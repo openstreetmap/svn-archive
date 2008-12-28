@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-25 18:54+0100\n"
-"PO-Revision-Date: 2008-12-23 17:34+0000\n"
-"Last-Translator: Štefan Baebler <Unknown>\n"
+"POT-Creation-Date: 2008-12-28 20:02+0100\n"
+"PO-Revision-Date: 2008-12-26 00:38+0000\n"
+"Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2008-12-25 16:53+0000\n"
+"X-Launchpad-Export-Date: 2008-12-28 18:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:444
+#: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:448
 #, java-format
 msgid ""
 "Setting the keyboard shortcut ''{0}'' for the action ''{1}'' ({2}) failed\n"
@@ -27,20 +27,20 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:449
+#: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:453
 msgid ""
 "This action will have no shortcut.\n"
 "\n"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:451
+#: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:455
 #, java-format
 msgid ""
 "Using the shortcut ''{0}'' instead.\n"
 "\n"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:453
+#: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:457
 msgid "(Hint: You can edit the shortcuts in the preferences.)"
 msgstr "(Namig: Bližnjice lahko urejate v nastavitvah.)"
 
@@ -49,36 +49,36 @@ msgid "Do not show again"
 msgstr "Ne prikaži več"
 
 #: ../core/src/org/openstreetmap/josm/tools/DontShowAgainInfo.java:37
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:148
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:152
 msgid "Information"
 msgstr "Informacije"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:64
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:65
 #, java-format
 msgid ""
 "An unexpected exception occurred that may have come from the ''{0}'' plugin."
 msgstr ""
 "Prišlo je do nepričakovane napake, ki verjetno izvira iz vstavka ''{0}''."
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:66
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:67
 #, java-format
 msgid "According to the information within the plugin, the author is {0}."
 msgstr "Glede na podatke znotraj vstavka je avtor {0}."
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:68
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:69
 msgid ""
 "Try updating to the newest version of this plugin before reporting a bug."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:69
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:70
 msgid "Should the plugin be disabled?"
 msgstr "Naj vstavek onemogočim?"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:70
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:71
 msgid "Disable plugin"
 msgstr "Onemogoči vstavek"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:83
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:84
 msgid ""
 "The plugin has been removed from the configuration. Please restart JOSM to "
 "unload the plugin."
@@ -86,21 +86,21 @@ msgstr ""
 "Vstavek je bil odstranjen iz nastavitev. Prosim, ponovno zaženite JOSM za "
 "njegovo odstranitev iz spomina."
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:86
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:87
 msgid ""
 "The plugin could not be removed. Please tell the people you got JOSM from "
 "about the problem."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:92
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:93
 msgid "Do nothing"
 msgstr "Ne stori ničesar"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:92
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:93
 msgid "Report Bug"
 msgstr "Prijavi napako"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:93
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:94
 msgid ""
 "An unexpected exception occurred.\n"
 "\n"
@@ -112,23 +112,30 @@ msgstr ""
 "To je vedno programerska napaka. Če uporabljate zadnjo različico \n"
 "urejevalnika JOSM, vas prosimo, da prijavite napako (podrobno, v angleščini)."
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:96
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:97
 msgid "Unexpected Exception"
 msgstr "Nepričakovana napaka"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:106
-msgid "Development version. Unknown revision."
-msgstr "Razvojna različica. Neznana izdaja."
-
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:127
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:114
 #, java-format
-msgid ""
-"<html>Please report a ticket at {0}<br>Include your steps to get to the "
-"error (as detailed as possible)!<br>Be sure to include the following "
-"information:</html>"
+msgid "Please report a ticket at {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:134
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:115
+msgid "Include your steps to get to the error (as detailed as possible)!"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:116
+msgid ""
+"Try updating to the newest version of JOSM and all plugin before reporting a "
+"bug."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:117
+msgid "Be sure to include the following information:"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:122
 msgid "(The text has already been copied to your clipboard.)"
 msgstr "(besedilo je že bilo prekopirano na odložišče.)"
 
@@ -234,9 +241,12 @@ msgid "Upload {0} {1} (id: {2}) {3}% {4}/{5} ({6} left)..."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:161
-#, java-format
-msgid "An error occoured: {0}"
-msgstr ""
+#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:69
+#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:64
+#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:122
+#, fuzzy, java-format
+msgid "An error occurred: {0}"
+msgstr "Napaka pri razločevanju na naslovu: \"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:189
 msgid "Opening changeset..."
@@ -345,27 +355,27 @@ msgstr "Vstavka {0} ni bilo mogoče naložiti. Ga izbrišem iz nastavitev?"
 msgid "The projection could not be read from preferences. Using EPSG:4263."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:461
+#: ../core/src/org/openstreetmap/josm/Main.java:466
 msgid "Hint: Some changes came from uploading new data to the server."
 msgstr ""
 "Namig: Do nekaterih sprememb je prišlo zaradi pošiljanja podatkov na "
 "strežnik."
 
-#: ../core/src/org/openstreetmap/josm/Main.java:463
+#: ../core/src/org/openstreetmap/josm/Main.java:468
 msgid "There are unsaved changes. Discard the changes and continue?"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:464
+#: ../core/src/org/openstreetmap/josm/Main.java:469
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:80
 msgid "Unsaved Changes"
 msgstr "Neshranjene spremembe"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:476
+#: ../core/src/org/openstreetmap/josm/Main.java:481
 #, java-format
 msgid "Ignoring malformed url: \"{0}\""
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:489
+#: ../core/src/org/openstreetmap/josm/Main.java:494
 #, java-format
 msgid "Ignoring malformed file url: \"{0}\""
 msgstr ""
@@ -405,7 +415,7 @@ msgstr "Zaznamki"
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:75
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:609
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:52
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:158
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:159
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:89
 #: ../core/src/org/openstreetmap/josm/command/AddCommand.java:67
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:427
@@ -563,7 +573,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:154
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:104
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:218
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:121
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:125
 msgid "Java OpenStreetMap Editor"
 msgstr "Javanski urejevalnik za OpenStreetMap"
 
@@ -668,7 +678,7 @@ msgstr "Datoteka"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:614
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:90
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:61
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:165
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:166
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:107
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:86
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:106
@@ -679,8 +689,6 @@ msgid "Edit"
 msgstr "Uredi"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:134
-#: ../plugins/osmarender/src/OsmarenderPlugin.java:99
-#: ../plugins/osmarender/src/OsmarenderPlugin.java:105
 msgid "View"
 msgstr "Pogled"
 
@@ -716,11 +724,11 @@ msgstr "Mrežni pogled"
 msgid "Toggle Wireframe view"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:24
+#: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:26
 msgid "Contacting the OSM server..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:26
+#: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:28
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:194
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:325
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:145
@@ -878,7 +886,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:64
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:98
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:74
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:175
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:176
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:115
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:286
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:20
@@ -1195,7 +1203,7 @@ msgid "Delete the selected relation"
 msgstr "Izbriši izbrano relacijo"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListPopup.java:26
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:138
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:142
 #: trans_surveyor.java:64
 msgid "Info"
 msgstr "Podrobnosti"
@@ -1534,7 +1542,7 @@ msgid "Import images"
 msgstr "Uvozi slike"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:227
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:433
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:434
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:56
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:343
 msgid "JPEG images (*.jpg)"
@@ -1629,60 +1637,60 @@ msgid ""
 "time were omitted."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:97
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:98
 #, java-format
 msgid "Images for {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:102
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:103
 msgid "Read GPX..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:111
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:112
 #, java-format
 msgid "No time for point {0} x {1}"
 msgstr "Točka {0} x {1} nima časovne oznake"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:116
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:117
 #, java-format
 msgid "Cannot read time \"{0}\" from point {1} x {2}"
 msgstr "Ni mogoče razbrati časa \"{0}\" točke {1} x {2}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:124
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:125
 msgid "No images with readable timestamps found."
 msgstr "Ni moč najti slik z berljivo časovno oznako."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:135
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:136
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:112
 #, java-format
 msgid "Reading {0}..."
 msgstr "Berem {0}..."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:202
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:203
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:164
 msgid "Geotagged Images"
 msgstr "Slike z geografskim položajem"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:353
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:354
 #, java-format
 msgid "GPS start: {0}"
 msgstr "Začetek GPS sledi: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:354
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:355
 #, java-format
 msgid "GPS end: {0}"
 msgstr "Konec GPS sledi: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:356
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:357
 #, java-format
 msgid "current delta: {0}s"
 msgstr "trenutna razlika: {0}s"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:357
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:358
 msgid "timezone difference: "
 msgstr "razlika časovnih pasov: "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:381
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:382
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:202
 msgid "image"
 msgid_plural "images"
@@ -1691,43 +1699,43 @@ msgstr[1] "slika"
 msgstr[2] "sliki"
 msgstr[3] "slike"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:381
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:382
 #, java-format
 msgid "{0} within the track."
 msgstr "{0} znotraj sledi."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:422
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:423
 msgid "Sync clock"
 msgstr "Uskladi uro"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:479
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:480
 #, java-format
 msgid "The date in file \"{0}\" could not be parsed."
 msgstr "Datuma v datoteki \"{0}\" ni bilo možno razbrati."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:483
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:484
 #, java-format
 msgid "There is no EXIF time within the file \"{0}\"."
 msgstr "V datoteki \"{0}\" manjka EXIF čas."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:487
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:488
 msgid "Image"
 msgstr "Slika"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:489
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:490
 msgid "Enter shown date (mm/dd/yyyy HH:MM:SS)"
 msgstr "Vnesite prikazan čas (mm/dd/yyyy HH:MM:SS)"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:492
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:493
 msgid "GPS unit timezone (difference to photo)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:500
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:501
 msgid "Syncronize Time with GPS Unit"
 msgstr "Uskladite čas z GPS napravo"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:516
-#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:518
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:517
+#: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:519
 msgid "Time entered could not be parsed."
 msgstr "Vpisanega časa ni bilo mogoče razpoznati."
 
@@ -1785,7 +1793,7 @@ msgid "scale"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/SplashScreen.java:75
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:125
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:129
 #, java-format
 msgid "Version {0}"
 msgstr "Različica {0}"
@@ -2053,22 +2061,22 @@ msgstr "Ohrani varnostne kopije datotek"
 msgid "When saving, keep backup files ending with a ~"
 msgstr "Pri shranjevanju ohrani varnostne kopije s končnico \"~\""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:109
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:110
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:208
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:168
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:172
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:141
 msgid "Plugins"
 msgstr "Vstavki"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:109
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:110
 msgid "Configure available plugins."
 msgstr "Nastavi razpoložljive vstavke."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:114
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:115
 msgid "Download List"
 msgstr "Sprejmi seznam"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:120
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:121
 #, java-format
 msgid "Downloaded plugin information from {0} site"
 msgid_plural "Downloaded plugin information from {0} sites"
@@ -2077,40 +2085,40 @@ msgstr[1] "Sprejeti podatki o vstavkih z  {0} strežnika"
 msgstr[2] "Sprejeti podatki o vstavkih z  {0} strežnikov"
 msgstr[3] "Sprejeti podatki o vstavkih z  {0} strežnikov"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:123
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:124
 msgid "No plugin information found."
 msgstr "Informacij o vsavku ni bilo mogoče najti."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:129
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:220
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:130
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:219
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:51
 msgid "Update"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:138
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:139
 msgid "Configure Sites ..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:151
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:160
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:171
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:152
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:161
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:172
 msgid "Add either site-josm.xml or Wiki Pages."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:168
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:178
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:169
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:179
 msgid "Please select an entry."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:185
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:186
 msgid "Configure Plugin Sites"
 msgstr "Nastavi vire vstavkov"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:214
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:215
 msgid "All installed plugins are up to date."
 msgstr "Vsi nameščeni vstavki so posodobljeni."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:219
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:218
 #, java-format
 msgid ""
 "Update the following plugins:\n"
@@ -2122,7 +2130,7 @@ msgstr ""
 "{0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:250
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:259
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:258
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:106
 #: trans_presets.java:301 trans_presets.java:302 trans_presets.java:303
 #: trans_presets.java:304 trans_presets.java:305 trans_presets.java:306
@@ -2137,7 +2145,7 @@ msgstr ""
 msgid "unknown"
 msgstr "neznan"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:265
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:264
 #, java-format
 msgid "{0}: Version {1}{2}"
 msgstr "{0}: Različica {1}{2}"
@@ -2147,11 +2155,11 @@ msgid "Plugin bundled with JOSM"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:269
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:163
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:167
 msgid "no description available"
 msgstr "opis ni na voljo"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:284
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:283
 #, java-format
 msgid ""
 "Plugin archive already available. Do you want to download current version by "
@@ -2160,22 +2168,22 @@ msgid ""
 "{0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:285
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:284
 msgid "Plugin already exists"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:288
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:293
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:287
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:292
 #, java-format
 msgid "Error deleting plugin file: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:336
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:335
 #, java-format
 msgid "Error reading plugin information file: {0}"
 msgstr "Napaka pri branju datoteke s podatki o vstavkih: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:364
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:363
 #, java-format
 msgid ""
 "Download the following plugins?\n"
@@ -2186,7 +2194,7 @@ msgstr ""
 "\n"
 "{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:365
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:364
 msgid "Download missing plugins"
 msgstr "Sprejem manjkajočih vtičnikov"
 
@@ -2844,7 +2852,7 @@ msgstr "Datoteke ni mogoče najti"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginException.java:18
 #, java-format
-msgid "An error occured in plugin {0}"
+msgid "An error occurred in plugin {0}"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:42
@@ -2903,17 +2911,18 @@ msgstr "Premakni"
 msgid "Change"
 msgstr "Spremeni"
 
-#: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:91
+#: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:96
 #, java-format
-msgid "Remove \"{0}\" for"
-msgstr "Odstrani \"{0}\" iz"
-
-#: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:91
-#, java-format
-msgid "Set {0}={1} for"
-msgstr "Nastavi {0}={1} za"
+msgid "Remove \"{0}\" for {1} ''{2}''"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:97
+#, java-format
+msgid "Set {0}={1} for {1} ''{2}''"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:102
+#: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:103
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:93
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/MultipleNameVisitor.java:66
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/ChangePropertyKeyCommand.java:73
@@ -2923,6 +2932,16 @@ msgstr[0] "predmetov"
 msgstr[1] "predmet"
 msgstr[2] "predmeta"
 msgstr[3] "predmeti"
+
+#: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:102
+#, java-format
+msgid "Remove \"{0}\" for {1} {2}"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:103
+#, java-format
+msgid "Set {0}={1} for {1} {2}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:80
 #, java-format
@@ -3233,57 +3252,58 @@ msgstr "Prosim, izberite vsaj 3 vozlišča."
 
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:72
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:76
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:198
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:111
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:202
 msgid "UNKNOWN"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:111
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:115
 msgid "About"
 msgstr "O programu"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:111
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:115
 msgid "Display the about screen."
 msgstr "Prikaži informacije o programu."
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:127
-#, fuzzy, java-format
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:131
+#, java-format
 msgid "Last change at {0}"
-msgstr "zadnja sprememba ob {0}"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:129
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:133
 #, java-format
 msgid "Java Version {0}"
 msgstr "Java različica {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:131
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:135
 msgid "Homepage"
 msgstr "Domača stran"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:133
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:137
 msgid "Bug Reports"
 msgstr "Prijava napak"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:135
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:139
 msgid "News about JOSM"
 msgstr "Novice o JOSM"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:139
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:143
 msgid "Readme"
 msgstr "Preberi me"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:140
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:144
 msgid "Revision"
 msgstr "Različica"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:141
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:145
 msgid "Contribution"
 msgstr "Prispevki"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:172
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:176
 msgid "About JOSM..."
 msgstr "O JOSM..."
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:209
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:213
 msgid "File could not be found."
 msgstr "Datoteke ni bilo moč najti."
 
@@ -3934,25 +3954,25 @@ msgstr "Izrini"
 msgid "Create areas"
 msgstr "Ustvari površine"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:244
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:237
 msgid "Extrude Way"
 msgstr "Izrini pot"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:257
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:250
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:389
 msgid "Release the mouse button to select the objects in the rectangle."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:259
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:252
 msgid "Draw a rectangle of the desired size, then release the mouse button."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:261
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:254
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:393
 msgid "Release the mouse button to stop rotating."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:263
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:256
 msgid "Drag a way segment to make a rectangle."
 msgstr "Povlecite segment poti za ustvarjenje pravokotnika."
 
@@ -4451,6 +4471,10 @@ msgstr "Izniči"
 msgid "Undo the last action."
 msgstr "Izniči zadnje dejanje."
 
+#: ../core/src/org/openstreetmap/josm/actions/JosmAction.java:33
+msgid "No Shortcut"
+msgstr ""
+
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:39
 msgid "Downloading data"
 msgstr "Sprejem podatkov"
@@ -4701,21 +4725,13 @@ msgstr ""
 msgid "Displays OpenStreetBugs issues"
 msgstr ""
 
-#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:69
-#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:64
-#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:122
-#, fuzzy, java-format
-msgid "An error occured: {0}"
-msgstr "Napaka pri razločevanju na naslovu: \"{0}\""
-
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/util/HttpUtils.java:169
 msgid "Header contains several values and cannot be mapped to a single String"
 msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/NewAction.java:76
-#, fuzzy
 msgid "Couldn't create new bug. Result: {0}"
-msgstr "Ni mogoče brati z naslova: \"{0}\""
+msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:47
 msgid "Mark as done"
@@ -4730,42 +4746,37 @@ msgid "Really close?"
 msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:58
-#, fuzzy
 msgid "New issue"
-msgstr "Nova vrednost"
+msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:95
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/AddCommentAction.java:55
-#, fuzzy
 msgid "Please enter a user name"
-msgstr "Prosim, vpišite iskani niz"
+msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:105
 msgid "Describe the problem precisely"
 msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:106
-#, fuzzy
 msgid "Create issue"
-msgstr "Ustvari krog"
+msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/AddCommentAction.java:47
 msgid "Add a comment"
 msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/AddCommentAction.java:57
-#, fuzzy
 msgid "NoName"
-msgstr "Naziv"
+msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/AddCommentAction.java:63
 msgid "Enter your comment"
 msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/PopupFactory.java:49
-#, fuzzy
 msgid "Unknown issue state"
-msgstr "Neznana vrsta"
+msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:92
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:96
@@ -4790,9 +4801,8 @@ msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:124
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:53
-#, fuzzy
 msgid "Warning"
-msgstr "Opozorila"
+msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:51
 msgid ""
@@ -5121,38 +5131,32 @@ msgid "Lakewalker Plugin Preferences"
 msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageEntry.java:56
-#, fuzzy
 msgid "Normal"
-msgstr "Naravno"
+msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageEntry.java:57
-#, fuzzy
 msgid "Rotate 90"
-msgstr "Zasuk"
+msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageEntry.java:59
-#, fuzzy
 msgid "Rotate 180"
-msgstr "Zasuk"
+msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageEntry.java:61
-#, fuzzy
 msgid "Rotate 270"
-msgstr "Zasuk"
+msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointLayer.java:74
-#, fuzzy
 msgid "Imported Images"
-msgstr "Uvozi slike"
+msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:37
 msgid "Image files (*.jpg, *.jpeg, *.png, *.gif)"
 msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:47
-#, fuzzy
 msgid "Open images with ImageWayPoint"
-msgstr "Odpri slike z AgPifoJ"
+msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:49
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:38
@@ -5165,9 +5169,8 @@ msgid "Previous"
 msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:108
-#, fuzzy
 msgid "Previous image"
-msgstr "Prejšnji označevalnik"
+msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:127
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:86
@@ -5175,23 +5178,20 @@ msgid "Next"
 msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:127
-#, fuzzy
 msgid "Next image"
-msgstr "Ni slike"
+msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:144
-#, fuzzy
 msgid "Rotate left"
-msgstr "Zasuk"
+msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:146
 msgid "Rotate image left"
 msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:163
-#, fuzzy
 msgid "Rotate right"
-msgstr "Zasuk"
+msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:165
 msgid "Rotate image right"
@@ -5203,9 +5203,8 @@ msgid "WayPoint Image"
 msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:189
-#, fuzzy
 msgid "Display non-geotagged photos"
-msgstr "Prikaži slike z geografskim položajem"
+msgstr ""
 
 #: ../plugins/openlayers/src/org/openstreetmap/josm/plugins/openLayers/OpenLayersPlugin.java:44
 msgid "OpenLayers"
@@ -6172,7 +6171,8 @@ msgid "Error on file {0}"
 msgstr "Napaka v datoteki {0}"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:36
-msgid "Open images with AgPifoJ"
+#, fuzzy
+msgid "Open images with AgPifoJ..."
 msgstr "Odpri slike z AgPifoJ"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:91
@@ -6365,7 +6365,7 @@ msgstr ""
 msgid "Uploads traces to openstreetmap.org"
 msgstr ""
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:273
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:256
 msgid "No GpxLayer selected. Cannot upload a trace."
 msgstr ""
 
@@ -6453,17 +6453,21 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: ../plugins/osmarender/src/OsmarenderPlugin.java:87
+#: ../plugins/osmarender/src/OsmarenderPlugin.java:43
+msgid "Osmarender"
+msgstr ""
+
+#: ../plugins/osmarender/src/OsmarenderPlugin.java:90
 msgid ""
 "Firefox not found. Please set firefox executable in the Map Settings page of "
 "the preferences."
 msgstr ""
 
-#: ../plugins/osmarender/src/OsmarenderPlugin.java:136
+#: ../plugins/osmarender/src/OsmarenderPlugin.java:121
 msgid "osmarender options"
 msgstr ""
 
-#: ../plugins/osmarender/src/OsmarenderPlugin.java:137
+#: ../plugins/osmarender/src/OsmarenderPlugin.java:122
 msgid "Firefox executable"
 msgstr ""
 
@@ -7651,23 +7655,20 @@ msgid "Stop"
 msgstr "Stop znak"
 
 #: trans_presets.java:740
-#, fuzzy
 msgid "Zebra Crossing"
-msgstr "Prehod za pešce"
+msgstr ""
 
 #: trans_presets.java:741
-#, fuzzy
 msgid "Edit a crossing"
-msgstr "Uredi izvir"
+msgstr ""
 
 #: trans_presets.java:743
 msgid "uncontrolled"
 msgstr ""
 
 #: trans_presets.java:743
-#, fuzzy
 msgid "island"
-msgstr "Otok"
+msgstr ""
 
 #: trans_presets.java:744
 msgid "Ref"
@@ -7678,9 +7679,8 @@ msgid "zebra"
 msgstr ""
 
 #: trans_presets.java:744
-#, fuzzy
 msgid "pelican"
-msgstr "Cevovod"
+msgstr ""
 
 #: trans_presets.java:749
 msgid "Mini Roundabout"
@@ -9820,29 +9820,24 @@ msgid "gas"
 msgstr ""
 
 #: trans_presets.java:2235
-#, fuzzy
 msgid "Power Station"
-msgstr "Gasilski dom"
+msgstr ""
 
 #: trans_presets.java:2236
-#, fuzzy
 msgid "Edit power station"
-msgstr "Uredi postajo"
+msgstr ""
 
 #: trans_presets.java:2241
-#, fuzzy
 msgid "Power Sub Station"
-msgstr "Avtobusna postaja"
+msgstr ""
 
 #: trans_presets.java:2242
-#, fuzzy
 msgid "Edit power sub station"
-msgstr "Uredi avtobusno postajo"
+msgstr ""
 
 #: trans_presets.java:2245 trans_presets.java:2257
-#, fuzzy
 msgid "Line reference"
-msgstr "Nastavitve"
+msgstr ""
 
 #: trans_presets.java:2248
 msgid "Power Tower"
@@ -9853,19 +9848,16 @@ msgid "Edit Power Tower"
 msgstr "Uredi steber daljnovoda"
 
 #: trans_presets.java:2253
-#, fuzzy
 msgid "Power Line"
-msgstr "Steber daljnovoda"
+msgstr ""
 
 #: trans_presets.java:2254
-#, fuzzy
 msgid "Edit power line"
-msgstr "Uredi cevovod"
+msgstr ""
 
 #: trans_presets.java:2258
-#, fuzzy
 msgid "Voltage"
-msgstr "Vas"
+msgstr ""
 
 #: trans_presets.java:2259
 msgid "Amount of Wires"
@@ -10748,14 +10740,12 @@ msgid "Edit Wood"
 msgstr ""
 
 #: trans_presets.java:2860
-#, fuzzy
 msgid "Riverbank"
-msgstr "Reka"
+msgstr ""
 
 #: trans_presets.java:2861
-#, fuzzy
 msgid "Edit a riverbank"
-msgstr "Uredi reko"
+msgstr ""
 
 #: trans_presets.java:2866
 msgid "Coastline"
@@ -10766,14 +10756,12 @@ msgid "Edit Coastline"
 msgstr ""
 
 #: trans_presets.java:2872
-#, fuzzy
 msgid "Wetland"
-msgstr "Ponovno naloži"
+msgstr ""
 
 #: trans_presets.java:2873
-#, fuzzy
 msgid "Edit Wetland"
-msgstr "Uredi otok"
+msgstr ""
 
 #: trans_presets.java:2876
 msgid "swamp"
@@ -10784,9 +10772,8 @@ msgid "bog"
 msgstr ""
 
 #: trans_presets.java:2876
-#, fuzzy
 msgid "marsh"
-msgstr "Denar"
+msgstr ""
 
 #: trans_presets.java:2876
 msgid "reedbed"
@@ -10801,9 +10788,8 @@ msgid "tidalflat"
 msgstr ""
 
 #: trans_presets.java:2876
-#, fuzzy
 msgid "mangrove"
-msgstr "slik"
+msgstr ""
 
 #: trans_presets.java:2879
 msgid "Mud"
@@ -10837,17 +10823,26 @@ msgstr ""
 msgid "Edit Cliff"
 msgstr ""
 
-#~ msgid "JOSM, the Java OpenStreetMap editor"
-#~ msgstr "JOSM, Javanski urejevalnik za OpenStreetMap"
-
-#~ msgid "JOSM - Java OpenStreetMap Editor"
-#~ msgstr "JOSM - Javanski urejevalnik za OpenStreetMap"
-
-#~ msgid "Java OpenStreetMap - Editor"
-#~ msgstr "Javanski urejevalnik za OpenStreetMap"
+#~ msgid "Development version. Unknown revision."
+#~ msgstr "Razvojna različica. Neznana izdaja."
 
 #~ msgid "Java OpenStreetMap Editor Version {0}"
 #~ msgstr "Urejevalnik Java OpenStreetMap, različica {0}"
 
 #~ msgid "NullPointerException. Possible some missing tags."
 #~ msgstr "NullPointerException. Najbrž manjka kakšna oznaka."
+
+#~ msgid "Remove \"{0}\" for"
+#~ msgstr "Odstrani \"{0}\" iz"
+
+#~ msgid "Set {0}={1} for"
+#~ msgstr "Nastavi {0}={1} za"
+
+#~ msgid "JOSM, the Java OpenStreetMap editor"
+#~ msgstr "JOSM, Javanski urejevalnik za OpenStreetMap"
+
+#~ msgid "Java OpenStreetMap - Editor"
+#~ msgstr "Javanski urejevalnik za OpenStreetMap"
+
+#~ msgid "JOSM - Java OpenStreetMap Editor"
+#~ msgstr "JOSM - Javanski urejevalnik za OpenStreetMap"

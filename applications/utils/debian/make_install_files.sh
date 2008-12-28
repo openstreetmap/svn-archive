@@ -1,3 +1,4 @@
+
 #!/bin/sh
 # This script replaces a make ; make install for creation of the debian package.
 # Maybe you can also use it to install the stuff on your system.
@@ -178,12 +179,20 @@ if true ; then
     make clean >build.log 2>build.err
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
-	echo "${RED}!!!!!! ERROR compiling color255 ${NORMAL}"
+	echo "${RED}!!!!!! ERROR compiling osm2pgsql ${NORMAL}"
 	exit -1
     fi
     cd ../..
     cp export/osm2pgsql/osm2pgsql ${bin_path}
+    if [ "$?" -ne "0" ] ; then
+	echo "${RED}!!!!!! ERROR osm2pgsql not copied ${NORMAL}"
+	exit -1
+    fi
     cp export/osm2pgsql/default.style ${share_path}/default.style
+    if [ "$?" -ne "0" ] ; then
+	echo "${RED}!!!!!! ERROR osm2pgsql/default.style no copied ${NORMAL}"
+	exit -1
+    fi
 fi
 
 # ------------------------------------------------------------------

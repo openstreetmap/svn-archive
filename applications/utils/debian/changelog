@@ -1,3 +1,96 @@
+openstreetmap-utils (12537) unstable; urgency=low
+
+   * Added new svn:ignore values.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Wed, 24 Dec 2008 12:44:57 +0100
+
+openstreetmap-utils (12533) unstable; urgency=low
+
+   * Fixed the 0.6 pgsql dump writer to create the correct member type values for relation members, and to include a sequence id column for relation members.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Wed, 24 Dec 2008 12:23:33 +0100
+
+openstreetmap-utils (12532) unstable; urgency=low
+
+   * Fixed the 0.5 pgsql dump writer which was writing incorrect user information to the way and relation tables.  This was showing up as an internal validation error complaining that an record wasn't closed properly.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Wed, 24 Dec 2008 12:22:09 +0100
+
+openstreetmap-utils (12518) unstable; urgency=low
+
+   * initial repository layout
+   * current version of DTD
+   * sample feature list (created by hand)
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 23 Dec 2008 20:32:45 +0100
+
+openstreetmap-utils (12517) unstable; urgency=low
+
+   * Repository for machine-readable OSM map feature list. 
+   * See  http://wiki.openstreetmap.org/wiki/Machine-readable_Map_Feature_list
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 23 Dec 2008 20:27:00 +0100
+
+openstreetmap-utils (12504) unstable; urgency=low
+
+   * remove unneeded libgnu-regexp-java from build dependency
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Tue, 23 Dec 2008 09:44:45 +0100
+
+openstreetmap-utils (12496) unstable; urgency=low
+
+   * Add ant to compile the java stuff
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 23:30:56 +0100
+
+openstreetmap-utils (12495) unstable; urgency=low
+
+   * Exclude stuff not compiling under amd64
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 23:30:38 +0100
+
+openstreetmap-utils (12492) unstable; urgency=low
+
+   * add ant as build dependency
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 23:03:22 +0100
+
+openstreetmap-utils (12488) unstable; urgency=low
+
+   * improve nmea parsing: add speed, count CHecksumm errors, add line and linenumber in case of errors
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 20:46:51 +0100
+
+openstreetmap-utils (12487) unstable; urgency=low
+
+   * improve comment 
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 20:31:13 +0100
+
+openstreetmap-utils (12483) unstable; urgency=low
+
+   * Add clean Target
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 17:34:31 +0100
+
+openstreetmap-utils (12482) unstable; urgency=low
+
+   * Add clean Target
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 17:34:21 +0100
+
+openstreetmap-utils (12481) unstable; urgency=low
+
+   * utils/debian/debian/make_install_files.sh: Add more things we build; add more Error Checks, Add color to output; reduce debug output
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 17:33:20 +0100
+
+openstreetmap-utils (12480) unstable; urgency=low
+
+   * Change mail format in changelog to avoid spamming
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 17:29:59 +0100
+
 openstreetmap-utils (12447) unstable; urgency=low
 
    * show more directory levels of GeoFabrik with option  --all-planet-geofabrik=\?

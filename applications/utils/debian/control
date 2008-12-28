@@ -14,7 +14,7 @@ Build-Depends:
 	libxml2-dev,
 	pkg-config,
 	ant, ant-optional,
-	sun-java5-jdk,
+	sun-java6-jdk,
 	libmysqlclient15-dev
 Standards-Version: 3.6.1
 
@@ -28,13 +28,12 @@ Depends:
 	libfile-slurp-perl,
 	libdate-manip-perl,
 	postgresql-client,
+	java6-runtime|sun-java6-jre|sun-java6-jdk|openjdk-6-jre|openjdk-6-jdk|ia32-sun-java6-bin,
 	gpsbabel,
 	libshp1
 Recommends:
 	gpsdrive,
 	mapnik
-Suggests:
-	java
 Conflicts:
 	gpsdrive-scripts,
 	osm2pgsql

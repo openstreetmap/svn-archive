@@ -25,6 +25,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: gpsd
 Suggests: josm
+Conflicts: gosmore
 Description: Openstreetmap.org viewer / wayfinder / search client
  Gosmore is a openstreetmap.org viewer and wayfinder with support for
  speech syntesis and fetching the current location from gpsd.

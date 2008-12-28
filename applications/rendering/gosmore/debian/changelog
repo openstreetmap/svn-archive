@@ -1,3 +1,9 @@
+openstreetmap-gosmore (12647) unstable; urgency=low
+
+   * debian directory taken from official gosmore package and modified to allow svn compiles
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Sun, 28 Dec 2008 22:14:39 +0100
+
 openstreetmap-gosmore (12260) unstable; urgency=low
 
    * Changed automatic created_by=gosmore to 'todo=FIXME - Added by gosmore' to trigger validation warnings in JOSM in case edits are forgotten and/or added to the DB

@@ -8,6 +8,7 @@ export destdir = $(CURDIR)/debian/openstreetmap-gosmore
 
 
 build: 
+	rm -f debian/files
 	make
 
 clean:

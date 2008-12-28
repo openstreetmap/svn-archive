@@ -204,29 +204,45 @@
 			<area class="waterway-riverbank"/>
 		</rule>
 		<rule e="way" k="waterway" v="river">
-			<line class="waterway-casing waterway-river-casing" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="100"/>
+			<line class="waterway-casing waterway-river-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
 		</rule>
 		<rule e="way" k="waterway" v="stream">
-			<line class="waterway-casing waterway-stream-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="2"/>
+			<line class="waterway-casing waterway-stream-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.03" maximum-width="2.75"/>
 		</rule>
 		<rule e="way" k="waterway" v="canal">
-			<line class="waterway-casing waterway-canal-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
+			<line class="waterway-casing waterway-canal-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
 		</rule>
 		<rule e="way" k="waterway" v="drain">
-			<line class="waterway-casing waterway-drain-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
+			<line class="waterway-casing waterway-drain-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
 		</rule>
-		<rule e="way" k="waterway" v="river">
-			<line class="waterway-core waterway-river-core" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="100"/>
+		<rule e="way" k="tunnel" v="yes">
+			<rule e="way" k="waterway" v="river">
+				<line class="waterway-core waterway-river-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
+			</rule>
+			<rule e="way" k="waterway" v="stream">
+				<line class="waterway-core waterway-stream-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.03" maximum-width="2.75"/>
+			</rule>
+			<rule e="way" k="waterway" v="canal">
+				<line class="waterway-core waterway-canal-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.08" maximum-width="8"/>
+			</rule>
+			<rule e="way" k="waterway" v="drain">
+				<line class="waterway-core waterway-drain-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.08" maximum-width="8"/>
+			</rule>
 		</rule>
-		<rule e="way" k="waterway" v="stream">
-			<line class="waterway-core waterway-stream-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="2"/>
-		</rule>
-		<rule e="way" k="waterway" v="canal">
-			<line class="waterway-core waterway-canal-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
-		</rule>
-		<rule e="way" k="waterway" v="drain">
-			<line class="waterway-core waterway-drain-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
-		</rule>
+		<else>
+			<rule e="way" k="waterway" v="river">
+				<line class="waterway-core waterway-river-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
+			</rule>
+			<rule e="way" k="waterway" v="stream">
+				<line class="waterway-core waterway-stream-core" width-scale-factor="1" honor-width="yes" minimum-width="0.03" maximum-width="2.75"/>
+			</rule>
+			<rule e="way" k="waterway" v="canal">
+				<line class="waterway-core waterway-canal-core" width-scale-factor="1" honor-width="yes" minimum-width="0.08" maximum-width="8"/>
+			</rule>
+			<rule e="way" k="waterway" v="drain">
+				<line class="waterway-core waterway-drain-core" width-scale-factor="1" honor-width="yes" minimum-width="0.08" maximum-width="8"/>
+			</rule>
+		</else>
 		<rule e="way" k="waterway" v="dock">
 			<area class="natural-water"/>
 		</rule>
@@ -2855,7 +2871,7 @@
 			.waterway-casing {
 			stroke-linecap: round;
 			stroke-linejoin: round;
-			stroke: #b5d6f1;
+			stroke: #b0b0b0;
 			fill: none;
 			}
 			
@@ -2872,23 +2888,27 @@
 			stroke-width: 0px;
 			}
 			
-			.waterway-river-casing                  { stroke-width: 2px; }
-			.waterway-river-core                    { stroke-width: 1.7px; }
+			.waterway-river-casing                  { stroke-width: 1px; }
+			.waterway-river-core                    { stroke-width: 1px; }
+			.waterway-river-tunnel-core             { stroke-width: 0.8px; stroke-dasharray: 1.5, 1.5; }
 			.waterway-river-name-casing             { font-size: 1.5px; stroke-width: 0.1px;}
 			.waterway-river-name-core               { font-size: 1.5px; }
 			
 			.waterway-stream-casing                 { stroke-width: 0.275px; }
-			.waterway-stream-core                   { stroke-width: 0.2px; }
+			.waterway-stream-core                   { stroke-width: 0.275px; }
+			.waterway-stream-tunnel-core            { stroke-width: 0.2px; stroke-dasharray: 0.4, 0.4; }
 			.waterway-stream-name-casing            { stroke-width: 0.1px; font-size: 1.5px; }
 			.waterway-stream-name-core              { font-size: 1.5px; }
 			
-			.waterway-canal-casing                  { stroke-width: 2px; }
-			.waterway-canal-core                    { stroke-width: 1px; }
+			.waterway-canal-casing                  { stroke-width: 1px; }
+			.waterway-canal-core                    { stroke-width: 0.8px; }
+			.waterway-canal-tunnel-core             { stroke-width: 0.8px; stroke-dasharray: 1.5, 1.5; }
 			.waterway-canal-name-casing             { stroke-width: 0.1px; font-size: 1.5px; }
 			.waterway-canal-name-core               { font-size: 1.5px; }
 			
-			.waterway-drain-casing                  { stroke-width: 0.25px; }
-			.waterway-drain-core                    { stroke-width: 0.175px; }
+			.waterway-drain-casing                  { stroke-width: 1px; }
+			.waterway-drain-core                    { stroke-width: 0.8px; }
+			.waterway-drain-tunnel-core             { stroke-width: 0.8px; stroke-dasharray: 1.5, 1.5; }
 			.waterway-drain-name-casing             { stroke-width: 0.1px; font-size: 1.5px; }
 			.waterway-drain-name-core               { font-size: 1.5px; }
 			

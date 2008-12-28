@@ -184,18 +184,34 @@
 		<rule e="way" k="waterway" v="drain">
 			<line class="waterway-casing waterway-drain-casing"/>
 		</rule>
-		<rule e="way" k="waterway" v="river">
-			<line class="waterway-core waterway-river-core"/>
+		<rule e="way" k="tunnel" v="yes">
+			<rule e="way" k="waterway" v="river">
+				<line class="waterway-core waterway-river-tunnel-core"/>
+			</rule>
+			<rule e="way" k="waterway" v="stream">
+				<line class="waterway-core waterway-stream-tunnel-core"/>
+			</rule>
+			<rule e="way" k="waterway" v="canal">
+				<line class="waterway-core waterway-canal-tunnel-core"/>
+			</rule>
+			<rule e="way" k="waterway" v="drain">
+				<line class="waterway-core waterway-drain-tunnel-core"/>
+			</rule>
 		</rule>
-		<rule e="way" k="waterway" v="stream">
-			<line class="waterway-core waterway-stream-core"/>
-		</rule>
-		<rule e="way" k="waterway" v="canal">
-			<line class="waterway-core waterway-canal-core"/>
-		</rule>
-		<rule e="way" k="waterway" v="drain">
-			<line class="waterway-core waterway-drain-core"/>
-		</rule>
+		<else>
+			<rule e="way" k="waterway" v="river">
+				<line class="waterway-core waterway-river-core"/>
+			</rule>
+			<rule e="way" k="waterway" v="stream">
+				<line class="waterway-core waterway-stream-core"/>
+			</rule>
+			<rule e="way" k="waterway" v="canal">
+				<line class="waterway-core waterway-canal-core"/>
+			</rule>
+			<rule e="way" k="waterway" v="drain">
+				<line class="waterway-core waterway-drain-core"/>
+			</rule>
+		</else>
 		<rule e="way" k="waterway" v="dock">
 			<area class="natural-water"/>
 		</rule>
@@ -1588,7 +1604,7 @@
 			.waterway-casing {
 			stroke-linecap: round;
 			stroke-linejoin: round;
-			stroke: #b5d6f1;
+			stroke: #b0b0b0;
 			fill: none;
 			}
 			
@@ -1605,23 +1621,27 @@
 			stroke-width: 0px;
 			}
 			
-			.waterway-river-casing                  { stroke-width: 6px; }
+			.waterway-river-casing                  { stroke-width: 4px; }
 			.waterway-river-core                    { stroke-width: 4px; }
+			.waterway-river-tunnel-core             { stroke-width: 3px; stroke-dasharray: 6, 6; }
 			.waterway-river-name-casing             { font-size: 6px; stroke-width: 0.4px;}
 			.waterway-river-name-core               { font-size: 6px; }
 			
-			.waterway-stream-casing                 { stroke-width: 1px; }
-			.waterway-stream-core                   { stroke-width: 0.8px; }
+			.waterway-stream-casing                 { stroke-width: 2px; }
+			.waterway-stream-core                   { stroke-width: 2px; }
+			.waterway-stream-tunnel-core            { stroke-width: 1.5px; stroke-dasharray: 3, 3; }
 			.waterway-stream-name-casing            { font-size: 3px; stroke-width: 0.2px;}
 			.waterway-stream-name-core              { font-size: 3px; }
 			
 			.waterway-canal-casing                  { stroke-width: 4px; }
-			.waterway-canal-core                    { stroke-width: 2px; }
+			.waterway-canal-core                    { stroke-width: 4px; }
+			.waterway-canal-tunnel-core             { stroke-width: 3px; stroke-dasharray: 6, 6; }
 			.waterway-canal-name-casing             { font-size: 6px; stroke-width: 0.4px;}
 			.waterway-canal-name-core               { font-size: 6px; }
 			
-			.waterway-drain-casing                  { stroke-width: 0.8px; }
-			.waterway-drain-core                    { stroke-width: 0.6px; }
+			.waterway-drain-casing                  { stroke-width: 2.3px; }
+			.waterway-drain-core                    { stroke-width: 2.3px; }
+			.waterway-drain-tunnel-core             { stroke-width: 1.8px; stroke-dasharray: 3.5, 3.5; }
 			.waterway-drain-name-casing             { font-size: 3px; stroke-width: 0.2px;}
 			.waterway-drain-name-core               { font-size: 3px; }
 			

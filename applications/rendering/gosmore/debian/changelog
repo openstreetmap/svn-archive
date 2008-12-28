@@ -1,0 +1,785 @@
+openstreetmap-gosmore (12260) unstable; urgency=low
+
+   * Changed automatic created_by=gosmore to 'todo=FIXME - Added by gosmore' to trigger validation warnings in JOSM in case edits are forgotten and/or added to the DB
+   * Also, JOSM seems to have protected created_by tags recently, so removing the created_by=gosmore wasn't working so well in JOSM anyway.
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Mon, 08 Dec 2008 06:36:09 +0100
+
+openstreetmap-gosmore (12233) unstable; urgency=low
+
+   * Fixed logprintf so timestamps work in WinCE
+   * WinCE spoken directions are now asynchronous, so no pausing while speaking
+   * Fixed transparency issues on some icons (rebuild probably required)
+   * Add created_by=gosmore to allow easier marking of changes in JOSM
+   * Search dialog now uses entire screen real-estate, will do other dialogs soon
+   * Edits weren't saving in the right place when no GPS connected
+   * Non-GPS-connected edits now save with GMT date and time taken from computer
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Fri, 05 Dec 2008 14:16:23 +0100
+
+openstreetmap-gosmore (12108) unstable; urgency=low
+
+   * AddWayOrNode can now just add a note for things that aren't in the presets
+   * (goes in as gosmore_note=yes at the moment + name and note fields)
+   * These probably shouldn't be saved to openstreetmaps though
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Thu, 27 Nov 2008 15:18:23 +0100
+
+openstreetmap-gosmore (11746) unstable; urgency=low
+
+   * If motorcars aren't allowed e.g. cycleway, then cyclists must obey oneway=1.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 06 Nov 2008 21:20:12 +0100
+
+openstreetmap-gosmore (11737) unstable; urgency=low
+
+   * Speed up long route calculation by considering fewer minor roads.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 06 Nov 2008 17:40:44 +0100
+
+openstreetmap-gosmore (11716) unstable; urgency=low
+
+   * Changed route colour to bright green so more visible in comparison to map colours
+   * Made areas visible in WinMobile as outlines
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Thu, 06 Nov 2008 08:27:38 +0100
+
+openstreetmap-gosmore (11713) unstable; urgency=low
+
+   * Add support for barrier={bollard,gate,stile,toll_booth}.
+   * Add routing for motorcycle.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 05 Nov 2008 21:52:55 +0100
+
+openstreetmap-gosmore (11693) unstable; urgency=low
+
+   * Add support for {access,motorcar,...}=destination
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 05 Nov 2008 11:02:42 +0100
+
+openstreetmap-gosmore (11088) unstable; urgency=low
+
+   * Linux : Experimental speedup for routing. Define ROUTE_SRV to activate.
+   * WinCE : Disable logging when compiling under VC++
+   * Add highway=byway
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 09 Oct 2008 01:03:55 +0200
+
+openstreetmap-gosmore (11051) unstable; urgency=low
+
+   * Resized icon to be as big as possible
+   * Made sure gosm_arm.exe depends upon gosmore.ico
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Sun, 05 Oct 2008 16:37:44 +0200
+
+openstreetmap-gosmore (11050) unstable; urgency=low
+
+   * Added icon to show in WindowsMobile. Feel free to improve it.
+   * Current icon taken from map-icons/square.small, which should be PD?
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Sun, 05 Oct 2008 16:20:02 +0200
+
+openstreetmap-gosmore (11048) unstable; urgency=low
+
+   * Added support for icon transparency in GDK and WinMob versions
+   * Fixed transparency in many classic.small icons and rebuilt icons.*
+   * Map rebuild required due to rebuild of icons.*
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Sun, 05 Oct 2008 15:06:42 +0200
+
+openstreetmap-gosmore (10996) unstable; urgency=low
+
+   * Added link to map-icons to always get latest icons
+   * Wrote new, more efficient version of mkicons.sh (w/o pnmmontage)
+   * Changed Makefile so that gosmore.rsc depends upon icons.bmp
+   * Added various files to svn:ignore property for cleaner commits
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Tue, 30 Sep 2008 15:46:39 +0200
+
+openstreetmap-gosmore (10740) unstable; urgency=low
+
+   * Improved cycle routing : When part of a cycle relation, trigger special rules.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 17 Sep 2008 02:06:31 +0200
+
+openstreetmap-gosmore (10694) unstable; urgency=low
+
+   * WinCE : Italian and Romenian translations
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sun, 14 Sep 2008 22:14:11 +0200
+
+openstreetmap-gosmore (10637) unstable; urgency=low
+
+   * WinCE: Will now attempt to reconnect if connection dies
+   *        (this may also allow for changing COM/BAUD w/o restarting,
+   *         but I haven't tested this yet).
+   * Added logging helper functions
+   * WinCE: Connections and Disconnects are currently logged
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Fri, 12 Sep 2008 08:49:52 +0200
+
+openstreetmap-gosmore (10572) unstable; urgency=low
+
+   * Fix access=no ...=yes (requires rebuild). Improve highway=primary.
+   * WinCE: Add untested DisplayOff option.
+   * WinCE: Add Portuguese translations.
+   * WinCE: Fix rendering of edits.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 09 Sep 2008 01:37:42 +0200
+
+openstreetmap-gosmore (10507) unstable; urgency=low
+
+   * Smaller .pak files. Render map with less clutter. Less gcc warings.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sat, 06 Sep 2008 00:00:48 +0200
+
+openstreetmap-gosmore (10495) unstable; urgency=low
+
+   * Ignore tags set during mass import of Japanese data.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 05 Sep 2008 13:54:04 +0200
+
+openstreetmap-gosmore (10465) unstable; urgency=low
+
+   * Update Mingw / msys port.
+   * Add -DLAMBERTUS to avoid rebuild seg fault.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 03 Sep 2008 23:06:20 +0200
+
+openstreetmap-gosmore (10318) unstable; urgency=low
+
+   * Fix seg fault during rebuild. Fix 'O' menu under GTK. Improve Pango layout.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 29 Aug 2008 22:53:42 +0200
+
+openstreetmap-gosmore (10309) unstable; urgency=low
+
+   * Added validation mode that highlights unnamed roads.
+   * Further validation tests can be introduced in future.
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Fri, 29 Aug 2008 14:51:40 +0200
+
+openstreetmap-gosmore (10292) unstable; urgency=low
+
+   * WinCE: Improved handling of resuming gosmore instance (hide wince controls)
+   * WinCE: Fixed starting position of non-fullscreen mode
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Fri, 29 Aug 2008 08:06:10 +0200
+
+openstreetmap-gosmore (10291) unstable; urgency=low
+
+   * Moved Pango stuff into the non-WinCE area to fix cegcc compiling
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Fri, 29 Aug 2008 07:28:10 +0200
+
+openstreetmap-gosmore (10290) unstable; urgency=low
+
+   * Added only-one-instance and non-fullscreen option to WinCE
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Fri, 29 Aug 2008 04:50:18 +0200
+
+openstreetmap-gosmore (10288) unstable; urgency=low
+
+   * GTK: Switch form cairo to pango in order to support Right-To-Left text.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 28 Aug 2008 23:21:45 +0200
+
+openstreetmap-gosmore (10286) unstable; urgency=low
+
+   * Fix trunk and trunk_link. Not oneways.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 28 Aug 2008 21:27:49 +0200
+
+openstreetmap-gosmore (10254) unstable; urgency=low
+
+   * WinCE: Apply patches from David Dean for non-fullscreen mode, autoreconnect,
+   *   having only one gosmore instance, and text with transparent background.
+   *   These may need it little bit more testing.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 27 Aug 2008 22:59:51 +0200
+
+openstreetmap-gosmore (10253) unstable; urgency=low
+
+   * Rules (styles) for elevation contours.
+   * Less clutter.
+   * Better translations.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 27 Aug 2008 22:49:34 +0200
+
+openstreetmap-gosmore (10088) unstable; urgency=low
+
+   * Added osmunda. Checking OSM data for routing problem by reading GPX files.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sat, 23 Aug 2008 22:25:18 +0200
+
+openstreetmap-gosmore (10074) unstable; urgency=low
+
+   * WinCE: Spanish & Slovenian translations
+   * Improve gentoo compatibility.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sat, 23 Aug 2008 00:25:37 +0200
+
+openstreetmap-gosmore (10073) unstable; urgency=low
+
+   * Updated icons and styles to josm-latest.
+   * Added Karlsruhe house number support.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 22 Aug 2008 22:53:25 +0200
+
+openstreetmap-gosmore (10060) unstable; urgency=low
+
+   * Move data access routines to new module.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 22 Aug 2008 16:46:48 +0200
+
+openstreetmap-gosmore (10043) unstable; urgency=low
+
+   * Fix broken roundabout support
+   * WinCE: Fix subsequent searching queries.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 21 Aug 2008 22:37:36 +0200
+
+openstreetmap-gosmore (9995) unstable; urgency=low
+
+   * Add man_made to enum for WinCE editing
+   * WinCE: Fix busy looping under WM5
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 20 Aug 2008 00:40:23 +0200
+
+openstreetmap-gosmore (9982) unstable; urgency=low
+
+   * Better rebuild with less open files
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 19 Aug 2008 16:11:47 +0200
+
+openstreetmap-gosmore (9974) unstable; urgency=low
+
+   * Add WHOLE_PLANET compiler switch
+   * Make HalfSegCmp stable.
+   * WinCE : Update translations
+   * WinCE : Add sports
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 19 Aug 2008 14:23:53 +0200
+
+openstreetmap-gosmore (9836) unstable; urgency=low
+
+   * Better 32 bit rebuild support.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 14 Aug 2008 20:22:37 +0200
+
+openstreetmap-gosmore (9829) unstable; urgency=low
+
+   * Free more memory during rebuild
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 14 Aug 2008 16:00:37 +0200
+
+openstreetmap-gosmore (9795) unstable; urgency=low
+
+   * Fix broken HEADLESS support.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 13 Aug 2008 20:58:00 +0200
+
+openstreetmap-gosmore (9781) unstable; urgency=low
+
+   * Bug fixes.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 13 Aug 2008 13:53:27 +0200
+
+openstreetmap-gosmore (9774) unstable; urgency=low
+
+   * Implement simple turn_restrictions.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 13 Aug 2008 12:46:52 +0200
+
+openstreetmap-gosmore (9734) unstable; urgency=low
+
+   * WinCE: Translations now comes from wiki, like RichardF did with Potlatch.
+   * WinCE: Fix cegcc compatibility
+   * Better verbal instructions.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 12 Aug 2008 19:24:01 +0200
+
+openstreetmap-gosmore (9694) unstable; urgency=low
+
+   * Fix floating point exception for some routes.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 12 Aug 2008 00:10:33 +0200
+
+openstreetmap-gosmore (9678) unstable; urgency=low
+
+   * Allow k=oneway, v=true
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Mon, 11 Aug 2008 18:39:41 +0200
+
+openstreetmap-gosmore (9677) unstable; urgency=low
+
+   * WinCE bug fixes.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Mon, 11 Aug 2008 17:18:04 +0200
+
+openstreetmap-gosmore (9625) unstable; urgency=low
+
+   * WinCE: Edits are now rendered just like .pak data
+   * WinCE: Support for editing on portrait screens. 
+   * WinCE: Editing of lots more map features. Notes supported.  
+   * WinCE: Save osm edits as YYMMDD-HHMMSS.osm and in same dir as .opt
+   * WinCE: Easily add Rd/St/Ave/Dr to names when editing.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sun, 10 Aug 2008 21:38:19 +0200
+
+openstreetmap-gosmore (9605) unstable; urgency=low
+
+   * Reduce icon clutter.
+   * Newer icon set.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sun, 10 Aug 2008 13:29:32 +0200
+
+openstreetmap-gosmore (9579) unstable; urgency=low
+
+   * cgi-bin : Output way type traveled.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 08 Aug 2008 21:45:46 +0200
+
+openstreetmap-gosmore (9578) unstable; urgency=low
+
+   * cgi-bin now classifies a node according to number of segments and
+   *   mini_roundabout / traffic_signal.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 08 Aug 2008 21:39:30 +0200
+
+openstreetmap-gosmore (9560) unstable; urgency=low
+
+   * Output street names in CGI mode.
+   * Rebuild : Place 'ref' just after name.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 08 Aug 2008 11:06:49 +0200
+
+openstreetmap-gosmore (9558) unstable; urgency=low
+
+   * Remove some compiler warnings.
+   * Support NMEA sentences with lon > 180 degrees
+   * WinCE : Add MenuKey option.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 08 Aug 2008 00:24:22 +0200
+
+openstreetmap-gosmore (9419) unstable; urgency=low
+
+   * Workaround for bug http://gcc.gnu.org/bugzilla/show_bug.cgi?id=36996
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 01 Aug 2008 12:14:38 +0200
+
+openstreetmap-gosmore (9282) unstable; urgency=low
+
+   * Roundabouts should now be verbalized correctly.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 24 Jul 2008 23:50:42 +0200
+
+openstreetmap-gosmore (9280) unstable; urgency=low
+
+   * WinCE: Utter commands "turnleft/right", "keepleft/right", "stop" and "uturn"
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 24 Jul 2008 20:27:07 +0200
+
+openstreetmap-gosmore (9264) unstable; urgency=low
+
+   * WinCE : Better fullscreen
+   * Experimental verbal commands
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 24 Jul 2008 00:19:19 +0200
+
+openstreetmap-gosmore (9247) unstable; urgency=low
+
+   * Sync elemstyles.xml with JOSM
+   * StartRoute now clears previous route.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 22 Jul 2008 22:27:14 +0200
+
+openstreetmap-gosmore (9229) unstable; urgency=low
+
+   * WinCE support of large (1GB ?) maps.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 22 Jul 2008 00:51:39 +0200
+
+openstreetmap-gosmore (9226) unstable; urgency=low
+
+   * WinCE version can now be compiled with cegcc.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Mon, 21 Jul 2008 21:39:31 +0200
+
+openstreetmap-gosmore (9177) unstable; urgency=low
+
+   * WinCE : Convert between UTF8 and UTF16 using builtin functions.
+   * WinCE : Fix &amp; bug
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sun, 20 Jul 2008 00:39:49 +0200
+
+openstreetmap-gosmore (9170) unstable; urgency=low
+
+   * WinCE: Add ShowTrace option.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sat, 19 Jul 2008 21:20:25 +0200
+
+openstreetmap-gosmore (9037) unstable; urgency=low
+
+   * WinCE : Rotate the map
+   * WinCE : Easier AddWayOrNode
+   * WinCE : QuickOptions
+   * Better detection of the way we are travelling along by using the motion vector
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 15 Jul 2008 15:04:25 +0200
+
+openstreetmap-gosmore (8832) unstable; urgency=low
+
+   * WinCE : Fix 'Cancel' after 'AddWayOrNode'. Better management of routing memory
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 08 Jul 2008 15:41:17 +0200
+
+openstreetmap-gosmore (8810) unstable; urgency=low
+
+   * Fix infinite loop in IncrementalSearch
+   * More names on ways for highzoom
+   * Better scale_max values
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Mon, 07 Jul 2008 13:37:53 +0200
+
+openstreetmap-gosmore (8791) unstable; urgency=low
+
+   * WinCE : Fix memory leak.
+   * WinCE : Show available memory when ShowC is 2.
+   * WinCE : Output k=name tag only when not empty.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sun, 06 Jul 2008 21:27:30 +0200
+
+openstreetmap-gosmore (8778) unstable; urgency=low
+
+   * Fix realtime routing bugs.
+   * Add small OSM editor for WinCE.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sun, 06 Jul 2008 02:03:16 +0200
+
+openstreetmap-gosmore (8766) unstable; urgency=low
+
+   * Fix broken GPX export under WinCE
+   * Add support for fast realtime recalculation of route when FollowGPSr.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sat, 05 Jul 2008 16:41:58 +0200
+
+openstreetmap-gosmore (8745) unstable; urgency=low
+
+   * Prepare for Debian packaging
+   * Abort on pak file version mismatch
+   * Rendering of icons less cluttered
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sat, 05 Jul 2008 00:59:44 +0200
+
+openstreetmap-gosmore (8642) unstable; urgency=low
+
+   * Don't hang when routing over things like highway=foot motorcar=yes
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 01 Jul 2008 22:29:42 +0200
+
+openstreetmap-gosmore (8628) unstable; urgency=low
+
+   * Fix bug with duplicates in search results.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 01 Jul 2008 10:25:18 +0200
+
+openstreetmap-gosmore (8619) unstable; urgency=low
+
+   * Fix xpm problem introduced earlier today
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Mon, 30 Jun 2008 21:20:50 +0200
+
+openstreetmap-gosmore (8618) unstable; urgency=low
+
+   * Fix Windows (MinGW) xpm read problem and distribute all DLLs
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Mon, 30 Jun 2008 21:14:02 +0200
+
+openstreetmap-gosmore (8546) unstable; urgency=low
+
+   * Now runs on SmartPhone 2003 emulator.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sat, 28 Jun 2008 14:57:46 +0200
+
+openstreetmap-gosmore (8528) unstable; urgency=low
+
+   * gosmore: Unify line endings.
+
+ -- Gabriel Ebner via osm-dev List <dev@openstreetmap.org>  Fri, 27 Jun 2008 21:04:07 +0200
+
+openstreetmap-gosmore (8523) unstable; urgency=low
+
+   * Fix WinCE follow problem
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 27 Jun 2008 16:22:31 +0200
+
+openstreetmap-gosmore (8516) unstable; urgency=low
+
+   * Better start location.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 27 Jun 2008 15:31:35 +0200
+
+openstreetmap-gosmore (8510) unstable; urgency=low
+
+   * Fix improved search function.
+   * Restored missing buttons.
+   * Try to find icons in various locations.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 27 Jun 2008 15:13:06 +0200
+
+openstreetmap-gosmore (8491) unstable; urgency=low
+
+   * Faster searching
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Thu, 26 Jun 2008 21:00:19 +0200
+
+openstreetmap-gosmore (8467) unstable; urgency=low
+
+   * Reorder ways during bbox rebuild for less cache misses.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 25 Jun 2008 23:13:28 +0200
+
+openstreetmap-gosmore (8441) unstable; urgency=low
+
+   * Many new options for WinCE : AnsiCodePage, ShowCoordinates
+   * Added the location bar under GTK.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Tue, 24 Jun 2008 18:09:22 +0200
+
+openstreetmap-gosmore (8352) unstable; urgency=low
+
+   * Make pak file path relative to gosm_arm.exe
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sat, 21 Jun 2008 18:55:04 +0200
+
+openstreetmap-gosmore (8344) unstable; urgency=low
+
+   * Added on-screen buttons for finger operation.
+   * Replaced NMEA recording with GPX recording.
+   * Added search dialog for Windows CE.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sat, 21 Jun 2008 15:32:37 +0200
+
+openstreetmap-gosmore (8034) unstable; urgency=low
+
+   * Fine tune scale_max
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sun, 01 Jun 2008 21:47:50 +0200
+
+openstreetmap-gosmore (8030) unstable; urgency=low
+
+   * Fix rebuild with tens of millions of nds
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sun, 01 Jun 2008 20:45:30 +0200
+
+openstreetmap-gosmore (8005) unstable; urgency=low
+
+   * Correct handling of juntion=roundabout
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 30 May 2008 15:30:39 +0200
+
+openstreetmap-gosmore (8002) unstable; urgency=low
+
+   * Fixed routing
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 30 May 2008 14:05:26 +0200
+
+openstreetmap-gosmore (7998) unstable; urgency=low
+
+   * Working A* routing
+   * If no route exist, a promising route will be displayed
+   * Route now displayed in thick red
+   * Tuned number of hash buckets
+   * Fixed rebuilding of lowzoom data.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 30 May 2008 02:40:19 +0200
+
+openstreetmap-gosmore (7923) unstable; urgency=low
+
+   * Windows (MinGW) port complete and remarkebly responsive !
+   * WinCE progress
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sun, 25 May 2008 10:48:58 +0200
+
+openstreetmap-gosmore (7901) unstable; urgency=low
+
+   * No longer links with gpsd, but will instead get the location using sockets
+   * and the internal NMEA parser.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 23 May 2008 23:28:06 +0200
+
+openstreetmap-gosmore (7896) unstable; urgency=low
+
+   * Changes :
+   * Support for OSM API 0.5
+   * Rebuild larger planets with less memory
+   * 2 pass rebuild for cutting a bbox
+   * Indexing and searching of non-name tags
+   * Search for nearest occurence of specific tags
+   * Rotated text
+   * Icons
+   * Polygons
+   * Low zoom
+   * Routing obeys more restrictions
+   * Work in progress :
+   * gpsd support
+   * WinCE port
+   * MinGW port
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 23 May 2008 18:42:28 +0200
+
+openstreetmap-gosmore (7895) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Fri, 23 May 2008 18:21:41 +0200
+
+openstreetmap-gosmore (4390) unstable; urgency=low
+
+   * Correct string length calculations in GetDirections(), to avoid writing past the allocated buffer.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sat, 01 Sep 2007 11:48:26 +0200
+
+openstreetmap-gosmore (3959) unstable; urgency=low
+
+   * Undo unwanted checkin.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 05 Aug 2007 20:15:02 +0200
+
+openstreetmap-gosmore (3958) unstable; urgency=low
+
+   * Mention memory requirements.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 05 Aug 2007 20:14:38 +0200
+
+openstreetmap-gosmore (3957) unstable; urgency=low
+
+   * Use +40% instead of %20, as the latter was not enough.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 05 Aug 2007 19:11:58 +0200
+
+openstreetmap-gosmore (3956) unstable; urgency=low
+
+   * Typo.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 05 Aug 2007 18:29:55 +0200
+
+openstreetmap-gosmore (3955) unstable; urgency=low
+
+   * Increase the limits with 20%.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 05 Aug 2007 18:28:05 +0200
+
+openstreetmap-gosmore (3937) unstable; urgency=low
+
+   * Use 'date' to generate the version number.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 05 Aug 2007 00:41:21 +0200
+
+openstreetmap-gosmore (3936) unstable; urgency=low
+
+   * Make sure to read long value using %ld.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 05 Aug 2007 00:22:01 +0200
+
+openstreetmap-gosmore (3931) unstable; urgency=low
+
+   * Include usage information.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sat, 04 Aug 2007 23:48:22 +0200
+
+openstreetmap-gosmore (3910) unstable; urgency=low
+
+   * Add 'dist' target to make tarball.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sat, 04 Aug 2007 21:09:18 +0200
+
+openstreetmap-gosmore (3600) unstable; urgency=low
+
+   * New clean target.  Improve install target.  Document the ROUTE_TEST option.  Make it easier to extend the list of warning flags used.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 15 Jul 2007 13:27:30 +0200
+
+openstreetmap-gosmore (3599) unstable; urgency=low
+
+   * Extend the README.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 15 Jul 2007 13:14:18 +0200
+
+openstreetmap-gosmore (3598) unstable; urgency=low
+
+   * Typo.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 15 Jul 2007 13:04:54 +0200
+
+openstreetmap-gosmore (3597) unstable; urgency=low
+
+   * Add install target.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 15 Jul 2007 13:03:02 +0200
+
+openstreetmap-gosmore (3596) unstable; urgency=low
+
+   * Add simple README with the URL to the home page.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 15 Jul 2007 13:01:14 +0200
+
+openstreetmap-gosmore (3595) unstable; urgency=low
+
+   * Fix endian issue when print time_t values.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 15 Jul 2007 13:00:20 +0200
+
+openstreetmap-gosmore (3594) unstable; urgency=low
+
+   * Build with more warnings enabled.
+
+ -- Petter Reinholdtsen via osm-dev List <dev@openstreetmap.org>  Sun, 15 Jul 2007 12:56:15 +0200
+
+openstreetmap-gosmore (3317) unstable; urgency=low
+
+   * New features:
+   * * speak directions using flite TTS engine if installed.
+   * * route for bikes or for cars.
+   * * route for fastest or shortest
+
+ -- rjmunro via osm-dev List <dev@openstreetmap.org>  Sun, 24 Jun 2007 03:07:16 +0200
+
+openstreetmap-gosmore (3316) unstable; urgency=low
+
+   * gosmoreNSW version of gosmore.
+
+ -- rjmunro via osm-dev List <dev@openstreetmap.org>  Sun, 24 Jun 2007 03:05:13 +0200
+
+openstreetmap-gosmore (3315) unstable; urgency=low
+
+   * gosmoreNameslessRoute version of gosmore.
+
+ -- rjmunro via osm-dev List <dev@openstreetmap.org>  Sun, 24 Jun 2007 03:04:36 +0200
+
+openstreetmap-gosmore (3314) unstable; urgency=low
+
+   * "gosmoreSlowRoute.cc" version of gosmore.
+
+ -- rjmunro via osm-dev List <dev@openstreetmap.org>  Sun, 24 Jun 2007 03:03:53 +0200
+
+openstreetmap-gosmore (3313) unstable; urgency=low
+
+   * Second version of Gosmore, labelled gosmoreQ. Added Makefile.
+
+ -- rjmunro via osm-dev List <dev@openstreetmap.org>  Sun, 24 Jun 2007 03:02:41 +0200
+
+openstreetmap-gosmore (3312) unstable; urgency=low
+
+   * Initial version of gosmore cc code.
+
+ -- rjmunro via osm-dev List <dev@openstreetmap.org>  Sun, 24 Jun 2007 03:00:55 +0200
+
+openstreetmap-gosmore (3311) unstable; urgency=low
+
+   * Directory for Nic Roets "gosmore" mapping application.
+
+ -- rjmunro via osm-dev List <dev@openstreetmap.org>  Sun, 24 Jun 2007 02:59:57 +0200
+

@@ -61,7 +61,7 @@ public class CloseAction {
 			Main.map.mapView.repaint();
 		} else {
 			JOptionPane.showMessageDialog(Main.parent,
-					tr("An error occured: {0}", new Object[] {result}),
+					tr("An error occurred: {0}", new Object[] {result}),
 					tr("Error"),
 					JOptionPane.ERROR_MESSAGE);
 		}

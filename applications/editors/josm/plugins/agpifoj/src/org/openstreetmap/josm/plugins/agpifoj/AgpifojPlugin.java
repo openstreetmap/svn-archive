@@ -33,7 +33,7 @@ public class AgpifojPlugin extends Plugin {
     private class Action extends JosmAction {
 
         public Action() {
-            super(tr("Open images with AgPifoJ"),
+            super(tr("Open images with AgPifoJ..."),
                   "agpifoj-open",
                   tr("Load set of images as a new layer."),
                   null, false);

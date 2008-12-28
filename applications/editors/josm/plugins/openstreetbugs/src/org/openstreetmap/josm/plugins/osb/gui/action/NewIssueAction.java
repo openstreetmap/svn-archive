@@ -119,7 +119,7 @@ public class NewIssueAction extends OsbAction implements MouseListener {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(Main.parent,
-						tr("An error occured: {0}", new Object[] {result}),
+						tr("An error occurred: {0}", new Object[] {result}),
 						tr("Error"),
 						JOptionPane.ERROR_MESSAGE);
 			}

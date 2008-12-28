@@ -1674,7 +1674,7 @@ Split tracks it they have gaps of more than
  - 1 Km
  - 200 Km/h
 
-=item B<--filter-against-osm> |  B<--osm>
+=item B<--filter-against-osm>=[<Filename>|mapnik] |  B<--osm>
 
 This loads the osm.csv and checks if the 
 track-points already exist as an osm-segment.
@@ -1696,6 +1696,11 @@ The Filename provided can be a csv-file or a standard osm-file.
 
 you can use --osm=0 in combination with --filter-all to not let osm-track-filter 
 check against osm Data.
+
+If you use the string "mapnik" osmtrackfilter will try to compare against the 
+local installed mapnik database. This Feature is still in development and 
+!!!!!!! NOT WORKING YET!!!!!!!!. But the first development lines are already 
+included for easier handling the sourcecode.
 
 =item B<--filter-dup-seg>
 

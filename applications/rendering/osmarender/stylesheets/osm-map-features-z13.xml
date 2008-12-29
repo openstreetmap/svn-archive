@@ -150,43 +150,43 @@
 			<area class="waterway-riverbank"/>
 		</rule>
 		<rule e="way" k="waterway" v="river">
-			<line class="waterway-casing waterway-river-casing"/>
+			<line class="waterway-casing waterway-river-casing" width-scale-factor="1" honor-width="yes" minimum-width="1" maximum-width="100"/>
 		</rule>
 		<rule e="way" k="waterway" v="stream">
-			<line class="waterway-casing waterway-stream-casing"/>
+			<line class="waterway-casing waterway-stream-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.4" maximum-width="40"/>
 		</rule>
 		<rule e="way" k="waterway" v="canal">
-			<line class="waterway-casing waterway-canal-casing"/>
+			<line class="waterway-casing waterway-canal-casing" width-scale-factor="1" honor-width="yes" minimum-width="1" maximum-width="100"/>
 		</rule>
 		<rule e="way" k="waterway" v="drain">
-			<line class="waterway-casing waterway-drain-casing"/>
+			<line class="waterway-casing waterway-drain-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.72" maximum-width="70"/>
 		</rule>
 		<rule e="way" k="tunnel" v="yes">
 			<rule e="way" k="waterway" v="river">
-				<line class="waterway-core waterway-river-tunnel-core"/>
+				<line class="waterway-core waterway-river-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="1" maximum-width="100"/>
 			</rule>
 			<rule e="way" k="waterway" v="stream">
-				<line class="waterway-core waterway-stream-tunnel-core"/>
+				<line class="waterway-core waterway-stream-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.4" maximum-width="40"/>
 			</rule>
 			<rule e="way" k="waterway" v="canal">
-				<line class="waterway-core waterway-canal-tunnel-core"/>
+				<line class="waterway-core waterway-canal-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.8" maximum-width="80"/>
 			</rule>
 			<rule e="way" k="waterway" v="drain">
-				<line class="waterway-core waterway-drain-tunnel-core"/>
+				<line class="waterway-core waterway-drain-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.56" maximum-width="56"/>
 			</rule>
 		</rule>
 		<else>
 			<rule e="way" k="waterway" v="river">
-				<line class="waterway-core waterway-river-core"/>
+				<line class="waterway-core waterway-river-core" width-scale-factor="1" honor-width="yes" minimum-width="1" maximum-width="100"/>
 			</rule>
 			<rule e="way" k="waterway" v="stream">
-				<line class="waterway-core waterway-stream-core"/>
+				<line class="waterway-core waterway-stream-core" width-scale-factor="1" honor-width="yes" minimum-width="0.4" maximum-width="40"/>
 			</rule>
 			<rule e="way" k="waterway" v="canal">
-				<line class="waterway-core waterway-canal-core"/>
+				<line class="waterway-core waterway-canal-core" width-scale-factor="1" honor-width="yes" minimum-width="0.8" maximum-width="80"/>
 			</rule>
 			<rule e="way" k="waterway" v="drain">
-				<line class="waterway-core waterway-drain-core"/>
+				<line class="waterway-core waterway-drain-core" width-scale-factor="1" honor-width="yes" minimum-width="0.56" maximum-width="56"/>
 			</rule>
 		</else>
 		<rule e="way" k="waterway" v="dock">

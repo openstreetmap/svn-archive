@@ -1290,9 +1290,9 @@
 			.waterway-river-core            { stroke-width: 6px; }
 			.waterway-river-tunnel-core     { stroke-width: 4px; stroke-dasharray: 9, 9; }
 			
-			.waterway-stream-casing         { stroke-width: 4px; }
-			.waterway-stream-core           { stroke-width: 4px; }
-			.waterway-stream-tunnel-core    { stroke-width: 3px; stroke-dasharray: 6, 6; }
+			.waterway-stream-casing         { stroke-width: 2px; }
+			.waterway-stream-core           { stroke-width: 2px; }
+			.waterway-stream-tunnel-core    { stroke-width: 1.5px; stroke-dasharray: 6, 6; }
 			
 			.waterway-canal-casing          { stroke-width: 6px; }
 			.waterway-canal-core            { stroke-width: 6px; }

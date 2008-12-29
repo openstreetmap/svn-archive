@@ -1490,10 +1490,10 @@ msgstr[1] ""
 #, java-format
 msgid "{0} point"
 msgid_plural "{0} points"
-msgstr[0] "točk"
-msgstr[1] "točka"
-msgstr[2] "točki"
-msgstr[3] "točke"
+msgstr[0] "{0} točk"
+msgstr[1] "{0} točka"
+msgstr[2] "{0} točki"
+msgstr[3] "{0} točke"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:292
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:111
@@ -10822,27 +10822,3 @@ msgstr ""
 #: trans_presets.java:2898
 msgid "Edit Cliff"
 msgstr ""
-
-#~ msgid "Development version. Unknown revision."
-#~ msgstr "Razvojna različica. Neznana izdaja."
-
-#~ msgid "Java OpenStreetMap Editor Version {0}"
-#~ msgstr "Urejevalnik Java OpenStreetMap, različica {0}"
-
-#~ msgid "NullPointerException. Possible some missing tags."
-#~ msgstr "NullPointerException. Najbrž manjka kakšna oznaka."
-
-#~ msgid "Remove \"{0}\" for"
-#~ msgstr "Odstrani \"{0}\" iz"
-
-#~ msgid "Set {0}={1} for"
-#~ msgstr "Nastavi {0}={1} za"
-
-#~ msgid "JOSM, the Java OpenStreetMap editor"
-#~ msgstr "JOSM, Javanski urejevalnik za OpenStreetMap"
-
-#~ msgid "Java OpenStreetMap - Editor"
-#~ msgstr "Javanski urejevalnik za OpenStreetMap"
-
-#~ msgid "JOSM - Java OpenStreetMap Editor"
-#~ msgstr "JOSM - Javanski urejevalnik za OpenStreetMap"

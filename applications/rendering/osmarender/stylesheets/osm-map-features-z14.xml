@@ -1631,9 +1631,9 @@
 			.waterway-river-name-casing             { font-size: 6px; stroke-width: 0.4px;}
 			.waterway-river-name-core               { font-size: 6px; }
 			
-			.waterway-stream-casing                 { stroke-width: 2px; }
-			.waterway-stream-core                   { stroke-width: 2px; }
-			.waterway-stream-tunnel-core            { stroke-width: 1.5px; stroke-dasharray: 3, 3; }
+			.waterway-stream-casing                 { stroke-width: 1px; }
+			.waterway-stream-core                   { stroke-width: 1px; }
+			.waterway-stream-tunnel-core            { stroke-width: 0.75px; stroke-dasharray: 3, 3; }
 			.waterway-stream-name-casing            { font-size: 3px; stroke-width: 0.2px;}
 			.waterway-stream-name-core              { font-size: 3px; }
 			

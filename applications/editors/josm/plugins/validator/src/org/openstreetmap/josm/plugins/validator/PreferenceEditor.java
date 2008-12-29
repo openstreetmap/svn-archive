@@ -67,7 +67,7 @@ public class PreferenceEditor implements PreferenceSetting
 		testPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
 		prefUseIgnore = new JCheckBox(tr("Use ignore list."), Main.pref.getBoolean(PREF_USE_IGNORE, true));
-		prefUseIgnore.setToolTipText(tr("Use the use ignore list to suppress warnings."));
+		prefUseIgnore.setToolTipText(tr("Use the ignore list to suppress warnings."));
 		testPanel.add(prefUseIgnore, GBC.eol());
 
 		prefUseLayer = new JCheckBox(tr("Use error layer."), Main.pref.getBoolean(PREF_LAYER, true));

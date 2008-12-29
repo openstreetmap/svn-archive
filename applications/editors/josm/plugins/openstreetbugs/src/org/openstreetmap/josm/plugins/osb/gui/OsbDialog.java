@@ -89,8 +89,8 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 	private JToggleButton newIssue = new JToggleButton();
 	
 	public OsbDialog(final OsbPlugin plugin) {
-		super(tr("Open OpenStreetBugs"), "icon_error22", 
-				tr("Open the OpenStreetBugs window and activates the automatic download"),
+		super(tr("Open OpenStreetBugs"), "icon_error22",
+				tr("Opens the OpenStreetBugs window and activates the automatic download"),
 				Shortcut.registerShortcut(
 						"view:openstreetbugs",
 						tr("Toggle: {0}", tr("Open OpenStreetBugs")),

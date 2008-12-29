@@ -584,7 +584,8 @@ sub splitptn($) {
 		last unless($rr);
 		push @relations, [$rr, gets($nd)];
 	    }
-	    while (my $s = gets($nd)) {
+	    my $s;
+	    while (defined ($s = gets($nd)) && ($s != "")) {
 		push @tv, $s, gets($nd);
 	    }
 	}
@@ -601,17 +602,17 @@ sub splitptn($) {
 		$nnoff = tell $nnd;
 		foreach my $n (@nodes) {
 		    my @n = @$n;
-		    print $nnd pack("N",$n[0]).$n[1];
+		    print $nnd pack("N",$n[0]).$n[1]."\0";
 		}
 		print $nnd pack "N", 0;
 		foreach my $w (@ways) {
 		    my @w = @$w;
-		    print $nnd pack("N",$w[0]).$w[1];
+		    print $nnd pack("N",$w[0]).$w[1]."\0";
 		}
 		print $nnd pack "N", 0;
 		foreach my $r (@relations) {
 		    my @r = @$r;
-		    print $nnd pack("N",$r[0]).$r[1];
+		    print $nnd pack("N",$r[0]).$r[1]."\0";
 		}
 		print $nnd pack "N", 0;
 		foreach my $s (@tv) {
@@ -654,17 +655,17 @@ sub splitptn($) {
 	    }
 	    foreach my $n (@nodes) {
 		my @n = @$n;
-		print $nnd pack("N",$n[0]).$n[1];
+		print $nnd pack("N",$n[0]).$n[1]."\0";
 	    }
 	    print $nnd pack "N", 0;
 	    foreach my $w (@ways) {
 		my @w = @$w;
-		print $nnd pack("N",$w[0]).$w[1];
+		print $nnd pack("N",$w[0]).$w[1]."\0";
 	    }
 	    print $nnd pack "N", 0;
 	    foreach my $r (@relations) {
 		my @r = @$r;
-		print $nnd pack("N",$r[0]).$r[1];
+		print $nnd pack("N",$r[0]).$r[1]."\0";
 	    }
 	    print $nnd pack "N", 0;
 	    foreach my $s (@tv) {

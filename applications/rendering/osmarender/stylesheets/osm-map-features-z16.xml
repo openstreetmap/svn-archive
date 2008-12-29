@@ -630,7 +630,7 @@
 				<rule e="way" k="highway" v="service">
 					<line class="highway-casing highway-service-casing"/>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor|road">
+				<rule e="way" k="highway" v="unclassified|residential|minor|road|ford">
 					<line class="highway-casing highway-unclassified-casing"/>
 				</rule>
 				<rule e="way" k="highway" v="living_street">
@@ -780,6 +780,9 @@
 					<rule e="way" k="bridge" v="yes|true">
 						<line class="railway-core railway-rail-1-core"/>
 					</rule>
+				</rule>
+				<rule e="way" k="highway" v="ford">
+					<line class="highway-core highway-ford-core" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="raceway">
 					<rule e="way" k="use_status" v="~">
@@ -2149,6 +2152,7 @@
 			.highway-unclassified-casing            { stroke-width: 2.5px;  stroke: #707070; }
 			.highway-unclassified-area-casing       { stroke-width: 0.25px; }
 			.highway-unclassified-core              { stroke-width: 2.25px;   stroke: #ffffff; }
+			.highway-ford-core                      { stroke-width: 2.25px;   stroke: #b5d6f1; stroke-linecap: butt; }
 			.highway-unclassified-area              { fill: #ffffff; }
 			.highway-unclassified-name              { stroke-width: 0px;     font-size: 2.5px; }
 			.highway-unclassified-ref               { stroke-width: 0px;     font-size: 3px; }

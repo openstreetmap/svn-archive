@@ -89,7 +89,7 @@ public class PluginManagerPreference implements PreferenceSetting {
         JButton addSite = new JButton(tr("Add Site"));
         addSite.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                String siteUrl = JOptionPane.showInputDialog(Main.parent, tr("Update Site Url"));
+                String siteUrl = JOptionPane.showInputDialog(Main.parent, tr("Update Site URL"));
                 if (siteUrl == null)
                     return;
                 SiteDescription site;
@@ -100,7 +100,7 @@ public class PluginManagerPreference implements PreferenceSetting {
                   site = new SiteDescription(siteUrl);
                   siteListModel.addElement(site);
                 } catch(MalformedURLException mue) {
-                    JOptionPane.showMessageDialog(Main.parent, tr("Invalid Url"), tr("Error"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.parent, tr("Invalid URL"), tr("Error"), JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }

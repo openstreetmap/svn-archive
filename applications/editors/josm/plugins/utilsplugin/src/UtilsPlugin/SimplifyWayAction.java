@@ -61,8 +61,8 @@ public class SimplifyWayAction extends JosmAction {
                         }
                         if (!isInsideOneBoundingBox) {
                             int option = JOptionPane.showConfirmDialog(Main.parent,
-                                    tr("The selected way(s) have nodes outside of the downloaded data region."
-                                            + "This can lead to nodes beeing deleted accidentially.\n"
+                                    tr("The selected way(s) have nodes outside of the downloaded data region.\n"
+                                            + "This can lead to nodes being deleted accidentally.\n"
                                             + "Are you really sure to continue?"),
                                     tr("Please abort if you are not sure"), JOptionPane.YES_NO_CANCEL_OPTION,
                                     JOptionPane.WARNING_MESSAGE);

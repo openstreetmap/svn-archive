@@ -106,7 +106,7 @@ public class DuplicateWayAction extends MapMode implements
 					if (last != null) {
 						if (!seg.from.eastNorth.equals(last)) {
 							JOptionPane.showMessageDialog(Main.parent,
-							        tr("Can't duplicate unnordered way."));
+							        tr("Can't duplicate unordered way."));
 							return;
 						}
 					}

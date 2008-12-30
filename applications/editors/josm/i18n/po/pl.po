@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-28 20:02+0100\n"
+"POT-Creation-Date: 2008-12-30 14:09+0100\n"
 "PO-Revision-Date: 2008-12-28 11:02+0000\n"
 "Last-Translator: Piotr Gorski <piotr@prnet.pl>\n"
 "Language-Team: Polish <josm-lang-pl@googlegroups.com>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2008-12-28 18:47+0000\n"
+"X-Launchpad-Export-Date: 2008-12-30 12:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: POLAND\n"
 "X-Poedit-Language: Polish\n"
@@ -136,13 +136,10 @@ msgid "Include your steps to get to the error (as detailed as possible)!"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:116
-#, fuzzy
 msgid ""
 "Try updating to the newest version of JOSM and all plugin before reporting a "
 "bug."
 msgstr ""
-"Postaraj się zaintalować najnowszą wersję tej wtyczki przed zgłaszaniem "
-"błędu."
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:117
 msgid "Be sure to include the following information:"
@@ -259,9 +256,9 @@ msgstr "Przesyłane: {0} {1} (id: {2}) {3}% {4}/{5} (pozostało {6})..."
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:69
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:64
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:122
-#, fuzzy, java-format
+#, java-format
 msgid "An error occurred: {0}"
-msgstr "Wystąpił błąd: {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:189
 msgid "Opening changeset..."
@@ -430,7 +427,7 @@ msgstr "Zakładki"
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:75
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:609
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:52
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:159
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:146
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:89
 #: ../core/src/org/openstreetmap/josm/command/AddCommand.java:67
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:427
@@ -692,7 +689,7 @@ msgstr "Plik"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:614
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:90
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:61
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:166
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:153
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:107
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:86
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:106
@@ -896,7 +893,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:64
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:98
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:74
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:176
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:163
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:115
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:286
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:20
@@ -2073,62 +2070,62 @@ msgid "When saving, keep backup files ending with a ~"
 msgstr ""
 "Podczas zapisywania, pozostawia kopie zapasowe pliku dodając ~ do nazwy"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:110
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:97
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:208
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:172
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:141
 msgid "Plugins"
 msgstr "Wtyczki"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:110
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:97
 msgid "Configure available plugins."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:115
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:102
 msgid "Download List"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:121
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:108
 #, java-format
 msgid "Downloaded plugin information from {0} site"
 msgid_plural "Downloaded plugin information from {0} sites"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:124
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:111
 msgid "No plugin information found."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:130
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:219
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:117
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:206
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:51
 msgid "Update"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:139
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:126
 msgid "Configure Sites ..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:152
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:161
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:172
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:139
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:148
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:159
 msgid "Add either site-josm.xml or Wiki Pages."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:169
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:179
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:156
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:166
 msgid "Please select an entry."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:186
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:173
 msgid "Configure Plugin Sites"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:215
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:202
 msgid "All installed plugins are up to date."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:218
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:205
 #, java-format
 msgid ""
 "Update the following plugins:\n"
@@ -2136,8 +2133,8 @@ msgid ""
 "{0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:250
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:258
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:241
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:249
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:106
 #: trans_presets.java:301 trans_presets.java:302 trans_presets.java:303
 #: trans_presets.java:304 trans_presets.java:305 trans_presets.java:306
@@ -2152,21 +2149,21 @@ msgstr ""
 msgid "unknown"
 msgstr "nieznany"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:264
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:255
 #, java-format
 msgid "{0}: Version {1}{2}"
 msgstr "{0}: Wersja {1}{2}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:268
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:263
 msgid "Plugin bundled with JOSM"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:269
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:268
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:167
 msgid "no description available"
 msgstr "brak opisu"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:283
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:295
 #, java-format
 msgid ""
 "Plugin archive already available. Do you want to download current version by "
@@ -2175,22 +2172,22 @@ msgid ""
 "{0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:284
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:296
 msgid "Plugin already exists"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:287
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:292
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:299
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:304
 #, java-format
 msgid "Error deleting plugin file: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:335
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:347
 #, java-format
 msgid "Error reading plugin information file: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:363
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:375
 #, java-format
 msgid ""
 "Download the following plugins?\n"
@@ -2201,7 +2198,7 @@ msgstr ""
 "\n"
 "{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:364
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:376
 msgid "Download missing plugins"
 msgstr "Pobierz brakujące wtyczki"
 
@@ -2861,9 +2858,9 @@ msgid "File not found"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginException.java:18
-#, fuzzy, java-format
+#, java-format
 msgid "An error occurred in plugin {0}"
-msgstr "Wystąpił błąd: {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:42
 msgid "Update Plugins"
@@ -3082,11 +3079,11 @@ msgstr "Wysłanie preferencji nie powiodło się. Powód: {0}"
 msgid "Could not load preferences from server."
 msgstr "Pobranie preferencji z serwera nie powiodło się."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:328
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:571
 msgid "untagged"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:329
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:572
 msgid "text"
 msgstr "tekst"
 
@@ -4789,7 +4786,7 @@ msgid "Open OpenStreetBugs"
 msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:93
-msgid "Open the OpenStreetBugs window and activates the automatic download"
+msgid "Opens the OpenStreetBugs window and activates the automatic download"
 msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:113
@@ -5326,7 +5323,7 @@ msgid "Use ignore list."
 msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:70
-msgid "Use the use ignore list to suppress warnings."
+msgid "Use the ignore list to suppress warnings."
 msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:73
@@ -6138,12 +6135,12 @@ msgstr "Proszę zaznaczyć przynajmniej jedną drogę do uproszczenia."
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:87
 #, java-format
-msgid ""
-"The selection contains {0} way. Are you sure you want to simplify them all?"
+msgid "The selection contains {0} way. Are you sure you want to simplify it?"
 msgid_plural ""
 "The selection contains {0} ways. Are you sure you want to simplify them all?"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:90
 msgid "Are you sure?"
@@ -6756,7 +6753,7 @@ msgid "footway with tag foot"
 msgstr ""
 
 #: trans_validator.java:54
-msgid "seperate cycleway as lane on a cycleway"
+msgid "separate cycleway as lane on a cycleway"
 msgstr ""
 
 #: trans_validator.java:55
@@ -10825,18 +10822,6 @@ msgstr "klif"
 msgid "Edit Cliff"
 msgstr "Edycja klifu"
 
-#~ msgid "Development version. Unknown revision."
-#~ msgstr "Wersja rozwojowa. Nieznane wydanie."
-
-#~ msgid ""
-#~ "<html>Please report a ticket at {0}<br>Include your steps to get to the "
-#~ "error (as detailed as possible)!<br>Be sure to include the following "
-#~ "information:</html>"
-#~ msgstr ""
-#~ "<html>Zgłoś proszę błąd na stronie {0}<br>Opisz w jakich okolicznościach "
-#~ "wystąpił ten błąd (tak dokładnie jak to możliwe)!<br>Do zgłoszenia dołącz "
-#~ "poniższą informację:</html>"
-
 #~ msgid "Java OpenStreetMap Editor Version {0}"
 #~ msgstr "Wersja edytora Java OpenStreetMap: {0}"
 
@@ -10852,5 +10837,17 @@ msgstr "Edycja klifu"
 #~ msgid "Java OpenStreetMap - Editor"
 #~ msgstr "Java OpenStreetMap - Edytor"
 
+#~ msgid ""
+#~ "<html>Please report a ticket at {0}<br>Include your steps to get to the "
+#~ "error (as detailed as possible)!<br>Be sure to include the following "
+#~ "information:</html>"
+#~ msgstr ""
+#~ "<html>Zgłoś proszę błąd na stronie {0}<br>Opisz w jakich okolicznościach "
+#~ "wystąpił ten błąd (tak dokładnie jak to możliwe)!<br>Do zgłoszenia dołącz "
+#~ "poniższą informację:</html>"
+
 #~ msgid "Edit Marsh"
 #~ msgstr "Edycja bagna"
+
+#~ msgid "Development version. Unknown revision."
+#~ msgstr "Wersja rozwojowa. Nieznane wydanie."

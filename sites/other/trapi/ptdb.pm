@@ -585,7 +585,7 @@ sub splitptn($) {
 		push @relations, [$rr, gets($nd)];
 	    }
 	    my $s;
-	    while (defined ($s = gets($nd)) && ($s != "")) {
+	    while (defined ($s = gets($nd)) && ($s ne "")) {
 		push @tv, $s, gets($nd);
 	    }
 	}

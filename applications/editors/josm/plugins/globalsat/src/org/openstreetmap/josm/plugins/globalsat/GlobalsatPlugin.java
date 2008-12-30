@@ -109,7 +109,7 @@ public class GlobalsatPlugin extends Plugin {
     class GlobalsatImportAction extends JosmAction{
         public GlobalsatImportAction(){
             super(tr("Globalsat Import"), "globalsatImport",
-            tr("Import Data from Globalsat Datalogger DG100 into GPXLayer."),
+            tr("Import Data from Globalsat Datalogger DG100 into GPX layer."),
             Shortcut.registerShortcut("menu:globalsatimport", tr("Menu: {0}", tr("Globalsat Import")),
             KeyEvent.VK_I, Shortcut.GROUP_MENU), false);
         }

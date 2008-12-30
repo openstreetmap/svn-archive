@@ -253,7 +253,7 @@ private void OkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         if(Main.map == null || Main.map.mapView == null ||Main.map.mapView.getActiveLayer() == null ||
                 !(Main.map.mapView.getActiveLayer() instanceof GpxLayer)){
                 JOptionPane.showMessageDialog(Main.parent,
-                tr("No GpxLayer selected. Cannot upload a trace.")
+                tr("No GPX layer selected. Cannot upload a trace.")
                 );
                 return;
         }

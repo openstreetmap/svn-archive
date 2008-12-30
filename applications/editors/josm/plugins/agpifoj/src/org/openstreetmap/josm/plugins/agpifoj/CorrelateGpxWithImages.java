@@ -440,7 +440,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         cbGpx = new JComboBox(gpxLst);
         panelCb.add(cbGpx);
         
-        JButton buttonOpen = new JButton(tr("Open an other GPXtrace"));
+        JButton buttonOpen = new JButton(tr("Open another GPX trace"));
         buttonOpen.setIcon(ImageProvider.get("agpifoj-open"));
         buttonOpen.addActionListener(new LoadGpxDataActionListener());
         

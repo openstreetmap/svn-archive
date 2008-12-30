@@ -37,8 +37,8 @@ public class Help_WMSmenuAction extends JosmAction {
 			"layers=global_mosaic&styles=&srs=EPSG:4326&\n"+
 			"format=image/jpeg \n\n"+
 			
-			"For Metacartas Map Rectifier http://labs.metacarta.com/rectifier/ , you only need to input the relevant 'id'.\n" +
-			"To add a Metacarta Map Rectifer menu item, manually create the url like in this example," +
+			"For Metacarta's Map Rectifier http://labs.metacarta.com/rectifier/ , you only need to input the relevant 'id'.\n" +
+			"To add a Metacarta Map Rectifier menu item, manually create the URL like in this example," +
 			"replacing 73 with your image id: \n" +
 			"http://labs.metacarta.com/rectifier/wms.cgi?id=73\n" +
 			"&srs=EPSG:4326&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png\n" +

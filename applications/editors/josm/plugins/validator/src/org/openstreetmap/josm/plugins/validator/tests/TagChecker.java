@@ -478,7 +478,7 @@ public class TagChecker extends Test
 		Sources.setMinimumSize(new Dimension(300,50));
 		Sources.setVisibleRowCount(3);
 
-		Sources.setToolTipText(tr("The sources (url or filename) of spell check (see http://wiki.openstreetmap.org/index.php/User:JLS/speller) or tag checking data files."));
+		Sources.setToolTipText(tr("The sources (URL or filename) of spell check (see http://wiki.openstreetmap.org/index.php/User:JLS/speller) or tag checking data files."));
 		addSrcButton.setToolTipText(tr("Add a new source to the list."));
 		editSrcButton.setToolTipText(tr("Edit the selected source."));
 		deleteSrcButton.setToolTipText(tr("Delete the selected source from the list."));

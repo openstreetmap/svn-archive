@@ -107,7 +107,7 @@ public class WMSLayer extends Layer {
 
 	@Override public String getToolTipText() {
 		if(startstop.isSelected())
-			return tr("WMS layer ({0}), automaticaly downloading in zoom {1}", name, resolution);
+			return tr("WMS layer ({0}), automatically downloading in zoom {1}", name, resolution);
 		else
 			return tr("WMS layer ({0}), downloading in zoom {1}", name, resolution);
 	}

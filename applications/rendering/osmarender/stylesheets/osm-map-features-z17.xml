@@ -1829,6 +1829,12 @@
 		<rule e="way" k="amenity" v="bank">
 			<areaSymbol ref="bank" position="center"/>
 		</rule>
+		<rule e="node" k="amenity" v="atm">
+			<symbol ref="atm" position="center"/>
+		</rule>
+		<rule e="way" k="amenity" v="atm">
+			<areaSymbol ref="atm" position="center"/>
+		</rule>
 		
 		<!-- Leisure symbols -->
 		<rule e="node" k="leisure" v="golf_course">
@@ -2146,10 +2152,12 @@
 				<text k="name" class="place-caption peak-caption" dy="-1.5px" layer="5"/>
 				<text k="elevation" class="place-caption" font-size="1px" dy="2.0px" layer="5"/>
 			</rule>
-                        <rule e="way" k="amenity" v="bank">
-                                <areaSymbol ref="bank" position="center"/>
-                        </rule>
-			
+			<rule e="way" k="amenity" v="bank">
+				<areaSymbol ref="bank" position="center"/>
+			</rule>
+			<rule e="way" k="amenity" v="atm">
+				<areaSymbol ref="atm" position="center"/>
+			</rule>
 			<rule e="node" k="place" v="islet" layer="5">
 				<text k="name" class="place-caption islet-caption" layer="5"/>
 			</rule>
@@ -2214,7 +2222,7 @@
 				<text k="name" class="caption-casing generic-caption-casing" dy="-3px" layer="5"/>
 				<text k="name" class="caption-core generic-caption-core" dy="-3px" layer="5"/>
 			</rule>
-			<rule e="node" k="amenity" v="restaurant|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|bus_station" layer="5">
+			<rule e="node" k="amenity" v="restaurant|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bus_station" layer="5">
 				<text k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
 				<text k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
 			</rule>
@@ -2270,14 +2278,14 @@
 			</else>
 		</rule>
 		<rule e="way" k="landuse|military" v="*" layer="5">
-            <rule e="way" k="amenity|shop" v="school|college|university|restaurant|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|bus_station" />
+            <rule e="way" k="amenity|shop" v="school|college|university|restaurant|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bus_station" />
             <else>
                 <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
 			    <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle"
                 startOffset="50%" layer="5"/>
             </else>
 		</rule>
-		<rule e="way" k="amenity|shop" v="school|college|university|restaurant|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|bus_station|fuel" layer="5">
+		<rule e="way" k="amenity|shop" v="school|college|university|restaurant|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bus_station|fuel" layer="5">
 			<areaText k="name" class="caption-casing generic-caption-casing" dy='-2.5px' text-anchor='middle' startOffset='50%' layer="5"/>
 			<areaText k="name" class="caption-core generic-caption-core" dy='-2.5px' text-anchor='middle' startOffset='50%' layer="5"/>
 		</rule>

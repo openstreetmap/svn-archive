@@ -186,9 +186,6 @@
 		</rule>
 		
 		<!-- Waterways -->
-		<rule e="way" k="waterway" v="riverbank">
-			<area class="waterway-riverbank"/>
-		</rule>
 		<rule e="way" k="waterway" v="river">
 			<line class="waterway-casing waterway-river-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.25" maximum-width="25"/>
 		</rule>
@@ -243,6 +240,9 @@
 		</rule>
 		<rule e="way" k="landuse" v="basin">
 			<area class="natural-water"/>
+		</rule>
+		<rule e="way" k="waterway" v="riverbank">
+			<area class="waterway-riverbank"/>
 		</rule>
 		
 		<!-- Highway area casings -->

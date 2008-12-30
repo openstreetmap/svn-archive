@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-28 20:02+0100\n"
-"PO-Revision-Date: 2008-12-28 18:27+0000\n"
+"POT-Creation-Date: 2008-12-30 14:09+0100\n"
+"PO-Revision-Date: 2008-12-30 12:43+0000\n"
 "Last-Translator: Susanna Björverud <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-12-28 18:47+0000\n"
+"X-Launchpad-Export-Date: 2008-12-30 12:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:448
@@ -25,9 +25,9 @@ msgid ""
 "because the shortcut is already taken by the action ''{3}'' ({4}).\n"
 "\n"
 msgstr ""
-"Det gick inte att tilldela snabbtangenten ''{0}'' till handlingen "
+"Det gick inte att tilldela kortkommandot ''{0}'' till handlingen "
 "''{1}'' ({2})\n"
-"eftersom denna snabbtangent redan används för handlingen ''{3}'' ({4}).\n"
+"eftersom detta kortkommando redan används för handlingen ''{3}'' ({4}).\n"
 "\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:453
@@ -35,7 +35,7 @@ msgid ""
 "This action will have no shortcut.\n"
 "\n"
 msgstr ""
-"Denna handling kommer sakna snabbtangent.\n"
+"Denna handling kommer sakna kortkommando.\n"
 "\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:455
@@ -44,12 +44,12 @@ msgid ""
 "Using the shortcut ''{0}'' instead.\n"
 "\n"
 msgstr ""
-"Använder snabbtangenten ''{0}'' istället.\n"
+"Använder kortkommandot ''{0}'' istället.\n"
 "\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:457
 msgid "(Hint: You can edit the shortcuts in the preferences.)"
-msgstr "(Tips: Du kan själv välja snabbtangenter i inställningarna.)"
+msgstr "(Tips: Du kan själv välja kortkommandon i inställningarna.)"
 
 #: ../core/src/org/openstreetmap/josm/tools/DontShowAgainInfo.java:32
 msgid "Do not show again"
@@ -130,24 +130,25 @@ msgstr "Oväntat undantag"
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:114
 #, java-format
 msgid "Please report a ticket at {0}"
-msgstr ""
+msgstr "Lämna in en rapport på {0}"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:115
 msgid "Include your steps to get to the error (as detailed as possible)!"
 msgstr ""
+"Berätta de steg du genomförde för att nå fram till felet (så detaljerat som "
+"möjligt)!"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:116
-#, fuzzy
 msgid ""
 "Try updating to the newest version of JOSM and all plugin before reporting a "
 "bug."
 msgstr ""
-"Prova först att uppdatera till den senaste versionen av denna insticksmodul "
-"innan du rapporterar en bugg."
+"Innan du rapporterar in ett fel, försök först att uppdatera till den nyaste "
+"versionen av JOSM och alla insticksmoduler."
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:117
 msgid "Be sure to include the following information:"
-msgstr ""
+msgstr "Följande information måste finnas med:"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:122
 msgid "(The text has already been copied to your clipboard.)"
@@ -208,11 +209,11 @@ msgstr "Okänd version"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:188
 msgid "Found <nd> element in non-way."
-msgstr ""
+msgstr "Hittade element av typen <nd> på icke-sträcka"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:191
 msgid "<nd> has zero ref"
-msgstr ""
+msgstr "<nd> har nollreferens"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:203
 msgid "Found <member> tag on non-relation."
@@ -260,9 +261,9 @@ msgstr "Skicka in {0} {1} (id: {2}) {3}% {4}/{5} ({6} kvar)..."
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:69
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:64
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:122
-#, fuzzy, java-format
+#, java-format
 msgid "An error occurred: {0}"
-msgstr "Det uppstod ett fel när filen skulle sparas."
+msgstr "Ett fel inträffade: {0}"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:189
 msgid "Opening changeset..."
@@ -438,7 +439,7 @@ msgstr "Bokmärken"
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:75
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:609
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:52
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:159
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:146
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:89
 #: ../core/src/org/openstreetmap/josm/command/AddCommand.java:67
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:427
@@ -508,6 +509,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/download/WorldChooser.java:100
 msgid "You can use the mouse or Ctrl+Arrow keys/./ to zoom and pan."
 msgstr ""
+"Du kan använda musen eller Ctrl+Piltangeter/./ för att zooma och panorera."
 
 #: ../core/src/org/openstreetmap/josm/gui/download/WorldChooser.java:101
 msgid "Map"
@@ -605,7 +607,7 @@ msgstr "Dagens meddelande är inte tillgängligt"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:84
 msgid "Move right"
-msgstr ""
+msgstr "Flytta höger"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:84
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:89
@@ -615,19 +617,19 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:109
 #, java-format
 msgid "Map: {0}"
-msgstr ""
+msgstr "Karta: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:89
 msgid "Move left"
-msgstr ""
+msgstr "Flytta vänster"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:94
 msgid "Move up"
-msgstr ""
+msgstr "Flytta uppåt"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:99
 msgid "Move down"
-msgstr ""
+msgstr "Flytta nedåt"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:104
 #: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:15
@@ -698,7 +700,7 @@ msgstr "Arkiv"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:614
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:90
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:61
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:166
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:153
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:107
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:86
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:106
@@ -734,15 +736,15 @@ msgstr "Snabbval"
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:113
 #, java-format
 msgid "Menu: {0}"
-msgstr ""
+msgstr "Meny: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:212
 msgid "Wireframe view"
-msgstr ""
+msgstr "Trådnätsvisning"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:214
 msgid "Toggle Wireframe view"
-msgstr ""
+msgstr "Växla trådnätsvisning"
 
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:26
 msgid "Contacting the OSM server..."
@@ -842,7 +844,7 @@ msgstr "Egenskaper för valda objekt."
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:46
 #, java-format
 msgid "Toggle: {0}"
-msgstr ""
+msgstr "Växla: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:497
 msgid "Member Of"
@@ -879,7 +881,7 @@ msgstr "Välj vilken rad du vill ta bort."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:607
 msgid "Add Properties"
-msgstr ""
+msgstr "Lägg till egenskaper"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:610
 msgid "Add a new key/value pair to all objects"
@@ -887,7 +889,7 @@ msgstr "Lägg till ett nytt nyckel/värde-par till alla objekt."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:612
 msgid "Edit Properties"
-msgstr ""
+msgstr "Redigera egenskaper"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:615
 msgid "Edit the value of the selected key for all objects"
@@ -895,14 +897,14 @@ msgstr "Redigera värdet av den valda nyckeln för alla objekt."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:617
 msgid "Delete Properties"
-msgstr ""
+msgstr "Ta bort egenskaper"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:619
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:344
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:64
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:98
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:74
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:176
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:163
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:115
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:286
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:20
@@ -957,11 +959,11 @@ msgstr "Medlemmar"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:308
 msgid "Move the currently selected member(s) up"
-msgstr ""
+msgstr "Flytta vald medlem/valda medlemmar uppåt"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:314
 msgid "Move the currently selected member(s) down"
-msgstr ""
+msgstr "Flytta vald medlem/valda medlemmar nedåt"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:330
 msgid "Add Selected"
@@ -977,7 +979,7 @@ msgstr "Ta bort de valda"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:338
 msgid "Delete all currently selected objects from relation"
-msgstr ""
+msgstr "Ta bort alla de för närvarande valda objekten från relationen"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:345
 msgid "Remove the member in the current table row from this relation"
@@ -1623,15 +1625,15 @@ msgstr "tid"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:771
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:871
 msgid "Download from OSM along this track"
-msgstr ""
+msgstr "Hämta från OSM längs med detta spår"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:765
 msgid "Download everything within:"
-msgstr ""
+msgstr "Hämta allting inom:"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:767
 msgid "Maximum area per request:"
-msgstr ""
+msgstr "Största tillåtna område per begäran:"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:867
 #, java-format
@@ -1639,6 +1641,8 @@ msgid ""
 "<html>This action will require {0} individual<br>download requests. Do you "
 "wish<br>to continue?</html>"
 msgstr ""
+"<html>För att utföra detta så kommer {0} separata<br>hämtningar att begäras. "
+"Önskar du<br>fortsätta?</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:924
 #, java-format
@@ -1750,7 +1754,7 @@ msgstr "Ange visat datum (mm/dd/yyyy HH:MM:SS)"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:493
 msgid "GPS unit timezone (difference to photo)"
-msgstr ""
+msgstr "Tidszon för GPS-enhet (skillnad mot foto)"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:501
 msgid "Syncronize Time with GPS Unit"
@@ -1769,7 +1773,7 @@ msgstr "bakgrund"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:141
 msgid "outside downloaded area"
-msgstr ""
+msgstr "utanför hämtat område"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:215
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:158
@@ -2007,7 +2011,7 @@ msgstr "inaktiv"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ServerAccessPreference.java:35
 msgid "The base URL for the OSM server (REST API)"
-msgstr ""
+msgstr "Bas-URL för OSM-servern (REST API)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ServerAccessPreference.java:36
 msgid "Login name (email) to the OSM account."
@@ -2021,7 +2025,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ServerAccessPreference.java:39
 msgid "Base Server URL"
-msgstr ""
+msgstr "Bas-URL för servern"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ServerAccessPreference.java:41
 msgid "OSM username (email)"
@@ -2084,62 +2088,62 @@ msgstr "Behåll backup-filer"
 msgid "When saving, keep backup files ending with a ~"
 msgstr "När man sparar, behåll backup-filer som slutar på ~"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:110
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:97
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:208
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:172
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:141
 msgid "Plugins"
 msgstr "Insticksmoduler"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:110
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:97
 msgid "Configure available plugins."
 msgstr "Ställ in tillgängliga insticksmoduler."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:115
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:102
 msgid "Download List"
 msgstr "Hämta lista"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:121
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:108
 #, java-format
 msgid "Downloaded plugin information from {0} site"
 msgid_plural "Downloaded plugin information from {0} sites"
 msgstr[0] "Hämtade information om insticksmoduler från {0} ställe"
 msgstr[1] "Hämtade information om insticksmoduler från {0} ställen"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:124
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:111
 msgid "No plugin information found."
 msgstr "Kunde inte hitta någon information om insticksmoduler."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:130
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:219
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:117
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:206
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:51
 msgid "Update"
 msgstr "Uppdatera"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:139
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:126
 msgid "Configure Sites ..."
 msgstr "Konfigurera hämtställen..."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:152
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:161
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:172
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:139
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:148
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:159
 msgid "Add either site-josm.xml or Wiki Pages."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:169
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:179
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:156
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:166
 msgid "Please select an entry."
 msgstr "Välj en post."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:186
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:173
 msgid "Configure Plugin Sites"
 msgstr "Konfigurera hämtställen för insticksmoduler"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:215
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:202
 msgid "All installed plugins are up to date."
 msgstr "Alla installerade insticksmoduler är av senaste version."
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:218
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:205
 #, java-format
 msgid ""
 "Update the following plugins:\n"
@@ -2150,8 +2154,8 @@ msgstr ""
 "\n"
 "{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:250
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:258
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:241
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:249
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:106
 #: trans_presets.java:301 trans_presets.java:302 trans_presets.java:303
 #: trans_presets.java:304 trans_presets.java:305 trans_presets.java:306
@@ -2166,21 +2170,21 @@ msgstr ""
 msgid "unknown"
 msgstr "okänd"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:264
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:255
 #, java-format
 msgid "{0}: Version {1}{2}"
 msgstr "{0}: Version {1}{2}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:268
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:263
 msgid "Plugin bundled with JOSM"
 msgstr "Insticksmodul som medföljer JOSM"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:269
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:268
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:167
 msgid "no description available"
 msgstr "ingen beskrivning tillgänglig"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:283
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:295
 #, java-format
 msgid ""
 "Plugin archive already available. Do you want to download current version by "
@@ -2188,23 +2192,27 @@ msgid ""
 "\n"
 "{0}"
 msgstr ""
+"Arkivfil för insticksmodul finns redan tillgänglig. Önskar du hämta "
+"nuvarande version genom att ta bort det existerande arkivet?\n"
+"\n"
+"{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:284
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:296
 msgid "Plugin already exists"
-msgstr ""
+msgstr "Insticksmodulen finns redan"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:287
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:292
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:299
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:304
 #, java-format
 msgid "Error deleting plugin file: {0}"
-msgstr ""
+msgstr "Fel vid borttagande av fil för insticksmodulen: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:335
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:347
 #, java-format
 msgid "Error reading plugin information file: {0}"
 msgstr "Fel vid inläsning av informationsfil för insticksmodul: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:363
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:375
 #, java-format
 msgid ""
 "Download the following plugins?\n"
@@ -2215,27 +2223,27 @@ msgstr ""
 "\n"
 "{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:364
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:376
 msgid "Download missing plugins"
 msgstr "Hämta saknade insticksmoduler"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LanguagePreference.java:51
 msgid "Default (Auto determined)"
-msgstr ""
+msgstr "Förval (automatiskt satt)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LanguagePreference.java:62
 msgid "Language"
-msgstr ""
+msgstr "Språk"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:32
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:70
 msgid "Show splash screen at startup"
-msgstr ""
+msgstr "Visa startbild vid uppstart"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:33
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:75
 msgid "Show object ID in selection lists"
-msgstr ""
+msgstr "Visa objektens ID i urvalslistor"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:81
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LafPreference.java:87
@@ -2280,11 +2288,11 @@ msgstr "Sätt etikett på markörer för ljud (och bild och webb)."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:31
 msgid "Display live audio trace."
-msgstr ""
+msgstr "Visa live-ljudspår."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:32
 msgid "Create non-audio markers when reading GPX."
-msgstr ""
+msgstr "Skapa icke-ljudsmarkörer vid läsning av GPX."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:35
 msgid "Explicit waypoints with valid timestamps."
@@ -2320,6 +2328,8 @@ msgid ""
 "Put text labels against audio (and image and web) markers as well as their "
 "button icons."
 msgstr ""
+"Sätt ut textetiketter vid markörer för ljud (och bild och webb) utöver deras "
+"knappikoner."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:88
 msgid ""
@@ -2329,7 +2339,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:91
 msgid "When importing audio, make markers from..."
-msgstr ""
+msgstr "Vid import av ljud, skapa markörer från..."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:101
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:112
@@ -2356,7 +2366,7 @@ msgstr "Tid framåt/bakåt (sekunder)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:143
 msgid "The amount by which the speed is multiplied for fast forwarding"
-msgstr ""
+msgstr "Hur många gånger hastigheten fördubblas vid snabbspolning framåt"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:144
 msgid "Fast forward multiplier"
@@ -2367,6 +2377,8 @@ msgid ""
 "Playback starts this number of seconds before (or after, if negative) the "
 "audio track position requested"
 msgstr ""
+"Uppspelning påbörjas detta antal sekunder före (eller efter om negativt "
+"värde) begärd position på ljudspåret"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:149
 msgid "Lead-in time (seconds)"
@@ -2427,7 +2439,7 @@ msgstr "Rita linjer mellan råa gps-punkter."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:26
 msgid "Force lines if no segments imported."
-msgstr ""
+msgstr "Tvinga linjer om inga segment importerats."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:27
 msgid "Draw large GPS points."
@@ -2455,7 +2467,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:34
 msgid "Draw segment order numbers"
-msgstr ""
+msgstr "Rita ut segmentens ordningsnummer"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:35
 msgid "Draw boundaries of downloaded data"
@@ -2494,6 +2506,8 @@ msgstr "Maxlängd (meter)"
 msgid ""
 "Force drawing of lines if the imported data contain no line information."
 msgstr ""
+"Framtvinga utritning av linjer om importerad data inte innehöll någon "
+"linjeinformation."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:80
 msgid "Draw direction arrows for lines, connecting GPS points."
@@ -2508,10 +2522,12 @@ msgid ""
 "Don't draw arrows if they are not at least this distance away from the last "
 "one."
 msgstr ""
+"Rita inte pilar om de inte befinner sig på åtminstone detta avstånd från "
+"senast ritade pil."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:95
 msgid "Minimum distance (pixels)"
-msgstr ""
+msgstr "Minimiavstånd (pixlar)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:100
 msgid "Choose the hue for the track color by the velocity at that point."
@@ -2523,15 +2539,15 @@ msgstr "Rita större punkter för GPS-punkter."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:112
 msgid "GPS Points"
-msgstr ""
+msgstr "GPS-punkter"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:127
 msgid "Draw direction hints for way segments."
-msgstr ""
+msgstr "Rita riktningsanvisningar för delsträckor."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:138
 msgid "Draw the order numbers of all segments within their way."
-msgstr ""
+msgstr "Rita ordningsnummer för alla delsträckor inom deras sträcka."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:143
 msgid "Apply antialiasing to the map view resulting in a smoother appearance."
@@ -2552,7 +2568,7 @@ msgstr "Rita de inaktiva datalagren i avvikande färg."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:165
 msgid "OSM Data"
-msgstr ""
+msgstr "OSM-data"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:108
 msgid "Separator"
@@ -2584,7 +2600,7 @@ msgstr "Projektionsmetod"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ProjectionPreference.java:49
 msgid "Display coordinates as"
-msgstr ""
+msgstr "Visa koordinater som"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ShortcutPreference.java:24
 msgid "Shortcut Preferences"
@@ -2592,7 +2608,7 @@ msgstr "Inställningar för kortkommandon"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ShortcutPreference.java:25
 msgid "Changing keyboard shortcuts manually."
-msgstr "Ändra snabbtangenter manuellt."
+msgstr "Ändra kortkommandon manuellt."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ShortcutPreference.java:39
 msgid "Action"
@@ -2600,7 +2616,7 @@ msgstr "Åtgärd"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ShortcutPreference.java:39
 msgid "Shortcut"
-msgstr "Kortkommandon"
+msgstr "Kortkommando"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:38
 msgid "Advanced Preferences"
@@ -2643,14 +2659,14 @@ msgstr "ingen modifierare"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:164
 msgid "<h1><a name=\"top\">Keyboard Shortcuts</a></h1>"
-msgstr "<h1><a name=\"top\">Tangentbordsgenvägar</a></h1>"
+msgstr "<h1><a name=\"top\">Kortkommandon</a></h1>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:165
 msgid ""
 "<p>Please note that shortcuts keys are assigned to the actions when JOSM is "
 "started. So you need to <b>restart</b> JOSM to see your changes.</p>"
 msgstr ""
-"<p>Tänk på att snabbtangenter knyts till händelser när JOSM startar. Så du "
+"<p>Tänk på att kortkommandon knyts till händelser när JOSM startar. Så du "
 "behöver <b>starta om</b> JOSM för att dina ändringar skall märkas.</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:167
@@ -2722,6 +2738,8 @@ msgid ""
 "<p>The pseudo-modifier 'disabled' will disable the shortcut when encountered."
 "</p>"
 msgstr ""
+"<p>Pseudomodifieraren 'disabled' avaktiverar kortkommandot när detta "
+"påträffas.</p>"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:186
 msgid "Read First"
@@ -2745,7 +2763,7 @@ msgstr "Varning: Använd endast riktiga tangenter!"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:247
 msgid "Keyboard Shortcuts"
-msgstr "Tangentbordsgenvägar"
+msgstr "Kortkommandon"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:254
 msgid "Edit Shortcuts"
@@ -2782,7 +2800,7 @@ msgstr "Snabbtangenter"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:323
 msgid "Subwindow Shortcuts"
-msgstr "Genvägar för underfönster"
+msgstr "Kortkommandon för underfönster"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:360
 msgid "Modifier Groups"
@@ -2912,9 +2930,9 @@ msgid "File not found"
 msgstr "Filen hittades inte"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginException.java:18
-#, fuzzy, java-format
+#, java-format
 msgid "An error occurred in plugin {0}"
-msgstr "Det uppstod ett fel när filen skulle sparas."
+msgstr "Fel uppstod i insticksmodulen {0}"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:42
 msgid "Update Plugins"
@@ -2974,12 +2992,12 @@ msgstr "Ändra"
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:96
 #, java-format
 msgid "Remove \"{0}\" for {1} ''{2}''"
-msgstr ""
+msgstr "Ta bort \"{0}\" för {1} ''{2}''"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:97
 #, java-format
 msgid "Set {0}={1} for {1} ''{2}''"
-msgstr ""
+msgstr "Sätt {0}={1} för {1} ''{2}''"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:102
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:103
@@ -2994,12 +3012,12 @@ msgstr[1] "objekt"
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:102
 #, java-format
 msgid "Remove \"{0}\" for {1} {2}"
-msgstr ""
+msgstr "Ta bort \"{0}\" för {1} {2}"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:103
 #, java-format
 msgid "Set {0}={1} for {1} {2}"
-msgstr ""
+msgstr "Sätt {0}={1} för {1} {2}"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:80
 #, java-format
@@ -3075,27 +3093,27 @@ msgstr "olik"
 
 #: ../core/src/org/openstreetmap/josm/data/coor/LatLon.java:30
 msgid "Decimal Degrees"
-msgstr ""
+msgstr "Decimalgrader"
 
 #: ../core/src/org/openstreetmap/josm/data/coor/LatLon.java:31
 msgid "Degrees Minutes Seconds"
-msgstr ""
+msgstr "Grader Minuter Sekunder"
 
 #: ../core/src/org/openstreetmap/josm/data/coor/LatLon.java:57
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #: ../core/src/org/openstreetmap/josm/data/coor/LatLon.java:57
 msgid "N"
-msgstr ""
+msgstr "N"
 
 #: ../core/src/org/openstreetmap/josm/data/coor/LatLon.java:69
 msgid "W"
-msgstr ""
+msgstr "V"
 
 #: ../core/src/org/openstreetmap/josm/data/coor/LatLon.java:69
 msgid "E"
-msgstr ""
+msgstr "Ö"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Lambert.java:110
 #, java-format
@@ -3147,11 +3165,11 @@ msgstr "Kunde inte skicka in inställningar. Orsak: {0}"
 msgid "Could not load preferences from server."
 msgstr "Kunde inte hämta inställningar från server."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:328
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:571
 msgid "untagged"
 msgstr "otaggade"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:329
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:572
 msgid "text"
 msgstr "text"
 
@@ -3224,7 +3242,7 @@ msgstr "Duplicera det valda genom att kopiera och omedelbart klistra in."
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:54
 #, java-format
 msgid "Edit: {0}"
-msgstr ""
+msgstr "Redigera: {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:49
 msgid "JOSM Online Help"
@@ -3251,7 +3269,7 @@ msgstr "Fel vid inläsning av sida{0}"
 #: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:16
 #, java-format
 msgid "View: {0}"
-msgstr ""
+msgstr "Visa: {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:20
 msgid "Delete selected objects."
@@ -3310,7 +3328,7 @@ msgstr "Flytta de valda noderna in i en linje"
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:35
 #, java-format
 msgid "Tool: {0}"
-msgstr ""
+msgstr "Vertyg: {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInLineAction.java:59
 msgid "Please select at least three nodes."
@@ -3321,7 +3339,7 @@ msgstr "Välj åtminstone tre noder."
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:111
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:202
 msgid "UNKNOWN"
-msgstr ""
+msgstr "OKÄND"
 
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:115
 msgid "About"
@@ -3334,7 +3352,7 @@ msgstr "Visa om-skärmen"
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:131
 #, java-format
 msgid "Last change at {0}"
-msgstr ""
+msgstr "Senaste ändring vid {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:133
 #, java-format
@@ -3541,7 +3559,7 @@ msgstr "Spara nuvarande data i en ny fil."
 #: ../core/src/org/openstreetmap/josm/actions/DownloadAction.java:34
 #, java-format
 msgid "File: {0}"
-msgstr ""
+msgstr "Arkiv: {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:53
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:54
@@ -3749,31 +3767,31 @@ msgstr "Markörer från {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:123
 msgid "Coordinates imported: "
-msgstr ""
+msgstr "Koordinater importerade: "
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:124
 msgid "Malformed sentences: "
-msgstr ""
+msgstr "Felaktigt utformade meningar: "
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:125
 msgid "Checksum errors: "
-msgstr ""
+msgstr "Checksum-fel: "
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:127
 msgid "Unknown sentences: "
-msgstr ""
+msgstr "Okända meningar: "
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:128
 msgid "Zero coordinates: "
-msgstr ""
+msgstr "Nollkoordinater: "
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:132
 msgid "NMEA import success"
-msgstr ""
+msgstr "Import från NMEA genomförd"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:136
 msgid "NMEA import faliure!"
-msgstr ""
+msgstr "Import från NMEA misslyckades!"
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:26
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:27
@@ -3889,11 +3907,11 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:223
 msgid "Missing arguments for or."
-msgstr ""
+msgstr "Det saknas argument för eller (or)."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:234
 msgid "Missing argument for not."
-msgstr ""
+msgstr "Det saknas argument för inte (not)."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:245
 msgid "Expected closing parenthesis."
@@ -3924,7 +3942,7 @@ msgstr "Flytta de valda noderna in i en cirkel"
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:93
 msgid "Some of the nodes are (almost) in the line"
-msgstr ""
+msgstr "Några av noderna befinner sig (nästan) på linjen"
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:182
 msgid "Please select at least four nodes."
@@ -4012,7 +4030,7 @@ msgstr "Ta bort noder eller sträckor"
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:49
 #, java-format
 msgid "Mode: {0}"
-msgstr ""
+msgstr "Läge: {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:129
 msgid ""
@@ -4161,6 +4179,8 @@ msgid ""
 "Zoom by dragging or Ctrl+. or Ctrl+,; move with Ctrl+up,left,down,right; "
 "move zoom with right button"
 msgstr ""
+"Zooma genom att dra eller Ctrl+. eller Ctrl+,; flytta med Ctrl+upp, vänster, "
+"ned, höger; flytta karta med högerknappen"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:22
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:23
@@ -4209,32 +4229,32 @@ msgstr "Slå ihop {0} noder"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:41
 msgid "Orthogonalize shape"
-msgstr ""
+msgstr "Räta upp form"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:43
 msgid "Move nodes so all angles are 90 or 270deg"
-msgstr ""
+msgstr "Flytta noder så att alla vinklar är 90 eller 270 grader"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:44
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:245
 msgid "Orthogonalize"
-msgstr ""
+msgstr "Räta upp"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:60
 msgid "Only two nodes allowed"
-msgstr ""
+msgstr "Enbart två noder kan vara valda"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:68
 msgid "Selection must consist only of ways."
-msgstr ""
+msgstr "Urvalet måste bestå uteslutande av sträckor."
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:75
 msgid "Please select closed way(s) of at least four nodes."
-msgstr ""
+msgstr "Välj slutna sträckor som består av åtminstone fyra noder."
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:90
 msgid "Please select ways with almost right angles to orthogonalize."
-msgstr ""
+msgstr "Välj sträckor som nästan har räta vinklar att räta upp."
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:97
 msgid ""
@@ -4245,7 +4265,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:108
 msgid "Only one node selected"
-msgstr ""
+msgstr "Enbart en nod vald"
 
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:15
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:16
@@ -4299,41 +4319,41 @@ msgstr "De noderna är inte i en cirkel."
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:48
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:49
 msgid "Open Location..."
-msgstr ""
+msgstr "Öppna plats..."
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:48
 msgid "Open a URL."
-msgstr ""
+msgstr "Öppna en URL."
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:54
 msgid "Separate Layer"
-msgstr ""
+msgstr "Skilda lager"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:61
 msgid "Download Location"
-msgstr ""
+msgstr "Hämta plats"
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:49
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:50
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:73
 msgid "Add Node"
-msgstr ""
+msgstr "Lägg till nod"
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:49
 msgid "Add a node by entering latitude and longitude."
-msgstr ""
+msgstr "Lägg till en nod genom att ange latitud och longitud."
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:57
 msgid "Enter the coordinates for the new node."
-msgstr ""
+msgstr "Ange den nya nodens koordinater."
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:58
 msgid "Use decimal degrees."
-msgstr ""
+msgstr "Använd decimalgrader."
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:59
 msgid "Negative values denote Western/Southern hemisphere."
-msgstr ""
+msgstr "Negativa värden avser Västra/Södra halvklotet."
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:62
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:54
@@ -4497,7 +4517,7 @@ msgstr "Hoppa tillbaka."
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFasterAction.java:13
 #, java-format
 msgid "Audio: {0}"
-msgstr ""
+msgstr "Ljud: {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioPrevAction.java:16
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioPrevAction.java:17
@@ -4577,7 +4597,7 @@ msgstr "Ångra senaste åtgärden."
 
 #: ../core/src/org/openstreetmap/josm/actions/JosmAction.java:33
 msgid "No Shortcut"
-msgstr ""
+msgstr "Inget kortkommando"
 
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:39
 msgid "Downloading data"
@@ -4717,20 +4737,20 @@ msgstr "Skapa en dubblett av sträcka"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementMode.java:47
 msgid "Can not draw outside of the world."
-msgstr ""
+msgstr "Det går inte att rita utanför världen."
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:68
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:69
 msgid "Measured values"
-msgstr ""
+msgstr "Uppmätta värden."
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:68
 msgid "Open the measurement window."
-msgstr ""
+msgstr "Öppna mätlistan."
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:74
 msgid "Reset"
-msgstr ""
+msgstr "Återställ"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:75
 msgid "Reset current measurement results and delete measurement path."
@@ -4742,44 +4762,44 @@ msgstr ""
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:86
 msgid "Selection Length"
-msgstr ""
+msgstr "Urvalets längd"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:91
 msgid "Selection Area"
-msgstr ""
+msgstr "Urvalets area"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:96
 msgid "Angle"
-msgstr ""
+msgstr "Vinkel"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:97
 msgid "Angle between two selected Nodes"
-msgstr ""
+msgstr "Vinkel mellan två valda noder"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementPlugin.java:20
 msgid "measurement mode"
-msgstr ""
+msgstr "mätläge"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementPlugin.java:36
 msgid "Measurements"
-msgstr ""
+msgstr "Mätningar"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:68
 msgid "Layer to make measurements"
-msgstr ""
+msgstr "Lager för att utföra mätningar"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:270
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:315
 msgid "Import path from GPX layer"
-msgstr ""
+msgstr "Importera sträckning från GPX-lager"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:305
 msgid "Drop existing path"
-msgstr ""
+msgstr "Glöm existerande sträckning"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:341
 msgid "No GPX data layer found."
-msgstr ""
+msgstr "Inget GPX-datalager kunde hittas."
 
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTesterAction.java:22
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTesterAction.java:25
@@ -4801,7 +4821,7 @@ msgstr ""
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:44
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:46
 msgid "Open Visible ..."
-msgstr ""
+msgstr "Öppna det som syns..."
 
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:45
 msgid "Open only files that are visible in current view."
@@ -4814,12 +4834,12 @@ msgstr ""
 #: ../plugins/waypoints/src/WaypointReader.java:57
 #, java-format
 msgid "Data error: lat value \"{0}\" is out of bound."
-msgstr ""
+msgstr "Datafel: latitudvärdet \"{0}\" ligger utanför gränsvärdena."
 
 #: ../plugins/waypoints/src/WaypointReader.java:61
 #, java-format
 msgid "Data error: lon value \"{0}\" is out of bound."
-msgstr ""
+msgstr "Datafel: longitudvärdet \"{0}\" ligger utanför gränsvärdena."
 
 #: ../plugins/waypoints/src/WaypointOpenAction.java:36
 #: ../plugins/waypoints/src/WaypointOpenAction.java:38
@@ -4832,7 +4852,7 @@ msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbLayer.java:101
 msgid "Displays OpenStreetBugs issues"
-msgstr ""
+msgstr "Visar problemfall från OpenStreetBugs"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/util/HttpUtils.java:169
 msgid "Header contains several values and cannot be mapped to a single String"
@@ -4840,84 +4860,88 @@ msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/NewAction.java:76
 msgid "Couldn't create new bug. Result: {0}"
-msgstr ""
+msgstr "Kunde inte skapa en ny felrapport. Resultat: {0}"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:47
 msgid "Mark as done"
-msgstr ""
+msgstr "Markera som slutförd"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:53
 msgid "Really mark this issue as ''done''?"
-msgstr ""
+msgstr "Vill du verkligen sätta status för detta problemfall som \"slutförd\"?"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/CloseIssueAction.java:54
 msgid "Really close?"
-msgstr ""
+msgstr "Är du säker på att du vill stänga?"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:58
 msgid "New issue"
-msgstr ""
+msgstr "Nytt problemfall"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:95
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/AddCommentAction.java:55
 msgid "Please enter a user name"
-msgstr ""
+msgstr "Ange ett användarnamn"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:105
 msgid "Describe the problem precisely"
-msgstr ""
+msgstr "Beskriv problem noggrannt"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:106
 msgid "Create issue"
-msgstr ""
+msgstr "Skapa ett problemfall"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/AddCommentAction.java:47
 msgid "Add a comment"
-msgstr ""
+msgstr "Lägg till kommentar"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/AddCommentAction.java:57
 msgid "NoName"
-msgstr ""
+msgstr "UtanNamn"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/AddCommentAction.java:63
 msgid "Enter your comment"
-msgstr ""
+msgstr "Skriv in din kommentar"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/PopupFactory.java:49
 msgid "Unknown issue state"
-msgstr ""
+msgstr "Okänd status för problemfall"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:92
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:96
 msgid "Open OpenStreetBugs"
-msgstr ""
+msgstr "Öppna OpenStreetBugs"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:93
-msgid "Open the OpenStreetBugs window and activates the automatic download"
-msgstr ""
+msgid "Opens the OpenStreetBugs window and activates the automatic download"
+msgstr "Öppna OpenStreetBugs-listan och aktiverar automatisk hämtning"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:113
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:114
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:94
 msgid "Refresh"
-msgstr ""
+msgstr "Uppdatera"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:123
 msgid ""
 "The visible area is either too small or too big to download data from "
 "OpenStreetBugs"
 msgstr ""
+"Området som visas är antingen för litet eller för stort för att hämta data "
+"från OpenStreetBugs"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:124
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:53
 msgid "Warning"
-msgstr ""
+msgstr "Varning"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:51
 msgid ""
 "<html>The selected data contains data from OpenStreetBugs.<br>You cannot "
 "upload these data. Maybe you have selected the wrong layer?"
 msgstr ""
+"<html>Det finns data från OpenStreetBugs i urvalet.<br>Du kan inte skicka in "
+"dessa data. Har du kanske valt fel lager?"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbDownloadLoop.java:52
 msgid "OpenStreetBugs download loop"
@@ -4925,26 +4949,26 @@ msgstr ""
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RequestProcessor.java:112
 msgid "Remote Control has been asked to load data from the API."
-msgstr ""
+msgstr "Fjärrstyrning har begärts för att hämta data från API"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RequestProcessor.java:113
 #, java-format
 msgid "Request details: {0}"
-msgstr ""
+msgstr "Detaljer om begäran: {0}"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RequestProcessor.java:113
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RequestProcessor.java:211
 msgid "Do you want to allow this?"
-msgstr ""
+msgstr "Vill du tillåta detta?"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RequestProcessor.java:114
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RequestProcessor.java:212
 msgid "Confirm Remote Control action"
-msgstr ""
+msgstr "Bekräfta fjärrstyrd handling"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RequestProcessor.java:209
 msgid "Remote Control has been asked to import data from the following URL:"
-msgstr ""
+msgstr "Fjärrstyrning har begärts för att importera data från följande URL:"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:25
 msgid "load data from API"
@@ -4960,7 +4984,7 @@ msgstr ""
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:28
 msgid "confirm all Remote Control actions manually"
-msgstr ""
+msgstr "bekräfta alla fjärrstyrda handlingar manuellt"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:33
 msgid "A plugin that allows JOSM to be controlled from other applications."
@@ -4969,7 +4993,7 @@ msgstr "En insticksmodul som låter JOSM kontrolleras från andra applikationer.
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:35
 #, java-format
 msgid "Version: {0}<br>Last change at {1}"
-msgstr ""
+msgstr "Version: {0}<br>Senast ändrad {1}"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:36
 msgid "Remote Control"
@@ -4985,6 +5009,9 @@ msgid ""
 "port is not variable because it is referenced by external applications "
 "talking to the plugin."
 msgstr ""
+"Insticksmodulen fjärrstyrning kommer alltid att lyssna på port 8111 på "
+"localhost. Porten kan inte ändras eftersom den refereras till av externa "
+"applikationer i kommunikation med insticksmodulen."
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:42
 msgid "Permitted actions"
@@ -4996,7 +5023,7 @@ msgstr "Ange en söksträng"
 
 #: ../plugins/namefinder/namefinder/PlaceSelection.java:186
 msgid "Cannot read place search results from server"
-msgstr ""
+msgstr "Kan inte läsa sökresultat för plats från servern"
 
 #: ../plugins/namefinder/namefinder/PlaceSelection.java:206
 msgid "Enter a place name to search for:"
@@ -5037,11 +5064,11 @@ msgstr "zooma"
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:39
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:40
 msgid "Import TCX File..."
-msgstr ""
+msgstr "Importera TCX-fil..."
 
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:39
 msgid "Import TCX file as GPS track"
-msgstr ""
+msgstr "Importera TCX-fil som GPS-spår"
 
 #: ../plugins/slippy_map_chooser/src/SlippyMapChooser.java:94
 msgid ""
@@ -5057,7 +5084,7 @@ msgstr ""
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/Lakewalker.java:81
 msgid "Direction index '{0}' not found"
-msgstr ""
+msgstr "Riktningsindex '{0}' kunde inte hittas"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/Lakewalker.java:108
 msgid "The starting location was not within the bbox"
@@ -5070,7 +5097,7 @@ msgstr ""
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/Lakewalker.java:145
 #, java-format
 msgid "{0} nodes so far..."
-msgstr ""
+msgstr "Hittills {0} noder..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:52
 msgid "Lake Walker."
@@ -5084,7 +5111,7 @@ msgstr "Lakewalker"
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:119
 #, java-format
 msgid "Error creating cache directory: {0}"
-msgstr ""
+msgstr "Fel uppstod när cache-biblioteket skulle skapas: {0}"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:152
 msgid "Tracing"
@@ -5092,19 +5119,19 @@ msgstr "Spårar"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:154
 msgid "checking cache..."
-msgstr ""
+msgstr "kontrollerar cache..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:190
 msgid "Running vertex reduction..."
-msgstr ""
+msgstr "Genomför hörnreduktion..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:200
 msgid "Running Douglas-Peucker approximation..."
-msgstr ""
+msgstr "Utför Douglas-Peucker-approximation..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:210
 msgid "Removing duplicate nodes..."
-msgstr ""
+msgstr "Tar bort dubblettnoder..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:286
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerReader.java:129
@@ -5113,11 +5140,11 @@ msgstr "Spår från lakewalker"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerWMS.java:45
 msgid "Downloading image tile..."
-msgstr ""
+msgstr "Hämtar bildruta..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerWMS.java:148
 msgid "Could not acquire image"
-msgstr ""
+msgstr "Kunde inte skaffa en bild"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:36
 msgid "Maximum number of segments per way"
@@ -5165,11 +5192,11 @@ msgstr "WMS-lager"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:58
 msgid "Maximum cache size (MB)"
-msgstr ""
+msgstr "Största tillåtna cachestorlek (MB)"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:60
 msgid "Maximum cache age (days)"
-msgstr ""
+msgstr "Största tillåtna cacheålder (dagar)"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:63
 msgid "Maximum number of segments allowed in each generated way. Default 250."
@@ -5211,11 +5238,11 @@ msgstr "Storlek på en landsatruta, mätt i pixlar. Förval 2000."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:69
 msgid "Offset all points in East direction (degrees). Default 0."
-msgstr ""
+msgstr "Förskjut alla punkter i östlig riktning (grader). Förval: 0."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:70
 msgid "Offset all points in North direction (degrees). Default 0."
-msgstr ""
+msgstr "Förskjut alla punkter i nordlig riktning (grader). Förval 0."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:71
 msgid "Direction to search for land. Default east."
@@ -5235,14 +5262,15 @@ msgstr ""
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:74
 msgid "Maximum size of each cache directory in bytes. Default is 300MB"
 msgstr ""
+"Största tillåtna storlek för varje cache-bibliotek i byte. Förval är 300MB"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:75
 msgid "Maximum age of each cached file in days. Default is 100"
-msgstr ""
+msgstr "Största tillåtna ålder för varje cachad fil i dagar. Förval är 100"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:77
 msgid "An plugin to trace water bodies on Landsat imagery."
-msgstr ""
+msgstr "En insticksmodul för att spåra vattensamlingar på landsat-bilder."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:78
 msgid "Lakewalker Plugin Preferences"
@@ -5250,27 +5278,27 @@ msgstr "Inställningar för insticksmodulen Lakewalker"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageEntry.java:56
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageEntry.java:57
 msgid "Rotate 90"
-msgstr ""
+msgstr "Rotera 90"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageEntry.java:59
 msgid "Rotate 180"
-msgstr ""
+msgstr "Rotera 180"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageEntry.java:61
 msgid "Rotate 270"
-msgstr ""
+msgstr "Rotera 270"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointLayer.java:74
 msgid "Imported Images"
-msgstr ""
+msgstr "Importerade bilder"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:37
 msgid "Image files (*.jpg, *.jpeg, *.png, *.gif)"
-msgstr ""
+msgstr "Bildfiler (*.jpg, *.jpeg, *.png, *.gif)"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:47
 msgid "Open images with ImageWayPoint"
@@ -5288,7 +5316,7 @@ msgstr "Föregående"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:108
 msgid "Previous image"
-msgstr ""
+msgstr "Föregående bild"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:127
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:86
@@ -5297,23 +5325,23 @@ msgstr "Nästa"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:127
 msgid "Next image"
-msgstr ""
+msgstr "Nästa bild"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:144
 msgid "Rotate left"
-msgstr ""
+msgstr "Rotera åt vänster"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:146
 msgid "Rotate image left"
-msgstr ""
+msgstr "Rotera bilden åt vänster"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:163
 msgid "Rotate right"
-msgstr ""
+msgstr "Rotera åt höger"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:165
 msgid "Rotate image right"
-msgstr ""
+msgstr "Rotera bilden åt höger"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:187
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:190
@@ -5322,7 +5350,7 @@ msgstr ""
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:189
 msgid "Display non-geotagged photos"
-msgstr ""
+msgstr "Visa bilder utan geotaggning"
 
 #: ../plugins/openlayers/src/org/openstreetmap/josm/plugins/openLayers/OpenLayersPlugin.java:44
 msgid "OpenLayers"
@@ -5417,15 +5445,15 @@ msgstr "{0}, ..."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:13
 msgid "Errors"
-msgstr ""
+msgstr "Fel"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:13
 msgid "validation error"
-msgstr ""
+msgstr "valideringsfel"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:15
 msgid "Warnings"
-msgstr ""
+msgstr "Varningar"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:15
 msgid "validation warning"
@@ -5441,42 +5469,44 @@ msgstr "andra typer av validering"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:69
 msgid "Use ignore list."
-msgstr ""
+msgstr "Använd undantagslista."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:70
-msgid "Use the use ignore list to suppress warnings."
+msgid "Use the ignore list to suppress warnings."
 msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:73
 msgid "Use error layer."
-msgstr ""
+msgstr "Använd fellager."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:74
 msgid "Use the error layer to display problematic elements."
-msgstr ""
+msgstr "Använd fellagret för att visa problematiska element."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:79
 msgid "On demand"
-msgstr ""
+msgstr "På begäran"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:80
 msgid "On upload"
-msgstr ""
+msgstr "Vid inskickning"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:92
 msgid ""
 "A OSM data validator that checks for common errors made by users and editor "
 "programs."
 msgstr ""
+"En datavaliderare för OSM som letar efter vanliga fel som görs av användare "
+"och redigeringsprogram."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:94
 #, java-format
 msgid "Version {0} - Last change at {1}"
-msgstr ""
+msgstr "Version {0} - Senaste ändring {1}"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:95
 msgid "Data validator"
-msgstr ""
+msgstr "Datavalidator"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:89
 msgid "No validation errors"
@@ -5762,12 +5792,12 @@ msgstr "Denna insticksmodul letar efter fel i egenskapsnycklar och -värden."
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:211
 #, java-format
 msgid "Invalid tagchecker line - {0}: {1}"
-msgstr ""
+msgstr "Ogiltig taggkontrollsrad - {0}: {1}"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:224
 #, java-format
 msgid "Invalid spellcheck line: {0}"
-msgstr ""
+msgstr "Ogiltig rättstavningsrad: {0}"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:235
 #, java-format
@@ -5803,12 +5833,12 @@ msgstr "Egenskapsvärdet börjar eller slutar med blanksteg"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:340
 msgid "Property values contain HTML entity"
-msgstr ""
+msgstr "Det finns en HTML-markör i egenskapsvärdet"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:349
 #, java-format
 msgid "Key ''{0}'' unknown."
-msgstr ""
+msgstr "Nyckeln ''{0}'' är okänd."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:350
 msgid "Unknown property values"
@@ -5820,7 +5850,7 @@ msgstr "FIXME-taggar"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:402
 msgid "Check property keys."
-msgstr ""
+msgstr "Kontrollera egenskapsnycklar"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:403
 msgid "Validate that property keys are valid checking against list of words."
@@ -5838,13 +5868,16 @@ msgstr ""
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:450
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:460
 msgid "TagChecker source"
-msgstr ""
+msgstr "Källa för TagChecker"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:481
 msgid ""
 "The sources (url or filename) of spell check (see http://wiki.openstreetmap."
 "org/index.php/User:JLS/speller) or tag checking data files."
 msgstr ""
+"De källor (url eller filnamn) som används för att stavningskontrollera (läs "
+"http://wiki.openstreetmap.org/index.php/User:JLS/speller) eller "
+"taggkontrollera datafiler."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:482
 msgid "Add a new source to the list."
@@ -5898,11 +5931,11 @@ msgstr "Rätta till egenskaper"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:727
 msgid "Could not find element type"
-msgstr ""
+msgstr "Kunde inte hitta elementtyp"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:744
 msgid "Could not find warning level"
-msgstr ""
+msgstr "Kunde inte hitta varningsnivå"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:753
 #, java-format
@@ -5933,69 +5966,70 @@ msgstr "Data med fel. Skicka in ändå?"
 
 #: ../plugins/livegps/livegps/LiveGpsLayer.java:25
 msgid "LiveGPS layer"
-msgstr ""
+msgstr "LiveGPS-lager"
 
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:41
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:42
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:68
 msgid "Capture GPS Track"
-msgstr ""
+msgstr "Fånga GPS-spår"
 
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:41
 msgid "Connect to gpsd server and show current position in LiveGPS layer."
 msgstr ""
+"Anslut till en gpsd-server och visa nuvarande position i ett LiveGPS-lager."
 
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:53
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:54
 msgid "Center Once"
-msgstr ""
+msgstr "Centrera en gång"
 
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:53
 msgid "Center the LiveGPS layer to current position."
-msgstr ""
+msgstr "Centrera LiveGPS-lagret runt nuvarande position."
 
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:67
 msgid "Auto-Center"
-msgstr ""
+msgstr "Autocentrera"
 
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:67
 msgid "Continuously center the LiveGPS layer to current position."
-msgstr ""
+msgstr "Centrera kontinuerligt LiveGPS-lagret runt nuvarande position."
 
 #: ../plugins/livegps/livegps/LiveGpsPlugin.java:82
 msgid "LiveGPS"
-msgstr ""
+msgstr "LiveGPS"
 
 #: ../plugins/livegps/livegps/LiveGpsAcquirer.java:128
 #: ../plugins/livegps/livegps/LiveGpsAcquirer.java:144
 msgid "Connecting"
-msgstr ""
+msgstr "Ansluter"
 
 #: ../plugins/livegps/livegps/LiveGpsAcquirer.java:204
 msgid "Connected"
-msgstr ""
+msgstr "Ansluten"
 
 #: ../plugins/livegps/livegps/LiveGpsAcquirer.java:216
 #: ../plugins/livegps/livegps/LiveGpsAcquirer.java:232
 msgid "Not connected"
-msgstr ""
+msgstr "Inte ansluten"
 
 #: ../plugins/livegps/livegps/LiveGpsAcquirer.java:225
 msgid "Connection Failed"
-msgstr ""
+msgstr "Anslutning misslyckades"
 
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:45
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:46
 msgid "Live GPS"
-msgstr ""
+msgstr "Live GPS"
 
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:45
 msgid "Show GPS data."
-msgstr ""
+msgstr "Visa GPS-data"
 
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:50
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:52
 msgid "Way Info"
@@ -6003,7 +6037,7 @@ msgstr ""
 
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:58
 msgid "Speed"
-msgstr ""
+msgstr "Hastighet:"
 
 #: ../plugins/livegps/livegps/LiveGpsDialog.java:60
 msgid "Course"
@@ -6047,7 +6081,7 @@ msgstr ""
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveAction.java:38
 msgid "Save captured data to file every minute."
-msgstr ""
+msgstr "Spara fångade data till en fil varje minut."
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorComponent.java:51
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorComponent.java:179
@@ -6066,23 +6100,23 @@ msgstr "Fel vid export {0}: {1}"
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorPlugin.java:60
 msgid "SurveyorPlugin depends on LiveGpsPlugin!"
-msgstr ""
+msgstr "SurveyorPlugin behöver LiveGpsPlugin!"
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorPlugin.java:61
 msgid "LiveGpsPlugin not found, please install and activate."
-msgstr ""
+msgstr "LiveGpsPlugin kunde inte hittas, installera och aktivera."
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorPlugin.java:62
 msgid "SurveyorPlugin is disabled for the moment"
-msgstr ""
+msgstr "SurveyorPlugin är för tillfället avaktiverad"
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorPlugin.java:63
 msgid "SurveyorPlugin"
-msgstr ""
+msgstr "SurveyorPlugin"
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorPlugin.java:78
 msgid "SurveyorPlugin needs LiveGpsPlugin, but could not find it!"
-msgstr ""
+msgstr "SurveyorPlugin behöver LiveGpsPlugin, men denna kunde inte hittas!"
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:58
 msgid "Slippy Map"
@@ -6127,79 +6161,79 @@ msgstr "Källor för rutor"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:81
 msgid "Position only"
-msgstr ""
+msgstr "Enbart position"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:82
 msgid "Position, Time, Date, Speed"
-msgstr ""
+msgstr "Position, tid, datum, hastighet"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:83
 msgid "Position, Time, Date, Speed, Altitude"
-msgstr ""
+msgstr "Position, tid, datum, hastighet, höjd"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:85
 msgid "A By Time"
-msgstr ""
+msgstr "A Efter tid"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:86
 msgid "A By Distance"
-msgstr ""
+msgstr "A Efter avstånd"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:87
 msgid "B By Time"
-msgstr ""
+msgstr "B Efter tid"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:88
 msgid "B By Distance"
-msgstr ""
+msgstr "B Efter avstånd"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:89
 msgid "C By Time"
-msgstr ""
+msgstr "C Efter tid"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:90
 msgid "C By Distance"
-msgstr ""
+msgstr "C Efter avstånd"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:137
 msgid "Data Logging Format"
-msgstr ""
+msgstr "Format för dataloggning"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:151
 msgid "Disable data logging if speed falls below"
-msgstr ""
+msgstr "Avaktivera dataloggning om hastigheten blir långsammare än"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:177
 msgid "Disable data logging if distance falls below"
-msgstr ""
+msgstr "Avaktivera dataloggning om avståndet blir kortare än"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:307
 msgid "Unknown logFormat"
-msgstr ""
+msgstr "Okänt loggningsformat"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:86
 msgid "Port:"
-msgstr ""
+msgstr "Port:"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:100
 msgid "refresh the port list"
-msgstr ""
+msgstr "uppdatera portlistan"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:108
 msgid "Configure"
-msgstr ""
+msgstr "Anpassa"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:116
 msgid "Configure Device"
-msgstr ""
+msgstr "Anpassa enheten"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:125
 msgid "Connection Error."
-msgstr ""
+msgstr "Anslutningsfel."
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:130
 msgid "configure the connected DG100"
-msgstr ""
+msgstr "anpassa den anslutna DG100"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:139
 msgid "delete data after import"
@@ -6215,7 +6249,7 @@ msgstr "Importerar data från DG100..."
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:68
 msgid "Error deleting data."
-msgstr ""
+msgstr "Fel vid borttagning av data"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:74
 #, java-format
@@ -6236,6 +6270,9 @@ msgid ""
 "Globalsat homepage at http://www.raphael-mack.de/josm-globalsat-gpx-import-"
 "plugin/"
 msgstr ""
+"Kan inte hämta biblioteket rxtxSerial. Om du behöver assistans med att "
+"installera detta, så läs globalsats hemsida på http://www.raphael-mack.de/"
+"josm-globalsat-gpx-import-plugin/"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:111
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:113
@@ -6271,20 +6308,21 @@ msgstr ""
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:67
 msgid "Please abort if you are not sure"
-msgstr ""
+msgstr "Avbryt om du är osäker"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:82
 msgid "Please select at least one way to simplify."
 msgstr "Välj åtminstone en sträcka att förenkla."
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:87
-#, java-format
-msgid ""
-"The selection contains {0} way. Are you sure you want to simplify them all?"
+#, fuzzy, java-format
+msgid "The selection contains {0} way. Are you sure you want to simplify it?"
 msgid_plural ""
 "The selection contains {0} ways. Are you sure you want to simplify them all?"
 msgstr[0] ""
+"Urvalet innehåller {0} sträcka. Är du säker på att du förenkla dem alla?"
 msgstr[1] ""
+"Urvalet innehåller {0} sträckor. Är du säker på att du förenkla dem alla?"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:90
 msgid "Are you sure?"
@@ -6294,8 +6332,8 @@ msgstr "Är du säker?"
 #, java-format
 msgid "Simplify Way (remove {0} node)"
 msgid_plural "Simplify Way (remove {0} nodes)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Förenkla sträcka (ta bort {0} nod)"
+msgstr[1] "Förenkla sträcka (ta bort {0} noder)"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:428
 msgid "No image"
@@ -6314,7 +6352,7 @@ msgstr "Fel i fil {0}"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:36
 msgid "Open images with AgPifoJ..."
-msgstr ""
+msgstr "Öppna bilder med AgPifoJ..."
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:91
 msgid "Extracting GPS locations from EXIF"
@@ -6331,15 +6369,15 @@ msgstr "Korrelerar med GPX"
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:203
 #, java-format
 msgid "{0} were found to be gps tagged."
-msgstr ""
+msgstr "{0} hittades med gps-taggar."
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:48
 msgid "AgPifoJ - Geotagged pictures"
-msgstr ""
+msgstr "AgPifoJ - Geotaggade bilder"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:48
 msgid "Display geotagged photos"
-msgstr ""
+msgstr "Visa geotaggade foton"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:78
 msgid "Remove photo from layer"
@@ -6347,7 +6385,7 @@ msgstr "Ta bort foto från lagret"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:94
 msgid "Center view"
-msgstr ""
+msgstr "Centrera visning"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:102
 msgid "Zoom best fit and 1:1"
@@ -6376,14 +6414,17 @@ msgid ""
 "<br>Display that photo here.<br>And then, simply capture the time you read "
 "on the photo and select a timezone<hr></html>"
 msgstr ""
+"<html>Ta ett foto av din GPS-mottagare när den visar tiden.<br>Visa detta "
+"foto här.<br>Och därefter läs helt enkelt av den tid du läste på fotot och "
+"välj en tidzon<hr></html>"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:221
 msgid "Photo time (from exif):"
-msgstr ""
+msgstr "Fototid (från exif):"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:236
 msgid "Gps time (read from the above photo): "
-msgstr ""
+msgstr "Gps-tid (läst från fotot ovan): "
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:248
 msgid " [dd/mm/yyyy hh:mm:ss]"
@@ -6404,13 +6445,15 @@ msgstr "Öppna ett annat foto"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:376
 msgid "Synchronize time from a photo of the GPS receiver"
-msgstr ""
+msgstr "Synkronisera tid med hjälp av ett foto av GPS-mottagaren"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:387
 msgid ""
 "Error while parsing the date.\n"
 "Please use the requested format"
 msgstr ""
+"Fel vid tolkning av daturm.\n"
+"Använd begärt format"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:389
 msgid "Invalid date"
@@ -6418,7 +6461,7 @@ msgstr "Ogiltigt datum"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:432
 msgid "<No GPX track loaded yet>"
-msgstr ""
+msgstr "<Inget GPX-spår har hämtats än>"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:438
 msgid "GPX track: "
@@ -6439,10 +6482,12 @@ msgstr "Förskjutning:"
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:493
 msgid "<html>I can take a picture of my GPS receiver.<br>Can this help?</html>"
 msgstr ""
+"<html>Jag kan ta en bild av min GPS-mottagare.<br>Kan detta vara till nytta?"
+"</html>"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:510
 msgid "Update position for: "
-msgstr ""
+msgstr "Uppdatera position för: "
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:519
 msgid "All images"
@@ -6474,6 +6519,8 @@ msgid ""
 "Error while parsing timezone.\n"
 "Expected format: {0}"
 msgstr ""
+"Fel vid tolkning av tidszon.\n"
+"Förväntat format: {0}"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:575
 msgid "Invalid timezone"
@@ -6485,6 +6532,8 @@ msgid ""
 "Error while parsing offset.\n"
 "Expected format: {0}"
 msgstr ""
+"Fel vid tolkning av förskjutning.\n"
+"Förväntat format: {0}"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:584
 msgid "Invalid offset"
@@ -6502,15 +6551,15 @@ msgstr "GPX-spår har hämtats"
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:35
 msgid "Upload Traces"
-msgstr ""
+msgstr "Skicka in spår"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
 msgid "Uploads traces to openstreetmap.org"
-msgstr ""
+msgstr "Skickar in spår till openstreetmap.org"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:256
 msgid "No GpxLayer selected. Cannot upload a trace."
-msgstr ""
+msgstr "Inget Gpxlager valt. Kan inte skicka in ett spår."
 
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:67
 msgid "Use"
@@ -6570,11 +6619,12 @@ msgstr "Välj den webbplats du vill ta bort"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:123
 msgid "Check Site(s)"
-msgstr ""
+msgstr "Kontrollplats(er)"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:127
 msgid "Please select the site(s) to check for updates."
 msgstr ""
+"Välj vilken plats/vilka platser som skall genomsökas efter uppdateringar."
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:151
 msgid "Add a new plugin site."
@@ -6582,15 +6632,17 @@ msgstr "Lägg till en ny webbplats för insticksmoduler"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:152
 msgid "Delete the selected site(s) from the list."
-msgstr ""
+msgstr "Ta bort vald plats/valda platser från listan."
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:153
 msgid "Check the selected site(s) for new plugins or updates."
 msgstr ""
+"Genomsök vald plats/valda platser efter nya insticksmoduler eller "
+"uppdateringar"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:155
 msgid "Update Sites"
-msgstr ""
+msgstr "Uppdatera platser"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:59
 msgid "Install"
@@ -6598,13 +6650,15 @@ msgstr "Installera"
 
 #: ../plugins/osmarender/src/OsmarenderPlugin.java:43
 msgid "Osmarender"
-msgstr ""
+msgstr "Osmarender"
 
 #: ../plugins/osmarender/src/OsmarenderPlugin.java:90
 msgid ""
 "Firefox not found. Please set firefox executable in the Map Settings page of "
 "the preferences."
 msgstr ""
+"Firefox kunde inte hittas. Specifiera applikationen firefox under "
+"kartinställningssidan av inställningar."
 
 #: ../plugins/osmarender/src/OsmarenderPlugin.java:121
 msgid "osmarender options"
@@ -6612,24 +6666,24 @@ msgstr "inställningar för osmarender"
 
 #: ../plugins/osmarender/src/OsmarenderPlugin.java:122
 msgid "Firefox executable"
-msgstr ""
+msgstr "Firefox-applikationen"
 
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:20
 msgid "Rectified Image ..."
-msgstr ""
+msgstr "Korrigerad bild..."
 
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:20
 msgid "Download Rectified Image from Metacarta's Map Rectifer WMS"
-msgstr ""
+msgstr "Hämta en korrigerad bild från Metacartas kartkorrigerar-WMS"
 
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:24
 msgid "Metacarta Map Rectifier image id"
-msgstr ""
+msgstr "Id för Metacartas korrigerade kartbild"
 
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:32
 #, java-format
 msgid "rectifier id={0}"
-msgstr ""
+msgstr "korrigeringsid={0}"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:139
 msgid "WMS"
@@ -6665,11 +6719,11 @@ msgstr "URL för WMS"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:49
 msgid "Menu Name (Default)"
-msgstr ""
+msgstr "Menynamn (Förval)"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:49
 msgid "WMS URL (Default)"
-msgstr ""
+msgstr "WMS-url (Förval)"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:73
 msgid "Enter a menu name and WMS URL"
@@ -6677,11 +6731,11 @@ msgstr "Ange ett menynamn och en URL för WMS"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:95
 msgid "Copy Default"
-msgstr ""
+msgstr "Kopiera förval"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:101
 msgid "Please select the row to copy."
-msgstr ""
+msgstr "Välj vilken rad du vill kopiera."
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSDownloadAction.java:18
 #, java-format
@@ -6742,7 +6796,7 @@ msgstr "Undantag inträffade"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:27
 msgid "Adjust WMS"
-msgstr ""
+msgstr "Justera WMS"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:28
 msgid "Adjust the position of the WMS layer"
@@ -6782,6 +6836,29 @@ msgid ""
 "Note: Make sure the image is suitable, copyright-wise, if in doubt, don't "
 "use."
 msgstr ""
+"Du kan lägga till, ändra och ta bort WMS-poster med hjälp av "
+"inställningsfliken för WMSplugin - dessa kommer att synas i WMS-menyn.\n"
+"\n"
+"Du kan också göra dessa ändringar manuellt under avancerade inställningar, "
+"enligt följande mall:\n"
+"wmsplugin.url.1.name=Landsat\n"
+"wmsplugin.url.1.url=http://onearth.jpl.nasa.gov....\n"
+"wmsplugin.url.2.name=NPE Maps... etc\n"
+"\n"
+"Exempel på fullständigt WMS URL-inmatningsformat (landsat)\n"
+"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&\n"
+"layers=global_mosaic&styles=&srs=EPSG:4326&\n"
+"format=image/jpeg \n"
+"\n"
+"Vad gäller Metacartas Kartkorrigerare http://labs.metacarta.com/rectifier/ , "
+"så behöver du enbart ange relevant 'id'.\n"
+"För att lägga till en menypost för en korrigerad karta från Metacarta, skapa "
+"manuellt en url som i följande exempel och ersätt 73 med id för din bild: \n"
+"http://labs.metacarta.com/rectifier/wms.cgi?id=73\n"
+"&srs=EPSG:4326&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png\n"
+" \n"
+"Observera: Se till att bilden får användas enligt copyright-regler, om du är "
+"tveksam så använd inte den."
 
 #: ../plugins/wmsplugin/src/wmsplugin/Help_WMSmenuAction.java:54
 msgid "WMS Plugin Help"
@@ -6813,7 +6890,7 @@ msgstr "Navigator"
 
 #: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorModeAction.java:28
 msgid "Set start/end for autorouting. Middle Mouse button to reset."
-msgstr ""
+msgstr "Ange start/slut för autorouting. Mellersta musknappen återställer."
 
 #: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:40
 #: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:44
@@ -6834,7 +6911,7 @@ msgstr "Landsat"
 
 #: trans_wms.java:6
 msgid "Open Aerial Map"
-msgstr ""
+msgstr "Open Aerial Map"
 
 #: trans_wms.java:8
 msgid "NPE Maps"
@@ -6854,76 +6931,76 @@ msgstr "YAHOO (WebKit)"
 
 #: trans_wms.java:16
 msgid "YAHOO (WebKit GTK)"
-msgstr ""
+msgstr "YAHOO (WebKit GTK)"
 
 #: trans_wms.java:18
 msgid "Oberpfalz Geofabrik.de"
-msgstr ""
+msgstr "Oberpfalz Geofabrik.de"
 
 #: trans_wms.java:19
 msgid "Strassen NRW Geofabrik.de"
-msgstr ""
+msgstr "Strassen NRW Geofabrik.de"
 
 #: trans_validator.java:38
 msgid "oneway tag on a node"
-msgstr ""
+msgstr "enkelriktningstagg på en nod"
 
 #: trans_validator.java:39
 msgid "bridge tag on a node"
-msgstr ""
+msgstr "brotagg på en nod"
 
 #: trans_validator.java:40 trans_validator.java:41 trans_validator.java:42
 #: trans_validator.java:43 trans_validator.java:44
 msgid "wrong highway tag on a node"
-msgstr ""
+msgstr "felaktig landsvägstagg på en nod"
 
 #: trans_validator.java:45 trans_validator.java:46
 msgid "highway without a reference"
-msgstr ""
+msgstr "landsväg som saknar referens"
 
 #: trans_validator.java:47
 msgid "temporary highway type"
-msgstr ""
+msgstr "tillfällig landsvägstyp"
 
 #: trans_validator.java:48
 msgid "misspelled key name"
-msgstr ""
+msgstr "felstavat nyckelnamn"
 
 #: trans_validator.java:50
 msgid "cycleway with tag bicycle"
-msgstr ""
+msgstr "cykelstig med taggen cykel"
 
 #: trans_validator.java:51
 msgid "footway with tag foot"
-msgstr ""
+msgstr "gångstig med taggen fotgängare"
 
 #: trans_validator.java:54
-msgid "seperate cycleway as lane on a cycleway"
+msgid "separate cycleway as lane on a cycleway"
 msgstr ""
 
 #: trans_validator.java:55
 msgid "barrier used on a way"
-msgstr ""
+msgstr "hinder använt på en sträcka"
 
 #: trans_validator.java:58
 msgid "maxspeed used for footway"
-msgstr ""
+msgstr "maxhastighet använt på gångstig"
 
 #: trans_validator.java:60
 msgid "layer tag with + sign"
-msgstr ""
+msgstr "lagertagg med plustecken"
 
 #: trans_validator.java:62
 msgid "street name contains ss"
-msgstr ""
+msgstr "gatunamn innehåller ss"
 
 #: trans_validator.java:63
 msgid "abbreviated street name"
-msgstr ""
+msgstr "förkortat gatunamn"
 
 #: trans_surveyor.java:6
 msgid "Tunnel Start"
-msgstr ""
+msgstr "Början på tunnel"
 
 #: trans_surveyor.java:12 trans_presets.java:53 trans_presets.java:70
 #: trans_presets.java:89 trans_presets.java:107 trans_presets.java:128
@@ -6940,7 +7017,7 @@ msgstr "Bro"
 
 #: trans_surveyor.java:16
 msgid "Village/City"
-msgstr ""
+msgstr "By/Stad"
 
 #: trans_surveyor.java:24 trans_presets.java:1275 trans_presets.java:1322
 msgid "Parking"
@@ -6948,15 +7025,15 @@ msgstr "Parkeringsplats"
 
 #: trans_surveyor.java:29
 msgid "One Way"
-msgstr ""
+msgstr "Enkelriktat"
 
 #: trans_surveyor.java:33
 msgid "Church"
-msgstr ""
+msgstr "Kyrka"
 
 #: trans_surveyor.java:38
 msgid "Fuel Station"
-msgstr ""
+msgstr "Bensinstation"
 
 #: trans_surveyor.java:43 trans_presets.java:1453
 msgid "Hotel"
@@ -6968,15 +7045,15 @@ msgstr "Restaurang"
 
 #: trans_surveyor.java:52
 msgid "Shopping"
-msgstr ""
+msgstr "Handel"
 
 #: trans_surveyor.java:56
 msgid "WC"
-msgstr ""
+msgstr "WC"
 
 #: trans_surveyor.java:60
 msgid "Camping"
-msgstr ""
+msgstr "Camping"
 
 #: trans_surveyor.java:72 trans_presets.java:40
 msgid "Motorway"
@@ -7000,13 +7077,15 @@ msgstr "Bostadsområde"
 
 #: trans_surveyor.java:93 trans_surveyor.java:97
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #: specialmessages.java:6
 msgid ""
 "You requested too many nodes (limit is 50,000). Either request a smaller "
 "area, or use planet.osm"
 msgstr ""
+"Du har begärt för många noder (gränsen ärn 50 000). Antingen får du begära "
+"ett mindre område, eller så får du använda dig av planet.osm"
 
 #: specialmessages.java:7
 msgid "Database offline for maintenance"
@@ -7273,11 +7352,11 @@ msgstr "Redigera en väg av okänd typ"
 
 #: trans_presets.java:296
 msgid "Road Restrictions"
-msgstr ""
+msgstr "Vägbegränsningar"
 
 #: trans_presets.java:297
 msgid "Edit Road Restrictions"
-msgstr ""
+msgstr "Redigera vägbegränsningar"
 
 #: trans_presets.java:299
 msgid "Toll"
@@ -7800,7 +7879,7 @@ msgstr "Stopp"
 
 #: trans_presets.java:740
 msgid "Zebra Crossing"
-msgstr ""
+msgstr "Övergångsställe"
 
 #: trans_presets.java:741
 msgid "Edit a crossing"
@@ -7808,19 +7887,19 @@ msgstr ""
 
 #: trans_presets.java:743
 msgid "uncontrolled"
-msgstr ""
+msgstr "obevakad"
 
 #: trans_presets.java:743
 msgid "island"
-msgstr ""
+msgstr "ö"
 
 #: trans_presets.java:744
 msgid "Ref"
-msgstr ""
+msgstr "Ref"
 
 #: trans_presets.java:744
 msgid "zebra"
-msgstr ""
+msgstr "övergångsställe"
 
 #: trans_presets.java:744
 msgid "pelican"
@@ -7844,11 +7923,11 @@ msgstr "Redigera en stadsgränsskylt"
 
 #: trans_presets.java:763
 msgid "Second Name"
-msgstr ""
+msgstr "Andra namn"
 
 #: trans_presets.java:766
 msgid "Signpost"
-msgstr ""
+msgstr "Skylt"
 
 #: trans_presets.java:770
 msgid "Speed Camera"
@@ -7856,7 +7935,7 @@ msgstr "Hastighetskamera"
 
 #: trans_presets.java:774
 msgid "Emergency Phone"
-msgstr ""
+msgstr "Nödtelefon"
 
 #: trans_presets.java:780
 msgid "Ford"
@@ -7877,11 +7956,11 @@ msgstr "Redigera ett bergspass"
 #: trans_presets.java:798 trans_presets.java:1488 trans_presets.java:2810
 #: trans_presets.java:2817 trans_presets.java:2824
 msgid "Elevation"
-msgstr ""
+msgstr "Höjd"
 
 #: trans_presets.java:804
 msgid "Barriers"
-msgstr ""
+msgstr "Hinder"
 
 #: trans_presets.java:806
 msgid "Stile"
@@ -7889,7 +7968,7 @@ msgstr "Stätta"
 
 #: trans_presets.java:807
 msgid "Edit a Stile"
-msgstr ""
+msgstr "Redigera en stätta"
 
 #: trans_presets.java:810 trans_presets.java:820 trans_presets.java:830
 #: trans_presets.java:843 trans_presets.java:855 trans_presets.java:872
@@ -7897,15 +7976,15 @@ msgstr ""
 #: trans_presets.java:922 trans_presets.java:935 trans_presets.java:948
 #: trans_presets.java:996 trans_presets.java:1011
 msgid "Allowed traffic:"
-msgstr ""
+msgstr "Tillåten trafik:"
 
 #: trans_presets.java:816
 msgid "Kissing Gate"
-msgstr ""
+msgstr "Manshål"
 
 #: trans_presets.java:817
 msgid "Edit a Kissing Gate"
-msgstr ""
+msgstr "Redigera ett manshål"
 
 #: trans_presets.java:826
 msgid "Hampshire Gate"
@@ -7921,15 +8000,15 @@ msgstr "Trafikkon"
 
 #: trans_presets.java:840
 msgid "Edit a bollard"
-msgstr ""
+msgstr "Redigera en trafikkon"
 
 #: trans_presets.java:851
 msgid "Drawbridge"
-msgstr ""
+msgstr "Klaffbro"
 
 #: trans_presets.java:852
 msgid "Edit a Drawbridge"
-msgstr ""
+msgstr "Redigera en klaffbro"
 
 #: trans_presets.java:864
 msgid "Bus Trap"
@@ -7941,7 +8020,7 @@ msgstr "Färist"
 
 #: trans_presets.java:869
 msgid "Edit a Cattle Grid"
-msgstr ""
+msgstr "Redigera en färist"
 
 #: trans_presets.java:880
 msgid "Spikes"
@@ -7953,11 +8032,11 @@ msgstr ""
 
 #: trans_presets.java:893
 msgid "Porticullis"
-msgstr ""
+msgstr "Fällgaller"
 
 #: trans_presets.java:894
 msgid "Edit a Porticullis"
-msgstr ""
+msgstr "Redigera ett fällgaller"
 
 #: trans_presets.java:905
 msgid "Gate"
@@ -7993,11 +8072,11 @@ msgstr ""
 
 #: trans_presets.java:957
 msgid "Hedge"
-msgstr ""
+msgstr "Häck"
 
 #: trans_presets.java:961
 msgid "Fence"
-msgstr ""
+msgstr "Stängsel"
 
 #: trans_presets.java:965
 msgid "Block"
@@ -8005,11 +8084,11 @@ msgstr ""
 
 #: trans_presets.java:969
 msgid "Wall"
-msgstr ""
+msgstr "Mur"
 
 #: trans_presets.java:973
 msgid "City Wall"
-msgstr ""
+msgstr "Stadsmur"
 
 #: trans_presets.java:977
 msgid "Retaining Wall"
@@ -8025,19 +8104,19 @@ msgstr ""
 
 #: trans_presets.java:992
 msgid "Border Control"
-msgstr ""
+msgstr "Gränskontroll"
 
 #: trans_presets.java:993
 msgid "Edit a Border Control"
-msgstr ""
+msgstr "Redigera en gränskontroll"
 
 #: trans_presets.java:1007
 msgid "Entrance"
-msgstr ""
+msgstr "Ingång"
 
 #: trans_presets.java:1008
 msgid "Edit a Entrance"
-msgstr ""
+msgstr "Redigera en ingång"
 
 #: trans_presets.java:1029
 msgid "Waterway"
@@ -8145,11 +8224,11 @@ msgstr "Redigera en småbåtshamn"
 
 #: trans_presets.java:1129
 msgid "Ferry Terminal"
-msgstr ""
+msgstr "Färjeterminal"
 
 #: trans_presets.java:1130
 msgid "Edit Ferry Terminal"
-msgstr ""
+msgstr "Redigera en färjeterminal"
 
 #: trans_presets.java:1135
 msgid "Slipway"
@@ -8333,11 +8412,11 @@ msgstr ""
 
 #: trans_presets.java:1280
 msgid "surface"
-msgstr ""
+msgstr "ytbeläggning"
 
 #: trans_presets.java:1280
 msgid "multi-storey"
-msgstr ""
+msgstr "flervånings-"
 
 #: trans_presets.java:1280
 msgid "underground"
@@ -10966,36 +11045,3 @@ msgstr "Stup"
 #: trans_presets.java:2898
 msgid "Edit Cliff"
 msgstr "Redigera stup"
-
-#~ msgid "Development version. Unknown revision."
-#~ msgstr "Utvecklingsversion. Okänd revision."
-
-#~ msgid ""
-#~ "<html>Please report a ticket at {0}<br>Include your steps to get to the "
-#~ "error (as detailed as possible)!<br>Be sure to include the following "
-#~ "information:</html>"
-#~ msgstr ""
-#~ "<html>Lämna en rapport på {0}<br>Beskriv (så detaljerat som möjligt) vad "
-#~ "du gjorde för att felet skulle uppträda!<br>Se till att åtminstone "
-#~ "följande information finns med:</html>"
-
-#~ msgid "Java OpenStreetMap Editor Version {0}"
-#~ msgstr "Java OpenStreetMap-redigerare version {0}"
-
-#~ msgid "Remove \"{0}\" for"
-#~ msgstr "Ta bort \"{0}\" föor"
-
-#~ msgid "Set {0}={1} for"
-#~ msgstr "Sätt {0}={1} för"
-
-#~ msgid "JOSM, the Java OpenStreetMap editor"
-#~ msgstr "JOSM, redigeraren för Java OpenStreetMap"
-
-#~ msgid "Java OpenStreetMap - Editor"
-#~ msgstr "Java OpenStreetMap - Redigerare"
-
-#~ msgid "JOSM - Java OpenStreetMap Editor"
-#~ msgstr "JOSM - Java OpenStreetMap-redigeraren"
-
-#~ msgid "Edit Marsh"
-#~ msgstr "Redigera träsk"

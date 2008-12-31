@@ -577,12 +577,17 @@ public class CorrelateGpxWithImages implements ActionListener {
             }
             gpstimezone = timezoneValue.floatValue();
             
-            try {
-                delta = Long.parseLong(tfOffset.getText());
-            } catch(NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(Main.parent, tr("Error while parsing offset.\nExpected format: {0}", "number"), 
-                        tr("Invalid offset"), JOptionPane.ERROR_MESSAGE);
-                continue;
+            String deltaText = tfOffset.getText().trim();
+            if (deltaText.length() > 0) {
+                try {
+                    delta = Long.parseLong(deltaText);
+                } catch(NumberFormatException nfe) {
+                    JOptionPane.showMessageDialog(Main.parent, tr("Error while parsing offset.\nExpected format: {0}", "number"), 
+                            tr("Invalid offset"), JOptionPane.ERROR_MESSAGE);
+                    continue;
+                }
+            } else {
+                delta = 0;
             }
             
             Main.pref.put("tagimages.doublegpstimezone", Double.toString(gpstimezone));
@@ -803,9 +808,13 @@ public class CorrelateGpxWithImages implements ActionListener {
     }
     
     private Float parseTimezone(String timezone) {
+    	if (timezone.length() == 0) {
+    		return new Float(0);
+    	}
+    	
         char sgnTimezone = '+';
-        String hTimezone = "";
-        String mTimezone = "";
+        StringBuffer hTimezone = new StringBuffer();
+        StringBuffer mTimezone = new StringBuffer();
         int state = 1; // 1=start/sign, 2=hours, 3=minutes.
         for (int i = 0; i < timezone.length(); i++) {
             char c = timezone.charAt(i);
@@ -836,14 +845,12 @@ public class CorrelateGpxWithImages implements ActionListener {
             case '5' : case '6' : case '7' : case '8' : case '9' :
                 switch(state) {
                 case 1 : 
-                    state = 2;
-                    hTimezone += c;
-                    break;
                 case 2 : 
-                    hTimezone += c;
+                    state = 2;
+                    hTimezone.append(c);
                     break;
                 case 3 : 
-                    mTimezone += c;
+                    mTimezone.append(c);
                     break;
                 default : 
                     return null;
@@ -853,12 +860,24 @@ public class CorrelateGpxWithImages implements ActionListener {
                 return null;
             }
         }
-        int h = Integer.parseInt(hTimezone);
-        int m = Integer.parseInt(mTimezone);
+        
+        int h = 0;
+        int m = 0;
+        try {
+       		h = Integer.parseInt(hTimezone.toString());
+        	if (mTimezone.length() > 0) {
+        		m = Integer.parseInt(mTimezone.toString());
+        	}
+        } catch (NumberFormatException nfe) {
+        	// Invalid timezone
+        	return null;
+        }
+        
         if (h > 12 || m > 59 ) {
             return null;
+        } else {
+        	return new Float((h + m / 60.0) * (sgnTimezone == '-' ? -1 : 1));
         }
-        return new Float((h + m / 60.0) * (sgnTimezone == '-' ? -1 : 1));
     }
 
     /** Return the distance in meters between 2 points 

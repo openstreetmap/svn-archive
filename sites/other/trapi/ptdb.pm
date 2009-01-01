@@ -415,7 +415,8 @@ sub splitptn($) {
 	    }
 	    $nnoff = tell($nnd);
 	    seek $nd, $noff, 0;
-	    while (my $s = gets($nd)) {
+	    my $s;
+	    while (defined($s = gets($nd)) && ($s ne "")) {
 		print $nnd $s."\0";
 	    }
 	    print $nnd "\0";
@@ -464,7 +465,8 @@ sub splitptn($) {
 			print $nnd pack "N", $nn;
 		    }
 		    print $nnd pack "N", 0;
-		    while (my $s = gets($nd)) {
+		    my $s;
+		    while (defined($s = gets($nd)) && ($s ne "")) {
 			print $nnd $s."\0";
 		    }
 		    print $nnd "\0";
@@ -501,7 +503,8 @@ sub splitptn($) {
 		    print $nnd pack "N", $nn;
 		}
 		print $nnd pack "N", 0;
-		while (my $s = gets($nd)) {
+		my $s;
+		while (defined($s = gets($nd)) && ($s ne "")) {
 		    print $nnd $s."\0";
 		}
 		print $nnd "\0";

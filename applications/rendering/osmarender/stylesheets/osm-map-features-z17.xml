@@ -1765,14 +1765,55 @@
 				</else>
 			</else>
 		</rule>
+		
+		<!-- Parking -->
 		<rule e="node" k="amenity" v="parking">
-			<symbol ref="parking" position="center"/>
+			<rule e="node" k="parking" v="park_and_ride">
+				<symbol ref="park_and_ride" position="center"/>
+			</rule>
+			<else>
+				<rule e="node" k="parking" v="multi-storey|underground">
+					<rule e="node" k="fee" v="yes">
+						<symbol ref="parking_roof_fee" position="center"/>
+					</rule>
+					<else>
+						<symbol ref="parking_roof" position="center"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="node" k="fee" v="yes">
+						<symbol ref="parking_fee" position="center"/>
+					</rule>
+					<else>
+						<symbol ref="parking" position="center"/>
+					</else>
+				</else>
+			</else>
 		</rule>
 		<rule e="way" k="amenity" v="parking">
-			<rule e="way" k="access" v="~|yes|public">
-				<areaSymbol ref="parking" position="center"/>
+			<rule e="way" k="parking" v="park_and_ride">
+				<areaSymbol ref="park_and_ride" position="center"/>
 			</rule>
+			<else>
+				<rule e="way" k="parking" v="multi-storey|underground">
+					<rule e="way" k="fee" v="yes">
+						<areaSymbol ref="parking_roof_fee" position="center"/>
+					</rule>
+					<else>
+						<areaSymbol ref="parking_roof" position="center"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="fee" v="yes">
+						<areaSymbol ref="parking_fee" position="center"/>
+					</rule>
+					<else>
+						<areaSymbol ref="parking" position="center"/>
+					</else>
+				</else>
+			</else>
 		</rule>
+		
 		<rule e="node" k="highway" v="traffic_signals">
 			<symbol ref="traffic_signal" position="center"/>
 		</rule>

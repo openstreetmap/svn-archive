@@ -1577,17 +1577,17 @@ msgstr "JPEG obrázky (*.jpg)"
 #, java-format
 msgid "{0} track, "
 msgid_plural "{0} tracks, "
-msgstr[0] "cesta, "
-msgstr[1] "cesty, "
-msgstr[2] "cesty, "
+msgstr[0] "{0} cesta, "
+msgstr[1] "{0} cesty, "
+msgstr[2] "{0} cesty, "
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:286
 #, java-format
 msgid "{0} route, "
 msgid_plural "{0} routes, "
-msgstr[0] "trasa, "
-msgstr[1] "trasy, "
-msgstr[2] "trasy, "
+msgstr[0] "{0} trasa, "
+msgstr[1] "{0} trasy, "
+msgstr[2] "{0} trasy, "
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:287
 #, java-format

@@ -2978,8 +2978,8 @@ msgstr ""
 #, java-format
 msgid "{0} Plugin successfully updated. Please restart JOSM."
 msgid_plural "{0} Plugins successfully updated. Please restart JOSM."
-msgstr[0] "Insticksmodulen har uppdaterats. Starta om JOSM."
-msgstr[1] "Insticksmodulerna har uppdaterats. Starta om JOSM."
+msgstr[0] "{0} Insticksmodulen har uppdaterats. Starta om JOSM."
+msgstr[1] "{0} Insticksmodulerna har uppdaterats. Starta om JOSM."
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:136
 #, java-format

@@ -805,10 +805,10 @@ def main():
   sax.parse(open(options.geomfile), handler)
   printStr( "Parse of geomfile done" )
 
-  #for junct in handler.junctionList:
+  for junct in handler.junctionList:
    #Find the 'nodes' at these coordinates and merge them IF
    # the junction is an intersection
-   #handler.mergeNodes((str(junct[0]),str(junct[1])))
+   handler.mergeNodes((str(junct[0]),str(junct[1])))
   
   # Format the code by default
   if options.indent:

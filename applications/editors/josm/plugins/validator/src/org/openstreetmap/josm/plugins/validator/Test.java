@@ -154,10 +154,11 @@ public class Test implements Visitor
 	/**
 	 * Called when the used submits the preferences
 	 */
-	public void ok() 
+	public boolean ok()
 	{
 		enabled = checkEnabled.isSelected();
 		testBeforeUpload = checkBeforeUpload.isSelected();
+		return false;
 	}
 	
 	/**

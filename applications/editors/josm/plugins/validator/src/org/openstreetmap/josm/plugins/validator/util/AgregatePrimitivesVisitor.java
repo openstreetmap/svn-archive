@@ -2,7 +2,7 @@ package org.openstreetmap.josm.plugins.validator.util;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.TreeSet;
+import java.util.LinkedList;
 
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
@@ -24,7 +24,7 @@ public class AgregatePrimitivesVisitor implements Visitor
 	 */
 	public AgregatePrimitivesVisitor() 
 	{
-		aggregatedData = new TreeSet<OsmPrimitive>( new PrimitiveComparator());
+		aggregatedData = new LinkedList<OsmPrimitive>();
 	}
 
 	/**
@@ -44,44 +44,25 @@ public class AgregatePrimitivesVisitor implements Visitor
 
 	public void visit(Node n) 
 	{
-		aggregatedData.add(n);
+		if(!aggregatedData.contains(n))
+			aggregatedData.add(n);
 	}
 
 	public void visit(Way w) 
 	{
-		aggregatedData.add(w);
-		for (Node n : w.nodes)
-			visit(n);
+		if(!aggregatedData.contains(w))
+		{
+			aggregatedData.add(w);
+			for (Node n : w.nodes)
+				visit(n);
+		}
 	}
 
 	public void visit(Relation r) {
-		// Relations can be cyclic so don't visit them twice.
 		if (!aggregatedData.contains(r)) {
 			aggregatedData.add(r);
 			for (RelationMember m : r.members) {
 				m.member.visit(this);
-			}
-		}
-	}
-
-	/**
-	 * A comparator that orders nodes first, ways last.
-	 * 
-	 * @author frsantos
-	 */
-	class PrimitiveComparator implements Comparator<OsmPrimitive>
-	{
-		public int compare(OsmPrimitive o1, OsmPrimitive o2) 
-		{
-			if( o1 instanceof Node)
-			{
-				return o2 instanceof Node ? o1.hashCode() - o2.hashCode() : -1;
-			}
-			else if( o1 instanceof Way)
-			{
-				return o2 instanceof Way ? o1.hashCode() - o2.hashCode() : 1;
-			} else {
-				return o1.hashCode() - o2.hashCode();
 			}
 		}
 	}

@@ -101,10 +101,12 @@ public class PreferenceEditor implements PreferenceSetting
 	{
 		StringBuilder tests = new StringBuilder();
 		StringBuilder testsBeforeUpload = new StringBuilder();
+		Boolean res = false;
 
 		for (Test test : allTests)
 		{
-			test.ok();
+			if(test.ok())
+			    res = false;
 			String name = test.getClass().getSimpleName();
 			tests.append( ',' ).append( name ).append( '=' ).append( test.enabled );
 			testsBeforeUpload.append( ',' ).append( name ).append( '=' ).append( test.testBeforeUpload );

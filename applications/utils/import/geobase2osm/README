@@ -8,8 +8,6 @@ FROM THE NATIONAL RULE SET DUE TO VARIATIONS IN HOW EACH JURISDICTION CLASSIFIES
 WHAT IS A ROAD.
 
 
-
-
 Introduction:
 -------------
 This tool is designed to take a Canadian Geobase GML file (or files) and 
@@ -20,17 +18,17 @@ This tool is designed to be compatible with the 0.5 API.
 How to use:
 -----------
 
-python geobase2osm.py -i NRN_GEOM.gml [-a NRN_ADDR.gml] [-o output.osm] [--pretty]
+python geobase2osm.py -i NRN_GEOM.gml [-a NRN_ADDR.gml] [-o output.osm] [--pretty] [--quiet]
 
 -i filename = The National Road Network Geometry input file
 -a filename = The National Road Network Address input file (optional)
 -o filename = The file to save to
---pretty    = Create a indented and neatly formatted output file (can add a fair 
-bit of whitespace)
+--pretty    = Create a indented and neatly formatted output file (can add a fair bit of whitespace)
+--quiet     = Don't display any messages while processing
 
 Requirements:
 -------------
-Python 2.3 or higher
+Python 2.5 or higher
 cElementTree (Note: you can use the native python ElementTree but its much slower. To 
 do so change the relevant import line in the script)
 
@@ -40,3 +38,9 @@ Notes:
 This is a very memory intensive process for some of the larger Geobase datasets. Things will
 be optimized in the future, currently processing requires roughly 10 times the datafile size 
 of memory.
+
+
+Contributors:
+-------------
+Jason Reid   - Initial script development
+Steve Singer - OGR integration, junction processing

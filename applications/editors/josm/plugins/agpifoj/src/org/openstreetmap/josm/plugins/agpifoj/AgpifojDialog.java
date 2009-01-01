@@ -34,7 +34,7 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
     private ImageDisplay imgDisplay = new ImageDisplay();
     private boolean centerView = false;
     
-    // Only one instance of thar class
+    // Only one instance of that class
     static private AgpifojDialog INSTANCE = null;
     
     public static AgpifojDialog getInstance() {
@@ -159,15 +159,19 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
             currentEntry = entry;
         }
         
-        imgDisplay.setImage(entry != null ? entry.file : null);
-        StringBuffer osd = new StringBuffer(entry.file.getName());
-        if (entry.elevation != null) {
-            osd.append(tr("\nAltitude: ")).append(entry.elevation.longValue()).append(" m");
+        if (entry != null) {
+            imgDisplay.setImage(entry.file);
+            StringBuffer osd = new StringBuffer(entry.file != null ? entry.file.getName() : "");
+            if (entry.elevation != null) {
+                osd.append(tr("\nAltitude: {0} m", entry.elevation.longValue()));
+            }
+            if (entry.speed != null) {
+                osd.append(tr("\n{0} km/h", (long) (3.6 * entry.speed)));
+            }
+            imgDisplay.setOsdText(osd.toString());
+        } else {
+            imgDisplay.setImage(null);
+            imgDisplay.setOsdText("");
         }
-        if (entry.speed != null) {
-            osd.append("\n").append((long) (3.6 * entry.speed)).append(tr(" km/h"));
-        }
-        imgDisplay.setOsdText(osd.toString());
     }
-
 }

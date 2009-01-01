@@ -124,6 +124,9 @@
 		<rule e="way" k="waterway" v="drain">
 			<line class="waterway-casing waterway-drain-casing" width-scale-factor="1" honor-width="yes" minimum-width="1.44" maximum-width="140"/>
 		</rule>
+		<rule e="way" k="waterway" v="ditch">
+			<line class="waterway-casing waterway-ditch-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.8" maximum-width="80"/>
+		</rule>
 		<rule e="way" k="tunnel" v="yes">
 			<rule e="way" k="waterway" v="river">
 				<line class="waterway-core waterway-river-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="200"/>
@@ -136,6 +139,9 @@
 			</rule>
 			<rule e="way" k="waterway" v="drain">
 				<line class="waterway-core waterway-drain-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="1.12" maximum-width="112"/>
+			</rule>
+			<rule e="way" k="waterway" v="ditch">
+				<line class="waterway-core waterway-ditch-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.8" maximum-width="80"/>
 			</rule>
 		</rule>
 		<else>
@@ -150,6 +156,9 @@
 			</rule>
 			<rule e="way" k="waterway" v="drain">
 				<line class="waterway-core waterway-drain-core" width-scale-factor="1" honor-width="yes" minimum-width="1.12" maximum-width="112"/>
+			</rule>
+			<rule e="way" k="waterway" v="ditch">
+				<line class="waterway-core waterway-ditch-core" width-scale-factor="1" honor-width="yes" minimum-width="0.8" maximum-width="80"/>
 			</rule>
 		</else>
 		<rule e="way" k="waterway" v="dock">
@@ -1181,6 +1190,10 @@
 			.waterway-drain-casing          { stroke-width: 4px; }
 			.waterway-drain-core            { stroke-width: 4px; }
 			.waterway-drain-tunnel-core     { stroke-width: 3px; stroke-dasharray: 6, 6; }
+			
+			.waterway-ditch-casing          { stroke-width: 1.2px; }
+			.waterway-ditch-core            { stroke-width: 1.2px; }
+			.waterway-ditch-tunnel-core     { stroke-width: 1.1px; stroke-dasharray: 6, 6; }
 			
 			
 			/* Ferry */

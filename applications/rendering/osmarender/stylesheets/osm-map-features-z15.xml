@@ -198,6 +198,9 @@
 		<rule e="way" k="waterway" v="drain">
 			<line class="waterway-casing waterway-drain-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.18" maximum-width="17.5"/>
 		</rule>
+		<rule e="way" k="waterway" v="ditch">
+			<line class="waterway-casing waterway-ditch-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
+		</rule>
 		<rule e="way" k="tunnel" v="yes">
 			<rule e="way" k="waterway" v="river">
 				<line class="waterway-core waterway-river-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.25" maximum-width="25"/>
@@ -210,6 +213,9 @@
 			</rule>
 			<rule e="way" k="waterway" v="drain">
 				<line class="waterway-core waterway-drain-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.14" maximum-width="14"/>
+			</rule>
+			<rule e="way" k="waterway" v="ditch">
+				<line class="waterway-core waterway-ditch-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
 			</rule>
 		</rule>
 		<else>
@@ -224,6 +230,9 @@
 			</rule>
 			<rule e="way" k="waterway" v="drain">
 				<line class="waterway-core waterway-drain-core" width-scale-factor="1" honor-width="yes" minimum-width="0.14" maximum-width="14"/>
+			</rule>
+			<rule e="way" k="waterway" v="ditch">
+				<line class="waterway-core waterway-ditch-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
 			</rule>
 		</else>
 		<rule e="way" k="waterway" v="dock">
@@ -1819,6 +1828,12 @@
 			.waterway-drain-tunnel-core             { stroke-width: 1.4px; stroke-dasharray: 2.6, 2.6; }
 			.waterway-drain-name-casing             { font-size: 3px; stroke-width: 0.2px;}
 			.waterway-drain-name-core               { font-size: 3px; }
+			
+			.waterway-ditch-casing                  { stroke-width: 0.3px; }
+			.waterway-ditch-core                    { stroke-width: 0.3px; }
+			.waterway-ditch-tunnel-core             { stroke-width: 0.2px; stroke-dasharray: 1.5, 1.5; }
+			.waterway-ditch-name-casing             { font-size: 3px; stroke-width: 0.2px;}
+			.waterway-ditch-name-core               { font-size: 3px; }
 			
 			
 			/* Generic under-construction style - makes any way dashed */

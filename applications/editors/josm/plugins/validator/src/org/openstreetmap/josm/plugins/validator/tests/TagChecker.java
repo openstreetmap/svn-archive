@@ -80,30 +80,35 @@ public class TagChecker extends Test
 	public static final String PREF_CHECK_KEYS = PREFIX + ".checkKeys";
 	public static final String PREF_CHECK_COMPLEX = PREFIX + ".checkComplex";
 	public static final String PREF_CHECK_FIXMES = PREFIX + ".checkFixmes";
+	public static final String PREF_CHECK_PAINT = PREFIX + ".paint";
 
 	public static final String PREF_SOURCES = PREFIX + ".sources";
 	public static final String PREF_USE_DATA_FILE = PREFIX + ".usedatafile";
 	public static final String PREF_USE_SPELL_FILE = PREFIX + ".usespellfile";
 
-	public static final String PREF_CHECK_KEYS_BEFORE_UPLOAD = PREFIX + ".checkKeysBeforeUpload";
-	public static final String PREF_CHECK_VALUES_BEFORE_UPLOAD = PREFIX + ".checkValuesBeforeUpload";
-	public static final String PREF_CHECK_COMPLEX_BEFORE_UPLOAD = PREFIX + ".checkComplexBeforeUpload";
-	public static final String PREF_CHECK_FIXMES_BEFORE_UPLOAD = PREFIX + ".checkFixmesBeforeUpload";
+	public static final String PREF_CHECK_KEYS_BEFORE_UPLOAD = PREF_CHECK_KEYS + "BeforeUpload";
+	public static final String PREF_CHECK_VALUES_BEFORE_UPLOAD = PREF_CHECK_VALUES + "BeforeUpload";
+	public static final String PREF_CHECK_COMPLEX_BEFORE_UPLOAD = PREF_CHECK_COMPLEX + "BeforeUpload";
+	public static final String PREF_CHECK_FIXMES_BEFORE_UPLOAD = PREF_CHECK_FIXMES + "BeforeUpload";
+	public static final String PREF_CHECK_PAINT_BEFORE_UPLOAD = PREF_CHECK_PAINT + "BeforeUpload";
 
 	protected boolean checkKeys = false;
 	protected boolean checkValues = false;
 	protected boolean checkComplex = false;
 	protected boolean checkFixmes = false;
+	protected boolean checkPaint = false;
 
 	protected JCheckBox prefCheckKeys;
 	protected JCheckBox prefCheckValues;
 	protected JCheckBox prefCheckComplex;
 	protected JCheckBox prefCheckFixmes;
+	protected JCheckBox prefCheckPaint;
 
 	protected JCheckBox prefCheckKeysBeforeUpload;
 	protected JCheckBox prefCheckValuesBeforeUpload;
 	protected JCheckBox prefCheckComplexBeforeUpload;
 	protected JCheckBox prefCheckFixmesBeforeUpload;
+	protected JCheckBox prefCheckPaintBeforeUpload;
 
 	protected JCheckBox prefUseDataFile;
 	protected JCheckBox prefUseSpellFile;
@@ -119,6 +124,7 @@ public class TagChecker extends Test
 	protected static int INVALID_SPACE     = 1204;
 	protected static int INVALID_KEY_SPACE = 1205;
 	protected static int INVALID_HTML      = 1206;
+	protected static int PAINT             = 1207;
 	/** 1250 and up is used by tagcheck */
 
 	/** List of sources for spellcheck data */
@@ -277,6 +283,13 @@ public class TagChecker extends Test
 
 
 	@Override
+	public void visit(Relation n)
+	{
+		checkPrimitive(n);
+	}
+
+
+	@Override
 	public void visit(Way w)
 	{
 		checkPrimitive(w);
@@ -302,6 +315,17 @@ public class TagChecker extends Test
 					withErrors.add(p, "TC");
 					break;
 				}
+			}
+		}
+		if(checkPaint && p.errors != null)
+		{
+			for(String s: p.errors)
+			{
+				/* passing translated text also to original string, as we already
+				translated the stuff before. Makes the ignore file language dependend. */
+				errors.add( new TestError(this, Severity.WARNING, tr("Painting problem"),
+				s, s, PAINT, p) );
+				withErrors.add(p, "P");
 			}
 		}
 
@@ -382,6 +406,10 @@ public class TagChecker extends Test
 		checkFixmes = Main.pref.getBoolean(PREF_CHECK_FIXMES, true);
 		if( isBeforeUpload )
 			checkFixmes = checkFixmes && Main.pref.getBoolean(PREF_CHECK_FIXMES_BEFORE_UPLOAD, true);
+
+		checkPaint = Main.pref.getBoolean(PREF_CHECK_PAINT, true);
+		if( isBeforeUpload )
+			checkPaint = checkPaint && Main.pref.getBoolean(PREF_CHECK_PAINT_BEFORE_UPLOAD, true);
 	}
 
 	@Override
@@ -519,6 +547,14 @@ public class TagChecker extends Test
 		prefCheckFixmesBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_FIXMES_BEFORE_UPLOAD, true));
 		testPanel.add(prefCheckFixmesBeforeUpload, a);
 
+		prefCheckPaint = new JCheckBox(tr("Check for paint notes."), Main.pref.getBoolean(PREF_CHECK_PAINT, true));
+		prefCheckPaint.setToolTipText(tr("Check if map paining found data errors."));
+		testPanel.add(prefCheckPaint, GBC.std().insets(20,0,0,0));
+
+		prefCheckPaintBeforeUpload = new JCheckBox();
+		prefCheckPaintBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_PAINT_BEFORE_UPLOAD, true));
+		testPanel.add(prefCheckPaintBeforeUpload, a);
+
 		prefUseDataFile = new JCheckBox(tr("Use default data file."), Main.pref.getBoolean(PREF_USE_DATA_FILE, true));
 		prefUseDataFile.setToolTipText(tr("Use the default data file (recommended)."));
 		testPanel.add(prefUseDataFile, GBC.eol().insets(20,0,0,0));
@@ -539,7 +575,7 @@ public class TagChecker extends Test
 	}
 
 	@Override
-	public void ok()
+	public boolean ok()
 	{
 		enabled = prefCheckKeys.isSelected() || prefCheckValues.isSelected() || prefCheckComplex.isSelected() || prefCheckFixmes.isSelected();
 		testBeforeUpload = prefCheckKeysBeforeUpload.isSelected() || prefCheckValuesBeforeUpload.isSelected()
@@ -549,10 +585,12 @@ public class TagChecker extends Test
 		Main.pref.put(PREF_CHECK_COMPLEX, prefCheckComplex.isSelected());
 		Main.pref.put(PREF_CHECK_KEYS, prefCheckKeys.isSelected());
 		Main.pref.put(PREF_CHECK_FIXMES, prefCheckFixmes.isSelected());
+		Main.pref.put(PREF_CHECK_PAINT, prefCheckPaint.isSelected());
 		Main.pref.put(PREF_CHECK_VALUES_BEFORE_UPLOAD, prefCheckValuesBeforeUpload.isSelected());
 		Main.pref.put(PREF_CHECK_COMPLEX_BEFORE_UPLOAD, prefCheckComplexBeforeUpload.isSelected());
 		Main.pref.put(PREF_CHECK_KEYS_BEFORE_UPLOAD, prefCheckKeysBeforeUpload.isSelected());
 		Main.pref.put(PREF_CHECK_FIXMES_BEFORE_UPLOAD, prefCheckFixmesBeforeUpload.isSelected());
+		Main.pref.put(PREF_CHECK_PAINT_BEFORE_UPLOAD, prefCheckPaintBeforeUpload.isSelected());
 		Main.pref.put(PREF_USE_DATA_FILE, prefUseDataFile.isSelected());
 		Main.pref.put(PREF_USE_SPELL_FILE, prefUseSpellFile.isSelected());
 		String sources = "";
@@ -565,7 +603,7 @@ public class TagChecker extends Test
 		}
 		if(sources.length() == 0)
 			sources = null;
-		Main.pref.put(PREF_SOURCES, sources );
+		return Main.pref.put(PREF_SOURCES, sources);
 	}
 
 	@Override

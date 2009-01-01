@@ -17,9 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -81,19 +81,37 @@ public class AgpifojLayer extends Layer {
         }
     }
 
+    /** Loads a set of images, while displaying a dialog that indicates what the plugin is currently doing.
+     * In facts, this object is instantiated with a list of files. These files may be JPEG files or 
+     * directories. In case of directories, they are scanned to find all the images they contain. 
+     * Then all the images that have be found are loaded as ImageEntry instances. 
+     */
     private static final class Loader extends PleaseWaitRunnable {
 
         private boolean cancelled = false;
         private AgpifojLayer layer;
-        private final Collection<File> files;
-
-        public Loader(Collection<File> files) {
+        private final File[] selection;
+        private HashSet<String> loadedDirectories = new HashSet<String>();
+        
+        public Loader(File[] selection) {
             super(tr("Extracting GPS locations from EXIF"));
-            this.files = files;
+            this.selection = selection;
         }
 
         @Override protected void realRun() throws IOException {
 
+            Main.pleaseWaitDlg.currentAction.setText(tr("Starting directory scan"));
+            List<File> files = new ArrayList<File>();
+            try {
+                addRecursiveFiles(files, selection);
+            } catch(NullPointerException npe) {
+                errorMessage += tr("One of the selected files was null !!!");
+            }
+            
+            if (cancelled) {
+                return;
+            }
+            
             Main.pleaseWaitDlg.currentAction.setText(tr("Read photos..."));
 
             // read the image files
@@ -127,13 +145,65 @@ public class AgpifojLayer extends Layer {
                 data.add(e);
             }
             layer = new AgpifojLayer(data);
+            files.clear();
+        }
+
+        private void addRecursiveFiles(List<File> files, File[] sel) { 
+            boolean nullFile = false;
+            
+            for (File f : sel) {
+                
+                if(cancelled) {
+                    break;
+                }
+                
+                if (f == null) {
+                    nullFile = true;
+                    
+                } else if (f.isDirectory()) {
+                    String canonical = null;
+                    try {
+                        canonical = f.getCanonicalPath();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        errorMessage += tr("Unable to get canonical path for directory {0}\n", 
+                                           f.getAbsolutePath());
+                    }
+                    
+                    if (canonical == null || loadedDirectories.contains(canonical)) {
+                        continue;
+                    } else {
+                        loadedDirectories.add(canonical);
+                    }
+                    
+                    File[] children = f.listFiles(AgpifojPlugin.JPEG_FILE_FILTER);
+                    if (children != null) {
+                        Main.pleaseWaitDlg.currentAction.setText(tr("Scanning directory {0}", f.getPath()));
+                        try {
+                            addRecursiveFiles(files, children);
+                        } catch(NullPointerException npe) {
+                            npe.printStackTrace();
+                            errorMessage += tr("Found null file in directory {0}\n", f.getPath());
+                        }
+                    } else {
+                        errorMessage += tr("Error while getting files from directory {0}\n", f.getPath());
+                    }
+                    
+                } else {
+                      files.add(f);
+                }
+            }
+            
+            if (nullFile) {
+                throw new NullPointerException();
+            }
         }
 
         @Override protected void finish() {
             if (layer != null) {
                 Main.main.addLayer(layer);
                 layer.hook_up_mouse_events(); // Main.map.mapView should exist
-                                              // now. Can add mouse lisener
+                                              // now. Can add mouse listener
 
                 if (! cancelled && layer.data.size() > 0) {
                     boolean noGeotagFound = true;
@@ -154,7 +224,7 @@ public class AgpifojLayer extends Layer {
         }
     }
 
-    public static void create(Collection<File> files) {
+    public static void create(File[] files) {
         Loader loader = new Loader(files);
         Main.worker.execute(loader);
     }

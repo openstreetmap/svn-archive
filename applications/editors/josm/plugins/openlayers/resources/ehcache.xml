@@ -4,7 +4,7 @@
     CacheManager Configuration
     ==========================
     An ehcache.xml corresponds to a single CacheManager.
-    
+
     See instructions below or the ehcache schema (ehcache.xsd) on how to configure.
 
     DiskStore configuration
@@ -169,9 +169,9 @@
     maxElementsInMemory:
     Sets the maximum number of objects that will be created in memory
 
-	maxElementsOnDisk:
+    maxElementsOnDisk:
     Sets the maximum number of objects that will be maintained in the DiskStore
-	The default value is zero, meaning unlimited.
+    The default value is zero, meaning unlimited.
 
     eternal:
     Sets whether elements are eternal. If eternal,  timeouts are ignored and the
@@ -210,7 +210,7 @@
     to this area and then asynchronously written to disk. The default size is 30MB.
     Each spool buffer is used only by its cache. If you get OutOfMemory errors consider
     lowering this value. To improve DiskStore performance consider increasing it. Trace level
-    logging in the DiskStore will show if put back ups are occurring. 
+    logging in the DiskStore will show if put back ups are occurring.
 
     memoryStoreEvictionPolicy:
     Policy would be enforced upon reaching the maxElementsInMemory limit. Default
@@ -467,7 +467,7 @@
                 properties="asynchronousReplicationIntervalMillis=200"/>
     </cache>
 
-    
+
 
 
 </ehcache>

@@ -2,8 +2,8 @@
 <site version="1.0">
   <!-- meta data of site -->
   <site-info>
-	  <site-name>Update Site of Christof Dallermassl</site-name>
-	  <site-url>http://www.tegmento.org/~cdaller/josm/</site-url>
+      <site-name>Update Site of Christof Dallermassl</site-name>
+      <site-url>http://www.tegmento.org/~cdaller/josm/</site-url>
   </site-info>
 
   <!-- include other update site locations -->
@@ -13,4 +13,4 @@
     <site ref="http://www.tegmento.org/~cdaller/josm/livegps/"/>
     <site ref="http://www.tegmento.org/~cdaller/josm/colorscheme/"/>
   </sites>
-</site> 
+</site>

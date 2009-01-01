@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <surveyor columns="4" width="1300" height="0">
   <!-- icons can either be absolute paths or relative paths to the .josm directory -->
-  <!-- action class: either fully qualified classnames or if not found, 
+  <!-- action class: either fully qualified classnames or if not found,
        package at.dallermassl.josm.plugin.surveyor.action is assumed -->
   <button label="Tunnel Start" hotkey="T" icon="tunnel">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
@@ -89,7 +89,7 @@
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Residential"/>
   </button>
-  <!-- 
+  <!--
   <button label="Test" hotkey="shift X">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Test X"/>

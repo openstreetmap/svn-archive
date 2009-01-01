@@ -2,12 +2,12 @@ A plugin for displaying OpenLayers images as a background
 
 This plugin is a proof of concept, and so it is at a very first stage.
 
-What it does: 
+What it does:
     * It downloads a Yahoo satellite background image of the current view port (well, sort of)
 
 What it does NOT:
     * Everything else :-)
- 
+
 What needs to be done:
     * Fix positions
     * Fix refresh problems

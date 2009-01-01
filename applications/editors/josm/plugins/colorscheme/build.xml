@@ -1,90 +1,79 @@
 <project name="colorscheme" default="dist" basedir=".">
-
-  <!-- compilation properties -->
-  <property name="josm.build.dir"	value="../../core"/>
-  <property name="josm.home.dir"	value="${user.home}/.josm"/>
-  <property name="josm"			location="../../core/dist/josm-custom.jar" />
-  <property name="plugin.build.dir"	value="build"/>
-  <property name="plugin.dist.dir"	value="../../dist"/>
-  <property name="plugin.name"		value="${ant.project.name}"/>
-  <property name="plugin.jar"		value="../../dist/${plugin.name}.jar"/>
-  
-  <property name="plugin.description" value="Allows the user to create different color schemes and to switch between them. Just change the colors and create a new scheme. Used to switch to a white background with matching colors for better visibility in bright sunlight. See dialog in JOSM's preferences and 'Map Settings' (strange but true :-) (V${plugin.version})."/>
-  <property name="plugin.class" value="at.dallermassl.josm.plugin.colorscheme.ColorSchemePlugin"/>
-
-  <!-- update site meta data -->
-  <property name="plugin.site.file" value="josm-site.xml"/>
-  <property name="plugin.site.description" value="Josm's ColorScheme Plugin Update Site"/>
-  <property name="plugin.site.url" value="http://www.tegmento.org/~cdaller/josm/colorscheme/"/>
-  <property name="plugin.site.upload.target" value="cdaller@www.tegmento.org:public_html/josm/colorscheme/"/>
-
-  <property name="ant.build.javac.target" value="1.5"/>
-  
-  <target name="dist" depends="compile, site">
-    <echo message="creating ${plugin.jar}"/>
-    <!-- images -->
-    <!-- 
-	 <copy todir="${plugin.build.dir}/images">
-	   <fileset dir="src/images" />
-	 </copy>
-	 -->
-    <!-- copy configuration xml files -->
-    <copy todir="${plugin.build.dir}">
-      <fileset dir="src"> 
-        <include name="*.xml"/>
-      </fileset>
-    </copy>
-    
-    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-      <env key="LANG" value="C"/>
-      <arg value="info"/>
-      <arg value="--xml"/>
-      <arg value="."/>
-    </exec>
-    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-    <delete file="REVISION"/>
-    <!-- create jar file -->
-    <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-      <manifest>
-        <attribute name="Plugin-Class" value="${plugin.class}" />
-        <attribute name="Plugin-Description" value="${plugin.description}" />
-        <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-        <attribute name="Plugin-Mainversion" value="1180"/>
-        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-      </manifest>
-    </jar>
-  </target>
-
-  <target name="compile" depends="init">
-    <mkdir dir="${plugin.build.dir}"/>
-    <javac srcdir="src" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
-      <classpath>
-        <pathelement path="${josm.build.dir}/build"/>
-        <fileset dir="${josm.build.dir}/lib">
-          <include name="**/*.jar"/>
-        </fileset>
-      </classpath>
-    </javac>
-  </target>
-
-  <target name="install" depends="dist">
-    <copy file="${plugin.jar}" todir="${josm.home.dir}/plugins" />
-  </target>
-
-  <target name="init">
-    <echo>java version: ${java.version}</echo>
-  </target>
-
-  <target name="clean">
-    <delete dir="${plugin.site.file}" />
-    <delete dir="${plugin.build.dir}" />
-    <delete file="${plugin.jar}" />
-  </target>
-
-  <!-- write site description for the given plugin so josm will accept it -->
-  <target name="site">
-    <echo message="creating site description in ${plugin.site.file}"/>
-    <echo file="${plugin.site.file}">&lt;!-- plugins available on this site -->
+<!-- compilation properties -->
+    <property name="josm.build.dir"   value="../../core"/>
+    <property name="josm.home.dir"    value="${user.home}/.josm"/>
+    <property name="josm"         location="../../core/dist/josm-custom.jar" />
+    <property name="plugin.build.dir" value="build"/>
+    <property name="plugin.dist.dir"  value="../../dist"/>
+    <property name="plugin.name"      value="${ant.project.name}"/>
+    <property name="plugin.jar"       value="../../dist/${plugin.name}.jar"/>
+    <property name="plugin.description" value="Allows the user to create different color schemes and to switch between them. Just change the colors and create a new scheme. Used to switch to a white background with matching colors for better visibility in bright sunlight. See dialog in JOSM's preferences and 'Map Settings' (strange but true :-) (V${plugin.version})."/>
+    <property name="plugin.class" value="at.dallermassl.josm.plugin.colorscheme.ColorSchemePlugin"/>
+<!-- update site meta data -->
+    <property name="plugin.site.file" value="josm-site.xml"/>
+    <property name="plugin.site.description" value="Josm's ColorScheme Plugin Update Site"/>
+    <property name="plugin.site.url" value="http://www.tegmento.org/~cdaller/josm/colorscheme/"/>
+    <property name="plugin.site.upload.target" value="cdaller@www.tegmento.org:public_html/josm/colorscheme/"/>
+    <property name="ant.build.javac.target" value="1.5"/>
+    <target name="dist" depends="compile, site">
+        <echo message="creating ${plugin.jar}"/>
+<!-- images -->
+<!--
+     <copy todir="${plugin.build.dir}/images">
+       <fileset dir="src/images" />
+     </copy>
+     -->
+<!-- copy configuration xml files -->
+        <copy todir="${plugin.build.dir}">
+            <fileset dir="src">
+                <include name="*.xml"/>
+            </fileset>
+        </copy>
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="info"/>
+            <arg value="--xml"/>
+            <arg value="."/>
+        </exec>
+        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+        <delete file="REVISION"/>
+<!-- create jar file -->
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <manifest>
+                <attribute name="Plugin-Class" value="${plugin.class}" />
+                <attribute name="Plugin-Description" value="${plugin.description}" />
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+                <attribute name="Plugin-Mainversion" value="1180"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="compile" depends="init">
+        <mkdir dir="${plugin.build.dir}"/>
+        <javac srcdir="src" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
+            <classpath>
+                <pathelement path="${josm.build.dir}/build"/>
+                <fileset dir="${josm.build.dir}/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+    <target name="install" depends="dist">
+        <copy file="${plugin.jar}" todir="${josm.home.dir}/plugins" />
+    </target>
+    <target name="init">
+        <echo>java version: ${java.version}</echo>
+    </target>
+    <target name="clean">
+        <delete dir="${plugin.site.file}" />
+        <delete dir="${plugin.build.dir}" />
+        <delete file="${plugin.jar}" />
+    </target>
+<!-- write site description for the given plugin so josm will accept it -->
+    <target name="site">
+        <echo message="creating site description in ${plugin.site.file}"/>
+        <echo file="${plugin.site.file}">&lt;!-- plugins available on this site -->
   &lt;plugins>
   &lt;plugin id="${ant.project.name}" version="${plugin.version}">
   &lt;name>${ant.project.name}&lt;/name>
@@ -93,12 +82,11 @@
   &lt;/plugin>
   &lt;/plugins>
 </echo>
-</target>
-
+    </target>
 <!-- write site description for the given plugin (not implemented in JOSM as full version yet!) -->
-<target name="site-full-donotuse">
-  <echo message="creating site description in ${plugin.site.file}"/>
-  <echo file="${plugin.site.file}">&lt;?xml version="1.0"?>
+    <target name="site-full-donotuse">
+        <echo message="creating site description in ${plugin.site.file}"/>
+        <echo file="${plugin.site.file}">&lt;?xml version="1.0"?>
     &lt;site version="1.0">
     &lt;!-- meta data of site -->
 &lt;site-info>
@@ -119,16 +107,14 @@ target="${josm.home.dir}/plugins/${plugin.jar}"/>
 &lt;/plugins>
 &lt;/site>
 </echo>
-</target>
-
+    </target>
 <!-- upload the site description and the jar file via ssh -->
-<target name="upload" depends="dist,site">
-  <echo message="uploading jar and site description to ${plugin.site.upload.target}"/>
-  <exec executable="scp">
-    <arg value="${plugin.jar}"/>
-    <arg value="${plugin.site.file}"/>
-    <arg value="${plugin.site.upload.target}"/>
-  </exec>
-</target>
-
+    <target name="upload" depends="dist,site">
+        <echo message="uploading jar and site description to ${plugin.site.upload.target}"/>
+        <exec executable="scp">
+            <arg value="${plugin.jar}"/>
+            <arg value="${plugin.site.file}"/>
+            <arg value="${plugin.site.upload.target}"/>
+        </exec>
+    </target>
 </project>

@@ -198,6 +198,9 @@
 		<rule e="way" k="waterway" v="drain">
 			<line class="waterway-casing waterway-drain-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.13" maximum-width="13"/>
 		</rule>
+		<rule e="way" k="waterway" v="ditch">
+			<line class="waterway-casing waterway-ditch-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.05" maximum-width="5"/>
+		</rule>
 		<rule e="way" k="tunnel" v="yes">
 			<rule e="way" k="waterway" v="river">
 				<line class="waterway-core waterway-river-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.15" maximum-width="15"/>
@@ -210,6 +213,9 @@
 			</rule>
 			<rule e="way" k="waterway" v="drain">
 				<line class="waterway-core waterway-drain-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
+			</rule>
+			<rule e="way" k="waterway" v="ditch">
+				<line class="waterway-core waterway-ditch-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.05" maximum-width="5"/>
 			</rule>
 		</rule>
 		<else>
@@ -224,6 +230,9 @@
 			</rule>
 			<rule e="way" k="waterway" v="drain">
 				<line class="waterway-core waterway-drain-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
+			</rule>
+			<rule e="way" k="waterway" v="ditch">
+				<line class="waterway-core waterway-ditch-core" width-scale-factor="1" honor-width="yes" minimum-width="0.05" maximum-width="5"/>
 			</rule>
 		</else>
 		<rule e="way" k="waterway" v="dock">
@@ -1646,6 +1655,10 @@
 					<rule e="way" k="junction" v="~" layer="5"> <!-- no names on or along junctions -->
 						
 						<!-- Waterway names -->
+						<rule e="way" k="waterway" v="ditch" layer="5">
+							<text k="name" startOffset="50%" class="waterway-name-casing waterway-ditch-name-casing" dy="0.5px" layer="5"/>
+							<text k="name" startOffset="50%" class="waterway-name-core waterway-ditch-name-core" dy="0.5px" layer="5"/>
+						</rule>
 						<rule e="way" k="waterway" v="drain" layer="5">
 							<text k="name" startOffset="50%" class="waterway-name-casing waterway-drain-name-casing" dy="0.5px" layer="5"/>
 							<text k="name" startOffset="50%" class="waterway-name-core waterway-drain-name-core" dy="0.5px" layer="5"/>
@@ -2393,6 +2406,12 @@
 			.waterway-drain-tunnel-core             { stroke-width: 1px; stroke-dasharray: 2,2; }
 			.waterway-drain-name-casing             { font-size: 3px; stroke-width: 0.2px;}
 			.waterway-drain-name-core               { font-size: 3px; }
+			
+			.waterway-ditch-casing                  { stroke-width: 0.15px; }
+			.waterway-ditch-core                    { stroke-width: 0.15px; }
+			.waterway-ditch-tunnel-core             { stroke-width: 0.1px; stroke-dasharray: 0.75, 0.75; }
+			.waterway-ditch-name-casing             { font-size: 3px; stroke-width: 0.2px;}
+			.waterway-ditch-name-core               { font-size: 3px; }
 			
 			
 			/* Generic under-construction style - makes any way dashed */

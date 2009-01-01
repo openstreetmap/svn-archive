@@ -1625,25 +1625,60 @@
 		
 		<!-- Non-physical boundaries -->
 		<rule e="way" k="boundary" v="administrative" layer="5">
-			<rule e="way" k="border_type" v="state" layer="5">
-				<line class="boundary boundary-administrative-state-casing" layer="5"/>
-				<line class="boundary boundary-administrative-state-core" layer="5"/>
-			</rule>
-			<else>
+			<rule e="way" k="admin_level" v="1|2|3|4|5|6|7|8|9|10" layer="5">
 				<rule e="way" k="admin_level" v="10" layer="5">
-					<line class="boundary boundary-administrative-parish-core" layer="5"/>
+					<line class="boundary boundary-level-10-core" layer="5"/>
 				</rule>
-				<else>
-					<rule e="way" k="admin_level" v="8" layer="5">
-						<line class="boundary boundary-administrative-district-core" layer="5"/>
-					</rule>
-					<else>
-						<line class="boundary boundary-administrative-state-core" layer="5"/>
-					</else>
-				</else>
+				<rule e="way" k="admin_level" v="9" layer="5">
+					<line class="boundary boundary-level-9-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="8" layer="5">
+					<line class="boundary boundary-level-8-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="7" layer="5">
+					<line class="boundary boundary-level-7-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="6" layer="5">
+					<line class="boundary boundary-level-6-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="5" layer="5">
+					<line class="boundary boundary-level-5-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="4" layer="5">
+					<line class="boundary boundary-level-4-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="3" layer="5">
+					<line class="boundary boundary-level-3-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="2" layer="5">
+					<line class="boundary boundary-level-2-casing" layer="5"/>
+					<line class="boundary boundary-level-2-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="1" layer="5">
+					<line class="boundary boundary-level-1-casing" layer="5"/>
+					<line class="boundary boundary-level-1-core" layer="5"/>
+				</rule>
+			</rule>
+			<!-- If we don't have explicit admin_level then guess -->
+			<else>
+				<rule e="way" k="border_type" v="suburb" layer="5">
+					<line class="boundary boundary-level-10-core" layer="5"/>
+				</rule>
+				<rule e="way" k="border_type" v="municipality|city" layer="5">
+					<line class="boundary boundary-level-8-core" layer="5"/>
+				</rule>
+				<rule e="way" k="border_type" v="county|district" layer="5">
+					<line class="boundary boundary-level-6-core" layer="5"/>
+				</rule>
+				<rule e="way" k="border_type" v="region|state" layer="5">
+					<line class="boundary boundary-level-4-core" layer="5"/>
+				</rule>
+				<rule e="way" k="border_type" v="nation|country" layer="5">
+					<line class="boundary boundary-level-2-casing" layer="5"/>
+					<line class="boundary boundary-level-2-core" layer="5"/>
+				</rule>
 			</else>
 		</rule>
-
 		<rule e="way" k="boundary" v="national_park" layer="5">
 			<line class="boundary boundary-nationalpark-core" layer="5"/>
 		</rule>
@@ -2700,35 +2735,80 @@
 			fill: none;
 			}
 			
-			.boundary-administrative-state-casing {
-			stroke-width: 5px;
+			.boundary-level-1-casing {
+			stroke-width: 3.5px;
 			stroke: #ffff00;
 			opacity: 0.5;
 			}
 			
-			.boundary-administrative-state-core {
-			stroke-width: 0.5px;
-			stroke: #f9574b;
-			stroke-dasharray: 5, 1, 1, 1;
-			}
-
-			.boundary-nationalpark-core {
-			stroke-width: 0.5px; 
-			stroke: #4ef94b;
-			stroke-dasharray: 5, 1, 1, 1;
-			}
-
-			
-			.boundary-administrative-district-core {
+			.boundary-level-1-core {
 			stroke-width: 0.5px;
 			stroke: #f9574b;
 			stroke-dasharray: 3, 1, 1, 1;
 			}
 			
-			.boundary-administrative-parish-core {
+			.boundary-level-2-casing {
+			stroke-width: 1.5px;
+			stroke: #ffff00;
+			opacity: 0.5;
+			}
+			
+			.boundary-level-2-core {
 			stroke-width: 0.5px;
 			stroke: #f9574b;
-			stroke-dasharray: 1, 1, 1, 1;
+			stroke-dasharray: 3, 3;
+			}
+			
+			.boundary-level-3-core {
+			stroke-width: 0.5px;
+			stroke: #f9574b;
+			}
+			
+			.boundary-level-4-core {
+			stroke-width: 0.5px;
+			stroke: #f9574b;
+			stroke-dasharray: 3, 1, 1, 1;
+			}
+			
+			.boundary-level-5-core {
+			stroke-width: 0.5px;
+			stroke: #f9574b;
+			stroke-dasharray: 3, 3;
+			}
+			
+			.boundary-level-6-core {
+			stroke-width: 0.5px;
+			stroke: #f9574b;
+			stroke-dasharray: 1, 5;
+			}
+			
+			.boundary-level-7-core {
+			stroke-width: 0.2px;
+			stroke: #f9574b;
+			}
+			
+			.boundary-level-8-core {
+			stroke-width: 0.2px;
+			stroke: #f9574b;
+			stroke-dasharray: 3, 1, 1, 1;
+			}
+			
+			.boundary-level-9-core {
+			stroke-width: 0.2px;
+			stroke: #f9574b;
+			stroke-dasharray: 3, 3;
+			}
+			
+			.boundary-level-10-core {
+			stroke-width: 0.2px;
+			stroke: #f9574b;
+			stroke-dasharray: 1, 5;
+			}
+			
+			.boundary-nationalpark-core {
+			stroke-width: 0.5px;
+			stroke: #4ef94b;
+			stroke-dasharray: 3, 1, 1, 1;
 			}
 			
 			

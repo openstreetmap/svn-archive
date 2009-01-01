@@ -815,25 +815,24 @@
 		
 		<!-- Non-physical boundaries -->
 		<rule e="way" k="boundary" v="administrative" layer="5">
-			<rule e="way" k="border_type" v="state" layer="5">
-				<line class="boundary boundary-administrative-state-casing" layer="5"/>
-				<line class="boundary boundary-administrative-state-core" layer="5"/>
-			</rule>
-			<else>
-				<rule e="way" k="admin_level" v="10" layer="5">
-					<line class="boundary boundary-administrative-parish-core" layer="5"/>
+			<rule e="way" k="admin_level" v="1|2" layer="5">
+				<rule e="way" k="admin_level" v="2" layer="5">
+					<line class="boundary boundary-level-2-casing" layer="5"/>
+					<line class="boundary boundary-level-2-core" layer="5"/>
 				</rule>
-				<else>
-					<rule e="way" k="admin_level" v="8" layer="5">
-						<line class="boundary boundary-administrative-district-core" layer="5"/>
-					</rule>
-					<else>
-						<line class="boundary boundary-administrative-state-core" layer="5"/>
-					</else>
-				</else>
+				<rule e="way" k="admin_level" v="1" layer="5">
+					<line class="boundary boundary-level-1-casing" layer="5"/>
+					<line class="boundary boundary-level-1-core" layer="5"/>
+				</rule>
+			</rule>
+			<!-- If we don't have explicit admin_level then guess -->
+			<else>
+				<rule e="way" k="border_type" v="nation|country" layer="5">
+					<line class="boundary boundary-level-2-casing" layer="5"/>
+					<line class="boundary boundary-level-2-core" layer="5"/>
+				</rule>
 			</else>
 		</rule>
-
 		<rule e="way" k="boundary" v="national_park" layer="5">
 			<line class="boundary boundary-nationalpark-core" layer="5"/>
 		</rule>
@@ -1385,41 +1384,40 @@
 			
 			/* Non-physical boundaries */
 			.boundary {
-			stroke-linecap: butt;
+			stroke-linecap: round;
 			stroke-linejoin: round;
 			fill: none;
 			}
 			
-			.boundary-administrative-state-casing {
-			stroke-width: 80px;
+			.boundary-level-1-casing {
+			stroke-width: 56px;
 			stroke: #ffff00;
 			opacity: 0.5;
 			}
 			
-			.boundary-administrative-state-core {
+			.boundary-level-1-core {
 			stroke-width: 8px;
 			stroke: #f9574b;
-			stroke-dasharray: 80, 16, 16, 16;
+			stroke-dasharray: 48, 16, 16, 16;
 			}
-
+			
+			.boundary-level-2-casing {
+			stroke-width: 24px;
+			stroke: #ffff00;
+			opacity: 0.5;
+			}
+			
+			.boundary-level-2-core {
+			stroke-width: 8px;
+			stroke: #f9574b;
+			stroke-dasharray: 48, 48;
+			}
+			
 			.boundary-nationalpark-core {
-			stroke-width: 8px; 
-			stroke: #4ef94b;
-			stroke-dasharray: 80, 16, 16, 16;
-			}
-			
-			.boundary-administrative-district-core {
 			stroke-width: 8px;
-			stroke: #f9574b;
-			stroke-dasharray: 40, 16, 16, 16;
+			stroke: #4ef94b;
+			stroke-dasharray: 48, 16, 16, 16;
 			}
-			
-			.boundary-administrative-parish-core {
-			stroke-width: 2px;
-			stroke: #f9574b;
-			stroke-dasharray: 16, 16, 16, 16;
-			}
-			
 			
 			
 			/* Racetracks */

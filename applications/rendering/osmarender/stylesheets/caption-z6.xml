@@ -37,16 +37,6 @@
 
   </rule> <!-- k="osmarender:renderName" v="~|yes" -->
 
-  <rule e="node|way" k="osmarender:render" v="~|yes">
-    <rule e="way" k="boundary" v="administrative">
-      <rule e="way" k="admin_level" v="2">
-        <line class="boundary boundary-administrative-country-casing"/>
-        <line class="boundary boundary-administrative-country-core"/>
-      </rule>
-    </rule>
-
-  </rule> <!-- k="osmarender:render" v="~|yes" -->
-
     <!-- SVG Definitions - markers, symbols etc go here -->
     <defs>
 
@@ -84,24 +74,6 @@
             .capital-caption-casing { font-size: 4000px; stroke-width: 900px; }
             .capital-caption        { font-size: 4000px; }
 
-            /* Boundaries */
-            .boundary {
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                fill: none;
-            }
-
-            .boundary-administrative-country-casing {
-                stroke-width: 500px;
-                stroke: #ffff00;
-                opacity: 0.5;
-            }
-
-            .boundary-administrative-country-core {
-                stroke-width: 250px;
-                stroke: #f9574b;
-                stroke-dasharray: 2500, 500, 500, 500;
-            }
 
             /* Map decoration */
             .map-grid-line {

@@ -73,7 +73,8 @@ while (read $nf, $b, 16) {
     if ($off) {
 	seek $df, $off, 0;
 	$noff = tell $ndf;
-	while (my $tag = gets($df)) {
+	my $tag;
+	while (defined($tag = gets($df)) && ($tag ne "")) {
 	    my $val = gets($df);
 	    print $ndf "$tag\0$val\0";
 	}
@@ -110,7 +111,8 @@ while (read $wf, $b, 8) {
 	    print $ndf $n;
 	    last if ($n eq $pz);
 	}
-	while (my $tag = gets($df)) {
+	my $tag;
+	while (defined($tag = gets($df)) && ($tag ne "")) {
 	    my $val = gets($df);
 	    print $ndf "$tag\0$val\0";
 	}

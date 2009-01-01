@@ -10491,11 +10491,11 @@ msgstr "Geschäft für Heimwerker bearbeiten"
 
 #: trans_presets.java:2388
 msgid "Hairdresser"
-msgstr "Frisör"
+msgstr "Friseur"
 
 #: trans_presets.java:2389
 msgid "Edit Hairdresser"
-msgstr "Frisör bearbeiten"
+msgstr "Friseur bearbeiten"
 
 #: trans_presets.java:2394
 msgid "Dry Cleaning"

@@ -1,74 +1,61 @@
 <project name="nearclick" default="dist" basedir=".">
-
-  <!-- compilation properties -->
-  <property name="josm.build.dir"	value="../../core"/>
-  <property name="josm.home.dir"	value="${user.home}/.josm"/>
-  <property name="josm"			location="../../core/dist/josm-custom.jar" />
-  <property name="plugin.build.dir"	value="build"/>
-  <property name="plugin.dist.dir"	value="../../dist"/>
-  <property name="plugin.name"		value="${ant.project.name}"/>
-  <property name="plugin.jar"		value="../../dist/${plugin.name}.jar"/>
-
-  <!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
-  <property name="josm" location="../../core/dist/josm-custom.jar" />
-  <!--<property name="josm" location="../josm/josm-latest.jar" ></property>-->
-  
-  <!-- target directory to place the plugin in -->
-  <!-- Windows has a different home directory scheme then unix/linux -->
-  <!-- I don't know an automatic way to find it with ant :-(, if you know, please fix -->
-  <!--<property name="plugins" location="${user.home}/.josm/plugins" ></property>-->
-  <property name="plugins" location="${user.home}/Application Data/JOSM/plugins" ></property>
-
-  <!-- you should not need to modify anything below this! -->
-
-  <property name="ant.build.javac.target" value="1.5"/>
-
-
-  <target name="init">
-    <mkdir dir="build"></mkdir>
-    <mkdir dir="dist"></mkdir>
-  </target>
-
-  <target name="compile" depends="init">
-    <echo message="creating ${plugin.jar}"/>
-    <javac srcdir="src" target="1.5" classpath="${josm}" destdir="build" debug="true">
-      <include name="**/*.java" />
-    </javac>
-  </target>
-
-  <target name="dist" depends="compile">
-    <!-- define the version of the jar file -->
-    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-      <env key="LANG" value="C"/>
-      <arg value="info"/>
-      <arg value="--xml"/>
-      <arg value="."/>
-    </exec>
-    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-	<!-- delete intermediate file -->
-    <delete file="REVISION"/>
-    <jar destfile="${plugin.jar}" basedir="build">
-      <manifest>
-	<attribute name="Plugin-Class" value="nearclick.NearClickPlugin" />
-	<attribute name="Plugin-Description" value="Simulates a click when you do a small and short drag. This is usefull for tablet pens, when you have problems just clicking the tablet without the mouse moving (general Java - tablet problem)." />
-	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-        <attribute name="Plugin-Mainversion" value="1180" />
-      </manifest>
-    </jar>
-  </target>
-
-  <target name="clean">
-    <delete dir="${plugin.build.dir}" />
-    <delete file="${plugin.jar}" />
-  </target>
-  
-  <target name="clean_install">
-    <delete file="${plugins}/nearclick.jar" />
-  </target>
-
-  <target name="install" depends="dist">
-    <copy file="${plugin.jar}" todir="${plugins}"/>
-  </target>
-
+<!-- compilation properties -->
+    <property name="josm.build.dir"   value="../../core"/>
+    <property name="josm.home.dir"    value="${user.home}/.josm"/>
+    <property name="josm"         location="../../core/dist/josm-custom.jar" />
+    <property name="plugin.build.dir" value="build"/>
+    <property name="plugin.dist.dir"  value="../../dist"/>
+    <property name="plugin.name"      value="${ant.project.name}"/>
+    <property name="plugin.jar"       value="../../dist/${plugin.name}.jar"/>
+<!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
+    <property name="josm" location="../../core/dist/josm-custom.jar" />
+<!--<property name="josm" location="../josm/josm-latest.jar" ></property>-->
+<!-- target directory to place the plugin in -->
+<!-- Windows has a different home directory scheme then unix/linux -->
+<!-- I don't know an automatic way to find it with ant :-(, if you know, please fix -->
+<!--<property name="plugins" location="${user.home}/.josm/plugins" ></property>-->
+    <property name="plugins" location="${user.home}/Application Data/JOSM/plugins" ></property>
+<!-- you should not need to modify anything below this! -->
+    <property name="ant.build.javac.target" value="1.5"/>
+    <target name="init">
+        <mkdir dir="build"></mkdir>
+        <mkdir dir="dist"></mkdir>
+    </target>
+    <target name="compile" depends="init">
+        <echo message="creating ${plugin.jar}"/>
+        <javac srcdir="src" target="1.5" classpath="${josm}" destdir="build" debug="true">
+            <include name="**/*.java" />
+        </javac>
+    </target>
+    <target name="dist" depends="compile">
+<!-- define the version of the jar file -->
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="info"/>
+            <arg value="--xml"/>
+            <arg value="."/>
+        </exec>
+        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+<!-- delete intermediate file -->
+        <delete file="REVISION"/>
+        <jar destfile="${plugin.jar}" basedir="build">
+            <manifest>
+                <attribute name="Plugin-Class" value="nearclick.NearClickPlugin" />
+                <attribute name="Plugin-Description" value="Simulates a click when you do a small and short drag. This is usefull for tablet pens, when you have problems just clicking the tablet without the mouse moving (general Java - tablet problem)." />
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Mainversion" value="1180" />
+            </manifest>
+        </jar>
+    </target>
+    <target name="clean">
+        <delete dir="${plugin.build.dir}" />
+        <delete file="${plugin.jar}" />
+    </target>
+    <target name="clean_install">
+        <delete file="${plugins}/nearclick.jar" />
+    </target>
+    <target name="install" depends="dist">
+        <copy file="${plugin.jar}" todir="${plugins}"/>
+    </target>
 </project>

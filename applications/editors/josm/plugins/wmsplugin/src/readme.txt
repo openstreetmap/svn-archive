@@ -1,11 +1,11 @@
 --------------------------------------------------------------------------
  Jcoord
  readme.txt
- 
+
  (c) 2006 Jonathan Stott
- 
+
  Created on 11-Feb-2006
- 
+
  1.0 - 11 Feb 2006
   - Initial version created from PHPcoord v2.2
 --------------------------------------------------------------------------
@@ -13,7 +13,7 @@
 Jcoord is a collection of Java classes that provide functions for handling
 various co-ordinate systems and converting between them. Currently, OSGB
 (Ordnance Survey of Great Britain) grid references, UTM (Universal Transverse
-Mercator) references and latitude/longitude are supported. A function is 
+Mercator) references and latitude/longitude are supported. A function is
 also provided to find the surface distance between two points of latitude
 and longitude.
 

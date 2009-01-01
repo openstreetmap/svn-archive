@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
@@ -29,13 +29,13 @@ public class InstallPanel extends JPanel implements ListSelectionListener {
 
     /**
      * @param pluginUpdateFrame
-     * @param descriptions 
+     * @param descriptions
      */
     public InstallPanel(PluginUpdateFrame pluginUpdateFrame, List<SiteDescription> descriptions) {
         super(new BorderLayout(12,12));
         setBorder(new javax.swing.border.EmptyBorder(12,12,12,12));
         final JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
-        
+
         /* Setup the table */
         table = new JTable(pluginModel = new PluginTableModel(descriptions));
         table.setShowGrid(false);
@@ -43,7 +43,7 @@ public class InstallPanel extends JPanel implements ListSelectionListener {
         table.setRowHeight(table.getRowHeight() + 2);
         table.setPreferredScrollableViewportSize(new Dimension(500,200));
         table.getSelectionModel().addListSelectionListener(this);
-        
+
         TableColumn col1 = table.getColumnModel().getColumn(0);
         TableColumn col2 = table.getColumnModel().getColumn(1);
         TableColumn col3 = table.getColumnModel().getColumn(2);
@@ -81,7 +81,7 @@ public class InstallPanel extends JPanel implements ListSelectionListener {
     }
 
     /**
-     * 
+     *
      */
     public void install() {
         System.out.println("Installing selected plugins");
@@ -100,7 +100,7 @@ public class InstallPanel extends JPanel implements ListSelectionListener {
         }
         infoBox.setText(text);
         infoBox.setCaretPosition(0);
-        
+
     }
 
 }

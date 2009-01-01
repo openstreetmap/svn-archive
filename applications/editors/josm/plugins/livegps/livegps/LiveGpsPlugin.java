@@ -23,19 +23,19 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class LiveGpsPlugin extends Plugin
 {
-	private LiveGpsAcquirer acquirer = null;
-	private Thread acquirerThread = null;
+    private LiveGpsAcquirer acquirer = null;
+    private Thread acquirerThread = null;
     private JMenu lgpsmenu;
     private JCheckBoxMenuItem lgpscapture;
     private JMenuItem lgpscenter;
     private JCheckBoxMenuItem lgpsautocenter;
     private LiveGpsDialog lgpsdialog;
     List<PropertyChangeListener>listenerQueue;
-        
-	private GpxData data = new GpxData();
+
+    private GpxData data = new GpxData();
     private LiveGpsLayer lgpslayer;
-    
-	
+
+
     public class CaptureAction extends JosmAction {
         public CaptureAction() {
             super(tr("Capture GPS Track"), "capturemenu", tr("Connect to gpsd server and show current position in LiveGPS layer."),
@@ -76,7 +76,7 @@ public class LiveGpsPlugin extends Plugin
         }
     }
 
-    public LiveGpsPlugin() 
+    public LiveGpsPlugin()
     {
         MainMenu menu = Main.main.menu;
         lgpsmenu = new JMenu(tr("LiveGPS"));
@@ -110,7 +110,7 @@ public class LiveGpsPlugin extends Plugin
             if (autoCenter) lgpslayer.center();
         }
     }
-    
+
     /**
      * Returns <code>true</code> if autocenter is selected.
      * @return <code>true</code> if autocenter is selected.
@@ -118,7 +118,7 @@ public class LiveGpsPlugin extends Plugin
     public boolean isAutoCenter() {
         return lgpsautocenter.isSelected();
     }
-    
+
     /**
      * Enable or disable gps tracking
      * @param enable if <code>true</code> tracking is started.
@@ -154,8 +154,8 @@ public class LiveGpsPlugin extends Plugin
             }
         }
     }
-    
-    
+
+
     /**
      * Add a listener for gps events.
      * @param listener the listener.

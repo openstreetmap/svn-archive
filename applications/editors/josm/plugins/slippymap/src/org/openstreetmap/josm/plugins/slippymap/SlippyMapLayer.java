@@ -34,9 +34,9 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Class that displays a slippy map layer.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
- * 
+ *
  */
 public class SlippyMapLayer extends Layer implements ImageObserver,
         PreferenceChangedListener
@@ -56,7 +56,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     public SlippyMapLayer()
     {
         super(tr("Slippy Map"));
-	background = true;
+    background = true;
 
         clearTileStorage();
 
@@ -467,7 +467,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openstreetmap.josm.data.Preferences.PreferenceChangedListener#preferenceChanged(java.lang.String,
      *      java.lang.String)
      */

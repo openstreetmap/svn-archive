@@ -28,47 +28,47 @@ import org.xml.sax.SAXException;
  * For opening a waypoint file to convert to nodes.
  */
 public class WaypointOpenAction extends DiskAccessAction {
-	
-	/**
-	 * Create an open action. The name is "Open a file".
-	 */
-	public WaypointOpenAction() {
-		super(tr("Open waypoints file"), "open", tr("Open a waypoints file."),
-		Shortcut.registerShortcut("tools:waypoints", tr("Menu: {0}",
-		tr("Open waypoints file")), KeyEvent.VK_W, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT));
-	}
+    
+    /**
+     * Create an open action. The name is "Open a file".
+     */
+    public WaypointOpenAction() {
+        super(tr("Open waypoints file"), "open", tr("Open a waypoints file."),
+        Shortcut.registerShortcut("tools:waypoints", tr("Menu: {0}",
+        tr("Open waypoints file")), KeyEvent.VK_W, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT));
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		JFileChooser fc = createAndOpenFileChooser(true, true, null);
-		if (fc == null)
-			return;
-		File[] files = fc.getSelectedFiles();
-		for (int i = files.length; i > 0; --i)
-			openFile(files[i-1]);
-	}
+    public void actionPerformed(ActionEvent e) {
+        JFileChooser fc = createAndOpenFileChooser(true, true, null);
+        if (fc == null)
+            return;
+        File[] files = fc.getSelectedFiles();
+        for (int i = files.length; i > 0; --i)
+            openFile(files[i-1]);
+    }
 
-	/**
-	 * Open the given file.
-	 */
-	public void openFile(File file) {
-		String fn = file.getName();
-		try {
-				DataSet dataSet = 
-						WaypointReader.parse(new FileInputStream(file));
-				Main.main.addLayer(new OsmDataLayer(dataSet, file.getName(), 
-										file));
-		} catch (SAXException x) {
-			x.printStackTrace();
-			JOptionPane.showMessageDialog(Main.parent, 
-					tr("Error while parsing {0}",fn)+": "+x.getMessage());
-		} catch (ParserConfigurationException x) {
-			x.printStackTrace(); // broken SAXException chaining
-			JOptionPane.showMessageDialog(Main.parent, 
-					tr("Error while parsing {0}",fn)+": "+x.getMessage());
-		} catch (IOException x) {
-			x.printStackTrace();
-			JOptionPane.showMessageDialog(Main.parent, 
-					tr("Could not read \"{0}\"",fn)+"\n"+x.getMessage());
-		}
-	}
+    /**
+     * Open the given file.
+     */
+    public void openFile(File file) {
+        String fn = file.getName();
+        try {
+                DataSet dataSet = 
+                        WaypointReader.parse(new FileInputStream(file));
+                Main.main.addLayer(new OsmDataLayer(dataSet, file.getName(), 
+                                        file));
+        } catch (SAXException x) {
+            x.printStackTrace();
+            JOptionPane.showMessageDialog(Main.parent, 
+                    tr("Error while parsing {0}",fn)+": "+x.getMessage());
+        } catch (ParserConfigurationException x) {
+            x.printStackTrace(); // broken SAXException chaining
+            JOptionPane.showMessageDialog(Main.parent, 
+                    tr("Error while parsing {0}",fn)+": "+x.getMessage());
+        } catch (IOException x) {
+            x.printStackTrace();
+            JOptionPane.showMessageDialog(Main.parent, 
+                    tr("Could not read \"{0}\"",fn)+"\n"+x.getMessage());
+        }
+    }
 }

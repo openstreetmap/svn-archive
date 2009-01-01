@@ -43,7 +43,7 @@ public class ButtonDescription {
     private GpsDataSource gpsDataSource;
 
     /**
-     * Default Constructor 
+     * Default Constructor
      */
     public ButtonDescription() {
         super();
@@ -51,7 +51,7 @@ public class ButtonDescription {
     /**
      * @param hotkey
      * @param actions a list of actions to be performed.
-     * @param type if <code>null</code> {@link ButtonType#SINGLE} is used. 
+     * @param type if <code>null</code> {@link ButtonType#SINGLE} is used.
      */
     public ButtonDescription(String label, String hotkey, String iconName, String buttonAction, ButtonType type) {
         this(label, hotkey, iconName, createFromOneElement(new SurveyorActionDescription(buttonAction)), type);
@@ -60,7 +60,7 @@ public class ButtonDescription {
     /**
      * @param hotkey
      * @param actions a list of actions to be performed.
-     * @param type if <code>null</code> {@link ButtonType#SINGLE} is used. 
+     * @param type if <code>null</code> {@link ButtonType#SINGLE} is used.
      */
     public ButtonDescription(String label, String hotkey, String iconName, SurveyorActionDescription actionDescription, ButtonType type) {
         this(label, hotkey, iconName, createFromOneElement(actionDescription), type);
@@ -76,11 +76,11 @@ public class ButtonDescription {
         list.add(actionDescription);
         return list;
     }
-    
+
     /**
      * @param hotkey
      * @param actions a list of actions to be performed.
-     * @param type if <code>null</code> {@link ButtonType#SINGLE} is used. 
+     * @param type if <code>null</code> {@link ButtonType#SINGLE} is used.
      */
     public ButtonDescription(String label, String hotkey, String iconName, List<SurveyorActionDescription> actions, ButtonType type) {
         super();
@@ -139,7 +139,7 @@ public class ButtonDescription {
     public ButtonType getButtonType() {
         return this.type;
     }
-    
+
     /**
      * Set the button type as a string.
      * @param type the type of the button
@@ -158,7 +158,7 @@ public class ButtonDescription {
     public void setButtonType(ButtonType type) {
         this.type = type;
     }
-    
+
     /**
      * Sets the name of the icon.
      * @param icon
@@ -166,15 +166,15 @@ public class ButtonDescription {
     public void setIcon(String icon) {
         this.iconName = icon;
     }
-    
+
     /**
      * Creates the button.
      * @return the button.
      */
     public JComponent createComponent() {
-        
+
         String actionName = tr(getLabel()) + " (" + hotkey + ")";
-           
+
         Icon icon = ImageProvider.getIfAvailable("markers",iconName);
         if (icon == null)
             icon = ImageProvider.getIfAvailable("symbols",iconName);
@@ -184,7 +184,7 @@ public class ButtonDescription {
         MetaAction action = new MetaAction(actionName, icon);
         action.setActions(actions);
         action.setGpsDataSource(gpsDataSource);
-                
+
         AbstractButton button;
         if(type == ButtonType.TOGGLE) {
             button = new JToggleButton(action);
@@ -205,16 +205,16 @@ public class ButtonDescription {
         SwingUtilities.replaceUIInputMap(button, JComponent.WHEN_IN_FOCUSED_WINDOW, keyMap);
         return button;
     }
-    
+
     private static void connectActionAndButton(Action action, AbstractButton button) {
         SelectionStateAdapter adapter = new SelectionStateAdapter(action, button);
         adapter.configure();
     }
- 
+
     /**
-     * Class that connects the selection state of the action 
+     * Class that connects the selection state of the action
      * to the selection state of the button.
-     * 
+     *
      * @author R.J. Lorimer
      */
     private static class SelectionStateAdapter implements PropertyChangeListener, ItemListener {
@@ -222,7 +222,7 @@ public class ButtonDescription {
         private AbstractButton button;
         public SelectionStateAdapter(Action theAction, AbstractButton theButton) {
             action = theAction;
-            button = theButton;         
+            button = theButton;
         }
         protected void configure() {
             action.addPropertyChangeListener(this);
@@ -233,7 +233,7 @@ public class ButtonDescription {
             Boolean valueObj = Boolean.valueOf(value);
             action.putValue(ActionConstants.SELECTED_KEY, valueObj);
         }
-        
+
         public void propertyChange(PropertyChangeEvent evt) {
             if(evt.getPropertyName().equals(ActionConstants.SELECTED_KEY)) {
                 Boolean newSelectedState = (Boolean)evt.getNewValue();

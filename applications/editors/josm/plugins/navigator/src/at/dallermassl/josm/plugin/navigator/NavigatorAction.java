@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.navigator;
 
@@ -27,7 +27,7 @@ public class NavigatorAction extends AbstractAction {
   public NavigatorAction(NavigatorPlugin navigatorPlugin) {
     super(tr("Navigate"));
     this.navigatorPlugin = navigatorPlugin;
-    
+
   }
 
   /* (non-Javadoc)

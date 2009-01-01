@@ -9,20 +9,20 @@ import org.openstreetmap.josm.plugins.Plugin;
 
 /**
  * Main class for the name finder plugin.
- * 
- * 
+ *
+ *
  * @author Frederik Ramm <frederik@remote.org>
  *
  */
-public class NameFinderPlugin extends Plugin 
-{    
-    public NameFinderPlugin() 
+public class NameFinderPlugin extends Plugin
+{
+    public NameFinderPlugin()
     {
     }
-    
-    @Override public void addDownloadSelection(List<DownloadSelection> list) 
+
+    @Override public void addDownloadSelection(List<DownloadSelection> list)
     {
-    	list.add(new PlaceSelection());
+        list.add(new PlaceSelection());
     }
-	
+
 }

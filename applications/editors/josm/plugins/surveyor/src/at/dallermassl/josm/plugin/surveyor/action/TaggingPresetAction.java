@@ -22,7 +22,7 @@ import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
 public class TaggingPresetAction implements SurveyorAction {
     private String presetName;
     private TaggingPreset preset;
-    
+
 
     /* (non-Javadoc)
      * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent)
@@ -33,7 +33,7 @@ public class TaggingPresetAction implements SurveyorAction {
             return;
         }
         LatLon coordinates = event.getCoordinates();
-        System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " 
+        System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", "
             + coordinates.lon() + ", preset=" + presetName);
 //        Node node = new Node(coordinates);
 //        node.put("created_by", "JOSM-surveyor-plugin");
@@ -42,7 +42,7 @@ public class TaggingPresetAction implements SurveyorAction {
 //            Main.ds.setSelected(node);
 //        }
 //        Main.map.repaint();
-        
+
         // call an annotationpreset to add additional properties...
         preset.actionPerformed(null);
 
@@ -62,7 +62,7 @@ public class TaggingPresetAction implements SurveyorAction {
         if(preset == null) {
             System.err.println("No valid preset '" + parameters.get(0) + "' found - disable action!");
             return;
-        }        
+        }
     }
 
     /**

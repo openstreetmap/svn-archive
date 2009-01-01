@@ -27,7 +27,7 @@ import org.openstreetmap.josm.io.XmlWriter;
  */
 public class AutoSaveEditLayerTimerTask extends TimerTask {
     private File file;
-    
+
     public AutoSaveEditLayerTimerTask(String filename) {
         file = new File(filename);
     }
@@ -48,7 +48,7 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
 //            if(outFile == null) {
 //                outFile = file;
 //            }
-            
+
             // write to temporary file, on success, rename tmp file to target file:
             File tmpFile = new File(file.getAbsoluteFile()+".tmp");
             System.out.println("AutoSaving osm data to file " + file.getAbsolutePath());
@@ -59,11 +59,11 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
             System.out.println("AutoSaving finished");
         } catch (IOException x) {
             x.printStackTrace();
-            JOptionPane.showMessageDialog(Main.parent, 
-                tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), x.getMessage()), 
-                tr("Error"), 
+            JOptionPane.showMessageDialog(Main.parent,
+                tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), x.getMessage()),
+                tr("Error"),
                 JOptionPane.ERROR_MESSAGE);
-        }       
+        }
     }
 
 

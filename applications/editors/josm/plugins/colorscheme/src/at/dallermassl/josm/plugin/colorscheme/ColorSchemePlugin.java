@@ -13,19 +13,19 @@ import org.openstreetmap.josm.plugins.Plugin;
  *
  */
 public class ColorSchemePlugin extends Plugin {
-    
+
     /**
      * Default Constructor
      */
     public ColorSchemePlugin() {
-        
+
     }
 
     @Override
     public PreferenceSetting getPreferenceSetting() {
         return new ColorSchemePreference();
     }
-    
-    
+
+
 
 }

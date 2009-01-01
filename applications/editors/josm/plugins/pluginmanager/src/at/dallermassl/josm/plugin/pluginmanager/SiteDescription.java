@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
@@ -29,7 +29,7 @@ public class SiteDescription {
     private String name;
     private URL url;
     List<PluginDescription>plugins = new ArrayList<PluginDescription>();
-    
+
     /**
      * Default Constructor
      */
@@ -46,7 +46,7 @@ public class SiteDescription {
         }
         this.url = new URL(url);
     }
-    
+
     /**
      * @param name
      * @param url
@@ -55,7 +55,7 @@ public class SiteDescription {
         this(url);
         this.name = name;
     }
-    
+
 
     /**
      * @return the name
@@ -70,10 +70,10 @@ public class SiteDescription {
         this.name = name;
     }
 
-    
+
     /**
      * Load the site description from the url.
-     * @throws IOException 
+     * @throws IOException
      */
     public void loadFromUrl() throws IOException {
         plugins.clear();
@@ -83,8 +83,8 @@ public class SiteDescription {
         // <FIXXME date="20.06.2007" author="cdaller">
         // TODO check and remember modified since date to compare and not load sites that did not change
         // connection.getIfModifiedSince()
-        // </FIXXME> 
-        
+        // </FIXXME>
+
         Reader in = new InputStreamReader(connection.getInputStream());
         SiteDescriptionParser parser = new SiteDescriptionParser(this);
         try {
@@ -110,14 +110,14 @@ public class SiteDescription {
             info = helper.getPluginInfo(plugin.getId());
             if(info != null) {
                 if(info.version == null) {
-                    plugin.setInstalledVersion("?");                    
+                    plugin.setInstalledVersion("?");
                 } else {
                     plugin.setInstalledVersion(info.version);
                 }
             }
         }
     }
-    
+
     /**
      * @return the plugins
      */
@@ -132,7 +132,7 @@ public class SiteDescription {
         plugins.add(pluginDescription);
     }
 
-    
+
     /**
      * @return the url
      */
@@ -157,9 +157,9 @@ public class SiteDescription {
         } else {
             return name;
         }
-        
+
     }
-    
+
     /**
      * Used by ListCellRenderer, so not only a debug method!
      * @see java.lang.Object#toString()
@@ -167,7 +167,7 @@ public class SiteDescription {
     public String toString() {
         return getLabelName();
     }
-    
+
     public static void main(String[] args) {
         try {
             new SiteDescription("file:site/").loadFromUrl();

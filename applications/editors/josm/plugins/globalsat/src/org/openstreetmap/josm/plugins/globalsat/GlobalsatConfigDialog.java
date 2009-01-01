@@ -49,7 +49,7 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
  * Configuration download dialog.
- * 
+ *
  * @author Raphael Mack <ramack@raphael-mack.de>
  *
  */
@@ -57,13 +57,13 @@ public class GlobalsatConfigDialog extends JPanel {
 
 
     public class IntegerTextField extends JTextField {
-        
+
         final static String badchars = "-`~!@#$%^&*()_+=\\|\"':;?/>.<, ";
-        
+
         public void processKeyEvent(KeyEvent ev) {
 
             char c = ev.getKeyChar();
-            if((Character.isLetter(c) && !ev.isAltDown()) 
+            if((Character.isLetter(c) && !ev.isAltDown())
                || badchars.indexOf(c) > -1) {
                 ev.consume();
                 return;
@@ -73,7 +73,7 @@ public class GlobalsatConfigDialog extends JPanel {
     }
 
 
-	
+
     // the JOptionPane that contains this dialog. required for the closeDialog() method.
     private JOptionPane optionPane;
     private JCheckBox delete;
@@ -102,7 +102,7 @@ public class GlobalsatConfigDialog extends JPanel {
     private JTextField minLogDist, minLogSpeed;
 
     private List<CommPortIdentifier> ports = new LinkedList<CommPortIdentifier>();
-    
+
     private Dg100Config conf;
 
 
@@ -131,7 +131,7 @@ public class GlobalsatConfigDialog extends JPanel {
         logFormat.add(formatPosOnly);
         logFormat.add(formatPosTDS);
         logFormat.add(formatPosTDSA);
-        
+
         JPanel logPanel = new JPanel();
         logPanel.setLayout(new BoxLayout(logPanel, BoxLayout.PAGE_AXIS));
         logPanel.add(new JLabel(tr("Data Logging Format")));
@@ -208,7 +208,7 @@ public class GlobalsatConfigDialog extends JPanel {
 
         minLogSpeed.setText("" + conf.getSpeedThres());
         minLogDist.setText("" + conf.getDistThres());
-        
+
         ButtonGroup group = new ButtonGroup();
         group.add(aTime);
         group.add(aDist);
@@ -260,11 +260,11 @@ public class GlobalsatConfigDialog extends JPanel {
         c.insets = new Insets(0,4,4,4);
         c.gridy = 6;
         add(bMeters, c);
-        
+
         group = new ButtonGroup();
         group.add(cTime);
         group.add(cDist);
-        
+
         c.insets = new Insets(4,4,0,4);
         c.gridwidth = 1;
         c.weightx = 1;
@@ -306,7 +306,7 @@ public class GlobalsatConfigDialog extends JPanel {
         default:
             JOptionPane.showMessageDialog(Main.parent, tr("Unknown logFormat"));
         }
-            
+
         if(conf.getSwATimeOrDist() == 0){
             aTime.setSelected(true);
             aDist.setSelected(false);

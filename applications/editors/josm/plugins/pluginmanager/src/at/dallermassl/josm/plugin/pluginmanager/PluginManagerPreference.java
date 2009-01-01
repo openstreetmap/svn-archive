@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
@@ -55,7 +55,7 @@ public class PluginManagerPreference implements PreferenceSetting {
         Map<String, String> sites = Main.pref.getAllPrefix(PREF_KEY_REMOTE_SITE_PREFIX);
         if(sites.keySet().size() == 0) {
             // add default entry (for demonstration purpose)
-            sites.put(PREF_KEY_REMOTE_SITE_PREFIX + "0"+PREF_KEY_SITE_URL_SUFFIX, 
+            sites.put(PREF_KEY_REMOTE_SITE_PREFIX + "0"+PREF_KEY_SITE_URL_SUFFIX,
                 "http://www.tegmento.org/~cdaller/josm/");
         }
         int siteCount = 0;
@@ -72,7 +72,7 @@ public class PluginManagerPreference implements PreferenceSetting {
                 e.printStackTrace();
             }
             ++siteCount;
-        }        
+        }
         return listModel;
     }
 
@@ -81,7 +81,7 @@ public class PluginManagerPreference implements PreferenceSetting {
      */
     // only in 1.6 allowed @Override
     public void addGui(final PreferenceDialog gui) {
-        
+
         siteListModel = createListModel();
         siteList = new JList(siteListModel);
         siteList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -113,7 +113,7 @@ public class PluginManagerPreference implements PreferenceSetting {
                     JOptionPane.showMessageDialog(Main.parent, tr("Please select the site to delete."));
                 else {
                     int[] selected = siteList.getSelectedIndices();
-                    for (int i = selected.length - 1; i >=0; --i) {                        
+                    for (int i = selected.length - 1; i >=0; --i) {
                         siteListModel.removeElementAt(selected[i]);
                     }
                 }

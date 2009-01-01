@@ -28,14 +28,14 @@ import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
  */
 public class SetNodeAction implements SurveyorAction {
     private Collection<Tuple<String, String>> keyValues;
-    
+
     /**
      * Default Constructor
      */
     public SetNodeAction() {
-        
+
     }
-    
+
     /* (non-Javadoc)
      * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#setParameters(java.util.List)
      */
@@ -54,7 +54,7 @@ public class SetNodeAction implements SurveyorAction {
             } else {
                 System.err.println("SetNodeAction: ignoring invalid key value pair: " + keyValuePair);
             }
-        }        
+        }
     }
 
     /* (non-Javadoc)
@@ -72,8 +72,8 @@ public class SetNodeAction implements SurveyorAction {
             Main.main.editLayer().data.nodes.add(node);
             Main.ds.setSelected(node);
         }
-        Main.map.repaint();        
+        Main.map.repaint();
     }
 
-    
+
 }

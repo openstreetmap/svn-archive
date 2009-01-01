@@ -3,11 +3,11 @@ package uk.me.jstott.jcoord;
 /**
  * Class to represent a reference ellipsoid. Also provides a number of
  * pre-determined reference ellipsoids as constants.
- * 
+ *
  * (c) 2006 Jonathan Stott
- * 
+ *
  * Created on 11-Feb-2006
- * 
+ *
  * @author Jonathan Stott
  * @version 1.0
  * @since 1.0
@@ -42,7 +42,7 @@ public class RefEll {
 
   /**
    * Create a new reference ellipsoid
-   * 
+   *
    * @param maj
    *          semi-major axis
    * @param min
@@ -58,7 +58,7 @@ public class RefEll {
 
   /**
    * Return the semi-major axis.
-   * 
+   *
    * @return the semi-major axis
    * @since 1.0
    */
@@ -69,7 +69,7 @@ public class RefEll {
 
   /**
    * Return the semi-minor axis
-   * 
+   *
    * @return the semi-minor axis
    * @since 1.0
    */
@@ -80,7 +80,7 @@ public class RefEll {
 
   /**
    * Return the eccentricity.
-   * 
+   *
    * @return the eccentricity
    * @since 1.0
    */

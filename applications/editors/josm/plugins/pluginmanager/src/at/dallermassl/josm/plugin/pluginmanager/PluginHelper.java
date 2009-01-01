@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
@@ -17,11 +17,11 @@ import org.openstreetmap.josm.plugins.PluginProxy;
  *
  */
 public class PluginHelper {
-    
+
     private static PluginHelper INSTANCE = new PluginHelper();
     private Map<String, JMenu>menus;
     private VariableHelper variableHelper;
-    
+
     /**
      * Private constructor
      */
@@ -34,12 +34,12 @@ public class PluginHelper {
 //        registerMenu("connection", Main.main.menu.connectionMenu);
 //        registerMenu("layer", Main.main.menu.layerMenu);
         registerMenu("help", Main.main.menu.helpMenu);
-        
+
         variableHelper = new VariableHelper();
         variableHelper.addAll(Main.pref.getAllPrefix(""));
         variableHelper.add("josm.user.dir", Main.pref.getPreferencesDir());
     }
-    
+
     /**
      * Returns the singleton instance of this helper.
      * @return the singleton instance of this helper.
@@ -47,7 +47,7 @@ public class PluginHelper {
     public static PluginHelper getInstance() {
         return INSTANCE;
     }
-    
+
     /**
      * Adds a menu to the main menu of JOSM and registers it under the given id.
      * @param menuId the id to register the menu, so other plugins can retrieve
@@ -58,19 +58,19 @@ public class PluginHelper {
         Main.main.menu.add(menu);
         registerMenu(menuId, menu);
     }
-    
+
     /**
      * Register the menu under the given id so other plugins can retrieve
-     * the menu with {@link #getMenu(String)}. 
+     * the menu with {@link #getMenu(String)}.
      * @param menuId
      * @param menu
      */
     public void registerMenu(String menuId, JMenu menu) {
         menus.put(menuId, menu);
     }
-    
+
     /**
-     * Returns the main menu that was registered with the given id or <code>null</code> 
+     * Returns the main menu that was registered with the given id or <code>null</code>
      * if no menu was registered with that id. The default menus have the ids:
      * <code>file</code>, <code>view</code>, <code>edit</code>, <code>tools</code>,
      * <code>connection</code>, <code>layer</code>, <code>help</code>,
@@ -86,7 +86,7 @@ public class PluginHelper {
     public VariableHelper getVariableHelper() {
         return this.variableHelper;
     }
-    
+
     /**
      * Returns the plugin with the given id or <code>null</code>
      * if the plugin is not installed.
@@ -103,8 +103,8 @@ public class PluginHelper {
         }
         return null;
     }
-    
 
-    
+
+
 
 }

@@ -3,11 +3,11 @@ package uk.me.jstott.jcoord;
 /**
  * Class to illustrate the use of the various functions of the classes in the
  * Jcoord package.
- * 
+ *
  * (c) 2006 Jonathan Stott
- * 
+ *
  * Created on 11-Feb-2006
- * 
+ *
  * @author Jonathan Stott
  * @version 1.0
  * @since 1.0
@@ -16,7 +16,7 @@ public class Test {
 
   /**
    * Main method
-   * 
+   *
    * @param args
    *          not used
    * @since 1.0
@@ -25,7 +25,7 @@ public class Test {
 
     /*
      * Calculate Surface Distance between two Latitudes/Longitudes
-     * 
+     *
      * The distance() function takes a reference to a LatLng object as a
      * parameter and calculates the surface distance between the the given
      * object and this object in kilometres:
@@ -44,7 +44,7 @@ public class Test {
 
     /*
      * Convert OS Grid Reference to Latitude/Longitude
-     * 
+     *
      * Note that the OSGB-Latitude/Longitude conversions use the OSGB36 datum by
      * default. The majority of applications use the WGS84 datum, for which the
      * appropriate conversions need to be added. See the examples below to see
@@ -75,7 +75,7 @@ public class Test {
 
     /*
      * Convert Latitude/Longitude to OS Grid Reference
-     * 
+     *
      * Note that the OSGB-Latitude/Longitude conversions use the OSGB36 datum by
      * default. The majority of applications use the WGS84 datum, for which the
      * appropriate conversions need to be added. See the examples below to see
@@ -106,7 +106,7 @@ public class Test {
 
     /*
      * Convert Six-Figure OS Grid Reference String to an OSRef Object
-     * 
+     *
      * To convert a string representing a six-figure OSGB grid reference:
      */
 

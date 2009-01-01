@@ -24,20 +24,20 @@ import java.io.File;
 import javax.swing.JComponent;
 
 public class ImageDisplay extends JComponent {
-    
+
     /** The file that is currently displayed */
     private File file = null;
-    
+
     /** The image currently displayed */
     private Image image = null;
-    
+
     /** The image currently displayed */
     private boolean errorLoading = false;
-    
-    /** The rectangle (in image coordinates) of the image that is visible. This rectangle is calculated 
+
+    /** The rectangle (in image coordinates) of the image that is visible. This rectangle is calculated
      * each time the zoom is modified */
     private Rectangle visibleRect = null;
-    
+
     /** When a selection is done, the rectangle of the selection (in image coordinates) */
     private Rectangle selectedRect = null;
 
@@ -45,24 +45,24 @@ public class ImageDisplay extends JComponent {
     private MediaTracker tracker = new MediaTracker(this);
 
     private String osdText = null;
-    
+
     /** The thread that reads the images. */
     private class LoadImageRunnable implements Runnable {
 
         File file = null;
-        
+
         public LoadImageRunnable(File file) {
             this.file = file;
         }
-        
+
         public void run() {
             Image img = Toolkit.getDefaultToolkit().createImage(file.getPath());
             tracker.addImage(img, 1);
-            
+
             // Wait for the end of loading
             while (! tracker.checkID(1, true)) {
                 if (this.file != ImageDisplay.this.file) {
-                    // The file has changed 
+                    // The file has changed
                     tracker.removeImage(img);
                     return;
                 }
@@ -76,10 +76,10 @@ public class ImageDisplay extends JComponent {
             if (img != null && (img.getWidth(null) == 0 || img.getHeight(null) == 0)) {
                 error = true;
             }
-            
+
             synchronized(ImageDisplay.this) {
                 if (this.file != ImageDisplay.this.file) {
-                    // The file has changed 
+                    // The file has changed
                     tracker.removeImage(img);
                     return;
                 }
@@ -92,38 +92,38 @@ public class ImageDisplay extends JComponent {
             ImageDisplay.this.repaint();
         }
     }
-    
+
     private class ImgDisplayMouseListener implements MouseListener, MouseWheelListener, MouseMotionListener {
 
         boolean mouseIsDragging = false;
         Point mousePointInImg = null;
-        
-        /** Zoom in and out, trying to preserve the point of the image that was under the mouse cursor 
-         * at the same place */ 
+
+        /** Zoom in and out, trying to preserve the point of the image that was under the mouse cursor
+         * at the same place */
         public void mouseWheelMoved(MouseWheelEvent e) {
             File file;
             Image image;
             Rectangle visibleRect;
-            
+
             synchronized (ImageDisplay.this) {
                 file = ImageDisplay.this.file;
                 image = ImageDisplay.this.image;
                 visibleRect = ImageDisplay.this.visibleRect;
             }
-            
+
             mouseIsDragging = false;
             selectedRect = null;
-            
+
             if (image == null) {
                 return;
             }
 
-            // Calculate the mouse cursor position in image coordinates, so that we can center the zoom 
-            // on that mouse position. 
+            // Calculate the mouse cursor position in image coordinates, so that we can center the zoom
+            // on that mouse position.
             if (e.getClickCount() == 1 || mousePointInImg == null) {
                 mousePointInImg = comp2imgCoord(visibleRect, e.getX(), e.getY());
             }
-            
+
             // Applicate the zoom to the visible rectangle in image coordinates
             if (e.getWheelRotation() > 0) {
                 visibleRect.width = visibleRect.width * 3 / 2;
@@ -132,7 +132,7 @@ public class ImageDisplay extends JComponent {
                 visibleRect.width = visibleRect.width * 2 / 3;
                 visibleRect.height = visibleRect.height * 2 / 3;
             }
-            
+
             // Check that the zoom doesn't exceed 2:1
             if (visibleRect.width < getSize().width / 2) {
                 visibleRect.width = getSize().width / 2;
@@ -140,7 +140,7 @@ public class ImageDisplay extends JComponent {
             if (visibleRect.height < getSize().height / 2) {
                 visibleRect.height = getSize().height / 2;
             }
-            
+
             // Set the same ratio for the visible rectangle and the display area
             int hFact = visibleRect.height * getSize().width;
             int wFact = visibleRect.width * getSize().height;
@@ -149,18 +149,18 @@ public class ImageDisplay extends JComponent {
             } else {
                 visibleRect.height = wFact / getSize().width;
             }
-            
+
             // The size of the visible rectangle is limited by the image size.
             checkVisibleRectSize(image, visibleRect);
-            
+
             // Set the position of the visible rectangle, so that the mouse cursor doesn't move on the image.
             Rectangle drawRect = calculateDrawImageRectangle(visibleRect);
             visibleRect.x = mousePointInImg.x + ((drawRect.x - e.getX()) * visibleRect.width) / drawRect.width;
             visibleRect.y = mousePointInImg.y + ((drawRect.y - e.getY()) * visibleRect.height) / drawRect.height;
-            
+
             // The position is also limited by the image size
             checkVisibleRectPos(image, visibleRect);
-            
+
             synchronized(ImageDisplay.this) {
                 if (ImageDisplay.this.file == file) {
                     ImageDisplay.this.visibleRect = visibleRect;
@@ -175,7 +175,7 @@ public class ImageDisplay extends JComponent {
             File file;
             Image image;
             Rectangle visibleRect;
-            
+
             synchronized (ImageDisplay.this) {
                 file = ImageDisplay.this.file;
                 image = ImageDisplay.this.image;
@@ -189,16 +189,16 @@ public class ImageDisplay extends JComponent {
             if (e.getButton() != 1) {
                 return;
             }
-            
+
             // Calculate the translation to set the clicked point the center of the view.
             Point click = comp2imgCoord(visibleRect, e.getX(), e.getY());
             Point center = getCenterImgCoord(visibleRect);
-            
+
             visibleRect.x += click.x - center.x;
             visibleRect.y += click.y - center.y;
-            
+
             checkVisibleRectPos(image, visibleRect);
-            
+
             synchronized(ImageDisplay.this) {
                 if (ImageDisplay.this.file == file) {
                     ImageDisplay.this.visibleRect = visibleRect;
@@ -207,7 +207,7 @@ public class ImageDisplay extends JComponent {
             ImageDisplay.this.repaint();
         }
 
-        /** Initialize the dragging, either with button 1 (simple dragging) or button 3 (selection of 
+        /** Initialize the dragging, either with button 1 (simple dragging) or button 3 (selection of
          * a picture part) */
         public void mousePressed(MouseEvent e) {
             if (image == null) {
@@ -215,11 +215,11 @@ public class ImageDisplay extends JComponent {
                 selectedRect = null;
                 return;
             }
-            
+
             File file;
             Image image;
             Rectangle visibleRect;
-            
+
             synchronized (ImageDisplay.this) {
                 file = ImageDisplay.this.file;
                 image = ImageDisplay.this.image;
@@ -250,11 +250,11 @@ public class ImageDisplay extends JComponent {
             if (! mouseIsDragging && selectedRect == null) {
                 return;
             }
-            
+
             File file;
             Image image;
             Rectangle visibleRect;
-            
+
             synchronized (ImageDisplay.this) {
                 file = ImageDisplay.this.file;
                 image = ImageDisplay.this.image;
@@ -278,7 +278,7 @@ public class ImageDisplay extends JComponent {
                     }
                 }
                 ImageDisplay.this.repaint();
-                
+
             } else if (selectedRect != null) {
                 Point p = comp2imgCoord(visibleRect, e.getX(), e.getY());
                 checkPointInVisibleRect(p, visibleRect);
@@ -299,11 +299,11 @@ public class ImageDisplay extends JComponent {
             if (! mouseIsDragging && selectedRect == null) {
                 return;
             }
-            
+
             File file;
             Image image;
             Rectangle visibleRect;
-            
+
             synchronized (ImageDisplay.this) {
                 file = ImageDisplay.this.file;
                 image = ImageDisplay.this.image;
@@ -318,7 +318,7 @@ public class ImageDisplay extends JComponent {
 
             if (mouseIsDragging) {
                 mouseIsDragging = false;
-                
+
             } else if (selectedRect != null) {
                 int oldWidth = selectedRect.width;
                 int oldHeight = selectedRect.height;
@@ -330,7 +330,7 @@ public class ImageDisplay extends JComponent {
                 if (selectedRect.height < getSize().height / 2) {
                     selectedRect.height = getSize().height / 2;
                 }
-                
+
                 // Set the same ratio for the visible rectangle and the display area
                 int hFact = selectedRect.height * getSize().width;
                 int wFact = selectedRect.width * getSize().height;
@@ -339,7 +339,7 @@ public class ImageDisplay extends JComponent {
                 } else {
                     selectedRect.height = wFact / getSize().width;
                 }
-                
+
                 // Keep the center of the selection
                 if (selectedRect.width != oldWidth) {
                     selectedRect.x -= (selectedRect.width - oldWidth) / 2;
@@ -347,15 +347,15 @@ public class ImageDisplay extends JComponent {
                 if (selectedRect.height != oldHeight) {
                     selectedRect.y -= (selectedRect.height - oldHeight) / 2;
                 }
-                
+
                 checkVisibleRectSize(image, selectedRect);
                 checkVisibleRectPos(image, selectedRect);
-                
+
                 synchronized (ImageDisplay.this) {
                     if (file == ImageDisplay.this.file) {
                         ImageDisplay.this.visibleRect = selectedRect;
                     }
-                }                
+                }
                 selectedRect = null;
                 ImageDisplay.this.repaint();
             }
@@ -369,7 +369,7 @@ public class ImageDisplay extends JComponent {
 
         public void mouseMoved(MouseEvent e) {
         }
-        
+
         private void checkPointInVisibleRect(Point p, Rectangle visibleRect) {
             if (p.x < visibleRect.x) {
                 p.x = visibleRect.x;
@@ -385,14 +385,14 @@ public class ImageDisplay extends JComponent {
             }
         }
     }
-    
+
     public ImageDisplay() {
         ImgDisplayMouseListener mouseListener = new ImgDisplayMouseListener();
         addMouseListener(mouseListener);
         addMouseWheelListener(mouseListener);
         addMouseMotionListener(mouseListener);
     }
-    
+
     public void setImage(File file) {
         synchronized(this) {
             this.file = file;
@@ -409,20 +409,20 @@ public class ImageDisplay extends JComponent {
     public void setOsdText(String text) {
         this.osdText = text;
     }
-    
+
     public void paintComponent(Graphics g) {
         Image image;
         File file;
         Rectangle visibleRect;
         boolean errorLoading;
-        
+
         synchronized(this) {
             image = this.image;
             file = this.file;
             visibleRect = this.visibleRect;
             errorLoading = this.errorLoading;
         }
-        
+
         if (file == null) {
             g.setColor(Color.black);
             String noImageStr = tr("No image");
@@ -446,14 +446,14 @@ public class ImageDisplay extends JComponent {
                          (int) ((size.height - noImageSize.getHeight()) / 2));
         } else {
             Rectangle target = calculateDrawImageRectangle(visibleRect);
-            g.drawImage(image, 
-                        target.x, target.y, target.x + target.width, target.y + target.height, 
-                        visibleRect.x, visibleRect.y, visibleRect.x + visibleRect.width, visibleRect.y + visibleRect.height, 
+            g.drawImage(image,
+                        target.x, target.y, target.x + target.width, target.y + target.height,
+                        visibleRect.x, visibleRect.y, visibleRect.x + visibleRect.width, visibleRect.y + visibleRect.height,
                         null);
             if (selectedRect != null) {
                 Point topLeft = img2compCoord(visibleRect, selectedRect.x, selectedRect.y);
-                Point bottomRight = img2compCoord(visibleRect, 
-                                                  selectedRect.x + selectedRect.width, 
+                Point bottomRight = img2compCoord(visibleRect,
+                                                  selectedRect.x + selectedRect.width,
                                                   selectedRect.y + selectedRect.height);
                 g.setColor(new Color(128, 128, 128, 180));
                 g.fillRect(target.x, target.y, target.width, topLeft.y - target.y);
@@ -501,7 +501,7 @@ public class ImageDisplay extends JComponent {
             }
         }
     }
-    
+
     private final Point img2compCoord(Rectangle visibleRect, int xImg, int yImg) {
         Rectangle drawRect = calculateDrawImageRectangle(visibleRect);
         return new Point(drawRect.x + ((xImg - visibleRect.x) * drawRect.width) / visibleRect.width,
@@ -523,10 +523,10 @@ public class ImageDisplay extends JComponent {
         Dimension size = getSize();
         int x, y, w, h;
         x = 0;
-        y = 0; 
+        y = 0;
         w = size.width;
         h = size.height;
-        
+
         int wFact = w * visibleRect.height;
         int hFact = h * visibleRect.width;
         if (wFact != hFact) {
@@ -545,7 +545,7 @@ public class ImageDisplay extends JComponent {
         File file;
         Image image;
         Rectangle visibleRect;
-        
+
         synchronized (this) {
             file = ImageDisplay.this.file;
             image = ImageDisplay.this.image;
@@ -559,15 +559,15 @@ public class ImageDisplay extends JComponent {
         if (visibleRect.width != image.getWidth(null) || visibleRect.height != image.getHeight(null)) {
             // The display is not at best fit. => Zoom to best fit
             visibleRect = new Rectangle(0, 0, image.getWidth(null), image.getHeight(null));
-        
+
         } else {
             // The display is at best fit => zoom to 1:1
             Point center = getCenterImgCoord(visibleRect);
-            visibleRect = new Rectangle(center.x - getWidth() / 2, center.y - getHeight() / 2, 
+            visibleRect = new Rectangle(center.x - getWidth() / 2, center.y - getHeight() / 2,
                                         getWidth(), getHeight());
             checkVisibleRectPos(image, visibleRect);
         }
-        
+
         synchronized(this) {
             if (file == this.file) {
                 this.visibleRect = visibleRect;

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.navigator;
 
@@ -20,9 +20,9 @@ import org.openstreetmap.josm.plugins.Plugin;
 
 /**
  * Plugin that allows navigation in josm
- * 
+ *
  * @author cdaller
- * 
+ *
  */
 public class NavigatorPlugin extends Plugin {
     private static final String KEY_HIGHWAY_WEIGHT_PREFIX = "navigator.weight.";
@@ -30,7 +30,7 @@ public class NavigatorPlugin extends Plugin {
     private NavigatorModel navigatorModel;
 
     /**
-     * 
+     *
      */
     public NavigatorPlugin() {
         super();
@@ -39,7 +39,7 @@ public class NavigatorPlugin extends Plugin {
         setHighwayTypeWeights();
         navigatorLayer = new NavigatorLayer(tr("Navigation"));
         navigatorLayer.setNavigatorNodeModel(navigatorModel);
-        
+
         JMenuBar menu = Main.main.menu;
         JMenu navigatorMenu = new JMenu(tr("Navigation"));
         JMenuItem navigatorMenuItem = new JMenuItem(new NavigatorAction(this));
@@ -54,7 +54,7 @@ public class NavigatorPlugin extends Plugin {
         navigatorMenu.add(resetMenuItem);
         menu.add(navigatorMenu);
     }
-    
+
     /**
      * Reads the weight values for the different highway types from the preferences.
      */
@@ -69,9 +69,9 @@ public class NavigatorPlugin extends Plugin {
             navigatorModel.setHighwayTypeWeight(type, weight);
         }
     }
-    
+
     /**
-     * Checks if there are any highway weights set in the preferences. If not, default 
+     * Checks if there are any highway weights set in the preferences. If not, default
      * values are used.
      */
     private void checkWeights() {
@@ -85,20 +85,20 @@ public class NavigatorPlugin extends Plugin {
         setDefaultWeight("cycleway", 0.0);
         setDefaultWeight("footway", 0.0);
     }
-    
+
     private void setDefaultWeight(String type, double value) {
         if(!Main.pref.hasKey(KEY_HIGHWAY_WEIGHT_PREFIX + type)) {
             Main.pref.put(KEY_HIGHWAY_WEIGHT_PREFIX + type, String.valueOf(value));
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)
      */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if(newFrame != null) {
-            IconToggleButton button = new IconToggleButton(new NavigatorModeAction(newFrame, navigatorModel, navigatorLayer)); 
+            IconToggleButton button = new IconToggleButton(new NavigatorModeAction(newFrame, navigatorModel, navigatorLayer));
             newFrame.toolBarActions.add(button);
             newFrame.toolGroup.add(button);
         }

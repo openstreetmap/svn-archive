@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.openvisible;
 
@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  */
 public class OpenVisibleAction extends JosmAction {
     private File lastDirectory;
-    
+
     public OpenVisibleAction() {
         super(tr("Open Visible ..."), "openvisible",
         tr("Open only files that are visible in current view."),
@@ -59,9 +59,9 @@ public class OpenVisibleAction extends JosmAction {
         Rectangle bounds = view.getBounds();
         LatLon bottomLeft = view.getLatLon(bounds.x, bounds.y + bounds.height);
         LatLon topRight = view.getLatLon(bounds.x + bounds.width, bounds.y);
-        
+
         System.err.println("FileFind Bounds: " + bottomLeft + " to " + topRight);
-        
+
         JFileChooser fileChooser;
         if(lastDirectory != null) {
             fileChooser = new JFileChooser(lastDirectory);
@@ -72,7 +72,7 @@ public class OpenVisibleAction extends JosmAction {
         fileChooser.showOpenDialog(Main.parent);
         File[] files = fileChooser.getSelectedFiles();
         lastDirectory = fileChooser.getCurrentDirectory();
-        
+
         for(File file : files) {
             try {
                 OsmGpxBounds parser = new OsmGpxBounds();
@@ -84,7 +84,7 @@ public class OpenVisibleAction extends JosmAction {
                     } else if(file.getName().endsWith("gpx")) {
                         openFileAsGpx(file);
                     }
-                    
+
                 }
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
@@ -94,9 +94,9 @@ public class OpenVisibleAction extends JosmAction {
                 e1.printStackTrace();
             }
         }
-        
+
     }
-    
+
     private void openAsData(File file) throws SAXException, IOException, FileNotFoundException {
         String fn = file.getName();
         if (ExtensionFileFilter.filters[ExtensionFileFilter.OSM].acceptName(fn)) {

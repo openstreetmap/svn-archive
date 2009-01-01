@@ -47,17 +47,17 @@ public class AutoSaveAction extends JosmAction {
         if (e.getSource() instanceof AbstractButton) {
             autoSave = ((AbstractButton)e.getSource()).isSelected();
         }
-        
+
         if(autoSave) {
             if(gpsDataTimer == null) {
                 gpsDataTimer = new Timer();
             }
             TimerTask task;
-            
+
             String gpxFilename = MessageFormat.format(GPS_FILE_NAME_PATTERN, new Date());
             task = new AutoSaveGpsLayerTimerTask(gpxFilename, LiveGpsLayer.LAYER_NAME);
             gpsDataTimer.schedule(task, 1000, AUTO_SAVE_PERIOD_SEC * 1000);
-            
+
             String osmFilename = MessageFormat.format(OSM_FILE_NAME_PATTERN, new Date());
             task = new AutoSaveEditLayerTimerTask(osmFilename);
             gpsDataTimer.schedule(task, 5000, AUTO_SAVE_PERIOD_SEC * 1000);
@@ -66,7 +66,7 @@ public class AutoSaveAction extends JosmAction {
                 gpsDataTimer.cancel();
             }
         }
-        
-        
+
+
     }
 }

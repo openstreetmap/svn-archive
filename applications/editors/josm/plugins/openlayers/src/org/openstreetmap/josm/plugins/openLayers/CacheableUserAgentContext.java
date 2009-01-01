@@ -8,11 +8,11 @@ import org.lobobrowser.html.test.SimpleUserAgentContext;
  */
 public class CacheableUserAgentContext extends SimpleUserAgentContext {
 
-    /** 
+    /**
      * Returns a cache aware HttpRequest
      */
     @Override
     public HttpRequest createHttpRequest() {
-	return new CacheableHttpRequest(this, this.getProxy());
+    return new CacheableHttpRequest(this, this.getProxy());
     }
 }

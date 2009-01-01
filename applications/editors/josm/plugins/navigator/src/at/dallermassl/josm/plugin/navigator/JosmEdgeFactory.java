@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.navigator;
 
@@ -12,7 +12,7 @@ import org.openstreetmap.josm.data.osm.Node;
  */
 public class JosmEdgeFactory implements EdgeFactory<Node, WayEdge> {
 
-  
+
 
   /* (non-Javadoc)
    * @see org.jgrapht.EdgeFactory#createEdge(java.lang.Object, java.lang.Object)

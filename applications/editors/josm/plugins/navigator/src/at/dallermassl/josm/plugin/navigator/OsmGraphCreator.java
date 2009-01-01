@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.navigator;
 
@@ -22,7 +22,7 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * @author cdaller
- * 
+ *
  */
 public class OsmGraphCreator {
     private Map<Node, Set<Segment>> nodeSegmentMap = new HashMap<Node, Set<Segment>>();
@@ -37,7 +37,7 @@ public class OsmGraphCreator {
     public OsmGraphCreator() {
         highwayWeight = new HashMap<String, Double>();
     }
-    
+
     /**
      * Set the weight for the given highway type. The higher the weight is,
      * the more it is preferred in routing.
@@ -57,7 +57,7 @@ public class OsmGraphCreator {
         double weight;
         // iterate all ways and segments for all nodes:
         for(Way way : Main.ds.ways) {
-            if(way != null && !way.deleted) {                
+            if(way != null && !way.deleted) {
                 for(Segment segment : way.segments) {
                     if(segment != null && !segment.deleted && segment.from != null && segment.to != null) {
                         graph.addVertex(segment.from);
@@ -66,15 +66,15 @@ public class OsmGraphCreator {
                         edge.setWay(way);
                         graph.addEdge(segment.from, segment.to, edge);
                         weight = getWeight(way, segment);
-                        System.out.println("edge for segment " + segment.id + "(from node "+ segment.from.id + " to node " 
+                        System.out.println("edge for segment " + segment.id + "(from node "+ segment.from.id + " to node "
                             + segment.to.id + ") has weight: " + weight);
                         graph.setEdgeWeight(edge, weight);
                         if(!isOneWay(way)) {
                             edge = new SegmentEdge(segment, true); // create a second edge for other direction
                             edge.setWay(way);
                             graph.addEdge(segment.to, segment.from, edge);
-                            graph.setEdgeWeight(edge, weight);          
-                            System.out.println("inverse segment " + segment.id + "(from node "+ segment.to.id + " to node " 
+                            graph.setEdgeWeight(edge, weight);
+                            System.out.println("inverse segment " + segment.id + "(from node "+ segment.to.id + " to node "
                                 + segment.from.id + ") has weight: " + weight);
                         }
                     }
@@ -104,7 +104,7 @@ public class OsmGraphCreator {
             weight = weightValue.doubleValue();
         }
         // deg to m (at equator :-):
-        double distance = Math.sqrt(segment.from.coor.distance(segment.to.coor)) * 111000; 
+        double distance = Math.sqrt(segment.from.coor.distance(segment.to.coor)) * 111000;
         if(weight == 0.0) {
             weight = 1E-20;
         }
@@ -190,7 +190,7 @@ public class OsmGraphCreator {
 
     /**
      * Returns the other segment for the given node (works only for non crossing nodes).
-     * 
+     *
      * @param node
      * @param segment
      * @return

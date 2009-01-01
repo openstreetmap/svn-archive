@@ -1,7 +1,7 @@
 /*
  *  Copyright by Subhodip Biswas
  *  This program is free software and licensed under GPL.
- * 
+ *
  */
 
 package org.openstreetmap.josm.plugins.DirectUpload;

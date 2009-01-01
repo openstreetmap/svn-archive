@@ -59,188 +59,188 @@ import org.openstreetmap.josm.plugins.osb.gui.OsbDialog;
  */
 public class OsbPlugin extends Plugin implements LayerChangeListener {
 
-	private DataSet dataSet;
-	
-	private UploadHook uploadHook;
-	
-	private OsbDialog dialog;
-	
-	private OsbLayer layer;
-	
-	public static boolean active = false;
-	
-	private DownloadAction download = new DownloadAction();
-	
-	public OsbPlugin() {
-	    super();
-		initConfig();
-		dataSet = new DataSet();
-		uploadHook = new OsbUploadHook();
-		dialog = new OsbDialog(this);
+    private DataSet dataSet;
+    
+    private UploadHook uploadHook;
+    
+    private OsbDialog dialog;
+    
+    private OsbLayer layer;
+    
+    public static boolean active = false;
+    
+    private DownloadAction download = new DownloadAction();
+    
+    public OsbPlugin() {
+        super();
+        initConfig();
+        dataSet = new DataSet();
+        uploadHook = new OsbUploadHook();
+        dialog = new OsbDialog(this);
         OsbLayer.listeners.add(dialog);
         OsbLayer.listeners.add(this);
-	}
-	
-	private void initConfig() {
-		String debug = Main.pref.get(ConfigKeys.OSB_API_DISABLED);
-		if(debug == null || debug.length() == 0) {
-			debug = "false";
-			Main.pref.put(ConfigKeys.OSB_API_DISABLED, debug);
-		}
-		
-		String uri = Main.pref.get(ConfigKeys.OSB_API_URI_EDIT);
-		if(uri == null || uri.length() == 0) {
-			uri = "http://openstreetbugs.appspot.com/editPOIexec";
-			Main.pref.put(ConfigKeys.OSB_API_URI_EDIT, uri);
-		}
-		
-		uri = Main.pref.get(ConfigKeys.OSB_API_URI_CLOSE);
-		if(uri == null || uri.length() == 0) {
-			uri = "http://openstreetbugs.appspot.com/closePOIexec";
-			Main.pref.put(ConfigKeys.OSB_API_URI_CLOSE, uri);
-		}
-		
-		uri = Main.pref.get(ConfigKeys.OSB_API_URI_DOWNLOAD);
-		if(uri == null || uri.length() == 0) {
-			uri = "http://openstreetbugs.appspot.com/getBugs";
-			Main.pref.put(ConfigKeys.OSB_API_URI_DOWNLOAD, uri);
-		}
-		
-		uri = Main.pref.get(ConfigKeys.OSB_API_URI_NEW);
-		if(uri == null || uri.length() == 0) {
-			uri = "http://openstreetbugs.appspot.com/addPOIexec";
-			Main.pref.put(ConfigKeys.OSB_API_URI_NEW, uri);
-		}
-		
-		String auto_download = Main.pref.get(ConfigKeys.OSB_AUTO_DOWNLOAD);
-		if(auto_download == null || auto_download.length() == 0) {
-			auto_download = "true";
-			Main.pref.put(ConfigKeys.OSB_AUTO_DOWNLOAD, auto_download);
-		}
-	}
+    }
+    
+    private void initConfig() {
+        String debug = Main.pref.get(ConfigKeys.OSB_API_DISABLED);
+        if(debug == null || debug.length() == 0) {
+            debug = "false";
+            Main.pref.put(ConfigKeys.OSB_API_DISABLED, debug);
+        }
+        
+        String uri = Main.pref.get(ConfigKeys.OSB_API_URI_EDIT);
+        if(uri == null || uri.length() == 0) {
+            uri = "http://openstreetbugs.appspot.com/editPOIexec";
+            Main.pref.put(ConfigKeys.OSB_API_URI_EDIT, uri);
+        }
+        
+        uri = Main.pref.get(ConfigKeys.OSB_API_URI_CLOSE);
+        if(uri == null || uri.length() == 0) {
+            uri = "http://openstreetbugs.appspot.com/closePOIexec";
+            Main.pref.put(ConfigKeys.OSB_API_URI_CLOSE, uri);
+        }
+        
+        uri = Main.pref.get(ConfigKeys.OSB_API_URI_DOWNLOAD);
+        if(uri == null || uri.length() == 0) {
+            uri = "http://openstreetbugs.appspot.com/getBugs";
+            Main.pref.put(ConfigKeys.OSB_API_URI_DOWNLOAD, uri);
+        }
+        
+        uri = Main.pref.get(ConfigKeys.OSB_API_URI_NEW);
+        if(uri == null || uri.length() == 0) {
+            uri = "http://openstreetbugs.appspot.com/addPOIexec";
+            Main.pref.put(ConfigKeys.OSB_API_URI_NEW, uri);
+        }
+        
+        String auto_download = Main.pref.get(ConfigKeys.OSB_AUTO_DOWNLOAD);
+        if(auto_download == null || auto_download.length() == 0) {
+            auto_download = "true";
+            Main.pref.put(ConfigKeys.OSB_AUTO_DOWNLOAD, auto_download);
+        }
+    }
 
-	/**
-	 * Determines the bounds of the current selected layer
-	 * @return
-	 */
-	protected Bounds bounds(){
-		MapView mv = Main.map.mapView;
-		return new Bounds(
-			mv.getLatLon(0, mv.getHeight()),
-			mv.getLatLon(mv.getWidth(), 0));
-	}
-	
-	public void updateData() {
-		// determine the bounds of the currently visible area
-		Bounds bounds = null;
-		try {
-			bounds = bounds();
-		} catch (Exception e) {
-			// something went wrong, probably the mapview isn't fully initialized
-			System.err.println("OpenStreetBugs: Couldn't determine bounds of currently visible rect. Cancel auto update");
-			return;
-		}
-		
-		try {
-			// download the data
-			download.execute(dataSet, bounds);
+    /**
+     * Determines the bounds of the current selected layer
+     * @return
+     */
+    protected Bounds bounds(){
+        MapView mv = Main.map.mapView;
+        return new Bounds(
+            mv.getLatLon(0, mv.getHeight()),
+            mv.getLatLon(mv.getWidth(), 0));
+    }
+    
+    public void updateData() {
+        // determine the bounds of the currently visible area
+        Bounds bounds = null;
+        try {
+            bounds = bounds();
+        } catch (Exception e) {
+            // something went wrong, probably the mapview isn't fully initialized
+            System.err.println("OpenStreetBugs: Couldn't determine bounds of currently visible rect. Cancel auto update");
+            return;
+        }
+        
+        try {
+            // download the data
+            download.execute(dataSet, bounds);
 
-			// display the parsed data
-			if(!dataSet.nodes.isEmpty()) {
-				updateGui();
-			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(Main.parent, e.getMessage());
-			e.printStackTrace();
-		}
-	}
-	
-	public void updateGui() {
-		// update dialog
-		dialog.update(dataSet);
-		
-		// create a new layer if necessary
-		updateLayer(dataSet);
-		
-		// repaint view, so that changes get visible
-		Main.map.mapView.repaint();
-	}
-	
-	private void updateLayer(DataSet osbData) {
-		if(layer == null) {
-			layer = new OsbLayer(osbData, "OpenStreetBugs");
-			Main.main.addLayer(layer);
-		}
-	}
+            // display the parsed data
+            if(!dataSet.nodes.isEmpty()) {
+                updateGui();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(Main.parent, e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateGui() {
+        // update dialog
+        dialog.update(dataSet);
+        
+        // create a new layer if necessary
+        updateLayer(dataSet);
+        
+        // repaint view, so that changes get visible
+        Main.map.mapView.repaint();
+    }
+    
+    private void updateLayer(DataSet osbData) {
+        if(layer == null) {
+            layer = new OsbLayer(osbData, "OpenStreetBugs");
+            Main.main.addLayer(layer);
+        }
+    }
 
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if (oldFrame==null && newFrame!=null) { // map frame added
-			// add the dialog
-			newFrame.addToggleDialog(dialog);
-			
-			// add the upload hook
-			LinkedList<UploadHook> hooks = ((UploadAction) Main.main.menu.upload).uploadHooks;
-			hooks.add(0, uploadHook);
-			
-			// add a listener to the plugin toggle button
-			final JToggleButton toggle = (JToggleButton) dialog.action.button;
-			active = toggle.isSelected();
-			toggle.addActionListener(new ActionListener() {
-				private boolean download = true;
-				
-				public void actionPerformed(ActionEvent e) {
-					active = toggle.isSelected();
-					if (toggle.isSelected() && download) {
-						Main.worker.execute(new Runnable() {
-							public void run() {
-								updateData();
-							}
-						});
-						download = false;
-					}
-				}
-			});
-		} else if (oldFrame!=null && newFrame==null ) { // map frame removed
-			
-		}
-	}
-	
-	public static ImageIcon loadIcon(String name) {
-		URL url = OsbPlugin.class.getResource("/images/".concat(name));
-		return new ImageIcon(url);
-	}
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (oldFrame==null && newFrame!=null) { // map frame added
+            // add the dialog
+            newFrame.addToggleDialog(dialog);
+            
+            // add the upload hook
+            LinkedList<UploadHook> hooks = ((UploadAction) Main.main.menu.upload).uploadHooks;
+            hooks.add(0, uploadHook);
+            
+            // add a listener to the plugin toggle button
+            final JToggleButton toggle = (JToggleButton) dialog.action.button;
+            active = toggle.isSelected();
+            toggle.addActionListener(new ActionListener() {
+                private boolean download = true;
+                
+                public void actionPerformed(ActionEvent e) {
+                    active = toggle.isSelected();
+                    if (toggle.isSelected() && download) {
+                        Main.worker.execute(new Runnable() {
+                            public void run() {
+                                updateData();
+                            }
+                        });
+                        download = false;
+                    }
+                }
+            });
+        } else if (oldFrame!=null && newFrame==null ) { // map frame removed
+            
+        }
+    }
+    
+    public static ImageIcon loadIcon(String name) {
+        URL url = OsbPlugin.class.getResource("/images/".concat(name));
+        return new ImageIcon(url);
+    }
 
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {}
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {}
 
-	public void layerAdded(Layer newLayer) {
-		if(newLayer instanceof OsmDataLayer) {
-			active = ((JToggleButton)dialog.action.button).isSelected();
-			
-			// start the auto download loop
-			OsbDownloadLoop.getInstance().setPlugin(this);
-		}
-	}
+    public void layerAdded(Layer newLayer) {
+        if(newLayer instanceof OsmDataLayer) {
+            active = ((JToggleButton)dialog.action.button).isSelected();
+            
+            // start the auto download loop
+            OsbDownloadLoop.getInstance().setPlugin(this);
+        }
+    }
 
-	public void layerRemoved(Layer oldLayer) {
-		if(oldLayer == layer) {
-			layer = null;
-		}
-	}
+    public void layerRemoved(Layer oldLayer) {
+        if(oldLayer == layer) {
+            layer = null;
+        }
+    }
 
-	public OsbLayer getLayer() {
-		return layer;
-	}
+    public OsbLayer getLayer() {
+        return layer;
+    }
 
-	public void setLayer(OsbLayer layer) {
-		this.layer = layer;
-	}
+    public void setLayer(OsbLayer layer) {
+        this.layer = layer;
+    }
 
-	public DataSet getDataSet() {
-		return dataSet;
-	}
+    public DataSet getDataSet() {
+        return dataSet;
+    }
 
-	public void setDataSet(DataSet dataSet) {
-		this.dataSet = dataSet;
-	}
+    public void setDataSet(DataSet dataSet) {
+        this.dataSet = dataSet;
+    }
 }

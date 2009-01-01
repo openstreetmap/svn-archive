@@ -17,7 +17,7 @@ public interface SurveyorAction {
      * @param event the event.
      */
     public void actionPerformed(GpsActionEvent event);
-    
+
     /**
      * Sets the parameters for the action execution.
      * @param parameters the parameters.

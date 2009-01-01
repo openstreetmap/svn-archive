@@ -10,7 +10,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 
 /**
  * A plugin to add a duplicate way option to assist with creating divided roads
- * 
+ *
  * @author Brent Easton
  */
 public class DuplicateWayPlugin extends Plugin {
@@ -37,7 +37,7 @@ public class DuplicateWayPlugin extends Plugin {
       toolsMenu.addSeparator();
       toolsMenu.add(new JMenuItem(new DuplicateWayAction()));
     }
-    
+
   }
 
 }

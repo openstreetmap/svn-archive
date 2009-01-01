@@ -20,7 +20,7 @@ public class Browser extends HtmlPanel {
 
     static
     {
-	Logger.getLogger("org.lobobrowser").setLevel(Level.WARNING);
+    Logger.getLogger("org.lobobrowser").setLevel(Level.WARNING);
     }
 
     private final SimpleHtmlRendererContext rcontext;
@@ -28,82 +28,82 @@ public class Browser extends HtmlPanel {
     Dimension oldSize = null;
 
     public Browser(String uri) {
-	super();
+    super();
 
-	UserAgentContext ucontext = new CacheableUserAgentContext();
-	rcontext = new SimpleHtmlRendererContext(this, ucontext);
-	addNotify();
+    UserAgentContext ucontext = new CacheableUserAgentContext();
+    rcontext = new SimpleHtmlRendererContext(this, ucontext);
+    addNotify();
 
-	process( uri );
+    process( uri );
     }
 
     private void process(String uri) {
-	try {
-	    URL url;
-	    try {
-		url = new URL(uri);
-	    } catch (java.net.MalformedURLException mfu) {
-		int idx = uri.indexOf(':');
-		if (idx == -1 || idx == 1) {
-		    // try file
-		    url = new URL("file:" + uri);
-		} else {
-		    throw mfu;
-		}
-	    }
-	    // Call SimpleHtmlRendererContext.navigate()
-	    // which implements incremental rendering.
-	    this.rcontext.navigate(url, null);
-	} catch (Exception err) {
-	    err.printStackTrace();
-	}
+    try {
+        URL url;
+        try {
+        url = new URL(uri);
+        } catch (java.net.MalformedURLException mfu) {
+        int idx = uri.indexOf(':');
+        if (idx == -1 || idx == 1) {
+            // try file
+            url = new URL("file:" + uri);
+        } else {
+            throw mfu;
+        }
+        }
+        // Call SimpleHtmlRendererContext.navigate()
+        // which implements incremental rendering.
+        this.rcontext.navigate(url, null);
+    } catch (Exception err) {
+        err.printStackTrace();
     }
-    
+    }
+
     @Override
     public void setSize(final Dimension newSize)
     {
-	if (!newSize.equals(oldSize)) {
-	    oldSize = newSize;
-	    super.setSize(newSize);
-	    validate();
+    if (!newSize.equals(oldSize)) {
+        oldSize = newSize;
+        super.setSize(newSize);
+        validate();
 
-	    executeAsyncScript("resizeMap(" + newSize.width + "," + newSize.height + ");");
-	}
+        executeAsyncScript("resizeMap(" + newSize.width + "," + newSize.height + ");");
+    }
     }
 
     public void executeAsyncScript(final String script)
     {
-	EventQueue.invokeLater(new Runnable() {
-	    public void run() {
-		executeScript(script);
-	    }
-	});
+    EventQueue.invokeLater(new Runnable() {
+        public void run() {
+        executeScript(script);
+        }
+    });
     }
-    
+
     public Object executeScript(String script)
     {
-	System.out.println("Executing script " + script);
-	try {
-	    Window window = Window.getWindow(rcontext);
-	    if( window.getDocumentNode() == null )
-		return null; // Document not loaded yet
+    System.out.println("Executing script " + script);
+    try {
+        Window window = Window.getWindow(rcontext);
+        if( window.getDocumentNode() == null )
+        return null; // Document not loaded yet
 
-	    return window.eval(script);
-	} catch (EcmaError ecmaError) {
-	    logger.log(Level.WARNING, "Javascript error at " + ecmaError.sourceName() + ":" + ecmaError.lineNumber() + ": " + ecmaError.getMessage());
-	} catch (Throwable err) {
-	    logger.log(Level.WARNING, "Unable to evaluate Javascript code", err);
-	}
-	
-	return null;
+        return window.eval(script);
+    } catch (EcmaError ecmaError) {
+        logger.log(Level.WARNING, "Javascript error at " + ecmaError.sourceName() + ":" + ecmaError.lineNumber() + ": " + ecmaError.getMessage());
+    } catch (Throwable err) {
+        logger.log(Level.WARNING, "Unable to evaluate Javascript code", err);
     }
-    
-    
+
+    return null;
+    }
+
+
     /**
      * Overrided to hide hardcoded scrollbars and insets
      */
     @Override
     protected HtmlBlockPanel createHtmlBlockPanel(UserAgentContext ucontext, HtmlRendererContext rcontext) {
-	return new MyHtmlBlockPanel(java.awt.Color.WHITE, true, ucontext, rcontext, this);
+    return new MyHtmlBlockPanel(java.awt.Color.WHITE, true, ucontext, rcontext, this);
     }
 }

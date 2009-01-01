@@ -12,9 +12,9 @@ import java.net.URLConnection;
 
 /**
  * Class that contains information about one single slippy map tile.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
- * 
+ *
  */
 public class SlippyMapTile
 {

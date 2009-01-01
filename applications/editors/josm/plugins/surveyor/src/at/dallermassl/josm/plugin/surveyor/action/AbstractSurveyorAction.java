@@ -14,7 +14,7 @@ import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
  */
 public abstract class AbstractSurveyorAction implements SurveyorAction {
     private List<String> parameters;
-    
+
     /**
      * Returns the parameters.
      * @return the parameters
@@ -22,7 +22,7 @@ public abstract class AbstractSurveyorAction implements SurveyorAction {
     public List<String> getParameters() {
         return parameters;
     }
-        
+
     /* (non-Javadoc)
      * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#setParameters(java.util.List)
      */

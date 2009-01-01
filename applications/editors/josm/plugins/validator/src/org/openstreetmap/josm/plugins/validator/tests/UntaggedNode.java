@@ -21,84 +21,84 @@ import org.openstreetmap.josm.plugins.validator.TestError;
  */
 public class UntaggedNode extends Test
 {
-	protected static int UNTAGGED_NODE = 201;
+    protected static int UNTAGGED_NODE = 201;
 
-	/** Bag of all nodes */
-	Set<Node> emptyNodes;
+    /** Bag of all nodes */
+    Set<Node> emptyNodes;
 
-	/**
-	 * Constructor
-	 */
-	public UntaggedNode()
-	{
-		super(tr("Untagged nodes."),
-			  tr("This test checks for untagged nodes that are not part of any way."));
-	}
+    /**
+     * Constructor
+     */
+    public UntaggedNode()
+    {
+        super(tr("Untagged nodes."),
+              tr("This test checks for untagged nodes that are not part of any way."));
+    }
 
-	@Override
-	public void startTest()
-	{
-		emptyNodes = new HashSet<Node>(100);
-	}
+    @Override
+    public void startTest()
+    {
+        emptyNodes = new HashSet<Node>(100);
+    }
 
-	@Override
-	public void visit(Collection<OsmPrimitive> selection)
-	{
-		// If there is a partial selection, it may be false positives if a
-		// node is selected, but not the container way. So, in this
-		// case, we must visit all ways, selected or not.
-		if (partialSelection) {
-			for (OsmPrimitive p : selection) {
-				if (!p.deleted && !p.incomplete && p instanceof Node) {
-					p.visit(this);
-				}
-			}
-			for (Way w : Main.ds.ways) {
-				visit(w);
-			}
-		} else {
-			for (OsmPrimitive p : selection) {
-				if (!p.deleted && !p.incomplete) {
-					p.visit(this);
-				}
-			}
-		}
-	}
+    @Override
+    public void visit(Collection<OsmPrimitive> selection)
+    {
+        // If there is a partial selection, it may be false positives if a
+        // node is selected, but not the container way. So, in this
+        // case, we must visit all ways, selected or not.
+        if (partialSelection) {
+            for (OsmPrimitive p : selection) {
+                if (!p.deleted && !p.incomplete && p instanceof Node) {
+                    p.visit(this);
+                }
+            }
+            for (Way w : Main.ds.ways) {
+                visit(w);
+            }
+        } else {
+            for (OsmPrimitive p : selection) {
+                if (!p.deleted && !p.incomplete) {
+                    p.visit(this);
+                }
+            }
+        }
+    }
 
-	@Override
-	public void visit(Node n)
-	{
-		if(!n.incomplete && !n.deleted && !n.tagged)
-			emptyNodes.add(n);
-	}
+    @Override
+    public void visit(Node n)
+    {
+        if(!n.incomplete && !n.deleted && !n.tagged)
+            emptyNodes.add(n);
+    }
 
-	@Override
-	public void visit(Way w)
-	{
-		for (Node n : w.nodes) {
-			emptyNodes.remove(n);
-		}
-	}
+    @Override
+    public void visit(Way w)
+    {
+        for (Node n : w.nodes) {
+            emptyNodes.remove(n);
+        }
+    }
 
-	@Override
-	public void endTest()
-	{
-		for(Node node : emptyNodes)
-		{
-			errors.add( new TestError(this, Severity.OTHER, tr("Untagged and unconnected nodes"), UNTAGGED_NODE, node) );
-		}
-		emptyNodes = null;
-	}
+    @Override
+    public void endTest()
+    {
+        for(Node node : emptyNodes)
+        {
+            errors.add( new TestError(this, Severity.OTHER, tr("Untagged and unconnected nodes"), UNTAGGED_NODE, node) );
+        }
+        emptyNodes = null;
+    }
 
-	@Override
-	public Command fixError(TestError testError)
-	{
-		return DeleteCommand.delete(testError.getPrimitives());
-	}
+    @Override
+    public Command fixError(TestError testError)
+    {
+        return DeleteCommand.delete(testError.getPrimitives());
+    }
 
-	@Override
-	public boolean isFixable(TestError testError)
-	{
-		return (testError.getTester() instanceof UntaggedNode);
-	}
+    @Override
+    public boolean isFixable(TestError testError)
+    {
+        return (testError.getTester() instanceof UntaggedNode);
+    }
 }

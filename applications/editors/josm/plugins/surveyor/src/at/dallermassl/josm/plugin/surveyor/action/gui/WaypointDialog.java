@@ -20,9 +20,9 @@ import javax.swing.JTextField;
  *
  */
 public class WaypointDialog {
-    
+
     public String openDialog(JFrame frame, String message) {
-        
+
         JTextField textField = new JTextField(10);
 
         //Create an array of the text and components to be displayed.
@@ -65,7 +65,7 @@ public class WaypointDialog {
         closer.start();
         dialog.pack();
         dialog.setVisible(true);
-        
+
 
         System.out.println("value: " + optionPane.getValue());
         return textField.getText();

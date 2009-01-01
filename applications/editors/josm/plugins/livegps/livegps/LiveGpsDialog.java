@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package livegps;
 
@@ -61,7 +61,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
         panel.add(courseLabel = new JLabel());
         add(new JScrollPane(panel), BorderLayout.CENTER);
     }
-    
+
     /* (non-Javadoc)
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
@@ -78,14 +78,14 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
                 double mySpeed = data.getSpeed() * 3.6f;
                 speedLabel.setText((Math.round(mySpeed*100)/100) + "km/h"); // m(s to km/h
                 courseLabel.setText(data.getCourse() + "deg");
-                
+
                 String wayString = data.getWayInfo();
                 if(wayString.length() > 0) {
                     wayLabel.setText(wayString);
                 } else {
                     wayLabel.setText("unknown");
                 }
-                
+
             } else {
 //                fixLabel.setText("no fix");
                 latLabel.setText("");
@@ -100,12 +100,9 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
             if(status.getStatus() != LiveGpsStatus.GpsStatus.CONNECTED) {
                 panel.setBackground(Color.RED);
             } else {
-                panel.setBackground(Color.WHITE);                
+                panel.setBackground(Color.WHITE);
             }
         }
-        
+
     }
-
-
-
 }

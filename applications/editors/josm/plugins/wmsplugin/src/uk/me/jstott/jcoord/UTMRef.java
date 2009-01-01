@@ -2,11 +2,11 @@ package uk.me.jstott.jcoord;
 
 /**
  * Class to represent a UTM reference
- * 
+ *
  * (c) 2006 Jonathan Stott
- * 
+ *
  * Created on 11-Feb-2006
- * 
+ *
  * @author Jonathan Stott
  * @version 1.0
  * @since 1.0
@@ -36,7 +36,7 @@ public class UTMRef {
 
   /**
    * Create a new UTM reference object.
-   * 
+   *
    * @param easting
    *          the easting
    * @param northing
@@ -57,7 +57,7 @@ public class UTMRef {
 
   /**
    * Convert this UTM reference to a latitude and longitude.
-   * 
+   *
    * @return the converted latitude and longitude
    * @since 1.0
    */
@@ -129,7 +129,7 @@ public class UTMRef {
 
   /**
    * Work out the UTM latitude zone from the latitude.
-   * 
+   *
    * @param latitude
    *          the latitude to find the UTM latitude zone for
    * @return the UTM latitude zone for the given latitude
@@ -183,7 +183,7 @@ public class UTMRef {
 
   /**
    * Convert this UTM reference to a String representation for printing out.
-   * 
+   *
    * @return a String representation of this UTM reference
    * @since 1.0
    */
@@ -195,7 +195,7 @@ public class UTMRef {
 
   /**
    * Get the easting.
-   * 
+   *
    * @return the easting
    * @since 1.0
    */
@@ -206,7 +206,7 @@ public class UTMRef {
 
   /**
    * Get the northing.
-   * 
+   *
    * @return the northing
    * @since 1.0
    */
@@ -217,7 +217,7 @@ public class UTMRef {
 
   /**
    * Get the latitude zone character.
-   * 
+   *
    * @return the latitude zone character
    * @since 1.0
    */
@@ -228,7 +228,7 @@ public class UTMRef {
 
   /**
    * Get the longitude zone number.
-   * 
+   *
    * @return the longitude zone number
    * @since 1.0
    */

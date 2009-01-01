@@ -21,17 +21,17 @@ import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.actions.JosmAction;
 
 public class UtilsPlugin extends Plugin {
-	JMenuItem SimplifyWay;
+    JMenuItem SimplifyWay;
 
-	public UtilsPlugin() {
-		SimplifyWay = MainMenu.add(Main.main.menu.toolsMenu, new SimplifyWayAction());
-		SimplifyWay.setEnabled(false);
-	}
-	
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if (oldFrame == null && newFrame != null) {
-			SimplifyWay.setEnabled(true);
-		}
-	}
+    public UtilsPlugin() {
+        SimplifyWay = MainMenu.add(Main.main.menu.toolsMenu, new SimplifyWayAction());
+        SimplifyWay.setEnabled(false);
+    }
+
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (oldFrame == null && newFrame != null) {
+            SimplifyWay.setEnabled(true);
+        }
+    }
 }

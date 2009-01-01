@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package livegps;
 
@@ -21,7 +21,7 @@ public class LiveGpsData {
     private boolean fix;
     private String wayString;
     private Way way;
-    
+
     /**
      * @param latitude
      * @param longitude
@@ -37,7 +37,7 @@ public class LiveGpsData {
         this.fix = haveFix;
     }
     /**
-     * 
+     *
      */
     public LiveGpsData() {
         // TODO Auto-generated constructor stub
@@ -90,31 +90,31 @@ public class LiveGpsData {
     public void setSpeed(float speed) {
         this.speed = speed;
     }
-    
+
     /**
      * @return the latlon
      */
     public LatLon getLatLon() {
         return this.latLon;
     }
-    
+
     /**
      * @param latLon
      */
     public void setLatLon(LatLon latLon) {
         this.latLon = latLon;
     }
-    
+
     public String toString() {
-        return getClass().getSimpleName() + "[fix=" + fix + ", lat=" + latLon.lat() 
+        return getClass().getSimpleName() + "[fix=" + fix + ", lat=" + latLon.lat()
         + ", long=" + latLon.lon() + ", speed=" + speed + ", course=" + course + "]";
-        
+
     }
-    
+
     /**
      * Returns the name of the way that is closest to the current coordinates or an
      * empty string if no way is around.
-     * 
+     *
      * @return the name of the way that is closest to the current coordinates.
      */
     public String getWayInfo() {
@@ -155,21 +155,21 @@ public class LiveGpsData {
         }
         return wayString;
     }
-    
+
     /**
      * Returns the closest way to this position.
      * @return the closest way to this position.
      */
     public Way getWay() {
         if(way == null) {
-            EastNorth eastnorth = Main.proj.latlon2eastNorth(getLatLon()); 
-            Point xy = Main.map.mapView.getPoint(eastnorth); 
+            EastNorth eastnorth = Main.proj.latlon2eastNorth(getLatLon());
+            Point xy = Main.map.mapView.getPoint(eastnorth);
             way = Main.map.mapView.getNearestWay(xy);
         }
         return way;
-        
+
     }
-    
+
     /* (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
@@ -206,6 +206,6 @@ public class LiveGpsData {
         return true;
     }
 
-    
-    
+
+
 }

@@ -19,9 +19,9 @@ import org.openstreetmap.josm.tools.GBC;
 
 /**
  * Preference Dialog for Slippy Map Tiles
- * 
+ *
  * @author Hakan Tandogan <hakan@gurkensalat.com>
- * 
+ *
  */
 public class SlippyMapPreferenceSetting implements PreferenceSetting
 {

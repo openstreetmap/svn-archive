@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
@@ -22,7 +22,7 @@ public class SiteDescriptionParser extends DefaultHandler {
     private PluginDescription pluginDescription;
     private StringBuilder characters;
     private VariableHelper variableHelper;
-    
+
     /**
      * Constructor using a new SiteDescription object.
      */
@@ -32,12 +32,12 @@ public class SiteDescriptionParser extends DefaultHandler {
     /**
      * Constructor using a description object to fill.
      * @param siteDescription the object to fill.
-     * @param in the reader to fill the description with. 
+     * @param in the reader to fill the description with.
      */
     public SiteDescriptionParser(SiteDescription siteDescription) {
         this.siteDescription = siteDescription;
     }
-    
+
     /**
      * Returns the site description object.
      * @return the site description object.
@@ -116,8 +116,8 @@ public class SiteDescriptionParser extends DefaultHandler {
             System.err.println("unknown tag: " + qName);
         }
     }
-    
-    /** 
+
+    /**
      * Read characters for description.
      */
     @Override public void characters(char[] data, int start, int length) throws org.xml.sax.SAXException {
@@ -126,7 +126,7 @@ public class SiteDescriptionParser extends DefaultHandler {
         }
         characters.append(data, start, length);
     }
-    
+
     /* (non-Javadoc)
      * @see uk.co.wilson.xml.MinML2#endElement(java.lang.String, java.lang.String, java.lang.String)
      */
@@ -157,7 +157,7 @@ public class SiteDescriptionParser extends DefaultHandler {
            pluginDescription = null;
        }
     }
-    
+
     /**
      * Clears the characters and returns the its previous content.
      * @return
@@ -167,7 +167,7 @@ public class SiteDescriptionParser extends DefaultHandler {
         characters = new StringBuilder();
         return chars;
     }
-    
-    
+
+
 
 }

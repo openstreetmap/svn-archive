@@ -1,18 +1,18 @@
 /* Copyright (c) 2008, Henrik Niehaus
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- *    this list of conditions and the following disclaimer in the documentation 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 3. Neither the name of the project nor the names of its 
- *    contributors may be used to endorse or promote products derived from this 
+ * 3. Neither the name of the project nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -50,7 +50,7 @@ public class HttpUtils {
                 con.setRequestProperty(entry.getKey(), entry.getValue());
             }
         }
-        
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         int length = -1;
         byte[] b = new byte[1024];
@@ -58,10 +58,10 @@ public class HttpUtils {
         while( (length = in.read(b)) > 0 ) {
             bos.write(b, 0, length);
         }
-        
+
         return new String(bos.toByteArray(), charset);
     }
-    
+
     public static HttpResponse getResponse(String url, Map<String, String> headers, String charset) throws IOException {
         URL page = new URL(url);
         URLConnection con = page.openConnection();
@@ -71,7 +71,7 @@ public class HttpUtils {
                 con.setRequestProperty(entry.getKey(), entry.getValue());
             }
         }
-        
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         int length = -1;
         byte[] b = new byte[1024];
@@ -79,13 +79,13 @@ public class HttpUtils {
         while( (length = in.read(b)) > 0 ) {
             bos.write(b, 0, length);
         }
-        
+
         HttpResponse response = new HttpResponse(new String(bos.toByteArray(), charset), con.getHeaderFields());
         return response;
     }
-    
+
     /**
-     * 
+     *
      * @param url
      * @param headers
      * @param content the post body
@@ -104,12 +104,12 @@ public class HttpUtils {
                 con.setRequestProperty(entry.getKey(), entry.getValue());
             }
         }
-        
+
         //send the post
         OutputStream os = con.getOutputStream();
         os.write(content.getBytes("UTF-8"));
         os.flush();
-        
+
         // read the response
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         int length = -1;
@@ -118,10 +118,10 @@ public class HttpUtils {
         while( (length = in.read(b)) > 0 ) {
             bos.write(b, 0, length);
         }
-        
+
         return new String(bos.toByteArray(), responseCharset);
     }
-    
+
     /**
      * Adds a parameter to a given URI
      * @param uri
@@ -136,11 +136,11 @@ public class HttpUtils {
         } else {
             sb.append('?');
         }
-        
+
         sb.append(param);
         sb.append('=');
         sb.append(value);
-        
+
         return sb.toString();
     }
 
@@ -153,15 +153,15 @@ public class HttpUtils {
                 con.setRequestProperty(entry.getKey(), entry.getValue());
             }
         }
-        
+
         return con.getHeaderFields();
     }
-    
+
     public static String getHeaderField(Map<String, List<String>> headers, String headerField) {
         if(!headers.containsKey(headerField)) {
             return null;
         }
-        
+
         List<String> value = headers.get(headerField);
         if(value.size() == 1) {
             return value.get(0);

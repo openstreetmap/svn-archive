@@ -17,9 +17,9 @@ import livegps.LiveGpsData;
 
 /**
  * Action that fires a {@link SurveyorAction} to the registered actions.
- * 
+ *
  * @author cdaller
- * 
+ *
  */
 public class MetaAction extends AbstractAction {
     private static final long serialVersionUID = -1523524381092575809L;
@@ -29,7 +29,7 @@ public class MetaAction extends AbstractAction {
     public static final long MIN_TIME_DIFF = 500; // 500ms
 
     /**
-     * 
+     *
      */
     public MetaAction() {
         // TODO Auto-generated constructor stub
@@ -69,7 +69,7 @@ public class MetaAction extends AbstractAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {

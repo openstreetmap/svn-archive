@@ -24,7 +24,7 @@ import at.dallermassl.josm.plugin.surveyor.util.ResourceLoader;
 
 /**
  * Action that plays an audio file.
- * 
+ *
  * @author cdaller
  *
  */
@@ -85,8 +85,8 @@ public class PlayAudioAction extends AbstractSurveyorAction {
                     e.printStackTrace();
                 }
             }
-            
+
         });
-        
+
     }
 }

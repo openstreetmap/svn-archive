@@ -38,12 +38,12 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
  * Main download dialog.
- * 
+ *
  * @author Raphael Mack <ramack@raphael-mack.de>
  *
  */
 public class GlobalsatImportDialog extends JPanel {
-	
+
     // the JOptionPane that contains this dialog. required for the closeDialog() method.
     private JOptionPane optionPane;
     private JCheckBox delete;
@@ -110,7 +110,7 @@ public class GlobalsatImportDialog extends JPanel {
                 public void actionPerformed(java.awt.event.ActionEvent e){
                     System.out.println("configureing the device");
                     try{
-                        
+
                         GlobalsatConfigDialog dialog = new GlobalsatConfigDialog(GlobalsatPlugin.dg100().getConfig());
                         JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
                         JDialog dlg = pane.createDialog(Main.parent, tr("Configure Device"));
@@ -135,7 +135,7 @@ public class GlobalsatImportDialog extends JPanel {
         c.gridy = 1;
         add(configBtn, c);
 
-        
+
         delete = new JCheckBox(tr("delete data after import"));
         delete.setSelected(Main.pref.getBoolean("globalsat.deleteAfterDownload", false));
 
@@ -166,7 +166,7 @@ public class GlobalsatImportDialog extends JPanel {
         GlobalsatPlugin.setPortIdent(getPort());
 
     }
-	
+
     public boolean deleteFilesAfterDownload(){
         return delete.isSelected();
     }

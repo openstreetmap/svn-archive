@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.navigator;
 
@@ -17,11 +17,11 @@ public class WayEdge {
   private Node startNode;
   private Node endNode;
   private List<Segment> segments;
-  
+
   public WayEdge() {
-    
+
   }
-  
+
   public WayEdge(int length) {
     this.length = length;
   }
@@ -81,7 +81,7 @@ public class WayEdge {
   public void setEndNode(Node endNode) {
     this.endNode = endNode;
   }
-  
-  
+
+
 
 }

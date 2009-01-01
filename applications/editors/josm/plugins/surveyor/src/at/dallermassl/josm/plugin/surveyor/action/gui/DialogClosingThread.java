@@ -23,15 +23,15 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     private JDialog dialog;
     private long timeout;
     private long loopCount;
-    
+
     /**
      * Using the given dialog and the default timeout.
      * @param dialog
      */
     public DialogClosingThread(JDialog dialog) {
         this(dialog, DEFAULT_TIMEOUT);
-    }   
-       
+    }
+
     /**
      * @param dialog
      * @param timeout
@@ -60,7 +60,7 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
         dialog.setVisible(false);
         dialog.dispose();
     }
-    
+
     public void reset() {
         this.loopCount = timeout / 1000;
     }
@@ -104,11 +104,11 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
             }
         }
     }
-    
+
     public void observe(Component component) {
         component.addKeyListener(this);
     }
-    
+
     public void observe(JTextField textfield) {
         textfield.getDocument().addDocumentListener(this);
     }
@@ -119,7 +119,7 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     //@Override
     public void changedUpdate(DocumentEvent e) {
         reset();
-        System.out.println("changedUpdate: " + e);        
+        System.out.println("changedUpdate: " + e);
     }
 
     /* (non-Javadoc)
@@ -137,6 +137,6 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     //@Override
     public void removeUpdate(DocumentEvent e) {
         reset();
-        System.out.println("removeUpdate: " + e);        
+        System.out.println("removeUpdate: " + e);
     }
 }

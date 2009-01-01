@@ -67,12 +67,12 @@ public class SurveyorShowAction extends JosmAction {
 //          comp.addButton(new ButtonDescription("Unclassified", "U", null, "ConsolePrinterAction", null));
 //          comp.addButton(new ButtonDescription("Residential", "R", null,
 //          new SurveyorActionDescription("SetWaypointAction", new String[] {"residential", "images/reorder.png"}), null));
-//          comp.addButton(new ButtonDescription("Parking", "P", "images/symbols/parking.png", 
+//          comp.addButton(new ButtonDescription("Parking", "P", "images/symbols/parking.png",
 //          new SurveyorActionDescription("SetNodeAction", new String[] {"amenity", "parking", "createdby", "surveyor"}), null));
-            
+
             // add component as gps event listener:
             gpsPlugin.addPropertyChangeListener(comp);
-            
+
             // add some hotkeys to the component:
             ActionMap actionMap = comp.getActionMap();
             InputMap inputMap = comp.getInputMap();
@@ -102,7 +102,7 @@ public class SurveyorShowAction extends JosmAction {
                 }
             });
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0), "autocenter");
-           
+
             surveyorFrame.add(comp);
             surveyorFrame.pack();
             surveyorFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -110,7 +110,7 @@ public class SurveyorShowAction extends JosmAction {
             surveyorFrame.setTitle(tr("Surveyor"));
             // <FIXXME date="28.04.2007" author="cdaller">
             // TODO get old pos of frame from properties
-            // </FIXXME> 
+            // </FIXXME>
             SurveyorPlugin.setSurveyorFrame(surveyorFrame);
         }
         surveyorFrame.setAlwaysOnTop(true);
@@ -126,7 +126,7 @@ public class SurveyorShowAction extends JosmAction {
             Main.pref.put("surveyor.source", DEFAULT_SOURCE);
             // <FIXXME date="04.05.2007" author="cdaller">
             // TODO copy xml file to .josm directory if it does not exist!
-            // </FIXXME> 
+            // </FIXXME>
         }
         SurveyorComponent component= null;
         try {

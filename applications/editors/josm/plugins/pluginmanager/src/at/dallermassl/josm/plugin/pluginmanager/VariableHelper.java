@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
@@ -9,21 +9,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Helper class that replaces variables in strings with its values. The variables are in the 
+ * Helper class that replaces variables in strings with its values. The variables are in the
  * form ${name}. Replacement values may be set. As a fallback (if the variable is not found)
  * the system properties are used. If neither is found, the variable is not replaced.
- * 
+ *
  * @author cdaller
  *
  */
 public class VariableHelper {
     private Pattern varPattern = Pattern.compile("\\$\\{(.+?)\\}");
     private Map<String, String> variables;
-    
+
     public VariableHelper() {
         variables = new HashMap<String, String>();
     }
-    
+
     /**
      * Adds all key/values as variables.
      * @param pref the values to add.
@@ -31,7 +31,7 @@ public class VariableHelper {
     public void addAll(Map<String,String> values) {
         variables.putAll(values);
     }
-    
+
     /**
      * Adds a single key/value pair.
      * @param key
@@ -40,7 +40,7 @@ public class VariableHelper {
     public void add(String key, String value) {
         variables.put(key, value);
     }
-    
+
     /**
      * Replaces all variable placeholder in the given string with the replacement.
      * If the variable cannot be found and is not a System.property, the placeholder remains
@@ -70,7 +70,7 @@ public class VariableHelper {
         }
         return source.toString();
     }
-    
+
     public static void main(String[] args) {
         VariableHelper helper = new VariableHelper();
         System.out.println(helper.replaceVariables("abc${java.version}cde${os.name}${user.name}xx${unknoqn}"));

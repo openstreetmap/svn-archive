@@ -105,7 +105,7 @@ public class GlobalsatPlugin extends Plugin {
             Main.main.menu.toolsMenu.add(importAction);
         }
     }
-    
+
     class GlobalsatImportAction extends JosmAction{
         public GlobalsatImportAction(){
             super(tr("Globalsat Import"), "globalsatImport",

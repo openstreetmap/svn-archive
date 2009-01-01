@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007 by Christian Gallioz (aka khris78)
-// Parts of code from Geotagged plugin (by Rob Neild) 
+// Parts of code from Geotagged plugin (by Rob Neild)
 // and the core JOSM source code (by Immanuel Scholz and others)
 
 package org.openstreetmap.josm.plugins.agpifoj;
@@ -22,10 +22,10 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
 
 public class AgpifojPlugin extends Plugin {
-    
-    static class JpegFileFilter extends javax.swing.filechooser.FileFilter 
+
+    static class JpegFileFilter extends javax.swing.filechooser.FileFilter
                                         implements java.io.FileFilter {
-        
+
         @Override public boolean accept(File f) {
             if (f.isDirectory()) {
                 return true;
@@ -39,9 +39,9 @@ public class AgpifojPlugin extends Plugin {
             return tr("JPEG images (*.jpg)");
         }
     };
-    
+
     static final JpegFileFilter JPEG_FILE_FILTER = new JpegFileFilter();
-    
+
     private class Action extends JosmAction {
 
         public Action() {
@@ -58,20 +58,20 @@ public class AgpifojPlugin extends Plugin {
             fc.setMultiSelectionEnabled(true);
             fc.setAcceptAllFileFilterUsed(false);
             fc.setFileFilter(JPEG_FILE_FILTER);
-            
+
             fc.showOpenDialog(Main.parent);
-            
+
             File[] sel = fc.getSelectedFiles();
             if (sel == null || sel.length == 0) {
                 return;
             }
-            
+
             Main.pref.put("tagimages.lastdirectory", fc.getCurrentDirectory().getPath());
-            
+
             AgpifojLayer.create(sel);
         }
     }
-    
+
     public AgpifojPlugin() {
         MainMenu.add(Main.main.menu.fileMenu, new Action());
     }

@@ -15,7 +15,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 public class GpsActionEvent extends ActionEvent {
     private static final long serialVersionUID = 2674961758007055637L;
     private LatLon coordinates;
-    
+
 
     /**
      * @param e
@@ -35,6 +35,6 @@ public class GpsActionEvent extends ActionEvent {
         return this.coordinates;
     }
 
- 
+
 
 }

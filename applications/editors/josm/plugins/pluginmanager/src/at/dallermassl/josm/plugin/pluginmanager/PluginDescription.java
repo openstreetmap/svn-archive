@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
@@ -22,7 +22,7 @@ public class PluginDescription {
     private String name;
     private String description;
     private List<PluginResource> resources = new ArrayList<PluginResource>();
-    
+
     /**
      * Add a resource to the plugin description.
      * @param resource the resource to add.
@@ -30,7 +30,7 @@ public class PluginDescription {
     public void addPluginResource(PluginResource resource) {
         resources.add(resource);
     }
-    
+
     /**
      * @return the id
      */
@@ -86,7 +86,7 @@ public class PluginDescription {
     public List<PluginResource> getResources() {
         return this.resources;
     }
-    
+
     /**
      * @return the installedVersion
      */
@@ -135,19 +135,19 @@ public class PluginDescription {
             }
         }
         if(errorReported) {
-            JOptionPane.showMessageDialog(Main.parent, "One or more installs had an error: " + errorMessages.toString());            
+            JOptionPane.showMessageDialog(Main.parent, "One or more installs had an error: " + errorMessages.toString());
         }
     }
-    
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return getClass().getSimpleName() + "[id=" + id 
-                                          + ", name=" + name 
-                                          + ", version=" + version 
-                                          + ", desc=" + description 
-                                          + ", resources=" + resources 
+        return getClass().getSimpleName() + "[id=" + id
+                                          + ", name=" + name
+                                          + ", version=" + version
+                                          + ", desc=" + description
+                                          + ", resources=" + resources
                                           + "]";
     }
 }

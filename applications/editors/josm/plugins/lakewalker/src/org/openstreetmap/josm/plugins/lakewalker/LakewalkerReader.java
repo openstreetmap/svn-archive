@@ -50,11 +50,11 @@ public class LakewalkerReader {
     char option = ' ';
     
     try {
-    	
-	  Node n = null;  // The current node being created
-	  Node tn = null; // The last node of the previous way
+        
+      Node n = null;  // The current node being created
+      Node tn = null; // The last node of the previous way
       Node fn = null; // Node to hold the first node in the trace
-    	
+        
       while ((line = input.readLine()) != null) {
         if (cancel) {
           return;
@@ -66,26 +66,26 @@ public class LakewalkerReader {
           String[] tokens = line.split(" ");
           
           if(tn==null){
-		      try {        	
-		        LatLon ll = new LatLon(Double.parseDouble(tokens[1])+northOffset, Double.parseDouble(tokens[2])+eastOffset);
-		        n = new Node(ll);
-		        if(fn==null){
-		          fn = n;
-		        }
-		        commands.add(new AddCommand(n));
-		      }
-	          catch (Exception ex) {
-	        	  
-		      }
+              try {         
+                LatLon ll = new LatLon(Double.parseDouble(tokens[1])+northOffset, Double.parseDouble(tokens[2])+eastOffset);
+                n = new Node(ll);
+                if(fn==null){
+                  fn = n;
+                }
+                commands.add(new AddCommand(n));
+              }
+              catch (Exception ex) {
+                  
+              }
           
           } else {
             // If there is a last node, and this node has the same coordinates
             // then we substitute for the previous node
-      		n = tn;
-        	tn = null;       	
+            n = tn;
+            tn = null;          
           }
-	      
-	      way.nodes.add(n);
+          
+          way.nodes.add(n);
           
           break;
 
@@ -97,7 +97,7 @@ public class LakewalkerReader {
           String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
           
           if(!waytype.equals("none")){
-        	  way.put("natural",waytype);
+              way.put("natural",waytype);
           }
           
           way.put("created_by", "Dshpak_landsat_lakes");
@@ -105,10 +105,10 @@ public class LakewalkerReader {
           
           break;
         
-        case 't':      	
-        	way = new Way();
-        	tn = n;
-        	break;
+        case 't':       
+            way = new Way();
+            tn = n;
+            break;
           
         case 'e':
           String error = line.substring(2);

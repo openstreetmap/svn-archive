@@ -16,7 +16,6 @@
         </javac>
     </target>
     <target name="dist" depends="compile">
-        <mkdir dir="dist"/>
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>

@@ -12,7 +12,6 @@
     <property name="ant.build.javac.target" value="1.5"/>
     <target name="init">
         <mkdir dir="build"></mkdir>
-        <mkdir dir="dist"></mkdir>
     </target>
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
@@ -44,8 +43,5 @@
     <target name="clean">
         <delete dir="${plugin.build.dir}" />
         <delete file="${plugin.jar}" />
-    </target>
-    <target name="install" depends="dist">
-        <copy file="dist/waypoints.jar" todir="${user.home}/.josm/plugins"/>
     </target>
 </project>

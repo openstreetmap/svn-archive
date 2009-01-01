@@ -9463,7 +9463,7 @@ msgstr "Radsporthalle oder -kurs bearbeiten"
 
 #: trans_presets.java:1808
 msgid "Dog Racing"
-msgstr "Hundeschule"
+msgstr "Hunderennen"
 
 #: trans_presets.java:1809
 msgid "Edit Dog Racing"

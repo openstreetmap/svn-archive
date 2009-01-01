@@ -9,7 +9,6 @@
     <property name="plugin.jar"       value="../../dist/${plugin.name}.jar"/>
 <!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
     <property name="josm" location="../../core/dist/josm-custom.jar" />
-<!--<property name="josm" location="../josm/josm-latest.jar" ></property>-->
 <!-- target directory to place the plugin in -->
 <!-- Windows has a different home directory scheme then unix/linux -->
 <!-- I don't know an automatic way to find it with ant :-(, if you know, please fix -->
@@ -19,7 +18,6 @@
     <property name="ant.build.javac.target" value="1.5"/>
     <target name="init">
         <mkdir dir="build"></mkdir>
-        <mkdir dir="dist"></mkdir>
     </target>
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>

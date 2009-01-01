@@ -333,16 +333,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                     fc.setAcceptAllFileFilterUsed(false);
                     fc.setMultiSelectionEnabled(false);
                     fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                    fc.setFileFilter(new FileFilter(){
-                        @Override public boolean accept(File f) {
-                            return (f.isDirectory()
-                                    || f .getName().toLowerCase().endsWith(".jpg") 
-                                    || f.getName().toLowerCase().endsWith(".jpeg"));
-                        }
-                        @Override public String getDescription() {
-                            return tr("JPEG images (*.jpg)");
-                        }
-                    });
+                    fc.setFileFilter(AgpifojPlugin.JPEG_FILE_FILTER);
                     fc.showOpenDialog(Main.parent);
                     File sel = fc.getSelectedFile();
                     if (sel == null) {

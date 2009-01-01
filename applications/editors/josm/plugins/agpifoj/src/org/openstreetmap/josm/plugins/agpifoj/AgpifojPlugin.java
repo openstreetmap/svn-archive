@@ -6,29 +6,41 @@ package org.openstreetmap.josm.plugins.agpifoj;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.IconToggleButton;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
 
 public class AgpifojPlugin extends Plugin {
+    
+    static class JpegFileFilter extends javax.swing.filechooser.FileFilter 
+                                        implements java.io.FileFilter {
+        
+        @Override public boolean accept(File f) {
+            if (f.isDirectory()) {
+                return true;
+            } else {
+                String name = f.getName().toLowerCase();
+                return name.endsWith(".jpg") || name.endsWith(".jpeg");
+            }
+        }
+
+        @Override public String getDescription() {
+            return tr("JPEG images (*.jpg)");
+        }
+    };
+    
+    static final JpegFileFilter JPEG_FILE_FILTER = new JpegFileFilter();
     
     private class Action extends JosmAction {
 
@@ -45,17 +57,7 @@ public class AgpifojPlugin extends Plugin {
             fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             fc.setMultiSelectionEnabled(true);
             fc.setAcceptAllFileFilterUsed(false);
-            fc.setFileFilter(
-                    new FileFilter() {
-                        @Override public boolean accept(File f) {
-                            return f.isDirectory()
-                                    || f.getName().toLowerCase().endsWith(".jpg");
-                        }
-
-                        @Override public String getDescription() {
-                            return tr("JPEG images (*.jpg)");
-                        }
-                    });
+            fc.setFileFilter(JPEG_FILE_FILTER);
             
             fc.showOpenDialog(Main.parent);
             
@@ -64,30 +66,18 @@ public class AgpifojPlugin extends Plugin {
                 return;
             }
             
-            List<File> files = new ArrayList<File>();
-            addRecursiveFiles(files, sel);
             Main.pref.put("tagimages.lastdirectory", fc.getCurrentDirectory().getPath());
             
-            AgpifojLayer.create(files);
-        }
-
-        private void addRecursiveFiles(List<File> files, File[] sel) {
-            for (File f : sel) {
-                if (f.isDirectory()) {
-                    addRecursiveFiles(files, f.listFiles());
-                } else if (f.getName().toLowerCase().endsWith(".jpg")) {
-                    files.add(f);
-                }
-            }
+            AgpifojLayer.create(sel);
         }
     }
-
+    
     public AgpifojPlugin() {
         MainMenu.add(Main.main.menu.fileMenu, new Action());
     }
 
     /**
-     * Called after Main.mapFrame is initalized. (After the first data is loaded).
+     * Called after Main.mapFrame is initialized. (After the first data is loaded).
      * You can use this callback to tweak the newFrame to your needs, as example install
      * an alternative Painter.
      */
@@ -108,6 +98,4 @@ public class AgpifojPlugin extends Plugin {
             AgpifojDialog.getInstance().displayImage(null, null);
         }
     }
-
-
 }

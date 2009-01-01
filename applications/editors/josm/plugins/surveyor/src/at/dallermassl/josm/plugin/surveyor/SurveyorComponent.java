@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 
 /**
  * @author cdaller
- * 
+ *
  */
 public class SurveyorComponent extends JComponent implements PropertyChangeListener, GpsDataSource {
     private static final long serialVersionUID = 4539838472057529042L;
@@ -56,7 +56,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         buttonPanel = new JPanel();
         add(buttonPanel, BorderLayout.CENTER);
     }
-    
+
     /**
      * Set the number of rows as a string (callback method from xml parser).
      * @param rowsString the row string.
@@ -65,7 +65,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         rows = Integer.parseInt(rowsString);
         buttonPanel.setLayout(new GridLayout(rows, columns));
     }
-    
+
     /**
      * Set the number of columns as a string (callback method from xml parser).
      * @param columnsString the column string.
@@ -75,7 +75,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         columns = Integer.parseInt(columnsString);
         buttonPanel.setLayout(new GridLayout(rows, columns));
     }
-    
+
     /**
      * Set the width as a string.
      * @param widthString the width of the component.
@@ -86,7 +86,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
             super.setPreferredSize(new Dimension(width, height));
         }
     }
-    
+
     /**
      * Set the width as a string.
      * @param widthString the width of the component.
@@ -114,12 +114,12 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
             hotKeys.add(description.getHotkey());
         }
     }
-    
-    
+
+
 
     public static void main(String[] args) {
-        
-        
+
+
         // parse xml file and create component from it:
         Reader in = new InputStreamReader(SurveyorComponent.class.getClassLoader().getResourceAsStream("surveyor.xml"));
         XmlObjectParser parser = new XmlObjectParser();
@@ -150,8 +150,8 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
             }
         } catch (SAXException e) {
             e.printStackTrace();
-        }        
-        
+        }
+
 //        SurveyorComponent surveyorComponent = new SurveyorComponent();
 //        surveyorComponent.setGridSize(3,3);
 //        surveyorComponent.addButton(new ButtonDescription("Tunnel", "T", "images/symbols/tunnel.png", "ConsolePrinterAction", ButtonType.SINGLE));
@@ -162,7 +162,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
 //        surveyorComponent.addButton(new ButtonDescription("Unclassified", "U", null, "ConsolePrinterAction", null));
 //        surveyorComponent.addButton(new ButtonDescription("Residential", "R", null, "ConsolePrinterAction", null));
 //        surveyorComponent.addButton(new ButtonDescription("Parking", "P", "images/symbols/parking.png", "ConsolePrinterAction", null));
-        
+
         JFrame frame = new JFrame();
         frame.add(surveyorComponent);
         frame.pack();
@@ -178,7 +178,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
             gpsData = (LiveGpsData) evt.getNewValue();
             streetLabel.setText(tr("Way: ") + gpsData.getWayInfo());
         }
-        
+
     }
 
     /* (non-Javadoc)

@@ -44,8 +44,8 @@ public class GlobalsatDg100
     }
 
     public static final int TIMEOUT = 2000;
-    public static final int TRACK_TYPE = 1; 
-    
+    public static final int TRACK_TYPE = 1;
+
     /** delete file: A0 A2 00 02 BC 01 00 BD B0 B3 */
     private static byte dg100CmdSwitch2Nmea[] =
     { (byte) 0xA0, (byte) 0xA2, (byte) 0x00, (byte) 0x18, (byte) 0x81,
@@ -110,14 +110,14 @@ public class GlobalsatDg100
       , (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00
       , (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00
       , (byte) 0x00, (byte) 0xC0, (byte) 0xB0, (byte) 0xB3};
-    
+
     private byte[] response = new byte[65536];
-    
+
     private CommPortIdentifier portIdentifier;
     private SerialPort port = null;
 
     private boolean cancelled = false;
-    
+
     public GlobalsatDg100(CommPortIdentifier portId){
         this.portIdentifier = portId;
     }
@@ -177,7 +177,7 @@ public class GlobalsatDg100
             result.attr.put("ele", "" + r.getAltitude());
         return result;
     }
-    
+
     public void deleteData() throws ConnectionException{
         if(port == null){
             connect();
@@ -188,7 +188,7 @@ public class GlobalsatDg100
             throw new ConnectionException(e);
         }
     }
-    
+
     public void disconnect(){
         if(port != null){
             port.close();
@@ -209,7 +209,7 @@ public class GlobalsatDg100
             throw new ConnectionException(e);
         }
     }
-    
+
     private List<FileInfoRec> readFileInfoList() throws ConnectionException
     {
         int nextIdx = 0;
@@ -225,12 +225,12 @@ public class GlobalsatDg100
             throw new ConnectionException(e);
         }
     }
- 
+
     public List<GpsRec> readGpsRecList(List<FileInfoRec> fileInfoList) throws ConnectionException
     {
         int cnt = 0;
         List<GpsRec> result = new ArrayList<GpsRec>(200);
-        
+
         try{
             for(FileInfoRec fileInfoRec:fileInfoList){
                 cnt++;
@@ -242,7 +242,7 @@ public class GlobalsatDg100
             throw new ConnectionException(e);
         }
     }
- 
+
     private Response sendCmdDelFiles() throws IOException, UnsupportedCommOperationException
     {
         System.out.println("deleting data...");
@@ -316,7 +316,7 @@ public class GlobalsatDg100
         int len = sendCmd(src, response, 2074);
         return Response.parseResponse(response, len);
     }
-    
+
     /**
      *
      * @param buf
@@ -347,7 +347,7 @@ public class GlobalsatDg100
         return cntBytTot;
     }
 
-    
+
     private int readResponse(byte[] response, int bytesToRead) throws IOException, UnsupportedCommOperationException
     {
         byte[] readBuffer = new byte[200];
@@ -395,7 +395,7 @@ public class GlobalsatDg100
                 }
             }
             return ((cntBytTot > bytesToRead) ? bytesToRead : cntBytTot);
-	}
+    }
         return -1;
     }
 } // class GlobalsatDg100

@@ -26,23 +26,23 @@ import org.openstreetmap.josm.plugins.PluginProxy;
 /**
  * Plugin that uses live gps data and a button panel to add nodes/waypoints etc at the current
  * position.
- * 
+ *
  * TODO: auto save marker layer and data layer?
  * TODO: in action retrieve buttontype state to set on/off values
  * @author cdaller
  *
  */
 public class SurveyorPlugin {
-    
+
     private static JFrame surveyorFrame;
     public static final String PREF_KEY_STREET_NAME_FONT_SIZE = "surveyor.way.fontsize";
-    
+
     /**
-     * 
+     *
      */
     public SurveyorPlugin() {
         super();
-        
+
         // try to determine if the livegps plugin was already loaded:
 //        PluginInformation pluginInfo = PluginInformation.getLoaded("livegps");
 //        if (pluginInfo == null) {
@@ -56,15 +56,15 @@ public class SurveyorPlugin {
         try {
             Class.forName("livegps.LiveGpsPlugin");
         } catch(ClassNotFoundException cnfe) {
-            String message = 
+            String message =
                 tr("SurveyorPlugin depends on LiveGpsPlugin!") + "\n" +
                 tr("LiveGpsPlugin not found, please install and activate.") + "\n" +
-                tr("SurveyorPlugin is disabled for the moment"); 
+                tr("SurveyorPlugin is disabled for the moment");
             JOptionPane.showMessageDialog(Main.parent, message, tr("SurveyorPlugin"), JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        
+
+
         LiveGpsPlugin gpsPlugin = null;
         Iterator<PluginProxy> proxyIter = Main.plugins.iterator();
         while(proxyIter.hasNext()) {
@@ -100,5 +100,5 @@ public class SurveyorPlugin {
     public static void setSurveyorFrame(JFrame surveyorFrame) {
         SurveyorPlugin.surveyorFrame = surveyorFrame;
     }
-    
+
 }

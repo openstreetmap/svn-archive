@@ -33,9 +33,9 @@ import org.openstreetmap.josm.Main;
  */
 public class MeasurementDialog extends ToggleDialog implements ActionListener
 {
-	private static final long serialVersionUID = 4708541586297950021L;
+    private static final long serialVersionUID = 4708541586297950021L;
 
-	/** 
+    /**
      * The reset button
      */
     private SideButton resetButton;
@@ -63,7 +63,7 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
     /**
      * Constructor
      */
-    public MeasurementDialog() 
+    public MeasurementDialog()
     {
         super(tr("Measured values"), "measure", tr("Open the measurement window."),
         Shortcut.registerShortcut("subwindow:measurement", tr("Toggle: {0}", tr("Measured values")),
@@ -77,43 +77,43 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
         add(buttonPanel, BorderLayout.SOUTH);
 
         JPanel valuePanel = new JPanel(new GridLayout(0,2));
-        
+
         valuePanel.add(new JLabel(tr("Path Length")));
-        
+
         pathLengthLabel = new JLabel("0 m");
         valuePanel.add(pathLengthLabel);
-        
+
         valuePanel.add(new JLabel(tr("Selection Length")));
-        
+
         selectLengthLabel = new JLabel("0 m");
         valuePanel.add(selectLengthLabel);
 
         valuePanel.add(new JLabel(tr("Selection Area")));
-        
+
         selectAreaLabel = new JLabel("0 m\u00b2");
         valuePanel.add(selectAreaLabel);
-        
+
         JLabel angle = new JLabel(tr("Angle"));
         angle.setToolTipText(tr("Angle between two selected Nodes"));
         valuePanel.add(angle);
-        
+
         segAngleLabel = new JLabel("- \u00b0");
         valuePanel.add(segAngleLabel);
-        
+
         add(valuePanel, BorderLayout.CENTER);
 
         this.setPreferredSize(new Dimension(0, 92));
         final MeasurementDialog dlg = this;
-       //TODO: is this enough? 
+       //TODO: is this enough?
 
         Main.ds.selListeners.add(new SelectionChangedListener(){
 
-			public void selectionChanged(Collection<? extends OsmPrimitive> arg0) {
-				double length = 0.0;
-				double segAngle = 0.0;
+            public void selectionChanged(Collection<? extends OsmPrimitive> arg0) {
+                double length = 0.0;
+                double segAngle = 0.0;
                                 double area = 0.0;
                                 Node lastNode = null;
-				for(OsmPrimitive p:arg0){
+                for(OsmPrimitive p:arg0){
                                     if(p instanceof Node){
                                         Node n =(Node)p;
                                         if(lastNode == null){
@@ -131,7 +131,7 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
                                                 length += MeasurementLayer.calcDistance(lastN.coor, n.coor);
                                                 //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
                                                 area += (MeasurementLayer.calcX(n.coor) * MeasurementLayer.calcY(lastN.coor))
-						      - (MeasurementLayer.calcY(n.coor) * MeasurementLayer.calcX(lastN.coor));
+                              - (MeasurementLayer.calcY(n.coor) * MeasurementLayer.calcX(lastN.coor));
                                             }
                                             lastN = n;
                                         }
@@ -141,28 +141,28 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
                                             area = 0;
                                         }
                                     }
-				}
-				dlg.selectLengthLabel.setText(new DecimalFormat("#0.00").format(length) + " m");
+                }
+                dlg.selectLengthLabel.setText(new DecimalFormat("#0.00").format(length) + " m");
 
-				dlg.segAngleLabel.setText(new DecimalFormat("#0.0").format(segAngle) + " \u00b0");		
- 				dlg.selectAreaLabel.setText(new DecimalFormat("#0.00").format(area) + " m\u00b2");
-			}
-		});
-	}
+                dlg.segAngleLabel.setText(new DecimalFormat("#0.0").format(segAngle) + " \u00b0");
+                dlg.selectAreaLabel.setText(new DecimalFormat("#0.00").format(area) + " m\u00b2");
+            }
+        });
+    }
 
-	public void actionPerformed(ActionEvent e) 
-	{
-		String actionCommand = e.getActionCommand();
-		if( actionCommand.equals("Reset")){
-			resetValues();
-		}
-	}
-    
-	/**
-	 * Cleans the active Meausurement Layer
-	 */
-	public void resetValues(){
-		MeasurementPlugin.getCurrentLayer().reset();
-	}
-	
+    public void actionPerformed(ActionEvent e)
+    {
+        String actionCommand = e.getActionCommand();
+        if( actionCommand.equals("Reset")){
+            resetValues();
+        }
+    }
+
+    /**
+     * Cleans the active Meausurement Layer
+     */
+    public void resetValues(){
+        MeasurementPlugin.getCurrentLayer().reset();
+    }
+
 }

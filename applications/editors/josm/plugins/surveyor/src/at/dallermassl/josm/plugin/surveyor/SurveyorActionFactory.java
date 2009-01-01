@@ -11,8 +11,8 @@ import java.util.Map;
  * Simple factory that creates a class instance from a classname. It caches the instances, so
  * the action instances are used as singletons!
  * A package name of "at.dallermassl.josm.plugin.surveyor.action" is assumed, if the class could
- * not be found. 
- * 
+ * not be found.
+ *
  * @author cdaller
  *
  */

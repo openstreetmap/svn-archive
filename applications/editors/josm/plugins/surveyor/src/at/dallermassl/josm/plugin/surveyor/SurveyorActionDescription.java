@@ -18,10 +18,10 @@ public class SurveyorActionDescription {
     private String actionClass;
     private List<String> params;
     private SurveyorAction action;
-    
-    
+
+
     /**
-     * Default Constructor 
+     * Default Constructor
      */
     public SurveyorActionDescription() {
         super();
@@ -79,7 +79,7 @@ public class SurveyorActionDescription {
     public void setParameterList(List<String> params) {
         this.params = params;
     }
-    
+
     public void actionPerformed(GpsActionEvent e) {
         if(action == null) {
             action = SurveyorActionFactory.getInstance(actionClass);
@@ -87,7 +87,7 @@ public class SurveyorActionDescription {
         }
         action.actionPerformed(e);
     }
-    
+
     /**
      * Sets the classname of the action to use. Callback method of xml parser.
      * @param claszName the name of the action class.
@@ -95,7 +95,7 @@ public class SurveyorActionDescription {
     public void setClass_(String claszName) {
         setActionClass(claszName);
     }
-    
+
     /**
      * Set the params as a comma separated string.
      * @param paramString the comma separated string for the parameters.

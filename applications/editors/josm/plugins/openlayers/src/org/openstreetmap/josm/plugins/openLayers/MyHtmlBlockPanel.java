@@ -42,7 +42,7 @@ class MyHtmlBlockPanel extends HtmlBlockPanel {
         } else {
             this.rblock = null;
         }
-        
+
         this.invalidate();
         this.validateAll();
         this.repaint();

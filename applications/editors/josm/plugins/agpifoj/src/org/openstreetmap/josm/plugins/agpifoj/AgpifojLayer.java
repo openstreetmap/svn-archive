@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007 by Christian Gallioz (aka khris78)
-// Parts of code from Geotagged plugin (by Rob Neild) 
+// Parts of code from Geotagged plugin (by Rob Neild)
 // and the core JOSM source code (by Immanuel Scholz and others)
 
 package org.openstreetmap.josm.plugins.agpifoj;
@@ -47,12 +47,12 @@ import com.drew.metadata.exif.GpsDirectory;
 public class AgpifojLayer extends Layer {
 
     List<ImageEntry> data;
-    
+
     private Icon icon = ImageProvider.get("dialogs/agpifoj-marker");
     private Icon selectedIcon = ImageProvider.get("dialogs/agpifoj-marker-selected");
-    
+
     private int currentPhoto = -1;
-    
+
     /*
      * Stores info about each image
      */
@@ -82,9 +82,9 @@ public class AgpifojLayer extends Layer {
     }
 
     /** Loads a set of images, while displaying a dialog that indicates what the plugin is currently doing.
-     * In facts, this object is instantiated with a list of files. These files may be JPEG files or 
-     * directories. In case of directories, they are scanned to find all the images they contain. 
-     * Then all the images that have be found are loaded as ImageEntry instances. 
+     * In facts, this object is instantiated with a list of files. These files may be JPEG files or
+     * directories. In case of directories, they are scanned to find all the images they contain.
+     * Then all the images that have be found are loaded as ImageEntry instances.
      */
     private static final class Loader extends PleaseWaitRunnable {
 
@@ -92,7 +92,7 @@ public class AgpifojLayer extends Layer {
         private AgpifojLayer layer;
         private final File[] selection;
         private HashSet<String> loadedDirectories = new HashSet<String>();
-        
+
         public Loader(File[] selection) {
             super(tr("Extracting GPS locations from EXIF"));
             this.selection = selection;
@@ -107,11 +107,11 @@ public class AgpifojLayer extends Layer {
             } catch(NullPointerException npe) {
                 errorMessage += tr("One of the selected files was null !!!");
             }
-            
+
             if (cancelled) {
                 return;
             }
-            
+
             Main.pleaseWaitDlg.currentAction.setText(tr("Read photos..."));
 
             // read the image files
@@ -120,7 +120,7 @@ public class AgpifojLayer extends Layer {
             int progress = 0;
             Main.pleaseWaitDlg.progress.setMaximum(files.size());
             Main.pleaseWaitDlg.progress.setValue(progress);
-            
+
             for (File f : files) {
 
                 if (cancelled) {
@@ -148,34 +148,34 @@ public class AgpifojLayer extends Layer {
             files.clear();
         }
 
-        private void addRecursiveFiles(List<File> files, File[] sel) { 
+        private void addRecursiveFiles(List<File> files, File[] sel) {
             boolean nullFile = false;
-            
+
             for (File f : sel) {
-                
+
                 if(cancelled) {
                     break;
                 }
-                
+
                 if (f == null) {
                     nullFile = true;
-                    
+
                 } else if (f.isDirectory()) {
                     String canonical = null;
                     try {
                         canonical = f.getCanonicalPath();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        errorMessage += tr("Unable to get canonical path for directory {0}\n", 
+                        errorMessage += tr("Unable to get canonical path for directory {0}\n",
                                            f.getAbsolutePath());
                     }
-                    
+
                     if (canonical == null || loadedDirectories.contains(canonical)) {
                         continue;
                     } else {
                         loadedDirectories.add(canonical);
                     }
-                    
+
                     File[] children = f.listFiles(AgpifojPlugin.JPEG_FILE_FILTER);
                     if (children != null) {
                         Main.pleaseWaitDlg.currentAction.setText(tr("Scanning directory {0}", f.getPath()));
@@ -188,12 +188,12 @@ public class AgpifojLayer extends Layer {
                     } else {
                         errorMessage += tr("Error while getting files from directory {0}\n", f.getPath());
                     }
-                    
+
                 } else {
                       files.add(f);
                 }
             }
-            
+
             if (nullFile) {
                 throw new NullPointerException();
             }
@@ -250,7 +250,7 @@ public class AgpifojLayer extends Layer {
 
     @Override
     public Component[] getMenuEntries() {
-        
+
         JMenuItem correlateItem = new JMenuItem(tr("Correlate to GPX"), ImageProvider.get("dialogs/gpx2img"));
         correlateItem.addActionListener(new CorrelateGpxWithImages(this));
 
@@ -282,14 +282,14 @@ public class AgpifojLayer extends Layer {
     public void mergeFrom(Layer from) {
         AgpifojLayer l = (AgpifojLayer) from;
 
-        ImageEntry selected = null; 
+        ImageEntry selected = null;
         if (l.currentPhoto >= 0) {
             selected = l.data.get(l.currentPhoto);
         }
-        
+
         data.addAll(l.data);
         Collections.sort(data);
-        
+
         // Supress the double photos.
         if (data.size() > 1) {
             ImageEntry cur;
@@ -303,7 +303,7 @@ public class AgpifojLayer extends Layer {
                 }
             }
         }
-        
+
         if (selected != null) {
             for (int i = 0; i < data.size() ; i++) {
                 if (data.get(i) == selected) {
@@ -313,9 +313,9 @@ public class AgpifojLayer extends Layer {
                 }
             }
         }
-        
+
         name = l.name;
-        
+
     }
 
     @Override
@@ -323,19 +323,19 @@ public class AgpifojLayer extends Layer {
 
         int iconWidth = icon.getIconWidth() / 2;
         int iconHeight = icon.getIconHeight() / 2;
-        
+
         for (ImageEntry e : data) {
             if (e.pos != null) {
                 Point p = mv.getPoint(e.pos);
 
                 Rectangle r = new Rectangle(p.x - iconWidth,
                                             p.y - iconHeight,
-                                            icon.getIconWidth(), 
+                                            icon.getIconWidth(),
                                             icon.getIconHeight());
                 icon.paintIcon(mv, g, r.x, r.y);
             }
         }
-        
+
         // Draw the selection on top of the other pictures.
         if (currentPhoto >= 0 && currentPhoto < data.size()) {
             ImageEntry e = data.get(currentPhoto);
@@ -345,7 +345,7 @@ public class AgpifojLayer extends Layer {
 
                 Rectangle r = new Rectangle(p.x - selectedIcon.getIconWidth() / 2,
                                             p.y - selectedIcon.getIconHeight() / 2,
-                                            selectedIcon.getIconWidth(), 
+                                            selectedIcon.getIconWidth(),
                                             selectedIcon.getIconHeight());
                 selectedIcon.paintIcon(mv, g, r.x, r.y);
             }
@@ -360,7 +360,7 @@ public class AgpifojLayer extends Layer {
 
     /*
      * Extract gps from image exif
-     * 
+     *
      * If successful, fills in the LatLon and EastNorth attributes of passed in
      * image;
      */
@@ -413,7 +413,7 @@ public class AgpifojLayer extends Layer {
             e.pos = null;
         }
     }
-    
+
     public void showNextPhoto() {
         if (data != null && data.size() > 0) {
             currentPhoto++;
@@ -426,7 +426,7 @@ public class AgpifojLayer extends Layer {
         }
         Main.main.map.repaint();
     }
-    
+
     public void showPreviousPhoto() {
         if (data != null && data.size() > 0) {
             currentPhoto--;
@@ -439,7 +439,7 @@ public class AgpifojLayer extends Layer {
         }
         Main.main.map.repaint();
     }
-    
+
     public void removeCurrentPhoto() {
         if (data != null && data.size() > 0 && currentPhoto >= 0 && currentPhoto < data.size()) {
             data.remove(currentPhoto);
@@ -454,7 +454,7 @@ public class AgpifojLayer extends Layer {
         }
         Main.main.map.repaint();
     }
-    
+
     private MouseAdapter mouseAdapter = null;
 
     private void hook_up_mouse_events() {
@@ -480,9 +480,9 @@ public class AgpifojLayer extends Layer {
                     if (e.pos == null)
                         continue;
                     Point p = Main.map.mapView.getPoint(e.pos);
-                    Rectangle r = new Rectangle(p.x - icon.getIconWidth() / 2, 
-                                                p.y - icon.getIconHeight() / 2, 
-                                                icon.getIconWidth(), 
+                    Rectangle r = new Rectangle(p.x - icon.getIconWidth() / 2,
+                                                p.y - icon.getIconHeight() / 2,
+                                                icon.getIconWidth(),
                                                 icon.getIconHeight());
                     if (r.contains(ev.getPoint())) {
                         currentPhoto = i;

@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007 by Christian Gallioz (aka khris78)
-// Parts of code from Geotagged plugin (by Rob Neild) 
+// Parts of code from Geotagged plugin (by Rob Neild)
 // and the core JOSM source code (by Immanuel Scholz and others)
 
 package org.openstreetmap.josm.plugins.agpifoj;
@@ -33,10 +33,10 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
 
     private ImageDisplay imgDisplay = new ImageDisplay();
     private boolean centerView = false;
-    
+
     // Only one instance of that class
     static private AgpifojDialog INSTANCE = null;
-    
+
     public static AgpifojDialog getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new AgpifojDialog();
@@ -50,19 +50,19 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
         if (INSTANCE != null) {
             throw new IllegalStateException("Agpifoj dialog should not be instanciated twice !");
         }
-        
+
         INSTANCE = this;
-        
+
         JPanel content = new JPanel();
         content.setLayout(new BorderLayout());
 
         content.add(imgDisplay, BorderLayout.CENTER);
-        
+
         JPanel buttons = new JPanel();
         buttons.setLayout(new FlowLayout());
-        
+
         JButton button;
-        
+
         Dimension buttonDim = new Dimension(26,26);
         button = new JButton();
         button.setIcon(ImageProvider.get("dialogs", "previous"));
@@ -71,7 +71,7 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
         button.addActionListener(this);
         button.setPreferredSize(buttonDim);
         buttons.add(button);
-        
+
         button = new JButton();
         button.setIcon(ImageProvider.get("dialogs", "delete"));
         button.setActionCommand(COMMAND_REMOVE);
@@ -79,7 +79,7 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
         button.addActionListener(this);
         button.setPreferredSize(buttonDim);
         buttons.add(button);
-        
+
         button = new JButton();
         button.setIcon(ImageProvider.get("dialogs", "next"));
         button.setActionCommand(COMMAND_NEXT);
@@ -87,7 +87,7 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
         button.addActionListener(this);
         button.setPreferredSize(buttonDim);
         buttons.add(button);
-        
+
         JToggleButton tb = new JToggleButton();
         tb.setIcon(ImageProvider.get("dialogs", "centreview"));
         tb.setActionCommand(COMMAND_CENTERVIEW);
@@ -95,7 +95,7 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
         tb.addActionListener(this);
         tb.setPreferredSize(buttonDim);
         buttons.add(tb);
-        
+
         button = new JButton();
         button.setIcon(ImageProvider.get("dialogs", "zoom-best-fit"));
         button.setActionCommand(COMMAND_ZOOM);
@@ -103,11 +103,11 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
         button.addActionListener(this);
         button.setPreferredSize(buttonDim);
         buttons.add(button);
-        
+
         content.add(buttons, BorderLayout.SOUTH);
 
         add(content, BorderLayout.CENTER);
-        
+
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -119,22 +119,22 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
             if (currentLayer != null) {
                 currentLayer.showPreviousPhoto();
             }
-            
+
         } else if (COMMAND_CENTERVIEW.equals(e.getActionCommand())) {
             centerView = ((JToggleButton) e.getSource()).isSelected();
             if (centerView && currentEntry != null && currentEntry.pos != null) {
                 Main.map.mapView.zoomTo(currentEntry.pos, Main.map.mapView.getScale());
             }
-            
+
         } else if (COMMAND_ZOOM.equals(e.getActionCommand())) {
             imgDisplay.zoomBestFitOrOne();
-            
+
         } else if (COMMAND_REMOVE.equals(e.getActionCommand())) {
             if (currentLayer != null) {
                currentLayer.removeCurrentPhoto();
             }
         }
-        
+
     }
 
     public static void showImage(AgpifojLayer layer, ImageEntry entry) {
@@ -143,14 +143,14 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
 
     private AgpifojLayer currentLayer = null;
     private ImageEntry currentEntry = null;
-    
+
     public void displayImage(AgpifojLayer layer, ImageEntry entry) {
         synchronized(this) {
             if (currentLayer == layer && currentEntry == entry) {
                 repaint();
                 return;
             }
-        
+
             if (centerView && Main.map != null && entry != null && entry.pos != null) {
                 Main.map.mapView.zoomTo(entry.pos, Main.map.mapView.getScale());
             }
@@ -158,7 +158,7 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
             currentLayer = layer;
             currentEntry = entry;
         }
-        
+
         if (entry != null) {
             imgDisplay.setImage(entry.file);
             StringBuffer osd = new StringBuffer(entry.file != null ? entry.file.getName() : "");

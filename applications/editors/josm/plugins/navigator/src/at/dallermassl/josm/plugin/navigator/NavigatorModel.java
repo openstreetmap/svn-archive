@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.navigator;
 
@@ -35,7 +35,7 @@ public class NavigatorModel {
         nodes = new ArrayList<Node>();
         highwayWeight = new HashMap<String, Double>();
     }
-    
+
     /**
      * Set the weight for the given highway type. The higher the weight is,
      * the more it is preferred in routing.
@@ -45,7 +45,7 @@ public class NavigatorModel {
     public void setHighwayTypeWeight(String type, double weigth) {
         highwayWeight.put(type, weigth);
     }
-    
+
     /**
      * @return the selectedNodes
      */
@@ -66,9 +66,9 @@ public class NavigatorModel {
         return graph;
     }
 
-    
+
     /**
-     * 
+     *
      */
     public void calculateShortesPath() {
         System.out.print("navigate nodes ");
@@ -91,10 +91,10 @@ public class NavigatorModel {
             fullPath.addAll(path);
             fullWeight += routing.getPathLength();
         }
-        
+
         edgePath = new ArrayList<SegmentEdge>();
         edgePath.addAll(fullPath);
-        
+
         System.out.println("shortest path found: " + fullPath + "\nweight: " + fullWeight);
         System.out.println(getPathDescription());
 //        double weight2 = 0;
@@ -103,10 +103,10 @@ public class NavigatorModel {
 //        }
 //        System.out.println("all added: " + weight2);
     }
-    
+
     public String getPathDescription() {
         List<PathDescription> pathDescriptions = getPathDescriptions();
-        
+
         // create text representation from description:
         StringBuilder builder = new StringBuilder();
         for(PathDescription desc : pathDescriptions) {
@@ -136,7 +136,7 @@ public class NavigatorModel {
         double length = 0;
         Way oldWay = null;
         Way way = null;
-        
+
         SegmentEdge edge;
         for(int segIndex = 0; segIndex < edgePath.size(); ++segIndex) {
             edge = edgePath.get(segIndex);
@@ -149,16 +149,16 @@ public class NavigatorModel {
             if(oldWay != null && !way.equals(oldWay)) {
                 description = new PathDescription(oldWay, length); // add finished way
                 pathDescriptions.add(description);
-                length = 0;                
+                length = 0;
             }
             if(segIndex == edgePath.size() - 1) {
                 description = new PathDescription(way, length);
-                pathDescriptions.add(description);                
+                pathDescriptions.add(description);
             }
             oldWay = way;
         }
-        
-        
+
+
 //        for(SegmentEdge edge : edgePath) {
 //            way = edge.getWay();
 //            length += edge.getLengthInM();
@@ -215,7 +215,7 @@ public class NavigatorModel {
     public List<SegmentEdge> getEdgePath() {
         return this.edgePath;
     }
-    
+
     /**
      * Resets all data (nodes, edges, segments).
      */

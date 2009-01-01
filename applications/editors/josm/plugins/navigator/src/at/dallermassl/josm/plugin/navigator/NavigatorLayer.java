@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.navigator;
 
@@ -28,7 +28,7 @@ import org.openstreetmap.josm.data.osm.Segment;
 
 /**
  * @author cdaller
- * 
+ *
  */
 public class NavigatorLayer extends Layer {
     private static final String KEY_ROUTE_COLOR = "color.navigator.route";
@@ -42,7 +42,7 @@ public class NavigatorLayer extends Layer {
 
     /**
      * Constructor
-     * 
+     *
      * @param name
      *            the name of the layer.
      */
@@ -52,7 +52,7 @@ public class NavigatorLayer extends Layer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openstreetmap.josm.gui.layer.Layer#getIcon()
      */
     @Override
@@ -63,7 +63,7 @@ public class NavigatorLayer extends Layer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openstreetmap.josm.gui.layer.Layer#getInfoComponent()
      */
     @Override
@@ -73,7 +73,7 @@ public class NavigatorLayer extends Layer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openstreetmap.josm.gui.layer.Layer#getMenuEntries()
      */
     @Override
@@ -84,7 +84,7 @@ public class NavigatorLayer extends Layer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openstreetmap.josm.gui.layer.Layer#getToolTipText()
      */
     @Override
@@ -94,7 +94,7 @@ public class NavigatorLayer extends Layer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openstreetmap.josm.gui.layer.Layer#isMergable(org.openstreetmap.josm.gui.layer.Layer)
      */
     @Override
@@ -104,7 +104,7 @@ public class NavigatorLayer extends Layer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openstreetmap.josm.gui.layer.Layer#mergeFrom(org.openstreetmap.josm.gui.layer.Layer)
      */
     @Override
@@ -114,7 +114,7 @@ public class NavigatorLayer extends Layer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openstreetmap.josm.gui.layer.Layer#paint(java.awt.Graphics,
      *      org.openstreetmap.josm.gui.MapView)
      */
@@ -124,7 +124,7 @@ public class NavigatorLayer extends Layer {
         if(nodes == null || nodes.size() == 0) {
             return;
         }
-        
+
         if(startIcon == null) {
             startIcon = ImageProvider.get("navigation", "startflag");
             middleIcon = ImageProvider.get("navigation", "middleflag");
@@ -134,7 +134,7 @@ public class NavigatorLayer extends Layer {
         Node node = nodes.get(0);
         Point screen = mv.getPoint(node.eastNorth);
         startIcon.paintIcon(mv, g, screen.x, screen.y - startIcon.getIconHeight());
-        
+
         // middle icons:
         for(int index = 1; index < nodes.size() - 1; ++index) {
             node = nodes.get(index);
@@ -147,7 +147,7 @@ public class NavigatorLayer extends Layer {
             screen = mv.getPoint(node.eastNorth);
             endIcon.paintIcon(mv, g, screen.x, screen.y - endIcon.getIconHeight());
         }
-        
+
         String colorString = Main.pref.get(KEY_ROUTE_COLOR);
         if(colorString.length() == 0) {
             colorString = ColorHelper.color2html(Color.GREEN);
@@ -169,7 +169,7 @@ public class NavigatorLayer extends Layer {
             }
         }
     }
-    
+
     /**
      * Draw a line with the given color.
      */
@@ -182,9 +182,9 @@ public class NavigatorLayer extends Layer {
             to = mv.getPoint(edge.getSegment().to.eastNorth);
         } else {
             from = mv.getPoint(edge.getSegment().to.eastNorth);
-            to = mv.getPoint(edge.getSegment().from.eastNorth);            
+            to = mv.getPoint(edge.getSegment().from.eastNorth);
         }
-        
+
         Rectangle screen = g.getClipBounds();
         Line2D line = new Line2D.Double(from.x, from.y, to.x, to.y);
         if (screen.contains(from.x, from.y, to.x, to.y) || screen.intersectsLine(line))
@@ -205,7 +205,7 @@ public class NavigatorLayer extends Layer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openstreetmap.josm.gui.layer.Layer#visitBoundingBox(org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor)
      */
     @Override
@@ -224,7 +224,7 @@ public class NavigatorLayer extends Layer {
     }
 
     /**
-     * 
+     *
      */
     public void navigate() {
         navigatorNodeModel.calculateShortesPath();
@@ -234,7 +234,7 @@ public class NavigatorLayer extends Layer {
             selectString = "true";
             Main.pref.put(KEY_ROUTE_SELECT, selectString);
         }
-        
+
         if(Boolean.parseBoolean(selectString)) {
             List<Segment> path = navigatorNodeModel.getSegmentPath();
             if(path != null) {
@@ -243,7 +243,7 @@ public class NavigatorLayer extends Layer {
                 }
             }
         }
-        Main.map.repaint();        
+        Main.map.repaint();
     }
 
     /**

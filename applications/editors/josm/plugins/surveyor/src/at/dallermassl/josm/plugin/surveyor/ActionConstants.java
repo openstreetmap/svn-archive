@@ -13,11 +13,11 @@ import javax.swing.Action;
  *
  */
 public final class ActionConstants {
- 
-	/**
-	 * 
-	 */
-	private ActionConstants() { }
+
+    /**
+     *
+     */
+    private ActionConstants() { }
 
     public static final String SELECTED_KEY = "actionConstants.selected";
 }

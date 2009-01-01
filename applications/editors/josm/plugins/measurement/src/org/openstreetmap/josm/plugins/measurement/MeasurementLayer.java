@@ -1,5 +1,5 @@
 package org.openstreetmap.josm.plugins.measurement;
-/// @author Raphael Mack <ramack@raphael-mack.de> 
+/// @author Raphael Mack <ramack@raphael-mack.de>
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
@@ -52,18 +52,18 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
  * This is a layer that draws a grid
  */
 public class MeasurementLayer extends Layer {
-	
+
     public MeasurementLayer(String arg0) {
         super(arg0);
     }
 
-    private static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(MeasurementPlugin.class.getResource("/images/measurement.png")));	
+    private static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(MeasurementPlugin.class.getResource("/images/measurement.png")));
     private Collection<WayPoint> points = new ArrayList<WayPoint>(32);
-	
+
     @Override public Icon getIcon() {
         return icon;
     }
-	
+
     @Override public String getToolTipText() {
         return tr("Layer to make measurements");
     }
@@ -75,7 +75,7 @@ public class MeasurementLayer extends Layer {
 
     @Override public void mergeFrom(Layer from) {
         // TODO: nyi - doubts about how this should be done are around. Ideas?
-	
+
     }
 
     @Override public void paint(Graphics g, final MapView mv) {
@@ -109,19 +109,19 @@ public class MeasurementLayer extends Layer {
             new JSeparator(),
             new JMenuItem(new LayerListPopup.InfoAction(this))};
     }
-	
+
     public void removeLastPoint(){
         WayPoint l = null;
         for(WayPoint p:points) l = p;
         if(l != null) points.remove(l);
         recalculate();
-        Main.map.repaint();	
+        Main.map.repaint();
     }
-	
-    public void mouseClicked(MouseEvent e){		
+
+    public void mouseClicked(MouseEvent e){
         if (e.getButton() != MouseEvent.BUTTON1) return;
 
-        LatLon coor = Main.map.mapView.getLatLon(e.getX(), e.getY());		
+        LatLon coor = Main.map.mapView.getLatLon(e.getX(), e.getY());
         points.add(new WayPoint(coor));
 
         Main.map.repaint();
@@ -131,13 +131,13 @@ public class MeasurementLayer extends Layer {
     public void reset(){
         points.clear();
         recalculate();
-        Main.map.repaint();		
+        Main.map.repaint();
     }
-	
+
     private void recalculate(){
         double pathLength = 0.0, segLength = 0.0; // in meters
         WayPoint last = null;
-		
+
         pathLength = 0.0;
         for(WayPoint p : points){
             if(last != null){
@@ -150,11 +150,11 @@ public class MeasurementLayer extends Layer {
         DecimalFormat nf2 = new DecimalFormat("#0.0");
         MeasurementPlugin.measurementDialog.pathLengthLabel.setText(pathLength < 800?nf2.format(pathLength) + " m":nf.format(pathLength/1000) + " km");
     }
-	
+
     public static double calcDistance(LatLon p1, LatLon p2){
         double lat1, lon1, lat2, lon2;
         double dlon, dlat;
-	    
+
         lat1 = p1.lat() * Math.PI / 180.0;
         lon1 = p1.lon() * Math.PI / 180.0;
         lat2 = p2.lat() * Math.PI / 180.0;
@@ -171,7 +171,7 @@ public class MeasurementLayer extends Layer {
     public static double calcX(LatLon p1){
         double lat1, lon1, lat2, lon2;
         double dlon, dlat;
-	    
+
         lat1 = p1.lat() * Math.PI / 180.0;
         lon1 = p1.lon() * Math.PI / 180.0;
         lat2 = lat1;
@@ -184,11 +184,11 @@ public class MeasurementLayer extends Layer {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         return 6367000 * c;
     }
-	
+
     public static double calcY(LatLon p1){
         double lat1, lon1, lat2, lon2;
         double dlon, dlat;
-	    
+
         lat1 = p1.lat() * Math.PI / 180.0;
         lon1 = p1.lon() * Math.PI / 180.0;
         lat2 = 0;
@@ -201,20 +201,20 @@ public class MeasurementLayer extends Layer {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         return 6367000 * c;
     }
-	
+
     public static double calcDistance(WayPoint p1, WayPoint p2){
         return calcDistance(p1.latlon, p2.latlon);
     }
-	
+
     public static double angleBetween(WayPoint p1, WayPoint p2){
         return angleBetween(p1.latlon, p2.latlon);
     }
-	
+
     public static double angleBetween(LatLon p1, LatLon p2){
         double lat1, lon1, lat2, lon2;
         double dlon;
         double heading;
-	    
+
         lat1 = p1.lat() * Math.PI / 180.0;
         lon1 = p1.lon() * Math.PI / 180.0;
         lat2 = p2.lat() * Math.PI / 180.0;
@@ -222,10 +222,10 @@ public class MeasurementLayer extends Layer {
 
         dlon = lon2 - lon1;
         double coslat2 = Math.cos(lat2);
-        
+
         return (180 * Math.atan2(coslat2 * Math.sin(dlon),
                           (Math.cos(lat1) * Math.sin(lat2)
-                                    - 
+                                    -
                            Math.sin(lat1) * coslat2 * Math.cos(dlon)))) / Math.PI;
     }
 
@@ -233,7 +233,7 @@ public class MeasurementLayer extends Layer {
         double lat1, lon1, lat2, lon2;
         double dlon, dlat;
         double heading;
-	    
+
         lat1 = p1.lat() * Math.PI / 180.0;
         lon1 = p1.lon() * Math.PI / 180.0;
         lat2 = p2.lat() * Math.PI / 180.0;
@@ -249,43 +249,43 @@ public class MeasurementLayer extends Layer {
         if (Math.sin(lon2 - lon1) < 0) {
             heading = 2 * Math.PI - heading;
         }
- 
+
         return heading * 180 / Math.PI;
     }
 
 
     private class GPXLayerImportAction extends AbstractAction {
 
-	private MeasurementLayer layer;
+    private MeasurementLayer layer;
 
-	/**
-	 * The data model for the list component.
-	 */
-	private DefaultListModel model = new DefaultListModel();
+    /**
+     * The data model for the list component.
+     */
+    private DefaultListModel model = new DefaultListModel();
 
-	/**
-	 * @param layer the targeting measurement layer
-	 */
-	public GPXLayerImportAction(MeasurementLayer layer) {
-	    super(tr("Import path from GPX layer"), ImageProvider.get("dialogs", "edit")); // TODO: find better image
-	    this.layer = layer;
-	}
+    /**
+     * @param layer the targeting measurement layer
+     */
+    public GPXLayerImportAction(MeasurementLayer layer) {
+        super(tr("Import path from GPX layer"), ImageProvider.get("dialogs", "edit")); // TODO: find better image
+        this.layer = layer;
+    }
 
-	public void actionPerformed(ActionEvent e) {
-	    Box panel = Box.createVerticalBox();
-	    final JList layerList = new JList(model);
-	    Collection<Layer> data = Main.map.mapView.getAllLayers();
-	    Layer lastLayer = null;
-	    int layerCnt = 0;
-	    
-	    for (Layer l : data){
-                if(l instanceof GpxLayer){    
+    public void actionPerformed(ActionEvent e) {
+        Box panel = Box.createVerticalBox();
+        final JList layerList = new JList(model);
+        Collection<Layer> data = Main.map.mapView.getAllLayers();
+        Layer lastLayer = null;
+        int layerCnt = 0;
+
+        for (Layer l : data){
+                if(l instanceof GpxLayer){
                     model.addElement(l);
                     lastLayer = l;
                     layerCnt++;
                 }
-	    }
-	    if(layerCnt == 1){
+        }
+        if(layerCnt == 1){
                 layerList.setSelectedValue(lastLayer, true);
             }
             if(layerCnt > 0){
@@ -303,10 +303,10 @@ public class MeasurementLayer extends Layer {
                     });
 
                 JCheckBox dropFirst = new JCheckBox(tr("Drop existing path"));
-	    
+
                 panel.add(layerList);
                 panel.add(dropFirst);
-	    
+
                 final JOptionPane optionPane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION){
                         @Override public void selectInitialValue() {
                             layerList.requestFocusInWindow();
@@ -314,7 +314,7 @@ public class MeasurementLayer extends Layer {
                     };
                 final JDialog dlg = optionPane.createDialog(Main.parent, tr("Import path from GPX layer"));
                 dlg.setVisible(true);
-	
+
                 Object answer = optionPane.getValue();
                 if (answer == null || answer == JOptionPane.UNINITIALIZED_VALUE ||
                     (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION)) {
@@ -325,14 +325,14 @@ public class MeasurementLayer extends Layer {
                 if(dropFirst.isSelected()){
                     points = new ArrayList<WayPoint>(32);
                 }
-	    
+
                 for (GpxTrack trk : gpx.data.tracks) {
                     for (Collection<WayPoint> trkseg : trk.trackSegs) {
                         for(WayPoint p: trkseg){
                             points.add(p);
                         }
                     }
-	    	}
+            }
                 recalculate();
                 Main.parent.repaint();
             }else{

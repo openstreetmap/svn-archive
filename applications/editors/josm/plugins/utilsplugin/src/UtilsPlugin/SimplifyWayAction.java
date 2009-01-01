@@ -48,7 +48,7 @@ public class SimplifyWayAction extends JosmAction {
             if (prim instanceof Way) {
                 if (bounds.size() > 0) {
                     Way way = (Way) prim;
-                    // We check if each node of each way is at least in one download 
+                    // We check if each node of each way is at least in one download
                     // bounding box. Otherwise nodes may get deleted that are necessary by
                     // unloaded ways (see Ticket #1594)
                     for (Node node : way.nodes) {
@@ -82,7 +82,7 @@ public class SimplifyWayAction extends JosmAction {
             JOptionPane.showMessageDialog(Main.parent, tr("Please select at least one way to simplify."));
             return;
         } else if (ways > 10) {
-        	//TRANSLATION: Although for English the use of trn is needless it is important for other languages
+            //TRANSLATION: Although for English the use of trn is needless it is important for other languages
             int option = JOptionPane.showConfirmDialog(Main.parent, trn(
                     "The selection contains {0} way. Are you sure you want to simplify it?",
                     "The selection contains {0} ways. Are you sure you want to simplify them all?",

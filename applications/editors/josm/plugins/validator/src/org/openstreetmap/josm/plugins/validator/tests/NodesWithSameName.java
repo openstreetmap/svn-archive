@@ -13,41 +13,41 @@ import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
 
 public class NodesWithSameName extends Test {
-	protected static int SAME_NAME = 801;
+    protected static int SAME_NAME = 801;
 
-	private Map<String, List<Node>> namesToNodes;
+    private Map<String, List<Node>> namesToNodes;
 
-	public NodesWithSameName() {
-		super(tr("Nodes with same name"),
-			tr("This test finds nodes that have the same name (might be duplicates)."));
-	}
+    public NodesWithSameName() {
+        super(tr("Nodes with same name"),
+            tr("This test finds nodes that have the same name (might be duplicates)."));
+    }
 
-	@Override public void startTest() {
-		namesToNodes = new HashMap<String, List<Node>>();
-	}
+    @Override public void startTest() {
+        namesToNodes = new HashMap<String, List<Node>>();
+    }
 
-	@Override public void visit(Node n) {
-		if (n.deleted || n.incomplete) return;
+    @Override public void visit(Node n) {
+        if (n.deleted || n.incomplete) return;
 
-		String name = n.get("name");
-		String sign = n.get("traffic_sign");
-		if (name == null || (sign != null && sign.equals("city_limit"))) return;
+        String name = n.get("name");
+        String sign = n.get("traffic_sign");
+        if (name == null || (sign != null && sign.equals("city_limit"))) return;
 
-		List<Node> nodes = namesToNodes.get(name);
-		if (nodes == null)
-			namesToNodes.put(name, nodes = new ArrayList<Node>());
+        List<Node> nodes = namesToNodes.get(name);
+        if (nodes == null)
+            namesToNodes.put(name, nodes = new ArrayList<Node>());
 
-		nodes.add(n);
-	}
+        nodes.add(n);
+    }
 
-	@Override public void endTest() {
-		for (List<Node> nodes : namesToNodes.values()) {
-			if (nodes.size() > 1) {
-				errors.add(new TestError(this, Severity.OTHER,
-					tr("Nodes with same name"), SAME_NAME, nodes));
-			}
-		}
+    @Override public void endTest() {
+        for (List<Node> nodes : namesToNodes.values()) {
+            if (nodes.size() > 1) {
+                errors.add(new TestError(this, Severity.OTHER,
+                    tr("Nodes with same name"), SAME_NAME, nodes));
+            }
+        }
 
-		namesToNodes = null;
-	}
+        namesToNodes = null;
+    }
 }

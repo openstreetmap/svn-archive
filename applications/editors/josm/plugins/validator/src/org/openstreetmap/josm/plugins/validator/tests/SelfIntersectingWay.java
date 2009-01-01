@@ -15,27 +15,27 @@ import org.openstreetmap.josm.plugins.validator.TestError;
  * Checks for self-intersecting ways.
  */
 public class SelfIntersectingWay extends Test {
-	protected static int SELF_INTERSECT = 401;
+    protected static int SELF_INTERSECT = 401;
 
-	public SelfIntersectingWay() {
-		super(tr("Self-intersecting ways"),
-			  tr("This test checks for ways " +
-				"that contain some of their nodes more than once."));
-	}
+    public SelfIntersectingWay() {
+        super(tr("Self-intersecting ways"),
+              tr("This test checks for ways " +
+                "that contain some of their nodes more than once."));
+    }
 
-	@Override public void visit(Way w) {
-		HashSet<Node> nodes = new HashSet<Node>();
+    @Override public void visit(Way w) {
+        HashSet<Node> nodes = new HashSet<Node>();
 
-		for (int i = 1; i < w.nodes.size() - 1; i++) {
-			Node n = w.nodes.get(i);
-			if (nodes.contains(n)) {
-				errors.add(new TestError(this,
-					Severity.WARNING, tr("Self-intersecting ways"), SELF_INTERSECT,
-					Arrays.asList(w), Arrays.asList(n)));
-				break;
-			} else {
-				nodes.add(n);
-			}
-		}
-	}
+        for (int i = 1; i < w.nodes.size() - 1; i++) {
+            Node n = w.nodes.get(i);
+            if (nodes.contains(n)) {
+                errors.add(new TestError(this,
+                    Severity.WARNING, tr("Self-intersecting ways"), SELF_INTERSECT,
+                    Arrays.asList(w), Arrays.asList(n)));
+                break;
+            } else {
+                nodes.add(n);
+            }
+        }
+    }
 }

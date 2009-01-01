@@ -24,187 +24,187 @@ import org.openstreetmap.josm.plugins.validator.TestError;
  */
 public class UnconnectedWays extends Test
 {
-	protected static int UNCONNECTED_WAYS = 1301;
-	protected static final String PREFIX = PreferenceEditor.PREFIX + "." + UnconnectedWays.class.getSimpleName();
+    protected static int UNCONNECTED_WAYS = 1301;
+    protected static final String PREFIX = PreferenceEditor.PREFIX + "." + UnconnectedWays.class.getSimpleName();
 
-	Set<MyWaySegment> ways;
-	Set<Node> endnodes; // nodes at end of way
-	Set<Node> endnodes_highway; // nodes at end of way
-	Set<Node> middlenodes; // nodes in middle of way
-	Set<Node> othernodes; // nodes appearing at least twice
+    Set<MyWaySegment> ways;
+    Set<Node> endnodes; // nodes at end of way
+    Set<Node> endnodes_highway; // nodes at end of way
+    Set<Node> middlenodes; // nodes in middle of way
+    Set<Node> othernodes; // nodes appearing at least twice
 
-	double mindist;
-	double minmiddledist;
-	/**
-	 * Constructor
-	 */
-	public UnconnectedWays()
-	{
-		super(tr("Unconnected ways."),
-			  tr("This test checks if a way has an endpoint very near to another way."));
-	}
+    double mindist;
+    double minmiddledist;
+    /**
+     * Constructor
+     */
+    public UnconnectedWays()
+    {
+        super(tr("Unconnected ways."),
+              tr("This test checks if a way has an endpoint very near to another way."));
+    }
 
-	@Override
-	public void startTest()
-	{
-		ways = new HashSet<MyWaySegment>();
-		endnodes = new HashSet<Node>();
-		endnodes_highway = new HashSet<Node>();
-		middlenodes = new HashSet<Node>();
-		othernodes = new HashSet<Node>();
-		mindist = Main.pref.getDouble(PREFIX + ".node_way_distance", 10.0)/6378135.0;
-		minmiddledist = Main.pref.getDouble(PREFIX + ".way_way_distance", 0.0)/6378135.0;
-	}
+    @Override
+    public void startTest()
+    {
+        ways = new HashSet<MyWaySegment>();
+        endnodes = new HashSet<Node>();
+        endnodes_highway = new HashSet<Node>();
+        middlenodes = new HashSet<Node>();
+        othernodes = new HashSet<Node>();
+        mindist = Main.pref.getDouble(PREFIX + ".node_way_distance", 10.0)/6378135.0;
+        minmiddledist = Main.pref.getDouble(PREFIX + ".way_way_distance", 0.0)/6378135.0;
+    }
 
-	@Override
-	public void endTest()
-	{
-		Map<Node, Way> map = new HashMap<Node, Way>();
-		for(Node en : endnodes_highway)
-		{
-			for(MyWaySegment s : ways)
-			{
-				if(s.highway && s.nearby(en, mindist))
-					map.put(en, s.w);
-			}
-		}
-		if(map.size() > 0)
-		{
-			for(Map.Entry<Node, Way> error : map.entrySet())
-			{
-				errors.add(new TestError(this, Severity.WARNING,
-				tr("Way end node near other highway"), UNCONNECTED_WAYS,
-				Arrays.asList(error.getKey(), error.getValue())));
-			}
-		}
-		map.clear();
-		for(Node en : endnodes_highway)
-		{
-			for(MyWaySegment s : ways)
-			{
-				if(!s.highway && s.nearby(en, mindist))
-					map.put(en, s.w);
-			}
-		}
-		for(Node en : endnodes)
-		{
-			for(MyWaySegment s : ways)
-			{
-				if(s.nearby(en, mindist))
-					map.put(en, s.w);
-			}
-		}
-		if(map.size() > 0)
-		{
-			for(Map.Entry<Node, Way> error : map.entrySet())
-			{
-				errors.add(new TestError(this, Severity.WARNING,
-				tr("Way end node near other way"), UNCONNECTED_WAYS,
-				Arrays.asList(error.getKey(), error.getValue())));
-			}
-		}
-		/* the following two use a shorter distance */
-		if(minmiddledist > 0.0)
-		{
-			map.clear();
-			for(Node en : middlenodes)
-			{
-				for(MyWaySegment s : ways)
-				{
-					if(s.nearby(en, minmiddledist))
-						map.put(en, s.w);
-				}
-			}
-			if(map.size() > 0)
-			{
-				for(Map.Entry<Node, Way> error : map.entrySet())
-				{
-					errors.add(new TestError(this, Severity.OTHER,
-					tr("Way node near other way"), UNCONNECTED_WAYS,
-					Arrays.asList(error.getKey(), error.getValue())));
-				}
-			}
-			map.clear();
-			for(Node en : othernodes)
-			{
-				for(MyWaySegment s : ways)
-				{
-					if(s.nearby(en, minmiddledist))
-						map.put(en, s.w);
-				}
-			}
-			if(map.size() > 0)
-			{
-				for(Map.Entry<Node, Way> error : map.entrySet())
-				{
-					errors.add(new TestError(this, Severity.OTHER,
-					tr("Connected way end node near other way"), UNCONNECTED_WAYS,
-					Arrays.asList(error.getKey(), error.getValue())));
-				}
-			}
-		}
-		ways = null;
-		endnodes = null;
-	}
+    @Override
+    public void endTest()
+    {
+        Map<Node, Way> map = new HashMap<Node, Way>();
+        for(Node en : endnodes_highway)
+        {
+            for(MyWaySegment s : ways)
+            {
+                if(s.highway && s.nearby(en, mindist))
+                    map.put(en, s.w);
+            }
+        }
+        if(map.size() > 0)
+        {
+            for(Map.Entry<Node, Way> error : map.entrySet())
+            {
+                errors.add(new TestError(this, Severity.WARNING,
+                tr("Way end node near other highway"), UNCONNECTED_WAYS,
+                Arrays.asList(error.getKey(), error.getValue())));
+            }
+        }
+        map.clear();
+        for(Node en : endnodes_highway)
+        {
+            for(MyWaySegment s : ways)
+            {
+                if(!s.highway && s.nearby(en, mindist))
+                    map.put(en, s.w);
+            }
+        }
+        for(Node en : endnodes)
+        {
+            for(MyWaySegment s : ways)
+            {
+                if(s.nearby(en, mindist))
+                    map.put(en, s.w);
+            }
+        }
+        if(map.size() > 0)
+        {
+            for(Map.Entry<Node, Way> error : map.entrySet())
+            {
+                errors.add(new TestError(this, Severity.WARNING,
+                tr("Way end node near other way"), UNCONNECTED_WAYS,
+                Arrays.asList(error.getKey(), error.getValue())));
+            }
+        }
+        /* the following two use a shorter distance */
+        if(minmiddledist > 0.0)
+        {
+            map.clear();
+            for(Node en : middlenodes)
+            {
+                for(MyWaySegment s : ways)
+                {
+                    if(s.nearby(en, minmiddledist))
+                        map.put(en, s.w);
+                }
+            }
+            if(map.size() > 0)
+            {
+                for(Map.Entry<Node, Way> error : map.entrySet())
+                {
+                    errors.add(new TestError(this, Severity.OTHER,
+                    tr("Way node near other way"), UNCONNECTED_WAYS,
+                    Arrays.asList(error.getKey(), error.getValue())));
+                }
+            }
+            map.clear();
+            for(Node en : othernodes)
+            {
+                for(MyWaySegment s : ways)
+                {
+                    if(s.nearby(en, minmiddledist))
+                        map.put(en, s.w);
+                }
+            }
+            if(map.size() > 0)
+            {
+                for(Map.Entry<Node, Way> error : map.entrySet())
+                {
+                    errors.add(new TestError(this, Severity.OTHER,
+                    tr("Connected way end node near other way"), UNCONNECTED_WAYS,
+                    Arrays.asList(error.getKey(), error.getValue())));
+                }
+            }
+        }
+        ways = null;
+        endnodes = null;
+    }
 
-	private class MyWaySegment
-	{
-		private Line2D line;
-		public Way w;
-		public Boolean highway;
+    private class MyWaySegment
+    {
+        private Line2D line;
+        public Way w;
+        public Boolean highway;
 
-		public MyWaySegment(Way w, Node n1, Node n2)
-		{
-			this.w = w;
-			this.highway = w.get("highway") != null || w.get("railway") != null;
-			line = new Line2D.Double(n1.eastNorth.east(), n1.eastNorth.north(),
-			n2.eastNorth.east(), n2.eastNorth.north());
-		}
+        public MyWaySegment(Way w, Node n1, Node n2)
+        {
+            this.w = w;
+            this.highway = w.get("highway") != null || w.get("railway") != null;
+            line = new Line2D.Double(n1.eastNorth.east(), n1.eastNorth.north(),
+            n2.eastNorth.east(), n2.eastNorth.north());
+        }
 
-		public boolean nearby(Node n, double dist)
-		{
-			return !w.nodes.contains(n)
-			&& line.ptSegDist(n.eastNorth.east(), n.eastNorth.north()) < dist;
-		}
-	}
+        public boolean nearby(Node n, double dist)
+        {
+            return !w.nodes.contains(n)
+            && line.ptSegDist(n.eastNorth.east(), n.eastNorth.north()) < dist;
+        }
+    }
 
-	@Override
-	public void visit(Way w)
-	{
-		if( w.deleted || w.incomplete )
-			return;
-		int size = w.nodes.size();
-		if(size < 2)
-			return;
-		for(int i = 1; i < size; ++i)
-		{
-			if(i < size-1)
-				addNode(w.nodes.get(i), middlenodes);
-			ways.add(new MyWaySegment(w, w.nodes.get(i-1), w.nodes.get(i)));
-		}
-		Set<Node> set = endnodes;
-		if(w.get("highway") != null || w.get("railway") != null)
-			set = endnodes_highway;
-		addNode(w.nodes.get(0), set);
-		addNode(w.nodes.get(size-1), set);
-	}
-	private void addNode(Node n, Set<Node> s)
-	{
-		Boolean m = middlenodes.contains(n);
-		Boolean e = endnodes.contains(n);
-		Boolean eh = endnodes_highway.contains(n);
-		Boolean o = othernodes.contains(n);
-		if(!m && !e && !o && !eh)
-			s.add(n);
-		else if(!o)
-		{
-			othernodes.add(n);
-			if(e)
-				endnodes.remove(n);
-			else if(eh)
-				endnodes_highway.remove(n);
-			else
-				middlenodes.remove(n);
-		}
-	}
+    @Override
+    public void visit(Way w)
+    {
+        if( w.deleted || w.incomplete )
+            return;
+        int size = w.nodes.size();
+        if(size < 2)
+            return;
+        for(int i = 1; i < size; ++i)
+        {
+            if(i < size-1)
+                addNode(w.nodes.get(i), middlenodes);
+            ways.add(new MyWaySegment(w, w.nodes.get(i-1), w.nodes.get(i)));
+        }
+        Set<Node> set = endnodes;
+        if(w.get("highway") != null || w.get("railway") != null)
+            set = endnodes_highway;
+        addNode(w.nodes.get(0), set);
+        addNode(w.nodes.get(size-1), set);
+    }
+    private void addNode(Node n, Set<Node> s)
+    {
+        Boolean m = middlenodes.contains(n);
+        Boolean e = endnodes.contains(n);
+        Boolean eh = endnodes_highway.contains(n);
+        Boolean o = othernodes.contains(n);
+        if(!m && !e && !o && !eh)
+            s.add(n);
+        else if(!o)
+        {
+            othernodes.add(n);
+            if(e)
+                endnodes.remove(n);
+            else if(eh)
+                endnodes_highway.remove(n);
+            else
+                middlenodes.remove(n);
+        }
+    }
 }

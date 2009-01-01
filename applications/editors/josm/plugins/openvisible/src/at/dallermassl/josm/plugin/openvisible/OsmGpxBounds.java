@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.openvisible;
 
@@ -26,11 +26,11 @@ public class OsmGpxBounds extends DefaultHandler {
     private double maxLat = -180.0;
     private double minLon = 90.0;
     private double maxLon = -90.0;
-    
+
     public OsmGpxBounds() {
-        
+
     }
-    
+
     /**
      * Parses the given input stream (gpx or osm file).
      * @param in the stream to parse.
@@ -45,8 +45,8 @@ public class OsmGpxBounds extends DefaultHandler {
             throw new SAXException(e1);
         }
     }
-    
-    @Override 
+
+    @Override
     public void startElement(String ns, String lname, String qname, Attributes a) {
         if (qname.equals("node") || qname.equals("trkpt")) {
             double lat = Double.parseDouble(a.getValue("lat"));
@@ -57,7 +57,7 @@ public class OsmGpxBounds extends DefaultHandler {
             maxLon = Math.max(maxLon, lon);
         }
     }
-    
+
     /**
      * Returns <code>true</code>, if the given coordinates intersect with the
      * parsed min/max latitude longitude.
@@ -74,7 +74,7 @@ public class OsmGpxBounds extends DefaultHandler {
         double lon2 = Math.min(this.maxLon, maxLon);
         return ((lat2-lat1) > 0) && ((lon2-lon1) > 0);
     }
-        
+
     public static void main(String[] args) {
         if(args.length < 5) {
             printHelp();
@@ -86,17 +86,17 @@ public class OsmGpxBounds extends DefaultHandler {
         double maxLon = Double.parseDouble(args[3]);
         String[] files = new String[args.length - 4];
         System.arraycopy(args, 4, files, 0, args.length - 4);
-            
-        try {    
+
+        try {
             File file;
             for(String fileName : files) {
                 file = new File(fileName);
-                if(!file.isDirectory() 
+                if(!file.isDirectory()
                   && (file.getName().endsWith("gpx") || file.getName().endsWith("osm"))) {
                     OsmGpxBounds parser = new OsmGpxBounds();
                     parser.parse(new BufferedInputStream(new FileInputStream(file)));
                     if(parser.intersects(minLat, maxLat, minLon, maxLon)) {
-                        System.out.println(file.getAbsolutePath()); // + "," + parser.minLat + "," + parser.maxLat + "," + parser.minLon + "," + parser.maxLon);                        
+                        System.out.println(file.getAbsolutePath()); // + "," + parser.minLat + "," + parser.maxLat + "," + parser.minLon + "," + parser.maxLon);
                     }
 //                    System.out.println(parser.intersects(47.0555, 47.09, 15.406, 15.4737));
                 }
@@ -111,11 +111,11 @@ public class OsmGpxBounds extends DefaultHandler {
     }
 
     /**
-     * 
+     *
      */
     private static void printHelp() {
         System.out.println(OsmGpxBounds.class.getName() + " <minLat> <maxLat> <minLon> <maxLon> <files+>");
-        
+
     }
 
 }

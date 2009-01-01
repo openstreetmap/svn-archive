@@ -8,20 +8,20 @@ import java.util.Map;
 
 /**
  * Simple implementation of a tuple (two objects).
- * 
+ *
  * @author cdaller
  *
  */
 public class Tuple<T1 extends Object, T2 extends Object> implements Map.Entry<T1, T2>{
     T1 first;
     T2 second;
-    
+
     /**
-     * Default Constructor 
+     * Default Constructor
      */
     public Tuple() {
     }
-    
+
     /**
      * Constructor filling the values.
      * @param first the first value.

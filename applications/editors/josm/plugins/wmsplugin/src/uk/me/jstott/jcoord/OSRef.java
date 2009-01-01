@@ -2,11 +2,11 @@ package uk.me.jstott.jcoord;
 
 /**
  * Class to represent an Ordnance Survey grid reference
- * 
+ *
  * (c) 2006 Jonathan Stott
- * 
+ *
  * Created on 11-02-2006
- * 
+ *
  * @author Jonathan Stott
  * @version 1.0
  * @since 1.0
@@ -26,7 +26,7 @@ public class OSRef {
 
   /**
    * Create a new Ordnance Survey grid reference.
-   * 
+   *
    * @param easting
    *          the easting in metres
    * @param northing
@@ -44,7 +44,7 @@ public class OSRef {
    * and create a new OSRef object that represents that grid reference. The
    * first character must be H, N, S, O or T. The second character can be any
    * uppercase character from A through Z excluding I.
-   * 
+   *
    * @param ref
    *          a String representing a six-figure Ordnance Survey grid reference
    *          in the form XY123456
@@ -82,7 +82,7 @@ public class OSRef {
   /**
    * Return a String representation of this OSGB grid reference showing the
    * easting and northing.
-   * 
+   *
    * @return a String represenation of this OSGB grid reference
    * @since 1.0
    */
@@ -94,7 +94,7 @@ public class OSRef {
   /**
    * Return a String representation of this OSGB grid reference using the
    * six-figure notation in the form XY123456
-   * 
+   *
    * @return a String representing this OSGB grid reference in six-figure
    *         notation
    * @since 1.0
@@ -146,7 +146,7 @@ public class OSRef {
    * Convert this OSGB grid reference to a latitude/longitude pair using the
    * OSGB36 datum. Note that, the LatLng object may need to be converted to the
    * WGS84 datum depending on the application.
-   * 
+   *
    * @return a LatLng object representing this OSGB grid reference using the
    *         OSGB36 datum
    * @since 1.0
@@ -224,7 +224,7 @@ public class OSRef {
 
   /**
    * Get the easting.
-   * 
+   *
    * @return the easting in metres
    * @since 1.0
    */
@@ -235,7 +235,7 @@ public class OSRef {
 
   /**
    * Get the northing.
-   * 
+   *
    * @return the northing in metres
    * @since 1.0
    */

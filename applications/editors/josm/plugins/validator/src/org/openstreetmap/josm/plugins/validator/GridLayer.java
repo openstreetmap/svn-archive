@@ -27,21 +27,21 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public class GridLayer extends Layer
 {
-	/**
-	 * Constructor 
-	 * @param name
-	 */
-	public GridLayer(String name) 
+    /**
+     * Constructor 
+     * @param name
+     */
+    public GridLayer(String name) 
     {
-		super(name);
-	}
+        super(name);
+    }
 
-	/**
-	 * Return a static icon.
-	 */
-	@Override public Icon getIcon() {
-		return ImageProvider.get("layer", "validator");
-	}
+    /**
+     * Return a static icon.
+     */
+    @Override public Icon getIcon() {
+        return ImageProvider.get("layer", "validator");
+    }
 
     /**
      * Draw the grid and highlight all cells acuppied by any selected primitive.
@@ -49,26 +49,26 @@ public class GridLayer extends Layer
     @Override 
     public void paint(final Graphics g, final MapView mv) 
     {
-    	if( !Main.pref.hasKey(PreferenceEditor.PREF_DEBUG + ".grid") )
-    		return;
-    	
-    	int gridWidth = Integer.parseInt(Main.pref.get(PreferenceEditor.PREF_DEBUG + ".grid") );
-    	int width = mv.getWidth();
-		int height = mv.getHeight();
+        if( !Main.pref.hasKey(PreferenceEditor.PREF_DEBUG + ".grid") )
+            return;
+        
+        int gridWidth = Integer.parseInt(Main.pref.get(PreferenceEditor.PREF_DEBUG + ".grid") );
+        int width = mv.getWidth();
+        int height = mv.getHeight();
 
-		EastNorth origin = mv.getEastNorth(0, 0);
-		EastNorth border = mv.getEastNorth(width, height);
+        EastNorth origin = mv.getEastNorth(0, 0);
+        EastNorth border = mv.getEastNorth(width, height);
 
-    	if( border.east() * gridWidth > 50 )
-    		return;
+        if( border.east() * gridWidth > 50 )
+            return;
 
         g.setColor(Color.RED.darker().darker());
-    	HighlightCellVisitor visitor = new HighlightCellVisitor(g, mv, gridWidth);
-    	for(OsmPrimitive p : Main.ds.getSelected() )
-    		p.visit(visitor);
+        HighlightCellVisitor visitor = new HighlightCellVisitor(g, mv, gridWidth);
+        for(OsmPrimitive p : Main.ds.getSelected() )
+            p.visit(visitor);
         
         long x0 = (long)Math.floor(origin.east()  * gridWidth);
-		long x1 = (long)Math.floor(border.east()  * gridWidth);
+        long x1 = (long)Math.floor(border.east()  * gridWidth);
         long y0 = (long)Math.floor(origin.north() * gridWidth) + 1;
         long y1 = (long)Math.floor(border.north() * gridWidth) + 1;        
         long aux;
@@ -76,44 +76,44 @@ public class GridLayer extends Layer
         if( y0 > y1 ) { aux = y0; y0 = y1; y1 = aux; }
         
         g.setColor(Color.RED.brighter().brighter());
-    	for( double x = x0; x <= x1; x++)
-    	{
-    		Point point = mv.getPoint( new EastNorth(x/gridWidth, 0));
-			g.drawLine(point.x, 0, point.x, height);
-    	}
+        for( double x = x0; x <= x1; x++)
+        {
+            Point point = mv.getPoint( new EastNorth(x/gridWidth, 0));
+            g.drawLine(point.x, 0, point.x, height);
+        }
 
-    	for( double y = y0; y <= y1; y++)
-    	{
-    		Point point = mv.getPoint( new EastNorth(0, y/gridWidth));
-			g.drawLine(0, point.y, width, point.y);
-    	}
+        for( double y = y0; y <= y1; y++)
+        {
+            Point point = mv.getPoint( new EastNorth(0, y/gridWidth));
+            g.drawLine(0, point.y, width, point.y);
+        }
     }
 
-	@Override 
+    @Override 
     public String getToolTipText() 
     {
-		return null;
-	}
+        return null;
+    }
 
-	@Override 
-	public void mergeFrom(Layer from) {}
+    @Override 
+    public void mergeFrom(Layer from) {}
 
-	@Override 
-	public boolean isMergable(Layer other) {
-		return false;
-	}
+    @Override 
+    public boolean isMergable(Layer other) {
+        return false;
+    }
 
-	@Override 
-	public void visitBoundingBox(BoundingXYVisitor v) {}
+    @Override 
+    public void visitBoundingBox(BoundingXYVisitor v) {}
 
-	@Override 
-	public Object getInfoComponent() 
+    @Override 
+    public Object getInfoComponent() 
     {
-	    return getToolTipText();
-	}
+        return getToolTipText();
+    }
 
-	@Override 
-	public Component[] getMenuEntries() 
+    @Override 
+    public Component[] getMenuEntries() 
     {
         return new Component[]{
                 new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
@@ -124,73 +124,73 @@ public class GridLayer extends Layer
                 new JMenuItem(new LayerListPopup.InfoAction(this))};
     }
 
-	@Override public void destroy() { }
-	
-	/**
-	 * Visitor that highlights all cells the selected primitives go through
-	 */
-	class HighlightCellVisitor implements Visitor
-	{
-		/** The MapView */
-		private final MapView mv;
-		/** The graphics */
-		private final Graphics g;
-		/** The grid width */
-		private final int gridDetail;
-		/** The width of a cell */
-		private int cellWidth;
+    @Override public void destroy() { }
+    
+    /**
+     * Visitor that highlights all cells the selected primitives go through
+     */
+    class HighlightCellVisitor implements Visitor
+    {
+        /** The MapView */
+        private final MapView mv;
+        /** The graphics */
+        private final Graphics g;
+        /** The grid width */
+        private final int gridDetail;
+        /** The width of a cell */
+        private int cellWidth;
 
-		/**
-		 * Constructor
-		 * @param g the graphics
-		 * @param mv The MapView
-		 * @param gridDetail The grid detail
-		 */
-		public HighlightCellVisitor(final Graphics g, final MapView mv, int gridDetail)
-		{
-			this.g = g;
-			this.mv = mv;
-			this.gridDetail = gridDetail;
-			
-    		Point p = mv.getPoint( new EastNorth(0, 0) );
-    		Point p2 = mv.getPoint( new EastNorth(1d/gridDetail, 1d/gridDetail) );
-    		cellWidth = Math.abs(p2.x - p.x);
-		}
+        /**
+         * Constructor
+         * @param g the graphics
+         * @param mv The MapView
+         * @param gridDetail The grid detail
+         */
+        public HighlightCellVisitor(final Graphics g, final MapView mv, int gridDetail)
+        {
+            this.g = g;
+            this.mv = mv;
+            this.gridDetail = gridDetail;
+            
+            Point p = mv.getPoint( new EastNorth(0, 0) );
+            Point p2 = mv.getPoint( new EastNorth(1d/gridDetail, 1d/gridDetail) );
+            cellWidth = Math.abs(p2.x - p.x);
+        }
 
-		public void visit(Node n) 
-		{
-			double x = n.eastNorth.east() * gridDetail;
-	        double y = n.eastNorth.north()* gridDetail + 1;
+        public void visit(Node n) 
+        {
+            double x = n.eastNorth.east() * gridDetail;
+            double y = n.eastNorth.north()* gridDetail + 1;
 
-	        drawCell( Math.floor(x), Math.floor(y) );
-		}
+            drawCell( Math.floor(x), Math.floor(y) );
+        }
 
-		public void visit(Way w) 
-		{
-			Node lastN = null;
-			for (Node n : w.nodes) {
-				if (lastN == null) {
-					lastN = n;
-					continue;
-				}
-				for (Point2D p : Util.getSegmentCells(lastN, n, gridDetail)) {
-					drawCell( p.getX(), p.getY() );
-				}
-				lastN = n;
-			}
-		}
+        public void visit(Way w) 
+        {
+            Node lastN = null;
+            for (Node n : w.nodes) {
+                if (lastN == null) {
+                    lastN = n;
+                    continue;
+                }
+                for (Point2D p : Util.getSegmentCells(lastN, n, gridDetail)) {
+                    drawCell( p.getX(), p.getY() );
+                }
+                lastN = n;
+            }
+        }
 
-		public void visit(Relation r) {}
-		
-		/** 
-		 * Draws a solid cell at the (x,y) location
-		 * @param x
-		 * @param y
-		 */
-		protected void drawCell(double x, double y)
-		{
-    		Point p = mv.getPoint( new EastNorth(x/gridDetail, y/gridDetail) );
-			g.fillRect(p.x, p.y, cellWidth, cellWidth);
-		}
-	}
+        public void visit(Relation r) {}
+        
+        /** 
+         * Draws a solid cell at the (x,y) location
+         * @param x
+         * @param y
+         */
+        protected void drawCell(double x, double y)
+        {
+            Point p = mv.getPoint( new EastNorth(x/gridDetail, y/gridDetail) );
+            g.fillRect(p.x, p.y, cellWidth, cellWidth);
+        }
+    }
 }

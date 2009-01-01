@@ -4,16 +4,16 @@ import org.openstreetmap.josm.Main;
 
 /**
  * Preferences for Slippy Map Tiles
- * 
+ *
  * @author Hakan Tandogan <hakan@gurkensalat.com>
- * 
+ *
  */
 public class SlippyMapPreferences
 {
     public static String PREFERENCE_PREFIX   = "slippymap";
 
     public static String PREFERENCE_TILE_URL = PREFERENCE_PREFIX + ".tile_url";
-    
+
     public static String getMapUrl()
     {
         String url = Main.pref.get(PREFERENCE_TILE_URL);

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
@@ -16,20 +16,20 @@ import javax.swing.table.AbstractTableModel;
 public class PluginTableModel extends AbstractTableModel {
     private List<SiteDescription> sites;
     private List<PluginDescription> plugins;
-    
+
     public PluginTableModel(List<SiteDescription> descriptions) {
         this.sites = descriptions;
         update();
     }
-    
+
     private void update() {
         plugins = new ArrayList<PluginDescription>();
         for (SiteDescription site : sites) {
             plugins.addAll(site.getPlugins());
         }
     }
-    
-    
+
+
 
     /* (non-Javadoc)
      * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
@@ -64,13 +64,13 @@ public class PluginTableModel extends AbstractTableModel {
         case 2: if(plugin.getInstalledVersion() != null) {
             return plugin.getInstalledVersion() + " -> " + plugin.getVersion();
         } else {
-            return plugin.getVersion();            
+            return plugin.getVersion();
         }
         default: throw new IllegalArgumentException("Illegal Column Index " + columnIndex);
         }
     }
-    
-    
+
+
 
     /* (non-Javadoc)
      * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
@@ -120,7 +120,7 @@ public class PluginTableModel extends AbstractTableModel {
                 plugin.install();
             }
         }
-        
+
     }
 
     /**
@@ -150,9 +150,9 @@ public class PluginTableModel extends AbstractTableModel {
     public void setPlugins(List<PluginDescription> plugins) {
         this.plugins = plugins;
     }
-    
-    
-    
-    
+
+
+
+
 
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.navigator;
 
@@ -23,13 +23,13 @@ public class NavigatorModeAction extends MapMode {
     private NavigatorModel navigatorModel;
     private NavigatorLayer navigatorLayer;
     private boolean layerAdded;
-    
+
     public NavigatorModeAction(MapFrame mapFrame, NavigatorModel navigatorModel, NavigatorLayer navigationLayer) {
         super(tr("Navigator"), "navigation", tr("Set start/end for routing. Middle mouse button to reset."), KeyEvent.VK_F, mapFrame, ImageProvider.getCursor("crosshair", "selection"));
         this.navigatorModel = navigatorModel;
         this.navigatorLayer = navigationLayer;
     }
-    
+
     @Override public void enterMode() {
         super.enterMode();
         Main.map.mapView.addMouseListener(this);
@@ -49,7 +49,7 @@ public class NavigatorModeAction extends MapMode {
     @Override public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON2) {
             navigatorModel.reset();
-        } else if (e.getButton() == MouseEvent.BUTTON1) {        
+        } else if (e.getButton() == MouseEvent.BUTTON1) {
             Node node = Main.map.mapView.getNearestNode(e.getPoint());
             System.out.println("selected node " + node);
             if(node == null) {

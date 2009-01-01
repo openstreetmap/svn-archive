@@ -371,7 +371,7 @@ public class TestError {
         /**
          * Checks if the given segment is in the visible area.
          * NOTE: This will return true for a small number of non-visible
-         *		 segments.
+         *       segments.
          * @param ls The segment to check
          * @return true if the segment is visible
          */

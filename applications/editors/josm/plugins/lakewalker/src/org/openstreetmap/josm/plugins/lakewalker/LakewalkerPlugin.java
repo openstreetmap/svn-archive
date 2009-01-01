@@ -9,7 +9,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 
 /**
  * Interface to Darryl Shpak's Lakewalker python module
- * 
+ *
  * @author Brent Easton
  */
 public class LakewalkerPlugin extends Plugin {
@@ -17,7 +17,7 @@ public class LakewalkerPlugin extends Plugin {
     MainMenu.add(Main.main.menu.toolsMenu, new LakewalkerAction(tr("Lake Walker")));
   }
 
-  public PreferenceSetting getPreferenceSetting() 
+  public PreferenceSetting getPreferenceSetting()
   {
     return new LakewalkerPreferences();
   }

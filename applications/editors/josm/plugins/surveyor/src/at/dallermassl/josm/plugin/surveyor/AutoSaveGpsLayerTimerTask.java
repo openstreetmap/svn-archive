@@ -28,14 +28,14 @@ import at.dallermassl.josm.plugin.surveyor.util.LayerUtil;
  * Every time the task is run, the layer is retrieved from the map view so it even works
  * if the layer does not exist at the start of the timer task. If the layer does not exist,
  * the file is not written.
- * 
+ *
  * @author cdaller
  *
  */
 public class AutoSaveGpsLayerTimerTask extends TimerTask {
     private String gpsLayerName;
     private File file;
-    
+
     /**
      * Constructor using the file to write to and the name of the layer.
      * @param filename the file to write to.
@@ -46,7 +46,7 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
         this.gpsLayerName = layerName;
         this.file = new File(filename);
     }
-    
+
     /**
      * @return the gpsLayerName
      */
@@ -61,7 +61,7 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
     @Override
     public void run() {
 
-        try {            
+        try {
 
             GpxLayer gpsLayer = LayerUtil.findGpsLayer(gpsLayerName, GpxLayer.class);
             if(gpsLayer == null) {
@@ -77,14 +77,14 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
             GpxWriter gpxWriter = new GpxWriter(out);
             synchronized(LiveGpsLock.class) {
                 gpxWriter.write(gpsLayer.data);
-            }   
+            }
             tmpFile.renameTo(file);
         } catch (IOException ioExc) {
             ioExc.printStackTrace();
-            JOptionPane.showMessageDialog(Main.parent, 
-                tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), ioExc.getMessage()), 
-                tr("Error"), 
+            JOptionPane.showMessageDialog(Main.parent,
+                tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), ioExc.getMessage()),
+                tr("Error"),
                 JOptionPane.ERROR_MESSAGE);
-        }       
+        }
     }
 }

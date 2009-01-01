@@ -14,11 +14,11 @@ import java.net.URL;
  *
  */
 public class ResourceLoader {
-    
+
     private ResourceLoader() {
-        
+
     }
-    
+
     /**
      * Returns an inputstream from urls, files and classloaders, depending on the name.
      * @param source the source: if starting with &quot;http://&quot;, &quot;ftp://&quot; or

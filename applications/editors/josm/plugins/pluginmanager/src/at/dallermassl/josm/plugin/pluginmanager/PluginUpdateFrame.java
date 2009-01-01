@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
@@ -31,16 +31,16 @@ public class PluginUpdateFrame extends JFrame {
 
     /**
      * @param title
-     * @param descriptions 
+     * @param descriptions
      * @throws HeadlessException
      */
     public PluginUpdateFrame(String title, List<SiteDescription> descriptions) throws HeadlessException {
         super(title);
         init(descriptions);
     }
-    
+
     public void init(List<SiteDescription> descriptions) {
-        
+
         /* Setup panes */
         JPanel content = new JPanel(new BorderLayout(12,12));
         content.setBorder(new EmptyBorder(12,12,12,12));
@@ -52,13 +52,13 @@ public class PluginUpdateFrame extends JFrame {
         //tabPane.addTab(tr("Install"),installer = new InstallPanel(this));
 
         content.add(BorderLayout.CENTER,tabPane);
-        
+
         JPanel buttonPannel = new JPanel();
         // <FIXXME date="23.06.2007" author="cdaller">
         // TODO i18n!
         JButton okButton = new JButton(tr("Install"));
         JButton cancelButton = new JButton(tr("Cancel"));
-        // </FIXXME> 
+        // </FIXXME>
         buttonPannel.add(okButton);
         buttonPannel.add(cancelButton);
 
@@ -67,17 +67,17 @@ public class PluginUpdateFrame extends JFrame {
                 updater.install();
                 setVisible(false);
                 dispose();
-            }   
+            }
         });
-        
+
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
                 dispose();
-            }   
+            }
         });
         content.add(BorderLayout.SOUTH,buttonPannel);
-        
+
         pack();
     }
 

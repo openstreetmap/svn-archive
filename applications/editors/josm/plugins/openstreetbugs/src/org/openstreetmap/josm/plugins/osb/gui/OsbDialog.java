@@ -1,18 +1,18 @@
 /* Copyright (c) 2008, Henrik Niehaus
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- *    this list of conditions and the following disclaimer in the documentation 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 3. Neither the name of the project nor the names of its 
- *    contributors may be used to endorse or promote products derived from this 
+ * 3. Neither the name of the project nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -76,226 +76,226 @@ import org.openstreetmap.josm.plugins.osb.gui.action.PopupFactory;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectionListener, LayerChangeListener,
-		DataChangeListener, MouseListener, OsbActionObserver {
+        DataChangeListener, MouseListener, OsbActionObserver {
 
-	private static final long serialVersionUID = 1L;
-	private DefaultListModel model;
-	private JList list;
-	private OsbPlugin osbPlugin;
-	private boolean fireSelectionChanged = true;
-	private JButton refresh;
-	private JButton addComment = new JButton(new AddCommentAction());
-	private JButton closeIssue = new JButton(new CloseIssueAction());
-	private JToggleButton newIssue = new JToggleButton();
-	
-	public OsbDialog(final OsbPlugin plugin) {
-		super(tr("Open OpenStreetBugs"), "icon_error22",
-				tr("Opens the OpenStreetBugs window and activates the automatic download"),
-				Shortcut.registerShortcut(
-						"view:openstreetbugs",
-						tr("Toggle: {0}", tr("Open OpenStreetBugs")),
-						KeyEvent.VK_O, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT), 
-				150);
-		
-		osbPlugin = plugin;
-		
-		model = new DefaultListModel();
-		list = new JList(model);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.addListSelectionListener(this);
-		list.addMouseListener(this);
-		list.setCellRenderer(new OsbListCellRenderer());
-		add(new JScrollPane(list), BorderLayout.CENTER);
+    private static final long serialVersionUID = 1L;
+    private DefaultListModel model;
+    private JList list;
+    private OsbPlugin osbPlugin;
+    private boolean fireSelectionChanged = true;
+    private JButton refresh;
+    private JButton addComment = new JButton(new AddCommentAction());
+    private JButton closeIssue = new JButton(new CloseIssueAction());
+    private JToggleButton newIssue = new JToggleButton();
 
-		// create dialog buttons
-		JPanel buttonPanel = new JPanel(new GridLayout(2, 2));
-		add(buttonPanel, BorderLayout.SOUTH);
-		refresh = new JButton(tr("Refresh"));
-		refresh.setToolTipText(tr("Refresh"));
-		refresh.setIcon(OsbPlugin.loadIcon("view-refresh22.png"));
-		refresh.setHorizontalAlignment(SwingConstants.LEFT);
-		refresh.addActionListener(new ActionListener() {
+    public OsbDialog(final OsbPlugin plugin) {
+        super(tr("Open OpenStreetBugs"), "icon_error22",
+                tr("Opens the OpenStreetBugs window and activates the automatic download"),
+                Shortcut.registerShortcut(
+                        "view:openstreetbugs",
+                        tr("Toggle: {0}", tr("Open OpenStreetBugs")),
+                        KeyEvent.VK_O, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT),
+                150);
 
-			public void actionPerformed(ActionEvent e) {
-				// check zoom level
-				if(Main.map.mapView.zoom() > 15 || Main.map.mapView.zoom() < 9) {
-					JOptionPane.showMessageDialog(Main.parent, 
-							tr("The visible area is either too small or too big to download data from OpenStreetBugs"),
-							tr("Warning"),
-							JOptionPane.INFORMATION_MESSAGE);
-					return;
-				}
-				
-				plugin.updateData();
-			}
-		});
-		
-		addComment.setEnabled(false);
-		addComment.setToolTipText((String) addComment.getAction().getValue(Action.NAME));
-		addComment.setIcon(OsbPlugin.loadIcon("add_comment22.png"));
-		addComment.setHorizontalAlignment(SwingConstants.LEFT);
-		closeIssue.setEnabled(false);
-		closeIssue.setToolTipText((String) closeIssue.getAction().getValue(Action.NAME));
-		closeIssue.setIcon(OsbPlugin.loadIcon("icon_valid22.png"));
-		closeIssue.setHorizontalAlignment(SwingConstants.LEFT);
-		NewIssueAction nia = new NewIssueAction(newIssue, osbPlugin);
-		newIssue.setAction(nia);
-		newIssue.setToolTipText((String) newIssue.getAction().getValue(Action.NAME));
-		newIssue.setIcon(OsbPlugin.loadIcon("icon_error_add22.png"));
-		newIssue.setHorizontalAlignment(SwingConstants.LEFT);
+        osbPlugin = plugin;
 
-		buttonPanel.add(refresh);
-		buttonPanel.add(newIssue);
-		buttonPanel.add(addComment);
-		buttonPanel.add(closeIssue);
-		
-		// add a selection listener to the data
-		DataSet.selListeners.add(new SelectionChangedListener() {
-			public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-				fireSelectionChanged = false;
-				list.clearSelection();
-				for (OsmPrimitive osmPrimitive : newSelection) {
-					for (int i = 0; i < model.getSize(); i++) {
-						OsbListItem item = (OsbListItem) model.get(i);
-						if(item.getNode() == osmPrimitive) {
-							list.addSelectionInterval(i, i);
-						}
-					}
-				}
-				fireSelectionChanged = true;
-			}
-		});
-		
-		AddCommentAction.addActionObserver(this);
-		CloseIssueAction.addActionObserver(this);
-	}
+        model = new DefaultListModel();
+        list = new JList(model);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(this);
+        list.addMouseListener(this);
+        list.setCellRenderer(new OsbListCellRenderer());
+        add(new JScrollPane(list), BorderLayout.CENTER);
 
-	public synchronized void update(final DataSet dataset) {
-		Node lastNode = OsbAction.getSelectedNode();
-		model = new DefaultListModel();
-		List<Node> sortedList = new ArrayList<Node>(dataset.nodes);
-		Collections.sort(sortedList, new BugComparator());
-		
-		for (Node node : sortedList) {
-			if (!node.deleted) {
-				model.addElement(new OsbListItem(node));
-			}
-		}
-		list.setModel(model);
-		list.setSelectedValue(new OsbListItem(lastNode), true);
-	}
+        // create dialog buttons
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 2));
+        add(buttonPanel, BorderLayout.SOUTH);
+        refresh = new JButton(tr("Refresh"));
+        refresh.setToolTipText(tr("Refresh"));
+        refresh.setIcon(OsbPlugin.loadIcon("view-refresh22.png"));
+        refresh.setHorizontalAlignment(SwingConstants.LEFT);
+        refresh.addActionListener(new ActionListener() {
 
-	public void valueChanged(ListSelectionEvent e) {
-		if(list.getSelectedValues().length == 0) {
-			addComment.setEnabled(false);
-			closeIssue.setEnabled(false);
-			OsbAction.setSelectedNode(null);
-			return;
-		}
-		
-		List<OsmPrimitive> selected = new ArrayList<OsmPrimitive>();
-		for (Object listItem : list.getSelectedValues()) {
-			Node node = ((OsbListItem) listItem).getNode();
-			selected.add(node);
+            public void actionPerformed(ActionEvent e) {
+                // check zoom level
+                if(Main.map.mapView.zoom() > 15 || Main.map.mapView.zoom() < 9) {
+                    JOptionPane.showMessageDialog(Main.parent,
+                            tr("The visible area is either too small or too big to download data from OpenStreetBugs"),
+                            tr("Warning"),
+                            JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
 
-			if ("1".equals(node.get("state"))) {
-				addComment.setEnabled(false);
-				closeIssue.setEnabled(false);
-			} else {
-				addComment.setEnabled(true);
-				closeIssue.setEnabled(true);
-			}
-			
-			OsbAction.setSelectedNode(node);
+                plugin.updateData();
+            }
+        });
 
-			scrollToSelected(node);
-			
-			if (fireSelectionChanged) {
-				Main.ds.setSelected(selected);
-			}
-		}
-	}
+        addComment.setEnabled(false);
+        addComment.setToolTipText((String) addComment.getAction().getValue(Action.NAME));
+        addComment.setIcon(OsbPlugin.loadIcon("add_comment22.png"));
+        addComment.setHorizontalAlignment(SwingConstants.LEFT);
+        closeIssue.setEnabled(false);
+        closeIssue.setToolTipText((String) closeIssue.getAction().getValue(Action.NAME));
+        closeIssue.setIcon(OsbPlugin.loadIcon("icon_valid22.png"));
+        closeIssue.setHorizontalAlignment(SwingConstants.LEFT);
+        NewIssueAction nia = new NewIssueAction(newIssue, osbPlugin);
+        newIssue.setAction(nia);
+        newIssue.setToolTipText((String) newIssue.getAction().getValue(Action.NAME));
+        newIssue.setIcon(OsbPlugin.loadIcon("icon_error_add22.png"));
+        newIssue.setHorizontalAlignment(SwingConstants.LEFT);
 
-	private void scrollToSelected(Node node) {
-		for (int i = 0; i < model.getSize();i++) {
-			Node current = ((OsbListItem)model.get(i)).getNode();
-			if(current.id == node.id) {
-				list.scrollRectToVisible(list.getCellBounds(i, i));
-				list.setSelectedIndex(i);
-				return;
-			}
-		}
-	}
+        buttonPanel.add(refresh);
+        buttonPanel.add(newIssue);
+        buttonPanel.add(addComment);
+        buttonPanel.add(closeIssue);
 
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {}
+        // add a selection listener to the data
+        DataSet.selListeners.add(new SelectionChangedListener() {
+            public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+                fireSelectionChanged = false;
+                list.clearSelection();
+                for (OsmPrimitive osmPrimitive : newSelection) {
+                    for (int i = 0; i < model.getSize(); i++) {
+                        OsbListItem item = (OsbListItem) model.get(i);
+                        if(item.getNode() == osmPrimitive) {
+                            list.addSelectionInterval(i, i);
+                        }
+                    }
+                }
+                fireSelectionChanged = true;
+            }
+        });
 
-	public void layerAdded(Layer newLayer) {
-		if(newLayer == osbPlugin.getLayer()) {
-			update(osbPlugin.getDataSet());
-			Main.map.mapView.moveLayer(newLayer, 0);
-		}
-	}
-
-	public void layerRemoved(Layer oldLayer) {
-		if(oldLayer == osbPlugin.getLayer()) {
-			model.removeAllElements();
-		}
-	}
-
-	public void dataChanged(OsmDataLayer l) {
-		update(l.data);
-	}
-	
-	public void zoomToNode(Node node) {
-		double scale = Main.map.mapView.getScale();
-		Main.map.mapView.zoomTo(node.eastNorth, scale);
+        AddCommentAction.addActionObserver(this);
+        CloseIssueAction.addActionObserver(this);
     }
 
-	public void mouseClicked(MouseEvent e) {
-		if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-			OsbListItem item = (OsbListItem)list.getSelectedValue();
-			zoomToNode(item.getNode());
-		}
-	}
-	
-	public void mousePressed(MouseEvent e) {
+    public synchronized void update(final DataSet dataset) {
+        Node lastNode = OsbAction.getSelectedNode();
+        model = new DefaultListModel();
+        List<Node> sortedList = new ArrayList<Node>(dataset.nodes);
+        Collections.sort(sortedList, new BugComparator());
+
+        for (Node node : sortedList) {
+            if (!node.deleted) {
+                model.addElement(new OsbListItem(node));
+            }
+        }
+        list.setModel(model);
+        list.setSelectedValue(new OsbListItem(lastNode), true);
+    }
+
+    public void valueChanged(ListSelectionEvent e) {
+        if(list.getSelectedValues().length == 0) {
+            addComment.setEnabled(false);
+            closeIssue.setEnabled(false);
+            OsbAction.setSelectedNode(null);
+            return;
+        }
+
+        List<OsmPrimitive> selected = new ArrayList<OsmPrimitive>();
+        for (Object listItem : list.getSelectedValues()) {
+            Node node = ((OsbListItem) listItem).getNode();
+            selected.add(node);
+
+            if ("1".equals(node.get("state"))) {
+                addComment.setEnabled(false);
+                closeIssue.setEnabled(false);
+            } else {
+                addComment.setEnabled(true);
+                closeIssue.setEnabled(true);
+            }
+
+            OsbAction.setSelectedNode(node);
+
+            scrollToSelected(node);
+
+            if (fireSelectionChanged) {
+                Main.ds.setSelected(selected);
+            }
+        }
+    }
+
+    private void scrollToSelected(Node node) {
+        for (int i = 0; i < model.getSize();i++) {
+            Node current = ((OsbListItem)model.get(i)).getNode();
+            if(current.id == node.id) {
+                list.scrollRectToVisible(list.getCellBounds(i, i));
+                list.setSelectedIndex(i);
+                return;
+            }
+        }
+    }
+
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {}
+
+    public void layerAdded(Layer newLayer) {
+        if(newLayer == osbPlugin.getLayer()) {
+            update(osbPlugin.getDataSet());
+            Main.map.mapView.moveLayer(newLayer, 0);
+        }
+    }
+
+    public void layerRemoved(Layer oldLayer) {
+        if(oldLayer == osbPlugin.getLayer()) {
+            model.removeAllElements();
+        }
+    }
+
+    public void dataChanged(OsmDataLayer l) {
+        update(l.data);
+    }
+
+    public void zoomToNode(Node node) {
+        double scale = Main.map.mapView.getScale();
+        Main.map.mapView.zoomTo(node.eastNorth, scale);
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+            OsbListItem item = (OsbListItem)list.getSelectedValue();
+            zoomToNode(item.getNode());
+        }
+    }
+
+    public void mousePressed(MouseEvent e) {
         mayTriggerPopup(e);
     }
 
     public void mouseReleased(MouseEvent e) {
         mayTriggerPopup(e);
     }
-    
+
     private void mayTriggerPopup(MouseEvent e) {
         if(e.isPopupTrigger()) {
-        	int selectedRow = list.locationToIndex(e.getPoint());
-        	list.setSelectedIndex(selectedRow);
-			Node n = ((OsbListItem)list.getSelectedValue()).getNode();
-			OsbAction.setSelectedNode(n);
-			PopupFactory.createPopup(n).show(e.getComponent(), e.getX(), e.getY());
+            int selectedRow = list.locationToIndex(e.getPoint());
+            list.setSelectedIndex(selectedRow);
+            Node n = ((OsbListItem)list.getSelectedValue()).getNode();
+            OsbAction.setSelectedNode(n);
+            PopupFactory.createPopup(n).show(e.getComponent(), e.getX(), e.getY());
         }
     }
-	
-	public void mouseEntered(MouseEvent e) {}
 
-	public void mouseExited(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
 
-	public void actionPerformed(OsbAction action) {
-		if(action instanceof AddCommentAction || action instanceof CloseIssueAction) {
-			update(osbPlugin.getDataSet());
-		}
-	}
-	
-	private class BugComparator implements Comparator<Node> {
+    public void mouseExited(MouseEvent e) {}
 
-		public int compare(Node o1, Node o2) {
-			String state1 = o1.get("state");
-			String state2 = o2.get("state");
-			if(state1.equals(state2)) {
-				return o1.get("note").compareTo(o2.get("note"));
-			}
-			return state1.compareTo(state2);
-		}
-		
-	}
+    public void actionPerformed(OsbAction action) {
+        if(action instanceof AddCommentAction || action instanceof CloseIssueAction) {
+            update(osbPlugin.getDataSet());
+        }
+    }
+
+    private class BugComparator implements Comparator<Node> {
+
+        public int compare(Node o1, Node o2) {
+            String state1 = o1.get("state");
+            String state2 = o2.get("state");
+            if(state1.equals(state2)) {
+                return o1.get("note").compareTo(o2.get("note"));
+            }
+            return state1.compareTo(state2);
+        }
+
+    }
 }

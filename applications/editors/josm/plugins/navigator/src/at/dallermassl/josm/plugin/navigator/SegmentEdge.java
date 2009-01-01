@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.navigator;
 
@@ -9,7 +9,7 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * @author cdaller
- * 
+ *
  */
 public class SegmentEdge extends DefaultWeightedEdge {
     private Segment segment;

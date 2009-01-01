@@ -2,11 +2,11 @@ package uk.me.jstott.jcoord;
 
 /**
  * Class to represent a latitude/longitude pair.
- * 
+ *
  * (c) 2006 Jonathan Stott
- * 
+ *
  * Created on 11-02-2006
- * 
+ *
  * @author Jonathan Stott
  * @version 1.0
  * @since 1.0
@@ -26,7 +26,7 @@ public class LatLng {
 
   /**
    * Create a new LatLng object to represent a latitude/longitude pair.
-   * 
+   *
    * @param lat
    *          the latitude in degrees
    * @param lng
@@ -41,7 +41,7 @@ public class LatLng {
 
   /**
    * Get a String representation of this LatLng object.
-   * 
+   *
    * @return a String representation of this LatLng object.
    * @since 1.0
    */
@@ -53,7 +53,7 @@ public class LatLng {
   /**
    * Convert this latitude and longitude into an OSGB (Ordnance Survey of Great
    * Britain) grid reference.
-   * 
+   *
    * @return the converted OSGB grid reference
    * @since 1.0
    */
@@ -123,7 +123,7 @@ public class LatLng {
 
   /**
    * Convert this latitude and longitude to a UTM reference.
-   * 
+   *
    * @return the converted UTM reference
    * @since 1.0
    */
@@ -211,7 +211,7 @@ public class LatLng {
   /**
    * Convert this LatLng from the OSGB36 datum to the WGS84 datum using an
    * approximate Helmert transformation.
-   * 
+   *
    * @since 1.0
    */
   public void toWGS84() {
@@ -259,7 +259,7 @@ public class LatLng {
   /**
    * Convert this LatLng from the WGS84 datum to the OSGB36 datum using an
    * approximate Helmert transformation.
-   * 
+   *
    * @since 1.0
    */
   public void toOSGB36() {
@@ -309,7 +309,7 @@ public class LatLng {
   /**
    * Calculate the surface distance in kilometres from the this LatLng to the
    * given LatLng.
-   * 
+   *
    * @param ll
    * @return the surface distance in km
    * @since 1.0
@@ -333,7 +333,7 @@ public class LatLng {
 
   /**
    * Return the latitude in degrees.
-   * 
+   *
    * @return the latitude in degrees
    * @since 1.0
    */
@@ -344,7 +344,7 @@ public class LatLng {
 
   /**
    * Return the longitude in degrees.
-   * 
+   *
    * @return the longitude in degrees
    * @since 1.0
    */

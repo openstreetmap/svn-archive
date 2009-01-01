@@ -19,57 +19,57 @@ import org.openstreetmap.josm.plugins.validator.util.Bag;
  */
 public class DuplicateNode extends Test
 {
-	protected static int DUPLICATE_NODE = 1;
+    protected static int DUPLICATE_NODE = 1;
 
-	/** Bag of all nodes */
-	Bag<LatLon, OsmPrimitive> nodes;
+    /** Bag of all nodes */
+    Bag<LatLon, OsmPrimitive> nodes;
 
-	/**
-	 * Constructor
-	 */
-	public DuplicateNode()
-	{
-		super(tr("Duplicated nodes."),
-			  tr("This test checks that there are no nodes at the very same location."));
-	}
+    /**
+     * Constructor
+     */
+    public DuplicateNode()
+    {
+        super(tr("Duplicated nodes."),
+              tr("This test checks that there are no nodes at the very same location."));
+    }
 
 
-	@Override
-	public void startTest()
-	{
-		nodes = new Bag<LatLon, OsmPrimitive>(1000);
-	}
+    @Override
+    public void startTest()
+    {
+        nodes = new Bag<LatLon, OsmPrimitive>(1000);
+    }
 
-	@Override
-	public void endTest()
-	{
-		for(List<OsmPrimitive> duplicated : nodes.values() )
-		{
-			if( duplicated.size() > 1)
-			{
-				TestError testError = new TestError(this, Severity.ERROR, tr("Duplicated nodes"), DUPLICATE_NODE, duplicated);
-				errors.add( testError );
-			}
-		}
-		nodes = null;
-	}
+    @Override
+    public void endTest()
+    {
+        for(List<OsmPrimitive> duplicated : nodes.values() )
+        {
+            if( duplicated.size() > 1)
+            {
+                TestError testError = new TestError(this, Severity.ERROR, tr("Duplicated nodes"), DUPLICATE_NODE, duplicated);
+                errors.add( testError );
+            }
+        }
+        nodes = null;
+    }
 
-	@Override
-	public void visit(Node n)
-	{
-		if(!n.deleted && !n.incomplete)
-			nodes.add(n.coor, n);
-	}
+    @Override
+    public void visit(Node n)
+    {
+        if(!n.deleted && !n.incomplete)
+            nodes.add(n.coor, n);
+    }
 
-	/**
-	 * Merge the nodes into one.
-	 * Copied from UtilsPlugin.MergePointsAction
-	 */
-	@Override
-	public Command fixError(TestError testError)
-	{
-		Collection<? extends OsmPrimitive> sel = testError.getPrimitives();
-		LinkedList<Node> nodes = new LinkedList<Node>();
+    /**
+     * Merge the nodes into one.
+     * Copied from UtilsPlugin.MergePointsAction
+     */
+    @Override
+    public Command fixError(TestError testError)
+    {
+        Collection<? extends OsmPrimitive> sel = testError.getPrimitives();
+        LinkedList<Node> nodes = new LinkedList<Node>();
 
         for (OsmPrimitive osm : sel)
             if (osm instanceof Node)
@@ -79,7 +79,7 @@ public class DuplicateNode extends Test
             return null;
 
         Node target = null;
-		// select the target node in the same way as in the core action MergeNodesAction, rev.1084
+        // select the target node in the same way as in the core action MergeNodesAction, rev.1084
         for (Node n: nodes) {
             if (n.id > 0) {
                 target = n;
@@ -92,11 +92,11 @@ public class DuplicateNode extends Test
         MergeNodesAction.mergeNodes(nodes, target);
 
         return null; // undoRedo handling done in mergeNodes
-	}
+    }
 
-	@Override
-	public boolean isFixable(TestError testError)
-	{
-		return (testError.getTester() instanceof DuplicateNode);
-	}
+    @Override
+    public boolean isFixable(TestError testError)
+    {
+        return (testError.getTester() instanceof DuplicateNode);
+    }
 }

@@ -1,18 +1,18 @@
 /* Copyright (c) 2008, Henrik Niehaus
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- *    this list of conditions and the following disclaimer in the documentation 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 3. Neither the name of the project nor the names of its 
- *    contributors may be used to endorse or promote products derived from this 
+ * 3. Neither the name of the project nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,31 +39,31 @@ import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.api.util.HttpUtils;
 
 public class CloseAction {
-	
-	private final String CHARSET = "UTF-8";
-	
-	public void execute(Node n) throws IOException {
-		// create the URI for the data download
-		String uri = Main.pref.get(ConfigKeys.OSB_API_URI_CLOSE);
-		String post = new StringBuilder("id=")
-			.append(n.get("id"))
-			.toString();
-		
-		String result = null;
-		if(Main.pref.getBoolean(ConfigKeys.OSB_API_DISABLED)) {
-			result = "ok";
-		} else {
-			result = HttpUtils.post(uri, null, post, CHARSET);
-		}
-		
-		if("ok".equalsIgnoreCase(result)) {
-			n.put("state", "1");
-			Main.map.mapView.repaint();
-		} else {
-			JOptionPane.showMessageDialog(Main.parent,
-					tr("An error occurred: {0}", new Object[] {result}),
-					tr("Error"),
-					JOptionPane.ERROR_MESSAGE);
-		}
-	}
+
+    private final String CHARSET = "UTF-8";
+
+    public void execute(Node n) throws IOException {
+        // create the URI for the data download
+        String uri = Main.pref.get(ConfigKeys.OSB_API_URI_CLOSE);
+        String post = new StringBuilder("id=")
+            .append(n.get("id"))
+            .toString();
+
+        String result = null;
+        if(Main.pref.getBoolean(ConfigKeys.OSB_API_DISABLED)) {
+            result = "ok";
+        } else {
+            result = HttpUtils.post(uri, null, post, CHARSET);
+        }
+
+        if("ok".equalsIgnoreCase(result)) {
+            n.put("state", "1");
+            Main.map.mapView.repaint();
+        } else {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("An error occurred: {0}", new Object[] {result}),
+                    tr("Error"),
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

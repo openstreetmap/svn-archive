@@ -95,11 +95,11 @@ public class StringEnumConfigurer extends Configurer {
   }
 
   public void setValidValues(String[] s) {
-  	validValues = s;
-  	if (box == null) {
-  	  getControls();
-  	}
-	box.setModel(new DefaultComboBoxModel(validValues));
+    validValues = s;
+    if (box == null) {
+      getControls();
+    }
+    box.setModel(new DefaultComboBoxModel(validValues));
   }
   
   public void setValue(Object o) {

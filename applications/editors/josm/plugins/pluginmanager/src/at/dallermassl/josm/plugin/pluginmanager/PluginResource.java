@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
@@ -21,7 +21,7 @@ public class PluginResource {
     private String target;
     private String errorMessage;
     private Exception errorException;
-    
+
     /**
      * @return the resourceUrl
      */
@@ -46,7 +46,7 @@ public class PluginResource {
     public void setTarget(String target) {
         this.target = target;
     }
-    
+
     /**
      * @return the errorMessage
      */
@@ -72,13 +72,13 @@ public class PluginResource {
         this.errorException = errorException;
     }
     /**
-     * Installs the resource into to the target location. 
-     * @throws IOException if the resource could not be read or written. 
+     * Installs the resource into to the target location.
+     * @throws IOException if the resource could not be read or written.
      */
     public void install() {
        File targetFile = new File(target);
-       if(targetFile.isDirectory() 
-          || targetFile.getAbsolutePath().endsWith("/") 
+       if(targetFile.isDirectory()
+          || targetFile.getAbsolutePath().endsWith("/")
           || targetFile.getAbsolutePath().endsWith("\\")) {
            targetFile = new File(targetFile, resourceUrl.getFile());
        }
@@ -87,7 +87,7 @@ public class PluginResource {
            errorMessage = "Could not create the target directory: " + parentDir.getAbsolutePath();
            return;
        }
-       
+
        // copy resource to local filesystem:
        System.out.println("Install " + resourceUrl + " to " + targetFile);
        byte[] buffer = new byte[BUFFER_SIZE];
@@ -111,7 +111,7 @@ public class PluginResource {
                if(out != null) out.close();
              } catch(IOException ignore) {}
        }
-       
+
     }
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -119,5 +119,5 @@ public class PluginResource {
     public String toString() {
         return getClass().getSimpleName() + "[url=" + resourceUrl + ", target=" + target + "]";
     }
- 
+
 }

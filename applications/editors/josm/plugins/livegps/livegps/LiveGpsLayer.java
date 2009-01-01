@@ -24,115 +24,115 @@ import org.openstreetmap.josm.tools.ColorHelper;
 public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String LAYER_NAME = tr("LiveGPS layer");
     public static final String KEY_LIVEGPS_COLOR ="color.livegps.position";
-	LatLon lastPos;
-	WayPoint lastPoint;
-	GpxTrack trackBeingWritten;
-	Collection<WayPoint> trackSegment;
-	float speed;
-	float course;
-	String status;
-	//JLabel lbl;
-	boolean autocenter;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-	
-	public LiveGpsLayer(GpxData data)
-	{
-		super (data, LAYER_NAME);
-		trackBeingWritten = new GpxTrack();
-		trackBeingWritten.attr.put("desc", "josm live gps");
-		trackSegment = new ArrayList<WayPoint>();
-		trackBeingWritten.trackSegs.add(trackSegment);
-		data.tracks.add(trackBeingWritten);
-	}
-	
-	void setCurrentPosition(double lat, double lon)
-	{
-	    //System.out.println("adding pos " + lat + "," + lon);
-		LatLon thisPos = new LatLon(lat, lon);
-		if ((lastPos != null) && (thisPos.equalsEpsilon(lastPos))) {
-			// no change in position
-			// maybe show a "paused" cursor or some such
-			return;
-		}
-			
-		lastPos = thisPos;
-		lastPoint = new WayPoint(thisPos);
-		lastPoint.attr.put("time", dateFormat.format(new Date()));
-		// synchronize when adding data, as otherwise the autosave action
-		// needs concurrent access and this results in an exception!
-		synchronized (LiveGpsLock.class) {
-		    trackSegment.add(lastPoint);            
+    LatLon lastPos;
+    WayPoint lastPoint;
+    GpxTrack trackBeingWritten;
+    Collection<WayPoint> trackSegment;
+    float speed;
+    float course;
+    String status;
+    //JLabel lbl;
+    boolean autocenter;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+    public LiveGpsLayer(GpxData data)
+    {
+        super (data, LAYER_NAME);
+        trackBeingWritten = new GpxTrack();
+        trackBeingWritten.attr.put("desc", "josm live gps");
+        trackSegment = new ArrayList<WayPoint>();
+        trackBeingWritten.trackSegs.add(trackSegment);
+        data.tracks.add(trackBeingWritten);
+    }
+
+    void setCurrentPosition(double lat, double lon)
+    {
+        //System.out.println("adding pos " + lat + "," + lon);
+        LatLon thisPos = new LatLon(lat, lon);
+        if ((lastPos != null) && (thisPos.equalsEpsilon(lastPos))) {
+            // no change in position
+            // maybe show a "paused" cursor or some such
+            return;
         }
-		if (autocenter) {
-		    center();
-		}
-		
-		//Main.map.repaint();
-	}
 
-	public void center()
-	{
-		if (lastPoint != null) 
-			Main.map.mapView.zoomTo(lastPoint.eastNorth, Main.map.mapView.getScale());
-	}
-	
-//	void setStatus(String status)
-//	{
-//		this.status = status;
-//		Main.map.repaint();
+        lastPos = thisPos;
+        lastPoint = new WayPoint(thisPos);
+        lastPoint.attr.put("time", dateFormat.format(new Date()));
+        // synchronize when adding data, as otherwise the autosave action
+        // needs concurrent access and this results in an exception!
+        synchronized (LiveGpsLock.class) {
+            trackSegment.add(lastPoint);
+        }
+        if (autocenter) {
+            center();
+        }
+
+        //Main.map.repaint();
+    }
+
+    public void center()
+    {
+        if (lastPoint != null)
+            Main.map.mapView.zoomTo(lastPoint.eastNorth, Main.map.mapView.getScale());
+    }
+
+//  void setStatus(String status)
+//  {
+//      this.status = status;
+//      Main.map.repaint();
 //        System.out.println("LiveGps status: " + status);
-//	}
-	
-	void setSpeed(float metresPerSecond)
-	{
-		speed = metresPerSecond;
-		//Main.map.repaint();
-	}
+//  }
 
-	void setCourse(float degrees)
-	{
-		course = degrees;
-		//Main.map.repaint();
-	}
-	
-	public void setAutoCenter(boolean ac)
-	{
-		autocenter = ac;
-	}
+    void setSpeed(float metresPerSecond)
+    {
+        speed = metresPerSecond;
+        //Main.map.repaint();
+    }
 
-	@Override public void paint(Graphics g, MapView mv)
-	{
-	    //System.out.println("in paint");
-	    synchronized (LiveGpsLock.class) {
-	        //System.out.println("in synced paint");
-	        super.paint(g, mv);
-//	        int statusHeight = 50;
-//	        Rectangle mvs = mv.getBounds();
-//	        mvs.y = mvs.y + mvs.height - statusHeight;
-//	        mvs.height = statusHeight;
-//	        g.setColor(new Color(1.0f, 1.0f, 1.0f, 0.8f)); 
-//	        g.fillRect(mvs.x, mvs.y, mvs.width, mvs.height);
+    void setCourse(float degrees)
+    {
+        course = degrees;
+        //Main.map.repaint();
+    }
 
-	        if (lastPoint != null)
-	        {
-	            Point screen = mv.getPoint(lastPoint.eastNorth);
-	            g.setColor(Main.pref.getColor(KEY_LIVEGPS_COLOR, Color.RED));
-	            g.drawOval(screen.x-10, screen.y-10,20,20);
-	            g.drawOval(screen.x-9, screen.y-9,18,18);
-	        }
+    public void setAutoCenter(boolean ac)
+    {
+        autocenter = ac;
+    }
 
-//	        lbl.setText("gpsd: "+status+" Speed: " + speed + " Course: "+course);
-//	        lbl.setBounds(0, 0, mvs.width-10, mvs.height-10);
-//	        Graphics sub = g.create(mvs.x+5, mvs.y+5, mvs.width-10, mvs.height-10);
-//	        lbl.paint(sub);
+    @Override public void paint(Graphics g, MapView mv)
+    {
+        //System.out.println("in paint");
+        synchronized (LiveGpsLock.class) {
+            //System.out.println("in synced paint");
+            super.paint(g, mv);
+//          int statusHeight = 50;
+//          Rectangle mvs = mv.getBounds();
+//          mvs.y = mvs.y + mvs.height - statusHeight;
+//          mvs.height = statusHeight;
+//          g.setColor(new Color(1.0f, 1.0f, 1.0f, 0.8f));
+//          g.fillRect(mvs.x, mvs.y, mvs.width, mvs.height);
 
-//	        if(status != null) {
-//	        g.setColor(Color.WHITE);
-//	        g.drawString("gpsd: " + status, 5, mv.getBounds().height - 15); // lower left corner
-//	        }
-	    }
-	}
-    
+            if (lastPoint != null)
+            {
+                Point screen = mv.getPoint(lastPoint.eastNorth);
+                g.setColor(Main.pref.getColor(KEY_LIVEGPS_COLOR, Color.RED));
+                g.drawOval(screen.x-10, screen.y-10,20,20);
+                g.drawOval(screen.x-9, screen.y-9,18,18);
+            }
+
+//          lbl.setText("gpsd: "+status+" Speed: " + speed + " Course: "+course);
+//          lbl.setBounds(0, 0, mvs.width-10, mvs.height-10);
+//          Graphics sub = g.create(mvs.x+5, mvs.y+5, mvs.width-10, mvs.height-10);
+//          lbl.paint(sub);
+
+//          if(status != null) {
+//          g.setColor(Color.WHITE);
+//          g.drawString("gpsd: " + status, 5, mv.getBounds().height - 15); // lower left corner
+//          }
+        }
+    }
+
     /* (non-Javadoc)
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
@@ -153,7 +153,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
                 Main.map.repaint();
             }
         }
-        
+
     }
 
 }

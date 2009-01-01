@@ -30,7 +30,7 @@ import at.dallermassl.josm.plugin.surveyor.util.LayerUtil;
 /**
  * Action that sets a marker into a marker layer. The first parameter of the action
  * is used as the text of the marker, the second (if it exists) as an icon.
- * 
+ *
  * @author cdaller
  *
  */
@@ -39,12 +39,12 @@ public class SetWaypointAction extends AbstractSurveyorAction {
     private MarkerLayer markerLayer;
     public static final String MARKER_LAYER_NAME = "surveyorwaypointlayer";
     private WaypointDialog dialog;
-    
+
     /**
      * Default Constructor.
      */
     public SetWaypointAction() {
-        
+
     }
 
 
@@ -60,24 +60,24 @@ public class SetWaypointAction extends AbstractSurveyorAction {
             if(((JToggleButton)source).isSelected()) {
                 markerTitle = markerTitle + " " + tr("start");
             } else {
-                markerTitle = markerTitle + " " + tr("end");                
+                markerTitle = markerTitle + " " + tr("end");
             }
         }
-        
+
         if(dialog == null) {
             dialog = new WaypointDialog();
         }
-        
+
         String markerText = markerTitle;
         String inputText = dialog.openDialog(SurveyorPlugin.getSurveyorFrame(), "Waypoint Description");
         if(inputText != null && inputText.length() > 0) {
             inputText = inputText.replaceAll("<", "_"); // otherwise the gpx file is ruined
             markerText = markerText + " " + inputText;
         }
-        
+
         String iconName = getParameters().size() > 1 ? getParameters().get(1) : null;
-        
-        // add the waypoint to the marker layer AND to the gpx layer 
+
+        // add the waypoint to the marker layer AND to the gpx layer
         // (easy export of data + waypoints):
         MarkerLayer layer = getMarkerLayer();
         GpxLayer gpsLayer = getGpxLayer();
@@ -86,15 +86,15 @@ public class SetWaypointAction extends AbstractSurveyorAction {
         waypoint.attr.put("sym", iconName);
         synchronized(LiveGpsLock.class) {
             //layer.data.add(new Marker(event.getCoordinates(), markerText, iconName));
-	    layer.data.add(new Marker(event.getCoordinates(), markerText, iconName, null, -1.0, 0.0));
+        layer.data.add(new Marker(event.getCoordinates(), markerText, iconName, null, -1.0, 0.0));
             if(gpsLayer != null) {
                 gpsLayer.data.waypoints.add(waypoint);
             }
         }
-        
+
         Main.map.repaint();
     }
-    
+
     /**
      * Returns the marker layer with the name {@link #MARKER_LAYER_NAME}.
      * @return the marker layer with the name {@link #MARKER_LAYER_NAME}.
@@ -102,17 +102,17 @@ public class SetWaypointAction extends AbstractSurveyorAction {
     public MarkerLayer getMarkerLayer() {
         if(markerLayer == null) {
             markerLayer = LayerUtil.findGpsLayer(MARKER_LAYER_NAME, MarkerLayer.class);
-           
+
             if(markerLayer == null) {
                 // not found, add a new one
                 //markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null);
-		markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null, null);
+        markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null, null);
                 Main.main.addLayer(markerLayer);
             }
         }
         return markerLayer;
     }
-    
+
     /**
      * Returns the gpx layer that is filled by the live gps data.
      * @return the gpx layer that is filled by the live gps data.
@@ -125,7 +125,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
                     liveGpsLayer = (LiveGpsLayer) layer;
                     break;
                 }
-            } 
+            }
         }
         return liveGpsLayer;
     }

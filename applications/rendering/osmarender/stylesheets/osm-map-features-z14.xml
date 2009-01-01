@@ -1068,25 +1068,42 @@
 		
 		<!-- Non-physical boundaries -->
 		<rule e="way" k="boundary" v="administrative" layer="5">
-			<rule e="way" k="border_type" v="state" layer="5">
-				<line class="boundary boundary-administrative-state-casing" layer="5"/>
-				<line class="boundary boundary-administrative-state-core" layer="5"/>
-			</rule>
-			<else>
-				<rule e="way" k="admin_level" v="10" layer="5">
-					<line class="boundary boundary-administrative-parish-core" layer="5"/>
+			<rule e="way" k="admin_level" v="1|2|3|4|5|6" layer="5">
+				<rule e="way" k="admin_level" v="6" layer="5">
+					<line class="boundary boundary-level-6-core" layer="5"/>
 				</rule>
-				<else>
-					<rule e="way" k="admin_level" v="8" layer="5">
-						<line class="boundary boundary-administrative-district-core" layer="5"/>
-					</rule>
-					<else>
-						<line class="boundary boundary-administrative-state-core" layer="5"/>
-					</else>
-				</else>
+				<rule e="way" k="admin_level" v="5" layer="5">
+					<line class="boundary boundary-level-5-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="4" layer="5">
+					<line class="boundary boundary-level-4-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="3" layer="5">
+					<line class="boundary boundary-level-3-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="2" layer="5">
+					<line class="boundary boundary-level-2-casing" layer="5"/>
+					<line class="boundary boundary-level-2-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="1" layer="5">
+					<line class="boundary boundary-level-1-casing" layer="5"/>
+					<line class="boundary boundary-level-1-core" layer="5"/>
+				</rule>
+			</rule>
+			<!-- If we don't have explicit admin_level then guess -->
+			<else>
+				<rule e="way" k="border_type" v="county|district" layer="5">
+					<line class="boundary boundary-level-6-core" layer="5"/>
+				</rule>
+				<rule e="way" k="border_type" v="region|state" layer="5">
+					<line class="boundary boundary-level-4-core" layer="5"/>
+				</rule>
+				<rule e="way" k="border_type" v="nation|country" layer="5">
+					<line class="boundary boundary-level-2-casing" layer="5"/>
+					<line class="boundary boundary-level-2-core" layer="5"/>
+				</rule>
 			</else>
 		</rule>
-
 		<rule e="way" k="boundary" v="national_park" layer="5">
 			<line class="boundary boundary-nationalpark-core" layer="5"/>
 		</rule>
@@ -1951,40 +1968,64 @@
 			
 			/* Non-physical boundaries */
 			.boundary {
-			stroke-linecap: butt;
+			stroke-linecap: round;
 			stroke-linejoin: round;
 			fill: none;
 			}
 			
-			.boundary-administrative-state-casing {
-			stroke-width: 20px;
+			.boundary-level-1-casing {
+			stroke-width: 14px;
 			stroke: #ffff00;
 			opacity: 0.5;
 			}
 			
-			.boundary-administrative-state-core {
+			.boundary-level-1-core {
 			stroke-width: 2px;
 			stroke: #f9574b;
-			stroke-dasharray: 20, 4, 4, 4;
+			stroke-dasharray: 12, 4, 4, 4;
 			}
-
+			
+			.boundary-level-2-casing {
+			stroke-width: 6px;
+			stroke: #ffff00;
+			opacity: 0.5;
+			}
+			
+			.boundary-level-2-core {
+			stroke-width: 2px;
+			stroke: #f9574b;
+			stroke-dasharray: 12, 12;
+			}
+			
+			.boundary-level-3-core {
+			stroke-width: 2px;
+			stroke: #f9574b;
+			}
+			
+			.boundary-level-4-core {
+			stroke-width: 2px;
+			stroke: #f9574b;
+			stroke-dasharray: 12, 4, 4, 4;
+			}
+			
+			.boundary-level-5-core {
+			stroke-width: 2px;
+			stroke: #f9574b;
+			stroke-dasharray: 12, 12;
+			}
+			
+			.boundary-level-6-core {
+			stroke-width: 2px;
+			stroke: #f9574b;
+			stroke-dasharray: 4, 20;
+			}
+			
 			.boundary-nationalpark-core {
-			stroke-width: 2px; 
-			stroke: #4ef94b;
-			stroke-dasharray: 20, 4, 4, 4;
-			}
-			
-			.boundary-administrative-district-core {
-			stroke-width: 4px;
-			stroke: #f9574b;
-			stroke-dasharray: 10, 4, 4, 4;
-			}
-			
-			.boundary-administrative-parish-core {
 			stroke-width: 2px;
-			stroke: #f9574b;
-			stroke-dasharray: 4, 4, 4, 4;
+			stroke: #4ef94b;
+			stroke-dasharray: 12, 4, 4, 4;
 			}
+			
 			
 			/* Racetracks */
 			.highway-raceway-casing {

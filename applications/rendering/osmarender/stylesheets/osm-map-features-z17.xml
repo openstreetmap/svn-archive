@@ -1688,6 +1688,12 @@
 		<rule e="way" k="amenity" v="pub">
 			<areaSymbol ref="pub" position="center"/>
 		</rule>
+		<rule e="node" k="amenity" v="cafe">
+			<symbol ref="cafe" position="center"/>
+		</rule>
+		<rule e="way" k="amenity" v="cafe">
+			<areaSymbol ref="cafe" position="center"/>
+		</rule>
 		<rule e="node" k="amenity" v="restaurant">
 			<rule e="node" k="tourism" v="hotel">
 				<symbol ref="hotel_and_restaurant" position="center"/>
@@ -2312,7 +2318,7 @@
 				<text k="name" class="caption-casing railway-halt-caption-casing" dy="-1px" layer="5"/>
 				<text k="name" class="caption-core railway-halt-caption-core" dy="-1px" layer="5"/>
 			</rule>
-			<rule e="node" k="amenity" v="pub" layer="5">
+			<rule e="node" k="amenity" v="pub|cafe" layer="5">
 				<text k="name" class="caption-casing amenity-pub-caption-casing" dy="-1.2px" layer="5"/>
 				<text k="name" class="caption-core amenity-pub-caption-core" dy="-1.2px" layer="5"/>
 			</rule>

@@ -1910,6 +1910,12 @@
 		<rule e="way" k="sport" v="soccer">
 			<areaSymbol ref="soccer-borderless" position="center"/>
 		</rule>
+		<rule e="node" k="sport" v="handball">
+			<symbol ref="handball" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="handball">
+			<areaSymbol ref="handball-borderless" position="center"/>
+		</rule>
 		<rule e="node" k="sport" v="tennis">
 			<symbol ref="tennis" position="center"/>
 		</rule>

@@ -3,11 +3,15 @@ package org.openstreetmap.josm.plugins.validator.tests;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -28,6 +32,8 @@ public class UntaggedWay extends Test
     protected static final int UNNAMED_WAY  = 303;
     /** One node way error */
     protected static final int ONE_NODE_WAY = 304;
+
+    private LinkedList<Way> multipolygonways;
 
     /** Ways that must have a name */
     public static final Set<String> NAMED_WAYS = new HashSet<String>();
@@ -78,7 +84,7 @@ public class UntaggedWay extends Test
             }
         }
 
-        if(!w.tagged)
+        if(!w.tagged && !multipolygonways.contains(w))
         {
             errors.add( new TestError(this, Severity.WARNING, tr("Untagged ways"), UNTAGGED_WAY, w) );
         }
@@ -92,6 +98,32 @@ public class UntaggedWay extends Test
             errors.add( new TestError(this, Severity.ERROR, tr("One node ways"), ONE_NODE_WAY, w) );
         }
 
+    }
+
+    @Override
+    public void startTest()
+    {
+        multipolygonways = new LinkedList<Way>();
+        for (final Relation r : Main.ds.relations)
+        {
+            if(!r.deleted && !r.incomplete && r.keys != null
+            && "multipolygon".equals(r.keys.get("type")))
+            {
+                for (RelationMember m : r.members)
+                {
+                    if(m.member != null && m.member instanceof Way &&
+                    !m.member.deleted && !m.member.incomplete
+                    && !m.member.tagged)
+                        multipolygonways.add((Way)m.member);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void endTest()
+    {
+        multipolygonways = null;
     }
 
     @Override

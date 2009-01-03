@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-03 15:36+0100\n"
-"PO-Revision-Date: 2009-01-03 15:51+0100\n"
+"POT-Creation-Date: 2009-01-04 00:25+0100\n"
+"PO-Revision-Date: 2009-01-04 00:26+0100\n"
 "Last-Translator: Dirk Stöcker <openstreetmap@dstoecker.de>\n"
 "Language-Team: Deutsch\n"
 "MIME-Version: 1.0\n"
@@ -3279,11 +3279,11 @@ msgstr "Zeichenstil des inneren Weges''{0}'' entspricht dem Multipolygon."
 msgid "Style for outer way ''{0}'' mismatches."
 msgstr "Zeichenstil für den äußeren Weg ''{0}'' stimmt nicht überein."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:760
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:770
 msgid "untagged"
 msgstr "Ohne Merkmale"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:761
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:771
 msgid "text"
 msgstr "Text"
 
@@ -3655,7 +3655,9 @@ msgstr "Export-Einstellungen"
 msgid ""
 "Error while exporting {0}:\n"
 "{1}"
-msgstr "Fehler beim Exportieren von {0}:\n{1}"
+msgstr ""
+"Fehler beim Exportieren von {0}:\n"
+"{1}"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:192
 msgid "Choose a predefined license"
@@ -5282,7 +5284,7 @@ msgid "Removing duplicate nodes..."
 msgstr "Doppelte Knoten entfernen..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:286
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerReader.java:129
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerReader.java:112
 msgid "Lakewalker trace"
 msgstr "Lake Walker Spur"
 
@@ -5294,63 +5296,115 @@ msgstr "Bildkachel herunterladen..."
 msgid "Could not acquire image"
 msgstr "Kann Bild nicht laden"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:36
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:18
+msgid "east"
+msgstr "Ost"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:18
+msgid "northeast"
+msgstr "Nordost"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:18
+msgid "north"
+msgstr "Nord"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:18
+msgid "northwest"
+msgstr "Nordwest"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:19
+msgid "west"
+msgstr "West"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:19
+msgid "southwest"
+msgstr "Südwest"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:19
+msgid "south"
+msgstr "Süd"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:19
+msgid "southeast"
+msgstr "Südost"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
+msgid "water"
+msgstr "Wasser"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
+msgid "coastline"
+msgstr "Küstenlinie"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
+msgid "land"
+msgstr "Land"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
+msgid "none"
+msgstr "Kein"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:40
 msgid "Maximum number of segments per way"
 msgstr "Maximale Anzahl von Abschnitten je Weg"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:38
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:42
 msgid "Maximum number of nodes in initial trace"
 msgstr "Maximale Anzahl von Knoten in der Anfangs-Spur"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:40
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:44
 msgid "Maximum gray value to count as water (0-255)"
 msgstr "Höchster Grauwert, der als Wasser betrachtet wird (0-255)"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:42
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:46
 msgid "Line simplification accuracy (degrees)"
 msgstr "Genauigkeit beim Vereinfachen von Linien (Grad)"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:44
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:48
 msgid "Resolution of Landsat tiles (pixels per degree)"
 msgstr "Auflösung der Landsat-Kacheln (Pixel pro Grad)"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:46
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:50
 msgid "Size of Landsat tiles (pixels)"
 msgstr "Größe der Landsat-Kacheln (Pixel)"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:48
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:52
 msgid "Shift all traces to east (degrees)"
 msgstr "Alle Spuren nach Osten verschieben (in Grad)"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:50
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:54
 msgid "Shift all traces to north (degrees)"
 msgstr "Alle Spuren nach Norden verschieben (in Grad)"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:52
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:56
 msgid "Direction to search for land"
 msgstr "Richtung, in der nach Land gesucht werden soll"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:54
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:58
 msgid "Tag ways as"
 msgstr "Wege bezeichnen als"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:56
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:60
 msgid "WMS Layer"
 msgstr "WMS-Ebene"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:58
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:62
 msgid "Maximum cache size (MB)"
 msgstr "Maximale Speichergröße (MB)"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:60
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:64
 msgid "Maximum cache age (days)"
 msgstr "Maximales Speicheralter (Tage)"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:63
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:66
+msgid "Source text"
+msgstr "Datenquelle"
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:69
 msgid "Maximum number of segments allowed in each generated way. Default 250."
 msgstr "Maximale Anzahl von Abschnitten in jedem generierten Weg. Standard ist 250."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:64
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:70
 msgid ""
 "Maximum number of nodes to generate before bailing out (before simplifying "
 "lines). Default 50000."
@@ -5358,7 +5412,7 @@ msgstr ""
 "Maximale Anzahl Knoten, die generiert werden soll, ohne auszusteigen (bevor "
 "Linien vereinfacht werden). Standardwert ist 50.000."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:65
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:71
 msgid ""
 "Maximum gray value to accept as water (based on Landsat IR-1 data). Can be "
 "in the range 0-255. Default 90."
@@ -5366,7 +5420,7 @@ msgstr ""
 "Maximaler Grauwert, der als Wasser akzeptiert werden soll (basierend auf "
 "Landsat IR-1-Daten). Erlaubter Bereich ist 0-255. Standard 90."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:66
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:72
 msgid ""
 "Accuracy of Douglas-Peucker line simplification, measured in degrees."
 "<br>Lower values give more nodes, and more accurate lines. Default 0.0003."
@@ -5375,51 +5429,55 @@ msgstr ""
 "<br>Kleinere Werte ergeben genauere Linien, aber mehr Knoten. Standard ist "
 "0.0003."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:67
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:73
 msgid "Resolution of Landsat tiles, measured in pixels per degree. Default 4000."
 msgstr ""
 "Auflösung der Landsat-Kacheln, gemessen in Pixel pro Grad. Standard ist "
 "4.000."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:68
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:74
 msgid "Size of one landsat tile, measured in pixels. Default 2000."
 msgstr "Größe der Landsat-Kacheln, gemessen in Pixeln. Standard ist 2.000."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:69
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:75
 msgid "Offset all points in East direction (degrees). Default 0."
 msgstr "Alle Punkte nach Osten verschieben (Grad). Standard ist 0."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:70
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:76
 msgid "Offset all points in North direction (degrees). Default 0."
 msgstr "Alle Punkte nach Norden verschieben (Grad). Standard ist 0."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:71
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:77
 msgid "Direction to search for land. Default east."
 msgstr "Richtung in der nach Land gesucht werden soll. Standardmäßig Ost."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:72
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:78
 msgid "Tag ways as water, coastline, land or nothing. Default is water."
 msgstr ""
 "Wege als Wasser, Küstenlinie, Land oder nichts bezeichnen. Standard ist "
 "Wasser."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:73
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:79
 msgid "Which WMS layer to use for tracing against. Default is IR1."
 msgstr "Zum Abzeichnen genutzte WMS-Ebene. Standard ist IR1."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:74
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:80
 msgid "Maximum size of each cache directory in bytes. Default is 300MB"
 msgstr "Maximale Größe des Speicherverzeichnisses in Bytes. Standard ist 300MB"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:75
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:81
 msgid "Maximum age of each cached file in days. Default is 100"
 msgstr "Maximales Dateialter von gespeicherten Dateien in Tagen. Standard ist 100"
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:77
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:82
+msgid "Data source text. Default is Landsat."
+msgstr "Name der Datenquelle. Standardeinstellung ist Landsat."
+
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:84
 msgid "An plugin to trace water bodies on Landsat imagery."
 msgstr "Ein Plugin, um Wasserflächen auf Landsat-Bildern zu kennzeichnen."
 
-#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:78
+#: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:85
 msgid "Lakewalker Plugin Preferences"
 msgstr "Einstellungen für das LakeWalker-Plugin"
 
@@ -5657,29 +5715,29 @@ msgstr "Datenprüfungs-Plugin"
 msgid "No validation errors"
 msgstr "Keine Fehler gefunden"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:50
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:56
 msgid "Untagged, empty, and one node ways."
 msgstr "Leere Wege, 1-Knoten-Wege und Wege ohne Merkmale."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:51
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:57
 msgid "This test checks for untagged, empty and one node ways."
 msgstr ""
 "Dieser Test sucht leere Wege, Wege, die nur aus einem Knoten bestehen und "
 "Wege ohne Merkmale."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:76
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:82
 msgid "Unnamed ways"
 msgstr "Unbenannte Wege"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:83
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:89
 msgid "Untagged ways"
 msgstr "Wege ohne Merkmale"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:88
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:94
 msgid "Empty ways"
 msgstr "Leere Wege"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:92
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:98
 msgid "One node ways"
 msgstr "Wege, die nur aus einem Knoten bestehen"
 
@@ -6588,7 +6646,9 @@ msgstr ""
 msgid ""
 "\n"
 "{0} km/h"
-msgstr "\n{0} km/h"
+msgstr ""
+"\n"
+"{0} km/h"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:144
 #, java-format

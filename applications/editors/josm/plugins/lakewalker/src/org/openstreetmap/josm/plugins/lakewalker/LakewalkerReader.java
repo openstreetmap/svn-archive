@@ -1,7 +1,7 @@
 /* LakewalkerReader.java
- * 
+ *
  * Read and process data from a Lakwalker python module
- * 
+ *
  */
 package org.openstreetmap.josm.plugins.lakewalker;
 
@@ -21,126 +21,107 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class LakewalkerReader {
-  
-  protected Collection<Command> commands = new LinkedList<Command>();
-  protected Collection<Way> ways = new ArrayList<Way>();
-  protected boolean cancel;
-  
-  /*
-   * Read the data
-   */
-  public void read(BufferedReader input) {
+    protected Collection<Command> commands = new LinkedList<Command>();
+    protected Collection<Way> ways = new ArrayList<Way>();
+    protected boolean cancel;
+
     /*
-     * Lakewalker will output data it stdout. Each line has a code in
-     * character 1 indicating the type of data on the line:
-     * 
-     * m text - Status message l name [size] - Access landsat image name. size
-     * is returned if it needs to be downloaded. e text - Error message s nnn -
-     * Start node data stream, nnn seperate tracings to follow t nnn - Start
-     * tracing, nnn nodes to follow x [o] - End of Tracing. o indicates do not
-     * connect last node to first n lat lon [o] - Node. o indicates it is an
-     * open node (not connected to the previous node) z - End of data stream
-     */
+    * Read the data
+    */
+    public void read(BufferedReader input) {
+        /*
+        * Lakewalker will output data it stdout. Each line has a code in
+        * character 1 indicating the type of data on the line:
+        *
+        * m text - Status message l name [size] - Access landsat image name. size
+        * is returned if it needs to be downloaded. e text - Error message s nnn -
+        * Start node data stream, nnn seperate tracings to follow t nnn - Start
+        * tracing, nnn nodes to follow x [o] - End of Tracing. o indicates do not
+        * connect last node to first n lat lon [o] - Node. o indicates it is an
+        * open node (not connected to the previous node) z - End of data stream
+        */
 
-    Way way = new Way();
-    String line;
-    setStatus("Initializing");
-    double eastOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_EAST_OFFSET, 0.0);
-    double northOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_NORTH_OFFSET, 0.0);
-    char option = ' ';
-    
-    try {
-        
-      Node n = null;  // The current node being created
-      Node tn = null; // The last node of the previous way
-      Node fn = null; // Node to hold the first node in the trace
-        
-      while ((line = input.readLine()) != null) {
-        if (cancel) {
-          return;
-        }
-        System.out.println(line);
-        option = line.charAt(0);
-        switch (option) {
-        case 'n':
-          String[] tokens = line.split(" ");
-          
-          if(tn==null){
-              try {         
-                LatLon ll = new LatLon(Double.parseDouble(tokens[1])+northOffset, Double.parseDouble(tokens[2])+eastOffset);
-                n = new Node(ll);
-                if(fn==null){
-                  fn = n;
+        Way way = new Way();
+        String line;
+        setStatus("Initializing");
+        double eastOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_EAST_OFFSET, 0.0);
+        double northOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_NORTH_OFFSET, 0.0);
+        char option = ' ';
+
+        try {
+            Node n = null;  // The current node being created
+            Node tn = null; // The last node of the previous way
+            Node fn = null; // Node to hold the first node in the trace
+
+            while ((line = input.readLine()) != null) {
+                if (cancel)
+                    return;
+                System.out.println(line);
+                option = line.charAt(0);
+                switch (option) {
+                case 'n':
+                    String[] tokens = line.split(" ");
+
+                    if(tn==null){
+                        try {
+                            LatLon ll = new LatLon(Double.parseDouble(tokens[1])+northOffset,
+                            Double.parseDouble(tokens[2])+eastOffset);
+                            n = new Node(ll);
+                            if(fn==null)
+                                fn = n;
+                            commands.add(new AddCommand(n));
+                        }
+                        catch (Exception ex) {}
+                    } else {
+                        // If there is a last node, and this node has the same coordinates
+                        // then we substitute for the previous node
+                        n = tn;
+                        tn = null;
+                    }
+                    way.nodes.add(n);
+                    break;
+                case 's':
+                    setStatus(line.substring(2));
+                    break;
+                case 'x':
+                    String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
+
+                    if(!waytype.equals("none"))
+                        way.put("natural",waytype);
+                    way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "water"));
+                    commands.add(new AddCommand(way));
+                    break;
+                case 't':
+                    way = new Way();
+                    tn = n;
+                    break;
+                case 'e':
+                    String error = line.substring(2);
+                    cancel = true;
+                    break;
                 }
-                commands.add(new AddCommand(n));
-              }
-              catch (Exception ex) {
-                  
-              }
-          
-          } else {
-            // If there is a last node, and this node has the same coordinates
-            // then we substitute for the previous node
-            n = tn;
-            tn = null;          
-          }
-          
-          way.nodes.add(n);
-          
-          break;
+            }
+            input.close();
 
-        case 's':
-          setStatus(line.substring(2));
-          break;
-          
-        case 'x':
-          String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
-          
-          if(!waytype.equals("none")){
-              way.put("natural",waytype);
-          }
-          
-          way.put("created_by", "Dshpak_landsat_lakes");
-          commands.add(new AddCommand(way));
-          
-          break;
-        
-        case 't':       
-            way = new Way();
-            tn = n;
-            break;
-          
-        case 'e':
-          String error = line.substring(2);
-          cancel = true;
-          break;
+            // Add the start node to the end of the trace to form a closed shape 
+            way.nodes.add(fn);
         }
-      } 
-      input.close();
+        catch (Exception ex) { }
 
-      // Add the start node to the end of the trace to form a closed shape 
-      way.nodes.add(fn);
+        if (!commands.isEmpty()) {
+            Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
+            Main.ds.setSelected(ways);
+        }
     }
 
-    catch (Exception ex) {
+    /*
+    * User has hit the cancel button
+    */
+    public void cancel() {
+        cancel = true;
     }
-    
-    if (!commands.isEmpty()) {
-      Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
-      Main.ds.setSelected(ways);
+    protected void setStatus(String s) {
+        Main.pleaseWaitDlg.currentAction.setText(s);
+        Main.pleaseWaitDlg.repaint();
     }
-  }
-  
-  /*
-   * User has hit the cancel button
-   */
-  public void cancel() {
-    cancel = true;
-  }
-  
-  protected void setStatus(String s) {
-    Main.pleaseWaitDlg.currentAction.setText(s);
-    Main.pleaseWaitDlg.repaint();
-  }
-  
 }

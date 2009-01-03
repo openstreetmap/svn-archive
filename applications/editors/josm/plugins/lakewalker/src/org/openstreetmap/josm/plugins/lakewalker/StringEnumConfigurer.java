@@ -26,6 +26,8 @@
  */
 package org.openstreetmap.josm.plugins.lakewalker;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -39,85 +41,67 @@ import javax.swing.JLabel;
  * A Configurer that returns a String from among a list of possible values
  */
 public class StringEnumConfigurer extends Configurer {
-  protected String[] validValues;
-  protected JComboBox box;
-  protected Box panel;
-  protected String tooltipText = "";
- 
-  public StringEnumConfigurer(String key, String name, String[] validValues) {
-    super(key, name);
-    this.validValues = validValues;
-  }
+    protected String[] validValues;
+    protected String[] transValues;
+    protected JComboBox box;
+    protected Box panel;
+    protected String tooltipText = "";
 
-  public StringEnumConfigurer(String[] validValues) {
-    this(null, "", validValues);
-  }
-  
-  public void setToolTipText(String s) {
-    tooltipText = s;
-  }
-  public Component getControls() {
-    if (panel == null) {
-      panel = Box.createHorizontalBox();
-      panel.add(new JLabel(name));
-      box = new JComboBox(validValues);
-      box.setToolTipText(tooltipText);
-      box.setMaximumSize(new Dimension(box.getMaximumSize().width,box.getPreferredSize().height));
-      if (isValidValue(getValue())) {
-        box.setSelectedItem(getValue());
-      }
-      else if (validValues.length > 0) {
-        box.setSelectedIndex(0);
-      }
-      box.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          noUpdate = true;
-          setValue(box.getSelectedItem());
-          noUpdate = false;
+    public StringEnumConfigurer(String key, String name, String[] validValues) {
+        super(key, name);
+        this.validValues = validValues;
+        transValues = new String[validValues.length];
+        for(int i = 0; i < validValues.length; ++i)
+            transValues[i] = tr(validValues[i]);
+    }
+
+    public StringEnumConfigurer(String[] validValues) {
+        this(null, "", validValues);
+    }
+
+    public void setToolTipText(String s) {
+        tooltipText = s;
+    }
+    public Component getControls() {
+        if (panel == null) {
+            panel = Box.createHorizontalBox();
+            panel.add(new JLabel(name));
+            box = new JComboBox(transValues);
+            box.setToolTipText(tooltipText);
+            box.setMaximumSize(new Dimension(box.getMaximumSize().width,box.getPreferredSize().height));
+            setValue(value);
+            box.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    noUpdate = true;
+                    setValue(box.getSelectedIndex());
+                    noUpdate = false;
+                }
+            });
+            panel.add(box);
         }
-      });
-      panel.add(box);
+        return panel;
     }
-    return panel;
-  }
-
-  public boolean isValidValue(Object o) {
-    for (int i = 0; i < validValues.length; ++i) {
-      if (validValues[i].equals(o)) {
-        return true;
-      }
+    public void setValue(Object o) {
+        if(o == null)
+            o = new Integer(0);
+        super.setValue(o);
+        if(!noUpdate && box != null)
+            box.setSelectedIndex((Integer)o);
     }
-    return false;
-  }
 
-  public String[] getValidValues() {
-    return validValues;
-  }
-
-  public void setValidValues(String[] s) {
-    validValues = s;
-    if (box == null) {
-      getControls();
+    public void setValue(String s) {
+        Integer n = 0;
+        for (int i = 0; i < transValues.length; ++i)
+        {
+            if (transValues[i].equals(s) || validValues[i].equals(s)){
+                n = i;
+                break;
+            }
+        }
+        setValue(n);
     }
-    box.setModel(new DefaultComboBoxModel(validValues));
-  }
-  
-  public void setValue(Object o) {
-    if (validValues == null
-        || isValidValue(o)) {
-      super.setValue(o);
-      if (!noUpdate && box != null) {
-        box.setSelectedItem(o);
-      }
+
+    public String getValueString() {
+        return validValues[(Integer)value];
     }
-  }
-
-  public String getValueString() {
-    return box != null ? (String) box.getSelectedItem() : validValues[0];
-  }
-
-  public void setValue(String s) {
-    setValue((Object) s);
-  }
-
 }

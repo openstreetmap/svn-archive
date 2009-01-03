@@ -88,7 +88,7 @@ public class LakewalkerReader {
 
                     if(!waytype.equals("none"))
                         way.put("natural",waytype);
-                    way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "water"));
+                    way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "Landsat"));
                     commands.add(new AddCommand(way));
                     break;
                 case 't':

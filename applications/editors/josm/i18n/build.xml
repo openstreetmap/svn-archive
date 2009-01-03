@@ -45,6 +45,7 @@
     <copy file="i18n.properties" todir="build/org/openstreetmap/josm" />
 
     <ant target="build-lang"><property name="language" value="cs"/></ant>
+    <ant target="build-lang"><property name="language" value="da"/></ant>
     <ant target="build-lang"><property name="language" value="de"/></ant>
     <ant target="build-lang"><property name="language" value="en_GB"/></ant>
     <ant target="build-lang"><property name="language" value="es"/></ant>

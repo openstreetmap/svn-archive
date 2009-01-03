@@ -916,13 +916,16 @@
 				<line class="railway-core railway-tram-core under-construction"/>
 			</rule>
 			<rule e="way" k="construction" v="subway">
-				<line class="railway-core railway-subway-core under-construction"/>
+				<line class="railway-casing railway-subway-construction-casing"/>
+				<line class="railway-core railway-subway-construction-core"/>
 			</rule>
 			<rule e="way" k="construction" v="light_rail">
 				<line class="railway-core railway-light-rail-core under-construction"/>
 			</rule>
 			<rule e="way" k="construction" v="rail">
-				<line class="railway-core railway-rail-1-core under-construction"/>
+				<line class="railway-casing railway-rail-construction-casing"/>
+				<line class="railway-core railway-rail-1-construction-core"/>
+				<line class="railway-core railway-rail-2-construction-core" smart-linecap="no"/>
 			</rule>
 		</rule>
 		
@@ -1341,6 +1344,9 @@
 			.railway-rail-casing                    { stroke-width: 5.5px; stroke: #b0b0b0; }
 			.railway-rail-1-core                    { stroke-width: 3.1px; stroke: #ffffff; }
 			.railway-rail-2-core                    { stroke-width: 7.5px; stroke: #b0b0b0; stroke-dasharray: 0.6, 6.0; }
+			.railway-rail-construction-casing       { stroke-width: 5.5px; stroke: #b0b0b0; stroke-dasharray: 19.2, 19.2; }
+			.railway-rail-1-construction-core       { stroke-width: 3.1px; stroke: #ffffff; stroke-dasharray: 19.2, 19.2; }
+			.railway-rail-2-construction-core       { stroke-width: 7.5px; stroke: #b0b0b0; stroke-dasharray: 0.6, 6.0, 0.6, 31.2; stroke-dashoffset: 32.4; }
 			
 			.railway-light-rail-bridge-casing       { stroke-width: 4.6px; }
 			.railway-light-rail-bridge-core         { stroke-width: 3.6px; }
@@ -1354,6 +1360,8 @@
 			.railway-subway-bridge-core             { stroke-width: 3.6px; }
 			.railway-subway-casing                  { stroke-width: 2.4px; stroke: #b0b0b0; }
 			.railway-subway-core                    { stroke-width: 1.8px; stroke: #ffffff; stroke-dasharray: 3, 9; }
+			.railway-subway-construction-casing     { stroke-width: 2.4px; stroke: #b0b0b0; stroke-dasharray: 12, 12; }
+			.railway-subway-construction-core       { stroke-width: 1.8px; stroke: #ffffff; stroke-dasharray: 3, 21; stroke-dashoffset: 19.5; }
 			
 			.railway-tram-bridge-casing             { stroke-width: 4.6px; }
 			.railway-tram-bridge-core               { stroke-width: 3.6px; }

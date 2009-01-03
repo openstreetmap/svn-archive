@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-31 14:08+0100\n"
-"PO-Revision-Date: 2008-12-31 06:22+0000\n"
+"POT-Creation-Date: 2009-01-03 15:36+0100\n"
+"PO-Revision-Date: 2009-01-02 03:36+0000\n"
 "Last-Translator: Teemu Koskinen <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-12-31 11:44+0000\n"
+"X-Launchpad-Export-Date: 2009-01-03 14:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:448
@@ -375,25 +375,25 @@ msgid "The projection could not be read from preferences. Using EPSG:4263."
 msgstr ""
 "Projektiota ei voitu lukea asetuksista. Käytetään projektiota EPSG:4263."
 
-#: ../core/src/org/openstreetmap/josm/Main.java:466
-msgid "Hint: Some changes came from uploading new data to the server."
-msgstr ""
-
 #: ../core/src/org/openstreetmap/josm/Main.java:468
-msgid "There are unsaved changes. Discard the changes and continue?"
-msgstr "Tallentamattomia muutoksia. Hylätäänkö muutokset ja jatketaan?"
+msgid "Hint: Some changes came from uploading new data to the server."
+msgstr "Vihje: Osa muutoksista tuli lähetettäessä uutta dataa palvelimelle."
 
-#: ../core/src/org/openstreetmap/josm/Main.java:469
+#: ../core/src/org/openstreetmap/josm/Main.java:470
+msgid "There are unsaved changes. Discard the changes and continue?"
+msgstr "Tallentamattomia muutoksia. Hylätäänkö muutokset?"
+
+#: ../core/src/org/openstreetmap/josm/Main.java:471
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:80
 msgid "Unsaved Changes"
 msgstr "Tallentamattomia muutoksia"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:481
+#: ../core/src/org/openstreetmap/josm/Main.java:483
 #, java-format
 msgid "Ignoring malformed URL: \"{0}\""
 msgstr "Jätetään huomioimatta virheellinen URL-osoite: ”{0}”"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:494
+#: ../core/src/org/openstreetmap/josm/Main.java:496
 #, java-format
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "Jätetään huomioimatta virheellinen URL-osoite: ”{0}”"
@@ -436,7 +436,7 @@ msgstr "Kirjanmerkit"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:146
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:89
 #: ../core/src/org/openstreetmap/josm/command/AddCommand.java:67
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:427
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:455
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:78
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:61
 msgid "Add"
@@ -591,7 +591,7 @@ msgstr "Jos määritetty, nollaa asetukset niiden lukemisen sijaan."
 #: ../core/src/org/openstreetmap/josm/gui/SplashScreen.java:67
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:154
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:104
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:218
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:206
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:125
 msgid "Java OpenStreetMap Editor"
 msgstr "Java OpenStreetMap -editori"
@@ -699,7 +699,7 @@ msgstr "Tiedosto"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:107
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:86
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:106
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:437
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:465
 #: ../plugins/grid/src/grid/GridPlugin.java:43
 #: ../plugins/grid/src/grid/GridPlugin.java:49
 msgid "Edit"
@@ -862,14 +862,14 @@ msgstr "Muuta relaatiota"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:594
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:65
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:156
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:456
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:484
 msgid "Please select the row to edit."
 msgstr "Ole hyvä ja valitse muokattava rivi."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:599
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:78
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:120
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:472
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:500
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:85
 msgid "Please select the row to delete."
 msgstr "Ole hyvä ja valitse poistettava rivi."
@@ -905,7 +905,7 @@ msgstr "Poista asetukset"
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:20
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:21
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:46
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:468
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:496
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:91
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:80
 msgid "Delete"
@@ -940,7 +940,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:282
 msgid "Occupied By"
-msgstr ""
+msgstr "Jäsen"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:298
 msgid "Tags (empty value deletes tag)"
@@ -1185,30 +1185,31 @@ msgid "Zoom to selection"
 msgstr "Sovita näkymä valintaan"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:302
-#, fuzzy, java-format
+#, java-format
 msgid "{0} way"
 msgid_plural "{0} ways"
-msgstr[0] "{0} reittipiste"
-msgstr[1] "{0} reittipistettä"
+msgstr[0] "{0} polku"
+msgstr[1] "{0} polkua"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:305
-#, fuzzy, java-format
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:115
+#, java-format
 msgid "{0} node"
 msgid_plural "{0} nodes"
-msgstr[0] " ({0} piste)"
-msgstr[1] " ({0} pistettä)"
+msgstr[0] "{0} piste"
+msgstr[1] "{0} pistettä"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:308
-#, fuzzy, java-format
+#, java-format
 msgid "{0} relation"
 msgid_plural "{0} relations"
-msgstr[0] "relaatio"
-msgstr[1] "relaatiot"
+msgstr[0] "{0} relaatio"
+msgstr[1] "{0} relaatiota"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:309
-#, fuzzy, java-format
+#, java-format
 msgid "Selection: {0}"
-msgstr "Kuvaus: {0}"
+msgstr "Valinta: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:58
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:59
@@ -1243,7 +1244,7 @@ msgstr "Poista valittu relaatio"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListPopup.java:26
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:142
-#: trans_surveyor.java:81
+#: trans_surveyor.java:64
 msgid "Info"
 msgstr "Tietoja"
 
@@ -1363,15 +1364,15 @@ msgid "No existing audio markers in this layer to offset from."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/Marker.java:96
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:974
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1036
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:971
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1033
 #: ../plugins/namefinder/namefinder/PlaceSelection.java:235
 #: ../plugins/namefinder/namefinder/PlaceSelection.java:241
 msgid "name"
 msgstr "nimi"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/Marker.java:98
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1038
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1035
 msgid "desc"
 msgstr "kuvaus"
 
@@ -1578,8 +1579,7 @@ msgstr "Tuo kuvia"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:227
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:434
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:56
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:343
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:39
 msgid "JPEG images (*.jpg)"
 msgstr "JPEG-kuvat (*.jpg)"
 
@@ -1631,8 +1631,8 @@ msgid "time"
 msgstr "aika"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:758
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:771
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:871
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:779
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:868
 msgid "Download from OSM along this track"
 msgstr "Lataa data OSM-palvelimelta tämän jäljen varrelta"
 
@@ -1640,33 +1640,43 @@ msgstr "Lataa data OSM-palvelimelta tämän jäljen varrelta"
 msgid "Download everything within:"
 msgstr "Lataa kaikki  alueella:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:767
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:768
+#, fuzzy, java-format
+msgid "{0} meters"
+msgstr "{0} jäsen"
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:771
 msgid "Maximum area per request:"
 msgstr "Yhden pyynnön enimmäisalue:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:867
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:774
+#, java-format
+msgid "{0} sq km"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:864
 #, java-format
 msgid ""
 "<html>This action will require {0} individual<br>download requests. Do you "
 "wish<br>to continue?</html>"
 msgstr "<html>Tämä vaatii {0} erillistä latauspyyntöä.<br>Jatketaanko?</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:924
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:921
 #, java-format
 msgid "Audio markers from {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:947
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:944
 msgid "No GPX track available in layer to associate audio with."
 msgstr "Tasolla ei ole yhtään GPX-jälkeä, johon liittää äänitiedosto."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1049
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1046
 msgid ""
 "Some waypoints with timestamps from before the start of the track were "
 "omitted."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1053
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1050
 msgid ""
 "Some waypoints which were too far from the track to sensibly estimate their "
 "time were omitted."
@@ -1696,13 +1706,13 @@ msgid "No images with readable timestamps found."
 msgstr "Ei löytynyt aikaleimallisia kuvia."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:136
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:112
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:130
 #, java-format
 msgid "Reading {0}..."
 msgstr "Luetaan {0}..."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:203
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:164
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:234
 msgid "Geotagged Images"
 msgstr "Geo-merkityt kuvat"
 
@@ -1726,7 +1736,7 @@ msgid "timezone difference: "
 msgstr "aikavyöhyke-ero: "
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:382
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:202
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:272
 msgid "image"
 msgid_plural "images"
 msgstr[0] "kuva"
@@ -1788,6 +1798,7 @@ msgstr "ladatun alueen ulkopuolella"
 #: ../core/src/org/openstreetmap/josm/command/MoveCommand.java:122
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:90
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:47
+#: ../core/src/org/openstreetmap/josm/data/osm/Node.java:93
 msgid "node"
 msgid_plural "nodes"
 msgstr[0] "piste"
@@ -1993,7 +2004,7 @@ msgstr "keskeneräinen polku"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:161
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:92
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:69
-#: ../core/src/org/openstreetmap/josm/data/osm/Relation.java:82
+#: ../core/src/org/openstreetmap/josm/data/osm/Relation.java:81
 msgid "relation"
 msgid_plural "relations"
 msgstr[0] "relaatio"
@@ -2071,7 +2082,7 @@ msgid "Add a new tagging preset source to the list."
 msgstr "Lisää uusi tagien esivalintalähde listaan."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:88
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:484
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:512
 msgid "Delete the selected source from the list."
 msgstr "Poista valittu lähde listasta."
 
@@ -2092,7 +2103,7 @@ msgid "When saving, keep backup files ending with a ~"
 msgstr "Lisää tallennettaessa varmuuskopiotiedostojen loppuun ~-merkki"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:97
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:208
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:196
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:172
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:141
 msgid "Plugins"
@@ -2836,11 +2847,21 @@ msgstr ""
 msgid "Instead of --download=<bbox> you may specify osm://<bbox>\n"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:204
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:134
+#, fuzzy, java-format
+msgid "Cannot open preferences directory: {0}"
+msgstr "Asetuksia ei voitu lähettää. Syy: {0}"
+
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:154
+#, java-format
+msgid "Preferences file had errors. Making backup of old one to {0}."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:192
 msgid "Activating updated plugins"
 msgstr "Aktivoidaan päivitetyt liitännäiset"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:207
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:195
 msgid ""
 "Activating the updated plugins failed. Check if JOSM has the permission to "
 "overwrite the existing ones."
@@ -2848,19 +2869,19 @@ msgstr ""
 "Päivitettyjen liitännäisten aktivointi epäonnistui. Tarkista, että JOSM:lla "
 "on oikeus korvata vanhat tiedostot."
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:212
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:200
 msgid "Loading early plugins"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:215
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:203
 msgid "Setting defaults"
 msgstr "Asetetaan oletuksia"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:217
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:205
 msgid "Creating main GUI"
 msgstr "Luodaan pääikkuna"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:221
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:209
 msgid "Loading plugins"
 msgstr "Ladataan liitännäiset"
 
@@ -3131,11 +3152,66 @@ msgstr "Asetuksia ei voitu lähettää. Syy: {0}"
 msgid "Could not load preferences from server."
 msgstr "Asetuksia ei voitu ladata palvelimelta."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:664
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:295
+#, java-format
+msgid "multipolygon way ''{0}'' is not closed."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:385
+#, fuzzy
+msgid "Empty member in relation."
+msgstr "<member>-tagi muussa kuin relaatiossa."
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:387
+#, java-format
+msgid "Deleted member ''{0}'' in relation."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:398
+#, java-format
+msgid "Way ''{0}'' with less than two points."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:407
+#, fuzzy, java-format
+msgid "No useful role ''{0}'' for Way ''{1}''."
+msgstr "Käytä esivalintaa \"{0}\" ryhmästä \"{1}\""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:418
+#, java-format
+msgid "Non-Way ''{0}'' in multipolygon."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:468
+#, java-format
+msgid "No outer way for multipolygon ''{0}''."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:547
+#, java-format
+msgid "Intersection between ways ''{0}'' and ''{1}''."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:558
+#, java-format
+msgid "Inner way ''{0}'' is outside."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:598
+#, java-format
+msgid "Style for inner way ''{0}'' equals multipolygon."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:623
+#, java-format
+msgid "Style for outer way ''{0}'' mismatches."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:760
 msgid "untagged"
 msgstr "ei tageja"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:665
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:761
 msgid "text"
 msgstr "teksti"
 
@@ -3147,6 +3223,16 @@ msgstr "tagiton polku"
 #, java-format
 msgid " [id: {0}]"
 msgstr " [id: {0}]"
+
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:329
+#, fuzzy, java-format
+msgid "Error: {0}"
+msgstr "Virhe"
+
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:329
+#, fuzzy, java-format
+msgid "Warning: {0}"
+msgstr "Varoitus"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/Way.java:102
 #: ../core/src/org/openstreetmap/josm/data/osm/Node.java:89
@@ -3170,14 +3256,7 @@ msgstr "vesiväylä"
 msgid "landuse"
 msgstr "maankäyttö"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:115
-#, java-format
-msgid " ({0} node)"
-msgid_plural " ({0} nodes)"
-msgstr[0] " ({0} piste)"
-msgstr[1] " ({0} pistettä)"
-
-#: ../core/src/org/openstreetmap/josm/data/osm/Relation.java:90
+#: ../core/src/org/openstreetmap/josm/data/osm/Relation.java:89
 #, java-format
 msgid "{0} member"
 msgid_plural "{0} members"
@@ -3498,9 +3577,11 @@ msgid "Export options"
 msgstr "Vientiasetukset"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:138
-#, java-format
-msgid "Error while exporting {0}"
-msgstr ""
+#, fuzzy, java-format
+msgid ""
+"Error while exporting {0}:\n"
+"{1}"
+msgstr "Virhe tulkittaessa {0}:aa"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:192
 msgid "Choose a predefined license"
@@ -3540,11 +3621,10 @@ msgid "The current selection cannot be used for splitting."
 msgstr "Valintaa ei voida käyttää jakamiseen."
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:116
-#, fuzzy
 msgid "The selected node is not in the middle of any way."
 msgid_plural "The selected nodes are not in the middle of any way."
-msgstr[0] "Valittu piste ei ole minkään polun sisällä oleva."
-msgstr[1] "Valitut pisteet eivät ole minkään polun sisällä olevia."
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:125
 msgid ""
@@ -3685,7 +3765,7 @@ msgstr "Lähetetään dataa"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:31
 #: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:32
-#: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:106
+#: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:110
 msgid "Paste"
 msgstr "Liitä"
 
@@ -4138,7 +4218,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:22
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:23
-#: trans_surveyor.java:85
+#: trans_surveyor.java:68
 msgid "Exit"
 msgstr "Poistu"
 
@@ -4392,14 +4472,12 @@ msgid "This node is not glued to anything else."
 msgstr "Tämä piste ei ole yhdistettynä mihinkään muuhun."
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:88
-#, fuzzy
 msgid "None of these nodes are glued to anything else."
-msgstr "Mikään näistä pisteistä ei ole yhdistettynä mihinkään muuhun."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:90
-#, fuzzy
 msgid "None of this way's nodes are glued to anything else."
-msgstr "Mikään tämän polun pisteistä ei ole käytössä muissa poluissa."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:99
 msgid "The current selection cannot be used for unglueing."
@@ -5248,7 +5326,7 @@ msgid "Open images with ImageWayPoint"
 msgstr "Avaa kuvat ImageWayPoint:lla"
 
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:49
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:38
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:50
 msgid "Load set of images as a new layer."
 msgstr "Lataa kuvat uutena tasona."
 
@@ -5367,12 +5445,12 @@ msgstr "Ohitetaanko koko ryhmä vai yksittäiset elementit?"
 msgid "Ignoring elements"
 msgstr "Ohitetaan elementit"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:161
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:163
 msgid "Grid"
 msgstr "Ruudukko"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:275
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:279
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:277
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:281
 #, java-format
 msgid ""
 "Error initializing test {0}:\n"
@@ -5710,163 +5788,175 @@ msgstr ""
 msgid "Untagged and unconnected nodes"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:134
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:140
 msgid "Properties checker :"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:135
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:141
 msgid "This plugin checks for errors in property keys and values."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:211
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:217
 #, java-format
 msgid "Invalid tagchecker line - {0}: {1}"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:224
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:230
 #, java-format
 msgid "Invalid spellcheck line: {0}"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:235
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:241
 #, java-format
 msgid ""
 "Could not access data file(s):\n"
 "{0}"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:300
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:313
 msgid "Illegal tag/value combinations"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:311
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:326
+msgid "Painting problem"
+msgstr ""
+
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:335
 #, java-format
 msgid "Key ''{0}'' invalid."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:316
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:340
 msgid "Tags with empty values"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:322
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:346
 msgid "Invalid property key"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:328
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:352
 msgid "Invalid white space in property key"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:334
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:358
 msgid "Property values start or end with white space"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:340
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:364
 msgid "Property values contain HTML entity"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:349
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:373
 #, java-format
 msgid "Key ''{0}'' unknown."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:350
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:374
 msgid "Unknown property values"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:360
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:384
 msgid "FIXMES"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:402
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:430
 msgid "Check property keys."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:403
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:431
 msgid "Validate that property keys are valid checking against list of words."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:410
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:438
 msgid "Use complex property checker."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:411
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:439
 msgid "Validate property values and tags using complex rules."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:430
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:450
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:460
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:458
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:478
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:488
 msgid "TagChecker source"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:481
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:509
 msgid ""
 "The sources (URL or filename) of spell check (see http://wiki.openstreetmap."
 "org/index.php/User:JLS/speller) or tag checking data files."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:482
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:510
 msgid "Add a new source to the list."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:483
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:511
 msgid "Edit the selected source."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:486
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:514
 msgid "Data sources"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:506
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:534
 msgid "Check property values."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:507
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:535
 msgid "Validate that property values are valid checking against presets."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:514
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:542
 msgid "Check for FIXMES."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:515
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:543
 msgid "Looks for nodes or ways with FIXME in any property value."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:522
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:550
+msgid "Check for paint notes."
+msgstr ""
+
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:551
+msgid "Check if map paining found data errors."
+msgstr ""
+
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:558
 msgid "Use default data file."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:523
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:559
 msgid "Use the default data file (recommended)."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:526
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:562
 msgid "Use default spellcheck file."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:527
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:563
 msgid "Use the default spellcheck file (recommended)."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:618
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:656
 msgid "Fix properties"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:727
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:765
 msgid "Could not find element type"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:744
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:782
 msgid "Could not find warning level"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:753
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:791
 #, java-format
 msgid "Illegal expression ''{0}''"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:757
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:795
 #, java-format
 msgid "Illegal regular expression ''{0}''"
 msgstr ""
@@ -6268,23 +6358,51 @@ msgstr "Ladataan {0}"
 msgid "Error on file {0}"
 msgstr "Virhe tiedostossa {0}"
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:36
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:48
 msgid "Open images with AgPifoJ..."
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:91
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:97
 msgid "Extracting GPS locations from EXIF"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:97
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:103
+msgid "Starting directory scan"
+msgstr ""
+
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:108
+msgid "One of the selected files was null !!!"
+msgstr ""
+
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:115
 msgid "Read photos..."
 msgstr "Luetaan kuvia..."
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:184
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:169
+#, java-format
+msgid "Unable to get canonical path for directory {0}\n"
+msgstr ""
+
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:181
+#, fuzzy, java-format
+msgid "Scanning directory {0}"
+msgstr "Virhe luotaessa välimuistihakemistoa: {0}"
+
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:186
+#, java-format
+msgid "Found null file in directory {0}\n"
+msgstr ""
+
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:189
+#, fuzzy, java-format
+msgid "Error while getting files from directory {0}\n"
+msgstr "Virhe luotaessa välimuistihakemistoa: {0}"
+
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:254
 msgid "Correlate to GPX"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:203
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:273
 #, java-format
 msgid "{0} were found to be gps tagged."
 msgstr ""
@@ -6309,14 +6427,18 @@ msgstr ""
 msgid "Zoom best fit and 1:1"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:165
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:166
+#, fuzzy, java-format
 msgid ""
 "\n"
-"Altitude: "
-msgstr ""
+"Altitude: {0} m"
+msgstr "Ääni: {0}"
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:168
-msgid " km/h"
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:169
+#, fuzzy, java-format
+msgid ""
+"\n"
+"{0} km/h"
 msgstr " km/h"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:144
@@ -6348,7 +6470,7 @@ msgid "I'm in the timezone of: "
 msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:319
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:364
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:355
 msgid "No date"
 msgstr "Ei päivämäärää"
 
@@ -6356,100 +6478,100 @@ msgstr "Ei päivämäärää"
 msgid "Open an other photo"
 msgstr "Avaa toinen kuva"
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:376
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:367
 msgid "Synchronize time from a photo of the GPS receiver"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:387
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:378
 msgid ""
 "Error while parsing the date.\n"
 "Please use the requested format"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:389
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:380
 msgid "Invalid date"
 msgstr "Virheellinen päivämäärä"
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:432
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:423
 msgid "<No GPX track loaded yet>"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:438
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:429
 msgid "GPX track: "
 msgstr "GPX-jälki: "
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:443
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:434
 msgid "Open another GPX trace"
 msgstr "Avaa toinen kuva"
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:459
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:450
 msgid "Timezone: "
 msgstr "Aikavyöhyke: "
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:481
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:472
 msgid "Offset:"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:493
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:484
 msgid "<html>I can take a picture of my GPS receiver.<br>Can this help?</html>"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:510
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:501
 msgid "Update position for: "
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:519
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:510
 msgid "All images"
 msgstr "Kaikki kuvat"
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:529
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:520
 msgid "Images with no exif position"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:539
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:530
 msgid "Not yet tagged images"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:558
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:549
 msgid "Correlate images with GPX track"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:566
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:557
 msgid "You should select a GPX track"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:567
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:558
 msgid "No selected GPX track"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:574
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:565
 #, java-format
 msgid ""
 "Error while parsing timezone.\n"
 "Expected format: {0}"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:575
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:566
 msgid "Invalid timezone"
 msgstr "Virheellinen aikavyöhyke"
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:583
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:576
 #, java-format
 msgid ""
 "Error while parsing offset.\n"
 "Expected format: {0}"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:584
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:577
 msgid "Invalid offset"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:645
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:641
 #, java-format
 msgid "Found {0} matchs of {1} in GPX track {2}"
 msgstr ""
 
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:646
+#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:642
 msgid "GPX Track loaded"
 msgstr ""
 
@@ -6874,11 +6996,11 @@ msgstr ""
 msgid "abbreviated street name"
 msgstr ""
 
-#: trans_surveyor.java:23
+#: trans_surveyor.java:6
 msgid "Tunnel Start"
 msgstr ""
 
-#: trans_surveyor.java:29 trans_presets.java:53 trans_presets.java:70
+#: trans_surveyor.java:12 trans_presets.java:53 trans_presets.java:70
 #: trans_presets.java:89 trans_presets.java:107 trans_presets.java:128
 #: trans_presets.java:145 trans_presets.java:164 trans_presets.java:182
 #: trans_presets.java:197 trans_presets.java:215 trans_presets.java:233
@@ -6891,67 +7013,67 @@ msgstr ""
 msgid "Bridge"
 msgstr "Silta"
 
-#: trans_surveyor.java:33
+#: trans_surveyor.java:16
 msgid "Village/City"
 msgstr ""
 
-#: trans_surveyor.java:41 trans_presets.java:1275 trans_presets.java:1322
+#: trans_surveyor.java:24 trans_presets.java:1275 trans_presets.java:1322
 msgid "Parking"
 msgstr ""
 
-#: trans_surveyor.java:46
+#: trans_surveyor.java:29
 msgid "One Way"
 msgstr ""
 
-#: trans_surveyor.java:50
+#: trans_surveyor.java:33
 msgid "Church"
 msgstr "Kirkko"
 
-#: trans_surveyor.java:55
+#: trans_surveyor.java:38
 msgid "Fuel Station"
 msgstr "Huoltoasema"
 
-#: trans_surveyor.java:60 trans_presets.java:1453
+#: trans_surveyor.java:43 trans_presets.java:1453
 msgid "Hotel"
 msgstr "Hotelli"
 
-#: trans_surveyor.java:64 trans_presets.java:1507
+#: trans_surveyor.java:47 trans_presets.java:1507
 msgid "Restaurant"
 msgstr "Ravintola"
 
-#: trans_surveyor.java:69
+#: trans_surveyor.java:52
 msgid "Shopping"
 msgstr ""
 
-#: trans_surveyor.java:73
+#: trans_surveyor.java:56
 msgid "WC"
 msgstr "WC"
 
-#: trans_surveyor.java:77
+#: trans_surveyor.java:60
 msgid "Camping"
 msgstr "Leirintäpaikka"
 
-#: trans_surveyor.java:89 trans_presets.java:40
+#: trans_surveyor.java:72 trans_presets.java:40
 msgid "Motorway"
 msgstr "Moottoritie"
 
-#: trans_surveyor.java:93 trans_presets.java:115
+#: trans_surveyor.java:76 trans_presets.java:115
 msgid "Primary"
 msgstr ""
 
-#: trans_surveyor.java:97 trans_presets.java:151
+#: trans_surveyor.java:80 trans_presets.java:151
 msgid "Secondary"
 msgstr ""
 
-#: trans_surveyor.java:105 trans_presets.java:188
+#: trans_surveyor.java:84 trans_presets.java:188
 msgid "Unclassified"
 msgstr ""
 
-#: trans_surveyor.java:109 trans_presets.java:206
+#: trans_surveyor.java:88 trans_presets.java:206
 msgid "Residential"
 msgstr ""
 
-#: trans_surveyor.java:114 trans_surveyor.java:118
+#: trans_surveyor.java:93 trans_surveyor.java:97
 msgid "Test"
 msgstr ""
 
@@ -10920,11 +11042,7 @@ msgstr "Kallio"
 msgid "Edit Cliff"
 msgstr ""
 
-#~ msgid "Selection: %d way(s) and %d node(s)"
-#~ msgstr "Valinta: %d polku(a) ja %d piste(ttä)"
-
-#~ msgid "An error occoured: {0}"
-#~ msgstr "Tapahtui virhe: {0}"
-
-#~ msgid "Development version. Unknown revision."
-#~ msgstr "Kehitysversio, tuntematon revisio."
+#~ msgid " ({0} node)"
+#~ msgid_plural " ({0} nodes)"
+#~ msgstr[0] " ({0} piste)"
+#~ msgstr[1] " ({0} pistettä)"

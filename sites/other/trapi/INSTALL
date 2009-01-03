@@ -1,5 +1,5 @@
 
-trapi has only been tested on Debian unstable on x86 machines, but
+Trapi has only been tested on Debian unstable on x86 machines, but
 should work on any modern unix-derived OS.  For Debian, you will need
 the packages listed in packages.  (or equivelents if you prefer
 another web server than apache2.)  The data files are
@@ -22,8 +22,12 @@ MAXOPEN is the number of data files to open at once, not including the
 indexes.  Bigger is generally better if your OS can handle it.
 KEEPOPEN should be a bit less, closer to MAXOPEN will mean more CPU
 and less file opening.  SPLIT is the number of bytes in a node data
-file before splitting to higher zoom.
+file before splitting to higher zoom.  IGNORETAGS is a regular
+expression to match tags that will not be stored in the database.
+(Use '^$' to store all tags.)
 
+
+All programs except map assume they are running in TRAPIDIR.
 
 Initial data load:
 

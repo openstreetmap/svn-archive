@@ -1896,6 +1896,12 @@
 		<rule e="node" k="leisure" v="slipway">
 			<symbol ref="slipway" position="center"/>
 		</rule>
+		<rule e="way" k="leisure" v="playground">
+			<areaSymbol ref="playground" position="center"/>
+		</rule>
+		<rule e="node" k="leisure" v="playground">
+			<symbol ref="playground" position="center"/>
+		</rule>
 		
 		<!-- Sport symbols -->
 		<rule e="node" k="sport" v="soccer">

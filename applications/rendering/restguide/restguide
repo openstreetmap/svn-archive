@@ -11,11 +11,13 @@
 
 # version 0.2   add --poi and --sub options
 
+# version 0.3   update for current orp and more recent stylesheet
+
 use strict;
 use warnings;
 
 # xml file to use
-my $XML="osm-blars.xml";
+my $XML="osm-restguide.xml";
 
 my $download = 0;
 my $name="cf4";

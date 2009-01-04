@@ -1340,7 +1340,21 @@
 						<line class="oneway-core oneway-core-7" smart-linecap="no"/>
 					</rule>
 					<rule e="way" k="oneway" v="-1">
-						<line class="otherway"/>
+						<line class="oneway-casing oneway-casing-r1" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-r2" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-r3" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-r4" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-r5" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-r6" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-r7" smart-linecap="no"/>
+						<line class="oneway-casing oneway-casing-r8" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-r1" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-r2" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-r3" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-r4" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-r5" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-r6" smart-linecap="no"/>
+						<line class="oneway-core oneway-core-r7" smart-linecap="no"/>
 					</rule>
 				</rule>
 				<!-- Motorway implies oneway-ness -->
@@ -3245,96 +3259,40 @@
 			stroke: #ffffff;
 			}
 			
-			.oneway-casing-1 {
-			stroke-width: 0.4px;
-			stroke-dasharray: 4.2,55.8;
-			stroke-dashoffset: 46.2;
-			}
+			.oneway-casing-1 { stroke-width: 0.4px; stroke-dasharray: 4.2,55.8; stroke-dashoffset: 46.2; }
+			.oneway-casing-2 { stroke-width: 0.95px; stroke-dasharray: 0.6,59.4; stroke-dashoffset: 43.4; }
+			.oneway-casing-3 { stroke-width: 0.8px; stroke-dasharray: 0.6,59.4; stroke-dashoffset: 43.2; }
+			.oneway-casing-4 { stroke-width: 0.65px; stroke-dasharray: 0.8,59.2; stroke-dashoffset: 43.2; }
+			.oneway-casing-5 { stroke-width: 0.5px; stroke-dasharray: 1.0,59; stroke-dashoffset: 43.2; }
+			.oneway-casing-6 { stroke-width: 0.35px; stroke-dasharray: 1.2,58.8; stroke-dashoffset: 43.2; }
+			.oneway-casing-7 { stroke-width: 0.2px; stroke-dasharray: 1.4,58.6; stroke-dashoffset: 43.2; }
+			.oneway-casing-8 { stroke-width: 0.1px; stroke-dasharray: 1.6,58.4; stroke-dashoffset: 43.2; }
 			
-			.oneway-casing-2 {
-			stroke-width: 0.95px;
-			stroke-dasharray: 0.6,59.4;
-			stroke-dashoffset: 43.4;
-			}
+			.oneway-core-1 { stroke-width: 0.2px; stroke-dasharray: 4,56; stroke-dashoffset: 46.1; }
+			.oneway-core-2 { stroke-width: 0.85px; stroke-dasharray: 0.4,59.6; stroke-dashoffset: 43.3; }
+			.oneway-core-3 { stroke-width: 0.7px; stroke-dasharray: 0.6,59.4; stroke-dashoffset: 43.3; }
+			.oneway-core-4 { stroke-width: 0.55px; stroke-dasharray: 0.8,59.2; stroke-dashoffset: 43.3; }
+			.oneway-core-5 { stroke-width: 0.4px; stroke-dasharray: 1.0,59; stroke-dashoffset: 43.3; }
+			.oneway-core-6 { stroke-width: 0.25px; stroke-dasharray: 1.2,58.8; stroke-dashoffset: 43.3; }
+			.oneway-core-7 { stroke-width: 0.1px; stroke-dasharray: 1.4,58.6; stroke-dashoffset: 43.3; }
 			
-			.oneway-casing-3 {
-			stroke-width: 0.8px;
-			stroke-dasharray: 0.6,59.4;
-			stroke-dashoffset: 43.2;
-			}
+			.oneway-casing-r1 { stroke-width: 0.4px; stroke-dasharray: 4.2,55.8; stroke-dashoffset: 45.2; }
+			.oneway-casing-r2 { stroke-width: 0.95px; stroke-dasharray: 0.6,59.4; stroke-dashoffset: 45.6; }
+			.oneway-casing-r3 { stroke-width: 0.8px; stroke-dasharray: 0.6,59.4; stroke-dashoffset: 45.8; }
+			.oneway-casing-r4 { stroke-width: 0.65px; stroke-dasharray: 0.8,59.2; stroke-dashoffset: 46; }
+			.oneway-casing-r5 { stroke-width: 0.5px; stroke-dasharray: 1.0,59; stroke-dashoffset: 46.2; }
+			.oneway-casing-r6 { stroke-width: 0.35px; stroke-dasharray: 1.2,58.8; stroke-dashoffset: 46.4; }
+			.oneway-casing-r7 { stroke-width: 0.2px; stroke-dasharray: 1.4,58.6; stroke-dashoffset: 46.6; }
+			.oneway-casing-r8 { stroke-width: 0.1px; stroke-dasharray: 1.6,58.4; stroke-dashoffset: 46.8; }
 			
-			.oneway-casing-4 {
-			stroke-width: 0.65px;
-			stroke-dasharray: 0.8,59.2;
-			stroke-dashoffset: 43.2;
-			}
-			
-			.oneway-casing-5 {
-			stroke-width: 0.5px;
-			stroke-dasharray: 1.0,59;
-			stroke-dashoffset: 43.2;
-			}
-			
-			.oneway-casing-6 {
-			stroke-width: 0.35px;
-			stroke-dasharray: 1.2,58.8;
-			stroke-dashoffset: 43.2;
-			}
-			
-			.oneway-casing-7 {
-			stroke-width: 0.2px;
-			stroke-dasharray: 1.4,58.6;
-			stroke-dashoffset: 43.2;
-			}
-			
-			.oneway-casing-8 {
-			stroke-width: 0.1px;
-			stroke-dasharray: 1.6,58.4;
-			stroke-dashoffset: 43.2;
-			}
-			
-			.oneway-core-1 {
-			stroke-width: 0.2px;
-			stroke-dasharray: 4,56;
-			stroke-dashoffset: 46;
-			}
-			
-			.oneway-core-2 {
-			stroke-width: 0.85px;
-			stroke-dasharray: 0.4,59.6;
-			stroke-dashoffset: 43.2;
-			}
-			
-			.oneway-core-3 {
-			stroke-width: 0.7px;
-			stroke-dasharray: 0.6,59.4;
-			stroke-dashoffset: 43.2;
-			}
-			
-			.oneway-core-4 {
-			stroke-width: 0.55px;
-			stroke-dasharray: 0.8,59.2;
-			stroke-dashoffset: 43.2;
-			}
-			
-			.oneway-core-5 {
-			stroke-width: 0.4px;
-			stroke-dasharray: 1.0,59;
-			stroke-dashoffset: 43.2;
-			}
-			
-			.oneway-core-6 {
-			stroke-width: 0.25px;
-			stroke-dasharray: 1.2,58.8;
-			stroke-dashoffset: 43.2;
-			}
-			
-			.oneway-core-7 {
-			stroke-width: 0.1px;
-			stroke-dasharray: 1.4,58.6;
-			stroke-dashoffset: 43.2;
-			}
-			
+			.oneway-core-r1 { stroke-width: 0.2px; stroke-dasharray: 4,56; stroke-dashoffset: 45.1; }
+			.oneway-core-r2 { stroke-width: 0.85px; stroke-dasharray: 0.4,59.6; stroke-dashoffset: 45.5; }
+			.oneway-core-r3 { stroke-width: 0.7px; stroke-dasharray: 0.6,59.4; stroke-dashoffset: 45.7; }
+			.oneway-core-r4 { stroke-width: 0.55px; stroke-dasharray: 0.8,59.2; stroke-dashoffset: 45.9; }
+			.oneway-core-r5 { stroke-width: 0.4px; stroke-dasharray: 1.0,59; stroke-dashoffset: 46.1; }
+			.oneway-core-r6 { stroke-width: 0.25px; stroke-dasharray: 1.2,58.8; stroke-dashoffset: 46.3; }
+			.oneway-core-r7 { stroke-width: 0.1px; stroke-dasharray: 1.4,58.6; stroke-dashoffset: 46.5; }
+
 			.otherway {
 			fill: none;
 			stroke: red;

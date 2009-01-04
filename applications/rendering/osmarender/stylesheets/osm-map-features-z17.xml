@@ -2359,12 +2359,24 @@
 		
 		<!-- House numbers -->
 		<rule e="way" k="addr:housenumber" v="*" layer="5">
-			<areaSymbol ref="housenumber"  position="center" layer="5"/>
-			<areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" layer="5"/>
+			<rule e="node" k="amenity" v="~" layer="5">
+				<areaSymbol ref="housenumber"  position="center" layer="5"/>
+				<areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" layer="5"/>
+			</rule>
+			<else>
+				<areaSymbol ref="housenumber"  position="center" transform="translate(15,0)" layer="5"/>
+				<areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>
+			</else>
 		</rule>
 		<rule e="node" k="addr:housenumber" v="*" layer="5">
-			<circle r="0.8px" class="housenumber-node" layer="5"/>
-			<text k="addr:housenumber" class="housenumber-caption" dy="0.3px" layer="5"/>
+			<rule e="node" k="amenity" v="~" layer="5">
+				<circle r="0.8px" class="housenumber-node" layer="5"/>
+				<text k="addr:housenumber" class="housenumber-caption" dy="0.3px" layer="5"/>
+			</rule>
+			<else>
+				<circle r="0.8px" class="housenumber-node" transform="translate(1.6,0)" layer="5"/>
+				<text k="addr:housenumber" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>
+			</else>
 		</rule>
 		
 		<!-- Area captions -->

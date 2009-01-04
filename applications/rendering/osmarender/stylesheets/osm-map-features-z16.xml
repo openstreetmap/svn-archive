@@ -298,8 +298,14 @@
 			<rule e="way" k="highway" v="primary_link">
 				<line class="bridge-casing highway-primary-link-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
 			</rule>
+			<rule e="way" k="highway" v="secondary_link">
+				<line class="bridge-casing highway-secondary-link-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
+			</rule>
 			<rule e="way" k="highway" v="secondary">
 				<line class="bridge-casing highway-secondary-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
+			</rule>
+			<rule e="way" k="highway" v="tertiary_link">
+				<line class="bridge-casing highway-tertiary-link-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
 			</rule>
 			<rule e="way" k="highway" v="tertiary">
 				<line class="bridge-casing highway-tertiary-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
@@ -389,8 +395,14 @@
 			<rule e="way" k="highway" v="primary_link">
 				<line class="bridge-core highway-primary-link-bridge-core" smart-linecap="no"/>
 			</rule>
+			<rule e="way" k="highway" v="secondary_link">
+				<line class="bridge-core highway-secondary-link-bridge-core" smart-linecap="no"/>
+			</rule>
 			<rule e="way" k="highway" v="secondary">
 				<line class="bridge-core highway-secondary-bridge-core" smart-linecap="no"/>
+			</rule>
+			<rule e="way" k="highway" v="tertiary_link">
+				<line class="bridge-core highway-tertiary-link-bridge-core" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="highway" v="tertiary">
 				<line class="bridge-core highway-tertiary-bridge-core" smart-linecap="no"/>
@@ -510,8 +522,14 @@
 			<rule e="way" k="highway" v="living_street">
 				<area class="highway-casing highway-livingstreet-casing highway-livingstreet-area-casing no-bezier"/>
 			</rule>
+			<rule e="way" k="highway" v="tertiary_link">
+				<area class="highway-casing highway-tertiary-link-casing highway-tertiary-link-area-casing no-bezier"/>
+			</rule>
 			<rule e="way" k="highway" v="tertiary">
 				<area class="highway-casing highway-tertiary-casing highway-tertiary-area-casing no-bezier"/>
+			</rule>
+			<rule e="way" k="highway" v="secondary_link">
+				<area class="highway-casing highway-secondary-link-casing highway-secondary-link-area-casing no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="secondary">
 				<area class="highway-casing highway-secondary-casing highway-secondary-area-casing no-bezier"/>
@@ -645,8 +663,14 @@
 				<rule e="way" k="highway" v="living_street">
 					<line class="highway-casing highway-livingstreet-casing"/>
 				</rule>
+				<rule e="way" k="highway" v="tertiary_link">
+					<line class="highway-casing highway-tertiary-link-casing"/>
+				</rule>
 				<rule e="way" k="highway" v="tertiary">
 					<line class="highway-casing highway-tertiary-casing"/>
+				</rule>
+				<rule e="way" k="highway" v="secondary_link">
+					<line class="highway-casing highway-secondary-link-casing"/>
 				</rule>
 				<rule e="way" k="highway" v="secondary">
 					<line class="highway-casing highway-secondary-casing"/>
@@ -735,8 +759,14 @@
 			<rule e="way" k="highway" v="living_street">
 				<area class="highway-core highway-livingstreet-area no-bezier"/>
 			</rule>
+			<rule e="way" k="highway" v="tertiary_link">
+				<area class="highway-core highway-tertiary-link-area no-bezier"/>
+			</rule>
 			<rule e="way" k="highway" v="tertiary">
 				<area class="highway-core highway-tertiary-area no-bezier"/>
+			</rule>
+			<rule e="way" k="highway" v="secondary_link">
+				<area class="highway-core highway-secondary-link-area no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="secondary">
 				<area class="highway-core highway-secondary-area no-bezier"/>
@@ -905,8 +935,14 @@
 					<line class="highway-core highway-livingstreet-core-1" smart-linecap="no"/>
 					<line class="highway-core highway-livingstreet-core-2" smart-linecap="no"/>
 				</rule>
+				<rule e="way" k="highway" v="tertiary_link">
+					<line class="highway-core highway-tertiary-link-core"/>
+				</rule>
 				<rule e="way" k="highway" v="tertiary">
 					<line class="highway-core highway-tertiary-core"/>
+				</rule>
+				<rule e="way" k="highway" v="secondary_link">
+					<line class="highway-core highway-secondary-link-core"/>
 				</rule>
 				<rule e="way" k="highway" v="secondary">
 					<line class="highway-core highway-secondary-core"/>
@@ -1000,7 +1036,7 @@
 				<line class="tunnel-casing highway-service-casing tunnel" mask-class="tunnel-core highway-service-core"/>
 				<line class="highway-service-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|tertiary|living_street">
+			<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
 				<line class="tunnel-casing highway-unclassified-casing tunnel" mask-class="tunnel-core highway-unclassified-core"/>
 				<line class="highway-unclassified-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
@@ -1008,9 +1044,17 @@
 				<line class="tunnel-casing highway-unclassified-casing tunnel" mask-class="tunnel-core highway-road-core"/>
 				<line class="highway-unclassified-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
+			<rule e="way" k="highway" v="tertiary_link">
+				<line class="tunnel-casing highway-tertiary-link-casing tunnel" mask-class="tunnel-core highway-tertiary-link-core"/>
+				<line class="highway-tertiary-link-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
+			</rule>
 			<rule e="way" k="highway" v="tertiary">
 				<line class="tunnel-casing highway-tertiary-casing tunnel" mask-class="tunnel-core highway-tertiary-core"/>
 				<line class="highway-tertiary-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
+			</rule>
+			<rule e="way" k="highway" v="secondary_link">
+				<line class="tunnel-casing highway-secondary-link-casing tunnel" mask-class="tunnel-core highway-secondary-link-core"/>
+				<line class="highway-secondary-link-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
 			<rule e="way" k="highway" v="secondary">
 				<line class="tunnel-casing highway-secondary-casing tunnel" mask-class="tunnel-core highway-secondary-core"/>
@@ -1124,8 +1168,14 @@
 			<rule e="way" k="construction" v="road">
 				<line class="highway-core highway-road-core under-construction"/>
 			</rule>
+			<rule e="way" k="construction" v="tertiary_link">
+				<line class="highway-core highway-tertiary-link-core under-construction"/>
+			</rule>
 			<rule e="way" k="construction" v="tertiary">
 				<line class="highway-core highway-tertiary-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="secondary_link">
+				<line class="highway-core highway-secondary-link-core under-construction"/>
 			</rule>
 			<rule e="way" k="construction" v="secondary">
 				<line class="highway-core highway-secondary-core under-construction"/>
@@ -1763,8 +1813,14 @@
 						<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
 							<text k="name" startOffset="50%" class="highway-name highway-unclassified-name" dy="0.7px" layer="5"/>
 						</rule>
+						<rule e="way" k="highway" v="tertiary_link" layer="5">
+							<text k="name" startOffset="50%" class="highway-name highway-tertiary-link-name" dy="1px" layer="5"/>
+						</rule>
 						<rule e="way" k="highway" v="tertiary" layer="5">
 							<text k="name" startOffset="50%" class="highway-name highway-tertiary-name" dy="1px" layer="5"/>
+						</rule>
+						<rule e="way" k="highway" v="secondary_link" layer="5">
+							<text k="name" startOffset="50%" class="highway-name highway-secondary-link-name" dy="1px" layer="5"/>
 						</rule>
 						<rule e="way" k="highway" v="secondary" layer="5">
 							<text k="name" startOffset="50%" class="highway-name highway-secondary-name" dy="1px" layer="5"/>
@@ -1790,7 +1846,7 @@
 					</rule>
 					
 					<rule e="way" k="junction" v="*" notConnectedSameTag="name" layer="5"> <!-- Roundabouts, motorway exits etc -->
-						<rule e="way" k="highway" v="secondary" layer="5">
+						<rule e="way" k="highway" v="secondary|secondary_link" layer="5">
 							<areaText k="name" startOffset="50%" class="highway-name highway-secondary-name" dy="2px"  layer="5"/>
 						</rule>
 						<rule e="way" k="highway" v="primary|primary_link" layer="5">
@@ -2194,6 +2250,15 @@
 			.highway-secondary-name                 { stroke-width: 0px;     font-size: 3px;}
 			.highway-secondary-ref                  { stroke-width: 0px;     font-size: 4px; }
 			
+			.highway-secondary-link-bridge-casing   { stroke-width: 4.6px; }
+			.highway-secondary-link-bridge-core     { stroke-width: 4.2px; }
+			.highway-secondary-link-casing          { stroke-width: 3.4px;   stroke: #707070; }
+			.highway-secondary-link-area-casing     { stroke-width: 0.4px; }
+			.highway-secondary-link-core            { stroke-width: 3px;  stroke: #FDBF6F; }
+			.highway-secondary-link-area            { fill: #FDBF6F; }
+			.highway-secondary-link-name            { stroke-width: 0px;     font-size: 3px;}
+			.highway-secondary-link-ref             { stroke-width: 0px;     font-size: 4px; }
+			
 			.highway-tertiary-bridge-casing         { stroke-width: 4.6px; }
 			.highway-tertiary-bridge-core           { stroke-width: 4.2px; }
 			.highway-tertiary-casing                { stroke-width: 3.4px;  stroke: #707070; }
@@ -2202,6 +2267,15 @@
 			.highway-tertiary-area                  { fill: #ffff90; }
 			.highway-tertiary-name                  { stroke-width: 0px;     font-size: 2.5px; }
 			.highway-tertiary-ref                   { stroke-width: 0px;     font-size: 3px; }
+			
+			.highway-tertiary-link-bridge-casing    { stroke-width: 4.6px; }
+			.highway-tertiary-link-bridge-core      { stroke-width: 4.2px; }
+			.highway-tertiary-link-casing           { stroke-width: 3.4px;  stroke: #707070; }
+			.highway-tertiary-link-area-casing      { stroke-width: 0.4px; }
+			.highway-tertiary-link-core             { stroke-width: 3px;   stroke: #ffff90; }
+			.highway-tertiary-link-area             { fill: #ffff90; }
+			.highway-tertiary-link-name             { stroke-width: 0px;     font-size: 2.5px; }
+			.highway-tertiary-link-ref              { stroke-width: 0px;     font-size: 3px; }
 			
 			.highway-unclassified-bridge-casing     { stroke-width: 3.1px; }
 			.highway-unclassified-bridge-core       { stroke-width: 2.9px; }

@@ -182,8 +182,14 @@
             <rule e="way" k="highway" v="unclassified|residential|minor">
                 <line class='highway-casing highway-unclassified-casing' />
             </rule>
+            <rule e="way" k="highway" v="tertiary_link">
+                <line class='highway-casing highway-tertiary-link-casing' />
+            </rule>
             <rule e="way" k="highway" v="tertiary">
                 <line class='highway-casing highway-tertiary-casing' />
+            </rule>
+            <rule e="way" k="highway" v="secondary_link">
+                <line class='highway-casing highway-secondary-link-casing' />
             </rule>
             <rule e="way" k="highway" v="secondary">
                 <line class='highway-casing highway-secondary-casing' />
@@ -270,24 +276,30 @@
 			<rule e="way" k="highway" v="track">
 				<line class='highway-core highway-track-core' />
 			</rule>
-            <rule e="way" k="highway" v="unsurfaced">
-                <line class='highway-core highway-unsurfaced-core' />
-            </rule>
-            <rule e="way" k="highway" v="service">
-                <line class='highway-core highway-service-core' />
-            </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor">
-                <line class='highway-core highway-unclassified-core' />
-            </rule>
-            <rule e="way" k="highway" v="tertiary">
-                <line class='highway-core highway-tertiary-core' />
-            </rule>
-            <rule e="way" k="highway" v="secondary">
-                <line class='highway-core highway-secondary-core' />
-            </rule>
-            <rule e="way" k="highway" v="primary_link">
-                <line class='highway-core highway-primary-link-core' />
-            </rule>
+			<rule e="way" k="highway" v="unsurfaced">
+				<line class='highway-core highway-unsurfaced-core' />
+			</rule>
+			<rule e="way" k="highway" v="service">
+				<line class='highway-core highway-service-core' />
+			</rule>
+			<rule e="way" k="highway" v="unclassified|residential|minor">
+				<line class='highway-core highway-unclassified-core' />
+			</rule>
+			<rule e="way" k="highway" v="tertiary_link">
+				<line class='highway-core highway-tertiary-link-core' />
+			</rule>
+			<rule e="way" k="highway" v="tertiary">
+				<line class='highway-core highway-tertiary-core' />
+			</rule>
+			<rule e="way" k="highway" v="secondary_link">
+				<line class='highway-core highway-secondary-link-core' />
+			</rule>
+			<rule e="way" k="highway" v="secondary">
+				<line class='highway-core highway-secondary-core' />
+			</rule>
+			<rule e="way" k="highway" v="primary_link">
+				<line class='highway-core highway-primary-link-core' />
+			</rule>
 			<rule e="way" k="highway" v="trunk_link">
 				<line class='highway-core highway-trunk-link-core' />
 			</rule>
@@ -321,108 +333,116 @@
         </rule>
 
         <!-- Tunnels -->
-        <rule e="way" k="tunnel" v="true|yes">
-            <rule e="way" k="highway" v="steps">
+		<rule e="way" k="tunnel" v="true|yes">
+			<rule e="way" k="highway" v="steps">
 				<line class='tunnel-casing highway-steps-casing tunnel' mask-class='tunnel-core highway-steps-core'/>
 				<line class='highway-steps-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="footway|footpath">
+			</rule>
+			<rule e="way" k="highway" v="footway|footpath">
 				<line class='tunnel-casing highway-footway-casing tunnel' mask-class='tunnel-core highway-footway-core'/>
 				<line class='highway-footway-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="pedestrian">
+			</rule>
+			<rule e="way" k="highway" v="pedestrian">
 				<line class='tunnel-casing highway-pedestrian-casing tunnel' mask-class='tunnel-core highway-pedestrian-core'/>
 				<line class='highway-pedestrian-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="cycleway">
+			</rule>
+			<rule e="way" k="highway" v="cycleway">
 				<line class='tunnel-casing highway-cycleway-casing tunnel' mask-class='tunnel-core highway-cycleway-core'/>
 				<line class='highway-cycleway-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="bridleway">
+			</rule>
+			<rule e="way" k="highway" v="bridleway">
 				<line class='tunnel-casing highway-bridleway-casing tunnel' mask-class='tunnel-core highway-bridleway-core'/>
 				<line class='highway-bridleway-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="byway">
+			</rule>
+			<rule e="way" k="highway" v="byway">
 				<line class='tunnel-casing highway-byway-1-casing tunnel' mask-class='tunnel-core highway-byway-1-core'/>
 				<line class='highway-byway-1-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="track">
+			</rule>
+			<rule e="way" k="highway" v="track">
 				<line class='tunnel-casing highway-track-casing tunnel' mask-class='tunnel-core highway-track-core'/>
 				<line class='highway-track-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="unsurfaced">
+			</rule>
+			<rule e="way" k="highway" v="unsurfaced">
 				<line class='tunnel-casing highway-unsurfaced-casing tunnel' mask-class='tunnel-core highway-unsurfaced-core'/>
 				<line class='highway-unsurfaced-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="service">
+			</rule>
+			<rule e="way" k="highway" v="service">
 				<line class='tunnel-casing highway-service-casing tunnel' mask-class='tunnel-core highway-service-core'/>
 				<line class='highway-service-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor|tertiary">
+			</rule>
+			<rule e="way" k="highway" v="unclassified|residential|minor|tertiary">
 				<line class='tunnel-casing highway-unclassified-casing tunnel' mask-class='tunnel-core highway-unclassified-core'/>
 				<line class='highway-unclassified-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="tertiary">
+			</rule>
+			<rule e="way" k="highway" v="tertiary_link">
+				<line class='tunnel-casing highway-tertiary-link-casing tunnel' mask-class='tunnel-core highway-tertiary-link-core'/>
+				<line class='highway-tertiary-link-casing highway-tunnel-ends'/>
+			</rule>
+			<rule e="way" k="highway" v="tertiary">
 				<line class='tunnel-casing highway-tertiary-casing tunnel' mask-class='tunnel-core highway-tertiary-core'/>
 				<line class='highway-tertiary-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="secondary">
+			</rule>
+			<rule e="way" k="highway" v="secondary_link">
+				<line class='tunnel-casing highway-secondary-link-casing tunnel' mask-class='tunnel-core highway-secondary-link-core'/>
+				<line class='highway-secondary-link-casing highway-tunnel-ends'/>
+			</rule>
+			<rule e="way" k="highway" v="secondary">
 				<line class='tunnel-casing highway-secondary-casing tunnel' mask-class='tunnel-core highway-secondary-core'/>
 				<line class='highway-secondary-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="primary_link">
+			</rule>
+			<rule e="way" k="highway" v="primary_link">
 				<line class='tunnel-casing highway-primary-link-casing tunnel' mask-class='tunnel-core highway-primary-link-core'/>
 				<line class='highway-primary-link-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="trunk_link">
+			</rule>
+			<rule e="way" k="highway" v="trunk_link">
 				<line class='tunnel-casing highway-trunk-link-casing tunnel' mask-class='tunnel-core highway-trunk-link-core'/>
 				<line class='highway-trunk-link-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="motorway_link">
+			</rule>
+			<rule e="way" k="highway" v="motorway_link">
 				<line class='tunnel-casing highway-motorway-link-casing tunnel' mask-class='tunnel-core highway-motorway-link-core'/>
 				<line class='highway-motorway-link-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="primary">
+			</rule>
+			<rule e="way" k="highway" v="primary">
 				<line class='tunnel-casing highway-primary-casing tunnel' mask-class='tunnel-core highway-primary-core'/>
 				<line class='highway-primary-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="trunk">
+			</rule>
+			<rule e="way" k="highway" v="trunk">
 				<line class='tunnel-casing highway-trunk-casing tunnel' mask-class='tunnel-core highway-trunk-core'/>
 				<line class='highway-trunk-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="highway" v="motorway">
+			</rule>
+			<rule e="way" k="highway" v="motorway">
 				<line class='tunnel-casing highway-motorway-casing tunnel' mask-class='tunnel-core highway-motorway-core'/>
 				<line class='highway-motorway-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="railway" v="monorail">
+			</rule>
+			<rule e="way" k="railway" v="monorail">
 				<line class='tunnel-casing railway-monorail-casing tunnel' mask-class='tunnel-core railway-monorail-core'/>
 				<line class='railway-monorail-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="railway" v="preserved">
+			</rule>
+			<rule e="way" k="railway" v="preserved">
 				<line class='tunnel-casing railway-preserved-casing tunnel' mask-class='tunnel-core railway-preserved-core'/>
 				<line class='railway-preserved-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="railway" v="narrow_gauge">
+			</rule>
+			<rule e="way" k="railway" v="narrow_gauge">
 				<line class='tunnel-casing railway-narrow-gauge-casing tunnel' mask-class='tunnel-core railway-narrow-gauge-core'/>
 				<line class='railway-narrow-gauge-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="railway" v="tram">
+			</rule>
+			<rule e="way" k="railway" v="tram">
 				<line class='tunnel-casing railway-tram-casing tunnel' mask-class='tunnel-core railway-tram-core'/>
 				<line class='railway-tram-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="railway" v="subway">
+			</rule>
+			<rule e="way" k="railway" v="subway">
 				<line class='tunnel-casing railway-subway-casing tunnel' mask-class='tunnel-core railway-subway-core'/>
 				<line class='railway-subway-casing highway-tunnel-ends'/>
-            </rule>
-            <rule e="way" k="railway" v="light_rail">
+			</rule>
+			<rule e="way" k="railway" v="light_rail">
 				<line class='tunnel-casing railway-light-rail-casing tunnel' mask-class='tunnel-core railway-light-rail-core'/>
 				<line class='railway-light-rail-casing highway-tunnel-ends'/>
-            </rule>
+			</rule>
 			<rule e="way" k="railway" v="rail">
 				<line class='tunnel-casing railway-rail-casing tunnel' mask-class='tunnel-core railway-rail-1-core'/>
 				<line class='railway-rail-casing highway-tunnel-ends'/>
 			</rule>
-        </rule>
+		</rule>
 
         <!-- Non-physical routes -->
         <rule e="way" k="route" v="ferry">

@@ -1,4 +1,4 @@
-<project name="wmsplugin" default="dist" basedir=".">
+<project name="usertools" default="dist" basedir=".">
     <property name="josm"                   location="../../core/dist/josm-custom.jar" />
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
@@ -16,12 +16,6 @@
         </javac>
     </target>
     <target name="dist" depends="compile">
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/images" >
-            <fileset dir="images" />
-        </copy>
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -32,10 +26,10 @@
         <delete file="REVISION"/>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <manifest>
-                <attribute name="Plugin-Class" value="wmsplugin.WMSPlugin" />
+                <attribute name="Plugin-Class" value="usertools.UserToolsPlugin" />
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Allows external WMS resources to be displayed." />
+                <attribute name="Plugin-Description" value="Tools to help work with authors/users.&lt;br&gt; Used with the author panel alt-a).&lt;br&gt; Opens up user profile and selects user's stuff on the map" />
                 <attribute name="Plugin-Mainversion" value="1180" />
             </manifest>
         </jar>

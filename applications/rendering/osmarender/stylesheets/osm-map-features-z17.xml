@@ -2266,7 +2266,7 @@
 			</rule>
 			<rule e="node" k="natural" v="peak" layer="5">
 				<text k="name" class="place-caption peak-caption" dy="-1.5px" layer="5"/>
-				<text k="elevation" class="place-caption" font-size="1px" dy="2.0px" layer="5"/>
+				<text k="ele" class="place-caption" font-size="1px" dy="2.0px" layer="5"/>
 			</rule>
 			<rule e="way" k="amenity" v="bank">
 				<areaSymbol ref="bank" position="center"/>

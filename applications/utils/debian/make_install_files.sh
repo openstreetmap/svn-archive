@@ -59,7 +59,7 @@ platform=`uname -m`
 # Various libs
 for lib in ccoord libosm libimg ; do 
     if [ "$platform" == "x86_64" ] ; then
-	if echo $lib | grep -q -e libosm -e ccoord ; then
+	if echo $lib | grep -q -e libosm -e ccoord -e libimg ; then
 	    echo "Ignored '$lib' because it does not compile on my debian $platform machine"
 	    continue
 	fi
@@ -72,6 +72,7 @@ for lib in ccoord libosm libimg ; do
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	echo "${RED}!!!!!! ERROR compiling $lib ${NORMAL}"
+	echo "Logfile is at `pwd`/build.log build.err"
 	exit -1
     fi
     cd ..

@@ -1,0 +1,2 @@
+#!/bin/sh
+perl /home/blarson/tilesAtHome/osmarender/orp/orp.pl "$@"

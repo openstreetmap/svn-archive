@@ -1,0 +1,123 @@
+#!/usr/bin/perl
+
+# Create restauraunt maps from openstreetmap
+# Copyright 2008 Blars Blarson
+# Distributed under GPL version 2.0
+
+# Usage:  restguide [options] name lat lon
+
+# Example, for Loscon at the LAX Mariot:
+#    restguide --lats 0.024 --lons 0.04 --dpi 1800 loscon 33.950 -118.380
+
+# version 0.2   add --poi and --sub options
+
+use strict;
+use warnings;
+
+# xml file to use
+my $XML="osm-blars.xml";
+
+my $download = 0;
+my $name="cf4";
+my $lat = 33.681;
+my $lon = -117.844;
+my $lats = 0.027;
+my $lons = 0.038;
+my $dpi = 1800;
+my $res = 300;
+my $poi;
+my $sub;
+
+while ($ARGV[0] =~ /^--/){
+   $_ = shift @ARGV;
+   if (/^--download$/) {
+     $download = 1;
+   } elsif (/^--dpi$/) {
+     $dpi = shift @ARGV;
+   } elsif (/^--res$/) {
+     $res = shift @ARGV;
+   } elsif (/^--lats$/) {
+     $lats = shift @ARGV;
+   } elsif (/^--lons$/) {
+     $lons = shift @ARGV;
+   } elsif (/^--poi$/) {
+     $poi = 1;
+   } elsif (/^--sub$/) {
+     $sub = 1;
+   }
+}
+if (@ARGV) {
+  $name = shift @ARGV;
+}
+if (@ARGV) {
+  $lat = shift @ARGV;
+}
+if (@ARGV) {
+  $lon = shift @ARGV;
+}
+
+#
+
+my $OSM="${name}.osm";
+my $SVG="${name}.svg";
+my $PNG="${name}.png";
+
+if ($download || ! -f $OSM) {
+  my $MINLAT=$lat - $lats;
+  my $MAXLAT=$lat + $lats;
+  my $MINLON=$lon - $lons;
+  my $MAXLON=$lon + $lons;
+  my $wget="wget -O ${OSM} http://api.openstreetmap.org/api/0.5/map?bbox=$MINLON,$MINLAT,$MAXLON,$MAXLAT";
+  print "$wget\n";
+  system($wget);
+}
+
+my $MINLAT=$lat - $lats/2;
+my $MAXLAT=$lat + $lats/2;
+my $MINLON=$lon - $lons/2;
+my $MAXLON=$lon + $lons/2;
+
+# AddBounds($XML, "${XML}.tmp", $MINLON, $MINLAT, $MAXLON, $MAXLAT);
+
+my $pf = "${name}.poi";
+if ($poi || ! -f $pf) {
+    system("restgpoi.pl $OSM");
+}
+if ($sub && -f $pf) {
+  system("restgsub.pl $OSM");
+  $OSM = $name.".sub.osm";
+  $SVG = $name.".sub.svg";
+}
+
+my $orp="orp --bbox=$MINLAT,$MINLON,$MAXLAT,$MAXLON -r ${XML} $OSM";
+print "$orp\n";
+system($orp);
+system("inkscape -D -d $dpi -e ${PNG}.tmp $SVG");
+system("pngcrush -res $res ${PNG}.tmp $PNG");
+
+
+#-----------------------------------------------------------------------------
+# Add bounding-box information to an osm-map-features file
+#-----------------------------------------------------------------------------
+sub AddBounds 
+{
+    my ($FileIn, $FileOut, $W,$S,$E,$N) = @_;
+    
+    # Read the old file
+    open(my $fpIn, "<", "$FileIn");
+    my $Data = join("",<$fpIn>);
+    close $fpIn;
+    die("no such $FileIn") if(! -f $FileIn);
+    
+    # Change some stuff
+    my $BoundsInfo = sprintf(
+      "<bounds minlat=\"%f\" minlon=\"%f\" maxlat=\"%f\" maxlon=\"%f\" />",
+      $S, $W, $N, $E);
+    
+    $Data =~ s/(<!--bounds_mkr1-->).*(<!--bounds_mkr2-->)/$1\n<!-- Inserted by restguide -->\n$BoundsInfo\n$2/s;
+    
+    # Save back to the same location
+    open(my $fpOut, ">$FileOut");
+    print $fpOut $Data;
+    close $fpOut;
+}

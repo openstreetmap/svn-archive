@@ -154,10 +154,17 @@ tag_mapping = [
 
 boring_tags = [ 'AREA', 'LEN', 'GIS_ACRES' ]
 
+# Namespace is used to prefix existing data attributes. If 'None', or 
+# '--no-source' is set, then source attributes are not exported, only
+# attributes in tag_mapping.
+
+namespace = "massgis"
+#namespace = None 
+
 # Uncomment the "DONT_RUN = False" line to get started. 
 
-DONT_RUN = True
-#DONT_RUN = False
+#DONT_RUN = True
+DONT_RUN = False
 
 # =========== DO NOT CHANGE AFTER THIS LINE. ===========================
 # Below here is regular code, part of the file. This is not designed to
@@ -242,24 +249,37 @@ id_counter = 1
 file_counter = 0
 counter = 0
 
-def run(filename, slice_count=1, obj_count=50000, output_location=None):
+class AppError(Exception): pass
+
+def run(filename, slice_count=1, obj_count=50000, output_location=None, no_source=False):
     """Run the converter. Requires open_file, file_name, id_counter,
     file_counter, counter to be defined in global space; not really a very good
     singleton."""
-    global id_counter, file_counter, counter, file_name, open_file
+    global id_counter, file_counter, counter, file_name, open_file, namespace
     
+    if no_source:
+        namespace=None
+
     if output_location:
        file_name = output_location
 
     ds = ogr.Open(filename)
+    if not ds:
+        raise AppError("OGR Could not open the file %s" % filename)
     l = ds.GetLayer(0)
    
     max_objs_per_file = obj_count 
 
     extent = l.GetExtent()
+    if extent[0] < -180 or extent[0] > 180 or extent[2] < -90 or extent[2] > 90:
+        raise AppError("Extent does not look like degrees; are you sure it is? \n(%s, %s, %s, %s)" % (extent[0], extent[2], extent[1], extent[3]))  
     slice_width = (extent[1] - extent[0]) / slice_count
 
     seen = {}
+
+    print "Running %s slices with %s base filename against shapefile %s" % (
+            slice_count, file_name, filename)
+
     for i in range(slice_count): 
 
         l.ResetReading()
@@ -302,8 +322,8 @@ def run(filename, slice_count=1, obj_count=50000, output_location=None):
             for field in range(field_count):
                 value = f.GetFieldAsString(field)
                 name = f.GetFieldDefnRef(field).GetName()
-                if name and value and name not in boring_tags:
-                    print >>open_file, "<tag k='massgis:%s' v='%s' />" % (name, clean_attr(value))
+                if namespace and name and value and name not in boring_tags:
+                    print >>open_file, "<tag k='%s:%s' v='%s' />" % (namespace, name, clean_attr(value))
                 fields[name.lower()] = value
             tags={}
             for tag_name, map_value in tag_mapping:
@@ -346,7 +366,7 @@ if __name__ == "__main__":
     
     from optparse import OptionParser
     
-    parse = OptionParser(usage="%s [args] filename.shp")
+    parse = OptionParser(usage="%prog [args] filename.shp", version=__version__)
     parse.add_option("-s", "--slice-count", dest="slice_count", 
                      help="Number of horizontal slices of data", default=1, 
                      action="store", type="int")
@@ -354,13 +374,24 @@ if __name__ == "__main__":
                      dest="obj_count", 
                      help="Target Maximum number of objects in a single .osm file", 
                      default=50000, type="int")
+    parse.add_option("-n", "--no-source", dest="no_source", 
+                     help="Do not store source attributes as tags.",
+                     action="store_true", default=False)
     parse.add_option("-l", "--output-location", 
                         dest="output_location", help="base filepath for output files.", 
                         default="poly_output") 
     (options, args) = parse.parse_args()
     
+    if not len(args):
+        print "No shapefile name given!"
+        parse.print_help()
+        sys.exit(3)
+
     kw = {}
-    for key in  ('slice_count', 'obj_count', 'output_location'):
+    for key in  ('slice_count', 'obj_count', 'output_location', 'no_source'):
         kw[key] = getattr(options, key)
     
-    run(args[0], **kw)    
+    try:
+        run(args[0], **kw)   
+    except AppError, E:
+        print "An error occurred: \n%s" % E  

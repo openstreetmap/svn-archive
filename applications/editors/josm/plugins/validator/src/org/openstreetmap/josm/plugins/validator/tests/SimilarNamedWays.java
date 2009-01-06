@@ -33,7 +33,7 @@ public class SimilarNamedWays extends Test
      */
     public SimilarNamedWays()
     {
-        super(tr("Similar named ways."),
+        super(tr("Similarly named ways")+".",
               tr("This test checks for ways with similar names that may have been misspelled."));
     }
 
@@ -79,7 +79,7 @@ public class SimilarNamedWays extends Test
                     List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
                     primitives.add(w);
                     primitives.add(w2);
-                    errors.add( new TestError(this, Severity.WARNING, tr("Similar named ways"), SIMILAR_NAMED, primitives) );
+                    errors.add( new TestError(this, Severity.WARNING, tr("Similarly named ways"), SIMILAR_NAMED, primitives) );
                     errorWays.add(w, w2);
                 }
             }

@@ -49,7 +49,7 @@ public class OsbUploadHook implements UploadHook {
         if(containsOsbData) {
             JOptionPane.showMessageDialog(Main.parent,
                 tr("<html>The selected data contains data from OpenStreetBugs.<br>" +
-                "You cannot upload these data. Maybe you have selected the wrong layer?"),
+                "You cannot upload this data. Maybe you have selected the wrong layer?"),
                 tr("Warning"), JOptionPane.WARNING_MESSAGE);
             return false;
         } else {

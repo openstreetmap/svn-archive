@@ -166,7 +166,7 @@ public class HttpUtils {
         if(value.size() == 1) {
             return value.get(0);
         } else {
-            throw new RuntimeException(tr("Header contains several values and cannot be mapped to a single String"));
+            throw new RuntimeException(tr("Header contains several values and cannot be mapped to a single string"));
         }
     }
 }

@@ -548,7 +548,7 @@ public class TagChecker extends Test
         testPanel.add(prefCheckFixmesBeforeUpload, a);
 
         prefCheckPaint = new JCheckBox(tr("Check for paint notes."), Main.pref.getBoolean(PREF_CHECK_PAINT, true));
-        prefCheckPaint.setToolTipText(tr("Check if map paining found data errors."));
+        prefCheckPaint.setToolTipText(tr("Check if map painting found data errors."));
         testPanel.add(prefCheckPaint, GBC.std().insets(20,0,0,0));
 
         prefCheckPaintBeforeUpload = new JCheckBox();

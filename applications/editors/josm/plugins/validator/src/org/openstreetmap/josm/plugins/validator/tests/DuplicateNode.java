@@ -29,7 +29,7 @@ public class DuplicateNode extends Test
      */
     public DuplicateNode()
     {
-        super(tr("Duplicated nodes."),
+        super(tr("Duplicated nodes")+".",
               tr("This test checks that there are no nodes at the very same location."));
     }
 

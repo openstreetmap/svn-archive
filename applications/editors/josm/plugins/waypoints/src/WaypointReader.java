@@ -54,11 +54,11 @@ public class WaypointReader {
                     double lon = Double.parseDouble(atts.getValue("lon"));
                     if (Math.abs(lat) > 90)
                         throw new SAXException
-                        (tr("Data error: lat value \"{0}\" is out of bound.",
+                        (tr("Data error: lat value \"{0}\" is out of bounds.",
                             lat));
                     if (Math.abs(lon) > 180)
                         throw new SAXException
-                        (tr("Data error: lon value \"{0}\" is out of bound.",
+                        (tr("Data error: lon value \"{0}\" is out of bounds.",
                             lon));
                     currentLatLon = new LatLon(lat, lon);
                 } catch (NumberFormatException e) {

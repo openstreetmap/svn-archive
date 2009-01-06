@@ -16,6 +16,7 @@
         <ant antfile="build.xml" target="dist" dir="measurement"/>
         <ant antfile="build.xml" target="dist" dir="namefinder"/>
         <ant antfile="build.xml" target="dist" dir="nearclick"/>
+        <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
@@ -26,6 +27,7 @@
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="dist" dir="tcxplugin"/>
+        <ant antfile="build.xml" target="dist" dir="usertools"/>
         <ant antfile="build.xml" target="dist" dir="utilsplugin"/>
         <ant antfile="build.xml" target="dist" dir="validator"/>
         <ant antfile="build.xml" target="dist" dir="waypoints"/>
@@ -49,6 +51,7 @@
         <ant antfile="build.xml" target="clean" dir="namefinder"/>
         <ant antfile="build.xml" target="clean" dir="navigator"/>
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
+        <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="clean" dir="openvisible"/>
         <ant antfile="build.xml" target="clean" dir="osmarender"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
@@ -59,6 +62,7 @@
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="clean" dir="tcxplugin"/>
+        <ant antfile="build.xml" target="clean" dir="usertools"/>
         <ant antfile="build.xml" target="clean" dir="utilsplugin"/>
         <ant antfile="build.xml" target="clean" dir="validator"/>
         <ant antfile="build.xml" target="clean" dir="waypoints"/>

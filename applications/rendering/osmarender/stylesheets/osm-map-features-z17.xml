@@ -2432,35 +2432,23 @@
 		
 		<!-- House numbers -->
 		<rule e="way" k="addr:housenumber" v="*" layer="5">
-			<rule e="node" k="amenity" v="~" layer="5">
-				<rule e="node" k="shop" v="~" layer="5">
-					<areaSymbol ref="housenumber"  position="center" layer="5"/>
-					<areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" layer="5"/>
-				</rule>
-				<else>
-					<areaSymbol ref="housenumber"  position="center" transform="translate(15,0)" layer="5"/>
-					<areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>
-				</else>
-			</rule>
-			<else>
+			<rule e="way" k="power|tourism|amenity|man_made|shop|historic" v="tower|hotel|hostel|information|camp_site|hospital|doctor|pharmacy|postoffice|pub|cafe|cinema|theatre|windmill|place_of_worship|parking|school|university|college|supermarket|shelter|library|fire_station|fuel|recycling|toilets|drinking_water|bank|atm|museum" layer="5">
 				<areaSymbol ref="housenumber"  position="center" transform="translate(15,0)" layer="5"/>
 				<areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>
+			</rule>
+			<else>
+					<areaSymbol ref="housenumber"  position="center" layer="5"/>
+					<areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" layer="5"/>
 			</else>
 		</rule>
 		<rule e="node" k="addr:housenumber" v="*" layer="5">
-			<rule e="node" k="amenity" v="~" layer="5">
-				<rule e="node" k="shop" v="~" layer="5">
-					<circle r="0.8px" class="housenumber-node" layer="5"/>
-					<text k="addr:housenumber" class="housenumber-caption" dy="0.3px" layer="5"/>
-				</rule>
-				<else>
-					<circle r="0.8px" class="housenumber-node" transform="translate(1.6,0)" layer="5"/>
-					<text k="addr:housenumber" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>
-				</else>
-			</rule>
-			<else>
+			<rule e="node" k="power|tourism|amenity|man_made|shop|historic" v="tower|hotel|hostel|information|camp_site|hospital|doctor|pharmacy|postoffice|pub|cafe|cinema|theatre|windmill|place_of_worship|parking|school|university|college|supermarket|shelter|library|fire_station|fuel|recycling|toilets|drinking_water|bank|atm|museum" layer="5">
 				<circle r="0.8px" class="housenumber-node" transform="translate(1.6,0)" layer="5"/>
 				<text k="addr:housenumber" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>
+			</rule>
+			<else>
+				<circle r="0.8px" class="housenumber-node" layer="5"/>
+				<text k="addr:housenumber" class="housenumber-caption" dy="0.3px" layer="5"/>
 			</else>
 		</rule>
 		

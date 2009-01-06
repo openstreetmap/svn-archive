@@ -8,8 +8,6 @@ You can perform this conversion with
 
    ogr2ogr -t_srs EPSG:4326 new_file.shp old_file.shp
 
-Requires OGR: Tested with 1.3.2 and 1.6.0
-
 It is expected that you will modify the fixed_tags, tag_mapping, and
 boring_tags attributes of this script before running. You should read,
 or at least skim, the code up until it says:
@@ -21,6 +19,18 @@ to accomodate your own data.
 
 __author__ = "Christopher Schmidt <crschmidt@crschmidt.net>"
 __version__ = "$Id$"
+
+gdal_install = """
+Installing GDAL depends on your platform. Information is available at:
+   
+   http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries
+
+For Debian-based systems:
+
+   apt-get install python-gdal
+
+will usually suffice. 
+"""
 
 # These tags are attached to all exterior ways. You can put any key/value pairs
 # in this dictionary. 
@@ -163,8 +173,8 @@ namespace = "massgis"
 
 # Uncomment the "DONT_RUN = False" line to get started. 
 
-#DONT_RUN = True
-DONT_RUN = False
+DONT_RUN = True
+#DONT_RUN = False
 
 # =========== DO NOT CHANGE AFTER THIS LINE. ===========================
 # Below here is regular code, part of the file. This is not designed to
@@ -179,10 +189,11 @@ try:
     except ImportError:
         import ogr
 except ImportError:
+    __doc__ += gdal_install 
     if DONT_RUN:
         print __doc__
         sys.exit(2)
-    print "OGR Python Bindings not installed. Fix that, please."
+    print "OGR Python Bindings not installed.\n%s" % gdal_install
     sys.exit(1)
 
 def close_file():

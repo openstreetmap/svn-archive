@@ -5,15 +5,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-06 09:58+0100\n"
-"PO-Revision-Date: 2009-01-05 10:43+0000\n"
+"POT-Creation-Date: 2009-01-06 17:46+0100\n"
+"PO-Revision-Date: 2009-01-06 13:35+0000\n"
 "Last-Translator: nin2jardin <Unknown>\n"
 "Language-Team: Fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2009-01-06 08:48+0000\n"
+"X-Launchpad-Export-Date: 2009-01-06 16:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:42
@@ -46,7 +46,7 @@ msgstr "Impossible de télécharger le greffon : {0} de {1}"
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:143
 #, java-format
 msgid ""
-"The plugin {0} seem to be broken or could not be downloaded automatically."
+"The plugin {0} seems to be broken or could not be downloaded automatically."
 msgstr ""
 "Le greffon {0} semble être cassé ou ne peut pas être téléchargé "
 "automatiquement."
@@ -564,57 +564,57 @@ msgstr[1] "{0} membres"
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:295
 #, java-format
 msgid "multipolygon way ''{0}'' is not closed."
-msgstr ""
+msgstr "Le multipolygone \"{0}\" n'est pas fermé."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:385
-#, fuzzy
 msgid "Empty member in relation."
-msgstr "Élément <member> trouvé dans une non-relation."
+msgstr "Membre vide dans la relation."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:387
 #, java-format
 msgid "Deleted member ''{0}'' in relation."
-msgstr ""
+msgstr "Membre \"{0}\" supprimé de la relation."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:398
 #, java-format
 msgid "Way ''{0}'' with less than two points."
-msgstr ""
+msgstr "Chemin \"{0}\" comporte moins de deux points."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:407
-#, fuzzy, java-format
+#, java-format
 msgid "No useful role ''{0}'' for Way ''{1}''."
-msgstr "Utiliser l’étiquette prédéfinie \"{0}\" du groupe \"{1}\""
+msgstr "Pas de rôle utile \"{0}\" pour le chemin \"{1}\"."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:418
 #, java-format
 msgid "Non-Way ''{0}'' in multipolygon."
-msgstr ""
+msgstr "Non-chemin \"{0}\" dans le multipolygone."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:468
 #, java-format
 msgid "No outer way for multipolygon ''{0}''."
-msgstr ""
+msgstr "Pas de chemin extérieur pour le multipolygone \"{0}\"."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:547
 #, java-format
 msgid "Intersection between ways ''{0}'' and ''{1}''."
-msgstr ""
+msgstr "Intersection entre les chemins \"{0}\" et \"{1}\"."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:558
-#, fuzzy, java-format
+#, java-format
 msgid "Inner way ''{0}'' is outside."
-msgstr "Clé \"{0}\" non valide."
+msgstr "Le chemin intérieur \"{0}\" est à l'extérieur."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:598
 #, java-format
 msgid "Style for inner way ''{0}'' equals multipolygon."
 msgstr ""
+"Le style du chemin intérieur \"{0}\" est équivalent à un multipolygone."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:623
 #, java-format
 msgid "Style for outer way ''{0}'' mismatches."
-msgstr ""
+msgstr "Le style du chemin extérieur \"{0}\" ne concorde pas."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:770
 msgid "untagged"
@@ -702,14 +702,14 @@ msgstr[0] "{0} nœud"
 msgstr[1] "{0} nœuds"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:329
-#, fuzzy, java-format
+#, java-format
 msgid "Error: {0}"
-msgstr "Erreur"
+msgstr "Erreur : {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:329
-#, fuzzy, java-format
+#, java-format
 msgid "Warning: {0}"
-msgstr "Avertissement"
+msgstr "Attention : {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/conflict/DeleteConflict.java:15
 msgid "deleted"
@@ -779,7 +779,7 @@ msgid ""
 "The projection \"{0}\" is designed for\n"
 "latitudes between 46.1° and 57° only.\n"
 "Use another projection system if you are not using\n"
-"a french WMS server.\n"
+"a French WMS server.\n"
 "Do not upload any data after this message."
 msgstr ""
 "La projection \"{0}\" est prévu pour\n"
@@ -790,7 +790,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Lambert.java:126
 msgid ""
-"IMPORTANT : data positionned far away from\n"
+"IMPORTANT : data positioned far away from\n"
 "the current Lambert zone limits.\n"
 "Do not upload any data after this message.\n"
 "Undo your last action, Save your work \n"
@@ -994,7 +994,7 @@ msgstr "Afficher : {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:41
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:42
-msgid "Open ..."
+msgid "Open..."
 msgstr "Ouvrir..."
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:41
@@ -1075,7 +1075,7 @@ msgstr "Supprimer les objets sélectionnés."
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:24
 #: ../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:25
-msgid "Save as ..."
+msgid "Save as..."
 msgstr "Sauvegarder sous..."
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:24
@@ -1297,7 +1297,7 @@ msgstr "Nouveautés sur JOSM"
 
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:142
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListPopup.java:26
-#: trans_surveyor.java:64
+#: trans_surveyor.java:66
 msgid "Info"
 msgstr "Info"
 
@@ -1335,7 +1335,7 @@ msgstr "Impossible de trouver le fichier."
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadAction.java:33
 #: ../core/src/org/openstreetmap/josm/actions/DownloadAction.java:34
-msgid "Download from OSM ..."
+msgid "Download from OSM..."
 msgstr "Téléchargement depuis OSM..."
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadAction.java:33
@@ -1486,8 +1486,8 @@ msgstr "Pas de raccourci"
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:62
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:63
-msgid "Upload to OSM ..."
-msgstr "Chargement vers OSM"
+msgid "Upload to OSM..."
+msgstr "Chargement vers OSM..."
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:62
 msgid "Upload all changes to the OSM server."
@@ -1602,7 +1602,7 @@ msgid "Align Nodes in Line"
 msgstr "Aligner les nœuds"
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInLineAction.java:32
-msgid "Move the selected nodes onto a line."
+msgid "Move the selected nodes in to a line."
 msgstr "Déplacer les nœuds sélectionnés en ligne"
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInLineAction.java:59
@@ -1610,8 +1610,8 @@ msgid "Please select at least three nodes."
 msgstr "Veuillez sélectionner au moins trois nœuds."
 
 #: ../core/src/org/openstreetmap/josm/actions/PreferencesAction.java:31
-msgid "Preferences ..."
-msgstr "Préférences ..."
+msgid "Preferences..."
+msgstr "Préférences..."
 
 #: ../core/src/org/openstreetmap/josm/actions/PreferencesAction.java:31
 msgid "Open a preferences page for global settings."
@@ -1632,7 +1632,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:47
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:48
-msgid "Export to GPX ..."
+msgid "Export to GPX..."
 msgstr "Exporter au format GPX..."
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:47
@@ -1680,11 +1680,13 @@ msgid "Export options"
 msgstr "Options d’export"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:138
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Error while exporting {0}:\n"
 "{1}"
-msgstr "Erreur lors de l’exportation de {0} : {1}"
+msgstr ""
+"Erreur en exportant {0} :\n"
+"{1}"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:138
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:567
@@ -1901,18 +1903,15 @@ msgid "Expected closing parenthesis."
 msgstr "Les parenthèses doivent être fermées."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:39
-msgid "Search ..."
-msgstr "Rechercher ..."
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:40
+#: ../plugins/namefinder/namefinder/PlaceSelection.java:45
+msgid "Search..."
+msgstr "Recherche..."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:39
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:141
 msgid "Search for objects."
 msgstr "Rechercher des objets"
-
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:40
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:45
-msgid "Search..."
-msgstr "Recherche..."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:45
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:66
@@ -2112,7 +2111,7 @@ msgstr "Emplacement de téléchargement"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:22
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:23
-#: trans_surveyor.java:68
+#: trans_surveyor.java:70
 msgid "Exit"
 msgstr "Quitter"
 
@@ -2823,14 +2822,16 @@ msgid "Instead of --download=<bbox> you may specify osm://<bbox>\n"
 msgstr "Au lieu de --download=<bbox> vous devriez indiquer osm://<bbox>\n"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:134
-#, fuzzy, java-format
+#, java-format
 msgid "Cannot open preferences directory: {0}"
-msgstr "Impossible de charger les préférences. Raison : {0}"
+msgstr "Impossible d’ouvrir le répertoire des préférences : {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:154
 #, java-format
 msgid "Preferences file had errors. Making backup of old one to {0}."
 msgstr ""
+"Le fichier des préférences contient des erreurs. Sauvegarde de l’ancien "
+"fichier dans {0}."
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:192
 msgid "Activating updated plugins"
@@ -3117,9 +3118,9 @@ msgid "Download everything within:"
 msgstr "Tout télécharger dans un rayon de :"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:768
-#, fuzzy, java-format
+#, java-format
 msgid "{0} meters"
-msgstr "{0} membre"
+msgstr "{0} mètres"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:771
 msgid "Maximum area per request:"
@@ -3128,7 +3129,7 @@ msgstr "Surface maximum par requête :"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:774
 #, java-format
 msgid "{0} sq km"
-msgstr ""
+msgstr "{0} km²"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:866
 #, java-format
@@ -3534,7 +3535,7 @@ msgstr "Lissage de la carte (antialiasing)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:57
 msgid ""
-"If your gps device draw too few lines, select this to draw lines along your "
+"If your gps device draws too few lines, select this to draw lines along your "
 "way."
 msgstr ""
 "Si votre périphérique GPS dessine des lignes trop fines, sélectionner cette "
@@ -4025,7 +4026,7 @@ msgid "Update"
 msgstr "Actualiser"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:126
-msgid "Configure Sites ..."
+msgid "Configure Sites..."
 msgstr "Configurer les sites..."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:139
@@ -4070,8 +4071,8 @@ msgstr "Greffon intégré à JOSM"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:295
 #, java-format
 msgid ""
-"Plugin archive already available. Do you want to download current version by "
-"deleting existing archive?\n"
+"Plugin archive already available. Do you want to download the current "
+"version by deleting existing archive?\n"
 "\n"
 "{0}"
 msgstr ""
@@ -5290,7 +5291,7 @@ msgid "Please select the row to copy."
 msgstr "Veuillez sélectionner la colonne à copier"
 
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:20
-msgid "Rectified Image ..."
+msgid "Rectified Image..."
 msgstr "Image réctifiée..."
 
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:20
@@ -5485,12 +5486,12 @@ msgstr "Ouvrir un fichier de chemin"
 
 #: ../plugins/waypoints/src/WaypointReader.java:57
 #, java-format
-msgid "Data error: lat value \"{0}\" is out of bound."
+msgid "Data error: lat value \"{0}\" is out of bounds."
 msgstr "Erreur de données : La valeur de latitude \"{0}\" est hors limite."
 
 #: ../plugins/waypoints/src/WaypointReader.java:61
 #, java-format
-msgid "Data error: lon value \"{0}\" is out of bound."
+msgid "Data error: lon value \"{0}\" is out of bounds."
 msgstr "Erreur de données : La valeur de longitude \"{0}\" est hors limite."
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:33
@@ -5587,8 +5588,8 @@ msgstr "fin"
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorShowAction.java:46
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorShowAction.java:47
-msgid "Surveyor ..."
-msgstr "Surveyor ..."
+msgid "Surveyor..."
+msgstr "Surveyor..."
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorShowAction.java:46
 msgid "Open surveyor tool."
@@ -5622,7 +5623,7 @@ msgid "Couldn't create new bug. Result: {0}"
 msgstr "Impossible de créer un nouveau bogue. Résultat : {0}"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/util/HttpUtils.java:169
-msgid "Header contains several values and cannot be mapped to a single String"
+msgid "Header contains several values and cannot be mapped to a single string"
 msgstr ""
 "L'en-tête contient plusieurs valeurs et ne peut être mappés en un seul Mot"
 
@@ -5633,7 +5634,7 @@ msgstr "Boucle de téléchargement OpenStreetBugs"
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:51
 msgid ""
 "<html>The selected data contains data from OpenStreetBugs.<br>You cannot "
-"upload these data. Maybe you have selected the wrong layer?"
+"upload this data. Maybe you have selected the wrong layer?"
 msgstr ""
 "<html>Les données sélectionnées contiennent des données de OpenStreetBugs."
 "<br>Vous ne pouvez charger ces données. Peut-être avez-vous sélectionné la "
@@ -5723,11 +5724,11 @@ msgstr "Extractions des positions GPS depuis les informations EXIF"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:103
 msgid "Starting directory scan"
-msgstr ""
+msgstr "Début du parcours du dossier"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:108
 msgid "One of the selected files was null !!!"
-msgstr ""
+msgstr "Un des fichiers sélectionnés était vide !!!"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:115
 msgid "Read photos..."
@@ -5736,22 +5737,22 @@ msgstr "Lexture des images..."
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:169
 #, java-format
 msgid "Unable to get canonical path for directory {0}\n"
-msgstr ""
+msgstr "Impossible d’obtenir le chemin canonique du dossier {0}\n"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:181
-#, fuzzy, java-format
+#, java-format
 msgid "Scanning directory {0}"
-msgstr "Erreur lors de la création du répertoire tampon : {0}"
+msgstr "Parcours du dossier {0}"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:186
 #, java-format
 msgid "Found null file in directory {0}\n"
-msgstr ""
+msgstr "Fichier vide trouvé dans le dossier {0}\n"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:189
-#, fuzzy, java-format
+#, java-format
 msgid "Error while getting files from directory {0}\n"
-msgstr "Erreur lors de la création du répertoire tampon : {0}"
+msgstr "Erreur lors de la récupération des fichiers du dossier {0}\n"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:254
 msgid "Correlate to GPX"
@@ -5783,20 +5784,22 @@ msgid "Zoom best fit and 1:1"
 msgstr "Meilleur zoom et 1:1"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:166
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "\n"
 "Altitude: {0} m"
 msgstr ""
 "\n"
-"Altitude: "
+"Altitude : {0} m"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:169
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "\n"
 "{0} km/h"
-msgstr " km/h"
+msgstr ""
+"\n"
+"{0} km/h"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:428
 msgid "No image"
@@ -5964,7 +5967,8 @@ msgstr "Ouvrir les images avec AgPifoJ..."
 
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:44
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:46
-msgid "Open Visible ..."
+#, fuzzy
+msgid "Open Visible..."
 msgstr "Open Visible ..."
 
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:45
@@ -6006,64 +6010,52 @@ msgid "Lake Walker"
 msgstr "Lake Walker"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:18
-#, fuzzy
 msgid "east"
-msgstr "Essai"
+msgstr "Est"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:18
-#, fuzzy
 msgid "northeast"
-msgstr "Forêt"
+msgstr "Nord-Est"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:18
-#, fuzzy
 msgid "north"
-msgstr "orthodox"
+msgstr "Nord"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:18
-#, fuzzy
 msgid "northwest"
-msgstr "Forêt"
+msgstr "Nord-Ouest"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:19
-#, fuzzy
 msgid "west"
-msgstr "Essai"
+msgstr "Ouest"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:19
-#, fuzzy
 msgid "southwest"
-msgstr "Vêtements"
+msgstr "Sud-Ouest"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:19
-#, fuzzy
 msgid "south"
-msgstr "À propos"
+msgstr "Sud"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:19
-#, fuzzy
 msgid "southeast"
-msgstr "Vêtements"
+msgstr "Sud-Est"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
-#, fuzzy
 msgid "water"
-msgstr "Eau"
+msgstr "eau"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
-#, fuzzy
 msgid "coastline"
-msgstr "Ligne côtière"
+msgstr "ligne côtière"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
-#, fuzzy
 msgid "land"
-msgstr "île"
+msgstr "terre"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
-#, fuzzy
 msgid "none"
-msgstr "nœud"
+msgstr "rien"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:40
 msgid "Maximum number of segments per way"
@@ -6119,7 +6111,7 @@ msgstr "Age maximum du cache (en jours)"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:66
 msgid "Source text"
-msgstr ""
+msgstr "Texte source"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:69
 msgid "Maximum number of segments allowed in each generated way. Default 250."
@@ -6196,10 +6188,10 @@ msgstr "Age maximum de chaque fichier en cache. Par défaut : 100"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:82
 msgid "Data source text. Default is Landsat."
-msgstr ""
+msgstr "Texte de donnée source. Landsat par défaut."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:84
-msgid "An plugin to trace water bodies on Landsat imagery."
+msgid "A plugin to trace water bodies on Landsat imagery."
 msgstr "Un greffon pour tracer les nappes d'eau des images Landsat."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:85
@@ -6621,8 +6613,9 @@ msgid "Crossing ways"
 msgstr "Chemins se croisant"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:36
-msgid "Similar named ways."
-msgstr "Chemins avec un nom similaire."
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:82
+msgid "Similarly named ways"
+msgstr "Chemins avec un nom similaire"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:37
 msgid ""
@@ -6630,10 +6623,6 @@ msgid ""
 msgstr ""
 "Ce test vérifie les chemins avec des noms similaires qui auraient pu être "
 "mal ortographiés."
-
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:82
-msgid "Similar named ways"
-msgstr "Chemins avec un nom similaire"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:32
 msgid "Unclosed Ways."
@@ -6708,7 +6697,7 @@ msgid "Duplicated way nodes"
 msgstr "Nœuds du chemin dupliqués"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:56
-msgid "Untagged, empty, and one node ways."
+msgid "Untagged, empty and one node ways."
 msgstr "Chemins vides, sans étiquette ou avec un seul nœud."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:57
@@ -6745,17 +6734,14 @@ msgstr ""
 "plus d’un fois."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:34
-msgid "Untagged nodes."
-msgstr "Nœud non étiqueté"
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:88
+msgid "Untagged and unconnected nodes"
+msgstr "Nœud non connectés et sans étiquettes"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:35
 msgid "This test checks for untagged nodes that are not part of any way."
 msgstr ""
 "Ce test vérifie les nœuds non étiquetés qui ne font partie d'aucun chemin."
-
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:88
-msgid "Untagged and unconnected nodes"
-msgstr "Nœud non connectés et sans étiquettes"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:140
 msgid "Properties checker :"
@@ -6832,7 +6818,7 @@ msgstr "FIXMES"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:430
 msgid "Check property keys."
-msgstr "Vérifier les clés de propriétés"
+msgstr "Vérifier les clés de propriétés."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:431
 msgid "Validate that property keys are valid checking against list of words."
@@ -6841,7 +6827,7 @@ msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:438
 msgid "Use complex property checker."
-msgstr "Utiliser un vérificateur de propriétés complexe"
+msgstr "Utiliser un vérificateur de propriétés complexe."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:439
 msgid "Validate property values and tags using complex rules."
@@ -6885,7 +6871,7 @@ msgstr "Valider les valeurs et les vérifier avec les étiquettes prédéfinies.
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:542
 msgid "Check for FIXMES."
-msgstr "Vérifier les FIXMES"
+msgstr "Vérifier les FIXMES."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:543
 msgid "Looks for nodes or ways with FIXME in any property value."
@@ -6894,12 +6880,11 @@ msgstr ""
 "étiquette."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:550
-#, fuzzy
 msgid "Check for paint notes."
-msgstr "Vérifier les clés de propriétés"
+msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:551
-msgid "Check if map paining found data errors."
+msgid "Check if map painting found data errors."
 msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:558
@@ -6967,7 +6952,7 @@ msgstr "point final d’un chemin connecté à côté d’un autre chemin"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:33
 msgid "Wrongly Ordered Ways."
-msgstr "Chemins mal ordonnés"
+msgstr "Chemins mal ordonnés."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:34
 msgid "This test checks the direction of water, land and coastline ways."
@@ -7031,7 +7016,7 @@ msgstr "Chemins superposés"
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:21
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:47
 msgid "Nodes with same name"
-msgstr "Nœuds avec le même nom"
+msgstr "Nœuds avec le même nom."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:22
 msgid "This test finds nodes that have the same name (might be duplicates)."
@@ -7056,17 +7041,14 @@ msgid "Unordered coastline"
 msgstr "Ligne de côte désordonnée"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:32
-msgid "Duplicated nodes."
-msgstr "Nœuds dupliqués."
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:50
+msgid "Duplicated nodes"
+msgstr "Nœuds dupliqués"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:33
 msgid "This test checks that there are no nodes at the very same location."
 msgstr ""
 "Ce test vérifie si des nœuds ne sont pas exactement à la même position."
-
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:50
-msgid "Duplicated nodes"
-msgstr "Nœuds dupliqués"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:13
 msgid "Errors"
@@ -7123,7 +7105,7 @@ msgstr "À l’envoi"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:92
 msgid ""
-"A OSM data validator that checks for common errors made by users and editor "
+"An OSM data validator that checks for common errors made by users and editor "
 "programs."
 msgstr ""
 "Un validateur des données OSM qui vérifie les erreurs communes commises par "
@@ -7167,46 +7149,41 @@ msgid "Performs the data validation"
 msgstr "Validation des données"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:68
-#, fuzzy
 msgid "User"
-msgstr "Utiliser"
+msgstr "Utilisateur"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:75
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:76
-#, fuzzy
 msgid "Show Author Panel"
-msgstr "Montrer cette aide"
+msgstr "Afficher la liste des auteurs"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:95
-#, fuzzy
 msgid "Open User Page"
-msgstr "Carte Open Aerial"
+msgstr "Ouvrir la page utilisateur"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:96
-#, fuzzy
 msgid "Open User Page in browser"
-msgstr "Ouvrir dans un navigateur"
+msgstr "Ouvrir la page utilisateur dans le navigateur"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:107
 msgid "Select User's Data"
-msgstr ""
+msgstr "Sélectionner les données de l'utilisateur"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:108
 msgid "Replaces Selection with Users data"
-msgstr ""
+msgstr "Remplacer la sélection par les données utilisateurs"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:141
-#, fuzzy
 msgid "Please select some data"
-msgstr "Sélectionner une valeur"
+msgstr "Veuillez sélectionner quelques données"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:145
 msgid "Please choose a user using the author panel"
-msgstr ""
+msgstr "Veuillez sélectionner un utilisateur en utilisant la liste des auteurs"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:158
 msgid "Sorry, doesn't work with anonymous users"
-msgstr ""
+msgstr "Désolé, cela ne fonctionne pas avec des utilisateurs anonymes"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:59
 msgid "Install"
@@ -7318,11 +7295,11 @@ msgstr "Oberpfalz Geofabrik.de"
 msgid "Streets NRW Geofabrik.de"
 msgstr "Rues Geofabrik.de de Rhénanie-du-Nord-Westphalie"
 
-#: trans_surveyor.java:6
+#: trans_surveyor.java:8
 msgid "Tunnel Start"
 msgstr "Début du tunnel"
 
-#: trans_surveyor.java:12 trans_presets.java:53 trans_presets.java:70
+#: trans_surveyor.java:14 trans_presets.java:53 trans_presets.java:70
 #: trans_presets.java:89 trans_presets.java:107 trans_presets.java:128
 #: trans_presets.java:145 trans_presets.java:164 trans_presets.java:182
 #: trans_presets.java:197 trans_presets.java:215 trans_presets.java:233
@@ -7335,67 +7312,67 @@ msgstr "Début du tunnel"
 msgid "Bridge"
 msgstr "Pont"
 
-#: trans_surveyor.java:16
+#: trans_surveyor.java:18
 msgid "Village/City"
 msgstr "Village/Ville"
 
-#: trans_surveyor.java:24 trans_presets.java:1275 trans_presets.java:1322
+#: trans_surveyor.java:26 trans_presets.java:1275 trans_presets.java:1322
 msgid "Parking"
 msgstr "Parking"
 
-#: trans_surveyor.java:29
+#: trans_surveyor.java:31
 msgid "One Way"
 msgstr "Sens unique"
 
-#: trans_surveyor.java:33
+#: trans_surveyor.java:35
 msgid "Church"
 msgstr "Eglise"
 
-#: trans_surveyor.java:38
+#: trans_surveyor.java:40
 msgid "Fuel Station"
 msgstr "Station essence"
 
-#: trans_surveyor.java:43 trans_presets.java:1453
+#: trans_surveyor.java:45 trans_presets.java:1453
 msgid "Hotel"
 msgstr "Hôtel"
 
-#: trans_surveyor.java:47 trans_presets.java:1507
+#: trans_surveyor.java:49 trans_presets.java:1507
 msgid "Restaurant"
 msgstr "Restaurant"
 
-#: trans_surveyor.java:52
+#: trans_surveyor.java:54
 msgid "Shopping"
 msgstr "Shopping"
 
-#: trans_surveyor.java:56
+#: trans_surveyor.java:58
 msgid "WC"
 msgstr "WC"
 
-#: trans_surveyor.java:60
+#: trans_surveyor.java:62
 msgid "Camping"
 msgstr "Camping"
 
-#: trans_surveyor.java:72 trans_presets.java:40
+#: trans_surveyor.java:74 trans_presets.java:40
 msgid "Motorway"
 msgstr "Autoroute"
 
-#: trans_surveyor.java:76 trans_presets.java:115
+#: trans_surveyor.java:78 trans_presets.java:115
 msgid "Primary"
 msgstr "Route primaire"
 
-#: trans_surveyor.java:80 trans_presets.java:151
+#: trans_surveyor.java:82 trans_presets.java:151
 msgid "Secondary"
 msgstr "Route secondaire"
 
-#: trans_surveyor.java:84 trans_presets.java:188
+#: trans_surveyor.java:86 trans_presets.java:188
 msgid "Unclassified"
 msgstr "Route mineure"
 
-#: trans_surveyor.java:88 trans_presets.java:206
+#: trans_surveyor.java:90 trans_presets.java:206
 msgid "Residential"
 msgstr "Rue résidentielle"
 
-#: trans_surveyor.java:93 trans_surveyor.java:97
+#: trans_surveyor.java:95 trans_surveyor.java:99
 msgid "Test"
 msgstr "Essai"
 
@@ -7482,20 +7459,19 @@ msgstr "nom de rue abrégé"
 
 #: trans_validator.java:66
 msgid "relation without type"
-msgstr ""
+msgstr "relantion sans type"
 
 #: trans_validator.java:68
 msgid "restaurant without name"
-msgstr ""
+msgstr "restaurant sans nom"
 
 #: trans_validator.java:69
 msgid "unusual named way type"
-msgstr ""
+msgstr "type de chemin inhabituel"
 
 #: trans_validator.java:70 trans_validator.java:71 trans_validator.java:72
-#, fuzzy
 msgid "unusual tag combination"
-msgstr "Combinaisons étiquette/valeur non valide"
+msgstr "combinaison d'étiquettes inhabituelle"
 
 #: trans_presets.java:39
 msgid "Streets"
@@ -11442,16 +11418,23 @@ msgstr "Falaise"
 msgid "Edit Cliff"
 msgstr "Éditer une falaise"
 
-#~ msgid " ({0} node)"
-#~ msgid_plural " ({0} nodes)"
-#~ msgstr[0] " ({0} nœud)"
-#~ msgstr[1] " ({0} nœuds)"
+#~ msgid "Search ..."
+#~ msgstr "Rechercher ..."
 
-#~ msgid "Error while exporting {0}"
-#~ msgstr "Erreur à l’export {0}"
+#~ msgid "Similar named ways."
+#~ msgstr "Chemins avec un nom similaire."
+
+#~ msgid "Untagged nodes."
+#~ msgstr "Nœud non étiqueté"
+
+#~ msgid "Duplicated nodes."
+#~ msgstr "Nœuds dupliqués."
 
 #~ msgid "Java OpenStreetMap Editor Version {0}"
 #~ msgstr "Java OpenStreetMap Editor Version {0}"
+
+#~ msgid "Error while exporting {0}"
+#~ msgstr "Erreur à l’export {0}"
 
 #~ msgid "NullPointerException. Possible some missing tags."
 #~ msgstr "NullPointerException.·Certains tags peuvent manquer."
@@ -11461,6 +11444,11 @@ msgstr "Éditer une falaise"
 
 #~ msgid "Set {0}={1} for"
 #~ msgstr "Affecte {0}={1} pour"
+
+#~ msgid " ({0} node)"
+#~ msgid_plural " ({0} nodes)"
+#~ msgstr[0] " ({0} nœud)"
+#~ msgstr[1] " ({0} nœuds)"
 
 #~ msgid "Selection: %d way(s) and %d node(s)"
 #~ msgstr "Sélection : %d chemin(s) et %d noeud(s)"

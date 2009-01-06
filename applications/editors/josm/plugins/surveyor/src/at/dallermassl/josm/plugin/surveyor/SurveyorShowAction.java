@@ -43,8 +43,8 @@ public class SurveyorShowAction extends JosmAction {
     private LiveGpsPlugin gpsPlugin;
 
     public SurveyorShowAction(LiveGpsPlugin gpsPlugin) {
-        super(tr("Surveyor ..."), "surveyormenu.png", tr("Open surveyor tool."),
-        Shortcut.registerShortcut("surveyor:open", tr("Tool: {0}", tr("Surveyor ...")),
+        super(tr("Surveyor..."), "surveyormenu.png", tr("Open surveyor tool."),
+        Shortcut.registerShortcut("surveyor:open", tr("Tool: {0}", tr("Surveyor...")),
         KeyEvent.VK_R, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT), true);
         this.gpsPlugin = gpsPlugin;
     }

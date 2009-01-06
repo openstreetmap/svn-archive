@@ -17,7 +17,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
     private static final long serialVersionUID = 1L;
 
     public Map_Rectifier_WMSmenuAction() {
-        super(tr("Rectified Image ..."), "OLmarker", tr("Download Rectified Image from Metacarta's Map Rectifier WMS"), null, false);
+        super(tr("Rectified Image..."), "OLmarker", tr("Download Rectified Image from Metacarta's Map Rectifier WMS"), null, false);
     }
 
     public void actionPerformed(ActionEvent e) {

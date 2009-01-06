@@ -348,7 +348,7 @@ sub draw_text
         {
             if (ref $_ eq 'node')
             {
-        debug("draw node text '$text'") if ($debug->{"drawing"});
+                debug("draw node text '$text'") if ($debug->{"drawing"});
                 render_text($textnode, $text, [$_->{'lat'}, $_->{'lon'}]);
             }
             elsif (ref $_ eq 'way')
@@ -387,18 +387,29 @@ sub draw_text_on_path
 
     if ($textnode->getAttribute("avoid-duplicates") =~ /^1|yes|true$/)
     {
-        $bucket = (int($nodes->[0]->{'lat'}*2)+180) * 720 + int($nodes->[0]->{'lon'}*2) + 360;
-        debug ("place '$text' in bucket $bucket");
+        my $bucket1 = (int($nodes->[0]->{'lat'}*2)+180) * 720 + int($nodes->[0]->{'lon'}*2) + 360;
+        my $bucket2 = (int($nodes->[scalar @$nodes -1]->{'lat'}*2)+180) * 720 + int($nodes->[scalar @$nodes -1]->{'lon'}*2) + 360;
+        $bucket = ($bucket1 < $bucket2) ? $bucket1 : $bucket2;
+        debug ("place '$text' in bucket $bucket") if ($debug->{"drawing"});
         foreach my $label (@{$text_index->{$bucket}})
         {
             if ($text eq $label->{"text"})
             {
                 my $d1 = distance($nodes->[0], $label->{'n0'});
                 my $d2 = distance($nodes->[scalar @$nodes -1], $label->{'n1'});
-                debug ("   distance to other: $d1 $d2");
+                debug ("   distance to other: $d1 $d2") if ($debug->{"drawing"});
                 if ($d1<1000 && $d2<1000)
                 {
                     debug("ignore '$text'");
+                    return;
+                }
+                # same check for reversed way
+                $d1 = distance($nodes->[0], $label->{'n1'});
+                $d2 = distance($nodes->[scalar @$nodes -1], $label->{'n0'});
+                debug ("   distance to other: $d1 $d2");
+                if ($d1<1000 && $d2<1000)
+                {
+                    debug("ignore '$text'") if ($debug->{"drawing"});
                     return;
                 }
             }

@@ -52,6 +52,7 @@
     <ant target="build-lang"><property name="language" value="fi"/></ant>
     <ant target="build-lang"><property name="language" value="fr"/></ant>
     <ant target="build-lang"><property name="language" value="it"/></ant>
+    <ant target="build-lang"><property name="language" value="nl"/></ant>
     <ant target="build-lang"><property name="language" value="pl"/></ant>
     <ant target="build-lang"><property name="language" value="ro"/></ant>
     <ant target="build-lang"><property name="language" value="ru"/></ant>

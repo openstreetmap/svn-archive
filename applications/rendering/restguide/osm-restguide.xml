@@ -1676,7 +1676,7 @@
 		<rule e="way" k="amenity" v="pub">
 			<areaSymbol ref="pub" position="center"/>
 		</rule>
-		<rule e="node" k="amenity" v="restaurant|fast_food">
+		<rule e="node" k="amenity" v="restaurant|fast_food|cafe">
 			<rule e="node" k="tourism" v="hotel">
 				<symbol ref="hotel_and_restaurant" position="center"/>
 			</rule>
@@ -2222,7 +2222,7 @@
 				<text k="name" class="caption-casing generic-caption-casing" dy="-3px" layer="5"/>
 				<text k="name" class="caption-core generic-caption-core" dy="-3px" layer="5"/>
 			</rule>
-			<rule e="node" k="amenity" v="restaurant|fast_food|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bus_station" layer="5">
+			<rule e="node" k="amenity" v="restaurant|fast_food|cafe|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bus_station" layer="5">
 				<text k="name" class="caption-casing generic-caption-casing" dy="-1.1px" layer="5"/>
 				<text k="name" class="caption-core generic-caption-core" dy="-1.1px" layer="5"/>
 			</rule>
@@ -2278,14 +2278,14 @@
 			</else>
 		</rule>
 		<rule e="way" k="landuse|military" v="*" layer="5">
-            <rule e="way" k="amenity|shop" v="school|college|university|restaurant|fast_food|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bus_station" />
+            <rule e="way" k="amenity|shop" v="school|college|university|restaurant|fast_food|cafe|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bus_station" />
             <else>
                 <areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
 			    <areaText k="name" class="caption-core generic-caption-core" text-anchor="middle"
                 startOffset="50%" layer="5"/>
             </else>
 		</rule>
-		<rule e="way" k="amenity|shop" v="school|college|university|restaurant|fast_food|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bus_station|fuel" layer="5">
+		<rule e="way" k="amenity|shop" v="school|college|university|restaurant|fast_food|cafe|shelter|supermarket|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bus_station|fuel" layer="5">
 			<areaText k="name" class="caption-casing generic-caption-casing" dy='-1.1px' text-anchor='middle' startOffset='50%' layer="5"/>
 			<areaText k="name" class="caption-core generic-caption-core" dy='-1.1px' text-anchor='middle' startOffset='50%' layer="5"/>
 		</rule>

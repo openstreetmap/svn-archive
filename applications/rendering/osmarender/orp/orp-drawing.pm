@@ -400,13 +400,13 @@ sub draw_text_on_path
                 debug ("   distance to other: $d1 $d2") if ($debug->{"drawing"});
                 if ($d1<1000 && $d2<1000)
                 {
-                    debug("ignore '$text'");
+                    debug("ignore '$text'") if ($debug->{"drawing"});
                     return;
                 }
                 # same check for reversed way
                 $d1 = distance($nodes->[0], $label->{'n1'});
                 $d2 = distance($nodes->[scalar @$nodes -1], $label->{'n0'});
-                debug ("   distance to other: $d1 $d2");
+                debug ("   distance to other: $d1 $d2") if ($debug->{"drawing"});
                 if ($d1<1000 && $d2<1000)
                 {
                     debug("ignore '$text'") if ($debug->{"drawing"});
@@ -541,7 +541,7 @@ sub substitute_text
                 }
                 else
                 {
-                    debug("ignoring <$elname> tag in text instruction");
+                    debug("ignoring <$elname> tag in text instruction") if ($debug->{"drawing"});
                 }
             }
             else

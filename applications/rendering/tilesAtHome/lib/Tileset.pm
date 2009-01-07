@@ -180,12 +180,26 @@ sub generate
     }
     else
     {
-        my %layers = map {$_ => 1} $req->layers;
-        my %alllayers = %layers;
-        if($layers{tile}) # make sure we have working directories
+        my %alllayers;
+        foreach my $layer ($req->layers)
         {
-            $alllayers{captionless} = 1;
-            $alllayers{caption} = 1;
+            $alllayers{$layer}{generate} = 1;
+            # work aroung "no such variable warning
+            my %vl = $Config->varlist(lc("^${layer}_LowZoom"));
+            if(%vl && (my $l = $vl{lc("${layer}_LowZoom")}))
+            {
+                my $text = "base";
+                foreach my $lzlayer (split(",",$l))
+                {
+                    $alllayers{$lzlayer}{"is$text"} = 1;
+                    $alllayers{$layer}{$text} = $lzlayer;
+                    $text = "overlay";
+                }
+            }
+            else
+            {
+                $alllayers{$layer}{direct} = 1;
+            }
         }
 
         foreach my $layer (keys %alllayers)
@@ -193,18 +207,13 @@ sub generate
             my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
             my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
             mkdir $JobDirectory;
-        }
-
-        #------------------------------------------------------
-        # Download data (returns full path to data.osm or 0)
-        #------------------------------------------------------
-
-        if($layers{caption})
-        {
-            my $beforeDownload = time();
-            my $FullDataFile = $self->downloadData("caption");
-            ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
-            $self->generateNormalLayer("caption");
+            if($alllayers{$layer}{direct})
+            {
+                my $beforeDownload = time();
+                my $FullDataFile = $self->downloadData($layer);
+                ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
+                $self->generateNormalLayer($layer);
+            }
         }
 
         eval
@@ -230,22 +239,22 @@ sub generate
             $::progress=0;
             $::progressPercent=0;
 
-            my $numlayers = 0;
-            ++$numlayers if $alllayers{captionless};
-            ++$numlayers if $alllayers{maplint};
-
             $self->{NumTiles} = 0;
             # up-to maxlayer, as this needs to be downloaded as well
             my $t = 1;
-            for(my $i = $req->Z; $i <= $maxlayer; ++$i)
+            my $sum = 0;
+            for(my $i = $req->Z; $i < $maxlayer; ++$i)
             {
-                $self->{NumTiles} += $numlayers*$t;
-
-                # no caption or tile download for $maxlayer level!
-                $self->{NumTiles} += 2*$t if $i < $maxlayer && $alllayers{tile};
-
+                $sum += $t;
                 $t *= 4;
             }
+            foreach my $layer (keys %alllayers)
+            {
+                $self->{NumTiles} += $t if $alllayers{$layer}{isbase};
+                $self->{NumTiles} += $sum if $alllayers{$layer}{isoverlay} || !$alllayers{$layer}{direct};
+            }
+            # $t is now number of tiles in $maxlayer
+            # $sum is number of tiles up to $maxlayer
 
             my $forkpid = 0;
             if($Config->get("Fork"))
@@ -254,34 +263,75 @@ sub generate
                 if($forkpid == 0)
                 {
                     $self->{childThread}=1;
+                    my @baselayers;
+                    my @ovlayers;
+
+                    foreach my $layer (keys %alllayers)
+                    {
+                        next if $alllayers{$layer}{direct};
+                        push(@baselayers, $layer) if $alllayers{$layer}{isbase};
+                        push(@ovlayers, $layer) if $alllayers{$layer}{isoverlay};
+                    }
+                    $self->{NumTiles} = $t*scalar(@baselayers) + $sum*scalar(@ovlayers);
+
                     my $num = 2**($maxlayer-$req->Z);
-                    $self->{NumTiles} = $num*$num;
                     my $startx = $req->X*$num;
                     my $starty = $req->Y*$num;
-                    for(my $i = 0; $i < $num; ++$i)
+                    foreach my $layer (@baselayers)
                     {
-                        for(my $j = 0; $j < $num; ++$j)
+                        $::currentSubTask = "download $layer";
+                        for(my $i = 0; $i < $num; ++$i)
                         {
-                            $self->getFile("captionless", $maxlayer, $startx+$i,
-                            $starty+$j);
+                            for(my $j = 0; $j < $num; ++$j)
+                            {
+                                $self->getFile($layer, $maxlayer, $startx+$i,
+                                $starty+$j);
+                            }
+                        }
+                    }
+                    foreach my $layer (@ovlayers)
+                    {
+                        $::currentSubTask = "download $layer";
+                        for(my $z = $req->Z; $z < $maxlayer; ++$z)
+                        {
+                            $num = 2**($z-$req->Z);
+                            $startx = $req->X*$num;
+                            $starty = $req->Y*$num;
+                            for(my $i = 0; $i < $num; ++$i)
+                            {
+                                for(my $j = 0; $j < $num; ++$j)
+                                {
+                                    $self->getFile($layer, $z, $startx+$i,
+                                    $starty+$j);
+                                }
+                            }
                         }
                     }
                     exit(1);
                 }
             }
 
-            if($layers{tile})
+            foreach my $layer ($req->layers)
             {
-                # also produces captionless
-                $self->lowZoom($req->ZXY, $maxlayer, "tile", "captionless", "caption");
-            }
-            elsif($layers{captionless})
-            {
-                $self->lowZoom($req->ZXY, $maxlayer, "captionless", "captionless");
-            }
-            if($layers{maplint})
-            {
-                $self->lowZoom($req->ZXY, $maxlayer, "maplint", "maplint");
+                # note - base layer can be created on the fly
+                if(!$alllayers{$layer}{direct} && !$alllayers{$layer}{isbase})
+                {
+                    try
+                    {
+                        $self->lowZoom($req->ZXY, $maxlayer, $layer,
+                        $alllayers{$layer}{base}, $alllayers{$layer}{overlay});
+                    }
+                    otherwise
+                    {
+                        my $E = shift;
+                        if($forkpid)
+                        {
+                            kill 15, $forkpid;
+                            waitpid($forkpid, 0);
+                        }
+                        throw $E;
+                    };
+                }
             }
             waitpid($forkpid, 0) if $forkpid;
         }
@@ -292,7 +342,7 @@ sub generate
         # now copy/cleanup the results
         foreach my $layer ($req->layers)
         {
-            next if $layer eq "caption";
+            next if $alllayers{$layer}{direct};
             my $TileDirectory = sprintf("%s_%d_%d_%d.dir", $Config->get($layer."_Prefix"), $req->ZXY);
             my $JobDirectory = File::Spec->join($self->{JobDir}, $TileDirectory);
             my $hasdata = 0;
@@ -435,8 +485,14 @@ sub readLocalImage
 
     my $imImage;
     throw TilesetError "The image $file is missing", "lowzoom" if !-f $pfile;
-    my $Image = GD::Image->newFromPng($pfile);
-    throw TilesetError "The image $file failed to load", "lowzoom" if !$Image;
+    my $Image;
+    eval { $Image = GD::Image->newFromPng($pfile); };
+    if(!$Image)
+    {
+      sleep 5;
+      eval { $Image = GD::Image->newFromPng($pfile); };
+      throw TilesetError "The image $file failed to load", "lowzoom" if !$Image;
+    }
 
     # Detect empty tiles here:
     if (File::Compare::compare($pfile, "emptyland.png") == 0)
@@ -548,6 +604,7 @@ sub supertile {
         {
             ::statusMessage("Writing sea $file", 0, 6);
             copy("emptysea.png", $pfile);
+            $Image = $self->{EmptySeaImageIM};
         }
         elsif($AA == $self->{EmptyLandImageIM}
         && $AB == $self->{EmptyLandImageIM}
@@ -556,6 +613,7 @@ sub supertile {
         {
             ::statusMessage("Writing land $file", 0, 6);
             copy("emptyland.png", $pfile);
+            $Image = $self->{EmptyLandImageIM};
         }
         else
         {
@@ -616,8 +674,12 @@ sub supertile {
           $Image->Composite(image => $CaptionFile);
         }
         ($pfile, $file) = $self->lowZoomFileName($OutputLayer, $Z, $X, $Y);
-        $Image->Write($pfile);
-        my $gdimage = GD::Image->newFromPng($pfile);
+        if($Image->Write($pfile) != 1)
+        {
+          throw TilesetError "The image $file failed to save", "lowzoom";
+        }
+        my $gdimage;
+        eval { $gdimage = GD::Image->newFromPng($pfile); };
         throw TilesetError "The image $file failed to load", "lowzoom" if !$gdimage;
         if (not ($gdimage->compare($self->{EmptyLandImage}) & GD_CMP_IMAGE)) {
             ::statusMessage("Writing land $file", 0, 6);
@@ -684,13 +746,15 @@ sub downloadData
     my $DataFile = File::Spec->join($self->{JobDir}, "data.osm");
     
     my @predicates;
+    my $predicatesname = ($req->Z < 6 ? "world" : "lowzoom") . "predicates";
+    
     foreach my $layer (@layers) {
         my %layer_config = $Config->varlist("^${layer}_", 1);
-        if (not $layer_config{"predicates"}) {
+        if (not $layer_config{$predicatesname}) {
             @predicates = ();
             last;
         }
-        my $predicates = $layer_config{"predicates"};
+        my $predicates = $layer_config{$predicatesname};
         # strip spaces in predicates
         $predicates =~ s/\s+//g;
         push(@predicates, split(/,/, $predicates));
@@ -739,9 +803,9 @@ sub downloadData
         foreach my $URL (@URLS) {
             ++$i;
             my $partialFile = File::Spec->join($self->{JobDir}, "data-$i.osm");
-            my $title = pop @title;
+            my $title = shift @title;
             ::statusMessage("Downloading $title for " . join(",",@layers) ." from ".$OSMServer, 0, 3);
-            
+
             # download tile data in one piece *if* the tile is not too complex
             if ($req->complexity() < 20_000_000) {
                 my $currentURL = $URL;
@@ -761,14 +825,18 @@ sub downloadData
             if ((! $res) and ($Config->get("FallBackToSlices"))) {
                 ::statusMessage("Trying smaller slices for $title from $OSMServer",1,0);
                 my $slice = (($E1 - $W1) / 10); # A slice is one tenth of the width
-                my $slicesdownloaded=0;
+                my $slicesdownloaded = 0;
                 for (my $j = 1; $j <= 10; $j++) {
                     my $bbox = sprintf("%f,%f,%f,%f", $W1 + ($slice * ($j - 1)), $S1, $W1 + ($slice * $j), $N1);
                     my $currentURL = $URL;
+                    my $trylimit = 3 + $slicesdownloaded;
                     $currentURL =~ s/%b/${bbox}/g;    # substitute bounding box place holder
                     $partialFile = File::Spec->join($self->{JobDir}, "data-$i-$j.osm");
                     $res = 0;
-                    for (my $k = 1; $k <= 3; $k++) {  # try each slice 3 times
+                    for (my $k = 1; $k <= $trylimit; $k++) {  # try each slice 3 times
+                        if(($k % 4) == 0) {
+                            ::talkInSleep("Sleeping for 30 seconds before the next retry", 30);
+                        }
                         ::statusMessage("Downloading $title (slice $j of 10) from $OSMServer", 0, 3);
                         print "Downloading: $currentURL\n" if ($Config->get("Debug"));
                         try {
@@ -779,7 +847,7 @@ sub downloadData
                         catch ServerError with {
                             my $err = shift();
                             print "Download failed: " . $err->text() . "\n" if ($Config->get("Debug"));;
-                            my $message = ($k < 3) ? "Download of $title slice $j from $OSMServer failed, trying again" : "Download of $title slice $j from $OSMServer failed 3 times, giving up";
+                            my $message = ($k < $trylimit) ? "Download of $title slice $j from $OSMServer failed, trying again" : "Download of $title slice $j from $OSMServer failed $trylimit times, giving up";
                             ::statusMessage($message, 0, 3);
                         };
                         last if ($res); # don't try again if download was successful
@@ -939,6 +1007,20 @@ sub runPreprocessors
     return $OSMfile;
 }
 
+sub getzoom
+{
+    my $self = shift;
+    my ($layer) = @_;
+    my $req = $self->{req};
+    my $Config = $self->{Config};
+
+    my $minzoom = $req->Z;
+    my $maxzoom = $Config->get($layer."_MaxZoom");
+    if($minzoom < 6 && $maxzoom >= 6) {$maxzoom = 5;}
+    elsif($minzoom < 12 && $maxzoom >= 12) {$maxzoom = 11;}
+    return ($minzoom, $maxzoom);
+}
+
 #-------------------------------------------------------------------
 # renders the tiles, using threads
 # paramter: ($layer, $layerDataFile)
@@ -949,8 +1031,7 @@ sub forkedRender
     my ($layer, $layerDataFile) = @_;
     my $req = $self->{req};
     my $Config = $self->{Config};
-    my $minzoom = $req->Z;
-    my $maxzoom = $Config->get($layer."_MaxZoom");
+    my ($minzoom, $maxzoom) = $self->getzoom($layer);
 
     my $numThreads = 2 * $Config->get("Fork");
     my @pids;
@@ -1018,8 +1099,7 @@ sub nonForkedRender
     my ($layer, $layerDataFile) = @_;
     my $req = $self->{req};
     my $Config = $self->{Config};
-    my $minzoom = $req->Z;
-    my $maxzoom = $Config->get($layer."_MaxZoom");
+    my ($minzoom, $maxzoom) = $self->getzoom($layer);
 
     for (my $zoom = $req->Z ; $zoom <= $maxzoom; $zoom++) {
         $self->Render($layer, $zoom, $layerDataFile)
@@ -1625,7 +1705,7 @@ sub cleanup
     my $Config = $self->{Config};
 
     # remove temporary job directory if 'Debug' is not set
-    print STDERR "would be removing job dir ",$self->{JobDir},"\n\n" if $Config->get('Debug');
+    print STDERR "removing job dir",$self->{JobDir},"\n\n" if $Config->get('Debug');
     rmtree $self->{JobDir} unless $Config->get('Debug');
 }
 

@@ -6,6 +6,9 @@ another web server than apache2.)  The data files are
 endian-independent.  Porting to Microsoft would be a challenge, there
 are subtle dependencies on a reasonable OS.
 
+The code depends on pack supporting "N!" for signed 32-bit values.
+This feature is apparently new at perl 5.10.
+
 The time on the system should be close to correct.  If it is off by
 more than a minute it could affect the data update process.  The map
 fcgi-bin program will refuse to serve data if the clock is too far in

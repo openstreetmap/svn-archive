@@ -35,7 +35,7 @@ while ($_ = <OSM>) {
       ($lat) = /\slat\=[\"\']?(-?\d+(?:\.\d+)?)[\"\']?\b/;
       ($lon) = /\slon\=[\"\']?(-?\d+(?:\.\d+)?)[\"\']?\b/;
       if (($tv{'amenity'} && ($tv{'amenity'} =~
-		  /^(?:restaurant|fast_food|cafe|hotel|motel|pharmacy)$/))
+		  /^(?:restaurant|fast_food|cafe|hotel|motel|pharmacy|hospital|bank)$/))
 	  || ($tv{'tourism'} &&
 	      ($tv{'tourism'} =~ /^(?:hotel|motel)$/))
 	  || $tv{'shop'} ) {

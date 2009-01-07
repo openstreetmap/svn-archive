@@ -312,7 +312,7 @@ elsif ($Mode eq "loop")
                 statusMessage("Waiting for previous upload process (this can take a while)",1,0);
                 waitpid($upload_pid, 0);
             }
-            print "We suggest that you set MaxTilesetComplexity to ".$complexity."\n";
+            print "We suggest that you set MaxTilesetComplexity to ".int($complexity)."\n";
             cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
         }
 
@@ -716,7 +716,11 @@ sub autotuneComplexity #
     my $minimum = $Config->get("AT_minimum");
     my $alpha = $Config->get("AT_alpha");
 
-    statusMessage ("Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render",1,3);
+    if($Mode eq "xy") {
+        statusMessage ("Tile took us ".$deltaT." seconds to render",1,3);
+    } else {
+        statusMessage ("Tile of complexity ".$tilecomplexity." took us ".$deltaT." seconds to render",1,3);
+    }
 
     if(! $complexity) { # this is the first call of this function
         if($Config->get('MaxTilesetComplexity')) {

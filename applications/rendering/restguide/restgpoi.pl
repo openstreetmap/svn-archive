@@ -58,6 +58,7 @@ my $n = 0;
 foreach my $poi (sort { ${$b}[1] <=> ${$a}[1] || ${$a}[2] <=> ${$b}[2] } @places) {
   my @poi = @$poi;
   $n++;
+  $poi[4] =~ s/\&amp;/\&/g;
   print POI "$n\t$poi[0]\t$poi[1]\t$poi[2]\t$poi[3]\t$poi[4]\n";
 }
 

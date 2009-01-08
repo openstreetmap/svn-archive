@@ -25,8 +25,14 @@ def area_names(tags, type):
     
     if type == "way" and 'name' in tags:
         name = tags['name']
+        
+        # Common playground typos
         if name.endswith("Plgd"):
             name = name.replace("Plgd", "Playground")
+            tags['name'] = name
+            changed = True
+        elif name.endswith("Plygrd"):
+            name = name.replace("Plygrd", "Playground")
             tags['name'] = name
             changed = True
         elif name.endswith("Playgroung"):
@@ -35,11 +41,19 @@ def area_names(tags, type):
             changed = True
         
         if name.endswith("Golf Course"):
-            if tags['leisure'] != "golf_course":
+            if not 'leisure' in tags or tags['leisure'] != "golf_course":
                 changed = True
                 tags['leisure'] = "golf_course"
-        elif name.endswith("Park") or name.endswith("Playground") or name.endswith("Field"):
-            if tags['leisure'] != "park":
+                if 'landuse' in tags:
+                    del tags['landuse']
+        elif name.endswith("State Park"):
+            if not 'leisure' in tags or tags['leisure'] != "nature_reserve":
+                changed = True
+                tags['leisure'] = 'nature_reserve'
+                
+        elif (name.endswith("Park") and tags['massgis:FEE_OWNER'] != "National Park Service") \
+                or name.endswith("Playground") or name.endswith("Field"):
+            if not 'leisure' in tags or tags['leisure'] != "park":
                 changed = True         
                 tags['leisure'] = "park"
 

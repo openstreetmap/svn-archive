@@ -145,7 +145,9 @@ class changeTags (ContentHandler):
 
     def upload(self, xml):
         if self.only_mine and self.current['user'] != self.only_mine:
-            self.skipped.append({'id': self.current['id'], 'type':self.current['type'], 'reason': "User %s doesn't match." % self.current['user']})
+            self.skipped.append({'id': self.current['id'], 
+                    'type':self.current['type'], 
+                    'reason': "User %s doesn't match." % self.current['user']})
             return
         db_key = "%s:%s" % (self.current['type'], self.current['id']) 
         if self.db and self.db.has_key(db_key):
@@ -213,7 +215,11 @@ class changeTags (ContentHandler):
             if new_tags:
                 osm = Element('osm', {'version': '0.5'})
 
-                parent = SubElement(osm, 'node', {'id': self.current['id'], 'lat': self.current['lat'], 'lon': self.current['lon']})
+                parent = SubElement(osm, 'node', 
+                    {'id': self.current['id'], 
+                     'lat': self.current['lat'], 
+                     'lon': self.current['lon']})
+                
                 keys = self.current['tags'].keys()
                 keys.sort()
                 for key in keys:
@@ -237,15 +243,38 @@ if __name__ == "__main__":
     from optparse import OptionParser
     parser = OptionParser()
 
-    parser.add_option("-f", "--file", help="source file. default is stdin", dest="file")
-    parser.add_option("-d", "--dry-run", action="store_true", default=False, help="print URLs and XML for changed items, rather than actually changing them.", dest="dry_run")
-    parser.add_option("-u", "--username", help="username for OSM API", dest="username")
-    parser.add_option("-p", "--password", help="api password (will prompt if not provided and required)", dest="password")
-    parser.add_option("-e", "--noisy-errors", dest="noisy_errors", default=False, action="store_true")
-    parser.add_option("--verbose", help="be verbose", dest="verbose", default=False, action="store_true")
-    parser.add_option('-o', "--only-mine", dest="only_mine", help="Provide a username/displayname which will be used to check if an edit should be perormed.") 
-    parser.add_option("-n", "--no-status", dest="no_status", action="store_true", default=False, help="Don't store status db for recovery of upload (faster; riskier")
-    parser.add_option('--profile', dest='profile', action="store_true", help="Report profiler stats", default=False)
+    parser.add_option("-f", "--file", 
+        help="source file. default is stdin", dest="file")
+    parser.add_option("-d", "--dry-run", 
+        action="store_true", default=False, 
+        help="print URLs and XML for changed items, rather than actually changing them.", 
+        dest="dry_run")
+    parser.add_option("-u", "--username", help="username for OSM API", 
+        dest="username")
+    parser.add_option("-p", "--password", 
+        help="api password (will prompt if not provided and required)", 
+        dest="password")
+    parser.add_option("-e", "--noisy-errors", 
+        dest="noisy_errors", 
+        default=False, 
+        action="store_true")
+    parser.add_option("--verbose", 
+        help="be verbose", 
+        dest="verbose", 
+        default=False, 
+        action="store_true")
+    parser.add_option('-o', "--only-mine", 
+        dest="only_mine", 
+        help="Provide a username/displayname which will be used to check if an edit should be perormed.") 
+    parser.add_option("-n", "--no-status", 
+        dest="no_status", 
+        action="store_true", 
+        default=False, 
+        help="Don't store status db for recovery of upload (faster; riskier")
+    parser.add_option('--profile', 
+        dest='profile', action="store_true", 
+        help="Report profiler stats", 
+        default=False)
 
     options, args = parser.parse_args()
 
@@ -296,37 +325,58 @@ if __name__ == "__main__":
             verbose=options.verbose)
    
     prof = None
+    
     if options.profile:
         import hotshot, hotshot.stats
         prof = hotshot.Profile("tagChanger.prof")
     
     try:
+        
         if prof:
             prof.runcall(xml.sax.parse, f, osmParser)
         else:    
             xml.sax.parse( f, osmParser )
-    except KeyboardInterrupt:
-        print "\nStopping at %s %s due to interrupt"  % (osmParser.current['type'], osmParser.current['id'])
-        pass
-    except Exception, E:
-        print E
-        print "\nStopping at %s %s due to exception: \n%s"  % (osmParser.current['type'], osmParser.current['id'], E)
 
-    print "Total Read: %s nodes, %s ways, %s tags"  % (osmParser.read['node'], osmParser.read['way'], osmParser.read['tag'])
-    print "Total Changed: %s nodes, %s ways"  % (osmParser.changes['node'], osmParser.changes['way'])
-    print "Previously Changed: %s nodes, %s ways"  % (osmParser.already_changed['node'], osmParser.already_changed['way'])
+    except KeyboardInterrupt:
+        print "\nStopping at %s %s due to interrupt"  % \
+              (osmParser.current['type'], osmParser.current['id'])
+    
+    except Exception, E:
+        if osmParser.current:
+            print "\nStopping at %s %s due to exception: \n%s"  % \
+                  (osmParser.current['type'], osmParser.current['id'], E)
+        else:
+            print "Stopping due to Exception: \n" % E  
+
+    print "Total Read: %s nodes, %s ways, %s tags"  % (
+           osmParser.read['node'], osmParser.read['way'], osmParser.read['tag'])
+    
+    print "Total Changed: %s nodes, %s ways"  % (
+           osmParser.changes['node'], osmParser.changes['way'])
+
+    print "Previously Changed: %s nodes, %s ways"  % \
+          (osmParser.already_changed['node'], osmParser.already_changed['way'])
+    
     if options.dry_run and options.file:
         f = open("%s.dry_run" % options.file, "w")
-        f.write("%s\n|||\n%s" % (converter.func_code.co_code, osmParser.changes['node'] + osmParser.changes['way']))
+        f.write("%s\n|||\n%s" % \
+               (converter.func_code.co_code, 
+                osmParser.changes['node'] + osmParser.changes['way']))
         f.close()
+    
     if len(osmParser.errors):
         print "The following %s errors occurred:" % len(osmParser.errors)
-    for e in osmParser.errors:
-         print "%s: %s. Code: %s. Error Text: %s" % (e['item']['type'],e['item']['id'], e['code'], e['data'])
+    
+        for e in osmParser.errors:
+             print "%s: %s. Code: %s. Error Text: %s" % \
+                (e['item']['type'],e['item']['id'], e['code'], e['data'])
+    
     if len(osmParser.skipped):
         print "The following %s items were skipped:" % len(osmParser.skipped)
-    for e in osmParser.skipped:
-         print "%s: %s. Reason: %s" % (e['type'],e['id'], e['reason'])
+    
+        for e in osmParser.skipped:
+             print "%s: %s. Reason: %s" % (e['type'],e['id'], e['reason'])
+    
     if prof:
         stats = hotshot.stats.load("tagChanger.prof")
         stats.strip_dirs()

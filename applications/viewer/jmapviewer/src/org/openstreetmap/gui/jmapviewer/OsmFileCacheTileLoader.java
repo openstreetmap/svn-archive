@@ -251,6 +251,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
             URL url;
             url = new URL(tile.getUrl());
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+            prepareHttpUrlConnection(urlConn);
             urlConn.setRequestMethod("HEAD");
             urlConn.setReadTimeout(30000); // 30 seconds read timeout
             // System.out.println("Tile age: " + new
@@ -266,6 +267,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
             URL url;
             url = new URL(tile.getUrl());
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+            prepareHttpUrlConnection(urlConn);
             urlConn.setRequestMethod("HEAD");
             urlConn.setReadTimeout(30000); // 30 seconds read timeout
             // System.out.println("Tile age: " + new

@@ -6,7 +6,6 @@ public class OsmTileSource {
 
 	public static final String MAP_MAPNIK = "http://tile.openstreetmap.org";
 	public static final String MAP_OSMA = "http://tah.openstreetmap.org/Tiles/tile";
-	public static final String MAP_CYCLE = "http://www.thunderflames.org/tiles/cycle";
 
 	protected static abstract class AbstractOsmTileSource implements TileSource {
 
@@ -54,15 +53,22 @@ public class OsmTileSource {
 
 	public static class CycleMap extends AbstractOsmTileSource {
 		
-		public static String NAME = "OSM Cycle Map";
+	    private static final String PATTERN = "http://%s.andy.sandbox.cloudmade.com/tiles/cycle/%d/%d/%d.png";
+        public static String NAME = "OSM Cycle Map";
+
+        private static final String[] SERVER = { "a", "b", "c" };
+
+        private int SERVER_NUM = 0;
+
+        @Override
+        public String getTileUrl(int zoom, int tilex, int tiley) {
+            String url = String.format(PATTERN, new Object[] { SERVER[SERVER_NUM], zoom, tilex, tiley });
+            SERVER_NUM = (SERVER_NUM + 1) % SERVER.length;
+            return url;
+        }
 
 		public String getName() {
 			return NAME;
-		}
-
-		@Override
-		public String getTileUrl(int zoom, int tilex, int tiley) {
-			return MAP_CYCLE + super.getTileUrl(zoom, tilex, tiley);
 		}
 
 		public TileUpdate getTileUpdate() {

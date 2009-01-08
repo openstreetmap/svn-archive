@@ -1,0 +1,293 @@
+/* the three main columns: left, main, right */
+
+div.left {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 200px;
+    margin: 0;
+}
+
+div.right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 200px;
+    margin: 0;
+}
+
+div.main {
+    position: absolute;
+    left: 230px;
+    right: 230px;
+    /* for ie */
+    width:expression((document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth)-460);
+}
+
+/* the map area */
+
+div#mapborder {
+    border: 1px solid #bfc0d8;
+}
+
+div#map {
+    height: 400px;
+//    width: 100%;
+    border: 1px solid #ffffff;
+}
+
+img#border-tl {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    z-index: 10000;
+}
+
+img#border-tr {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    z-index: 10000;
+}
+
+div#corners {
+    position: absolute;
+    left: -1px;
+    right: 1px;
+//    width: 100%;
+    width:expression((document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth)-458);
+}
+
+img#border-bl {
+    position: absolute;
+    top: -4px;
+    left: 0px;
+    z-index: 10000;
+}
+
+img#border-br {
+    position: absolute;
+    top: -4px;
+    right: -2px;
+    z-index: 10000;
+}
+
+div#marginalia {
+    /* for ie */
+//    width: 100%;
+    background-image: url('/img/marginaliabg.png');
+    background-repeat: repeat-x;
+    border: 1px solid #bfc0d8;
+    padding: 4px 0px 4px 0px;
+}
+
+div#germany {
+    position: absolute;
+    z-index: 10000;
+    margin: 6px;
+}
+
+div#fullscreen {
+    position: absolute;
+    right: 0px;
+    z-index: 10000;
+    margin: 6px;
+}
+
+div#destinations {
+//    width: 100%;
+    text-align: center;
+    word-spacing: 6px;
+    padding-bottom: 6px;
+}
+
+div#search {
+//    width: 100%;
+    min-height: 22px;
+    /* for ie */
+    // height: 22px;
+    text-align: center;
+    padding-bottom: 6px;
+}
+
+/* boxes on left and right side */
+
+div.box {
+    margin: 2px 0px 10px 0px;
+    padding: 2px 0px 4px 4px;
+    width: 100%;
+}
+
+div.box h1 {
+    clear: both;
+    font-size: x-large;
+    font-weight: bold;
+    margin: 2px 0px 2px 0px;
+}
+
+div.box h2 {
+    clear: both;
+    font-size: medium;
+    font-weight: bold;
+    margin: 0px 0px 6px 0px;
+    display: block;
+}
+
+div.left div.box h2 {
+    border-bottom: 1px solid #bfc0d8;
+}
+
+div#title {
+    width: 100%;
+    margin-top: 15px;
+    text-align: center;
+}
+
+div#faq ul {
+    list-style-image: url('/img/bullet.gif');
+    padding: 0px;
+    margin-left: 1.15em;
+    margin-top: 4px;
+    margin-bottom: 0px;
+}
+
+div#faq ul li {
+    margin: 3px 0px;
+}
+
+div#faq p {
+    margin: 3px;
+    text-align: right;
+}
+
+div#aktionen {
+    font-size: small;
+}
+
+div#aktionen p {
+    clear: both;
+    margin-bottom: 2px;
+}
+
+div#aktionen img {
+    float: left;
+}
+
+div#international {
+    margin-top: 15px;
+    text-align: center;
+    border-bottom: 1px dotted #606080;
+}
+
+div#book {
+    font-size: small;
+    text-align: center;
+}
+
+div#book h2 {
+    color: #606060;
+}
+div#book img {
+    border: 1px solid #bfc0d8;
+}
+
+div#sotm {
+    text-align: center;
+    font-size: small;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #f0f0f0;
+    padding: 4px;
+}
+
+div#sotm img {
+    border: 1px solid #e0e0e0;
+}
+
+div#showcase {
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+div#showcase h2 {
+    color: #606060;
+}
+
+
+/* content table */
+
+table#content {
+/    width: 100%;
+}
+
+table#content td.tdcontent {
+    width: 50%;
+    vertical-align: top;
+    padding: 4px;
+}
+
+table#content td#news {
+    border-right: 1px dotted #bfc0d8;
+}
+
+table#content td.tdcontent h2 {
+    clear: both;
+    text-align: center;
+    margin: 2px;
+}
+
+div#main {
+    border-top: 1px solid #bfc0d8;
+    border-left: 1px solid #bfc0d8;
+    border-right: 1px solid #bfc0d8;
+    background-color: #ffffff;
+}
+
+div#content {
+    padding: 20px;
+}
+
+div#content h1 {
+    color: #303030;
+    margin-top: 0px;
+}
+
+div#content h2 {
+    clear: both;
+    margin-top: 30px;
+    margin-bottom: 0px;
+    color: #303030;
+    border-bottom: 1px solid #e8e8e8;
+
+}
+
+/* attribution at bottom */
+
+div#attribution {
+    margin-top: 20px;
+    border-top: 1px solid #bfc0d8;
+    padding-top: 4px;
+    font-size: small;
+}
+
+div#attribution img {
+    float: left;
+    padding-right: 6px;
+}
+
+div.localgroup {
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #f0f0f0;
+    padding: 4px;
+    margin-top: 4px;
+}
+
+/* to map icon */
+img.tomap {
+    float: right;
+    padding-top: 2px;
+    padding-right: 8px;
+    z-index: 100;
+}
+

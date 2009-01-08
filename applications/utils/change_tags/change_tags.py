@@ -14,7 +14,11 @@
    how many total nodes/elements there are, and how many would be changed by
    the conversion.
 
-   Once you've done that, call:
+   You can also write your own functions in another module, and provide:
+
+     --module mod_name --function func_name
+
+   Once you've done a dry run, call:
 
        python tag_changer.py -f file.osm -u <username> -p <password> 
 
@@ -23,7 +27,7 @@
 
    If you are working only with your own data, you should usually use 
     
-       --only-mine displayName
+       --only-mine='Display Name'
 
    Which will skip any updates which do not have you as the last author.
 """   
@@ -119,7 +123,7 @@ def indent(elem, level=0):
 class changeTags (ContentHandler):
     """A class implementing an XML Content handler which uses a passed converter function to change
        data on the OSM server based on a local XML file."""
-    def __init__ (self, converter, db=None, user=None, password=None, dry_run=None, noisy_errors=None, only_mine=None, verbose=None, changes=None):
+    def __init__ (self, converter, db=None, user=None, password=None, dry_run=None, noisy_errors=None, only_mine=None, verbose=None, changes=None, api=None):
         ContentHandler.__init__(self)
         
         self.converter = converter
@@ -131,6 +135,7 @@ class changeTags (ContentHandler):
         self.only_mine = only_mine
         self.change_count = changes
         self.db = db
+        self.api = api
 
         self.changes = {'node': 0, 'way': 0} 
         self.already_changed = {'node': 0, 'way': 0} 
@@ -156,7 +161,7 @@ class changeTags (ContentHandler):
         if self.db and self.db.has_key(db_key):
             self.already_changed[self.current['type']] += 1
             return
-        url = "http://api.openstreetmap.org/api/0.5/%s/%s" % (self.current['type'], self.current['id'])
+        url = "%s/%s/%s" % (self.api, self.current['type'], self.current['id'])
         if self.dry_run:
             if self.verbose:
                 print "URL:  %s" % url
@@ -164,7 +169,7 @@ class changeTags (ContentHandler):
             self.changes[self.current['type']] += 1
         else:
             try:
-                if self.verbose: 
+                if True: # self.verbose: 
                     print "Opening URL %s" % url
                 else:
                     upload = self.changes['node'] + self.changes['way'] + \
@@ -252,24 +257,24 @@ if __name__ == "__main__":
         print "Required dependancies unavailable: \n  " % ("\n  ".join(requires))  
         sys.exit(2)
 
-    from optparse import OptionParser
-    parser = OptionParser()
+    from optparse import OptionParser, OptionGroup
+    parser = OptionParser(usage="%prog [options] \n  Change tags on the OSM server based on applying Python functions to a file."  )
 
     parser.add_option("-f", "--file", 
-        help="source file. default is stdin", dest="file")
+        help="source file.", dest="file")
+    
+    parser.add_option("-m", "--module", 
+        help="module file for converter. Default is internal", dest="module")
+    parser.add_option("--function", 
+        help="function for converter (in module). Default is same as module name", dest="function")
+    
+    parser.add_option("--doc", 
+        help="print documentation", action="store_true", dest="doc")
+    
     parser.add_option("-d", "--dry-run", 
         action="store_true", default=False, 
         help="print URLs and XML for changed items, rather than actually changing them.", 
         dest="dry_run")
-    parser.add_option("-u", "--username", help="username for OSM API", 
-        dest="username")
-    parser.add_option("-p", "--password", 
-        help="api password (will prompt if not provided and required)", 
-        dest="password")
-    parser.add_option("-e", "--noisy-errors", 
-        dest="noisy_errors", 
-        default=False, 
-        action="store_true")
     parser.add_option("--verbose", 
         help="be verbose", 
         dest="verbose", 
@@ -278,17 +283,44 @@ if __name__ == "__main__":
     parser.add_option('-o', "--only-mine", 
         dest="only_mine", 
         help="Provide a username/displayname which will be used to check if an edit should be perormed.") 
-    parser.add_option("-n", "--no-status", 
+    
+    group = OptionGroup(parser, "API Options", "OSM API Configuration")
+
+    group.add_option("-u", "--username", help="username for OSM API", 
+        dest="username")
+    group.add_option("-p", "--password", 
+        help="api password (will prompt if not provided and required)", 
+        dest="password")
+    group.add_option("-a", "--api", 
+        help="api url; default: http://api.openstreetmap.org/0.5", 
+        dest="api",
+        default="http://api.openstreetmap.org/0.5")
+    parser.add_option_group(group)
+    
+    group = OptionGroup(parser, "Advanced Options", "Don't use these unless you know what you're doing.")
+
+    group.add_option("-e", "--noisy-errors", 
+        dest="noisy_errors", 
+        default=False, 
+        action="store_true")
+    group.add_option("-n", "--no-status", 
         dest="no_status", 
         action="store_true", 
         default=False, 
-        help="Don't store status db for recovery of upload (faster; riskier")
-    parser.add_option('--profile', 
+        help="Don't store status db for recovery of upload (faster; riskier)")
+    group.add_option('--profile', 
         dest='profile', action="store_true", 
         help="Report profiler stats", 
         default=False)
+    
+    parser.add_option_group(group)
 
     options, args = parser.parse_args()
+
+    if options.doc:
+        parser.print_help()
+        print __doc__
+        sys.exit()
 
     f = None
     if options.file:
@@ -299,10 +331,15 @@ if __name__ == "__main__":
             db = None 
     else:
         raise Exception("No input file")
-    #    f = sys.stdin
-    #    db=None
-    #    if not options.no_status:
-    #        print "Using stdin, unable to create status db; "
+    
+    if options.module:
+        m = __import__(options.module)
+        func = options.function or options.module
+        if not hasattr(m, func):
+            print "Module %s has no function %s: Check your module." % (
+                options.module, func)
+        converter = getattr(m,func)
+
     if not options.dry_run and options.username and not options.password:
         import getpass
         options.password = getpass.getpass("Password: ") 
@@ -337,7 +374,8 @@ if __name__ == "__main__":
             noisy_errors = options.noisy_errors, 
             only_mine=options.only_mine,
             verbose=options.verbose,
-            changes=changes)
+            changes=changes,
+            api=api)
    
     prof = None
     

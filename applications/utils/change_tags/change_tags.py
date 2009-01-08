@@ -375,7 +375,7 @@ if __name__ == "__main__":
             only_mine=options.only_mine,
             verbose=options.verbose,
             changes=changes,
-            api=api)
+            api=options.api)
    
     prof = None
     

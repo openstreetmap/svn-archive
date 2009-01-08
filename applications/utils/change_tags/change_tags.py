@@ -63,7 +63,7 @@ def converter(tags, type):
     By default, adds a created_by tag identifying the source of the change.
     """
     
-    return False
+#    return True
     
     changed = False
     
@@ -82,20 +82,20 @@ def converter(tags, type):
         changed = True
    
     # change a key in a tag
-    if 'leisure' in tags and tags['leisure'] == 'recreation_ground':
-        del tags['leisure']
-        if not 'landuse' in tags:
-            tags['landuse'] = 'recreation_ground'
-        else:
-            tags['landuse'] = "%s; recreation_ground" % tags['landuse']
-        changed = True
+#    if 'leisure' in tags and tags['leisure'] == 'recreation_ground':
+#        del tags['leisure']
+#        if not 'landuse' in tags:
+#            tags['landuse'] = 'recreation_ground'
+#        else:
+#            tags['landuse'] = "%s; recreation_ground" % tags['landuse']
+#        changed = True
 
     tags['created_by'] = 'change_tags.py %s' % __version__
 
     return changed    
 
 # Comment this line out once you have edited the converter above.
-converter = False
+#converter = False
 
 #### DO NOT CHANGE CODE AFTER THIS LINE #####
 
@@ -117,8 +117,9 @@ def indent(elem, level=0):
             elem.tail = i
 
 class changeTags (ContentHandler):
-    
-    def __init__ (self, converter, db=None, user=None, password=None, dry_run=None, noisy_errors=None, only_mine=None, verbose=None):
+    """A class implementing an XML Content handler which uses a passed converter function to change
+       data on the OSM server based on a local XML file."""
+    def __init__ (self, converter, db=None, user=None, password=None, dry_run=None, noisy_errors=None, only_mine=None, verbose=None, changes=None):
         ContentHandler.__init__(self)
         
         self.converter = converter
@@ -128,6 +129,7 @@ class changeTags (ContentHandler):
         self.noisy_errors = noisy_errors
         self.verbose = verbose
         self.only_mine = only_mine
+        self.change_count = changes
         self.db = db
 
         self.changes = {'node': 0, 'way': 0} 
@@ -144,6 +146,7 @@ class changeTags (ContentHandler):
                 raise Exception("Username and password required.")
 
     def upload(self, xml):
+        """Upload the way.""" 
         if self.only_mine and self.current['user'] != self.only_mine:
             self.skipped.append({'id': self.current['id'], 
                     'type':self.current['type'], 
@@ -163,8 +166,16 @@ class changeTags (ContentHandler):
             try:
                 if self.verbose: 
                     print "Opening URL %s" % url
+                else:
+                    upload = self.changes['node'] + self.changes['way'] + \
+                        self.already_changed['node'] + self.already_changed['way']
+                    if upload and upload % 100 == 0:
+                       if self.change_count:
+                           print "%s: %s/%s complete" % ((upload/self.change_count), upload, self.change_count)
+                       else:
+                           print "%s complete" % (upload)
                 resp, content = self.h.request(url, "PUT", body=xml)
-                if resp.status != '200':
+                if int(resp.status) != 200:
                     error = {'item': self.current, 'code': resp.status, 'data': content}
                     if self.noisy_errors: print "Error occurred! %s" % error
                     self.errors.append(error)
@@ -178,6 +189,7 @@ class changeTags (ContentHandler):
                 self.errors.append(error)
 
     def startElement (self, name, attr):
+        """Handle creating the self.current node, and pulling tags/nd refs."""
         if name == 'node':
             self.current = {'type': 'node', 'id': attr['id'],
                 'lon':attr["lon"], 'lat':attr["lat"], 'tags': {}}
@@ -194,7 +206,7 @@ class changeTags (ContentHandler):
             self.read[name] += 1
 
     def endElement (self, name):
-        
+        """Switch on node type, and serialize to XML for upload or print."""
         if name == 'way':
             new_tags = converter(self.current['tags'], 'way')
             if new_tags:
@@ -295,6 +307,7 @@ if __name__ == "__main__":
         import getpass
         options.password = getpass.getpass("Password: ") 
     
+    changes = 0
     if not options.dry_run:
         try:
             f_dry = open("%s.dry_run" % options.file)
@@ -302,15 +315,16 @@ if __name__ == "__main__":
             print "You haven't run a dry run to see what the results will be! (%s)" % E
             sys.exit(2)
         data = f_dry.read().strip()
-        hash, count = data.split("\n|||\n")
+        hash, changes = data.split("\n|||\n")
         if hash != converter.func_code.co_code:
             print "The converter function changed, and you haven't run another dry run. Do that first."
             sys.exit(3)
-        if int(count) > 1000:
+        changes = int(changes)
+        if changes > 1000:
             print "You are changing more than 1000 objects. Ask crschmidt for the special password."
             pw = raw_input("Secret Phrase: ")
             if md5.md5(pw).hexdigest() != '1271ed5ef305aadabc605b1609e24c52': 
-                print "That's too much at once. You might break something. %s" % count
+                print "That's too much at once. You might break something. %s" % changes
                 sys.exit(4)
             
             
@@ -322,7 +336,8 @@ if __name__ == "__main__":
             dry_run=options.dry_run, 
             noisy_errors = options.noisy_errors, 
             only_mine=options.only_mine,
-            verbose=options.verbose)
+            verbose=options.verbose,
+            changes=changes)
    
     prof = None
     

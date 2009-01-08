@@ -19,9 +19,7 @@ def conservation_organization(tags, type):
     return changed    
 
 def area_names(tags, type):
-    """Fix for a MassGIS OpenSpace todo: typo in 'conservation_organization'
-       in bulk import.
-    """
+    """Fix for MassGIS OpenSpace areas: do better keying based on name, fix some common typos."""
     
     changed = False
     

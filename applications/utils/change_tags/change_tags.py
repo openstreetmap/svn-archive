@@ -38,6 +38,7 @@ __revision__ = "$Id$"
 
 import dbm
 import md5
+import time
 import sys, re, xml.sax
 from xml.sax.handler import ContentHandler
 
@@ -136,6 +137,8 @@ class changeTags (ContentHandler):
         self.change_count = changes
         self.db = db
         self.api = api
+        self.last_report_time = 0
+        self.last_report_object = 0
 
         self.changes = {'node': 0, 'way': 0} 
         self.already_changed = {'node': 0, 'way': 0} 
@@ -169,16 +172,24 @@ class changeTags (ContentHandler):
             self.changes[self.current['type']] += 1
         else:
             try:
-                if True: # self.verbose: 
+                if self.verbose: # self.verbose: 
                     print "Opening URL %s" % url
-                else:
-                    upload = self.changes['node'] + self.changes['way'] + \
-                        self.already_changed['node'] + self.already_changed['way']
-                    if upload and upload % 100 == 0:
-                       if self.change_count:
-                           print "%s: %s/%s complete" % ((upload/self.change_count), upload, self.change_count)
-                       else:
-                           print "%s complete" % (upload)
+                upload = self.changes['node'] + self.changes['way'] + \
+                    self.already_changed['node'] + self.already_changed['way']
+                
+                if upload and upload % 10 == 0:
+                   t = time.time() - self.last_report_time
+                   c = upload - self.last_report_object
+                   rate = c/t
+                   
+                   if self.change_count:
+                       remain = float(self.change_count - upload) / rate
+                       remain_string = "%i:%02i" % (remain / 60, remain % 60) 
+                       print "%.2f%% (%s/%s) complete; %.3f/s  %s remain" % (((float(upload)/self.change_count) * 100), upload, self.change_count, rate, remain_string)
+                   else:
+                       print "%s complete" % (upload)
+                   self.last_report_object = upload 
+                   self.last_report_time = time.time()  
                 resp, content = self.h.request(url, "PUT", body=xml)
                 if int(resp.status) != 200:
                     error = {'item': self.current, 'code': resp.status, 'data': content}
@@ -254,7 +265,7 @@ if __name__ == "__main__":
         sys.exit(1)
     
     if requires:
-        print "Required dependancies unavailable: \n  " % ("\n  ".join(requires))  
+        print "Required dependancies unavailable: \n  %s" % ("\n  ".join(requires))  
         sys.exit(2)
 
     from optparse import OptionParser, OptionGroup
@@ -294,7 +305,7 @@ if __name__ == "__main__":
     group.add_option("-a", "--api", 
         help="api url; default: http://api.openstreetmap.org/0.5", 
         dest="api",
-        default="http://api.openstreetmap.org/0.5")
+        default="http://api.openstreetmap.org/api/0.5")
     parser.add_option_group(group)
     
     group = OptionGroup(parser, "Advanced Options", "Don't use these unless you know what you're doing.")
@@ -382,7 +393,7 @@ if __name__ == "__main__":
     if options.profile:
         import hotshot, hotshot.stats
         prof = hotshot.Profile("tagChanger.prof")
-    
+    failed = False 
     try:
         
         if prof:
@@ -393,13 +404,15 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print "\nStopping at %s %s due to interrupt"  % \
               (osmParser.current['type'], osmParser.current['id'])
+        failed = True      
     
     except Exception, E:
         if osmParser.current:
             print "\nStopping at %s %s due to exception: \n%s"  % \
                   (osmParser.current['type'], osmParser.current['id'], E)
         else:
-            print "Stopping due to Exception: \n" % E  
+            print "Stopping due to Exception: \n" % E 
+        failed = True    
 
     print "Total Read: %s nodes, %s ways, %s tags"  % (
            osmParser.read['node'], osmParser.read['way'], osmParser.read['tag'])
@@ -410,7 +423,7 @@ if __name__ == "__main__":
     print "Previously Changed: %s nodes, %s ways"  % \
           (osmParser.already_changed['node'], osmParser.already_changed['way'])
     
-    if options.dry_run and options.file:
+    if not failed and options.dry_run and options.file:
         f = open("%s.dry_run" % options.file, "w")
         f.write("%s\n|||\n%s" % \
                (converter.func_code.co_code, 

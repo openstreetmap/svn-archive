@@ -33,6 +33,7 @@ __version__ = "0.2"
 __revision__ = "$Id$"
 
 import dbm
+import md5
 import sys, re, xml.sax
 from xml.sax.handler import ContentHandler
 
@@ -61,8 +62,8 @@ def converter(tags, type):
 
     By default, adds a created_by tag identifying the source of the change.
     """
-
-    return False 
+    
+    return False
     
     changed = False
     
@@ -256,14 +257,34 @@ if __name__ == "__main__":
         else:
             db = None 
     else:
-        f = sys.stdin
-        db=None
-        if not options.no_status:
-            print "Using stdin, unable to create status db"
-    if not options.dry_run and options.username:
+        raise Exception("No input file")
+    #    f = sys.stdin
+    #    db=None
+    #    if not options.no_status:
+    #        print "Using stdin, unable to create status db; "
+    if not options.dry_run and options.username and not options.password:
         import getpass
         options.password = getpass.getpass("Password: ") 
-
+    
+    if not options.dry_run:
+        try:
+            f_dry = open("%s.dry_run" % options.file)
+        except Exception, E:
+            print "You haven't run a dry run to see what the results will be! (%s)" % E
+            sys.exit(2)
+        data = f_dry.read().strip()
+        hash, count = data.split("\n|||\n")
+        if hash != converter.func_code.co_code:
+            print "The converter function changed, and you haven't run another dry run. Do that first."
+            sys.exit(3)
+        if int(count) > 1000:
+            print "You are changing more than 1000 objects. Ask crschmidt for the special password."
+            pw = raw_input("Secret Phrase: ")
+            if md5.md5(pw).hexdigest() != '1271ed5ef305aadabc605b1609e24c52': 
+                print "That's too much at once. You might break something. %s" % count
+                sys.exit(4)
+            
+            
     osmParser = changeTags(
             converter,
             db=db,
@@ -288,11 +309,16 @@ if __name__ == "__main__":
         print "\nStopping at %s %s due to interrupt"  % (osmParser.current['type'], osmParser.current['id'])
         pass
     except Exception, E:
+        print E
         print "\nStopping at %s %s due to exception: \n%s"  % (osmParser.current['type'], osmParser.current['id'], E)
 
     print "Total Read: %s nodes, %s ways, %s tags"  % (osmParser.read['node'], osmParser.read['way'], osmParser.read['tag'])
     print "Total Changed: %s nodes, %s ways"  % (osmParser.changes['node'], osmParser.changes['way'])
     print "Previously Changed: %s nodes, %s ways"  % (osmParser.already_changed['node'], osmParser.already_changed['way'])
+    if options.dry_run and options.file:
+        f = open("%s.dry_run" % options.file, "w")
+        f.write("%s\n|||\n%s" % (converter.func_code.co_code, osmParser.changes['node'] + osmParser.changes['way']))
+        f.close()
     if len(osmParser.errors):
         print "The following %s errors occurred:" % len(osmParser.errors)
     for e in osmParser.errors:

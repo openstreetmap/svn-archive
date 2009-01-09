@@ -42,6 +42,8 @@ import time
 import sys, re, xml.sax
 from xml.sax.handler import ContentHandler
 
+import xml.dom.minidom as minidom
+
 requires = []
 
 try:
@@ -124,7 +126,7 @@ def indent(elem, level=0):
 class changeTags (ContentHandler):
     """A class implementing an XML Content handler which uses a passed converter function to change
        data on the OSM server based on a local XML file."""
-    def __init__ (self, converter, db=None, user=None, password=None, dry_run=None, noisy_errors=None, only_mine=None, verbose=None, changes=None, api=None):
+    def __init__ (self, converter, db=None, user=None, password=None, dry_run=None, noisy_errors=None, only_mine=None, verbose=None, changes=None, api=None, check_api=None):
         ContentHandler.__init__(self)
         
         self.converter = converter
@@ -137,9 +139,10 @@ class changeTags (ContentHandler):
         self.change_count = changes
         self.db = db
         self.api = api
+        self.check_api_first = check_api  
+
         self.last_report_time = 0
         self.last_report_object = 0
-
         self.changes = {'node': 0, 'way': 0} 
         self.already_changed = {'node': 0, 'way': 0} 
         self.read = {'node': 0, 'way': 0, 'tag': 0} 
@@ -152,9 +155,52 @@ class changeTags (ContentHandler):
                 self.h.add_credentials(self.user, self.password)
             else:
                 raise Exception("Username and password required.")
+        else:
+            self.h = httplib2.Http()
 
-    def upload(self, xml):
+    
+    def current_from_api(self):
+        """Update the self.current object by fetching it from the API, and
+        doing a quick/simple reparse with minidom."""
+        
+        url = "%s/%s/%s" % (self.api, self.current['type'], self.current['id'])
+        resp, content = self.h.request(url, "GET")
+        if int(resp.status) == 411:
+            raise Exception("Object has been deleted.")
+        elif True or int(resp.status) == 200:
+            doc = minidom.parseString(content)
+            item = doc.getElementsByTagName(self.current['type'])[0]
+            self.current['user'] = item.getAttribute("user")     
+            if self.current['type'] == "node":
+                self.current['lon'] = item.getAttribute("lon")    
+                self.current['lat'] = item.getAttribute("lat")    
+            elif self.current['type'] == "way":
+                nodes = []
+                for i in item.getElementByTagName("nd"):
+                    nodes.append(i.getAttribute("ref"))
+                self.current['nodes'] = nodes
+            tags = {}
+            for i in item.getElementsByTagName("tag"):
+                tags[i.getAttribute("k")] = i.getAttribute("v")
+            self.current['tags'] = tags    
+                
+        else:
+            raise Exception("Couldn't update from API server.")
+
+
+    def upload(self):
         """Upload the way.""" 
+        if self.check_api_first:
+            try:
+                self.current_from_api()
+                run = self.converter(self.current['tags'], self.current['type'])
+                if not run: 
+                    raise Exception("Server version changed; no change needed.") 
+            except Exception, E:
+                error = {'item': self.current, 'code': -1, 'data': str(E)}
+                if self.noisy_errors: print "Error occurred! %s" % error
+                self.errors.append(error)
+                return
         if self.only_mine and self.current['user'] != self.only_mine:
             self.skipped.append({'id': self.current['id'], 
                     'type':self.current['type'], 
@@ -165,6 +211,7 @@ class changeTags (ContentHandler):
             self.already_changed[self.current['type']] += 1
             return
         url = "%s/%s/%s" % (self.api, self.current['type'], self.current['id'])
+        xml = self.makeXML()
         if self.dry_run:
             if self.verbose:
                 print "URL:  %s" % url
@@ -221,41 +268,39 @@ class changeTags (ContentHandler):
         if name in ['node', 'way', 'tag']:
             self.read[name] += 1
 
+    def makeXML(self):
+        if self.current['type'] == "way":
+            osm = Element('osm', {'version': '0.5'})
+
+            parent = SubElement(osm, 'way', {'id': self.current['id']})
+            for n in self.current['nodes']:
+                SubElement(parent, "nd", {'ref': n})
+            keys = self.current['tags'].keys()
+            keys.sort()
+            for key in keys:
+                SubElement(parent, "tag", {'k': key, 'v': self.current['tags'][key]})
+        
+        if self.current['type'] == "node":
+            osm = Element('osm', {'version': '0.5'})
+
+            parent = SubElement(osm, 'node', 
+                {'id': self.current['id'], 
+                 'lat': self.current['lat'], 
+                 'lon': self.current['lon']})
+            
+            keys = self.current['tags'].keys()
+            keys.sort()
+            for key in keys:
+                SubElement(parent, "tag", {'k': key, 'v': self.current['tags'][key]})
+        
+        indent(osm)
+        return tostring(osm)
     def endElement (self, name):
         """Switch on node type, and serialize to XML for upload or print."""
-        if name == 'way':
-            new_tags = converter(self.current['tags'], 'way')
+        if name in ['way', 'node']:
+            new_tags = self.converter(self.current['tags'], self.current['type'])
             if new_tags:
-                osm = Element('osm', {'version': '0.5'})
-
-                parent = SubElement(osm, 'way', {'id': self.current['id']})
-                for n in self.current['nodes']:
-                    SubElement(parent, "nd", {'ref': n})
-                keys = self.current['tags'].keys()
-                keys.sort()
-                for key in keys:
-                    SubElement(parent, "tag", {'k': key, 'v': self.current['tags'][key]})
-                indent(osm)
-                self.upload(tostring(osm))
-        
-        elif name == 'node':
-            new_tags = converter(self.current['tags'], 'node')
-            if new_tags:
-                osm = Element('osm', {'version': '0.5'})
-
-                parent = SubElement(osm, 'node', 
-                    {'id': self.current['id'], 
-                     'lat': self.current['lat'], 
-                     'lon': self.current['lon']})
-                
-                keys = self.current['tags'].keys()
-                keys.sort()
-                for key in keys:
-                    SubElement(parent, "tag", {'k': key, 'v': self.current['tags'][key]})
-                
-                indent(osm)
-                self.upload(tostring(osm))
-
+                self.upload()
 
 if __name__ == "__main__":
     if not converter:
@@ -294,6 +339,9 @@ if __name__ == "__main__":
     parser.add_option('-o', "--only-mine", 
         dest="only_mine", 
         help="Provide a username/displayname which will be used to check if an edit should be perormed.") 
+    parser.add_option('-c', "--check-api", 
+        dest="check_api", action="store_true",
+        help="For each item to be uploaded, get the current data from the API first. (Safer)") 
     
     group = OptionGroup(parser, "API Options", "OSM API Configuration")
 
@@ -386,7 +434,8 @@ if __name__ == "__main__":
             only_mine=options.only_mine,
             verbose=options.verbose,
             changes=changes,
-            api=options.api)
+            api=options.api,
+            check_api=options.check_api)
    
     prof = None
     

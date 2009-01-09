@@ -55,7 +55,6 @@ def more_shrt_nms(tags, type):
         for key, value in remap.items():
             new_name = key.sub(value, name)
             if new_name != name:
-                print tags
                 tags['name'] = new_name
                 changed = True
                 break

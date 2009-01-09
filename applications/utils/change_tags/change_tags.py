@@ -176,7 +176,7 @@ class changeTags (ContentHandler):
                 self.current['lat'] = item.getAttribute("lat")    
             elif self.current['type'] == "way":
                 nodes = []
-                for i in item.getElementByTagName("nd"):
+                for i in item.getElementsByTagName("nd"):
                     nodes.append(i.getAttribute("ref"))
                 self.current['nodes'] = nodes
             tags = {}

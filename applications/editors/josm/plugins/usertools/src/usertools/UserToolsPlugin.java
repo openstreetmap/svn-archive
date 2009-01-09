@@ -110,7 +110,7 @@ public class UserToolsPlugin extends Plugin {
                 String name =  getSelectedUser();
                 if (!name.equals("0")){
                     SearchAction.SearchMode mode = SearchAction.SearchMode.replace;
-                    SearchAction.search(name, mode, false);
+                    SearchAction.search(name, mode, false,false);
                 }
             }
         }));

@@ -113,3 +113,12 @@ ProcessLogFile="tah-process.log"
 #            each message, and printing even more output.
 Verbose=6
 
+# DateTimeString allows you to prepend client log messages with a time stamp. Default off.
+# %H - hours
+# %M - minutes
+# %S - seconds
+# %d - days
+# %m - months
+# %y - 2-digit year
+# %Y - 4-digit year
+#DateTimeString = %d.%m.%Y - %H:%M:%S

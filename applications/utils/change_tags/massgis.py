@@ -35,7 +35,16 @@ def playgrounds(tags, type):
 def more_shrt_nms(tags, type):
     import re
     map = {
+      " Rec Area$": ' Recreation Area', 
+      " Nwr$": ' National Wildlife Refuge', 
+      " Wma$": ' Wildlife Management Area', 
+      " Nha$": ' National Historic Area', 
+      " Mdws$": ' Meadows', 
+      " Reserv\.$": ' Reservation', 
+      " St Forest$": ' State Forest', 
+      " Conservation La$": ' Conservation Land', 
       " Cons Lnd$": ' Conservation Land', 
+      " Cons Land$": ' Conservation Land', 
       " Cons Area$": ' Conservation Area', 
       " Consv Land$": ' Conservation Land', 
       " Sanc$": ' Sanctuary', 

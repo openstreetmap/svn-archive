@@ -1,5 +1,6 @@
 use strict;
 use TahConf;
+use Encode;
 
 # =====================================================================
 # The following is duplicated from tilesGen.pl
@@ -25,8 +26,28 @@ sub statusMessage
     my $progressPercent = $main::progressPercent;
 
     my ($msg, $newline, $VerbosityTriggerLevel) = @_;
-    
-    my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
+
+    my $TimeString = '';
+
+    if ($Config->get("DateTimeString"))
+    {
+        my ($s, $i, $h, $d, $m, $y) = (localtime)[0..7];
+        ++$m;
+        my $Y = $y + 1900;
+        $y = $y % 100; # two-digit year
+
+        $TimeString = "[".$Config->get("DateTimeString")."]";
+        $TimeString =~ s/%H/$h/ge; # substitute %H placeholder with hours
+        $TimeString =~ s/%M/$i/ge; # substitute %M placeholder with minutes
+        $TimeString =~ s/%S/$s/ge; # substitute %S placeholder with seconds
+        $TimeString =~ s/%d/$d/ge; # substitute %d placeholder with days
+        $TimeString =~ s/%m/$m/ge; # substitute %m placeholder with months
+        $TimeString =~ s/%y/$y/ge; # substitute %y placeholder with 2-digit year
+        $TimeString =~ s/%Y/$Y/ge; # substitute %Y placeholder with 4-digit year
+
+    }
+
+    my $toprint = sprintf("%s[#%d %3d%% %s] %s%s ", $TimeString, $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
 
     if ($Config->get("Verbose") >= 10)
     {
@@ -438,6 +459,30 @@ sub dirEmpty
     closedir DIR;
     return 1; 
 }
+
+#--------------------------------------------------------------------------------------
+# check for utf-8 faults in file and return false if UTF-8 clean, otherwise return the 
+# number of the first line where an utf-8 error occured
+#--------------------------------------------------------------------------------------
+sub fileUTF8ErrCheck
+{
+    my $DataFile = shift();
+    open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
+    my @toCheck = <OSMDATA>;
+    close(OSMDATA);
+    my $line=0;
+    while (my $osmline = shift @toCheck)
+    {
+        $line++;
+        eval { decode("UTF-8",$osmline, Encode::FB_CROAK) };
+        if ($@)
+        {
+            return $line; # returns the line the error occured on
+        }
+    }
+    return 0;
+}
+
 
 1;
 

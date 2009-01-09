@@ -16,6 +16,8 @@ Verbose = 6
 ProcessLog = 0
 ProcessLogFile = /tmp/tah.log
 
+DateTimeString = 0
+
 Niceness = 10
 
 Rasterizer=Inkscape

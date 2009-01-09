@@ -7,18 +7,13 @@ use warnings;
 use Math::Trig;
 use File::Path;
 
-use constant MINZOOM => 11;		# bigest tiles we keep
 use constant MAXZOOM => 14;		# magic number with current ptn scheme
 use constant NOPTN => "\0\0\0\0";	# toptn(0,0,0)
 use constant MAXLAT => 85.051128;	# deliberatly slightly less than the thoretical value
 use constant MINLAT => -(MAXLAT);
-use constant MAXOPEN => 500;		# max cached filehandles
-use constant KEEPOPEN => 400;		# drop down to this when MAXOPEN hit
-use constant SPLIT => 4096;		# bytes in node file before splitting
 use constant CONV => 10000000;		# conversion from lat/lon to int
-use constant TRAPIDIR => '/trapi';	# directory trapi data is in
-use constant DBDIR => '';		# directory where the indexes are kept (absolute or relitive to TRAPIDIR) end with / if not empty
-use constant IGNORETAGS => '^(?:created_by$|tiger:|gnis:|source$|attribution$|import_uuid$|time$|AND[_:]|massgis:|open[gG]eo[dD][bB]:|converted_by$)';	# regular expression of tags to ignore
+use constant MEMBER => { 'node' => 1, 'way' => 2, 'relation' => 3 };
+use constant MEMBERTYPE => ( '', 'node', 'way', 'relation' );
 
 our $devnull;
 sub ptdbinit($) {
@@ -44,6 +39,7 @@ sub toptn($$$) {
 # given MAXZOOM xy, return ptn
 sub etoptn($$) {
     my ($x, $y) = @_;
+    # ZOOMS is stored for MAXZOOM-1
     seek ZOOMS, (($x>>1)<<(MAXZOOM-1)) | ($y>>1), 0;
     my $z;
     if (read ZOOMS, $z, 1) {
@@ -278,30 +274,29 @@ sub ProjectF
 }
 
 # find the tiles this relation is in
-sub reltiles($$$) {
-    my @nodelist = @{shift @_};
-    my @waylist = @{shift @_};
-    my @rellist = @{shift @_};
+sub reltiles($) {
+    my @members = @{shift @_};
     my (%tiles, %wtodo, %rdone, %rtodo);
-    foreach my $nr (@nodelist) {
-	$tiles{nodeptn(${$nr}[0])}++;
-    }
-    foreach my $wr (@waylist) {
-	my $w = ${$wr}[0];
-	my $t = wayptn($w);
-        if (exists $wtodo{$t}) {
-	    ${$wtodo{$t}}{$w}++;
-        } else {
-            $wtodo{$t} = {$w => 1};
-        }
-    }
-    foreach my $wr (@rellist) {
-	my $r = ${$wr}[0];
-        my $t = relationptn($r);
-	if (exists $rtodo{$t}) {
-	    ${$rtodo{$t}}{$r}++;
-        } else {
-	    $rtodo{$t} = {$r => 1};
+    foreach my $m (@members) {
+	my ($type, $id, $role) = @$m;
+	if ($type == 1) {
+	    $tiles{nodeptn($id)}++;
+	} elsif ($type == 2) {
+	    my $t = wayptn($id);
+	    if (exists $wtodo{$t}) {
+		${$wtodo{$t}}{$id}++;
+	    } else {
+		$wtodo{$t} = {$id => 1};
+	    }
+	} elsif ($type == 3) {
+	    my $t = relationptn($id);
+	    if (exists $rtodo{$t}) {
+		${$rtodo{$t}}{$id}++;
+	    } else {
+		$rtodo{$t} = {$id => 1};
+	    }
+	} else {
+	    die "Unknown relation $id type $type";
 	}
     }
     while (my @rt = keys %rtodo) {
@@ -314,39 +309,33 @@ sub reltiles($$$) {
 	    my ($r, $off);
 	    while (read $rf, $r, 8) {
 		($r, $off) = unpack "NN", $r;
-		next unless (exists $rthis{$r});
+		next unless ($r && exists $rthis{$r});
 	        $rdone{$r}++;
 		seek $df, $off, 0;
-		my $n;
-		while (read $df, $n, 4) {
-		    $n = unpack "N", $n;
-		    last unless ($n);
+		my ($type, $n);
+		while (read $df, $n, 5) {
+		    ($type, $n) = unpack "CN", $n;
+		    last unless ($type);
 		    gets($df);
-		    $tiles{nodeptn($n)}++;
-		}
-		my $w;
-		while (read $df, $w, 4) {
-		    $w = unpack "N", $w;
-		    last unless ($w);
-		    gets($df);
-		    my $wp = wayptn($w);
-		    if (exists $wtodo{$wp}) {
-			${$wtodo{$wp}}{$w}++;
+		    if ($type == 1) {
+			$tiles{nodeptn($n)}++;
+		    } elsif ($type == 2) {
+			my $wp = wayptn($n);
+			if (exists $wtodo{$wp}) {
+			    ${$wtodo{$wp}}{$n}++;
+			} else {
+			    $wtodo{$wp} = {$n => 1};
+			}
+		    } elsif ($type == 3) {
+			next if(exists $rdone{$n});
+			my $rrp = relationptn($n);
+			if (exists $rtodo{$rrp}) {
+			    ${$rtodo{$rrp}}{$n}++;
+			} else {
+			    $rtodo{$rrp} = {$n => 1};
+			}
 		    } else {
-			$wtodo{$wp} = {$w => 1};
-		    }
-	        }
-	        my $rr;
-	        while (read $df, $rr, 4) {
-		    $rr = unpack "N", $rr;
-		    last unless ($rr);
-		    gets($df);
-		    next if(exists $rdone{$rr});
-		    my $rrp = relationptn($rr);
-		    if (exists $rtodo{$rrp}) {
-			${$rtodo{$rrp}}{$rr}++;
-	    	    } else {
-			$rtodo{$rrp} = {$rr => 1};
+			die "Unknown relation $r type $type";
 		    }
 	        }
             }
@@ -567,26 +556,17 @@ sub splitptn($) {
 	my ($rid, $roff) = unpack "NN", $w;
 	next unless($rid);
 	print "relation $rid\n" if (VERBOSE > 4);
-	my %tiles = reltiles([],[],[[$rid]]);
-	my (@nodes, @ways, @relations, @tv);
+	my %tiles = reltiles([[3,$rid]]);
+	my (@members, @tv);
 	my $first = ($roff != 0);
 	if ($first) {
 	    seek $nd, $roff, 0;
-	    while (read $nd, $w, 4) {
-		my $nn = unpack "N", $w;
-		last unless($nn);
-		push @nodes, [$nn, gets($nd)];
+	    while (read $nd, $w, 5) {
+		my ($type, $nn) = unpack "CN", $w;
+		last unless($type);
+		push @members, [$type, $nn, gets($nd)];
 	    }
-	    while (read $nd, $w, 4) {
-		my $ww = unpack "N", $w;
-		last unless($ww);
-		push @ways, [$ww, gets($nd)];
-	    }
-	    while (read $nd, $w, 4) {
-		my $rr = unpack "N", $w;
-		last unless($rr);
-		push @relations, [$rr, gets($nd)];
-	    }
+	    seek $nd, -4, 1;
 	    my $s;
 	    while (defined ($s = gets($nd)) && ($s ne "")) {
 		push @tv, $s, gets($nd);
@@ -603,21 +583,11 @@ sub splitptn($) {
 		}
 		seek $nnd, 0, 2;
 		$nnoff = tell $nnd;
-		foreach my $n (@nodes) {
-		    my @n = @$n;
-		    print $nnd pack("N",$n[0]).$n[1]."\0";
+		foreach my $m (@members) {
+		    my @m= @$m;
+		    print $nnd pack("CN",$m[0],$m[1]).$m[2]."\0";
 		}
-		print $nnd pack "N", 0;
-		foreach my $w (@ways) {
-		    my @w = @$w;
-		    print $nnd pack("N",$w[0]).$w[1]."\0";
-		}
-		print $nnd pack "N", 0;
-		foreach my $r (@relations) {
-		    my @r = @$r;
-		    print $nnd pack("N",$r[0]).$r[1]."\0";
-		}
-		print $nnd pack "N", 0;
+		print $nnd pack "C", 0;
 		foreach my $s (@tv) {
 		    print $nnd $s."\0";
 		}
@@ -656,21 +626,11 @@ sub splitptn($) {
 		print $nnd "\0";
 		$nnoff = 1;
 	    }
-	    foreach my $n (@nodes) {
-		my @n = @$n;
-		print $nnd pack("N",$n[0]).$n[1]."\0";
+	    foreach my $m (@members) {
+		my @m = @$m;
+		print $nnd pack("CN",$m[0],$m[1]).$m[2]."\0";
 	    }
-	    print $nnd pack "N", 0;
-	    foreach my $w (@ways) {
-		my @w = @$w;
-		print $nnd pack("N",$w[0]).$w[1]."\0";
-	    }
-	    print $nnd pack "N", 0;
-	    foreach my $r (@relations) {
-		my @r = @$r;
-		print $nnd pack("N",$r[0]).$r[1]."\0";
-	    }
-	    print $nnd pack "N", 0;
+	    print $nnd pack "C", 0;
 	    foreach my $s (@tv) {
 		print $nnd $s."\0";
 	    }
@@ -682,13 +642,15 @@ sub splitptn($) {
 		print "  moved to z$uz $ux,$uy\n";
 	    }
 	    seek $nrf, 0, 0;
-	    my ($r, $roff);
+	    my ($r, $roff, $mt);
 	    while (read $nrf, $r, 8) {
 		($r, $roff) = unpack "NN", $r;
+		$mt //= tell($nrf) unless ($r);
 		next unless ($r == $rid);
-		seek $nrf, -8, 0;
+		$mt = tell($nrf);
 		last;
 	    }
+	    seek $nrf, $mt-8, 0 if($mt);
 	    print $nrf pack "NN", $rid, $nnoff;
 	}
     }

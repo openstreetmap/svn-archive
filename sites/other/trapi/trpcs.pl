@@ -9,7 +9,9 @@ use strict;
 use warnings;
 
 use constant VERBOSE => 5;		# verbosity
-use ptdb;
+use trapi;
+
+chdir TRAPIDIR or die "could not chdir ".TRAPIDIR.": $!";
 
 ptdbinit("+<");
 
@@ -174,6 +176,7 @@ while (my $gz = <>) {
 		    }
 		}
 		my $orf = openptn($oldptn, "+<", "relations");
+		$odf = openptn($oldptn, "+<", "data");
 		seek $orf, 0, 0;
 		my ($r, $roff, %rtc, %rels);
 	      rproc:	while (read $orf, $r, 8) {
@@ -181,48 +184,40 @@ while (my $gz = <>) {
 		  next if ($r == 0);
 		  if ($roff == 0) {
 		      my $rp = relationptn($r);
-		      if (exists $rtc{$rp}) {
-			  ${$rtc{$rp}}{$r} = {} unless (exists ${$rtc{$rp}}{$r});
-		      } else {
-			  $rtc{$rp} = {$r => {}};
-		      }
+		      $rtc{$rp} //= {};
+		      ${$rtc{$rp}}{$r} //= {};
 		  } else {
 		      seek $odf, $roff, 0;
-		      while (read $odf, $n, 4) {
-			  $n = unpack "N", $n;
-			  last unless ($n);
+		      while (read $odf, $n, 5) {
+			  my ($type, $mid) = unpack "CN", $n;
+			  last unless ($type);
 			  gets($odf);
-			  next unless ($n == $id);
-			  $rels{$r} = 1;
-			  next rproc;
-		      }
-		      while (read $odf, $w, 4) {
-			  $w = unpack "N", $w;
-			  last unless ($w);
-			  gets($odf);
-			  next unless (exists $ways{$w});
-			  $rels{$r} = 1;
-			  next rproc;
-		      }
-		      my ($rr);
-		      while (read $odf, $rr, 4) {
-			  $rr = unpack "N", $rr;
-			  last unless ($rr);
-			  gets($odf);
-			  if (exists $rels{$rr}) {
+			  if ($type == 1) {
+			      next unless ($mid == $id);
 			      $rels{$r} = 1;
 			      next rproc;
-			  }
-			  my $rrp = relationptn($rr);
-			  if (exists $rtc{$rrp}) {
-			      my %x = %{$rtc{$rrp}};
-			      if (exists $x{$rr}) {
-				  ${$x{$rr}}{$r} = 1;
+			  } elsif ($type == 2) {
+			      next unless (exists $ways{$mid});
+			      $rels{$r} = 1;
+			      next rproc;
+			  } elsif ($type == 3) {
+			      if (exists $rels{$mid}) {
+				  $rels{$r} = 1;
+				  next rproc;
+			      }
+			      my $rrp = relationptn($mid);
+			      if (exists $rtc{$rrp}) {
+				  my %x = %{$rtc{$rrp}};
+				  if (exists $x{$mid}) {
+				      ${$x{$mid}}{$r} = 1;
+				  } else {
+				      $x{$mid} = {$r => 1};
+				  }
 			      } else {
-				  $x{$rr} = {$r => 1};
+				  $rtc{$rrp} = {$mid => {$r => 1}};
 			      }
 			  } else {
-			      $rtc{$rrp} = {$rr => {$r => 1}};
+			      die "Unknown relation $r type $type";
 			  }
 		      }
 		  }
@@ -239,51 +234,46 @@ while (my $gz = <>) {
 			  next if (exists $rels{$r});
 			  next unless (exists $x{$r});
 			  next unless ($roff);
-			  seek $odf, $roff, 1;
-			  while (read $odf, $n, 4) {
-			      $n = unpack "N", $n;
-			      last unless ($n);
+			  seek $odf, $roff, 0;
+			  while (read $odf, $n, 5) {
+			      my ($type, $mid) = unpack "CN", $n;
+			      last unless ($type);
 			      gets($odf);
-			      next unless ($n == $id);
-			      $rels{$r} = 1;
-			      foreach my $rr (keys %{$x{$r}}) {
-				  $rels{$rr} = 1;
-			      }
-			      next rrtc;
-			  }
-			  while (read $odf, $w, 4) {
-			      $w = unpack "N", $w;
-			      last unless ($w);
-			      gets($odf);
-			      next unless (exists $ways{$w});
-			      $rels{$r} = 1;
-			      foreach my $rr (keys %{$x{$r}}) {
-				  $rels{$rr} = 1;
-			      }
-			      next rrtc;
-			  }
-			  my ($rr);
-			  while (read $odf, $rr, 4) {
-			      $rr = unpack "N", $rr;
-			      last unless ($rr);
-			      gets($odf);
-			      if (exists $rels{$rr}) {
+			      if ($type == 1) {
+				  next unless ($mid == $id);
 				  $rels{$r} = 1;
-				  foreach my $rrr (keys %{$x{$r}}) {
-				      $rels{$rrr} = 1;
+				  foreach my $rr (keys %{$x{$r}}) {
+				      $rels{$rr} = 1;
 				  }
 				  next rrtc;
-			      }
-			      my $rrp = relationptn($rr);
-			      if (exists $rtc{$rrp}) {
-				  my %y = %{$rtc{$rrp}};
-				  if (exists $y{$rr}) {
-				      ${$y{$rr}}{$r} = 1;
+			      } elsif ($type == 2) {
+				  next unless (exists $ways{$mid});
+				  $rels{$r} = 1;
+				  foreach my $rr (keys %{$x{$r}}) {
+				      $rels{$rr} = 1;
+				  }
+				  next rrtc;
+			      } elsif ($type == 3) {
+				  if (exists $rels{$mid}) {
+				      $rels{$r} = 1;
+				      foreach my $rrr (keys %{$x{$r}}) {
+					  $rels{$rrr} = 1;
+				      }
+				      next rrtc;
+				  }
+				  my $rrp = relationptn($mid);
+				  if (exists $rtc{$rrp}) {
+				      my %y = %{$rtc{$rrp}};
+				      if (exists $y{$mid}) {
+					  ${$y{$mid}}{$r} = 1;
+				      } else {
+					  $y{$mid} = {$r => 1};
+				      }
 				  } else {
-				      $y{$rr} = {$r => 1};
+				      $rtc{$rrp} = {$mid => {$r => 1}};
 				  }
 			      } else {
-				  $rtc{$rrp} = {$rr => {$r => 1}};
+				  die "unknown relation $r type $type";
 			      }
 			  }
 		      }
@@ -296,7 +286,7 @@ while (my $gz = <>) {
 		    delete $rels{$r} if (exists $rels{$r});
 		}
 		foreach $r (keys %rels) {
-		    print "  adding relation $r to $uz $ux,$uy\n"
+		    print "  adding relation $r to z$uz $ux,$uy\n"
 			if (VERBOSE > 4);
 		    print $nrf pack "NN", $r, 0;
 		}
@@ -515,7 +505,7 @@ while (my $gz = <>) {
 		    foreach my $r (keys %rtc) {
 			if ($rtc{$r}) {
 			    unless (exists $rt{$r}) {
-				$rt{$r} = {reltiles([], [], [[$r]])};
+				$rt{$r} = {reltiles([[3, $r]])};
 			    }
 			    if (exists ${$rt{$r}}{$p}) {
 				seek $prf, 0, 2;
@@ -547,23 +537,13 @@ while (my $gz = <>) {
 	} elsif (/^\s*\<relation\s+/) {
 	    $relations++;
 	    @tv = ();
-	    my @nodes = ();
-	    my @ways = ();
-	    my @relations = ();
+	    my @members = ();
 	    unless (/\/\>\s*$/) {
 		while (! /\<\/relation\>/s) {
 		    $tv = <OSC>;
 		    $_ .= $tv;
 		    if ($tv =~ /\<member\s+type\=\"(\w+)\"\s+ref\=\"(\d+)\"(?:\s+role\=\"([^\"]*)\")?/) {
-			if ($1 eq "node") {
-			    push @nodes, [$2, $3];
-			} elsif ($1 eq "way") {
-			    push @ways, [$2, $3];
-			} elsif ($1 eq "relation") {
-			    push @relations, [$2, $3];
-			} else {
-			    print "Unknown relation member type \"$1\" ignored.\n";
-			}
+			push @members, [MEMBER->{$1}, $2, $3];
 		    } elsif ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
 			my $tag = $1;
 			my $val = $2;
@@ -575,7 +555,7 @@ while (my $gz = <>) {
 	    print "Relation: $_" if (VERBOSE > 18);
 	    $ptn = relationptn($id);
 	    my (%oldtiles, %rtc, $rf);
-	    my %tiles = reltiles(\@nodes, \@ways, \@relations);
+	    my %tiles = reltiles(\@members);
 	    if ($ptn eq NOPTN) {
 		$ptn = each %tiles;
 		unless($ptn) {
@@ -595,7 +575,7 @@ while (my $gz = <>) {
 		    my ($uz, $ux, $uy) = fromptn($ptn);
 		    print "Modify relation $id in z$uz $ux,$uy\n";
 		}
-		%oldtiles = reltiles([],[],[[$id]]);
+		%oldtiles = reltiles([[3, $id]]);
 		$oldtiles{$ptn}++;
 		$rf = openptn($ptn, "+<", "relations");
 		my ($r, $rp);
@@ -644,19 +624,12 @@ while (my $gz = <>) {
 		print $rd "\0";
 		$off = 1;
 	    }
-	    print "nodes: ".scalar(@nodes)." ways: ".scalar(@ways)." relations: ".scalar(@relations)." tags: ".scalar(@tv)." off: $off\n" if (VERBOSE > 19);
-	    foreach my $node (@nodes) {
-		print $rd (pack "N", ${$node}[0]).${$node}[1]."\0";
+	    print "members: ".scalar(@members)." tags: ".scalar(@tv)." off: $off\n" if (VERBOSE > 19);
+	    foreach my $m (@members) {
+		my ($type, $mid, $role) = @$m;
+		print $rd pack("CN", $type, $mid).$role."\0";
 	    }
-	    print $rd pack "N", 0;
-	    foreach my $way (@ways) {
-		print $rd (pack "N", ${$way}[0]).${$way}[1]."\0";
-	    }
-	    print $rd pack "N", 0;
-	    foreach my $rel (@relations) {
-		print $rd (pack "N", ${$rel}[0]).${$rel}[1]."\0";
-	    }
-	    print $rd pack "N", 0;
+	    print $rd pack "C", 0;
 	    foreach $tv (@tv) {
 		print $rd "$tv\0";
 	    }
@@ -688,7 +661,7 @@ while (my $gz = <>) {
 		foreach $r (keys %rtc) {
 		    if ($rtc{$r}) {
 			unless (exists $rt{$r}) {
-			    $rt{$r} = {reltiles([],[],[[$r]])};
+			    $rt{$r} = {reltiles([[3, $r]])};
 			}
 			if (exists ${$rt{$r}}{$p}) {
 			    seek $prf, 0, 0;
@@ -751,29 +724,10 @@ while (my $gz = <>) {
 	    next;
 	} elsif (/^\s*\<relation\s+/) {
 	    $relations++;
-	    @tv = ();
-	    my @nodes = ();
-	    my @ways = ();
-	    my @relations = ();
 	    unless (/\/\>\s*$/) {
 		while (! /\<\/relation\>/s) {
 		    $tv = <OSC>;
 		    $_ .= $tv;
-		    if ($tv =~ /\<member\s+type\=\"(\w+)\"\s+ref\=\"(\d+)\"(?:\s+role\=\"([^\"]*)\")?/) {
-			if ($1 eq "node") {
-			    push @nodes, [$2, $3];
-			} elsif ($1 eq "way") {
-			    push @ways, [$2, $3];
-			} elsif ($1 eq "relation") {
-			    push @relations, [$2, $3];
-			} else {
-			    print "Unknown relation member type \"$1\" ignored.\n";
-			}
-		    } elsif ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
-			my $tag = $1;
-			my $val = $2;
-			push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
-		    }
 		}
 	    }
 	    ($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
@@ -783,7 +737,7 @@ while (my $gz = <>) {
 		my ($uz, $ux, $uy) = fromptn($ptn);
 		print "Delete relation $id from z$uz $ux,$uy\n"
 		    if (VERBOSE > 4);
-		my %tiles = reltiles([],[],[[$id]]);
+		my %tiles = reltiles([[3, $id]]);
 		while (my $t = each %tiles) {
 		    my $rf = openptn($t, "+<", "relations");
 		    seek $rf, 0, 0;
@@ -824,19 +778,10 @@ while (my $gz = <>) {
 	    next;
 	} elsif (/^\s*\<way\s+/) {
 	    $ways++;
-	    @tv = ();
-	    my @nodes = ();
 	    unless (/\/\>\s*$/) {
 		while (! /\<\/way\>/s) {
 		    $tv = <OSC>;
 		    $_ .= $tv;
-		    if ($tv =~ /\<nd\s+ref\=\"(\d+)\"/) {
-			push @nodes, $1;
-		    } elsif ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
-			my $tag = $1;
-			my $val = $2;
-			push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
-		    }
 		}
 	    }
 	    ($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
@@ -903,16 +848,10 @@ while (my $gz = <>) {
 	    next;
 	} elsif (/^\s*\<node\s/) {
 	    $nodes++;
-	    @tv = ();
 	    unless (/\/\>\s*$/) {
 		while (! /\<\/node\>/s) {
 		    $tv = <OSC>;
 		    $_ .= $tv;
-		    if ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
-			my $tag = $1;
-			my $val = $2;
-			push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
-		    }
 		}
 	    }
 	    print "Node: $_" if (VERBOSE > 20);

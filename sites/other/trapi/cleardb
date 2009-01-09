@@ -1,9 +1,21 @@
-#!/bin/sh
+#!/usr/bin/perl
 # Copyright 2008 Blars Blarson.  Distributed under GPL version 2, see GPL-2
 
-touch z1
-rm -r z[0-9]*
-> nodes.db
-> ways.db
-> relations.db
-> zooms.db
+use strict;
+use warnings;
+
+use File::Path;
+
+use constant VERBOSE => 5;
+use trapi;
+
+chdir TRAPIDIR or die "Could not chdir TRAPIDIR: $!";
+
+foreach my $z (0, MINZOOM .. MAXZOOM) {
+    rmtree("z$z", {}) if (-d "z$z");
+}
+
+foreach my $file ('nodes', 'ways', 'relations', 'zooms') {
+    open F, ">", DBDIR.$file.".db" or die "Could not create $file.db: $!";
+    close F;
+}

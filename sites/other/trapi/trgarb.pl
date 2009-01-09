@@ -5,7 +5,9 @@ use strict;
 use warnings;
 
 use constant VERBOSE => 10;
-use ptdb;
+use trapi;
+
+chdir TRAPIDIR or die "could not chdir ".TRAPIDIR.": $!";
 
 ptdbinit("+<");
 my ($pz) = pack "N", 0;
@@ -150,27 +152,17 @@ while (read $rf, $b, 8) {
 	seek $df, $off, 0;
 	$noff = tell $ndf;
 	my $n;
-	while (read $df, $n, 4) {
+	while (read $df, $n, 5) {
+	    my ($type, $mid) = unpack "CN", $n;
+	    last unless($type);
 	    print $ndf $n;
-	    last if ($n eq $pz);
 	    my $role = gets($df);
 	    print $ndf "$role\0";
 	}
-	my $w;
-	while (read $df, $w, 4) {
-	    print $ndf $w;
-	    last if ($w eq $pz);
-	    my $role = gets($df);
-	    print $ndf "$role\0";
-	}
-	my $rr;
-	while (read $df, $rr, 4) {
-	    print $ndf $rr;
-	    last if ($rr eq $pz);
-	    my $role = gets($df);
-	    print $ndf "$role\0";
-	}
-	while (my $tag = gets($df)) {
+	seek $df, -4, 1;
+	print $ndf "\0";
+	my $tag;
+	while (defined($tag = gets($df)) && $tag ne "") {
 	    my $val = gets($df);
 	    print $ndf "$tag\0$val\0";
 	}

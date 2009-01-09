@@ -7,17 +7,19 @@
 use strict;
 use warnings;
 
+
 use LWP::Simple;
 use Time::Local;
+use constant VERBOSE => 5;
+use trapi;
 
-use constant TMPDIR => "/tmp/";
-use constant WEBSITE => "http://planet.openstreetmap.org/";
-# use constant WEBSITE => "http://ftp.heanet.ie/mirrors/openstreetmap.org/";
 use constant MINUTE => 60;
 use constant HOUR => 3600;
 use constant DAY => (24 * HOUR);
 use constant USEDAY => (12 * HOUR);
 use constant USEHOUR => (30 * MINUTE);
+
+chdir TRAPIDIR or die "Could not chdir TRAPIDIR: $!";
 
 
 sub process($$$) {
@@ -74,7 +76,7 @@ for (;;) {
     my @f = gmtime($t);
     my $e = timegm(0, $f[1], $f[2], $f[3], $f[4], $f[5]) + MINUTE;
 #    printf "e: %d time: %d\n", $e, time;
-    sleep(55) if ($e > time - 300);
+    sleep(55) if ($e > time - OSCDELAY);
     my $f = sprintf("%04d%02d%02d%02d%02d", $f[5]+1900, $f[4]+1, $f[3], $f[2], $f[1]);
     my @g = gmtime($e);
     my $g = sprintf("%04d%02d%02d%02d%02d", $g[5]+1900, $g[4]+1, $g[3], $g[2], $g[1]);

@@ -5,9 +5,8 @@ use strict;
 use warnings;
 
 use constant VERBOSE => 0;		# verbosity
-use constant MAXTILESPERREQ => 100;	# largest request in tiles
-use constant TOOLD => 1500;		# how old database can get before refusing
-use ptdb;
+
+use trapi;
 use CGI::Fast qw(:standard);
 use CGI::Carp;
 use Time::Local;
@@ -59,6 +58,35 @@ while (my $query = new CGI::Fast) {
 	}
 	($bbs, $bbw, undef, undef) = Project($west, $south, MAXZOOM);
 	(undef, undef, $bbn, $bbe) = Project($east, $north, MAXZOOM);
+    } elsif ($query->param('node') =~ /^(\d+)$/) {
+	my $node = $1;
+	$pn{nodeptn($node)} = {$node => 1};
+    } elsif ($query->param('way') =~ /^(\d+)$/) {
+	my $way = $1;
+	$pw{wayptn($way)} = {$way => 1};
+    } elsif ($query->param('relation') =~ /^(\d+)$/) {
+	my $rel = $1;
+	$pr{relationptn($rel)} = {$rel => 1};
+    } elsif ($query->param('tile') =~ /^(\d+),(\d+),(\d+)$/) {
+	my ($z,$x,$y) = ($1,$2,$3);
+	if ($z >= MAXZOOM) {
+	    my $zdiff = $z - MAXZOOM;
+	    $x >>= $zdiff;
+	    $y >>= $zdiff;
+	    $tiles{etoptn($x, $y)} = 1;
+	    ($bbs, $bbw, $bbn, $bbe) = Project($x, $y, MAXZOOM);
+	} else {
+	    ($bbs, $bbw, $bbn, $bbe) = Project($x, $y, $z);
+	    my $zdiff = MAXZOOM - $z;
+	    $x <<= $zdiff;
+	    $y <<= $zdiff;
+	    my $n = (1<< $zdiff) - 1;
+	    foreach my $xx (0 .. $n) {
+		foreach my $yy (0 .. $n) {
+		    $tiles{etoptn($x+$xx,$y+$yy)} = 1;
+		}
+	    }
+	}
     } elsif (path_info =~ /node\/(\d+)\b/) {
 	my $node = $1;
 	$pn{nodeptn($node)} = {$node => 1};
@@ -184,7 +212,7 @@ while (my $query = new CGI::Fast) {
 	    } else {
 		print ">\n";
 		seek $nd, $off, 0;
-		while ($key = gets $nd) {
+		while (defined($key = gets $nd) && ($key ne "")) {
 		    $val = gets $nd;
 		    print "  <tag k=\"$key\" v=\"$val\"/>\n";
 		}
@@ -213,7 +241,7 @@ while (my $query = new CGI::Fast) {
 		} else {
 		    print ">\n";
 		    seek $pd, $off, 0;
-		    while ($key = gets $pd) {
+		    while (defined($key = gets $pd) && ($key ne "")) {
 			$val = gets $pd;
 			print "  <tag k=\"$key\" v=\"$val\"/>\n";
 		    }
@@ -242,7 +270,7 @@ while (my $query = new CGI::Fast) {
 		last if($tn == 0);
 		print "  <nd ref=\"$tn\"/>\n";
 	    }
-	    while ($key = gets $nd) {
+	    while (defined($key = gets $nd) && ($key ne "")) {
 		$val = gets $nd;
 		print "  <tag k=\"$key\" v=\"$val\"/>\n";
 	    }
@@ -267,7 +295,7 @@ while (my $query = new CGI::Fast) {
 		    last unless ($tn);
 		    print "  <nd ref=\"$tn\"/>\n";
 		}
-		while ($key = gets $pd) {
+		while (defined($key = gets $pd) && ($key ne "")) {
 		    $val = gets $pd;
 		    print "  <tag k=\"$key\" v=\"$val\"/>\n";
 		}
@@ -291,25 +319,14 @@ while (my $query = new CGI::Fast) {
 	    next unless ($off);
 	    print "<relation id=\"$tr\">\n";
 	    seek $nd, $off, 0;
-	    while (read $nd, $w, 4) {
-		($tn) = unpack "N", $w;
-		last unless ($tn);
+	    while (read $nd, $w, 5) {
+		my ($type, $mid) = unpack "CN", $w;
+		last unless ($type);
 		my $role = gets($nd);
-		print "  <member type=\"node\" ref=\"$tn\" role=\"$role\"/>\n";
+		print "  <member type=\"".(MEMBERTYPE)[$type]."\" ref=\"$mid\" role=\"$role\"/>\n";
 	    }
-	    while (read $nd, $w, 4) {
-		($tw) = unpack "N", $w;
-		last unless ($tw);
-		my $role = gets($nd);
-		print "  <member type=\"way\" ref=\"$tw\" role=\"$role\"/>\n";
-	    }
-	    while (read $nd, $w, 4) {
-		($tw) = unpack "N", $w;
-		last unless ($tw);
-		my $role = gets($nd);
-		print "  <member type=\"relation\" ref=\"$tw\" role=\"$role\"/>\n";
-	    }
-	    while ($key = gets $nd) {
+	    seek $nd, -4, 1;
+	    while (defined($key = gets $nd) && ($key ne "")) {
 		$val = gets $nd;
 		print "  <tag k=\"$key\" v=\"$val\"/>\n";
 	    }
@@ -329,25 +346,15 @@ while (my $query = new CGI::Fast) {
 	    if ($off && exists ${$pr{$tp}}{$tr}) {
 		print "<relation id=\"$tr\">\n";
 		seek $pd, $off, 0;
-		while (read $pd, $w, 4) {
-		    ($tn) = unpack "N", $w;
-		    last unless ($tn);
+		while (read $pd, $w, 5) {
+		    my ($type, $mid) = unpack "CN", $w;
+		    last unless ($type);
 		    my $role = gets($pd);
-		    print "  <member type=\"node\" ref=\"$tn\" role=\"$role\"/>\n";
+		    print "  <member type=\"".(MEMBERTYPE)[$type]."\" ref=\"$mid\" role=\"$role\"/>\n";
 		}
-		while (read $pd, $w, 4) {
-		    ($tw) = unpack "N", $w;
-		    last unless ($tw);
-		    my $role = gets($pd);
-		    print "  <member type=\"way\" ref=\"$tw\" role=\"$role\"/>\n";
-		}
-		while (read $pd, $w, 4) {
-		    ($tw) = unpack "N", $w;
-		    last unless ($tw);
-		    my $role = gets($pd);
-		    print "  <member type=\"relation\" ref=\"$tw\" role=\"$role\"/>\n";
-		}
-		while ($key = gets $pd) {
+		seek $pd, -4, 1;
+		my $key;
+		while (defined($key = gets $pd) && ($key ne "")) {
 		    $val = gets $pd;
 		    print "  <tag k=\"$key\" v=\"$val\"/>\n";
 		}

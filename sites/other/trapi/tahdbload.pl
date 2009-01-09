@@ -5,9 +5,12 @@ use strict;
 use warnings;
 
 use constant VERBOSE => 5;		# verbosity
-use ptdb;
+use trapi;
+
+chdir TRAPIDIR or die "could not chdir ".TRAPIDIR.": $!";
 
 ptdbinit("+<");
+
 
 my $ignoretags = IGNORETAGS;
 
@@ -126,24 +129,13 @@ while ($_ = <>) {
     } elsif (/^\s*\<relation\s+/) {
 	$relations++;
 	@tv = ();
-	my @nodes = ();
-	my @ways = ();
-	my @relations = ();
+	my @members = ();
 	unless (/\/\>\s*$/) {
 	    while (! /\<\/relation\>/s) {
 		$tv = <>;
 		$_ .= $tv;
 		if ($tv =~ /\<member\s+type\=\"(\w+)\"\s+ref\=\"(\d+)\"(?:\s+role\=\"([^\"]*)\")?/) {
-		    if ($1 eq "node") {
-			push @nodes, [$2, $3];
-		    } elsif ($1 eq "way") {
-			push @ways, [$2, $3];
-		    } elsif ($1 eq "relation") {
-			push @relations, [$2, $3];
-		    } else {
-			print "Unknown relation member type \"$1\" ignored.\n"
-			    if (VERBOSE > 0);
-		    }
+		    push @members, [MEMBER->{$1}, $2, $3];
 		} elsif ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
 		    my $tag = $1;
 		    my $val = $2;
@@ -153,7 +145,7 @@ while ($_ = <>) {
 	}
 	($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
 	print "Relation: $_" if (VERBOSE > 20);
-	my %tiles = reltiles(\@nodes,\@ways,\@relations);
+	my %tiles = reltiles(\@members);
 	$ptn = each %tiles;
 	unless (defined $ptn) {
 	    print "Relation $id has no members\n" if (VERBOSE > 0);
@@ -170,31 +162,28 @@ while ($_ = <>) {
 	    print $rd "\0";
 	    $off = 1;
 	}
-	print "nodes: ".scalar(@nodes)." ways: ".scalar(@ways)." relations: ".scalar(@relations)." tags: ".scalar(@tv)." off: $off\n" if (VERBOSE > 19);
-	foreach my $node (@nodes) {
-	    print $rd (pack "N", ${$node}[0]).${$node}[1]."\0";
+	print "members: ".scalar(@members)." tags: ".scalar(@tv)." off: $off\n" if (VERBOSE > 19);
+	foreach my $m (@members) {
+	    my ($type, $mid, $role) = @$m;
+	    print $rd pack("CN", $type, $mid).$role."\0";
 	}
-	print $rd pack "N", 0;
-	foreach my $way (@ways) {
-	    print $rd (pack "N", ${$way}[0]).${$way}[1]."\0";
-	}
-	print $rd pack "N", 0;
-	foreach my $rel (@relations) {
-	    print $rd (pack "N", ${$rel}[0]).${$rel}[1]."\0";
-	}
-	print $rd pack "N", 0;
+	print $rd pack "C", 0;
 	foreach $tv (@tv) {
 	    print $rd "$tv\0";
 	}
 	print $rd "\0";
-	my ($uz, $ux, $uy) = fromptn($ptn);
-	print "Relation $id in z$uz $ux,$uy\n" if (VERBOSE > 4);
+	if (VERBOSE > 4) {
+	    my ($uz, $ux, $uy) = fromptn($ptn);
+	    print "Relation $id in z$uz $ux,$uy\n";
+	}
 	print $rf pack "NN", $id, $off;
 	relationptn($id, $ptn);
 	while (my $p = each %tiles) {
 	    next if ($p eq $ptn);
-	    my ($vz, $vx, $vy) = fromptn($p);
-	    print "  also in z$vz $vx,$vy\n" if (VERBOSE > 4);
+	    if (VERBOSE > 4) {
+		my ($vz, $vx, $vy) = fromptn($p);
+		print "  also in z$vz $vx,$vy\n";
+	    }
 	    my $prf = openptn($p, "+<", "relations");
 	    seek $prf, 0, 2;
 	    print $prf pack "NN", $id, 0;

@@ -36,6 +36,8 @@ __author__  = "Christopher Schmidt <crschmidt@crschmidt.net>"
 __version__ = "0.2"
 __revision__ = "$Id$"
 
+import traceback 
+
 import dbm
 import md5
 import time
@@ -126,7 +128,7 @@ def indent(elem, level=0):
 class changeTags (ContentHandler):
     """A class implementing an XML Content handler which uses a passed converter function to change
        data on the OSM server based on a local XML file."""
-    def __init__ (self, converter, db=None, user=None, password=None, dry_run=None, noisy_errors=None, only_mine=None, verbose=None, changes=None, api=None, check_api=None):
+    def __init__ (self, converter, db=None, user=None, password=None, dry_run=None, noisy_errors=None, only_mine=None, verbose=None, changes=None, api=None, check_api=None, obj_counts = {}):
         ContentHandler.__init__(self)
         
         self.converter = converter
@@ -141,11 +143,12 @@ class changeTags (ContentHandler):
         self.api = api
         self.check_api_first = check_api  
 
-        self.last_report_time = 0
+        self.last_report_time = time.time() 
         self.last_report_object = 0
         self.changes = {'node': 0, 'way': 0} 
         self.already_changed = {'node': 0, 'way': 0} 
         self.read = {'node': 0, 'way': 0, 'tag': 0} 
+        self.total_read = {'node': obj_counts.get('node', 0), 'way': obj_counts.get('way', 0)}
         self.errors = []
         self.skipped = []
         
@@ -165,7 +168,7 @@ class changeTags (ContentHandler):
         
         url = "%s/%s/%s" % (self.api, self.current['type'], self.current['id'])
         resp, content = self.h.request(url, "GET")
-        if int(resp.status) == 411:
+        if int(resp.status) == 410:
             raise Exception("Object has been deleted.")
         elif True or int(resp.status) == 200:
             doc = minidom.parseString(content)
@@ -187,6 +190,32 @@ class changeTags (ContentHandler):
         else:
             raise Exception("Couldn't update from API server.")
 
+    def progress(self):
+        upload = self.changes['node'] + self.changes['way'] + \
+            self.already_changed['node'] + self.already_changed['way']
+        
+        t = time.time() - self.last_report_time
+        
+        if t > 10:
+           
+            obj_count = "Nodes: %s/%s, Ways: %s/%s" % (self.read['node'], self.total_read['node'], self.read['way'], self.total_read['way'])
+
+            c = upload - self.last_report_object
+            rate = float(c/t)
+            
+            if self.change_count:
+                if rate:
+                    remain = float(self.change_count - upload) / rate
+                    remain_string = "%i:%02i" % (remain / 60, remain % 60)
+                else:
+                    remain_string = "??"
+                print "%s Upload: %.2f%% (%s/%s) complete; %.3f/s  %s remain" % (obj_count, ((float(upload)/self.change_count) * 100), upload, self.change_count, rate, remain_string)
+                #else:
+                #    print "%s Upload: 0/%s complete" % (obj_count, self.change_count)
+            else:
+                print "%s, %s complete" % (obj_count, upload)
+            self.last_report_object = upload 
+            self.last_report_time = time.time() 
 
     def upload(self):
         """Upload the way.""" 
@@ -197,7 +226,7 @@ class changeTags (ContentHandler):
                 if not run: 
                     raise Exception("Server version changed; no change needed.") 
             except Exception, E:
-                error = {'item': self.current, 'code': -1, 'data': str(E)}
+                error = {'item': self.current, 'code': -5, 'data': str(E)}
                 if self.noisy_errors: print "Error occurred! %s" % error
                 self.errors.append(error)
                 return
@@ -210,33 +239,21 @@ class changeTags (ContentHandler):
         if self.db and self.db.has_key(db_key):
             self.already_changed[self.current['type']] += 1
             return
+        
         url = "%s/%s/%s" % (self.api, self.current['type'], self.current['id'])
         xml = self.makeXML()
+        
         if self.dry_run:
             if self.verbose:
                 print "URL:  %s" % url
                 print "XML:\n%s" % xml
             self.changes[self.current['type']] += 1
+        
         else:
             try:
                 if self.verbose: # self.verbose: 
                     print "Opening URL %s" % url
-                upload = self.changes['node'] + self.changes['way'] + \
-                    self.already_changed['node'] + self.already_changed['way']
                 
-                if upload and upload % 10 == 0:
-                   t = time.time() - self.last_report_time
-                   c = upload - self.last_report_object
-                   rate = c/t
-                   
-                   if self.change_count:
-                       remain = float(self.change_count - upload) / rate
-                       remain_string = "%i:%02i" % (remain / 60, remain % 60) 
-                       print "%.2f%% (%s/%s) complete; %.3f/s  %s remain" % (((float(upload)/self.change_count) * 100), upload, self.change_count, rate, remain_string)
-                   else:
-                       print "%s complete" % (upload)
-                   self.last_report_object = upload 
-                   self.last_report_time = time.time()  
                 resp, content = self.h.request(url, "PUT", body=xml)
                 if int(resp.status) != 200:
                     error = {'item': self.current, 'code': resp.status, 'data': content}
@@ -301,6 +318,8 @@ class changeTags (ContentHandler):
             new_tags = self.converter(self.current['tags'], self.current['type'])
             if new_tags:
                 self.upload()
+        self.progress()
+        
 
 if __name__ == "__main__":
     if not converter:
@@ -404,6 +423,7 @@ if __name__ == "__main__":
         options.password = getpass.getpass("Password: ") 
     
     changes = 0
+    read = {}
     if not options.dry_run:
         try:
             f_dry = open("%s.dry_run" % options.file)
@@ -411,11 +431,14 @@ if __name__ == "__main__":
             print "You haven't run a dry run to see what the results will be! (%s)" % E
             sys.exit(2)
         data = f_dry.read().strip()
-        hash, changes = data.split("\n|||\n")
+        hash, changes, read = data.split("\n|||\n")
         if hash != converter.func_code.co_code:
             print "The converter function changed, and you haven't run another dry run. Do that first."
             sys.exit(3)
-        changes = int(changes)
+        node_changes, way_changes = map(int, changes.split("|"))
+        node_read, way_read = map(int, read.split("|"))
+        changes = node_changes + way_changes
+        read = {'node': node_read, 'way': way_read} 
         if changes > 1000:
             print "You are changing more than 1000 objects. Ask crschmidt for the special password."
             pw = raw_input("Secret Phrase: ")
@@ -435,7 +458,8 @@ if __name__ == "__main__":
             verbose=options.verbose,
             changes=changes,
             api=options.api,
-            check_api=options.check_api)
+            check_api=options.check_api,
+            obj_counts=read)
    
     prof = None
     
@@ -459,6 +483,7 @@ if __name__ == "__main__":
         if osmParser.current:
             print "\nStopping at %s %s due to exception: \n%s"  % \
                   (osmParser.current['type'], osmParser.current['id'], E)
+                  
         else:
             print "Stopping due to Exception: \n" % E 
         failed = True    
@@ -474,9 +499,11 @@ if __name__ == "__main__":
     
     if not failed and options.dry_run and options.file:
         f = open("%s.dry_run" % options.file, "w")
-        f.write("%s\n|||\n%s" % \
+        f.write("%s\n|||\n%i|%i\n|||\n%i|%i" % \
                (converter.func_code.co_code, 
-                osmParser.changes['node'] + osmParser.changes['way']))
+                osmParser.changes['node'], osmParser.changes['way'], 
+                osmParser.read['node'], osmParser.read['way']
+                ))
         f.close()
     
     if len(osmParser.errors):

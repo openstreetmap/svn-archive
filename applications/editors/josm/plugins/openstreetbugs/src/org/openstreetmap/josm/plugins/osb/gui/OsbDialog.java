@@ -1,18 +1,18 @@
 /* Copyright (c) 2008, Henrik Niehaus
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ *    this list of conditions and the following disclaimer in the documentation 
  *    and/or other materials provided with the distribution.
- * 3. Neither the name of the project nor the names of its
- *    contributors may be used to endorse or promote products derived from this
+ * 3. Neither the name of the project nor the names of its 
+ *    contributors may be used to endorse or promote products derived from this 
  *    software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -65,6 +65,7 @@ import org.openstreetmap.josm.gui.layer.DataChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
+import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbObserver;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.gui.action.AddCommentAction;
@@ -88,14 +89,13 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
     private JButton closeIssue = new JButton(new CloseIssueAction());
     private JToggleButton newIssue = new JToggleButton();
 
+    private boolean buttonLabels = Main.pref.getBoolean(ConfigKeys.OSB_BUTTON_LABELS);
+
     public OsbDialog(final OsbPlugin plugin) {
         super(tr("Open OpenStreetBugs"), "icon_error22",
-                tr("Opens the OpenStreetBugs window and activates the automatic download"),
-                Shortcut.registerShortcut(
-                        "view:openstreetbugs",
-                        tr("Toggle: {0}", tr("Open OpenStreetBugs")),
-                        KeyEvent.VK_O, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT),
-                150);
+                tr("Open the OpenStreetBugs window and activates the automatic download"), Shortcut.registerShortcut(
+                        "view:openstreetbugs", tr("Toggle: {0}", tr("Open OpenStreetBugs")), KeyEvent.VK_O,
+                        Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT), 150);
 
         osbPlugin = plugin;
 
@@ -108,21 +108,20 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
         add(new JScrollPane(list), BorderLayout.CENTER);
 
         // create dialog buttons
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 2));
+        GridLayout layout = buttonLabels ? new GridLayout(2, 2) : new GridLayout(1, 4);
+        JPanel buttonPanel = new JPanel(layout);
         add(buttonPanel, BorderLayout.SOUTH);
         refresh = new JButton(tr("Refresh"));
         refresh.setToolTipText(tr("Refresh"));
         refresh.setIcon(OsbPlugin.loadIcon("view-refresh22.png"));
-        refresh.setHorizontalAlignment(SwingConstants.LEFT);
         refresh.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 // check zoom level
-                if(Main.map.mapView.zoom() > 15 || Main.map.mapView.zoom() < 9) {
+                if (Main.map.mapView.zoom() > 15 || Main.map.mapView.zoom() < 9) {
                     JOptionPane.showMessageDialog(Main.parent,
                             tr("The visible area is either too small or too big to download data from OpenStreetBugs"),
-                            tr("Warning"),
-                            JOptionPane.INFORMATION_MESSAGE);
+                            tr("Warning"), JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
 
@@ -133,21 +132,30 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
         addComment.setEnabled(false);
         addComment.setToolTipText((String) addComment.getAction().getValue(Action.NAME));
         addComment.setIcon(OsbPlugin.loadIcon("add_comment22.png"));
-        addComment.setHorizontalAlignment(SwingConstants.LEFT);
         closeIssue.setEnabled(false);
         closeIssue.setToolTipText((String) closeIssue.getAction().getValue(Action.NAME));
         closeIssue.setIcon(OsbPlugin.loadIcon("icon_valid22.png"));
-        closeIssue.setHorizontalAlignment(SwingConstants.LEFT);
         NewIssueAction nia = new NewIssueAction(newIssue, osbPlugin);
         newIssue.setAction(nia);
         newIssue.setToolTipText((String) newIssue.getAction().getValue(Action.NAME));
         newIssue.setIcon(OsbPlugin.loadIcon("icon_error_add22.png"));
-        newIssue.setHorizontalAlignment(SwingConstants.LEFT);
 
         buttonPanel.add(refresh);
         buttonPanel.add(newIssue);
         buttonPanel.add(addComment);
         buttonPanel.add(closeIssue);
+
+        if (buttonLabels) {
+            refresh.setHorizontalAlignment(SwingConstants.LEFT);
+            addComment.setHorizontalAlignment(SwingConstants.LEFT);
+            closeIssue.setHorizontalAlignment(SwingConstants.LEFT);
+            newIssue.setHorizontalAlignment(SwingConstants.LEFT);
+        } else {
+            refresh.setText(null);
+            addComment.setText(null);
+            closeIssue.setText(null);
+            newIssue.setText(null);
+        }
 
         // add a selection listener to the data
         DataSet.selListeners.add(new SelectionChangedListener() {
@@ -157,7 +165,7 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
                 for (OsmPrimitive osmPrimitive : newSelection) {
                     for (int i = 0; i < model.getSize(); i++) {
                         OsbListItem item = (OsbListItem) model.get(i);
-                        if(item.getNode() == osmPrimitive) {
+                        if (item.getNode() == osmPrimitive) {
                             list.addSelectionInterval(i, i);
                         }
                     }
@@ -186,7 +194,7 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
     }
 
     public void valueChanged(ListSelectionEvent e) {
-        if(list.getSelectedValues().length == 0) {
+        if (list.getSelectedValues().length == 0) {
             addComment.setEnabled(false);
             closeIssue.setEnabled(false);
             OsbAction.setSelectedNode(null);
@@ -217,9 +225,9 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
     }
 
     private void scrollToSelected(Node node) {
-        for (int i = 0; i < model.getSize();i++) {
-            Node current = ((OsbListItem)model.get(i)).getNode();
-            if(current.id == node.id) {
+        for (int i = 0; i < model.getSize(); i++) {
+            Node current = ((OsbListItem) model.get(i)).getNode();
+            if (current.id == node.id) {
                 list.scrollRectToVisible(list.getCellBounds(i, i));
                 list.setSelectedIndex(i);
                 return;
@@ -227,17 +235,18 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
         }
     }
 
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {}
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    }
 
     public void layerAdded(Layer newLayer) {
-        if(newLayer == osbPlugin.getLayer()) {
+        if (newLayer == osbPlugin.getLayer()) {
             update(osbPlugin.getDataSet());
             Main.map.mapView.moveLayer(newLayer, 0);
         }
     }
 
     public void layerRemoved(Layer oldLayer) {
-        if(oldLayer == osbPlugin.getLayer()) {
+        if (oldLayer == osbPlugin.getLayer()) {
             model.removeAllElements();
         }
     }
@@ -252,8 +261,8 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
     }
 
     public void mouseClicked(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-            OsbListItem item = (OsbListItem)list.getSelectedValue();
+        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+            OsbListItem item = (OsbListItem) list.getSelectedValue();
             zoomToNode(item.getNode());
         }
     }
@@ -267,21 +276,23 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
     }
 
     private void mayTriggerPopup(MouseEvent e) {
-        if(e.isPopupTrigger()) {
+        if (e.isPopupTrigger()) {
             int selectedRow = list.locationToIndex(e.getPoint());
             list.setSelectedIndex(selectedRow);
-            Node n = ((OsbListItem)list.getSelectedValue()).getNode();
+            Node n = ((OsbListItem) list.getSelectedValue()).getNode();
             OsbAction.setSelectedNode(n);
             PopupFactory.createPopup(n).show(e.getComponent(), e.getX(), e.getY());
         }
     }
 
-    public void mouseEntered(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {
+    }
 
-    public void mouseExited(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {
+    }
 
     public void actionPerformed(OsbAction action) {
-        if(action instanceof AddCommentAction || action instanceof CloseIssueAction) {
+        if (action instanceof AddCommentAction || action instanceof CloseIssueAction) {
             update(osbPlugin.getDataSet());
         }
     }
@@ -291,7 +302,7 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
         public int compare(Node o1, Node o2) {
             String state1 = o1.get("state");
             String state2 = o2.get("state");
-            if(state1.equals(state2)) {
+            if (state1.equals(state2)) {
                 return o1.get("note").compareTo(o2.get("note"));
             }
             return state1.compareTo(state2);

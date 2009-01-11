@@ -88,6 +88,10 @@
 		<rule e="way" k="leisure" v="park|playground|playing_fields|garden|pitch|golf_course|common|green">
 			<area class="leisure-park"/>
 		</rule>
+		<rule e="way" k="leisure" v="nature_reserve">
+			<area class="leisure-nature_reserve"/>
+			<areaSymbol ref="bird" position="center"/>
+		</rule>
 		<rule e="way" k="leisure" v="stadium|sports_centre|water_park">
 			<area class="leisure-stadium"/>
 		</rule>
@@ -2002,6 +2006,12 @@
 			.leisure-swimming-pool {
 			fill: #b5d6f1;
 			stroke: #6060ff;
+			stroke-width: 0.2px;
+			}
+			
+			.leisure-nature_reserve {
+			fill: #c7f1a3;
+			stroke: #6fc18e;
 			stroke-width: 0.2px;
 			}
 			

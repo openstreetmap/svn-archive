@@ -48,6 +48,9 @@
 				<area class="wetland-bog"/>
 			</rule>
 		</rule>
+                <rule e="way" k="landuse" v="conservation">
+                	<area class="landuse-conservation"/>
+                </rule>
 		
 		<!-- Artificial landuse -->
 		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow">
@@ -1392,7 +1395,12 @@
 			stroke-dasharray: 0.3, 1.7;
 			opacity: 0.5;
 			}
-			
+
+                        .landuse-conservation {
+                        fill: #cfeca8;
+                        stroke: #6fc18e;
+                        stroke-width: 0.2px
+                        }
 			
 			/* Leisure */
 			.leisure-park {

@@ -93,7 +93,6 @@
 		</rule>
 		<rule e="way" k="leisure" v="nature_reserve">
 			<area class="leisure-nature_reserve"/>
-			<areaSymbol ref="bird" position="center"/>
 		</rule>
 		<rule e="way" k="leisure" v="stadium|sports_centre|water_park">
 			<area class="leisure-stadium"/>

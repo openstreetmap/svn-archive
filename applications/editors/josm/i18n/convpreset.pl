@@ -78,7 +78,9 @@ while(my $line = <>)
     print "\n";
   }
   elsif($line =~ /^\s*$/
-     || $line =~ /<separator\/>/
+     || $line =~ /<separator *\/>/
+     || $line =~ /<space *\/>/
+     || $line =~ /<\/?optional>/
      || $line =~ /<key/
      || $line =~ /annotations/
      || $line =~ /<!--/
@@ -90,7 +92,7 @@ while(my $line = <>)
   else
   {
     print "/* unparsed line $line */\n";
-    print STDERR "Unparsed line $line\n";
+#    print STDERR "Unparsed line $line\n";
   }
 
   # note, these two must be in this order ore oneliners aren't handled

@@ -2745,7 +2745,7 @@
 			stroke-width: 0.2px;
 			}
 			.access-area-border-width-landuse-field {
-			stroke-width: 0.3px;
+			stroke-width: 0.8px;
 			}
 			
 			.landuse-residential {
@@ -2765,7 +2765,7 @@
 			fill: #a47c41;
 			}
 			.access-area-border-width-landuse-conservation {
-			stroke-width: 0.3px;
+			stroke-width: 0.8px;
 			}
 			
 			.landuse-commercial {
@@ -2837,7 +2837,7 @@
 			stroke-width: 0.2px;
 			}
 			.access-area-border-width-leisure-park {
-			stroke-width: 0.3px;
+			stroke-width: 0.8px;
 			}
 			
 			.leisure-stadium {

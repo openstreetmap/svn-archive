@@ -1255,46 +1255,46 @@
 		<!-- ==================================== Layer -5 ======================================== -->
 		
 		<!-- Access restrictions for areas -->
-		<rule e="way" k="landuse" v="conservation">
-			<rule e="way" k="access" v="private">
-				<area class="access-private-area-border access-area-border-width-landuse-conservation"/>
+		<rule e="way" k="landuse" v="conservation" layer="-5">
+			<rule e="way" k="access" v="private" layer="-5">
+				<area class="access-private-area-border access-area-border-width-landuse-conservation" layer="-5"/>
 			</rule>
-			<rule e="way" k="access" v="permissive">
-				<area class="access-permissive-area-border access-area-border-width-landuse-conservation"/>
+			<rule e="way" k="access" v="permissive" layer="-5">
+				<area class="access-permissive-area-border access-area-border-width-landuse-conservation" layer="-5"/>
 			</rule>
-			<rule e="way" k="access" v="destination">
-				<area class="access-destination-area-border access-area-border-width-landuse-conservation"/>
+			<rule e="way" k="access" v="destination" layer="-5">
+				<area class="access-destination-area-border access-area-border-width-landuse-conservation" layer="-5"/>
 			</rule>
-			<rule e="way" k="access" v="no">
-				<area class="access-no-area-border access-area-border-width-landuse-conservation"/>
-			</rule>
-		</rule>
-		<rule e="way" k="leisure" v="park">
-			<rule e="way" k="access" v="private">
-				<area class="access-private-area-border access-area-border-width-leisure-park"/>
-			</rule>
-			<rule e="way" k="access" v="permissive">
-				<area class="access-permissive-area-border access-area-border-width-leisure-park"/>
-			</rule>
-			<rule e="way" k="access" v="destination">
-				<area class="access-destination-area-border access-area-border-width-leisure-park"/>
-			</rule>
-			<rule e="way" k="access" v="no">
-				<area class="access-no-area-border access-area-border-width-leisure-park"/>
+			<rule e="way" k="access" v="no" layer="-5">
+				<area class="access-no-area-border access-area-border-width-landuse-conservation" layer="-5"/>
 			</rule>
 		</rule>
-		<rule e="way" k="leisure" v="recreation_ground">
-			<rule e="way" k="access" v="private">
-				<area class="access-private-area-border access-area-border-width-landuse-field"/>
+		<rule e="way" k="leisure" v="park" layer="-5">
+			<rule e="way" k="access" v="private" layer="-5">
+				<area class="access-private-area-border access-area-border-width-leisure-park" layer="-5"/>
 			</rule>
-			<rule e="way" k="access" v="permissive">
-				<area class="access-permissive-area-border access-area-border-width-landuse-field"/>
+			<rule e="way" k="access" v="permissive" layer="-5">
+				<area class="access-permissive-area-border access-area-border-width-leisure-park" layer="-5"/>
 			</rule>
-			<rule e="way" k="access" v="destination">
-				<area class="access-destination-area-border access-area-border-width-landuse-field"/>
+			<rule e="way" k="access" v="destination" layer="-5">
+				<area class="access-destination-area-border access-area-border-width-leisure-park" layer="-5"/>
 			</rule>
-			<rule e="way" k="access" v="no">
-				<area class="access-no-area-border access-area-border-width-landuse-field"/>
+			<rule e="way" k="access" v="no" layer="-5">
+				<area class="access-no-area-border access-area-border-width-leisure-park" layer="-5"/>
+			</rule>
+		</rule>
+		<rule e="way" k="leisure" v="recreation_ground" layer="-5">
+			<rule e="way" k="access" v="private" layer="-5">
+				<area class="access-private-area-border access-area-border-width-landuse-field" layer="-5"/>
+			</rule>
+			<rule e="way" k="access" v="permissive" layer="-5">
+				<area class="access-permissive-area-border access-area-border-width-landuse-field" layer="-5"/>
+			</rule>
+			<rule e="way" k="access" v="destination" layer="-5">
+				<area class="access-destination-area-border access-area-border-width-landuse-field" layer="-5"/>
+			</rule>
+			<rule e="way" k="access" v="no" layer="-5">
+				<area class="access-no-area-border access-area-border-width-landuse-field" layer="-5"/>
 			</rule>
 		</rule>
 
@@ -2134,7 +2134,7 @@
 			stroke-width: 0.4px;
 			}
 			.access-area-border-width-landuse-field {
-			stroke-width: 0.6px;
+			stroke-width: 1.6px;
 			}
 			
 			.landuse-residential {
@@ -2215,7 +2215,7 @@
                         stroke-width: 0.4px
                         }
 			.access-area-border-width-landuse-conservation {
-			stroke-width: 0.6px;
+			stroke-width: 1.6px;
 			}
 			
 			/* Leisure */
@@ -2225,7 +2225,7 @@
 			stroke-width: 0.4px;
 			}
 			.access-area-border-width-leisure-park {
-			stroke-width: 0.6px;
+			stroke-width: 1.6px;
 			}
 			
 			.leisure-stadium {

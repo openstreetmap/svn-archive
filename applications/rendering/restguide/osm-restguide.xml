@@ -17,7 +17,7 @@
 	  withOSMLayers="yes"
 	  withUntaggedSegments="no"
 	  showScale="no"
-	  showGrid="no"
+	  showGrid="yes"
 	  showBorder="no"
 	  showLicense="no"
 	  interactive="no"
@@ -1779,7 +1779,10 @@
 		<rule e="way" k="amenity" v="university|college">
 			<areaSymbol ref="university" position="center"/>
 		</rule>
-		<rule e="node" k="amenity|shop" v="supermarket">
+		<rule e="node" k="amenity" v="supermarket">
+			<symbol ref="supermarket" position="center"/>
+		</rule>
+		<rule e="node" k="shop" v="*">
 			<symbol ref="supermarket" position="center"/>
 		</rule>
 		<rule e="way" k="amenity|shop" v="supermarket">
@@ -2226,7 +2229,7 @@
 				<text k="name" class="caption-casing generic-caption-casing" dy="-1.1px" layer="5"/>
 				<text k="name" class="caption-core generic-caption-core" dy="-1.1px" layer="5"/>
 			</rule>
-			<rule e="node" k="shop" v="supermarket" layer="5">
+			<rule e="node" k="shop" v="*" layer="5">
 				<text k="name" class="caption-casing generic-caption-casing" dy="-1.1px" layer="5"/>
 				<text k="name" class="caption-core generic-caption-core" dy="-1.1px" layer="5"/>
 			</rule>

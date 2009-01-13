@@ -35,13 +35,13 @@ while ($_ = <OSM>) {
       ($lat) = /\slat\=[\"\']?(-?\d+(?:\.\d+)?)[\"\']?\b/;
       ($lon) = /\slon\=[\"\']?(-?\d+(?:\.\d+)?)[\"\']?\b/;
       if (($tv{'amenity'} && ($tv{'amenity'} =~
-		  /^(?:restaurant|fast_food|cafe|hotel|motel|pharmacy|hospital|bank)$/))
+		  /^(?:restaurant|fast_food|cafe|hotel|motel|pharmacy|hospital|bank|atm)$/))
 	  || ($tv{'tourism'} &&
 	      ($tv{'tourism'} =~ /^(?:hotel|motel)$/))
 	  || $tv{'shop'} ) {
 	push @places, [$id, $lat, $lon,
 		       $tv{'amenity'} || $tv{'tourism'} || $tv{'shop'},
-		       $tv{'name'} || ''];
+		       $tv{'cuisine'}, $tv{'name'} || ''];
       }
 
     }
@@ -58,7 +58,7 @@ my $n = 0;
 foreach my $poi (sort { ${$b}[1] <=> ${$a}[1] || ${$a}[2] <=> ${$b}[2] } @places) {
   my @poi = @$poi;
   $n++;
-  $poi[4] =~ s/\&amp;/\&/g;
-  print POI "$n\t$poi[0]\t$poi[1]\t$poi[2]\t$poi[3]\t$poi[4]\n";
+  $poi[5] =~ s/\&amp;/\&/g;
+  print POI join("\t",$n,@poi)."\n";
 }
 

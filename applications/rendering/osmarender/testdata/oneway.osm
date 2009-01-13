@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <bounds minlat='0.0' minlon='0.0' maxlat='0.025' maxlon='0.025' origin='petschge' />
+  <node id='102' visible='true' lat='0.021602349166935562' lon='0.023510906389653714' />
+  <node id='103' visible='true' lat='0.016652684857702375' lon='0.001363254680178817' />
+  <node id='1' user='petschge' visible='true' lat='0.0' lon='0.0' />
+  <node id='19' user='petschge' visible='true' lat='0.0' lon='0.025' />
+  <node id='101' visible='true' lat='0.021602349166935562' lon='0.0012374157500113464' />
+  <node id='20' user='petschge' visible='true' lat='0.025' lon='0.0' />
+  <node id='108' visible='true' lat='0.0031879195625913914' lon='0.022965604358928002' />
+  <node id='106' visible='true' lat='0.01002516805218163' lon='0.023217282219262943' />
+  <node id='29' user='petschge' visible='true' lat='0.025' lon='0.025' />
+  <node id='107' visible='true' lat='0.003145973252599645' lon='0.0015729862304579352' />
+  <node id='104' visible='true' lat='0.016652684857702375' lon='0.0231333895991513' />
+  <node id='105' visible='true' lat='0.009941275433343463' lon='0.0015310399204021116' />
+  <way id='1012' visible='true'>
+    <nd ref='107' />
+    <nd ref='108' />
+    <tag k='highway' v='cycleway' />
+    <tag k='oneway' v='101' />
+  </way>
+  <way id='1000' user='petschge' visible='true'>
+    <nd ref='1' />
+    <nd ref='20' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1009' user='petschge' visible='true'>
+    <nd ref='19' />
+    <nd ref='29' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1010' visible='true'>
+    <nd ref='103' />
+    <nd ref='104' />
+    <tag k='highway' v='residential' />
+    <tag k='oneway' v='101' />
+  </way>
+  <way id='109' visible='true'>
+    <nd ref='101' />
+    <nd ref='102' />
+    <tag k='highway' v='residential' />
+    <tag k='oneway' v='true' />
+  </way>
+  <way id='1011' visible='true'>
+    <nd ref='105' />
+    <nd ref='106' />
+    <tag k='highway' v='cycleway' />
+    <tag k='oneway' v='true' />
+  </way>
+</osm>

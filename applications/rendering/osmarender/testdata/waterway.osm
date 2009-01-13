@@ -1,0 +1,346 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <bounds minlat='0.0' minlon='0.0' maxlat='0.025' maxlon='0.025' origin='petschge' />
+  <node id='1' user='petschge' visible='true' lat='0.0' lon='0.0' />
+  <node id='11' user='petschge' visible='true' lat='0.0025' lon='0.0025' />
+  <node id='1088' visible='true' lat='0.0032298658725814283' lon='0.020113255275131997' />
+  <node id='12' user='petschge' visible='true' lat='0.0025' lon='0.0050' />
+  <node id='13' user='petschge' visible='true' lat='0.0025' lon='0.0075' />
+  <node id='14' user='petschge' visible='true' lat='0.0025' lon='0.01' />
+  <node id='19' user='petschge' visible='true' lat='0.0' lon='0.025' />
+  <node id='21' user='petschge' visible='true' lat='0.0225' lon='0.0025' />
+  <node id='20' user='petschge' visible='true' lat='0.025' lon='0.0' />
+  <node id='23' user='petschge' visible='true' lat='0.0225' lon='0.0075' />
+  <node id='22' user='petschge' visible='true' lat='0.0225' lon='0.0050' />
+  <node id='24' user='petschge' visible='true' lat='0.0225' lon='0.01' />
+  <node id='29' user='petschge' visible='true' lat='0.025' lon='0.025' />
+  <node id='1032' visible='true' lat='0.021434563938545488' lon='0.0176384229818384' />
+  <node id='1033' visible='true' lat='0.01862416133680968' lon='0.007487415948329073' />
+  <node id='1034' visible='true' lat='0.018582215028964892' lon='0.010004194551678494' />
+  <node id='1035' visible='true' lat='0.018540268721110125' lon='0.0023699661215185845' />
+  <node id='1036' visible='true' lat='0.018582215028964892' lon='0.004970637344979652' />
+  <node id='1037' visible='true' lat='0.018582215028964892' lon='0.017680369291894222' />
+  <node id='1038' visible='true' lat='0.018498322413245435' lon='0.02015520158518782' />
+  <node id='1039' visible='true' lat='0.01862416133680968' lon='0.012562919465083736' />
+  <node id='1024' visible='true' lat='0.013573825782093846' lon='0.020664849232534307' />
+  <node id='1025' visible='true' lat='0.021476510245660302' lon='0.0050125836550354765' />
+  <node id='1026' visible='true' lat='0.021476510245660302' lon='0.0025796976717977027' />
+  <node id='1027' visible='true' lat='0.021434563938545488' lon='0.00996224824162267' />
+  <node id='1028' visible='true' lat='0.02139261763141919' lon='0.007487415948329073' />
+  <node id='1029' visible='true' lat='0.021434563938545488' lon='0.015121644378488982' />
+  <node id='1030' visible='true' lat='0.021476510245660302' lon='0.012562919465083736' />
+  <node id='1031' visible='true' lat='0.021434563938545488' lon='0.020071308965076175' />
+  <node id='1049' visible='true' lat='0.013548658021756964' lon='0.00996224824162267' />
+  <node id='1048' visible='true' lat='0.01619127546604187' lon='0.015121644378488982' />
+  <node id='1051' visible='true' lat='0.013548658021756964' lon='0.0050545299650913' />
+  <node id='1050' visible='true' lat='0.013674496948373362' lon='0.007403523328217425' />
+  <node id='1053' visible='true' lat='0.01350671171287028' lon='0.019861577414797056' />
+  <node id='1052' visible='true' lat='0.013632550639508526' lon='0.002453858741630232' />
+  <node id='1055' visible='true' lat='0.013548658021756964' lon='0.015079698068433157' />
+  <node id='1054' visible='true' lat='0.013590604330636387' lon='0.0176384229818384' />
+  <node id='1041' visible='true' lat='0.016065436540860054' lon='0.007487415948329073' />
+  <node id='1040' visible='true' lat='0.018666107644644506' lon='0.015163590688544804' />
+  <node id='1043' visible='true' lat='0.016107382849262636' lon='0.002453858741630232' />
+  <node id='1042' visible='true' lat='0.016107382849262636' lon='0.009920301931566846' />
+  <node id='1045' visible='true' lat='0.01619127546604187' lon='0.0176384229818384' />
+  <node id='1044' visible='true' lat='0.016065436540860054' lon='0.005138422585202948' />
+  <node id='1047' visible='true' lat='0.016149329157656583' lon='0.012353187914804617' />
+  <node id='1046' visible='true' lat='0.016317114391145585' lon='0.01998741634496452' />
+  <node id='102' visible='true' lat='0.0024161074870470913' lon='0.015088087370107868' />
+  <node id='1066' visible='true' lat='0.00776006733659636' lon='0.015121644378488982' />
+  <node id='103' visible='true' lat='0.0024161074870470913' lon='0.017588087370107867' />
+  <node id='1067' visible='true' lat='0.007802013646265376' lon='0.017596476671782574' />
+  <node id='1064' visible='true' lat='0.010486577455402536' lon='0.012520973155027914' />
+  <node id='101' visible='true' lat='0.022416107493419126' lon='0.012588087370107866' />
+  <node id='1065' visible='true' lat='0.007843959955930211' lon='0.012646812085195384' />
+  <node id='1070' visible='true' lat='0.007927852575247245' lon='0.0049286910349238275' />
+  <node id='1071' visible='true' lat='0.007843959955930211' lon='0.007655201188552368' />
+  <node id='1068' visible='true' lat='0.007718121026923186' lon='0.02002936265502035' />
+  <node id='1069' visible='true' lat='0.007843959955930211' lon='0.002453858741630232' />
+  <node id='1058' visible='true' lat='0.010318792217944775' lon='0.007487415948329073' />
+  <node id='1059' visible='true' lat='0.010192953289793303' lon='0.004970637344979652' />
+  <node id='108' visible='true' lat='0.0024161074870470913' lon='0.012588087370107866' />
+  <node id='1056' visible='true' lat='0.01350671171287028' lon='0.012646812085195384' />
+  <node id='109' visible='true' lat='0.00790268481444556' lon='0.0016757546305993865' />
+  <node id='1057' visible='true' lat='0.010360738527317568' lon='0.010004194551678494' />
+  <node id='106' visible='true' lat='0.0024161074870470913' lon='0.02008808737010787' />
+  <node id='1062' visible='true' lat='0.010360738527317568' lon='0.01751258405167093' />
+  <node id='107' visible='true' lat='0.022416107493419126' lon='0.015088087370107868' />
+  <node id='1063' visible='true' lat='0.010276845908566451' lon='0.015037751758377333' />
+  <node id='104' visible='true' lat='0.022416107493419126' lon='0.02008808737010787' />
+  <node id='1060' visible='true' lat='0.010360738527317568' lon='0.002411912431574408' />
+  <node id='105' visible='true' lat='0.022416107493419126' lon='0.017588087370107867' />
+  <node id='1061' visible='true' lat='0.010360738527317568' lon='0.020071308965076175' />
+  <node id='1083' visible='true' lat='0.0031040269426062133' lon='0.01751258405167093' />
+  <node id='1082' visible='true' lat='0.0032298658725814283' lon='0.01260486577513956' />
+  <node id='1081' visible='true' lat='0.0032298658725814283' lon='0.015037751758377333' />
+  <node id='1080' visible='true' lat='0.005746644468006599' lon='0.010046140861734316' />
+  <node id='1087' visible='true' lat='0.003145973252599645' lon='0.007529362258384896' />
+  <node id='1086' visible='true' lat='0.0032298658725814283' lon='0.010004194551678494' />
+  <node id='1085' visible='true' lat='0.003145973252599645' lon='0.0025796976717977027' />
+  <node id='1084' visible='true' lat='0.0031879195625913914' lon='0.004970637344979652' />
+  <node id='1075' visible='true' lat='0.005662751848310787' lon='0.017596476671782574' />
+  <node id='1074' visible='true' lat='0.0056208055384583165' lon='0.015037751758377333' />
+  <node id='1073' visible='true' lat='0.005662751848310787' lon='0.012646812085195384' />
+  <node id='1072' visible='true' lat='0.00776006733659636' lon='0.010130033481845963' />
+  <node id='1079' visible='true' lat='0.005662751848310787' lon='0.007487415948329073' />
+  <node id='1078' visible='true' lat='0.0056208055384583165' lon='0.0050545299650913' />
+  <node id='1077' visible='true' lat='0.0056208055384583165' lon='0.002537751361741879' />
+  <node id='1076' visible='true' lat='0.005662751848310787' lon='0.02015520158518782' />
+  <node id='1016' visible='true' lat='0.00770134258515255' lon='0.02076132570599916' />
+  <node id='1017' visible='true' lat='0.018607382788681317' lon='0.02078229905934479' />
+  <node id='1018' visible='true' lat='0.003213087430685419' lon='0.02102139266969108' />
+  <node id='1019' visible='true' lat='0.016174496917697147' lon='0.02059773521577208' />
+  <node id='1020' visible='true' lat='0.005645973406469961' lon='0.020828439722761383' />
+  <node id='1021' visible='true' lat='0.010385906395038376' lon='0.02073615799929275' />
+  <node id='1022' visible='true' lat='0.01612416129052146' lon='0.0013443789001490157' />
+  <node id='1023' visible='true' lat='0.018598993470004214' lon='0.0017386742940008481' />
+  <node id='1010' visible='true' lat='0.010377517076056771' lon='0.0016505869238929837' />
+  <node id='1011' visible='true' lat='0.005637584087391312' lon='0.0016589760272499674' />
+  <node id='1012' visible='true' lat='0.013523490154326027' lon='0.0014953855370228902' />
+  <node id='1013' visible='true' lat='0.0032046981115792642' lon='0.0017260900440121932' />
+  <node id='1014' visible='true' lat='0.02145973169782411' lon='0.02079907766269421' />
+  <node id='1015' visible='true' lat='0.02145134237929301' lon='0.0017135065872944432' />
+  <way id='1001' user='petschge' visible='true'>
+    <nd ref='11' />
+    <nd ref='1085' />
+    <nd ref='1077' />
+    <nd ref='1069' />
+    <nd ref='1060' />
+    <nd ref='1052' />
+    <nd ref='1043' />
+    <nd ref='1035' />
+    <nd ref='1026' />
+    <nd ref='21' />
+    <tag k='canal' v='canal' />
+    <tag k='waterway' v='canal' />
+  </way>
+  <way id='1092' visible='true'>
+    <nd ref='1021' />
+    <nd ref='1061' />
+    <nd ref='1062' />
+    <nd ref='1063' />
+    <nd ref='1064' />
+    <nd ref='1057' />
+    <nd ref='1058' />
+    <nd ref='1059' />
+    <nd ref='1060' />
+    <nd ref='1010' />
+    <tag k='canal' v='canal' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='canal' />
+  </way>
+  <way id='1000' user='petschge' visible='true'>
+    <nd ref='1' />
+    <nd ref='20' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1093' visible='true'>
+    <nd ref='106' />
+    <nd ref='1088' />
+    <nd ref='1076' />
+    <nd ref='1068' />
+    <nd ref='1061' />
+    <nd ref='1053' />
+    <nd ref='1046' />
+    <nd ref='1038' />
+    <nd ref='1031' />
+    <nd ref='104' />
+    <tag k='name' v='stream' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='stream' />
+  </way>
+  <way id='1009' user='petschge' visible='true'>
+    <nd ref='19' />
+    <nd ref='29' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1003' user='petschge' visible='true'>
+    <nd ref='13' />
+    <nd ref='1087' />
+    <nd ref='1079' />
+    <nd ref='1071' />
+    <nd ref='1058' />
+    <nd ref='1050' />
+    <nd ref='1041' />
+    <nd ref='1033' />
+    <nd ref='1028' />
+    <nd ref='23' />
+    <tag k='name' v='river' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='1094' visible='true'>
+    <nd ref='103' />
+    <nd ref='1083' />
+    <nd ref='1075' />
+    <nd ref='1067' />
+    <nd ref='1062' />
+    <nd ref='1054' />
+    <nd ref='1045' />
+    <nd ref='1037' />
+    <nd ref='1032' />
+    <nd ref='105' />
+    <tag k='name' v='river' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='1002' user='petschge' visible='true'>
+    <nd ref='12' />
+    <nd ref='1084' />
+    <nd ref='1078' />
+    <nd ref='1070' />
+    <nd ref='1059' />
+    <nd ref='1051' />
+    <nd ref='1044' />
+    <nd ref='1036' />
+    <nd ref='1025' />
+    <nd ref='22' />
+    <tag k='name' v='drain' />
+    <tag k='waterway' v='drain' />
+  </way>
+  <way id='1095' visible='true'>
+    <nd ref='1024' />
+    <nd ref='1053' />
+    <nd ref='1054' />
+    <nd ref='1055' />
+    <nd ref='1056' />
+    <nd ref='1049' />
+    <nd ref='1050' />
+    <nd ref='1051' />
+    <nd ref='1052' />
+    <nd ref='1012' />
+    <tag k='name' v='stream' />
+    <tag k='waterway' v='stream' />
+  </way>
+  <way id='1096' visible='true'>
+    <nd ref='1019' />
+    <nd ref='1046' />
+    <nd ref='1045' />
+    <nd ref='1048' />
+    <nd ref='1047' />
+    <nd ref='1042' />
+    <nd ref='1041' />
+    <nd ref='1044' />
+    <nd ref='1043' />
+    <nd ref='1022' />
+    <tag k='name' v='river' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='1004' user='petschge' visible='true'>
+    <nd ref='14' />
+    <nd ref='1086' />
+    <nd ref='1080' />
+    <nd ref='1072' />
+    <nd ref='1057' />
+    <nd ref='1049' />
+    <nd ref='1042' />
+    <nd ref='1034' />
+    <nd ref='1027' />
+    <nd ref='24' />
+    <tag k='name' v='stream' />
+    <tag k='waterway' v='stream' />
+  </way>
+  <way id='1097' visible='true'>
+    <nd ref='1020' />
+    <nd ref='1076' />
+    <nd ref='1075' />
+    <nd ref='1074' />
+    <nd ref='1073' />
+    <nd ref='1080' />
+    <nd ref='1079' />
+    <nd ref='1078' />
+    <nd ref='1077' />
+    <nd ref='1011' />
+    <tag k='name' v='river' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='1089' visible='true'>
+    <nd ref='102' />
+    <nd ref='1081' />
+    <nd ref='1074' />
+    <nd ref='1066' />
+    <nd ref='1063' />
+    <nd ref='1055' />
+    <nd ref='1048' />
+    <nd ref='1040' />
+    <nd ref='1029' />
+    <nd ref='107' />
+    <tag k='name' v='drain' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='drain' />
+  </way>
+  <way id='1098' visible='true'>
+    <nd ref='108' />
+    <nd ref='1082' />
+    <nd ref='1073' />
+    <nd ref='1065' />
+    <nd ref='1064' />
+    <nd ref='1056' />
+    <nd ref='1047' />
+    <nd ref='1039' />
+    <nd ref='1030' />
+    <nd ref='101' />
+    <tag k='canal' v='canal' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='canal' />
+  </way>
+  <way id='1090' visible='true'>
+    <nd ref='1017' />
+    <nd ref='1038' />
+    <nd ref='1037' />
+    <nd ref='1040' />
+    <nd ref='1039' />
+    <nd ref='1034' />
+    <nd ref='1033' />
+    <nd ref='1036' />
+    <nd ref='1035' />
+    <nd ref='1023' />
+    <tag k='name' v='drain' />
+    <tag k='waterway' v='drain' />
+  </way>
+  <way id='1099' visible='true'>
+    <nd ref='1018' />
+    <nd ref='1088' />
+    <nd ref='1083' />
+    <nd ref='1081' />
+    <nd ref='1082' />
+    <nd ref='1086' />
+    <nd ref='1087' />
+    <nd ref='1084' />
+    <nd ref='1085' />
+    <nd ref='1013' />
+    <tag k='name' v='stream' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='stream' />
+  </way>
+  <way id='10100' visible='true'>
+    <nd ref='1014' />
+    <nd ref='1031' />
+    <nd ref='1032' />
+    <nd ref='1029' />
+    <nd ref='1030' />
+    <nd ref='1027' />
+    <nd ref='1028' />
+    <nd ref='1025' />
+    <nd ref='1026' />
+    <nd ref='1015' />
+    <tag k='canal' v='canal' />
+    <tag k='waterway' v='canal' />
+  </way>
+  <way id='1091' visible='true'>
+    <nd ref='1016' />
+    <nd ref='1068' />
+    <nd ref='1067' />
+    <nd ref='1066' />
+    <nd ref='1065' />
+    <nd ref='1072' />
+    <nd ref='1071' />
+    <nd ref='1070' />
+    <nd ref='1069' />
+    <nd ref='109' />
+    <tag k='name' v='drain' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='drain' />
+  </way>
+</osm>

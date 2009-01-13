@@ -792,7 +792,7 @@ sub ClientModified
     {
         $Cmd = sprintf("\"%s\" %s %s",
         $Config->get("Subversion"),
-        "status -q --ignore-externals"
+        "status -q --ignore-externals",
         $svn_external);
 
         $svn_status += `$Cmd`;

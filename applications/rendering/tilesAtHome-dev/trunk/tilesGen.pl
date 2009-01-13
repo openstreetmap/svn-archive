@@ -785,6 +785,22 @@ sub ClientModified
     my $svn_status = `$Cmd`;
 
     chomp $svn_status;
+
+    my @svn_externals = ("osmarender","png2tileinfo","maplint"); # FIXME: use svn command to automatically gather externals
+
+    foreach my $svn_external (@svn_externals)
+    {
+        $Cmd = sprintf("\"%s\" %s %s",
+        $Config->get("Subversion"),
+        "status -q --ignore-externals"
+        $svn_external);
+
+        $svn_status += `$Cmd`;
+
+        chomp $svn_status;
+    }
+
+
     #$svn_status =~ s/^M.*\n?//mg;  # FFS use a future date in version.txt instead of this line.
     if ($svn_status ne '')
     {

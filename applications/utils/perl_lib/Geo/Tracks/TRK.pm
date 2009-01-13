@@ -27,11 +27,13 @@ sub is_format_TRK($) {
 	return undef if (!$fh);
 
 	my $line = $fh->getline();
+	chomp $line;
 	$fh->close();
 	# Format for TRK
 	# dummy1,time,lon,lat,heading,speed,test1,test2,test3
 	# 106290, 100744, 8.644805, 53.524435, 0, 0, 2, 1.300000, 7
-    	return $line =~ m/^\d+,\d+,\d+\.\d+,\d+\.\d+,\d+,\d+,\d+,\d+\.\d+,\d+$/;
+	print "\n-----------$line==========\n";
+        return $line =~ m/^\d+,\s*[\-\d]+,\s*\d+\.\d+,\s*\d+\.\d+,\s*\d+,\s*\d+,\s*\d+,\s*\d+\.\d+,\s*\d+$/ ;
 }
 
 # -----------------------------------------------------------------------------

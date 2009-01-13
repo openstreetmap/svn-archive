@@ -1295,7 +1295,7 @@ sub convert_Data(){
 	    $new_tracks = read_track_GpsBabel($filename,"gdb");
 	} elsif ( $extension eq "ns1" ) {
 	    $new_tracks = read_track_GpsBabel($filename,"netstumbler");
-	} elsif ( $extension eq "trk" ) {
+	} elsif ( $extension eq "trk" || $extension eq "csv" ) {
 	    if ( is_format_TRK($filename) ) {
 		$new_tracks = read_track_TRK($filename); # Aldi Tevion Navigation Unit
 	    } else {

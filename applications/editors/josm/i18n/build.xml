@@ -56,7 +56,7 @@
     <ant target="build-lang"><property name="language" value="es"/></ant>
     <ant target="build-lang"><property name="language" value="fi"/></ant>
     <ant target="build-lang"><property name="language" value="fr"/></ant>
-    <ant target="build-lang"><property name="language" value="he"/></ant>
+    <ant target="build-lang"><property name="language" value="he"/><property name="jlanguage" value="iw_IL"/></ant>
     <ant target="build-lang"><property name="language" value="it"/></ant>
     <ant target="build-lang"><property name="language" value="nl"/></ant>
     <ant target="build-lang"><property name="language" value="pl"/></ant>
@@ -85,12 +85,13 @@
   </target>
 
   <target name="build-lang">
+    <property name="jlanguage" value="${language}"/>
     <exec executable="msgmerge">
       <arg line="-U po/${language}.po po/josm.pot"/>
     </exec>
 
     <exec executable="msgfmt">
-      <arg line="--verbose --java2 -dbuild -rorg.openstreetmap.josm.i18n.Translation -l${language} po/${language}.po"/>
+      <arg line="--verbose --java2 -dbuild -rorg.openstreetmap.josm.i18n.Translation -l${jlanguage} po/${language}.po"/>
     </exec>
   </target>
 

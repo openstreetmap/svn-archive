@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <bounds minlat='0.0' minlon='0.0' maxlat='0.025' maxlon='0.025' origin='petschge' />
+  <node id='1016' visible='true' lat='0.0034444939977021248' lon='0.005487537772662155' />
+  <node id='1' user='petschge' visible='true' lat='0.0' lon='0.0' />
+  <node id='1017' visible='true' lat='0.003443221682633348' lon='0.002775368900721137' />
+  <node id='1018' visible='true' lat='0.002344096787260076' lon='0.0027758845150642002' />
+  <node id='1019' visible='true' lat='0.016773627207518644' lon='0.01900910650666796' />
+  <node id='1020' visible='true' lat='0.017872752054056213' lon='0.019008590892324897' />
+  <node id='1021' visible='true' lat='0.0167748995225352' lon='0.021721275378608983' />
+  <node id='1022' visible='true' lat='0.017874024369065385' lon='0.021720759764265917' />
+  <node id='1023' visible='true' lat='0.0038639570974063043' lon='0.021804652384377565' />
+  <node id='1024' visible='true' lat='0.0038626847823381226' lon='0.019092483512436545' />
+  <node id='1025' visible='true' lat='0.002763559887400695' lon='0.019092999126779607' />
+  <node id='1026' visible='true' lat='0.002764832202470295' lon='0.021805167998720624' />
+  <node id='1010' visible='true' lat='0.018567146462031725' lon='0.005691335058146556' />
+  <node id='1027' visible='true' lat='0.010733358736300313' lon='0.011836287487122111' />
+  <node id='1011' visible='true' lat='0.010439734570922024' lon='0.0028597771351758475' />
+  <node id='1028' visible='true' lat='0.011832483611763778' lon='0.01183577187277905' />
+  <node id='1012' visible='true' lat='0.01044100688597198' lon='0.005571946007116868' />
+  <node id='1029' visible='true' lat='0.011833755926807719' lon='0.014547940744720069' />
+  <node id='1013' visible='true' lat='0.011538859447480275' lon='0.0028592615208327837' />
+  <node id='1030' visible='true' lat='0.010734631051349065' lon='0.014548456359063131' />
+  <node id='1014' visible='true' lat='0.011540131762525545' lon='0.0055714303927738035' />
+  <node id='1015' visible='true' lat='0.002345369102330088' lon='0.005488053387005221' />
+  <node id='19' user='petschge' visible='true' lat='0.0' lon='0.025' />
+  <node id='20' user='petschge' visible='true' lat='0.025' lon='0.0' />
+  <node id='29' user='petschge' visible='true' lat='0.025' lon='0.025' />
+  <node id='102' visible='true' lat='0.018750000260284106' lon='0.020448825755578586'>
+    <tag k='fee' v='yes' />
+    <tag k='parking' v='surface' />
+    <tag k='name' v='surface fee' />
+    <tag k='amenity' v='parking' />
+  </node>
+  <node id='103' visible='true' lat='0.004572147791225933' lon='0.02053271837569023'>
+    <tag k='fee' v='yes' />
+    <tag k='parking' v='underground' />
+    <tag k='name' v='underground fee' />
+    <tag k='amenity' v='parking' />
+  </node>
+  <node id='101' visible='true' lat='0.019253355953263118' lon='0.004215603763974825'>
+    <tag k='parking' v='surface' />
+    <tag k='name' v='surface free' />
+    <tag k='amenity' v='parking' />
+  </node>
+  <node id='108' visible='true' lat='0.01746674930459043' lon='0.0029796818005486015' />
+  <node id='109' visible='true' lat='0.017468021619602384' lon='0.00569185067248962' />
+  <node id='106' visible='true' lat='0.012500000297469768' lon='0.004194630608946916'>
+    <tag k='name' v='free' />
+    <tag k='amenity' v='parking' />
+  </node>
+  <node id='107' visible='true' lat='0.018565874147027452' lon='0.002979166186205537' />
+  <node id='104' visible='true' lat='0.0043624162415844235' lon='0.004257550074030649'>
+    <tag k='parking' v='underground' />
+    <tag k='name' v='underground free' />
+    <tag k='amenity' v='parking' />
+  </node>
+  <node id='105' visible='true' lat='0.012500000297469768' lon='0.013234060425976914'>
+    <tag k='parking' v='park_and_ride' />
+    <tag k='name' v='park &amp; ride' />
+    <tag k='amenity' v='parking' />
+  </node>
+  <way id='1036' visible='true'>
+    <nd ref='1028' />
+    <nd ref='1027' />
+    <nd ref='1030' />
+    <nd ref='1029' />
+    <nd ref='1028' />
+    <tag k='parking' v='park_and_ride' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='1032' visible='true'>
+    <nd ref='1013' />
+    <nd ref='1011' />
+    <nd ref='1012' />
+    <nd ref='1014' />
+    <nd ref='1013' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='1000' user='petschge' visible='true'>
+    <nd ref='1' />
+    <nd ref='20' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1033' visible='true'>
+    <nd ref='1017' />
+    <nd ref='1018' />
+    <nd ref='1015' />
+    <nd ref='1016' />
+    <nd ref='1017' />
+    <tag k='parking' v='underground' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='1009' user='petschge' visible='true'>
+    <nd ref='19' />
+    <nd ref='29' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1034' visible='true'>
+    <nd ref='1020' />
+    <nd ref='1019' />
+    <nd ref='1021' />
+    <nd ref='1022' />
+    <nd ref='1020' />
+    <tag k='fee' v='yes' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='1031' visible='true'>
+    <nd ref='107' />
+    <nd ref='108' />
+    <nd ref='109' />
+    <nd ref='1010' />
+    <nd ref='107' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='1035' visible='true'>
+    <nd ref='1024' />
+    <nd ref='1025' />
+    <nd ref='1026' />
+    <nd ref='1023' />
+    <nd ref='1024' />
+    <tag k='fee' v='yes' />
+    <tag k='parking' v='underground' />
+    <tag k='amenity' v='parking' />
+  </way>
+</osm>

@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <bounds minlat='50.007' minlon='8.705' maxlat='50.01' maxlon='8.71' origin='petschge' />
+  <node id='1016' visible='true' lat='50.00885112231724' lon='8.706359999999998' />
+  <node id='1017' visible='true' lat='50.00918233809457' lon='8.707294953150237' />
+  <node id='1018' visible='true' lat='50.00917719677564' lon='8.707606953150242' />
+  <node id='1019' visible='true' lat='50.00717224033187' lon='8.70808' />
+  <node id='1020' visible='true' lat='50.00717224033187' lon='8.706560000000003' />
+  <node id='1021' visible='true' lat='50.00847540157848' lon='8.707790953150237' />
+  <node id='1022' visible='true' lat='50.007930611246906' lon='8.707328000000002'>
+    <tag k='note' v='source' />
+  </node>
+  <node id='1023' visible='true' lat='50.00827271650056' lon='8.706368' />
+  <node id='1024' visible='true' lat='50.00870676376482' lon='8.707238953150242' />
+  <node id='1025' visible='true' lat='50.00827785791624' lon='8.708704000000001' />
+  <node id='1010' visible='true' lat='50.00966344940011' lon='8.707559999999999' />
+  <node id='1011' visible='true' lat='50.00966859066702' lon='8.709896000000002' />
+  <node id='1012' visible='true' lat='50.00711311333603' lon='8.708495999999998'>
+    <tag k='note' v='source' />
+  </node>
+  <node id='1013' visible='true' lat='50.00798459579055' lon='8.707840000000003' />
+  <node id='1014' visible='true' lat='50.00798459579055' lon='8.709359999999998' />
+  <node id='1015' visible='true' lat='50.008856263671056' lon='8.708696000000002' />
+  <node id='102' visible='true' lat='50.008025793754285' lon='8.706684355411952' />
+  <node id='103' visible='true' lat='50.008025793754285' lon='8.705164355411954' />
+  <node id='101' visible='true' lat='50.00715431204676' lon='8.705820355411953'>
+    <tag k='note' v='source' />
+  </node>
+  <node id='108' visible='true' lat='50.009048663623275' lon='8.70853495315024' />
+  <node id='109' visible='true' lat='50.009038380956255' lon='8.708750953150243' />
+  <node id='106' visible='true' lat='50.00917354099511' lon='8.706159999999999' />
+  <node id='107' visible='true' lat='50.00916325835481' lon='8.706376' />
+  <node id='104' visible='true' lat='50.00978832517454' lon='8.705185046849756' />
+  <node id='105' visible='true' lat='50.0097934664281' lon='8.70752104684976' />
+  <way id='1028' visible='true'>
+    <nd ref='108' />
+    <nd ref='1010' />
+    <nd ref='1011' />
+    <nd ref='109' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='upright way 2' />
+  </way>
+  <way id='1032' visible='true'>
+    <nd ref='101' />
+    <nd ref='102' />
+    <nd ref='103' />
+    <nd ref='101' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='upside down way' />
+  </way>
+  <way id='1029' visible='true'>
+    <nd ref='1024' />
+    <nd ref='1025' />
+    <nd ref='1023' />
+    <nd ref='1021' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='upside down way 2' />
+  </way>
+  <way id='1030' visible='true'>
+    <nd ref='1012' />
+    <nd ref='1013' />
+    <nd ref='1014' />
+    <nd ref='1012' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='upright way 4' />
+  </way>
+  <way id='1026' visible='true'>
+    <nd ref='1022' />
+    <nd ref='1019' />
+    <nd ref='1020' />
+    <nd ref='1022' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='upside down way 3' />
+  </way>
+  <way id='1031' visible='true'>
+    <nd ref='107' />
+    <nd ref='105' />
+    <nd ref='104' />
+    <nd ref='106' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='upright way' />
+  </way>
+  <way id='1027' visible='true'>
+    <nd ref='1018' />
+    <nd ref='1015' />
+    <nd ref='1016' />
+    <nd ref='1017' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='upright way 3' />
+  </way>
+</osm>

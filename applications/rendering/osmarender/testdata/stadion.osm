@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <bounds minlat='0.0' minlon='0.0' maxlat='0.025' maxlon='0.025' origin='petschge' />
+  <node id='102' visible='true' lat='0.016276068390020753' lon='0.007034555938057584' />
+  <node id='1' user='petschge' visible='true' lat='0.0' lon='0.0' />
+  <node id='103' visible='true' lat='0.014990066427008345' lon='0.006689443612476971' />
+  <node id='101' visible='true' lat='0.01686133918081602' lon='0.00803290824182998' />
+  <node id='110' visible='true' lat='0.016839992465617515' lon='0.01176458611993961' />
+  <node id='108' visible='true' lat='0.016387569561160515' lon='0.012800097992172677' />
+  <node id='109' visible='true' lat='0.013643719238514816' lon='0.00795132818280173' />
+  <node id='106' visible='true' lat='0.013957594365877955' lon='0.012734037228725079' />
+  <node id='107' visible='true' lat='0.015382024435171794' lon='0.013296352432142668' />
+  <node id='104' visible='true' lat='0.013921983487847867' lon='0.007339423463969448' />
+  <node id='105' visible='true' lat='0.013562119286204611' lon='0.011678247152957007' />
+  <node id='19' user='petschge' visible='true' lat='0.0' lon='0.025' />
+  <node id='20' user='petschge' visible='true' lat='0.025' lon='0.0' />
+  <node id='29' user='petschge' visible='true' lat='0.025' lon='0.025' />
+  <way id='111' visible='true'>
+    <nd ref='109' />
+    <nd ref='105' />
+    <nd ref='106' />
+    <nd ref='107' />
+    <nd ref='108' />
+    <nd ref='110' />
+    <nd ref='101' />
+    <nd ref='102' />
+    <nd ref='103' />
+    <nd ref='104' />
+    <nd ref='109' />
+    <tag k='name' v='Testei' />
+    <tag k='sport' v='soccer' />
+    <tag k='leisure' v='stadium' />
+  </way>
+  <way id='1000' user='petschge' visible='true'>
+    <nd ref='1' />
+    <nd ref='20' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1009' user='petschge' visible='true'>
+    <nd ref='19' />
+    <nd ref='29' />
+    <tag k='highway' v='residential' />
+  </way>
+</osm>

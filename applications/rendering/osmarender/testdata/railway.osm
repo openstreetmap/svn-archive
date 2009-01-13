@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <bounds minlat='0.0' minlon='0.0' maxlat='0.025' maxlon='0.025' origin='petschge' />
+  <node id='1016' visible='true' lat='0.018246644565847382' lon='0.019148490143848052' />
+  <node id='102' visible='true' lat='0.016820470090760535' lon='0.0011954694399555243' />
+  <node id='1' user='petschge' visible='true' lat='0.0' lon='0.0' />
+  <node id='103' visible='true' lat='0.023070469907288015' lon='0.020364933135466938' />
+  <node id='101' visible='true' lat='0.024370805407541957' lon='0.01721895988128017' />
+  <node id='108' visible='true' lat='0.0031250000976037503' lon='0.003984899058667798' />
+  <node id='1010' visible='true' lat='1.6778524020568983E-4' lon='0.005411073600565804' />
+  <node id='109' visible='true' lat='0.00838926198119099' lon='0.024328859435742273' />
+  <node id='1011' visible='true' lat='0.016484899624501163' lon='0.020889262011164728' />
+  <node id='106' visible='true' lat='0.00962667811252489' lon='0.023657718474849092' />
+  <node id='1012' visible='true' lat='0.008263423052337114' lon='0.0019714761759882598' />
+  <node id='1013' visible='true' lat='0.012961409696699283' lon='0.022441275483230206' />
+  <node id='107' visible='true' lat='0.01134647679594468' lon='0.02290268489384427' />
+  <node id='1014' visible='true' lat='0.004739933030888662' lon='0.0035234896480537377' />
+  <node id='104' visible='true' lat='0.014848993593515882' lon='0.0014471473002904659' />
+  <node id='1015' visible='true' lat='0.010696309002100574' lon='0.00312499970252341' />
+  <node id='105' visible='true' lat='0.0014052013867207392' lon='0.00473993263967262' />
+  <node id='19' user='petschge' visible='true' lat='0.0' lon='0.025' />
+  <node id='20' user='petschge' visible='true' lat='0.025' lon='0.0' />
+  <node id='29' user='petschge' visible='true' lat='0.025' lon='0.025' />
+  <way id='1020' visible='true'>
+    <nd ref='103' />
+    <nd ref='104' />
+    <tag k='railway' v='rail' />
+  </way>
+  <way id='1024' visible='true'>
+    <nd ref='1016' />
+    <nd ref='1015' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='subway' />
+  </way>
+  <way id='1021' visible='true'>
+    <nd ref='107' />
+    <nd ref='108' />
+    <tag k='railway' v='narrow_gauge' />
+  </way>
+  <way id='1000' user='petschge' visible='true'>
+    <nd ref='1' />
+    <nd ref='20' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1017' visible='true'>
+    <nd ref='109' />
+    <nd ref='1010' />
+    <tag k='railway' v='narrow_gauge' />
+  </way>
+  <way id='1009' user='petschge' visible='true'>
+    <nd ref='19' />
+    <nd ref='29' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1022' visible='true'>
+    <nd ref='1013' />
+    <nd ref='1014' />
+    <tag k='railway' v='light_rail' />
+  </way>
+  <way id='1018' visible='true'>
+    <nd ref='101' />
+    <nd ref='102' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='rail' />
+  </way>
+  <way id='1023' visible='true'>
+    <nd ref='106' />
+    <nd ref='105' />
+    <tag k='railway' v='monorail' />
+  </way>
+  <way id='1019' visible='true'>
+    <nd ref='1011' />
+    <nd ref='1012' />
+    <tag k='railway' v='subway' />
+  </way>
+</osm>

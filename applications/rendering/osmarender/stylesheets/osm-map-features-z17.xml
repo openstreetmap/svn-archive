@@ -1579,6 +1579,30 @@
 		<rule e="way" k="power" v="line">
 			<line class="power-line no-bezier" smart-linecap="no"/>
 		</rule>
+		<!-- Pipelines -->
+		<rule e="way" k="man_made" v="pipeline">
+			<rule e="way" k="type" v="water">
+				<line class="pipeline-water no-bezier" smart-linecap="no"/>
+			</rule>
+			<else>
+				<rule e="way" k="type" v="oil">
+					<line class="pipeline-oil no-bezier" smart-linecap="no"/>
+				</rule>
+				<else>
+					<rule e="way" k="type" v="gas">
+						<line class="pipeline-gas no-bezier" smart-linecap="no"/>
+					</rule>
+					<else>
+						<rule e="way" k="type" v="sewage">
+							<line class="pipeline-sewage no-bezier" smart-linecap="no"/>
+						</rule>
+						<else>
+							<line class="pipeline-unknown no-bezier" smart-linecap="no"/>
+						</else>
+					</else>
+				</else>
+			</else>
+		</rule>
 		
 		<!-- Non-physical routes -->
 		<rule e="way" k="route" v="ferry">
@@ -3941,10 +3965,53 @@
 			stroke-width: 0.1px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
-			stroke: #d0d0d0;
+			stroke: #808080;
 			stroke-dasharray: 1 ,1;
 			fill: none;
 			}
+			
+			/* Pipelines */
+			.pipeline-unknown {
+			stroke-width: 0.1px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #a0a0a0;
+			stroke-dasharray: 0.5 ,0.5;
+			fill: none;
+			}
+			.pipeline-water {
+			stroke-width: 0.1px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #6060c0;
+			stroke-dasharray: 0.5 ,0.5;
+			fill: none;
+			}
+			.pipeline-gas {
+			stroke-width: 0.1px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #c0d040;
+			stroke-dasharray: 0.5 ,0.5;
+			fill: none;
+			}
+			.pipeline-oil {
+			stroke-width: 0.1px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #60c060;
+			stroke-dasharray: 0.5 ,0.5;
+			fill: none;
+			}
+			.pipeline-sewage {
+			stroke-width: 0.1px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #908030;
+			stroke-dasharray: 0.5 ,0.5;
+			fill: none;
+			}
+
 			
 			
 			/* Area captions */

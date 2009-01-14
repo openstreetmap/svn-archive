@@ -1335,7 +1335,13 @@
 		
 		<!-- Non-physical boundaries -->
 		<rule e="way" k="boundary" v="administrative" layer="5">
-			<rule e="way" k="admin_level" v="1|2|3|4|5|6|7|8" layer="5">
+			<rule e="way" k="admin_level" v="1|2|3|4|5|6|7|8|9|10" layer="5">
+				<rule e="way" k="admin_level" v="10" layer="5">
+					<line class="boundary boundary-level-10-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="9" layer="5">
+					<line class="boundary boundary-level-9-core" layer="5"/>
+				</rule>
 				<rule e="way" k="admin_level" v="8" layer="5">
 					<line class="boundary boundary-level-8-core" layer="5"/>
 				</rule>
@@ -1365,6 +1371,9 @@
 			</rule>
 			<!-- If we don't have explicit admin_level then guess -->
 			<else>
+				<rule e="way" k="border_type" v="suburb" layer="5">
+					<line class="boundary boundary-level-10-core" layer="5"/>
+				</rule>
 				<rule e="way" k="border_type" v="municipality|city" layer="5">
 					<line class="boundary boundary-level-8-core" layer="5"/>
 				</rule>
@@ -2346,6 +2355,18 @@
 			stroke-width: 0.4px;
 			stroke: #f9574b;
 			stroke-dasharray: 6, 2, 2, 2;
+			}
+			
+			.boundary-level-9-core {
+			stroke-width: 0.4px;
+			stroke: #f9574b;
+			stroke-dasharray: 6, 6;
+			}
+			
+			.boundary-level-10-core {
+			stroke-width: 0.4px;
+			stroke: #f9574b;
+			stroke-dasharray: 2, 10;
 			}
 			
 			.boundary-nationalpark-core {

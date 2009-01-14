@@ -1558,33 +1558,38 @@
 			<symbol ref="power-tower" position="center"/>
 		</rule>
 		<rule e="way" k="power" v="line">
+			<line class="powerline-pipeline-casing no-bezier"/>
 			<line class="power-line no-bezier"/>
 		</rule>
 		<!-- Pipelines -->
 		<rule e="way" k="man_made" v="pipeline">
 			<rule e="way" k="type" v="water">
+				<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
 				<line class="pipeline-water no-bezier" smart-linecap="no"/>
 			</rule>
 			<else>
 				<rule e="way" k="type" v="oil">
+					<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
 					<line class="pipeline-oil no-bezier" smart-linecap="no"/>
 				</rule>
 				<else>
 					<rule e="way" k="type" v="gas">
+						<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
 						<line class="pipeline-gas no-bezier" smart-linecap="no"/>
 					</rule>
 					<else>
 						<rule e="way" k="type" v="sewage">
+							<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
 							<line class="pipeline-sewage no-bezier" smart-linecap="no"/>
 						</rule>
 						<else>
+							<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
 							<line class="pipeline-unknown no-bezier" smart-linecap="no"/>
 						</else>
 					</else>
 				</else>
 			</else>
 		</rule>
-
 		
 		<!-- Non-physical routes -->
 		<rule e="way" k="route" v="ferry">
@@ -3311,6 +3316,15 @@
 			stroke-width: 0.4px;
 			}
 			
+			/* Power line and pipeline casing */
+			.powerline-pipeline-casing {
+			stroke-width: 0.3px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #ffffff;
+			stroke-opacity: 0.75;
+			fill: none;
+			}
 			/* Power line */
 			.power-line {
 			stroke-width: 0.2px;

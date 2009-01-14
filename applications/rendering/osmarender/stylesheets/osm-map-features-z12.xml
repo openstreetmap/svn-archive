@@ -853,7 +853,13 @@
 		
 		<!-- Non-physical boundaries -->
 		<rule e="way" k="boundary" v="administrative" layer="5">
-			<rule e="way" k="admin_level" v="1|2" layer="5">
+			<rule e="way" k="admin_level" v="1|2|3|4" layer="5">
+				<rule e="way" k="admin_level" v="4" layer="5">
+					<line class="boundary boundary-level-4-core" layer="5"/>
+				</rule>
+				<rule e="way" k="admin_level" v="3" layer="5">
+					<line class="boundary boundary-level-3-core" layer="5"/>
+				</rule>
 				<rule e="way" k="admin_level" v="2" layer="5">
 					<line class="boundary boundary-level-2-casing" layer="5"/>
 					<line class="boundary boundary-level-2-core" layer="5"/>
@@ -865,6 +871,9 @@
 			</rule>
 			<!-- If we don't have explicit admin_level then guess -->
 			<else>
+				<rule e="way" k="border_type" v="region|state" layer="5">
+					<line class="boundary boundary-level-4-core" layer="5"/>
+				</rule>
 				<rule e="way" k="border_type" v="nation|country" layer="5">
 					<line class="boundary boundary-level-2-casing" layer="5"/>
 					<line class="boundary boundary-level-2-core" layer="5"/>
@@ -1470,6 +1479,17 @@
 			stroke-width: 8px;
 			stroke: #f9574b;
 			stroke-dasharray: 48, 48;
+			}
+			
+			.boundary-level-3-core {
+			stroke-width: 8px;
+			stroke: #f9574b;
+			}
+			
+			.boundary-level-4-core {
+			stroke-width: 8px;
+			stroke: #f9574b;
+			stroke-dasharray: 48, 16, 16, 16;
 			}
 			
 			.boundary-nationalpark-core {

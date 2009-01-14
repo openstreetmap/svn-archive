@@ -116,3 +116,21 @@ def area_names(tags, type):
     tags['created_by'] = 'change_tags.py - massgis area_names %s' % __version__
 
     return changed    
+
+def ramps(tags, type):
+    import re
+
+    changed = False
+    
+    if type == "way" and 'name' in tags and 'highway' in tags:
+        name = tags['name']
+    
+        # re.match checks for a match only at the beginning of the string
+        if re.match("Ramp\W", name, ):
+            changed = True
+            tags['orig_name'] = name
+            del tags['name']
+
+    tags['created_by'] = 'change_tags.py - massgis ramps %s' % __version__
+
+    return changed    

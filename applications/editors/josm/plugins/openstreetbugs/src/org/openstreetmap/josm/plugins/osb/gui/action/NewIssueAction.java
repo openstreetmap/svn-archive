@@ -53,6 +53,8 @@ public class NewIssueAction extends OsbAction implements MouseListener {
     private JToggleButton button;
 
     private OsbPlugin plugin;
+    
+    private Cursor previousCursor;
 
     public NewIssueAction(JToggleButton button, OsbPlugin plugin) {
         super(tr("New issue"));
@@ -63,6 +65,7 @@ public class NewIssueAction extends OsbAction implements MouseListener {
     @Override
     protected void doActionPerformed(ActionEvent e) throws IOException {
         if(button.isSelected()) {
+            previousCursor = Main.map.mapView.getCursor();
             Main.map.mapView.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             Main.map.mapView.addMouseListener(this);
         } else {
@@ -71,7 +74,7 @@ public class NewIssueAction extends OsbAction implements MouseListener {
     }
 
     private void reset() {
-        Main.map.mapView.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        Main.map.mapView.setCursor(previousCursor);
         Main.map.mapView.removeMouseListener(this);
         button.setSelected(false);
     }

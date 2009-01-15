@@ -326,8 +326,11 @@
 			<rule e="way" k="highway" v="service">
 				<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
+			<rule e="way" k="highway" v="unclassified|residential|minor|road">
 				<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
+			</rule>
+			<rule e="way" k="highway" v="living_street">
+				<area class="highway-casing highway-livingstreet-casing highway-livingstreet-area-casing no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="tertiary_link">
 				<area class="highway-casing highway-tertiary-link-casing highway-tertiary-link-area-casing no-bezier"/>
@@ -459,8 +462,11 @@
 				<rule e="way" k="highway" v="service">
 					<line class="highway-casing highway-service-casing"/>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road|ford">
+				<rule e="way" k="highway" v="unclassified|residential|minor|road|ford">
 					<line class="highway-casing highway-unclassified-casing"/>
+				</rule>
+				<rule e="way" k="highway" v="living_street">
+					<line class="highway-casing highway-livingstreet-casing"/>
 				</rule>
 				<rule e="way" k="highway" v="tertiary_link">
 					<line class="highway-casing highway-tertiary-link-casing"/>
@@ -549,8 +555,11 @@
 			<rule e="way" k="highway" v="service">
 				<area class="highway-core highway-service-area no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+			<rule e="way" k="highway" v="unclassified|residential|minor">
 				<area class="highway-core highway-unclassified-area no-bezier"/>
+			</rule>
+			<rule e="way" k="highway" v="living_street">
+				<area class="highway-core highway-livingstreet-area-1 highway-livingstreet-area-2 no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="road">
 				<area class="highway-core highway-road-area no-bezier"/>
@@ -716,8 +725,11 @@
 				<rule e="way" k="highway" v="service">
 					<line class="highway-core highway-service-core"/>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+				<rule e="way" k="highway" v="unclassified|residential|minor">
 					<line class="highway-core highway-unclassified-core"/>
+				</rule>
+				<rule e="way" k="highway" v="living_street">
+					<line class="highway-core highway-livingstreet-core-1" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="road">
 					<line class="highway-core highway-road-core"/>
@@ -1759,6 +1771,13 @@
 			.highway-unclassified-turningcircle     { fill: #ffffff; stroke-width: 0.1px; stroke: #707070; }
 			.highway-road-core                      { stroke-width: 3.5px;   stroke: #d0d0d0; }
 			.highway-road-area                      { fill: #d0d0d0; }
+
+			.highway-livingstreet-casing            { stroke-width: 3.7px;  stroke: #707070; }
+			.highway-livingstreet-area-casing       { stroke-width: 0.2px; }
+			.highway-livingstreet-core-1            { stroke-width: 3.5px; stroke: #ffffff; }
+			.highway-livingstreet-core-2            { stroke-width: 3.5px; stroke: #e0e0e0; stroke-dasharray: 0.4,1.; stroke-linecap: butt; }
+			.highway-livingstreet-area-1            { fill: #ffffff; }
+			.highway-livingstreet-area-2            { fill: url(#livingstreet-pattern); stroke: #e0e0e0; stroke-width: 0px; }
 			
 			.highway-service-bridge-casing          { stroke-width: 4.5px; }
 			.highway-service-bridge-core            { stroke-width: 3.5px; }
@@ -2922,6 +2941,9 @@
 			<svg:path stroke="black" stroke-width="0.2" d="M1,1 L3,1 M2,0 L2,3 M6,6 L8,6 M7,5 L7,8"/>
 		</svg:pattern>
 		
+		<svg:pattern id="livingstreet-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
+			<svg:path fill="none" stroke="#e0e0e0" stroke-width="2" d="M10,0 L0,10 M0,0 L10,10"/>
+		</svg:pattern>
 		<svg:pattern id="access-private-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
 			<svg:path fill="none" stroke="#ff4040" stroke-width="0.2" d="M10,0 L0,10 M0,0 L10,10"/>
 		</svg:pattern>

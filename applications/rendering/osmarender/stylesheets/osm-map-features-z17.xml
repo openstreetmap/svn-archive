@@ -778,7 +778,7 @@
 				<area class="highway-core highway-road-area no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="living_street">
-				<area class="highway-core highway-livingstreet-area no-bezier"/>
+				<area class="highway-core highway-livingstreet-area-1 highway-livingstreet-area-2 no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="tertiary_link">
 				<area class="highway-core highway-tertiary-link-area no-bezier"/>
@@ -3001,9 +3001,10 @@
 			.highway-livingstreet-casing            { stroke-width: 1.5px;  stroke: #707070; }
 			.highway-livingstreet-area-casing       { stroke-width: 0.25px; }
 			.highway-livingstreet-core-1            { stroke-width: 1.25px; stroke: #ffffff; }
-			.highway-livingstreet-core-2            { stroke-width: 1.25px; stroke: #f0f0f0; stroke-dasharray: 0.2,0.5; stroke-linecap: butt; }
-			.highway-livingstreet-area              { fill: #ffffff; }
-			
+			.highway-livingstreet-core-2            { stroke-width: 1.25px; stroke: #e0e0e0; stroke-dasharray: 0.2,0.5; stroke-linecap: butt; }
+			.highway-livingstreet-area-1            { fill: #ffffff; }
+			.highway-livingstreet-area-2            { fill: url(#livingstreet-pattern); stroke: #e0e0e0; stroke-width: 0px; }
+
 			.highway-service-bridge-casing          { stroke-width: 2.25px; }
 			.highway-service-bridge-core            { stroke-width: 1.75px; }
 			.highway-service-casing                 { stroke-width: 1.0px;   stroke: #707070; }
@@ -4465,6 +4466,9 @@
 			</svg:g>
 		</svg:pattern>
 		
+		<svg:pattern id="livingstreet-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
+			<svg:path fill="none" stroke="#e0e0e0" stroke-width="1" d="M5,0 L0,5 M0,0 L5,5"/>
+		</svg:pattern>
 		<svg:pattern id="access-private-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
 			<svg:path fill="none" stroke="#ff4040" stroke-width="0.1" d="M5,0 L0,5 M0,0 L5,5"/>
 		</svg:pattern>

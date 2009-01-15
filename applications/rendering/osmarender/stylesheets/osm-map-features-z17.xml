@@ -1602,8 +1602,14 @@
 							<line class="pipeline-sewage no-bezier" smart-linecap="no"/>
 						</rule>
 						<else>
-							<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-							<line class="pipeline-unknown no-bezier" smart-linecap="no"/>
+							<rule e="way" k="type" v="hot_water|heat">
+								<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
+								<line class="pipeline-heat no-bezier" smart-linecap="no"/>
+							</rule>
+							<else>
+								<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
+								<line class="pipeline-unknown no-bezier" smart-linecap="no"/>
+							</else>
 						</else>
 					</else>
 				</else>
@@ -3967,11 +3973,11 @@
 			
 			/* Power line and pipeline casing */
 			.powerline-pipeline-casing {
-			stroke-width: 0.3px;
+			stroke-width: 0.2px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #ffffff;
-			stroke-opacity: 0.75;
+			stroke-opacity: 0.5;
 			fill: none;
 			}
 			/* Power line */
@@ -3997,7 +4003,7 @@
 			stroke-width: 0.2px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
-			stroke: #6060c0;
+			stroke: #4080f0;
 			stroke-dasharray: 0.5 ,0.5;
 			fill: none;
 			}
@@ -4005,7 +4011,7 @@
 			stroke-width: 0.2px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
-			stroke: #c0d040;
+			stroke: #e0f000;
 			stroke-dasharray: 0.5 ,0.5;
 			fill: none;
 			}
@@ -4013,7 +4019,7 @@
 			stroke-width: 0.2px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
-			stroke: #60c060;
+			stroke: #40f040;
 			stroke-dasharray: 0.5 ,0.5;
 			fill: none;
 			}
@@ -4025,7 +4031,14 @@
 			stroke-dasharray: 0.5 ,0.5;
 			fill: none;
 			}
-
+			.pipeline-heat {
+			stroke-width: 0.2px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #f03060;
+			stroke-dasharray: 1 ,1;
+			fill: none;
+			}
 			
 			
 			/* Area captions */

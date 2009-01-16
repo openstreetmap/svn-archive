@@ -739,7 +739,7 @@
 						<area class="highway-core highway-bridleway-area no-bezier" smart-linecap="no"/>
 					</rule>
 					<else>
-						<area class="highway-core highway-footway-area no-bezier" smart-linecap="no"/>
+						<area class="highway-core highway-path-area no-bezier" smart-linecap="no"/>
 					</else></else>
 			</rule>
 			<rule e="way" k="highway" v="bridleway">
@@ -2395,9 +2395,9 @@
 			.highway-livingstreet-casing            { stroke-width: 2.5px;  stroke: #707070; }
 			.highway-livingstreet-area-casing       { stroke-width: 0.25px; }
 			.highway-livingstreet-core-1            { stroke-width: 2.25px; stroke: #ffffff; }
-			.highway-livingstreet-core-2            { stroke-width: 2.25px; stroke: #e0e0e0; stroke-dasharray: 0.3,0.8; stroke-linecap: butt; }
+			.highway-livingstreet-core-2            { stroke-width: 2.25px; stroke: #e5e0c2; stroke-dasharray: 0.3,0.8; stroke-linecap: butt; }
 			.highway-livingstreet-area-1            { fill: #ffffff; }
-			.highway-livingstreet-area-2            { fill: url(#livingstreet-pattern); stroke: #e0e0e0; stroke-width: 0px; }
+			.highway-livingstreet-area-2            { fill: url(#livingstreet-pattern); stroke: #e5e0c2; stroke-width: 0px; }
 			
 			.highway-service-bridge-casing          { stroke-width: 2.8px; }
 			.highway-service-bridge-core            { stroke-width: 2.6px; }
@@ -2476,10 +2476,10 @@
 			
 			.highway-pedestrian-bridge-casing       { stroke-width: 3.4px; }
 			.highway-pedestrian-bridge-core         { stroke-width: 3.2px; }
-			.highway-pedestrian-casing              { stroke-width: 2.2px;   stroke: #b0b0b0; }
+			.highway-pedestrian-casing              { stroke-width: 2.2px;   stroke: #707070; }
 			.highway-pedestrian-area-casing         { stroke-width: 0.2px; }
-			.highway-pedestrian-core                { stroke-width: 2px;     stroke: #f0f0f0; }
-			.highway-pedestrian-area                { fill: #f0f0f0; }
+			.highway-pedestrian-core                { stroke-width: 2px;     stroke: #e5e0c2; }
+			.highway-pedestrian-area                { fill: #e5e0c2; }
 			.highway-pedestrian-name                { stroke-width: 0px;     font-size: 2px; }
 			.highway-pedestrian-ref                 { stroke-width: 0px;     font-size: 2.5px; }
 			
@@ -2494,7 +2494,8 @@
 			
 			/* render unmarked paths in the same color as highway=road */
 			.highway-path-core                      { stroke-width: 1px;   stroke: #d0d0d0; }
-			
+			.highway-path-area                      { fill: #d0d0d0; }
+
 			.highway-steps-bridge-casing            { stroke-width: 2.2px; }
 			.highway-steps-bridge-core              { stroke-width: 2px; }
 			.highway-steps-casing                   { stroke-width: 1.2px;   stroke: #707070; }
@@ -3735,7 +3736,7 @@
 		</svg:pattern>
 		
 		<svg:pattern id="livingstreet-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
-			<svg:path fill="none" stroke="#e0e0e0" stroke-width="2" d="M10,0 L0,10 M0,0 L10,10"/>
+			<svg:path fill="none" stroke="#e5e0c2" stroke-width="2" d="M10,0 L0,10 M0,0 L10,10"/>
 		</svg:pattern>
 		<svg:pattern id="access-private-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
 			<svg:path fill="none" stroke="#ff4040" stroke-width="0.2" d="M5,0 L0,5 M0,0 L5,5"/>

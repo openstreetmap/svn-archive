@@ -440,7 +440,7 @@
 						<area class="highway-core highway-bridleway-area no-bezier" smart-linecap="no"/>
 					</rule>
 					<else>
-						<area class="highway-core highway-footway-area no-bezier" smart-linecap="no"/>
+						<area class="highway-core highway-path-area no-bezier" smart-linecap="no"/>
 					</else></else>
 			</rule>
 			<rule e="way" k="highway" v="bridleway">
@@ -1131,10 +1131,10 @@
 			.highway-cycleway-core                  { stroke-width: 0.5px;   stroke: #d1ead1; }
 			.highway-cycleway-area                  { fill: #d1ead1; }
 			
-			.highway-pedestrian-casing              { stroke-width: 4px; stroke: #b0b0b0; }
+			.highway-pedestrian-casing              { stroke-width: 4px; stroke: #707070; }
 			.highway-pedestrian-area-casing         { stroke-width: 0.5px; }
-			.highway-pedestrian-core                { stroke-width: 3.5px; stroke: #f0f0f0; }
-			.highway-pedestrian-area                { fill: #f0f0f0; }
+			.highway-pedestrian-core                { stroke-width: 3.5px; stroke: #e5e0c2; }
+			.highway-pedestrian-area                { fill: #e5e0c2; }
 			
 			.highway-footway-casing                 { stroke-width: 0.5px;   stroke: #202020; }
 			.highway-footway-area-casing            { stroke-width: 0.0px; }
@@ -1143,6 +1143,7 @@
 			
 			/* render unmarked paths in the same color as highway=road */
 			.highway-path-core                      { stroke-width: 0.5px;   stroke: #d0d0d0; }
+			.highway-path-area                      { fill: #d0d0d0; }
 			
 			.highway-steps-casing                   { stroke-width: 1.2px;   stroke: #202020; }
 			.highway-steps-core                     { stroke-width: 1.1px;   stroke: #e5e0c2; stroke-dasharray: 0.6, 0.2; stroke-linecap: butt;}

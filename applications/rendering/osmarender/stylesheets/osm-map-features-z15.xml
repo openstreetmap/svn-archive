@@ -730,6 +730,7 @@
 				</rule>
 				<rule e="way" k="highway" v="living_street">
 					<line class="highway-core highway-livingstreet-core-1" smart-linecap="no"/>
+					<line class="highway-core highway-livingstreet-core-2" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="road">
 					<line class="highway-core highway-road-core"/>

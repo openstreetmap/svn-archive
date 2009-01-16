@@ -1777,7 +1777,7 @@
 			.highway-livingstreet-casing            { stroke-width: 3.7px;  stroke: #707070; }
 			.highway-livingstreet-area-casing       { stroke-width: 0.2px; }
 			.highway-livingstreet-core-1            { stroke-width: 3.5px; stroke: #ffffff; }
-			.highway-livingstreet-core-2            { stroke-width: 3.5px; stroke: #e0e0e0; stroke-dasharray: 0.4,1.; stroke-linecap: butt; }
+			.highway-livingstreet-core-2            { stroke-width: 3.5px; stroke: #e0e0e0; stroke-dasharray: 0.3,0.8; stroke-linecap: butt; }
 			.highway-livingstreet-area-1            { fill: #ffffff; }
 			.highway-livingstreet-area-2            { fill: url(#livingstreet-pattern); stroke: #e0e0e0; stroke-width: 0px; }
 			

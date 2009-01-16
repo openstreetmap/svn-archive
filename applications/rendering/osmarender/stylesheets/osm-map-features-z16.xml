@@ -2395,7 +2395,7 @@
 			.highway-livingstreet-casing            { stroke-width: 2.5px;  stroke: #707070; }
 			.highway-livingstreet-area-casing       { stroke-width: 0.25px; }
 			.highway-livingstreet-core-1            { stroke-width: 2.25px; stroke: #ffffff; }
-			.highway-livingstreet-core-2            { stroke-width: 2.25px; stroke: #e0e0e0; stroke-dasharray: 0.3,0.75; stroke-linecap: butt; }
+			.highway-livingstreet-core-2            { stroke-width: 2.25px; stroke: #e0e0e0; stroke-dasharray: 0.3,0.8; stroke-linecap: butt; }
 			.highway-livingstreet-area-1            { fill: #ffffff; }
 			.highway-livingstreet-area-2            { fill: url(#livingstreet-pattern); stroke: #e0e0e0; stroke-width: 0px; }
 			
@@ -3734,8 +3734,8 @@
 			<svg:path stroke="black" stroke-width="0.2" d="M1,1 L3,1 M2,0 L2,3 M6,6 L8,6 M7,5 L7,8"/>
 		</svg:pattern>
 		
-		<svg:pattern id="livingstreet-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
-			<svg:path fill="none" stroke="#e0e0e0" stroke-width="2" d="M5,0 L0,5 M0,0 L5,5"/>
+		<svg:pattern id="livingstreet-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
+			<svg:path fill="none" stroke="#e0e0e0" stroke-width="2" d="M10,0 L0,10 M0,0 L10,10"/>
 		</svg:pattern>
 		<svg:pattern id="access-private-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
 			<svg:path fill="none" stroke="#ff4040" stroke-width="0.2" d="M5,0 L0,5 M0,0 L5,5"/>

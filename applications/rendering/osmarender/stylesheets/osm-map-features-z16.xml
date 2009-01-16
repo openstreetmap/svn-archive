@@ -764,7 +764,8 @@
 				<area class="highway-core highway-road-area no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="living_street">
-				<area class="highway-core highway-livingstreet-area-1 highway-livingstreet-area-2 no-bezier"/>
+				<area class="highway-core highway-livingstreet-area-1 no-bezier"/>
+				<area class="highway-core highway-livingstreet-area-2 no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="tertiary_link">
 				<area class="highway-core highway-tertiary-link-area no-bezier"/>

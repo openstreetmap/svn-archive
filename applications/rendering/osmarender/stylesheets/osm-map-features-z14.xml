@@ -1618,7 +1618,7 @@
 			.highway-footway-ref                    { stroke-width: 0px;     font-size: 2.5px; }
 			
 			/* render unmarked paths in the same color as highway=road */
-			.highway-path-core                      { stroke-width: 1px;   stroke: #d0d0d0; }
+			.highway-path-core                      { stroke-width: 1.1px;   stroke: #d0d0d0; }
 			.highway-path-area                      { fill: #d0d0d0; }
 			
 			.highway-steps-bridge-casing            { stroke-width: 3.7px; }

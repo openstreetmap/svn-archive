@@ -1882,7 +1882,7 @@
 			
 			.highway-bridleway-bridge-casing        { stroke-width: 4.5px; }
 			.highway-bridleway-bridge-core          { stroke-width: 3.5px; }
-			.highway-bridleway-casing               { stroke-width: 2px;     stroke: #707070;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt; }
+			.highway-bridleway-casing               { stroke-width: 1.8px;     stroke: #707070;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt; }
 			.highway-bridleway-area-casing          { stroke-width: 0.4px; }
 			.highway-bridleway-core                 { stroke-width: 1.6px;   stroke: #d3e9f8; }
 			.highway-bridleway-area                 { fill: #d3e9f8; }

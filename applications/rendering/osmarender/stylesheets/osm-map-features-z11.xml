@@ -174,7 +174,7 @@
             <rule e="way" k="highway" v="track">
                 <line class="highway-casing highway-track-casing"/>
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road">
                 <line class="highway-casing highway-unclassified-casing"/>
             </rule>
             <rule e="way" k="highway" v="unsurfaced">
@@ -254,7 +254,7 @@
                 <rule e="way" k="highway" v="track">
                     <line class="highway-core highway-track-core"/>
                 </rule>
-                <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+                <rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad">
                     <line class="highway-core highway-unclassified-core"/>
                 </rule>
                 <rule e="way" k="highway" v="road">
@@ -295,7 +295,7 @@
             <rule e="way" k="highway" v="track">
                 <tunnel width="2" class="highway-core highway-track"/>
             </rule>
-            <rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+            <rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad">
                 <tunnel width="2" class="highway-core highway-unclassified"/>
             </rule>
             <rule e="way" k="highway" v="road">

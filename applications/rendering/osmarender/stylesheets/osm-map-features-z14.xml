@@ -308,7 +308,7 @@
 			<rule e="way" k="highway" v="service">
 				<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
+			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road">
 				<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="tertiary_link">
@@ -438,7 +438,7 @@
 				<rule e="way" k="highway" v="service">
 					<line class="highway-casing highway-service-casing"/>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road|ford">
+				<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road|ford">
 					<line class="highway-casing highway-unclassified-casing"/>
 				</rule>
 				<rule e="way" k="highway" v="tertiary_link">
@@ -521,7 +521,7 @@
 			<rule e="way" k="highway" v="service">
 				<area class="highway-core highway-service-area no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+			<rule e="way" k="highway" v="unclassified|residential|minor|cycleroad|living_street">
 				<area class="highway-core highway-unclassified-area no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="road">
@@ -678,7 +678,7 @@
 				<rule e="way" k="highway" v="service">
 					<line class="highway-core highway-service-core"/>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+				<rule e="way" k="highway" v="unclassified|residential|minor|cycleroad|living_street">
 					<line class="highway-core highway-unclassified-core"/>
 				</rule>
 				<rule e="way" k="highway" v="road">
@@ -785,7 +785,7 @@
 				<line class="tunnel-casing highway-service-casing tunnel" mask-class="tunnel-core highway-service-core"/>
 				<line class="highway-service-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+			<rule e="way" k="highway" v="unclassified|residential|minor|cycleroad|living_street">
 				<line class="tunnel-casing highway-unclassified-casing tunnel" mask-class="tunnel-core highway-unclassified-core"/>
 				<line class="highway-unclassified-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
@@ -908,7 +908,7 @@
 			<rule e="way" k="construction" v="service">
 				<line class="highway-core highway-service-core under-construction"/>
 			</rule>
-			<rule e="way" k="construction" v="unclassified|residential|minor|living_street">
+			<rule e="way" k="construction" v="unclassified|residential|minor|cycleroad|living_street">
 				<line class="highway-core highway-unclassified-core under-construction"/>
 			</rule>
 			<rule e="way" k="construction" v="road">
@@ -1168,7 +1168,7 @@
 							<text k="name" startOffset="50%" class="waterway-name-casing waterway-river-name-casing" dy="2px" layer="5"/>
 							<text k="name" startOffset="50%" class="waterway-name-core waterway-river-name-core" dy="2px" layer="5"/>
 						</rule>
-						<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
+						<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road" layer="5">
 							<text k="name" startOffset="50%" class="highway-name highway-unclassified-name" dy="1.6px" layer="5" avoid-duplicates="true" />
 						</rule>
 						<rule e="way" k="highway" v="tertiary_link" layer="5">
@@ -1585,8 +1585,8 @@
 			.highway-bridleway-bridge-core          { stroke-width: 3.5px; }
 			.highway-bridleway-casing               { stroke-width: 1.8px;   stroke: #707070;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt; }
 			.highway-bridleway-area-casing          { stroke-width: 0.1px; }
-			.highway-bridleway-core                 { stroke-width: 1.7px;   stroke: #e3e9f1; }
-			.highway-bridleway-area                 { fill: #e3e9f1; }
+			.highway-bridleway-core                 { stroke-width: 1.7px;   stroke: #d3e9f8; }
+			.highway-bridleway-area                 { fill: #d3e9f8; }
 			.highway-bridleway-name                 { stroke-width: 0px;     font-size: 2.5px; }
 			.highway-bridleway-ref                  { stroke-width: 0px;     font-size: 2.5px; }
 			
@@ -1594,8 +1594,8 @@
 			.highway-cycleway-bridge-core           { stroke-width: 3.5px; }
 			.highway-cycleway-casing                { stroke-width: 1.8px;   stroke: #707070; stroke-dasharray: 0.4, 0.4; stroke-linecap: butt;}
 			.highway-cycleway-area-casing           { stroke-width: 0.1px; }
-			.highway-cycleway-core                  { stroke-width: 1.7px;   stroke: #d1ead1; }
-			.highway-cycleway-area                  { fill: #d1ead1; }
+			.highway-cycleway-core                  { stroke-width: 1.7px;   stroke: #d1fad1; }
+			.highway-cycleway-area                  { fill: #d1fad1; }
 			.highway-cycleway-name                  { stroke-width: 0px;     font-size: 2.5px; }
 			.highway-cycleway-ref                   { stroke-width: 0px;     font-size: 2.5px; }
 			

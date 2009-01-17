@@ -282,7 +282,7 @@
 			<rule e="way" k="highway" v="service">
 				<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
+			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road">
 				<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="tertiary_link">
@@ -412,7 +412,7 @@
 				<rule e="way" k="highway" v="service">
 					<line class="highway-casing highway-service-casing"/>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road|ford">
+				<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road|ford">
 					<line class="highway-casing highway-unclassified-casing"/>
 				</rule>
 				<rule e="way" k="highway" v="tertiary_link">
@@ -495,7 +495,7 @@
 			<rule e="way" k="highway" v="service">
 				<area class="highway-core highway-service-area no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+			<rule e="way" k="highway" v="unclassified|residential|minor|cycleroad|living_street">
 				<area class="highway-core highway-unclassified-area no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="road">
@@ -652,7 +652,7 @@
 				<rule e="way" k="highway" v="service">
 					<line class="highway-core highway-service-core"/>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+				<rule e="way" k="highway" v="unclassified|residential|minor|cycleroad|living_street">
 					<line class="highway-core highway-unclassified-core"/>
 				</rule>
 				<rule e="way" k="highway" v="road">
@@ -759,7 +759,7 @@
 				<line class="tunnel-casing highway-service-casing tunnel" mask-class="tunnel-core highway-service-core"/>
 				<line class="highway-service-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|tertiary|living_street">
+			<rule e="way" k="highway" v="unclassified|residential|minor|tertiary|cycleroad|living_street">
 				<line class="tunnel-casing highway-unclassified-casing tunnel" mask-class="tunnel-core highway-unclassified-core"/>
 				<line class="highway-unclassified-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
@@ -1243,13 +1243,13 @@
 			
 			.highway-bridleway-casing               { stroke-width: 1.8px;   stroke: #707070;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt; }
 			.highway-bridleway-area-casing          { stroke-width: 0.1px; }
-			.highway-bridleway-core                 { stroke-width: 1.7px;   stroke: #e3e9f1; }
-			.highway-bridleway-area                 { fill: #e3e9f1; }
+			.highway-bridleway-core                 { stroke-width: 1.7px;   stroke: #d3e9f8; }
+			.highway-bridleway-area                 { fill: #d3e9f8; }
 			
 			.highway-cycleway-casing                { stroke-width: 1.8px;   stroke: #707070; stroke-dasharray: 0.4, 0.4; stroke-linecap: butt;}
 			.highway-cycleway-area-casing           { stroke-width: 0.1px; stroke-dasharray: 0.4, 0.4; stroke-linecap: butt;}
-			.highway-cycleway-core                  { stroke-width: 1.7px;   stroke: #d1ead1; }
-			.highway-cycleway-area                  { fill: #d1ead1; }
+			.highway-cycleway-core                  { stroke-width: 1.7px;   stroke: #d1fad1; }
+			.highway-cycleway-area                  { fill: #d1fad1; }
 			
 			.highway-pedestrian-casing              { stroke-width: 4px; stroke: #707070; }
 			.highway-pedestrian-area-casing         { stroke-width: 0.5px; }

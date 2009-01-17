@@ -317,7 +317,7 @@
 			<rule e="way" k="highway" v="tertiary">
 				<line class="bridge-casing highway-tertiary-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
+			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road">
 				<line class="bridge-casing highway-unclassified-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
@@ -414,7 +414,7 @@
 			<rule e="way" k="highway" v="tertiary">
 				<line class="bridge-core highway-tertiary-bridge-core" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
+			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road">
 				<line class="bridge-core highway-unclassified-bridge-core" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
@@ -528,6 +528,14 @@
 			</rule>
 			<rule e="way" k="highway" v="living_street">
 				<area class="highway-casing highway-livingstreet-casing highway-livingstreet-area-casing no-bezier"/>
+			</rule>
+			<rule e="way" k="highway" v="cycleroad">
+				<rule e="way" k="motorcar" v="yes|destination|private">
+					<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
+				</rule>
+				<else>
+					<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="tertiary_link">
 				<area class="highway-casing highway-tertiary-link-casing highway-tertiary-link-area-casing no-bezier"/>
@@ -670,6 +678,14 @@
 				<rule e="way" k="highway" v="living_street">
 					<line class="highway-casing highway-livingstreet-casing"/>
 				</rule>
+				<rule e="way" k="highway" v="cycleroad">
+					<rule e="way" k="motorcar" v="yes|destination|private">
+						<line class="highway-casing highway-cycleroad-casing"/>
+					</rule>
+					<else>
+						<line class="highway-casing highway-cycleroad-casing"/>
+					</else>
+				</rule>
 				<rule e="way" k="highway" v="tertiary_link">
 					<line class="highway-casing highway-tertiary-link-casing"/>
 				</rule>
@@ -766,6 +782,15 @@
 			<rule e="way" k="highway" v="living_street">
 				<area class="highway-core highway-livingstreet-area-1 no-bezier"/>
 				<area class="highway-core highway-livingstreet-area-2 no-bezier"/>
+			</rule>
+			<rule e="way" k="highway" v="cycleroad">
+				<rule e="way" k="motorcar" v="yes|destination|private">
+					<area class="highway-core highway-cycleroad-area-1 no-bezier"/>
+					<area class="highway-core highway-cycleroad-area-2 no-bezier"/>
+				</rule>
+				<else>
+					<area class="highway-core highway-cycleroad-area-3 no-bezier"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="tertiary_link">
 				<area class="highway-core highway-tertiary-link-area no-bezier"/>
@@ -943,6 +968,15 @@
 					<line class="highway-core highway-livingstreet-core-1" smart-linecap="no"/>
 					<line class="highway-core highway-livingstreet-core-2" smart-linecap="no"/>
 				</rule>
+				<rule e="way" k="highway" v="cycleroad">
+					<rule e="way" k="motorcar" v="yes|destination|private">
+						<line class="highway-core highway-cycleroad-core-1" smart-linecap="no"/>
+						<line class="highway-core highway-cycleroad-core-2" smart-linecap="no"/>
+					</rule>
+					<else>
+						<line class="highway-core highway-cycleroad-core-3"/>
+					</else>
+				</rule>
 				<rule e="way" k="highway" v="tertiary_link">
 					<line class="highway-core highway-tertiary-link-core"/>
 				</rule>
@@ -1044,7 +1078,7 @@
 				<line class="tunnel-casing highway-service-casing tunnel" mask-class="tunnel-core highway-service-core"/>
 				<line class="highway-service-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
+			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad">
 				<line class="tunnel-casing highway-unclassified-casing tunnel" mask-class="tunnel-core highway-unclassified-core"/>
 				<line class="highway-unclassified-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
@@ -1170,7 +1204,7 @@
 			<rule e="way" k="construction" v="service">
 				<line class="highway-core highway-service-core under-construction"/>
 			</rule>
-			<rule e="way" k="construction" v="unclassified|residential|minor|living_street">
+			<rule e="way" k="construction" v="unclassified|residential|minor|living_street|cycleroad">
 				<line class="highway-core highway-unclassified-core under-construction"/>
 			</rule>
 			<rule e="way" k="construction" v="road">
@@ -1625,12 +1659,12 @@
 		<!-- For everything, except trams, if it shares a node with a road then render a railroad crossing symbol.  -->
 		<rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail">
 			<rule e="node" s="way" k="railway" v="rail">
-				<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|path|footway">
+				<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|cycleroad|road|cycleway|path|footway">
 					<symbol ref="railway-crossing" position="center"/>
 				</rule>
 			</rule>
 			<else>
-				<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|road|cycleway|path|footway">
+				<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|cycleroad|road|cycleway|path|footway">
 					<symbol ref="railway-crossing" position="center"/>
 				</rule>
 			</else>
@@ -1912,7 +1946,7 @@
 						<rule e="way" k="highway" v="service" layer="5">
 							<text k="name" startOffset="50%" class="highway-name highway-service-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
-						<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
+						<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road" layer="5">
 							<text k="name" startOffset="50%" class="highway-name highway-unclassified-name" dy="0.7px" layer="5" avoid-duplicates="true" />
 						</rule>
 						<rule e="way" k="highway" v="tertiary_link" layer="5">
@@ -2025,7 +2059,7 @@
 					<rule e="way" k="highway" v="service" layer="5">
 						<text k="ref" startOffset="30%" class="highway-ref highway-service-ref" dy="-2px" layer="5"/>
 					</rule>
-					<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road" layer="5">
+					<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road" layer="5">
 						<text k="ref" startOffset="30%" class="highway-ref highway-unclassified-ref" dy="-2.4px" layer="5"/>
 					</rule>
 					<rule e="way" k="highway" v="tertiary" layer="5">
@@ -2399,6 +2433,15 @@
 			.highway-livingstreet-area-1            { fill: #ffffff; }
 			.highway-livingstreet-area-2            { fill: url(#livingstreet-pattern); stroke: #e5e0c2; stroke-width: 0px; }
 			
+			.highway-cycleroad-casing               { stroke-width: 2.5px;  stroke: #707070; }
+			.highway-cycleroad-area-casing          { stroke-width: 0.25px; }
+			.highway-cycleroad-core-1               { stroke-width: 2.25px; stroke: #ffffff; }
+			.highway-cycleroad-core-2               { stroke-width: 2.25px; stroke: #d1fad1; stroke-dasharray: 0.3,0.8; stroke-linecap: butt; }
+			.highway-cycleroad-area-1               { fill: #ffffff; }
+			.highway-cycleroad-area-2               { fill: url(#cycleroad-pattern); stroke: #d1fad1; stroke-width: 0px; }
+			.highway-cycleroad-core-3               { stroke-width: 2.25px;   stroke: #d1fad1; }
+			.highway-cycleroad-area-3               { fill: #d1fad1; }
+
 			.highway-service-bridge-casing          { stroke-width: 2.8px; }
 			.highway-service-bridge-core            { stroke-width: 2.6px; }
 			.highway-service-casing                 { stroke-width: 1.8px;   stroke: #707070; }
@@ -2460,8 +2503,8 @@
 			.highway-bridleway-bridge-core          { stroke-width: 2.8px; }
 			.highway-bridleway-casing               { stroke-width: 2px;     stroke: #707070;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt; }
 			.highway-bridleway-area-casing          { stroke-width: 0.4px; }
-			.highway-bridleway-core                 { stroke-width: 1.6px;   stroke: #e3e9f1; }
-			.highway-bridleway-area                 { fill: #e3e9f1; }
+			.highway-bridleway-core                 { stroke-width: 1.6px;   stroke: #d3e9f8; }
+			.highway-bridleway-area                 { fill: #d3e9f8; }
 			.highway-bridleway-name                 { stroke-width: 0px;     font-size: 2.5px; }
 			.highway-bridleway-ref                  { stroke-width: 0px;     font-size: 2.5px; }
 			
@@ -2469,8 +2512,8 @@
 			.highway-cycleway-bridge-core           { stroke-width: 2.6px; }
 			.highway-cycleway-casing                { stroke-width: 1.8px;     stroke: #707070; stroke-dasharray: 0.4, 0.4; stroke-linecap: butt;}
 			.highway-cycleway-area-casing           { stroke-width: 0.2px; }
-			.highway-cycleway-core                  { stroke-width: 1.6px;   stroke: #d1ead1; }
-			.highway-cycleway-area                  { fill: #d1ead1; }
+			.highway-cycleway-core                  { stroke-width: 1.6px;   stroke: #d1fad1; }
+			.highway-cycleway-area                  { fill: #d1fad1; }
 			.highway-cycleway-name                  { stroke-width: 0px;     font-size: 2.5px; }
 			.highway-cycleway-ref                   { stroke-width: 0px;     font-size: 2.5px; }
 			
@@ -3737,6 +3780,9 @@
 		
 		<svg:pattern id="livingstreet-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
 			<svg:path fill="none" stroke="#e5e0c2" stroke-width="2" d="M10,0 L0,10 M0,0 L10,10"/>
+		</svg:pattern>
+		<svg:pattern id="cycleroad-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
+			<svg:path fill="none" stroke="#d1fad1" stroke-width="2" d="M10,0 L0,10 M0,0 L10,10"/>
 		</svg:pattern>
 		<svg:pattern id="access-private-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
 			<svg:path fill="none" stroke="#ff4040" stroke-width="0.2" d="M5,0 L0,5 M0,0 L5,5"/>

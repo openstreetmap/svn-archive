@@ -308,8 +308,16 @@
 			<rule e="way" k="highway" v="service">
 				<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road">
+			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
 				<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
+			</rule>
+			<rule e="way" k="highway" v="cycleroad">
+				<rule e="way" k="motorcar" v="yes|destination|private">
+					<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
+				</rule>
+				<else>
+					<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="tertiary_link">
 				<area class="highway-casing highway-tertiary-link-casing highway-tertiary-link-area-casing no-bezier"/>
@@ -438,8 +446,16 @@
 				<rule e="way" k="highway" v="service">
 					<line class="highway-casing highway-service-casing"/>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad|road|ford">
+				<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road|ford">
 					<line class="highway-casing highway-unclassified-casing"/>
+				</rule>
+				<rule e="way" k="highway" v="cycleroad">
+					<rule e="way" k="motorcar" v="yes|destination|private">
+						<line class="highway-casing highway-unclassified-casing"/>
+					</rule>
+					<else>
+						<line class="highway-casing highway-cycleroad-casing"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="tertiary_link">
 					<line class="highway-casing highway-tertiary-link-casing"/>
@@ -521,8 +537,16 @@
 			<rule e="way" k="highway" v="service">
 				<area class="highway-core highway-service-area no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|cycleroad|living_street">
+			<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
 				<area class="highway-core highway-unclassified-area no-bezier"/>
+			</rule>
+			<rule e="way" k="highway" v="cycleroad">
+				<rule e="way" k="motorcar" v="yes|destination|private">
+					<area class="highway-core highway-unclassified-area no-bezier"/>
+				</rule>
+				<else>
+					<area class="highway-core highway-cycleroad-area-3 no-bezier"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="road">
 				<area class="highway-core highway-road-area no-bezier"/>
@@ -678,8 +702,16 @@
 				<rule e="way" k="highway" v="service">
 					<line class="highway-core highway-service-core"/>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor|cycleroad|living_street">
+				<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
 					<line class="highway-core highway-unclassified-core"/>
+				</rule>
+				<rule e="way" k="highway" v="cycleroad">
+					<rule e="way" k="motorcar" v="yes|destination|private">
+						<line class="highway-core highway-unclassified-core"/>
+					</rule>
+					<else>
+						<line class="highway-core highway-cycleroad-core-3"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="road">
 					<line class="highway-core highway-road-core"/>
@@ -1599,6 +1631,11 @@
 			.highway-cycleway-name                  { stroke-width: 0px;     font-size: 2.5px; }
 			.highway-cycleway-ref                   { stroke-width: 0px;     font-size: 2.5px; }
 			
+			.highway-cycleroad-casing               { stroke-width: 2.2px;  stroke: #707070; }
+			.highway-cycleroad-area-casing          { stroke-width: 0.1px; }
+			.highway-cycleroad-core-3               { stroke-width: 2.1px;   stroke: #d1fad1; }
+			.highway-cycleroad-area-3               { fill: #d1fad1; }
+
 			.highway-pedestrian-bridge-casing       { stroke-width: 4.5px; }
 			.highway-pedestrian-bridge-core         { stroke-width: 3.5px; }
 			.highway-pedestrian-casing              { stroke-width: 2.2px;   stroke: #707070; }

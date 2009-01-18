@@ -124,12 +124,28 @@ def ramps(tags, type):
     
     if type == "way" and 'name' in tags and 'highway' in tags:
         name = tags['name']
+        status = tags['highway']
     
         # re.match checks for a match only at the beginning of the string
-        if re.match("Ramp\W", name, ):
-            changed = True
+        if re.match("Ramp\W", name):
             tags['orig_name'] = name
             del tags['name']
+            tags['ramp'] = "yes"
+
+            if status == 'motorway' or status == 'motorway_link':
+	        tags['highway'] = 'motorway_link'
+            elif status == 'trunk' or status == 'trunk_link':
+                tags['highway'] = 'trunk_link'
+            elif status == 'primary' or status == 'primary_link':
+                tags['highway'] = 'primary_link'
+            elif status == 'secondary' or status == 'secondary_link':
+                tags['highway'] = 'secondary_link'
+            elif status == 'tertiary' or status == 'tertiary_link':
+                tags['highway'] = 'tertiary_link'
+            else:
+                raise Exception("Found a highway with unhandled type: %s" % status)
+
+            changed = True
 
     tags['created_by'] = 'change_tags.py - massgis ramps %s' % __version__
 

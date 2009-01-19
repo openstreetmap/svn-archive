@@ -1814,7 +1814,6 @@
 					</rule>
 					<rule e="way" k="oneway" v="-1">
 						<rule e="way" k="cycleway" v="opposite|opposite_track|opposite_lane">
-						</rule>
 							<line class="oneway-exclcycle-casing oneway-casing-r1" smart-linecap="no"/>
 							<line class="oneway-exclcycle-casing oneway-casing-r2" smart-linecap="no"/>
 							<line class="oneway-exclcycle-casing oneway-casing-r3" smart-linecap="no"/>
@@ -1830,6 +1829,7 @@
 							<line class="oneway-exclcycle-core oneway-core-r5" smart-linecap="no"/>
 							<line class="oneway-exclcycle-core oneway-core-r6" smart-linecap="no"/>
 							<line class="oneway-exclcycle-core oneway-core-r7" smart-linecap="no"/>
+						</rule>
 						<else>
 							<line class="oneway-casing oneway-casing-r1" smart-linecap="no"/>
 							<line class="oneway-casing oneway-casing-r2" smart-linecap="no"/>
@@ -4589,14 +4589,14 @@
 			.oneway-core-6 { stroke-width: 0.125px; stroke-dasharray: 0.6,29.4; stroke-dashoffset: 21.65; }
 			.oneway-core-7 { stroke-width: 0.05px; stroke-dasharray: 0.7,29.3; stroke-dashoffset: 21.65; }
 			
-			.oneway-casing-r1 { stroke-width: 0.2px; stroke-dasharray: 2.1,27.9; stroke-dashoffset: 23.1; }
-			.oneway-casing-r2 { stroke-width: 0.475px; stroke-dasharray: 0.3,29.7; stroke-dashoffset: 23.3; }
-			.oneway-casing-r3 { stroke-width: 0.4px; stroke-dasharray: 0.3,29.7; stroke-dashoffset: 23.4; }
-			.oneway-casing-r4 { stroke-width: 0.325px; stroke-dasharray: 0.4,29.6; stroke-dashoffset: 23.5; }
-			.oneway-casing-r5 { stroke-width: 0.25px; stroke-dasharray: 0.5,29.5; stroke-dashoffset: 23.6; }
-			.oneway-casing-r6 { stroke-width: 0.175px; stroke-dasharray: 0.6,29.4; stroke-dashoffset: 23.7; }
-			.oneway-casing-r7 { stroke-width: 0.1px; stroke-dasharray: 0.7,29.3; stroke-dashoffset: 23.8; }
-			.oneway-casing-r8 { stroke-width: 0.05px; stroke-dasharray: 0.8,29.2; stroke-dashoffset: 23.9; }
+			.oneway-casing-r1 { stroke-width: 0.3px; stroke-dasharray: 2.1,27.9; stroke-dashoffset: 23.1; }
+			.oneway-casing-r2 { stroke-width: 0.575px; stroke-dasharray: 0.3,29.7; stroke-dashoffset: 23.3; }
+			.oneway-casing-r3 { stroke-width: 0.5px; stroke-dasharray: 0.3,29.7; stroke-dashoffset: 23.4; }
+			.oneway-casing-r4 { stroke-width: 0.425px; stroke-dasharray: 0.4,29.6; stroke-dashoffset: 23.5; }
+			.oneway-casing-r5 { stroke-width: 0.35px; stroke-dasharray: 0.5,29.5; stroke-dashoffset: 23.6; }
+			.oneway-casing-r6 { stroke-width: 0.275px; stroke-dasharray: 0.6,29.4; stroke-dashoffset: 23.7; }
+			.oneway-casing-r7 { stroke-width: 0.2px; stroke-dasharray: 0.7,29.3; stroke-dashoffset: 23.8; }
+			.oneway-casing-r8 { stroke-width: 0.1px; stroke-dasharray: 0.8,29.2; stroke-dashoffset: 23.9; }
 			
 			.oneway-core-r1 { stroke-width: 0.1px; stroke-dasharray: 2.05,27.95; stroke-dashoffset: 23.1; }
 			.oneway-core-r2 { stroke-width: 0.425px; stroke-dasharray: 0.2,29.8; stroke-dashoffset: 23.25; }

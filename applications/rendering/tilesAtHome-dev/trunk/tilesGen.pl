@@ -795,7 +795,7 @@ sub ClientModified
         "status -q --ignore-externals",
         $svn_external);
 
-        $svn_status += `$Cmd`;
+        $svn_status .= `$Cmd`;
 
         chomp $svn_status;
     }

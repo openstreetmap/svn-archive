@@ -85,4 +85,8 @@ public class SourceButton {
 
         return 0;
     }
+    
+    public void setIsMapStyleMapnik (boolean style) {
+        isMapnik = style;
+    }
 }

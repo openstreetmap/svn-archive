@@ -28,6 +28,7 @@ import org.openstreetmap.gui.jmapviewer.OsmTileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSelection;
 
@@ -73,6 +74,16 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection, C
         setFileCacheEnabled(SlippyMapChooserPlugin.ENABLE_FILE_CACHE);
         setMaxTilesInmemory(SlippyMapChooserPlugin.MAX_TILES_IN_MEMORY);
         addComponentListener(this);
+
+        String mapStyle = Main.pref.get("slippy_map_chooser.mapstyle", "mapnik");
+        if(mapStyle.equals("osmarender")) {
+            iSourceButton.setIsMapStyleMapnik(false);
+            this.setTileSource(sources[1]);
+        }
+        else {
+            if(!mapStyle.equals("mapnik"))
+                Main.pref.put("slippy_map_chooser.mapstyle", "mapnik");
+        }
     }
 
     public void setMaxTilesInmemory(int tiles) {
@@ -248,8 +259,10 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection, C
         this.tileCache = new MemoryTileCache();
         if (mapSource == SourceButton.MAPNIK) {
             this.setTileSource(sources[0]);
+            Main.pref.put("slippy_map_chooser.mapstyle", "mapnik");
         } else {
             this.setTileSource(sources[1]);
+            Main.pref.put("slippy_map_chooser.mapstyle", "osmarender");
         }
     }
 

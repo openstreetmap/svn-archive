@@ -76,14 +76,14 @@ for (;;) {
     my @f = gmtime($t);
     my $e = timegm(0, $f[1], $f[2], $f[3], $f[4], $f[5]) + MINUTE;
 #    printf "e: %d time: %d\n", $e, time;
-    sleep(55) if ($e > time - OSCDELAY);
+    sleep(WAITDELAY) if ($e > time - OSCDELAY);
     my $f = sprintf("%04d%02d%02d%02d%02d", $f[5]+1900, $f[4]+1, $f[3], $f[2], $f[1]);
     my @g = gmtime($e);
     my $g = sprintf("%04d%02d%02d%02d%02d", $g[5]+1900, $g[4]+1, $g[3], $g[2], $g[1]);
     if (process("minute",$f,$g)) {
 	$t = $e;
     } else {
-	sleep(60);
+	sleep(WAITFAIL);
     }
 }
 

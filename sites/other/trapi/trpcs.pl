@@ -16,6 +16,189 @@ chdir TRAPIDIR or die "could not chdir ".TRAPIDIR.": $!";
 ptdbinit("+<");
 
 $| = 1;
+my ($pz) = pack "N", 0;
+
+our (%togc, $cachecount);
+# garbage collect
+sub garbagecollect() {
+    our (%filecache, %whengc, $devnull);
+    my @togc = sort {($whengc{$a} // 0) <=> ($whengc{$b} // 0) ||
+	 ($togc{$a} // 0) <=> ($togc{b} // 0)} keys %togc;
+    my $todo = GCCOUNT;
+    while (my $ptn = shift @togc) {
+	# avoid tiles being used
+	next if (exists $filecache{$ptn."data"});
+	flushptn($ptn);
+	my ($z, $x, $y) = fromptn($ptn);
+	print "Garbagecollect: z$z $x,$y\n" if (VERBOSE > 4);
+	my ($df, $ndf, $nf, $nnf, $wf, $nwf, $rf, $nrf, $b);
+	if (open $df, "<", "z$z/$x/$y/data") {
+	    open $ndf, ">", "z$z/$x/$y/data.new";
+	    print $ndf "\0";
+	} else {
+	    $df = $devnull;
+	    $ndf = undef;
+	}
+	if (open $nf, "<", "z$z/$x/$y/nodes") {
+	    open $nnf, ">", "z$z/$x/$y/nodes.new";
+	} else {
+	    $nf = $devnull;
+	    $nnf = undef;
+	}
+	if (open $wf, "<", "z$z/$x/$y/ways") {
+	    open $nwf, ">", "z$z/$x/$y/ways.new";
+	} else {
+	    $wf = $devnull;
+	    $nwf = undef;
+	}
+	if (open $rf, "<", "z$z/$x/$y/relations") {
+	    open $nrf, ">", "z$z/$x/$y/relations.new";
+	} else {
+	    $rf = $devnull;
+	    $nrf = undef;
+	}
+	my %seen;
+	while (read $nf, $b, 16) {
+	    my ($n, $lat, $lon, $off) = unpack "NN!N!N", $b;
+	    next unless ($n);
+	    if (exists $seen{$n}) {
+		print "Duplicate node $n in tile z$z $x,$y\n";
+		next;
+	    }
+	    my $noff = 0;
+	    if ($off) {
+		seek $df, $off, 0;
+		$noff = tell $ndf;
+		my $tag;
+		while (defined($tag = gets($df)) && ($tag ne "")) {
+		    my $val = gets($df);
+		    print $ndf "$tag\0$val\0";
+		}
+		print $ndf "\0";
+	    }
+	    print $nnf pack "NN!N!N", $n, $lat, $lon, $noff;
+	    $seen{$n} = 1;
+	    my $oldptn = nodeptn($n);
+	    if (defined $oldptn && $oldptn ne NOPTN) {
+		if ($oldptn ne $ptn) {
+		    my ($uz, $ux, $uy) = fromptn($oldptn);
+		    print "  node $n is actually in tile z$z $x,$y not z$uz $ux,$uy\n";
+#		    nodeptn($n, $ptn);
+		}
+	    } else {
+		print "  node $n is in tile z$z $x,$y not deleted\n";
+#		nodeptn($n, $ptn);
+	    }
+	}
+	%seen = ();
+	while (read $wf, $b, 8) {
+	    my ($w, $off) = unpack "NN", $b;
+	    next unless ($w);
+	    if (exists $seen{$w}) {
+		print "Duplicate way $w\n";
+		next;
+	    }
+	    my $noff = 0;
+	    if ($off) {
+		seek $df, $off, 0;
+		$noff = tell $ndf;
+		my $n;
+		while (read $df, $n, 4) {
+		    print $ndf $n;
+		    last if ($n eq $pz);
+		}
+		my $tag;
+		while (defined($tag = gets($df)) && ($tag ne "")) {
+		    my $val = gets($df);
+		    print $ndf "$tag\0$val\0";
+		}
+		print $ndf "\0";
+	    }
+	    $seen{$w} = 1;
+	    my $oldptn = wayptn($w);
+	    if (defined $oldptn) {
+		if ($off && ($ptn ne $oldptn)) {
+		    my ($ux, $uy, $uz) = fromptn($oldptn);
+		    print "  way $w is actually in z$z $x,$y not z$uz $ux,$uy\n";
+#		    wayptn($w, $ptn);
+		}
+		print $nwf pack "NN", $w, $noff;
+	    } else {
+		if ($off) {
+		    print "  way $w is actually in z$z $x,$y not deleted\n";
+#		    wayptn($w, $ptn);
+#		    print $nwf pack "NN", $w, $noff;
+		} else {
+		    print "  way $w is deleted, not in z$z $x,$y\n";
+		}
+	    }
+	}
+	%seen = ();
+	while (read $rf, $b, 8) {
+	    my ($r, $off) = unpack "NN", $b;
+	    next unless ($r);
+	    if (exists $seen{$r}) {
+		print "Duplicate relation $r\n";
+		next;
+	    }
+	    my $noff = 0;
+	    if ($off) {
+		seek $df, $off, 0;
+		$noff = tell $ndf;
+		my $n;
+		while (read $df, $n, 5) {
+		    my ($type, $mid) = unpack "CN", $n;
+		    last unless($type);
+		    print $ndf $n;
+		    my $role = gets($df);
+		    print $ndf "$role\0";
+		}
+		seek $df, -4, 1;
+		print $ndf "\0";
+		my $tag;
+		while (defined($tag = gets($df)) && $tag ne "") {
+		    my $val = gets($df);
+		    print $ndf "$tag\0$val\0";
+		}
+		print $ndf "\0";
+	    }
+	    my $oldptn = relationptn($r);
+	    if (defined $oldptn) {
+		if ($off && ($ptn ne $oldptn)) {
+		    my ($uz, $ux, $uy) = fromptn($oldptn);
+		    print "  relation $r is actually in z$z $x,$y not z$uz $ux,$uy\n";
+#		    relationptn($r, $ptn);
+		}
+		print $nrf pack "NN", $r, $noff;
+	    } else {
+		if ($off && $z != 0) {
+		    print "  relation $r is actually in z$z $x,$y not deleted\n";
+#		    relationptn($r, $ptn);
+#		    print $nrf pack "NN", $r, $noff;
+		} else {
+		    print "  relation $r is deleted, not in z$z $x,$y\n";
+		}
+	    }
+	}
+	if (defined $ndf) {
+	    rename "z$z/$x/$y/data.new","z$z/$x/$y/data";
+	}
+	if (defined $nnf) {
+	    rename "z$z/$x/$y/nodes.new","z$z/$x/$y/nodes";
+	}
+	if (defined $nwf) {
+	    rename "z$z/$x/$y/ways.new","z$z/$x/$y/ways";
+	}
+	if (defined $nrf) {
+	    rename "z$z/$x/$y/relations.new","z$z/$x/$y/relations";
+	}
+	$whengc{$ptn} = $cachecount;
+	delete $togc{$ptn};
+	last unless (--$todo);
+    }
+    print "Tiles left to garbagecollect: ".scalar(@togc)."\n"
+	if (VERBOSE > 3 && scalar(@togc));
+}
 
 my $ignoretags = IGNORETAGS;
 my ($id, $lat, $lon, $x, $y, $ptn, $off, @tv, $tv);
@@ -52,7 +235,7 @@ while (my $gz = <>) {
 		    if ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
 			my $tag = $1;
 			my $val = $2;
-			push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
+			push @tv, $tag, $val unless (IGNORETAGS && $tag =~ /$ignoretags/o);
 		    }
 		}
 	    }
@@ -84,6 +267,9 @@ while (my $gz = <>) {
 		if (tell($nf) >= SPLIT) {
 		    if (splitptn($ptn)) {
 			$splits++;
+			delete $togc{$ptn};
+			our %whengc;
+			delete $whengc{$ptn};
 			$ptn = etoptn($x, $y);
 			$nf = openptn($ptn, "+<", "nodes");
 			seek $nf, 0, 2;
@@ -113,6 +299,7 @@ while (my $gz = <>) {
 		    if ($tn == $id) {
 			seek $onf, -16, 1;
 			print $onf pack "NN!N!N", 0, 0, 0, 0;
+			$togc{$oldptn} = $cachecount if ($off);
 			last;
 		    }
 		}
@@ -294,6 +481,7 @@ while (my $gz = <>) {
 	    if (@tv) {
 		print "writing node $id tags\n" if (VERBOSE > 22);
 		my $nd = openptn($ptn, "+<", "data");
+		$togc{$ptn} = $cachecount;
 		seek $nd, 0, 2;
 		$off = tell $nd;
 		if ($off == 0) {
@@ -324,7 +512,7 @@ while (my $gz = <>) {
 		    } elsif ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
 			my $tag = $1;
 			my $val = $2;
-			push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
+			push @tv, $tag, $val unless (IGNORETAGS && $tag =~ /$ignoretags/o);
 		    }
 		}
 	    }
@@ -344,6 +532,7 @@ while (my $gz = <>) {
 			seek $wf, -8, 1;
 			print $wf pack "NN", 0, 0;
 			my $wd = openptn($ptn, "+<", "data");
+			$togc{$ptn} = $cachecount;
 			seek $wd, $off, 0;
 			my %ptns = ();
 			my ($n);
@@ -414,6 +603,7 @@ while (my $gz = <>) {
 		    }
 		}
 		$wd = openptn($ptn, "+<", "data");
+		$togc{$ptn} = $cachecount;
 		if (defined $off) {
 		    seek $wd, $off, 0;
 		    while (read $wd, $w, 4) {
@@ -453,6 +643,7 @@ while (my $gz = <>) {
 		    }
 		    seek $wf, $mt-8, 0 if (defined $mt);
 		    $wd = openptn($ptn, "+<", "data");
+		    $togc{$ptn} = $cachecount;
 		    $new = 1;
 		}
 		seek $wd, 0, 2;
@@ -547,7 +738,7 @@ while (my $gz = <>) {
 		    } elsif ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
 			my $tag = $1;
 			my $val = $2;
-			push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
+			push @tv, $tag, $val unless (IGNORETAGS && $tag =~ /$ignoretags/o);
 		    }
 		}
 	    }
@@ -618,6 +809,7 @@ while (my $gz = <>) {
 		}
 	    }
 	    my $rd = openptn($ptn, "+<", "data");
+	    $togc{$ptn} = $cachecount;
 	    seek $rd, 0, 2;
 	    $off = tell $rd;
 	    if ($off == 0) {
@@ -734,10 +926,12 @@ while (my $gz = <>) {
 	    print "Relation: $_" if (VERBOSE > 18);
 	    $ptn = relationptn($id);
 	    if ($ptn ne NOPTN) {
+		$togc{$ptn} = $cachecount;
 		my ($uz, $ux, $uy) = fromptn($ptn);
 		print "Delete relation $id from z$uz $ux,$uy\n"
 		    if (VERBOSE > 4);
 		my %tiles = reltiles([[3, $id]]);
+		$tiles{$ptn}++;
 		while (my $t = each %tiles) {
 		    my $rf = openptn($t, "+<", "relations");
 		    seek $rf, 0, 0;
@@ -802,6 +996,7 @@ while (my $gz = <>) {
 		seek $wf, -8, 1;
 		print $wf pack "NN", 0, 0;
 		my $wd = openptn($ptn, "+<", "data");
+		$togc{$ptn} = $cachecount;
 		seek $wd, $off, 0;
 		my %ptns = ();
 		my ($n);
@@ -871,6 +1066,7 @@ while (my $gz = <>) {
 		print "Deleting node $id\n" if (VERBOSE > 9);
 		seek $nf, -16, 1;
 		print $nf pack "NN!N!N", 0, 0, 0, 0;
+		$togc{$ptn} = $cachecount if ($off);
 		last;
 	    }
 	    nodeptn($id,NOPTN);
@@ -889,5 +1085,5 @@ while (my $gz = <>) {
     print "Nodes: $nodes Ways: $ways Relations: $relations Splits: $splits\n"
 	if (VERBOSE > 1);
     cachestat() if (VERBOSE > 2);
-    
+    garbagecollect() if (GCCOUNT);
 }

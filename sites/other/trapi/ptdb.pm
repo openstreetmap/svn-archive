@@ -77,13 +77,13 @@ sub openptn($$$) {
     my ($ptn,$mode,$name) = @_;
     my $f;
     my $ptnname = $ptn.$name;
-    our ($opened, $hits, $misses);
+    our ($opened, $hits, $misses, $cachecount);
     our (%filecache);
     if (defined $filecache{$ptnname}) {
 	my @c = @{$filecache{$ptnname}};
 	if ($c[1] eq $mode) {
 	    $hits++;
-            ${$filecache{$ptnname}}[2] = time();
+            ${$filecache{$ptnname}}[2] = ++$cachecount;
    	    return $c[0];
         } else {
 	    print "changing mode from $c[1] to $mode\n" if (VERBOSE > 10);
@@ -126,7 +126,7 @@ sub openptn($$$) {
 	}
     }
     $misses++;
-    $filecache{$ptnname} = [$f, $mode, time()];
+    $filecache{$ptnname} = [$f, $mode, ++$cachecount];
     return $f;
 }
 

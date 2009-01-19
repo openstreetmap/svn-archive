@@ -1,18 +1,31 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <osm version='0.5' generator='JOSM'>
+  <bound note='this tag is deprecated and only provided for backward compatiblity' box='0.0,0.0,0.025,0.025' origin='petschge' />
   <bounds minlat='0.0' minlon='0.0' maxlat='0.025' maxlon='0.025' origin='petschge' />
   <node id='102' visible='true' lat='0.021602349166935562' lon='0.023510906389653714' />
-  <node id='103' visible='true' lat='0.016652684857702375' lon='0.001363254680178817' />
   <node id='1' user='petschge' visible='true' lat='0.0' lon='0.0' />
+  <node id='103' visible='true' lat='0.016652684857702375' lon='0.001363254680178817' />
   <node id='19' user='petschge' visible='true' lat='0.0' lon='0.025' />
   <node id='101' visible='true' lat='0.021602349166935562' lon='0.0012374157500113464' />
   <node id='20' user='petschge' visible='true' lat='0.025' lon='0.0' />
-  <node id='108' visible='true' lat='0.0031879195625913914' lon='0.022965604358928002' />
-  <node id='106' visible='true' lat='0.01002516805218163' lon='0.023217282219262943' />
+  <node id='108' action='modify' visible='true' lat='0.0072584759833400694' lon='0.023067368269891107' />
   <node id='29' user='petschge' visible='true' lat='0.025' lon='0.025' />
-  <node id='107' visible='true' lat='0.003145973252599645' lon='0.0015729862304579352' />
+  <node id='106' action='modify' visible='true' lat='0.012128288839334913' lon='0.02318336091560857' />
+  <node id='107' action='modify' visible='true' lat='0.00721652967361578' lon='0.0016747501414210479' />
   <node id='104' visible='true' lat='0.016652684857702375' lon='0.0231333895991513' />
-  <node id='105' visible='true' lat='0.009941275433343463' lon='0.0015310399204021116' />
+  <node id='105' action='modify' visible='true' lat='0.012044396221088535' lon='0.0014971186167477405' />
+  <node id='-1' action='modify' visible='true' lat='0.0032354719940641567' lon='0.0016510450693203043' />
+  <node id='-2' action='modify' visible='true' lat='0.003277418304055352' lon='0.023043663197790363' />
+  <node id='-3' action='modify' visible='true' lat='0.01986864909439172' lon='0.023450178149722146' />
+  <node id='-4' action='modify' visible='true' lat='0.014918984737422982' lon='0.0013025264402472525' />
+  <node id='-5' action='modify' visible='true' lat='0.00552477580805219' lon='0.023006640029959544' />
+  <node id='-6' action='modify' visible='true' lat='0.01986864909439172' lon='0.0011766875100797816' />
+  <node id='-7' action='modify' visible='true' lat='0.010394588686747308' lon='0.023122632675677005' />
+  <node id='-8' action='modify' visible='true' lat='0.005482829498186773' lon='0.0016140219014894833' />
+  <node id='-9' action='modify' visible='true' lat='0.001501771809470221' lon='0.0015903168293887398' />
+  <node id='-10' action='modify' visible='true' lat='0.014918984737422982' lon='0.023072661359219728' />
+  <node id='-11' action='modify' visible='true' lat='0.0015437181195143517' lon='0.0229829349578588' />
+  <node id='-12' action='modify' visible='true' lat='0.010310696068003848' lon='0.0014363903768161758' />
   <way id='1012' visible='true'>
     <nd ref='107' />
     <nd ref='108' />
@@ -35,16 +48,57 @@
     <tag k='highway' v='residential' />
     <tag k='oneway' v='-1' />
   </way>
-  <way id='109' visible='true'>
+  <way id='109' action='modify' visible='true'>
     <nd ref='101' />
     <nd ref='102' />
     <tag k='highway' v='residential' />
-    <tag k='oneway' v='true' />
+    <tag k='oneway' v='yes' />
   </way>
   <way id='1011' visible='true'>
     <nd ref='105' />
     <nd ref='106' />
     <tag k='highway' v='cycleway' />
     <tag k='oneway' v='true' />
+  </way>
+  <way id='-13' action='modify' visible='true'>
+    <nd ref='-1' />
+    <nd ref='-2' />
+    <tag k='highway' v='motorway' />
+    <tag k='oneway' v='-1' />
+  </way>
+  <way id='-14' action='modify' visible='true'>
+    <nd ref='-4' />
+    <nd ref='-10' />
+    <tag k='highway' v='residential' />
+    <tag k='cycleway' v='opposite' />
+    <tag k='oneway' v='-1' />
+  </way>
+  <way id='-15' action='modify' visible='true'>
+    <nd ref='-12' />
+    <nd ref='-7' />
+    <tag k='highway' v='cycleway' />
+    <tag k='cycleway' v='opposite' />
+    <tag k='oneway' v='true' />
+  </way>
+  <way id='-16' action='modify' visible='true'>
+    <nd ref='-9' />
+    <nd ref='-11' />
+    <tag k='highway' v='motorway' />
+    <tag k='cycleway' v='opposite' />
+    <tag k='oneway' v='-1' />
+  </way>
+  <way id='-17' action='modify' visible='true'>
+    <nd ref='-6' />
+    <nd ref='-3' />
+    <tag k='highway' v='residential' />
+    <tag k='cycleway' v='opposite' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='-18' action='modify' visible='true'>
+    <nd ref='-8' />
+    <nd ref='-5' />
+    <tag k='highway' v='cycleway' />
+    <tag k='cycleway' v='opposite' />
+    <tag k='oneway' v='-1' />
   </way>
 </osm>

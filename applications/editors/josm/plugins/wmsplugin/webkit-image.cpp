@@ -12,6 +12,8 @@ adding the correct directories with -L or -I:
 #include <QtCore/QString>
 #include <QtWebKit/QWebPage>
 #include <QtWebKit/QWebFrame>
+#include <QtNetwork/QNetworkProxy>
+#include <QtCore/QProcess>
 
 /* using mingw to set binary mode */
 #ifdef WIN32
@@ -68,6 +70,30 @@ int main(int argc, char **argv)
   QApplication a(argc, argv);
   QWebPage * page = new QWebPage();
   Save * s = new Save(page);
+
+  QStringList environment = QProcess::systemEnvironment();
+  int idx = environment.indexOf(QRegExp("http_proxy=.*"));
+  if(idx != -1)
+  {
+     QString proxyHost;
+     int proxyPort = 8080;
+     QStringList tmpList = environment.at(idx).split("=");
+     QStringList host_port = tmpList.at(1).split(":");
+     proxyHost = host_port.at(0);
+     if(host_port.size() == 2)
+     {
+       bool ok;
+       int port = host_port.at(1).toInt(&ok);
+       if(ok)
+         proxyPort = port;
+     }
+
+     QNetworkProxy proxy;
+     proxy.setType(QNetworkProxy::HttpCachingProxy);
+     proxy.setHostName(proxyHost);
+     proxy.setPort(proxyPort);
+     page->networkAccessManager()->setProxy(proxy);
+  }
 
   QObject::connect(page, SIGNAL(loadFinished(bool)), s, SLOT(loaded(bool)));
   QObject::connect(s, SIGNAL(finish(void)), &a, SLOT(quit()));

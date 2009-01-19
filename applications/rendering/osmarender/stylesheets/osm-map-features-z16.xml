@@ -1365,41 +1365,78 @@
 			<rule e="way" k="area" v="~|false|no">
 				<rule e="way" k="highway" v="*">
 					<rule e="way" k="oneway" v="1|yes|true">
-						<line class="oneway-casing oneway-casing-1" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-2" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-3" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-4" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-5" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-6" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-7" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-8" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-1" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-2" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-3" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-4" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-5" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-6" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-7" smart-linecap="no"/>
+						<rule e="way" k="cycleway" v="opposite|opposite_track|opposite_lane">
+							<line class="oneway-exclcycle-casing oneway-casing-1" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-2" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-3" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-4" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-5" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-6" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-7" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-8" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-1" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-2" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-3" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-4" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-5" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-6" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-7" smart-linecap="no"/>
+						</rule>
+						<else>
+							<line class="oneway-casing oneway-casing-1" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-2" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-3" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-4" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-5" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-6" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-7" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-8" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-1" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-2" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-3" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-4" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-5" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-6" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-7" smart-linecap="no"/>
+						</else>
 					</rule>
 					<rule e="way" k="oneway" v="-1">
-						<line class="oneway-casing oneway-casing-r1" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-r2" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-r3" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-r4" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-r5" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-r6" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-r7" smart-linecap="no"/>
-						<line class="oneway-casing oneway-casing-r8" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-r1" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-r2" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-r3" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-r4" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-r5" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-r6" smart-linecap="no"/>
-						<line class="oneway-core oneway-core-r7" smart-linecap="no"/>
+						<rule e="way" k="cycleway" v="opposite|opposite_track|opposite_lane">
+						</rule>
+							<line class="oneway-exclcycle-casing oneway-casing-r1" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-r2" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-r3" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-r4" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-r5" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-r6" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-r7" smart-linecap="no"/>
+							<line class="oneway-exclcycle-casing oneway-casing-r8" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-r1" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-r2" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-r3" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-r4" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-r5" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-r6" smart-linecap="no"/>
+							<line class="oneway-exclcycle-core oneway-core-r7" smart-linecap="no"/>
+						<else>
+							<line class="oneway-casing oneway-casing-r1" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-r2" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-r3" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-r4" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-r5" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-r6" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-r7" smart-linecap="no"/>
+							<line class="oneway-casing oneway-casing-r8" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-r1" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-r2" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-r3" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-r4" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-r5" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-r6" smart-linecap="no"/>
+							<line class="oneway-core oneway-core-r7" smart-linecap="no"/>
+						</else>
 					</rule>
-				</rule>
-				<!-- Motorway implies oneway-ness -->
+				</rule>				<!-- Motorway implies oneway-ness -->
 				<rule e="way" k="highway" v="motorway|motorway_link">
 					<rule e="way" k="oneway" v="~|yes|true|1">
 						<line class="oneway-casing oneway-casing-1" smart-linecap="no"/>
@@ -3460,26 +3497,20 @@
 			
 			
 			/* Oneway */
-			.oneway-casing {
-			fill: none;
-			stroke-linecap: butt;
-			stroke: #707070;
-			}
+			.oneway-casing { fill: none; stroke-linecap: butt; stroke: #0000a0; }
+			/*    stroke: #a2aee9; */
+			.oneway-core { fill: none; stroke-linecap: butt; stroke: #ffffff; }
+			.oneway-exclcycle-casing { fill: none; stroke-linecap: butt; stroke: #7070a0; }
+			.oneway-exclcycle-core { fill: none; stroke-linecap: butt; stroke: #90ff70; }
 			
-			.oneway-core {
-			fill: none;
-			stroke-linecap: butt;
-			stroke: #ffffff;
-			}
-			
-			.oneway-casing-1 { stroke-width: 0.4px; stroke-dasharray: 4.2,55.8; stroke-dashoffset: 46.2; }
-			.oneway-casing-2 { stroke-width: 0.95px; stroke-dasharray: 0.6,59.4; stroke-dashoffset: 43.4; }
-			.oneway-casing-3 { stroke-width: 0.8px; stroke-dasharray: 0.6,59.4; stroke-dashoffset: 43.2; }
-			.oneway-casing-4 { stroke-width: 0.65px; stroke-dasharray: 0.8,59.2; stroke-dashoffset: 43.2; }
-			.oneway-casing-5 { stroke-width: 0.5px; stroke-dasharray: 1.0,59; stroke-dashoffset: 43.2; }
-			.oneway-casing-6 { stroke-width: 0.35px; stroke-dasharray: 1.2,58.8; stroke-dashoffset: 43.2; }
-			.oneway-casing-7 { stroke-width: 0.2px; stroke-dasharray: 1.4,58.6; stroke-dashoffset: 43.2; }
-			.oneway-casing-8 { stroke-width: 0.1px; stroke-dasharray: 1.6,58.4; stroke-dashoffset: 43.2; }
+			.oneway-casing-1 { stroke-width: 0.6px; stroke-dasharray: 4.2,55.8; stroke-dashoffset: 46.2; }
+			.oneway-casing-2 { stroke-width: 1.15px; stroke-dasharray: 0.6,59.4; stroke-dashoffset: 43.4; }
+			.oneway-casing-3 { stroke-width: 1.0px; stroke-dasharray: 0.6,59.4; stroke-dashoffset: 43.2; }
+			.oneway-casing-4 { stroke-width: 0.85px; stroke-dasharray: 0.8,59.2; stroke-dashoffset: 43.2; }
+			.oneway-casing-5 { stroke-width: 0.7px; stroke-dasharray: 1.0,59; stroke-dashoffset: 43.2; }
+			.oneway-casing-6 { stroke-width: 0.55px; stroke-dasharray: 1.2,58.8; stroke-dashoffset: 43.2; }
+			.oneway-casing-7 { stroke-width: 0.4px; stroke-dasharray: 1.4,58.6; stroke-dashoffset: 43.2; }
+			.oneway-casing-8 { stroke-width: 0.2px; stroke-dasharray: 1.6,58.4; stroke-dashoffset: 43.2; }
 			
 			.oneway-core-1 { stroke-width: 0.2px; stroke-dasharray: 4,56; stroke-dashoffset: 46.1; }
 			.oneway-core-2 { stroke-width: 0.85px; stroke-dasharray: 0.4,59.6; stroke-dashoffset: 43.3; }

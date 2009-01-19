@@ -27,7 +27,7 @@ while ($_ = <>) {
 		if ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
 		    my $tag = $1;
 		    my $val = $2;
-		    push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
+		    push @tv, $tag, $val unless (IGNORETAGS && $tag =~ /$ignoretags/o);
 		}
 	    }
 	}
@@ -79,7 +79,7 @@ while ($_ = <>) {
 		} elsif ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
 		    my $tag = $1;
 		    my $val = $2;
-		    push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
+		    push @tv, $tag, $val unless (IGNORETAGS && $tag =~ /$ignoretags/o);
 		}
 	    }
 	}
@@ -139,7 +139,7 @@ while ($_ = <>) {
 		} elsif ($tv =~ /\<tag\s+k\=\"([^\"]*)\"\s+v\=\"([^\"]*)\"/) {
 		    my $tag = $1;
 		    my $val = $2;
-		    push @tv, $tag, $val unless ($tag =~ /$ignoretags/o);
+		    push @tv, $tag, $val unless (IGNORETAGS && $tag =~ /$ignoretags/o);
 		}
 	    }
 	}

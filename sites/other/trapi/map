@@ -109,8 +109,8 @@ while (my $query = new CGI::Fast) {
     
     print $query->header(-type=>'text/xml', -charset=>'utf8');
     print "<?xml version='1.0' encoding='UTF-8'?>\n";
-    print "<osm version=\"0.5\" generator=\"Trapi 0.0\">\n";
-    if ($bbs) {
+    print "<osm version=\"0.5\" generator=\"Trapi 0.2\">\n";
+    if (defined $bbs) {
 	print "<bound box=\"$bbs,$bbw,$bbn,$bbe\" origin=\"http://www.openstreetmap.org/api/0.5\"/>\n";
     }
     

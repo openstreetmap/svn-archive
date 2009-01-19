@@ -17,7 +17,7 @@
     <nd ref='107' />
     <nd ref='108' />
     <tag k='highway' v='cycleway' />
-    <tag k='oneway' v='101' />
+    <tag k='oneway' v='-1' />
   </way>
   <way id='1000' user='petschge' visible='true'>
     <nd ref='1' />
@@ -33,7 +33,7 @@
     <nd ref='103' />
     <nd ref='104' />
     <tag k='highway' v='residential' />
-    <tag k='oneway' v='101' />
+    <tag k='oneway' v='-1' />
   </way>
   <way id='109' visible='true'>
     <nd ref='101' />

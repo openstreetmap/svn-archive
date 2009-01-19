@@ -873,6 +873,52 @@
 			</rule>
 		</rule>
 		
+		<!-- Linear cores (under construction) -->
+		<rule e="way" k="highway" v="construction">
+			<rule e="way" k="construction" v="unsurfaced">
+				<line class="highway-core highway-unsurfaced-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="service">
+				<line class="highway-core highway-service-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="unclassified|residential|minor|cycleroad|living_street">
+				<line class="highway-core highway-unclassified-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="road">
+				<line class="highway-core highway-road-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="tertiary_link">
+				<line class="highway-core highway-tertiary-link-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="tertiary">
+				<line class="highway-core highway-tertiary-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="secondary_link">
+				<line class="highway-core highway-secondary-link-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="secondary">
+				<line class="highway-core highway-secondary-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="primary_link">
+				<line class="highway-core highway-primary-link-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="trunk_link">
+				<line class="highway-core highway-trunk-link-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="motorway_link">
+				<line class="highway-core highway-motorway-link-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="primary">
+				<line class="highway-core highway-primary-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="trunk">
+				<line class="highway-core highway-trunk-core under-construction"/>
+			</rule>
+			<rule e="way" k="construction" v="motorway">
+				<line class="highway-core highway-motorway-core under-construction"/>
+			</rule>
+		</rule>
+		
 		<!-- Piste maps -->
 		<rule e="way" k="piste:type" v="downhill">
 			<rule e="way" k="piste:difficulty" v="novice">
@@ -1410,6 +1456,10 @@
 			.waterway-ditch-tunnel-core     { stroke-width: 0.6px; stroke-dasharray: 6, 6; }
 			
 			
+			/* Generic under-construction style - makes any way dashed */
+			.under-construction { stroke-dasharray: 12, 18; }
+			
+
 			.railway-station {
 			fill: red;
 			stroke: #606060;

@@ -578,7 +578,7 @@
 			<rule e="way" k="highway" v="trunk">
 				<area class="highway-casing highway-trunk-casing highway-trunk-area-casing no-bezier"/>
 			</rule>
-			<rule e="way" k="highway|construction" v="motorway">
+			<rule e="way" k="highway" v="motorway">
 				<area class="highway-casing highway-motorway-casing highway-motorway-area-casing no-bezier"/>
 			</rule>
 		</rule>
@@ -727,7 +727,7 @@
 				<rule e="way" k="highway" v="trunk">
 					<line class="highway-casing highway-trunk-casing"/>
 				</rule>
-				<rule e="way" k="highway|construction" v="motorway">
+				<rule e="way" k="highway" v="motorway">
 					<line class="highway-casing highway-motorway-casing"/>
 				</rule>
 				<rule e="way" k="railway" v="tram">
@@ -833,12 +833,8 @@
 			<rule e="way" k="highway" v="trunk">
 				<area class="highway-core highway-trunk-area no-bezier"/>
 			</rule>
-			<rule e="way" k="highway|construction" v="motorway">
-				<rule e="way" k="highway" v="construction">
-				</rule>
-				<else>
-					<area class="highway-core highway-motorway-area no-bezier"/>
-				</else>
+			<rule e="way" k="highway" v="motorway">
+				<area class="highway-core highway-motorway-area no-bezier"/>
 			</rule>
 		</rule>
 		
@@ -1022,13 +1018,8 @@
 				<rule e="way" k="highway" v="trunk">
 					<line class="highway-core highway-trunk-core"/>
 				</rule>
-				<rule e="way" k="highway|construction" v="motorway">
-					<rule e="way" k="highway" v="construction">
-						<line class="highway-core highway-motorway-core" mask-class="under-construction" smart-linecap="no"/>
-					</rule>
-					<else>
-						<line class="highway-core highway-motorway-core"/>
-					</else>
+				<rule e="way" k="highway" v="motorway">
+					<line class="highway-core highway-motorway-core"/>
 				</rule>
 				<rule e="way" k="railway" v="tram">
 					<line class="railway-core railway-tram-core"/>
@@ -1182,103 +1173,129 @@
 		<!-- Linear cores (under construction) -->
 		<rule e="way" k="highway" v="construction">
 			<rule e="way" k="construction" v="steps">
-				<line class="highway-core highway-steps-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-steps-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="footway|footpath">
-				<line class="highway-core highway-footway-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-footway-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="pedestrian">
-				<line class="highway-core highway-pedestrian-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-pedestrian-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="cycleway">
-				<line class="highway-core highway-cycleway-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-cycleway-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="path">
 				<rule e="way" k="bicycle" v="yes|designated">
-					<line class="highway-core highway-cycleway-core under-construction"/>
+					<line class="under-construction-1"/>
+					<line class="highway-core highway-cycleway-core under-construction-2"/>
 				</rule>
 				<else>
 					<rule e="way" k="horse" v="yes|designated">
-						<line class="highway-core highway-bridleway-core under-construction"/>
+						<line class="under-construction-1"/>
+						<line class="highway-core highway-bridleway-core under-construction-2"/>
 					</rule>
 					<else>
-						<line class="highway-core highway-footway-core under-construction"/>
+						<line class="under-construction-1"/>
+						<line class="highway-core highway-footway-core under-construction-2"/>
 					</else></else>
 			</rule>
 			<rule e="way" k="construction" v="bridleway">
-				<line class="highway-core highway-bridleway-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-bridleway-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="byway">
-				<line class="highway-core highway-byway-1-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-byway-1-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="track">
-				<line class="highway-core highway-track-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-track-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="unsurfaced">
-				<line class="highway-core highway-unsurfaced-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-unsurfaced-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="service">
-				<line class="highway-core highway-service-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-service-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="unclassified|residential|minor|living_street|cycleroad">
-				<line class="highway-core highway-unclassified-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-unclassified-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="road">
-				<line class="highway-core highway-road-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-road-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="tertiary_link">
-				<line class="highway-core highway-tertiary-link-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-tertiary-link-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="tertiary">
-				<line class="highway-core highway-tertiary-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-tertiary-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="secondary_link">
-				<line class="highway-core highway-secondary-link-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-secondary-link-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="secondary">
-				<line class="highway-core highway-secondary-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-secondary-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="primary_link">
-				<line class="highway-core highway-primary-link-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-primary-link-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="trunk_link">
-				<line class="highway-core highway-trunk-link-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-trunk-link-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="motorway_link">
-				<line class="highway-core highway-motorway-link-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-motorway-link-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="primary">
-				<line class="highway-core highway-primary-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-primary-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="trunk">
-				<line class="highway-core highway-trunk-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-trunk-core under-construction-2"/>
 			</rule>
-			<!--
-				rule e="way" k="construction" v="motorway"
-				line class='highway-casing highway-motorway-casing' mask-class='highway-motorway-core under-construction' smart-linecap='no'/>
-		line class='highway-core highway-motorway-core' mask-class='under-construction' smart-linecap='no'/
-		/rule
-		-->
+			<rule e="way" k="construction" v="motorway">
+				<line class="under-construction-1"/>
+				<line class="highway-core highway-motorway-core under-construction-2"/>
+			</rule>
 		</rule>
 		<rule e="way" k="railway" v="construction">
 			<rule e="way" k="construction" v="monorail">
-				<line class="railway-core railway-monorail-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="railway-core railway-monorail-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="preserved">
-				<line class="railway-core railway-preserved-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="railway-core railway-preserved-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="narrow_gauge">
-				<line class="railway-core railway-narrow-gauge-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="railway-core railway-narrow-gauge-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="tram">
-				<line class="railway-core railway-tram-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="railway-core railway-tram-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="subway">
 				<line class="railway-casing railway-subway-construction-casing"/>
 				<line class="railway-core railway-subway-construction-core"/>
 			</rule>
 			<rule e="way" k="construction" v="light_rail|incline">
-				<line class="railway-core railway-light-rail-core under-construction"/>
+				<line class="under-construction-1"/>
+				<line class="railway-core railway-light-rail-core under-construction-2"/>
 			</rule>
 			<rule e="way" k="construction" v="rail">
 				<line class="railway-casing railway-rail-construction-casing"/>
@@ -1286,7 +1303,384 @@
 				<line class="railway-core railway-rail-2-construction-core" smart-linecap="no"/>
 			</rule>
 		</rule>
-		
+
+		<!-- Linear cores (planned) -->
+		<rule e="way" k="highway" v="planned">
+			<rule e="way" k="planned" v="steps">
+				<line class="highway-core highway-steps-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="footway|footpath">
+				<line class="highway-core highway-footway-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="pedestrian">
+				<line class="highway-core highway-pedestrian-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="cycleway">
+				<line class="highway-core highway-cycleway-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="path">
+				<rule e="way" k="bicycle" v="yes|designated">
+					<line class="highway-core highway-cycleway-core planned"/>
+				</rule>
+				<else>
+					<rule e="way" k="horse" v="yes|designated">
+						<line class="highway-core highway-bridleway-core planned"/>
+					</rule>
+					<else>
+						<line class="highway-core highway-footway-core planned"/>
+					</else></else>
+			</rule>
+			<rule e="way" k="planned" v="bridleway">
+				<line class="highway-core highway-bridleway-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="byway">
+				<line class="highway-core highway-byway-1-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="track">
+				<line class="highway-core highway-track-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="unsurfaced">
+				<line class="highway-core highway-unsurfaced-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="service">
+				<line class="highway-core highway-service-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="unclassified|residential|minor|living_street|cycleroad">
+				<line class="highway-core highway-unclassified-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="road">
+				<line class="highway-core highway-road-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="tertiary_link">
+				<line class="highway-core highway-tertiary-link-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="tertiary">
+				<line class="highway-core highway-tertiary-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="secondary_link">
+				<line class="highway-core highway-secondary-link-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="secondary">
+				<line class="highway-core highway-secondary-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="primary_link">
+				<line class="highway-core highway-primary-link-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="trunk_link">
+				<line class="highway-core highway-trunk-link-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="motorway_link">
+				<line class="highway-core highway-motorway-link-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="primary">
+				<line class="highway-core highway-primary-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="trunk">
+				<line class="highway-core highway-trunk-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="motorway">
+				<line class="highway-core highway-motorway-core planned"/>
+			</rule>
+		</rule>
+		<rule e="way" k="railway" v="planned">
+			<rule e="way" k="planned" v="monorail">
+				<line class="railway-core railway-monorail-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="preserved">
+				<line class="railway-core railway-preserved-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="narrow_gauge">
+				<line class="railway-core railway-narrow-gauge-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="tram">
+				<line class="railway-core railway-tram-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="subway">
+				<line class="railway-casing railway-subway-planned-casing"/>
+				<line class="railway-core railway-subway-planned-core"/>
+			</rule>
+			<rule e="way" k="planned" v="light_rail|incline">
+				<line class="railway-core railway-light-rail-core planned"/>
+			</rule>
+			<rule e="way" k="planned" v="rail">
+				<line class="railway-casing railway-rail-planned-casing"/>
+				<line class="railway-core railway-rail-1-planned-core"/>
+				<line class="railway-core railway-rail-2-planned-core" smart-linecap="no"/>
+			</rule>
+		</rule>
+
+		<!-- Linear cores (disused) -->
+		<rule e="way" k="highway" v="disused">
+			<rule e="way" k="disused" v="steps">
+				<line class="highway-core highway-steps-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="footway|footpath">
+				<line class="highway-core highway-footway-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="pedestrian">
+				<line class="highway-core highway-pedestrian-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="cycleway">
+				<line class="highway-core highway-cycleway-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="path">
+				<rule e="way" k="bicycle" v="yes|designated">
+					<line class="highway-core highway-cycleway-core disused-1"/>
+					<line class="disused-2"/>
+				</rule>
+				<else>
+					<rule e="way" k="horse" v="yes|designated">
+						<line class="highway-core highway-bridleway-core disused-1"/>
+						<line class="disused-2"/>
+					</rule>
+					<else>
+						<line class="highway-core highway-footway-core disused-1"/>
+						<line class="disused-2"/>
+					</else></else>
+			</rule>
+			<rule e="way" k="disused" v="bridleway">
+				<line class="highway-core highway-bridleway-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="byway">
+				<line class="highway-core highway-byway-1-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="track">
+				<line class="highway-core highway-track-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="unsurfaced">
+				<line class="highway-core highway-unsurfaced-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="service">
+				<line class="highway-core highway-service-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="unclassified|residential|minor|living_street|cycleroad">
+				<line class="highway-core highway-unclassified-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="road">
+				<line class="highway-core highway-road-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="tertiary_link">
+				<line class="highway-core highway-tertiary-link-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="tertiary">
+				<line class="highway-core highway-tertiary-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="secondary_link">
+				<line class="highway-core highway-secondary-link-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="secondary">
+				<line class="highway-core highway-secondary-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="primary_link">
+				<line class="highway-core highway-primary-link-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="trunk_link">
+				<line class="highway-core highway-trunk-link-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="motorway_link">
+				<line class="highway-core highway-motorway-link-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="primary">
+				<line class="highway-core highway-primary-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="trunk">
+				<line class="highway-core highway-trunk-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="motorway">
+				<line class="highway-core highway-motorway-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+		</rule>
+		<rule e="way" k="railway" v="disused">
+			<rule e="way" k="disused" v="monorail">
+				<line class="railway-core railway-monorail-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="preserved">
+				<line class="railway-core railway-preserved-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="narrow_gauge">
+				<line class="railway-core railway-narrow-gauge-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="tram">
+				<line class="railway-core railway-tram-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="subway">
+				<line class="railway-casing railway-subway-disused-casing"/>
+				<line class="railway-core railway-subway-disused-core"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="light_rail|incline">
+				<line class="railway-core railway-light-rail-core disused-1"/>
+				<line class="disused-2"/>
+			</rule>
+			<rule e="way" k="disused" v="rail">
+				<line class="railway-casing railway-rail-disused-casing"/>
+				<line class="railway-core railway-rail-1-disused-core"/>
+				<line class="railway-core railway-rail-2-disused-core" smart-linecap="no"/>
+				<line class="disused-2"/>
+			</rule>
+		</rule>
+
+		<!-- Linear cores (abandoned) -->
+		<rule e="way" k="highway" v="abandoned">
+			<rule e="way" k="abandoned" v="steps">
+				<line class="highway-core highway-steps-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="footway|footpath">
+				<line class="highway-core highway-footway-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="pedestrian">
+				<line class="highway-core highway-pedestrian-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="cycleway">
+				<line class="highway-core highway-cycleway-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="path">
+				<rule e="way" k="bicycle" v="yes|designated">
+					<line class="highway-core highway-cycleway-core abandoned-1"/>
+					<line class="abandoned-2"/>
+				</rule>
+				<else>
+					<rule e="way" k="horse" v="yes|designated">
+						<line class="highway-core highway-bridleway-core abandoned-1"/>
+						<line class="abandoned-2"/>
+					</rule>
+					<else>
+						<line class="highway-core highway-footway-core abandoned-1"/>
+						<line class="abandoned-2"/>
+					</else></else>
+			</rule>
+			<rule e="way" k="abandoned" v="bridleway">
+				<line class="highway-core highway-bridleway-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="byway">
+				<line class="highway-core highway-byway-1-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="track">
+				<line class="highway-core highway-track-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="unsurfaced">
+				<line class="highway-core highway-unsurfaced-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="service">
+				<line class="highway-core highway-service-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="unclassified|residential|minor|living_street|cycleroad">
+				<line class="highway-core highway-unclassified-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="road">
+				<line class="highway-core highway-road-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="tertiary_link">
+				<line class="highway-core highway-tertiary-link-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="tertiary">
+				<line class="highway-core highway-tertiary-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="secondary_link">
+				<line class="highway-core highway-secondary-link-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="secondary">
+				<line class="highway-core highway-secondary-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="primary_link">
+				<line class="highway-core highway-primary-link-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="trunk_link">
+				<line class="highway-core highway-trunk-link-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="motorway_link">
+				<line class="highway-core highway-motorway-link-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="primary">
+				<line class="highway-core highway-primary-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="trunk">
+				<line class="highway-core highway-trunk-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="motorway">
+				<line class="highway-core highway-motorway-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+		</rule>
+		<rule e="way" k="railway" v="abandoned">
+			<rule e="way" k="abandoned" v="monorail">
+				<line class="railway-core railway-monorail-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="preserved">
+				<line class="railway-core railway-preserved-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="narrow_gauge">
+				<line class="railway-core railway-narrow-gauge-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="tram">
+				<line class="railway-core railway-tram-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="subway">
+				<line class="railway-casing railway-subway-abandoned-casing"/>
+				<line class="railway-core railway-subway-abandoned-core"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="light_rail|incline">
+				<line class="railway-core railway-light-rail-core abandoned-1"/>
+				<line class="abandoned-2"/>
+			</rule>
+			<rule e="way" k="abandoned" v="rail">
+				<line class="railway-casing railway-rail-abandoned-casing"/>
+				<line class="railway-core railway-rail-1-abandoned-core"/>
+				<line class="railway-core railway-rail-2-abandoned-core" smart-linecap="no"/>
+				<line class="abandoned-2"/>
+			</rule>
+		</rule>
+
 		<!-- access restrictions -->
 		<rule e="way" k="highway" v="*">
 			<rule e="way" k="area" v="yes|true">
@@ -2897,7 +3291,16 @@
 			.railway-rail-construction-casing       { stroke-width: 1.0px; stroke: #b0b0b0; stroke-dasharray: 3.2, 3.2; }
 			.railway-rail-1-construction-core       { stroke-width: 0.8px; stroke: #ffffff; stroke-dasharray: 3.2, 3.2; }
 			.railway-rail-2-construction-core       { stroke-width: 1.5px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 5.2; stroke-dashoffset: 5.4; }
-			
+			.railway-rail-planned-casing       { stroke-width: 1.0px; stroke: #b0b0b0; stroke-dasharray: 3.2, 6.4; }
+			.railway-rail-1-planned-core       { stroke-width: 0.8px; stroke: #ffffff; stroke-dasharray: 3.2, 6.4; }
+			.railway-rail-2-planned-core       { stroke-width: 1.5px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 8.4; stroke-dashoffset: 8.6; }
+			.railway-rail-abandoned-casing       { stroke-width: 1.0px; stroke: #b0b0b0; stroke-dasharray: 3.2, 3.2; }
+			.railway-rail-1-abandoned-core       { stroke-width: 0.8px; stroke: #ffffff; stroke-dasharray: 3.2, 3.2; }
+			.railway-rail-2-abandoned-core       { stroke-width: 1.5px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 5.2; stroke-dashoffset: 5.4; }
+			.railway-rail-disused-casing       { stroke-width: 1.0px; stroke: #b0b0b0; stroke-dasharray: 3.2, 3.2; }
+			.railway-rail-1-disused-core       { stroke-width: 0.8px; stroke: #ffffff; stroke-dasharray: 3.2, 3.2; }
+			.railway-rail-2-disused-core       { stroke-width: 1.5px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 5.2; stroke-dashoffset: 5.4; }
+
 			.railway-light-rail-bridge-casing       { stroke-width: 2.05px; }
 			.railway-light-rail-bridge-core         { stroke-width: 1.55px; }
 			.railway-light-rail-casing              { stroke-width: 0.8px; stroke: #606060; }
@@ -2907,9 +3310,15 @@
 			.railway-subway-bridge-core             { stroke-width: 1.55px; }
 			.railway-subway-casing                  { stroke-width: 0.8px; stroke: #b0b0b0; }
 			.railway-subway-core                    { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 3; }
+			.railway-subway-planned-casing     { stroke-width: 0.8px; stroke: #b0b0b0; stroke-dasharray: 4, 8; }
+			.railway-subway-planned-core       { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 11; stroke-dashoffset: 10.5; }
 			.railway-subway-construction-casing     { stroke-width: 0.8px; stroke: #b0b0b0; stroke-dasharray: 4, 4; }
 			.railway-subway-construction-core       { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 7; stroke-dashoffset: 6.5; }
-			
+			.railway-subway-disused-casing     { stroke-width: 0.8px; stroke: #b0b0b0; stroke-dasharray: 4, 4; }
+			.railway-subway-disused-core       { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 7; stroke-dashoffset: 6.5; }
+			.railway-subway-abandoned-casing     { stroke-width: 0.8px; stroke: #b0b0b0; stroke-dasharray: 4, 4; }
+			.railway-subway-abandoned-core       { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 7; stroke-dashoffset: 6.5; }
+
 			.railway-tram-bridge-casing             { stroke-width: 2.05px; }
 			.railway-tram-bridge-core               { stroke-width: 1.55px; }
 			.railway-tram-casing                    { stroke-width: 0.8px; stroke: #606060; }
@@ -3134,7 +3543,7 @@
 			
 			.highway-footway-bridge-casing          { stroke-width: 1.2px; }
 			.highway-footway-bridge-core            { stroke-width: 1px; }
-			.highway-footway-casing                 { stroke-width: 0.6px;   stroke: #707070; stroke-dasharray: 0.2, 0.2; stroke-linecap: butt;}
+			.highway-footway-casing                 { stroke-width: 0.6px;   stroke: #707070; stroke-dasharray: 0.2, 0.2; stroke-linecap: butt; }
 			.highway-footway-area-casing            { stroke-width: 0.1px;}
 			.highway-footway-core                   { stroke-width: 0.5px;   stroke: #e5e0c2; }
 			.highway-footway-area                   { fill: #e5e0c2; }
@@ -3286,8 +3695,19 @@
 			
 			
 			/* Generic under-construction style - makes any way dashed */
-			.under-construction { stroke-dasharray: 4, 4; stroke-linecap: butt;}
+			.under-construction-1 { stroke-width: 0.1px; stroke: #707070; stroke-dasharray: 0.5, 0.5; stroke-linecap: butt; fill:none; }
+			.under-construction-2 { stroke-dasharray: 4, 4; stroke-linecap: butt;}
 			
+			/* Generic planned style - makes any way dashed */
+			.planned { stroke-dasharray: 0.5, 3; stroke-linecap: butt;}
+
+			/* Generic disused style - makes any way dashed */
+			.disused-1 { stroke-dasharray: 1, 2; stroke-linecap: butt;}
+			.disused-2 { stroke-width: 3px; stroke: #600000; stroke-dasharray: 0.1, 2.9; stroke-dashoffset: 2.55; stroke-linecap: butt; fill:none; }
+
+			/* Generic abandoned style - makes any way dashed */
+			.abandoned-1 { stroke-dasharray: 0.7, 5.8; stroke-linecap: butt;}
+			.abandoned-2 { stroke-width: 3px; stroke: #600000; stroke-dasharray: 0.3, 6.2; stroke-dashoffset: 6.2; stroke-linecap: butt; fill:none; }
 			
 			/* Ferry */
 			.route-ferry {

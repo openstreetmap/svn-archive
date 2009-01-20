@@ -275,6 +275,16 @@
 			<area class="waterway-riverbank"/>
 		</rule>
 		
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="highway" v="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned">
+			</rule>
+			<else>
+				<rule e="way" k="bicycle" v="no">
+					<line class="highway-nobicycle-1" smart-linecap="no" />
+				</rule>
+			</else>
+		</rule>
+
 		<!-- Bridge casings -->
 		<rule e="way" k="bridge" v="yes|true">
 			<rule e="way" k="railway" v="rail">
@@ -1752,6 +1762,16 @@
 				<line class="railway-core railway-rail-2-abandoned-core" smart-linecap="no"/>
 				<line class="abandoned-2"/>
 			</rule>
+		</rule>
+
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="highway" v="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned">
+			</rule>
+			<else>
+				<rule e="way" k="bicycle" v="no">
+					<line class="highway-nobicycle-2" smart-linecap="no" />
+				</rule>
+			</else>
 		</rule>
 
 		<!-- access restrictions -->
@@ -3366,6 +3386,9 @@
 			font-size: 1.0px; fill: #c0c0c0;
 			}
 			
+			.highway-nobicycle-1 { stroke-width: 2.3px; stroke: #000080; stroke-dasharray: 0.3,1.7; stroke-linecap: butt; fill: none; }
+			.highway-nobicycle-2 { stroke-width: 1.9px; stroke: #000080; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; stroke-dashoffset: 1.9; fill: none; }
+
 			.bridge-casing {
 			stroke-linecap: butt;
 			stroke-linejoin: round;

@@ -3430,15 +3430,15 @@
 			.railway-rail-construction-casing       { stroke-width: 1.0px; stroke: #b0b0b0; stroke-dasharray: 3.2, 3.2; }
 			.railway-rail-1-construction-core       { stroke-width: 0.8px; stroke: #ffffff; stroke-dasharray: 3.2, 3.2; }
 			.railway-rail-2-construction-core       { stroke-width: 1.5px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 5.2; stroke-dashoffset: 5.4; }
-			.railway-rail-planned-casing       { stroke-width: 1.0px; stroke: #b0b0b0; stroke-dasharray: 3.2, 6.4; }
-			.railway-rail-1-planned-core       { stroke-width: 0.8px; stroke: #ffffff; stroke-dasharray: 3.2, 6.4; }
-			.railway-rail-2-planned-core       { stroke-width: 1.5px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 8.4; stroke-dashoffset: 8.6; }
-			.railway-rail-abandoned-casing       { stroke-width: 1.0px; stroke: #b0b0b0; stroke-dasharray: 3.2, 3.2; }
-			.railway-rail-1-abandoned-core       { stroke-width: 0.8px; stroke: #ffffff; stroke-dasharray: 3.2, 3.2; }
-			.railway-rail-2-abandoned-core       { stroke-width: 1.5px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 5.2; stroke-dashoffset: 5.4; }
-			.railway-rail-disused-casing       { stroke-width: 1.0px; stroke: #b0b0b0; stroke-dasharray: 3.2, 3.2; }
-			.railway-rail-1-disused-core       { stroke-width: 0.8px; stroke: #ffffff; stroke-dasharray: 3.2, 3.2; }
-			.railway-rail-2-disused-core       { stroke-width: 1.5px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 5.2; stroke-dashoffset: 5.4; }
+			.railway-rail-planned-casing            { stroke-width: 1.0px; stroke: #b0b0b0; stroke-dasharray: 3.2, 6.4; }
+			.railway-rail-1-planned-core            { stroke-width: 0.8px; stroke: #ffffff; stroke-dasharray: 3.2, 6.4; }
+			.railway-rail-2-planned-core            { stroke-width: 1.5px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 8.4; stroke-dashoffset: 8.6; }
+			.railway-rail-abandoned-casing          { stroke-width: 0.6px; stroke: #b0b0b0; stroke-dasharray: 3.2, 3.2; }
+			.railway-rail-1-abandoned-core          { stroke-width: 0.4px; stroke: #ffffff; stroke-dasharray: 3.2, 3.2; }
+			.railway-rail-2-abandoned-core          { stroke-width: 1.1px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 5.2; stroke-dashoffset: 5.4; }
+			.railway-rail-disused-casing            { stroke-width: 0.6px; stroke: #b0b0b0; stroke-dasharray: 3.2, 3.2; }
+			.railway-rail-1-disused-core            { stroke-width: 0.4px; stroke: #ffffff; stroke-dasharray: 3.2, 3.2; }
+			.railway-rail-2-disused-core            { stroke-width: 1.1px; stroke: #b0b0b0; stroke-dasharray: 0.1, 1.0, 0.1, 5.2; stroke-dashoffset: 5.4; }
 
 			.railway-light-rail-bridge-casing       { stroke-width: 2.05px; }
 			.railway-light-rail-bridge-core         { stroke-width: 1.55px; }
@@ -3449,14 +3449,14 @@
 			.railway-subway-bridge-core             { stroke-width: 1.55px; }
 			.railway-subway-casing                  { stroke-width: 0.8px; stroke: #b0b0b0; }
 			.railway-subway-core                    { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 3; }
-			.railway-subway-planned-casing     { stroke-width: 0.8px; stroke: #b0b0b0; stroke-dasharray: 4, 8; }
-			.railway-subway-planned-core       { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 11; stroke-dashoffset: 10.5; }
+			.railway-subway-planned-casing          { stroke-width: 0.8px; stroke: #b0b0b0; stroke-dasharray: 4, 8; }
+			.railway-subway-planned-core            { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 11; stroke-dashoffset: 10.5; }
 			.railway-subway-construction-casing     { stroke-width: 0.8px; stroke: #b0b0b0; stroke-dasharray: 4, 4; }
 			.railway-subway-construction-core       { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 7; stroke-dashoffset: 6.5; }
-			.railway-subway-disused-casing     { stroke-width: 0.8px; stroke: #b0b0b0; stroke-dasharray: 4, 4; }
-			.railway-subway-disused-core       { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 7; stroke-dashoffset: 6.5; }
-			.railway-subway-abandoned-casing     { stroke-width: 0.8px; stroke: #b0b0b0; stroke-dasharray: 4, 4; }
-			.railway-subway-abandoned-core       { stroke-width: 0.6px; stroke: #ffffff; stroke-dasharray: 1, 7; stroke-dashoffset: 6.5; }
+			.railway-subway-disused-casing          { stroke-width: 0.6px; stroke: #b0b0b0; stroke-dasharray: 4, 4; }
+			.railway-subway-disused-core            { stroke-width: 0.4px; stroke: #ffffff; stroke-dasharray: 1, 7; stroke-dashoffset: 6.5; }
+			.railway-subway-abandoned-casing        { stroke-width: 0.6px; stroke: #b0b0b0; stroke-dasharray: 4, 4; }
+			.railway-subway-abandoned-core          { stroke-width: 0.4px; stroke: #ffffff; stroke-dasharray: 1, 7; stroke-dashoffset: 6.5; }
 
 			.railway-tram-bridge-casing             { stroke-width: 2.05px; }
 			.railway-tram-bridge-core               { stroke-width: 1.55px; }

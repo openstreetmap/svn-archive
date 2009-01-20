@@ -23,7 +23,7 @@ our (%togc, $cachecount);
 sub garbagecollect() {
     our (%filecache, %whengc, $devnull);
     my @togc = sort {($whengc{$a} // 0) <=> ($whengc{$b} // 0) ||
-	 ($togc{$a} // 0) <=> ($togc{b} // 0)} keys %togc;
+	 ($togc{$a} // 0) <=> ($togc{$b} // 0)} keys %togc;
     my $todo = GCCOUNT;
     while (my $ptn = shift @togc) {
 	# avoid tiles being used

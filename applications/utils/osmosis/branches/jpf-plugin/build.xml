@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Osmosis" default="all" basedir=".">
+	<description>
+		Builds the Osmosis data replication library.
+	</description>
+	
+	<!-- set global properties for this build -->
+	<property name="project.name" value="osmosis"/>
+	<property name="project.version" value="0.30.1"/>
+	
+	<!-- Define a classpath containing all lib jars. -->
+	<path id="libclasspath">
+		<fileset dir="lib" includes="**/*.jar"/>
+	</path>
+	
+	<target name="init" description="Perform initialisation required by all other build steps.">
+		<!-- Create the time stamp -->
+		<tstamp/>
+	</target>	
+	
+	<target name="build_src" depends="init" description="Compile source code into class files.">
+		<!-- Update the version number in the main class. -->
+		<replaceregexp
+			byline="true"
+			file="src/com/bretth/osmosis/core/OsmosisConstants.java"
+			match="static final String VERSION = &quot;(.*)&quot;"
+			replace="static final String VERSION = &quot;${project.version}&quot;"
+		/>
+		<!-- Create the build directory structure. -->
+		<mkdir dir="build"/>
+		<mkdir dir="build/src"/>
+		<!-- Compile the java code from src into build/src -->
+		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="libclasspath"/>
+		<!-- Copy all resource files from src into build/src -->
+		<copy todir="build/src">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		<!-- Put a version number file in the build/src directory. -->
+		<touch file="build/src/version-${project.version}"/>
+	</target>
+	
+	<target name="build_test" depends="build_src" description="Compile test source code into class files.">
+		<!-- Create the build directory structure. -->
+		<mkdir dir="build/test"/>
+		
+		<!-- Copy the test data into the test data input directory -->
+		<copy todir="test/data/input">
+			<fileset dir="test/data/template"/>
+		</copy>
+		<!-- Replace the version tag in all test data. -->
+		<replace token="%VERSION%" value="${project.version}" dir="test/data/input"/>
+		
+		<!-- Compile the java test code with the main project classes as a dependency. -->
+		<javac srcdir="test" destdir="build/test" debug="on" debuglevel="lines,vars,source">
+			<classpath>
+				<path refid="libclasspath"/>
+				<path location="build/src"/>
+			</classpath>
+		</javac>
+		<!-- Copy all resource files from the test directory into the build test directory. -->
+		<copy todir="build/test">
+			<fileset dir="test">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="build_binary" depends="build_src" description="Generates the binaries for the distribution.">
+		<!-- Create the binary directory -->
+		<mkdir dir="build/binary"/>
+		
+		<!-- Create a manifest for the jar file. -->
+		<manifest file="build/binary/jar.txt">
+			<attribute name="Main-Class" value="com.bretth.osmosis.core.Osmosis"/>
+			<attribute name="Built-By" value="${user.name}"/>
+			<attribute name="Implementation-Title" value="Osmosis Library"/>
+			<attribute name="Implementation-Version" value="${project.version} (${TODAY})"/> 
+			<attribute name="Implementation-Vendor" value="Brett Henderson"/>
+		</manifest>
+		
+		<!-- Create the jar archive. -->
+		<jar
+			destfile="build/binary/${project.name}.jar"
+			basedir="build/src"
+			manifest="build/binary/jar.txt"/>
+		
+		<!-- Copy the jar to the root directory where it can be run. -->
+		<copy todir=".">
+			<fileset dir="build/binary">
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- Produces javadoc output from the source code. -->
+	<target name="javadoc" depends="init" description="Products javadoc documentation from the source code.">
+		<javadoc packagenames="*" sourcepath="src" destdir="doc/api" classpathref="libclasspath"/>
+	</target>
+	
+	<target name="dist" depends="build_binary,javadoc" description="Generate the distribution.">
+		<!-- Create the distribution zip file. -->
+		<mkdir dir="dist"/>
+		<zip destfile="dist/${project.name}-${project.version}.zip">
+			<zipfileset prefix="${project.name}-${project.version}" dir=".">
+				<exclude name="build/"/>
+				<exclude name="dist/"/>
+				<exclude name="eclipse/"/>
+			</zipfileset>
+		</zip>
+		<tar destfile="dist/${project.name}-${project.version}.tar.gz" compression="gzip">
+			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
+				<include name="bin/*"/>
+			</tarfileset>
+			<tarfileset prefix="${project.name}-${project.version}" dir=".">
+				<exclude name="bin/*"/>
+				<exclude name="build/"/>
+				<exclude name="dist/"/>
+				<exclude name="eclipse/"/>
+			</tarfileset>
+		</tar>
+	</target>
+	
+	<!-- Runs all of the unit tests in the application. -->
+	<target name="test" depends="build_test" description="Run automated test cases.">
+		<junit fork="yes" maxmemory="512m" printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
+			<formatter type="plain" usefile="true"/>
+			<classpath>
+				<path refid="libclasspath"/>
+				<path location="build/src"/>
+				<path location="build/test"/>
+			</classpath>
+			<batchtest todir="build/test">
+				<fileset dir="build/test">
+					<include name="**/*Test*.class"/>
+					<exclude name="**/*TestSuite*.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<!-- Executes all major build targets. -->
+	<target name="all" depends="dist, test"/>
+	
+	<target name="clean" description="Clean up the project tree.">
+		<!-- Delete the build and dist directory trees. -->
+		<delete dir="build"/>
+		<delete dir="dist"/>
+		<!-- Delete the doc/api directory tree. -->
+		<delete dir="doc/api"/>
+		<!-- Delete the generated test data files. -->
+		<delete>
+			<fileset dir="test/data/input">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+	</target>
+</project>

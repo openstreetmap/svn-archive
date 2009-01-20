@@ -1688,7 +1688,7 @@
 			stroke-width: 0.2px;
 			}
 			.military-area {
-			fill: #808000;
+			fill: #d0d050;
 			stroke: #f0f0f0;
 			stroke-width: 0.2px;
 			}

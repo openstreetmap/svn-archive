@@ -919,6 +919,12 @@
 			</rule>
 		</rule>
 		
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="construction" v="yes|true">
+				<line class="wrong-under-construction"/>
+			</rule>
+		</rule>
+
 		<!-- Piste maps -->
 		<rule e="way" k="piste:type" v="downhill">
 			<rule e="way" k="piste:difficulty" v="novice">
@@ -1458,7 +1464,8 @@
 			
 			/* Generic under-construction style - makes any way dashed */
 			.under-construction { stroke-dasharray: 12, 18; }
-			
+			.wrong-under-construction { stroke-width: 20px; stroke: #ffffff; stroke-dasharray: 20, 20; fill:none; }
+
 
 			.railway-station {
 			fill: red;

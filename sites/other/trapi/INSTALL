@@ -39,7 +39,11 @@ KEEPOPEN should be a bit less, closer to MAXOPEN will mean more CPU
 and less file opening.  SPLIT is the number of bytes in a node data
 file before splitting to higher zoom.  (16 bytes/node) IGNORETAGS is a
 regular expression to match tags that will not be stored in the
-database.  (Use '^$' to store all tags.)
+database.  (Use '' to store all tags.)  GCCOUNT is the number of tiles
+to garbage collect per change file processed.  (Setting it low will
+cause the list of tiles to be garbage-collected to build up in busy
+times.)  OSCDELAY, WAITDELAY, and WAITFAIL determine how the change
+files are checked for.
 
 The .pm files need to be where your perl will find them, and the
 executable files where your shell will find them.

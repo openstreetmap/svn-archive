@@ -875,6 +875,12 @@
 			</rule>
 		</rule>
 
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="construction" v="yes|true">
+				<line class="wrong-under-construction"/>
+			</rule>
+		</rule>
+
 		<!-- Aerialways -->
 		<rule e="way" k="aerialway" v="cable_car|gondola">
 			<line class="aerialway-line no-bezier" smart-linecap="no"/>
@@ -1338,6 +1344,7 @@
 			
 			/* Generic under-construction style - makes any way dashed */
 			.under-construction { stroke-dasharray: 16, 26; }
+			.wrong-under-construction { stroke-width: 25px; stroke: #ffffff; stroke-dasharray: 25, 25; fill:none; }
 			
 
 			/* Ferry */

@@ -1064,6 +1064,9 @@
 		
 		<!-- access restrictions -->
 		<rule e="way" k="highway" v="*">
+			<rule e="way" k="construction" v="yes|true">
+				<line class="wrong-under-construction"/>
+			</rule>
 			<rule e="way" k="area" v="yes|true">
 				<rule e="way" k="access" v="private">
 					<area class="access-private-area"/>
@@ -2060,7 +2063,7 @@
 			
 			/* Generic under-construction style - makes any way dashed */
 			.under-construction { stroke-dasharray: 8, 10; }
-			
+			.wrong-under-construction { stroke-width: 5px; stroke: #ffffff; stroke-dasharray: 6, 6; fill:none; }
 			
 			/* Ferry */
 			.route-ferry {

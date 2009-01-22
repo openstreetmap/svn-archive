@@ -11,7 +11,6 @@ import javax.swing.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
-import org.openstreetmap.josm.plugins.remotecontrol.Util.Version;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
 
@@ -29,10 +28,7 @@ public class RemoteControlPreferences implements PreferenceSetting
 
     public void addGui(final PreferenceDialog gui)
     {
-        Version ver = Util.getVersion();
         String description = tr("A plugin that allows JOSM to be controlled from other applications.");
-        if (ver != null)
-            description += "<br><br>" + tr("Version: {0}<br>Last change at {1}", ver.revision, ver.time) + "<br><br>";
         JPanel remote = gui.createPreferenceTab("remotecontrol.gif", tr("Remote Control"), tr("Settings for the Remote Control plugin."));
         remote.add(new JLabel("<html>"+tr("The Remote Control plugin will always listen on port 8111 on localhost." +
                 "The port is not variable because it is referenced by external applications talking to the plugin.") + "</html>"), GBC.eol().insets(0,5,0,10).fill(GBC.HORIZONTAL));

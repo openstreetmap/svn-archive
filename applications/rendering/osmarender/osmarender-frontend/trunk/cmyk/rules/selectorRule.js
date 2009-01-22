@@ -13,6 +13,12 @@ dojo.declare("cmyk.rules.selectorRule",cmyk.rules.Rule,{
 	      @memberOf cmyk.rules
 	      @extends cmyk.rules.Rule
 	*/
-	constructor: function() {
+	constructor: function(node) {
+		var selector=node.getAttribute("s");
+
+		this.getSelector = function() {
+			return dojo.clone(selector);
+		};
+
 	},
 });

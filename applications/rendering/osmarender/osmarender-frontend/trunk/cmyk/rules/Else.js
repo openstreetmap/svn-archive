@@ -13,6 +13,6 @@ dojo.declare("cmyk.rules.Else",cmyk.rules.Directive,{
 	      @memberOf cmyk.rules
 	      @extends cmyk.rules.Directive
 	*/
-	constructor: function() {
+	constructor: function(node) {
 	},
 });

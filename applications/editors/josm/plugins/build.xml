@@ -30,7 +30,6 @@
         <ant antfile="build.xml" target="dist" dir="usertools"/>
         <ant antfile="build.xml" target="dist" dir="utilsplugin"/>
         <ant antfile="build.xml" target="dist" dir="validator"/>
-        <ant antfile="build.xml" target="dist" dir="waypoints"/>
         <ant antfile="build.xml" target="dist" dir="wmsplugin"/>
     </target>
     <target name="build_defect" depends="compile">
@@ -65,7 +64,6 @@
         <ant antfile="build.xml" target="clean" dir="usertools"/>
         <ant antfile="build.xml" target="clean" dir="utilsplugin"/>
         <ant antfile="build.xml" target="clean" dir="validator"/>
-        <ant antfile="build.xml" target="clean" dir="waypoints"/>
         <ant antfile="build.xml" target="clean" dir="wmsplugin"/>
     </target>
     <target name="clean_install"></target>

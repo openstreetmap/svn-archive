@@ -8,6 +8,9 @@ var cmyk;
 
 var classesAndProperties = new Array();
 
+//TODO: Be compatible with old stylesheets with markers, patterns and symbols were all in the rule file
+//TODO: Verify how to achieve this to select things on the map => svg inline over the map (ids of the generated svg corresponds to ids in the source osm file, I can retrieve names from the osm file and then analyze where it's been drawn in the map from the output svg file and then overlay custom generated svg), ?or something like another rule file? http://www.openstreetmap.org/?lat=41.88674&lon=12.49885&zoom=17&layers=00B0FTTT
+
 //var OSMARENDER_LOCATION=location.href.substring(0,location.href.lastIndexOf("/")+1);
 var OSMARENDER_LOCATION=location.href.substring(0,location.href.lastIndexOf("/")+1)+"../../xslt/";
 var STYLESHEET_PATH=location.href.substring(0,location.href.lastIndexOf("/")+1)+"../../stylesheets/";

@@ -4,6 +4,9 @@
  * Released under GPL v2 or later
  */
 
+
+//TODO: When refactoring remember to be compatible also with old xlink:href symbols/markers
+
 PROGRAM_NAME="osmarender_frontend";
 XHTML_NS="http://www.w3.org/1999/xhtml";
 var rulesfile;
@@ -43,14 +46,15 @@ rulesfile = function () {
 
 markersfile = function() {
 	var MARKERS_TAG = "include";
-	var xmlhttp = new XMLHttpRequest();
-
-	var markersfilename = rulesfile.getElementsByTagName(MARKERS_TAG)[0].getAttribute("ref");
-	markersfilename = rulesfilename.substring(0,rulesfilename.lastIndexOf("/")+1)+markersfilename;
- 	xmlhttp.open("GET", markersfilename, false);  
- 	xmlhttp.send('');
- 	markersfile=xmlhttp.responseXML;
- 	return markersfile;
+	if(rulesfile.getElementsByTagName(MARKERS_TAG).length) {
+		var markersfilename = rulesfile.getElementsByTagName(MARKERS_TAG)[0].getAttribute("ref");
+		markersfilename = rulesfilename.substring(0,rulesfilename.lastIndexOf("/")+1)+markersfilename;
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("GET", markersfilename, false);  
+		xmlhttp.send('');
+		markersfile=xmlhttp.responseXML;
+		return markersfile;
+	}
 }();
 
 osmfile = function () {
@@ -103,10 +107,12 @@ this.symbols = function() {
 
 	function addContent(symbol) {
 		symbol_referenced = symbol.getAttribute("ref");
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("GET", SYMBOL_PATH+symbol_referenced+".svg", false);  
-		xmlhttp.send('');
-		symbols_array[symbols_array.length]=xmlhttp.responseXML.documentElement;
+		if (symbol_referenced!=null) {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.open("GET", SYMBOL_PATH+symbol_referenced+".svg", false);  
+			xmlhttp.send('');
+			symbols_array[symbols_array.length]=xmlhttp.responseXML.documentElement;
+		}
 	}
 	return symbols_array;
 //	rulesfile.getElementsByTagName("svg:symbol");
@@ -638,12 +644,14 @@ CMYK.prototype.getObjects = function() {
 			objects.patterns.push(pattern);
 		}
 	);
-	dojo.forEach(markersfile.getElementsByTagName("svg:marker"),
-		function(marker,index,array) {
-			objects.markers.push(marker);
-		}
-	);
-	dojo.forEach(defs.getElementsByTagName("svg:symbol"),
+	if (markersfile) {
+		dojo.forEach(markersfile.getElementsByTagName("svg:marker"),
+			function(marker,index,array) {
+				objects.markers.push(marker);
+			}
+		);
+	}
+	dojo.forEach(this.symbols,
 		function(symbol,index,array) {
 			objects.symbols.push(symbol);
 		}

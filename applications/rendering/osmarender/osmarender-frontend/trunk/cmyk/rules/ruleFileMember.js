@@ -28,6 +28,10 @@ dojo.declare("cmyk.rules.ruleFileMember",null,{
 		var children = [];
 		var string_debug="unknown type: "+node.nodeType+" name: "+node.nodeName+" value: "+node.nodeValue;
 		//TODO: overload constructor for new node based on text
+
+//TODO: All the work is in Line
+
+
 		switch (node.nodeType) {
 			case node.PROCESSING_INSTRUCTION_NODE:
 				//TODO: save the XSL link inside?

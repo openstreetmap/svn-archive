@@ -2,6 +2,8 @@ dojo.provide("cmyk.rules.Line");
 
 dojo.require("cmyk.rules.renderingInstruction");
 
+dojo.require("cmyk.rules.attributes.attributeFactory");
+
 /**
 	@lends cmyk.rules.Line
 */
@@ -15,6 +17,59 @@ dojo.declare("cmyk.rules.Line",cmyk.rules.renderingInstruction,{
 	*/
 	constructor: function(node) {
 		var _class="cmyk.rules.Line";
+
+		var _evaluator = new cmyk.utils.Evaluators();
+		var _attributeFactory = new cmyk.rules.attributes.attributeFactory();
+
+/*		var _newattributes = {
+			classes: {
+				attributeName: "class",
+				value: [],
+				evaluator: _evaluator._ISVALIDCLASS,
+				splitter: " "
+			},
+			maskclasses: {
+				attributeName: "mask-class",
+				value: [],
+				evaluator: _evaluator._ISVALIDCLASS,
+				splitter: " "
+			},
+			widthscalefactor: {
+				attributeName: "width-scale-factor".
+				value: null,
+				evaluator: _evaluator._ISNUMBER
+			},
+			honorwidth: {
+				attributeName: "honor-width",
+				value: null,
+				evaluator: _evaluator._ISNUMBER
+			},
+			minimumwidth: {
+				attributeName: "minimum-width",
+				value: null,
+				evaluator: _evaluator._ISNUMBER
+			},
+			maximumwidth: {
+				attributeName: "maximum-width",
+				value: null,
+				evaluator: _evaluator._ISNUMBER
+			},
+			smartlinecap: {
+				attributeName: "smart-linecap",
+				value: null,
+				evaluator: evaluator._ISBOOLEAN
+			},
+			suppressmarkerstag: {
+				attributeName: "suppress-markers-tag",
+				value: null,
+				evaluator: evaluator._ISVALIDTAG
+			},
+			layer: {
+				attributeName: "layer",
+				value: null,
+				evaluator: evaluator._ISNUMBER
+			}
+		};*/
 
 		var _attributes = {
 			classes: [],
@@ -31,6 +86,10 @@ dojo.declare("cmyk.rules.Line",cmyk.rules.renderingInstruction,{
 		dojo.forEach(node.attributes, function(attribute,index,array) {
 			switch (attribute.nodeName) {
 				case "class":
+//					console.debug("AAA creo classe");
+					var pippo = _attributeFactory.factory("class",attribute.nodeValue);
+//					console.debug("AAA il mio valore è "+pippo.getValue());
+//					console.debug("AAA il mio splitter è "+pippo.getSplitter());
 					_attributes.classes = attribute.nodeValue.split(" ");
 				break;
 				case "mask-class":
@@ -42,46 +101,34 @@ dojo.declare("cmyk.rules.Line",cmyk.rules.renderingInstruction,{
 					_attributes.suppressmarkerstag = current_value;
 				break;
 				case "width-scale-factor":
-					var current_value = new Number(attribute.nodeValue);
-					if (isNaN(current_value)) {
-						throw new Error('attribute '+attribute.nodeName+' must be a Number. Value '+attribute.nodeValue+' encountered instead for class '+_class);
+					if (_evaluator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
+						_attributes.widthscalefactor = attribute.nodeValue;
 					}
-					_attributes.widthscalefactor = current_value;
 				break;
 				case "minimum-width":
-					var current_value = new Number(attribute.nodeValue);
-					if (isNaN(current_value)) {
-						throw new Error('attribute '+attribute.nodeName+' must be a Number. Value '+attribute.nodeValue+' encountered instead for class '+_class);
+					if (_evaluator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
+						_attributes.minimumwidth = attribute.nodeValue;
 					}
-					_attributes.minimumwidth = current_value;
 				break;
 				case "maximum-width":
-					var current_value = new Number(attribute.nodeValue);
-					if (isNaN(current_value)) {
-						throw new Error('attribute '+attribute.nodeName+' must be a Number. Value '+attribute.nodeValue+' encountered instead for class '+_class);
+					if (_evaluator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
+						_attributes.maximumwidth = attribute.nodeValue;
 					}
-					_attributes.maximumwidth = current_value;
 				break;
 				case "honor-width":
-					var current_value;
-					if (attribute.nodeValue=="yes") current_value==true;
-					else if (attribute.nodeValue=="no") current_value==false;
-					else throw new Error('attribute '+attribute.nodeName+' must be "yes" or "no". Value '+attribute.nodeValue+' encountered instead for class '+_class);
-					_attributes.honorwidth = new Boolean(current_value);
+					if (_evaluator.isBoolean(attribute.nodeName,attribute.nodeValue,_class)) {
+						_attributes.honorwidth = _evaluator.convertToBoolean(attribute.nodeName,attribute.nodeValue,_class,_evaluator._YESNO);
+					}
 				break;
 				case "smart-linecap":
-					var current_value;
-					if (attribute.nodeValue=="yes") current_value==true;
-					else if (attribute.nodeValue=="no") current_value==false;
-					else throw new Error('attribute '+attribute.nodeName+' must be "yes" or "no". Value '+attribute.nodeValue+' encountered instead for class '+_class);
-					_attributes.smartlinecap = new Boolean(current_value);
+					if (_evaluator.isBoolean(attribute.nodeName,attribute.nodeValue,_class)) {
+						_attributes.smartlinecap = _evaluator.convertToBoolean(attribute.nodeName,attribute.nodeValue,_class,_evaluator._YESNO);
+					}
 				break;
 				case "layer":
-					var current_value = new Number(attribute.nodeValue);
-					if (isNaN(current_value)) {
-						throw new Error('attribute '+attribute.nodeName+' must be a Number. Value '+attribute.nodeValue+' encountered instead for class '+_class);
+					if (_evaluator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
+						_attributes.layer = attribute.nodeValue;
 					}
-					_attributes.layer = current_value;					
 				break;
 				default:
 					throw new Error('unknown attribute: '+attribute.nodeName+' with value '+attribute.nodeValue+' for class '+_class);

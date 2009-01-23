@@ -3,6 +3,7 @@ dojo.provide("cmyk.rules.Rule");
 dojo.require("cmyk.rules.Directive");
 dojo.require("cmyk.rules.ruleFileMember");
 
+dojo.require("cmyk.utils.Evaluators");
 /**
 	@lends cmyk.rules.Rule
 */

@@ -98,7 +98,7 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
                 iSourceButton.toggle();
                 iSlippyMapChooser.repaint();
                 
-            }else if(sourceButton == SourceButton.MAPNIK || sourceButton == SourceButton.OSMARENDER) {
+            }else if(sourceButton == SourceButton.MAPNIK || sourceButton == SourceButton.OSMARENDER || sourceButton == SourceButton.CYCLEMAP) {
                 iSlippyMapChooser.toggleMapSource(sourceButton);
             }
             else {

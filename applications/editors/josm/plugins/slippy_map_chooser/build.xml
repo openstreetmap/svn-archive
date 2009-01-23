@@ -5,7 +5,7 @@
         <and>
             <os family="windows"/>
         </and>
-    </condition>
+    </condition>	
 <!-- compilation properties -->
     <property name="josm.build.dir"   value="../../core"/>
     <property name="josm.plugins.dir" value="${josm.home.dir}/plugins"/>

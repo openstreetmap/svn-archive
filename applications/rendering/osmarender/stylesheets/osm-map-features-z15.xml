@@ -47,7 +47,7 @@
 			<area class="natural-coastline"/>
 		</rule>
 		<rule e="way" k="natural" v="glacier">
-		   <line class='natural-glacier'/> 
+			<line class='natural-glacier'/>
 		</rule>
 		<rule e="way" k="natural" v="land">
 			<area class="natural-land"/>
@@ -81,9 +81,9 @@
 				<area class="wetland-bog"/>
 			</rule>
 		</rule>
-                <rule e="way" k="landuse" v="conservation">
-                	<area class="landuse-conservation"/>
-                </rule>
+		<rule e="way" k="landuse" v="conservation">
+			<area class="landuse-conservation"/>
+		</rule>
 		
 		<!-- Artificial landuse -->
 		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow|grass">
@@ -1450,8 +1450,8 @@
 				<rule e="way" k="area" v="~|no|false" layer="5"> <!-- don't draw linear names around areas -->
 					<rule e="way" k="junction" v="~" layer="5"> <!-- no names on or along junctions -->
 						<rule e="way" k="waterway" v="canal" layer="5">
-							<text k="name" startOffset="50%" class="waterway-name-casing waterway-canal-name-casing" dy="2px"  layer="5"/>
-							<text k="name" startOffset="50%" class="waterway-name-core waterway-canal-name-core" dy="2px"  layer="5"/>
+							<text k="name" startOffset="50%" class="waterway-name-casing waterway-canal-name-casing" dy="2px" layer="5"/>
+							<text k="name" startOffset="50%" class="waterway-name-core waterway-canal-name-core" dy="2px" layer="5"/>
 						</rule>
 						<rule e="way" k="waterway" v="river" layer="5">
 							<text k="name" startOffset="50%" class="waterway-name-casing waterway-river-name-casing" dy="2px" layer="5"/>
@@ -1529,7 +1529,7 @@
 		<!-- Place names  -->
 		<rule e="node" k="osmarender:renderName" v="~|yes" layer="5">
 			<rule k="natural" v="peak" layer="5">
-				<text k="name" class="place-caption peak-caption" dy="-5px"  layer="5"/>
+				<text k="name" class="place-caption peak-caption" dy="-5px" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="islet" layer="5">
 				<text k="name" class="place-caption islet-caption" layer="5"/>
@@ -1554,8 +1554,8 @@
 			</rule>
 			<rule e="node" k="railway" v="station" layer="5">
 				<rule e="node" s="way" k="railway" v="rail" layer="5">
-					<text k="name" class="caption-casing railway-station-caption-casing" dy="-5px"  layer="5"/>
-					<text k="name" class="caption-core railway-station-caption-core" dy="-5px"  layer="5"/>
+					<text k="name" class="caption-casing railway-station-caption-casing" dy="-5px" layer="5"/>
+					<text k="name" class="caption-core railway-station-caption-core" dy="-5px" layer="5"/>
 				</rule>
 			</rule>
 		</rule>
@@ -2286,11 +2286,11 @@
 			fill: none;
 			}
 			
-                        .landuse-conservation {
-                        fill: #cfeca8;
-                        stroke: #6fc18e;
-                        stroke-width: 0.4px
-                        }
+			.landuse-conservation {
+			fill: #cfeca8;
+			stroke: #6fc18e;
+			stroke-width: 0.4px
+			}
 			.access-area-border-width-landuse-conservation {
 			stroke-width: 1.6px;
 			}

@@ -41,7 +41,7 @@
 			<area class="natural-coastline"/>
 		</rule>
 		<rule e="way" k="natural" v="glacier">
-		   <line class='natural-glacier'/> 
+			<line class='natural-glacier'/>
 		</rule>
 		<rule e="way" k="natural" v="land">
 			<area class="natural-land"/>
@@ -57,9 +57,9 @@
 				<area class="wetland-bog"/>
 			</rule>
 		</rule>
-                <rule e="way" k="landuse" v="conservation">
-                	<area class="landuse-conservation"/>
-                </rule>
+		<rule e="way" k="landuse" v="conservation">
+			<area class="landuse-conservation"/>
+		</rule>
 		
 		<!-- Artificial landuse -->
 		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow|grass">
@@ -1653,11 +1653,11 @@
 			opacity: 0.5;
 			}
 			
-                        .landuse-conservation {
-                        fill: #cfeca8;
-                        stroke: #6fc18e;
-                        stroke-width: 0.2px
-                        }
+			.landuse-conservation {
+			fill: #cfeca8;
+			stroke: #6fc18e;
+			stroke-width: 0.2px
+			}
 			
 			/* Leisure */
 			.leisure-park {

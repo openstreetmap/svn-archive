@@ -122,8 +122,8 @@ sub select_elements_with_given_tag_key_and_value_fast
     {
         # retrieve list of objects with this key from index.
         my @objects = 
-            ($e eq 'way') ? @{$index_way_tags->{$key}||[]} : 
-            ($e eq 'node') ? @{$index_node_tags->{$key}||[]} : 
+            (defined $e && $e eq 'way') ? @{$index_way_tags->{$key}||[]} :
+            (defined $e && $e eq 'node') ? @{$index_node_tags->{$key}||[]} :
             (@{$index_way_tags->{$key}||[]}, @{$index_node_tags->{$key}||[]});
 
         debug(sprintf('%d objects retrieved from index for e="%s" k="%s"', 

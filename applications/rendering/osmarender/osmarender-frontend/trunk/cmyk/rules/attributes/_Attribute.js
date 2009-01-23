@@ -1,7 +1,5 @@
 dojo.provide("cmyk.rules.attributes._Attribute");
 
-dojo.provide("cmyk.utils.Validators");
-
 /**
 	@lends cmyk.rules.attributes._Attribute
 */

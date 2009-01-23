@@ -15,6 +15,14 @@ dojo.declare("cmyk.utils.Validators",null,{
 		this._ISBOOLEANTRUEFALSE = 1;
 		this._ISNUMBER = 2;
 		this._ISVALIDCLASS = 3;
+		this._ISVALIDTAG = 4;
+		this._ISVALIDSYMBOL = 5;
+		this._ISVALIDPOSITION = 6;
+		this._ISVALIDTRANSFORM = 7;
+		this._ISDIMENSION = 8;
+		this._NONE = 9;
+		this._ISVALIDKEY = 10;
+		this._ISVALIDMARKER = 11;
 
 		var _validator_type;
 		_value_to_validate = value_to_validate;
@@ -52,11 +60,11 @@ dojo.declare("cmyk.utils.Validators",null,{
 		}
 
 		//TODO: verify if validator_type is one instance of the variables _ISxxx
-		this.setValidator(validator_type) {
+		this.setValidator = function(validator_type) {
 			_validator_type = validator_type;
 		}
 
-		this.applyValidator() {
+		this.applyValidator = function() {
 			switch (_validator_type) {
 				case this._ISBOOLEAN:
 					return isBoolean(_value_to_validate);

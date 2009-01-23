@@ -18,32 +18,12 @@ dojo.declare("cmyk.rules.Symbol",cmyk.rules._Symbol,{
 //TODO: connect the real svg inside the object
 		var _class="cmyk.rules.Symbol";
 
-		var _attributes = {
-			ref: "",
-			position: "center",
-			transform: null,
-			layer: null
-		};
+		var _attributeFactory = new cmyk.rules.attributes.attributeFactory();
+
+		var _attributes = [];
 
 		dojo.forEach(node.attributes, function(attribute,index,array) {
-			switch (attribute.nodeName) {
-				case "ref":
-					_attributes.ref = attribute.nodeValue;
-				break;
-				case "position":
-					_attributes.position= attribute.nodeValue;
-				break;
-				default:
-					throw new Error('unknown attribute: '+attribute.nodeName+' with value '+attribute.nodeValue+' for class '+_class);
-			}
+			_attributes.push(_attributeFactory.factory(attribute.nodeName,attribute.nodeValue,_class));
 		});
-
-		this.getRef = function() {
-			return dojo.clone(_attributes.ref);
-		};
-
-		this.getPosition = function() {
-			return dojo.clone(_attributes.position);
-		};
 	},
 });

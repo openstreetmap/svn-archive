@@ -578,27 +578,33 @@ sub draw_area_text
 
     foreach(@$selected)
     {
-        next unless (ref $_ eq 'way');
         my $text = substitute_text($textnode, $_);
         next unless $text ne '';
 
-        my $labelRelation = $labelRelations->{$_->{'id'}};
-        if (defined($labelRelation))
+        if (ref $_ eq 'way')
         {
-            # Draw text at users specifed position
-            foreach my $ref (@{$labelRelation})
+            #Area
+            my $labelRelation = $labelRelations->{$_->{'id'}};
+            if (defined($labelRelation))
             {
-                render_text($textnode, $text, [$ref->{'lat'}, $ref->{'lon'}]);
+                # Draw text at users specifed position
+                foreach my $ref (@{$labelRelation})
+                {
+                    render_text($textnode, $text, [$ref->{'lat'}, $ref->{'lon'}]);
+                }
+            }
+            else
+            {
+                # Draw text at area center
+                my $center = get_area_center($_);
+                render_text($textnode, $text, $center);
             }
         }
         else
         {
-            # Draw text at area center
-            my $center = get_area_center($_);
-            render_text($textnode, $text, $center);
+            #Node
+            render_text($textnode, $text, [$_->{'lat'}, $_->{'lon'}]);
         }
-
-
     }
 }
 
@@ -617,10 +623,10 @@ sub get_area_center
 }
 
 # -------------------------------------------------------------------
-# sub draw_area_symbols($rulenode, $layer, $selection)
+# sub draw_symbols($rulenode, $layer, $selection)
 #
 # for each selected object referenced by the $selection structure,
-# draw a symbol inside the area.
+# draw a symbol inside the area or at the node.
 #
 # Parameters:
 # $rulenode - the XML::XPath::Node object for the <areaSymbol> instruction
@@ -634,32 +640,40 @@ sub get_area_center
 # Only ways are read from the selection; other objects are
 # ignored.
 # -------------------------------------------------------------------
-sub draw_area_symbols
+sub draw_symbols
 {
     my ($symbolnode, $layer, $selected) = @_;
 
     foreach(@$selected)
     {
-        next unless (ref $_ eq 'way');
-
-        my $labelRelation = $labelRelations->{$_->{'id'}};
-        if (defined($labelRelation))
+        if (ref $_ eq 'way')
         {
-            foreach my $ref (@{$labelRelation})
+            #Area
+            my $labelRelation = $labelRelations->{$_->{'id'}};
+            if (defined($labelRelation))
             {
-                draw_symbol($symbolnode, project[$ref->{'lat'}, $ref->{'lon'}]);
+                foreach my $ref (@{$labelRelation})
+                {
+                    draw_symbol($symbolnode, project[$ref->{'lat'}, $ref->{'lon'}]);
+                }
+            }
+            else
+            {
+                # Draw icon at area center
+                my $center = get_area_center($_);
+                my $projected = project($center);
+                draw_symbol($symbolnode, $projected);
             }
         }
         else
         {
-            # Draw icon at area center
-            my $center = get_area_center($_);
-            my $projected = project($center);
-
+            #Node
+            my $projected = project([$_->{'lat'}, $_->{'lon'}]);
             draw_symbol($symbolnode, $projected);
         }
     }
 }
+
 
 # -------------------------------------------------------------------
 # sub draw_circles($rulenode, $layer, $selection)
@@ -685,13 +699,43 @@ sub draw_circles
 
     foreach(@$selected)
     {
-        next if (ref $_ eq 'way');
-        
-        my $projected = project([$_->{'lat'}, $_->{'lon'}]);
-        $writer->emptyTag('circle', 
-            'cx' => $projected->[0], 
-            'cy' => $projected->[1], 
-            copy_attributes_not_in_list($circlenode, [ 'type', 'ref', 'scale', 'smart-linecap', 'cx', 'cy' ]));
+        if (ref $_ eq 'way')
+        {
+            #Area
+            my $labelRelation = $labelRelations->{$_->{'id'}};
+            if (defined($labelRelation))
+            {
+                foreach my $ref (@{$labelRelation})
+                {
+                    my $projected = project([$ref->{'lat'}, $ref->{'lon'}]);
+                    $writer->emptyTag('circle',
+                        'cx' => $projected->[0],
+                        'cy' => $projected->[1],
+                        copy_attributes_not_in_list($circlenode,
+                            [ 'type', 'ref', 'scale', 'smart-linecap', 'cx', 'cy' ]));
+                }
+            }
+            else
+            {
+                # Draw icon at area center
+                my $center = get_area_center($_);
+                my $projected = project($center);
+                $writer->emptyTag('circle',
+                    'cx' => $projected->[0],
+                    'cy' => $projected->[1],
+                    copy_attributes_not_in_list($circlenode,
+                        [ 'type', 'ref', 'scale', 'smart-linecap', 'cx', 'cy' ]));
+            }
+        }
+        else
+        {
+            #Node
+            my $projected = project([$_->{'lat'}, $_->{'lon'}]);
+            $writer->emptyTag('circle',
+                'cx' => $projected->[0],
+                'cy' => $projected->[1],
+                copy_attributes_not_in_list($circlenode, [ 'type', 'ref', 'scale', 'smart-linecap', 'cx', 'cy' ]));
+        }
     }
 }
 
@@ -751,35 +795,6 @@ sub draw_symbol
     }
 }
 
-# -------------------------------------------------------------------
-# sub draw_symbols($rulenode, $layer, $selection)
-#
-# for each selected object in $selection, draw a symbol based 
-# on the parameters specified by $rulenode.
-#
-# Parameters:
-# $rulenode - the XML::XPath::Node object for the <symbol> instruction
-#    in the rules file.
-# $layer - if not undef, process only objects on this layer
-# $selection - Set::Object that contains selected objects
-#
-# Return value:
-# none.
-#
-# Only nodes are read from the selection; other objects are
-# ignored.
-# -------------------------------------------------------------------
-sub draw_symbols
-{
-    my ($symbolnode, $layer, $selected) = @_;
-
-    foreach(@$selected)
-    {
-        next if (ref $_ eq 'way');
-        my $projected = project([$_->{'lat'}, $_->{'lon'}]);
-        draw_symbol($symbolnode, $projected);
-    }
-}
 
 # -------------------------------------------------------------------
 # sub draw_way_markers($rulenode, $layer, $selection)

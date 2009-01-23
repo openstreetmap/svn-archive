@@ -159,12 +159,15 @@ my $drawing_commands;
 my %instructions = (
   'line' => {'func' => \&draw_lines},
   'area' => {'func' => \&draw_areas},
-  'text' => {'func' => \&draw_text},
   'circle' => {'func' => \&draw_circles},
   'symbol' => {'func' => \&draw_symbols},
   'wayMarker' => {'func' => \&draw_way_markers},
+  'caption' => {'func' => \&draw_area_text},
+  'pathText' => {'func' => \&draw_text},
+  # The following names are kept for compatibility
+  'text' => {'func' => \&draw_text},
   'areaText' => {'func' => \&draw_area_text},
-  'areaSymbol' => {'func' => \&draw_area_symbols});
+  'areaSymbol' => {'func' => \&draw_symbols});
 
 GetOptions("rule=s"    => \$rule_file, 
            "debug=s"   => \$debug_opts,

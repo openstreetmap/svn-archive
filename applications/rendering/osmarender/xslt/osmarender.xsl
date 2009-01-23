@@ -1052,14 +1052,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </xsl:for-each>
   </xsl:template>
 
-  
 
-	<xsl:template match="line|area|symbol|areaSymbol|circle|wayMarker|text|areaText">
+
+	<xsl:template match="line|area|symbol|areaSymbol|circle|wayMarker|text|areaText|caption|pathText">
 		<xsl:param name="elements"/>
 				
 		<xsl:variable name="instruction" select="."/>
 				
-		<xsl:for-each select="$elements">		
+		<xsl:for-each select="$elements">
 			<z:command>
 				<xsl:attribute name="layer">
 					<xsl:choose>
@@ -1224,6 +1224,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
   </xsl:template>
 
+  <!-- Draw circle for a area -->
+  <xsl:template match="way" mode="circle">
+    <xsl:param name="instruction"/>
+    <xsl:param name="elements"/>
+
+    <xsl:for-each select="$elements[name()='way']">
+		<xsl:variable name='center'>
+			<xsl:call-template name="areaCenterWrapper">
+				<xsl:with-param name="element" select="." />
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:call-template name="drawCircle">
+			<xsl:with-param name="instruction" select="$instruction"/>
+			<xsl:with-param name="lon" select="substring-before($center, ',')"/>
+			<xsl:with-param name="lat" select="substring-after($center, ',')"/>
+		</xsl:call-template>
+    </xsl:for-each>
+
+  </xsl:template>
+
+
 
   <!-- Draw circle for a relation -->
   <xsl:template match="relation" mode="circle">
@@ -1260,8 +1281,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:for-each select="$elements[name()='node']">
 		<xsl:call-template name="drawSymbol">
 			<xsl:with-param name="instruction" select="$instruction"/>
-		</xsl:call-template>				
+		</xsl:call-template>
     </xsl:for-each>
+
+    <!-- Select all <way> elements -->
+    <xsl:apply-templates select="$elements[name()='way']" mode="areaSymbolPath">
+      <xsl:with-param name="instruction" select="$instruction"/>
+    </xsl:apply-templates>
 
   </xsl:template>
 
@@ -1328,8 +1354,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     
   </xsl:template>
 
-  <!-- Process an <areaText> instruction -->
-  <xsl:template match="areaText" mode="render">
+  <!-- Process an <caption> instruction -->
+  <xsl:template match="areaText|caption" mode="render">
     <xsl:param name="elements"/>
 
     <!-- This is the instruction that is currently being processed -->
@@ -1339,6 +1365,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:apply-templates select="$elements[name()='way'][tag[@k=$instruction/@k]]" mode="areaTextPath">
       <xsl:with-param name="instruction" select="$instruction"/>
     </xsl:apply-templates>
+	<!-- Select all <node> elements that have a key that matches the k attribute of the text instruction -->
+	<xsl:for-each select="$elements[name()='node'][tag[@k=$instruction/@k]]">
+		<xsl:call-template name="renderText">
+			<xsl:with-param name="instruction" select="$instruction"/>
+			<xsl:with-param name="lon" select="@lon"/>
+			<xsl:with-param name="lat" select="@lat"/>
+			<xsl:with-param name="text" select="tag[@k=$instruction/@k]/@v"/>
+		</xsl:call-template>
+    </xsl:for-each>
   </xsl:template>
 
 
@@ -2410,8 +2445,8 @@ against infinite loops -->
     </xsl:choose>
   </xsl:template>
 
-  <!-- Process a <text> instruction -->
-  <xsl:template match="text" mode="render">
+  <!-- Process a <pathText> instruction -->
+  <xsl:template match="text|pathText" mode="render">
     <xsl:param name="elements"/>
 
     <!-- This is the instruction that is currently being processed -->
@@ -2499,7 +2534,7 @@ against infinite loops -->
   </xsl:template>
 
   <!-- Process extended form of text instruction -->
-  <xsl:template match='text' mode='textFormat'>
+  <xsl:template match='text|pathText' mode='textFormat'>
     <xsl:param name='way'/>
 
     <xsl:apply-templates mode='textFormat'>
@@ -2509,7 +2544,7 @@ against infinite loops -->
 
 
   <!-- Substitute a tag in a text instruction -->
-  <xsl:template match='text/tag' mode='textFormat'>
+  <xsl:template match='text/tag|pathText/tag' mode='textFormat'>
     <xsl:param name='way'/>
 
     <xsl:variable name='key' select='@k'/>

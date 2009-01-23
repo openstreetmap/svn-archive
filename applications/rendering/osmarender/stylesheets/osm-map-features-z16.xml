@@ -47,7 +47,7 @@
 			<area class="natural-coastline"/>
 		</rule>
 		<rule e="way" k="natural" v="glacier">
-		   <line class='natural-glacier'/> 
+			<line class='natural-glacier'/>
 		</rule>
 		<rule e="way" k="natural" v="land">
 			<area class="natural-land"/>
@@ -81,9 +81,9 @@
 				<area class="wetland-bog"/>
 			</rule>
 		</rule>
-                <rule e="way" k="landuse" v="conservation">
-                	<area class="landuse-conservation"/>
-                </rule>
+		<rule e="way" k="landuse" v="conservation">
+			<area class="landuse-conservation"/>
+		</rule>
 		
 		<!-- Artificial landuse -->
 		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow|grass">
@@ -1499,7 +1499,7 @@
 			</rule>
 			<rule e="way" k="sac_scale" v="difficult_alpine_hiking|t6|T6">
 				<line class="sac-scale-t6" smart-linecap="no"/>
-			</rule>            
+			</rule>
 		</rule>
 		
 		<!-- Piste maps -->
@@ -2023,10 +2023,10 @@
 					
 					<rule e="way" k="junction" v="*" notConnectedSameTag="name" layer="5"> <!-- Roundabouts, motorway exits etc -->
 						<rule e="way" k="highway" v="secondary|secondary_link" layer="5">
-							<areaText k="name" startOffset="50%" class="highway-name highway-secondary-name" dy="2px"  layer="5"/>
+							<areaText k="name" startOffset="50%" class="highway-name highway-secondary-name" dy="2px" layer="5"/>
 						</rule>
 						<rule e="way" k="highway" v="primary|primary_link" layer="5">
-							<areaText k="name" startOffset="50%" class="highway-name highway-primary-name" dy="2px"  layer="5"/>
+							<areaText k="name" startOffset="50%" class="highway-name highway-primary-name" dy="2px" layer="5"/>
 						</rule>
 						<rule e="way" k="highway" v="trunk|trunk_link" layer="5">
 							<areaText k="name" startOffset="50%" class="highway-name highway-trunk-name" dy="3px" layer="5"/>
@@ -2039,7 +2039,7 @@
 				<else> <!-- area!=yes -->
 					<rule e="way" k="highway" v="*" notConnectedSameTag="name" layer="5">
 						<areaText k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
-						<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%"  layer="5"/>
+						<areaText k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
 					</rule>
 				</else>
 			</rule>
@@ -2103,19 +2103,19 @@
 						<text k="ref" startOffset="30%" class="highway-ref highway-unclassified-ref" dy="-2.4px" layer="5"/>
 					</rule>
 					<rule e="way" k="highway" v="tertiary" layer="5">
-						<text k="ref" startOffset="30%" class="highway-ref highway-tertiary-ref" dy="-2.5px" textAttenuation="1.5"  layer="5"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-tertiary-ref" dy="-2.5px" textAttenuation="1.5" layer="5"/>
 					</rule>
 					<rule e="way" k="highway" v="secondary" layer="5">
-						<text k="ref" startOffset="30%" class="highway-ref highway-secondary-ref" dy="-2.5px" textAttenuation="1.5"  layer="5"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-secondary-ref" dy="-2.5px" textAttenuation="1.5" layer="5"/>
 					</rule>
 					<rule e="way" k="highway" v="primary" layer="5">
-						<text k="ref" startOffset="30%" class="highway-ref highway-primary-ref" dy="-2.5px" textAttenuation="1.5"  layer="5"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-primary-ref" dy="-2.5px" textAttenuation="1.5" layer="5"/>
 					</rule>
 					<rule e="way" k="highway" v="trunk" layer="5">
-						<text k="ref" startOffset="30%" class="highway-ref highway-trunk-ref" dy="-2.5px" textAttenuation="1.5"  layer="5"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-trunk-ref" dy="-2.5px" textAttenuation="1.5" layer="5"/>
 					</rule>
 					<rule e="way" k="highway" v="motorway" layer="5">
-						<text k="ref" startOffset="30%" class="highway-ref highway-motorway-ref" dy="-3px" textAttenuation="1.5"  layer="5"/>
+						<text k="ref" startOffset="30%" class="highway-ref highway-motorway-ref" dy="-3px" textAttenuation="1.5" layer="5"/>
 					</rule>
 				</rule>
 			</rule>
@@ -2124,7 +2124,7 @@
 		<!-- Place names  -->
 		<rule e="node" k="osmarender:renderName" v="~|yes" layer="5">
 			<rule k="natural" v="peak" layer="5">
-				<text k="name" class="place-caption peak-caption" dy="-3px"  layer="5"/>
+				<text k="name" class="place-caption peak-caption" dy="-3px" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="islet" layer="5">
 				<text k="name" class="place-caption islet-caption" layer="5"/>
@@ -2946,12 +2946,11 @@
 			fill: none;
 			}
 			
-                        .landuse-conservation {
-                        fill: #cfeca8;
-                        stroke: #6fc18e;
-                        stroke-width: 0.2px
-                        }
-
+			.landuse-conservation {
+			fill: #cfeca8;
+			stroke: #6fc18e;
+			stroke-width: 0.2px
+			}
 			
 			/* Leisure */
 			.leisure-park {

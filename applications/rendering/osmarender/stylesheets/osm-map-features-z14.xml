@@ -46,7 +46,7 @@
 			<area class="natural-coastline"/>
 		</rule>
 		<rule e="way" k="natural" v="glacier">
-		   <line class='natural-glacier'/> 
+			<line class='natural-glacier'/>
 		</rule>
 		<rule e="way" k="natural" v="land">
 			<area class="natural-land"/>
@@ -80,9 +80,9 @@
 				<area class="wetland-bog"/>
 			</rule>
 		</rule>
-                <rule e="way" k="landuse" v="conservation">
-                	<area class="landuse-conservation"/>
-                </rule>
+		<rule e="way" k="landuse" v="conservation">
+			<area class="landuse-conservation"/>
+</rule>
 		
 		<!-- Artificial landuse -->
 		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow|grass">
@@ -1309,7 +1309,7 @@
 			</rule>
 			<rule e="node" k="railway" v="station" layer="5">
 				<rule e="node" s="way" k="railway" v="rail" layer="5">
-					<text k="name" class="caption-casing railway-station-caption-casing" dy="-7px"  layer="5"/>
+					<text k="name" class="caption-casing railway-station-caption-casing" dy="-7px" layer="5"/>
 					<text k="name" class="caption-core railway-station-caption-core" dy="-7px" layer="5"/>
 				</rule>
 			</rule>
@@ -2029,11 +2029,11 @@
 			fill: none;
 			}
 			
-                        .landuse-conservation {
-                        fill: #cfeca8;
-                        stroke: #6fc18e;
-                        stroke-width: 0.4px
-                        }
+			.landuse-conservation {
+			fill: #cfeca8;
+			stroke: #6fc18e;
+			stroke-width: 0.4px
+			}
 			
 			/* Leisure */
 			.leisure-park {

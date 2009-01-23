@@ -656,7 +656,7 @@
             .highway-cycleway-core                  { stroke-width: 0.5px;   stroke: #d1ead1; }
 
             .highway-pedestrian-casing              { stroke-width: 4px; stroke: #b0b0b0; }
-            .highway-pedestrian-core                { stroke-width: 3.5px; stroke: #f0f0f0; }
+            .highway-pedestrian-core                { stroke-width: 3.5px; stroke: #e4e4e4; }
 
             .highway-footway-casing                 { stroke-width: 0.5px;   stroke: #202020; }
             .highway-footway-core                   { stroke-width: 0.5px;   stroke: #e5e0c2; }
@@ -897,7 +897,7 @@
 
             .landuse-cemetery {
                 fill: #bde3cb;
-                stroke: #f0f0f0;
+                stroke: #e4e4e4;
                 stroke-width: 0.2px;
             }
 
@@ -909,7 +909,7 @@
 
             .landuse-residential {
                 stroke: none;
-                fill: #f0f0f0;
+                fill: #e4e4e4;
             }
 
             .landuse-retail {
@@ -919,19 +919,19 @@
 
             .landuse-industrial {
                 fill: #ecd8ff;
-                stroke: #f0f0f0;
+                stroke: #e4e4e4;
                 stroke-width: 0.2px;
             }
 
             .landuse-commercial {
                 fill: #ffffc0;
-                stroke: #f0f0f0;
+                stroke: #e4e4e4;
                 stroke-width: 0.2px;
             }
 
             .landuse-retail {
                 fill: #ffebeb;
-                stroke: #f0f0f0;
+                stroke: #e4e4e4;
                 stroke-width: 0.2px;
             }
 

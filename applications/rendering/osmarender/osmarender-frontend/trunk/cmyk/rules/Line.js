@@ -18,7 +18,7 @@ dojo.declare("cmyk.rules.Line",cmyk.rules.renderingInstruction,{
 	constructor: function(node) {
 		var _class="cmyk.rules.Line";
 
-		var _evaluator = new cmyk.utils.Evaluators();
+		//var _validator = new cmyk.utils.Validators();
 		var _attributeFactory = new cmyk.rules.attributes.attributeFactory();
 
 /*		var _newattributes = {
@@ -101,34 +101,34 @@ dojo.declare("cmyk.rules.Line",cmyk.rules.renderingInstruction,{
 					_attributes.suppressmarkerstag = current_value;
 				break;
 				case "width-scale-factor":
-					if (_evaluator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
+					//if (_validator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
 						_attributes.widthscalefactor = attribute.nodeValue;
-					}
+					//}
 				break;
 				case "minimum-width":
-					if (_evaluator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
+// 					if (_validator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
 						_attributes.minimumwidth = attribute.nodeValue;
-					}
+// 					}
 				break;
 				case "maximum-width":
-					if (_evaluator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
+// 					if (_validator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
 						_attributes.maximumwidth = attribute.nodeValue;
-					}
+// 					}
 				break;
 				case "honor-width":
-					if (_evaluator.isBoolean(attribute.nodeName,attribute.nodeValue,_class)) {
-						_attributes.honorwidth = _evaluator.convertToBoolean(attribute.nodeName,attribute.nodeValue,_class,_evaluator._YESNO);
-					}
+// 					if (_validator.isBoolean(attribute.nodeName,attribute.nodeValue,_class)) {
+						//_attributes.honorwidth = _evaluator.convertToBoolean(attribute.nodeName,attribute.nodeValue,_class,_evaluator._YESNO);
+// 					}
 				break;
 				case "smart-linecap":
-					if (_evaluator.isBoolean(attribute.nodeName,attribute.nodeValue,_class)) {
-						_attributes.smartlinecap = _evaluator.convertToBoolean(attribute.nodeName,attribute.nodeValue,_class,_evaluator._YESNO);
-					}
+// 					if (_validator.isBoolean(attribute.nodeName,attribute.nodeValue,_class)) {
+						//_attributes.smartlinecap = _evaluator.convertToBoolean(attribute.nodeName,attribute.nodeValue,_class,_evaluator._YESNO);
+// 					}
 				break;
 				case "layer":
-					if (_evaluator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
+// 					if (_validator.isNumber(attribute.nodeName,attribute.nodeValue,_class)) {
 						_attributes.layer = attribute.nodeValue;
-					}
+// 					}
 				break;
 				default:
 					throw new Error('unknown attribute: '+attribute.nodeName+' with value '+attribute.nodeValue+' for class '+_class);

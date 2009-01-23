@@ -1,5 +1,6 @@
 dojo.provide("cmyk.rules.attributes._Attribute");
 
+dojo.provide("cmyk.utils.Validators");
 
 /**
 	@lends cmyk.rules.attributes._Attribute
@@ -14,7 +15,7 @@ dojo.declare("cmyk.rules.attributes._Attribute",null,{
 	constructor: function() {
 		var _name = "";
 		var _value = "";
-		var _evaluator = null;
+		var _validator = null;
 
 		this.getName = function() {
 			return dojo.clone(_name);
@@ -26,20 +27,25 @@ dojo.declare("cmyk.rules.attributes._Attribute",null,{
 
 		this.setValue = function(value) {
 			_value = dojo.clone(value);
-		},
+		}
 
 		this.getValue = function() {
 			return dojo.clone(_value);
-		},
-
-		this.getEvaluator = function() {
-			return dojo.clone(_evaluator);
-		},
-
-		this.setEvaluator = function(evaluator) {
-			_evaluator = evaluator;
 		}
 
+		this.getValidator = function() {
+			return dojo.clone(_validator);
+		}
+
+		this.setValidator = function(validator) {
+			_validator = validator;
+		}
+
+		this.applyValidator = function() {
+			if (validator!=undefined) {
+				return validator.applyValidator();
+			}
+		}
 	},
 });
 

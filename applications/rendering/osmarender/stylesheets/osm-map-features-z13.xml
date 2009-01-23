@@ -1581,13 +1581,13 @@
 			
 			.landuse-cemetery {
 			fill: #bde3cb;
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
 			.landuse-vineyard {
 			fill: #d1ead1;
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
@@ -1599,24 +1599,24 @@
 			
 			.landuse-residential {
 			stroke: none;
-			fill: #f0f0f0;
+			fill: #e4e4e4;
 			}
 			
 			.landuse-industrial {
 			fill: #ecd8ff;
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 
 			.landuse-construction {
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			fill: #a47c41;
 			}
 			
 			.landuse-commercial {
 			fill: #ffffc0;
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
@@ -1628,7 +1628,7 @@
 			
 			.landuse-retail {
 			fill: #ffebeb;
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
@@ -1722,7 +1722,7 @@
 			
 			.military-area {
 			fill: #d0d050;
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			

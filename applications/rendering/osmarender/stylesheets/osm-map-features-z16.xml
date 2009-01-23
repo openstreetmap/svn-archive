@@ -2846,19 +2846,19 @@
 			
 			.landuse-cemetery {
 			fill: url(#cemetery-pattern);
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
 			.landuse-cemetery-christian {
 			fill: url(#cemetery-christian-pattern);
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
 			.landuse-vineyard {
 			fill: url(#vineyard-pattern);
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
@@ -2873,17 +2873,17 @@
 			
 			.landuse-residential {
 			stroke: none;
-			fill: #f0f0f0;
+			fill: #e4e4e4;
 			}
 			
 			.landuse-industrial {
 			fill: #ecd8ff;
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
 			.landuse-construction {
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			fill: #a47c41;
 			}
@@ -2893,7 +2893,7 @@
 			
 			.landuse-commercial {
 			fill: #ffffc0;
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
@@ -2905,7 +2905,7 @@
 			
 			.landuse-retail {
 			fill: #ffebeb;
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
@@ -2934,7 +2934,7 @@
 			stroke-width: 0.6px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			fill: none;
 			}
 			
@@ -3330,7 +3330,7 @@
 			
 			.military-area {
 			fill: url(#military-pattern);
-			stroke: #f0f0f0;
+			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			

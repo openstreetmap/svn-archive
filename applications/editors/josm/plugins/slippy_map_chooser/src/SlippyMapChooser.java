@@ -25,6 +25,7 @@ import org.openstreetmap.gui.jmapviewer.OsmFileCacheTileLoader;
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.OsmTileSource;
+import org.openstreetmap.gui.jmapviewer.OsmTileSource.CycleMap;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
@@ -55,7 +56,7 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection, C
     // screen size
     private Dimension iScreenSize;
 
-    private TileSource[] sources = { new OsmTileSource.Mapnik(), new OsmTileSource.TilesAtHome() };
+    private TileSource[] sources = { new OsmTileSource.Mapnik(), new OsmTileSource.TilesAtHome(),new OsmTileSource.CycleMap()};
     TileLoader cachedLoader;
     TileLoader uncachedLoader;
     JPanel slipyyMapTabPanel;
@@ -77,8 +78,11 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection, C
 
         String mapStyle = Main.pref.get("slippy_map_chooser.mapstyle", "mapnik");
         if(mapStyle.equals("osmarender")) {
-            iSourceButton.setIsMapStyleMapnik(false);
+            iSourceButton.setMapStyle(SourceButton.OSMARENDER);
             this.setTileSource(sources[1]);
+        }else if(mapStyle.equals("cyclemap")){
+        	 iSourceButton.setMapStyle(SourceButton.CYCLEMAP);
+             this.setTileSource(sources[2]);
         }
         else {
             if(!mapStyle.equals("mapnik"))
@@ -260,7 +264,10 @@ public class SlippyMapChooser extends JMapViewer implements DownloadSelection, C
         if (mapSource == SourceButton.MAPNIK) {
             this.setTileSource(sources[0]);
             Main.pref.put("slippy_map_chooser.mapstyle", "mapnik");
-        } else {
+        }else if (mapSource == SourceButton.CYCLEMAP) {
+            this.setTileSource(sources[2]);
+            Main.pref.put("slippy_map_chooser.mapstyle", "cyclemap");
+        }else {
             this.setTileSource(sources[1]);
             Main.pref.put("slippy_map_chooser.mapstyle", "osmarender");
         }

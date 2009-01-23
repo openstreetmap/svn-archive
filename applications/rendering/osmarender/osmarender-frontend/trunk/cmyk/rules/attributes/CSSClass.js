@@ -2,7 +2,8 @@ dojo.provide("cmyk.rules.attributes.CSSClass");
 
 dojo.require("cmyk.rules.attributes._multiAttribute");
 
-dojo.require("cmyk.utils.Evaluators");
+dojo.require("cmyk.utils.Dimensions");
+//dojo.require("cmyk.utils.Validators");
 
 /**
 	@lends cmyk.rules.attributes.CSSClass
@@ -16,11 +17,17 @@ dojo.declare("cmyk.rules.attributes.CSSClass",cmyk.rules.attributes._multiAttrib
 	      @extends cmyk.rules.attributes._Attribute
 	*/
 	constructor: function(attribute_value) {
-		var evaluator = new cmyk.utils.Evaluators();
+//console.debug("before");
+//var dimension = new cmyk.utils.Dimensions("10px");
+//TODO: this not works... but the above yes... why????
+		//var validator = new cmyk.utils.Validators("class",attribute_value,"cmyk.rules.attributes.CSSClass");
+//console.debug("after");
+//		var validator = new cmyk.utils.Validators();
+		//validator.setValidator(validator._ISVALIDCLASS);
 		this.setName("class");
 		this.setSplitter(" ");
 		this.setValue(attribute_value);
-		this.setEvaluator(evaluator._ISVALIDCLASS);
+		//this.setValidator(validator);
 	},
 });
 

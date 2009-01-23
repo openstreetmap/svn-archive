@@ -1,25 +1,22 @@
 <project name="validator" default="dist" basedir=".">
-<!-- compilation properties -->
-    <property name="josm.build.dir"   value="../../core"/>
-    <property name="josm.home.dir"    value="${user.home}/.josm"/>
-    <property name="plugin.build.dir" value="build"/>
-    <property name="plugin.dist.dir"  value="../../dist"/>
-    <property name="plugin.name"      value="${ant.project.name}"/>
-    <property name="plugin.jar"       value="../../dist/${plugin.name}.jar"/>
-<!-- point to your JOSM directory -->
-    <property name="josm" location="../../core/dist/josm-custom.jar" />
+    <property name="josm"                   location="../../core/dist/josm-custom.jar" />
+    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.build.dir"       value="build"/>
+    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="ant.build.javac.target" value="1.5"/>
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
-        <javac srcdir="src" classpath="${josm}" destdir="build" debug="true" encoding="UTF-8">
+        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}" encoding="UTF-8">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
             <include name="**/*.java" />
         </javac>
     </target>
-    <target name="dist" depends="clean, compile">
-        <copy todir="build/images">
+    <target name="dist" depends="compile">
+        <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
@@ -30,7 +27,7 @@
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
-        <jar destfile="${plugin.jar}" basedir="build">
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <manifest>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin"/>
                 <attribute name="Plugin-Description" value="A OSM data validator"/>
@@ -41,15 +38,8 @@
             </manifest>
         </jar>
     </target>
-<!-- clean target -->
     <target name="clean">
         <delete dir="${plugin.build.dir}" />
         <delete file="${plugin.jar}" />
-    </target>
-    <target name="install" depends="dist">
-        <copy file="${plugin.jar}" todir="${user.home}/.josm/plugins"/>
-    </target>
-    <target name="test" depends="install">
-        <java jar="${josm}" fork="true"></java>
     </target>
 </project>

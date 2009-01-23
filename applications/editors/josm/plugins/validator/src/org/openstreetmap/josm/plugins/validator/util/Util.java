@@ -32,43 +32,6 @@ public class Util
     }
 
     /**
-     * Returns the version
-     * @return The version of the application
-     */
-    public static Version getVersion()
-    {
-        PluginInformation info = PluginInformation.getLoaded("validator");
-        if( info == null )
-            return null;
-
-        return new Version(info.version, info.attr.get("Plugin-Date"));
-    }
-
-    /**
-     * Utility class for displaying versions
-     *
-     * @author frsantos
-     */
-    public static class Version
-    {
-        /** The revision */
-        public String revision;
-        /** The build time */
-        public String time;
-
-        /**
-         * Constructor
-         * @param revision
-         * @param time
-         */
-        public Version(String revision, String time)
-        {
-            this.revision = revision;
-            this.time = time;
-        }
-    }
-
-    /**
      * Returns the start and end cells of a way.
      * @param w The way
      * @param cellWays The map with all cells

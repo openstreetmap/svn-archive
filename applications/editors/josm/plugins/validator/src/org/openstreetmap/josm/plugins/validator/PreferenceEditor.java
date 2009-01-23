@@ -15,7 +15,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.validator.util.Util;
-import org.openstreetmap.josm.plugins.validator.util.Util.Version;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -88,10 +87,7 @@ public class PreferenceEditor implements PreferenceSetting
         JScrollPane testPane = new JScrollPane(testPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         testPane.setBorder(null);
 
-        Version ver = Util.getVersion();
         String description = tr("An OSM data validator that checks for common errors made by users and editor programs.");
-        if( ver != null )
-            description += "<br>" + tr("Version {0} - Last change at {1}", ver.revision, ver.time);
         JPanel tab = gui.createPreferenceTab("validator", tr("Data validator"), description);
         tab.add(testPane, GBC.eol().fill(GBC.BOTH));
         tab.add(GBC.glue(0,10), a);

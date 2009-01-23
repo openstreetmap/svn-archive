@@ -21,7 +21,7 @@ import livegps.LiveGpsPlugin;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
-import org.openstreetmap.josm.plugins.PluginProxy;
+import org.openstreetmap.josm.plugins.PluginHandler;
 
 /**
  * Plugin that uses live gps data and a button panel to add nodes/waypoints etc at the current
@@ -43,37 +43,7 @@ public class SurveyorPlugin {
     public SurveyorPlugin() {
         super();
 
-        // try to determine if the livegps plugin was already loaded:
-//        PluginInformation pluginInfo = PluginInformation.getLoaded("livegps");
-//        if (pluginInfo == null) {
-//          JOptionPane.showMessageDialog(null, "Please install wmsplugin");
-//          return;
-//        }
-//        if (!pluginInfo.version.equals("2")) {
-//          JOptionPane.showMessageDialog(null, "livegps Version 2 required.");
-//          return;
-//        }
-        try {
-            Class.forName("livegps.LiveGpsPlugin");
-        } catch(ClassNotFoundException cnfe) {
-            String message =
-                tr("SurveyorPlugin depends on LiveGpsPlugin!") + "\n" +
-                tr("LiveGpsPlugin not found, please install and activate.") + "\n" +
-                tr("SurveyorPlugin is disabled for the moment");
-            JOptionPane.showMessageDialog(Main.parent, message, tr("SurveyorPlugin"), JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-
-        LiveGpsPlugin gpsPlugin = null;
-        Iterator<PluginProxy> proxyIter = Main.plugins.iterator();
-        while(proxyIter.hasNext()) {
-            Object plugin = proxyIter.next().plugin;
-            if(plugin instanceof LiveGpsPlugin) {
-                gpsPlugin = (LiveGpsPlugin) plugin;
-                break;
-            }
-        }
+        LiveGpsPlugin gpsPlugin = (LiveGpsPlugin) PluginHandler.getPlugin("livegps");
         if(gpsPlugin == null)
             throw new IllegalStateException(tr("SurveyorPlugin needs LiveGpsPlugin, but could not find it!"));
 

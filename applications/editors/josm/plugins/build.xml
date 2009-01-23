@@ -20,7 +20,6 @@
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
-        <ant antfile="build.xml" target="dist" dir="pluginmanager"/>
         <ant antfile="build.xml" target="dist" dir="remotecontrol"/>
         <ant antfile="build.xml" target="dist" dir="slippymap"/>
         <ant antfile="build.xml" target="dist" dir="slippy_map_chooser"/>
@@ -36,6 +35,7 @@
         <ant antfile="build.xml" target="dist" dir="duplicateway"/>
         <ant antfile="build.xml" target="dist" dir="grid"/>
         <ant antfile="build.xml" target="dist" dir="navigator"/>
+        <ant antfile="build.xml" target="dist" dir="pluginmanager"/>
     </target>
     <target name="clean">
         <ant antfile="build.xml" target="clean" dir="agpifoj"/>

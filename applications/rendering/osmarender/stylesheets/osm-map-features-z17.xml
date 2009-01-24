@@ -1272,129 +1272,129 @@
 		<!-- Linear cores (under construction) -->
 		<rule e="way" k="highway" v="construction">
 			<rule e="way" k="construction" v="steps">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-steps-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-steps-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="footway|footpath">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-footway-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-footway-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="pedestrian">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-pedestrian-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-pedestrian-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="cycleway">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-cycleway-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-cycleway-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="path">
 				<rule e="way" k="bicycle" v="yes|designated">
-					<line class="under-construction-1"/>
-					<line class="highway-core highway-cycleway-core under-construction-2"/>
+					<line class="under-construction-1" smart-linecap="no"/>
+					<line class="highway-core highway-cycleway-core under-construction-2" smart-linecap="no"/>
 				</rule>
 				<else>
 					<rule e="way" k="horse" v="yes|designated">
-						<line class="under-construction-1"/>
-						<line class="highway-core highway-bridleway-core under-construction-2"/>
+						<line class="under-construction-1" smart-linecap="no"/>
+						<line class="highway-core highway-bridleway-core under-construction-2" smart-linecap="no"/>
 					</rule>
 					<else>
-						<line class="under-construction-1"/>
-						<line class="highway-core highway-footway-core under-construction-2"/>
+						<line class="under-construction-1" smart-linecap="no"/>
+						<line class="highway-core highway-footway-core under-construction-2" smart-linecap="no"/>
 					</else></else>
 			</rule>
 			<rule e="way" k="construction" v="bridleway">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-bridleway-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-bridleway-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="byway">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-byway-1-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-byway-1-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="track">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-track-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-track-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="unsurfaced">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-unsurfaced-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-unsurfaced-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="service">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-service-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-service-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="unclassified|residential|minor|living_street|cycleroad">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-unclassified-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-unclassified-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="road">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-road-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-road-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="tertiary_link">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-tertiary-link-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-tertiary-link-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="tertiary">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-tertiary-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-tertiary-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="secondary_link">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-secondary-link-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-secondary-link-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="secondary">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-secondary-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-secondary-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="primary_link">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-primary-link-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-primary-link-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="trunk_link">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-trunk-link-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-trunk-link-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="motorway_link">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-motorway-link-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-motorway-link-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="primary">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-primary-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-primary-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="trunk">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-trunk-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-trunk-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="motorway">
-				<line class="under-construction-1"/>
-				<line class="highway-core highway-motorway-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="highway-core highway-motorway-core under-construction-2" smart-linecap="no"/>
 			</rule>
 		</rule>
 		<rule e="way" k="railway" v="construction">
 			<rule e="way" k="construction" v="monorail">
-				<line class="under-construction-1"/>
-				<line class="railway-core railway-monorail-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="railway-core railway-monorail-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="preserved">
-				<line class="under-construction-1"/>
-				<line class="railway-core railway-preserved-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="railway-core railway-preserved-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="narrow_gauge">
-				<line class="under-construction-1"/>
-				<line class="railway-core railway-narrow-gauge-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="railway-core railway-narrow-gauge-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="tram">
-				<line class="under-construction-1"/>
-				<line class="railway-core railway-tram-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="railway-core railway-tram-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="subway">
 				<line class="railway-casing railway-subway-construction-casing"/>
 				<line class="railway-core railway-subway-construction-core"/>
 			</rule>
 			<rule e="way" k="construction" v="light_rail|incline">
-				<line class="under-construction-1"/>
-				<line class="railway-core railway-light-rail-core under-construction-2"/>
+				<line class="under-construction-1" smart-linecap="no"/>
+				<line class="railway-core railway-light-rail-core under-construction-2" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="construction" v="rail">
 				<line class="railway-casing railway-rail-construction-casing"/>
@@ -1406,100 +1406,100 @@
 		<!-- Linear cores (planned) -->
 		<rule e="way" k="highway" v="planned">
 			<rule e="way" k="planned" v="steps">
-				<line class="highway-core highway-steps-core planned"/>
+				<line class="highway-core highway-steps-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="footway|footpath">
-				<line class="highway-core highway-footway-core planned"/>
+				<line class="highway-core highway-footway-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="pedestrian">
-				<line class="highway-core highway-pedestrian-core planned"/>
+				<line class="highway-core highway-pedestrian-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="cycleway">
-				<line class="highway-core highway-cycleway-core planned"/>
+				<line class="highway-core highway-cycleway-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="path">
 				<rule e="way" k="bicycle" v="yes|designated">
-					<line class="highway-core highway-cycleway-core planned"/>
+					<line class="highway-core highway-cycleway-core planned" smart-linecap="no"/>
 				</rule>
 				<else>
 					<rule e="way" k="horse" v="yes|designated">
-						<line class="highway-core highway-bridleway-core planned"/>
+						<line class="highway-core highway-bridleway-core planned" smart-linecap="no"/>
 					</rule>
 					<else>
-						<line class="highway-core highway-footway-core planned"/>
+						<line class="highway-core highway-footway-core planned" smart-linecap="no"/>
 					</else></else>
 			</rule>
 			<rule e="way" k="planned" v="bridleway">
-				<line class="highway-core highway-bridleway-core planned"/>
+				<line class="highway-core highway-bridleway-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="byway">
-				<line class="highway-core highway-byway-1-core planned"/>
+				<line class="highway-core highway-byway-1-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="track">
-				<line class="highway-core highway-track-core planned"/>
+				<line class="highway-core highway-track-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="unsurfaced">
-				<line class="highway-core highway-unsurfaced-core planned"/>
+				<line class="highway-core highway-unsurfaced-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="service">
-				<line class="highway-core highway-service-core planned"/>
+				<line class="highway-core highway-service-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="unclassified|residential|minor|living_street|cycleroad">
-				<line class="highway-core highway-unclassified-core planned"/>
+				<line class="highway-core highway-unclassified-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="road">
-				<line class="highway-core highway-road-core planned"/>
+				<line class="highway-core highway-road-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="tertiary_link">
-				<line class="highway-core highway-tertiary-link-core planned"/>
+				<line class="highway-core highway-tertiary-link-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="tertiary">
-				<line class="highway-core highway-tertiary-core planned"/>
+				<line class="highway-core highway-tertiary-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="secondary_link">
-				<line class="highway-core highway-secondary-link-core planned"/>
+				<line class="highway-core highway-secondary-link-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="secondary">
-				<line class="highway-core highway-secondary-core planned"/>
+				<line class="highway-core highway-secondary-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="primary_link">
-				<line class="highway-core highway-primary-link-core planned"/>
+				<line class="highway-core highway-primary-link-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="trunk_link">
-				<line class="highway-core highway-trunk-link-core planned"/>
+				<line class="highway-core highway-trunk-link-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="motorway_link">
-				<line class="highway-core highway-motorway-link-core planned"/>
+				<line class="highway-core highway-motorway-link-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="primary">
-				<line class="highway-core highway-primary-core planned"/>
+				<line class="highway-core highway-primary-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="trunk">
-				<line class="highway-core highway-trunk-core planned"/>
+				<line class="highway-core highway-trunk-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="motorway">
-				<line class="highway-core highway-motorway-core planned"/>
+				<line class="highway-core highway-motorway-core planned" smart-linecap="no"/>
 			</rule>
 		</rule>
 		<rule e="way" k="railway" v="planned">
 			<rule e="way" k="planned" v="monorail">
-				<line class="railway-core railway-monorail-core planned"/>
+				<line class="railway-core railway-monorail-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="preserved">
-				<line class="railway-core railway-preserved-core planned"/>
+				<line class="railway-core railway-preserved-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="narrow_gauge">
-				<line class="railway-core railway-narrow-gauge-core planned"/>
+				<line class="railway-core railway-narrow-gauge-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="tram">
-				<line class="railway-core railway-tram-core planned"/>
+				<line class="railway-core railway-tram-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="subway">
 				<line class="railway-casing railway-subway-planned-casing"/>
 				<line class="railway-core railway-subway-planned-core"/>
 			</rule>
 			<rule e="way" k="planned" v="light_rail|incline">
-				<line class="railway-core railway-light-rail-core planned"/>
+				<line class="railway-core railway-light-rail-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="rail">
 				<line class="railway-casing railway-rail-planned-casing"/>
@@ -1511,120 +1511,120 @@
 		<!-- Linear cores (disused) -->
 		<rule e="way" k="highway" v="disused">
 			<rule e="way" k="disused" v="steps">
-				<line class="highway-core highway-steps-core disused-1"/>
+				<line class="highway-core highway-steps-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="footway|footpath">
-				<line class="highway-core highway-footway-core disused-1"/>
+				<line class="highway-core highway-footway-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="pedestrian">
-				<line class="highway-core highway-pedestrian-core disused-1"/>
+				<line class="highway-core highway-pedestrian-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="cycleway">
-				<line class="highway-core highway-cycleway-core disused-1"/>
+				<line class="highway-core highway-cycleway-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="path">
 				<rule e="way" k="bicycle" v="yes|designated">
-					<line class="highway-core highway-cycleway-core disused-1"/>
+					<line class="highway-core highway-cycleway-core disused-1" smart-linecap="no"/>
 					<line class="disused-2" smart-linecap="no" />
 				</rule>
 				<else>
 					<rule e="way" k="horse" v="yes|designated">
-						<line class="highway-core highway-bridleway-core disused-1"/>
+						<line class="highway-core highway-bridleway-core disused-1" smart-linecap="no"/>
 						<line class="disused-2" smart-linecap="no" />
 					</rule>
 					<else>
-						<line class="highway-core highway-footway-core disused-1"/>
+						<line class="highway-core highway-footway-core disused-1" smart-linecap="no"/>
 						<line class="disused-2" smart-linecap="no" />
 					</else></else>
 			</rule>
 			<rule e="way" k="disused" v="bridleway">
-				<line class="highway-core highway-bridleway-core disused-1"/>
+				<line class="highway-core highway-bridleway-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="byway">
-				<line class="highway-core highway-byway-1-core disused-1"/>
+				<line class="highway-core highway-byway-1-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="track">
-				<line class="highway-core highway-track-core disused-1"/>
+				<line class="highway-core highway-track-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="unsurfaced">
-				<line class="highway-core highway-unsurfaced-core disused-1"/>
+				<line class="highway-core highway-unsurfaced-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="service">
-				<line class="highway-core highway-service-core disused-1"/>
+				<line class="highway-core highway-service-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="unclassified|residential|minor|living_street|cycleroad">
-				<line class="highway-core highway-unclassified-core disused-1"/>
+				<line class="highway-core highway-unclassified-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="road">
-				<line class="highway-core highway-road-core disused-1"/>
+				<line class="highway-core highway-road-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="tertiary_link">
-				<line class="highway-core highway-tertiary-link-core disused-1"/>
+				<line class="highway-core highway-tertiary-link-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="tertiary">
-				<line class="highway-core highway-tertiary-core disused-1"/>
+				<line class="highway-core highway-tertiary-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="secondary_link">
-				<line class="highway-core highway-secondary-link-core disused-1"/>
+				<line class="highway-core highway-secondary-link-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="secondary">
-				<line class="highway-core highway-secondary-core disused-1"/>
+				<line class="highway-core highway-secondary-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="primary_link">
-				<line class="highway-core highway-primary-link-core disused-1"/>
+				<line class="highway-core highway-primary-link-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="trunk_link">
-				<line class="highway-core highway-trunk-link-core disused-1"/>
+				<line class="highway-core highway-trunk-link-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="motorway_link">
-				<line class="highway-core highway-motorway-link-core disused-1"/>
+				<line class="highway-core highway-motorway-link-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="primary">
-				<line class="highway-core highway-primary-core disused-1"/>
+				<line class="highway-core highway-primary-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="trunk">
-				<line class="highway-core highway-trunk-core disused-1"/>
+				<line class="highway-core highway-trunk-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="motorway">
-				<line class="highway-core highway-motorway-core disused-1"/>
+				<line class="highway-core highway-motorway-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 		</rule>
 		<rule e="way" k="railway" v="disused">
 			<rule e="way" k="disused" v="monorail">
-				<line class="railway-core railway-monorail-core disused-1"/>
+				<line class="railway-core railway-monorail-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="preserved">
-				<line class="railway-core railway-preserved-core disused-1"/>
+				<line class="railway-core railway-preserved-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="narrow_gauge">
-				<line class="railway-core railway-narrow-gauge-core disused-1"/>
+				<line class="railway-core railway-narrow-gauge-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="tram">
-				<line class="railway-core railway-tram-core disused-1"/>
+				<line class="railway-core railway-tram-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="subway">
@@ -1633,7 +1633,7 @@
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="light_rail|incline">
-				<line class="railway-core railway-light-rail-core disused-1"/>
+				<line class="railway-core railway-light-rail-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="disused" v="rail">
@@ -1651,116 +1651,116 @@
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="footway|footpath">
-				<line class="highway-core highway-footway-core abandoned-1"/>
+				<line class="highway-core highway-footway-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="pedestrian">
-				<line class="highway-core highway-pedestrian-core abandoned-1"/>
+				<line class="highway-core highway-pedestrian-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="cycleway">
-				<line class="highway-core highway-cycleway-core abandoned-1"/>
+				<line class="highway-core highway-cycleway-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="path">
 				<rule e="way" k="bicycle" v="yes|designated">
-					<line class="highway-core highway-cycleway-core abandoned-1"/>
+					<line class="highway-core highway-cycleway-core abandoned-1" smart-linecap="no"/>
 					<line class="abandoned-2" smart-linecap="no" />
 				</rule>
 				<else>
 					<rule e="way" k="horse" v="yes|designated">
-						<line class="highway-core highway-bridleway-core abandoned-1"/>
+						<line class="highway-core highway-bridleway-core abandoned-1" smart-linecap="no"/>
 						<line class="abandoned-2" smart-linecap="no" />
 					</rule>
 					<else>
-						<line class="highway-core highway-footway-core abandoned-1"/>
+						<line class="highway-core highway-footway-core abandoned-1" smart-linecap="no"/>
 						<line class="abandoned-2" smart-linecap="no" />
 					</else></else>
 			</rule>
 			<rule e="way" k="abandoned" v="bridleway">
-				<line class="highway-core highway-bridleway-core abandoned-1"/>
+				<line class="highway-core highway-bridleway-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="byway">
-				<line class="highway-core highway-byway-1-core abandoned-1"/>
+				<line class="highway-core highway-byway-1-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="track">
-				<line class="highway-core highway-track-core abandoned-1"/>
+				<line class="highway-core highway-track-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="unsurfaced">
-				<line class="highway-core highway-unsurfaced-core abandoned-1"/>
+				<line class="highway-core highway-unsurfaced-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="service">
-				<line class="highway-core highway-service-core abandoned-1"/>
+				<line class="highway-core highway-service-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="unclassified|residential|minor|living_street|cycleroad">
-				<line class="highway-core highway-unclassified-core abandoned-1"/>
+				<line class="highway-core highway-unclassified-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="road">
-				<line class="highway-core highway-road-core abandoned-1"/>
+				<line class="highway-core highway-road-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="tertiary_link">
-				<line class="highway-core highway-tertiary-link-core abandoned-1"/>
+				<line class="highway-core highway-tertiary-link-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="tertiary">
-				<line class="highway-core highway-tertiary-core abandoned-1"/>
+				<line class="highway-core highway-tertiary-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="secondary_link">
-				<line class="highway-core highway-secondary-link-core abandoned-1"/>
+				<line class="highway-core highway-secondary-link-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="secondary">
-				<line class="highway-core highway-secondary-core abandoned-1"/>
+				<line class="highway-core highway-secondary-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="primary_link">
-				<line class="highway-core highway-primary-link-core abandoned-1"/>
+				<line class="highway-core highway-primary-link-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="trunk_link">
-				<line class="highway-core highway-trunk-link-core abandoned-1"/>
+				<line class="highway-core highway-trunk-link-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="motorway_link">
-				<line class="highway-core highway-motorway-link-core abandoned-1"/>
+				<line class="highway-core highway-motorway-link-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="primary">
-				<line class="highway-core highway-primary-core abandoned-1"/>
+				<line class="highway-core highway-primary-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="trunk">
-				<line class="highway-core highway-trunk-core abandoned-1"/>
+				<line class="highway-core highway-trunk-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="motorway">
-				<line class="highway-core highway-motorway-core abandoned-1"/>
+				<line class="highway-core highway-motorway-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 		</rule>
 		<rule e="way" k="railway" v="abandoned">
 			<rule e="way" k="abandoned" v="monorail">
-				<line class="railway-core railway-monorail-core abandoned-1"/>
+				<line class="railway-core railway-monorail-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="preserved">
-				<line class="railway-core railway-preserved-core abandoned-1"/>
+				<line class="railway-core railway-preserved-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="narrow_gauge">
-				<line class="railway-core railway-narrow-gauge-core abandoned-1"/>
+				<line class="railway-core railway-narrow-gauge-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="tram">
-				<line class="railway-core railway-tram-core abandoned-1"/>
+				<line class="railway-core railway-tram-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="subway">
@@ -1769,7 +1769,7 @@
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="light_rail|incline">
-				<line class="railway-core railway-light-rail-core abandoned-1"/>
+				<line class="railway-core railway-light-rail-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 			<rule e="way" k="abandoned" v="rail">

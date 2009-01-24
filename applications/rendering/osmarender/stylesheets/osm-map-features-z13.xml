@@ -921,7 +921,7 @@
 		
 		<rule e="way" k="highway" v="*">
 			<rule e="way" k="construction" v="yes|true">
-				<line class="wrong-under-construction"/>
+				<line class="wrong-under-construction" smart-linecap="no"/>
 			</rule>
 		</rule>
 
@@ -1464,7 +1464,7 @@
 			
 			/* Generic under-construction style - makes any way dashed */
 			.under-construction { stroke-dasharray: 12, 18; }
-			.wrong-under-construction { stroke-width: 20px; stroke: #ffffff; stroke-dasharray: 20, 20; fill:none; }
+			.wrong-under-construction { stroke-width:5px; stroke: #ffffff; stroke-dasharray: 20, 20; fill:none; }
 
 
 			.railway-station {

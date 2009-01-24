@@ -1793,7 +1793,7 @@
 		<!-- access restrictions -->
 		<rule e="way" k="highway" v="*">
 			<rule e="way" k="construction" v="yes|true">
-				<line class="wrong-under-construction"/>
+				<line class="wrong-under-construction" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="area" v="yes|true">
 				<rule e="way" k="access" v="private">
@@ -3759,6 +3759,7 @@
 			/* Generic under-construction style - makes any way dashed */
 			.under-construction-1 { stroke-width: 0.1px; stroke: #707070; stroke-dasharray: 0.5, 0.5; stroke-linecap: butt; fill:none; }
 			.under-construction-2 { stroke-dasharray: 4, 4; stroke-linecap: butt;}
+			.wrong-under-construction { stroke-width: 1.5px; stroke: #ffffff; stroke-dasharray: 4, 4; fill:none; }
 
 			/* Generic planned style - makes any way dashed */
 			.planned { stroke-dasharray: 0.5, 3; stroke-linecap: butt;}

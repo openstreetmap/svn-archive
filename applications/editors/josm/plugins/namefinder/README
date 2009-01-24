@@ -1,9 +1,0 @@
-A very simple implementation of a Name Finder that will
-add a "place" tab to the download dialog and connect to
-David Earl's name finder service to get results.
-
-Author: Frederik Ramm <frederik@remote.org>
-License: Public Domain
-
-(but note, some JOSM components & MinML library are used
-which may have different licensing.)

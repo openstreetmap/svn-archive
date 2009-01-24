@@ -68,8 +68,19 @@ def edit_osm_obj(type, id, post):
         if k in obj['tags'] and post[key] != obj['tags'][k]:
             changed = True
             obj['tags'][k] = post[key]
-    
-    
+   
+    print post.keys()
+    for key in filter(lambda x: x.startswith("new_key_"), post.keys()):
+        new_id = key.replace("new_key_", "")
+        kname = "new_key_%s" % new_id
+        vname = "new_value_%s" % new_id
+        if kname in post and vname in post:
+            k = post[kname]
+            v = post[vname]
+            if k and v:
+                obj['tags'][k] = v
+                changed = True
+            
     if not changed: return
 
     for k, v in obj['tags'].items():

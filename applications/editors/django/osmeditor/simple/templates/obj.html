@@ -19,8 +19,30 @@
     </tr>    
 {% endfor %}
 </table>
+Add more tags<a href="#" onclick='document.getElementById("new_keys").style.display="";return false'>...</a>
+<div id="new_keys" style="display:none">
+<table>
+  <tr>
+    <td>Tag 1: <input name="new_key_1" /></td>
+    <td><input name="new_value_1" /></td>
+    <td></td>
+  </tr>  
+  <tr>
+    <td>Tag 2: <input name="new_key_2" /></td>
+    <td><input name="new_value_2" /></td>
+    <td></td>
+  </tr>  
+  <tr>
+    <td>Tag 3: <input name="new_key_3" /></td>
+    <td><input name="new_value_3" /></td>
+    <td></td>
+  </tr>  
+</table>  
+</div>
+<div>
 Username: <input type="text" name="username" /><br />
 Password: <input type="text" name="password" />
+</div>
 <input type="submit" value="Change" />
 </form>
 {% endblock %}

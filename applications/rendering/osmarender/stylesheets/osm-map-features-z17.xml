@@ -4488,7 +4488,7 @@
 
 			/* Power line and pipeline casing */
 			.powerline-pipeline-casing {
-			stroke-width: 0.2px;
+			stroke-width: 0.1px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #ffffff;
@@ -4497,17 +4497,17 @@
 			}
 			/* Power line */
 			.power-line {
-			stroke-width: 0.2px;
+			stroke-width: 0.1px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #808080;
-			stroke-dasharray: 1 ,1;
+			stroke-dasharray: 2 ,1;
 			fill: none;
 			}
 
 			/* Pipelines */
 			.pipeline-unknown {
-			stroke-width: 0.2px;
+			stroke-width: 0.1px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #a0a0a0;
@@ -4516,7 +4516,7 @@
 			}
 
 			.pipeline-water {
-			stroke-width: 0.2px;
+			stroke-width: 0.1px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #4080f0;
@@ -4525,7 +4525,7 @@
 			}
 
 			.pipeline-gas {
-			stroke-width: 0.2px;
+			stroke-width: 0.1px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #e0f000;
@@ -4534,7 +4534,7 @@
 			}
 
 			.pipeline-oil {
-			stroke-width: 0.2px;
+			stroke-width: 0.1px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #40f040;
@@ -4543,7 +4543,7 @@
 			}
 
 			.pipeline-sewage {
-			stroke-width: 0.2px;
+			stroke-width: 0.1px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #908030;
@@ -4552,7 +4552,7 @@
 			}
 
 			.pipeline-heat {
-			stroke-width: 0.2px;
+			stroke-width: 0.1px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #f03060;

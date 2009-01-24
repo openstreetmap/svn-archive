@@ -94,7 +94,7 @@
 		</rule>
 		<rule e="way" k="leisure" v="nature_reserve">
 			<area class="leisure-nature_reserve"/>
-			<areaSymbol ref="bird" position="center"/>
+			<symbol ref="bird" position="center"/>
 		</rule>
 		<rule e="way" k="leisure" v="stadium|sports_centre|water_park">
 			<area class="leisure-stadium"/>
@@ -1204,7 +1204,7 @@
 		</rule>
 		<rule e="way" k="man_made" v="piste:halfpipe">
 			<area class="man-made-piste-halfpipe"/>
-			<areaSymbol ref="man-made-halfpipe" position="center"/>
+			<symbol ref="man-made-halfpipe" position="center"/>
 		</rule>
 		
 		<!-- Surface lifts (render over pistes) -->

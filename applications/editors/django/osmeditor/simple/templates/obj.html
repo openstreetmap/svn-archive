@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{obj.type.title}} {{ obj.id }}{% endblock %}
+{% block body %}
+<h2>{{ obj.type.title }} {{ obj.id }}</h2>
+
+<p>
+  Last edited {{ obj.timestamp }}
+</p>  
+<form method="POST">
+<input type="hidden" name="id" value="{{ obj.id }}" />
+<input type="hidden" name="type" value="{{ obj.type }}" />
+<input type="hidden" name="timestamp" value="{{ obj.timestamp }}" />
+<table>
+{% for k, v in obj.tags.items %}
+    <tr>
+        <td><b>{{ k }}</b>:</td>
+        <td> <input name="key_{{k}}" value="{{ v }}" /></td>
+        <td> <input type="checkbox" name="delete_key_{{k}}" value="delete" /> Delete?</td>
+    </tr>    
+{% endfor %}
+</table>
+Username: <input type="text" name="username" /><br />
+Password: <input type="text" name="password" />
+<input type="submit" value="Change" />
+</form>
+{% endblock %}

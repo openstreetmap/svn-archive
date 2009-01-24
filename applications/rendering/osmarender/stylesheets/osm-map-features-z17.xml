@@ -97,7 +97,7 @@
 		</rule>
 		<rule e="way" k="leisure" v="nature_reserve">
 			<area class="leisure-nature_reserve"/>
-			<areaSymbol ref="bird" position="center"/>
+			<symbol ref="bird" position="center"/>
 		</rule>
 		<rule e="way" k="leisure" v="stadium|sports_centre|water_park">
 			<area class="leisure-stadium"/>
@@ -2410,23 +2410,23 @@
 		</rule>
 		<rule e="node|way" k="amenity" v="parking">
 			<rule e="node|way" k="parking" v="park_and_ride">
-				<areaSymbol ref="park_and_ride" position="center"/>
+				<symbol ref="park_and_ride" position="center"/>
 			</rule>
 			<else>
 				<rule e="node|way" k="parking" v="multi-storey|underground">
 					<rule e="node|way" k="fee" v="yes">
-						<areaSymbol ref="parking_roof_fee" position="center"/>
+						<symbol ref="parking_roof_fee" position="center"/>
 					</rule>
 					<else>
-						<areaSymbol ref="parking_roof" position="center"/>
+						<symbol ref="parking_roof" position="center"/>
 					</else>
 				</rule>
 				<else>
 					<rule e="node|way" k="fee" v="yes">
-						<areaSymbol ref="parking_fee" position="center"/>
+						<symbol ref="parking_fee" position="center"/>
 					</rule>
 					<else>
-						<areaSymbol ref="parking" position="center"/>
+						<symbol ref="parking" position="center"/>
 					</else>
 				</else>
 			</else>
@@ -2488,7 +2488,7 @@
 			<symbol ref="slipway" position="center"/>
 		</rule>
 		<rule e="node|way" k="leisure" v="playground">
-			<areaSymbol ref="playground" position="center"/>
+			<symbol ref="playground" position="center"/>
 		</rule>
 
 		<!-- Sport symbols -->
@@ -2888,12 +2888,6 @@
 				<text k="name" class="place-caption peak-caption" dy="-1.5px" layer="5"/>
 				<text k="ele" class="place-caption" font-size="1px" dy="2.0px" layer="5"/>
 			</rule>
-			<rule e="way" k="amenity" v="bank">
-				<areaSymbol ref="bank" position="center"/>
-			</rule>
-			<rule e="way" k="amenity" v="atm">
-				<areaSymbol ref="atm" position="center"/>
-			</rule>
 			<rule e="node" k="place" v="islet" layer="5">
 				<text k="name" class="place-caption islet-caption" layer="5"/>
 			</rule>
@@ -2983,11 +2977,11 @@
 		<!-- House numbers -->
 		<rule e="way" k="addr:housenumber" v="*" layer="5">
 			<rule e="way" k="power|tourism|amenity|man_made|shop|historic" v="tower|hotel|hostel|information|camp_site|hospital|doctor|pharmacy|postoffice|pub|cafe|cinema|theatre|windmill|place_of_worship|parking|school|university|college|supermarket|organic|shelter|library|fire_station|fuel|recycling|toilets|drinking_water|bank|atm|museum" layer="5">
-				<areaSymbol ref="housenumber" position="center" transform="translate(15,0)" layer="5"/>
+				<symbol ref="housenumber" position="center" transform="translate(15,0)" layer="5"/>
 				<areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>
 			</rule>
 			<else>
-					<areaSymbol ref="housenumber" position="center" layer="5"/>
+					<symbol ref="housenumber" position="center" layer="5"/>
 					<areaText k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" layer="5"/>
 			</else>
 		</rule>

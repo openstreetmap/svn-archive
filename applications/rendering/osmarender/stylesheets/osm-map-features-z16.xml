@@ -3423,7 +3423,7 @@
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #808080;
-			stroke-dasharray: 2 ,2;
+			stroke-dasharray: 4 ,2;
 			fill: none;
 			}
 			

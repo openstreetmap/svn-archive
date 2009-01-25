@@ -15,7 +15,7 @@ while(my $line = <>)
   {
     print "tr($1) /* mappaint style named $1 */\n";
   }
-  elsif($line =~ /colour="([^"]*)#/)
+  elsif($line =~ /colour="([^"]+)#/)
   {
     print "tr(\"$1\") /* color $1 */\n";
   }

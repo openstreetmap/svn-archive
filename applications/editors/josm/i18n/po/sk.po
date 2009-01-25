@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-23 23:17+0100\n"
-"PO-Revision-Date: 2009-01-23 09:09+0000\n"
+"POT-Creation-Date: 2009-01-26 00:21+0100\n"
+"PO-Revision-Date: 2009-01-25 20:04+0000\n"
 "Last-Translator: Vlado <babicvm@szm.sk>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Launchpad-Export-Date: 2009-01-23 22:08+0000\n"
+"X-Launchpad-Export-Date: 2009-01-25 23:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:448
@@ -48,14 +48,14 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:457
 msgid "(Hint: You can edit the shortcuts in the preferences.)"
-msgstr "(Pomoc: Skratky môžeš modifikovať v preferenciách)"
+msgstr "(Pomoc: Skratky môžeš modifikovať v nastaveniach)"
 
 #: ../core/src/org/openstreetmap/josm/tools/DontShowAgainInfo.java:32
 msgid "Do not show again"
 msgstr "Nezobrazovať v budúcnosti"
 
 #: ../core/src/org/openstreetmap/josm/tools/DontShowAgainInfo.java:37
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:296
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:297
 msgid "Information"
 msgstr "Informácia"
 
@@ -76,8 +76,8 @@ msgid ""
 msgstr ""
 "V programe sa vyskytla chyba.\n"
 "\n"
-"Ak používaš najnovšiu verziu JOSM buď taký dobrý a oznám (vlož do databázy "
-"chýb) správu."
+"Ak používaš najnovšiu verziu JOSM buďte  taký dobrý a oznámte (vložte do "
+"databázy chýb) správu."
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:63
 msgid "Unexpected Exception"
@@ -86,11 +86,11 @@ msgstr "Neočakávaná chyba programu."
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:76
 #, java-format
 msgid "Please report a ticket at {0}"
-msgstr "Prosíme napíš chybovú správu v {0}"
+msgstr "Prosíme napíšte chybovú správu v {0}"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:77
 msgid "Include your steps to get to the error (as detailed as possible)!"
-msgstr "Opíš (detailne) kroky ktoré vedú k chybe."
+msgstr "Opíšte (detailne) kroky, ktoré vedú k chybe."
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:78
 msgid ""
@@ -102,7 +102,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:79
 msgid "Be sure to include the following information:"
-msgstr "Prosím pripoj nasledujúcu informáciu:"
+msgstr "Prosím pripojte nasledujúcu informáciu:"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:84
 msgid "(The text has already been copied to your clipboard.)"
@@ -120,7 +120,7 @@ msgstr "Chyba prehrávánia zvuku"
 #: ../core/src/org/openstreetmap/josm/io/BoundingBoxDownloader.java:43
 #: ../core/src/org/openstreetmap/josm/io/BoundingBoxDownloader.java:94
 msgid "Contacting OSM Server..."
-msgstr "Kontaktuje OSM server..."
+msgstr "Kontaktujem OSM Server..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerObjectReader.java:51
 #: ../core/src/org/openstreetmap/josm/io/BoundingBoxDownloader.java:100
@@ -131,7 +131,7 @@ msgstr "Sťahujem OSM dáta..."
 #: ../core/src/org/openstreetmap/josm/io/DiffResultReader.java:72
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:267
 msgid "NullPointerException, possibly some missing tags."
-msgstr "NullPointerException, pravdepodobne chýbajú niektoré tagy."
+msgstr "NullPointerException, pravdepodobne chýbajú niektoré značky (tagy)."
 
 #: ../core/src/org/openstreetmap/josm/io/DiffResultReader.java:99
 msgid "Preparing data..."
@@ -176,7 +176,7 @@ msgstr "<nd> má nulový ref"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:244
 msgid "Found <member> element in non-relation."
-msgstr "Nájdený <member> tag mimo relácie."
+msgstr "Nájdený <member> element mimo relácie."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:252
 msgid "Incomplete <member> specification with ref=0"
@@ -212,20 +212,20 @@ msgstr "Chyba parsovania: Chybná štruktúra GPX dokumentu"
 msgid "Contacting Server..."
 msgstr "Kontaktujem server..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:116
-msgid "Provide a brief comment for the changes you are uploading:"
-msgstr ""
-
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:117
+msgid "Provide a brief comment for the changes you are uploading:"
+msgstr "Doplniť krátky komentár k nahrávaným zmenám"
+
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:118
 msgid "Commit comment"
 msgstr "Poslať komentár"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:146
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:148
 #, java-format
-msgid "Upload {0} {1} (id: {2}) {3}% {4}/{5} ({6} left)..."
-msgstr "Nahrávanie {0} {1} (id: {2}) {3}% {4}/{5} ({6} chýba)..."
+msgid "{0}% ({1}/{2}), {3} left. Uploading {4}: {5} (id: {6})"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:161
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:164
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:69
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:64
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:125
@@ -233,36 +233,36 @@ msgstr "Nahrávanie {0} {1} (id: {2}) {3}% {4}/{5} ({6} chýba)..."
 msgid "An error occurred: {0}"
 msgstr "Nastala chyba : {0}"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:189
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:192
 msgid "Opening changeset..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:223
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:226
 msgid "Server does not support changesets"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:245
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:347
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:429
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:597
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:248
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:350
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:432
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:600
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:184
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:707
 msgid "Unknown host"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:283
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:286
 msgid "Preparing..."
 msgstr "Pripravujem..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:293
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:296
 msgid "Uploading..."
 msgstr "Nahrávam..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:377
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:380
 msgid "Closing changeset..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:640
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:643
 msgid "Transfer aborted due to error (will wait for 5 seconds):"
 msgstr "Prenos pre chybu ukončený (budem čakať 5 sekúnd):"
 
@@ -301,7 +301,7 @@ msgid "Download \"Message of the day\""
 msgstr "Sťahujem \"Správu dňa\""
 
 #: ../core/src/org/openstreetmap/josm/Main.java:179
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:165
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:169
 msgid "Creating main GUI"
 msgstr "Vytváram hlavné grafické rozhranie ( GUI )"
 
@@ -314,15 +314,15 @@ msgstr "Nápoveda"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:251
 msgid "The projection could not be read from preferences. Using EPSG:4326"
-msgstr "Projekcia nemôže byť načítaná s nastavení. Použijem EPSG:4326"
+msgstr "Projekcia nemôže byť načítaná z nastavení. Použijem EPSG:4326"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:337
 msgid "Hint: Some changes came from uploading new data to the server."
-msgstr ""
+msgstr "Tip: Pri nahrávaní nových dát zo servera nastali nejaké zmeny."
 
 #: ../core/src/org/openstreetmap/josm/Main.java:339
 msgid "There are unsaved changes. Discard the changes and continue?"
-msgstr "Zmeny niesú uložené. Zahodit zmeny a pokračovať?"
+msgstr "Zmeny niesú uložené. Zahodiť zmeny a pokračovať?"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:340
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:80
@@ -339,31 +339,95 @@ msgstr "Ignorujem skomolenú URL: \"{0}\""
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "Ignorujem poškodený súbor z URL: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:112
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:116
 msgid "min lat"
 msgstr "min šírka"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:114
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:118
 msgid "min lon"
 msgstr "min dĺžka"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:116
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:120
 msgid "max lat"
 msgstr "max šírka"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:118
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:122
 msgid "max lon"
 msgstr "max dĺžka"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:121
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:125
 msgid ""
 "URL from www.openstreetmap.org (you can paste an URL here to download the "
 "area)"
 msgstr ""
+"URL z www.openstreetmap.org (môžete vložiť nejakú URL sem k stiahnutiu "
+"oblasti)"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:133
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:137
 msgid "Bounding Box"
 msgstr "Ohraničujúcí box"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:45
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:39
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:40
+msgid "Search..."
+msgstr "Vyhľadávať..."
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:120
+msgid "NullPointerException, Possibly some missing tags."
+msgstr "NullPointerException, pravdepodobne chýbajú niektoré značky(tagy)."
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:168
+msgid "Please enter a search string"
+msgstr "Prosím zadajte hľadaný reťazec"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:186
+msgid "Cannot read place search results from server"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:206
+msgid "Enter a place name to search for:"
+msgstr "Zapíšte názov miesta pre vihľadávanie:"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:218
+#: trans_presets.java:2464
+msgid "Places"
+msgstr "Miesta"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:235
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:241
+#: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/Marker.java:96
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:974
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1036
+msgid "name"
+msgstr "meno"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:236
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:242
+#: trans_presets.java:1511 trans_presets.java:1700 trans_presets.java:1706
+#: trans_presets.java:1712 trans_presets.java:1718 trans_presets.java:1724
+#: trans_presets.java:1730 trans_presets.java:1736 trans_presets.java:1742
+#: trans_presets.java:1748 trans_presets.java:1754 trans_presets.java:1760
+#: trans_presets.java:1766 trans_presets.java:1772 trans_presets.java:1778
+#: trans_presets.java:1784 trans_presets.java:1793 trans_presets.java:1800
+#: trans_presets.java:1808 trans_presets.java:1814 trans_presets.java:1820
+#: trans_presets.java:1826 trans_presets.java:1832 trans_presets.java:1838
+#: trans_presets.java:1844 trans_presets.java:1850 trans_presets.java:1856
+#: trans_presets.java:1862 trans_presets.java:1868 trans_presets.java:1874
+#: trans_presets.java:1880 trans_presets.java:1886 trans_presets.java:1892
+#: trans_presets.java:1898 trans_presets.java:1904
+msgid "type"
+msgstr "typ"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:237
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:243
+msgid "near"
+msgstr "blízko"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:238
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:244
+msgid "zoom"
+msgstr "zväčšenie"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:44
 msgid "Bookmarks"
@@ -387,7 +451,7 @@ msgstr "Prosím najskôr zadajte požadované koordináty."
 
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:83
 msgid "Please enter a name for the location."
-msgstr "Prosím zadajte meno pre lokáciu."
+msgstr "Prosím zadajte meno pre umiestnenie."
 
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:91
 msgid "Remove"
@@ -422,20 +486,20 @@ msgstr "Čísla dlaždíc"
 msgid "Data Sources and Types"
 msgstr "Zdroje a typy dát"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:141
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:142
 msgid "Download as new layer"
 msgstr "Uložiť ako novú vrstvu"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:144
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:145
 msgid "Download Area"
 msgstr "Stiahnuť plochu"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:193
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:194
 msgid "Download area too large; will probably be rejected by server"
 msgstr ""
 "Sťahovaná plocha je príliš veľká, server zrejme odmietne vašu požiadavku"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:196
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:197
 msgid "Download area ok, size probably acceptable to server"
 msgstr "Sťahovaná plocha je v poriadku, veľkosť je akceptovaná serverom"
 
@@ -459,11 +523,11 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/QuadStateCheckBox.java:96
 msgid ""
 "partial: different selected objects have different values, do not change"
-msgstr ""
+msgstr "partial: vybraté objekty majú rôzne hodnoty, do not change"
 
 #: ../core/src/org/openstreetmap/josm/gui/QuadStateCheckBox.java:101
 msgid "unset: do not set this property on the selected objects"
-msgstr ""
+msgstr "unset: táto vlastnosť sa nedá nastaviť na vybraté objekty."
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:37
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:38
@@ -528,8 +592,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:143
 #: ../core/src/org/openstreetmap/josm/gui/SplashScreen.java:67
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:154
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:130
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:166
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:134
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:170
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:121
 msgid "Java OpenStreetMap Editor"
 msgstr "Java OpenStreetMap Editor"
@@ -598,21 +662,21 @@ msgstr "Použiť prednastavenie \"{0}\" zo skupiny \"{1}\""
 msgid "Use preset ''{0}''"
 msgstr "Použiť prednastavenie \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:480
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:479
 msgid "Unknown type"
 msgstr "Neznámy typ"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:557
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:556
 #, java-format
 msgid "Could not read tagging preset source: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:560
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:559
 #, java-format
 msgid "Error parsing {0}: "
 msgstr "Chyba parsovania {0}: "
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:593
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:592
 #, java-format
 msgid "Change {0} object"
 msgid_plural "Change {0} objects"
@@ -620,7 +684,7 @@ msgstr[0] "Zmeniť {0} objekt"
 msgstr[1] "Zmeniť {0} objekty"
 msgstr[2] "Zmeniť {0} objektov"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:623
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:622
 msgid "Change Properties"
 msgstr "Zmeniť vlastnosti"
 
@@ -636,7 +700,7 @@ msgstr "Súbor"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:133
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:627
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:104
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:82
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:61
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:87
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:107
@@ -692,6 +756,7 @@ msgstr "Kontaktujem OSM server..."
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:325
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:151
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:41
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:102
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:60
 #: ../plugins/grid/src/grid/GridLayer.java:162
 #: ../plugins/grid/src/grid/GridLayer.java:199
@@ -790,7 +855,7 @@ msgid "Member Of"
 msgstr "Člen"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:510
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:290
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:284
 msgid "Role"
 msgstr "Úloha"
 
@@ -839,9 +904,9 @@ msgid "Delete Properties"
 msgstr "Zmazať vlastnosti"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:632
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:370
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:364
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:64
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:112
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:90
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:74
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:97
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:115
@@ -889,70 +954,70 @@ msgid ""
 "sensible way."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:290
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:284
 msgid "Occupied By"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:327
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:321
 msgid "Tags (empty value deletes tag)"
 msgstr "Značky (prázdne hodnoty zmazaných značiek)"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:329
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:323
 msgid "Members"
 msgstr "Členovia"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:334
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:328
 msgid "Move the currently selected members up"
 msgstr "Pridať všetky zvolené objekty medzi členy"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:340
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:334
 msgid "Move the currently selected members down"
 msgstr "Presunúť zvolenú vrstvu o riadok dolu."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:356
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:350
 msgid "Add Selected"
 msgstr "Pridať vybrané"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:357
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:351
 msgid "Add all currently selected objects as members"
 msgstr "Pridať všetky zvolené objekty medzi členy"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:363
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:357
 msgid "Delete Selected"
 msgstr "Zmazať vybrané"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:364
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:358
 msgid "Delete all currently selected objects from relation"
 msgstr "Vymazať všetky označené objekty z relácie"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:371
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:365
 msgid "Remove the member in the current table row from this relation"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:405
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:399
 msgid "Download Members"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:406
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:400
 msgid "Download all incomplete ways and nodes in relation"
 msgstr "Stiahnuť všetky nekompletné cesty a uzly v relácii"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:457
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:451
 #, java-format
 msgid "Members: {0}"
 msgstr "Členov: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:587
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:581
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:251
 msgid "There were conflicts during import."
 msgstr "Vznikli konflikty počas importu"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:595
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:589
 msgid "Error parsing server response."
 msgstr "Chyba parsovania odozvy servera"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:596
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:600
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:590
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:594
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:138
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:70
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:65
@@ -964,7 +1029,7 @@ msgstr "Chyba parsovania odozvy servera"
 msgid "Error"
 msgstr "Chyba"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:599
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:593
 msgid "Cannot connect to server."
 msgstr "Nemôžem sa pripojiť na server."
 
@@ -1040,18 +1105,18 @@ msgstr "# Objekty"
 msgid "Authors: {0}"
 msgstr "Autori: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:151
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:159
 msgid "Undock the panel"
 msgstr "Uvoľniť panel"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:199
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:208
 msgid ""
 "Close this panel. You can reopen it with the buttons in the left toolbar."
 msgstr ""
 "Zavrieť tento panel. Môžete ho znovu otvoriť  tlačítkom na ľavej nástrojovej "
 "lište."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:211
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:220
 msgid "Click to minimize/maximize the panel content"
 msgstr "Kľuknite pre minimalizovanie/maximalizovanie obsahu panelu"
 
@@ -1120,7 +1185,6 @@ msgid "Open a selection list window."
 msgstr "Otvoriť výber obsahu okien."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:111
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:95
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:74
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:88
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:89
@@ -1198,7 +1262,7 @@ msgstr "Výber: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:60
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:61
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:142
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:120
 msgid "Relations"
 msgstr "Relácie"
 
@@ -1206,36 +1270,32 @@ msgstr "Relácie"
 msgid "Open a list of all relations."
 msgstr "Otvoríť zoznam všetkých relácií"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:88
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:75
 #: ../core/src/org/openstreetmap/josm/actions/NewAction.java:17
 #: ../core/src/org/openstreetmap/josm/actions/NewAction.java:18
 msgid "New"
 msgstr "Nový"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:88
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:75
 msgid "Create a new relation"
 msgstr "Vytvoriť novú reláciu"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:95
-msgid "Select this relation"
-msgstr "Zvoliť túto reláciu"
-
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:104
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:82
 msgid "Open an editor for the selected relation"
 msgstr "Otvoriť editor pre zvolenú reláciu"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:112
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:90
 msgid "Delete the selected relation"
 msgstr "Zmazať vybraté relácie"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:140
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:118
 #, java-format
 msgid "Relations: {0}"
 msgstr "Relácie: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListPopup.java:26
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:138
-#: trans_surveyor.java:85
+#: trans_surveyor.java:64
 msgid "Info"
 msgstr "Informácie"
 
@@ -1379,14 +1439,6 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:310
 msgid "No existing audio markers in this layer to offset from."
 msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/Marker.java:96
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:974
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1036
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:235
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:241
-msgid "name"
-msgstr "meno"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/Marker.java:98
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1038
@@ -2096,7 +2148,7 @@ msgid "When saving, keep backup files ending with a ~"
 msgstr "Pri ukladaní zanechávať záložné súbory končiace znakom ~"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:39
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:194
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:195
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:142
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:141
 msgid "Plugins"
@@ -2501,23 +2553,24 @@ msgstr "Zobrazovať neaktívne vrstvy dát inou farbou."
 msgid "OSM Data"
 msgstr "OSM Dáta"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:108
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:129
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:151
 msgid "Separator"
 msgstr "Oddeľovač"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:154
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:299
 msgid "Toolbar"
 msgstr "Panel nástrojov"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:158
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:303
 msgid "Available"
 msgstr "Dostupný"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:199
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:342
 msgid "Toolbar customization"
 msgstr "Úprava panela nástrojov"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:200
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:343
 msgid "Customize the elements on the toolbar."
 msgstr "Úprava položiek na panely nástrojov."
 
@@ -2718,81 +2771,81 @@ msgstr "vrstva nie je v zozname"
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:131
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:135
 msgid "usage"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:133
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:137
 msgid "options"
 msgstr "Možnosti"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:134
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:138
 msgid "Show this help"
 msgstr "Zobrazí túto nápovedu"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:135
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:139
 msgid "Standard unix geometry argument"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:136
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:140
 msgid "Download the bounding box"
 msgstr "Stiahnuť ohraničujúcí box"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:137
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:141
 msgid "Download the location at the url (with lat=x&lon=y&zoom=z)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:138
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:142
 msgid "Open file (as raw gps, if .gpx)"
 msgstr "Otvoriť súbor (as raw gps, if .gpx)"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:139
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:143
 msgid "Download the bounding box as raw gps"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:140
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:144
 msgid "Select with the given search"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:141
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:145
 msgid "Don't launch in fullscreen mode"
 msgstr "Nespúšťať v celoobrazovkovom režime"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:142
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:146
 msgid "Reset the preferences to default"
 msgstr "Nastaviť východzie hodnoty"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:143
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:147
 msgid "Set the language."
 msgstr "Nastaviť jazyk."
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:144
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:148
 msgid "examples"
 msgstr "príklady"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:149
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:153
 msgid ""
 "Parameters are read in the order they are specified, so make sure you load\n"
 "some data before --selection"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:151
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:155
 msgid "Instead of --download=<bbox> you may specify osm://<bbox>\n"
 msgstr "Namiesto --download=<bbox> môžete zadať osm://<bbox>\n"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:157
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:161
 msgid "Activating updated plugins"
 msgstr "Aktivujem aktualizované pluginy"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:160
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:164
 msgid "Loading early plugins"
 msgstr "Načítavam skoršie pluginy"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:163
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:167
 msgid "Setting defaults"
 msgstr "Nastavujem východzie hodnoty"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:169
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:173
 msgid "Loading plugins"
 msgstr "Načítavam pluginy"
 
@@ -2840,7 +2893,7 @@ msgstr "Súbor nebol nájdený"
 msgid "unknown"
 msgstr "neznámy"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:64
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:65
 #, java-format
 msgid ""
 "Warning - loading of {0} plugin was requested. This plugin is no longer "
@@ -2849,43 +2902,43 @@ msgstr ""
 "Upozornenie - bolo požadované nahratie pluginu {0}. Tento plugin už nie je "
 "potrebný."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:85
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:86
 #, java-format
 msgid "Plugin requires JOSM update: {0}."
 msgstr "Plugin potrebuje JOSM: {0}."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:100
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:101
 #, java-format
 msgid "Plugin {0} is required by plugin {1} but was not found."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:109
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:110
 #, java-format
 msgid "Plugin not found: {0}."
 msgstr "Plugin nenájdený: {0}."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:123
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:124
 #, java-format
 msgid "Last plugin update more than {0} days ago."
 msgstr "Pluginy boli  naposledy aktualizované pred {0} dňami."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:125
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:126
 msgid ""
 "(You can change the number of days after which this warning appears<br>by "
 "setting the config option 'pluginmanager.warntime'.)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:152
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:153
 #, java-format
 msgid "Could not load plugin {0}. Delete from preferences?"
 msgstr "Nemôžem nahrať plugin {0}. Zmazať z konfigurácie?"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:153
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:255
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:154
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:256
 msgid "Disable plugin"
 msgstr "Vypnúť doplnok"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:193
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:194
 msgid ""
 "Activating the updated plugins failed. Check if JOSM has the permission to "
 "overwrite the existing ones."
@@ -2893,29 +2946,29 @@ msgstr ""
 "Aktivácia aktualizovaných pluginov zlyhala. Zkontrolujte, či máte práva k "
 "ich prepísaniu."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:249
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:250
 #, java-format
 msgid ""
 "An unexpected exception occurred that may have come from the ''{0}'' plugin."
 msgstr ""
 "Vyskytla sa chyba pravdepodobne zapríčinená doplnkom (angl: plugin) ''{0}''."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:251
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:252
 #, java-format
 msgid "According to the information within the plugin, the author is {0}."
 msgstr "Podľa informácie v doplnku jeho autorom je ''{0}''."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:253
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:254
 msgid ""
 "Try updating to the newest version of this plugin before reporting a bug."
 msgstr ""
 "Vyskúšajte aktualizovať plugin na najnovšiu verziu pre nahláseným chyby."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:254
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:255
 msgid "Should the plugin be disabled?"
 msgstr "Vypnúť doplnok?"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:268
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:269
 msgid ""
 "The plugin has been removed from the configuration. Please restart JOSM to "
 "unload the plugin."
@@ -2923,14 +2976,14 @@ msgstr ""
 "Doplnok (plugin) bol odstránený z konfigurácie. Prosím reštartujte JOSM aby "
 "sa prestal používať."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:271
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:272
 msgid ""
 "The plugin could not be removed. Please tell the people you got JOSM from "
 "about the problem."
 msgstr ""
 "Doplnok sa nedal odstrániť. Prosím informuj o tomto probléme vývojárov JOSM."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:312
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:313
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:178
 msgid "no description available"
 msgstr "Popis nedostupný"
@@ -3252,118 +3305,118 @@ msgstr ""
 msgid "Could not load preferences from server."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:230
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:231
 msgid "Area style way is not closed."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:419
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:422
 #, java-format
 msgid "multipolygon way ''{0}'' is not closed."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:520
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:758
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:523
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:761
 msgid "Empty member in relation."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:522
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:760
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:525
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:763
 #, java-format
 msgid "Deleted member ''{0}'' in relation."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:540
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:771
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:543
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:774
 #, java-format
 msgid "Way ''{0}'' with less than two points."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:545
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:548
 msgid "More than one \"from\" way found."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:551
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:554
 msgid "More than one \"to\" way found."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:557
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:569
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:560
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:572
 #, java-format
 msgid "Unknown role ''{0}''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:572
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:575
 #, java-format
 msgid "Unknown member type for ''{0}''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:577
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:580
 msgid "No \"from\" way found."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:581
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:584
 msgid "No \"to\" way found."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:585
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:588
 msgid "No \"via\" node found."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:591
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:594
 msgid "The \"from\" way doesn't start or end at a \"via\" node."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:612
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:629
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:615
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:632
 #, java-format
 msgid "The \"{0}\" way must contain at least 2 nodes."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:724
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:727
 #, java-format
 msgid "Style for restriction {0} not found."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:780
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:783
 #, java-format
 msgid "No useful role ''{0}'' for Way ''{1}''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:791
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:794
 #, java-format
 msgid "Non-Way ''{0}'' in multipolygon."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:840
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:843
 #, java-format
 msgid "No outer way for multipolygon ''{0}''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:920
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:923
 #, java-format
 msgid "Intersection between ways ''{0}'' and ''{1}''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:931
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:934
 #, java-format
 msgid "Inner way ''{0}'' is outside."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:980
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:983
 #, java-format
 msgid "Style for inner way ''{0}'' equals multipolygon."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1005
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1008
 #, java-format
 msgid "Style for outer way ''{0}'' mismatches."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1175
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1191
 msgid "untagged"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1176
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1192
 msgid "text"
 msgstr ""
 
@@ -3622,7 +3675,7 @@ msgstr "Súbor nenájdený."
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:52
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:53
 msgid "Combine Way"
-msgstr ""
+msgstr "Spojiť cesty"
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:52
 msgid "Combine several ways into one."
@@ -3670,7 +3723,7 @@ msgstr ""
 msgid ""
 "Could not combine ways (They could not be merged into a single string of "
 "nodes)"
-msgstr ""
+msgstr "Nemôžem spojiť cesty (Nemôžu byť spojené do jedného reťazca bodov)"
 
 #: ../core/src/org/openstreetmap/josm/actions/PreferencesAction.java:31
 msgid "Preferences..."
@@ -4054,12 +4107,6 @@ msgstr "Nemôžem čítať z URL:\"{0}\""
 msgid "Parsing error in URL: \"{0}\""
 msgstr "Chyba parsovania v URL:\"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:39
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:40
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:45
-msgid "Search..."
-msgstr "Vyhľadávať..."
-
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:45
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:120
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:66
@@ -4211,7 +4258,7 @@ msgstr "Očakávam uzatváraciu zátvorku."
 #: ../core/src/org/openstreetmap/josm/actions/JoinNodeWayAction.java:29
 #: ../core/src/org/openstreetmap/josm/actions/JoinNodeWayAction.java:30
 msgid "Join Node to Way"
-msgstr ""
+msgstr "Vložiť bod do cesty"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinNodeWayAction.java:29
 msgid "Join a node into the nearest way segments"
@@ -4225,7 +4272,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:247
 msgid "Align Nodes in Circle"
-msgstr "Zoradiť uzly do kruhu"
+msgstr "Zoradiť body do kruhu"
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:33
 msgid "Move the selected nodes into a circle."
@@ -4468,7 +4515,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:22
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:23
-#: trans_surveyor.java:89
+#: trans_surveyor.java:68
 msgid "Exit"
 msgstr "Koniec"
 
@@ -4479,7 +4526,7 @@ msgstr "Ukončí program."
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:55
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:56
 msgid "Merge Nodes"
-msgstr "Spojiť uzly"
+msgstr "Spojiť body"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:55
 msgid "Merge nodes into the oldest one."
@@ -4497,12 +4544,12 @@ msgstr "Zvolené uzly majú rozdielne relačné členy. Stále ich chcete spoji�
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:149
 msgid "Merge nodes with different memberships?"
-msgstr "Spojiť uzly s rôznymi relačnými členmi ?"
+msgstr "Spojiť body s rôznymi relačnými členmi ?"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:234
 msgid "Cannot merge nodes: Would have to delete a way that is still used."
 msgstr ""
-"Nemôžem spojiť uzly: Zmazala by sa tak cesta, ktorá je stále používaná."
+"Nemôžem spojiť body: Zmazala by sa tak cesta, ktorá je stále používaná."
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:272
 #, java-format
@@ -5268,54 +5315,6 @@ msgstr ""
 msgid "Permitted actions"
 msgstr "Povolené akcia"
 
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:120
-msgid "NullPointerException, Possibly some missing tags."
-msgstr "NullPointerException, pravdepodobne chýbajú niektoré značky(tagy)."
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:168
-msgid "Please enter a search string"
-msgstr "Prosím zadajte hľadaný reťazec"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:186
-msgid "Cannot read place search results from server"
-msgstr ""
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:206
-msgid "Enter a place name to search for:"
-msgstr "Zapíšte názov miesta pre vihľadávanie:"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:218
-#: trans_presets.java:2464
-msgid "Places"
-msgstr "Miesta"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:236
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:242
-#: trans_presets.java:1511 trans_presets.java:1700 trans_presets.java:1706
-#: trans_presets.java:1712 trans_presets.java:1718 trans_presets.java:1724
-#: trans_presets.java:1730 trans_presets.java:1736 trans_presets.java:1742
-#: trans_presets.java:1748 trans_presets.java:1754 trans_presets.java:1760
-#: trans_presets.java:1766 trans_presets.java:1772 trans_presets.java:1778
-#: trans_presets.java:1784 trans_presets.java:1793 trans_presets.java:1800
-#: trans_presets.java:1808 trans_presets.java:1814 trans_presets.java:1820
-#: trans_presets.java:1826 trans_presets.java:1832 trans_presets.java:1838
-#: trans_presets.java:1844 trans_presets.java:1850 trans_presets.java:1856
-#: trans_presets.java:1862 trans_presets.java:1868 trans_presets.java:1874
-#: trans_presets.java:1880 trans_presets.java:1886 trans_presets.java:1892
-#: trans_presets.java:1898 trans_presets.java:1904
-msgid "type"
-msgstr "typ"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:237
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:243
-msgid "near"
-msgstr "blízko"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:238
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:244
-msgid "zoom"
-msgstr "zväčšenie"
-
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:39
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:40
 msgid "Import TCX File..."
@@ -5432,8 +5431,8 @@ msgid "southeast"
 msgstr "juhovýchod"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
-#: trans_style.java:797 trans_style.java:814 trans_style.java:830
-#: trans_style.java:2947 trans_style.java:2955
+#: trans_style.java:827 trans_style.java:844 trans_style.java:860
+#: trans_style.java:2979 trans_style.java:2987
 msgid "water"
 msgstr "voda"
 
@@ -5938,13 +5937,13 @@ msgid "waterway type {0}"
 msgstr "vodné cesty (Waterway) {0}"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:100
-#: trans_style.java:3669 trans_style.java:3676 trans_style.java:3683
-#: trans_style.java:3690 trans_style.java:3697
+#: trans_style.java:3699 trans_style.java:3706 trans_style.java:3713
+#: trans_style.java:3720 trans_style.java:3727
 msgid "building"
 msgstr "budovy"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:103
-#: trans_style.java:3704
+#: trans_style.java:3734
 msgid "area"
 msgstr "oblasť(plocha)"
 
@@ -6847,6 +6846,7 @@ msgstr "Nahratá GPX stopa(trasa)"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:35
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:71
 msgid "Upload Traces"
 msgstr "Nahrať Stopy (Traces)"
 
@@ -6854,9 +6854,58 @@ msgstr "Nahrať Stopy (Traces)"
 msgid "Uploads traces to openstreetmap.org"
 msgstr "Nahrať Stopy (Traces) na openstreetmap.org"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:256
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:95
+msgid "Upload GPX track"
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:109
+msgid "Direct Upload to OpenStreetMap"
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:111
+msgid "Public"
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:112
+msgid "Selected makes your trace public in openstreetmap.org"
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:114
+msgid "Description"
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:117
+msgid "Tags"
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:172
+msgid "Starting to upload selected file to openstreetmap.org"
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:212
+msgid "Error while uploading"
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:221
+msgid "No description provided. Please provide some description."
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:224
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:238
 msgid "No GPX layer selected. Cannot upload a trace."
 msgstr "Nieje vybratá GPX vrstva. Nemôžem nahrať stopu(trace)."
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:227
+msgid "No username provided."
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:230
+msgid "No password provided."
+msgstr ""
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:278
+msgid "Transferring data to server"
+msgstr ""
 
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:67
 msgid "Use"
@@ -6892,7 +6941,7 @@ msgstr "Farebná schéma"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:68
 msgid "User"
-msgstr ""
+msgstr "Užívateľ"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:75
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:76
@@ -6901,23 +6950,23 @@ msgstr ""
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:95
 msgid "Open User Page"
-msgstr ""
+msgstr "Otvoriť stránku uživateľa"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:96
 msgid "Open User Page in browser"
-msgstr ""
+msgstr "Otvoriť stránku uživateľa v prehliadači"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:107
 msgid "Select User's Data"
-msgstr ""
+msgstr "Vybrať dáta uživateľa"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:108
 msgid "Replaces Selection with Users data"
-msgstr ""
+msgstr "Vymeniť výber s dátami užívateľa"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:141
 msgid "Please select some data"
-msgstr ""
+msgstr "Prosím vyberte nejaké dáta"
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:145
 msgid "Please choose a user using the author panel"
@@ -6925,15 +6974,15 @@ msgstr ""
 
 #: ../plugins/usertools/src/usertools/UserToolsPlugin.java:158
 msgid "Sorry, doesn't work with anonymous users"
-msgstr ""
+msgstr "Prepáčte, nefunguje s anonymnými uživateľmi."
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginTableModel.java:108
 msgid "Version"
-msgstr ""
+msgstr "Verzia"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:89
 msgid "Add Site"
-msgstr ""
+msgstr "Pridať stránku"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:92
 msgid "Update Site URL"
@@ -6941,43 +6990,43 @@ msgstr ""
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:103
 msgid "Invalid URL"
-msgstr ""
+msgstr "Chybná URL"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:109
 msgid "Delete Site(s)"
-msgstr ""
+msgstr "Zmazať stránku(y)"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:113
 msgid "Please select the site to delete."
-msgstr ""
+msgstr "Prosím vyberte stránku pre zmazanie."
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:123
 msgid "Check Site(s)"
-msgstr ""
+msgstr "Kontrolovať stránku(y)"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:127
 msgid "Please select the site(s) to check for updates."
-msgstr ""
+msgstr "Vyberte stránku(y) pre kontrolu na aktualizáciu."
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:151
 msgid "Add a new plugin site."
-msgstr ""
+msgstr "Pridať novú stránku s pluginmi."
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:152
 msgid "Delete the selected site(s) from the list."
-msgstr ""
+msgstr "Zmazať zvolenú stránku(y) zo zoznamu."
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:153
 msgid "Check the selected site(s) for new plugins or updates."
-msgstr ""
+msgstr "Kontrolovať zvolenú stránku(y) pre nové pluginy a aktualizácie."
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:155
 msgid "Update Sites"
-msgstr ""
+msgstr "Stránka aktualizácií"
 
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:59
 msgid "Install"
-msgstr ""
+msgstr "Nainštalovať"
 
 #: ../plugins/osmarender/src/OsmarenderPlugin.java:43
 msgid "Osmarender"
@@ -7034,7 +7083,7 @@ msgstr "Nastavenie WMS Pluginu"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:35
 msgid "Modify list of WMS servers displayed in the WMS plugin menu"
-msgstr ""
+msgstr "Upraviť obsah WMS serverov zobrazených vo WMS menu pluginu"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:37
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:67
@@ -7078,7 +7127,7 @@ msgstr "Automatické sťahovanie"
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:110
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
-msgstr ""
+msgstr "WMS vrstva ({0}), sa automaticky stiahne vo zväčšení (zoom) {1}"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:112
 #, java-format
@@ -7198,6 +7247,8 @@ msgstr "Navigátor"
 #: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorModeAction.java:28
 msgid "Set start/end for routing. Middle mouse button to reset."
 msgstr ""
+"Nastaviť začiatok/koniec pre trasu(routing). Stredné tlačítko myši vynuluje"
+"(reset)."
 
 #: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:40
 #: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:44
@@ -7212,493 +7263,529 @@ msgstr "Vynulovať Graf"
 msgid "Navigate"
 msgstr "Navigovať"
 
-#: trans_style.java:47
+#: trans_style.java:49
 msgid "standard"
-msgstr ""
+msgstr "štandartný"
 
-#: trans_style.java:103 trans_style.java:117 trans_style.java:124
-#: trans_style.java:131 trans_style.java:138
+#: trans_style.java:105 trans_style.java:119 trans_style.java:126
+#: trans_style.java:133 trans_style.java:140
 msgid "bridge"
-msgstr ""
+msgstr "v"
 
-#: trans_style.java:110 trans_style.java:145 trans_style.java:152
-#: trans_style.java:159 trans_style.java:474 trans_style.java:3728
-#: trans_style.java:3737 trans_style.java:3746 trans_style.java:3755
-#: trans_style.java:3764 trans_style.java:3773 trans_style.java:3782
-#: trans_style.java:3799
+#: trans_style.java:112 trans_style.java:147 trans_style.java:154
+#: trans_style.java:161 trans_style.java:497 trans_style.java:2140
+#: trans_style.java:3779 trans_style.java:3788 trans_style.java:3797
+#: trans_style.java:3806 trans_style.java:3815 trans_style.java:3824
+#: trans_style.java:3833 trans_style.java:3834 trans_style.java:3843
+#: trans_style.java:3852
 msgid "deprecated"
-msgstr ""
+msgstr "zastaralý"
 
-#: trans_style.java:183 trans_style.java:530 trans_style.java:713
-#: trans_style.java:721 trans_style.java:729 trans_style.java:737
-#: trans_style.java:745
+#: trans_style.java:178 trans_presets.java:299 trans_presets.java:300
+#: trans_presets.java:301 trans_presets.java:302 trans_presets.java:303
+#: trans_presets.java:304 trans_presets.java:305 trans_presets.java:306
+#: trans_presets.java:307 trans_presets.java:308 trans_presets.java:309
+#: trans_presets.java:489 trans_presets.java:490 trans_presets.java:491
+#: trans_presets.java:510 trans_presets.java:511 trans_presets.java:512
+#: trans_presets.java:531 trans_presets.java:532 trans_presets.java:533
+#: trans_presets.java:552 trans_presets.java:553 trans_presets.java:554
+#: trans_presets.java:573 trans_presets.java:574 trans_presets.java:575
+#: trans_presets.java:594 trans_presets.java:595 trans_presets.java:596
+msgid "permissive"
+msgstr "voľný (permissive)"
+
+#: trans_style.java:185 trans_presets.java:299 trans_presets.java:300
+#: trans_presets.java:301 trans_presets.java:302 trans_presets.java:303
+#: trans_presets.java:304 trans_presets.java:305 trans_presets.java:306
+#: trans_presets.java:307 trans_presets.java:308 trans_presets.java:309
+#: trans_presets.java:489 trans_presets.java:490 trans_presets.java:491
+#: trans_presets.java:510 trans_presets.java:511 trans_presets.java:512
+#: trans_presets.java:531 trans_presets.java:532 trans_presets.java:533
+#: trans_presets.java:552 trans_presets.java:553 trans_presets.java:554
+#: trans_presets.java:573 trans_presets.java:574 trans_presets.java:575
+#: trans_presets.java:594 trans_presets.java:595 trans_presets.java:596
+msgid "private"
+msgstr "súkromný"
+
+#: trans_style.java:192 trans_presets.java:299 trans_presets.java:300
+#: trans_presets.java:301 trans_presets.java:302 trans_presets.java:303
+#: trans_presets.java:304 trans_presets.java:305 trans_presets.java:306
+#: trans_presets.java:307 trans_presets.java:308 trans_presets.java:309
+#: trans_presets.java:489 trans_presets.java:490 trans_presets.java:491
+#: trans_presets.java:510 trans_presets.java:511 trans_presets.java:512
+#: trans_presets.java:531 trans_presets.java:532 trans_presets.java:533
+#: trans_presets.java:552 trans_presets.java:553 trans_presets.java:554
+#: trans_presets.java:573 trans_presets.java:574 trans_presets.java:575
+#: trans_presets.java:594 trans_presets.java:595 trans_presets.java:596
+msgid "destination"
+msgstr "miesto určenia (cieľ)"
+
+#: trans_style.java:206 trans_style.java:553 trans_style.java:743
+#: trans_style.java:751 trans_style.java:759 trans_style.java:767
+#: trans_style.java:775
 msgid "bicycle"
-msgstr ""
+msgstr "bicykel"
 
-#: trans_style.java:197 trans_style.java:538 trans_style.java:546
-#: trans_style.java:554 trans_style.java:562
+#: trans_style.java:220 trans_style.java:561 trans_style.java:569
+#: trans_style.java:577 trans_style.java:585
 msgid "foot"
-msgstr ""
+msgstr "pešia (foot)"
 
-#: trans_style.java:225 trans_style.java:522
+#: trans_style.java:248 trans_style.java:545
 msgid "horse"
-msgstr ""
+msgstr "koňská (horse)"
 
-#: trans_style.java:394 trans_style.java:402 trans_presets.java:325
+#: trans_style.java:417 trans_style.java:425 trans_presets.java:325
 msgid "motorway"
-msgstr ""
+msgstr "dialnica (motorway)"
 
-#: trans_style.java:410 trans_style.java:418 trans_presets.java:325
+#: trans_style.java:433 trans_style.java:441 trans_presets.java:325
 msgid "trunk"
-msgstr ""
+msgstr "cesta pre motorové vozidlá (trunk)"
 
-#: trans_style.java:426 trans_style.java:434 trans_presets.java:325
+#: trans_style.java:449 trans_style.java:457 trans_presets.java:325
 msgid "primary"
-msgstr ""
+msgstr "cesta prvej triedy"
 
-#: trans_style.java:442 trans_style.java:450 trans_presets.java:325
+#: trans_style.java:465 trans_style.java:473 trans_presets.java:325
 msgid "secondary"
-msgstr ""
+msgstr "cesta druhej triedy"
 
-#: trans_style.java:458 trans_presets.java:325
+#: trans_style.java:481 trans_presets.java:325
 msgid "tertiary"
-msgstr ""
+msgstr "cesta tretej triedy"
 
-#: trans_style.java:466 trans_style.java:482 trans_style.java:498
-#: trans_style.java:506 trans_style.java:3486 trans_style.java:3494
-#: trans_style.java:3502
+#: trans_style.java:489 trans_style.java:505 trans_style.java:521
+#: trans_style.java:529
 msgid "street"
-msgstr ""
+msgstr "ulica"
 
-#: trans_style.java:490 trans_style.java:755 trans_style.java:763
-#: trans_style.java:771 trans_style.java:779 trans_style.java:787
+#: trans_style.java:513 trans_style.java:785 trans_style.java:793
+#: trans_style.java:801 trans_style.java:809 trans_style.java:817
 msgid "highway_track"
 msgstr ""
 
-#: trans_style.java:514 trans_presets.java:325
+#: trans_style.java:537 trans_presets.java:325
 msgid "service"
-msgstr ""
+msgstr "obslužná (service)"
 
-#: trans_style.java:570
-msgid "bus"
-msgstr ""
-
-#: trans_style.java:648 trans_style.java:962
-msgid "viaduct"
-msgstr ""
-
-#: trans_style.java:684
-msgid "turningcircle"
-msgstr ""
-
-#: trans_style.java:692 trans_style.java:2774 trans_style.java:3660
-#: trans_presets.java:325
-msgid "construction"
-msgstr ""
-
-#: trans_style.java:702 trans_presets.java:373
-msgid "roundabout"
-msgstr ""
-
-#: trans_style.java:805 trans_style.java:806
-msgid "riverbank"
-msgstr ""
-
-#: trans_style.java:822
-msgid "stream"
-msgstr ""
-
-#: trans_style.java:838
-msgid "dock"
-msgstr ""
-
-#: trans_style.java:860
-msgid "aqueduct"
-msgstr ""
-
-#: trans_style.java:897 trans_style.java:905 trans_style.java:914
-#: trans_style.java:1284 trans_style.java:1291 trans_style.java:1300
-#: trans_style.java:1308 trans_style.java:1332 trans_style.java:1340
-#: trans_style.java:1348 trans_style.java:1356 trans_style.java:1363
-#: trans_style.java:1372 trans_style.java:1380 trans_style.java:1388
-#: trans_style.java:1396
-msgid "manmade"
-msgstr ""
-
-#: trans_style.java:924 trans_style.java:939 trans_style.java:954
-#: trans_style.java:970 trans_style.java:978
-msgid "railwaypoint"
-msgstr ""
-
-#: trans_style.java:986 trans_style.java:995 trans_style.java:1004
-msgid "rail"
-msgstr ""
-
-#: trans_style.java:996
-msgid "railover"
-msgstr ""
-
-#: trans_style.java:1012
-msgid "subway"
-msgstr ""
-
-#: trans_style.java:1020 trans_style.java:1028 trans_style.java:1036
-msgid "oldrail"
-msgstr ""
-
-#: trans_style.java:1044 trans_style.java:1052 trans_style.java:1061
+#: trans_style.java:593 trans_style.java:1074 trans_style.java:1082
+#: trans_style.java:1091
 msgid "otherrail"
 msgstr ""
 
-#: trans_style.java:1091 trans_style.java:1123
+#: trans_style.java:678 trans_style.java:992
+msgid "viaduct"
+msgstr "viadukt (nadjazd)"
+
+#: trans_style.java:714
+msgid "turningcircle"
+msgstr ""
+
+#: trans_style.java:722 trans_style.java:2805 trans_style.java:2806
+#: trans_presets.java:325
+msgid "construction"
+msgstr "konštrukcia"
+
+#: trans_style.java:732 trans_presets.java:373
+msgid "roundabout"
+msgstr "kruhový objazd (roundabout)"
+
+#: trans_style.java:835 trans_style.java:836
+msgid "riverbank"
+msgstr "riečny breh"
+
+#: trans_style.java:852
+msgid "stream"
+msgstr "potok"
+
+#: trans_style.java:868
+msgid "dock"
+msgstr "dok (nakladacia rampa)"
+
+#: trans_style.java:890
+msgid "aqueduct"
+msgstr ""
+
+#: trans_style.java:927 trans_style.java:935 trans_style.java:944
+#: trans_style.java:1314 trans_style.java:1321 trans_style.java:1330
+#: trans_style.java:1338 trans_style.java:1362 trans_style.java:1370
+#: trans_style.java:1378 trans_style.java:1386 trans_style.java:1393
+#: trans_style.java:1402 trans_style.java:1410 trans_style.java:1418
+#: trans_style.java:1426
+msgid "manmade"
+msgstr ""
+
+#: trans_style.java:954 trans_style.java:969 trans_style.java:984
+#: trans_style.java:1000 trans_style.java:1008
+msgid "railwaypoint"
+msgstr ""
+
+#: trans_style.java:1016 trans_style.java:1025 trans_style.java:1034
+msgid "rail"
+msgstr "železnica (rail)"
+
+#: trans_style.java:1026
+msgid "railover"
+msgstr ""
+
+#: trans_style.java:1042
+msgid "subway"
+msgstr "metro (subway)"
+
+#: trans_style.java:1050 trans_style.java:1058 trans_style.java:1066
+msgid "oldrail"
+msgstr ""
+
+#: trans_style.java:1121 trans_style.java:1153
 msgid "aeroway"
-msgstr ""
+msgstr "letecké cesty"
 
-#: trans_style.java:1099
+#: trans_style.java:1129
 msgid "terminal"
-msgstr ""
+msgstr "terminál"
 
-#: trans_style.java:1107 trans_style.java:1115
+#: trans_style.java:1137 trans_style.java:1145
 msgid "aeroway_dark"
 msgstr ""
 
-#: trans_style.java:1131
+#: trans_style.java:1161
 msgid "aeroway_light"
 msgstr ""
 
-#: trans_style.java:1141 trans_style.java:1149 trans_style.java:1157
-#: trans_style.java:1165
+#: trans_style.java:1171 trans_style.java:1179 trans_style.java:1187
+#: trans_style.java:1195
 msgid "aerialway"
-msgstr ""
+msgstr "Visuté cesty/Lanovky"
 
-#: trans_style.java:1175
+#: trans_style.java:1205
 msgid "piste_easy"
-msgstr ""
+msgstr "mierna zjazdovka (piste_easy)"
 
-#: trans_style.java:1183
+#: trans_style.java:1213
 msgid "piste_intermediate"
-msgstr ""
+msgstr "stredne ťažká zjazdovka (piste_intermediate)"
 
-#: trans_style.java:1191
+#: trans_style.java:1221
 msgid "piste_advanced"
-msgstr ""
+msgstr "zjazdovka pre pokročilých (piste_advanced)"
 
-#: trans_style.java:1199
+#: trans_style.java:1229
 msgid "piste_freeride"
-msgstr ""
+msgstr "zjazdovka pre freeride (piste_freeride)"
 
-#: trans_style.java:1207
+#: trans_style.java:1237
 msgid "piste_novice"
-msgstr ""
+msgstr "zjazdovka pre začiatočníkov (piste_novice)"
 
-#: trans_style.java:1218 trans_style.java:1225 trans_style.java:1234
-#: trans_style.java:1242 trans_style.java:1250 trans_style.java:1258
-#: trans_style.java:1266 trans_style.java:1274
+#: trans_style.java:1248 trans_style.java:1255 trans_style.java:1264
+#: trans_style.java:1272 trans_style.java:1280 trans_style.java:1288
+#: trans_style.java:1296 trans_style.java:1304
 msgid "power"
-msgstr ""
+msgstr "energia (power)"
 
-#: trans_style.java:1315
+#: trans_style.java:1345
 msgid "pier"
-msgstr ""
+msgstr "hrádza (pier)"
 
-#: trans_style.java:1323
+#: trans_style.java:1353
 msgid "pipeline"
-msgstr ""
+msgstr "potrubie (pipeline)"
 
-#: trans_style.java:1406 trans_style.java:1414 trans_style.java:1422
-#: trans_style.java:1430 trans_style.java:1438 trans_style.java:1446
-#: trans_style.java:1454 trans_style.java:1462 trans_style.java:1470
-#: trans_style.java:1478 trans_style.java:1486 trans_style.java:1494
-#: trans_style.java:1502 trans_style.java:1510 trans_style.java:1518
-#: trans_style.java:1526
+#: trans_style.java:1436 trans_style.java:1444 trans_style.java:1452
+#: trans_style.java:1460 trans_style.java:1468 trans_style.java:1476
+#: trans_style.java:1484 trans_style.java:1492 trans_style.java:1500
+#: trans_style.java:1508 trans_style.java:1516 trans_style.java:1524
+#: trans_style.java:1532 trans_style.java:1540 trans_style.java:1548
+#: trans_style.java:1556
 msgid "leisure"
-msgstr ""
+msgstr "oddych (leisure)"
 
-#: trans_style.java:1536 trans_style.java:1544 trans_style.java:1552
-#: trans_style.java:1560 trans_style.java:1568 trans_style.java:1576
-#: trans_style.java:1584 trans_style.java:1592
+#: trans_style.java:1566 trans_style.java:1574 trans_style.java:1582
+#: trans_style.java:1590 trans_style.java:1598 trans_style.java:1606
+#: trans_style.java:1614 trans_style.java:1622
 msgid "amenity"
-msgstr ""
+msgstr "zaujímavosti (amenity)"
 
-#: trans_style.java:1600 trans_style.java:1608 trans_style.java:1616
-#: trans_style.java:1624 trans_style.java:1632 trans_style.java:1640
-#: trans_style.java:1648 trans_style.java:1656 trans_style.java:1663
-#: trans_style.java:1672 trans_style.java:1680
+#: trans_style.java:1630 trans_style.java:1638 trans_style.java:1646
+#: trans_style.java:1654 trans_style.java:1662 trans_style.java:1670
+#: trans_style.java:1678 trans_style.java:1686 trans_style.java:1693
+#: trans_style.java:1702 trans_style.java:1710
 msgid "amenity_traffic"
 msgstr ""
 
-#: trans_style.java:1688 trans_style.java:1696 trans_style.java:1704
-#: trans_style.java:1712 trans_style.java:1720 trans_style.java:1728
-#: trans_style.java:1736 trans_style.java:1744 trans_style.java:1838
-#: trans_style.java:1846 trans_style.java:1853 trans_style.java:1862
-#: trans_style.java:1870 trans_style.java:1878 trans_style.java:1886
-#: trans_style.java:1894 trans_style.java:1902 trans_style.java:1910
-#: trans_style.java:1965 trans_style.java:1973 trans_style.java:1981
-#: trans_style.java:1990 trans_style.java:1998 trans_style.java:2005
-#: trans_style.java:2013 trans_style.java:2021 trans_style.java:2029
-#: trans_style.java:2037 trans_style.java:2045 trans_style.java:2053
-#: trans_style.java:2061 trans_style.java:2069 trans_style.java:2077
-#: trans_style.java:2085 trans_style.java:2094 trans_style.java:2102
+#: trans_style.java:1718 trans_style.java:1726 trans_style.java:1734
+#: trans_style.java:1742 trans_style.java:1750 trans_style.java:1758
+#: trans_style.java:1766 trans_style.java:1774 trans_style.java:1868
+#: trans_style.java:1876 trans_style.java:1883 trans_style.java:1892
+#: trans_style.java:1900 trans_style.java:1908 trans_style.java:1916
+#: trans_style.java:1924 trans_style.java:1932 trans_style.java:1940
+#: trans_style.java:1995 trans_style.java:2003 trans_style.java:2011
+#: trans_style.java:2020 trans_style.java:2028 trans_style.java:2035
+#: trans_style.java:2043 trans_style.java:2051 trans_style.java:2059
+#: trans_style.java:2067 trans_style.java:2075 trans_style.java:2083
+#: trans_style.java:2091 trans_style.java:2099 trans_style.java:2107
+#: trans_style.java:2115 trans_style.java:2124 trans_style.java:2132
 msgid "amenity_light"
 msgstr ""
 
-#: trans_style.java:1752 trans_style.java:1760 trans_style.java:2859
+#: trans_style.java:1782 trans_style.java:1790 trans_style.java:2891
 msgid "light_water"
 msgstr ""
 
-#: trans_style.java:1917 trans_style.java:1925 trans_style.java:1933
-#: trans_style.java:1941 trans_style.java:1949 trans_style.java:1957
+#: trans_style.java:1947 trans_style.java:1955 trans_style.java:1963
+#: trans_style.java:1971 trans_style.java:1979 trans_style.java:1987
 msgid "health"
-msgstr ""
+msgstr "zdravie"
 
-#: trans_style.java:2119 trans_style.java:2127 trans_style.java:2135
-#: trans_style.java:2143 trans_style.java:2151 trans_style.java:2159
-#: trans_style.java:2167 trans_style.java:2175 trans_style.java:2183
-#: trans_style.java:2191 trans_style.java:2199 trans_style.java:2207
-#: trans_style.java:2215 trans_style.java:2223 trans_style.java:2231
-#: trans_style.java:2239 trans_style.java:2247 trans_style.java:2255
-#: trans_style.java:2263 trans_style.java:2271 trans_style.java:2279
-#: trans_style.java:2287 trans_style.java:2295 trans_style.java:2303
-#: trans_style.java:2311 trans_style.java:2319 trans_style.java:2327
-#: trans_style.java:2335 trans_style.java:2343 trans_style.java:2351
-#: trans_style.java:2359 trans_style.java:2367 trans_style.java:2375
-#: trans_style.java:2383 trans_style.java:2391 trans_style.java:2399
-#: trans_style.java:2407 trans_style.java:2415 trans_style.java:2423
-#: trans_style.java:2432
+#: trans_style.java:2150 trans_style.java:2158 trans_style.java:2166
+#: trans_style.java:2174 trans_style.java:2182 trans_style.java:2190
+#: trans_style.java:2198 trans_style.java:2206 trans_style.java:2214
+#: trans_style.java:2222 trans_style.java:2230 trans_style.java:2238
+#: trans_style.java:2246 trans_style.java:2254 trans_style.java:2262
+#: trans_style.java:2270 trans_style.java:2278 trans_style.java:2286
+#: trans_style.java:2294 trans_style.java:2302 trans_style.java:2310
+#: trans_style.java:2318 trans_style.java:2326 trans_style.java:2334
+#: trans_style.java:2342 trans_style.java:2350 trans_style.java:2358
+#: trans_style.java:2366 trans_style.java:2374 trans_style.java:2382
+#: trans_style.java:2390 trans_style.java:2398 trans_style.java:2406
+#: trans_style.java:2414 trans_style.java:2422 trans_style.java:2430
+#: trans_style.java:2438 trans_style.java:2446 trans_style.java:2454
+#: trans_style.java:2463
 msgid "shop"
-msgstr ""
+msgstr "obchod"
 
-#: trans_style.java:2442 trans_style.java:2506 trans_style.java:2514
-#: trans_style.java:2522 trans_style.java:2530 trans_style.java:2538
-#: trans_style.java:2546 trans_style.java:2554
+#: trans_style.java:2473 trans_style.java:2537 trans_style.java:2545
+#: trans_style.java:2553 trans_style.java:2561 trans_style.java:2569
+#: trans_style.java:2577 trans_style.java:2585
 msgid "tourism"
-msgstr ""
+msgstr "cestovanie"
 
-#: trans_style.java:2450 trans_style.java:2458 trans_style.java:2466
-#: trans_style.java:2474 trans_style.java:2482 trans_style.java:2490
-#: trans_style.java:2498
+#: trans_style.java:2481 trans_style.java:2489 trans_style.java:2497
+#: trans_style.java:2505 trans_style.java:2513 trans_style.java:2521
+#: trans_style.java:2529
 msgid "hotel"
-msgstr ""
+msgstr "hotel"
 
-#: trans_style.java:2564 trans_style.java:2572 trans_style.java:2580
-#: trans_style.java:2588 trans_style.java:2596 trans_style.java:2604
-#: trans_style.java:2612 trans_style.java:2620
+#: trans_style.java:2595 trans_style.java:2603 trans_style.java:2611
+#: trans_style.java:2619 trans_style.java:2627 trans_style.java:2635
+#: trans_style.java:2643 trans_style.java:2651
 msgid "historic"
-msgstr ""
+msgstr "historické"
 
-#: trans_style.java:2629 trans_style.java:2637 trans_style.java:2645
-#: trans_style.java:2693 trans_style.java:2701 trans_style.java:2798
-#: trans_style.java:2806
+#: trans_style.java:2660 trans_style.java:2668 trans_style.java:2676
+#: trans_style.java:2724 trans_style.java:2732 trans_style.java:2830
+#: trans_style.java:2838
 msgid "green"
-msgstr ""
+msgstr "zelená"
 
-#: trans_style.java:2653
+#: trans_style.java:2684
 msgid "quarry"
-msgstr ""
+msgstr "lom"
 
-#: trans_style.java:2661
+#: trans_style.java:2692
 msgid "landfill"
-msgstr ""
+msgstr "skládka odpadov (landfill)"
 
-#: trans_style.java:2669 trans_style.java:2677
+#: trans_style.java:2700 trans_style.java:2708
 msgid "basin"
-msgstr ""
+msgstr "revír (basin)"
 
-#: trans_style.java:2685
+#: trans_style.java:2716
 msgid "forest"
-msgstr ""
+msgstr "les"
 
-#: trans_style.java:2709 trans_presets.java:325
+#: trans_style.java:2740 trans_presets.java:325
 msgid "residential"
-msgstr ""
+msgstr "obytná (osídlená)"
 
-#: trans_style.java:2717
+#: trans_style.java:2748
 msgid "farmyard"
-msgstr ""
+msgstr "farmy"
 
-#: trans_style.java:2726 trans_style.java:2734
+#: trans_style.java:2757 trans_style.java:2765
 msgid "retail"
-msgstr ""
+msgstr "maloobchody"
 
-#: trans_style.java:2742
+#: trans_style.java:2773
 msgid "industrial"
-msgstr ""
+msgstr "závody"
 
-#: trans_style.java:2750
+#: trans_style.java:2781
 msgid "brownfield"
 msgstr ""
 
-#: trans_style.java:2758
+#: trans_style.java:2789
 msgid "greenfield"
 msgstr ""
 
-#: trans_style.java:2766
+#: trans_style.java:2797
 msgid "railland"
 msgstr ""
 
-#: trans_style.java:2782 trans_style.java:2817 trans_style.java:2825
-#: trans_style.java:2833 trans_style.java:2841 trans_style.java:2849
+#: trans_style.java:2814 trans_style.java:2849 trans_style.java:2857
+#: trans_style.java:2865 trans_style.java:2873 trans_style.java:2881
 msgid "military"
-msgstr ""
+msgstr "armáda"
 
-#: trans_style.java:2790
+#: trans_style.java:2822
 msgid "cemetery"
-msgstr ""
+msgstr "cintorín (cemetery)"
 
-#: trans_style.java:2866
+#: trans_style.java:2898
 msgid "peak"
-msgstr ""
-
-#: trans_style.java:2875
-msgid "glacier"
-msgstr ""
-
-#: trans_style.java:2883
-msgid "volcano"
-msgstr ""
-
-#: trans_style.java:2891 trans_style.java:2899 trans_style.java:2915
-#: trans_style.java:2979 trans_style.java:2987 trans_style.java:2995
-msgid "natural"
-msgstr ""
+msgstr "vrchol (peak)"
 
 #: trans_style.java:2907
+msgid "glacier"
+msgstr "ľadovec (glacier)"
+
+#: trans_style.java:2915
+msgid "volcano"
+msgstr "sopka"
+
+#: trans_style.java:2923 trans_style.java:2931 trans_style.java:2947
+#: trans_style.java:3011 trans_style.java:3019 trans_style.java:3027
+msgid "natural"
+msgstr "prírodné (natural)"
+
+#: trans_style.java:2939
 msgid "scrub"
 msgstr ""
 
-#: trans_style.java:2923
+#: trans_style.java:2955
 msgid "heath"
 msgstr ""
 
-#: trans_style.java:2931
-msgid "wood"
-msgstr ""
-
-#: trans_style.java:2939 trans_presets.java:2835
-msgid "marsh"
-msgstr ""
-
 #: trans_style.java:2963
+msgid "wood"
+msgstr "drevo (wood)"
+
+#: trans_style.java:2971 trans_presets.java:2835
+msgid "marsh"
+msgstr "močiar (marsh)"
+
+#: trans_style.java:2995
 msgid "mud"
-msgstr ""
+msgstr "blato (mud)"
 
-#: trans_style.java:2971
+#: trans_style.java:3003
 msgid "beach"
-msgstr ""
+msgstr "pláž (beach)"
 
-#: trans_style.java:3011 trans_style.java:3019 trans_style.java:3027
-#: trans_style.java:3035 trans_style.java:3043 trans_style.java:3051
-#: trans_style.java:3059 trans_style.java:3067
+#: trans_style.java:3043 trans_style.java:3051 trans_style.java:3059
+#: trans_style.java:3067 trans_style.java:3075 trans_style.java:3083
+#: trans_style.java:3091 trans_style.java:3099
 msgid "route"
-msgstr ""
+msgstr "trasa (route)"
 
-#: trans_style.java:3077 trans_style.java:3085 trans_style.java:3093
-#: trans_style.java:3101 trans_style.java:3109
+#: trans_style.java:3109 trans_style.java:3117 trans_style.java:3125
+#: trans_style.java:3133 trans_style.java:3141
 msgid "boundary"
-msgstr ""
+msgstr "hranica (boundary)"
 
-#: trans_style.java:3119 trans_style.java:3127 trans_style.java:3135
-#: trans_style.java:3143 trans_style.java:3151 trans_style.java:3159
-#: trans_style.java:3167 trans_style.java:3175 trans_style.java:3183
-#: trans_style.java:3191 trans_style.java:3199 trans_style.java:3207
-#: trans_style.java:3215 trans_style.java:3223 trans_style.java:3231
-#: trans_style.java:3239 trans_style.java:3247 trans_style.java:3255
-#: trans_style.java:3263 trans_style.java:3271 trans_style.java:3279
-#: trans_style.java:3287 trans_style.java:3295 trans_style.java:3303
-#: trans_style.java:3311 trans_style.java:3319 trans_style.java:3327
-#: trans_style.java:3335 trans_style.java:3343 trans_style.java:3351
-#: trans_style.java:3359 trans_style.java:3367 trans_style.java:3375
-#: trans_style.java:3383 trans_style.java:3391 trans_style.java:3399
-#: trans_style.java:3407 trans_style.java:3415 trans_style.java:3423
-#: trans_style.java:3431 trans_style.java:3439 trans_style.java:3447
-#: trans_style.java:3455 trans_style.java:3463 trans_presets.java:1655
+#: trans_style.java:3151 trans_style.java:3159 trans_style.java:3167
+#: trans_style.java:3175 trans_style.java:3183 trans_style.java:3191
+#: trans_style.java:3199 trans_style.java:3207 trans_style.java:3215
+#: trans_style.java:3223 trans_style.java:3231 trans_style.java:3239
+#: trans_style.java:3247 trans_style.java:3255 trans_style.java:3263
+#: trans_style.java:3271 trans_style.java:3279 trans_style.java:3287
+#: trans_style.java:3295 trans_style.java:3303 trans_style.java:3311
+#: trans_style.java:3319 trans_style.java:3327 trans_style.java:3335
+#: trans_style.java:3343 trans_style.java:3351 trans_style.java:3359
+#: trans_style.java:3367 trans_style.java:3375 trans_style.java:3383
+#: trans_style.java:3391 trans_style.java:3399 trans_style.java:3407
+#: trans_style.java:3415 trans_style.java:3423 trans_style.java:3431
+#: trans_style.java:3439 trans_style.java:3447 trans_style.java:3455
+#: trans_style.java:3463 trans_style.java:3471 trans_style.java:3479
+#: trans_style.java:3487 trans_style.java:3495 trans_presets.java:1655
 #: trans_presets.java:1664 trans_presets.java:1673 trans_presets.java:1682
 msgid "sport"
-msgstr ""
+msgstr "šport"
 
-#: trans_style.java:3518 trans_style.java:3526 trans_style.java:3534
-#: trans_style.java:3542 trans_style.java:3550 trans_style.java:3558
-#: trans_style.java:3566 trans_style.java:3574 trans_style.java:3582
-#: trans_style.java:3590 trans_style.java:3598 trans_style.java:3606
+#: trans_style.java:3556 trans_style.java:3564 trans_style.java:3572
+#: trans_style.java:3580 trans_style.java:3588 trans_style.java:3596
+#: trans_style.java:3604 trans_style.java:3612 trans_style.java:3620
+#: trans_style.java:3628 trans_style.java:3636 trans_style.java:3644
 msgid "place"
-msgstr ""
+msgstr "miesto"
 
-#: trans_style.java:3815 trans_style.java:3822 trans_style.java:3829
+#: trans_style.java:3755 trans_style.java:3762 trans_style.java:3769
 msgid "address"
-msgstr ""
+msgstr "adresa"
 
 #: trans_wms.java:5
 msgid "Landsat"
-msgstr ""
+msgstr "Landsat"
 
 #: trans_wms.java:6
 msgid "Open Aerial Map"
-msgstr ""
+msgstr "Open Aerial Map"
 
 #: trans_wms.java:8
 msgid "NPE Maps"
-msgstr ""
+msgstr "NPE Maps"
 
 #: trans_wms.java:9
 msgid "NPE Maps (Tim)"
-msgstr ""
+msgstr "NPE Maps (Tim)"
 
 #: trans_wms.java:14
 msgid "YAHOO (GNOME)"
-msgstr ""
+msgstr "YAHOO (GNOME)"
 
 #: trans_wms.java:15
 msgid "YAHOO (GNOME Fix)"
-msgstr ""
+msgstr "YAHOO (GNOME Fix)"
 
 #: trans_wms.java:16
 msgid "YAHOO (WebKit)"
-msgstr ""
+msgstr "YAHOO (WebKit)"
 
 #: trans_wms.java:17
 msgid "YAHOO (WebKit GTK)"
-msgstr ""
+msgstr "YAHOO (WebKit GTK)"
 
 #: trans_wms.java:19
 msgid "Oberpfalz Geofabrik.de"
-msgstr ""
+msgstr "Oberpfalz Geofabrik.de"
 
 #: trans_wms.java:20
 msgid "Streets NRW Geofabrik.de"
-msgstr ""
+msgstr "Ulice NRW Geofabrik.de"
 
 #: trans_validator.java:38
 msgid "oneway tag on a node"
-msgstr ""
+msgstr "značka (tag) jednosmerky (oneway) na bode"
 
 #: trans_validator.java:39
 msgid "bridge tag on a node"
-msgstr ""
+msgstr "značka (tag) mosta (bridge) na bode"
 
 #: trans_validator.java:40 trans_validator.java:41 trans_validator.java:42
 #: trans_validator.java:43 trans_validator.java:44
 msgid "wrong highway tag on a node"
-msgstr ""
+msgstr "chybná značka (tag) cesty (highway) na bode"
 
 #: trans_validator.java:45 trans_validator.java:46 trans_validator.java:47
 msgid "highway without a reference"
-msgstr ""
+msgstr "cesta bez označenia (ref)"
 
 #: trans_validator.java:48
 msgid "temporary highway type"
-msgstr ""
+msgstr "dočasný typ cesty"
 
 #: trans_validator.java:49
 msgid "misspelled key name"
-msgstr ""
+msgstr "preklep v mene kľúča (key)"
 
 #: trans_validator.java:51
 msgid "cycleway with tag bicycle"
-msgstr ""
+msgstr "cesta pre bicykle so značkoy bicykla"
 
 #: trans_validator.java:52
 msgid "footway with tag foot"
-msgstr ""
+msgstr "cesta pre peších so značkou"
 
 #: trans_validator.java:55
 msgid "separate cycleway as lane on a cycleway"
@@ -7706,11 +7793,11 @@ msgstr ""
 
 #: trans_validator.java:56
 msgid "barrier used on a way"
-msgstr ""
+msgstr "prekážka na ceste"
 
 #: trans_validator.java:59
 msgid "maxspeed used for footway"
-msgstr ""
+msgstr "maximálna rýchlosť na ceste pre peších"
 
 #: trans_validator.java:61
 msgid "layer tag with + sign"
@@ -7718,29 +7805,29 @@ msgstr ""
 
 #: trans_validator.java:63
 msgid "street name contains ss"
-msgstr ""
+msgstr "meno ulice obsahuje ss"
 
 #: trans_validator.java:64
 msgid "abbreviated street name"
-msgstr ""
+msgstr "skrátené meno ulice"
 
 #: trans_validator.java:66
 msgid "relation without type"
-msgstr ""
+msgstr "relácia bez typu"
 
 #: trans_validator.java:68
 msgid "restaurant without name"
-msgstr ""
+msgstr "reštaurácia bez mena"
 
 #: trans_validator.java:70 trans_validator.java:71 trans_validator.java:72
 msgid "unusual tag combination"
-msgstr ""
+msgstr "neobvyklá kombinácia značiek (tagov)"
 
-#: trans_surveyor.java:27
+#: trans_surveyor.java:6
 msgid "Tunnel Start"
-msgstr ""
+msgstr "Začiatok tunela"
 
-#: trans_surveyor.java:33 trans_presets.java:53 trans_presets.java:70
+#: trans_surveyor.java:12 trans_presets.java:53 trans_presets.java:70
 #: trans_presets.java:89 trans_presets.java:107 trans_presets.java:127
 #: trans_presets.java:142 trans_presets.java:162 trans_presets.java:181
 #: trans_presets.java:197 trans_presets.java:215 trans_presets.java:233
@@ -7751,87 +7838,91 @@ msgstr ""
 #: trans_presets.java:525 trans_presets.java:546 trans_presets.java:567
 #: trans_presets.java:588 trans_presets.java:618 trans_presets.java:1171
 msgid "Bridge"
-msgstr ""
+msgstr "Most"
 
-#: trans_surveyor.java:37
+#: trans_surveyor.java:16
 msgid "Village/City"
-msgstr ""
+msgstr "Dedina/Mesto"
 
-#: trans_surveyor.java:45 trans_presets.java:1241 trans_presets.java:1288
+#: trans_surveyor.java:24 trans_presets.java:1241 trans_presets.java:1288
 msgid "Parking"
-msgstr ""
+msgstr "Parkovisko"
 
-#: trans_surveyor.java:50
+#: trans_surveyor.java:29
 msgid "One Way"
-msgstr ""
+msgstr "Jednosmerka"
 
-#: trans_surveyor.java:54
+#: trans_surveyor.java:33
 msgid "Church"
-msgstr ""
+msgstr "Kostol"
 
-#: trans_surveyor.java:59
+#: trans_surveyor.java:38
 msgid "Fuel Station"
-msgstr ""
+msgstr "Čerpacia stanica"
 
-#: trans_surveyor.java:64 trans_presets.java:1413
+#: trans_surveyor.java:43 trans_presets.java:1413
 msgid "Hotel"
-msgstr ""
+msgstr "Hotel"
 
-#: trans_surveyor.java:68 trans_presets.java:1463
+#: trans_surveyor.java:47 trans_presets.java:1463
 msgid "Restaurant"
-msgstr ""
+msgstr "Reštaurácia"
 
-#: trans_surveyor.java:73
+#: trans_surveyor.java:52
 msgid "Shopping"
-msgstr ""
+msgstr "Nakupovanie"
 
-#: trans_surveyor.java:77
+#: trans_surveyor.java:56
 msgid "WC"
-msgstr ""
+msgstr "WC"
 
-#: trans_surveyor.java:81
+#: trans_surveyor.java:60
 msgid "Camping"
-msgstr ""
+msgstr "Táborisko"
 
-#: trans_surveyor.java:93 trans_presets.java:40
+#: trans_surveyor.java:72 trans_presets.java:40
 msgid "Motorway"
-msgstr ""
+msgstr "Dialnica"
 
-#: trans_surveyor.java:97 trans_presets.java:114
+#: trans_surveyor.java:76 trans_presets.java:114
 msgid "Primary"
-msgstr ""
+msgstr "Cesta I. triedy"
 
-#: trans_surveyor.java:101 trans_presets.java:148
+#: trans_surveyor.java:80 trans_presets.java:148
 msgid "Secondary"
-msgstr ""
+msgstr "Cesta II. triedy"
 
-#: trans_surveyor.java:105 trans_presets.java:187
+#: trans_surveyor.java:84 trans_presets.java:187
 msgid "Unclassified"
-msgstr ""
+msgstr "Miestna cesta neklasifikovaná (Unclassified)"
 
-#: trans_surveyor.java:109 trans_presets.java:206
+#: trans_surveyor.java:88 trans_presets.java:206
 msgid "Residential"
-msgstr ""
+msgstr "Ulica"
 
-#: trans_surveyor.java:114 trans_surveyor.java:118
+#: trans_surveyor.java:93 trans_surveyor.java:97
 msgid "Test"
-msgstr ""
+msgstr "Otestovať"
 
 #: specialmessages.java:6
 msgid ""
 "You requested too many nodes (limit is 50,000). Either request a smaller "
 "area, or use planet.osm"
 msgstr ""
+"Vyžiadali ste si príliš veľa bodov (limit je 50 000). Vyžiadajte si menšiu "
+"plochu, alebo použite planet.osm"
 
 #: specialmessages.java:7
 msgid "Database offline for maintenance"
-msgstr ""
+msgstr "Databáza je mimo prevádzky kvôli údržbe"
 
 #: specialmessages.java:8
 msgid ""
 "The maximum bbox size is 0.25, and your request was too large. Either "
 "request a smaller area, or use planet.osm"
 msgstr ""
+"Maximálna veľkosť bbox je 0.25, a vaša požiadavka bola príliš veľká. "
+"Vyžiadajte si menšiu oblasť, alebo použite planet.osm"
 
 #: specialmessages.java:9
 msgid "could not get audio input stream from input URL"
@@ -7839,17 +7930,17 @@ msgstr ""
 
 #: trans_presets.java:39
 msgid "Streets"
-msgstr ""
+msgstr "Ulice"
 
 #: trans_presets.java:43
 msgid "Edit a Motorway"
-msgstr ""
+msgstr "Upraviť diaľnicu"
 
 #: trans_presets.java:46 trans_presets.java:82 trans_presets.java:101
 #: trans_presets.java:120 trans_presets.java:155 trans_presets.java:175
 #: trans_presets.java:1405
 msgid "Reference"
-msgstr ""
+msgstr "Odkaz"
 
 #: trans_presets.java:49 trans_presets.java:66 trans_presets.java:85
 #: trans_presets.java:103 trans_presets.java:123 trans_presets.java:138
@@ -7869,7 +7960,7 @@ msgstr "Vrstva"
 #: trans_presets.java:104 trans_presets.java:124 trans_presets.java:139
 #: trans_presets.java:159 trans_presets.java:334
 msgid "Lanes"
-msgstr ""
+msgstr "Jazdné pruhy"
 
 #: trans_presets.java:51 trans_presets.java:68 trans_presets.java:87
 #: trans_presets.java:105 trans_presets.java:125 trans_presets.java:140
@@ -7879,7 +7970,7 @@ msgstr ""
 #: trans_presets.java:413 trans_presets.java:432 trans_presets.java:470
 #: trans_presets.java:624 trans_presets.java:1177
 msgid "Max. speed (km/h)"
-msgstr ""
+msgstr "Max. rýchlosť (km/h)"
 
 #: trans_presets.java:52 trans_presets.java:69 trans_presets.java:88
 #: trans_presets.java:106 trans_presets.java:126 trans_presets.java:141
@@ -7890,7 +7981,7 @@ msgstr ""
 #: trans_presets.java:406 trans_presets.java:425 trans_presets.java:444
 #: trans_presets.java:463 trans_presets.java:617 trans_presets.java:1170
 msgid "Oneway"
-msgstr ""
+msgstr "Jednosmerka"
 
 #: trans_presets.java:54 trans_presets.java:71 trans_presets.java:90
 #: trans_presets.java:108 trans_presets.java:128 trans_presets.java:143
@@ -7903,7 +7994,7 @@ msgstr ""
 #: trans_presets.java:568 trans_presets.java:589 trans_presets.java:619
 #: trans_presets.java:1172
 msgid "Tunnel"
-msgstr ""
+msgstr "Tunel"
 
 #: trans_presets.java:55 trans_presets.java:72 trans_presets.java:91
 #: trans_presets.java:109 trans_presets.java:129 trans_presets.java:144
@@ -7916,7 +8007,7 @@ msgstr ""
 #: trans_presets.java:569 trans_presets.java:590 trans_presets.java:620
 #: trans_presets.java:1173
 msgid "Cutting"
-msgstr ""
+msgstr "Rezanie"
 
 #: trans_presets.java:56 trans_presets.java:73 trans_presets.java:92
 #: trans_presets.java:110 trans_presets.java:130 trans_presets.java:145
@@ -7929,59 +8020,59 @@ msgstr ""
 #: trans_presets.java:570 trans_presets.java:591 trans_presets.java:621
 #: trans_presets.java:1174
 msgid "Embankment"
-msgstr ""
+msgstr "Násyp"
 
 #: trans_presets.java:59
 msgid "Motorway Link"
-msgstr ""
+msgstr "Dialničná prípojka"
 
 #: trans_presets.java:62
 msgid "Edit a Motorway Link"
-msgstr ""
+msgstr "Upraviť dialničnú prípojku"
 
 #: trans_presets.java:76
 msgid "Trunk"
-msgstr ""
+msgstr "Cesta pre motorové vozidlá"
 
 #: trans_presets.java:79
 msgid "Edit a Trunk"
-msgstr ""
+msgstr "Upraviť cestu pre motorové vozidlá"
 
 #: trans_presets.java:95
 msgid "Trunk Link"
-msgstr ""
+msgstr "Prípojka cesty pre motorové vozidla"
 
 #: trans_presets.java:98
 msgid "Edit a Trunk Link"
-msgstr ""
+msgstr "Upraviť prípojku cesty pre motorové vozidla"
 
 #: trans_presets.java:117
 msgid "Edit a Primary Road"
-msgstr ""
+msgstr "Upraviť cestu I. triedy"
 
 #: trans_presets.java:133
 msgid "Primary Link"
-msgstr ""
+msgstr "Prípojka cesty I. triedy"
 
 #: trans_presets.java:134
 msgid "Edit a Primary Link"
-msgstr ""
+msgstr "Upraviť prípojku cesty I. triedy"
 
 #: trans_presets.java:152
 msgid "Edit a Secondary Road"
-msgstr ""
+msgstr "Upraviť cestu II. triedy"
 
 #: trans_presets.java:168
 msgid "Tertiary"
-msgstr ""
+msgstr "Cesta III. triedy"
 
 #: trans_presets.java:172
 msgid "Edit a Tertiary Road"
-msgstr ""
+msgstr "Upraviť cestu III. triedy"
 
 #: trans_presets.java:191
 msgid "Edit a Unclassified Road"
-msgstr ""
+msgstr "Upraviť Neklasifikovanú cestu"
 
 #: trans_presets.java:203 trans_presets.java:221 trans_presets.java:239
 #: trans_presets.java:258 trans_presets.java:290 trans_presets.java:335
@@ -7994,11 +8085,11 @@ msgstr ""
 #: trans_presets.java:690 trans_presets.java:703 trans_presets.java:1178
 #: trans_presets.java:1347 trans_presets.java:1388
 msgid "Width (metres)"
-msgstr ""
+msgstr "Šírka (metrov)"
 
 #: trans_presets.java:209
 msgid "Edit a Residential Street"
-msgstr ""
+msgstr "Upraviť ulicu"
 
 #: trans_presets.java:220 trans_presets.java:238 trans_presets.java:256
 #: trans_presets.java:271 trans_presets.java:372 trans_presets.java:392
@@ -8007,7 +8098,7 @@ msgstr ""
 #: trans_presets.java:529 trans_presets.java:550 trans_presets.java:571
 #: trans_presets.java:592 trans_presets.java:623 trans_presets.java:1176
 msgid "Surface"
-msgstr ""
+msgstr "Povrch"
 
 #: trans_presets.java:220 trans_presets.java:238 trans_presets.java:256
 #: trans_presets.java:271 trans_presets.java:372 trans_presets.java:392
@@ -8016,14 +8107,14 @@ msgstr ""
 #: trans_presets.java:529 trans_presets.java:550 trans_presets.java:571
 #: trans_presets.java:592 trans_presets.java:623 trans_presets.java:1176
 msgid "paved"
-msgstr ""
+msgstr "spevnený"
 
 #: trans_presets.java:220 trans_presets.java:238 trans_presets.java:256
 #: trans_presets.java:271 trans_presets.java:372 trans_presets.java:392
 #: trans_presets.java:412 trans_presets.java:431 trans_presets.java:450
 #: trans_presets.java:469 trans_presets.java:623 trans_presets.java:1176
 msgid "unpaved"
-msgstr ""
+msgstr "nespevnený"
 
 #: trans_presets.java:220 trans_presets.java:238 trans_presets.java:256
 #: trans_presets.java:271 trans_presets.java:372 trans_presets.java:392
@@ -8032,61 +8123,61 @@ msgstr ""
 #: trans_presets.java:529 trans_presets.java:550 trans_presets.java:571
 #: trans_presets.java:592 trans_presets.java:623 trans_presets.java:1176
 msgid "cobblestone"
-msgstr ""
+msgstr "dlažbová kocka (cobblestone)"
 
 #: trans_presets.java:224
 msgid "Living Street"
-msgstr ""
+msgstr "Obytná zóna"
 
 #: trans_presets.java:227
 msgid "Edit a Living Street"
-msgstr ""
+msgstr "Upraviť Obytnú zónu"
 
 #: trans_presets.java:242
 msgid "Service"
-msgstr ""
+msgstr "Obslužná cesta (Service)"
 
 #: trans_presets.java:245
 msgid "Edit a Serviceway"
-msgstr ""
+msgstr "Upraviť obslužnú cestu (Service)"
 
 #: trans_presets.java:261
 msgid "Parking Aisle"
-msgstr ""
+msgstr "Parkovacia ulička (Parking Aisle)"
 
 #: trans_presets.java:265
 msgid "Edit a Parking Aisle"
-msgstr ""
+msgstr "Upraviť parkovaciu uličku (Parking Aisle)"
 
 #: trans_presets.java:275
 msgid "Road (Unknown Type)"
-msgstr ""
+msgstr "Cesta (neznámy typ)"
 
 #: trans_presets.java:278
 msgid "Edit a Road of unknown type"
-msgstr ""
+msgstr "Upraviť cestu neznámeho typu"
 
 #: trans_presets.java:294
 msgid "Road Restrictions"
-msgstr ""
+msgstr "Cestné obmedzenie"
 
 #: trans_presets.java:295
 msgid "Edit Road Restrictions"
-msgstr ""
+msgstr "Upraviť cestné obmedzenie"
 
 #: trans_presets.java:297
 msgid "Toll"
-msgstr ""
+msgstr "Mýto (Toll)"
 
 #: trans_presets.java:298
 msgid "No exit (cul-de-sac)"
-msgstr ""
+msgstr "Slepá ulica"
 
 #: trans_presets.java:299 trans_presets.java:489 trans_presets.java:510
 #: trans_presets.java:531 trans_presets.java:552 trans_presets.java:573
 #: trans_presets.java:594
 msgid "Access"
-msgstr ""
+msgstr "Prístup"
 
 #: trans_presets.java:299 trans_presets.java:300 trans_presets.java:301
 #: trans_presets.java:302 trans_presets.java:303 trans_presets.java:304
@@ -8102,20 +8193,7 @@ msgstr ""
 #: trans_presets.java:613 trans_presets.java:614 trans_presets.java:1249
 #: trans_presets.java:2177 trans_presets.java:2435
 msgid "yes"
-msgstr ""
-
-#: trans_presets.java:299 trans_presets.java:300 trans_presets.java:301
-#: trans_presets.java:302 trans_presets.java:303 trans_presets.java:304
-#: trans_presets.java:305 trans_presets.java:306 trans_presets.java:307
-#: trans_presets.java:308 trans_presets.java:309 trans_presets.java:489
-#: trans_presets.java:490 trans_presets.java:491 trans_presets.java:510
-#: trans_presets.java:511 trans_presets.java:512 trans_presets.java:531
-#: trans_presets.java:532 trans_presets.java:533 trans_presets.java:552
-#: trans_presets.java:553 trans_presets.java:554 trans_presets.java:573
-#: trans_presets.java:574 trans_presets.java:575 trans_presets.java:594
-#: trans_presets.java:595 trans_presets.java:596
-msgid "private"
-msgstr ""
+msgstr "áno"
 
 #: trans_presets.java:299 trans_presets.java:300 trans_presets.java:301
 #: trans_presets.java:302 trans_presets.java:303 trans_presets.java:304
@@ -8130,33 +8208,7 @@ msgstr ""
 #: trans_presets.java:610 trans_presets.java:611 trans_presets.java:612
 #: trans_presets.java:613 trans_presets.java:614
 msgid "designated"
-msgstr ""
-
-#: trans_presets.java:299 trans_presets.java:300 trans_presets.java:301
-#: trans_presets.java:302 trans_presets.java:303 trans_presets.java:304
-#: trans_presets.java:305 trans_presets.java:306 trans_presets.java:307
-#: trans_presets.java:308 trans_presets.java:309 trans_presets.java:489
-#: trans_presets.java:490 trans_presets.java:491 trans_presets.java:510
-#: trans_presets.java:511 trans_presets.java:512 trans_presets.java:531
-#: trans_presets.java:532 trans_presets.java:533 trans_presets.java:552
-#: trans_presets.java:553 trans_presets.java:554 trans_presets.java:573
-#: trans_presets.java:574 trans_presets.java:575 trans_presets.java:594
-#: trans_presets.java:595 trans_presets.java:596
-msgid "destination"
-msgstr ""
-
-#: trans_presets.java:299 trans_presets.java:300 trans_presets.java:301
-#: trans_presets.java:302 trans_presets.java:303 trans_presets.java:304
-#: trans_presets.java:305 trans_presets.java:306 trans_presets.java:307
-#: trans_presets.java:308 trans_presets.java:309 trans_presets.java:489
-#: trans_presets.java:490 trans_presets.java:491 trans_presets.java:510
-#: trans_presets.java:511 trans_presets.java:512 trans_presets.java:531
-#: trans_presets.java:532 trans_presets.java:533 trans_presets.java:552
-#: trans_presets.java:553 trans_presets.java:554 trans_presets.java:573
-#: trans_presets.java:574 trans_presets.java:575 trans_presets.java:594
-#: trans_presets.java:595 trans_presets.java:596
-msgid "permissive"
-msgstr ""
+msgstr "určený"
 
 #: trans_presets.java:299 trans_presets.java:303 trans_presets.java:306
 #: trans_presets.java:489 trans_presets.java:490 trans_presets.java:491
@@ -8166,7 +8218,7 @@ msgstr ""
 #: trans_presets.java:573 trans_presets.java:574 trans_presets.java:575
 #: trans_presets.java:594 trans_presets.java:595 trans_presets.java:596
 msgid "agricultural"
-msgstr ""
+msgstr "farmársky (agricultural)"
 
 #: trans_presets.java:299 trans_presets.java:300 trans_presets.java:301
 #: trans_presets.java:302 trans_presets.java:303 trans_presets.java:304
@@ -8182,15 +8234,15 @@ msgstr ""
 #: trans_presets.java:613 trans_presets.java:614 trans_presets.java:1249
 #: trans_presets.java:2177 trans_presets.java:2435
 msgid "no"
-msgstr ""
+msgstr "Nie"
 
 #: trans_presets.java:302
 msgid "Goods"
-msgstr ""
+msgstr "Tovar (Goods)"
 
 #: trans_presets.java:303
 msgid "Heavy Goods Vehicles (hgv)"
-msgstr ""
+msgstr "Nákladné vozidlo"
 
 #: trans_presets.java:304 trans_presets.java:611 trans_presets.java:827
 #: trans_presets.java:840 trans_presets.java:851 trans_presets.java:878
@@ -8198,7 +8250,7 @@ msgstr ""
 #: trans_presets.java:925 trans_presets.java:937 trans_presets.java:981
 #: trans_presets.java:994
 msgid "Horse"
-msgstr ""
+msgstr "Kôň"
 
 #: trans_presets.java:305 trans_presets.java:490 trans_presets.java:511
 #: trans_presets.java:532 trans_presets.java:553 trans_presets.java:574
@@ -8208,7 +8260,7 @@ msgstr ""
 #: trans_presets.java:926 trans_presets.java:938 trans_presets.java:982
 #: trans_presets.java:995
 msgid "Motorcycle"
-msgstr ""
+msgstr "Motocykel"
 
 #: trans_presets.java:306 trans_presets.java:491 trans_presets.java:512
 #: trans_presets.java:533 trans_presets.java:554 trans_presets.java:575
@@ -8218,69 +8270,69 @@ msgstr ""
 #: trans_presets.java:927 trans_presets.java:939 trans_presets.java:983
 #: trans_presets.java:996
 msgid "Motorcar"
-msgstr ""
+msgstr "Motorové vozidlo"
 
 #: trans_presets.java:307
 msgid "Public Service Vehicles (psv)"
-msgstr ""
+msgstr "Dopravná obsluha"
 
 #: trans_presets.java:308
 msgid "Motorboat"
-msgstr ""
+msgstr "Motorová loď"
 
 #: trans_presets.java:309
 msgid "Boat"
-msgstr ""
+msgstr "Loď"
 
 #: trans_presets.java:311
 msgid "Min. speed (km/h)"
-msgstr ""
+msgstr "Min. rýchlosť (km/h)"
 
 #: trans_presets.java:312 trans_presets.java:350
 msgid "Max. weight (tonnes)"
-msgstr ""
+msgstr "Max. hmotnosť (ton)"
 
 #: trans_presets.java:313
 msgid "Max. Height (metres)"
-msgstr ""
+msgstr "Max. výška (metrov)"
 
 #: trans_presets.java:314
 msgid "Max. Width (metres)"
-msgstr ""
+msgstr "Max. šírka (metrov)"
 
 #: trans_presets.java:315
 msgid "Max. Length (metres)"
-msgstr ""
+msgstr "Max. dĺžka (metrov)"
 
 #: trans_presets.java:317
 msgid "Roundabout"
-msgstr ""
+msgstr "Kruhový objazd"
 
 #: trans_presets.java:322
 msgid "Edit a Junction"
-msgstr ""
+msgstr "Upraviť kruhový objazd"
 
 #: trans_presets.java:325 trans_presets.java:608 trans_presets.java:746
 #: trans_presets.java:1248 trans_presets.java:2133 trans_presets.java:2635
 #: trans_presets.java:2746 trans_presets.java:2811 trans_presets.java:2835
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: trans_presets.java:325
 msgid "motorway_link"
-msgstr ""
+msgstr "dialničná prípojka"
 
 #: trans_presets.java:325
 msgid "trunk_link"
-msgstr ""
+msgstr "prípojka cesty pre motorové vozidlá"
 
 #: trans_presets.java:325
 msgid "primary_link"
-msgstr ""
+msgstr "prípojka cesty I. triedy"
 
 #: trans_presets.java:325
 msgid "unclassified"
-msgstr ""
+msgstr "cesta bez klasifikácie (unclassified)"
 
 #: trans_presets.java:325
 msgid "living_street"
@@ -8292,23 +8344,23 @@ msgstr ""
 
 #: trans_presets.java:343
 msgid "Edit a Bridge"
-msgstr ""
+msgstr "Editácia mosta"
 
 #: trans_presets.java:355
 msgid "Ways"
-msgstr ""
+msgstr "Cesty"
 
 #: trans_presets.java:356
 msgid "Construction"
-msgstr ""
+msgstr "Stavba"
 
 #: trans_presets.java:357
 msgid "Edit a highway under construction"
-msgstr ""
+msgstr "Upraviť cestu vo výstavbe"
 
 #: trans_presets.java:373
 msgid "Junction"
-msgstr ""
+msgstr "Križovatka"
 
 #: trans_presets.java:379
 msgid "Bridleway"
@@ -8320,31 +8372,31 @@ msgstr ""
 
 #: trans_presets.java:397
 msgid "Cycleway"
-msgstr ""
+msgstr "Cyklistická cesta"
 
 #: trans_presets.java:401
 msgid "Edit a Cycleway"
-msgstr ""
+msgstr "Upraviť cyklistickú cestu"
 
 #: trans_presets.java:417
 msgid "Footway"
-msgstr ""
+msgstr "Chodník"
 
 #: trans_presets.java:420
 msgid "Edit a Footway"
-msgstr ""
+msgstr "Upraviť chodník"
 
 #: trans_presets.java:436
 msgid "Pedestrian"
-msgstr ""
+msgstr "Pešia zóna"
 
 #: trans_presets.java:439
 msgid "Edit a Pedestrian Street"
-msgstr ""
+msgstr "Upraviť pešiu zónu"
 
 #: trans_presets.java:454
 msgid "Steps"
-msgstr ""
+msgstr "Schody"
 
 #: trans_presets.java:458
 msgid "Edit a flight of Steps"
@@ -8352,175 +8404,175 @@ msgstr ""
 
 #: trans_presets.java:475
 msgid "Track"
-msgstr ""
+msgstr "Stopa (Track)"
 
 #: trans_presets.java:478
 msgid "Edit a Track"
-msgstr ""
+msgstr "Upraviť Stopu (Track)"
 
 #: trans_presets.java:487 trans_presets.java:508 trans_presets.java:529
 #: trans_presets.java:550 trans_presets.java:571 trans_presets.java:592
 msgid "gravel"
-msgstr ""
+msgstr "štrk (gravel)"
 
 #: trans_presets.java:487 trans_presets.java:508 trans_presets.java:529
 #: trans_presets.java:550 trans_presets.java:571 trans_presets.java:592
 msgid "ground"
-msgstr ""
+msgstr "zem (ground)"
 
 #: trans_presets.java:487 trans_presets.java:508 trans_presets.java:529
 #: trans_presets.java:550 trans_presets.java:571 trans_presets.java:592
 msgid "grass"
-msgstr ""
+msgstr "tráva (grass)"
 
 #: trans_presets.java:487 trans_presets.java:508 trans_presets.java:529
 #: trans_presets.java:550 trans_presets.java:571 trans_presets.java:592
 msgid "sand"
-msgstr ""
+msgstr "piesok (sand)"
 
 #: trans_presets.java:495
 msgid "Track Grade 1"
-msgstr ""
+msgstr "Kvalita stopy (track grade 1) 1"
 
 #: trans_presets.java:498
 msgid "Edit a Track of grade 1"
-msgstr ""
+msgstr "Upraviť kvalitu stopy (track grade 1) 1"
 
 #: trans_presets.java:516
 msgid "Track Grade 2"
-msgstr ""
+msgstr "Kvalita stopy (track grade 2) 2"
 
 #: trans_presets.java:519
 msgid "Edit a Track of grade 2"
-msgstr ""
+msgstr "Upraviť kvalitu stopy (track grade 2) 2"
 
 #: trans_presets.java:537
 msgid "Track Grade 3"
-msgstr ""
+msgstr "Kvalita stopy (track grade 3) 3"
 
 #: trans_presets.java:540
 msgid "Edit a Track of grade 3"
-msgstr ""
+msgstr "Upraviť kvalitu stopy (track grade 3) 3"
 
 #: trans_presets.java:558
 msgid "Track Grade 4"
-msgstr ""
+msgstr "Kvalita stopy (track grade 4) 4"
 
 #: trans_presets.java:561
 msgid "Edit a Track of grade 4"
-msgstr ""
+msgstr "Upraviť kvalitu stopy (track grade 4) 4"
 
 #: trans_presets.java:579
 msgid "Track Grade 5"
-msgstr ""
+msgstr "Kvalita stopy (track grade 5) 5"
 
 #: trans_presets.java:582
 msgid "Edit a Track of grade 5"
-msgstr ""
+msgstr "Upraviť kvalitu stopy (track grade 5) 5"
 
 #: trans_presets.java:601
 msgid "Path"
-msgstr ""
+msgstr "Cesta (chodník)"
 
 #: trans_presets.java:604
 msgid "Edit Path"
-msgstr ""
+msgstr "Upraviť cestu (chodník)"
 
 #: trans_presets.java:610
 msgid "Snowmobile"
-msgstr ""
+msgstr "Snežný skúter"
 
 #: trans_presets.java:613
 msgid "Ski"
-msgstr ""
+msgstr "Lyže"
 
 #: trans_presets.java:628
 msgid "Hiking"
-msgstr ""
+msgstr "Turistika"
 
 #: trans_presets.java:632
 msgid "Edit Hiking"
-msgstr ""
+msgstr "Upraviť Turistiku"
 
 #: trans_presets.java:641
 msgid "Mountain Hiking"
-msgstr ""
+msgstr "Horská turistika"
 
 #: trans_presets.java:645
 msgid "Edit Mountain Hiking"
-msgstr ""
+msgstr "Upraviť horskú turistiku"
 
 #: trans_presets.java:654
 msgid "Demanding Mountain Hiking"
-msgstr ""
+msgstr "Náročná horská turistika"
 
 #: trans_presets.java:658
 msgid "Edit Demanding Mountain Hiking"
-msgstr ""
+msgstr "Upraviť náročnú horskú turistiku"
 
 #: trans_presets.java:667
 msgid "Alpine Hiking"
-msgstr ""
+msgstr "Vysokohorská turistika"
 
 #: trans_presets.java:671
 msgid "Edit Alpine Hiking"
-msgstr ""
+msgstr "Upraviť vysokohorskú turistiku"
 
 #: trans_presets.java:680
 msgid "Demanding alpine hiking"
-msgstr ""
+msgstr "Náročná vysokohorská turistika"
 
 #: trans_presets.java:684
 msgid "Edit Demanding alpine hiking"
-msgstr ""
+msgstr "Upraviť náročnú vysokohorskú turistiku"
 
 #: trans_presets.java:693
 msgid "Difficult alpine hiking"
-msgstr ""
+msgstr "Tažká vysokohorská turistika"
 
 #: trans_presets.java:697
 msgid "Edit Difficult alpine hiking"
-msgstr ""
+msgstr "Upraviť ťažkú vysokohorskú turistiku"
 
 #: trans_presets.java:707
 msgid "Waypoints"
-msgstr ""
+msgstr "Cestný bod"
 
 #: trans_presets.java:708
 msgid "Motorway Junction"
-msgstr ""
+msgstr "Ďialničná križovatka"
 
 #: trans_presets.java:710
 msgid "Edit Motorway Junction"
-msgstr ""
+msgstr "Upraviť diaľničnú križovatku"
 
 #: trans_presets.java:714
 msgid "Number"
-msgstr ""
+msgstr "Číslo"
 
 #: trans_presets.java:716
 msgid "Highway Exit"
-msgstr ""
+msgstr "Výjazd z diaľnice"
 
 #: trans_presets.java:717
 msgid "Edit an Exit"
-msgstr ""
+msgstr "Upraviť výjazd z diaľnice"
 
 #: trans_presets.java:719
 msgid "Exit Number"
-msgstr ""
+msgstr "Číslo výjazdu"
 
 #: trans_presets.java:720
 msgid "Exit Name"
-msgstr ""
+msgstr "Názov výjazdu"
 
 #: trans_presets.java:723
 msgid "Services"
-msgstr ""
+msgstr "Služby"
 
 #: trans_presets.java:725
 msgid "Edit Service Station"
-msgstr ""
+msgstr "Upraviť servisnú stanicu (autoservis)"
 
 #: trans_presets.java:730 trans_presets.java:970 trans_presets.java:1239
 #: trans_presets.java:1256 trans_presets.java:1263 trans_presets.java:1269
@@ -8529,35 +8581,35 @@ msgstr ""
 #: trans_presets.java:2183 trans_presets.java:2190 trans_presets.java:2240
 #: trans_presets.java:2267
 msgid "Operator"
-msgstr ""
+msgstr "Operátor"
 
 #: trans_presets.java:734
 msgid "Traffic Signal"
-msgstr ""
+msgstr "Semafor"
 
 #: trans_presets.java:738
 msgid "Stop"
-msgstr ""
+msgstr "Zastaviť (stop)"
 
 #: trans_presets.java:741
 msgid "Zebra Crossing"
-msgstr ""
+msgstr "Prechod pre chodcov"
 
 #: trans_presets.java:744
 msgid "Edit a crossing"
-msgstr ""
+msgstr "Upraviť prechod pre chodcov"
 
 #: trans_presets.java:746
 msgid "uncontrolled"
-msgstr ""
+msgstr "neriadená"
 
 #: trans_presets.java:746
 msgid "island"
-msgstr ""
+msgstr "ostrov"
 
 #: trans_presets.java:747
 msgid "Ref"
-msgstr ""
+msgstr "Ref (označenie)"
 
 #: trans_presets.java:747
 msgid "zebra"
@@ -8569,7 +8621,7 @@ msgstr ""
 
 #: trans_presets.java:751
 msgid "Mini Roundabout"
-msgstr ""
+msgstr "Malý kruhový objazd"
 
 #: trans_presets.java:757
 msgid "Turning Circle"
@@ -8577,60 +8629,60 @@ msgstr ""
 
 #: trans_presets.java:762
 msgid "City Limit"
-msgstr ""
+msgstr "Hranica mesta/obce"
 
 #: trans_presets.java:763
 msgid "Edit a city limit sign"
-msgstr ""
+msgstr "Upraviť označenie hranice mesta/obce"
 
 #: trans_presets.java:768
 msgid "Second Name"
-msgstr ""
+msgstr "Druhé meno"
 
 #: trans_presets.java:770
 msgid "Signpost"
-msgstr ""
+msgstr "Smerová tabuľa"
 
 #: trans_presets.java:773
 msgid "Speed Camera"
-msgstr ""
+msgstr "Kamera na meranie rýchlosti"
 
 #: trans_presets.java:776
 msgid "Emergency Phone"
-msgstr ""
+msgstr "Núdzový telefón"
 
 #: trans_presets.java:780
 msgid "Ford"
-msgstr ""
+msgstr "Brod"
 
 #: trans_presets.java:781
 msgid "Edit Ford"
-msgstr ""
+msgstr "Upraviť brod"
 
 #: trans_presets.java:788
 msgid "Mountain Pass"
-msgstr ""
+msgstr "Horský priesmyk"
 
 #: trans_presets.java:790
 msgid "Edit Mountain Pass"
-msgstr ""
+msgstr "Upraviť horský priesmyk"
 
 #: trans_presets.java:795 trans_presets.java:1448 trans_presets.java:2767
 #: trans_presets.java:2774 trans_presets.java:2781
 msgid "Elevation"
-msgstr ""
+msgstr "Nadmorská výška"
 
 #: trans_presets.java:799
 msgid "Barriers"
-msgstr ""
+msgstr "Prekážka (Barriers)"
 
 #: trans_presets.java:800
 msgid "Stile"
-msgstr ""
+msgstr "Turniket (Stile)"
 
 #: trans_presets.java:802
 msgid "Edit a Stile"
-msgstr ""
+msgstr "Upraviť turniket"
 
 #: trans_presets.java:805 trans_presets.java:814 trans_presets.java:823
 #: trans_presets.java:836 trans_presets.java:847 trans_presets.java:863
@@ -8638,7 +8690,7 @@ msgstr ""
 #: trans_presets.java:909 trans_presets.java:921 trans_presets.java:933
 #: trans_presets.java:977 trans_presets.java:990
 msgid "Allowed traffic:"
-msgstr ""
+msgstr "Povolená prevádzka:"
 
 #: trans_presets.java:810
 msgid "Kissing Gate"
@@ -8658,19 +8710,19 @@ msgstr ""
 
 #: trans_presets.java:831
 msgid "Bollard"
-msgstr ""
+msgstr "Stĺpik"
 
 #: trans_presets.java:833
 msgid "Edit a bollard"
-msgstr ""
+msgstr "Upraviť stĺpik"
 
 #: trans_presets.java:843
 msgid "Drawbridge"
-msgstr ""
+msgstr "Padací most"
 
 #: trans_presets.java:844
 msgid "Edit a Drawbridge"
-msgstr ""
+msgstr "Upraviť padací most"
 
 #: trans_presets.java:855
 msgid "Bus Trap"
@@ -8702,19 +8754,19 @@ msgstr ""
 
 #: trans_presets.java:892
 msgid "Gate"
-msgstr ""
+msgstr "Brána"
 
 #: trans_presets.java:894
 msgid "Edit a Gate"
-msgstr ""
+msgstr "Upraviť bránu"
 
 #: trans_presets.java:905
 msgid "Lift Gate"
-msgstr ""
+msgstr "Závora (Lift Gate)"
 
 #: trans_presets.java:906
 msgid "Edit a Lift Gate"
-msgstr ""
+msgstr "Upraviť závoru (Lift Gate)"
 
 #: trans_presets.java:917
 msgid "Sally Port"
@@ -8734,11 +8786,11 @@ msgstr ""
 
 #: trans_presets.java:941
 msgid "Hedge"
-msgstr ""
+msgstr "Živý plot (Hedge)"
 
 #: trans_presets.java:945
 msgid "Fence"
-msgstr ""
+msgstr "Plot"
 
 #: trans_presets.java:949
 msgid "Block"
@@ -8746,11 +8798,11 @@ msgstr ""
 
 #: trans_presets.java:952
 msgid "Wall"
-msgstr ""
+msgstr "Hradby"
 
 #: trans_presets.java:955
 msgid "City Wall"
-msgstr ""
+msgstr "Mestské hradby"
 
 #: trans_presets.java:959
 msgid "Retaining Wall"
@@ -8758,119 +8810,119 @@ msgstr ""
 
 #: trans_presets.java:963
 msgid "Toll Booth"
-msgstr ""
+msgstr "Mýtna búdka"
 
 #: trans_presets.java:965
 msgid "Edit Toll Booth"
-msgstr ""
+msgstr "Upraviť mýtnu búdku"
 
 #: trans_presets.java:973
 msgid "Border Control"
-msgstr ""
+msgstr "Hraničná kontrola"
 
 #: trans_presets.java:974
 msgid "Edit a Border Control"
-msgstr ""
+msgstr "Upraviť hraničnú kontrolu"
 
 #: trans_presets.java:986
 msgid "Entrance"
-msgstr ""
+msgstr "Vstup"
 
 #: trans_presets.java:987
 msgid "Edit a Entrance"
-msgstr ""
+msgstr "Upraviť vstup"
 
 #: trans_presets.java:1000
 msgid "Waterway"
-msgstr ""
+msgstr "Vodná cesta"
 
 #: trans_presets.java:1001
 msgid "River"
-msgstr ""
+msgstr "Rieka"
 
 #: trans_presets.java:1005
 msgid "Edit a River"
-msgstr ""
+msgstr "Upraviť rieku"
 
 #: trans_presets.java:1011
 msgid "Canal"
-msgstr ""
+msgstr "Prieplav"
 
 #: trans_presets.java:1013
 msgid "Edit a Canal"
-msgstr ""
+msgstr "Upraviť prieplav"
 
 #: trans_presets.java:1019
 msgid "Drain"
-msgstr ""
+msgstr "Odvodňovací kanál, odtok"
 
 #: trans_presets.java:1021
 msgid "Edit a Drain"
-msgstr ""
+msgstr "Upraviť odvodňovací kanál, odtok"
 
 #: trans_presets.java:1027
 msgid "Stream"
-msgstr ""
+msgstr "Potok"
 
 #: trans_presets.java:1029
 msgid "Edit a Stream"
-msgstr ""
+msgstr "Upraviť potok"
 
 #: trans_presets.java:1036
 msgid "Ferry Route"
-msgstr ""
+msgstr "Prievoz, trajekt"
 
 #: trans_presets.java:1038
 msgid "Edit a Ferry"
-msgstr ""
+msgstr "Upraviť prievoz, trajekt"
 
 #: trans_presets.java:1046
 msgid "Boatyard"
-msgstr ""
+msgstr "Lodenica"
 
 #: trans_presets.java:1048
 msgid "Edit a Boatyard"
-msgstr ""
+msgstr "Upraviť lodenicu"
 
 #: trans_presets.java:1053
 msgid "Dock"
-msgstr ""
+msgstr "Dok, prístavná hrádza"
 
 #: trans_presets.java:1055
 msgid "Edit a Dock"
-msgstr ""
+msgstr "Upraviť dok, prístavnú hrádzu"
 
 #: trans_presets.java:1061
 msgid "Dam"
-msgstr ""
+msgstr "Priehrada, nádrž"
 
 #: trans_presets.java:1063
 msgid "Edit a Dam"
-msgstr ""
+msgstr "Upraviť priehradu, nádrž"
 
 #: trans_presets.java:1069
 msgid "Waterway Point"
-msgstr ""
+msgstr "Vodné objekty"
 
 #: trans_presets.java:1070
 msgid "Lock Gate"
-msgstr ""
+msgstr "Plavebná komora"
 
 #: trans_presets.java:1074
 msgid "Weir"
-msgstr ""
+msgstr "Priehradzka"
 
 #: trans_presets.java:1076
 msgid "Edit a Weir"
-msgstr ""
+msgstr "Upraviť priehradzku"
 
 #: trans_presets.java:1081
 msgid "Waterfall"
-msgstr ""
+msgstr "Vodopád"
 
 #: trans_presets.java:1082
 msgid "Edit a Waterfall"
-msgstr ""
+msgstr "Upraviť vodopád"
 
 #: trans_presets.java:1087
 msgid "Turning Point"
@@ -8878,27 +8930,27 @@ msgstr ""
 
 #: trans_presets.java:1091
 msgid "Marina"
-msgstr ""
+msgstr "Prístav pre jachty"
 
 #: trans_presets.java:1092
 msgid "Edit Marina"
-msgstr ""
+msgstr "Upraviť prístav pre jachty"
 
 #: trans_presets.java:1096
 msgid "Pier"
-msgstr ""
+msgstr "Mólo"
 
 #: trans_presets.java:1098
 msgid "Edit Pier"
-msgstr ""
+msgstr "Upraviť mólo"
 
 #: trans_presets.java:1102
 msgid "Ferry Terminal"
-msgstr ""
+msgstr "Prístavisko prievozu, trajektu"
 
 #: trans_presets.java:1104
 msgid "Edit Ferry Terminal"
-msgstr ""
+msgstr "Upraviť prístavisko prievozu, trajektu"
 
 #: trans_presets.java:1108
 msgid "Slipway"
@@ -8910,11 +8962,11 @@ msgstr ""
 
 #: trans_presets.java:1118
 msgid "Railway"
-msgstr ""
+msgstr "Železnica"
 
 #: trans_presets.java:1119
 msgid "Rail"
-msgstr ""
+msgstr "Koľajnica"
 
 #: trans_presets.java:1121
 msgid "Edit a Rail"
@@ -8924,73 +8976,73 @@ msgstr ""
 #: trans_presets.java:1143 trans_presets.java:1149 trans_presets.java:1155
 #: trans_presets.java:1161 trans_presets.java:1186
 msgid "Optional Types"
-msgstr ""
+msgstr "Voliteľné typy"
 
 #: trans_presets.java:1124 trans_presets.java:1130 trans_presets.java:1137
 #: trans_presets.java:1143 trans_presets.java:1149 trans_presets.java:1155
 #: trans_presets.java:1161 trans_presets.java:1186
 msgid "yard"
-msgstr ""
+msgstr "železničná vlečka v závode"
 
 #: trans_presets.java:1124 trans_presets.java:1130 trans_presets.java:1137
 #: trans_presets.java:1143 trans_presets.java:1149 trans_presets.java:1155
 #: trans_presets.java:1161 trans_presets.java:1186
 msgid "siding"
-msgstr ""
+msgstr "vedľajšia koľaj (napr: na stanici)"
 
 #: trans_presets.java:1124 trans_presets.java:1130 trans_presets.java:1137
 #: trans_presets.java:1143 trans_presets.java:1149 trans_presets.java:1155
 #: trans_presets.java:1161 trans_presets.java:1186
 msgid "spur"
-msgstr ""
+msgstr "železničná vlečka"
 
 #: trans_presets.java:1126
 msgid "Narrow Gauge Rail"
-msgstr ""
+msgstr "Úzkorozchodná železnica"
 
 #: trans_presets.java:1127
 msgid "Edit a Narrow Gauge Rail"
-msgstr ""
+msgstr "Upraviť úzkorozchodnú železnicu"
 
 #: trans_presets.java:1132
 msgid "Monorail"
-msgstr ""
+msgstr "Jednokoľajka, vysutá dráha"
 
 #: trans_presets.java:1134
 msgid "Edit a Monorail"
-msgstr ""
+msgstr "Upraviť jednokoľajku, vysutú dráhu"
 
 #: trans_presets.java:1139
 msgid "Preserved"
-msgstr ""
+msgstr "Zachované ( v prevádzke)"
 
 #: trans_presets.java:1140
 msgid "Edit a Preserved Railway"
-msgstr ""
+msgstr "Upraviť zachovanú železnicu (v prevádzke)"
 
 #: trans_presets.java:1145
 msgid "Light Rail"
-msgstr ""
+msgstr "Rýchloelektrička"
 
 #: trans_presets.java:1146
 msgid "Edit a Light Rail"
-msgstr ""
+msgstr "Upraviť električku"
 
 #: trans_presets.java:1151
 msgid "Subway"
-msgstr ""
+msgstr "Metro"
 
 #: trans_presets.java:1152
 msgid "Edit a Subway"
-msgstr ""
+msgstr "Upraviť metro"
 
 #: trans_presets.java:1157
 msgid "Tram"
-msgstr ""
+msgstr "Električka"
 
 #: trans_presets.java:1158
 msgid "Edit a Tram"
-msgstr ""
+msgstr "Upraviť električku"
 
 #: trans_presets.java:1163
 msgid "Bus Guideway"
@@ -9002,83 +9054,83 @@ msgstr ""
 
 #: trans_presets.java:1182
 msgid "Disused Rail"
-msgstr ""
+msgstr "Nepoužívaná železnica"
 
 #: trans_presets.java:1183
 msgid "Edit a Disused Railway"
-msgstr ""
+msgstr "Upraviť nepoužívanú železnicu"
 
 #: trans_presets.java:1188
 msgid "Abandoned Rail"
-msgstr ""
+msgstr "Opustená železnica"
 
 #: trans_presets.java:1192
 msgid "Level Crossing"
-msgstr ""
+msgstr "Železničné priecestie"
 
 #: trans_presets.java:1196
 msgid "Crossing"
-msgstr ""
+msgstr "Peší prechod cez železnicu"
 
 #: trans_presets.java:1200
 msgid "Turntable"
-msgstr ""
+msgstr "Točňa"
 
 #: trans_presets.java:1205
 msgid "Aerialway"
-msgstr ""
+msgstr "Lanovka"
 
 #: trans_presets.java:1206
 msgid "Chair Lift"
-msgstr ""
+msgstr "Sedačková lanovka"
 
 #: trans_presets.java:1208
 msgid "Edit a Chair Lift"
-msgstr ""
+msgstr "Upraviť sedačkovú lanovku"
 
 #: trans_presets.java:1212
 msgid "Drag Lift"
-msgstr ""
+msgstr "Lyžiarsky vlek (nepoužíva sa, použite piste:lift=platter)"
 
 #: trans_presets.java:1214
 msgid "Edit a Drag Lift"
-msgstr ""
+msgstr "Upraviť lyžiarsky vlek (nepoužíva sa, použite piste:lift=platter)"
 
 #: trans_presets.java:1218
 msgid "Cable Car"
-msgstr ""
+msgstr "Kabínková lanovka"
 
 #: trans_presets.java:1220
 msgid "Edit a Cable Car"
-msgstr ""
+msgstr "Upraviť kabínkovú lanovku"
 
 #: trans_presets.java:1224 trans_presets.java:1310
 msgid "Station"
-msgstr ""
+msgstr "Stanica"
 
 #: trans_presets.java:1225
 msgid "Edit a Station"
-msgstr ""
+msgstr "Upraviť stanicu"
 
 #: trans_presets.java:1232
 msgid "Fuel"
-msgstr ""
+msgstr "Čerpacia stanica"
 
 #: trans_presets.java:1236
 msgid "Edit Fuel"
-msgstr ""
+msgstr "Upraviť čerpaciu stanicu"
 
 #: trans_presets.java:1244
 msgid "Edit Parking"
-msgstr ""
+msgstr "Upraviť parkovisko"
 
 #: trans_presets.java:1247
 msgid "Capacity"
-msgstr ""
+msgstr "Kapacita"
 
 #: trans_presets.java:1248
 msgid "surface"
-msgstr ""
+msgstr "povrch"
 
 #: trans_presets.java:1248
 msgid "multi-storey"
@@ -9086,7 +9138,7 @@ msgstr ""
 
 #: trans_presets.java:1248
 msgid "underground"
-msgstr ""
+msgstr "podzemie"
 
 #: trans_presets.java:1248
 msgid "park_and_ride"
@@ -9094,99 +9146,99 @@ msgstr ""
 
 #: trans_presets.java:1249
 msgid "Spaces for Disabled"
-msgstr ""
+msgstr "Miesta pre vozíčkárov"
 
 #: trans_presets.java:1250
 msgid "Fee"
-msgstr ""
+msgstr "Poplatok"
 
 #: trans_presets.java:1252
 msgid "Wash"
-msgstr ""
+msgstr "Umývačka"
 
 #: trans_presets.java:1253
 msgid "Edit Car Wash"
-msgstr ""
+msgstr "Upraviť umývačku aut"
 
 #: trans_presets.java:1258 trans_presets.java:1301
 msgid "Shop"
-msgstr ""
+msgstr "Obchod"
 
 #: trans_presets.java:1260
 msgid "Edit Car Shop"
-msgstr ""
+msgstr "Upraviť obchod s autami"
 
 #: trans_presets.java:1265
 msgid "Repair"
-msgstr ""
+msgstr "Opravovňa"
 
 #: trans_presets.java:1266
 msgid "Edit Car Repair"
-msgstr ""
+msgstr "Upraviť autoopravovňu"
 
 #: trans_presets.java:1271 trans_presets.java:1294
 msgid "Rental"
-msgstr ""
+msgstr "Požičovňa"
 
 #: trans_presets.java:1274
 msgid "Edit Car Rental"
-msgstr ""
+msgstr "Upraviť autopožičovňu"
 
 #: trans_presets.java:1279
 msgid "Sharing"
-msgstr ""
+msgstr "Zdieľanie"
 
 #: trans_presets.java:1281
 msgid "Edit Car Sharing"
-msgstr ""
+msgstr "Upraviť zdieľanie aut"
 
 #: trans_presets.java:1290
 msgid "Edit Bicycle Parking"
-msgstr ""
+msgstr "Upraviť parkovisko bicyklov"
 
 #: trans_presets.java:1297
 msgid "Edit Bicycle Rental"
-msgstr ""
+msgstr "Upraviť požičovňu bicyklov"
 
 #: trans_presets.java:1304
 msgid "Edit Bicycle Shop"
-msgstr ""
+msgstr "Upraviť bicyklový obchod"
 
 #: trans_presets.java:1309
 msgid "Public Transport"
-msgstr ""
+msgstr "Hromadná doprava"
 
 #: trans_presets.java:1313
 msgid "Edit Station"
-msgstr ""
+msgstr "Upraviť stanicu"
 
 #: trans_presets.java:1318
 msgid "UIC-Reference"
-msgstr ""
+msgstr "UIC-Reference"
 
 #: trans_presets.java:1321
 msgid "Railway Halt"
-msgstr ""
+msgstr "Železničná zastávka"
 
 #: trans_presets.java:1323
 msgid "Edit Halt"
-msgstr ""
+msgstr "Upraviť zastávku"
 
 #: trans_presets.java:1330
 msgid "Tram Stop"
-msgstr ""
+msgstr "Zastávka električky"
 
 #: trans_presets.java:1333
 msgid "Edit Tram Stop"
-msgstr ""
+msgstr "Upraviť zastávku električky"
 
 #: trans_presets.java:1340
 msgid "Railway Platform"
-msgstr ""
+msgstr "Železničné nástupište"
 
 #: trans_presets.java:1343
 msgid "Edit a railway platform"
-msgstr ""
+msgstr "Upraviť železničné nástupište"
 
 #: trans_presets.java:1346 trans_presets.java:1387
 msgid "Reference (track number)"
@@ -9194,227 +9246,227 @@ msgstr ""
 
 #: trans_presets.java:1348 trans_presets.java:1389
 msgid "Area"
-msgstr ""
+msgstr "Oblasť"
 
 #: trans_presets.java:1350
 msgid "Subway Entrance"
-msgstr ""
+msgstr "Vchod do metra"
 
 #: trans_presets.java:1353
 msgid "Edit Subway Entrance"
-msgstr ""
+msgstr "Upraviť vchod do metra"
 
 #: trans_presets.java:1358
 msgid "Wheelchair"
-msgstr ""
+msgstr "Invalidný vozík"
 
 #: trans_presets.java:1363
 msgid "Bus Station"
-msgstr ""
+msgstr "Autobusová stanica"
 
 #: trans_presets.java:1366
 msgid "Edit a Bus Station"
-msgstr ""
+msgstr "Upraviť autobusovú stanicu"
 
 #: trans_presets.java:1372
 msgid "Bus Stop"
-msgstr ""
+msgstr "Autobusová zastávka"
 
 #: trans_presets.java:1376
 msgid "Edit Bus Stop"
-msgstr ""
+msgstr "Upraviť autobusovú zastávku"
 
 #: trans_presets.java:1383
 msgid "Bus Platform"
-msgstr ""
+msgstr "Autobusové nástupište"
 
 #: trans_presets.java:1384
 msgid "Edit a bus platform"
-msgstr ""
+msgstr "Upraviť autobusové nástupište"
 
 #: trans_presets.java:1392
 msgid "Taxi"
-msgstr ""
+msgstr "Taxi"
 
 #: trans_presets.java:1394
 msgid "Edit a Taxi station"
-msgstr ""
+msgstr "Upraviť stanicu taxíkov"
 
 #: trans_presets.java:1399
 msgid "Airport"
-msgstr ""
+msgstr "Letisko"
 
 #: trans_presets.java:1401
 msgid "Edit an airport"
-msgstr ""
+msgstr "Upraviť letisko"
 
 #: trans_presets.java:1406
 msgid "IATA"
-msgstr ""
+msgstr "IATA"
 
 #: trans_presets.java:1407
 msgid "ICAO"
-msgstr ""
+msgstr "ICAO"
 
 #: trans_presets.java:1412
 msgid "Accomodation"
-msgstr ""
+msgstr "Ubytovanie"
 
 #: trans_presets.java:1416
 msgid "Edit Hotel"
-msgstr ""
+msgstr "Upraviť hotel"
 
 #: trans_presets.java:1419
 msgid "Stars"
-msgstr ""
+msgstr "Hviezdy (Stars)"
 
 #: trans_presets.java:1421
 msgid "Motel"
-msgstr ""
+msgstr "Motel"
 
 #: trans_presets.java:1423
 msgid "Edit Motel"
-msgstr ""
+msgstr "Upraviť motel"
 
 #: trans_presets.java:1427
 msgid "Guest House"
-msgstr ""
+msgstr "Penzión"
 
 #: trans_presets.java:1428
 msgid "Edit Guest House"
-msgstr ""
+msgstr "Upraviť penzión"
 
 #: trans_presets.java:1432
 msgid "Chalet"
-msgstr ""
+msgstr "Chata"
 
 #: trans_presets.java:1434
 msgid "Edit Chalet"
-msgstr ""
+msgstr "Upraviť chatu"
 
 #: trans_presets.java:1438
 msgid "Hostel"
-msgstr ""
+msgstr "Ubytovňa"
 
 #: trans_presets.java:1440
 msgid "Edit Hostel"
-msgstr ""
+msgstr "Upraviť ubytovňu"
 
 #: trans_presets.java:1444
 msgid "Alpine Hut"
-msgstr ""
+msgstr "Horská chata"
 
 #: trans_presets.java:1445
 msgid "Edit Alpine Hut"
-msgstr ""
+msgstr "Upraviť horskú chatu"
 
 #: trans_presets.java:1450
 msgid "Caravan Site"
-msgstr ""
+msgstr "Kemping pre obytné prívesy"
 
 #: trans_presets.java:1451
 msgid "Edit Caravan Site"
-msgstr ""
+msgstr "Upraviť kemping pre obytné prívesy"
 
 #: trans_presets.java:1455
 msgid "Camping Site"
-msgstr ""
+msgstr "Stanový tábor"
 
 #: trans_presets.java:1457
 msgid "Edit Camping Site"
-msgstr ""
+msgstr "Upraviť stanový tábor"
 
 #: trans_presets.java:1462
 msgid "Food+Drinks"
-msgstr ""
+msgstr "Jedlo + Pitie"
 
 #: trans_presets.java:1465
 msgid "Edit Restaurant"
-msgstr ""
+msgstr "Upraviť reštauráciu"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "Cuisine"
-msgstr ""
+msgstr "Kuchyňa"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "italian"
-msgstr ""
+msgstr "talianska"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "chinese"
-msgstr ""
+msgstr "čínska"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "pizza"
-msgstr ""
+msgstr "pizza"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "burger"
-msgstr ""
+msgstr "hamburger"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "greek"
-msgstr ""
+msgstr "grécka"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "german"
-msgstr ""
+msgstr "nemecká"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "indian"
-msgstr ""
+msgstr "indická"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "regional"
-msgstr ""
+msgstr "regionálna"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "kebab"
-msgstr ""
+msgstr "kebab"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "turkish"
-msgstr ""
+msgstr "turecká"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "asian"
-msgstr ""
+msgstr "ázijská"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "thai"
-msgstr ""
+msgstr "thajská"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "mexican"
-msgstr ""
+msgstr "mexická"
 
 #: trans_presets.java:1468 trans_presets.java:1475
 msgid "japanese"
-msgstr ""
+msgstr "japonská"
 
 #: trans_presets.java:1470
 msgid "Fast Food"
-msgstr ""
+msgstr "Rýchle občerstvenie"
 
 #: trans_presets.java:1472
 msgid "Edit Fast Food Restaurant"
-msgstr ""
+msgstr "Upraviť reštauráciu rýchleho občerstvenia"
 
 #: trans_presets.java:1477
 msgid "Cafe"
-msgstr ""
+msgstr "Kaviareň"
 
 #: trans_presets.java:1479
 msgid "Edit Cafe"
-msgstr ""
+msgstr "Upraviť kaviareň"
 
 #: trans_presets.java:1483
 msgid "Pub"
-msgstr ""
+msgstr "Krčma"
 
 #: trans_presets.java:1485
 msgid "Edit Pub"
-msgstr ""
+msgstr "Upraviť krčmu"
 
 #: trans_presets.java:1489
 msgid "Biergarten"
@@ -9426,67 +9478,67 @@ msgstr ""
 
 #: trans_presets.java:1494
 msgid "Nightclub"
-msgstr ""
+msgstr "Nočný klub"
 
 #: trans_presets.java:1496
 msgid "Edit Nightclub"
-msgstr ""
+msgstr "Upraviť nočný klub"
 
 #: trans_presets.java:1501
 msgid "Tourism"
-msgstr ""
+msgstr "Turistika"
 
 #: trans_presets.java:1502
 msgid "Attraction"
-msgstr ""
+msgstr "Atrakcia"
 
 #: trans_presets.java:1503
 msgid "Edit Attraction"
-msgstr ""
+msgstr "Upraviť atrakciu"
 
 #: trans_presets.java:1507
 msgid "Information point"
-msgstr ""
+msgstr "Informačná tabuľa"
 
 #: trans_presets.java:1509
 msgid "Edit Information Point"
-msgstr ""
+msgstr "Upraviť informačnú tabuľu"
 
 #: trans_presets.java:1511
 msgid "office"
-msgstr ""
+msgstr "kancelária (úrad)"
 
 #: trans_presets.java:1511
 msgid "map"
-msgstr ""
+msgstr "mapa"
 
 #: trans_presets.java:1511
 msgid "citymap"
-msgstr ""
+msgstr "Mapa mesta"
 
 #: trans_presets.java:1511
 msgid "hikingmap"
-msgstr ""
+msgstr "Turistická mapa"
 
 #: trans_presets.java:1511
 msgid "bicyclemap"
-msgstr ""
+msgstr "Cykloturistická mapa"
 
 #: trans_presets.java:1511
 msgid "board"
-msgstr ""
+msgstr "Tabuľa"
 
 #: trans_presets.java:1511
 msgid "history"
-msgstr ""
+msgstr "história"
 
 #: trans_presets.java:1511
 msgid "nature"
-msgstr ""
+msgstr "príroda"
 
 #: trans_presets.java:1511
 msgid "wildlife"
-msgstr ""
+msgstr "divoká príroda"
 
 #: trans_presets.java:1511
 msgid "guidepost"
@@ -9494,31 +9546,31 @@ msgstr ""
 
 #: trans_presets.java:1514
 msgid "Museum"
-msgstr ""
+msgstr "Múzeum"
 
 #: trans_presets.java:1516
 msgid "Edit Museum"
-msgstr ""
+msgstr "Upraviť múzeum"
 
 #: trans_presets.java:1520
 msgid "Zoo"
-msgstr ""
+msgstr "Zoo"
 
 #: trans_presets.java:1523
 msgid "Edit Zoo"
-msgstr ""
+msgstr "Upraviť zoo"
 
 #: trans_presets.java:1527
 msgid "Viewpoint"
-msgstr ""
+msgstr "Výhliadka"
 
 #: trans_presets.java:1529
 msgid "Edit Viewpoint"
-msgstr ""
+msgstr "Upraviť výhliadku"
 
 #: trans_presets.java:1532
 msgid "Look-Out Tower"
-msgstr ""
+msgstr "Výhliadková veža"
 
 #: trans_presets.java:1534
 msgid "Theme Park"
@@ -9530,11 +9582,11 @@ msgstr ""
 
 #: trans_presets.java:1539
 msgid "Artwork"
-msgstr ""
+msgstr "Umelecké dielo"
 
 #: trans_presets.java:1541
 msgid "Edit Artwork"
-msgstr ""
+msgstr "Upraviť umelecké dielo"
 
 #: trans_presets.java:1546 trans_presets.java:2217
 msgid "Shelter"
@@ -10084,19 +10136,16 @@ msgid "Edit Skiing"
 msgstr ""
 
 #: trans_presets.java:1791
-#, fuzzy
 msgid "Piste type"
-msgstr "oddych (Leisure) {0}"
+msgstr ""
 
 #: trans_presets.java:1791
-#, fuzzy
 msgid "downhill"
-msgstr "dole"
+msgstr ""
 
 #: trans_presets.java:1791
-#, fuzzy
 msgid "nordic"
-msgstr "uzol"
+msgstr ""
 
 #: trans_presets.java:1791
 msgid "snow_park"
@@ -10107,28 +10156,24 @@ msgid "Difficulty"
 msgstr ""
 
 #: trans_presets.java:1792
-#, fuzzy
 msgid "novice"
-msgstr "uzol"
+msgstr ""
 
 #: trans_presets.java:1792
-#, fuzzy
 msgid "easy"
-msgstr "východ"
+msgstr ""
 
 #: trans_presets.java:1792
 msgid "intermedia"
 msgstr ""
 
 #: trans_presets.java:1792
-#, fuzzy
 msgid "advance"
-msgstr "Zrušiť"
+msgstr ""
 
 #: trans_presets.java:1792
-#, fuzzy
 msgid "expert"
-msgstr "Vrátiť naspäť"
+msgstr ""
 
 #: trans_presets.java:1792
 msgid "freeride"
@@ -11075,14 +11120,12 @@ msgid "Edit Baker"
 msgstr ""
 
 #: trans_presets.java:2289
-#, fuzzy
 msgid "Florist"
-msgstr "Farby"
+msgstr ""
 
 #: trans_presets.java:2291
-#, fuzzy
 msgid "Edit Florist"
-msgstr "Upraviť vlastnosti"
+msgstr ""
 
 #: trans_presets.java:2295
 msgid "Organic"
@@ -11109,9 +11152,8 @@ msgid "Edit Computer Shop"
 msgstr ""
 
 #: trans_presets.java:2310
-#, fuzzy
 msgid "Electronics"
-msgstr "výber"
+msgstr ""
 
 #: trans_presets.java:2311
 msgid "Edit Electronics Shop"
@@ -11182,18 +11224,16 @@ msgid "Edit Shoe Shop"
 msgstr ""
 
 #: trans_presets.java:2358
-#, fuzzy
 msgid "Toys"
-msgstr "Nástroje"
+msgstr ""
 
 #: trans_presets.java:2359
 msgid "Edit Toy Shop"
 msgstr ""
 
 #: trans_presets.java:2363
-#, fuzzy
 msgid "Video"
-msgstr "Zobraziť"
+msgstr ""
 
 #: trans_presets.java:2364
 msgid "Edit Video Shop"
@@ -11224,19 +11264,16 @@ msgid "Edit Outdoor Shop"
 msgstr ""
 
 #: trans_presets.java:2386
-#, fuzzy
 msgid "sports"
-msgstr "Importovať"
+msgstr ""
 
 #: trans_presets.java:2387
-#, fuzzy
 msgid "Edit Sports Shop"
-msgstr "Upraviť skratky"
+msgstr ""
 
 #: trans_presets.java:2391
-#, fuzzy
 msgid "optician"
-msgstr "Možnosti"
+msgstr ""
 
 #: trans_presets.java:2392
 msgid "Edit Optician"
@@ -11874,11 +11911,17 @@ msgstr ""
 msgid "Edit Cliff"
 msgstr ""
 
-#~ msgid "Data error: lat value \"{0}\" is out of bounds."
-#~ msgstr "Chyba dát: zemepisná šírka \"{0}\" je mimo rozsah."
+#~ msgid "bus"
+#~ msgstr "autobus"
 
-#~ msgid "Data error: lon value \"{0}\" is out of bounds."
-#~ msgstr "Chyba dát: zemepisná dĺžka \"{0}\" je mimo rozsah."
+#~ msgid "Select this relation"
+#~ msgstr "Zvoliť túto reláciu"
+
+#~ msgid "Upload {0} {1} (id: {2}) {3}% {4}/{5} ({6} left)..."
+#~ msgstr "Nahrávanie {0} {1} (id: {2}) {3}% {4}/{5} ({6} chýba)..."
+
+#~ msgid "Version: {0}<br>Last change at {1}"
+#~ msgstr "Verzie: {0}<br>Posledná zmena v {1}"
 
 #~ msgid "SurveyorPlugin depends on LiveGpsPlugin!"
 #~ msgstr "Plugin SurveyorPlugin vyžaduje plugin LiveGpsPlugin!"
@@ -11892,5 +11935,8 @@ msgstr ""
 #~ msgid "SurveyorPlugin"
 #~ msgstr "SurveyorPlugin"
 
-#~ msgid "Version: {0}<br>Last change at {1}"
-#~ msgstr "Verzie: {0}<br>Posledná zmena v {1}"
+#~ msgid "Data error: lat value \"{0}\" is out of bounds."
+#~ msgstr "Chyba dát: zemepisná šírka \"{0}\" je mimo rozsah."
+
+#~ msgid "Data error: lon value \"{0}\" is out of bounds."
+#~ msgstr "Chyba dát: zemepisná dĺžka \"{0}\" je mimo rozsah."

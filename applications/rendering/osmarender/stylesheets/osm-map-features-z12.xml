@@ -876,7 +876,7 @@
 		</rule>
 
 		<rule e="way" k="highway" v="*">
-			<rule e="way" k="construction" v="yes|true">
+			<rule e="way" k="construction|planned|disused|abandoned" v="yes|true">
 				<line class="wrong-under-construction" smart-linecap="no"/>
 			</rule>
 		</rule>

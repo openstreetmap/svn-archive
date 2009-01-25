@@ -2521,7 +2521,11 @@
 			<circle r="0.4" stroke="black" stroke-width="0.1px" fill="white"/>
 			<circle r="0.1" stroke="black" stroke-width="0.1px" fill="black"/>
 		</rule>
-
+		<rule e="node|way" k="amenity|man_made|leisure|shop|tourism|building" v="*">
+			<rule e="node|way" k="disused|abandoned" v="yes|true">
+				<symbol ref="disused" position="center"/>
+			</rule>
+		</rule>
 		<!-- ==================================== Layer -5 ======================================== -->
 
 		<!-- Access restrictions for areas -->

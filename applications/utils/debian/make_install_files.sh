@@ -1,7 +1,8 @@
 #!/bin/bash
 # This script replaces a make ; make install for creation of the debian package.
 # Maybe you can also use it to install the stuff on your system.
-# If sou please state so here.
+# If you are successfull, please write how to do this here
+# PS.: Any improvements/additions to this installer are welcome.
 
 dst_path=$1
 
@@ -64,7 +65,7 @@ for lib in ccoord libosm libimg  ; do
 	fi
     fi
 
-    echo "${BLUE}----------> lib/$lib${NORMAL}"
+    echo "${BLUE}----------> applications/lib/$lib${NORMAL}"
     cd ../lib/$lib
 
     # for a in *.cpp ; do perl -p -i -e 's,libshp/shapefil.h,shapefil.h,g' $a; done
@@ -90,7 +91,7 @@ cd ../utils/
 
 # Perl-libs
 for lib in Geo-OSM-MapFeatures ; do 
-    echo "${BLUE}----------> lib/$lib${NORMAL} (Compile only)"
+    echo "${BLUE}----------> applications/lib/$lib${NORMAL} (Compile only)"
     cd ../lib/$lib
 
     # for a in *.cpp ; do perl -p -i -e 's,libshp/shapefil.h,shapefil.h,g' $a; done
@@ -130,7 +131,7 @@ for import in `ls import/*/Makefile| sed 's,/Makefile,,;s,import/,,'` ; do
 	continue
     fi
 
-    echo "${BLUE}----------> import/$import${NORMAL}"
+    echo "${BLUE}----------> applications/utils/import/$import${NORMAL}"
     cd import/$import/
     make clean >build.log 2>build.err
     make >>build.log 2>>build.err
@@ -152,7 +153,7 @@ for filter in `ls filter/*/Makefile| sed 's,/Makefile,,;s,filter/,,'` ; do
 	continue
     fi
 
-    echo "${BLUE}----------> filter/${filter}${NORMAL}"
+    echo "${BLUE}----------> applications/utils/filter/${filter}${NORMAL}"
     cd filter/${filter}  || exit -1
     make clean >build.log 2>build.err
     make >>build.log 2>>build.err
@@ -174,7 +175,7 @@ for export in `ls export/*/Makefile| sed 's,/Makefile,,;s,export/,,'` ; do
 	continue
     fi
 
-    echo "${BLUE}----------> export/${export}${NORMAL}"
+    echo "${BLUE}----------> applications/utils/export/${export}${NORMAL}"
     cd export/${export}  || exit -1
 
     if [ -s "Makefile.$export" ] ;then
@@ -195,7 +196,7 @@ done
 
 # ------------------------------------------------------------------
 if true ; then
-    echo "${BLUE}----------> color255${NORMAL}"
+    echo "${BLUE}----------> applications/utils/color255${NORMAL}"
     cd color255 || exit -1
     make clean >build.log 2>build.err
     make >>build.log 2>>build.err
@@ -209,7 +210,7 @@ fi
 
 # ------------------------------------------------------------------
 if true ; then
-    echo "${BLUE}----------> osm2pqsql${NORMAL}"
+    echo "${BLUE}----------> applications/utils/export/osm2pqsql${NORMAL}"
     cd export/osm2pgsql  || exit -1
     make clean >build.log 2>build.err
     make >>build.log 2>>build.err
@@ -232,7 +233,7 @@ fi
 
 # ------------------------------------------------------------------
 if true; then
-    echo "${BLUE}----------> UTF8Sanitizer${NORMAL}${NORMAL}"
+    echo "${BLUE}----------> applications/planet.osm/C/UTF8Sanitizer${NORMAL}${NORMAL}"
     cd planet.osm/C/  || exit -1
     make clean >build.log 2>build.err
     make >>build.log 2>>build.err
@@ -245,7 +246,7 @@ if true; then
 fi
 
 # ------------------------------------------------------------------
-echo "${BLUE}----------> Copy Perl libraries${NORMAL}${NORMAL}"
+echo "${BLUE}----------> applications/utils/perl_lib Copy Perl libraries${NORMAL}${NORMAL}"
 find perl_lib/ -name "*.pm" | while read src_fn ; do 
     dst_fn="$perl_path/${src_fn#perl_lib/}"
     dst_dir=`dirname "$dst_fn"`
@@ -253,7 +254,7 @@ find perl_lib/ -name "*.pm" | while read src_fn ; do
     cp "$src_fn" "$dst_fn"
 done
 
-echo "${BLUE}----------> Copy Perl Binaries${NORMAL}${NORMAL}"
+echo "${BLUE}----------> applications/utils Copy Perl Binaries${NORMAL}${NORMAL}"
 find ./ -name "*.pl" | while read src_fn ; do 
     dst_fn="$bin_path/${src_fn##*/}"
     filename="`basename $src_fn`"
@@ -290,7 +291,7 @@ find ./ -name "*.pl" | while read src_fn ; do
 done
 
 # --------------------------------------------
-echo "${BLUE}----------> Copy Python Binaries${NORMAL}"
+echo "${BLUE}----------> applications/utils Copy Python Binaries${NORMAL}"
 find ./ -name "*.py" | while read src_fn ; do 
     dst_fn="$bin_path/${src_fn##*/}"
     dst_fn="${dst_fn/.py}"
@@ -311,8 +312,16 @@ done
 # #######################################################
 # Osmosis
 # #######################################################
-echo "${BLUE}----------> Osmosis${NORMAL}"
-cd osmosis/trunk
+echo "${BLUE}----------> applications/osmosis/trunk Osmosis${NORMAL}"
+
+cd osmosis
+
+# Osmosis moves it's Binary arround, so to be sure we do not catch old Versions and don't 
+# recognize it we remove all osmosis.jar Files first
+find . -name "osmosis.jar" -print0 | xargs -0 rm 
+
+cd trunk
+
 ant clean >build.log 2>build.err
 ant dist >>build.log 2>>build.err
 if [ "$?" -ne "0" ] ; then
@@ -321,8 +330,13 @@ if [ "$?" -ne "0" ] ; then
 fi
 cd ../..
 mkdir -p $dst_path/usr/local/share/osmosis/
-cp ./osmosis/dist/result/osmosis.jar $dst_path/usr/local/share/osmosis/
+cp osmosis/trunk/build/binary/osmosis.jar $dst_path/usr/local/share/osmosis/
+if [ "$?" -ne "0" ] ; then
+    echo "${RED}!!!!!! ERROR cannot find resulting Osmosis.jar ${NORMAL}"
+    exit -1
+fi
 
+# TODO: use osmosis/trunk/bin/osmosis
 cp debian/osmosis.sh "$bin_path/osmosis"
 
 

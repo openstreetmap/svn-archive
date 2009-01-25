@@ -23,6 +23,7 @@ clean:
 	dh_testroot
 	rm -f build-stamp
 
+	dh_clean -k
 	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
 
@@ -31,7 +32,6 @@ clean:
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
 	dh_installdirs
 
 #	./debian/update_svn_revision.sh

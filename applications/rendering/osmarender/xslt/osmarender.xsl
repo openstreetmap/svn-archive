@@ -794,15 +794,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   <!-- Draw a circle for the current <node> element using the formatting of the current <circle> instruction -->
   <xsl:template name="drawCircle">
     <xsl:param name="instruction"/>
+    <xsl:param name="lat"><xsl:value-of select="@lat" /></xsl:param>
+    <xsl:param name="lon"><xsl:value-of select="@lon" /></xsl:param>
 
-    <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
-    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)"/>
+    <xsl:variable name="x" select="($width)-((($topRightLongitude)-($lon))*10000*$scale)"/>
+    <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($lat))*10000*$scale*$projection)"/>
 
     <circle cx="{$x}" cy="{$y}">
       <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
       <!-- Copy all the svg attributes from the <circle> instruction -->
     </circle>
-
   </xsl:template>
 
   <xsl:template name="renderSymbol">

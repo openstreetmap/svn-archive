@@ -31,6 +31,11 @@ def get_osm_obj(type, id, doc=None):
     if type == "node":
         obj['lat'] = parent.getAttribute("lat")
         obj['lon'] = parent.getAttribute("lon")
+    elif type == "way":
+        obj['child'] = []
+        obj['childtype'] = "node" #FIXME: there's probably a nicer place to assign this
+        for node in parent.getElementsByTagName("nd"):
+            obj['child'].append(node.getAttribute("ref"))
     obj['id'] = int(id)
     obj['type'] = type
     obj['tags'] = {}

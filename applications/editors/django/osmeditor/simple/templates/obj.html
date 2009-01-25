@@ -47,4 +47,13 @@
 </fieldset>
 <input type="submit" value="Change" />
 </form>
+{% if obj.child %}
+<h3>Parent to:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
+<ul class="children">
+{% for ref in obj.child %}
+  <li class="node"><a href="/{{obj.childtype}}/{{ref}}">{{ref}}</a></li> <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
+<!-- TODO: add delete checkboxes to these children -->
+{% endfor %}
+</ul>
+{% endif %}
 {% endblock %}

@@ -56,18 +56,20 @@ platform=`uname -m`
 
 # ------------------------------------------------------------------
 # Various libs
-for lib in ccoord libosm libimg ; do 
+for lib in ccoord libosm libimg  ; do 
     if [ "$platform" == "x86_64" ] ; then
 	if echo $lib | grep -q -e libosm -e ccoord -e libimg ; then
-	    echo "Ignored '$lib' because it does not compile on my debian $platform machine"
+	    echo "Ignored 'applications/lib/$lib' because it does not compile on my debian $platform machine"
 	    continue
 	fi
     fi
 
     echo "${BLUE}----------> lib/$lib${NORMAL}"
     cd ../lib/$lib
+
     # for a in *.cpp ; do perl -p -i -e 's,libshp/shapefil.h,shapefil.h,g' $a; done
     make clean >build.log 2>build.err
+
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	echo "${RED}!!!!!! ERROR compiling $lib ${NORMAL}"
@@ -86,12 +88,45 @@ for lib in ccoord libosm libimg ; do
 done
 cd ../utils/
 
+# Perl-libs
+for lib in Geo-OSM-MapFeatures ; do 
+    echo "${BLUE}----------> lib/$lib${NORMAL} (Compile only)"
+    cd ../lib/$lib
+
+    # for a in *.cpp ; do perl -p -i -e 's,libshp/shapefil.h,shapefil.h,g' $a; done
+    make clean >build.log 2>build.err
+
+    if [ -s "Makefile.PL" ] ; then
+	perl Makefile.PL >>build.log 2>>build.err
+	if [ "$?" -ne "0" ] ; then
+	    echo "${RED}!!!!!! ERROR compiling $lib ${NORMAL}"
+	    echo "Logfile is at `pwd`/build.log build.err"
+	    exit -1
+	fi
+
+    fi
+
+    make >>build.log 2>>build.err
+    if [ "$?" -ne "0" ] ; then
+	echo "${RED}!!!!!! ERROR compiling $lib ${NORMAL}"
+	echo "Logfile is at `pwd`/build.log build.err"
+	exit -1
+    fi
+
+    cd ..
+
+    #!!!!!!!!!!!!!!!!
+    # TODO: Copy resulting *.pm and ManPages
+    # 
+done
+cd ../utils/
+
 
 # ------------------------------------------------------------------
 # Importer
 for import in `ls import/*/Makefile| sed 's,/Makefile,,;s,import/,,'` ; do 
     if echo $import | grep -q  and_import ; then
-	echo "Ignored '$import' because it does not compile on my debian machine"
+	echo "Ignored 'applications/import/$import' because it does not compile on my debian machine"
 	continue
     fi
 
@@ -113,7 +148,7 @@ done
 # i will remove the excludes
 for filter in `ls filter/*/Makefile| sed 's,/Makefile,,;s,filter/,,'` ; do 
     if echo $filter | grep -q wayclean ; then
-	echo "Ignored '$filter' because it does not compile on my debian machine"
+	echo "Ignored 'applications/filter/$filter' because it does not compile on my debian machine"
 	continue
     fi
 
@@ -135,7 +170,7 @@ done
 # i will remove the excludes
 for export in `ls export/*/Makefile| sed 's,/Makefile,,;s,export/,,'` ; do 
     if echo $export | grep -q -e osmgarminmap -e osm2shp -e osmgoogleearth; then
-	echo "Ignored '$export' because it does not compile on my debian machine"
+	echo "Ignored 'applications/export/$export' because it does not compile on my debian machine"
 	continue
     fi
 
@@ -232,7 +267,7 @@ find ./ -name "*.pl" | while read src_fn ; do
     else
 	echo "${RED}WARNING!!! Perl Hash Bang is missing at File '$src_fn'${NORMAL}"
 	echo "           I'm not adding this File to the debian Package"
-	echo "First Line: `head -1 '$src_fn'`"
+	echo "First Line: `head -1 $src_fn`"
     fi
 
     # ----- Try to create man Pages

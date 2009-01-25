@@ -38,6 +38,7 @@ NORMAL="${ESC}[0m"
 echo "copying Files to '$dst_path'"
 package_name=openstreetmap
 dst_path=${dst_path%/}
+platform=`uname -m`
 
 perl_path="$dst_path/usr/share/perl5"
 bin_path="$dst_path/usr/bin"
@@ -50,7 +51,6 @@ mkdir -p "$lib_path"
 mkdir -p "$share_path"
 mkdir -p "$man1_path"
 
-platform=`uname -m`
 
 # ------------------------------------------------------------------
 # Utilities written in C
@@ -329,16 +329,41 @@ if [ "$?" -ne "0" ] ; then
     exit -1
 fi
 cd ../..
-mkdir -p $dst_path/usr/local/share/osmosis/
-cp osmosis/trunk/build/binary/osmosis.jar $dst_path/usr/local/share/osmosis/
+
+osmosis_dir="$dst_path/usr/local/share/osmosis/"
+mkdir -p $osmosis_dir
+cp osmosis/trunk/build/binary/osmosis.jar $osmosis_dir
 if [ "$?" -ne "0" ] ; then
-    echo "${RED}!!!!!! ERROR cannot find resulting Osmosis.jar ${NORMAL}"
+    echo "${RED}!!!!!! ERROR cannot find resulting osmosis.jar ${NORMAL}"
     exit -1
 fi
 
-# TODO: use osmosis/trunk/bin/osmosis
-cp debian/osmosis.sh "$bin_path/osmosis"
+# copy needed libs
+mkdir -p $osmosis_dir/lib/
+cp osmosis/trunk/lib/*.jar $osmosis_dir/lib/
+if [ "$?" -ne "0" ] ; then
+    echo "${RED}!!!!!! ERROR cannot copy needed libs for osmosis${NORMAL}"
+    exit -1
+fi
 
+# Osmosis script
+src_fn="osmosis/trunk/bin/osmosis"
+man1_fn="$man1_path/osmosis.1"
+if grep -q -e "--help" "$src_fn"; then
+    echo "Create Man Page from Help '$man1_fn'"
+    perl $src_fn --help >"$man1_fn"
+else
+    echo "!!!! No idea how to create Man Page for $src_fn"
+fi
+mkdir -p $osmosis_dir/bin
+cp $src_fn "$osmosis_dir/bin/osmosis"
+if [ "$?" -ne "0" ] ; then
+    echo "${RED}!!!!!! ERROR cannot find resulting osmosis script ${NORMAL}"
+    exit -1
+fi
+
+rm -f $bin_path/osmosis
+ln -s /usr/local/share/osmosis/bin/osmosis $bin_path/osmosis
 
 #########################################################
 # Mapnik installation tool

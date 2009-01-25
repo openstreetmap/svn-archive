@@ -1,3 +1,427 @@
+openstreetmap-utils (13162) unstable; urgency=low
+
+   * Updated to version 0.30.1.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Mon, 12 Jan 2009 11:09:05 +0100
+
+openstreetmap-utils (13161) unstable; urgency=low
+
+   * Tagged at version 0.30.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Mon, 12 Jan 2009 11:07:28 +0100
+
+openstreetmap-utils (13160) unstable; urgency=low
+
+   * Updated to version 0.30.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Mon, 12 Jan 2009 10:54:19 +0100
+
+openstreetmap-utils (13159) unstable; urgency=low
+
+   * Fixed line endings on several files.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Mon, 12 Jan 2009 09:37:13 +0100
+
+openstreetmap-utils (13139) unstable; urgency=low
+
+   * Added Denmark polygon submitted by Carsten T?\195?\184nsberg Nielsen <Carsten@toensberg.dk>
+
+ -- Keith Sharp via osm-dev List <dev@openstreetmap.org>  Sun, 11 Jan 2009 11:19:30 +0100
+
+openstreetmap-utils (13133) unstable; urgency=low
+
+   * Provide alternate PNG rendering using Cairo. Fix zoom 18
+
+ -- Jon Burgess via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 18:50:43 +0100
+
+openstreetmap-utils (13127) unstable; urgency=low
+
+   * Fix generation of zoom 0 - 2 tiles
+
+ -- Jon Burgess via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 17:03:57 +0100
+
+openstreetmap-utils (13126) unstable; urgency=low
+
+   * Applied MacOSX compile fixes from Artem with a few modifications
+
+ -- Jon Burgess via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 16:50:02 +0100
+
+openstreetmap-utils (13125) unstable; urgency=low
+
+   * Remove some unused imports, move minmax inside the only class which uses it
+
+ -- Jon Burgess via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 16:37:53 +0100
+
+openstreetmap-utils (13123) unstable; urgency=low
+
+   * Make render_list generate V2 requests with the Default layer
+
+ -- Jon Burgess via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 16:37:08 +0100
+
+openstreetmap-utils (13121) unstable; urgency=low
+
+   * Render daemon code ported to Python. It is functionally equivalent to the C version but it is not intended to replace it. The python version should make it easier to experiment with new types of tile rendering
+
+ -- Jon Burgess via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 15:12:51 +0100
+
+openstreetmap-utils (13120) unstable; urgency=low
+
+   * improved object counting for reporting of status/progress.
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 15:04:34 +0100
+
+openstreetmap-utils (13107) unstable; urgency=low
+
+   * Correct meaning of Nha, add expansion of Wce.
+
+ -- cmarqu via osm-dev List <dev@openstreetmap.org>  Fri, 09 Jan 2009 20:50:56 +0100
+
+openstreetmap-utils (13106) unstable; urgency=low
+
+   * More name fixes.
+
+ -- cmarqu via osm-dev List <dev@openstreetmap.org>  Fri, 09 Jan 2009 20:31:20 +0100
+
+openstreetmap-utils (13061) unstable; urgency=low
+
+   * minor typos
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Fri, 09 Jan 2009 15:18:09 +0100
+
+openstreetmap-utils (13060) unstable; urgency=low
+
+   * add more shortname -> longname mappings, fix for playgrounds 
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Fri, 09 Jan 2009 13:44:39 +0100
+
+openstreetmap-utils (13059) unstable; urgency=low
+
+   * refactor; XML all in one place, add support for updating from the API before
+   * performing updates, so that stale data isn't used.
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Fri, 09 Jan 2009 13:43:28 +0100
+
+openstreetmap-utils (13049) unstable; urgency=low
+
+   * minor updates, including progress meter.
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 21:17:42 +0100
+
+openstreetmap-utils (13046) unstable; urgency=low
+
+   * be smarter with national, state parks; don't crash on golfcourses without
+   * existing leisure tags.
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 19:08:29 +0100
+
+openstreetmap-utils (13045) unstable; urgency=low
+
+   * update comment
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 15:42:22 +0100
+
+openstreetmap-utils (13044) unstable; urgency=low
+
+   * Adding functions used for cleaning up massgis data.
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 15:40:39 +0100
+
+openstreetmap-utils (13043) unstable; urgency=low
+
+   * typo in api options
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 15:40:14 +0100
+
+openstreetmap-utils (13041) unstable; urgency=low
+
+   * group options, add API URL, add --doc flag.
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 15:25:21 +0100
+
+openstreetmap-utils (13040) unstable; urgency=low
+
+   * The pgsql action table is now fully optional.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 13:13:44 +0100
+
+openstreetmap-utils (13039) unstable; urgency=low
+
+   * Updated the pgsql tasks and schema to remove the action column from all entities and make it a separate table.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 12:28:34 +0100
+
+openstreetmap-utils (13037) unstable; urgency=low
+
+   * API finally back up; first test of script found some errors, seems to generally work.
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 09:57:40 +0100
+
+openstreetmap-utils (13034) unstable; urgency=low
+
+   * code cleanup.
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 09:26:11 +0100
+
+openstreetmap-utils (13033) unstable; urgency=low
+
+   * Force a dry run. When running the dry run, record the converter hash,
+   * so that we can confirm later that the conversion function we expected
+   * is actually the same. Also record the expected number of changes, 
+   * and if the total is more than 1000, require a secret phrase. This is 
+   * obviously not foolproof, but is designed to keep users from shooting
+   * off the head of the database without at least some knowledge.
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 09:17:38 +0100
+
+openstreetmap-utils (13032) unstable; urgency=low
+
+   * Tool for changing tags on a large number of objects at once. 
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Thu, 08 Jan 2009 08:53:55 +0100
+
+openstreetmap-utils (12999) unstable; urgency=low
+
+   * Improve GDAL installation information.
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 21:19:16 +0100
+
+openstreetmap-utils (12969) unstable; urgency=low
+
+   * Updated the node location store to print JVM memory usage, to print buffer usage in MB, and fix an integer overflow.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 11:46:49 +0100
+
+openstreetmap-utils (12964) unstable; urgency=low
+
+   * Declare xmlconfig as a const char * in many APIs
+
+ -- Jon Burgess via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 00:12:22 +0100
+
+openstreetmap-utils (12959) unstable; urgency=low
+
+   * Fix compile error due to PATH_MAX not being defined
+
+ -- Jon Burgess via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 00:03:52 +0100
+
+openstreetmap-utils (12950) unstable; urgency=low
+
+   * mod_tile: New apache directives and options for multiple tile sets
+
+ -- twain via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 23:43:54 +0100
+
+openstreetmap-utils (12945) unstable; urgency=low
+
+   * tileDownloader, a perl script written by Jozef Vince <jozef.vince@freemap.sk> for downloading tiles from OSM
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 15:08:14 +0100
+
+openstreetmap-utils (12943) unstable; urgency=low
+
+   * Check for missing nodes on way geometry creation and enter NULL into db instead of an invalid geometry
+
+ -- Jochen Topf via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 13:15:32 +0100
+
+openstreetmap-utils (12938) unstable; urgency=low
+
+   * Added logging to the in-memory node location store detailing how much memory is being consumed.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 10:29:29 +0100
+
+openstreetmap-utils (12937) unstable; urgency=low
+
+   * more cleanup. 
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 06:31:41 +0100
+
+openstreetmap-utils (12936) unstable; urgency=low
+
+   * Add polygon-shape-to-osm tool to SVN. Developed as part of
+   * http://wiki.openstreetmap.org/wiki/MassGis_Layer_Openspace .
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 06:07:08 +0100
+
+openstreetmap-utils (12935) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 01:40:52 +0100
+
+openstreetmap-utils (12934) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 01:40:19 +0100
+
+openstreetmap-utils (12933) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 01:25:08 +0100
+
+openstreetmap-utils (12932) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 01:24:11 +0100
+
+openstreetmap-utils (12931) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- extremecarver via osm-dev List <dev@openstreetmap.org>  Mon, 05 Jan 2009 01:23:52 +0100
+
+openstreetmap-utils (12920) unstable; urgency=low
+
+   * do not try to compile libimg on debian64, add hint where to find error-logfile
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Sun, 04 Jan 2009 22:44:32 +0100
+
+openstreetmap-utils (12912) unstable; urgency=low
+
+   * Fix compile problem by removing output-gazetteer.h reference
+
+ -- Jon Burgess via osm-dev List <dev@openstreetmap.org>  Sun, 04 Jan 2009 18:27:23 +0100
+
+openstreetmap-utils (12828) unstable; urgency=low
+
+   * Allow osm2pgsql to process planetdiff files.
+
+ -- Tom Hughes via osm-dev List <dev@openstreetmap.org>  Sat, 03 Jan 2009 00:58:27 +0100
+
+openstreetmap-utils (12770) unstable; urgency=low
+
+   * Enable handling of junctions in geobase NRN import
+
+ -- Jason Reid via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 14:07:27 +0100
+
+openstreetmap-utils (12769) unstable; urgency=low
+
+   * Updates to geobase2osm import tool
+
+ -- Jason Reid via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 13:50:53 +0100
+
+openstreetmap-utils (12767) unstable; urgency=low
+
+   * Updated the pgsql change application code to correctly use the 'action' column index on all entity tables.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 12:57:09 +0100
+
+openstreetmap-utils (12765) unstable; urgency=low
+
+   * Added basic timing information to the main Osmosis class to print out the total execution time upon completion.
+   * Enhanced the progress logger tasks (0.6 only) to include the number of objects processed per second.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 12:16:26 +0100
+
+openstreetmap-utils (12708) unstable; urgency=low
+
+   * Added a node location store test and fixed a bug in the implementation of the in-memory store.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Wed, 31 Dec 2008 03:03:51 +0100
+
+openstreetmap-utils (12706) unstable; urgency=low
+
+   * Added support for a true in-memory way geometry builder.  Both in-memory and temp-file based approaches are supported.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Wed, 31 Dec 2008 00:30:42 +0100
+
+openstreetmap-utils (12687) unstable; urgency=low
+
+   * Added detailed logging to the database context.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 12:48:16 +0100
+
+openstreetmap-utils (12686) unstable; urgency=low
+
+   * Fixed the database capability checker to cache previous results to avoid constantly querying the database itself.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 12:46:54 +0100
+
+openstreetmap-utils (12685) unstable; urgency=low
+
+   * Added an initial 0.6 schema.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 12:13:36 +0100
+
+openstreetmap-utils (12684) unstable; urgency=low
+
+   * Updated the ivy configurations to compile, default and test.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 11:28:41 +0100
+
+openstreetmap-utils (12683) unstable; urgency=low
+
+   * Removed direct compilation dependencies on the Woodstock XML Stax parser.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 11:24:11 +0100
+
+openstreetmap-utils (12682) unstable; urgency=low
+
+   * Removed an unused PGPoint method from the pgsql copy file writer to eliminate a direct dependency on Postgres jdbc libraries.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 11:22:44 +0100
+
+openstreetmap-utils (12681) unstable; urgency=low
+
+   * Added ivy configuration and build files.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 06:07:47 +0100
+
+openstreetmap-utils (12680) unstable; urgency=low
+
+   * Merged the latest changes from trunk.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 06:06:55 +0100
+
+openstreetmap-utils (12679) unstable; urgency=low
+
+   * Removed jars from the repository.
+   * Updated ant script to include ivy build tasks.
+   * Updated readme.txt to reflect ivy build.
+
+ -- Brett Henderson via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 05:56:10 +0100
+
+openstreetmap-utils (12661) unstable; urgency=low
+
+   * - updated creation of poi database in mapnik-osm-updater.sh
+
+ -- Guenter Maier via osm-dev List <dev@openstreetmap.org>  Mon, 29 Dec 2008 13:06:22 +0100
+
+openstreetmap-utils (12659) unstable; urgency=low
+
+   * - updated part for generation of gpsdrive POI database in mapnik-osm-updater.sh
+
+ -- Guenter Maier via osm-dev List <dev@openstreetmap.org>  Mon, 29 Dec 2008 12:21:40 +0100
+
+openstreetmap-utils (12646) unstable; urgency=low
+
+   * Add error messages if compile fails
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Sun, 28 Dec 2008 22:02:30 +0100
+
+openstreetmap-utils (12630) unstable; urgency=low
+
+   * Use Java6 as default;also allow openjdk for java;Update changelog;
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Sun, 28 Dec 2008 14:30:02 +0100
+
+openstreetmap-utils (12629) unstable; urgency=low
+
+   * get svnrevision the new way
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Sun, 28 Dec 2008 14:29:04 +0100
+
+openstreetmap-utils (12628) unstable; urgency=low
+
+   * Add first Stub for mapnik support
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Sun, 28 Dec 2008 14:28:11 +0100
+
 openstreetmap-utils (12537) unstable; urgency=low
 
    * Added new svn:ignore values.

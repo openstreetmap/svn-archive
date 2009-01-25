@@ -6,43 +6,45 @@
 <p>
   Last edited {{ obj.timestamp }}
 </p>  
-<form method="POST">
+<form method="POST" action="" class="foo">
 <input type="hidden" name="id" value="{{ obj.id }}" />
 <input type="hidden" name="type" value="{{ obj.type }}" />
 <input type="hidden" name="timestamp" value="{{ obj.timestamp }}" />
-<table>
+<fieldset>
+<ul class="fields varying">
 {% for k, v in obj.tags.items %}
-    <tr>
-        <td><b>{{ k }}</b>:</td>
-        <td> <input name="key_{{k}}" value="{{ v }}" /></td>
-        <td> <input type="checkbox" name="delete_key_{{k}}" value="delete" /> Delete?</td>
-    </tr>    
+  <li>
+        <label for="key_{{k}}">{{ k }}</label>
+        <input name="key_{{k}}" id="key_{{k}}" value="{{ v }}" />
+        <input type="checkbox" name="delete_key_{{k}}" id="delete_key_{{k}}" value="delete" /><label class="delete" for="delete_key_{{k}}">Delete?</label>
+    </li>
 {% endfor %}
-</table>
-Add more tags<a href="#" onclick='document.getElementById("new_keys").style.display="";return false'>...</a>
-<div id="new_keys" style="display:none">
-<table>
-  <tr>
-    <td>Tag 1: <input name="new_key_1" /></td>
-    <td><input name="new_value_1" /></td>
-    <td></td>
-  </tr>  
-  <tr>
-    <td>Tag 2: <input name="new_key_2" /></td>
-    <td><input name="new_value_2" /></td>
-    <td></td>
-  </tr>  
-  <tr>
-    <td>Tag 3: <input name="new_key_3" /></td>
-    <td><input name="new_value_3" /></td>
-    <td></td>
-  </tr>  
-</table>  
-</div>
-<div>
-<label for="username">Username:</label><input type="text" name="username" id="username" /><br />
-<label for="password">Password:</label><input type="password" name="password" id="password" />
-</div>
+</ul>
+</fieldset>
+<fieldset id="new_keys">
+<a href="#" onclick='document.getElementById("new_keys").style.display="";return false'>Add more tags…</a>
+<ol class="fields">
+  <li>
+    <label for="new_key_1">Key: </label><input name="new_key_1" id="new_key_1" />
+    <label for="new_value_1"><input name="new_value_1" id="new_value_1" /></td>
+  </li>  
+  <li>
+    <label for="new_key_2">Key: </label><input name="new_key_2" id="new_key_2" />
+    <label for="new_value_2"><input name="new_value_2" id="new_value_2" /></td>
+  </li>  
+  <li>
+    <label for="new_key_3">Key: </label><input name="new_key_3" id="new_key_3" />
+    <label for="new_value_3"><input name="new_value_3" id="new_value_3" /></td>
+  </li>  
+</ol>  
+</fieldset>
+<fieldset>
+<legend>Credentials</legend>
+<ul class="fields varying">
+<li><label for="username">Username:</label><input type="text" name="username" id="username" /></li>
+<li><label for="password">Password:</label><input type="password" name="password" id="password" /></li>
+</ul>
+</fieldset>
 <input type="submit" value="Change" />
 </form>
 {% endblock %}

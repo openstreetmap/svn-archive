@@ -340,7 +340,7 @@ fi
 
 # copy needed libs
 mkdir -p $osmosis_dir/lib/
-cp osmosis/trunk/lib/*.jar $osmosis_dir/lib/
+cp osmosis/trunk/lib/default/*.jar $osmosis_dir/lib/
 if [ "$?" -ne "0" ] ; then
     echo "${RED}!!!!!! ERROR cannot copy needed libs for osmosis${NORMAL}"
     exit -1

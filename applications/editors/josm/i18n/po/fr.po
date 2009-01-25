@@ -5,15 +5,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-23 23:17+0100\n"
-"PO-Revision-Date: 2009-01-23 19:30+0000\n"
+"POT-Creation-Date: 2009-01-26 00:21+0100\n"
+"PO-Revision-Date: 2009-01-25 22:01+0000\n"
 "Last-Translator: Xavier LB <Unknown>\n"
 "Language-Team: Fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2009-01-23 22:09+0000\n"
+"X-Launchpad-Export-Date: 2009-01-25 23:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:448
@@ -32,7 +32,7 @@ msgid ""
 "This action will have no shortcut.\n"
 "\n"
 msgstr ""
-"Cette action n’aura aucun raccourci.\n"
+"Aucun raccourci-clavier ne sera associé à cette action.\n"
 "\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:455
@@ -46,14 +46,15 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:457
 msgid "(Hint: You can edit the shortcuts in the preferences.)"
-msgstr "(Aide: vous pouvez éditer les raccourcis dans les préférences.)"
+msgstr ""
+"(Astuce : Vous pouvez modifier les raccourcis-clavier dans les préférences.)"
 
 #: ../core/src/org/openstreetmap/josm/tools/DontShowAgainInfo.java:32
 msgid "Do not show again"
 msgstr "Ne plus afficher"
 
 #: ../core/src/org/openstreetmap/josm/tools/DontShowAgainInfo.java:37
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:296
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:297
 msgid "Information"
 msgstr "Informations"
 
@@ -63,7 +64,7 @@ msgstr "Ne rien faire"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:59
 msgid "Report Bug"
-msgstr "Rapporter un bug"
+msgstr "Signaler un bug"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:60
 msgid ""
@@ -72,10 +73,12 @@ msgid ""
 "This is always a coding error. If you are running the latest\n"
 "version of JOSM, please consider being kind and file a bug report."
 msgstr ""
-"Une exception inattendue s'est produite\n"
+"Une exception inattendue s'est produite.\n"
 "\n"
-"C'est toujours une erreur de programmation. Si vous utilisez la dernière\n"
-"version de JOSM, merci d'envisager de remplir un rapport de bogue."
+"Celle-ci est due à une erreur de programmation et non à une erreur de votre "
+"part. Si vous utilisez la dernière\n"
+"version de JOSM, et afin d'améliorer celle-ci, merci de remplir un rapport "
+"de bogue."
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:63
 msgid "Unexpected Exception"
@@ -214,20 +217,20 @@ msgstr ""
 msgid "Contacting Server..."
 msgstr "Contact du serveur..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:116
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:117
 msgid "Provide a brief comment for the changes you are uploading:"
 msgstr "Fournissez un bref comentaire aux changements que vous envoyez :"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:117
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:118
 msgid "Commit comment"
 msgstr "Commentaire du commit"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:146
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:148
 #, java-format
-msgid "Upload {0} {1} (id: {2}) {3}% {4}/{5} ({6} left)..."
-msgstr "Envoi {0} {1} (id: {2}) {3}% {4}/{5} ({6} restant)..."
+msgid "{0}% ({1}/{2}), {3} left. Uploading {4}: {5} (id: {6})"
+msgstr "{0}% ({1}/{2}), {3} restant(s). Chargement de {4}: {5} (id: {6})"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:161
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:164
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:69
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:64
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:125
@@ -235,36 +238,36 @@ msgstr "Envoi {0} {1} (id: {2}) {3}% {4}/{5} ({6} restant)..."
 msgid "An error occurred: {0}"
 msgstr "Une erreur est survenue : {0}"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:189
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:192
 msgid "Opening changeset..."
 msgstr "Ouverture de la révision..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:223
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:226
 msgid "Server does not support changesets"
 msgstr "Le serveur ne supporte pas les révisions"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:245
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:347
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:429
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:597
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:248
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:350
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:432
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:600
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:184
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:707
 msgid "Unknown host"
 msgstr "Hôte inconnu"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:283
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:286
 msgid "Preparing..."
 msgstr "Préparation en cours..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:293
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:296
 msgid "Uploading..."
 msgstr "Envoi en cours..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:377
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:380
 msgid "Closing changeset..."
 msgstr "Fermeture de la révision..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:640
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:643
 msgid "Transfer aborted due to error (will wait for 5 seconds):"
 msgstr "Le transfert a été interrompu sur erreur (attente de 5 secondes) :"
 
@@ -303,7 +306,7 @@ msgid "Download \"Message of the day\""
 msgstr "Téléchargement du \"Message du jour\""
 
 #: ../core/src/org/openstreetmap/josm/Main.java:179
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:165
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:169
 msgid "Creating main GUI"
 msgstr "Création de l’environnement graphique (GUI)"
 
@@ -346,23 +349,23 @@ msgstr "Ignore l’URL malformé : \"{0}\""
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "Ignore le fichier malformé d’URL : \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:112
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:116
 msgid "min lat"
 msgstr "lat min"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:114
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:118
 msgid "min lon"
 msgstr "lon min"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:116
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:120
 msgid "max lat"
 msgstr "lat max"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:118
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:122
 msgid "max lon"
 msgstr "lon max"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:121
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:125
 msgid ""
 "URL from www.openstreetmap.org (you can paste an URL here to download the "
 "area)"
@@ -370,9 +373,71 @@ msgstr ""
 "URL venant de www.openstreetmap.org (vous pouvez coller une URL ici pour "
 "télécharger la zone)"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:133
+#: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:137
 msgid "Bounding Box"
 msgstr "Zone de délimitation"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:45
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:39
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:40
+msgid "Search..."
+msgstr "Recherche..."
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:120
+msgid "NullPointerException, Possibly some missing tags."
+msgstr "NullPointerException, Il est possible que des tags soient manquants"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:168
+msgid "Please enter a search string"
+msgstr "Veuillez saisir une chaîne de recherche"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:186
+msgid "Cannot read place search results from server"
+msgstr "Impossible de lire les résultats de recherche depuis le serveur"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:206
+msgid "Enter a place name to search for:"
+msgstr "Entrez un nom d’endroit à rechercher :"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:218
+#: trans_presets.java:2464
+msgid "Places"
+msgstr "Toponymie"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:235
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:241
+#: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/Marker.java:96
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:974
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1036
+msgid "name"
+msgstr "nom"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:236
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:242
+#: trans_presets.java:1511 trans_presets.java:1700 trans_presets.java:1706
+#: trans_presets.java:1712 trans_presets.java:1718 trans_presets.java:1724
+#: trans_presets.java:1730 trans_presets.java:1736 trans_presets.java:1742
+#: trans_presets.java:1748 trans_presets.java:1754 trans_presets.java:1760
+#: trans_presets.java:1766 trans_presets.java:1772 trans_presets.java:1778
+#: trans_presets.java:1784 trans_presets.java:1793 trans_presets.java:1800
+#: trans_presets.java:1808 trans_presets.java:1814 trans_presets.java:1820
+#: trans_presets.java:1826 trans_presets.java:1832 trans_presets.java:1838
+#: trans_presets.java:1844 trans_presets.java:1850 trans_presets.java:1856
+#: trans_presets.java:1862 trans_presets.java:1868 trans_presets.java:1874
+#: trans_presets.java:1880 trans_presets.java:1886 trans_presets.java:1892
+#: trans_presets.java:1898 trans_presets.java:1904
+msgid "type"
+msgstr "type"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:237
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:243
+msgid "near"
+msgstr "à côté de"
+
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:238
+#: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:244
+msgid "zoom"
+msgstr "zoom"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:44
 msgid "Bookmarks"
@@ -431,21 +496,21 @@ msgstr "Numéros des dalles"
 msgid "Data Sources and Types"
 msgstr "Sources de données et types"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:141
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:142
 msgid "Download as new layer"
 msgstr "Télécharger en tant que nouveau calque"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:144
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:145
 msgid "Download Area"
 msgstr "Télécharger zone"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:193
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:194
 msgid "Download area too large; will probably be rejected by server"
 msgstr ""
 "La zone de téléchargement est trop grande et sera probablement rejetée par "
 "le serveur"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:196
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:197
 msgid "Download area ok, size probably acceptable to server"
 msgstr ""
 "La zone de téléchargement est bonne et sera probablement acceptée par le "
@@ -551,8 +616,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:143
 #: ../core/src/org/openstreetmap/josm/gui/SplashScreen.java:67
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:154
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:130
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:166
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:134
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:170
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:121
 msgid "Java OpenStreetMap Editor"
 msgstr "Java OpenStreetMap Editor"
@@ -621,28 +686,28 @@ msgstr "Utiliser l’étiquette prédéfinie \"{0}\" du groupe \"{1}\""
 msgid "Use preset ''{0}''"
 msgstr "Utiliser l’étiquette prédéfinie \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:480
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:479
 msgid "Unknown type"
 msgstr "Type inconnu"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:557
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:556
 #, java-format
 msgid "Could not read tagging preset source: {0}"
 msgstr "Impossible de lire la source des étiquettes prédéfinies : {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:560
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:559
 #, java-format
 msgid "Error parsing {0}: "
 msgstr "Erreur de traitement {0} : "
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:593
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:592
 #, java-format
 msgid "Change {0} object"
 msgid_plural "Change {0} objects"
 msgstr[0] "Changer {0} objet."
 msgstr[1] "Changer {0} objets."
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:623
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:622
 msgid "Change Properties"
 msgstr "Changer les propriétés"
 
@@ -658,7 +723,7 @@ msgstr "Fichier"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:133
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:627
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:104
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:82
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:61
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:87
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:107
@@ -714,6 +779,7 @@ msgstr "Contact du serveur OSM..."
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:325
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:151
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:41
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:102
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:60
 #: ../plugins/grid/src/grid/GridLayer.java:162
 #: ../plugins/grid/src/grid/GridLayer.java:199
@@ -810,7 +876,7 @@ msgid "Member Of"
 msgstr "Membre de"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:510
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:290
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:284
 msgid "Role"
 msgstr "Rôle"
 
@@ -859,9 +925,9 @@ msgid "Delete Properties"
 msgstr "Supprimer les propriétés"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:632
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:370
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:364
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:64
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:112
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:90
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:74
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:97
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:115
@@ -913,70 +979,70 @@ msgstr ""
 "avoir un éditeur intelligent qui détecte le type de relation et limite les "
 "choix de façon sensible."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:290
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:284
 msgid "Occupied By"
 msgstr "Occupé par"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:327
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:321
 msgid "Tags (empty value deletes tag)"
 msgstr "Étiquettes (une valeur vide supprime l’étiquette)"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:329
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:323
 msgid "Members"
 msgstr "Membres"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:334
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:328
 msgid "Move the currently selected members up"
 msgstr "Déplacer les membres sélectionnés vers le haut"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:340
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:334
 msgid "Move the currently selected members down"
 msgstr "Déplacer les membres sélectionnés vers le bas"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:356
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:350
 msgid "Add Selected"
 msgstr "Ajouter la sélection"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:357
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:351
 msgid "Add all currently selected objects as members"
 msgstr "Ajouter les objets sélectionnés en tant que memebres"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:363
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:357
 msgid "Delete Selected"
 msgstr "Effacer la sélection"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:364
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:358
 msgid "Delete all currently selected objects from relation"
 msgstr "Supprimer tous les objets sélectionnés de la relation"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:371
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:365
 msgid "Remove the member in the current table row from this relation"
 msgstr "Supprimer le membre de la ligne actuelle de cette relation"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:405
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:399
 msgid "Download Members"
 msgstr "Télécharger les membres"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:406
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:400
 msgid "Download all incomplete ways and nodes in relation"
 msgstr "Télécharger tous les chemins et les nœuds incomplets dans la relation"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:457
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:451
 #, java-format
 msgid "Members: {0}"
 msgstr "Membres : {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:587
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:581
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:251
 msgid "There were conflicts during import."
 msgstr "Il y a eu des conflits pendant l’import."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:595
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:589
 msgid "Error parsing server response."
 msgstr "Erreur d'analyse de la réponse du serveur"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:596
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:600
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:590
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:594
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:138
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:70
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:65
@@ -988,7 +1054,7 @@ msgstr "Erreur d'analyse de la réponse du serveur"
 msgid "Error"
 msgstr "Erreur"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:599
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:593
 msgid "Cannot connect to server."
 msgstr "Impossible de se connecter au serveur."
 
@@ -1065,18 +1131,18 @@ msgstr "# Objets"
 msgid "Authors: {0}"
 msgstr "Auteurs : {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:151
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:159
 msgid "Undock the panel"
 msgstr "Détacher le panneau"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:199
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:208
 msgid ""
 "Close this panel. You can reopen it with the buttons in the left toolbar."
 msgstr ""
 "Fermer ce panneau. Vous pouvez le réouvrir avec les boutons de la barre "
 "d'outils de gauche."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:211
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:220
 msgid "Click to minimize/maximize the panel content"
 msgstr "Cliquer pour minimiser/maximiser le contenu du panneau"
 
@@ -1147,7 +1213,6 @@ msgid "Open a selection list window."
 msgstr "Afficher une liste de la sélection"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:111
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:95
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:74
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:88
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:89
@@ -1224,7 +1289,7 @@ msgstr "Sélection : {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:60
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:61
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:142
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:120
 msgid "Relations"
 msgstr "Relations"
 
@@ -1232,36 +1297,32 @@ msgstr "Relations"
 msgid "Open a list of all relations."
 msgstr "Ouvrir une liste de toutes les relations."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:88
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:75
 #: ../core/src/org/openstreetmap/josm/actions/NewAction.java:17
 #: ../core/src/org/openstreetmap/josm/actions/NewAction.java:18
 msgid "New"
 msgstr "Nouveau"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:88
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:75
 msgid "Create a new relation"
 msgstr "Créer une nouvelle relation"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:95
-msgid "Select this relation"
-msgstr "Sélectionner cette relation"
-
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:104
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:82
 msgid "Open an editor for the selected relation"
 msgstr "Ouvrir un éditeur pour la relation sélectionnée"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:112
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:90
 msgid "Delete the selected relation"
 msgstr "Supprimer la relation sélectionnée"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:140
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:118
 #, java-format
 msgid "Relations: {0}"
 msgstr "Relations : {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListPopup.java:26
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:138
-#: trans_surveyor.java:85
+#: trans_surveyor.java:64
 msgid "Info"
 msgstr "Info"
 
@@ -1409,14 +1470,6 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:310
 msgid "No existing audio markers in this layer to offset from."
 msgstr "Aucun marqueur audio existant pour cette couche."
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/Marker.java:96
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:974
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1036
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:235
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:241
-msgid "name"
-msgstr "nom"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/Marker.java:98
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1038
@@ -2137,7 +2190,7 @@ msgstr ""
 "terminant par ~"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:39
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:194
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:195
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:142
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:141
 msgid "Plugins"
@@ -2577,23 +2630,24 @@ msgstr "Dessiner les couches inactives dans une couleur différente."
 msgid "OSM Data"
 msgstr "Données OSM"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:108
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:129
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:151
 msgid "Separator"
 msgstr "Séparateur"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:154
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:299
 msgid "Toolbar"
 msgstr "Barre d'outils"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:158
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:303
 msgid "Available"
 msgstr "Disponible"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:199
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:342
 msgid "Toolbar customization"
 msgstr "Personalisation de la barre d'outils"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:200
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:343
 msgid "Customize the elements on the toolbar."
 msgstr "Personnaliser les éléments de la barre d’outils."
 
@@ -2818,60 +2872,62 @@ msgstr "la couche n’est pas dans la liste."
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr ""
+"Impossible de trouver la traduction pour la langue {0}. Retour à la langue "
+"{1}."
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:131
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:135
 msgid "usage"
 msgstr "usage"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:133
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:137
 msgid "options"
 msgstr "Options"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:134
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:138
 msgid "Show this help"
 msgstr "Montrer cette aide"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:135
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:139
 msgid "Standard unix geometry argument"
 msgstr "Argument de géométrie standard UNIX"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:136
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:140
 msgid "Download the bounding box"
 msgstr "Télécharge la zone sélectionnée"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:137
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:141
 msgid "Download the location at the url (with lat=x&lon=y&zoom=z)"
 msgstr "Télécharge l’emplacement donné par l’URL (avec lat=x&lon=y&zoom=z)"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:138
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:142
 msgid "Open file (as raw gps, if .gpx)"
 msgstr "Ouvrir fichier (données brutes gps, si .gpx)"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:139
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:143
 msgid "Download the bounding box as raw gps"
 msgstr "Télécharger la zone sélectionnée en données GPS brut."
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:140
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:144
 msgid "Select with the given search"
 msgstr "Sélectionner avec la recherche actuelle"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:141
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:145
 msgid "Don't launch in fullscreen mode"
 msgstr "Ne pas lancer en plein écran"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:142
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:146
 msgid "Reset the preferences to default"
 msgstr "Rétablir les préférences par défaut"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:143
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:147
 msgid "Set the language."
 msgstr "Définir la langue"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:144
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:148
 msgid "examples"
 msgstr "exemples"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:149
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:153
 msgid ""
 "Parameters are read in the order they are specified, so make sure you load\n"
 "some data before --selection"
@@ -2880,23 +2936,23 @@ msgstr ""
 "donc\n"
 "sur d’avoir chargé des données avant --selection"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:151
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:155
 msgid "Instead of --download=<bbox> you may specify osm://<bbox>\n"
 msgstr "Au lieu de --download=<bbox> vous devriez indiquer osm://<bbox>\n"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:157
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:161
 msgid "Activating updated plugins"
 msgstr "Activation des greffons mis à jour"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:160
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:164
 msgid "Loading early plugins"
 msgstr "Chargement des premiers greffons"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:163
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:167
 msgid "Setting defaults"
 msgstr "Régalage des valeurs par défaut"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:169
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:173
 msgid "Loading plugins"
 msgstr "Chargement des greffons"
 
@@ -2943,7 +2999,7 @@ msgstr "Fichier non trouvé"
 msgid "unknown"
 msgstr "inconnu"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:64
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:65
 #, java-format
 msgid ""
 "Warning - loading of {0} plugin was requested. This plugin is no longer "
@@ -2952,27 +3008,27 @@ msgstr ""
 "Attention - le chargment de {0} greffon a été demandé. Ce greffon n’est plus "
 "nécessaire."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:85
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:86
 #, java-format
 msgid "Plugin requires JOSM update: {0}."
 msgstr "Ce greffon nécessite une mise à jour de JOSM : {0}."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:100
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:101
 #, java-format
 msgid "Plugin {0} is required by plugin {1} but was not found."
-msgstr ""
+msgstr "Le greffon {0} est requis par le greffon {1} mais n’a pu être trouvé."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:109
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:110
 #, java-format
 msgid "Plugin not found: {0}."
 msgstr "Greffon non trouvé : {0}"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:123
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:124
 #, java-format
 msgid "Last plugin update more than {0} days ago."
 msgstr "La dernière mise à jour du greffon date de plus de {0} jours."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:125
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:126
 msgid ""
 "(You can change the number of days after which this warning appears<br>by "
 "setting the config option 'pluginmanager.warntime'.)"
@@ -2981,17 +3037,17 @@ msgstr ""
 "s'affiche<br>en modifiant l'option de configuration 'pluginmanager."
 "warntime'.)"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:152
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:153
 #, java-format
 msgid "Could not load plugin {0}. Delete from preferences?"
 msgstr "Impossible de charger le greffon {0}. Le supprimer des préférences ?"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:153
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:255
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:154
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:256
 msgid "Disable plugin"
 msgstr "Désactiver le greffon"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:193
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:194
 msgid ""
 "Activating the updated plugins failed. Check if JOSM has the permission to "
 "overwrite the existing ones."
@@ -2999,30 +3055,30 @@ msgstr ""
 "L’activation des greffons mis à jour a échoué. Vérifiez si JOSM a "
 "l’autorisation de remplacer les greffons existants."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:249
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:250
 #, java-format
 msgid ""
 "An unexpected exception occurred that may have come from the ''{0}'' plugin."
 msgstr ""
 "Une exception inattendue pouvant provenir du greffon \"{0}\" s’est produite."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:251
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:252
 #, java-format
 msgid "According to the information within the plugin, the author is {0}."
 msgstr "D’après les informations du greffon, l’auteur est {0}."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:253
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:254
 msgid ""
 "Try updating to the newest version of this plugin before reporting a bug."
 msgstr ""
 "Essayez de mettre à jour vers une version plus récente de ce module "
 "d'extension avant de rapporter un bug."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:254
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:255
 msgid "Should the plugin be disabled?"
 msgstr "Ce module d'extension doit-il être désactivé ?"
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:268
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:269
 msgid ""
 "The plugin has been removed from the configuration. Please restart JOSM to "
 "unload the plugin."
@@ -3030,7 +3086,7 @@ msgstr ""
 "Le greffon a été supprimé de la configuration. Redémarrez JOSM pour que le "
 "greffon ne soit plus chargé."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:271
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:272
 msgid ""
 "The plugin could not be removed. Please tell the people you got JOSM from "
 "about the problem."
@@ -3038,7 +3094,7 @@ msgstr ""
 "Le greffon ne peut pas être supprimé. Merci de le signaler là où vous avez "
 "obtenu JOSM."
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:312
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:313
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:178
 msgid "no description available"
 msgstr "Aucune description disponible"
@@ -3286,7 +3342,7 @@ msgstr "différent"
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:305
 #, java-format
 msgid "Malformed config file at lines {0}"
-msgstr ""
+msgstr "Erreur dans le fichier de configuration aux lignes {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:315
 #, java-format
@@ -3383,120 +3439,120 @@ msgstr "Impossible de charger les préférences. Raison : {0}"
 msgid "Could not load preferences from server."
 msgstr "Impossible de charger les préférences depuis le serveur."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:230
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:231
 msgid "Area style way is not closed."
 msgstr "La zone n'est pas fermée."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:419
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:422
 #, java-format
 msgid "multipolygon way ''{0}'' is not closed."
 msgstr "Le multipolygone \"{0}\" n'est pas fermé."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:520
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:758
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:523
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:761
 msgid "Empty member in relation."
 msgstr "Membre vide dans la relation."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:522
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:760
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:525
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:763
 #, java-format
 msgid "Deleted member ''{0}'' in relation."
 msgstr "Membre \"{0}\" supprimé de la relation."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:540
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:771
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:543
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:774
 #, java-format
 msgid "Way ''{0}'' with less than two points."
 msgstr "Chemin \"{0}\" comporte moins de deux points."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:545
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:548
 msgid "More than one \"from\" way found."
 msgstr "Plus d'un chemin d'origine trouvé."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:551
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:554
 msgid "More than one \"to\" way found."
 msgstr "Plus d'un chemin \"destination\" trouvé."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:557
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:569
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:560
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:572
 #, java-format
 msgid "Unknown role ''{0}''."
 msgstr "Rôle inconnu \"{0}\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:572
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:575
 #, java-format
 msgid "Unknown member type for ''{0}''."
 msgstr "Type de membre inconnu pour \"{0}\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:577
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:580
 msgid "No \"from\" way found."
 msgstr "Pas de chemin d'origine trouvé."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:581
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:584
 msgid "No \"to\" way found."
 msgstr "Pas de chemin \"destination\" trouvé."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:585
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:588
 msgid "No \"via\" node found."
 msgstr "Pas de nœud \"de passage\" trouvé."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:591
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:594
 msgid "The \"from\" way doesn't start or end at a \"via\" node."
 msgstr ""
 "Le chemin d'origine ne commence ou fini pas par un nœud \"de passage\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:612
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:629
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:615
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:632
 #, java-format
 msgid "The \"{0}\" way must contain at least 2 nodes."
 msgstr "Le chemin \"{0}\" doit contenir au moins 2 nœuds."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:724
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:727
 #, java-format
 msgid "Style for restriction {0} not found."
 msgstr "Le style de la restriction {0} n'a pas été trouvé."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:780
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:783
 #, java-format
 msgid "No useful role ''{0}'' for Way ''{1}''."
 msgstr "Pas de rôle utile \"{0}\" pour le chemin \"{1}\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:791
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:794
 #, java-format
 msgid "Non-Way ''{0}'' in multipolygon."
 msgstr "Non-chemin \"{0}\" dans le multipolygone."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:840
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:843
 #, java-format
 msgid "No outer way for multipolygon ''{0}''."
 msgstr "Pas de chemin extérieur pour le multipolygone \"{0}\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:920
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:923
 #, java-format
 msgid "Intersection between ways ''{0}'' and ''{1}''."
 msgstr "Intersection entre les chemins \"{0}\" et \"{1}\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:931
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:934
 #, java-format
 msgid "Inner way ''{0}'' is outside."
 msgstr "Le chemin intérieur \"{0}\" est à l'extérieur."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:980
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:983
 #, java-format
 msgid "Style for inner way ''{0}'' equals multipolygon."
 msgstr ""
 "Le style du chemin intérieur \"{0}\" est équivalent à un multipolygone."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1005
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1008
 #, java-format
 msgid "Style for outer way ''{0}'' mismatches."
 msgstr "Le style du chemin extérieur \"{0}\" ne concorde pas."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1175
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1191
 msgid "untagged"
 msgstr "non étiqueté"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1176
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:1192
 msgid "text"
 msgstr "texte"
 
@@ -4202,12 +4258,6 @@ msgstr "Impossible de lire quelque chose depuis l’URL : \"{0}\""
 msgid "Parsing error in URL: \"{0}\""
 msgstr "Erreur d’analyse dans l’URL : \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:39
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:40
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:45
-msgid "Search..."
-msgstr "Recherche..."
-
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:45
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:120
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:66
@@ -4634,7 +4684,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:22
 #: ../core/src/org/openstreetmap/josm/actions/ExitAction.java:23
-#: trans_surveyor.java:89
+#: trans_surveyor.java:68
 msgid "Exit"
 msgstr "Quitter"
 
@@ -5461,54 +5511,6 @@ msgstr ""
 msgid "Permitted actions"
 msgstr "Actions permises"
 
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:120
-msgid "NullPointerException, Possibly some missing tags."
-msgstr "NullPointerException, Il est possible que des tags soient manquants"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:168
-msgid "Please enter a search string"
-msgstr "Veuillez saisir une chaîne de recherche"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:186
-msgid "Cannot read place search results from server"
-msgstr "Impossible de lire les résultats de recherche depuis le serveur"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:206
-msgid "Enter a place name to search for:"
-msgstr "Entrez un nom d’endroit à rechercher :"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:218
-#: trans_presets.java:2464
-msgid "Places"
-msgstr "Toponymie"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:236
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:242
-#: trans_presets.java:1511 trans_presets.java:1700 trans_presets.java:1706
-#: trans_presets.java:1712 trans_presets.java:1718 trans_presets.java:1724
-#: trans_presets.java:1730 trans_presets.java:1736 trans_presets.java:1742
-#: trans_presets.java:1748 trans_presets.java:1754 trans_presets.java:1760
-#: trans_presets.java:1766 trans_presets.java:1772 trans_presets.java:1778
-#: trans_presets.java:1784 trans_presets.java:1793 trans_presets.java:1800
-#: trans_presets.java:1808 trans_presets.java:1814 trans_presets.java:1820
-#: trans_presets.java:1826 trans_presets.java:1832 trans_presets.java:1838
-#: trans_presets.java:1844 trans_presets.java:1850 trans_presets.java:1856
-#: trans_presets.java:1862 trans_presets.java:1868 trans_presets.java:1874
-#: trans_presets.java:1880 trans_presets.java:1886 trans_presets.java:1892
-#: trans_presets.java:1898 trans_presets.java:1904
-msgid "type"
-msgstr "type"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:237
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:243
-msgid "near"
-msgstr "à côté de"
-
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:238
-#: ../plugins/namefinder/namefinder/PlaceSelection.java:244
-msgid "zoom"
-msgstr "zoom"
-
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:39
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:40
 msgid "Import TCX File..."
@@ -5627,8 +5629,8 @@ msgid "southeast"
 msgstr "Sud-Est"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
-#: trans_style.java:797 trans_style.java:814 trans_style.java:830
-#: trans_style.java:2947 trans_style.java:2955
+#: trans_style.java:827 trans_style.java:844 trans_style.java:860
+#: trans_style.java:2979 trans_style.java:2987
 msgid "water"
 msgstr "eau"
 
@@ -6149,13 +6151,13 @@ msgid "waterway type {0}"
 msgstr "type de voie fluviale {0}"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:100
-#: trans_style.java:3669 trans_style.java:3676 trans_style.java:3683
-#: trans_style.java:3690 trans_style.java:3697
+#: trans_style.java:3699 trans_style.java:3706 trans_style.java:3713
+#: trans_style.java:3720 trans_style.java:3727
 msgid "building"
 msgstr "bâtiment"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:103
-#: trans_style.java:3704
+#: trans_style.java:3734
 msgid "area"
 msgstr "zone"
 
@@ -7086,6 +7088,7 @@ msgstr "Trace GPX chargée"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:35
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:71
 msgid "Upload Traces"
 msgstr "Charger les traces"
 
@@ -7093,9 +7096,58 @@ msgstr "Charger les traces"
 msgid "Uploads traces to openstreetmap.org"
 msgstr "CHarger les traces vers openstreetmap.org"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:256
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:95
+msgid "Upload GPX track"
+msgstr "Charger la trace GPX"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:109
+msgid "Direct Upload to OpenStreetMap"
+msgstr "Envoi direct vers OpenStreetMap"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:111
+msgid "Public"
+msgstr "Public"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:112
+msgid "Selected makes your trace public in openstreetmap.org"
+msgstr "Cette sélection rend votre trace publique dans openstreetmap.org"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:114
+msgid "Description"
+msgstr "Description"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:117
+msgid "Tags"
+msgstr "Étiquettes"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:172
+msgid "Starting to upload selected file to openstreetmap.org"
+msgstr "Début du chargement du fichier sélectionné vers openstreetmap.org"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:212
+msgid "Error while uploading"
+msgstr "Erreur lors du chargement"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:221
+msgid "No description provided. Please provide some description."
+msgstr "Pas de description fournie. Merci de fournir une description."
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:224
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:238
 msgid "No GPX layer selected. Cannot upload a trace."
 msgstr "Pas de couche GPX sélectionnée. Impossible de charger une trace."
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:227
+msgid "No username provided."
+msgstr "Pas de nom d'utilisateur fourni."
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:230
+msgid "No password provided."
+msgstr "Pas de mot de passe fourni."
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:278
+msgid "Transferring data to server"
+msgstr "Transfert des données vers le serveur"
 
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:67
 msgid "Use"
@@ -7483,418 +7535,454 @@ msgstr "Remettre à zéro le graphique"
 msgid "Navigate"
 msgstr "Naviguer"
 
-#: trans_style.java:47
+#: trans_style.java:49
 msgid "standard"
 msgstr "standard"
 
-#: trans_style.java:103 trans_style.java:117 trans_style.java:124
-#: trans_style.java:131 trans_style.java:138
+#: trans_style.java:105 trans_style.java:119 trans_style.java:126
+#: trans_style.java:133 trans_style.java:140
 msgid "bridge"
 msgstr "pont"
 
-#: trans_style.java:110 trans_style.java:145 trans_style.java:152
-#: trans_style.java:159 trans_style.java:474 trans_style.java:3728
-#: trans_style.java:3737 trans_style.java:3746 trans_style.java:3755
-#: trans_style.java:3764 trans_style.java:3773 trans_style.java:3782
-#: trans_style.java:3799
+#: trans_style.java:112 trans_style.java:147 trans_style.java:154
+#: trans_style.java:161 trans_style.java:497 trans_style.java:2140
+#: trans_style.java:3779 trans_style.java:3788 trans_style.java:3797
+#: trans_style.java:3806 trans_style.java:3815 trans_style.java:3824
+#: trans_style.java:3833 trans_style.java:3834 trans_style.java:3843
+#: trans_style.java:3852
 msgid "deprecated"
 msgstr "déprécié"
 
-#: trans_style.java:183 trans_style.java:530 trans_style.java:713
-#: trans_style.java:721 trans_style.java:729 trans_style.java:737
-#: trans_style.java:745
+#: trans_style.java:178 trans_presets.java:299 trans_presets.java:300
+#: trans_presets.java:301 trans_presets.java:302 trans_presets.java:303
+#: trans_presets.java:304 trans_presets.java:305 trans_presets.java:306
+#: trans_presets.java:307 trans_presets.java:308 trans_presets.java:309
+#: trans_presets.java:489 trans_presets.java:490 trans_presets.java:491
+#: trans_presets.java:510 trans_presets.java:511 trans_presets.java:512
+#: trans_presets.java:531 trans_presets.java:532 trans_presets.java:533
+#: trans_presets.java:552 trans_presets.java:553 trans_presets.java:554
+#: trans_presets.java:573 trans_presets.java:574 trans_presets.java:575
+#: trans_presets.java:594 trans_presets.java:595 trans_presets.java:596
+msgid "permissive"
+msgstr "permis par le propriétaire"
+
+#: trans_style.java:185 trans_presets.java:299 trans_presets.java:300
+#: trans_presets.java:301 trans_presets.java:302 trans_presets.java:303
+#: trans_presets.java:304 trans_presets.java:305 trans_presets.java:306
+#: trans_presets.java:307 trans_presets.java:308 trans_presets.java:309
+#: trans_presets.java:489 trans_presets.java:490 trans_presets.java:491
+#: trans_presets.java:510 trans_presets.java:511 trans_presets.java:512
+#: trans_presets.java:531 trans_presets.java:532 trans_presets.java:533
+#: trans_presets.java:552 trans_presets.java:553 trans_presets.java:554
+#: trans_presets.java:573 trans_presets.java:574 trans_presets.java:575
+#: trans_presets.java:594 trans_presets.java:595 trans_presets.java:596
+msgid "private"
+msgstr "privé"
+
+#: trans_style.java:192 trans_presets.java:299 trans_presets.java:300
+#: trans_presets.java:301 trans_presets.java:302 trans_presets.java:303
+#: trans_presets.java:304 trans_presets.java:305 trans_presets.java:306
+#: trans_presets.java:307 trans_presets.java:308 trans_presets.java:309
+#: trans_presets.java:489 trans_presets.java:490 trans_presets.java:491
+#: trans_presets.java:510 trans_presets.java:511 trans_presets.java:512
+#: trans_presets.java:531 trans_presets.java:532 trans_presets.java:533
+#: trans_presets.java:552 trans_presets.java:553 trans_presets.java:554
+#: trans_presets.java:573 trans_presets.java:574 trans_presets.java:575
+#: trans_presets.java:594 trans_presets.java:595 trans_presets.java:596
+msgid "destination"
+msgstr "destination"
+
+#: trans_style.java:206 trans_style.java:553 trans_style.java:743
+#: trans_style.java:751 trans_style.java:759 trans_style.java:767
+#: trans_style.java:775
 msgid "bicycle"
 msgstr "cycle"
 
-#: trans_style.java:197 trans_style.java:538 trans_style.java:546
-#: trans_style.java:554 trans_style.java:562
+#: trans_style.java:220 trans_style.java:561 trans_style.java:569
+#: trans_style.java:577 trans_style.java:585
 msgid "foot"
 msgstr "piéton"
 
-#: trans_style.java:225 trans_style.java:522
+#: trans_style.java:248 trans_style.java:545
 msgid "horse"
 msgstr "cheval"
 
-#: trans_style.java:394 trans_style.java:402 trans_presets.java:325
+#: trans_style.java:417 trans_style.java:425 trans_presets.java:325
 msgid "motorway"
 msgstr "motorway"
 
-#: trans_style.java:410 trans_style.java:418 trans_presets.java:325
+#: trans_style.java:433 trans_style.java:441 trans_presets.java:325
 msgid "trunk"
 msgstr "voie rapide"
 
-#: trans_style.java:426 trans_style.java:434 trans_presets.java:325
+#: trans_style.java:449 trans_style.java:457 trans_presets.java:325
 msgid "primary"
 msgstr "primary"
 
-#: trans_style.java:442 trans_style.java:450 trans_presets.java:325
+#: trans_style.java:465 trans_style.java:473 trans_presets.java:325
 msgid "secondary"
 msgstr "secondary"
 
-#: trans_style.java:458 trans_presets.java:325
+#: trans_style.java:481 trans_presets.java:325
 msgid "tertiary"
 msgstr "tertiary"
 
-#: trans_style.java:466 trans_style.java:482 trans_style.java:498
-#: trans_style.java:506 trans_style.java:3486 trans_style.java:3494
-#: trans_style.java:3502
+#: trans_style.java:489 trans_style.java:505 trans_style.java:521
+#: trans_style.java:529
 msgid "street"
 msgstr "rue"
 
-#: trans_style.java:490 trans_style.java:755 trans_style.java:763
-#: trans_style.java:771 trans_style.java:779 trans_style.java:787
+#: trans_style.java:513 trans_style.java:785 trans_style.java:793
+#: trans_style.java:801 trans_style.java:809 trans_style.java:817
 msgid "highway_track"
 msgstr "piste"
 
-#: trans_style.java:514 trans_presets.java:325
+#: trans_style.java:537 trans_presets.java:325
 msgid "service"
 msgstr "service"
 
-#: trans_style.java:570
-msgid "bus"
-msgstr "bus"
+#: trans_style.java:593 trans_style.java:1074 trans_style.java:1082
+#: trans_style.java:1091
+msgid "otherrail"
+msgstr "Autre voie ferrée"
 
-#: trans_style.java:648 trans_style.java:962
+#: trans_style.java:678 trans_style.java:992
 msgid "viaduct"
 msgstr "viaduc"
 
-#: trans_style.java:684
+#: trans_style.java:714
 msgid "turningcircle"
 msgstr "zone de manœuvre"
 
-#: trans_style.java:692 trans_style.java:2774 trans_style.java:3660
+#: trans_style.java:722 trans_style.java:2805 trans_style.java:2806
 #: trans_presets.java:325
 msgid "construction"
 msgstr "construction"
 
-#: trans_style.java:702 trans_presets.java:373
+#: trans_style.java:732 trans_presets.java:373
 msgid "roundabout"
 msgstr "roundabout"
 
-#: trans_style.java:805 trans_style.java:806
+#: trans_style.java:835 trans_style.java:836
 msgid "riverbank"
 msgstr "berge"
 
-#: trans_style.java:822
+#: trans_style.java:852
 msgid "stream"
 msgstr "cours d'eau"
 
-#: trans_style.java:838
+#: trans_style.java:868
 msgid "dock"
 msgstr "dock"
 
-#: trans_style.java:860
+#: trans_style.java:890
 msgid "aqueduct"
 msgstr "aqueduc"
 
-#: trans_style.java:897 trans_style.java:905 trans_style.java:914
-#: trans_style.java:1284 trans_style.java:1291 trans_style.java:1300
-#: trans_style.java:1308 trans_style.java:1332 trans_style.java:1340
-#: trans_style.java:1348 trans_style.java:1356 trans_style.java:1363
-#: trans_style.java:1372 trans_style.java:1380 trans_style.java:1388
-#: trans_style.java:1396
+#: trans_style.java:927 trans_style.java:935 trans_style.java:944
+#: trans_style.java:1314 trans_style.java:1321 trans_style.java:1330
+#: trans_style.java:1338 trans_style.java:1362 trans_style.java:1370
+#: trans_style.java:1378 trans_style.java:1386 trans_style.java:1393
+#: trans_style.java:1402 trans_style.java:1410 trans_style.java:1418
+#: trans_style.java:1426
 msgid "manmade"
 msgstr "artificiel"
 
-#: trans_style.java:924 trans_style.java:939 trans_style.java:954
-#: trans_style.java:970 trans_style.java:978
+#: trans_style.java:954 trans_style.java:969 trans_style.java:984
+#: trans_style.java:1000 trans_style.java:1008
 msgid "railwaypoint"
 msgstr "point ferroviaire"
 
-#: trans_style.java:986 trans_style.java:995 trans_style.java:1004
+#: trans_style.java:1016 trans_style.java:1025 trans_style.java:1034
 msgid "rail"
 msgstr "voie ferrée"
 
-#: trans_style.java:996
+#: trans_style.java:1026
 msgid "railover"
 msgstr "passage au dessus d'une voie ferrée"
 
-#: trans_style.java:1012
+#: trans_style.java:1042
 msgid "subway"
 msgstr "métro"
 
-#: trans_style.java:1020 trans_style.java:1028 trans_style.java:1036
+#: trans_style.java:1050 trans_style.java:1058 trans_style.java:1066
 msgid "oldrail"
 msgstr "ligne ferroviaire touristique"
 
-#: trans_style.java:1044 trans_style.java:1052 trans_style.java:1061
-msgid "otherrail"
-msgstr "Autre voie ferrée"
-
-#: trans_style.java:1091 trans_style.java:1123
+#: trans_style.java:1121 trans_style.java:1153
 msgid "aeroway"
 msgstr "piste d'atterrissage"
 
-#: trans_style.java:1099
+#: trans_style.java:1129
 msgid "terminal"
 msgstr "terminal"
 
-#: trans_style.java:1107 trans_style.java:1115
+#: trans_style.java:1137 trans_style.java:1145
 msgid "aeroway_dark"
 msgstr "piste (sombre)"
 
-#: trans_style.java:1131
+#: trans_style.java:1161
 msgid "aeroway_light"
 msgstr "piste (claire)"
 
-#: trans_style.java:1141 trans_style.java:1149 trans_style.java:1157
-#: trans_style.java:1165
+#: trans_style.java:1171 trans_style.java:1179 trans_style.java:1187
+#: trans_style.java:1195
 msgid "aerialway"
 msgstr "couloir aérien"
 
-#: trans_style.java:1175
+#: trans_style.java:1205
 msgid "piste_easy"
 msgstr "piste bleue"
 
-#: trans_style.java:1183
+#: trans_style.java:1213
 msgid "piste_intermediate"
 msgstr "piste rouge"
 
-#: trans_style.java:1191
+#: trans_style.java:1221
 msgid "piste_advanced"
 msgstr "piste noire"
 
-#: trans_style.java:1199
+#: trans_style.java:1229
 msgid "piste_freeride"
 msgstr "hors piste"
 
-#: trans_style.java:1207
+#: trans_style.java:1237
 msgid "piste_novice"
 msgstr "piste verte"
 
-#: trans_style.java:1218 trans_style.java:1225 trans_style.java:1234
-#: trans_style.java:1242 trans_style.java:1250 trans_style.java:1258
-#: trans_style.java:1266 trans_style.java:1274
+#: trans_style.java:1248 trans_style.java:1255 trans_style.java:1264
+#: trans_style.java:1272 trans_style.java:1280 trans_style.java:1288
+#: trans_style.java:1296 trans_style.java:1304
 msgid "power"
 msgstr "alimentation électrique"
 
-#: trans_style.java:1315
+#: trans_style.java:1345
 msgid "pier"
 msgstr "ponton"
 
-#: trans_style.java:1323
+#: trans_style.java:1353
 msgid "pipeline"
 msgstr "pipeline"
 
-#: trans_style.java:1406 trans_style.java:1414 trans_style.java:1422
-#: trans_style.java:1430 trans_style.java:1438 trans_style.java:1446
-#: trans_style.java:1454 trans_style.java:1462 trans_style.java:1470
-#: trans_style.java:1478 trans_style.java:1486 trans_style.java:1494
-#: trans_style.java:1502 trans_style.java:1510 trans_style.java:1518
-#: trans_style.java:1526
+#: trans_style.java:1436 trans_style.java:1444 trans_style.java:1452
+#: trans_style.java:1460 trans_style.java:1468 trans_style.java:1476
+#: trans_style.java:1484 trans_style.java:1492 trans_style.java:1500
+#: trans_style.java:1508 trans_style.java:1516 trans_style.java:1524
+#: trans_style.java:1532 trans_style.java:1540 trans_style.java:1548
+#: trans_style.java:1556
 msgid "leisure"
 msgstr "loisir"
 
-#: trans_style.java:1536 trans_style.java:1544 trans_style.java:1552
-#: trans_style.java:1560 trans_style.java:1568 trans_style.java:1576
-#: trans_style.java:1584 trans_style.java:1592
+#: trans_style.java:1566 trans_style.java:1574 trans_style.java:1582
+#: trans_style.java:1590 trans_style.java:1598 trans_style.java:1606
+#: trans_style.java:1614 trans_style.java:1622
 msgid "amenity"
 msgstr "bâtiment"
 
-#: trans_style.java:1600 trans_style.java:1608 trans_style.java:1616
-#: trans_style.java:1624 trans_style.java:1632 trans_style.java:1640
-#: trans_style.java:1648 trans_style.java:1656 trans_style.java:1663
-#: trans_style.java:1672 trans_style.java:1680
+#: trans_style.java:1630 trans_style.java:1638 trans_style.java:1646
+#: trans_style.java:1654 trans_style.java:1662 trans_style.java:1670
+#: trans_style.java:1678 trans_style.java:1686 trans_style.java:1693
+#: trans_style.java:1702 trans_style.java:1710
 msgid "amenity_traffic"
 msgstr "équipement de traffic"
 
-#: trans_style.java:1688 trans_style.java:1696 trans_style.java:1704
-#: trans_style.java:1712 trans_style.java:1720 trans_style.java:1728
-#: trans_style.java:1736 trans_style.java:1744 trans_style.java:1838
-#: trans_style.java:1846 trans_style.java:1853 trans_style.java:1862
-#: trans_style.java:1870 trans_style.java:1878 trans_style.java:1886
-#: trans_style.java:1894 trans_style.java:1902 trans_style.java:1910
-#: trans_style.java:1965 trans_style.java:1973 trans_style.java:1981
-#: trans_style.java:1990 trans_style.java:1998 trans_style.java:2005
-#: trans_style.java:2013 trans_style.java:2021 trans_style.java:2029
-#: trans_style.java:2037 trans_style.java:2045 trans_style.java:2053
-#: trans_style.java:2061 trans_style.java:2069 trans_style.java:2077
-#: trans_style.java:2085 trans_style.java:2094 trans_style.java:2102
+#: trans_style.java:1718 trans_style.java:1726 trans_style.java:1734
+#: trans_style.java:1742 trans_style.java:1750 trans_style.java:1758
+#: trans_style.java:1766 trans_style.java:1774 trans_style.java:1868
+#: trans_style.java:1876 trans_style.java:1883 trans_style.java:1892
+#: trans_style.java:1900 trans_style.java:1908 trans_style.java:1916
+#: trans_style.java:1924 trans_style.java:1932 trans_style.java:1940
+#: trans_style.java:1995 trans_style.java:2003 trans_style.java:2011
+#: trans_style.java:2020 trans_style.java:2028 trans_style.java:2035
+#: trans_style.java:2043 trans_style.java:2051 trans_style.java:2059
+#: trans_style.java:2067 trans_style.java:2075 trans_style.java:2083
+#: trans_style.java:2091 trans_style.java:2099 trans_style.java:2107
+#: trans_style.java:2115 trans_style.java:2124 trans_style.java:2132
 msgid "amenity_light"
 msgstr "équipement lumineux"
 
-#: trans_style.java:1752 trans_style.java:1760 trans_style.java:2859
+#: trans_style.java:1782 trans_style.java:1790 trans_style.java:2891
 msgid "light_water"
 msgstr "eau (claire)"
 
-#: trans_style.java:1917 trans_style.java:1925 trans_style.java:1933
-#: trans_style.java:1941 trans_style.java:1949 trans_style.java:1957
+#: trans_style.java:1947 trans_style.java:1955 trans_style.java:1963
+#: trans_style.java:1971 trans_style.java:1979 trans_style.java:1987
 msgid "health"
 msgstr "santé"
 
-#: trans_style.java:2119 trans_style.java:2127 trans_style.java:2135
-#: trans_style.java:2143 trans_style.java:2151 trans_style.java:2159
-#: trans_style.java:2167 trans_style.java:2175 trans_style.java:2183
-#: trans_style.java:2191 trans_style.java:2199 trans_style.java:2207
-#: trans_style.java:2215 trans_style.java:2223 trans_style.java:2231
-#: trans_style.java:2239 trans_style.java:2247 trans_style.java:2255
-#: trans_style.java:2263 trans_style.java:2271 trans_style.java:2279
-#: trans_style.java:2287 trans_style.java:2295 trans_style.java:2303
-#: trans_style.java:2311 trans_style.java:2319 trans_style.java:2327
-#: trans_style.java:2335 trans_style.java:2343 trans_style.java:2351
-#: trans_style.java:2359 trans_style.java:2367 trans_style.java:2375
-#: trans_style.java:2383 trans_style.java:2391 trans_style.java:2399
-#: trans_style.java:2407 trans_style.java:2415 trans_style.java:2423
-#: trans_style.java:2432
+#: trans_style.java:2150 trans_style.java:2158 trans_style.java:2166
+#: trans_style.java:2174 trans_style.java:2182 trans_style.java:2190
+#: trans_style.java:2198 trans_style.java:2206 trans_style.java:2214
+#: trans_style.java:2222 trans_style.java:2230 trans_style.java:2238
+#: trans_style.java:2246 trans_style.java:2254 trans_style.java:2262
+#: trans_style.java:2270 trans_style.java:2278 trans_style.java:2286
+#: trans_style.java:2294 trans_style.java:2302 trans_style.java:2310
+#: trans_style.java:2318 trans_style.java:2326 trans_style.java:2334
+#: trans_style.java:2342 trans_style.java:2350 trans_style.java:2358
+#: trans_style.java:2366 trans_style.java:2374 trans_style.java:2382
+#: trans_style.java:2390 trans_style.java:2398 trans_style.java:2406
+#: trans_style.java:2414 trans_style.java:2422 trans_style.java:2430
+#: trans_style.java:2438 trans_style.java:2446 trans_style.java:2454
+#: trans_style.java:2463
 msgid "shop"
 msgstr "magasin"
 
-#: trans_style.java:2442 trans_style.java:2506 trans_style.java:2514
-#: trans_style.java:2522 trans_style.java:2530 trans_style.java:2538
-#: trans_style.java:2546 trans_style.java:2554
+#: trans_style.java:2473 trans_style.java:2537 trans_style.java:2545
+#: trans_style.java:2553 trans_style.java:2561 trans_style.java:2569
+#: trans_style.java:2577 trans_style.java:2585
 msgid "tourism"
 msgstr "tourisme"
 
-#: trans_style.java:2450 trans_style.java:2458 trans_style.java:2466
-#: trans_style.java:2474 trans_style.java:2482 trans_style.java:2490
-#: trans_style.java:2498
+#: trans_style.java:2481 trans_style.java:2489 trans_style.java:2497
+#: trans_style.java:2505 trans_style.java:2513 trans_style.java:2521
+#: trans_style.java:2529
 msgid "hotel"
 msgstr "hôtel"
 
-#: trans_style.java:2564 trans_style.java:2572 trans_style.java:2580
-#: trans_style.java:2588 trans_style.java:2596 trans_style.java:2604
-#: trans_style.java:2612 trans_style.java:2620
+#: trans_style.java:2595 trans_style.java:2603 trans_style.java:2611
+#: trans_style.java:2619 trans_style.java:2627 trans_style.java:2635
+#: trans_style.java:2643 trans_style.java:2651
 msgid "historic"
 msgstr "patrimoine"
 
-#: trans_style.java:2629 trans_style.java:2637 trans_style.java:2645
-#: trans_style.java:2693 trans_style.java:2701 trans_style.java:2798
-#: trans_style.java:2806
+#: trans_style.java:2660 trans_style.java:2668 trans_style.java:2676
+#: trans_style.java:2724 trans_style.java:2732 trans_style.java:2830
+#: trans_style.java:2838
 msgid "green"
 msgstr "espace vert"
 
-#: trans_style.java:2653
+#: trans_style.java:2684
 msgid "quarry"
 msgstr "carrière"
 
-#: trans_style.java:2661
+#: trans_style.java:2692
 msgid "landfill"
 msgstr "décharge"
 
-#: trans_style.java:2669 trans_style.java:2677
+#: trans_style.java:2700 trans_style.java:2708
 msgid "basin"
 msgstr "bassin"
 
-#: trans_style.java:2685
+#: trans_style.java:2716
 msgid "forest"
 msgstr "forêt"
 
-#: trans_style.java:2709 trans_presets.java:325
+#: trans_style.java:2740 trans_presets.java:325
 msgid "residential"
 msgstr "residential"
 
-#: trans_style.java:2717
+#: trans_style.java:2748
 msgid "farmyard"
 msgstr "bâtiments de ferme"
 
-#: trans_style.java:2726 trans_style.java:2734
+#: trans_style.java:2757 trans_style.java:2765
 msgid "retail"
 msgstr "commerce de proximité"
 
-#: trans_style.java:2742
+#: trans_style.java:2773
 msgid "industrial"
 msgstr "zone industrielle"
 
-#: trans_style.java:2750
+#: trans_style.java:2781
 msgid "brownfield"
 msgstr "terrain en friche"
 
-#: trans_style.java:2758
+#: trans_style.java:2789
 msgid "greenfield"
 msgstr "espace vert"
 
-#: trans_style.java:2766
+#: trans_style.java:2797
 msgid "railland"
 msgstr "zone ferroviaire"
 
-#: trans_style.java:2782 trans_style.java:2817 trans_style.java:2825
-#: trans_style.java:2833 trans_style.java:2841 trans_style.java:2849
+#: trans_style.java:2814 trans_style.java:2849 trans_style.java:2857
+#: trans_style.java:2865 trans_style.java:2873 trans_style.java:2881
 msgid "military"
 msgstr "zone militaire"
 
-#: trans_style.java:2790
+#: trans_style.java:2822
 msgid "cemetery"
 msgstr "cimetière"
 
-#: trans_style.java:2866
+#: trans_style.java:2898
 msgid "peak"
 msgstr "sommet"
 
-#: trans_style.java:2875
+#: trans_style.java:2907
 msgid "glacier"
 msgstr "glacier"
 
-#: trans_style.java:2883
+#: trans_style.java:2915
 msgid "volcano"
 msgstr "volcan"
 
-#: trans_style.java:2891 trans_style.java:2899 trans_style.java:2915
-#: trans_style.java:2979 trans_style.java:2987 trans_style.java:2995
+#: trans_style.java:2923 trans_style.java:2931 trans_style.java:2947
+#: trans_style.java:3011 trans_style.java:3019 trans_style.java:3027
 msgid "natural"
 msgstr "nature"
 
-#: trans_style.java:2907
+#: trans_style.java:2939
 msgid "scrub"
 msgstr "broussailles"
 
-#: trans_style.java:2923
+#: trans_style.java:2955
 msgid "heath"
 msgstr "santé"
 
-#: trans_style.java:2931
+#: trans_style.java:2963
 msgid "wood"
 msgstr "bois"
 
-#: trans_style.java:2939 trans_presets.java:2835
+#: trans_style.java:2971 trans_presets.java:2835
 msgid "marsh"
 msgstr "marais"
 
-#: trans_style.java:2963
+#: trans_style.java:2995
 msgid "mud"
 msgstr "terrain boueux/vase"
 
-#: trans_style.java:2971
+#: trans_style.java:3003
 msgid "beach"
 msgstr "plage"
 
-#: trans_style.java:3011 trans_style.java:3019 trans_style.java:3027
-#: trans_style.java:3035 trans_style.java:3043 trans_style.java:3051
-#: trans_style.java:3059 trans_style.java:3067
+#: trans_style.java:3043 trans_style.java:3051 trans_style.java:3059
+#: trans_style.java:3067 trans_style.java:3075 trans_style.java:3083
+#: trans_style.java:3091 trans_style.java:3099
 msgid "route"
 msgstr "route"
 
-#: trans_style.java:3077 trans_style.java:3085 trans_style.java:3093
-#: trans_style.java:3101 trans_style.java:3109
+#: trans_style.java:3109 trans_style.java:3117 trans_style.java:3125
+#: trans_style.java:3133 trans_style.java:3141
 msgid "boundary"
 msgstr "frontière"
 
-#: trans_style.java:3119 trans_style.java:3127 trans_style.java:3135
-#: trans_style.java:3143 trans_style.java:3151 trans_style.java:3159
-#: trans_style.java:3167 trans_style.java:3175 trans_style.java:3183
-#: trans_style.java:3191 trans_style.java:3199 trans_style.java:3207
-#: trans_style.java:3215 trans_style.java:3223 trans_style.java:3231
-#: trans_style.java:3239 trans_style.java:3247 trans_style.java:3255
-#: trans_style.java:3263 trans_style.java:3271 trans_style.java:3279
-#: trans_style.java:3287 trans_style.java:3295 trans_style.java:3303
-#: trans_style.java:3311 trans_style.java:3319 trans_style.java:3327
-#: trans_style.java:3335 trans_style.java:3343 trans_style.java:3351
-#: trans_style.java:3359 trans_style.java:3367 trans_style.java:3375
-#: trans_style.java:3383 trans_style.java:3391 trans_style.java:3399
-#: trans_style.java:3407 trans_style.java:3415 trans_style.java:3423
-#: trans_style.java:3431 trans_style.java:3439 trans_style.java:3447
-#: trans_style.java:3455 trans_style.java:3463 trans_presets.java:1655
+#: trans_style.java:3151 trans_style.java:3159 trans_style.java:3167
+#: trans_style.java:3175 trans_style.java:3183 trans_style.java:3191
+#: trans_style.java:3199 trans_style.java:3207 trans_style.java:3215
+#: trans_style.java:3223 trans_style.java:3231 trans_style.java:3239
+#: trans_style.java:3247 trans_style.java:3255 trans_style.java:3263
+#: trans_style.java:3271 trans_style.java:3279 trans_style.java:3287
+#: trans_style.java:3295 trans_style.java:3303 trans_style.java:3311
+#: trans_style.java:3319 trans_style.java:3327 trans_style.java:3335
+#: trans_style.java:3343 trans_style.java:3351 trans_style.java:3359
+#: trans_style.java:3367 trans_style.java:3375 trans_style.java:3383
+#: trans_style.java:3391 trans_style.java:3399 trans_style.java:3407
+#: trans_style.java:3415 trans_style.java:3423 trans_style.java:3431
+#: trans_style.java:3439 trans_style.java:3447 trans_style.java:3455
+#: trans_style.java:3463 trans_style.java:3471 trans_style.java:3479
+#: trans_style.java:3487 trans_style.java:3495 trans_presets.java:1655
 #: trans_presets.java:1664 trans_presets.java:1673 trans_presets.java:1682
 msgid "sport"
 msgstr "sport"
 
-#: trans_style.java:3518 trans_style.java:3526 trans_style.java:3534
-#: trans_style.java:3542 trans_style.java:3550 trans_style.java:3558
-#: trans_style.java:3566 trans_style.java:3574 trans_style.java:3582
-#: trans_style.java:3590 trans_style.java:3598 trans_style.java:3606
+#: trans_style.java:3556 trans_style.java:3564 trans_style.java:3572
+#: trans_style.java:3580 trans_style.java:3588 trans_style.java:3596
+#: trans_style.java:3604 trans_style.java:3612 trans_style.java:3620
+#: trans_style.java:3628 trans_style.java:3636 trans_style.java:3644
 msgid "place"
 msgstr "lieu"
 
-#: trans_style.java:3815 trans_style.java:3822 trans_style.java:3829
+#: trans_style.java:3755 trans_style.java:3762 trans_style.java:3769
 msgid "address"
 msgstr "adresse"
 
@@ -8007,11 +8095,11 @@ msgstr "restaurant sans nom"
 msgid "unusual tag combination"
 msgstr "combinaison d'étiquettes inhabituelle"
 
-#: trans_surveyor.java:27
+#: trans_surveyor.java:6
 msgid "Tunnel Start"
 msgstr "Début du tunnel"
 
-#: trans_surveyor.java:33 trans_presets.java:53 trans_presets.java:70
+#: trans_surveyor.java:12 trans_presets.java:53 trans_presets.java:70
 #: trans_presets.java:89 trans_presets.java:107 trans_presets.java:127
 #: trans_presets.java:142 trans_presets.java:162 trans_presets.java:181
 #: trans_presets.java:197 trans_presets.java:215 trans_presets.java:233
@@ -8024,67 +8112,67 @@ msgstr "Début du tunnel"
 msgid "Bridge"
 msgstr "Pont"
 
-#: trans_surveyor.java:37
+#: trans_surveyor.java:16
 msgid "Village/City"
 msgstr "Village/Ville"
 
-#: trans_surveyor.java:45 trans_presets.java:1241 trans_presets.java:1288
+#: trans_surveyor.java:24 trans_presets.java:1241 trans_presets.java:1288
 msgid "Parking"
 msgstr "Parking"
 
-#: trans_surveyor.java:50
+#: trans_surveyor.java:29
 msgid "One Way"
 msgstr "Sens unique"
 
-#: trans_surveyor.java:54
+#: trans_surveyor.java:33
 msgid "Church"
 msgstr "Eglise"
 
-#: trans_surveyor.java:59
+#: trans_surveyor.java:38
 msgid "Fuel Station"
 msgstr "Station essence"
 
-#: trans_surveyor.java:64 trans_presets.java:1413
+#: trans_surveyor.java:43 trans_presets.java:1413
 msgid "Hotel"
 msgstr "Hôtel"
 
-#: trans_surveyor.java:68 trans_presets.java:1463
+#: trans_surveyor.java:47 trans_presets.java:1463
 msgid "Restaurant"
 msgstr "Restaurant"
 
-#: trans_surveyor.java:73
+#: trans_surveyor.java:52
 msgid "Shopping"
 msgstr "Shopping"
 
-#: trans_surveyor.java:77
+#: trans_surveyor.java:56
 msgid "WC"
 msgstr "WC"
 
-#: trans_surveyor.java:81
+#: trans_surveyor.java:60
 msgid "Camping"
 msgstr "Camping"
 
-#: trans_surveyor.java:93 trans_presets.java:40
+#: trans_surveyor.java:72 trans_presets.java:40
 msgid "Motorway"
 msgstr "Autoroute"
 
-#: trans_surveyor.java:97 trans_presets.java:114
+#: trans_surveyor.java:76 trans_presets.java:114
 msgid "Primary"
 msgstr "Route primaire"
 
-#: trans_surveyor.java:101 trans_presets.java:148
+#: trans_surveyor.java:80 trans_presets.java:148
 msgid "Secondary"
 msgstr "Route secondaire"
 
-#: trans_surveyor.java:105 trans_presets.java:187
+#: trans_surveyor.java:84 trans_presets.java:187
 msgid "Unclassified"
 msgstr "Route mineure"
 
-#: trans_surveyor.java:109 trans_presets.java:206
+#: trans_surveyor.java:88 trans_presets.java:206
 msgid "Residential"
 msgstr "Rue résidentielle"
 
-#: trans_surveyor.java:114 trans_surveyor.java:118
+#: trans_surveyor.java:93 trans_surveyor.java:97
 msgid "Test"
 msgstr "Essai"
 
@@ -8388,50 +8476,11 @@ msgstr "oui"
 #: trans_presets.java:532 trans_presets.java:533 trans_presets.java:552
 #: trans_presets.java:553 trans_presets.java:554 trans_presets.java:573
 #: trans_presets.java:574 trans_presets.java:575 trans_presets.java:594
-#: trans_presets.java:595 trans_presets.java:596
-msgid "private"
-msgstr "privé"
-
-#: trans_presets.java:299 trans_presets.java:300 trans_presets.java:301
-#: trans_presets.java:302 trans_presets.java:303 trans_presets.java:304
-#: trans_presets.java:305 trans_presets.java:306 trans_presets.java:307
-#: trans_presets.java:308 trans_presets.java:309 trans_presets.java:489
-#: trans_presets.java:490 trans_presets.java:491 trans_presets.java:510
-#: trans_presets.java:511 trans_presets.java:512 trans_presets.java:531
-#: trans_presets.java:532 trans_presets.java:533 trans_presets.java:552
-#: trans_presets.java:553 trans_presets.java:554 trans_presets.java:573
-#: trans_presets.java:574 trans_presets.java:575 trans_presets.java:594
 #: trans_presets.java:595 trans_presets.java:596 trans_presets.java:609
 #: trans_presets.java:610 trans_presets.java:611 trans_presets.java:612
 #: trans_presets.java:613 trans_presets.java:614
 msgid "designated"
 msgstr "désigné"
-
-#: trans_presets.java:299 trans_presets.java:300 trans_presets.java:301
-#: trans_presets.java:302 trans_presets.java:303 trans_presets.java:304
-#: trans_presets.java:305 trans_presets.java:306 trans_presets.java:307
-#: trans_presets.java:308 trans_presets.java:309 trans_presets.java:489
-#: trans_presets.java:490 trans_presets.java:491 trans_presets.java:510
-#: trans_presets.java:511 trans_presets.java:512 trans_presets.java:531
-#: trans_presets.java:532 trans_presets.java:533 trans_presets.java:552
-#: trans_presets.java:553 trans_presets.java:554 trans_presets.java:573
-#: trans_presets.java:574 trans_presets.java:575 trans_presets.java:594
-#: trans_presets.java:595 trans_presets.java:596
-msgid "destination"
-msgstr "destination"
-
-#: trans_presets.java:299 trans_presets.java:300 trans_presets.java:301
-#: trans_presets.java:302 trans_presets.java:303 trans_presets.java:304
-#: trans_presets.java:305 trans_presets.java:306 trans_presets.java:307
-#: trans_presets.java:308 trans_presets.java:309 trans_presets.java:489
-#: trans_presets.java:490 trans_presets.java:491 trans_presets.java:510
-#: trans_presets.java:511 trans_presets.java:512 trans_presets.java:531
-#: trans_presets.java:532 trans_presets.java:533 trans_presets.java:552
-#: trans_presets.java:553 trans_presets.java:554 trans_presets.java:573
-#: trans_presets.java:574 trans_presets.java:575 trans_presets.java:594
-#: trans_presets.java:595 trans_presets.java:596
-msgid "permissive"
-msgstr "permis par le propriétaire"
 
 #: trans_presets.java:299 trans_presets.java:303 trans_presets.java:306
 #: trans_presets.java:489 trans_presets.java:490 trans_presets.java:491
@@ -10359,58 +10408,48 @@ msgid "Edit Skiing"
 msgstr "ski"
 
 #: trans_presets.java:1791
-#, fuzzy
 msgid "Piste type"
-msgstr "type loisir {0}"
+msgstr "Type de piste"
 
 #: trans_presets.java:1791
-#, fuzzy
 msgid "downhill"
-msgstr "Mairie"
+msgstr "de descente"
 
 #: trans_presets.java:1791
-#, fuzzy
 msgid "nordic"
-msgstr "nœud"
+msgstr "nordique"
 
 #: trans_presets.java:1791
-#, fuzzy
 msgid "snow_park"
-msgstr "news_papers"
+msgstr "snow park"
 
 #: trans_presets.java:1792
 msgid "Difficulty"
-msgstr ""
+msgstr "Difficulté"
 
 #: trans_presets.java:1792
-#, fuzzy
 msgid "novice"
-msgstr "piste verte"
+msgstr "verte"
 
 #: trans_presets.java:1792
-#, fuzzy
 msgid "easy"
-msgstr "Est"
+msgstr "bleue"
 
 #: trans_presets.java:1792
-#, fuzzy
 msgid "intermedia"
-msgstr "piste rouge"
+msgstr "rouge"
 
 #: trans_presets.java:1792
-#, fuzzy
 msgid "advance"
-msgstr "piste noire"
+msgstr "noire"
 
 #: trans_presets.java:1792
-#, fuzzy
 msgid "expert"
-msgstr "Reverter"
+msgstr "expert"
 
 #: trans_presets.java:1792
-#, fuzzy
 msgid "freeride"
-msgstr "hors piste"
+msgstr "jaune"
 
 #: trans_presets.java:1795
 msgid "Shooting"
@@ -11353,92 +11392,76 @@ msgid "Edit Baker"
 msgstr "Éditer une boulangerie"
 
 #: trans_presets.java:2289
-#, fuzzy
 msgid "Florist"
-msgstr "Forêt"
+msgstr "Fleuriste"
 
 #: trans_presets.java:2291
-#, fuzzy
 msgid "Edit Florist"
-msgstr "Modifier un gué"
+msgstr "Modifier fleuriste"
 
 #: trans_presets.java:2295
 msgid "Organic"
-msgstr ""
+msgstr "Boutique bio"
 
 #: trans_presets.java:2296
-#, fuzzy
 msgid "Edit Organic Shop"
-msgstr "Éditer une concession/réparation"
+msgstr "Modifier boutique bio"
 
 #: trans_presets.java:2300
 msgid "Beverages"
-msgstr ""
+msgstr "Boissons"
 
 #: trans_presets.java:2301
-#, fuzzy
 msgid "Edit Beverages  Shop"
-msgstr "Éditer une concession/réparation"
+msgstr "Mofiifer boutique de boissons"
 
 #: trans_presets.java:2305
-#, fuzzy
 msgid "Computer"
-msgstr "Pays"
+msgstr "Informatique"
 
 #: trans_presets.java:2306
-#, fuzzy
 msgid "Edit Computer Shop"
-msgstr "Éditer une concession/réparation"
+msgstr "Modifier magasin informatique"
 
 #: trans_presets.java:2310
-#, fuzzy
 msgid "Electronics"
-msgstr "la sélection"
+msgstr "Électronique"
 
 #: trans_presets.java:2311
-#, fuzzy
 msgid "Edit Electronics Shop"
-msgstr "Éditer une concession/réparation"
+msgstr "Modifier magasin d’électronique"
 
 #: trans_presets.java:2315
-#, fuzzy
 msgid "Hifi"
-msgstr "Chemin de randonnée"
+msgstr "Hi-Fi"
 
 #: trans_presets.java:2316
-#, fuzzy
 msgid "Edit Hifi Shop"
-msgstr "Éditer une concession/réparation"
+msgstr "Modifier boutique Hi-Fi"
 
 #: trans_presets.java:2320
-#, fuzzy
 msgid "Furniture"
-msgstr "nature"
+msgstr "Ameublement"
 
 #: trans_presets.java:2321
-#, fuzzy
 msgid "Edit Furniture Shop"
-msgstr "Éditer un magasin de sports d’extérieur"
+msgstr "Modifier magasin d’ameublement"
 
 #: trans_presets.java:2325
-#, fuzzy
 msgid "Garden Centre"
-msgstr "Centre artistique"
+msgstr "Jardinerie"
 
 #: trans_presets.java:2327
-#, fuzzy
 msgid "Edit Garden Centre"
-msgstr "Éditer un centre artistique"
+msgstr "Modifier jardinerie"
 
 #: trans_presets.java:2331
-#, fuzzy
 msgid "Hardware"
-msgstr "Coiffeur"
+msgstr "Quincaillerie"
 
 #: trans_presets.java:2333
-#, fuzzy
 msgid "Edit Hardware Store"
-msgstr "Éditer un cours d’eau étroit"
+msgstr "Modifier quincaillerie"
 
 #: trans_presets.java:2337
 msgid "Do-it-yourself-store"
@@ -11449,14 +11472,12 @@ msgid "Edit Do-it-yourself-store"
 msgstr "Éditer un magasin de bricolage"
 
 #: trans_presets.java:2343
-#, fuzzy
 msgid "Stationery"
-msgstr "Station"
+msgstr "Papeterie"
 
 #: trans_presets.java:2344
-#, fuzzy
 msgid "Edit Stationery Shop"
-msgstr "Éditer la station"
+msgstr "Modifier papeterie"
 
 #: trans_presets.java:2348
 msgid "Hairdresser"
@@ -11467,34 +11488,28 @@ msgid "Edit Hairdresser"
 msgstr "Editez un Coiffeur"
 
 #: trans_presets.java:2353
-#, fuzzy
 msgid "Shoes"
-msgstr "Magasins"
+msgstr "Magasin de chaussures"
 
 #: trans_presets.java:2354
-#, fuzzy
 msgid "Edit Shoe Shop"
-msgstr "Éditer une concession/réparation"
+msgstr "Modifier magasin de chaussures"
 
 #: trans_presets.java:2358
-#, fuzzy
 msgid "Toys"
-msgstr "jouets"
+msgstr "Jouets"
 
 #: trans_presets.java:2359
-#, fuzzy
 msgid "Edit Toy Shop"
-msgstr "Éditer une concession/réparation"
+msgstr "Modifier magasin de jouets"
 
 #: trans_presets.java:2363
-#, fuzzy
 msgid "Video"
-msgstr "Affichage"
+msgstr "Vidéoclub"
 
 #: trans_presets.java:2364
-#, fuzzy
 msgid "Edit Video Shop"
-msgstr "Éditer un magasin de vélo"
+msgstr "Modifier vidéoclub"
 
 #: trans_presets.java:2368
 msgid "Dry Cleaning"
@@ -11521,24 +11536,20 @@ msgid "Edit Outdoor Shop"
 msgstr "Éditer un magasin de sports d’extérieur"
 
 #: trans_presets.java:2386
-#, fuzzy
 msgid "sports"
-msgstr "sport"
+msgstr "Magasin de sport"
 
 #: trans_presets.java:2387
-#, fuzzy
 msgid "Edit Sports Shop"
-msgstr "Éditer une concession/réparation"
+msgstr "Modifier magasin de sport"
 
 #: trans_presets.java:2391
-#, fuzzy
 msgid "optician"
-msgstr "Options"
+msgstr "Opticien"
 
 #: trans_presets.java:2392
-#, fuzzy
 msgid "Edit Optician"
-msgstr "Éditer un Bowling"
+msgstr "Modifier opticien"
 
 #: trans_presets.java:2398
 msgid "Cash"
@@ -12172,37 +12183,8 @@ msgstr "Falaise"
 msgid "Edit Cliff"
 msgstr "Éditer une falaise"
 
-#~ msgid "Open waypoints file"
-#~ msgstr "Ouvrir un fichier de cheminsF"
-
-#~ msgid "Open a waypoints file."
-#~ msgstr "Ouvrir un fichier de chemin"
-
-#~ msgid "Data error: lat value \"{0}\" is out of bounds."
-#~ msgstr ""
-#~ "Erreur de données : La valeur de latitude \\\"{0}\\\" est hors limite."
-
-#~ msgid "Data error: lon value \"{0}\" is out of bounds."
-#~ msgstr ""
-#~ "Erreur de données : La valeur de longitude \\\"{0}\\\" est hors limite."
-
-#~ msgid "SurveyorPlugin depends on LiveGpsPlugin!"
-#~ msgstr "SurveyorPlugin dépend de LiveGpsPlugin !"
-
-#~ msgid "LiveGpsPlugin not found, please install and activate."
-#~ msgstr "LiveGpsPlugin non trouvé, merci de l’installer et de l’activer."
-
-#~ msgid "SurveyorPlugin is disabled for the moment"
-#~ msgstr "SurveyorPlugin est désactivé pour le moment"
-
-#~ msgid "SurveyorPlugin"
-#~ msgstr "SurveyorPlugin"
-
-#~ msgid "Version: {0}<br>Last change at {1}"
-#~ msgstr "Version: {0}<br>Dernier changement le {1}"
-
-#~ msgid "Version {0} - Last change at {1}"
-#~ msgstr "Version {0} - Dernier changement le {1}"
+#~ msgid "bus"
+#~ msgstr "bus"
 
 #~ msgid "URL from www.openstreetmap.org"
 #~ msgstr "URL à partir de www.openstreetmap.org"
@@ -12291,6 +12273,9 @@ msgstr "Éditer une falaise"
 #~ "Mettre en évidence le membre de la ligne actuelle comme une sélection de "
 #~ "JOSM"
 
+#~ msgid "Select this relation"
+#~ msgstr "Sélectionner cette relation"
+
 #~ msgid "Selection: %d way(s) and %d node(s)"
 #~ msgstr "Sélection : %d chemin(s) et %d noeud(s)"
 
@@ -12313,6 +12298,9 @@ msgstr "Éditer une falaise"
 #~ msgid "JOSM - Java OpenStreetMap Editor"
 #~ msgstr "JOSM - Editeur OpenStreetMap Java"
 
+#~ msgid "Upload {0} {1} (id: {2}) {3}% {4}/{5} ({6} left)..."
+#~ msgstr "Envoi {0} {1} (id: {2}) {3}% {4}/{5} ({6} restant)..."
+
 #~ msgid ""
 #~ "The plugin {0} seem to be broken or could not be downloaded automatically."
 #~ msgstr ""
@@ -12334,6 +12322,21 @@ msgstr "Éditer une falaise"
 #~ msgid "Open Visible ..."
 #~ msgstr "Open Visible ..."
 
+#~ msgid "Version: {0}<br>Last change at {1}"
+#~ msgstr "Version: {0}<br>Dernier changement le {1}"
+
+#~ msgid "SurveyorPlugin depends on LiveGpsPlugin!"
+#~ msgstr "SurveyorPlugin dépend de LiveGpsPlugin !"
+
+#~ msgid "LiveGpsPlugin not found, please install and activate."
+#~ msgstr "LiveGpsPlugin non trouvé, merci de l’installer et de l’activer."
+
+#~ msgid "SurveyorPlugin is disabled for the moment"
+#~ msgstr "SurveyorPlugin est désactivé pour le moment"
+
+#~ msgid "SurveyorPlugin"
+#~ msgstr "SurveyorPlugin"
+
 #~ msgid "Surveyor ..."
 #~ msgstr "Surveyor ..."
 
@@ -12343,6 +12346,9 @@ msgstr "Éditer une falaise"
 #~ msgstr ""
 #~ "Un validateur des données OSM qui vérifie les erreurs communes commises "
 #~ "par les utilisateurs et les programmes d’édition."
+
+#~ msgid "Version {0} - Last change at {1}"
+#~ msgstr "Version {0} - Dernier changement le {1}"
 
 #~ msgid "Duplicated nodes."
 #~ msgstr "Nœuds dupliqués."
@@ -12359,8 +12365,22 @@ msgstr "Éditer une falaise"
 #~ msgid "Untagged, empty, and one node ways."
 #~ msgstr "Chemins vides, sans étiquette ou avec un seul nœud."
 
+#~ msgid "Open waypoints file"
+#~ msgstr "Ouvrir un fichier de cheminsF"
+
+#~ msgid "Open a waypoints file."
+#~ msgstr "Ouvrir un fichier de chemin"
+
 #~ msgid "Rectified Image ..."
 #~ msgstr "Image réctifiée..."
+
+#~ msgid "Data error: lat value \"{0}\" is out of bounds."
+#~ msgstr ""
+#~ "Erreur de données : La valeur de latitude \\\"{0}\\\" est hors limite."
+
+#~ msgid "Data error: lon value \"{0}\" is out of bounds."
+#~ msgstr ""
+#~ "Erreur de données : La valeur de longitude \\\"{0}\\\" est hors limite."
 
 #~ msgid "Development version. Unknown revision."
 #~ msgstr "Version de développement. Révision inconnue."

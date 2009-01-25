@@ -48,6 +48,7 @@
   <target name="build" depends="josm.pot">
     <copy file="i18n.properties" todir="build/org/openstreetmap/josm" />
 
+    <ant target="build-lang"><property name="language" value="bg"/></ant>
     <ant target="build-lang"><property name="language" value="cs"/></ant>
     <ant target="build-lang"><property name="language" value="da"/></ant>
     <ant target="build-lang"><property name="language" value="de"/></ant>

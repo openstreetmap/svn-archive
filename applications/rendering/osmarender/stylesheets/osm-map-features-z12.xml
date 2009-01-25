@@ -898,7 +898,7 @@
 		</rule>
 		
 		<!-- Airfields and airports -->
-		<rule e="node" k="aeroway" v="airport">
+		<rule e="node|way" k="aeroway" v="airport">
 			<symbol ref="airport" position="center"/>
 		</rule>
 		
@@ -971,16 +971,16 @@
 		<!-- Place names  -->
 		<rule e="node" k="osmarender:renderName" v="~|yes" layer="5">
 			<rule e="node" k="place" v="island" layer="5">
-				<text k="name" class="place-caption island-caption" layer="5"/>
+				<caption k="name" class="place-caption island-caption" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="county" layer="5">
-				<text k="name" class="place-caption county-caption" layer="5"/>
+				<caption k="name" class="place-caption county-caption" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="city" layer="5">
-				<text k="name" class="place-caption city-caption" layer="5"/>
+				<caption k="name" class="place-caption city-caption" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="town" layer="5">
-				<text k="name" class="place-caption town-caption" layer="5"/>
+				<caption k="name" class="place-caption town-caption" layer="5"/>
 			</rule>
 		</rule>
 		

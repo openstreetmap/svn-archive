@@ -1,4 +1,6 @@
+#!/usr/bin/perl
 
+# TODO: please add a short help to this File
 
 my $BlankFileSize = 540;
 my $dir = "html/Samples";

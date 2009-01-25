@@ -994,15 +994,15 @@
 		</rule>
 		
 		<!-- Amenities -->
-		<rule e="node" k="amenity" v="hospital">
+		<rule e="node|way" k="amenity" v="hospital">
 			<symbol ref="hospital" position="center"/>
 		</rule>
 		
 		<!-- Airfields and airports -->
-		<rule e="node" k="aeroway" v="aerodrome">
+		<rule e="node|way" k="aeroway" v="aerodrome">
 			<symbol ref="airport" position="center"/>
 		</rule>
-		<rule e="node" k="aeroway" v="airport">
+		<rule e="node|way" k="aeroway" v="airport">
 			<symbol ref="airport" position="center"/>
 		</rule>
 		
@@ -1076,27 +1076,27 @@
 		</rule>
 		
 		<!-- Place names  -->
-		<rule e="node" k="osmarender:renderName" v="~|yes" layer="5">
+		<rule e="node|way" k="osmarender:renderName" v="~|yes" layer="5">
 			<rule e="node" k="place" v="island" layer="5">
-				<text k="name" class="place-caption island-caption" layer="5"/>
+				<caption k="name" class="place-caption island-caption" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="islet" layer="5">
-				<text k="name" class="place-caption islet-caption" layer="5"/>
+				<caption k="name" class="place-caption islet-caption" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="city" layer="5">
-				<text k="name" class="place-caption city-caption" layer="5"/>
+				<caption k="name" class="place-caption city-caption" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="town" layer="5">
-				<text k="name" class="place-caption town-caption" layer="5"/>
+				<caption k="name" class="place-caption town-caption" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="village" layer="5">
-				<text k="name" class="place-caption village-caption" layer="5"/>
+				<caption k="name" class="place-caption village-caption" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="suburb" layer="5">
-				<text k="name" class="place-caption suburb-caption" layer="5"/>
+				<caption k="name" class="place-caption suburb-caption" layer="5"/>
 			</rule>
-			<rule e="node" k="aeroway" v="airport" layer="5">
-				<text k="name" class="aeroway-airport-caption" dy="-15px" layer="5"/>
+			<rule e="node|way" k="aeroway" v="airport" layer="5">
+				<caption k="name" class="aeroway-airport-caption" dy="-15px" layer="5"/>
 			</rule>
 		</rule>
 		

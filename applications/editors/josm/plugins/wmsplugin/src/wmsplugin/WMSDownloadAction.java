@@ -16,6 +16,7 @@ public class WMSDownloadAction extends JosmAction {
 
     public WMSDownloadAction(WMSInfo info) {
         super(info.name, "wmsmenu", tr("Download WMS tile from {0}",info.name), null, false);
+        putValue("toolbar", "wms_" + info.name);
         this.info = info;
     }
 

@@ -23,10 +23,7 @@ clean:
 	dh_testroot
 	rm -f build-stamp
 
-	dh_clean -k
-	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
-
 	dh_clean
 
 install: build

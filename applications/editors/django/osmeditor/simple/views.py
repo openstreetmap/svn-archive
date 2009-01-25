@@ -54,6 +54,8 @@ def edit_osm_obj(type, id, post):
         for nd in xml.getElementsByTagName("nd"):
             nd = SubElement(parent, "nd", {'ref': nd.getAttribute("ref")})
     
+    else:
+        raise Exception("%s not supported" % type)
     changed = False
     for key in filter(lambda x: x.startswith("delete_"), post.keys()):
         k = key.replace("delete_key_", "")
@@ -69,7 +71,6 @@ def edit_osm_obj(type, id, post):
             changed = True
             obj['tags'][k] = post[key]
    
-    print post.keys()
     for key in filter(lambda x: x.startswith("new_key_"), post.keys()):
         new_id = key.replace("new_key_", "")
         kname = "new_key_%s" % new_id

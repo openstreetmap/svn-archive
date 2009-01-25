@@ -1,4 +1,3 @@
-
 #!/bin/sh
 # This script replaces a make ; make install for creation of the debian package.
 # Maybe you can also use it to install the stuff on your system.

@@ -302,6 +302,29 @@ struct gpsNewStruct {
   struct gpsNewStruct *dptr;
 } gpsTrack[18000], *gpsNew = gpsTrack;
 
+// Return the basefilename for saving .osm and .gpx files
+void getBaseFilename(char* basename, gpsNewStruct* first) {
+  char VehicleName[80];
+  #define M(v) Vehicle == v ## R ? #v :
+  sprintf(VehicleName, "%s", RESTRICTIONS NULL);
+  #undef M
+
+  if (first) {
+    sprintf (basename, "%s%.2s%.2s%.2s-%.6s-%s", docPrefix,
+	     first->fix.date + 4, first->fix.date + 2, first->fix.date,
+	     first->fix.tm, VehicleName);
+  } else {
+    // get time from computer if no gps traces
+#ifdef _WIN32_WCE
+    SYSTEMTIME t;
+    GetSystemTime(&t);
+    sprintf (basename, "%s%02d%02d%02d-%02d%02d%02d-%s", docPrefix,
+	     t.wYear % 100, t.wMonth, t.wDay,
+	     t.wHour, t.wMinute, t.wSecond, VehicleName);
+#endif
+  }
+}
+
 gpsNewStruct *FlushGpx (void)
 {
   struct gpsNewStruct *a, *best, *first = NULL;
@@ -319,9 +342,10 @@ gpsNewStruct *FlushGpx (void)
     first = best;
     best = a;
   }
-  char fname[80];
-  sprintf (fname, "%s%.2s%.2s%.2s-%.6s.gpx", docPrefix, first->fix.date + 4,
-    first->fix.date + 2, first->fix.date, first->fix.tm);
+  
+  char bname[80], fname[80];
+  getBaseFilename(bname, first);
+  sprintf (fname, "%s.gpx", bname);
   FILE *gpx = fopen (fname, "wb");
   if (!gpx) return first;
   fprintf (gpx, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
@@ -3175,19 +3199,16 @@ int WINAPI WinMain(
   }
   gpsNewStruct *first = FlushGpx ();
   if (newWayCnt > 0) {
-    char newWayFileName[80];
-    if (first) sprintf (newWayFileName, "%s%.2s%.2s%.2s-%.6s.osm", docPrefix,
-      first->fix.date + 4, first->fix.date + 2, first->fix.date,
-      first->fix.tm);
-    else {
-      // get time from computer if no gps traces
-      SYSTEMTIME t;
-      GetSystemTime(&t);
-      sprintf (newWayFileName, "%s%02d%02d%02d-%02d%02d%02d.osm", docPrefix,
-	       t.wYear % 100, t.wMonth, t.wDay,
-	       t.wHour, t.wMinute, t.wSecond);
-    }
-    FILE *newWayFile = fopen (newWayFileName, "w");
+    char VehicleName[80];
+    #define M(v) Vehicle == v ## R ? #v :
+    sprintf(VehicleName, "%s", RESTRICTIONS NULL);
+    #undef M
+
+    char bname[80], fname[80];
+    getBaseFilename(bname, first);
+    sprintf (fname, "%s.osm", bname);
+
+    FILE *newWayFile = fopen (fname, "w");
     if (newWayFile) {
       fprintf (newWayFile, "<?xml version='1.0' encoding='UTF-8'?>\n"
                            "<osm version='0.5' generator='gosmore'>\n");

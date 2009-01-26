@@ -1,28 +1,32 @@
 {% extends "base.html" %}
 {% block title %}{{obj.type.title}} {{ obj.id }}{% endblock %}
 {% block body %}
-<h2>{{ obj.type.title }} {{ obj.id }}</h2>
-
-<p>
-  Last edited {{ obj.timestamp }}
-</p>  
+{% block summary %}
+<h2><a href="{{ obj.uri }}">{{ obj.type.title }} {{ obj.id }}</a>: {% if obj.name %}{{ obj.name }}{% endif %}</h2>
+<p class="meta">
+  Last edited {{ obj.timestamp }} by <a href="{{ obj.user.uri }}">{{ obj.user.id }}</a>
+</p>
+{% endblock %}
 <form method="POST" action="" class="foo">
 <input type="hidden" name="id" value="{{ obj.id }}" />
 <input type="hidden" name="type" value="{{ obj.type }}" />
-<input type="hidden" name="timestamp" value="{{ obj.timestamp }}" />
+<input type="hidden" name="timestamp" value="{{ obj.timestamp }}" /> <!-- is this needed in the form? -->
 <fieldset>
 <ul class="fields varying">
 {% for k, v in obj.tags.items %}
   <li>
         <label for="key_{{k}}">{{ k }}</label>
         <input name="key_{{k}}" id="key_{{k}}" value="{{ v }}" />
-        <input type="checkbox" name="delete_key_{{k}}" id="delete_key_{{k}}" value="delete" /><label class="delete" for="delete_key_{{k}}">Delete?</label>
+        <input type="checkbox" name="delete_key_{{k}}" id="delete_key_{{k}}" value="delete" onChange='javascript:document.getElementById("key_{{k}}").className=(this.checked?"deleting":"")'/><label class="delete" for="delete_key_{{k}}">Delete?</label>
     </li>
 {% endfor %}
 </ul>
 </fieldset>
+<p class="instruction" id="add_tags">
+<a href="#" onclick='javascript:document.getElementById("new_keys").style.display="block";document.getElementById("add_tags").style.visibility="hidden";return false'>Add more tags…</a>
+</p>
 <fieldset id="new_keys">
-<a href="#" onclick='document.getElementById("new_keys").style.display="";return false'>Add more tags…</a>
+<legend>New tags</legend>
 <ol class="fields">
   <li>
     <label for="new_key_1">Key: </label><input name="new_key_1" id="new_key_1" />
@@ -51,7 +55,7 @@
 <h3>Parent to:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
 <ul class="children">
 {% for ref in obj.child %}
-  <li class="node"><a href="/{{obj.childtype}}/{{ref}}">{{ref}}</a></li> <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
+  <li class="{{obj.childtype}}"><a href="/{{obj.childtype}}/{{ref}}">{{ref}}</a></li> <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
 <!-- TODO: add delete checkboxes to these children -->
 {% endfor %}
 </ul>

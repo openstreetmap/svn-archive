@@ -11,6 +11,10 @@ my $comment = 0;
 # This is a simple conversion and in no way a complete XML parser
 # but it works with a default Perl installation
 
+# Print a header to write valid Java code.  No line break,
+# so that the input and output line numbers will match.
+print "class trans_surveyor { void tr(String s){} void f() {";
+
 while(my $line = <>)
 {
   chomp($line);
@@ -24,10 +28,12 @@ while(my $line = <>)
   }
   elsif($line =~ /<button label=\"(.*?)\"/)
   {
-    print "tr(\"$1\") // $_\n";
+    print "tr(\"$1\"); // $line\n";
   }
   else
   {
     print "/* $line */\n";
   }
 }
+
+print "}}\n";

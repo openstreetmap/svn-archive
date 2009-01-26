@@ -61,6 +61,14 @@ def edit_osm_obj(type, id, post):
         for nd in xml.getElementsByTagName("nd"):
             nd = SubElement(parent, "nd", {'ref': nd.getAttribute("ref")})
     
+    elif type == "relation":
+        parent = SubElement(osm, type, {'id':id, })
+        for m in xml.getElementsByTagName("member"):
+            member = SubElement(parent, "member", {'type': nd.getAttribute("type"),
+                                                   'id': nd.getAttribute("id"),
+                                                   'role': nd.getAttribute("role")
+                                                  }
+                               )
     else:
         raise Exception("%s not supported" % type)
     changed = False

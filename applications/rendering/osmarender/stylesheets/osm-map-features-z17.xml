@@ -3764,6 +3764,7 @@
 
 			.caption-casing {
 			fill: white;
+			stroke-opacity: 0.6;
 			stroke: white;
 			font-family: "DejaVu Sans";
 			font-weight: bold;

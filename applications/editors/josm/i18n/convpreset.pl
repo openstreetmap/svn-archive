@@ -12,19 +12,23 @@ my $comment = 0;
 # This is a simple conversion and in no way a complete XML parser
 # but it works with a default Perl installation
 
+# Print a header to write valid Java code.  No line break,
+# so that the input and output line numbers will match.
+print "class trans_preset { void tr(String s){} void f() {";
+
 while(my $line = <>)
 {
   chomp($line);
   if($line =~ /<item\s+name=(".*?")/)
   {
-    print "tr($1) /* item $item */\n";
+    print "tr($1); /* item $item */\n";
     $item = $group ? "$group$1" : $1;
     $item =~ s/""/\//;
   }
   elsif($line =~ /<group\s+name=(".*?")/)
   {
     $group = $1;
-    print "tr($1) /* group $group */\n";
+    print "tr($1); /* group $group */\n";
   }
   elsif($line =~ /<label\s+text=" "/)
   {
@@ -32,38 +36,38 @@ while(my $line = <>)
   }
   elsif($line =~ /<label\s+text=(".*?")/)
   {
-    print "tr($1) /* item $item label $1 */\n";
+    print "tr($1); /* item $item label $1 */\n";
   }
   elsif($line =~ /<text.*text=(".*?")/)
   {
     my $n = $1;
-    print "tr($n) /* item $item text $n */\n";
+    print "tr($n); /* item $item text $n */\n";
   }
   elsif($line =~ /<check.*text=(".*?")/)
   {
     my $n = $1;
-    print "tr($n) /* item $item check $n */\n";
+    print "tr($n); /* item $item check $n */\n";
   }
   # first handle display values
   elsif($line =~ /<combo.*text=(".*?").*display_values="(.*?)"/)
   {
     my ($n,$vals) = ($1,$2);
-    print "tr($n) /* item $item combo $n */";
+    print "tr($n); /* item $item combo $n */";
     foreach my $val (split ",",$vals)
     {
       next if $val =~ /^[0-9-]+$/; # search for non-numbers
-      print " tr(\"$val\")";
+      print " tr(\"$val\");";
     }
     print "\n";
   }
   elsif($line =~ /<combo.*text=(".*?").*values="(.*?)"/)
   {
     my ($n,$vals) = ($1,$2);
-    print "tr($n) /* item $item combo $n */";
+    print "tr($n); /* item $item combo $n */";
     foreach my $val (split ",",$vals)
     {
       next if $val =~ /^[0-9-]+$/; # search for non-numbers
-      print " tr(\"$val\")";
+      print " tr(\"$val\");";
     }
     print "\n";
   }
@@ -99,3 +103,5 @@ while(my $line = <>)
   $comment = 1 if($line =~ /<!--/);
   $comment = 0 if($line =~ /-->/);
 }
+
+print "}}\n";

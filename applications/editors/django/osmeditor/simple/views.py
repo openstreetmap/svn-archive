@@ -41,6 +41,9 @@ def get_osm_obj(type, id, doc=None):
     obj['tags'] = {}
     for tag in parent.getElementsByTagName("tag"):
         obj['tags'][tag.getAttribute("k")] = tag.getAttribute("v")
+    obj['user'] = { 'id': parent.getAttribute("user") , 'uri': settings.OSM_USER % parent.getAttribute("user") }
+    obj['uri'] = settings.OSM_BROWSE % (type.lower(),id)
+    obj['name'] = obj['tags']['name'] or None; # not sure if this convenience key is worthwhile ..
     return obj 
 
 def edit_osm_obj(type, id, post):

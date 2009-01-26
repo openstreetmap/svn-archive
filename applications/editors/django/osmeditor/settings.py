@@ -79,4 +79,7 @@ INSTALLED_APPS = (
     'simple'
 )
 
+#OSM_API = "http://main.dev.openstreetmap.org/api/0.5"
 OSM_API = "http://openstreetmap.org/api/0.5"
+OSM_BROWSE = "http://openstreetmap.org/browse/%s/%s" # maybe it's not a good idea to put interpolation points in here
+OSM_USER = "http://openstreetmap.org/user/%s"

@@ -2,7 +2,7 @@
 {% block title %}{{obj.type.title}} {{ obj.id }}{% endblock %}
 {% block body %}
 {% block summary %}
-<h2><a href="{{ obj.uri }}">{{ obj.type.title }} {{ obj.id }}</a>: {% if obj.name %}{{ obj.name }}{% endif %}</h2>
+<h2><a href="{{ obj.uri }}">{{ obj.type.title }} {{ obj.id }}</a>{% if obj.tags.name %}: {{ obj.tags.name }}{% endif %}</h2>
 <p class="meta">
   Last edited {{ obj.timestamp }} by <a href="{{ obj.user.uri }}">{{ obj.user.id }}</a>
 </p>

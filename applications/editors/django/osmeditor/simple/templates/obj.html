@@ -40,7 +40,12 @@
     <label for="new_key_3">Key: </label><input name="new_key_3" id="new_key_3" />
     <label for="new_value_3"><input name="new_value_3" id="new_value_3" /></td>
   </li>  
-</ol>  
+</ol>
+<!-- 
+<p class="hint resource">
+<a href="http://wiki.openstreetmap.org/wiki/Map_Features">Map features</a>
+</p>
+-->
 </fieldset>
 <fieldset>
 <legend>Credentials</legend>
@@ -52,10 +57,10 @@
 <input type="submit" value="Change" />
 </form>
 {% if obj.child %}
-<h3>Parent to:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
+<h3>Contains object{% ifnotequal obj.child_count 1 %}s{% endifnotequal %}:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
 <ul class="children">
-{% for ref in obj.child %}
-  <li class="{{obj.childtype}}"><a href="/{{obj.childtype}}/{{ref}}">{{ref}}</a></li> <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
+{% for c in obj.child %}
+  <li class="{{c.type}}">{% if c.role %}{{c.role}}: {% endif %}<a href="/{{c.type}}/{{c.ref}}"><span class="redundant">{{c.type|lower}} </span>{{c.ref}}</a></li> <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
 <!-- TODO: add delete checkboxes to these children -->
 {% endfor %}
 </ul>

@@ -28,20 +28,32 @@ def get_osm_obj(type, id, doc=None):
         doc = get_xml(type, id)
     parent = doc.getElementsByTagName(type)[0]
     obj['timestamp'] = parent.getAttribute("timestamp")
+    obj['child'] = [] #everyone now gets 0 or more children
     if type == "node":
         obj['lat'] = parent.getAttribute("lat")
         obj['lon'] = parent.getAttribute("lon")
     elif type == "way":
-        obj['child'] = []
-        obj['childtype'] = "node" #FIXME: there's probably a nicer place to assign this
         for node in parent.getElementsByTagName("nd"):
-            obj['child'].append(node.getAttribute("ref"))
+            obj['child'].append( {'ref': node.getAttribute("ref"),
+                                  'type':'node'
+                                 } )
+    elif type == "relation":
+        for member in parent.getElementsByTagName("member"):
+            obj['child'].append( { 'ref': member.getAttribute("ref"),
+                                   'type': member.getAttribute("type"),
+                                   'role': member.getAttribute("role")
+                                 } )
+    obj['child_count'] = len(obj['child'])
     obj['id'] = int(id)
     obj['type'] = type
     obj['tags'] = {}
     for tag in parent.getElementsByTagName("tag"):
         obj['tags'][tag.getAttribute("k")] = tag.getAttribute("v")
-    obj['user'] = { 'id': parent.getAttribute("user") , 'uri': settings.OSM_USER % parent.getAttribute("user") }
+    #hmm, not sure how the UI should manage the created_by tag
+    #obj['tags']['created_by'] = "%s (%s)" % (settings.APP_NAME,settings.APP_URI)
+    obj['user'] = { 'id': parent.getAttribute("user") ,
+                    'uri': settings.OSM_USER % parent.getAttribute("user") 
+                  }
     obj['uri'] = settings.OSM_BROWSE % (type.lower(),id)
     return obj 
 

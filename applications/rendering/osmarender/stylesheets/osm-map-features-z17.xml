@@ -2875,6 +2875,20 @@
 			</rule>
 		</rule>
 
+		<!-- House numbers -->
+		<rule e="node|way" k="addr:housenumber" v="*" layer="5">
+			<rule e="node|way" k="power|tourism|amenity|man_made|shop|historic" v="tower|hotel|hostel|information|camp_site|hospital|doctor|pharmacy|postoffice|pub|cafe|cinema|theatre|windmill|place_of_worship|parking|school|university|college|supermarket|organic|shelter|library|fire_station|fuel|recycling|toilets|drinking_water|bank|atm|museum" layer="5">
+				<!-- circle r="0.9px" class="housenumber-node" transform="translate(1.6,0)" layer="5"/ testweise raus ... -->
+				<caption k="addr:housenumber" startOffset="50%" class="housenumber-casing"  dy="0.3px" dx="3.2px" layer="5"/>
+				<caption k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>
+			</rule>
+			<else>
+				<!-- circle r="0.9px" class="housenumber-node" layer="5"/ -->
+				<caption k="addr:housenumber" startOffset="50%" class="housenumber-casing"  dy="0.3px" layer="5"/>
+				<caption k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" layer="5"/>
+			</else>
+		</rule>
+
 		<!-- Place names  -->
 		<rule e="node|way" k="osmarender:renderName" v="~|yes" layer="5">
 			<rule e="node|way" k="aeroway" v="gate" layer="5">
@@ -2968,20 +2982,6 @@
 				<caption k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
 				<caption k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
 			</rule>
-		</rule>
-
-		<!-- House numbers -->
-		<rule e="node|way" k="addr:housenumber" v="*" layer="5">
-			<rule e="node|way" k="power|tourism|amenity|man_made|shop|historic" v="tower|hotel|hostel|information|camp_site|hospital|doctor|pharmacy|postoffice|pub|cafe|cinema|theatre|windmill|place_of_worship|parking|school|university|college|supermarket|organic|shelter|library|fire_station|fuel|recycling|toilets|drinking_water|bank|atm|museum" layer="5">
-				<!-- circle r="0.9px" class="housenumber-node" transform="translate(1.6,0)" layer="5"/ testweise raus ... -->
-				<caption k="addr:housenumber" startOffset="50%" class="housenumber-casing"  dy="0.3px" dx="3.2px" layer="5"/>
-				<caption k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>
-			</rule>
-			<else>
-				<!-- circle r="0.9px" class="housenumber-node" layer="5"/ -->
-				<caption k="addr:housenumber" startOffset="50%" class="housenumber-casing"  dy="0.3px" layer="5"/>
-				<caption k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" layer="5"/>
-			</else>
 		</rule>
 
 		<!-- Area captions -->
@@ -3830,7 +3830,7 @@
 			}
 
 			.housenumber-casing {
-			stroke-width: 0.3px;
+			stroke-width: 0.4px;
 			fill: #ffffff;
 			stroke: #ffffff;
 			stroke-opacity: 0.6;

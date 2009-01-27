@@ -2468,20 +2468,34 @@
 			<symbol ref="playground" position="center"/>
 		</rule>
 
-		<!-- Sport symbols -->
-		<rule e="node|way" k="sport" v="soccer">
+		<!-- Sport symbols with border on nodes -->
+		<rule e="node" k="sport" v="soccer">
 			<symbol ref="soccer" position="center"/>
 		</rule>
-		<rule e="node|way" k="sport" v="handball">
+		<rule e="node" k="sport" v="handball">
 			<symbol ref="handball" position="center"/>
 		</rule>
-		<rule e="node|way" k="sport" v="tennis">
+		<rule e="node" k="sport" v="tennis">
 			<symbol ref="tennis" position="center"/>
 		</rule>
-		<rule e="node|way" k="sport" v="swimming">
+		<rule e="node" k="sport" v="swimming">
 			<symbol ref="swimming" position="center"/>
 		</rule>
-
+		
+		<!-- Sport symbols without borders on ways -->
+		<rule e="way" k="sport" v="soccer">
+			<symbol ref="soccer-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="handball">
+			<symbol ref="handball-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="tennis">
+			<symbol ref="tennis-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="swimming">
+			<symbol ref="swimming-borderless" position="center"/>
+		</rule>
+		
 		<!-- Historic symbols -->
 		<rule e="node" k="historic" v="*">
 			<rule e="node" k="historic" v="museum">

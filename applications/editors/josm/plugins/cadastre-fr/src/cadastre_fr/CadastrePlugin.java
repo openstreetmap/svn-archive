@@ -63,6 +63,7 @@ import org.openstreetmap.josm.data.projection.Lambert;
  *                 - new possible grab factor of 100 square meters fixed size                     
  *                 - minor fixes due to changes in JOSM core classes
  *                 - first draft of raster image support 
+ * 0.9 draft       - grab vectorized full commune bbox and save it in cache
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "0.8";

@@ -59,8 +59,8 @@ public class MenuActionLoadFromCache extends JosmAction {
             }
             // create layer and load cache
             WMSLayer wmsLayer = new WMSLayer("", "", Integer.parseInt(ext)-1);
-            wmsLayer.getCacheControl().loadCache(file, Lambert.layoutZone);
-            Main.main.addLayer(wmsLayer);
+            if (wmsLayer.getCacheControl().loadCache(file, Lambert.layoutZone))
+                Main.main.addLayer(wmsLayer);
         }
         
     }

@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -37,6 +38,8 @@ public class CadastreInterface {
     final String cCommuneListEnd = "</select>";
     final String c0ptionListStart = "<option value=\"";
     final String cOptionListEnd = "</option>";
+    final String cBBoxCommunStart = "new GeoBox(";
+    final String cBBoxCommunEnd = ")";
     
     final String cInterfaceVector = "afficherCarteCommune.do";
     final String cInterfaceRaster = "afficherCarteTa.do";
@@ -307,6 +310,48 @@ public class CadastreInterface {
 
     private String buildRasterInterfaceRef(String codeCommune) {
         return cInterfaceRaster + "?f=" + codeCommune;
+    }
+    
+    public EastNorthBound retrieveCommuneBBox() throws IOException {
+        if (interfaceRef == null)
+            return null;
+        String ln = null;
+        String line = null;
+        // send GET opening normally the small window with the commune overview
+        String content = baseURL + "/scpc/" + interfaceRef;
+        content += "&dontSaveLastForward&keepVolatileSession=";
+        searchFormURL = new URL(content);
+        System.out.println("HEAD:"+content);
+        urlConn = (HttpURLConnection)searchFormURL.openConnection();
+        urlConn.setRequestMethod("GET");
+        setCookie();
+        urlConn.connect();
+        if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            throw (IOException) new IOException("Cannot get Cadastre response.");
+        }
+        BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+        while ((ln = in.readLine()) != null) {
+            line += ln;
+        }
+        in.close();
+        urlConn.disconnect();
+        return parseBBoxCommune(line);
+    }
+    
+    private EastNorthBound parseBBoxCommune(String input) {
+        if (input.indexOf(cBBoxCommunStart) != -1) {
+            input = input.substring(input.indexOf(cBBoxCommunStart));
+            int i = input.indexOf(",");
+            double minx = Double.parseDouble(input.substring(cBBoxCommunStart.length(), i));
+            int j = input.indexOf(",", i+1);
+            double miny = Double.parseDouble(input.substring(i+1, j));
+            int k = input.indexOf(",", j+1);
+            double maxx = Double.parseDouble(input.substring(j+1, k));
+            int l = input.indexOf(cBBoxCommunEnd, k+1);
+            double maxy = Double.parseDouble(input.substring(k+1, l));
+            return new EastNorthBound(new EastNorth(minx,miny), new EastNorth(maxx,maxy));
+        }
+        return null;
     }
     
     private void checkLayerDuplicates(WMSLayer wmsLayer) throws DuplicateLayerException {

@@ -28,14 +28,20 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
         Main.pleaseWaitDlg.currentAction.setText(tr("Contacting WMS Server..."));
         try {
             if (grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
-                if (wmsLayer.isRaster() && wmsLayer.images.isEmpty())
-                    wmsLayer.setRasterBounds(bounds);
-                if (CacheControl.cacheEnabled && wmsLayer.images.isEmpty()) {
-                    // images loaded from cache
-                    if (wmsLayer.getCacheControl().loadCacheIfExist()) {
-                        Main.map.mapView.repaint();
-                        return;
+                if (wmsLayer.images.isEmpty()) {
+                    // first time we grab an image for this layer
+                    if (CacheControl.cacheEnabled) {
+                        if (wmsLayer.getCacheControl().loadCacheIfExist()) {
+                            Main.map.mapView.repaint();
+                            return;
+                        }
                     }
+                    if (wmsLayer.isRaster())
+                        // set raster image commune bounding box based on current view (before adjustment) 
+                        wmsLayer.setRasterBounds(bounds);
+                    else
+                        // set vectorized commune bounding box by opening the standard web window
+                        wmsLayer.setCommuneBBox( grabber.getWmsInterface().retrieveCommuneBBox());
                 }
                 // grab new images from wms server into active layer
                 wmsLayer.grab(grabber, bounds);

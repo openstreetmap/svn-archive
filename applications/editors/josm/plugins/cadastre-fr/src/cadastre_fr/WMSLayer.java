@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -44,17 +45,6 @@ import org.openstreetmap.josm.data.coor.EastNorth;
  */
 public class WMSLayer extends Layer {
 
-    public class EastNorthBound {
-        public EastNorth min, max;
-        public EastNorthBound(EastNorth min, EastNorth max) {
-            this.min = min;
-            this.max = max;
-        }
-        @Override public String toString() {
-            return "EastNorthBound[" + min.east() + "," + min.north() + "," + max.east() + "," + max.north() + "]";
-        }
-    }
-    
     Component[] component = null;  
 
     public int lambertZone = -1;
@@ -64,7 +54,7 @@ public class WMSLayer extends Layer {
 
     protected ArrayList<GeorefImage> images = new ArrayList<GeorefImage>();
     
-    protected final int serializeFormatVersion = 1;
+    protected final int serializeFormatVersion = 2;
     
     private ArrayList<EastNorthBound> dividedBbox = new ArrayList<EastNorthBound>();
     
@@ -73,6 +63,8 @@ public class WMSLayer extends Layer {
     private String location = "";
 
     private String codeCommune = "";
+    
+    private EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0,0), new EastNorth(0,0));
     
     private boolean isRaster = false;
     
@@ -491,6 +483,82 @@ public class WMSLayer extends Layer {
             }
         }
     }
+    
+    /**
+     * Called by CacheControl when a new cache file is created on disk
+     * @param oos
+     * @throws IOException
+     */
+    public void write(ObjectOutputStream oos, ArrayList<GeorefImage> imgs) throws IOException {
+        oos.writeInt(this.serializeFormatVersion);
+        oos.writeObject(this.location);
+        oos.writeObject(this.codeCommune);
+        oos.writeInt(this.lambertZone);
+        oos.writeBoolean(this.isRaster);
+        if (this.isRaster) { 
+            oos.writeObject(this.rasterMin);
+            oos.writeObject(this.rasterCenter);
+            oos.writeDouble(this.rasterRatio);
+        } else {
+            oos.writeObject(this.communeBBox);
+        }
+        for (GeorefImage img : imgs) {
+            oos.writeObject(img);
+        }
+    }
+    
+    /**
+     * Called by CacheControl when a cache file is read from disk
+     * @param ois
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public boolean read(ObjectInputStream ois, int currentLambertZone) throws IOException, ClassNotFoundException {
+        int sfv = ois.readInt();
+        if (sfv != this.serializeFormatVersion) {
+            JOptionPane.showMessageDialog(Main.parent, tr("Unsupported cache file version; found {0}, expected {1}\nCreate a new one.",
+                    sfv, this.serializeFormatVersion), tr("Cache Format Error"), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        this.setLocation((String) ois.readObject());
+        this.setCodeCommune((String) ois.readObject());
+        this.lambertZone = ois.readInt();
+        this.isRaster = ois.readBoolean();
+        if (this.isRaster) { 
+            this.rasterMin = (EastNorth) ois.readObject();
+            this.rasterCenter = (EastNorth) ois.readObject();
+            this.rasterRatio = ois.readDouble();
+        } else {
+            this.communeBBox = (EastNorthBound) ois.readObject();
+        }
+        if (this.lambertZone != currentLambertZone) {
+            JOptionPane.showMessageDialog(Main.parent, tr("Lambert zone {0} in cache "+
+                    " incompatible with current Lambert zone {1}",
+                    this.lambertZone+1, currentLambertZone), tr("Cache Lambert Zone Error"), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        boolean EOF = false;
+        try {
+            while (!EOF) {
+                GeorefImage newImage = (GeorefImage) ois.readObject();
+                for (GeorefImage img : this.images) {
+                    if (CadastrePlugin.backgroundTransparent) {
+                        if (img.overlap(newImage))
+                            // mask overlapping zone in already grabbed image
+                            img.withdraw(newImage);
+                        else
+                            // mask overlapping zone in new image only when
+                            // new image covers completely the existing image
+                            newImage.withdraw(img);
+                    }
+                }
+                this.images.add(newImage);
+            }
+        } catch (EOFException ex) {
+            // expected exception when all images are read
+        }
+        return true;
+    }
 
     public double getRasterRatio() {
         return rasterRatio;
@@ -506,6 +574,14 @@ public class WMSLayer extends Layer {
 
     public void setRasterCenter(EastNorth rasterCenter) {
         this.rasterCenter = rasterCenter;
+    }
+
+    public EastNorthBound getCommuneBBox() {
+        return communeBBox;
+    }
+
+    public void setCommuneBBox(EastNorthBound entireCommune) {
+        this.communeBBox = entireCommune;
     }
 
 }

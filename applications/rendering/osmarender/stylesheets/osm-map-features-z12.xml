@@ -56,7 +56,11 @@
 		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow">
 			<area class="landuse-field"/>
 		</rule>
-		<rule e="way" k="leisure" v="park|playground|playing_fields|garden|pitch|golf_course|common|green">
+		<rule e="way" k="leisure" v="park|garden|golf_course|common|green">
+			<area class="leisure-park"/>
+		</rule>
+		<rule e="way" k="leisure" v="playground|playing_fields|pitch">
+                	<!-- Done separately from the above rule to layer these above. Tend to be smaller and inside parks. -->
 			<area class="leisure-park"/>
 		</rule>
 		<rule e="way" k="leisure" v="nature_reserve">

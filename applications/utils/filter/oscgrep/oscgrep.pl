@@ -27,7 +27,7 @@ use Getopt::Std;
 my $options = {};
 getopts("a:t:", $options);
 my $grep;
-$grep = shift(@ARGV) unless (! -f $ARGV[0]);
+$grep = shift(@ARGV) unless (-f $ARGV[0]);
 
 while(<>)
 {

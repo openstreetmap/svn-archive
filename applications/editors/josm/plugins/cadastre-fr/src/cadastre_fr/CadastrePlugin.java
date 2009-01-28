@@ -102,7 +102,7 @@ public class CadastrePlugin extends Plugin {
         System.out.println("Pluging \"french cadastre\" started...");
         if (Main.proj.toString().equals(new Lambert().toString()) != true) {
             JOptionPane.showMessageDialog(Main.parent,
-                    tr("To enable the plugin cadastrewms, change\nthe JOSM projection to Lambert and restart"));
+                    tr("To enable the cadastre WMS plugin, change\nthe JOSM projection to Lambert and restart"));
             return;
         }
         if (Main.pref.get("cadastrewms.cacheDir").equals(""))

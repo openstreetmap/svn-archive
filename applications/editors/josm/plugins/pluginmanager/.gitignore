@@ -1,4 +1,4 @@
-/pluginmanager.jar
-/bin
-/josm-site.xml
 /build
+/build.log
+/build.err
+/josm-site.xml

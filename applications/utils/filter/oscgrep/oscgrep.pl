@@ -26,7 +26,8 @@ sub VERSION_MESSAGE {};
 use Getopt::Std;
 my $options = {};
 getopts("a:t:", $options);
-my $grep = shift(@ARGV);
+my $grep;
+$grep = shift(@ARGV) unless (! -f $ARGV[0]);
 
 while(<>)
 {

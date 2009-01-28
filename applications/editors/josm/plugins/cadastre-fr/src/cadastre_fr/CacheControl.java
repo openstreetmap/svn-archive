@@ -17,7 +17,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.EastNorth;
 
 public class CacheControl implements Runnable {
 
@@ -111,49 +110,15 @@ public class CacheControl implements Runnable {
         try {
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            int sfv = ois.readInt();
-            if (sfv != wmsLayer.serializeFormatVersion) {
-                JOptionPane.showMessageDialog(Main.parent, tr("Unsupported WMS file version; found {0}, expected {1}",
-                        sfv, wmsLayer.serializeFormatVersion), tr("Cache Format Error"), JOptionPane.ERROR_MESSAGE);
+            if (wmsLayer.read(ois, currentLambertZone) == false)
                 return false;
-            }
-            wmsLayer.setLocation((String) ois.readObject());
-            wmsLayer.setCodeCommune((String) ois.readObject());
-            wmsLayer.lambertZone = ois.readInt();
-            wmsLayer.setRaster(ois.readBoolean());
-            wmsLayer.setRasterMin((EastNorth) ois.readObject());
-            wmsLayer.setRasterCenter((EastNorth) ois.readObject());
-            wmsLayer.setRasterRatio(ois.readDouble());
-            if (wmsLayer.lambertZone != currentLambertZone) {
-                JOptionPane.showMessageDialog(Main.parent, tr("Lambert zone {0} in cache "+
-                        " incompatible with current Lambert zone {1}",
-                        wmsLayer.lambertZone+1, currentLambertZone), tr("Cache Lambert Zone Error"), JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            boolean EOF = false;
-            try {
-                while (!EOF) {
-                    GeorefImage newImage = (GeorefImage) ois.readObject();
-                    for (GeorefImage img : wmsLayer.images) {
-                        if (CadastrePlugin.backgroundTransparent) {
-                            if (img.overlap(newImage))
-                                // mask overlapping zone in already grabbed image
-                                img.withdraw(newImage);
-                            else
-                                // mask overlapping zone in new image only when
-                                // new image covers completely the existing image
-                                newImage.withdraw(img);
-                        }
-                    }
-                    wmsLayer.images.add(newImage);
-                }
-            } catch (EOFException e) {}
             ois.close();
             fis.close();
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
             JOptionPane
                     .showMessageDialog(Main.parent, tr("Error loading file"), tr("Error"), JOptionPane.ERROR_MESSAGE);
+            return false;
         }
         return true;
     }
@@ -204,17 +169,7 @@ public class CacheControl implements Runnable {
                     } else {
                         ObjectOutputStream oos = new ObjectOutputStream(
                                 new BufferedOutputStream(new FileOutputStream(file)));
-                        oos.writeInt(wmsLayer.serializeFormatVersion);
-                        oos.writeObject(wmsLayer.getLocation());
-                        oos.writeObject(wmsLayer.getCodeCommune());
-                        oos.writeInt(wmsLayer.lambertZone);
-                        oos.writeBoolean(wmsLayer.isRaster());
-                        oos.writeObject(wmsLayer.getRasterMin());
-                        oos.writeObject(wmsLayer.getRasterCenter());
-                        oos.writeDouble(wmsLayer.getRasterRatio());
-                        for (GeorefImage img : images) {
-                            oos.writeObject(img);
-                        }
+                        wmsLayer.write(oos, images);
                         oos.close();
                     }
                 } catch (IOException e) {

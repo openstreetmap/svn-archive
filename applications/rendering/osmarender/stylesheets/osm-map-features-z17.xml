@@ -552,8 +552,11 @@
 			<rule e="way" k="highway" v="service">
 				<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor|road">
+			<rule e="way" k="highway" v="unclassified|minor|road">
 				<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
+			</rule>
+			<rule e="way" k="highway" v="residential">
+				<area class="highway-casing highway-residential-casing highway-residential-area-casing no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="living_street">
 				<area class="highway-casing highway-livingstreet-casing highway-livingstreet-area-casing no-bezier"/>
@@ -725,13 +728,22 @@
 						<line class="highway-casing highway-service-casing"/>
 					</else>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor|road|ford">
+				<rule e="way" k="highway" v="unclassified|minor|road|ford">
 					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
 						<line class="highway-casing highway-unclassified-cy1-casing"/>
 						<line class="highway-casing highway-unclassified-cy2-casing"/>
 					</rule>
 					<else>
 						<line class="highway-casing highway-unclassified-casing"/>
+					</else>
+				</rule>
+				<rule e="way" k="highway" v="residential">
+					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+						<line class="highway-casing highway-residential-cy1-casing"/>
+						<line class="highway-casing highway-residential-cy2-casing"/>
+					</rule>
+					<else>
+						<line class="highway-casing highway-residential-casing"/>
 					</else>
 				</rule>
 				<rule e="way" k="highway" v="living_street">
@@ -890,8 +902,11 @@
 			<rule e="way" k="highway" v="service">
 				<area class="highway-core highway-service-area no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="unclassified|residential|minor">
+			<rule e="way" k="highway" v="unclassified|minor">
 				<area class="highway-core highway-unclassified-area no-bezier"/>
+			</rule>
+			<rule e="way" k="highway" v="residential">
+				<area class="highway-core highway-residential-area no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="road">
 				<area class="highway-core highway-road-area no-bezier"/>
@@ -1075,8 +1090,11 @@
 				<rule e="way" k="highway" v="service">
 					<line class="highway-core highway-service-core"/>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor">
+				<rule e="way" k="highway" v="unclassified|minor">
 					<line class="highway-core highway-unclassified-core"/>
+				</rule>
+				<rule e="way" k="highway" v="residential">
+					<line class="highway-core highway-residential-core"/>
 				</rule>
 				<rule e="way" k="highway" v="road">
 					<line class="highway-core highway-road-core"/>
@@ -3483,10 +3501,15 @@
 			.highway-unclassified-bridge-core       { stroke-width: 2.0px; }
 			.highway-unclassified-casing            { stroke-width: 1.5px;  stroke: #707070; }
 			.highway-unclassified-cy1-casing        { stroke-width: 2.3px;  stroke: #707070; }
-			.highway-unclassified-cy2-casing        { stroke-width: 2.1px;  stroke: #d1fad1; }
-			.highway-unclassified-area-casing       { stroke-width: 0.25px; }
-			.highway-unclassified-core              { stroke-width: 1.25px;   stroke: #ffffff; }
-			.highway-ford-core                      { stroke-width: 1.25px;   stroke: #b5d6f1; stroke-linecap: butt; }
+			.highway-unclassified-cy2-casing        { stroke-width: 2.0px;  stroke: #d1fad1; }
+			.highway-unclassified-area-casing       { stroke-width: 0.3px; }
+			.highway-unclassified-core              { stroke-width: 1.15px; stroke: #ffffff; }
+			.highway-residential-casing             { stroke-width: 1.5px;  stroke: #707070; }
+			.highway-residential-cy1-casing         { stroke-width: 2.3px;  stroke: #707070; }
+			.highway-residential-cy2-casing         { stroke-width: 2.15px; stroke: #d1fad1; }
+			.highway-residential-area-casing        { stroke-width: 0.2px; }
+			.highway-residential-core               { stroke-width: 1.35px; stroke: #ffffff; }
+			.highway-ford-core                      { stroke-width: 1.25px; stroke: #b5d6f1; stroke-linecap: butt; }
 			.highway-unclassified-area              { fill: #ffffff; }
 			.highway-unclassified-name              { stroke-width: 0px;     font-size: 1.25px; }
 			.highway-unclassified-ref               { stroke-width: 0px;     font-size: 1.5px; }

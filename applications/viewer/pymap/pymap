@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
 # licensed under a BSD license of your choice
 import urllib,re,os,sys,stat,errno,socket,time,socket
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
@@ -20,6 +21,8 @@ class MyHttpHandler(BaseHTTPRequestHandler):
       tileurl = 'http://tah.openstreetmap.org/Tiles/tile/'+z+'/'+x+'/'+y+'.png'
     elif layer == 'cycle':
       tileurl = 'http://www.thunderflames.org/tiles/cycle/'+z+'/'+x+'/'+y+'.png'
+    elif layer == 'PSV':
+      tileurl = 'http://xn--pnvkarte-m4a.de/tiles/'+z+'/'+x+'/'+y+'.png'
     else: return None
 
     try: os.makedirs(os.path.dirname(localpath))

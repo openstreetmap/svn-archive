@@ -2379,6 +2379,9 @@
 		<rule e="node|way" k="amenity" v="theatre">
 			<symbol ref="theatre" position="center"/>
 		</rule>
+		<rule e="node|way" k="man_made" v="lighthouse">
+			<symbol ref="lighthouse" position="center"/>
+		</rule>
 		<rule e="node|way" k="man_made" v="windmill">
 			<symbol ref="windmill" position="center"/>
 		</rule>
@@ -2976,6 +2979,10 @@
 			<rule e="node|way" k="amenity" v="pub|cafe" layer="5">
 				<caption k="name" class="caption-casing amenity-pub-caption-casing" dy="-1.2px" layer="5"/>
 				<caption k="name" class="caption-core amenity-pub-caption-core" dy="-1.2px" layer="5"/>
+			</rule>
+			<rule e="node|way" k="man_made" v="lighthouse" layer="5">
+				<caption k="name" class="caption-casing man_made-lighthouse-caption-casing" dy="-1.2px" layer="5"/>
+				<caption k="name" class="caption-core man_made-lighthouse-caption-core" dy="-1.2px" layer="5"/>
 			</rule>
 			<rule e="node|way" k="amenity" v="cinema" layer="5">
 				<caption k="name" class="caption-casing amenity-cinema-caption-casing" dy="-2px" layer="5"/>
@@ -4351,6 +4358,9 @@
 			font-weight: bold;
 			text-anchor: middle;
 			}
+
+			.man_made-lighthouse-caption-casing  { stroke-width: .5px;   font-size: 1px; }
+			.man_made-lighthouse-caption-core    { fill: #ec2d2d;        font-size: 1px; }
 
 			.amenity-pub-caption-casing          { stroke-width: .5px;   font-size: 1px; }
 			.amenity-pub-caption-core            { fill: #ec2d2d;        font-size: 1px; }

@@ -350,7 +350,12 @@
 				<line class="bridge-casing highway-unclassified-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<line class="bridge-casing highway-service-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
+				<rule e="way" k="service" v="parking_aisle">
+					<line class="bridge-casing highway-aisle-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
+				</rule>
+				<else>
+					<line class="bridge-casing highway-service-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="unsurfaced">
 				<line class="bridge-casing highway-unsurfaced-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
@@ -447,7 +452,12 @@
 				<line class="bridge-core highway-unclassified-bridge-core" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<line class="bridge-core highway-service-bridge-core" smart-linecap="no"/>
+				<rule e="way" k="service" v="parking_aisle">
+					<line class="bridge-core highway-aisle-bridge-core" smart-linecap="no"/>
+				</rule>
+				<else>
+					<line class="bridge-core highway-service-bridge-core" smart-linecap="no"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="unsurfaced">
 				<line class="bridge-core highway-unsurfaced-bridge-core" smart-linecap="no"/>
@@ -550,7 +560,12 @@
 				<area class="highway-casing highway-unsurfaced-casing highway-unsurfaced-area-casing no-bezier" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
+				<rule e="way" k="service" v="parking_aisle">
+					<area class="highway-casing highway-aisle-casing highway-aisle-area-casing no-bezier"/>
+				</rule>
+				<else>
+					<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="unclassified|minor|road">
 				<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
@@ -725,7 +740,12 @@
 						<line class="highway-casing highway-service-cy2-casing"/>
 					</rule>
 					<else>
-						<line class="highway-casing highway-service-casing"/>
+						<rule e="way" k="service" v="parking_aisle">
+							<line class="highway-casing highway-aisle-casing"/>
+						</rule>
+						<else>
+							<line class="highway-casing highway-service-casing"/>
+						</else>
 					</else>
 				</rule>
 				<rule e="way" k="highway" v="unclassified|minor|road|ford">
@@ -900,7 +920,12 @@
 				<area class="highway-core highway-unsurfaced-area no-bezier" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<area class="highway-core highway-service-area no-bezier"/>
+				<rule e="way" k="service" v="parking_aisle">
+					<area class="highway-core highway-aisle-area no-bezier"/>
+				</rule>
+				<else>
+					<area class="highway-core highway-service-area no-bezier"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="unclassified|minor">
 				<area class="highway-core highway-unclassified-area no-bezier"/>
@@ -1088,7 +1113,12 @@
 					<line class="highway-core highway-unsurfaced-core" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="service">
-					<line class="highway-core highway-service-core"/>
+					<rule e="way" k="service" v="parking_aisle">
+						<line class="highway-core highway-aisle-core"/>
+					</rule>
+					<else>
+						<line class="highway-core highway-service-core"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="unclassified|minor">
 					<line class="highway-core highway-unclassified-core"/>
@@ -1210,8 +1240,14 @@
 				<line class="highway-unsurfaced-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<line class="tunnel-casing highway-service-casing tunnel" mask-class="tunnel-core highway-service-core"/>
-				<line class="highway-service-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
+				<rule e="way" k="service" v="parking_aisle">
+					<line class="tunnel-casing highway-aisle-casing tunnel" mask-class="tunnel-core highway-aisle-core"/>
+					<line class="highway-aisle-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
+				</rule>
+				<else>
+					<line class="tunnel-casing highway-service-casing tunnel" mask-class="tunnel-core highway-service-core"/>
+					<line class="highway-service-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|cycleroad">
 				<line class="tunnel-casing highway-unclassified-casing tunnel" mask-class="tunnel-core highway-unclassified-core"/>
@@ -3550,6 +3586,13 @@
 			.highway-service-area                   { fill: #ffffff; }
 			.highway-service-name                   { stroke-width: 0px;     font-size: 1.25px; }
 			.highway-service-ref                    { stroke-width: 0px;     font-size: 1.25px; }
+
+			.highway-aisle-bridge-casing            { stroke-width: 2.0px; }
+			.highway-aisle-bridge-core              { stroke-width: 1.5px; }
+			.highway-aisle-casing                   { stroke-width: 0.6px;   stroke: #707070; }
+			.highway-aisle-area-casing              { stroke-width: 0.1px; }
+			.highway-aisle-core                     { stroke-width: 0.5px;   stroke: #ffffff; }
+			.highway-aisle-area                     { fill: #ffffff; }
 
 			.highway-unsurfaced-bridge-casing       { stroke-width: 2.25px; }
 			.highway-unsurfaced-bridge-core         { stroke-width: 1.75px; }

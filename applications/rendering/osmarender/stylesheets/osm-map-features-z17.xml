@@ -2908,7 +2908,7 @@
 
 		<!-- House numbers -->
 		<rule e="node|way" k="addr:housenumber" v="*" layer="5">
-			<rule e="node|way" k="power|tourism|amenity|man_made|shop|historic" v="tower|hotel|hostel|information|camp_site|hospital|doctor|pharmacy|postoffice|pub|cafe|cinema|theatre|windmill|place_of_worship|parking|school|university|college|supermarket|organic|shelter|library|fire_station|fuel|recycling|toilets|drinking_water|bank|atm|museum|telephone|fast_food" layer="5">
+			<rule e="node|way" k="power|tourism|amenity|man_made|shop|historic" v="tower|hotel|hostel|information|camp_site|hospital|doctor|pharmacy|postoffice|pub|cafe|cinema|theatre|windmill|place_of_worship|parking|school|university|college|supermarket|organic|shelter|library|fire_station|fuel|recycling|toilets|drinking_water|bank|atm|museum|telephone|fast_food|restaurant" layer="5">
 				<!-- circle r="0.9px" class="housenumber-node" transform="translate(1.6,0)" layer="5"/ testweise raus ... -->
 				<caption k="addr:housenumber" startOffset="50%" class="housenumber-casing"  dy="0.3px" dx="3.2px" layer="5"/>
 				<caption k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>

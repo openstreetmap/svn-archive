@@ -382,7 +382,8 @@
 					</rule>
 					<else>
 						<line class="bridge-casing highway-footway-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
-					</else></else>
+					</else>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="pedestrian">
 				<line class="bridge-casing highway-pedestrian-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
@@ -2447,27 +2448,29 @@
 
 		<!-- Parking -->
 		<rule e="node|way" k="amenity" v="parking">
-			<rule e="node|way" k="parking" v="park_and_ride">
-				<symbol ref="park_and_ride" position="center"/>
-			</rule>
-			<else>
-				<rule e="node|way" k="parking" v="multi-storey|underground">
-					<rule e="node|way" k="fee" v="yes">
-						<symbol ref="parking_roof_fee" position="center"/>
-					</rule>
-					<else>
-						<symbol ref="parking_roof" position="center"/>
-					</else>
+			<rule e="node|way" k="access" v="~|permissive">
+				<rule e="node|way" k="parking" v="park_and_ride">
+					<symbol ref="park_and_ride" position="center"/>
 				</rule>
 				<else>
-					<rule e="node|way" k="fee" v="yes">
-						<symbol ref="parking_fee" position="center"/>
+					<rule e="node|way" k="parking" v="multi-storey|underground">
+						<rule e="node|way" k="fee" v="yes">
+							<symbol ref="parking_roof_fee" position="center"/>
+						</rule>
+						<else>
+							<symbol ref="parking_roof" position="center"/>
+						</else>
 					</rule>
 					<else>
-						<symbol ref="parking" position="center"/>
+						<rule e="node|way" k="fee" v="yes">
+							<symbol ref="parking_fee" position="center"/>
+						</rule>
+						<else>
+							<symbol ref="parking" position="center"/>
+						</else>
 					</else>
 				</else>
-			</else>
+			</rule>
 		</rule>
 
 		<rule e="node" k="highway" v="traffic_signals">
@@ -2946,13 +2949,13 @@
 		<rule e="node|way" k="addr:housenumber" v="*" layer="5">
 			<rule e="node|way" k="power|tourism|amenity|man_made|shop|historic" v="tower|hotel|hostel|information|camp_site|hospital|doctor|pharmacy|postoffice|pub|cafe|cinema|theatre|windmill|place_of_worship|parking|school|university|college|supermarket|organic|shelter|library|fire_station|fuel|recycling|toilets|drinking_water|bank|atm|museum|telephone|fast_food|restaurant" layer="5">
 				<!-- circle r="0.9px" class="housenumber-node" transform="translate(1.6,0)" layer="5"/ testweise raus ... -->
-				<caption k="addr:housenumber" startOffset="50%" class="housenumber-casing"  dy="0.3px" dx="3.2px" layer="5"/>
-				<caption k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" dx="3.2px" layer="5"/>
+				<caption k="addr:housenumber" startOffset="50%" class="housenumber-casing housenumber-left"  dy="0.3px" dx="0.9px" layer="5"/>
+				<caption k="addr:housenumber" startOffset="50%" class="housenumber-caption housenumber-left" dy="0.3px" dx="0.9px" layer="5"/>
 			</rule>
 			<else>
 				<!-- circle r="0.9px" class="housenumber-node" layer="5"/ -->
-				<caption k="addr:housenumber" startOffset="50%" class="housenumber-casing"  dy="0.3px" layer="5"/>
-				<caption k="addr:housenumber" startOffset="50%" class="housenumber-caption" dy="0.3px" layer="5"/>
+				<caption k="addr:housenumber" startOffset="50%" class="housenumber-casing housenumber-center"  dy="0.3px" layer="5"/>
+				<caption k="addr:housenumber" startOffset="50%" class="housenumber-caption housenumber-center" dy="0.3px" layer="5"/>
 			</else>
 		</rule>
 
@@ -2984,7 +2987,7 @@
 				<caption k="name" class="place-caption farm-caption" layer="5"/>
 			</rule>
 			<rule e="node|way" k="tourism" v="attraction" layer="5">
-				<rule e="node" k="amenity|historic" v="place_of_worship|ruins" />
+				<rule e="node|way" k="amenity|historic" v="place_of_worship|ruins" />
 				<else>
 					<caption k="name" class="tourism-attraction-caption" layer="5"/>
 				</else>
@@ -3095,12 +3098,12 @@
 				<else>
 					<rule e="way" k="addr:housenumber" v="*">
 						<!-- Offset caption if housenumber is present -->
-						<caption k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%' dy="-2.5px" layer="5"/>
-						<caption k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%' dy="-2.5px" layer="5"/>
+						<caption k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%' dy="-0.7px" layer="5"/>
+						<caption k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%' dy="-0.7px" layer="5"/>
 					</rule>
 					<else>
-						<caption k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%' dy="-2.5px" layer="5"/>
-						<caption k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%' dy="-2.5px" layer="5"/>
+						<caption k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%' layer="5"/>
+						<caption k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%' layer="5"/>
 					</else>
 				</else>
 			</rule>
@@ -3912,14 +3915,21 @@
 			fill-opacity: 0.5;
 			fill: #ffffff;
 			}
+			
+			.housenumber-left {
+			text-anchor: left;
+			}
+			
+			.housenumber-center {
+			text-anchor: middle;
+			}
 
 			.housenumber-casing {
-			stroke-width: 0.4px;
+			stroke-width: 0.2px;
 			fill: #ffffff;
 			stroke: #ffffff;
-			stroke-opacity: 0.6;
+			stroke-opacity: 1;
 			font-family: "DejaVu Sans";
-			text-anchor: middle;
 			stroke-miterlimit: 1.5;
 			font-size: 0.8px;
 			}
@@ -3928,7 +3938,6 @@
 			stroke-width: 0px;
 			fill: #606060;
 			font-family: "DejaVu Sans";
-			text-anchor: middle;
 			stroke-miterlimit: 1.5;
 			font-size: 0.8px;
 			}

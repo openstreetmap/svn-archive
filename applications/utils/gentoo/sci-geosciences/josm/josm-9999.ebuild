@@ -16,18 +16,11 @@ IUSE=""
 
 ESVN_REPO_URI="http://josm.openstreetmap.de/svn/trunk"
 
-src_unpack() {
-	subversion_src_unpack
-	cd ${S} || die
-
-	epatch "${FILESDIR}/svn_build_xml.patch"
-}
-
 src_compile() {
-	eant -f build.xml compile
-
+	sed -i -e 's#output="REVISION" executable="svn"#output="REVISION.XXX" executable="true"#' build.xml
 	svn info --xml ${ESVN_WC_PATH} > REVISION
 
+	eant -f build.xml compile
 	eant -f build.xml dist
 }
 

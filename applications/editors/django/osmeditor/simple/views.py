@@ -1,8 +1,8 @@
-
 import xml.dom.minidom as m
 from django.conf import settings
+from django import forms
 from django.shortcuts import render_to_response
-
+from django.http import HttpResponseRedirect
 try:
     import httplib2
 except:
@@ -57,7 +57,7 @@ def get_osm_obj(type, id, doc=None):
     obj['uri'] = settings.OSM_BROWSE % (type.lower(),id)
     return obj 
 
-def edit_osm_obj(type, id, post):
+def edit_osm_obj(type, id, post, session={}):
     xml = get_xml(type, id)
     obj = get_osm_obj(type, id, xml)
     if obj['timestamp'] != post['timestamp']:
@@ -113,11 +113,13 @@ def edit_osm_obj(type, id, post):
 
     for k, v in obj['tags'].items():
         SubElement(parent, "tag", {'k': k, 'v': v})
-    
-    if not 'username' in post or not 'password' in post:
+  
+    username = post.get('username', None) or session.get("username", None)
+    password = post.get('password', None) or session.get("password", None)
+    if not username or not password:
         raise Exception("Need username and password")
     xml = tostring(osm)
-    change_obj(type, id, xml, post['username'], post['password'])
+    change_obj(type, id, xml, username, password)
 
 def change_obj(type, id, xml, username, password):    
     url = "%s/%s/%s" % (settings.OSM_API, type, id)
@@ -129,9 +131,34 @@ def change_obj(type, id, xml, username, password):
 
 def load(request, type="node", id=0):
     if request.method == "POST":
-        edit_osm_obj(type, id, request.POST)
+        edit_osm_obj(type, id, request.POST, request.session)
+        return HttpResponseRedirect("/%s/%s/" % (type, id))    
     obj = get_osm_obj(type, id)
-    return render_to_response("obj.html",{'obj':obj})
+    
+    return render_to_response("obj.html",{'obj':obj, 
+        'logged_in': ('username' in request.session)})
 
 def home(request):
-    return render_to_response("home.html")
+    return render_to_response("home.html", {'logged_in': 'username' in request.session})
+
+class UserForm(forms.Form):
+    email = forms.CharField(max_length=255)
+    password = forms.CharField(widget=forms.PasswordInput)
+
+def login(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            http = httplib2.Http()   
+            http.add_credentials(username, password)
+            url = "%s/user/details" % (settings.OSM_API)
+            resp, content = http.request(url, "GET")
+            if int(resp.status) == 200:
+                request.session['username'] = username 
+                request.session['password'] = password 
+                return HttpResponseRedirect("/")    
+    else:
+        form = UserForm()
+    return render_to_response("login.html", {'form': form})    

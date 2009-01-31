@@ -52,7 +52,13 @@ class OSMObj:
             self.members = []
         elif self.type == "node":
             self.loc = (-181, -91)
-            
+    
+    def display(self):
+        d = str(self)
+        if 'name' in self.tags:
+            d = "%s (%s)" % (self.tags['name'], d)
+        return d
+
     def __str__(self):
         return "%s %s" % (self.type.title(), self.id)
 

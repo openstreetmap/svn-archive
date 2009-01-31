@@ -67,7 +67,7 @@ class OSMObj:
         return " ".join(filter(None, (start, middle, end)))
 
     def toxml(self, as_string=True, parent=None):
-        if parent != None:
+        if parent == None:
             parent = Element("osm", {"version": "0.5"})
         if self.type == "node":
             element = SubElement(parent, "node", {
@@ -89,7 +89,7 @@ class OSMObj:
             for m in self.members:
                 id = None
                 if isinstance(m['ref'], int):
-                    id = n
+                    id = m['ref']
                 else:
                     id = m['ref'].id
                 id = str(id)    
@@ -178,7 +178,7 @@ class ParseObjects(ContentHandler):
 
 def parse(f, arrange=True):
     parser = ParseObjects()
-    xml.sax.parseString( data, parser )          
+    xml.sax.parse( f, parser )          
     output = parser.output
     if arrange:
         try:

@@ -22,6 +22,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 
 public class UtilsPlugin extends Plugin {
     JMenuItem SimplifyWay;
+    JumpToAction JumpToAct = new JumpToAction();
 
     public UtilsPlugin() {
         SimplifyWay = MainMenu.add(Main.main.menu.toolsMenu, new SimplifyWayAction());
@@ -32,6 +33,7 @@ public class UtilsPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
             SimplifyWay.setEnabled(true);
+            newFrame.statusLine.addMouseListener(JumpToAct);
         }
     }
 }

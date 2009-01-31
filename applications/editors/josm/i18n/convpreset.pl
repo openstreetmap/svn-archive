@@ -48,6 +48,11 @@ while(my $line = <>)
     my $n = $1;
     print "tr($n); /* item $item check $n */\n";
   }
+  elsif($line =~ /<role.*text=(".*?")/)
+  {
+    my $n = $1;
+    print "tr($n); /* item $item role $n */\n";
+  }
   # first handle display values
   elsif($line =~ /<combo.*text=(".*?").*display_values="(.*?)"/)
   {
@@ -81,17 +86,23 @@ while(my $line = <>)
     $item = "";
     print "\n";
   }
+  elsif(!$line)
+  {
+    print "\n";
+  }
   elsif($line =~ /^\s*$/
      || $line =~ /<separator *\/>/
      || $line =~ /<space *\/>/
      || $line =~ /<\/?optional>/
      || $line =~ /<key/
      || $line =~ /annotations/
+     || $line =~ /roles/
+     || $line =~ /href=/
      || $line =~ /<!--/
      || $line =~ /-->/
      || $comment)
   {
-    print "\n";
+    print "// $line\n";
   }
   else
   {

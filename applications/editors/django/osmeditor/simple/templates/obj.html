@@ -7,6 +7,10 @@
   Last edited {{ obj.timestamp }} by <a href="{{ obj.user.uri }}">{{ obj.user.id }}</a>
 </p>
 {% endblock %}
+<div id="map" style="float:right; width: 256px; height: 256px"></div>
+<script>
+  map = mapOf('map', '{{obj.type}}', {{obj.id}});
+</script>  
 <form method="POST" action="" class="foo">
 <input type="hidden" name="id" value="{{ obj.id }}" />
 <input type="hidden" name="type" value="{{ obj.type }}" />

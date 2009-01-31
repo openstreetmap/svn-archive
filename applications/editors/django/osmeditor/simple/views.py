@@ -2,7 +2,7 @@ import xml.dom.minidom as m
 from django.conf import settings
 from django import forms
 from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 try:
     import httplib2
 except:
@@ -127,7 +127,7 @@ def change_obj(type, id, xml, username, password):
     http.add_credentials(username, password)
     resp, content = http.request(url, "PUT", body=xml)    
     if int(resp.status) != 200:
-        raise Exception(resp.status)
+        raise Exception("%s, %s \n%s" % (resp.status, url, content))
 
 def load(request, type="node", id=0):
     if request.method == "POST":
@@ -162,3 +162,9 @@ def login(request):
     else:
         form = UserForm()
     return render_to_response("login.html", {'form': form})    
+
+def api_proxy(request, url):
+    http = httplib2.Http()   
+    url = "%s/%s" % (settings.OSM_API, url)
+    resp, content = http.request(url, "GET")
+    return HttpResponse(content, content_type="application/osm+xml")

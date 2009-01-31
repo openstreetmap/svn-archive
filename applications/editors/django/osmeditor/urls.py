@@ -7,6 +7,8 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('',
     # Example:
     (r'^', include('osmeditor.simple.urls')),
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': 'static'})
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:

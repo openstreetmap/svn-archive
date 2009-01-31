@@ -86,3 +86,5 @@ OSM_USER = "http://openstreetmap.org/user/%s"
 
 APP_NAME = "Simple OSM Editor"
 APP_URI = "http://trac.openstreetmap.org/browser/applications/editors/django/osmeditor"
+
+OSC_PORT = 9999

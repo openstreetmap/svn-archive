@@ -1,0 +1,144 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>OpenLayers Basic Single WMS Example</title>
+    <script src="openlayers/OpenLayers.js"></script>
+    <script type="text/javascript">
+        var map, layer;
+        function onPopupClose(evt) {
+            selectControl.unselect(selectedFeature);
+        }
+        function onFeatureSelect(feature) {
+            selectedFeature = feature;
+            popup = new OpenLayers.Popup.FramedCloud("featurePopup", 
+                                     feature.geometry.getBounds().getCenterLonLat(),
+                                     null,
+                                     "<div style='font-size:.8em'>Feature: " + feature.attributes.osm_id +"<br />Area: " + feature.geometry.getArea()+"</div>",
+                                     null, true, onPopupClose);
+            feature.popup = popup;
+            map.addPopup(popup);
+        }
+        function onFeatureUnselect(feature) {
+            map.removePopup(feature.popup);
+            feature.popup.destroy();
+            feature.popup = null;
+        }    
+        function init(){
+           OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
+                defaultHandlerOptions: {
+                    'single': true,
+                    'double': false,
+                    'pixelTolerance': 0,
+                    'stopSingle': false,
+                    'stopDouble': false
+                },
+
+                initialize: function(options) {
+                    this.handlerOptions = OpenLayers.Util.extend(
+                        {}, this.defaultHandlerOptions
+                    );
+                    OpenLayers.Control.prototype.initialize.apply(
+                        this, arguments
+                    ); 
+                    this.handler = new OpenLayers.Handler.Click(
+                        this, {
+                            'click': this.onClick
+                        }, this.handlerOptions
+                    );
+                }, 
+
+                onClick: function(evt) {
+                    if (map.getResolution() > 30) {
+                        alert("sorry, zoom in");
+                        return;
+                    }    
+                    var output = document.getElementById("data");
+                    var xy = evt.xy;
+                    var b = new OpenLayers.Bounds();
+                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x-8, xy.y-8)));
+                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x+8, xy.y+8)));
+                    if (this.selectFeature) {
+                        this.selectFeature.destroy();
+                    }    
+                    if (this.layers) {
+                        for (var i = 0; i <this.layers.length; i++) {
+                            this.layers[i].destroy();
+                        }
+                    }
+                    
+                    var styleMap = new OpenLayers.StyleMap({'default': OpenLayers.Util.extend(OpenLayers.Feature.Vector.style['default'], {strokeWidth:3, cursor: 'pointer'})});
+
+                    this.layers = []
+                    this.layers.push(new OpenLayers.Layer.GML("", "/featureserver/featureserver.cgi/osm-polygons/?bbox="+b.toBBOX(), {format: OpenLayers.Format.GeoJSON, styleMap: styleMap, osmType: 'way'}));
+                    this.layers.push(new OpenLayers.Layer.GML("", "/featureserver/featureserver.cgi/osm/?bbox="+b.toBBOX(), {format: OpenLayers.Format.GeoJSON, styleMap: styleMap, 'osmType': 'way'}));
+                    this.layers.push(new OpenLayers.Layer.GML("", "/featureserver/featureserver.cgi/osm-points/?bbox="+b.toBBOX(), {format: OpenLayers.Format.GeoJSON, styleMap: styleMap, osmType: 'node'}));
+                    map.addLayers(this.layers);
+                    for (var i = 0; i < this.layers.length; i++) {
+                        this.layers[i].events.on({'featureselected': function(e) {
+                            var feature = e.feature;
+                            var s = "<a href='http://openstreetmap.org/browse/" + e.feature.layer.osmType+"/" + feature.fid +"'>"+ e.feature.layer.osmType+" " + feature.fid + "</a>";
+                            document.getElementById("data").innerHTML = s;
+                        }    
+                        });
+                    }    
+                    this.selectFeature = new OpenLayers.Control.SelectFeature(this.layers);
+                    map.addControl(this.selectFeature);
+                    this.selectFeature.activate();
+                }
+
+            }); 
+            var options = {
+                projection: new OpenLayers.Projection("EPSG:900913"),
+                units: "m",
+                maxResolution: 156543.0339,
+                numZoomLevels: 19,
+                maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
+                                                 20037508.34, 20037508.34)
+            };
+
+            map = new OpenLayers.Map( 'map', options );
+            layer = new OpenLayers.Layer.WMS( "OpenLayers WMS",
+                    "http://labs.metacarta.com/wms/vmap0",
+                    {layers: 'basic'} );
+            var mapnik = new OpenLayers.Layer.TMS(
+                "OpenStreetMap (Mapnik)",
+                  "http://a.tile.openstreetmap.org/",
+                {
+                    type: 'png', getURL: osm_getTileURL,
+                    displayOutsideMaxExtent: true,
+                    attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
+                }
+            );
+            var control = new OpenLayers.Control.Click();
+            map.addControl(control);
+            map.addControl(new OpenLayers.Control.Permalink());
+            var sfc = new OpenLayers.Control.SelectFeature
+            control.activate();
+            map.addLayer(mapnik);
+            if (!map.getCenter()) { map.zoomToMaxExtent(); }
+        }
+        function osm_getTileURL(bounds) {
+            var res = this.map.getResolution();
+            var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+            var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+            var z = this.map.getZoom();
+            var limit = Math.pow(2, z);
+
+            if (y < 0 || y >= limit) {
+                return OpenLayers.Util.getImagesLocation() + "404.png";
+            } else {
+                x = ((x % limit) + limit) % limit;
+                return this.url + z + "/" + x + "/" + y + "." + this.type;
+            }
+        }
+
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="map" style="width:99%; height:99%">
+        <div id="data" style="position:absolute; right: 5px; top:5px; z-index:10000"></div>
+    </div>
+
+  </body>
+</html>
+

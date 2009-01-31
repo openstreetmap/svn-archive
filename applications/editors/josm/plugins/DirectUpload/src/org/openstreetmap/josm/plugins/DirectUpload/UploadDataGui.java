@@ -19,6 +19,7 @@ import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.String;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -46,6 +47,7 @@ import org.openstreetmap.josm.io.GpxWriter;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.tools.Base64;
 import org.openstreetmap.josm.tools.GBC;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -59,6 +61,7 @@ public class UploadDataGui extends javax.swing.JFrame {
     private JTextField descriptionField = new JTextField();
     private JTextField tagsField = new JTextField();
     private JCheckBox publicCheckbox = new JCheckBox();
+    private JButton OkButton = new JButton();
 
     public static final String API_VERSION = "0.5";
     private static final String BOUNDARY = "----------------------------d10f7aa230e8";
@@ -92,7 +95,7 @@ public class UploadDataGui extends javax.swing.JFrame {
         JScrollPane jScrollPane1 = new JScrollPane();
         jScrollPane1.setViewportView(OutputDisplay);
 
-        JButton OkButton = new JButton(tr("Upload GPX track"));
+        OkButton.setText(tr("Upload GPX track"));
         OkButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 OkButtonActionPerformed(evt);
@@ -105,8 +108,6 @@ public class UploadDataGui extends javax.swing.JFrame {
                 CancelButtonActionPerformed(evt);
             }
         });
-
-        JLabel directUploadLabel = new JLabel(tr("Direct Upload to OpenStreetMap"));
 
         publicCheckbox.setText(tr("Public"));
         publicCheckbox.setToolTipText(tr("Selected makes your trace public in openstreetmap.org"));
@@ -165,16 +166,20 @@ public class UploadDataGui extends javax.swing.JFrame {
     public void upload(String username, String password, String description, String tags, Boolean isPublic, GpxData gpxData) throws IOException {
         if(checkForErrors(username, password, description, gpxData))
             return;
-
+				
+				OkButton.setEnabled(false);
+				
         description = description.replaceAll("[&?/\\\\]"," ");
         tags = tags.replaceAll("[&?/\\\\.,;]"," ");
-
-        OutputDisplay.setText(tr("Starting to upload selected file to openstreetmap.org"));
+        
+        Main.pleaseWaitDlg.progress.setValue(0);
+        Main.pleaseWaitDlg.setIndeterminate(true); 
+        Main.pleaseWaitDlg.currentAction.setText(tr("Connecting..."));
+        // We don't support cancellation yet, so do not advertise it
+        Main.pleaseWaitDlg.cancel.setEnabled(false);
 
         try {
             URL url = new URL("http://www.openstreetmap.org/api/" + API_VERSION + "/gpx/create");
-            //System.err.println("url: " + url);
-            //OutputDisplay.setText("Uploading in Progress");
             HttpURLConnection connect = (HttpURLConnection) url.openConnection();
             connect.setConnectTimeout(15000);
             connect.setRequestMethod("POST");
@@ -184,37 +189,36 @@ public class UploadDataGui extends javax.swing.JFrame {
             connect.addRequestProperty("Connection", "close"); // counterpart of keep-alive
             connect.addRequestProperty("Expect", "");
             connect.connect();
-            DataOutputStream out  = new DataOutputStream(new BufferedOutputStream(connect.getOutputStream()));
-
+            
+            Main.pleaseWaitDlg.currentAction.setText(tr("Uploading GPX track..."));
+            DataOutputStream out  = new DataOutputStream(new BufferedOutputStream(connect.getOutputStream()));            
             writeContentDispositionGpxData(out, "file", gpxData);
             writeContentDisposition(out, "description", description);
-            writeContentDisposition(out, "tags", (tags!=null && tags.length()>0) ? tags : "");
+            writeContentDisposition(out, "tags", (tags != null && tags.length() > 0) ? tags : "");
             writeContentDisposition(out, "public", isPublic ? "1" : "0");
-
             out.writeBytes("--" + BOUNDARY + "--" + LINE_END);
             out.flush();
-
-            int returnCode = connect.getResponseCode();
+            
             String returnMsg = connect.getResponseMessage();
-            //System.err.println(returnCode);
-            OutputDisplay.setText(returnMsg);
+            boolean success = returnMsg.equals("OK");
+            OutputDisplay.setText(success ? tr("GPX upload was successful") : returnMsg);
 
-            if (returnCode != 200) {
+            if (connect.getResponseCode() != 200) {
                 if (connect.getHeaderField("Error") != null)
                     returnMsg += "\n" + connect.getHeaderField("Error");
-                connect.disconnect();
             }
             out.close();
             connect.disconnect();
-
+            
+            OkButton.setEnabled(!success);
+            
         } catch(UnsupportedEncodingException ignore) {
         } catch (MalformedURLException e) {
             OutputDisplay.setText(tr("Error while uploading"));
             e.printStackTrace();
         }
     }
-
-
+    
     private boolean checkForErrors(String username, String password, String description, GpxData gpxData) {
         String errors="";
         if(description == null || description.length() == 0)
@@ -244,18 +248,25 @@ public class UploadDataGui extends javax.swing.JFrame {
     private void OkButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if(checkForGPXLayer()) return;
 
-        //System.out.println(Descriptionfield);
-        try {
-            upload(Main.pref.get("osm-server.username"),
-                   Main.pref.get("osm-server.password"),
-                   descriptionField.getText(),
-                   tagsField.getText(),
-                   publicCheckbox.isSelected(),
-                   ((GpxLayer)Main.map.mapView.getActiveLayer()).data
-            );
-        } catch (IOException ex) {
-            Logger.getLogger(UploadDataGui.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        PleaseWaitRunnable uploadTask = new PleaseWaitRunnable(tr("Uploading GPX Track")){
+            @Override protected void realRun() throws IOException {
+                  setAlwaysOnTop(false);
+                  upload(Main.pref.get("osm-server.username"),
+                         Main.pref.get("osm-server.password"),
+                         descriptionField.getText(),
+                         tagsField.getText(),
+                         publicCheckbox.isSelected(),
+                         ((GpxLayer)Main.map.mapView.getActiveLayer()).data
+                  );
+            }
+            @Override protected void finish() {
+                setAlwaysOnTop(true);
+            }
+            @Override protected void cancel() {
+            }
+        };
+        
+        Main.worker.execute(uploadTask);
     }
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -266,7 +277,11 @@ public class UploadDataGui extends javax.swing.JFrame {
         out.writeBytes("--" + BOUNDARY + LINE_END);
         out.writeBytes("Content-Disposition: form-data; name=\"" + name + "\"" + LINE_END);
         out.writeBytes(LINE_END);
-        out.writeBytes(value + LINE_END);
+        // DataOutputStream's "writeUTF" method is unsuitable here because it adds two
+        // char length bytes in front
+        byte[] temp=value.getBytes("UTF-8");
+        out.write(temp, 0, temp.length);
+        out.writeBytes(LINE_END);
     }
 
     private void writeContentDispositionGpxData(DataOutputStream out, String name, GpxData gpxData) throws IOException {
@@ -274,8 +289,6 @@ public class UploadDataGui extends javax.swing.JFrame {
         out.writeBytes("Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + datename +".gpx" + "\"" + LINE_END);
         out.writeBytes("Content-Type: application/octet-stream" + LINE_END);
         out.writeBytes(LINE_END);
-
-        OutputDisplay.setText(tr("Transferring data to server"));
         new GpxWriter(out).write(gpxData);
         out.flush();
         out.writeBytes(LINE_END);

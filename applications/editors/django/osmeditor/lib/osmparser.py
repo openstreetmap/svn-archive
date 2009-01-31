@@ -176,7 +176,7 @@ class ParseObjects(ContentHandler):
         if name in ['way', 'node','relation']:
             self.output['%ss' % name].append(self.current)
 
-def parse(f):
+def parse(f, arrange=True):
     parser = ParseObjects()
     xml.sax.parseString( data, parser )          
     output = parser.output

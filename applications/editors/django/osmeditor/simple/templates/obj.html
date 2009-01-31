@@ -16,9 +16,10 @@
 {% for k, v in obj.tags.items %}
   <li>
         <label for="key_{{k}}">{{ k }}</label>
-        <input name="key_{{k}}" id="key_{{k}}" value="{{ v }}" />
+        <input name="key_{{k}}" id="key_{{k}}" value="{{ v }}" onchange='if (this.value != this.origValue) { this.className="changed"; } else { this.className = ""; }'/>
         <input type="checkbox" name="delete_key_{{k}}" id="delete_key_{{k}}" value="delete" onChange='javascript:document.getElementById("key_{{k}}").className=(this.checked?"deleting":"")'/><label class="delete" for="delete_key_{{k}}">Delete?</label>
     </li>
+    <script> document.getElementById("key_{{k}}").origValue = '{{v}}'; </script>
 {% endfor %}
 </ul>
 </fieldset>
@@ -47,6 +48,7 @@
 </p>
 -->
 </fieldset>
+{% if not logged_in %}
 <fieldset>
 <legend>Credentials</legend>
 <ul class="fields varying">
@@ -54,6 +56,7 @@
 <li><label for="password">Password:</label><input type="password" name="password" id="password" /></li>
 </ul>
 </fieldset>
+{% endif %}
 <input type="submit" value="Change" />
 </form>
 {% if obj.child %}

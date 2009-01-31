@@ -71,8 +71,7 @@ public class UserToolsPlugin extends Plugin {
         } else {
             userJMenu.removeAll();
         }
-
-        userJMenu.add(new JMenuItem(new JosmAction(tr("Show Author Panel"),
+        JosmAction a = new JosmAction(tr("Show Author Panel"),
         "dialogs/userlist", tr("Show Author Panel"), null, false) {
             public void actionPerformed(ActionEvent ev) {
                 int dialogIndex = 100;
@@ -88,11 +87,12 @@ public class UserToolsPlugin extends Plugin {
 
                 uld.setVisible(true);
             }
-        }));
+        };
+        a.putValue("toolbar", "usertools_show");
+        userJMenu.add(new JMenuItem(a));
 
         userJMenu.addSeparator();
-        // userJMenu.addSeparator();
-        userJMenu.add(new JMenuItem(new JosmAction(tr("Open User Page"),
+        a = new JosmAction(tr("Open User Page"),
                 "presets/letter", tr("Open User Page in browser"), null, false) {
             public void actionPerformed(ActionEvent ev) {
                 String name =  getSelectedUser();
@@ -102,9 +102,11 @@ public class UserToolsPlugin extends Plugin {
                 OpenBrowser.displayUrl(userUrl);
                 }
             }
-        }));
+        };
+        a.putValue("toolbar", "usertools_open");
+        userJMenu.add(new JMenuItem(a));
 
-        userJMenu.add(new JMenuItem(new JosmAction(tr("Select User's Data"),
+        a = new JosmAction(tr("Select User's Data"),
         "dialogs/search", tr("Replaces Selection with Users data"), null, false) {
             public void actionPerformed(ActionEvent ev) {
                 String name =  getSelectedUser();
@@ -113,7 +115,9 @@ public class UserToolsPlugin extends Plugin {
                     SearchAction.search(name, mode, false,false);
                 }
             }
-        }));
+        };
+        a.putValue("toolbar", "usertools_search");
+        userJMenu.add(new JMenuItem(a));
 
         setEnabledAll(false);
     }

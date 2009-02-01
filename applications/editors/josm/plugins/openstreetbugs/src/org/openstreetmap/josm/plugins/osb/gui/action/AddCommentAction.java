@@ -34,7 +34,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.api.EditAction;
 
 public class AddCommentAction extends OsbAction {
@@ -49,20 +48,9 @@ public class AddCommentAction extends OsbAction {
 
     @Override
     protected void doActionPerformed(ActionEvent e) throws Exception {
-        // get the user nickname
-        String nickname = Main.pref.get(ConfigKeys.OSB_NICKNAME);
-        if(nickname == null || nickname.length() == 0) {
-            nickname = JOptionPane.showInputDialog(Main.parent, tr("Please enter a user name"));
-            if(nickname == null) {
-                nickname = tr("NoName");
-            } else {
-                Main.pref.put(ConfigKeys.OSB_NICKNAME, nickname);
-            }
-        }
-
         String comment = JOptionPane.showInputDialog(Main.parent, tr("Enter your comment"));
         if(comment != null) {
-            comment = comment.concat(" [").concat(nickname).concat("]");
+            comment = addMesgInfo(comment);
             editAction.execute(getSelectedNode(), comment);
         }
     }

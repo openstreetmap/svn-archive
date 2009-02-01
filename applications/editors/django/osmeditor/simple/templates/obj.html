@@ -22,7 +22,7 @@
 {% for k, v in obj.tags.items %}
   <li>
         <label for="key_{{k}}">{{ k }}</label>
-        <input name="key_{{k}}" id="key_{{k}}" value="{{ v }}" onchange='if (this.value != this.origValue) { this.className="changed"; } else { this.className = ""; }'/>
+        <input name="key_{{k}}" id="key_{{k}}" value="{{ v }}" onchange='if (this.value != this.origValue) { this.className="changed"; } else { this.className = ""; }' maxlength="200"  style="width: 300px"/>
         <input type="checkbox" name="delete_key_{{k}}" id="delete_key_{{k}}" value="delete" onChange='javascript:document.getElementById("key_{{k}}").className=(this.checked?"deleting":"")'/><label class="delete" for="delete_key_{{k}}">Delete?</label>
     </li>
     <script> document.getElementById("key_{{k}}").origValue = '{{v}}'; </script>

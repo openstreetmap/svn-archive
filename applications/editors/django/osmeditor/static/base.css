@@ -14,3 +14,11 @@
     li.relation { list-style-type: square; }
     abbr.legend { border-bottom: 0;} 
     .role { font-style:italic; }
+
+.head { 
+  border-bottom: 1px dashed red; 
+  margin:  -3px -5px 5px -5px;
+  padding: 5px;
+} 
+.head h1 {font-size: 1.3em; font-weight:normal; } 
+

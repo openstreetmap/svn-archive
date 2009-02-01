@@ -1,23 +1,6 @@
 <html>
  <head>
    <title>{% block title %}{{ title }}{% endblock %} -- Simple OSM Editor</title>
-   <style type="text/css">
-    body { font-size: .8em; }
-    h1 { margin: 0; padding: 0;}
-    h2 { margin: 0; padding: 0;}
-    label { font-weight: bolder;}
-    #new_keys {display:none;}
-    form ul.fields {list-style: none;}
-    .fields.varying label {width:15em;display: inline-block;line-height: 1.8;vertical-align: top;}
-    label.delete {color:#f00;font-weight:normal;}
-    .deleting {text-decoration:line-through;color:#f00; /* planned */}
-    .redundant {display: none;}
-    li.node { list-style-type: disc; } /* FIXME: need some decent list icons here */
-    li.way { list-style-type: circle; }
-    li.relation { list-style-type: square; } 
-    abbr.legend { border-bottom: 0;} 
-    .role { font-style:italic; }
-   </style> 
    <link rel="stylesheet" href="/static/base.css" />
    <script src="http://openlayers.org/api/OpenLayers.js"></script>
    <script src="/static/map.js"></script>

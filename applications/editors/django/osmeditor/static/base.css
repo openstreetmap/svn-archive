@@ -12,4 +12,5 @@
     li.node { list-style-type: disc; } /* FIXME: need some decent list icons here */
     li.way { list-style-type: circle; }
     li.relation { list-style-type: square; }
-
+    abbr.legend { border-bottom: 0;} 
+    .role { font-style:italic; }

@@ -36,4 +36,5 @@ public class ConfigKeys {
     public static final String OSB_NICKNAME = "osb.nickname";
     public static final String OSB_AUTO_DOWNLOAD = "osb.auto_download";
     public static final String OSB_BUTTON_LABELS = "osb.button_labels";
+    public static final String OSB_INCLUDE_DATE = "osb.include_date";
 }

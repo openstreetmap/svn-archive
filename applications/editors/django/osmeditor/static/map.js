@@ -17,7 +17,7 @@ function mapOf(div, type, id) {
         displayProjection: new OpenLayers.Projection("EPSG:4326"),
         projection: new OpenLayers.Projection("EPSG:900913"),
         units: "m",
-        numZoomLevels: 18,
+        numZoomLevels: 19,
         maxResolution: 156543.0339,
         maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
                                          20037508.34, 20037508.34)

@@ -16,7 +16,9 @@ except:
 import urllib
 
 def get_xml(type, id):
-    url = "%s/%s/%s" % (settings.OSM_API, type, id)
+    url = "%s/%s/%s/full" % (settings.OSM_API, type, id)
+    if type == "node":
+        url = url.replace('/full','') # required because the API 404s on node/x/full - wtf?
     u = urllib.urlopen(url)
     data = u.read()
     doc = m.parseString(data)
@@ -26,36 +28,71 @@ def get_osm_obj(type, id, doc=None):
     obj = {}
     if not doc:
         doc = get_xml(type, id)
-    parent = doc.getElementsByTagName(type)[0]
-    obj['timestamp'] = parent.getAttribute("timestamp")
-    obj['child'] = [] #everyone now gets 0 or more children
+    obj['xml'] = doc.toxml() #expose this to make debugging easier
+
+    obj['children'] = [] # we're giving everyone 0 or more children
+
     if type == "node":
+        parent = doc.getElementsByTagName("node")[0]
+        referencer = parent
         obj['lat'] = parent.getAttribute("lat")
         obj['lon'] = parent.getAttribute("lon")
+
     elif type == "way":
-        for node in parent.getElementsByTagName("nd"):
-            obj['child'].append( {'ref': node.getAttribute("ref"),
-                                  'type':'node'
+        parent = doc.firstChild
+        referencer = doc.getElementsByTagName("way")[0]
+        for node in parent.getElementsByTagName("node"):
+            obj['children'].append( {'ref': node.getAttribute("id"),
+                                  'type':'node',
+                                  'tags': get_tags(node),
+                                  'tag_count': node.getElementsByTagName("tag").length
                                  } )
+
     elif type == "relation":
-        for member in parent.getElementsByTagName("member"):
-            obj['child'].append( { 'ref': member.getAttribute("ref"),
-                                   'type': member.getAttribute("type"),
-                                   'role': member.getAttribute("role")
-                                 } )
-    obj['child_count'] = len(obj['child'])
+        parent = doc.firstChild
+
+        # this pre-loop seems the only robust way to select and classify child XML elements - need XPath
+        memberElements = []
+        for element in parent.getElementsByTagName("*"):
+            if element.parentNode == parent:
+                if element.getAttribute("id") == id:
+                    referencer = element
+                else:
+                    memberElements.append(element)
+
+        for member in memberElements:
+            refs = [ref for ref in referencer.getElementsByTagName("member") if ref.getAttribute("ref") == member.getAttribute("id")]
+            if len(refs):
+                pointer = refs[0]
+                obj['children'].append( { 'ref': member.getAttribute("id"),
+                                       'type': member.nodeName, # could also use pointer.getAttribute("type") - maybe that's a safer bet?
+                                       'role': pointer.getAttribute("role"),
+                                       'tags': get_tags(member),
+                                       'tag_count': member.getElementsByTagName("tag").length
+                                    } )
+
+    obj['child_count'] = len(obj['children'])
+    obj['timestamp'] = referencer.getAttribute("timestamp")
     obj['id'] = int(id)
     obj['type'] = type
-    obj['tags'] = {}
-    for tag in parent.getElementsByTagName("tag"):
-        obj['tags'][tag.getAttribute("k")] = tag.getAttribute("v")
+    obj['tags'] = get_tags(referencer)
     #hmm, not sure how the UI should manage the created_by tag
     #obj['tags']['created_by'] = "%s (%s)" % (settings.APP_NAME,settings.APP_URI)
-    obj['user'] = { 'id': parent.getAttribute("user") ,
-                    'uri': settings.OSM_USER % parent.getAttribute("user") 
+    obj['user'] = { 'id': referencer.getAttribute("user") ,
+                    'uri': settings.OSM_USER % referencer.getAttribute("user") 
                   }
-    obj['uri'] = settings.OSM_BROWSE % (type.lower(),id)
+    obj['uri'] = { 'browse': "%s/%s/%s" % (settings.OSM_BROWSE, type.lower(), id),
+                   'xml_std': "%s/%s/%s" % (settings.OSM_API, type.lower(), id),
+                   'xml_full': "%s/%s/%s/full" % (settings.OSM_API, type.lower(), id) # echh, this url is just wrong
+                 }
+    obj['foo'] = referencer.nodeName
     return obj 
+
+def get_tags(parent):
+    tagset = {}
+    for tag in parent.getElementsByTagName("tag"):
+        tagset[tag.getAttribute("k")] = tag.getAttribute("v")
+    return tagset
 
 def edit_osm_obj(type, id, post, session={}):
     xml = get_xml(type, id)
@@ -69,16 +106,16 @@ def edit_osm_obj(type, id, post, session={}):
                                         'lon':obj['lon']
                                         })
     elif type == "way":
-        parent = SubElement(osm, type, {'id':id, })
+        parent = SubElement(osm, type, {'id':id })
         for nd in xml.getElementsByTagName("nd"):
             nd = SubElement(parent, "nd", {'ref': nd.getAttribute("ref")})
     
     elif type == "relation":
         parent = SubElement(osm, type, {'id':id, })
         for m in xml.getElementsByTagName("member"):
-            member = SubElement(parent, "member", {'type': nd.getAttribute("type"),
-                                                   'id': nd.getAttribute("id"),
-                                                   'role': nd.getAttribute("role")
+            member = SubElement(parent, "member", {'type': m.getAttribute("type"),
+                                                   'id': m.getAttribute("id"),
+                                                   'role': m.getAttribute("role")
                                                   }
                                )
     else:

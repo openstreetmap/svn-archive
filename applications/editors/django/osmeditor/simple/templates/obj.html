@@ -2,9 +2,11 @@
 {% block title %}{{obj.type.title}} {{ obj.id }}{% endblock %}
 {% block body %}
 {% block summary %}
-<h2><a href="{{ obj.uri }}">{{ obj.type.title }} {{ obj.id }}</a>{% if obj.tags.name %}: {{ obj.tags.name }}{% endif %}</h2>
+<h2><a href="{{ obj.browse_url }}">{{ obj.type.title }} {{ obj.id }}</a>{% if obj.tags.name %}: {{ obj.tags.name }}{% endif %}</h2>
 <p class="meta">
-  Last edited {{ obj.timestamp }} by <a href="{{ obj.user.uri }}">{{ obj.user.id }}</a>
+  Last edited {{ obj.timestamp }} {% if obj.user %} 
+   by <a href="{{ obj.user_link }}">{{ obj.user }}</a>
+  {% endif %} 
 </p>
 {% endblock %}
 <div id="map" style="float:right; width: 256px; height: 256px"></div>
@@ -14,7 +16,7 @@
 <form method="POST" action="" class="foo">
 <input type="hidden" name="id" value="{{ obj.id }}" />
 <input type="hidden" name="type" value="{{ obj.type }}" />
-<input type="hidden" name="timestamp" value="{{ obj.timestamp }}" /> <!-- is this needed in the form? -->
+<input type="hidden" name="timestamp" value="{{ obj.timestamp }}" /> <!-- is this needed in the form? yes, until 0.6: this is our conflict detector -->
 <fieldset>
 <ul class="fields varying">
 {% for k, v in obj.tags.items %}
@@ -63,21 +65,31 @@
 {% endif %}
 <input type="submit" value="Change" />
 </form>
-{% if obj.children %}
-<h3>Contains {{ obj.child_count }} object{% ifnotequal obj.child_count 1 %}s{% endifnotequal %}:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
+{% if obj.members %}
+<h3>Contains {{ obj.members|length }} member{{ obj.members|length|pluralize }}:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
 <ul class="children">
-{% for c in obj.children %}
-  <li class="{{c.type}}"><a href="/{{c.type}}/{{c.ref}}"><span class="redundant">{{c.type|lower}} </span>{{c.ref}}</a>{% if c.role %} (role:<span class="role">{{c.role}}</span>){% endif %}{% ifnotequal c.tag_count 0 %}{% if c.tags.name %}: {{c.tags.name}}{% else %} <abbr class="legend" title="{{c.type}} contains traces of nuts">*</abbr>{% endif %}{% endifnotequal %}</li> <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
-<!-- TODO: add delete checkboxes to these children -->
+{% for c in obj.members %}
+  <li class="{{c.type}}"><a href="{{c.ref.local_url}}"><span class="redundant">{{c.type|lower}} </span>{{c.ref}}</a>{% if c.role %} (role: <span class="role">{{c.role}}</span>){% endif %}{% if c.ref.tags.name %}: {{c.ref.tags.name}}{% else %} <abbr class="legend" title="{{c.type}} contains traces of nuts">*</abbr>{% endif %}</li> 
+  <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
+  <!-- TODO: add delete checkboxes to these children -->
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if obj.nodes %}
+<h3>Contains {{ obj.nodes|length }} node{{ obj.nodes|length|pluralize }}:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
+<ul class="children">
+{% for c in obj.nodes %}
+  <li class="{{c.type}}"><a href="{{c.local_url}}"><span class="redundant">{{c.type|lower}} </span>{{c.id}}</a>{% if c.tags.name %}: {{c.ref.tags.name}}{% else %} <abbr class="legend" title="{{c.type}} contains traces of nuts">*</abbr>{% endif %}</li> 
+  <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
+  <!-- TODO: add delete checkboxes to these children -->
 {% endfor %}
 </ul>
 {% endif %}
 <div class="debug">
-<h3>Debug output</h3>
-obj.foo={{obj.foo}}
 <h4>Source XML</h4>
 <pre class="xml">
-{{ obj.xml }}
+{{ obj_xml }}
 </pre>
 </div>
 {% endblock %}

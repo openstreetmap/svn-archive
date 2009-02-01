@@ -19,7 +19,7 @@
 <input type="hidden" name="timestamp" value="{{ obj.timestamp }}" /> <!-- is this needed in the form? yes, until 0.6: this is our conflict detector -->
 <fieldset>
 <ul class="fields varying">
-{% for k, v in obj.tags.items %}
+{% for k,v in sorted_tags %}
   <li>
         <label for="key_{{k}}">{{ k }}</label>
         <input name="key_{{k}}" id="key_{{k}}" value="{{ v }}" onchange='if (this.value != this.origValue) { this.className="changed"; } else { this.className = ""; }' maxlength="200"  style="width: 300px"/>

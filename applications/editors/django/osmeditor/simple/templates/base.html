@@ -6,7 +6,12 @@
    <script src="/static/map.js"></script>
  </head>
  <body>
-   <h1>Simple OSM Editor</h1>
+   <div class="head">
+       <div style='float: right'>
+         <a href="/">Home</a> {% if not logged_in %} | <a href="/login/">Login</a> {% endif %}  
+       </div>  
+       <h1>Simple OSM Editor</h1>
+   </div>
    {% block body %}
    {% endblock %}
  </body>

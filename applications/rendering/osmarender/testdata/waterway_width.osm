@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <node id='-1' action='modify' visible='true' lat='48.99655420715371' lon='8.471822077548532' />
+  <node id='-2' visible='true' lat='48.99687964801484' lon='8.472601454777399' />
+  <node id='-3' visible='true' lat='48.99613611271468' lon='8.473346662643383' />
+  <node id='-4' action='modify' visible='true' lat='48.99702257337214' lon='8.472784515162584' />
+  <node id='-5' action='modify' visible='true' lat='48.996507095811424' lon='8.472988112698829' />
+  <node id='-6' action='modify' visible='true' lat='48.99661540991709' lon='8.472751357843075' />
+  <node id='-7' action='modify' visible='true' lat='48.995878171381015' lon='8.472695370998295' />
+  <node id='-8' visible='true' lat='48.99687204805089' lon='8.473275230801306' />
+  <node id='-9' visible='true' lat='48.9968809146754' lon='8.472155488412005' />
+  <node id='-10' action='modify' visible='true' lat='48.996601090858405' lon='8.472416342395304' />
+  <node id='-11' action='modify' visible='true' lat='48.996643967281244' lon='8.471821255035854' />
+  <node id='-12' action='modify' visible='true' lat='48.996502249268254' lon='8.472729118496959' />
+  <node id='-13' action='modify' visible='true' lat='48.996016644269645' lon='8.473067335739044'>
+    <tag k='tunnel' v='yes' />
+  </node>
+  <node id='-14' action='modify' visible='true' lat='48.996556809534574' lon='8.47341160256405' />
+  <node id='-15' action='modify' visible='true' lat='48.99655366813269' lon='8.47168543025827' />
+  <node id='-16' action='modify' visible='true' lat='48.99613313490435' lon='8.472427263202718' />
+  <node id='-17' action='modify' visible='true' lat='48.99646827926707' lon='8.473685761498231' />
+  <node id='-18' visible='true' lat='48.99603477825393' lon='8.472078264798949' />
+  <node id='-19' action='modify' visible='true' lat='48.99664342826124' lon='8.471684607745587' />
+  <node id='-20' action='modify' visible='true' lat='48.996601097448256' lon='8.471825174413654' />
+  <node id='-21' action='modify' visible='true' lat='48.99676001269084' lon='8.472162133919415' />
+  <node id='-22' visible='true' lat='48.996875848033014' lon='8.472977919891044' />
+  <node id='-23' visible='true' lat='48.99674918415036' lon='8.472984051089572' />
+  <node id='-24' action='modify' visible='true' lat='48.99675568127494' lon='8.472574742940578' />
+  <node id='-25' visible='true' lat='48.99634724180097' lon='8.47359493813344' />
+  <node id='-26' visible='true' lat='48.99674918415036' lon='8.47328112958481' />
+  <node id='-27' visible='true' lat='48.99599477802477' lon='8.473767373568421' />
+  <node id='-28' visible='true' lat='48.99622757845287' lon='8.473661259454587' />
+  <node id='-29' visible='true' lat='48.99568582624392' lon='8.472805714411798' />
+  <node id='-30' visible='true' lat='48.99574674646506' lon='8.473422502698458' />
+  <node id='-31' visible='true' lat='48.996329836240925' lon='8.471940221170838' />
+  <node id='-32' visible='true' lat='48.9961427260864' lon='8.471588718168764' />
+  <node id='-33' visible='true' lat='48.99630590358595' lon='8.472162397596678' />
+  <node id='-34' visible='true' lat='48.99628100551904' lon='8.473280999405551' />
+  <node id='-35' visible='true' lat='48.99711765614828' lon='8.474610054411844' />
+  <node id='-36' visible='true' lat='48.99544347230629' lon='8.474259142974583' />
+  <node id='-37' visible='true' lat='48.99542399051902' lon='8.471901629862522' />
+  <way id='-38' action='modify' visible='true'>
+    <nd ref='-13' />
+    <nd ref='-3' />
+    <tag k='name' v='Nix' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-39' visible='true'>
+    <nd ref='-30' />
+    <nd ref='-29' />
+    <nd ref='-32' />
+    <nd ref='-31' />
+    <nd ref='-33' />
+    <tag k='width' v='1' />
+    <tag k='name' v='1' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-40' action='modify' visible='true'>
+    <nd ref='-18' />
+    <nd ref='-16' />
+    <tag k='name' v='Nix' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-41' action='modify' visible='true'>
+    <nd ref='-5' />
+    <nd ref='-34' />
+    <tag k='width' v='1' />
+    <tag k='name' v='1' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-42' action='modify' visible='true'>
+    <nd ref='-24' />
+    <nd ref='-23' />
+    <tag k='name' v='Nix' />
+    <tag k='layer' v='-1' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-43' action='modify' visible='true'>
+    <nd ref='-23' />
+    <nd ref='-26' />
+    <tag k='name' v='Nix' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-44' action='modify' visible='true'>
+    <nd ref='-19' />
+    <nd ref='-15' />
+    <nd ref='-1' />
+    <nd ref='-11' />
+    <nd ref='-19' />
+    <tag k='building' v='yes' />
+  </way>
+  <way id='-45' action='modify' visible='true'>
+    <nd ref='-16' />
+    <nd ref='-13' />
+    <tag k='name' v='Nix' />
+    <tag k='layer' v='-1' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-46' action='modify' visible='true'>
+    <nd ref='-10' />
+    <nd ref='-5' />
+    <tag k='name' v='aaa' />
+    <tag k='width' v='aaa' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-47' action='modify' visible='true'>
+    <nd ref='-7' />
+    <nd ref='-12' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Do not upload' />
+  </way>
+  <way id='-48' action='modify' visible='true'>
+    <nd ref='-2' />
+    <nd ref='-22' />
+    <tag k='name' v='Nix' />
+    <tag k='layer' v='1' />
+    <tag k='bridge' v='yes' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-49' action='modify' visible='true'>
+    <nd ref='-22' />
+    <nd ref='-8' />
+    <tag k='name' v='Nix' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-50' action='modify' visible='true'>
+    <nd ref='-12' />
+    <nd ref='-6' />
+    <tag k='highway' v='residential' />
+    <tag k='layer' v='1' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-51' action='modify' visible='true'>
+    <nd ref='-5' />
+    <nd ref='-14' />
+    <nd ref='-17' />
+    <nd ref='-25' />
+    <nd ref='-28' />
+    <nd ref='-27' />
+    <nd ref='-30' />
+    <tag k='name' v='5' />
+    <tag k='width' v='5' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-52' action='modify' visible='true'>
+    <nd ref='-21' />
+    <nd ref='-24' />
+    <tag k='name' v='Nix' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-53' visible='true'>
+    <nd ref='-6' />
+    <nd ref='-4' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Do not upload' />
+  </way>
+  <way id='-54' action='modify' visible='true'>
+    <nd ref='-20' />
+    <nd ref='-10' />
+    <tag k='name' v='10m' />
+    <tag k='width' v='10m' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-55' action='modify' visible='true'>
+    <nd ref='-9' />
+    <nd ref='-2' />
+    <tag k='name' v='Nix' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-56' action='modify' visible='true'>
+    <nd ref='-35' />
+    <nd ref='-36' />
+    <tag k='width' v='30' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-57' action='modify' visible='true'>
+    <nd ref='-36' />
+    <nd ref='-37' />
+    <tag k='width' v='30' />
+    <tag k='tunnel' v='yes' />
+    <tag k='waterway' v='river' />
+  </way>
+</osm>

@@ -66,6 +66,13 @@ def edit_osm_obj(type, id, post, session={}):
     obj.save(username, password)
     return obj
 
+def tag_sorter(a, b):
+    if ':' in a and not ':' in b:
+        return 1
+    elif ':' in b and not ':' in a:
+        return -1
+    return cmp(a,b)
+
 def load(request, type="node", id=0):
     if request.method == "POST":
         obj = edit_osm_obj(type, id, request.POST, request.session)
@@ -73,7 +80,13 @@ def load(request, type="node", id=0):
     xml = get_xml_string(type, id)
     obj = osmparser_obj(type, id, xml=xml)
     
-    return render_to_response("obj.html",{'obj':obj, 'obj_xml': xml,
+    tag_list = obj.tags.keys()
+    tag_list.sort(tag_sorter)
+    sorted_tags = []
+    for k in tag_list:
+        sorted_tags.append((k, obj.tags[k]))
+    return render_to_response("obj.html",{'obj':obj, 'obj_xml': xml, 
+        'sorted_tags': sorted_tags,
         'logged_in': ('username' in request.session)})
 
 def home(request):

@@ -191,7 +191,7 @@ class OSMObj:
         h = httplib2.Http()
         h.add_credentials(username, password)
         xml = self.toxml()    
-        (resp, content) = h.request(url, "PUT", body=xml)
+        (resp, content) = h.request(url, "DELETE")
         if int(resp.status) != 200:
             raise Exception("Status was: %s, Content: %s" % (resp.status, content))
         self.id = None

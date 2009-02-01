@@ -114,6 +114,10 @@ def login(request):
         form = UserForm()
     return render_to_response("login.html", {'form': form})    
 
+def logout(request):
+    request.session.flush()
+    return HttpResponseRedirect("/")    
+
 def api_proxy(request, url):
     http = httplib2.Http()   
     url = "%s/%s" % (settings.OSM_API, url)

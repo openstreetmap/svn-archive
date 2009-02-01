@@ -8,7 +8,7 @@
  <body>
    <div class="head">
        <div style='float: right'>
-         <a href="/">Home</a> {% if not logged_in %} | <a href="/login/">Login</a> {% endif %}  
+         <a href="/">Home</a> {% if not logged_in %} | <a href="/login/">Login</a> {% else %} | <a href="/logout/">Logout</a> {% endif %}  
        </div>  
        <h1>Simple OSM Editor</h1>
    </div>

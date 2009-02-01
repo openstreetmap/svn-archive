@@ -27,13 +27,21 @@
  */
 package org.openstreetmap.josm.plugins.osb.gui.action;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 
 public abstract class OsbAction extends AbstractAction {
 
@@ -75,5 +83,34 @@ public abstract class OsbAction extends AbstractAction {
 
     public static void removeActionObserver(OsbActionObserver obs) {
         observers.remove(obs);
+    }
+    
+    protected String addMesgInfo(String msg) {
+        // get the user nickname
+        String nickname = Main.pref.get(ConfigKeys.OSB_NICKNAME);
+        if(nickname == null || nickname.length() == 0) {
+            nickname = JOptionPane.showInputDialog(Main.parent, tr("Please enter a user name"));
+            if(nickname == null) {
+                nickname = "NoName";
+            } else {
+                Main.pref.put(ConfigKeys.OSB_NICKNAME, nickname);
+            }
+        }
+        
+        // concatenate nickname and date, if date should be included
+        String info = nickname;
+        if(Main.pref.getBoolean(ConfigKeys.OSB_INCLUDE_DATE)) {
+            // get the date
+            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, Locale.getDefault());
+            String date = df.format(new Date());
+            
+            // concatenate nickname and date
+            info = info.concat(", ").concat(date);
+        }
+        
+        // add user and date info to the message
+        msg = msg.concat(" [").concat(info).concat("]");
+        
+        return msg;
     }
 }

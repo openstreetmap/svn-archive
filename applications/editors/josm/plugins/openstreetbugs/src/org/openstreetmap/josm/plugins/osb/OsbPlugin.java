@@ -115,6 +115,12 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             auto_download = "true";
             Main.pref.put(ConfigKeys.OSB_AUTO_DOWNLOAD, auto_download);
         }
+        
+        String include_date = Main.pref.get(ConfigKeys.OSB_INCLUDE_DATE);
+        if(include_date == null || include_date.length() == 0) {
+            include_date = "true";
+            Main.pref.put(ConfigKeys.OSB_INCLUDE_DATE, include_date);
+        }
     }
 
     /**

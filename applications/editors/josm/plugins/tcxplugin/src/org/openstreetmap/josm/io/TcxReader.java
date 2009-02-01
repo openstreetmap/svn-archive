@@ -124,6 +124,8 @@ public class TcxReader {
                 if (activity.getLap() != null) {
                     for (ActivityLapT activityLap : activity.getLap()) {
                         if (activityLap.getTrack() != null) {
+                            XMLGregorianCalendar startTime = activityLap
+                                    .getStartTime();
                             GpxTrack currentTrack = new GpxTrack();
                             gpxData.tracks.add(currentTrack);
                             for (TrackT track : activityLap.getTrack()) {
@@ -135,6 +137,13 @@ public class TcxReader {
                                         WayPoint waypt = convertPoint(tp);
 
                                         if (waypt != null) {
+                                            if (startTime != null) {
+                                                waypt.attr.put("name",
+                                                               startTime
+							       .toString());
+                                                startTime = null;
+                                            }
+
                                             currentTrackSeg.add(waypt);
                                         }
                                     }

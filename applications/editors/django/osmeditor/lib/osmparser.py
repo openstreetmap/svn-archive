@@ -10,8 +10,11 @@ except:
 try:
     import httplib2
 except ImportError, E:
-    httplib2 = False
-    httplib2_error = str(E)
+    try:
+        from third import httplib2
+    except ImportError, E2:
+        httplib2 = False
+        httplib2_error = "%s/%s" % (E, E2)
 
 def indent(elem, level=0):
     """Used for pretty printing XML."""

@@ -1,35 +1,30 @@
-import xml.dom.minidom as m
 from django.conf import settings
 from django import forms
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
+
 try:
     import httplib2
 except:
     from third import httplib2
-
-try:
-    from xml.etree.cElementTree import Element, SubElement, tostring 
-except:
-    from third.ElementTree import Element, SubElement, tostring
-
-import urllib
 
 from lib import osmparser
 
 def osmparser_obj(type, id, xml=None):
     if not xml:
         xml = get_xml_string(type, id)
-    output = osmparser.parseString(xml)
+    output = osmparser.parseString(xml, site_url=settings.OSM_SERVER)
     return output["%ss" % type][int(id)] 
 
 def get_xml_string(type, id):
     url = "%s/%s/%s/full" % (settings.OSM_API, type, id)
     if type == "node":
         url = url.replace('/full','') # required because the API 404s on node/x/full - wtf?
-    u = urllib.urlopen(url)
-    data = u.read()
-    return data
+    h = httplib2.Http()    
+    (resp, content) = h.request(url)
+    if int(resp.status) != 200:
+        raise Exception("%s returned %s" % (url, resp.status))
+    return content 
 
 def edit_osm_obj(type, id, post, session={}):
     obj = osmparser_obj(type, id)
@@ -68,21 +63,13 @@ def edit_osm_obj(type, id, post, session={}):
     password = post.get('password', None) or session.get("password", None)
     if not username or not password:
         raise Exception("Need username and password")
-    xml = obj.toxml()
-    change_obj(type, id, xml, username, password)
-
-def change_obj(type, id, xml, username, password):    
-    url = "%s/%s/%s" % (settings.OSM_API, type, id)
-    http = httplib2.Http()   
-    http.add_credentials(username, password)
-    resp, content = http.request(url, "PUT", body=xml)    
-    if int(resp.status) != 200:
-        raise Exception("%s, %s \n%s" % (resp.status, url, content))
+    obj.save(username, password)
+    return obj
 
 def load(request, type="node", id=0):
     if request.method == "POST":
-        edit_osm_obj(type, id, request.POST, request.session)
-        return HttpResponseRedirect("/%s/%s/" % (type, id))   
+        obj = edit_osm_obj(type, id, request.POST, request.session)
+        return HttpResponseRedirect(obj.local_url())   
     xml = get_xml_string(type, id)
     obj = osmparser_obj(type, id, xml=xml)
     

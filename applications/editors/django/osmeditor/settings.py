@@ -80,9 +80,10 @@ INSTALLED_APPS = (
 )
 
 #OSM_API = "http://api.openstreetmap.org/api/0.5"
-OSM_API = "http://api.openstreetmap.org/api/0.5"
-OSM_BROWSE = "http://api.openstreetmap.org/browse/%s/%s" # maybe it's not a good idea to put interpolation points in here
-OSM_USER = "http://api.openstreetmap.org/user/%s"
+OSM_SERVER = "http://openstreetmap.org"  
+OSM_API = "%s/api/0.5" % OSM_SERVER
+OSM_BROWSE = OSM_SERVER + "/browse/%s/%s" # maybe it's not a good idea to put interpolation points in here
+OSM_USER = OSM_SERVER + "/user/%s"
 
 APP_NAME = "Simple OSM Editor"
 APP_URI = "http://trac.openstreetmap.org/browser/applications/editors/django/osmeditor"

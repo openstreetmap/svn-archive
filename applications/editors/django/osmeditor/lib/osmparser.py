@@ -38,12 +38,13 @@ class OSMObj:
     members = None
 
 
-    def __init__(self, id, type=None):
+    def __init__(self, id, type=None, site_url="http://openstreetmap.org"):
         self.id = id
         self.tags = {}
         if type:
             self.setType(type)
-    
+        self.site_url = site_url
+
     def setType(self, type):
         self.type = type
         if self.type == "way":
@@ -59,6 +60,21 @@ class OSMObj:
             d = "%s (%s)" % (self.tags['name'], d)
         return d
 
+    def api_url(self):
+        return "%s/api/0.5/%s/%s" % (self.site_url, self.type, self.id)
+    
+    def local_url(self):
+        return "/%s/%s/" % (self.type, self.id)
+    
+    def user_link(self):
+        if self.user:
+            return "%s/user/%s" % (self.site_url, self.user)
+        else: 
+            return ""    
+    
+    def browse_url(self):
+        return "%s/browse/%s/%s" % (self.site_url, self.type, self.id)
+    
     def __str__(self):
         return "%s %s" % (self.type.title(), self.id)
 
@@ -145,17 +161,20 @@ def rearrange(output):
     return new_output
 
 class ParseObjects(ContentHandler):
-    def __init__ (self):
+    def __init__ (self, site_url="http://openstreetmap.org"):
+        self.site_url = site_url
         self.output = {
-          'nodes': [],
-          'ways': [],
-          'relations': []
-       }   
+           'nodes': [],
+           'ways': [],
+           'relations': []
+        }   
+       
+    
     def startElement (self, name, attr):
          """Handle creating the self.current node, and pulling tags/nd refs."""
          
          if name in ['node', 'way', 'relation']:
-            self.current = OSMObj(int(attr['id']), name)
+            self.current = OSMObj(int(attr['id']), name, site_url=self.site_url)
             if 'user' in attr:
                 self.current.user = attr['user']
             if 'timestamp' in attr:
@@ -182,8 +201,8 @@ class ParseObjects(ContentHandler):
         if name in ['way', 'node','relation']:
             self.output['%ss' % name].append(self.current)
 
-def parse(f, arrange=True):
-    parser = ParseObjects()
+def parse(f, arrange=True, site_url = "http://openstreetmap.org"):
+    parser = ParseObjects(site_url=site_url)
     xml.sax.parse( f, parser )          
     output = parser.output
     if arrange:
@@ -193,9 +212,9 @@ def parse(f, arrange=True):
             pass
     return output 
 
-def parseString(data, arrange=True):
-    parser = ParseObjects()
-    xml.sax.parseString( data, parser )          
+def parseString(data, arrange=True, site_url = "http://openstreetmap.org"):
+    parser = ParseObjects(site_url=site_url)
+    xml.sax.parseString( data, parser  )          
     output = parser.output
     if arrange:
         try:

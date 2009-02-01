@@ -7,6 +7,12 @@ except:
     sys.path.append("..")
     from third.ElementTree import Element, SubElement, tostring
 
+try:
+    import httplib2
+except ImportError, E:
+    httplib2 = False
+    httplib2_error = str(E)
+
 def indent(elem, level=0):
     """Used for pretty printing XML."""
     i = "\n" + level*"  "
@@ -25,6 +31,30 @@ def indent(elem, level=0):
 
 
 class OSMObj:
+    """
+    >>> o = osmparser.OSMObj(type='node')
+    >>> o.loc = (-5, -5)
+    >>> o.tags['created_by'] = 'osmparser'
+    >>> o.toxml()
+    '<osm version="0.5">\\n  <node lat="-5" lon="-5">\\n    <tag k="created_by" v="osmparser" />\\n  </node>\\n</osm>'
+    >>> o.save(username, password)
+    '339668244'
+    >>> o.id
+    339668244
+    >>> o.delete()
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    TypeError: delete() takes exactly 3 arguments (1 given)
+    >>> o.delete(username, password)
+    ' '
+    >>> o.id
+    >>> o.delete(username, password)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "lib/osmparser.py", line 162, in delete
+        raise Exception("Can't delete object with no id")
+    Exception: Can't delete object with no id
+    """
     type = None
     id = None
     user = None
@@ -37,8 +67,7 @@ class OSMObj:
     nodes = None
     members = None
 
-
-    def __init__(self, id, type=None, site_url="http://openstreetmap.org"):
+    def __init__(self, id=None, type=None, site_url="http://openstreetmap.org"):
         self.id = id
         self.tags = {}
         if type:
@@ -61,7 +90,8 @@ class OSMObj:
         return d
 
     def api_url(self):
-        return "%s/api/0.5/%s/%s" % (self.site_url, self.type, self.id)
+        id = self.id or "create"
+        return "%s/api/0.5/%s/%s" % (self.site_url, self.type, id)
     
     def local_url(self):
         return "/%s/%s/" % (self.type, self.id)
@@ -93,11 +123,10 @@ class OSMObj:
             parent = Element("osm", {"version": "0.5"})
         if self.type == "node":
             element = SubElement(parent, "node", {
-                'id': str(self.id), 
                 'lon': str(self.loc[0]), 
                 'lat': str(self.loc[1])})
         elif self.type == "way":
-            element = SubElement(parent, 'way', {'id': str(self.id)})
+            element = SubElement(parent, 'way')
             for n in self.nodes:
                 id = None
                 if isinstance(n, int):
@@ -107,7 +136,7 @@ class OSMObj:
                 id = str(id)    
                 SubElement(element, "nd", {'ref': id})
         elif self.type == "relation":
-            element = SubElement(parent, 'relation', {'id': str(self.id)})
+            element = SubElement(parent, 'relation')
             for m in self.members:
                 id = None
                 if isinstance(m['ref'], int):
@@ -116,14 +145,18 @@ class OSMObj:
                     id = m['ref'].id
                 id = str(id)    
                 SubElement(element, "member", {
-                    'type': m['type'],
                     'ref': id,
+                    'type': m['type'],
                     'role': m['role']
                 })    
-            
+        
+        if self.id:
+            element.attrib['id'] = str(self.id)
+
         keys = self.tags.keys()
         keys.sort()
         
+
         for key in keys:
             SubElement(element, "tag", {'k': key, 'v': self.tags[key]})
         
@@ -132,7 +165,35 @@ class OSMObj:
             return tostring(parent)
         else:
             return parent
-        
+
+    def save(self, username, password):
+        if not httplib2:
+            raise Exception("Couldn't import httplib2: %s" % httplib2_error)
+        url = self.api_url()
+        h = httplib2.Http()
+        h.add_credentials(username, password)
+        xml = self.toxml()    
+        (resp, content) = h.request(url, "PUT", body=xml)
+        if int(resp.status) != 200:
+            raise Exception("Status was: %s, Content: %s" % (resp.status, content))
+        if not self.id:
+            self.id = int(content)
+        return content
+    def delete(self, username, password):
+        if not httplib2:
+            raise Exception("Couldn't import httplib2: %s" % httplib2_error)
+        if not self.id:
+            raise Exception("Can't delete object with no id")
+        url = self.api_url()
+        h = httplib2.Http()
+        h.add_credentials(username, password)
+        xml = self.toxml()    
+        (resp, content) = h.request(url, "PUT", body=xml)
+        if int(resp.status) != 200:
+            raise Exception("Status was: %s, Content: %s" % (resp.status, content))
+        self.id = None
+        return content
+
 def rearrange(output):
     new_output = {
         'nodes': {},

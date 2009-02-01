@@ -184,11 +184,17 @@ static void cutFile(const char *inFilename, const char *outFilename, struct hash
 		    die("Error creating XML element");
 	    	}
 
-		copyAttributes(reader, writer);		    
+		copyAttributes(reader, writer);
 	    } else {
 	        copy = 0;
 	    }
 	    free(att);
+	} else if (strcmp((char *)name, "bound") == 0) {
+	    rc = xmlTextWriterStartElement(writer, BAD_CAST "bound");
+	    if (rc < 0) {
+	        die("Error creating XML element");
+	    }
+	    copyAttributes(reader, writer);
 	} else if (copy) {
 	    if (strcmp((char *)name, "nd") == 0 ||
 	    	    strcmp((char *)name, "tag") == 0 ||
@@ -359,6 +365,7 @@ static int fillIncludes(const char *inFilename, struct hashtable *includeNodes, 
 		    }
 		}
 	    }
+	} else if (strcmp((char *)name, "bound") == 0) {
 	} else if (strcmp((char *)name, "osm") == 0) {
 	    xmlChar *att = xmlTextReaderGetAttribute(reader, (xmlChar *)"version");
 	    if (strcmp((char *)att, OSM_VERSION) != 0) {

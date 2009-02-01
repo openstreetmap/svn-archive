@@ -3,9 +3,8 @@
     h2 { margin: 0; padding: 0;}
     label { font-weight: bolder;}
     #new_keys {display:none;}
-    form ul.fields {list-style: none;}
+    form ul.fields {list-style: none; padding: 0px; margin: 0px}
     .fields.varying label {width:15em;display: inline-block;line-height: 1.8;vertical-align: top;}
-    label.delete {color:#f00;font-weight:normal;}
     .deleting {text-decoration:line-through;color:#f00; /* planned */}
     .changed {color:#0f0; /* planned */}
     .redundant {display: none;}
@@ -22,3 +21,4 @@
 } 
 .head h1 {font-size: 1.3em; font-weight:normal; } 
 
+    label.delete {color:#f00;font-weight:normal; width:5em!important;}

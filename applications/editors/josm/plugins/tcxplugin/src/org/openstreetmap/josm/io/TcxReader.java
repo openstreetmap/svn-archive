@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
@@ -17,6 +18,7 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.io.tcx.ActivityLapT;
 import org.openstreetmap.josm.io.tcx.ActivityT;
 import org.openstreetmap.josm.io.tcx.CourseT;
+import org.openstreetmap.josm.io.tcx.PositionT;
 import org.openstreetmap.josm.io.tcx.TrackT;
 import org.openstreetmap.josm.io.tcx.TrackpointT;
 import org.openstreetmap.josm.io.tcx.TrainingCenterDatabaseT;
@@ -85,6 +87,33 @@ public class TcxReader {
         }
     }
 
+    /** Convert a TrackpointT to a WayPoint.
+     * @param tp	TrackpointT to convert
+     * @return		tp converted to WayPoint, or null
+     */
+    private static WayPoint convertPoint(TrackpointT tp) {
+
+        PositionT p = tp.getPosition();
+
+        if (p == null) {
+            // If the TrackPointT lacks a position, return null.
+            return null;
+        }
+
+        WayPoint waypt = new WayPoint(new LatLon(p.getLatitudeDegrees(),
+                                                 p.getLongitudeDegrees()));
+        // If WayPoint handled elevation data, we could get it from
+        // tp.getAltitudeMeters().
+
+        XMLGregorianCalendar time = tp.getTime();
+
+        if (time != null) {
+            waypt.time = .001 * time.toGregorianCalendar().getTimeInMillis();
+        }
+
+        return waypt;
+    }
+
     /**
      * @param tcd
      */
@@ -101,30 +130,12 @@ public class TcxReader {
                                 if (track.getTrackpoint() != null) {
                                     Collection<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
                                     currentTrack.trackSegs.add(currentTrackSeg);
-                                    for (TrackpointT trackpoint : track
-                                            .getTrackpoint()) {
-                                        // Some trackspoints don't have a
-                                        // position.
-                                        // Check it
-                                        // first to avoid an NPE!
-                                        if (trackpoint.getPosition() != null) {
-                                            LatLon latLon = new LatLon(
-                                                    trackpoint
-                                                            .getPosition()
-                                                            .getLatitudeDegrees(),
-                                                    trackpoint
-                                                            .getPosition()
-                                                            .getLongitudeDegrees());
-                                            WayPoint currentWayPoint = new WayPoint(
-                                                    latLon);
-                                            // We usually have altitude info
-                                            // here
-                                            // (trackpoint.getAltitudeMeters())
-                                            // Don't know how to add it to
-                                            // the GPX
-                                            // Data...
-                                            currentTrackSeg
-                                                    .add(currentWayPoint);
+                                    for (TrackpointT tp :
+                                           track.getTrackpoint()) {
+                                        WayPoint waypt = convertPoint(tp);
+
+                                        if (waypt != null) {
+                                            currentTrackSeg.add(waypt);
                                         }
                                     }
                                 }
@@ -150,23 +161,11 @@ public class TcxReader {
                         if (track.getTrackpoint() != null) {
                             Collection<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
                             currentTrack.trackSegs.add(currentTrackSeg);
-                            for (TrackpointT trackpoint : track.getTrackpoint()) {
-                                // Some trackspoints don't have a position.
-                                // Check it
-                                // first to avoid an NPE!
-                                if (trackpoint.getPosition() != null) {
-                                    LatLon latLon = new LatLon(
-                                            trackpoint.getPosition()
-                                                    .getLatitudeDegrees(),
-                                            trackpoint.getPosition()
-                                                    .getLongitudeDegrees());
-                                    WayPoint currentWayPoint = new WayPoint(
-                                            latLon);
-                                    // We usually have altitude info here
-                                    // (trackpoint.getAltitudeMeters())
-                                    // Don't know how to add it to the GPX
-                                    // Data...
-                                    currentTrackSeg.add(currentWayPoint);
+                            for (TrackpointT tp : track.getTrackpoint()) {
+                                WayPoint waypt = convertPoint(tp);
+
+                                if (waypt != null) {
+                                    currentTrackSeg.add(waypt);
                                 }
                             }
                         }

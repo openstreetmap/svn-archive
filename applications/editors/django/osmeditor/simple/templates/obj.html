@@ -63,13 +63,21 @@
 {% endif %}
 <input type="submit" value="Change" />
 </form>
-{% if obj.child %}
-<h3>Contains object{% ifnotequal obj.child_count 1 %}s{% endifnotequal %}:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
+{% if obj.children %}
+<h3>Contains {{ obj.child_count }} object{% ifnotequal obj.child_count 1 %}s{% endifnotequal %}:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
 <ul class="children">
-{% for c in obj.child %}
-  <li class="{{c.type}}">{% if c.role %}{{c.role}}: {% endif %}<a href="/{{c.type}}/{{c.ref}}"><span class="redundant">{{c.type|lower}} </span>{{c.ref}}</a></li> <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
+{% for c in obj.children %}
+  <li class="{{c.type}}"><a href="/{{c.type}}/{{c.ref}}"><span class="redundant">{{c.type|lower}} </span>{{c.ref}}</a>{% if c.role %} (role:<span class="role">{{c.role}}</span>){% endif %}{% ifnotequal c.tag_count 0 %}{% if c.tags.name %}: {{c.tags.name}}{% else %} <abbr class="legend" title="{{c.type}} contains traces of nuts">*</abbr>{% endif %}{% endifnotequal %}</li> <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
 <!-- TODO: add delete checkboxes to these children -->
 {% endfor %}
 </ul>
 {% endif %}
+<div class="debug">
+<h3>Debug output</h3>
+obj.foo={{obj.foo}}
+<h4>Source XML</h4>
+<pre class="xml">
+{{ obj.xml }}
+</pre>
+</div>
 {% endblock %}

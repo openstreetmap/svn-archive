@@ -34,7 +34,9 @@ function mapOf(div, type, id) {
         }
     );
     map.addLayer(mapnik);
-    var osm = new OpenLayers.Layer.GML("", "/api/0.5/" + type + "/" + id + "/full", {
+    var url = "/api/0.5/" + type + "/" + id;
+    if (type != 'node') { url += '/full'; }
+    var osm = new OpenLayers.Layer.GML("", url, {
         format: OpenLayers.Format.OSM,
         projection: map.displayProjection
     });

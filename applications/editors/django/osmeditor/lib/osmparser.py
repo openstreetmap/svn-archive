@@ -239,9 +239,9 @@ class ParseObjects(ContentHandler):
          
          if name in ['node', 'way', 'relation']:
             self.current = OSMObj(int(attr['id']), name, site_url=self.site_url)
-            if 'user' in attr:
+            if attr.has_key("user"):
                 self.current.user = attr['user']
-            if 'timestamp' in attr:
+            if attr.has_key("timestamp"):
                 self.current.timestamp = attr['timestamp']
          
          elif name =='nd' and self.current:

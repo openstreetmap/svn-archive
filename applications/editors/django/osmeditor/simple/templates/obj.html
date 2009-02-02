@@ -16,21 +16,25 @@
 <form method="POST" action="" class="foo">
 <input type="hidden" name="id" value="{{ obj.id }}" />
 <input type="hidden" name="type" value="{{ obj.type }}" />
-<input type="hidden" name="timestamp" value="{{ obj.timestamp }}" /> <!-- is this needed in the form? yes, until 0.6: this is our conflict detector -->
+<input type="hidden" name="timestamp" value="{{ obj.timestamp }}" /> {# needed until 0.6: this is our conflict detector #}
+{% if obj.tags %}
 <fieldset>
 <ul class="fields varying">
 {% for k,v in sorted_tags %}
   <li>
         <label for="key_{{k}}">{{ k }}</label>
-        <input name="key_{{k}}" id="key_{{k}}" value="{{ v }}" onchange='if (this.value != this.origValue) { this.className="changed"; } else { this.className = ""; }' maxlength="200"  style="width: 300px"/>
-        <input type="checkbox" name="delete_key_{{k}}" id="delete_key_{{k}}" value="delete" onChange='javascript:document.getElementById("key_{{k}}").className=(this.checked?"deleting":"")'/><label class="delete" for="delete_key_{{k}}">Delete?</label>
+        <input name="key_{{k}}" id="key_{{k}}" value="{{ v }}" onchange='this.changed = (this.value != this.origValue); if (this.changed) { this.className="editing"; document.getElementById("delete_key_{{k}}").checked=false; }' maxlength="200"  style="width: 300px"/>
+        <input type="checkbox" name="delete_key_{{k}}" id="delete_key_{{k}}" value="delete" onChange='document.getElementById("key_{{k}}").className=(this.checked?"deleting":(document.getElementById("key_{{k}}").changed ? "editing" : ""))'/><label class="delete" for="delete_key_{{k}}">Delete?</label>
     </li>
     <script> document.getElementById("key_{{k}}").origValue = '{{v}}'; </script>
 {% endfor %}
 </ul>
 </fieldset>
+{% else %}
+<p class="advisory">Currently {{obj.type}} has no tags</p>
+{% endif %}
 <p class="instruction" id="add_tags">
-<a href="#" onclick='javascript:document.getElementById("new_keys").style.display="block";document.getElementById("add_tags").style.visibility="hidden";return false'>Add more tags…</a>
+<a href="#" onclick='document.getElementById("new_keys").style.display="block";document.getElementById("add_tags").style.visibility="hidden";return false'>Add {% if obj.tags %}more {% endif %}tags…</a>
 </p>
 <fieldset id="new_keys">
 <legend>New tags</legend>
@@ -66,23 +70,23 @@
 <input type="submit" value="Change" />
 </form>
 {% if obj.members %}
-<h3>Contains {{ obj.members|length }} member{{ obj.members|length|pluralize }}:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
+<h3>Contains {{ obj.members|length }} member{{ obj.members|length|pluralize }}:</h3>
 <ul class="children">
 {% for c in obj.members %}
   <li class="{{c.type}}"><a href="{{c.ref.local_url}}"><span class="redundant">{{c.type|lower}} </span>{{c.ref}}</a>{% if c.role %} (role: <span class="role">{{c.role}}</span>){% endif %}{% if c.ref.tags.name %}: {{c.ref.tags.name}}{% else %} <abbr class="legend" title="{{c.type}} contains traces of nuts">*</abbr>{% endif %}</li> 
-  <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
-  <!-- TODO: add delete checkboxes to these children -->
+  {# FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern #}
+  {# TODO: add delete checkboxes to these children #}
 {% endfor %}
 </ul>
 {% endif %}
 
 {% if obj.nodes %}
-<h3>Contains {{ obj.nodes|length }} node{{ obj.nodes|length|pluralize }}:</h3> <!-- FIXME: probably need some nicer heading but I can't be dealing with plural checking right now -->
+<h3>Contains {{ obj.nodes|length }} node{{ obj.nodes|length|pluralize }}:</h3>
 <ul class="children">
 {% for c in obj.nodes %}
   <li class="{{c.type}}"><a href="{{c.local_url}}"><span class="redundant">{{c.type|lower}} </span>{{c.id}}</a>{% if c.tags.name %}: {{c.ref.tags.name}}{% else %} <abbr class="legend" title="{{c.type}} contains traces of nuts">*</abbr>{% endif %}</li> 
-  <!-- FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern -->
-  <!-- TODO: add delete checkboxes to these children -->
+  {# FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern #}
+  {# TODO: add delete checkboxes to these children #}
 {% endfor %}
 </ul>
 {% endif %}

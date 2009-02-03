@@ -10,8 +10,8 @@ dojo.declare("cmyk.rules.attributes._Attribute",null,{
 	      @class Parent class of all attributes
 	      @memberOf cmyk.rules.attributes
 	*/
-	constructor: function() {
-		var _name = "";
+	constructor: function(my_name,my_value) {
+		var _name = my_name;
 		var _value = "";
 		var _validator = null;
 
@@ -44,6 +44,9 @@ dojo.declare("cmyk.rules.attributes._Attribute",null,{
 				return validator.applyValidator();
 			}
 		}
+
+		this.setValue(my_value);
+
 	},
 });
 

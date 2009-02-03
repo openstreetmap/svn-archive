@@ -1,20 +1,20 @@
-dojo.provide("cmyk.rules.svgPattern");
+dojo.provide("cmyk.rules.pathText");
 
-dojo.require("cmyk.rules._svgFeature");
+dojo.require("cmyk.rules.renderingInstruction");
 
 /**
-	@lends cmyk.rules.svgPattern
+	@lends cmyk.rules.pathText
 */
 
-dojo.declare("cmyk.rules.svgPattern",cmyk.rules._svgFeature,{
+dojo.declare("cmyk.rules.pathText",cmyk.rules.renderingInstruction,{
 	/** 
 	      @constructs
-	      @class This is a class that represents an SVG Pattern
+	      @class A "pathText" rendering instruction
 	      @memberOf cmyk.rules
-	      @extends cmyk.rules._svgFeature
+	      @extends cmyk.rules.renderingInstruction
 	*/
 	constructor: function(node) {
-		var _class="cmyk.rules.svgPattern";
+		var _class="cmyk.rules.pathText";
 
 		var _attributeFactory = new cmyk.rules.attributes.attributeFactory();
 

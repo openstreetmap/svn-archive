@@ -1,24 +1,22 @@
-dojo.provide("cmyk.rules.areaSymbol");
+dojo.provide("cmyk.rules.Tag");
 
-dojo.require("cmyk.rules._Symbol");
+dojo.require("cmyk.rules.renderingInstruction");
 
 dojo.require("cmyk.rules.attributes.attributeFactory");
 
 /**
-	@lends cmyk.rules.areaSymbol
+	@lends cmyk.rules.Tag
 */
 
-dojo.declare("cmyk.rules.areaSymbol",cmyk.rules._Symbol,{
+dojo.declare("cmyk.rules.Tag",cmyk.rules.renderingInstruction,{
 	/** 
 	      @constructs
-	      @class This is a class representing an AreaSymbol rendering instruction
+	      @class A Tag rendering instruction
 	      @memberOf cmyk.rules
-	      @extends cmyk.rules._Symbol
-	      @private
+	      @extends cmyk.rules.renderingInstruction
 	*/
 	constructor: function(node) {
-//TODO: connect the real svg inside the object
-		var _class="cmyk.rules.areaSymbol";
+		var _class="cmyk.rules.Tag";
 
 		var _attributeFactory = new cmyk.rules.attributes.attributeFactory();
 

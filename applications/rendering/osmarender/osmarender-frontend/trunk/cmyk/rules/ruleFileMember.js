@@ -1,17 +1,26 @@
 dojo.provide("cmyk.rules.ruleFileMember");
 
-dojo.require("cmyk.rules.xmlComment");
-dojo.require("cmyk.rules.xmlText");
-dojo.require("cmyk.rules.Rule");
 dojo.require("cmyk.rules.Area");
+dojo.require("cmyk.rules.Caption");
+dojo.require("cmyk.rules.Circle");
 dojo.require("cmyk.rules.Else");
 dojo.require("cmyk.rules.Line");
+dojo.require("cmyk.rules.pathText");
+dojo.require("cmyk.rules.Rule");
 dojo.require("cmyk.rules.selectorRule");
-dojo.require("cmyk.rules.areaSymbol");
-dojo.require("cmyk.rules.Circle");
+dojo.require("cmyk.rules.svgG");
+dojo.require("cmyk.rules.svgMarker");
+dojo.require("cmyk.rules.svgPath");
+dojo.require("cmyk.rules.svgPattern");
+dojo.require("cmyk.rules.svgRect");
+dojo.require("cmyk.rules.svgSymbol");
 dojo.require("cmyk.rules.Symbol");
-dojo.require("cmyk.rules.textWithK");
+dojo.require("cmyk.rules.Symbol");
+dojo.require("cmyk.rules.Symbol");
+dojo.require("cmyk.rules.Tag");
 dojo.require("cmyk.rules.wayMarker");
+dojo.require("cmyk.rules.xmlComment");
+dojo.require("cmyk.rules.xmlText");
 
 /**
 	@lends cmyk.rules.ruleFileMember
@@ -69,15 +78,13 @@ dojo.declare("cmyk.rules.ruleFileMember",null,{
 								string_debug="";
 								children.push(new cmyk.rules.Line(node));
 							break;
-							case "tag":
+							case "caption":
+								string_debug="";
+								children.push(new cmyk.rules.Caption(node));
 							break;
-							case "text":
-								if (node.getAttribute("k")!=null) {
-									string_debug="";
-									children.push(new cmyk.rules.textWithK(node));
-								}
-							break;
-							case "areaText":
+							case "pathText":
+								string_debug="";
+								children.push(new cmyk.rules.pathText(node));
 							break;
 							case "wayMarker":
 								string_debug="";
@@ -91,19 +98,33 @@ dojo.declare("cmyk.rules.ruleFileMember",null,{
 								string_debug="";
 								children.push(new cmyk.rules.Symbol(node));
 							break;
-							case "areaSymbol":
+							case "tag":
 								string_debug="";
-								children.push(new cmyk.rules.areaSymbol(node));
+								children.push(new cmyk.rules.Tag(node));
 							break;
 							case "svg:marker":
+								string_debug="";
+								children.push(new cmyk.rules.svgMarker(node));
 							break;
 							case "svg:pattern":
+								string_debug="";
+								children.push(new cmyk.rules.svgPattern(node));
+							break;
+							case "svg:symbol":
+								string_debug="";
+								children.push(new cmyk.rules.svgSymbol(node));
 							break;
 								case "svg:path":
+									string_debug="";
+									children.push(new cmyk.rules.svgPath(node));
 								break;
 								case "svg:rect":
+									string_debug="";
+									children.push(new cmyk.rules.svgRect(node));
 								break;
 								case "svg:g":
+									string_debug="";
+									children.push(new cmyk.rules.svgRect(node));
 								break;
 					case "include":
 					break;

@@ -969,9 +969,16 @@ sub runPreprocessors
            {
 	       if ($Config->get("JavaVersion") >= 1.6)
                {
+                   my $javaHeapSize = '256M';
+                   if ($Config->get('JavaHeapSize'))
+                   {
+                       $javaHeapSize = $Config->get('JavaHeapSize');
+                   }
+
                    # use preprocessor only for XSLT for now. Using different algorithm for area center might provide inconsistent results"
                    # on tile boundaries. But XSLT is currently in minority and use different algorithm than orp anyway, so no difference.
-                   my $Cmd = sprintf("java -cp %s com.bretth.osmosis.core.Osmosis -q -p org.tah.areaCenter.AreaCenterPlugin --read-xml %s --area-center --write-xml %s",
+                   my $Cmd = sprintf("java -Xmx%s -cp %s com.bretth.osmosis.core.Osmosis -q -p org.tah.areaCenter.AreaCenterPlugin --read-xml %s --area-center --write-xml %s",
+                               $javaHeapSize,
                                join($Config->get("JavaSeparator"), "java/osmosis/osmosis.jar", "java/area-center.jar"),
                                $inputFile,
                                $outputFile);

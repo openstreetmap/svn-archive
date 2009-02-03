@@ -24,6 +24,15 @@ dojo.declare("cmyk.rules.attributes.attributeFactory",null,{
 				case "mask-class":
 					return new cmyk.rules.attributes.multiAttribute(attribute_name,attribute_value," ");
 				break;
+				case "e":
+					return new cmyk.rules.attributes.multiAttribute(attribute_name,attribute_value,"|");
+				break;
+				case "k":
+					return new cmyk.rules.attributes.multiAttribute(attribute_name,attribute_value,"|");
+				break;
+				case "v":
+					return new cmyk.rules.attributes.multiAttribute(attribute_name,attribute_value,"|");
+				break;
 				default:
 					return new cmyk.rules.attributes.singleAttribute(attribute_name,attribute_value);
 			}

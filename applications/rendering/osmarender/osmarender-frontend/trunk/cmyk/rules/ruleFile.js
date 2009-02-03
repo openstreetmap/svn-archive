@@ -23,7 +23,6 @@ dojo.declare("cmyk.rules.ruleFile",null,{
 			dojo.forEach(rulesFileRaw.childNodes,function(node,index,array) {
 				ruleFileMembers.push(new cmyk.rules.ruleFileMember(node));
 			});
-			console.dir(ruleFileMembers);
 			rulesSection = rulesFileRaw.getElementsByTagName("rules")[0];
 			var my_attributes = new Object();
 			with (rulesSection) {
@@ -58,6 +57,8 @@ dojo.declare("cmyk.rules.ruleFile",null,{
 		this.getGlobalAttributes = function() {
 			return dojo.clone(ruleFileAttributes.getAttributes());
 		}
+
+		console.dir(ruleFileMembers);
 
 	}
 

@@ -343,41 +343,6 @@ const char *reformDate(const char *str)
     return out;
 }
 
-void nodes(void)
-{
-    char query[255];
-    MYSQL_RES *res;
-    MYSQL_ROW row;
-    struct keyval tags;
-    MYSQL *mysql = connection_open();
-
-    initList(&tags);
-
-    snprintf(query, sizeof(query), "select id, latitude, longitude, timestamp, tags, user_id from current_nodes where visible = 1 order by id");
-
-    if ((mysql_query(mysql, query)) || !(res= mysql_use_result(mysql)))
-    {
-        fprintf(stderr,"Cannot query nodes: %s\n", mysql_error(mysql));
-        exit(1);
-    }
-
-    while ((row= mysql_fetch_row(res))) {
-        long int id;
-        long double latitude,longitude;
-
-        assert(mysql_num_fields(res) == 6);
-
-        id = strtol(row[0], NULL, 10);
-        latitude  = strtol(row[1], NULL, 10) / 10000000.0;
-        longitude = strtol(row[2], NULL, 10) / 10000000.0;
-        read_tags(row[4], &tags);
-
-        osm_node(id, latitude, longitude, &tags, reformDate(row[3]), lookup_user(row[5]));
-    }
-
-    mysql_free_result(res);
-    connection_close(mysql);
-}
 
 #define TAG_CACHE (10000)
 
@@ -541,6 +506,42 @@ struct keyval *get_generic_tags(MYSQL *mysql, const int id)
         cache_off++;
         assert (cache_off <= TAG_CACHE);
     }
+}
+
+void nodes(void)
+{
+    char query[255];
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+    struct keyval tags;
+    MYSQL *mysql = connection_open();
+
+    initList(&tags);
+
+    snprintf(query, sizeof(query), "select id, latitude, longitude, timestamp, tags, user_id from current_nodes where visible = 1 order by id");
+
+    if ((mysql_query(mysql, query)) || !(res= mysql_use_result(mysql)))
+    {
+        fprintf(stderr,"Cannot query nodes: %s\n", mysql_error(mysql));
+        exit(1);
+    }
+
+    while ((row= mysql_fetch_row(res))) {
+        long int id;
+        long double latitude,longitude;
+
+        assert(mysql_num_fields(res) == 6);
+
+        id = strtol(row[0], NULL, 10);
+        latitude  = strtol(row[1], NULL, 10) / 10000000.0;
+        longitude = strtol(row[2], NULL, 10) / 10000000.0;
+        read_tags(row[4], &tags);
+
+        osm_node(id, latitude, longitude, &tags, reformDate(row[3]), lookup_user(row[5]));
+    }
+
+    mysql_free_result(res);
+    connection_close(mysql);
 }
 
 void ways(void)

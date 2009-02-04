@@ -17,3 +17,9 @@ ForceLanguagePriority Prefer Fallback
 # Server Side Includes
 AddType text/html .shtml
 AddOutputFilter INCLUDES .shtml
+AddType text/html .html
+AddOutputFilter INCLUDES .html
+AddType text/html .shtml.en
+AddOutputFilter INCLUDES .shtml.en
+AddType text/html .html.en
+AddOutputFilter INCLUDES .html.en

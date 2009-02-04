@@ -46,13 +46,25 @@ if (!$fp) {
 			mysql_select_db('osm_donate', $_DB_H);
 			mysql_query('SET NAMES \'utf8\'', $_DB_H);
 			if ($payment_status == 'Completed' AND $option_name1=='contribution_tracking_id' AND $business == 'treasurer@openstreetmap.org') {
-				$sql_update_donation = 'UPDATE `donations` SET `processed` = 1 WHERE `uid`="'.mysql_real_escape_string($option_selection1, $_DB_H).'" LIMIT 1';
+				if ($payment_currency=='GBP') {
+					$payment_amount_gbp = $payment_amount;
+				} else {
+					$payment_amount_gbp = 0;
+					$sql_query_exc_rate = 'SELECT `rate` FROM `currency_rates` WHERE `currency`="'.$payment_currency.'" LIMIT 1';
+					$sql_result = mysql_query($sql_query_exc_rate, $_DB_H) OR error_log('FAIL UPDATING: '.$sql_query_exc_rate);
+					if ($sql_result AND mysql_num_rows($sql_result)==1) {
+						$exc_rate = mysql_fetch_array($sql_result ,MYSQL_ASSOC);
+						$payment_amount_gbp = $payment_amount / $exc_rate['rate'];
+					}
+				}
+				$sql_update_donation = 'UPDATE `donations` SET `processed` = 1, `amount_gbp` = "'.$payment_amount_gbp.'" WHERE `uid`="'.mysql_real_escape_string($option_selection1, $_DB_H).'" LIMIT 1';
 				mysql_query($sql_update_donation, $_DB_H) OR error_log('SQL FAIL: '.$sql_update_donation);
 			}
 
-			$sql_insert_callback = 'INSERT INTO `paypal_callbacks` (`amount`, `currency` , `donation_id`, `callback`) VALUES (\''.
+			$sql_insert_callback = 'INSERT INTO `paypal_callbacks` (`amount`, `currency` , `status`, `donation_id`, `callback`) VALUES (\''.
 									mysql_real_escape_string($payment_amount, $_DB_H).'\',\''.
 									mysql_real_escape_string($payment_currency, $_DB_H).'\',\''.
+									mysql_real_escape_string($payment_status, $_DB_H).'\',\''.
 									mysql_real_escape_string($option_selection1, $_DB_H).'\',\''.
 									mysql_real_escape_string(serialize($_POST), $_DB_H).
 									'\')';

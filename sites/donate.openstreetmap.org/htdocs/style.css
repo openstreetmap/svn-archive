@@ -38,7 +38,7 @@ Styles for Notices
 }
 
 #progress-meter {
-	background-image: url(images/progress/p2.5.png);
+	background-image: url(images/button-red.png);
 	background-repeat: no-repeat;
 	background-position: top center;
 	font-size: 0.8em;
@@ -275,16 +275,14 @@ h1 {
 #red-button a:hover { text-decoration: none; }
 
 .submit-button {
-cursor:pointer;
-border:outset 1px #dedede;
-background:#aaa;
-color:#fff;
-font-weight:bold;
-font-family: Verdana, Arial, Helvetica,Tahoma,sans-serif;
-padding: 5px 10px;
-
+	cursor:pointer;
+	border:outset 1px #dedede;
+	background:#aaa;
+	color:#fff;
+	font-weight:bold;
+	font-family: Verdana, Arial, Helvetica,Tahoma,sans-serif;
+	padding: 5px 10px;
 }
-
 
 i {
 	font-style: italic;
@@ -304,6 +302,14 @@ a:hover { text-decoration: underline; }
 	font-size: 36px;
 	font-weight: lighter;
 	line-height: 80%;
+}
+
+.infobox {
+	margin: 0px;
+	padding: 15px;
+	text-align: left;
+	border: 1px solid rgb(102, 102, 102);
+	background-color: rgb(243, 255, 243);
 }
 
 blockquote {

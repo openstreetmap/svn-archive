@@ -9,20 +9,9 @@
 	<title>Support OpenStreetMap Donate Now</title>
 	<link rel="stylesheet" href="style.css" type="text/css"/>
 	<script type="text/javascript" src="js/main.js"></script>
-</head>
-<body>
-	<div align="center">
-			<div id="container" dir="ltr">
-<div id="banner" dir="ltr">
-<div class="logo-box"><a href="http://www.openstreetmap.org/"><img alt="" src="images/osm_logo.png" width="120" height="120" border="0" /></a></div>
-<h1>OpenStreetMap Hardware Upgrade Fund</h1>
-<a href="#"><img src="banners/osm_banner2.png" width="468" height="60" alt="Donate Promotion Banner" border="0" /></a>
-</div>
-<div id="content-container" style="margin: 10px 80px;"><!-- content container -->
-<p><script type="text/javascript" language="javascript">
+<script type="text/javascript" language="javascript">
 //<![CDATA[
 function validateForm( form ) {
-
   var minimums = {
     'USD' : 1,
     'GBP' : 1, // $1.26
@@ -73,8 +62,28 @@ function validateForm( form ) {
   return !error;
 }
 //]]>
-
-</script></p>
+</script>
+</head>
+<body>
+	<div align="center">
+			<div id="container" dir="ltr">
+<div id="banner" dir="ltr">
+<div class="logo-box"><a href="http://www.openstreetmap.org/"><img alt="" src="images/osm_logo.png" width="120" height="120" border="0" /></a></div>
+<h1>OpenStreetMap Hardware Upgrade Fund</h1>
+<a href="#"><img src="banners/osm_banner2.png" width="468" height="60" alt="Donate Promotion Banner" border="0" /></a>
+</div>
+<div id="content-container" style="margin: 10px 80px;"><!-- content container -->
+<div class="infobox">
+<p>OpenStreetMap Foundation is raising funds to purchase a new <strong>API database server</strong> and peripheral hardware.</p>
+<ul>
+	<li><strong>Funding Target: £ 10,000</strong></li>
+	<li><strong>Raised: <!--#include virtual="/raised.inc.html" --></strong></li>
+</ul>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc id nunc. Vestibulum luctus sodales arcu. Pellentesque pharetra ligula et velit. Donec lacus. Proin odio sapien, suscipit nec, bibendum sit amet, pellentesque ac, nisl. Cras adipiscing mauris et tortor.</p>
+</div>
+</div>
+<div id="content-container" style="margin: 10px 80px;"><!-- content container -->
+<p></p>
 <form method="post" action="process/paypal-submit.php" name="paypalcontribution" onsubmit="return validateForm(this)">
 <p><input type="hidden" name="gateway" value="paypal" /><input type="hidden" name="language" value="en" /></p>
 <div id="liquid-round" style="width:600px;"><a id='newtop' name='newtop'></a>
@@ -83,7 +92,6 @@ function validateForm( form ) {
 <div class="bottom">
 <div class="bottom-right">
 <div class="center-content"><!-- CONTENT BEGIN -->
-<p>&nbsp;</p>
 <div id="main-title">Support OpenStreetMap</div>
 <p>&nbsp;</p>
 <div style="clear:left">Contribute with your credit card through PayPal. (Other ways to give, including electronic funds transfer can be <a href="http://wiki.openstreetmap.org/wiki/Donations">found here</a>.)</div>
@@ -116,7 +124,6 @@ function validateForm( form ) {
 
 <option value="SGD">SGD – S$</option>
 <option value="SEK">SEK – kr</option>
-<option value="ILS">ILS - ₪</option>
 <option value="USD">USD – $</option>
 </select></div>
 <div id="blue-title">Public Comment</div>
@@ -146,8 +153,8 @@ function validateForm( form ) {
 
 <div id="languages">
 <!--
-	Later...
-	<a href="#Skenk" title="Skenk">Afrikaans</a> · 
+	Later... 
+	<a href="af/" title="Skenk">Afrikaans</a> · 
 -->
 <br /></div>
 </div>

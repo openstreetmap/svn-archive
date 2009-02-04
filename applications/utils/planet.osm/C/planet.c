@@ -42,6 +42,53 @@ static iconv_t cd = ICONV_ERROR;
 static char **user_list;
 static unsigned long max_uid;
 
+void connection_close(MYSQL *c)
+{
+    mysql_close(c);
+    free(c);
+}
+
+MYSQL *connection_open(void)
+{
+    const char *set_timeout1 = "SET SESSION net_write_timeout=60*60*12";
+    const char *set_timeout2 = "SET SESSION interactive_timeout=60*60*12";
+    const char *set_timeout3 = "SET SESSION wait_timeout=60*60*12";
+    MYSQL *c = malloc(sizeof(MYSQL));
+
+    assert(c);
+    mysql_init(c);
+
+#if 0
+    if (mysql_options(c, MYSQL_SET_CHARSET_NAME , "utf8")) {
+        fprintf(stderr, "set options failed\n");
+        exit(1);
+    }
+#endif
+
+    if (!(mysql_real_connect(c,"","openstreetmap","openstreetmap","openstreetmap",MYSQL_PORT,NULL,0)))
+    {
+        fprintf(stderr,"FAILED database connection: %s\n",mysql_error(c));
+        exit(1);
+    }
+
+    if (mysql_query(c, set_timeout1)) {
+        fprintf(stderr,"FAILED %s: %s\n", set_timeout1, mysql_error(c));
+        exit(1);
+    }
+    if (mysql_query(c, set_timeout2)) {
+        fprintf(stderr,"FAILED %s: %s\n", set_timeout2, mysql_error(c));
+        exit(1);
+    }
+    if (mysql_query(c, set_timeout3)) {
+        fprintf(stderr,"FAILED %s: %s\n", set_timeout3, mysql_error(c));
+        exit(1);
+    }
+
+    return c;
+}
+
+
+
 /* const char *xmlescape(char *in)
  *
  * Character escaping for valid XML output as per http://www.w3.org/TR/REC-xml/
@@ -461,12 +508,15 @@ struct keyval *get_generic_tags(MYSQL *mysql, const int id)
     }
 }
 
-void nodes(MYSQL *mysql, MYSQL *tags_mysql)
+void nodes(void)
 {
     char query[255];
     MYSQL_RES *res;
     MYSQL_ROW row;
     struct keyval *tags;
+
+    MYSQL *mysql = connection_open();
+    MYSQL *tags_mysql = connection_open();
 
     snprintf(query, sizeof(query), "select id, latitude, longitude, timestamp, user_id, version from current_nodes where visible = 1 order by id");
 
@@ -494,14 +544,19 @@ void nodes(MYSQL *mysql, MYSQL *tags_mysql)
 
     mysql_free_result(res);
     tags_exit();
+    connection_close(tags_mysql);
+    connection_close(mysql);
 }
 
-void ways(MYSQL *ways_mysql, MYSQL *nodes_mysql, MYSQL *tags_mysql)
+void ways(void)
 {
     char ways_query[255], nodes_query[255];
     MYSQL_RES *ways_res, *nodes_res;
     MYSQL_ROW ways_row, nodes_row;
     struct keyval *tags, nodes;
+    MYSQL *ways_mysql = connection_open();
+    MYSQL *nodes_mysql = connection_open();
+    MYSQL *tags_mysql = connection_open();
 
     initList(&nodes);
 
@@ -555,14 +610,20 @@ void ways(MYSQL *ways_mysql, MYSQL *nodes_mysql, MYSQL *tags_mysql)
     mysql_free_result(ways_res);
     mysql_free_result(nodes_res);
     tags_exit();
+    connection_close(tags_mysql);
+    connection_close(ways_mysql);
+    connection_close(nodes_mysql);
 }
 
-void relations(MYSQL *relations_mysql, MYSQL *members_mysql, MYSQL *tags_mysql)
+void relations(void)
 {
     char relations_query[255], members_query[255];
     MYSQL_RES *relations_res, *members_res;
     MYSQL_ROW relations_row, members_row;
     struct keyval *tags, members, roles;
+    MYSQL *relations_mysql = connection_open();
+    MYSQL *members_mysql = connection_open();
+    MYSQL *tags_mysql = connection_open();
 
     initList(&members);
     initList(&roles);
@@ -622,14 +683,18 @@ void relations(MYSQL *relations_mysql, MYSQL *members_mysql, MYSQL *tags_mysql)
     mysql_free_result(relations_res);
     mysql_free_result(members_res);
     tags_exit();
+    connection_close(relations_mysql);
+    connection_close(members_mysql);
+    connection_close(tags_mysql);
 }
 
-unsigned long int max_userid(MYSQL *mysql)
+unsigned long int max_userid(void)
 {
     const char *sql = "SELECT MAX(id) FROM users";
     MYSQL_RES *res;
     MYSQL_ROW row;
     unsigned long int max = 0;
+    MYSQL *mysql = connection_open();
 
     if ((mysql_query(mysql, sql)) || !(res= mysql_use_result(mysql))) {
         fprintf(stderr,"Cannot query users: %s\n", mysql_error(mysql));
@@ -642,15 +707,17 @@ unsigned long int max_userid(MYSQL *mysql)
 
     mysql_free_result(res);
     //printf("Maximum user id = %lu\n", max);
+    connection_close(mysql);
     return max;
 }
 
 
-void fetch_users(MYSQL *mysql)
+void fetch_users(void)
 {
     char sql[256];
     MYSQL_RES *res;
     MYSQL_ROW row;
+    MYSQL *mysql = connection_open();
 
     sprintf(sql, "SELECT id,display_name from users where id <= %lu and data_public = 1", max_uid);
 
@@ -676,20 +743,18 @@ void fetch_users(MYSQL *mysql)
     }
 
     mysql_free_result(res); 
+    connection_close(mysql);
 }
 
 
 int main(int argc, char **argv)
 {
-    // 3 MySQL connections are required to fetch way data from multiple tables
-#define NUM_CONN (3)
-    MYSQL mysql[NUM_CONN];
 #ifdef USE_ICONV
+    MYSQL *mysql = NULL;
     MYSQL_ROW row;
     MYSQL_RES *res;
 #endif
     int i;
-    const char *set_timeout = "SET SESSION net_write_timeout=60*60*6";
     int want_nodes, want_ways, want_relations;
 
     // Database timestamps use UK localtime
@@ -716,27 +781,8 @@ int main(int argc, char **argv)
         }
     }
 
-    for (i=0; i<NUM_CONN; i++) {
-        mysql_init(&mysql[i]);
-#if 0
-        if (mysql_options(&mysql[i], MYSQL_SET_CHARSET_NAME , "utf8")) {
-            fprintf(stderr, "set options failed\n");
-            exit(1);
-        }
-#endif
-        if (!(mysql_real_connect(&mysql[i],"","openstreetmap","openstreetmap","openstreetmap",MYSQL_PORT,NULL,0)))
-        {
-            fprintf(stderr,"%s: %s\n",argv[0],mysql_error(&mysql[i]));
-            exit(1);
-        }
-
-        if (mysql_query(mysql, set_timeout)) {
-            fprintf(stderr,"FAILED %s: %s\n", set_timeout, mysql_error(mysql));
-            exit(1);
-       }
-    }
-
 #ifdef USE_ICONV
+    mysql = connection_open();
     if (mysql_query(mysql, "SHOW VARIABLES like 'character_set_results'") || !(res= mysql_use_result(mysql))) {
             fprintf(stderr,"FAILED show variables: %s\n", mysql_error(mysql));
             exit(1);
@@ -754,34 +800,34 @@ int main(int argc, char **argv)
     } else {
         fprintf(stderr, "Failed to fetch DB charset, assuming UTF8\n");
     }
+    connection_close(mysql);
+    mysql = NULL;
 #endif
 
     printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
     printf("<osm version=\"0.6\" generator=\"OpenStreetMap planet.c\">\n");
     printf("  <bound box=\"-90,-180,90,180\" origin=\"http://www.openstreetmap.org/api/0.6\" />\n");
 
-    max_uid = max_userid(&mysql[0]);
+    max_uid = max_userid();
     user_list = calloc(max_uid + 1, sizeof(char *));
     if (!user_list) {
         fprintf(stderr, "Malloc of user_list failed for %lu users\n", max_uid);
         exit(1);
     }
 
-    fetch_users(&mysql[0]);
+    fetch_users();
 
     if (want_nodes)
-        nodes(&mysql[0], &mysql[2]);
+        nodes();
 
     if (want_ways)
-        ways(&mysql[0], &mysql[1], &mysql[2]);
+        ways();
 
     if (want_relations)
-        relations(&mysql[0], &mysql[1], &mysql[2]);
+        relations();
 
     printf("</osm>\n");
 
-    for (i=0; i<NUM_CONN; i++)
-        mysql_close(&mysql[i]);
 #ifdef USE_ICONV
     iconv_close(cd);
 #endif

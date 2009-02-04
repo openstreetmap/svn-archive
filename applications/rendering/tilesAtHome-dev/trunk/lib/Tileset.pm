@@ -969,7 +969,6 @@ sub runPreprocessors
            {
 	       if ($Config->get("JavaVersion") >= 1.6)
                {
-                   my $javaHeapSize = '256M';
                    if ($Config->get('JavaHeapSize'))
                    {
                        $javaHeapSize = $Config->get('JavaHeapSize');

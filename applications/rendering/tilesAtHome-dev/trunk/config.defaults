@@ -35,6 +35,8 @@ RenderStripes = 0
 BatikJVMSize = 1536M
 BatikPort = 18123
 
+JavaHeapSize = 512M
+
 XmlStarlet = xmlstarlet
 XmlStarletMaxDepth = 20000
 

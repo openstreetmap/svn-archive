@@ -802,6 +802,9 @@ int main(int argc, char **argv)
     }
     connection_close(mysql);
     mysql = NULL;
+#else
+    /* Check we can connect to database */
+    connection_close(connection_open());
 #endif
 
     printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");

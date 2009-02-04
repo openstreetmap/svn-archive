@@ -343,6 +343,41 @@ const char *reformDate(const char *str)
     return out;
 }
 
+void nodes(void)
+{
+    char query[255];
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+    struct keyval tags;
+    MYSQL *mysql = connection_open();
+
+    initList(&tags);
+
+    snprintf(query, sizeof(query), "select id, latitude, longitude, timestamp, tags, user_id from current_nodes where visible = 1 order by id");
+
+    if ((mysql_query(mysql, query)) || !(res= mysql_use_result(mysql)))
+    {
+        fprintf(stderr,"Cannot query nodes: %s\n", mysql_error(mysql));
+        exit(1);
+    }
+
+    while ((row= mysql_fetch_row(res))) {
+        long int id;
+        long double latitude,longitude;
+
+        assert(mysql_num_fields(res) == 6);
+
+        id = strtol(row[0], NULL, 10);
+        latitude  = strtol(row[1], NULL, 10) / 10000000.0;
+        longitude = strtol(row[2], NULL, 10) / 10000000.0;
+        read_tags(row[4], &tags);
+
+        osm_node(id, latitude, longitude, &tags, reformDate(row[3]), lookup_user(row[5]));
+    }
+
+    mysql_free_result(res);
+    connection_close(mysql);
+}
 
 #define TAG_CACHE (10000)
 
@@ -508,45 +543,6 @@ struct keyval *get_generic_tags(MYSQL *mysql, const int id)
     }
 }
 
-void nodes(void)
-{
-    char query[255];
-    MYSQL_RES *res;
-    MYSQL_ROW row;
-    struct keyval *tags;
-
-    MYSQL *mysql = connection_open();
-    MYSQL *tags_mysql = connection_open();
-
-    snprintf(query, sizeof(query), "select id, latitude, longitude, timestamp, user_id from current_nodes where visible = 1 order by id");
-
-    if ((mysql_query(mysql, query)) || !(res= mysql_use_result(mysql))) 
-    {
-        fprintf(stderr, "Cannot query nodes: %s\n", mysql_error(mysql));
-        exit(1);
-    }
-
-    tags_init(tags_mysql, "current_node_tags");
-
-    while ((row= mysql_fetch_row(res))) {
-        int id;
-        long double latitude,longitude;
-
-        assert(mysql_num_fields(res) == 5);
-
-        id = strtol(row[0], NULL, 10);
-        latitude  = strtol(row[1], NULL, 10) / 10000000.0;
-        longitude = strtol(row[2], NULL, 10) / 10000000.0;
-        tags = get_generic_tags(tags_mysql, id);
-        osm_node(id, latitude, longitude, tags, reformDate(row[3]), lookup_user(row[4]));
-    }
-
-    mysql_free_result(res);
-    tags_exit();
-    connection_close(tags_mysql);
-    connection_close(mysql);
-}
-
 void ways(void)
 {
     char ways_query[255], nodes_query[255];
@@ -591,7 +587,7 @@ void ways(void)
             osm_way(way_id, &nodes, tags, reformDate(ways_row[1]), lookup_user(ways_row[2]));
             // fetch new way
             ways_row= mysql_fetch_row(ways_res);
-            assert(mysql_num_fields(ways_res) == 4);
+            assert(mysql_num_fields(ways_res) == 3);
         } else if (way_id > way_nd_id) {
             // we have entries in current_way_nodes for a missing way, discard!
             // fetch next way_seg
@@ -648,7 +644,7 @@ void relations(void)
     members_row = mysql_fetch_row(members_res);
 
     while (relations_row) {
-        int relation_id      = strtol(relations_row[0], NULL, 10);
+        int relation_id     = strtol(relations_row[0], NULL, 10);
         // Terminating relation_memb_id is necessary to ensure final way is generated.
         int relation_memb_id = members_row ? strtol(members_row[0], NULL, 10): INT_MAX;
 
@@ -658,7 +654,7 @@ void relations(void)
             osm_relation(relation_id, &members, &roles, tags, reformDate(relations_row[1]), lookup_user(relations_row[2]));
             // fetch new way
             relations_row= mysql_fetch_row(relations_res);
-            assert(mysql_num_fields(relations_res) == 4);
+            assert(mysql_num_fields(relations_res) == 3);
         } else if (relation_id > relation_memb_id) {
             // we have entries in current_way_members for a missing way, discard!
             // fetch next way_seg
@@ -803,7 +799,7 @@ int main(int argc, char **argv)
 
     printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
     printf("<osm version=\"0.5\" generator=\"OpenStreetMap planet.c\">\n");
-    printf("  <bound box=\"-90,-180,90,180\" origin=\"http://www.openstreetmap.org/api/0.6\" />\n");
+    printf("  <bound box=\"-90,-180,90,180\" origin=\"http://www.openstreetmap.org/api/0.5\" />\n");
 
     max_uid = max_userid();
     user_list = calloc(max_uid + 1, sizeof(char *));

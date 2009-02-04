@@ -969,6 +969,7 @@ sub runPreprocessors
            {
 	       if ($Config->get("JavaVersion") >= 1.6)
                {
+                   my $javaHeapSize; ## default values for overridable config parameters go into config.defaults so as to ease maintenance.
                    if ($Config->get('JavaHeapSize'))
                    {
                        $javaHeapSize = $Config->get('JavaHeapSize');

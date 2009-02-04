@@ -27,25 +27,25 @@
 		
 		<!-- Draw land areas first -->
 		<rule e="way" k="natural" v="land">
-			<area class="natural-land"/>
+			<area class="natural land"/>
 		</rule>
 		
 		<!-- Natural features -->
 		<rule e="way" k="natural" v="coastline">
-			<area class="natural-coastline"/>
+			<area class="natural coastline"/>
 		</rule>
 		<rule e="way" k="natural" v="glacier">
-			<line class='natural-glacier'/>
+			<line class='natural glacier'/>
 		</rule>
 		<rule e="way" k="landuse|natural" v="forest|wood|scrub">
 			<area class="landuse-wood"/>
 		</rule>
 		<rule e="way" k="natural" v="heath">
-			<area class="'natural-heath"/>
+			<area class="'natural heath"/>
 		</rule>
 		<rule e="way" k="natural" v="wetland">
 			<rule e="way" k="wetland" v="bog">
-				<area class="wetland-bog"/>
+				<area class="wetland bog"/>
 			</rule>
 		</rule>
 		<rule e="way" k="landuse" v="conservation">
@@ -172,16 +172,16 @@
 			</rule>
 		</else>
 		<rule e="way" k="waterway" v="dock">
-			<area class="natural-water"/>
+			<area class="natural water"/>
 		</rule>
 		<rule e="way" k="natural" v="water|pond|lake">
-			<area class="natural-water"/>
+			<area class="natural water"/>
 		</rule>
 		<rule e="way" k="landuse" v="reservoir">
-			<area class="natural-water"/>
+			<area class="natural water"/>
 		</rule>
 		<rule e="way" k="landuse" v="basin">
-			<area class="natural-water"/>
+			<area class="natural water"/>
 		</rule>
 		<rule e="way" k="waterway" v="riverbank">
 			<area class="waterway-riverbank"/>
@@ -1400,37 +1400,39 @@
 			.largefeature-caption-core          { fill: #4040ff;      font-size: 50px; }
 			
 			/* Natural */
-			.natural-water {
+                        .natural.water, .coastline {
 			fill: #b5d6f1;
+                        }
+
+			.natural.water {
 			stroke: #b0b0b0;
 			stroke-width: 0px;
 			}
 			
-			.natural-coastline {
-			fill: #b5d6f1;
+			.coastline {
 			stroke: #b5d6f1;
 			stroke-width: 1.5px;
 			}
 
-			.natural-glacier {
+			.glacier {
 			fill: #fafaff;
 			stroke: lightblue;
 			stroke-width: 1.5px;
 			}
 			
-			.natural-land {
+			.natural.land {
 			fill: #f8f8f8;
 			stroke: #e0e0e0;
 			stroke-width: 0.1px;
 			}
 			
-			.natural-heath {
+			.heath {
 			fill: #ffffc0;
 			stroke: #ffff90;
 			stroke-width: 0.2px;
 			}
 			
-			.wetland-bog {
+			.bog {
 			fill: #946e50;
 			stroke: #3f1f06;
 			stroke-width: 0.2px;

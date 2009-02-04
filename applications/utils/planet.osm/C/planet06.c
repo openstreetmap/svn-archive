@@ -353,20 +353,24 @@ struct tCache {
 
 static struct tCache cache[TAG_CACHE+1];
 static MYSQL_STMT *tags_stmt;
+static MYSQL *tags_mysql;
 static int cache_off;
 
-void tags_init(MYSQL *mysql, const char *table)
+void tags_init(const char *table)
 {
     int i;
     char query[255];
     MYSQL_RES *prepare_meta_result;
-    tags_stmt = mysql_stmt_init(mysql);
+
+    assert(tags_mysql == NULL); // Only allowed a single table open at once
+    tags_mysql = connection_open();
+    tags_stmt = mysql_stmt_init(tags_mysql);
     assert(tags_stmt);
 
     snprintf(query, sizeof(query), "SELECT id, k, v FROM %s WHERE id >= ? ORDER BY id LIMIT 10000", table); // LIMIT == TAG_CACHE
 
     if (mysql_stmt_prepare(tags_stmt, query, strlen(query))) {
-        fprintf(stderr,"Cannot setup prepared query for %s: %s\n", table, mysql_error(mysql));
+        fprintf(stderr,"Cannot setup prepared query for %s: %s\n", table, mysql_error(tags_mysql));
         exit(1);
     }
     assert(mysql_stmt_param_count(tags_stmt) == 1);
@@ -385,13 +389,17 @@ void tags_init(MYSQL *mysql, const char *table)
 void tags_exit(void)
 {
     int i;
+
     mysql_stmt_close(tags_stmt);
     tags_stmt = NULL;
+    connection_close(tags_mysql);
+    tags_mysql = NULL;
+
     for (i=0; i< TAG_CACHE; i++)
         resetList(&cache[i].tags);
 }
 
-void refill_tags(MYSQL *mysql, const int id)
+void refill_tags(const int id)
 {
     unsigned long length[3];
     my_bool       is_null[3];
@@ -399,7 +407,7 @@ void refill_tags(MYSQL *mysql, const int id)
     MYSQL_BIND tags_bind_param[1];
     MYSQL_BIND tags_bind_res[3];
     char key[256], value[256];
-    int i, row_id, last_id, cache_slot;
+    int i, row_id, last_id, cache_slot, result;
 
     for (i=0; i<TAG_CACHE; i++) {
         if (!cache[i].id)
@@ -466,7 +474,7 @@ void refill_tags(MYSQL *mysql, const int id)
 
     cache_slot = 0;
     last_id = 0;
-    while (!mysql_stmt_fetch(tags_stmt)) {
+    while ((result = mysql_stmt_fetch(tags_stmt)) == 0) {
         if (last_id != row_id) {
             if (last_id)
                cache_slot++;
@@ -475,6 +483,20 @@ void refill_tags(MYSQL *mysql, const int id)
         }
         addItem(&cache[cache_slot].tags, key, value, 0);
     }
+
+    if (result != MYSQL_NO_DATA) {
+        fprintf(stderr, " mysql_stmt_fetch() failed\n");
+        fprintf(stderr, " %s\n", mysql_stmt_error(tags_stmt));
+        exit(1);
+    }
+
+    if (mysql_stmt_free_result(tags_stmt))
+    {
+        fprintf(stderr, " mysql_stmt_free_result() failed\n");
+        fprintf(stderr, " %s\n", mysql_stmt_error(tags_stmt));
+        exit(1);
+    }
+
     // We need to clean out final slot since it may be truncated, unless
     // we only got a single slot filled then we hit the end of the table
     // which we assume _is_ complete
@@ -487,13 +509,13 @@ void refill_tags(MYSQL *mysql, const int id)
     }
 }
 
-struct keyval *get_generic_tags(MYSQL *mysql, const int id)
+struct keyval *get_generic_tags(const int id)
 {
     while (1) {
         if (!cache[cache_off].id) {
             if (cache_off == 1)
                 return NULL; // No more tags in DB table
-            refill_tags(mysql, id);
+            refill_tags(id);
             cache_off = 0;
         }
 
@@ -516,7 +538,6 @@ void nodes(void)
     struct keyval *tags;
 
     MYSQL *mysql = connection_open();
-    MYSQL *tags_mysql = connection_open();
 
     snprintf(query, sizeof(query), "select id, latitude, longitude, timestamp, user_id, version from current_nodes where visible = 1 order by id");
 
@@ -526,7 +547,7 @@ void nodes(void)
         exit(1);
     }
 
-    tags_init(tags_mysql, "current_node_tags");
+    tags_init("current_node_tags");
 
     while ((row= mysql_fetch_row(res))) {
         int id, version;
@@ -538,13 +559,18 @@ void nodes(void)
         latitude  = strtol(row[1], NULL, 10) / 10000000.0;
         longitude = strtol(row[2], NULL, 10) / 10000000.0;
         version = strtol(row[5], NULL, 10);
-        tags = get_generic_tags(tags_mysql, id);
+        tags = get_generic_tags(id);
         osm_node(id, latitude, longitude, tags, reformDate(row[3]), lookup_user(row[4]), version);
+    }
+
+    if (mysql_errno(mysql)) {
+        fprintf(stderr, " mysql_fetch_row() failed\n");
+        fprintf(stderr, " %s\n", mysql_error(mysql));
+        exit(1);
     }
 
     mysql_free_result(res);
     tags_exit();
-    connection_close(tags_mysql);
     connection_close(mysql);
 }
 
@@ -556,7 +582,6 @@ void ways(void)
     struct keyval *tags, nodes;
     MYSQL *ways_mysql = connection_open();
     MYSQL *nodes_mysql = connection_open();
-    MYSQL *tags_mysql = connection_open();
 
     initList(&nodes);
 
@@ -576,7 +601,7 @@ void ways(void)
         exit(1);
     }
 
-    tags_init(tags_mysql, "current_way_tags");
+    tags_init("current_way_tags");
 
     ways_row = mysql_fetch_row(ways_res);
     nodes_row = mysql_fetch_row(nodes_res);
@@ -589,7 +614,7 @@ void ways(void)
 
         if (way_id < way_nd_id) {
             // no more nodes in this way
-            tags = get_generic_tags(tags_mysql, way_id);
+            tags = get_generic_tags(way_id);
             osm_way(way_id, &nodes, tags, reformDate(ways_row[1]), lookup_user(ways_row[2]), way_version);
             // fetch new way
             ways_row= mysql_fetch_row(ways_res);
@@ -607,10 +632,20 @@ void ways(void)
         }
     }
 
+    if (mysql_errno(ways_mysql)) {
+        fprintf(stderr, " mysql_fetch_row() failed\n");
+        fprintf(stderr, " %s\n", mysql_error(ways_mysql));
+        exit(1);
+    }
+    if (mysql_errno(nodes_mysql)) {
+        fprintf(stderr, " mysql_fetch_row() failed\n");
+        fprintf(stderr, " %s\n", mysql_error(nodes_mysql));
+        exit(1);
+    }
+
     mysql_free_result(ways_res);
     mysql_free_result(nodes_res);
     tags_exit();
-    connection_close(tags_mysql);
     connection_close(ways_mysql);
     connection_close(nodes_mysql);
 }
@@ -623,7 +658,6 @@ void relations(void)
     struct keyval *tags, members, roles;
     MYSQL *relations_mysql = connection_open();
     MYSQL *members_mysql = connection_open();
-    MYSQL *tags_mysql = connection_open();
 
     initList(&members);
     initList(&roles);
@@ -644,7 +678,7 @@ void relations(void)
         exit(1);
     }
 
-    tags_init(tags_mysql, "current_relation_tags");
+    tags_init("current_relation_tags");
 
     relations_row = mysql_fetch_row(relations_res);
     members_row = mysql_fetch_row(members_res);
@@ -657,7 +691,7 @@ void relations(void)
 
         if (relation_id < relation_memb_id) {
             // no more members in this way
-            tags = get_generic_tags(tags_mysql, relation_id);
+            tags = get_generic_tags(relation_id);
             osm_relation(relation_id, &members, &roles, tags, reformDate(relations_row[1]), lookup_user(relations_row[2]), relation_version);
             // fetch new way
             relations_row= mysql_fetch_row(relations_res);
@@ -680,12 +714,22 @@ void relations(void)
         }
     }
 
+    if (mysql_errno(relations_mysql)) {
+        fprintf(stderr, " mysql_fetch_row() failed\n");
+        fprintf(stderr, " %s\n", mysql_error(relations_mysql));
+        exit(1);
+    }
+    if (mysql_errno(members_mysql)) {
+        fprintf(stderr, " mysql_fetch_row() failed\n");
+        fprintf(stderr, " %s\n", mysql_error(members_mysql));
+        exit(1);
+    }
+
     mysql_free_result(relations_res);
     mysql_free_result(members_res);
     tags_exit();
     connection_close(relations_mysql);
     connection_close(members_mysql);
-    connection_close(tags_mysql);
 }
 
 unsigned long int max_userid(void)
@@ -703,6 +747,12 @@ unsigned long int max_userid(void)
 
     while ((row=mysql_fetch_row(res))) {
         max = strtol(row[0], NULL, 10);
+    }
+
+    if (mysql_errno(mysql)) {
+        fprintf(stderr, " mysql_fetch_row() failed\n");
+        fprintf(stderr, " %s\n", mysql_error(mysql));
+        exit(1);
     }
 
     mysql_free_result(res);
@@ -740,6 +790,12 @@ void fetch_users(void)
         snprintf(tmp, sizeof(tmp), " user=\"%s\" uid=\"%lu\"", display_name, id);
         user_list[id] = strdup(tmp);
         assert(user_list[id]);
+    }
+
+    if (mysql_errno(mysql)) {
+        fprintf(stderr, " mysql_fetch_row() failed\n");
+        fprintf(stderr, " %s\n", mysql_error(mysql));
+        exit(1);
     }
 
     mysql_free_result(res); 

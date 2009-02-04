@@ -417,14 +417,14 @@ void refill_tags(MYSQL *mysql, const int id)
     if (mysql_stmt_bind_param(tags_stmt, tags_bind_param)) {
         fprintf(stderr, " mysql_stmt_bind_param() failed\n");
         fprintf(stderr, " %s\n", mysql_stmt_error(tags_stmt));
-        exit(0);
+        exit(1);
     }
 
     if (mysql_stmt_execute(tags_stmt))
     {
         fprintf(stderr, " mysql_stmt_execute(), 1 failed\n");
         fprintf(stderr, " %s\n", mysql_stmt_error(tags_stmt));
-        exit(0);
+        exit(1);
     }
 
     memset(tags_bind_res, 0, sizeof(tags_bind_res));
@@ -454,14 +454,14 @@ void refill_tags(MYSQL *mysql, const int id)
     {
         fprintf(stderr, " mysql_stmt_bind_result() failed\n");
         fprintf(stderr, " %s\n", mysql_stmt_error(tags_stmt));
-        exit(0);
+        exit(1);
     }
 
     if (mysql_stmt_store_result(tags_stmt))
     {
         fprintf(stderr, " mysql_stmt_store_result() failed\n");
         fprintf(stderr, " %s\n", mysql_stmt_error(tags_stmt));
-        exit(0);
+        exit(1);
     }
 
     cache_slot = 0;

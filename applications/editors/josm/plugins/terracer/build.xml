@@ -17,6 +17,8 @@
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
         <javac srcdir="src" classpath="${josm}" debug="true" destdir="build">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
             <include name="**/*.java" />
         </javac>
     </target>
@@ -24,10 +26,19 @@
         <copy todir="build/images" >
             <fileset dir="images" />
         </copy>
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="info"/>
+            <arg value="--xml"/>
+            <arg value="."/>
+        </exec>
+        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+        <delete file="REVISION"/>
         <jar destfile="${plugin.jar}" basedir="build">
             <manifest>
                 <attribute name="Plugin-Class" value="terracer.TerracerPlugin" />
                 <attribute name="Plugin-Description" value="Easy creation of individual terraced houses." />
+		<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />
             </manifest>
         </jar>
     </target>

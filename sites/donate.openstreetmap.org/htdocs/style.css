@@ -4,26 +4,6 @@ Heavily based on http://wikimediafoundation.org/wiki/Donate/en
 Styles for Notices
 */
 
-#notice-wrapper {
-	border: 1px solid #bbb;
-	text-align: center;
-	background-color: #fcfcfc;
-	background-repeat: no-repeat;
-	height: 115px;
-	font-size: 1.4em;
-	padding: 5px 5px;
-}
-
-#notice-collapsed-wrapper {
-	border: 1px solid #bbb;
-	text-align: left;
-	background-color: #fcfcfc;
-	font-size: 1.4em;
-	padding: 5px 5px;
-}
-
-#notice-wrapper a:hover { text-decoration: none; }
-#notice-collapsed-wrapper a:hover { text-decoration: none; }
 
 #toggle-box {
 	float: right;
@@ -37,37 +17,6 @@ Styles for Notices
 	margin-bottom: 5px;
 }
 
-#progress-meter {
-	background-image: url(images/button-red.png);
-	background-repeat: no-repeat;
-	background-position: top center;
-	font-size: 0.8em;
-	text-align: left;
-	width: 606px;
-	height: 28px;
-	padding-top: 10px;
-	margin-left: auto;
-	margin-right: auto;
-	padding-left: 120px;
-	margin-bottom: 8px;
-}
-
-#amount-raised {
-	color: #fff;
-	padding-left: 125px;
-	font-size: 0.8em;
-	float: left;
-}
-
-#goal {
-	color: #333;
-	padding-left: 450px;
-	font-size: 0.8em;
-}
-
-/*
-Styles for Donation Module
-*/
 
 #liquid-round input {
 	margin: 5px 0;
@@ -109,12 +58,12 @@ body {
 }
 
 #banner {
-	height: 184px;
+	height: 144px;
 	margin: 0px;
 	padding-top: 15px;
 	text-align: left;
 	border: 2px solid rgb(102, 102, 102);
-	background-color: rgb(224, 238, 224);" 
+	background-color: rgb(224, 238, 224); 
 }
 
 .logo-box {
@@ -153,7 +102,7 @@ body {
 	font-size: .8em;
 }
 
-#content-container {
+.content-container {
 	margin: 40px 80px;
 	font-size: 0.9em;
 	text-align: left;
@@ -308,7 +257,7 @@ a:hover { text-decoration: underline; }
 	margin: 0px;
 	padding: 15px;
 	text-align: left;
-	border: 1px solid rgb(102, 102, 102);
+	border: 2px solid rgb(102, 102, 102);
 	background-color: rgb(243, 255, 243);
 }
 

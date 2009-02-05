@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
 <head>
 	<!-- Heavily based on http://wikimediafoundation.org#Donate/en -->
-	<!-- GNU Free Documentation License -->
+	<!-- Believed to be GNU Free Documentation License -->
 	<meta http-equiv="Content-Language" content="en" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Support OpenStreetMap Donate Now</title>
@@ -28,7 +28,7 @@ function validateForm( form ) {
     'NOK' : 10, // $1.44
     'PLN' : 5, // $1.78
     'SGD' : 2, // $1.35
-    'SEK' : 10, // $1.28
+    'SEK' : 10 // $1.28
   };
 
   var error = true;
@@ -72,17 +72,17 @@ function validateForm( form ) {
 <h1>OpenStreetMap Hardware Upgrade Fund</h1>
 <a href="#"><img src="banners/osm_banner2.png" width="468" height="60" alt="Donate Promotion Banner" border="0" /></a>
 </div>
-<div id="content-container" style="margin: 10px 80px;"><!-- content container -->
+<div class="content-container" style="margin: 5px 80px;"><!-- content container -->
 <div class="infobox">
 <p>OpenStreetMap Foundation is raising funds to purchase a new <strong>API database server</strong> and peripheral hardware.</p>
 <ul>
 	<li><strong>Funding Target: £ 10,000</strong></li>
 	<li><strong>Raised: <!--#include virtual="/raised.inc.html" --></strong></li>
 </ul>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc id nunc. Vestibulum luctus sodales arcu. Pellentesque pharetra ligula et velit. Donec lacus. Proin odio sapien, suscipit nec, bibendum sit amet, pellentesque ac, nisl. Cras adipiscing mauris et tortor.</p>
+<p>With the continuing success of OpenStreetMap we're running a fundraising drive for a new database server. It's the bit behind the scenes that stores all the data our volunteers create, and with the new version of the API coming up, it's an ideal time for our planned upgrade. Your donation will help the servers keep up with the pace of our mappers, and all the money from this drive will go towards the hardware, the peripherals and future OSMF projects.</p>
 </div>
 </div>
-<div id="content-container" style="margin: 10px 80px;"><!-- content container -->
+<div class="content-container" style="margin: 5px 80px;"><!-- content container -->
 <p></p>
 <form method="post" action="process/paypal-submit.php" name="paypalcontribution" onsubmit="return validateForm(this)">
 <p><input type="hidden" name="gateway" value="paypal" /><input type="hidden" name="language" value="en" /></p>
@@ -135,7 +135,7 @@ function validateForm( form ) {
 <br />
 <input type="submit" value="DONATE" class="red-input-button" />
 <div class="small">For more information about the OpenStreetMap Foundation’s non-profit status, the Treasurer’s Report, or other questions, <a href="http://foundation.openstreetmap.org/">click here</a>.</div>
-<br /><br />
+<br /><br />&nbsp;
 <!-- CONTENT END --></div>
 </div>
 

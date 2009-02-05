@@ -1,6 +1,8 @@
 <?
 //Extensively based on Very_Horrible Paypal sample code.
 
+ob_start();
+
 // read the post from PayPal system and add 'cmd'
 $req = 'cmd=_notify-validate';
 foreach ($_POST as $key => $value) {
@@ -27,6 +29,12 @@ $business			= get_magic_quotes_gpc() ? stripslashes($_POST['business'])			: $_PO
 $option_selection1	= get_magic_quotes_gpc() ? stripslashes($_POST['option_selection1']) : $_POST['option_selection1'];
 $option_name1		= get_magic_quotes_gpc() ? stripslashes($_POST['option_name1'])		 : $_POST['option_name1'];
 
+$first_name			= get_magic_quotes_gpc() ? stripslashes($_POST['first_name'])		 : $_POST['first_name'];
+$last_name			= get_magic_quotes_gpc() ? stripslashes($_POST['last_name'])		 : $_POST['last_name'];
+
+$full_name			= $first_name.' '.$last_name;
+
+
 if (!$fp) {
 	// HTTP ERROR
 	error_log('Verify Failed Callback: '.var_export($_POST, TRUE));
@@ -42,7 +50,7 @@ if (!$fp) {
 			// process payment
 			//CONNECT to DB
 			
-			$_DB_H = mysql_pconnect('localhost','osm_donate','password');
+			$_DB_H = mysql_connect('localhost','osm_donate','password');
 			mysql_select_db('osm_donate', $_DB_H);
 			mysql_query('SET NAMES \'utf8\'', $_DB_H);
 			if ($payment_status == 'Completed' AND $option_name1=='contribution_tracking_id' AND $business == 'treasurer@openstreetmap.org') {
@@ -57,7 +65,10 @@ if (!$fp) {
 						$payment_amount_gbp = $payment_amount / $exc_rate['rate'];
 					}
 				}
-				$sql_update_donation = 'UPDATE `donations` SET `processed` = 1, `amount_gbp` = "'.$payment_amount_gbp.'" WHERE `uid`="'.mysql_real_escape_string($option_selection1, $_DB_H).'" LIMIT 1';
+				$sql_update_donation = 'UPDATE `donations` SET `processed` = 1, '.
+										'`amount_gbp` = "'.$payment_amount_gbp.'", '.
+										'`name` = \''.mysql_real_escape_string($full_name, $_DB_H).'\''.
+										'WHERE `uid`="'.mysql_real_escape_string($option_selection1, $_DB_H).'" LIMIT 1';
 				mysql_query($sql_update_donation, $_DB_H) OR error_log('SQL FAIL: '.$sql_update_donation);
 			}
 

@@ -5,7 +5,8 @@ lc = AU, DE FR IT GB ES US
 */
 
 //CONNECT to DB
-$_DB_H = mysql_pconnect('localhost','osm_donate','password');
+ob_start();
+$_DB_H = mysql_connect('localhost','osm_donate','password');
 mysql_select_db('osm_donate', $_DB_H);
 mysql_query('SET NAMES \'utf8\'', $_DB_H);
 

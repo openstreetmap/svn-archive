@@ -13,6 +13,15 @@ public class EastNorthBound implements Serializable {
         this.min = min;
         this.max = max;
     }
+
+    public boolean contains(EastNorth eastNorth) {
+        if (eastNorth.east() < min.east() || eastNorth.north() < min.north())
+            return false;
+        if (eastNorth.east() > max.east() || eastNorth.north() > max.north())
+            return false;
+        return true;
+    }
+
     @Override public String toString() {
         return "EastNorthBound[" + min.east() + "," + min.north() + "," + max.east() + "," + max.north() + "]";
     }

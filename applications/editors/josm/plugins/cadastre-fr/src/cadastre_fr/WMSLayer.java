@@ -179,7 +179,14 @@ public class WMSLayer extends Layer {
 
     @Override
     public String getToolTipText() {
-        return tr("WMS layer ({0}), {1} tile(s) loaded", name, images.size());
+        String str = tr("WMS layer ({0}), {1} tile(s) loaded", name, images.size());
+        if (isRaster) {
+            str += "\n"+tr("Is not vectorized.");
+            str += "\n"+tr("Raster center: {0}", rasterCenter);
+        } else
+            str += "\n"+tr("Is vectorized.");
+            str += "\n"+tr("Commune bbox: {0}", communeBBox);
+        return str;
     }
 
     @Override

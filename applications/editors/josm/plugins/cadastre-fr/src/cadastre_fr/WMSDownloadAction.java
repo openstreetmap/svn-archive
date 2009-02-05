@@ -5,6 +5,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -13,8 +15,6 @@ public class WMSDownloadAction extends JosmAction {
 
     private static final long serialVersionUID = 1L;
 
-    //private String layerName;
-	
 	public WMSDownloadAction(String layerName) {
 		super(layerName, "wmsmenu", tr("Download WMS tile from {0}",layerName), null, false);
 	}
@@ -37,7 +37,10 @@ public class WMSDownloadAction extends JosmAction {
             }
             if (existingWMSlayers.size() == 1)
                 return existingWMSlayers.get(0);
-            return new MenuActionNewLocation().addNewLayer(existingWMSlayers);
+            if (existingWMSlayers.size() == 0)
+                return new MenuActionNewLocation().addNewLayer(existingWMSlayers);
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("More than one WMS layer present\nSelect one of them first, then retry"));
         }
         return null;
 	}

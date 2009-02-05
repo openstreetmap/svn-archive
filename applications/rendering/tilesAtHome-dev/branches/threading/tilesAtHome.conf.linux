@@ -74,6 +74,13 @@ KeepDataFile=0
 # Set to Inkscape, Batik or BatikAgent
 Rasterizer=Inkscape
 
+# Set the maximum heap size for the java virtual machine. Use 'M' for megabytes, 'G' for gigabytes.
+# If nothing is specified then a hard-coded default of 512M is used.
+# The Java process will use memory other than heap, so don't set to values equal or greater your actual RAM.
+# Note1: In the future this setting will be used for all calls to java
+# Note2: on 32bit platforms this is limited to 1.5 GiB (1536M)
+#JavaHeapSize=1536M
+
 # Set to the maximum JVM size to pass to the -Xmx parameter when running the
 # rasterizer. The maximum size depends on the OS and the available memory.
 # For 32bit Systems it is 1536M (1.5GiB)

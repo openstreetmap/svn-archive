@@ -45,7 +45,7 @@ public class CheckSourceUploadHook implements UploadHook
                 }
             }
             if (!sel.isEmpty()) {
-                return displaySource(sel);
+                displaySource(sel);
             }
         }
         return true;
@@ -69,11 +69,9 @@ public class CheckSourceUploadHook implements UploadHook
      * Displays a screen with the list of objects which will be tagged with 
      * source="cadastre.." if it is approved.
      * @param sel the list of elements added without a key "source"
-     * @return true if it is accepted by user 
      */
-    private boolean displaySource(Collection<OsmPrimitive> sel) 
+    private void displaySource(Collection<OsmPrimitive> sel) 
     {
-        boolean bContinue = true;
         if (!sel.isEmpty()) {
             JPanel p = new JPanel(new GridBagLayout());
             OsmPrimitivRenderer renderer = new OsmPrimitivRenderer();
@@ -82,12 +80,11 @@ public class CheckSourceUploadHook implements UploadHook
             l.setCellRenderer(renderer);
             l.setVisibleRowCount(l.getModel().getSize() < 6 ? l.getModel().getSize() : 10);
             p.add(new JScrollPane(l), GBC.eol().fill());
-            bContinue = JOptionPane.showConfirmDialog(Main.parent, p, tr("Add \"source=...\" to elements?"),
+            boolean bContinue = JOptionPane.showConfirmDialog(Main.parent, p, tr("Add \"source=Cadastre...\" to ?"),
                     JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
             if (bContinue)
                 Main.main.undoRedo.add(new ChangePropertyCommand(sel, "source", CadastrePlugin.source));
         }
-        return bContinue;
                 
     }    
 }

@@ -63,7 +63,8 @@ import org.openstreetmap.josm.data.projection.Lambert;
  *                 - new possible grab factor of 100 square meters fixed size                     
  *                 - minor fixes due to changes in JOSM core classes
  *                 - first draft of raster image support 
- * 0.9 draft       - grab vectorized full commune bbox and save it in cache
+ * 0.9 05-Feb-2009 - grab vectorized full commune bbox, save in file, convert to OSM way
+ *                   and simplify
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "0.8";
@@ -150,6 +151,7 @@ public class CadastrePlugin extends Plugin {
             JMenuItem menuResetCookie = new JMenuItem(new MenuActionResetCookie());
             JMenuItem menuLambertZone = new JMenuItem(new MenuActionLambertZone());
             JMenuItem menuLoadFromCache = new JMenuItem(new MenuActionLoadFromCache());
+            JMenuItem menuActionBoundaries = new JMenuItem(new MenuActionBoundaries());
             
             cadastreJMenu.add(menuGrab);
             cadastreJMenu.add(menuSettings);
@@ -157,6 +159,7 @@ public class CadastrePlugin extends Plugin {
             cadastreJMenu.add(menuResetCookie);
             cadastreJMenu.add(menuLambertZone);
             cadastreJMenu.add(menuLoadFromCache);
+            cadastreJMenu.add(menuActionBoundaries);
         }
         setEnabledAll(menuEnabled);
     }
@@ -186,10 +189,12 @@ public class CadastrePlugin extends Plugin {
         for (int i = 0; i < cadastreJMenu.getItemCount(); i++) {
             JMenuItem item = cadastreJMenu.getItem(i);
             if (item != null)
-                if (item.getText().equals(MenuActionGrab.name))
+                if (item.getText().equals(MenuActionGrab.name) ||
+                    item.getText().equals(MenuActionBoundaries.name)) {
                     item.setEnabled(isEnabled);
-                else if (item.getText().equals(MenuActionLambertZone.name))
+                } else if (item.getText().equals(MenuActionLambertZone.name)) {
                     item.setEnabled(!isEnabled);
+                }
         }
         menuEnabled = isEnabled;
     }

@@ -59,7 +59,6 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
 
     @Override
     protected void finish() {
-        //wmsLayer.saveToCache();
     }
 
     public static void download(WMSLayer wmsLayer) {

@@ -116,29 +116,13 @@ public class CacheControl implements Runnable {
             fis.close();
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
-            JOptionPane
-                    .showMessageDialog(Main.parent, tr("Error loading file"), tr("Error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, tr("Error loading file"), tr("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
     }
 
 
-    public boolean existCache() {
-        try {
-            /*
-            File pathname = new File(CadastrePlugin.cacheDir);
-            String[] fileNames = pathname.list();
-            for (String fileName : fileNames) {
-                System.out.println("check file:"+fileName);
-                //WMSLayer cached = new WMSLayer(new File(cacheDir+fileName));
-            }*/
-        } catch (Exception e) {
-            e.printStackTrace(System.out);
-        }
-        return false;
-    }
-    
     public synchronized void saveCache(GeorefImage image) {
         imagesLock.lock();
         this.imagesToSave.add(image);

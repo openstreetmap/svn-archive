@@ -47,7 +47,7 @@ public class MenuActionNewLocation extends JosmAction {
             String codeDepartement = "";
             String codeCommune = "";
             boolean resetCookie = false;
-            JLabel labelSectionNewLocation = new JLabel(tr("Add new layer"));
+            JLabel labelSectionNewLocation = new JLabel(tr("Add a new layer"));
             JPanel p = new JPanel(new GridBagLayout());
             JLabel labelLocation = new JLabel(tr("Location"));
             final JTextField inputTown = new JTextField( Main.pref.get("cadastrewms.location") );

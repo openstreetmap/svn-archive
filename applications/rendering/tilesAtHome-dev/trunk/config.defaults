@@ -1,7 +1,8 @@
 # default values for variables, may be overridden in any other config file
 
 ### DO NOT EDIT ###
-### Every setting in here can be overridden in tilesAtHome.conf and authentication.conf so uses those to modify the config.###
+### Every setting in here can be overridden in tilesAtHome.conf and authentication.conf so do 
+### use those to modify the config.
 
 ### defaults for authentication settings (in case someone forgot to create his authentication.conf
 

@@ -2,6 +2,7 @@ from django.conf import settings
 from django import forms
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
+import urllib
 
 try:
     import httplib2
@@ -120,6 +121,6 @@ def logout(request):
 
 def api_proxy(request, url):
     http = httplib2.Http()   
-    url = "%s/%s" % (settings.OSM_API, url)
+    url = "%s/%s?%s" % (settings.OSM_API, url, urllib.urlencode(request.GET))
     resp, content = http.request(url, "GET")
-    return HttpResponse(content, content_type="application/osm+xml")
+    return HttpResponse(content, content_type="application/osm+xml", status=resp.status)

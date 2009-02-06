@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>OpenLayers Basic Single WMS Example</title>
-    <script src="openlayers/OpenLayers.js"></script>
+    <script src="http://openlayers.org/api/OpenLayers.js"></script>
     <script type="text/javascript">
         var map, layer;
         function onPopupClose(evt) {
@@ -54,8 +54,8 @@
                     var output = document.getElementById("data");
                     var xy = evt.xy;
                     var b = new OpenLayers.Bounds();
-                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x-8, xy.y-8)));
-                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x+8, xy.y+8)));
+                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x-15, xy.y-15)));
+                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x+15, xy.y+15)));
                     if (this.selectFeature) {
                         this.selectFeature.destroy();
                     }    
@@ -64,35 +64,67 @@
                             this.layers[i].destroy();
                         }
                     }
-                    
-                    var styleMap = new OpenLayers.StyleMap({'default': OpenLayers.Util.extend(OpenLayers.Feature.Vector.style['default'], {strokeWidth:3, cursor: 'pointer'})});
+                    $("data").innerHTML = "";
+                    $("loading").innerHTML = "Loading...";
+                    var styleMap = new OpenLayers.StyleMap({'default': OpenLayers.Util.extend(OpenLayers.Feature.Vector.style['default'], {strokeWidth: 5, cursor: 'pointer'})});
 
                     this.layers = []
-                    this.layers.push(new OpenLayers.Layer.GML("", "/featureserver/featureserver.cgi/osm-polygons/?bbox="+b.toBBOX(), {format: OpenLayers.Format.GeoJSON, styleMap: styleMap, osmType: 'way'}));
-                    this.layers.push(new OpenLayers.Layer.GML("", "/featureserver/featureserver.cgi/osm/?bbox="+b.toBBOX(), {format: OpenLayers.Format.GeoJSON, styleMap: styleMap, 'osmType': 'way'}));
-                    this.layers.push(new OpenLayers.Layer.GML("", "/featureserver/featureserver.cgi/osm-points/?bbox="+b.toBBOX(), {format: OpenLayers.Format.GeoJSON, styleMap: styleMap, osmType: 'node'}));
-                    map.addLayers(this.layers);
+                    this.layers.push(
+                        new OpenLayers.Layer.GML("", 
+                            "/api/0.5/map?bbox="+b.clone().transform(map.getProjectionObject(), map.displayProjection).toBBOX(), 
+                            {format: OpenLayers.Format.OSM, styleMap: styleMap, projection: map.displayProjection}));
+                    
+                    var selectFeature = new OpenLayers.Control.SelectFeature(this.layers[0]);
+                    
                     for (var i = 0; i < this.layers.length; i++) {
-                        this.layers[i].events.on({'featureselected': function(e) {
-                            var feature = e.feature;
-                            var s = "<a href='http://openstreetmap.org/browse/" + e.feature.layer.osmType+"/" + feature.fid +"'>"+ e.feature.layer.osmType+" " + feature.fid + "</a>";
-                            document.getElementById("data").innerHTML = s;
-                        }    
+                        
+                        this.layers[i].events.on({
+                        'featureselected': 
+                            function(e) {
+                                var feature = e.feature;
+                                var type = "way"; 
+                                if (feature.geometry.CLASS_NAME == "OpenLayers.Geometry.Point") {
+                                    type = "node";
+                                }    
+                                var s = "<a href='/" + type +"/" + feature.osm_id +"'>Edit "+ type + " " + feature.osm_id + "</a>";
+                                var tags = "<ul>"; 
+                                for (var key in feature.attributes) {
+                                    if (key.search(":") == -1) {
+                                        tags += "<li><b>" + key + "</b>: " + feature.attributes[key] + "</li>";
+                                    }
+                                }
+                                tags += "</ul>";
+                                document.getElementById("data").innerHTML = s + tags;
+                            },
+                        'featureunselected': function () {
+                            $("data").innerHTML = "";
+
+                        },
+                        "loadend": 
+                            function() { 
+                                $("loading").innerHTML = this.features.length + " loaded";
+                                if (this.features.length == 1) {
+                                    selectFeature.select(this.features[0]);
+                                }    
+                            }    
                         });
                     }    
-                    this.selectFeature = new OpenLayers.Control.SelectFeature(this.layers);
+                    this.selectFeature = selectFeature;
                     map.addControl(this.selectFeature);
                     this.selectFeature.activate();
+                    
+                    map.addLayers(this.layers);
+                    
                 }
 
             }); 
             var options = {
                 projection: new OpenLayers.Projection("EPSG:900913"),
+                displayProjection: new OpenLayers.Projection("EPSG:4326"),
                 units: "m",
-                maxResolution: 156543.0339,
+                maxResolution: 156543.03392804062,
                 numZoomLevels: 19,
-                maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
-                                                 20037508.34, 20037508.34)
+                maxExtent: new OpenLayers.Bounds(-20037508.342787, -20037508.342788, 20037508.342789, 20037508.342789 )
             };
 
             map = new OpenLayers.Map( 'map', options );
@@ -101,18 +133,17 @@
                     {layers: 'basic'} );
             var mapnik = new OpenLayers.Layer.TMS(
                 "OpenStreetMap (Mapnik)",
-                  "http://a.tile.openstreetmap.org/",
+                  ["http://a.tile.openstreetmap.org/",
+                   "http://b.tile.openstreetmap.org/"],
                 {
                     type: 'png', getURL: osm_getTileURL,
-                    displayOutsideMaxExtent: true,
                     attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
                 }
             );
             var control = new OpenLayers.Control.Click();
             map.addControl(control);
-            map.addControl(new OpenLayers.Control.Permalink());
-            var sfc = new OpenLayers.Control.SelectFeature
             control.activate();
+            map.addControl(new OpenLayers.Control.Permalink());
             map.addLayer(mapnik);
             if (!map.getCenter()) { map.zoomToMaxExtent(); }
         }
@@ -123,11 +154,16 @@
             var z = this.map.getZoom();
             var limit = Math.pow(2, z);
 
-            if (y < 0 || y >= limit) {
-                return OpenLayers.Util.getImagesLocation() + "404.png";
+            if (y < 0 || y >= limit || x < 0 || x >= limit) {
+                return OpenLayers.Util.getImagesLocation() + "blank.gif";
             } else {
                 x = ((x % limit) + limit) % limit;
-                return this.url + z + "/" + x + "/" + y + "." + this.type;
+                path = z + "/" + x + "/" + y + "." + this.type;
+                var url = this.url;
+                if (url instanceof Array) {
+                    url = this.selectUrl(path, url);
+                }
+                return url + path;
             }
         }
 
@@ -136,7 +172,9 @@
 
   <body onload="init()">
     <div id="map" style="width:99%; height:99%">
-        <div id="data" style="position:absolute; right: 5px; top:5px; z-index:10000"></div>
+        <div id="data" style="position:absolute; left: 5px; bottom:5px; z-index:10000; background-color: white; padding: 5px"></div>
+        <div id="loading" style="position:absolute; right: 5px; top:25px; z-index:10000"></div>
+
     </div>
 
   </body>

@@ -54,8 +54,9 @@
                     var output = document.getElementById("data");
                     var xy = evt.xy;
                     var b = new OpenLayers.Bounds();
-                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x-15, xy.y-15)));
-                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x+15, xy.y+15)));
+                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x-30, xy.y-30)));
+                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x+30, xy.y+30)));
+                    this.lastLonLat = b.getCenterLonLat();
                     if (this.selectFeature) {
                         this.selectFeature.destroy();
                     }    
@@ -75,7 +76,7 @@
                             {format: OpenLayers.Format.OSM, styleMap: styleMap, projection: map.displayProjection}));
                     
                     var selectFeature = new OpenLayers.Control.SelectFeature(this.layers[0]);
-                    
+                    var click = this;
                     for (var i = 0; i < this.layers.length; i++) {
                         
                         this.layers[i].events.on({
@@ -105,7 +106,19 @@
                                 $("loading").innerHTML = this.features.length + " loaded";
                                 if (this.features.length == 1) {
                                     selectFeature.select(this.features[0]);
-                                }    
+                                } else {
+                                    var matches = [];
+                                    var point = new OpenLayers.Geometry.Point(click.lastLonLat.lon, click.lastLonLat.lat); 
+                                    for (var i = 0; i < this.features.length; i++) {
+                                         if (this.features[i].geometry.intersects(point)) {
+                                            matches.push(this.features[i]);
+                                         }
+                                    }
+                                    if (matches.length == 1) {
+                                        selectFeature.select(matches[0]);
+                                    }    
+                                }
+                                    
                             }    
                         });
                     }    

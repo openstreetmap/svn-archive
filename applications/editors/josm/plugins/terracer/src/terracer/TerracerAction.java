@@ -141,11 +141,13 @@ public final class TerracerAction extends JosmAction {
         // assemble new quadrilateral, closed ways
         for (int i = 0; i < nb; ++i) {
         	Way terr = new Way();
-        	terr.addNode(new_nodes[0][i]);
-        	terr.addNode(new_nodes[0][i+1]);
-        	terr.addNode(new_nodes[1][i+1]);
-        	terr.addNode(new_nodes[1][i]);
-        	terr.addNode(new_nodes[0][i]);
+        	// Using Way.nodes.add rather than Way.addNode because the latter doesn't
+        	// exist in older versions of JOSM.
+        	terr.nodes.add(new_nodes[0][i]);
+        	terr.nodes.add(new_nodes[0][i+1]);
+        	terr.nodes.add(new_nodes[1][i+1]);
+        	terr.nodes.add(new_nodes[1][i]);
+        	terr.nodes.add(new_nodes[0][i]);
         	ways.add(terr);
         	commands.add(new AddCommand(terr));
         }

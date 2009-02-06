@@ -66,8 +66,16 @@ public final class TerracerAction extends JosmAction {
 
 				if ((way.nodes.size() == 5) &&
 						way.isClosed()) {
-					terraceBuilding(way);
-
+					// first ask the user how many buildings to terrace into
+					String answer = 
+						JOptionPane.showInputDialog(
+								tr("How many buildings are in the terrace?"));
+					
+					// if the answer was null then the user clicked "Cancel"
+					if (answer != null) {
+						int nb = Integer.parseInt(answer);
+						terraceBuilding(way, nb);
+					}
 				} else {
 					badSelect = true;
 				}
@@ -93,12 +101,9 @@ public final class TerracerAction extends JosmAction {
 	 * closed, quadrilateral ways and left in the selection.
 	 * 
 	 * @param w The closed, quadrilateral way to terrace.
+	 * @param nb The number of buildings to terrace into.
 	 */
-	private void terraceBuilding(Way w) {
-		// first ask the user how many buildings to terrace into
-		int nb = Integer.parseInt(
-				JOptionPane.showInputDialog(
-						tr("How many buildings are in the terrace?")));
+	private void terraceBuilding(Way w, int nb) {
 
 		// now find which is the longest side connecting the first node
 		Node[] nodes = w.nodes.toArray(new Node[] {});

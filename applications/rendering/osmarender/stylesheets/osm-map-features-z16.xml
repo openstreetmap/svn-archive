@@ -1724,8 +1724,44 @@
 				</else>
 			</rule>
 		</else>
-		
+
 		<!-- Barriers -->
+		<rule e="way" k="barrier" v="bollard|hedge|fence|wall|retaining_wall|city_wall">
+			<rule e="way" k="barrier" v="bollard">
+				<line class="barrier barrier-bollard"/>
+			</rule>
+			<rule e="way" k="barrier" v="hedge">
+				<line class="barrier barrier-hedge-1"/>
+				<line class="barrier barrier-hedge-2"/>
+			</rule>
+			<rule e="way" k="barrier" v="fence">
+				<line class="barrier barrier-fence-1"/>
+				<line class="barrier barrier-fence-2"/>
+			</rule>
+			<rule e="way" k="barrier" v="wall">
+				<line class="barrier barrier-wall"/>
+			</rule>
+			<rule e="way" k="barrier" v="retaining_wall">
+				<line class="barrier barrier-retaining-wall-1"/>
+				<line class="barrier barrier-retaining-wall-2"/>
+			</rule>
+			<rule e="way" k="barrier" v="city_wall">
+				<rule e="way" k="two_sided" v="yes">
+					<line class="barrier barrier-city-wall-ts-1"/>
+					<line class="barrier barrier-city-wall-ts-2"/>
+				</rule>
+				<else>
+					<!-- We can't move the dot of to one side yet -->
+					<line class="barrier barrier-city-wall-1"/>
+					<line class="barrier barrier-city-wall-2"/>
+				</else>
+			</rule>
+		</rule>
+		<else>
+			<rule e="way" k="barrier">
+				<line class="barrier"/>
+			</rule>
+		</else>
 		<rule e="node" k="barrier|highway" v="gate">
 			<rule e="node" k="status" v="open">
 				<wayMarker k="highway" class="gate-open"/>
@@ -3677,7 +3713,22 @@
 			.access-no-area-border {
 			stroke: #4040ff;
 			}
-			
+
+			/* Barriers */
+			.barrier { stroke: #000000; stroke-linecap: butt; stroke-width: 0.05px; fill: none; }
+			.barrier-bollard { stroke: #ff0000; stroke-dasharray: 0.0001, 0.4999; stroke-linecap: round; stroke-width: 0.1px; }
+			.barrier-hedge-1 { stroke: #00ff00; stroke-width: 0.1px; }
+			.barrier-hedge-2 { stroke-dasharray: 0.0001, 0.4999; stroke-linecap: round; stroke-width: 0.1px; }
+			.barrier-fence-1 { stroke-width: 0.1px; }
+			.barrier-fence-2 { stroke: #888888; stroke-dasharray: 0.0001, 0.4999; stroke-linecap: round; stroke-width: 0.1px; }
+			.barrier-wall { stroke-width: 0.1px; }
+			.barrier-retaining-wall-1 { stroke: #888888; stroke-width: 0.1px; }
+			.barrier-retaining-wall-2 { stroke: #888888; stroke-dasharray: 0.0001, 0.4999; stroke-linecap: round; stroke-width: 0.2px; }
+			.barrier-city-wall-ts-1 { stroke-width: 0.1px; }
+			.barrier-city-wall-ts-2 { stroke-dasharray: 0.0001, 0.4999; stroke-linecap: round; stroke-width: 0.2px; }
+			.barrier-city-wall-1 { stroke-width: 0.1px; }
+			.barrier-city-wall-2 { stroke-dasharray: 0.0001, 0.4999; stroke-linecap: round; stroke-width: 0.2px; }
+
 			/* Map decoration */
 			.map-grid-line {
 			fill: none;

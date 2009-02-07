@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <bounds minlat='0.0' minlon='0.0' maxlat='0.025' maxlon='0.025' origin='petschge' />
+  <node id='1' user='petschge' visible='true' lat='0.0' lon='0.0' />
+  <node id='19' user='petschge' visible='true' lat='0.0' lon='0.025' />
+  <node id='20' user='petschge' visible='true' lat='0.025' lon='0.0' />
+  <node id='29' user='petschge' visible='true' lat='0.025' lon='0.025' />
+  <node id='101' visible='true' lat='0.016149329157656583' lon='0.007739093808664015' />
+  <node id='102' visible='true' lat='0.011912751970022843' lon='0.007739093808664015' />
+  <node id='103' visible='true' lat='0.011917606982849426' lon='0.008169917790366483' />
+  <node id='104' visible='true' lat='0.016154184170383747' lon='0.008169917790366486' />
+  <node id='105' visible='true' lat='0.016158801795766786' lon='0.00857967649969801' />
+  <node id='106' visible='true' lat='0.011922224608316124' lon='0.008579676499698008' />
+  <node id='107' visible='true' lat='0.011927247962296252' lon='0.00902543873361925' />
+  <node id='108' visible='true' lat='0.016163825149655878' lon='0.00902543873361925' />
+  <node id='109' visible='true' lat='0.01193258486130309' lon='0.009499024316669252' />
+  <node id='1010' visible='true' lat='0.016169162048565958' lon='0.009499024316669253' />
+  <node id='1011' visible='true' lat='0.01193782148426166' lon='0.009963711606782631' />
+  <node id='1012' visible='true' lat='0.016174398671429557' lon='0.009963711606782635' />
+  <node id='1013' visible='true' lat='0.016179732102098793' lon='0.010436989425200206' />
+  <node id='1014' visible='true' lat='0.011943154915027662' lon='0.010436989425200206' />
+  <node id='1015' visible='true' lat='0.00948171730086308' lon='0.005306354397350292' />
+  <node id='1016' visible='true' lat='0.009488993891427438' lon='0.00619409845877947' />
+  <node id='1017' visible='true' lat='0.009498704537775165' lon='0.007378797329275144' />
+  <node id='1018' visible='true' lat='0.00951222470166096' lon='0.009028257345775592' />
+  <node id='1019' visible='true' lat='0.009524366561923686' lon='0.010509564318029909' />
+  <node id='1020' visible='true' lat='0.009534767781013241' lon='0.011778513064302559' />
+  <node id='1021' visible='true' lat='0.009545169000096809' lon='0.01304746181057521' />
+  <node id='1022' visible='true' lat='0.013661437426801174' lon='0.01201900084173862'>
+    <tag k='barrier' v='stile' />
+  </node>
+  <node id='1023' visible='true' lat='0.013577529813578394' lon='0.006531559058120818'>
+    <tag k='barrier' v='bollard' />
+  </node>
+  <node id='1024' visible='true' lat='0.016365122711702745' lon='0.005384894077786707'>
+    <tag k='barrier' v='cattle_grid' />
+  </node>
+  <node id='1025' visible='true' lat='0.019104673405915228' lon='0.006577553789891249' />
+  <node id='1026' visible='true' lat='0.020167315042317606' lon='0.009316250569665382'>
+    <tag k='barrier' v='hampshire_gate' />
+  </node>
+  <node id='1027' visible='true' lat='0.019022152131966463' lon='0.01197439016843657' />
+  <node id='1028' visible='true' lat='0.01636316234644466' lon='0.013083139127770453'>
+    <tag k='barrier' v='sally_port' />
+  </node>
+  <node id='1029' visible='true' lat='0.01480061326724621' lon='0.005696647776652747'>
+    <tag k='barrier' v='bus_trap' />
+  </node>
+  <node id='1030' visible='true' lat='0.018013260254602714' lon='0.005777616840684875'>
+    <tag k='barrier' v='drawbridge' />
+  </node>
+  <node id='1031' visible='true' lat='0.019895786691370272' lon='0.007811684259403314'>
+    <tag k='barrier' v='bump_gate' />
+  </node>
+  <node id='1032' visible='true' lat='0.019830581557444316' lon='0.010810463120491753'>
+    <tag k='barrier' v='kissing_gate' />
+  </node>
+  <node id='1033' visible='true' lat='0.01789682343573616' lon='0.012745081263925366'>
+    <tag k='barrier' v='port_cullis' />
+  </node>
+  <node id='1034' visible='true' lat='0.014879407600868515' lon='0.012804150390954446'>
+    <tag k='barrier' v='spikes' />
+  </node>
+  <node id='1035' visible='true' lat='0.013161915834667455' lon='0.011059308540511978'>
+    <tag k='barrier' v='entrance' />
+  </node>
+  <node id='1036' visible='true' lat='0.013183066400811296' lon='0.007357959367521923'>
+    <tag k='barrier' v='block' />
+  </node>
+  <way id='1000' user='petschge' visible='true'>
+    <nd ref='1' />
+    <nd ref='20' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1009' user='petschge' visible='true'>
+    <nd ref='19' />
+    <nd ref='29' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1037' visible='true'>
+    <nd ref='101' />
+    <nd ref='102' />
+    <nd ref='1015' />
+    <tag k='barrier' v='bollard' />
+  </way>
+  <way id='1038' visible='true'>
+    <nd ref='104' />
+    <nd ref='103' />
+    <nd ref='1016' />
+    <tag k='barrier' v='hedge' />
+  </way>
+  <way id='1039' visible='true'>
+    <nd ref='105' />
+    <nd ref='106' />
+    <nd ref='1017' />
+    <tag k='barrier' v='fence' />
+  </way>
+  <way id='1040' visible='true'>
+    <nd ref='108' />
+    <nd ref='107' />
+    <nd ref='1018' />
+    <tag k='barrier' v='wall' />
+  </way>
+  <way id='1041' visible='true'>
+    <nd ref='1010' />
+    <nd ref='109' />
+    <nd ref='1019' />
+    <tag k='barrier' v='retaining_wall' />
+  </way>
+  <way id='1042' visible='true'>
+    <nd ref='1012' />
+    <nd ref='1011' />
+    <nd ref='1020' />
+    <tag k='barrier' v='city_wall' />
+  </way>
+  <way id='1043' visible='true'>
+    <nd ref='1013' />
+    <nd ref='1014' />
+    <nd ref='1021' />
+    <tag k='barrier' v='city_wall' />
+    <tag k='two_sided' v='yes' />
+  </way>
+  <way id='1044' visible='true'>
+    <nd ref='1035' />
+    <nd ref='1036' />
+    <nd ref='1023' />
+    <nd ref='1029' />
+    <nd ref='1024' />
+    <nd ref='1030' />
+    <nd ref='1025' />
+    <nd ref='1031' />
+    <nd ref='1026' />
+    <nd ref='1032' />
+    <nd ref='1027' />
+    <nd ref='1033' />
+    <nd ref='1028' />
+    <nd ref='1034' />
+    <nd ref='1022' />
+    <nd ref='1035' />
+    <tag k='highway' v='footway' />
+  </way>
+</osm>

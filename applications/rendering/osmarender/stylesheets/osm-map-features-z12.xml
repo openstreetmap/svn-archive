@@ -910,7 +910,7 @@
 		
 		<!-- Landuse -->
 		<!-- at zoom 12 render all landuse in the same colour so it doesn't look too psychedelic -->
-		<rule e="way" k="landuse" v="residential|farmyard|retail|industrial|brownfield|commercial|cemetery|quarry|greenfield|construction" layer="-5">
+		<rule e="way" k="landuse" v="residential|farmyard|retail|industrial|brownfield|commercial|cemetery|quarry|greenfield|construction|railway" layer="-5">
 			<area class="landuse-all" layer="-5"/>
 		</rule>
 		

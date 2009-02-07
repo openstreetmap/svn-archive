@@ -1829,7 +1829,7 @@
 		<rule e="way" k="landuse" v="retail" layer="-5">
 			<area class="landuse-retail" layer="-5"/>
 		</rule>
-		<rule e="way" k="landuse" v="industrial|brownfield" layer="-5">
+		<rule e="way" k="landuse" v="industrial|brownfield|railway" layer="-5">
 			<area class="landuse-industrial" layer="-5"/>
 		</rule>
 		<rule e="way" k="landuse" v="commercial" layer="-5">

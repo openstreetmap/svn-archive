@@ -1,11 +1,16 @@
 from xml.sax.handler import ContentHandler
 import sys, re, xml.sax
 
+elementtree = True 
+
 try:
     from xml.etree.cElementTree import Element, SubElement, tostring
 except:
-    sys.path.append("..")
-    from third.ElementTree import Element, SubElement, tostring
+    try:
+        sys.path.append("..")
+        from third.ElementTree import Element, SubElement, tostring
+    except ImportError, E:
+        elementtree = False    
 
 try:
     import httplib2
@@ -122,6 +127,8 @@ class OSMObj:
         return " ".join(filter(None, (start, middle, end)))
 
     def toxml(self, as_string=True, parent=None):
+        if not elementtree:
+            raise Exception("ElementTree support required for writing to XML.") 
         if parent == None:
             parent = Element("osm", {"version": "0.5"})
         if self.type == "node":

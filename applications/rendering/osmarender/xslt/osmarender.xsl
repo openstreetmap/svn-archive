@@ -1073,6 +1073,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 						<xsl:otherwise>0</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
+
+				<xsl:attribute name="labels">
+					<xsl:value-of select="concat('|',local-name($instruction),'|',$instruction/@labels,'|')"/>
+				</xsl:attribute>
+
 				<z:instruction>
 					<xsl:copy-of select="$instruction"/>
 				</z:instruction>
@@ -1081,6 +1086,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 		</xsl:for-each>
 	</xsl:template>
 
+	<xsl:template match="set-attribute">
+		<xsl:param name="elements"/>
+		
+		<!-- TODO: Don't save id's for global actions. It's a waste of memory -->
+		<z:set-attribute name="{@name}" value="{@value}" for-label="{concat('|',@for-label,'|')}">
+			<xsl:for-each select="$elements">
+				<z:element id="{@id}"/>
+			</xsl:for-each>
+		</z:set-attribute>
+	</xsl:template>
+
+	<xsl:template match="delete">
+		<xsl:param name="elements"/>
+		
+		<!-- TODO: Don't save id's for global actions. It's a waste of memory -->
+		<z:delete name="{@name}" value="{@value}" for-label="{concat('|',@for-label,'|')}">
+			<xsl:for-each select="$elements">
+				<z:element id="{@id}"/>
+			</xsl:for-each>
+		</z:delete>
+	</xsl:template>
 
   <!-- Templates to process line, circle, text, etc. instructions -->
   <!-- Each template is passed a variable containing the set of elements that need to
@@ -2755,15 +2781,7 @@ against infinite loops -->
 
   <xsl:template name='generateAreaSubPath'>
     <xsl:param name='way'/>
-	
-	<xsl:message>
-		<!--<xsl:copy-of select="$way"/>-->
-		<xsl:for-each select="$data">
-			<!--<xsl:copy-of select="."/>-->
-			<xsl:copy-of select="key('nodeById', '261050764')"/>
-		</xsl:for-each>
-	</xsl:message>
-	
+
     <xsl:variable name='loop' select='$way/nd[1]/@ref=$way/nd[last()]/@ref'/>
     <xsl:message>
       WayId: <xsl:value-of select='$way/@id'/>
@@ -2866,7 +2884,7 @@ against infinite loops -->
   </xsl:template>
 
   <!-- Some attribute shouldn't be copied -->
-  <xsl:template match="@type|@ref|@scale|@smart-linecap|@honor-width|@position" mode="copyAttributes" />
+  <xsl:template match="@type|@ref|@scale|@smart-linecap|@honor-width|@position|@labels" mode="copyAttributes" />
 
   <!-- Copy all other attributes  -->
   <xsl:template match="@*" mode="copyAttributes">
@@ -2885,25 +2903,39 @@ against infinite loops -->
 		to be 'yes', which is the default.
 
 	-->
-  <xsl:template name="processRules">
+<xsl:template name="processRules">
 
     <!-- First select all elements - exclude those marked as deleted by JOSM -->
-    <xsl:variable name='elements' select="$data/osm/*[not(@action) or not(@action='delete')]" />
+	<xsl:variable name='elements' select="$data/osm/*[not(@action) or not(@action='delete')]" />
 
-	<xsl:variable name="commands">
+	<xsl:variable name="originalCommands">
 		<xsl:apply-templates select="/rules/rule">
 			<xsl:with-param name="elements" select="$elements"/>
 		</xsl:apply-templates>
 	</xsl:variable>
+
+	<xsl:variable name="originalCommands2">
+		<xsl:call-template name="applySetAttributeActions">
+			<xsl:with-param name="commands" select="exslt:node-set($originalCommands)/z:command"/>
+			<xsl:with-param name="setAttributeActions" select="exslt:node-set($originalCommands)/z:set-attribute"/>
+		</xsl:call-template>
+	</xsl:variable>
+
+	<xsl:variable name="commands">
+		<xsl:call-template name="applyDeleteActions">
+			<xsl:with-param name="commands" select="exslt:node-set($originalCommands2)/z:command"/>
+			<xsl:with-param name="deleteActions" select="exslt:node-set($originalCommands)/z:delete"/>
+		</xsl:call-template>
+	</xsl:variable>
 	
-	<xsl:for-each select="exslt:node-set($commands)/z:command[instruction/*/@z-mode='bottom']">
+	<xsl:for-each select="exslt:node-set($commands)/z:command[z:instruction/*/@z-mode='bottom']">
 		<xsl:sort select="@z-index" data-type="number"/>
 		<xsl:call-template name="renderCommand">
 			<xsl:with-param name="command" select="."/>
 		</xsl:call-template>
 	</xsl:for-each>
 
-	<xsl:for-each select="exslt:node-set($commands)/z:command[instruction/*/@z-mode='normal' or not(instruction/*/@z-mode)]">
+	<xsl:for-each select="exslt:node-set($commands)/z:command[z:instruction/*/@z-mode='normal' or not(z:instruction/*/@z-mode)]">
 		<xsl:sort select="@layer" data-type="number"/>
 		<xsl:sort select="@z-index" data-type="number"/>
 		<xsl:call-template name="renderCommand">
@@ -2911,13 +2943,14 @@ against infinite loops -->
 		</xsl:call-template>
 	</xsl:for-each>
 	
-	<xsl:for-each select="exslt:node-set($commands)/z:command[instruction/*/@z-mode='top']">
+	<xsl:for-each select="exslt:node-set($commands)/z:command[z:instruction/*/@z-mode='top']">
 		<xsl:sort select="@z-index" data-type="number"/>
 		<xsl:call-template name="renderCommand">
 			<xsl:with-param name="command" select="."/>
 		</xsl:call-template>
 	</xsl:for-each>
-  </xsl:template>
+
+</xsl:template>
   
 	<xsl:template name="renderCommand">
 		<xsl:param name="command"/>
@@ -2931,6 +2964,82 @@ against infinite loops -->
 		</xsl:for-each>
 	</xsl:template>
 
+	<xsl:template name="applySetAttributeActions">
+		<xsl:param name="commands"/>
+		<xsl:param name="setAttributeActions"/>
+
+		<xsl:choose>
+			<xsl:when test="$setAttributeActions">
+				
+				<xsl:variable name="processedCommands">
+					<xsl:call-template name="applySetAttributeActions">
+						<xsl:with-param name="commands" select="$commands"/>
+						<xsl:with-param name="setAttributesActions" select="$setAttributeActions[position() > 1]"/>
+					</xsl:call-template>
+				</xsl:variable>
+
+				<xsl:variable name="attr" select="$setAttributeActions[1]"/>
+
+				<xsl:for-each select="$commands">
+					<xsl:variable name="command" select="."/>
+					<xsl:choose>
+						<xsl:when test="($attr/z:element[@id = $command/z:element/@id]) and contains($command/@labels, $attr/@for-label)">
+							<z:command layer="{$command/@layer}">
+								<z:instruction>
+									<xsl:element name="{local-name($command/z:instruction/*)}" xmlns="">
+										<xsl:copy-of select="$command/z:instruction/*/@*"/>
+										<xsl:attribute name="{$attr/@name}">
+											<xsl:value-of select="$attr/@value"/>
+										</xsl:attribute>
+									</xsl:element>
+								</z:instruction>
+								<z:element>
+									<xsl:copy-of select="$command/z:element/@*"/>
+								</z:element>
+							</z:command>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:copy-of select="$command"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy-of select="$commands"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="applyDeleteActions">
+		<xsl:param name="commands"/>
+		<xsl:param name="deleteActions"/>
+
+		<xsl:choose>
+			<xsl:when test="$deleteActions">
+				
+				<xsl:variable name="processedCommands">
+					<xsl:call-template name="applyDeleteActions">
+						<xsl:with-param name="commands" select="$commands"/>
+						<xsl:with-param name="deleteActions" select="$deleteActions[position() > 1]"/>
+					</xsl:call-template>
+				</xsl:variable>
+
+				<xsl:variable name="attr" select="$deleteActions[1]"/>
+
+				<xsl:for-each select="$commands">
+					<xsl:variable name="command" select="."/>
+					<xsl:if test="not(($attr/z:element[@id = $command/z:element/@id]) and contains($command/@labels, $attr/@for-label))">
+						<xsl:copy-of select="$command"/>
+					</xsl:if>
+				</xsl:for-each>
+
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy-of select="$commands"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
   <!-- Process a rule at a specific level -->
   <xsl:template match='rule'>

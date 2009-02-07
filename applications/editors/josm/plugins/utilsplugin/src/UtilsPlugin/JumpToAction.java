@@ -41,13 +41,23 @@ public class JumpToAction extends JosmAction implements MouseListener {
         KeyEvent.VK_G, Shortcut.GROUP_HOTKEY), true);
     }
     
-    public JTextField url = new JTextField();
-    public JTextField lat = new JTextField();
-    public JTextField lon = new JTextField();
+    private JTextField url = new JTextField();
+    private JTextField lat = new JTextField();
+    private JTextField lon = new JTextField();
+    private JTextField zm = new JTextField();
+    
+    private double zoomFactor = 0;
     public void showJumpToDialog() {
         LatLon curPos=Main.proj.eastNorth2latlon(Main.map.mapView.getCenter());
         lat.setText(java.lang.Double.toString(curPos.lat()));
         lon.setText(java.lang.Double.toString(curPos.lon()));
+        
+        LatLon ll1 = Main.map.mapView.getLatLon(0,0);
+        LatLon ll2 = Main.map.mapView.getLatLon(100,0);
+        double dist = ll1.greatCircleDistance(ll2);
+        zoomFactor = Main.map.mapView.getScale()/dist;
+        
+        zm.setText(java.lang.Long.toString(Math.round(dist*100)/100));
         updateUrl(true);
         
         JPanel panel = new JPanel(new BorderLayout());
@@ -74,6 +84,7 @@ public class JumpToAction extends JosmAction implements MouseListener {
         osmLonLatListener x=new osmLonLatListener();
         lat.getDocument().addDocumentListener(x); 
         lon.getDocument().addDocumentListener(x); 
+        zm.getDocument().addDocumentListener(x); 
         url.getDocument().addDocumentListener(new osmURLListener()); 
         
         JPanel p = new JPanel(new GridBagLayout());
@@ -85,11 +96,15 @@ public class JumpToAction extends JosmAction implements MouseListener {
         p.add(new JLabel(tr("Longitude")), GBC.eol());
         p.add(lon, GBC.eol().fill(GBC.HORIZONTAL));
         
+        p.add(new JLabel(tr("Zoom (in metres)")), GBC.eol());
+        p.add(zm, GBC.eol().fill(GBC.HORIZONTAL));
+        
         p.add(new JLabel(tr("URL")), GBC.eol());
         p.add(url, GBC.eol().fill(GBC.HORIZONTAL));
         
         Object[] buttons = { tr("Jump there"), tr("Cancel") };
         LatLon ll = null;
+        double zoomLvl = 100;
         while(ll == null) {
             int option = JOptionPane.showOptionDialog(
                             Main.parent,
@@ -103,44 +118,69 @@ public class JumpToAction extends JosmAction implements MouseListener {
             
             if (option != JOptionPane.OK_OPTION) return;
             try {
+                zoomLvl = Double.parseDouble(zm.getText());
                 ll = new LatLon(Double.parseDouble(lat.getText()), Double.parseDouble(lon.getText()));
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(Main.parent, tr("Could not parse Latitude or Longitude. Please check."), tr("Unable to parse Lon/Lat"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(Main.parent, tr("Could not parse Latitude, Longitude or Zoom. Please check."), tr("Unable to parse Lon/Lat"), JOptionPane.ERROR_MESSAGE);
             }
         }
         
-        Main.map.mapView.zoomTo(Main.proj.latlon2eastNorth(ll), Main.map.mapView.getScale());
-        
-      
+        Main.map.mapView.zoomTo(Main.proj.latlon2eastNorth(ll), zoomFactor * zoomLvl);
     }
     
     private void parseURL() {
         if(!url.hasFocus()) return;
         Bounds b = OsmUrlToBounds.parse(url.getText());
         if (b != null) {
-            lat.setText(java.lang.Double.toString((b.min.lat() + b.max.lat())/2));
-            lon.setText(java.lang.Double.toString((b.min.lon() + b.max.lon())/2));
+            lat.setText(Double.toString((b.min.lat() + b.max.lat())/2));
+            lon.setText(Double.toString((b.min.lon() + b.max.lon())/2));
+            
+            int zoomLvl = 16;
+            String[] args = url.getText().substring(url.getText().indexOf('?')+1).split("&"); 
+            for (String arg : args) { 
+                int eq = arg.indexOf('='); 
+                if (eq == -1 || !arg.substring(0, eq).equalsIgnoreCase("zoom")) continue; 
+                
+                zoomLvl = Integer.parseInt(arg.substring(eq + 1));
+                break;
+            }
+            
+            // 10000000 = 10 000 * 1000 = World * (km -> m)
+            zm.setText(Double.toString(Math.round(10000000 * Math.pow(2, (-1) * zoomLvl))));
         }
     }
     
     private void updateUrl(boolean force) {
-        if(!lat.hasFocus() && !lon.hasFocus() && !force) return;
+        if(!lat.hasFocus() && !lon.hasFocus() && !zm.hasFocus() && !force) return;
         try {
             double dlat = Double.parseDouble(lat.getText());
             double dlon = Double.parseDouble(lon.getText());
-            int zoom = Main.map.mapView.zoom();
+            int zoomLvl = getZoom(zoomFactor * Double.parseDouble(zm.getText()));
 
-            int decimals = (int) Math.pow(10, (zoom / 3));
+            int decimals = (int) Math.pow(10, (zoomLvl / 3));
             dlat = Math.round(dlat * decimals);
             dlat /= decimals;
             dlon = Math.round(dlon * decimals);
             dlon /= decimals;
-            url.setText("http://www.openstreetmap.org/?lat="+dlat+"&lon="+dlon+"&zoom="+zoom);
+            url.setText("http://www.openstreetmap.org/?lat="+dlat+"&lon="+dlon+"&zoom="+zoomLvl);
         } catch (NumberFormatException x) {}
     }
 
     public void actionPerformed(ActionEvent e) {
         showJumpToDialog();
+    }
+    
+    /**
+     * Converts a given scale into OSM-Style zoom factors 
+     * @param double scale
+     */    
+    public int getZoom(double scale) {
+        double sizex = scale * Main.map.mapView.getWidth();
+        double sizey = scale * Main.map.mapView.getHeight();
+        for (int zoom = 0; zoom <= 32; zoom++, sizex *= 2, sizey *= 2)
+            if (sizex > Main.map.mapView.world.east() || sizey > Main.map.mapView.world.north())
+                return zoom;
+        return 32;
     }
   
     public void mousePressed(MouseEvent e) {}

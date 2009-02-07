@@ -650,7 +650,7 @@
             .highway-byway-1-core                   { stroke-width: 0.8px;   stroke: #efadaa; }
 
             .highway-bridleway-casing               { stroke-width: 1.8px;   stroke: #707070;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt; }
-            .highway-bridleway-core                 { stroke-width: 1.7px;   stroke: #e3e9f1; }
+            .highway-bridleway-core                 { stroke-width: 1.7px;   stroke: #d3cb98; }
 
             .highway-cycleway-casing                { stroke-width: 0.5px;   stroke: #202020; }
             .highway-cycleway-core                  { stroke-width: 0.5px;   stroke: #d1ead1; }

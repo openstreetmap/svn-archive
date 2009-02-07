@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.taggingpresettester;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +25,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.tagging.TaggingCellRenderer;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 import org.xml.sax.SAXException;
 
@@ -46,10 +47,10 @@ public class TaggingPresetTester extends JFrame {
                 allPresets.addAll(TaggingPreset.readAll(new BufferedReader(new InputStreamReader(in))));
             } catch (IOException e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Could not read tagging preset source: "+source);
+                JOptionPane.showMessageDialog(null, tr("Could not read tagging preset source: {0}",source));
             } catch (SAXException e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Error parsing "+source+": "+e.getMessage());
+                JOptionPane.showMessageDialog(null, tr("Error parsing {0}: {1}",source,e.getMessage()));
             }
 
             try {
@@ -76,7 +77,7 @@ public class TaggingPresetTester extends JFrame {
     }
 
     public TaggingPresetTester(String[] args) {
-        super("Tagging Preset Tester");
+        super(tr("Tagging Preset Tester"));
         this.args = args;
         taggingPresets = new JComboBox();
         taggingPresets.setRenderer(new TaggingCellRenderer());
@@ -91,7 +92,7 @@ public class TaggingPresetTester extends JFrame {
         });
         reselect();
 
-        JButton b = new JButton("Reload");
+        JButton b = new JButton(tr("Reload"));
         b.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 int i = taggingPresets.getSelectedIndex();

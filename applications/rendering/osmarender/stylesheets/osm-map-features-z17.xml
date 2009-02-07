@@ -3651,8 +3651,8 @@
 			.highway-bridleway-bridge-core          { stroke-width: 1.4px; }
 			.highway-bridleway-casing               { stroke-width: 1px;     stroke: #707070;  stroke-dasharray: 0.7, 0.2; stroke-linecap: butt; }
 			.highway-bridleway-area-casing          { stroke-width: 0.2px; }
-			.highway-bridleway-core                 { stroke-width: 0.8px;   stroke: #d3e9f8; }
-			.highway-bridleway-area                 { fill: #d3e9f8; }
+			.highway-bridleway-core                 { stroke-width: 0.8px;   stroke: #d3cb98; }
+			.highway-bridleway-area                 { fill: #d3cb98; }
 			.highway-bridleway-name                 { stroke-width: 0px;     font-size: 1.25px; }
 			.highway-bridleway-ref                  { stroke-width: 0px;     font-size: 1.25px; }
 

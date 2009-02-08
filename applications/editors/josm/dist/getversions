@@ -13,13 +13,15 @@ foreach my $plugin (@names)
 {
   my $date = "";
   my $version = "";
+  my $mversion = "";
   my $manifest = `unzip -c $plugin META-INF/MANIFEST.MF`;
   if($manifest)
   {
     $date = $1 if $manifest =~ /Plugin-Date: ([^\r\n]+)/;
     $version = $1 if $manifest =~ /Plugin-Version: ([^\r\n]+)/;
+    $mversion = $1 if $manifest =~ /Plugin-Mainversion: ([^\r\n]+)/;
   }
-  printf "%-${maxlength}s %28s %6s", $plugin,$date,$version;
+  printf "%-${maxlength}s %28s %6s (%4s)", $plugin,$date,$version,$mversion;
   my $svnfile = ".svn/text-base/$plugin.svn-base";
   if(-f $svnfile && ($manifest = `unzip -c $svnfile META-INF/MANIFEST.MF`))
   {

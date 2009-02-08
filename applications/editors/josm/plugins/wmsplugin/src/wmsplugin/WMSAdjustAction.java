@@ -16,7 +16,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 
 
 public class WMSAdjustAction extends MapMode implements
-        MouseListener, MouseMotionListener{
+    MouseListener, MouseMotionListener{
 
     GeorefImage selectedImage;
     WMSLayer selectedLayer;
@@ -25,7 +25,7 @@ public class WMSAdjustAction extends MapMode implements
 
     public WMSAdjustAction(MapFrame mapFrame) {
         super(tr("Adjust WMS"), "adjustwms", 
-                        tr("Adjust the position of the WMS layer"), mapFrame, 
+                        tr("Adjust the position of the selected WMS layer"), mapFrame, 
                         ImageProvider.getCursor("normal", "move"));
     }
 
@@ -44,31 +44,27 @@ public class WMSAdjustAction extends MapMode implements
     @Override public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
-
-         for(Layer layer:Main.map.mapView.getAllLayers()) {
-            if (layer.visible && layer instanceof WMSLayer) {
-                prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());
-                selectedLayer = ((WMSLayer)layer);
-                selectedImage = selectedLayer.findImage(prevEastNorth);
-                if(selectedImage!=null){
-                    Main.map.mapView.setCursor
-                        (Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                }
+        
+        Layer layer=Main.map.mapView.getActiveLayer();
+        if (layer.visible && layer instanceof WMSLayer) {
+            prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());
+            selectedLayer = ((WMSLayer)layer);
+            selectedImage = selectedLayer.findImage(prevEastNorth);
+            if(selectedImage!=null) {
+                Main.map.mapView.setCursor
+                    (Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
             }
         }
     }
 
     @Override public void mouseDragged(MouseEvent e) {
-            /*
-        if (e.getButton() != MouseEvent.BUTTON1)
-            return;
-            */
-
         if(selectedImage!=null) {
             EastNorth eastNorth=
                     Main.map.mapView.getEastNorth(e.getX(),e.getY());
-                selectedLayer.displace(eastNorth.east()-prevEastNorth.east(), 
-                eastNorth.north()-prevEastNorth.north());
+            selectedLayer.displace(
+                eastNorth.east()-prevEastNorth.east(), 
+                eastNorth.north()-prevEastNorth.north()
+            );
             prevEastNorth = eastNorth;
             Main.map.mapView.repaint();
         }
@@ -90,5 +86,11 @@ public class WMSAdjustAction extends MapMode implements
     }
 
     @Override public void mouseClicked(MouseEvent e) {
+    }
+    
+    // This only makes the buttons look disabled, but since no keyboard shortcut is
+    // provided there aren't any other means to activate this tool
+    @Override public boolean layerIsSupported(Layer l) {
+        return (l instanceof WMSLayer) && l.visible;
     }
 }

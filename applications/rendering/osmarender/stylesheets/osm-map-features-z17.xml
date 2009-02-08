@@ -3904,7 +3904,7 @@
 
 			.caption-casing {
 			fill: white;
-			stroke-opacity: 0.6;
+			stroke-opacity: 1;
 			stroke: white;
 			font-family: "DejaVu Sans";
 			font-weight: bold;
@@ -4461,7 +4461,7 @@
 			.amenity-theatre-caption-casing      { stroke-width: .5px;   font-size: 1px; }
 			.amenity-theatre-caption-core        { fill: #ff00ff;        font-size: 1px; }
 
-			.generic-caption-casing              { stroke-width: .5px;   font-size: 1px; }
+			.generic-caption-casing              { stroke-width: .28px;  font-size: 1px; }
 			.generic-caption-core                { fill: #4040ff;        font-size: 1px; }
 
 			.generic-poi {

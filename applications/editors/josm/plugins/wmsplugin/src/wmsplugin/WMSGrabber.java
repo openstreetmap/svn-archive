@@ -1,5 +1,7 @@
 package wmsplugin;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,8 +15,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -25,6 +30,7 @@ import org.openstreetmap.josm.gui.MapView;
 
 public class WMSGrabber extends Grabber {
     protected String baseURL;
+    private static Boolean shownWarning = false;
 
     WMSGrabber(String baseURL, Bounds b, Projection proj,
             double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer) {
@@ -70,8 +76,38 @@ public class WMSGrabber extends Grabber {
             + latLonFormat.format(s) + ","
             + latLonFormat.format(e) + ","
             + latLonFormat.format(n)
+            + getProjection(baseURL, false)
             + "&width=" + wi + "&height=" + ht;
         return new URL(str.replace(" ", "%20"));
+    }
+
+    static public String getProjection(String baseURL, Boolean warn)
+    {
+        String projname = Main.proj.toCode();
+        if(projname.equals("EPSG:3785")) // don't use mercator code
+            projname = "EPSG:4326";
+        String res = "";
+        try
+        {
+            Matcher m = Pattern.compile(".*srs=([a-z0-9:]+).*").matcher(baseURL.toLowerCase());
+            if(m.matches())
+            {
+                projname = projname.toLowerCase();
+                if(!projname.equals(m.group(1)) && warn)
+                {
+                    JOptionPane.showMessageDialog(Main.parent,
+                    tr("The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
+                    + "This may lead to wrong coordinates.\n",
+                    m.group(1), projname));
+                }
+            }
+            else
+                res ="&srs="+projname;
+        }
+        catch(Exception e)
+        {
+        }
+        return res;
     }
 
     protected BufferedImage grab(URL url) throws IOException {

@@ -77,6 +77,7 @@ public class WMSLayer extends Layer {
         background = true; /* set global background variable */
         initializeImages();
         this.baseURL = baseURL;
+        WMSGrabber.getProjection(baseURL, true);
         mv = Main.map.mapView;
         getPPD();
 

@@ -7,6 +7,7 @@
     <target name="dist" depends="compile">
         <mkdir dir="../dist"/>
         <ant antfile="build.xml" target="dist" dir="agpifoj"/>
+        <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
         <ant antfile="build.xml" target="dist" dir="DirectUpload"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
@@ -15,6 +16,7 @@
         <ant antfile="build.xml" target="dist" dir="livegps"/>
         <ant antfile="build.xml" target="dist" dir="measurement"/>
         <ant antfile="build.xml" target="dist" dir="nearclick"/>
+        <ant antfile="build.xml" target="dist" dir="openlayers"/>
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
@@ -25,6 +27,7 @@
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="dist" dir="tcxplugin"/>
+        <ant antfile="build.xml" target="dist" dir="terracer"/>
         <ant antfile="build.xml" target="dist" dir="usertools"/>
         <ant antfile="build.xml" target="dist" dir="utilsplugin"/>
         <ant antfile="build.xml" target="dist" dir="validator"/>
@@ -38,6 +41,7 @@
     </target>
     <target name="clean">
         <ant antfile="build.xml" target="clean" dir="agpifoj"/>
+        <ant antfile="build.xml" target="clean" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="clean" dir="colorscheme"/>
         <ant antfile="build.xml" target="clean" dir="duplicateway"/>
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
@@ -48,6 +52,7 @@
         <ant antfile="build.xml" target="clean" dir="measurement"/>
         <ant antfile="build.xml" target="clean" dir="navigator"/>
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
+        <ant antfile="build.xml" target="clean" dir="openlayers"/>
         <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="clean" dir="openvisible"/>
         <ant antfile="build.xml" target="clean" dir="osmarender"/>
@@ -59,6 +64,7 @@
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="clean" dir="tcxplugin"/>
+        <ant antfile="build.xml" target="clean" dir="terracer"/>
         <ant antfile="build.xml" target="clean" dir="usertools"/>
         <ant antfile="build.xml" target="clean" dir="utilsplugin"/>
         <ant antfile="build.xml" target="clean" dir="validator"/>

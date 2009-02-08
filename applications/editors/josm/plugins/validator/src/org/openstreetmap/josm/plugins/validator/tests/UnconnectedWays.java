@@ -82,7 +82,7 @@ public class UnconnectedWays extends Test
         {
             for(MyWaySegment s : ways)
             {
-                if(!s.highway && s.nearby(en, mindist))
+                if(!s.highway && s.nearby(en, mindist) && !s.isArea())
                     map.put(en, s.w);
             }
         }
@@ -90,7 +90,7 @@ public class UnconnectedWays extends Test
         {
             for(MyWaySegment s : ways)
             {
-                if(s.nearby(en, mindist))
+                if(s.nearby(en, mindist) && !s.isArea())
                     map.put(en, s.w);
             }
         }
@@ -165,6 +165,12 @@ public class UnconnectedWays extends Test
         {
             return !w.nodes.contains(n)
             && line.ptSegDist(n.eastNorth.east(), n.eastNorth.north()) < dist;
+        }
+        
+        public boolean isArea() {
+            return w.get("landuse") != null
+                || w.get("leisure") != null
+                || w.get("building") != null;
         }
     }
 

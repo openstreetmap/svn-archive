@@ -3954,7 +3954,7 @@
 			}
 			
 			.housenumber-left {
-			text-anchor: left;
+			text-anchor: start;
 			}
 			
 			.housenumber-center {

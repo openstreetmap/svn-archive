@@ -7,7 +7,7 @@
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
-    <target name="compile">
+    <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
         <javac srcdir="src" destdir="${plugin.build.dir}" classpath="${josm}">
             <compilerarg value="-Xlint:deprecation"/>

@@ -80,8 +80,8 @@ public class CheckSourceUploadHook implements UploadHook
             l.setCellRenderer(renderer);
             l.setVisibleRowCount(l.getModel().getSize() < 6 ? l.getModel().getSize() : 10);
             p.add(new JScrollPane(l), GBC.eol().fill());
-            boolean bContinue = JOptionPane.showConfirmDialog(Main.parent, p, tr("Add \"source=Cadastre...\" to ?"),
-                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+            boolean bContinue = JOptionPane.showConfirmDialog(Main.parent, p, tr("Add \"source=...\" to elements?"),
+                   JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
             if (bContinue)
                 Main.main.undoRedo.add(new ChangePropertyCommand(sel, "source", CadastrePlugin.source));
         }

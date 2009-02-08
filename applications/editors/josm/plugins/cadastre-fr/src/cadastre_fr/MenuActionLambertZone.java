@@ -28,7 +28,7 @@ public class MenuActionLambertZone extends JosmAction {
 
     public void actionPerformed(ActionEvent e) {
         JPanel p = new JPanel(new GridBagLayout());
-        String[] zones = { "", "1 (51.30° to 48.15°)", "2 (48.15° to 45.45°)", "3 (45.45° to 42.76°)", "4 (Corsica)" };
+        String[] zones = { "", "1 (51.30 to 48.15 degrees)", "2 (48.15 to 45.45 degrees)", "3 (45.45 to 42.76 degrees)", "4 (Corsica)" };
         final JComboBox inputLambertZone = new JComboBox(zones);
         JLabel newLambertZone = new JLabel(tr("Zone"));
         p.add(newLambertZone, GBC.std());

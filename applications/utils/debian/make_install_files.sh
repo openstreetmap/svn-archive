@@ -63,7 +63,7 @@ if true; then
 
     # Osmosis moves it's Binary arround, so to be sure we do not catch old Versions and don't 
     # recognize it we remove all osmosis.jar Files first
-    find . -name "osmosis*.jar" -print0 | xargs -0 rm 
+    ( find . -name "osmosis*.jar" -print0 | xargs -0 rm ) || true
 
     cd trunk
 

@@ -2,6 +2,23 @@
   <head>
     <title>OpenLayers Basic Single WMS Example</title>
     <script src="http://openlayers.org/api/OpenLayers.js"></script>
+    <link rel="stylesheet" href="http://openlayers.org/api/theme/default/style.css" type="text/css" />
+
+    <style type="text/css">
+       .potlatchLink {
+        font-size: smaller;
+        position: absolute;
+        right: 7em;
+        bottom: 17px;
+        z-index: 10000;
+       }
+       .olControlPermalink {
+        bottom: 3px;
+       } 
+       .olControlAttribution {
+        bottom: 20px;
+       } 
+    </style>  
     <script type="text/javascript">
         var map, layer;
         function onPopupClose(evt) {
@@ -26,23 +43,17 @@
            OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
                 defaultHandlerOptions: {
                     'single': true,
-                    'double': false,
-                    'pixelTolerance': 0,
-                    'stopSingle': false,
-                    'stopDouble': false
+                    'pixelTolerance': 0
                 },
 
                 initialize: function(options) {
-                    this.handlerOptions = OpenLayers.Util.extend(
-                        {}, this.defaultHandlerOptions
-                    );
                     OpenLayers.Control.prototype.initialize.apply(
                         this, arguments
                     ); 
                     this.handler = new OpenLayers.Handler.Click(
                         this, {
                             'click': this.onClick
-                        }, this.handlerOptions
+                        }
                     );
                 }, 
 
@@ -127,7 +138,6 @@
                     this.selectFeature.activate();
                     
                     map.addLayers(this.layers);
-                    
                 }
 
             }); 
@@ -150,13 +160,14 @@
                    "http://b.tile.openstreetmap.org/"],
                 {
                     type: 'png', getURL: osm_getTileURL,
-                    attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> Contributors'
                 }
             );
             var control = new OpenLayers.Control.Click();
             map.addControl(control);
             control.activate();
             map.addControl(new OpenLayers.Control.Permalink());
+            map.addControl(new OpenLayers.Control.Permalink(potlatchLinkHref, "http://openstreetmap.org/edit.html", {displayClass: 'potlatchLink'}));
             map.addLayer(mapnik);
             if (!map.getCenter()) { map.zoomToMaxExtent(); }
         }
@@ -187,7 +198,7 @@
     <div id="map" style="width:99%; height:99%">
         <div id="data" style="position:absolute; left: 5px; bottom:5px; z-index:10000; background-color: white; padding: 5px"></div>
         <div id="loading" style="position:absolute; right: 5px; top:25px; z-index:10000"></div>
-
+        <div class="potlatchLink"><a id="potlatchLinkHref">Edit (with Potlatch)</a></div>
     </div>
 
   </body>

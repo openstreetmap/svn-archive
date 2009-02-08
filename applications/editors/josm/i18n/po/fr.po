@@ -5,15 +5,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-08 13:52+0100\n"
-"PO-Revision-Date: 2009-02-08 10:19+0000\n"
-"Last-Translator: Xavier LB <Unknown>\n"
+"POT-Creation-Date: 2009-02-08 22:41+0100\n"
+"PO-Revision-Date: 2009-02-08 16:04+0000\n"
+"Last-Translator: nin2jardin <Unknown>\n"
 "Language-Team: Fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2009-02-08 10:44+0000\n"
+"X-Launchpad-Export-Date: 2009-02-08 21:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:448
@@ -300,7 +300,7 @@ msgid "Enter Password"
 msgstr "Entrer le mot de passe"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmConnection.java:127
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:371
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:373
 msgid "Aborting..."
 msgstr "Échec..."
 
@@ -339,14 +339,12 @@ msgstr ""
 "continuer ?"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
-#, fuzzy
 msgid "Save and Exit"
-msgstr "Éditer une sortie"
+msgstr "Enregistrer et quitter"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
-#, fuzzy
 msgid "Discard and Exit"
-msgstr "Éditer une sortie"
+msgstr "Annuler et quitter"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:30
@@ -1038,14 +1036,12 @@ msgid "Add all currently selected objects as members"
 msgstr "Ajouter les objets sélectionnés en tant que memebres"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:363
-#, fuzzy
 msgid "Remove Selected"
-msgstr "Effacer la sélection"
+msgstr "Supprimer la sélection"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:364
-#, fuzzy
 msgid "Remove all currently selected objects from relation"
-msgstr "Supprimer tous les objets sélectionnés de la relation"
+msgstr "Retirer tous les objets sélectionnés de la relation"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:371
 msgid "Remove the member in the current table row from this relation"
@@ -1060,9 +1056,8 @@ msgid "Download all incomplete ways and nodes in relation"
 msgstr "Télécharger tous les chemins et les nœuds incomplets dans la relation"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:415
-#, fuzzy
 msgid "Basic"
-msgstr "Bassin"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:457
 #, java-format
@@ -1086,11 +1081,12 @@ msgstr "Erreur d'analyse de la réponse du serveur"
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:115
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveGpsLayerTimerTask.java:86
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveEditLayerTimerTask.java:64
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:337
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:103
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:302
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:303
 msgid "Error"
 msgstr "Erreur"
 
@@ -3790,12 +3786,11 @@ msgstr "Veuillez sélectionner au moins trois nœuds."
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:31
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:124
 msgid "Distribute Nodes"
-msgstr ""
+msgstr "Distribuer les nœuds"
 
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:30
-#, fuzzy
 msgid "Distribute the selected nodes to equal distances along a line."
-msgstr "Déplacer les nœuds sélectionnés sur une ligne."
+msgstr "Distribue les nœuds sélectionnés à égale distance le long d'une ligne."
 
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:68
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:72
@@ -3928,19 +3923,16 @@ msgid "Preferences"
 msgstr "Préférences"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:26
-#, fuzzy
 msgid "OSM Server Files"
-msgstr "Fichiers du serveur OSM (*.osm *.xml)"
+msgstr "Fichiers du serveur OSM"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:27
-#, fuzzy
 msgid "GPX Files"
-msgstr "Sauvegarder le fichier GPX"
+msgstr "Fichiers GPX"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:28
-#, fuzzy
 msgid "NMEA-0183 Files"
-msgstr "Fichers NMEA-0183 (*.nmea *.txt)"
+msgstr "Fichiers NMEA-0183"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:42
 msgid ""
@@ -4391,9 +4383,8 @@ msgid "<b>incomplete</b> - all incomplete objects"
 msgstr "<b>incomplete</b> - tous les objets incomplets"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:92
-#, fuzzy
 msgid "<b>untagged</b> - all untagged objects"
-msgstr "<b>modified</b> - tous les objets modifiés"
+msgstr "<b>untagged</b> - tous les objets non étiquetés"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:93
 msgid "Use <b>|</b> or <b>OR</b> to combine with logical or"
@@ -4969,13 +4960,13 @@ msgstr "Déplacer les objets {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:46
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:365
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:329
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:330
 msgid "File exists. Overwrite?"
 msgstr "Le fichier existe déjà. Écrire dessus ?"
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:46
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:365
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:329
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:330
 msgid "Overwrite"
 msgstr "Écrire dessus"
 
@@ -5570,29 +5561,24 @@ msgstr "Actions permises"
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:43
 #: ../plugins/terracer/src/terracer/TerracerAction.java:47
-#, fuzzy
 msgid "Terrace a building"
-msgstr "bâtiment"
+msgstr "Diviser un bâtiment"
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:45
 msgid "Creates individual buildings from a long building."
-msgstr ""
+msgstr "Crée des bâtiments mitoyens à partir d'un long bâtiment."
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:72
 msgid "How many buildings are in the terrace?"
-msgstr ""
+msgstr "Combien de bâtiments mitoyens y-a-t-il ?"
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:91
-#, fuzzy
 msgid "Select a single, closed way of four nodes."
-msgstr ""
-"Veuillez sélectionner un ou plusieurs chemins fermés ou au moins quatre "
-"nœuds."
+msgstr "Sélectionner un unique chemin de quatre nœuds."
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:155
-#, fuzzy
 msgid "Terrace"
-msgstr "Piste"
+msgstr "Bâtiments mitoyens"
 
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:39
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:40
@@ -6244,7 +6230,7 @@ msgstr "bâtiment"
 msgid "area"
 msgstr "zone"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:117
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:118
 msgid "Unclosed way"
 msgstr "Chemin non fermé"
 
@@ -6901,14 +6887,38 @@ msgstr ""
 msgid "Add new layer"
 msgstr "Ajouter une nouvelle couche"
 
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:40
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:45
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:20
+#, java-format
+msgid "Downloading {0}"
+msgstr "Téléchargement {0}"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:48
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:53
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:28
+msgid "Contacting WMS Server..."
+msgstr "Contact du serveur WMS..."
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:132
+#, fuzzy
+msgid "Create buildings"
+msgstr "Diviser un bâtiment"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:185
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:42
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:159
+msgid "CadastreGrabber: Illegal url."
+msgstr "CadastreGrabber : url illégale."
+
 #: ../plugins/cadastre-fr/src/cadastre_fr/CheckSourceUploadHook.java:78
 msgid "Auto-tag source added:"
 msgstr "Ajouter le commentaire de source suivant :"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CheckSourceUploadHook.java:83
 #, fuzzy
-msgid "Add \"source=Cadastre...\" to ?"
-msgstr "Ajouter \"source=...\" aux éléments ?"
+msgid "Add \"source=...\" to elements?"
+msgstr "Ajouter \"source=Cadastre...\" à ?"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrab.java:22
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrab.java:23
@@ -6920,7 +6930,7 @@ msgstr "Téléchargement depuis le serveur WMS du Cadastre français"
 msgid "Cadastre: {0}"
 msgstr "Cadastre : {0}"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:107
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:108
 msgid ""
 "To enable the cadastre WMS plugin, change\n"
 "the JOSM projection to Lambert and restart"
@@ -6928,22 +6938,26 @@ msgstr ""
 "Pour activer le greffon cadastre WMS, modifiez\n"
 "la projection JOSM en Lambert et redémarrez"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:131
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:132
 msgid "Cadastre"
 msgstr "Cadastre"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:142
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:143
 msgid "Auto sourcing"
 msgstr "Enregistrement automatique de la source"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:20
-#, fuzzy
-msgid "Extract commune boundary"
-msgstr "Éditer une frontière nationale"
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:20
+msgid "Extract building footprints"
+msgstr ""
 
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 msgid "Only on vectorized layers"
-msgstr ""
+msgstr "Seulement sur les couches vectorisées"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:20
+msgid "Extract commune boundary"
+msgstr "Extraire les limites de commune"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheFileFilter.java:16
 msgid "Lambert Zone 1 cache file (.1)"
@@ -6961,15 +6975,22 @@ msgstr "Fichier tampon de la zone Lambert 3 (.3)"
 msgid "Lambert Zone 4 cache file (.4)"
 msgstr "Fichier tampon de la zone Lambert 4 (.4)"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:281
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:65
+#, java-format
+msgid ""
+"Town/city {0} not found or not available in WMS.\n"
+"Please check its availibility on www.cadastre.gouv.fr"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:283
 msgid "Choose from..."
 msgstr "Choisir parmi..."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:290
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:292
 msgid "Select commune"
 msgstr "Sélectionner la commune"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:304
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:306
 msgid "Select Tableau d'Assemblage"
 msgstr "Sélectionner le tableau d'assemblage"
 
@@ -6998,11 +7019,8 @@ msgid ""
 "More than one WMS layer present.\n"
 "Select one of them first, then retry."
 msgstr ""
-
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:42
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:160
-msgid "CadastreGrabber: Illegal url."
-msgstr "CadastreGrabber : url illégale."
+"Plus d'une couche WMS présente.\n"
+"Sélectionnez la couche voulue et réessayez."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLoadFromCache.java:19
 msgid "Load location from cache (only if cache is enabled)"
@@ -7017,29 +7035,17 @@ msgid_plural "Simplify Way (remove {0} nodes)"
 msgstr[0] "Simplifier le chemin (supprimer {0} nœud)"
 msgstr[1] "Simplifier le chemin (supprimer {0} nœuds)"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:45
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:20
-#, java-format
-msgid "Downloading {0}"
-msgstr "Téléchargement {0}"
-
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:53
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:28
-msgid "Contacting WMS Server..."
-msgstr "Contact du serveur WMS..."
-
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:59
 msgid "Extract SVG ViewBox..."
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:63
 msgid "Extract best fitting boundary..."
-msgstr ""
+msgstr "Extraction des meilleures limites..."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:121
-#, fuzzy
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:120
 msgid "Create boundary"
-msgstr "frontière"
+msgstr "Créer la frontière"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:81
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:155
@@ -7054,34 +7060,34 @@ msgstr "Couche WMS ({0}), {1} tuile(s) chargée(s)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:184
 msgid "Is not vectorized."
-msgstr ""
+msgstr "N'est pas vectorisée."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:185
-#, fuzzy, java-format
+#, java-format
 msgid "Raster center: {0}"
-msgstr "Cadastre : {0}"
+msgstr "Centre de la couche Raster : {0}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:187
 msgid "Is vectorized."
-msgstr ""
+msgstr "Est vectorisée."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:188
-#, fuzzy, java-format
+#, java-format
 msgid "Commune bbox: {0}"
-msgstr "Pile de commande : {0}"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:283
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:241
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:242
 msgid "Save WMS layer to file"
 msgstr "Sauvegarder une couche WMS dans un fichier"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:309
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:268
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:269
 msgid "Load WMS layer from file"
 msgstr "Charger une couche WMS depuis un fichier"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:322
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:280
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:281
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr ""
@@ -7089,13 +7095,13 @@ msgstr ""
 "attendue"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:323
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:281
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:282
 msgid "File Format Error"
 msgstr "Erreur de format de fichier"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:337
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:301
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:302
 msgid "Error loading file"
 msgstr "Erreur lors du chargement du fichier"
 
@@ -7251,9 +7257,8 @@ msgid "You can also paste an URL from www.openstreetmap.org"
 msgstr "Vous pouvez aussi coller une URL de www.openstreetmap.org"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:99
-#, fuzzy
 msgid "Zoom (in metres)"
-msgstr "Zoom avant"
+msgstr "Zoom (en mètres)"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:102
 msgid "URL"
@@ -7268,9 +7273,9 @@ msgid "Jump to Position"
 msgstr "Aller à la position"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:124
-#, fuzzy
 msgid "Could not parse Latitude, Longitude or Zoom. Please check."
-msgstr "Impossible d'analyser la Latitude ou la Longitude. Merci de vérifier."
+msgstr ""
+"Impossible d'analyser la Latitude, Longitude ou le Zoom. Veuillez vérifier."
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:124
 msgid "Unable to parse Lon/Lat"
@@ -7794,6 +7799,13 @@ msgstr "Metacarta Map Rectifier image id"
 msgid "rectifier id={0}"
 msgstr "rectifier id={0}"
 
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:99
+#, java-format
+msgid ""
+"The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
+"This may lead to wrong coordinates."
+msgstr ""
+
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:139
 msgid "WMS"
 msgstr "WMS"
@@ -7845,28 +7857,28 @@ msgstr "Veuillez sélectionner la colonne à copier"
 msgid "Automatic downloading"
 msgstr "Téléchargement automatique"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:110
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:111
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
 msgstr "Couche WMS ({0}), téléchargement automatique au zoom {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:112
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:113
 #, java-format
 msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr "Couche WMS ({0}), téléchargement au zoom {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:164
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:165
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 "La zone demandée est trop grande. Vous pouvez zoomer un peu ou changer la "
 "résolution."
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:220
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:221
 msgid "Download visible tiles"
 msgstr "Télécharger les tuiles visibles"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:229
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:230
 msgid "Change resolution"
 msgstr "Changer la résolution"
 
@@ -7875,9 +7887,8 @@ msgid "Exception occurred"
 msgstr "Une exception s’est produite"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:28
-#, fuzzy
 msgid "Adjust the position of the selected WMS layer"
-msgstr "Ajuster la position de la couche WMS"
+msgstr "Ajuster la position de la couche WMS sélectionnée"
 
 #: ../plugins/wmsplugin/src/wmsplugin/Help_WMSmenuAction.java:20
 msgid "help"
@@ -8223,9 +8234,8 @@ msgid "leisure"
 msgstr "loisir"
 
 #: trans_style.java:1485
-#, fuzzy
 msgid "marina"
-msgstr "Marina"
+msgstr "marina"
 
 #: trans_style.java:1567 trans_style.java:1575 trans_style.java:1583
 #: trans_style.java:1591 trans_style.java:1599 trans_style.java:1607
@@ -8811,9 +8821,8 @@ msgstr "Éditer une route mineure"
 #: trans_presets.java:660 trans_presets.java:673 trans_presets.java:686
 #: trans_presets.java:699 trans_presets.java:712 trans_presets.java:725
 #: trans_presets.java:1209 trans_presets.java:1385 trans_presets.java:1426
-#, fuzzy
 msgid "Width (meters)"
-msgstr "Largeur (en mètres)"
+msgstr "Largeur (mètres)"
 
 #: trans_presets.java:216
 msgid "Edit a Residential Street"
@@ -8870,24 +8879,20 @@ msgid "Edit a Serviceway"
 msgstr "Éditer une voie d’accès"
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "Serviceway type"
-msgstr "Voie de service"
+msgstr "Type Voie de service"
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "alley"
-msgstr "all"
+msgstr "allée"
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "driveway"
-msgstr "Chemin équestre"
+msgstr "driveway"
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "parking_aisle"
-msgstr "Voie de parking"
+msgstr "parking_aisle"
 
 #: trans_presets.java:269
 msgid "Parking Aisle"
@@ -9042,19 +9047,16 @@ msgid "Max. weight (tonnes)"
 msgstr "Poids max (tonnes)"
 
 #: trans_presets.java:321
-#, fuzzy
 msgid "Max. Height (meters)"
-msgstr "Hauteur max (mètres)"
+msgstr "Hauteur max. (mètres)"
 
 #: trans_presets.java:322
-#, fuzzy
 msgid "Max. Width (meters)"
-msgstr "Largeur max (mètres)"
+msgstr "Largeur max. (mètres)"
 
 #: trans_presets.java:323
-#, fuzzy
 msgid "Max. Length (meters)"
-msgstr "Longueur max (mètres)"
+msgstr "Longueur max. (mètres)"
 
 #: trans_presets.java:325
 msgid "Roundabout"
@@ -9099,9 +9101,8 @@ msgid "Edit a Bridge"
 msgstr "Éditer un pont"
 
 #: trans_presets.java:363
-#, fuzzy
 msgid "Edit a Tunnel"
-msgstr "Éditer une voie rapide"
+msgstr "Modifier un tunnel"
 
 #: trans_presets.java:377
 msgid "Ways"
@@ -9345,41 +9346,36 @@ msgid "Traffic Signal"
 msgstr "Feux tricolores"
 
 #: trans_presets.java:760
-#, fuzzy
 msgid "Pedestrian crossing type"
-msgstr "Editer un passage"
+msgstr ""
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
 msgid "uncontrolled"
 msgstr "non contrôlé"
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
-#, fuzzy
 msgid "traffic_signals"
-msgstr "Feux tricolores"
+msgstr "traffic_signals"
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
 msgid "island"
 msgstr "île"
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
-#, fuzzy
 msgid "unmarked"
-msgstr "marqueur"
+msgstr "unmarked"
 
 #: trans_presets.java:761 trans_presets.java:777 trans_presets.java:1232
 msgid "Cross on horseback"
 msgstr ""
 
 #: trans_presets.java:762 trans_presets.java:776 trans_presets.java:1233
-#, fuzzy
 msgid "Cross by bicycle"
-msgstr "cycle"
+msgstr ""
 
 #: trans_presets.java:763 trans_presets.java:778 trans_presets.java:1234
-#, fuzzy
 msgid "Crossing attendant"
-msgstr "Chemins se croisant"
+msgstr ""
 
 #: trans_presets.java:764
 msgid "Crossing type name (UK)"
@@ -9394,32 +9390,28 @@ msgid "pelican"
 msgstr "pélican"
 
 #: trans_presets.java:764 trans_presets.java:779
-#, fuzzy
 msgid "toucan"
-msgstr "volcan"
+msgstr ""
 
 #: trans_presets.java:764 trans_presets.java:779
 msgid "puffin"
 msgstr ""
 
 #: trans_presets.java:764 trans_presets.java:779
-#, fuzzy
 msgid "pegasus"
-msgstr "herbe"
+msgstr ""
 
 #: trans_presets.java:764 trans_presets.java:779
-#, fuzzy
 msgid "tiger"
-msgstr "temps"
+msgstr ""
 
 #: trans_presets.java:767
 msgid "Stop"
 msgstr "Stop"
 
 #: trans_presets.java:770
-#, fuzzy
 msgid "Pedestrian Crossing"
-msgstr "Passage piétons"
+msgstr ""
 
 #: trans_presets.java:773
 msgid "Edit a crossing"
@@ -9430,14 +9422,12 @@ msgid "Type name (UK)"
 msgstr ""
 
 #: trans_presets.java:781
-#, fuzzy
 msgid "Mini-roundabout"
-msgstr "Mini rond-point"
+msgstr ""
 
 #: trans_presets.java:786
-#, fuzzy
 msgid "Direction"
-msgstr "relation"
+msgstr ""
 
 #: trans_presets.java:786
 msgid "clockwise"
@@ -9561,9 +9551,8 @@ msgid "Spikes"
 msgstr "Pointes"
 
 #: trans_presets.java:902
-#, fuzzy
 msgid "Edit Spikes"
-msgstr "Modifier des Pointes"
+msgstr ""
 
 #: trans_presets.java:913
 msgid "Portcullis"
@@ -9894,9 +9883,8 @@ msgid "Crossing"
 msgstr "Passage pour piétons"
 
 #: trans_presets.java:1231
-#, fuzzy
 msgid "Crossing type"
-msgstr "Chemins se croisant"
+msgstr ""
 
 #: trans_presets.java:1237
 msgid "Turntable"
@@ -12809,27 +12797,6 @@ msgstr "nœud ou chemin de passage"
 msgid "to way"
 msgstr "chemin destination"
 
-#, fuzzy
-#~ msgid "Clockwise direction?"
-#~ msgstr "Changer les directions ?"
-
-#~ msgid ""
-#~ "This is the basic relation editor which allows you to change the "
-#~ "relation's tags as well as the members. In addition to this we should "
-#~ "have a smart editor that detects the type of relationship and limits your "
-#~ "choices in a sensible way."
-#~ msgstr ""
-#~ "Ceci est l'éditeur basique de relation qui vous permet des changer les "
-#~ "étiquette de la relation ainsi que les membres. En supplément, nous "
-#~ "devrions avoir un éditeur intelligent qui détecte le type de relation et "
-#~ "limite les choix de façon sensible."
-
-#~ msgid "Ref"
-#~ msgstr "Réf"
-
-#~ msgid "Provider"
-#~ msgstr "Banque"
-
 #~ msgid "Java OpenStreetMap Editor Version {0}"
 #~ msgstr "Java OpenStreetMap Editor Version {0}"
 
@@ -12912,6 +12879,17 @@ msgstr "chemin destination"
 #~ msgid "Please select objects for which you want to change properties."
 #~ msgstr "Sélectionnez les objets dont vous voulez changer les propriétés."
 
+#~ msgid ""
+#~ "This is the basic relation editor which allows you to change the "
+#~ "relation's tags as well as the members. In addition to this we should "
+#~ "have a smart editor that detects the type of relationship and limits your "
+#~ "choices in a sensible way."
+#~ msgstr ""
+#~ "Ceci est l'éditeur basique de relation qui vous permet des changer les "
+#~ "étiquette de la relation ainsi que les membres. En supplément, nous "
+#~ "devrions avoir un éditeur intelligent qui détecte le type de relation et "
+#~ "limite les choix de façon sensible."
+
 #~ msgid "Highlight the member from the current table row as JOSM's selection"
 #~ msgstr ""
 #~ "Mettre en évidence le membre de la ligne actuelle comme une sélection de "
@@ -12965,6 +12943,9 @@ msgstr "chemin destination"
 #~ "<html>Veuillez ouvrir un ticket ici : {0}<br>Incluez les étapes pour "
 #~ "obtenir l’erreur (aussi détaillées que possible)<br>Assrez-vous d’inclure "
 #~ "les informations suivantes :</html>"
+
+#~ msgid "Provider"
+#~ msgstr "Banque"
 
 #~ msgid "Edit Marsh"
 #~ msgstr "Éditer un marais"
@@ -13100,6 +13081,9 @@ msgstr "chemin destination"
 #~ "<html>Les données sélectionnées contiennent des données de OpenStreetBugs."
 #~ "<br>Vous ne pouvez charger ces données. Peut-être avez-vous sélectionné "
 #~ "la mauvaise couche ?"
+
+#~ msgid "Ref"
+#~ msgstr "Réf"
 
 #~ msgid "unusual named way type"
 #~ msgstr "type de chemin inhabituel"

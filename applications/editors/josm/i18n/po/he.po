@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-08 13:52+0100\n"
+"POT-Creation-Date: 2009-02-08 22:41+0100\n"
 "PO-Revision-Date: 2009-02-05 11:26+0000\n"
 "Last-Translator: Moshe Sayag <Unknown>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-08 10:44+0000\n"
+"X-Launchpad-Export-Date: 2009-02-08 21:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:448
@@ -287,7 +287,7 @@ msgid "Enter Password"
 msgstr "הכנס סיסמא"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmConnection.java:127
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:371
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:373
 msgid "Aborting..."
 msgstr "מבטל..."
 
@@ -321,14 +321,12 @@ msgid "There are unsaved changes. Discard the changes and continue?"
 msgstr "ישנם שינויים בלתי שמורים. התעלם מהשינויים והמשך?"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
-#, fuzzy
 msgid "Save and Exit"
-msgstr "ערוך יציאה"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
-#, fuzzy
 msgid "Discard and Exit"
-msgstr "ערוך יציאה"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:30
@@ -1002,14 +1000,12 @@ msgid "Add all currently selected objects as members"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:363
-#, fuzzy
 msgid "Remove Selected"
-msgstr "מחק נבחר"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:364
-#, fuzzy
 msgid "Remove all currently selected objects from relation"
-msgstr "טען מחדש את כל העצמים הבחורים ורענן את הרשימה."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:371
 msgid "Remove the member in the current table row from this relation"
@@ -1024,9 +1020,8 @@ msgid "Download all incomplete ways and nodes in relation"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:415
-#, fuzzy
 msgid "Basic"
-msgstr "חזרה"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:457
 #, java-format
@@ -1050,11 +1045,12 @@ msgstr "שגיאה בניתוח תשובת השרת."
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:115
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveGpsLayerTimerTask.java:86
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveEditLayerTimerTask.java:64
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:337
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:103
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:302
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:303
 msgid "Error"
 msgstr "שגיאה"
 
@@ -3621,9 +3617,8 @@ msgid "Distribute Nodes"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:30
-#, fuzzy
 msgid "Distribute the selected nodes to equal distances along a line."
-msgstr "הזז את הנקודות הנבחרות לתוך קו"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:68
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:72
@@ -3749,19 +3744,16 @@ msgid "Preferences"
 msgstr "העדפות"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:26
-#, fuzzy
 msgid "OSM Server Files"
-msgstr "קבצי שרת OSM‏ (*.osm *.xml)"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:27
-#, fuzzy
 msgid "GPX Files"
-msgstr "שמור קובץ GPX"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:28
-#, fuzzy
 msgid "NMEA-0183 Files"
-msgstr "קבצי NMEA-0183‏ (*.nmea *.txt)"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:42
 msgid ""
@@ -4198,9 +4190,8 @@ msgid "<b>incomplete</b> - all incomplete objects"
 msgstr "<b>incomplete</b> - כל העצמים הבלתי גמורים"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:92
-#, fuzzy
 msgid "<b>untagged</b> - all untagged objects"
-msgstr "<b>selected</b> - כל העצמים הבחורים"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:93
 msgid "Use <b>|</b> or <b>OR</b> to combine with logical or"
@@ -4751,13 +4742,13 @@ msgstr "הזז את הפריטים {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:46
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:365
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:329
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:330
 msgid "File exists. Overwrite?"
 msgstr "הקובץ כבר קיים. לשכתב?"
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:46
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:365
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:329
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:330
 msgid "Overwrite"
 msgstr "שכתוב"
 
@@ -5326,9 +5317,8 @@ msgstr "פעולות מורשות"
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:43
 #: ../plugins/terracer/src/terracer/TerracerAction.java:47
-#, fuzzy
 msgid "Terrace a building"
-msgstr "בניין"
+msgstr ""
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:45
 msgid "Creates individual buildings from a long building."
@@ -5339,9 +5329,8 @@ msgid "How many buildings are in the terrace?"
 msgstr ""
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:91
-#, fuzzy
 msgid "Select a single, closed way of four nodes."
-msgstr "בחר דרך סגורה אחת או יותר בנות ארבע נקודות לפחות"
+msgstr ""
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:155
 msgid "Terrace"
@@ -5975,7 +5964,7 @@ msgstr "בניין"
 msgid "area"
 msgstr "שטח"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:117
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:118
 msgid "Unclosed way"
 msgstr "דרך לא סגורה"
 
@@ -6588,9 +6577,8 @@ msgid "Open a layer first (GPX, OSM, cache)"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:50
-#, fuzzy
 msgid "Add a new layer"
-msgstr "הורדה כשכבה חדשה"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:52
 msgid "Location"
@@ -6606,12 +6594,36 @@ msgstr ""
 msgid "Add new layer"
 msgstr ""
 
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:40
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:45
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:20
+#, java-format
+msgid "Downloading {0}"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:48
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:53
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:28
+msgid "Contacting WMS Server..."
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:132
+#, fuzzy
+msgid "Create buildings"
+msgstr "בניין"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:185
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:42
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:159
+msgid "CadastreGrabber: Illegal url."
+msgstr ""
+
 #: ../plugins/cadastre-fr/src/cadastre_fr/CheckSourceUploadHook.java:78
 msgid "Auto-tag source added:"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CheckSourceUploadHook.java:83
-msgid "Add \"source=Cadastre...\" to ?"
+msgid "Add \"source=...\" to elements?"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrab.java:22
@@ -6624,27 +6636,31 @@ msgstr ""
 msgid "Cadastre: {0}"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:107
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:108
 msgid ""
 "To enable the cadastre WMS plugin, change\n"
 "the JOSM projection to Lambert and restart"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:131
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:132
 msgid "Cadastre"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:142
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:143
 msgid "Auto sourcing"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:20
-#, fuzzy
-msgid "Extract commune boundary"
-msgstr "ערוך גבול לאומי"
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:20
+msgid "Extract building footprints"
+msgstr ""
 
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 msgid "Only on vectorized layers"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:20
+msgid "Extract commune boundary"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheFileFilter.java:16
@@ -6663,15 +6679,22 @@ msgstr ""
 msgid "Lambert Zone 4 cache file (.4)"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:281
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:65
+#, java-format
+msgid ""
+"Town/city {0} not found or not available in WMS.\n"
+"Please check its availibility on www.cadastre.gouv.fr"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:283
 msgid "Choose from..."
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:290
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:292
 msgid "Select commune"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:304
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:306
 msgid "Select Tableau d'Assemblage"
 msgstr ""
 
@@ -6699,11 +6722,6 @@ msgid ""
 "Select one of them first, then retry."
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:42
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:160
-msgid "CadastreGrabber: Illegal url."
-msgstr ""
-
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLoadFromCache.java:19
 msgid "Load location from cache (only if cache is enabled)"
 msgstr ""
@@ -6716,17 +6734,6 @@ msgid_plural "Simplify Way (remove {0} nodes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:45
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:20
-#, java-format
-msgid "Downloading {0}"
-msgstr ""
-
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:53
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:28
-msgid "Contacting WMS Server..."
-msgstr ""
-
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:59
 msgid "Extract SVG ViewBox..."
 msgstr ""
@@ -6735,10 +6742,9 @@ msgstr ""
 msgid "Extract best fitting boundary..."
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:121
-#, fuzzy
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:120
 msgid "Create boundary"
-msgstr "גבול"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:81
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:155
@@ -6756,43 +6762,43 @@ msgid "Is not vectorized."
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:185
-#, fuzzy, java-format
+#, java-format
 msgid "Raster center: {0}"
-msgstr "סוג נתיב מים {0}"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:187
 msgid "Is vectorized."
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:188
-#, fuzzy, java-format
+#, java-format
 msgid "Commune bbox: {0}"
-msgstr "מצבור פקודות: {0}"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:283
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:241
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:242
 msgid "Save WMS layer to file"
 msgstr "שמור שכבת WMS לקובץ"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:309
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:268
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:269
 msgid "Load WMS layer from file"
 msgstr "טען שכבת WMS מקובץ"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:322
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:280
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:281
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr "גירסת קובץ WMS לא נתמכת; נמצא {0}, צפי {1}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:323
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:281
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:282
 msgid "File Format Error"
 msgstr "שגיאה בפורמט קובץ"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:337
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:301
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:302
 msgid "Error loading file"
 msgstr "שגיאה בטעינת קובץ"
 
@@ -6928,9 +6934,8 @@ msgid "You can also paste an URL from www.openstreetmap.org"
 msgstr ""
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:99
-#, fuzzy
 msgid "Zoom (in metres)"
-msgstr "התקרב"
+msgstr ""
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:102
 msgid "URL"
@@ -7454,6 +7459,13 @@ msgstr ""
 msgid "rectifier id={0}"
 msgstr ""
 
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:99
+#, java-format
+msgid ""
+"The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
+"This may lead to wrong coordinates."
+msgstr ""
+
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:139
 msgid "WMS"
 msgstr "WMS"
@@ -7504,26 +7516,26 @@ msgstr "בחר שורה להעתקה"
 msgid "Automatic downloading"
 msgstr "הורדה אוטומטית"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:110
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:111
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:112
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:113
 #, java-format
 msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:164
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:165
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:220
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:221
 msgid "Download visible tiles"
 msgstr "הורד משטחים גלויים"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:229
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:230
 msgid "Change resolution"
 msgstr "שנה רזולוציה"
 
@@ -7532,9 +7544,8 @@ msgid "Exception occurred"
 msgstr "אירעה שגיאה"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:28
-#, fuzzy
 msgid "Adjust the position of the selected WMS layer"
-msgstr "התאם את מיקום שכבת WMS"
+msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/Help_WMSmenuAction.java:20
 msgid "help"
@@ -7854,9 +7865,8 @@ msgid "leisure"
 msgstr "פנאי"
 
 #: trans_style.java:1485
-#, fuzzy
 msgid "marina"
-msgstr "רוחב מזערי"
+msgstr ""
 
 #: trans_style.java:1567 trans_style.java:1575 trans_style.java:1583
 #: trans_style.java:1591 trans_style.java:1599 trans_style.java:1607
@@ -8440,9 +8450,8 @@ msgstr "ערוך כביש לא מסווג"
 #: trans_presets.java:660 trans_presets.java:673 trans_presets.java:686
 #: trans_presets.java:699 trans_presets.java:712 trans_presets.java:725
 #: trans_presets.java:1209 trans_presets.java:1385 trans_presets.java:1426
-#, fuzzy
 msgid "Width (meters)"
-msgstr "רוחב (מטרים)"
+msgstr ""
 
 #: trans_presets.java:216
 msgid "Edit a Residential Street"
@@ -8499,24 +8508,20 @@ msgid "Edit a Serviceway"
 msgstr "ערוך דרך שירות"
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "Serviceway type"
-msgstr "שירות"
+msgstr ""
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "alley"
-msgstr "חומה"
+msgstr ""
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "driveway"
-msgstr "מסילת רכבת"
+msgstr ""
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "parking_aisle"
-msgstr "מפרץ חנייה"
+msgstr ""
 
 #: trans_presets.java:269
 msgid "Parking Aisle"
@@ -8671,19 +8676,16 @@ msgid "Max. weight (tonnes)"
 msgstr "משקל מירבי (טונות)"
 
 #: trans_presets.java:321
-#, fuzzy
 msgid "Max. Height (meters)"
-msgstr "גובה מירבי (מטרים)"
+msgstr ""
 
 #: trans_presets.java:322
-#, fuzzy
 msgid "Max. Width (meters)"
-msgstr "רוחב מירבי (מטרים)"
+msgstr ""
 
 #: trans_presets.java:323
-#, fuzzy
 msgid "Max. Length (meters)"
-msgstr "אורך מירבי (מטרים)"
+msgstr ""
 
 #: trans_presets.java:325
 msgid "Roundabout"
@@ -8728,9 +8730,8 @@ msgid "Edit a Bridge"
 msgstr "ערוך גשר"
 
 #: trans_presets.java:363
-#, fuzzy
 msgid "Edit a Tunnel"
-msgstr "ערוך עץ"
+msgstr ""
 
 #: trans_presets.java:377
 msgid "Ways"
@@ -8974,41 +8975,36 @@ msgid "Traffic Signal"
 msgstr "רמזור"
 
 #: trans_presets.java:760
-#, fuzzy
 msgid "Pedestrian crossing type"
-msgstr "ערוך מעבר"
+msgstr ""
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
 msgid "uncontrolled"
 msgstr ""
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
-#, fuzzy
 msgid "traffic_signals"
-msgstr "רמזור"
+msgstr ""
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
 msgid "island"
 msgstr "אי"
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
-#, fuzzy
 msgid "unmarked"
-msgstr "סמן"
+msgstr ""
 
 #: trans_presets.java:761 trans_presets.java:777 trans_presets.java:1232
 msgid "Cross on horseback"
 msgstr ""
 
 #: trans_presets.java:762 trans_presets.java:776 trans_presets.java:1233
-#, fuzzy
 msgid "Cross by bicycle"
-msgstr "אופניים"
+msgstr ""
 
 #: trans_presets.java:763 trans_presets.java:778 trans_presets.java:1234
-#, fuzzy
 msgid "Crossing attendant"
-msgstr "דרכים חוצות"
+msgstr ""
 
 #: trans_presets.java:764
 msgid "Crossing type name (UK)"
@@ -9023,32 +9019,28 @@ msgid "pelican"
 msgstr "שקנאי"
 
 #: trans_presets.java:764 trans_presets.java:779
-#, fuzzy
 msgid "toucan"
-msgstr "הר געש"
+msgstr ""
 
 #: trans_presets.java:764 trans_presets.java:779
 msgid "puffin"
 msgstr ""
 
 #: trans_presets.java:764 trans_presets.java:779
-#, fuzzy
 msgid "pegasus"
-msgstr "דשא"
+msgstr ""
 
 #: trans_presets.java:764 trans_presets.java:779
-#, fuzzy
 msgid "tiger"
-msgstr "זמן"
+msgstr ""
 
 #: trans_presets.java:767
 msgid "Stop"
 msgstr "עצור"
 
 #: trans_presets.java:770
-#, fuzzy
 msgid "Pedestrian Crossing"
-msgstr "מעבר חצייה"
+msgstr ""
 
 #: trans_presets.java:773
 msgid "Edit a crossing"
@@ -9059,14 +9051,12 @@ msgid "Type name (UK)"
 msgstr ""
 
 #: trans_presets.java:781
-#, fuzzy
 msgid "Mini-roundabout"
-msgstr "מעגל תנועה"
+msgstr ""
 
 #: trans_presets.java:786
-#, fuzzy
 msgid "Direction"
-msgstr "תיאור"
+msgstr ""
 
 #: trans_presets.java:786
 msgid "clockwise"
@@ -9190,9 +9180,8 @@ msgid "Spikes"
 msgstr ""
 
 #: trans_presets.java:902
-#, fuzzy
 msgid "Edit Spikes"
-msgstr "ערוך מאפיינים"
+msgstr ""
 
 #: trans_presets.java:913
 msgid "Portcullis"
@@ -9523,9 +9512,8 @@ msgid "Crossing"
 msgstr ""
 
 #: trans_presets.java:1231
-#, fuzzy
 msgid "Crossing type"
-msgstr "דרכים חוצות"
+msgstr ""
 
 #: trans_presets.java:1237
 msgid "Turntable"
@@ -12438,13 +12426,6 @@ msgstr ""
 msgid "to way"
 msgstr ""
 
-#, fuzzy
-#~ msgid "Clockwise direction?"
-#~ msgstr "לשנות כיוונים?"
-
-#~ msgid "Provider"
-#~ msgstr "ספק"
-
 #~ msgid "Unknown type"
 #~ msgstr "סוג לא ידוע"
 
@@ -12453,6 +12434,9 @@ msgstr ""
 
 #~ msgid "Upload {0} {1} (id: {2}) {3}% {4}/{5} ({6} left)..."
 #~ msgstr "מעלה {0} {1} (id: {2}) {3}% {4}/{5} ({6} נשארו)..."
+
+#~ msgid "Provider"
+#~ msgstr "ספק"
 
 #~ msgid "Version: {0}<br>Last change at {1}"
 #~ msgstr "גירסא: {0}<br>שונה לאחרונה ב {1}"

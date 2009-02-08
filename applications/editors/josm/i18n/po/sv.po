@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-08 13:52+0100\n"
-"PO-Revision-Date: 2009-01-31 19:14+0000\n"
-"Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
+"POT-Creation-Date: 2009-02-08 22:41+0100\n"
+"PO-Revision-Date: 2009-02-08 20:13+0000\n"
+"Last-Translator: Susanna Björverud <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-08 10:44+0000\n"
+"X-Launchpad-Export-Date: 2009-02-08 21:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:448
@@ -226,7 +226,7 @@ msgstr "Bidragskommentar"
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:148
 #, java-format
 msgid "{0}% ({1}/{2}), {3} left. Uploading {4}: {5} (id: {6})"
-msgstr ""
+msgstr "{0}% ({1}/{2}), {3} kvar. Skickar in {4}: {5} (id: {6})"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:164
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:69
@@ -296,7 +296,7 @@ msgid "Enter Password"
 msgstr "Ange losenord"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmConnection.java:127
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:371
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:373
 msgid "Aborting..."
 msgstr "Avbryter..."
 
@@ -331,14 +331,12 @@ msgid "There are unsaved changes. Discard the changes and continue?"
 msgstr "Det finns osparade ändringar. Åsidosätt ändringarna och fortsätt?"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
-#, fuzzy
 msgid "Save and Exit"
-msgstr "Redigera en avfart"
+msgstr "Spara och avsluta"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
-#, fuzzy
 msgid "Discard and Exit"
-msgstr "Redigera en avfart"
+msgstr "Kassera och avsluta"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:30
@@ -385,6 +383,8 @@ msgid ""
 "URL from www.openstreetmap.org (you can paste an URL here to download the "
 "area)"
 msgstr ""
+"URL från www.openstreetmap.org (du kan klistra in en URL här för att hämta "
+"hem området)"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/BoundingBoxSelection.java:134
 msgid "Bounding Box"
@@ -635,7 +635,7 @@ msgstr "Dagens meddelande är inte tillgängligt"
 
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:200
 msgid "Downloading \"Message of the day\""
-msgstr ""
+msgstr "Hämtar \"Dagens meddelande\""
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:84
 msgid "Move right"
@@ -681,7 +681,7 @@ msgstr "<olika>"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:383
 msgid "More information about this feature"
-msgstr ""
+msgstr "Mer information om denna funktion"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:393
 msgid "Optional Attributes:"
@@ -734,7 +734,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:475
 #, java-format
 msgid "Unknown type: {0}"
-msgstr ""
+msgstr "Okänd typ: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:552
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTester.java:50
@@ -750,7 +750,7 @@ msgstr "Fel vid tolkning {0}: "
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:572
 #, java-format
 msgid "Elements of type {0} are supported."
-msgstr ""
+msgstr "Objekt av typ {0} stöds."
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:607
 #, java-format
@@ -761,7 +761,7 @@ msgstr[1] "Ändra {0} objekt"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:609
 msgid "Nothing selected!"
-msgstr ""
+msgstr "Inget markerat!"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:660
 msgid "Change Properties"
@@ -1020,14 +1020,12 @@ msgid "Add all currently selected objects as members"
 msgstr "Lägg till alla för närvarande valda objekt som medlemmar"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:363
-#, fuzzy
 msgid "Remove Selected"
-msgstr "Ta bort de valda"
+msgstr "Ta bort det valda"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:364
-#, fuzzy
 msgid "Remove all currently selected objects from relation"
-msgstr "Ta bort alla de för närvarande valda objekten från relationen"
+msgstr "Ta bort alla för närvarande valda objekt från relationen"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:371
 msgid "Remove the member in the current table row from this relation"
@@ -1042,9 +1040,8 @@ msgid "Download all incomplete ways and nodes in relation"
 msgstr "Hämta alla ofullständiga sträckor och noder i relationen"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:415
-#, fuzzy
 msgid "Basic"
-msgstr "Hamnbassäng"
+msgstr "Grundläggande"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:457
 #, java-format
@@ -1068,11 +1065,12 @@ msgstr "Fel vid inläsning av serverns svar."
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:115
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveGpsLayerTimerTask.java:86
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveEditLayerTimerTask.java:64
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:337
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
 #: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:103
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:302
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:303
 msgid "Error"
 msgstr "Fel"
 
@@ -2871,6 +2869,7 @@ msgstr "lagret finns inte i listan."
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr ""
+"Kunde inte hitta någon översättning för locale {0}. Faller tillbaka på {1}."
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:135
 msgid "usage"
@@ -3014,6 +3013,7 @@ msgstr "Insticksmodulen kräver en uppdatering av JOSM: {0}."
 #, java-format
 msgid "Plugin {0} is required by plugin {1} but was not found."
 msgstr ""
+"Plugin {0}, som behövs för att plugin {1} ska fungera, men det hittades inte."
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:110
 #, java-format
@@ -3340,7 +3340,7 @@ msgstr "olik"
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:305
 #, java-format
 msgid "Malformed config file at lines {0}"
-msgstr ""
+msgstr "Fel i configurationsfilen på raderna {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:315
 #, java-format
@@ -3740,12 +3740,11 @@ msgstr "Välj åtminstone tre noder."
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:31
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:124
 msgid "Distribute Nodes"
-msgstr ""
+msgstr "Distribuera noder"
 
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:30
-#, fuzzy
 msgid "Distribute the selected nodes to equal distances along a line."
-msgstr "Flytta de valda noderna in i en linje"
+msgstr "Distribuera de valda noderna på jämna avstånd längs en linje."
 
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:68
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:72
@@ -3876,19 +3875,16 @@ msgid "Preferences"
 msgstr "Inställningar"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:26
-#, fuzzy
 msgid "OSM Server Files"
-msgstr "OSM-serverfiler (*.osm *.xml)"
+msgstr "OSM serverfiler"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:27
-#, fuzzy
 msgid "GPX Files"
-msgstr "Spara GPX-fil"
+msgstr "GPX-filer"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:28
-#, fuzzy
 msgid "NMEA-0183 Files"
-msgstr "NMEA-0183-filer (*.nmea *.txt)"
+msgstr "NMEA-0183-filer"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:42
 msgid ""
@@ -4338,9 +4334,8 @@ msgid "<b>incomplete</b> - all incomplete objects"
 msgstr "<b>incomplete</b> - alla ofullständiga objekt"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:92
-#, fuzzy
 msgid "<b>untagged</b> - all untagged objects"
-msgstr "<b>modified</b> - alla ändrade objekt"
+msgstr "<b>otaggade</b> - alal otaggede objekt"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:93
 msgid "Use <b>|</b> or <b>OR</b> to combine with logical or"
@@ -4905,13 +4900,13 @@ msgstr "Flytta objekt {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:46
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:365
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:329
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:330
 msgid "File exists. Overwrite?"
 msgstr "Filen existerar redan. Vill du skriva över?"
 
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:46
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:365
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:329
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:330
 msgid "Overwrite"
 msgstr "Skriv över"
 
@@ -5501,27 +5496,24 @@ msgstr "Tillåtna handlingar"
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:43
 #: ../plugins/terracer/src/terracer/TerracerAction.java:47
-#, fuzzy
 msgid "Terrace a building"
-msgstr "byggnad (building)"
+msgstr "Gör radhus av husrad"
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:45
 msgid "Creates individual buildings from a long building."
-msgstr ""
+msgstr "Skapar enskilda byggnader från en lång byggnad."
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:72
 msgid "How many buildings are in the terrace?"
 msgstr ""
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:91
-#, fuzzy
 msgid "Select a single, closed way of four nodes."
-msgstr "Välj en eller flera slutna sträckor med åtminstone fyra noder."
+msgstr "Välj en enkel, sluten sträcka med fyra noder."
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:155
-#, fuzzy
 msgid "Terrace"
-msgstr "Bruksväg"
+msgstr "Husrad"
 
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:39
 #: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:40
@@ -5554,7 +5546,7 @@ msgstr ""
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/Lakewalker.java:113
 msgid "Looking for shoreline..."
-msgstr ""
+msgstr "Letar efter strandlinje..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/Lakewalker.java:145
 #, java-format
@@ -6169,7 +6161,7 @@ msgstr "byggnad (building)"
 msgid "area"
 msgstr "yta (area)"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:117
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:118
 msgid "Unclosed way"
 msgstr "Ej stängd sträcka"
 
@@ -6791,24 +6783,23 @@ msgstr "Importera"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:26
 msgid "Change location"
-msgstr ""
+msgstr "Byt plats"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:26
 msgid "Set a new location for the next request"
-msgstr ""
+msgstr "Ange en ny plats för nästa förfrågan"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:38
 msgid "Open a layer first (GPX, OSM, cache)"
-msgstr ""
+msgstr "Öppna först ett lager (GPX, OSM, cache)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:50
-#, fuzzy
 msgid "Add a new layer"
-msgstr "Hämta som ett nytt lager"
+msgstr "Lägg till ett nytt lager"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:52
 msgid "Location"
-msgstr ""
+msgstr "Plats"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:54
 msgid ""
@@ -6818,6 +6809,30 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:70
 msgid "Add new layer"
+msgstr "Lägg till ett nytt lager"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:40
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:45
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:20
+#, java-format
+msgid "Downloading {0}"
+msgstr "Hämtar {0}"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:48
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:53
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:28
+msgid "Contacting WMS Server..."
+msgstr "Kontaktar WMS-servern..."
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:132
+#, fuzzy
+msgid "Create buildings"
+msgstr "Gör radhus av husrad"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:185
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:42
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:159
+msgid "CadastreGrabber: Illegal url."
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CheckSourceUploadHook.java:78
@@ -6825,7 +6840,7 @@ msgid "Auto-tag source added:"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CheckSourceUploadHook.java:83
-msgid "Add \"source=Cadastre...\" to ?"
+msgid "Add \"source=...\" to elements?"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrab.java:22
@@ -6836,56 +6851,67 @@ msgstr ""
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrab.java:23
 #, java-format
 msgid "Cadastre: {0}"
-msgstr ""
+msgstr "Cadastre: {0}"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:107
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:108
 msgid ""
 "To enable the cadastre WMS plugin, change\n"
 "the JOSM projection to Lambert and restart"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:131
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:132
 msgid "Cadastre"
-msgstr ""
+msgstr "Cadastre"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:142
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:143
 msgid "Auto sourcing"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:20
-#, fuzzy
-msgid "Extract commune boundary"
-msgstr "Redigera nationsgränser"
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:20
+msgid "Extract building footprints"
+msgstr ""
 
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 msgid "Only on vectorized layers"
+msgstr "Endast vektoriserade lager"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:20
+msgid "Extract commune boundary"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheFileFilter.java:16
 msgid "Lambert Zone 1 cache file (.1)"
-msgstr ""
+msgstr "Lambertzon 1 cachefil (.1)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheFileFilter.java:17
 msgid "Lambert Zone 2 cache file (.2)"
-msgstr ""
+msgstr "Lambertzon 1 cachefil (.2)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheFileFilter.java:18
 msgid "Lambert Zone 3 cache file (.3)"
-msgstr ""
+msgstr "Lambertzon 1 cachefil (.3)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheFileFilter.java:19
 msgid "Lambert Zone 4 cache file (.4)"
+msgstr "Lambertzon 1 cachefil (.4)"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:65
+#, java-format
+msgid ""
+"Town/city {0} not found or not available in WMS.\n"
+"Please check its availibility on www.cadastre.gouv.fr"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:281
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:283
 msgid "Choose from..."
-msgstr ""
+msgstr "Välj en av..."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:290
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:292
 msgid "Select commune"
-msgstr ""
+msgstr "Välj commune"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:304
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:306
 msgid "Select Tableau d'Assemblage"
 msgstr ""
 
@@ -6895,11 +6921,11 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLambertZone.java:33
 msgid "Zone"
-msgstr ""
+msgstr "Zon"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLambertZone.java:44
 msgid "Lambert zone"
-msgstr ""
+msgstr "Lambertzon"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSDownloadAction.java:19
 #: ../plugins/wmsplugin/src/wmsplugin/WMSDownloadAction.java:18
@@ -6912,11 +6938,8 @@ msgid ""
 "More than one WMS layer present.\n"
 "Select one of them first, then retry."
 msgstr ""
-
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:42
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:160
-msgid "CadastreGrabber: Illegal url."
-msgstr ""
+"Det finns mer än ett WMS-lager.\n"
+"Välj ett av dem först och försök sedan igen."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLoadFromCache.java:19
 msgid "Load location from cache (only if cache is enabled)"
@@ -6930,17 +6953,6 @@ msgid_plural "Simplify Way (remove {0} nodes)"
 msgstr[0] "Förenkla sträcka (ta bort {0} nod)"
 msgstr[1] "Förenkla sträcka (ta bort {0} noder)"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:45
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:20
-#, java-format
-msgid "Downloading {0}"
-msgstr ""
-
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:53
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:28
-msgid "Contacting WMS Server..."
-msgstr ""
-
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:59
 msgid "Extract SVG ViewBox..."
 msgstr ""
@@ -6949,10 +6961,9 @@ msgstr ""
 msgid "Extract best fitting boundary..."
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:121
-#, fuzzy
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:120
 msgid "Create boundary"
-msgstr "gräns"
+msgstr "Skapa gräns"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:81
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:155
@@ -6963,50 +6974,50 @@ msgstr "Tomt lager"
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:182
 #, java-format
 msgid "WMS layer ({0}), {1} tile(s) loaded"
-msgstr ""
+msgstr "WMS-lager ({0}), {1} ruta/rutor inlästa"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:184
 msgid "Is not vectorized."
-msgstr ""
+msgstr "Är inte vektoriserad"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:185
-#, fuzzy, java-format
+#, java-format
 msgid "Raster center: {0}"
-msgstr "vattendragstyp {0}"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:187
 msgid "Is vectorized."
-msgstr ""
+msgstr "Är vektoriserad"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:188
-#, fuzzy, java-format
+#, java-format
 msgid "Commune bbox: {0}"
-msgstr "Kommandolista: {0}"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:283
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:241
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:242
 msgid "Save WMS layer to file"
 msgstr "Spara WMS-lagret till en fil"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:309
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:268
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:269
 msgid "Load WMS layer from file"
 msgstr "Hämta WMS-lager från en fil"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:322
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:280
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:281
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr "WMS-filversion som ej stöds; funnen {0}, förväntad {1}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:323
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:281
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:282
 msgid "File Format Error"
 msgstr "Fel filformat"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:337
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:301
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:302
 msgid "Error loading file"
 msgstr "Fel vid läsning av fil"
 
@@ -7019,7 +7030,7 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:527
 msgid "Cache Format Error"
-msgstr ""
+msgstr "Cacheformatsfel"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:542
 #, java-format
@@ -7032,7 +7043,7 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:29
 msgid "Replace original background by JOSM background color."
-msgstr ""
+msgstr "Ersätt originalets bakgrund med JOSM:s bakgrundsfärg."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:31
 msgid "Reverse grey colors (for black backgrounds)."
@@ -7040,11 +7051,11 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:33
 msgid "Set background transparent."
-msgstr ""
+msgstr "Gör bakgrunden genomskinlig."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:35
 msgid "Draw boundaries of downloaded data."
-msgstr ""
+msgstr "Rita gränser för hämtade data."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:45
 msgid "Enable automatic caching."
@@ -7052,7 +7063,7 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:48
 msgid "Max. cache size (in MB)"
-msgstr ""
+msgstr "Största tillåtna cachestorlek (MB)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:53
 msgid ""
@@ -7074,7 +7085,7 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:63
 msgid "Source"
-msgstr ""
+msgstr "Källa"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:76
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:151
@@ -7127,44 +7138,44 @@ msgstr ""
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:40
 msgid "Jump To Position"
-msgstr ""
+msgstr "Gå till plats"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:40
 msgid "Opens a dialog that allows to jump to a specific location"
-msgstr ""
+msgstr "Öppnar en dialogruta som gör att man kan gå direkt till en viss plats"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:65
 msgid "Enter Lat/Lon to jump to position."
-msgstr ""
+msgstr "Ange lat/lon för att gå direkt till plats."
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:67
 msgid "You can also paste an URL from www.openstreetmap.org"
-msgstr ""
+msgstr "Du kan också klistra in en URL från www.openstreetmap.org"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:99
-#, fuzzy
 msgid "Zoom (in metres)"
-msgstr "Zooma in"
+msgstr "Zoomnivå (meter)"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:102
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:105
 msgid "Jump there"
-msgstr ""
+msgstr "Gå direkt dit"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:112
 msgid "Jump to Position"
-msgstr ""
+msgstr "Gå direkt till plats"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:124
 msgid "Could not parse Latitude, Longitude or Zoom. Please check."
 msgstr ""
+"Kunde inte tolka latitude, longitude eller zoomnivå. Kontrollera värdena."
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:124
 msgid "Unable to parse Lon/Lat"
-msgstr ""
+msgstr "Kunde inte tolka lon/lat"
 
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:33
 msgid "Simplify Way"
@@ -7453,7 +7464,7 @@ msgstr "Ogiltig förskjutning"
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:641
 #, java-format
 msgid "Found {0} matchs of {1} in GPX track {2}"
-msgstr ""
+msgstr "Hittade {0} träffar av {1} i GPX-spår {2}"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:642
 msgid "GPX Track loaded"
@@ -7471,23 +7482,23 @@ msgstr "Skickar in spår till openstreetmap.org"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:98
 msgid "Upload GPX track"
-msgstr ""
+msgstr "Skicka in GPX-spår"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:112
 msgid "Public"
-msgstr ""
+msgstr "Publik"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:113
 msgid "Selected makes your trace public in openstreetmap.org"
-msgstr ""
+msgstr "Om vald så är dina spår öppna för allmänheten på openstreetmap.org"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:115
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:118
 msgid "Tags"
-msgstr ""
+msgstr "Taggar"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:177
 msgid "Connecting..."
@@ -7499,15 +7510,15 @@ msgstr "Skicka in detta spår..."
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:204
 msgid "GPX upload was successful"
-msgstr ""
+msgstr "GPX-inskickning genomförd"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:217
 msgid "Error while uploading"
-msgstr ""
+msgstr "Fel vid inskickning"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:225
 msgid "No description provided. Please provide some description."
-msgstr ""
+msgstr "Ingen beskrivning angiven. Skriv in en beskrivning."
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:228
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:242
@@ -7516,15 +7527,15 @@ msgstr "Inget GPX-lager valt. Kan inte skicka in ett spår."
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:231
 msgid "No username provided."
-msgstr ""
+msgstr "Inget användarnamn angivet."
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:234
 msgid "No password provided."
-msgstr ""
+msgstr "Inget lösenord angviet."
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:251
 msgid "Uploading GPX Track"
-msgstr ""
+msgstr "Skickar in GPX-spår"
 
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:67
 msgid "Use"
@@ -7687,6 +7698,13 @@ msgstr "Id för Metacartas korrigerade kartbild"
 msgid "rectifier id={0}"
 msgstr "korrigeringsid={0}"
 
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:99
+#, java-format
+msgid ""
+"The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
+"This may lead to wrong coordinates."
+msgstr ""
+
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:139
 msgid "WMS"
 msgstr "WMS"
@@ -7738,26 +7756,26 @@ msgstr "Välj vilken rad du vill kopiera."
 msgid "Automatic downloading"
 msgstr "Automatisk hämtning"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:110
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:111
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
 msgstr "WMS-lager ({0}), hämtas automatiskt i zoomläge {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:112
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:113
 #, java-format
 msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr "WMS-lager ({0}), hämtas i zoomläge {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:164
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:165
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr "Den begärda ytan är för stor. Zooma in lite eller ändra upplösning"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:220
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:221
 msgid "Download visible tiles"
 msgstr "Hämta de rutor som syns"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:229
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:230
 msgid "Change resolution"
 msgstr "Ändra upplösning"
 
@@ -7766,9 +7784,8 @@ msgid "Exception occurred"
 msgstr "Undantag inträffade"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:28
-#, fuzzy
 msgid "Adjust the position of the selected WMS layer"
-msgstr "Justera WMS-lagrets position"
+msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/Help_WMSmenuAction.java:20
 msgid "help"
@@ -8111,9 +8128,8 @@ msgid "leisure"
 msgstr "fritid"
 
 #: trans_style.java:1485
-#, fuzzy
 msgid "marina"
-msgstr "Småbåtshamn"
+msgstr "marina"
 
 #: trans_style.java:1567 trans_style.java:1575 trans_style.java:1583
 #: trans_style.java:1591 trans_style.java:1599 trans_style.java:1607
@@ -8219,11 +8235,11 @@ msgstr ""
 
 #: trans_style.java:2766 trans_style.java:2774
 msgid "retail"
-msgstr ""
+msgstr "detaljhandel"
 
 #: trans_style.java:2782
 msgid "industrial"
-msgstr ""
+msgstr "industri"
 
 #: trans_style.java:2790
 msgid "brownfield"
@@ -8697,7 +8713,6 @@ msgstr "Redigera en oklassificerad väg"
 #: trans_presets.java:660 trans_presets.java:673 trans_presets.java:686
 #: trans_presets.java:699 trans_presets.java:712 trans_presets.java:725
 #: trans_presets.java:1209 trans_presets.java:1385 trans_presets.java:1426
-#, fuzzy
 msgid "Width (meters)"
 msgstr "Bredd (meter)"
 
@@ -8756,24 +8771,20 @@ msgid "Edit a Serviceway"
 msgstr "Redigera en tillfartsväg"
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "Serviceway type"
-msgstr "Tillfartsväg"
+msgstr "Type av tillfartsväg"
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "alley"
-msgstr "alla"
+msgstr "gränd"
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "driveway"
-msgstr "Gång-/Ridstig"
+msgstr "uppfart"
 
 #: trans_presets.java:256
-#, fuzzy
 msgid "parking_aisle"
-msgstr "parkeringsbiljetter"
+msgstr ""
 
 #: trans_presets.java:269
 msgid "Parking Aisle"
@@ -8928,17 +8939,14 @@ msgid "Max. weight (tonnes)"
 msgstr "Största tillåtna vikt (ton)"
 
 #: trans_presets.java:321
-#, fuzzy
 msgid "Max. Height (meters)"
 msgstr "Största tillåtna höjd (meter)"
 
 #: trans_presets.java:322
-#, fuzzy
 msgid "Max. Width (meters)"
 msgstr "Största tillåtna bredd (meter)"
 
 #: trans_presets.java:323
-#, fuzzy
 msgid "Max. Length (meters)"
 msgstr "Största tillåtna längd (meter)"
 
@@ -8985,9 +8993,8 @@ msgid "Edit a Bridge"
 msgstr "Redigera en bro"
 
 #: trans_presets.java:363
-#, fuzzy
 msgid "Edit a Tunnel"
-msgstr "Redigera en stamväg"
+msgstr "Redigera en tunnel"
 
 #: trans_presets.java:377
 msgid "Ways"
@@ -9232,39 +9239,35 @@ msgstr "Trafikljus"
 
 #: trans_presets.java:760
 msgid "Pedestrian crossing type"
-msgstr ""
+msgstr "Typ av övergångsställe"
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
 msgid "uncontrolled"
 msgstr "obevakad"
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
-#, fuzzy
 msgid "traffic_signals"
-msgstr "Trafikljus"
+msgstr "trafikljus"
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
 msgid "island"
 msgstr "ö"
 
 #: trans_presets.java:760 trans_presets.java:775 trans_presets.java:1231
-#, fuzzy
 msgid "unmarked"
-msgstr "markör"
+msgstr "utan markering"
 
 #: trans_presets.java:761 trans_presets.java:777 trans_presets.java:1232
 msgid "Cross on horseback"
 msgstr ""
 
 #: trans_presets.java:762 trans_presets.java:776 trans_presets.java:1233
-#, fuzzy
 msgid "Cross by bicycle"
-msgstr "cykel"
+msgstr ""
 
 #: trans_presets.java:763 trans_presets.java:778 trans_presets.java:1234
-#, fuzzy
 msgid "Crossing attendant"
-msgstr "Korsande sträckor"
+msgstr ""
 
 #: trans_presets.java:764
 msgid "Crossing type name (UK)"
@@ -9279,32 +9282,28 @@ msgid "pelican"
 msgstr ""
 
 #: trans_presets.java:764 trans_presets.java:779
-#, fuzzy
 msgid "toucan"
-msgstr "vulkan"
+msgstr ""
 
 #: trans_presets.java:764 trans_presets.java:779
 msgid "puffin"
 msgstr ""
 
 #: trans_presets.java:764 trans_presets.java:779
-#, fuzzy
 msgid "pegasus"
-msgstr "gräs"
+msgstr ""
 
 #: trans_presets.java:764 trans_presets.java:779
-#, fuzzy
 msgid "tiger"
-msgstr "tid"
+msgstr ""
 
 #: trans_presets.java:767
 msgid "Stop"
 msgstr "Stopp"
 
 #: trans_presets.java:770
-#, fuzzy
 msgid "Pedestrian Crossing"
-msgstr "Övergångsställe"
+msgstr "Övergångsställe för fotgängare"
 
 #: trans_presets.java:773
 msgid "Edit a crossing"
@@ -9315,18 +9314,16 @@ msgid "Type name (UK)"
 msgstr ""
 
 #: trans_presets.java:781
-#, fuzzy
 msgid "Mini-roundabout"
 msgstr "Minirondell"
 
 #: trans_presets.java:786
-#, fuzzy
 msgid "Direction"
-msgstr "relation"
+msgstr "Riktning"
 
 #: trans_presets.java:786
 msgid "clockwise"
-msgstr ""
+msgstr "medurs"
 
 #: trans_presets.java:788
 msgid "Turning Circle"
@@ -9446,9 +9443,8 @@ msgid "Spikes"
 msgstr ""
 
 #: trans_presets.java:902
-#, fuzzy
 msgid "Edit Spikes"
-msgstr "Ändra Pir"
+msgstr ""
 
 #: trans_presets.java:913
 msgid "Portcullis"
@@ -9779,9 +9775,8 @@ msgid "Crossing"
 msgstr "Järnvägsövergång"
 
 #: trans_presets.java:1231
-#, fuzzy
 msgid "Crossing type"
-msgstr "Korsande sträckor"
+msgstr ""
 
 #: trans_presets.java:1237
 msgid "Turntable"
@@ -10848,15 +10843,15 @@ msgstr "Redigera skidåkning"
 
 #: trans_presets.java:1829
 msgid "Piste type"
-msgstr ""
+msgstr "Skidspårstyp"
 
 #: trans_presets.java:1829
 msgid "downhill"
-msgstr ""
+msgstr "utförsåkning"
 
 #: trans_presets.java:1829
 msgid "nordic"
-msgstr ""
+msgstr "längdskidåkning"
 
 #: trans_presets.java:1829
 msgid "snow_park"
@@ -10864,31 +10859,31 @@ msgstr ""
 
 #: trans_presets.java:1830
 msgid "Difficulty"
-msgstr ""
+msgstr "Svårighetsgrad"
 
 #: trans_presets.java:1830
 msgid "novice"
-msgstr ""
+msgstr "nybörjare"
 
 #: trans_presets.java:1830
 msgid "easy"
-msgstr ""
+msgstr "lätt"
 
 #: trans_presets.java:1830
 msgid "intermedia"
-msgstr ""
+msgstr "medelsvår"
 
 #: trans_presets.java:1830
 msgid "advance"
-msgstr ""
+msgstr "svår"
 
 #: trans_presets.java:1830
 msgid "expert"
-msgstr ""
+msgstr "expert"
 
 #: trans_presets.java:1830
 msgid "freeride"
-msgstr ""
+msgstr "ospårat"
 
 #: trans_presets.java:1833
 msgid "Shooting"
@@ -11832,11 +11827,11 @@ msgstr "Redigera bageri"
 
 #: trans_presets.java:2327
 msgid "Florist"
-msgstr ""
+msgstr "Florist"
 
 #: trans_presets.java:2329
 msgid "Edit Florist"
-msgstr ""
+msgstr "Redigera florist"
 
 #: trans_presets.java:2333
 msgid "Organic"
@@ -11848,7 +11843,7 @@ msgstr ""
 
 #: trans_presets.java:2338
 msgid "Beverages"
-msgstr ""
+msgstr "Drycker"
 
 #: trans_presets.java:2339
 msgid "Edit Beverages  Shop"
@@ -11856,19 +11851,19 @@ msgstr ""
 
 #: trans_presets.java:2343
 msgid "Computer"
-msgstr ""
+msgstr "Dator"
 
 #: trans_presets.java:2344
 msgid "Edit Computer Shop"
-msgstr ""
+msgstr "Redigera datoraffär"
 
 #: trans_presets.java:2348
 msgid "Electronics"
-msgstr ""
+msgstr "Electronik"
 
 #: trans_presets.java:2349
 msgid "Edit Electronics Shop"
-msgstr ""
+msgstr "Redigera elektronikaffär"
 
 #: trans_presets.java:2353
 msgid "Hifi"
@@ -11880,27 +11875,27 @@ msgstr ""
 
 #: trans_presets.java:2358
 msgid "Furniture"
-msgstr ""
+msgstr "Möbler"
 
 #: trans_presets.java:2359
 msgid "Edit Furniture Shop"
-msgstr ""
+msgstr "Redigera möbelaffär"
 
 #: trans_presets.java:2363
 msgid "Garden Centre"
-msgstr ""
+msgstr "Trädgårdscenter"
 
 #: trans_presets.java:2365
 msgid "Edit Garden Centre"
-msgstr ""
+msgstr "Redigera trädgårdscenter"
 
 #: trans_presets.java:2369
 msgid "Hardware"
-msgstr ""
+msgstr "Järnvaror"
 
 #: trans_presets.java:2371
 msgid "Edit Hardware Store"
-msgstr ""
+msgstr "Redigera järnaffär"
 
 #: trans_presets.java:2375
 msgid "Do-it-yourself-store"
@@ -11912,11 +11907,11 @@ msgstr "Redigera gör-det-själv-affär"
 
 #: trans_presets.java:2381
 msgid "Stationery"
-msgstr ""
+msgstr "Kontorsmaterial"
 
 #: trans_presets.java:2382
 msgid "Edit Stationery Shop"
-msgstr ""
+msgstr "Redigera pappershandel"
 
 #: trans_presets.java:2386
 msgid "Hairdresser"
@@ -11928,19 +11923,19 @@ msgstr "Ändra Hårfrisör"
 
 #: trans_presets.java:2391
 msgid "Shoes"
-msgstr ""
+msgstr "Skor"
 
 #: trans_presets.java:2392
 msgid "Edit Shoe Shop"
-msgstr ""
+msgstr "Redigera skoaffär"
 
 #: trans_presets.java:2396
 msgid "Toys"
-msgstr ""
+msgstr "Leksaker"
 
 #: trans_presets.java:2397
 msgid "Edit Toy Shop"
-msgstr ""
+msgstr "Redigera leksaksaffär"
 
 #: trans_presets.java:2401
 msgid "Video"
@@ -11984,11 +11979,11 @@ msgstr ""
 
 #: trans_presets.java:2429
 msgid "optician"
-msgstr ""
+msgstr "optiker"
 
 #: trans_presets.java:2430
 msgid "Edit Optician"
-msgstr ""
+msgstr "Redigera optiker"
 
 #: trans_presets.java:2436
 msgid "Cash"
@@ -12694,9 +12689,11 @@ msgstr ""
 msgid "to way"
 msgstr ""
 
-#, fuzzy
-#~ msgid "Clockwise direction?"
-#~ msgstr "Ändra riktning?"
+#~ msgid "OSM History Information"
+#~ msgstr "OSM-historik"
+
+#~ msgid "Please select objects for which you want to change properties."
+#~ msgstr "Välj de objekt vars egenskaper du vill ändra."
 
 #~ msgid ""
 #~ "This is the basic relation editor which allows you to change the "
@@ -12708,18 +12705,6 @@ msgstr ""
 #~ "taggar för en relation och dess medlemmar. Därutöver skulle det behövas "
 #~ "en smart redigerare som läser av typ av relation och gör förnuftiga "
 #~ "begränsningar av dina valmöjligheter."
-
-#~ msgid "Ref"
-#~ msgstr "Ref"
-
-#~ msgid "Provider"
-#~ msgstr "Leverantör"
-
-#~ msgid "OSM History Information"
-#~ msgstr "OSM-historik"
-
-#~ msgid "Please select objects for which you want to change properties."
-#~ msgstr "Välj de objekt vars egenskaper du vill ändra."
 
 #~ msgid "Highlight the member from the current table row as JOSM's selection"
 #~ msgstr ""
@@ -12736,6 +12721,9 @@ msgstr ""
 
 #~ msgid "Upload {0} {1} (id: {2}) {3}% {4}/{5} ({6} left)..."
 #~ msgstr "Skicka in {0} {1} (id: {2}) {3}% {4}/{5} ({6} kvar)..."
+
+#~ msgid "Provider"
+#~ msgstr "Leverantör"
 
 #~ msgid "Version: {0}<br>Last change at {1}"
 #~ msgstr "Version: {0}<br>Senast ändrad {1}"
@@ -12772,6 +12760,9 @@ msgstr ""
 
 #~ msgid "NoName"
 #~ msgstr "UtanNamn"
+
+#~ msgid "Ref"
+#~ msgstr "Ref"
 
 #~ msgid "unusual named way type"
 #~ msgstr "sträcktyp som vanligtvis ej är namnad"

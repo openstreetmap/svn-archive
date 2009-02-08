@@ -7,7 +7,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Way;
@@ -102,18 +102,19 @@ public class UnclosedWays extends Test {
         if (btest != null && btest)
             set(true, 1130, marktr("area"));
 
-        if (type != null) {
-            LatLon s = w.nodes.get(0).coor;
-            LatLon e = w.nodes.get(w.nodes.size() - 1).coor;
-            /* take unclosed ways with end-to-end-distance below 10 km */
-            if (s != e && (force || s.greatCircleDistance(e) < 10000)) {
+        if (type != null && !w.isClosed())
+        {
+            Node f = w.nodes.get(0);
+            Node l = w.nodes.get(w.nodes.size() - 1);
+            if(force || f.coor.greatCircleDistance(l.coor) < 10000)
+            {
                 List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
                 List<OsmPrimitive> highlight = new ArrayList<OsmPrimitive>();
                 primitives.add(w);
-                // The important parts of an unclosed way are the first and 
+                // The important parts of an unclosed way are the first and
                 // the last node which should be connected, therefore we highlight them
-                highlight.add(w.nodes.get(0)); 
-                highlight.add(w.nodes.get(w.nodes.size() - 1));
+                highlight.add(f);
+                highlight.add(l);
                 errors.add(new TestError(this, Severity.WARNING, tr("Unclosed way"), type, etype, mode, primitives,
                         highlight));
                 _errorWays.add(w, w);

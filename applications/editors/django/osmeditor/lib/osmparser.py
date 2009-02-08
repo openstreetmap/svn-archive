@@ -37,26 +37,28 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
+class LibException(Exception): pass
+class DependancyException(LibException): pass
+class OSMException(LibException): pass
+
 
 class OSMObj:
     """
-    >>> o = osmparser.OSMObj(type='node')
+    >>> o = OSMObj(type='node')
     >>> o.loc = (-5, -5)
     >>> o.tags['created_by'] = 'osmparser'
     >>> o.toxml()
     '<osm version="0.5">\\n  <node lat="-5" lon="-5">\\n    <tag k="created_by" v="osmparser" />\\n  </node>\\n</osm>'
-    >>> o.save(username, password)
+    
+    
+    >> o.save(username, password)
     '339668244'
-    >>> o.id
+    >> o.id
     339668244
-    >>> o.delete()
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-    TypeError: delete() takes exactly 3 arguments (1 given)
-    >>> o.delete(username, password)
+    >> o.delete(username, password)
     ' '
-    >>> o.id
-    >>> o.delete(username, password)
+    >> o.id
+    >> o.delete(username, password)
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
       File "lib/osmparser.py", line 162, in delete
@@ -83,6 +85,24 @@ class OSMObj:
         self.site_url = site_url
 
     def setType(self, type):
+        """
+        >>> o = OSMObj()
+        >>> o.nodes == None
+        True
+        >>> o.members == None
+        True
+        >>> o.loc == None
+        True
+        >>> o.setType("way")
+        >>> o.nodes
+        []
+        >>> o.setType("relation")
+        >>> o.members
+        []
+        >>> o.setType("node")
+        >>> len(o.loc)
+        2
+        """
         self.type = type
         if self.type == "way":
             self.nodes = []
@@ -128,7 +148,7 @@ class OSMObj:
 
     def toxml(self, as_string=True, parent=None):
         if not elementtree:
-            raise Exception("ElementTree support required for writing to XML.") 
+            raise DependancyException("ElementTree support required for writing to XML.") 
         if parent == None:
             parent = Element("osm", {"version": "0.5"})
         if self.type == "node":
@@ -178,29 +198,30 @@ class OSMObj:
 
     def save(self, username, password):
         if not httplib2:
-            raise Exception("Couldn't import httplib2: %s" % httplib2_error)
+            raise DependancyException("Couldn't import httplib2: %s" % httplib2_error)
         url = self.api_url()
         h = httplib2.Http()
         h.add_credentials(username, password)
         xml = self.toxml()    
         (resp, content) = h.request(url, "PUT", body=xml)
         if int(resp.status) != 200:
-            raise Exception("Status was: %s, Content: %s" % (resp.status, content))
+            raise OSMException("Status was: %s, Content: %s" % (resp.status, content))
         if not self.id:
             self.id = int(content)
         return content
+    
     def delete(self, username, password):
         if not httplib2:
-            raise Exception("Couldn't import httplib2: %s" % httplib2_error)
+            raise DependancyException("Couldn't import httplib2: %s" % httplib2_error)
         if not self.id:
-            raise Exception("Can't delete object with no id")
+            raise OSMException("Can't delete object with no id")
         url = self.api_url()
         h = httplib2.Http()
         h.add_credentials(username, password)
         xml = self.toxml()    
         (resp, content) = h.request(url, "DELETE")
         if int(resp.status) != 200:
-            raise Exception("Status was: %s, Content: %s" % (resp.status, content))
+            raise OSMException("Status was: %s, Content: %s" % (resp.status, content))
         self.id = None
         return content
 
@@ -273,6 +294,22 @@ class ParseObjects(ContentHandler):
             self.output['%ss' % name].append(self.current)
 
 def parse(f, arrange=True, site_url = "http://openstreetmap.org"):
+    """
+    >>> import urllib
+    >>> u = urllib.urlopen("http://openstreetmap.org/api/0.5/way/29787178/full")
+    >>> data = parse(u)
+    >>> way = data['ways'][29787178]
+    >>> node0 = way.nodes[0]
+    >>> node0.id 
+    328108960
+    >>> node0.type
+    u'node'
+    >>> 'addr:housenumber' in way.tags.keys()
+    True
+    >>> way.tags['addr:housenumber']
+    u'236'
+    """
+    
     parser = ParseObjects(site_url=site_url)
     xml.sax.parse( f, parser )          
     output = parser.output
@@ -284,6 +321,15 @@ def parse(f, arrange=True, site_url = "http://openstreetmap.org"):
     return output 
 
 def parseString(data, arrange=True, site_url = "http://openstreetmap.org"):
+    """
+    >>> nodeXML = '<osm version="0.5" generator="OpenStreetMap server"><node id="327260132" lat="42.3621444" lon="-71.0996605" user="crschmidt" visible="true" timestamp="2009-01-05T15:35:26+00:00"/></osm>'
+    >>> data = parseString(nodeXML)
+    >>> len(data['nodes'])
+    1
+    >>> node = data['nodes'][327260132]  
+    >>> map(lambda x: int(float(x)), node.loc)
+    [-71, 42]
+    """
     parser = ParseObjects(site_url=site_url)
     xml.sax.parseString( data, parser  )          
     output = parser.output
@@ -295,6 +341,10 @@ def parseString(data, arrange=True, site_url = "http://openstreetmap.org"):
     return output 
 
 if __name__ == "__main__": 
+    if len(sys.argv) > 1 and sys.argv[1] == "--test":
+        import doctest
+        doctest.testmod()
+        sys.exit()
     f = sys.stdin
     parser = ParseObjects()
     xml.sax.parse( f, parser )           

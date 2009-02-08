@@ -24,30 +24,30 @@ public class OpenLayersPlugin extends Plugin {
     static String pluginDir;
 
     public OpenLayersPlugin() {
-    pluginDir = getPluginDir();
-    try {
-        copy("/resources/yahoo.html", "yahoo.html");
-    } catch (FileNotFoundException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    }
-    StorageManager.initStorage( pluginDir );
-    refreshMenu();
+        pluginDir = getPluginDir();
+        try {
+            copy("/resources/yahoo.html", "yahoo.html");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        StorageManager.initStorage( pluginDir );
+        refreshMenu();
     }
 
     public static void refreshMenu() {
-    JMenuBar menuBar = Main.main.menu;
-    if (menu == null) {
-        menu = new JMenu(tr("OpenLayers"));
-        menuBar.add(menu, 5);
-    } else {
-        menu.removeAll();
-    }
+        JMenuBar menuBar = Main.main.menu;
+        if (menu == null) {
+            menu = new JMenu(tr("OpenLayers"));
+            menuBar.add(menu, 5);
+        } else {
+            menu.removeAll();
+        }
 
-    menu.add(new JMenuItem(new ShowOpenLayersAction("Yahoo")));
+        menu.add(new JMenuItem(new ShowOpenLayersAction("Yahoo")));
     }
 
     /*
@@ -57,7 +57,6 @@ public class OpenLayersPlugin extends Plugin {
      */
     @Override
     public PreferenceSetting getPreferenceSetting() {
-    return null;
+        return null;
     }
-
 }

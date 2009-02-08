@@ -55,7 +55,7 @@ public class HttpResponse implements Serializable {
      * @param bytes The response bytes
      */
     public synchronized void changeState(int status, String statusMessage, byte[] bytes) {
-    this.status = status;
+        this.status = status;
         this.statusText = statusMessage;
         this.responseBytes = bytes;
     }
@@ -67,20 +67,20 @@ public class HttpResponse implements Serializable {
      */
     private String getAllResponseHeaders(URLConnection c) {
         int idx = 0;
-    String value;
-    StringBuffer buf = new StringBuffer();
-    while((value = c.getHeaderField(idx)) != null) {
-        String key = c.getHeaderFieldKey(idx);
-        if( key != null )
-        {
-        buf.append(key);
-        buf.append("=");
+        String value;
+        StringBuffer buf = new StringBuffer();
+        while((value = c.getHeaderField(idx)) != null) {
+            String key = c.getHeaderFieldKey(idx);
+            if( key != null )
+            {
+            buf.append(key);
+            buf.append("=");
+            }
+            buf.append(value);
+            buf.append("\n");
+            idx++;
         }
-        buf.append(value);
-        buf.append("\n");
-        idx++;
-    }
-    return buf.toString();
+        return buf.toString();
     }
 
     /**
@@ -88,8 +88,8 @@ public class HttpResponse implements Serializable {
      * @param requestURL The URL requested
      */
     public void store(URL requestURL) {
-    loaded = true;
-    StorageManager.getInstance().put(requestURL, this);
+        loaded = true;
+        StorageManager.getInstance().put(requestURL, this);
     }
 
     /**
@@ -98,6 +98,6 @@ public class HttpResponse implements Serializable {
      * @return The response, if available
      */
     public static HttpResponse lookup(URL requestURL) {
-    return StorageManager.getInstance().get(requestURL);
+        return StorageManager.getInstance().get(requestURL);
     }
 }

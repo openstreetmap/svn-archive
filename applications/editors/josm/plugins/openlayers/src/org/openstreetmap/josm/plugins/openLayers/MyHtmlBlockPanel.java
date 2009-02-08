@@ -17,6 +17,11 @@ class MyHtmlBlockPanel extends HtmlBlockPanel {
 
     private static final long serialVersionUID = -4778865358510293592L;
 
+    public interface ViewUpdateListener {
+        void region_update(int x, int y, int w, int h);
+    }
+    ViewUpdateListener view_update_listener;
+
     /**
      * Constructor
      * @param background
@@ -25,8 +30,10 @@ class MyHtmlBlockPanel extends HtmlBlockPanel {
      * @param rcontext
      * @param frameContext
      */
-    public MyHtmlBlockPanel(Color background, boolean opaque, UserAgentContext pcontext, HtmlRendererContext rcontext, FrameContext frameContext) {
+    public MyHtmlBlockPanel(Color background, boolean opaque, UserAgentContext pcontext, HtmlRendererContext rcontext, FrameContext frameContext,
+    ViewUpdateListener vul) {
         super(background, opaque, pcontext, rcontext, frameContext);
+        view_update_listener = vul;
     }
 
     /**
@@ -46,5 +53,10 @@ class MyHtmlBlockPanel extends HtmlBlockPanel {
         this.invalidate();
         this.validateAll();
         this.repaint();
+    }
+
+    public void repaint(int x, int y, int width, int height) {
+        super.repaint(x, y, width, height);
+        view_update_listener.region_update(x, y, width, height);
     }
 }

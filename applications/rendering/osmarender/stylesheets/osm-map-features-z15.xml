@@ -1497,12 +1497,10 @@
 					</rule>
 				</rule>
 				
-				<!--
-					rule e="way" k="natural" v="*" minSize="0.016" layer="5"
-					areaText k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%'/
-					areaText k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%'/
-					/rule
-					-->
+                                <rule e="way" k="natural" v="*" minSize="0.016" layer="5">
+                                	<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%'/>
+                                        <caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%'/>
+				</rule>
 			</rule>
 			
 			<!-- Road numbers for all highways -->

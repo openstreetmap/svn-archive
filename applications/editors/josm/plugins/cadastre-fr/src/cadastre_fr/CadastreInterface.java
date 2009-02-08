@@ -61,7 +61,9 @@ public class CadastreInterface {
             }
             openInterface();
         } catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("Town/city {0} not found or not available in WMS.\n" +
+                    		"Please check its availibility on www.cadastre.gouv.fr", wmsLayer.getLocation()));
             return false;
         }
         return true;

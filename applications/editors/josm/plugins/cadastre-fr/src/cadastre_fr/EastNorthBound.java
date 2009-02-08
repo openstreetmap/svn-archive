@@ -22,6 +22,12 @@ public class EastNorthBound implements Serializable {
         return true;
     }
 
+    public EastNorthBound interpolate(EastNorthBound en2, double proportion) {
+        EastNorthBound enb = new EastNorthBound(this.min.interpolate(en2.min, proportion),
+                this.max.interpolate(en2.max, proportion));
+        return enb;
+    }
+
     @Override public String toString() {
         return "EastNorthBound[" + min.east() + "," + min.north() + "," + max.east() + "," + max.north() + "]";
     }

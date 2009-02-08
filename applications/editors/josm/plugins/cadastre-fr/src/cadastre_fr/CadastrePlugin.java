@@ -65,9 +65,10 @@ import org.openstreetmap.josm.data.projection.Lambert;
  *                 - first draft of raster image support 
  * 0.9 05-Feb-2009 - grab vectorized full commune bbox, save in file, convert to OSM way
  *                   and simplify
+ * 1.0 05-Feb-2009 - fix various bugs
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "0.8";
+    static String VERSION = "1.0";
 
     static JMenu cadastreJMenu;
 
@@ -152,6 +153,7 @@ public class CadastrePlugin extends Plugin {
             JMenuItem menuLambertZone = new JMenuItem(new MenuActionLambertZone());
             JMenuItem menuLoadFromCache = new JMenuItem(new MenuActionLoadFromCache());
             JMenuItem menuActionBoundaries = new JMenuItem(new MenuActionBoundaries());
+            JMenuItem menuActionBuildings = new JMenuItem(new MenuActionBuildings());
             
             cadastreJMenu.add(menuGrab);
             cadastreJMenu.add(menuSettings);
@@ -160,6 +162,7 @@ public class CadastrePlugin extends Plugin {
             cadastreJMenu.add(menuLambertZone);
             cadastreJMenu.add(menuLoadFromCache);
             cadastreJMenu.add(menuActionBoundaries);
+            //cadastreJMenu.add(menuActionBuildings);
         }
         setEnabledAll(menuEnabled);
     }
@@ -190,7 +193,8 @@ public class CadastrePlugin extends Plugin {
             JMenuItem item = cadastreJMenu.getItem(i);
             if (item != null)
                 if (item.getText().equals(MenuActionGrab.name) ||
-                    item.getText().equals(MenuActionBoundaries.name)) {
+                    item.getText().equals(MenuActionBoundaries.name) ||
+                    item.getText().equals(MenuActionBuildings.name)) {
                     item.setEnabled(isEnabled);
                 } else if (item.getText().equals(MenuActionLambertZone.name)) {
                     item.setEnabled(!isEnabled);

@@ -27,8 +27,6 @@ public class ImageModifier {
 
     public ImageModifier(BufferedImage bi) {
         bufferedImage = bi;
-        System.out.println("cadastrewms.alterColors="+Main.pref.getBoolean("cadastrewms.alterColors"));
-        System.out.println("cadastrewms.backgroundTransparent="+Main.pref.getBoolean("cadastrewms.backgroundTransparent"));
         if (Main.pref.getBoolean("cadastrewms.alterColors")) {
             changeColors();
             if (Main.pref.getBoolean("cadastrewms.backgroundTransparent")) {
@@ -48,8 +46,6 @@ public class ImageModifier {
         int pixel;
         int josmBackgroundColor = ColorHelper.html2color(Main.pref.get("color.background", "#FFFFFF")).getRGB();
         boolean invertGrey = (Main.pref.getBoolean("cadastrewms.invertGrey"));
-        System.out.println("cadastrewms.invertGrey="+invertGrey);
-        System.out.println("color.background="+Main.pref.get("color.background", "#FFFFFF"));
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 pixel = bufferedImage.getRGB(x, y);

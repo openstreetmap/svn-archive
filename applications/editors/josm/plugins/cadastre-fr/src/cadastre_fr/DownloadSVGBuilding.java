@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,15 +24,11 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.ProgressInputStream;
-/**
- * Grab the SVG administrative boundaries of the active commune layer (cadastre), 
- * isolate the SVG path of the concerned commune (other municipalities are also
- * downloaded in the SVG data), convert to OSM nodes and way plus simplify.
- * Thanks to Frederic Rodrigo for his help.
- */
-public class DownloadSVGTask extends PleaseWaitRunnable {
+
+public class DownloadSVGBuilding extends PleaseWaitRunnable {
 
     private WMSLayer wmsLayer;
     private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;
@@ -41,7 +36,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     private String svg = null;
     private EastNorthBound viewBox = null;
     
-    public DownloadSVGTask(WMSLayer wmsLayer) {
+    public DownloadSVGBuilding(WMSLayer wmsLayer) {
         super(tr("Downloading {0}", wmsLayer.name));
 
         this.wmsLayer = wmsLayer;
@@ -53,14 +48,15 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         Main.pleaseWaitDlg.currentAction.setText(tr("Contacting WMS Server..."));
         try {
             if (wmsInterface.retrieveInterface(wmsLayer)) {
-                svg = grabBoundary(wmsLayer.getCommuneBBox());
+                MapView mv = Main.map.mapView;
+                EastNorthBound enb = new EastNorthBound(mv.getEastNorth(0, mv.getHeight()),
+                        mv.getEastNorth(mv.getWidth(), 0));
+                svg = grabBoundary(enb);
                 if (svg == null)
                     return;
-                Main.pleaseWaitDlg.currentAction.setText(tr("Extract SVG ViewBox..."));
                 getViewBox(svg);
                 if (viewBox == null)
                     return;
-                Main.pleaseWaitDlg.currentAction.setText(tr("Extract best fitting boundary..."));
                 createWay(svg);
             }
         } catch (DuplicateLayerException e) {
@@ -94,60 +90,90 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
      */
     private void createWay(String svg) {
         String[] SVGpaths = new SVGParser().getPaths(svg);
-        ArrayList<Double> fitViewBox = new ArrayList<Double>();  
         ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<ArrayList<EastNorth>>();
+        Collection<Node> existingNodes = Main.ds.nodes;
+        
         for (int i=0; i< SVGpaths.length; i++) {
             ArrayList<EastNorth> eastNorth = new ArrayList<EastNorth>();
-            fitViewBox.add( createNodes(SVGpaths[i], eastNorth) );
-            eastNorths.add(eastNorth);
+            createNodes(SVGpaths[i], eastNorth);
+            if (eastNorth.size() > 2)
+                eastNorths.add(eastNorth);
         }
-        // the smallest fitViewBox indicates the best fitting path in viewBox
-        Double min = Collections.min(fitViewBox);
-        int bestPath = fitViewBox.indexOf(min);
+        List<Way> wayList = new ArrayList<Way>();
         List<Node> nodeList = new ArrayList<Node>();
-        for (EastNorth eastNorth : eastNorths.get(bestPath)) {
-            nodeList.add(new Node(Main.proj.eastNorth2latlon(eastNorth)));
+        for (ArrayList<EastNorth> path : eastNorths) {
+            List<Node> tmpNodeList = new ArrayList<Node>();
+            Way wayToAdd = new Way();
+            for (EastNorth eastNorth : path) {
+                Node nodeToAdd = new Node(Main.proj.eastNorth2latlon(eastNorth));
+                // check if new node is not already created by another new path 
+                Node nearestNewNode = checkNearestNode(nodeToAdd, tmpNodeList); 
+                if (nearestNewNode == nodeToAdd) {
+                    // check if new node is not already in existing OSM objects
+                    nearestNewNode = checkNearestNode(nodeToAdd, existingNodes);
+                    if (nearestNewNode == nodeToAdd)
+                        tmpNodeList.add(nodeToAdd);
+                }
+                wayToAdd.nodes.add(nearestNewNode); // either a new node or an existing one
+            }
+            // at least two nodes have to be new, otherwise the polygon is not new (duplicate)
+            if (tmpNodeList.size() > 1) {
+                for (Node n : tmpNodeList)
+                    nodeList.add(n);
+                wayToAdd.nodes.add(wayToAdd.nodes.get(0)); // close the way
+                wayList.add(wayToAdd);
+            }
         }
-        Way wayToAdd = new Way();
         Collection<Command> cmds = new LinkedList<Command>();
-        for (Node node : nodeList) {
+        for (Node node : nodeList)
             cmds.add(new AddCommand(node));
-            wayToAdd.nodes.add(node);
-        }
-        wayToAdd.nodes.add(wayToAdd.nodes.get(0)); // close the circle
-        new SimplifyWay().simplifyWay(wayToAdd);
-        cmds.add(new AddCommand(wayToAdd));
-        Main.main.undoRedo.add(new SequenceCommand(tr("Create boundary"), cmds));
+        for (Way way : wayList)
+            cmds.add(new AddCommand(way));
+        Main.main.undoRedo.add(new SequenceCommand(tr("Create buildings"), cmds));
         Main.map.repaint();
     }
     
-    private double createNodes(String SVGpath, ArrayList<EastNorth> eastNorth) {
+    private void createNodes(String SVGpath, ArrayList<EastNorth> eastNorth) {
         // looks like "M981283.38 368690.15l143.81 72.46 155.86 ..."
         String[] coor = SVGpath.split("[MlZ ]"); //coor[1] is x, coor[2] is y
         double dx = Double.parseDouble(coor[1]);
         double dy = Double.parseDouble(coor[2]);
-        double minY = Double.MAX_VALUE;
-        double minX = Double.MAX_VALUE;
-        double maxY = Double.MIN_VALUE;
-        double maxX = Double.MIN_VALUE;
         for (int i=3; i<coor.length; i+=2){
+            if (coor[i].equals("")) {
+                eastNorth.clear(); // some paths are just artifacts
+                return;
+            }
             double east = dx+=Double.parseDouble(coor[i]);
             double north = dy+=Double.parseDouble(coor[i+1]); 
             eastNorth.add(new EastNorth(east,north));
-            minX = minX > east ? east : minX; 
-            minY = minY > north ? north : minY; 
-            maxX = maxX < east ? east : maxX; 
-            maxY = maxY < north ? north : maxY; 
         }
         // flip the image (svg using a reversed Y coordinate system)            
         double pivot = viewBox.min.getY() + (viewBox.max.getY() - viewBox.min.getY()) / 2;
         for (EastNorth en : eastNorth) {
             en.setLocation(en.east(), 2 * pivot - en.north());
         }
-        return Math.abs(minX - viewBox.min.getX())+Math.abs(maxX - viewBox.max.getX())
-        +Math.abs(minY - viewBox.min.getY())+Math.abs(maxY - viewBox.max.getY());
+        return;
     }
-    
+
+    /**
+     * Check if node can be reused.
+     * @param nodeToAdd the candidate as new node 
+     * @return the already existing node (if any), otherwise the new node candidate. 
+     */
+    private Node checkNearestNode(Node nodeToAdd, Collection<Node> nodes) {
+        double epsilon = 0.01; // smallest distance considering duplicate node
+        for (Node n : nodes) {
+            if (!n.deleted && !n.incomplete) {
+                double dist = n.eastNorth.distance(nodeToAdd.eastNorth);
+                if (dist < epsilon) {
+                    System.out.println("distance="+dist);
+                    return n;
+                }
+            }
+        }
+        return nodeToAdd;
+    }
+
     private String grabBoundary(EastNorthBound bbox) throws IOException {
 
         try {
@@ -163,7 +189,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     private URL getURLsvg(EastNorthBound bbox) throws MalformedURLException {
         String str = new String(wmsInterface.baseURL+"/scpc/wms?version=1.1&request=GetMap");
         str += "&layers=";
-        str += "CDIF:COMMUNE";
+        str += "CDIF:LS2";
         str += "&format=image/svg";
         str += "&bbox="+bbox.min.east()+",";
         str += bbox.min.north() + ",";
@@ -171,7 +197,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         str += bbox.max.north();
         str += "&width=800&height=600"; // maximum allowed by wms server
         str += "&styles=";
-        str += "COMMUNE_90";
+        str += "LS2_90";
         System.out.println("URL="+str);
         return new URL(str.replace(" ", "%20"));
     }
@@ -181,7 +207,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
         InputStream is = new ProgressInputStream(wmsInterface.urlConn, Main.pleaseWaitDlg);
-        File file = new File(CadastrePlugin.cacheDir + "boundary.svg");
+        File file = new File(CadastrePlugin.cacheDir + "building.svg");
         String svg = new String();
         try {
             if (file.exists())
@@ -204,7 +230,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     }
 
     public static void download(WMSLayer wmsLayer) {
-        Main.worker.execute(new DownloadSVGTask(wmsLayer));
+        Main.worker.execute(new DownloadSVGBuilding(wmsLayer));
     }
 
 }

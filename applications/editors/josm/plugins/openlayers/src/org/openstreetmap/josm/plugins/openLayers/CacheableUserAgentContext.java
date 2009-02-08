@@ -13,6 +13,6 @@ public class CacheableUserAgentContext extends SimpleUserAgentContext {
      */
     @Override
     public HttpRequest createHttpRequest() {
-    return new CacheableHttpRequest(this, this.getProxy());
+        return new CacheableHttpRequest(this, this.getProxy());
     }
 }

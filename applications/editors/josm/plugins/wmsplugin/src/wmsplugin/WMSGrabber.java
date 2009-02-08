@@ -97,7 +97,7 @@ public class WMSGrabber extends Grabber {
                 {
                     JOptionPane.showMessageDialog(Main.parent,
                     tr("The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
-                    + "This may lead to wrong coordinates.\n",
+                    + "This may lead to wrong coordinates.",
                     m.group(1), projname));
                 }
             }

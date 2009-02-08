@@ -52,16 +52,74 @@ mkdir -p "$share_path"
 mkdir -p "$man1_path"
 
 
+
+# #######################################################
+# Osmosis
+# #######################################################
+if true; then
+    echo "${BLUE}----------> applications/utils/osmosis/trunk Osmosis${NORMAL}"
+
+    cd osmosis
+
+    # Osmosis moves it's Binary arround, so to be sure we do not catch old Versions and don't 
+    # recognize it we remove all osmosis.jar Files first
+    find . -name "osmosis*.jar" -print0 | xargs -0 rm 
+
+    cd trunk
+
+    ant clean >build.log 2>build.err
+    ant dist >>build.log 2>>build.err
+    if [ "$?" -ne "0" ] ; then
+	echo "${RED}!!!!!! ERROR compiling  Osmosis ${NORMAL}"
+	exit -1
+    fi
+    cd ../..
+
+    osmosis_dir="$dst_path/usr/local/share/osmosis/"
+    mkdir -p $osmosis_dir
+    cp osmosis/trunk/build/binary/osmosis.jar $osmosis_dir
+    if [ "$?" -ne "0" ] ; then
+	echo "${RED}!!!!!! ERROR cannot find resulting osmosis.jar ${NORMAL}"
+	exit -1
+    fi
+
+    # copy needed libs
+    mkdir -p $osmosis_dir/lib/
+    cp osmosis/trunk/lib/default/*.jar $osmosis_dir/lib/
+    if [ "$?" -ne "0" ] ; then
+	echo "${RED}!!!!!! ERROR cannot copy needed libs for osmosis${NORMAL}"
+	exit -1
+    fi
+
+    # Osmosis script
+    src_fn="osmosis/trunk/bin/osmosis"
+    man1_fn="$man1_path/osmosis.1"
+    if grep -q -e "--help" "$src_fn"; then
+	echo "Create Man Page from Help '$man1_fn'"
+	perl $src_fn --help >"$man1_fn"
+    else
+	echo "!!!! No idea how to create Man Page for $src_fn"
+    fi
+    mkdir -p $osmosis_dir/bin
+    cp $src_fn "$osmosis_dir/bin/osmosis"
+    if [ "$?" -ne "0" ] ; then
+	echo "${RED}!!!!!! ERROR cannot find resulting osmosis script ${NORMAL}"
+	exit -1
+    fi
+
+    ln -sf /usr/local/share/osmosis/bin/osmosis $bin_path/osmosis
+fi
+
 # ------------------------------------------------------------------
 # Utilities written in C
 
 # ------------------------------------------------------------------
 # Various libs
 for lib in ccoord libosm libimg  ; do 
+    allow_error=false
     if [ "$platform" == "x86_64" ] ; then
 	if echo $lib | grep -q -e libosm -e ccoord -e libimg ; then
-	    echo "Ignored 'applications/lib/$lib' because it does not compile on my debian $platform machine"
-	    continue
+	    allow_error=true
 	fi
     fi
 
@@ -73,6 +131,11 @@ for lib in ccoord libosm libimg  ; do
 
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
+	if $allow_error ; then
+	    echo "Ignored Errors in 'applications/lib/$lib' because it does not compile on my debian $platform machine"
+	    cd ..
+	    continue
+	fi
 	echo "${RED}!!!!!! ERROR compiling $lib ${NORMAL}"
 	echo "Logfile is at `pwd`/build.log build.err"
 	exit -1
@@ -126,9 +189,9 @@ cd ../utils/
 # ------------------------------------------------------------------
 # Importer
 for import in `ls import/*/Makefile| sed 's,/Makefile,,;s,import/,,'` ; do 
+    allow_error=false
     if echo $import | grep -q  and_import ; then
-	echo "Ignored 'applications/import/$import' because it does not compile on my debian machine"
-	continue
+	allow_error=true
     fi
 
     echo "${BLUE}----------> applications/utils/import/$import${NORMAL}"
@@ -136,6 +199,11 @@ for import in `ls import/*/Makefile| sed 's,/Makefile,,;s,import/,,'` ; do
     make clean >build.log 2>build.err
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
+	if $allow_error ; then
+	    echo "Ignored 'applications/import/$import' because it does not compile on my debian machine"
+	    cd ../..
+	    continue
+	fi
 	echo "${RED}!!!!!! ERROR compiling  import/${import} ${NORMAL}"
 	exit -1
     fi
@@ -148,9 +216,9 @@ done
 # As soon it compiles here on my debian machine
 # i will remove the excludes
 for filter in `ls filter/*/Makefile| sed 's,/Makefile,,;s,filter/,,'` ; do 
+    allow_error=false
     if echo $filter | grep -q wayclean ; then
-	echo "Ignored 'applications/filter/$filter' because it does not compile on my debian machine"
-	continue
+	allow_error=true
     fi
 
     echo "${BLUE}----------> applications/utils/filter/${filter}${NORMAL}"
@@ -158,6 +226,11 @@ for filter in `ls filter/*/Makefile| sed 's,/Makefile,,;s,filter/,,'` ; do
     make clean >build.log 2>build.err
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
+	if $allow_error ; then
+	    echo "Ignored 'applications/filter/$filter' because it does not compile on my debian machine"
+	    cd ../..
+	    continue
+	fi
 	echo "${RED}!!!!!! ERROR compiling  filter/${filter} ${NORMAL}"
 	exit -1
     fi
@@ -170,9 +243,9 @@ done
 # As soon it compiles here on my debian machine
 # i will remove the excludes
 for export in `ls export/*/Makefile| sed 's,/Makefile,,;s,export/,,'` ; do 
+    allow_error=false
     if echo $export | grep -q -e osmgarminmap -e osm2shp -e osmgoogleearth; then
-	echo "Ignored 'applications/export/$export' because it does not compile on my debian machine"
-	continue
+	allow_error=true
     fi
 
     echo "${BLUE}----------> applications/utils/export/${export}${NORMAL}"
@@ -187,11 +260,26 @@ for export in `ls export/*/Makefile| sed 's,/Makefile,,;s,export/,,'` ; do
     make $custom_makefile clean >build.log 2>build.err
     make $custom_makefile >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
+	if $allow_error ; then
+	    echo "Ignored 'applications/export/$export' because it does not compile on my debian machine"
+	    cd ../..
+	    continue
+	fi
 	echo "${RED}!!!!!! ERROR compiling  export/${export} ${NORMAL}"
-	exit -1
+	exit -1 
     fi
     cd ../..
     cp export/${export}/${export} ${bin_path}
+
+    case ${export} in
+	osm2pgsql) 
+	    cp export/osm2pgsql/default.style ${share_path}/default.style
+	    if [ "$?" -ne "0" ] ; then
+		echo "${RED}!!!!!! ERROR osm2pgsql/default.style no copied ${NORMAL}"
+		exit -1
+	    fi
+	    ;;
+    esac
 done
 
 # ------------------------------------------------------------------
@@ -208,28 +296,6 @@ if true ; then
     cp color255/color255 ${bin_path}
 fi
 
-# ------------------------------------------------------------------
-if true ; then
-    echo "${BLUE}----------> applications/utils/export/osm2pqsql${NORMAL}"
-    cd export/osm2pgsql  || exit -1
-    make clean >build.log 2>build.err
-    make >>build.log 2>>build.err
-    if [ "$?" -ne "0" ] ; then
-	echo "${RED}!!!!!! ERROR compiling osm2pgsql ${NORMAL}"
-	exit -1
-    fi
-    cd ../..
-    cp export/osm2pgsql/osm2pgsql ${bin_path}
-    if [ "$?" -ne "0" ] ; then
-	echo "${RED}!!!!!! ERROR osm2pgsql not copied ${NORMAL}"
-	exit -1
-    fi
-    cp export/osm2pgsql/default.style ${share_path}/default.style
-    if [ "$?" -ne "0" ] ; then
-	echo "${RED}!!!!!! ERROR osm2pgsql/default.style no copied ${NORMAL}"
-	exit -1
-    fi
-fi
 
 # ------------------------------------------------------------------
 if true; then
@@ -308,62 +374,6 @@ find ./ -name "*.py" | while read src_fn ; do
     fi
 done
 
-
-# #######################################################
-# Osmosis
-# #######################################################
-echo "${BLUE}----------> applications/osmosis/trunk Osmosis${NORMAL}"
-
-cd osmosis
-
-# Osmosis moves it's Binary arround, so to be sure we do not catch old Versions and don't 
-# recognize it we remove all osmosis.jar Files first
-find . -name "osmosis.jar" -print0 | xargs -0 rm 
-
-cd trunk
-
-ant clean >build.log 2>build.err
-ant dist >>build.log 2>>build.err
-if [ "$?" -ne "0" ] ; then
-    echo "${RED}!!!!!! ERROR compiling  Osmosis ${NORMAL}"
-    exit -1
-fi
-cd ../..
-
-osmosis_dir="$dst_path/usr/local/share/osmosis/"
-mkdir -p $osmosis_dir
-cp osmosis/trunk/build/binary/osmosis.jar $osmosis_dir
-if [ "$?" -ne "0" ] ; then
-    echo "${RED}!!!!!! ERROR cannot find resulting osmosis.jar ${NORMAL}"
-    exit -1
-fi
-
-# copy needed libs
-mkdir -p $osmosis_dir/lib/
-cp osmosis/trunk/lib/default/*.jar $osmosis_dir/lib/
-if [ "$?" -ne "0" ] ; then
-    echo "${RED}!!!!!! ERROR cannot copy needed libs for osmosis${NORMAL}"
-    exit -1
-fi
-
-# Osmosis script
-src_fn="osmosis/trunk/bin/osmosis"
-man1_fn="$man1_path/osmosis.1"
-if grep -q -e "--help" "$src_fn"; then
-    echo "Create Man Page from Help '$man1_fn'"
-    perl $src_fn --help >"$man1_fn"
-else
-    echo "!!!! No idea how to create Man Page for $src_fn"
-fi
-mkdir -p $osmosis_dir/bin
-cp $src_fn "$osmosis_dir/bin/osmosis"
-if [ "$?" -ne "0" ] ; then
-    echo "${RED}!!!!!! ERROR cannot find resulting osmosis script ${NORMAL}"
-    exit -1
-fi
-
-rm -f $bin_path/osmosis
-ln -s /usr/local/share/osmosis/bin/osmosis $bin_path/osmosis
 
 #########################################################
 # Mapnik installation tool

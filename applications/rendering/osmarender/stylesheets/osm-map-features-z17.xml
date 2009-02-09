@@ -885,6 +885,16 @@
 			</rule>
 		</rule>
 
+		<!-- Bus platforms -->
+		<rule e="way" k="highway" v="platform">
+			<line class="highway-platform-area" />
+			<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
+		</rule>
+		<rule e="node" k="highway" v="platform">
+			<circle r="0.6px" class="highway-platform-node" />
+			<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
+		</rule>
+
 		<!-- Highway area cores -->
 		<rule e="way" k="area" v="yes|true">
 			<rule e="way" k="highway" v="footway|footpath">
@@ -2291,6 +2301,14 @@
 		</rule>
 		<rule e="node" k="railway" v="halt">
 			<circle r="0.4" class="railway-halt"/>
+		</rule>
+		<rule e="way" k="railway" v="platform">
+			<line class="railway-platform-area" />
+			<caption k="ref" startOffset="50%" class="railway-platform-ref" dy="0.3px" layer="5" />
+		</rule>
+		<rule e="node" k="railway" v="platform">
+			<circle r="0.6px" class="railway-platform-node" />
+			<caption k="ref" startOffset="50%" class="railway-platform-ref" dy="0.3px" layer="5" />
 		</rule>
 
 		<!-- tram stops -->
@@ -4432,6 +4450,12 @@
 			.railway-halt                           { fill: #ec2d2d;        stroke: #606060; stroke-width: 0.1px; }
 			.railway-halt-caption-casing            { stroke-width: 0.4px;  font-size: 1.25px; }
 			.railway-halt-caption-core              { fill: #ec2d2d;        font-size: 1.25px; }
+			.railway-platform-area                  { stroke: #707070; stroke-width: 0.15px; fill: #9b9b79; }
+			.railway-platform-node                  { fill: #9b9b79; }
+			.railway-platform-ref                   { font-family: "DejaVu Sans"; font-size: 0.8px; stroke: #707070; stroke-width: 0.005px; text-anchor: middle;}
+			.highway-platform-area                  { stroke: #707070; stroke-width: 0.15px; fill: #9b9b79; }
+			.highway-platform-node                  { fill: #9b9b79; }
+			.highway-platform-ref                   { font-family: "DejaVu Sans"; font-size: 0.8px; stroke: #707070; stroke-width: 0.005px; text-anchor: middle;}
 
 			/* Tourism */
 			.tourism-attraction {

@@ -2,15 +2,8 @@ package org.openstreetmap.josm.plugins.slippymap;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
-
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
@@ -23,8 +16,7 @@ import org.openstreetmap.josm.tools.GBC;
  * @author Hakan Tandogan <hakan@gurkensalat.com>
  *
  */
-public class SlippyMapPreferenceSetting implements PreferenceSetting
-{
+public class SlippyMapPreferenceSetting implements PreferenceSetting {
     /**
      * ComboBox with all known tile sources.
      */
@@ -59,8 +51,8 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting
      */
     public boolean ok()
     {
-        Main.pref.put(SlippyMapPreferences.PREFERENCE_TILE_URL, tileSourceCombo
-                .getSelectedItem().toString());
+        Main.pref.put(SlippyMapPreferences.PREFERENCE_TILE_URL, tileSourceCombo.getSelectedItem().toString());
+        //restart isnt required
         return false;
     }
 }

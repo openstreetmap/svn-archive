@@ -15,7 +15,6 @@ public class SlippyMapPlugin extends Plugin
 {
     public SlippyMapPlugin()
     {
-
     }
 
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame)

@@ -2276,6 +2276,9 @@
 		<rule e="node|way" k="tourism" v="information">
 			<symbol ref="information" position="center"/>
 		</rule>
+		<rule e="node" k="tourism" v="viewpoint">
+			<symbol ref="viewpoint" position="center"/>
+		</rule>
 
 		<!-- Railway stations -->
 		<rule e="node" k="railway" v="station">

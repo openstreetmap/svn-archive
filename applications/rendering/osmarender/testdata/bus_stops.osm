@@ -106,6 +106,12 @@
     <tag k='name' v='Steig 3' />
   </node>
   <node id='115990525' lat='49.8012293' lon='9.9337554' />
+  <node id='201' lat='49.80070132080023' lon='9.934329793027336' />
+  <node id='202' lat='49.80087135478306' lon='9.934593228954348' />
+  <node id='204' lat='49.80081858567989' lon='9.933989143121718'>
+    <tag k='highway' v='platform' />
+    <tag k='ref' v='5' />
+  </node>
   <way id='10211764' >
     <nd ref='84490809' />
     <nd ref='119865114' />
@@ -286,6 +292,7 @@
     <nd ref='107' />
     <nd ref='102' />
     <tag k='highway' v='platform' />
+    <tag k='ref' v='3' />
   </way>
   <way id='30094283' >
     <nd ref='84490776' />
@@ -370,5 +377,10 @@
     <nd ref='84490787' />
     <tag k='highway' v='service' />
     <tag k='access' v='psv' />
+  </way>
+  <way id='203' action='modify' visible='true'>
+    <nd ref='201' />
+    <nd ref='202' />
+    <tag k='highway' v='platform' />
   </way>
 </osm>

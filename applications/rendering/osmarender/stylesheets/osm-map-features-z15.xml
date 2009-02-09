@@ -1271,6 +1271,9 @@
 		<rule e="node" k="natural" v="peak">
 			<symbol ref="peak" position="center"/>
 		</rule>
+		<rule e="node" k="tourism" v="viewpoint">
+			<symbol ref="viewpoint" position="center"/>
+		</rule>
 		
 		<!-- Draw marine features -->
 		<rule e="way" k="man_made" v="pier">

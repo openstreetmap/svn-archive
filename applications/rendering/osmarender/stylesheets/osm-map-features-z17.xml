@@ -3047,7 +3047,7 @@
 			<rule e="node|way" k="tourism" v="attraction" layer="5">
 				<rule e="node|way" k="amenity|historic" v="place_of_worship|ruins" />
 				<else>
-					<rule e="node|way" k="highway" v="~">
+					<rule e="node|way" k="highway" v="~">
 						<caption k="name" class="tourism-attraction-caption" layer="5"/>
 					</rule>
 				</else>

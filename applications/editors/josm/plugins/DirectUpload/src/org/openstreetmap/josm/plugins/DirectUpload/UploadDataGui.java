@@ -23,6 +23,11 @@ import java.lang.String;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CharacterCodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -166,9 +171,9 @@ public class UploadDataGui extends javax.swing.JFrame {
     public void upload(String username, String password, String description, String tags, Boolean isPublic, GpxData gpxData) throws IOException {
         if(checkForErrors(username, password, description, gpxData))
             return;
-				
-				OkButton.setEnabled(false);
-				
+                
+        OkButton.setEnabled(false);
+                
         description = description.replaceAll("[&?/\\\\]"," ");
         tags = tags.replaceAll("[&?/\\\\.,;]"," ");
         
@@ -184,7 +189,12 @@ public class UploadDataGui extends javax.swing.JFrame {
             connect.setConnectTimeout(15000);
             connect.setRequestMethod("POST");
             connect.setDoOutput(true);
-            connect.addRequestProperty("Authorization", "Basic " + Base64.encode(username + ":" + password));
+            
+            CharsetEncoder encoder = Charset.forName("UTF-8").newEncoder();
+            String auth = username + ":" + password;
+            ByteBuffer bytes = encoder.encode(CharBuffer.wrap(auth));
+            connect.addRequestProperty("Authorization", "Basic " + Base64.encode(bytes));
+            
             connect.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
             connect.addRequestProperty("Connection", "close"); // counterpart of keep-alive
             connect.addRequestProperty("Expect", "");

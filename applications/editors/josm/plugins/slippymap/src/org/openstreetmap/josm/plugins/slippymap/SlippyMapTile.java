@@ -12,17 +12,18 @@ import java.net.URLConnection;
 
 /**
  * Class that contains information about one single slippy map tile.
- *
+ * 
  * @author Frederik Ramm <frederik@remote.org>
- *
+ * @author LuVar <lubomir.varga@freemap.sk>
+ * 
  */
 public class SlippyMapTile
 {
     private Image  tileImage;
 
-    int            x;
-    int            y;
-    int            z;
+    int x;
+    int y;
+    int z;
 
     private String metadata;
 
@@ -44,7 +45,7 @@ public class SlippyMapTile
         {
             URL imageURL = new URL(SlippyMapPreferences.getMapUrl() + "/" + z
                     + "/" + x + "/" + y + ".png");
-
+            
             tileImage = Toolkit.getDefaultToolkit().createImage(imageURL);
         }
         catch (MalformedURLException mfu)
@@ -64,7 +65,7 @@ public class SlippyMapTile
         {
             URL dev = new URL(
                     "http://tah.openstreetmap.org/Tiles/info_short.php?x=" + x
-                            + "&y=" + y + "&z=12/layer=tile");
+                            + "&y=" + y + "&z=" + z + "/layer=tile");
             URLConnection devc = dev.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(devc
                     .getInputStream()));

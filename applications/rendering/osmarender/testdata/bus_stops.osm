@@ -1,0 +1,367 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <bounds minlat='49.799933228816' minlon='9.93281944572501' maxlat='49.8016804738301' maxlon='9.93565391838126' origin='OpenStreetMap server' />
+  <node id='-1' visible='true' lat='49.80048438002415' lon='9.932976277402345' />
+  <node id='84490809' visible='true' lat='49.8006824' lon='9.9341815' />
+  <node id='-2' visible='true' lat='49.80090151177702' lon='9.934298847580097' />
+  <node id='84490808' visible='true' lat='49.8009148' lon='9.9344295' />
+  <node id='-3' visible='true' lat='49.80072299209861' lon='9.934020989926848' />
+  <node id='84490811' visible='true' lat='49.8008902' lon='9.9346512' />
+  <node id='-4' visible='true' lat='49.8007032479463' lon='9.934027362808804' />
+  <node id='84490810' visible='true' lat='49.800679' lon='9.9343002' />
+  <node id='-5' visible='true' lat='49.8007032479463' lon='9.934056678065797' />
+  <node id='119865069' visible='true' lat='49.8008264' lon='9.9339072'>
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Steig 4' />
+  </node>
+  <node id='84490813' visible='true' lat='49.8008717' lon='9.9347466' />
+  <node id='-6' visible='true' lat='49.8008875263882' lon='9.934338359448219'>
+    <tag k='bus_stop' v='plattform' />
+  </node>
+  <node id='84490812' visible='true' lat='49.8006701' lon='9.934408' />
+  <node id='-7' visible='true' lat='49.80090973847446' lon='9.934326888260701' />
+  <node id='115990533' visible='true' lat='49.8009241' lon='9.933702' />
+  <node id='84490801' visible='true' lat='49.8009225' lon='9.9342507' />
+  <node id='84490800' visible='true' lat='49.8009256' lon='9.9340552' />
+  <node id='84490803' visible='true' lat='49.8007075' lon='9.9337371' />
+  <node id='84490802' visible='true' lat='49.8009056' lon='9.9345487' />
+  <node id='84490805' visible='true' lat='49.8009148' lon='9.9342936' />
+  <node id='119865215' visible='true' lat='49.8013487' lon='9.9345565'>
+    <tag k='highway' v='bus_stop' />
+  </node>
+  <node id='84490804' visible='true' lat='49.8006966' lon='9.933967' />
+  <node id='115990540' visible='true' lat='49.800961' lon='9.9338889' />
+  <node id='84490807' visible='true' lat='49.8006936' lon='9.9340619' />
+  <node id='84490806' visible='true' lat='49.8009253' lon='9.9341767' />
+  <node id='84490792' visible='true' lat='49.8013872' lon='9.9348372' />
+  <node id='115990546' visible='true' lat='49.8009635' lon='9.9340224' />
+  <node id='84490794' visible='true' lat='49.8013103' lon='9.9348372' />
+  <node id='84490795' visible='true' lat='49.8012518' lon='9.9348372' />
+  <node id='84490796' visible='true' lat='49.8013826' lon='9.9339193' />
+  <node id='84490798' visible='true' lat='49.800844' lon='9.9336498' />
+  <node id='84490799' visible='true' lat='49.8008948' lon='9.933769' />
+  <node id='115990555' visible='true' lat='49.8009487' lon='9.9344571' />
+  <node id='84490787' visible='true' lat='49.8015841' lon='9.9339982' />
+  <node id='119865198' visible='true' lat='49.801425' lon='9.9345681'>
+    <tag k='highway' v='bus_stop' />
+  </node>
+  <node id='84490788' visible='true' lat='49.8015065' lon='9.933979' />
+  <node id='84490789' visible='true' lat='49.8014288' lon='9.9339598' />
+  <node id='84490790' visible='true' lat='49.8012949' lon='9.9338525' />
+  <node id='84490791' visible='true' lat='49.8014688' lon='9.93483' />
+  <node id='84490779' visible='true' lat='49.8006706' lon='9.9345034' />
+  <node id='115990561' visible='true' lat='49.8009339' lon='9.934663' />
+  <node id='84490778' visible='true' lat='49.8007055' lon='9.9338477' />
+  <node id='119865168' visible='true' lat='49.8015567' lon='9.9341971'>
+    <tag k='highway' v='bus_stop' />
+  </node>
+  <node id='84490777' visible='true' lat='49.8004485' lon='9.9336212' />
+  <node id='84490776' visible='true' lat='49.8006839' lon='9.9336451' />
+  <node id='84490782' visible='true' lat='49.8011487' lon='9.9348539' />
+  <node id='119865175' visible='true' lat='49.8015028' lon='9.9345866'>
+    <tag k='highway' v='bus_stop' />
+  </node>
+  <node id='84490781' visible='true' lat='49.8008686' lon='9.9347895' />
+  <node id='84490780' visible='true' lat='49.8006993' lon='9.9345988' />
+  <node id='84490771' visible='true' lat='49.8012672' lon='9.9334496' />
+  <node id='115990569' visible='true' lat='49.8009881' lon='9.9347431' />
+  <node id='84490770' visible='true' lat='49.8013057' lon='9.9332588'>
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Bismarckstraße' />
+  </node>
+  <node id='84490775' visible='true' lat='49.8009379' lon='9.933657' />
+  <node id='84490774' visible='true' lat='49.8010871' lon='9.9336522' />
+  <node id='84490773' visible='true' lat='49.801141' lon='9.9336212' />
+  <node id='84490772' visible='true' lat='49.8012318' lon='9.9335259' />
+  <node id='115990580' visible='true' lat='49.8010693' lon='9.9347698' />
+  <node id='115990588' visible='true' lat='49.8011309' lon='9.9346897' />
+  <node id='84490759' visible='true' lat='49.8013379' lon='9.9329176' />
+  <node id='115990594' visible='true' lat='49.8012367' lon='9.9339194' />
+  <node id='119865146' visible='true' lat='49.800771' lon='9.9345704'>
+    <tag k='ref' v='11;19' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Steig 1' />
+  </node>
+  <node id='115990600' visible='true' lat='49.8012096' lon='9.9338241' />
+  <node id='331472052' visible='true' lat='49.8007609' lon='9.9346632' />
+  <node id='175627603' visible='true' lat='49.8006139' lon='9.9336324' />
+  <node id='115990609' visible='true' lat='49.8011555' lon='9.9337325' />
+  <node id='115990620' visible='true' lat='49.801089' lon='9.9336944' />
+  <node id='84490847' visible='true' lat='49.8003794' lon='9.9348782' />
+  <node id='119865236' action='modify' visible='true' lat='49.8012903' lon='9.9345565'>
+    <tag k='amenity' v='bus_station' />
+  </node>
+  <node id='115990508' visible='true' lat='49.8009216' lon='9.9339232' />
+  <node id='119865114' visible='true' lat='49.800792' lon='9.9343663'>
+    <tag k='ref' v='20;26' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Steig 2' />
+  </node>
+  <node id='84490830' visible='true' lat='49.8014381' lon='9.934835' />
+  <node id='119865089' visible='true' lat='49.8008114' lon='9.9341391'>
+    <tag k='ref' v='13;22;52' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Steig 3' />
+  </node>
+  <node id='115990525' visible='true' lat='49.8012293' lon='9.9337554' />
+  <way id='-8' visible='true'>
+    <nd ref='84490759' />
+    <nd ref='84490770' />
+    <nd ref='84490771' />
+    <nd ref='84490772' />
+    <nd ref='84490773' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Bismarckstraße' />
+  </way>
+  <way id='10211764' visible='true'>
+    <nd ref='84490809' />
+    <nd ref='119865114' />
+    <nd ref='84490802' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094295' visible='true'>
+    <nd ref='84490808' />
+    <nd ref='84490802' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='10211766' visible='true'>
+    <nd ref='84490812' />
+    <nd ref='119865146' />
+    <nd ref='84490813' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094292' visible='true'>
+    <nd ref='84490806' />
+    <nd ref='84490801' />
+    <nd ref='84490805' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094293' visible='true'>
+    <nd ref='84490805' />
+    <nd ref='84490808' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094290' visible='true'>
+    <nd ref='84490812' />
+    <nd ref='84490779' />
+    <nd ref='84490780' />
+    <nd ref='331472052' />
+    <nd ref='84490781' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='10211760' visible='true'>
+    <nd ref='84490803' />
+    <nd ref='119865069' />
+    <nd ref='84490800' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094291' visible='true'>
+    <nd ref='84490800' />
+    <nd ref='84490806' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='10211761' visible='true'>
+    <nd ref='84490804' />
+    <nd ref='119865089' />
+    <nd ref='84490805' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094288' visible='true'>
+    <nd ref='84490809' />
+    <nd ref='84490810' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094289' visible='true'>
+    <nd ref='84490810' />
+    <nd ref='84490812' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='10211757' visible='true'>
+    <nd ref='84490795' />
+    <nd ref='119865236' />
+    <nd ref='84490796' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094302' visible='true'>
+    <nd ref='84490790' />
+    <nd ref='115990525' />
+    <nd ref='84490773' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094287' visible='true'>
+    <nd ref='84490807' />
+    <nd ref='84490809' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='10211756' visible='true'>
+    <nd ref='84490794' />
+    <nd ref='119865215' />
+    <nd ref='84490789' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='12696879' visible='true'>
+    <nd ref='115990533' />
+    <nd ref='115990540' />
+    <nd ref='115990546' />
+    <nd ref='115990555' />
+    <nd ref='115990561' />
+    <nd ref='115990569' />
+    <nd ref='115990580' />
+    <nd ref='115990588' />
+    <nd ref='115990594' />
+    <nd ref='115990600' />
+    <nd ref='115990609' />
+    <nd ref='115990620' />
+    <nd ref='115990533' />
+    <tag k='landuse' v='recreation_ground' />
+  </way>
+  <way id='30094286' visible='true'>
+    <nd ref='84490804' />
+    <nd ref='84490807' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='10211759' visible='true'>
+    <nd ref='84490798' />
+    <nd ref='84490799' />
+    <nd ref='115990508' />
+    <nd ref='84490800' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094300' visible='true'>
+    <nd ref='84490782' />
+    <nd ref='84490795' />
+    <nd ref='84490794' />
+    <nd ref='84490792' />
+    <nd ref='84490830' />
+    <nd ref='84490791' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094285' visible='true'>
+    <nd ref='84490778' />
+    <nd ref='84490804' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094858' visible='true'>
+    <nd ref='-1' />
+    <nd ref='84490777' />
+    <nd ref='84490847' />
+    <tag k='highway' v='secondary' />
+    <tag k='name' v='Röntgenring' />
+    <tag k='cycleway' v='track' />
+  </way>
+  <way id='10211758' visible='true'>
+    <nd ref='84490782' />
+    <nd ref='84490790' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094284' visible='true'>
+    <nd ref='84490803' />
+    <nd ref='84490778' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094283' visible='true'>
+    <nd ref='84490776' />
+    <nd ref='175627603' />
+    <nd ref='84490777' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Bismarckstraße' />
+  </way>
+  <way id='30094298' visible='true'>
+    <nd ref='84490813' />
+    <nd ref='84490781' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='10211753' action='modify' visible='true'>
+    <nd ref='84490776' />
+    <nd ref='84490803' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094299' visible='true'>
+    <nd ref='84490781' />
+    <nd ref='84490782' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094282' visible='true'>
+    <nd ref='84490773' />
+    <nd ref='84490774' />
+    <nd ref='84490775' />
+    <nd ref='84490798' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Bismarckstraße' />
+  </way>
+  <way id='30336479' visible='true'>
+    <nd ref='84490798' />
+    <nd ref='84490776' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Bismarckstraße' />
+  </way>
+  <way id='30094296' visible='true'>
+    <nd ref='84490802' />
+    <nd ref='84490811' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='10211755' visible='true'>
+    <nd ref='84490792' />
+    <nd ref='119865198' />
+    <nd ref='84490788' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30094297' visible='true'>
+    <nd ref='84490811' />
+    <nd ref='84490813' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='30336477' visible='true'>
+    <nd ref='84490787' />
+    <nd ref='84490788' />
+    <nd ref='84490789' />
+    <nd ref='84490796' />
+    <nd ref='84490790' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='10211754' visible='true'>
+    <nd ref='84490791' />
+    <nd ref='119865175' />
+    <nd ref='119865168' />
+    <nd ref='84490787' />
+    <tag k='highway' v='service' />
+    <tag k='access' v='psv' />
+  </way>
+  <way id='-9' visible='true'>
+    <nd ref='-2' />
+    <nd ref='-3' />
+    <nd ref='-4' />
+    <nd ref='-5' />
+    <nd ref='-6' />
+    <nd ref='-7' />
+    <nd ref='-2' />
+  </way>
+</osm>

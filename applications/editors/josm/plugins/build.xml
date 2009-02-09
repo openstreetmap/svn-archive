@@ -23,7 +23,6 @@
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
         <ant antfile="build.xml" target="dist" dir="remotecontrol"/>
         <ant antfile="build.xml" target="dist" dir="slippymap"/>
-        <ant antfile="build.xml" target="dist" dir="slippy_map_chooser"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="dist" dir="tcxplugin"/>
@@ -60,7 +59,6 @@
         <ant antfile="build.xml" target="clean" dir="pluginmanager"/>
         <ant antfile="build.xml" target="clean" dir="remotecontrol"/>
         <ant antfile="build.xml" target="clean" dir="slippymap"/>
-        <ant antfile="build.xml" target="clean" dir="slippy_map_chooser"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="clean" dir="tcxplugin"/>

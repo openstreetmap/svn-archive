@@ -361,4 +361,36 @@ sub select_not_connected_same_tag
     return $newsel;
 }
 
+# Filter for closed or non-closed ways.
+# This can be used to style something different if it is drawn like an area or as a linear feature
+
+sub select_closed
+{
+    my ($selection, $closed) = @_;
+
+    foreach my $element ($selection->members())
+    {
+        unless ( ref($element) eq 'way')
+        {
+            $selection->remove($element);
+            next;
+        }
+
+        # Test for closed-ness
+        # * It's not an area if it is tagged area=no
+        # * An area must have more than two nodes
+        # * The first and last node must be the same
+        if ( (!defined($element->{'tags'}->{'area'}) || $element->{'tags'}->{'area'} ne 'no') &&
+            scalar( @{ $element->{'nodes'} } ) > 2 &&
+            $element->{'nodes'}->[0] == $element->{'nodes'}->[-1])
+        {
+            $selection->remove($element) if $closed eq 'no';
+        }
+        else
+        {
+            $selection->remove($element) if $closed eq 'yes';
+        }
+    }
+}
+
 1;

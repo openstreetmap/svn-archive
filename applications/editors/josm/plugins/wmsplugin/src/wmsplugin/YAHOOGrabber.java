@@ -20,21 +20,25 @@ import org.openstreetmap.josm.gui.MapView;
 
 public class YAHOOGrabber extends WMSGrabber{
     protected String browserCmd;
+    protected Cache cache = new wmsplugin.Cache();
 
     YAHOOGrabber(String baseURL, Bounds b, Projection proj,
             double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer) {
-        super("file:///" + Main.pref.getPreferencesDir() + "plugins/wmsplugin/ymap.html?"
-//                + "request=getmap&format=image/jpeg"
+        super("file:///" + WMSPlugin.getPrefsPath() + "ymap.html?"
         , b, proj, pixelPerDegree, image, mv, layer);
         this.browserCmd = baseURL.replaceFirst("yahoo://", "");
     }
 
     protected BufferedImage grab(URL url) throws IOException {
-        ArrayList<String> cmdParams = new ArrayList<String>();
         String urlstring = url.toExternalForm();
         // work around a problem in URL removing 2 slashes
         if(!urlstring.startsWith("file:///"))
             urlstring = urlstring.replaceFirst("file:", "file://");
+
+        BufferedImage cached = cache.getImg(urlstring);
+        if(cached != null) return cached;
+
+        ArrayList<String> cmdParams = new ArrayList<String>();
         StringTokenizer st = new StringTokenizer(MessageFormat.format(browserCmd, urlstring));
         while( st.hasMoreTokens() )
             cmdParams.add(st.nextToken());
@@ -49,6 +53,6 @@ public class YAHOOGrabber extends WMSGrabber{
             throw new IOException( "Could not start browser. Please check that the executable path is correct.\n" + ioe.getMessage() );
         }
 
-        return ImageIO.read(browser.getInputStream());
+        return cache.saveImg(urlstring, ImageIO.read(browser.getInputStream()), true);
     }
 }

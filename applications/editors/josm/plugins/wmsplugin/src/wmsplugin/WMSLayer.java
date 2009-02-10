@@ -176,6 +176,8 @@ public class WMSLayer extends Layer {
                     executor.submit(gr);
             }
         }
+
+        new wmsplugin.Cache().cleanUp();
     }
 
     @Override public void visitBoundingBox(BoundingXYVisitor v) {

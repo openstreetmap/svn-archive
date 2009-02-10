@@ -1,5 +1,6 @@
 package wmsplugin;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -15,6 +16,8 @@ import org.openstreetmap.josm.gui.NavigatableComponent;
 
 public class GeorefImage implements Serializable {
     public BufferedImage image = null;
+    private BufferedImage reImg = null;
+    private Dimension reImgHash = new Dimension(0, 0);
     public EastNorth min, max;
     public boolean downloadingStarted;
 
@@ -43,16 +46,37 @@ public class GeorefImage implements Serializable {
         EastNorth ma = new EastNorth(max.east()+dx, max.north()+dy);
         Point minPt = nc.getPoint(mi), maxPt = nc.getPoint(ma);
 
+        // downloadAndPaintVisible in WMSLayer.java requests visible images only
+        // so this path is never hit. 
         /* this is isVisible() but taking dx, dy into account */
-        if(!(g.hitClip(minPt.x, maxPt.y,
-                maxPt.x - minPt.x, minPt.y - maxPt.y)))
+        /*if(!(g.hitClip(minPt.x, maxPt.y, maxPt.x - minPt.x, minPt.y - maxPt.y))) {
             return false;
+        }*/
+        
+        // Width and height flicker about 2 pixels due to rounding errors, typically only 1
+        int width = Math.abs(maxPt.x-minPt.x);
+        int height = Math.abs(minPt.y-maxPt.y);
+        int diffx = reImgHash.width - width;
+        int diffy = reImgHash.height - height;
+        
+        // We still need to re-render if the requested size is larger (otherwise we'll have black lines)
+        // If it's only up to two pixels smaller, just draw the old image, the errors are minimal
+        // but the performance improvements when moving are huge
+        // Zooming is still slow because the images need to be resized
+        if(diffx >= 0 && diffx <= 2 && diffy >= 0 && diffy <= 2 && reImg != null) {
+            g.drawImage(reImg, minPt.x, maxPt.y, null);
+            return true;
+        }
 
-        g.drawImage(image,
-            minPt.x, maxPt.y, maxPt.x, minPt.y, // dest
+        // We haven't got a saved resized copy, so resize and cache it        
+        reImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        reImg.getGraphics().drawImage(image,
+            0, 0, width, height, // dest
             0, 0, image.getWidth(), image.getHeight(), // src
             null);
 
+        reImgHash.setSize(width, height);        
+        g.drawImage(reImg, minPt.x, maxPt.y, null);
         return true;
     }
 

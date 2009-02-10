@@ -30,6 +30,7 @@ import org.openstreetmap.josm.gui.MapView;
 
 public class WMSGrabber extends Grabber {
     protected String baseURL;
+    protected Cache cache = new wmsplugin.Cache();
     private static Boolean shownWarning = false;
 
     WMSGrabber(String baseURL, Bounds b, Projection proj,
@@ -111,6 +112,9 @@ public class WMSGrabber extends Grabber {
     }
 
     protected BufferedImage grab(URL url) throws IOException {
+        BufferedImage cached = cache.getImg(url.toString());
+        if(cached != null) return cached;
+    
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
         String contentType = conn.getHeaderField("Content-Type");
@@ -122,7 +126,8 @@ public class WMSGrabber extends Grabber {
         InputStream is = new ProgressInputStream(conn, null);
         BufferedImage img = ImageIO.read(is);
         is.close();
-        return img;
+        
+        return cache.saveImg(url.toString(), img, true);
     }
 
     protected String readException(URLConnection conn) throws IOException {

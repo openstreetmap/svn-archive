@@ -1174,6 +1174,18 @@ sub make_selection
         $interim = select_not_connected_same_tag($interim, $notConnectedSameTag);
     }
 
+    # Filter for closed or unclosed ways if closed= is set
+    my $closed = $rulenode->getAttribute("closed");
+    if ($closed ne '')
+    {
+        if ($closed ne 'yes' && $closed ne 'no')
+        {
+            die "Error in stylesheet: <rule closed= must be 'yes' or 'no'\n";
+        }
+
+        select_closed($interim, $closed);
+    }
+
     return $interim;
 }
 

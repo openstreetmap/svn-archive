@@ -3092,11 +3092,53 @@ against infinite loops -->
 
     <xsl:variable
       name="selectedElements"
-      select="$elements[contains($e,concat('|',name(),'|'))
-            or 
-            (contains($e,'|node|') and name()='way' and key('wayByNode',@id))
+      select="$elements[
+              (
+                  not( $rule/@closed )
+                  and
+                  (
+                      (contains($e,'|way|') and name()='way')
+                      or
+                      (contains($e,'|node|') and name()='node')
+                      or
+                      (contains($e,'|node|') and name()='way' and key('wayByNode',@id))
+                  )
+              )
+              or
+              (
+                  $rule/@closed='yes'
+                  and
+                  contains($e,'|way|') and name()='way'
+                  and
+                  not(
+                      tag[@k='area' and (@v='no' or @v='false')]
+                  )
+                  and
+                  count(nd) &gt; 2
+                  and
+                  nd[1]/@ref = nd[last()]/@ref
+              )
+              or
+              (
+                  $rule/@closed='no'
+                  and
+                  contains($e,'|way|') and name()='way'
+                  and
+                  not(
+                      not(
+                          tag[@k='area' and (@v='no' or @v='false')]
+                      )
+                      and
+                      count(nd) &gt; 2
+                      and
+                      nd[1]/@ref = nd[last()]/@ref
+                  )
+                  and
+                  not(
+                      tag[@k='area' and (@v='yes' or @v='true')]
+                  )
+              )
             ]"/>
-
 
     <!-- Patch $s -->
     <xsl:choose>
@@ -3297,10 +3339,53 @@ against infinite loops -->
 
     <xsl:variable
       name="selectedElements"
-      select="$elements[contains($e,concat('|',name(),'|'))
-              or 
-              (contains($e,'|node|') and name()='way'and key('wayByNode',@id))
-              ]"/>
+      select="$elements[
+              (
+                  not( $rule/@closed )
+                  and
+                  (
+                      (contains($e,'|way|') and name()='way')
+                      or
+                      (contains($e,'|node|') and name()='node')
+                      or
+                      (contains($e,'|node|') and name()='way' and key('wayByNode',@id))
+                  )
+              )
+              or
+              (
+                  $rule/@closed='yes'
+                  and
+                  contains($e,'|way|') and name()='way'
+                  and
+                  not(
+                      tag[@k='area' and (@v='no' or @v='false')]
+                  )
+                  and
+                  count(nd) &gt; 2
+                  and
+                  nd[1]/@ref = nd[last()]/@ref
+              )
+              or
+              (
+                  $rule/@closed='no'
+                  and
+                  contains($e,'|way|') and name()='way'
+                  and
+                  not(
+                      not(
+                          tag[@k='area' and (@v='no' or @v='false')]
+                      )
+                      and
+                      count(nd) &gt; 2
+                      and
+                      nd[1]/@ref = nd[last()]/@ref
+                  )
+                  and
+                  not(
+                      tag[@k='area' and (@v='yes' or @v='true')]
+                  )
+              )
+            ]"/>
 
     <!-- Patch $s -->
     <xsl:choose>

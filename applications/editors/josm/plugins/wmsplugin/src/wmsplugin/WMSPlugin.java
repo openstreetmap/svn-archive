@@ -30,12 +30,6 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 
-
-// NW 151006 only add the landsat task when the map frame is initialised with
-// data.
-
-
-
 public class WMSPlugin extends Plugin {
 
     WMSLayer wmsLayer;
@@ -65,10 +59,10 @@ public class WMSPlugin extends Plugin {
 
     public void copy(String from, String to) throws FileNotFoundException, IOException
     {
-        File pluginDir = new File(Main.pref.getPreferencesDir() + "plugins/wmsplugin/");
+        File pluginDir = new File(getPrefsPath());
         if (!pluginDir.exists())
             pluginDir.mkdirs();
-        FileOutputStream out = new FileOutputStream(Main.pref.getPreferencesDir() + "plugins/wmsplugin/" + to);
+        FileOutputStream out = new FileOutputStream(getPrefsPath() + to);
         InputStream in = WMSPlugin.class.getResourceAsStream(from);
         byte[] buffer = new byte[8192];
         for(int len = in.read(buffer); len > 0; len = in.read(buffer))
@@ -220,5 +214,10 @@ public class WMSPlugin extends Plugin {
 
     public PreferenceSetting getPreferenceSetting() {
         return new WMSPreferenceEditor();
+    }
+
+    static public String getPrefsPath()
+    {
+        return Main.pref.getPluginsDirFile().getPath() + "wmsplugin/";
     }
 }

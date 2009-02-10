@@ -247,7 +247,15 @@ public class WMSLayer extends Layer {
             JCheckBoxMenuItem checkbox = (JCheckBoxMenuItem) ev.getSource();
             boolean alphaChannel = checkbox.isSelected();
             Main.pref.put("wmsplugin.alpha_channel", alphaChannel);
-            Main.map.repaint();
+            
+            // clear all resized cached instances and repaint the layer
+            for (int x = 0; x < dax; ++x) {
+                for (int y = 0; y < day; ++y) {
+                    GeorefImage img = images[modulo(x, dax)][modulo(y, day)];
+                    img.flushedResizedCachedInstance();
+                }
+            }
+            mv.repaint();
         }
     }
 

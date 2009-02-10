@@ -2,8 +2,13 @@ package wmsplugin;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageProducer;
+import java.awt.image.RGBImageFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,6 +16,7 @@ import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 
@@ -68,11 +74,18 @@ public class GeorefImage implements Serializable {
             return true;
         }
 
+        boolean alphaChannel = Main.pref.getBoolean("wmsplugin.alpha_channel");
+        Image ppImg = image;
+        if(!alphaChannel) {
+            // set alpha value to 255
+            ppImg = clearAlpha(image);
+        }
+           
         // We haven't got a saved resized copy, so resize and cache it        
-        reImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        reImg.getGraphics().drawImage(image,
+        reImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        reImg.getGraphics().drawImage(ppImg,
             0, 0, width, height, // dest
-            0, 0, image.getWidth(), image.getHeight(), // src
+            0, 0, ppImg.getWidth(null), ppImg.getHeight(null), // src
             null);
 
         reImgHash.setSize(width, height);        
@@ -94,4 +107,17 @@ public class GeorefImage implements Serializable {
         else
             ImageIO.write(image, "png", ImageIO.createImageOutputStream(out));
     }
+
+    private Image clearAlpha(Image img) {
+		ImageProducer ip = img.getSource();
+		RGBImageFilter filter = new RGBImageFilter() {
+			public int filterRGB(int x, int y, int rgb) {
+				return rgb | 0xff000000;
+			}
+		};
+		ImageProducer filt_ip = new FilteredImageSource(ip, filter);
+		Image out_img = Toolkit.getDefaultToolkit().createImage(filt_ip);
+
+		return out_img;
+	}
 }

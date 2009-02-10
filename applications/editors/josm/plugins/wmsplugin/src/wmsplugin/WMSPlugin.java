@@ -218,6 +218,6 @@ public class WMSPlugin extends Plugin {
 
     static public String getPrefsPath()
     {
-        return Main.pref.getPluginsDirFile().getPath() + "wmsplugin/";
+        return Main.pref.getPluginsDirFile().getPath() + "/wmsplugin/";
     }
 }

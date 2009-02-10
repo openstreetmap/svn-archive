@@ -2,7 +2,6 @@ package wmsplugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.lang.Math;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Toolkit;
@@ -12,12 +11,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
@@ -25,18 +26,15 @@ import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
-import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.data.coor.EastNorth;
 
 /**
  * This is a layer that grabs the current screen from an WMS server. The data
@@ -60,7 +58,7 @@ public class WMSLayer extends Layer {
     protected double pixelPerDegree;
     protected GeorefImage[][] images = new GeorefImage[dax][day];
     JCheckBoxMenuItem startstop = new JCheckBoxMenuItem(tr("Automatic downloading"), true);
-
+    protected JCheckBoxMenuItem alphaChannel = new JCheckBoxMenuItem(new ToggleAlphaAction());
     protected String baseURL;
     protected final int serializeFormatVersion = 4;
 
@@ -74,13 +72,14 @@ public class WMSLayer extends Layer {
 
     public WMSLayer(String name, String baseURL) {
         super(name);
+        alphaChannel.setSelected(Main.pref.getBoolean("wmsplugin.alpha_channel"));
         background = true; /* set global background variable */
         initializeImages();
         this.baseURL = baseURL;
         WMSGrabber.getProjection(baseURL, true);
         mv = Main.map.mapView;
         getPPD();
-
+        
         executor = Executors.newFixedThreadPool(3);
     }
 
@@ -165,7 +164,7 @@ public class WMSLayer extends Layer {
             JOptionPane.showMessageDialog(Main.parent, tr("The requested area is too big. Please zoom in a little, or change resolution"));
             return;
         }
-
+        
         for(int x = bminx; x<bmaxx; ++x)
             for(int y = bminy; y<bmaxy; ++y){
                 GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
@@ -202,6 +201,7 @@ public class WMSLayer extends Layer {
                 new JMenuItem(new SaveWmsAction()),
                 new JSeparator(),
                 startstop,
+                alphaChannel,
                 new JMenuItem(new changeResolutionAction()),
                 new JMenuItem(new downloadAction()),
                 new JSeparator(),
@@ -236,6 +236,18 @@ public class WMSLayer extends Layer {
             resolution = scale();
             getPPD();
             mv.repaint();
+        }
+    }
+    
+    public class ToggleAlphaAction extends AbstractAction {
+        public ToggleAlphaAction() {
+            super(tr("Alpha channel"));
+        }
+        public void actionPerformed(ActionEvent ev) {
+            JCheckBoxMenuItem checkbox = (JCheckBoxMenuItem) ev.getSource();
+            boolean alphaChannel = checkbox.isSelected();
+            Main.pref.put("wmsplugin.alpha_channel", alphaChannel);
+            Main.map.repaint();
         }
     }
 

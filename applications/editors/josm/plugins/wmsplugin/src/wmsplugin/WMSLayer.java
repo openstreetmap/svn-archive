@@ -203,6 +203,7 @@ public class WMSLayer extends Layer {
                 startstop,
                 alphaChannel,
                 new JMenuItem(new changeResolutionAction()),
+                new JMenuItem(new reloadErrorTilesAction()),
                 new JMenuItem(new downloadAction()),
                 new JSeparator(),
                 new JMenuItem(new LayerListPopup.InfoAction(this))
@@ -236,6 +237,23 @@ public class WMSLayer extends Layer {
             resolution = scale();
             getPPD();
             mv.repaint();
+        }
+    }
+    
+    public class reloadErrorTilesAction extends AbstractAction {
+        public reloadErrorTilesAction() {
+            super(tr("Reload erroneous tiles"));
+        }
+        public void actionPerformed(ActionEvent ev) {
+            for (int x = 0; x < dax; ++x) {
+                for (int y = 0; y < day; ++y) {
+                    GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
+                    img.image = null;
+                    img.downloadingStarted = false;
+                    img.failed = false;
+                    mv.repaint();
+                }
+            }
         }
     }
     

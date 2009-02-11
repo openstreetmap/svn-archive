@@ -26,6 +26,7 @@ public class GeorefImage implements Serializable {
     private Dimension reImgHash = new Dimension(0, 0);
     public EastNorth min, max;
     public boolean downloadingStarted;
+    public boolean failed = false;
 
     public GeorefImage(boolean downloadingStarted) {
         this.downloadingStarted = downloadingStarted;

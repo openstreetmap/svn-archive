@@ -24,6 +24,7 @@ function mapOf(div, type, id) {
     };
 
     var map = new OpenLayers.Map(div, options);
+    map.addControl(new OpenLayers.Control.Permalink(null, "/static/map.html"));
     var mapnik = new OpenLayers.Layer.TMS(
         "OpenStreetMap (Mapnik)",
         "http://tile.openstreetmap.org/",

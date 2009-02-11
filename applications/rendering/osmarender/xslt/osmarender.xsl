@@ -144,39 +144,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </xsl:choose>
   </xsl:variable>
 
-  <!-- Calculate the size of the bounding box based on the file content -->
-  <xsl:variable name="bllat">
-    <xsl:for-each select="$data/osm/node/@lat">
-      <xsl:sort data-type="number" order="ascending"/>
-      <xsl:if test="position()=1">
-        <xsl:value-of select="."/>
-      </xsl:if>
-    </xsl:for-each>
-  </xsl:variable>
-  <xsl:variable name="bllon">
-    <xsl:for-each select="$data/osm/node/@lon">
-      <xsl:sort data-type="number" order="ascending"/>
-      <xsl:if test="position()=1">
-        <xsl:value-of select="."/>
-      </xsl:if>
-    </xsl:for-each>
-  </xsl:variable>
-  <xsl:variable name="trlat">
-    <xsl:for-each select="$data/osm/node/@lat">
-      <xsl:sort data-type="number" order="descending"/>
-      <xsl:if test="position()=1">
-        <xsl:value-of select="."/>
-      </xsl:if>
-    </xsl:for-each>
-  </xsl:variable>
-  <xsl:variable name="trlon">
-    <xsl:for-each select="$data/osm/node/@lon">
-      <xsl:sort data-type="number" order="descending"/>
-      <xsl:if test="position()=1">
-        <xsl:value-of select="."/>
-      </xsl:if>
-    </xsl:for-each>
-  </xsl:variable>
+  <!-- Calculate bounding box.
+       Use the first given of min/max lat/lon parameters, bounds element from rules,
+       bounds elements from data or fallback to calculating based on file content -->
+
   <xsl:variable name="bottomLeftLatitude">
     <xsl:choose>
       <xsl:when test="$minlat">
@@ -186,10 +157,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:value-of select="/rules/bounds/@minlat"/>
       </xsl:when>
       <xsl:when test="$data/osm/bounds">
-        <xsl:value-of select="$data/osm/bounds/@minlat"/>
+        <xsl:for-each select="$data/osm/bounds/@minlat">
+          <xsl:sort data-type="number" order="ascending"/>
+          <xsl:if test="position()=1">
+            <xsl:value-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$bllat"/>
+        <xsl:for-each select="$data/osm/node/@lat">
+          <xsl:sort data-type="number" order="ascending"/>
+          <xsl:if test="position()=1">
+            <xsl:value-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -199,13 +180,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:value-of select="$minlon"/>
       </xsl:when>
       <xsl:when test="/rules/bounds">
-        <xsl:value-of select="/rules/bounds/@minlon"/>
+        <xsl:for-each select="$data/osm/bounds/@minlon">
+          <xsl:sort data-type="number" order="ascending"/>
+          <xsl:if test="position()=1">
+            <xsl:value-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:when>
       <xsl:when test="$data/osm/bounds">
-        <xsl:value-of select="$data/osm/bounds/@minlon"/>
+        <xsl:for-each select="$data/osm/bounds/@minlon">
+          <xsl:sort data-type="number" order="ascending"/>
+          <xsl:if test="position()=1">
+            <xsl:value-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$bllon"/>
+        <xsl:for-each select="$data/osm/node/@lon">
+          <xsl:sort data-type="number" order="ascending"/>
+          <xsl:if test="position()=1">
+            <xsl:value-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -218,10 +214,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:value-of select="/rules/bounds/@maxlat"/>
       </xsl:when>
       <xsl:when test="$data/osm/bounds">
-        <xsl:value-of select="$data/osm/bounds/@maxlat"/>
+        <xsl:for-each select="$data/osm/bounds/@maxlat">
+          <xsl:sort data-type="number" order="descending"/>
+          <xsl:if test="position()=1">
+            <xsl:value-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$trlat"/>
+        <xsl:for-each select="$data/osm/node/@lat">
+          <xsl:sort data-type="number" order="descending"/>
+          <xsl:if test="position()=1">
+            <xsl:value-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -234,10 +240,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:value-of select="/rules/bounds/@maxlon"/>
       </xsl:when>
       <xsl:when test="$data/osm/bounds">
-        <xsl:value-of select="$data/osm/bounds/@maxlon"/>
+        <xsl:for-each select="$data/osm/bounds/@maxlon">
+          <xsl:sort data-type="number" order="descending"/>
+          <xsl:if test="position()=1">
+            <xsl:value-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$trlon"/>
+        <xsl:for-each select="$data/osm/node/@lon">
+          <xsl:sort data-type="number" order="descending"/>
+          <xsl:if test="position()=1">
+            <xsl:value-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>

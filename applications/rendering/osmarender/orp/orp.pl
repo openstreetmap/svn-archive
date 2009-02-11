@@ -135,16 +135,18 @@ our $debug = {
 our $node_storage = {};
 our $way_storage = {};
 our $relation_storage = {};
+my %data_bounds = ();
 our $text_index = {};
 our $meter2pixel = {};
 our %symbols = ();
 our $labelRelations = {};
 
-my $handler = SAXOsmHandler->new($node_storage, $way_storage, $relation_storage);
+my $handler = SAXOsmHandler->new($node_storage, $way_storage, $relation_storage, \%data_bounds);
 my $parser = XML::Parser::PerlSAX->new(Handler => $handler);
 my $rule_file = "rule.xml";
 my $debug_opts = '';
 my $output_file;
+my %opt_bounds;
 my $bbox;
 my %referenced_ways;
 
@@ -172,7 +174,11 @@ my %instructions = (
 GetOptions("rule=s"    => \$rule_file, 
            "debug=s"   => \$debug_opts,
            "outfile=s" => \$output_file,
-           "bbox=s"    => \$bbox);
+           "minlat=f"  => \$opt_bounds{minlat},
+           "minlon=f"  => \$opt_bounds{minlon},
+           "maxlat=f"  => \$opt_bounds{maxlat},
+           "maxlon=f"  => \$opt_bounds{maxlon},
+           "bbox=s"    => \$bbox) or usage('');
 
 for my $key(split(/,/, $debug_opts))
 {
@@ -181,6 +187,13 @@ for my $key(split(/,/, $debug_opts))
         usage("unknown debug option '$key'");
     }
     $debug->{$key} = 1;
+}
+
+if ($bbox)
+{
+    usage("Error: Both bbox and one of minlat/minlon/maxlat/maxlon given")
+        if @opt_bounds{qw(minlat minlon maxlat maxlon)};
+    ($opt_bounds{minlat}, $opt_bounds{minlon}, $opt_bounds{maxlat}, $opt_bounds{maxlon}) = split(/,/, $bbox);
 }
 
 my $rules = XML::XPath->new(filename => $rule_file); 
@@ -301,35 +314,40 @@ my $marginaliaBottomHeight =
 my $extraWidth = ($showBorder eq "yes") ? 3 : 0;
 my $extraHeight = ($title eq "" and $showBorder eq "yes") ? 3 : 0;
 
-#  Calculate the size of the bounding box based on data
-my $maxlon = -500; 
-my $maxlat = -500;
-my $minlon = 500;
-my $minlat = 500;
+# Find out what bounds to render
 
-foreach (values(%$node_storage))
+my ($minlat, $minlon, $maxlat, $maxlon);
+
+if (@opt_bounds{qw(minlat minlon maxlat maxlon)}) # Given on command line
 {
-    $maxlon = $_->{"lon"} if ($_->{"lon"} > $maxlon);
-    $maxlat = $_->{"lat"} if ($_->{"lat"} > $maxlat);
-    $minlon = $_->{"lon"} if ($_->{"lon"} < $minlon);
-    $minlat = $_->{"lat"} if ($_->{"lat"} < $minlat);
+    $minlat = $opt_bounds{minlat};
+    $minlon = $opt_bounds{minlon};
+    $maxlat = $opt_bounds{maxlat};
+    $maxlon = $opt_bounds{maxlon};
 }
-
-# if explicit bounds are given in the rules file, honour them
-if ($rules->find("//rules/bounds"))
+elsif ($rules->find('//rules/bounds')) # Given in rules file
 {
-    $minlat = get_variable("bounds/minlat");
-    $minlon = get_variable("bounds/minlon");
-    $maxlat = get_variable("bounds/maxlat");
-    $maxlon = get_variable("bounds/maxlon");
+    $minlat = get_variable('bounds/minlat');
+    $minlon = get_variable('bounds/minlon');
+    $maxlat = get_variable('bounds/maxlat');
+    $maxlon = get_variable('bounds/maxlon');
 }
-
-# FIXME find bound element in .osm file and honour it
-
-# if explicit bound are given on command line, honour them
-if (defined($bbox))
+elsif (%data_bounds) # Given as <bounds> element(s) in data file
 {
-    ($minlat, $minlon, $maxlat, $maxlon) = split(/,/, $bbox);
+    $minlat = $data_bounds{minlat};
+    $minlon = $data_bounds{minlon};
+    $maxlat = $data_bounds{maxlat};
+    $maxlon = $data_bounds{maxlon};
+}
+else # Fallback to calculating based on nodes in data
+{
+    foreach (values(%$node_storage))
+    {
+        $maxlon = $_->{"lon"} if (!defined($maxlon) || $_->{"lon"} > $maxlon);
+        $maxlat = $_->{"lat"} if (!defined($maxlat) || $_->{"lat"} > $maxlat);
+        $minlon = $_->{"lon"} if (!defined($minlon) || $_->{"lon"} < $minlon);
+        $minlat = $_->{"lat"} if (!defined($minlat) || $_->{"lat"} < $minlat);
+    }
 }
 
 our $scale = get_variable("scale", 1);
@@ -1355,7 +1373,11 @@ Options:
    -d|--debug=list      specify list of debug options
    -o|--outfile=name    specify output file (default: same as input, with .svg)
    -r|--rule=file.xml   specify the rule file to use (default: rule.xml)
-   -b|--bbox=minLat,minLon,maxLat,maxLon specify bounding box
+   --minlat		Minimum latitude to render
+   --minlon		Minimum longitude to render
+   --maxlat		Maximum latitude to render
+   --maxlon		Maximum longitude to render
+   -b|--bbox=minLat,minLon,maxLat,maxLon specify bounding box (as alternative to the specific options)
 
 EOF
     exit(1);

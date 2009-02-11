@@ -43,12 +43,13 @@ Creates a new L<SAXOsmHandler> instance.
 #--------------------------------------------------------------------
 sub new 
 {
-    my ($type, $node, $way, $relation) = @_;
+    my ($type, $node, $way, $relation, $bounds) = @_;
     
     return bless {current  => undef,
                   node     => $node,
                   way      => $way,
-                  relation => $relation }, $type;
+                  relation => $relation,
+                  bounds   => $bounds }, $type;
 }
 
 
@@ -149,6 +150,19 @@ sub start_element
         $self->{current}{tags }{ $element->{Attributes}{k} }= $element->{Attributes}{v};
         $self->{current}{layer} = $element->{Attributes}{v}
             if $element->{Attributes}{k} eq "layer";
+    }
+    elsif ($element->{Name} eq 'bounds')
+    {
+        my $b = $self->{bounds}; # Just a shortcut
+        my $minlat = $element->{Attributes}{minlat};
+        my $minlon = $element->{Attributes}{minlon};
+        my $maxlat = $element->{Attributes}{maxlat};
+        my $maxlon = $element->{Attributes}{maxlon};
+
+        $b->{minlat} = $minlat if !defined($b->{minlat}) || $minlat < $b->{minlat};
+        $b->{minlon} = $minlon if !defined($b->{minlon}) || $minlon < $b->{minlon};
+        $b->{maxlat} = $maxlat if !defined($b->{maxlat}) || $maxlat > $b->{maxlat};
+        $b->{maxlon} = $maxlon if !defined($b->{maxlon}) || $maxlon > $b->{maxlon};
     }
     else
     {

@@ -3123,8 +3123,10 @@
 				</else>
 			</rule>
 			<rule e="node|way" k="historic" v="*" layer="5">
-				<caption k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
-				<caption k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
+				<rule e="node|way" k="building" v="~|no">
+					<caption k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
+					<caption k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
+				</rule>
 			</rule>
 		</rule>
 

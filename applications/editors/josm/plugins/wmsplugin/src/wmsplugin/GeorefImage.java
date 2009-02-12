@@ -57,17 +57,17 @@ public class GeorefImage implements Serializable {
         if(!(g.hitClip(minPt.x, maxPt.y, maxPt.x - minPt.x, minPt.y - maxPt.y))) {
             return false;
         }
-        
+
         // Width and height flicker about 2 pixels due to rounding errors, typically only 1
         int width = Math.abs(maxPt.x-minPt.x);
         int height = Math.abs(minPt.y-maxPt.y);
         int diffx = reImgHash.width - width;
         int diffy = reImgHash.height - height;
-        
+
         // This happens if you zoom outside the world
         if(width == 0 || height == 0)
             return false;
-        
+
         // We still need to re-render if the requested size is larger (otherwise we'll have black lines)
         // If it's only up to two pixels smaller, just draw the old image, the errors are minimal
         // but the performance improvements when moving are huge
@@ -78,22 +78,56 @@ public class GeorefImage implements Serializable {
         }
 
         boolean alphaChannel = Main.pref.getBoolean("wmsplugin.alpha_channel");
-        Image ppImg = image;
-        if(!alphaChannel) {
+        // We don't need this, as simply saving the image to RGB instead of ARGB removes alpha
+        // But we do get a black instead of white background.
+        //Image ppImg = image;
+        /*if(!alphaChannel) {
             // set alpha value to 255
             ppImg = clearAlpha(image);
-        }
-           
-        // We haven't got a saved resized copy, so resize and cache it        
-        reImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        reImg.getGraphics().drawImage(ppImg,
-            0, 0, width, height, // dest
-            0, 0, ppImg.getWidth(null), ppImg.getHeight(null), // src
-            null);
+        }*/
 
-        reImgHash.setSize(width, height);        
-        g.drawImage(reImg, minPt.x, maxPt.y, null);
+        try {
+            if(reImg != null) reImg.flush();
+            long freeMem = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory();
+            //System.out.println("Free Memory:           "+ (freeMem/1024/1024) +" MB");
+            // Notice that this value can get negative due to integer overflows
+            //System.out.println("Img Size:              "+ (width*height*3/1024/1024) +" MB");
+
+            // This happens when requesting images while zoomed out and then zooming in
+            // Storing images this large in memory will certainly hang up JOSM. Luckily
+            // traditional rendering is as fast at these zoom levels, so it's no loss.
+            // Also prevent caching if we're out of memory soon
+            if(width > 10000 || height > 10000 || width*height*3 > freeMem) {
+                fallbackDraw(g, image, minPt, maxPt);
+            } else {
+                // We haven't got a saved resized copy, so resize and cache it
+                reImg = new BufferedImage(width, height,
+                    alphaChannel
+                        ? BufferedImage.TYPE_INT_ARGB
+                        : BufferedImage.TYPE_3BYTE_BGR  // This removes alpha, too
+                    );
+                reImg.getGraphics().drawImage(image,
+                    0, 0, width, height, // dest
+                    0, 0, image.getWidth(null), image.getHeight(null), // src
+                    null);
+                reImg.getGraphics().dispose();
+
+                reImgHash.setSize(width, height);
+                g.drawImage(reImg, minPt.x, maxPt.y, null);
+            }
+        } catch(Exception e) {
+            fallbackDraw(g, image, minPt, maxPt);
+        }
         return true;
+    }
+
+    private void fallbackDraw(Graphics g, Image img, Point min, Point max) {
+        if(reImg != null) reImg.flush();
+        reImg = null;
+        g.drawImage(img,
+            min.x, max.y, max.x, min.y, // dest
+            0, 0, img.getWidth(null), img.getHeight(null), // src
+            null);
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -123,7 +157,7 @@ public class GeorefImage implements Serializable {
 
 		return out_img;
 	}
-    
+
     public void flushedResizedCachedInstance() {
         reImg = null;
     }

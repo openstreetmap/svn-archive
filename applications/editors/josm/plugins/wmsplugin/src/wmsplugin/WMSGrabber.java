@@ -55,8 +55,10 @@ public class WMSGrabber extends Grabber {
             image.min = proj.latlon2eastNorth(b.min);
             image.max = proj.latlon2eastNorth(b.max);
 
-            if(image.isVisible(mv)) //don't download, if the image isn't visible already
+            if(image.isVisible(mv)) { //don't download, if the image isn't visible already
                 image.image = grab(url);
+                image.flushedResizedCachedInstance();
+            }
             image.downloadingStarted = false;
         } catch(Exception e) {
             throw new Exception(e.getMessage() + "\nImage couldn't be fetched: " + (url != null ? url.toString() : ""));

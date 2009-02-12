@@ -52,6 +52,7 @@ abstract public class Grabber implements Runnable {
         g.setColor(Color.BLACK);
         g.drawString(tr("Exception occurred"), 10, height()/2);
         image.image = img;
+        image.flushedResizedCachedInstance();
         image.failed = true;
         g.setFont(font);
     }

@@ -171,6 +171,7 @@ public class WMSLayer extends Layer {
                 if(!img.paint(g, mv, dx, dy) && !img.downloadingStarted){
                     img.downloadingStarted = true;
                     img.image = null;
+                    img.flushedResizedCachedInstance();
                     Grabber gr = WMSPlugin.getGrabber(baseURL, XYtoBounds(x,y), Main.main.proj, pixelPerDegree, img, mv, this);
                     executor.submit(gr);
             }
@@ -249,6 +250,7 @@ public class WMSLayer extends Layer {
                 for (int y = 0; y < day; ++y) {
                     GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
                     img.image = null;
+                    img.flushedResizedCachedInstance();
                     img.downloadingStarted = false;
                     img.failed = false;
                     mv.repaint();

@@ -38,7 +38,7 @@
 			<line class='natural glacier'/>
 		</rule>
 		<rule e="way" k="landuse|natural" v="forest|wood|scrub">
-			<area class="landuse-wood"/>
+			<area class="landuse wood"/>
 		</rule>
 		<rule e="way" k="natural" v="heath">
 			<area class="'natural heath"/>
@@ -49,12 +49,12 @@
 			</rule>
 		</rule>
 		<rule e="way" k="landuse" v="conservation">
-			<area class="landuse-conservation"/>
+			<area class="landuse conservation"/>
 		</rule>
 		
 		<!-- Artificial landuse -->
 		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow">
-			<area class="landuse-field"/>
+			<area class="landuse field"/>
 		</rule>
 		<rule e="way" k="leisure" v="park|garden|golf_course|common|green">
 			<area class="leisure-park"/>
@@ -79,26 +79,26 @@
 		</rule>
 		<rule e="way" k="landuse" v="runway">
 			<rule e="way" k="use_status" v="~">
-				<area class="landuse-runway"/>
+				<area class="landuse runway"/>
 			</rule>
 			<rule e="way" k="use_status" v="disused">
-				<area class="landuse-runway-disused"/>
+				<area class="landuse runway disused"/>
 			</rule>
 			<rule e="way" k="use_status" v="dismantled">
-				<area class="landuse-runway-dismantled"/>
+				<area class="landuse runway dismantled"/>
 			</rule>
 		</rule>
 		
 		<!-- Raceways and racetracks (cars and horses etc) -->
 		<rule e="way" k="landuse" v="raceway">
 			<rule e="way" k="use_status" v="~">
-				<area class="landuse-raceway"/>
+				<area class="landuse raceway"/>
 			</rule>
 			<rule e="way" k="use_status" v="disused">
-				<area class="landuse-raceway-disused"/>
+				<area class="landuse raceway disused"/>
 			</rule>
 			<rule e="way" k="use_status" v="dismantled">
-				<area class="landuse-raceway-dismantled"/>
+				<area class="landuse raceway dismantled"/>
 			</rule>
 		</rule>
 		
@@ -911,12 +911,12 @@
 		<!-- Landuse -->
 		<!-- at zoom 12 render all landuse in the same colour so it doesn't look too psychedelic -->
 		<rule e="way" k="landuse" v="residential|farmyard|retail|industrial|brownfield|commercial|cemetery|quarry|greenfield|construction|railway" layer="-5">
-			<area class="landuse-all" layer="-5"/>
+			<area class="landuse" layer="-5"/>
 		</rule>
 		
 		<!-- Artificial landuse -->
 		<rule e="way" k="amenity" v="school|college|university" layer="-5">
-			<area class="landuse-all" layer="-5"/>
+			<area class="landuse" layer="-5"/>
 		</rule>
 		
 		<!-- Man-made areas -->
@@ -1437,74 +1437,71 @@
 			}
 			
 			/* Landuse */
-			.landuse-all {
+			.landuse {
 			stroke: none;
 			fill: #f0f0f0;
 			}
 			
-			.landuse-wood {
+                        /* selecting with the landuse class is possibly redundant here, .. */
+                        /*  but safer since it's more specific than just .landuse and .. */
+                        /*  won't be dependent on ordering here in the CSS */
+			.landuse.wood {
 			fill: #6fc18e;
 			stroke: #6fc18e;
 			stroke-width: 0.2px;
 			}
 			
-			.landuse-cemetery {
+			.landuse.cemetery {
 			fill: #bde3cb;
 			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
-			.landuse-field {
+			.landuse.field {
 			fill: #bde3cb;
 			stroke: #6fc13d;
 			stroke-width: 0.2px;
 			}
 			
-			.landuse-residential {
-			stroke: none;
+			.landuse.residential {
 			fill: #e4e4e4;
 			}
 			
-			.landuse-industrial {
+			.landuse.industrial {
 			fill: #ecd8ff;
 			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
-			.landuse-commercial {
+			.landuse.commercial {
 			fill: #ffffc0;
 			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
-			.landuse-retail {
+			.landuse.retail {
 			fill: #ffebeb;
 			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
 			
-			.landuse-runway {
+			.landuse.runway {
 			stroke-width: 0.3px;
 			stroke: #808080;
 			fill: #d4dcbd;
 			}
 			
-			.landuse-runway-disused {
-			stroke-width: 0.3px;
-			stroke: #808080;
-			fill: #d4dcbd;
+			.landuse.runway.disused {
 			stroke-dasharray: 1, 1;
 			}
 			
-			.landuse-runway-dismantled {
-			stroke-width: 0.3px;
-			stroke: #808080;
+			.landuse.runway.dismantled {
 			fill: #fcffef;
 			stroke-dasharray: 0.3, 1.7;
 			opacity: 0.5;
 			}
 
-			.landuse-conservation {
+			.landuse.conservation {
 			fill: #cfeca8;
 			stroke: #6fc18e;
 			stroke-width: 0.2px
@@ -1653,7 +1650,7 @@
 			opacity: 0.5;
 			}
 			
-			.landuse-raceway {
+			.landuse.raceway {
 			stroke-width: 0.3px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
@@ -1661,7 +1658,7 @@
 			stroke: #101010;
 			}
 			
-			.landuse-raceway-disused {
+			.landuse.raceway.disused {
 			stroke-width: 0.3px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
@@ -1670,7 +1667,7 @@
 			stroke-dasharray: 1, 1;
 			}
 			
-			.landuse-raceway-dismantled {
+			.landuse.raceway.dismantled {
 			stroke-width: 0.3px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;

@@ -2636,6 +2636,9 @@
 		<rule e="way" k="sport" v="swimming">
 			<symbol ref="swimming-borderless" position="center"/>
 		</rule>
+		<rule e="way" k="sport" v="curling">
+			<symbol ref="curling-borderless" position="center"/>
+		</rule>
 		
 		<!-- Historic symbols -->
 		<rule e="node" k="historic" v="*">
@@ -3147,7 +3150,7 @@
 		</rule>
 		<rule e="way" k="sport" v="*" layer="5">
 			<!-- Offset captions for areas with icons -->
-			<rule e="way" k="sport" v="soccer|handball|tennis|swimming" layer="5">
+			<rule e="way" k="sport" v="soccer|handball|tennis|swimming|curling" layer="5">
 				<caption k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" dy="3.5px" layer="5"/>
 				<caption k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" dy="3.5px" layer="5"/>
 			</rule>

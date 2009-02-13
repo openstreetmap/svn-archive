@@ -125,8 +125,14 @@ def logout(request):
     request.session.flush()
     return HttpResponseRedirect("/")    
 
+def help(request):
+    return render_to_response("help.html")
+
 def api_proxy(request, url):
     http = httplib2.Http()   
+    if request.session['username']:
+        http.add_credentials(request.session['username'], request.session['password'])
     url = "%s/%s?%s" % (settings.OSM_API, url, urllib.urlencode(request.GET))
-    resp, content = http.request(url, "GET")
+    body = (request.raw_post_data or None)
+    resp, content = http.request(url, request.method, body=body)
     return HttpResponse(content, content_type="application/osm+xml", status=resp.status)

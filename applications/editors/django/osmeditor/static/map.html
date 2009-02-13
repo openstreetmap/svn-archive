@@ -6,6 +6,13 @@
     <link rel="stylesheet" href="/static/base.css" type="text/css" />
 
     <style type="text/css">
+       #helpLink {
+        font-size: smaller;
+        position: absolute;
+        right: 25px;
+        bottom: 53px;
+        z-index: 10000;
+       }
        .potlatchLink {
         font-size: smaller;
         position: absolute;
@@ -244,8 +251,9 @@
 
   <body onload="init()">
     <div id="map" style="width:99%; height:99%">
+        <div id="helpLink"><a href="/help/" target="_blank">Help?</a></div>
         <div id="data" style="position:absolute; left: 5px; bottom:5px; z-index:10000; background-color: white; padding: 5px"></div>
-        <div id="loading" style="position:absolute; right: 5px; top:25px; z-index:10000"></div>
+        <div id="loading" style="position:absolute; right: 5px; top:45px; z-index:10000"></div>
         <div class="potlatchLink"><a id="potlatchLinkHref">Edit (with Potlatch)</a></div>
     </div>
 

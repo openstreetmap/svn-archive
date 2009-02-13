@@ -33,39 +33,48 @@ def edit_osm_obj(type, id, post, session={}):
     if obj.timestamp != post['timestamp']:
         raise Exception("Object changed since you started editing it.")
     
-    changed = False
-    for key in filter(lambda x: x.startswith("delete_"), post.keys()):
-        k = key.replace("delete_key_", "")
-        if k in obj.tags:
-            changed = True
-            del obj.tags[k]
-        else:
-            raise Exception("Huh? %s is not in tags" % k)
-    
-    for key in filter(lambda x: x.startswith("key_"), post.keys()):
-        k = key.replace("key_", "")
-        if k in obj.tags and post[key] != obj.tags[k]:
-            changed = True
-            obj.tags[k] = post[key]
-   
-    for key in filter(lambda x: x.startswith("new_key_"), post.keys()):
-        new_id = key.replace("new_key_", "")
-        kname = "new_key_%s" % new_id
-        vname = "new_value_%s" % new_id
-        if kname in post and vname in post:
-            k = post[kname]
-            v = post[vname]
-            if k and v:
-                obj.tags[k] = v
+    if 'action' in post and post['action'] == "delete":
+        username = post.get('username', None) or session.get("username", None)
+        password = post.get('password', None) or session.get("password", None)
+        if not username or not password:
+            raise Exception("Need username and password")
+        id = obj.id    
+        obj.delete(username, password)
+        obj.id = id
+    else:
+        changed = False
+        for key in filter(lambda x: x.startswith("delete_"), post.keys()):
+            k = key.replace("delete_key_", "")
+            if k in obj.tags:
                 changed = True
-            
-    if not changed: return
+                del obj.tags[k]
+            else:
+                raise Exception("Huh? %s is not in tags" % k)
+        
+        for key in filter(lambda x: x.startswith("key_"), post.keys()):
+            k = key.replace("key_", "")
+            if k in obj.tags and post[key] != obj.tags[k]:
+                changed = True
+                obj.tags[k] = post[key]
+   
+        for key in filter(lambda x: x.startswith("new_key_"), post.keys()):
+            new_id = key.replace("new_key_", "")
+            kname = "new_key_%s" % new_id
+            vname = "new_value_%s" % new_id
+            if kname in post and vname in post:
+                k = post[kname]
+                v = post[vname]
+                if k and v:
+                    obj.tags[k] = v
+                    changed = True
+                
+        if changed:
 
-    username = post.get('username', None) or session.get("username", None)
-    password = post.get('password', None) or session.get("password", None)
-    if not username or not password:
-        raise Exception("Need username and password")
-    obj.save(username, password)
+            username = post.get('username', None) or session.get("username", None)
+            password = post.get('password', None) or session.get("password", None)
+            if not username or not password:
+                raise Exception("Need username and password")
+            obj.save(username, password)
     return obj
 
 def tag_sorter(a, b):

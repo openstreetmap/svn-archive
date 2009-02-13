@@ -57,25 +57,25 @@
 			<area class="landuse field"/>
 		</rule>
 		<rule e="way" k="leisure" v="park|garden|golf_course|common|green">
-			<area class="leisure-park"/>
+			<area class="leisure park"/>
 		</rule>
 		<rule e="way" k="leisure" v="playground|playing_fields|pitch">
                 	<!-- Done separately from the above rule to layer these above. Tend to be smaller and inside parks. -->
-			<area class="leisure-park"/>
+			<area class="leisure park"/>
 		</rule>
 		<rule e="way" k="leisure" v="nature_reserve">
-			<area class="leisure-nature_reserve"/>
+			<area class="leisure nature_reserve"/>
 		</rule>
 		<rule e="way" k="leisure" v="stadium|sports_centre">
-			<area class="leisure-stadium"/>
+			<area class="leisure stadium"/>
 		</rule>
 		<rule e="way" k="leisure" v="track">
-			<area class="leisure-track"/>
+			<area class="leisure track"/>
 		</rule>
 		
 		<!-- Airports and runways -->
 		<rule e="way" k="aeroway" v="apron">
-			<area class="aeroway-apron"/>
+			<area class="aeroway apron"/>
 		</rule>
 		<rule e="way" k="landuse" v="runway">
 			<rule e="way" k="use_status" v="~">
@@ -107,18 +107,18 @@
 			<area class="sport"/>
 		</rule>
 		<rule e="way" k="amenity" v="parking">
-			<area class="amenity-parking"/>
+			<area class="amenity parking"/>
 		</rule>
 		<rule e="way" k="tourism" v="zoo|picnic_site|caravan_site|camp_site">
-			<area class="tourism-green-area"/>
+			<area class="tourism green_area"/>
 		</rule>
 		
 		<!-- Airfields and airports -->
 		<rule e="way" k="aeroway" v="runway">
-			<line class="aeroway-runway-casing"/>
+			<line class="aeroway runway casing"/>
 		</rule>
 		<rule e="way" k="aeroway" v="taxiway">
-			<line class="aeroway-taxiway-casing"/>
+			<line class="aeroway taxiway casing"/>
 		</rule>
 		
 		<!-- Waterways -->
@@ -694,10 +694,10 @@
 					<line class="railway-core railway-light-rail-core"/>
 				</rule>
 				<rule e="way" k="aeroway" v="runway">
-					<line class="aeroway-runway-core"/>
+					<line class="aeroway runway core"/>
 				</rule>
 				<rule e="way" k="aeroway" v="taxiway">
-					<line class="aeroway-taxiway-core"/>
+					<line class="aeroway taxiway core"/>
 				</rule>
 			</rule>
 		</rule>
@@ -932,7 +932,7 @@
 			<rule e="way" k="highway" v="~">
 				<rule e="way" k="area" v="no" />
 				<else>
-					<area class="tourism-attraction" layer="-5"/>
+					<area class="tourism attraction" layer="-5"/>
 				</else>
 			</rule>
 		</rule>
@@ -1244,44 +1244,44 @@
 			
 			
 			/* Aeroways */
-			.aeroway-apron {
+			.apron {
 			stroke-width: 0.3px;
 			stroke: none;
 			fill: #f0f0f0;
 			}
-			
-			.aeroway-taxiway-core {
+
+			.aeroway.core {
+			stroke: #d4dcbd;
+			}
+
+			.aeroway.casing {
+			stroke: #000000;
+			}
+
+			.taxiway, .runway {
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			fill: none;
+			}
+
+			.taxiway.core {
 			stroke-width: 2px;
-			stroke-linecap: butt;
-			stroke-linejoin: round;
-			stroke: #d4dcbd;
-			fill: none;
 			}
 			
-			.aeroway-taxiway-casing {
+			.taxiway.casing {
 			stroke-width: 3px;
-			stroke-linecap: butt;
-			stroke-linejoin: round;
-			stroke: #000000;
-			fill: none;
 			}
 			
-			.aeroway-runway-core {
+			.runway.core {
 			stroke-width: 5px;
-			stroke-linecap: butt;
-			stroke-linejoin: round;
-			stroke: #d4dcbd;
-			fill: none;
 			}
 			
-			.aeroway-runway-casing {
+			.runway.casing {
 			stroke-width: 7px;
-			stroke-linecap: butt;
-			stroke-linejoin: round;
-			stroke: #000000;
-			fill: none;
 			}
 			
+			/* not in use at this level? */
+			/*
 			.aeroway-aerodrome-caption {
 			fill: black;
 			stroke: white;
@@ -1300,7 +1300,7 @@
 			font-weight: bold;
 			text-anchor: middle;
 			}
-			
+			*/
 			
 			/* Waterways */
 			.waterway-casing {
@@ -1507,38 +1507,21 @@
 			stroke-width: 0.2px
 			}
 			
-			/* Leisure */
-			.leisure-park {
+			/* Leisure, sport */
+			.leisure, .sport {
+			stroke: #6fc18e;
+			stroke-width: 0.2px;
+			}
+
+			.leisure.park, .nature_reserve {
 			fill: #c7f1a3;
-			stroke: #6fc18e;
-			stroke-width: 0.2px;
 			}
 			
-			.leisure-stadium {
+			.stadium, .leisure.track, .sport {
 			fill: #bde3cb;
-			stroke: #6fc18e;
-			stroke-width: 0.2px;
 			}
 			
-			.leisure-track {
-			fill: #bde3cb;
-			stroke: #6fc18e;
-			stroke-width: 0.2px;
-			}
-			
-			.leisure-nature_reserve {
-			fill: #c7f1a3;
-			stroke: #6fc18e;
-			stroke-width: 0.2px;
-			}
-			
-			.sport {
-			fill: #bde3cb;
-			stroke: #6fc18e;
-			stroke-width: 0.2px;
-			}
-			
-			.amenity-parking {
+			.parking {
 			fill: #ffffc0;
 			stroke: #e9dd72;
 			stroke-width: 0.2px;
@@ -1678,16 +1661,17 @@
 			}
 			
 			/* Tourism */
-			.tourism-attraction {
+			.attraction {
 			fill: #f2caea;
 			stroke: #ff00ff;
 			stroke-width: 0px;
 			}
-			.tourism-green-area {
+			.green_area {
 			fill: #c7f1a3;
 			stroke: #6fc18e;
 			stroke-width: 0.2px;
 			}
+
 			.military-area {
 			fill: #d0d050;
 			stroke: #e4e4e4;

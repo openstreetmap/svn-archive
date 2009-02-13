@@ -229,11 +229,30 @@
                     buffer: 0
                 }
             );
+            var cyclemap = new OpenLayers.Layer.TMS(
+                "CycleMap (OpenStreetMap)",
+                [
+                "http://a.andy.sandbox.cloudmade.com/tiles/cycle/",
+                "http://b.andy.sandbox.cloudmade.com/tiles/cycle/",
+                "http://c.andy.sandbox.cloudmade.com/tiles/cycle/"
+                ], 
+                {
+                    type: 'png', getURL: osm_getTileURL,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> Contributors',
+                    buffer: 0
+                }
+            );
+            var yahoo = new OpenLayers.Layer.Yahoo("Yahoo", {sphericalMercator: true, 'type': YAHOO_MAP_SAT, MAX_ZOOM_LEVEL: 17});
+
 
             var panel = new OpenLayers.Control.Panel({displayClass: 'mainMapToolbar'});
-            panel.addControls(new OSMEditor.LoadDataClick({
+            var loadData = new OSMEditor.LoadDataClick({
                 'displayClass': 'loadData'
-            }));
+            });
+            var vlayer = new OpenLayers.Layer.Vector("OSM Data");
+            map.addLayer(vlayer);
+            loadData.layers = [vlayer]; 
+            panel.addControls(loadData);
             panel.addControls(new OSMEditor.CreatePOIClick({
                 'displayClass': 'createPoi'
             }));
@@ -242,9 +261,7 @@
             panel.activateControl(panel.controls[0]);
             map.addControl(new OpenLayers.Control.Permalink());
             map.addControl(new OpenLayers.Control.Permalink($("potlatchLinkHref"), "http://openstreetmap.org/edit.html", {displayClass: 'potlatchLink'}));
-            map.addLayer(mapnik);
-            var yahoo = new OpenLayers.Layer.Yahoo("Yahoo", {sphericalMercator: true, 'type': YAHOO_MAP_SAT, MAX_ZOOM_LEVEL: 17});
-            map.addLayer(yahoo);
+            map.addLayers([mapnik, cyclemap, yahoo]);
             map.addControl(new OpenLayers.Control.LayerSwitcher());
             if (!map.getCenter()) { map.zoomToMaxExtent(); }
         }

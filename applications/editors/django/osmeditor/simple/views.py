@@ -2,6 +2,7 @@ from django.conf import settings
 from django import forms
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
+from django.forms.util import ValidationError
 import urllib
 
 try:
@@ -97,20 +98,25 @@ class UserForm(forms.Form):
     email = forms.CharField(max_length=255)
     password = forms.CharField(widget=forms.PasswordInput)
 
+    def clean(self):
+        if self.cleaned_data.get('password') and self.cleaned_data.get('password'):
+            http = httplib2.Http()   
+            http.add_credentials(self.cleaned_data['email'], self.cleaned_data['password'])
+            url = "%s/user/details" % (settings.OSM_API)
+            resp, content = http.request(url, "GET")
+            if int(resp.status) == 200:
+                return self.cleaned_data
+            else:
+                raise ValidationError("Could not authenticate against OSM API") 
+                        
+
 def login(request):
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            http = httplib2.Http()   
-            http.add_credentials(username, password)
-            url = "%s/user/details" % (settings.OSM_API)
-            resp, content = http.request(url, "GET")
-            if int(resp.status) == 200:
-                request.session['username'] = username 
-                request.session['password'] = password 
-                return HttpResponseRedirect("/")    
+            request.session['username'] = form.cleaned_data['email']
+            request.session['password'] = form.cleaned_data['password']
+            return HttpResponseRedirect("/")
     else:
         form = UserForm()
     return render_to_response("login.html", {'form': form})    

@@ -2,6 +2,8 @@
   <head>
     <title>Simple OSM Editor Map Viewer</title>
     <script src="http://openlayers.org/api/OpenLayers.js"></script>
+        <script src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=euzuro-openlayers"></script>
+
     <link rel="stylesheet" href="http://openlayers.org/api/theme/default/style.css" type="text/css" />
     <link rel="stylesheet" href="/static/base.css" type="text/css" />
 
@@ -12,6 +14,18 @@
         right: 25px;
         bottom: 53px;
         z-index: 10000;
+       }
+       #loginLink {
+        font-size: 1.3em;
+        position: absolute;
+        right: 25px;
+        top: 100px;
+        color: red;
+        z-index: 10000;
+        background-color: white;
+       }
+       #loginLink a {
+        color: red;
        }
        .potlatchLink {
         font-size: smaller;
@@ -67,8 +81,13 @@
              },
 
              handleResponse: function(req) {
+                if (req.status == 401) {
+                    alert("Login first!");
+                    $("loginA").style.display="inline";
+                } else {    
                  var id = req.responseText;
                  document.location = "/node/" + id;
+                } 
              }
         });     
         OSMEditor.LoadDataClick = OpenLayers.Class(OpenLayers.Control, {                
@@ -224,6 +243,9 @@
             map.addControl(new OpenLayers.Control.Permalink());
             map.addControl(new OpenLayers.Control.Permalink($("potlatchLinkHref"), "http://openstreetmap.org/edit.html", {displayClass: 'potlatchLink'}));
             map.addLayer(mapnik);
+            var yahoo = new OpenLayers.Layer.Yahoo("Yahoo", {sphericalMercator: true, 'type': YAHOO_MAP_SAT, MAX_ZOOM_LEVEL: 17});
+            map.addLayer(yahoo);
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
             if (!map.getCenter()) { map.zoomToMaxExtent(); }
         }
         function osm_getTileURL(bounds) {
@@ -251,6 +273,7 @@
 
   <body onload="init()">
     <div id="map" style="width:99%; height:99%">
+        <div id="loginLink"><a id="loginA" href="/login/" target="_blank" style="display:none">Login</a></div>
         <div id="helpLink"><a href="/help/" target="_blank">Help?</a></div>
         <div id="data" style="position:absolute; left: 5px; bottom:5px; z-index:10000; background-color: white; padding: 5px"></div>
         <div id="loading" style="position:absolute; right: 5px; top:45px; z-index:10000"></div>

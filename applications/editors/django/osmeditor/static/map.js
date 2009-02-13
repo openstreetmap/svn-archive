@@ -31,7 +31,8 @@ function mapOf(div, type, id) {
         {
             type: 'png', getURL: osm_getTileURL,
             displayOutsideMaxExtent: true,
-            attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
+            attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>',
+            buffer: 0
         }
     );
     map.addLayer(mapnik);

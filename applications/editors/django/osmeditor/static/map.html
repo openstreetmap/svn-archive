@@ -279,7 +279,7 @@
             map.addControl(panel);
             panel.activate();
             panel.activateControl(panel.controls[0]);
-            map.addControl(new OSMEditor.HashControl());
+            map.addControl(new OSMEditor.HashControl(null, "/static/map.html"));
             map.addControl(new OpenLayers.Control.Permalink($("potlatchLinkHref"), "http://openstreetmap.org/edit.html", {displayClass: 'potlatchLink'}));
             map.addControl(new OpenLayers.Control.LayerSwitcher());
             map.addLayers([mapnik, cyclemap, minutelyNoName, yahoo]);

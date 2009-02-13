@@ -69,6 +69,14 @@
 {% endif %}
 <input type="submit" value="Change" />
 </form>
+
+<form method="POST" onsubmit='return confirm("Are you sure you want to delete this object?")'>
+<input type="hidden" name='action' value="delete" />
+<input type="hidden" name="id" value="{{ obj.id }}" />
+<input type="hidden" name="type" value="{{ obj.type }}" />
+<input type="hidden" name="timestamp" value="{{ obj.timestamp }}" /> {# needed until 0.6: this is our conflict detector #}
+<input type="submit" value="Delete" />
+</form>
 {% if obj.members %}
 <h3>Contains {{ obj.members|length }} member{{ obj.members|length|pluralize }}:</h3>
 <ul class="children">

@@ -20,11 +20,11 @@ function mapOf(div, type, id) {
         numZoomLevels: 19,
         maxResolution: 156543.0339,
         maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
-                                         20037508.34, 20037508.34)
+                                         20037508.34, 20037508.34),
+        controls: [new OSMEditor.HashControl(null, "/static/map.html", {updateUrl: false})]                                 
     };
 
     var map = new OpenLayers.Map(div, options);
-    map.addControl(new OpenLayers.Control.Permalink(null, "/static/map.html"));
     var mapnik = new OpenLayers.Layer.TMS(
         "OpenStreetMap (Mapnik)",
         "http://tile.openstreetmap.org/",

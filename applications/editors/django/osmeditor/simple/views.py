@@ -139,7 +139,7 @@ def help(request):
 
 def api_proxy(request, url):
     http = httplib2.Http()   
-    if request.session['username']:
+    if 'username' in request.session:
         http.add_credentials(request.session['username'], request.session['password'])
     url = "%s/%s?%s" % (settings.OSM_API, url, urllib.urlencode(request.GET))
     body = (request.raw_post_data or None)

@@ -220,7 +220,7 @@
                     "http://labs.metacarta.com/wms/vmap0",
                     {layers: 'basic'} );
             var mapnik = new OpenLayers.Layer.TMS(
-                "OpenStreetMap (Mapnik)",
+                "Mapnik (OpenStreetMap)",
                   ["http://a.tile.openstreetmap.org/",
                    "http://b.tile.openstreetmap.org/"],
                 {
@@ -230,12 +230,24 @@
                 }
             );
             var cyclemap = new OpenLayers.Layer.TMS(
-                "CycleMap (OpenStreetMap)",
+                "CycleMap (CloudMade)",
                 [
                 "http://a.andy.sandbox.cloudmade.com/tiles/cycle/",
                 "http://b.andy.sandbox.cloudmade.com/tiles/cycle/",
                 "http://c.andy.sandbox.cloudmade.com/tiles/cycle/"
                 ], 
+                {
+                    type: 'png', getURL: osm_getTileURL,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> Contributors',
+                    buffer: 0
+                }
+            );
+            var minutelyNoName = new OpenLayers.Layer.TMS(
+                "No Name (CloudMade)",
+                ["http://a.matt.sandbox.cloudmade.com/123/3/256/", 
+                 "http://b.matt.sandbox.cloudmade.com/123/3/256/", 
+                 "http://c.matt.sandbox.cloudmade.com/123/3/256/"
+                ],
                 {
                     type: 'png', getURL: osm_getTileURL,
                     attribution: '&copy; <a href="http://www.openstreetmap.org/">OpenStreetMap</a> Contributors',
@@ -261,7 +273,7 @@
             panel.activateControl(panel.controls[0]);
             map.addControl(new OpenLayers.Control.Permalink());
             map.addControl(new OpenLayers.Control.Permalink($("potlatchLinkHref"), "http://openstreetmap.org/edit.html", {displayClass: 'potlatchLink'}));
-            map.addLayers([mapnik, cyclemap, yahoo]);
+            map.addLayers([mapnik, cyclemap, minutelyNoName, yahoo]);
             map.addControl(new OpenLayers.Control.LayerSwitcher());
             if (!map.getCenter()) { map.zoomToMaxExtent(); }
         }

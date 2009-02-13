@@ -3,6 +3,7 @@
     <title>Simple OSM Editor Map Viewer</title>
     <script src="http://openlayers.org/api/OpenLayers.js"></script>
     <link rel="stylesheet" href="http://openlayers.org/api/theme/default/style.css" type="text/css" />
+    <link rel="stylesheet" href="/static/base.css" type="text/css" />
 
     <style type="text/css">
        .potlatchLink {
@@ -21,6 +22,145 @@
     </style>  
     <script type="text/javascript">
         var map, layer;
+        var OSMEditor = {};
+        OSMEditor.CreatePOIClick = OpenLayers.Class(OpenLayers.Control, {               
+             title: 'Create POI',
+             initialize: function(options) {
+                 OpenLayers.Control.prototype.initialize.apply(
+                     this, arguments
+                 ); 
+                 this.handler = new OpenLayers.Handler.Click(
+                     this, {
+                         'dblclick': this.onClick,
+                     }, {
+                         'double': true,
+                         'stopDouble': true,
+                         'single': false
+                     }
+                 );
+             }, 
+
+             onClick: function(evt) {
+                 var xy = evt.xy;
+                 var f = new OpenLayers.Format.XML();
+                 var loc = map.getLonLatFromPixel(evt.xy);
+                 loc.transform(map.getProjectionObject(), map.displayProjection);
+                 var osm = f.createElementNS(null, "osm");
+                 osm.setAttribute("version", "0.5");
+                 var node = f.createElementNS(null, "node");
+                 node.setAttribute("lon", loc.lon);
+                 node.setAttribute("lat", loc.lat);
+                 osm.appendChild(node);
+                 var node = f.write(osm);
+                 var request = OpenLayers.Request.PUT({
+                     url: "/api/0.5/node/create",
+                     data: node,
+                     callback: this.handleResponse
+                 });           
+             },
+
+             handleResponse: function(req) {
+                 var id = req.responseText;
+                 document.location = "/node/" + id;
+             }
+        });     
+        OSMEditor.LoadDataClick = OpenLayers.Class(OpenLayers.Control, {                
+             title: 'Browse OSM Data by clicking',
+             initialize: function(options) {
+                 OpenLayers.Control.prototype.initialize.apply(
+                     this, arguments
+                 ); 
+                 this.handler = new OpenLayers.Handler.Click(
+                     this, {
+                         'click': this.onClick
+                     }
+                 );
+             }, 
+
+             onClick: function(evt) {
+                 if (map.getResolution() > 30) {
+                     alert("sorry, zoom in");
+                     return;
+                 }    
+                 var output = document.getElementById("data");
+                 var xy = evt.xy;
+                 var b = new OpenLayers.Bounds();
+                 b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x-30, xy.y-30)));
+                 b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x+30, xy.y+30)));
+                 this.lastLonLat = b.getCenterLonLat();
+                 if (this.selectFeature) {
+                     this.selectFeature.destroy();
+                 }    
+                 if (this.layers) {
+                     for (var i = 0; i <this.layers.length; i++) {
+                         this.layers[i].destroy();
+                     }
+                 }
+                 $("data").innerHTML = "";
+                 $("loading").innerHTML = "Loading...";
+                 var styleMap = new OpenLayers.StyleMap({'default': OpenLayers.Util.extend(OpenLayers.Feature.Vector.style['default'], {strokeWidth: 5, cursor: 'pointer'})});
+
+                 this.layers = []
+                 this.layers.push(
+                     new OpenLayers.Layer.GML("", 
+                         "/api/0.5/map?bbox="+b.clone().transform(map.getProjectionObject(), map.displayProjection).toBBOX(), 
+                         {format: OpenLayers.Format.OSM, styleMap: styleMap, projection: map.displayProjection}));
+                 
+                 var selectFeature = new OpenLayers.Control.SelectFeature(this.layers[0]);
+                 var click = this;
+                 for (var i = 0; i < this.layers.length; i++) {
+                     
+                     this.layers[i].events.on({
+                     'featureselected': 
+                         function(e) {
+                             var feature = e.feature;
+                             var type = "way"; 
+                             if (feature.geometry.CLASS_NAME == "OpenLayers.Geometry.Point") {
+                                 type = "node";
+                             }    
+                             var s = "<a href='/" + type +"/" + feature.osm_id +"'>Edit "+ type + " " + feature.osm_id + "</a>";
+                             var tags = "<ul>"; 
+                             for (var key in feature.attributes) {
+                                 if (key.search(":") == -1) {
+                                     tags += "<li><b>" + key + "</b>: " + feature.attributes[key] + "</li>";
+                                 }
+                             }
+                             tags += "</ul>";
+                             document.getElementById("data").innerHTML = s + tags;
+                         },
+                     'featureunselected': function () {
+                         $("data").innerHTML = "";
+
+                     },
+                     "loadend": 
+                         function() { 
+                             $("loading").innerHTML = this.features.length + " loaded";
+                             if (this.features.length == 1) {
+                                 selectFeature.select(this.features[0]);
+                             } else {
+                                 var matches = [];
+                                 var point = new OpenLayers.Geometry.Point(click.lastLonLat.lon, click.lastLonLat.lat); 
+                                 for (var i = 0; i < this.features.length; i++) {
+                                      if (this.features[i].geometry.intersects(point)) {
+                                         matches.push(this.features[i]);
+                                      }
+                                 }
+                                 if (matches.length == 1) {
+                                     selectFeature.select(matches[0]);
+                                 }    
+                             }
+                                 
+                         }    
+                     });
+                 }    
+                 this.selectFeature = selectFeature;
+                 map.addControl(this.selectFeature);
+                 this.selectFeature.activate();
+                 
+                 map.addLayers(this.layers);
+             }
+
+         }); 
         function onPopupClose(evt) {
             selectControl.unselect(selectedFeature);
         }
@@ -40,107 +180,6 @@
             feature.popup = null;
         }    
         function init(){
-           OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
-                defaultHandlerOptions: {
-                    'single': true,
-                    'pixelTolerance': 0
-                },
-
-                initialize: function(options) {
-                    OpenLayers.Control.prototype.initialize.apply(
-                        this, arguments
-                    ); 
-                    this.handler = new OpenLayers.Handler.Click(
-                        this, {
-                            'click': this.onClick
-                        }
-                    );
-                }, 
-
-                onClick: function(evt) {
-                    if (map.getResolution() > 30) {
-                        alert("sorry, zoom in");
-                        return;
-                    }    
-                    var output = document.getElementById("data");
-                    var xy = evt.xy;
-                    var b = new OpenLayers.Bounds();
-                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x-30, xy.y-30)));
-                    b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x+30, xy.y+30)));
-                    this.lastLonLat = b.getCenterLonLat();
-                    if (this.selectFeature) {
-                        this.selectFeature.destroy();
-                    }    
-                    if (this.layers) {
-                        for (var i = 0; i <this.layers.length; i++) {
-                            this.layers[i].destroy();
-                        }
-                    }
-                    $("data").innerHTML = "";
-                    $("loading").innerHTML = "Loading...";
-                    var styleMap = new OpenLayers.StyleMap({'default': OpenLayers.Util.extend(OpenLayers.Feature.Vector.style['default'], {strokeWidth: 5, cursor: 'pointer'})});
-
-                    this.layers = []
-                    this.layers.push(
-                        new OpenLayers.Layer.GML("", 
-                            "/api/0.5/map?bbox="+b.clone().transform(map.getProjectionObject(), map.displayProjection).toBBOX(), 
-                            {format: OpenLayers.Format.OSM, styleMap: styleMap, projection: map.displayProjection}));
-                    
-                    var selectFeature = new OpenLayers.Control.SelectFeature(this.layers[0]);
-                    var click = this;
-                    for (var i = 0; i < this.layers.length; i++) {
-                        
-                        this.layers[i].events.on({
-                        'featureselected': 
-                            function(e) {
-                                var feature = e.feature;
-                                var type = "way"; 
-                                if (feature.geometry.CLASS_NAME == "OpenLayers.Geometry.Point") {
-                                    type = "node";
-                                }    
-                                var s = "<a href='/" + type +"/" + feature.osm_id +"'>Edit "+ type + " " + feature.osm_id + "</a>";
-                                var tags = "<ul>"; 
-                                for (var key in feature.attributes) {
-                                    if (key.search(":") == -1) {
-                                        tags += "<li><b>" + key + "</b>: " + feature.attributes[key] + "</li>";
-                                    }
-                                }
-                                tags += "</ul>";
-                                document.getElementById("data").innerHTML = s + tags;
-                            },
-                        'featureunselected': function () {
-                            $("data").innerHTML = "";
-
-                        },
-                        "loadend": 
-                            function() { 
-                                $("loading").innerHTML = this.features.length + " loaded";
-                                if (this.features.length == 1) {
-                                    selectFeature.select(this.features[0]);
-                                } else {
-                                    var matches = [];
-                                    var point = new OpenLayers.Geometry.Point(click.lastLonLat.lon, click.lastLonLat.lat); 
-                                    for (var i = 0; i < this.features.length; i++) {
-                                         if (this.features[i].geometry.intersects(point)) {
-                                            matches.push(this.features[i]);
-                                         }
-                                    }
-                                    if (matches.length == 1) {
-                                        selectFeature.select(matches[0]);
-                                    }    
-                                }
-                                    
-                            }    
-                        });
-                    }    
-                    this.selectFeature = selectFeature;
-                    map.addControl(this.selectFeature);
-                    this.selectFeature.activate();
-                    
-                    map.addLayers(this.layers);
-                }
-
-            }); 
             var options = {
                 projection: new OpenLayers.Projection("EPSG:900913"),
                 displayProjection: new OpenLayers.Projection("EPSG:4326"),
@@ -164,11 +203,19 @@
                     buffer: 0
                 }
             );
-            var control = new OpenLayers.Control.Click();
-            map.addControl(control);
-            control.activate();
+
+            var panel = new OpenLayers.Control.Panel({displayClass: 'mainMapToolbar'});
+            panel.addControls(new OSMEditor.LoadDataClick({
+                'displayClass': 'loadData'
+            }));
+            panel.addControls(new OSMEditor.CreatePOIClick({
+                'displayClass': 'createPoi'
+            }));
+            map.addControl(panel);
+            panel.activate();
+            panel.activateControl(panel.controls[0]);
             map.addControl(new OpenLayers.Control.Permalink());
-            map.addControl(new OpenLayers.Control.Permalink(potlatchLinkHref, "http://openstreetmap.org/edit.html", {displayClass: 'potlatchLink'}));
+            map.addControl(new OpenLayers.Control.Permalink($("potlatchLinkHref"), "http://openstreetmap.org/edit.html", {displayClass: 'potlatchLink'}));
             map.addLayer(mapnik);
             if (!map.getCenter()) { map.zoomToMaxExtent(); }
         }
@@ -183,7 +230,7 @@
                 return OpenLayers.Util.getImagesLocation() + "blank.gif";
             } else {
                 x = ((x % limit) + limit) % limit;
-                path = z + "/" + x + "/" + y + "." + this.type;
+                var path = z + "/" + x + "/" + y + "." + this.type;
                 var url = this.url;
                 if (url instanceof Array) {
                     url = this.selectUrl(path, url);

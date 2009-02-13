@@ -22,3 +22,33 @@
 .head h1 {font-size: 1.3em; font-weight:normal; } 
 
     label.delete {color:#f00;font-weight:normal; width:5em!important;}
+
+.mainMapToolbar {
+    float:right;
+    right: 0px;
+    height: 30px; 
+    width: 200px;
+}
+.mainMapToolbar div { 
+  background-repeat: no-repeat;
+  float:right;
+  width:  24px;
+  height: 24px;
+  margin: 5px;
+}
+.mainMapToolbar .loadDataItemActive { 
+  background-image: url("/static/media/select_feature_on.png");
+  background-repeat: no-repeat;
+}
+.mainMapToolbar .loadDataItemInactive { 
+  background-image: url("/static/media/select_feature_off.png");
+  background-repeat: no-repeat;
+}
+.mainMapToolbar .createPoiItemActive {
+  background-position: -77px -23px; 
+  background-image: url("http://openlayers.org/api/theme/default/img/editing_tool_bar.png");
+}
+.mainMapToolbar .createPoiItemInactive {
+  background-position: -77px -0px; 
+  background-image: url("http://openlayers.org/api/theme/default/img/editing_tool_bar.png");
+}

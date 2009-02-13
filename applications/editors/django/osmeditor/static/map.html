@@ -128,7 +128,7 @@
 
                  this.layers = []
                  this.layers.push(
-                     new OpenLayers.Layer.GML("", 
+                     new OpenLayers.Layer.GML("OSM Data", 
                          "/api/0.5/map?bbox="+b.clone().transform(map.getProjectionObject(), map.displayProjection).toBBOX(), 
                          {format: OpenLayers.Format.OSM, styleMap: styleMap, projection: map.displayProjection}));
                  
@@ -276,7 +276,7 @@
         <div id="loginLink"><a id="loginA" href="/login/" target="_blank" style="display:none">Login</a></div>
         <div id="helpLink"><a href="/help/" target="_blank">Help?</a></div>
         <div id="data" style="position:absolute; left: 5px; bottom:5px; z-index:10000; background-color: white; padding: 5px"></div>
-        <div id="loading" style="position:absolute; right: 5px; top:45px; z-index:10000"></div>
+        <div id="loading" style="position:absolute; right: 200px; top:5px; z-index:10000"></div>
         <div class="potlatchLink"><a id="potlatchLinkHref">Edit (with Potlatch)</a></div>
     </div>
 

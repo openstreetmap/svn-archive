@@ -27,6 +27,13 @@
        #loginLink a {
         color: red;
        }
+       .permalink {
+        font-size: smaller;
+        position: absolute;
+        right: 1em;
+        bottom: 17px;
+        z-index: 10000;
+       }
        .potlatchLink {
         font-size: smaller;
         position: absolute;
@@ -44,6 +51,66 @@
     <script type="text/javascript">
         var map, layer;
         var OSMEditor = {};
+        OSMEditor.HashControl = OpenLayers.Class(OpenLayers.Control.Permalink, {
+            updateLink: function() {
+                var href = OpenLayers.Util.getParameterString(this.createParams());
+                document.location.hash= "m-"+href;
+                this.element.href = document.location.hash;
+            },
+    draw: function() {
+        OpenLayers.Control.prototype.draw.apply(this, arguments);
+          
+        if (!this.element) {
+            this.div.className = this.displayClass;
+            this.element = document.createElement("a");
+            this.element.innerHTML = OpenLayers.i18n("permalink");
+            this.element.href="";
+            this.div.appendChild(this.element);
+        }
+        this.map.events.on({
+            'moveend': this.updateLink,
+            'changelayer': this.updateLink,
+            'changebaselayer': this.updateLink,
+            scope: this
+        });
+        
+        // Make it so there is at least a link even though the map may not have
+        // moved yet.
+        this.updateLink();
+        
+        return this.div;
+    }
+        });
+        OSMEditor.HashParser = OpenLayers.Class(OpenLayers.Control.ArgParser, {
+            setMap: function(map) {
+                OpenLayers.Control.prototype.setMap.apply(this, arguments);
+                    var hstr = "?"+document.location.hash.substr(3, document.location.hash.length - 1);
+                    var args = OpenLayers.Util.getParameters(hstr);
+                    // Be careful to set layer first, to not trigger unnecessary layer loads
+                    if (args.layers) {
+                        this.layers = args.layers;
+    
+                        // when we add a new layer, set its visibility 
+                        this.map.events.register('addlayer', this, 
+                                                 this.configureLayers);
+                        this.configureLayers();
+                    }
+                    if (args.lat && args.lon) {
+                        this.center = new OpenLayers.LonLat(parseFloat(args.lon),
+                                                            parseFloat(args.lat));
+                        if (args.zoom) {
+                            this.zoom = parseInt(args.zoom);
+                        }
+    
+                        // when we add a new baselayer to see when we can set the center
+                        this.map.events.register('changebaselayer', this, 
+                                                 this.setCenter);
+                        this.setCenter();
+                    }
+            }
+        });
+
+    
         OSMEditor.CreatePOIClick = OpenLayers.Class(OpenLayers.Control, {               
              title: 'Create POI',
              initialize: function(options) {
@@ -212,7 +279,8 @@
                 units: "m",
                 maxResolution: 156543.03392804062,
                 numZoomLevels: 19,
-                maxExtent: new OpenLayers.Bounds(-20037508.342787, -20037508.342788, 20037508.342789, 20037508.342789 )
+                maxExtent: new OpenLayers.Bounds(-20037508.342787, -20037508.342788, 20037508.342789, 20037508.342789 ),
+                controls: [new OSMEditor.HashParser(), new OpenLayers.Control.PanZoomBar(), new OpenLayers.Control.Navigation(), new OpenLayers.Control.Attribution()]
             };
 
             map = new OpenLayers.Map( 'map', options );
@@ -271,7 +339,7 @@
             map.addControl(panel);
             panel.activate();
             panel.activateControl(panel.controls[0]);
-            map.addControl(new OpenLayers.Control.Permalink());
+            map.addControl(new OSMEditor.HashControl());
             map.addControl(new OpenLayers.Control.Permalink($("potlatchLinkHref"), "http://openstreetmap.org/edit.html", {displayClass: 'potlatchLink'}));
             map.addLayers([mapnik, cyclemap, minutelyNoName, yahoo]);
             map.addControl(new OpenLayers.Control.LayerSwitcher());

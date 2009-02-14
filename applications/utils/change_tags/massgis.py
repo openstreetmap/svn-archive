@@ -149,4 +149,12 @@ def ramps(tags, type):
 
     tags['created_by'] = 'change_tags.py - massgis ramps %s' % __version__
 
-    return changed    
+    return changed   
+
+def clear_node_tags(tags, type):
+    changed = False
+    if 'attribution' in tags and 'source' in tags:
+        if tags['attribution'] == 'Office of Geographic and Environmental Information (MassGIS)' and len(tags) == 2 or (len(tags) == 3 and 'created_by' in tags):
+            tags = {}
+            changed = True
+    return changed        

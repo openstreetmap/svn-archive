@@ -43,7 +43,8 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         PreferenceChangedListener
 {
 	public int currentZoomLevel = 14;
-    ArrayList<HashMap<SlippyMapKey, SlippyMapTile>> tileStorage = null;
+    //ArrayList<HashMap<SlippyMapKey, SlippyMapTile>> tileStorage = null;
+	private HashMap<SlippyMapKey, SlippyMapTile>[] tileStorage = null;
 
     Point[][]                                  pixelpos    = new Point[21][21];
     LatLon                                     lastTopLeft;
@@ -58,7 +59,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     public SlippyMapLayer()
     {
         super(tr("Slippy Map"));
-	background = true;
+        background = true;
 
         clearTileStorage();
 
@@ -177,10 +178,11 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
      * Zoom in, go closer to map.
      */
     public void increaseZoomLevel() {
-    	//TODO max lvl should be in preferences...
-    	if(currentZoomLevel < 17) {
+    	if(currentZoomLevel < SlippyMapPreferences.getMaxZoomLvl()) {
     		currentZoomLevel++;
-    		loadAllTiles();
+    		//if(SlippyMapPreferences.getAutoloadTiles()) {
+    		//	loadAllTiles();
+    		//}
     	}
     }
     
@@ -190,16 +192,20 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     public void decreaseZoomLevel() {
     	if(currentZoomLevel > 10) {
     		currentZoomLevel--;
-    		loadAllTiles();
+    		//if(SlippyMapPreferences.getAutoloadTiles()) {
+    		//	loadAllTiles();
+    		//}
     	}
     }
     
-    private void clearTileStorage()
+    public void clearTileStorage()
     {
-        tileStorage = new ArrayList<HashMap<SlippyMapKey, SlippyMapTile>>(20);
+    	int maxZoom = SlippyMapPreferences.getMaxZoomLvl();
+    	// +1 because of array indexed from 0.
+        tileStorage = new HashMap[maxZoom+1];
 
-        for (int i = 0; i < 18; i++)
-            tileStorage.add(new HashMap<SlippyMapKey, SlippyMapTile>());
+        for (int i = 0; i < maxZoom+1; i++)
+            tileStorage[i] = new HashMap<SlippyMapKey, SlippyMapTile>();
     }
 
     void loadAllTiles()
@@ -239,10 +245,10 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             {
             	SlippyMapKey key = new SlippyMapKey(x,y);
 
-                SlippyMapTile tile = tileStorage.get(currentZoomLevel).get(key);
+                SlippyMapTile tile = tileStorage[currentZoomLevel].get(key);
 
                 if (tile == null)
-                    tileStorage.get(currentZoomLevel).put(key,
+                    tileStorage[currentZoomLevel].put(key,
                             tile = new SlippyMapTile(x, y, currentZoomLevel));
 
                 if (tile.getImage() == null)
@@ -320,12 +326,22 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             for (int y = z12y0 - 1; y <= z12y1; y++)
             {
             	SlippyMapKey key = new SlippyMapKey(x,y);
-                SlippyMapTile tile = tileStorage.get(currentZoomLevel).get(key);
+                SlippyMapTile tile;
+                try
+                {
+                	tile = tileStorage[currentZoomLevel].get(key);
+                } catch (IndexOutOfBoundsException ex) {
+                	throw new RuntimeException("currentZoomLevel=" + currentZoomLevel + " and tile storage array have just size=" + tileStorage.length + " and maxZoomLvl in preferences is " + SlippyMapPreferences.getMaxZoomLvl() + ".", ex);
+                }
 
                 if (tile == null)
                 {
-                    tileStorage.get(currentZoomLevel).put(key,
-                            tile = new SlippyMapTile(x, y, currentZoomLevel));
+                	tile = new SlippyMapTile(x, y, currentZoomLevel);
+                    tileStorage[currentZoomLevel].put(key, tile);
+                    if(SlippyMapPreferences.getAutoloadTiles()) {
+                    	//TODO probably do on background
+                    	tile.loadImage();
+            		}
                 }
                 Image img = tile.getImage();
 
@@ -356,7 +372,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             {
             	SlippyMapKey key = new SlippyMapKey(x,y);
                 int texty = p.y + 2 + fontHeight;
-                SlippyMapTile tile = tileStorage.get(currentZoomLevel).get(key);
+                SlippyMapTile tile = tileStorage[currentZoomLevel].get(key);
                 p = pixelpos[x - z12x0 + 1][y - z12y0 + 2];
                 g.drawString("x=" + x + " y=" + y + " z=" + currentZoomLevel + "", p.x + 2, texty);
                 texty += 1 + fontHeight;
@@ -397,12 +413,16 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         oldg.drawImage(bufferImage, 0, 0, null);
 
         if((z12x1 - z12x0 < 2) || (z12y1 - z12y0 < 2)) {
-        	increaseZoomLevel();
+        	if(SlippyMapPreferences.getAutozoom()) {
+        		increaseZoomLevel();
+        	}
         	this.paint(oldg, mv);
         }
         
         if((z12x1 - z12x0 > 6) || (z12y1 - z12y0 > 6)) {
-        	decreaseZoomLevel();
+        	if(SlippyMapPreferences.getAutozoom()) {
+        		decreaseZoomLevel();
+        	}
         	this.paint(oldg, mv);
         }
         
@@ -437,9 +457,9 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             return null;
 
         SlippyMapKey key = new SlippyMapKey(tilex,tiley);
-        SlippyMapTile tile = tileStorage.get(currentZoomLevel).get(key);
+        SlippyMapTile tile = tileStorage[currentZoomLevel].get(key);
         if (tile == null)
-            tileStorage.get(currentZoomLevel).put(key,
+            tileStorage[currentZoomLevel].put(key,
                     tile = new SlippyMapTile(tilex, tiley, currentZoomLevel));
         return tile;
     }

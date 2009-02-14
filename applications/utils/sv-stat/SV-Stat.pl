@@ -33,7 +33,7 @@ $bildSource="Quelle:unbekannt";
 # Koordinaten aus *.coordinaten nehmen ->0 Koordinaten aus OSM "place=suburb" Tag erzeugen ->1 (Eine coordinaten.autogen Datei wird automatisch erzeugt) 
 $autocoordinaten=1;
 # Bindestriche in Straßennahmen aus .csv und OSM entfernen? Führt zu Missverständnissen, wenn die Striche weg sind und User auf dieser Basis neue Straßen taggen
-$strip_dash_names=0;
+$strip_dash_names=1;
 # einen Link hinter nicht vorhandenen Straßen erstellen, damit man weiss wo man noch zum mappen hinfahren muss.
 $link_unknown=1;
 my $name="";

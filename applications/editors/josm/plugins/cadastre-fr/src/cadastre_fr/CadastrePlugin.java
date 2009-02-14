@@ -169,7 +169,7 @@ public class CadastrePlugin extends Plugin {
 
     public static void refreshConfiguration() {
         source = Main.pref.get("cadastrewms.source",
-                "cadastre-dgi-fr source : Direction Générale des Impôts - Cadastre ; mise à jour : AAAA");
+                "cadastre-dgi-fr source : Direction G\u00e9n\u00e9rale des Imp\u00f4ts - Cadastre ; mise \u00e0 jour : AAAA");
         autoSourcing = Main.pref.getBoolean("cadastrewms.autosourcing", true);
         alterColors = Main.pref.getBoolean("cadastrewms.alterColors");
         drawBoundaries = Main.pref.getBoolean("cadastrewms.drawBoundaries", false);

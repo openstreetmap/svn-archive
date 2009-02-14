@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import xml.etree.cElementTree as ET
+import sets
 import sys
 import codecs
 import optparse
@@ -54,7 +55,6 @@ def convertStr(s):
 # Namespaces
 nrn_ns = "{http://www.geobase.ca/nrn}"
 ogc_ns = "{http://www.opengis.net/gml}"
-
 # Mapping of NRN road types to OSM highway types
 highway = {}
 highway["Freeway"] = "trunk"
@@ -78,7 +78,7 @@ CRS83.ImportFromEPSG(4617)
 WGS84=osgeo.osr.SpatialReference()
 WGS84.ImportFromEPSG(4326)
 transform=osgeo.osr.CoordinateTransformation(CRS83,WGS84)
-
+standAloneList={}
 
 import string
 import sys
@@ -152,33 +152,105 @@ class addrHandler(sax.ContentHandler):
       else :
         self.string = self.string + string
 
+class RoadMatchHandler(sax.ContentHandler):
+  count = 0
+  
+  string = None
+    
+  waiting = False
+  feature = False
+  attribute = None
+  nid = None
+  split=None
+  
+  def __init__(self):
+    print "Starting to process Exclusion information..."
+  
+  def counter(self):
+    if self.count % 5000 == 0:
+      print self.count
+    self.count += 1  
+  
+  def startDocument(self):
+    return
+   
+  def endDocument(self):
+    return
+    
+  def startElement(self, name, attributes):
+    if name == 'feature':
+      self.feature=True
+      self.nid=None
+      self.src_state=None
+      self.split=False
+      self.counter()
+      
+    if name == 'property':
+      self.attribute=attributes['name']
+      self.waiting = True
+  
+  def endElement(self,name):
+    if name=='property' and self.feature==True and self.attribute=='NID':
+      self.waiting = False
+      self.nid=self.string
+      self.string=None
+    elif name=='property' and self.feature==True and self.attribute=='SrcState':
+      self.src_state=self.string
+      self.string=None
+      self.waiting=False
+    elif name=='property':
+      self.waiting=False
+      if (self.attribute == 'SplitStart' or self.attribute=='SplitEnd') and self.string=='Y':
+        self.split=True
+      self.string=None
+    if name=='feature' and self.nid != None:
+      self.feature=False
+      if self.src_state=='Standalone' and self.split==False:
+        standAloneList[self.nid]=1
+
+  def characters(self,string):
+    string = unicode(string)
+  
+    if self.waiting == True:
+      if self.string == None:
+        self.string = string
+      else :
+        self.string = self.string + string
+
+
 class geomHandler(sax.ContentHandler):
 
   count = 0
   boundary=None
   attribution = "GeoBase®"
-  source = "GeobaseImport2008"
+  source = "Geobase_Import_2009"
 
   roadSegment = None
   ferrySegment = None
   junctionPoint = None
   way = None
   nodes = None
-  
+  place=None
   tags = None
   coords = []
   cur_nodes=[]
   nodeid = -1000
   junctionList=[]
   waiting = False
-  waitingCoord = False
-  
+  waitingCoord = False  
   string = None
   cstring = None
   way_map={}
+  #A map of nodes keyed on the lat/lon
   node_map={}
-  osm = ET.Element("osm", generator='geobase2osm', version='0.5')
-
+  #A map of nodes keyed on id
+  node_map_id={}
+  nid=None
+  osm_ways = sets.Set()
+  osm_nodes= sets.Set()
+  osm_standalone=sets.Set()
+  dataset=None
+  
   def counter(self):
     if self.count % 5000 == 0:
       printStr( self.count )
@@ -261,9 +333,14 @@ class geomHandler(sax.ContentHandler):
             
       if name == 'nrn:datasetName':
         self.waiting = True
-            
+      if name == 'nrn:right_OfficialPlaceName':
+        self.waiting=True
+      if name == 'nrn:right_OfficialStreetNameConcat':
+        self.waiting=True
       if name == 'nrn:structureType':
         self.waiting = True
+      if name == 'nrn:acquisitionTechnique':
+          self.waiting=True      
     if name == 'nrn:junctionType':
       self.waiting = True 
     if self.roadSegment == True or self.ferrySegment == True or self.junctionPoint==True:      
@@ -307,13 +384,12 @@ class geomHandler(sax.ContentHandler):
         self.tags['nrn:ferrySegmentId'] = text
       
       self.tags['route'] = 'ferry'
-      
-      self.string = None
-  
+           
+    
     if self.roadSegment == True:      
             
-      if name == 'nrn:roadSegmentId':
-        self.tags['nrn:roadSegmentId'] = text
+      #if name == 'nrn:roadSegmentId':
+        #self.tags['nrn:roadSegmentId'] = text
         
       if name == 'nrn:functionalRoadClass':
         self.tags['highway'] = highway[text ]
@@ -325,8 +401,10 @@ class geomHandler(sax.ContentHandler):
         self.tags['surface'] = text.lower()
       
       if name == 'nrn:datasetName':
-        self.tags['nrn:datasetName'] = text
-        
+        self.tags['geobase:datasetName'] = "NRN:" + text
+        self.dataset=text
+      if name == 'nrn:acquisitionTechnique':
+          self.tags['geobase:acquisitionTechnique']=text      
       if name == 'nrn:structureType':
         if text == 'Bridge' or text == 'Bridge Covered' or text == 'Bridge moveable' or text == 'Bridge unknown':
           # Found a bridge
@@ -337,8 +415,10 @@ class geomHandler(sax.ContentHandler):
           # Found a tunnel              
           self.tags['tunnel'] = 'yes'
           self.tags['layer'] = '-1'
-  
-      self.string = None
+      if name == 'nrn:right_OfficialPlaceName' and text != 'Unknown':
+        self.placeName=text;
+
+      
     if name == 'nrn:junctionType':
         self.tags['junctionType'] = text
         
@@ -346,61 +426,63 @@ class geomHandler(sax.ContentHandler):
     if self.roadSegment == True or self.ferrySegment == True :
     
       if name == 'nrn:nid':
-        self.tags['nrn:nid'] = text
+        self.tags['geobase:uuid'] = text
         
-      if name == 'nrn:routeNumber1' and text!="None":
+      if name == 'nrn:routeNumber1' and text!="None" and text != None:
         self.tags['ref'] = set([stringToInteger(text)])
         
       if self.tags.has_key('ref'):
-        if name == 'nrn:routeNumber2' and text!="None":
+        if name == 'nrn:routeNumber2' and text!="None" and text != None:
           self.tags['ref'].add(stringToInteger(text))
           
-        if name == 'nrn:routeNumber3' and text!="None":
+        if name == 'nrn:routeNumber3' and text!="None" and text != None:
           self.tags['ref'].add(stringToInteger(text))
           
-        if name == 'nrn:routeNumber4' and text!="None":
+        if name == 'nrn:routeNumber4' and text!="None" and text != None:
           self.tags['ref'].add(stringToInteger(text))
-          
+      if name=='nrn:right_OfficialStreetNameConcat' and text != "None" and text!="-" and text != "Unknown" :
+          self.tags['name']=text
+      
       if name == 'nrn:routeNameEnglish1' and text!="None":
-        self.tags['name'] = set([text])
-        
+        self.tags['alt_name:en'] = set([text])
+        self.tags['geobase:routeName1:en']=text
       if self.tags.has_key('name'):
         if name == 'nrn:routeNameEnglish2' and text!="None":
-          self.tags['name'].add(text)
-          
+          self.tags['alt_name:en'].add(text)
+          self.tags['geobase:routeName2:en']=text
         if name == 'nrn:routeNameEnglish3' and text!="None":
-          self.tags['name'].add(text)
-          
+          self.tags['alt_name:en'].add(text)
+          self.tags['geobase:routeName3:en']=text
         if name == 'nrn:routeNameEnglish4' and text!="None":
-          self.tags['name'].add(text)
-      
+          self.tags['alt_name:en'].add(text)
+          self.tags['geobase:routeName4:en']=text
       if name == 'nrn:routeNameFrench1' and text!="None":
-        self.tags['name:fr'] = set([text])
-        
+        self.tags['alt_name:fr'] = set([text])
+        self.tags['geobase:routeName1:fr']=text
       if self.tags.has_key('name:fr'):
         if name == 'nrn:routeNameFrench2' and text!="None":
-          self.tags['name:fr'].add(text)
-          
+          self.tags['alt_name:fr'].add(text)
+          self.tags['geobase:routeName2:fr']=text
         if name == 'nrn:routeNameFrench3' and text!="None": 
-          self.tags['name:fr'].add(text)
-          
+          self.tags['alt_name:fr'].add(text)
+          self.tags['geobase:routeName3:fr']=text
         if name == 'nrn:routeNameFrench4' and text!="None":
-          self.tags['name:fr'].add(text)
+          self.tags['alt_name:fr'].add(text)
+          self.tags['geobase:routeName4:fr']=text
     if self.roadSegment==True or self.ferrySegment==True or self.junctionPoint==True: 
       if name == 'gml:coordinates':
         self.appendCoordinates()
         
-       
-  
+    self.string = None  
     if name == 'nrn:FerryConnectionSegment':
       pass
   
     if name=='nrn:RoadSegment':
       
-      if self.tags['nrn:datasetName'] == 'Newfoundland and Labrador':
+      if self.dataset == 'Newfoundland and Labrador':
         pass
         
-      if self.tags['nrn:datasetName'] == 'Nova Scotia':
+      if self.dataset == 'Nova Scotia':
         if self.tags.has_key('ref'):
         
           if self.tags.has_key('highway'):
@@ -417,7 +499,7 @@ class geomHandler(sax.ContentHandler):
               if ref == 1:
                 self.tags['highway'] = 'trunk'
         
-      if self.tags['nrn:datasetName'] == 'Prince Edward Island':
+      if self.dataset == 'Prince Edward Island':
         if self.tags.has_key('ref'):
         
           if self.tags.has_key('highway'):
@@ -428,7 +510,7 @@ class geomHandler(sax.ContentHandler):
               if ref == 1:
                 self.tags['highway'] = 'trunk'
             
-      if self.tags['nrn:datasetName'] == 'New Brunswick':
+      if self.dataset == 'New Brunswick':
         if self.tags.has_key('ref'):
         
           if self.tags.has_key('highway'):
@@ -444,7 +526,7 @@ class geomHandler(sax.ContentHandler):
               if ref >= 200 and ref <= 1000:
                 self.tags['highway'] = 'tertiary'
                 
-      if self.tags['nrn:datasetName'] == 'Quebec':
+      if self.dataset == 'Quebec':
 
         if self.tags.has_key('ref'):
           
@@ -467,7 +549,7 @@ class geomHandler(sax.ContentHandler):
               if ref >= 200 and ref <= 399:
                 self.tags['highway'] = 'secondary'
         
-      if self.tags['nrn:datasetName'] == 'Ontario':
+      if self.dataset == 'Ontario':
         if self.tags.has_key('ref'):
           
           if self.tags.has_key('highway'):
@@ -489,7 +571,7 @@ class geomHandler(sax.ContentHandler):
               if ref >= 400 and ref < 500:
                 self.tags['highway'] = 'motorway'
         
-      if self.tags['nrn:datasetName'] == 'Manitoba':
+      if self.dataset == 'Manitoba':
         if self.tags.has_key('ref'):
           
           if self.tags.has_key('highway'):
@@ -508,7 +590,7 @@ class geomHandler(sax.ContentHandler):
               if ref == 1 or ref == 16 or ref == 75 or ref == 100:
                 self.tags['highway'] = 'trunk'
               
-      if self.tags['nrn:datasetName'] == 'Saskatchewan':
+      if self.dataset == 'Saskatchewan':
         if self.tags.has_key('ref'):
         
           if self.tags.has_key('highway'):
@@ -528,7 +610,7 @@ class geomHandler(sax.ContentHandler):
               if ref == 1 or ref == 16 or ref == 7 or ref == 1 or ref == 6 or ref == 39:
                 self.tags['highway'] = 'trunk'
                 
-      if self.tags['nrn:datasetName'] == 'Alberta':
+      if self.dataset == 'Alberta':
 
         if self.tags.has_key('ref'):
         
@@ -548,7 +630,7 @@ class geomHandler(sax.ContentHandler):
               if ref == 1 or ref == 2 or ref == 3 or ref == 4 or ref == 16 or ref == 35 or ref == 43 or ref == 49 or ref == 201 or ref == 216:
                 self.tags['highway'] = 'trunk'
                 
-      if self.tags['nrn:datasetName'] == 'British Columbia':
+      if self.dataset == 'British Columbia':
         if self.tags.has_key('ref'):
         
           if self.tags['highway'] == 'primary' or self.tags['highway'] == 'secondary':
@@ -559,7 +641,7 @@ class geomHandler(sax.ContentHandler):
               if ref == 1 or ref == 2 or ref == 3 or ref ==5 or ref == 16 or ref == 17 or ref == 97 or ref == 99:
                 self.tags['highway'] = 'trunk'
       
-      if self.tags['nrn:datasetName'] == 'Yukon Territory':
+      if self.dataset == 'Yukon Territory':
         if self.tags.has_key('ref'):
         
           if self.tags.has_key('highway'):
@@ -569,7 +651,7 @@ class geomHandler(sax.ContentHandler):
               if ref == 1 or ref == 2:
                 self.tags['highway'] = 'trunk'
       
-      if self.tags['nrn:datasetName'] == 'Northwest Territories':
+      if self.dataset == 'Northwest Territories':
         if self.tags.has_key('ref'):
         
           if self.tags.has_key('highway'):
@@ -579,31 +661,51 @@ class geomHandler(sax.ContentHandler):
               if ref == 1 or ref == 2 or ref == 3:
                 self.tags['highway'] = 'trunk'
         
-      if self.tags['nrn:datasetName'] == 'Nunavut':
+      if self.dataset == 'Nunavut':
         pass
         
-      # Catch all transcanada/yellowhead highway segments that we may have missed
-      if self.tags.has_key('name'):
-        if ('TransCanada Highway' in self.tags['name'] or 'Yellowhead Highway' in self.tags['name']) and self.tags['highway'] != 'motorway':
+      # Catch all transcanada/yellowhead highway segments that we may have missed  
+      if self.tags.has_key('alt_name:en'):
+        if ('TransCanada Highway' in self.tags['alt_name:en'] or 'Yellowhead Highway' in self.tags['alt_name:en']) and self.tags['highway'] != 'motorway':
           self.tags['highway'] = 'trunk'
-    
+          if 'TransCanada Highway' in self.tags['alt_name:en']:
+            self.tags['nat_name:en']='TransCanada Highway'
+            self.tags['nat_name:fr']='Route Transcanadienne'
+          if 'Yellowhead Highway' in self.tags['alt_name:en']:
+            self.tags['nat_name:en']='Yellowhead Highway'
+
     if name == 'nrn:FerryConnectionSegment' or name=='nrn:RoadSegment':
       shape=LineString(self.coords)
       #print "Checking Intersection on %s"  % str(self.coords)
-      if self.boundary==None or  self.boundary.intersects(shape) :
+      if (self.boundary==None or  self.boundary.intersects(shape) ):
         # Convert the sets back to semicolon separated strings      
         if self.tags.has_key('ref'):      
           self.tags['ref'] = setToString(self.tags['ref']);
-          
-        if self.tags.has_key('name'):
-          self.tags['name'] = setToString(self.tags['name']);
-          
-        if self.tags.has_key('name:fr'):
-          self.tags['name:fr'] = setToString(self.tags['name:fr']);
-          
+
+       
+
+        if self.tags.has_key('name')==False:
+          if self.dataset <> 'Quebec' and self.tags.has_key('alt_name:en'):
+            self.tags['name']=setToString(self.tags['alt_name:en'])
+          elif self.tags.has_key('alt_name:fr'):
+            self.tags['name']=setToString(self.tags['alt_name:fr'])
+        if self.tags.has_key('alt_name:en'):
+          self.tags['alt_name:en'] = setToString(self.tags['alt_name:en']);
+
+        if self.tags.has_key('alt_name:fr'):
+          self.tags['alt_name:fr'] = setToString(self.tags['alt_name:fr']);  
+        if self.placeName != None:
+          self.placeName=self.placeName + ',' + self.dataset
+        else:          
+          self.placeName=self.dataset
+        if self.placeName != None:
+          #Only set is in, if we at least have a province.
+          self.placeName=self.placeName + ',Canada'
+          self.tags['is_in']=self.placeName
           # Convert the tags to xml nodes
         for key, value in self.tags.iteritems():
           self.way.append(ET.Element('tag', k=key,v=value))
+        self.nid=self.tags['geobase:uuid']
         self.tags = None
               
         # add the default tags
@@ -619,6 +721,9 @@ class geomHandler(sax.ContentHandler):
       self.cur_nodes=[]
       self.junctionPoint=False
       self.waitingCoord
+      self.nid=None
+      self.placeName=None
+      self.dataset=None
     self.waiting = False
     self.depth = self.depth - 1
     return
@@ -637,7 +742,7 @@ class geomHandler(sax.ContentHandler):
             if elem.get('ref')==n.get('id') and elem.get('ref') != keep_id:
               elem.set('ref',keep_id)
           #Now delete n, it should not be used anywhere
-          self.osm.remove(n)
+          self.osm_nodes.remove(n)
     return
   def appendJunction(self):
   # Check if junction is in bounds
@@ -669,8 +774,8 @@ class geomHandler(sax.ContentHandler):
               node = ET.Element("node", visible='true', id=str(self.nodeid), lat=str(lat), lon=str(lon))
 
               # Add default tags
-              node.append(ET.Element('tag', k='attribution',v=self.attribution))
-              node.append(ET.Element('tag', k='source',v=self.source))
+              #node.append(ET.Element('tag', k='attribution',v=self.attribution))
+              #node.append(ET.Element('tag', k='source',v=self.source))
 
               # Add a reference to this node to the current way
               self.way.append(ET.Element('nd', ref=str(self.nodeid)))
@@ -692,21 +797,25 @@ class geomHandler(sax.ContentHandler):
 
   def appendWay(self):
     self.way.append(ET.Element('tag', k='attribution',v=self.attribution))
-    self.way.append(ET.Element('tag', k='source',v=self.source))
+    self.way.append(ET.Element('tag', k='source',v=self.source))   
     for n in self.cur_nodes:
-      self.osm.append(n)
+      self.osm_nodes.add(n)
       lat_attr = n.get('lat')
       lon_attr = n.get('lon')
       if self.node_map.has_key((lon_attr,lat_attr)) :
         self.node_map[(lon_attr,lat_attr)].append(n)
       else:
         self.node_map[(lon_attr,lat_attr)]=[n]
+      self.node_map_id[n.attrib['id']]=n
       if self.way_map.has_key(n.attrib['id']) :
         self.way_map[n.attrib['id']].append(self.way)
       else:
         self.way_map[n.attrib['id']]=[self.way]
     # add this way to the main document
-    self.osm.append(self.way)
+    
+    if  standAloneList.has_key(self.nid):
+      self.osm_standalone.add(self.way)
+    self.osm_ways.add(self.way)
       
 def stringToInteger(string):
   try:
@@ -768,6 +877,7 @@ def main():
   parser.add_option("-p", "--pretty", dest="indent", action="store_true", help="stylize the output file")
   parser.add_option("-b", "--boundsfile", dest="boundsfile",help="Boundary file")
   parser.add_option("-q", "--quiet", dest="quiet", action="store_true", help="Enable quiet mode")
+  parser.add_option("-e", "--roadmatch_standalone", dest="standAloneFile",help="RoadMatch File")
   (options, args) = parser.parse_args()
 
   global suppressoutput
@@ -788,7 +898,11 @@ def main():
     bounds=boundsfile.readline()
     
     boundary=loads(bounds)
-    
+  if options.standAloneFile != None and len(options.standAloneFile) >0:
+    standAloneHandler = RoadMatchHandler()
+    sax.parse(open(options.standAloneFile),standAloneHandler)
+    print "Standalone List Size %d" % (len(standAloneList))
+  
   # If we were given the addr file parse it
   if options.addrfile != None and len(options.addrfile) > 0:
     printStr( "Preparing to read '"+options.addrfile+"'" )
@@ -806,26 +920,83 @@ def main():
   printStr( "Parse of geomfile done" )
 
   for junct in handler.junctionList:
-   #Find the 'nodes' at these coordinates and merge them IF
-   # the junction is an intersection
-   handler.mergeNodes((str(junct[0]),str(junct[1])))
+    #Find the 'nodes' at these coordinates and merge them IF
+    # the junction is an intersection
+    handler.mergeNodes((str(junct[0]),str(junct[1])))
+
+  #
+  # If we ran with a standalone list, then we need to generate the standalone
+  # output file.
+  # The standalone output file contains just ways.
+  # we need to find only the nodes referenced by the standalone list.
+  
+  complete_osm=ET.Element("osm", generator='geobase2osm', version='0.5')
+  for n in handler.osm_nodes:
+    complete_osm.append(n)
+  for w in handler.osm_ways:
+    complete_osm.append(w)
+  
   
   # Format the code by default
   if options.indent:
     printStr( "Formatting output" )
-    indent(handler.osm)
+    for e in handler.osm_ways:
+        indent(e)
+    for e in handler.osm_nodes:        
+        indent(e)
     
   if options.compress:
     printStr( "Saving to '" + options.outputfile + ".gz'" )
     f = gzip.GzipFile(options.outputfile+".gz", 'wb');
-    f.write(ET.tostring(handler.osm))
+    f.write(ET.tostring(complete_osm))
     f.close()
-
   else:
     printStr( "Saving to '" + options.outputfile + "'" )
     f = open(options.outputfile, 'w')
-    f.write(ET.tostring(handler.osm))
+    f.write(ET.tostring(complete_osm))
     f.close()
 
+  complete_osm=None
+
+  if options.standAloneFile != None:
+    standalone_nodes=sets.Set()
+    print "Size of Standalone ways:%d" % (len(handler.osm_standalone))
+    for way in handler.osm_standalone:
+      for node in way.getiterator('nd'):
+        if node.get('ref') not in standalone_nodes:
+          #Find the node with the ref
+          standalone_nodes.add(node.get('ref'))
+
+    #Now For each XML node in handler.osm_nodes that is in the set, write it
+    standalone_osm=ET.Element("osm", generator='geobase2osm', version='0.5')
+    excluded_osm=ET.Element("osm", generator='geobase2osm', version='0.5')
+    excluded_nodes=sets.Set()
+    for n in handler.osm_nodes:
+      if n.get('id') in standalone_nodes:
+        standalone_osm.append(n)
+    print  "Scanning ways for standalones"
+    for w in handler.osm_ways:
+        if w in handler.osm_standalone:
+            standalone_osm.append(w)
+        else:
+            excluded_osm.append(w)
+            #Now Walk through excluded ways finding the excluded nodes
+            #This might contain duplicate nodes with the standalone set
+            #because junction nodes can be on a way in each set
+            for node in w.getiterator('nd'):
+                if node.get('ref') not in excluded_nodes:
+                    excluded_nodes.add(node.get('ref'))
+    print "Scanning excluded nodes"
+    for nref in excluded_nodes:
+        excluded_osm.insert(0,handler.node_map_id[nref])
+    print "Writing standalone"
+    f = open(options.outputfile+".standalone.osm",'w')
+    f.write(ET.tostring(standalone_osm))
+    f.close();
+    print "Writing excluded"
+    f = open(options.outputfile+".excluded.osm",'w')
+    f.write(ET.tostring(excluded_osm))
+    f.close();
+    print "Done"
 if __name__ == "__main__":
     main()

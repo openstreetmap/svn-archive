@@ -547,13 +547,13 @@ foreach my $stadtteil (sort (keys %stadtteile)) {
 	    print OUT " <h1>Es fehlen noch:</h1>\n<ul>\n";
 	    foreach my $k (sort @{$missingIn{$stadtteil}}) {
 
-		if ($link_unknown eq 1) {
+		if ($link_unknown==1) {
 		    my $ku=$k;
 		    $ku=~s/ /+/g;
 		    print OUT "<li>$k (<a href=\"http://maps.google.de/maps?f=q&source=s_q&hl=de&geocode=&q=$ku,+$ort\">GoogleMaps</a>)</li>\n";
 		} else {
 		    print OUT "<li>$k</li>\n";
-		}	print OUT "<li>$k</li>\n";
+		}	
 		$miss++;
 	    }
 	    print OUT "</ul>";

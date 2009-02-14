@@ -11,11 +11,13 @@ use vars qw($ort $ortURL $ortHTML $bundesland $pw_schutz
 	    $osmosis_minLon $osmosis_maxLon
 	    $bildSource $bugWikiText $bugWikiURL
 	    $csvSeperator $nutzungsErlaubnis $printBild
-	    $zuschnitt
-	    $java_bin $osmosisjar $debug
+	    $java_bin $osmosisjar $debug $autocoordinaten 
+	    $strip_dash_names $link_unknown
+	    $bzip2_bin
 	    );
 $java_bin="/usr/local/java/jre1.6.0_05.amd64/bin/java";
 $osmosisjar="/home/sven/gps/hamburg-stat/osmosis-0.26/osmosis.jar";
+$bzip2_bin="/usr/bin/bzip2";
 $csvSeperator=",";
 $pw_schutz=9;
 $standdate="";
@@ -25,10 +27,15 @@ $nutzungsErlaubnis="";
 $csvSpalteOrt=-1;
 $csvSpalteStr=-1;
 $printBild=0;
-$zuschnitt=1;
 $debug=0;
 $bundesland="";
 $bildSource="Quelle:unbekannt";
+# Koordinaten aus *.coordinaten nehmen ->0 Koordinaten aus OSM "place=suburb" Tag erzeugen ->1 (Eine coordinaten.autogen Datei wird automatisch erzeugt) 
+$autocoordinaten=1;
+# Bindestriche in Straßennahmen aus .csv und OSM entfernen? Führt zu Missverständnissen, wenn die Striche weg sind und User auf dieser Basis neue Straßen taggen
+$strip_dash_names=0;
+# einen Link hinter nicht vorhandenen Straßen erstellen, damit man weiss wo man noch zum mappen hinfahren muss.
+$link_unknown=1;
 my $name="";
 my $highway="";
 my %streets;
@@ -42,6 +49,11 @@ my %coordLat;
 my %coordLon;
 my $plz;
 my %postal_code;
+my $xmlstadtteil;
+my $xmlnodeid;
+my %stadtteillat;
+my %stadtteillon;
+
 sub getPrintable {
     my $str=shift;
     $str=~s/ä/ae/g;
@@ -101,9 +113,14 @@ sub xmlStart {
 	    print "name:$name\n" if $debug;
 	} elsif ($hash{'k'} eq "postal_code") {
 	    $plz=$hash{'v'};
+	} elsif (($hash{'k'} eq "place") and ($hash{'v'} eq "suburb")) {
+	    $xmlstadtteil=1;
 	}
     } elsif ($starttag eq "node") {
 	my $id=$hash{'id'};
+	$xmlstadtteil=0;
+	$name="";
+	$xmlnodeid=$id;
 	$osmLat{$id}=$hash{'lat'};
 	$osmLon{$id}=$hash{'lon'};
     } elsif ($starttag eq "nd") {
@@ -121,7 +138,9 @@ sub xmlEnd {
        
 	if (($highway ne "") or ($name=~ /Platz der j/)) {
 	    utf8::decode($name);
-	      $name=~s/-/ /g;
+	      if ($strip_dash_names==1) {
+		  $name=~s/-/ /g;
+	      }
 	      if ($name ne "") {
 		  $streets{$name}="nur in OSM";
 		  $coordLat{$name}=$streetLat;
@@ -145,6 +164,12 @@ sub xmlEnd {
 	      }
 	  }
 	print "$streetLat,$streetLon\n" if $debug;
+    } elsif ($endtag eq "node") {
+	if (($xmlstadtteil eq 1) and ($name ne "") and ($autocoordinaten eq 1)) {
+	    $stadtteillat{$name}=$osmLat{$xmlnodeid};
+	    $stadtteillon{$name}=$osmLon{$xmlnodeid};  
+	    print "Neuer Stadtteil: $name $stadtteillon{$name} $stadtteillat{$name}\n" if $debug;
+	}
     }
 
 }
@@ -163,7 +188,9 @@ sub formatNameAusSV {
     $n=~s/\"$//;
     $n=~s/\s\s\d.*$//;
     $n=~s/\s*$//;
-    $n=~s/-/ /g;
+    if ($strip_dash_names==1) {
+	 $n=~s/-/ /g;
+     }
     $n=~s/(\s*)$//;
     $n=~s/str.$/straße/;
     $n=~s/\sStr.$/ Straße/;
@@ -257,6 +284,7 @@ if (!(-d "$ortURL/s")) {
 # Osmosis 
 ############################################################################
 my @osmosiscmd=();
+my $zuschnittStr="";
 if (defined($osmosis_source))  {
     my $doit=0;
     if (-f "$ortURL.osm.bz2") {
@@ -269,32 +297,34 @@ if (defined($osmosis_source))  {
     } else {
 	$doit=1;
     }
-    if ($doit) {
-
-	if (defined($osmosis_minLat)) {
-	    defined($osmosis_maxLat) or die("osmosis_maxLat not defined");
-	    defined($osmosis_maxLon) or die("osmosis_maxLon not defined");
-	    defined($osmosis_minLon) or die("osmosis_minLon not defined");
-	    (-f $osmosis_source) or die("Osmosis Source $osmosis_source not found");
-	    @osmosiscmd=($java_bin,"-jar",$osmosisjar,
-			 "--rx","file=$osmosis_source",
-			 "--bb",
-			 "top=$osmosis_maxLat",
-			 "bottom=$osmosis_minLat",
-			 "left=$osmosis_minLon",
-			 "right=$osmosis_maxLon",
-			 "--wx","file=$ortURL.osm");
-	    
-	} elsif (defined($osmosis_polygon)) {
-	    
-	    @osmosiscmd=($java_bin,"-jar",$osmosisjar,
-			 "--rx","file=$osmosis_source",
-			 "--bp","file=$osmosis_polygon",
-			 "--wx","file=$ortURL.osm");
-	    
-	} else {
-	    die("osmosis_source is defined but no lat/lon or poly");
-	}
+    if (defined($osmosis_minLat)) {
+	defined($osmosis_maxLat) or die("osmosis_maxLat not defined");
+	defined($osmosis_maxLon) or die("osmosis_maxLon not defined");
+	defined($osmosis_minLon) or die("osmosis_minLon not defined");
+	(-f $osmosis_source) or die("Osmosis Source $osmosis_source not found");
+	@osmosiscmd=($java_bin,"-jar",$osmosisjar,
+		     "--rx","file=$osmosis_source",
+		     "--bb",
+		     "top=$osmosis_maxLat",
+		     "bottom=$osmosis_minLat",
+		     "left=$osmosis_minLon",
+		     "right=$osmosis_maxLon",
+		     "--wx","file=$ortURL.osm");
+	$zuschnittStr="Der Zuschnitt erfolgte durch die Koordinaten: ($osmosis_minLat,$osmosis_minLon),($osmosis_maxLat,$osmosis_maxLon).";
+    } elsif (defined($osmosis_polygon)) {
+	
+	@osmosiscmd=($java_bin,"-jar",$osmosisjar,
+		     "--rx","file=$osmosis_source",
+		     "--bp","file=$osmosis_polygon",
+		     "--wx","file=$ortURL.osm");
+	$zuschnittStr="Der Zuschnitt erfolgte durch das Polygon: <a href=\"$osmosis_polygon\">$osmosis_polygon</a>.";
+	my @cmd=("/bin/cp",$osmosis_polygon,$ortURL."/");
+	system(@cmd)==0 or die;
+    } else {
+	die("osmosis_source is defined but no lat/lon or poly");
+    }
+    if ($doit==0) {
+	@osmosiscmd=();
     }
 }
 if ($#osmosiscmd>-1) {
@@ -305,7 +335,7 @@ if ($#osmosiscmd>-1) {
     print join(" ",@osmosiscmd),"\n" if $debug;
     system(@osmosiscmd)==0 or die("Osmosis died with exit code: $?");
     # Bzip
-    my @bzipcmd=("/bin/bzip2","$ortURL.osm");
+    my @bzipcmd=($bzip2_bin,"$ortURL.osm");
     print join(" ",@bzipcmd),"\n" if $debug;
     system(@bzipcmd)==0 or die("Bzip2 died with exit code: $?");
 }
@@ -363,23 +393,7 @@ if (-f "$ortURL.ausnahme.wiki") {
     }
     close(FILE);
 }
-############################################################################
-my %lat;
-my %lon;
-open(FILE,"$ortURL.coordinaten") or die("File $ortURL.coordinaten not found");
-foreach my $line (<FILE>) {
-    chop $line;
-    if (!($line=~/^(\s*)$/))  {
-	my @arr=split /\t/,$line;
-	
-	my $name=$arr[1];
-#    utf8::decode($name);
-	$lat{$name}=$arr[2];
-	$lon{$name}=$arr[3];
-	print "yyy $name $lat{$name} $lon{$name}\n" if $debug;
-    }
-}
-close(FILE); 
+
 ############################################################################
 $streetLat=$streetLon="";
 my $xmlP = new XML::Parser ();
@@ -389,6 +403,31 @@ $xmlP->setHandlers (Start => \&xmlStart,
 open(FILE,"bzcat $ortURL.osm.bz2 |") or die("File $ortURL.osm.bz2 not found");
 $xmlP->parse(*FILE);
 close(FILE);
+############################################################################
+if ($autocoordinaten!=1) {
+    open(FILE,"$ortURL.coordinaten") or die("File $ortURL.coordinaten not found");
+    foreach my $line (<FILE>) {
+	chop $line;
+        if (!($line=~/^(\s*)$/))  {
+	    my @arr=split /\t/,$line;
+	    my $name=$arr[1];
+#    utf8::decode($name);
+	    $stadtteillat{$name}=$arr[2];
+	    $stadtteillon{$name}=$arr[3];
+    	    print "yyy $name $stadtteillat{$name} $stadtteillon{$name}\n" if $debug;
+        }
+    }
+    close(FILE); 
+} else {
+    open(FILE,">$ortURL.coordinaten.autogen") or die("Cannot create file $ortURL.coordinaten.autogen");
+    my $count=0;
+    foreach my $line (sort (keys %stadtteillat)) {
+	$count++;
+	print FILE "$count\t$line\t$stadtteillat{$line}\t$stadtteillon{$line}\n";
+    }
+    close(FILE);
+}
+
 
 ############################################################################
 open(FILE,"$ortURL.csv") or die("Can not open $ortURL.csv");
@@ -462,9 +501,7 @@ $mon++;
 my $standd=sprintf("%d.%d.%d %d:%02d",$mday,$mon,$year,$hour,$min);
 my $lbundesland=lc($bundesland);
 my $stand="<p>Letze Aktualisierung: $standd Uhr (Neuester Timestamp im OSM File: $timeMaxStr) Copyright <a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-By-SA</a> Daten von <a href='http://download.geofabrik.de/'>http://download.geofabrik.de/</a><a href='http://download.geofabrik.de/osm/europe/germany/$lbundesland.osm.bz2'>osm/europe/germany/$lbundesland.osm.bz2</a>. Diese Daten werden wiederum regelmäßig von <a href='http://www.openstreetmap.org/'>www.openstreemap.org</a> geladen. ";
-if ($zuschnitt==1) {
-    $stand.="Nachdem diese geladen wurde, wurden sie zugeschnitten und befinden sich unter: <a href='$ortURL".".osm.bz2'>".$ortURL.".osm.bz2</a></p><p>Stand $ort Straßenverzeichnis-Daten: $standdate";
-}
+$stand.=$zuschnittStr;
 $stand.="</p><p>$nutzungsErlaubnis";
 if ($pw_schutz==1) {
     $stand.="<p>Wichtig: Um auf die Ortsteilseiten Zugriff zu bekommen, benötigst du ein Passwort. Dieses bekommst du, wenn du bei OSM mitwirkst und das
@@ -493,7 +530,6 @@ print INDEX $stand;
 if ($printBild==1) {
     print INDEX "<p><img src=\"$ortURL.png\" alt=\"$ortHTML\" />$bildSource</p>\n";
 }
-print INDEX "<p>Achtung, aktualisierung erfolgt nun nur noch Dienstags und Freitags, wegen zu gro&szlig;en Traffic, Gru&szlig; Sven</p>";
 print INDEX "<h1>Alphabetisch sortiert</h1>";
 print INDEX "<table>";
 print INDEX "<tr><th>Stadtteil</th><th>fehlende</th><th>gefundene</th><th>Gesamt</th><th>Prozent</th></tr>\n";
@@ -510,7 +546,14 @@ foreach my $stadtteil (sort (keys %stadtteile)) {
 	if (defined($missingIn{$stadtteil})) {
 	    print OUT " <h1>Es fehlen noch:</h1>\n<ul>\n";
 	    foreach my $k (sort @{$missingIn{$stadtteil}}) {
-		print OUT "<li>$k</li>\n";
+
+		if ($link_unknown eq 1) {
+		    my $ku=$k;
+		    $ku=~s/ /+/g;
+		    print OUT "<li>$k (<a href=\"http://maps.google.de/maps?f=q&source=s_q&hl=de&geocode=&q=$ku,+$ort\">GoogleMaps</a>)</li>\n";
+		} else {
+		    print OUT "<li>$k</li>\n";
+		}	print OUT "<li>$k</li>\n";
 		$miss++;
 	    }
 	    print OUT "</ul>";
@@ -612,17 +655,18 @@ foreach my $k (sort (keys %streets)) {
      if ($ausnahme==0) {
 	my $c=9999999999999999999;
 	my $st="";
-	foreach my $stadtteil (keys %lat) {
+	foreach my $stadtteil (keys %stadtteillat) {
 	    if (!(defined($coordLat{$k}))) {
 		warn("coordLat $k undef $stadtteil");
 	    }
-	    if (!(defined($lon{$stadtteil}))) {
+	    if (!(defined($stadtteillon{$stadtteil}))) {
 		warn("lon x$stadtteil"."x undef");
 	    }
-	    if (!(defined($lat{$stadtteil}))) {
+	    if (!(defined($stadtteillat{$stadtteil}))) {
 		warn("lat x$stadtteil"."x undef");
 	    }
-	    my $ent=(($lat{$stadtteil}-$coordLat{$k})**2)+(($lon{$stadtteil}-$coordLon{$k})**2);
+	    my $ent=(($stadtteillat{$stadtteil}-$coordLat{$k})**2)+
+		    (($stadtteillon{$stadtteil}-$coordLon{$k})**2);
 	    if ($ent<$c) {
 		$c=$ent;
 		$st=$stadtteil;

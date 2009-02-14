@@ -157,4 +157,12 @@ def clear_node_tags(tags, type):
         if tags['attribution'] == 'Office of Geographic and Environmental Information (MassGIS)' and len(tags) == 2 or (len(tags) == 3 and 'created_by' in tags):
             tags = {}
             changed = True
-    return changed        
+    return changed       
+
+def drop_secondary_refs(tags, type):
+    changed = False
+    if 'ref' in tags and tags['ref'].startswith("0"):
+        tags['massgis:ref'] = tags['ref']
+        del tags['ref']
+        changed = True
+    return changed    

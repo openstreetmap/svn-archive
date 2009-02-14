@@ -19,17 +19,17 @@ public class LayerUtil {
      * @param layerType the type of the layer.
      * @return the layer or <code>null</code>.
      */
+    @SuppressWarnings("unchecked")
     public static <LayerType extends Layer> LayerType findGpsLayer(String layerName, Class<LayerType> layerType) {
-        LayerType result = null;
+        Layer result = null;
         if(Main.map != null && Main.map.mapView != null) {
             for(Layer layer : Main.map.mapView.getAllLayers()) {
                 if(layerName.equals(layer.name) && layerType.isAssignableFrom(layer.getClass())) {
-                    result = (LayerType) layer;
+                    result = layer;
                     break;
                 }
             }
         }
-        return result;
+        return (LayerType) result;
     }
-
 }

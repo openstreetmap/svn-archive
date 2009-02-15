@@ -6,9 +6,14 @@ class ParseXML:
     namespace = '{http://www.naptan.org.uk/}'
     tagmap = {}
     def cleantag(self, elem):
+        """Cleans namespace from element tag
+        eg: elem.tag = '{http://www.naptan.org.uk/}AtcoCode'
+            is transformed to 'AtcoCode'
+        """
         return elem.tag.replace(self.namespace, '')
         
     def node2tag(self, elem):
+        """Lookup an OSM tag mapping in tagmap for a given node name"""
         try:
             key = self.tagmap[self.cleantag(elem)]
             value = elem.text
@@ -24,9 +29,13 @@ class ParseNaptan(ParseXML):
         self.group = 0
         
     def startElement(self, elem):
+        """Event handler for when the XML parser encounters an opening tag.
+        Should be used for maintaining state, data retrieval should be done on
+        encountering an endElement"""
         tag = self.cleantag(elem)
         if tag == 'StopPoints':
             self.group = self.STOPPOINTS
+        # The StopAreas node also appears in a StopPoint as well as a grouping node.
         elif tag == 'StopAreas' and self.group != self.STOPPOINTS:
             self.group = self.STOPAREAS
         elif tag == '':
@@ -66,5 +75,3 @@ def treeparse(f):
 if __name__ == "__main__":
     f = open(sys.argv[1])
     treeparse(f)
-    
-    

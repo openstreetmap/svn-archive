@@ -61,9 +61,15 @@ public class GeorefImage implements Serializable {
         // Width and height flicker about 2 pixels due to rounding errors, typically only 1
         int width = Math.abs(maxPt.x-minPt.x);
         int height = Math.abs(minPt.y-maxPt.y);
-        int diffx = reImgHash.width - width;
-        int diffy = reImgHash.height - height;
-
+        int diffx, diffy;
+        try {
+            diffx = reImgHash.width - width;
+            diffy = reImgHash.height - height;
+        } catch(Exception e) {
+            reImgHash = new Dimension(0, 0);
+            diffx = 99;
+            diffy = 99;
+        }
         // This happens if you zoom outside the world
         if(width == 0 || height == 0)
             return false;

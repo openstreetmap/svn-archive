@@ -68,10 +68,15 @@
 		<rule e="way" k="leisure" v="park|garden|golf_course|common|green">
 			<area class="leisure-park"/>
 		</rule>
-		<rule e="way" k="leisure" v="playground|playing_fields|pitch">
+                <rule e="way" k="leisure" v="playground|playing_fields|pitch">
+                	<rule e="way" k="sport" v="tennis">
+                		<area class="sport-tennis"/>
+                	</rule>
+                	<else>
                 	<!-- Done separately from the above rule to layer these above. Tend to be smaller and inside parks. -->
-			<area class="leisure-park"/>
-		</rule>
+                		<area class="leisure-park"/>
+                	</else>
+                </rule>
 		<rule e="way" k="leisure" v="nature_reserve">
 			<area class="leisure-nature_reserve"/>
 		</rule>

@@ -123,9 +123,9 @@ my $temp ;
 my $i ;
 my $j ;
 my $n ;
-my $a ;
-my $b ;
 my $c ;
+my $d ;
+my $e ;
 
 
 $time0 = time() ;
@@ -259,48 +259,48 @@ print $html_file "<td>".$file2_name." date: ".ctime(stat($file2_name)->mtime)."<
 print $html_file "<td></td>\n" ;
 print $html_file "</tr>\n" ;
 
-$a = scalar (keys %node0_lon) ;
-$b = scalar (keys %node1_lon) ;
-$c = $b - $a ;
+$d = scalar (keys %node0_lon) ;
+$e = scalar (keys %node1_lon) ;
+$c = $e - $d ;
 print $html_file "<tr><td>Number nodes</td>\n" ;
-print $html_file "<td>$a</td>\n" ;
-print $html_file "<td>$b</td>\n" ;
+print $html_file "<td>$d</td>\n" ;
+print $html_file "<td>$e</td>\n" ;
 print $html_file "<td>$c</td>\n" ;
 print $html_file "</tr>\n" ;
 
-$a = scalar (keys %way0_nodes) ;
-$b = scalar (keys %way1_nodes) ;
-$c = $b - $a ;
+$d = scalar (keys %way0_nodes) ;
+$e = scalar (keys %way1_nodes) ;
+$c = $e - $d ;
 print $html_file "<tr><td>Number ways</td>\n" ;
-print $html_file "<td>$a</td>\n" ;
-print $html_file "<td>$b</td>\n" ;
+print $html_file "<td>$d</td>\n" ;
+print $html_file "<td>$e</td>\n" ;
 print $html_file "<td>$c</td>\n" ;
 print $html_file "</tr>\n" ;
 
-$a = $nodetags0 ;
-$b = $nodetags1 ;
-$c = $b - $a ;
+$d = $nodetags0 ;
+$e = $nodetags1 ;
+$c = $e - $d ;
 print $html_file "<tr><td>Number node tags</td>\n" ;
-print $html_file "<td>$a</td>\n" ;
-print $html_file "<td>$b</td>\n" ;
+print $html_file "<td>$d</td>\n" ;
+print $html_file "<td>$e</td>\n" ;
 print $html_file "<td>$c</td>\n" ;
 print $html_file "</tr>\n" ;
 
-$a = $waytags0 ;
-$b = $waytags1 ;
-$c = $b - $a ;
+$d = $waytags0 ;
+$e = $waytags1 ;
+$c = $e - $d ;
 print $html_file "<tr><td>Number way tags</td>\n" ;
-print $html_file "<td>$a</td>\n" ;
-print $html_file "<td>$b</td>\n" ;
+print $html_file "<td>$d</td>\n" ;
+print $html_file "<td>$e</td>\n" ;
 print $html_file "<td>$c</td>\n" ;
 print $html_file "</tr>\n" ;
 
-$a = $waynodecount0 ;
-$b = $waynodecount1 ;
-$c = $b - $a ;
+$d = $waynodecount0 ;
+$e = $waynodecount1 ;
+$c = $e - $d ;
 print $html_file "<tr><td>Waynode count</td>\n" ;
-print $html_file "<td>$a</td>\n" ;
-print $html_file "<td>$b</td>\n" ;
+print $html_file "<td>$d</td>\n" ;
+print $html_file "<td>$e</td>\n" ;
 print $html_file "<td>$c</td>\n" ;
 print $html_file "</tr>\n" ;
 
@@ -362,7 +362,7 @@ print $html_file "  <th>User</th>\n" ;
 print $html_file "  <th>Nodes added/changed</th>\n" ;
 print $html_file " </tr>\n" ;
 
-foreach $key (keys %user_num) {
+foreach $key (sort { $user_num{$b} <=> $user_num{$a} } keys %user_num) {
 	print $html_file "<tr><td>".$key."</td><td>".$user_num{$key}."</td></tr>\n" ;
 }
 print $html_file "</table>\n" ;
@@ -849,7 +849,12 @@ sub read_file {
 	my $file ;
 
 	print "reading file $name...\n" ;
-	open ($file, , "<", $name) ;
+    if ($name =~ /\.bz2$/) {
+        require PerlIO::via::Bzip2;
+        open ($file, "<:via(Bzip2)", $name) ;
+    } else {
+        open ($file, , "<", $name) ;
+    }
 
 	while(my $line = <$file>) {
 		if($line =~ /^\s*\<way/) {
@@ -858,7 +863,7 @@ sub read_file {
 	
 			# get all needed information
 			my ($id)   = ($line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/); # get way id
-			my ($u) = ($line =~ /^.+user=[\'\"]([-\w\d\s]+)[\'\"]/);       # get value // REGEX???
+			my ($u) = ($line =~ /^.+user=[\'\"](.*?)[\'\"]/);       # get value // REGEX???
 
 			if (!$u) {
 				$u = "unknown" ;
@@ -933,7 +938,7 @@ sub read_file {
 			my ($id)   = ($line =~ /^\s*\<node id=[\'\"](\d+)[\'\"]/); # get node id
 			my ($lon) = ($line =~ /^.+lon=[\'\"]([-\d,\.]+)[\'\"]/);    # get position
 			my ($lat) = ($line =~ /^.+lat=[\'\"]([-\d,\.]+)[\'\"]/);    # get position
-			my ($u) = ($line =~ /^.+user=[\'\"]([-\w\d\s]+)[\'\"]/);       # get value // REGEX???
+			my ($u) = ($line =~ /^.+user=[\'\"](.*?)[\'\"]/);       # get value // REGEX???
 
 			my ($i) = 0 ;
 			my $place = 0 ;

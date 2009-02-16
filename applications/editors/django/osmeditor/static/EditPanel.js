@@ -25,7 +25,7 @@ OSMEditor.EditPanel = OpenLayers.Class(OpenLayers.Control, {
     },
     'createHTML': function(type, id, attrs) {
         window.editFunction = OpenLayers.Function.bind(this.editHTML, this); 
-        var s = "<a onclick='editFunction(); return false;' href='#/" + type +"/" + id +"'>Edit "+ type + " " + id + "</a>";
+        var s = "<a onclick='editFunction(); return false;' href='/" + type +"/" + id +"'>Edit "+ type + " " + id + "</a>";
         var tags = "<ul>"; 
         for (var key in attrs) {
             if (key.search(":") == -1) {

@@ -600,7 +600,8 @@ sub ProcessRequestsFromServer
             # got request, now check that it's not too complex
             if ($Config->get('MaxTilesetComplexity')) {
                 #the setting is enabled
-                if ($req->complexity() > $Config->get('MaxTilesetComplexity')) {
+                if ($req->complexity() > $Config->get('MaxTilesetComplexity')) 
+                {
                     # too complex!
                     statusMessage("Ignoring too complex tile (" . $req->ZXY_str() . ", "
                     . int($req->complexity()) . " > " . int($Config->get('MaxTilesetComplexity')). ")", 1, 3);
@@ -609,6 +610,21 @@ sub ProcessRequestsFromServer
                     }; # ignoring exceptions
                     $req = undef;  # set to undef, need another loop
                     talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
+                }
+                elsif (not $req->complexity())
+                {
+                    # unknown complexity!
+                    if ($Config->get('MaxTilesetComplexity') < $Config->get('AT_average')) 
+                    {
+                        # we have a weak client so we do not trust unknown complexity
+                        statusMessage("Ignoring unknown complexity tile (" . $req->ZXY_str() . ", "
+                           . int($req->complexity()) . " > " . int($Config->get('MaxTilesetComplexity')). ")", 1, 3);
+                        eval {
+                            $Server->putRequestBack($req, "NoComplexity");
+                        }; # ignoring exceptions
+                        $req = undef;  # set to undef, need another loop
+                        talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
+                    }
                 }
             }
             # and now check whether we found it unrenderable before

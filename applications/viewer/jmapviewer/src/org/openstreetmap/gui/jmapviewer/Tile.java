@@ -111,7 +111,7 @@ public class Tile {
                 int xtile_low = xtile >> zoomDiff;
                 int ytile_low = ytile >> zoomDiff;
                 int factor = (1 << zoomDiff);
-                double scale = (double) factor;
+                double scale = factor;
                 AffineTransform at = new AffineTransform();
                 int translate_x = (xtile % factor) * SIZE;
                 int translate_y = (ytile % factor) * SIZE;

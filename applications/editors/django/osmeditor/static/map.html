@@ -123,6 +123,10 @@
                  b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x-30, xy.y-30)));
                  b.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x+30, xy.y+30)));
                  this.lastLonLat = b.getCenterLonLat();
+                 var smallBox = new OpenLayers.Bounds();
+                 smallBox.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x-3, xy.y-3)));
+                 smallBox.extend(map.getLonLatFromPixel(new OpenLayers.Pixel(xy.x+3, xy.y+3)));
+                 this.lastBox = smallBox;
                  if (this.selectFeature) {
                      this.selectFeature.destroy();
                  }    
@@ -155,7 +159,7 @@
                                  selectFeature.select(this.features[0]);
                              } else {
                                  var matches = [];
-                                 var point = new OpenLayers.Geometry.Point(click.lastLonLat.lon, click.lastLonLat.lat); 
+                                 var point = click.lastBox.toGeometry();  
                                  for (var i = 0; i < this.features.length; i++) {
                                       if (this.features[i].geometry.intersects(point)) {
                                          matches.push(this.features[i]);

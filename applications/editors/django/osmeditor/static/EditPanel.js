@@ -2,6 +2,7 @@ OSMEditor.EditPanel = OpenLayers.Class(OpenLayers.Control, {
     features: [],
     outputDiv: 'data',
     layer: null,
+    saving: 0,
     'featureselected': function(e) {
         var feature = e.feature;
         var type = "way"; 
@@ -24,7 +25,7 @@ OSMEditor.EditPanel = OpenLayers.Class(OpenLayers.Control, {
     },
     'createHTML': function(type, id, attrs) {
         window.editFunction = OpenLayers.Function.bind(this.editHTML, this); 
-        var s = "<a onclick='editFunction(); return false;' href='/" + type +"/" + id +"'>Edit "+ type + " " + id + "</a>";
+        var s = "<a onclick='editFunction(); return false;' href='#/" + type +"/" + id +"'>Edit "+ type + " " + id + "</a>";
         var tags = "<ul>"; 
         for (var key in attrs) {
             if (key.search(":") == -1) {
@@ -36,8 +37,34 @@ OSMEditor.EditPanel = OpenLayers.Class(OpenLayers.Control, {
         div.innerHTML = s+tags;
         return div;
     },
+    'startSaving': function() { 
+        this.ifr.onload = OpenLayers.Function.bind(this.doneSaving, this); 
+        this.saving += 1;
+        $(this.outputDiv).appendChild(document.createTextNode("Saving (" + this.saving +" left to save)"));
+
+    },
+    'doneSaving': function() { 
+        this.saving -= 1;
+        var lastChild = $(this.outputDiv).childNodes;
+        lastChild = lastChild[lastChild.length -1];
+        lastChild = lastChild.nodeValue;
+        if (lastChild.substr(0, 6) == "Saving") {
+            if (this.saving == 0) {
+                $(this.outputDiv).innerHTML = "Saved";
+            } else {
+                $(this.outputDiv).innerHTML = "Saving (" + this.saving +" left to save)";
+            }    
+        }
+    },
     'editHTML': function() {
-        var form = $.FORM({'action':'/' + this.type + '/' + this.id + '/', 'method':'POST', 'target': '_blank'});
+        var ifr = document.createElement("iframe");
+        ifr.id=OpenLayers.Util.createUniqueID("iframe_");
+        ifr.name = ifr.id;
+        ifr.style.display='none';
+        document.body.appendChild(ifr);
+        this.ifr = ifr;
+        var form = $.FORM({'action':'/' + this.type + '/' + this.id + '/', 'method':'POST', 'target': ifr.id});
+        form.onsubmit = OpenLayers.Function.bind(this.startSaving, this);
         form.appendChild($.INPUT({'type':'hidden','name':'type','value': this.type})); 
         form.appendChild($.INPUT({'type':'hidden','name':'id','value': this.id})); 
         form.appendChild($.INPUT({'type':'hidden','name':'timestamp','value': 'nocheck'})); 

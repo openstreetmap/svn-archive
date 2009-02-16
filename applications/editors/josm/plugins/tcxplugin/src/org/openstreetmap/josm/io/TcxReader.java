@@ -121,6 +121,7 @@ public class TcxReader {
      * @param tcd
      */
     private void parseDataFromActivities(TrainingCenterDatabaseT tcd) {
+        int lap = 0;
         if ((tcd.getActivities() != null)
                 && (tcd.getActivities().getActivity() != null)) {
             for (ActivityT activity : tcd.getActivities().getActivity()) {
@@ -141,9 +142,9 @@ public class TcxReader {
 
                                         if (waypt != null) {
                                             if (startTime != null) {
-                                                waypt.attr.put("name",
-                                                               startTime
-                                                               .toString());
+                                                waypt.attr.put("name", "LAP"
+                                                               + (++lap));
+                                                gpxData.waypoints.add(waypt);
                                                 startTime = null;
                                             }
 

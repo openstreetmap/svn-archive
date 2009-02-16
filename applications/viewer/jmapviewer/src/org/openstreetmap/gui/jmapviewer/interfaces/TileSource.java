@@ -13,7 +13,7 @@ public interface TileSource {
     /**
      * Specifies the different mechanisms for detecting updated tiles
      * respectively only download newer tiles than those stored locally.
-     * 
+     *
      * <ul>
      * <li>{@link #IfNoneMatch} Server provides ETag header entry for all tiles
      * and <b>supports</b> conditional download via <code>If-None-Match</code>
@@ -30,11 +30,11 @@ public interface TileSource {
      * <li>{@link #None} The server does not support any of the listed
      * mechanisms.</li>
      * </ul>
-     * 
+     *
      */
     public enum TileUpdate {
         IfNoneMatch, ETag, IfModifiedSince, LastModified, None
-    };
+    }
 
     /**
      * Specifies the maximum zoom value. The number of zoom levels is [0..

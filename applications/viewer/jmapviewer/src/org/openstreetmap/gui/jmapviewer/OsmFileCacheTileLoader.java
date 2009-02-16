@@ -279,7 +279,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
             return (osmETag.equals(eTag));
         }
 
-        protected File getTileFile() throws IOException {
+        protected File getTileFile() {
             return new File(tileCacheDir + "/" + tile.getZoom() + "_" + tile.getXtile() + "_" + tile.getYtile() + "."
                     + source.getTileType());
         }

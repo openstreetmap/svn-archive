@@ -43,6 +43,9 @@ def edit_osm_obj(type, id, post, session={}):
         obj.id = id
     else:
         changed = False
+        if 'reverse' in post and type == "way":
+            obj.nodes.reverse()
+            changed = True
         for key in filter(lambda x: x.startswith("delete_"), post.keys()):
             k = key.replace("delete_key_", "")
             if k in obj.tags:

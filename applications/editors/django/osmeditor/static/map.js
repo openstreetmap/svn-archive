@@ -44,6 +44,16 @@ function mapOf(div, type, id) {
     });
     osm.events.on({"loadend": function() { 
         this.map.zoomToExtent(this.getDataExtent()); 
+        if (type == "way") {
+            var f = this.features[0];
+            switch (f.geometry.CLASS_NAME) { 
+                case "OpenLayers.Geometry.LineString":
+                    var start = new OpenLayers.Feature.Vector(f.geometry.components[0], null, {fillColor: 'green', pointRadius: 6 });
+                    this.addFeatures(start);
+                    var end = new OpenLayers.Feature.Vector(f.geometry.components[f.geometry.components.length-1], null, {fillColor: 'red', pointRadius: 6 });
+                    this.addFeatures(end);
+            }
+        }     
     }, "scope": osm});
     map.addLayer(osm);
     osm.loadGML();

@@ -318,7 +318,7 @@ my $extraHeight = ($title eq "" and $showBorder eq "yes") ? 3 : 0;
 
 my ($minlat, $minlon, $maxlat, $maxlon);
 
-if (@opt_bounds{qw(minlat minlon maxlat maxlon)}) # Given on command line
+if (scalar(grep defined, values %opt_bounds) == 4) # Given on command line
 {
     $minlat = $opt_bounds{minlat};
     $minlon = $opt_bounds{minlon};

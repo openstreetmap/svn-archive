@@ -210,6 +210,34 @@ class OSMObj:
             self.id = int(content)
         return content
     
+    def test_delete(self):
+        if not httplib2:
+            raise DependancyException("Couldn't import httplib2: %s" % httplib2_error)
+        if not self.id:
+            raise OSMException("Can't delete object with no id")
+        res = {
+            'ok': [],
+            'not_ok': []
+        }    
+        h = httplib2.Http()
+        url = "%s/api/0.5/%s/%s/relations" % (self.site_url, self.type, id)
+        resp, content = h.request(url)
+        data = parseString(content)
+        add_to = 'ok'
+        if len(data['relations']):
+            add_to = 'not_ok'
+
+        if self.type == "node":
+            url = "%s/api/0.5/%s/%s/ways" % (self.site_url, self.type, id)
+            resp, content = h.request(url)
+            data = parseString(content)
+            add_to = 'ok'
+            if len(data['ways']) > 0:
+                add_to = 'not_ok'
+            
+            res[add_to].append((self.type, self.id))   
+            
+
     def delete(self, username, password):
         if not httplib2:
             raise DependancyException("Couldn't import httplib2: %s" % httplib2_error)

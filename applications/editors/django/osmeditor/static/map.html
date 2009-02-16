@@ -143,7 +143,7 @@
                  this.layers.push(
                      new OpenLayers.Layer.GML("OSM Data", 
                          "/api/0.5/map?bbox="+b.clone().transform(map.getProjectionObject(), map.displayProjection).toBBOX(), 
-                         {format: OpenLayers.Format.OSM, styleMap: styleMap, projection: map.displayProjection}));
+                         {format: OpenLayers.Format.OSM, styleMap: styleMap, projection: map.displayProjection, formatOptions: {checkTags: true}}));
                  
                  var selectFeature = new OpenLayers.Control.SelectFeature(this.layers[0]);
                  var click = this;

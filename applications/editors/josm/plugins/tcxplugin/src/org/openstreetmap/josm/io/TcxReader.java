@@ -102,12 +102,15 @@ public class TcxReader {
 
         WayPoint waypt = new WayPoint(new LatLon(p.getLatitudeDegrees(),
                                                  p.getLongitudeDegrees()));
-        // If WayPoint handled elevation data, we could get it from
-        // tp.getAltitudeMeters().
+        Double altitudeMeters = tp.getAltitudeMeters();
+        if (altitudeMeters != null) {
+            waypt.attr.put("ele", altitudeMeters.toString());
+        }
 
         XMLGregorianCalendar time = tp.getTime();
 
         if (time != null) {
+            waypt.attr.put("time", time.toString());
             waypt.time = .001 * time.toGregorianCalendar().getTimeInMillis();
         }
 
@@ -140,7 +143,7 @@ public class TcxReader {
                                             if (startTime != null) {
                                                 waypt.attr.put("name",
                                                                startTime
-							       .toString());
+                                                               .toString());
                                                 startTime = null;
                                             }
 

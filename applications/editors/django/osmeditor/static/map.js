@@ -21,7 +21,7 @@ function mapOf(div, type, id) {
         maxResolution: 156543.0339,
         maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
                                          20037508.34, 20037508.34),
-        controls: [new OSMEditor.HashControl(null, "/static/map.html", {updateUrl: false})]                                 
+        controls: [new OSMEditor.HashControl(null, "/static/map.html", {updateUrl: false}), new OpenLayers.Control.Navigation()]                                 
     };
 
     var map = new OpenLayers.Map(div, options);

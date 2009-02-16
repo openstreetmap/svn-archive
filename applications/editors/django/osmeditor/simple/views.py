@@ -30,7 +30,7 @@ def get_xml_string(type, id):
 
 def edit_osm_obj(type, id, post, session={}):
     obj = osmparser_obj(type, id)
-    if obj.timestamp != post['timestamp']:
+    if obj.timestamp != post['timestamp'] and post['timestamp'] != "nocheck":
         raise Exception("Object changed since you started editing it.")
     
     if 'action' in post and post['action'] == "delete":

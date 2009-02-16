@@ -3,10 +3,11 @@
     <title>Simple OSM Editor Map Viewer</title>
     <script src="http://openlayers.org/api/OpenLayers.js"></script>
         <script src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=euzuro-openlayers"></script>
-
     <link rel="stylesheet" href="http://openlayers.org/api/theme/default/style.css" type="text/css" />
     <link rel="stylesheet" href="/static/base.css" type="text/css" />
     <script src="/static/classes.js"></script>
+    <script src="/static/jquery-dom.js"></script>
+    <script src="/static/EditPanel.js"></script>
 
     <style type="text/css">
        #helpLink {
@@ -108,6 +109,7 @@
                          'click': this.onClick
                      }
                  );
+                 this.editPanel = new OSMEditor.EditPanel();
              }, 
 
              onClick: function(evt) {
@@ -142,29 +144,10 @@
                  var selectFeature = new OpenLayers.Control.SelectFeature(this.layers[0]);
                  var click = this;
                  for (var i = 0; i < this.layers.length; i++) {
-                     
+                     this.editPanel.layer = this.layers[i];
                      this.layers[i].events.on({
-                     'featureselected': 
-                         function(e) {
-                             var feature = e.feature;
-                             var type = "way"; 
-                             if (feature.geometry.CLASS_NAME == "OpenLayers.Geometry.Point") {
-                                 type = "node";
-                             }    
-                             var s = "<a href='/" + type +"/" + feature.osm_id +"'>Edit "+ type + " " + feature.osm_id + "</a>";
-                             var tags = "<ul>"; 
-                             for (var key in feature.attributes) {
-                                 if (key.search(":") == -1) {
-                                     tags += "<li><b>" + key + "</b>: " + feature.attributes[key] + "</li>";
-                                 }
-                             }
-                             tags += "</ul>";
-                             document.getElementById("data").innerHTML = s + tags;
-                         },
-                     'featureunselected': function () {
-                         $("data").innerHTML = "";
-
-                     },
+                     'featureselected': OpenLayers.Function.bind(this.editPanel.featureselected, this.editPanel),
+                     'featureunselected': OpenLayers.Function.bind(this.editPanel.featureunselected, this.editPanel),
                      "loadend": 
                          function() { 
                              $("loading").innerHTML = this.features.length + " loaded";
@@ -310,12 +293,12 @@
 
   <body onload="init()">
     <div id="map" style="width:99%; height:99%">
-        <div id="loginLink"><a id="loginA" href="/login/" target="_blank" style="display:none">Login</a></div>
-        <div id="helpLink"><a href="/help/" target="_blank">Help?</a></div>
-        <div id="data" style="position:absolute; left: 5px; bottom:5px; z-index:10000; background-color: white; padding: 5px"></div>
-        <div id="loading" style="position:absolute; right: 200px; top:5px; z-index:10000"></div>
-        <div class="potlatchLink"><a id="potlatchLinkHref">Edit (with Potlatch)</a></div>
     </div>
+    <div id="data" style="left: 5px; bottom:5px; position: absolute; z-index:10000; background-color: white; padding: 5px"></div>
+    <div id="loginLink"><a id="loginA" href="/login/" target="_blank" style="display:none">Login</a></div>
+    <div id="helpLink"><a href="/help/" target="_blank">Help?</a></div>
+    <div id="loading" style="position:absolute; right: 200px; top:5px; z-index:10000"></div>
+    <div class="potlatchLink"><a id="potlatchLinkHref">Edit (with Potlatch)</a></div>
 
   </body>
 </html>

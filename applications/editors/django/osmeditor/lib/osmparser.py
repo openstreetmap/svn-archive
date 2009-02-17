@@ -21,14 +21,14 @@ except ImportError, E:
         httplib2 = False
         httplib2_error = "%s/%s" % (E, E2)
 
-def indent(elem, level=0):
+def indentElement(elem, level=0):
     """Used for pretty printing XML."""
     i = "\n" + level*"  "
     if len(elem):
         if not elem.text or not elem.text.strip():
             elem.text = i + "  "
         for e in elem:
-            indent(e, level+1)
+            indentElement(e, level+1)
             if not e.tail or not e.tail.strip():
                 e.tail = i + "  "
         if not e.tail or not e.tail.strip():
@@ -191,7 +191,7 @@ class OSMObj:
             SubElement(element, "tag", {'k': key, 'v': self.tags[key]})
         
         if indent:
-            indent(parent)
+            indentElement(parent)
         if as_string:  
             return tostring(parent)
         else:

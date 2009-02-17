@@ -146,7 +146,7 @@ class OSMObj:
         end = ">"
         return " ".join(filter(None, (start, middle, end)))
 
-    def toxml(self, as_string=True, parent=None):
+    def toxml(self, as_string=True, parent=None, indent=True):
         if not elementtree:
             raise DependancyException("ElementTree support required for writing to XML.") 
         if parent == None:
@@ -190,7 +190,8 @@ class OSMObj:
         for key in keys:
             SubElement(element, "tag", {'k': key, 'v': self.tags[key]})
         
-        indent(parent)
+        if indent:
+            indent(parent)
         if as_string:  
             return tostring(parent)
         else:

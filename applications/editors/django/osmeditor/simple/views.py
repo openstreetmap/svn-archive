@@ -16,10 +16,13 @@ def osmparser_obj(type, id, xml=None):
     if not xml:
         xml = get_xml_string(type, id)
     output = osmparser.parseString(xml, site_url=settings.OSM_SERVER)
-    return output["%ss" % type][int(id)] 
+    try:    
+        return output["%ss" % type][int(id)] 
+    except:
+        return output
 
-def get_xml_string(type, id):
-    url = "%s/%s/%s/full" % (settings.OSM_API, type, id)
+def get_xml_string(type, id, extra="full"):
+    url = "%s/%s/%s/%s" % (settings.OSM_API, type, id, extra)
     if type == "node":
         url = url.replace('/full','') # required because the API 404s on node/x/full - wtf?
     h = httplib2.Http()    
@@ -102,6 +105,27 @@ def load(request, type="node", id=0):
     return render_to_response("obj.html",{'obj':obj, 'obj_xml': xml, 
         'sorted_tags': sorted_tags,
         'logged_in': ('username' in request.session)})
+
+def load_history(request, type="node", id=0):
+    """not done yet"""
+    #if request.method == "POST":
+    #    obj = edit_osm_obj(type, id, request.POST, request.session)
+    #    return HttpResponseRedirect(obj.local_url())   
+    xml = get_xml_string(type, id, extra="history")
+    obj = osmparser_obj(type, id, xml=xml)
+    items = obj["%ss" % type]
+    o_list = []
+    version = len(items) 
+    for o in items:
+        o.version = version
+        version -= 1
+        tag_list = o.tags.keys()
+        tag_list.sort(tag_sorter)
+        o.tag_list = tag_list
+        o_list.append(o)  
+    return render_to_response("obj_history.html",{'o_list':o_list,
+        'logged_in': ('username' in request.session)})
+
 
 def home(request):
     return render_to_response("home.html", {'logged_in': 'username' in request.session})

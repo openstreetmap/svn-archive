@@ -571,6 +571,8 @@ public class CorrelateGpxWithImages implements ActionListener {
             String deltaText = tfOffset.getText().trim();
             if (deltaText.length() > 0) {
                 try {
+                    if(deltaText.startsWith("+"))
+                        deltaText = deltaText.substring(1);
                     delta = Long.parseLong(deltaText);
                 } catch(NumberFormatException nfe) {
                     JOptionPane.showMessageDialog(Main.parent, tr("Error while parsing offset.\nExpected format: {0}", "number"),
@@ -691,9 +693,10 @@ public class CorrelateGpxWithImages implements ActionListener {
     }
 
     private int matchPoints(ArrayList<ImageEntry> dateImgLst, WayPoint prevWp, long prevDateWp, WayPoint curWp, long curDateWp) {
+        int interval = prevDateWp > 0 ? ((int)Math.abs(curDateWp - prevDateWp))/2 : 500;
         int ret = 0;
-        int i = getLastIndexOfListBefore(dateImgLst, curDateWp);
-        if (i >= 0 && i < dateImgLst.size() && dateImgLst.get(i).time.getTime() > prevDateWp) {
+        int i = getLastIndexOfListBefore(dateImgLst, curDateWp, interval);
+        if (i >= 0 && i < dateImgLst.size() && dateImgLst.get(i).time.getTime()+interval > prevDateWp) {
             Double speed = null;
             Double prevElevation = null;
             Double curElevation = null;
@@ -702,21 +705,20 @@ public class CorrelateGpxWithImages implements ActionListener {
                 speed = new Double((1000 * distance) / (curDateWp - prevDateWp));
                 try {
                     prevElevation = new Double((String) prevWp.attr.get("ele"));
-                } catch(Exception e) {
-                }
+                } catch(Exception e) {}
             }
             try {
                 curElevation = new Double((String) curWp.attr.get("ele"));
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
 
-            while(i >= 0
-                    && dateImgLst.get(i).time.getTime() == curDateWp) {
-                dateImgLst.get(i).pos = curWp.eastNorth;
-                dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
-                dateImgLst.get(i).speed = speed;
-                dateImgLst.get(i).elevation = curElevation;
-                ret++;
+            while(i >= 0 && inRadius(dateImgLst.get(i).time.getTime(), curDateWp, interval)) {
+                if(dateImgLst.get(i).coor == null) {
+                    dateImgLst.get(i).pos = curWp.eastNorth;
+                    dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
+                    dateImgLst.get(i).speed = speed;
+                    dateImgLst.get(i).elevation = curElevation;
+                    ret++;
+                }
                 i--;
             }
 
@@ -724,15 +726,17 @@ public class CorrelateGpxWithImages implements ActionListener {
                 long imgDate;
                 while(i >= 0
                         && (imgDate = dateImgLst.get(i).time.getTime()) > prevDateWp) {
-                    dateImgLst.get(i).pos = new EastNorth(
-                            prevWp.eastNorth.east() + ((curWp.eastNorth.east() - prevWp.eastNorth.east()) * (imgDate - prevDateWp)) / (curDateWp - prevDateWp),
-                            prevWp.eastNorth.north() + ((curWp.eastNorth.north() - prevWp.eastNorth.north()) * (imgDate - prevDateWp)) / (curDateWp - prevDateWp));
-                    dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
-                    dateImgLst.get(i).speed = speed;
-                    if (curElevation != null && prevElevation != null) {
-                        dateImgLst.get(i).elevation = prevElevation + ((curElevation - prevElevation) * (imgDate - prevDateWp)) / (curDateWp - prevDateWp);
+                    if(dateImgLst.get(i).coor == null) {
+                        dateImgLst.get(i).pos = new EastNorth(
+                                prevWp.eastNorth.east() + ((curWp.eastNorth.east() - prevWp.eastNorth.east()) * (imgDate - prevDateWp)) / (curDateWp - prevDateWp),
+                                prevWp.eastNorth.north() + ((curWp.eastNorth.north() - prevWp.eastNorth.north()) * (imgDate - prevDateWp)) / (curDateWp - prevDateWp));
+                        dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
+                        dateImgLst.get(i).speed = speed;
+                        if (curElevation != null && prevElevation != null) {
+                            dateImgLst.get(i).elevation = prevElevation + ((curElevation - prevElevation) * (imgDate - prevDateWp)) / (curDateWp - prevDateWp);
+                        }
+                        ret++;
                     }
-                    ret++;
                     i--;
                 }
             }
@@ -740,18 +744,18 @@ public class CorrelateGpxWithImages implements ActionListener {
         return ret;
     }
 
-    private int getLastIndexOfListBefore(ArrayList<ImageEntry> dateImgLst, long searchedDate) {
+    private int getLastIndexOfListBefore(ArrayList<ImageEntry> dateImgLst, long searchedDate, int interval) {
         int lstSize = dateImgLst.size();
         if (lstSize == 0 || searchedDate < dateImgLst.get(0).time.getTime()) {
             return -1;
-        } else if (searchedDate > dateImgLst.get(lstSize - 1).time.getTime()) {
+        } else if (searchedDate-interval > dateImgLst.get(lstSize - 1).time.getTime()) {
             return lstSize;
-        } else if (searchedDate == dateImgLst.get(lstSize - 1).time.getTime()) {
+        } else if (inRadius(searchedDate, dateImgLst.get(lstSize - 1).time.getTime(), interval)) {
             return lstSize - 1;
-        } else if (searchedDate == dateImgLst.get(0).time.getTime()) {
+        } else if (inRadius(searchedDate , dateImgLst.get(0).time.getTime(), interval)) {
             int curIndex = 0;
             while (curIndex + 1 < lstSize
-                    && dateImgLst.get(curIndex + 1).time.getTime() == searchedDate) {
+                    && inRadius(dateImgLst.get(curIndex + 1).time.getTime(), searchedDate, interval)) {
                 curIndex++;
             }
             return curIndex;
@@ -763,14 +767,14 @@ public class CorrelateGpxWithImages implements ActionListener {
         while (endIndex - startIndex > 1) {
             curIndex = (endIndex + startIndex) / 2;
             long curDate = dateImgLst.get(curIndex).time.getTime();
-            if (curDate < searchedDate) {
+            if (curDate-interval < searchedDate) {
                 startIndex = curIndex;
-            } else if (curDate > searchedDate) {
+            } else if (curDate+interval > searchedDate) {
                 endIndex = curIndex;
             } else {
                 // Check that there is no image _after_ that one that have exactly the same date.
                 while (curIndex + 1 < lstSize
-                        && dateImgLst.get(curIndex + 1).time.getTime() == searchedDate) {
+                        && inRadius(dateImgLst.get(curIndex + 1).time.getTime(), searchedDate, interval)) {
                     curIndex++;
                 }
                 return curIndex;
@@ -885,5 +889,9 @@ public class CorrelateGpxWithImages implements ActionListener {
                                 + Math.cos(p1Lat) * Math.cos(p2Lat) * Math.cos(p2Lon - p1Lon))
                      * 6372795; // Earth radius, in meters
         return ret;
+    }
+    
+    private boolean inRadius(long time1, long time2, int interval) {
+        return Math.abs(time1 - time2) < interval;
     }
 }

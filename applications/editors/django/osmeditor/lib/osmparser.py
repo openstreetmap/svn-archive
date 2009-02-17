@@ -47,9 +47,14 @@ class OSMObj:
     >>> o = OSMObj(type='node')
     >>> o.loc = (-5, -5)
     >>> o.tags['created_by'] = 'osmparser'
-    >>> o.toxml()
+    >>> xml = o.toxml()
+    >>> xml
     '<osm version="0.5">\\n  <node lat="-5" lon="-5">\\n    <tag k="created_by" v="osmparser" />\\n  </node>\\n</osm>'
-    
+    >>> shortxml = o.toxml(indent=False)
+    >>> len(xml) > len(shortxml)
+    True
+    >>> len(shortxml)
+    92
     
     >> o.save(username, password)
     '339668244'

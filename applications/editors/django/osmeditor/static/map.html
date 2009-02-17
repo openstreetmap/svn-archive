@@ -2,12 +2,13 @@
   <head>
     <title>Simple OSM Editor Map Viewer</title>
     <script src="http://openlayers.org/api/OpenLayers.js"></script>
-        <script src="http://api.maps.yahoo.com/ajaxymap?v=3.8&appid=euzuro-openlayers"></script>
+    <script src="http://api.maps.yahoo.com/ajaxymap?v=3.8&appid=euzuro-openlayers"></script>
     <link rel="stylesheet" href="http://openlayers.org/api/theme/default/style.css" type="text/css" />
     <link rel="stylesheet" href="/static/base.css" type="text/css" />
     <script src="/static/classes.js"></script>
     <script src="/static/jquery-dom.js"></script>
     <script src="/static/EditPanel.js"></script>
+    <meta name="viewport" content="width = device-width">
 
     <style type="text/css">
        #helpLink {
@@ -49,6 +50,19 @@
        .olControlAttribution {
         bottom: 20px;
        } 
+       #throbber {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 8em;
+        height: 1em;
+        margin: 0px auto ;
+        z-index: 10000;
+        font-size: x-large;
+       }
     </style>  
     <script type="text/javascript">
         var map, layer;
@@ -85,7 +99,7 @@
                      url: "/api/0.5/node/create",
                      data: node,
                      callback: this.handleResponse
-                 });           
+                 });
              },
 
              handleResponse: function(req) {
@@ -137,6 +151,7 @@
                  }
                  $("data").innerHTML = "";
                  $("loading").innerHTML = "Loading...";
+                 $("throbber").style.display = "block";
                  var styleMap = new OpenLayers.StyleMap({'default': OpenLayers.Util.extend(OpenLayers.Feature.Vector.style['default'], {strokeWidth: 5, cursor: 'pointer'})});
 
                  this.layers = []
@@ -155,6 +170,7 @@
                      "loadend": 
                          function() { 
                              $("loading").innerHTML = this.features.length + " loaded";
+			     $("throbber").style.display = "none";
                              if (this.features.length == 1) {
                                  selectFeature.select(this.features[0]);
                              } else {
@@ -302,8 +318,10 @@
     <div id="loginLink"><a id="loginA" href="/login/" target="_blank" style="display:none">Login</a></div>
     <div id="helpLink"><a href="/help/" target="_blank">Help?</a></div>
     <div id="loading" style="position:absolute; right: 200px; top:5px; z-index:10000"></div>
+    <div id="throbber"><img src="/static/media/throbber.gif"> Loading&hellip;</div>
     <div class="potlatchLink"><a id="potlatchLinkHref">Edit (with Potlatch)</a></div>
 
   </body>
 </html>
 
+ 

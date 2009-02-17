@@ -45,7 +45,7 @@ class OSMException(LibException): pass
 class OSMObj:
     """
     >>> o = OSMObj(type='node')
-    >>> o.loc = (-5, -5)
+    >>> o.loc = [-5, -5]
     >>> o.tags['created_by'] = 'osmparser'
     >>> xml = o.toxml()
     >>> xml
@@ -114,7 +114,7 @@ class OSMObj:
         elif self.type == "relation":
             self.members = []
         elif self.type == "node":
-            self.loc = (-181, -91)
+            self.loc = [-181, -91]
     
     def display(self):
         d = str(self)

@@ -235,7 +235,8 @@ public class JoinAreasAction extends JosmAction {
         Collection<Way> newInnerWays = fixMultigons(innerWays, outerWay);
 
         // Delete the remaining inner ways
-        cmds.add(DeleteCommand.delete(innerWays, true));
+        if(innerWays != null && innerWays.size() > 0)
+            cmds.add(DeleteCommand.delete(innerWays, true));
         commitCommands("Delete Ways that are not part of an inner multipolygon");
 
         // We can attach our new multipolygon relation and pretend it has always been there

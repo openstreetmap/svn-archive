@@ -151,17 +151,16 @@ class OSMObj:
         end = ">"
         return " ".join(filter(None, (start, middle, end)))
 
-    def toxml(self, as_string=True, parent=None, indent=True):
+    def toxml(self, as_string=True, parent=None, needs_parent=True, indent=True):
         if not elementtree:
             raise DependancyException("ElementTree support required for writing to XML.") 
-        if parent == None:
-            parent = Element("osm", {"version": "0.5"})
+
         if self.type == "node":
-            element = SubElement(parent, "node", {
+            element = Element("node", {
                 'lon': str(self.loc[0]), 
                 'lat': str(self.loc[1])})
         elif self.type == "way":
-            element = SubElement(parent, 'way')
+            element = Element('way')
             for n in self.nodes:
                 id = None
                 if isinstance(n, int):
@@ -171,7 +170,7 @@ class OSMObj:
                 id = str(id)    
                 SubElement(element, "nd", {'ref': id})
         elif self.type == "relation":
-            element = SubElement(parent, 'relation')
+            element = Element('relation')
             for m in self.members:
                 id = None
                 if isinstance(m['ref'], int):
@@ -194,6 +193,13 @@ class OSMObj:
 
         for key in keys:
             SubElement(element, "tag", {'k': key, 'v': self.tags[key]})
+        
+        if needs_parent:
+            if parent == None:
+                parent = Element("osm", {"version": "0.5"})
+            parent.append(element)
+        else:
+            parent = element
         
         if indent:
             indentElement(parent)

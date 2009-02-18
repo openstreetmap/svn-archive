@@ -38,26 +38,30 @@ class ParseXML:
         """
         return elem.tag.replace(self.namespace, '')
         
-    def node2tag(self, elem, tagmap=None, noset=False):
+    def node2tag(self, elem, tagmap=None):
         """Lookup (and set) an OSM tag mapping in tagmap for a given node name"""
         if not tagmap:
             tagmap = self.tagmap
-        try:
             node = self.cleannode(elem)
-            key = tagmap[node]
-            if not key:
-                key = '%s:%s' % (self.tagprefix, node)
+            
+            try:
+                keys = tagmap[node]
+            except KeyError:
+                return None
+                
             value = elem.text.strip(' -')
             if not value:
                 return None
             
-            if not noset:
-                self.feature.tags[key] = value
-            else:
-                return (key, value)
-            
-        except KeyError:
-            return
+            if not isinstance(keys, tuple):
+                keys = (keys,)
+            for key in keys:
+                if not key:
+                    key = '%s:%s' % (self.tagprefix, node)
+                if key in self.feature.tags:
+                    self.feature.tags[key] = '%s;%s' % (self.feature.tags[key], value)
+                else:
+                    self.feature.tags[key] = value
             
     def newfeature(self):
         self.featurecounter += 1
@@ -70,13 +74,14 @@ class ParseNaptan(ParseXML):
     tagprefix = 'naptan'
     tagmap = {
         'AtcoCode': '',         # Blank entries automatically form tags of tagprefix:nodename
-        'NaptanCode': 'ref',
+        'NaptanCode': ('','ref'),   # Tuples can be used if a node needs to be mapped to multiple tags
         'CommonName': 'name',
         'ShortCommonName': '',
         'Landmark': '',
         'Street': '',
         'Crossing': '',
         'Indicator': '',
+        'Notes': '',
     }
     tagmap_altdescriptors = {
         
@@ -109,24 +114,20 @@ class ParseNaptan(ParseXML):
             self.feature.loc[0] = elem.text
         elif node == 'Indicator' and not self.parentnodes['AlternativeDescriptors']:
             indicator = elem.text.upper()
+            v = ''
             matches = re.match('^(?:(?:BAY)|(?:ENTRANCE)|(?:STAND)|(?:STOP) )?([A-Z0-9\-& ]{1,7})', indicator)
             if matches:
                 v = matches.group(1).strip(' -')
-                if v:
-                    self.feature.tags['ref'] = v
-        elif self.parentnodes['AlternativeDescriptors']:
-            tag = self.node2tag(elem, self.tagmap_altdescriptors, noset=True)
-            if tag:
-                k, v = tag
-                if self.feature.tags[k]:
-                    self.feature.tags[k] = '%s;%s' % (self.feature.tags[k], v)
-                else:
-                    self.feature.tags[k] = v
+            if v:
+                self.feature.tags['ref'] = v
             else:
                 self.node2tag(elem)
+            
+        elif self.parentnodes['AlternativeDescriptors']:
+            self.node2tag(elem, self.tagmap_altdescriptors)
         else:
             # Fallthrough for simple tag mappings
-            tag = self.node2tag(elem)
+            self.node2tag(elem)
         
         # Keep our parent nodes dict updated.
         ParseXML.endElement(self, elem)

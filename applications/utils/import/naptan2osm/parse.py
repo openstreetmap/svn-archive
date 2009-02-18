@@ -5,10 +5,18 @@ import xml.etree.cElementTree as ET
 
 class ParseXML:
     namespace = '{http://www.naptan.org.uk/}'
-    tagmap = {}
-    featurecounter = 0
+    tagmap = {}         # The basic tag mappings that are a simple one to one mapping
+    
+    # Tuple containing XML (parent) nodes that are required to determine a child node's meaning
+    interestingparentnodes = ('StopPoints', 'StopAreas')
+    parentnodes = {}    # Dict noting parent nodes that may need to be checked to determine child's meaning
+    
+    featurecounter = 0  # OSM feature id incrementor
     feature = None      # The OSM feature we're building
     document = ET.Element("osm", {"version": "0.5"})    # OSM document we're creating
+    
+    def __init__(self):
+        self.parentnodes = dict.fromkeys(self.interestingparentnodes, False)
     
     def cleannode(self, elem):
         """Cleans namespace from element node
@@ -17,10 +25,12 @@ class ParseXML:
         """
         return elem.tag.replace(self.namespace, '')
         
-    def node2tag(self, elem):
+    def node2tag(self, elem, tagmap=None):
         """Lookup an OSM tag mapping in tagmap for a given node name"""
+        if not tagmap:
+            tagmap = self.tagmap
         try:
-            key = self.tagmap[self.cleannode(elem)]
+            key = tagmap[self.cleannode(elem)]
             value = elem.text
             return (key, value)
         except:
@@ -35,49 +45,42 @@ class ParseXML:
 
 class ParseNaptan(ParseXML):
     tagmap = {
-        'AtcoCode': 'naptan:AtcoCode'
+        'AtcoCode': 'naptan:AtcoCode',
+        'StopType': 'naptan:StopType',
+        'BusStopType': 'naptan:BusStopType'
     }
-    STOPPOINTS = 1
-    STOPAREAS = 2
-    
-    def __init__(self):
-        self.group = 0
         
     def startElement(self, elem):
         """Event handler for when the XML parser encounters an opening tag.
         Should be used for maintaining state, data retrieval should be done on
         encountering an endElement"""
         node = self.cleannode(elem)
-        if node == 'StopPoints':
-            self.group = self.STOPPOINTS
-        # The StopAreas node also appears in a StopPoint as well as a grouping node.
-        elif node == 'StopAreas' and self.group != self.STOPPOINTS:
-            self.group = self.STOPAREAS
-        elif node == 'StopPoint':
+        if node in self.interestingparentnodes:
+            self.parentnodes[node] = True
+
+        if node == 'StopPoint':
             self.feature = self.newfeature()
     
     def endElement(self, elem):
         node = self.cleannode(elem)
-        if node == 'StopPoints':
-            self.group = 0
-        elif node == 'StopAreas' and self.group != self.STOPPOINTS:
-            self.group = 0
-        elif node == 'StopPoint':
+        
+        if node == 'StopPoint':
             self.feature.toxml(parent=self.document, as_string=False, indent=False)
             self.feature = None
-        elif node == 'Latitude' and self.group == self.STOPPOINTS:
+        elif node == 'Latitude' and self.parentnodes['StopPoints']:
             self.feature.loc[1] = elem.text
-        elif node == 'Longitude' and self.group == self.STOPPOINTS:
+        elif node == 'Longitude' and self.parentnodes['StopPoints']:
             self.feature.loc[0] = elem.text
         else:
             tag = self.node2tag(elem)
             if tag:
                 k, v = tag
                 self.feature.tags[k] = v
+        
+        if node in self.interestingparentnodes:
+            self.parentnodes[node] = False
     
 class ParseNPTG(ParseXML):
-    def __init__(self):
-        pass
     
     def startElement(self, elem):
         pass

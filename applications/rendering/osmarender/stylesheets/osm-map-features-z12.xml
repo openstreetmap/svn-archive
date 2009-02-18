@@ -57,7 +57,7 @@
 			<area class="landuse field"/>
 		</rule>
 		<rule e="way" k="leisure" v="park|garden|golf_course|common|green">
-			<area class="leisure park"/>
+			<area class="leisure-park"/>
 		</rule>
                 <rule e="way" k="leisure" v="playground|playing_fields|pitch">
                 	<rule e="way" k="sport" v="tennis">
@@ -1518,7 +1518,7 @@
 			stroke-width: 0.2px;
 			}
 
-			.leisure.park, .nature_reserve {
+			.leisure-park, .nature_reserve {
 			fill: #c7f1a3;
 			}
 			

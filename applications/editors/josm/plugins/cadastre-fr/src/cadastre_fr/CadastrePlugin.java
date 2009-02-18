@@ -65,7 +65,9 @@ import org.openstreetmap.josm.data.projection.Lambert;
  *                 - first draft of raster image support 
  * 0.9 05-Feb-2009 - grab vectorized full commune bbox, save in file, convert to OSM way
  *                   and simplify
- * 1.0 05-Feb-2009 - fix various bugs
+ * 1.0 18-Feb-2009 - fix various bugs in color management and preference dialog 
+ *                 - increase PNG picture size requested to WMS (800x1000)
+ *                 - set 4th grab scale fixed size configurable (from 25 to 1000 meters) 
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "1.0";
@@ -86,8 +88,6 @@ public class CadastrePlugin extends Plugin {
     
     public static boolean alterColors = false;
     
-    public static String colorBackground;
-
     public static boolean backgroundTransparent = false;
     
     public static float transparency = 1.0f;
@@ -102,12 +102,7 @@ public class CadastrePlugin extends Plugin {
      * @throws Exception
      */
     public CadastrePlugin() throws Exception {
-        System.out.println("Pluging \"french cadastre\" started...");
-        if (Main.proj.toString().equals(new Lambert().toString()) != true) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("To enable the cadastre WMS plugin, change\nthe JOSM projection to Lambert and restart"));
-            return;
-        }
+        System.out.println("Pluging \"cadastre-fr\" started...");
         if (Main.pref.get("cadastrewms.cacheDir").equals(""))
             cacheDir = Main.pref.getPreferencesDir()+"plugins/cadastrewms/";
         else {
@@ -126,43 +121,56 @@ public class CadastrePlugin extends Plugin {
     }
 
     public void refreshMenu() throws Exception {
+        boolean isLambertProjection = Main.proj.toString().equals(new Lambert().toString());
         JMenuBar menu = Main.main.menu;
 
         if (cadastreJMenu == null) {
             cadastreJMenu = new JMenu(tr("Cadastre"));
             cadastreJMenu.setMnemonic(KeyEvent.VK_C);
             menu.add(cadastreJMenu, menu.getMenuCount()-2);
-            
-            JosmAction grab = new MenuActionGrab();
-            JMenuItem menuGrab = new JMenuItem(grab);
-            KeyStroke ks = grab.getShortcut().getKeyStroke();
-            if (ks != null) {
-                menuGrab.setAccelerator(ks);
-            }
-            JMenuItem menuSettings = new JMenuItem(new MenuActionNewLocation());
-            final JCheckBoxMenuItem menuSource = new JCheckBoxMenuItem(tr("Auto sourcing"));
-            menuSource.setSelected(autoSourcing);     
-            menuSource.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ev) {
-                    Main.pref.put("cadastrewms.autosourcing", menuSource.isSelected());
-                    autoSourcing = menuSource.isSelected();
+            if (isLambertProjection) {
+                JosmAction grab = new MenuActionGrab();
+                JMenuItem menuGrab = new JMenuItem(grab);
+                KeyStroke ks = grab.getShortcut().getKeyStroke();
+                if (ks != null) {
+                    menuGrab.setAccelerator(ks);
                 }
-            });
-
-            JMenuItem menuResetCookie = new JMenuItem(new MenuActionResetCookie());
-            JMenuItem menuLambertZone = new JMenuItem(new MenuActionLambertZone());
-            JMenuItem menuLoadFromCache = new JMenuItem(new MenuActionLoadFromCache());
-            JMenuItem menuActionBoundaries = new JMenuItem(new MenuActionBoundaries());
-            JMenuItem menuActionBuildings = new JMenuItem(new MenuActionBuildings());
-            
-            cadastreJMenu.add(menuGrab);
-            cadastreJMenu.add(menuSettings);
-            cadastreJMenu.add(menuSource);
-            cadastreJMenu.add(menuResetCookie);
-            cadastreJMenu.add(menuLambertZone);
-            cadastreJMenu.add(menuLoadFromCache);
-            cadastreJMenu.add(menuActionBoundaries);
-            //cadastreJMenu.add(menuActionBuildings);
+                JMenuItem menuSettings = new JMenuItem(new MenuActionNewLocation());
+                final JCheckBoxMenuItem menuSource = new JCheckBoxMenuItem(tr("Auto sourcing"));
+                menuSource.setSelected(autoSourcing);     
+                menuSource.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ev) {
+                        Main.pref.put("cadastrewms.autosourcing", menuSource.isSelected());
+                        autoSourcing = menuSource.isSelected();
+                    }
+                });
+    
+                JMenuItem menuResetCookie = new JMenuItem(new MenuActionResetCookie());
+                JMenuItem menuLambertZone = new JMenuItem(new MenuActionLambertZone());
+                JMenuItem menuLoadFromCache = new JMenuItem(new MenuActionLoadFromCache());
+                //JMenuItem menuActionBoundaries = new JMenuItem(new MenuActionBoundaries());
+                //JMenuItem menuActionBuildings = new JMenuItem(new MenuActionBuildings());
+                
+                cadastreJMenu.add(menuGrab);
+                cadastreJMenu.add(menuSettings);
+                cadastreJMenu.add(menuSource);
+                cadastreJMenu.add(menuResetCookie);
+                cadastreJMenu.add(menuLambertZone);
+                cadastreJMenu.add(menuLoadFromCache);
+                // all SVG features disabled until official WMS is released
+                //cadastreJMenu.add(menuActionBoundaries); 
+                //cadastreJMenu.add(menuActionBuildings);
+            } else {
+                JMenuItem hint = new JMenuItem(tr("Invalid projection"));
+                hint.setToolTipText(tr("Change the projection to {0} first.", new Lambert().toString()));
+                hint.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ev) {
+                        JOptionPane.showMessageDialog(Main.parent,
+                                tr("To enable the cadastre WMS plugin, change\nthe JOSM projection to Lambert and restart"));
+                    }
+                });
+                cadastreJMenu.add(hint);
+            }
         }
         setEnabledAll(menuEnabled);
     }
@@ -173,7 +181,6 @@ public class CadastrePlugin extends Plugin {
         autoSourcing = Main.pref.getBoolean("cadastrewms.autosourcing", true);
         alterColors = Main.pref.getBoolean("cadastrewms.alterColors");
         drawBoundaries = Main.pref.getBoolean("cadastrewms.drawBoundaries", false);
-        colorBackground = Main.pref.get("color.background", "#FFFFFF");
         if (alterColors) {
             backgroundTransparent = Main.pref.getBoolean("cadastrewms.backgroundTransparent");
             transparency = Float.parseFloat(Main.pref.get("cadastrewms.brightness", "1.0f"));
@@ -192,9 +199,9 @@ public class CadastrePlugin extends Plugin {
         for (int i = 0; i < cadastreJMenu.getItemCount(); i++) {
             JMenuItem item = cadastreJMenu.getItem(i);
             if (item != null)
-                if (item.getText().equals(MenuActionGrab.name) ||
+                if (item.getText().equals(MenuActionGrab.name) /* ||
                     item.getText().equals(MenuActionBoundaries.name) ||
-                    item.getText().equals(MenuActionBuildings.name)) {
+                    item.getText().equals(MenuActionBuildings.name)*/) {
                     item.setEnabled(isEnabled);
                 } else if (item.getText().equals(MenuActionLambertZone.name)) {
                     item.setEnabled(!isEnabled);

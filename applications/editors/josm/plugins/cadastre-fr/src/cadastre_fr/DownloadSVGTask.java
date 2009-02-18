@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
@@ -93,7 +95,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
      *  which path element is the best fitting to the viewBox and convert it to OSM objects
      */
     private void createWay(String svg) {
-        String[] SVGpaths = new SVGParser().getPaths(svg);
+        String[] SVGpaths = new SVGParser().getClosedPaths(svg);
         ArrayList<Double> fitViewBox = new ArrayList<Double>();  
         ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<ArrayList<EastNorth>>();
         for (int i=0; i< SVGpaths.length; i++) {
@@ -115,7 +117,11 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
             wayToAdd.nodes.add(node);
         }
         wayToAdd.nodes.add(wayToAdd.nodes.get(0)); // close the circle
-        new SimplifyWay().simplifyWay(wayToAdd);
+        
+        // simplify the way
+        double threshold = Double.parseDouble(Main.pref.get("cadastrewms.simplify-way-boundary", "1.0"));
+        new SimplifyWay().simplifyWay(wayToAdd, Main.ds, threshold);
+        
         cmds.add(new AddCommand(wayToAdd));
         Main.main.undoRedo.add(new SequenceCommand(tr("Create boundary"), cmds));
         Main.map.repaint();
@@ -204,6 +210,11 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     }
 
     public static void download(WMSLayer wmsLayer) {
+        if (CadastrePlugin.autoSourcing == false) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("Please, enable auto-sourcing and check cadastre millesime."));
+            return;
+        }
         Main.worker.execute(new DownloadSVGTask(wmsLayer));
     }
 

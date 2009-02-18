@@ -40,7 +40,7 @@ public class WMSDownloadAction extends JosmAction {
             if (existingWMSlayers.size() == 0)
                 return new MenuActionNewLocation().addNewLayer(existingWMSlayers);
             JOptionPane.showMessageDialog(Main.parent,
-                    tr("More than one WMS layer present.\nSelect one of them first, then retry."));
+                    tr("More than one WMS layer present\nSelect one of them first, then retry"));
         }
         return null;
 	}

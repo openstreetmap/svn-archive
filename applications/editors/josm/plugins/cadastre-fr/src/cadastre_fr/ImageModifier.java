@@ -17,6 +17,8 @@ public class ImageModifier {
 
     public static final int cadastreBackground = -1; // white
 
+    public static final int cadastreBackgroundTransp = 1; // original white but transparent 
+
     public BufferedImage bufferedImage;
 
     private boolean withBackground = false;
@@ -27,41 +29,52 @@ public class ImageModifier {
 
     public ImageModifier(BufferedImage bi) {
         bufferedImage = bi;
-        if (Main.pref.getBoolean("cadastrewms.alterColors")) {
-            changeColors();
-            if (Main.pref.getBoolean("cadastrewms.backgroundTransparent")) {
-                makeTransparent();
-            }
-        }
+        if (Main.pref.getBoolean("cadastrewms.backgroundTransparent"))
+            makeTransparent();
+        else if (Main.pref.getBoolean("cadastrewms.alterColors"))
+            replaceBackground();
+        
+        if (Main.pref.getBoolean("cadastrewms.invertGrey"))
+            invertGrey();
     }
 
     /**
      * Replace the background color by the josm color.background color.
-     * @param bi
-     * @return
      */
-    private void changeColors() {
+    private void replaceBackground() {
         int w = bufferedImage.getWidth();
         int h = bufferedImage.getHeight();
-        int pixel;
-        int josmBackgroundColor = ColorHelper.html2color(Main.pref.get("color.background", "#FFFFFF")).getRGB();
-        boolean invertGrey = (Main.pref.getBoolean("cadastrewms.invertGrey"));
+        int josmBackgroundColor = ColorHelper.html2color(Main.pref.get("color.background", "#000000")).getRGB();
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
-                pixel = bufferedImage.getRGB(x, y);
+                int pixel = bufferedImage.getRGB(x, y);
                 if (pixel == cadastreBackground) {
                     bufferedImage.setRGB(x, y, josmBackgroundColor);
                     if (!withBackground)
                         withBackground = true;
                     backgroundSampleX = x;
                     backgroundSampleY = y;
-                } else if (invertGrey) {
-                    bufferedImage.setRGB(x, y, reverseIfGrey(pixel));
                 }
             }
         }
     }
     
+    /**
+     * Invert black/white/grey pixels (to change original black characters to white).
+     */
+    private void invertGrey() {
+        int w = bufferedImage.getWidth();
+        int h = bufferedImage.getHeight();
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                int pixel = bufferedImage.getRGB(x, y);
+                if (pixel != cadastreBackground) {
+                    bufferedImage.setRGB(x, y, reverseIfGrey(pixel));
+                }
+            }
+        }
+    }
+
     /**
      * Reverse the grey value if the pixel is grey (light grey becomes dark grey)
      * Used for texts. 

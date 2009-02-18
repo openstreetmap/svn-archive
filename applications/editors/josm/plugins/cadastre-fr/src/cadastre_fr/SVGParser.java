@@ -13,7 +13,7 @@ public class SVGParser {
     private String cViewBoxStart = "viewBox=\"";
     private String cViewBoxEnd = "\"";
     private String cPathStart = "<path d=\"";
-    private String cPathEnd = "\"/>";
+    private String cClosedPathEnd = "\"/>";
 
     /**
      * The SVG viewBox looks like this:
@@ -39,14 +39,21 @@ public class SVGParser {
         return null;
     }
     
-    public String [] getPaths(String svg) {
+    /**
+     * Closed SVG paths are finishing with a "Z" at the end of the moves list.
+     * @param svg
+     * @return
+     */
+    public String [] getClosedPaths(String svg) {
         ArrayList<String> path = new ArrayList<String>();
         int i = 0;
         while (svg.indexOf(cPathStart, i) != -1) {
             int s = svg.indexOf(cPathStart, i) + cViewBoxStart.length();
-            int e = svg.indexOf(cPathEnd, s);
+            int e = svg.indexOf(cClosedPathEnd, s);
             if (s != -1 && e != -1) {
-                path.add(svg.substring(s, e));
+                String onePath = svg.substring(s, e); 
+                if (onePath.indexOf("Z") != -1) // only closed SVG path
+                    path.add(onePath);
             } else
                 break;
             i = e;

@@ -161,7 +161,7 @@ public class WMSLayer extends Layer {
             }
         } else {
             // divide to fixed size squares
-            int cSquare = 100; // expressed in meters in projection Lambert
+            int cSquare = Integer.parseInt(Main.pref.get("cadastrewms.squareSize", "100"));
             minEast = minEast - minEast % cSquare;
             minNorth = minNorth - minNorth % cSquare;
             for (int xEast = (int)minEast; xEast < lambertMax.east(); xEast+=cSquare)

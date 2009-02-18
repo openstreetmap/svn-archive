@@ -15,13 +15,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MapView;
@@ -34,6 +36,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;
     private CadastreInterface wmsInterface;
     private String svg = null;
+    private static EastNorthBound currentView = null;
     private EastNorthBound viewBox = null;
     
     public DownloadSVGBuilding(WMSLayer wmsLayer) {
@@ -48,16 +51,13 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         Main.pleaseWaitDlg.currentAction.setText(tr("Contacting WMS Server..."));
         try {
             if (wmsInterface.retrieveInterface(wmsLayer)) {
-                MapView mv = Main.map.mapView;
-                EastNorthBound enb = new EastNorthBound(mv.getEastNorth(0, mv.getHeight()),
-                        mv.getEastNorth(mv.getWidth(), 0));
-                svg = grabBoundary(enb);
+                svg = grabBoundary(currentView);
                 if (svg == null)
                     return;
                 getViewBox(svg);
                 if (viewBox == null)
                     return;
-                createWay(svg);
+                createBuildings(svg);
             }
         } catch (DuplicateLayerException e) {
             System.err.println("removed a duplicated layer");
@@ -88,47 +88,72 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
      *  The svg contains more than one commune boundary defined by path elements. So detect
      *  which path element is the best fitting to the viewBox and convert it to OSM objects
      */
-    private void createWay(String svg) {
-        String[] SVGpaths = new SVGParser().getPaths(svg);
+    private void createBuildings(String svg) {
+        String[] SVGpaths = new SVGParser().getClosedPaths(svg);
         ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<ArrayList<EastNorth>>();
-        Collection<Node> existingNodes = Main.ds.nodes;
         
+        // convert SVG nodes to eastNorth coordinates 
         for (int i=0; i< SVGpaths.length; i++) {
             ArrayList<EastNorth> eastNorth = new ArrayList<EastNorth>();
             createNodes(SVGpaths[i], eastNorth);
             if (eastNorth.size() > 2)
                 eastNorths.add(eastNorth);
         }
-        List<Way> wayList = new ArrayList<Way>();
-        List<Node> nodeList = new ArrayList<Node>();
+
+        // create nodes and closed ways
+        DataSet svgDataSet = new DataSet();
         for (ArrayList<EastNorth> path : eastNorths) {
-            List<Node> tmpNodeList = new ArrayList<Node>();
             Way wayToAdd = new Way();
             for (EastNorth eastNorth : path) {
                 Node nodeToAdd = new Node(Main.proj.eastNorth2latlon(eastNorth));
                 // check if new node is not already created by another new path 
-                Node nearestNewNode = checkNearestNode(nodeToAdd, tmpNodeList); 
-                if (nearestNewNode == nodeToAdd) {
-                    // check if new node is not already in existing OSM objects
-                    nearestNewNode = checkNearestNode(nodeToAdd, existingNodes);
-                    if (nearestNewNode == nodeToAdd)
-                        tmpNodeList.add(nodeToAdd);
-                }
+                Node nearestNewNode = checkNearestNode(nodeToAdd, svgDataSet.nodes); 
+                if (nearestNewNode == nodeToAdd)
+                    svgDataSet.addPrimitive(nearestNewNode);
                 wayToAdd.nodes.add(nearestNewNode); // either a new node or an existing one
             }
-            // at least two nodes have to be new, otherwise the polygon is not new (duplicate)
-            if (tmpNodeList.size() > 1) {
-                for (Node n : tmpNodeList)
-                    nodeList.add(n);
-                wayToAdd.nodes.add(wayToAdd.nodes.get(0)); // close the way
-                wayList.add(wayToAdd);
-            }
+            wayToAdd.nodes.add(wayToAdd.nodes.get(0)); // close the way
+            svgDataSet.addPrimitive(wayToAdd);
         }
+        
+        // TODO remove small boxes (4 nodes with less than 1 meter distance)
+        /*
+        for (Way w : svgDataSet.ways)
+            if (w.nodes.size() == 5)
+                for (int i = 0; i < w.nodes.size()-2; i++) {
+                    if (w.nodes.get(i).eastNorth.distance(w.nodes.get(i+1).eastNorth))
+                }*/
+
+        // simplify ways and check if we can reuse existing OSM nodes
+        for (Way wayToAdd : svgDataSet.ways)
+            new SimplifyWay().simplifyWay(wayToAdd, svgDataSet, 0.5);
+        // check if the new way or its nodes is already in OSM layer
+        for (Node n : svgDataSet.nodes) {
+            Node nearestNewNode = checkNearestNode(n, Main.ds.nodes); 
+            if (nearestNewNode != n) {
+                // replace the SVG node by the OSM node
+                for (Way w : svgDataSet.ways) {
+                    int replaced = 0;
+                    for (Node node : w.nodes)
+                        if (node == n) {
+                            node = nearestNewNode;
+                            replaced++;
+                        }
+                    if (w.nodes.size() == replaced)
+                        w.delete(true);
+                }
+                n.delete(true);
+            }
+                
+        }
+
         Collection<Command> cmds = new LinkedList<Command>();
-        for (Node node : nodeList)
-            cmds.add(new AddCommand(node));
-        for (Way way : wayList)
-            cmds.add(new AddCommand(way));
+        for (Node node : svgDataSet.nodes)
+            if (!node.deleted)
+                cmds.add(new AddCommand(node));
+        for (Way way : svgDataSet.ways)
+            if (!way.deleted)
+                cmds.add(new AddCommand(way));
         Main.main.undoRedo.add(new SequenceCommand(tr("Create buildings"), cmds));
         Main.map.repaint();
     }
@@ -161,12 +186,11 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
      * @return the already existing node (if any), otherwise the new node candidate. 
      */
     private Node checkNearestNode(Node nodeToAdd, Collection<Node> nodes) {
-        double epsilon = 0.01; // smallest distance considering duplicate node
+        double epsilon = 0.05; // smallest distance considering duplicate node
         for (Node n : nodes) {
             if (!n.deleted && !n.incomplete) {
                 double dist = n.eastNorth.distance(nodeToAdd.eastNorth);
                 if (dist < epsilon) {
-                    System.out.println("distance="+dist);
                     return n;
                 }
             }
@@ -196,6 +220,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         str += bbox.max.east() + ",";
         str += bbox.max.north();
         str += "&width=800&height=600"; // maximum allowed by wms server
+        str += "&exception=application/vnd.ogc.se_inimage";
         str += "&styles=";
         str += "LS2_90";
         System.out.println("URL="+str);
@@ -230,6 +255,20 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     }
 
     public static void download(WMSLayer wmsLayer) {
+        MapView mv = Main.map.mapView;
+        currentView = new EastNorthBound(mv.getEastNorth(0, mv.getHeight()),
+                mv.getEastNorth(mv.getWidth(), 0));
+        if ((currentView.max.east() - currentView.min.east()) > 1000 || 
+                (currentView.max.north() - currentView.min.north() > 1000)) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("To avoid cadastre WMS overload,\nbuilding import size is limited to 1 km2 max."));
+            return;
+        }
+        if (CadastrePlugin.autoSourcing == false) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("Please, enable auto-sourcing and check cadastre millesime."));
+            return;
+        }
         Main.worker.execute(new DownloadSVGBuilding(wmsLayer));
     }
 

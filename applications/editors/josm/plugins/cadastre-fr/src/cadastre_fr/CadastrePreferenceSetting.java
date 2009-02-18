@@ -2,7 +2,6 @@ package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -41,7 +40,10 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     private JRadioButton grabMultiplier3 = new JRadioButton("", true);
     
     private JRadioButton grabMultiplier4 = new JRadioButton("", true);
-    
+
+    static final int DEFAULT_SQUARE_SIZE = 100;
+    private JTextField grabMultiplier4Size = new JTextField(5);
+
     private JCheckBox enableCache = new JCheckBox(tr("Enable automatic caching."));
 
     static final int DEFAULT_CACHE_SIZE = 500;
@@ -65,22 +67,15 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         cadastrewms.add(sourcing, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 5));
 
         // option to alter the original colors of the wms images
-        alterColors.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                reversGrey.setEnabled(alterColors.isSelected());
-                transparency.setEnabled(alterColors.isSelected());
-                sliderTrans.setEnabled(transparency.isSelected() && alterColors.isSelected());
-            }
-        });
         alterColors.setSelected(Main.pref.getBoolean("cadastrewms.alterColors", false));
         alterColors.setToolTipText(tr("Replace the original white background by the backgound color defined in JOSM preferences."));
         cadastrewms.add(alterColors, GBC.eop().insets(0, 0, 0, 0));
 
         // option to reverse the grey colors (to see texts background)
         reversGrey.setSelected(Main.pref.getBoolean("cadastrewms.invertGrey", false));
-        reversGrey.setToolTipText(tr("Invert the original texts from black to white (and all intermediate greys)."));
+        reversGrey.setToolTipText(tr("Invert the original black and white colors (and all intermediate greys). Useful for texts on dark backgrounds."));
         reversGrey.setEnabled(alterColors.isSelected());
-        cadastrewms.add(reversGrey, GBC.eop().insets(20, 0, 0, 0));
+        cadastrewms.add(reversGrey, GBC.eop().insets(00, 0, 0, 0));
 
         // option to enable transparency
         transparency.addActionListener(new ActionListener() {
@@ -90,11 +85,9 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         });
         transparency.setSelected(Main.pref.getBoolean("cadastrewms.backgroundTransparent", false));
         transparency.setToolTipText(tr("Allows multiple layers stacking"));
-        transparency.setEnabled(alterColors.isSelected());
-        cadastrewms.add(transparency, GBC.eop().insets(20, 0, 0, 0));
+        cadastrewms.add(transparency, GBC.eop().insets(0, 0, 0, 0));
 
         // slider for transparency level
-        sliderTrans.setPreferredSize(new Dimension(20,200));
         sliderTrans.setSnapToTicks(true);
         sliderTrans.setToolTipText(tr("Set WMS layers transparency. Right is opaque, left is transparent."));
         sliderTrans.setMajorTickSpacing(10);
@@ -113,32 +106,49 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         JLabel jLabelScale = new JLabel(tr("Image grab multiplier:"));
         cadastrewms.add(jLabelScale, GBC.std().insets(0, 5, 10, 0));
         ButtonGroup bg = new ButtonGroup();
+        ActionListener multiplierActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+              AbstractButton button = (AbstractButton) actionEvent.getSource();
+              grabMultiplier4Size.setEnabled(button == grabMultiplier4);
+            }
+          };
         grabMultiplier1.setIcon(ImageProvider.get("preferences", "unsel_box_1"));
         grabMultiplier1.setSelectedIcon(ImageProvider.get("preferences", "sel_box_1"));
+        grabMultiplier1.addActionListener( multiplierActionListener);
         grabMultiplier2.setIcon(ImageProvider.get("preferences", "unsel_box_2"));
         grabMultiplier2.setSelectedIcon(ImageProvider.get("preferences", "sel_box_2"));
+        grabMultiplier2.addActionListener( multiplierActionListener);
+        grabMultiplier2.setToolTipText(tr("Grab smaller images (higher quality but use more memory)"));
         grabMultiplier3.setIcon(ImageProvider.get("preferences", "unsel_box_3"));
         grabMultiplier3.setSelectedIcon(ImageProvider.get("preferences", "sel_box_3"));
+        grabMultiplier3.addActionListener( multiplierActionListener);
+        grabMultiplier3.setToolTipText(tr("Grab smaller images (higher quality but use more memory)"));
         grabMultiplier4.setIcon(ImageProvider.get("preferences", "unsel_box_4"));
         grabMultiplier4.setSelectedIcon(ImageProvider.get("preferences", "sel_box_4"));
-        String multiplierTooltip = "Grab smaller images (higher quality but use more memory)";
-        grabMultiplier3.setToolTipText(multiplierTooltip);
+        grabMultiplier4.addActionListener( multiplierActionListener);
+        grabMultiplier4.setToolTipText(tr("Fixed size square (default is 100m)"));
         bg.add(grabMultiplier1);
         bg.add(grabMultiplier2);
         bg.add(grabMultiplier3);
         bg.add(grabMultiplier4);
-        if (Main.pref.get("cadastrewms.scale", "1").equals(Scale.X1))
+        String currentScale = Main.pref.get("cadastrewms.scale", "1");
+        if (currentScale.equals(Scale.X1.value))
             grabMultiplier1.setSelected(true);
-        if (Main.pref.get("cadastrewms.scale", "1").equals(Scale.X2))
+        if (currentScale.equals(Scale.X2.value))
             grabMultiplier2.setSelected(true);
-        if (Main.pref.get("cadastrewms.scale", "1").equals(Scale.X3))
+        if (currentScale.equals(Scale.X3.value))
             grabMultiplier3.setSelected(true);
-        if (Main.pref.get("cadastrewms.scale", "1").equals(Scale.SQUARE_100M))
+        if (currentScale.equals(Scale.SQUARE_100M.value))
             grabMultiplier4.setSelected(true);
         cadastrewms.add(grabMultiplier1, GBC.std().insets(5, 0, 5, 0));
         cadastrewms.add(grabMultiplier2, GBC.std().insets(5, 0, 5, 0));
         cadastrewms.add(grabMultiplier3, GBC.std().insets(5, 0, 5, 0));
-        cadastrewms.add(grabMultiplier4, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 5, 0));
+        cadastrewms.add(grabMultiplier4, GBC.std().insets(5, 0, 5, 0));
+        int squareSize = getNumber("cadastrewms.squareSize", DEFAULT_SQUARE_SIZE);
+        grabMultiplier4Size.setText(String.valueOf(squareSize));
+        grabMultiplier4Size.setToolTipText(tr("Fixed size (from 25 to 1000 meters)"));
+        grabMultiplier4Size.setEnabled(currentScale.equals(Scale.SQUARE_100M.value));
+        cadastrewms.add(grabMultiplier4Size, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
         
         // option to enable automatic caching
         enableCache.addActionListener(new ActionListener() {
@@ -152,12 +162,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         cadastrewms.add(enableCache, GBC.eop().insets(0, 0, 0, 0));
 
         // option to fix the cache size(in MB)
-        int size;
-        try {
-            size = Integer.parseInt(Main.pref.get("cadastrewms.cacheSize", String.valueOf(DEFAULT_CACHE_SIZE)));
-        } catch (NumberFormatException e) {
-            size = DEFAULT_CACHE_SIZE;
-        }
+        int size = getNumber("cadastrewms.cacheSize", DEFAULT_CACHE_SIZE);
         cacheSize.setText(String.valueOf(size));
         cacheSize.setToolTipText(tr("Oldest files are automatically deleted when this size is exceeded"));
         cadastrewms.add(jLabelCacheSize, GBC.std().insets(20, 0, 0, 0));
@@ -181,16 +186,22 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
             Main.pref.put("cadastrewms.scale", Scale.X2.toString());
         else if (grabMultiplier3.isSelected())
             Main.pref.put("cadastrewms.scale", Scale.X3.toString());
-        else
+        else {
             Main.pref.put("cadastrewms.scale", Scale.SQUARE_100M.toString());
+            try {
+                int squareSize = Integer.parseInt(grabMultiplier4Size.getText());
+                if (squareSize >= 25 && squareSize <= 1000)
+                    Main.pref.put("cadastrewms.squareSize", grabMultiplier4Size.getText());
+            } catch (NumberFormatException e) { // ignore the last input
+            }
+        }
         Main.pref.put("cadastrewms.enableCaching", enableCache.isSelected());
         
         // spread data into objects instead of restarting the application
         try {
             CacheControl.cacheSize = Integer.parseInt(cacheSize.getText());
             Main.pref.put("cadastrewms.cacheSize", String.valueOf(CacheControl.cacheSize));
-        } catch (NumberFormatException e) {
-            // ignore the last input
+        } catch (NumberFormatException e) { // ignore the last input
         }
         CacheControl.cacheEnabled = enableCache.isSelected();
         CadastrePlugin.refreshConfiguration();
@@ -198,4 +209,11 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         return false;
     }
 
+    private int getNumber(String pref_parameter, int def_value) {
+        try {
+            return Integer.parseInt(Main.pref.get(pref_parameter, String.valueOf(def_value)));
+        } catch (NumberFormatException e) {
+            return def_value;
+        }
+    }
 }

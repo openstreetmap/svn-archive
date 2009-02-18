@@ -15,9 +15,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import javax.imageio.ImageIO;
+
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.NavigatableComponent;
-import org.openstreetmap.josm.tools.ColorHelper;
 
 public class GeorefImage implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -180,13 +180,9 @@ public class GeorefImage implements Serializable {
             int widthXMaskPixel = Math.abs((int) ((maxMaskEast - minMaskEast) / pixelPerEast));
             int heightYMaskPixel = Math.abs((int) ((maxMaskNorth - minMaskNorth) / pixelPerNorth));
             Graphics g = image.getGraphics();
-            int josmBackgroundColor = ColorHelper.html2color(CadastrePlugin.colorBackground).getRGB();
             for (int x = minXMaskPixel; x < minXMaskPixel + widthXMaskPixel; x++)
                 for (int y = minYMaskPixel; y < minYMaskPixel + heightYMaskPixel; y++)
-                    if (CadastrePlugin.alterColors)
-                        image.setRGB(x, y, josmBackgroundColor);
-                    else
-                        image.setRGB(x, y, ImageModifier.cadastreBackground);
+                    image.setRGB(x, y, ImageModifier.cadastreBackgroundTransp);
             g.dispose();
         }
     }

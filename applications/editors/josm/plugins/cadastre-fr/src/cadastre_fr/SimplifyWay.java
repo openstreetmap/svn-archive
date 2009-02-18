@@ -11,6 +11,7 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.CollectBackReferencesVisitor;
@@ -22,14 +23,12 @@ import static org.openstreetmap.josm.tools.I18n.trn;
  *
  */
 public class SimplifyWay {
-    public void simplifyWay(Way w) {
-        double threshold = Double.parseDouble(Main.pref.get("simplify-way.max-error", "3"));
-
+    public void simplifyWay(Way w, DataSet dataSet, double threshold) {
         Way wnew = new Way(w);
 
         int toI = wnew.nodes.size() - 1;
         for (int i = wnew.nodes.size() - 1; i >= 0; i--) {
-            CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(Main.ds, false);
+            CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(dataSet, false);
             backRefsV.visit(wnew.nodes.get(i));
             boolean used = false;
             if (backRefsV.data.size() == 1) {

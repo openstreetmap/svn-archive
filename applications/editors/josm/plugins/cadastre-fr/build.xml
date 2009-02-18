@@ -25,7 +25,7 @@
             <arg value="."/>
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-        <delete file="REVISION"/>
+        <delete file="REVISION"/> 
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <manifest>
                 <attribute name="Plugin-Class" value="cadastre_fr.CadastrePlugin"/>

@@ -73,14 +73,14 @@ class ParseXML:
 class ParseNaptan(ParseXML):
     tagprefix = 'naptan'
     tagmap = {
-        'AtcoCode': '',         # Blank entries automatically form tags of tagprefix:nodename
+        'AtcoCode': '',             # Blank entries automatically form tags of tagprefix:nodename
         'NaptanCode': ('','ref'),   # Tuples can be used if a node needs to be mapped to multiple tags
         'CommonName': 'name',
         'ShortCommonName': '',
         'Landmark': '',
         'Street': '',
         'Crossing': '',
-        'Indicator': '',
+        'Indicator': '',            # For when the ref-parsing code below fails
         'Notes': '',
     }
     tagmap_altdescriptors = {
@@ -113,14 +113,23 @@ class ParseNaptan(ParseXML):
         elif node == 'Longitude' and self.parentnodes['StopPoints']:
             self.feature.loc[0] = elem.text
         elif node == 'Indicator' and not self.parentnodes['AlternativeDescriptors']:
-            indicator = elem.text.upper()
             v = ''
-            matches = re.match('^(?:(?:BAY)|(?:ENTRANCE)|(?:STAND)|(?:STOP) )?([A-Z0-9\-& ]{1,7})', indicator)
-            if matches:
-                v = matches.group(1).strip(' -')
-            if v:
-                self.feature.tags['ref'] = v
-            else:
+            if not elem.text in ('In', 'No', 'Nr', 'On'):
+                indicator = elem.text.upper()
+                regexes = (
+                    # Mostly produced with reference to London and Surrey data
+                    re.compile('^(?:(?:BAY)|(?:ENTRANCE)|(?:STAND)|(?:STOP) )([A-Z0-9\-& ]{1,7})'),
+                    # Unfortunately, still matches 2 letter words (such as 'on') used as Indicators in Surrey
+                    re.compile('^([A-Z0-9]{1,2}[0-9]?)$')
+                )
+                for regex in regexes:
+                    matches = regex.match(indicator)
+                    if matches:
+                        v = matches.group(1).strip(' -')
+                        if v:
+                            self.feature.tags['ref'] = v
+                            break
+            if not v:
                 self.node2tag(elem)
             
         elif self.parentnodes['AlternativeDescriptors']:

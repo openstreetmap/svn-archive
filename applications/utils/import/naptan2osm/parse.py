@@ -134,6 +134,13 @@ class ParseNaptan(ParseXML):
             
         elif self.parentnodes['AlternativeDescriptors']:
             self.node2tag(elem, self.tagmap_altdescriptors)
+        elif node == 'StopType':
+            # This is a 'legacy' node according to the schema, but it should still work
+            stoptype = elem.text
+            if stoptype == 'BCT' or stoptype == 'BCQ' or stoptype == 'BCS':
+                self.feature.tags['highway'] = 'bus_stop'
+            elif stoptype == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
+                self.feature.tag['amenity'] = 'bus_station'
         else:
             # Fallthrough for simple tag mappings
             self.node2tag(elem)

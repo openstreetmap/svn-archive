@@ -99,12 +99,15 @@ values, and roles.  alltags.pl will analyze your current Trapi
 database and create a tags.z14x16384y0 file.  (As well as several
 other files checkpointing the creation.)  tagsproc.pl will take this
 file, sort and eliminate things less common than THRESH, and create a
-tags file to standard output.  You should run this twice if your Trapi
-database is significantly different than the one used to create your
-current tags file, since it will only capture values for known common
-tags.  Trapi will use the current version selected by TAGSVERSION for
-new tiles, and the version the tile was created at for old tiles until
-they are garbage-collected.
+tags file to standard output.  THRESH is a compromise between disk
+space and memory, higher THRESH will cause Trapi to use less memory
+but more disk space.  You should run this twice if your Trapi database
+is significantly different than the one used to create your current
+tags file, since it will only capture values for known common tags.
+Trapi will use the current version selected by TAGSVERSION for new
+tiles, and the version the tile was created at for old tiles until
+they are garbage-collected.  TAGSVERSION of 0 is used for old format
+tiles.
 
 To update from tags.1 based on current trapi database:
     cd /trapi

@@ -16,7 +16,6 @@ chdir TRAPIDIR or die "could not chdir ".TRAPIDIR.": $!";
 ptdbinit("+<");
 
 $| = 1;
-my ($pz) = pack "N", 0;
 
 our (%togc, $cachecount);
 # garbage collect
@@ -28,170 +27,7 @@ sub garbagecollect() {
     while (my $ptn = shift @togc) {
 	# avoid tiles being used
 	next if (exists $filecache{$ptn."data"});
-	flushptn($ptn);
-	my ($z, $x, $y) = fromptn($ptn);
-	print "Garbagecollect: z$z $x,$y\n" if (VERBOSE > 4);
-	my ($df, $ndf, $nf, $nnf, $wf, $nwf, $rf, $nrf, $b);
-	if (open $df, "<", "z$z/$x/$y/data") {
-	    open $ndf, ">", "z$z/$x/$y/data.new";
-	    print $ndf "\0";
-	} else {
-	    $df = $devnull;
-	    $ndf = undef;
-	}
-	if (open $nf, "<", "z$z/$x/$y/nodes") {
-	    open $nnf, ">", "z$z/$x/$y/nodes.new";
-	} else {
-	    $nf = $devnull;
-	    $nnf = undef;
-	}
-	if (open $wf, "<", "z$z/$x/$y/ways") {
-	    open $nwf, ">", "z$z/$x/$y/ways.new";
-	} else {
-	    $wf = $devnull;
-	    $nwf = undef;
-	}
-	if (open $rf, "<", "z$z/$x/$y/relations") {
-	    open $nrf, ">", "z$z/$x/$y/relations.new";
-	} else {
-	    $rf = $devnull;
-	    $nrf = undef;
-	}
-	my %seen;
-	while (read $nf, $b, 16) {
-	    my ($n, $lat, $lon, $off) = unpack "NN!N!N", $b;
-	    next unless ($n);
-	    if (exists $seen{$n}) {
-		print "Duplicate node $n in tile z$z $x,$y\n";
-		next;
-	    }
-	    my $noff = 0;
-	    if ($off) {
-		seek $df, $off, 0;
-		$noff = tell $ndf;
-		my $tag;
-		while (defined($tag = gets($df)) && ($tag ne "")) {
-		    my $val = gets($df);
-		    print $ndf "$tag\0$val\0";
-		}
-		print $ndf "\0";
-	    }
-	    print $nnf pack "NN!N!N", $n, $lat, $lon, $noff;
-	    $seen{$n} = 1;
-	    my $oldptn = nodeptn($n);
-	    if (defined $oldptn && $oldptn ne NOPTN) {
-		if ($oldptn ne $ptn) {
-		    my ($uz, $ux, $uy) = fromptn($oldptn);
-		    print "  node $n is actually in tile z$z $x,$y not z$uz $ux,$uy\n";
-#		    nodeptn($n, $ptn);
-		}
-	    } else {
-		print "  node $n is in tile z$z $x,$y not deleted\n";
-#		nodeptn($n, $ptn);
-	    }
-	}
-	%seen = ();
-	while (read $wf, $b, 8) {
-	    my ($w, $off) = unpack "NN", $b;
-	    next unless ($w);
-	    if (exists $seen{$w}) {
-		print "Duplicate way $w\n";
-		next;
-	    }
-	    my $noff = 0;
-	    if ($off) {
-		seek $df, $off, 0;
-		$noff = tell $ndf;
-		my $n;
-		while (read $df, $n, 4) {
-		    print $ndf $n;
-		    last if ($n eq $pz);
-		}
-		my $tag;
-		while (defined($tag = gets($df)) && ($tag ne "")) {
-		    my $val = gets($df);
-		    print $ndf "$tag\0$val\0";
-		}
-		print $ndf "\0";
-	    }
-	    $seen{$w} = 1;
-	    my $oldptn = wayptn($w);
-	    if (defined $oldptn) {
-		if ($off && ($ptn ne $oldptn)) {
-		    my ($ux, $uy, $uz) = fromptn($oldptn);
-		    print "  way $w is actually in z$z $x,$y not z$uz $ux,$uy\n";
-#		    wayptn($w, $ptn);
-		}
-		print $nwf pack "NN", $w, $noff;
-	    } else {
-		if ($off) {
-		    print "  way $w is actually in z$z $x,$y not deleted\n";
-#		    wayptn($w, $ptn);
-#		    print $nwf pack "NN", $w, $noff;
-		} else {
-		    print "  way $w is deleted, not in z$z $x,$y\n";
-		}
-	    }
-	}
-	%seen = ();
-	while (read $rf, $b, 8) {
-	    my ($r, $off) = unpack "NN", $b;
-	    next unless ($r);
-	    if (exists $seen{$r}) {
-		print "Duplicate relation $r\n";
-		next;
-	    }
-	    my $noff = 0;
-	    if ($off) {
-		seek $df, $off, 0;
-		$noff = tell $ndf;
-		my $n;
-		while (read $df, $n, 5) {
-		    my ($type, $mid) = unpack "CN", $n;
-		    last unless($type);
-		    print $ndf $n;
-		    my $role = gets($df);
-		    print $ndf "$role\0";
-		}
-		seek $df, -4, 1;
-		print $ndf "\0";
-		my $tag;
-		while (defined($tag = gets($df)) && $tag ne "") {
-		    my $val = gets($df);
-		    print $ndf "$tag\0$val\0";
-		}
-		print $ndf "\0";
-	    }
-	    my $oldptn = relationptn($r);
-	    if (defined $oldptn) {
-		if ($off && ($ptn ne $oldptn)) {
-		    my ($uz, $ux, $uy) = fromptn($oldptn);
-		    print "  relation $r is actually in z$z $x,$y not z$uz $ux,$uy\n";
-#		    relationptn($r, $ptn);
-		}
-		print $nrf pack "NN", $r, $noff;
-	    } else {
-		if ($off && $z != 0) {
-		    print "  relation $r is actually in z$z $x,$y not deleted\n";
-#		    relationptn($r, $ptn);
-#		    print $nrf pack "NN", $r, $noff;
-		} else {
-		    print "  relation $r is deleted, not in z$z $x,$y\n";
-		}
-	    }
-	}
-	if (defined $ndf) {
-	    rename "z$z/$x/$y/data.new","z$z/$x/$y/data";
-	}
-	if (defined $nnf) {
-	    rename "z$z/$x/$y/nodes.new","z$z/$x/$y/nodes";
-	}
-	if (defined $nwf) {
-	    rename "z$z/$x/$y/ways.new","z$z/$x/$y/ways";
-	}
-	if (defined $nrf) {
-	    rename "z$z/$x/$y/relations.new","z$z/$x/$y/relations";
-	}
+	gcptn($ptn);
 	$whengc{$ptn} = $cachecount;
 	delete $togc{$ptn};
 	last unless (--$todo);
@@ -247,14 +83,14 @@ while (my $gz = <>) {
 	    $ptn = etoptn($x, $y);
 	    print "id: $id lat: $lat lon: $lon x: $x y:$y\n" if (VERBOSE > 18);
 	    my $oldptn = nodeptn($id);
-	    my $nf = openptn($ptn, "+<", "nodes");
+	    my $nf = openptn($ptn, "nodes");
 	    my ($uz, $ux, $uy) = fromptn($ptn);
 	    if ($oldptn eq NOPTN) {
 		print "Creating new node $id in $uz $ux,$uy\n" if (VERBOSE > 11);
 		seek $nf, 0, 0;
-		my ($n, $tlat, $tlon, $noff, $mt);
-		while (read $nf, $n, 16) {
-		    ($n, $tlat, $tlon, $noff) = unpack "NN!N!N", $n;
+		my ($mt);
+		while (my ($n, $tlat, $tlon, $noff) = readnode($nf)) {
+		    last unless (defined $n);
 		    unless ($n) {
 			$mt //= tell $nf;
 			next;
@@ -271,16 +107,15 @@ while (my $gz = <>) {
 			our %whengc;
 			delete $whengc{$ptn};
 			$ptn = etoptn($x, $y);
-			$nf = openptn($ptn, "+<", "nodes");
+			$nf = openptn($ptn, "nodes");
 			seek $nf, 0, 2;
 		    }
 		}
 	    } elsif ($oldptn eq $ptn) {
 		print "Replacing node $id in tile $uz $ux,$uy\n" if (VERBOSE > 6);
 		seek $nf, 0, 0;
-		my ($n, $tlat, $tlon);
-		while (read $nf, $n, 16) {
-		    ($n, $tlat, $tlon, $off) = unpack "NN!N!N", $n;
+		while (my ($n, $tlat, $tlon, $off) = readnode($nf)) {
+		    last unless (defined $n);
 		    if ($n == $id) {
 			seek $nf, -16, 1;
 			last;
@@ -291,25 +126,24 @@ while (my $gz = <>) {
 		    my ($vz, $vx, $vy) = fromptn($oldptn);
 		    print "Moving node $id from $vz $vx,$vy to $uz $ux,$uy\n"
 		}
-		my $onf = openptn($oldptn, "+<", "nodes");
+		my $onf = openptn($oldptn, "nodes");
 		seek $onf, 0, 0;
-		my ($n, $tn, $tlat, $tlon);
-		while (read $onf, $n, 16) {
-		    ($tn, $tlat, $tlon, $off) = unpack "NN!N!N", $n;
+		while (my ($tn, $tlat, $tlon, $toff) = readnode($onf)) {
+		    last unless (defined $tn);
 		    if ($tn == $id) {
 			seek $onf, -16, 1;
-			print $onf pack "NN!N!N", 0, 0, 0, 0;
-			$togc{$oldptn} = $cachecount if ($off);
+			printnode($onf, 0, 0, 0, 0);
+			$togc{$oldptn} = $cachecount if ($toff);
 			last;
 		    }
 		}
 		seek $nf, 0, 2;
-		my $owf = openptn($oldptn, "+<", "ways");
+		my $owf = openptn($oldptn, "ways");
 		seek $owf, 0, 0;
-		my $odf = openptn($oldptn, "+<", "data");
-		my ($w, $woff, %wtc, %ways);
-		while (read $owf, $w, 8) {
-		    ($w, $woff) = unpack "NN", $w;
+		my $odf = openptn($oldptn, "data");
+		my (%wtc, %ways);
+		while (my ($w, $woff) = readway($owf)) {
+		    last unless (defined $w);
 		    next if ($w == 0);
 		    if ($woff == 0) {
 			my $wp = wayptn($w);
@@ -320,9 +154,8 @@ while (my $gz = <>) {
 			}
 		    } else {
 			seek $odf, $woff, 0;
-			while (read $odf, $n, 4) {
-			    $n = unpack "N", $n;
-			    last unless ($n);
+			my @nodes = readwaynodes($odf);
+			foreach my $n (@nodes) {
 			    next unless ($n == $id);
 			    $ways{$w} = 1;
 			    last;
@@ -333,41 +166,41 @@ while (my $gz = <>) {
 		foreach $wp (keys %wtc) {
 		    next if ($wp eq $ptn);
 		    my %wh = %{$wtc{$wp}};
-		    $owf = openptn($wp, "+<", "ways");
+		    $owf = openptn($wp, "ways");
 		    seek $owf, 0, 0;
-		    $odf = openptn($wp, "+<", "data");
-		    while (read $owf, $w, 8) {
-			($w, $woff) = unpack "NN", $w;
+		    $odf = openptn($wp, "data");
+		    while (my ($w, $woff) = readway($owf)) {
+			last unless (defined $w);
 			next unless (exists $wh{$w});
 			seek $odf, $woff, 0;
-			while (read $odf, $n, 4) {
-			    $n = unpack "N", $n;
-			    last unless ($n);
+			my @nodes = readwaynodes($odf);
+			foreach my $n (@nodes) {
 			    next unless ($n == $id);
 			    $ways{$w} = 1;
 			    last;
 			}
 		    }
 		}
-		my $nwf = openptn($ptn, "+<", "ways");
+		my $nwf = openptn($ptn, "ways");
 		seek $nwf, 0, 0;
-		while (read $nwf, $w, 8) {
-		    ($w, $woff) = unpack "NN", $w;
+		while (my ($w, $woff) = readway($nwf)) {
+		    last unless (defined $w);
+		    next unless($w);
 		    $ways{$w} = 0 if (exists $ways{$w});
 		}
-		foreach $w (keys %ways) {
+		foreach my $w (keys %ways) {
 		    if ($ways{$w}) {
 			print "  adding way $w to $uz $ux,$uy\n"
 			    if (VERBOSE > 4);;
-			print $nwf pack "NN", $w, 0;
+			printway($nwf, $w, 0);
 		    }
 		}
-		my $orf = openptn($oldptn, "+<", "relations");
-		$odf = openptn($oldptn, "+<", "data");
+		my $orf = openptn($oldptn, "relations");
+		$odf = openptn($oldptn, "data");
 		seek $orf, 0, 0;
-		my ($r, $roff, %rtc, %rels);
-	      rproc:	while (read $orf, $r, 8) {
-		  ($r, $roff) = unpack "NN", $r;
+		my (%rtc, %rels);
+	      rproc:	while (my ($r, $roff) = readrel($orf)) {
+		  last unless (defined $r);
 		  next if ($r == 0);
 		  if ($roff == 0) {
 		      my $rp = relationptn($r);
@@ -375,10 +208,9 @@ while (my $gz = <>) {
 		      ${$rtc{$rp}}{$r} //= {};
 		  } else {
 		      seek $odf, $roff, 0;
-		      while (read $odf, $n, 5) {
-			  my ($type, $mid) = unpack "CN", $n;
-			  last unless ($type);
-			  gets($odf);
+		      my @members = readmemb($odf);
+		      foreach my $m (@members) {
+			  my ($type, $mid, $role) = @$m;
 			  if ($type == 1) {
 			      next unless ($mid == $id);
 			      $rels{$r} = 1;
@@ -393,16 +225,9 @@ while (my $gz = <>) {
 				  next rproc;
 			      }
 			      my $rrp = relationptn($mid);
-			      if (exists $rtc{$rrp}) {
-				  my %x = %{$rtc{$rrp}};
-				  if (exists $x{$mid}) {
-				      ${$x{$mid}}{$r} = 1;
-				  } else {
-				      $x{$mid} = {$r => 1};
-				  }
-			      } else {
-				  $rtc{$rrp} = {$mid => {$r => 1}};
-			      }
+			      $rtc{$rrp} //= {};
+			      $rtc{$rrp}->{$mid} //= {};
+			      $rtc{$rrp}->{$mid}->{$r} = 1;
 			  } else {
 			      die "Unknown relation $r type $type";
 			  }
@@ -413,19 +238,18 @@ while (my $gz = <>) {
 		    foreach my $t (@rt) {
 			my %x = %{$rtc{$t}};
 			delete $rtc{$t};
-			my $orf = openptn($t, "+<", "relations");
+			my $orf = openptn($t, "relations");
 			seek $orf, 0, 0;
-			my $odf = openptn($t, "+<", "data");
-		      rrtc:		while (read $orf, $r, 8) {
-			  ($r, $roff) = unpack "NN", $r;
+			my $odf = openptn($t, "data");
+		      rrtc: while (my ($r, $roff) = readrel($orf)) {
+			  last unless (defined $r);
+			  next unless ($r && $roff);
 			  next if (exists $rels{$r});
 			  next unless (exists $x{$r});
-			  next unless ($roff);
 			  seek $odf, $roff, 0;
-			  while (read $odf, $n, 5) {
-			      my ($type, $mid) = unpack "CN", $n;
-			      last unless ($type);
-			      gets($odf);
+			  my @members = readmemb($odf);
+			  foreach my $m (@members) {
+			      my ($type, $mid, $role) = @$m;
 			      if ($type == 1) {
 				  next unless ($mid == $id);
 				  $rels{$r} = 1;
@@ -449,16 +273,9 @@ while (my $gz = <>) {
 				      next rrtc;
 				  }
 				  my $rrp = relationptn($mid);
-				  if (exists $rtc{$rrp}) {
-				      my %y = %{$rtc{$rrp}};
-				      if (exists $y{$mid}) {
-					  ${$y{$mid}}{$r} = 1;
-				      } else {
-					  $y{$mid} = {$r => 1};
-				      }
-				  } else {
-				      $rtc{$rrp} = {$mid => {$r => 1}};
-				  }
+				  $rtc{$rrp} //= {};
+				  $rtc{$rrp}->{$mid} //= {};
+				  $rtc{$rrp}->{$mid}->{$r} = 1;
 			      } else {
 				  die "unknown relation $r type $type";
 			      }
@@ -466,38 +283,30 @@ while (my $gz = <>) {
 		      }
 		    }
 		}
-		my $nrf = openptn($ptn, "+<", "relations");
+		my $nrf = openptn($ptn, "relations");
 		seek $nrf, 0, 0;
-		while (read $nrf, $r, 8) {
-		    ($r, $roff) = unpack "NN", $r;
+		while (my ($r, $roff) = readrel($nrf)) {
+		    last unless (defined $r);
 		    delete $rels{$r} if (exists $rels{$r});
 		}
-		foreach $r (keys %rels) {
+		foreach my $r (keys %rels) {
 		    print "  adding relation $r to z$uz $ux,$uy\n"
 			if (VERBOSE > 4);
-		    print $nrf pack "NN", $r, 0;
+		    printrel($nrf, $r, 0);
 		}
 	    }
 	    if (@tv) {
 		print "writing node $id tags\n" if (VERBOSE > 22);
-		my $nd = openptn($ptn, "+<", "data");
+		my $nd = openptn($ptn, "data");
 		$togc{$ptn} = $cachecount;
 		seek $nd, 0, 2;
 		$off = tell $nd;
-		if ($off == 0) {
-		    print $nd "\0";
-		    $off = 1;
-		}
 		print "tags: ".scalar(@tv)." off: $off\n" if (VERBOSE > 24);
-		foreach $tv (@tv) {
-		    print $nd "$tv\0";
-		}
-		print $nd "\0";
+		printtags($nd, \@tv, NODE);
 	    } else {
 		$off = 0;
 	    }
-	    print $nf pack "NN!N!N", $id, int($lat * CONV), int($lon * CONV),
-	        $off;
+	    printnode($nf, $id, int($lat * CONV), int($lon * CONV), $off);
 	    nodeptn($id, $ptn) if ($ptn ne $oldptn);
 	} elsif (/^\s*\<way\s+/) {
 	    $ways++;
@@ -523,33 +332,30 @@ while (my $gz = <>) {
 		print "Way $id has no nodes\n" if (VERBOSE > 2);
 		print "Way: $_" if (VERBOSE > 3);
 		if ($ptn ne NOPTN) {
-		    my $wf = openptn($ptn, "+<", "ways");
+		    my $wf = openptn($ptn, "ways");
 		    seek $wf, 0, 0;
-		    my ($w);
-		    while (read $wf, $w, 8) {
-			($w, $off) = unpack "NN", $w;
+		    while (my ($w, $off) = readway($wf)) {
+			last unless (defined $w);
 			next unless ($w == $id);
 			seek $wf, -8, 1;
-			print $wf pack "NN", 0, 0;
-			my $wd = openptn($ptn, "+<", "data");
+			printway($wf, 0, 0);
+			my $wd = openptn($ptn, "data");
 			$togc{$ptn} = $cachecount;
 			seek $wd, $off, 0;
 			my %ptns = ();
-			my ($n);
-			while (read $wd, $n, 4) {
-			    $n = unpack "N", $n;
-			    last unless ($n);
+			my @nodes = readwaynodes($wd);
+			foreach my $n (@nodes) {
 			    $ptns{nodeptn($n)}++;
 			}
 			delete $ptns{$ptn};
 			foreach my $p (keys %ptns) {
-			    $wf = openptn($p, "+<", "ways");
+			    $wf = openptn($p, "ways");
 			    seek $wf, 0, 0;
-			    while (read $wf, $w, 8) {
-				($w, $off) = unpack "NN", $w;
+			    while (my ($w, $off) = readway($wf)) {
+				last unless (defined $w);
 				next unless ($w == $id);
 				seek $wf, -8, 1;
-				print $wf pack "NN", 0, 0;
+				printway($wf, 0, 0);
 				last;
 			    }
 			}
@@ -571,68 +377,61 @@ while (my $gz = <>) {
 		    my ($uz, $ux, $uy) = fromptn($ptn);
 		    print "New way $id in tile $uz $ux,$uy\n";
 		}
-		$wf = openptn($ptn, "+<", "ways");
+		$wf = openptn($ptn, "ways");
 		seek $wf, 0, 0;
-		my ($w);
-		while (read $wf, $w, 8) {
-		    ($w, $off) = unpack "NN", $w;
+		while (my ($w, $off) = readway($wf)) {
+		    last unless (defined $w);
 		    next if ($w);
 		    seek $wf, -8, 1;
 		    last;
 		}
-		$wd = openptn($ptn, "+<", "data");
+		$wd = openptn($ptn, "data");
 		seek $wd, 0, 2;
-		if (tell($wd) == 0) {
-		    print $wd "\0";
-		}
 	    } else {
 		if (VERBOSE > 4) {
 		    my ($uz, $ux, $uy) = fromptn($ptn);
 		    print "Update way $id in tile $uz $ux,$uy\n";
 		}
-		$wf = openptn($ptn, "+<", "ways");
+		$wf = openptn($ptn, "ways");
 		seek $wf, 0, 0;
-		my ($w, $woff);
 		$off = undef;
-		while (read $wf, $w, 8) {
-		    ($w, $woff) = unpack "NN", $w;
+		while (my ($w, $woff) = readway($wf)) {
+		    last unless (defined $w);
 		    if ($w == $id) {
 			seek $wf, -8, 1;
 			$off = $woff if ($woff);
 			last;
 		    }
 		}
-		$wd = openptn($ptn, "+<", "data");
+		$wd = openptn($ptn, "data");
 		$togc{$ptn} = $cachecount;
 		if (defined $off) {
 		    seek $wd, $off, 0;
-		    while (read $wd, $w, 4) {
-			my $node = unpack "N", $w;
-			last unless ($node);
+		    my @n = readwaynodes($wd);
+		    foreach my $node (@n) {
 			$oldptns{nodeptn($node)}++;
 		    }
 		}
-		my $rf = openptn($ptn, "+<", "relations");
+		my $rf = openptn($ptn, "relations");
 		seek $rf, 0, 0;
-		my ($r, $roff);
-		while (read $rf, $r, 8) {
-		    ($r, $roff) = unpack "NN", $r;
+		while (my ($r, $roff) = readrel($rf)) {
+		    last unless (defined $r);
 		    next unless ($r);
 		    $rtc{$r} = 1;
 		}
 		unless ((exists $ptns{$ptn}) || ((exists $ptns{NOPTN}) && ($ptn eq toptn(0,1,1)))) {
-		    print $wf pack "NN", 0, 0;
+		    printway($wf, 0, 0);
 		    $ptn = nodeptn($nodes[0]);
 		    $ptn = toptn(0,1,1) if ($ptn eq NOPTN);
 		    if (VERBOSE > 4) {
 			my ($uz, $ux, $uy) = fromptn($ptn);
-			print "  moving to $uz $ux,$uy\n";
+			print "  moving to z$uz $ux,$uy\n";
 		    }
-		    $wf = openptn($ptn, "+<", "ways");
+		    $wf = openptn($ptn, "ways");
 		    seek $wf, 0, 0;
 		    my $mt;
-		    while (read $wf, $w, 8) {
-			($w, $off) = unpack "NN", $w;
+		    while (my ($w, $off) = readway($wf)) {
+			last unless (defined $w);
 			if ($w == 0) {
 			    $mt //= tell $wf;
 			    next;
@@ -642,7 +441,7 @@ while (my $gz = <>) {
 			last;
 		    }
 		    seek $wf, $mt-8, 0 if (defined $mt);
-		    $wd = openptn($ptn, "+<", "data");
+		    $wd = openptn($ptn, "data");
 		    $togc{$ptn} = $cachecount;
 		    $new = 1;
 		}
@@ -651,15 +450,9 @@ while (my $gz = <>) {
 	    $off = tell $wd;
 	    print "nodes: ".scalar(@nodes)." tags: ".scalar(@tv)." off: $off\n"
 		if (VERBOSE > 20);
-	    foreach my $node (@nodes) {
-		print $wd pack "N", $node;
-	    }
-	    print $wd pack "N", 0;
-	    foreach $tv (@tv) {
-		print $wd "$tv\0";
-	    }
-	    print $wd "\0";
-	    print $wf pack "NN", $id, $off;
+	    printwaynodes($wd, \@nodes);
+	    printtags($wd, \@tv, WAY);
+	    printway($wf, $id, $off);
 	    wayptn($id, $ptn) if($new);
 	    my %rt;
 	    foreach my $p (keys %ptns) {
@@ -668,11 +461,11 @@ while (my $gz = <>) {
 			my ($uz, $ux, $uy) = fromptn($p);
 			print "  adding to z$uz $ux,$uy\n";
 		    }
-		    my $pwf = openptn($p, "+<", "ways");
+		    my $pwf = openptn($p, "ways");
 		    seek $pwf, 0, 0;
-		    my ($mt, $w);
-		    while (read $pwf, $w, 8) {
-			($w, $off) = unpack "NN", $w;
+		    my ($mt);
+		    while (my ($w, $off) = readway($pwf)) {
+			last unless (defined $w);
 			unless ($w) {
 			    $mt //= tell $pwf;
 			    next;
@@ -682,12 +475,12 @@ while (my $gz = <>) {
 			last;
 		    }
 		    seek $pwf, $mt-8, 0 if ($mt);
-		    print $pwf pack "NN", $id, 0;
-		    my $prf = openptn($p, "+<", "relations");
+		    printway($pwf, $id, 0);
+		    my $prf = openptn($p, "relations");
 		    seek $prf, 0, 0;
-		    my ($r, $roff, $f);
-		    while (read $prf, $r, 8) {
-			($r, $roff) = unpack "NN", $r;
+		    my ($f);
+		    while (my ($r, $roff) = readrel($prf)) {
+			last unless (defined $r);
 			next unless ($r);
 			if (exists $rtc{$r}) {
 			    $rtc{$r} = 0;
@@ -698,9 +491,9 @@ while (my $gz = <>) {
 			    unless (exists $rt{$r}) {
 				$rt{$r} = {reltiles([[3, $r]])};
 			    }
-			    if (exists ${$rt{$r}}{$p}) {
+			    if (exists $rt{$r}->{$p}) {
 				seek $prf, 0, 2;
-				print $prf pack "NN", $r, 0;
+				printrel($prf, $r, 0);
 			    }
 			} else {
 			    $rtc{$r} = 1;
@@ -712,14 +505,13 @@ while (my $gz = <>) {
 		if ($p ne $ptn && ! defined($ptns{$p})) {
 		    my ($uz, $ux, $uy) = fromptn($p);
 		    print "  removing from z$uz $ux,$uy\n";
-		    my $pwf = openptn($p, "+<", "ways");
+		    my $pwf = openptn($p, "ways");
 		    seek $pwf, 0, 0;
-		    my ($w);
-		    while (read $pwf, $w, 8) {
-			($w, $off) = unpack "NN", $w;
+		    while (my ($w, $woff) = readway($pwf)) {
+			last unless (defined $w);
 			next unless ($w eq $id);
 			seek $pwf, -8, 1;
-			print $pwf pack "NN", 0, 0;
+			printway($pwf, 0, 0);
 			last;
 		    }
 		}
@@ -759,7 +551,7 @@ while (my $gz = <>) {
 		    my ($uz, $ux, $uy) = fromptn($ptn);
 		    print "New relation $id in z$uz $ux,$uy\n";
 		}
-		$rf = openptn($ptn, "+<", "relations");
+		$rf = openptn($ptn, "relations");
 		seek $rf, 0, 2;
 	    } else {
 		if (VERBOSE > 4) {
@@ -768,13 +560,13 @@ while (my $gz = <>) {
 		}
 		%oldtiles = reltiles([[3, $id]]);
 		$oldtiles{$ptn}++;
-		$rf = openptn($ptn, "+<", "relations");
-		my ($r, $rp);
+		$rf = openptn($ptn, "relations");
+		my ($rp);
 		seek $rf, 0, 0;
-		while (read $rf, $r, 8) {
-		    ($r, $off) = unpack "NN", $r;
+		while (my ($r, $off) = readrel($rf)) {
+		    last unless (defined $r);
 		    unless ($r) {
-			$rp = tell $rf unless ($rp);
+			$rp //= tell $rf;
 			next;
 		    }
 		    if ($r == $id) {
@@ -785,20 +577,20 @@ while (my $gz = <>) {
 		}
 		seek $rf, $rp-8, 0 if ($rp);
 		unless ($tiles{$ptn}) {
-		    print $rf pack "NN", 0, 0;
+		    printrel($rf, 0, 0);
 		    $ptn = (each %tiles) // NOPTN;
 		    $ptn = toptn(0,1,1) if ($ptn eq NOPTN);
 		    if (VERBOSE > 4) {
 			my ($uz, $ux, $uy) = fromptn($ptn);
 			print "  moving to z$uz $ux,$uy\n";
 		    }
-		    $rf = openptn($ptn, "+<", "relations");
+		    $rf = openptn($ptn, "relations");
 		    seek $rf, 0, 0;
 		    $rp = undef;
-		    while (read $rf, $r, 8) {
-			($r, $off) = unpack "NN", $r;
+		    while (my ($r, $off) = readrel($rf)) {
+			last unless (defined $r);
 			unless ($r) {
-			    $rp = tell $rf unless ($rp);
+			    $rp //= tell $rf;
 			    next;
 			}
 			next unless ($r == $id);
@@ -808,25 +600,14 @@ while (my $gz = <>) {
 		    seek $rf, $rp-8, 0 if ($rp);
 		}
 	    }
-	    my $rd = openptn($ptn, "+<", "data");
+	    my $rd = openptn($ptn, "data");
 	    $togc{$ptn} = $cachecount;
 	    seek $rd, 0, 2;
 	    $off = tell $rd;
-	    if ($off == 0) {
-		print $rd "\0";
-		$off = 1;
-	    }
 	    print "members: ".scalar(@members)." tags: ".scalar(@tv)." off: $off\n" if (VERBOSE > 19);
-	    foreach my $m (@members) {
-		my ($type, $mid, $role) = @$m;
-		print $rd pack("CN", $type, $mid).$role."\0";
-	    }
-	    print $rd pack "C", 0;
-	    foreach $tv (@tv) {
-		print $rd "$tv\0";
-	    }
-	    print $rd "\0";
-	    print $rf pack "NN", $id, $off;
+	    printmemb($rd, \@members);
+	    printtags($rd, \@tv, RELATION);
+	    printrel($rf, $id, $off);
 	    relationptn($id, $ptn);
 	    my %rt;
 	    while (my $p = each %tiles) {
@@ -836,30 +617,34 @@ while (my $gz = <>) {
 		    my ($vz, $vx, $vy) = fromptn($p);
 		    print "  also in z$vz $vx,$vy\n";
 		}
-		my $prf = openptn($p, "+<", "relations");
+		my $prf = openptn($p, "relations");
 		seek $prf, 0, 0;
-		my ($r, $roff, $f, $mt);
-		while (read $prf, $r, 8) {
-		    ($r, $roff) = unpack "NN", $r;
+		my ($f, $mt);
+		while (my ($r, $roff) = readrel($prf)) {
+		    last unless (defined $r);
 		    unless ($r) {
 			$mt //= tell $prf;
 			next;
+		    }
+		    if ($r == $id) {
+			$mt = tell $prf;
+			last;
 		    }
 		    next unless (exists $rtc{$r});
 		    $rtc{$r} = 0;
 		}
 		seek $prf, $mt - 8, 0 if (defined $mt);
-		print $prf pack "NN", $id, 0;
-		foreach $r (keys %rtc) {
+		printrel($prf, $id, 0);
+		foreach my $r (keys %rtc) {
 		    if ($rtc{$r}) {
 			unless (exists $rt{$r}) {
 			    $rt{$r} = {reltiles([[3, $r]])};
 			}
-			if (exists ${$rt{$r}}{$p}) {
+			if (exists $rt{$r}->{$p}) {
 			    seek $prf, 0, 0;
-			    my ($rr, $rroff, $mt);
-			    while (read $prf, $rr, 8) {
-				($rr, $rroff) = unpack "NN", $rr;
+			    my ($mt);
+			    while (my ($rr, $rroff) = readrel($prf)) {
+				last unless (defined $rr);
 				unless ($rr) {
 				    $mt //= tell $prf;
 				    next;
@@ -869,7 +654,7 @@ while (my $gz = <>) {
 				last;
 			    }
 			    seek $prf, $mt-8, 0 if ($mt);
-			    print $prf pack "NN", $r, 0;
+			    printrel($prf, $r, 0);
 			}
 		    } else {
 			$rtc{$r} = 1;
@@ -879,16 +664,17 @@ while (my $gz = <>) {
 	    while (my $p = each %oldtiles) {
 		next if ($p eq $ptn);
 		next if (exists $tiles{$p});
-		my ($vz, $vx, $vy) = fromptn($p);
-		print "  remove from z$vz $vx,$vy\n" if (VERBOSE > 4);
-		my $prf = openptn($p, "+<", "relations");
+		if (VERBOSE > 4) {
+		    my ($vz, $vx, $vy) = fromptn($p);
+		    print "  remove from z$vz $vx,$vy\n";
+		}
+		my $prf = openptn($p, "relations");
 		seek $prf, 0, 0;
-		my ($r, $roff);
-		while (read $prf, $r, 8) {
-		    ($r, $roff) = unpack "NN", $r;
+		while (my ($r, $roff) = readrel($prf)) {
+		    last unless (defined $r);
 		    next unless ($r == $id);
 		    seek $prf, -8, 1;
-		    print $prf pack "NN", 0, 0;
+		    printrel($prf, 0, 0);
 		    last;
 		}
 	    }
@@ -932,19 +718,19 @@ while (my $gz = <>) {
 		    if (VERBOSE > 4);
 		my %tiles = reltiles([[3, $id]]);
 		$tiles{$ptn}++;
+		$tiles{toptn(0,1,1)}++ if ($tiles{NOPTN});
 		while (my $t = each %tiles) {
-		    my $rf = openptn($t, "+<", "relations");
+		    my $rf = openptn($t, "relations");
 		    seek $rf, 0, 0;
-		    my $r;
-		    while (read $rf, $r, 8) {
-			($r, $off) = unpack "NN", $r;
+		    while (my ($r, $off) = readrel($rf)) {
+			last unless (defined $r);
 			next unless($r == $id);
 			seek $rf, -8, 1;
-			print $rf pack "NN", 0, 0;
+			printrel($rf, 0, 0);
 			last;
 		    }
 		}
-		relationptn($id,NOPTN);
+		relationptn($id, NOPTN);
 	    } else {
 		print "Delete of nonexistant relation $id ignored\n"
 		    if (VERBOSE > 2);
@@ -986,34 +772,34 @@ while (my $gz = <>) {
 		    if (VERBOSE > 3);
 		next;
 	    }
-	    print "Deleting way $id\n" if (VERBOSE > 4);
-	    my $wf = openptn($ptn, "+<", "ways");
+	    if (VERBOSE > 4) {
+		my ($uz, $ux, $uy) = fromptn($ptn);
+		print "Deleting way $id from z$uz $ux,$uy\n";
+	    }
+	    my $wf = openptn($ptn, "ways");
 	    seek $wf, 0, 0;
-	    my ($w);
-	    while (read $wf, $w, 8) {
-		($w, $off) = unpack "NN", $w;
+	    while (my ($w, $off) = readway($wf)) {
+		last unless (defined $w);
 		next unless ($w == $id);
 		seek $wf, -8, 1;
-		print $wf pack "NN", 0, 0;
-		my $wd = openptn($ptn, "+<", "data");
+		printway($wf, 0, 0);
+		my $wd = openptn($ptn, "data");
 		$togc{$ptn} = $cachecount;
 		seek $wd, $off, 0;
 		my %ptns = ();
-		my ($n);
-		while (read $wd, $n, 4) {
-		    $n = unpack "N", $n;
-		    last unless ($n);
+		my @nodes = readwaynodes($wd);
+		foreach my $n (@nodes) {
 		    $ptns{nodeptn($n)}++;
 		}
 		delete $ptns{$ptn};
 		foreach my $p (keys %ptns) {
-		    $wf = openptn($p, "+<", "ways");
+		    $wf = openptn($p, "ways");
 		    seek $wf, 0, 0;
-		    while (read $wf, $w, 8) {
-			($w, $off) = unpack "NN", $w;
+		    while (my ($w, $off) = readway($wf)) {
+			last unless (defined $w);
 			next unless ($w == $id);
 			seek $wf, -8, 1;
-			print $wf pack "NN", 0, 0;
+			printway($wf, 0, 0);
 			last;
 		    }
 		}
@@ -1057,19 +843,18 @@ while (my $gz = <>) {
 		    if (VERBOSE > 7);
 		next;
 	    }
-	    my $nf = openptn($ptn,"+<","nodes");
+	    my $nf = openptn($ptn, "nodes");
 	    seek $nf, 0, 0;
-	    my ($n);
-	    while (read $nf, $n, 16) {
-		($n, $lat, $lon, $off) = unpack "NN!N!N", $n;
+	    while (my ($n, $lat, $lon, $off) = readnode($nf)) {
+		last unless (defined $n);
 		next unless($n == $id);
 		print "Deleting node $id\n" if (VERBOSE > 9);
 		seek $nf, -16, 1;
-		print $nf pack "NN!N!N", 0, 0, 0, 0;
+		printnode($nf, 0, 0, 0, 0);
 		$togc{$ptn} = $cachecount if ($off);
 		last;
 	    }
-	    nodeptn($id,NOPTN);
+	    nodeptn($id, NOPTN);
 	}
     }
     close OSC;

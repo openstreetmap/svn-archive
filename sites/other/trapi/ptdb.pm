@@ -1,5 +1,6 @@
 #!/usr/bin/perl
-# Copyright 2008 Blars Blarson.  Distributed under GPL version 2, see GPL-2
+# Copyright 2008, 2009 Blars Blarson.  
+# Distributed under GPL version 2, see GPL-2
 
 use strict;
 use warnings;
@@ -12,12 +13,17 @@ use constant NOPTN => "\0\0\0\0";	# toptn(0,0,0)
 use constant MAXLAT => 85.051128;	# deliberatly slightly less than the thoretical value
 use constant MINLAT => -(MAXLAT);
 use constant CONV => 10000000;		# conversion from lat/lon to int
-use constant MEMBER => { 'node' => 1, 'way' => 2, 'relation' => 3 };
-use constant MEMBERTYPE => ( '', 'node', 'way', 'relation' );
+use constant {NONE => 0, NODE => 1, WAY => 2, RELATION => 3, ROLE => 4};
+use constant MEMBER => { 'node' => NODE, 'way' => WAY, 'relation' => RELATION, 'role' => ROLE };
+use constant MEMBERTYPE => ( '', 'node', 'way', 'relation', 'role' );
+use constant PZ => pack("N", 0);
 
 our $devnull;
+our @comtags;
+our %tagsversion;
+
 sub ptdbinit($) {
-    my ($mode) = @_;
+    our ($mode) = @_;
     open NODES, $mode, DBDIR."nodes.db"
 	or die "Could not open nodes.db: $!";
     open WAYS, $mode, DBDIR."ways.db"
@@ -28,6 +34,58 @@ sub ptdbinit($) {
 	or die "Could not open zooms.db: $!";
     open $devnull, "<", "/dev/null"
 	or die "Could not open /dev/null: $!";
+}
+
+# tags are encoded in a variable-length code.
+# first byte 0 means no more tags, 1 means string follows.
+# >=192 means 2 more bytes, >=128 means 1 more byte
+# vals and roles are the same except 0 means string follows.
+#
+# commontags reads the tags file and creates the hashes for encoding
+# and arrays for decoding
+sub commontags($) {
+    my ($ctn) = @_;
+    return unless($ctn);
+    print "processing tags.$ctn\n" if (VERBOSE > 30);
+    my ($v, $t, $vv, $tn, $vn, $va, $ta, $vva, $tag);
+    open TAGS, "<", DBDIR."tags.$ctn" or die "Could not open tags.$ctn: $!";
+    $comtags[$ctn] = [
+	undef,
+	[ {}, [], {}, [], ],
+	[ {}, [], {}, [], ],
+	[ {}, [], {}, [], ],
+	[ {}, [], ],
+    ];
+
+    while ($_ = <TAGS>) {
+	chomp;
+	if (/^\t\t([^\t]*)\t(\d+)$/) {
+	    my $val = $1;
+	    unless (defined $vv) {
+		$vv = {};
+		$v->{$tag} = $vv;
+		$vva = [];
+		$va->[$tn] = $vva;
+		$vn = 0;
+	    }
+	    $vv->{$val} = ++$vn;
+	    $vva->[$vn] = $val;
+	} elsif (/^\t([^\t]*)\t(\d+)$/) {
+	    $tag = $1;
+	    $t->{$tag} = ++$tn;
+	    $ta->[$tn] = $tag;
+	    $vv = undef;
+	} elsif (/^(\w+)s$/) {
+	    my $m = MEMBER->{$1};
+	    die "Malformed line in tags.$ctn: $_" unless($m);
+	    ($t, $ta, $v, $va) = @{$comtags[$ctn]->[$m]};
+	    $tn = ($m != ROLE);
+	} else {
+	    die "Malformed line in tags.$ctn: $_";
+	}
+    }
+    close TAGS;
+    print "tags.$ctn processed\n" if (VERBOSE > 10);
 }
 
 # pack 4-bit z, 14-bit x and y into 4-byte ptn (packed tile number)
@@ -69,39 +127,27 @@ sub getTileNumber($$$) {
     return(($xtile, $ytile));
 }
 
-# open file from ptn, mode, and name
+# open file from ptn, and name
 #   name is "data", "nodes", "ways", or "relations"
 # if file doesn't exist, return /dev/null if read only or create it
 # we keep a cache of file handles
-sub openptn($$$) {
-    my ($ptn,$mode,$name) = @_;
+sub openptn($$) {
+    my ($ptn, $name) = @_;
     my $f;
     my $ptnname = $ptn.$name;
-    our ($opened, $hits, $misses, $cachecount);
+    our ($opened, $hits, $misses, $cachecount, $mode);
     our (%filecache);
     if (defined $filecache{$ptnname}) {
-	my @c = @{$filecache{$ptnname}};
-	if ($c[1] eq $mode) {
-	    $hits++;
-            ${$filecache{$ptnname}}[2] = ++$cachecount;
-   	    return $c[0];
-        } else {
-	    print "changing mode from $c[1] to $mode\n" if (VERBOSE > 10);
-	    delete $filecache{$ptnname};
-	    $opened--;
-	}
+	$hits++;
+	$filecache{$ptnname}->[1] = ++$cachecount;
+	return $filecache{$ptnname}->[0];
     }
     my ($z, $x, $y) = fromptn($ptn);
+    print "opening z$z/$x/$y/$name\n" if (VERBOSE > 34);
     unless (open $f, $mode, "z$z/$x/$y/$name") {
 	my $err = $!;
 	return $devnull if ($mode eq "<");
-	my $m = $mode;
-	if ($m eq "+<") {
-	    $m = "+>";
-	    open $f, $m, "z$z/$x/$y/$name" or $f = undef();
-	} else {
-	    $f = undef();
-	}
+	open $f, "+>", "z$z/$x/$y/$name" or $f = undef();
 	unless (defined $f) {
 	    unless (mkdir "z$z/$x/$y") {
 		unless (mkdir "z$z/$x") {
@@ -110,23 +156,44 @@ sub openptn($$$) {
 		}
 		mkdir "z$z/$x/$y" or die "Could not mkdir z$z/$x/$y for z$z/$x/$y/$name: $!";
 	    }
-	    open $f, $m,  "z$z/$x/$y/$name"
+	    open $f, "+>",  "z$z/$x/$y/$name"
 		or die "Could not open z$z/$x/$y/$name: $!";
 	}
+	if ($name eq "data") {
+	    printvnum($f, TAGSVERSION);
+	    $tagsversion{$f} = TAGSVERSION;
+	    commontags(TAGSVERSION) if (!defined($comtags[TAGSVERSION]));
+	}
+    } elsif ($name eq "data") {
+	my $tv = getvnum($f);
+	unless (defined $tv || $mode eq '<') {
+	    $tv = TAGSVERSION;
+	    printvnum($f, $tv);
+	}
+#	elsif ($tv > 1) {
+#	    my ($vz, $vx, $vy) = fromptn($ptn);
+#	    print "!!! broken tile z$vz $vx,$vy\n";
+#	    $tv = 0;
+#	}
+	$tagsversion{$f} = $tv;
+	commontags($tv) if ($tv && !defined($comtags[$tv]));
     }
     # keep a cache of the most recently opened 500 files
     if ($opened++ > MAXOPEN) {
 	print "Cache full after $hits hits\n" if (VERBOSE > 10);
 	my @toclose =
-	    sort {${$filecache{$a}}[2] <=> ${$filecache{$b}}[2]} keys %filecache;
+	    sort {${$filecache{$a}}[1] <=> ${$filecache{$b}}[1]} keys %filecache;
 	while ($opened > KEEPOPEN) {
 	    my $toclose = shift @toclose;
+	    if ($toclose =~ /data$/) {
+#		delete $tagsversion{$filecache{$toclose}->[0]};
+	    }
 	    delete $filecache{$toclose};
 	    $opened--;
 	}
     }
     $misses++;
-    $filecache{$ptnname} = [$f, $mode, ++$cachecount];
+    $filecache{$ptnname} = [$f, ++$cachecount];
     return $f;
 }
 
@@ -144,6 +211,8 @@ sub flushptn($) {
     foreach my $name ("data", "nodes", "ways", "relations") {
 	my $ptnname = $ptn.$name;
 	if (exists $filecache{$ptnname}) {
+	    delete $tagsversion{$filecache{$ptnname}->[0]}
+	        if ($name eq "data");
 	    delete $filecache{$ptnname};
 	    $opened--;
 	}
@@ -190,15 +259,15 @@ sub closeall {
 # get a null-terminated string from a file
 sub gets($) {
     my ($f) = @_;
-    my ($c, $s);
-    $s = "";
-    while (read $f, $c, 1) {
+    my $s = "";
+    my $c;
+    while (defined($c = getc($f))) {
 	if ($c eq "\0") {
 	    return $s;
 	}
 	$s .= $c;
     }
-    return undef();
+    return $s;
 }
 
 # return or set ptn of a node
@@ -279,54 +348,49 @@ sub reltiles($) {
     my (%tiles, %wtodo, %rdone, %rtodo);
     foreach my $m (@members) {
 	my ($type, $id, $role) = @$m;
-	if ($type == 1) {
+	if ($type == NODE) {
 	    $tiles{nodeptn($id)}++;
-	} elsif ($type == 2) {
+	} elsif ($type == WAY) {
 	    my $t = wayptn($id);
 	    if (exists $wtodo{$t}) {
 		${$wtodo{$t}}{$id}++;
 	    } else {
 		$wtodo{$t} = {$id => 1};
 	    }
-	} elsif ($type == 3) {
+	} elsif ($type == RELATION) {
 	    my $t = relationptn($id);
-	    if (exists $rtodo{$t}) {
-		${$rtodo{$t}}{$id}++;
-	    } else {
-		$rtodo{$t} = {$id => 1};
-	    }
+	    $rtodo{$t} //= {};
+	    $rtodo{$t}->{$id}++;
 	} else {
 	    die "Unknown relation $id type $type";
 	}
     }
+    # can't use foreach because %rtodo can change
     while (my @rt = keys %rtodo) {
 	while (my $t = shift @rt) {
 	    my %rthis = %{$rtodo{$t}};
 	    delete $rtodo{$t};
-	    my $rf = openptn($t, "+<", "relations");
-	    my $df = openptn($t, "+<", "data");
+	    my $rf = openptn($t, "relations");
+	    my $df = openptn($t, "data");
 	    seek $rf, 0, 0;
-	    my ($r, $off);
-	    while (read $rf, $r, 8) {
-		($r, $off) = unpack "NN", $r;
+	    while (my ($r, $off) = readrel($rf)) {
+		last unless (defined $r);
 		next unless ($r && exists $rthis{$r});
 	        $rdone{$r}++;
 		seek $df, $off, 0;
-		my ($type, $n);
-		while (read $df, $n, 5) {
-		    ($type, $n) = unpack "CN", $n;
-		    last unless ($type);
-		    gets($df);
-		    if ($type == 1) {
+		my @mm = readmemb($df);
+		foreach my $mi (@mm) {
+		    my ($type, $n, $role) = @$mi;
+		    if ($type == NODE) {
 			$tiles{nodeptn($n)}++;
-		    } elsif ($type == 2) {
+		    } elsif ($type == WAY) {
 			my $wp = wayptn($n);
 			if (exists $wtodo{$wp}) {
 			    ${$wtodo{$wp}}{$n}++;
 			} else {
 			    $wtodo{$wp} = {$n => 1};
 			}
-		    } elsif ($type == 3) {
+		    } elsif ($type == RELATION) {
 			next if(exists $rdone{$n});
 			my $rrp = relationptn($n);
 			if (exists $rtodo{$rrp}) {
@@ -344,17 +408,15 @@ sub reltiles($) {
     foreach my $t (keys %wtodo) {
         $tiles{$t}++;
         my %wthis = %{$wtodo{$t}};
-	my $wf = openptn($t, "+<", "ways");
-	my $df = openptn($t, "+<", "data");
+	my $wf = openptn($t, "ways");
+	my $df = openptn($t, "data");
 	seek $wf, 0, 0;
-	my ($w, $off, $n);
-	while (read $wf, $w, 8) {
-	    ($w, $off) = unpack "NN", $w;
-	    next unless (exists $wthis{$w});
+	while (my ($w, $off) = readway($wf)) {
+	    last unless (defined $w);
+	    next unless ($w && $off && exists $wthis{$w});
 	    seek $df, $off, 0;
-	    while (read $df, $n, 4) {
-	        $n = unpack "N", $n;
-		last unless($n);
+	    my @nodes = readwaynodes($df);
+	    foreach my $n (@nodes) {
 		$tiles{nodeptn($n)}++;
 	    }
 	}
@@ -367,8 +429,9 @@ sub splitptn($) {
     my ($ptn) = @_;
     my ($ez, $ex, $ey) = fromptn($ptn);
     return(0) if ($ez >= MAXZOOM);
-    print "Splitting $ez $ex,$ey\n" if (VERBOSE > 2);
-    my $nd = openptn($ptn, "+<", "data");
+    writecache();
+    print "Splitting z$ez $ex,$ey\n" if (VERBOSE > 2);
+    my $nd = openptn($ptn, "data");
     my $nz = $ez + 1;
     my $fz = 1 << (MAXZOOM - $nz);
     my $bx = $ex << (MAXZOOM - $nz);
@@ -379,59 +442,49 @@ sub splitptn($) {
 	print ZOOMS pack("C", $nz) x $fz;
     }
     my ($nf, $nnf, %nf, $nnd, %nd, %n, %wf, %w, $n);
-    $nf = openptn($ptn, "+<", "nodes");
+    $nf = openptn($ptn, "nodes");
     seek $nf, 0, 0;
-    while (read $nf, $n, 16) {
-	my ($nid, $nlat, $nlon, $noff) = unpack "NN!N!N", $n;
+    while (my ($nid, $nlat, $nlon, $noff) = readnode($nf)) {
+	last unless(defined $nid);
 	next unless($nid);
 	my ($nx, $ny) = getTileNumber($nlat/CONV, $nlon/CONV, $nz);
-#	print "moving node $nid to z$nz $nx,$ny\n";
+	print "moving node $nid to z$nz $nx,$ny\n" if (VERBOSE > 30);
 	my $p = toptn($nz, $nx, $ny);
 	unless ($nnf = $nf{$p}) {
-	    $nnf = openptn($p, "+<", "nodes");
+	    $nnf = openptn($p, "nodes");
 	    seek $nnf, 0, 2;
 	    $nf{$p} = $nnf;
 	}
 	my ($nnoff);
 	if ($noff) {
 	    unless ($nnd = $nd{$p}) {
-		$nnd = openptn($p, "+<", "data");
+		$nnd = openptn($p, "data");
 		seek $nnd, 0, 2;
 		$nd{$p} = $nnd;
-		unless (tell($nnd)) {
-		    print $nnd "\0";
-		}
 	    }
 	    $nnoff = tell($nnd);
 	    seek $nd, $noff, 0;
-	    my $s;
-	    while (defined($s = gets($nd)) && ($s ne "")) {
-		print $nnd $s."\0";
-	    }
-	    print $nnd "\0";
+	    my @tv = readtags($nd, NODE);
+	    printtags($nnd, \@tv, NODE);
 	} else {
 	    $nnoff = 0;
 	}
-	print $nnf pack "NN!N!N", $nid, $nlat, $nlon, $nnoff;
+	printnode($nnf, $nid, $nlat, $nlon, $nnoff);
 	nodeptn($nid,$p);
 	$n{$nid} = $p;
     }
-    my $wf = openptn($ptn,"+<","ways");
+    my $wf = openptn($ptn, "ways");
     seek $wf, 0, 0;
     my $w;
-    while (read $wf, $w, 8) {
-	my ($wid, $woff) = unpack "NN", $w;
+    while (my ($wid, $woff) = readway($wf)) {
+	last unless (defined $wid);
 	next unless($wid);
 	print "Way $wid\n" if (VERBOSE > 4);
 	if ($woff) {
 	    my %w;
-	    my @nodes;
 	    seek $nd, $woff, 0;
-	    my $n;
-	    while (read $nd, $n, 4) {
-		my $nn = unpack "N", $n;
-		last unless ($nn);
-		push @nodes, $nn;
+	    my @nodes = readwaynodes($nd);
+	    foreach my $nn (@nodes) {
 		if ($n{$nn}) {
 		    $w{$n{$nn}} = 1;
 		}
@@ -445,34 +498,29 @@ sub splitptn($) {
 			print " moved to z$uz $ux,$uy\n";
 		    }
 		    unless ($nnd = $nd{$p}) {
-			$nnd = openptn($p, "+<", "data");
+			$nnd = openptn($p, "data");
 			seek $nnd, 0, 2;
-			print $nnd "\0" unless (tell($nnd));
 		    }
 		    $nnoff = tell $nnd;
-		    foreach my $nn (@nodes) {
-			print $nnd pack "N", $nn;
-		    }
-		    print $nnd pack "N", 0;
-		    my $s;
-		    while (defined($s = gets($nd)) && ($s ne "")) {
-			print $nnd $s."\0";
-		    }
-		    print $nnd "\0";
+		    printwaynodes($nnd, \@nodes);
+		    my @tv = readtags($nd, WAY);
+		    printtags($nnd, \@tv, WAY);
 		    wayptn($wid,$p);
 		    $first = 0;
 		} else {
-		    my ($uz, $ux, $uy) = fromptn($p);
-		    print "  also in z$uz $ux,$uy\n" if (VERBOSE > 4);
+		    if (VERBOSE > 4) {
+			my ($uz, $ux, $uy) = fromptn($p);
+			print "  also in z$uz $ux,$uy\n";
+		    }
 		    $nnoff = 0;
 		}
 		my $nwf;
 		unless ($nwf = $wf{$p}) {
-		    $nwf = openptn($p, "+<", "ways");
+		    $nwf = openptn($p, "ways");
 		    $wf{$p} = $nwf;
 		}
 		seek $nwf, 0, 2;
-		print $nwf pack "NN", $wid, $nnoff;
+		printway($nwf, $wid, $nnoff);
 	    }
 	    if ($first) {
 		my $p = nodeptn($nodes[0]);
@@ -481,66 +529,59 @@ sub splitptn($) {
 		    my ($uz, $ux, $uy) = fromptn($p);
 		    print " moved to z$uz $ux,$uy\n";
 		}
-		$nnd = openptn($p, "+<", "data");
+		$nnd = openptn($p, "data");
 		seek $nnd, 0, 2;
 		my $nnoff = tell $nnd;
-		unless ($nnoff) {
-		    print $nnd "\0";
-		    $nnoff = 1;
-		}
-		foreach my $nn (@nodes) {
-		    print $nnd pack "N", $nn;
-		}
-		print $nnd pack "N", 0;
-		my $s;
-		while (defined($s = gets($nd)) && ($s ne "")) {
-		    print $nnd $s."\0";
-		}
-		print $nnd "\0";
-		my $nwf = openptn($p, "+<", "ways");
+		printwaynodes($nnd, \@nodes);
+		my @tv = readtags($nd, WAY);
+		printtags($nnd, \@tv, WAY);
+		my $nwf = openptn($p, "ways");
 		seek $nwf, 0, 0;
-		while (read $nwf, $w, 8) {
-		    ($w, $woff) = unpack "NN", $w;
-		    next unless ($w);
+		my $mt;
+		while (my ($w, $woff) = readway($nwf)) {
+		    last unless(defined $w);
+		    $mt //= tell($nwf) unless($w);
 		    next unless ($w == $wid);
-		    seek $nwf, -8, 1;
+		    $mt = tell($nwf);
 		    last;
 		}
-		print $nwf pack "NN", $wid, $nnoff;
+		seek $nwf, $mt-8, 0 if ($mt);
+		printway($nwf, $wid, $nnoff);
 		wayptn($wid,$p);
 	    }
 	} else {
 	    my $wptn = wayptn($wid);
-	    my $nwf = openptn($wptn, "+<", "ways");
+	    my $nwf = openptn($wptn, "ways");
 	    seek $nwf, 0, 0;
-	    while (read $nwf, $w, 8) {
-		my ($ww, $wwoff) = unpack "NN", $w;
+	    while (my ($ww, $wwoff) = readway($nwf)) {
+		last unless (defined $ww);
 		next unless ($ww == $wid);
-		my $nwd = openptn($wptn, "+<", "data");
+		my $nwd = openptn($wptn, "data");
 		seek $nwd, $wwoff, 0;
-		while (read $nwd, $w, 4) {
-		    my $nn = unpack "N", $w;
-		    last unless ($nn);
+		my @nodes = readwaynodes($nwd);
+		foreach my $nn (@nodes) {
 		    if ($n{$nn}) {
 			$w{$n{$nn}} = 1;
 		    }
 		}
 		my $nwf;
 		foreach my $p (keys %w) {
-		    my ($uz, $ux, $uy) = fromptn($p);
-		    print "  in z$uz $ux,$uy\n" if (VERBOSE > 4);
+		    if (VERBOSE > 4) {
+			my ($uz, $ux, $uy) = fromptn($p);
+			print "  in z$uz $ux,$uy\n";
+		    }
 		    unless ($nwf = $wf{$p}) {
-			$nwf = openptn($p, "+<", "ways");
+			$nwf = openptn($p, "ways");
 			$wf{$p} = $nwf;
 		    }
 		    seek $nwf, 0, 2;
-		    print $nwf pack "NN", $wid, 0;
+		    printway($nwf, $wid, 0);
 		}
 		last;
 	    }
 	}
     }
-    my $rf = openptn($ptn, "+<", "relations");
+    my $rf = openptn($ptn, "relations");
     my $rfp = 0;
     my $nx = $ex << 1;
     my $ny = $ey << 1;
@@ -551,47 +592,31 @@ sub splitptn($) {
     $t{toptn($nz,$nx+1,$ny+1)} = 1;
     for(;;) {
 	seek $rf, $rfp, 0;	# reltiles may have moved the file pointer
-        last unless (read $rf, $w, 8);
+	my ($rid, $roff);
+        last unless ((($rid, $roff) = readrel($rf)) && defined($rid));
 	$rfp = tell $rf;
-	my ($rid, $roff) = unpack "NN", $w;
 	next unless($rid);
 	print "relation $rid\n" if (VERBOSE > 4);
-	my %tiles = reltiles([[3,$rid]]);
+	my %tiles = reltiles([[RELATION, $rid]]);
 	my (@members, @tv);
 	my $first = ($roff != 0);
 	if ($first) {
 	    seek $nd, $roff, 0;
-	    while (read $nd, $w, 5) {
-		my ($type, $nn) = unpack "CN", $w;
-		last unless($type);
-		push @members, [$type, $nn, gets($nd)];
-	    }
-	    seek $nd, -4, 1;
-	    my $s;
-	    while (defined ($s = gets($nd)) && ($s ne "")) {
-		push @tv, $s, gets($nd);
-	    }
+	    @members = readmemb($nd);
+	    @tv = readtags($nd, RELATION);
 	}
 	foreach my $t (keys %t) {
 	    next unless (exists $tiles{$t});
 	    my ($nnoff);
 	    if ($first) {
 		unless ($nnd = $nd{$t}) {
-		    $nnd = openptn($t, "+<", "data");
+		    $nnd = openptn($t, "data");
 		    seek $nnd, 0, 2;
-		    print $nnd "\0" unless (tell($nnd));
 		}
 		seek $nnd, 0, 2;
 		$nnoff = tell $nnd;
-		foreach my $m (@members) {
-		    my @m= @$m;
-		    print $nnd pack("CN",$m[0],$m[1]).$m[2]."\0";
-		}
-		print $nnd pack "C", 0;
-		foreach my $s (@tv) {
-		    print $nnd $s."\0";
-		}
-		print $nnd "\0";
+		printmemb($nnd, \@members);
+		printtags($nnd, \@tv, RELATION);
 		relationptn($rid,$t);
 		$first = 0;
 	    } else {
@@ -599,7 +624,7 @@ sub splitptn($) {
 	    }
 	    my $nrf;
 	    unless ($nrf = $rf{$t}) {
-		$nrf = openptn($t, "+<", "relations");
+		$nrf = openptn($t, "relations");
 		$rf{$t} = $nrf;
 	    }
 	    if (VERBOSE > 4) {
@@ -611,7 +636,7 @@ sub splitptn($) {
 		}
 	    }
 	    seek $nrf, 0, 2;
-	    print $nrf pack "NN", $rid, $nnoff;
+	    printrel($nrf, $rid, $nnoff);
 	}
 	if ($first) {
 	    my $t = each %tiles;
@@ -619,44 +644,434 @@ sub splitptn($) {
 		print "missing relation $rid\n" if (VERBOSE > 1);
 		next;
 	    }
-	    $nnd = openptn($t, "+<", "data");
+	    $nnd = openptn($t, "data");
 	    seek $nnd, 0, 2;
 	    my $nnoff = tell $nnd;
-	    unless ($nnoff) {
-		print $nnd "\0";
-		$nnoff = 1;
-	    }
-	    foreach my $m (@members) {
-		my @m = @$m;
-		print $nnd pack("CN",$m[0],$m[1]).$m[2]."\0";
-	    }
-	    print $nnd pack "C", 0;
-	    foreach my $s (@tv) {
-		print $nnd $s."\0";
-	    }
-	    print $nnd "\0";
-	    relationptn($rid,$t);
-	    my $nrf = openptn($t, "+<", "relations");
+	    printmemb($nnd, \@members);
+	    printtags($nnd, \@tv, RELATION);
+	    my $nrf = openptn($t, "relations");
 	    if (VERBOSE > 4) {
 		my ($uz, $ux, $uy) = fromptn($t);
 		print "  moved to z$uz $ux,$uy\n";
 	    }
 	    seek $nrf, 0, 0;
-	    my ($r, $roff, $mt);
-	    while (read $nrf, $r, 8) {
-		($r, $roff) = unpack "NN", $r;
+	    my ($mt);
+	    while (my ($r, $roff) = readrel($nrf)) {
+		last unless (defined $r);
 		$mt //= tell($nrf) unless ($r);
 		next unless ($r == $rid);
 		$mt = tell($nrf);
 		last;
 	    }
 	    seek $nrf, $mt-8, 0 if($mt);
-	    print $nrf pack "NN", $rid, $nnoff;
+	    printrel($nrf, $rid, $nnoff);
+	    relationptn($rid,$t);
 	}
     }
     flushptn($ptn);
     rmtree("z$ez/$ex/$ey",{});
     return 1;
+}
+
+# vnum are variable-length numbers.  1 byte is up to 127, 2 up to 16511,
+# 3 up to 2113663, 4 up to 270549119
+sub printvnum($$) {
+    my ($f, $v) = @_;
+    if ($v >= 128) {
+	$v -= 128;
+	if ($v >= 16384) {
+	    $v -= 16384;
+	    if ($v >= 2097152) {
+		$v -= 2097152;
+		print $f pack "C4", (224 + ($v>>24)), (($v>>16) & 0xff),
+		    (($v>>8) & 0xff, $v & 0xff);
+	    } else {
+		print $f pack "C3", (192 + ($v>>16)), (($v>>8) & 0xff),
+		    ($v & 0xff);
+	    }
+	} else {
+	    print $f pack "C2", (128 + ($v>>8)), ($v & 0xff);
+	}
+    } else {
+	print $f pack "C", $v;
+    }
+}
+
+sub getvnum($) {
+    my ($f) = @_;
+    my $c = getc($f);
+    return undef unless(defined $c);
+    my $v = unpack "C", $c;
+    if ($v >= 128) {
+	if ($v >= 192) {
+	    if ($v >= 224) {
+		$v -= 224;
+		$v <<= 8;
+		$v += unpack "C", getc($f);
+		$v <<= 8;
+		$v += unpack "C", getc($f);
+		$v <<= 8;
+		$v += unpack("C", getc($f)) + 2097152 + 16384 + 128;
+		return $v;
+	    }
+	    $v -= 192;
+	    $v <<= 8;
+	    $v += unpack "C", getc($f);
+	    $v <<= 8;
+	    $v += unpack("C", getc($f)) + 16384 + 128;
+	    return $v;
+	}
+	$v -= 128;
+	$v <<= 8;
+	$v += unpack("C", getc($f)) + 128;
+    }
+    return $v;
+}
+    
+	
+
+sub printtags($$$) {
+    my ($f, $tags, $t) = @_;
+    my @tags = @$tags;
+    my $tagsver = $tagsversion{$f};
+    my $h = $tagsver ? $comtags[$tagsver]->[$t] : undef;
+    while (my $tag = shift @tags) {
+	my $val = shift @tags;
+	print "  k=$tag v=$val tagsver=$tagsver\n" if (VERBOSE > 99);
+	if ($tagsver) {
+	    my $tn = $h->[0]->{$tag};
+	    if ($tn) {
+		print "    tn=$tn\n" if (VERBOSE > 99);
+		printvnum($f, $tn);
+		if (defined $h->[2]->{$tag}) {
+		    my $vn = $h->[2]->{$tag}->{$val};
+		    if ($vn) {
+			printvnum($f, $vn);
+		    } else {
+			print $f pack("C",0)."$val\0";
+		    }
+		} else {
+		    print $f "$val\0";
+		}
+	    } else {
+		print $f pack("C",1)."$tag\0$val\0";
+	    }
+	} else {
+	    print $f "$tag\0$val\0";
+	}
+    }
+    print $f "\0";
+    print "  next off ".tell($f)."\n" if (VERBOSE > 99);
+}
+
+sub readtags($$) {
+    my ($f, $t) = @_;
+    my @tags;
+    my $tagsver = $tagsversion{$f};
+    if ($tagsver) {
+	my $a = $comtags[$tagsver]->[$t];
+	while (my $c = getvnum($f)) {
+	    if ($c == 1) {
+		my $tag = gets($f);
+		my $val = gets($f);
+		push @tags, $tag, $val;
+	    } else {
+		push @tags, $a->[1]->[$c];
+		if (defined $a->[3]->[$c]) {
+		    my $i = getvnum($f);
+		    if ($i) {
+			push @tags, $a->[3]->[$c]->[$i];
+		    } else {
+			push @tags, gets($f);
+		    }
+		} else {
+		    push @tags, gets($f);
+		}
+	    }
+	}
+    } else {
+	my $tag;
+	while (defined($tag = gets($f))) {
+	    last if ($tag eq "");
+	    my $val = gets($f);
+	    push @tags, $tag, $val;
+	}
+    }
+    return @tags;
+}
+
+sub printmemb($$) {
+    my ($f, $memb) = @_;
+    my @members = @$memb;
+    my $tagsver = $tagsversion{$f};
+    my $h = $tagsver ? $comtags[$tagsver]->[ROLE]->[0] : undef;
+    while (my $m = shift @members) {
+	print $f pack("CN", $m->[0], $m->[1]);
+	my $role = $m->[2];
+	if ($tagsver) {
+	    if (exists $h->{$role}) {
+		printvnum($f, $h->{$role});
+	    } else {
+		print $f pack("C", 0).$role."\0";
+	    }
+	} else {
+	    print $f "$role\0";
+	}
+    }
+    print $f pack "C", NONE;
+}
+
+sub readmemb($) {
+    my ($f) = @_;
+    my @members;
+    my ($b, $role);
+    my $tagsver = $tagsversion{$f};
+    my $a = $tagsver ? $comtags[$tagsver]->[ROLE]->[1] : undef;
+    while (defined($b = getc($f))) {
+	my ($type) = unpack "C", $b;
+	last unless($type);
+	last unless(read $f, $b, 4);
+	my ($id) = unpack "N", $b;
+	my $r = $tagsver ? getvnum($f) : 0;
+	if ($r) {
+	    $role = $a->[$r];
+	} else {
+	    $role = gets($f);
+	}
+	push @members, [$type, $id, $role];
+    }
+    return @members;
+}
+
+sub readnode($) {
+    my ($f) = @_;
+    my $b;
+    read $f, $b, 16 or return undef;
+    return unpack "NN!N!N", $b;
+}
+
+sub readway($) {
+    my ($f) = @_;
+    my $b;
+    read $f, $b, 8 or return undef;
+    return unpack "NN", $b;
+}
+
+sub readrel($) {
+    my ($f) = @_;
+    my $b;
+    read $f, $b, 8 or return undef;
+    return unpack "NN", $b;
+}
+
+sub readwaynodes($) {
+    my ($f) = @_;
+    my ($b);
+    if ($tagsversion{$f}) {
+	my $nodes = getvnum($f) // 0;
+	print "reading $nodes nodes\n" if (VERBOSE > 99);
+	read $f, $b, (4 * $nodes);
+	return unpack("N$nodes", $b);
+    } else {
+	my @nodes;
+	while (read $f, $b, 4) {
+	    my $n = unpack "N", $b;
+	    last unless ($n);
+	    push @nodes, $n;
+	}
+	return @nodes;
+    }
+}
+
+sub printnode($$$$$) {
+    my ($f, $id, $lat, $lon, $off) = @_;
+    print $f pack "NN!N!N", $id, $lat, $lon, $off;
+}
+
+sub printway($$$) {
+    my ($f, $id, $off) = @_;
+    print $f pack "NN", $id, $off;
+}
+
+sub printrel($$$) {
+    my ($f, $id, $off) = @_;
+    print $f pack "NN", $id, $off;
+}
+
+sub printwaynodes($$) {
+    my ($f, $n) = @_;
+    if ($tagsversion{$f}) {
+	my $nodes = scalar(@$n);
+	print "saving $nodes nodes\n" if (VERBOSE > 99);
+	printvnum($f, $nodes);
+	print $f pack "N$nodes", @$n;
+    } else {
+	foreach my $node (@$n) {
+	    print $f pack "N", $node;
+	}
+	print $f PZ;
+    }
+    print " tags at ".tell($f)."\n" if (VERBOSE > 99);
+}
+
+# garbagecollect a single tile
+sub gcptn($) {
+    my ($ptn) = @_;
+    flushptn($ptn);
+    my ($z, $x, $y) = fromptn($ptn);
+    print "Garbagecollect: z$z $x,$y\n" if (VERBOSE > 4);
+    my ($df, $ndf, $nf, $nnf, $wf, $nwf, $rf, $nrf, $b);
+    if (open $df, "<", "z$z/$x/$y/data") {
+	$tagsversion{$df} = getvnum($df);
+	open $ndf, ">", "z$z/$x/$y/data.new";
+	printvnum($ndf, TAGSVERSION);
+	$tagsversion{$ndf} = TAGSVERSION;
+	commontags(TAGSVERSION) unless (defined $comtags[TAGSVERSION]);
+    } else {
+	$df = $devnull;
+	$ndf = undef;
+    }
+    if (open $nf, "<", "z$z/$x/$y/nodes") {
+	open $nnf, ">", "z$z/$x/$y/nodes.new";
+    } else {
+	$nf = $devnull;
+	$nnf = undef;
+    }
+    if (open $wf, "<", "z$z/$x/$y/ways") {
+	open $nwf, ">", "z$z/$x/$y/ways.new";
+    } else {
+	$wf = $devnull;
+	$nwf = undef;
+    }
+    if (open $rf, "<", "z$z/$x/$y/relations") {
+	open $nrf, ">", "z$z/$x/$y/relations.new";
+    } else {
+	$rf = $devnull;
+	$nrf = undef;
+    }
+    my %seen;
+    while (my ($n, $lat, $lon, $off) = readnode($nf)) {
+	last unless (defined $n);
+	next unless ($n);
+	if (exists $seen{$n}) {
+	    print "Duplicate node $n in tile z$z $x,$y\n";
+	    next;
+	}
+	my $noff = 0;
+	if ($off) {
+	    seek $df, $off, 0;
+	    $noff = tell $ndf;
+	    my @tags = readtags($df, NODE);
+	    printtags($ndf, \@tags, NODE);
+	}
+	printnode($nnf, $n, $lat, $lon, $noff);
+	$seen{$n} = 1;
+	my $oldptn = nodeptn($n);
+	if (defined $oldptn && $oldptn ne NOPTN) {
+	    if ($oldptn ne $ptn) {
+		my ($uz, $ux, $uy) = fromptn($oldptn);
+		print "  node $n is actually in tile z$z $x,$y not z$uz $ux,$uy\n";
+#		    nodeptn($n, $ptn);
+	    }
+	} else {
+	    print "  node $n is in tile z$z $x,$y not deleted\n";
+#		nodeptn($n, $ptn);
+	}
+    }
+    %seen = ();
+    while (my ($w, $off) = readway($wf)) {
+	last unless (defined $w);
+	next unless ($w);
+	if (exists $seen{$w}) {
+	    print "Duplicate way $w\n";
+	    next;
+	}
+	my $noff = 0;
+	if ($off) {
+	    seek $df, $off, 0;
+	    $noff = tell $ndf;
+	    my @nodes = readwaynodes($df);
+	    my @tags = readtags($df, WAY);
+	    printwaynodes($ndf, \@nodes);
+	    printtags($ndf, \@tags, WAY);
+	}
+	$seen{$w} = 1;
+	my $oldptn = wayptn($w);
+	if (defined $oldptn) {
+	    if ($off && ($ptn ne $oldptn)) {
+		my ($ux, $uy, $uz) = fromptn($oldptn);
+		print "  way $w is actually in z$z $x,$y not z$uz $ux,$uy\n";
+#		    wayptn($w, $ptn);
+	    }
+	    printway($nwf, $w, $noff);
+	} else {
+	    if ($off) {
+		print "  way $w is actually in z$z $x,$y not deleted\n";
+#		    wayptn($w, $ptn);
+#		    printway($nwf, $w, $noff);
+	    } else {
+		print "  way $w is deleted, not in z$z $x,$y\n";
+	    }
+	}
+    }
+    %seen = ();
+    while (my ($r, $off) = readrel($rf)) {
+	last unless (defined $r);
+	next unless ($r);
+	if (exists $seen{$r}) {
+	    print "Duplicate relation $r\n";
+	    next;
+	}
+	my $noff = 0;
+	if ($off) {
+	    seek $df, $off, 0;
+	    $noff = tell $ndf;
+	    my @members = readmemb($df);
+	    printmemb($ndf, \@members);
+	    my @tags = readtags($df, RELATION);
+	    printtags($ndf, \@tags, RELATION);
+	}
+	my $oldptn = relationptn($r);
+	if (defined $oldptn && $oldptn ne NOPTN) {
+	    if ($off && ($ptn ne $oldptn)) {
+		my ($uz, $ux, $uy) = fromptn($oldptn);
+		print "  relation $r is actually in z$z $x,$y not z$uz $ux,$uy\n";
+#		    relationptn($r, $ptn);
+	    } else {
+		printrel($nrf, $r, $noff);
+	    }
+	} else {
+	    if ($off && $z != 0) {
+		print "  relation $r is actually in z$z $x,$y not deleted\n";
+#		    relationptn($r, $ptn);
+#		    printrel($nrf, $r, $noff);
+	    } else {
+		print "  relation $r is deleted, not in z$z $x,$y\n";
+	    }
+	}
+    }
+    if (defined $ndf) {
+	delete $tagsversion{$df};
+	close $df;
+	delete $tagsversion{$ndf};
+	close $ndf;
+	rename "z$z/$x/$y/data.new","z$z/$x/$y/data";
+    }
+    if (defined $nnf) {
+	close $nf;
+	close $nnf;
+	rename "z$z/$x/$y/nodes.new","z$z/$x/$y/nodes";
+    }
+    if (defined $nwf) {
+	close $wf;
+	close $nwf;
+	rename "z$z/$x/$y/ways.new","z$z/$x/$y/ways";
+    }
+    if (defined $nrf) {
+	close $rf;
+	close $nrf;
+	rename "z$z/$x/$y/relations.new","z$z/$x/$y/relations";
+    }
 }
 
 1;

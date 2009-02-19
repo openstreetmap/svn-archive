@@ -12,7 +12,8 @@ This feature is apparently new at perl 5.10.
 The time on the system should be close to correct.  If it is off by
 more than a minute it could affect the data update process.  The map
 fcgi-bin program will refuse to serve data if the clock is too far in
-the future.
+the future, and having the clock in the past will cause Trapi to
+server obsolete data.
 
 Trapi does many seeks and small reads and writes, on millions of small
 files.  The indexes are fairly large (Around 2.5 Gb in 4 files as of
@@ -43,7 +44,9 @@ database.  (Use '' to store all tags.)  GCCOUNT is the number of tiles
 to garbage collect per change file processed.  (Setting it low will
 cause the list of tiles to be garbage-collected to build up in busy
 times.)  OSCDELAY, WAITDELAY, and WAITFAIL determine how the change
-files are checked for.
+files are checked for.  THRESH is used by the tags file generator,
+explained below.  TAGSVERSION selects which tags file to use for new
+tiles.
 
 The .pm files need to be where your perl will find them, and the
 executable files where your shell will find them.
@@ -66,10 +69,10 @@ Updating the data:
 
    trup.pl | trpcs.pl
 
-This will fetch the daily, hourly, and minute diff files and update
+This will fetch the daily, hourly, and minute change files and update
 the trapi database.  It will complete processing the currently fetched
 data then stop if the file stopfile.txt exists.  timestamp will be
-updated as the diff files are processed.
+updated as the change files are processed.
 
 
 Garbage collection:
@@ -77,8 +80,9 @@ Garbage collection:
    trgarb.pl
 
 Garbage collection must be done when nothing else is updating the
-database.  It takes a little over a day.  How often this should be
-done is to be determined.  stopfile.txt will stop the garbage
+database.  It takes a little over a day.  Now that tiles are garbage
+collected as trpcs.pl runs, this should only be needed to convert
+tiles to the current version.  stopfile.txt will stop the garbage
 collection.
 
 
@@ -86,6 +90,32 @@ Web access:
 
 map is a fastcgi script.  Your web server should be configured so
 api/0.5/map requests will go to it.
+
+
+Tags files: 
+
+Trapi uses a variable-length encoding scheme to store common tag keys,
+values, and roles.  alltags.pl will analyze your current Trapi
+database and create a tags.z14x16384y0 file.  (As well as several
+other files checkpointing the creation.)  tagsproc.pl will take this
+file, sort and eliminate things less common than THRESH, and create a
+tags file to standard output.  You should run this twice if your Trapi
+database is significantly different than the one used to create your
+current tags file, since it will only capture values for known common
+tags.  Trapi will use the current version selected by TAGSVERSION for
+new tiles, and the version the tile was created at for old tiles until
+they are garbage-collected.
+
+To update from tags.1 based on current trapi database:
+    cd /trapi
+    alltags.pl
+    tagsproc.pl >db/tags.2
+    edit trapi.pm and change TAGSVERSION to 2
+    alltags.pl
+    tagsproc.pl >db/tags.3
+    edit trapi.pm and change TAGSVERSION to 3
+    restart apache
+    restart trpcs.pl
 
 
 
@@ -101,6 +131,16 @@ returned.
 
 
 UPDATE NOTE:
+
+When upgrading from a version prior to Feb 18, 2009: This version of
+trapi is designed to do a gradual upgrade of tile format as tiles are
+split or garbage collected.  You will need to add the new settings to
+trapi.pm, and install tags.1 in your db directory if TAGSVERSION is 1.
+The new version is also less tollerant of some database errors.  Due
+to bugs in the previous version, you should do a complete database
+reload.
+
+
 
 When updating from a version prior to Jan 9, 2009 you'll need to put
 your configuraiton in trapi.pm and the relation files need to be

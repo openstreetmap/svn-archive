@@ -11,7 +11,7 @@ chdir TRAPIDIR or die "Could not chdir TRAPIDIR: $!";
 
 ptdbinit("<");
 
-my ($ptn, $n, $tn, $lat, $lon, $off, $key, $val, $w, $tw, $tr);
+my ($ptn, $n, $w);
 my (%pw, %pn, %pr, %tiles);
 
 my ($bbs, $bbw, $bbn, $bbe);
@@ -32,6 +32,27 @@ if (/map\?bbox\=(-?\d+(?:\.\d*)?)\,(-?\d+(?:\.\d*)?)\,(-?\d+(?:\.\d*)?)\,(-?\d+(
     }
     ($bbs, $bbw, undef, undef) = Project($west, $south, 14);
     (undef, undef, $bbn, $bbe) = Project($east, $north, 14);
+} elsif (/map\?tile\=(\d+)\,(\d+)\,(\d+)$/) {
+    my ($z,$x,$y) = ($1, $2, $3);
+    if ($z >= MAXZOOM) {
+	my $zdiff = $z - MAXZOOM;
+	$x >>= $zdiff;
+	$y >>= $zdiff;
+	$tiles{etoptn($x, $y)} = 1;
+	($bbs, $bbw, $bbn, $bbe) = Project($x, $y, MAXZOOM);
+    } else {
+	($bbs, $bbw, $bbn, $bbe) = Project($x, $y, $z);
+	my $zdiff = MAXZOOM - $z;
+	$x <<= $zdiff;
+	$y <<= $zdiff;
+	my $n = (1<< $zdiff) - 1;
+	foreach my $xx (0 .. $n) {
+	    foreach my $yy (0 .. $n) {
+		$tiles{etoptn($x+$xx,$y+$yy)} = 1;
+	    }
+	}
+    }
+    
 } elsif (/node\/(\d+)$/) {
     my $node = $1;
     $ptn = nodeptn($node);
@@ -49,84 +70,75 @@ if (/map\?bbox\=(-?\d+(?:\.\d*)?)\,(-?\d+(?:\.\d*)?)\,(-?\d+(?:\.\d*)?)\,(-?\d+(
 }
 
 print "<?xml version='1.0' encoding='UTF-8'?>\n";
-print "<osm version=\"0.5\" generator=\"Trapi 0.0\">\n";
+print "<osm version=\"0.5\" generator=\"Trapi 0.3\">\n";
 if ($bbs) {
     print "<bound box=\"$bbs,$bbw,$bbn,$bbe\" origin=\"http://www.openstreetmap.org/api/0.5\"/>\n";
 }
 
 foreach $ptn (keys %tiles) {
-    my $nd = openptn($ptn, "<", "data");
-    my $wf = openptn($ptn, "<", "ways");
-    my $rf = openptn($ptn, "<", "relations");
+    my $nd = openptn($ptn, "data");
+    my $wf = openptn($ptn, "ways");
+    my $rf = openptn($ptn, "relations");
     
 # first we go through the ways, looking for ones stored remotely or with nodes
 # not in the tile
     seek $wf, 0, 0;
-    while (read $wf, $w, 8) {
-	($tw, $off) = unpack "NN", $w;
+    while (my ($tw, $off) = readway($wf)) {
+	last unless (defined $tw);
 	next unless($tw);
 	if ($off == 0) {
 	    # way stored remotly
 	    $w = wayptn($tw);
 # print "Remote way $tw\n";
 	    unless (exists $tiles{$w}) {
-		unless (defined $pw{$w}) {
-		    $pw{$w} = {};
-		}
-		${$pw{$w}}{$tw} = 1;
+		$pw{$w} //= {};
+		$pw{$w}->{$tw} = 1;
 	    }
 	} else {
 	    seek $nd, $off, 0;
-	    while(read $nd, $n, 4) {
-		($tn) = unpack "N", $n;
-		last unless ($tn);
+	    my @nodes = readwaynodes($nd);
+	    foreach my $tn (@nodes) {
 		$n = nodeptn($tn);
 		unless (exists $tiles{$n}) {
 		    # node stored remotly
-		    unless (defined $pn{$n}) {
-			$pn{$n} = {};
-		    }
-		    ${$pn{$n}}{$tn} = 1;
+		    $pn{$n} //= {};  
+		    $pn{$n}->{$tn} = 1;
 		}
 	    }
 	}
     }
     seek $rf, 0, 0;
-    while (read $rf, $w, 8) {
-	($tr, $off) = unpack "NN", $w;
+    while (my ($tr, $off) = readrel($rf)) {
+	last unless (defined $tr);
 	next unless($tr);
 	if ($off == 0) {
 	    my $r = relationptn($tr);
 	    unless (exists $tiles{$r}) {
-		unless (defined $pr{$r}) {
-		    $pr{$r} = {};
-		}
-		${$pr{$r}}{$tr} = 1;
+		$pr{$r} //= {};
+		$pr{$r}->{$tr} = 1;
 	    }
 	}
     }
 }
 
-# now we go through the remote ways, looking for nodes and ways not in the tile
+# now we go through the remote ways, looking for nodes not in the tile
 foreach my $tp (keys %pw) {
-    my $pwf = openptn($tp, "<", "ways");
-    my $pd = openptn($tp, "<", "data");
+    my $pwf = openptn($tp, "ways");
+    my $pd = openptn($tp, "data");
     seek $pwf, 0, 0;
-    while (read $pwf, $w, 8) {
-	($tw, $off) = unpack "NN", $w;
+    while (my ($tw, $off) = readway($pwf)) {
+	last unless (defined $tw);
 	next unless($tw);
-	if (exists ${$pw{$tp}}{$tw}) {
+	if (exists $pw{$tp}->{$tw}) {
+	    print "reading way data from $off\n" if (VERBOSE > 99);
 	    seek $pd, $off, 0;
-	    while(read $pd, $n, 4) {
-		($tn) = unpack "N", $n;
-		last unless ($tn);
+	    my @nodes = readwaynodes($pd);
+	    foreach my $tn (@nodes) {
 		$n = nodeptn($tn);
 		unless (exists $tiles{$n}) {
 		    # node stored remotly
-		    unless (defined $pn{$n}) {
-			$pn{$n} = {};
-		    }
-		    ${$pn{$n}}{$tn} = 1;
+		    $pn{$n} //= {};
+		    $pn{$n}->{$tn} = 1;
 		}
 	    }
 	}
@@ -135,14 +147,14 @@ foreach my $tp (keys %pw) {
 
 # print nodes in the tile
 foreach $ptn (keys %tiles) {
-    my $nf = openptn($ptn, "<", "nodes");
-    my $nd = openptn($ptn, "<", "data");
+    my $nf = openptn($ptn, "nodes");
+    my $nd = openptn($ptn, "data");
     
     my ($z, $x, $y) = fromptn($ptn);
     print "<-- nodes from z$z $x $y >\n";
     seek $nf, 0, 0;
-    while (read $nf, $n, 16) {
-	($tn, $lat, $lon, $off) = unpack "NN!N!N", $n;
+    while (my ($tn, $lat, $lon, $off) = readnode($nf)) {
+	last unless (defined $tn);
 	next unless($tn);
 	$lat /= 10000000;
 	$lon /= 10000000;
@@ -152,8 +164,9 @@ foreach $ptn (keys %tiles) {
 	} else {
 	    print ">\n";
 	    seek $nd, $off, 0;
-	    while (defined($key = gets $nd) && ($key ne "")) {
-                $val = gets $nd;
+	    my @tv = readtags($nd, NODE);
+	    while (my $key = shift @tv) {
+                my $val = shift @tv;
                 print "  <tag k=\"$key\" v=\"$val\"/>\n";
             }
 	    print "</node>\n";
@@ -166,13 +179,13 @@ foreach $ptn (keys %tiles) {
 foreach my $tp (keys %pn) {
     my ($tz, $tx, $ty) = fromptn($tp);
     print "<-- some nodes from z$tz $tx $ty >\n";
-    my $pnf = openptn($tp, "<", "nodes");
-    my $pd = openptn($tp, "<", "data");
+    my $pnf = openptn($tp, "nodes");
+    my $pd = openptn($tp, "data");
     seek $pnf, 0, 0;
-    while(read $pnf, $n, 16) {
-	($tn, $lat, $lon, $off) = unpack "NN!N!N", $n;
+    while(my ($tn, $lat, $lon, $off) = readnode($pnf)) {
+	last unless (defined $tn);
 	next unless($tn);
-	if (exists ${$pn{$tp}}{$tn}) {
+	if (exists $pn{$tp}->{$tn}) {
 	    $lat /= 10000000;
 	    $lon /= 10000000;
 	    print "<node id=\"$tn\" lat=\"$lat\" lon=\"$lon\" ";
@@ -181,8 +194,9 @@ foreach my $tp (keys %pn) {
 	    } else {
 		print ">\n";
 		seek $pd, $off, 0;
-		while (defined($key = gets $pd) && ($key ne "")) {
-		    $val = gets $pd;
+		my @tv = readtags($pd, NODE);
+		while (my $key = shift @tv) {
+		    my $val = shift @tv;
 		    print "  <tag k=\"$key\" v=\"$val\"/>\n";
 		}
 		print "</node>\n";
@@ -193,25 +207,24 @@ foreach my $tp (keys %pn) {
 
 # print ways
 foreach $ptn (keys %tiles) {
-    my $nd = openptn($ptn, "<", "data");
-    my $wf = openptn($ptn, "<", "ways");
+    my $nd = openptn($ptn, "data");
+    my $wf = openptn($ptn, "ways");
     
     my ($z, $x, $y) = fromptn($ptn);
     print "<-- ways from z$z $x $y >\n";
     seek $wf, 0, 0;
-    while(read $wf, $w, 8) {
-	($tw, $off) = unpack "NN", $w;
-	next unless ($tw);
-	next unless ($off);
+    while(my ($tw, $off) = readway($wf)) {
+	last unless (defined $tw);
+	next unless ($tw && $off);
 	print "<way id=\"$tw\">\n";
 	seek $nd, $off, 0;
-	while (read $nd, $w, 4) {
-	    ($tn) = unpack "N", $w;
-	    last if($tn == 0);
+	my @nodes = readwaynodes($nd);
+	foreach my $tn (@nodes) {
 	    print "  <nd ref=\"$tn\"/>\n";
 	}
-	while (defined($key = gets $nd) && ($key ne "")) {
-	    $val = gets $nd;
+	my @tv = readtags($nd, WAY);
+	while (my $key = shift @tv) {
+	    my $val = shift @tv;
 	    print "  <tag k=\"$key\" v=\"$val\"/>\n";
 	}
 	print "</way>\n";
@@ -221,22 +234,23 @@ foreach $ptn (keys %tiles) {
 foreach my $tp (keys %pw) {
     my ($tz, $tx, $ty) = fromptn($tp);
     print "<-- some ways from z$tz $tx $ty >\n";
-    my $pwf = openptn($tp, "<", "ways");
-    my $pd = openptn($tp, "<", "data");
+    my $pwf = openptn($tp, "ways");
+    my $pd = openptn($tp, "data");
     seek $pwf, 0, 0;
-    while (read $pwf, $w, 8) {
-	($tw, $off) = unpack "NN", $w;
-	next unless($tw);
-	if ($off && exists ${$pw{$tp}}{$tw}) {
+    while (my 	($tw, $off) = readway($pwf)) {
+	last unless (defined $tw);
+	next unless($tw && $off);
+	if (exists $pw{$tp}->{$tw}) {
+	    print "reading way data from $off\n" if (VERBOSE > 99);
 	    print "<way id=\"$tw\">\n";
 	    seek $pd, $off, 0;
-	    while(read $pd, $n, 4) {
-		($tn) = unpack "N", $n;
-		last unless ($tn);
+	    my @nodes = readwaynodes($pd);
+	    foreach my $tn (@nodes) {
 		print "  <nd ref=\"$tn\"/>\n";
 	    }
-	    while (defined($key = gets $pd) && ($key ne "")) {
-		$val = gets $pd;
+	    my @tv = readtags($pd, WAY);
+	    while (my $key = shift @tv) {
+		my $val = shift @tv;
 		print "  <tag k=\"$key\" v=\"$val\"/>\n";
 	    }
 	    print "</way>\n";
@@ -247,27 +261,26 @@ foreach my $tp (keys %pw) {
 # print relations
 
 foreach $ptn (keys %tiles) {
-    my $nd = openptn($ptn, "<", "data");
-    my $rf = openptn($ptn, "<", "relations");
+    my $nd = openptn($ptn, "data");
+    my $rf = openptn($ptn, "relations");
     
     my ($z, $x, $y) = fromptn($ptn);
     print "<-- relations from z$z $x $y>\n";
     seek $rf, 0, 0;
-    while (read $rf, $w, 8) {
-	($tr, $off) = unpack "NN", $w;
-	next unless ($tr);
-	next unless ($off);
+    while (my ($tr, $off) = readrel($rf)) {
+	last unless (defined $tr);
+	next unless ($tr && $off);
 	print "<relation id=\"$tr\">\n";
 	seek $nd, $off, 0;
-	while (read $nd, $w, 5) {
-	    my ($type, $mid) = unpack "CN", $w;
-	    last unless ($type);
-	    my $role = gets($nd);
-	    print "  <member type=\"".(MEMBERTYPE)[$type]."\" ref=\"$tn\" role=\"$role\"/>\n";
+	my @members = readmemb($nd);
+	foreach my $m (@members) {
+	    my ($type, $mid, $role) = @$m;
+	    print "  <member type=\"".(MEMBERTYPE)[$type].
+		"\" ref=\"$mid\" role=\"$role\"/>\n";
 	}
-	seek $nd, -4, 1;
-	while (defined($key = gets $nd) && ($key ne "")) {
-	    $val = gets $nd;
+	my @tv = readtags($nd, RELATION);
+	while (my $key = shift @tv) {
+	    my $val = shift @tv;
 	    print "  <tag k=\"$key\" v=\"$val\"/>\n";
 	}
 	print "</relation>\n";
@@ -277,24 +290,24 @@ foreach $ptn (keys %tiles) {
 foreach my $tp (keys %pr) {
     my ($tz, $tx, $ty) = fromptn($tp);
     print "<-- some relations from z$tz $tx $ty >\n";
-    my $prf = openptn($tp, "<", "relations");
-    my $pd = openptn($tp, "<", "data");
+    my $prf = openptn($tp, "relations");
+    my $pd = openptn($tp, "data");
     seek $prf, 0, 0;
-    while (read $prf, $w, 8) {
-	($tr, $off) = unpack "NN", $w;
-	next unless($tr);
-	if ($off && exists ${$pr{$tp}}{$tr}) {
+    while (my ($tr, $off) = readrel($prf)) {
+	last unless (defined $tr);
+	next unless($tr && $off);
+	if (exists $pr{$tp}->{$tr}) {
 	    print "<relation id=\"$tr\">\n";
 	    seek $pd, $off, 0;
-	    while (read $pd, $w, 5) {
-		my ($type, $mid) = unpack "CN", $w;
-		last unless ($type);
-		my $role = gets($pd);
-		print "  <member type=\"".(MEMBERTYPE)[$type]."\" ref=\"$mid\" role=\"$role\"/>\n";
+	    my @members = readmemb($pd);
+	    foreach my $m (@members) {
+		my ($type, $mid, $role) = @$m;
+		print "  <member type=\"".(MEMBERTYPE)[$type].
+		    "\" ref=\"$mid\" role=\"$role\"/>\n";
 	    }
-	    seek $pd, -4, 1;
-	    while (defined($key = gets $pd) && ($key ne "")) {
-		$val = gets $pd;
+	    my @tv = readtags($pd, RELATION);
+	    while (my $key = shift @tv) {
+		my $val = shift @tv;
 		print "  <tag k=\"$key\" v=\"$val\"/>\n";
 	    }
 	    print "</relation>\n";

@@ -16,7 +16,7 @@ use constant SPLIT => 4096;
 use constant TRAPIDIR => '/trapi';
 # directory where the indexes are kept (absolute or relitive to TRAPIDIR) end with / if not empty
 use constant DBDIR => '';
-# regular expression of tags to ignore.  '' disables.
+# regular expression of tags to ignore.  undef disables.
 use constant IGNORETAGS => '^(?:created_by$|tiger:|gnis:|source$|attribution$|import_uuid$|time$|AND[_:]|massgis:|open[gG]eo[dD][bB]:|converted_by$|KSJ2:|uploaded_by$|source_ref$|gns:)';
 
 # directory to save osc files in
@@ -33,6 +33,11 @@ use constant WAITDELAY => 59;
 use constant WAITFAIL => 62;
 # tiles to garbagecollect per osc file processed.  0 disables garbagecollection
 use constant GCCOUNT => 20;
+# Number of times a string is repeated to get common string handling
+use constant THRESH => 32;
+
+# which tags compression to use for new tiles.  0 is old uncompressed version.
+use constant TAGSVERSION => 1;
 
 use ptdb;
 

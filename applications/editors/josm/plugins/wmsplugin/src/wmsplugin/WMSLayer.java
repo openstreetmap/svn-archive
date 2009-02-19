@@ -62,7 +62,7 @@ public class WMSLayer extends Layer {
     protected String baseURL;
     protected final int serializeFormatVersion = 4;
 
-    private ExecutorService executor;
+    private ExecutorService executor = null;
 
     public WMSLayer() {
         this(tr("Blank Layer"), null);
@@ -81,6 +81,13 @@ public class WMSLayer extends Layer {
         getPPD();
         
         executor = Executors.newFixedThreadPool(3);
+    }
+    
+    public void destroy() {
+        try { 
+            executor.shutdown();  
+        // Might not be initalized, so catch NullPointer as well
+        } catch(Exception x) {}
     }
 
     public void getPPD(){

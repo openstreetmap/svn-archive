@@ -67,6 +67,7 @@ sub getPrintable {
     $str=~s/Ö/Oe/g;
     $str=~s/Ü/Ue/g;
     $str=~s/ß/sz/g;
+    $str=~s/\+/PLUS/g;
     $str=~s/\W//g;
     return $str;
 
@@ -710,7 +711,11 @@ foreach my $k (sort (keys %streets)) {
         $c=$c*1000;
 	my $pst=$st;
 	utf8::decode($pst);
-	my $str="<li>$kk (vermutlich in $pst, Entfernung: $c) <a href=\"http://www.informationfreeway.org/?lat=$coordLat{$k}&lon=$coordLon{$k}&zoom=17\">InfFree Karte</a>
+	my $wo="";
+	if ($pst ne "") {
+	    $wo="(vermutlich in $pst, Entfernung: $c)";
+	}
+	my $str="<li>$kk $wo <a href=\"http://www.informationfreeway.org/?lat=$coordLat{$k}&lon=$coordLon{$k}&zoom=17\">InfFree Karte</a>
 <a href=\"http://www.openstreetmap.org/?mlat=$coordLat{$k}&mlon=$coordLon{$k}&zoom=16\">OSM Karte</a>";
 
 	if ($dista<4) {

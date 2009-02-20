@@ -67,9 +67,11 @@ class ParseXML:
     def newfeature(self):
         self.featurecounter += 1
         feature = osmparser.OSMObj(type='node', id='-%d' % self.featurecounter)
-        feature.tags = self.defaulttags
+        feature.tags = self.defaulttags.copy()
         return feature
-
+        
+    def cancelfeature(self):
+        self.feature = None
 
 
 
@@ -104,50 +106,56 @@ class ParseNaptan(ParseXML):
             self.feature = self.newfeature()
     
     def endElement(self, elem):
-        node = self.cleannode(elem)
-        
-        if node == 'StopPoint':
-            # That's all for this point, wrap up the feature's xml ready for the next one
-            self.outfile.write(self.feature.toxml(needs_parent=False, indent=False))
-            self.feature = None
-        
-        elif node == 'Latitude' and self.parentnodes['StopPoints']:
-            self.feature.loc[1] = elem.text
-        elif node == 'Longitude' and self.parentnodes['StopPoints']:
-            self.feature.loc[0] = elem.text
-        elif node == 'Indicator' and not self.parentnodes['AlternativeDescriptors']:
-            v = ''
-            if not elem.text in ('In', 'No', 'Nr', 'On'):
-                indicator = elem.text.upper()
-                regexes = (
-                    # Mostly produced with reference to London and Surrey data
-                    re.compile('^(?:(?:BAY)|(?:ENTRANCE)|(?:STAND)|(?:STOP) )([A-Z0-9\-& ]{1,7})'),
-                    # Unfortunately, still matches 2 letter words (such as 'on') used as Indicators in Surrey
-                    re.compile('^([A-Z0-9]{1,2}[0-9]?)$')
-                )
-                for regex in regexes:
-                    matches = regex.match(indicator)
-                    if matches:
-                        v = matches.group(1).strip(' -')
-                        if v:
-                            self.feature.tags['local_ref'] = v
-                            break
-            if not v:
-                self.node2tag(elem)
+        # If there's no feature, we're probably ignoring this element, or the tree its in.
+        if self.feature:
+            node = self.cleannode(elem)
             
-        elif self.parentnodes['AlternativeDescriptors']:
-            self.node2tag(elem, self.tagmap_altdescriptors)
-        elif node == 'StopType':
-            # This is a 'legacy' node according to the schema, but it should still work
-            stoptype = elem.text
-            if stoptype == 'BCT' or stoptype == 'BCQ' or stoptype == 'BCS':
-                self.feature.tags['highway'] = 'bus_stop'
-            elif stoptype == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
-                self.feature.tag['amenity'] = 'bus_station'
-        else:
-            # Fallthrough for simple tag mappings
-            self.node2tag(elem)
-        
+            if node == 'StopPoint':
+                # That's all for this point, wrap up the feature's xml ready for the next one
+                self.outfile.write(self.feature.toxml(needs_parent=False, indent=False))
+                self.outfile.write("\n")
+                self.feature = None
+            
+            elif node == 'Latitude' and self.parentnodes['StopPoints']:
+                self.feature.loc[1] = elem.text
+            elif node == 'Longitude' and self.parentnodes['StopPoints']:
+                self.feature.loc[0] = elem.text
+            elif node == 'Indicator' and not self.parentnodes['AlternativeDescriptors']:
+                v = ''
+                if not elem.text in ('In', 'No', 'Nr', 'On'):
+                    indicator = elem.text.upper()
+                    regexes = (
+                        # Mostly produced with reference to London and Surrey data
+                        re.compile('^(?:(?:BAY)|(?:ENTRANCE)|(?:STAND)|(?:STOP) )([A-Z0-9\-& ]{1,7})'),
+                        # Unfortunately, still matches 2 letter words (such as 'on') used as Indicators in Surrey
+                        re.compile('^([A-Z0-9]{1,2}[0-9]?)$')
+                    )
+                    for regex in regexes:
+                        matches = regex.match(indicator)
+                        if matches:
+                            v = matches.group(1).strip(' -')
+                            if v:
+                                self.feature.tags['local_ref'] = v
+                                break
+                if not v:
+                    self.node2tag(elem)
+                
+            elif self.parentnodes['AlternativeDescriptors']:
+                self.node2tag(elem, self.tagmap_altdescriptors)
+            elif node == 'StopType':
+                # This is a 'legacy' node according to the schema, but it should still work
+                stoptype = elem.text
+                if stoptype == 'BCT' or stoptype == 'BCQ' or stoptype == 'BCS':
+                    self.feature.tags['highway'] = 'bus_stop'
+                elif stoptype == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
+                    self.feature.tag['amenity'] = 'bus_station'
+                else:
+                    # We don't want any other types of points imported at all yet, need to consider this as a config option.
+                    self.cancelfeature()
+            else:
+                # Fallthrough for simple tag mappings
+                self.node2tag(elem)
+        # (endif self.feature)
         # Keep our parent nodes dict updated.
         ParseXML.endElement(self, elem)
 
@@ -196,9 +204,6 @@ if __name__ == "__main__":
     osmfile = '%s.osm' % (filename.rpartition('.')[0])
     outfile = open(osmfile, 'w')
     
-    time1 = time.time()
     xml = treeparse(infile, outfile)
-    time2 = time.time()
-    print >>sys.stderr, "Time: %f" % (time2 - time1)
     
     outfile.close()

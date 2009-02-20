@@ -28,15 +28,17 @@ sub is_format_Kismet($) {
 	return undef if (!$fh);
 
 	my $line = $fh->getline();
-	$fh->close();
+
 	# Format for Kismet:
 	# File must start with:
 	# <?xml version="1.0" encoding="ISO-8859-1"?>
 	# <!DOCTYPE detection-run SYSTEM "http://kismetwireless.net/kismet-3.1.0.dtd">
     	if ( $line =~ m/^<\?xml.*\?>$/ ) {
 		$line = $fh->getline();
+		$fh->close();
 		return $line =~ m/ detection-run .*kismet/;
 	}
+	$fh->close();
 	return 0;
 }
 

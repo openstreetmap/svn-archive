@@ -12,12 +12,14 @@ use vars qw($ort $ortURL $ortHTML $bundesland $pw_schutz
 	    $bildSource $bugWikiText $bugWikiURL
 	    $csvSeperator $nutzungsErlaubnis $printBild
 	    $java_bin $osmosisjar $debug $autocoordinaten 
+	    $nutzeLeisurePark
 	    $strip_dash_names $link_unknown
 	    $bzip2_bin
 	    );
 $java_bin="/usr/local/java/jre1.6.0_05.amd64/bin/java";
 $osmosisjar="/home/sven/gps/hamburg-stat/osmosis-0.26/osmosis.jar";
-$bzip2_bin="/usr/bin/bzip2";
+$bzip2_bin="/bin/bzip2";
+(-f $bzip2_bin ) or $bzip2_bin="/usr/bin/bzip2";
 $csvSeperator=",";
 $pw_schutz=9;
 $standdate="";
@@ -26,6 +28,7 @@ $bugWikiText="";
 $nutzungsErlaubnis="";
 $csvSpalteOrt=-1;
 $csvSpalteStr=-1;
+$nutzeLeisurePark=0;
 $printBild=0;
 $debug=0;
 $bundesland="";
@@ -38,6 +41,7 @@ $strip_dash_names=1;
 $link_unknown=1;
 my $name="";
 my $highway="";
+my $leisure="";
 my %streets;
 my $timeMax=0;
 my $timeMaxStr="unbekannt";
@@ -100,6 +104,7 @@ sub xmlStart {
     if ($starttag eq "way") {
 	$name="";
 	$highway="";
+	$leisure="";
 	$plz="";
 	$streetLat="";
 	$streetLon="";
@@ -111,6 +116,8 @@ sub xmlStart {
 	} elsif ($hash{'k'} eq "name") {
 	    $name=$hash{'v'};
 	    print "name:$name\n" if $debug;
+	} elsif ($hash{'k'} eq "leisure") {
+	    $leisure=$hash{'v'};
 	} elsif ($hash{'k'} eq "postal_code") {
 	    $plz=$hash{'v'};
 	} elsif (($hash{'k'} eq "place") and ($hash{'v'} eq "suburb")) {
@@ -135,8 +142,8 @@ sub xmlEnd {
     my ($wert_des_zeigers,$endtag) = @_;
     if ($endtag eq "way" ) {
 	print "way-end $name $highway\n" if $debug;
-       
-	if (($highway ne "") or ($name=~ /Platz der j/)) {
+	if (($highway ne "") or
+	    (($leisure eq "park") and ($nutzeLeisurePark==1))) {
 	    utf8::decode($name);
 	      if ($strip_dash_names==1) {
 		  $name=~s/-/ /g;
@@ -502,6 +509,11 @@ my $standd=sprintf("%d.%d.%d %d:%02d",$mday,$mon,$year,$hour,$min);
 my $lbundesland=lc($bundesland);
 my $stand="<p>Letze Aktualisierung: $standd Uhr (Neuester Timestamp im OSM File: $timeMaxStr) Copyright <a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-By-SA</a> Daten von <a href='http://download.geofabrik.de/'>http://download.geofabrik.de/</a><a href='http://download.geofabrik.de/osm/europe/germany/$lbundesland.osm.bz2'>osm/europe/germany/$lbundesland.osm.bz2</a>. Diese Daten werden wiederum regelmäßig von <a href='http://www.openstreetmap.org/'>www.openstreemap.org</a> geladen. ";
 $stand.=$zuschnittStr;
+if ($nutzeLeisurePark==1) {
+    $stand.="</p><p>F&uuml;r den Abgleich werden alle Ways mit highway=* und leisure=park ausgwertet.";
+} else {
+    $stand.="</p><p>F&uuml;r den Abgleich werden alle Ways mit highway=* ausgwertet.";
+}
 $stand.="</p><p>$nutzungsErlaubnis";
 if ($pw_schutz==1) {
     $stand.="<p>Wichtig: Um auf die Ortsteilseiten Zugriff zu bekommen, benötigst du ein Passwort. Dieses bekommst du, wenn du bei OSM mitwirkst und das
@@ -514,6 +526,7 @@ glaubhaft per E-Mail an:
 
 $stand.=" Jegliche andere Nutzung ist nur nach Genehmigung gestattet.</p>";
 open(INDEX,">$ortURL/index.html") or die;
+open(STATI,">$ortURL/stat.csv") or die;
 open(COLOR,">$ortURL/stadtteil.color") or die;
 open(SCRIPT,">$ortURL/myscript.sh") or die;
 print SCRIPT "#!/bin/sh\n";
@@ -617,6 +630,7 @@ my $color=&colorPrz($prozent);
 print INDEX $seperator;
 print INDEX "<tr bgcolor=\"$color\"><td>$ortHTML gesamt</a></td>\n";	
 print INDEX "<td>$summMiss</td>\n<td>$summFound</td>\n";
+print STATI "$ort,$summMiss,$summFound\n";
 printf INDEX "<td>%d</td>\n",($summFound+$summMiss);
 printf INDEX "<td>%.1f %% </td></tr>\n\n",$prozent;
 print INDEX "</table> <h1>Nach Abdeckungsgrad sortiert</h1>\n";
@@ -638,6 +652,7 @@ print INDEX  "<a href=\"s/Nur_in_OSM.html\">Nur in OSM</a>\n";
 print INDEX $kommentar;
 print INDEX  "</body></html>\n";
 close(INDEX);
+close(STATI);
 open(OUT,">$ortURL/s/Nur_in_OSM.html") or die;
 print OUT "<html><body>\n<h1>Nur in OpenStreetMap</h1>\n<ul>";
 my %stadtteilOut;

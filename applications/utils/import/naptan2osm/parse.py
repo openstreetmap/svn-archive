@@ -5,6 +5,7 @@ import xml.etree.cElementTree as ET
 
 class ParseXML:
     namespace = '{http://www.naptan.org.uk/}'
+    defaulttags = {'source': 'naptan_import', 'created_by': 'naptan2osm'}
     tagprefix = ''
     tagmap = {}         # The basic tag mappings that are a simple one to one mapping
     
@@ -65,7 +66,9 @@ class ParseXML:
             
     def newfeature(self):
         self.featurecounter += 1
-        return osmparser.OSMObj(type='node', id='-%d' % self.featurecounter)
+        feature = osmparser.OSMObj(type='node', id='-%d' % self.featurecounter)
+        feature.tags = self.defaulttags
+        return feature
 
 
 
@@ -74,7 +77,7 @@ class ParseNaptan(ParseXML):
     tagprefix = 'naptan'
     tagmap = {
         'AtcoCode': '',             # Blank entries automatically form tags of tagprefix:nodename
-        'NaptanCode': ('','ref'),   # Tuples can be used if a node needs to be mapped to multiple tags
+        'NaptanCode': 'ref',   # Tuples can be used if a node needs to be mapped to multiple tags
         'CommonName': 'name',
         'ShortCommonName': '',
         'Landmark': '',
@@ -127,7 +130,7 @@ class ParseNaptan(ParseXML):
                     if matches:
                         v = matches.group(1).strip(' -')
                         if v:
-                            self.feature.tags['ref'] = v
+                            self.feature.tags['local_ref'] = v
                             break
             if not v:
                 self.node2tag(elem)

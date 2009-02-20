@@ -5,7 +5,7 @@ import xml.etree.cElementTree as ET
 
 class ParseXML:
     namespace = '{http://www.naptan.org.uk/}'
-    defaulttags = {'source': 'naptan_import', 'created_by': 'naptan2osm'}
+    defaulttags = {'source': 'naptan_import', 'created_by': 'naptan2osm', 'naptan:unverified': 'yes'}
     tagprefix = ''
     tagmap = {}         # The basic tag mappings that are a simple one to one mapping
     

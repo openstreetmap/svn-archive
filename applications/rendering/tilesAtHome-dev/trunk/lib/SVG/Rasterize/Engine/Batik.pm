@@ -149,7 +149,13 @@ sub new {
         'xercesImpl.jar',
         'batik.jar'
         ]);
+
     my @default_java_searchpaths = ( File::Spec->path() );
+    if( $ENV{JAVA_HOME} ){
+        my($volume,$dir) = File::Spec->splitpath( $ENV{JAVA_HOME}, 1 );
+        push( @default_java_searchpaths, File::Spec->catpath( $volume, File::Spec->catdir($dir, 'bin') ) );
+    }
+
     if( $^O eq 'MSWin32' ){
         my($volume, $dir) = File::Spec->splitpath($ENV{WINDIR}, 1);
         $dir = File::Spec->catdir( $dir, 'WOW64' );

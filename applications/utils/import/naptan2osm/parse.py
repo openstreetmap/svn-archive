@@ -103,7 +103,10 @@ class ParseNaptan(ParseXML):
 
         node = self.cleannode(elem)
         if node == 'StopPoint':
-            self.feature = self.newfeature()
+            if elem.attrib['Status'] == 'active':
+                self.feature = self.newfeature()
+            else:
+                elem.clear()
     
     def endElement(self, elem):
         # If there's no feature, we're probably ignoring this element, or the tree its in.
@@ -150,7 +153,7 @@ class ParseNaptan(ParseXML):
                 #elif st == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
                     #self.feature.tag['amenity'] = 'bus_station'
                 elif st == 'TXR' or st == 'STR':
-                    self.feature.tag['amenity'] = 'taxi'
+                    self.feature.tags['amenity'] = 'taxi'
                 else:
                     # We don't want any other types of points imported at all yet, need to consider this as a config option.
                     self.cancelfeature()

@@ -332,37 +332,6 @@ sub CheckConfig
         }
     }
 
-    my $rasterizer = $self->get("Rasterizer");
-    if ( $rasterizer =~ /inkscape/i )
-    {
-        $cmd = $self->get("inkscape"); # this config parameter is deprecated and not present in newer installations
-                                       # http://trac.openstreetmap.org/ticket/1286
-
-        # Fall back un 'inkscape' if the inkscape variable isn't
-        # defined, in the config. As is the case in some
-        # installations.
-        $cmd = 'inkscape' unless defined $cmd;
-
-        my $InkscapeV=`\"$cmd\" -V 2>&1`;
-        $InkscapeV =~ /Inkscape.(\d+(\.\d+)+)/;
-
-        my $minVersion = "0.46";
-
-        if ( $InkscapeV eq '' )
-        {
-            print "* Could not determine your inkscape version\n";
-            print "* You need at least version ${minVersion} for RenderStripes=0 setting\n" unless $self->get("RenderStripes");
-        }
-        elsif ($self->CompareVersions($1, $minVersion) == -1 and not $self->get("RenderStripes")) 
-        {
-            print "! Inkscape version ${1} too low, needs to be at least ${minVersion} for RenderStripes=0 setting\n";
-        }
-        else 
-        {
-            print "- Inkscape version $1\n";
-        }
-    }
-
 
     #-------------------------------------------------------------------
     # check all layers for existing and sane values

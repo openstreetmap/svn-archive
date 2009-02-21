@@ -2,10 +2,11 @@
 -- STATUS: --
 -------------
 
-THIS TOOL IS NOT READY FOR PRODUCTION WORK YET. SPECIFIC RULE SETS FOR THE 
-VARIOUS PROVINCES HAVE YET TO BE DEVELOPED AND IN MANY CASES WILL BE DISTINCT
-FROM THE NATIONAL RULE SET DUE TO VARIATIONS IN HOW EACH JURISDICTION CLASSIFIES
-WHAT IS A ROAD.
+This tool has been used to import data in Alberta and Ontario and British 
+Columbia.
+
+Each provincial dataset differs slightly.  Please review the data
+before importing additional provinces.
 
 
 Introduction:
@@ -25,13 +26,26 @@ python geobase2osm.py -i NRN_GEOM.gml [-a NRN_ADDR.gml] [-o output.osm] [--prett
 -o filename = The file to save to
 --pretty    = Create a indented and neatly formatted output file (can add a fair bit of whitespace)
 --quiet     = Don't display any messages while processing
+-b filename = This option allows you to exclude portions of the GEOM file from
+	      being processed. boundsfile.txt should contain a EWKT type 
+	      geometry of the area that should be processed. For example 
+	      POLYGON(-120 54,-121 55,-122 56,-122 55,-120 54)
+-e filename = If this option is specified then RoadMatcherResult.jml should be 
+	      a results file genereated from the road matcher application. 
+	      geobase2osm will generate two additional output files. 
+	      outfile.osm.standalone.osm will only have roads marked as 
+	      StandAlone. outfile.osm.excluded.osm will contain the roads 
+	      excluded from the .standalone file.
+
+
 
 Requirements:
 -------------
 Python 2.5 or higher
 cElementTree (Note: you can use the native python ElementTree but its much slower. To 
 do so change the relevant import line in the script)
-
+Shapely
+Python gdal bindings
 
 Notes:
 -------------

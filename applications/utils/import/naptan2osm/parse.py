@@ -126,7 +126,7 @@ class ParseNaptan(ParseXML):
                     indicator = elem.text.upper()
                     regexes = (
                         # Mostly produced with reference to London and Surrey data
-                        re.compile('^(?:(?:BAY)|(?:ENTRANCE)|(?:STAND)|(?:STOP) )([A-Z0-9\-& ]{1,7})'),
+                        re.compile('^(?:(?:BAY)|(?:ENTRANCE)|(?:STAND)|(?:STOP)|(?:STANCE) )([A-Z0-9\-& ]{1,7})'),
                         # Unfortunately, still matches 2 letter words (such as 'on') used as Indicators in Surrey
                         re.compile('^([A-Z0-9]{1,2}[0-9]?)$')
                     )
@@ -147,8 +147,8 @@ class ParseNaptan(ParseXML):
                 st = elem.text
                 if st == 'BCT' or st == 'BCQ' or st == 'BCS':
                     self.feature.tags['highway'] = 'bus_stop'
-                elif st == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
-                    self.feature.tag['amenity'] = 'bus_station'
+                #elif st == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
+                    #self.feature.tag['amenity'] = 'bus_station'
                 elif st == 'TXR' or st == 'STR':
                     self.feature.tag['amenity'] = 'taxi'
                 else:

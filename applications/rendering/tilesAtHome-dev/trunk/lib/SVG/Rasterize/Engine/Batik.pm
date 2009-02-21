@@ -9,6 +9,7 @@ use base qw(Class::Accessor SVG::Rasterize::Engine);
 use File::Spec;
 use Error qw(:try);
 use IPC::Run qw(run);
+use FindBin qw($Bin);
 
 =pod
 =head1 NAME
@@ -99,6 +100,7 @@ sub new {
     if( $^O eq 'MSWin32' ){
         #FIXME: add good places to search here
         push(@default_jar_searchpaths,
+             $Bin.'\..',
              'c:\program files',
              'c:\program files\batik',
              'c:\programme',

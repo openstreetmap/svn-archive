@@ -91,7 +91,7 @@ class ParseNaptan(ParseXML):
     tagmap_altdescriptors = {
         
     }
-    watchnodes = ('StopPoints', 'StopAreas', 'AlternativeDescriptors')
+    watchnodes = ('StopPoints', 'StopAreas', 'AlternativeDescriptors', 'StopClassification')
         
     def startElement(self, elem):
         """Event handler for when the XML parser encounters an opening tag.
@@ -116,9 +116,9 @@ class ParseNaptan(ParseXML):
                 self.outfile.write("\n")
                 self.feature = None
             
-            elif node == 'Latitude' and self.parentnodes['StopPoints']:
+            elif node == 'Latitude' and self.parentnodes['StopPoints'] and not self.parentnodes['StopClassification']:
                 self.feature.loc[1] = elem.text
-            elif node == 'Longitude' and self.parentnodes['StopPoints']:
+            elif node == 'Longitude' and self.parentnodes['StopPoints'] and not self.parentnodes['StopClassification']:
                 self.feature.loc[0] = elem.text
             elif node == 'Indicator' and not self.parentnodes['AlternativeDescriptors']:
                 v = ''
@@ -144,13 +144,20 @@ class ParseNaptan(ParseXML):
                 self.node2tag(elem, self.tagmap_altdescriptors)
             elif node == 'StopType':
                 # This is a 'legacy' node according to the schema, but it should still work
-                stoptype = elem.text
-                if stoptype == 'BCT' or stoptype == 'BCQ' or stoptype == 'BCS':
+                st = elem.text
+                if st == 'BCT' or st == 'BCQ' or st == 'BCS':
                     self.feature.tags['highway'] = 'bus_stop'
-                elif stoptype == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
+                elif st == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
                     self.feature.tag['amenity'] = 'bus_station'
+                elif st == 'TXR' or st == 'STR':
+                    self.feature.tag['amenity'] = 'taxi'
                 else:
                     # We don't want any other types of points imported at all yet, need to consider this as a config option.
+                    self.cancelfeature()
+            elif node == 'BusStopType':
+                bst = elem.text
+                # We don't yet support Hail and Ride or 'Flexible' stop point areas.
+                if bst == 'HAR' or bst == 'FLX':
                     self.cancelfeature()
             else:
                 # Fallthrough for simple tag mappings

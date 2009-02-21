@@ -344,6 +344,45 @@ sub convert {
     };
 }
 
+sub version {
+    my $self = shift;
+
+    my @cmd;
+
+    my $printBatikVersionPath = __FILE__;
+    $printBatikVersionPath =~ s!(/|\\)[^/\\]+\.pm$!${1}Batik/PrintBatikVersion.jar!;
+
+    if( $self->jar_available() ){
+        @cmd = ($self->java_path());
+        my @jarlist = ( $self->find_jars('batik.jar'), $printBatikVersionPath );
+        push(@cmd, '-classpath', join( ($^O eq 'MSWin32' ? ';' : ':' ),
+                                       @jarlist ) );
+        push(@cmd, 'PrintBatikVersion');
+    } elsif( $self->wrapper_available() ){
+        warn 'Batik rasterizer wrapper does not expose version';
+        return undef;
+    } else {
+        throw SVG::Rasterize::Engine::Batik::Error::Prerequisite('No batik available');
+    }
+
+    my $result;
+    try {
+        $result = run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} )
+    } otherwise {
+        my $e = shift;
+        throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\", run could not execute the command: $e");
+    };
+
+    my $version = $self->{stdout};
+    $version =~ s/^\s+//;
+    $version =~ s/\s+$//;
+    $version =~ s/batik-?\s*//;
+
+    my @versionparts = split(/\s*[\._\+\;]\s*/, $version);
+
+    return @versionparts;
+}
+
 package SVG::Rasterize::Engine::Batik::Error;
 use base qw(SVG::Rasterize::Engine::Error);
 

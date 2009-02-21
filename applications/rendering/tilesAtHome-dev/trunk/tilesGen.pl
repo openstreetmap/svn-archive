@@ -142,7 +142,9 @@ if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
         $SVG::Rasterize::object->engine( $Config->get("Rasterizer") );
     }
 
-    print "- rasterizing using ".ref($SVG::Rasterize::object->engine)."\n";
+    my $rasterizer = ref($SVG::Rasterize::object->engine());
+
+    print "- rasterizing using $rasterizer\n";
 
     if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') )
     {
@@ -151,36 +153,46 @@ if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
         $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
     }
 
-    # Check for broken Inkscape versions
-    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') ){
-        my %brokenInkscapeVersions = (
+    # Check for broken rasterizer versions
+    my %brokenRasterizerVersions = (
+        'SVG::Rasterize::Engine::Inkscape' => {
             "RenderStripes=0 will not work" => [0, 45, 1]
-            );
+        },
+        'SVG::Rasterize::Engine::Batik' => {
+            "Problems with black tiles reported" => [1, 6]
+        },
+        'SVG::Rasterize::Engine::BatikAgent' => {
+            "Problems with black tiles reported" => [1, 6]
+        }
+    );
 
-        try {
-            my @version = $SVG::Rasterize::object->engine()->version();
-            die if scalar(@version) == 0;
+    try {
+        my @version = $SVG::Rasterize::object->engine()->version();
+        die if scalar(@version) == 0;
 
-            while( my( $reason, $ver ) = each %brokenInkscapeVersions ){
-                my @brokenVersion = @{ $ver };
+        while( my( $reason, $ver ) = each %{$brokenRasterizerVersions{$rasterizer}} ){
+            my @brokenVersion = @{ $ver };
 
-                my $equal = 1;
-                if( $#brokenVersion == $#version ){
-                    for( my $i=0; $i < @version; $i++ ){
-                        $equal = $version[$i] eq $brokenVersion[$i];
-                        last if ! $equal;
-                    }
-                } else {
-                    $equal = 0;
+            my $equal = 1;
+            if( $#brokenVersion == $#version ){
+                for( my $i=0; $i < @version; $i++ ){
+                    $equal = $version[$i] eq $brokenVersion[$i];
+                    last if ! $equal;
                 }
-
-                if( $equal ){
-                    printf("! You have a broken version of Inkscape, %s. %s\n", join('.', @version), $reason);
-                }
+            } else {
+                $equal = 0;
             }
-        } otherwise {
-            print "! Could not determine your Inkscape version\n";
-        };
+
+            if( $equal ){
+                printf("! You have a broken version (%s) of your rasterizer. %s\n", join('.', @version), $reason);
+                sleep 10;
+            }
+        }
+    } otherwise {
+        print "! Could not determine your rasterizer version\n";
+    };
+
+    if( $rasterizer eq "SVG::Rasterize::Engine::Inkscape" ){
         print "* Take care to manually backup your inkscape user preferences\n"; 
         print "  if you have knowingly changed them. \n";
         print "  Some tilesets will cause inkscape to clobber that file!\n";

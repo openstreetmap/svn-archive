@@ -9,7 +9,6 @@ use base qw(Class::Accessor SVG::Rasterize::Engine);
 use File::Spec;
 use Error qw(:try);
 use IPC::Run qw(run);
-use FindBin qw($Bin);
 
 =pod
 =head1 NAME
@@ -100,7 +99,6 @@ sub new {
     if( $^O eq 'MSWin32' ){
         #FIXME: add good places to search here
         push(@default_jar_searchpaths,
-             $Bin.'\..',
              'c:\program files',
              'c:\program files\batik',
              'c:\programme',
@@ -151,8 +149,7 @@ sub new {
         'xercesImpl.jar',
         'batik.jar'
         ]);
-    my @default_java_searchpaths = ( $ENV{JAVA_HOME}?$ENV{JAVA_HOME}.'/bin/':'' );
-    push(@default_java_searchpaths, File::Spec->path() );
+    my @default_java_searchpaths = ( File::Spec->path() );
     if( $^O eq 'MSWin32' ){
         my($volume, $dir) = File::Spec->splitpath($ENV{WINDIR}, 1);
         $dir = File::Spec->catdir( $dir, 'WOW64' );

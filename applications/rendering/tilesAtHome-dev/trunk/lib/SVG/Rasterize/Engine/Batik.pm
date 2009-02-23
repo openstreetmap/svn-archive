@@ -351,6 +351,16 @@ sub convert {
     };
 }
 
+=pod
+
+=head2 version()
+
+Get Batik version number.
+
+Returns version number as array, for example (1, 7) for 1.7
+
+=cut
+
 sub version {
     my $self = shift;
 

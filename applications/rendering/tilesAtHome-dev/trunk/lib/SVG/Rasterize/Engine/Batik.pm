@@ -99,6 +99,10 @@ sub new {
     if( $^O eq 'MSWin32' ){
         #FIXME: add good places to search here
         push(@default_jar_searchpaths,
+             $ENV{'PROGRAMFILES'},
+             $ENV{'PROGRAMFILES'}.'\batik',
+             $ENV{'PROGRAMFILES(X86)'},
+             $ENV{'PROGRAMFILES(X86)'}.'\batik',
              'c:\program files',
              'c:\program files\batik',
              'c:\programme',
@@ -188,12 +192,14 @@ sub find_jar {
     my $self = shift;
     my $jarname = shift;
 
+    return $self->{jarcache}{$jarname} if exists($self->{jarcache}{$jarname});
+
     foreach my $path ( @{ $self->jar_searchpaths() } ){
         my($volume, $dir) = File::Spec->splitpath($path, 1);
 
         my $filepath = File::Spec->catpath($volume, $dir, $jarname);
 
-        return $filepath if -r $filepath;
+        return $self->{jarcache}{$jarname} = $filepath if -r $filepath;
     }
     throw SVG::Rasterize::Engine::Batik::Error::Prerequisite("Couldn't find $jarname");
 }

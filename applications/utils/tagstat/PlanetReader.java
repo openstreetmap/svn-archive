@@ -1,40 +1,45 @@
-import java.util.regex.*;
-import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.io.FileReader;
+import org.xml.sax.XMLReader;
+import org.xml.sax.InputSource;
+import org.xml.sax.helpers.XMLReaderFactory;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.Attributes;
+import org.apache.commons.lang.StringEscapeUtils;
 
-public class PlanetReader {
+public class PlanetReader extends DefaultHandler {
 	private static Connection conn = null;
-	private static Pattern pattern;
+
+	public void startElement (String uri, String name, String qName, Attributes atts) {
+		if(qName.equals("tag")) {
+			handleTag(StringEscapeUtils.escapeSql(atts.getValue("k")), StringEscapeUtils.escapeSql(atts.getValue("v")));
+		}
+	}
+
+	private static void incrementInDB(String key, String value, int inc) {
+		try {
+			Statement s = conn.createStatement();
+			int count = s.executeUpdate("UPDATE tagpairs SET newcount=newcount+"+inc+" WHERE tag='"+key+"' AND value='"+value+"'");
+			if(count != 1) {
+				s.executeUpdate("INSERT INTO tagpairs SET tag='"+key+"', value='"+value+"', count=0, newcount="+inc);
+			}
+			s.close();
+		} catch (SQLException ex) {
+			System.err.println("INSERT INTO tagpairs SET tag='"+key+"', value='"+value+"', count=0, newcount="+inc);
+			System.err.println("SQLException: " + ex.getMessage());
+			System.err.println("SQLState: " + ex.getSQLState());
+			System.err.println("VendorError: " + ex.getErrorCode());
+		}
+	}
 
 	private static void handleTag(String key, String value) {
 		if(key.equals("created_by")) {
 			return;
 		}
-		try {
-			Statement s = conn.createStatement();
-			int count = s.executeUpdate("UPDATE tags SET count=count+1 WHERE tag=\""+key+"\" AND value=\""+value+"\"");
-			if(count != 1) {
-				s.executeUpdate("INSERT INTO tags SET tag=\""+key+"\", value=\""+value+"\", count=1");
-			}
-			s.close();
-		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
-		}
-	}
-
-	private static void handleLine(String line) {
-		if(line.lastIndexOf("tag") > 0) {
-			Matcher matcher = pattern.matcher(line);
-			if(matcher.matches()) {
-				handleTag(matcher.group(1), matcher.group(2));
-			}
-		}
+		incrementInDB(key, value, 1);
 	}
 
 	private static void getConnection(String host, String db, String user, String password) {
@@ -58,38 +63,26 @@ public class PlanetReader {
 		}
 	}
 
-	private static String getLine(BufferedReader from) {
-		String line;
-		try {
-			line = from.readLine();
-		} catch (IOException ex) {
-			line = null;
-		}
-		return line;
-	}
-
-	private static BufferedReader getInput(String filename) {
-		BufferedReader input = null;
-		try {
-			input = new BufferedReader(new FileReader(filename));
-		} catch (FileNotFoundException ex) {
-			System.err.println("File not found");
-			System.exit(5);
-		}
-		return input;
-	}
-
-	public static void main(String[] args) {
+	public static void main (String args[]) throws Exception {
 		getConnection("localhost", "tagstat", "tagstat", "iyZscbZU");
-		pattern = Pattern.compile(" *<tag k=['\"](.*)['\"] v=['\"](.*)['\"].*");
-		BufferedReader input = getInput(args[0]);
-		String line;
 
-		line = "";
-		while(line != null) {
-			handleLine(line);
-			line = getLine(input);
-		}
+		Statement s = conn.createStatement();
+		s.executeUpdate("ALTER TABLE tagpairs ADD COLUMN newcount INT DEFAULT 0 AFTER count");
+
+		XMLReader xr = XMLReaderFactory.createXMLReader();
+		PlanetReader handler = new PlanetReader();
+		xr.setContentHandler(handler);
+		xr.setErrorHandler(handler);
+
+		FileReader r = new FileReader(args[0]);
+		xr.parse(new InputSource(r));
+
+		s.executeUpdate("UPDATE tagpairs SET count=newcount");
+		s.executeUpdate("ALTER TABLE tagpairs DROP COLUMN newcount");
+
+	}
+
+	public PlanetReader() {
+		super();
 	}
 }
-

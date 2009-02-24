@@ -20,6 +20,10 @@ WINDRES=	${ARCH}-windres
 # enable this to test the experimental route support
 #CFLAGS += -DROUTE_TEST
 
+# enable this to force gosmore into headless mode (gosmore will also
+# be put in headless mode if gtk+-2.0 isn't available)
+#CFLAGS += -DHEADLESS
+
 ifneq (${OS},Windows_NT)
 EXTRA=`pkg-config --cflags --libs gtk+-2.0 || echo -D HEADLESS`
 XMLFLAGS=`pkg-config --cflags libxml-2.0 || echo -I /usr/include/libxml2` \

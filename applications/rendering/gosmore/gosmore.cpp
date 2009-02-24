@@ -10,12 +10,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <assert.h>
 #include <math.h>
 #include <time.h>
 #ifndef _WIN32
 #include <sys/mman.h>
-#include <libxml/xmlreader.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/types.h>
@@ -68,7 +66,6 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <string>
-#include <vector>
 #include "libgosm.h"
 using namespace std;
 #define wchar_t char
@@ -135,10 +132,18 @@ const char *FindResource (const char *fname)
 {
   static string s;
   struct stat dummy;
+  // first check in current working directory
   if (stat (fname, &dummy) == 0) return fname;
+  // then check in $HOME
   s = (string) getenv ("HOME") + "/.gosmore/" + fname;
-  if (stat (s.c_str (), &dummy) != 0) s = (string) RES_DIR + fname;
-  return s.c_str ();
+  if (stat (s.c_str (), &dummy) == 0) return s.c_str();
+  // then check in RES_DIR
+  s = (string) RES_DIR + fname;
+  if (stat (s.c_str (), &dummy) == 0) return s.c_str();
+  // and then fall back on current working directory if it cannot be
+  // found anywhere else (this is so new files are created in the
+  // current working directory)
+  return fname;
 }
 #endif
 
@@ -1578,47 +1583,38 @@ void InitializeOptions (void)
 #endif // HEADLESS
 
 #ifndef _WIN32_WCE
-int UserInterface (int argc, char *argv[])
+int UserInterface (int argc, char *argv[], int nextarg)
 {
-/*  if (gmap) {
-    #ifdef __linux__
-    int ndCount[3];
-    fseek (gmap, -sizeof (ndCount), SEEK_END);
-    fread (ndCount, sizeof (ndCount), 1, gmap);
-    long pakSize = ftello64 (gmap);
-    data = (char *) mmap (NULL, ndCount[2],
-                   PROT_READ, MAP_SHARED, fileno (gmap), 0);
+  const char* pakfile = "";
+  // check if a pakfile was specified on the command line
+  if (argc == nextarg) {
+    pakfile=FindResource("gosmore.pak");
+  } else {
+    pakfile=argv[nextarg];
+  }
 
-    ndBase = (ndType *) ((char *)mmap (NULL, pakSize - (ndCount[2] & ~0xfff),
-    //ndCount[0] * sizeof (*ndBase),
-         PROT_READ, MAP_SHARED, fileno (gmap), ndCount[2] & ~0xfff) +
-       (ndCount[2] & 0xfff));
-    bucketsMin1 = ndCount[1];
-    hashTable = (int *)((char *)ndBase + pakSize - ndCount[2]) - bucketsMin1
-      - (bucketsMin1 >> 7) - 5;
-    #else
-    #endif
-  } */
   #if defined (__linux__)
-  FILE *gmap = fopen64 ("gosmore.pak", "r");
+  FILE *gmap = fopen64 (pakfile, "r");
   if (!gmap || fseek (gmap, 0, SEEK_END) != 0 ||
       !GosmInit (mmap (NULL, ftell (gmap), PROT_READ, MAP_SHARED,
                 fileno (gmap), 0), ftell (gmap))) {
   #else
-  GMappedFile *gmap = g_mapped_file_new ("gosmore.pak", FALSE, NULL);
+  GMappedFile *gmap = g_mapped_file_new (pakfile, FALSE, NULL);
   if (!gmap || !GosmInit (g_mapped_file_get_contents (gmap),
       g_mapped_file_get_length (gmap))) {
   #endif
-    fprintf (stderr, "Cannot read gosmore.pak\nYou can (re)build it from\n"
-      "the planet file e.g. bzip2 -d planet-...osm.bz2 | %s rebuild\n",
-      argv[0]);
+    fprintf (stderr, "Cannot read %s\n"
+	     "You can (re)build it from\n"
+	     "the planet file e.g. " 
+	     "bzip2 -d planet-...osm.bz2 | %s rebuild\n",
+	     pakfile, argv[0]);
     #ifndef HEADLESS
     gtk_init (&argc, &argv);
     gtk_dialog_run (GTK_DIALOG (gtk_message_dialog_new (NULL,
       GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-      "Cannot read gosmore.pak\nYou can (re)build it from\n"
+      "Cannot read %s\nYou can (re)build it from\n"
       "the planet file e.g. bzip2 -d planet-...osm.bz2 | %s rebuild\n",
-      argv[0])));
+      pakfile, argv[0])));
     #endif
     return 8;
   }
@@ -1650,7 +1646,7 @@ int UserInterface (int argc, char *argv[])
     return 0;
   }
 
-  printf ("%s is in the public domain and comes without warrantee\n",argv[0]);
+  printf ("%s is in the public domain and comes without warranty\n",argv[0]);
   #ifndef HEADLESS
   
   gtk_init (&argc, &argv);
@@ -1791,832 +1787,35 @@ int UserInterface (int argc, char *argv[])
   #endif // HEADLESS
   return 0;
 }
-#endif // !_WIN32_WCE
-
-/*--------------------------------- Rebuid code ---------------------------*/
-#ifndef _WIN32_WCE
-// These defines are only used during rebuild
-#define MAX_BUCKETS (1<<26)
-#define IDXGROUPS 676
-#define NGROUPS 60
-#define MAX_NODES 9000000 /* Max in a group */
-#define S2GROUPS 129 // Last group is reserved for lowzoom halfSegs
-#define NGROUP(x)  ((x) / MAX_NODES % NGROUPS + IDXGROUPS)
-#define S1GROUPS NGROUPS
-#define S1GROUP(x) ((x) / MAX_NODES % NGROUPS + IDXGROUPS + NGROUPS)
-#define S2GROUP(x) ((x) / (MAX_BUCKETS / (S2GROUPS - 1)) + IDXGROUPS + NGROUPS * 2)
-#define PAIRS (16 * 1024 * 1024)
-#define PAIRGROUPS 120
-#define PAIRGROUP(x) ((x) / PAIRS + S2GROUP (0) + S2GROUPS)
-#define PAIRGROUPS2 120
-#define PAIRGROUP2(x) ((x) / PAIRS + PAIRGROUP (0) + PAIRGROUPS)
-#define FIRST_LOWZ_OTHER (PAIRS * (PAIRGROUPS - 1))
-
-#define REBUILDWATCH(x) fprintf (stderr, "%3d %s\n", ++rebuildCnt, #x); x
-
-#define TO_HALFSEG -1 // Rebuild only
-
-struct halfSegType { // Rebuild only
-  int lon, lat, other, wayPtr;
-};
-
-struct nodeType {
-  int id, lon, lat;
-};
-
-char *data;
-
-inline nodeType *FindNode (nodeType *table, int id)
-{
-  unsigned hash = id;
-  for (;;) {
-    nodeType *n = &table[hash % MAX_NODES];
-    if (n->id < 0 || n->id == id) return n;
-    hash = hash * (__int64) 1664525 + 1013904223;
-  }
-}
-
-int HalfSegCmp (const halfSegType *a, const halfSegType *b)
-{
-  int lowz = a->other < -2 || FIRST_LOWZ_OTHER <= a->other;
-  int hasha = Hash (a->lon, a->lat, lowz), hashb = Hash (b->lon, b->lat, lowz);
-  return hasha != hashb ? hasha - hashb : a->lon != b->lon ? a->lon - b->lon :
-    a->lat != b->lat ? a->lat - b->lat :
-    (b->other < 0 && b[1].other < 0 ? 1 : 0) -
-    (a->other < 0 && a[1].other < 0 ? 1 : 0);
-} // First sort by hash bucket, then by lon, then by lat.
-// If they are all the same, the nodes goes in the front where so that it's
-// easy to iterate through the turn restrictions.
-
-int IdxCmp (const void *aptr, const void *bptr)
-{
-  char *ta = data + *(unsigned *)aptr, *tb = data + *(unsigned *)bptr;
-  int tag = TagCmp (ta, tb);
-  while (*--ta) {}
-  while (*--tb) {}
-  unsigned a = ZEnc ((unsigned)((wayType *)ta)[-1].clat >> 16, 
-                     (unsigned)((wayType *)ta)[-1].clon >> 16);
-  unsigned b = ZEnc ((unsigned)((wayType *)tb)[-1].clat >> 16, 
-                     (unsigned)((wayType *)tb)[-1].clon >> 16);
-  return tag ? tag : a < b ? -1 : 1;
-}
-
-/* To reduce the number of cache misses and disk seeks we need to construct
- the pack file so that waysTypes that are physically close to each other, are
- also close to each other in the file. We only know where ways are physically
- after the first pass, so the reordering is one done during a bbox rebuild.
- 
- Finding an optimal solution is quite similar to find a soluting to the
- traveling salesman problem. Instead we just place them in 2-D Hilbert curve
- order using a qsort. */
-typedef struct {
-  wayType *w;
-  int idx;
-} masterWayType;
-
-int MasterWayCmp (const void *a, const void *b)
-{
-  int r[2], t, s, i, lead;
-  for (i = 0; i < 2; i++) {
-    t = ZEnc (((masterWayType *)(i ? b : a))->w->clon >> 16,
-      ((unsigned)((masterWayType *)(i ? b : a))->w->clat) >> 16);
-    s = ((((unsigned)t & 0xaaaaaaaa) >> 1) | ((t & 0x55555555) << 1)) ^ ~t;
-    for (lead = 1 << 30; lead; lead >>= 2) {
-      if (!(t & lead)) t ^= ((t & (lead << 1)) ? s : ~s) & (lead - 1);
-    }
-    r[i] = ((t & 0xaaaaaaaa) >> 1) ^ t;
-  }
-  return r[0] < r[1] ? 1 : r[0] > r[1] ? -1 : 0;
-}
 
 int main (int argc, char *argv[])
 {
-  assert (layerBit3 < 32);
-  #ifndef _WIN32
-  int rebuildCnt = 0;
-  if (argc > 1) {
-    if ((argc != 6 && argc > 2) || stricmp (argv[1], "rebuild")) {
+  int nextarg = 1;
+  if (argc > 1 && stricmp(argv[1], "rebuild") == 0) {
+    if (argc != 6 && argc > 2) {
       fprintf (stderr, "Usage : %s [rebuild [bbox for 2 pass]]\n"
-      "See http://wiki.openstreetmap.org/index.php/gosmore\n", argv[0]);
+	       "See http://wiki.openstreetmap.org/index.php/gosmore\n", 
+	       argv[0]);
       return 1;
     }
-    FILE *pak, *masterf;
-    int styleCnt = firstElemStyle, ndStart;
+    nextarg++;
     int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
-    wayType *master = /* shutup gcc */ NULL;
+    const char* master = "";
     if (argc == 6) {
-      if (!(masterf = fopen64 ("master.pak", "r")) ||
-          fseek (masterf, -sizeof (ndStart), SEEK_END) != 0 ||
-          fread (&ndStart, sizeof (ndStart), 1, masterf) != 1 ||
-          (long)(master = (wayType *)mmap (NULL, ndStart, PROT_READ,
-                                MAP_SHARED, fileno (masterf), 0)) == -1) {
-        fprintf (stderr, "Unable to open master.pak for bbox rebuild\n");
-        return 4;
-      }
+      master = FindResource("master.pak");
       bbox[0] = Latitude (atof (argv[2]));
       bbox[1] = Longitude (atof (argv[3]));
       bbox[2] = Latitude (atof (argv[4]));
       bbox[3] = Longitude (atof (argv[5]));
+      nextarg += 4;
     }
-    if (!(pak = fopen64 ("gosmore.pak", "w+"))) {
-      fprintf (stderr, "Cannot create gosmore.pak\n");
-      return 2;
-    }
-    fwrite (&pakHead, sizeof (pakHead), 1, pak);
     
-    //------------------------- elemstyle.xml : --------------------------
-    const char *style_k[2 << STYLE_BITS], *style_v[2 << STYLE_BITS];
-    int ruleCnt = 0, ruleNr[2 << STYLE_BITS];
-    int defaultRestrict[2 << STYLE_BITS];
-    memset (defaultRestrict, 0, sizeof (defaultRestrict));
-    FILE *icons_csv = fopen (FindResource ("icons.csv"), "r");
-    xmlTextReaderPtr sXml = xmlNewTextReaderFilename (
-      FindResource ("elemstyles.xml"));
-    if (!sXml || !icons_csv) {
-      fprintf (stderr, "Either icons.csv or elemstyles.xml not found\n");
-      return 3;
-    }
-    styleStruct srec[2 << STYLE_BITS];
-    memset (&srec, 0, sizeof (srec));
-    for (int i = 0; i < int (sizeof (srec) / sizeof (srec[0])); i++) {
-      srec[i].lineColour = -1;
-      srec[i].areaColour = -1;
-      style_k[i] = style_v[i] = "";
-    }
-    /* If elemstyles contain these, we can delete these assignments : */
-    for (int i = restriction_no_right_turn;
-            i <= restriction_only_straight_on; i++) {
-      style_k[i] = "restriction";
-      srec[i].scaleMax = 1;
-      srec[i].lineColour = 0; // Make it match.
-    }
-    style_v[restriction_no_right_turn] = "no_right_turn";
-    style_v[restriction_no_left_turn] = "no_left_turn";
-    style_v[restriction_no_u_turn] = "no_u_turn";
-    style_v[restriction_no_straight_on] = "no_straight_on";
-    style_v[restriction_only_right_turn] = "only_right_turn";
-    style_v[restriction_only_left_turn] = "only_left_turn";
-    style_v[restriction_only_straight_on] = "only_straight_on";
+    rebuildpak(FindResource("gosmore.pak"), FindResource("elemstyles.xml"),
+	       FindResource("icons.csv"), master, bbox);
     
-    while (xmlTextReaderRead (sXml)) {
-      char *name = (char*) xmlTextReaderName (sXml);
-      //xmlChar *val = xmlTextReaderValue (sXml);
-      if (xmlTextReaderNodeType (sXml) == XML_READER_TYPE_ELEMENT) {
-        if (strcasecmp (name, "scale_max") == 0) {
-          while (xmlTextReaderRead (sXml) && // memory leak :
-            xmlStrcmp (xmlTextReaderName (sXml), BAD_CAST "#text") != 0) {}
-          srec[styleCnt].scaleMax = atoi ((char *) xmlTextReaderValue (sXml));
-        }
-        while (xmlTextReaderMoveToNextAttribute (sXml)) {
-          char *n = (char *) xmlTextReaderName (sXml);
-          char *v = (char *) xmlTextReaderValue (sXml);
-          if (strcasecmp (name, "condition") == 0) {
-            if (strcasecmp (n, "k") == 0) style_k[styleCnt] = strdup (v);
-            if (strcasecmp (n, "v") == 0) style_v[styleCnt] = strdup (v);
-          }                                     // memory leak -^
-          if (strcasecmp (name, "line") == 0) {
-            if (strcasecmp (n, "width") == 0) {
-              srec[styleCnt].lineWidth = atoi (v);
-            }
-            if (strcasecmp (n, "realwidth") == 0) {
-              srec[styleCnt].lineRWidth = atoi (v);
-            }
-            if (strcasecmp (n, "colour") == 0) {
-              sscanf (v, "#%x", &srec[styleCnt].lineColour);
-            }
-            if (strcasecmp (n, "colour_bg") == 0) {
-              sscanf (v, "#%x", &srec[styleCnt].lineColourBg);
-            }
-            srec[styleCnt].dashed = srec[styleCnt].dashed ||
-              (strcasecmp (n, "dashed") == 0 && strcasecmp (v, "true") == 0);
-          }
-          if (strcasecmp (name, "area") == 0) {
-            if (strcasecmp (n, "colour") == 0) {
-              sscanf (v, "#%x", &srec[styleCnt].areaColour);
-            }
-          }
-          if (strcasecmp (name, "icon") == 0) {
-            if (strcasecmp (n, "src") == 0) {
-              while (v[strcspn ((char *) v, "/ ")]) {
-                v[strcspn ((char *) v, "/ ")] = '_';
-              }
-              char line[80], fnd = FALSE;
-              static const char *set[] = { "classic.big_", "classic.small_",
-                "square.big_", "square.small_" };
-              for (int i = 0; i < 4; i++) {
-                srec[styleCnt].x[i * 4 + 2] = srec[styleCnt].x[i * 4 + 3] = 1;
-              // Default to 1x1 dummys
-                int slen = strlen (set[i]), vlen = strlen (v);
-                rewind (icons_csv);
-                while (fgets (line, sizeof (line) - 1, icons_csv)) {
-                  if (strncmp (line, set[i], slen) == 0 &&
-                      strncmp (line + slen, v, vlen - 1) == 0) {
-                    sscanf (line + slen + vlen, ":%d:%d:%d:%d",
-                      srec[styleCnt].x + i * 4, srec[styleCnt].x + i * 4 + 1,
-                      srec[styleCnt].x + i * 4 + 2,
-                      srec[styleCnt].x + i * 4 + 3);
-                    fnd = TRUE;
-                  }
-                }
-              }
-              if (!fnd) fprintf (stderr, "Icon %s not found\n", v);
-            }
-          }
-          if (strcasecmp (name, "routing") == 0 && atoi (v) > 0) {
-            #define M(field) if (strcasecmp (n, #field) == 0) {\
-              defaultRestrict[styleCnt] |= 1 << field ## R; \
-              srec[styleCnt].aveSpeed[field ## R] = atof (v); \
-            }
-            RESTRICTIONS
-            #undef M
-          }
-          
-          xmlFree (v);
-          xmlFree (n);
-        }
-      }
-      else if (xmlTextReaderNodeType (sXml) == XML_READER_TYPE_END_ELEMENT
-                  && strcasecmp ((char *) name, "rule") == 0) {
-        int ipos;
-        #define s(k,v,shortname,extraTags) { #k, #v },
-        static const char *stylet[][2] = { STYLES };
-        #undef s
-        for (ipos = 0; ipos < firstElemStyle; ipos++) {
-          if (strcmp (stylet[ipos][0], style_k[styleCnt]) == 0 && 
-              strcmp (stylet[ipos][1], style_v[styleCnt]) == 0) break;
-        }
-        ruleNr[ipos < firstElemStyle ? ipos : styleCnt] = ruleCnt++;
-        if (ipos < firstElemStyle) {
-          memcpy (&srec[ipos], &srec[styleCnt], sizeof (srec[ipos]));
-          memcpy (&srec[styleCnt], &srec[styleCnt + 1], sizeof (srec[0]));
-          defaultRestrict[ipos] = defaultRestrict[styleCnt];
-          defaultRestrict[styleCnt] = 0;
-          style_k[ipos] = style_k[styleCnt];
-          style_v[ipos] = style_v[styleCnt];
-        }
-        else if (styleCnt < (2 << STYLE_BITS) - 2) styleCnt++;
-        else fprintf (stderr, "Too many rules. Increase STYLE_BITS\n");
-      }
-      xmlFree (name);
-      //xmlFree (val);      
-    }
-    for (int i = 0; i < layerBit1; i++) {
-      double max = 0;
-      for (int j = 0; j < styleCnt; j++) {
-        if (srec[j].aveSpeed[i] > max) max = srec[j].aveSpeed[i];
-      }
-      for (int j = 0; j < styleCnt; j++) {
-        if (srec[j].aveSpeed[i] == 0) { // e.g. highway=foot motorcar=yes
-          for (int k = 0; k < layerBit1; k++) {
-            if (srec[j].aveSpeed[i] < srec[j].aveSpeed[k]) {
-              srec[j].aveSpeed[i] = srec[j].aveSpeed[k];
-            } // As fast as any other vehicle,
-          } // without breaking our own speed limit :
-          if (srec[j].aveSpeed[i] > max) srec[j].aveSpeed[i] = max;
-        }
-        srec[j].invSpeed[i] = max / srec[j].aveSpeed[i];
-      }
-    }
-    fwrite (&srec, sizeof (srec[0]), styleCnt + 1, pak);    
-    xmlFreeTextReader (sXml);
+  }
 
-    //-------------------------- OSM Data File : ---------------------------
-    xmlTextReaderPtr xml = xmlReaderForFd (STDIN_FILENO, "", NULL, 0);
-//    xmlTextReaderPtr xml = xmlReaderForFile ("/dosc/osm/r28_2.osm", "", 0);
-    FILE *groupf[PAIRGROUP2 (0) + PAIRGROUPS2];
-    char groupName[PAIRGROUP2 (0) + PAIRGROUPS2][9];
-    for (int i = 0; i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
-      sprintf (groupName[i], "%c%c%d.tmp", i / 26 % 26 + 'a', i % 26 + 'a',
-        i / 26 / 26);
-      if (i < S2GROUP (0) && !(groupf[i] = fopen64 (groupName[i], "w+"))) {
-        fprintf (stderr, "Cannot create temporary file.\nPossibly too many"
-          " open files, in which case you must run ulimit -n or recompile\n");
-        return 9;
-      }
-    }
-    
-    #if 0 // For making sure we have a Hilbert curve
-    bucketsMin1 = MAX_BUCKETS - 1;
-    for (int x = 0; x < 16; x++) {
-      for (int y = 0; y < 16; y++) {
-        printf ("%7d ", Hash (x << TILEBITS, y << TILEBITS));
-      }
-      printf ("\n");
-    }
-    #endif
-    
-    nodeType nd;
-    halfSegType s[2];
-    int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
-    int yesMask = 0, noMask = 0, *wayFseek = NULL;
-    int lowzList[1000], lowzListCnt = 0, wStyle = styleCnt, ref = 0, role = 0;
-    int member[2], relationType = 0;
-    vector<int> wayId, wayMember, cycleNet;
-    s[0].lat = 0; // Should be -1 ?
-    s[0].other = -2;
-    s[1].other = -1;
-    wayType w;
-    w.clat = 0;
-    w.clon = 0;
-    w.dlat = INT_MIN;
-    w.dlon = INT_MIN;
-    w.bits = 0;
-    w.destination = 0;
-    
-    if (argc >= 6) {
-      masterWayType *masterWay = (masterWayType *) malloc (
-        sizeof (*masterWay) * (ndStart / (sizeof (wayType) + 4)));
-
-      unsigned i = 0, offset = ftell (pak), wcnt;
-      wayType *m = (wayType *)(((char *)master) + offset);
-      for (wcnt = 0; (char*) m < (char*) master + ndStart; wcnt++) {
-        if (bbox[0] <= m->clat + m->dlat && bbox[1] <= m->clon + m->dlon &&
-            m->clat - m->dlat <= bbox[2] && m->clon - m->dlon <= bbox[3] &&
-            StyleNr (m) < styleCnt) {
-          masterWay[i].idx = wcnt;
-          masterWay[i++].w = m;
-        }
-        m = (wayType*)((char*)m +
-          ((1 + strlen ((char*)(m + 1) + 1) + 1 + 3) & ~3)) + 1;
-      }
-      qsort (masterWay, i, sizeof (*masterWay), MasterWayCmp);
-      assert (wayFseek = (int*) calloc (sizeof (*wayFseek),
-        ndStart / (sizeof (wayType) + 4)));
-      for (unsigned j = 0; j < i; j++) {
-        wayFseek[masterWay[j].idx] = offset;
-        offset += sizeof (*masterWay[j].w) +
-          ((1 + strlen ((char*)(masterWay[j].w + 1) + 1) + 1 + 3) & ~3);
-      }
-      wayFseek[wcnt] = offset;
-      fflush (pak);
-      ftruncate (fileno (pak), offset); // fflush first ?
-      free (masterWay);
-      fseek (pak, *wayFseek, SEEK_SET);
-    }
-    
-    char *tag_k = NULL, *tags = (char *) BAD_CAST xmlStrdup (BAD_CAST "");
-    char *nameTag = NULL;
-    REBUILDWATCH (while (xmlTextReaderRead (xml))) {
-      char *name = (char *) BAD_CAST xmlTextReaderName (xml);
-      //xmlChar *value = xmlTextReaderValue (xml); // always empty
-      if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_ELEMENT) {
-        isNode = stricmp (name, "way") != 0 && stricmp (name, "relation") != 0
-                 && (stricmp (name, "node") == 0 || isNode);
-        while (xmlTextReaderMoveToNextAttribute (xml)) {
-          char *aname = (char *) BAD_CAST xmlTextReaderName (xml);
-          char *avalue = (char *) BAD_CAST xmlTextReaderValue (xml);
-  //        if (xmlStrcasecmp (name, "node") == 0) 
-          if (stricmp (aname, "id") == 0) nd.id = atoi (avalue);
-          if (stricmp (aname, "lat") == 0) nd.lat = Latitude (atof (avalue));
-          if (stricmp (aname, "lon") == 0) nd.lon = Longitude (atof (avalue));
-          if (stricmp (aname, "ref") == 0) ref = atoi (avalue);
-          if (stricmp (aname, "type") == 0) relationType = avalue[0];
-          if (stricmp (aname, "role") == 0) role = avalue[0];
-          #define K_IS(x) (stricmp (tag_k, x) == 0)
-          #define V_IS(x) (stricmp (avalue, x) == 0)
-          if (stricmp (aname, "v") == 0) {
-            if (K_IS ("route") && V_IS ("bicycle")) cycleNet.insert
-                  (cycleNet.end (), wayMember.begin (), wayMember.end ());
-            if ((!wayFseek || *wayFseek) &&
-                 (K_IS ("lcn_ref") || K_IS ("rcn_ref") || K_IS ("ncn_ref"))) {
-              cycleNet.push_back (ftell (pak));
-            }
-          
-            int newStyle = 0;
-            for (; newStyle < styleCnt && !(K_IS (style_k[newStyle]) &&
-              (style_v[newStyle][0] == '\0' || V_IS (style_v[newStyle])) &&
-              (isNode ? srec[newStyle].x[2] :
-                srec[newStyle].lineColour != -1 ||
-                srec[newStyle].areaColour != -1)); newStyle++) {}
-            // elemstyles rules are from most important to least important
-            // Ulf has placed rules at the beginning that will highlight
-            // errors, like oneway=true -> icon=deprecated. So they must only
-            // match nodes when no line or area colour was given and only
-            // match ways when no icon was given.
-            if (K_IS ("junction") && V_IS ("roundabout")) {
-              yesMask |= (1 << onewayR) | (1 << roundaboutR);
-            }
-            else if (newStyle < styleCnt && (wStyle == styleCnt ||
-                     ruleNr[wStyle] > ruleNr[newStyle])) wStyle = newStyle;
-
-            if (K_IS ("name")) {
-              nameTag = avalue;
-              avalue = (char*) xmlStrdup (BAD_CAST "");
-            }
-            else if (K_IS ("ref")) {
-              xmlChar *tmp = xmlStrdup (BAD_CAST "\n");
-              tmp = xmlStrcat (BAD_CAST tmp, BAD_CAST avalue);
-              avalue = tags; // Old 'tags' will be freed
-              tags = (char*) xmlStrcat (tmp, BAD_CAST tags);
-              // name always first tag.
-            }
-            else if (K_IS ("layer")) w.bits |= atoi (avalue) << 29;
-            
-            #define M(field) else if (K_IS (#field)) { \
-                if (V_IS ("yes") || V_IS ("1") || V_IS ("permissive") || \
-                    V_IS ("true")) { \
-                  yesMask |= 1 << field ## R; \
-                } else if (V_IS ("no") || V_IS ("0") || V_IS ("private")) { \
-                  noMask |= 1 << field ## R; \
-                } \
-                else if (V_IS ("destination")) { \
-                  yesMask |= 1 << field ## R; \
-                  w.destination |= 1 << field ## R; \
-                } \
-              }
-            RESTRICTIONS
-            #undef M
-            
-            else if (!V_IS ("no") && !V_IS ("false") && 
-              !K_IS ("sagns_id") && !K_IS ("sangs_id") && 
-              !K_IS ("is_in") && !V_IS ("residential") &&
-              !V_IS ("unclassified") && !V_IS ("tertiary") &&
-              !V_IS ("secondary") && !V_IS ("primary") && // Esp. ValidateMode
-              !V_IS ("junction") && /* Not approved and when it isn't obvious
-                from the ways that it's a junction, the tag will often be
-                something ridiculous like junction=junction ! */
-// blocked as highway:  !V_IS ("mini_roundabout") && !V_IS ("roundabout") &&
-              !V_IS ("traffic_signals") && !K_IS ("editor") &&
-              !K_IS ("class") /* esp. class=node */ &&
-              !K_IS ("type") /* This is only for boules, but we drop it
-                because it's often misused */ &&
-    !V_IS ("National-Land Numerical Information (Railway) 2007, MLIT Japan") &&
-    !V_IS ("National-Land Numerical Information (Lake and Pond) 2005, MLIT Japan") &&
-    !V_IS ("National-Land Numerical Information (Administrative area) 2007, MLIT Japan") &&
-              !V_IS ("coastline_old") &&
-              !K_IS ("upload_tag") && !K_IS ("admin_level") &&
-              (!isNode || (!K_IS ("highway") && !V_IS ("water") &&
-                           !K_IS ("abutters") && !V_IS ("coastline")))) {
-              // First block out tags that will bloat the index, will not make
-              // sense or are implied.
-
-              // tags = xmlStrcat (tags, tag_k); // with this it's
-              // tags = xmlStrcat (tags, "="); // it's amenity=fuel
-              tags = (char *) xmlStrcat (BAD_CAST tags, BAD_CAST "\n");
-              tags = (char *) BAD_CAST xmlStrcat (BAD_CAST tags,  
-                V_IS ("yes") || V_IS ("1") || V_IS ("true")
-                ? BAD_CAST tag_k : BAD_CAST avalue);
-            }
-          }
-          if (stricmp (aname, "k") == 0) {
-            xmlFree (tag_k);
-            tag_k = avalue;
-            if (strncasecmp (tag_k, "tiger:", 6) == 0 ||
-                K_IS ("created_by") || K_IS ("converted_by") ||
-                strncasecmp (tag_k, "source", 6) == 0 ||
-                strncasecmp (tag_k, "AND_", 4) == 0 ||
-                strncasecmp (tag_k, "AND:", 4) == 0 ||
-                strncasecmp (tag_k, "KSJ2:", 4) == 0 || K_IS ("note:ja") ||
-                K_IS ("attribution") /* Mostly MassGIS */ ||
-                K_IS ("time") || K_IS ("ele") || K_IS ("hdop") ||
-                K_IS ("sat") || K_IS ("pdop") || K_IS ("speed") ||
-                K_IS ("course") || K_IS ("fix") || K_IS ("vdop")) {
-              xmlFree (aname);
-              break;
-            }
-          }
-          else xmlFree (avalue);
-          xmlFree (aname);
-        } /* While it's an attribute */
-        if (relationType == 'w' && stricmp (name, "member") == 0) {
-          for (unsigned i = 0; i < wayId.size (); i += 2) {
-            if (ref == wayId[i]) wayMember.push_back (wayId[i + 1]);
-          }
-        }
-        if (!wayFseek || *wayFseek) {
-          if (stricmp (name, "member") == 0 && role != 'v') {
-            for (unsigned i = 0; i < wayId.size (); i += 2) {
-              if (ref == wayId[i]) member[role == 'f' ? 0 : 1] = wayId[i + 1];
-            }
-          }
-          else if (stricmp (name, "nd") == 0 ||
-                   stricmp (name, "member") == 0) {
-            if (s[0].lat) {
-              fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
-            }
-            s[0].wayPtr = ftell (pak);
-            s[1].wayPtr = TO_HALFSEG;
-            s[1].other = s[0].other + 1;
-            s[0].other = nOther++ * 2;
-            s[0].lat = ref;
-            if (lowzListCnt >=
-                int (sizeof (lowzList) / sizeof (lowzList[0]))) lowzListCnt--;
-            lowzList[lowzListCnt++] = ref;
-          }
-        }
-        if (stricmp (name, "node") == 0 && bbox[0] <= nd.lat &&
-            bbox[1] <= nd.lon && nd.lat <= bbox[2] && nd.lon <= bbox[3]) {
-          fwrite (&nd, sizeof (nd), 1, groupf[NGROUP (nd.id)]);
-        }
-      }
-      if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_END_ELEMENT) {
-        int nameIsNode = stricmp (name, "node") == 0;
-        int nameIsRelation = stricmp (name, "relation") == 0;
-        if (nameIsRelation) wayMember.clear ();
-        if (stricmp (name, "way") == 0 || nameIsNode || nameIsRelation) {
-          w.bits += wStyle;
-          if (!nameIsRelation && !nameIsNode) {
-            wayId.push_back (nd.id);
-            wayId.push_back (ftell (pak));
-          }
-          if (nameIsRelation) {
-            xmlFree (nameTag);
-            char str[21];
-            sprintf (str, "%d %d", member[0], member[1]);
-            nameTag = (char *) xmlStrdup (BAD_CAST str);
-          }
-          if (nameTag) {
-            char *oldTags = tags;
-            tags = (char *) xmlStrdup (BAD_CAST "\n");
-            tags = (char *) xmlStrcat (BAD_CAST tags, BAD_CAST nameTag);
-            tags = (char *) xmlStrcat (BAD_CAST tags, BAD_CAST oldTags);
-            xmlFree (oldTags);
-            xmlFree (nameTag);
-            nameTag = NULL;
-          }
-          if (!nameIsNode || strlen (tags) > 8 || wStyle != styleCnt) {
-            if (nameIsNode && (!wayFseek || *wayFseek)) {
-              if (s[0].lat) { // Flush s
-                fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
-              }
-              s[0].lat = nd.id; // Create 2 fake halfSegs
-              s[0].wayPtr = ftell (pak);
-              s[1].wayPtr = TO_HALFSEG;
-              s[0].other = -2; // No next
-              s[1].other = -1; // No prev
-              lowzList[lowzListCnt++] = nd.id;
-            }
-            if (s[0].other > -2) { // Not lowz
-              if (s[0].other >= 0) nOther--; // Reclaim unused 'other' number
-              s[0].other = -2;
-            }
-
-            if (srec[StyleNr (&w)].scaleMax > 10000000 &&
-                                                  (!wayFseek || *wayFseek)) {
-              for (int i = 0; i < lowzListCnt; i++) {
-                if (i % 10 && i < lowzListCnt - 1) continue; // Skip some
-                if (s[0].lat) { // Flush s
-                  fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
-                }
-                s[0].lat = lowzList[i];
-                s[0].wayPtr = ftell (pak);
-                s[1].wayPtr = TO_HALFSEG;
-                s[1].other = i == 0 ? -4 : lowzOther++;
-                s[0].other = i == lowzListCnt -1 ? -4 : lowzOther++;
-              }
-            }
-            lowzListCnt = 0;
-          
-            if (StyleNr (&w) < styleCnt && stricmp (style_v[StyleNr (&w)],
-                                     "city") == 0 && tags[0] == '\n') {
-              int nlen = strcspn (tags + 1, "\n");
-              char *n = (char *) xmlMalloc (strlen (tags) + 1 + nlen + 5 + 1);
-              strcpy (n, tags);
-              memcpy (n + strlen (tags), tags, 1 + nlen);
-              strcpy (n + strlen (tags) + 1 + nlen, " City");
-              //fprintf (stderr, "Mark : %s\n", n + strlen (tags) + 1);
-              xmlFree (tags);
-              tags = n; 
-            }
-            w.bits |= ~noMask & (yesMask | (defaultRestrict[StyleNr (&w)] &
-                          ((noMask & (1 << accessR)) ? (1 << onewayR) : ~0)));
-            if (w.destination & (1 << accessR)) w.destination = ~0;
-            char *compact = tags[0] == '\n' ? tags + 1 : tags;
-            if (!wayFseek || *wayFseek) {
-              fwrite (&w, sizeof (w), 1, pak);
-              fwrite (tags + strlen (tags), 1, 1, pak); // '\0' at the front
-              for (char *ptr = tags; *ptr != '\0'; ) {
-                if (*ptr++ == '\n') {
-                  unsigned idx = ftell (pak) + ptr - 1 - tags, grp;
-                  for (grp = 0; grp < IDXGROUPS - 1 &&
-                     TagCmp (groupName[grp], ptr) < 0; grp++) {}
-                  fwrite (&idx, sizeof (idx), 1, groupf[grp]);
-                }
-              }
-              fwrite (compact, strlen (compact) + 1, 1, pak);
-            
-              // Write variable length tags and align on 4 bytes
-              if (ftell (pak) & 3) {
-                fwrite (tags, 4 - (ftell (pak) & 3), 1, pak);
-              }
-            }
-            if (wayFseek) fseek (pak, *++wayFseek, SEEK_SET);
-            //xmlFree (tags); // Just set tags[0] = '\0'
-            //tags = (char *) xmlStrdup (BAD_CAST "");
-          }
-          tags[0] = '\0'; // Erase nodes with short names
-          yesMask = noMask = 0;
-          w.bits = 0;
-          w.destination = 0;
-          wStyle = styleCnt;
-        }
-      } // if it was </...>
-      xmlFree (name);
-    } // While reading xml
-    wayId.clear ();
-    if (s[0].lat && (!wayFseek || *wayFseek)) {
-      fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
-    }
-    assert (nOther * 2 < FIRST_LOWZ_OTHER);
-    bucketsMin1 = (nOther >> 5) | (nOther >> 4);
-    bucketsMin1 |= bucketsMin1 >> 2;
-    bucketsMin1 |= bucketsMin1 >> 4;
-    bucketsMin1 |= bucketsMin1 >> 8;
-    bucketsMin1 |= bucketsMin1 >> 16;
-    assert (bucketsMin1 < MAX_BUCKETS);
-    
-    for (int i = 0; i < IDXGROUPS; i++) fclose (groupf[i]);
-    for (int i = S2GROUP (0); i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
-      assert (groupf[i] = fopen64 (groupName[i], "w+"));
-    } // Avoid exceeding ulimit
-    
-    nodeType *nodes = (nodeType *) malloc (sizeof (*nodes) * MAX_NODES);
-    if (!nodes) {
-      fprintf (stderr, "Out of memory. Reduce MAX_NODES and increase GRPs\n");
-      return 3;
-    }
-    for (int i = NGROUP (0); i < NGROUP (0) + NGROUPS; i++) {
-      rewind (groupf[i]);
-      memset (nodes, -1, sizeof (*nodes) * MAX_NODES);
-      REBUILDWATCH (while (fread (&nd, sizeof (nd), 1, groupf[i]) == 1)) {
-        memcpy (FindNode (nodes, nd.id), &nd, sizeof (nd));
-      }
-      fclose (groupf[i]);
-      unlink (groupName[i]);
-      rewind (groupf[i + NGROUPS]);
-      REBUILDWATCH (while (fread (s, sizeof (s), 1, groupf[i + NGROUPS])
-          == 1)) {
-        nodeType *n = FindNode (nodes, s[0].lat);
-        //if (n->id == -1) printf ("** Undefined node %d\n", s[0].lat);
-        s[0].lat = s[1].lat = n->id != -1 ? n->lat : INT_MIN;
-        s[0].lon = s[1].lon = n->id != -1 ? n->lon : INT_MIN;
-        fwrite (s, sizeof (s), 1,
-          groupf[-2 <= s[0].other && s[0].other < FIRST_LOWZ_OTHER
-            ? S2GROUP (Hash (s[0].lon, s[0].lat)) : PAIRGROUP (0) - 1]);
-      }
-      fclose (groupf[i + NGROUPS]);
-      unlink (groupName[i + NGROUPS]);
-    }
-    free (nodes);
-    
-    struct {
-      int nOther1, final;
-    } offsetpair;
-    offsetpair.final = 0;
-    
-    hashTable = (int *) malloc (sizeof (*hashTable) *
-      (bucketsMin1 + (bucketsMin1 >> 7) + 3));
-    int bucket = -1;
-    for (int i = S2GROUP (0); i < S2GROUP (0) + S2GROUPS; i++) {
-      fflush (groupf[i]);
-      size_t size = ftell (groupf[i]);
-      rewind (groupf[i]);
-      REBUILDWATCH (halfSegType *seg = (halfSegType *) mmap (NULL, size,
-        PROT_READ | PROT_WRITE, MAP_SHARED, fileno (groupf[i]), 0));
-      qsort (seg, size / sizeof (s), sizeof (s),
-        (int (*)(const void *, const void *))HalfSegCmp);
-      for (int j = 0; j < int (size / sizeof (seg[0])); j++) {
-        if (!(j & 1)) {
-          while (bucket < Hash (seg[j].lon, seg[j].lat,
-                               i >= S2GROUP (0) + S2GROUPS - 1)) {
-            hashTable[++bucket] = offsetpair.final / 2;
-          }
-        }
-        offsetpair.nOther1 = seg[j].other;
-        if (seg[j].other >= 0) fwrite (&offsetpair, sizeof (offsetpair), 1,
-          groupf[PAIRGROUP (offsetpair.nOther1)]);
-        offsetpair.final++;
-      }
-      munmap (seg, size);
-    }
-    while (bucket < bucketsMin1 + (bucketsMin1 >> 7) + 2) {
-      hashTable[++bucket] = offsetpair.final / 2;
-    }
-    
-    ndStart = ftell (pak);
-    
-    int *pairing = (int *) malloc (sizeof (*pairing) * PAIRS);
-    for (int i = PAIRGROUP (0); i < PAIRGROUP (0) + PAIRGROUPS; i++) {
-      REBUILDWATCH (rewind (groupf[i]));
-      while (fread (&offsetpair, sizeof (offsetpair), 1, groupf[i]) == 1) {
-        pairing[offsetpair.nOther1 % PAIRS] = offsetpair.final;
-      }
-      int pairs = ftell (groupf[i]) / sizeof (offsetpair);
-      for (int j = 0; j < pairs; j++) {
-        offsetpair.final = pairing[j ^ 1];
-        offsetpair.nOther1 = pairing[j];
-        fwrite (&offsetpair, sizeof (offsetpair), 1,
-          groupf[PAIRGROUP2 (offsetpair.nOther1)]);
-      }
-      fclose (groupf[i]);
-      unlink (groupName[i]);
-    }
-    free (pairing);
-    
-    int s2grp = S2GROUP (0), pairs;
-    halfSegType *seg = (halfSegType *) malloc (PAIRS * sizeof (*seg));
-    assert (seg /* Out of memory. Reduce PAIRS for small scale rebuilds. */);
-    ndType ndWrite;
-    for (int i = PAIRGROUP2 (0); i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
-      REBUILDWATCH (for (pairs = 0; pairs < PAIRS &&
-                                s2grp < S2GROUP (0) + S2GROUPS; )) {
-        if (fread (&seg[pairs], sizeof (seg[0]), 2, groupf [s2grp]) == 2) {
-          pairs += 2;
-        }
-        else {
-          fclose (groupf[s2grp]);
-          unlink (groupName[s2grp]);
-          s2grp++;
-        }
-      }
-      rewind (groupf[i]);
-      while (fread (&offsetpair, sizeof (offsetpair), 1, groupf[i]) == 1) {
-        seg[offsetpair.nOther1 % PAIRS].other = offsetpair.final;
-      }
-      for (int j = 0; j < pairs; j += 2) {
-        ndWrite.wayPtr = seg[j].wayPtr;
-        ndWrite.lat = seg[j].lat;
-        ndWrite.lon = seg[j].lon;
-        ndWrite.other[0] = seg[j].other >> 1; // Right shift handles -1 the
-        ndWrite.other[1] = seg[j + 1].other >> 1; // way we want.
-        fwrite (&ndWrite, sizeof (ndWrite), 1, pak);
-      }
-      fclose (groupf[i]);
-      unlink (groupName[i]);
-    }
-    free (seg);
-    
-    fflush (pak);
-    data = (char *) mmap (NULL, ndStart,
-      PROT_READ | PROT_WRITE, MAP_SHARED, fileno (pak), 0);
-    fseek (pak, ndStart, SEEK_SET);
-    REBUILDWATCH (for (unsigned i = 0; i < cycleNet.size (); i++)) {
-      wayType *way = (wayType*) (data + cycleNet[i]);
-      for (int j = StyleNr (way) + 1; j < styleCnt; j++) {
-        if (strncasecmp (style_k[j], "cyclenet", 8) == 0 &&
-            stricmp (style_k[j] + 8, style_k[StyleNr (way)]) == 0 &&
-            stricmp (style_v[j], style_v[StyleNr (way)]) == 0) {
-          way->bits = (way->bits & ~((2 << STYLE_BITS) - 1)) | j;
-        }
-      }
-    }
-    REBUILDWATCH (while (fread (&ndWrite, sizeof (ndWrite), 1, pak) == 1)) {
-      //if (bucket > Hash (ndWrite.lon, ndWrite.lat)) printf ("unsorted !\n");
-      wayType *way = (wayType*) (data + ndWrite.wayPtr);
-      
-      /* The difficult way of calculating bounding boxes,
-         namely to adjust the centerpoint (it does save us a pass) : */
-      // Block lost nodes with if (ndWrite.lat == INT_MIN) continue;
-      if (way->clat + way->dlat < ndWrite.lat) {
-        way->dlat = way->dlat < 0 ? 0 : // Bootstrap
-          (way->dlat - way->clat + ndWrite.lat) / 2;
-        way->clat = ndWrite.lat - way->dlat;
-      }
-      if (way->clat - way->dlat > ndWrite.lat) {
-        way->dlat = (way->dlat + way->clat - ndWrite.lat) / 2;
-        way->clat = ndWrite.lat + way->dlat;
-      }
-      if (way->clon + way->dlon < ndWrite.lon) {
-        way->dlon = way->dlon < 0 ? 0 : // Bootstrap
-          (way->dlon - way->clon + ndWrite.lon) / 2;
-        way->clon = ndWrite.lon - way->dlon;
-      }
-      if (way->clon - way->dlon > ndWrite.lon) {
-        way->dlon = (way->dlon + way->clon - ndWrite.lon) / 2;
-        way->clon = ndWrite.lon + way->dlon;
-      }
-    }
-    #ifndef LAMBERTUS
-    REBUILDWATCH (for (int i = 0; i < IDXGROUPS; i++)) {
-      assert (groupf[i] = fopen64 (groupName[i], "r+"));
-      fseek (groupf[i], 0, SEEK_END);
-      int fsize = ftell (groupf[i]);
-      fflush (groupf[i]);
-      unsigned *idx = (unsigned *) mmap (NULL, fsize,
-        PROT_READ | PROT_WRITE, MAP_SHARED, fileno (groupf[i]), 0);
-      qsort (idx, fsize / sizeof (*idx), sizeof (*idx), IdxCmp);
-      fwrite (idx, fsize, 1, pak);
-      #if 0
-      for (int j = 0; j < fsize / (int) sizeof (*idx); j++) {
-        printf ("%.*s\n", strcspn (data + idx[j], "\n"), data + idx[j]);
-      }
-      #endif
-      munmap (idx, fsize);
-      fclose (groupf[i]);
-      unlink (groupName[i]);
-    }
-    #endif // LAMBERTUS
-//    printf ("ndCount=%d\n", ndCount);
-    munmap (data, ndStart);
-    fwrite (hashTable, sizeof (*hashTable),
-      bucketsMin1 + (bucketsMin1 >> 7) + 3, pak);
-    fwrite (&bucketsMin1, sizeof (bucketsMin1), 1, pak);
-    fwrite (&ndStart, sizeof (ndStart), 1, pak); /* for ndBase */
-    fclose (pak);
-    free (hashTable);
-  } /* if rebuilding */
-  #endif // _WIN32
-  return UserInterface (argc, argv);
+  return UserInterface (argc, argv, nextarg);
 
   // close the logfile if it has been opened
   if (logFP(false)) fclose(logFP(false));

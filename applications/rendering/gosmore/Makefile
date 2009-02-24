@@ -1,6 +1,5 @@
 # Written by Nic Roets with contributions by Petter Reinholdtsen
 # Placed in the public domain
-# Don't run mkicons.sh until my patched pnmmontage is part of debian-netpbm
 
 TODAY := `exec date +%Y%m%d`
 VERSION = 0.0.0.$(TODAY)

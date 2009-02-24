@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+
 #ifdef _WIN32_WCE
 #include <windows.h>
 #define lrint(x) int ((x) < 0 ? (x) - 0.5 : (x) + 0.5) 
@@ -13,7 +14,9 @@ typedef int intptr_t;
 #define strncasecmp _strnicmp
 #define stricmp _stricmp
 #endif
+
 #ifndef _WIN32
+#include <libxml/xmlreader.h>
 #include <inttypes.h>
 #define stricmp strcasecmp
 typedef long long __int64;
@@ -420,5 +423,32 @@ int JunctionType (ndType *nd);
 void GosmSearch (int clon, int clat, char *key);
 
 int GosmInit (void *d, long size);
+
+// *** EVERYTHING AFTER THIS POINT IS NOT IN THE WINDOWS BUILDS ***
+
+#ifndef _WIN32
+
+// struct to hold mappings between elemstyles.xml and stylesrec
+// these are needed when the osm file is converted to a pak file
+typedef struct {
+  char style_k[80];
+  char style_v[80];
+  int ruleNr;
+  int defaultRestrict;
+} elemstyleMapping;
+
+// reads the elemstyles.xml file into srec, with the mapping between
+// srec and elemstyles.xml stored in map. StyleCnt representing the
+// location of the first elemstyle. Returns the final styleCnt.
+int readElemstyles(const char *elemstylesfname, const char *iconsfname, 
+		   styleStruct *srec, elemstyleMapping *map, 
+		   int styleCnt);
+
+// creates a new pakfile from an osmdata file read from standard in
+int rebuildpak(const char* pakfile, const char* elemstylefile, 
+	       const char* iconscsvfile, const char* masterpakfile, 
+	       const int bbox[4]);
+
+#endif // #ifndef _WIN32
 
 #endif

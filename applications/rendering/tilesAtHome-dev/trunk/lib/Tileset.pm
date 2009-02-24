@@ -545,7 +545,7 @@ sub readLocalImage
     # try to work around an ImageMagick bug with transparency in >= 6.4.3
     elsif($Layer eq "caption" && open(FILE,">",$pfile))
     {
-        binmode FILE
+        binmode FILE;
         $Image->trueColorToPalette();
         print FILE $Image->png;
         close FILE;
@@ -1590,7 +1590,7 @@ sub createTilesetFile
 
     my $currpos = $data_offset;
     open my $fh, ">$temp_file" or throw TilesetError "Couldn't open '$temp_file': $!", "fatal";
-    binmode $fh
+    binmode $fh;
     seek $fh, $currpos, 0 or throw TilesetError "Couldn't seek: $!", "fatal";
 
     my @offsets;
@@ -1621,7 +1621,7 @@ sub createTilesetFile
                 }
                 else {
                     open my $png, "<$png_name" or throw TilesetError "Couldn't open file '$png_name': $!", "fatal";
-                    binmode $png
+                    binmode $png;
                     my $buffer;
                     if( read($png, $buffer, $length) != $length ) {
                         throw TilesetError "Read failed from '$png_name': $!", "fatal";

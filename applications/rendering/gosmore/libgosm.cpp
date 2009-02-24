@@ -627,6 +627,10 @@ int GosmInit (void *d, long size)
   return ndBase && hashTable && *(int*) gosmData == pakHead;
 }
 
+// *** EVERYTHING AFTER THIS POINT IS NOT IN THE WINDOWS BUILDS ***
+
+#ifndef _WIN32
+
 void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile) {
   elemstyleMapping map[2 << STYLE_BITS]; // this is needed for
 					 // LoadElemstyles but ignored
@@ -636,10 +640,6 @@ void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile) {
   // over-ride style record loaded from pakfile with alternative
   style = &(srec[0]);
 }
-
-// *** EVERYTHING AFTER THIS POINT IS NOT IN THE WINDOWS BUILDS ***
-
-#ifndef _WIN32
 
 /*--------------------------------- Rebuild code ---------------------------*/
 // These defines are only used during rebuild

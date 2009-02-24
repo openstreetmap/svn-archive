@@ -255,6 +255,13 @@ while(my $line = <XML>) {
 	# Process the line of XML
 	if($line =~ /^\s*<node/) {
 		my ($id,$lat,$long,$ts) = ($line =~ /^\s*<node id=['"](\d+)['"] lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]? timestamp=['"]?(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z['"]?/);
+		unless($id && $ts) {
+			($id,$ts,$lat,$long) = ($line =~ /^\s*<node id=['"](\d+)['"] timestamp=['"]?(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z['"]? lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
+		}
+		unless($id && $ts) {
+			($id,$ts,$lat,$long) = ($line =~ /^\s*<node id=['"](\d+)['"] timestamp=['"]?(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})Z['"]? user=['"].*?['"] lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
+		}
+
 		$last_id = undef; # In case it has tags we need to exclude
 		$last_type = "node";
 
@@ -501,7 +508,7 @@ while(my $line = <XML>) {
 	}
 	elsif($line =~ /^\s*\<\/node\>/) {
 	}
-	elsif($line =~ /^\s*\<bound box=\>/) {
+	elsif($line =~ /^\s*\<bound box=/) {
 	}
 	else {
 	    print STDERR "Unknown line $line\n";

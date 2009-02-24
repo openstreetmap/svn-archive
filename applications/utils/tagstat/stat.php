@@ -29,7 +29,7 @@
 	$result->free();
 
 	echo "<H3>Number of tagpairs parsed to generate the DB</H3>\n";
-	$result =& $conn->query("SELECT SUM(count) FROM tagpairs");
+	$result =& $conn->query("SELECT SUM(c_total) FROM tagpairs");
 	if (DB::isError($result) || $result->numRows() != 1) {
 		die ("SELECT failed: " . $result->getMessage() . "\n");
 	}

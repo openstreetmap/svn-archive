@@ -17,22 +17,33 @@ public class PlanetReader extends DefaultHandler {
 	private static int cachesize = 0;
 	private static PreparedStatement us;
 	private static PreparedStatement is;
+	private static int mode = 3;
 
-	private static void incrementInHashMap(String key, String value, int inc) {
+	private static final int TAG_NODE = 0;
+	private static final int TAG_WAY = 1;
+	private static final int TAG_RELATION = 2;
+	private static final int TAG_OTHER   = 3;
+
+	private static void incrementInHashMap(String key, String value, int inc, int mode) {
 		HashMap t;
 		if(cache.containsKey(key)) {
 			t = (HashMap)cache.get(key);
 			if(t.containsKey(value)) {
-				int count = ((Integer)t.get(value)).intValue();
-				t.put(value, new Integer(count +inc));
+				int count[] = (int[])t.get(value);
+				count[mode] += inc;
+				t.put(value, count);
 			} else {
 				cachesize++;
-				t.put(value, new Integer(inc));
+				int count[] = new int[4];
+				count[mode] = inc;
+				t.put(value, count);
 			}
 		} else {
 			cachesize++;
 			t = new HashMap();
-			t.put(value, new Integer(inc));
+			int count[] = new int[4];
+			count[mode] = inc;
+			t.put(value, count);
 		}
 		cache.put(key, t);
 	}
@@ -49,7 +60,7 @@ public class PlanetReader extends DefaultHandler {
 			while(j.hasNext()){
 				Map.Entry n = (Map.Entry)j.next();
 				String value = (String)n.getKey();
-				int count = ((Integer)n.getValue()).intValue();
+				int count[] = (int[])n.getValue();
 				incrementInDB(key, value, count);
 			}
 			values.clear();
@@ -58,23 +69,50 @@ public class PlanetReader extends DefaultHandler {
 		cachesize = 0;
 	}
 
-	public void startElement (String uri, String name, String qName, Attributes atts) {
-		if(qName.equals("tag")) {
-			handleTag(atts.getValue("k"), atts.getValue("v"));
+	public void endElement(String uri, String name, String qName) {
+		if(qName.equals("node")) {
+			mode=TAG_OTHER;
+		}
+		if(qName.equals("way")) {
+			mode=TAG_OTHER;
+		}
+		if(qName.equals("relation")) {
+			mode=TAG_OTHER;
 		}
 	}
 
-	private static void incrementInDB(String key, String value, int inc) {
+	public void startElement(String uri, String name, String qName, Attributes atts) {
+		if(qName.equals("node")) {
+			mode=TAG_NODE;
+		}
+		if(qName.equals("way")) {
+			mode=TAG_WAY;
+		}
+		if(qName.equals("relation")) {
+			mode=TAG_RELATION;
+		}
+		if(qName.equals("tag")) {
+			handleTag(atts.getValue("k"), atts.getValue("v"), mode);
+		}
+	}
+
+	private static void incrementInDB(String key, String value, int inc[]) {
 		int count;
 		try {
-			us.setInt(1, inc);
-			us.setString(2, key);
-			us.setString(3, value);
+			us.setInt(1, inc[TAG_NODE]);
+			us.setInt(2, inc[TAG_WAY]);
+			us.setInt(3, inc[TAG_RELATION]);
+			us.setInt(4, inc[TAG_OTHER]);
+			us.setString(5, key);
+			us.setString(6, value);
 			count = us.executeUpdate();
 			if(count != 1) {
 				is.setString(1, key);
 				is.setString(2, value);
-				is.setInt(3, inc);
+				is.setInt(3, inc[TAG_NODE]);
+				is.setInt(4, inc[TAG_WAY]);
+				is.setInt(5, inc[TAG_RELATION]);
+				is.setInt(6, inc[TAG_OTHER]);
 				is.executeUpdate();
 			}
 		} catch (SQLException ex) {
@@ -84,8 +122,8 @@ public class PlanetReader extends DefaultHandler {
 		}
 	}
 
-	private static void handleTag(String key, String value) {
-		incrementInHashMap(key, value, 1);
+	private static void handleTag(String key, String value, int mode) {
+		incrementInHashMap(key, value, 1, mode);
 		if(cachesize > 1000000) {
 			flushHashMap();
 		}
@@ -114,11 +152,11 @@ public class PlanetReader extends DefaultHandler {
 
 	public static void main (String args[]) throws Exception {
 		getConnection("localhost", "tagstat", "tagstat", "iyZscbZU");
-		us = conn.prepareStatement("UPDATE tagpairs SET newcount=(newcount+?) WHERE tag=? AND value=?");
-		is = conn.prepareStatement("INSERT INTO tagpairs SET tag=?, value=?, count=0, newcount=?");
+		us = conn.prepareStatement("UPDATE tagpairs SET nc_node=(nc_node+?), nc_way=(nc_way+?), nc_relation=(nc_relation+?), nc_other=(nc_other+?) WHERE tag=? AND value=?");
+		is = conn.prepareStatement("INSERT INTO tagpairs SET tag=?, value=?, c_node=0, c_way=0, c_relation=0, c_other=0, c_total=0, nc_node=?, nc_way=?, nc_relation=?, nc_other=?");
 
 		Statement s = conn.createStatement();
-		s.executeUpdate("ALTER TABLE tagpairs ADD COLUMN newcount INT DEFAULT 0 AFTER count");
+		s.executeUpdate("ALTER TABLE tagpairs ADD COLUMN nc_node INT DEFAULT 0, ADD COLUMN nc_way INT DEFAULT 0, ADD COLUMN nc_relation INT DEFAULT 0, ADD COLUMN nc_other INT DEFAULT 0 AFTER c_total");
 
 		XMLReader xr = XMLReaderFactory.createXMLReader();
 		PlanetReader handler = new PlanetReader();
@@ -132,12 +170,12 @@ public class PlanetReader extends DefaultHandler {
 		us.close();
 		is.close();
 
-		s.executeUpdate("UPDATE tagpairs SET count=newcount");
-		s.executeUpdate("ALTER TABLE tagpairs DROP COLUMN newcount");
-		s.executeUpdate("DELETE FROM tagpairs WHERE count=0");
+		s.executeUpdate("UPDATE tagpairs SET c_node=nc_node, c_way=nc_way, c_relation=nc_relation, c_other=nc_other, c_total=nc_node+nc_way+nc_relation+nc_other");
+		s.executeUpdate("ALTER TABLE tagpairs DROP COLUMN nc_node, DROP COLUMN nc_way, DROP COLUMN nc_relation, DROP COLUMN nc_other");
+		s.executeUpdate("DELETE FROM tagpairs WHERE c_total=0");
 
 		s.executeUpdate("DELETE FROM tags");
-		s.executeUpdate("INSERT INTO tags (tag, uses, uniq_values) SELECT p.tag, SUM(p.count), COUNT(*) FROM tagpairs p GROUP BY tag;");
+		s.executeUpdate("INSERT INTO tags (tag, uses, uniq_values) SELECT p.tag, SUM(p.c_total), COUNT(*) FROM tagpairs p GROUP BY tag;");
 	}
 
 	public PlanetReader() {

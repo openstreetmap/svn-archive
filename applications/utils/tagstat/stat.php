@@ -19,8 +19,8 @@
 	}
 	$conn->query("SET NAMES utf8");
 
-	echo "<H3>Number of tagpairs seen in the current import</H3>\n";
-	$result =& $conn->query("SELECT COUNT(*) FROM tagpairs WHERE nc_node+nc_way+nc_relation+nc_other <> 0;");
+	echo "<H3>Tagpairs in the DB</H3>\n";
+	$result =& $conn->query("SELECT COUNT(*) FROM tagpairs");
 	if (DB::isError($result) || $result->numRows() != 1) {
 		die ("SELECT failed: " . $result->getMessage() . "\n");
 	}
@@ -28,8 +28,8 @@
 	echo displayNum($row[0])."\n";
 	$result->free();
 
-	echo "<H3>Number of tagpairs parsed in import</H3>\n";
-	$result =& $conn->query("SELECT SUM(nc_node+nc_way+nc_relation+nc_other) FROM tagpairs");
+	echo "<H3>Number of tagpairs parsed to generate the DB</H3>\n";
+	$result =& $conn->query("SELECT SUM(count) FROM tagpairs");
 	if (DB::isError($result) || $result->numRows() != 1) {
 		die ("SELECT failed: " . $result->getMessage() . "\n");
 	}
@@ -37,15 +37,14 @@
 	echo displayNum($row[0])."\n";
 	$result->free();
 
-	echo "<H3>Number of tagpairs first seen in the current import</H3>\n";
-	$result =& $conn->query("SELECT COUNT(*) FROM tagpairs WHERE c_total=0");
+	echo "<H3>Number of different tags in the DB</H3>\n";
+	$result =& $conn->query("SELECT COUNT(DISTINCT tag) FROM tagpairs");
 	if (DB::isError($result) || $result->numRows() != 1) {
 		die ("SELECT failed: " . $result->getMessage() . "\n");
 	}
 	$row =& $result->fetchRow();
 	echo displayNum($row[0])."\n";
 	$result->free();
-
 
 	echo "<BR><BR>\n";
 	echo "<A href=\"index.php\">Back to index page</A>\n";

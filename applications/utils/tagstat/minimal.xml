@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version="0.5" generator="Osmosis 0.29">
+  <bound box="34.00000,-27.00000,75.00000,45.00000" origin="http://www.openstreetmap.org/api/0.5"/>
+   <tag k="note" v="Übergang zwischen 3- und 2-spurig ganz grob"/>
+   <tag k="name" v="Morey\&apos;s"/>
+   <tag k="religion" v="Jehovah&apos;s Witnesses"/>
+</osm>

@@ -1,0 +1,27 @@
+body {
+background-image:url(background.png);
+}
+
+img {
+border-width: 0px;
+}
+
+th {
+background-color: #999999;
+}
+
+th a {
+color: #000000; text-decoration:none;
+}
+
+.odd {
+background-color: #ffffff;
+}
+
+.even {
+background-color: #cccccc;
+}
+
+.count {
+text-align: right;
+}

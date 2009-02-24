@@ -1583,15 +1583,7 @@ void InitializeOptions (void)
 #endif // HEADLESS
 
 #ifndef _WIN32_WCE
-int UserInterface (int argc, char *argv[], int nextarg)
-{
-  const char* pakfile = "";
-  // check if a pakfile was specified on the command line
-  if (argc == nextarg) {
-    pakfile=FindResource("gosmore.pak");
-  } else {
-    pakfile=argv[nextarg];
-  }
+int UserInterface (int argc, char *argv[], const char* pakfile) {
 
   #if defined (__linux__)
   FILE *gmap = fopen64 (pakfile, "r");
@@ -1791,17 +1783,19 @@ int UserInterface (int argc, char *argv[], int nextarg)
 int main (int argc, char *argv[])
 {
   int nextarg = 1;
+  bool rebuild = false;
+  const char* master = "";
+  int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
   if (argc > 1 && stricmp(argv[1], "rebuild") == 0) {
-    if (argc != 6 && argc > 2) {
-      fprintf (stderr, "Usage : %s [rebuild [bbox for 2 pass]]\n"
+    if (argc < 6 && argc > 3) {
+      fprintf (stderr, "Usage : %s [rebuild [bbox for 2 pass]] [pakfile]\n"
 	       "See http://wiki.openstreetmap.org/index.php/gosmore\n", 
 	       argv[0]);
       return 1;
     }
+    rebuild=true;
     nextarg++;
-    int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
-    const char* master = "";
-    if (argc == 6) {
+    if (argc >= 6) {
       master = FindResource("master.pak");
       bbox[0] = Latitude (atof (argv[2]));
       bbox[1] = Longitude (atof (argv[3]));
@@ -1809,13 +1803,24 @@ int main (int argc, char *argv[])
       bbox[3] = Longitude (atof (argv[5]));
       nextarg += 4;
     }
-    
-    rebuildpak(FindResource("gosmore.pak"), FindResource("elemstyles.xml"),
+  }
+  
+  // check if a pakfile was specified on the command line
+  const char* pakfile;
+  if (argc > nextarg) {
+    pakfile=argv[nextarg];
+  } else {
+    pakfile=FindResource("gosmore.pak");
+  }
+  
+  if (rebuild) {
+    printf("Building %s...\n",pakfile);
+
+    rebuildpak(pakfile, FindResource("elemstyles.xml"),
 	       FindResource("icons.csv"), master, bbox);
-    
   }
 
-  return UserInterface (argc, argv, nextarg);
+  return UserInterface (argc, argv, pakfile);
 
   // close the logfile if it has been opened
   if (logFP(false)) fclose(logFP(false));

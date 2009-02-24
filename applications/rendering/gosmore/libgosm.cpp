@@ -15,6 +15,11 @@ long dhashSize;
 int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
 int *hashTable, bucketsMin1, pakHead = 0xEB3A942;
 char *gosmData, *gosmSstr[searchCnt];
+
+// this is used if the stylerec in the pakfile are overwritten with
+// one loaded from an alternative xml stylefile
+styleStruct srec[2 << STYLE_BITS];
+
 ndType *ndBase;
 styleStruct *style;
 wayType *gosmSway[searchCnt];
@@ -622,6 +627,16 @@ int GosmInit (void *d, long size)
   return ndBase && hashTable && *(int*) gosmData == pakHead;
 }
 
+void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile) {
+  elemstyleMapping map[2 << STYLE_BITS]; // this is needed for
+					 // LoadElemstyles but ignored
+  memset (&srec, 0, sizeof (srec)); // defined globally
+  memset (&map, 0, sizeof (map));
+  LoadElemstyles(elemstylefile, iconscsvfile, srec, map, firstElemStyle);
+  // over-ride style record loaded from pakfile with alternative
+  style = &(srec[0]);
+}
+
 // *** EVERYTHING AFTER THIS POINT IS NOT IN THE WINDOWS BUILDS ***
 
 #ifndef _WIN32
@@ -725,7 +740,7 @@ int MasterWayCmp (const void *a, const void *b)
   return r[0] < r[1] ? 1 : r[0] > r[1] ? -1 : 0;
 }
 
-int readElemstyles(const char *elemstylesfname, const char *iconsfname, 
+int LoadElemstyles(const char *elemstylesfname, const char *iconsfname, 
 		   styleStruct *srec, elemstyleMapping *map, 
 		   int styleCnt)
 {
@@ -881,7 +896,7 @@ int readElemstyles(const char *elemstylesfname, const char *iconsfname,
     return styleCnt;
 }
 
-int rebuildpak(const char* pakfile, const char* elemstylefile, 
+int RebuildPak(const char* pakfile, const char* elemstylefile, 
 	       const char* iconscsvfile, const char* masterpakfile, 
 	       const int bbox[4]) {
   assert (layerBit3 < 32);
@@ -914,7 +929,7 @@ int rebuildpak(const char* pakfile, const char* elemstylefile,
   memset (&srec, 0, sizeof (srec));
   memset (&map, 0, sizeof (map));
   
-  int styleCnt = readElemstyles(elemstylefile, iconscsvfile, srec, map,
+  int styleCnt = LoadElemstyles(elemstylefile, iconscsvfile, srec, map,
 				firstElemStyle);
   fwrite (&srec, sizeof (srec[0]), styleCnt + 1, pak);    
 

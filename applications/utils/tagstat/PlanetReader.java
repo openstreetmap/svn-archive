@@ -244,7 +244,7 @@ public class PlanetReader extends DefaultHandler {
 
 	public PlanetReader() {
 		super();
-		conn = getConnection("localhost", "tagstat", "tagstat", "iyZscbZU");
+		conn = getConnection("localhost", "tagstat", "tagstat", "Ididntchangemypassword");
 		tagpairs = new DBCache(conn, "UPDATE tagpairs SET nc_node=(nc_node+?), nc_way=(nc_way+?), nc_relation=(nc_relation+?), nc_other=(nc_other+?) WHERE tag=? AND value=?", "INSERT INTO tagpairs SET tag=?, value=?, c_node=0, c_way=0, c_relation=0, c_other=0, c_total=0, nc_node=?, nc_way=?, nc_relation=?, nc_other=?");
 		tagfriends = new DBCache(conn, "UPDATE tagfriends SET nc_node=(nc_node+?), nc_way=(nc_way+?), nc_relation=(nc_relation+?), nc_other=(nc_other+?) WHERE tag1=? AND tag2=?", "INSERT INTO tagfriends SET tag1=?, tag2=?, c_node=0, c_way=0, c_relation=0, c_other=0, c_total=0, nc_node=?, nc_way=?, nc_relation=?, nc_other=?");
 	}

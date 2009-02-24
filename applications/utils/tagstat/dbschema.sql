@@ -42,6 +42,29 @@ CREATE TABLE `tagpairs` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table `tagfriends`
+--
+
+DROP TABLE IF EXISTS `tagfriends`;
+CREATE TABLE `tagfriends` (
+  `id` int(11) NOT NULL auto_increment,
+  `tag1` text,
+  `tag2` text,
+  `c_node` int(11) default 0,
+  `c_way` int(11) default 0,
+  `c_relation` int(11) default 0,
+  `c_other` int(11) default 0,
+  `c_total` int(11) default 0,
+  PRIMARY KEY  (`id`),
+  KEY `tag1_idx` (`tag1`(12)),
+  KEY `tag2_idx` (`tag2`(12)),
+  KEY `c_node_ind` (`c_node`),
+  KEY `c_way_ind` (`c_way`),
+  KEY `c_relation_ind` (`c_relation`),
+  KEY `c_total_ind` (`c_total`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `tags`
 --
 

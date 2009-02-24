@@ -1,14 +1,13 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.io.FileReader;
 import org.xml.sax.XMLReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.XMLReaderFactory;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.Attributes;
-import org.apache.commons.lang.StringEscapeUtils;
 import java.util.*;
 import java.io.*;
 
@@ -16,6 +15,8 @@ public class PlanetReader extends DefaultHandler {
 	private static Connection conn = null;
 	private static HashMap cache = new HashMap();
 	private static int cachesize = 0;
+	private static PreparedStatement us;
+	private static PreparedStatement is;
 
 	private static void incrementInHashMap(String key, String value, int inc) {
 		HashMap t;
@@ -59,38 +60,31 @@ public class PlanetReader extends DefaultHandler {
 
 	public void startElement (String uri, String name, String qName, Attributes atts) {
 		if(qName.equals("tag")) {
-			//handleTag(StringEscapeUtils.escapeSql(atts.getValue("k")), StringEscapeUtils.escapeSql(atts.getValue("v")));
 			handleTag(atts.getValue("k"), atts.getValue("v"));
 		}
 	}
 
 	private static void incrementInDB(String key, String value, int inc) {
+		int count;
 		try {
-			Statement s = conn.createStatement();
-			int count = s.executeUpdate("UPDATE tagpairs SET newcount=newcount+"+inc+" WHERE tag='"+key+"' AND value='"+value+"'");
+			us.setInt(1, inc);
+			us.setString(2, key);
+			us.setString(3, value);
+			count = us.executeUpdate();
 			if(count != 1) {
-				s.executeUpdate("INSERT INTO tagpairs SET tag='"+key+"', value='"+value+"', count=0, newcount="+inc);
+				is.setString(1, key);
+				is.setString(2, value);
+				is.setInt(3, inc);
+				is.executeUpdate();
 			}
-			s.close();
 		} catch (SQLException ex) {
-			if(ex.getSQLState() == "22001") { // ER_DATA_TOO_LONG
-				System.err.println("INSERT INTO tagpairs SET tag='"+key+"', value='snip...too long...', count=0, newcount="+inc);
-				System.err.println("SQLException: " + ex.getMessage());
-				System.err.println("SQLState: " + ex.getSQLState());
-				System.err.println("VendorError: " + ex.getErrorCode());
-			} else {
-				System.err.println("INSERT INTO tagpairs SET tag='"+key+"', value='"+value+"', count=0, newcount="+inc);
-				System.err.println("SQLException: " + ex.getMessage());
-				System.err.println("SQLState: " + ex.getSQLState());
-				System.err.println("VendorError: " + ex.getErrorCode());
-			}
+			System.err.println("SQLException: " + ex.getMessage());
+			System.err.println("SQLState: " + ex.getSQLState());
+			System.err.println("VendorError: " + ex.getErrorCode());
 		}
 	}
 
 	private static void handleTag(String key, String value) {
-		//if(key.equals("created_by")) {
-		//	return;
-		//}
 		incrementInHashMap(key, value, 1);
 		if(cachesize > 1000000) {
 			flushHashMap();
@@ -120,9 +114,10 @@ public class PlanetReader extends DefaultHandler {
 
 	public static void main (String args[]) throws Exception {
 		getConnection("localhost", "tagstat", "tagstat", "iyZscbZU");
+		us = conn.prepareStatement("UPDATE tagpairs SET newcount=(newcount+?) WHERE tag=? AND value=?");
+		is = conn.prepareStatement("INSERT INTO tagpairs SET tag=?, value=?, count=0, newcount=?");
 
 		Statement s = conn.createStatement();
-		//s.executeUpdate("SET NAMES utf8");
 		s.executeUpdate("ALTER TABLE tagpairs ADD COLUMN newcount INT DEFAULT 0 AFTER count");
 
 		XMLReader xr = XMLReaderFactory.createXMLReader();
@@ -130,11 +125,13 @@ public class PlanetReader extends DefaultHandler {
 		xr.setContentHandler(handler);
 		xr.setErrorHandler(handler);
 
-		//FileReader r = new FileReader(args[0]);
 		BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
 		xr.parse(new InputSource(r));
 
 		flushHashMap();
+		us.close();
+		is.close();
+
 		s.executeUpdate("UPDATE tagpairs SET count=newcount");
 		s.executeUpdate("ALTER TABLE tagpairs DROP COLUMN newcount");
 		s.executeUpdate("DELETE FROM tagpairs WHERE count=0");

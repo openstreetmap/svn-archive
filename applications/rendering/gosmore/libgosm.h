@@ -424,6 +424,8 @@ void GosmSearch (int clon, int clat, char *key);
 
 int GosmInit (void *d, long size);
 
+void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile);
+
 // *** EVERYTHING AFTER THIS POINT IS NOT IN THE WINDOWS BUILDS ***
 
 #ifndef _WIN32
@@ -440,12 +442,12 @@ typedef struct {
 // reads the elemstyles.xml file into srec, with the mapping between
 // srec and elemstyles.xml stored in map. StyleCnt representing the
 // location of the first elemstyle. Returns the final styleCnt.
-int readElemstyles(const char *elemstylesfname, const char *iconsfname, 
+int LoadElemstyles(const char *elemstylesfname, const char *iconsfname, 
 		   styleStruct *srec, elemstyleMapping *map, 
 		   int styleCnt);
 
 // creates a new pakfile from an osmdata file read from standard in
-int rebuildpak(const char* pakfile, const char* elemstylefile, 
+int RebuildPak(const char* pakfile, const char* elemstylefile, 
 	       const char* iconscsvfile, const char* masterpakfile, 
 	       const int bbox[4]);
 

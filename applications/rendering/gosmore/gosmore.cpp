@@ -1583,7 +1583,8 @@ void InitializeOptions (void)
 #endif // HEADLESS
 
 #ifndef _WIN32_WCE
-int UserInterface (int argc, char *argv[], const char* pakfile) {
+int UserInterface (int argc, char *argv[], 
+		   const char* pakfile, const char* stylefile) {
 
   #if defined (__linux__)
   FILE *gmap = fopen64 (pakfile, "r");
@@ -1609,6 +1610,10 @@ int UserInterface (int argc, char *argv[], const char* pakfile) {
       pakfile, argv[0])));
     #endif
     return 8;
+  }
+
+  if (stylefile) {
+    GosmLoadAltStyle(stylefile,FindResource("icons.csv"));
   }
 
   if (getenv ("QUERY_STRING")) {
@@ -1787,8 +1792,9 @@ int main (int argc, char *argv[])
   const char* master = "";
   int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
   if (argc > 1 && stricmp(argv[1], "rebuild") == 0) {
-    if (argc < 6 && argc > 3) {
-      fprintf (stderr, "Usage : %s [rebuild [bbox for 2 pass]] [pakfile]\n"
+    if (argc < 6 && argc > 4) {
+      fprintf (stderr, 
+	       "Usage : %s [rebuild [bbox for 2 pass]] [pakfile [stylefile]]\n"
 	       "See http://wiki.openstreetmap.org/index.php/gosmore\n", 
 	       argv[0]);
       return 1;
@@ -1807,20 +1813,29 @@ int main (int argc, char *argv[])
   
   // check if a pakfile was specified on the command line
   const char* pakfile;
+  const char* stylefile = NULL;
   if (argc > nextarg) {
     pakfile=argv[nextarg];
+    nextarg++;
+    if (argc > nextarg)  {
+      stylefile=argv[nextarg];
+    } else if (rebuild) { 
+      stylefile=FindResource("elemstyles.xml");
+    }
   } else {
     pakfile=FindResource("gosmore.pak");
+    if (rebuild) {
+      stylefile=FindResource("elemstyles.xml");
+    }
   }
   
   if (rebuild) {
-    printf("Building %s...\n",pakfile);
+    printf("Building %s using style %s...\n",pakfile,stylefile);
 
-    rebuildpak(pakfile, FindResource("elemstyles.xml"),
-	       FindResource("icons.csv"), master, bbox);
+    RebuildPak(pakfile, stylefile, FindResource("icons.csv"), master, bbox);
   }
 
-  return UserInterface (argc, argv, pakfile);
+  return UserInterface (argc, argv, pakfile, stylefile);
 
   // close the logfile if it has been opened
   if (logFP(false)) fclose(logFP(false));

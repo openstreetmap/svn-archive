@@ -33,7 +33,7 @@
 		} else {
 			$style="even";
 		}
-		$rank = get_tag_rank($conn, $row[1]);
+		$rank = getTagRank($conn, $row[1]);
 		printf('<TR class="%1$s"><TD>%4$s</TD><TD><A href="tagdetails.php?tag=%2$s">%5$s</A></TD><TD class="count">%3$s</TD></TR>', $style, $row[0], displayNum($row[1]), $rank, displayTag($row[0]));
 		echo "\n";
 		$i++;
@@ -41,11 +41,11 @@
 	echo "</TABLE>\n";
 	$result->free();
 	echo "<A href=\"tags.php\">More tags</A>\n";
-	echo "<A href=\"tags.php?rev=true\">Rare tags</A>\n";
+	echo "<A href=\"tags.php?dir=ASC\">Rare tags</A>\n";
 
 
 	echo "<H3>Most popular tag / value combinations</H3>\n";
-	$result =& $conn->query("SELECT tag, value, count FROM tagpairs WHERE count > 0 ORDER BY count DESC LIMIT 10");
+	$result =& $conn->query("SELECT tag, value, c_total FROM tagpairs WHERE c_total > 0 ORDER BY c_total DESC LIMIT 10");
 	if (DB::isError($result)) {
 		die ("SELECT failed: " . $result->getMessage() . "\n");
 	}
@@ -65,9 +65,37 @@
 	echo "</TABLE>\n";
 	$result->free();
 	echo "<A href=\"tagpairs.php\">More tag / value pairs</A>\n";
-	echo "<A href=\"tagpairs.php?rev=true\">Rare tag / value pairs</A>\n";
+	echo "<A href=\"tagpairs.php?dir=ASC\">Rare tag / value pairs</A>\n";
+
+
+	$result =& $conn->query("SELECT tag1, tag2, c_total FROM tagfriends WHERE c_total > 0 ORDER BY c_total DESC LIMIT 10");
+	if (DB::isError($result)) {
+		die ("SELECT failed: " . $result->getMessage() . "\n");
+	}
+	if($result->numRows() > 0) {
+		echo "<H3>Most popular tag / tag combinations</H3>\n";
+		echo "<TABLE>\n";
+		echo "<TR><TH>tag 1</TH><TH>tag 2</TH><TH>uses</TH></TR>\n";
+		$i = 1;
+		while ($row =& $result->fetchRow()) {
+			if($i % 2) {
+				$style="odd";
+			} else {
+				$style="even";
+			}
+			printf('<TR class="%1$s"><TD>%2$s</TD><TD>%3$s</TD><TD class="count">%4$s</TD></TR>', $style, displayTag($row[0]), displayTag($row[1]), displayNum($row[2]));
+			echo "\n";
+			$i++;
+		}
+		echo "</TABLE>\n";
+		echo "<A href=\"tagfriends.php\">More tag / tag pairs</A>\n";
+	}
+	$result->free();
 
 	$conn->disconnect();
+
+	echo "<BR><BR>\n";
+	echo "<A href=\"search.php\">Search</A>\n";
 ?>
  </BODY>
 </HTML>

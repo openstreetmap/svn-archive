@@ -424,11 +424,11 @@ void GosmSearch (int clon, int clat, char *key);
 
 int GosmInit (void *d, long size);
 
-void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile);
-
 // *** EVERYTHING AFTER THIS POINT IS NOT IN THE WINDOWS BUILDS ***
 
 #ifndef _WIN32
+
+void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile);
 
 // struct to hold mappings between elemstyles.xml and stylesrec
 // these are needed when the osm file is converted to a pak file

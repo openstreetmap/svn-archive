@@ -1,0 +1,131 @@
+#
+# Configuration file for TilesAtHome
+#
+
+## Edit and save as tilesAtHome.conf.
+##
+## do NOT save modifications to this file
+##
+
+## Path strings are later quoted by t@h, do not use quotes here
+## File Locations
+#
+# If WorkingDir is commented out, it will use the default system tmpdir location
+WorkingDirectory=c:\temp
+XmlStarlet=c:\program files\xmlstarlet\xml.exe
+Niceness=' '
+Zip=c:\program files\zip\zip.exe
+Pngcrush=c:\program files\pngcrush\pngcrush.exe
+Optipng=c:\program files\optipng\optipng.exe
+Subversion=c:\program files\subversion\svn.exe
+PNGnq=c:\program files\pngnq\pngnq.exe
+
+## If you want to use 7Zip set this to 1 and set "Zip" above to your 7zip.exe
+7zipWin=0
+
+## PNG optimizer to use, "optipng" and "pngcrush" currently supported.
+PngOptimizer=pngcrush
+
+# Set the timeout when downloading files (on tenths of a second)
+DownloadTimeout=1800
+
+# APIServers and XAPIServers define the servers to use to download OSM datta from.
+# APIServers are used for standard map downloads and XAPIServers are used for downloads 
+# with the specification of predicates.
+# The actual download URLs need to be defined by API_<NAME> and XAPI_<NAME> settings.
+# Currently defined servers are API, ROMA and XAPI for APIServers and XAPI for XAPIServers.
+#APIServers = API,ROMA,XAPI
+#XAPIServers = XAPI
+
+# Hand back render requests that have a tileset on a server bigger than
+# MaxTilesetComplexity. Useful if you do not have much RAM and inkscape
+# crashes. The biggest tileset is about 31000000, so playing with values
+# around 20000000 will help you. A setting of 0 disables the mechanism.
+MaxTilesetComplexity = 0
+
+# Machines with relatively small memory can encounter problems when rendering
+# complex tilesets.  If Inkscape fails with error messages on high zoom levels
+# indicating a memory issue, try to set RenderStripes to a positive value
+# The value of RenderStripes is determining from which zoom level below the
+# highest on the SVG file will be rendered in stripes.  E.g. a value of 5 means 
+# that the 5th zoom level below the top level (normally 12) is to be rendered in
+# stripes.  This would be z17 on a standard tileset.  A value of 5 should be
+# sufficient in most cases.  Reducing that value increases the number of Inkscape
+# calls.  A value of 0 disables striped rendering.  This is the default.
+#RenderStripes = 0
+
+
+## Upload settings
+
+# if set to 0 the zip files will get renamed to zip_uploaded after upload.
+DeleteZipFilesAfterUpload=1
+
+# set UploadToDirectory to 1 to enable uploading to a common upload 
+# directory from which one central client can handle all the uploading
+UploadToDirectory=0
+UploadTargetDirectory=Z:\set\this\to\your\upload\directory
+
+# Recommended setting 1/2 your kbyte/s upstream of your uploader to the tah server
+# Recommended maximum setting: 1.5 times your kbyte/s upstream of your uploader
+UploadToDirectoryMaxQueue = 20
+
+# If set to 1, make a copy of the data file for later debugging purposes
+KeepDataFile=0
+
+# What rasterizer to use.
+# Set to Inkscape, Batik or BatikAgent
+Rasterizer=Inkscape
+
+# Set the maximum heap size for the java virtual machine. Use 'M' for megabytes, 'G' for gigabytes.
+# If nothing is specified then a default of 512M is used. Do not specify more RAM than your machine has.
+# Note1: In the future this setting will be used for all calls to java
+# Note2: on Windows 64bit/32bit dual installations the VM used is determined by system32\java.exe
+#        If it selects the 32bit one, the maximum heap is limited.
+#JavaHeapSize=1350M
+
+# Set to the maximum JVM size to pass to the -Xmx parameter when running the rasterizer. The
+# maximum size depends on the OS. For Windows XP it is 1350M
+BatikJVMSize=1350M
+
+# If set to 1 or greater, it will enable forking to render several zoom levels to SVG simultanously
+# Fork = n  -> use 2*n parallel processes for rendering to svg
+Fork=0
+
+# make the client upload in the background if set to 1
+ForkForUpload=0
+
+# Maxdepth for xmlstarlet, reduce if you run into problems with memory,
+# increase if you get "tile too complex" errors.
+XmlStarletMaxDepth=20000
+
+# Set this to 1 if you want to clear the stopfile.txt on program start. 
+# may unintentionally clear stopfile.txt when (accidentally) running 2 instances
+AutoResetStopfile=0
+
+# Set this to 1 if you want to have som logs dump in ProcessLogFile
+ProcessLog=0
+ProcessLogFile="tah-process.log"
+
+
+## Verbosity: changing this makes the client report different actions more or
+## less verbosely.
+#
+# Verbose=0  almost like "quiet" on other programs, just output wether it's 
+#            getting a request, preprocessing, rendering or uploading, no 
+#            progress inside a tileset (%ages) or on uploading zips.
+# Verbose=3  show progress inside a tileset and on upload, but not the single
+#            steps while rendering
+# Verbose=6  show everything like it was before r9700, this is the default
+# Verbose=10 behaves like Verbose=1 before r9700, adding a newline after 
+#            each message, and printing even more output.
+Verbose=6
+
+# DateTimeString allows you to prepend client log messages with a time stamp. Default off.
+# %H - hours
+# %M - minutes
+# %S - seconds
+# %d - days
+# %m - months
+# %y - 2-digit year
+# %Y - 4-digit year
+#DateTimeString = %d.%m.%Y - %H:%M:%S

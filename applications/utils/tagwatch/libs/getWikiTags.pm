@@ -42,6 +42,7 @@ sub buildWikiTagCache
 {
 	my (%Config) = @_;
 
+	$c->{ua}->agent($Config{'user_agent'} || "TagWatch/1.0");
 	my $CacheTopDir = $Config{'cache_folder'};
 	mkdir $CacheTopDir if ! -d $CacheTopDir;
 

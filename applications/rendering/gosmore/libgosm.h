@@ -310,6 +310,7 @@ struct ndType {
 struct wayType {
   int bits, destination;
   int clat, clon, dlat, dlon; /* Centre coordinates and (half)diameter */
+  float maxspeed;
 };
 
 inline int Layer (wayType *w) { return w->bits >> 29; }
@@ -440,11 +441,13 @@ typedef struct {
 } elemstyleMapping;
 
 // reads the elemstyles.xml file into srec, with the mapping between
-// srec and elemstyles.xml stored in map. StyleCnt representing the
-// location of the first elemstyle. Returns the final styleCnt.
-int LoadElemstyles(const char *elemstylesfname, const char *iconsfname, 
-		   styleStruct *srec, elemstyleMapping *map, 
-		   int styleCnt);
+// srec and elemstyles.xml stored in map, and the list of maximum
+// speeds for each vehicle type in maxspeeds. styleCnt representing
+// the location of the first elemstyle. Returns the final styleCnt.
+int LoadElemstyles(/* in */ const char *elemstylesfname, 
+		   const char *iconsfname, int styleCnt,
+		   /* out */ styleStruct *srec, elemstyleMapping *map, 
+		   float *maxspeeds);
 
 // creates a new pakfile from an osmdata file read from standard in
 int RebuildPak(const char* pakfile, const char* elemstylefile, 

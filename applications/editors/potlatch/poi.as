@@ -24,7 +24,7 @@
 				_root.writesrequested--;
 			};
 			_root.writesrequested++;
-			remote_write.call('putpoi',poidelresponder,_root.usertoken,_root.changeset,Math.floor(this._name),coord2long(this._x),coord2lat(this._y),this.attr,0);
+			remote_write.call('putpoi',poidelresponder,_root.usertoken,_root.changeset,Number(this.version),Number(this._name),coord2long(this._x),coord2lat(this._y),this.attr,0);
 		} else {
 			if (this._name==poiselected) { deselectAll(); }
 			removeMovieClip(this);
@@ -39,7 +39,7 @@
 			_root.map.pois[result[0]].version=result[4];
 			_root.map.pois[result[0]].select();
 		};
-		if (!timestamp) { timestamp=0; }
+		if (!timestamp) { timestamp=''; }
 		remote_read.call('getpoi',poirelresponder,Math.floor(this._name),timestamp);
 	};
 	POI.prototype.upload=function() {
@@ -61,7 +61,7 @@
 		};
 		if (!this.uploading && !this.locked && !_root.sandbox) {
 			_root.writesrequested++;
-			remote_write.call('putpoi',poiresponder,_root.usertoken,_root.changeset,this._name,coord2long(this._x),coord2lat(this._y),this.attr,1);
+			remote_write.call('putpoi',poiresponder,_root.usertoken,_root.changeset,Number(this.version),Number(this._name),coord2long(this._x),coord2lat(this._y),this.attr,1);
 			this.clean=true;
 		}
 	};

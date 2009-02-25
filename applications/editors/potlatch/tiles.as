@@ -133,8 +133,11 @@
 			case 4: return (tileprefix+"http://tah.openstreetmap.org/Tiles/tile/"+_root.scale+"/"+x+"/"+y+".png");
 			case 5: return (tileprefix+"http://tah.openstreetmap.org/Tiles/maplint/"+_root.scale+"/"+x+"/"+y+".png");
 			case 6: return (tileprefix+"http://andy.sandbox.cloudmade.com/tiles/cycle/"+_root.scale+"/"+x+"/"+y+".png");
-			case 7: return (tileprefix+"http://richard.dev.openstreetmap.org/npe/"+_root.scale+"/"+x+"/"+y+".jpg");
+			case 7: var addr;
+					if (_root.scale==14) { addr=tileprefix+"http://richard.dev.openstreetmap.org/npe/"+_root.scale+"/"+x+"/"+y+".jpg"; }
+									else { addr=tileprefix+"http://npe.openstreetmap.org/"+_root.scale+"/"+x+"/"+y+".png"; }
+					return addr;
 			case 8:	return (tileprefix+"http://tile.openaerialmap.org/tiles/1.0.0/opentopomap-900913/"+_root.scale+"/"+x+"/"+y+".jpg");
-//			case 7: return (tileprefix+"http://127.0.0.1/~richard/npe/"+_root.scale+"/"+x+"/"+y+".jpg");
+//			case 7: return ("http://127.0.0.1/~richard/npe/"+_root.scale+"/"+x+"/"+y+".jpg");
 		}
 	}

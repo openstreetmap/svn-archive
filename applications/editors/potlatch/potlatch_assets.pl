@@ -633,6 +633,8 @@ if (0==1) {
 		
 # ------ potlatch_iplace sprite
 
+# ------ potlatch_iskyline sprite
+
 $ec=new SWF::MovieClip();
 
 $s=new SWF::Shape();
@@ -646,30 +648,70 @@ $ec->add($s);
 
 $s=new SWF::Shape();
 $s->setRightFill(255,255,255);
-$s->movePenTo(-7,5);
-$s->drawLineTo(-7,-3);
-$s->drawLineTo(-4,-3);
-$s->drawLineTo(-4,3); $s->drawLineTo(-3,3);
+$s->movePenTo(-7.71,4.70);
+$s->drawLineTo(-7.71,-3.43);
+$s->drawLineTo(-4.37,-3.43);
+$s->drawLineTo(-4.37,4.69);
+$s->drawLineTo(-7.71,4.70);
+$ec->add($s);
 
-$s->drawLineTo(-3,-7);
-$s->drawLineTo(0,-7);
-$s->drawLineTo(0,3); $s->drawLineTo(1,3);
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(-5.18,-4.65);
+$s->drawLineTo(-2.72,-7.11);
+$s->drawLineTo(-0.27,-4.67);
+$s->drawLineTo(-0.27,4.77);
+$s->drawLineTo(-3.31,4.77);
+$s->drawLineTo(-3.31,-4.61);
+$s->drawLineTo(-5.18,-4.65);
+$ec->add($s);
 
-$s->drawLineTo(1,-4); $s->drawLineTo(3.5,-7);
-$s->drawLineTo(6,-4); $s->drawLineTo(6,3);
-$s->drawLineTo(7,3);
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(4.42,-1.42);
+$s->drawLineTo(4.42,-7.21);
+$s->drawLineTo(0.69,-7.21);
+$s->drawLineTo(0.69,4.70);
+$s->drawLineTo(3.14,4.70);
+$s->drawLineTo(3.19,-1.42);
+$s->drawLineTo(4.42,-1.42);
+$ec->add($s);
 
-$s->drawLineTo(7,-1); $s->drawLineTo(10,-1);
-$s->drawLineTo(10,3);
-$s->drawLineTo(11,3);
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(12.32,4.64);
+$s->drawLineTo(4.03,4.64);
+$s->drawLineTo(4.03,-0.70);
+$s->drawLineTo(12.32,-0.70);
+$s->drawLineTo(12.32,4.64);
+$ec->add($s);
 
-$s->drawLineTo(11,-7); $s->drawLineTo(14,-7);
-$s->drawLineTo(14,3);
-$s->drawLineTo(15,3);
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(7.37,-4.09);
+$s->drawLineTo(5.48,-4.09);
+$s->drawLineTo(5.48,-1.53);
+$s->drawLineTo(7.37,-1.53);
+$s->drawLineTo(7.37,-4.09);
+$ec->add($s);
 
-$s->drawLineTo(15,0); $s->drawLineTo(17,0);
-$s->drawLineTo(17,5);
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(12.21,-7.77);
+$s->drawLineTo(9.82,-7.77);
+$s->drawLineTo(9.82,-1.59);
+$s->drawLineTo(12.21,-1.59);
+$s->drawLineTo(12.21,-7.77);
+$ec->add($s);
 
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(16.60,-6.32);
+$s->drawLineTo(14.71,-8.04);
+$s->drawLineTo(12.99,-6.32);
+$s->drawLineTo(12.99,4.64);
+$s->drawLineTo(16.60,4.64);
+$s->drawLineTo(16.60,-6.32);
 $ec->add($s);
 
 $ec->nextFrame(); $m->addExport($ec,"preset_place");
@@ -688,25 +730,86 @@ $s->drawLineTo(-10.00,7.17);
 $ec->add($s);
 
 $s=new SWF::Shape();
-$s->setLine(30,255,255,255);
-$s->movePenTo(-5,-5); $s->drawLineTo(14,-5);
-$s->drawLineTo(14,4); $s->drawLineTo(-5,4);
-$s->drawLineTo(-5,-5);
+$s->setRightFill(255,255,255);
+$s->movePenTo(11.74,5.18);
+$s->drawLineTo(-4.19,5.18);
+$s->drawCurveTo(-4.23,5.17,-4.27,5.16);
+$s->drawCurveTo(-4.70,4.99,-4.72,4.49);
+$s->drawCurveTo(-4.77,3.61,-4.77,1.27);
+$s->drawCurveTo(-4.77,-1.67,-4.63,-2.52);
+$s->drawCurveTo(-4.45,-3.62,-4.34,-4.16);
+$s->drawCurveTo(-4.33,-4.21,-4.32,-4.24);
+$s->drawCurveTo(-4.31,-4.27,-4.29,-4.30);
+$s->drawCurveTo(-4.14,-4.66,-3.82,-4.74);
+$s->drawCurveTo(-3.81,-4.74,-3.67,-4.78);
+$s->drawCurveTo(-2.37,-5.11,-1.61,-4.93);
+$s->drawCurveTo(-1.50,-4.90,-1.41,-4.87);
+$s->drawCurveTo(-1.43,-4.89,-1.41,-5.11);
+$s->drawCurveTo(-1.41,-5.13,-1.41,-5.15);
+$s->drawCurveTo(-1.38,-5.17,-1.33,-5.21);
+$s->drawCurveTo(-0.87,-5.52,0.03,-5.52);
+$s->drawCurveTo(0.93,-5.52,1.58,-5.21);
+$s->drawCurveTo(1.64,-5.18,1.69,-5.15);
+$s->drawCurveTo(1.69,-5.15,1.69,-5.15);
+$s->drawLineTo(1.72,-4.71);
+$s->drawCurveTo(1.77,-4.70,1.82,-4.69);
+$s->drawCurveTo(2.36,-4.63,2.73,-5.37);
+$s->drawCurveTo(3.09,-6.10,3.76,-7.13);
+$s->drawCurveTo(3.83,-7.22,3.87,-7.30);
+$s->drawCurveTo(3.88,-7.30,3.88,-7.31);
+$s->drawCurveTo(3.88,-7.31,3.89,-7.31);
+$s->drawCurveTo(3.94,-7.34,4.02,-7.37);
+$s->drawCurveTo(4.86,-7.75,5.79,-7.75);
+$s->drawCurveTo(6.72,-7.75,7.80,-7.40);
+$s->drawCurveTo(7.90,-7.37,7.97,-7.34);
+$s->drawCurveTo(7.98,-7.34,7.98,-7.34);
+$s->drawLineTo(9.36,-5.05);
+$s->drawCurveTo(9.38,-5.01,9.41,-4.97);
+$s->drawCurveTo(9.74,-4.48,10.24,-4.43);
+$s->drawCurveTo(11.79,-4.27,12.21,-3.04);
+$s->drawCurveTo(12.30,-2.79,12.33,-2.49);
+$s->drawCurveTo(12.44,-1.56,12.41,1.16);
+$s->drawCurveTo(12.39,2.61,12.34,4.21);
+$s->drawCurveTo(12.34,4.36,12.33,4.47);
+$s->drawCurveTo(12.33,4.48,12.33,4.49);
+$s->drawCurveTo(12.33,4.49,12.33,4.50);
+$s->drawCurveTo(12.34,4.54,12.33,4.60);
+$s->drawCurveTo(12.29,5.18,11.74,5.18);
+$ec->add($s);
 
-$s->movePenTo(8,-5); $s->drawLineTo(8,-8);
-$s->drawLineTo(13,-8); $s->drawLineTo(13,-5);
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(1.75,0.33);
+$s->drawCurveTo(1.75,-3.83,5.92,-3.83);
+$s->drawCurveTo(10.08,-3.83,10.08,0.33);
+$s->drawCurveTo(10.08,4.49,5.92,4.49);
+$s->drawCurveTo(1.75,4.49,1.75,0.33);
+$ec->add($s);
 
-$s->movePenTo(5,-0.5); $s->drawCircle(4);
+$s=new SWF::Shape();
+$s->setLine(1.34,190,190,190);
+$s->movePenTo(-0.56,4.59);
+$s->drawCurveTo(-0.56,4.56,-0.56,4.53);
+$s->drawCurveTo(-0.60,4.17,-0.63,3.73);
+$s->drawCurveTo(-0.97,-0.97,-0.03,-3.02);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.67,190,190,190);
+$s->movePenTo(3.60,-5.37);
+$s->drawLineTo(8.17,-5.37);
 $ec->add($s);
 
 $ec->nextFrame(); $m->addExport($ec,"preset_tourism");
 
 # ------ potlatch_inatural sprite
 
+# ------ potlatch_itrees sprite
+
 $ec=new SWF::MovieClip();
 
 $s=new SWF::Shape();
-	$s->setRightFill(190,190,190);
+$s->setRightFill(190,190,190);
 $s->movePenTo(-10.00,7.17);
 $s->drawLineTo(19.00,7.17);
 $s->drawLineTo(19.00,-10.00);
@@ -716,38 +819,49 @@ $ec->add($s);
 
 $s=new SWF::Shape();
 $s->setRightFill(255,255,255);
-$s->movePenTo(-2.98,-8.43);
-$s->drawLineTo(-8.37,2.55);
-$s->drawLineTo(-4.82,3.05);
-$s->drawLineTo(-4.73,5.64);
-$s->drawLineTo(-2.52,5.72);
-$s->drawLineTo(-2.40,3.01);
-$s->drawLineTo(1.15,2.76);
-$s->drawLineTo(-2.98,-8.43);
+$s->movePenTo(-6.54,0.95);
+$s->drawLineTo(-2.87,-7.50);
+$s->drawLineTo(0.02,0.62);
+$s->drawLineTo(-1.87,0.84);
+$s->drawLineTo(-2.09,5.07);
+$s->drawLineTo(-4.54,5.07);
+$s->drawLineTo(-4.43,1.07);
+$s->drawLineTo(-6.54,0.95);
 $ec->add($s);
 
 $s=new SWF::Shape();
 $s->setRightFill(255,255,255);
-$s->movePenTo(4.86,-2.63);
-$s->drawLineTo(1.63,3.95);
-$s->drawLineTo(3.76,4.25);
-$s->drawLineTo(3.81,5.80);
-$s->drawLineTo(5.14,5.85);
-$s->drawLineTo(5.21,4.23);
-$s->drawLineTo(7.34,4.08);
-$s->drawLineTo(4.86,-2.63);
+$s->movePenTo(8.70,1.18);
+$s->drawLineTo(12.82,-7.50);
+$s->drawLineTo(16.55,1.51);
+$s->drawLineTo(13.49,2.85);
+$s->drawLineTo(13.60,5.07);
+$s->drawLineTo(11.15,5.07);
+$s->drawLineTo(11.26,2.40);
+$s->drawLineTo(8.70,1.18);
 $ec->add($s);
 
 $s=new SWF::Shape();
 $s->setRightFill(255,255,255);
-$s->movePenTo(12.96,-8.22);
-$s->drawLineTo(7.58,2.76);
-$s->drawLineTo(11.12,3.26);
-$s->drawLineTo(11.21,5.85);
-$s->drawLineTo(13.42,5.93);
-$s->drawLineTo(13.54,3.22);
-$s->drawLineTo(17.09,2.97);
-$s->drawLineTo(12.96,-8.22);
+$s->movePenTo(2.19,2.12);
+$s->drawLineTo(4.95,-3.33);
+$s->drawLineTo(7.65,2.35);
+$s->drawLineTo(5.64,3.01);
+$s->drawLineTo(5.75,5.24);
+$s->drawLineTo(3.97,5.24);
+$s->drawLineTo(4.08,2.57);
+$s->drawLineTo(2.19,2.12);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.67,255,255,255);
+$s->movePenTo(-0.31,-8.50);
+$s->drawCurveTo(-0.30,-8.50,-0.29,-8.50);
+$s->drawCurveTo(-0.16,-8.50,0.00,-8.48);
+$s->drawCurveTo(1.72,-8.22,1.86,-6.67);
+$s->drawCurveTo(1.87,-6.68,1.87,-6.68);
+$s->drawCurveTo(1.94,-6.78,2.03,-6.88);
+$s->drawCurveTo(3.07,-8.01,4.20,-7.17);
 $ec->add($s);
 
 $ec->nextFrame(); $m->addExport($ec,"preset_natural");
@@ -1755,6 +1869,610 @@ if (1==0) {
 		$s->drawLineTo(2.60,14.21);
 		$ec->add($s);
 	}
+
+
+
+
+
+
+
+
+
+
+# ------ potlatch_iaddress sprite
+
+$ec=new SWF::MovieClip();
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-10.00,7.17);
+$s->drawLineTo(19.00,7.17);
+$s->drawLineTo(19.00,-10.00);
+$s->drawLineTo(-10.00,-10.00);
+$s->drawLineTo(-10.00,7.17);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(1.34,255,255,255);
+$s->movePenTo(-6.94,0.38);
+$s->drawCurveTo(-7.81,-4.67,-2.76,-5.53);
+$s->drawCurveTo(2.28,-6.40,3.15,-1.35);
+$s->drawCurveTo(4.01,3.69,-1.03,4.56);
+$s->drawCurveTo(-6.08,5.42,-6.94,0.38);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.67,255,255,255);
+$s->movePenTo(3.26,-5.32);
+$s->drawCurveTo(3.27,-5.34,3.27,-5.35);
+$s->drawCurveTo(3.36,-5.49,3.48,-5.65);
+$s->drawCurveTo(4.75,-7.29,6.33,-5.85);
+$s->drawCurveTo(8.35,-4.01,9.40,-6.38);
+$s->drawCurveTo(10.52,-8.89,12.87,-6.91);
+$s->drawCurveTo(12.88,-6.90,12.89,-6.90);
+$s->drawCurveTo(13.00,-6.79,13.16,-6.69);
+$s->drawCurveTo(14.77,-5.64,15.92,-7.55);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.67,255,255,255);
+$s->movePenTo(5.15,-3.84);
+$s->drawCurveTo(5.95,-3.98,6.78,-3.21);
+$s->drawCurveTo(8.80,-1.37,9.85,-3.74);
+$s->drawCurveTo(10.97,-6.25,13.32,-4.28);
+$s->drawCurveTo(13.33,-4.27,13.34,-4.26);
+$s->drawCurveTo(13.45,-4.16,13.60,-4.06);
+$s->drawCurveTo(15.22,-3.00,16.37,-4.91);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.67,255,255,255);
+$s->movePenTo(5.66,-1.21);
+$s->drawCurveTo(6.43,-1.31,7.23,-0.58);
+$s->drawCurveTo(9.25,1.26,10.30,-1.11);
+$s->drawCurveTo(11.42,-3.62,13.77,-1.64);
+$s->drawCurveTo(13.78,-1.63,13.79,-1.63);
+$s->drawCurveTo(13.90,-1.53,14.05,-1.43);
+$s->drawCurveTo(15.67,-0.37,16.82,-2.28);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.67,255,255,255);
+$s->movePenTo(4.61,2.58);
+$s->drawCurveTo(4.62,2.57,4.63,2.56);
+$s->drawCurveTo(4.71,2.41,4.83,2.25);
+$s->drawCurveTo(6.11,0.62,7.69,2.06);
+$s->drawCurveTo(9.70,3.90,10.76,1.53);
+$s->drawCurveTo(11.87,-0.98,14.22,0.99);
+$s->drawCurveTo(14.23,1.00,14.24,1.01);
+$s->drawCurveTo(14.36,1.11,14.51,1.21);
+$s->drawCurveTo(16.13,2.26,17.27,0.36);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(-0.14,0.31);
+$s->drawCurveTo(-0.03,1.01,0.11,1.45);
+$s->drawLineTo(-0.67,1.57);
+$s->drawLineTo(-0.85,0.98);
+$s->drawLineTo(-0.87,0.99);
+$s->drawCurveTo(-1.25,1.78,-2.23,1.93);
+$s->drawCurveTo(-3.69,2.16,-3.91,0.78);
+$s->drawCurveTo(-4.19,-1.02,-1.30,-1.45);
+$s->drawLineTo(-1.32,-1.55);
+$s->drawCurveTo(-1.50,-2.67,-2.58,-2.49);
+$s->drawCurveTo(-3.31,-2.37,-3.78,-1.94);
+$s->drawLineTo(-4.07,-2.49);
+$s->drawCurveTo(-3.47,-3.01,-2.55,-3.15);
+$s->drawCurveTo(-0.72,-3.44,-0.42,-1.48);
+$s->drawLineTo(-0.14,0.31);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-1.19,-0.85);
+$s->drawCurveTo(-3.23,-0.58,-3.05,0.55);
+$s->drawCurveTo(-2.92,1.38,-2.11,1.25);
+$s->drawCurveTo(-1.21,1.11,-1.06,0.26);
+$s->drawCurveTo(-1.04,0.14,-1.06,-0.02);
+$s->drawLineTo(-1.19,-0.85);
+$ec->add($s);
+
+$ec->nextFrame(); $m->addExport($ec,"preset_address");
+
+# ------ potlatch_ilanduse sprite
+
+$ec=new SWF::MovieClip();
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-10.00,7.17);
+$s->drawLineTo(19.00,7.17);
+$s->drawLineTo(19.00,-10.00);
+$s->drawLineTo(-10.00,-10.00);
+$s->drawLineTo(-10.00,7.17);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(3.38,4.72);
+$s->drawLineTo(-6.53,4.72);
+$s->drawLineTo(-6.53,-6.80);
+$s->drawLineTo(3.38,-6.80);
+$s->drawLineTo(3.38,4.72);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(15.67,-0.20);
+$s->drawLineTo(4.91,-0.20);
+$s->drawLineTo(4.91,-6.80);
+$s->drawLineTo(15.67,-6.80);
+$s->drawLineTo(15.67,-0.20);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(15.67,4.69);
+$s->drawLineTo(4.91,4.69);
+$s->drawLineTo(4.91,1.69);
+$s->drawLineTo(15.67,1.69);
+$s->drawLineTo(15.67,4.69);
+$ec->add($s);
+
+$ec->nextFrame(); $m->addExport($ec,"preset_landuse");
+
+# ------ potlatch_itrack sprite
+
+$ec=new SWF::MovieClip();
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-10.00,7.17);
+$s->drawLineTo(19.00,7.17);
+$s->drawLineTo(19.00,-10.00);
+$s->drawLineTo(-10.00,-10.00);
+$s->drawLineTo(-10.00,7.17);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(13.00,7.21);
+$s->drawCurveTo(12.93,4.45,12.91,4.25);
+$s->drawCurveTo(12.77,2.60,8.65,-1.01);
+$s->drawCurveTo(8.49,-1.16,8.37,-1.27);
+$s->drawCurveTo(5.66,-3.78,5.79,-4.92);
+$s->drawCurveTo(5.86,-5.59,8.36,-6.76);
+$s->drawCurveTo(8.59,-6.87,8.78,-6.95);
+$s->drawCurveTo(8.80,-6.96,8.81,-6.96);
+$s->drawLineTo(7.92,-7.05);
+$s->drawCurveTo(7.91,-7.05,7.90,-7.04);
+$s->drawCurveTo(7.72,-6.99,7.50,-6.91);
+$s->drawCurveTo(5.16,-6.08,3.74,-5.18);
+$s->drawCurveTo(2.20,-4.21,3.69,-1.91);
+$s->drawCurveTo(3.89,-1.60,4.10,-1.36);
+$s->drawCurveTo(4.79,-0.52,5.46,0.77);
+$s->drawCurveTo(6.36,2.49,6.41,3.81);
+$s->drawCurveTo(6.45,4.86,3.24,7.16);
+$s->drawLineTo(13.00,7.21);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.67,255,255,255);
+$s->movePenTo(-7.43,-6.05);
+$s->drawCurveTo(-7.42,-6.06,-7.41,-6.07);
+$s->drawCurveTo(-7.28,-6.17,-7.11,-6.29);
+$s->drawCurveTo(-5.25,-7.56,-3.65,-7.27);
+$s->drawCurveTo(-3.24,-7.20,-1.36,-6.24);
+$s->drawCurveTo(-0.77,-5.94,0.02,-5.94);
+$s->drawCurveTo(0.14,-5.94,3.46,-7.10);
+$s->drawCurveTo(4.34,-7.41,5.03,-7.27);
+$s->drawCurveTo(7.62,-6.76,8.37,-7.16);
+$s->drawCurveTo(10.77,-8.47,12.15,-7.61);
+$s->drawCurveTo(15.00,-5.83,16.83,-5.83);
+$ec->add($s);
+
+$ec->nextFrame(); $m->addExport($ec,"preset_track");
+
+# ------ potlatch_ilighthouse sprite
+
+$ec=new SWF::MovieClip();
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-10.00,7.17);
+$s->drawLineTo(19.00,7.17);
+$s->drawLineTo(19.00,-10.00);
+$s->drawLineTo(-10.00,-10.00);
+$s->drawLineTo(-10.00,7.17);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(-7.66,-4.74);
+$s->drawLineTo(-1.65,-8.52);
+$s->drawLineTo(4.36,-4.74);
+$s->drawLineTo(-3.54,-4.74);
+$s->drawLineTo(-3.54,1.35);
+$s->drawLineTo(2.64,1.35);
+$s->drawLineTo(4.70,1.93);
+$s->drawLineTo(4.64,2.86);
+$s->drawLineTo(-7.54,2.86);
+$s->drawLineTo(-7.54,1.47);
+$s->drawLineTo(-4.98,1.47);
+$s->drawLineTo(-4.98,-4.74);
+$s->drawLineTo(-7.66,-4.74);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(16.04,-8.02);
+$s->drawLineTo(1.80,-2.26);
+$s->drawLineTo(16.84,-5.78);
+$s->drawLineTo(16.84,-8.01);
+$s->drawLineTo(16.04,-8.02);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(16.38,2.57);
+$s->drawLineTo(1.86,-0.31);
+$s->drawLineTo(15.26,4.37);
+$s->drawLineTo(16.38,4.37);
+$s->drawLineTo(16.38,2.57);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(0.88,-3.12);
+$s->drawCurveTo(0.59,-3.22,0.29,-3.22);
+$s->drawCurveTo(-2.31,-3.22,-2.31,-1.48);
+$s->drawCurveTo(-2.31,0.25,0.29,0.25);
+$s->drawCurveTo(0.68,0.25,1.03,0.09);
+$s->drawCurveTo(1.02,0.08,1.01,0.08);
+$s->drawCurveTo(0.90,0.03,0.78,-0.04);
+$s->drawCurveTo(-0.53,-0.78,-0.53,-1.47);
+$s->drawCurveTo(-0.53,-2.16,0.66,-2.98);
+$s->drawCurveTo(0.77,-3.05,0.86,-3.11);
+$s->drawCurveTo(0.87,-3.11,0.87,-3.11);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(2.47,5.78);
+$s->drawLineTo(-5.76,5.78);
+$s->drawLineTo(-5.76,1.74);
+$s->drawLineTo(2.47,1.74);
+$s->drawLineTo(2.47,5.78);
+$ec->add($s);
+
+$ec->nextFrame(); $m->addExport($ec,"preset_landmark");
+
+# ------ potlatch_ishopping sprite
+
+$ec=new SWF::MovieClip();
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-10.00,7.17);
+$s->drawLineTo(19.00,7.17);
+$s->drawLineTo(19.00,-10.00);
+$s->drawLineTo(-10.00,-10.00);
+$s->drawLineTo(-10.00,7.17);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(-0.18,-4.92);
+$s->drawLineTo(9.35,-4.92);
+$s->drawCurveTo(9.38,-4.91,9.42,-4.90);
+$s->drawCurveTo(9.79,-4.76,9.79,-4.34);
+$s->drawCurveTo(9.79,-4.34,9.79,3.45);
+$s->drawCurveTo(9.79,3.46,9.79,3.47);
+$s->drawCurveTo(9.74,3.61,9.68,3.79);
+$s->drawCurveTo(8.97,5.58,7.66,5.58);
+$s->drawCurveTo(7.66,5.58,1.47,5.58);
+$s->drawCurveTo(1.46,5.58,1.45,5.57);
+$s->drawCurveTo(1.31,5.53,1.15,5.45);
+$s->drawCurveTo(-0.62,4.66,-0.62,3.49);
+$s->drawCurveTo(-0.62,3.49,-0.62,-4.43);
+$s->drawCurveTo(-0.62,-4.47,-0.60,-4.51);
+$s->drawCurveTo(-0.48,-4.92,-0.18,-4.92);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(1.34,255,255,255);
+$s->movePenTo(2.63,-4.97);
+$s->drawLineTo(2.63,-5.77);
+$s->drawCurveTo(2.63,-5.78,2.63,-5.79);
+$s->drawCurveTo(2.62,-5.92,2.63,-6.08);
+$s->drawCurveTo(2.79,-7.77,4.63,-7.77);
+$s->drawCurveTo(6.47,-7.77,6.59,-6.04);
+$s->drawCurveTo(6.60,-5.88,6.59,-5.75);
+$s->drawCurveTo(6.59,-5.73,6.59,-5.73);
+$s->drawLineTo(6.59,-4.97);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(8.37,-5.38);
+$s->drawCurveTo(8.37,-5.37,8.37,-5.36);
+$s->drawCurveTo(8.34,-5.25,8.31,-5.10);
+$s->drawCurveTo(7.97,-3.58,7.67,-3.32);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(7.94,-2.99);
+$s->drawCurveTo(8.11,-2.79,7.91,-2.61);
+$s->drawLineTo(6.27,-1.23);
+$s->drawCurveTo(6.07,-1.06,5.90,-1.27);
+$s->drawLineTo(5.35,-1.91);
+$s->drawCurveTo(5.18,-2.12,5.38,-2.29);
+$s->drawLineTo(7.02,-3.67);
+$s->drawCurveTo(7.22,-3.84,7.39,-3.64);
+$s->drawLineTo(7.94,-2.99);
+$ec->add($s);
+
+$ec->nextFrame(); $m->addExport($ec,"preset_shop");
+
+# ------ potlatch_ipostbox sprite
+
+$ec=new SWF::MovieClip();
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-10.00,7.17);
+$s->drawLineTo(19.00,7.17);
+$s->drawLineTo(19.00,-10.00);
+$s->drawLineTo(-10.00,-10.00);
+$s->drawLineTo(-10.00,7.17);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(-2.13,5.78);
+$s->drawLineTo(-2.13,-1.45);
+$s->drawLineTo(-4.05,-4.46);
+$s->drawLineTo(-4.38,-4.50);
+$s->drawLineTo(-4.42,-6.29);
+$s->drawCurveTo(-4.41,-6.30,-4.40,-6.31);
+$s->drawCurveTo(-4.25,-6.42,-4.01,-6.56);
+$s->drawCurveTo(-1.40,-8.01,4.09,-8.01);
+$s->drawCurveTo(9.58,-8.01,12.90,-6.52);
+$s->drawCurveTo(13.21,-6.39,13.41,-6.27);
+$s->drawCurveTo(13.43,-6.26,13.44,-6.25);
+$s->drawLineTo(13.48,-4.54);
+$s->drawLineTo(12.90,-4.54);
+$s->drawLineTo(11.44,-1.54);
+$s->drawLineTo(11.44,5.86);
+$s->drawLineTo(-2.13,5.78);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(8.01,3.05);
+$s->drawLineTo(0.79,3.05);
+$s->drawLineTo(0.79,0.38);
+$s->drawLineTo(8.01,0.38);
+$s->drawLineTo(8.01,3.05);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(1.00,190,190,190);
+$s->movePenTo(-1.71,-1.75);
+$s->drawLineTo(10.77,-1.75);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(1.00,190,190,190);
+$s->movePenTo(-3.38,-4.54);
+$s->drawLineTo(12.23,-4.54);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(5.87,4.85);
+$s->drawLineTo(2.86,4.85);
+$s->drawLineTo(2.86,6.30);
+$s->drawLineTo(5.87,6.30);
+$s->drawLineTo(5.87,4.85);
+$ec->add($s);
+
+$ec->nextFrame(); $m->addExport($ec,"preset_utility");
+
+# ------ potlatch_ifootball sprite
+
+$ec=new SWF::MovieClip();
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-10.00,7.17);
+$s->drawLineTo(19.00,7.17);
+$s->drawLineTo(19.00,-10.00);
+$s->drawLineTo(-10.00,-10.00);
+$s->drawLineTo(-10.00,7.17);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(-3.56,-1.26);
+$s->drawCurveTo(-3.56,-8.85,4.03,-8.85);
+$s->drawCurveTo(11.62,-8.85,11.62,-1.26);
+$s->drawCurveTo(11.62,6.34,4.03,6.34);
+$s->drawCurveTo(-3.56,6.34,-3.56,-1.26);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(0.97,-6.34);
+$s->drawCurveTo(0.97,-6.34,0.98,-6.35);
+$s->drawCurveTo(1.05,-6.39,1.14,-6.44);
+$s->drawCurveTo(2.07,-6.96,2.52,-7.10);
+$s->drawCurveTo(2.98,-7.24,4.09,-7.50);
+$s->drawCurveTo(4.19,-7.52,4.28,-7.54);
+$s->drawCurveTo(4.28,-7.54,4.29,-7.54);
+$s->drawCurveTo(4.29,-7.54,4.42,-7.45);
+$s->drawCurveTo(5.18,-6.93,5.49,-6.62);
+$s->drawCurveTo(5.79,-6.33,6.50,-5.56);
+$s->drawCurveTo(6.56,-5.49,6.61,-5.43);
+$s->drawCurveTo(6.62,-5.43,6.62,-5.42);
+$s->drawLineTo(4.74,-2.66);
+$s->drawLineTo(1.11,-3.32);
+$s->drawCurveTo(1.11,-3.33,1.11,-3.34);
+$s->drawCurveTo(1.09,-3.43,1.08,-3.54);
+$s->drawCurveTo(0.94,-4.71,0.94,-4.95);
+$s->drawCurveTo(0.94,-5.19,0.96,-6.16);
+$s->drawCurveTo(0.96,-6.25,0.97,-6.33);
+$s->drawCurveTo(0.97,-6.33,0.97,-6.34);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-1.13,-0.54);
+$s->drawLineTo(-3.04,-1.16);
+$s->drawCurveTo(-3.04,-1.15,-3.04,-1.14);
+$s->drawCurveTo(-3.05,-1.01,-3.07,-0.85);
+$s->drawCurveTo(-3.22,0.88,-3.16,1.20);
+$s->drawCurveTo(-3.00,2.04,-1.81,3.27);
+$s->drawCurveTo(-1.44,3.65,-1.11,3.81);
+$s->drawCurveTo(-1.09,3.81,-0.05,2.94);
+$s->drawCurveTo(0.05,2.86,0.13,2.79);
+$s->drawCurveTo(0.13,2.79,0.14,2.78);
+$s->drawCurveTo(0.14,2.78,0.11,2.72);
+$s->drawCurveTo(0.02,2.53,-0.05,2.39);
+$s->drawCurveTo(-1.03,0.26,-1.13,-0.54);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(3.72,3.56);
+$s->drawCurveTo(3.73,3.54,3.74,3.54);
+$s->drawCurveTo(3.86,3.42,4.00,3.28);
+$s->drawCurveTo(5.51,1.77,5.96,1.03);
+$s->drawCurveTo(5.96,1.02,8.48,1.37);
+$s->drawCurveTo(8.72,1.40,8.92,1.43);
+$s->drawCurveTo(8.94,1.43,8.95,1.44);
+$s->drawCurveTo(8.95,1.44,8.95,1.45);
+$s->drawCurveTo(8.97,1.56,8.97,1.72);
+$s->drawCurveTo(9.05,3.31,8.55,4.05);
+$s->drawCurveTo(8.55,4.05,8.34,4.22);
+$s->drawCurveTo(7.17,5.11,5.87,5.32);
+$s->drawCurveTo(5.60,5.36,5.33,5.37);
+$s->drawCurveTo(5.25,5.37,4.58,4.67);
+$s->drawCurveTo(3.89,3.96,3.75,3.60);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(9.64,-4.60);
+$s->drawCurveTo(9.64,-4.60,9.64,-4.61);
+$s->drawCurveTo(9.67,-4.68,9.70,-4.76);
+$s->drawCurveTo(10.01,-5.64,9.97,-5.94);
+$s->drawCurveTo(9.99,-5.94,10.14,-5.76);
+$s->drawCurveTo(11.07,-4.65,11.33,-3.37);
+$s->drawCurveTo(11.59,-2.12,11.62,-1.23);
+$s->drawCurveTo(11.62,-1.15,11.62,-1.10);
+$s->drawCurveTo(11.62,-1.09,11.62,-1.09);
+$s->drawCurveTo(11.61,-1.09,11.61,-1.09);
+$s->drawCurveTo(11.56,-1.11,11.50,-1.13);
+$s->drawCurveTo(10.89,-1.37,10.68,-1.37);
+$s->drawCurveTo(10.68,-1.37,10.67,-1.40);
+$s->drawCurveTo(10.65,-1.58,10.62,-1.77);
+$s->drawCurveTo(10.29,-3.99,9.64,-4.60);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(4.63,-3.39);
+$s->drawLineTo(6.09,1.43);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(-1.27,-0.38);
+$s->drawLineTo(1.50,-3.89);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(1.37,-6.10);
+$s->drawLineTo(-1.85,-6.83);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(4.27,-7.43);
+$s->drawCurveTo(4.27,-7.43,4.27,-7.44);
+$s->drawCurveTo(4.31,-7.52,4.37,-7.61);
+$s->drawCurveTo(4.95,-8.65,5.54,-9.13);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(5.82,-5.46);
+$s->drawCurveTo(5.84,-5.45,5.86,-5.45);
+$s->drawCurveTo(6.10,-5.42,6.40,-5.38);
+$s->drawCurveTo(9.61,-4.96,10.23,-4.45);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(8.77,1.72);
+$s->drawCurveTo(8.78,1.70,8.79,1.69);
+$s->drawCurveTo(8.92,1.51,9.09,1.29);
+$s->drawCurveTo(10.86,-1.14,10.96,-2.06);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(9.81,4.46);
+$s->drawCurveTo(9.81,4.46,9.80,4.46);
+$s->drawCurveTo(9.72,4.43,9.62,4.39);
+$s->drawCurveTo(8.54,3.99,7.89,3.91);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(3.98,3.53);
+$s->drawCurveTo(3.97,3.53,3.95,3.53);
+$s->drawCurveTo(3.77,3.52,3.54,3.49);
+$s->drawCurveTo(1.10,3.24,-0.16,2.71);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(3.48,6.80);
+$s->drawCurveTo(3.49,6.80,3.50,6.79);
+$s->drawCurveTo(3.61,6.74,3.74,6.66);
+$s->drawCurveTo(5.18,5.85,5.54,5.13);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(-0.24,5.84);
+$s->drawCurveTo(-0.25,5.83,-0.25,5.82);
+$s->drawCurveTo(-0.30,5.70,-0.37,5.56);
+$s->drawCurveTo(-1.07,4.03,-1.23,3.44);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(0.73,190,190,190);
+$s->movePenTo(-2.72,-0.45);
+$s->drawCurveTo(-2.72,-0.45,-2.72,-0.46);
+$s->drawCurveTo(-2.73,-0.50,-2.75,-0.57);
+$s->drawCurveTo(-2.94,-1.25,-3.08,-1.93);
+$s->drawCurveTo(-3.47,-3.89,-3.18,-4.49);
+$ec->add($s);
+
+$ec->nextFrame(); $m->addExport($ec,"preset_recreation");
+
+
+
+
+
+
+
 
 	$m->writeExports();
 

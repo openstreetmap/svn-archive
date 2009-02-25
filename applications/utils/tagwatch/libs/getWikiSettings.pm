@@ -30,6 +30,7 @@ sub buildWikiSettingsCache
 {
 	my (%Config) = @_;
 
+	$c->{ua}->agent($Config{'user_agent'} || "TagWatch/1.0");
 	@Languages = split(/,/, $Config{'languages'});
 
 	my $CacheDir = "$Config{'cache_folder'}/wiki_settings";

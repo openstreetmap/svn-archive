@@ -15,6 +15,7 @@
 	POI.prototype=new MovieClip();
 	POI.prototype.remove=function() {
 		memberDeleted('node', this._name);
+		uploadDirtyRelations();
 		if (this._name>=0 && !_root.sandbox) {
 			poidelresponder = function() { };
 			poidelresponder.onResult = function(result) {

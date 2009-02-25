@@ -323,12 +323,10 @@
 			_root.map.relations[rels[r]].redraw();
 	}
 
-	// the server-side handles removing a deleted object from a relation
-	// but we need to keep the client side in sync
 	function memberDeleted(type, id) {
 		var rels = _root.map.relations;
 		for ( r in rels )
-			rels[r].removeMemberDirty(type, id, false);
+			rels[r].removeMemberDirty(type, id, true);
 	}
 
 	function renumberMemberOfRelation(type, id, new_id) {

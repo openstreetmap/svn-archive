@@ -126,7 +126,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.10g";	// current version
+	var signature="Potlatch 0.11";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","Yahoo","","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used

@@ -71,36 +71,39 @@
 		delresponder=function() { };
 		delresponder.onResult=function(result) {
 			var code=result.shift(); if (code) { handleError(code,result); return; }
-			var i,id;
-			var w=result[0];
-			// ***** Needs to mark as unclean anything where the version differs
-			//       (and create a new version)
-			// Don't mark as unclean if it's actually visible
-			if (result[4]) { _root.map.ways[w].historic=false; _root.map.ways[w].clean=true;  }
-			          else { _root.map.ways[w].historic=true;  _root.map.ways[w].clean=false; }
-			_root.map.ways[w].version=result[3];
-			_root.map.ways[w].removeNodeIndex();
-			_root.map.ways[w].path=[];
-			_root.map.ways[w].resetBBox();
+			var i,id,n;
+			var w=_root.map.ways[result[0]];
+			if (result[4]) { w.historic=false; w.clean=true;  }
+			          else { w.historic=true;  w.clean=false; }
+			w.version=result[3];
+			w.removeNodeIndex();
+			w.path=[];
+			w.resetBBox();
 			for (i=0; i<result[1].length; i++) {
-				x =result[1][i][0];
-				y =result[1][i][1];
-				id=result[1][i][2]; if (id<0) { id=--_root.newnodeid; }	// assign negative IDs to anything moved
-				_root.map.ways[w].updateBBox(x,y);
+				n=result[1][i];
+				x=n[0]; y=n[1]; id=n[2];					// 3:current version, 4:tags, 5:reuse?
+				if (id<0) { id=--_root.newnodeid; }			// assign negative IDs to anything moved
+				w.updateBBox(x,y);
 				x=long2coord(x); y=lat2coord(y);
 				if (nodes[id]) {
-					nodes[id].moveTo(x,y,w);
+					if (x!=nodes[id].x || y!=nodes[id].y) {
+						// ** also needs to check that tags haven't changed
+						nodes[id].moveTo(x,y,w);
+						nodes[id].attr=n[4];
+						nodes[id].version=n[3];
+					}
+					if (n[5]) { nodes[id].clean=true; }		// is visible and current version
 				} else {
-					_root.nodes[id]=new Node(id,x,y,result[1][i][4]);	// ** add node version here
+					_root.nodes[id]=new Node(id,x,y,n[4],n[3]);
 				}
-				_root.map.ways[w].path.push(_root.nodes[id]);
-				_root.nodes[id].addWay(w);
+				w.path.push(_root.nodes[id]);
+				_root.nodes[id].addWay(result[0]);
 			}
-			_root.map.ways[w].attr=result[2];
-			if (w==wayselected) { _root.map.ways[w].select(); }
-						   else { _root.map.ways[w].locked=true; }
-			_root.map.ways[w].redraw();
-			_root.map.ways[w].clearPOIs();
+			w.attr=result[2];
+			if (w==ws) { w.select(); }
+				  else { w.locked=true; }
+			w.redraw();
+			w.clearPOIs();
 		};
 		remote_read.call('getway_old',delresponder,Number(this._name),timestamp);
 	};
@@ -259,6 +262,8 @@
 		this.deleteMergedWays();
 		this.removeNodeIndex();
 		memberDeleted('way', this._name);
+		var z=this.path; for (var i in z) { memberDeleted('node', z[i].id); }
+		uploadDirtyRelations();
 		if (this._name>=0 && !_root.sandbox && !this.historic) {
 			deleteresponder = function() { };
 			deleteresponder.onResult = function(result) {

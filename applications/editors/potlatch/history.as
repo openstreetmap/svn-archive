@@ -40,19 +40,19 @@
 		var versionlist=new Array();
 		_root.versioninfo=result[2];
 		for (i=0; i<result[2].length; i+=1) {
-			versionlist.push(result[2][i][1]+' ('+result[2][i][3]+')');
+			versionlist.push(result[2][i][0]+' ('+result[2][i][1]+')');
 		}
 		_root.windows.history.box.attachMovie("menu","version",23);
 		_root.windows.history.box.version.init(9,32,0,versionlist,
-			iText('Choose the version to revert to','tip_revertversion'),
+			iText('Choose the date to revert to','tip_revertversion'),
 			function(n) {
 				var a=100; if (versioninfo[n][2]==0) { var a=25; }
 				_root.windows.history.box.revert._alpha=a;
-				_root.revertversion=versioninfo[n][0]; 
-				_root.revertauthor =versioninfo[n][4];
+				_root.reverttime   =versioninfo[n][0]; 
+				_root.revertauthor =versioninfo[n][2];
 			},null,256);
-		_root.revertversion=versioninfo[0][0];
-		_root.revertauthor =versioninfo[0][4];
+		_root.reverttime  =versioninfo[0][0];
+		_root.revertauthor=versioninfo[0][2];
 	};
 
 	// Respond to buttons
@@ -76,7 +76,7 @@
 		_root.windows.history.remove();
 		if (_root.reverttype=='way') {
 			_root.map.ways[_root.revertid].saveUndo(iText("reverting",'reverting'));
-			_root.map.ways[_root.revertid].loadFromDeleted(_root.revertversion);
+			_root.map.ways[_root.revertid].loadFromDeleted(_root.reverttime);
 		} else if (nodes[_root.revertid]) { // node in way
 			noderesponder=function() {};
 			noderesponder.onResult=function(result) {
@@ -86,10 +86,10 @@
 				_root.map.ways[w].clean=false;
 				_root.map.ways[w].select();
 			};
-			remote_read.call('getpoi',noderesponder,_root.revertid,_root.revertversion);
+			remote_read.call('getpoi',noderesponder,_root.revertid,_root.reverttime);
 		} else { // POI
 			_root.map.pois[_root.revertid].clean=false;
-			_root.map.pois[_root.revertid].reload(_root.revertversion);
+			_root.map.pois[_root.revertid].reload(_root.reverttime);
 		}
 	};
 
@@ -106,7 +106,7 @@
 				way=waylist[i];											//  |
 				if (!_root.map.ways[way]) {								//  |
 					_root.map.ways.attachMovie("way",way,++waydepth);	//  |
-					_root.map.ways[way].loadFromDeleted(-1);			//  |
+					_root.map.ways[way].loadFromDeleted('');			//  |
 					_root.waycount+=1;									//  |
 				}
 			}

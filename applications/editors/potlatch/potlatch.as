@@ -129,6 +129,7 @@
 	var signature="Potlatch 0.10g";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","Yahoo","","","","","NPE","OpenTopoMap");
+	var lastgroup='road';			// last preset group used
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// background layer

@@ -67,12 +67,14 @@
 		remote_read.call('getway',responder,Math.floor(this._name));
 	};
 
-	OSMWay.prototype.loadFromDeleted=function(version) {
+	OSMWay.prototype.loadFromDeleted=function(timestamp) {
 		delresponder=function() { };
 		delresponder.onResult=function(result) {
 			var code=result.shift(); if (code) { handleError(code,result); return; }
 			var i,id;
 			var w=result[0];
+			// ***** Needs to mark as unclean anything where the version differs
+			//       (and create a new version)
 			// Don't mark as unclean if it's actually visible
 			if (result[4]) { _root.map.ways[w].historic=false; _root.map.ways[w].clean=true;  }
 			          else { _root.map.ways[w].historic=true;  _root.map.ways[w].clean=false; }
@@ -100,7 +102,7 @@
 			_root.map.ways[w].redraw();
 			_root.map.ways[w].clearPOIs();
 		};
-		remote_read.call('getway_old',delresponder,Math.floor(this._name),Math.floor(version));
+		remote_read.call('getway_old',delresponder,Number(this._name),timestamp);
 	};
 
 	OSMWay.prototype.clearPOIs=function() {
@@ -267,7 +269,9 @@
 				_root.writesrequested--;
 			};
 			_root.writesrequested++;
-			remote_write.call('deleteway',deleteresponder,_root.usertoken,_root.changeset,Math.floor(this._name));
+			var nodeversions=new Object(); var z=this.path;
+			for (var i in z) { nodeversions[z[i].id]=z[i].version; }
+			remote_write.call('deleteway',deleteresponder,_root.usertoken,_root.changeset,Number(this._name),Number(this.version),nodeversions);
 		} else {
 			if (this._name==wayselected) { stopDrawing(); deselectAll(); }
 			removeMovieClip(_root.map.areas[this._name]);

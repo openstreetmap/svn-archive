@@ -33,8 +33,8 @@
 		if (pw) {
 			this.pw=pw;			// reference to property window
 			pw.presetmenu=this;	// and back again!
-			this.group='road';	// what group of tags? (e.g. 'road')
-			this.setIcon(this.group);
+			this.group=_root.lastgroup;	// what group of tags? (e.g. 'road')
+			this.setIcon();
 			this.reflect();
 		} else {
 			removeMovieClip(this.dropdown);
@@ -61,6 +61,7 @@
 			  else { this.initMenu(0); }
 	};
 	PresetMenu.prototype.setIcon=function() {
+		_root.lastgroup=this.group;
 		this.attachMovie("preset_"+this.group,"icon",2);
 		with (this.icon) { _x=10; _y=15; }
 		this.icon.onPress   =function() { this._parent.cycleIcon(); };
@@ -494,6 +495,7 @@
 	};
 
 	PropertyWindow.prototype.findInPresetMenu=function(group) {
+		if (group=='address') { return 0; }	// shouldn't match addresses as they're "additional" tags
 		var pname,pkeys,pre,ok,cvalue;
 		var f=0;
 		for (pre=presetnames[this.proptype][group].length-1; pre>-1; pre-=1) {

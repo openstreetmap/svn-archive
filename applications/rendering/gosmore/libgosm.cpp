@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <vector>
 #include <assert.h>
+#include "float.h"
 using namespace std;
 
 #include "libgosm.h"
@@ -21,8 +22,12 @@ char *gosmData, *gosmSstr[searchCnt];
 styleStruct srec[2 << STYLE_BITS];
 
 ndType *ndBase;
+int styleCnt;
 styleStruct *style;
 wayType *gosmSway[searchCnt];
+
+// store the maximum speeds (over all waytypes) of each vehicle type
+float maxspeeds[layerBit1];
 
 int TagCmp (char *a, char *b)
 { // This works like the ordering of books in a library : We ignore
@@ -349,6 +354,20 @@ inline int IsOneway (wayType *w, int Vehicle)
     (w->bits & (1 << motorcarR))) && (w->bits & (1<<onewayR));
 }
 
+inline float GetWayInvSpeed (wayType *w, int Vehicle) {
+  if (w->maxspeed < Style (w)->aveSpeed[Vehicle]) {
+    // if w.maxspeed is less than the vehicle speed, then calculate
+    // invSpeed from w->maxspeed
+    // printf("DEBUG: overriding %f with %f (%f with %f)\n",
+    // 	   Style(w)->aveSpeed[Vehicle], w->maxspeed,
+    // 	   Style(w)->invSpeed[Vehicle], maxspeeds[Vehicle]/w->maxspeed);
+    return maxspeeds[Vehicle] / w->maxspeed;
+  } else {
+    // otherwise, just use the stored vehicle invSpeed
+    return Style (w)->invSpeed[Vehicle];
+  }
+}
+
 void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
 { /* Recalculate is faster but only valid if 'to', 'Vehicle' and
      'fast' did not change */
@@ -398,7 +417,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
       
       if (d < bestd) {
         bestd = d;
-        double invSpeed = !fast ? 1.0 : Style (w)->invSpeed[Vehicle];
+        double invSpeed = !fast ? 1.0 : GetWayInvSpeed(w,Vehicle);
         //printf ("%d %lf\n", i, invSpeed);
         toEndNd[i][0] =
           lrint (sqrt ((double)(Sqr (lon0) + Sqr (lat0))) * invSpeed);
@@ -575,7 +594,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
           int d = lrint (sqrt ((double)
             (Sqr ((__int64)(nd->lon - other->lon)) +
              Sqr ((__int64)(nd->lat - other->lat)))) *
-                        (fast ? Style (w)->invSpeed[Vehicle] : 1.0));     
+			 (fast ? GetWayInvSpeed(w, Vehicle) : 1.0));     
           if (rootIsAdestination && !(w->destination & (1 << Vehicle))) {
             d += 5000000; // 500km penalty for entering v='destination' area.
           }
@@ -613,6 +632,22 @@ int JunctionType (ndType *nd)
   return segCnt > 2 ? toupper (ret) : ret;
 }
 
+void CalculateMaxSpeeds(/* in */ const styleStruct* srec, int styleCnt, 
+			/* out */ float* maxspeeds) {
+  //calculate maxspeeds for vehicles from styles
+  for (int i = 0; i < layerBit1; i++) {
+    // first calculate the maximum specified speed for each vehicle
+    // over all styles
+    maxspeeds[i] = 0;
+    // for style
+    for (int j = 0; j < styleCnt; j++) {
+      if (srec[j].aveSpeed[i] > maxspeeds[i]) {
+	maxspeeds[i] = srec[j].aveSpeed[i];
+      }
+    }
+  }
+}
+
 int GosmInit (void *d, long size)
 {
   if (!d) return FALSE;
@@ -622,8 +657,18 @@ int GosmInit (void *d, long size)
                       - 5;
   ndBase = (ndType *)(gosmData + hashTable[bucketsMin1 + (bucketsMin1 >> 7)
      + 4]);
-  style = (struct styleStruct *)(gosmData + 4);
+  
+  // load styleCnt and style rec
+  styleCnt = *((int *) (gosmData + sizeof(pakHead)));
+  style = (struct styleStruct *)
+    (gosmData + sizeof(pakHead) + sizeof(styleCnt));
+
   memset (gosmSway, 0, sizeof (gosmSway));
+
+  // calculate the maximum specified speed for each vehicle over all styles
+  // (used for routing later)
+  CalculateMaxSpeeds(style, styleCnt, maxspeeds);
+  
   return ndBase && hashTable && *(int*) gosmData == pakHead;
 }
 
@@ -636,7 +681,8 @@ void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile) {
 					 // LoadElemstyles but ignored
   memset (&srec, 0, sizeof (srec)); // defined globally
   memset (&map, 0, sizeof (map));
-  LoadElemstyles(elemstylefile, iconscsvfile, srec, map, firstElemStyle);
+  LoadElemstyles(elemstylefile, iconscsvfile, firstElemStyle, 
+		 srec, map, maxspeeds);
   // over-ride style record loaded from pakfile with alternative
   style = &(srec[0]);
 }
@@ -740,9 +786,10 @@ int MasterWayCmp (const void *a, const void *b)
   return r[0] < r[1] ? 1 : r[0] > r[1] ? -1 : 0;
 }
 
-int LoadElemstyles(const char *elemstylesfname, const char *iconsfname, 
-		   styleStruct *srec, elemstyleMapping *map, 
-		   int styleCnt)
+int LoadElemstyles(/* in */ const char *elemstylesfname, 
+		   const char *iconsfname, int styleCnt,
+		   /* out */ styleStruct *srec, elemstyleMapping *map, 
+		   float* maxspeeds)
 {
    //------------------------- elemstyle.xml : --------------------------
     int ruleCnt = 0;
@@ -874,21 +921,31 @@ int LoadElemstyles(const char *elemstylesfname, const char *iconsfname,
       xmlFree (name);
       //xmlFree (val);      
     }
+
+    // calculate the maximum specified speed for each vehicle over all
+    // styles
+    CalculateMaxSpeeds(srec, styleCnt, maxspeeds);
+
+    // for vehicle
     for (int i = 0; i < layerBit1; i++) {
-      double max = 0;
+      // for style
       for (int j = 0; j < styleCnt; j++) {
-        if (srec[j].aveSpeed[i] > max) max = srec[j].aveSpeed[i];
-      }
-      for (int j = 0; j < styleCnt; j++) {
-        if (srec[j].aveSpeed[i] == 0) { // e.g. highway=foot motorcar=yes
+	// if no speed is defined for a vehicle on this style, then
+	// set the aveSpeed to be the maximum of any other
+	// vehicles. This speed will only be used if vehicle=yes is
+	// defined on the way. (e.g. highway=foot motorcar=yes)
+        if (srec[j].aveSpeed[i] == 0) { 
           for (int k = 0; k < layerBit1; k++) {
             if (srec[j].aveSpeed[i] < srec[j].aveSpeed[k]) {
               srec[j].aveSpeed[i] = srec[j].aveSpeed[k];
-            } // As fast as any other vehicle,
-          } // without breaking our own speed limit :
-          if (srec[j].aveSpeed[i] > max) srec[j].aveSpeed[i] = max;
+            } 
+          } // without breaking the normal maximum speed for this vehicle
+          if (srec[j].aveSpeed[i] > maxspeeds[i]) {
+	    srec[j].aveSpeed[i] = maxspeeds[i];
+	  }
         }
-        srec[j].invSpeed[i] = max / srec[j].aveSpeed[i];
+	// store the proportion of maxspeed for routing
+        srec[j].invSpeed[i] = maxspeeds[i] / srec[j].aveSpeed[i];
       }
     }
     xmlFreeTextReader (sXml);
@@ -926,11 +983,15 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   //------------------------ elemstylesfile : -----------------------------
   styleStruct srec[2 << STYLE_BITS];
   elemstyleMapping map[2 << STYLE_BITS];
+  float maxspeeds[layerBit1];
   memset (&srec, 0, sizeof (srec));
   memset (&map, 0, sizeof (map));
   
-  int styleCnt = LoadElemstyles(elemstylefile, iconscsvfile, srec, map,
-				firstElemStyle);
+  int styleCnt = LoadElemstyles(elemstylefile, iconscsvfile, firstElemStyle, 
+				srec, map, maxspeeds);
+  // write number of styles
+  fwrite (&styleCnt, sizeof(styleCnt), 1, pak); 
+  // followed by styleStruct
   fwrite (&srec, sizeof (srec[0]), styleCnt + 1, pak);    
 
   //------------------ OSM Data File (/dev/stdin) : ------------------------
@@ -976,6 +1037,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   w.dlon = INT_MIN;
   w.bits = 0;
   w.destination = 0;
+  w.maxspeed = FLT_MAX;
   
   // if we are doing a second pass bbox rebuild
   if (master) {
@@ -1072,6 +1134,10 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    avalue = tags; // Old 'tags' will be freed
 	    tags = (char*) xmlStrcat (tmp, BAD_CAST tags);
 	    // name always first tag.
+	  }
+	  else if (K_IS ("maxspeed")) {
+	    // TODO check for mph and variants and convert to kph
+	    w.maxspeed=atof(avalue);
 	  }
 	  else if (K_IS ("layer")) w.bits |= atoi (avalue) << 29;
           
@@ -1272,6 +1338,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	yesMask = noMask = 0;
 	w.bits = 0;
 	w.destination = 0;
+	w.maxspeed = FLT_MAX;
 	wStyle = styleCnt;
       }
     } // if it was </...>

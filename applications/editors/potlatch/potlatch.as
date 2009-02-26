@@ -716,6 +716,7 @@
 				_root.map.anchors[_root.drawpoint].endElastic();
 				_root.ws.remove();
 				_root.drawpoint=-1;
+				deselectAll();
 			}
 		} else if (_root.pointselected>-2) {
 			// delete selected point
@@ -951,6 +952,7 @@
 
 	function deselectAll() {
 		_root.map.createEmptyMovieClip("anchors",5000); 
+		_root.map.elastic.clear();
 		removeMovieClip(_root.map.highlight);
 		_root.panel.i_clockwise._visible=false;
 		_root.panel.i_anticlockwise._visible=false;

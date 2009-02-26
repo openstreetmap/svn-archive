@@ -29,11 +29,10 @@ EXTRA=`pkg-config --cflags --libs gtk+-2.0 || echo -D HEADLESS`
 XMLFLAGS=`pkg-config --cflags libxml-2.0 || echo -I /usr/include/libxml2` \
   `pkg-config --libs libxml-2.0 || echo -l xml2 -lz -lm`
 else
-EXTRA=-mms-bitfields -mno-cygwin -I/msys/include/gtk-2.0 \
-  -I/msys/include/cairo     -I/msys/include/glib-2.0 \
-  -I/msys/include/pango-1.0 -I/msys/include/atk-1.0 \
-  -I/msys/lib/glib-2.0/include    -I/msys/lib/gtk-2.0/include -L/msys/lib \
-  -lgtk-win32-2.0 -lgdk-win32-2.0 -lglib-2.0 -lgobject-2.0 -lpango-1.0
+# To compile with mingw, install MSYS and mingw, and then download
+# the "all-in-one bundle" from http://www.gtk.org/download-windows.html
+# and unzip it to C:\msys\1.0.
+EXTRA=-mms-bitfields -mno-cygwin `pkg-config --cflags --libs gtk+-2.0`
 endif
 
 all: gosmore

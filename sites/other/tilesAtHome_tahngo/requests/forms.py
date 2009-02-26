@@ -17,6 +17,6 @@ class ClientAuthForm(forms.Form):
      passwd = forms.CharField()
 
 class TakeRequestForm(forms.Form):
-     version = forms.CharField(required=False,initial="Trondheim",widget=forms.widgets.HiddenInput())
+     version = forms.CharField(required=False,initial="Ulm",widget=forms.widgets.HiddenInput())
      layerspossible = forms.CharField(required=False, initial="tile,maplint,captionless,caption")
      client_uuid = forms.IntegerField(min_value=0,max_value=65535,required=False,widget=forms.widgets.HiddenInput(),initial=0)

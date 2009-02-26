@@ -1613,8 +1613,14 @@ int UserInterface (int argc, char *argv[],
   }
 
   if (stylefile) {
+#ifndef _WIN32
     GosmLoadAltStyle(stylefile,FindResource("icons.csv"));
+#else
+    fprintf(stderr, "Overiding style information is not currently supported"
+	    " in Windows.");
+#endif
   }
+
 
   if (getenv ("QUERY_STRING")) {
     double x0, y0, x1, y1;
@@ -1830,9 +1836,13 @@ int main (int argc, char *argv[])
   }
   
   if (rebuild) {
+#ifndef _WIN32
     printf("Building %s using style %s...\n",pakfile,stylefile);
 
     RebuildPak(pakfile, stylefile, FindResource("icons.csv"), master, bbox);
+#else
+    fprintf(stderr,"Pakfile rebuild is not currently supported in Windows.\n");
+#endif
   }
 
   return UserInterface (argc, argv, pakfile, stylefile);

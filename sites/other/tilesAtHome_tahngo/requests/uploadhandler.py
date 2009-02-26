@@ -23,10 +23,10 @@ def handle_uploaded_tileset(file, form):
   # otherwise it's in RAM and still needs saving
   try:
       tmp_fullpath = file.temporary_file_path()
-      f = open(tmp_fullpath, 'w+b')
+      f = open(tmp_fullpath, 'r+b')
   except AttributeError:
       (tmp_fd, tmp_fullpath) = mkstemp()
-      f = os.fdopen(tmp_fd, 'w+b')
+      f = os.fdopen(tmp_fd, 'r+b')
       for chunk in file.chunks():
           f.write(chunk)
 

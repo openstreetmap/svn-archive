@@ -315,7 +315,7 @@ def upload_request(request):
 
 def upload_gonogo(request):
     # return 'fullness' of the server queue between [0,1]
-    load = min(Upload.objects.all().count()/1500.0, 1)
+    load = min(Upload.objects.all().count()/2000.0, 1)
     return HttpResponse(str(load));
 
 
@@ -378,7 +378,7 @@ def take(request):
 
     #"You provided a correct username and password!"
     # next, check for a valid client version
-    if not form['version'] in ['Trondheim']:
+    if not form['version'] in ['Ulm','Trondheim']:
         # client version not in whitelist
         logging.info("User %s connects with disallowed client '%s'." %\
                      (user,form.cleaned_data['version']))
@@ -403,7 +403,7 @@ def take(request):
     # req is a request we are about to hand out
     # make sure the upload queue is not too full, depending on priority
     upload_queue = Upload.objects.all().count() # [0...1500]
-    if upload_queue > {1:2000,2:1700,3:1500,4:1400}[req.priority]:
+    if upload_queue > {1:2500,2:2000,3:1900,4:2700}[req.priority]:
         # reset to unhandled and bomb out with a "No request in queue for you"
         req.status=0
         req.save()
@@ -448,7 +448,7 @@ def request_changedTiles(request):
       return HttpResponseForbidden('Access not allowed from this IP address.')
     #fetch the url that is called to retrieve the changed tiles
     url = setting.getSetting('changed_tiles_api_url')
-    if not url: url = setting.setSetting('changed_tiles_api_url','http://www.openstreetmap.org/api/0.5/changes?hours=4')
+    if not url: url = setting.setSetting('changed_tiles_api_url','http://www.openstreetmap.org/api/0.5/changes?hours=2')
 
     html="Requested tiles:\n"
     xml_dom = xml.dom.minidom.parse(urllib.urlopen(url))

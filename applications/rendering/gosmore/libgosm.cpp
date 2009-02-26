@@ -1136,8 +1136,14 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    // name always first tag.
 	  }
 	  else if (K_IS ("maxspeed")) {
-	    // TODO check for mph and variants and convert to kph
-	    w.maxspeed=atof(avalue);
+	    char units[80] = "";
+	    sscanf(avalue,"%f%s",&(w.maxspeed),units);
+	    // check for mph and variants and convert to kph
+	    if (strlen(units) > 0) {
+	      if (units[0] == 'm' || units[0] == 'M' ) {
+		w.maxspeed *= 1.609344;
+	      }
+	    }
 	  }
 	  else if (K_IS ("layer")) w.bits |= atoi (avalue) << 29;
           

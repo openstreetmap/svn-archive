@@ -105,12 +105,12 @@ class SimpleMap {
 		if ($height=='')	$height='320'; 
 		if ($format=='')	$format='jpeg'; 
 
-		if ($zoom=='' && isset( $argv['zoom'] ) ) {
+		if ($zoom=='') {
 			//see if they used 'zoom' rather than 'z' (and allow it)
-			if ( isset( $argv['z'] ) ) { 
-				$zoom		= $argv['z'];
+			if ( isset( $argv['zoom'] ) ) { 
+				$zoom = $argv['zoom'];
 			} else {
-				$zoom		= $oldStyleParams['z'];
+				$zoom = $oldStyleParams['zoom'];
 			}
 		}
 

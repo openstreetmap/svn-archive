@@ -368,11 +368,18 @@ public class TagChecker extends Test
             if( checkValues && value != null && value.length() > 0 && presetsValueData != null)
             {
                 List<String> values = presetsValueData.get(key);
-                if( values != null && !values.contains(prop.getValue()) && !withErrors.contains(p, "UPV"))
+                if( values == null)
                 {
-                    String i = marktr("Key ''{0}'' unknown.");
-                    errors.add( new TestError(this, Severity.OTHER, tr("Unknown property values"),
+                    String i = marktr("Key ''{0}'' not in presets.");
+                    errors.add( new TestError(this, Severity.OTHER, tr("Presets do not contain property key"),
                     tr(i, key), MessageFormat.format(i, key), INVALID_VALUE, p) );
+                    withErrors.add(p, "UPK");
+                }
+                else if(!values.contains(prop.getValue()))
+                {
+                    String i = marktr("Value ''{0}'' for key ''{1}'' not in presets.");
+                    errors.add( new TestError(this, Severity.OTHER, tr("Presets do not contain property value"),
+                    tr(i, prop.getValue(), key), MessageFormat.format(i, prop.getValue(), key), INVALID_VALUE, p) );
                     withErrors.add(p, "UPV");
                 }
             }

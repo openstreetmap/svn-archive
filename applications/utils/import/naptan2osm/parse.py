@@ -13,7 +13,8 @@ class ParseXML:
     watchnodes = ()
     parentnodes = {}    # Dict noting parent nodes that may need to be checked to determine child's meaning
     
-    featurecounter = 0  # OSM feature id incrementor
+    nodecounter = 0  # OSM feature id incrementor
+    relationcounter = 0
     feature = None      # The OSM feature we're building
     outfile = None
     
@@ -65,8 +66,14 @@ class ParseXML:
                     self.feature.tags[key] = value
             
     def newfeature(self):
-        self.featurecounter += 1
-        feature = osmparser.OSMObj(type='node', id='-%d' % self.featurecounter)
+        self.nodecounter += 1
+        feature = osmparser.OSMObj(type='node', id=-self.nodecounter)
+        feature.tags = self.defaulttags.copy()
+        return feature
+        
+    def newrelation(self):
+        self.relationcounter += 1
+        feature = osmparser.OSMObj(type='relation', id=-self.relationcounter)
         feature.tags = self.defaulttags.copy()
         return feature
         
@@ -87,11 +94,22 @@ class ParseNaptan(ParseXML):
         'Crossing': '',
         'Indicator': '',            # For when the ref-parsing code below fails
         'Notes': '',
+        # StopArea tagging begins here
+        'StopAreaCode': '',
     }
     tagmap_altdescriptors = {
         
     }
-    watchnodes = ('StopPoints', 'StopAreas', 'AlternativeDescriptors', 'StopClassification')
+    defaultareatags = {'type': 'site', 'site': 'stop_area'}
+    watchnodes = ('StopPoints', 'StopArea', 'AlternativeDescriptors', 'StopClassification')
+    
+    # dict of form {stoparearef: [osmstoppointid, osmstoparearaid, ...]}
+    stopareamap = {}
+    # Some ParentStopAreas are in other datasets (eg national), make a note so we can link back.
+    # TODO: mechanism for pulling in PSAs that are already imported.
+    missingparentarea = []
+    # Used when storing StopAreas which could require further modification
+    features = {}
         
     def startElement(self, elem):
         """Event handler for when the XML parser encounters an opening tag.
@@ -105,6 +123,12 @@ class ParseNaptan(ParseXML):
         if node == 'StopPoint':
             if elem.attrib['Status'] == 'active':
                 self.feature = self.newfeature()
+            else:
+                elem.clear()
+        elif node == 'StopArea':
+            if elem.attrib['Status'] == 'active':
+                self.feature = self.newrelation()
+                self.feature.tags.update(self.defaultareatags)
             else:
                 elem.clear()
     
@@ -155,16 +179,57 @@ class ParseNaptan(ParseXML):
                 elif st == 'TXR' or st == 'STR':
                     self.feature.tags['amenity'] = 'taxi'
                 else:
-                    # We don't want any other types of points imported at all yet, need to consider this as a config option.
+                    # We don't want any other types of points imported at all yet
                     self.cancelfeature()
             elif node == 'BusStopType':
                 bst = elem.text
                 # We don't yet support Hail and Ride or 'Flexible' stop point areas.
                 if bst == 'HAR' or bst == 'FLX':
                     self.cancelfeature()
-            else:
-                # Fallthrough for simple tag mappings
+            
+            elif node == 'StopAreaRef':
+                # Store this info to add the feature to the relation when we're parsing the StopArea
+                # TODO: Pull this out to osmparser
+                relationmember = {'ref': self.feature.id, 'type': 'node', 'role': ''}
+                if not elem.text in self.stopareamap:
+                    self.stopareamap[elem.text] = [relationmember,]
+                else:
+                    self.stopareamap[elem.text].append(relationmember)
+            
+            # StopArea stuff
+            elif node == 'StopArea':
+                # Don't bother with StopAreas with no StopPoints present
+                if not self.feature.members:
+                    self.feature = None
+                if self.feature:
+                    atcocode = self.feature.tags['naptan:StopAreaCode']
+                    self.features[atcocode] = self.feature
+                    self.feature = None
+                    
+            elif node == 'StopAreaCode':
+                if elem.text in self.stopareamap:
+                    # Add the Points we stored earlier to the newly created relation
+                    self.feature.members.extend(self.stopareamap[elem.text])
                 self.node2tag(elem)
+                
+            elif node == 'ParentStopAreaRef':
+                # TODO: Pull this out to osmparser
+                relationmember = {'ref': self.feature.id, 'type': 'relation', 'role': ''}
+                if elem.text in self.features:
+                    self.features[elem.text].members.append(relationmember)
+                elif not elem.text in self.stopareamap:
+                    self.stopareamap[elem.text] = [relationmember,]
+                else:
+                    self.stopareamap[elem.text].append(relationmember)
+                
+            elif node == 'Name' and self.parentnodes['StopArea']:
+                self.feature.tags['name'] = elem.text
+
+
+            else:
+                # Fallthrough for ALL simple tag mappings
+                self.node2tag(elem)
+
         # (endif self.feature)
         # Keep our parent nodes dict updated.
         ParseXML.endElement(self, elem)

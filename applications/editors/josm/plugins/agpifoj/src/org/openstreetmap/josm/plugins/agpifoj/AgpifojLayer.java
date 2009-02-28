@@ -52,6 +52,12 @@ public class AgpifojLayer extends Layer {
     private Icon selectedIcon = ImageProvider.get("dialogs/agpifoj-marker-selected");
 
     private int currentPhoto = -1;
+    
+    // These are used by the auto-guess function to store the result,
+    // so when the dialig is re-opened the users modifications don't
+    // get overwritten
+    public boolean hasTimeoffset = false;
+    public long timeoffset = 0;
 
     /*
      * Stores info about each image

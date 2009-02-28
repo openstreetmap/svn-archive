@@ -3,11 +3,14 @@ package wmsplugin;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.imageio.*;
+
 
 import org.openstreetmap.josm.Main;
 
@@ -126,11 +129,21 @@ public class Cache {
         );
     }
 
-    private String clean(String ident) {
-        return ident.replaceAll("[^a-zA-Z0-9]", "");
+    private static String getUniqueFilename(String ident) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            BigInteger number = new BigInteger(1, md.digest(ident.getBytes()));
+            return number.toString(16);
+        } catch(Exception e) {
+            // Fall back. Remove unsuitable characters and some random ones to shrink down path length.
+            // Limit it to 70 characters, that leaves about 190 for the path on Windows/NTFS
+            ident = ident.replaceAll("[^a-zA-Z0-9]", "");
+            ident = ident.replaceAll("[acegikmoqsuwy]", "");
+            return ident.substring(ident.length() - 70);
+        }
     }
 
     private File getPath(String ident) {
-        return new File(dir, clean(ident) + ".png");
+        return new File(dir, getUniqueFilename(ident) + ".png");
     }
 }

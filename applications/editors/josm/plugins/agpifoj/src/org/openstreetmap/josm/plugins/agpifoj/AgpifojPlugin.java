@@ -59,10 +59,10 @@ public class AgpifojPlugin extends Plugin {
             fc.setAcceptAllFileFilterUsed(false);
             fc.setFileFilter(JPEG_FILE_FILTER);
 
-            fc.showOpenDialog(Main.parent);
+            int result = fc.showOpenDialog(Main.parent);
 
             File[] sel = fc.getSelectedFiles();
-            if (sel == null || sel.length == 0) {
+            if (sel == null || sel.length == 0 || result != JFileChooser.APPROVE_OPTION) {
                 return;
             }
 

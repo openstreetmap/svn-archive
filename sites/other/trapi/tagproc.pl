@@ -16,12 +16,12 @@ while ($_ = <TF>) {
     if (/^\t\t([^\t]*)\t(\d+)$/) {
 	my $val = $1;
 	my $c = $2;
-	$vv->{$val} = $c if ($u && $c >= 32);
+	$vv->{$val} = $c if ($u && $c >= THRESH);
     } elsif (/^\t([^\t]*)\t(\d+)$/) {
         my $tag = $1;
 	my $c = $2;
 	$u = ($tag !~ /$ignoretags/o);
-	if ($u && $c >= 32) {
+	if ($u && $c >= THRESH) {
 	    $t->{$tag} = $c;
 	    $vv = {};
 	    $v->{$tag} = $vv;

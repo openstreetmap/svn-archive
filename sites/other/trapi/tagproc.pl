@@ -39,7 +39,7 @@ while ($_ = <TF>) {
 	$t = \%nroles;
 	$v = undef;
     } else {
-	die "Malformed line in tags: $_";
+	print STDERR "Malformed line in tags: $_";
     }
 }
 close TF;

@@ -174,4 +174,12 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
             imgDisplay.setOsdText("");
         }
     }
+    
+    /**
+     * Returns whether an image is currently displayed
+     * @return If image is currently displayed
+     */
+    public boolean hasImage() {
+        return currentEntry != null;
+    }
 }

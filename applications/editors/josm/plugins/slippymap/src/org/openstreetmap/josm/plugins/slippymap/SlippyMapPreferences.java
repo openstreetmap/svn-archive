@@ -17,6 +17,7 @@ public class SlippyMapPreferences
     private static final String PREFERENCE_AUTOZOOM = PREFERENCE_PREFIX + ".autozoom";
     private static final String PREFERENCE_AUTOLOADTILES = PREFERENCE_PREFIX + ".autoload_tiles";
     private static final String PREFERENCE_MAX_ZOOM_LVL = PREFERENCE_PREFIX + ".max_zoom_lvl";
+    private static final String PREFERENCE_FADE_BACKGROUND = PREFERENCE_PREFIX + ".fade_background";
     
     public static String getMapUrl()
     {
@@ -65,10 +66,46 @@ public class SlippyMapPreferences
         return Boolean.parseBoolean(autoloadTiles);
     }
     
+    public static void setFadeBackground(float fadeBackground) {
+    	Main.pref.put(SlippyMapPreferences.PREFERENCE_FADE_BACKGROUND, fadeBackground + "");
+    }
+
+    /**
+     * 
+     * @return	number between 0 and 1, inclusive
+     */
+    public static float getFadeBackground() {
+        String fadeBackground = Main.pref.get(PREFERENCE_FADE_BACKGROUND);
+
+        if (fadeBackground == null || "".equals(fadeBackground))
+        {
+        	fadeBackground = "0.0";
+            Main.pref.put(PREFERENCE_FADE_BACKGROUND, fadeBackground);
+        }
+        
+        float parsed;
+        try {
+        	parsed = Float.parseFloat(fadeBackground);
+        } catch (Exception ex) {
+        	setFadeBackground(0.1f);
+        	System.out.println("Error while parsing setting fade background to float! returning 0.1, because of error:");
+        	ex.printStackTrace(System.out);
+        	return 0.1f;
+        }
+        if(parsed < 0f) {
+        	parsed = 0f;
+        } else {
+        	if(parsed > 1f) {
+            	parsed = 1f;
+            }
+        }
+        return parsed;
+    }
+    
     public static void setAutoloadTiles(boolean autoloadTiles) {
     	Main.pref.put(SlippyMapPreferences.PREFERENCE_AUTOLOADTILES, autoloadTiles);
     }
-
+    
     public static int getMaxZoomLvl()
     {
         String maxZoomLvl = Main.pref.get(PREFERENCE_MAX_ZOOM_LVL);

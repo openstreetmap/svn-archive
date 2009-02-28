@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
@@ -321,6 +320,8 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
         g.setColor(Color.DARK_GRAY);
 
+        float fadeBackground = SlippyMapPreferences.getFadeBackground();
+        
         for (int x = z12x0 - 1; x <= z12x1; x++)
         {
             for (int y = z12y0 - 1; y <= z12y1; y++)
@@ -350,9 +351,15 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
                     Point p = pixelpos[x - z12x0 + 1][y - z12y0 + 1];
                     Point p2 = pixelpos[x - z12x0 + 2][y - z12y0 + 2];
                     g.drawImage(img, p.x, p.y, p2.x - p.x, p2.y - p.y, this);
-                }
-            }
-        }
+                    
+                    if(fadeBackground != 0f) {
+	                    //dimm by painting opaque rect...
+	                    g.setColor(new Color(1f,1f,1f,fadeBackground));
+	                    g.fillRect(p.x, p.y, p2.x - p.x, p2.y - p.y);
+                    }//end of if dim != 0
+                }//end of if img != null
+            }//end of for
+        }//end of for
 
         for (int x = z12x0 - 1; x <= z12x1; x++)
         {
@@ -373,6 +380,9 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             	SlippyMapKey key = new SlippyMapKey(x,y);
                 int texty = p.y + 2 + fontHeight;
                 SlippyMapTile tile = tileStorage[currentZoomLevel].get(key);
+                if(tile == null) {
+                	continue;
+                }
                 p = pixelpos[x - z12x0 + 1][y - z12y0 + 2];
                 g.drawString("x=" + x + " y=" + y + " z=" + currentZoomLevel + "", p.x + 2, texty);
                 texty += 1 + fontHeight;
@@ -407,7 +417,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
                         g.drawLine(0, p.y, mv.getWidth(), p.y);
                     }
                 }
-            }
+            } //end of for
         }
 
         oldg.drawImage(bufferImage, 0, 0, null);

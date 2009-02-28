@@ -16,46 +16,53 @@ if (scalar(@ARGV)) {
 }
 
 
-my ($z, $x, $y) = (0) x 3;
 my (%nnodetags, %nnodevals, %nwaytags, %nwayvals, %nreltags, %nrelvals, %nroles);
 my $tiles = 0;
 
-sub checkpoint() {
+sub checkpoint($$$) {
+    my ($z, $x, $y) = @_;
     open TF, ">", "tags.z${z}x${x}y${y}" or die "Could not open tags: $!";
 
     my ($tag, $count, $role, $val, $vc);
     print TF "nodes\n";
     while (($tag,$count) = each %nnodetags) {
+	next unless ($tag =~ /^[^\t]*$/);
 	print TF "\t$tag\t$count\n";
 	if (exists $nnodevals{$tag}) {
 	    my %nv = %{$nnodevals{$tag}};
 	    while (($val, $vc) = each %nv) {
+		next unless ($val =~ /^[^\t]*$/);
 		print TF "\t\t$val\t$vc\n";
 	    }
 	}
     }
     print TF "ways\n";
     while (($tag,$count) = each %nwaytags) {
+	next unless ($tag =~ /^[^\t]*$/);
 	print TF "\t$tag\t$count\n";
 	if (exists $nwayvals{$tag}) {
 	    my %wv = %{$nwayvals{$tag}};
 	    while (($val, $vc) = each %wv) {
+		next unless ($val =~ /^[^\t]*$/);
 		print TF "\t\t$val\t$vc\n";
 	    }
 	}
     }
     print TF "relations\n";
     while (($tag,$count) = each %nreltags) {
+	next unless ($tag =~ /^[^\t]*$/);
 	print TF "\t$tag\t$count\n";
 	if (exists $nrelvals{$tag}) {
 	    my %rv = %{$nrelvals{$tag}};
 	    while (($val, $vc) = each %rv) {
+		next unless ($val =~ /^[^\t]*$/);
 		print TF "\t\t$val\t$vc\n";
 	    }
 	}
     }
     print TF "roles\n";
     while (($role, $count) = each %nroles) {
+	next unless ($role =~ /^[^\t]*$/);
 	print TF "\t$role\t$count\n";
     }
     close TF;
@@ -71,28 +78,30 @@ while ($_ = <TF>) {
     } elsif (/^\t([^\t]*)\t(\d+)$/) {
 	my $tag = $1;
 	my $c = $2;
-	$v->{$tag} = {} if ($c >= THRESH);
+	$v->{$tag} = {} if ($v && $c >= THRESH);
     } elsif (/^nodes$/) {
-	$v = \%nodevals;
+	$v = \%nnodevals;
     } elsif (/^ways$/) {
-	$v = \%wayvals;
+	$v = \%nwayvals;
     } elsif (/^relations$/) {
-	$v = \%relvals;
+	$v = \%nrelvals;
+    } elsif (/^roles$/) {
+	$v = undef;
     } else {
 	die "Malformed line in tags: $_";
     }
 }
 close TF;
 
-outer: for (my $z = $startz; $z <= MAXZOOM; $z++) {
+outer:  for (my $z = $startz; $z <= MAXZOOM; $z++) {
     my $zdir;
-    next unless(opendir $zdir, $z);
-    my @x = sort {$a <=> $b} grep (/^\d+$/ && ($_ >= $startx)), readdir $zdir;
+    next unless(opendir $zdir, "z$z");
+    my @x = sort {$a <=> $b} grep ((/^\d+$/ && ($_ >= $startx)), readdir $zdir);
     closedir $zdir;
     foreach my $x (@x) {
 	my $xdir;
-	opendir $xdir,"$z/$x" or die "Could not opendir $z/$x; $!";
-	my @y = sort {$a <=> $b} grep (/^\d+$/ && ($_ >= $starty)), readdir $xdir;
+	opendir $xdir,"z$z/$x" or die "Could not opendir z$z/$x; $!";
+	my @y = sort {$a <=> $b} grep((/^\d+$/ && ($_ >= $starty)), readdir $xdir);
 	closedir $xdir;
 	foreach my $y (@y) {
 	    last outer if (-f "stopfile.txt");
@@ -143,10 +152,13 @@ outer: for (my $z = $startz; $z <= MAXZOOM; $z++) {
 			if (exists $nrelvals{$tag});
 		}
 	    }
-	    checkpoint unless(++$tiles % 100000);
-	    last outer if (-f 'stopfile.txt');
+	    if (-f 'stopfile.txt') {
+		checkpoint($z,$x,$y);
+		exit 0;
+	    }
+	    checkpoint($z,$x,$y) unless(++$tiles % 100000);
 	}
     }
 }
 
-checkpoint;
+checkpoint(MAXZOOM,1<<MAXZOOM,0);

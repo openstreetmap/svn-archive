@@ -85,6 +85,7 @@ sub processOSMFiles
 		my $Relationtype=="-";
 
 		my $name = "$Config{'osmfile_folder'}/$OSMfile";
+		my $splitvals = ($Config{'split_values'} || "no") eq "yes";
 		my $openmode = "<$name";
 		$openmode = "bunzip2 <$name |" if($name =~ /\.bz2$/);
 		$openmode = "gunzip <$name |" if($name =~ /\.gz$/);
@@ -99,18 +100,27 @@ sub processOSMFiles
 			if($Line =~ m{<tag k=["'](.*?)["'] v=["'](.*?)["']\s*/>})
 			{
 				# Tag within an object
-				my ($Key, $Value) = ($1, $2);
+				my ($Key, @Values) = ($1, $2);
 
-				# save the type of the Relation if we have one.
-				if($Key eq "type")
+				if($splitvals)
 				{
-					$Relationtype = $Value;
-					$Relationtype =~ s/^$/-/g;
-					$Relationtype =~ s/^ $/-/g;
+					@Values = split(" *; *", $Values[0]);
 				}
 
-				if($Value ne '')
+				$Keys{$Key}++ if !$IgnoreTags{$Key};
+
+				foreach my $Value (@Values)
 				{
+					next if !$Value;
+
+					# save the type of the Relation if we have one.
+					if($Key eq "type")
+					{
+						$Relationtype = $Value;
+						$Relationtype =~ s/^$/-/g;
+						$Relationtype =~ s/^ $/-/g;
+					}
+
 					# get some more statistics about the used editors
 					if($Key eq 'created_by')
 					{
@@ -118,8 +128,6 @@ sub processOSMFiles
 					}
 					if(!$IgnoreTags{$Key})      # Ignored tags
 					{
-						$Keys{$Key}++;
-
 						my $TempTagName;
 						if($IgnoreCount)
 						{

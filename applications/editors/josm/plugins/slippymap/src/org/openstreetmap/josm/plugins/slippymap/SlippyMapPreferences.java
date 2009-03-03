@@ -13,11 +13,13 @@ public class SlippyMapPreferences
 {
     public static final String PREFERENCE_PREFIX   = "slippymap";
 
-    private static final String PREFERENCE_TILE_URL = PREFERENCE_PREFIX + ".tile_url";
-    private static final String PREFERENCE_AUTOZOOM = PREFERENCE_PREFIX + ".autozoom";
-    private static final String PREFERENCE_AUTOLOADTILES = PREFERENCE_PREFIX + ".autoload_tiles";
-    private static final String PREFERENCE_MAX_ZOOM_LVL = PREFERENCE_PREFIX + ".max_zoom_lvl";
-    private static final String PREFERENCE_FADE_BACKGROUND = PREFERENCE_PREFIX + ".fade_background";
+    public static final String PREFERENCE_TILE_URL = PREFERENCE_PREFIX + ".tile_url";
+    public static final String PREFERENCE_AUTOZOOM = PREFERENCE_PREFIX + ".autozoom";
+    public static final String PREFERENCE_AUTOLOADTILES = PREFERENCE_PREFIX + ".autoload_tiles";
+    public static final String PREFERENCE_MIN_ZOOM_LVL = PREFERENCE_PREFIX + ".min_zoom_lvl";
+    public static final String PREFERENCE_MAX_ZOOM_LVL = PREFERENCE_PREFIX + ".max_zoom_lvl";
+    public static final String PREFERENCE_FADE_BACKGROUND = PREFERENCE_PREFIX + ".fade_background";
+    public static final String PREFERENCE_DRAW_DEBUG = PREFERENCE_PREFIX + ".draw_debug";
     
     public static String getMapUrl()
     {
@@ -51,6 +53,23 @@ public class SlippyMapPreferences
     
     public static void setAutozoom(boolean autozoom) {
     	Main.pref.put(SlippyMapPreferences.PREFERENCE_AUTOZOOM, autozoom);
+    }
+    
+    public static void setDrawDebug(boolean drawDebug) {
+    	Main.pref.put(SlippyMapPreferences.PREFERENCE_DRAW_DEBUG, drawDebug);
+    }
+    
+    public static boolean getDrawDebug()
+    {
+        String drawDebug = Main.pref.get(PREFERENCE_DRAW_DEBUG);
+
+        if (drawDebug == null || "".equals(drawDebug))
+        {
+        	drawDebug = "false";
+            Main.pref.put(PREFERENCE_DRAW_DEBUG, drawDebug);
+        }
+
+        return Boolean.parseBoolean(drawDebug);
     }
     
     public static boolean getAutoloadTiles()
@@ -126,6 +145,10 @@ public class SlippyMapPreferences
     		System.err.println("MaxZoomLvl shouldnt be more than 30! Setting to 30.");
     		navrat = 30;
     	}
+        //if(navrat < SlippyMapPreferences.getMinZoomLvl()) {
+    	//	System.err.println("maxZoomLvl shouldnt be more than minZoomLvl! Setting to minZoomLvl.");
+    	//	navrat = SlippyMapPreferences.getMinZoomLvl();
+    	//}
         return navrat;
     }
     
@@ -134,7 +157,50 @@ public class SlippyMapPreferences
     		System.err.println("MaxZoomLvl shouldnt be more than 30! Setting to 30.");
     		maxZoomLvl = 30;
     	}
+    	if(maxZoomLvl < SlippyMapPreferences.getMinZoomLvl()) {
+    		System.err.println("maxZoomLvl shouldnt be more than minZoomLvl! Setting to minZoomLvl.");
+    		maxZoomLvl = SlippyMapPreferences.getMinZoomLvl();
+    	}
     	Main.pref.put(SlippyMapPreferences.PREFERENCE_MAX_ZOOM_LVL, "" + maxZoomLvl);
+    }
+    
+    public static int getMinZoomLvl()
+    {
+        String minZoomLvl = Main.pref.get(PREFERENCE_MIN_ZOOM_LVL);
+
+        if (minZoomLvl == null || "".equals(minZoomLvl))
+        {
+        	minZoomLvl = "" + (SlippyMapPreferences.getMaxZoomLvl() - 4);
+            Main.pref.put(PREFERENCE_MAX_ZOOM_LVL, minZoomLvl);
+        }
+
+        int navrat;
+        try {
+        	navrat = Integer.parseInt(minZoomLvl);
+        } catch (Exception ex) {
+        	throw new RuntimeException("Problem while converting string to int. Converting value of prefetrences " + PREFERENCE_MIN_ZOOM_LVL + ". Value=\"" + minZoomLvl + "\". Should be an integer. Error: " + ex.getMessage(), ex);
+        }
+        if(navrat < 2) {
+    		System.err.println("minZoomLvl shouldnt be lees than 2! Setting to 2.");
+    		navrat = 2;
+    	}
+        //if(navrat > SlippyMapPreferences.getMaxZoomLvl()) {
+    	//	System.err.println("minZoomLvl shouldnt be more than maxZoomLvl! Setting to maxZoomLvl.");
+    	//	navrat = SlippyMapPreferences.getMaxZoomLvl();
+    	//}
+        return navrat;
+    }
+    
+    public static void setMinZoomLvl(int minZoomLvl) {
+    	if(minZoomLvl < 2) {
+    		System.err.println("minZoomLvl shouldnt be lees than 2! Setting to 2.");
+    		minZoomLvl = 2;
+    	}
+    	if(minZoomLvl > SlippyMapPreferences.getMaxZoomLvl()) {
+    		System.err.println("minZoomLvl shouldnt be more than maxZoomLvl! Setting to maxZoomLvl.");
+    		minZoomLvl = SlippyMapPreferences.getMaxZoomLvl();
+    	}
+    	Main.pref.put(SlippyMapPreferences.PREFERENCE_MIN_ZOOM_LVL, "" + minZoomLvl);
     }
     
     public static String[] getAllMapUrls()

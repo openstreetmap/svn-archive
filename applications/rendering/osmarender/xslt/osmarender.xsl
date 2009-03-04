@@ -1781,43 +1781,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:variable name="to_x" select="$to/@lon - $through/@lon" />
     <xsl:variable name="to_y" select="$to/@lat - $through/@lat" />
 
-    <xsl:variable name="from_angle_">
+    <xsl:variable name="from_angle">
       <xsl:call-template name="atan2">
 	<xsl:with-param name="x" select="$from_x" />
 	<xsl:with-param name="y" select="$from_y" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="from_angle" select="$from_angle_ + $pi" />
-    <xsl:variable name="to_angle_">
+    <xsl:variable name="to_angle">
       <xsl:call-template name="atan2">
 	<xsl:with-param name="x" select="$to_x" />
 	<xsl:with-param name="y" select="$to_y" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:variable name="to_angle" select="$to_angle_ + $pi" />
-
-    <xsl:variable name="min_angle">
-      <xsl:choose>
-	<xsl:when test="$from_angle &gt; $to_angle">
-	  <xsl:value-of select="$to_angle" />
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:value-of select="$from_angle" />
-	</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="max_angle">
-      <xsl:choose>
-	<xsl:when test="$from_angle &gt; $to_angle">
-	  <xsl:value-of select="$from_angle" />
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:value-of select="$to_angle" />
-	</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-    <xsl:value-of select="$min_angle + ($max_angle - $min_angle) div 2" />
+    <xsl:value-of select="($to_angle + $from_angle) div 2" />
   </xsl:template>
 
   <!-- atan2 implementation from http://lists.fourthought.com/pipermail/exslt/2007-March/001540.html -->

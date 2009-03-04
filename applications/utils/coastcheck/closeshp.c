@@ -144,9 +144,22 @@ static inline void mark_tile( int x, int y )
 {
   used_bitmap[ x + y * DIVISIONS ] = 1;
 }
+static inline int check_tile2( int x, int y )
+{
+  if (x >= 0 && x < DIVISIONS && y >= 0 && y < DIVISIONS)
+    return used_bitmap[ x + y * DIVISIONS ];
+  else
+    return 0;
+}
 static inline int check_tile( int x, int y )
 {
-  return used_bitmap[ x + y * DIVISIONS ];
+  /* The generated tiles overlap one another so it is possible that a
+   * shape near the edge of an adjacent tile may be relevant too
+   */
+  return 
+    check_tile2(x-1, y-1) || check_tile2(x, y-1) || check_tile2(x+1, y-1) ||
+    check_tile2(x-1, y)   || check_tile2(x, y)   || check_tile2(x+1, y)   ||
+    check_tile2(x-1, y+1) || check_tile2(x, y+1) || check_tile2(x+1, y+1);
 }
 
 static inline SHPObject *source_get_shape( struct source *src, int i )

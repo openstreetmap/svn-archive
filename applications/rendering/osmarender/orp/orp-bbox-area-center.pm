@@ -14,7 +14,18 @@
 sub find_area_center
 {
     my $way = shift;
-    my $nodes = $way->{'nodes'};
+    my $nodes;
+    if (ref $way eq 'way')
+    {
+        $nodes = $way->{'nodes'};
+    }
+    elsif (ref $way eq 'multipolygon')
+    {
+        foreach (@{$way->{'outer'}})
+        {
+            push(@$nodes, @{$_->{'nodes'}});
+        }
+    }
     my $maxlat = -180;
     my $maxlon = -180;
     my $minlat = 180;

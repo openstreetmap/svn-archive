@@ -24,7 +24,7 @@ sub select_elements_without_tags
     my $newsel = Set::Object->new();
     foreach ($oldsel->members())
     {
-        next if defined($e) and ref($_) != $e;
+        next if defined($e) and ref($_) ne $e and not ($e eq 'way' and ref($_) eq 'multipolygon');
         $newsel->insert($_) unless defined($_->{"tags"});
     }
     return $newsel;
@@ -38,7 +38,7 @@ sub select_elements_with_any_tag
 
     foreach ($oldsel->members())
     {
-        next if defined($e) and ref($_) != $e;
+        next if defined($e) and ref($_) ne $e and not ($e eq 'way' and ref($_) eq 'multipolygon');
         $newsel->insert($_) if defined($_->{"tags"});
     }
     return $newsel;
@@ -53,7 +53,7 @@ sub select_elements_with_given_tag_value
 outer:
     foreach ($oldsel->members())
     {
-        next if defined($e) and ref($_) ne $e;
+        next if defined($e) and ref($_) ne $e and not ($e eq 'way' and ref($_) eq 'multipolygon');
         foreach my $value(values(%{$_->{"tags"}}))
         {
             if (defined($seek->{$value}))
@@ -75,7 +75,7 @@ sub select_elements_with_given_tag_key
 outer:
     foreach ($oldsel->members())
     {
-        next if (defined($e) and ref($_) ne $e);
+        next if defined($e) and ref($_) ne $e and not ($e eq 'way' and ref($_) eq 'multipolygon');
         foreach my $key(@keys_wanted)
         {
             if (defined($_->{"tags"}->{$key}))
@@ -99,7 +99,7 @@ sub select_elements_without_given_tag_key
 outer:
     foreach ($oldsel->members())
     {
-        next if defined($e) and ref($_) ne $e;
+        next if defined($e) and ref($_) ne $e and not ($e eq 'way' and ref($_) eq 'multipolygon');
         foreach my $key(@keys_wanted)
         {
             next outer if (defined($_->{"tags"}->{$key}));
@@ -187,7 +187,7 @@ sub select_elements_with_given_tag_key_and_value_slow
 outer:
     foreach ($oldsel->members())
     {   
-        next if defined($e) and ref($_) ne $e; 
+        next if defined($e) and ref($_) ne $e and not ($e eq 'way' and ref($_) eq 'multipolygon');
         # determine whether we're comparing against the tags of the object
         # itself or the tags selected with the "s" attribute.
         my $tagsets;

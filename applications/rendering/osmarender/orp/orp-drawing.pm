@@ -49,7 +49,7 @@ sub draw_lines
 
     foreach (@$selected)
     {
-        next unless (ref $_  eq 'way');
+        next unless (ref $_ eq 'way'); # Draw lines doesn't care about multipolygons
         next if (scalar(@{$_->{"nodes"}}) < 2);
 
     # this is a special case for ways (e.g. rivers) where we honor a
@@ -116,6 +116,8 @@ sub draw_lines
 sub draw_way_with_smart_linecaps
 {
     my ($linenode, $layer, $way, $class, $style) = @_;
+
+    return if (ref $way eq 'multipolygon');
 
     # convenience variables
     my $id = $way->{"id"};
@@ -221,72 +223,35 @@ sub draw_areas
 OUTER:
     foreach (@$selected)
     {
-        next unless (ref $_ eq 'way');
+        next unless (ref $_ eq 'way' or ref $_ eq 'multipolygon');
+        # Skip ways that are already rendered
+        # because they are part of a multipolygon
+        next if (ref $_ eq 'way' and defined $_->{"multipolygon"});
 
-        my $points = [];
-        foreach (@{$_->{"nodes"}})
-        {
-            push(@$points, [ $_->{"lat"}, $_->{"lon"} ]) if (defined($_->{"lat"}) && defined($_->{"lon"}));
+        my $ways;
+        
+        if (ref $_ eq 'way') {
+            $ways = [$_];
         }
-        my $path = make_path(@$points)."Z ";
+        if (ref $_ eq 'multipolygon') {
+            $ways = [@{$_->{"outer"}}, @{$_->{"inner"}}];
+        }
+        
+        my $path = '';
+        foreach my $way (@$ways) {
+            my $points = [];
+            foreach (@{$way->{"nodes"}})
+            {
+                push(@$points, [ $_->{"lat"}, $_->{"lon"} ]) if (defined($_->{"lat"}) && defined($_->{"lon"}));
+            }
+            $path .= make_path(@$points)."Z ";
+        }
 
-        # find out if we're the "outer" or "inner" polygon of a "multipolygon" relation
-        foreach my $relpair(@{$_->{"relations"}})
-        {
-            my ($role, $rel) = @$relpair;
-            if (defined $rel->{"tags"}->{"type"} && $rel->{"tags"}->{"type"} eq "multipolygon" && defined $role && $role eq "outer")
-            {
-                # right, we are "outer" - find all "inner" ways of this relation 
-                # and add them to our path
-                foreach my $relmember(@{$rel->{"members"}})
-                {
-                    my ($role, $obj) = @$relmember;
-                    if ($role eq "inner" && ref($obj) eq "way")
-                    {
-                        #debug(sprintf("collecting way %d as 'hole' in polygon %d",
-                        #    $obj->{"id"}, $_->{"id"}));
-                        $points = [];
-                        foreach (@{$obj->{"nodes"}})
-                        {
-                            push(@$points, [ $_->{"lat"}, $_->{"lon"} ]) if (defined($_->{"lat"}) && defined($_->{"lon"}));
-                        }
-                        $path .= make_path(@$points)."Z";
-                    }
-                }
-            }
-            if (defined $rel->{"tags"}->{"type"} && $rel->{"tags"}->{"type"} eq "multipolygon" && defined $role && $role eq "inner")
-            {
-                # we are "inner" - if the corresponding "outer" poly is tagged 
-                # the same as we are, then don't draw anything (legacy polygon
-                # support). otherwise draw normally.
-                foreach my $relmember(@{$rel->{"members"}})
-                {
-                    my ($role, $obj) = @$relmember;
-                    if ($role eq "outer" && ref($obj) eq "way")
-                    {
-                        next OUTER if (tags_subset($_, $obj));
-                        last;
-                    }
-                }
-            }
-        }
         $writer->emptyTag("path", "d" => $path, "style" => "fill-rule:evenodd");
     }
     $writer->endTag("g");
 }
 
-# returns true if the first has a subset of the second object's tags,
-# with some tags being ignored
-sub tags_subset
-{
-    my ($first, $second) = @_;
-    foreach my $tag(keys %{$first->{"tags"}})
-    {
-        next if ($tag =~ /^(name|created_by|note|layer|osmarender:areaCenterLat|osmarender:areaCenterLon|osmarender:areaSize)$/);
-        return 0 unless defined($second->{'tags'}{$tag}) && $first->{'tags'}{$tag} eq $second->{'tags'}{$tag};
-    }
-    return 1;
-}
 
 # sub render_text($textnode, $text, $coordinates)
 #
@@ -346,14 +311,20 @@ sub draw_text
         my $text = substitute_text($textnode, $_);
         if ($text ne '')
         {
+            # This function only works on pathes
+            next if (ref $_ eq 'multipolygon');
+
             if (ref $_ eq 'node')
             {
-                debug("draw node text '$text'") if ($debug->{"drawing"});
                 render_text($textnode, $text, [$_->{'lat'}, $_->{'lon'}]);
             }
             elsif (ref $_ eq 'way')
             {
                 draw_text_on_path($textnode, $_, $text);
+            }
+            else
+            {
+                debug("Unhandled type in draw_text: ".ref($_)) if ($debug->{"drawing"});
             }
         }
     }
@@ -581,7 +552,11 @@ sub draw_area_text
         my $text = substitute_text($textnode, $_);
         next unless $text ne '';
 
-        if (ref $_ eq 'way')
+        # Skip ways that are already rendered
+        # because they are part of a multipolygon
+        next if (ref $_ eq 'way' and defined $_->{"multipolygon"});
+
+        if (ref $_ eq 'way' or ref $_ eq 'multipolygon')
         {
             #Area
             my $labelRelation = $labelRelations->{$_->{'id'}};
@@ -600,10 +575,14 @@ sub draw_area_text
                 render_text($textnode, $text, $center);
             }
         }
-        else
+        elsif (ref $_ eq 'node')
         {
             #Node
             render_text($textnode, $text, [$_->{'lat'}, $_->{'lon'}]);
+        }
+        else
+        {
+            debug("Unhandled type in draw_area_text: ".ref($_)) if ($debug->{"drawing"});
         }
     }
 }
@@ -643,10 +622,13 @@ sub get_area_center
 sub draw_symbols
 {
     my ($symbolnode, $layer, $selected) = @_;
-
     foreach(@$selected)
     {
-        if (ref $_ eq 'way')
+        # Skip ways that are already rendered
+        # because they are part of a multipolygon
+        next if (ref $_ eq 'way' and defined $_->{"multipolygon"});
+        
+        if (ref $_ eq 'way' or ref $_ eq 'multipolygon')
         {
             #Area
             my $labelRelation = $labelRelations->{$_->{'id'}};
@@ -665,11 +647,15 @@ sub draw_symbols
                 draw_symbol($symbolnode, $projected);
             }
         }
-        else
+        elsif (ref $_ eq 'node')
         {
             #Node
             my $projected = project([$_->{'lat'}, $_->{'lon'}]);
             draw_symbol($symbolnode, $projected);
+        }
+        else
+        {
+            debug("Unhandled type in draw_symbols: ".ref($_)) if ($debug->{"drawing"});
         }
     }
 }
@@ -696,10 +682,13 @@ sub draw_symbols
 sub draw_circles
 {
     my ($circlenode, $layer, $selected) = @_;
-
     foreach(@$selected)
     {
-        if (ref $_ eq 'way')
+        # Skip ways that are already rendered
+        # because they are part of a multipolygon
+        next if (ref $_ eq 'way' and defined $_->{"multipolygon"});
+        
+        if (ref $_ eq 'way' or ref $_ eq 'multipolygon')
         {
             #Area
             my $labelRelation = $labelRelations->{$_->{'id'}};
@@ -727,7 +716,7 @@ sub draw_circles
                         [ 'type', 'ref', 'scale', 'smart-linecap', 'cx', 'cy' ]));
             }
         }
-        else
+        elsif (ref $_ eq 'node')
         {
             #Node
             my $projected = project([$_->{'lat'}, $_->{'lon'}]);
@@ -735,6 +724,10 @@ sub draw_circles
                 'cx' => $projected->[0],
                 'cy' => $projected->[1],
                 copy_attributes_not_in_list($circlenode, [ 'type', 'ref', 'scale', 'smart-linecap', 'cx', 'cy' ]));
+        }
+        else
+        {
+            debug("Unhandled type in draw_circles: ".ref($_)) if ($debug->{"drawing"});
         }
     }
 }

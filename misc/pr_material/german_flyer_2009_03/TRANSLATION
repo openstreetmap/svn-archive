@@ -1,0 +1,79 @@
+
+A rough English translation of the texts in the flyer.
+
+>> Title page:
+
+OpenStreetMap - On the road for a free world map
+
+>> Page 2 (with Garmin image)
+
+Why a free world map?
+
+There are lots of no-fee city plans and maps on the Internet. But most
+are only for private use and must not be re-published. In a flyer like
+this we would not be allowed to print them, for example. Plus, they're
+often not current and not complete. Errors are fixed only slowly.
+
+The most important thing is that you only get map images but not the
+data from which they were created. You need that data if you want to
+create your own maps or use the map on a variety of devices, for
+example for routing.
+
+Because of that, OpenStreetMap has people like you and me collecting
+raw data themselves - world-wide, sometimes as a team and sometimes on
+their own. With our own data an our own software we become independent
+of commercial providers. As in Wikipedia, everybody can take part.
+
+>> Page 4 (with GPS mouse and notepad image)
+
+How does OpenstreetMap work?
+
+The map data for OpenStreetMap is collected in various ways. The most
+common method is recording GPS data. Here, the GPS receier stores the
+current position every second, and this results in an exact protocol
+of ways taken.
+
+While the GPS logs the current position, the data acquirer (we call
+him mapper) notes down important information like street names,
+buildings, park and water areas or other things that should be present
+on the map. He uses a notepad, dictaphone, or digital camera. Later at
+his computer, he re-draws the GPS tracks and augments them with the
+information collected on his notepad. The results are then transferred
+to the central project database, and soon after the new data is
+visible for anyone.
+
+>> Page 5 (with the three little screenshots)
+
+The GPS track is compared with other data and refined in the editor.
+
+The server accepts the new data and computes new map images.
+
+>> Page 6 (with the book cover - this is the rear side of the flyer
+>> when folded)
+
+Join OpenStreetMap!
+
+The English-language project start page is at www.openstreetmap.org.
+There's also a Wiki with a lot of project information and of course
+the world map viewer. At www.openstreetmap.de you will find a German
+introduction with links to forums and mailing lists.
+
+(Book advertising blurb not translated)
+
+OpenStreetMap uses the Creative Commons Attribution Share-Alike
+license. There are no usage restrictions. Works that are based on
+OpenStreetMap data inherit the license.
+
+>> Page 7 (below Toronto map)
+
+The map on this double page shows an excerpt of the Toronto, Canada
+city centre. Like the Berlin map on the reverse side it was created
+with Open Source software. Many Open Source programs have been created
+specially for OpenStreetMap.
+
+>> Page 8 (below Toronto map)
+
+All map images from OpenStreetMap, CC-BY-SA 2.0.
+
+(Geofabrik advertising blurb not translated)
+

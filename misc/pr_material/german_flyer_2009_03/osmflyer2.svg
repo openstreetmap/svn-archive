@@ -2,7 +2,7 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -13,12 +13,20 @@
    height="442.91336"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.46"
    version="1.0"
+   sodipodi:docbase="/home/fred/flyer"
    sodipodi:docname="osmflyer2.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <defs
      id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 221.45668 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1119.6851 : 221.45668 : 1"
+       inkscape:persp3d-origin="559.84253 : 147.63779 : 1"
+       id="perspective152" />
     <pattern
        id="pattern2692"
        patternTransform="translate(151.5402,41.65591)"
@@ -228,9 +236,9 @@
      objecttolerance="10"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.0314937"
-     inkscape:cx="521.1653"
-     inkscape:cy="221.4567"
+     inkscape:zoom="1.8289474"
+     inkscape:cx="256.91202"
+     inkscape:cy="215.34892"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      width="316mm"
@@ -242,7 +250,8 @@
      inkscape:window-width="1548"
      inkscape:window-height="788"
      inkscape:window-x="34"
-     inkscape:window-y="65">
+     inkscape:window-y="65"
+     showgrid="false">
     <sodipodi:guide
        orientation="vertical"
        position="0"
@@ -313,7 +322,7 @@
        id="guide3533" />
     <sodipodi:guide
        orientation="vertical"
-       position="311.81102"
+       position="312.20143,247.68345"
        id="guide3535" />
     <sodipodi:guide
        orientation="vertical"
@@ -373,8 +382,8 @@
        id="image3047"
        height="407.48032"
        width="1409.6063"
-       sodipodi:absref="./berlin-background.png"
-       xlink:href="berlin-background.png" />
+       sodipodi:absref="/home/fred/flyer/berlin-background-blaugrau.png"
+       xlink:href="berlin-background-blaugrau.png" />
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -558,8 +567,8 @@
        id="image3683"
        height="343.70081"
        width="233.85828"
-       sodipodi:absref="./berlin.png"
-       xlink:href="berlin.png"
+       sodipodi:absref="/home/fred/projects/aktiv/osm/flyer/muenchen.png"
+       xlink:href="muenchen.png"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
        inkscape:export-ydpi="400.01047" />
@@ -584,7 +593,7 @@
        id="image4043"
        height="95.551353"
        width="63.601379"
-       sodipodi:absref="./notebook.png"
+       sodipodi:absref="/home/fred/projects/aktiv/osm/flyer/notebook.png"
        xlink:href="notebook.png"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
@@ -628,7 +637,7 @@
        id="image4117"
        height="83.217842"
        width="233.8582"
-       sodipodi:absref="./finish.png"
+       sodipodi:absref="/home/fred/projects/aktiv/osm/flyer/finish.png"
        xlink:href="finish.png"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
@@ -639,7 +648,7 @@
        id="image4160"
        height="83.20034"
        width="233.85825"
-       sodipodi:absref="./gpstrack.png"
+       sodipodi:absref="/home/fred/projects/aktiv/osm/flyer/gpstrack.png"
        xlink:href="gpstrack.png"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
@@ -650,13 +659,13 @@
        id="image4203"
        height="84.677177"
        width="233.85823"
-       sodipodi:absref="./editnodes.png"
+       sodipodi:absref="/home/fred/projects/aktiv/osm/flyer/editnodes.png"
        xlink:href="editnodes.png"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
        inkscape:export-ydpi="400.01047" />
     <path
-       style="fill:#6f4e25;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       style="fill:#40406d;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
        d="M 1004.2351,144.2324 L 1032.0711,168.61376 L 1059.0401,144.2324 L 1004.2351,144.2324 z "
        id="path4208"
        sodipodi:nodetypes="cccc"
@@ -664,7 +673,7 @@
        inkscape:export-xdpi="400.01047"
        inkscape:export-ydpi="400.01047" />
     <path
-       style="fill:#6f4e25;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       style="fill:#40406d;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
        d="M 1004.2351,273.92571 L 1032.0711,298.30707 L 1059.0401,273.92571 L 1004.2351,273.92571 z "
        id="path4212"
        sodipodi:nodetypes="cccc"
@@ -672,7 +681,7 @@
        inkscape:export-xdpi="400.01047"
        inkscape:export-ydpi="400.01047" />
     <rect
-       style="fill:none;fill-opacity:1;stroke:#644217;stroke-width:1.06299213;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#40406d;stroke-width:1.06299213000000004;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect10224"
        width="234.57812"
        height="83.371567"
@@ -682,7 +691,7 @@
        inkscape:export-xdpi="400.01047"
        inkscape:export-ydpi="400.01047" />
     <rect
-       style="fill:none;fill-opacity:1;stroke:#644217;stroke-width:1.06299213;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#40406d;stroke-width:1.06299213;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect10226"
        width="233.83662"
        height="84.589142"
@@ -692,7 +701,7 @@
        inkscape:export-xdpi="400.01047"
        inkscape:export-ydpi="400.01047" />
     <rect
-       style="fill:none;fill-opacity:1;stroke:#644217;stroke-width:1.06299213;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#40406d;stroke-width:1.06299213000000004;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect10228"
        width="233.86008"
        height="83.268471"
@@ -739,10 +748,10 @@
        id="image2782"
        height="175.50153"
        width="70.200615"
-       sodipodi:absref="./garmin.png"
+       sodipodi:absref="/home/fred/projects/aktiv/osm/flyer/garmin.png"
        xlink:href="garmin.png" />
     <rect
-       style="fill:none;fill-opacity:1;stroke:#644217;stroke-opacity:1;stroke-width:1.06299213;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:none;fill-opacity:1;stroke:#40406d;stroke-opacity:1;stroke-width:1.06299213;stroke-miterlimit:4;stroke-dasharray:none"
        id="rect3266"
        width="233.85828"
        height="343.70081"
@@ -757,7 +766,7 @@
        id="image2357"
        height="79.589569"
        width="63.927376"
-       sodipodi:absref="./wintec.png"
+       sodipodi:absref="/home/fred/flyer/wintec.png"
        xlink:href="wintec.png"
        transform="matrix(0.9988307,-4.8345859e-2,4.8345859e-2,0.9988307,0,0)" />
   </g>

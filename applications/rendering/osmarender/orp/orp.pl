@@ -130,6 +130,7 @@ our $debug = {
     "rules" => 0,    # print all rules and how many matches
     "indexes" => 0,  # print messages about the use of indexes
     "drawing" => 0,  # print out all drawing instructions executed
+    "multipolygon" => 0, # print debugging messages for multipolygons
 };
 
 our $node_storage = {};
@@ -230,17 +231,11 @@ our $index_way_tags = {};
 my %parser_args = (Source => {SystemId => $input_file});
 $parser->parse(%parser_args);
 
-# initialise level-0 selection list with all available objects.
-# (relations are only there for specific reference; you cannot
-# have rules that match relations. if you want that, then add
-# relations to the initial selection here.)
-our $selection = [];
-$selection->[0] = Set::Object->new();
-$selection->[0]->insert(values(%$way_storage));
-$selection->[0]->insert(values(%$node_storage));
-
 # initialise the "ways" element of every node with the list of
 # ways it belongs to (creating a back reference)
+# FIXME: it's not entirely clear if this should also be done for
+# multipolygon objects. I think it should be done, but it needs
+# further checking.
 foreach (values(%$way_storage))
 {
     foreach my $node(@{$_->{"nodes"}})
@@ -273,6 +268,202 @@ foreach (values(%$relation_storage))
         }
     }
 }
+
+my $multipolygon_wayid = 0;
+
+sub assemble_closed_ways
+{
+    my ($inputways, $relation) = @_;
+    return [] if not defined $inputways;
+    my $outputways = [];
+    while (@$inputways > 0)
+    {
+        # Start with the first item in the list
+        my $way = shift @$inputways;
+        my $nodes = [@{$way->{'nodes'}}];
+        my $tags = {};
+        my $relations = [@{$way->{'relations'}}]; # TODO: Make sure no duplicate entries are present
+        while (my ($key, $val) = each(%{$way->{'tags'}}))
+        {
+            $tags->{$key}=$val;
+        }
+        $multipolygon_wayid += 1;
+        my $wayobj = {
+            'layer' => $way->{'layer'},
+            'timestamp' => $way->{'timestamp'},
+            'user' => $way->{'user'},
+            'nodes' => $nodes,
+            'relations' => $relations,
+            'id' => "multipolygon$multipolygon_wayid",
+            'tags' => $tags,
+        };
+        bless($wayobj, 'way');
+
+        # $found stores information if new node where found in
+        # the last iteration though the nodelist
+        # if no new nodes are found but the list is still not
+        # empty there are 2 or more disjunct areas
+        # 1 = nodes were found in the last iteration or this 
+        #       is the first iteration
+        # 0 = no nodes were found, start a new way
+        my $found = 1;
+        while (@$inputways > 0 && $found)
+        {
+            $found = 0;
+            foreach my $index (0 .. $#{$inputways})
+            {
+                my $nodelist = @$inputways[$index]->{'nodes'};
+                my @sorted;
+                # Check if the way's direction is reversed
+                if (defined $nodes->[-1] && defined $nodelist->[-1] && 
+                    ($nodes->[-1] eq $nodelist->[-1]))
+                {
+                    @sorted = reverse @$nodelist;
+                }
+                else
+                {
+                    @sorted = @$nodelist;
+                }
+
+                # Check if the way matches
+                if (defined $nodes->[-1] && defined $sorted[0] && 
+                    ($nodes->[-1] eq $sorted[0]))
+                {
+                    # Add way segement
+                    $found = 1;
+                    # Add tags to taglist
+                    while (my ($key, $val) = each(%{@$inputways[$index]->{'tags'}}))
+                    {
+                        $tags->{$key}=$val;
+                    }
+                    push(@$relations, @{@$inputways[$index]->{'relations'}});
+                    # Remove first node which is identical to
+                    # the last node of the old way
+                    shift @sorted;
+                    push(@$nodes, @sorted);
+                    # Remove segment from the list of available segements
+                    splice(@$inputways, $index, 1);
+                    last;
+                }
+            }
+        }
+        push(@$outputways, $wayobj);
+        debug("Unclosed way in multipolygon $relation->{'id'}") if (defined @$nodes[0]
+            and @$nodes[0] ne @$nodes[-1] and $debug->{'multipolygon'});
+    }
+    return $outputways;
+}
+
+# returns true if the first has a subset of the second object's tags,
+# with some tags being ignored
+sub tags_subset
+{
+    my ($first, $second) = @_;
+    foreach my $tag(keys %{$first->{"tags"}})
+    {
+        next if ($tag =~ /^(name|created_by|note|layer|osmarender:areaCenterLat|osmarender:areaCenterLon|osmarender:areaSize)$/);
+        return 0 unless defined($second->{'tags'}{$tag}) && $first->{'tags'}{$tag} eq $second->{'tags'}{$tag};
+    }
+    return 1;
+}
+
+#Multipolygon:
+# "outer": [way1, way2, ...]
+#   Combined to form full ways
+# "inner": [way1, way2, ...]
+#   Combined to form full ways, for each inner way a new way-object with
+#   the sum of all tags is created and added to $way_storage
+# "tags":
+#   The sum of all tags, from both the relation and all the outer ways.
+# The original ways get a special tag, so they aren't processed anymore
+# in function that are able to handle multipolygons.
+#
+# In theory each way could be represented as a multipolygon with the
+# following properties:
+# - One outer way
+# - No inner ways
+# - Tags from the original way
+#
+# This might be a good future enhancement but requires big changes to
+# existing code.
+#
+# TODO:
+# - Label relation
+
+
+foreach my $rel (values(%$relation_storage))
+{
+    next unless defined $rel->{'tags'}->{'type'} and $rel->{'tags'}->{'type'} eq 'multipolygon';
+    my $outerways = ();
+    my $innerways = ();
+    $multipolygon_wayid += 1;
+    my $multipolygon = {
+        'multipolgyon_relation' => $rel,
+        'relations' => [],
+        'tags' => {},
+        'id' => "multipolygon$multipolygon_wayid"
+    };
+    # Copy tags from relation
+    while (my ($key, $val) = each(%{$rel->{"tags"}}))
+    {
+        $multipolygon->{"tags"}->{$key}=$val;
+    }
+    foreach my $relmember(@{$rel->{"members"}})
+    {
+        my ($role, $obj) = @$relmember;
+        next unless (defined $role && defined $obj && 
+            ref($obj) eq "way" && defined $obj->{"nodes"});
+        if ($role eq "outer")
+        {
+            push(@$outerways, $obj);
+            push(@{$multipolygon->{'relations'}}, @{$obj->{'relations'}});
+            while (my ($key, $val) = each(%{$obj->{'tags'}}))
+            {
+                $multipolygon->{'tags'}->{$key}=$val;
+            }
+        }
+        elsif ($role eq 'inner')
+        {
+            push(@$innerways, $obj);
+        }
+        else
+        {
+            debug("Unknown role \"$role\" in multipolygon relation $rel->{'id'}!") if ($debug->{'multipolygon'});
+        }
+        $obj->{'multipolygon'} = 1; # Mark object as beeing part of a multipolygon
+    }
+    # A list of all outer and inner nodes is assembled, now sort them
+    $multipolygon->{'outer'} = assemble_closed_ways($outerways, $rel);
+    $multipolygon->{'inner'} = assemble_closed_ways($innerways, $rel);
+    bless($multipolygon, 'multipolygon');
+
+    # Add inner ways to the global list of ways
+    WAY:
+    foreach my $way (@{$multipolygon->{'inner'}})
+    {
+        # Handle multipolygon in multipolygon
+        foreach (@{$way->{'relations'}})
+        {
+            my ($role, $wayrelation) = @{$_};
+            next WAY if ($role eq 'outer' and defined $wayrelation->{"tags"}->{"type"}
+                and $wayrelation->{"tags"}->{"type"} eq "multipolygon")
+        }
+        # Handle old-style multipolygons
+        next if tags_subset($way, $multipolygon);
+        $way_storage->{$way->{'id'}} = $way;
+    }
+    # Add multipolygon object to the global list of ways
+    $way_storage->{$multipolygon->{'id'}} = $multipolygon;
+}
+
+# initialise level-0 selection list with all available objects.
+# (relations are only there for specific reference; you cannot
+# have rules that match relations. if you want that, then add
+# relations to the initial selection here.)
+our $selection = [];
+$selection->[0] = Set::Object->new();
+$selection->[0]->insert(values(%$way_storage));
+$selection->[0]->insert(values(%$node_storage));
 
 # initialise the tag indexes. These will help us to quickly
 # find objects that have a given tag key.
@@ -652,6 +843,8 @@ sub generate_paths
         # extract data into variables for convenience. the "points"
         # array contains lat/lon pairs of the nodes.
         my $way = $way_storage->{$way_id};
+        debug('ERROR: Multipolygon in generate_paths!') if ref $way eq
+            'multipolygon' and $debug->{'multipolygon'};
         my $types = $referenced_ways{$way_id};
         my $tags = $way->{"tags"};
         my $points = [];

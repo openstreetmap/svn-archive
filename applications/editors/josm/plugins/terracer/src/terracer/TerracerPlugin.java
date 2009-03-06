@@ -19,5 +19,6 @@ import org.openstreetmap.josm.plugins.Plugin;
 public class TerracerPlugin extends Plugin {
 	public TerracerPlugin() {
 		MainMenu.add(Main.main.menu.toolsMenu, new TerracerAction());
+		MainMenu.add(Main.main.menu.toolsMenu, new ReverseTerraceAction());
 	}
 }

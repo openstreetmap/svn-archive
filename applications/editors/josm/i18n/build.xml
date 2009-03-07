@@ -15,14 +15,6 @@
 
   <property name="ant.build.javac.target" value="1.5"/>
 
-  <property name="gettexttasks.jar" value="lib/gettext-ant-tasks-0.9.6.jar"/>
-
-  <target name="init.gettext" description="Loads the Ant gettext tasks">
-    <taskdef name="gettext-extract" classname="org.xnap.commons.ant.gettext.GettextExtractKeysTask" classpath="${gettexttasks.jar}"/>
-    <taskdef name="gettext-merge" classname="org.xnap.commons.ant.gettext.GettextMergeKeysTask" classpath="${gettexttasks.jar}"/>
-    <taskdef name="gettext-dist" classname="org.xnap.commons.ant.gettext.GettextDistTask" classpath="${gettexttasks.jar}"/>
-  </target>
-
   <target name="trans_.java">
     <mkdir dir="${i18n.build.dir}"/>
     <exec executable="perl" output="${i18n.build.dir}/trans_presets.java">
@@ -42,24 +34,53 @@
     </exec>
   </target>
 
-  <target name="po/josm.pot"
-          description="Extracts message keys from the source code"
-          depends="trans_.java,init.gettext">
-    <gettext-extract keysFile="josm.pot" poDirectory="po"
-                     keywords="-k -ktrc -ktr -kmarktr -ktrn:1,2 -ktrl">
-      <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
-      <fileset dir="${plugin.dir}" includes="**/*.java"/>
-      <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
-    </gettext-extract>
+  <target name="java_sourcefiles.txt" depends="trans_.java">
+    <exec executable="find" osfamily="unix"
+          output="${i18n.build.dir}/java_sources.txt">
+      <arg value="${josm.build.dir}/src" />
+      <arg value="${plugin.dir}"/>
+      <arg value="${i18n.build.dir}"/>
+      <arg value="-name"/>
+      <arg value="*.java"/>
+    </exec>
+    <exec executable="sort" osfamily="unix"
+          output="${i18n.build.dir}/java_sourcefiles.txt">
+      <arg value="${i18n.build.dir}/java_sources.txt"/>
+    </exec>
+    <delete file="${i18n.build.dir}/java_sources.txt"/>
   </target>
 
-  <target name="build" depends="po/josm.pot,init.gettext">
+  <target name="po/josm.pot"
+          description="Extracts message keys from the source code"
+          depends="java_sourcefiles.txt">
+    <exec executable="xgettext">
+      <arg line="-ktr -ktrn:1,2 -ktrc -kmarktr -Ljava --from-code=UTF-8 -opo/josm.pot -f${i18n.build.dir}/java_sourcefiles.txt"/>
+    </exec>
+  </target>
+
+  <target name="build" depends="po/josm.pot">
     <copy file="i18n.properties" todir="build/org/openstreetmap/josm" />
 
-    <gettext-merge keysFile="josm.pot" poDirectory="po"/>
-
-    <gettext-dist targetBundle="org.openstreetmap.josm.i18n.Translation"
-                  poDirectory="po" outputDirectory="build"/>
+    <ant target="build-lang"><property name="language" value="bg"/></ant>
+    <ant target="build-lang"><property name="language" value="cs"/></ant>
+    <ant target="build-lang"><property name="language" value="da"/></ant>
+    <ant target="build-lang"><property name="language" value="de"/></ant>
+    <ant target="build-lang"><property name="language" value="el"/></ant>
+    <ant target="build-lang"><property name="language" value="en_GB"/></ant>
+    <ant target="build-lang"><property name="language" value="es"/></ant>
+    <ant target="build-lang"><property name="language" value="fi"/></ant>
+    <ant target="build-lang"><property name="language" value="fr"/></ant>
+    <ant target="build-lang"><property name="language" value="he"/><property name="jlanguage" value="iw_IL"/></ant>
+    <ant target="build-lang"><property name="language" value="ja"/></ant>
+    <ant target="build-lang"><property name="language" value="it"/></ant>
+    <ant target="build-lang"><property name="language" value="nl"/></ant>
+    <ant target="build-lang"><property name="language" value="pl"/></ant>
+    <ant target="build-lang"><property name="language" value="ro"/></ant>
+    <ant target="build-lang"><property name="language" value="ru"/></ant>
+    <ant target="build-lang"><property name="language" value="sk"/></ant>
+    <ant target="build-lang"><property name="language" value="sl"/></ant>
+    <ant target="build-lang"><property name="language" value="sv"/></ant>
+    <ant target="build-lang"><property name="language" value="tr"/></ant>
 
     <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
       <env key="LANG" value="C"/>
@@ -70,7 +91,8 @@
     <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
     <delete file="REVISION"/>
 
-    <jar destfile="${i18n.jar}" basedir="build" excludes="**/*.java">
+    <jar destfile="${i18n.jar}" basedir="build"
+         excludes="trans_*.java java_sourcefiles.txt">
       <manifest>
         <attribute name="Extension-Name" value="JOSM Translation into various languages" />
         <attribute name="Translation-Version" value="${version.entry.commit.revision}"/>
@@ -78,6 +100,17 @@
       </manifest>
     </jar>
 
+  </target>
+
+  <target name="build-lang">
+    <property name="jlanguage" value="${language}"/>
+    <exec executable="msgmerge">
+      <arg line="-U po/${language}.po po/josm.pot"/>
+    </exec>
+
+    <exec executable="msgfmt">
+      <arg line="--verbose --java2 -dbuild -rorg.openstreetmap.josm.i18n.Translation -l${jlanguage} po/${language}.po"/>
+    </exec>
   </target>
 
   <target name="clean">

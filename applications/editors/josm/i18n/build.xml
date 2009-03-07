@@ -70,7 +70,7 @@
     <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
     <delete file="REVISION"/>
 
-    <jar destfile="${i18n.jar}" basedir="build">
+    <jar destfile="${i18n.jar}" basedir="build" excludes="**/*.java">
       <manifest>
         <attribute name="Extension-Name" value="JOSM Translation into various languages" />
         <attribute name="Translation-Version" value="${version.entry.commit.revision}"/>

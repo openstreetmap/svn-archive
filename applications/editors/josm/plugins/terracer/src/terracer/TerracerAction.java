@@ -490,7 +490,7 @@ public final class TerracerAction extends JosmAction {
 				return null;
 			} else {
 				String name = selected.toString();
-				if (name.isEmpty()) {
+				if (name.length() == 0) {
 					return null;
 				} else {
 					return name;

@@ -21,17 +21,17 @@ import org.openstreetmap.josm.tools.GBC;
  * A test is a primitive visitor, so that it can access to all data to be
  * validated. These primitives are always visited in the same order: nodes
  * first, then ways.
- * 
+ *
  * @author frsantos
  */
 public class Test implements Visitor
 {
     /** Name of the test */
     protected String name;
-    
+
     /** Description of the test */
     protected String description;
-    
+
     /** Whether this test is enabled. Enabled by default */
     protected boolean enabled = true;
 
@@ -40,7 +40,7 @@ public class Test implements Visitor
 
     /** The preferences check for validation on upload */
     protected JCheckBox checkBeforeUpload;
-    
+
     /** Whether this test must check before upload. Enabled by default */
     protected boolean testBeforeUpload = true;
 
@@ -63,7 +63,7 @@ public class Test implements Visitor
         this.name = name;
         this.description = description;
     }
-    
+
     /**
      * Constructor
      * @param name Name of the test
@@ -72,19 +72,19 @@ public class Test implements Visitor
     {
         this.name = name;
     }
-    
+
     /**
      * Initializes any global data used this tester.
      * @param plugin The plugin
      * @throws Exception When cannot initialize the test
-     */ 
+     */
     public static void initialize(OSMValidatorPlugin plugin) throws Exception {}
-    
+
     /**
      * Notification of the start of the test. The tester can initialize the
      * structures it may need for this test
-     */ 
-    public void startTest() 
+     */
+    public void startTest()
     {
         errors = new ArrayList<TestError>(30);
     }
@@ -92,34 +92,34 @@ public class Test implements Visitor
     /**
      * Flag notifying that this test is run over a partial data selection
      * @param partialSelection Whether the test is on a partial selection data
-     */ 
-    public void setPartialSelection(boolean partialSelection) 
+     */
+    public void setPartialSelection(boolean partialSelection)
     {
         this.partialSelection = partialSelection;
     }
-    
+
     /**
      * Gets the validation errors accumulated until this moment.
-     * @return The list of errors 
+     * @return The list of errors
      */
-    public List<TestError> getErrors() 
+    public List<TestError> getErrors()
     {
         return errors;
     }
-    
+
     /**
      * Notification of the end of the test. The tester may perform additional
-     * actions and destroy the used structures 
+     * actions and destroy the used structures
      */
     public void endTest() {}
 
     /**
      * Visits all primitives to be tested. These primitives are always visited
      * in the same order: nodes first, then ways.
-     * 
+     *
      * @param selection The primitives to be tested
      */
-    public void visit(Collection<OsmPrimitive> selection) 
+    public void visit(Collection<OsmPrimitive> selection)
     {
         for (OsmPrimitive p : selection)
         {
@@ -135,10 +135,10 @@ public class Test implements Visitor
     public void visit(Relation r) {}
 
     /**
-     * Allow the tester to manage its own preferences 
+     * Allow the tester to manage its own preferences
      * @param testPanel The panel to add any preferences component
      */
-    public void addGui(JPanel testPanel) 
+    public void addGui(JPanel testPanel)
     {
         checkEnabled = new JCheckBox(name, enabled);
         checkEnabled.setToolTipText(description);
@@ -160,10 +160,10 @@ public class Test implements Visitor
         testBeforeUpload = checkBeforeUpload.isSelected();
         return false;
     }
-    
+
     /**
      * Fixes the error with the appropiate command
-     * 
+     *
      * @param testError
      * @return The command to fix the error
      */
@@ -171,10 +171,10 @@ public class Test implements Visitor
     {
         return null;
     }
-    
+
     /**
      * Returns true if the given error can be fixed automatically
-     * 
+     *
      * @param testError The error to check if can be fixed
      * @return true if the error can be fixed
      */

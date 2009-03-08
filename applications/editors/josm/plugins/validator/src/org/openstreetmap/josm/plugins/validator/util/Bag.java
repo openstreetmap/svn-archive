@@ -47,6 +47,21 @@ public class Bag<K,V> extends HashMap<K, List<V>>
     }
 
     /**
+     * Adds an element to the bag
+     * @param key The key of the element
+     * @param value The element to add
+     */
+    public void add(K key)
+    {
+        List<V> values = get(key);
+        if( values == null )
+        {
+            values = new ArrayList<V>();
+            put(key, values);
+        }
+    }
+
+    /**
      * Constructor
      */
     public Bag()

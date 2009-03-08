@@ -52,11 +52,10 @@ mkdir -p "$share_path"
 mkdir -p "$man1_path"
 
 
-
 # #######################################################
 # Osmosis
 # #######################################################
-if true; then
+if false; then
     echo "${BLUE}----------> applications/utils/osmosis/trunk Osmosis${NORMAL}"
 
     cd osmosis

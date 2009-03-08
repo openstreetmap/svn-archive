@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -254,7 +255,17 @@ public class TagChecker extends Test
         Collection<TaggingPreset> presets = TaggingPresetPreference.taggingPresets;
         if(presets != null)
         {
+            Way w = new Way();
+            w.checkTagged();
+            w.checkDirectionTagged();
             presetsValueData = new Bag<String, String>();
+            for(String a : OsmPrimitive.uninteresting)
+                presetsValueData.add(a);
+            for(String a : OsmPrimitive.directionKeys)
+                presetsValueData.add(a);
+            for(String a : Main.pref.getCollection(PreferenceEditor.PREFIX + ".knownkeys",
+            Arrays.asList(new String[]{"is_in", "int_ref", "fixme", "population"})))
+                presetsValueData.add(a);
             for(TaggingPreset p : presets)
             {
                 for(TaggingPreset.Item i : p.data)
@@ -269,6 +280,17 @@ public class TagChecker extends Test
                     {
                         TaggingPreset.Key k = (TaggingPreset.Key) i;
                         presetsValueData.add(k.key, k.value);
+                    }
+                    else if(i instanceof TaggingPreset.Text)
+                    {
+                        TaggingPreset.Text k = (TaggingPreset.Text) i;
+                        presetsValueData.add(k.key);
+                    }
+                    else if(i instanceof TaggingPreset.Check)
+                    {
+                        TaggingPreset.Check k = (TaggingPreset.Check) i;
+                        presetsValueData.add(k.key, "yes");
+                        presetsValueData.add(k.key, "no");
                     }
                 }
             }
@@ -368,14 +390,30 @@ public class TagChecker extends Test
             if( checkValues && value != null && value.length() > 0 && presetsValueData != null)
             {
                 List<String> values = presetsValueData.get(key);
-                if( values == null)
+                if(values == null)
                 {
-                    String i = marktr("Key ''{0}'' not in presets.");
-                    errors.add( new TestError(this, Severity.OTHER, tr("Presets do not contain property key"),
-                    tr(i, key), MessageFormat.format(i, key), INVALID_VALUE, p) );
-                    withErrors.add(p, "UPK");
+                    Boolean ignore = false;
+                    for(String a : Main.pref.getCollection(PreferenceEditor.PREFIX + ".startswithkeys",
+                    Arrays.asList(new String[]{"opengeodb","openGeoDB","name:","note:"})))
+                    {
+                        if(key.startsWith(a))
+                            ignore = true;
+                    }
+                    for(String a : Main.pref.getCollection(PreferenceEditor.PREFIX + ".endswithkeys",
+                    Arrays.asList(new String[]{":forward",":backward",":left",":right"})))
+                    {
+                        if(key.endsWith(a))
+                            ignore = true;
+                    }
+                    if(!ignore)
+                    {
+                        String i = marktr("Key ''{0}'' not in presets.");
+                        errors.add( new TestError(this, Severity.OTHER, tr("Presets do not contain property key"),
+                        tr(i, key), MessageFormat.format(i, key), INVALID_VALUE, p) );
+                        withErrors.add(p, "UPK");
+                    }
                 }
-                else if(!values.contains(prop.getValue()))
+                else if(values.size() > 0 && !values.contains(prop.getValue()))
                 {
                     String i = marktr("Value ''{0}'' for key ''{1}'' not in presets.");
                     errors.add( new TestError(this, Severity.OTHER, tr("Presets do not contain property value"),

@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.geom.Area;
 import java.awt.geom.Line2D;
 import java.util.Arrays;
 import java.util.Map;
@@ -59,12 +60,13 @@ public class UnconnectedWays extends Test
     @Override
     public void endTest()
     {
+        Area a = Main.ds.getDataSourceArea();
         Map<Node, Way> map = new HashMap<Node, Way>();
         for(Node en : endnodes_highway)
         {
             for(MyWaySegment s : ways)
             {
-                if(s.highway && s.nearby(en, mindist))
+                if(s.highway && s.nearby(en, mindist) && (a == null || a.contains(en.coor)))
                     map.put(en, s.w);
             }
         }
@@ -82,7 +84,7 @@ public class UnconnectedWays extends Test
         {
             for(MyWaySegment s : ways)
             {
-                if(!s.highway && s.nearby(en, mindist) && !s.isArea())
+                if(!s.highway && s.nearby(en, mindist) && !s.isArea() && (a == null || a.contains(en.coor)))
                     map.put(en, s.w);
             }
         }
@@ -90,7 +92,7 @@ public class UnconnectedWays extends Test
         {
             for(MyWaySegment s : ways)
             {
-                if(s.nearby(en, mindist) && !s.isArea())
+                if(s.nearby(en, mindist) && !s.isArea() && (a == null || a.contains(en.coor)))
                     map.put(en, s.w);
             }
         }
@@ -111,7 +113,7 @@ public class UnconnectedWays extends Test
             {
                 for(MyWaySegment s : ways)
                 {
-                    if(s.nearby(en, minmiddledist))
+                    if(s.nearby(en, minmiddledist) && (a == null || a.contains(en.coor)))
                         map.put(en, s.w);
                 }
             }
@@ -129,7 +131,7 @@ public class UnconnectedWays extends Test
             {
                 for(MyWaySegment s : ways)
                 {
-                    if(s.nearby(en, minmiddledist))
+                    if(s.nearby(en, minmiddledist) && (a == null || a.contains(en.coor)))
                         map.put(en, s.w);
                 }
             }

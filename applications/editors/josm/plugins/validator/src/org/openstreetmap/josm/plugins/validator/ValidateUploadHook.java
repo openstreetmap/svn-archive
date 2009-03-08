@@ -59,7 +59,16 @@ public class ValidateUploadHook implements UploadHook
             test.startTest();
             test.visit(selection);
             test.endTest();
-            errors.addAll( test.getErrors() );
+            if(Main.pref.getBoolean(PreferenceEditor.PREF_OTHER_UPLOAD, false))
+                errors.addAll( test.getErrors() );
+            else
+            {
+                for(TestError e : test.getErrors())
+                {
+                    if(e.getSeverity() != Severity.OTHER)
+                        errors.add(e);
+                }
+            }
         }
         tests = null;
         if(errors == null || errors.isEmpty())

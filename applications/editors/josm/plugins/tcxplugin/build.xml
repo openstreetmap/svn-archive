@@ -1,40 +1,45 @@
 <project name="tcx-support" default="dist" basedir=".">
-<!-- josm "user home" directory depends on the platform used (windows has a different place than unix/linux) -->
-    <property environment="env"/>
-    <condition property="josm.home.dir" value="${env.APPDATA}/JOSM" else="${user.home}/.josm">
-        <and>
-            <os family="windows"/>
-        </and>
-    </condition>
-<!-- compilation properties -->
-    <property name="josm.build.dir"   value="../../core"/>
-    <property name="josm.plugins.dir" value="${josm.home.dir}/plugins"/>
-    <property name="josm"         location="../../core/dist/josm-custom.jar" />
-    <property name="plugin.build.dir" value="build"/>
-    <property name="plugin.dist.dir"  value="../../dist"/>
-    <property name="plugin.name"      value="${ant.project.name}"/>
-    <property name="plugin.jar"       value="../../dist/${plugin.name}.jar"/>
-    <property name="livegpsplugin.jar" value="../../dist/livegps.jar"/>
-    <property name="plugin.description" value="Adds support for TCX files."/>
-    <property name="plugin.stage" value="100"/>
-    <property name="plugin.class" value="org.openstreetmap.josm.plugins.TcxPlugin"/>
-<!-- update site meta data -->
-    <property name="plugin.site.file" value="josm-site.xml"/>
-    <property name="plugin.site.description" value=""/>
-    <property name="plugin.site.url" value=""/>
-    <property name="plugin.site.upload.target" value=""/>
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.build.dir"       value="build"/>
+    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="ant.build.javac.target" value="1.5"/>
-<!-- All jar files necessary to run only JOSM (no tests) -->
-    <fileset id="josm_required_libs" dir="lib"></fileset>
-    <target name="dist" depends="compile,site">
-<!-- jars -->
-        <unjar dest="build">
-            <fileset refid="josm_required_libs" />
+    <target name="init">
+        <mkdir dir="${plugin.build.dir}"/>
+    </target>
+    <target name="compile" depends="init">
+        <echo message="creating ${plugin.jar}"/>
+        <javac srcdir="src" debug="false" destdir="${plugin.build.dir}">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+            <classpath>
+                <pathelement location="${josm}"/>
+                <fileset dir="lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+    <target name="dist" depends="compile,revision">
+        <unjar dest="${plugin.build.dir}">
+            <fileset dir="lib"/>
         </unjar>
-<!-- images -->
-        <copy todir="build/images">
-            <fileset dir="images" />
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
         </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <manifest>
+                <attribute name="Author" value="Adrian Stabiszewski"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.TcxPlugin"/>
+                <attribute name="Plugin-Description" value="Directly load TCX files from JOSM."/>
+                <attribute name="Plugin-Stage" value="100"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Mainversion" value="1465"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="revision">
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -43,90 +48,18 @@
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
-<!-- create jar file -->
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <manifest>
-                <attribute name="Plugin-Class" value="${plugin.class}" />
-                <attribute name="Plugin-Description" value="${plugin.description}" />
-                <attribute name="Plugin-Stage" value="${plugin.stage}" />
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Mainversion" value="1180" />
-<!--        <attribute name="Class-Path" value="lib/jaxb-api.jar;lib/jaxb-impl.jar" />-->
-            </manifest>
-        </jar>
-    </target>
-    <target name="compile" depends="init">
-        <echo message="creating ${plugin.jar}"/>
-        <mkdir dir="${plugin.build.dir}"/>
-        <javac srcdir="src" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
-            <classpath>
-                <pathelement path="${josm.build.dir}/build"/>
-                <fileset dir="${josm.build.dir}/lib">
-                    <include name="**/*.jar"/>
-                </fileset>
-                <fileset dir="./lib">
-                    <include name="**/*.jar"/>
-                </fileset>
-            </classpath>
-        </javac>
-    </target>
-    <target name="install" depends="dist">
-        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
-    </target>
-    <target name="init">
-        <echo>java version: ${java.version}</echo>
     </target>
     <target name="clean">
-        <delete dir="${plugin.build.dir}" />
-        <delete dir="${plugin.site.file}" />
-        <delete file="${plugin.jar}" />
+        <delete dir="${plugin.build.dir}"/>
+        <delete file="${plugin.jar}"/>
     </target>
-<!-- write site description for the given plugin so josm will accept it -->
-    <target name="site">
-        <echo message="creating site description in ${plugin.site.file}"/>
-        <echo file="${plugin.site.file}">&lt;!-- plugins available on this site -->
-  &lt;plugins>
-  &lt;plugin id="${ant.project.name}" version="${plugin.version}">
-  &lt;name>${ant.project.name}&lt;/name>
-  &lt;description>${plugin.description}&lt;/description>
-  &lt;resource>${plugin.site.url}${plugin.jar}&lt;/resource>
-  &lt;/plugin>
-  &lt;/plugins>
-</echo>
-    </target>
-<!-- write site description for the given plugin (not implemented in JOSM as full version yet!) -->
-    <target name="site-full-donotuse">
-        <echo message="creating site description in ${plugin.site.file}"/>
-        <echo file="${plugin.site.file}">&lt;?xml version="1.0"?>
-    &lt;site version="1.0">
-    &lt;!-- meta data of site -->
-&lt;site-info>
-&lt;site-name>${plugin.site.description}&lt;/site-name>
-&lt;site-url>${plugin.site.url}&lt;/site-url>
-&lt;/site-info>
-
-&lt;!-- plugins available on this site -->
-&lt;plugins>
-&lt;plugin id="${ant.project.name}" version="${plugin.version}">
-&lt;name>${ant.project.name}&lt;/name>
-&lt;description>${plugin.description}&lt;/description>
-&lt;resources>
-&lt;resource src="${plugin.site.url}${plugin.jar}"
-target="${josm.home.dir}/plugins/${plugin.jar}"/>
-&lt;/resources>
-&lt;/plugin>
-&lt;/plugins>
-&lt;/site>
-</echo>
-    </target>
-<!-- upload the site description and the jar file via ssh -->
-    <target name="upload" depends="dist,site">
-        <echo message="uploading jar and site description to ${plugin.site.upload.target}"/>
-        <exec executable="scp">
-            <arg value="${plugin.jar}"/>
-            <arg value="${plugin.site.file}"/>
-            <arg value="${plugin.site.upload.target}"/>
-        </exec>
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
+        </condition>
+        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
 </project>

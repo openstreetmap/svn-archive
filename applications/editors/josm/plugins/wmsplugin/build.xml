@@ -1,5 +1,5 @@
 <project name="wmsplugin" default="dist" basedir=".">
-    <property name="josm"                   location="../../core/dist/josm-custom.jar" />
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
@@ -9,19 +9,32 @@
     </target>
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
-        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+        <javac srcdir="src" classpath="${josm}" debug="false" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
-            <include name="**/*.java" />
         </javac>
     </target>
-    <target name="dist" depends="compile">
+    <target name="dist" depends="compile,revision">
         <copy todir="${plugin.build.dir}/resources">
             <fileset dir="resources"/>
         </copy>
-        <copy todir="${plugin.build.dir}/images" >
-            <fileset dir="images" />
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
         </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <manifest>
+                <attribute name="Author" value="Tim Waters, Petr Dlouhý"/>
+                <attribute name="Plugin-Class" value="wmsplugin.WMSPlugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="Display georeferenced images as background in JOSM (WMS servers, Yahoo, ...)."/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/WMSPlugin"/>
+                <attribute name="Plugin-Mainversion" value="1465"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+                <attribute name="de.Plugin-Link" value="http://wiki.openstreetmap.org/wiki/DE:JOSM/Plugins/WMSPlugin"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="revision">
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -30,18 +43,18 @@
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <manifest>
-                <attribute name="Plugin-Class" value="wmsplugin.WMSPlugin" />
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Allows external WMS resources to be displayed." />
-                <attribute name="Plugin-Mainversion" value="1379" />
-            </manifest>
-        </jar>
     </target>
     <target name="clean">
-        <delete dir="${plugin.build.dir}" />
-        <delete file="${plugin.jar}" />
+        <delete dir="${plugin.build.dir}"/>
+        <delete file="${plugin.jar}"/>
+    </target>
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
+        </condition>
+        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
 </project>

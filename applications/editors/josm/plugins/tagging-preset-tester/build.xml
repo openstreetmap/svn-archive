@@ -1,5 +1,5 @@
 <project name="tagging-preset-tester" default="dist" basedir=".">
-    <property name="josm"                   location="../../core/dist/josm-custom.jar" />
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
@@ -9,14 +9,28 @@
     </target>
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
-        <javac srcdir="src" destdir="${plugin.build.dir}" classpath="${josm}">
+        <javac srcdir="src" classpath="${josm}" debug="false" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
-    <target name="dist" depends="compile">
-        <copy todir="${plugin.build.dir}/images" >
-            <fileset dir="images" />
+    <target name="dist" depends="compile,revision">
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
         </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <manifest>
+                <attribute name="Author" value="Imi"/>
+                <attribute name="Main-Class" value="org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTester"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTesterAction"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="Adds a tagging preset tester to the help menu, which helps you developing of tagging presets (quick preview of the dialog that will popup). You can start the jar-file as standalone as well."/>
+                <attribute name="Plugin-Mainversion" value="1465"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="revision">
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -25,19 +39,18 @@
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <manifest>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Make the Tagging Preset Tester tool available in the help menu." />
-                <attribute name="Main-Class" value="org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTester" />
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTesterAction" />
-                <attribute name="Plugin-Mainversion" value="1364" />
-            </manifest>
-        </jar>
     </target>
     <target name="clean">
-        <delete dir="${plugin.build.dir}" />
-        <delete file="${plugin.jar}" />
+        <delete dir="${plugin.build.dir}"/>
+        <delete file="${plugin.jar}"/>
+    </target>
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
+        </condition>
+        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
 </project>

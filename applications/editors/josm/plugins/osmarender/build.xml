@@ -1,58 +1,56 @@
 <project name="osmarender" default="install" basedir=".">
-<!-- josm "user home" directory depends on the platform used (windows has a different place than unix/linux) -->
-    <property environment="env"/>
-    <condition property="josm.home.dir" value="${env.APPDATA}/JOSM" else="${user.home}/.josm">
-        <and>
-            <os family="windows"/>
-        </and>
-    </condition>
-<!-- compilation properties -->
-    <property name="josm.build.dir"   value="../../core"/>
-    <property name="josm.plugins.dir" value="${josm.home.dir}/plugins"/>
-    <property name="josm"         location="../../core/dist/josm-custom.jar" />
-    <property name="plugin.build.dir" value="build"/>
-    <property name="plugin.dist.dir"  value="../../dist"/>
-    <property name="plugin.name"      value="${ant.project.name}"/>
-    <property name="plugin.jar"       value="../../dist/${plugin.name}.jar"/>
-    <property name="josm" location="../../core/dist/josm-custom.jar" />
-    <property name="stylesheets" location="./stylesheets" />
-    <property name="xslt" location="./xslt" />
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.build.dir"       value="build"/>
+    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="ant.build.javac.target" value="1.5"/>
-    <target name="compile">
+    <property name="stylesheets"            location="./stylesheets"/>
+    <property name="xslt"                   location="./xslt"/>
+    <target name="init">
+        <mkdir dir="${plugin.build.dir}"/>
+    </target>
+    <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
-        <mkdir dir="${plugin.build.dir}"></mkdir>
-        <mkdir dir="${plugin.dist.dir}"></mkdir>
-        <javac srcdir="src" debug="true" classpath="${josm}" destdir="${plugin.build.dir}">
-            <include name="**/*.java" />
+        <javac srcdir="src" classpath="${josm}" debug="false" destdir="${plugin.build.dir}">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
-    <target name="dist"  depends="compile">
+    <target name="dist" depends="compile,revision">
         <copy todir="${plugin.build.dir}" file="${xslt}/osmarender.xsl"/>
-        <copy tofile="${plugin.build.dir}/osm-map-features.xml"
-      file="${stylesheets}/osm-map-features-z17.xml"/>
-        <exec append="false" output="REVISION" executable="perl" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="../getrevision.pl"/>
-            <arg value="xslt"/>
-            <arg value="stylesheets"/>
-        </exec>
-        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-        <delete file="REVISION"/>
+        <copy tofile="${plugin.build.dir}/osm-map-features.xml" file="${stylesheets}/osm-map-features-z17.xml"/>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <manifest>
-                <attribute name="Plugin-Class" value="OsmarenderPlugin" />
-                <attribute name="Plugin-Description" value="Launches FireFox to display the current visible screen as a nice SVG image" />
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Plugin-Mainversion" value="1180"/>
+                <attribute name="Author" value="80n"/>
+                <attribute name="Plugin-Class" value="OsmarenderPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="Launches FireFox to display the current visible screen as a nice SVG image."/>
+                <attribute name="Plugin-Mainversion" value="1465"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>
     </target>
-    <target name="clean">
-        <delete dir="${plugin.build.dir}" />
-        <delete file="${plugin.jar}" />
+    <target name="revision">
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="info"/>
+            <arg value="--xml"/>
+            <arg value="."/>
+        </exec>
+        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+        <delete file="REVISION"/>
     </target>
-    <target name="install" depends="compile,dist">
+    <target name="clean">
+        <delete dir="${plugin.build.dir}"/>
+        <delete file="${plugin.jar}"/>
+    </target>
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
+        </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
 </project>

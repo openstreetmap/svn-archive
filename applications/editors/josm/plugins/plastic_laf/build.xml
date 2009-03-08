@@ -1,20 +1,35 @@
 <project name="plastic_laf" default="dist" basedir=".">
-<!-- compilation properties -->
-    <property name="josm.build.dir"   value="../../core"/>
-    <property name="josm.home.dir"    value="${user.home}/.josm"/>
-    <property name="josm"         location="../../core/dist/josm-custom.jar" />
-    <property name="plugin.build.dir" value="build"/>
-    <property name="plugin.dist.dir"  value="../../dist"/>
-    <property name="plugin.name"      value="${ant.project.name}"/>
-    <property name="plugin.jar"       value="../../dist/${plugin.name}.jar"/>
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.build.dir"       value="build"/>
+    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="ant.build.javac.target" value="1.5"/>
-    <target name="dist">
+    <target name="init">
+        <mkdir dir="${plugin.build.dir}"/>
+    </target>
+    <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
-        <unjar dest="${plugin.build.dir}" src="lib/looks-2.0.4.jar" />
-        <javac srcdir="src" destdir="${plugin.build.dir}">
-            <include name="**/*.java" />
+        <javac srcdir="src" classpath="${josm}" debug="false" destdir="${plugin.build.dir}">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
-<!-- define the version of the jar file -->
+    </target>
+    <target name="dist" depends="compile,revision">
+        <unjar dest="${plugin.build.dir}" src="lib/looks-2.2.1.jar"/>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <manifest>
+                <attribute name="Author" value="Imi"/>
+                <attribute name="Plugin-Class" value="plastic_laf.Plugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="The great JGoodies Plastic Look and Feel."/>
+                <attribute name="Plugin-Early" value="true"/>
+                <attribute name="Plugin-Link" value="http://www.jgoodies.com/"/>
+                <attribute name="Plugin-Mainversion" value="1465"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="revision">
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -22,21 +37,19 @@
             <arg value="."/>
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-<!-- delete intermediate file -->
         <delete file="REVISION"/>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <manifest>
-                <attribute name="Plugin-Class" value="plastic_laf.Plugin" />
-                <attribute name="Plugin-Description" value="The great JGoodies Plastic Look and Feel" />
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Plugin-Early" value="true" />
-                <attribute name="Plugin-Mainversion" value="1180" />
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-            </manifest>
-        </jar>
     </target>
     <target name="clean">
-        <delete dir="${plugin.build.dir}" />
-        <delete file="${plugin.jar}" />
+        <delete dir="${plugin.build.dir}"/>
+        <delete file="${plugin.jar}"/>
+    </target>
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
+        </condition>
+        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
 </project>

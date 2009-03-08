@@ -30,7 +30,7 @@
                 <attribute name="Author" value="Christian Gallioz"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.agpifoj.AgpifojPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Another geotag/> for JOSM. Correlates pictures with GPS tracks or import EXIF geotagged pictures."/>
+                <attribute name="Plugin-Description" value="Another geotag plugin for JOSM. Correlates pictures with GPS tracks or import EXIF geotagged pictures."/>
                 <attribute name="Plugin-Early" value="false"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/AgPifoJ"/>
                 <attribute name="Plugin-Mainversion" value="1465"/>

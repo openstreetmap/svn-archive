@@ -4,6 +4,7 @@
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="ant.build.javac.target" value="1.5"/>
+    <property name="looks"                  value="lib/looks-2.2.1.jar"/>
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
@@ -12,10 +13,14 @@
         <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
+            <classpath>
+                <pathelement location="${josm}"/>
+                <pathelement location="${looks}"/>
+            </classpath>
         </javac>
     </target>
     <target name="dist" depends="compile,revision">
-        <unjar dest="${plugin.build.dir}" src="lib/looks-2.2.1.jar"/>
+        <unjar dest="${plugin.build.dir}" src="${looks}"/>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <manifest>
                 <attribute name="Author" value="Imi"/>

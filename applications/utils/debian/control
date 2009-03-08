@@ -5,6 +5,7 @@ Maintainer: Joerg Ostertag <debian@ostertag.name>
 Build-Depends: debhelper (>> 3.7.2),
 	grass-dev,
 	libgeos-dev,
+	libfcgi-dev,
 	libmagick9-dev | libmagick10-dev ,
 	libmysql++-dev,
 	libpq-dev,

@@ -1,25 +1,36 @@
 <project name="slippymap" default="dist" basedir=".">
-<!-- josm "user home" directory depends on the platform used (windows has a different place than unix/linux) -->
-    <property environment="env"/>
-    <condition property="josm.home.dir" value="${env.APPDATA}/JOSM" else="${user.home}/.josm">
-        <and>
-            <os family="windows"/>
-        </and>
-    </condition>
-<!-- compilation properties -->
-    <property name="josm.build.dir"   value="../../core"/>
-    <property name="josm.plugins.dir" value="${josm.home.dir}/plugins"/>
-    <property name="josm"         location="../../core/dist/josm-custom.jar" />
-    <property name="plugin.build.dir" value="build"/>
-    <property name="plugin.dist.dir"  value="../../dist"/>
-    <property name="plugin.name"      value="${ant.project.name}"/>
-    <property name="plugin.jar"       value="../../dist/${plugin.name}.jar"/>
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.build.dir"       value="build"/>
+    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="ant.build.javac.target" value="1.5"/>
-    <target name="dist" depends="compile">
-<!-- images -->
-        <copy todir="build/images">
-            <fileset dir="images" />
+    <target name="init">
+        <mkdir dir="${plugin.build.dir}"/>
+    </target>
+    <target name="compile" depends="init">
+        <echo message="creating ${plugin.jar}"/>
+        <javac srcdir="src" classpath="${josm}" debug="false" destdir="${plugin.build.dir}">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+    <target name="dist" depends="compile,revision">
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
         </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <manifest>
+                <attribute name="Author" value="Frederik Ramm"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.slippymap.SlippyMapPlugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="Displays a slippy map grid in JOSM. Can load tiles from slippy map as background and request updates."/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/SlippyMap"/>
+                <attribute name="Plugin-Mainversion" value="1465"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="revision">
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -28,31 +39,18 @@
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
-<!-- create josm-custom.jar -->
-        <jar destfile="${plugin.jar}" basedir="build">
-            <manifest>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.slippymap.SlippyMapPlugin" />
-                <attribute name="Plugin-Description" value="Displays a slippy map tile grid, and tile status info" />
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Plugin-Mainversion" value="1180"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-            </manifest>
-        </jar>
-    </target>
-    <target name="compile" depends="init">
-        <echo message="creating ${plugin.jar}"/>
-        <javac srcdir="src" classpath="../../core/dist/josm-custom.jar" destdir="build">
-            <compilerarg value="-Xlint:deprecation"/>
-        </javac>
-    </target>
-    <target name="init">
-        <mkdir dir="${plugin.build.dir}" />
     </target>
     <target name="clean">
-        <delete dir="${plugin.build.dir}" />
-        <delete file="${plugin.jar}" />
+        <delete dir="${plugin.build.dir}"/>
+        <delete file="${plugin.jar}"/>
     </target>
     <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
+        </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
 </project>

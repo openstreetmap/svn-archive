@@ -1,5 +1,5 @@
 <project name="DirectUpload" default="dist" basedir=".">
-    <property name="josm"                   location="../../core/dist/josm-custom.jar" />
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
@@ -9,16 +9,28 @@
     </target>
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
-        <javac srcdir="src" classpath="${josm}" destdir="${plugin.build.dir}" debug="true" encoding="UTF-8">
+        <javac srcdir="src" classpath="${josm}" debug="false" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
-            <include name="**/*.java" />
         </javac>
     </target>
-    <target name="dist" depends="compile">
+    <target name="dist" depends="compile,revision">
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <manifest>
+                <attribute name="Author" value="Subhodip Biswas"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.DirectUpload.UploadDataGuiPlugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="This plugin directly upload GPS Traces from current active layer in JOSM to openstreetmap.org."/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/User:Subhodip/GSoC_Doc#DirectUpload_Plugin_in_JOSM_:"/>
+                <attribute name="Plugin-Mainversion" value="1465"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="revision">
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -27,19 +39,18 @@
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <manifest>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.DirectUpload.UploadDataGuiPlugin" />
-                <attribute name="Plugin-Description" value="Uploads GPS traces to openstreetmap.org" />
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Plugin-Mainversion" value="1180"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Author" value="Subhodip Biswas &lt;subhodipbiswas@gmail.com&gt;" />
-            </manifest>
-        </jar>
     </target>
     <target name="clean">
-        <delete dir="${plugin.build.dir}" />
-        <delete file="${plugin.jar}" />
+        <delete dir="${plugin.build.dir}"/>
+        <delete file="${plugin.jar}"/>
+    </target>
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
+        </condition>
+        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
 </project>

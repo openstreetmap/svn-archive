@@ -31,11 +31,11 @@
             <manifest>
                 <attribute name="Author" value="Adrian Stabiszewski"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.TcxPlugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Directly load TCX files from JOSM."/>
+                <attribute name="Plugin-Mainversion" value="1465"/>
                 <attribute name="Plugin-Stage" value="100"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Mainversion" value="1465"/>
             </manifest>
         </jar>
     </target>

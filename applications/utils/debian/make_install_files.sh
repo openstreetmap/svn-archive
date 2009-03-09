@@ -125,8 +125,12 @@ for lib in ccoord libosm libimg  ; do
     echo "${BLUE}----------> applications/lib/$lib${NORMAL}"
     cd ../lib/$lib
 
-    # for a in *.cpp ; do perl -p -i -e 's,libshp/shapefil.h,shapefil.h,g' $a; done
-    make clean >build.log 2>build.err
+    rm build.log build.err
+    if [ -s "configure" ] ;then
+	./configure >>build.log 2>>build.err
+    fi
+
+    make clean >>build.log 2>>build.err
 
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
@@ -156,8 +160,14 @@ for lib in Geo-OSM-MapFeatures ; do
     echo "${BLUE}----------> applications/lib/$lib${NORMAL} (Compile only)"
     cd ../lib/$lib
 
-    # for a in *.cpp ; do perl -p -i -e 's,libshp/shapefil.h,shapefil.h,g' $a; done
-    make clean >build.log 2>build.err
+    rm build.log build.err
+    if [ -s "configure" ] ;then
+	./configure >>build.log 2>>build.err
+    fi
+
+    if [ -S Makefile ] ; then
+	make clean >>build.log 2>>build.err
+    fi
 
     if [ -s "Makefile.PL" ] ; then
 	perl Makefile.PL >>build.log 2>>build.err
@@ -195,7 +205,13 @@ for import in `ls import/*/Makefile| sed 's,/Makefile,,;s,import/,,'` ; do
 
     echo "${BLUE}----------> applications/utils/import/$import${NORMAL}"
     cd import/$import/
-    make clean >build.log 2>build.err
+
+    rm build.log build.err
+    if [ -s "configure" ] ;then
+	./configure >>build.log 2>>build.err
+    fi
+
+    make clean >>build.log 2>>build.err
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	if $allow_error ; then
@@ -222,7 +238,13 @@ for filter in `ls filter/*/Makefile| sed 's,/Makefile,,;s,filter/,,'` ; do
 
     echo "${BLUE}----------> applications/utils/filter/${filter}${NORMAL}"
     cd filter/${filter}  || exit -1
-    make clean >build.log 2>build.err
+
+    rm build.log build.err
+    if [ -s "configure" ] ;then
+	./configure >>build.log 2>>build.err
+    fi
+
+    make clean >>build.log 2>>build.err
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	if $allow_error ; then
@@ -249,6 +271,12 @@ for export in `ls export/*/Makefile| sed 's,/Makefile,,;s,export/,,'` ; do
 
     echo "${BLUE}----------> applications/utils/export/${export}${NORMAL}"
     cd export/${export}  || exit -1
+    
+    rm build.log build.err
+
+    if [ -s "configure" ] ;then
+	./configure >>build.log 2>>build.err
+    fi
 
     if [ -s "Makefile.$export" ] ;then
 	custom_makefile=" -f Makefile.$export"
@@ -256,7 +284,7 @@ for export in `ls export/*/Makefile| sed 's,/Makefile,,;s,export/,,'` ; do
 	custom_makefile=''
     fi
 
-    make $custom_makefile clean >build.log 2>build.err
+    make $custom_makefile clean >>build.log 2>>build.err
     make $custom_makefile >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	if $allow_error ; then
@@ -266,6 +294,9 @@ for export in `ls export/*/Makefile| sed 's,/Makefile,,;s,export/,,'` ; do
 	fi
 	echo "${RED}!!!!!! ERROR compiling  export/${export} ${NORMAL}"
 	exit -1 
+    fi
+    if $allow_error ; then
+	echo "${GREEN}Even so it sometimes wasn't compiling; 'applications/export/$export' just compiled good on this machine${NORMAL}"
     fi
     cd ../..
     cp export/${export}/${export} ${bin_path}
@@ -285,7 +316,13 @@ done
 if true ; then
     echo "${BLUE}----------> applications/utils/color255${NORMAL}"
     cd color255 || exit -1
-    make clean >build.log 2>build.err
+
+    rm build.log build.err
+    if [ -s "configure" ] ;then
+	./configure >>build.log 2>>build.err
+    fi
+
+    make clean >>build.log 2>>build.err
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	echo "${RED}!!!!!! ERROR compiling color255 ${NORMAL}"
@@ -300,7 +337,13 @@ fi
 if true; then
     echo "${BLUE}----------> applications/planet.osm/C/UTF8Sanitizer${NORMAL}${NORMAL}"
     cd planet.osm/C/  || exit -1
-    make clean >build.log 2>build.err
+
+    rm build.log build.err
+    if [ -s "configure" ] ;then
+	./configure >>build.log 2>>build.err
+    fi
+
+    make clean >>build.log 2>>build.err
     make >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	echo "${RED}!!!!!! ERROR compiling color255 ${NORMAL}"

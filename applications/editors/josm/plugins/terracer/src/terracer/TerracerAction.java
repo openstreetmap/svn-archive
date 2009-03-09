@@ -283,6 +283,16 @@ public final class TerracerAction extends JosmAction {
 			side2 = indexes[3];
 		}
 
+		// if the second side has a shorter length and an approximately equal
+		// sideness then its better to choose the shorter, as with quadrilaterals
+		// created using the orthogonalise tool the sideness will be about the
+		// same for all sides.
+		if (sideLength(w, side1) > sideLength(w, side1 + 1) &&
+			Math.abs(sideness[side1] - sideness[side1 + 1]) < 0.001) {
+			side1 = side1 + 1;
+			side2 = (side2 + 1) % (w.nodes.size() - 1);
+		}
+
 		// swap side1 and side2 into sorted order.
 		if (side1 > side2) {
 			// i can't believe i have to write swap() myself - surely java standard
@@ -307,6 +317,15 @@ public final class TerracerAction extends JosmAction {
 		}
 
 		return new Pair<Way, Way>(front, back);
+	}
+
+	/**
+	 * Calculate the length of a side (from node i to i+1) in a way.
+	 */
+	private double sideLength(Way w, int i) {
+		Node a = w.nodes.get(i);
+		Node b = w.nodes.get(i+1);
+		return a.coor.greatCircleDistance(b.coor);
 	}
 
 	/**
@@ -459,10 +478,10 @@ public final class TerracerAction extends JosmAction {
 			x.setColumns(5);
 			x = ((JSpinner.DefaultEditor)chi.getEditor()).getTextField();
 			x.setColumns(5);
-			addLabelled("From number: ", clo);
-			addLabelled("To number: ",   chi);
-			addLabelled("Interpolation: ", step);
-			addLabelled("Street name (Optional): ", street);
+			addLabelled(tr("Highest number") + ": ",   chi);
+			addLabelled(tr("Lowest number") + ": ", clo);
+			addLabelled(tr("Interpolation") + ": ", step);
+			addLabelled(tr("Street name") + " (" + tr("Optional") + "): ", street);
 		}
 
 		private void addLabelled(String str, Component c) {

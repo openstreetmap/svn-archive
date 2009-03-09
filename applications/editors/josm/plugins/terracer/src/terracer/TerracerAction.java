@@ -320,11 +320,12 @@ public final class TerracerAction extends JosmAction {
 	}
 
 	/**
-	 * Calculate the length of a side (from node i to i+1) in a way.
+	 * Calculate the length of a side (from node i to i+1) in a way. This assumes that
+	 * the way is closed, but I only ever call it for buildings.
 	 */
 	private double sideLength(Way w, int i) {
 		Node a = w.nodes.get(i);
-		Node b = w.nodes.get(i+1);
+		Node b = w.nodes.get((i+1) % (w.nodes.size() - 1));
 		return a.coor.greatCircleDistance(b.coor);
 	}
 
@@ -368,7 +369,7 @@ public final class TerracerAction extends JosmAction {
 	}
 
 	/**
-	 * Calculate "sideness" metric for each segment in a way.
+	 * Calculate "sideness" metric for each segment in a way.  
 	 */
 	private double[] calculateSideness(Way w) {
 		final int length = w.nodes.size() - 1;

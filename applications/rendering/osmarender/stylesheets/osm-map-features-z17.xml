@@ -2238,6 +2238,13 @@
 			<line class="powerline-pipeline-casing no-bezier"/>
 			<line class="power-line no-bezier"/>
 		</rule>
+	
+		<rule e="node" k="power" v="generator">
+			<rule e="node" k="power_source" v="wind">
+				<symbol ref="windpower" position="center"/>
+			</rule>
+		</rule>
+
 		<!-- Pipelines -->
 		<rule e="way" k="man_made" v="pipeline">
 			<rule e="way" k="type" v="water">

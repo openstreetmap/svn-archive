@@ -362,14 +362,6 @@ SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\wmsplugin.jar"
 SectionEnd
 
-Section $(JOSM_SEC_NAMEFINDER_PLUGIN) SecNamefinderPlugin
-;-------------------------------------------
-SectionIn 1 2
-SetShellVarContext all
-SetOutPath $APPDATA\JOSM\plugins
-File "..\dist\namefinder.jar"
-SectionEnd
-
 Section $(JOSM_SEC_VALIDATOR_PLUGIN) SecValidatorPlugin
 ;-------------------------------------------
 SectionIn 1 2
@@ -454,7 +446,7 @@ SectionIn 1 2
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 !include LogicLib.nsh
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "wmsplugin,namefinder,validator"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "wmsplugin,validator"
 SectionEnd
 
 
@@ -550,7 +542,6 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} $(JOSM_SECDESC_JOSM)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} $(JOSM_SECDESC_PLUGINS_GROUP)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} $(JOSM_SECDESC_WMS_PLUGIN)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecNamefinderPlugin} $(JOSM_SECDESC_NAMEFINDER_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} $(JOSM_SECDESC_VALIDATOR_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} $(JOSM_SECDESC_STARTMENU)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopIcon} $(JOSM_SECDESC_DESKTOP_ICON)

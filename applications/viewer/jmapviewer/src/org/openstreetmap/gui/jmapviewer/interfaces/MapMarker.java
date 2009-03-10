@@ -16,22 +16,22 @@ import org.openstreetmap.gui.jmapviewer.JMapViewer;
  */
 public interface MapMarker {
 
-	/**
-	 * @return Latitude of the map marker position
-	 */
-	public double getLat();
+    /**
+     * @return Latitude of the map marker position
+     */
+    public double getLat();
 
-	/**
-	 * @return Longitude of the map marker position
-	 */
-	public double getLon();
+    /**
+     * @return Longitude of the map marker position
+     */
+    public double getLon();
 
-	/**
-	 * Paints the map marker on the map. The <code>position</code> specifies the
-	 * coordinates within <code>g</code>
-	 * 
-	 * @param g
-	 * @param position
-	 */
-	public void paint(Graphics g, Point position);
+    /**
+     * Paints the map marker on the map. The <code>position</code> specifies the
+     * coordinates within <code>g</code>
+     * 
+     * @param g
+     * @param position
+     */
+    public void paint(Graphics g, Point position);
 }

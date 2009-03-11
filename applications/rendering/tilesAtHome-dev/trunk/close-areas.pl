@@ -443,6 +443,7 @@ STRING:
             $i=0 if ($i==4);
             last if ($i==$entry_side && !$min_once);
             $min_once = 0;
+            last if (check_segments_intersect($helpernodes->{$helper}->[1], $helpernodes->{$helper}->[0], $nodes->{$currentnode}->{"lon"}, $nodes->{$currentnode}->{"lat"}, $segments) );
             my $newnode = make_node($helpernodes->{$i}->[0], $helpernodes->{$i}->[1]);
             my $newseg = make_seg($currentnode, $newnode);
             $currentnode = $newnode;
@@ -469,6 +470,7 @@ STRING:
             $min_once = 0;
             my $helper = $i-1;
             $helper = 3 if ($helper == -1);
+            last if (check_segments_intersect($helpernodes->{$helper}->[1], $helpernodes->{$helper}->[0], $nodes->{$currentnode}->{"lon"}, $nodes->{$currentnode}->{"lat"}, $segments) );
             my $newnode = make_node($helpernodes->{$helper}->[0], $helpernodes->{$helper}->[1]);
             my $newseg = make_seg($currentnode, $newnode);
             $currentnode = $newnode;
@@ -549,6 +551,94 @@ else
     make_multipolygon(\@coastline_segments);
 }
 print "</osm>\n";
+
+
+
+
+# checks segment from ($x0,$y0) to ($x1,$y1) for intersection with all segments 
+# in $s 
+sub check_segments_intersect
+{
+	my ($x0, $y0, $x1, $y1, $s)= @_;
+	
+	printf("check_segments_intersect: (%f,%f)  (%f,%f)   %s\n", $x0, $y0, $x1, $y1, join(", ",keys(%$s)) ) if ($debug);
+	foreach my $seg(keys(%$s))
+	{
+		my $from= $s->{$seg}->{"from"};
+		my $to  = $s->{$seg}->{"to"};
+		my $x2= $nodes->{$from}->{"lon"};
+		my $y2= $nodes->{$from}->{"lat"};
+		my $x3= $nodes->{$to}  ->{"lon"};
+		my $y3= $nodes->{$to}  ->{"lat"};
+		my ($ret)= intersect($x0, $y0, $x1, $y1, $x2, $y2, $x3, $y3);
+		if ($ret>0) # found intersection
+		{
+			printf("   SEG %3d: %d (%f,%f) --> %d (%f,%f) \n", $seg, $from, $x2, $y2, $to, $x3, $y3 ) if ($debug);
+			return 1;
+		}
+	}
+	return 0; # no intersection
+}
+
+
+# Perl implementation of intersect algorithm for segments
+# first segments is from ($x0,$y0) to ($x1,$y1), second segment is from ($x2,$y2) to ($x3,$y3)
+# source: http://softsurfer.com/Archive/algorithm_0104/algorithm_0104B.htm#Line%20Intersections
+# Modification: This implementation accepts only _true_ intersections, i.e. if the two segments 
+# only "touch" at the ends it's _not_ detected as an intersection _intentionally_
+sub intersect
+{
+	my ($x0, $y0, $x1, $y1, $x2, $y2, $x3, $y3)= @_;
+	
+	my $cpproduct= ($x1-$x0)*($y3-$y2) - ($y1-$y0)*($x3-$x2);
+	if (abs($cpproduct)>0.000000000001)
+	{
+		my $t1= (($x1-$x0)*($y0-$y2) - ($y1-$y0)*($x0-$x2)) / $cpproduct;
+		return 0 if ( ($t1<=0) || ($t1>=1) );
+		my $t2= (($x3-$x2)*($y0-$y2) - ($y3-$y2)*($x0-$x2)) / $cpproduct;
+		return 0 if ( ($t2<=0) || ($t2>=1) );
+		# a true intersection
+		my $xs= $x0 + $t2*($x1-$x0);
+		my $ys= $y0 + $t2*($y1-$y0);
+		return (1, $xs, $ys);
+	}
+	else
+	{
+		# are the two segments collinear ?
+		my $cpp1= ($x1-$x0)*($y0-$y2) -($y1-$y0)*($x0-$x2);
+		my $cpp2= ($x3-$x2)*($y0-$y2) -($y3-$y2)*($x0-$x2);
+		return 0 if ( ($cpp1!=0) || ($cpp2!=0) ); # they are _not_ collinear
+		
+		return -1 if ( ($x0==$x1) && ($y0==$y1) ); # error: first segment is only a single point
+		return -1 if ( ($x2==$x3) && ($y2==$y3) ); # error: second segment is only a single point
+		
+		my ($t0, $t1);
+		if (($x3-$x2)!=0)
+		{
+			$t0= ($x0-$x2) / ($x3-$x2);
+			$t1= ($x1-$x2) / ($x3-$x2);
+		}
+		else
+		{
+			$t0= ($y0-$y2) / ($y3-$y2);
+			$t1= ($y1-$y2) / ($y3-$y2);
+		}
+		if ($t0>$t1)
+		{
+			my $tmp= $t0; $t0= $t1; $t1= $tmp; 
+		}
+		return 0 if ( ($t0>1) || ($t1<0) );
+		$t0 = ($t0<0)? 0 : $t0; # clip to min 0
+		$t1 = ($t1>1)? 1 : $t1; # clip to max 1		
+		if ($t0==$t1)
+		{
+			return (1, $x2 + $t0*($x3-$x2), $y2 + $t0*($y3-$y2) );
+		}
+		return (2, $x2 + $t0*($x3-$x2), $y2 + $t0*($y3-$y2), $x2 + $t1*($x3-$x2), $y2 + $t1*($y3-$y2));
+	}
+}
+
+
 
 sub make_node
 {

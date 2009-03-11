@@ -822,7 +822,7 @@ sub polygon_contains_point
     foreach my $seg(@$seglist)
     {
         my $p2 = $nodes->{$segments->{$seg}->{"to"}};
-        if ($point->{"lat"} > $p1->{"lat"} || $point->{"lat"} > $p2->{"lat"})
+        if ($point->{"lat"} >= $p1->{"lat"} || $point->{"lat"} >= $p2->{"lat"})
         {
             if ($point->{"lat"} < $p1->{"lat"} || $point->{"lat"} < $p2->{"lat"})
             {

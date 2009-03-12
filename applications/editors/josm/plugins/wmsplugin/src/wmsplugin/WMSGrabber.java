@@ -15,6 +15,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,8 +25,8 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.io.ProgressInputStream;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.io.ProgressInputStream;
 
 
 public class WMSGrabber extends Grabber {
@@ -118,6 +119,8 @@ public class WMSGrabber extends Grabber {
         if(cached != null) return cached;
     
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(Main.pref.getInteger("wmsplugin.timeout.connect", 30) * 1000);
+        conn.setReadTimeout(Main.pref.getInteger("wmsplugin.timeout.read", 30) * 1000);
 
         String contentType = conn.getHeaderField("Content-Type");
         if( conn.getResponseCode() != 200

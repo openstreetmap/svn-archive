@@ -865,6 +865,14 @@
 		};
 		_root.panel.historylink.onPress=getHistory;
 		_root.panel.historylink.useHandCursor=true;
+		_root.panel.historylink.onRollOver=function() {
+			var v;
+			if (_root.poiselected) { v=_root.map.pois[poiselected].version; }
+			else if (_root.pointselected>-2) { v=_root.ws.path[_root.pointselected].version; }
+			else { v=_root.ws.version; }
+			setFloater("Version "+v);
+		};
+		_root.panel.historylink.onRollOut =function() { clearFloater(); };
 	}
 
 	// getPanelColumns - how many columns can fit into the panel?

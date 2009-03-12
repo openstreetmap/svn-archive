@@ -119,7 +119,7 @@
 	var redopropertywindow=null;	// need to redraw property window after deletion?
 	var lastkeypressed=null;		// code of last key pressed
 	var keytarget='';				// send keys where? ('','key','value')
-	var tilesetloaded=-1;			// which tileset is loaded?
+	var tilesetloaded='';			// which tileset is loaded?
 	var tolerance=4/Math.pow(2,_root.scale-13);
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
@@ -128,11 +128,21 @@
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
 	var signature="Potlatch 0.11";	// current version
 	var maximised=false;			// minimised/maximised?
-	var sourcetags=new Array("","","Yahoo","","","","","NPE","OpenTopoMap");
+	var sourcetags=new Array("Oberpfalz","","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
 
+	var tileurls=new Array("http://oberpfalz.geofabrik.de/lvg-by-slippymap/!/!/!.png",
+						   "http://tile.openstreetmap.org/!/!/!.png",
+						   "http://tah.openstreetmap.org/Tiles/tile/!/!/!.png",
+						   "http://tah.openstreetmap.org/Tiles/maplint/!/!/!.png",
+						   "http://andy.sandbox.cloudmade.com/tiles/cycle/!/!/!.png",
+						   "http://npe.openstreetmap.org/!/!/!.png",
+						   "http://tile.openaerialmap.org/tiles/1.0.0/opentopomap-900913/!/!/!.jpg");
+
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
-	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// background layer
+	if (preferences.data.bgtype       ==undefined) { preferences.data.bgtype       =2; }	// 1=tiles, 2=Yahoo, 3=custom, 4=none
+	if (preferences.data.tileset      ==undefined) { preferences.data.tileset      =3; }	// background layer
+	if (preferences.data.tilecustom   ==undefined) { preferences.data.tilecustom   =''; }	// custom background URL
 	if (preferences.data.dimbackground==undefined) { preferences.data.dimbackground=true; }	// dim background?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
@@ -313,6 +323,7 @@
 	
 	_root.panel.createTextField('t_details',24,5,23,220,20);
 	with (_root.panel.t_details) { text=""; setTextFormat(plainText); selectable=false; };
+
 	
 	// MovieClip loader
 	var tileLoader=new MovieClipLoader();
@@ -390,7 +401,7 @@
 		if (mapDragging() || Key.isDown(Key.SPACE)) {
 			if (_root.pointertype!='hand') { setPointer('hand'); }
 
-			if (_root.yahoo._visible) {
+			if (preferences.data.bgtype==2) {
 				var t=new Date();
 				if ((t.getTime()-yahootime.getTime())<500) {
 					_root.yahoo._x+=Math.floor(_xmouse-lastxmouse); // less than 0.5s, so
@@ -399,7 +410,7 @@
 					redrawBackground();								// 0.5s elapsed, so
 					_root.yahootime=new Date();						// request new tiles
 				}
-			} else if (preferences.data.baselayer) {
+			} else if (preferences.data.bgtype!=4) {
 				redrawBackground();
 			}
 			moveMap(Math.floor(_xmouse-lastxmouse),Math.floor(_ymouse-lastymouse));
@@ -611,8 +622,12 @@
 			return;
 		} else if (k>=112 && k<=120) {
 			preferences.data.dimbackground=Key.isDown(Key.SHIFT); 
-			setBackground(k-112);
-			return;
+			switch (k) {
+				case 112:	preferences.data.bgtype=4; break;
+				case 113:	preferences.data.bgtype=2; break;
+				default:	preferences.data.bgtype=1; preferences.data.tileset=k-114; break;
+			}
+			initBackground(); return;
 		}
 
 		switch (k) {
@@ -648,7 +663,12 @@
 			case '/':		cycleStacked(); break;								// '/' - cycle between stacked ways (191)
 			case 'M':		maximiseSWF(); break;								// 'M' - maximise/minimise Potlatch
 			case 'K':		keyLock(); break;									// 'K' - lock item
-			case 'S':		_root.panel.properties.setTag("source",sourcetags[preferences.data.baselayer]); break;	// 'S' - set source tag
+			case 'S':		var s=''; switch (preferences.data.bgtype) {		// 'S' - set source tag
+								case 1: s=sourcetags[preferences.data.tileset]; break;
+								case 2: s='Yahoo'; break;
+								case 3: s=preferences.data.tilecustom; break;
+							}
+							_root.panel.properties.setTag("source",s); break;
 //			default:		_root.chat.text=Key.getCode()+" pressed";
 		};
 	}
@@ -830,7 +850,7 @@
 		// ----	Fix Yahoo! peculiarities
 		_root.yahoo.myMap.enableKeyboardShortcuts(false);
 
-		if (preferences.data.baselayer==2) {
+		if (preferences.data.bgtype==2) {
 			var t=0;
 			for (i in _root.yahoo.myMap.map["map_"+(18-_root.scale)].mc) {
 				t+=_root.yahoo.myMap.map["map_"+(18-_root.scale)].mc[i][i].getBytesTotal();
@@ -875,21 +895,17 @@
 			  				else if (loading) { setIOStatus(1); }
 			  							 else { _root.io=0; _root.waysloading._visible=false; }
 
-		// ---- Redraw lines if necessary (3 per frame)
+		// ---- Redraw lines if necessary (5 per frame)
 		if (_root.redrawlist.length) {
-			for (var i=0; i<3; i++) {
+			for (var i=0; i<5; i++) {
 				var w=_root.redrawlist.pop();
 				_root.map.ways[w].redraw(_root.redrawskip);
 			}
 		} else { _root.redrawskip=true; }
 
 		// ---- Service tile queue
-		if (preferences.data.baselayer!=0 &&
-			preferences.data.baselayer!=2 ) { serviceTileQueue(); }
-
-		if (_root.map.ways._alpha<40) {
-			if (!Key.isToggled(Key.CAPSLOCK)) { dimMap(); }
-		}
+		if (preferences.data.bgtype==1 || preferences.data.bgtype==3) { serviceTileQueue(); }
+		if (_root.map.ways._alpha<40) { if (!Key.isToggled(Key.CAPSLOCK)) { dimMap(); } }
 			
 		// ----	Reinstate focus if lost after click event
 		if (_root.reinstatefocus) {
@@ -912,29 +928,50 @@
 	
 	function openOptionsWindow() {
 		_root.windows.attachMovie("modal","options",++windowdepth);
-		_root.windows.options.init(290,170,new Array('Ok'),function() { preferences.flush(); } );
-		_root.windows.options.box.createTextField("prompt1",2,7,9,80,20);
-		writeText(_root.windows.options.box.prompt1,iText("Background:",'option_background'));
+		_root.windows.options.init(390,130,new Array('Ok'),function() { preferences.flush(); } );
+		var box=_root.windows.options.box;
 
-		_root.windows.options.box.attachMovie("menu","background",30);
-		_root.windows.options.box.background.init(87,10,preferences.data.baselayer,
-			new Array("None","Aerial - Bavaria","Aerial - Yahoo!","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Other - out-of-copyright map","Other - OpenTopoMap"),
-			'Choose the background to display',setBackground,null,0);
+		// Background selector
 
-		_root.windows.options.box.attachMovie("checkbox","fadepref",5);
-		_root.windows.options.box.fadepref.init(10,40,iText("Fade background",'option_fadebackground'),preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
+		box.attachMovie("radio","bgoption",40);
+		box.bgoption.addButton(10,15,'');
+		box.bgoption.addButton(10,35,'Yahoo!');
+		box.bgoption.addButton(10,55,iText("Custom: ",'custom'));
+		box.bgoption.addButton(10,75,iText("No background",'nobackground'));
+		box.bgoption.doOnChange=function(n) { preferences.data.bgtype=n; initBackground(); };
 
-		_root.windows.options.box.attachMovie("checkbox","linepref",8);
-		_root.windows.options.box.linepref.init(10,60,iText("Use thin lines at all scales",'option_thinlines'),preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
+		box.attachMovie("menu","background",60);
+		box.background.init(24,12,preferences.data.tileset,
+			new Array("Aerial - Bavaria","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Out-of-copyright map","OpenTopoMap"),
+			'Choose the background to display',function(n) { preferences.data.tileset=n; _root.windows.options.box.bgoption.select(1); },null,0);
 
-		_root.windows.options.box.attachMovie("checkbox","noname",10);
-		_root.windows.options.box.noname.init(10,80,iText("Highlight unnamed roads",'option_noname'),preferences.data.noname,function(n) { preferences.data.noname=n; redrawWays(); });
+		var w=box.bgoption[3].prompt._width+25;
+		box.createTextField("custom",50,w,52,190-w,17);
+		box.custom.setNewTextFormat(plainSmall); box.custom.type='input';
+		box.custom.variable="preferences.data.tilecustom";
+		box.custom.background=true; box.custom.backgroundColor=0xDDDDDD;
+		box.custom.border=true; box.custom.borderColor=0xFFFFFF;
+		box.custom.onSetFocus=function() { this._parent.bgoption.select(3); };
+		box.custom.onKillFocus=function() { initBackground(); };
 
-		_root.windows.options.box.attachMovie("checkbox","pointer",4);
-		_root.windows.options.box.pointer.init(10,100,iText("Use pen and hand pointers",'option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+		box.bgoption.select(preferences.data.bgtype);
 
-		_root.windows.options.box.attachMovie("checkbox","warnings",3);
-		_root.windows.options.box.warnings.init(10,120,iText("Show floating warnings",'option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
+		// Checkboxes
+
+		box.attachMovie("checkbox","fadepref",5);
+		box.fadepref.init(10,100,iText("Fade background",'option_fadebackground'),preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
+
+		box.attachMovie("checkbox","linepref",8);
+		box.linepref.init(220,15,iText("Use thin lines at all scales",'option_thinlines'),preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
+
+		box.attachMovie("checkbox","noname",10);
+		box.noname.init(220,35,iText("Highlight unnamed roads",'option_noname'),preferences.data.noname,function(n) { preferences.data.noname=n; redrawWays(); });
+
+		box.attachMovie("checkbox","pointer",4);
+		box.pointer.init(220,55,iText("Use pen and hand pointers",'option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+
+		box.attachMovie("checkbox","warnings",3);
+		box.warnings.init(220,75,iText("Show floating warnings",'option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
 
 	}
 	

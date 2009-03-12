@@ -127,17 +127,13 @@
 	// tile URLs
 	
 	function tileURL(x,y) { 
-		switch (preferences.data.baselayer) {
-			case 1:	return (tileprefix+"http://oberpfalz.geofabrik.de/lvg-by-slippymap/"+_root.scale+"/"+x+"/"+y+".png");
-			case 3: return (tileprefix+"http://tile.openstreetmap.org/"+_root.scale+"/"+x+"/"+y+".png");
-			case 4: return (tileprefix+"http://tah.openstreetmap.org/Tiles/tile/"+_root.scale+"/"+x+"/"+y+".png");
-			case 5: return (tileprefix+"http://tah.openstreetmap.org/Tiles/maplint/"+_root.scale+"/"+x+"/"+y+".png");
-			case 6: return (tileprefix+"http://andy.sandbox.cloudmade.com/tiles/cycle/"+_root.scale+"/"+x+"/"+y+".png");
-			case 7: var addr;
-					if (_root.scale==14) { addr=tileprefix+"http://richard.dev.openstreetmap.org/npe/"+_root.scale+"/"+x+"/"+y+".jpg"; }
-									else { addr=tileprefix+"http://npe.openstreetmap.org/"+_root.scale+"/"+x+"/"+y+".png"; }
-					return addr;
-			case 8:	return (tileprefix+"http://tile.openaerialmap.org/tiles/1.0.0/opentopomap-900913/"+_root.scale+"/"+x+"/"+y+".jpg");
-//			case 7: return ("http://127.0.0.1/~richard/npe/"+_root.scale+"/"+x+"/"+y+".jpg");
+		var c;
+		if (preferences.data.bgtype==1) {
+			c=tileurls[preferences.data.tileset];
+		} else {
+			c=preferences.data.tilecustom;
+			if (c.toLowerCase().indexOf('google')>-1) { c='http://tile.openstreetmap.org/16/18222/24892.png?!!!'; }
 		}
+		var a=c.split('!');
+		return tileprefix+a[0]+_root.scale+a[1]+x+a[2]+y+a[3];
 	}

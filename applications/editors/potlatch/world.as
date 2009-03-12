@@ -158,8 +158,7 @@
 	// =====================================================================================
 	// Backgrounds
 
-	function setBackground(n) {
-		preferences.data.baselayer=n;
+	function initBackground() {
 		preferences.flush();
 		_root.bgxoffset=0; _root.bgyoffset=0;
 		setStatusPosition();
@@ -168,26 +167,29 @@
 
 	function redrawBackground() {
 		var alpha=100-50*preferences.data.dimbackground;
-		switch (preferences.data.baselayer) {
-			case 0: _root.yahoo._visible=false;	// none
+		switch (preferences.data.bgtype) {
+			case 4: // No background
+					_root.yahoo._visible=false;
 					_root.map.tiles._visible=false;
 					break;
-			case 2: _root.yahoo._visible=true;
+					
+			case 2: // Yahoo
+					_root.yahoo._visible=true;
 					_root.yahoo._alpha=alpha;	
 					_root.yahoo._x=0; _root.yahoo._y=0;
 					_root.ylat=centrelat(_root.bgyoffset);
 					_root.ylon=centrelong(_root.bgxoffset);
 					_root.yzoom=18-_root.scale;
 					_root.map.tiles._visible=false;
-					if (!_root.yahooloaded) {	// Yahoo
-						loadMovie(yahoourl,_root.yahoo); _root.yahooloaded=true;
-						_root.yahoo.swapDepths(_root.masksquare);
-					} else if (_root.yahooinited) {
-						repositionYahoo(true);
-					}
+					if     (!_root.yahooloaded) { loadMovie(yahoourl,_root.yahoo);
+												  _root.yahooloaded=true;
+												  _root.yahoo.swapDepths(_root.masksquare); }
+					else if (_root.yahooinited) { repositionYahoo(true); }
 					break;
-			default: if (_root.tilesetloaded!=preferences.data.baselayer) {
-						_root.tilesetloaded=preferences.data.baselayer;
+
+			default: // Tiles
+					if (_root.tilesetloaded!=preferences.data.tilecustom+'/'+preferences.data.bgtype+'/'+preferences.data.tileset) {
+						_root.tilesetloaded=preferences.data.tilecustom+'/'+preferences.data.bgtype+'/'+preferences.data.tileset;
 						initTiles();
 					}
 					_root.map.tiles._visible=true;

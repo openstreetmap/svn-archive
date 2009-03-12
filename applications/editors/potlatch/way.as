@@ -268,20 +268,20 @@
 			deleteresponder = function() { };
 			deleteresponder.onResult = function(result) {
 				var code=result.shift(); if (code) { handleError(code,result); return; }
-				if (wayselected==result[0]) { deselectAll(); }
-				removeMovieClip(_root.map.ways[result[0]]);
-				removeMovieClip(_root.map.areas[result[0]]);
+//				if (wayselected==result[0]) { deselectAll(); }
+//				removeMovieClip(_root.map.ways[result[0]]);
+//				removeMovieClip(_root.map.areas[result[0]]);
 				_root.writesrequested--;
 			};
 			_root.writesrequested++;
 			var nodeversions=new Object(); var z=this.path;
 			for (var i in z) { nodeversions[z[i].id]=z[i].version; }
 			remote_write.call('deleteway',deleteresponder,_root.usertoken,_root.changeset,Number(this._name),Number(this.version),nodeversions);
-		} else {
-			if (this._name==wayselected) { stopDrawing(); deselectAll(); }
-			removeMovieClip(_root.map.areas[this._name]);
-			removeMovieClip(this);
-		}
+		} // else {
+		if (this._name==wayselected) { stopDrawing(); deselectAll(); }
+		removeMovieClip(_root.map.areas[this._name]);
+		removeMovieClip(this);
+		// }
 	};
 
 	// ---- Variant with confirmation if any nodes have tags
@@ -376,8 +376,9 @@
 	OSMWay.prototype.deleteMergedWays=function() {
 		while (this.mergedways.length>0) {
 			var i=this.mergedways.shift();
-			_root.map.ways.attachMovie("way",i,++waydepth);	// can't remove unless the movieclip exists!
-			_root.map.ways[i].remove();
+			_root.map.ways.attachMovie("way",i[0],++waydepth);	// can't remove unless the movieclip exists!
+			_root.map.ways[i[0]].version=i[1];					//  |
+			_root.map.ways[i[0]].remove();
 		}
 	};
 
@@ -388,8 +389,8 @@
 		while (this.mergedways.length>0) {
 			var i=this.mergedways.shift();
 			_root.waysrequested+=1;
-			_root.map.ways.attachMovie("way",i,++waydepth);
-			_root.map.ways[i].load();
+			_root.map.ways.attachMovie("way",i[0],++waydepth);
+			_root.map.ways[i[0]].load();
 		}
 		this.checkconnections=true;
 		this.load();
@@ -640,6 +641,7 @@
 		if (frompos==0) { for (i=0; i<otherway.path.length;    i+=1) { this.addPointFrom(topos,otherway,i); } }
 				   else { for (i=otherway.path.length-1; i>=0; i-=1) { this.addPointFrom(topos,otherway,i); } }
 
+		// Merge attributes
 		z=otherway.attr;
 		for (i in z) {
 			if (otherway.attr[i].substr(0,6)=='(type ') { otherway.attr[i]=null; }
@@ -652,6 +654,7 @@
 			if (!this.attr[i]) { delete this.attr[i]; }
 		}
 
+		// Merge relations
 		z=getRelationsForWay(otherway._name);						// copy relations
 		for (i in z) {												//  | 
 			if (!_root.map.relations[z[i]].hasWay(this._name)) {	//  |
@@ -659,7 +662,8 @@
 			}														//  |
 		}															//  |
 
-		this.mergedways.push(otherway._name);
+		// Add to list of merged ways (so they can be deleted on next putway)
+		this.mergedways.push(new Array(otherway._name,otherway.version));
 		this.mergedways.concat(otherway.mergedways);
 		this.clean=false;
 		markClean(false);

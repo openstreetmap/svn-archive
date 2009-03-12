@@ -132,7 +132,7 @@
 		_root.ylon=baselong; _root.lastylon=ylon;		//  |
 		updateCoords(0,0);
 		updateLinks();
-		setBackground(preferences.data.baselayer);
+		initBackground();
 		whichWays();
 		_root.onEnterFrame=function() { everyFrame(); };
 	}

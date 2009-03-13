@@ -1793,18 +1793,13 @@
 		<rule e="node" k="highway|barrier" v="bollard">
 			<circle r='0.3px' class='bollard' />
 		</rule>
-		<rule e="node" k="barrier" v="cycle_barrier">
+		<rule e="node" k="barrier" v="cycle_barrier|chicane">
 			<wayMarker k="highway" class="chicane"/>
 		</rule>
 
 		<!-- Traffic calming -->
 		<rule e="node" k="traffic_calming" v="*">
-			<rule e="node" k="traffic_calming" v="chicane">
-				<wayMarker k="highway" class="chicane"/>
-			</rule>
-			<else>
-				<wayMarker k="highway" class="traffic-calming"/>
-			</else>
+			<wayMarker k="highway" class="traffic-calming"/>
 		</rule>
 		
 		<!-- Bus stops -->

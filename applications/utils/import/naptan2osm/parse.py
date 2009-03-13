@@ -40,30 +40,35 @@ class ParseXML:
         """
         return elem.tag.replace(self.namespace, '')
         
-    def node2tag(self, elem, tagmap=None):
-        """Lookup (and set) an OSM tag mapping in tagmap for a given node name"""
+    def node2tag(self, elem, tagmap=None, midfix=None):
+        """Lookup (and set) an OSM tag mapping in tagmap for a given node name.
+        
+        elem: elem to map
+        tagmap: dict mapping elem.type to osm tag(s)
+        midfix: suffix to the tagprefix, prefix to the element type if copied across
+        """
         if not tagmap:
             tagmap = self.tagmap
-            node = self.cleannode(elem)
+        node = self.cleannode(elem)
+        
+        try:
+            keys = tagmap[node]
+        except KeyError:
+            return None
             
-            try:
-                keys = tagmap[node]
-            except KeyError:
-                return None
-                
-            value = elem.text.strip(' -')
-            if not value:
-                return None
-            
-            if not isinstance(keys, tuple):
-                keys = (keys,)
-            for key in keys:
-                if not key:
-                    key = '%s:%s' % (self.tagprefix, node)
-                if key in self.feature.tags:
-                    self.feature.tags[key] = '%s;%s' % (self.feature.tags[key], value)
-                else:
-                    self.feature.tags[key] = value
+        value = elem.text.strip(' -')
+        if not value:
+            return None
+        
+        if not isinstance(keys, tuple):
+            keys = (keys,)
+        for key in keys:
+            if not key:
+                key = '%s:%s%s' % (self.tagprefix, midfix or '', node)
+            if key in self.feature.tags:
+                self.feature.tags[key] = '%s;%s' % (self.feature.tags[key], value)
+            else:
+                self.feature.tags[key] = value
             
     def newfeature(self):
         self.nodecounter += 1
@@ -86,8 +91,8 @@ class ParseNaptan(ParseXML):
     tagprefix = 'naptan'
     tagmap = {
         'AtcoCode': '',             # Blank entries automatically form tags of tagprefix:nodename
-        'NaptanCode': 'ref',   # Tuples can be used if a node needs to be mapped to multiple tags
-        'CommonName': 'name',
+        'NaptanCode': ('', 'ref'),   # Tuples can be used if a node needs to be mapped to multiple tags
+        'CommonName': ('', 'name'),
         'ShortCommonName': '',
         'Landmark': '',
         'Street': '',
@@ -98,6 +103,10 @@ class ParseNaptan(ParseXML):
         'StopAreaCode': '',
     }
     tagmap_altdescriptors = {
+        'CommonName': ('', 'alt_name'),
+        'ShortCommonName': '',
+        'Landmark': '',
+        'Street': '',
         
     }
     defaultareatags = {'type': 'site', 'site': 'stop_area'}
@@ -164,11 +173,11 @@ class ParseNaptan(ParseXML):
                             if v:
                                 self.feature.tags['local_ref'] = v
                                 break
-                if not v:
-                    self.node2tag(elem)
+                # Also pull into naptan:Indicator
+                self.node2tag(elem)
                 
             elif self.parentnodes['AlternativeDescriptors']:
-                self.node2tag(elem, self.tagmap_altdescriptors)
+                self.node2tag(elem, self.tagmap_altdescriptors, 'Alt')
             elif node == 'StopType':
                 # This is a 'legacy' node according to the schema, but it should still work
                 st = elem.text

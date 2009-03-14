@@ -131,6 +131,7 @@ our $debug = {
     "indexes" => 0,  # print messages about the use of indexes
     "drawing" => 0,  # print out all drawing instructions executed
     "multipolygon" => 0, # print debugging messages for multipolygons
+    "selectors" => 0, # print debug messages from selectors
 };
 
 our $node_storage = {};

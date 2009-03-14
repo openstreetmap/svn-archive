@@ -298,27 +298,33 @@ sub select_minsize
 {
     my ($oldsel,$minsize) = @_;
     my $newsel = Set::Object->new();
-    foreach ($oldsel->members())
+
+    foreach my $element ($oldsel->members())
     {
-        # minsize stuff currently only works for ways; copy others
-        if (ref($_) ne "way")
+        # minsize stuff currently only works for ways
+        if (ref($element) ne "way")
         {
-            $newsel->insert($_);
             next;
         }
 
         my ($minlat, $minlon, $maxlat, $maxlon);
-        foreach (@{$_->{"nodes"}})
+        foreach my $node (@{$element->{"nodes"}})
         {
-            $minlat = $_->{"lat"} if (!defined($minlat) or $_->{"lat"}<$minlat);
-            $minlon = $_->{"lon"} if (!defined($minlon) or $_->{"lon"}<$minlon);
-            $maxlat = $_->{"lat"} if (!defined($maxlat) or $_->{"lat"}>$maxlat);
-            $maxlon = $_->{"lon"} if (!defined($maxlon) or $_->{"lon"}>$maxlon);
+            $minlat = $node->{"lat"} if (!defined($minlat) or $node->{"lat"}<$minlat);
+            $minlon = $node->{"lon"} if (!defined($minlon) or $node->{"lon"}<$minlon);
+            $maxlat = $node->{"lat"} if (!defined($maxlat) or $node->{"lat"}>$maxlat);
+            $maxlon = $node->{"lon"} if (!defined($maxlon) or $node->{"lon"}>$maxlon);
         }
-        next unless defined($minlat);
+
+        #FIXME: what is this for? next unless defined($minlat);
+
         my $cirfer = ($maxlat-$minlat) + (($maxlon-$minlon) * (1.05-(($maxlat-5) / 90)));
-        $newsel->insert($_) if ($cirfer > $minsize);
+        $newsel->insert($element) if ($cirfer > $minsize);
+
+        debug(sprintf('select_minsize: way=%s size=%f %s minsize %f', 
+            $element->{id}, $cirfer, $cirfer > $minsize ? 'larger than' : 'smaller than', $minsize)) if ($debug->{"selectors"});
     }
+
     return $newsel;
 }
 

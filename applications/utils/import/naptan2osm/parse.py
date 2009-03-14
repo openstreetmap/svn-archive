@@ -32,6 +32,9 @@ class ParseXML:
         node = self.cleannode(elem)
         if node in self.watchnodes:
             self.parentnodes[node] = False
+            
+    def finish(self):
+        pass
     
     def cleannode(self, elem):
         """Cleans namespace from element node
@@ -101,13 +104,16 @@ class ParseNaptan(ParseXML):
         'Notes': '',
         # StopArea tagging begins here
         'StopAreaCode': '',
+        'StopAreaType': ''
     }
     tagmap_altdescriptors = {
+        # When copied across, will have Alt prepended to name (after naptan:)
         'CommonName': ('', 'alt_name'),
         'ShortCommonName': '',
         'Landmark': '',
         'Street': '',
-        
+        'Crossing': '',
+        'Indicator': ''
     }
     defaultareatags = {'type': 'site', 'site': 'stop_area'}
     watchnodes = ('StopPoints', 'StopArea', 'AlternativeDescriptors', 'StopClassification')
@@ -119,6 +125,8 @@ class ParseNaptan(ParseXML):
     missingparentarea = []
     # Used when storing StopAreas which could require further modification
     features = {}
+    
+    pointcount = 0
         
     def startElement(self, elem):
         """Event handler for when the XML parser encounters an opening tag.
@@ -142,15 +150,16 @@ class ParseNaptan(ParseXML):
                 elem.clear()
     
     def endElement(self, elem):
+        node = self.cleannode(elem)
         # If there's no feature, we're probably ignoring this element, or the tree its in.
         if self.feature:
-            node = self.cleannode(elem)
             
             if node == 'StopPoint':
                 # That's all for this point, wrap up the feature's xml ready for the next one
                 self.outfile.write(self.feature.toxml(needs_parent=False, indent=False))
                 self.outfile.write("\n")
                 self.feature = None
+                self.pointcount += 1
             
             elif node == 'Latitude' and self.parentnodes['StopPoints'] and not self.parentnodes['StopClassification']:
                 self.feature.loc[1] = elem.text
@@ -176,8 +185,8 @@ class ParseNaptan(ParseXML):
                 # Also pull into naptan:Indicator
                 self.node2tag(elem)
                 
-            elif self.parentnodes['AlternativeDescriptors']:
-                self.node2tag(elem, self.tagmap_altdescriptors, 'Alt')
+            #elif self.parentnodes['AlternativeDescriptors']:
+                #self.node2tag(elem, self.tagmap_altdescriptors, 'Alt')
             elif node == 'StopType':
                 # This is a 'legacy' node according to the schema, but it should still work
                 st = elem.text
@@ -198,18 +207,20 @@ class ParseNaptan(ParseXML):
             
             elif node == 'StopAreaRef':
                 # Store this info to add the feature to the relation when we're parsing the StopArea
-                # TODO: Pull this out to osmparser
-                relationmember = {'ref': self.feature.id, 'type': 'node', 'role': ''}
                 if not elem.text in self.stopareamap:
-                    self.stopareamap[elem.text] = [relationmember,]
+                    # This StopArea has not yet been referenced
+                    self.stopareamap[elem.text] = [self.feature,]
                 else:
-                    self.stopareamap[elem.text].append(relationmember)
+                    # This StopArea has already been referenced
+                    self.stopareamap[elem.text].append(self.feature)
             
+            ###
             # StopArea stuff
+            ###
             elif node == 'StopArea':
                 # Don't bother with StopAreas with no StopPoints present
-                if not self.feature.members:
-                    self.feature = None
+                #if not self.feature.members:
+                    #self.feature = None
                 if self.feature:
                     atcocode = self.feature.tags['naptan:StopAreaCode']
                     self.features[atcocode] = self.feature
@@ -219,33 +230,44 @@ class ParseNaptan(ParseXML):
                 if elem.text in self.stopareamap:
                     # Add the Points we stored earlier to the newly created relation
                     self.feature.members.extend(self.stopareamap[elem.text])
+                    # Delete from the dict, so we can store completely unreferenced objects
+                    del self.stopareamap[elem.text]
                 self.node2tag(elem)
                 
             elif node == 'ParentStopAreaRef':
-                # TODO: Pull this out to osmparser
-                relationmember = {'ref': self.feature.id, 'type': 'relation', 'role': ''}
                 if elem.text in self.features:
-                    self.features[elem.text].members.append(relationmember)
+                    # The parent StopArea's feature has already been created
+                    self.features[elem.text].members.append(self.feature)
                 elif not elem.text in self.stopareamap:
-                    self.stopareamap[elem.text] = [relationmember,]
+                    # The parent StopArea has not yet been referenced
+                    self.stopareamap[elem.text] = [self.feature,]
                 else:
-                    self.stopareamap[elem.text].append(relationmember)
+                    # The parent StopArea has been referenced but not created
+                    self.stopareamap[elem.text].append(self.feature)
                 
             elif node == 'Name' and self.parentnodes['StopArea']:
                 self.feature.tags['name'] = elem.text
-
-
+            
             else:
                 # Fallthrough for ALL simple tag mappings
                 self.node2tag(elem)
 
         # (endif self.feature)
+        
         # Keep our parent nodes dict updated.
         ParseXML.endElement(self, elem)
-
-
-
-
+        
+    def finish(self):
+        # Write out any other features
+        areacount = len(self.features)
+        for feature in self.features.values():
+            self.outfile.write(feature.toxml(needs_parent=False, indent=False))
+            self.outfile.write("\n")
+        self.features = None
+        
+        print "Parsed %s StopPoints and %s StopAreas" % (self.nodecounter, self.relationcounter)
+        print "Output %s StopPoints and %s StopAreas" % (self.pointcount, areacount)
+        print self.stopareamap
 
 
 class ParseNPTG(ParseXML):
@@ -276,6 +298,8 @@ def treeparse(f, of=sys.stdout):
         elif event == 'end':
             parser.endElement(elem)
             elem.clear()
+            
+    parser.finish()
 
     of.write('</osm>')
     

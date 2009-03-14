@@ -47,55 +47,41 @@ class SimpleMap {
 		wfLoadExtensionMessages( 'SimpleMap' );
 		
 		
-		//Support old style parameters from $input
-		//Parse the pipe separated name value pairs (e.g. 'aaa=bbb|ccc=ddd')
-		//With the new syntax we expect nothing in the $input, so this will result in '' values
-		$oldStyleParamStrings=explode('|',$input);
-		foreach ($oldStyleParamStrings as $oldStyleParamString) {
-			$oldStyleParamString = trim($oldStyleParamString);
-			$eqPos = strpos($oldStyleParamString,"=");
-			if ($eqPos===false) {
-				$oldStyleParams[$oldStyleParamString] = "true";
-			} else {
-				$oldStyleParams[substr($oldStyleParamString,0,$eqPos)] = trim(htmlspecialchars(substr($oldStyleParamString,$eqPos+1)));
-			}
-		}	
-		
-		//Receive new style args: <map aaa=bbb ccc=ddd></map>
+		//Receive args of the form <map aaa=bbb ccc=ddd />
 		if ( isset( $argv['lat'] ) ) { 
-			$lat		= $argv['lat'];
+			$lat = $argv['lat'];
 		} else {
-			$lat		= $oldStyleParams['lat'];
+			$lat = '';
 		}
 		if ( isset( $argv['lon'] ) ) { 
-			$lon		= $argv['lon'];
+			$lon = $argv['lon'];
 		} else {
-			$lon		= $oldStyleParams['lon'];
+			$lon = '';
 		}
 		if ( isset( $argv['z'] ) ) { 
-			$zoom		= $argv['z'];
+			$zoom = $argv['z'];
 		} else {
-			$zoom		= $oldStyleParams['z'];
+			$zoom = '';
 		}
 		if ( isset( $argv['w'] ) ) { 
-			$width		= $argv['w'];
+			$width = $argv['w'];
 		} else {
-			$width		= $oldStyleParams['w'];
+			$width = '';
 		}
 		if ( isset( $argv['h'] ) ) { 
-			$height		= $argv['h'];
+			$height	= $argv['h'];
 		} else {
-			$height		= $oldStyleParams['h'];
+			$height = '';
 		}
 		if ( isset( $argv['format'] ) ) { 
-			$format		= $argv['format'];
+			$format = $argv['format'];
 		} else {
-			$format		= '';
+			$format	= '';
 		}
 		if ( isset( $argv['marker'] ) ) { 
-			$marker		= $argv['marker'];
+			$marker = $argv['marker'];
 		} else {
-			$marker		= '';
+			$marker	= '';
 		}
 
 		$error='';
@@ -114,30 +100,29 @@ class SimpleMap {
 			}
 		}
 
-		$marker = ( $marker != '' && $marker != '0' );
 		
 		//trim off the 'px' on the end of pixel measurement numbers (ignore if present)
 		if (substr($width,-2)=='px')	$width = (int) substr($width,0,-2);
 		if (substr($height,-2)=='px')	$height = (int) substr($height,0,-2);
 
-
-		if (trim($input)!='' && sizeof($oldStyleParamStrings)<3) {
-			$error = 'map tag contents. We expect the map tag to have no inner text';
-			$showkml = false;
-		} else {
-			$showkml = false;
+		$input = trim($input); 	
+		if ($input!='') {
+			if (strpos($input,'|')!==false) {
+				$error = 'Old style tag syntax no longer supported';
+			} else {	
+				$error = 'slippymap tag contents. Were you trying to input KML? KML support ' .
+				         'is disabled pending discussions about wiki syntax<br>';
+			}
 		}
-		
-		
-		if ($marker) $error = 'marker support is disactivated on the OSM wiki pending discussions about wiki syntax';
+			
+		if ($marker) $error = 'No marker support in the &lt;map&gt; tag extension (yet)';
 	
-
-		//Check required parameters values are provided
-		if ( $lat==''  ) $error .= wfMsg( 'simplemap_latmissing' );
-		if ( $lon==''  ) $error .= wfMsg( 'simplemap_lonmissing' );
-		if ( $zoom=='' ) $error .= wfMsg( 'simplemap_zoommissing' );
-		
 		if ($error=='') {
+			//Check required parameters values are provided
+			if ( $lat==''  ) $error .= wfMsg( 'simplemap_latmissing' );
+			if ( $lon==''  ) $error .= wfMsg( 'simplemap_lonmissing' );
+			if ( $zoom=='' ) $error .= wfMsg( 'simplemap_zoommissing' );
+			
 			//no errors so far. Now check the values	
 			if (!is_numeric($width)) {
 				$error = wfMsg( 'simplemap_widthnan', $width );
@@ -189,8 +174,6 @@ class SimpleMap {
 			$output .= "\" width=\"". $width."\" height=\"".$height."\" border=\"0\">";
 			$output .= "</a>";
 			
-			//commenting this out, because maybe we can get zwobot to change them all over without having to display this message
-			if (sizeof($oldStyleParamStrings) >2 )  $output .= '<div style="font-size:0.8em;"><i>please change to <a href="http://wiki.openstreetmap.org/wiki/Simple_image_MediaWiki_Extension">new syntax</a></i></div>';
 		}
 		return $output;
 	}

@@ -1,0 +1,60 @@
+#Header files
+HEADERS += \
+	NativeRenderDialog.h 
+
+#Source files
+SOURCES += \
+	NativeRenderDialog.cpp 
+
+#Forms
+FORMS += \
+	NativeRenderDialog.ui
+
+contains(OSMARENDER,1) {
+
+	DEFINES += OSMARENDER
+
+	#Header files
+	HEADERS += \
+	OsmaRenderDialog.h 
+
+	#Source files
+	SOURCES += \
+	OsmaRenderDialog.cpp 
+
+	#Resource file(s)
+	RESOURCES += osmarender.qrc 
+
+	#Forms
+	FORMS += \
+	OsmaRenderDialog.ui
+
+	QT += svg
+
+	win32 {
+		INCLUDEPATH += $$OUTPUT_DIR/include/libxml $$OUTPUT_DIR/include/libxslt
+	}
+
+	win32-msvc* {
+		debug {
+                        DEFINES += LIBXML_STATIC LIBXSLT_STATIC LIBEXSLT_STATIC
+                        LIBS += -llibxml2_a -llibxslt_a -llibexslt_a
+			QMAKE_LFLAGS += /NODEFAULTLIB:MSVCRT
+		}
+		release {
+                        LIBS += -llibxml2 -llibxslt -llibexslt
+		}
+	}
+
+	win32-g++ {
+                        LIBS += -llibxml2 -llibxslt -llibexslt
+	}
+
+	unix {
+                        DEFINES += LIBXML_STATIC LIBXSLT_STATIC LIBEXSLT_STATIC
+                        LIBS += -lxml2 -lxslt -lexslt -lz
+			INCLUDEPATH += /usr/include/libxml2
+	}
+}
+
+

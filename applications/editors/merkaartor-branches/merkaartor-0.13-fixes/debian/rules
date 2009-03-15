@@ -1,0 +1,54 @@
+#!/usr/bin/make -f
+
+CFLAGS = -Wall -g
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+configure: configure-stamp
+configure-stamp: clean
+	dh_testdir
+	/usr/share/qt4/bin/qmake
+	touch configure-stamp
+
+build-indep:
+
+build build-arch: build-stamp
+build-stamp: configure-stamp
+	dh_testdir
+	$(MAKE)
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	[ ! -f Makefile ] || $(MAKE) distclean
+	dh_clean
+	rm -f build-stamp configure-stamp
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	install -D binaries/debug/bin/merkaartor $(CURDIR)/debian/merkaartor/usr/bin
+
+binary-indep:
+binary binary-arch: install
+	dh_installchangelogs CHANGELOG
+	dh_installdocs
+	dh_installexamples Data/*
+	dh_installmenu
+	dh_installman debian/merkaartor.1
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+.PHONY: build build-arch build-indep clean binary-indep binary-arch binary install configure

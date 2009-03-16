@@ -158,6 +158,12 @@ ruleFileAttributes.setAttributes(newAttributes);
 		this.setAttributes = function(attributes) {
 			_setAttributes(attributes);
 		}
+
+		this.write = function(xmlNode) {
+			for (var attribute_name in _attributes) {
+				xmlNode.setAttribute(attribute_name,_attributes[attribute_name]);
+			}
+		}
 	}
 });
  

@@ -15,7 +15,7 @@ dojo.declare("cmyk.rules.attributes.attributeFactory",null,{
 	*/
 	constructor: function() {
 
-		this.factory = function(attribute_name,attribute_value,calling_class) {
+		this.factory = function(attribute_name,attribute_value) {
 			//TODO: support checking of valid attribute for this calling class
 			switch (attribute_name) {
 				case "class":

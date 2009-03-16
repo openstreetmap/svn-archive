@@ -17,6 +17,8 @@ dojo.declare("cmyk.rules.Rule",[cmyk.rules.Directive,cmyk.rules.ruleFileMember],
 	*/
 	constructor: function(node) {
 		var _class="cmyk.rules.Rule";
+		var xmlNodeRead = node;
+		var _xmlNodeWrite = null;
 
 		var _attributes = {
 			types: [],
@@ -25,6 +27,13 @@ dojo.declare("cmyk.rules.Rule",[cmyk.rules.Directive,cmyk.rules.ruleFileMember],
 			layer: null,
 			notconnectedsametag: null
 		};
+
+		var _dictionary = {
+			"keys": "k",
+			"values": "v",
+			"types": "e"
+		};
+
 		dojo.forEach(node.attributes, function(attribute,index,array) {
 			switch (attribute.nodeName) {
 				// TODO: verify if you can actually apply this rule to this key/value pair, need to create objects instead of text values
@@ -46,6 +55,9 @@ dojo.declare("cmyk.rules.Rule",[cmyk.rules.Directive,cmyk.rules.ruleFileMember],
 					}
 					_attributes.layer = current_value;					
 				break;
+				case "closed":
+					_attributes.closed = current_value;					
+				break;
 				case "notConnectedSameTag":
 					_attributes.notconnectedsametag = current_value;					
 				break;
@@ -64,6 +76,26 @@ dojo.declare("cmyk.rules.Rule",[cmyk.rules.Directive,cmyk.rules.ruleFileMember],
 
 		this.getValues = function() {
 			return dojo.clone(_attributes.values);
+		}
+
+		this.write = function() {
+			var my_node = document.createElementNS("","rule");
+			for (var attribute_name in _attributes) {
+				var attribute_value_to_write = "";
+				if (attribute_name == "keys" || attribute_name == "types" || attribute_name == "values" || attribute_name == "s") {
+					attribute_value_to_write = _attributes[attribute_name].join("|");
+					attribute_name = _dictionary[attribute_name];
+				}
+				else {
+					attribute_value_to_write = _attributes[attribute_name];
+				}
+				my_node.setAttribute(attribute_name,attribute_value_to_write);
+			}
+			_xmlNodeWrite = my_node;
+		}
+
+		this.getXmlNodeWrite = function() {
+			return _xmlNodeWrite;
 		}
 	},
 });

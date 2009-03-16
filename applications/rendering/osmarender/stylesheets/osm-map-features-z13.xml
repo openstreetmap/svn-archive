@@ -289,7 +289,11 @@
 				<area class="highway-casing highway-unsurfaced-casing highway-unsurfaced-area-casing no-bezier" smart-area="no"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
+				<rule e="way" k="service" v="parking_aisle">
+				</rule>
+				<else>
+					<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
 				<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
@@ -427,7 +431,11 @@
 					<line class="highway-casing highway-unsurfaced-casing" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="service">
-					<line class="highway-casing highway-service-casing"/>
+					<rule e="way" k="service" v="parking_aisle">
+					</rule>
+					<else>
+						<line class="highway-casing highway-service-casing"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road|ford">
 					<line class="highway-casing highway-unclassified-casing"/>
@@ -518,7 +526,11 @@
 				<area class="highway-core highway-unsurfaced-area no-bezier" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<area class="highway-core highway-service-area no-bezier"/>
+				<rule e="way" k="service" v="parking_aisle">
+				</rule>
+				<else>
+					<area class="highway-core highway-service-area no-bezier"/>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
 				<area class="highway-core highway-unclassified-area no-bezier"/>
@@ -683,7 +695,11 @@
 					<line class="highway-core highway-unsurfaced-core" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="service">
-					<line class="highway-core highway-service-core"/>
+					<rule e="way" k="service" v="parking_aisle">
+					</rule>
+					<else>
+						<line class="highway-core highway-service-core"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="unclassified|residential|minor|living_street">
 					<line class="highway-core highway-unclassified-core"/>

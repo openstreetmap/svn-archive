@@ -14,14 +14,5 @@ dojo.declare("cmyk.rules.svgRect",cmyk.rules._svgDirective,{
 	      @extends cmyk.rules._svgDirective
 	*/
 	constructor: function(node) {
-		var _class="cmyk.rules.svgRect";
-
-		var _attributeFactory = new cmyk.rules.attributes.attributeFactory();
-
-		var _attributes = [];
-
-		dojo.forEach(node.attributes, function(attribute,index,array) {
-			_attributes.push(_attributeFactory.factory(attribute.nodeName,attribute.nodeValue,_class));
-		});
 	},
 });

@@ -103,10 +103,10 @@ public class UploadDataGui extends ExtendedDialog {
         publicCheckbox.setToolTipText(tr("Selected makes your trace public in openstreetmap.org"));
 
         JLabel descriptionLabel = new JLabel(tr("Description"));
-        descriptionField.setToolTipText("Please enter Description about your trace.");
+        descriptionField.setToolTipText(tr("Please enter Description about your trace."));
 
         JLabel tagsLabel = new JLabel(tr("Tags"));
-        tagsField.setToolTipText("Please enter tags about your trace.");
+        tagsField.setToolTipText(tr("Please enter tags about your trace."));
 
         JPanel p = new JPanel();
         p.setLayout(new GridBagLayout());

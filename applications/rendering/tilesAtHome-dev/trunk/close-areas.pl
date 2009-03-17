@@ -443,6 +443,8 @@ STRING:
             $i=0 if ($i==4);
             last if ($i==$entry_side && !$min_once);
             $min_once = 0;
+            my $helper = $i+1; # should be symmetrical to the CW case, haven't tested.
+            $helper = 0 if ($helper == 4);
             last if (check_segments_intersect($helpernodes->{$helper}->[1], $helpernodes->{$helper}->[0], $nodes->{$currentnode}->{"lon"}, $nodes->{$currentnode}->{"lat"}, $segments) );
             my $newnode = make_node($helpernodes->{$i}->[0], $helpernodes->{$i}->[1]);
             my $newseg = make_seg($currentnode, $newnode);

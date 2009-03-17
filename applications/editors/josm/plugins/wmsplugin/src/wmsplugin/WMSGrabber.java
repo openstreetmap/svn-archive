@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -33,11 +34,14 @@ public class WMSGrabber extends Grabber {
     protected String baseURL;
     protected Cache cache = new wmsplugin.Cache();
     private static Boolean shownWarning = false;
+    private boolean urlWithPatterns;
 
     WMSGrabber(String baseURL, Bounds b, Projection proj,
             double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer) {
         super(b, proj, pixelPerDegree, image, mv, layer);
         this.baseURL = baseURL;
+        /* URL containing placeholders? */
+        urlWithPatterns = baseURL != null && baseURL.contains("{1}");
     }
 
     public void run() {
@@ -73,15 +77,25 @@ public class WMSGrabber extends Grabber {
     protected URL getURL(double w, double s,double e,double n,
             int wi, int ht) throws MalformedURLException {
         String str = baseURL;
-        if(!str.endsWith("?"))
-            str += "&";
-        str += "bbox="
-            + latLonFormat.format(w) + ","
-            + latLonFormat.format(s) + ","
-            + latLonFormat.format(e) + ","
-            + latLonFormat.format(n)
-            + getProjection(baseURL, false)
-            + "&width=" + wi + "&height=" + ht;
+        String bbox = latLonFormat.format(w) + "," +
+                      latLonFormat.format(s) + "," +
+                      latLonFormat.format(e) + "," +
+                      latLonFormat.format(n);
+
+        if (urlWithPatterns) {
+            String proj = Main.proj.toCode();
+            if(proj.equals("EPSG:3785")) // don't use mercator code
+                proj = "EPSG:4326";
+
+            str = MessageFormat.format(str, proj, bbox, wi, ht);
+        } else {
+            if(!str.endsWith("?"))
+                str += "&";
+            str += "bbox="
+                + bbox
+                + getProjection(baseURL, false)
+                + "&width=" + wi + "&height=" + ht;
+        }
         return new URL(str.replace(" ", "%20"));
     }
 

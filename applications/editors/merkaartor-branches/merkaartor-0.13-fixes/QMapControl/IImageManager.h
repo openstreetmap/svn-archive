@@ -47,11 +47,10 @@ class LoadingRequest
 /**
 	@author Kai Winter <kaiwinter@gmx.de>
 */
-class IImageManager : public QObject
+class IImageManager
 {
-	Q_OBJECT;
 	public:
-		IImageManager(QObject* parent = 0);
+		IImageManager();
 		virtual ~IImageManager() {};
 
 		//! returns a QPixmap of the asked image
@@ -104,11 +103,6 @@ class IImageManager : public QObject
 
 		bool useDiskCache(QString filename);
 		void adaptCache();
-		
-	signals:
-		void imageRequested();
-		void imageReceived();
-		void loadingFinished();
 };
 
 #endif

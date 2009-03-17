@@ -57,7 +57,7 @@ class BrowserWebPage : public QWebPage
 		int ox, oy, sw, sh;
 };
 
-class BrowserImageManager : public IImageManager
+class BrowserImageManager : public QThread, public IImageManager
 {
 	Q_OBJECT;
 	public:
@@ -118,12 +118,13 @@ class BrowserImageManager : public IImageManager
 		QVector<QString> prefetch;
 
 		QQueue<LoadingRequest> loadingRequests;
+		bool requestActive;
+		int requestDuration;
 		void launchRequest();
 
 		static BrowserImageManager* m_BrowserImageManagerInstance;
 
 		//QNetworkProxy* proxy;
-		QWebView *browser;
 		BrowserWebPage* page;
 		QWebFrame *frame;
 		QNetworkAccessManager* qnam;
@@ -137,6 +138,10 @@ class BrowserImageManager : public IImageManager
 	private slots:
 		void pageLoadFinished(bool);
 		void slotLoadProgress(int p);
+		void checkRequests();
+
+	protected:
+		virtual void run();
 };
 
 #endif

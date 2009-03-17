@@ -34,7 +34,7 @@ class MapNetwork;
 /**
 	@author Kai Winter <kaiwinter@gmx.de>
 */
-class ImageManager : public IImageManager
+class ImageManager : public QObject, public IImageManager
 {
 	Q_OBJECT;
 	public:

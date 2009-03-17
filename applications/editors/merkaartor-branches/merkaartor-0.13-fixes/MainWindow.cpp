@@ -1452,6 +1452,7 @@ void MainWindow::preferencesChanged(void)
 	
 	updateStyleMenu();
 	updateMenu();
+	invalidateView(false);
 }
 
 void MainWindow::on_fileSaveAsAction_triggered()

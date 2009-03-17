@@ -1,3 +1,5 @@
+v0.13.1
+	* ADD : Threaded browser-based background image grabbing. (fixes #1312)
 v0.13
     * FIX : Workaround for a crash with templates on Qt 4.5
 	* FIX : Crash after TMS/WMS server renaming (fixes #1634)

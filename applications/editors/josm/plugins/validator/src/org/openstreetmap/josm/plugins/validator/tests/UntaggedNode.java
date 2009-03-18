@@ -68,7 +68,7 @@ public class UntaggedNode extends Test
     @Override
     public void visit(Node n)
     {
-        if(!n.incomplete && !n.deleted && !n.tagged)
+        if(!n.incomplete && !n.deleted && !n.isTagged())
             emptyNodes.add(n);
     }
 

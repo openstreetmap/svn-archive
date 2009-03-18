@@ -10,13 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.I18n;
@@ -97,24 +95,8 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
      * no-arg constructor is required by JOSM
      */
     public ImageWayPointPlugin() {
-    // find the File menu
-    final JMenuBar menuBar = Main.main.menu;
-    JMenu fileMenu = null;
-
-    if (null != menuBar) {
-        for (int index = 0; index < menuBar.getMenuCount()
-            && null == fileMenu; index++) {
-        if (I18n.tr("File").equals(menuBar.getMenu(index).getText())) {
-            fileMenu = menuBar.getMenu(index);
-        }
-        }
-    }
-
-    if (null != fileMenu) {
-        // now create our 'load' menu item and add to the file menu
-        final JMenuItem menuItem = new JMenuItem(new LoadImagesAction(this));
-        fileMenu.add(menuItem, 2);
-    }
+        MainMenu menu = Main.main.menu;
+        menu.add(menu.fileMenu, new LoadImagesAction(this));
     }
 
     @Override

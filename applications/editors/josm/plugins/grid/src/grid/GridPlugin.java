@@ -14,7 +14,6 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.AddVisitor;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -25,7 +24,7 @@ public class GridPlugin extends Plugin {
 
     private class Action extends AbstractAction {
     public Action() {
-        super("add grid");
+        super(tr("Add grid"));
     }
     public void actionPerformed(ActionEvent e) {
         GridLayer gridLayer = new GridLayer("");
@@ -37,21 +36,9 @@ public class GridPlugin extends Plugin {
     private JMenuItem addGridMenu = new JMenuItem(new Action());
 
     public GridPlugin() {
-    JMenuBar menu = Main.main.menu;
-    edit = null;
-    for (int i = 0; i < menu.getMenuCount(); ++i) {
-        if (menu.getMenu(i) != null && tr("Edit").equals(menu.getMenu(i).getName())) {
-        edit = menu.getMenu(i);
-        break;
-        }
-    }
-    if (edit == null) {
-        edit = new JMenu(tr("Edit"));
-        menu.add(edit, 2);
-        edit.setVisible(false);
-    }
-    edit.add(addGridMenu);
-    addGridMenu.setVisible(false);
+        edit = Main.main.menu.editMenu;
+        edit.add(addGridMenu);
+        addGridMenu.setVisible(false);
     }
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {

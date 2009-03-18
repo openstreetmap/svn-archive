@@ -1,5 +1,6 @@
 package cadastre_fr;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -9,7 +10,6 @@ import java.util.LinkedList;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
@@ -19,30 +19,31 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.actions.UploadAction.UploadHook;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.data.projection.Lambert;
 
 /**
- * 
+ *
  * Plugin to access the french Cadastre WMS server at www.cadastre.gouv.fr This
  * WMS server requires some specific handling like retrieving a cookie for a
  * limitation in case of no activity, or the request to the server shall provide
  * a city/town/village code.
- * 
- * @author Pieren <pieren3@gmail.com>, 
+ *
+ * @author Pieren <pieren3@gmail.com>,
  * @author <matthieu.lochegnies@gmail.com> for the extension to codeCommune
  * @version 0.8
- * History: 
- * 0.1 17-Jun-2008 first prototype using a first Lambert projection impl. in core 
+ * History:
+ * 0.1 17-Jun-2008 first prototype using a first Lambert projection impl. in core
  * 0.2 22-Jun-2008 first stable version
  * 0.3 24-Jun-2008 add code departement
  * 0.4 06-Jul-2008 - add images scales, icons, menu items disabling
  *                 - remove dependencies of wmsplugin
  *                 - add option to force a Lambert zone (for median locations)
  *                 - add auto-sourcing
- * 0.5 16-Aug-2008 - add transparency in layer (allowing multiple wms layers displayed together) 
+ * 0.5 16-Aug-2008 - add transparency in layer (allowing multiple wms layers displayed together)
  *                 - no overlapping of grabbed images if transparency is enabled
  *                 - set one layer per location
  *                 - use utf-8 charset in POST request to server
@@ -60,14 +61,14 @@ import org.openstreetmap.josm.data.projection.Lambert;
  * 0.7 24-Aug-2008 - mask images only if transparency enabled
  *                 - validate projection name by Lambert.toString() method
  * 0.8 25-Jan-2009 - display returned list of communes if direct name is not recognized by server
- *                 - new possible grab factor of 100 square meters fixed size                     
+ *                 - new possible grab factor of 100 square meters fixed size
  *                 - minor fixes due to changes in JOSM core classes
- *                 - first draft of raster image support 
+ *                 - first draft of raster image support
  * 0.9 05-Feb-2009 - grab vectorized full commune bbox, save in file, convert to OSM way
  *                   and simplify
- * 1.0 18-Feb-2009 - fix various bugs in color management and preference dialog 
+ * 1.0 18-Feb-2009 - fix various bugs in color management and preference dialog
  *                 - increase PNG picture size requested to WMS (800x1000)
- *                 - set 4th grab scale fixed size configurable (from 25 to 1000 meters) 
+ *                 - set 4th grab scale fixed size configurable (from 25 to 1000 meters)
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "1.0";
@@ -77,28 +78,28 @@ public class CadastrePlugin extends Plugin {
     public static CadastreGrabber cadastreGrabber = new CadastreGrabber();
 
     public static String source = "";
-    
+
     // true if the checkbox "auto-sourcing" is set in the plugin menu
     public static boolean autoSourcing = false;
-    
+
     // true when the plugin is first used, e.g. grab from WMS or download cache file
     public static boolean pluginUsed = false;
-    
+
     public static String cacheDir = null;
-    
+
     public static boolean alterColors = false;
-    
+
     public static boolean backgroundTransparent = false;
-    
+
     public static float transparency = 1.0f;
-    
+
     public static boolean drawBoundaries = false;
-    
+
     static private boolean menuEnabled = false;
 
     /**
      * Creates the plugin and setup the default settings if necessary
-     * 
+     *
      * @throws Exception
      */
     public CadastrePlugin() throws Exception {
@@ -122,12 +123,10 @@ public class CadastrePlugin extends Plugin {
 
     public void refreshMenu() throws Exception {
         boolean isLambertProjection = Main.proj.toString().equals(new Lambert().toString());
-        JMenuBar menu = Main.main.menu;
+        MainMenu menu = Main.main.menu;
 
         if (cadastreJMenu == null) {
-            cadastreJMenu = new JMenu(tr("Cadastre"));
-            cadastreJMenu.setMnemonic(KeyEvent.VK_C);
-            menu.add(cadastreJMenu, menu.getMenuCount()-2);
+            cadastreJMenu = menu.addMenu(marktr("Cadastre"), KeyEvent.VK_C, menu.defaultMenuPos);
             if (isLambertProjection) {
                 JosmAction grab = new MenuActionGrab();
                 JMenuItem menuGrab = new JMenuItem(grab);
@@ -137,20 +136,20 @@ public class CadastrePlugin extends Plugin {
                 }
                 JMenuItem menuSettings = new JMenuItem(new MenuActionNewLocation());
                 final JCheckBoxMenuItem menuSource = new JCheckBoxMenuItem(tr("Auto sourcing"));
-                menuSource.setSelected(autoSourcing);     
+                menuSource.setSelected(autoSourcing);
                 menuSource.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ev) {
                         Main.pref.put("cadastrewms.autosourcing", menuSource.isSelected());
                         autoSourcing = menuSource.isSelected();
                     }
                 });
-    
+
                 JMenuItem menuResetCookie = new JMenuItem(new MenuActionResetCookie());
                 JMenuItem menuLambertZone = new JMenuItem(new MenuActionLambertZone());
                 JMenuItem menuLoadFromCache = new JMenuItem(new MenuActionLoadFromCache());
                 //JMenuItem menuActionBoundaries = new JMenuItem(new MenuActionBoundaries());
                 //JMenuItem menuActionBuildings = new JMenuItem(new MenuActionBuildings());
-                
+
                 cadastreJMenu.add(menuGrab);
                 cadastreJMenu.add(menuSettings);
                 cadastreJMenu.add(menuSource);
@@ -158,7 +157,7 @@ public class CadastrePlugin extends Plugin {
                 cadastreJMenu.add(menuLambertZone);
                 cadastreJMenu.add(menuLoadFromCache);
                 // all SVG features disabled until official WMS is released
-                //cadastreJMenu.add(menuActionBoundaries); 
+                //cadastreJMenu.add(menuActionBoundaries);
                 //cadastreJMenu.add(menuActionBuildings);
             } else {
                 JMenuItem hint = new JMenuItem(tr("Invalid projection"));

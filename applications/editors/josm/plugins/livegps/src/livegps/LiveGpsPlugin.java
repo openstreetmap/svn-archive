@@ -1,5 +1,6 @@
 package livegps;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -10,7 +11,6 @@ import java.util.List;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
@@ -79,9 +79,7 @@ public class LiveGpsPlugin extends Plugin
     public LiveGpsPlugin()
     {
         MainMenu menu = Main.main.menu;
-        lgpsmenu = new JMenu(tr("LiveGPS"));
-        menu.add(lgpsmenu, KeyEvent.VK_G, "livegps");
-        menu.add(lgpsmenu, 5);
+        lgpsmenu = menu.addMenu(marktr("LiveGPS"), KeyEvent.VK_G, menu.defaultMenuPos);
 
         JosmAction captureAction = new CaptureAction();
         lgpscapture = new JCheckBoxMenuItem(captureAction);

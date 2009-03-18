@@ -1,7 +1,7 @@
 package wmsplugin;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
-
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -15,7 +15,6 @@ import java.io.*;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
@@ -129,13 +128,10 @@ public class WMSPlugin extends Plugin {
         Collections.sort(wmsList);
         MainMenu menu = Main.main.menu;
 
-        if (wmsJMenu == null) {
-            wmsJMenu = new JMenu(tr("WMS"));
-            menu.add(wmsJMenu, KeyEvent.VK_W, "wms");
-            menu.add(wmsJMenu, 5);
-        } else {
+        if (wmsJMenu == null)
+            wmsJMenu = menu.addMenu(marktr("WMS"), KeyEvent.VK_W, menu.defaultMenuPos);
+        else
             wmsJMenu.removeAll();
-        }
 
         // for each configured WMSInfo, add a menu entry.
         for (final WMSInfo u : wmsList) {

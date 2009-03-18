@@ -1,7 +1,7 @@
 /*
  * josm.tcx.plugin
  * (c) Copyright by M.IT 2002-2008
- * www.emaitie.de 
+ * www.emaitie.de
  */
 
 package org.openstreetmap.josm.plugins;
@@ -14,8 +14,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -40,7 +38,7 @@ public class TcxPlugin extends Plugin
             Shortcut.registerShortcut("menu:importtcx", tr("Menu: {0}", tr("Import TCX File...")),
             KeyEvent.VK_T, Shortcut.GROUP_MENU));
         }
-        
+
         private void addTcxFileFilter()
         {
     //TODO doesn't work! ExtensionFileFilter has private constructor
@@ -48,11 +46,11 @@ public class TcxPlugin extends Plugin
 //            add to ExtensionFileFilter.filters;
 //              => check if filters contains a tcx entry, if not create a new array with tcx in it
 //              assign it to filters
-            
-    // TODO later we can remove the filter from the file filter list, so the extension does not appear 
+
+    // TODO later we can remove the filter from the file filter list, so the extension does not appear
     // when the user wants to open a normal file.
         }
-        
+
 
         public void actionPerformed(ActionEvent e)
         {

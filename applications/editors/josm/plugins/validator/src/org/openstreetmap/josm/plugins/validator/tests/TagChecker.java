@@ -255,13 +255,10 @@ public class TagChecker extends Test
         Collection<TaggingPreset> presets = TaggingPresetPreference.taggingPresets;
         if(presets != null)
         {
-            Way w = new Way();
-            w.checkTagged();
-            w.checkDirectionTagged();
             presetsValueData = new Bag<String, String>();
-            for(String a : OsmPrimitive.uninteresting)
+            for(String a : OsmPrimitive.getUninterestingKeys())
                 presetsValueData.add(a);
-            for(String a : OsmPrimitive.directionKeys)
+            for(String a : OsmPrimitive.getDirectionKeys())
                 presetsValueData.add(a);
             for(String a : Main.pref.getCollection(PreferenceEditor.PREFIX + ".knownkeys",
             Arrays.asList(new String[]{"is_in", "int_ref", "fixme", "population"})))

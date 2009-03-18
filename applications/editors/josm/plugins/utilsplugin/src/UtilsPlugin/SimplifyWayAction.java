@@ -116,7 +116,7 @@ public class SimplifyWayAction extends JosmAction {
                 used = !backRefsV.data.isEmpty();
             }
             if (!used)
-                used = wnew.nodes.get(i).tagged;
+                used = wnew.nodes.get(i).isTagged();
 
             if (used) {
                 simplifyWayRange(wnew, i, toI, threshold);

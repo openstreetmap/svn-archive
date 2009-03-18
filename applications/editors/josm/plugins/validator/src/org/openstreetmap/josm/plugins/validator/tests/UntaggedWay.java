@@ -84,7 +84,7 @@ public class UntaggedWay extends Test
             }
         }
 
-        if(!w.tagged && !multipolygonways.contains(w))
+        if(!w.isTagged() && !multipolygonways.contains(w))
         {
             errors.add( new TestError(this, Severity.WARNING, tr("Untagged ways"), UNTAGGED_WAY, w) );
         }
@@ -113,7 +113,7 @@ public class UntaggedWay extends Test
                 {
                     if(m.member != null && m.member instanceof Way &&
                     !m.member.deleted && !m.member.incomplete
-                    && !m.member.tagged)
+                    && !m.member.isTagged())
                         multipolygonways.add((Way)m.member);
                 }
             }

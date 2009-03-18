@@ -158,6 +158,7 @@ void BrowserImageManager::launchRequest()
 	QUrl u = QUrl( R.url);
 
 	page->mainFrame()->load(u);
+	requestActive = true;
 }
 
 void BrowserImageManager::pageLoadFinished(bool ok)

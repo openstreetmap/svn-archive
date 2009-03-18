@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QPixmap>
+#include <QThread>
 
 #include <QtNetwork/QtNetwork>
 #include "qwebframe.h"

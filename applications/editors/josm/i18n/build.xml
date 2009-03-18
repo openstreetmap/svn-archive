@@ -40,6 +40,9 @@
     <exec executable="perl" output="${i18n.build.dir}/trans_surveyor.java">
       <arg line="convsurveyor.pl ${surveyor.srcfile}"/>
     </exec>
+    <exec executable="perl" output="${i18n.build.dir}/trans_plugins.java">
+      <arg line="convplugins.pl ${plugin.dir}/*/build.xml"/>
+    </exec>
     <copy file="specialmessages.java" todir="${i18n.build.dir}" />
   </target>
 

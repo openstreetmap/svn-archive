@@ -19,25 +19,8 @@ public class DuplicateWayPlugin extends Plugin {
 
   public DuplicateWayPlugin() {
     name = tr("Duplicate Way");
-    JMenu toolsMenu = null;
-    for (int i = 0; i < Main.main.menu.getMenuCount() && toolsMenu == null; i++) {
-      JMenu menu = Main.main.menu.getMenu(i);
-      String name = menu.getText();
-      if (name != null && name.equals(tr("Tools"))) {
-        toolsMenu = menu;
-      }
-    }
-
-    if (toolsMenu == null) {
-      toolsMenu = new JMenu(name);
-      toolsMenu.add(new JMenuItem(new DuplicateWayAction()));
-      Main.main.menu.add(toolsMenu, 2);
-    }
-    else {
-      toolsMenu.addSeparator();
-      toolsMenu.add(new JMenuItem(new DuplicateWayAction()));
-    }
-
+    JMenu toolsMenu = Main.main.menu.toolsMenu;
+    toolsMenu.addSeparator();
+    toolsMenu.add(new JMenuItem(new DuplicateWayAction()));
   }
-
 }

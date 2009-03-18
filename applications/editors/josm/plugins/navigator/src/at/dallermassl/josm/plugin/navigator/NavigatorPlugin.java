@@ -3,6 +3,7 @@
  */
 package at.dallermassl.josm.plugin.navigator;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -10,10 +11,10 @@ import java.awt.event.ActionListener;
 import java.util.Map;
 
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.MainMenu;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -40,8 +41,8 @@ public class NavigatorPlugin extends Plugin {
         navigatorLayer = new NavigatorLayer(tr("Navigation"));
         navigatorLayer.setNavigatorNodeModel(navigatorModel);
 
-        JMenuBar menu = Main.main.menu;
-        JMenu navigatorMenu = new JMenu(tr("Navigation"));
+        MainMenu menu = Main.main.menu;
+        JMenu navigatorMenu = menu.addMenu(marktr("Navigation"), KeyEvent.VK_N, menu.defaultMenuPos);
         JMenuItem navigatorMenuItem = new JMenuItem(new NavigatorAction(this));
         navigatorMenu.add(navigatorMenuItem);
         JMenuItem resetMenuItem = new JMenuItem(tr("Reset Graph"));

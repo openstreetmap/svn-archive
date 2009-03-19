@@ -42,6 +42,7 @@
         <ant antfile="build.xml" target="clean" dir="agpifoj"/>
         <ant antfile="build.xml" target="clean" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="clean" dir="colorscheme"/>
+        <ant antfile="build.xml" target="clean" dir="DirectUpload"/>
         <ant antfile="build.xml" target="clean" dir="duplicateway"/>
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
         <ant antfile="build.xml" target="clean" dir="grid"/>

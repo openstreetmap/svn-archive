@@ -147,8 +147,10 @@ public class UploadDataGui extends ExtendedDialog {
 
             if(mv.getActiveLayer() instanceof GpxLayer) {
                 GpxData data=((GpxLayer)Main.map.mapView.getActiveLayer()).data;
-                filename = data.storageFile.getName()
-                                .replaceAll("[&?/\\\\]"," ").replaceAll("(\\.[^.]*)$","");
+                try {
+                    filename = data.storageFile.getName()
+                                    .replaceAll("[&?/\\\\]"," ").replaceAll("(\\.[^.]*)$","");
+                } catch(Exception e) { }
                 descriptionField.setText(getFilename());
                 OutputDisplay.setText(tr("Selected track: {0}", getFilename()));
             }

@@ -172,17 +172,32 @@ class OSMObj:
         elif self.type == "relation":
             element = Element('relation')
             for m in self.members:
+                obj = None
                 id = None
-                if isinstance(m['ref'], int):
-                    id = m['ref']
+                type = ''
+                role = ''
+                if isinstance(m, dict):
+                    obj = m['ref']
+                    type = m['type']
+                    role = m['role']
+                elif isinstance(m, (tuple, list)):
+                    obj = m[0]
+                    role = m[1]
+                elif isinstance(m, OSMObj):
+                    obj = m
+
+                if isinstance(obj, int):
+                    id = obj
                 else:
-                    id = m['ref'].id
-                id = str(id)    
+                    id = obj.id
+                    type = obj.type
+                    
+                id = str(id)
                 SubElement(element, "member", {
                     'ref': id,
-                    'type': m['type'],
-                    'role': m['role']
-                })    
+                    'type': type,
+                    'role': role
+                })
         
         if self.id:
             element.attrib['id'] = str(self.id)

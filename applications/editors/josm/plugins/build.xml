@@ -36,7 +36,6 @@
         <ant antfile="build.xml" target="dist" dir="duplicateway"/>
         <ant antfile="build.xml" target="dist" dir="grid"/>
         <ant antfile="build.xml" target="dist" dir="navigator"/>
-        <ant antfile="build.xml" target="dist" dir="pluginmanager"/>
     </target>
     <target name="clean">
         <ant antfile="build.xml" target="clean" dir="agpifoj"/>
@@ -57,7 +56,6 @@
         <ant antfile="build.xml" target="clean" dir="openvisible"/>
         <ant antfile="build.xml" target="clean" dir="osmarender"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
-        <ant antfile="build.xml" target="clean" dir="pluginmanager"/>
         <ant antfile="build.xml" target="clean" dir="remotecontrol"/>
         <ant antfile="build.xml" target="clean" dir="slippymap"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>

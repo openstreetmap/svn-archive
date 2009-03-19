@@ -1,15 +1,20 @@
 package usertools;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.UnsupportedEncodingException;
 
-import javax.swing.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JViewport;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import org.openstreetmap.josm.actions.JosmAction;
-//import org.openstreetmap.josm.actions.search.*;
 import org.openstreetmap.josm.actions.search.SearchAction;
 import org.openstreetmap.josm.gui.dialogs.UserListDialog;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -64,13 +69,11 @@ public class UserToolsPlugin extends Plugin {
     public static void refreshMenu() {
         MainMenu menu = Main.main.menu;
 
-        if (userJMenu == null) {
-            userJMenu = new JMenu(tr("User"));
-            menu.add(userJMenu, KeyEvent.VK_U, "user");
-            menu.add(userJMenu, 5);
-        } else {
+        if (userJMenu == null)
+            userJMenu = menu.addMenu(marktr("User"), KeyEvent.VK_U, menu.defaultMenuPos);
+        else
             userJMenu.removeAll();
-        }
+
         JosmAction a = new JosmAction(tr("Show Author Panel"),
         "dialogs/userlist", tr("Show Author Panel"), null, false) {
             public void actionPerformed(ActionEvent ev) {
@@ -89,7 +92,7 @@ public class UserToolsPlugin extends Plugin {
             }
         };
         a.putValue("toolbar", "usertools_show");
-        userJMenu.add(new JMenuItem(a));
+        menu.add(userJMenu,a);
 
         userJMenu.addSeparator();
         a = new JosmAction(tr("Open User Page"),
@@ -104,7 +107,7 @@ public class UserToolsPlugin extends Plugin {
             }
         };
         a.putValue("toolbar", "usertools_open");
-        userJMenu.add(new JMenuItem(a));
+        menu.add(userJMenu,a);
 
         a = new JosmAction(tr("Select User's Data"),
         "dialogs/search", tr("Replaces Selection with Users data"), null, false) {
@@ -117,7 +120,7 @@ public class UserToolsPlugin extends Plugin {
             }
         };
         a.putValue("toolbar", "usertools_search");
-        userJMenu.add(new JMenuItem(a));
+        menu.add(userJMenu,a);
 
         setEnabledAll(false);
     }

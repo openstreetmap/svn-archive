@@ -185,8 +185,8 @@ class ParseNaptan(ParseXML):
                 # Also pull into naptan:Indicator
                 self.node2tag(elem)
                 
-            #elif self.parentnodes['AlternativeDescriptors']:
-                #self.node2tag(elem, self.tagmap_altdescriptors, 'Alt')
+            elif self.parentnodes['AlternativeDescriptors']:
+                self.node2tag(elem, self.tagmap_altdescriptors, 'Alt')
             elif node == 'StopType':
                 # This is a 'legacy' node according to the schema, but it should still work
                 st = elem.text
@@ -218,9 +218,6 @@ class ParseNaptan(ParseXML):
             # StopArea stuff
             ###
             elif node == 'StopArea':
-                # Don't bother with StopAreas with no StopPoints present
-                #if not self.feature.members:
-                    #self.feature = None
                 if self.feature:
                     atcocode = self.feature.tags['naptan:StopAreaCode']
                     self.features[atcocode] = self.feature
@@ -261,8 +258,12 @@ class ParseNaptan(ParseXML):
         # Write out any other features
         areacount = len(self.features)
         for feature in self.features.values():
-            self.outfile.write(feature.toxml(needs_parent=False, indent=False))
-            self.outfile.write("\n")
+            # Ignore relations with no members
+            if len(feature.members):
+                self.outfile.write(feature.toxml(needs_parent=False, indent=False))
+                self.outfile.write("\n")
+            else:
+                areacount -= 1
         self.features = None
         
         print "Parsed %s StopPoints and %s StopAreas" % (self.nodecounter, self.relationcounter)

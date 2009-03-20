@@ -146,25 +146,36 @@ if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
 
     print "- rasterizing using $rasterizer\n";
 
-    #set engine specific parameters
+    # Set engine specific parameters
     if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') )
     {
         $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
         $SVG::Rasterize::object->engine()->host('localhost');
         $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
-    } elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Batik') )
+    }
+    elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Batik') )
     {
-    	my @batikPath;
-    	if ($Config->get("BatikPath")) {push(@batikPath, $Config->get("BatikPath"));}
-    	push(@batikPath,$SVG::Rasterize::object->engine()->jar_searchpaths());
-    	 
-    	$SVG::Rasterize::object->engine()->jar_searchpaths(@batikPath);
-    	
-    	#final version to be implemented in a few weeks
-        #$SVG::Rasterize::object->engine()->jar_searchpaths([$Config->get("BatikPath")]);
-    } elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') )
+        my @customSearchPaths = ();
+        push(@customSearchPaths, $Config->get("BatikPath")) if $Config->get("BatikPath");
+        if( $^O eq 'MSWin32' ){
+            push(@customSearchPaths, 'c:\tilesAtHome', 'c:\tilesAtHome\batik');
+            push(@customSearchPaths, 'D:\Programme\batik');
+        }
+
+        $SVG::Rasterize::object->engine()->jar_searchpaths(
+            @customSearchPaths,
+            $SVG::Rasterize::object->engine()->jar_searchpaths()
+        );
+    }
+    elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') )
     {
-    	if ($Config->get("InkscapePath")) {$SVG::Rasterize::object->engine()->path($Config->get("InkscapePath"));}
+        if( $Config->get("InkscapePath") ){
+            # Add InkscapePath as first location to look
+            $SVG::Rasterize::object->engine()->jar_searchpaths(
+                $Config->get("InkscapePath"),
+                $SVG::Rasterize::object->engine()->jar_searchpaths()
+            );
+        }
     }
 
     # Check for broken rasterizer versions

@@ -52,63 +52,6 @@ mkdir -p "$share_path"
 mkdir -p "$man1_path"
 
 
-# #######################################################
-# Osmosis
-# #######################################################
-if false; then
-    echo "${BLUE}----------> applications/utils/osmosis/trunk Osmosis${NORMAL}"
-
-    cd osmosis
-
-    # Osmosis moves it's Binary arround, so to be sure we do not catch old Versions and don't 
-    # recognize it we remove all osmosis.jar Files first
-    ( find . -name "osmosis*.jar" | while read file ; do rm "$file" ; done ) || true
-
-    cd trunk
-
-    ant clean >build.log 2>build.err
-    ant dist >>build.log 2>>build.err
-    if [ "$?" -ne "0" ] ; then
-	echo "${RED}!!!!!! ERROR compiling  Osmosis ${NORMAL}"
-	exit -1
-    fi
-    cd ../..
-
-    osmosis_dir="$dst_path/usr/local/share/osmosis/"
-    mkdir -p $osmosis_dir
-    cp osmosis/trunk/build/binary/osmosis.jar $osmosis_dir
-    if [ "$?" -ne "0" ] ; then
-	echo "${RED}!!!!!! ERROR cannot find resulting osmosis.jar ${NORMAL}"
-	exit -1
-    fi
-
-    # copy needed libs
-    mkdir -p $osmosis_dir/lib/
-    cp osmosis/trunk/lib/default/*.jar $osmosis_dir/lib/
-    if [ "$?" -ne "0" ] ; then
-	echo "${RED}!!!!!! ERROR cannot copy needed libs for osmosis${NORMAL}"
-	exit -1
-    fi
-
-    # Osmosis script
-    src_fn="osmosis/trunk/bin/osmosis"
-    man1_fn="$man1_path/osmosis.1"
-    if grep -q -e "--help" "$src_fn"; then
-	echo "Create Man Page from Help '$man1_fn'"
-	perl $src_fn --help >"$man1_fn"
-    else
-	echo "!!!! No idea how to create Man Page for $src_fn"
-    fi
-    mkdir -p $osmosis_dir/bin
-    cp $src_fn "$osmosis_dir/bin/osmosis"
-    if [ "$?" -ne "0" ] ; then
-	echo "${RED}!!!!!! ERROR cannot find resulting osmosis script ${NORMAL}"
-	exit -1
-    fi
-
-    ln -sf /usr/local/share/osmosis/bin/osmosis $bin_path/osmosis
-fi
-
 # ------------------------------------------------------------------
 # Utilities written in C
 

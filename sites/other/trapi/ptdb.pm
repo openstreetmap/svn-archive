@@ -48,6 +48,8 @@ sub commontags($) {
     return unless($ctn);
     print "processing tags.$ctn\n" if (VERBOSE > 30);
     my ($v, $t, $vv, $tn, $vn, $va, $ta, $vva, $tag);
+    our ($mode);
+    my $ro = $mode eq '<';
     open TAGS, "<", DBDIR."tags.$ctn" or die "Could not open tags.$ctn: $!";
     $comtags[$ctn] = [
 	undef,
@@ -61,20 +63,22 @@ sub commontags($) {
 	chomp;
 	if (/^\t\t([^\t]*)\t(\d+)$/) {
 	    my $val = $1;
-	    unless (defined $vv) {
-		$vv = {};
-		$v->{$tag} = $vv;
+	    unless (defined $vva) {
+		unless ($ro) {
+		    $vv = {};
+		    $v->{$tag} = $vv;
+		}
 		$vva = [];
 		$va->[$tn] = $vva;
 		$vn = 0;
 	    }
-	    $vv->{$val} = ++$vn;
+	    $vv->{$val} = ++$vn unless($ro);
 	    $vva->[$vn] = $val;
 	} elsif (/^\t([^\t]*)\t(\d+)$/) {
 	    $tag = $1;
-	    $t->{$tag} = ++$tn;
-	    $ta->[$tn] = $tag;
-	    $vv = undef;
+	    $ta->[++$tn] = $tag;
+	    $t->{$tag} = $tn unless($ro);
+	    $vva = undef;
 	} elsif (/^(\w+)s$/) {
 	    my $m = MEMBER->{$1};
 	    die "Malformed line in tags.$ctn: $_" unless($m);
@@ -162,21 +166,27 @@ sub openptn($$) {
 	if ($name eq "data") {
 	    printvnum($f, TAGSVERSION);
 	    $tagsversion{$f} = TAGSVERSION;
-	    commontags(TAGSVERSION) if (!defined($comtags[TAGSVERSION]));
+	    commontags(TAGSVERSION) unless (defined($comtags[TAGSVERSION]));
 	}
     } elsif ($name eq "data") {
 	my $tv = getvnum($f);
-	unless (defined $tv || $mode eq '<') {
-	    $tv = TAGSVERSION;
-	    printvnum($f, $tv);
+	unless (defined $tv) {
+	    if ($mode eq '<') {
+		$tv = 0;
+	    } else {
+		$tv = TAGSVERSION;
+		printvnum($f, $tv);
+		commontags(TAGSVERSION) unless (defined($comtags[TAGSVERSION]));
+	    }
+	} elsif ($tv > TAGSVERSION) {
+	    my ($vz, $vx, $vy) = fromptn($ptn);
+	    print "!!! broken tile z$vz $vx,$vy\n";
+	    $tv = 0;
 	}
-#	elsif ($tv > 1) {
-#	    my ($vz, $vx, $vy) = fromptn($ptn);
-#	    print "!!! broken tile z$vz $vx,$vy\n";
-#	    $tv = 0;
-#	}
 	$tagsversion{$f} = $tv;
 	commontags($tv) if ($tv && !defined($comtags[$tv]));
+	our %togc;
+	$togc{$ptn} = $cachecount unless($tv == TAGSVERSION || $mode eq '<');
     }
     # keep a cache of the most recently opened 500 files
     if ($opened++ > MAXOPEN) {
@@ -185,9 +195,9 @@ sub openptn($$) {
 	    sort {${$filecache{$a}}[1] <=> ${$filecache{$b}}[1]} keys %filecache;
 	while ($opened > KEEPOPEN) {
 	    my $toclose = shift @toclose;
-	    if ($toclose =~ /data$/) {
+#	    if ($toclose =~ /data$/) {
 #		delete $tagsversion{$filecache{$toclose}->[0]};
-	    }
+#	    }
 	    delete $filecache{$toclose};
 	    $opened--;
 	}
@@ -376,6 +386,7 @@ sub reltiles($) {
 	    while (my ($r, $off) = readrel($rf)) {
 		last unless (defined $r);
 		next unless ($r && exists $rthis{$r});
+		print "  relation $r\n" if (VERBOSE > 200);
 	        $rdone{$r}++;
 		seek $df, $off, 0;
 		my @mm = readmemb($df);
@@ -385,19 +396,13 @@ sub reltiles($) {
 			$tiles{nodeptn($n)}++;
 		    } elsif ($type == WAY) {
 			my $wp = wayptn($n);
-			if (exists $wtodo{$wp}) {
-			    ${$wtodo{$wp}}{$n}++;
-			} else {
-			    $wtodo{$wp} = {$n => 1};
-			}
+			$wtodo{$wp} //= {};
+			$wtodo{$wp}->{$n}++;
 		    } elsif ($type == RELATION) {
 			next if(exists $rdone{$n});
 			my $rrp = relationptn($n);
-			if (exists $rtodo{$rrp}) {
-			    ${$rtodo{$rrp}}{$n}++;
-			} else {
-			    $rtodo{$rrp} = {$n => 1};
-			}
+			$rtodo{$rrp} //= {};
+			$rtodo{$rrp}->{$n}++;
 		    } else {
 			die "Unknown relation $r type $type";
 		    }
@@ -733,7 +738,7 @@ sub getvnum($) {
 sub printtags($$$) {
     my ($f, $tags, $t) = @_;
     my @tags = @$tags;
-    my $tagsver = $tagsversion{$f};
+    my $tagsver = tv_check($f);
     my $h = $tagsver ? $comtags[$tagsver]->[$t] : undef;
     while (my $tag = shift @tags) {
 	my $val = shift @tags;
@@ -767,7 +772,7 @@ sub printtags($$$) {
 sub readtags($$) {
     my ($f, $t) = @_;
     my @tags;
-    my $tagsver = $tagsversion{$f};
+    my $tagsver = tv_check($f);
     if ($tagsver) {
 	my $a = $comtags[$tagsver]->[$t];
 	while (my $c = getvnum($f)) {
@@ -803,7 +808,7 @@ sub readtags($$) {
 sub printmemb($$) {
     my ($f, $memb) = @_;
     my @members = @$memb;
-    my $tagsver = $tagsversion{$f};
+    my $tagsver = tv_check($f);
     my $h = $tagsver ? $comtags[$tagsver]->[ROLE]->[0] : undef;
     while (my $m = shift @members) {
 	print $f pack("CN", $m->[0], $m->[1]);
@@ -825,7 +830,7 @@ sub readmemb($) {
     my ($f) = @_;
     my @members;
     my ($b, $role);
-    my $tagsver = $tagsversion{$f};
+    my $tagsver = tv_check($f);
     my $a = $tagsver ? $comtags[$tagsver]->[ROLE]->[1] : undef;
     while (defined($b = getc($f))) {
 	my ($type) = unpack "C", $b;
@@ -867,7 +872,7 @@ sub readrel($) {
 sub readwaynodes($) {
     my ($f) = @_;
     my ($b);
-    if ($tagsversion{$f}) {
+    if (tv_check($f)) {
 	my $nodes = getvnum($f) // 0;
 	print "reading $nodes nodes\n" if (VERBOSE > 99);
 	read $f, $b, (4 * $nodes);
@@ -900,18 +905,29 @@ sub printrel($$$) {
 
 sub printwaynodes($$) {
     my ($f, $n) = @_;
-    if ($tagsversion{$f}) {
-	my $nodes = scalar(@$n);
-	print "saving $nodes nodes\n" if (VERBOSE > 99);
+    my $nodes = scalar(@$n);
+    print "saving $nodes nodes\n" if (VERBOSE > 99);
+    if (tv_check($f)) {
 	printvnum($f, $nodes);
 	print $f pack "N$nodes", @$n;
     } else {
-	foreach my $node (@$n) {
-	    print $f pack "N", $node;
-	}
+	print $f pack "N$nodes", @$n;
 	print $f PZ;
     }
     print " tags at ".tell($f)."\n" if (VERBOSE > 99);
+}
+
+sub tv_check($) {
+    my ($f) = @_;
+    my $tv = $tagsversion{$f};
+    return $tv if (defined $tv);
+    print "!!! undefined tagsversion\n" if (VERBOSE > 4);
+    my $loc = tell $f;
+    seek $f, 0, 0;
+    $tv = getvnum($f) // 0;
+    $tagsversion{$f} = $tv;
+    seek $f, $loc, 0;
+    return $tv;
 }
 
 # garbagecollect a single tile

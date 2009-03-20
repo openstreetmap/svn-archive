@@ -51,7 +51,7 @@ sub path {
                 return $self->path($filepath) if -x $filepath;
             }
         }
-        throw SVG::Rasterize::Engine::Inkscape::Error::Prerequisite("Couldn't find inkscape executable. Check InkscapePath in your config file.");
+        throw SVG::Rasterize::Engine::Inkscape::Error::Prerequisite("Couldn't find inkscape executable");
     }
 
     return $self->_path_accessor(@_);

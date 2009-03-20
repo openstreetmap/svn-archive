@@ -8,7 +8,7 @@
 use strict;
 use warnings;
 
-use constant VERBOSE => 5;		# verbosity
+use constant VERBOSE => 999;		# verbosity
 use trapi;
 
 chdir TRAPIDIR or die "could not chdir ".TRAPIDIR.": $!";
@@ -147,11 +147,8 @@ while (my $gz = <>) {
 		    next if ($w == 0);
 		    if ($woff == 0) {
 			my $wp = wayptn($w);
-			if (exists $wtc{$wp}) {
-			    ${$wtc{$wp}}{$w} = 1;
-			} else {
-			    $wtc{$wp} = {$w => 1};
-			}
+			$wtc{$wp} //= {};
+			$wtc{$wp}->{$w} = 1;
 		    } else {
 			seek $odf, $woff, 0;
 			my @nodes = readwaynodes($odf);
@@ -201,25 +198,25 @@ while (my $gz = <>) {
 		my (%rtc, %rels);
 	      rproc:	while (my ($r, $roff) = readrel($orf)) {
 		  last unless (defined $r);
-		  next if ($r == 0);
+		  next unless ($r);
 		  if ($roff == 0) {
 		      my $rp = relationptn($r);
 		      $rtc{$rp} //= {};
-		      ${$rtc{$rp}}{$r} //= {};
+		      $rtc{$rp}->{$r} //= {};
 		  } else {
 		      seek $odf, $roff, 0;
 		      my @members = readmemb($odf);
 		      foreach my $m (@members) {
 			  my ($type, $mid, $role) = @$m;
-			  if ($type == 1) {
+			  if ($type == NODE) {
 			      next unless ($mid == $id);
 			      $rels{$r} = 1;
 			      next rproc;
-			  } elsif ($type == 2) {
+			  } elsif ($type == WAY) {
 			      next unless (exists $ways{$mid});
 			      $rels{$r} = 1;
 			      next rproc;
-			  } elsif ($type == 3) {
+			  } elsif ($type == RELATION) {
 			      if (exists $rels{$mid}) {
 				  $rels{$r} = 1;
 				  next rproc;
@@ -234,6 +231,7 @@ while (my $gz = <>) {
 		      }
 		  }
 	      }
+		my %rseen;
 		while (my @rt = keys %rtc) {
 		    foreach my $t (@rt) {
 			my %x = %{$rtc{$t}};
@@ -246,31 +244,37 @@ while (my $gz = <>) {
 			  next unless ($r && $roff);
 			  next if (exists $rels{$r});
 			  next unless (exists $x{$r});
+			  $rseen{$r} = 1;
 			  seek $odf, $roff, 0;
 			  my @members = readmemb($odf);
 			  foreach my $m (@members) {
 			      my ($type, $mid, $role) = @$m;
-			      if ($type == 1) {
+			      if ($type == NODE) {
 				  next unless ($mid == $id);
 				  $rels{$r} = 1;
 				  foreach my $rr (keys %{$x{$r}}) {
 				      $rels{$rr} = 1;
 				  }
 				  next rrtc;
-			      } elsif ($type == 2) {
+			      } elsif ($type == WAY) {
 				  next unless (exists $ways{$mid});
 				  $rels{$r} = 1;
 				  foreach my $rr (keys %{$x{$r}}) {
 				      $rels{$rr} = 1;
 				  }
 				  next rrtc;
-			      } elsif ($type == 3) {
+			      } elsif ($type == RELATION) {
 				  if (exists $rels{$mid}) {
 				      $rels{$r} = 1;
 				      foreach my $rrr (keys %{$x{$r}}) {
 					  $rels{$rrr} = 1;
 				      }
 				      next rrtc;
+				  }
+				  if ($rseen{$mid}) {
+				      print "  seen relation $mid before\n"
+					  if (VERBOSE > 99);
+				      next;
 				  }
 				  my $rrp = relationptn($mid);
 				  $rtc{$rrp} //= {};

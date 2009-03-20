@@ -1,0 +1,2 @@
+osm2poidb is used to create a sqlite3 database containing poi data from a given osm xml file
+

@@ -47,11 +47,6 @@ include_directories(
   ${GPSDRIVE_PRIVATE_INCLUDE_DIRS}
 )
 
-add_definitions (
-  -DPACKAGE=${APPLICATION_NAME}
-  -DPACKAGE_VERSION=${APPLICATION_VERSION}
-)
-
 add_executable(osm2poidb osm2poidb.c)
 
 target_link_libraries(osm2poidb

@@ -459,14 +459,13 @@ main (int argc, char *argv[])
 		g_print ("Parsing of commandline options failed: %s\n", error->message);
 		exit (EXIT_FAILURE);
 	}
+	g_print ("\nosm2poidb\n\n");
 	if (show_version)
 	{
-		g_print ("\ngpsdrive-update-mapnik-db\n"
-			" (C) 2008 Guenther Meyer <d.s.e (at) sordidmusic.com>\n"
-			"\n Version %s\n %s\n\n"), PACKAGE_VERSION, rcsid;
+		g_print (" (C) 2008 Guenther Meyer <d.s.e (at) sordidmusic.com>\n"
+			"\n Version %s\n\n"), rcsid;
 		exit (EXIT_SUCCESS);
 	}
-	g_print ("gpsdrive-update-osm-poi-db v%s\n\n", PACKAGE_VERSION);
 
 	/* setup signal handler to gracefully handle a CTRL-C command */
 	signal (SIGINT, signalhandler_int);
@@ -565,6 +564,11 @@ main (int argc, char *argv[])
 		timer = g_timer_new ();
 
 	/* parse xml file and write data into database */
+	if (!argv[1])
+	{
+		g_print ("\nPlease supply a valid Openstreetmap XML-File!\n");
+		exit (EXIT_FAILURE);
+	}
 	if (strcmp ("STDIN", argv[1]) == 0)
 		xml_reader = xmlReaderForFd (STDIN_FILENO, "", NULL, 0);
 	else

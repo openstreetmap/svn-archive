@@ -96,6 +96,8 @@ sub new {
 
     # Defaults
     my @default_jar_searchpaths = (File::Spec->curdir());
+
+    #I would suggest to remove all these paths and to use BatikPath again
     if( $^O eq 'MSWin32' ){
         #FIXME: add good places to search here
         push(@default_jar_searchpaths,
@@ -110,7 +112,7 @@ sub new {
              'c:\programfiler',
              'c:\programfiler\batik',
              'c:\tilesAtHome',
-             'c:\tilesAtHome\batik'
+             'c:\tilesAtHome\batik','D:\Programme\batik'
             );
     } else {
         push(@default_jar_searchpaths,
@@ -127,6 +129,8 @@ sub new {
             );
     }
     # Add subdirs of the searchpaths
+    
+    # I would suggest to remove all these paths and to use BatikPath again
     my @extended_default_jar_searchpaths;
     foreach my $path ( @default_jar_searchpaths ){
         push(@extended_default_jar_searchpaths, $path);
@@ -150,7 +154,6 @@ sub new {
     }
     $self->jar_searchpaths(@extended_default_jar_searchpaths);
     $self->jar_list([
-        'xercesImpl.jar',
         'batik.jar'
         ]);
 
@@ -307,7 +310,7 @@ sub convert {
         push(@cmd, '-d', $params{outfile});
         push(@cmd, $params{infile});
     } else {
-        throw SVG::Rasterize::Engine::Batik::Error::Prerequisite('No batik available');
+        throw SVG::Rasterize::Engine::Batik::Error::Prerequisite('No batik available. Check BatikPath in your config file.');
     }
 
     my $stdout; my $stderr;
@@ -379,7 +382,7 @@ sub version {
         warn 'Batik rasterizer wrapper does not expose version';
         return undef;
     } else {
-        throw SVG::Rasterize::Engine::Batik::Error::Prerequisite('No batik available');
+        throw SVG::Rasterize::Engine::Batik::Error::Prerequisite('No batik available. Check BatikPath in your config file.');
     }
 
     my $result;

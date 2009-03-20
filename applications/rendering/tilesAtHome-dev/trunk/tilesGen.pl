@@ -139,18 +139,32 @@ if ($LoopMode) {
 if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
     $SVG::Rasterize::object = SVG::Rasterize->new();
     if( $Config->get("Rasterizer") ){
-        $SVG::Rasterize::object->engine( $Config->get("Rasterizer") );
+        $SVG::Rasterize::object->engine( $Config->get("Rasterizer"));
     }
 
     my $rasterizer = ref($SVG::Rasterize::object->engine());
 
     print "- rasterizing using $rasterizer\n";
 
+    #set engine specific parameters
     if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') )
     {
         $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
         $SVG::Rasterize::object->engine()->host('localhost');
         $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
+    } elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Batik') )
+    {
+    	my @batikPath;
+    	if ($Config->get("BatikPath")) {push(@batikPath, $Config->get("BatikPath"));}
+    	push(@batikPath,$SVG::Rasterize::object->engine()->jar_searchpaths());
+    	 
+    	$SVG::Rasterize::object->engine()->jar_searchpaths(@batikPath);
+    	
+    	#final version to be implemented in a few weeks
+        #$SVG::Rasterize::object->engine()->jar_searchpaths([$Config->get("BatikPath")]);
+    } elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') )
+    {
+    	if ($Config->get("InkscapePath")) {$SVG::Rasterize::object->engine()->path($Config->get("InkscapePath"));}
     }
 
     # Check for broken rasterizer versions

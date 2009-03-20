@@ -263,7 +263,7 @@ done
 # Export
 # As soon it compiles here on my debian machine
 # i will remove the excludes
-for export in `ls export/*/Makefile| sed 's,/Makefile,,;s,export/,,'` ; do 
+for export in `ls export/*/Makefile  export/*/CMakeLists.txt| sed 's,/Makefile,,;s,/CMakeLists.txt,,;s,export/,,'` ; do 
     allow_error=false
     if echo $export | grep -q -e osmgarminmap -e osm2shp -e osmgoogleearth; then
 	allow_error=true
@@ -276,6 +276,16 @@ for export in `ls export/*/Makefile| sed 's,/Makefile,,;s,export/,,'` ; do
 
     if [ -s "configure" ] ;then
 	./configure >>build.log 2>>build.err
+    fi
+
+    if [ -s "CMakeLists.txt" ] ;then
+	mkdir -p build
+	cd build
+	pwd
+	cmake ..
+	build_dir='build'
+    else
+	build_dir=''
     fi
 
     if [ -s "Makefile.$export" ] ;then
@@ -298,8 +308,11 @@ for export in `ls export/*/Makefile| sed 's,/Makefile,,;s,export/,,'` ; do
     if $allow_error ; then
 	echo "${GREEN}Even so it sometimes wasn't compiling; 'applications/export/$export' just compiled good on this machine${NORMAL}"
     fi
+    if [ -n "$build_dir" ] ; then
+	cd ..
+    fi
     cd ../..
-    cp export/${export}/${export} ${bin_path}
+    cp export/${export}/$build_dir/${export} ${bin_path}
 
     case ${export} in
 	osm2pgsql) 

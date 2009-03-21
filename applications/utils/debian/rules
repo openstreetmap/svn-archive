@@ -9,6 +9,14 @@ export DH_VERBOSE=1
 #export DH_COMPAT=5
 
 
+# Get options like
+#       export DEB_BUILD_OPTIONS="parallel=4"
+
+debian_build_options_list:=$(shell echo "$$DEB_BUILD_OPTIONS"|sed 's/[^-_=[:alnum:]]/ /g'|tr a-z- A-Z_)
+$(foreach o, $(debian_build_options_list), $(if $(findstring =,$o),$(eval DEB_BUILD_OPT_$o),$(eval DEB_BUILD_OPT_$o=1)))
+MAKE_-J += $(addprefix -j, $(DEB_BUILD_OPT_PARALLEL))
+
+
 build: build-stamp
 build-stamp:
 	dh_testdir
@@ -32,7 +40,7 @@ install: build
 	dh_installdirs
 
 #	./debian/update_svn_revision.sh
-	./debian/make_install_files.sh debian/openstreetmap-utils
+	MAKE_J=$(MAKE_-J) ./debian/make_install_files.sh debian/openstreetmap-utils
 
 # Build architecture-independent files here.
 binary-indep: build install

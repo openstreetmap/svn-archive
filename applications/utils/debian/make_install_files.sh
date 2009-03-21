@@ -36,7 +36,7 @@ REVERSE="${ESC}[07m"
 NORMAL="${ESC}[0m"
 
 # -j4 is for now hardcoded until i find out how to set this through debuild
-MAKEFLAGS="$MAKEFLAGS -j4"
+MAKEFLAGS="$MAKEFLAGS $MAKE_J"
 
 echo "copying Files to '$dst_path'"
 package_name=openstreetmap

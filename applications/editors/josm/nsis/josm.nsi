@@ -360,6 +360,15 @@ SectionIn 1 2
 SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\wmsplugin.jar"
+SetOutPath $INSTDIR\webkit-image\imageformats
+File "webkit-image\imageformats\qjpeg4.dll"
+SetOutPath $INSTDIR\webkit-image
+File "webkit-image\mingwm10.dll"
+File "webkit-image\QtCore4.dll"
+File "webkit-image\QtGui4.dll"
+File "webkit-image\QtNetwork4.dll"
+File "webkit-image\QtWebKit4.dll"
+File "webkit-image\webkit-image.exe"
 SectionEnd
 
 Section $(JOSM_SEC_VALIDATOR_PLUGIN) SecValidatorPlugin

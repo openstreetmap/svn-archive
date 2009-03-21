@@ -13,16 +13,15 @@
 # and unpack it to /usr/share/launch4j
 
 ## settings ##
-LAUNCH4J="java -jar /usr/share/launch4j/launch4j.jar"
+LAUNCH4J="/cygdrive/c/Programme/Launch4j/launch4jc.exe"
+MAKENSIS="/cygdrive/c/Programme/nsis/makensis.exe"
 
 svncorerevision=`svnversion ../core`
 svnpluginsrevision=`svnversion ../plugins`
 svnrevision="$svncorerevision-$svnpluginsrevision"
 
-export VERSION=latest
-#export VERSION=custom-${svnrevision}                                         
-
-LAUNCH4J_XML="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\svn.josm\nsis\launch4j.xml"
+#export VERSION=latest
+export VERSION=custom-${svnrevision}                                         
 
 echo "Creating Windows Installer for josm-$VERSION"
 
@@ -50,12 +49,10 @@ echo "##################################################################"
 echo "### convert jar to exe with launch4j"
 # (an exe file makes attaching to file extensions a lot easier)
 # launch4j - http://launch4j.sourceforge.net/
-
 # delete old exe file first
-rm josm.exe
-"/cygdrive/c/Programme/Launch4j/launch4jc.exe" "$LAUNCH4J_XML"
-# using a relative path still doesn't work with launch4j 3.0.0-pre2
-#"/cygdrive/c/Program Files/Launch4j/launch4jc.exe" ./launch4j.xml
+rm -f josm.exe
+$LAUNCH4J "launch4j.xml"
+
 if ! [ -s josm.exe ]; then
     echo "NO Josm File Created"
     exit -1
@@ -63,9 +60,11 @@ fi
 
 echo 
 echo "##################################################################"
-echo "### create the installer exe with makensis"
+echo "### create the josm-installer-${VERSION}.exe with makensis"
 # NSIS - http://nsis.sourceforge.net/Main_Page
-"/cygdrive/c/Programme/nsis/makensis.exe" /DVERSION=$VERSION josm.nsi
+# apt-get install nsis
+$MAKENSIS -V2 -DVERSION=$VERSION josm.nsi
 
-# delete the intermediate file, just to avoid confusion
-rm josm.exe
+# keep the intermediate file, for debugging
+rm -f josm-intermediate.exe
+mv josm.exe josm-intermediate.exe

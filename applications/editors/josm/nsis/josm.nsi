@@ -297,10 +297,40 @@ IfFileExists preferences dont_overwrite_bookmarks
 File "bookmarks"
 dont_overwrite_bookmarks:
 
+; write reasonable defaults for some preferences
+; XXX - some of this should be done in JOSM itself, see also JOSM core, data\Preferences.java function resetToDefault()
+; XXX - just using JOSM defaults doesn't work here, as JOSM doesn't set some defaults if a preferences file doesn't exist
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "projection" "org.openstreetmap.josm.data.projection.Epsg4326"
+;${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "draw.segment.direction" "true"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "layerlist.visible" "true"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "selectionlist.visible" "true"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "commandstack.visible" "true"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "propertiesdialog.visible" "true"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osm-server.url" "http://www.openstreetmap.org/api"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "laf" "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
+
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "validator.visible" "true"
+
 SectionEnd
 
 
 SectionGroup $(JOSM_SEC_PLUGINS_GROUP) SecPluginsGroup
+
+Section $(JOSM_SEC_AGPIFOJ_PLUGIN) SecAgPifoJPlugin
+;-------------------------------------------
+SectionIn 1 2
+SetShellVarContext current
+SetOutPath $APPDATA\JOSM\plugins
+File "..\dist\AgPifoJ.jar"
+SectionEnd
+
+Section $(JOSM_SEC_VALIDATOR_PLUGIN) SecValidatorPlugin
+;-------------------------------------------
+SectionIn 1 2
+SetShellVarContext current
+SetOutPath $APPDATA\JOSM\plugins
+File "..\dist\validator.jar"
+SectionEnd
 
 Section $(JOSM_SEC_WMS_PLUGIN) SecWMSPlugin
 ;-------------------------------------------
@@ -317,14 +347,6 @@ File "webkit-image\QtGui4.dll"
 File "webkit-image\QtNetwork4.dll"
 File "webkit-image\QtWebKit4.dll"
 File "webkit-image\webkit-image.exe"
-SectionEnd
-
-Section $(JOSM_SEC_VALIDATOR_PLUGIN) SecValidatorPlugin
-;-------------------------------------------
-SectionIn 1 2
-SetShellVarContext current
-SetOutPath $APPDATA\JOSM\plugins
-File "..\dist\validator.jar"
 SectionEnd
 
 SectionGroupEnd	; "Plugins"
@@ -377,7 +399,7 @@ SectionIn 1 2
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 !include LogicLib.nsh
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "wmsplugin;validator"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "AgPifoJ;validator;wmsplugin"
 SectionEnd
 
 
@@ -436,10 +458,12 @@ Section /o "un.$(un.JOSM_SEC_PERSONAL_SETTINGS)" un.SecPersonalSettings
 ;-------------------------------------------
 SectionIn 2
 SetShellVarContext current
-Delete "$APPDATA\JOSM\plugins\wmsplugin\*.*"
-RMDir "$APPDATA\JOSM\plugins\wmsplugin"
+Delete "$APPDATA\JOSM\plugins\agpifoj\*.*"
+RMDir "$APPDATA\JOSM\plugins\agpifoj"
 Delete "$APPDATA\JOSM\plugins\validator\*.*"
 RMDir "$APPDATA\JOSM\plugins\validator"
+Delete "$APPDATA\JOSM\plugins\wmsplugin\*.*"
+RMDir "$APPDATA\JOSM\plugins\wmsplugin"
 Delete "$APPDATA\JOSM\plugins\*.*"
 RMDir "$APPDATA\JOSM\plugins"
 
@@ -466,8 +490,9 @@ SectionEnd
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} $(JOSM_SECDESC_JOSM)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} $(JOSM_SECDESC_PLUGINS_GROUP)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} $(JOSM_SECDESC_WMS_PLUGIN)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecAgPifoJPlugin} $(JOSM_SECDESC_AGPIFOJ_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} $(JOSM_SECDESC_VALIDATOR_PLUGIN)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} $(JOSM_SECDESC_WMS_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} $(JOSM_SECDESC_STARTMENU)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopIcon} $(JOSM_SECDESC_DESKTOP_ICON)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecQuickLaunchIcon} $(JOSM_SECDESC_QUICKLAUNCH_ICON) 

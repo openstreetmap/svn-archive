@@ -681,9 +681,11 @@ main (int argc, char *argv[])
 	/* create index on poi column */
 	g_print ("+ Creating new index\n");
 	status = sqlite3_exec(osm_db,
-		"CREATE INDEX latlon ON poi (lat,lon); "
+		"CREATE INDEX poi_lat ON poi (lat); "
+		"CREATE INDEX poi_lon ON poi (lon); "
+		"CREATE UNIQUE INDEX poi_latlontype ON poi (lat,lon,poi_type); "
 		"CREATE INDEX poi_type ON poi (poi_type); "
-		"CREATE INDEX name ON poi (name,comment); "
+		"CREATE INDEX poi_name ON poi (name,comment); "
 		"CREATE INDEX poi_id ON poi_extra (poi_id); "
 		, NULL, NULL, &error_string);
 	if (status != SQLITE_OK )

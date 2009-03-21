@@ -14,16 +14,28 @@
 
 ## settings ##
 
+# trying to find launch4j
 if [ -s /cygdrive/c/Programme/Launch4j/launch4jc.exe ]; then
-	echo Using paths: "C:\Programme\..."
-	LAUNCH4J="/cygdrive/c/Programme/Launch4j/launch4jc.exe"
-	MAKENSIS="/cygdrive/c/Programme/nsis/makensis.exe"
-elif [ -s josm.exe ]; then
-	echo Using UNIX-like paths
-	LAUNCH4J="java -jar /usr/share/launch4j/launch4j.jar"
-	MAKENSIS=makensis
+    # Windows under cygwin
+    LAUNCH4J="/cygdrive/c/Programme/Launch4j/launch4jc.exe"
+elif [ -s /usr/share/launch4j/launch4j.jar ]; then
+    # as described above
+    LAUNCH4J="java -jar /usr/share/launch4j/launch4j.jar"
+else
+    # launch4j installed locally under this nsis folder
+    LAUNCH4J="java -jar ./launch4j/launch4j.jar"
 fi
+echo Using launch4j: $LAUNCH4J
 
+# trying to find makensis
+if [ -s /cygdrive/c/Programme/nsis/makensis.exe ]; then
+    # Windows under cygwin
+    MAKENSIS="/cygdrive/c/Programme/nsis/makensis.exe"
+else
+    # UNIX like
+    MAKENSIS=makensis
+fi
+echo Using NSIS: $MAKENSIS
 
 svncorerevision=`svnversion ../core`
 svnpluginsrevision=`svnversion ../plugins`

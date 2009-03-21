@@ -13,8 +13,17 @@
 # and unpack it to /usr/share/launch4j
 
 ## settings ##
-LAUNCH4J="/cygdrive/c/Programme/Launch4j/launch4jc.exe"
-MAKENSIS="/cygdrive/c/Programme/nsis/makensis.exe"
+
+if [ -s /cygdrive/c/Programme/Launch4j/launch4jc.exe ]; then
+	echo Using paths: "C:\Programme\..."
+	LAUNCH4J="/cygdrive/c/Programme/Launch4j/launch4jc.exe"
+	MAKENSIS="/cygdrive/c/Programme/nsis/makensis.exe"
+elif [ -s josm.exe ]; then
+	echo Using UNIX-like paths
+	LAUNCH4J="java -jar /usr/share/launch4j/launch4j.jar"
+	MAKENSIS=makensis
+fi
+
 
 svncorerevision=`svnversion ../core`
 svnpluginsrevision=`svnversion ../plugins`
@@ -25,8 +34,18 @@ export VERSION=custom-${svnrevision}
 
 echo "Creating Windows Installer for josm-$VERSION"
 
-##################################################################
-### Build the Complete josm + Plugin Stuff
+echo 
+echo "##################################################################"
+echo "### Download and unzip the webkit stuff"
+wget -nc http://josm.openstreetmap.de/download/windows/webkit-image.zip
+mkdir -p webkit-image
+cd webkit-image
+unzip -o ../webkit-image.zip
+cd ..
+
+echo 
+echo "##################################################################"
+echo "### Build the Complete josm + Plugin Stuff"
 if true; then
     (
 	echo "Build the Complete josm Stuff"

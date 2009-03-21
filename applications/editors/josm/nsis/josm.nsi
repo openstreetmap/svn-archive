@@ -309,8 +309,6 @@ ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "propertiesdialog.visible" "tru
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osm-server.url" "http://www.openstreetmap.org/api"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "laf" "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
 
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "validator.visible" "true"
-
 SectionEnd
 
 
@@ -322,6 +320,22 @@ SectionIn 1 2
 SetShellVarContext current
 SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\AgPifoJ.jar"
+SectionEnd
+
+Section $(JOSM_SEC_OPENSTREETBUGS_PLUGIN) SecOpenStreetBugsPlugin
+;-------------------------------------------
+SectionIn 1 2
+SetShellVarContext current
+SetOutPath $APPDATA\JOSM\plugins
+File "..\dist\openstreetbugs.jar"
+SectionEnd
+
+Section $(JOSM_SEC_REMOTECONTROL_PLUGIN) SecRemoteControlPlugin
+;-------------------------------------------
+SectionIn 1 2
+SetShellVarContext current
+SetOutPath $APPDATA\JOSM\plugins
+File "..\dist\remotecontrol.jar"
 SectionEnd
 
 Section $(JOSM_SEC_VALIDATOR_PLUGIN) SecValidatorPlugin
@@ -399,7 +413,7 @@ SectionIn 1 2
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 !include LogicLib.nsh
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "AgPifoJ;validator;wmsplugin"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "AgPifoJ;openstreetbugs;remotecontrol;validator;wmsplugin"
 SectionEnd
 
 
@@ -460,6 +474,10 @@ SectionIn 2
 SetShellVarContext current
 Delete "$APPDATA\JOSM\plugins\agpifoj\*.*"
 RMDir "$APPDATA\JOSM\plugins\agpifoj"
+Delete "$APPDATA\JOSM\plugins\openstreetbugs\*.*"
+RMDir "$APPDATA\JOSM\plugins\openstreetbugs"
+Delete "$APPDATA\JOSM\plugins\remotecontrol\*.*"
+RMDir "$APPDATA\JOSM\plugins\remotecontrol"
 Delete "$APPDATA\JOSM\plugins\validator\*.*"
 RMDir "$APPDATA\JOSM\plugins\validator"
 Delete "$APPDATA\JOSM\plugins\wmsplugin\*.*"
@@ -491,6 +509,8 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} $(JOSM_SECDESC_JOSM)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} $(JOSM_SECDESC_PLUGINS_GROUP)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecAgPifoJPlugin} $(JOSM_SECDESC_AGPIFOJ_PLUGIN)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecOpenStreetBugsPlugin} $(JOSM_SECDESC_OPENSTREETBUGS_PLUGIN)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecRemoteControlPlugin} $(JOSM_SECDESC_REMOTECONTROL_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} $(JOSM_SECDESC_VALIDATOR_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} $(JOSM_SECDESC_WMS_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} $(JOSM_SECDESC_STARTMENU)

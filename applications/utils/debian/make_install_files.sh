@@ -40,23 +40,25 @@ package_name=openstreetmap
 dst_path=${dst_path%/}
 platform=`uname -m`
 
-perl_path="$dst_path/usr/share/perl5"
-bin_path="$dst_path/usr/bin"
-lib_path="$dst_path/usr/lib"
-share_path="$dst_path/usr/share/$package_name"
-man1_path="$dst_path/usr/man/man1"
-mkdir -p "$perl_path"
-mkdir -p "$bin_path"
-mkdir -p "$lib_path"
-mkdir -p "$share_path"
-mkdir -p "$man1_path"
-
+perl_path="usr/share/perl5"
+bin_path="usr/bin"
+lib_path="usr/lib"
+share_path="usr/share/$package_name"
+man1_path="usr/man/man1"
+for sub_package in '' -lib -export -filter -import ; do 
+    mkdir -p "$dst_path$sub_package/$perl_path"
+    mkdir -p "$dst_path$sub_package/$bin_path"
+    mkdir -p "$dst_path$sub_package/$lib_path"
+    mkdir -p "$dst_path$sub_package/$share_path"
+    mkdir -p "$dst_path$sub_package/$man1_path"
+done
 
 # ------------------------------------------------------------------
 # Utilities written in C
 
 # ------------------------------------------------------------------
 # Various libs
+sub_package="-lib"
 for lib in ccoord libosm libimg  ; do 
     allow_error=false
     if [ "$platform" == "x86_64" ] ; then
@@ -94,7 +96,7 @@ for lib in ccoord libosm libimg  ; do
 	echo "${RED}!!!!!! ERROR compiling $lib no Resulting '$result_lib'${NORMAL}"
 	exit -1
     fi
-    cp "$result_lib" "../utils/${lib_path}" || exit -1
+    cp "$result_lib" "../utils/$dst_path$sub_package/${lib_path}" || exit -1
 done
 cd ../utils/
 
@@ -140,6 +142,7 @@ cd ../utils/
 
 # ------------------------------------------------------------------
 # Importer
+sub_package="-import"
 for import in `ls import/*/Makefile| sed 's,/Makefile,,;s,import/,,'` ; do 
     allow_error=false
     if echo $import | grep -q  and_import ; then
@@ -166,13 +169,14 @@ for import in `ls import/*/Makefile| sed 's,/Makefile,,;s,import/,,'` ; do
 	exit -1
     fi
     cd ../..
-    cp import/$import/2AND  ${bin_path}/osm2AND
+    cp import/$import/2AND  $dst_path$sub_package/${bin_path}/osm2AND
 done
 
 # ------------------------------------------------------------------
 # Filter
 # As soon it compiles here on my debian machine
 # i will remove the excludes
+sub_package="-filter"
 for filter in `ls filter/*/Makefile| sed 's,/Makefile,,;s,filter/,,'` ; do 
     allow_error=false
     if echo $filter | grep -q wayclean ; then
@@ -199,13 +203,14 @@ for filter in `ls filter/*/Makefile| sed 's,/Makefile,,;s,filter/,,'` ; do
 	exit -1
     fi
     cd ../..
-    cp filter/${filter}/${filter} ${bin_path}
+    cp filter/${filter}/${filter} $dst_path$sub_package/${bin_path}
 done
 
 # ------------------------------------------------------------------
 # Export
 # As soon it compiles here on my debian machine
 # i will remove the excludes
+sub_package="-export"
 for export in `ls export/*/Makefile  export/*/CMakeLists.txt| sed 's,/Makefile,,;s,/CMakeLists.txt,,;s,export/,,'` ; do 
     allow_error=false
     if echo $export | grep -q -e osmgarminmap -e osm2shp -e osmgoogleearth; then
@@ -255,11 +260,11 @@ for export in `ls export/*/Makefile  export/*/CMakeLists.txt| sed 's,/Makefile,,
 	cd ..
     fi
     cd ../..
-    cp export/${export}/$build_dir/${export} ${bin_path}
+    cp export/${export}/$build_dir/${export} $dst_path$sub_package/${bin_path}
 
     case ${export} in
 	osm2pgsql) 
-	    cp export/osm2pgsql/default.style ${share_path}/default.style
+	    cp export/osm2pgsql/default.style $dst_path$sub_package/${share_path}/default.style
 	    if [ "$?" -ne "0" ] ; then
 		echo "${RED}!!!!!! ERROR osm2pgsql/default.style no copied ${NORMAL}"
 		exit -1
@@ -269,6 +274,7 @@ for export in `ls export/*/Makefile  export/*/CMakeLists.txt| sed 's,/Makefile,,
 done
 
 # ------------------------------------------------------------------
+sub_package=
 if true ; then
     echo "${BLUE}----------> applications/utils/color255${NORMAL}"
     cd color255 || exit -1
@@ -285,7 +291,7 @@ if true ; then
 	exit -1
     fi
     cd ..
-    cp color255/color255 ${bin_path}
+    cp color255/color255 $dst_path$sub_package/${bin_path}
 fi
 
 
@@ -306,13 +312,13 @@ if true; then
 	exit -1
     fi
     cd ../..
-    cp planet.osm/C/UTF8Sanitizer ${bin_path} || exit -1 
+    cp planet.osm/C/UTF8Sanitizer $dst_path$sub_package/${bin_path} || exit -1 
 fi
 
 # ------------------------------------------------------------------
 echo "${BLUE}----------> applications/utils/perl_lib Copy Perl libraries${NORMAL}${NORMAL}"
 find perl_lib/ -name "*.pm" | while read src_fn ; do 
-    dst_fn="$perl_path/${src_fn#perl_lib/}"
+    dst_fn="$dst_path$sub_package/$perl_path/${src_fn#perl_lib/}"
     dst_dir=`dirname "$dst_fn"`
     test -d "$dst_dir" || mkdir -p "$dst_dir"
     cp "$src_fn" "$dst_fn"
@@ -320,13 +326,13 @@ done
 
 echo "${BLUE}----------> applications/utils Copy Perl Binaries${NORMAL}${NORMAL}"
 find ./ -name "*.pl" | while read src_fn ; do 
-    dst_fn="$bin_path/${src_fn##*/}"
+    dst_fn="$dst_path$sub_package/$bin_path/${src_fn##*/}"
     filename="`basename $src_fn`"
     dst_fn="${dst_fn/.pl}"
     if ! echo $dst_fn | grep -e osm ; then
 	dst_fn="`dirname ${dst_fn}`/osm-`basename ${dst_fn}`"
     fi
-    man1_fn="$man1_path/${filename%.pl}.1"
+    man1_fn="$dst_path$sub_package/$man1_path/${filename%.pl}.1"
     if head -1 "$src_fn" | grep -q -e '^#! */usr/bin/perl' ; then
 	cp "$src_fn" "$dst_fn"
     else
@@ -357,7 +363,7 @@ done
 # --------------------------------------------
 echo "${BLUE}----------> applications/utils Copy Python Binaries${NORMAL}"
 find ./ -name "*.py" | while read src_fn ; do 
-    dst_fn="$bin_path/${src_fn##*/}"
+    dst_fn="$dst_path$sub_package/$bin_path/${src_fn##*/}"
     dst_fn="${dst_fn/.py}"
     if head -1 "$src_fn" | grep -q -e '^#! */usr/bin/python' -e '^#!/opt/python-2_5/bin/python' -e '^#!/usr/bin/env python'; then
 	cp "$src_fn" "$dst_fn"
@@ -377,9 +383,10 @@ done
 # Mapnik installation tool
 #########################################################
 echo "${BLUE}----------> Mapnik${NORMAL}"
-cp export/osm2pgsql/mapnik-osm-updater.sh "$bin_path"
-cp export/osm2pgsql/900913.sql "$bin_path"
-cp export/osm2pgsql/default.style  "$bin_path"
+sub_package="-export"
+cp export/osm2pgsql/mapnik-osm-updater.sh "$dst_path$sub_package/$bin_path"
+cp export/osm2pgsql/900913.sql "$dst_path$sub_package/$bin_path"
+cp export/osm2pgsql/default.style  "$dst_path$sub_package/$bin_path"
 
 
 ##################################################################

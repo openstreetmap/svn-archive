@@ -30,8 +30,7 @@ SVG::Rasterize -- Rasterizes an SVG file to PNG
 
     $rasterizer->engine('Inkscape'); # Set preferred rasterizer engine
 
-    $rasterizer->convert($infile, $outfile)
-        or die "Couldn't rasterize $infile into $outfile: ".$rasterizer->error;
+    $rasterizer->convert($infile, $outfile);
 
 =head1 DESCRIPTION
 

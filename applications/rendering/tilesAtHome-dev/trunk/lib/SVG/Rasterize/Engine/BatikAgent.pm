@@ -81,9 +81,9 @@ sub convert {
 
     my %area;
     if( $params{area} ){
-        %area = $params{area}->get_box_upperleft();
-        $area{width} = $params{area}->get_box_width();
-        $area{height} = $params{area}->get_box_height();
+        %area = %{ $params{area} }; # Make a copy
+        $area{width} = abs($area{left} - $area{right});
+        $area{height} = abs($area{top} - $area{bottom});
     }
 
     my @cmd = ('svg2png');
@@ -95,10 +95,17 @@ sub convert {
     push(@cmd, 'destination='.$params{outfile});
     push(@cmd, 'source='.$params{infile});
 
+    print STDERR __PACKAGE__.": About to send:\n" . join("\n", @cmd) . "\n" if $self->rasterizer->debug;
+
     my $reply = $self->send_command( join("\n", @cmd) . "\n\n" );
     my ($result) = $reply =~ /^(\w+)/;
     unless( $result eq 'OK' ){
         throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime("Batik agent returned non-OK result \"$result\"", { cmd => \@cmd, stdout => $reply } );
+    }
+
+    if( $self->rasterizer->debug() ){
+        print STDERR __PACKAGE__."Returned result '$result'.\n";
+        print STDERR __PACKAGE__."BatikAgent reply:\n$self->{stdout}\n";
     }
 
     try {

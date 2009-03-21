@@ -39,7 +39,6 @@ use Server;
 use Request;
 use Upload;
 use SVG::Rasterize;
-use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
 use POSIX;
 
@@ -137,7 +136,7 @@ if ($LoopMode) {
 
 # Setup SVG::Rasterize
 if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
-    $SVG::Rasterize::object = SVG::Rasterize->new();
+    $SVG::Rasterize::object = SVG::Rasterize->new({ debug => $Config->get("DEBUG") });
     if( $Config->get("Rasterizer") ){
         $SVG::Rasterize::object->engine( $Config->get("Rasterizer"));
     }
@@ -1016,26 +1015,6 @@ sub xml2svg
         statusMessage("Bezier Curve hinting disabled.",0,3);
     }
     return 1;
-}
-
-
-#-----------------------------------------------------------------------------
-# Get the width and height (in SVG units, must be pixels) of an SVG file
-#-----------------------------------------------------------------------------
-sub getSize($)
-{
-    my $SVG = shift();
-    open(my $fpSvg,"<",$SVG);
-    while(my $Line = <$fpSvg>)
-    {
-        if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/)
-        {
-            close $fpSvg;
-            return(($1,$2,1));
-        }
-    }
-    close $fpSvg;
-    return((0,0,0));
 }
 
 #-----------------------------------------------------------------------------

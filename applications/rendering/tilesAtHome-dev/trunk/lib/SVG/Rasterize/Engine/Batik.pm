@@ -275,9 +275,9 @@ sub convert {
 
     my %area;
     if( $params{area} ){
-        %area = $params{area}->get_box_upperleft();
-        $area{width} = $params{area}->get_box_width();
-        $area{height} = $params{area}->get_box_height();
+        %area = %{ $params{area} }; # Make a copy
+        $area{width} = abs($area{left} - $area{right});
+        $area{height} = abs($area{top} - $area{bottom});
     }
 
     if( $self->jar_available() ){
@@ -308,9 +308,8 @@ sub convert {
         throw SVG::Rasterize::Engine::Batik::Error::Prerequisite('No batik available');
     }
 
-    my $stdout; my $stderr;
+    print STDERR __PACKAGE__.": About to run: " . join(' ', @cmd) . "\n" if $self->rasterizer->debug;
 
-    #DEBUG:warn 'about to run '.join(' ', @cmd);
     my $result;
     try {
         $result = run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} )
@@ -318,10 +317,12 @@ sub convert {
         my $e = shift;
         throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\", run could not execute the command: $e");
     };
-    #DEBUG
-    #warn "status: $result\n\$!: $!\n\$?: $?";
-    #warn "stdout: ".$stdout;
-    #warn "stderr: ".$stderr;
+
+    if( $self->rasterizer->debug() ){
+        print STDERR __PACKAGE__."Returned code $result.\n";
+        print STDERR __PACKAGE__."Batik STDOUT:\n$self->{stdout}\n";
+        print STDERR __PACKAGE__."Batik STDERR:\n$self->{stdout}\n";
+    }
 
     if( ! $result || $self->{stderr} =~ /Error/ ){
         my $error;

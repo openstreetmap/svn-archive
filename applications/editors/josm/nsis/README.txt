@@ -54,11 +54,7 @@ create the actual josm-setup-latest.exe.
 known issues
 ------------
 - absolute paths in josm-setup.sh
-- bookmarks are of ulfl's personal interest (should be replaced e.g. by some "well known" places)
-- version number fixed to latest (JOSM and Plugins have different SVN versions, some plugins not even in SVN)
-- localisation/internationalisation settings (currently only english supported)
 - josm should support "global settings" instead of only the personal profile
-- josm should use some defaults already instead of the installer ones
 - some way of automatic installer generation on the server (e.g. nightly build)?
 - install all josm plugins by default and only enable them according to user wishes?
 

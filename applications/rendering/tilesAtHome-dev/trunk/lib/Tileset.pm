@@ -1204,20 +1204,9 @@ sub RenderSVG
     my $png_width = $tile_size * (2 ** ($zoom - $Req->Z));
     my $png_height = $png_width / $stripes;
 
-    # SVG excerpt in SVG units
-    my ($height, $width, $valid) = ::getSize(File::Spec->join($self->{JobDir}, "$layer-z$zoom.svg"));
-    my $stripe_height = $height / $stripes;
-
-    for (my $stripe = 0; $stripe <= $stripes - 1; $stripe++) {
+    for (my $stripe = 0; $stripe < $stripes; $stripe++) {
         my $png_file = File::Spec->join($self->{JobDir},"$layer-z$zoom-s$stripe.png");
 
-        # Create an object describing what area of the svg we want
-        my $box = SVG::Rasterize::CoordinateBox->new
-            ({
-                space => { top => 0, bottom => $height, left => 0, right => $width },
-                box => { left => 0, right => $width, top => ($stripe_height * $stripe), bottom => ($stripe_height * ($stripe+1)) }
-             });
-        
         # Make a variable that points to the renderer to save lots of typing...
         my $rasterize = $SVG::Rasterize::object;
         my $engine = $rasterize->engine();
@@ -1227,8 +1216,15 @@ sub RenderSVG
             outfile => $png_file,
             width => $png_width,
             height => $png_height,
-            area => $box
-            );
+            area => {
+                type => 'relative',
+                left => 0,
+                right => 1,
+                top => $stripe / $stripes,
+                bottom => ($stripe + 1) / $stripes
+            }
+        );
+
         if( ref($engine) =~ /batik/i && $Config->get('BatikJVMSize') ){
             $rasterize_params{heapsize} = $Config->get('BatikJVMSize');
         }

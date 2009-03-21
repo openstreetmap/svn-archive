@@ -259,7 +259,7 @@ Section "-Required"
 ; Install for every user
 ;
 SectionIn 1 2 RO
-SetShellVarContext all
+SetShellVarContext current
 
 SetOutPath $INSTDIR
 
@@ -318,7 +318,7 @@ SectionGroup $(JOSM_SEC_PLUGINS_GROUP) SecPluginsGroup
 Section $(JOSM_SEC_WMS_PLUGIN) SecWMSPlugin
 ;-------------------------------------------
 SectionIn 1 2
-SetShellVarContext all
+SetShellVarContext current
 SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\wmsplugin.jar"
 SetOutPath $INSTDIR\imageformats
@@ -335,7 +335,7 @@ SectionEnd
 Section $(JOSM_SEC_VALIDATOR_PLUGIN) SecValidatorPlugin
 ;-------------------------------------------
 SectionIn 1 2
-SetShellVarContext all
+SetShellVarContext current
 SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\validator.jar"
 SectionEnd
@@ -401,7 +401,7 @@ Section "un.$(un.JOSM_SEC_UNINSTALL)" un.SecUinstall
 ; UnInstall for every user
 ;
 SectionIn 1 2
-SetShellVarContext all
+SetShellVarContext current
 
 Delete "$INSTDIR\josm.exe"
 IfErrors 0 NoJOSMErrorMsg
@@ -417,11 +417,6 @@ Delete "$INSTDIR\QtNetwork4.dll"
 Delete "$INSTDIR\QtWebKit4.dll"
 Delete "$INSTDIR\webkit-image.exe"
 Delete "$INSTDIR\uninstall.exe"
-Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
-Delete "$APPDATA\JOSM\plugins\namefinder.jar"
-Delete "$APPDATA\JOSM\plugins\validator.jar"
-RMDir "$APPDATA\JOSM\plugins"
-RMDir "$APPDATA\JOSM"
 
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM"
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\josm.exe"
@@ -454,21 +449,16 @@ Section /o "un.$(un.JOSM_SEC_PERSONAL_SETTINGS)" un.SecPersonalSettings
 ;-------------------------------------------
 SectionIn 2
 SetShellVarContext current
+Delete "$APPDATA\JOSM\plugins\wmsplugin\*.*"
+RMDir "$APPDATA\JOSM\plugins\wmsplugin"
+Delete "$APPDATA\JOSM\plugins\validator\*.*"
+RMDir "$APPDATA\JOSM\plugins\validator"
+Delete "$APPDATA\JOSM\plugins\*.*"
+RMDir "$APPDATA\JOSM\plugins"
+
+Delete "$APPDATA\JOSM\motd.html"
 Delete "$APPDATA\JOSM\preferences"
 Delete "$APPDATA\JOSM\bookmarks"
-RMDir "$APPDATA\JOSM"
-SectionEnd
-
-Section /o "un.$(un.JOSM_SEC_PLUGINS)"un.SecPlugins
-;-------------------------------------------
-SectionIn 2
-SetShellVarContext current
-Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
-Delete "$APPDATA\JOSM\plugins\namefinder.jar"
-Delete "$APPDATA\JOSM\plugins\validator\*.*"
-Delete "$APPDATA\JOSM\plugins\validator.jar"
-RMDir "$APPDATA\JOSM\plugins\validator"
-RMDir "$APPDATA\JOSM\plugins"
 RMDir "$APPDATA\JOSM"
 SectionEnd
 
@@ -502,7 +492,6 @@ SectionEnd
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${un.SecUinstall} $(un.JOSM_SECDESC_UNINSTALL)
   !insertmacro MUI_DESCRIPTION_TEXT ${un.SecPersonalSettings} $(un.JOSM_SECDESC_PERSONAL_SETTINGS)
-  !insertmacro MUI_DESCRIPTION_TEXT ${un.SecPlugins} $(un.JOSM_SECDESC_PLUGINS)
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_END
 
 ; ============================================================================

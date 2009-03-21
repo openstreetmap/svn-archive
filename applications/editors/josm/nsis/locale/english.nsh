@@ -53,6 +53,5 @@
 
 
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_SECDESC_UNINSTALL "Uninstall JOSM."
-!insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_SECDESC_PERSONAL_SETTINGS  "Uninstall personal settings like your preferences and bookmarks from your profile: $PROFILE."
-!insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_SECDESC_PLUGINS  "Uninstall all plugins."
+!insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_SECDESC_PERSONAL_SETTINGS  "Uninstall personal settings from your profile: $PROFILE."
 

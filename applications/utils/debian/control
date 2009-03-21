@@ -31,9 +31,98 @@ Depends: perl,
 	gpsbabel,
 	libshp1
 Recommends: gpsdrive,
+	mapnik,
+	openstreetmap-utils-import,
+	openstreetmap-utils-export,
+	openstreetmap-utils-filter,
+	openstreetmap-utils-lib
+Conflicts: gpsdrive-scripts,
+	osm2pgsql
+Description: OpenStreetmap Utilsopenstreetmap-osmosis
+ This Package contains some of the most usefull Utils
+ for working with OpenStreetMap
+
+
+Package: openstreetmap-utils-import
+Architecture: any
+Depends: perl,
+	python,
+	libshp1,
+	libmagick9 | libmagick10,
+	libfile-slurp-perl,
+	libdate-manip-perl,
+	postgresql-client,
+	java6-runtime|sun-java6-jre|sun-java6-jdk|openjdk-6-jre|openjdk-6-jdk|ia32-sun-java6-bin,
+	gpsbabel,
+	libshp1
+Recommends: gpsdrive,
 	mapnik
 Conflicts: gpsdrive-scripts,
 	osm2pgsql
 Description: OpenStreetmap Utils
  This Package contains some of the most usefull Utils
  for working with OpenStreetMap
+
+
+Package: openstreetmap-utils-filter
+Architecture: any
+Depends: perl,
+	python,
+	libshp1,
+	libmagick9 | libmagick10,
+	libfile-slurp-perl,
+	libdate-manip-perl,
+	postgresql-client,
+	java6-runtime|sun-java6-jre|sun-java6-jdk|openjdk-6-jre|openjdk-6-jdk|ia32-sun-java6-bin,
+	gpsbabel,
+	libshp1
+Recommends: gpsdrive,
+	mapnik
+Conflicts: gpsdrive-scripts,
+	osm2pgsql
+Description: OpenStreetmap Utils
+ This Package contains some of the most usefull Utils
+ for working with OpenStreetMap
+
+
+Package: openstreetmap-utils-export
+Architecture: any
+Depends: perl,
+	python,
+	libshp1,
+	libmagick9 | libmagick10,
+	libfile-slurp-perl,
+	libdate-manip-perl,
+	postgresql-client,
+	java6-runtime|sun-java6-jre|sun-java6-jdk|openjdk-6-jre|openjdk-6-jdk|ia32-sun-java6-bin,
+	gpsbabel,
+	libshp1
+Recommends: gpsdrive,
+	mapnik
+Conflicts: gpsdrive-scripts,
+	osm2pgsql
+Description: OpenStreetmap Utils
+ This Package contains some of the most usefull Utils
+ for working with OpenStreetMap
+
+
+Package: openstreetmap-utils-lib
+Architecture: any
+Depends: perl,
+	python,
+	libshp1,
+	libmagick9 | libmagick10,
+	libfile-slurp-perl,
+	libdate-manip-perl,
+	postgresql-client,
+	java6-runtime|sun-java6-jre|sun-java6-jdk|openjdk-6-jre|openjdk-6-jdk|ia32-sun-java6-bin,
+	gpsbabel,
+	libshp1
+Recommends: gpsdrive,
+	mapnik
+Conflicts: gpsdrive-scripts,
+	osm2pgsql
+Description: OpenStreetmap Utils
+ This Package contains some of the most usefull Utils
+ for working with OpenStreetMap
+

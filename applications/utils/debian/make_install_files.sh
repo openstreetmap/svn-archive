@@ -35,6 +35,9 @@ BLINK="${ESC}[05m"
 REVERSE="${ESC}[07m"
 NORMAL="${ESC}[0m"
 
+# -j4 is for now hardcoded until i find out how to set this through debuild
+MAKEFLAGS="$MAKEFLAGS -j4"
+
 echo "copying Files to '$dst_path'"
 package_name=openstreetmap
 dst_path=${dst_path%/}
@@ -75,9 +78,9 @@ for lib in ccoord libosm libimg  ; do
 	./configure >>build.log 2>>build.err
     fi
 
-    make clean >>build.log 2>>build.err
+    make ${MAKEFLAGS} clean >>build.log 2>>build.err
 
-    make >>build.log 2>>build.err
+    make ${MAKEFLAGS} >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	if $allow_error ; then
 	    echo "Ignored Errors in 'applications/lib/$lib' because it does not compile on my debian $platform machine"
@@ -111,7 +114,7 @@ for lib in Geo-OSM-MapFeatures ; do
     fi
 
     if [ -S Makefile ] ; then
-	make clean >>build.log 2>>build.err
+	make ${MAKEFLAGS} clean >>build.log 2>>build.err
     fi
 
     if [ -s "Makefile.PL" ] ; then
@@ -124,7 +127,7 @@ for lib in Geo-OSM-MapFeatures ; do
 
     fi
 
-    make >>build.log 2>>build.err
+    make ${MAKEFLAGS} >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	echo "${RED}!!!!!! ERROR compiling $lib ${NORMAL}"
 	echo "Logfile is at `pwd`/build.log build.err"
@@ -157,8 +160,8 @@ for import in `ls import/*/Makefile| sed 's,/Makefile,,;s,import/,,'` ; do
 	./configure >>build.log 2>>build.err
     fi
 
-    make clean >>build.log 2>>build.err
-    make >>build.log 2>>build.err
+    make ${MAKEFLAGS} clean >>build.log 2>>build.err
+    make ${MAKEFLAGS} >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	if $allow_error ; then
 	    echo "Ignored 'applications/import/$import' because it does not compile on my debian machine"
@@ -191,8 +194,8 @@ for filter in `ls filter/*/Makefile| sed 's,/Makefile,,;s,filter/,,'` ; do
 	./configure >>build.log 2>>build.err
     fi
 
-    make clean >>build.log 2>>build.err
-    make >>build.log 2>>build.err
+    make ${MAKEFLAGS} clean >>build.log 2>>build.err
+    make ${MAKEFLAGS} >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	if $allow_error ; then
 	    echo "Ignored 'applications/filter/$filter' because it does not compile on my debian machine"
@@ -242,8 +245,8 @@ for export in `ls export/*/Makefile  export/*/CMakeLists.txt| sed 's,/Makefile,,
 	custom_makefile=''
     fi
 
-    make $custom_makefile clean >>build.log 2>>build.err
-    make $custom_makefile >>build.log 2>>build.err
+    make ${MAKEFLAGS}  $custom_makefile clean >>build.log 2>>build.err
+    make ${MAKEFLAGS} $custom_makefile >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	if $allow_error ; then
 	    echo "Ignored 'applications/export/$export' because it does not compile on my debian machine"
@@ -284,8 +287,8 @@ if true ; then
 	./configure >>build.log 2>>build.err
     fi
 
-    make clean >>build.log 2>>build.err
-    make >>build.log 2>>build.err
+    make ${MAKEFLAGS} clean >>build.log 2>>build.err
+    make ${MAKEFLAGS} >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	echo "${RED}!!!!!! ERROR compiling color255 ${NORMAL}"
 	exit -1
@@ -305,8 +308,8 @@ if true; then
 	./configure >>build.log 2>>build.err
     fi
 
-    make clean >>build.log 2>>build.err
-    make >>build.log 2>>build.err
+    make ${MAKEFLAGS} clean >>build.log 2>>build.err
+    make ${MAKEFLAGS} >>build.log 2>>build.err
     if [ "$?" -ne "0" ] ; then
 	echo "${RED}!!!!!! ERROR compiling color255 ${NORMAL}"
 	exit -1

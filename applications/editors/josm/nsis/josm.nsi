@@ -3,10 +3,7 @@
 ;
 
 ; Set the compression mechanism first.
-; As of NSIS 2.07, solid compression which makes installer about 1MB smaller
-; is no longer the default, so use the /SOLID switch.
-; This unfortunately is unknown to NSIS prior to 2.07 and creates an error.
-; So if you get an error here, please update to at least NSIS 2.07!
+; If you get an error here, please update to at least NSIS 2.07!
 SetCompressor /SOLID lzma
 
 ; work with JAVA ini strings
@@ -41,7 +38,6 @@ XPStyle on
 ; ============================================================================
 
 !include "MUI.nsh"
-;!addplugindir ".\Plugins"
 
 ; Icon of installer and uninstaller
 !define MUI_ICON "logo.ico"
@@ -52,22 +48,9 @@ XPStyle on
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
 !define MUI_WELCOMEFINISHPAGE_BITMAP "josm-nsis-brand.bmp"
 !define MUI_WELCOMEPAGE_TEXT $(JOSM_WELCOME_TEXT) 
-;!define MUI_FINISHPAGE_LINK "Install WinPcap to be able to capture packets from a network!"
-;!define MUI_FINISHPAGE_LINK_LOCATION "http://www.winpcap.org"
 
-; NSIS shows Readme files by opening the Readme file with the default application for
-; the file's extension. "README.win32" won't work in most cases, because extension "win32"
-; is usually not associated with an appropriate text editor. We should use extension "txt"
-; for a text file or "html" for an html README file.
-;!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\NEWS.txt"
-;!define MUI_FINISHPAGE_SHOWREADME_TEXT "Show News"
-;!define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
 !define MUI_FINISHPAGE_RUN "$INSTDIR\josm.exe"
-;!define MUI_FINISHPAGE_RUN_NOTCHECKED
 
-
-
-;!define MUI_PAGE_CUSTOMFUNCTION_SHOW myShowCallback
 
 ; ============================================================================
 ; MUI Pages
@@ -113,7 +96,7 @@ XPStyle on
   !insertmacro JOSM_MACRO_INCLUDE_LANGFILE "ENGLISH" "locale\english.nsh"
   !insertmacro JOSM_MACRO_INCLUDE_LANGFILE "GERMAN" "locale\german.nsh"
 
-; Uninstall stuff (NSIS 2.08: "\r\n" don't work here)
+; Uninstall stuff
 !define MUI_UNCONFIRMPAGE_TEXT_TOP ${un.JOSM_UNCONFIRMPAGE_TEXT_TOP}
 
 ; ============================================================================
@@ -132,7 +115,6 @@ InstType "un.$(un.JOSM_FULL_UNINSTALL)"
   ;Things that need to be extracted on first (keep these lines before any File command!)
   ;Only useful for BZIP2 compression
 
-;  ReserveFile "AdditionalTasksPage.ini"
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
 ; ============================================================================
@@ -169,9 +151,6 @@ InstType "un.$(un.JOSM_FULL_UNINSTALL)"
 ; Command Line
 ; ============================================================================
 !include "FileFunc.nsh"
-
-;!insertmacro GetParameters
-;!insertmacro GetOptions
 
 ; ============================================================================
 ; Directory selection page configuration
@@ -269,11 +248,6 @@ Function un.onInit
   
 FunctionEnd
 
-;Function DisplayAdditionalTasksPage
-;  !insertmacro MUI_HEADER_TEXT "Select Additional Tasks" "Which additional tasks should be done?"
-;  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "AdditionalTasksPage.ini"
-;FunctionEnd
-
 ; ============================================================================
 ; Installation execution commands
 ; ============================================================================
@@ -341,28 +315,15 @@ SectionEnd
 
 SectionGroup $(JOSM_SEC_PLUGINS_GROUP) SecPluginsGroup
 
-;Section "osmarender" SecOsmarenderPlugin
-; osmarender needs Firefox (which isn't available on all machines)
-; and often provides clipped SVG graphics - therefore it's ommited by default
-;-------------------------------------------
-;SectionIn 1 2
-;SetShellVarContext all
-;SetOutPath $APPDATA\JOSM\plugins
-;File "downloads\osmarender.jar"
-; XXX - should be done inside the plugin and not here!
-;SetShellVarContext current
-;${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osmarender.firefox" "$PROGRAMFILES\Mozilla Firefox\firefox.exe"
-;SectionEnd
-
 Section $(JOSM_SEC_WMS_PLUGIN) SecWMSPlugin
 ;-------------------------------------------
 SectionIn 1 2
 SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\wmsplugin.jar"
-SetOutPath $INSTDIR\webkit-image\imageformats
+SetOutPath $INSTDIR\imageformats
 File "webkit-image\imageformats\qjpeg4.dll"
-SetOutPath $INSTDIR\webkit-image
+SetOutPath $INSTDIR
 File "webkit-image\mingwm10.dll"
 File "webkit-image\QtCore4.dll"
 File "webkit-image\QtGui4.dll"
@@ -384,55 +345,30 @@ SectionGroupEnd	; "Plugins"
 Section $(JOSM_SEC_STARTMENU) SecStartMenu
 ;-------------------------------------------
 SectionIn 1 2
-; Create start menu entries (depending on additional tasks page)
-;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 2" "State"
-;StrCmp $0 "0" SecRequired_skip_StartMenu
 ; To qoute "http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwue/html/ch11d.asp":
 ; "Do not include Readme, Help, or Uninstall entries on the Programs menu."
 CreateShortCut "$SMPROGRAMS\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
-;SecRequired_skip_StartMenu:
 SectionEnd
 
 Section $(JOSM_SEC_DESKTOP_ICON) SecDesktopIcon
 ;-------------------------------------------
 ; SectionIn 1 2
-; is command line option "/desktopicon" set?
-;${GetParameters} $R0
-;${GetOptions} $R0 "/desktopicon=" $R1
-;StrCmp $R1 "no" SecRequired_skip_DesktopIcon
-;StrCmp $R1 "yes" SecRequired_install_DesktopIcon
-
-; Create desktop icon (depending on additional tasks page and command line option)
-;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 3" "State"
-;StrCmp $0 "0" SecRequired_skip_DesktopIcon
-;SecRequired_install_DesktopIcon:
+; Create desktop icon
+; Desktop icon for a program should not be installed as default!
 CreateShortCut "$DESKTOP\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
-;SecRequired_skip_DesktopIcon:
 SectionEnd
 
 Section $(JOSM_SEC_QUICKLAUNCH_ICON) SecQuickLaunchIcon
 ;-------------------------------------------
 SectionIn 1 2
-; is command line option "/quicklaunchicon" set?
-;${GetParameters} $R0
-;${GetOptions} $R0 "/quicklaunchicon=" $R1
-;StrCmp $R1 "no" SecRequired_skip_QuickLaunchIcon
-;StrCmp $R1 "yes" SecRequired_install_QuickLaunchIcon
-
-; Create quick launch icon (depending on additional tasks page and command line option)
-;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 4" "State"
-;StrCmp $0 "0" SecRequired_skip_QuickLaunchIcon
-;SecRequired_install_QuickLaunchIcon:
+; Create quick launch icon
 CreateShortCut "$QUICKLAUNCH\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
-;SecRequired_skip_QuickLaunchIcon:
 SectionEnd
 
 Section $(JOSM_SEC_FILE_EXTENSIONS) SecFileExtensions
 ;-------------------------------------------
 SectionIn 1 2
-; Create File Extensions (depending on additional tasks page)
-;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 6" "State"
-;StrCmp $0 "0" SecRequired_skip_FileExtensions
+; Create File Extensions
 WriteRegStr HKCR ${OSM_ASSOC} "" "OpenStreetMap data"
 WriteRegStr HKCR "${OSM_ASSOC}\Shell\open\command" "" '"$INSTDIR\josm.exe" "%1"'
 WriteRegStr HKCR "${OSM_ASSOC}\DefaultIcon" "" '"$INSTDIR\josm.exe",0'
@@ -441,10 +377,9 @@ push $R0
   	Call Associate
 	StrCpy $R0 ".gpx"
   	Call Associate
-; if somethings added here, add it also to the uninstall section and the AdditionalTask page
+; if somethings added here, add it also to the uninstall section
 pop $R0
 !insertmacro UpdateIcons
-;SecRequired_skip_FileExtensions:
 SectionEnd
 
 
@@ -473,6 +408,14 @@ IfErrors 0 NoJOSMErrorMsg
 	MessageBox MB_OK $(un.JOSM_IN_USE_ERROR) IDOK 0 ;skipped if josm.exe removed
 	Abort $(un.JOSM_IN_USE_ERROR)
 NoJOSMErrorMsg:
+Delete "$INSTDIR\imageformats\qjpeg4.dll"
+RMDir "$INSTDIR\imageformats"
+Delete "$INSTDIR\mingwm10.dll"
+Delete "$INSTDIR\QtCore4.dll"
+Delete "$INSTDIR\QtGui4.dll"
+Delete "$INSTDIR\QtNetwork4.dll"
+Delete "$INSTDIR\QtWebKit4.dll"
+Delete "$INSTDIR\webkit-image.exe"
 Delete "$INSTDIR\uninstall.exe"
 Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
@@ -513,7 +456,6 @@ SectionIn 2
 SetShellVarContext current
 Delete "$APPDATA\JOSM\preferences"
 Delete "$APPDATA\JOSM\bookmarks"
-;Delete "$APPDATA\JOSM\de-streets.xml"
 RMDir "$APPDATA\JOSM"
 SectionEnd
 
@@ -522,12 +464,9 @@ Section /o "un.$(un.JOSM_SEC_PLUGINS)"un.SecPlugins
 SectionIn 2
 SetShellVarContext current
 Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
-;Delete "$APPDATA\JOSM\plugins\osmarender.jar"
-;Delete "$APPDATA\JOSM\plugins\osmarender\*.*"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator\*.*"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
-;RMDir "$APPDATA\JOSM\plugins\osmarender"
 RMDir "$APPDATA\JOSM\plugins\validator"
 RMDir "$APPDATA\JOSM\plugins"
 RMDir "$APPDATA\JOSM"

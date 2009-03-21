@@ -14,6 +14,7 @@
 
 ## settings ##
 LAUNCH4J="java -jar /usr/share/launch4j/launch4j.jar"
+MAKENSIS=makensis
 
 svncorerevision=`svnversion ../core`
 svnpluginsrevision=`svnversion ../plugins`
@@ -50,7 +51,7 @@ echo "### convert jar to exe with launch4j"
 # launch4j - http://launch4j.sourceforge.net/
 # delete old exe file first
 rm -f josm.exe
-$LAUNCH4J ./launch4j.xml
+$LAUNCH4J "launch4j.xml"
 
 if ! [ -s josm.exe ]; then
     echo "NO Josm File Created"
@@ -62,8 +63,8 @@ echo "##################################################################"
 echo "### create the josm-installer-${VERSION}.exe with makensis"
 # NSIS - http://nsis.sourceforge.net/Main_Page
 # apt-get install nsis
-makensis -V2 -DVERSION=$VERSION josm.nsi
+$MAKENSIS -V2 -DVERSION=$VERSION josm.nsi
 
-# delete the intermediate file, just to avoid confusion
-rm josm-intermediate.exe
+# keep the intermediate file, for debugging
+rm -f josm-intermediate.exe
 mv josm.exe josm-intermediate.exe

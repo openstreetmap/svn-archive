@@ -459,7 +459,7 @@ main (int argc, char *argv[])
 		g_print ("Parsing of commandline options failed: %s\n", error->message);
 		exit (EXIT_FAILURE);
 	}
-	g_print ("\nosm2poidb\n\n");
+	g_print ("\nosm2poidb\n");
 	if (show_version)
 	{
 		g_print (" (C) 2008 Guenther Meyer <d.s.e (at) sordidmusic.com>\n"
@@ -472,15 +472,15 @@ main (int argc, char *argv[])
 
 
 	/* create connection to gpsdrive geoinfo database */
-	g_print ("+ Initializing Database access\n");
+	g_print ("  + Initializing Database access\n");
 	if (db_file == NULL)
 		db_file = g_strdup (DB_GEOINFO);
 	if (verbose)
-		g_print ("    Using geoinfo database file: %s\n", db_file);
+		g_print ("     Using geoinfo database file: %s\n", db_file);
 	status = sqlite3_open (db_file, &geoinfo_db);
 	if (status != SQLITE_OK)
 	{
-		g_print ("  Error while opening %s: %s\n",
+		g_print ("   Error while opening %s: %s\n",
 			db_file, sqlite3_errmsg (geoinfo_db));
 		sqlite3_close (geoinfo_db);
 		g_free (db_file);
@@ -492,14 +492,14 @@ main (int argc, char *argv[])
 	/* backup old osm database file and create new one*/
 	if (osm_file == NULL)
 		osm_file = g_strdup (DB_OSMFILE);
-	g_print ("+ Creating OSM database file: %s\n", osm_file);
+	g_print (" + Creating OSM database file: %s\n", osm_file);
 	if (g_file_test (osm_file, G_FILE_TEST_IS_REGULAR))
 	{
 	 	gchar *t_fbuf;
 	 	t_fbuf = g_strconcat (osm_file, ".bak", NULL);
 		if (g_rename (osm_file, t_fbuf) != 0)
 		{
-			g_print ("  ERROR: Can't create backup of existing OSM database file\n");
+			g_print ("   ERROR: Can't create backup of existing OSM database file\n");
 			exit (EXIT_FAILURE);
 		}
 		g_free (t_fbuf);
@@ -507,7 +507,7 @@ main (int argc, char *argv[])
 	status = sqlite3_open (osm_file, &osm_db);
 	if (status != SQLITE_OK)
 	{
-		g_print ("  Error while opening %s: %s\n",
+		g_print ("   Error while opening %s: %s\n",
 			osm_file, sqlite3_errmsg (osm_db));
 		sqlite3_close (geoinfo_db);
 		g_free (osm_file);
@@ -546,19 +546,19 @@ main (int argc, char *argv[])
 
 
 	/* read poi_types for matching osm types from gpsdrive geoinfo.db */
-	g_print ("+ Reading POI types from GpsDrive geoinfo database\n");
+	g_print (" + Reading POI types from GpsDrive geoinfo database\n");
 	poitypes_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	status = sqlite3_exec (geoinfo_db, "SELECT osm_condition,poi_type FROM poi_type WHERE"
 		" (osm_condition !='' AND osm_cond_2nd='' AND osm_cond_3rd='');",
 		read_poi_types_cb, NULL, &error_string);
 	if (status != SQLITE_OK )
 	{
-		g_print ("  SQLite error: %s\n"), error_string;
+		g_print ("   SQLite error: %s\n"), error_string;
 		sqlite3_free(error_string);
 		exit (EXIT_FAILURE);
 	}
 	if (verbose)
-		g_print ("  %d known POI types found.\n", g_hash_table_size (poitypes_hash));
+		g_print ("   %d known POI types found.\n", g_hash_table_size (poitypes_hash));
 
 	/* start timer to show duration of parsing process */
 		timer = g_timer_new ();
@@ -566,7 +566,7 @@ main (int argc, char *argv[])
 	/* parse xml file and write data into database */
 	if (!argv[1])
 	{
-		g_print ("\nPlease supply a valid Openstreetmap XML-File!\n");
+		g_print ("\n Please supply a valid Openstreetmap XML-File!\n");
 		exit (EXIT_FAILURE);
 	}
 	if (strcmp ("STDIN", argv[1]) == 0)
@@ -575,12 +575,13 @@ main (int argc, char *argv[])
 		xml_reader = xmlNewTextReaderFilename (argv[1]);
 	if (xml_reader != NULL)
 	{
-		g_print ("+ Parsing OSM data from %s\n", argv[1]);
+		g_print (" + Parsing OSM data from %s\n", argv[1]);
 		parsing_active = TRUE;
 		status = xmlTextReaderRead (xml_reader);
 		while (status == 1)
 		{
-			g_print ("\r  %ld/%ld/%ld", poi_count, node_count, count);
+			if (count % 10000 == 0)
+				g_print ("\r  poi: %ld / nodes: %ld / others: %ld", poi_count, node_count, count);
 
 			xml_name = xmlTextReaderName(xml_reader);
 			if (xmlStrEqual(xml_name, BAD_CAST "node"))

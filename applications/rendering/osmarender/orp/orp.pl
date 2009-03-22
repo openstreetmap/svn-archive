@@ -558,13 +558,15 @@ our $documentHeight = ($dataHeight > $minimumMapHeight * $km) ? $dataHeight : $m
 our $width = ($documentWidth + $dataWidth) / 2;
 our $height = ($documentHeight + $dataHeight) / 2;
 
-# FIXME don't know what this is for but it seems to be unused
-my $style = get_variable("xml-stylesheet", undef);
-debug("XX STYLESHEET $style FIXME") if ($style);
-
 my $output = new IO::File(">$output_file");
 our $writer = new XML::Writer(OUTPUT => $output, UNSAFE => 1, 
     DATA_MODE => 1, DATA_INDENT => 3, ENCODING => "utf-8");
+
+# Add xml-stylesheet processing instruction if given
+my $style = get_variable("xml-stylesheet", undef);
+if( $style ){
+    $writer->pi('xml-stylesheet', "href=\"$style\" type=\"text/css\"");
+}
 
 my $svgWidth = $documentWidth + $extraWidth;
 my $svgHeight = $documentHeight + $marginaliaBottomHeight + $marginaliaTopHeight;

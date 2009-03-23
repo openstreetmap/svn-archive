@@ -8,7 +8,7 @@
 use strict;
 use warnings;
 
-use constant VERBOSE => 999;		# verbosity
+use constant VERBOSE => 5;		# verbosity
 use trapi;
 
 chdir TRAPIDIR or die "could not chdir ".TRAPIDIR.": $!";
@@ -185,8 +185,10 @@ while (my $gz = <>) {
 		    next unless($w);
 		    $ways{$w} = 0 if (exists $ways{$w});
 		}
+		our %waycache;
 		foreach my $w (keys %ways) {
 		    if ($ways{$w}) {
+			delete $waycache{$w};
 			print "  adding way $w to $uz $ux,$uy\n"
 			    if (VERBOSE > 4);;
 			printway($nwf, $w, 0);
@@ -291,6 +293,7 @@ while (my $gz = <>) {
 		seek $nrf, 0, 0;
 		while (my ($r, $roff) = readrel($nrf)) {
 		    last unless (defined $r);
+		    next unless ($r);
 		    delete $rels{$r} if (exists $rels{$r});
 		}
 		foreach my $r (keys %rels) {
@@ -332,6 +335,8 @@ while (my $gz = <>) {
 	    ($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
 	    print "Way: $_" if (VERBOSE > 19);
 	    $ptn = wayptn($id);
+	    our %waycache;
+	    delete $waycache{$id};
 	    unless (@nodes) {
 		print "Way $id has no nodes\n" if (VERBOSE > 2);
 		print "Way: $_" if (VERBOSE > 3);
@@ -770,6 +775,8 @@ while (my $gz = <>) {
 	    }
 	    ($id) = /\sid\=[\"\']?(\d+)[\"\']?\b/;
 	    print "Way: $_" if (VERBOSE > 19);
+	    our %waycache;
+	    delete $waycache{$id};
 	    $ptn = wayptn($id);
 	    if ($ptn eq NOPTN) {
 		print "Delete of nonexistant way $id ignored\n"
@@ -852,7 +859,10 @@ while (my $gz = <>) {
 	    while (my ($n, $lat, $lon, $off) = readnode($nf)) {
 		last unless (defined $n);
 		next unless($n == $id);
-		print "Deleting node $id\n" if (VERBOSE > 9);
+		if (VERBOSE > 9) {
+		    my ($uz, $ux, $uy) = fromptn($ptn);
+		    print "Deleting node $id from z$uz $ux,$uy\n";
+		}
 		seek $nf, -16, 1;
 		printnode($nf, 0, 0, 0, 0);
 		$togc{$ptn} = $cachecount if ($off);

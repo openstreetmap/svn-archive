@@ -161,7 +161,10 @@ ruleFileAttributes.setAttributes(newAttributes);
 
 		this.write = function(xmlNode) {
 			for (var attribute_name in _attributes) {
-				xmlNode.setAttribute(attribute_name,_attributes[attribute_name]);
+				var attribute_to_write = _attributes[attribute_name];
+				if (attribute_to_write==new Boolean(true)) attribute_to_write="yes";
+				if (attribute_to_write==new Boolean(false)) attribute_to_write="no";
+				xmlNode.setAttribute(attribute_name,attribute_to_write);
 			}
 		}
 	}

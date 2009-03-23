@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>OpenStreetMap routing service - About</title>
+		<link rel="stylesheet" href="main.css">
+	</head>
+	<body>
+	  	<div id="header">
+		    <center>
+				<h1>OpenStreetMap routing service</h1>
+			</center>
+		</div>
+	
+		<div id="wrapper">
+			<div id="map">
+				<h3>About</h3>
+				<p>This website is about making a routeplanner using OpenSource software and data as much as possible.
+				The OpenStreetMap geographic data is the most important part in this project. 
+				While being nowhere near complete enough to be able to say that it covers the whole world, it contains some pretty complete data for countries like: the Netherlands, United Kingdon, United States and Germany. 
+				Some other countries are not far behind. 
+				So the time is there to actually put the OpenStreetMap data to use. 
+				This website being one of the possible useable scenarios.
+				</p>
+				
+				<p>
+				Gosmore is usually very quick in returning a route, often a route is calculated in under 0.1 seconds and downloading the resulting route takes more time. If it takes more then 30 seconds to calculate a route then you can assume there is some problem in the underlying OSM data and often your route won't be complete. The route data is updated once a week after a new planet dump is available, so it is possible that the map is not always in sync with the routing engine.
+				</p>
+				<h3>More information</h3>
+				Please visit the <a href="http://wiki.openstreetmap.org/index.php/YOURS">YOURS wiki page</a> for more information.
+				
+				<h3>Things to do (in random order)</h3>
+				<ul>
+					<li><del>Interface with Gosmore to find routes using KML.</del></li>
+					<li><del>Use the Namefinder service to find the 'To' and 'From' coordinates.</del></li>
+					<li><del>Add controls for travel methods (motorcar, cycle, foot) available in Gosmore.</del></li>
+					<li><del>Add route option controls (fastest or shortest route) available in Gosmore.</del></li>
+					<li><del>Add permalink to allow route queries to be saved or exchanged.</del></li>
+					<li><del>Zoom and pan automatically to show whole route on map.</del></li>
+					<li><del>Add cycle map as baselayer to choose from.</del></li>
+					<li><del>Interface with the altitude profile service from Sjors Provoost.</del></li>
+					<li><del>Accurately calculate route length (current length is an 'estimate').</del></li>
+					<li><del>Add link from the current mapview to the online 'Potlatch' map editor for quick bugfixing.</del></li>
+					<li>Export as <del>GPX.</del>, WPT and KML file.</li>
+					<li>Add 'route via' possibilities.</li>
+					<li>Allow changes to existing route (i.e. move to/from/via markers) a la Google.</li>
+					<li>Show driving directions.</li>
+					<li>Support for multiple languages.</li>
+					<li>Support for other routing engines (e.g. Pyroute or OpenRouteService).</li>
+					<li>Interface with the RemoteControl plugin for the JOSM editor for easy data-bug fixing.</li>
+					<li>Add Munin plugin to keep track of the number of requests, route calculation times, etc.</li>
+					<li>Add caching of route calculation results.</li>
+					<li>Interface with Gosmore to find routes using (geo)JSON, for 3rd party applications.</li>
+				</ul>
+				<h3>Contact</h3>
+				Please visit the <a href="http://forum.openstreetmap.org/viewtopic.php?id=735">forum</a> for feedback or more information on this service. You can also send me a message through the <a href="http://www.openstreetmap.org/message/new/6424">OSM messaging</a> function.
+			</div>
+		</div>
+		
+		<div id="navigation">
+			<div id="menu-block">
+				<p id="menu-header">Site menu</p>
+				<ul>
+					<li><a href="index.php">Home</a></li>
+					<li><a href="help.html">Help</a></li>
+					<li><a href="about.html">About</a></li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

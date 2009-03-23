@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>OpenStreetMap routing service - About</title>
+		<link rel="stylesheet" href="main.css">
+	</head>
+	<body>
+	  	<div id="header">
+		    <center>
+				<h1>OpenStreetMap routing service</h1>
+			</center>
+		</div>
+	
+		<div id="wrapper">
+			<div id="map">
+				<h3>Creating a route</h3>
+				<p>Determine a TO and FROM coordinate (markers) which can be done with two methods (or a combination of):
+					<ul>
+						<li>- By using the TO and FROM buttons. Click one of these buttons and then click on the map to add a marker. Repeat for the other button.</li>
+						<li>- By searching for a given street and city combination. This feature uses the nameserver to translate names to coordinates. See <a href=http://wiki.openstreetmap.org/index.php/Namefinder>here for more info</a> on how to use these fields.</li>
+					</ul>
+				A route is automatically generated as soon both markers are placed on the map. If a route is found it will plot it on the map, otherwise an error description will appear.
+				<h3>Changing route parameters</h3>
+				You can change the route parameters (e.g. from 'Car' to 'Bicycle') and when you click the FIND ROUTE button a new calculation is performed based on the given parameters.
+				<h3>Partial new route (single click map/routing data testing)</h3>
+				If you click on the map again a new TO or FROM marker is placed and a new route is calculated. This is very handy for mappers when testing the route network of a certain area. Once you've spotted a bug in the data you can click on the 'EDIT MAP' button and the online 'Potlatch' map data editor is automatically loaded with the current map view.
+				<h3>Completely new route</h3>
+				Click the CLEAR button if you want to generate a completely new route (or when things go wrong, which happens sometimes...). This should work as a rest. If the site continues to be non-functional please try a forced reload of your browser by pressing ctrl-F5.
+				</p>
+				
+			</div>
+		</div>
+		
+		<div id="navigation">
+			<div id="menu-block">
+				<p id="menu-header">Site menu</p>
+				<ul>
+					<li><a href="index.php">Home</a></li>
+					<li><a href="help.html">Help</a></li>
+					<li><a href="about.html">About</a></li>
+				</ul>
+			</div>
+		</div>
+		
+	</body>
+</html>

@@ -1,0 +1,6 @@
+Plugin openvisible
+
+This plugin is copyrighted 2008-2009 
+by Christof Dallermassl <christof@dallermassl.at>.
+
+It is distributed under GPL-v2 license (see file  LICENSE in this directory).

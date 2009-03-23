@@ -27,8 +27,8 @@ dojo.declare("cmyk.rules.ruleFile",null,{
 			if (member instanceof cmyk.rules.renderingInstruction) {
 				var member_attributes = member.getAttributes();
 				dojo.forEach(member_attributes,function(attribute,index,array) {
-					if (attribute.getName()=="class") {
-						dojo.forEach(attribute.getValue(), function(class,index,array) {
+					if (attribute.name=="class") {
+						dojo.forEach(attribute.value, function(class,index,array) {
 							try {
 								var class_object = ruleFileStyles.getClassByName(class);
 								if (class_object!=null) {
@@ -122,8 +122,11 @@ console.debug("Writing file "+new Date().getMinutes()+":"+new Date().getSeconds(
 					member.write(ruleFileRaw_output);
 				}
 				else {
-					member.write();
-					var member_node = member.getXmlNodeWrite();
+					var member_node=xmlNode;
+					if (member.declaredClass!="cmyk.rules.rulesSection") {
+						member.write();
+						member_node = member.getXmlNodeWrite();
+					}
 					var write_iteration = function(member,member_node) {
 						dojo.forEach(member.children,function(inner_member,index,array) {
 							inner_member.write();
@@ -132,12 +135,37 @@ console.debug("Writing file "+new Date().getMinutes()+":"+new Date().getSeconds(
 							write_iteration(inner_member,inner_member_node);
 						});
 					}
-					xmlNode.appendChild(member_node);
+//					xmlNode.appendChild(member_node);
 					write_iteration(member,member_node);
 				}
 			});
 //https://developer.mozilla.org/En/Parsing_and_serializing_XML
-			console.debug(XML((new XMLSerializer()).serializeToString(ruleFileRaw_output)).toXMLString());
+var xml_string = XML((new XMLSerializer()).serializeToString(ruleFileRaw_output)).toXMLString();
+			//console.debug(xml_string);
+/*
+http://straxus.javadevelopersjournal.com/creating_a_mozillafirefox_drag_and_drop_file_upload_script_p.htm
+http://www.captain.at/programming/xul/
+https://developer.mozilla.org/Special:Search?search=save+file&type=fulltext&go=Search
+https://developer.mozilla.org/index.php?title=En/Code_snippets/File_I%2F%2FO
+http://jslib.mozdev.org/
+http://kb.mozillazine.org/Io.js
+*/
+netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+var nsIFilePicker = Components.interfaces.nsIFilePicker;
+var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+fp.init(window, "Select a File", nsIFilePicker.modeSave);
+var res = fp.show();
+if (res == nsIFilePicker.returnOK){
+  var file = fp.file;
+  file.create( Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 420 );
+  var outputStream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance( Components.interfaces.nsIFileOutputStream );
+outputStream.init( file, 0x04 | 0x08 | 0x20, 420, 0 );
+	var output = xml_string;
+	var result = outputStream.write( output, output.length );
+	outputStream.close();
+
+}
+
 		}
 	}
 

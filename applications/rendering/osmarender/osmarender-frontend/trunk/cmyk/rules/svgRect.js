@@ -14,5 +14,6 @@ dojo.declare("cmyk.rules.svgRect",cmyk.rules._svgDirective,{
 	      @extends cmyk.rules._svgDirective
 	*/
 	constructor: function(node) {
+		this._mytag = "svg:rect";
 	},
 });

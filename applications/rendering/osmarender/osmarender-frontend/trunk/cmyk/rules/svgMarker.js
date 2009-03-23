@@ -14,5 +14,6 @@ dojo.declare("cmyk.rules.svgMarker",cmyk.rules._svgFeature,{
 	      @extends cmyk.rules._svgFeature
 	*/
 	constructor: function(node) {
+		this._mytag = "svg:marker";
 	},
 });

@@ -16,6 +16,6 @@ dojo.declare("cmyk.rules.Line",cmyk.rules.renderingInstruction,{
 	      @extends cmyk.rules.renderingInstruction
 	*/
 	constructor: function(node) {
-		_mytag = "line";
+		this._mytag = "line";
 	},
 });

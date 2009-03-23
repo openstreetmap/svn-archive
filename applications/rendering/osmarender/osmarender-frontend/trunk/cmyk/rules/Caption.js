@@ -14,5 +14,6 @@ dojo.declare("cmyk.rules.Caption",cmyk.rules.renderingInstruction,{
 	      @extends cmyk.rules.renderingInstruction
 	*/
 	constructor: function(node) {
+		this._mytag = "caption";
 	},
 });

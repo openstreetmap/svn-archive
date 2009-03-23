@@ -89,7 +89,9 @@ dojo.declare("cmyk.rules.Rule",[cmyk.rules.Directive,cmyk.rules.ruleFileMember],
 				else {
 					attribute_value_to_write = _attributes[attribute_name];
 				}
-				my_node.setAttribute(attribute_name,attribute_value_to_write);
+				if (attribute_value_to_write!=null) {
+					my_node.setAttribute(attribute_name,attribute_value_to_write);
+				}
 			}
 			_xmlNodeWrite = my_node;
 		}

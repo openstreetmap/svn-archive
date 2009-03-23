@@ -1,12 +1,12 @@
 dojo.provide("cmyk.rules.renderingInstruction");
 
-dojo.require("cmyk.rules.Directive");
+dojo.require("cmyk.rules.ruleFileMember");
 
 /**
 	@lends cmyk.rules.renderingInstruction
 */
 
-dojo.declare("cmyk.rules.renderingInstruction",cmyk.rules.Directive,{
+dojo.declare("cmyk.rules.renderingInstruction",cmyk.rules.ruleFileMember,{
 	/** 
 	      @constructs
 	      @class The superclass of every rendering instruction (line, circle, etc..)
@@ -14,17 +14,28 @@ dojo.declare("cmyk.rules.renderingInstruction",cmyk.rules.Directive,{
 	      @extends cmyk.rules.Directive
 	*/
 	constructor: function(node) {
+		// this contains the name of the tag of the rendering instruction
+		this._mytag = "generic_rendering_instruction";
 		var _classes = new Array();
 		var _attributes = new Array();
-		// this contains the name of the tag of the rendering instruction
-		var _mytag = "null";
+		var _list_attributes_multiple_space = ["class","mask-class"];
+		var _list_attributes_multiple_or = ["e","k","v"];
 		var _xmlNodeRead = node;
 		var _xmlNodeWrite = null;
 
-		var _attributeFactory = new cmyk.rules.attributes.attributeFactory();
+//		var _attributeFactory = new cmyk.rules.attributes.attributeFactory();
 
 		dojo.forEach(node.attributes, function(attribute,index,array) {
-			_attributes.push(_attributeFactory.factory(attribute.nodeName,attribute.nodeValue));
+			if (dojo.indexOf(_list_attributes_multiple_space,attribute.nodeName)!=-1) {
+				_attributes.push({"name":attribute.nodeName,"value":attribute.nodeValue.split(" ")});
+			}
+			else if (dojo.indexOf(_list_attributes_multiple_or,attribute.nodeName)!=-1) {
+				_attributes.push({"name":attribute.nodeName,"value":attribute.nodeValue.split("|")});
+			}
+			else {
+				_attributes.push({"name":attribute.nodeName,"value":attribute.nodeValue});
+			}
+			//_attributes.push(_attributeFactory.factory(attribute.nodeName,attribute.nodeValue));
 		});
 
 
@@ -44,15 +55,22 @@ dojo.declare("cmyk.rules.renderingInstruction",cmyk.rules.Directive,{
 		};
 
 		this.write = function() {
-//console.debug("creating renderinginstruction");
-			var my_node = document.createElementNS("",_mytag);
-//console.debug("creating attributes");
+			var my_node = document.createElementNS("",this._mytag);
 			for (var attribute_index in _attributes) {
-//console.debug("creating attribute "+_attributes[attribute_index].getName()+" with value: "+_attributes[attribute_index].getValue());
-				my_node.setAttribute(_attributes[attribute_index].getName(),_attributes[attribute_index].getValue());
+				var value_to_write="";
+				if (dojo.indexOf(_list_attributes_multiple_space,_attributes[attribute_index].name)!=-1) {
+					value_to_write=_attributes[attribute_index].value.join(" ");
+				}
+				else if (dojo.indexOf(_list_attributes_multiple_or,_attributes[attribute_index].name)!=-1) {
+					value_to_write=_attributes[attribute_index].value.join("|");
+				}
+				else {
+					value_to_write=_attributes[attribute_index].value;
+				}
+
+				my_node.setAttribute(_attributes[attribute_index].name,value_to_write);
 			}
 			_xmlNodeWrite = my_node;
-//console.debug("fine renderinginstruction");
 		}
 
 		this.getXmlNodeWrite = function() {

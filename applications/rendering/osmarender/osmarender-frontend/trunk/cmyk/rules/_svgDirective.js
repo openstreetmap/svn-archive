@@ -15,5 +15,6 @@ dojo.declare("cmyk.rules._svgDirective",cmyk.rules.renderingInstruction,{
 	      @private
 	*/
 	constructor: function() {
+		this._mytag="_svgDirective";
 	},
 });

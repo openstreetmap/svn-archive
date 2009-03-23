@@ -15,9 +15,9 @@ dojo.declare("cmyk.rules.ruleFileMember",null,{
 //http://www.ibm.com/developerworks/web/library/wa-aj-dojo/
 	constructor: function(node) {
 		this.children = [];
+                this._mytag = "generic_rule_file_member";
 		var _xmlNodeWrite = null;
 		var xmlNodeRead = node;
-		var _tagName = null;
 		var _ruleFileMemberFactory = new cmyk.rules.ruleFileMemberFactory();
 
 		var children = this.children;
@@ -27,9 +27,7 @@ dojo.declare("cmyk.rules.ruleFileMember",null,{
 		});
 		
 		this.write = function() {
-console.debug("rulefilemember");
-			_xmlNodeWrite = document.createElementNS("","generic_rule_file_member");
-console.debug("fine rulefilemember");
+			_xmlNodeWrite = document.createElementNS("",this._mytag);
 		}
 
 		this.getXmlNodeWrite = function() {

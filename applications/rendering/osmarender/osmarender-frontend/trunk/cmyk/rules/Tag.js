@@ -16,5 +16,6 @@ dojo.declare("cmyk.rules.Tag",cmyk.rules.renderingInstruction,{
 	      @extends cmyk.rules.renderingInstruction
 	*/
 	constructor: function(node) {
+		this._mytag = "tag";
 	},
 });

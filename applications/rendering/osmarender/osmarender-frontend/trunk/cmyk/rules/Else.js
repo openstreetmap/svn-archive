@@ -14,5 +14,6 @@ dojo.declare("cmyk.rules.Else",cmyk.rules.Directive,{
 	      @extends cmyk.rules.Directive
 	*/
 	constructor: function(node) {
+		this._mytag = "else";
 	},
 });

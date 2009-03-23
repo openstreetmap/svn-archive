@@ -16,6 +16,6 @@ dojo.declare("cmyk.rules.rulesSection",cmyk.rules.ruleFileMember,{
 	      @extends cmyk.rules.ruleFileMember
 	*/
 	constructor: function(node) {
-		_mytag = "rules";
+		this._mytag = "rules";
 	},
 });

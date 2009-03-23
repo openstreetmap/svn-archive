@@ -14,5 +14,6 @@ dojo.declare("cmyk.rules.Circle",cmyk.rules.renderingInstruction,{
 	      @extends cmyk.rules.renderingInstruction
 	*/
 	constructor: function(node) {
+		this._mytag = "circle";
 	},
 });

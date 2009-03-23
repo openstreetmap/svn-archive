@@ -16,5 +16,6 @@ dojo.declare("cmyk.rules.Symbol",cmyk.rules.renderingInstruction,{
 	*/
 	constructor: function(node) {
 //TODO: connect the real svg inside the object
+		this._mytag = "symbol";
 	},
 });

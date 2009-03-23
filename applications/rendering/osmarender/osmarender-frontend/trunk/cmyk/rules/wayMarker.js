@@ -14,6 +14,6 @@ dojo.declare("cmyk.rules.wayMarker",cmyk.rules.renderingInstruction,{
 	      @extends cmyk.rules.renderingInstruction
 	*/
 	constructor: function(node) {
-		this._mytag = "waymarker";
+		this._mytag = "wayMarker";
 	},
 });

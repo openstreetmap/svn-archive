@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ @author Mario Ferraro <fadinlight@gmail.com>
+ http://osmarenderfrontend.wordpress.com
+ Released under GPL v2 or later
+-->
+<!--?xml-stylesheet type="text/xsl" href="demo.xsl"?-->
+<!DOCTYPE html 
+      PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html	xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:svg="http://www.w3.org/2000/svg"
+		xml:lang="en">
+	<head>
+		<style type="text/css">
+			@import "dojotoolkit/dijit/themes/tundra/tundra.css";
+			@import "dojotoolkit/dojo/resources/dojo.css";
+			@import "dojotoolkit/dojox/widget/ColorPicker/ColorPicker.css";
+  			@import "dojotoolkit/dojox/layout/resources/ResizeHandle.css";
+			@import "osmarender_frontend.css";
+		</style>
+		<object id="AdobeSVG" classid="clsid:78156a80-c6a1-4bbf-8e6a-3cd390eeb4e2"></object>
+		<?import namespace="svg" urn="http://www.w3.org/2000/svg" implementation="#AdobeSVG"?>
+
+		<!-- TODO: make CSS parser a Dojo widget -->
+		<script type="text/javascript" src="CSS_parse.js"></script>
+		<script type="text/javascript" src="dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad: true,isDebug:true"></script>
+		<script type="text/javascript">
+			dojo.registerModulePath("cmyk","../../cmyk");
+			dojo.require("cmyk.rules.ruleFile");
+			dojo.require("cmyk.utils.fileIO");
+			var initDND = function() {
+				var file_io = new cmyk.utils.fileIO();
+				var rule_file_path = file_io.loadFile();
+				if (rule_file_path) {
+					var rule_file = new cmyk.rules.ruleFile(rule_file_path);
+					rule_file.write();
+					//console.debug(rule_file.getXMLOutputString());
+					file_io.saveFile(rule_file.getXMLOutputString());
+				}
+			};
+			dojo.addOnLoad(initDND);
+		</script>
+	</head>
+	<body class="tundra">
+	</body>
+</html>
+
+
+

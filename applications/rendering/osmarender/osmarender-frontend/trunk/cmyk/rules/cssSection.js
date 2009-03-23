@@ -37,7 +37,14 @@ dojo.declare("cmyk.rules.cssSection",null,{
 		};*/
 
 		this.write = function() {
-			_xmlNodeWrite = document.createElementNS("","css");
+//			_xmlNodeWrite = document.createElementNS("","defs");
+			var defs_section = document.createElementNS("","defs");
+			var style_section = document.createElementNS("http://www.w3.org/2000/svg","style");
+			style_section.setAttribute("id","styles");
+			style_section.setAttribute("type","text/css");
+			style_section.appendChild(document.createTextNode(parser.getWriterString(styles)));
+			defs_section.appendChild(style_section);
+			_xmlNodeWrite = defs_section;
 		}
 
 		this.getXmlNodeWrite = function() {

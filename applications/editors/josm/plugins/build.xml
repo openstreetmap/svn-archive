@@ -10,6 +10,7 @@
         <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
         <ant antfile="build.xml" target="dist" dir="DirectUpload"/>
+        <ant antfile="build.xml" target="dist" dir="editgpx"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="dist" dir="lakewalker"/>
@@ -43,6 +44,7 @@
         <ant antfile="build.xml" target="clean" dir="colorscheme"/>
         <ant antfile="build.xml" target="clean" dir="DirectUpload"/>
         <ant antfile="build.xml" target="clean" dir="duplicateway"/>
+        <ant antfile="build.xml" target="clean" dir="editgpx"/>
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
         <ant antfile="build.xml" target="clean" dir="grid"/>
         <ant antfile="build.xml" target="clean" dir="imagewaypoint"/>

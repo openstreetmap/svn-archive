@@ -202,8 +202,8 @@ while (my $query = new CGI::Fast) {
 		print ">\n";
 		seek $nd, $off, 0;
 		my @tv = readtags($nd, NODE);
-		while (my $key = shift @tv) {
-		    my $val = shift @tv;
+		while (my $key = shift(@tv)) {
+		    my $val = shift(@tv) // '';
 		    print "  <tag k=\"$key\" v=\"$val\"/>\n";
 		}
 		print "</node>\n";
@@ -232,8 +232,8 @@ while (my $query = new CGI::Fast) {
 		    print ">\n";
 		    seek $pd, $off, 0;
 		    my @tv = readtags($pd, NODE);
-		    while (my $key = shift @tv) {
-			$val = shift @tv;
+		    while (my $key = shift(@tv)) {
+			$val = shift(@tv) // '';
 			print "  <tag k=\"$key\" v=\"$val\"/>\n";
 		    }
 		    print "</node>\n";
@@ -260,8 +260,8 @@ while (my $query = new CGI::Fast) {
 		print "  <nd ref=\"$tn\"/>\n";
 	    }
 	    my @tv = readtags($nd, WAY);
-	    while (my $key = shift @tv) {
-		$val = shift @tv;
+	    while (my $key = shift(@tv)) {
+		$val = shift(@tv) // '';
 		print "  <tag k=\"$key\" v=\"$val\"/>\n";
 	    }
 	    print "</way>\n";
@@ -285,8 +285,8 @@ while (my $query = new CGI::Fast) {
 		    print "  <nd ref=\"$tn\"/>\n";
 		}
 		my @tv = readtags($pd, WAY);
-		while(my $key = shift @tv) {
-		    $val = shift @tv;
+		while(my $key = shift(@tv)) {
+		    $val = shift(@tv) // '';
 		    print "  <tag k=\"$key\" v=\"$val\"/>\n";
 		}
 		print "</way>\n";
@@ -314,8 +314,8 @@ while (my $query = new CGI::Fast) {
 		print "  <member type=\"".(MEMBERTYPE)[$type]."\" ref=\"$mid\" role=\"$role\"/>\n";
 	    }
 	    my @tv = readtags($nd, RELATION);
-	    while (my $key = shift @tv) {
-		$val = shift @tv;
+	    while (my $key = shift(@tv)) {
+		$val = shift(@tv) // '';
 		print "  <tag k=\"$key\" v=\"$val\"/>\n";
 	    }
 	    print "</relation>\n";
@@ -340,8 +340,8 @@ while (my $query = new CGI::Fast) {
 		    print "  <member type=\"".(MEMBERTYPE)[$type]."\" ref=\"$mid\" role=\"$role\"/>\n";
 		}
 		my @tv = readtags($pd, RELATION);
-		while (my $key = shift @tv) {
-		    $val = shift @tv;
+		while (my $key = shift(@tv)) {
+		    $val = shift(@tv) // '';
 		    print "  <tag k=\"$key\" v=\"$val\"/>\n";
 		}
 		print "</relation>\n";

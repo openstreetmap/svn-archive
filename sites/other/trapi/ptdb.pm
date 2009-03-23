@@ -355,6 +355,7 @@ sub ProjectF
 # find the tiles this relation is in
 sub reltiles($) {
     my @members = @{shift @_};
+    our %waycache;
     my (%tiles, %wtodo, %rdone, %rtodo);
     foreach my $m (@members) {
 	my ($type, $id, $role) = @$m;
@@ -395,9 +396,16 @@ sub reltiles($) {
 		    if ($type == NODE) {
 			$tiles{nodeptn($n)}++;
 		    } elsif ($type == WAY) {
-			my $wp = wayptn($n);
-			$wtodo{$wp} //= {};
-			$wtodo{$wp}->{$n}++;
+			if (exists $waycache{$n}) {
+			    print "    Way cache hit: $n\n" if (VERBOSE > 99);
+			    foreach my $p (@{$waycache{$n}}) {
+				$tiles{$p}++;
+			    }
+			} else {
+			    my $wp = wayptn($n);
+			    $wtodo{$wp} //= {};
+			    $wtodo{$wp}->{$n}++;
+			}
 		    } elsif ($type == RELATION) {
 			next if(exists $rdone{$n});
 			my $rrp = relationptn($n);
@@ -421,9 +429,13 @@ sub reltiles($) {
 	    next unless ($w && $off && exists $wthis{$w});
 	    seek $df, $off, 0;
 	    my @nodes = readwaynodes($df);
+	    my %wt;
 	    foreach my $n (@nodes) {
-		$tiles{nodeptn($n)}++;
+		my $p = nodeptn($n);
+		$wt{$p}++;
+		$tiles{$p}++;
 	    }
+	    $waycache{$w} = [keys %wt];
 	}
     }
     return %tiles;
@@ -434,6 +446,7 @@ sub splitptn($) {
     my ($ptn) = @_;
     my ($ez, $ex, $ey) = fromptn($ptn);
     return(0) if ($ez >= MAXZOOM);
+    our %waycache;
     writecache();
     print "Splitting z$ez $ex,$ey\n" if (VERBOSE > 2);
     my $nd = openptn($ptn, "data");
@@ -484,6 +497,7 @@ sub splitptn($) {
     while (my ($wid, $woff) = readway($wf)) {
 	last unless (defined $wid);
 	next unless($wid);
+	delete $waycache{$wid};
 	print "Way $wid\n" if (VERBOSE > 4);
 	if ($woff) {
 	    my %w;

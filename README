@@ -1,12 +1,16 @@
 FIXME note down what these things do
 
-LICENSE
-data/
-lib/           
-sites/          
 applications/
     editors/
     rendering/
     utils/
-etc/   
+extensions/      integrating openstreetmap in content management 
+systems and websites
+misc/
+sites/           websites operated by the openstreetmap foundation or 
+local chapters
+LICENSE         GPL Version 2 license text for all sources found in this 
+repository
+README          this file
+   
 

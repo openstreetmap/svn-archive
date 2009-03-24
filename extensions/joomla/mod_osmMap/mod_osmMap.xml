@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0">
+    <name>osmmap</name>
+    <author>Stichting OpenGeo</author>
+    <version>0.1</version>
+    <description>Displays a openstreetmap</description>
+    <files>
+        <filename module="mod_osmMap">mod_osmMap.php</filename>
+    </files>
+    <languages>
+        <language tag="en-GB">language/en-GB/en-GB.mod_osmMap.ini</language>
+    </languages>
+    <params>
+		<param name="@spacer" type="spacer" default="" label="DIM" description=""></param>
+		<param name="mapdiv" type="text" default="map" label="MAPDIV"></param>
+		<param name="height" type="text" default="300" label="HIGH"></param>
+		<param name="width" type="text" default="300" label="WIDTH"></param>
+		
+		<param name="@spacer" type="spacer" default="" label="MAPCENTER" description=""></param>
+
+		<param name="myLatitude" type="text" default="118170.58398" label="MYLATITUDE"></param>
+		<param name="myLongitude" type="text" default="483780.20801" label="MYLONGITUDE"></param>
+		<param name="zoom" type="text" default="9" label="ZOOM"></param>
+
+		<param name="@spacer" type="spacer" default="" label="MAPTYPE" description=""></param>
+
+		<param name="maptype" type="list" default="0" label="MAPTYPE">
+			<option value="0">NL</option>
+			<option value="1">WORLD</option>
+		</param>
+
+		<param name="@spacer" type="spacer" default="" label="CONTROLS" description=""></param>
+
+		<param name="panzoombar" type="radio" default="0" label="PANZOOMBAR">
+			<option value="0">NO</option>
+			<option value="1">YES</option>
+		</param>
+		<param name="mini" type="radio" default="0" label="PANZOOMBARMINI">
+			<option value="0">NO</option>
+			<option value="1">YES</option>
+		</param>
+
+		<param name="layerswitcher" type="radio" default="0" label="LAYERSWITCHER">
+			<option value="0">NO</option>
+			<option value="1">YES</option>
+		</param>
+
+		<param name="mouseposition" type="radio" default="0" label="MOUSEPOSITION">
+			<option value="0">NO</option>
+			<option value="1">YES</option>
+		</param>
+
+		<param name="mousedefaults" type="radio" default="0" label="MOUSEDEFAULTS">
+			<option value="0">NO</option>
+			<option value="1">YES</option>
+		</param>
+
+		<param name="keyboarddefaults" type="radio" default="0" label="KEYBOARDDEFAULTS">
+			<option value="0">NO</option>
+			<option value="1">YES</option>
+		</param>
+
+		<param name="@spacer" type="spacer" default="" label="OTHER" description=""></param>
+
+		<param name="reset_link" type="radio" default="0" label="RESET_LINK">
+			<option value="0">NO</option>
+			<option value="1">YES</option>
+		</param>
+
+		
+    </params>
+</install>

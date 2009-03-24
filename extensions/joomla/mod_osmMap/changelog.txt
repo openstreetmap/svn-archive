@@ -1,0 +1,8 @@
+Changelog
+
+Name: mod_osmMap
+Author: Milo van der Linden, Stichting OpenGeo
+Home: http://www.opengeo.nl
+Version: 0.0.1
+
+first release

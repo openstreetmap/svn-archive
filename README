@@ -1,16 +1,45 @@
-FIXME note down what these things do
-
 applications/
+ Applications created by the community that create, modify or use 
+ openstreetmap data direct or via the web api. Subdivided into these
+ categories:
+ 
     editors/
+	create or modify openstreetmap data via the api
+    etc/
+	FIXME: holds a more then 2 year old mapnik xml
+    lib/
+        libraries that can be used by the applications
+    mobile/
+        Openstreetmap related applications for mobile devices
     rendering/
+        Applications for creating maps from openstreetmap data
+    routing/
+        Applications for routing with openstreetmap data
+    share/
+       Media files (images, icons, map-icons) that can be used by
+       the applications
     utils/
-extensions/      integrating openstreetmap in content management 
-systems and websites
+       Utilities for conversion, export, download, quality control 
+       monitoring, data cleaning and others
+    viewer/
+       Applications for viewing openstreetmap maps or data
+
+extensions/      
+ integrating openstreetmap in content management 
+ systems and websites
+
 misc/
-sites/           websites operated by the openstreetmap foundation or 
-local chapters
-LICENSE         GPL Version 2 license text for all sources found in this 
-repository
-README          this file
+ images, documents, videos, papers and material related to marketing
+ and promotion and promotional activities
+
+sites/           
+ websites operated by the openstreetmap foundation or local chapters
+
+LICENSE         
+ GPL Version 2 license text for all sources found in this 
+ repository
+
+README          
+ this file
    
 

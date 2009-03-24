@@ -172,6 +172,8 @@ sub generate
       $::GlobalChildren->{ThreadedRenderer}->Reset();
       $::GlobalChildren->{ThreadedRenderer}->setRequest($self->{req});
       $::GlobalChildren->{ThreadedRenderer}->setJobDir($self->{JobDir});
+
+      $::GlobalChildren->{optimizePngTasks}->dataReset();
     }
 
     ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, $self->{bbox}->center), 1, 0);

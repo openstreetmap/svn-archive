@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-08 22:55+0100\n"
-"PO-Revision-Date: 2009-03-01 15:27+0000\n"
-"Last-Translator: logictheo <towardsoss@gmail.com>\n"
+"POT-Creation-Date: 2009-03-24 16:37+0100\n"
+"PO-Revision-Date: 2009-03-18 19:00+0000\n"
+"Last-Translator: alichani <alichani@yahoo.co.uk>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-08 21:33+0000\n"
+"X-Launchpad-Export-Date: 2009-03-24 15:25+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:186
@@ -26,14 +26,15 @@ msgstr "Δημιουργία κύριου GUI"
 #. FIXME why is help not a JosmAction?
 #: ../core/src/org/openstreetmap/josm/Main.java:195
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:56
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:143
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:278
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:150
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:296
 msgid "Help"
 msgstr "Βοήθεια"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:258
 msgid "The projection could not be read from preferences. Using EPSG:4326"
 msgstr ""
+"Αδυναμία ανάγνωσης προβολής από τις προτιμήσεις. Θα χρησιμοποιηθεί EPSG:4326"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:345
 msgid "Hint: Some changes came from uploading new data to the server."
@@ -50,7 +51,7 @@ msgstr "Υπάρχουν μη αποθηκευμένες αλλαγές. Από�
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
 msgid "Save and Exit"
-msgstr ""
+msgstr "Αποθήκευση και Έξοδος"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:348
 msgid "Discard and Exit"
@@ -78,12 +79,11 @@ msgstr "Απόρριψη και Έξοδος"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:81
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:561
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:211
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:146
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:147
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:218
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:199
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:610
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:616
 #: ../core/src/org/openstreetmap/josm/io/OsmConnection.java:95
-#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:156
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:264
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:82
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:107
@@ -92,7 +92,6 @@ msgstr "Απόρριψη και Έξοδος"
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:559
 #: ../plugins/grid/src/grid/GridLayer.java:162
 #: ../plugins/grid/src/grid/GridLayer.java:199
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:60
 #: ../plugins/utilsplugin/src/UtilsPlugin/JoinAreasAction.java:125
 #: ../plugins/utilsplugin/src/UtilsPlugin/JoinAreasAction.java:317
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:105
@@ -109,27 +108,27 @@ msgstr "Αγνοήθηκε κακοσχηματισμένο URL:\"{0}\""
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "Αγνοήθηκε κακοσχηματισμένο URL αρχείου:\"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:68
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:72
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:107
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:172
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:71
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:75
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:93
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:116
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:179
 msgid "UNKNOWN"
 msgstr "ΆΓΝΩΣΤΟ"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:111
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:120
 msgid "About"
 msgstr "Περί"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:111
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:120
 msgid "Display the about screen."
 msgstr "Εμφάνιση του παραθύρου περί"
 
 #. TODO: put in a platformHook for system that have no console by default
 #. Add the name of this application
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:121
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:141
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:225
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:293
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:130
+#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:73
+#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:113
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:132
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:168
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:157
@@ -138,68 +137,63 @@ msgid "Java OpenStreetMap Editor"
 msgstr "Java OpenStreetMap Editor"
 
 #. Add the version number
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:125
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:134
 #: ../core/src/org/openstreetmap/josm/gui/SplashScreen.java:75
 #, java-format
 msgid "Version {0}"
 msgstr "Έκδοση {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:127
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:136
 #, java-format
 msgid "Last change at {0}"
 msgstr "Τελεταία αλλαγή στις {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:129
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:138
 #, java-format
 msgid "Java Version {0}"
 msgstr "Έκδοση Java {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:131
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:140
 msgid "Homepage"
 msgstr "Ιστοσελίδα"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:133
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:142
 msgid "Bug Reports"
 msgstr "Αναφορές σφαλμάτων"
-
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:135
-msgid "News about JOSM"
-msgstr "Νέα του JOSM"
 
 #. <button label="Camping" hotkey="Z" icon="caravan">
 #. <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
 #. <action class="SetWaypointAction" params="Camping"/>
 #. </button>
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:138
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:145
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListPopup.java:26
 #: build/trans_surveyor.java:64
 msgid "Info"
 msgstr "Πληροφορίες"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:139
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:146
 msgid "Readme"
 msgstr "Διάβασέμε"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:140
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:147
 msgid "Revision"
 msgstr "Αναθεώρηση"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:141
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:148
 msgid "Contribution"
 msgstr "Συνεισφορά"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:142
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:149
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:38
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:199
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:141
 msgid "Plugins"
 msgstr "Πρόσθετα"
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:146
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:153
 msgid "About JOSM..."
 msgstr "Περί του JOSM..."
 
-#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:183
+#: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:190
 msgid "File could not be found."
 msgstr "Το αρχείο δεν βρέθηκε."
 
@@ -225,7 +219,7 @@ msgstr "Προσθήκη κόμβου με εισαγωγή γεωγραφικο
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:17
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:23
 #: ../core/src/org/openstreetmap/josm/actions/UnselectAllAction.java:34
-#: ../plugins/livegps/src/LiveGpsPlugin.java:54
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:54
 #, java-format
 msgid "Edit: {0}"
 msgstr "Επεξεργασία: {0}"
@@ -244,14 +238,14 @@ msgstr "Αρνητικές τιμές υποδεικνείουν  Δυτικό/�
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:42
 #: ../plugins/grid/src/grid/GridLayer.java:193
-#: ../plugins/livegps/src/LiveGpsDialog.java:54
+#: ../plugins/livegps/src/livegps/LiveGpsDialog.java:54
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:93
 msgid "Latitude"
 msgstr "Γεωγραφικό πλάτος"
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:45
 #: ../plugins/grid/src/grid/GridLayer.java:195
-#: ../plugins/livegps/src/LiveGpsDialog.java:56
+#: ../plugins/livegps/src/livegps/LiveGpsDialog.java:56
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:96
 msgid "Longitude"
 msgstr "Γεωγραφικό μήκος"
@@ -347,7 +341,7 @@ msgstr "Ζουμ στο {0}"
 #: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:52
 #, java-format
 msgid "Zoom the view to {0}."
-msgstr ""
+msgstr "Ζουμ στο {0}."
 
 #: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:53
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:16
@@ -355,7 +349,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/ZoomOutAction.java:16
 #, java-format
 msgid "View: {0}"
-msgstr ""
+msgstr "Προβολή: {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:81
 msgid "Nothing selected to zoom to."
@@ -363,7 +357,7 @@ msgstr "Δεν υπάρχει επιλογή στην οποία να γίνει
 
 #: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:81
 msgid "No conflicts to zoom to"
-msgstr ""
+msgstr "Καμοία διένεξη για να γίνει ζουμ"
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:53
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:54
@@ -390,7 +384,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:115
 msgid "Combine Anyway"
-msgstr ""
+msgstr "Επιβεβαίωση συνδυασμού"
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:141
 msgid "Change directions?"
@@ -404,20 +398,20 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:144
 msgid "Reverse and Combine"
-msgstr ""
+msgstr "Αντισροφή και Συνδυασμός"
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:196
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:195
 #: ../plugins/utilsplugin/src/UtilsPlugin/JoinAreasAction.java:123
 #: ../plugins/utilsplugin/src/UtilsPlugin/JoinAreasAction.java:315
 msgid "Enter values for all conflicts."
-msgstr ""
+msgstr "Εισάγετε τιμές για όλες τισ διενέξεις."
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:198
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:197
 #: ../plugins/utilsplugin/src/UtilsPlugin/JoinAreasAction.java:317
 msgid "Solve Conflicts"
-msgstr ""
+msgstr "Επίλυση διενέξεων"
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:231
 #, java-format
@@ -441,7 +435,7 @@ msgstr "Αντιγραφή"
 
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:34
 msgid "Copy selected objects to paste buffer."
-msgstr ""
+msgstr "Αντιγραφή επιλεγμένων αντικειμένων στο πρόχειρο."
 
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:125
 msgid "Please select something to copy."
@@ -476,7 +470,7 @@ msgstr "Αυτοι οι κόμβοι δεν βρίσκονται σε κύκλο
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:96
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:76
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:91
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:541
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:538
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:80
 msgid "Delete"
 msgstr "Διαγραφή"
@@ -503,11 +497,12 @@ msgstr "Το αρχείο υπάρχει. Αντικατάσταση;"
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:31
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:124
 msgid "Distribute Nodes"
-msgstr ""
+msgstr "Κατανομή Κόμβων"
 
 #: ../core/src/org/openstreetmap/josm/actions/DistributeAction.java:30
 msgid "Distribute the selected nodes to equal distances along a line."
 msgstr ""
+"Κατανομή των επιλεγμένων κόμβων σε ίσες αποστάσεις κατά μήκος μιας γραμμής."
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadAction.java:33
 #: ../core/src/org/openstreetmap/josm/actions/DownloadAction.java:34
@@ -535,7 +530,7 @@ msgstr "Λήψη"
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadAction.java:69
 msgid "Please select at least one task to download"
-msgstr ""
+msgstr "Παρακαλώ επιλέξτε τουλάχιστον μία εργασία για λήψη"
 
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:21
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:23
@@ -562,7 +557,7 @@ msgstr "Έξοδος από την εφαρμογή"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:26
 msgid "OSM Server Files"
-msgstr ""
+msgstr "Αρχεία Διακομιστή OSM"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:27
 msgid "GPX Files"
@@ -570,7 +565,7 @@ msgstr "Αρχεία GPX"
 
 #: ../core/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:28
 msgid "NMEA-0183 Files"
-msgstr ""
+msgstr "Αρχεία NMEA-0183"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:43
 msgid ""
@@ -595,7 +590,7 @@ msgstr "Τίποτα προς εξαγωγή. Λάβετε κάποια δεδο
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:79
 msgid "gps track description"
-msgstr ""
+msgstr "περιγραφή ίχνους gps"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:85
 msgid "Add author information"
@@ -631,7 +626,7 @@ msgstr "Επιλογές εξαγογής"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:117
 msgid "Export and Save"
-msgstr ""
+msgstr "Εξαγωγή και Αποθήκευση"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:143
 #, java-format
@@ -643,8 +638,8 @@ msgstr ""
 "{1}"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:143
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:594
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:598
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:593
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:597
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
@@ -652,7 +647,6 @@ msgstr ""
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:65
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:70
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:115
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:103
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveEditLayerTimerTask.java:64
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveGpsLayerTimerTask.java:86
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:352
@@ -674,21 +668,19 @@ msgstr "Άνοιγμα σε Φυλλομετρητή"
 
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:86
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:106
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:138
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:145
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:608
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:57
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:107
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:86
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:63
-#: ../plugins/grid/src/grid/GridPlugin.java:43
-#: ../plugins/grid/src/grid/GridPlugin.java:49
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:510
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:507
 msgid "Edit"
 msgstr "Επεξεργασία"
 
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:87
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:112
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:128
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:129
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:134
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTester.java:95
 msgid "Reload"
@@ -699,11 +691,22 @@ msgid "Can only edit help pages from JOSM Online Help"
 msgstr ""
 "Η επεξεργασία σελίδων βοήθειας έιναι δυνατή μόνο από το JOSM Online Help"
 
-#: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:176
-#: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:195
+#: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:186
 #, java-format
 msgid "Error while loading page {0}"
 msgstr "Σφάλμα κατά την φόρτωση της σελίδας {0}"
+
+#: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:205
+#, java-format
+msgid "Helppage missing. Create it in <A HREF=\"{0}\">english</A>."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:210
+#, java-format
+msgid ""
+"Helppage missing. Create it in <A HREF=\"{0}\">english</A> or <A HREF=\"{1}"
+"\">your language</A>."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/HistoryInfoAction.java:25
 #: ../core/src/org/openstreetmap/josm/actions/HistoryInfoAction.java:28
@@ -731,7 +734,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinNodeWayAction.java:66
 msgid "Join Node and Line"
-msgstr ""
+msgstr "Ένωση Κόμβου και Γραμμής"
 
 #: ../core/src/org/openstreetmap/josm/actions/JosmAction.java:30
 msgid "No Shortcut"
@@ -764,7 +767,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:151
 msgid "Merge Anyway"
-msgstr ""
+msgstr "Επιβεβαίωση συγχώνευσης"
 
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:239
 msgid "Cannot merge nodes: Would have to delete a way that is still used."
@@ -842,7 +845,7 @@ msgstr "Άνοιγμα αρχείου."
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:170
 #, java-format
 msgid "Error while parsing {0}"
-msgstr ""
+msgstr "Σφάλμα κατά την ερμηνεία {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:71
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:174
@@ -859,10 +862,10 @@ msgstr "Άγνωστη επέκταση αρχείου: {0}"
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:122
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:160
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:123
-#: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:88
+#: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:86
 #, java-format
 msgid "Markers from {0}"
-msgstr ""
+msgstr "Σημάδια από {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:134
 msgid "Coordinates imported: "
@@ -908,7 +911,7 @@ msgstr "Ξεχωριστό Επίπεδο"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:41
 msgid "Enter URL to download:"
-msgstr ""
+msgstr "Εισάγετε URL προς λήψη:"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:46
 msgid "Download Location"
@@ -916,12 +919,12 @@ msgstr "Προορισμός Λήψης"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:48
 msgid "Download URL"
-msgstr ""
+msgstr "Λήψη URL"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:39
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:42
 msgid "Orthogonalize Shape"
-msgstr ""
+msgstr "Ορθογωνισμός Σχήματος"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:41
 msgid "Move nodes so all angles are 90 or 270 degree"
@@ -970,7 +973,7 @@ msgstr "Επικόλληση"
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteAction.java:31
 msgid "Paste contents of paste buffer."
-msgstr ""
+msgstr "Επικόληση περιεχομένων πρόχειρου."
 
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:27
 #: ../core/src/org/openstreetmap/josm/actions/PasteTagsAction.java:29
@@ -1062,11 +1065,11 @@ msgstr "Κενό έγγραφο"
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:81
 msgid "The document contains no data."
-msgstr ""
+msgstr "Το έγγραφο δεν περιέχει δεδομένα."
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:81
 msgid "Save anyway"
-msgstr ""
+msgstr "Επιβεβαίωση αποθήκευσης"
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:89
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:148
@@ -1081,7 +1084,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:91
 msgid "Reject Conflicts and Save"
-msgstr ""
+msgstr "Απόρριψη διενέξεων και Αποθήκευση"
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:100
 msgid "Save GPX file"
@@ -1133,7 +1136,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:35
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:39
 msgid "Show Status Report"
-msgstr ""
+msgstr "Προβολή Αναφοράς Κατάστασης"
 
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:37
 msgid "Show status report with useful information that can be attached to bugs"
@@ -1142,21 +1145,21 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:38
 #, java-format
 msgid "Help: {0}"
-msgstr ""
+msgstr "Βοήθεια: {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:92
 msgid "Status Report"
-msgstr ""
+msgstr "Αναφορά Κατάστασης"
 
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:93
 msgid "Copy to clipboard and close"
-msgstr ""
+msgstr "Αντιγραφή στο πρόχειρο και κλείσιμο"
 
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:93
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:206
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:208
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:871
 msgid "Close"
-msgstr ""
+msgstr "Κλείσιμο"
 
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:53
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:54
@@ -1208,13 +1211,13 @@ msgid ""
 "middle of the way.)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:291
+#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:289
 msgid ""
 "A role based relation membership was copied to all new ways.\n"
 "You should verify this and correct it when necessary."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:296
+#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:294
 #, java-format
 msgid "Split way {0} into {1} parts"
 msgstr ""
@@ -1257,7 +1260,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:111
 msgid "The current selection cannot be used for unglueing."
-msgstr ""
+msgstr "Η τρέχουσα επιλογή δεν μπορεί να χρησιμοποιηθεί για ξεκόλημα."
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:113
 msgid "Select either:"
@@ -1265,7 +1268,7 @@ msgstr "Επιλέξτε οποιοδήποτε:"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:114
 msgid "* One tagged node, or"
-msgstr ""
+msgstr "* Ένας κόμβος με ετικέτα, ή"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:115
 msgid "* One node that is used by more than one way, or"
@@ -1295,17 +1298,17 @@ msgid ""
 "own copy and all nodes will be selected."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:160
+#: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:159
 msgid "Unglued Node"
-msgstr ""
+msgstr "Ξεκολημένος Κόμβος"
 
-#: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:373
+#: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:372
 #, java-format
 msgid "Dupe into {0} nodes"
 msgstr ""
 
 #. only one changeCommand for a way, else garbage will happen
-#: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:397
+#: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:396
 #, java-format
 msgid "Dupe {0} nodes into {1} nodes"
 msgstr ""
@@ -1343,11 +1346,13 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/UpdateDataAction.java:76
 #: ../core/src/org/openstreetmap/josm/actions/UpdateDataAction.java:79
 msgid "Update Data"
-msgstr ""
+msgstr "Ενημέρωση Δεδομένων"
 
 #: ../core/src/org/openstreetmap/josm/actions/UpdateDataAction.java:24
 msgid "Updates the current data layer from the server (re-downloads data)"
 msgstr ""
+"Ενημερώνει το τρέχον επίπεδο δεδομένων από τον διακομιστή (επαναλαμβάνει την "
+"λήψη δεδομένων)"
 
 #: ../core/src/org/openstreetmap/josm/actions/UpdateDataAction.java:71
 msgid ""
@@ -1360,6 +1365,8 @@ msgid ""
 "This action will require {0} individual download requests. Do you wish to "
 "continue?"
 msgstr ""
+"Αυτή η ενέργεια θα απαιτήσει {0} επιμέρους αιτήσης λήψης. Θέλετε να "
+"συνεχίσετε;"
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:63
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:64
@@ -1388,7 +1395,7 @@ msgstr "Να αποσταλούν αυτές οι αλλαγές;"
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:104
 msgid "Upload Changes"
-msgstr ""
+msgstr "Αποστολή Αλλαγών"
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:112
 msgid "Nothing to upload. Get some data first."
@@ -1396,7 +1403,7 @@ msgstr "Τίποτα για αποστολή. Κάντε λήψη δεδομέν
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:117
 msgid "There are unresolved conflicts. You have to resolve these first."
-msgstr ""
+msgstr "Υπάρχουν ανεπίλυτες διενέξεις. Πρέπει να τις επιλύσετε πρώτα."
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:138
 msgid "No changes to upload."
@@ -1496,7 +1503,7 @@ msgstr "Λήψη δεδομένων GPS"
 
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadGpsTask.java:47
 msgid "Downloaded GPX Data"
-msgstr ""
+msgstr "Λήψη Δεδομένων GPX"
 
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadGpsTask.java:78
 msgid "Raw GPS data"
@@ -1513,7 +1520,7 @@ msgstr "Δεν εισήχθησαν δεδομένα"
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:68
 #, java-format
 msgid "Data Layer {0}"
-msgstr ""
+msgstr "Επίπεδο Δεδομένων {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:83
 msgid "OpenStreetMap data"
@@ -1526,15 +1533,15 @@ msgstr "Επίπεδο δεδομένων"
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTaskList.java:47
 #, java-format
 msgid "Download {0} of {1} ({2} left)"
-msgstr ""
+msgstr "Λήψη {0} από {1} (απομένουν {2})"
 
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTaskList.java:88
 msgid "The following errors occured during mass download:"
-msgstr ""
+msgstr "Τα παρακάτω σφάλματα συνέβησαν κατά την μαζική λήψη:"
 
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTaskList.java:89
 msgid "Errors during Download"
-msgstr ""
+msgstr "Σφάλματα κατά την λήψη"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:45
 msgid "Delete Mode"
@@ -1579,61 +1586,61 @@ msgstr ""
 msgid "selected"
 msgstr "επιλεγμένο"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:334
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:335
 msgid "Cannot add a node outside of the world."
 msgstr "Δεν μπορείτε να προσθέσετε κόμβο εκτός κόσμου."
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:486
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:489
 msgid "Add node"
 msgstr "Προσθήκη κόμβου"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:488
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:491
 msgid "Add node into way"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:493
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:496
 msgid "Connect existing way to node"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:495
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:498
 msgid "Add a new node to an existing way"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:497
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:500
 msgid "Add node into way and connect"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:876
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:879
 msgid "Create new node."
-msgstr ""
+msgstr "Δημιοθργία νέου κόμβου."
 
 #. We already know oldHighlights is not empty, but shift is pressed.
 #. We can assume the new node will be joined into an existing way
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:880
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:888
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:883
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:891
 #, java-format
 msgid "Insert new node into way."
 msgid_plural "Insert new node into {0} ways."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:886
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:909
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:889
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:912
 msgid "Select node under cursor."
-msgstr ""
+msgstr "Επιλογή κόμβου στο σημείο του κέρσορα."
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:897
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:900
 msgid "Start new way from last node."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:899
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:902
 msgid "Continue way from last node."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:911
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:921
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:914
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:924
 msgid "Finish drawing."
-msgstr ""
+msgstr "Τέλος σχεδιασμού."
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:77
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:78
@@ -1769,18 +1776,20 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:82
 msgid "<b>Baker Street</b> - 'Baker' and 'Street' in any key or name."
 msgstr ""
+"<b>Baker Street</b> - 'Baker' και 'Street' σε οποιοδήποτε κλειδί ή όνομα."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:83
 msgid "<b>\"Baker Street\"</b> - 'Baker Street' in any key or name."
 msgstr ""
+"<b>\"Baker Street\"</b> - 'Baker Street' σε οποιοδήποτε κλειδί ή όνομα."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:84
 msgid "<b>name:Bak</b> - 'Bak' anywhere in the name."
-msgstr ""
+msgstr "<b>name:Bak</b> - 'Bak' οπουδήποτε στο όνομα."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:85
 msgid "<b>-name:Bak</b> - not 'Bak' in the name."
-msgstr ""
+msgstr "<b>-name:Bak</b> - χωρίς 'Bak' στο όνομα."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:86
 msgid "<b>foot:</b> - key=foot set to any value."
@@ -1797,7 +1806,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:89
 msgid "<b>user:</b>... - all objects changed by user"
-msgstr ""
+msgstr "<b>user:</b>... - όλα τα αντικείμενα που αλλάχθηκαν από τον χρήστη"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:90
 msgid "<b>id:</b>... - object with given ID"
@@ -1809,19 +1818,19 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:92
 msgid "<b>modified</b> - all changed objects"
-msgstr ""
+msgstr "<b>modified</b> - όλα τα αλλαγμένα αντικείμενα"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:93
 msgid "<b>selected</b> - all selected objects"
-msgstr ""
+msgstr "<b>selected</b> - όλα τα επιλεγμένα αντικείμενα"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:94
 msgid "<b>incomplete</b> - all incomplete objects"
-msgstr ""
+msgstr "<b>incomplete</b> - όλα τα ημιτελή αντικείμενα"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:95
 msgid "<b>untagged</b> - all untagged objects"
-msgstr ""
+msgstr "<b>untagged</b> - όλα τα αντικείμενα χωρίς ετικέτες"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:96
 msgid "Use <b>|</b> or <b>OR</b> to combine with logical or"
@@ -1842,7 +1851,7 @@ msgstr "Αναζήτηση"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:108
 msgid "Start Search"
-msgstr ""
+msgstr "Έναρξη αναζήτησης"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:171
 #, java-format
@@ -1876,7 +1885,7 @@ msgstr "CS"
 msgid "RX"
 msgstr "RX"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:28
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:29
 #, java-format
 msgid ""
 "The regex \"{0}\" had a parse error at offset {1}, full error:\n"
@@ -1884,15 +1893,15 @@ msgid ""
 "{2}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:360
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:361
 msgid "Missing arguments for or."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:371
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:372
 msgid "Missing argument for not."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:382
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:383
 msgid "Expected closing parenthesis."
 msgstr "Αναμενόταν κλείσιμο παρένθεσης."
 
@@ -1903,7 +1912,7 @@ msgstr "Φόρτωση επιλογής"
 #: ../core/src/org/openstreetmap/josm/actions/search/SelectionWebsiteLoader.java:40
 #, java-format
 msgid "Contact {0}..."
-msgstr ""
+msgstr "Επικοινωνήστε με {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SelectionWebsiteLoader.java:45
 msgid "Downloading..."
@@ -1912,7 +1921,7 @@ msgstr "Λήψη..."
 #: ../core/src/org/openstreetmap/josm/actions/search/SelectionWebsiteLoader.java:57
 #, java-format
 msgid "Could not read from URL: \"{0}\""
-msgstr ""
+msgstr "Αδυναμία ανάγνωσης από το URL: \"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SelectionWebsiteLoader.java:60
 #, java-format
@@ -1926,7 +1935,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:79
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:54
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:78
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:500
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:497
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:61
 msgid "Add"
 msgstr "Προσθήκη"
@@ -1968,7 +1977,7 @@ msgstr "Ρύθμιση {0}={1} για {2} {3}"
 #: ../core/src/org/openstreetmap/josm/command/ConflictResolveCommand.java:78
 #, java-format
 msgid "Resolve {0} conflicts in {1} objects"
-msgstr ""
+msgstr "Επίλυση {0} διενέξεων σε {1} αντικείμενα"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:81
 #, java-format
@@ -1983,7 +1992,7 @@ msgstr "Διαγραφή {0} {1}"
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:145
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:152
 msgid "Conflicting relation"
-msgstr ""
+msgstr "Αντικρουόμενη σχέση"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:146
 #, java-format
@@ -1998,7 +2007,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:155
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:561
 msgid "Delete from relation"
-msgstr ""
+msgstr "Διαγραφή από σχέση"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:153
 #, java-format
@@ -2009,12 +2018,12 @@ msgstr ""
 "Η επιλογή \"{0}\" χρησιμοποιείτε από την σχέση \"{1}\"\n"
 "Διαγραφή απο την σχέση;"
 
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:330
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:328
 msgid "Split way segment"
 msgstr ""
 
 #. leave message in one tr() as there is a grammatical connection.
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:349
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:347
 msgid ""
 "You are about to delete nodes outside of the area you have downloaded."
 "<br>This can cause problems because other objects (that you don't see) might "
@@ -2033,8 +2042,8 @@ msgstr "Μετακίνηση"
 #: ../core/src/org/openstreetmap/josm/data/osm/Node.java:91
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:47
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:97
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:214
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:470
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:215
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:476
 msgid "node"
 msgid_plural "nodes"
 msgstr[0] "κόμβος"
@@ -2122,7 +2131,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:316
 #, java-format
 msgid "Cannot open preferences directory: {0}"
-msgstr ""
+msgstr "Αδυναμία ανοίγματος φακέλου προτιμήσεων: {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:334
 #, java-format
@@ -2191,16 +2200,16 @@ msgstr "Α"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/Node.java:87
 #: ../core/src/org/openstreetmap/josm/data/osm/Relation.java:83
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:114
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:113
 msgid "incomplete"
 msgstr "μη ολοκληρωμένη"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:51
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:47
 #, java-format
 msgid "Error: {0}"
 msgstr "Σφάλμα: {0}"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:51
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:47
 #, java-format
 msgid "Warning: {0}"
 msgstr "Προειδοποίηση: {0}"
@@ -2208,7 +2217,7 @@ msgstr "Προειδοποίηση: {0}"
 #: ../core/src/org/openstreetmap/josm/data/osm/Relation.java:87
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:69
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:99
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:470
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:476
 msgid "relation"
 msgid_plural "relations"
 msgstr[0] "σχέση"
@@ -2221,24 +2230,24 @@ msgid_plural "{0} members"
 msgstr[0] "{0} μέλος"
 msgstr[1] "{0} μέλη"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:120
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:119
 msgid "highway"
-msgstr ""
+msgstr "Οδός ταχείας κυκλοφορίας"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:121
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:120
 #: build/trans_presets.java:2981
 msgid "railway"
 msgstr "σιδηρόδρομος"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:122
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:121
 msgid "waterway"
 msgstr "υδατόρρευμα"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:123
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:122
 msgid "landuse"
 msgstr "χρήση γής"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:127
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:126
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:323
 #, java-format
 msgid "{0} node"
@@ -2289,12 +2298,12 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:580
 #, java-format
 msgid "Unknown role ''{0}''."
-msgstr ""
+msgstr "Άγνωστος ρόλος \"{0}\"."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:583
 #, java-format
 msgid "Unknown member type for ''{0}''."
-msgstr ""
+msgstr "Άγνωστος τύπος μέλους για το \"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/MapPaintVisitor.java:588
 msgid "No \"from\" way found."
@@ -2374,8 +2383,8 @@ msgstr "κείμενο"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:59
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:98
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:215
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:470
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:216
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:476
 msgid "way"
 msgid_plural "ways"
 msgstr[0] ""
@@ -2400,7 +2409,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:102
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:170
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:136
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:137
 msgid "background"
 msgstr "φόντο"
 
@@ -2455,11 +2464,11 @@ msgstr "Μερκατορικός"
 
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:43
 msgid "Could not read bookmarks."
-msgstr ""
+msgstr "Αδυναμία ανάγνωσης σελιδοδεικτών."
 
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:57
 msgid "Could not write bookmark."
-msgstr ""
+msgstr "Αδυναμία εγγραφής σελιδοδείκτη."
 
 #. setting up the properties table
 #: ../core/src/org/openstreetmap/josm/gui/ConflictResolver.java:78
@@ -2485,8 +2494,8 @@ msgstr "Τιμή"
 #, java-format
 msgid "{0} object has conflicts:"
 msgid_plural "{0} objects have conflicts:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} αντικείμενο έχει διενέξεις:"
+msgstr[1] "{0} αντικείμενα έχουν διενέξεις:"
 
 #: ../core/src/org/openstreetmap/josm/gui/ConflictResolver.java:227
 msgid "my version:"
@@ -2498,30 +2507,20 @@ msgstr "η έκδοση τους:"
 
 #: ../core/src/org/openstreetmap/josm/gui/ConflictResolver.java:239
 msgid "resolved version:"
-msgstr ""
+msgstr "επιλυμένη έκδοση:"
 
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:143
+#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:75
 msgid "Message of the day not available"
 msgstr "Το μήνυμα της ημέρας δεν είναι διαθέσιμο"
 
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:270
-msgid "Update available"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:271
-msgid "Version Details:"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:272
+#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:80
 #, java-format
-msgid ""
-"Yours: {2}; Current: {0}; <font style=\"font-size:x-small\">(latest "
-"untested: {1} &#150; not recommended)</font>"
+msgid "- running version is {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:295
+#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:115
 msgid "Downloading \"Message of the day\""
-msgstr ""
+msgstr "Λήψη \"Μηνύματος Ημέρας\""
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:37
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:38
@@ -2536,7 +2535,7 @@ msgstr "Αποστολή των τρεχουσών προτιμήσεων στο
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:55
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:56
 msgid "string"
-msgstr ""
+msgstr "συμβολοσειρά"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:54
 msgid "Name of the user."
@@ -2554,7 +2553,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:58
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:59
 msgid "string;string;..."
-msgstr ""
+msgstr "συμβολοσειρά;συμβολοσειρά;..."
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:57
 msgid ""
@@ -2609,7 +2608,7 @@ msgstr "Επιλογές"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:136
 msgid "Show this help"
-msgstr "Εμφάνιση αυτής τησ βοήθειας"
+msgstr "Εμφάνιση αυτής της βοήθειας"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:137
 msgid "Standard unix geometry argument"
@@ -2636,7 +2635,7 @@ msgid "Select with the given search"
 msgstr "Επιλογή με την δοθείσα αναζήτηση"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:143
-msgid "Don't launch in fullscreen mode"
+msgid "Launch in maximized mode"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:144
@@ -2681,46 +2680,52 @@ msgstr "Ρύθμιση προκαθορισμένων"
 msgid "Loading plugins"
 msgstr "Φόρτωση πρόσθετων"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:137
-#: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:107
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:144
 msgid "File"
 msgstr "Αρχείο"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:139
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:146
 msgid "View"
 msgstr "Προβολή"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:140
-#: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayPlugin.java:26
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:147
 msgid "Tools"
 msgstr "Εργαλεία"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:141
-msgid "Audio"
-msgstr "Ήχος"
-
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:142
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:148
 msgid "Presets"
 msgstr "Προεπιλογές"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:169
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:173
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatPlugin.java:113
-#: ../plugins/livegps/src/LiveGpsPlugin.java:42
-#: ../plugins/livegps/src/LiveGpsPlugin.java:68
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:42
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:68
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:46
-#: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:40
+#: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:38
 #, java-format
 msgid "Menu: {0}"
 msgstr "Μενού: {0}"
 
 #. TODO move code to an "action" like the others?
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:210
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:214
 msgid "Wireframe View"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:212
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:216
 msgid "Toggle Wireframe view"
 msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:242
+msgid "Full Screen"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:244
+msgid "Toggle Full Screen view"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:283
+msgid "Audio"
+msgstr "Ήχος"
 
 #: ../core/src/org/openstreetmap/josm/gui/MapMover.java:84
 msgid "Move right"
@@ -2797,11 +2802,11 @@ msgstr "το επίπεδο δεν είναι στη λίστα."
 msgid "Contacting the OSM server..."
 msgstr "Επικοινωνία με τον διακομιστή OSM..."
 
-#: ../core/src/org/openstreetmap/josm/gui/PleaseWaitRunnable.java:89
+#: ../core/src/org/openstreetmap/josm/gui/PleaseWaitRunnable.java:104
 msgid "Error while parsing"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/PleaseWaitRunnable.java:92
+#: ../core/src/org/openstreetmap/josm/gui/PleaseWaitRunnable.java:107
 msgid "File not found"
 msgstr "Το αρχείο δεν βρέθηκε"
 
@@ -2838,14 +2843,14 @@ msgstr "Άνοιγμα λίστας όλων των εντολών (μνήμη �
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:31
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:72
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:91
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:92
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:165
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:452
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:80
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:82
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:54
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:190
-#: ../plugins/livegps/src/LiveGpsDialog.java:46
+#: ../plugins/livegps/src/livegps/LiveGpsDialog.java:46
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:69
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:97
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:74
@@ -2878,55 +2883,55 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:71
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:72
 msgid "Conflict"
-msgstr ""
+msgstr "Διένεξη"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:71
 msgid "Merging conflicts."
-msgstr ""
+msgstr "Συγχώνευση διενέξεων."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:121
 msgid "Resolve Conflicts"
-msgstr ""
+msgstr "Επίλυση Διενέξεων"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:123
 msgid "Solve Conflict"
-msgstr ""
+msgstr "Επίλυση Διένεξης"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:146
 #, java-format
 msgid "Conflicts: {0}"
-msgstr ""
+msgstr "Διενέξεις: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:87
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:88
 msgid "Click Reload to refresh list"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:90
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:91
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:92
 msgid "History"
 msgstr "Ιστορικό"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:90
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:91
 msgid "Display the history of all selected items."
 msgstr "Εμφάνιση του ιστορικού όλων των επιλεγμένων αντικειμένων."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:102
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:103
 msgid "Object"
 msgstr "Αντικείμενο"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:102
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:103
 msgid "Date"
 msgstr "Ημερομηνία"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:128
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:129
 msgid "Reload all currently selected objects and refresh the list."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:134
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:135
 msgid "Revert"
 msgstr "Επαναφορά"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:135
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:136
 msgid ""
 "Revert the state of all currently selected objects to the version selected "
 "in the history list."
@@ -2934,8 +2939,8 @@ msgstr ""
 "Επαναφορά της κατάστασης όλων των επιλεγμένων αντικειμένων στην έκδοση που "
 "έχει απιλεγεί στη λίστα ιστορικού."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:137
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:180
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:138
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:181
 msgid "Not implemented yet."
 msgstr "Δεν έχει υλοποιηθεί ακόμη."
 
@@ -2949,7 +2954,7 @@ msgstr "Υπάρχουν μη αποθηκευμένες αλλαγές. Δια�
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:81
 msgid "Delete Layer"
-msgstr ""
+msgstr "Διαγραφή Επιπέδου"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:86
 msgid "Do you really want to delete the whole layer?"
@@ -3111,7 +3116,7 @@ msgstr "Ιδιότητες / Υπαγωγές"
 #. We need this twice, so cache result
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:178
 msgid "Apply Changes"
-msgstr ""
+msgstr "Εφαρμογή αλλαγών"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:206
 msgid "Create new relation"
@@ -3128,7 +3133,7 @@ msgstr "Επεξεργασία σχέσης #{0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:230
 msgid "Basic"
-msgstr ""
+msgstr "Βασικό"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:274
 msgid "Occupied By"
@@ -3144,7 +3149,7 @@ msgstr "Μέλη"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:351
 msgid "Move Up"
-msgstr ""
+msgstr "Μετακίνηση Πάνω"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:351
 msgid "Move the currently selected members up"
@@ -3160,15 +3165,15 @@ msgstr "Προσθήκη επιλεγμένων αντικειμένων ως μ
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:365
 msgid "Remove Selected"
-msgstr ""
+msgstr "Αφαίρεση Επιλεγμένων"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:366
 msgid "Remove all currently selected objects from relation"
-msgstr ""
+msgstr "Αφαίρεση όλων των επιλεγμένων αντικειμένων από την σχέση"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:373
 msgid "Move Down"
-msgstr ""
+msgstr "Μετακίνηση Κάτω"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:373
 msgid "Move the currently selected members down"
@@ -3192,26 +3197,26 @@ msgstr "Λήψη μελών"
 msgid "Download all incomplete ways and nodes in relation"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:453
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:452
 #, java-format
 msgid "Members: {0}"
 msgstr "Μέλη: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:461
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:460
 #, java-format
 msgid "Relation Editor: {0}"
-msgstr ""
+msgstr "Επεξεργαστής Σχέσεων: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:585
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:245
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:584
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:246
 msgid "There were conflicts during import."
 msgstr "Υπήρχαν συγκρούσεις στην εισαγωγή"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:593
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:592
 msgid "Error parsing server response."
 msgstr "Σφάλμα κατά την ανάλυση της απάντησης του διακομιστή."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:597
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationEditor.java:596
 msgid "Cannot connect to server."
 msgstr "Αδυναμία σύνδεσης με το διακομιστή"
 
@@ -3302,6 +3307,8 @@ msgstr ""
 msgid ""
 "Close this panel. You can reopen it with the buttons in the left toolbar."
 msgstr ""
+"Κλείστε αυτόν τον πίνακα. Μπορείτε να τον ξανανοίξετε με τα κουμπιά στην "
+"αριστερή εργαλειοθήκη."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:220
 msgid "Click to minimize/maximize the panel content"
@@ -3591,7 +3598,7 @@ msgstr "τρέχουσα διαφορά: {0} δευτερόλεπτα"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:360
 msgid "timezone difference: "
-msgstr ""
+msgstr "διαφορά στη ζώνη ώρας: "
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:384
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:278
@@ -3610,7 +3617,7 @@ msgid "Sync clock"
 msgstr "Συγχρονισμός ρολογιού"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:436
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:237
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:238
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:39
 msgid "JPEG images (*.jpg)"
 msgstr "Εικόνες JPEG (*.jpg)"
@@ -3635,7 +3642,7 @@ msgstr "Εισάγετε την εμφνιζόμενη ημερομηνία (μ�
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:495
 msgid "GPS unit timezone (difference to photo)"
-msgstr ""
+msgstr "ζώνη ώρας της συσκευής GPS (διαφορά από την φωτογραφία)"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:503
 msgid "Synchronize Time with GPS Unit"
@@ -3646,44 +3653,44 @@ msgstr "Συγχρονισμός Ώρας με τη μονάδα GPS"
 msgid "Time entered could not be parsed."
 msgstr "Η ώρα ποθ εισήχθει δεν μπόρεσε να ερμηνευθεί."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:108
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:109
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:122
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:217
 msgid "gps point"
 msgstr "σημείο gps"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:112
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:113
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:185
 msgid "Customize line drawing"
 msgstr "Προσαρμογή του σχεδιασμού γραμμών"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:116
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:117
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:189
 msgid "Use global settings."
 msgstr "Χρηση καθολικών ρυθμίσεων."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:117
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:118
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:190
 msgid "Draw lines between points for this layer."
 msgstr "Σχεδίαση γραμμών ανάμεσα στα σημεία για αυτό το επίπεδο."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:118
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:119
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:191
 msgid "Do not draw lines between points for this layer."
 msgstr "ΠΑράλειψη σχεδίασης γραμμών ανάμεσα στα σημεία για αυτό το επίπεδο."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:130
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:131
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:203
 msgid "Select line drawing options"
 msgstr "Επιλογή προτιμήσεων για τον σχεδιασμό γραμμών"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:141
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:142
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:214
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:194
 msgid "Customize Color"
 msgstr "Προσαρμογή Χρώματος"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:146
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:147
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:218
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:199
 #: ../plugins/grid/src/grid/GridLayer.java:162
@@ -3691,91 +3698,91 @@ msgstr "Προσαρμογή Χρώματος"
 msgid "OK"
 msgstr "Εντάξει"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:146
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:147
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:218
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:199
 #: ../plugins/grid/src/grid/GridLayer.java:162
 msgid "Default"
 msgstr "Προκαθορισμένο"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:147
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:148
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:219
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:200
 #: ../plugins/grid/src/grid/GridLayer.java:163
 msgid "Choose a color"
 msgstr "Επιλέξτε ένα χρώμα"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:163
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:164
 msgid "Markers From Named Points"
 msgstr "Σημάδια από Ονομασμένα Σημεία"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:174
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:175
 #, java-format
 msgid "Named Trackpoints from {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:181
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:182
 msgid "Import Audio"
 msgstr "Εισαγωγή Ήχου"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:194
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:195
 msgid "Wave Audio files (*.wav)"
 msgstr "Αρχεία Κυματομορφής (*.wav)"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:202
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:203
 #, java-format
 msgid "Audio markers from {0}"
 msgstr "Σημάδια ήχου από {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:224
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:225
 msgid "Import images"
 msgstr "Εισαγωγή εικόνων"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:294
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:295
 #, java-format
 msgid "{0} track, "
 msgid_plural "{0} tracks, "
 msgstr[0] "{0} τροχιά, "
 msgstr[1] "{0} τροχιές, "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:295
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:296
 #, java-format
 msgid "{0} route, "
 msgid_plural "{0} routes, "
 msgstr[0] "{0} διαδρομή, "
 msgstr[1] "{0} διαδρομές, "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:296
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:297
 #, java-format
 msgid "{0} waypoint"
 msgid_plural "{0} waypoints"
 msgstr[0] "{0} σημείο αναφοράς"
 msgstr[1] "{0} σημεία αναφοράς"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:300
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:301
 #, java-format
 msgid "Name: {0}"
 msgstr "Όνομα: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:303
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:304
 #, java-format
 msgid "Description: {0}"
 msgstr "Περιγραφή: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:327
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:328
 msgid "Timespan: "
 msgstr "Διάρκεια: "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:334
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:335
 msgid "Length: "
 msgstr "Μήκος: "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:645
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:646
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:66
 msgid "Convert to data layer"
 msgstr "Μετατροπή σε επίπεδο δεδομένων"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:649
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:650
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:70
 msgid ""
 "<html>Upload of unprocessed GPS data as map data is considered harmful."
@@ -3784,43 +3791,45 @@ msgstr ""
 "<html>Η αποστολή μη επεξεργασμένων δεδομένων GPS ως δεδομένα χάρτη θερείτε "
 "βλαβερή.<br>Αν θέλετε να αποστείλετε ίχνη, κοιτάξτε εδώ:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:650
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:651
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:71
 msgid "http://www.openstreetmap.org/traces"
 msgstr "http://www.openstreetmap.org/traces"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:671
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:442
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:444
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:84
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:209
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:220
 #, java-format
 msgid "Converted from: {0}"
 msgstr "Μετατράπηκε από: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:683
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:704
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:795
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:684
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:705
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:796
 msgid "Download from OSM along this track"
 msgstr "Λήψη από OSM κατά μηκός αυτού του ίχνους"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:690
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:691
 msgid "Download everything within:"
 msgstr "Λήψη όλων εντός:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:693
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:694
 #, java-format
 msgid "{0} meters"
 msgstr "{0} μέτρα"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:696
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:697
 msgid "Maximum area per request:"
 msgstr "Μέγιστη περιοχή ανά αίτημα:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:699
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:700
 #, java-format
 msgid "{0} sq km"
 msgstr "{0} τετρ. χλμ"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:791
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:792
 #, java-format
 msgid ""
 "<html>This action will require {0} individual<br>download requests. Do you "
@@ -3829,38 +3838,39 @@ msgstr ""
 "<html>Αυτή η ενέργεια {0} ξεχωριστές<br>αιτήσεις λήψης. Επιθυμείτε<br>να "
 "συνεχίσετε;</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:865
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:866
 msgid "No GPX track available in layer to associate audio with."
 msgstr ""
 "Δεν υπάρχει διαθέσιμο ίχνος GPX  στο επίπεδο για την συσχέτιση με τον ήχο."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1012
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1013
 msgid ""
 "Some waypoints with timestamps from before the start of the track or after "
 "the end were omitted or moved to the start."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1016
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1017
 msgid ""
 "Some waypoints which were too far from the track to sensibly estimate their "
 "time were omitted."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:140
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:141
 msgid "outside downloaded area"
 msgstr "εκτός περιοχής λήψης"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:343
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:344
 #, java-format
 msgid "{0} consists of:"
 msgstr "το {0} αποτελείται από:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:347
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:348
 #, java-format
 msgid " ({0} deleted.)"
 msgstr " ({0} διαγράφηκαν.)"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:439
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:441
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:206
 msgid "Convert to GPX layer"
 msgstr "Μετατροπή σε επίπεδο GPX"
 
@@ -3939,6 +3949,8 @@ msgstr "Συγχρονισμός ήχου"
 msgid ""
 "You need to pause audio at the moment when you hear your synchronization cue."
 msgstr ""
+"Θα χρειαστεί να κάνετε παύση στον ήχο την στιγμή που θα ακούσετε τον ήχο "
+"συγχρονισμού."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:226
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:228
@@ -4001,7 +4013,7 @@ msgstr "Προχωρημένες προτιμήσεις"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:39
 msgid "Setting Preference entries directly. Use with caution!"
-msgstr ""
+msgstr "Απ' ευθείας Ρύθμιση Προτιμήσεων. Χρησιμοποιήστε με προσοχή!"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:55
 msgid "Current value is default."
@@ -4024,14 +4036,14 @@ msgstr "Εισάγεται ένα νέο ζεύγος κλειδιού/τιμή�
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:120
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:80
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:545
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:542
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:85
 msgid "Please select the row to delete."
 msgstr "Παρακαλώ επιλέξτε την γραμμή για διαγραφή."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:156
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:67
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:529
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:526
 msgid "Please select the row to edit."
 msgstr "Παρακαλώ επιλέξτε την γραμμή για επεξεργασία."
 
@@ -4076,6 +4088,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:39
 msgid "Start of track (will always do this if no other markers available)."
 msgstr ""
+"Αρχή της διαδρομής (θα το κάνει πάντοτε εάν δεν υπάρχουν άλλα επιλεγμένα "
+"σημεία διαθέσιμα)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:56
 msgid "Show or hide the audio menu entry on the main menu bar."
@@ -4765,10 +4779,10 @@ msgstr "Χρώμα"
 #. item "Boundaries/Civil" label "Edit Civil Boundary"
 #. <space />
 #. <key key="boundary" value="civil" />
-#. item "Boundaries/political" label "Edit Political Boundary"
+#. item "Boundaries/Political" label "Edit Political Boundary"
 #. <space />
 #. <key key="boundary" value="political" />
-#. item "Boundaries/National_park" label "Edit National Park Boundary"
+#. item "Boundaries/National park" label "Edit National Park Boundary"
 #. <space />
 #. <key key="boundary" value="national_park" />
 #. item "Land use/Tree" label "Edit Tree"
@@ -4860,7 +4874,6 @@ msgstr "Χρώμα"
 #. <key key="type" value="multipolygon" />
 #. <optional>
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:64
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginTableModel.java:107
 #: build/trans_presets.java:56 build/trans_presets.java:92
 #: build/trans_presets.java:130 build/trans_presets.java:165
 #: build/trans_presets.java:185 build/trans_presets.java:203
@@ -5015,7 +5028,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:135
 #, java-format
 msgid "Layer: {0}"
-msgstr ""
+msgstr "Επίπεδο: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:145
 msgid "Choose"
@@ -5133,7 +5146,7 @@ msgstr "Ποδήλατο"
 #: build/trans_presets.java:963 build/trans_presets.java:1011
 #: build/trans_presets.java:1024
 msgid "Foot"
-msgstr ""
+msgstr "Πεζοί"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:38
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:39
@@ -5166,7 +5179,7 @@ msgstr "Σχεδιασμός ορίων δεδομένων που έχουν λ�
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:46
 msgid "Draw virtual nodes in select mode"
-msgstr ""
+msgstr "Σχεδιασμός εικονικών κόμβων σε κατάσταση επιλογής"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:47
 msgid "Draw inactive layers in other color"
@@ -5223,7 +5236,7 @@ msgstr "Ελάχιστη απόσταση (pixels)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:109
 msgid "Draw larger dots for the GPS points."
-msgstr "Σχεδιασμός μεγαλύτερων κοθκίδων για τα σημεία GPS."
+msgstr "Σχεδιασμός μεγαλύτερων κουκίδων για τα σημεία GPS."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:136
 msgid ""
@@ -5233,7 +5246,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:137
 msgid "Colors points and track segments by velocity."
-msgstr ""
+msgstr "Χρωματισμός σημείων και τμημάτων ιχνών ανάλογα με την ταχύτητα."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:138
 msgid ""
@@ -5247,7 +5260,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:148
 msgid "Track and Point Coloring"
-msgstr ""
+msgstr "Χρωματισμός Ιχνών και Σημείων"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:157
 msgid "GPS Points"
@@ -5328,7 +5341,7 @@ msgstr "Όψη και Αίσθηση"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LanguagePreference.java:51
 msgid "Default (Auto determined)"
-msgstr ""
+msgstr "Προεπιλογή (οριζόμενο αυτόματα)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LanguagePreference.java:62
 msgid "Language"
@@ -5342,10 +5355,8 @@ msgstr "Ρύθμιση διαθέσιμων πρόσθετων."
 msgid "Download List"
 msgstr "Λήψη λίστας"
 
-#. tabPane.addTab(tr("Manage"),  manager = new ManagePanel(this));
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:51
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:80
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:51
 msgid "Update"
 msgstr "Ενημέρωση"
 
@@ -5357,7 +5368,7 @@ msgstr "Ρύθμιση τοποθεσιών..."
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:81
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:92
 msgid "Add either site-josm.xml or Wiki Pages."
-msgstr ""
+msgstr "Προσθέστε είτε το site-josm.xml ή τις Σελίδες Βίκι."
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:89
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:99
@@ -5529,7 +5540,7 @@ msgid "Add a new tagging preset source to the list."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:90
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:557
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:554
 msgid "Delete the selected source from the list."
 msgstr "Διαγραφή της επιλεγμένης πηγής από την λίστα."
 
@@ -5697,49 +5708,49 @@ msgstr "Ομάδες τροποποιητών"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:383
 msgid "More information about this feature"
-msgstr ""
+msgstr "Περισότερες πληροφορίες για αυτό το χαρακτηριστικό"
 
 #. space
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:393
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:399
 msgid "Optional Attributes:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:437
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:443
 #, java-format
 msgid "Use preset ''{0}'' of group ''{1}''"
 msgstr "Χρήση προεπιλογής \"{0}\" από ομάδα \"{1}\""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:438
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:444
 #, java-format
 msgid "Use preset ''{0}''"
 msgstr "Χρήση προεπιλογής \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:470
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:476
 msgid "closedway"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:475
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:481
 #, java-format
 msgid "Unknown type: {0}"
-msgstr ""
+msgstr "Άγνωστος τύπος: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:552
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:558
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTester.java:50
 #, java-format
 msgid "Could not read tagging preset source: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:555
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:561
 #, java-format
 msgid "Error parsing {0}: "
 msgstr "Σφάλμα ανάλυσης {0}: "
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:572
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:578
 #, java-format
 msgid "Elements of type {0} are supported."
-msgstr ""
+msgstr "Υποστηρίζονται στοιχεία τύπου {0}."
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:598
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:604
 #: ../plugins/terracer/src/terracer/TerracerAction.java:108
 #, java-format
 msgid "Change {0} object"
@@ -5747,20 +5758,20 @@ msgid_plural "Change {0} objects"
 msgstr[0] "Αλλαγή {0} αντικειμένου"
 msgstr[1] "Αλλαγή {0} αντικειμένων"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:601
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:607
 #: ../plugins/terracer/src/terracer/TerracerAction.java:110
 msgid "Nothing selected!"
 msgstr "Τίποτα επιλεγμένο!"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:603
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:609
 msgid "Selection unsuitable!"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:610
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:616
 msgid "Apply Preset"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:676
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:682
 msgid "Change Properties"
 msgstr "Αλλαγή ιδιοτήτων"
 
@@ -5788,7 +5799,7 @@ msgstr "Μεταφόρτωση δεδομένων OSM..."
 
 #. SAXException does not chain correctly
 #: ../core/src/org/openstreetmap/josm/io/DiffResultReader.java:59
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:266
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:272
 msgid "NullPointerException, possibly some missing tags."
 msgstr "NullPointerException, πιθανόν να λείπουν κάποιες ετικέτες"
 
@@ -5850,25 +5861,25 @@ msgstr "Βρέθηκε <member> στοιχείο εκτός σχέσης."
 msgid "Incomplete <member> specification with ref=0"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:295
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:301
 msgid "Illegal object with id=0"
 msgstr "Άγνωστο αντικείμενο με id=0"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:351
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:348
 #, java-format
 msgid "Missing required attribute \"{0}\"."
 msgstr "Ανύπαρκτο απαιτούμενο χαρακτηριστικό \"{0}\"."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:378
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:375
 #, java-format
 msgid "Skipping a way because it includes a node that doesn''t exist: {0}\n"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:508
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:505
 msgid "Prepare OSM data..."
 msgstr "Προετοιμασία δεδομένων OSM..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:522
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:519
 msgid "Ill-formed node id"
 msgstr "Κακοσχηματισμένο id κόμβου"
 
@@ -5888,7 +5899,7 @@ msgid ""
 "Server returned internal error. Try a reduced area or retry after waiting "
 "some time."
 msgstr ""
-"Ο διακομιστής επέστρεψε εσωτερικό σφάλμα. Χρησιμοποιήστε μικρότερη περιοχή ή "
+"Ο διακομιστής επέστρεψε εσωτερικό σφάλμα. Δοκιμάστε μια μικρότερη περιοχή ή "
 "ξαναδοκιμάστε αργότερα."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:115
@@ -5902,7 +5913,7 @@ msgstr "Οριστικοποίηση σχολίου"
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:146
 #, java-format
 msgid "{0}% ({1}/{2}), {3} left. Uploading {4}: {5} (id: {6})"
-msgstr ""
+msgstr "{0}% ({1}/{2}), {3} απομένουν. Αποστολή {4}: {5} (id: {6})"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:162
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:64
@@ -6035,6 +6046,10 @@ msgid "Could not load plugin {0}. Delete from preferences?"
 msgstr ""
 "Δεν ήταν δυνατή η φόρτωση του πρόσθετου {0}. Διαγραφή από τις προτιμήσεις;"
 
+#: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:156
+msgid "Keep plugin"
+msgstr ""
+
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:198
 msgid ""
 "Activating the updated plugins failed. Check if JOSM has the permission to "
@@ -6159,7 +6174,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:107
 msgid "Download Plugins"
-msgstr ""
+msgstr "Λήψη Πρόσθετων"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:168
 #, java-format
@@ -6189,7 +6204,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:212
 msgid "Delete and Download"
-msgstr ""
+msgstr "Διαγραφή και Λήψη"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:217
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:222
@@ -6238,7 +6253,7 @@ msgstr "Μη Αναμενόμενη Εξαίρεση"
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:67
 #, java-format
 msgid "Please report a ticket at {0}"
-msgstr ""
+msgstr "Παρακαλώ αναφέρετε ένα δελτίο στο {0}"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:68
 msgid "Include your steps to get to the error (as detailed as possible)!"
@@ -6300,7 +6315,7 @@ msgstr "Συμβουλή: Μπορείτε να αλλάξετε τις συντ
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:71
 msgid "Upload Trace"
-msgstr ""
+msgstr "Αποστολή Ίχνους"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:82
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
@@ -6310,7 +6325,7 @@ msgstr "Αποστολή ιχνών"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:102
 msgid "Public"
-msgstr ""
+msgstr "Δημόσιο"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:103
 msgid "Selected makes your trace public in openstreetmap.org"
@@ -6320,62 +6335,70 @@ msgstr ""
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:105
 #: build/trans_presets.java:2985
 msgid "Description"
+msgstr "Περιγραφή"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:106
+msgid "Please enter Description about your trace."
 msgstr ""
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:108
 msgid "Tags"
+msgstr "Ετικέτες"
+
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:109
+msgid "Please enter tags about your trace."
 msgstr ""
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:153
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:155
 #, java-format
 msgid "Selected track: {0}"
 msgstr ""
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:176
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:178
 msgid "Connecting..."
-msgstr ""
+msgstr "Σύνδεση..."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:199
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:201
 msgid "Upload cancelled"
-msgstr ""
+msgstr "Ακυρώθηκε η αποστολή"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:209
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:211
 msgid "Error while uploading"
-msgstr ""
+msgstr "Σφάλμα κατά την αποστολή"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:260
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:262
 msgid "GPX upload was successful"
-msgstr ""
+msgstr "Η αποστολη GPX ήταν επιτυχής"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:261
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:263
 msgid "Upload failed. Server returned the following message: "
-msgstr ""
+msgstr "Η αποστολή απέτυχε. Ο διακομιστής επέστρεψε το παρακάτω μηνυμα: "
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:303
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:305
 #, java-format
 msgid "Uploading GPX track: {0}% ({1} of {2})"
-msgstr ""
+msgstr "Αποστολή ίχνους GPX : {0}% ({1} από {2})"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:335
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:337
 msgid "No description provided. Please provide some description."
 msgstr ""
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:338
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:360
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:340
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:362
 msgid "No GPX layer selected. Cannot upload a trace."
 msgstr ""
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:341
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:343
 msgid "No username provided."
-msgstr ""
+msgstr "Δεν δώθηκε όνομα χρήστη."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:344
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:346
 msgid "No password provided."
-msgstr ""
+msgstr "Δεν δώθηκε συνθηματικό."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:376
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:378
 msgid "Uploading GPX Track"
-msgstr ""
+msgstr "Αποστολή Ίχνους GPX"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
 msgid "Uploads traces to openstreetmap.org"
@@ -6479,7 +6502,7 @@ msgid "Open images with AgPifoJ..."
 msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:50
-#: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:49
+#: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:47
 msgid "Load set of images as a new layer."
 msgstr "Φόρτωση ομάδας εικόνων ως νέο επίπεδο."
 
@@ -6544,15 +6567,15 @@ msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:436
 msgid "GPX track: "
-msgstr ""
+msgstr "Ίχνος GPX: "
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:441
 msgid "Open another GPX trace"
-msgstr ""
+msgstr "Άνοιγμα άλλου ίχνους GPX"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:457
 msgid "Timezone: "
-msgstr ""
+msgstr "Ζώνη Ώρας: "
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:479
 msgid "Offset:"
@@ -6574,7 +6597,7 @@ msgstr "Όλες οι εικόνες"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:527
 msgid "Images with no exif position"
-msgstr ""
+msgstr "Εικόνες χωρίς θέση exif"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:537
 msgid "Not yet tagged images"
@@ -6594,11 +6617,11 @@ msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:569
 msgid "You should select a GPX track"
-msgstr ""
+msgstr "Πρέπει να επιλέξετε ένα ίχνος GPX"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:570
 msgid "No selected GPX track"
-msgstr ""
+msgstr "Δεν επιλέχθηκε ίχνος GPX"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:582
 #, java-format
@@ -6633,11 +6656,11 @@ msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:675
 msgid "The selected photos don't contain time information."
-msgstr ""
+msgstr "Οι επιλεγμένες φωτογραφίες δεν περιέχουν πληροφορίες ώρας."
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:676
 msgid "Photos don't contain time information"
-msgstr ""
+msgstr "Οι φωτογραφίες δεν περιέχουν πληροφορίες ώρας"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:713
 msgid ""
@@ -6646,22 +6669,22 @@ msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:714
 msgid "GPX Track has no time information"
-msgstr ""
+msgstr "Τ οίχνος GPX δεν περιέχει πληροφορίες ώρας"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:759
 #, java-format
 msgid "Timezone: {0}"
-msgstr ""
+msgstr "Ζώνη ώρας: {0}"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:760
 #, java-format
 msgid "Minutes: {0}"
-msgstr ""
+msgstr "Λεπτά: {0}"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:761
 #, java-format
 msgid "Seconds: {0}"
-msgstr ""
+msgstr "Δευτερόλεπτα: {0}"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:779
 #, java-format
@@ -6671,12 +6694,12 @@ msgstr ""
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:782
 #, java-format
 msgid "(Time difference of {0} days)"
-msgstr ""
+msgstr "(Διαφορά ώρας {0} ημερών)"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:789
 #, java-format
 msgid "Offset between track and photos: {0}m {1}s"
-msgstr ""
+msgstr "Απόκλειση ανάμεσα σε ίχνος και φωτογραφίες: {0}λ {1}δ"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:851
 msgid ""
@@ -6690,7 +6713,7 @@ msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:869
 msgid "Adjust timezone and offset"
-msgstr ""
+msgstr "Ρύθμιση ζώνης ώρας και απόκλεισης"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:871
 msgid "Default Values"
@@ -6748,7 +6771,7 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:283
 msgid "Choose from..."
-msgstr ""
+msgstr "Επιλέξτε από..."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:292
 msgid "Select commune"
@@ -6758,24 +6781,24 @@ msgstr ""
 msgid "Select Tableau d'Assemblage"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:128
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:129
 msgid "Cadastre"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:139
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:138
 msgid "Auto sourcing"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:164
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:163
 msgid "Invalid projection"
-msgstr ""
+msgstr "Άκυρη προβολή"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:165
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:164
 #, java-format
 msgid "Change the projection to {0} first."
-msgstr ""
+msgstr "Αλλάξτε την προβολή σε {0} πρώτα."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:169
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:168
 msgid ""
 "To enable the cadastre WMS plugin, change\n"
 "the JOSM projection to Lambert and restart"
@@ -6783,19 +6806,19 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:28
 msgid "Replace original background by JOSM background color."
-msgstr ""
+msgstr "Αντικατάσταση αρχικού φόντου με το χρώμα φόντου του JOSM."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:30
 msgid "Reverse grey colors (for black backgrounds)."
-msgstr ""
+msgstr "Αντιστορή γκρι χρωμάτων (για μαύρο φόντο)."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:32
 msgid "Set background transparent."
-msgstr ""
+msgstr "Διαφανές φόντο."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:34
 msgid "Draw boundaries of downloaded data."
-msgstr ""
+msgstr "Σχεδιασμός ορίων δεδομένων που λήφθησαν."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:47
 msgid "Enable automatic caching."
@@ -6825,7 +6848,7 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:65
 msgid "Source"
-msgstr ""
+msgstr "Πηγή"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:71
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:161
@@ -6833,6 +6856,8 @@ msgid ""
 "Replace the original white background by the backgound color defined in JOSM "
 "preferences."
 msgstr ""
+"Αντικατάσταση του αρχικού λευκού φόντου με το χρώμα φόντου που ορίζεται στις "
+"προτιμήσεις του JOSM."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:76
 msgid ""
@@ -6847,6 +6872,7 @@ msgstr ""
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:92
 msgid "Set WMS layers transparency. Right is opaque, left is transparent."
 msgstr ""
+"Ρύθμιση διαφάνειας επιπέδων WMS. Δεξιά για αδιαφανές, αριστερά για διαφανές."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:102
 msgid "Draw a rectangle around downloaded data from WMS server."
@@ -6873,6 +6899,7 @@ msgstr ""
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:167
 msgid "Oldest files are automatically deleted when this size is exceeded"
 msgstr ""
+"Τα παλαιότερα αρχεία διαγράφονται αυτόματα όταν ξεπεραστεί αυτό το μέγεθος"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CheckSourceUploadHook.java:78
 msgid "Auto-tag source added:"
@@ -6880,24 +6907,24 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CheckSourceUploadHook.java:83
 msgid "Add \"source=...\" to elements?"
-msgstr ""
+msgstr "Προσθήκη \"source=...\" στα στοιχεία;"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:43
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:47
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:20
 #, java-format
 msgid "Downloading {0}"
-msgstr ""
+msgstr "Λήψη {0}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:51
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:55
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:28
 msgid "Contacting WMS Server..."
-msgstr ""
+msgstr "Επικοινωνία με διακομιστή WMS..."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:157
 msgid "Create buildings"
-msgstr ""
+msgstr "Δημιουργία κτηρίων"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:264
 msgid ""
@@ -6920,7 +6947,7 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:126
 msgid "Create boundary"
-msgstr ""
+msgstr "Δημιουργία ορίου"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:20
 msgid "Extract commune boundary"
@@ -6929,7 +6956,7 @@ msgstr ""
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
 msgid "Only on vectorized layers"
-msgstr ""
+msgstr "Μόνο σε διανυσματικά επίπεδα"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:20
 msgid "Extract building footprints"
@@ -6948,14 +6975,15 @@ msgstr ""
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLambertZone.java:25
 msgid "Set manually the Lambert zone (e.g. for locations between two zones)"
 msgstr ""
+"Χειροκίνητη ρύθμιση ζώνης Lambert (π.χ. για τοποθεσίες μεταξύ δύο ζωνών)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLambertZone.java:33
 msgid "Zone"
-msgstr ""
+msgstr "Ζώνη"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLambertZone.java:44
 msgid "Lambert zone"
-msgstr ""
+msgstr "Ζώνη Lambert"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLoadFromCache.java:19
 msgid "Load location from cache (only if cache is enabled)"
@@ -6963,11 +6991,11 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:26
 msgid "Change location"
-msgstr ""
+msgstr "Αλλαγή θέσης"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:26
 msgid "Set a new location for the next request"
-msgstr ""
+msgstr "Ρύθμιση νέας θέσης για την επόμενη αίτηση"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:38
 msgid "Open a layer first (GPX, OSM, cache)"
@@ -6975,11 +7003,11 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:50
 msgid "Add a new layer"
-msgstr ""
+msgstr "Προσθήκη νέου επιπέδου"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:52
 msgid "Location"
-msgstr ""
+msgstr "Θέση"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:54
 msgid ""
@@ -6989,7 +7017,7 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:70
 msgid "Add new layer"
-msgstr ""
+msgstr "Προσθήκη νέου επιπέδου"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionResetCookie.java:17
 msgid "Reset cookie"
@@ -7027,21 +7055,23 @@ msgid ""
 "More than one WMS layer present\n"
 "Select one of them first, then retry"
 msgstr ""
+"Περισσότερα από ένα επίπεδα WMS\n"
+"Επιλέξτε ένα από αυτά πρώτα και μετά ξαναπροσπαθήστε"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:81
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:68
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:149
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:145
 msgid "Blank Layer"
 msgstr "Άδειο επίπεδο"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:182
 #, java-format
 msgid "WMS layer ({0}), {1} tile(s) loaded"
-msgstr ""
+msgstr "Επίπεδο WMS ({0}), {1} πλακίδιο(α) φορτώθηκαν"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:184
 msgid "Is not vectorized."
-msgstr ""
+msgstr "Δεν είναι διανυσματικό."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:185
 #, java-format
@@ -7050,7 +7080,7 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:187
 msgid "Is vectorized."
-msgstr ""
+msgstr "Είναι διανυσματικό."
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:188
 #, java-format
@@ -7071,7 +7101,7 @@ msgstr "Φόρτωση επιπέδου WMS από αρχείο"
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:330
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
-msgstr ""
+msgstr "Μη υποστηριζόμενη έκδοση αρχείου WMS΄ βρέθηκε {0}, αναμενόταν {1}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:323
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:331
@@ -7150,6 +7180,43 @@ msgstr ""
 
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:240
 msgid "Create duplicate way"
+msgstr ""
+
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:93
+msgid "Layer for editing GPX tracks"
+msgstr ""
+
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:217
+msgid "Convert to GPX layer with anonymised time"
+msgstr ""
+
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxPlugin.java:46
+msgid "edit gpx tracks"
+msgstr ""
+
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxPlugin.java:85
+msgid "EditGpx"
+msgstr ""
+
+#. TODO what is icon at the end?
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/GPXLayerImportAction.java:51
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/GPXLayerImportAction.java:101
+#: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:270
+#: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:315
+msgid "Import path from GPX layer"
+msgstr ""
+
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/GPXLayerImportAction.java:91
+#: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:305
+msgid "Drop existing path"
+msgstr ""
+
+#. no gps layer
+#. TODO: register a listener and show menu entry only if gps layers are available
+#. no gps layer
+#: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/GPXLayerImportAction.java:135
+#: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:341
+msgid "No GPX data layer found."
 msgstr ""
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:81
@@ -7303,6 +7370,10 @@ msgstr "Διάταξη πλέγματος"
 msgid "Grid layer:"
 msgstr "Επίπεδο πλέγματος:"
 
+#: ../plugins/grid/src/grid/GridPlugin.java:27
+msgid "Add grid"
+msgstr ""
+
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageEntry.java:56
 msgid "Normal"
 msgstr ""
@@ -7356,11 +7427,11 @@ msgstr ""
 msgid "Imported Images"
 msgstr "Εισαγμένες Εικόνες"
 
-#: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:37
+#: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:35
 msgid "Image files (*.jpg, *.jpeg, *.png, *.gif)"
 msgstr "Αρχεία εικόνων (*.jpg, *.jpeg, *.png, *.gif)"
 
-#: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:47
+#: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:45
 msgid "Open images with ImageWayPoint"
 msgstr ""
 
@@ -7424,7 +7495,7 @@ msgstr ""
 #.
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:210
 msgid "Removing duplicate nodes..."
-msgstr ""
+msgstr "Αφαίρεση διπλών κόμβων..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:286
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerReader.java:112
@@ -7522,7 +7593,7 @@ msgstr "γη"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:21
 msgid "none"
-msgstr ""
+msgstr "καμοία"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:40
 msgid "Maximum number of segments per way"
@@ -7578,7 +7649,7 @@ msgstr "Μέγιστη ηλικία cache (ημέρες)"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:66
 msgid "Source text"
-msgstr ""
+msgstr "Πηγαίο κείμενο"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:69
 msgid "Maximum number of segments allowed in each generated way. Default 250."
@@ -7601,6 +7672,9 @@ msgid ""
 "Accuracy of Douglas-Peucker line simplification, measured in degrees."
 "<br>Lower values give more nodes, and more accurate lines. Default 0.0003."
 msgstr ""
+"Ακρίβεια απλοποίησης γραμμών Douglas-Peucker , μετρημένη σε μοίρες."
+"<br>Χαμηλότερες τιμές δίνουν περισσότερους κόμβους, και ποιό ακριβείς "
+"γραμμές. Default 0.0003."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:73
 msgid ""
@@ -7658,90 +7732,90 @@ msgstr "Προτιμήσεις πρόσθετου Lakewalker"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerWMS.java:45
 msgid "Downloading image tile..."
-msgstr ""
+msgstr "Λήψη πλακιδίου εικόνας..."
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerWMS.java:148
 msgid "Could not acquire image"
 msgstr ""
 
-#: ../plugins/livegps/src/LiveGpsAcquirer.java:128
-#: ../plugins/livegps/src/LiveGpsAcquirer.java:144
+#: ../plugins/livegps/src/livegps/LiveGpsAcquirer.java:128
+#: ../plugins/livegps/src/livegps/LiveGpsAcquirer.java:144
 msgid "Connecting"
 msgstr "Γίνεται σύνδεση"
 
-#: ../plugins/livegps/src/LiveGpsAcquirer.java:204
+#: ../plugins/livegps/src/livegps/LiveGpsAcquirer.java:204
 msgid "Connected"
 msgstr "Σε σύνδεση"
 
 #. not connected:
-#: ../plugins/livegps/src/LiveGpsAcquirer.java:216
-#: ../plugins/livegps/src/LiveGpsAcquirer.java:232
+#: ../plugins/livegps/src/livegps/LiveGpsAcquirer.java:216
+#: ../plugins/livegps/src/livegps/LiveGpsAcquirer.java:232
 msgid "Not connected"
 msgstr "Χωρίς σύνδεση"
 
-#: ../plugins/livegps/src/LiveGpsAcquirer.java:225
+#: ../plugins/livegps/src/livegps/LiveGpsAcquirer.java:225
 msgid "Connection Failed"
 msgstr "Η σύνδεση απέτυχε"
 
-#: ../plugins/livegps/src/LiveGpsDialog.java:45
-#: ../plugins/livegps/src/LiveGpsDialog.java:46
+#: ../plugins/livegps/src/livegps/LiveGpsDialog.java:45
+#: ../plugins/livegps/src/livegps/LiveGpsDialog.java:46
 msgid "Live GPS"
 msgstr ""
 
-#: ../plugins/livegps/src/LiveGpsDialog.java:45
+#: ../plugins/livegps/src/livegps/LiveGpsDialog.java:45
 msgid "Show GPS data."
 msgstr "Εμφάνιση δεδομένων GPS."
 
-#: ../plugins/livegps/src/LiveGpsDialog.java:50
+#: ../plugins/livegps/src/livegps/LiveGpsDialog.java:50
 msgid "Status"
 msgstr "Κατάσταση"
 
-#: ../plugins/livegps/src/LiveGpsDialog.java:52
+#: ../plugins/livegps/src/livegps/LiveGpsDialog.java:52
 msgid "Way Info"
 msgstr ""
 
-#: ../plugins/livegps/src/LiveGpsDialog.java:58
+#: ../plugins/livegps/src/livegps/LiveGpsDialog.java:58
 msgid "Speed"
 msgstr "Ταχύτητα"
 
-#: ../plugins/livegps/src/LiveGpsDialog.java:60
+#: ../plugins/livegps/src/livegps/LiveGpsDialog.java:60
 msgid "Course"
 msgstr "Πορεία"
 
-#: ../plugins/livegps/src/LiveGpsLayer.java:25
+#: ../plugins/livegps/src/livegps/LiveGpsLayer.java:25
 msgid "LiveGPS layer"
 msgstr "Επίπεδο LiveGPS"
 
-#: ../plugins/livegps/src/LiveGpsPlugin.java:41
-#: ../plugins/livegps/src/LiveGpsPlugin.java:42
-#: ../plugins/livegps/src/LiveGpsPlugin.java:68
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:41
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:42
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:68
 msgid "Capture GPS Track"
 msgstr ""
 
-#: ../plugins/livegps/src/LiveGpsPlugin.java:41
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:41
 msgid "Connect to gpsd server and show current position in LiveGPS layer."
 msgstr ""
 "Σύνδεση στον διακομιστή gpsd και εμφάνιση της τρέχουσας θέσης στο επίπεδο "
 "LiveGPS."
 
-#: ../plugins/livegps/src/LiveGpsPlugin.java:53
-#: ../plugins/livegps/src/LiveGpsPlugin.java:54
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:53
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:54
 msgid "Center Once"
 msgstr "Κεντράρισμα μία φορά"
 
-#: ../plugins/livegps/src/LiveGpsPlugin.java:53
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:53
 msgid "Center the LiveGPS layer to current position."
 msgstr "Κεντράρισμα του επιπέδου LiveGPS στην τρέχουσα θέση."
 
-#: ../plugins/livegps/src/LiveGpsPlugin.java:67
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:67
 msgid "Auto-Center"
 msgstr "Αυτόματο Κεντράρισμα"
 
-#: ../plugins/livegps/src/LiveGpsPlugin.java:67
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:67
 msgid "Continuously center the LiveGPS layer to current position."
 msgstr "Κεντράρισμα του επιπέδου LiveGPS στην τρέχουσα θέση συνεχώς."
 
-#: ../plugins/livegps/src/LiveGpsPlugin.java:82
+#: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:82
 msgid "LiveGPS"
 msgstr "LiveGPS"
 
@@ -7786,21 +7860,6 @@ msgstr "Γωνία μεταξύ δύο επιλεγμένων Κόμβων"
 msgid "Layer to make measurements"
 msgstr "Επίπεδο για την λήψη μετρήσεων"
 
-#: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:270
-#: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:315
-msgid "Import path from GPX layer"
-msgstr ""
-
-#: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:305
-msgid "Drop existing path"
-msgstr ""
-
-#. TODO: register a listener and show menu entry only if gps layers are available
-#. no gps layer
-#: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:341
-msgid "No GPX data layer found."
-msgstr ""
-
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementMode.java:47
 msgid "Can not draw outside of the world."
 msgstr ""
@@ -7825,12 +7884,12 @@ msgstr ""
 msgid "Set start/end for routing. Middle mouse button to reset."
 msgstr ""
 
-#: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:40
-#: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:44
+#: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:41
+#: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:45
 msgid "Navigation"
 msgstr "Πλοήγηση"
 
-#: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:47
+#: ../plugins/navigator/src/at/dallermassl/josm/plugin/navigator/NavigatorPlugin.java:48
 msgid "Reset Graph"
 msgstr ""
 
@@ -7864,15 +7923,17 @@ msgstr ""
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/util/HttpUtils.java:169
 msgid "Header contains several values and cannot be mapped to a single string"
 msgstr ""
+"Η κεφαλίδα περιέχει πολλαπλές τιμές και δεν μπορεί να αντιστοιχηθεί σε ένα "
+"λεκτικό"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:95
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:97
 msgid "Open OpenStreetBugs"
-msgstr ""
+msgstr "Άνοιμα OpenStreetBugs"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:96
 msgid "Open the OpenStreetBugs window and activate the automatic download"
-msgstr ""
+msgstr "Άνοιγμα του παραθύρου OpenStreetBugs και ενεργοποίηση αυτόματης λήψης"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:123
 msgid ""
@@ -7935,11 +7996,11 @@ msgstr "Άνοιγμα μόνο των αρχείων που είναι ορατ
 msgid "No view open - cannot determine boundaries!"
 msgstr ""
 
-#: ../plugins/osmarender/src/OsmarenderPlugin.java:43
+#: ../plugins/osmarender/src/OsmarenderPlugin.java:41
 msgid "Osmarender"
 msgstr "Osmarender"
 
-#: ../plugins/osmarender/src/OsmarenderPlugin.java:90
+#: ../plugins/osmarender/src/OsmarenderPlugin.java:88
 msgid ""
 "Firefox not found. Please set firefox executable in the Map Settings page of "
 "the preferences."
@@ -7947,68 +8008,13 @@ msgstr ""
 "Το Firefox δεν βρέθηκε. Παρακαλώ ρυθμίστε το εκτελέσιμο του Firefox στην "
 "σελίδα Ρυθμίσεις Χάρτη από τις επιλογές."
 
-#: ../plugins/osmarender/src/OsmarenderPlugin.java:121
+#: ../plugins/osmarender/src/OsmarenderPlugin.java:119
 msgid "osmarender options"
 msgstr "επιλογές osmarender"
 
-#: ../plugins/osmarender/src/OsmarenderPlugin.java:122
+#: ../plugins/osmarender/src/OsmarenderPlugin.java:120
 msgid "Firefox executable"
 msgstr "εκτελέσιμο Firefox"
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:89
-msgid "Add Site"
-msgstr "Προσθήκη τοποθεσίας"
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:92
-msgid "Update Site URL"
-msgstr "Ενημέρωση URL τοποθεσίας"
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:103
-msgid "Invalid URL"
-msgstr "Μη έγκυρο URL"
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:109
-msgid "Delete Site(s)"
-msgstr "Διαγραφή τοποθεσίας"
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:113
-msgid "Please select the site to delete."
-msgstr "Παρακαλώ επιλέξτε την τοποθεσία προς διαγραφή."
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:123
-msgid "Check Site(s)"
-msgstr "Έλεγχος τοποθεσίας"
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:127
-msgid "Please select the site(s) to check for updates."
-msgstr "Παρακαλώ επιλέξτε την τοποθεσία προς έλεγχο ενημερώσεων."
-
-#. schemesList.setToolTipText(tr("The sources (url or filename) of annotation preset definition files. See http://josm.eigenheimstrasse.de/wiki/AnnotationPresets for help."));
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:151
-msgid "Add a new plugin site."
-msgstr "Προσθήκη νέας τοποθεσίας πρόσθετων."
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:152
-msgid "Delete the selected site(s) from the list."
-msgstr "Διαγραφή της επιλεγμένης τοποθεσίας από την λίστα."
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:153
-msgid "Check the selected site(s) for new plugins or updates."
-msgstr "Έλεγχος της επιλεγμένης τοποθεσίας για νέα πρόσθετα και ενημερώσεις."
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginManagerPreference.java:155
-msgid "Update Sites"
-msgstr "Ενημέρωση τοποθεσιών"
-
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginTableModel.java:108
-msgid "Version"
-msgstr "Έκδοση"
-
-#. <FIXXME date="23.06.2007" author="cdaller">
-#. TODO i18n!
-#: ../plugins/pluginmanager/src/at/dallermassl/josm/plugin/pluginmanager/PluginUpdateFrame.java:59
-msgid "Install"
-msgstr "Εγκατάσταση"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:24
 msgid "load data from API"
@@ -8094,11 +8100,11 @@ msgstr "Φόρτωση όλων των πλακιδίων"
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:110
 msgid "Increase zoom"
-msgstr ""
+msgstr "Άυξηση ζουμ"
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:119
 msgid "Decrease zoom"
-msgstr ""
+msgstr "Μείωση ζουμ"
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:379
 msgid "image not loaded"
@@ -8106,11 +8112,11 @@ msgstr "η εικόνα δεν φορτώθηκε"
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:29
 msgid "autozoom"
-msgstr ""
+msgstr "αυτόματο ζουμ"
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:30
 msgid "autoload tiles"
-msgstr ""
+msgstr "αυτόματη φόρτωση πλακιδίων"
 
 #. String description = tr("A plugin that adds to JOSM new layer. This layer could render external tiles.");
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:37
@@ -8119,7 +8125,7 @@ msgstr ""
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:37
 msgid "Settings for the SlippyMap plugin."
-msgstr ""
+msgstr "Ρυθμίσεις για το πρόσθετο SlippyMap."
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:45
 msgid "Tile Sources"
@@ -8127,15 +8133,15 @@ msgstr "Πηγές Πλακιδίων"
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:50
 msgid "Auto zoom: "
-msgstr ""
+msgstr "Αυτόματο ζουμ: "
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:55
 msgid "Autoload Tiles: "
-msgstr ""
+msgstr "Αυτόματη φόρτωση Πλακιδίων: "
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:60
 msgid "Max zoom lvl: "
-msgstr ""
+msgstr "Μέγιστο επίπεδο ζούμ: "
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:65
 msgid "Fade background: "
@@ -8178,7 +8184,7 @@ msgstr ""
 msgid "Duplicate hotkey for button '{0}' - button will be ignored!"
 msgstr ""
 
-#: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorPlugin.java:48
+#: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorPlugin.java:47
 msgid "SurveyorPlugin needs LiveGpsPlugin, but could not find it!"
 msgstr ""
 
@@ -8189,12 +8195,12 @@ msgstr ""
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorShowAction.java:46
 msgid "Open surveyor tool."
-msgstr ""
+msgstr "Άνοιγμα του εργαλείου surveyor."
 
 #. surveyorFrame.setTitle((String)getValue(AbstractAction.NAME));
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorShowAction.java:110
 msgid "Surveyor"
-msgstr ""
+msgstr "Surveyor"
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorShowAction.java:139
 #, java-format
@@ -8209,11 +8215,11 @@ msgstr ""
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/action/SetWaypointAction.java:61
 msgid "start"
-msgstr ""
+msgstr "αρχή"
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/action/SetWaypointAction.java:63
 msgid "end"
-msgstr ""
+msgstr "τέλος"
 
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTester.java:80
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTesterAction.java:22
@@ -8230,14 +8236,14 @@ msgstr ""
 msgid "You have to specify tagging preset sources in the preferences first."
 msgstr ""
 
-#: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:39
-#: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:40
+#: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:37
+#: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:38
 msgid "Import TCX File..."
 msgstr "Εισαγωγή αρχείου TCX..."
 
-#: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:39
+#: ../plugins/tcxplugin/src/org/openstreetmap/josm/plugins/TcxPlugin.java:37
 msgid "Import TCX file as GPS track"
-msgstr ""
+msgstr "Εισαγωγή αρχείου TCX ως ίχνος GPS"
 
 #: ../plugins/terracer/src/terracer/ReverseTerraceAction.java:36
 msgid "Reverse a terrace"
@@ -8262,7 +8268,7 @@ msgstr ""
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:80
 msgid "Creates individual buildings from a long building."
-msgstr ""
+msgstr "Δημιουργεί ξεχωριστά κτίρια  από ένα μακρύ κτίριο."
 
 #: ../plugins/terracer/src/terracer/TerracerAction.java:140
 msgid "Select a single, closed way of at least four nodes."
@@ -8272,55 +8278,77 @@ msgstr ""
 msgid "Terrace"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/TerracerAction.java:402
-#: ../plugins/terracer/src/terracer/TerracerAction.java:420
-#: ../plugins/terracer/src/terracer/TerracerAction.java:484
+#: ../plugins/terracer/src/terracer/TerracerAction.java:422
+#: ../plugins/terracer/src/terracer/TerracerAction.java:440
+#: ../plugins/terracer/src/terracer/TerracerAction.java:504
 msgid "All"
-msgstr ""
+msgstr "Όλα"
 
-#: ../plugins/terracer/src/terracer/TerracerAction.java:403
-#: ../plugins/terracer/src/terracer/TerracerAction.java:427
+#: ../plugins/terracer/src/terracer/TerracerAction.java:423
+#: ../plugins/terracer/src/terracer/TerracerAction.java:447
 msgid "Even"
-msgstr ""
+msgstr "Ζυγά"
 
-#: ../plugins/terracer/src/terracer/TerracerAction.java:404
+#: ../plugins/terracer/src/terracer/TerracerAction.java:424
 msgid "Odd"
+msgstr "Μονά"
+
+#: ../plugins/terracer/src/terracer/TerracerAction.java:482
+msgid "Highest number"
 msgstr ""
 
-#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:68
+#: ../plugins/terracer/src/terracer/TerracerAction.java:483
+msgid "Lowest number"
+msgstr ""
+
+#: ../plugins/terracer/src/terracer/TerracerAction.java:484
+msgid "Interpolation"
+msgstr ""
+
+#. item "Buildings/Addresses" text "House name"
+#: ../plugins/terracer/src/terracer/TerracerAction.java:485
+#: build/trans_presets.java:2171
+msgid "Street name"
+msgstr "Όνομα οδού"
+
+#: ../plugins/terracer/src/terracer/TerracerAction.java:485
+msgid "Optional"
+msgstr ""
+
+#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:73
 msgid "User"
 msgstr "Χρήστης"
 
-#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:74
-#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:75
+#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:77
+#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:78
 msgid "Show Author Panel"
-msgstr ""
+msgstr "Εμφάνιση πίνακα Συγγραφέα"
 
-#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:95
+#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:98
 msgid "Open User Page"
 msgstr "Άνοιγμα σελίδας χρήστη"
 
-#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:96
+#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:99
 msgid "Open User Page in browser"
 msgstr ""
 
-#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:109
+#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:112
 msgid "Select User's Data"
 msgstr "Επιλογή δεδομένων χρήστη"
 
-#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:110
+#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:113
 msgid "Replaces Selection with Users data"
 msgstr "Αντικαθιστά την επιλογή με τα στοιχεία χρήστη"
 
-#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:145
+#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:148
 msgid "Please select some data"
 msgstr "Παρακαλώ επιλέξτε κάποια δεδομένα"
 
-#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:149
+#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:152
 msgid "Please choose a user using the author panel"
 msgstr ""
 
-#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:162
+#: ../plugins/usertools/src/usertools/UserToolsPlugin.java:165
 msgid "Sorry, doesn't work with anonymous users"
 msgstr ""
 
@@ -8745,161 +8773,161 @@ msgstr ""
 "Αδυναμία πρόσβασης στο αρχείο δεδομένων:\n"
 "{0}"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:335
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:332
 msgid "Illegal tag/value combinations"
 msgstr ""
 
 #. passing translated text also to original string, as we already
 #. translated the stuff before. Makes the ignore file language dependend.
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:348
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:345
 msgid "Painting problem"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:357
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:354
 #, java-format
 msgid "Key ''{0}'' invalid."
 msgstr "Το κλειδί \"{0}\" δεν είναι έγκυρο."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:362
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:359
 msgid "Tags with empty values"
 msgstr "Ετικέτες χωρίς τιμές"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:368
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:365
 msgid "Invalid property key"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:374
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:371
 msgid "Invalid white space in property key"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:380
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:377
 msgid "Property values start or end with white space"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:386
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:383
 msgid "Property values contain HTML entity"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:410
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:407
 #, java-format
 msgid "Key ''{0}'' not in presets."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:411
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:408
 msgid "Presets do not contain property key"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:418
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:415
 #, java-format
 msgid "Value ''{0}'' for key ''{1}'' not in presets."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:419
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:416
 msgid "Presets do not contain property value"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:429
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:426
 msgid "FIXMES"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:475
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:472
 msgid "Check property keys."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:476
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:473
 msgid "Validate that property keys are valid checking against list of words."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:483
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:480
 msgid "Use complex property checker."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:484
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:481
 msgid "Validate property values and tags using complex rules."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:503
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:523
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:533
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:500
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:520
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:530
 msgid "TagChecker source"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:554
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:551
 msgid ""
 "The sources (URL or filename) of spell check (see http://wiki.openstreetmap."
 "org/index.php/User:JLS/speller) or tag checking data files."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:555
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:552
 msgid "Add a new source to the list."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:556
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:553
 msgid "Edit the selected source."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:559
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:556
 msgid "Data sources"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:579
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:576
 msgid "Check property values."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:580
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:577
 msgid "Validate that property values are valid checking against presets."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:587
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:584
 msgid "Check for FIXMES."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:588
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:585
 msgid "Looks for nodes or ways with FIXME in any property value."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:595
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:592
 msgid "Check for paint notes."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:596
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:593
 msgid "Check if map painting found data errors."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:603
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:600
 msgid "Use default data file."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:604
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:601
 msgid "Use the default data file (recommended)."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:607
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:604
 msgid "Use default spellcheck file."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:608
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:605
 msgid "Use the default spellcheck file (recommended)."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:701
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:698
 msgid "Fix properties"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:810
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:807
 msgid "Could not find element type"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:827
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:824
 msgid "Could not find warning level"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:836
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:833
 #, java-format
 msgid "Illegal expression ''{0}''"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:840
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:837
 #, java-format
 msgid "Illegal regular expression ''{0}''"
 msgstr ""
@@ -9036,9 +9064,9 @@ msgstr ""
 #. <condition k="building" v="station"/>
 #. <icon annotate="true" src="misc/no_icon.png" priority="-10000"/>
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:100
-#: build/trans_style.java:3796 build/trans_style.java:3803
-#: build/trans_style.java:3810 build/trans_style.java:3817
-#: build/trans_style.java:3824
+#: build/trans_style.java:3797 build/trans_style.java:3804
+#: build/trans_style.java:3811 build/trans_style.java:3818
+#: build/trans_style.java:3825
 msgid "building"
 msgstr "κτίριο"
 
@@ -9050,7 +9078,7 @@ msgstr "κτίριο"
 #. <rule>
 #. <condition k="area" b="yes"/>
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:103
-#: build/trans_style.java:3831
+#: build/trans_style.java:3832
 msgid "area"
 msgstr ""
 
@@ -9151,7 +9179,7 @@ msgstr "βοήθεια"
 
 #: ../plugins/wmsplugin/src/wmsplugin/Help_WMSmenuAction.java:20
 msgid "Help / About"
-msgstr ""
+msgstr "Βοήθεια / Σχετικά"
 
 #: ../plugins/wmsplugin/src/wmsplugin/Help_WMSmenuAction.java:27
 msgid ""
@@ -9205,7 +9233,7 @@ msgstr ""
 msgid "Adjust the position of the selected WMS layer"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:102
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:117
 #, java-format
 msgid ""
 "The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
@@ -9230,6 +9258,7 @@ msgstr ""
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
+"Η ζητούμενη περιοχή είναι πολύ μεγάλη. Παρακαλώ κάντε ζουμ, ή αλλάξτε ανάλυση"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:232
 msgid "Download visible tiles"
@@ -9241,19 +9270,19 @@ msgstr "Αλλαγή ανάλυσης"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:253
 msgid "Reload erroneous tiles"
-msgstr ""
+msgstr "Ανανέωση λανθασμένων πλακιδίων"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:271
 msgid "Alpha channel"
-msgstr ""
+msgstr "Κανάλι άλφα"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:133
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:132
 msgid "WMS"
 msgstr "WMS"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:149
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:145
 msgid "Open a blank WMS layer to load data from a file"
-msgstr ""
+msgstr "Άνοιγμα ενός κενού επιπέδου WMS για φόρτωση δεδομένων από ένα αρχείο"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:35
 msgid "WMS Plugin Preferences"
@@ -9324,7 +9353,187 @@ msgstr ""
 msgid "could not get audio input stream from input URL"
 msgstr ""
 
-#. Java message loading audio data
+#. Plugin AgPifoJ
+#: build/trans_plugins.java:3
+msgid ""
+"Another geotag plugin for JOSM. Correlates pictures with GPS tracks or "
+"import EXIF geotagged pictures."
+msgstr ""
+
+#. Plugin cadastre-fr
+#: build/trans_plugins.java:5
+msgid "A special handler for the french land registry WMS server."
+msgstr ""
+
+#. Plugin colorscheme
+#: build/trans_plugins.java:7
+msgid ""
+"Allows the user to create different color schemes and to switch between "
+"them. Just change the colors and create a new scheme. Used to switch to a "
+"white background with matching colors for better visibility in bright "
+"sunlight. See dialog in JOSM's preferences and 'Map Settings' (strange but "
+"true :-)"
+msgstr ""
+
+#. Plugin DirectUpload
+#: build/trans_plugins.java:9
+msgid ""
+"This plugin directly upload GPS Traces from current active layer in JOSM to "
+"openstreetmap.org."
+msgstr ""
+
+#. Plugin Duplicate-Way
+#: build/trans_plugins.java:11
+msgid "Duplicate Ways with an offset"
+msgstr ""
+
+#. Plugin editgpx
+#: build/trans_plugins.java:13
+msgid ""
+"The main feature of the plugin is the possibility to delete points of the "
+"GPX track. This plugin can be used to prepare  tracks for uploading to OSM "
+"eg. deleting uninteresting parts of track."
+msgstr ""
+
+#. Plugin globalsat
+#: build/trans_plugins.java:15
+msgid "Download GPS points from Globalsat dg100 data logger directly in JOSM."
+msgstr ""
+
+#. Plugin grid
+#: build/trans_plugins.java:17
+msgid "Provide a background layer that displays a map grid"
+msgstr ""
+
+#. Plugin ImageWayPoint
+#: build/trans_plugins.java:19
+msgid ""
+"Another plugin to match images to the waypoints in a GPX file. A match is "
+"made when the 'name', 'cmt' or 'desc' attribute of a waypoint tag matches "
+"the filename of an image."
+msgstr ""
+
+#. Plugin lakewalker
+#: build/trans_plugins.java:21
+msgid "Helps vectorizing WMS images."
+msgstr ""
+
+#. Plugin livegps
+#: build/trans_plugins.java:23
+msgid ""
+"Support live GPS input (moving dot) through a connection to gpsd server."
+msgstr ""
+
+#. Plugin measurement
+#: build/trans_plugins.java:25
+msgid ""
+"Provide a measurement dialog and a layer to measure length and angle of "
+"segments, area surrounded by a (simple) closed way and create measurement "
+"paths (which also can be imported from a gps layer)."
+msgstr ""
+
+#. Plugin navigator
+#: build/trans_plugins.java:27
+msgid "Provides navigation/autorouting functionality"
+msgstr ""
+
+#. Plugin nearclick
+#: build/trans_plugins.java:29
+msgid ""
+"Simulates a click when you do a small and short drag. This is usefull for "
+"tablet pens, when you have problems just clicking the tablet without the "
+"mouse moving (general Java - tablet problem)."
+msgstr ""
+
+#. Plugin openlayers
+#: build/trans_plugins.java:31
+msgid "Displays an OpenLayers background image"
+msgstr ""
+
+#. Plugin openstreetbugs
+#: build/trans_plugins.java:33
+msgid "Imports issues from OpenStreetBugs"
+msgstr ""
+
+#. Plugin openvisible
+#: build/trans_plugins.java:35
+msgid ""
+"Allows opening gpx/osm files that intersect the currently visible screen area"
+msgstr ""
+
+#. Plugin osmarender
+#: build/trans_plugins.java:37
+msgid ""
+"Launches FireFox to display the current visible screen as a nice SVG image."
+msgstr ""
+
+#. Plugin plastic_laf
+#: build/trans_plugins.java:39
+msgid "The great JGoodies Plastic Look and Feel."
+msgstr ""
+
+#. Plugin remotecontrol
+#: build/trans_plugins.java:41
+msgid "Let other applications send commands to JOSM."
+msgstr ""
+
+#. Plugin slippymap
+#: build/trans_plugins.java:43
+msgid ""
+"Displays a slippy map grid in JOSM. Can load tiles from slippy map as "
+"background and request updates."
+msgstr ""
+
+#. Plugin surveyor
+#: build/trans_plugins.java:45
+msgid "Allow adding markers/nodes on current gps positions."
+msgstr ""
+
+#. Plugin tagging-preset-tester
+#: build/trans_plugins.java:47
+msgid ""
+"Adds a tagging preset tester to the help menu, which helps you developing of "
+"tagging presets (quick preview of the dialog that will popup). You can start "
+"the jar-file as standalone as well."
+msgstr ""
+
+#. Plugin tcx-support
+#: build/trans_plugins.java:49
+msgid "Directly load TCX files from JOSM."
+msgstr ""
+
+#. Plugin terracer
+#: build/trans_plugins.java:51
+msgid "Make terraced houses out of single blocks."
+msgstr ""
+
+#. Plugin usertools
+#: build/trans_plugins.java:53
+msgid ""
+"Tools to work with authors/users. Selects map data that belongs to selected "
+"user, opens browser showing selected author profile page."
+msgstr ""
+
+#. Plugin utilsplugin
+#: build/trans_plugins.java:55
+msgid ""
+"Several utilities that make your life easier: e.g. simplify way, join areas, "
+"jump to position."
+msgstr ""
+
+#. Plugin validator
+#: build/trans_plugins.java:57
+msgid ""
+"An OSM data validator. It checks for problems in data, and provides fixes "
+"for the common ones. Spellcheck integrated for tag names."
+msgstr ""
+
+#. Plugin wmsplugin
+#: build/trans_plugins.java:59
+msgid ""
+"Display georeferenced images as background in JOSM (WMS servers, Yahoo, ...)."
+msgstr ""
+
 #. <!--
 #. Pics have been derived from
 #. http://commons.wikipedia.org (german street sign SVGs)
@@ -9375,14 +9584,14 @@ msgstr "Οδοί"
 #. </button>
 #: build/trans_presets.java:48 build/trans_surveyor.java:72
 msgid "Motorway"
-msgstr ""
+msgstr "Αυτοκινητόδρομος"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:highway=motorway"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:highway=motorway" />
 #: build/trans_presets.java:51
 msgid "Edit Motorway"
-msgstr ""
+msgstr "Επεξεργασία Αυτοκινητοδρόμου"
 
 #. item "Streets/Motorway" label "Edit Motorway"
 #. <space />
@@ -9901,7 +10110,7 @@ msgstr ""
 #: build/trans_presets.java:726 build/trans_presets.java:1294
 #: build/trans_presets.java:1470 build/trans_presets.java:1511
 msgid "Width (meters)"
-msgstr ""
+msgstr "Πλάτος (μέτρα)"
 
 #. item "Streets/Unclassified" text "Width (meters)"
 #. </optional>
@@ -9918,7 +10127,7 @@ msgstr "Οικιστική"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:highway=residential" />
 #: build/trans_presets.java:217
 msgid "Edit Residential Street"
-msgstr ""
+msgstr "Επεξεργασία οικιστικής οδού"
 
 #. item "Streets/Residential" combo "Layer"
 #. item "Streets/Living Street" combo "Layer"
@@ -10652,7 +10861,7 @@ msgstr "Τύπος"
 #: build/trans_presets.java:334 build/trans_style.java:417
 #: build/trans_style.java:425
 msgid "motorway"
-msgstr ""
+msgstr "Αυτοκινητόδρομος"
 
 #: build/trans_presets.java:334
 msgid "motorway_link"
@@ -10811,7 +11020,7 @@ msgstr "Επεξεργασία Γέφυρας"
 #. item
 #: build/trans_presets.java:364
 msgid "Edit Tunnel"
-msgstr ""
+msgstr "Σήραγγα"
 
 #. item "Streets/Tunnel" text "Width (meters)"
 #. </optional>
@@ -10827,11 +11036,11 @@ msgstr ""
 #. item
 #: build/trans_presets.java:380
 msgid "Edit Highway Under Construction"
-msgstr ""
+msgstr "Επεξεργασία οδού ταχείας κυκλοφορίας υπό κατασκευή"
 
 #: build/trans_presets.java:396
 msgid "Junction"
-msgstr ""
+msgstr "Κόμβος"
 
 #. item "Ways/Construction" combo "Junction"
 #. color construction
@@ -11044,7 +11253,7 @@ msgstr "Σκι"
 #. </optional>
 #: build/trans_presets.java:651
 msgid "Hiking"
-msgstr ""
+msgstr "Πεζοπορία"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Key:sac_scale"
@@ -11052,13 +11261,13 @@ msgstr ""
 #. it.href="http://wiki.openstreetmap.org/wiki/IT:Key:sac_scale" />
 #: build/trans_presets.java:655
 msgid "Edit Hiking"
-msgstr ""
+msgstr "Επεξεργασία Πεζοπορίας"
 
 #. item "Ways/Hiking" text "Width (meters)"
 #. </optional>
 #: build/trans_presets.java:664
 msgid "Mountain Hiking"
-msgstr ""
+msgstr "Ορειβασία"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Key:sac_scale"
@@ -11066,13 +11275,13 @@ msgstr ""
 #. it.href="http://wiki.openstreetmap.org/wiki/IT:Key:sac_scale" />
 #: build/trans_presets.java:668
 msgid "Edit Mountain Hiking"
-msgstr ""
+msgstr "Επεξεργασία Ορειβασίας"
 
 #. item "Ways/Mountain Hiking" text "Width (meters)"
 #. </optional>
 #: build/trans_presets.java:677
 msgid "Demanding Mountain Hiking"
-msgstr ""
+msgstr "Απαιτητική Ορειβασία"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Key:sac_scale"
@@ -11080,7 +11289,7 @@ msgstr ""
 #. it.href="http://wiki.openstreetmap.org/wiki/IT:Key:sac_scale" />
 #: build/trans_presets.java:681
 msgid "Edit Demanding Mountain Hiking"
-msgstr ""
+msgstr "Επεξεργασία απαιτητικής ορειβασίας"
 
 #. item "Ways/Demanding Mountain Hiking" text "Width (meters)"
 #. </optional>
@@ -11133,13 +11342,13 @@ msgstr "Σημεία αναφοράς"
 #. group "Waypoints"
 #: build/trans_presets.java:731
 msgid "Motorway Junction"
-msgstr ""
+msgstr "Κόμβος Αυτοκινητοδρόμου"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:highway=motorway_junction" />
 #: build/trans_presets.java:733
 msgid "Edit Motorway Junction"
-msgstr ""
+msgstr "Επεξεργασία Κόμβου Αυτοκινητοδρόμου"
 
 #. item "Waypoints/Motorway Junction" text "Name"
 #: build/trans_presets.java:737
@@ -11212,7 +11421,7 @@ msgstr "Σηματοδότης"
 #. <optional>
 #: build/trans_presets.java:754
 msgid "Pedestrian crossing type"
-msgstr ""
+msgstr "Τύπος διάβασης πεζών"
 
 #. item "Waypoints/Traffic Signal" combo "Pedestrian crossing type"
 #. item "Waypoints/Pedestrian Crossing" combo "Type"
@@ -11225,7 +11434,7 @@ msgstr ""
 #: build/trans_presets.java:754 build/trans_presets.java:769
 #: build/trans_presets.java:1316
 msgid "traffic_signals"
-msgstr ""
+msgstr "σηματοδότες"
 
 #: build/trans_presets.java:754 build/trans_presets.java:769
 #: build/trans_presets.java:1316
@@ -11298,15 +11507,14 @@ msgstr "Stop"
 #. <key key="highway" value="stop" />
 #: build/trans_presets.java:764
 msgid "Pedestrian Crossing"
-msgstr ""
+msgstr "Διάβαση Πεζών"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Key:crossing"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:highway=crossing" />
 #: build/trans_presets.java:767
-#, fuzzy
 msgid "Edit Crossing"
-msgstr "Επεξεργασία διάβασης"
+msgstr "Επεξεργασία Διάβασης Πεζών"
 
 #. item "Waypoints/Pedestrian Crossing" check "Crossing attendant"
 #: build/trans_presets.java:773
@@ -11315,7 +11523,7 @@ msgstr ""
 
 #: build/trans_presets.java:775
 msgid "Mini-roundabout"
-msgstr ""
+msgstr "Μικρός Κυκλικός Κόμβος"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:highway=mini_roundabout"
@@ -11324,12 +11532,12 @@ msgstr ""
 #. <key key="highway" value="mini_roundabout" />
 #: build/trans_presets.java:780
 msgid "Direction"
-msgstr ""
+msgstr "Κατεύθυνση"
 
 #. item "Waypoints/Mini-roundabout" combo "Direction"
 #: build/trans_presets.java:780
 msgid "clockwise"
-msgstr ""
+msgstr "δεξιόστροφα"
 
 #: build/trans_presets.java:782
 msgid "Turning Circle"
@@ -11367,9 +11575,8 @@ msgstr "Τηλέφωνο εκτάκτου ανάγκης"
 #. item
 #. <key key="amenity" value="emergency_phone" />
 #: build/trans_presets.java:801
-#, fuzzy
 msgid "Incline"
-msgstr "ακτογραμμή"
+msgstr ""
 
 #. item
 #. <key key="highway" value="incline" />
@@ -11824,7 +12031,7 @@ msgstr ""
 #. item "Water/Wetland" combo "Type"
 #: build/trans_presets.java:1121
 msgid "swamp"
-msgstr ""
+msgstr "Βάλτος"
 
 #: build/trans_presets.java:1121
 msgid "bog"
@@ -12566,7 +12773,6 @@ msgstr "Αεροδρόμιο"
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:aeroway=aerodrome" />
 #: build/trans_presets.java:1524
-#, fuzzy
 msgid "Edit Airport"
 msgstr "Επεξεργασία Αεροδρομίου"
 
@@ -12811,13 +13017,13 @@ msgstr ""
 #. item "Food+Drinks/Biergarten" text "Name"
 #: build/trans_presets.java:1617
 msgid "Bar"
-msgstr ""
+msgstr "Μπαρ"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=bar" />
 #: build/trans_presets.java:1619
 msgid "Edit Bar"
-msgstr ""
+msgstr "Επεξεργασία Μπαρ"
 
 #. item "Food+Drinks/Bar" text "Name"
 #: build/trans_presets.java:1623
@@ -12856,13 +13062,13 @@ msgstr "Ώρες Λειτουργείας"
 #. item "Tourism/Attraction" text "Opening Hours"
 #: build/trans_presets.java:1637
 msgid "Information Office"
-msgstr ""
+msgstr "Γραφείο Πληροφοριών"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Proposed_features/information" />
 #: build/trans_presets.java:1639
 msgid "Edit Information Office"
-msgstr ""
+msgstr "Επεξεργασία Γραφείου Πληροφοριών"
 
 #. item "Tourism/Information Office" text "Opening Hours"
 #: build/trans_presets.java:1645
@@ -12933,7 +13139,7 @@ msgstr ""
 #. item "Tourism/Map" text "Name"
 #: build/trans_presets.java:1686
 msgid "Map Type"
-msgstr ""
+msgstr "Τύπος Χάρτη"
 
 #. item "Tourism/Map" combo "Map Type"
 #: build/trans_presets.java:1686
@@ -13081,13 +13287,13 @@ msgstr "Επεξεργασία Ηρώου"
 #. item "Historic Places/Memorial" text "Name"
 #: build/trans_presets.java:1746
 msgid "Battlefield"
-msgstr ""
+msgstr "Πεδίο Μάχης"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:historic=battlefield" />
 #: build/trans_presets.java:1748
 msgid "Edit Battlefield"
-msgstr ""
+msgstr "Επεξεργασία Πεδίου Μάχης"
 
 #. item "Historic Places/Battlefield" text "Name"
 #: build/trans_presets.java:1752
@@ -14042,24 +14248,24 @@ msgstr ""
 
 #: build/trans_presets.java:1927
 msgid "Difficulty"
-msgstr ""
+msgstr "Δυσκολία"
 
 #. item "Sport/Skiing" combo "Difficulty"
 #: build/trans_presets.java:1927
 msgid "novice"
-msgstr ""
+msgstr "αρχαρίων"
 
 #: build/trans_presets.java:1927
 msgid "easy"
-msgstr ""
+msgstr "εύκολη"
 
 #: build/trans_presets.java:1927
 msgid "intermedia"
-msgstr ""
+msgstr "μεσαία"
 
 #: build/trans_presets.java:1927
 msgid "advance"
-msgstr ""
+msgstr "προχωρημένη"
 
 #: build/trans_presets.java:1927
 msgid "expert"
@@ -14095,7 +14301,7 @@ msgstr "Επεξεργασία Ποδοσφαίρου"
 
 #: build/trans_presets.java:1945
 msgid "Football"
-msgstr ""
+msgstr "Ποδόσφαιρο"
 
 #. item
 #: build/trans_presets.java:1946
@@ -14629,11 +14835,6 @@ msgstr "Αριθμός σπιτιού"
 msgid "House name"
 msgstr "Όνομα Σπιτιού"
 
-#. item "Buildings/Addresses" text "House name"
-#: build/trans_presets.java:2171
-msgid "Street name"
-msgstr "Όνομα οδού"
-
 #. item "Buildings/Addresses" text "Street name"
 #: build/trans_presets.java:2172
 msgid "City name"
@@ -14653,14 +14854,14 @@ msgstr "Κωδικός χώρας"
 #. </optional>
 #: build/trans_presets.java:2177
 msgid "Address Interpolation"
-msgstr ""
+msgstr "Παρεμβολή Διευθύνσεων"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Proposed_features/House_numbers/Karlsruhe_Schema"
 #. de.href="http://wiki.openstreetmap.org/wiki/Proposed_features/De:Hausnummern" />
 #: build/trans_presets.java:2180
 msgid "Edit Address Interpolation"
-msgstr ""
+msgstr "Επεξεργασία Παρεμβολής Διευθύνσεων"
 
 #. item "Buildings/Address Interpolation" label "Edit Address Interpolation"
 #. <space />
@@ -14939,7 +15140,7 @@ msgstr "Τουαλέτες"
 #. item "Shops/Vending machine" text "Operator"
 #: build/trans_presets.java:2306 build/trans_presets.java:2398
 msgid "Reference number"
-msgstr ""
+msgstr "Αριθμός Αναφοράς"
 
 #. item "Amenities/Toilets" text "Reference number"
 #: build/trans_presets.java:2307
@@ -15024,7 +15225,7 @@ msgstr "Μπαταρίες"
 #. item "Amenities/Recycling" check "Batteries"
 #: build/trans_presets.java:2334
 msgid "Cans"
-msgstr ""
+msgstr "Τενεκεδάκια"
 
 #. item "Amenities/Recycling" check "Cans"
 #: build/trans_presets.java:2335
@@ -15239,7 +15440,7 @@ msgstr ""
 
 #: build/trans_presets.java:2396
 msgid "vouchers"
-msgstr ""
+msgstr "κουπόνια"
 
 #: build/trans_presets.java:2396
 msgid "condoms"
@@ -15283,23 +15484,23 @@ msgstr "Επεξεργασία Φούρνου"
 #. item "Shops/Baker" text "Name"
 #: build/trans_presets.java:2419
 msgid "Florist"
-msgstr ""
+msgstr "Ανθοπωλείο"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=florist" />
 #: build/trans_presets.java:2421
 msgid "Edit Florist"
-msgstr ""
+msgstr "Επεξεργασία Ανθοπωλείου"
 
 #. item "Shops/Florist" text "Name"
 #: build/trans_presets.java:2425
 msgid "Organic"
-msgstr ""
+msgstr "Βιολογικά"
 
 #. item
 #: build/trans_presets.java:2426
 msgid "Edit Organic Shop"
-msgstr ""
+msgstr "Επεξεργασία Καταστήματος Βιολογικών"
 
 #. item "Shops/Organic" text "Name"
 #: build/trans_presets.java:2430
@@ -15314,64 +15515,64 @@ msgstr ""
 #. item "Shops/Beverages" text "Name"
 #: build/trans_presets.java:2435
 msgid "Computer"
-msgstr ""
+msgstr "Υπολογιστές"
 
 #. item
 #: build/trans_presets.java:2436
 msgid "Edit Computer Shop"
-msgstr ""
+msgstr "Επεξεργασία Καταστήματος Υπολογιστών"
 
 #. item "Shops/Computer" text "Name"
 #: build/trans_presets.java:2440
 msgid "Electronics"
-msgstr ""
+msgstr "Ηλεκτρονικά"
 
 #. item
 #: build/trans_presets.java:2441
 msgid "Edit Electronics Shop"
-msgstr ""
+msgstr "Επεξεργασία Καταστήματος Ηλεκτρονικών"
 
 #. item "Shops/Electronics" text "Name"
 #: build/trans_presets.java:2445
 msgid "Hifi"
-msgstr ""
+msgstr "Ηχοσυστήματα"
 
 #. item
 #: build/trans_presets.java:2446
 msgid "Edit Hifi Shop"
-msgstr ""
+msgstr "Επεξεργασία Καταστήματος Ηχοσυστημάτων"
 
 #. item "Shops/Hifi" text "Name"
 #: build/trans_presets.java:2450
 msgid "Furniture"
-msgstr ""
+msgstr "Έπιπλα"
 
 #. item
 #: build/trans_presets.java:2451
 msgid "Edit Furniture Shop"
-msgstr ""
+msgstr "Επεξεργασία Καταστήματος Επίπλων"
 
 #. item "Shops/Furniture" text "Name"
 #: build/trans_presets.java:2455
 msgid "Garden Centre"
-msgstr ""
+msgstr "Είδη Κήπου"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=garden_centre" />
 #: build/trans_presets.java:2457
 msgid "Edit Garden Centre"
-msgstr ""
+msgstr "Επεξεργασία Καταστήματος Ειδών Κήπου"
 
 #. item "Shops/Garden Centre" text "Name"
 #: build/trans_presets.java:2461
 msgid "Hardware"
-msgstr ""
+msgstr "Σιδηρικά"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=hardware" />
 #: build/trans_presets.java:2463
 msgid "Edit Hardware Store"
-msgstr ""
+msgstr "Επεξεργασία Καταστήματος Σιδηρικών"
 
 #. item "Shops/Hardware" text "Name"
 #: build/trans_presets.java:2467
@@ -15387,12 +15588,12 @@ msgstr ""
 #. item "Shops/Do-it-yourself-store" text "Name"
 #: build/trans_presets.java:2473
 msgid "Stationery"
-msgstr ""
+msgstr "Χαρτικά"
 
 #. item
 #: build/trans_presets.java:2474
 msgid "Edit Stationery Shop"
-msgstr ""
+msgstr "Επεξεργασία Χαρτοπωλείου"
 
 #. item "Shops/Stationery" text "Name"
 #: build/trans_presets.java:2478
@@ -15407,22 +15608,22 @@ msgstr "Επεξεργασία Κομμωτηρίου"
 #. item "Shops/Hairdresser" text "Name"
 #: build/trans_presets.java:2483
 msgid "Shoes"
-msgstr ""
+msgstr "Υποδήματα"
 
 #. item
 #: build/trans_presets.java:2484
 msgid "Edit Shoe Shop"
-msgstr ""
+msgstr "Επεξεργασία Υποδηματοπωλείου"
 
 #. item "Shops/Shoes" text "Name"
 #: build/trans_presets.java:2488
 msgid "Toys"
-msgstr ""
+msgstr "Παιχνίδια"
 
 #. item
 #: build/trans_presets.java:2489
 msgid "Edit Toy Shop"
-msgstr ""
+msgstr "Επεξεργασία Καταστήματος Παιχνιδιών"
 
 #. item "Shops/Toys" text "Name"
 #: build/trans_presets.java:2493
@@ -15475,7 +15676,7 @@ msgstr ""
 #. item
 #: build/trans_presets.java:2517
 msgid "Edit Sports Shop"
-msgstr ""
+msgstr "Επεξεργασία Καταστήματος Αθλητικών"
 
 #. item "Shops/sports" text "Name"
 #: build/trans_presets.java:2521
@@ -15507,24 +15708,24 @@ msgstr "Επεξεργασία Τράπεζας"
 #. item "Cash/Money Exchange" text "Name"
 #: build/trans_presets.java:2534 build/trans_presets.java:2542
 msgid "Automated Teller Machine"
-msgstr ""
+msgstr "ΑΤΜ"
 
 #. item "Cash/Bank" check "Automated Teller Machine"
 #: build/trans_presets.java:2536
 msgid "Money Exchange"
-msgstr ""
+msgstr "Συναλλακτήριο"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=bureau_de_change" />
 #: build/trans_presets.java:2538
 msgid "Edit Money Exchange"
-msgstr ""
+msgstr "Επεξεργασία Συναλλακτηρίου"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=atm" />
 #: build/trans_presets.java:2544
 msgid "Edit Automated Teller Machine"
-msgstr ""
+msgstr "Επεξεργασία ΑΤΜ"
 
 #. item "Cash/Automated Teller Machine" text "Operator"
 #: build/trans_presets.java:2549
@@ -15597,13 +15798,12 @@ msgstr ""
 #. <key key="highway" value="emergency_access_point" />
 #: build/trans_presets.java:2580
 msgid "Point Number"
-msgstr ""
+msgstr "Αριθμός Σημείου"
 
 #. item "Health/Emergency Access Point" text "Point Number"
 #: build/trans_presets.java:2581
-#, fuzzy
 msgid "Point Name"
-msgstr "Όνομα Εξόδου"
+msgstr "Όνομα Σημείου"
 
 #. item "Health/Emergency Access Point" text "Operator"
 #: build/trans_presets.java:2583
@@ -15613,7 +15813,7 @@ msgstr "Αριθμός Τηλεφώνου"
 #. item "Health/Emergency Access Point" text "Phone Number"
 #: build/trans_presets.java:2584
 msgid "(Use international code, like +12-345-67890)"
-msgstr ""
+msgstr "(Χρησιμοποιήστε διεθνή κωδικό, όπως +12-345-67890)"
 
 #. item "Health/Emergency Access Point" label "(Use international code, like +12-345-67890)"
 #. <space />
@@ -15692,13 +15892,13 @@ msgstr "Επεξεργασία Πόλης"
 #. item "Places/City" text "Name"
 #: build/trans_presets.java:2633
 msgid "Town"
-msgstr ""
+msgstr "Κωμόπολη"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:place=town" />
 #: build/trans_presets.java:2635
 msgid "Edit Town"
-msgstr ""
+msgstr "Επεξεργασία Κωμόπολης"
 
 #. item "Places/Town" text "Name"
 #: build/trans_presets.java:2640
@@ -15714,12 +15914,12 @@ msgstr "Επεξεργασία Προαστίου"
 #. item "Places/Suburb" text "Name"
 #: build/trans_presets.java:2647
 msgid "Village"
-msgstr ""
+msgstr "Χωριό"
 
 #. item
 #: build/trans_presets.java:2648
 msgid "Edit Village"
-msgstr ""
+msgstr "Επεξεργασία Χωριού"
 
 #. item "Places/Village" text "Name"
 #: build/trans_presets.java:2653
@@ -15835,25 +16035,25 @@ msgstr "Επεξεργασία Πολιτικού Ορίου"
 
 #. item "Boundaries/Civil" text "Name"
 #: build/trans_presets.java:2721
-msgid "political"
-msgstr "Πολιτικό"
+msgid "Political"
+msgstr ""
 
 #. item
 #: build/trans_presets.java:2722
 msgid "Edit Political Boundary"
 msgstr "Επεξεργασία Πολιτικού Ορίου"
 
-#. item "Boundaries/political" text "Name"
+#. item "Boundaries/Political" text "Name"
 #: build/trans_presets.java:2727
-msgid "National_park"
-msgstr "Εθνικός Δρυμός"
+msgid "National park"
+msgstr ""
 
 #. item
 #: build/trans_presets.java:2728
 msgid "Edit National Park Boundary"
 msgstr "Επεξεργασία Ορίου Εθνικού Δρυμού"
 
-#. item "Boundaries/National_park" text "Name"
+#. item "Boundaries/National park" text "Name"
 #: build/trans_presets.java:2734
 msgid "Land use"
 msgstr "Χρήση γής"
@@ -15878,14 +16078,14 @@ msgstr "Βοτανικό όνομα"
 #. item "Land use/Tree" text "Botanical Name"
 #: build/trans_presets.java:2745
 msgid "Wood"
-msgstr ""
+msgstr "Άλσος"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:natural=wood"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:natural=wood" />
 #: build/trans_presets.java:2748
 msgid "Edit Wood"
-msgstr ""
+msgstr "Επεξεργασία άλσους"
 
 #. item "Land use/Wood" combo "Type"
 #. item "Land use/Forest" combo "Type"
@@ -16066,7 +16266,7 @@ msgstr "Κοιμητήριο"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse=cemetery" />
 #: build/trans_presets.java:2852
 msgid "Edit Cemetery Landuse"
-msgstr ""
+msgstr "Επεξεργασία χρήσης γης κοιμητηρίου"
 
 #: build/trans_presets.java:2859
 msgid "Retail"
@@ -16241,49 +16441,49 @@ msgstr ""
 #. </roles>
 #: build/trans_presets.java:2961
 msgid "Turn restriction"
-msgstr ""
+msgstr "Περιορισμός στροφής"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Relation:restriction"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Relation:restriction"/>
 #: build/trans_presets.java:2964
 msgid "Edit Turn Restriction"
-msgstr ""
+msgstr "Επεξεργασία περιορισμού στροφής"
 
 #. item "Relations/Turn restriction" label "Edit Turn Restriction"
 #. <key key="type" value="restriction" />
 #: build/trans_presets.java:2966
 msgid "Restriction"
-msgstr ""
+msgstr "Περιορισμός"
 
 #. item "Relations/Turn restriction" combo "Restriction"
 #: build/trans_presets.java:2966
 msgid "no_left_turn"
-msgstr ""
+msgstr "όχι_αριστερή_στροφή"
 
 #: build/trans_presets.java:2966
 msgid "no_right_turn"
-msgstr ""
+msgstr "όχι_δεξιά_στροφή"
 
 #: build/trans_presets.java:2966
 msgid "no_straight_on"
-msgstr ""
+msgstr "όχι_ευθεία"
 
 #: build/trans_presets.java:2966
 msgid "no_u_turn"
-msgstr ""
+msgstr "όχι_αναστροφή"
 
 #: build/trans_presets.java:2966
 msgid "only_right_turn"
-msgstr ""
+msgstr "μόνο_δεξιά_στροφή"
 
 #: build/trans_presets.java:2966
 msgid "only_left_turn"
-msgstr ""
+msgstr "μόνο_αριστερή_στροφή"
 
 #: build/trans_presets.java:2966
 msgid "only_straight_on"
-msgstr ""
+msgstr "μόνο_ευθεία"
 
 #. item "Relations/Turn restriction" text "Name"
 #. </optional>
@@ -16306,20 +16506,20 @@ msgstr ""
 #. </roles>
 #: build/trans_presets.java:2976
 msgid "Route"
-msgstr ""
+msgstr "Διαδρομή"
 
 #. item
 #. <link href="http://wiki.openstreetmap.org/wiki/Relation:route"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Relation:route"/>
 #: build/trans_presets.java:2979
 msgid "Edit Route"
-msgstr ""
+msgstr "Επεξεργασία Διαδρομής"
 
 #. item "Relations/Route" label "Edit Route"
 #. <key key="type" value="route" />
 #: build/trans_presets.java:2981
 msgid "Route type"
-msgstr ""
+msgstr "Τύπος Διαδρομής"
 
 #. item "Relations/Route" combo "Route type"
 #. color destination
@@ -16392,7 +16592,7 @@ msgstr ""
 #: build/trans_style.java:751 build/trans_style.java:759
 #: build/trans_style.java:767 build/trans_style.java:775
 msgid "bicycle"
-msgstr ""
+msgstr "ποδήλατο"
 
 #: build/trans_presets.java:2981
 msgid "bus"
@@ -16400,7 +16600,7 @@ msgstr "λεωφορείο"
 
 #: build/trans_presets.java:2981
 msgid "road"
-msgstr ""
+msgstr "δρόμος"
 
 #: build/trans_presets.java:2981
 msgid "ferry"
@@ -16408,7 +16608,7 @@ msgstr ""
 
 #: build/trans_presets.java:2981
 msgid "ski"
-msgstr ""
+msgstr "σκι"
 
 #. color bicycle
 #. <icon annotate="true" src="vehicle/restriction/bicycle-designated.png"/>
@@ -16464,15 +16664,15 @@ msgstr ""
 
 #: build/trans_presets.java:2981
 msgid "hiking"
-msgstr ""
+msgstr "πεζοπορία"
 
 #: build/trans_presets.java:2981
 msgid "tram"
-msgstr ""
+msgstr "τραμ"
 
 #: build/trans_presets.java:2981
 msgid "detour"
-msgstr ""
+msgstr "παράκαμψη"
 
 #. color otherrail
 #. <icon annotate="true" src="misc/deprecated.png"/>
@@ -16484,46 +16684,46 @@ msgstr ""
 #. <condition k="railway" v="subway"/>
 #: build/trans_presets.java:2981 build/trans_style.java:1042
 msgid "subway"
-msgstr ""
+msgstr "υπόγειος"
 
 #. item "Relations/Route" text "Reference"
 #: build/trans_presets.java:2984
 msgid "Symbol description"
-msgstr ""
+msgstr "Περιγραφή συμβόλου"
 
 #. item "Relations/Route" text "Description"
 #. <optional>
 #: build/trans_presets.java:2987
 msgid "Network"
-msgstr ""
+msgstr "Δίκτυο"
 
 #. item "Relations/Route" combo "State"
 #: build/trans_presets.java:2989
 msgid "proposed"
-msgstr ""
+msgstr "προτεινόμενο"
 
 #: build/trans_presets.java:2989
 msgid "alternate"
-msgstr ""
+msgstr "εναλλακτικό"
 
 #: build/trans_presets.java:2989
 msgid "temporary"
-msgstr ""
+msgstr "προσωρινό"
 
 #: build/trans_presets.java:2989
 msgid "connection"
-msgstr ""
+msgstr "σύνδεση"
 
 #: build/trans_presets.java:2990
 msgid "Color (hex)"
-msgstr ""
+msgstr "Χρώμα (δεκαεξαδικό)"
 
 #. item "Relations/Route" text "Color (hex)"
 #. </optional>
 #. <roles>
 #: build/trans_presets.java:2993
 msgid "route segment"
-msgstr ""
+msgstr "τμήμα διαδρομής"
 
 #. item "Relations/Route" role "route segment"
 #: build/trans_presets.java:2994
@@ -16737,6 +16937,20 @@ msgstr "γέφυρα"
 #. <!-- deprecated; use information=guidepost instead -->
 #. <condition k="amenity" v="signpost"/>
 #. <icon annotate="true" src="misc/deprecated.png"/>
+#. color sport
+#. <icon annotate="true" src="sport/fishing.png"/>
+#. <scale_min>1</scale_min>
+#. <scale_max>50000</scale_max>
+#. </rule>
+#.
+#. <!--abutters tags -->
+#.
+#. <!--accessories tags -->
+#.
+#. <!--properties tags -->
+#.
+#. <rule>
+#. <condition k="mountain_pass" b="yes"/>
 #. color address
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
@@ -16823,11 +17037,12 @@ msgstr "γέφυρα"
 #: build/trans_style.java:112 build/trans_style.java:147
 #: build/trans_style.java:154 build/trans_style.java:161
 #: build/trans_style.java:497 build/trans_style.java:2150
-#: build/trans_style.java:3876 build/trans_style.java:3885
-#: build/trans_style.java:3894 build/trans_style.java:3903
-#: build/trans_style.java:3912 build/trans_style.java:3921
-#: build/trans_style.java:3930 build/trans_style.java:3931
-#: build/trans_style.java:3940 build/trans_style.java:3949
+#: build/trans_style.java:3606 build/trans_style.java:3877
+#: build/trans_style.java:3886 build/trans_style.java:3895
+#: build/trans_style.java:3904 build/trans_style.java:3913
+#: build/trans_style.java:3922 build/trans_style.java:3931
+#: build/trans_style.java:3932 build/trans_style.java:3941
+#: build/trans_style.java:3950
 msgid "deprecated"
 msgstr ""
 
@@ -16869,7 +17084,7 @@ msgstr ""
 #. <condition k="highway" v="bridleway"/>
 #: build/trans_style.java:248 build/trans_style.java:545
 msgid "horse"
-msgstr ""
+msgstr "άλογο"
 
 #. color tertiary
 #. <icon annotate="true" src="misc/deprecated.png"/>
@@ -17061,7 +17276,7 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="highway" v="gate"/>
-#. <icon annotate="true" src="vehicle/gate.png"/>
+#. <icon annotate="true" src="misc/deprecated.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
@@ -17793,7 +18008,7 @@ msgstr "προβλήτα"
 #. <condition k="man_made" v="pipeline"/>
 #: build/trans_style.java:1362
 msgid "pipeline"
-msgstr ""
+msgstr "αγωγός"
 
 #. color manmade
 #. <scale_min>1</scale_min>
@@ -19485,7 +19700,7 @@ msgstr "στρατιωτική"
 #. <condition k="landuse" v="cemetery"/>
 #: build/trans_style.java:2919
 msgid "cemetery"
-msgstr ""
+msgstr "κοιμητήριο"
 
 #. color light_water
 #. <scale_min>1</scale_min>
@@ -19764,20 +19979,7 @@ msgstr ""
 msgid "boundary"
 msgstr "όριο"
 
-#. color sport
-#. <icon annotate="true" src="sport/fishing.png"/>
-#. <scale_min>1</scale_min>
-#. <scale_max>50000</scale_max>
-#. </rule>
-#.
-#. <!--abutters tags -->
-#.
-#. <!--accessories tags -->
-#.
-#. <!--properties tags -->
-#.
-#. <rule>
-#. <condition k="mountain_pass" b="yes"/>
+#. color deprecated
 #. <icon src="misc/landmark/mountain_pass.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
@@ -19913,12 +20115,12 @@ msgstr "όριο"
 #. <rule>
 #. <condition k="place" v="island"/>
 #. <icon annotate="true" src="place/island.png"/>
-#: build/trans_style.java:3653 build/trans_style.java:3661
-#: build/trans_style.java:3669 build/trans_style.java:3677
-#: build/trans_style.java:3685 build/trans_style.java:3693
-#: build/trans_style.java:3701 build/trans_style.java:3709
-#: build/trans_style.java:3717 build/trans_style.java:3725
-#: build/trans_style.java:3733 build/trans_style.java:3741
+#: build/trans_style.java:3654 build/trans_style.java:3662
+#: build/trans_style.java:3670 build/trans_style.java:3678
+#: build/trans_style.java:3686 build/trans_style.java:3694
+#: build/trans_style.java:3702 build/trans_style.java:3710
+#: build/trans_style.java:3718 build/trans_style.java:3726
+#: build/trans_style.java:3734 build/trans_style.java:3742
 msgid "place"
 msgstr ""
 
@@ -19957,8 +20159,8 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="addr:interpolation" v="all"/>
-#: build/trans_style.java:3852 build/trans_style.java:3859
-#: build/trans_style.java:3866
+#: build/trans_style.java:3853 build/trans_style.java:3860
+#: build/trans_style.java:3867
 msgid "address"
 msgstr "διεύθυνση"
 
@@ -20028,7 +20230,7 @@ msgstr "WC"
 #. </button>
 #: build/trans_surveyor.java:60
 msgid "Camping"
-msgstr ""
+msgstr "Κάμπιγκ"
 
 #. <button label="Residential" hotkey="5">
 #. <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
@@ -20096,7 +20298,7 @@ msgstr "ετικέτα γέφυρας σε κόμβο"
 #: build/trans_validator.java:42 build/trans_validator.java:43
 #: build/trans_validator.java:44
 msgid "wrong highway tag on a node"
-msgstr ""
+msgstr "λάθος ετικέτ αυτοκινητοδρόμου σε κόμβο"
 
 #. node : W : highway == track
 #. way  : I : highway == secondary && ref != *
@@ -20140,32 +20342,33 @@ msgstr ""
 
 #. way  : W : highway == * && barrier == *
 #. way  : I : waterway == * && layer != *                         # waterway without layer tag
-#: build/trans_validator.java:59
+#. way  : I : highway == footway && maxspeed == *
+#: build/trans_validator.java:59 build/trans_validator.java:60
 msgid "maxspeed used for footway"
 msgstr ""
 
-#. way  : I : highway == footway && maxspeed == *
-#: build/trans_validator.java:61
+#. way  : I : highway == steps && maxspeed == *
+#: build/trans_validator.java:62
 msgid "layer tag with + sign"
-msgstr ""
+msgstr "ετικέτα επιπέδου με σήμα +"
 
 #. *    : W : layer == /\+.*/
-#: build/trans_validator.java:63
+#: build/trans_validator.java:64
 msgid "street name contains ss"
 msgstr ""
 
 #. *    : I : name == /.*Strasse.*/i
-#: build/trans_validator.java:64
+#: build/trans_validator.java:65
 msgid "abbreviated street name"
 msgstr "Συντμημένο όνομα οδού"
 
 #. *    : W : name == /.*Str\.?/i
-#: build/trans_validator.java:66
+#: build/trans_validator.java:67
 msgid "relation without type"
 msgstr "σχέση χωρίς τύπο"
 
 #. relation : E : type != *
-#: build/trans_validator.java:68
+#: build/trans_validator.java:69
 msgid "restaurant without name"
 msgstr "εστιατόριο χωρίς όνομα"
 
@@ -20173,10 +20376,10 @@ msgstr "εστιατόριο χωρίς όνομα"
 #. way  : I : highway != * && railway != * && waterway != * && name == * # unusual named way type
 #. *    : W : natural == water && waterway == *
 #. *    : W : highway == * && waterway == *
-#: build/trans_validator.java:70 build/trans_validator.java:71
-#: build/trans_validator.java:72
+#: build/trans_validator.java:71 build/trans_validator.java:72
+#: build/trans_validator.java:73
 msgid "unusual tag combination"
-msgstr ""
+msgstr "ασυνήθηστος συνδυασμός ετικετών"
 
 #. FORMAT
 #. default(true or false);Name;URL
@@ -20189,7 +20392,7 @@ msgstr "Landsat"
 #. http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg
 #: build/trans_wms.java:6
 msgid "Open Aerial Map"
-msgstr ""
+msgstr "Άνοιγμα Aerial Map"
 
 #. http://openaerialmap.org/wms/?VERSION=1.0&request=GetMap&layers=world&styles=&srs=EPSG:4326&format=image/jpeg
 #. fails with division by zero error
@@ -20200,7 +20403,7 @@ msgstr "Χάρτες NPE"
 #. http://nick.dev.openstreetmap.org/openpaths/freemap.php?layers=npe
 #: build/trans_wms.java:9
 msgid "NPE Maps (Tim)"
-msgstr ""
+msgstr "Χάρτες NPE (Tim)"
 
 #. http://dev.openstreetmap.org/~timsc/wms2/map.php?
 #. different forms for Yahoo
@@ -20239,6 +20442,9 @@ msgstr "Streets NRW Geofabrik.de"
 
 #~ msgid "Please select a color."
 #~ msgstr "Παρακαλώ επιλέξτε ένα χρώμα."
+
+#~ msgid "News about JOSM"
+#~ msgstr "Νέα του JOSM"
 
 #~ msgid "OSM History Information"
 #~ msgstr "Πληροφορίες Ιστορικού OSM"
@@ -20326,6 +20532,46 @@ msgstr "Streets NRW Geofabrik.de"
 #~ msgid "Provider"
 #~ msgstr "Πάροχος"
 
+#~ msgid "political"
+#~ msgstr "Πολιτικό"
+
+#~ msgid "National_park"
+#~ msgstr "Εθνικός Δρυμός"
+
+#~ msgid "Add Site"
+#~ msgstr "Προσθήκη τοποθεσίας"
+
+#~ msgid "Delete Site(s)"
+#~ msgstr "Διαγραφή τοποθεσίας"
+
+#~ msgid "Please select the site to delete."
+#~ msgstr "Παρακαλώ επιλέξτε την τοποθεσία προς διαγραφή."
+
+#~ msgid "Check Site(s)"
+#~ msgstr "Έλεγχος τοποθεσίας"
+
+#~ msgid "Please select the site(s) to check for updates."
+#~ msgstr "Παρακαλώ επιλέξτε την τοποθεσία προς έλεγχο ενημερώσεων."
+
+#~ msgid "Add a new plugin site."
+#~ msgstr "Προσθήκη νέας τοποθεσίας πρόσθετων."
+
+#~ msgid "Delete the selected site(s) from the list."
+#~ msgstr "Διαγραφή της επιλεγμένης τοποθεσίας από την λίστα."
+
+#~ msgid "Check the selected site(s) for new plugins or updates."
+#~ msgstr ""
+#~ "Έλεγχος της επιλεγμένης τοποθεσίας για νέα πρόσθετα και ενημερώσεις."
+
+#~ msgid "Update Sites"
+#~ msgstr "Ενημέρωση τοποθεσιών"
+
+#~ msgid "Version"
+#~ msgstr "Έκδοση"
+
+#~ msgid "Install"
+#~ msgstr "Εγκατάσταση"
+
 #~ msgid "Version: {0}<br>Last change at {1}"
 #~ msgstr "Έκδοση: {0}<br>Τελευταία αλλαγή στις {1}"
 
@@ -20386,6 +20632,12 @@ msgstr "Streets NRW Geofabrik.de"
 
 #~ msgid "office"
 #~ msgstr "γραφείο"
+
+#~ msgid "Update Site URL"
+#~ msgstr "Ενημέρωση URL τοποθεσίας"
+
+#~ msgid "Invalid URL"
+#~ msgstr "Μη έγκυρο URL"
 
 #~ msgid "Download \"Message of the day\""
 #~ msgstr "Λήψη \"Μηνύματος ημέρας\""

@@ -151,6 +151,7 @@ if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
         $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
         $SVG::Rasterize::object->engine()->host('localhost');
         $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
+        $SVG::Rasterize::object->engine()->autostartstop(1);
     }
     elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Batik') )
     {
@@ -230,9 +231,6 @@ my $upload_pid = -1;
 
 # keep track of the server time for current job
 my $JobTime;
-
-# If batik agent was started automatically, turn it off at exit
-our $StartedBatikAgent = 0;
 
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
@@ -320,15 +318,6 @@ elsif ($Mode eq "loop")
     # ----------------------------------
     # Continuously process requests from server
     # ----------------------------------
-
-    # Start batik agent if it's not runnig
-    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
-        my $result = $SVG::Rasterize::object->engine()->start_agent();
-        if( $result ){
-            $StartedBatikAgent = 1;
-            statusMessage("Started Batik agent", 0, 0);
-        }
-    }
 
     # this is the actual processing loop
     
@@ -465,7 +454,6 @@ elsif ($Mode eq "startBatik")
 {
     my $result = $SVG::Rasterize::object->engine()->start_agent();
     if( $result ){
-        $StartedBatikAgent = 1;
         statusMessage("Started Batik agent", 0, 0);
     } else {
         statusMessage("Batik agent already running");

@@ -19,6 +19,15 @@ SVG::Rasterize::Engine::BatikAgent -- Batik-agent engine for SVG::Rasterize
 
 This module is only meant to be used by SVG::Rasterize.
 
+=head1 SYNOPSIS
+
+    my $rasterizer = SVG::Rasterize->new();
+    $rasterizer->engine('BatikAgent'); # Set preferred rasterizer engine
+    
+    $rasterizer->engine()->autostartstop(1);
+    
+    $rasterizer->convert($infile, $outfile);
+
 =head1 ACCESSORS
 
 =head2 host
@@ -27,9 +36,13 @@ This module is only meant to be used by SVG::Rasterize.
 
 =head2 heapsize
 
+=head2 autostartstop
+
+Auto-start agent when needed, and stop it when object is destroyed.
+
 =cut
 
-__PACKAGE__->mk_accessors(qw(host port heapsize));
+__PACKAGE__->mk_accessors(qw(host port heapsize autostartstop));
 
 =pod
 
@@ -201,7 +214,7 @@ sub stop_agent {
 
     return 0 if ! $self->get_status(); #FIXME: maybe this should throw an exception instead?
 
-    my $answer = $self->send_command("stop\n\n");
+    my $answer = $self->send_command("stop\n\n", 'no_autostart');
     if( $answer eq 'OK' ){
         return 1;
     } else {
@@ -211,7 +224,7 @@ sub stop_agent {
 
 =pod
 
-=head2 send_command( $command )
+=head2 send_command( $command [, 'no_autostart'] )
 
 Sends a command to the agent.
 
@@ -220,15 +233,24 @@ Sends a command to the agent.
 sub send_command {
     my $self = shift;
     my $command = shift;
+    my $no_autostart = shift;
 
-    my $sock = new IO::Socket::INET( PeerAddr => $self->host(), PeerPort => $self->port(), Proto => 'tcp');
-    throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime::IOError("Error creating socket to the batik agent: $!") unless $sock;
+    my $reply;
+    try {
+        my $sock = new IO::Socket::INET( PeerAddr => $self->host(), PeerPort => $self->port(), Proto => 'tcp');
+        throw SVG::Rasterize::Engine::BatikAgent::Error::Runtime::IOError("Error creating socket to the batik agent: $!") unless $sock;
 
-    print $sock $command;
-    flush $sock;
-    my $reply = join('', <$sock>);
-    chomp($reply);
-    close($sock);
+        print $sock $command;
+        flush $sock;
+        $reply = join('', <$sock>);
+        chomp($reply);
+        close($sock);
+    } otherwise {
+        if( $self->autostartstop() && ! $no_autostart ){
+            $self->start_agent();
+            $reply = $self->send_command($command, 'no_autostart');
+        }
+    };
 
     return $reply;
 }
@@ -246,7 +268,7 @@ sub get_status {
 
     my $result;
     try {
-        $result = $self->send_command("status\n\n");
+        $result = $self->send_command("status\n\n", 'no_autostart');
     } otherwise {
         # We just ignore exceptions
     };
@@ -256,6 +278,20 @@ sub get_status {
     } else {
         return 0;
     }
+}
+
+=pod
+
+=head2 DESTROY
+
+Stop agent if autostartstop has been set.
+
+=cut
+
+sub DESTROY {
+    my $self = shift;
+
+    $self->stop_agent() if $self->autostartstop();
 }
 
 package SVG::Rasterize::Engine::BatikAgent::Error;

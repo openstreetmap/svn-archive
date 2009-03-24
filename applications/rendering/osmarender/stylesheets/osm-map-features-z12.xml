@@ -35,13 +35,13 @@
 			<area class="natural coastline"/>
 		</rule>
 		<rule e="way" k="natural" v="glacier">
-			<line class='natural glacier'/>
+			<line class="natural glacier"/>
 		</rule>
 		<rule e="way" k="landuse|natural" v="forest|wood|scrub">
 			<area class="landuse wood"/>
 		</rule>
 		<rule e="way" k="natural" v="heath">
-			<area class="'natural heath"/>
+			<area class="natural heath"/>
 		</rule>
 		<rule e="way" k="natural" v="wetland">
 			<rule e="way" k="wetland" v="bog">

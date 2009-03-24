@@ -44,10 +44,12 @@ use Thread::Semaphore;
 sub new
 {
     my $class = shift;
-    my $Config = TahConf->getConfig();
     my $req = shift;    #Request object
     my $child = shift;
     my $jobDir = shift;
+
+    my $Config = TahConf->getConfig();
+
     my $self = {
         req => $req,
         Config => $Config,
@@ -60,9 +62,9 @@ sub new
     my $delTmpDir = 1-$Config->get('Debug');
 
     if($child) {
-         $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
-         $self->{JobDir} = $jobDir;
-         $self->{childThread} = 1;
+         $self->{bbox}= bbox->new(ProjectXY($req->ZXY)) if $req;
+         $self->{JobDir} = $jobDir if $jobDir;
+         $self->{childThread} = $child;
     }
     else {
         $self->{JobDir} = tempdir( 
@@ -1684,10 +1686,13 @@ sub optimizePng
     my $transparent = shift();
 
 
-    # we use threading? then push the job and go return
+    # do we use threading? then push the job and go return
     if(defined $::GlobalChildren->{optimizePngTasks}) {
-        $::GlobalChildren->{optimizePngTasks}->addJob($png_file,$transparent);
-        return;
+        #childThread == 2 if the optimizePNG child
+        if(defined $self->{childThread} && $self->{childThread} ne "2" ) {
+            $::GlobalChildren->{optimizePngTasks}->addJob($png_file,$transparent);
+            return;
+        }
     }
 
 

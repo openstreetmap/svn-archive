@@ -12,6 +12,8 @@ use threads;
 use Thread::Semaphore;
 use Time::HiRes qw ( sleep );
 
+use Tileset;
+
 sub new
 {
     my $class  = shift;
@@ -64,6 +66,8 @@ sub startChildren
 {
     my $self   = shift;
     my $Config = $self->{Config};
+
+    $self->{tileset} = new Tileset( "", "2" );
 
     if ( $Config->get("Cores") )
     {
@@ -122,7 +126,13 @@ sub startChildren
                                     # lets do my work now
                                     #####
 
-                                    eval { $self->optimizePngClient( $png_file, $transparent ); };
+                                    eval { $self->{tileset}->optimizePng( $png_file, $transparent ); };
+
+                                    if ($@)
+                                    {
+                                        ::statusMessage( "ERROR: optimizePng return $@", 1, 10 );
+                                    }
+
                                 }
 
                                 $self->{'Semaphore'}->down();
@@ -201,92 +211,6 @@ sub notStopped
     }
 
     return 1;
-}
-
-#-----------------------------------------------------------------------------
-# optimize a PNG file
-#
-# Parameters:
-#   $png_file - file name of PNG file
-#   $transparent - whether or not this is a transparent tile
-#-----------------------------------------------------------------------------
-sub optimizePngClient
-{
-    my $self        = shift();
-    my $png_file    = shift();
-    my $transparent = shift();
-
-    my $Config = $self->{Config};
-
-    my $optipngOptions = "-l 9";
-
-    my $redirect   = ( $^O eq "MSWin32" ) ? "" : ">/dev/null";
-    my $tmp_suffix = '.cut';
-    my $tmp_file   = $png_file . $tmp_suffix;
-    my ( undef, undef, $png_file_name ) = File::Spec->splitpath($png_file);
-
-    my $cmd;
-    if ($transparent)
-    {
-
-        # Don't quantize if it's transparent
-        rename( $png_file, $tmp_file );
-    }
-    elsif ( ( $Config->get("PngQuantizer") || '' ) eq "pngnq" )
-    {
-        $cmd = sprintf( "\"%s\" -e .png%s -s1 -n256 %s %s", $Config->get("pngnq"), $tmp_suffix, $png_file, $redirect );
-
-        ::statusMessage( "ColorQuantizing $png_file_name", 0, 6 );
-        if ( ::runCommand( $cmd, $::PID ) )
-        {
-
-            # Color quantizing successful
-            unlink($png_file);
-        }
-        else
-        {
-
-            # Color quantizing failed
-            ::statusMessage( "ColorQuantizing $png_file_name with " . $Config->get("PngQuantizer") . " failed", 1, 0 );
-            rename( $png_file, $tmp_file );
-        }
-    }
-    else
-    {
-        ::statusMessage( "Not Color Quantizing $png_file_name, pngnq not installed?", 0, 6 );
-        rename( $png_file, $tmp_file );
-    }
-
-    if ( $Config->get("PngOptimizer") eq "pngcrush" )
-    {
-        $cmd = sprintf( "\"%s\" %s -q %s %s %s", $Config->get("Pngcrush"), $optipngOptions, $tmp_file, $png_file, $redirect );
-    }
-    elsif ( $Config->get("PngOptimizer") eq "optipng" )
-    {
-        $cmd = sprintf(
-            "\"%s\" %s -out %s %s",    #no quiet, because it even suppresses error output
-            $Config->get("Optipng"),
-            $tmp_file,
-            $png_file,
-            $redirect
-        );
-    }
-    else
-    {
-        ::statusMessage( "PngOptimizer not configured (should not happen, update from svn, and check config file)", 1, 0 );
-        ::talkInSleep( "Install a PNG optimizer and configure it.", 15 );
-    }
-
-    ::statusMessage( "Optimizing $png_file_name", 0, 6 );
-    if ( ::runCommand( $cmd, $::PID ) )
-    {
-        unlink($tmp_file);
-    }
-    else
-    {
-        ::statusMessage( "Optimizing $png_file_name with " . $Config->get("PngOptimizer") . " failed", 1, 0 );
-        rename( $tmp_file, $png_file );
-    }
 }
 
 1;

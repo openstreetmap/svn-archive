@@ -21,12 +21,12 @@ if (scalar(@ARGV)) {
 trapi: for (my $z = $startz; $z <= MAXZOOM; $z++) {
     my $zdir;
     next unless(opendir $zdir, "z$z");
-    my @x = sort {$a <=> $b} grep (/^\d+$/ && ($_ >= $startx)), readdir $zdir;
+    my @x = sort {$a <=> $b} grep((/^\d+$/ && ($_ >= $startx)), readdir $zdir);
     closedir $zdir;
     foreach my $x (@x) {
 	my $xdir;
 	opendir $xdir,"z$z/$x" or die "Could not opendir $z/$x; $!";
-	my @y = sort {$a <=> $b} grep (/^\d+$/ && ($_ >= $starty)), readdir $xdir;
+	my @y = sort {$a <=> $b} grep((/^\d+$/ && ($_ >= $starty)), readdir $xdir);
 	closedir $xdir;
 	foreach my $y (@y) {
 	    last trapi if (-f "stopfile.txt");

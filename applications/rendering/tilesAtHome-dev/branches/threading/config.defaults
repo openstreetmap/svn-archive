@@ -1,7 +1,8 @@
 # default values for variables, may be overridden in any other config file
 
 ### DO NOT EDIT ###
-### Every setting in here can be overridden in tilesAtHome.conf and authentication.conf so uses those to modify the config.###
+### Every setting in here can be overridden in tilesAtHome.conf and authentication.conf so do 
+### use those to modify the config.
 
 ### defaults for authentication settings (in case someone forgot to create his authentication.conf
 
@@ -92,3 +93,6 @@ AT_timeaim = 1800
 AT_minimum = 1000000
 # how much does the current estimate count (0..1)
 AT_alpha 0.05
+# what do we take as complexity that a "normal" client should be able to take
+# so weak clients can reject tiles with 0 complexity.
+AT_average = 2500000

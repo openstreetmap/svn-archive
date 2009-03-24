@@ -6,7 +6,6 @@ use warnings;
 $__PACKAGE__::VERSION = '0.2';
 
 use base qw(Class::Accessor SVG::Rasterize::Engine);
-use SVG::Rasterize::CoordinateBox;
 use File::Spec;
 use Error qw(:try);
 use IPC::Run qw(run);
@@ -166,7 +165,12 @@ sub convert {
 
     my $areastring;
     if( $params{area} ){
-        my %area = $params{area}->get_box_lowerleft();
+        # We need to transform from a coordinate system with 0,0 in the
+        # upper left to one with 0,0 in the bottom left.
+        my %area = %{ $params{area} }; # Make a copy
+        my $size = $self->rasterizer->getSize($params{infile});
+        $area{top} = $size->{height}{n} - $area{top};
+        $area{bottom} = $size->{height}{n} - $area{bottom};
 
         # Workaround for stupid inkscape bug:
         # On Windows Inkscape reads it's area parameter according to the locale
@@ -189,10 +193,18 @@ sub convert {
     push(@cmd, '--export-png='.$params{outfile});
     push(@cmd, $params{infile});
 
-    run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} ) or
+    print STDERR __PACKAGE__.": About to run: " . join(' ', @cmd) . "\n" if $self->rasterizer->debug;
+
+    my $result = run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} ) or
         throw SVG::Rasterize::Engine::Inkscape::Error::Runtime("Inkscape returned non-zero status code $?", {cmd => \@cmd, stdout => $self->{stdout}, stderr => $self->{stderr}});
 
     # on linux error code 11 seems to denote a defect config file, while on freebsd it returns 139 (11+128)
+
+    if( $self->rasterizer->debug() ){
+        print STDERR __PACKAGE__."Returned code $result.\n";
+        print STDERR __PACKAGE__."Inkscape STDOUT:\n$self->{stdout}\n";
+        print STDERR __PACKAGE__."Inkscape STDERR:\n$self->{stdout}\n";
+    }
 
     try {
         $self->check_output($params{outfile});

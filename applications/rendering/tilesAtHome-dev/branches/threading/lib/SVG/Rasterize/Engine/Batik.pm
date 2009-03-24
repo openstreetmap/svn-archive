@@ -99,14 +99,16 @@ sub new {
     if( $^O eq 'MSWin32' ){
         #FIXME: add good places to search here
         push(@default_jar_searchpaths,
+             $ENV{'PROGRAMFILES'},
+             $ENV{'PROGRAMFILES'}.'\batik',
+             $ENV{'PROGRAMFILES(X86)'},
+             $ENV{'PROGRAMFILES(X86)'}.'\batik',
              'c:\program files',
              'c:\program files\batik',
              'c:\programme',
              'c:\programme\batik',
              'c:\programfiler',
              'c:\programfiler\batik',
-             'c:\tilesAtHome',
-             'c:\tilesAtHome\batik'
             );
     } else {
         push(@default_jar_searchpaths,
@@ -149,7 +151,14 @@ sub new {
         'xercesImpl.jar',
         'batik.jar'
         ]);
-    my @default_java_searchpaths = ( File::Spec->path() );
+
+    my @default_java_searchpaths;
+    if( $ENV{JAVA_HOME} ){
+        my($volume,$dir) = File::Spec->splitpath( $ENV{JAVA_HOME}, 1 );
+        push( @default_java_searchpaths, File::Spec->catpath( $volume, File::Spec->catdir($dir, 'bin') ) );
+    }
+    push ( @default_java_searchpaths, File::Spec->path() );
+    
     if( $^O eq 'MSWin32' ){
         my($volume, $dir) = File::Spec->splitpath($ENV{WINDIR}, 1);
         $dir = File::Spec->catdir( $dir, 'WOW64' );
@@ -181,12 +190,14 @@ sub find_jar {
     my $self = shift;
     my $jarname = shift;
 
+    return $self->{jarcache}{$jarname} if exists($self->{jarcache}{$jarname});
+
     foreach my $path ( @{ $self->jar_searchpaths() } ){
         my($volume, $dir) = File::Spec->splitpath($path, 1);
 
         my $filepath = File::Spec->catpath($volume, $dir, $jarname);
 
-        return $filepath if -r $filepath;
+        return $self->{jarcache}{$jarname} = $filepath if -r $filepath;
     }
     throw SVG::Rasterize::Engine::Batik::Error::Prerequisite("Couldn't find $jarname");
 }
@@ -264,9 +275,9 @@ sub convert {
 
     my %area;
     if( $params{area} ){
-        %area = $params{area}->get_box_upperleft();
-        $area{width} = $params{area}->get_box_width();
-        $area{height} = $params{area}->get_box_height();
+        %area = %{ $params{area} }; # Make a copy
+        $area{width} = abs($area{left} - $area{right});
+        $area{height} = abs($area{top} - $area{bottom});
     }
 
     if( $self->jar_available() ){
@@ -297,9 +308,8 @@ sub convert {
         throw SVG::Rasterize::Engine::Batik::Error::Prerequisite('No batik available');
     }
 
-    my $stdout; my $stderr;
+    print STDERR __PACKAGE__.": About to run: " . join(' ', @cmd) . "\n" if $self->rasterizer->debug;
 
-    #DEBUG:warn 'about to run '.join(' ', @cmd);
     my $result;
     try {
         $result = run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} )
@@ -307,10 +317,12 @@ sub convert {
         my $e = shift;
         throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\", run could not execute the command: $e");
     };
-    #DEBUG
-    #warn "status: $result\n\$!: $!\n\$?: $?";
-    #warn "stdout: ".$stdout;
-    #warn "stderr: ".$stderr;
+
+    if( $self->rasterizer->debug() ){
+        print STDERR __PACKAGE__."Returned code $result.\n";
+        print STDERR __PACKAGE__."Batik STDOUT:\n$self->{stdout}\n";
+        print STDERR __PACKAGE__."Batik STDERR:\n$self->{stdout}\n";
+    }
 
     if( ! $result || $self->{stderr} =~ /Error/ ){
         my $error;
@@ -336,6 +348,55 @@ sub convert {
         $e->{stderr} = $self->{stderr};
         $e->throw;
     };
+}
+
+=pod
+
+=head2 version()
+
+Get Batik version number.
+
+Returns version number as array, for example (1, 7) for 1.7
+
+=cut
+
+sub version {
+    my $self = shift;
+
+    my @cmd;
+
+    my $printBatikVersionPath = __FILE__;
+    $printBatikVersionPath =~ s!(/|\\)[^/\\]+\.pm$!${1}Batik/PrintBatikVersion.jar!;
+
+    if( $self->jar_available() ){
+        @cmd = ($self->java_path());
+        my @jarlist = ( $self->find_jars('batik.jar'), $printBatikVersionPath );
+        push(@cmd, '-classpath', join( ($^O eq 'MSWin32' ? ';' : ':' ),
+                                       @jarlist ) );
+        push(@cmd, 'PrintBatikVersion');
+    } elsif( $self->wrapper_available() ){
+        warn 'Batik rasterizer wrapper does not expose version';
+        return undef;
+    } else {
+        throw SVG::Rasterize::Engine::Batik::Error::Prerequisite('No batik available');
+    }
+
+    my $result;
+    try {
+        $result = run( \@cmd, \undef, \$self->{stdout}, \$self->{stderr} )
+    } otherwise {
+        my $e = shift;
+        throw SVG::Rasterize::Engine::Batik::Error::Runtime("Error running \"$cmd[0]\", run could not execute the command: $e");
+    };
+
+    my $version = $self->{stdout};
+    $version =~ s/^\s+//;
+    $version =~ s/\s+$//;
+    $version =~ s/batik-?\s*//;
+
+    my @versionparts = split(/\s*[\._\+\;]\s*/, $version);
+
+    return @versionparts;
 }
 
 package SVG::Rasterize::Engine::Batik::Error;

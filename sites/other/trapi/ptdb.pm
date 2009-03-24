@@ -49,7 +49,7 @@ sub commontags($) {
     print "processing tags.$ctn\n" if (VERBOSE > 30);
     my ($v, $t, $vv, $tn, $vn, $va, $ta, $vva, $tag);
     our ($mode);
-    my $ro = $mode eq '<';
+    my $ro = 0; # $mode eq '<';
     open TAGS, "<", DBDIR."tags.$ctn" or die "Could not open tags.$ctn: $!";
     $comtags[$ctn] = [
 	undef,
@@ -696,6 +696,7 @@ sub splitptn($) {
 # 3 up to 2113663, 4 up to 270549119
 sub printvnum($$) {
     my ($f, $v) = @_;
+    print " printvnum($v)\n" if (VERBOSE > 995);
     if ($v >= 128) {
 	$v -= 128;
 	if ($v >= 16384) {
@@ -765,6 +766,7 @@ sub printtags($$$) {
 		if (defined $h->[2]->{$tag}) {
 		    my $vn = $h->[2]->{$tag}->{$val};
 		    if ($vn) {
+			print "      vn=$vn\n" if (VERBOSE >200);
 			printvnum($f, $vn);
 		    } else {
 			print $f pack("C",0)."$val\0";
@@ -787,6 +789,7 @@ sub readtags($$) {
     my ($f, $t) = @_;
     my @tags;
     my $tagsver = tv_check($f);
+    print "tagsver $tagsver\n" if (VERBOSE > 900);
     if ($tagsver) {
 	my $a = $comtags[$tagsver]->[$t];
 	while (my $c = getvnum($f)) {
@@ -798,6 +801,7 @@ sub readtags($$) {
 		push @tags, $a->[1]->[$c];
 		if (defined $a->[3]->[$c]) {
 		    my $i = getvnum($f);
+		    print "  tn=$c vn=$i\n" if (VERBOSE > 990);
 		    if ($i) {
 			push @tags, $a->[3]->[$c]->[$i];
 		    } else {

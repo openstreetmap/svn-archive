@@ -2,7 +2,7 @@
  * License: GPL. Copyright 2008. Martin Garbe (leo at running-sheep dot com)
  *
  * other source from mesurement plugin written by Raphael Mack
- * 
+ *
  */
 package org.openstreetmap.josm.plugins.editgpx;
 
@@ -36,31 +36,31 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Import GPX data from available layers
- * 
+ *
  *
  */
 class GPXLayerImportAction extends AbstractAction {
-	
-	
-	private static final long serialVersionUID = 5794897888911798168L;
-	private DataSet dataSet;
-	public Object importing = new Object(); //used for synchronization
-	
-	public GPXLayerImportAction(DataSet ds) {
-		//TODO what is icon at the end?
-		super(tr("Import path from GPX layer"), ImageProvider.get("dialogs", "edit"));
-        this.dataSet = ds;
-	}
-	
-	/**
-	 * shows a list of GPX layers. if user selects one the data from this layer is
-	 * imported.
-	 */
-	public void activateImport() {
-		Box panel = Box.createVerticalBox();
-		DefaultListModel dModel= new DefaultListModel();
 
-		final JList layerList = new JList(dModel);
+
+    private static final long serialVersionUID = 5794897888911798168L;
+    private DataSet dataSet;
+    public Object importing = new Object(); //used for synchronization
+
+    public GPXLayerImportAction(DataSet ds) {
+        //TODO what is icon at the end?
+        super(tr("Import path from GPX layer"), ImageProvider.get("dialogs", "edit"));
+        this.dataSet = ds;
+    }
+
+    /**
+     * shows a list of GPX layers. if user selects one the data from this layer is
+     * imported.
+     */
+    public void activateImport() {
+        Box panel = Box.createVerticalBox();
+        DefaultListModel dModel= new DefaultListModel();
+
+        final JList layerList = new JList(dModel);
         Collection<Layer> data = Main.map.mapView.getAllLayers();
         Layer lastLayer = null;
         int layerCnt = 0;
@@ -110,40 +110,37 @@ class GPXLayerImportAction extends AbstractAction {
             GpxLayer gpx = (GpxLayer)layerList.getSelectedValue();
 
             synchronized(importing) {
-	            for (GpxTrack trk : gpx.data.tracks) {
-	                for (Collection<WayPoint> segment : trk.trackSegs) {
-	                    Way w = new Way();
-	                    for (WayPoint p : segment) {
-	                        Node n = new Node(p.latlon);
-	                        String timestr = p.getString("time");
-	                        if(timestr != null)
-	                        {
-	                            timestr = timestr.replace("Z","+00:00");
-	                            n.setTimestamp(DateUtils.fromString(timestr));
-	                        }
-	                        dataSet.nodes.add(n);
-	                        w.nodes.add(n); //TODO what to do with these while deletion
-	                    }
-	                    dataSet.ways.add(w);
-	                }
-	            }
+                for (GpxTrack trk : gpx.data.tracks) {
+                    for (Collection<WayPoint> segment : trk.trackSegs) {
+                        Way w = new Way();
+                        for (WayPoint p : segment) {
+                            Node n = new Node(p.latlon);
+                            String timestr = p.getString("time");
+                            if(timestr != null)
+                            {
+                                timestr = timestr.replace("Z","+00:00");
+                                n.setTimestamp(DateUtils.fromString(timestr));
+                            }
+                            dataSet.nodes.add(n);
+                            w.nodes.add(n); //TODO what to do with these while deletion
+                        }
+                        dataSet.ways.add(w);
+                    }
+                }
             }
             Main.map.mapView.repaint();
 
-        } else { 
+        } else {
             // no gps layer
             JOptionPane.showMessageDialog(Main.parent,tr("No GPX data layer found."));
         }
-	
-	}
+    }
 
-	/**
-	 * called when pressing "Import.." from context menu of EditGpx layer
-	 * 
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		activateImport();
-	}
-		
-
+    /**
+     * called when pressing "Import.." from context menu of EditGpx layer
+     *
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        activateImport();
+    }
 }

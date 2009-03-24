@@ -1,7 +1,18 @@
 #!/usr/bin/python
+
+"""
+This script is designed to convert and NaPTAN XMLv2 data into a suitable OSM form.
+"""
+
+__author__ = "Thomas Wood (Edgemaster) <grand.edgemaster@gmail.com>"
+__version__ = "$Id$"
+
 import re, sys, time
 from osmparser import osmparser     # We eventually want to mod this to stream out the XML to file, bypassing ET.
 import xml.etree.cElementTree as ET
+
+class Feature(osmparser.OSMObj):
+    filtered = False
 
 class ParseXML:
     namespace = '{http://www.naptan.org.uk/}'
@@ -13,14 +24,17 @@ class ParseXML:
     watchnodes = ()
     parentnodes = {}    # Dict noting parent nodes that may need to be checked to determine child's meaning
     
-    nodecounter = 0  # OSM feature id incrementor
+    nodecounter = 0     # OSM feature id incrementor
     relationcounter = 0
     feature = None      # The OSM feature we're building
     outfile = None
+    filter = []       # Filtering for a particular element in the naptan
     
-    def __init__(self, of):
+    def __init__(self, of, filt):
         self.parentnodes = dict.fromkeys(self.watchnodes, False)
         self.outfile = of
+        if filt:
+            self.filter = filt.upper().split(':')
         
     def startElement(self, elem):
         node = self.cleannode(elem)
@@ -30,6 +44,13 @@ class ParseXML:
             
     def endElement(self, elem):
         node = self.cleannode(elem)
+        try:
+            if node.upper() == self.filter[0]:
+                if elem.text.upper() == self.filter[1]:
+                    if self.feature:
+                        self.feature.filtered = True
+        except IndexError:
+            pass
         if node in self.watchnodes:
             self.parentnodes[node] = False
             
@@ -75,14 +96,15 @@ class ParseXML:
             
     def newfeature(self):
         self.nodecounter += 1
-        feature = osmparser.OSMObj(type='node', id=-self.nodecounter)
+        feature = Feature(type='node', id=-self.nodecounter)
         feature.tags = self.defaulttags.copy()
         return feature
         
     def newrelation(self):
         self.relationcounter += 1
-        feature = osmparser.OSMObj(type='relation', id=-self.relationcounter)
+        feature = Feature(type='relation', id=-self.relationcounter)
         feature.tags = self.defaulttags.copy()
+        feature.filtered = True         # No filtering yet on relations
         return feature
         
     def cancelfeature(self):
@@ -153,13 +175,16 @@ class ParseNaptan(ParseXML):
         node = self.cleannode(elem)
         # If there's no feature, we're probably ignoring this element, or the tree its in.
         if self.feature:
-            
+            ###
+            # StopPoint OUTPUT
+            ###
             if node == 'StopPoint':
-                # That's all for this point, wrap up the feature's xml ready for the next one
-                self.outfile.write(self.feature.toxml(needs_parent=False, indent=False))
-                self.outfile.write("\n")
+                if (not self.filter) or (self.filter and self.feature.filtered):
+                    # That's all for this point, wrap up the feature's xml ready for the next one
+                    self.outfile.write(self.feature.toxml(needs_parent=False, indent=False))
+                    self.outfile.write("\n")
+                    self.pointcount += 1
                 self.feature = None
-                self.pointcount += 1
             
             elif node == 'Latitude' and self.parentnodes['StopPoints'] and not self.parentnodes['StopClassification']:
                 self.feature.loc[1] = elem.text
@@ -279,16 +304,16 @@ class ParseNPTG(ParseXML):
     def endElement(self, elem):
         pass
 
-def treeparse(f, of=sys.stdout):
+def treeparse(f, of, filt=None):
     of.write('<osm version="0.5">')
 
     it = iter(ET.iterparse(f, events=('start', 'end')))
     event, root = it.next()
     
     if root.tag == ParseNaptan.namespace + 'NaPTAN':
-        parser = ParseNaptan(of=of)
+        parser = ParseNaptan(of, filt)
     elif root.tag == ParseNPTG.namespace + 'NationalPublicTransportGazetteer':
-        parser = ParseNPTG(of=of)
+        parser = ParseNPTG(of, filt)
     else:
         raise Exception, "Unknown XML type"
     
@@ -305,14 +330,25 @@ def treeparse(f, of=sys.stdout):
     of.write('</osm>')
     
 if __name__ == "__main__":
-    if not len(sys.argv) == 2:
-        raise Exception, "Input file required"
+    from optparse import OptionParser
     
-    filename = sys.argv[1]
+    parser = OptionParser(usage="%prog [args] naptan.xml", version=__version__)
+    parser.add_option("-f", "--filter", action="store", dest="filter",
+    type="string", default=None, help="Only import Points matching FILTER. FILTER is in the form element:value")
+    parser.add_option("-o", "--outfile", action="store", dest="outfile",
+    type="string", default=None, help="Write OSM data to OUTFILE. Defaults to filename.osm")
+    (options, args) = parser.parse_args()
+    
+    if len(args) != 1:
+        parser.error("Input file required")
+    
+    filename = args[0]
     infile = open(filename)
-    osmfile = '%s.osm' % (filename.rpartition('.')[0])
-    outfile = open(osmfile, 'w')
     
-    xml = treeparse(infile, outfile)
+    if not options.outfile:
+        options.outfile = '%s.osm' % (filename.rpartition('.')[0])
+    outfile = open(options.outfile, 'w')
+    
+    xml = treeparse(infile, outfile, options.filter)
     
     outfile.close()

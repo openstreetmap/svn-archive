@@ -39,7 +39,6 @@ use Server;
 use Request;
 use Upload;
 use SVG::Rasterize;
-use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
 use POSIX;
 
@@ -140,50 +139,88 @@ if ($LoopMode) {
 
 # Setup SVG::Rasterize
 if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
-    $SVG::Rasterize::object = SVG::Rasterize->new();
+    $SVG::Rasterize::object = SVG::Rasterize->new({ debug => $Config->get("DEBUG") });
     if( $Config->get("Rasterizer") ){
-        $SVG::Rasterize::object->engine( $Config->get("Rasterizer") );
+        $SVG::Rasterize::object->engine( $Config->get("Rasterizer"));
     }
 
-    print "- rasterizing using ".ref($SVG::Rasterize::object->engine)."\n";
+    my $rasterizer = ref($SVG::Rasterize::object->engine());
 
+    print "- rasterizing using $rasterizer\n";
+
+    # Set engine specific parameters
     if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') )
     {
         $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
         $SVG::Rasterize::object->engine()->host('localhost');
         $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
+        $SVG::Rasterize::object->engine()->autostartstop(1);
+    }
+    elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Batik') )
+    {
+        my @customSearchPaths = ();
+        push(@customSearchPaths, $Config->get("BatikPath")) if $Config->get("BatikPath");
+        if( $^O eq 'MSWin32' ){
+            push(@customSearchPaths, 'c:\tilesAtHome', 'c:\tilesAtHome\batik');
+            push(@customSearchPaths, 'D:\Programme\batik');
+        }
+
+        $SVG::Rasterize::object->engine()->jar_searchpaths(
+            @customSearchPaths,
+            $SVG::Rasterize::object->engine()->jar_searchpaths()
+        );
+    }
+    elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') )
+    {
+        if( $Config->get("InkscapePath") ){
+            # Add InkscapePath as first location to look
+            $SVG::Rasterize::object->engine()->jar_searchpaths(
+                $Config->get("InkscapePath"),
+                $SVG::Rasterize::object->engine()->jar_searchpaths()
+            );
+        }
     }
 
-    # Check for broken Inkscape versions
-    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') ){
-        my %brokenInkscapeVersions = (
+    # Check for broken rasterizer versions
+    my %brokenRasterizerVersions = (
+        'SVG::Rasterize::Engine::Inkscape' => {
             "RenderStripes=0 will not work" => [0, 45, 1]
-            );
+        },
+        'SVG::Rasterize::Engine::Batik' => {
+            "Problems with black tiles reported" => [1, 6]
+        },
+        'SVG::Rasterize::Engine::BatikAgent' => {
+            "Problems with black tiles reported" => [1, 6]
+        }
+    );
 
-        try {
-            my @version = $SVG::Rasterize::object->engine()->version();
-            die if scalar(@version) == 0;
+    try {
+        my @version = $SVG::Rasterize::object->engine()->version();
+        die if scalar(@version) == 0;
 
-            while( my( $reason, $ver ) = each %brokenInkscapeVersions ){
-                my @brokenVersion = @{ $ver };
+        while( my( $reason, $ver ) = each %{$brokenRasterizerVersions{$rasterizer}} ){
+            my @brokenVersion = @{ $ver };
 
-                my $equal = 1;
-                if( $#brokenVersion == $#version ){
-                    for( my $i=0; $i < @version; $i++ ){
-                        $equal = $version[$i] eq $brokenVersion[$i];
-                        last if ! $equal;
-                    }
-                } else {
-                    $equal = 0;
+            my $equal = 1;
+            if( $#brokenVersion == $#version ){
+                for( my $i=0; $i < @version; $i++ ){
+                    $equal = $version[$i] eq $brokenVersion[$i];
+                    last if ! $equal;
                 }
-
-                if( $equal ){
-                    printf("! You have a broken version of Inkscape, %s. %s\n", join('.', @version), $reason);
-                }
+            } else {
+                $equal = 0;
             }
-        } otherwise {
-            print "! Could not determine your Inkscape version\n";
-        };
+
+            if( $equal ){
+                printf("! You have a broken version (%s) of your rasterizer. %s\n", join('.', @version), $reason);
+                sleep 10;
+            }
+        }
+    } otherwise {
+        print "! Could not determine your rasterizer version\n";
+    };
+
+    if( $rasterizer eq "SVG::Rasterize::Engine::Inkscape" ){
         print "* Take care to manually backup your inkscape user preferences\n"; 
         print "  if you have knowingly changed them. \n";
         print "  Some tilesets will cause inkscape to clobber that file!\n";
@@ -197,9 +234,6 @@ my $upload_pid = -1;
 
 # keep track of the server time for current job
 my $JobTime;
-
-# If batik agent was started automatically, turn it off at exit
-our $StartedBatikAgent = 0;
 
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
@@ -313,15 +347,6 @@ elsif ($Mode eq "loop")
     # ----------------------------------
     # Continuously process requests from server
     # ----------------------------------
-
-    # Start batik agent if it's not runnig
-    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
-        my $result = $SVG::Rasterize::object->engine()->start_agent();
-        if( $result ){
-            $StartedBatikAgent = 1;
-            statusMessage("Started Batik agent", 0, 0);
-        }
-    }
 
     # this is the actual processing loop
 
@@ -467,7 +492,6 @@ elsif ($Mode eq "startBatik")
 {
     my $result = $SVG::Rasterize::object->engine()->start_agent();
     if( $result ){
-        $StartedBatikAgent = 1;
         statusMessage("Started Batik agent", 0, 0);
     } else {
         statusMessage("Batik agent already running");
@@ -638,7 +662,8 @@ sub ProcessRequestsFromServer
             # got request, now check that it's not too complex
             if ($Config->get('MaxTilesetComplexity')) {
                 #the setting is enabled
-                if ($req->complexity() > $Config->get('MaxTilesetComplexity')) {
+                if ($req->complexity() > $Config->get('MaxTilesetComplexity')) 
+                {
                     # too complex!
                     statusMessage("Ignoring too complex tile (" . $req->ZXY_str() . ", "
                     . int($req->complexity()) . " > " . int($Config->get('MaxTilesetComplexity')). ")", 1, 3);
@@ -647,6 +672,21 @@ sub ProcessRequestsFromServer
                     }; # ignoring exceptions
                     $req = undef;  # set to undef, need another loop
                     talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
+                }
+                elsif (not $req->complexity())
+                {
+                    # unknown complexity!
+                    if ($Config->get('MaxTilesetComplexity') < $Config->get('AT_average')) 
+                    {
+                        # we have a weak client so we do not trust unknown complexity
+                        statusMessage("Ignoring unknown complexity tile (" . $req->ZXY_str() . ", "
+                           . int($req->complexity()) . " > " . int($Config->get('MaxTilesetComplexity')). ")", 1, 3);
+                        eval {
+                            $Server->putRequestBack($req, "NoComplexity");
+                        }; # ignoring exceptions
+                        $req = undef;  # set to undef, need another loop
+                        talkInSleep("Waiting before new tile is requested", 15); # to avoid re-requesting the same tile
+                    }
                 }
             }
             # and now check whether we found it unrenderable before
@@ -1001,26 +1041,6 @@ sub xml2svg
         statusMessage("Bezier Curve hinting disabled.",0,3);
     }
     return 1;
-}
-
-
-#-----------------------------------------------------------------------------
-# Get the width and height (in SVG units, must be pixels) of an SVG file
-#-----------------------------------------------------------------------------
-sub getSize($)
-{
-    my $SVG = shift();
-    open(my $fpSvg,"<",$SVG);
-    while(my $Line = <$fpSvg>)
-    {
-        if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/)
-        {
-            close $fpSvg;
-            return(($1,$2,1));
-        }
-    }
-    close $fpSvg;
-    return((0,0,0));
 }
 
 #-----------------------------------------------------------------------------

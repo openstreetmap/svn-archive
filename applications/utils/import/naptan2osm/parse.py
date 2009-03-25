@@ -31,13 +31,16 @@ class ParseXML:
     relationcounter = 0
     feature = None      # The OSM feature we're building
     outfile = None
+
     filter = []       # Filtering for a particular element in the naptan
+    passive = False
     
-    def __init__(self, of, filt):
+    def __init__(self, of, filt, passive=False):
         self.parentnodes = dict.fromkeys(self.watchnodes, False)
         self.outfile = of
         if filt:
             self.filter = filt.upper().split(':')
+        self.passive = passive
         
     def startElement(self, elem):
         node = self.cleannode(elem)
@@ -219,7 +222,8 @@ class ParseNaptan(ParseXML):
                 # This is a 'legacy' node according to the schema, but it should still work
                 st = elem.text
                 if st == 'BCT' or st == 'BCQ' or st == 'BCS':
-                    self.feature.tags['highway'] = 'bus_stop'
+                    if not self.passive:
+                        self.feature.tags['highway'] = 'bus_stop'
                 #elif st == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
                     #self.feature.tag['amenity'] = 'bus_station'
                 elif st == 'TXR' or st == 'STR':
@@ -307,16 +311,16 @@ class ParseNPTG(ParseXML):
     def endElement(self, elem):
         pass
 
-def treeparse(f, of, filt=None):
+def treeparse(f, of, options):
     of.write('<osm version="0.5">')
 
     it = iter(ET.iterparse(f, events=('start', 'end')))
     event, root = it.next()
     
     if root.tag == ParseNaptan.namespace + 'NaPTAN':
-        parser = ParseNaptan(of, filt)
+        parser = ParseNaptan(of, options.filter, options.passive)
     elif root.tag == ParseNPTG.namespace + 'NationalPublicTransportGazetteer':
-        parser = ParseNPTG(of, filt)
+        parser = ParseNPTG(of, options.filter, options.passive)
     else:
         raise Exception, "Unknown XML type"
     
@@ -340,6 +344,8 @@ if __name__ == "__main__":
     type="string", default=None, help="Only import Points matching FILTER. FILTER is in the form element:value")
     parser.add_option("-o", "--outfile", action="store", dest="outfile",
     type="string", default=None, help="Write OSM data to OUTFILE. Defaults to filename.osm")
+    parser.add_option("-p", "--passive", action="store_true", dest="passive",
+    help="'Passive' conversion, don't tag the data visibly, require it to be reviewed before being useful.")
     (options, args) = parser.parse_args()
     
     if len(args) != 1:
@@ -352,6 +358,6 @@ if __name__ == "__main__":
         options.outfile = '%s.osm' % (filename.rpartition('.')[0])
     outfile = open(options.outfile, 'w')
     
-    xml = treeparse(infile, outfile, options.filter)
+    xml = treeparse(infile, outfile, options)
     
     outfile.close()

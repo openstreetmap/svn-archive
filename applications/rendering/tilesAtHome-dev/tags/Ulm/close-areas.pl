@@ -443,9 +443,7 @@ STRING:
             $i=0 if ($i==4);
             last if ($i==$entry_side && !$min_once);
             $min_once = 0;
-            my $helper = $i+1; # should be symmetrical to the CW case, haven't tested.
-            $helper = 0 if ($helper == 4);
-            last if (check_segments_intersect($helpernodes->{$helper}->[1], $helpernodes->{$helper}->[0], $nodes->{$currentnode}->{"lon"}, $nodes->{$currentnode}->{"lat"}, $segments) );
+            last if (check_segments_intersect($helpernodes->{$i}->[1], $helpernodes->{$i}->[0], $nodes->{$currentnode}->{"lon"}, $nodes->{$currentnode}->{"lat"}, $segments) );
             my $newnode = make_node($helpernodes->{$i}->[0], $helpernodes->{$i}->[1]);
             my $newseg = make_seg($currentnode, $newnode);
             $currentnode = $newnode;
@@ -572,6 +570,8 @@ sub check_segments_intersect
 		my $y2= $nodes->{$from}->{"lat"};
 		my $x3= $nodes->{$to}  ->{"lon"};
 		my $y3= $nodes->{$to}  ->{"lat"};
+		next if ( ($x2==$x1) && ($y2==$y1) ); # in an ideal world this would be unnecessary, but as we do numerical calculations...
+		next if ( ($x3==$x1) && ($y3==$y1) ); # in an ideal world this would be unnecessary, but as we do numerical calculations...
 		my ($ret)= intersect($x0, $y0, $x1, $y1, $x2, $y2, $x3, $y3);
 		if ($ret>0) # found intersection
 		{

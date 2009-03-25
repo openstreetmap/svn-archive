@@ -9,7 +9,10 @@ __version__ = "$Id$"
 
 import re, sys, time
 from osmparser import osmparser     # We eventually want to mod this to stream out the XML to file, bypassing ET.
-import xml.etree.cElementTree as ET
+try:
+    import xml.etree.cElementTree as ET
+except ImportError:
+    import cElementTree as ET
 
 class Feature(osmparser.OSMObj):
     filtered = False

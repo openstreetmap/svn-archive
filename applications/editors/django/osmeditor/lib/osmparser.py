@@ -7,10 +7,13 @@ try:
     from xml.etree.cElementTree import Element, SubElement, tostring
 except:
     try:
-        sys.path.append("..")
-        from third.ElementTree import Element, SubElement, tostring
-    except ImportError, E:
-        elementtree = False    
+        from cElementTree import Element, SubElement, tostring
+    except:
+        try:
+            sys.path.append("..")
+            from third.ElementTree import Element, SubElement, tostring
+        except ImportError, E:
+            elementtree = False
 
 try:
     import httplib2

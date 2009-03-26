@@ -99,6 +99,18 @@ class ParseXML:
                 self.feature.tags[key] = '%s;%s' % (self.feature.tags[key], value)
             else:
                 self.feature.tags[key] = value
+
+    def addtomap(self, text, feature, map, features=[]):
+        """Add feature to given pre-relation mappings."""
+        if text in features:
+            # The parent StopArea's feature has already been created
+            features[text].members.append(feature)
+        elif not text in map:
+            # The parent StopArea has not yet been referenced
+            map[text] = [feature,]
+        else:
+            # The parent StopArea has been referenced but not created
+            map[text].append(feature)
             
     def newfeature(self):
         self.nodecounter += 1
@@ -122,8 +134,8 @@ class ParseNaptan(ParseXML):
     tagprefix = 'naptan'
     tagmap = {
         'AtcoCode': '',             # Blank entries automatically form tags of tagprefix:nodename
-        'NaptanCode': ('', 'ref'),   # Tuples can be used if a node needs to be mapped to multiple tags
-        'CommonName': ('', 'name'),
+        'NaptanCode': '',   # Tuples can be used if a node needs to be mapped to multiple tags
+        'CommonName': '',
         'ShortCommonName': '',
         'Landmark': '',
         'Street': '',
@@ -148,6 +160,8 @@ class ParseNaptan(ParseXML):
     
     # dict of form {stoparearef: [osmstoppointid, osmstoparearaid, ...]}
     stopareamap = {}
+    adminareamap = {}
+    plusbusmap = {}
     # Some ParentStopAreas are in other datasets (eg national), make a note so we can link back.
     # TODO: mechanism for pulling in PSAs that are already imported.
     missingparentarea = []
@@ -238,13 +252,12 @@ class ParseNaptan(ParseXML):
                     self.cancelfeature()
             
             elif node == 'StopAreaRef':
-                # Store this info to add the feature to the relation when we're parsing the StopArea
-                if not elem.text in self.stopareamap:
-                    # This StopArea has not yet been referenced
-                    self.stopareamap[elem.text] = [self.feature,]
-                else:
-                    # This StopArea has already been referenced
-                    self.stopareamap[elem.text].append(self.feature)
+                self.addtomap(elem.text, self.feature, self.stopareamap)
+
+            elif node == 'AdministrativeAreaRef':
+                self.addtomap(elem.text, self.feature, self.adminareamap)
+            elif node == 'PlusbusZoneRef':
+                self.addtomap(elem.text, self.feature, self.plusbusmap)
             
             ###
             # StopArea stuff
@@ -264,15 +277,7 @@ class ParseNaptan(ParseXML):
                 self.node2tag(elem)
                 
             elif node == 'ParentStopAreaRef':
-                if elem.text in self.features:
-                    # The parent StopArea's feature has already been created
-                    self.features[elem.text].members.append(self.feature)
-                elif not elem.text in self.stopareamap:
-                    # The parent StopArea has not yet been referenced
-                    self.stopareamap[elem.text] = [self.feature,]
-                else:
-                    # The parent StopArea has been referenced but not created
-                    self.stopareamap[elem.text].append(self.feature)
+                self.addtomap(elem.text, self.feature, self.stopareamap, self.features)
                 
             elif node == 'Name' and self.parentnodes['StopArea']:
                 self.feature.tags['name'] = elem.text

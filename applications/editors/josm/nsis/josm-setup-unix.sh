@@ -49,7 +49,7 @@ echo "Creating Windows Installer for josm-$VERSION"
 echo 
 echo "##################################################################"
 echo "### Download and unzip the webkit stuff"
-wget -nc http://josm.openstreetmap.de/download/windows/webkit-image.zip
+wget --continue --timestamping http://josm.openstreetmap.de/download/windows/webkit-image.zip
 mkdir -p webkit-image
 cd webkit-image
 unzip -o ../webkit-image.zip

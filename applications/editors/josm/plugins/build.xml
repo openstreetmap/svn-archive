@@ -23,6 +23,7 @@
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
         <ant antfile="build.xml" target="dist" dir="remotecontrol"/>
+        <ant antfile="build.xml" target="dist" dir="routing"/>
         <ant antfile="build.xml" target="dist" dir="slippymap"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
@@ -59,6 +60,7 @@
         <ant antfile="build.xml" target="clean" dir="osmarender"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
         <ant antfile="build.xml" target="clean" dir="remotecontrol"/>
+        <ant antfile="build.xml" target="clean" dir="routing"/>
         <ant antfile="build.xml" target="clean" dir="slippymap"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>

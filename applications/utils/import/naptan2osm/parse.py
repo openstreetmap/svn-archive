@@ -118,10 +118,11 @@ class ParseXML:
         feature.tags = self.defaulttags.copy()
         return feature
         
-    def newrelation(self):
+    def newrelation(self, tags={}):
         self.relationcounter += 1
         feature = Feature(type='relation', id=-self.relationcounter)
         feature.tags = self.defaulttags.copy()
+        feature.tags.update(tags)
         feature.filtered = True         # No filtering yet on relations
         return feature
         
@@ -142,6 +143,8 @@ class ParseNaptan(ParseXML):
         'Crossing': '',
         'Indicator': '',            # For when the ref-parsing code below fails
         'Notes': '',
+        'AdministrativeAreaRef': '',
+        'PlusbusZoneRef': '',
         # StopArea tagging begins here
         'StopAreaCode': '',
         'StopAreaType': ''
@@ -160,8 +163,6 @@ class ParseNaptan(ParseXML):
     
     # dict of form {stoparearef: [osmstoppointid, osmstoparearaid, ...]}
     stopareamap = {}
-    adminareamap = {}
-    plusbusmap = {}
     # Some ParentStopAreas are in other datasets (eg national), make a note so we can link back.
     # TODO: mechanism for pulling in PSAs that are already imported.
     missingparentarea = []
@@ -186,8 +187,7 @@ class ParseNaptan(ParseXML):
                 elem.clear()
         elif node == 'StopArea':
             if elem.attrib['Status'] == 'active':
-                self.feature = self.newrelation()
-                self.feature.tags.update(self.defaultareatags)
+                self.feature = self.newrelation(self.defaultareatags)
             else:
                 elem.clear()
     
@@ -254,11 +254,6 @@ class ParseNaptan(ParseXML):
             elif node == 'StopAreaRef':
                 self.addtomap(elem.text, self.feature, self.stopareamap)
 
-            elif node == 'AdministrativeAreaRef':
-                self.addtomap(elem.text, self.feature, self.adminareamap)
-            elif node == 'PlusbusZoneRef':
-                self.addtomap(elem.text, self.feature, self.plusbusmap)
-            
             ###
             # StopArea stuff
             ###

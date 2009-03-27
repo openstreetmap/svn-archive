@@ -175,6 +175,7 @@ contains (GDAL, 1) {
 		world_shp.path = share/world_shp
 	}
 	unix {
+		INCLUDEPATH += /usr/include/gdal
 		LIBS += -lgdal
 		world_shp.path = $${PREFIX}/share/merkaartor/world_shp
 	}

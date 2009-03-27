@@ -96,6 +96,7 @@ public class ImageDisplay extends JComponent {
     private class ImgDisplayMouseListener implements MouseListener, MouseWheelListener, MouseMotionListener {
 
         boolean mouseIsDragging = false;
+        long lastTimeForMousePoint = 0l;
         Point mousePointInImg = null;
 
         /** Zoom in and out, trying to preserve the point of the image that was under the mouse cursor
@@ -119,8 +120,12 @@ public class ImageDisplay extends JComponent {
             }
 
             // Calculate the mouse cursor position in image coordinates, so that we can center the zoom
-            // on that mouse position.
-            if (e.getClickCount() == 1 || mousePointInImg == null) {
+            // on that mouse position. 
+            // To avoid issues when the user tries to zoom in on the image borders, this point is not calculated 
+            // again if there was less than 1.5seconds since the last event.
+            System.out.println(e);
+            if (e.getWhen() - lastTimeForMousePoint > 1500 || mousePointInImg == null) {
+            	lastTimeForMousePoint = e.getWhen();
                 mousePointInImg = comp2imgCoord(visibleRect, e.getX(), e.getY());
             }
 

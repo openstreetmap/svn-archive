@@ -100,6 +100,10 @@ class ParseXML:
             else:
                 self.feature.tags[key] = value
 
+            # Only do the first tag (most often empty, so copies naptan:value)
+            if self.passive:
+                break
+
     def addtomap(self, text, feature, map, features=[]):
         """Add feature to given pre-relation mappings."""
         if text in features:
@@ -135,8 +139,8 @@ class ParseNaptan(ParseXML):
     tagprefix = 'naptan'
     tagmap = {
         'AtcoCode': '',             # Blank entries automatically form tags of tagprefix:nodename
-        'NaptanCode': '',   # Tuples can be used if a node needs to be mapped to multiple tags
-        'CommonName': '',
+        'NaptanCode': '',           # Tuples can be used if a node needs to be mapped to multiple tags
+        'CommonName': ('', 'name'), # Only the first will be used in passive mode.
         'ShortCommonName': '',
         'Landmark': '',
         'Street': '',

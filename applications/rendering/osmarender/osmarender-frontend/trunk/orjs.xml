@@ -16,13 +16,13 @@
 		<object id="AdobeSVG" classid="clsid:78156a80-c6a1-4bbf-8e6a-3cd390eeb4e2"></object>
 		<?import namespace="svg" urn="http://www.w3.org/2000/svg" implementation="#AdobeSVG"?>
 
-		<!-- TODO: make CSS parser a Dojo widget -->
 		<script type="text/javascript" src="orjs/orjs.js"></script>
 		<script type="text/javascript">
-			orjs.load("zurich_google.xml","../../stylesheets/osm-map-features-z17.xml");
+			orjs.load("zurich_google.xml","../../stylesheets/osm-map-features-z17.xml",true);
 		</script>
 	</head>
 	<body>
+		<div id="resulting_svg"></div>
 	</body>
 </html>
 

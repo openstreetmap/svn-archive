@@ -84,7 +84,7 @@ public class PresetManager extends JPanel {
 	protected void removeCurrentPreset() {
 		Item item= (Item)presets.getSelectedItem();
 		if (item != null && model !=null) {
-			model.removeAppliedItem(item);
+			model.removeAppliedPreset(item);
 		}
 	}
 	

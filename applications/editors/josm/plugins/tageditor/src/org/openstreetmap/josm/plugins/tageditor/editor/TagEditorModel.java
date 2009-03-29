@@ -456,7 +456,13 @@ public class TagEditorModel extends AbstractTableModel {
 					prepend(tagModel);
 				} else {
 					TagModel tagModel = get(tag.getKey());
-					tagModel.setValue(tag.getValue());
+					// only overwrite an existing value if the preset
+					// proposes a value. I.e. don't overwrite
+					// existing values for tag 'name' with an empty string
+					//
+					if (tag.getValue() != null) {
+						tagModel.setValue(tag.getValue());
+					}
 				}
 			}
 		}
@@ -490,7 +496,7 @@ public class TagEditorModel extends AbstractTableModel {
 		return appliedPresets;
 	}
 
-	public void removeAppliedItem(Item item) {
+	public void removeAppliedPreset(Item item) {
 		if (item == null) {
 			return; 
 		}
@@ -516,6 +522,11 @@ public class TagEditorModel extends AbstractTableModel {
 			}
 		}
 		appliedPresets.removeElement(item);		
+		fireTableDataChanged();
+	}
+	
+	public void clearAppliedPresets() {
+		appliedPresets.removeAllElements();
 		fireTableDataChanged();
 	}
 	

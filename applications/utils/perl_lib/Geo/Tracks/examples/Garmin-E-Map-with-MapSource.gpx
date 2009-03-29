@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx
+ version="1.0"
+creator="GPSBabel - http://www.gpsbabel.org"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://www.topografix.com/GPX/1/0"
+xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+<time>2008-03-02T14:58:37Z</time>
+<bounds minlat="47.588567734" minlon="9.505684376" maxlat="48.173911572" maxlon="11.564569473"/>
+<wpt lat="47.756173611" lon="9.719231129">
+  <ele>499.046265</ele>
+  <name>001</name>
+  <cmt>001</cmt>
+  <desc>001</desc>
+  <sym>Waypoint</sym>
+</wpt>
+<trk>
+  <name>ACTIVE LOG</name>
+<number>1</number>
+<trkseg>
+<trkpt lat="47.756173611" lon="9.719231129">
+  <ele>624.032959</ele>
+<time>2008-01-27T11:26:07Z</time>
+</trkpt>
+<trkpt lat="47.755658627" lon="9.717535973">
+  <ele>700.458008</ele>
+<time>2008-01-27T11:26:19Z</time>
+</trkpt>
+<trkpt lat="47.755508423" lon="9.715325832">
+  <ele>705.264404</ele>
+<time>2008-01-27T11:26:33Z</time>
+</trkpt>
+<trkpt lat="47.755744457" lon="9.714767933">
+  <ele>705.264404</ele>
+<time>2008-01-27T11:26:37Z</time>
+</trkpt>
+<trkpt lat="47.755830288" lon="9.714488983">
+  <ele>704.783691</ele>
+<time>2008-01-27T11:26:39Z</time>
+</trkpt>
+<trkpt lat="47.756001949" lon="9.713888168">
+  <ele>704.303223</ele>
+<time>2008-01-27T11:26:47Z</time>
+</trkpt>
+<trkpt lat="47.756023407" lon="9.713716507">
+  <ele>704.303223</ele>
+<time>2008-01-27T11:26:50Z</time>
+</trkpt>
+<trkpt lat="47.756001949" lon="9.713201523">
+  <ele>703.822510</ele>
+<time>2008-01-27T11:26:58Z</time>
+</trkpt>
+<trkpt lat="47.756023407" lon="9.712150097">
+  <ele>703.822510</ele>
+<time>2008-01-27T11:27:08Z</time>
+</trkpt>
+<trkpt lat="47.756023407" lon="9.710605145">
+  <ele>703.822510</ele>
+<time>2008-01-27T11:27:22Z</time>
+</trkpt>
+<trkpt lat="47.756023407" lon="9.710605145">
+  <ele>704.303223</ele>
+<time>2008-01-27T11:27:27Z</time>
+</trkpt>
+<trkpt lat="47.755637169" lon="9.709703922">
+  <ele>707.187012</ele>
+<time>2008-01-27T11:27:36Z</time>
+</trkpt>
+<trkpt lat="47.755186558" lon="9.708545208">
+  <ele>707.667725</ele>
+<time>2008-01-27T11:27:44Z</time>
+</trkpt>
+<trkpt lat="47.754864693" lon="9.707150459">
+  <ele>707.667725</ele>
+<time>2008-01-27T11:27:52Z</time>
+</trkpt>
+<trkpt lat="47.754049301" lon="9.706034660">
+  <ele>704.783691</ele>
+<time>2008-01-27T11:27:59Z</time>
+</trkpt>
+<trkpt lat="47.752954960" lon="9.704811573">
+  <ele>710.551514</ele>
+<time>2008-01-27T11:28:08Z</time>
+</trkpt>
+<trkpt lat="47.752182484" lon="9.703266621">
+  <ele>711.032227</ele>
+<time>2008-01-27T11:28:17Z</time>
+</trkpt>
+<trkpt lat="47.751989365" lon="9.702193737">
+  <ele>711.512939</ele>
+<time>2008-01-27T11:28:23Z</time>
+</trkpt>
+<trkpt lat="47.752461433" lon="9.700949192">
+  <ele>710.070801</ele>
+<time>2008-01-27T11:28:29Z</time>
+</trkpt>
+<trkpt lat="47.752439976" lon="9.700090885">
+  <ele>708.628906</ele>
+<time>2008-01-27T11:28:33Z</time>
+</trkpt>
+<trkpt lat="47.752826214" lon="9.698910713">
+  <ele>705.745117</ele>
+<time>2008-01-27T11:28:40Z</time>
+</trkpt>
+<trkpt lat="47.752933502" lon="9.698781967">
+  <ele>705.745117</ele>
+<time>2008-01-27T11:28:41Z</time>
+</trkpt>
+<trkpt lat="47.753362656" lon="9.698181152">
+  <ele>701.899902</ele>
+<time>2008-01-27T11:28:46Z</time>
+</trkpt>
+</trkseg>
+</trk>
+</gpx>

@@ -1,3 +1,4 @@
+// TODO: Implement from line 818, render_layer and zindexsort
 var orjs = {};
 
 orjs.node_object = function() {};
@@ -47,6 +48,8 @@ orjs.relation_storage = new Object();
 
 orjs.index_way_tags = new Object();
 orjs.index_node_tags = new Object();
+
+orjs.referenced_ways = new Object();
 
 orjs.title = "";
 orjs.showBorder = "no";
@@ -158,7 +161,7 @@ orjs.createInternalReference = function () {
 				break;
 				case "nd":
 					if (parentNode.nodeName!="way") continue;
-					orjs.way_storage[parentNode.getAttribute("id")].nodes.push(getAttribute("ref"));
+					orjs.way_storage[parentNode.getAttribute("id")].nodes.push(orjs.node_storage[getAttribute("ref")]);
 				break;
 				case "member":
 					if (parentNode.nodeName!="relation") continue;
@@ -166,9 +169,8 @@ orjs.createInternalReference = function () {
 				break;
 				case "tag":
 					var my_current_object = eval("orjs."+current_array+"["+parentNode.getAttribute("id")+"]");
-					if (my_current_object["tags"]==undefined) my_current_object["tags"] = new Array();
-					var json = eval ("({\""+getAttribute("k")+"\":\""+getAttribute("v")+"\"})");
-					my_current_object["tags"].push(json);
+					if (my_current_object.tags==undefined) my_current_object.tags = new Object();
+					eval("my_current_object.tags."+getAttribute("k")+" = '"+getAttribute("v")+"'");
 					if (getAttribute("k")=="layer") {
 						my_current_object.layer = getAttribute("v");
 					}
@@ -187,7 +189,8 @@ orjs.buildReferences = function() {
 	//update way reference in nodes
 	for (way_id in orjs.way_storage) {
 		for (node_index in orjs.way_storage[way_id].nodes) {
-			orjs.node_storage[orjs.way_storage[way_id].nodes[node_index]].ways.push(orjs.way_storage[way_id]);
+			orjs.way_storage[way_id].nodes[node_index].ways.push(orjs.way_storage[way_id]);
+			//orjs.node_storage[orjs.way_storage[way_id].nodes[node_index]].ways.push(orjs.way_storage[way_id]);
 		}
 	}
 	//line 254-271
@@ -214,52 +217,76 @@ orjs.buildReferences = function() {
 			}
 		}
 	}
-	// line 464 selection level 0
-	orjs.selection[0] = new Array();
-	for (way in orjs.way_storage) {
-		orjs.selection[0].push(orjs.way_storage[way]);
+
+	//Lines 395-458
+	//Multipolygon:
+	// "outer": [way1, way2, ...]
+	//   Combined to form full ways
+	// "inner": [way1, way2, ...]
+	//   Combined to form full ways, for each inner way a new way-object with
+	//   the sum of all tags is created and added to $way_storage
+	// "tags":
+	//   The sum of all tags, from both the relation and all the outer ways.
+	// The original ways get a special tag, so they aren't processed anymore
+	// in function that are able to handle multipolygons.
+	//
+	// In theory each way could be represented as a multipolygon with the
+	// following properties:
+	// - One outer way
+	// - No inner ways
+	// - Tags from the original way
+	//
+	// This might be a good future enhancement but requires big changes to
+	// existing code.
+	//
+	// TODO:
+	// - Label relation
+
+	for (relation_id in orjs.relation_storage) {
+		if (orjs.relation_storage[relation_id].tags.type==undefined || orjs.relation_storage[relation_id].tags.type!="multipolygon") continue;
+		//TODO: Implement the algorythm for multipolygons
 	}
-	for (node in orjs.node_storage) {
-		orjs.selection[0].push(orjs.node_storage[node]);
+
+	// line 464 selection level 0
+	orjs.selection[0] = new Object();
+	for (way_id in orjs.way_storage) {
+		orjs.selection[0][way_id] = orjs.way_storage[way_id];
+	}
+	for (node_id in orjs.node_storage) {
+		orjs.selection[0][way_id] = orjs.node_storage[node_id];
 	}
 
 	// line 471-484
 	for (way_id in orjs.way_storage) {
-		for (tag_index in orjs.way_storage[way_id].tags) {
-			for (key in orjs.way_storage[way_id].tags[tag_index]) {
-				orjs.index_way_tags[key] = orjs.way_storage[way_id];
-			}
+		for (key in orjs.way_storage[way_id].tags) {
+			orjs.index_way_tags[key] = orjs.way_storage[way_id];
 		}
 	}
 	for (node_id in orjs.node_storage) {
-		for (tag_index in orjs.node_storage[node_id].tags) {
-			for (key in orjs.node_storage[node_id].tags[tag_index]) {
-				orjs.index_node_tags[key] = orjs.node_storage[node_id];
-			}
+		for (key in orjs.node_storage[node_id].tags) {
+			orjs.index_node_tags[key] = orjs.node_storage[node_id];
 		}
 	}
 }
 
 orjs.globalVariables = function() {
 	with (rule_file.documentElement) {
-		hasAttribute("title") ? orjs.title = getAttribute("title"):
-		hasAttribute("showBorder") ? orjs.showBorder = getAttribute("showBorder"):
-		hasAttribute("showScale") ? orjs.showScale = getAttribute("showScale"):
-		hasAttribute("showLicense") ? orjs.showLicense = getAttribute("showLicense"):
-		hasAttribute("textAttenuation") ? orjs.textAttenuation = getAttribute("textAttenuation"):
-		hasAttribute("meter2pixel") ? orjs.meter2pixel = getAttribute("meter2pixel"):
-		hasAttribute("scale") ? orjs.scale = parseFloat(getAttribute("scale")):
-		hasAttribute("symbolsScale") ? orjs.symbolsScale = getAttribute("symbolsScale"):
-		hasAttribute("minimumMapWidth") ? orjs.minimumMapWidth = parseFloat(getAttribute("minimumMapWidth")):
-		hasAttribute("minimumMapHeight") ? orjs.minimumMapHeight = parseFloat(getAttribute("minimumMapHeight")):
+		orjs.title = hasAttribute("title") ? getAttribute("title") : "";
+		orjs.showBorder = hasAttribute("showBorder") ? getAttribute("showBorder") : "no";
+		orjs.showScale = hasAttribute("showScale") ? getAttribute("showScale") : "no";
+		orjs.showLicense = hasAttribute("showLicense") ? getAttribute("showLicense") : "no";
+		orjs.textAttenuation = hasAttribute("textAttenuation") ? getAttribute("textAttenuation") : "";
+		orjs.meter2pixel = hasAttribute("meter2pixel") ? getAttribute("meter2pixel") : "0.1375";
+		orjs.scale = hasAttribute("scale") ? parseFloat(getAttribute("scale")) : 1;
+		orjs.symbolScale = hasAttribute("symbolsScale") ? getAttribute("symbolsScale") : 1;
+		orjs.minimumMapWidth = hasAttribute("minimumMapWidth") ? parseFloat(getAttribute("minimumMapWidth")) : undefined;
+		orjs.minimumMapHeight = hasAttribute("minimumMapHeight") ? parseFloat(getAttribute("minimumMapHeight")) : undefined;
+		orjs.svgBaseProfile = hasAttribute("svgBaseProfile") ? getAttribute("svgBaseProfile") : undefined;
+		orjs.withOSMLayers = hasAttribute("withOSMLayers") ? getAttribute("withOSMLayers") : "yes";
 		orjs.title == "" ? orjs.marginaliaTopHeight = 40 : orjs.showBorder == "yes" ? orjs.marginaliaTopHeight = 1.5 : orjs.marginaliaTopHeight = 0;
 		(orjs.showScale == "yes" || orjs.showLicense == "yes") ? 45 : orjs.showBorder == "yes" ? 1.5 : 0;
 		orjs.showBorder == "yes" ? orjs.extraWidth = 3 : orjs.extraWidth = 0;
 		(orjs.title == "" && orjs.showBorder == "yes") ? orjs.extraHeight = 3 : orjs.extraHeight = 0;
-		//hasAttribute("svgBaseProfile") ? orjs.svgBaseProfile = getAttribute("svgBaseProfile"):
-		//FIXME change all to this
-		orjs.svgBaseProfile = hasAttribute("svgBaseProfile") ? getAttribute("svgBaseProfile") : undefined;
-		orjs.withOSMLayers = hasAttribute("withOSMLayers") ? getAttribute("withOSMLayers") : "yes";
 	}
 	//TODO: retrieve bounds from other sources
 	var iterator = osm_file.evaluate("//bounds",osm_file.documentElement,null,XPathResult.UNORDERED_NODE_ITERATOR_TYPE,null);
@@ -365,19 +392,47 @@ orjs.processRules = function() {
 			orjs.process_rule(current_rule,depth,layer);
 		}
 		else {
+
 			// Process all layers
 			orjs.process_rule(current_rule,depth,layer);
+
+			// TODO:z-mode=bottom
 			
-			// TODO:Render z-mode=bottom line 750
 			
 			// prepare z-mode=normal
-			var normalInstructions;
+			var normalInstructions = new Object();
+
 			for (command_index in orjs.drawing_commands) {
-				console.dir(orjs.drawing_commands[command_index]);
-				break;
+				var instruction = orjs.drawing_commands[command_index].instruction;
+				if ((instruction.getAttribute("z-mode") || "normal") != "normal") continue;
+				
+				var layer = instruction.getAttribute("layer");
+
+				for (element_index in orjs.drawing_commands[command_index].elements) {
+					var element = orjs.drawing_commands[command_index].elements[element_index];
+					var elementLayer = layer || element.tags.layer || 0;
+					if (normalInstructions[elementLayer] == undefined) {
+						normalInstructions[elementLayer] = new Array();
+						normalInstructions[elementLayer].push({"instruction" : instruction,"elements":new Array()});
+					}
+					var array_old_position = normalInstructions[elementLayer].length-1;
+					if (normalInstructions[elementLayer][array_old_position].instruction != instruction) {
+						normalInstructions[elementLayer].push({"instruction":instruction,"elements":new Array()});
+					}
+					normalInstructions[elementLayer][array_old_position].elements.push(element);
+				}
 			}
+
+			// Now sorting the normalInstructions object
+			normalInstructions = orjs.objectKeySort(normalInstructions);
+			for (layer in normalInstructions) {
+				orjs.render_layer(layer,normalInstructions[layer]);
+			}
+
+			// TODO:z-mode=top
 		}
-		//var children = current_rule.getChildren();
+		//TODO: Implement draw decoration and draw marginalia
+		orjs.generate_paths();
 		
 	}
 //	console.debug(XML((new XMLSerializer()).serializeToString(orjs.outputFile)).toXMLString());
@@ -395,24 +450,29 @@ orjs.process_rule = function (node,depth,layer,previous) {
 	}
 	// Part 1 of process rule: line 1.151
 	if (node.nodeName == "rule") {
-		orjs.selection[depth+1] = new Array();
+		orjs.selection[depth+1] = new Object();
 		orjs.selection[depth+1] = orjs.makeSelection(node, orjs.selection[depth]);
 	}
 	else if (node.nodeName == "else") {
-		//TODO
-		console.debug("else");
 		// "else" selection - a selection for our level of 
 		// recursion already exists (from the previous rule) and 
 		// we need to select all objects that are present in the
 		// selection one level up and not in the previous rule's
 		// selection (which is on our level of recursion).
-
-		//orjs.selection[depth+1] = orjs.selection
+		var temp_selection = new Object();
+		for (member_id in orjs.selection[depth]) {
+			if (orjs.selection[depth+1][member_id]==null) {
+				temp_selection[member_id] = orjs.selection[depth][member_id];
+			}
+		}
+		delete orjs.selection[depth+1];
+		orjs.selection[depth+1] = new Object();
+		orjs.selection[depth+1] = temp_selection;
 	}
 
 	var selected = orjs.selection[depth+1];
-	if (!selected.length) return;
-
+	//FIXME: this probably will work only on Firefox?
+	if (!selected.__count__) return;
 	// ----------------------------------------------------
 	// Part 2 of process_rule:
 	//the selection is complete; iterate over child nodes
@@ -423,12 +483,10 @@ orjs.process_rule = function (node,depth,layer,previous) {
 	var previous_child;
 	for (index_instruction in node.childNodes) {
 		var instruction = node.childNodes[index_instruction];
+
 		if (instruction.nodeType != node.ELEMENT_NODE) continue;
-if (instruction.nodeName!="rule" && instruction.nodeName!="else" && instruction.nodeName!="#comment" && instruction.nodeName!="#text") {
-	console.debug("INSTRUCTION");
-	console.dir(instruction);
-}
 		var name = instruction.nodeName || "";
+
 		if (name == "layer") {
 			orjs.process_layer(instruction,depth+1,layer);
 		}
@@ -451,7 +509,9 @@ if (instruction.nodeName!="rule" && instruction.nodeName!="else" && instruction.
 		else if (name != "") {
 			console.debug("unknown drawing instruction "+name+", ignored");
 		}
-		if (name != "") previous_child == node;
+		if (name != "") {
+			previous_child = instruction;
+		}
 	}
 }
 
@@ -480,7 +540,7 @@ orjs.makeSelection = function(node, oldsel) {
 	if (e_pieces |= undefined && e_pieces["node"] != undefined) e = "node";
 
 	var interim;
-console.debug("e: "+e+" s: "+s+" k: "+k+" v: "+v);
+//console.debug("e: "+e+" s: "+s+" k: "+k+" v: "+v);
 
 	if (k == "*" || k == undefined) {
 		// rules that apply to any key. these don't occur often
@@ -509,22 +569,22 @@ console.debug("e: "+e+" s: "+s+" k: "+k+" v: "+v);
 		// rules that apply to the specifc key given in $k. This may
 		// be a pipe-separated list of values.
 
-		if (v == "*") {
+		if (v != null && v == "*") {
 			// objects that have the given key(s), with any value.
 			// FIXME "s"
 			interim = orjs.select_elements_with_given_tag_key(oldsel,e,k);
 		}
-		else if (v == "~") {
+		else if (v != null && v == "~") {
 			// objects that don't have the key(s)
 			// FIXME "s"
 			interim = orjs.select_elements_without_given_tag_key(oldsel,e,k);
 		}
-		else if (s == null && v.indexOf("~") == -1) {
+		else if (v != null && s == null && v.indexOf("~") == -1) {
 			// objects that have the given keys and values, where none of the
 			// values is "~"
 			interim = orjs.select_elements_with_given_tag_key_and_value_fast(oldsel,e,k,v);
 		}
-		else if (s == "way" && v.indexOf("~") == -1) {
+		else if (v != null && s == "way" && v.indexOf("~") == -1) {
 			// nodes that belong to a way that has the given keys and values,
 			// where none of the values is "~"
 			interim = orjs.select_nodes_with_given_tag_key_and_value_for_way_fast(oldsel,k,v);
@@ -533,10 +593,11 @@ console.debug("e: "+e+" s: "+s+" k: "+k+" v: "+v);
 			// the code that can handle "~" in values (i.e. rules like "the 
 			// 'highway' tag must be 'bridleway' or not present at all)
 			// is slower since it cannot use indexes.
+			//FIXME: there are instructions in z17 without v defined, why is it working in orp? Fallback to *
+			if (v==null) v = "*";
 			interim = orjs.select_elements_with_given_tag_key_and_value_slow(oldsel,e,k,v,s);
 		}
 	}
-console.dir(interim);
 
 	if (interim==undefined) console.debug("something is wrong");
 
@@ -579,6 +640,8 @@ console.dir(interim);
 		orjs.select_closed(interim,closed);
 	}
 
+//console.debug("printing interim");
+//console.dir(interim);
 	return interim;
 }
 
@@ -593,34 +656,35 @@ orjs.projectF = function (projected) {
 // Implementation of orp-select.pm
 
 orjs.select_elements_with_given_tag_key_and_value_slow = function(oldsel,e,k,v,s) {
+//console.debug("SELECTION: select_elements_with_given_tag_key_and_value_slow");
 	var values_wanted = v.split("|");
-	var newsel = new Array();
+	var newsel = new Object();
 	var keys_wanted = k.split("|");
 
 outer:
-	for (member in oldsel) {
+	for (member_id in oldsel) {
 		var instance_string_e = orjs.e_to_object[e];
-		if (instance_string_e != undefined && e != undefined && eval("!(oldsel[member] instanceof "+instance_string_e+" )") && !(e == "way" && (oldsel[member] instanceof orjs.multipolygon_object))) continue;
+		if (instance_string_e != undefined && e != undefined && eval("!(oldsel[member_id] instanceof "+instance_string_e+" )") && !(e == "way" && (oldsel[member_id] instanceof orjs.multipolygon_object))) continue;
 		// determine whether we're comparing against the tags of the object
 		// itself or the tags selected with the "s" attribute.
 		var tagsets;
 		if (s == "way") {
 			tagsets = new Array();
-			if (oldsel[member].ways != undefined) {
-				for (way in oldsel[member].ways) {
+			if (oldsel[member_id].ways != undefined) {
+				for (way in oldsel[member_id].ways) {
 					tagsets.push(way.tags);
 				}
 			}
 		}
 		else {
-			tagsets = oldsel[member].tags;
+			tagsets = oldsel[member_id].tags;
 		}
 		for (key in keys_wanted) {
 			for (value in values_wanted) {
 				for (tagset in tagsets) {
 					var keyval = tagsets[tagset][keys_wanted[key]];
 					if ((values_wanted[value] == "~" && keyval == undefined) || (keyval!=undefined && values_wanted[value] == keyval)) {
-						newsel.push(oldsel[member]);
+						newsel[member_id] = oldsel[member_id];
 						continue outer;
 					}
 				}
@@ -632,8 +696,9 @@ outer:
 }
 
 orjs.select_elements_with_given_tag_key_and_value_fast = function(oldsel,e,k,v) {
+//console.debug("SELECTION: select_elements_with_given_tag_key_and_value_fast");
 	var values_wanted = v.split("|");
-	var newsel = new Array();
+	var newsel = new Object();
 	var keys_wanted = k.split("|");
 	for (key in keys_wanted) {
 		// retrieve list of objects with this key from index.
@@ -655,15 +720,23 @@ orjs.select_elements_with_given_tag_key_and_value_fast = function(oldsel,e,k,v) 
 			}
 		}
 		else {
-			objects.push(orjs.index_way_tags[keys_wanted[key]]);
-			objects.push(orjs.index_node_tags[keys_wanted[key]]);
+			// Needed for e="way|node", why not needed in orp?
+			if (e != undefined) {
+				if (orjs.index_way_tags[keys_wanted[key]]!=undefined) {
+					objects.push(orjs.index_way_tags[keys_wanted[key]]);
+				}
+				if (orjs.index_node_tags[keys_wanted[key]]!=undefined) {
+					objects.push(orjs.index_node_tags[keys_wanted[key]]);
+				}
+			}
 		}
-		outer:
-		for (element in objects) {
-			if (!orjs.arrayContains(oldsel,objects[element])) continue;
+outer:
+		for (element_index in objects) {
+			if (oldsel[objects[element_index].id]==null) continue;
+
 			for (value in values_wanted) {
-				if (objects[element].tags[keys_wanted[key]]!=undefined && objects[element].tags[keys_wanted[key]] == values_wanted[value]) {
-					newsel.push(objects[element]);
+				if (objects[element_index].tags[keys_wanted[key]]!=undefined && objects[element_index].tags[keys_wanted[key]] == values_wanted[value]) {
+					newsel[objects[element_index].id] = objects[element_index];
 					continue outer;
 				}
 			}
@@ -673,31 +746,33 @@ orjs.select_elements_with_given_tag_key_and_value_fast = function(oldsel,e,k,v) 
 }
 
 orjs.select_elements_without_given_tag_key = function(oldsel,e,k) {
-	var newsel = new Array();
+//console.debug("SELECTION: select_elements_without_given_tag_key");
+	var newsel = new Object();
 	var keys_wanted = k.split("|");
 
 outer:
-	for (member_index in oldsel) {
+	for (member_id in oldsel) {
 		var instance_string_e = orjs.e_to_object[e];
-		if (instance_string_e != undefined && e!=undefined && eval("!(oldsel[member_index] instanceof "+instance_string_e+" )") && !(e == "way" && (oldsel[member_index] instanceof orjs.multipolygon_object))) continue;
+		if (instance_string_e != undefined && e!=undefined && eval("!(oldsel[member_id] instanceof "+instance_string_e+" )") && !(e == "way" && (oldsel[member_id] instanceof orjs.multipolygon_object))) continue;
 		for (key_index in keys_wanted) {
-			if (oldsel[member_index].tags[keys_wanted[key_index]] != undefined) continue outer;
+			if (oldsel[member_id].tags[keys_wanted[key_index]] != undefined) continue outer;
 		}
-		newsel.push(oldsel[member_index]);
+		newsel[member_id] = oldsel[member_id];
 	}
 	return newsel;
 }
 
 orjs.select_elements_with_given_tag_key = function(oldsel,e,k) {
-	var newsel = new Array();
+//console.debug("SELECTION: select_elements_with_given_tag_key");
+	var newsel = new Object();
 	var keys_wanted = k.split("|");
 	var instance_string_e = orjs.e_to_object[e];
 outer:
-	for (member_index in oldsel) {
-		if (instance_string_e != undefined && e!=undefined && eval("!(oldsel[member_index] instanceof "+instance_string_e+" )") && !(e == "way" && (oldsel[member_index] instanceof orjs.multipolygon_object))) continue;
+	for (member_id in oldsel) {
+		if (instance_string_e != undefined && e!=undefined && eval("!(oldsel[member_id] instanceof "+instance_string_e+" )") && !(e == "way" && (oldsel[member_id] instanceof orjs.multipolygon_object))) continue;
 		for (key_index in keys_wanted) {
-			if (oldsel[member_index].tags[keys_wanted[key_index]] != undefined) {
-				newsel.push(oldsel[member_index]);
+			if (oldsel[member_id].tags[keys_wanted[key_index]] != undefined) {
+				newsel[member_id] = oldsel[member_id];
 				continue outer;
 			}
 		}
@@ -706,6 +781,7 @@ outer:
 }
 
 orjs.select_closed = function (selection,closed) {
+//console.debug("SELECTION: select_closed");
 	for (member_index in selection) {
 		//TODO: select_closed function
 		console.debug("Function select_closed not implemented");
@@ -713,8 +789,9 @@ orjs.select_closed = function (selection,closed) {
 }
 
 orjs.select_nodes_with_given_tag_key_and_value_for_way_fast = function(oldsel,k,v) {
+//console.debug("SELECTION: select_nodes_with_given_tag_key_and_value_for_way_fast");
 	var values_wanted = v.split("|");
-	var newsel = new Array();
+	var newsel = new Object();
 	var keys_wanted = v.split("|");
 	for (key_index in keys_wanted) {
 		// process only those from oldsel that have this key.
@@ -723,8 +800,8 @@ orjs.select_nodes_with_given_tag_key_and_value_for_way_fast = function(oldsel,k,
 			for (value_index in values_wanted) {
 				if (way.tags[keys_wanted[key_index]] != undefined && way.tags[keys_wanted[key_index]]==values_wanted[value_index]) {
 					for (node_index in way.nodes) {
-						if (!orjs.arrayContains(oldsel,way.nodes[node_index])) continue;
-						newsel.push(way.nodes[node_index]);
+						if (oldsel[way.nodes[node_index]]==null) continue;
+						newsel[way.nodes[node_index]] = way.nodes[node_index];
 					}
 				}
 			}
@@ -737,39 +814,312 @@ orjs.select_nodes_with_given_tag_key_and_value_for_way_fast = function(oldsel,k,
 // it selects objects which are not connected to at least one other object with the same value of $tag
 
 orjs.select_not_connected_same_tag = function(oldsel,tag) {
-	var newsel = new Array();
+	var newsel = new Object();
 outer:
-	for (member_index in oldsel) {
+	for (member_id in oldsel) {
 		// only ways are supported for now
-		if (!(oldsel[member_index] instanceof orjs.way_object)) {
-			newsel.push(oldsel[member_index]);
+		if (!(oldsel[member_id] instanceof orjs.way_object)) {
+			newsel[member_id] = oldsel[member_id];
 			continue;
 		}
-		var value = oldsel[member_index].tags[tag];
+		var value = oldsel[member_id].tags[tag];
 		if (value == undefined) continue;
 
-		for (node_index in oldsel[member_index].nodes) {
-			var node = oldsel[member_index].nodes[node_index];
-			for (way_index in oldsel[member_index].ways) {
-				var way = oldsel[member_index].ways[way_index];
+		for (node_index in oldsel[member_id].nodes) {
+			var node = oldsel[member_id].nodes[node_index];
+			for (way_index in oldsel[member_id].ways) {
+				var way = oldsel[member_id].ways[way_index];
 				var otherValue = way.tags[tag];
 				if (otherValue == undefined) continue;
-				if (way.id == oldsel[member_index].id) continue;
+				if (way.id == member_id) continue;
 		                // skip element if other element with the same value is connected
 				if (otherValue == value) continue outer;
 			}
 		}
-		newsel.push(oldsel[member_index]);
+		newsel[member_id] = oldsel[member_id];
 	}
 	return newsel;
 }
 
-// Helper
+orjs.render_layer = function(id,commands) {
+	if (commands == undefined) return;
+	var g = document.createElementNS(orjs.tagSvg,"g");
+	g.setAttribute("inkscape:groupmode","layer");
+	g.setAttribute("id","layer"+id);
+	g.setAttribute("inkscape:label", "Layer "+id);
+
+	commands = orjs.commandZIndexSort(commands);
+
+	for (var command_index in commands) {
+		var function_to_call = orjs.instructions[commands[command_index].instruction.nodeName];
+console.debug(function_to_call);
+		eval(function_to_call+"(commands[command_index].instruction,undefined,commands[command_index].elements,g)");
+	}
+	orjs.outputFile.documentElement.appendChild(g);
+}
+
+orjs.generate_paths = function() {
+
+	//var defs = document.createElementNS(orjs.tagSvg,"defs");
+	//defs.setAttribute("id","defs-ways");
+	
+}
+
+//Implementation of orp-drawing.pl
+orjs.draw_lines = function(linenode,layer,selected,dom) {
+	// FIXME copy node svg: attributes
+	var smart_linecaps = (linenode.getAttribute("smart-linecap") != "no");
+	var class = linenode.getAttribute("class");
+	var mask_class = linenode.hasAttribute("mask-class") ? linenode.getAttribute("mask-class") : "";
+	var group_started = 0;
+	var honor_width = (linenode.getAttribute("honor-width") == "yes");
+
+	//Global variable needed to create or not the tag (the dom in JS it's handled differently than Perl SAX)
+	var my_g = document.createElementNS(orjs.tagSvg,"g");
+
+	// explicit way specific style
+	var style;
+	for (var selected_index in selected) {
+		var element = selected[selected_index];
+		if (!(element instanceof orjs.way_object)) continue; // Draw lines doesn't care about multipolygons
+		if (element.nodes.length < 2) continue;
+
+		// this is a special case for ways (e.g. rivers) where we honor a
+		// width=something tag.
+		// It is used to generate rivers of different width, depending on the
+		// value of the width tag.
+		// This is done by an explicit specification of a
+		// style="stroke-width:..px" tag in the generated SVG output
+
+		var style = "";
+		if (honor_width) {
+			if (element.tags.width != undefined) {
+				var maxwidth = linenode.hasAttribute("maximum-width") ? linenode.getAttribute("maximum-width") : 100;
+				var minwidth = linenode.hasAttribute("minimum-width") ? linenode.getAttribute("minimum-width") : 0.1;
+				var scale = linenode.hasAttribute("width-scale-factor") ? linenode.getAttribute("width-scale-factor") : 1;
+				var width = element.tags.width;
+				//TODO: continue line 72-85 of orp-drawing.pm
+			}
+		}
+
+		my_g.setAttribute("class",class);
+		if (!group_started) {
+			if (mask_class!="") my_g.setAttribute("mask-class",mask_class);
+		}
+		group_started = 1;
+		if (smart_linecaps) {
+			orjs.draw_way_with_smart_linecaps(linenode,layer,element,class,style,my_g);
+		}
+		else {
+			orjs.draw_path(linenode,element.id,"normal",null,style,my_g);
+		}
+	}
+	if (group_started) dom.appendChild(my_g);
+}
+
+// The following comment is from the original osmarender.xsl and describes 
+// how "smart linecaps" work:
+//
+// The first half of the first segment and the last half of the last segment 
+// are treated differently from the main part of the way path.  The main part 
+// is always rendered with a butt line-cap.  Each end fragement is rendered with
+// either a round line-cap, if it connects to some other path, or with its 
+// default line-cap if it is not connected to anything.  That way, cul-de-sacs 
+// etc are terminated with round, square or butt as specified in the style for 
+// the way.
+
+orjs.draw_way_with_smart_linecaps = function(linenode,layer,way,class,style,dom) {
+	if (way instanceof orjs.multipolygon_object) return;
+
+	// Convenience variables
+	var id = way.id;
+	var nodes = way.nodes;
+
+	if (!nodes.length) return;
+	// count connectors on first and last node
+	var first_node_connection_count = nodes[0].ways.length;
+	var first_node_lower_layer_connection_count = first_node_connection_count;
+	if (first_node_connection_count > 1) {
+		// need to explicitly count lower layer connections.
+		first_node_lower_layer_connection_count = 0;
+		for (var otherway_index in nodes[0].ways) {
+			var otherway = nodes[0].ways[otherway_index];
+			if (otherway.layer < way.layer) first_node_lower_layer_connection_count++;
+		}
+	}
+	var former_element = nodes.length-1;
+	var last_node_connection_count = nodes[former_element].ways.length;
+	var last_node_lower_layer_connection_count = last_node_connection_count;
+	if (last_node_connection_count > 1) {
+		//need to explicitly count lower layer connections.
+		var last_node_lower_layer_connection_count = 0;
+		for (var otherway_index in nodes[former_element].ways) {
+			var otherway = nodes[former_element].ways[otherway_index];
+			if (otherway.layer < way.layer) last_node_lower_layer_connection_count++;
+		}
+	}
+
+	var extraClassFirst = "";
+	var extraClassLast = "";
+
+	if (first_node_connection_count != 1) {
+		if (first_node_lower_layer_connection_count > 0) {
+			extraClassFirst = "osmarender-stroke-linecap-butt";
+		}
+		else {
+			extraClassFirst = "osmarender-stroke-linecap-round";
+		}
+	}
+
+	if (last_node_connection_count != 1) {
+		if (last_node_lower_layer_connection_count > 0) {
+			extraClassLast = "osmarender-stroke-linecap-butt";
+		}
+		else {
+			extraClassLast = "osmarender-stroke-linecap-round";
+		}
+	}
+
+	// If first and last is the same, draw only one way. Else divide way into way_start, way_mid and way_last
+
+	if (extraClassFirst == extraClassLast) {
+		orjs.draw_path(linenode,id,"normal",extraClassFirst,style,dom);
+	}
+	else {
+		// first draw middle segment if we have more than 2 nodes
+		if (nodes.length > 2) orjs.draw_path(linenode,id,"mid","osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end",style,dom);
+		orjs.draw_path(linenode,id,"start",extraClassFirst+" osmarender-no-marker-end",style,dom);
+		orjs.draw_path(linenode,id,"end",extraClassLast+" osmarender-no-marker-start",style,dom);
+	}
+}
+
+orjs.draw_areas = function(linenode,layer,way,class,style,dom) {}
+
+orjs.draw_symbols = function(linenode,layer,way,class,style,dom) {}
+
+// -------------------------------------------------------------------
+// sub draw_path($rulenode, $path_id, $class, $style)
+//
+// draws an SVG path with the given path reference and style.
+// -------------------------------------------------------------------
+
+orjs.draw_path = function(rulenode,way_id,way_type,addclass,style,dom) {
+	/*var defs = orjs.outputFile.documentElement.appendChild(document.createElementNS(orjs.tagSvg,"defs"));
+	defs.setAttribute("id","defs-rulefile");
+	var original_defs = rule_file.evaluate("//rules/defs/*[local-name() != 'svg' and local-name() != 'symbol']",rule_file.documentElement,null,XPathResult.ANY_TYPE,null);
+	//FIXME: check if this is the desired behavior, creating the <style></style> tag inside the svg file
+	defs.appendChild(original_defs.iterateNext());
+
+	// Clipping rectangle for the map
+	//TODO: change all the various callings to createelement/setattribute to direct parsing form string
+	var clip_path = document.createElementNS(orjs.tagSvg,"clipPath");*/
+
+	var mask_class = rulenode.hasAttribute("mask-class") ? rulenode.getAttribute("mask-class") : "";
+	var class = rulenode.getAttribute("class");
+	var extra_attr = new Array();
+
+	var path_id = orjs.get_way_href(way_id,way_type);
+	if (mask_class != "") {
+		var mask_id = "mask_"+way_type+"_"+way_id;
+		var mask_tag = document.createElementNS(orjs.tagSvg,"mask");
+		mask_tag.setAttribute("id",mask_id);
+		mask_tag.setAttribute("maskUnits","userSpaceOnUse");
+		var use_tag = document.createElementNS(orjs.tagSvg,"use");
+		use_tag.setAttribute("xlink:href",path_id);
+		use_tag.setAttribute("class",mask_class+" osmarender-mask-black");
+		mask_tag.appendChild(use_tag);
+
+		// the following two seem to be required as a workaround for 
+		// an inkscape bug.
+
+		var use_2_tag = document.createElementNS(orjs.tagSvg,"use");
+		use_2_tag.setAttribute("xlink:href",path_id);
+		use_2_tag.setAttribute("class",mask_class+" osmarender-mask-white");
+		mask_tag.appendChild(use_2_tag);
+		var use_3_tag = document.createElementNS(orjs.tagSvg,"use");
+		use_3_tag.setAttribute("xlink:href",path_id);
+		use_3_tag.setAttribute("class",mask_class+" osmarender-mask-black");
+		mask_tag.appendChild(use_3_tag);
+		
+		extra_attr.push({"mask":"url(#"+mask_id+")"});
+	}
+	// We can simplify this in Javascript by adding or not adding the setattribute("style") to the use_tag
+	var use_tag = document.createElementNS(orjs.tagSvg,"use");
+	if (style!=undefined && style != "") {
+		use_tag.setAttribute("xlink:href",path_id);
+		use_tag.setAttribute("style",style);
+		//is it needed?
+		for (var extra_attr_index in extra_attr) {
+			var single_extra_attr = extra_attr[extra_attr_index];
+			for (var property in single_extra_attr) {
+				use_tag.setAttribute(property,single_extra_attr[property]);
+			}
+		}
+		var class_for_tag = addclass != null ? (""+class+" "+addclass) : class;
+		use_tag.setAttribute("class",class_for_tag);
+	}
+	else {
+		use_tag.setAttribute("xlink:href",path_id);
+		//is it needed?
+		for (var extra_attr_index in extra_attr) {
+			var single_extra_attr = extra_attr[extra_attr_index];
+			for (var property in single_extra_attr) {
+				use_tag.setAttribute(property,single_extra_attr[property]);
+			}
+		}
+		var class_for_tag = addclass != null ? (""+class+" "+addclass) : class;
+		use_tag.setAttribute("class",class_for_tag);
+	}
+	dom.appendChild(use_tag);
+}
+
+orjs.get_way_href = function (id, type) {
+	if (orjs.referenced_ways[id] == undefined) orjs.referenced_ways[id] = new Object();
+	if (orjs.referenced_ways[type] == undefined) orjs.referenced_ways[id][type] = new Object();
+	orjs.referenced_ways[id][type] = 1;
+	return "#way_"+type+"_"+id;
+}
+
+//HELPERS
+
+orjs.objectKeySort = function(object) {
+	var array = new Array();
+	var temp_object = new Object();
+	for (property_number in object) {
+		if (!orjs.arrayContains(array,property_number)) array.push(property_number);
+	}
+	array.sort();
+	for (array_index in array) {
+		temp_object[array[array_index]] = object[array[array_index]];
+	}
+	return temp_object;
+}
+
+orjs.commandZIndexSort = function (commands) {
+	var array = new Array();
+	//FIXME: creating ordered/unordered is probably efficient if there aren't so many objects, could it be more efficient to just reiterate the objects without creating a new one?
+	var temp_commands_unordered = new Object();
+	var temp_commands_ordered = new Array();
+	for (command_index in commands) {
+		var z_index = commands[command_index].instruction.hasAttribute("z-index") ? commands[command_index].instruction.getAttribute("z-index") : 0;
+		if (temp_commands_unordered[z_index]==undefined) {
+			temp_commands_unordered[z_index] = new Array();
+		}
+		temp_commands_unordered[z_index].push(commands[command_index]);
+		if (!orjs.arrayContains(array,z_index)) array.push(z_index);
+	}
+	array.sort();
+	for (array_index in array) {
+		for (single_command in temp_commands_unordered[array[array_index]]) {
+			temp_commands_ordered.push(temp_commands_unordered[array[array_index]][single_command]);
+		}
+	}
+	return temp_commands_ordered;
+}
+
 orjs.arrayContains = function(array,element) {
 	for (element_index in array) {
-		if (array[element_index] === element) {
-			return true;
-		}
+		if (array[element_index] == element) return true;
 	}
 	return false;
 }

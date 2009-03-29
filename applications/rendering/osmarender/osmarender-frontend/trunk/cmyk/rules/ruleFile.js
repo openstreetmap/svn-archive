@@ -22,6 +22,17 @@ dojo.declare("cmyk.rules.ruleFile",null,{
 	Support
 		Deal with xmlns:xlink and xmlns:svg
 		svg Patterns and Symbols
+	Compatibility with
+		CSS (after comments and multiple declaration in one line)
+		nature_reserve (z12)
+		sac-scale-t1 (z17,z16?)
+		track (z12)
+		sport (z12)
+		waterway-casing (z12)
+
+		Not loading (errors)
+		z11 and less (doesn't matter I guess)
+		caption-z1 and upper
 */
 
 		var rulesFileRaw;

@@ -18,7 +18,7 @@ http://kb.mozillazine.org/Io.js
 
 dojo.declare("cmyk.utils.fileIO",null,{
 	/** 
-	      @class A class that loads a file from Hard Disk and returns an handler
+	      @class A class that loads and saves a file from Hard Disk and returns the path (if loading)
 	      @memberOf cmyk.utils
 	*/
 

@@ -36,7 +36,7 @@ sub is_format_Kismet($) {
     	if ( $line =~ m/^<\?xml.*\?>$/ ) {
 		$line = $fh->getline();
 		$fh->close();
-		return $line =~ m/ detection-run .*kismet/;
+		return $line =~ m/ (gps|detection)-run .*kismet/;
 	}
 	$fh->close();
 	return 0;

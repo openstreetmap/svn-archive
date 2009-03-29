@@ -158,6 +158,10 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 	public void setAutoCompletionList(AutoCompletionList autoCompletionList) {
 		tblTagEditor.setAutoCompletionList(autoCompletionList);
 	}
+	
+	public void setAutoCompletionCache(AutoCompletionCache acCache) {
+		tblTagEditor.setAutoCompletionCache(acCache);
+	}
 
 	@Override
 	public void autoCompletionItemSelected(String item) {

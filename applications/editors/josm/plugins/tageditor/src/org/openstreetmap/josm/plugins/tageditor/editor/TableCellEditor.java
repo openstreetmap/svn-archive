@@ -127,6 +127,7 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 			logger.log(Level.WARNING, "failed to initialize auto completion list with standard values", e);
 		}
 		
+		logger.info("acCache=" + acCache);
 		for (String value : acCache.getValues(forKey)) {
 			autoCompletionList.add(
 					new AutoCompletionListItem(value, AutoCompletionItemPritority.IS_IN_DATASET)
@@ -224,6 +225,10 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
     	this.autoCompletionList = autoCompletionList;
     	editor.setAutoCompletionList(autoCompletionList);
     }
+	
+	public void setAutoCompletionCache(AutoCompletionCache acCache) {
+		this.acCache = acCache;
+	}
 
 	
 	@Override

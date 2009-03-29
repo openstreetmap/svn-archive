@@ -172,6 +172,7 @@ public class TagEditorDialog extends JDialog {
 		AutoCompletionList autoCompletionList = new AutoCompletionList();
 		aclViewer = new AutoCompletionListViewer(autoCompletionList);
 		tagEditor.setAutoCompletionList(autoCompletionList);
+		tagEditor.setAutoCompletionCache(acCache);
 		aclViewer.addAutoCompletionListListener(tagEditor);		
 		
 		JPanel pnlTagGrid = new JPanel();
@@ -304,7 +305,8 @@ public class TagEditorDialog extends JDialog {
 	 * called. 
 	 */
 	public void startEditSession() {		
-		model.initFromJOSMSelection();
+		model.clearAppliedPresets();
+		model.initFromJOSMSelection();		
 		acCache.initFromJOSMDataset();
 		getModel().ensureOneTag();
 	}

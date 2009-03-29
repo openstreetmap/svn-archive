@@ -28,6 +28,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionCache;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionList;
 
 
@@ -399,6 +400,16 @@ public class TagTable extends JTable  {
 		if (editor != null) {
 			editor.setAutoCompletionList(autoCompletionList);
 		} 
+	}
+	
+	public void setAutoCompletionCache(AutoCompletionCache acCache) {
+		if (acCache == null) {
+			logger.warning("argument acCache should not be null. Aborting.");
+			return; 
+		}
+		if (editor != null) {
+			editor.setAutoCompletionCache(acCache);
+		}
 	}
 	
 	public AutoCompletionList getAutoCompletionList() {

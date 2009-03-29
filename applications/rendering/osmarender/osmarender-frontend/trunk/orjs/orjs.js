@@ -1,4 +1,9 @@
-// TODO: Implement from line 818, render_layer and zindexsort
+/**
+ * @author Mario Ferraro <fadinlight@gmail.com>
+ * http://osmarenderfrontend.wordpress.com
+ * Released under GPL v2 or later
+ */
+
 var orjs = {};
 
 orjs.node_object = function() {};

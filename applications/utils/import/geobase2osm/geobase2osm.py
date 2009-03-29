@@ -16,6 +16,9 @@ from shapely.wkt import loads
 import string
 from xml import sax
 from operator import itemgetter
+from roadmatchertools import RoadMatchHandler
+from roadmatchertools import NameMatchHandler
+from roadmatchertools import expandStreetType
 
 # Allow enforcing of required arguements
 # code from http://www.python.org/doc/2.3/lib/optparse-extending-examples.html
@@ -73,6 +76,8 @@ highway["Service Lane"] = "service"
 highway["Rapid Transit"] = "unclassified"
 highway["Winter"] = "unclassified"
 
+
+    
 
 TagList=set(('nrn:nid',
             'nrn:ferrySegmentId',
@@ -168,76 +173,9 @@ class addrHandler(sax.ContentHandler):
         self.string = self.string + string
 
 
+        
 
-
-
-    
-
-class RoadMatchHandler(sax.ContentHandler):
-  count = 0
-  
-  string = None
-    
-  waiting = False
-  feature = False
-  attribute = None
-  nid = None
-  split=None
-  standAloneList=set()
-  def __init__(self):
-    print "Starting to process Exclusion information..."
-  
-  def counter(self):
-    if self.count % 5000 == 0:
-      print self.count
-    self.count += 1  
-  
-  def startDocument(self):
-    return
-   
-  def endDocument(self):
-    return
-    
-  def startElement(self, name, attributes):
-    if name == 'feature':
-      self.feature=True
-      self.nid=None
-      self.src_state=None
-      self.split=False
-      self.counter()
-      
-    if name == 'property':
-      self.attribute=attributes['name']
-      self.waiting = True
-  
-  def endElement(self,name):
-      
-    if name=='property' and self.feature==True and self.attribute=='NID':
-      self.waiting = False
-      self.nid=self.string
-      self.string=None
-    elif name=='property' and self.feature==True and self.attribute=='SrcState':
-      self.src_state=self.string
-      self.string=None
-      self.waiting=False
-    elif name=='property':
-      self.waiting=False
-      if (self.attribute == 'SplitStart' or self.attribute=='SplitEnd') and self.string=='Y':
-        self.split=True
-      self.string=None
-    if name=='feature' and self.nid != None:
-      self.feature=False
-      if self.src_state=='Standalone' and self.split==False:
-        self.standAloneList.add(self.nid)
-
-  def characters(self,string):
-    if self.waiting == True:
-      string = unicode(string)
-      if self.string == None:
-        self.string = string
-      else :
-        self.string = self.string + string
-
+        
 ##
 # A class that has the ability to accumlate characeters passed to the
 # characeters() method.
@@ -319,9 +257,10 @@ class Way(GeomParser):
     attribution = "GeoBase®"
     source = "Geobase_Import_2009"
     
-    def __init__(self,id,type,boundary):
+    def __init__(self,id,type,boundary,nameHash):
           self.nodeid=id         
           self.boundary=boundary
+          self.nameHash=nameHash
           self.osm_nodes=[]
           way_element=None
           string=None
@@ -329,6 +268,7 @@ class Way(GeomParser):
           self.tags={}
           self.way_element = ET.Element("way",visible="true",id=str(self.nodeid))
           self.nodeid-=1
+          self.placeName=None
           
     def isCompleted(self):
         return self.completed
@@ -490,6 +430,27 @@ class Way(GeomParser):
                   self.placeName=self.placeName + ',Canada'
           self.tags['is_in']=self.placeName
                 # Convert the tags to xml nodes
+                
+          #
+          # If no name is defined, check nameHash
+          # to see if one is available in the external
+          # dataset.
+          if not  self.tags.has_key('name'):
+              uuid=self.tags['geobase:uuid']              
+              if  self.nameHash.has_key(uuid) :
+                  nameTags=self.nameHash[uuid]
+                  if nameTags['NAME'] != None:
+                      self.tags['name'] = nameTags['NAME']
+                      if nameTags['TYPE'] != None:
+                          self.tags['name']=self.tags['name'] + expandStreetType(nameTags['TYPE'])
+                      if nameTags['DIRECTION'] != None:
+                          self.tags['name']=self.tags['name']+ ' '+ nameTags['DIRECTION']
+                      if nameTags['RB_UID'] != None:
+                          self.tags['statscan:rbuid'] = nameTags['RB_UID']
+                      
+                          
+                  #TODO filter out Unknown etc...
+          
           for key, value in self.tags.iteritems():
               self.way_element.append(ET.Element('tag', k=key,v=value))
           self.way_element.append(ET.Element('tag',k='attribution',v=self.attribution))
@@ -765,9 +726,10 @@ class geomHandler(sax.ContentHandler):
       printStr( self.count )
     self.count += 1
 
-  def __init__(self):
+  def __init__(self,nameHash):
     printStr( "Starting to process GML..." )
     self.depth = 0
+    self.nameHash=nameHash
     return
 
   def startDocument(self):
@@ -793,13 +755,13 @@ class geomHandler(sax.ContentHandler):
     # A ferry connection
     elif name == 'nrn:FerryConnectionSegment':
       self.ferrySegment = True
-      self.current_way=Way(self.nodeid,'nrn:FerryConnectionSegment',self.boundary)      
+      self.current_way=Way(self.nodeid,'nrn:FerryConnectionSegment',self.boundary,self.nameHash)      
       
       self.counter()
       
     # A road 'way'
     elif name == "nrn:RoadSegment":
-      self.current_way=Way(self.nodeid,'nrn:RoadSegment',self.boundary)   
+      self.current_way=Way(self.nodeid,'nrn:RoadSegment',self.boundary,self.nameHash)   
       self.counter()
     
     elif self.current_way != None:
@@ -938,7 +900,7 @@ def printStr(s):
   print s
 
 def main():
-
+    
   usage = "usage: %prog -i NRN_GEOM.gml [-a NRN_ADDR.gml] [-o outfilefile.osm] [--zip] [--pretty] [--quiet]"
   parser = OptionParser(usage)
   parser.add_option("-i", "--input", dest="geomfile", help="read data from GEOMFILE")
@@ -949,6 +911,7 @@ def main():
   parser.add_option("-b", "--boundsfile", dest="boundsfile",help="Boundary file")
   parser.add_option("-q", "--quiet", dest="quiet", action="store_true", help="Enable quiet mode")
   parser.add_option("-e", "--roadmatch_standalone", dest="standAloneFile",help="RoadMatch File")
+  parser.add_option("-n", "--roadmatch_names", dest="nameFile",help="RoadMatch FName File")
   (options, args) = parser.parse_args()
 
   global suppressoutput
@@ -973,6 +936,12 @@ def main():
     standAloneHandler = RoadMatchHandler()
     sax.parse(open(options.standAloneFile),standAloneHandler)
     print "Standalone List Size %d" % (len(standAloneHandler.standAloneList))
+
+
+  nameMatchHandler=None
+  if options.nameFile != None and len(options.nameFile) > 0:
+      nameMatchHandler = NameMatchHandler()
+      sax.parse(open(options.nameFile),nameMatchHandler)
   
   # If we were given the addr file parse it
   if options.addrfile != None and len(options.addrfile) > 0:
@@ -984,8 +953,10 @@ def main():
   
   # Then parse the geom file
   printStr( "Preparing to read '"+options.geomfile+"'" )
-  
-  handler = geomHandler()
+  nameHash={}
+  if nameMatchHandler != None:
+      nameHash = nameMatchHandler.nameHash
+  handler = geomHandler(nameHash)
   handler.boundary=boundary
   sax.parse(open(options.geomfile), handler)
   printStr( "Parse of geomfile done" )
@@ -1006,7 +977,10 @@ def main():
   
   complete_osm=ET.Element("osm", generator='geobase2osm', version='0.5')
   included_nodes=set()
-  for w in handler.ways:      
+
+             
+  
+  for w in handler.ways:
     for n in w.osm_nodes:
         if n not in included_nodes:
             included_nodes.add(n)

@@ -39,11 +39,14 @@ orjs.drawing_commands = new Array();
 
 orjs.multipolygon_wayid = 0;
 
+
 var osm_file;
 var rule_file;
 
 orjs.inBrowser = false;
 orjs.tagSvg = "";
+orjs.debug = false;
+orjs.customZoom = 5;
 
 orjs.selection = new Array();
 
@@ -330,8 +333,8 @@ orjs.startSVG = function() {
 		setAttribute("id","main");
 		setAttribute("version","1.1");
 		setAttribute("baseProfile",orjs.svgBaseProfile);
-		setAttribute("width",orjs.svgWidth+"px");
-		setAttribute("height",orjs.svgHeight+"px");
+		setAttribute("width",orjs.svgWidth*orjs.customZoom+"px");
+		setAttribute("height",orjs.svgHeight*orjs.customZoom+"px");
 		setAttribute("preserveAspectRatio","none");
 		setAttribute("viewBox","-"+(orjs.extraWidth/2)+" -"+(orjs.extraHeight/2)+" "+orjs.svgWidth+" "+orjs.svgHeight);
 	}
@@ -408,7 +411,10 @@ orjs.processRules = function() {
 			
 			// prepare z-mode=normal
 			var normalInstructions = new Object();
-
+if (orjs.debug) {
+console.debug("drawing commands");
+console.dir(orjs.drawing_commands);
+}
 			for (command_index in orjs.drawing_commands) {
 				var instruction = orjs.drawing_commands[command_index].instruction;
 				if ((instruction.getAttribute("z-mode") || "normal") != "normal") continue;
@@ -502,19 +508,22 @@ orjs.process_rule = function (node,depth,layer,previous) {
 		}
 		else if (name == "else") {
 			if (previous_child == undefined || previous_child.nodeName != "rule") {
-				console.debug("<else> not following <rule>, ignored");
+				if (orjs.debug)
+					console.debug("<else> not following <rule>, ignored");
 			}
 			else {
 				orjs.process_rule(instruction,depth+1,layer,previous_child);
 			}
 		}
 		else if (orjs.instructions[name]!=undefined) {
-			console.debug("processing instruction with name: "+name);
+			if (orjs.debug)
+				console.debug("processing instruction with name: "+name);
 			var command = {"instruction":instruction,"elements":selected};
 			orjs.drawing_commands.push(command);
 		}
 		else if (name != "") {
-			console.debug("unknown drawing instruction "+name+", ignored");
+			if (orjs.debug)
+				console.debug("unknown drawing instruction "+name+", ignored");
 		}
 		if (name != "") {
 			previous_child = instruction;
@@ -606,7 +615,7 @@ orjs.makeSelection = function(node, oldsel) {
 		}
 	}
 
-	if (interim==undefined) console.debug("something is wrong");
+	if (interim==undefined && orjs.debug) console.debug("something is wrong");
 
 	// post-process the selection according to proximity filter, if set.
 
@@ -642,7 +651,7 @@ orjs.makeSelection = function(node, oldsel) {
 	var closed = node.hasAttribute("closed") ? node.getAttribute("closed") : null;
 	if (closed != null) {
 		if (closed != "yes" && closed != "no") {
-			console.debug("Error in stylesheet: <rule closed= must be 'yes' or 'no'");
+			if (orjs.debug) console.debug("Error in stylesheet: <rule closed= must be 'yes' or 'no'");
 		}
 		orjs.select_closed(interim,closed);
 	}
@@ -791,7 +800,8 @@ orjs.select_closed = function (selection,closed) {
 //console.debug("SELECTION: select_closed");
 	for (member_index in selection) {
 		//TODO: select_closed function
-		console.debug("Function select_closed not implemented");
+		if (orjs.debug)
+			console.debug("Function select_closed not implemented");
 	}
 }
 
@@ -859,7 +869,7 @@ orjs.render_layer = function(id,commands) {
 
 	for (var command_index in commands) {
 		var function_to_call = orjs.instructions[commands[command_index].instruction.nodeName];
-console.debug(function_to_call);
+if (orjs.debug) console.debug(function_to_call);
 		eval(function_to_call+"(commands[command_index].instruction,undefined,commands[command_index].elements,g)");
 	}
 	orjs.outputFile.getElementById("map").appendChild(g);
@@ -868,27 +878,69 @@ console.debug(function_to_call);
 orjs.generate_paths = function() {
 	var defs = document.createElementNS(orjs.tagSvg,"defs");
 	defs.setAttributeNS(null,"id","defs-ways");
+if (orjs.debug) {
+	console.debug("referenced ways");
+	console.dir(orjs.referenced_ways);
+}
 	for (way_id in orjs.referenced_ways) {
 		// extract data into variables for convenience. the "points"
 		// array contains lat/lon pairs of the nodes.
-		var way = orjs.way_storage[way_id];
-		if (way instanceof orjs.multipolygon_object) console.debug("ERROR: Multipolygon in generate_paths!");
-		var types = orjs.referenced_ways[way_id];
-		var tags = way.tags;
-		var points = new Array();
-		for (node_id in way.nodes) {
-			var node = way.nodes[node_id];
+		way = orjs.way_storage[way_id];
+		if (way instanceof orjs.multipolygon_object && orjs.debug) console.debug("ERROR: Multipolygon in generate_paths!");
+		types = orjs.referenced_ways[way_id];
+		tags = way.tags;
+way.nodes.unshift({});
+way.nodes.unshift({});
+way.nodes.push({});
+		//var points = new Array();
+if (orjs.debug)
+console.dir(way.nodes);
+/*		Array.forEach(way.nodes, function (node) {
 			if (node.lat != undefined && node.lon != undefined) {
 				points.push([node.lat,node.lon]);
 			}
-		}
-
+		});*/
+//console.dir(points);	
+		points = way.nodes.map(function (node) {
+			//if (node.lat != undefined && node.lon != undefined) {
+				return [node.lat,node.lon];
+			//}
+		});
+/*		for (node_id in way.nodes) {
+			var node = way.nodes[node_id];
+			if (node.lat != undefined && node.lon != undefined) {
+				var lat = node.lat;
+				var lon = node.lon;
+console.debug("la lunghezza è: "+points.length);
+console.debug("inserisco il node seguente: ");
+console.debug("node lat:"+lat+" node lon: "+lon);
+				var position = points.length;
+console.debug("inserisco in position "+position);
+				points[position] = new Array(2);
+				points[position][0]=lat;
+				points[position][1]=lon;
+//				points.push([node.lat,node.lon]);
+console.debug("points interno è:");
+console.debug(points[position][0]);
+console.debug(points[position][1]);
+			}
+		}*/
 		// FIXME? points.length returns 2 if there is only one point with the two coordinates, so this line it's different from orp.pl
-		if (points.length <= 2) continue;
-
+if (orjs.debug) {
+console.debug("SCRIVO "+way_id);
+console.debug("nodi trovati");
+console.debug("la lunghezza è "+points.length);
+console.dir(points);
+}
+		if (points.length < 2) continue;
 		// generate a normal way path
+if (orjs.debug) {
+console.debug("type di "+way_id);
+console.dir(types);
+}
 		if (types.normal != undefined && types.normal) {
-			var path = document.createElementNS(orjs.tagSvg,"path");
+if (orjs.debug) console.debug("creo path normal di id"+way_id);
+			path = document.createElementNS(orjs.tagSvg,"path");
 			path.setAttributeNS(null,"id","way_normal_"+way_id);
 			path.setAttributeNS(null,"d",orjs.make_path(points));
 			defs.appendChild(path);
@@ -896,7 +948,8 @@ orjs.generate_paths = function() {
 
 	        // generate reverse path if needed
 		if (types.reverse != undefined && types.reverse) {
-			var path = document.createElementNS(orjs.tagSvg,"path");
+if (orjs.debug) console.debug("creo path reverse");
+			path = document.createElementNS(orjs.tagSvg,"path");
 			path.setAttributeNS(null,"id","way_reverse_"+way_id);
 			path.setAttributeNS(null,"d",orjs.make_path(points.reverse()));
 			defs.appendChild(path);
@@ -905,27 +958,30 @@ orjs.generate_paths = function() {
 		// generate the start, middle and end paths needed for "smart linecaps".
 		// The first and last way segment are split in the middle.
 
-		var n = points.length - 1;
+		n = points.length - 1;
 
-		var midpoint_head = [(points[0][0]+points[1][0]/2),(points[0][1]+points[1][1])/2];
-		var midpoint_tail = [(points[n][0]+points[n-1][0]/2),(points[n][1]+points[n-1][1]/2)];
-		var firstnode = points.shift();
-		var lastnode = points.pop();
+		midpoint_head = [(points[0][0]+points[1][0]/2),(points[0][1]+points[1][1])/2];
+		midpoint_tail = [(points[n][0]+points[n-1][0]/2),(points[n][1]+points[n-1][1]/2)];
+		firstnode = points.shift();
+		lastnode = points.pop();
 
 		if (types.start != undefined && types.start) {
-			var path = document.createElementNS(orjs.tagSvg,"path");
+if (orjs.debug) console.debug("creo path start");
+			path = document.createElementNS(orjs.tagSvg,"path");
 			path.setAttributeNS(null,"id","way_start_"+way_id);
 			path.setAttributeNS(null,"d",orjs.make_path([firstnode,midpoint_head]));
 			defs.appendChild(path);
 		}
 		if (types.end != undefined && types.end) {
-			var path = document.createElementNS(orjs.tagSvg,"path");
+if (orjs.debug) console.debug("creo path end");
+			path = document.createElementNS(orjs.tagSvg,"path");
 			path.setAttributeNS(null,"id","way_end_"+way_id);
 			path.setAttributeNS(null,"d",orjs.make_path([midpoint_tail,lastnode]));
 			defs.appendChild(path);
 		}
 		if (types.mid != undefined && types.mid) {
-			var path = document.createElementNS(orjs.tagSvg,"path");
+if (orjs.debug) console.debug("creo path mid");
+			path = document.createElementNS(orjs.tagSvg,"path");
 			path.setAttributeNS(null,"id","way_mid_"+way_id);
 			if (points.length) {
 				path.setAttributeNS(null,"d",orjs.make_path([midpoint_head].concat(points,[midpoint_tail])));
@@ -938,9 +994,12 @@ orjs.generate_paths = function() {
 }
 
 orjs.make_path = function(points) {
+	points.shift()
+	points.shift();
 	var firstpoint = points.shift();
 	var path = "M"+orjs.project_string(firstpoint);
 	for (point_index in points) {
+		if (point_index==points.length-1) continue;
 		path+=("L"+orjs.project_string(points[point_index]));
 	}
 	return path;
@@ -985,6 +1044,7 @@ orjs.draw_lines = function(linenode,layer,selected,dom) {
 
 	// explicit way specific style
 	var style;
+if (orjs.debug) console.dir(selected);
 	for (var selected_index in selected) {
 		var element = selected[selected_index];
 		if (!(element instanceof orjs.way_object)) continue; // Draw lines doesn't care about multipolygons
@@ -1035,6 +1095,7 @@ orjs.draw_lines = function(linenode,layer,selected,dom) {
 // the way.
 
 orjs.draw_way_with_smart_linecaps = function(linenode,layer,way,class,style,dom) {
+
 	if (way instanceof orjs.multipolygon_object) return;
 
 	// Convenience variables
@@ -1042,6 +1103,7 @@ orjs.draw_way_with_smart_linecaps = function(linenode,layer,way,class,style,dom)
 	var nodes = way.nodes;
 
 	if (!nodes.length) return;
+
 	// count connectors on first and last node
 	var first_node_connection_count = nodes[0].ways.length;
 	var first_node_lower_layer_connection_count = first_node_connection_count;
@@ -1110,24 +1172,16 @@ orjs.draw_symbols = function(linenode,layer,way,class,style,dom) {}
 // -------------------------------------------------------------------
 
 orjs.draw_path = function(rulenode,way_id,way_type,addclass,style,dom) {
-	/*var defs = orjs.outputFile.documentElement.appendChild(document.createElementNS(orjs.tagSvg,"defs"));
-	defs.setAttribute("id","defs-rulefile");
-	var original_defs = rule_file.evaluate("//rules/defs/*[local-name() != 'svg' and local-name() != 'symbol']",rule_file.documentElement,null,XPathResult.ANY_TYPE,null);
-	//FIXME: check if this is the desired behavior, creating the <style></style> tag inside the svg file
-	defs.appendChild(original_defs.iterateNext());
-
-	// Clipping rectangle for the map
-	//TODO: change all the various callings to createelement/setattribute to direct parsing form string
-	var clip_path = document.createElementNS(orjs.tagSvg,"clipPath");*/
-
 	var mask_class = rulenode.hasAttribute("mask-class") ? rulenode.getAttribute("mask-class") : "";
 	var class = rulenode.getAttribute("class");
 	var extra_attr = new Array();
-
+if (orjs.debug) console.debug("way_id to href: "+way_id);
 	var path_id = orjs.get_way_href(way_id,way_type);
+if (orjs.debug) console.debug("devo scrivere path id "+path_id+", mask_class è "+mask_class);
+	var mask_tag;
 	if (mask_class != "") {
 		var mask_id = "mask_"+way_type+"_"+way_id;
-		var mask_tag = document.createElementNS(orjs.tagSvg,"mask");
+		mask_tag = document.createElementNS(orjs.tagSvg,"mask");
 		mask_tag.setAttributeNS(null,"id",mask_id);
 		mask_tag.setAttributeNS(null,"maskUnits","userSpaceOnUse");
 		var use_tag = document.createElementNS(orjs.tagSvg,"use");
@@ -1176,13 +1230,16 @@ orjs.draw_path = function(rulenode,way_id,way_type,addclass,style,dom) {
 		var class_for_tag = addclass != null ? (""+class+" "+addclass) : class;
 		use_tag.setAttributeNS(null,"class",class_for_tag);
 	}
+	if (mask_tag!=undefined) dom.appendChild(mask_tag);
 	dom.appendChild(use_tag);
 }
 
 orjs.get_way_href = function (id, type) {
+if (orjs.debug) console.debug("creo href per way id "+id+" e type "+type);
 	if (orjs.referenced_ways[id] == undefined) orjs.referenced_ways[id] = new Object();
-	if (orjs.referenced_ways[type] == undefined) orjs.referenced_ways[id][type] = new Object();
+	if (orjs.referenced_ways[id][type] == undefined) orjs.referenced_ways[id][type] = new Object();
 	orjs.referenced_ways[id][type] = 1;
+if (orjs.debug) console.debug("ritorno "+"#way_"+type+"_"+id);
 	return "#way_"+type+"_"+id;
 }
 

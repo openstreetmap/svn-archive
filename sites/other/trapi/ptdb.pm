@@ -34,6 +34,8 @@ sub ptdbinit($) {
 	or die "Could not open zooms.db: $!";
     open $devnull, "<", "/dev/null"
 	or die "Could not open /dev/null: $!";
+    our $wch = 0;
+    our $wcm = 0;
 }
 
 # tags are encoded in a variable-length code.
@@ -190,7 +192,8 @@ sub openptn($$) {
     }
     # keep a cache of the most recently opened 500 files
     if ($opened++ > MAXOPEN) {
-	print "Cache full after $hits hits\n" if (VERBOSE > 10);
+	print "Cache full after $hits hits and $misses misses\n"
+	    if (VERBOSE > 10);
 	my @toclose =
 	    sort {${$filecache{$a}}[1] <=> ${$filecache{$b}}[1]} keys %filecache;
 	while ($opened > KEEPOPEN) {
@@ -355,7 +358,7 @@ sub ProjectF
 # find the tiles this relation is in
 sub reltiles($) {
     my @members = @{shift @_};
-    our %waycache;
+    our (%waycache, $wch, $wcm);
     my (%tiles, %wtodo, %rdone, %rtodo);
     foreach my $m (@members) {
 	my ($type, $id, $role) = @$m;
@@ -389,6 +392,11 @@ sub reltiles($) {
 		next unless ($r && exists $rthis{$r});
 		print "  relation $r\n" if (VERBOSE > 200);
 	        $rdone{$r}++;
+		unless ($off) {
+		    my ($uz, $ux, $uy) = fromptn($t);
+		    print "!!! relation $r not in tile $uz $ux,$uy\n" if (VERBOSE > 4);
+		    next;
+		}
 		seek $df, $off, 0;
 		my @mm = readmemb($df);
 		foreach my $mi (@mm) {
@@ -397,11 +405,17 @@ sub reltiles($) {
 			$tiles{nodeptn($n)}++;
 		    } elsif ($type == WAY) {
 			if (exists $waycache{$n}) {
-			    print "    Way cache hit: $n\n" if (VERBOSE > 99);
-			    foreach my $p (@{$waycache{$n}}) {
-				$tiles{$p}++;
+			    print "    Way cache hit: $n\n" if (VERBOSE > 999);
+			    $wch++;
+			    if (ref($waycache{$n})) {
+				foreach my $p (@{$waycache{$n}}) {
+				    $tiles{$p}++;
+				}
+			    } else {
+				$tiles{$waycache{$n}}++;
 			    }
 			} else {
+			    $wcm++;
 			    my $wp = wayptn($n);
 			    $wtodo{$wp} //= {};
 			    $wtodo{$wp}->{$n}++;
@@ -435,9 +449,15 @@ sub reltiles($) {
 		$wt{$p}++;
 		$tiles{$p}++;
 	    }
-	    $waycache{$w} = [keys %wt];
+	    my @k = keys %wt;
+	    if (scalar(@k) > 1) {
+		$waycache{$w} = [@k];
+	    } else {
+		$waycache{$w} = $k[0];
+	    }
 	}
     }
+    print "      waycache hits: $wch misses: $wcm\n" if (VERBOSE > 10);
     return %tiles;
 }
 
@@ -696,7 +716,7 @@ sub splitptn($) {
 # 3 up to 2113663, 4 up to 270549119
 sub printvnum($$) {
     my ($f, $v) = @_;
-    print " printvnum($v)\n" if (VERBOSE > 995);
+#    print " printvnum($v)\n" if (VERBOSE > 995);
     if ($v >= 128) {
 	$v -= 128;
 	if ($v >= 16384) {
@@ -761,19 +781,20 @@ sub printtags($$$) {
 	if ($tagsver) {
 	    my $tn = $h->[0]->{$tag};
 	    if ($tn) {
-		print "    tn=$tn\n" if (VERBOSE > 99);
 		printvnum($f, $tn);
+		my $vn;
 		if (defined $h->[2]->{$tag}) {
-		    my $vn = $h->[2]->{$tag}->{$val};
+		    $vn = $h->[2]->{$tag}->{$val} // 0;
 		    if ($vn) {
-			print "      vn=$vn\n" if (VERBOSE >200);
 			printvnum($f, $vn);
 		    } else {
 			print $f pack("C",0)."$val\0";
 		    }
 		} else {
+		    $vn = '';
 		    print $f "$val\0";
 		}
+		print "    tn=$tn vn=$vn\n" if (VERBOSE > 99);
 	    } else {
 		print $f pack("C",1)."$tag\0$val\0";
 	    }
@@ -789,7 +810,6 @@ sub readtags($$) {
     my ($f, $t) = @_;
     my @tags;
     my $tagsver = tv_check($f);
-    print "tagsver $tagsver\n" if (VERBOSE > 900);
     if ($tagsver) {
 	my $a = $comtags[$tagsver]->[$t];
 	while (my $c = getvnum($f)) {

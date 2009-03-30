@@ -1,0 +1,11 @@
+#!/bin/sh
+
+./dumptile.pl $@ >/tmp/fi
+
+grep '^Node' </tmp/fi | cut '-d ' -f2 >/tmp/n
+while read n ; do wget -O- http://api.openstreetmap.org/api/0.5/node/$n ; done </tmp/n >>/tmp/foo.osm
+grep '^Way' </tmp/fi | cut '-d ' -f2 >/tmp/n
+while read n ; do wget -O- http://api.openstreetmap.org/api/0.5/way/$n ; done </tmp/n >>/tmp/foo.osm
+grep '^Relation' </tmp/fi | cut '-d ' -f2 >/tmp/n
+while read n ; do wget -O- http://api.openstreetmap.org/api/0.5/relation/$n ; done </tmp/n >>/tmp/foo.osm
+

@@ -24,6 +24,10 @@
  *  http://public.grupoinnovant.com/blog
  *
  */
+/*
+ * Christof Dallermassl
+ * christof@dallermassl.at
+ */
 
 package com.innovant.josm.plugin.routing;
 
@@ -50,6 +54,7 @@ import com.innovant.josm.plugin.routing.gui.RoutingPreferenceDialog;
  * The main class of the routing plugin
  * @author juangui
  * @author Jose Vidal
+ * @author cdaller
  *
  * @version 0.3
  */

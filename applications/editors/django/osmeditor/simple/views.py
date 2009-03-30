@@ -97,11 +97,14 @@ def load(request, type="node", id=0):
     xml = get_xml_string(type, id)
     obj = osmparser_obj(type, id, xml=xml)
     
-    tag_list = obj.tags.keys()
-    tag_list.sort(tag_sorter)
-    sorted_tags = []
-    for k in tag_list:
-        sorted_tags.append((k, obj.tags[k]))
+    try:
+        tag_list = obj.tags.keys()
+        tag_list.sort(tag_sorter)
+        sorted_tags = []
+        for k in tag_list:
+            sorted_tags.append((k, obj.tags[k]))
+    except AttributeError:
+        sorted_tags=[]
     return render_to_response("obj.html",{'obj':obj, 'obj_xml': xml, 
         'sorted_tags': sorted_tags,
         'logged_in': ('username' in request.session)})

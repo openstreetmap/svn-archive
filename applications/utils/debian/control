@@ -36,7 +36,7 @@ Recommends: gpsdrive,
 	openstreetmap-utils-export,
 	openstreetmap-utils-filter,
 	openstreetmap-utils-lib
-Conflicts: gpsdrive-scripts,
+Conflicts: gpsdrive-scripts, gpsdrive-utils
 	osm2pgsql
 Description: OpenStreetmap Utilsopenstreetmap-osmosis
  This Package contains some of the most usefull Utils

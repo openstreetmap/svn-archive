@@ -2415,7 +2415,7 @@
 				</else>
 			</else>
 		</rule>
-		<rule e="node" k="highway" v="stile">
+		<rule e="node" k="highway|barrier" v="stile">
 			<wayMarker k="highway" fill="none" stroke="red" stroke-width="1px" stroke-opacity="0" marker-mid="url(#marker-stile)"/>
 		</rule>
 		<rule e="node" k="highway|barrier" v="bollard">

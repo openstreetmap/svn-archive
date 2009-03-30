@@ -7,7 +7,11 @@ use trapi;
 
 ptdbinit('<');
 
-my ($z, $x, $y) = @ARGV;
+my $argl = join(' ', @ARGV);
+my @tiles = $argl =~ /^(?:z?(0|1\d)\D+(\d+)\D+(\d+)\D*)+$/;
+while (my $z = shift @tiles) {
+    my $x = shift @tiles;
+    my $y = shift @tiles;
 my $ptn = toptn($z, $x, $y);
 my $df = openptn($ptn, 'data');
 my $nf = openptn($ptn, 'nodes');
@@ -115,4 +119,5 @@ while (my ($r, $off) = readrel($rf)) {
 	    }
 	}
     }
+}
 }

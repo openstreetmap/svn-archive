@@ -26,7 +26,7 @@ sub process($$$) {
     my ($type, $f, $e) = @_;
     my $fn = "$f-$e.osc.gz";
     exit 0 if (-f "stopfile.txt");
-    my $return = getstore(WEBSITE."$type/$fn", TMPDIR.$fn);
+    my $return = mirror(WEBSITE."$type/$fn", TMPDIR.$fn);
     if (is_error($return)) {
 	print STDERR "Error fetching $fn: $return\n";
 	return 0;

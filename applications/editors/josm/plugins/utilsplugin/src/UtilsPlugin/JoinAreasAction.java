@@ -1,5 +1,6 @@
 package UtilsPlugin;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
@@ -213,7 +214,7 @@ public class JoinAreasAction extends JosmAction {
 
         ArrayList<OsmPrimitive> nodes = addIntersections(a, b);
         if(nodes.size() == 0) return hadChanges;
-        commitCommands("Added node on all intersections");
+        commitCommands(marktr("Added node on all intersections"));
 
         // Remove ways from all relations so ways can be combined/split quietly
         ArrayList<RelationRole> relations = removeFromRelations(a);
@@ -237,18 +238,18 @@ public class JoinAreasAction extends JosmAction {
         // Delete the remaining inner ways
         if(innerWays != null && innerWays.size() > 0)
             cmds.add(DeleteCommand.delete(innerWays, true));
-        commitCommands("Delete Ways that are not part of an inner multipolygon");
+        commitCommands(marktr("Delete Ways that are not part of an inner multipolygon"));
 
         // We can attach our new multipolygon relation and pretend it has always been there
         addOwnMultigonRelation(newInnerWays, outerWay, relations);
         fixRelations(relations, outerWay);
-        commitCommands("Fix relations");
+        commitCommands(marktr("Fix relations"));
 
         stripTags(newInnerWays);
         makeCommitsOneAction(
-            a.equals(b)
-                ? "Joined self-overlapping area " + a.getName()
-                : "Joined overlapping areas " + a.getName() + " and " + b.getName()
+            same
+                ? marktr("Joined self-overlapping area")
+                : marktr("Joined overlapping areas")
         );
 
         if(warnAboutRelations)
@@ -327,7 +328,7 @@ public class JoinAreasAction extends JosmAction {
 
         cmds.add(new ChangeCommand(a, ax));
         cmds.add(new ChangeCommand(b, bx));
-        commitCommands("Fix tag conflicts");
+        commitCommands(marktr("Fix tag conflicts"));
         return false;
     }
 
@@ -476,7 +477,7 @@ public class JoinAreasAction extends JosmAction {
             }
         }
 
-        commitCommands("Removed Element from Relations");
+        commitCommands(marktr("Removed Element from Relations"));
         return result;
     }
 
@@ -541,7 +542,7 @@ public class JoinAreasAction extends JosmAction {
 
             for(Node n: multigonNodes) {
                 if(!((Way)w).nodes.contains(n) && poly.contains(latlonToXY(n.coor.lat()), latlonToXY(n.coor.lon()))) {
-                    innerWays.addAll(getWaysByNode(multigonWays, n));
+                    getWaysByNode(innerWays, multigonWays, n);
                 }
             }
         }
@@ -556,17 +557,15 @@ public class JoinAreasAction extends JosmAction {
 
     /**
      * Finds all ways that contain the given node.
-     * @param Collection<OsmPrimitive> A collection of OsmPrimitives, but only ways will be honored
+     * @param Collection<Way> A list to which matching ways will be added
+     * @param Collection<Way> A list of ways to check
      * @param Node The node the ways should be checked against
-     * @return Collection<Way> A list of ways that contain the given node
      */
-    private Collection<Way> getWaysByNode(Collection<Way> w, Node n) {
-        Collection<Way> deletedWays = new ArrayList<Way>();
+    private void getWaysByNode(Collection<Way> innerWays, Collection<Way> w, Node n) {
         for(Way way : w) {
             if(!((Way)way).nodes.contains(n)) continue;
-            if(!deletedWays.contains(way)) deletedWays.add(way); // Will need this later for multigons
+            if(!innerWays.contains(way)) innerWays.add(way); // Will need this later for multigons
         }
-        return deletedWays;
     }
 
     /**
@@ -587,8 +586,24 @@ public class JoinAreasAction extends JosmAction {
                 join.add(w);
         }
 
-        commitCommands("Join Areas: Remove Short Ways");
-        return joinWays(join);
+        commitCommands(marktr("Join Areas: Remove Short Ways"));
+        return closeWay(joinWays(join));
+    }
+
+    /**
+     * Ensures a way is closed. If it isn't, last and first node are connected.
+     * @param Way the way to ensure it's closed
+     * @return Way The joined way.
+     */
+    private Way closeWay(Way w) {
+        if(w.isClosed())
+            return w;
+        Main.ds.setSelected(w);
+        Way wnew = new Way(w);
+        wnew.addNode(wnew.firstNode());
+        cmds.add(new ChangeCommand(w, wnew));
+        commitCommands(marktr("Closed Way"));
+        return (Way)(Main.ds.getSelectedWays().toArray())[0];
     }
 
     /**
@@ -598,7 +613,6 @@ public class JoinAreasAction extends JosmAction {
      */
     private Way joinWays(ArrayList<Way> ways) {
         if(ways.size() < 2) return ways.get(0);
-        //Main.ds.setSelected(ways);
 
         // This will turn ways so all of them point in the same direction and CombineAction won't bug
         // the user about this.
@@ -617,6 +631,9 @@ public class JoinAreasAction extends JosmAction {
             a = b;
         }
         Main.ds.setSelected(ways);
+        // TODO: It might be possible that a confirmation dialog is presented even after reversing (for
+        // "strange" ways). If the user cancels this, makeCommitsOneAction will wrongly consume a previous
+        // action. Make CombineWayAction either silent or expose its combining capabilities.
         new CombineWayAction().actionPerformed(null);
         cmdsCount++;
         return (Way)(Main.ds.getSelectedWays().toArray())[0];
@@ -640,16 +657,20 @@ public class JoinAreasAction extends JosmAction {
         // Remaining nodes are those that contain to more than one way. All nodes that belong to an
         // inner multigon part will have at least two ways, so we can use this to find which ways do
         // belong to the multigon.
-        Collection<Way> possibleWays = new ArrayList<Way>();
+        ArrayList<Way> possibleWays = new ArrayList<Way>();
         wayIterator: for(Way w : uninterestingWays) {
             boolean hasInnerNodes = false;
             for(Node n : w.nodes) {
                 if(outerNodes.contains(n)) continue wayIterator;
                 if(!hasInnerNodes && innerNodes.contains(n)) hasInnerNodes = true;
             }
-            if(!hasInnerNodes && w.nodes.size() >= 2) continue;
+            if(!hasInnerNodes || w.nodes.size() < 2) continue;
             possibleWays.add(w);
         }
+
+        // This removes unnecessary ways that might have been added.
+        removeAlmostAlikeWays(possibleWays);
+        removePartlyUnconnectedWays(possibleWays);
 
         // Join all ways that have one start/ending node in common
         Way joined = null;
@@ -684,6 +705,52 @@ public class JoinAreasAction extends JosmAction {
             }
         } while(joined != null);
         return newInnerWays;
+    }
+
+    /**
+     * Removes almost alike ways (= ways that are on top of each other for all nodes)
+     * @param ArrayList<Way> the ways to remove almost-duplicates from
+     */
+    private void removeAlmostAlikeWays(ArrayList<Way> ways) {
+        Collection<Way> removables = new ArrayList<Way>();
+        outer: for(int i=0; i < ways.size(); i++) {
+            Way a = ways.get(i);
+            for(int j=i+1; j < ways.size(); j++) {
+                Way b = ways.get(j);
+                List<Node> revNodes = new ArrayList<Node>(b.nodes);
+                Collections.reverse(revNodes);
+                if(a.nodes.equals(b.nodes) || a.nodes.equals(revNodes)) {
+                    removables.add(a);
+                    continue outer;
+                }
+            }
+        }
+        ways.removeAll(removables);
+    }
+
+    /**
+     * Removes ways from the given list whose starting or ending node doesn't
+     * connect to other ways from the same list (it's like removing spikes).
+     * @param ArrayList<Way> The list of ways to remove "spikes" from
+     */
+    private void removePartlyUnconnectedWays(ArrayList<Way> ways) {
+        List<Way> removables = new ArrayList<Way>();
+        for(Way a : ways) {
+            if(a.isClosed()) continue;
+            boolean connectedStart = false;
+            boolean connectedEnd = false;
+            for(Way b : ways) {
+                if(a.equals(b))
+                    continue;
+                if(b.isFirstLastNode(a.firstNode()))
+                    connectedStart = true;
+                if(b.isFirstLastNode(a.lastNode()))
+                    connectedEnd = true;
+            }
+            if(!connectedStart || !connectedEnd)
+                removables.add(a);
+        }
+        ways.removeAll(removables);
     }
 
     /**
@@ -802,7 +869,7 @@ public class JoinAreasAction extends JosmAction {
      */
     private void stripTags(Collection<Way> ways) {
         for(Way w: ways) stripTags(w);
-        commitCommands("Remove tags from inner ways");
+        commitCommands(marktr("Remove tags from inner ways"));
     }
 
     /**
@@ -824,13 +891,14 @@ public class JoinAreasAction extends JosmAction {
     private void makeCommitsOneAction(String message) {
         UndoRedoHandler ur = Main.main.undoRedo;
         cmds.clear();
-        for(int i = ur.commands.size() - cmdsCount; i < ur.commands.size(); i++)
+        int i = Math.max(ur.commands.size() - cmdsCount, 0);
+        for(; i < ur.commands.size(); i++)
             cmds.add(ur.commands.get(i));
 
-        for(int i = 0; i < cmdsCount; i++)
+        for(i = 0; i < cmds.size(); i++)
             ur.undo();
 
-        commitCommands(message == null ? "Join Areas Function" : message);
+        commitCommands(message == null ? marktr("Join Areas Function") : message);
         cmdsCount = 0;
     }
 }

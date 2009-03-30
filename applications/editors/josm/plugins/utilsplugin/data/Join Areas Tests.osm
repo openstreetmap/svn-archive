@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <osm version='0.5' generator='JOSM'>
   <bounds minlat='49.6358455937926' minlon='8.97891998291015' maxlat='49.6659612524238' maxlon='9.01926040649414' origin='JOSM' />
+  <bounds minlat='51.0727784461145' minlon='13.7410855293274' maxlat='51.07443677101' maxlon='13.743531703949' origin='OpenStreetMap server' />
   <node id='-1' visible='true' lat='49.665557350679464' lon='8.980018030697323'>
     <tag k='name' v='Multipolygon' />
   </node>
@@ -230,13 +231,89 @@
   <node id='-203' action='modify' visible='true' lat='49.63983876223289' lon='8.999763400318008' />
   <node id='-204' action='modify' visible='true' lat='49.640963432528' lon='9.002300773285747' />
   <node id='-205' action='modify' visible='true' lat='49.640355464550595' lon='9.00163017923136' />
-  <node id='-206' visible='true' lat='49.64101635201889' lon='9.01104143811511' />
-  <node id='-207' visible='true' lat='49.63695925798987' lon='9.010907319304232' />
-  <node id='-208' visible='true' lat='49.63692572828715' lon='9.01338851730545' />
-  <node id='-209' visible='true' lat='49.641116941127045' lon='9.013556165819047' />
-  <node id='-210' visible='true' lat='49.636858668881715' lon='9.01704325490184' />
-  <node id='-211' visible='true' lat='49.641116941127045' lon='9.016909136090963' />
-  <way id='-212' visible='true'>
+  <node id='-206' action='modify' visible='true' lat='49.641650361020126' lon='9.011375542032631' />
+  <node id='-207' action='modify' visible='true' lat='49.63994510769946' lon='9.011537754906723' />
+  <node id='-208' action='modify' visible='true' lat='49.63989778320692' lon='9.01301762121565' />
+  <node id='-209' action='modify' timestamp='2008-03-17T23:16:02Z' visible='true' lat='49.63851559945754' lon='9.011923928883068'>
+    <tag k='created_by' v='Merkaartor 0.10' />
+  </node>
+  <node id='-210' action='modify' timestamp='2008-03-17T23:16:00Z' visible='true' lat='49.63931004998166' lon='9.014994879645652'>
+    <tag k='created_by' v='Merkaartor 0.10' />
+  </node>
+  <node id='-211' action='modify' timestamp='2008-03-17T23:16:02Z' visible='true' lat='49.63656290879177' lon='9.01184224653937'>
+    <tag k='created_by' v='Merkaartor 0.10' />
+  </node>
+  <node id='-212' action='modify' timestamp='2008-03-19T00:23:09Z' visible='true' lat='49.638495992538296' lon='9.013041516659012'>
+    <tag k='created_by' v='Merkaartor 0.10' />
+  </node>
+  <node id='-213' action='modify' timestamp='2008-03-17T23:16:00Z' visible='true' lat='49.639297465489946' lon='9.013075043737933'>
+    <tag k='created_by' v='Merkaartor 0.10' />
+  </node>
+  <node id='-214' action='modify' timestamp='2008-03-17T23:16:01Z' visible='true' lat='49.63932787364639' lon='9.011341760369241'>
+    <tag k='created_by' v='Merkaartor 0.10' />
+  </node>
+  <node id='-215' action='modify' timestamp='2008-03-17T23:16:00Z' visible='true' lat='49.6362341674196' lon='9.011212347946481' />
+  <node id='-216' action='modify' timestamp='2008-06-18T15:47:24Z' visible='true' lat='49.63846974351432' lon='9.014959728094702' />
+  <node id='-217' action='modify' timestamp='2008-03-17T23:16:01Z' visible='true' lat='49.639285639926086' lon='9.016386267202325'>
+    <tag k='created_by' v='Merkaartor 0.10' />
+  </node>
+  <node id='-218' action='modify' timestamp='2008-03-17T23:16:01Z' visible='true' lat='49.63614569649766' lon='9.016254920813461'>
+    <tag k='created_by' v='Merkaartor 0.10' />
+  </node>
+  <node id='-219' action='modify' timestamp='2008-03-17T23:16:02Z' visible='true' lat='49.636497278618506' lon='9.01558299248487' />
+  <node id='-220' action='modify' visible='true' lat='49.64173715249402' lon='9.01288893804428' />
+  <node id='-221' action='modify' visible='true' lat='49.63997057825359' lon='9.017121223877993' />
+  <node id='-222' action='modify' visible='true' lat='49.6418769973781' lon='9.016690773382148' />
+  <node id='-223' action='modify' timestamp='2008-03-17T23:16:02Z' visible='true' lat='49.638457370514' lon='9.015664984322639'>
+    <tag k='created_by' v='Merkaartor 0.10' />
+  </node>
+  <way id='-224' visible='true'>
+    <nd ref='-171' />
+    <nd ref='-151' />
+    <nd ref='-147' />
+    <nd ref='-146' />
+    <nd ref='-148' />
+    <nd ref='-145' />
+    <nd ref='-152' />
+    <nd ref='-172' />
+    <nd ref='-150' />
+    <nd ref='-149' />
+    <nd ref='-171' />
+    <tag k='name' v='Thing in the Middle' />
+  </way>
+  <way id='-225' visible='true'>
+    <nd ref='-164' />
+    <nd ref='-163' />
+    <nd ref='-166' />
+    <nd ref='-165' />
+    <nd ref='-164' />
+    <tag k='parking' v='surface' />
+    <tag k='name' v='Outer blob' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-226' visible='true'>
+    <nd ref='-117' />
+    <nd ref='-106' />
+    <nd ref='-105' />
+    <nd ref='-116' />
+    <nd ref='-117' />
+  </way>
+  <way id='-227' visible='true'>
+    <nd ref='-28' />
+    <nd ref='-39' />
+    <nd ref='-34' />
+    <nd ref='-37' />
+    <nd ref='-40' />
+    <nd ref='-35' />
+    <nd ref='-31' />
+    <nd ref='-33' />
+    <nd ref='-36' />
+    <nd ref='-29' />
+    <nd ref='-28' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-228' visible='true'>
     <nd ref='-158' />
     <nd ref='-155' />
     <nd ref='-160' />
@@ -245,23 +322,41 @@
     <tag k='parking' v='surface' />
     <tag k='amenity' v='parking' />
   </way>
-  <way id='-213' visible='true'>
-    <nd ref='-153' />
-    <nd ref='-154' />
-    <nd ref='-133' />
-    <nd ref='-156' />
-    <nd ref='-153' />
+  <way id='-229' visible='true'>
+    <nd ref='-109' />
+    <nd ref='-110' />
+    <nd ref='-107' />
+    <nd ref='-108' />
+    <nd ref='-109' />
   </way>
-  <way id='-214' visible='true'>
-    <nd ref='-169' />
-    <nd ref='-170' />
-    <nd ref='-173' />
-    <nd ref='-174' />
-    <nd ref='-169' />
+  <way id='-230' visible='true'>
+    <nd ref='-70' />
+    <nd ref='-77' />
+    <nd ref='-73' />
+    <nd ref='-76' />
+    <nd ref='-70' />
     <tag k='parking' v='surface' />
     <tag k='amenity' v='parking' />
   </way>
-  <way id='-215' action='modify' visible='true'>
+  <way id='-231' visible='true'>
+    <nd ref='-10' />
+    <nd ref='-11' />
+    <nd ref='-12' />
+    <nd ref='-13' />
+    <nd ref='-10' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-232' visible='true'>
+    <nd ref='-99' />
+    <nd ref='-102' />
+    <nd ref='-101' />
+    <nd ref='-111' />
+    <nd ref='-99' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-233' action='modify' visible='true'>
     <nd ref='-198' />
     <nd ref='-201' />
     <nd ref='-199' />
@@ -278,76 +373,7 @@
     <tag k='parking' v='surface' />
     <tag k='amenity' v='parking' />
   </way>
-  <way id='-216' visible='true'>
-    <nd ref='-60' />
-    <nd ref='-59' />
-    <nd ref='-58' />
-    <nd ref='-57' />
-    <nd ref='-60' />
-    <tag k='parking' v='surface' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-217' visible='true'>
-    <nd ref='-117' />
-    <nd ref='-106' />
-    <nd ref='-105' />
-    <nd ref='-116' />
-    <nd ref='-117' />
-  </way>
-  <way id='-218' visible='true'>
-    <nd ref='-176' />
-    <nd ref='-175' />
-    <tag k='highway' v='motorway' />
-    <tag k='lanes' v='5' />
-  </way>
-  <way id='-219' visible='true'>
-    <nd ref='-137' />
-    <nd ref='-144' />
-    <nd ref='-124' />
-    <nd ref='-139' />
-    <nd ref='-137' />
-  </way>
-  <way id='-220' visible='true'>
-    <nd ref='-78' />
-    <nd ref='-79' />
-    <tag k='highway' v='motorway' />
-    <tag k='lanes' v='5' />
-  </way>
-  <way id='-221' visible='true'>
-    <nd ref='-80' />
-    <nd ref='-86' />
-    <tag k='highway' v='motorway' />
-    <tag k='lanes' v='5' />
-  </way>
-  <way id='-222' visible='true'>
-    <nd ref='-26' />
-    <nd ref='-16' />
-    <nd ref='-19' />
-    <nd ref='-24' />
-    <nd ref='-23' />
-    <nd ref='-26' />
-    <tag k='landuse' v='retail' />
-  </way>
-  <way id='-223' visible='true'>
-    <nd ref='-87' />
-    <nd ref='-82' />
-    <tag k='highway' v='motorway' />
-    <tag k='lanes' v='5' />
-  </way>
-  <way id='-224' action='modify' visible='true'>
-    <nd ref='-192' />
-    <nd ref='-189' />
-    <nd ref='-186' />
-    <nd ref='-191' />
-    <nd ref='-180' />
-    <nd ref='-177' />
-    <nd ref='-190' />
-    <nd ref='-179' />
-    <nd ref='-188' />
-    <nd ref='-192' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-225' visible='true'>
+  <way id='-234' visible='true'>
     <nd ref='-61' />
     <nd ref='-62' />
     <nd ref='-65' />
@@ -358,189 +384,22 @@
     <tag k='parking' v='surface' />
     <tag k='amenity' v='parking' />
   </way>
-  <way id='-226' visible='true'>
-    <nd ref='-125' />
-    <nd ref='-126' />
-    <tag k='highway' v='motorway' />
-    <tag k='lanes' v='5' />
-  </way>
-  <way id='-227' action='modify' visible='true'>
-    <nd ref='-185' />
-    <nd ref='-189' />
-    <nd ref='-186' />
-    <nd ref='-191' />
-    <nd ref='-180' />
-    <nd ref='-177' />
-    <nd ref='-190' />
-    <nd ref='-179' />
-    <nd ref='-187' />
-    <nd ref='-185' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-228' visible='true'>
-    <nd ref='-25' />
-    <nd ref='-15' />
-    <nd ref='-27' />
-    <tag k='highway' v='footway' />
-  </way>
-  <way id='-229' visible='true'>
-    <nd ref='-22' />
-    <nd ref='-21' />
-    <nd ref='-17' />
-    <nd ref='-20' />
-    <nd ref='-22' />
-    <tag k='landuse' v='basin' />
-  </way>
-  <way id='-230' visible='true'>
-    <nd ref='-171' />
-    <nd ref='-151' />
-    <nd ref='-147' />
-    <nd ref='-146' />
-    <nd ref='-148' />
-    <nd ref='-145' />
-    <nd ref='-152' />
-    <nd ref='-172' />
-    <nd ref='-150' />
-    <nd ref='-149' />
-    <nd ref='-171' />
-    <tag k='name' v='Thing in the Middle' />
-  </way>
-  <way id='-231' visible='true'>
-    <nd ref='-18' />
-    <nd ref='-50' />
-    <nd ref='-49' />
-    <nd ref='-53' />
-    <nd ref='-54' />
-    <nd ref='-56' />
-    <nd ref='-55' />
-    <nd ref='-51' />
-    <nd ref='-14' />
-    <nd ref='-15' />
-    <nd ref='-18' />
-    <tag k='parking' v='surface' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-232' visible='true'>
-    <nd ref='-71' />
-    <nd ref='-72' />
-    <nd ref='-77' />
-    <nd ref='-75' />
-    <nd ref='-74' />
-    <nd ref='-71' />
-    <tag k='parking' v='surface' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-233' visible='true'>
-    <nd ref='-130' />
-    <nd ref='-129' />
-    <nd ref='-132' />
-    <nd ref='-131' />
-    <nd ref='-130' />
-  </way>
-  <way id='-234' visible='true'>
-    <nd ref='-159' />
-    <nd ref='-135' />
-    <nd ref='-134' />
-    <nd ref='-157' />
-    <nd ref='-159' />
-  </way>
   <way id='-235' visible='true'>
-    <nd ref='-69' />
-    <nd ref='-65' />
-    <nd ref='-66' />
-    <nd ref='-67' />
-    <nd ref='-68' />
-    <nd ref='-69' />
+    <nd ref='-81' />
+    <nd ref='-84' />
+    <nd ref='-83' />
+    <nd ref='-94' />
+    <nd ref='-93' />
+    <nd ref='-96' />
+    <nd ref='-95' />
+    <nd ref='-90' />
+    <nd ref='-89' />
+    <nd ref='-92' />
+    <nd ref='-81' />
     <tag k='parking' v='surface' />
     <tag k='amenity' v='parking' />
   </way>
   <way id='-236' visible='true'>
-    <nd ref='-99' />
-    <nd ref='-102' />
-    <nd ref='-101' />
-    <nd ref='-111' />
-    <nd ref='-99' />
-    <tag k='parking' v='surface' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-237' visible='true'>
-    <nd ref='-120' />
-    <nd ref='-118' />
-    <nd ref='-128' />
-    <nd ref='-114' />
-    <nd ref='-120' />
-    <tag k='parking' v='surface' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-238' visible='true'>
-    <nd ref='-115' />
-    <nd ref='-113' />
-    <nd ref='-127' />
-    <nd ref='-119' />
-    <nd ref='-115' />
-  </way>
-  <way id='-239' visible='true'>
-    <nd ref='-32' />
-    <nd ref='-17' />
-    <nd ref='-30' />
-    <tag k='highway' v='footway' />
-  </way>
-  <way id='-240' visible='true'>
-    <nd ref='-1' />
-    <nd ref='-2' />
-    <nd ref='-3' />
-    <nd ref='-4' />
-    <nd ref='-1' />
-    <tag k='parking' v='surface' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-241' visible='true'>
-    <nd ref='-10' />
-    <nd ref='-11' />
-    <nd ref='-12' />
-    <nd ref='-13' />
-    <nd ref='-10' />
-    <tag k='parking' v='surface' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-242' visible='true'>
-    <nd ref='-164' />
-    <nd ref='-163' />
-    <nd ref='-166' />
-    <nd ref='-165' />
-    <nd ref='-164' />
-    <tag k='parking' v='surface' />
-    <tag k='name' v='Outer blob' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-243' visible='true'>
-    <nd ref='-91' />
-    <nd ref='-103' />
-    <nd ref='-104' />
-  </way>
-  <way id='-244' visible='true'>
-    <nd ref='-112' />
-    <nd ref='-97' />
-    <nd ref='-100' />
-    <nd ref='-98' />
-    <nd ref='-112' />
-  </way>
-  <way id='-245' visible='true'>
-    <nd ref='-28' />
-    <nd ref='-39' />
-    <nd ref='-34' />
-    <nd ref='-37' />
-    <nd ref='-40' />
-    <nd ref='-35' />
-    <nd ref='-31' />
-    <nd ref='-33' />
-    <nd ref='-36' />
-    <nd ref='-29' />
-    <nd ref='-28' />
-    <tag k='parking' v='surface' />
-    <tag k='amenity' v='parking' />
-  </way>
-  <way id='-246' visible='true'>
     <nd ref='-44' />
     <nd ref='-46' />
     <nd ref='-41' />
@@ -555,32 +414,115 @@
     <tag k='parking' v='surface' />
     <tag k='amenity' v='parking' />
   </way>
-  <way id='-247' visible='true'>
-    <nd ref='-142' />
-    <nd ref='-123' />
-    <nd ref='-138' />
-    <nd ref='-122' />
-    <nd ref='-142' />
+  <way id='-237' visible='true'>
+    <nd ref='-112' />
+    <nd ref='-97' />
+    <nd ref='-100' />
+    <nd ref='-98' />
+    <nd ref='-112' />
+  </way>
+  <way id='-238' visible='true'>
+    <nd ref='-120' />
+    <nd ref='-118' />
+    <nd ref='-128' />
+    <nd ref='-114' />
+    <nd ref='-120' />
     <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-239' visible='true'>
+    <nd ref='-78' />
+    <nd ref='-79' />
+    <tag k='highway' v='motorway' />
+    <tag k='lanes' v='5' />
+  </way>
+  <way id='-240' visible='true'>
+    <nd ref='-25' />
+    <nd ref='-15' />
+    <nd ref='-27' />
+    <tag k='highway' v='footway' />
+  </way>
+  <way id='-241' visible='true'>
+    <nd ref='-125' />
+    <nd ref='-126' />
+    <tag k='highway' v='motorway' />
+    <tag k='lanes' v='5' />
+  </way>
+  <way id='-242' action='modify' visible='true'>
+    <nd ref='-192' />
+    <nd ref='-189' />
+    <nd ref='-186' />
+    <nd ref='-191' />
+    <nd ref='-180' />
+    <nd ref='-177' />
+    <nd ref='-190' />
+    <nd ref='-179' />
+    <nd ref='-188' />
+    <nd ref='-192' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-243' visible='true'>
+    <nd ref='-60' />
+    <nd ref='-59' />
+    <nd ref='-58' />
+    <nd ref='-57' />
+    <nd ref='-60' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-244' visible='true'>
+    <nd ref='-91' />
+    <nd ref='-103' />
+    <nd ref='-104' />
+  </way>
+  <way id='-245' action='modify' visible='true'>
+    <nd ref='-208' />
+    <nd ref='-221' />
+    <nd ref='-222' />
+    <nd ref='-220' />
+    <nd ref='-208' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-246' visible='true'>
+    <nd ref='-22' />
+    <nd ref='-21' />
+    <nd ref='-17' />
+    <nd ref='-20' />
+    <nd ref='-22' />
+    <tag k='landuse' v='basin' />
+  </way>
+  <way id='-247' action='modify' visible='true'>
+    <nd ref='-185' />
+    <nd ref='-189' />
+    <nd ref='-186' />
+    <nd ref='-191' />
+    <nd ref='-180' />
+    <nd ref='-177' />
+    <nd ref='-190' />
+    <nd ref='-179' />
+    <nd ref='-187' />
+    <nd ref='-185' />
     <tag k='amenity' v='parking' />
   </way>
   <way id='-248' visible='true'>
-    <nd ref='-70' />
-    <nd ref='-77' />
-    <nd ref='-73' />
-    <nd ref='-76' />
-    <nd ref='-70' />
+    <nd ref='-5' />
+    <nd ref='-6' />
+    <nd ref='-7' />
+    <nd ref='-8' />
+    <nd ref='-9' />
+    <nd ref='-5' />
     <tag k='parking' v='surface' />
     <tag k='amenity' v='parking' />
   </way>
-  <way id='-249' visible='true'>
-    <nd ref='-161' />
-    <nd ref='-162' />
-    <nd ref='-167' />
-    <nd ref='-168' />
-    <nd ref='-161' />
-    <tag k='parking' v='surface' />
-    <tag k='amenity' v='parking' />
+  <way id='-249' timestamp='2008-06-18T15:47:24Z' visible='true'>
+    <nd ref='-216' />
+    <nd ref='-210' />
+    <nd ref='-213' />
+    <nd ref='-212' />
+    <nd ref='-216' />
+    <tag k='created_by' v='Potlatch 0.9c' />
+    <tag k='building' v='yes' />
   </way>
   <way id='-250' action='modify' visible='true'>
     <nd ref='-178' />
@@ -599,112 +541,227 @@
     <tag k='amenity' v='parking' />
   </way>
   <way id='-251' visible='true'>
-    <nd ref='-109' />
-    <nd ref='-110' />
-    <nd ref='-107' />
-    <nd ref='-108' />
-    <nd ref='-109' />
-  </way>
-  <way id='-252' visible='true'>
-    <nd ref='-85' />
-    <nd ref='-88' />
+    <nd ref='-87' />
+    <nd ref='-82' />
     <tag k='highway' v='motorway' />
     <tag k='lanes' v='5' />
   </way>
+  <way id='-252' visible='true'>
+    <nd ref='-153' />
+    <nd ref='-154' />
+    <nd ref='-133' />
+    <nd ref='-156' />
+    <nd ref='-153' />
+  </way>
   <way id='-253' visible='true'>
-    <nd ref='-5' />
-    <nd ref='-6' />
-    <nd ref='-7' />
-    <nd ref='-8' />
-    <nd ref='-9' />
-    <nd ref='-5' />
-    <tag k='parking' v='surface' />
-    <tag k='amenity' v='parking' />
+    <nd ref='-130' />
+    <nd ref='-129' />
+    <nd ref='-132' />
+    <nd ref='-131' />
+    <nd ref='-130' />
   </way>
   <way id='-254' visible='true'>
-    <nd ref='-81' />
-    <nd ref='-84' />
-    <nd ref='-83' />
-    <nd ref='-94' />
-    <nd ref='-93' />
-    <nd ref='-96' />
-    <nd ref='-95' />
-    <nd ref='-90' />
-    <nd ref='-89' />
-    <nd ref='-92' />
-    <nd ref='-81' />
+    <nd ref='-115' />
+    <nd ref='-113' />
+    <nd ref='-127' />
+    <nd ref='-119' />
+    <nd ref='-115' />
+  </way>
+  <way id='-255' visible='true'>
+    <nd ref='-137' />
+    <nd ref='-144' />
+    <nd ref='-124' />
+    <nd ref='-139' />
+    <nd ref='-137' />
+  </way>
+  <way id='-256' visible='true'>
+    <nd ref='-32' />
+    <nd ref='-17' />
+    <nd ref='-30' />
+    <tag k='highway' v='footway' />
+  </way>
+  <way id='-257' timestamp='2008-06-17T03:52:47Z' visible='true'>
+    <nd ref='-210' />
+    <nd ref='-217' />
+    <nd ref='-218' />
+    <nd ref='-215' />
+    <nd ref='-214' />
+    <nd ref='-213' />
+    <nd ref='-212' />
+    <nd ref='-209' />
+    <nd ref='-211' />
+    <nd ref='-219' />
+    <nd ref='-223' />
+    <nd ref='-216' />
+    <nd ref='-210' />
+    <tag k='created_by' v='Merkaartor 0.10' />
+    <tag k='building' v='yes' />
+  </way>
+  <way id='-258' visible='true'>
+    <nd ref='-161' />
+    <nd ref='-162' />
+    <nd ref='-167' />
+    <nd ref='-168' />
+    <nd ref='-161' />
     <tag k='parking' v='surface' />
     <tag k='amenity' v='parking' />
   </way>
-  <way id='-255' visible='true'>
+  <way id='-259' action='modify' visible='true'>
+    <nd ref='-206' />
+    <nd ref='-207' />
+    <nd ref='-208' />
+    <nd ref='-220' />
+    <nd ref='-206' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-260' visible='true'>
+    <nd ref='-169' />
+    <nd ref='-170' />
+    <nd ref='-173' />
+    <nd ref='-174' />
+    <nd ref='-169' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-261' visible='true'>
+    <nd ref='-159' />
+    <nd ref='-135' />
+    <nd ref='-134' />
+    <nd ref='-157' />
+    <nd ref='-159' />
+  </way>
+  <way id='-262' visible='true'>
     <nd ref='-141' />
     <nd ref='-143' />
     <nd ref='-140' />
     <nd ref='-121' />
     <nd ref='-141' />
   </way>
-  <way id='-256' action='modify' visible='true'>
-    <nd ref='-206' />
-    <nd ref='-207' />
-    <nd ref='-208' />
-    <nd ref='-209' />
-    <nd ref='-206' />
+  <way id='-263' visible='true'>
+    <nd ref='-18' />
+    <nd ref='-50' />
+    <nd ref='-49' />
+    <nd ref='-53' />
+    <nd ref='-54' />
+    <nd ref='-56' />
+    <nd ref='-55' />
+    <nd ref='-51' />
+    <nd ref='-14' />
+    <nd ref='-15' />
+    <nd ref='-18' />
     <tag k='parking' v='surface' />
     <tag k='amenity' v='parking' />
   </way>
-  <way id='-257' action='modify' visible='true'>
-    <nd ref='-208' />
-    <nd ref='-210' />
-    <nd ref='-211' />
-    <nd ref='-209' />
-    <nd ref='-208' />
+  <way id='-264' visible='true'>
+    <nd ref='-176' />
+    <nd ref='-175' />
+    <tag k='highway' v='motorway' />
+    <tag k='lanes' v='5' />
+  </way>
+  <way id='-265' visible='true'>
+    <nd ref='-26' />
+    <nd ref='-16' />
+    <nd ref='-19' />
+    <nd ref='-24' />
+    <nd ref='-23' />
+    <nd ref='-26' />
+    <tag k='landuse' v='retail' />
+  </way>
+  <way id='-266' visible='true'>
+    <nd ref='-71' />
+    <nd ref='-72' />
+    <nd ref='-77' />
+    <nd ref='-75' />
+    <nd ref='-74' />
+    <nd ref='-71' />
     <tag k='parking' v='surface' />
     <tag k='amenity' v='parking' />
   </way>
-  <relation id='-258' visible='true'>
-    <member type='way' ref='-238' role='inner' />
-    <member type='way' ref='-237' role='outer' />
-    <tag k='name' v='3.' />
-    <tag k='type' v='multipolygon' />
-  </relation>
-  <relation id='-259' visible='true'>
-    <member type='way' ref='-244' role='inner' />
-    <member type='way' ref='-236' role='outer' />
-    <tag k='name' v='2.' />
-    <tag k='type' v='multipolygon' />
-  </relation>
-  <relation id='-260' visible='true'>
-    <member type='way' ref='-254' role='area' />
-    <member type='node' ref='-93' role='node in area' />
-    <member type='node' ref='-95' role='node in area' />
-    <member type='way' ref='-243' role='some other way' />
-    <member type='node' ref='-90' role='to be deleted node in area' />
-    <tag k='name' v='1.' />
-  </relation>
-  <relation id='-261' visible='true'>
-    <member type='way' ref='-255' role='inner' />
-    <member type='way' ref='-247' role='outer' />
-    <tag k='name' v='4. a' />
-    <tag k='type' v='multipolygon' />
-  </relation>
-  <relation id='-262' visible='true'>
-    <member type='way' ref='-230' role='inner' />
-    <member type='way' ref='-242' role='outer' />
+  <way id='-267' visible='true'>
+    <nd ref='-85' />
+    <nd ref='-88' />
+    <tag k='highway' v='motorway' />
+    <tag k='lanes' v='5' />
+  </way>
+  <way id='-268' visible='true'>
+    <nd ref='-80' />
+    <nd ref='-86' />
+    <tag k='highway' v='motorway' />
+    <tag k='lanes' v='5' />
+  </way>
+  <way id='-269' visible='true'>
+    <nd ref='-142' />
+    <nd ref='-123' />
+    <nd ref='-138' />
+    <nd ref='-122' />
+    <nd ref='-142' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-270' visible='true'>
+    <nd ref='-69' />
+    <nd ref='-65' />
+    <nd ref='-66' />
+    <nd ref='-67' />
+    <nd ref='-68' />
+    <nd ref='-69' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <way id='-271' visible='true'>
+    <nd ref='-1' />
+    <nd ref='-2' />
+    <nd ref='-3' />
+    <nd ref='-4' />
+    <nd ref='-1' />
+    <tag k='parking' v='surface' />
+    <tag k='amenity' v='parking' />
+  </way>
+  <relation id='-272' visible='true'>
+    <member type='way' ref='-224' role='inner' />
+    <member type='way' ref='-225' role='outer' />
     <tag k='name' v='6.' />
     <tag k='type' v='multipolygon' />
   </relation>
-  <relation id='-263' visible='true'>
-    <member type='way' ref='-233' role='' />
-    <member type='way' ref='-219' role='' />
-    <tag k='name ' v='4. b' />
-  </relation>
-  <relation id='-264' visible='true'>
-    <member type='way' ref='-213' role='inner' />
-    <member type='way' ref='-234' role='inner' />
-    <member type='way' ref='-212' role='outer' />
+  <relation id='-273' visible='true'>
+    <member type='way' ref='-252' role='inner' />
+    <member type='way' ref='-261' role='inner' />
+    <member type='way' ref='-228' role='outer' />
     <tag k='name' v='5.' />
     <tag k='type' v='multipolygon' />
   </relation>
-  <relation id='-265' visible='true'>
+  <relation id='-274' visible='true'>
+    <member type='way' ref='-262' role='inner' />
+    <member type='way' ref='-269' role='outer' />
+    <tag k='name' v='4. a' />
+    <tag k='type' v='multipolygon' />
+  </relation>
+  <relation id='-275' visible='true'>
+    <member type='way' ref='-237' role='inner' />
+    <member type='way' ref='-232' role='outer' />
+    <tag k='name' v='2.' />
+    <tag k='type' v='multipolygon' />
+  </relation>
+  <relation id='-276' visible='true'>
+  </relation>
+  <relation id='-277' visible='true'>
+    <member type='way' ref='-253' role='' />
+    <member type='way' ref='-255' role='' />
+    <tag k='name ' v='4. b' />
+  </relation>
+  <relation id='-278' visible='true'>
+    <member type='way' ref='-254' role='inner' />
+    <member type='way' ref='-238' role='outer' />
+    <tag k='name' v='3.' />
+    <tag k='type' v='multipolygon' />
+  </relation>
+  <relation id='-279' visible='true'>
+    <member type='way' ref='-235' role='area' />
+    <member type='node' ref='-93' role='node in area' />
+    <member type='node' ref='-95' role='node in area' />
+    <member type='way' ref='-244' role='some other way' />
+    <member type='node' ref='-90' role='to be deleted node in area' />
+    <tag k='name' v='1.' />
   </relation>
 </osm>

@@ -82,9 +82,9 @@
 <h3>Contains {{ obj.members|length }} member{{ obj.members|length|pluralize }}:</h3>
 <ul class="children">
 {% for c in obj.members %}
-  <li class="{{c.type}}"><a href="{{c.ref.local_url}}"><span class="redundant">{{c.type|lower}} </span>{{c.ref}}</a>{% if c.role %} (role: <span class="role">{{c.role}}</span>){% endif %}{% if c.ref.tags.name %}: {{c.ref.tags.name}}{% else %} <abbr class="legend" title="{{c.type}} contains traces of nuts">*</abbr>{% endif %}</li> 
+  <li class="{{c.type}}"><a href="{{c.ref.local_url}}"><span class="redundant">{{c.type|lower}} </span>{{c.ref}}</a>{% if c.role %} (role: <span class="role">{{c.role}}</span>){% endif %}{% if c.ref.tags.name %}: {{c.ref.tags.name}}{% endif %}{% if c.ref.tags %}{% if not c.ref.tags|length_is:1 or not c.ref.tags.created_by %} <abbr class="legend" title="{{c.type}} contains traces of nuts">*</abbr>{% endif %}{% endif %}</li>
   {# FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern #}
-  {# TODO: add delete checkboxes to these children #}
+  {# TODO: add delete checkboxes to these children? #}
 {% endfor %}
 </ul>
 {% endif %}
@@ -93,9 +93,9 @@
 <h3>Contains {{ obj.nodes|length }} node{{ obj.nodes|length|pluralize }}:</h3>
 <ul class="children">
 {% for c in obj.nodes %}
-  <li class="{{c.type}}"><a href="{{c.local_url}}"><span class="redundant">{{c.type|lower}} </span>{{c.id}}</a>{% if c.tags.name %}: {{c.ref.tags.name}}{% else %} <abbr class="legend" title="{{c.type}} contains traces of nuts">*</abbr>{% endif %}</li> 
+  <li class="{{c.type}}"><a href="{{c.local_url}}"><span class="redundant">{{c.type|lower}} </span>{{c.id}}</a>{% if c.tags.name %}: {{c.ref.tags.name}}{% endif %}{% if c.tags %}{% if not c.tags|length_is:1 or not c.tags.created_by %} <abbr class="legend" title="{{c.type}} contains traces of nuts">*</abbr>{% endif %}{% endif %}</li>
   {# FIXME: should see if the framework can supply the link path rather than hardcoding in the URL pattern #}
-  {# TODO: add delete checkboxes to these children #}
+  {# TODO: add delete checkboxes to these children? #}
 {% endfor %}
 </ul>
 {% endif %}

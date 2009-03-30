@@ -56,24 +56,24 @@ orjs.index_node_tags = new Object();
 
 orjs.referenced_ways = new Object();
 
-orjs.title = "";
-orjs.showBorder = "no";
-orjs.showScale = "no";
-orjs.showLicense = "no";
-orjs.textAttenuation = "";
-orjs.meter2pixel = "0.1375";
-orjs.marginaliaTopHeight = 40;
-orjs.marginaliaBottomHeight = 45;
+orjs.title;
+orjs.showBorder;
+orjs.showScale;
+orjs.showLicense;
+orjs.textAttenuation;
+orjs.meter2pixel;
+orjs.marginaliaTopHeight;
+orjs.marginaliaBottomHeight;
 orjs.extraWidth = 3;
 orjs.extraHeight = 3;
 orjs.svgBaseProfile;
-orjs.withOSMLayers = "yes";
+orjs.withOSMLayers;
 orjs.minlat;
 orjs.minlon;
 orjs.maxlat;
 orjs.maxlon;
-orjs.scale = 1;
-orjs.symbolScale = 1;
+orjs.scale;
+orjs.symbolScale;
 orjs.projection;
 orjs.km;
 orjs.dataWidth;
@@ -288,8 +288,8 @@ orjs.globalVariables = function() {
 		orjs.minimumMapHeight = hasAttribute("minimumMapHeight") ? parseFloat(getAttribute("minimumMapHeight")) : undefined;
 		orjs.svgBaseProfile = hasAttribute("svgBaseProfile") ? getAttribute("svgBaseProfile") : undefined;
 		orjs.withOSMLayers = hasAttribute("withOSMLayers") ? getAttribute("withOSMLayers") : "yes";
-		orjs.title == "" ? orjs.marginaliaTopHeight = 40 : orjs.showBorder == "yes" ? orjs.marginaliaTopHeight = 1.5 : orjs.marginaliaTopHeight = 0;
-		(orjs.showScale == "yes" || orjs.showLicense == "yes") ? 45 : orjs.showBorder == "yes" ? 1.5 : 0;
+		orjs.title != "" ? orjs.marginaliaTopHeight = 40 : orjs.showBorder == "yes" ? orjs.marginaliaTopHeight = 1.5 : orjs.marginaliaTopHeight = 0;
+		(orjs.showScale == "yes" || orjs.showLicense == "yes") ? orjs.marginaliaBottomHeight = 45 : orjs.showBorder == "yes" ? orjs.marginaliaBottomHeight = 1.5 : orjs.marginaliaBottomHeight = 0;
 		orjs.showBorder == "yes" ? orjs.extraWidth = 3 : orjs.extraWidth = 0;
 		(orjs.title == "" && orjs.showBorder == "yes") ? orjs.extraHeight = 3 : orjs.extraHeight = 0;
 	}
@@ -304,12 +304,12 @@ orjs.globalVariables = function() {
 	}
 	// Calculate other variables
 	orjs.projection = 1 / Math.cos((orjs.maxlat + orjs.minlat) / 360 * Math.PI);
-	orjs.km = 0.0089928 * orjs.scale * 10000 + orjs.projection;
+	orjs.km = 0.0089928 * orjs.scale * 10000 * orjs.projection;
 	orjs.dataWidth = (orjs.maxlon - orjs.minlon) * 10000 * orjs.scale;
 	// original osmarender: our $dataHeight = ($maxlat - $minlat) * 10000 * $scale * $projection;
 	orjs.dataHeight = (orjs.projectF(orjs.maxlat) - orjs.projectF(orjs.minlat)) * 180 / Math.PI * 10000 * orjs.scale;
 	orjs.documentWidth = (orjs.minimumMapWidth == undefined || orjs.dataWidth > orjs.minimumMapWidth * orjs.km) ? orjs.dataWidth : (orjs.minimumMapWidth * orjs.km);
-	orjs.documentHeight = (orjs.minimumMapHeight == undefined || orjs.dataHeight > orjs.minimumMapHeight * orjs.km) ? orjs.dataHeight : (orjs.minimumMapHeight * orjs.km);
+	orjs.documentHeight = (orjs.dataHeight > orjs.minimumMapHeight * orjs.km) ? orjs.dataHeight : (orjs.minimumMapHeight * orjs.km);
 	orjs.width = (orjs.documentWidth + orjs.dataWidth) / 2;
 	orjs.height = (orjs.documentHeight + orjs.dataHeight) / 2;
 	orjs.svgWidth = orjs.documentWidth + orjs.extraWidth;
@@ -354,36 +354,38 @@ orjs.startSVG = function() {
 	// Clipping rectangle for the map
 	//TODO: change all the various callings to createelement/setattribute to direct parsing form string
 	var clip_path = document.createElementNS(orjs.tagSvg,"clipPath");
-		clip_path.setAttribute("id","map-clipping");
+		clip_path.setAttributeNS(null,"id","map-clipping");
 	var rect = document.createElementNS(orjs.tagSvg,"rect");
-		rect.setAttribute("id","map-clipping-rect");
-		rect.setAttribute("x","0px");
-		rect.setAttribute("y","0px");
-		rect.setAttribute("height",orjs.documentHeight+"px");
-		rect.setAttribute("width",orjs.documentWidth+"px");
+		rect.setAttributeNS(null,"id","map-clipping-rect");
+		rect.setAttributeNS(null,"x","0px");
+		rect.setAttributeNS(null,"y","0px");
+		rect.setAttributeNS(null,"height",orjs.documentHeight+"px");
+		rect.setAttributeNS(null,"width",orjs.documentWidth+"px");
 	clip_path.appendChild(rect);
 	orjs.outputFile.documentElement.appendChild(clip_path);
 
 	// Start of main drawing
 	var starting_g = document.createElementNS(orjs.tagSvg,"g");
 	with (starting_g) {
-		setAttribute("id","map");
-		setAttribute("clip-path","url(#map-clipping)");
-		setAttribute("inkscape:groupmode","layer");
-		setAttribute("inkscape:label","Map");
-		setAttribute("transform","translate(0,"+orjs.marginaliaTopHeight+")");
+		setAttributeNS(null,"id","map");
+		setAttributeNS(null,"clip-path","url(#map-clipping)");
+		setAttributeNS("http://www.inkscape.org/namespaces/inkscape","inkscape:groupmode","layer");
+		setAttributeNS("http://www.inkscape.org/namespaces/inkscape","inkscape:label","Map");
+//FIXME: use svg attributes for transform
+//		setAttribute("transform",("translate(0,"+orjs.marginaliaTopHeight+")"));
 	}
 
 	// Draw a nice background layer
 	var rect = document.createElementNS(orjs.tagSvg,"rect");
-		rect.setAttribute("id","background");
-		rect.setAttribute("x","0px");
-		rect.setAttribute("y","0px");
-		rect.setAttribute("height",orjs.documentHeight+"px");
-		rect.setAttribute("width",orjs.documentWidth+"px");
-		rect.setAttribute("class","map-background");
+		rect.setAttributeNS(null,"id","background");
+		rect.setAttributeNS(null,"x","0px");
+		rect.setAttributeNS(null,"y","0px");
+		rect.setAttributeNS(null,"height",orjs.documentHeight+"px");
+		rect.setAttributeNS(null,"width",orjs.documentWidth+"px");
+		rect.setAttributeNS(null,"class","map-background");
 
-	orjs.outputFile.documentElement.appendChild(rect);
+	starting_g.appendChild(rect);
+	orjs.outputFile.documentElement.appendChild(starting_g);
 }
 
 // Line 737
@@ -849,9 +851,9 @@ outer:
 orjs.render_layer = function(id,commands) {
 	if (commands == undefined) return;
 	var g = document.createElementNS(orjs.tagSvg,"g");
-	g.setAttribute("inkscape:groupmode","layer");
-	g.setAttribute("id","layer"+id);
-	g.setAttribute("inkscape:label", "Layer "+id);
+	g.setAttributeNS("http://www.inkscape.org/namespaces/inkscape","inkscape:groupmode","layer");
+	g.setAttributeNS(null,"id","layer"+id);
+	g.setAttributeNS("http://www.inkscape.org/namespaces/inkscape","inkscape:label", "Layer "+id);
 
 	commands = orjs.commandZIndexSort(commands);
 
@@ -860,14 +862,113 @@ orjs.render_layer = function(id,commands) {
 console.debug(function_to_call);
 		eval(function_to_call+"(commands[command_index].instruction,undefined,commands[command_index].elements,g)");
 	}
-	orjs.outputFile.documentElement.appendChild(g);
+	orjs.outputFile.getElementById("map").appendChild(g);
 }
 
 orjs.generate_paths = function() {
+	var defs = document.createElementNS(orjs.tagSvg,"defs");
+	defs.setAttributeNS(null,"id","defs-ways");
+	for (way_id in orjs.referenced_ways) {
+		// extract data into variables for convenience. the "points"
+		// array contains lat/lon pairs of the nodes.
+		var way = orjs.way_storage[way_id];
+		if (way instanceof orjs.multipolygon_object) console.debug("ERROR: Multipolygon in generate_paths!");
+		var types = orjs.referenced_ways[way_id];
+		var tags = way.tags;
+		var points = new Array();
+		for (node_id in way.nodes) {
+			var node = way.nodes[node_id];
+			if (node.lat != undefined && node.lon != undefined) {
+				points.push([node.lat,node.lon]);
+			}
+		}
 
-	//var defs = document.createElementNS(orjs.tagSvg,"defs");
-	//defs.setAttribute("id","defs-ways");
-	
+		// FIXME? points.length returns 2 if there is only one point with the two coordinates, so this line it's different from orp.pl
+		if (points.length <= 2) continue;
+
+		// generate a normal way path
+		if (types.normal != undefined && types.normal) {
+			var path = document.createElementNS(orjs.tagSvg,"path");
+			path.setAttributeNS(null,"id","way_normal_"+way_id);
+			path.setAttributeNS(null,"d",orjs.make_path(points));
+			defs.appendChild(path);
+		}
+
+	        // generate reverse path if needed
+		if (types.reverse != undefined && types.reverse) {
+			var path = document.createElementNS(orjs.tagSvg,"path");
+			path.setAttributeNS(null,"id","way_reverse_"+way_id);
+			path.setAttributeNS(null,"d",orjs.make_path(points.reverse()));
+			defs.appendChild(path);
+		}
+
+		// generate the start, middle and end paths needed for "smart linecaps".
+		// The first and last way segment are split in the middle.
+
+		var n = points.length - 1;
+
+		var midpoint_head = [(points[0][0]+points[1][0]/2),(points[0][1]+points[1][1])/2];
+		var midpoint_tail = [(points[n][0]+points[n-1][0]/2),(points[n][1]+points[n-1][1]/2)];
+		var firstnode = points.shift();
+		var lastnode = points.pop();
+
+		if (types.start != undefined && types.start) {
+			var path = document.createElementNS(orjs.tagSvg,"path");
+			path.setAttributeNS(null,"id","way_start_"+way_id);
+			path.setAttributeNS(null,"d",orjs.make_path([firstnode,midpoint_head]));
+			defs.appendChild(path);
+		}
+		if (types.end != undefined && types.end) {
+			var path = document.createElementNS(orjs.tagSvg,"path");
+			path.setAttributeNS(null,"id","way_end_"+way_id);
+			path.setAttributeNS(null,"d",orjs.make_path([midpoint_tail,lastnode]));
+			defs.appendChild(path);
+		}
+		if (types.mid != undefined && types.mid) {
+			var path = document.createElementNS(orjs.tagSvg,"path");
+			path.setAttributeNS(null,"id","way_mid_"+way_id);
+			if (points.length) {
+				path.setAttributeNS(null,"d",orjs.make_path([midpoint_head].concat(points,[midpoint_tail])));
+			}
+			defs.appendChild(path);
+		}
+	}
+	orjs.outputFile.documentElement.appendChild(defs);
+
+}
+
+orjs.make_path = function(points) {
+	var firstpoint = points.shift();
+	var path = "M"+orjs.project_string(firstpoint);
+	for (point_index in points) {
+		path+=("L"+orjs.project_string(points[point_index]));
+	}
+	return path;
+}
+
+orjs.project_string = function(point) {
+	var latlon = point;
+	var projected = orjs.project(latlon);
+	return ""+projected[0]+" "+projected[1];
+}
+
+orjs.project = function(latlon) {
+// -------------------------------------------------------------------
+// sub project($latlon)
+//
+// takes an array reference with a "lat" and a "lon" element
+// and returns an array reference with "x" and "y" elements.
+//
+// SUPER BIG FIXME: switch to Proj.4 library to allow arbitrary
+// (correct) projections instead of the current kludge. Also, 
+// possibly project stuff directly in the data base.
+// -------------------------------------------------------------------
+	var x = orjs.width - (orjs.maxlon - latlon[1])*10000*orjs.scale;
+        // original osmarender (unused)
+        // $height + ($minlat-$latlon->[0])*10000*$scale*$projection
+        // new (proper merc.)
+	var y = orjs.height + (orjs.projectF(orjs.minlat) - orjs.projectF(latlon[0])) * 180/Math.PI * 10000 * orjs.scale;
+	return [x,y];
 }
 
 //Implementation of orp-drawing.pl
@@ -907,9 +1008,9 @@ orjs.draw_lines = function(linenode,layer,selected,dom) {
 			}
 		}
 
-		my_g.setAttribute("class",class);
+		my_g.setAttributeNS(null,"class",class);
 		if (!group_started) {
-			if (mask_class!="") my_g.setAttribute("mask-class",mask_class);
+			if (mask_class!="") my_g.setAttributeNS(null,"mask-class",mask_class);
 		}
 		group_started = 1;
 		if (smart_linecaps) {
@@ -1027,23 +1128,23 @@ orjs.draw_path = function(rulenode,way_id,way_type,addclass,style,dom) {
 	if (mask_class != "") {
 		var mask_id = "mask_"+way_type+"_"+way_id;
 		var mask_tag = document.createElementNS(orjs.tagSvg,"mask");
-		mask_tag.setAttribute("id",mask_id);
-		mask_tag.setAttribute("maskUnits","userSpaceOnUse");
+		mask_tag.setAttributeNS(null,"id",mask_id);
+		mask_tag.setAttributeNS(null,"maskUnits","userSpaceOnUse");
 		var use_tag = document.createElementNS(orjs.tagSvg,"use");
-		use_tag.setAttribute("xlink:href",path_id);
-		use_tag.setAttribute("class",mask_class+" osmarender-mask-black");
+		use_tag.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",path_id);
+		use_tag.setAttributeNS(null,"class",mask_class+" osmarender-mask-black");
 		mask_tag.appendChild(use_tag);
 
 		// the following two seem to be required as a workaround for 
 		// an inkscape bug.
 
 		var use_2_tag = document.createElementNS(orjs.tagSvg,"use");
-		use_2_tag.setAttribute("xlink:href",path_id);
-		use_2_tag.setAttribute("class",mask_class+" osmarender-mask-white");
+		use_2_tag.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",path_id);
+		use_2_tag.setAttributeNS(null,"class",mask_class+" osmarender-mask-white");
 		mask_tag.appendChild(use_2_tag);
 		var use_3_tag = document.createElementNS(orjs.tagSvg,"use");
-		use_3_tag.setAttribute("xlink:href",path_id);
-		use_3_tag.setAttribute("class",mask_class+" osmarender-mask-black");
+		use_3_tag.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",path_id);
+		use_3_tag.setAttributeNS(null,"class",mask_class+" osmarender-mask-black");
 		mask_tag.appendChild(use_3_tag);
 		
 		extra_attr.push({"mask":"url(#"+mask_id+")"});
@@ -1051,29 +1152,29 @@ orjs.draw_path = function(rulenode,way_id,way_type,addclass,style,dom) {
 	// We can simplify this in Javascript by adding or not adding the setattribute("style") to the use_tag
 	var use_tag = document.createElementNS(orjs.tagSvg,"use");
 	if (style!=undefined && style != "") {
-		use_tag.setAttribute("xlink:href",path_id);
-		use_tag.setAttribute("style",style);
+		use_tag.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",path_id);
+		use_tag.setAttributeNS(null,"style",style);
 		//is it needed?
 		for (var extra_attr_index in extra_attr) {
 			var single_extra_attr = extra_attr[extra_attr_index];
 			for (var property in single_extra_attr) {
-				use_tag.setAttribute(property,single_extra_attr[property]);
+				use_tag.setAttributeNS(null,property,single_extra_attr[property]);
 			}
 		}
 		var class_for_tag = addclass != null ? (""+class+" "+addclass) : class;
-		use_tag.setAttribute("class",class_for_tag);
+		use_tag.setAttributeNS(null,"class",class_for_tag);
 	}
 	else {
-		use_tag.setAttribute("xlink:href",path_id);
+		use_tag.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",path_id);
 		//is it needed?
 		for (var extra_attr_index in extra_attr) {
 			var single_extra_attr = extra_attr[extra_attr_index];
 			for (var property in single_extra_attr) {
-				use_tag.setAttribute(property,single_extra_attr[property]);
+				use_tag.setAttributeNS(null,property,single_extra_attr[property]);
 			}
 		}
 		var class_for_tag = addclass != null ? (""+class+" "+addclass) : class;
-		use_tag.setAttribute("class",class_for_tag);
+		use_tag.setAttributeNS(null,"class",class_for_tag);
 	}
 	dom.appendChild(use_tag);
 }

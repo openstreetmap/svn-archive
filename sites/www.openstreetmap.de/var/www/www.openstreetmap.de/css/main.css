@@ -110,6 +110,15 @@ div#search {
     padding-bottom: 6px;
 }
 
+div#hinweis {
+//    width: 100%;
+    min-height: 22px;
+    /* for ie */
+    // height: 22px;
+    text-align: center;
+    padding-bottom: 2px;
+}
+
 /* boxes on left and right side */
 
 div.box {

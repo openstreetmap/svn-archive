@@ -1,5 +1,6 @@
 /**
  * @author Mario Ferraro <fadinlight@gmail.com>
+ * Porting from or/p written by Frederik Ramm <frederik@remote.org>
  * http://osmarenderfrontend.wordpress.com
  * Released under GPL v2 or later
  */
@@ -195,18 +196,17 @@ orjs.createInternalReference = function () {
 orjs.buildReferences = function() {
 	//line 240-246
 	//update way reference in nodes
-	for (way_id in orjs.way_storage) {
-		for (node_index in orjs.way_storage[way_id].nodes) {
-			orjs.way_storage[way_id].nodes[node_index].ways.push(orjs.way_storage[way_id]);
-			//orjs.node_storage[orjs.way_storage[way_id].nodes[node_index]].ways.push(orjs.way_storage[way_id]);
-		}
+	for (let [way_id, way] in Iterator(orjs.way_storage)) {
+		Array.forEach(way.nodes, function (node) {
+			node.ways.push(way);
+		});
 	}
 	//line 254-271
 	//update references in relations
-	for (relation_id in orjs.relation_storage) {
-		for (member_index in orjs.relation_storage[relation_id].members) {
-			var type_id = orjs.relation_storage[relation_id].members[member_index][1].split(":");
-			var deref;
+	for (let [relation_id, relation] in Iterator(orjs.relation_storage)) {
+		Array.forEach(relation.members, function(member) {
+			let type_id = member[1].split(":");
+			let deref;
 			switch (type_id[0]) {
 				case "node":
 					deref = orjs.node_storage[type_id[1]];
@@ -219,11 +219,12 @@ orjs.buildReferences = function() {
 				break;
 				default:
 			}
-			orjs.relation_storage[relation_id].members[member_index][1] = deref;
+			member[1] = deref;
 			if (deref!=undefined) {
-				deref.relations.push([orjs.relation_storage[relation_id].members[member_index][0],orjs.relation_storage[relation_id].members[member_index]])
+				deref.relations.push([member[0],member]);
 			}
-		}
+
+		});
 	}
 
 	//Lines 395-458
@@ -250,29 +251,32 @@ orjs.buildReferences = function() {
 	// TODO:
 	// - Label relation
 
-	for (relation_id in orjs.relation_storage) {
-		if (orjs.relation_storage[relation_id].tags.type==undefined || orjs.relation_storage[relation_id].tags.type!="multipolygon") continue;
+	for (let [relation_id, relation] in Iterator(orjs.relation_storage)) {
+		if (relation.tags.type==undefined || relation.tags.type!="multipolygon") continue;
 		//TODO: Implement the algorythm for multipolygons
 	}
 
 	// line 464 selection level 0
 	orjs.selection[0] = new Object();
-	for (way_id in orjs.way_storage) {
-		orjs.selection[0][way_id] = orjs.way_storage[way_id];
+	//FIXME: can't do it as associative array, what happens if node_id == way_id?
+	for (let [way_id, way] in Iterator(orjs.way_storage)) {
+		orjs.selection[0][way_id] = way;
 	}
-	for (node_id in orjs.node_storage) {
-		orjs.selection[0][way_id] = orjs.node_storage[node_id];
+	for (let [node_id, node] in Iterator(orjs.node_storage)) {
+		orjs.selection[0][node_id] = node;
 	}
 
 	// line 471-484
 	for (way_id in orjs.way_storage) {
 		for (key in orjs.way_storage[way_id].tags) {
-			orjs.index_way_tags[key] = orjs.way_storage[way_id];
+			if (orjs.index_way_tags[key]==undefined) orjs.index_way_tags[key] = new Array();
+			orjs.index_way_tags[key].push(orjs.way_storage[way_id]);
 		}
 	}
 	for (node_id in orjs.node_storage) {
 		for (key in orjs.node_storage[node_id].tags) {
-			orjs.index_node_tags[key] = orjs.node_storage[node_id];
+			if (orjs.index_node_tags[key]==undefined) orjs.index_node_tags[key] = new Array();
+			orjs.index_node_tags[key].push(orjs.node_storage[node_id]);
 		}
 	}
 }
@@ -495,6 +499,9 @@ orjs.process_rule = function (node,depth,layer,previous) {
 
 	var previous_child;
 	for (index_instruction in node.childNodes) {
+if (orjs.debug) {
+	console.debug("depth: "+depth);
+}
 		var instruction = node.childNodes[index_instruction];
 
 		if (instruction.nodeType != node.ELEMENT_NODE) continue;
@@ -516,8 +523,10 @@ orjs.process_rule = function (node,depth,layer,previous) {
 			}
 		}
 		else if (orjs.instructions[name]!=undefined) {
-			if (orjs.debug)
-				console.debug("processing instruction with name: "+name);
+			if (orjs.debug) {
+				console.debug("processing instruction with name: "+name+" for these elements");
+				console.dir(selected);
+			}
 			var command = {"instruction":instruction,"elements":selected};
 			orjs.drawing_commands.push(command);
 		}
@@ -556,7 +565,8 @@ orjs.makeSelection = function(node, oldsel) {
 	if (e_pieces |= undefined && e_pieces["node"] != undefined) e = "node";
 
 	var interim;
-//console.debug("e: "+e+" s: "+s+" k: "+k+" v: "+v);
+if (orjs.debug)
+console.debug("e: "+e+" s: "+s+" k: "+k+" v: "+v);
 
 	if (k == "*" || k == undefined) {
 		// rules that apply to any key. these don't occur often
@@ -656,8 +666,10 @@ orjs.makeSelection = function(node, oldsel) {
 		orjs.select_closed(interim,closed);
 	}
 
-//console.debug("printing interim");
-//console.dir(interim);
+if (orjs.debug) {
+console.debug("printing interim");
+console.dir(interim);
+}
 	return interim;
 }
 
@@ -672,7 +684,7 @@ orjs.projectF = function (projected) {
 // Implementation of orp-select.pm
 
 orjs.select_elements_with_given_tag_key_and_value_slow = function(oldsel,e,k,v,s) {
-//console.debug("SELECTION: select_elements_with_given_tag_key_and_value_slow");
+if (orjs.debug) console.debug("SELECTION: select_elements_with_given_tag_key_and_value_slow");
 	var values_wanted = v.split("|");
 	var newsel = new Object();
 	var keys_wanted = k.split("|");
@@ -712,40 +724,56 @@ outer:
 }
 
 orjs.select_elements_with_given_tag_key_and_value_fast = function(oldsel,e,k,v) {
-//console.debug("SELECTION: select_elements_with_given_tag_key_and_value_fast");
+if (orjs.debug) console.debug("SELECTION: select_elements_with_given_tag_key_and_value_fast");
 	var values_wanted = v.split("|");
 	var newsel = new Object();
 	var keys_wanted = k.split("|");
+if (orjs.debug && v=="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned") {
+console.debug("ECCOMI");
+console.dir(keys_wanted);
+console.dir(values_wanted);
+}
 	for (key in keys_wanted) {
 		// retrieve list of objects with this key from index.
 		var objects = new Array();
 		if (e != undefined && e == "way") {
+if (orjs.debug && v=="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned") {
+	console.dir(orjs.index_way_tags);
+	console.debug("key: "+keys_wanted[key]);
+	console.debug(orjs.index_way_tags[keys_wanted[key]]);
+}			
 			if (orjs.index_way_tags[keys_wanted[key]]!=undefined) {
-				objects.push(orjs.index_way_tags[keys_wanted[key]]);
+if (orjs.debug && v=="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned") {
+	console.debug("found, pushing in objects");
+}		
+				objects = orjs.index_way_tags[keys_wanted[key]];
 			}
 			else {
-				objects.push(new Array());
+				objects = new Array();
 			}
 		}
 		else if (e != undefined && e == "node") {
 			if (orjs.index_node_tags[keys_wanted[key]]!=undefined) {
-				objects.push(orjs.index_node_tags[keys_wanted[key]]);
+				objects = orjs.index_node_tags[keys_wanted[key]];
 			}
 			else {
-				objects.push(new Array());
+				objects = new Array();
 			}
 		}
 		else {
 			// Needed for e="way|node", why not needed in orp?
 			if (e != undefined) {
 				if (orjs.index_way_tags[keys_wanted[key]]!=undefined) {
-					objects.push(orjs.index_way_tags[keys_wanted[key]]);
+					objects = orjs.index_way_tags[keys_wanted[key]];
 				}
 				if (orjs.index_node_tags[keys_wanted[key]]!=undefined) {
-					objects.push(orjs.index_node_tags[keys_wanted[key]]);
+					objects = orjs.index_node_tags[keys_wanted[key]];
 				}
 			}
 		}
+if (orjs.debug && v=="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned") {
+console.dir(objects);
+}
 outer:
 		for (element_index in objects) {
 			if (oldsel[objects[element_index].id]==null) continue;
@@ -762,7 +790,7 @@ outer:
 }
 
 orjs.select_elements_without_given_tag_key = function(oldsel,e,k) {
-//console.debug("SELECTION: select_elements_without_given_tag_key");
+if (orjs.debug) console.debug("SELECTION: select_elements_without_given_tag_key");
 	var newsel = new Object();
 	var keys_wanted = k.split("|");
 
@@ -779,7 +807,7 @@ outer:
 }
 
 orjs.select_elements_with_given_tag_key = function(oldsel,e,k) {
-//console.debug("SELECTION: select_elements_with_given_tag_key");
+if (orjs.debug) console.debug("SELECTION: select_elements_with_given_tag_key");
 	var newsel = new Object();
 	var keys_wanted = k.split("|");
 	var instance_string_e = orjs.e_to_object[e];
@@ -797,7 +825,7 @@ outer:
 }
 
 orjs.select_closed = function (selection,closed) {
-//console.debug("SELECTION: select_closed");
+if (orjs.debug) console.debug("SELECTION: select_closed");
 	for (member_index in selection) {
 		//TODO: select_closed function
 		if (orjs.debug)
@@ -806,7 +834,7 @@ orjs.select_closed = function (selection,closed) {
 }
 
 orjs.select_nodes_with_given_tag_key_and_value_for_way_fast = function(oldsel,k,v) {
-//console.debug("SELECTION: select_nodes_with_given_tag_key_and_value_for_way_fast");
+if (orjs.debug) console.debug("SELECTION: select_nodes_with_given_tag_key_and_value_for_way_fast");
 	var values_wanted = v.split("|");
 	var newsel = new Object();
 	var keys_wanted = v.split("|");
@@ -878,10 +906,7 @@ if (orjs.debug) console.debug(function_to_call);
 orjs.generate_paths = function() {
 	var defs = document.createElementNS(orjs.tagSvg,"defs");
 	defs.setAttributeNS(null,"id","defs-ways");
-if (orjs.debug) {
-	console.debug("referenced ways");
-	console.dir(orjs.referenced_ways);
-}
+
 	for (way_id in orjs.referenced_ways) {
 		// extract data into variables for convenience. the "points"
 		// array contains lat/lon pairs of the nodes.
@@ -889,55 +914,17 @@ if (orjs.debug) {
 		if (way instanceof orjs.multipolygon_object && orjs.debug) console.debug("ERROR: Multipolygon in generate_paths!");
 		types = orjs.referenced_ways[way_id];
 		tags = way.tags;
-way.nodes.unshift({});
-way.nodes.unshift({});
-way.nodes.push({});
-		//var points = new Array();
-if (orjs.debug)
-console.dir(way.nodes);
-/*		Array.forEach(way.nodes, function (node) {
+
+		var points = way.nodes.map(function (node) {
 			if (node.lat != undefined && node.lon != undefined) {
-				points.push([node.lat,node.lon]);
-			}
-		});*/
-//console.dir(points);	
-		points = way.nodes.map(function (node) {
-			//if (node.lat != undefined && node.lon != undefined) {
 				return [node.lat,node.lon];
-			//}
-		});
-/*		for (node_id in way.nodes) {
-			var node = way.nodes[node_id];
-			if (node.lat != undefined && node.lon != undefined) {
-				var lat = node.lat;
-				var lon = node.lon;
-console.debug("la lunghezza è: "+points.length);
-console.debug("inserisco il node seguente: ");
-console.debug("node lat:"+lat+" node lon: "+lon);
-				var position = points.length;
-console.debug("inserisco in position "+position);
-				points[position] = new Array(2);
-				points[position][0]=lat;
-				points[position][1]=lon;
-//				points.push([node.lat,node.lon]);
-console.debug("points interno è:");
-console.debug(points[position][0]);
-console.debug(points[position][1]);
 			}
-		}*/
+		});
 		// FIXME? points.length returns 2 if there is only one point with the two coordinates, so this line it's different from orp.pl
-if (orjs.debug) {
-console.debug("SCRIVO "+way_id);
-console.debug("nodi trovati");
-console.debug("la lunghezza è "+points.length);
-console.dir(points);
-}
+
 		if (points.length < 2) continue;
 		// generate a normal way path
-if (orjs.debug) {
-console.debug("type di "+way_id);
-console.dir(types);
-}
+
 		if (types.normal != undefined && types.normal) {
 if (orjs.debug) console.debug("creo path normal di id"+way_id);
 			path = document.createElementNS(orjs.tagSvg,"path");
@@ -993,13 +980,11 @@ if (orjs.debug) console.debug("creo path mid");
 
 }
 
-orjs.make_path = function(points) {
-	points.shift()
-	points.shift();
+orjs.make_path = function(points_passed) {
+	var points = points_passed.map(function(point){return point;});
 	var firstpoint = points.shift();
 	var path = "M"+orjs.project_string(firstpoint);
 	for (point_index in points) {
-		if (point_index==points.length-1) continue;
 		path+=("L"+orjs.project_string(points[point_index]));
 	}
 	return path;
@@ -1164,6 +1149,9 @@ orjs.draw_way_with_smart_linecaps = function(linenode,layer,way,class,style,dom)
 orjs.draw_areas = function(linenode,layer,way,class,style,dom) {}
 
 orjs.draw_symbols = function(linenode,layer,way,class,style,dom) {}
+
+orjs.draw_circles = function(linenode,layer,way,class,style,dom) {}
+
 
 // -------------------------------------------------------------------
 // sub draw_path($rulenode, $path_id, $class, $style)

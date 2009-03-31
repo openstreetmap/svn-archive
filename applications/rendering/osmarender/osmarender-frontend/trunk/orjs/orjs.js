@@ -432,14 +432,12 @@ console.dir(orjs.drawing_commands);
 						normalInstructions[elementLayer] = new Array();
 						normalInstructions[elementLayer].push({"instruction" : instruction,"elements":new Array()});
 					}
-					var array_old_position = normalInstructions[elementLayer].length-1;
-					if (normalInstructions[elementLayer][array_old_position].instruction != instruction) {
+					if (normalInstructions[elementLayer][normalInstructions[elementLayer].length-1].instruction != instruction) {
 						normalInstructions[elementLayer].push({"instruction":instruction,"elements":new Array()});
 					}
-					normalInstructions[elementLayer][array_old_position].elements.push(element);
+					normalInstructions[elementLayer][normalInstructions[elementLayer].length-1].elements.push(element);
 				}
 			}
-
 			// Now sorting the normalInstructions object
 			normalInstructions = orjs.objectKeySort(normalInstructions);
 			for (layer in normalInstructions) {
@@ -728,24 +726,12 @@ if (orjs.debug) console.debug("SELECTION: select_elements_with_given_tag_key_and
 	var values_wanted = v.split("|");
 	var newsel = new Object();
 	var keys_wanted = k.split("|");
-if (orjs.debug && v=="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned") {
-console.debug("ECCOMI");
-console.dir(keys_wanted);
-console.dir(values_wanted);
-}
+
 	for (key in keys_wanted) {
 		// retrieve list of objects with this key from index.
 		var objects = new Array();
 		if (e != undefined && e == "way") {
-if (orjs.debug && v=="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned") {
-	console.dir(orjs.index_way_tags);
-	console.debug("key: "+keys_wanted[key]);
-	console.debug(orjs.index_way_tags[keys_wanted[key]]);
-}			
 			if (orjs.index_way_tags[keys_wanted[key]]!=undefined) {
-if (orjs.debug && v=="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned") {
-	console.debug("found, pushing in objects");
-}		
 				objects = orjs.index_way_tags[keys_wanted[key]];
 			}
 			else {
@@ -771,9 +757,6 @@ if (orjs.debug && v=="motorway|motorway_link|footway|pedestrian|cycleway|bridlew
 				}
 			}
 		}
-if (orjs.debug && v=="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned") {
-console.dir(objects);
-}
 outer:
 		for (element_index in objects) {
 			if (oldsel[objects[element_index].id]==null) continue;
@@ -912,6 +895,7 @@ orjs.generate_paths = function() {
 		// array contains lat/lon pairs of the nodes.
 		way = orjs.way_storage[way_id];
 		if (way instanceof orjs.multipolygon_object && orjs.debug) console.debug("ERROR: Multipolygon in generate_paths!");
+
 		types = orjs.referenced_ways[way_id];
 		tags = way.tags;
 
@@ -920,7 +904,6 @@ orjs.generate_paths = function() {
 				return [node.lat,node.lon];
 			}
 		});
-		// FIXME? points.length returns 2 if there is only one point with the two coordinates, so this line it's different from orp.pl
 
 		if (points.length < 2) continue;
 		// generate a normal way path
@@ -947,8 +930,8 @@ if (orjs.debug) console.debug("creo path reverse");
 
 		n = points.length - 1;
 
-		midpoint_head = [(points[0][0]+points[1][0]/2),(points[0][1]+points[1][1])/2];
-		midpoint_tail = [(points[n][0]+points[n-1][0]/2),(points[n][1]+points[n-1][1]/2)];
+		midpoint_head = [((parseFloat(points[0][0])+parseFloat(points[1][0]))/2),((parseFloat(points[0][1])+parseFloat(points[1][1]))/2)];
+		midpoint_tail = [((parseFloat(points[n][0])+parseFloat(points[n-1][0]))/2),((parseFloat(points[n][1])+parseFloat(points[n-1][1]))/2)];
 		firstnode = points.shift();
 		lastnode = points.pop();
 

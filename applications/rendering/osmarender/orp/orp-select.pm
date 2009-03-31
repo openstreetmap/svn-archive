@@ -110,7 +110,16 @@ outer:
     return $newsel;
 }
 
-# e=way or node, s not supptd, v must not contain ~
+# this is a speedy method to find objects that have one of a list of 
+# specified values for one or more tag. instead of looking through all 
+# objects, it uses the index_way_tags/index_node_tags structure to quickly 
+# identify objects that have the tag at all, and then only checks for
+# the correct value being present.
+#
+# it supports "node" or "way" for the "e" attribute, does not support
+# the "s" attribute, and the non-value ("~") is not allowed as part of 
+# the "v" attribute.
+#
 sub select_elements_with_given_tag_key_and_value_fast
 {
     my ($oldsel, $e, $k, $v) = @_;
@@ -147,7 +156,15 @@ outer:
     return $newsel;
 }
 
-# e=node, s=way, v must not contain ~
+# this is a fast, indexed lookup in the same manner as the above
+# select_elements_with_given_tag_key_and_value_fast, but geared towards
+# the situation where nodes are selected based on the tags of ways they
+# are member of.
+#
+# it supports only "node" for the "e" attribute and only "way" for the
+# "s" attribute, and the non-value ("~") is not allowed as part of 
+# the "v" attribute.
+#
 sub select_nodes_with_given_tag_key_and_value_for_way_fast
 {
     my ($oldsel, $k, $v) = @_;
@@ -177,6 +194,11 @@ outer:
     return $newsel;
 }
 
+# this is the equivalent to a "table scan" in an SQL database; it simply
+# tuns throught all the elements in the current selection and checks whether
+# they need to be copied into the new selection. it supports (more or less)
+# everything but is also the slowest method.
+#
 sub select_elements_with_given_tag_key_and_value_slow
 {
     my ($oldsel, $e, $k, $v, $s) = @_;

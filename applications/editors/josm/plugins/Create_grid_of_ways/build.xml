@@ -1,4 +1,4 @@
-<project name="navigator" default="dist" basedir=".">
+<project name="Create_grid_of_ways" default="dist" basedir=".">
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
@@ -9,31 +9,23 @@
     </target>
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
-        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}">
+        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
-            <classpath>
-                <pathelement location="${josm}"/>
-                <fileset dir="lib">
-                    <include name="**/*.jar"/>
-                </fileset>
-            </classpath>
         </javac>
     </target>
     <target name="dist" depends="compile,revision">
-        <unjar dest="${plugin.build.dir}">
-            <fileset dir="lib"/>
-        </unjar>
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <manifest>
-                <attribute name="Author" value="Christof Dallermassl" />
-                <attribute name="Plugin-Class" value="at.dallermassl.josm.plugin.navigator.NavigatorPlugin" />
+                <attribute name="Author" value="Jorge Luis Chamorro"/>
+                <attribute name="Plugin-Class" value="CreateGridOfWaysPlugin.CreateGridOfWaysPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Provides navigation/autorouting functionality" />
-                <attribute name="Plugin-Stage" value="50" />
+                <attribute name="Plugin-Description" value="Create a grid of ways."/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/Create_grid_of_ways"/>
+                <attribute name="Plugin-Mainversion" value="1208"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

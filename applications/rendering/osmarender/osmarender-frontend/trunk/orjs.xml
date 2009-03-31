@@ -19,7 +19,8 @@
 		<script type="text/javascript;version=1.7" src="orjs/orjs.js"></script>
 <!-- e4x=1 -->
 		<script type="text/javascript">
-			orjs.load("zurich_google.xml","../../stylesheets/osm-map-features-z17.xml",true);
+			orjs.load("zurich_google.xml","osm-map-features-z17-orjs.xml",true);
+			//orjs.load("zurich_google.xml","../../stylesheets/osm-map-features-z17.xml",true);
 			//orjs.load("rome_centre.xml","../../stylesheets/osm-map-features-z17.xml",true);
 			//orjs.load("somewhere_in_london.xml","../../stylesheets/osm-map-features-z17.xml",true);
 		</script>

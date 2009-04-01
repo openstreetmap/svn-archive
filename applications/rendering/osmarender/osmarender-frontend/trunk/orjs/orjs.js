@@ -1129,11 +1129,52 @@ orjs.draw_way_with_smart_linecaps = function(linenode,layer,way,class,style,dom)
 	}
 }
 
-orjs.draw_areas = function(linenode,layer,way,class,style,dom) {}
+orjs.draw_areas = function(areanode,layer,selected,dom) {
+	// FIXME copy node svg: attributes
+	var class = areanode.getAttribute("class");
 
-orjs.draw_symbols = function(linenode,layer,way,class,style,dom) {}
+	//Global variable needed to create or not the tag (the dom in JS it's handled differently than Perl SAX)
+	var my_g = document.createElementNS(orjs.tagSvg,"g");
+	my_g.setAttributeNS(null,"class",class);
 
-orjs.draw_circles = function(linenode,layer,way,class,style,dom) {}
+outer:
+	for (selected_index in selected) {
+		var element = selected[selected_index];
+		if (!(element instanceof orjs.way_object) && !(element instanceof orjs.multipolygon_object)) continue;
+		// Skip ways that are already rendered
+		//because they are part of a multipolygon
+		if ((element instanceof orjs.way_object) && (element.multipolygon != undefined)) continue;
+		var ways = new Array();
+
+		if (element instanceof orjs.way_object) {
+			ways.push(element);
+		}
+		if (element instanceof orjs.multipolygon_object) {
+			ways.push([element.outer,element.inner]);
+		}
+		var path = "";
+		for (way_index in ways) {
+			var way = ways[way_index];
+			var points = new Array();
+			for (node_index in way.nodes) {
+				var node = way.nodes[node_index];
+				if (node.lat != undefined && node.lon != undefined) {
+					points.push([node.lat,node.lon]);
+				}
+			}
+			path += (orjs.make_path(points)+"Z ");
+		}
+		var path_tag = document.createElementNS(orjs.tagSvg,"path");
+		path_tag.setAttributeNS(null,"d",path);
+		path_tag.setAttributeNS(null,"style","fill-rule:evenodd");
+		my_g.appendChild(path_tag);
+	}
+	dom.appendChild(my_g);
+}
+
+orjs.draw_symbols = function(linenode,layer,selected,dom) {}
+
+orjs.draw_circles = function(linenode,layer,selected,dom) {}
 
 
 // -------------------------------------------------------------------
@@ -1284,4 +1325,5 @@ orjs.encodeToPNG = function() {
 	var bytes = stream.readByteArray(stream.available());
 	var dataURL="data:image/png;base64," + btoa(String.fromCharCode.apply(null, bytes));
 	document.getElementById("image").src=dataURL
+	netscape.security.PrivilegeManager.revertPrivilege('UniversalXPConnect');
 }

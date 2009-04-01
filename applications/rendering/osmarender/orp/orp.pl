@@ -885,7 +885,6 @@ sub generate_paths
         # suggested to use this feature for tiles@home.
         if ($types->{'normal_extended'} or $types->{'reverse_extended'})
         {
-            print "--\n";
             foreach my $p(@$points) { print $p->[0].", ".$p->[1]."\n" };
             # compute total length
             my $wl = 0;
@@ -894,7 +893,6 @@ sub generate_paths
                 my $pwl = sqrt(($points->[$i]->[0] - $points->[$i-1]->[0])**2 + ($points->[$i]->[1] - $points->[$i-1]->[1])**2);
                 $wl += $pwl;
             }
-            print "tl=$wl\n";
 
             # extend before first node
             my $a = $points->[1]->[0] - $points->[0]->[0];
@@ -913,13 +911,8 @@ sub generate_paths
                 $bb *= -1 if ($b<0);
                 $aa = $bb/$b*$a;
             }
-            print "aa=$aa bb=$bb\n";
 
             my $startnode = [ $points->[0]->[0] - $aa, $points->[0]->[1] - $bb ];
-            print $points->[0]->[0] - $aa;
-            print ", ";
-            print $points->[0]->[1] - $bb;
-            print "\n";
 
             # extend after last node
             $a = $points->[$n]->[0] - $points->[$n-1]->[0];
@@ -936,12 +929,7 @@ sub generate_paths
                 $bb *= -1 if ($b<0);
                 $aa = $bb/$b*$a;
             }
-            print "aa=$aa bb=$bb\n";
             my $endnode = [ $points->[$n]->[0] + $aa, $points->[$n]->[1] + $bb ];
-            print $points->[$n]->[0] + $aa;
-            print ", ";
-            print $points->[$n]->[1] + $bb;
-            print "\n";
             
             foreach my $t("normal_extended", "reverse_extended")
             {

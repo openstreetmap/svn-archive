@@ -885,7 +885,6 @@ sub generate_paths
         # suggested to use this feature for tiles@home.
         if ($types->{'normal_extended'} or $types->{'reverse_extended'})
         {
-            foreach my $p(@$points) { print $p->[0].", ".$p->[1]."\n" };
             # compute total length
             my $wl = 0;
             for (my $i = 1; $i < scalar(@$points); $i++)
@@ -906,7 +905,6 @@ sub generate_paths
             }
             else
             {
-                #$bb = sqrt((($a/$b)**2 + 1) * $wl**2);
                 $bb = sqrt($wl**2 / ($a**2/$b**2 + 1));
                 $bb *= -1 if ($b<0);
                 $aa = $bb/$b*$a;
@@ -924,7 +922,6 @@ sub generate_paths
             }
             else
             {
-                #$bb = sqrt((($a/$b)**2 + 1) * $wl**2);
                 $bb = sqrt($wl**2 / ($a**2/$b**2 + 1));
                 $bb *= -1 if ($b<0);
                 $aa = $bb/$b*$a;

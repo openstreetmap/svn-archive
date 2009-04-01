@@ -26,6 +26,7 @@
 		</script>
 	</head>
 	<body>
+		<button id="encode_png" onclick="javascript:orjs.encodeToPNG();">Encode to PNG</button><br />
 		<p>OR/JS</p><div id="resulting_svg"></div>
 		<p>OR/P</p><div id="original_svg"><svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" id="main" version="1.1" baseProfile="full" width="388.50000000003604px" height="331.919795404072px" preserveAspectRatio="none" viewBox="0.000000 0.000000 77.700000 66.383959">
    <defs id="defs-rulefile"><style xmlns="http://www.w3.org/2000/svg" id="styles" type="text/css">
@@ -2986,6 +2987,9 @@
    </defs>
 </svg>
 </div>
+<p>IMAGE</p><img id="image"></img>
+<p>CANVAS</p><div id="resulting_canvas"><canvas id="canvas"></canvas></div>
+
 	</body>
 </html>
 

@@ -451,7 +451,7 @@ console.dir(orjs.drawing_commands);
 		
 	}
 //	console.debug(XML((new XMLSerializer()).serializeToString(orjs.outputFile)).toXMLString());
-	//console.debug((new XMLSerializer()).serializeToString(orjs.outputFile));
+//	string_file_svg = (new XMLSerializer()).serializeToString(orjs.outputFile);
 	document.getElementById("resulting_svg").appendChild(orjs.outputFile.documentElement);
 }
 
@@ -1165,7 +1165,7 @@ if (orjs.debug) console.debug("devo scrivere path id "+path_id+", mask_class è 
 
 		var use_2_tag = document.createElementNS(orjs.tagSvg,"use");
 		use_2_tag.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",path_id);
-		use_2_tag.setAttributeNS(null,"class",mask_class+" osmarender-mask-white");
+		use_2_tag.setAttributeNS(null,"class",class+" osmarender-mask-white");
 		mask_tag.appendChild(use_2_tag);
 		var use_3_tag = document.createElementNS(orjs.tagSvg,"use");
 		use_3_tag.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",path_id);
@@ -1256,4 +1256,32 @@ orjs.arrayContains = function(array,element) {
 		if (array[element_index] == element) return true;
 	}
 	return false;
+}
+
+orjs.encodeToPNG = function() {
+	// Encode in PNG, thanks to svg2png firefox extension code for guidance (http://www.treebuilder.de/default.asp?file=660000.xml)
+	var my_w = parseInt(orjs.svgWidth*orjs.customZoom);
+	var my_h = parseInt(orjs.svgHeight*orjs.customZoom);
+	var canvas = document.getElementById("canvas");
+	canvas.width = my_w
+	canvas.height = my_h;
+	ctx = canvas.getContext("2d");
+	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+	image_rect = document.getElementById("resulting_svg").getBoundingClientRect();
+	ctx.drawWindow(document.defaultView,image_rect.left,image_rect.top,my_w,my_h,"rgba(0,0,0,0)");
+	pixels = ctx.getImageData(0,0,my_w,my_h).data;
+	Cc = Components.classes;
+	Ci = Components.interfaces;
+	encoder = Cc["@mozilla.org/image/encoder;2?type=image/png"].createInstance();
+	encoder.QueryInterface(Ci.imgIEncoder);
+	encoder.initFromData(pixels,pixels.length,my_w,my_h,my_w*4,Ci.imgIEncoder.INPUT_FORMAT_RGBA,null);
+
+	// End of encoding: display
+	var rawStream = encoder.QueryInterface(Ci.nsIInputStream);
+	var stream = Cc["@mozilla.org/binaryinputstream;1"].createInstance();
+	stream.QueryInterface(Ci.nsIBinaryInputStream);
+	stream.setInputStream(rawStream);
+	var bytes = stream.readByteArray(stream.available());
+	var dataURL="data:image/png;base64," + btoa(String.fromCharCode.apply(null, bytes));
+	document.getElementById("image").src=dataURL
 }

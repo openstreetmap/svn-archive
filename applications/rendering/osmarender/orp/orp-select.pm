@@ -234,7 +234,7 @@ outer:
                 {   
                     my $keyval = $tagset->{$k};
                     if (($value eq '~' and !defined($keyval)) or
-                        ($value eq $keyval and defined($keyval)))
+                        (defined($keyval) and ($value eq $keyval)))
                     {   
                         $newsel->insert($_);
                         next outer;

@@ -856,8 +856,8 @@ sub generate_paths
             push(@$points, [ $_->{"lat"}, $_->{"lon"} ]) if (defined($_->{"lat"}) && defined($_->{"lon"}));
         }
 
-        next if (scalar(@$points) < 2);
-
+        my $n = scalar(@$points) -1;
+        next if ($n < 1);
 
         # generate a normal way path
         if ($types->{'normal'})
@@ -872,9 +872,87 @@ sub generate_paths
                 "d" => make_path(reverse @$points));
         }
 
+        # this generates extended paths. extended paths have one extra node at the beginning 
+        # and one at the end, each "shooting out" of the way in a straight line, and each
+        # having a distance from the original end node equivalent to the total length of the
+        # way. the path is thus exactly three times as long as it was originally.
+        # the idea is that by drawing text on such extended paths instead of normal paths, 
+        # text may "spill" over the end of the road which is not always beautiful but can give
+        # better results. 
+        #
+        # extended paths are requested by the draw_text_on_path function when it encounters
+        # text drawing instructions with the "overflow" attribute set to "true". it is not
+        # suggested to use this feature for tiles@home.
+        if ($types->{'normal_extended'} or $types->{'reverse_extended'})
+        {
+            print "--\n";
+            foreach my $p(@$points) { print $p->[0].", ".$p->[1]."\n" };
+            # compute total length
+            my $wl = 0;
+            for (my $i = 1; $i < scalar(@$points); $i++)
+            {
+                my $pwl = sqrt(($points->[$i]->[0] - $points->[$i-1]->[0])**2 + ($points->[$i]->[1] - $points->[$i-1]->[1])**2);
+                $wl += $pwl;
+            }
+            print "tl=$wl\n";
+
+            # extend before first node
+            my $a = $points->[1]->[0] - $points->[0]->[0];
+            my $b = $points->[1]->[1] - $points->[0]->[1];
+            my $bb;
+            my $aa;
+            if ($b == 0)
+            {
+                $bb = 0;
+                $aa = $wl;
+            }
+            else
+            {
+                #$bb = sqrt((($a/$b)**2 + 1) * $wl**2);
+                $bb = sqrt($wl**2 / ($a**2/$b**2 + 1));
+                $bb *= -1 if ($b<0);
+                $aa = $bb/$b*$a;
+            }
+            print "aa=$aa bb=$bb\n";
+
+            my $startnode = [ $points->[0]->[0] - $aa, $points->[0]->[1] - $bb ];
+            print $points->[0]->[0] - $aa;
+            print ", ";
+            print $points->[0]->[1] - $bb;
+            print "\n";
+
+            # extend after last node
+            $a = $points->[$n]->[0] - $points->[$n-1]->[0];
+            $b = $points->[$n]->[1] - $points->[$n-1]->[1];
+            if ($b == 0)
+            {
+                $bb = 0;
+                $aa = $wl;
+            }
+            else
+            {
+                #$bb = sqrt((($a/$b)**2 + 1) * $wl**2);
+                $bb = sqrt($wl**2 / ($a**2/$b**2 + 1));
+                $bb *= -1 if ($b<0);
+                $aa = $bb/$b*$a;
+            }
+            print "aa=$aa bb=$bb\n";
+            my $endnode = [ $points->[$n]->[0] + $aa, $points->[$n]->[1] + $bb ];
+            print $points->[$n]->[0] + $aa;
+            print ", ";
+            print $points->[$n]->[1] + $bb;
+            print "\n";
+            
+            foreach my $t("normal_extended", "reverse_extended")
+            {
+                $writer->emptyTag("path", "id" => "way_${t}_$way_id", "d" => 
+                    ($t eq "normal_extended") ? 
+                        make_path($startnode, @$points, $endnode) : make_path($endnode, reverse(@$points), $startnode));
+            }
+        }
+
         # generate the start, middle and end paths needed for "smart linecaps".
         # The first and last way segment are split in the middle.
-        my $n = scalar(@$points) -1;
         my $midpoint_head = [ ($points->[0]->[0]+$points->[1]->[0])/2,
                              ($points->[0]->[1]+$points->[1]->[1])/2 ];
         my $midpoint_tail = [ ($points->[$n]->[0]+$points->[$n-1]->[0])/2,

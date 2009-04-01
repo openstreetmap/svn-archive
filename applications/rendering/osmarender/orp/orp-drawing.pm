@@ -401,8 +401,12 @@ sub draw_text_on_path
        $att = ($textAttenuation || '') if ($att eq '');
        $att = 99999999 if ($att eq '');
 
+    my $overflow = ($textnode->getAttribute("overflow") =~ /^1|yes|true$/);
+
     my $pathLength = sqrt(($sumLon*1000*$att)**2 + 
        ($sumLat*1000*$att*$projection)**2);
+
+    $pathLength *= 3 if ($overflow);
 
     my $fontsize;
     my $textLength = length($text);
@@ -432,8 +436,8 @@ sub draw_text_on_path
             { 'text' => $text, 
               'n0' => $nodes->[0], 
               'n1' => $nodes->[scalar @$nodes -1] }) if defined($bucket);
-
-        my $path = get_way_href($id,  ($reverse) ? 'reverse' : 'normal');
+        my $extended = ($overflow) ? "_extended" : "";
+        my $path = get_way_href($id,  ($reverse) ? 'reverse'.$extended : 'normal'.$extended);
         $writer->startTag("text", 
             copy_attributes_not_in_list($textnode, 
                 [ "startOffset","method","spacing","lengthAdjust","textLength" ]));

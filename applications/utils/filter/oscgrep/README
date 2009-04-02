@@ -1,0 +1,4 @@
+oscgrep.pl, written by Frederik Ramm <frederik@remote.org>, public domain.
+
+This program helps you filter out certain things from an .osc file.
+Use --help to read instructions.

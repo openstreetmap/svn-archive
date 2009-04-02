@@ -628,7 +628,10 @@ foreach my $node ($rules->find('//rules/defs/svg:svg')->get_nodelist)
 my $symbolsDir = get_variable("symbolsDir");
 if (defined($symbolsDir))
 {
-    $symbolsDir = File::Spec->catdir($Bin, '../stylesheets/', $symbolsDir);
+    # allow overriding symbolsDir with local directory - only recurse to global dir if local
+    # not found
+    $symbolsDir = File::Spec->catdir($Bin, '../stylesheets/', $symbolsDir) unless (-d $symbolsDir);
+
     # get refs, then convert to hash so we can get only unique values
     my %refs = map {$_, 1} map {$_->getNodeValue} $rules->find('/rules//symbol/@ref | /rules//areaSymbol/@ref')->get_nodelist;
     foreach my $file (keys %refs) 

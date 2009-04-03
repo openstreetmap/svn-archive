@@ -114,6 +114,11 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
     private IconToggleButton moveRouteNodeButton;
 
     /**
+     * IconToggleButton for moving route nodes, we use this field to show or hide the button.
+     */
+    private RoutingMenu menu;
+
+    /**
      * Reference for the plugin class (as if it were a singleton)
      */
     private static RoutingPlugin plugin;
@@ -132,7 +137,9 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 		routingDialog = new RoutingDialog();
         // Add routing layer
         routingLayer = new RoutingLayer(tr("Navigation"));
-        Main.main.menu.add(new RoutingMenu(tr("Routing")));
+        // Add menu
+        menu = new RoutingMenu(tr("Routing"));
+        Main.main.menu.add(menu);
         // Register this class as LayerChangeListener
         Layer.listeners.add(this);
         logger.debug("Finished loading plugin");
@@ -187,6 +194,8 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 			addRouteNodeButton.setVisible(false);
 			removeRouteNodeButton.setVisible(false);
 			moveRouteNodeButton.setVisible(false);
+			// Enable menu
+			menu.enableStartItem();
             newFrame.addToggleDialog(routingDialog);
         }
     }
@@ -208,6 +217,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 			addRouteNodeButton.setVisible(true);
 			removeRouteNodeButton.setVisible(true);
 			moveRouteNodeButton.setVisible(true);
+			menu.enableRestOfItems();
 			logger.debug("Added routing layer.");
 		}
 	}
@@ -222,6 +232,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 			addRouteNodeButton.setVisible(false);
 			removeRouteNodeButton.setVisible(false);
 			moveRouteNodeButton.setVisible(false);
+			menu.disableRestOfItems();
     		logger.debug("Removed routing layer.");
 		}
 	}

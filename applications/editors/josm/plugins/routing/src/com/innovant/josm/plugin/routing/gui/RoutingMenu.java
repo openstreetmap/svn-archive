@@ -59,6 +59,11 @@ public class RoutingMenu extends JMenu {
 	 */
 	private static final long serialVersionUID = 3559922048225708480L;
 
+	private JMenuItem startMI;
+	private JMenuItem reverseMI;
+	private JMenuItem clearMI;
+	private JMenu criteriaM;
+
 	/**
 	 * @param s
 	 */
@@ -70,8 +75,8 @@ public class RoutingMenu extends JMenu {
 		JMenuItem mi;
 		JMenu m;
 
-		mi = new JMenuItem(tr("Start routing"));
-		mi.addActionListener(new ActionListener() {
+		startMI = new JMenuItem(tr("Start routing"));
+		startMI.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(!routingLayer.isLayerAdded()) {
 					routingLayer.setLayerAdded();
@@ -79,12 +84,12 @@ public class RoutingMenu extends JMenu {
 				}
 			}
 		});
-		this.add(mi);
+		this.add(startMI);
 
 		this.addSeparator();
 		ButtonGroup group = new ButtonGroup();
 
-		m = new JMenu(tr("Criteria"));
+		criteriaM = new JMenu(tr("Criteria"));
 
 		JRadioButtonMenuItem rshorter = new JRadioButtonMenuItem(tr("Shortest"));
 		rshorter.setSelected(true);
@@ -109,10 +114,10 @@ public class RoutingMenu extends JMenu {
 
 		group.add(rshorter);
 		group.add(rfaster);
-		m.add(rshorter);
-		m.add(rfaster);
+		criteriaM.add(rshorter);
+		criteriaM.add(rfaster);
 
-		m.addSeparator();
+		criteriaM.addSeparator();
 		JCheckBoxMenuItem cbmi = new JCheckBoxMenuItem("Ignore oneways");
 		cbmi.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -124,21 +129,21 @@ public class RoutingMenu extends JMenu {
 				Main.map.repaint();
 			}
 		});
-		m.add(cbmi);
-		this.add(m);
+		criteriaM.add(cbmi);
+		this.add(criteriaM);
 
 		this.addSeparator();
-		mi = new JMenuItem(tr("Reverse route"));
-		mi.addActionListener(new ActionListener() {
+		reverseMI = new JMenuItem(tr("Reverse route"));
+		reverseMI.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				routingModel.reverseNodes();
 				Main.map.repaint();
 			}
 		});
-		this.add(mi);
+		this.add(reverseMI);
 
-		mi = new JMenuItem(tr("Clear route"));
-		mi.addActionListener(new ActionListener() {
+		clearMI = new JMenuItem(tr("Clear route"));
+		clearMI.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Reset routing nodes and paths
 				routingModel.reset();
@@ -146,9 +151,32 @@ public class RoutingMenu extends JMenu {
 				Main.map.repaint();
 			}
 		});
-		this.add(mi);
+		this.add(clearMI);
 
+		// Initially disabled
+		disableAllItems();
 	}
 
+	public void disableAllItems() {
+		startMI.setEnabled(false);
+		reverseMI.setEnabled(false);
+		clearMI.setEnabled(false);
+		criteriaM.setEnabled(false);
+	}
 
+	public void enableStartItem() {
+		startMI.setEnabled(true);
+	}
+
+	public void enableRestOfItems() {
+		reverseMI.setEnabled(true);
+		clearMI.setEnabled(true);
+		criteriaM.setEnabled(true);
+	}
+
+	public void disableRestOfItems() {
+		reverseMI.setEnabled(false);
+		clearMI.setEnabled(false);
+		criteriaM.setEnabled(false);
+	}
 }

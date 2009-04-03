@@ -147,6 +147,7 @@ class ParseNaptan(ParseXML):
         'Crossing': '',
         'Indicator': '',            # For when the ref-parsing code below fails
         'Notes': '',
+        'CompassPoint': 'naptan:Bearing',   # Slightly hacky
         'AdministrativeAreaRef': '',
         'PlusbusZoneRef': '',
         # StopArea tagging begins here
@@ -254,6 +255,8 @@ class ParseNaptan(ParseXML):
                 # We don't yet support Hail and Ride or 'Flexible' stop point areas.
                 if bst == 'HAR' or bst == 'FLX':
                     self.cancelfeature()
+                elif bst == 'CUS':
+                    self.feature.tags['naptan:BusStopType'] = 'CUS'
             
             elif node == 'StopAreaRef':
                 self.addtomap(elem.text, self.feature, self.stopareamap)

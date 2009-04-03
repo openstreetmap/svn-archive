@@ -9,7 +9,7 @@ file.close()
 
 for line in sys.stdin:
     line = line.partition(': ')
-    text = text.replace(line[0], line[2].trim())
+    text = text.replace(line[0], line[2].strip())
 
 file = open(sys.argv[1], 'w')
 file.write(text)

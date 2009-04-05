@@ -182,13 +182,15 @@ class addrHandler(sax.ContentHandler):
 # The class can then convert them to a geometry array (appendCoordinates)
 #
 ##
-class GeomParser:
-    coords=[]
-    cstring=None
-    string=None
-    waiting=False
-    waitingCoord=False
-    
+class GeomParser:    
+
+    def __init__(self):
+         self.coords=[]
+         self.cstring=None
+         self.string=None
+         self.waiting=False
+         self.waitingCoord=False
+         
     def characters(self,string):
         string = unicode(string)
         if self.waiting == True:
@@ -247,28 +249,24 @@ class Way(GeomParser):
     #that make up this way.
     #Note: Multiple ways can share nodes.
     
-    #The XML celement for the way.
-    way_element=None
-    string=None
-    placeNone=None
-    outOfBounds=False
-    completed=False
-    boundary=None
+    #The XML celement for the way.    
     attribution = "GeoBase®"
     source = "Geobase_Import_2009"
     
     def __init__(self,id,type,boundary,nameHash):
+          GeomParser.__init__(self)
           self.nodeid=id         
           self.boundary=boundary
           self.nameHash=nameHash
           self.osm_nodes=[]
-          way_element=None
-          string=None
-          completed=False
+          self.way_element=None
+          self.string=None
+          self.completed=False
           self.tags={}
           self.way_element = ET.Element("way",visible="true",id=str(self.nodeid))
           self.nodeid-=1
           self.placeName=None
+          self.outOfBounds=False
           
     def isCompleted(self):
         return self.completed
@@ -382,12 +380,12 @@ class Way(GeomParser):
                         self.tags['alt_name:fr'].add(text)
                   self.tags['geobase:routeName4:fr']=text
 
-        if name == 'nrn:RoadSegment' or name=='nrn:FerrySegment':
+        if name == 'nrn:RoadSegment' or name=='nrn:FerryConnectionSegment':
                self.completeWay()
         
 
     def completeWay(self):
-
+          self.completed=True  
           #Post Processing.
           #Exclude nodes that are not in the bounding region.
           shape=LineString(self.coords)
@@ -457,8 +455,8 @@ class Way(GeomParser):
           self.way_element.append(ET.Element('tag',k='source',v=self.source))
           self.nid=self.tags['geobase:uuid']
           self.tags = None
-          self.completed=True  
 
+          
     def localize(self):
         if self.dataset == 'Newfoundland and Labrador':
             pass
@@ -649,6 +647,7 @@ class Way(GeomParser):
           for nd in self.way_element.getiterator('nd'):
                 if nd.get('ref')==nodeToReplace.get('id'):
                       #found
+                      print "Replacing node " + nd.get('ref') + ' with ' +nodeToKeep.get('id')
                       nd.set('ref',nodeToKeep.get('id'))
                       #Remote from the list
                       self.osm_nodes.remove(nodeToReplace)
@@ -666,33 +665,36 @@ class Way(GeomParser):
 
 
 class Junction(GeomParser):
-      completed=False
-      intersection=False
-      skipped=True
-      boundary=None
       def __init__(self,boundary,nodeid):
+            GeomParser.__init__(self)
             self.boundary=boundary
             self.nodeid=nodeid
+            self.completed=False
+            self.skipped=True
+            self.intersection=False
+            
       def startElement(self,name,attributes):
             if  name == 'gml:coordinates':
                   self.string = None
                   self.waitingCoord = True                  
             else:
                   self.waiting=True
+                  self.string=None
 
       def endElement(self,name):
             if name == 'gml:coordinates':
-                  self.appendCoordinates()
-                  self.waitingCoord=False
+                 self.appendCoordinates()
+                 self.waitingCoord=False
             elif name=='nrn:junctionType':
-                  if self.string=='Intersection' or self.string=='Ferry':
-                        self.intersection=True                               
+                 if self.string=='Intersection' or self.string=='Ferry':
+                    self.intersection=True                               
             elif name == 'nrn:Junction':
-                  self.completed=True
-                  coord_t=(self.startLon(),self.startLat())
-                  shape=Point(coord_t[0],coord_t[1])
-                  if self.boundary==None or  self.boundary.intersects(shape):
-                        self.skipped=False                 
+                 self.completed=True
+                 coord_t=(self.startLon(),self.startLat())
+                 shape=Point(coord_t[0],coord_t[1])
+                 if self.boundary==None or  self.boundary.intersects(shape):
+                      self.skipped=False
+
             self.waiting=False
             self.string=None
                   
@@ -708,7 +710,6 @@ class geomHandler(sax.ContentHandler):
   count = 0
   boundary=None  
   current_way=None  
-  junctionPoint = None
   nodeid = -1000
   junctionList=[]
   currentJunction=None
@@ -746,7 +747,6 @@ class geomHandler(sax.ContentHandler):
       
     # A junction of two or more roads, a dead end road, a ferry route and a road, or the edge of a road on a dataset boundary
     if name == "nrn:Junction":
-      self.junctionPoint=True
       self.currentJunction=Junction(self.boundary,self.nodeid)
       self.intersection=False
       self.tags={}
@@ -775,7 +775,6 @@ class geomHandler(sax.ContentHandler):
 
   def endElement(self, name):
     name = unicode(name)
-    
     if self.current_way <> None:
         self.current_way.endElement(name)
         if self.current_way.isCompleted():
@@ -785,7 +784,7 @@ class geomHandler(sax.ContentHandler):
                 for c in self.current_way.coords:
                       
                       key=str(c[0])+'_'+str(c[1])
-                      if key in self.way_index:
+                      if self.way_index.has_key(key):
                             self.way_index[key].append(self.current_way)
                       else:
                             self.way_index[key]=[self.current_way]

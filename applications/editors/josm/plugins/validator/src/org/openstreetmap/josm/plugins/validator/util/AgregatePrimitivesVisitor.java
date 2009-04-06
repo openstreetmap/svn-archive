@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 
 import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.data.osm.visitor.AbstractVisitor;
 
 /**
  * A visitor that aggregates all primitives it visits.
@@ -14,7 +14,7 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
  *
  * @author frsantos
  */
-public class AgregatePrimitivesVisitor implements Visitor
+public class AgregatePrimitivesVisitor extends AbstractVisitor
 {
     /** Aggregated data */
     Collection<OsmPrimitive> aggregatedData;

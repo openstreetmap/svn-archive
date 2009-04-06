@@ -12,7 +12,7 @@ import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.data.osm.visitor.AbstractVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -129,7 +129,7 @@ public class GridLayer extends Layer
     /**
      * Visitor that highlights all cells the selected primitives go through
      */
-    class HighlightCellVisitor implements Visitor
+    class HighlightCellVisitor extends AbstractVisitor
     {
         /** The MapView */
         private final MapView mv;

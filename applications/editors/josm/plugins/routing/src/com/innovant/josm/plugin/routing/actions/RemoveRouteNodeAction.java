@@ -66,14 +66,6 @@ public class RemoveRouteNodeAction extends MapMode {
 	 * Logger.
 	 */
 	static Logger logger = Logger.getLogger(RoutingLayer.class);
-    /**
-     * Routing Model.
-     */
-	private RoutingModel routingModel;
-	/**
-	 * Routing Layer.
-	 */
-    private RoutingLayer routingLayer;
 	/**
 	 * Routing Dialog.
 	 */
@@ -84,8 +76,6 @@ public class RemoveRouteNodeAction extends MapMode {
 		super(tr("Routing"), "remove",
 				tr("Remove route nodes"),
 				mapFrame, ImageProvider.getCursor("normal", "delete"));
-        this.routingLayer = RoutingPlugin.getInstance().getRoutingLayer();
-        this.routingModel = routingLayer.getRoutingModel();
         this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
 	}
 
@@ -102,28 +92,32 @@ public class RemoveRouteNodeAction extends MapMode {
     @Override public void mouseClicked(MouseEvent e) {
         // If left button is clicked
         if (e.getButton() == MouseEvent.BUTTON1) {
-        	// Search for the nearest node in the list
-        	List<Node> nl = routingModel.getSelectedNodes();
-        	int index = -1;
-        	double dmax = REMOVE_SQR_RADIUS; // maximum distance, in pixels
-           	for (int i=0;i<nl.size();i++) {
-           		Node node = nl.get(i);
-        		double d = Main.map.mapView.getPoint(node.eastNorth).distanceSq(e.getPoint());
-        		if (d < dmax) {
-        			dmax = d;
-        			index = i;
-        		}
+        	if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+        		RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+        		RoutingModel routingModel = layer.getRoutingModel();
+            	// Search for the nearest node in the list
+            	List<Node> nl = routingModel.getSelectedNodes();
+            	int index = -1;
+            	double dmax = REMOVE_SQR_RADIUS; // maximum distance, in pixels
+               	for (int i=0;i<nl.size();i++) {
+               		Node node = nl.get(i);
+            		double d = Main.map.mapView.getPoint(node.eastNorth).distanceSq(e.getPoint());
+            		if (d < dmax) {
+            			dmax = d;
+            			index = i;
+            		}
+            	}
+               	// If found a close node, remove it and recalculate route
+                if (index >= 0) {
+                	// Remove node
+                	logger.debug("Removing node " + nl.get(index));
+                    routingModel.removeNode(index);
+            		routingDialog.removeNode(index);
+                    Main.map.repaint();
+                } else {
+                	logger.debug("Can't find a node to remove.");
+                }
         	}
-           	// If found a close node, remove it and recalculate route
-            if (index >= 0) {
-            	// Remove node
-            	logger.debug("Removing node " + nl.get(index));
-                routingModel.removeNode(index);
-        		routingDialog.removeNode(index);
-                Main.map.repaint();
-            } else {
-            	logger.debug("Can't find a node to remove.");
-            }
         }
     }
 

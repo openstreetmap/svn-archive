@@ -30,18 +30,15 @@ package com.innovant.josm.plugin.routing.actions;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 import com.innovant.josm.plugin.routing.RoutingLayer;
-import com.innovant.josm.plugin.routing.RoutingModel;
 import com.innovant.josm.plugin.routing.RoutingPlugin;
 import com.innovant.josm.plugin.routing.gui.RoutingDialog;
 
@@ -61,14 +58,6 @@ public class AddRouteNodeAction extends MapMode {
 	 * Logger.
 	 */
 	static Logger logger = Logger.getLogger(AddRouteNodeAction.class);
-    /**
-     * Routing Model.
-     */
-	private RoutingModel routingModel;
-	/**
-	 * Routing Layer.
-	 */
-    private RoutingLayer routingLayer;
 	/**
 	 * Routing Dialog.
 	 */
@@ -83,8 +72,6 @@ public class AddRouteNodeAction extends MapMode {
 		super(tr("Routing"), "add",
 				tr("Click to add route nodes."),
 				mapFrame, ImageProvider.getCursor("crosshair", null));
-        this.routingLayer = RoutingPlugin.getInstance().getRoutingLayer();
-        this.routingModel = routingLayer.getRoutingModel();
         this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
 	}
 
@@ -103,29 +90,17 @@ public class AddRouteNodeAction extends MapMode {
         if (e.getButton() == MouseEvent.BUTTON1) {
         	// Search for nearest highway node
         	Node node = null;
-        	List<WaySegment> wsl = Main.map.mapView.getNearestWaySegments(e.getPoint());
-        	for (WaySegment ws:wsl) {
-        		if (ws.way.get("highway")!=null) {
-        			// If waysegment belongs to a highway compare the distance from
-        			// both waysegment nodes to the point clicked and keep the nearest one
-        			Node node0 = ws.way.nodes.get(ws.lowerIndex);
-        			Node node1 = ws.way.nodes.get(ws.lowerIndex + 1);
-        			double d0 = Main.map.mapView.getPoint(node0.eastNorth).distanceSq(e.getPoint());
-        			double d1 = Main.map.mapView.getPoint(node1.eastNorth).distanceSq(e.getPoint());
-        			if (d0<d1)
-        				node = node0;
-        			else
-        				node = node1;
-        			break;
-        		}
+        	if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+        		RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+        		node = layer.getNearestHighwayNode(e.getPoint());
+                if(node == null) {
+                	logger.debug("no selected node");
+                    return;
+                }
+                logger.debug("selected node " + node);
+                layer.getRoutingModel().addNode(node);
+                routingDialog.addNode(node);
         	}
-            logger.debug("selected node " + node);
-            if(node == null) {
-            	logger.debug("no selected node");
-                return;
-            }
-            routingModel.addNode(node);
-            routingDialog.addNode(node.id+" ["+node.coor.toDisplayString()+"]");
         }
         Main.map.repaint();
     }

@@ -37,7 +37,6 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -70,16 +69,6 @@ public class MoveRouteNodeAction extends MapMode {
 	static Logger logger = Logger.getLogger(RoutingLayer.class);
 
 	/**
-     * Routing Model.
-     */
-	private RoutingModel routingModel;
-
-	/**
-	 * Routing Layer.
-	 */
-    private RoutingLayer routingLayer;
-
-	/**
 	 * Routing Dialog.
 	 */
     private RoutingDialog routingDialog;
@@ -98,8 +87,6 @@ public class MoveRouteNodeAction extends MapMode {
 		super(tr("Routing"), "move",
 				tr("Click and drag to move route nodes."),
 				mapFrame, ImageProvider.getCursor("normal", "move"));
-        this.routingLayer = RoutingPlugin.getInstance().getRoutingLayer();
-        this.routingModel = routingLayer.getRoutingModel();
         this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
 	}
 
@@ -116,20 +103,24 @@ public class MoveRouteNodeAction extends MapMode {
     @Override public void mousePressed(MouseEvent e) {
         // If left button is pressed
         if (e.getButton() == MouseEvent.BUTTON1) {
-        	// Search for the nearest node in the list
-        	List<Node> nl = routingModel.getSelectedNodes();
-        	index = -1;
-        	double dmax = DRAG_SQR_RADIUS; // maximum distance, in pixels
-           	for (int i=0;i<nl.size();i++) {
-           		Node node = nl.get(i);
-        		double d = Main.map.mapView.getPoint(node.eastNorth).distanceSq(e.getPoint());
-        		if (d < dmax) {
-        			dmax = d;
-        			index = i;
-        		}
+        	if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+        		RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+        		RoutingModel routingModel = layer.getRoutingModel();
+            	// Search for the nearest node in the list
+            	List<Node> nl = routingModel.getSelectedNodes();
+            	index = -1;
+            	double dmax = DRAG_SQR_RADIUS; // maximum distance, in pixels
+               	for (int i=0;i<nl.size();i++) {
+               		Node node = nl.get(i);
+            		double d = Main.map.mapView.getPoint(node.eastNorth).distanceSq(e.getPoint());
+            		if (d < dmax) {
+            			dmax = d;
+            			index = i;
+            		}
+            	}
+               	if (index>=0)
+                    logger.debug("Moved from node " + nl.get(index));
         	}
-           	if (index>=0)
-                logger.debug("Moved from node " + nl.get(index));
         }
     }
 
@@ -144,33 +135,22 @@ public class MoveRouteNodeAction extends MapMode {
     }
 
     private void searchAndReplaceNode(Point point) {
-    	// Search for nearest highway node
-    	Node node = null;
-    	List<WaySegment> wsl = Main.map.mapView.getNearestWaySegments(point);
-    	for (WaySegment ws:wsl) {
-    		if (ws.way.get("highway")!=null) {
-    			// If waysegment belongs to a highway compare the distance from
-    			// both waysegment nodes to the point clicked and keep the nearest one
-    			Node node0 = ws.way.nodes.get(ws.lowerIndex);
-    			Node node1 = ws.way.nodes.get(ws.lowerIndex + 1);
-    			double d0 = Main.map.mapView.getPoint(node0.eastNorth).distanceSq(point);
-    			double d1 = Main.map.mapView.getPoint(node1.eastNorth).distanceSq(point);
-    			if (d0<d1)
-    				node = node0;
-    			else
-    				node = node1;
-    			break;
-    		}
+    	if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+    		RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+    		RoutingModel routingModel = layer.getRoutingModel();
+        	// Search for nearest highway node
+        	Node node = null;
+    		node = layer.getNearestHighwayNode(point);
+            if (node == null) {
+            	logger.debug("Didn't found a close node to move to.");
+                return;
+            }
+            logger.debug("Moved to node " + node);
+            routingModel.removeNode(index);
+    		routingDialog.removeNode(index);
+            routingModel.insertNode(index, node);
+    		routingDialog.insertNode(index, node);
+            Main.map.repaint();
     	}
-        if (node == null) {
-        	logger.debug("Didn't found a close node to move to.");
-            return;
-        }
-        logger.debug("Moved to node " + node);
-        routingModel.removeNode(index);
-		routingDialog.removeNode(index);
-        routingModel.insertNode(index, node);
-		routingDialog.insertNode(index,node.id+" ["+node.coor.toDisplayString()+"]");
-        Main.map.repaint();
     }
 }

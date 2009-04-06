@@ -36,7 +36,9 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
@@ -46,11 +48,15 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -81,27 +87,33 @@ public class RoutingLayer extends Layer {
     private RoutingModel routingModel;
 
     /**
-     * Icon Start Middle End
+     * Start, Middle and End icons
      */
     private Icon startIcon,middleIcon,endIcon;
 
     /**
-     * Flag that manager activation layer
+     * Associated OSM layer
      */
-    private boolean layerAdded = false;
+    private OsmDataLayer dataLayer;
+
+//    /**
+//     * Flag that manager activation layer
+//     */
+//    private boolean layerAdded = false;
 
     /**
      * Default constructor
      * @param name Layer name.
      */
-	public RoutingLayer(String name) {
+	public RoutingLayer(String name, OsmDataLayer dataLayer) {
 		super(name);
-		logger.debug("Init Routing Layer");
+		logger.debug("Creating Routing Layer...");
         if(startIcon == null) startIcon = ImageProvider.get("routing", "startflag");
         if(middleIcon == null) middleIcon = ImageProvider.get("routing", "middleflag");
         if(endIcon == null) endIcon = ImageProvider.get("routing", "endflag");
-        this.routingModel = new RoutingModel();
-        logger.debug("End init Routing Layer");
+        this.dataLayer = dataLayer;
+        this.routingModel = new RoutingModel(dataLayer.data);
+        logger.debug("Routing Layer created.");
 	}
 
 	/**
@@ -113,20 +125,54 @@ public class RoutingLayer extends Layer {
 	}
 
 	/**
-	 * Check if layer is load.
-	 * @return <code>true</code> Layer load.
-	 *         <code>false</code> Layer don't load.
+	 * Gets associated data layer
+	 * @return OsmDataLayer associated to the RoutingLayer
 	 */
-	public boolean isLayerAdded() {
-		return layerAdded;
+	public OsmDataLayer getDataLayer() {
+		return dataLayer;
 	}
 
 	/**
-	 * Setter layer active.
+	 * Gets nearest node belonging to a highway tagged way
+	 * @param p Point on the screen
+	 * @return The nearest highway node, in the range of the snap distance
 	 */
-	public void setLayerAdded() {
-		layerAdded = true;
-	}
+    public final Node getNearestHighwayNode(Point p) {
+    	Node nearest = null;
+    	double minDist = 0;
+        for (Way w : dataLayer.data.ways) {
+            if (w.deleted || w.incomplete || w.get("highway")==null) continue;
+            for (Node n : w.nodes) {
+                if (n.deleted || n.incomplete) continue;
+
+                Point P = Main.map.mapView.getPoint(n.eastNorth);
+                double dist = p.distanceSq(P);
+                if (dist < NavigatableComponent.snapDistance) {
+                	if ((nearest == null) || (dist < minDist)) {
+                		nearest = n;
+                		minDist = dist;
+                	}
+                }
+            }
+        }
+        return nearest;
+    }
+
+//	/**
+//	 * Check if layer is load.
+//	 * @return <code>true</code> Layer load.
+//	 *         <code>false</code> Layer don't load.
+//	 */
+//	public boolean isLayerAdded() {
+//		return layerAdded;
+//	}
+//
+//	/**
+//	 * Setter layer active.
+//	 */
+//	public void setLayerAdded() {
+//		layerAdded = true;
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -282,7 +328,7 @@ public class RoutingLayer extends Layer {
 	@Override
     public void destroy() {
 		routingModel.reset();
-		layerAdded = false;
+//		layerAdded = false;
 	}
 
     /**

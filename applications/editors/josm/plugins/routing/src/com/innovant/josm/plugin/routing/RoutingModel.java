@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 
 import com.innovant.josm.jrt.core.RoutingGraph;
@@ -69,9 +70,9 @@ public class RoutingModel {
     /**
      * Default Constructor.
      */
-	public RoutingModel() {
+	public RoutingModel(DataSet data) {
         nodes = new ArrayList<Node>();
-        routingGraph = new RoutingGraph();
+        routingGraph = new RoutingGraph(data);
 	}
 
     /**

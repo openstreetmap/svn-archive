@@ -12,7 +12,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.data.osm.visitor.AbstractVisitor;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -24,7 +24,7 @@ import org.openstreetmap.josm.tools.GBC;
  *
  * @author frsantos
  */
-public class Test implements Visitor
+public class Test extends AbstractVisitor
 {
     /** Name of the test */
     protected String name;

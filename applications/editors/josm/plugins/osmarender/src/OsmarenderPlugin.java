@@ -73,7 +73,11 @@ public class OsmarenderPlugin extends Plugin {
             String firefox = Main.pref.get("osmarender.firefox", "firefox");
             try {
                 // write to plugin dir
-                OsmWriter.output(new FileOutputStream(getPluginDir()+File.separator+"data.osm"), new OsmWriter.All(fromDataSet, true));
+                OsmWriter w = new OsmWriter(new PrintWriter(new FileOutputStream(getPluginDir()+File.separator+"data.osm")), false, fromDataSet.version);
+                w.header();
+                w.writeDataSources(fromDataSet);
+                w.writeContent(fromDataSet);
+                w.footer();
 
                 // get the exec line
                 String exec = firefox;

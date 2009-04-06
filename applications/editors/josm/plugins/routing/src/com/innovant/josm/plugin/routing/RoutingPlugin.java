@@ -33,12 +33,16 @@ package com.innovant.josm.plugin.routing;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -64,11 +68,10 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 	 */
 	static Logger logger = Logger.getLogger(RoutingPlugin.class);
 
-	/**
-	 * Displays the layer menu when right clicking on the layer name, and manages
-	 * how to paint the layer.
-	 */
-    private RoutingLayer routingLayer;
+    /**
+     * The list of routing layers
+     */
+    private ArrayList<RoutingLayer> layers;
 
     /**
      * The side dialog where nodes are listed
@@ -135,8 +138,8 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 		preferenceSettings=new RoutingPreferenceDialog();
 		// Create side dialog
 		routingDialog = new RoutingDialog();
-        // Add routing layer
-        routingLayer = new RoutingLayer(tr("Navigation"));
+		// Initialize layers list
+		layers = new ArrayList<RoutingLayer>();
         // Add menu
         menu = new RoutingMenu(tr("Routing"));
         Main.main.menu.add(menu);
@@ -154,19 +157,18 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 	}
 
 	/**
-	 * Get the routing layer
-	 * @return The instance of the routing layer
-	 */
-	public RoutingLayer getRoutingLayer() {
-		return routingLayer;
-	}
-
-	/**
 	 * Get the routing side dialog
 	 * @return The instance of the routing side dialog
 	 */
 	public RoutingDialog getRoutingDialog() {
 		return routingDialog;
+	}
+
+	public void addLayer() {
+		OsmDataLayer osmLayer = Main.main.editLayer();
+		RoutingLayer layer = new RoutingLayer(tr("Routing") + " [" + osmLayer.name + "]", osmLayer);
+		layers.add(layer);
+		Main.main.addLayer(layer);
 	}
 
 	/*
@@ -180,7 +182,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
         	addRouteNodeAction = new AddRouteNodeAction(newFrame);
         	removeRouteNodeAction = new RemoveRouteNodeAction(newFrame);
         	moveRouteNodeAction = new MoveRouteNodeAction(newFrame);
-        	// Create plugin buttons and add them to the tool bar
+        	// Create plugin buttons and add them to the toolbar
         	addRouteNodeButton = new IconToggleButton(addRouteNodeAction);
         	removeRouteNodeButton = new IconToggleButton(removeRouteNodeAction);
         	moveRouteNodeButton = new IconToggleButton(moveRouteNodeAction);
@@ -204,7 +206,9 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
      * (non-Javadoc)
      * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#activeLayerChange(org.openstreetmap.josm.gui.layer.Layer, org.openstreetmap.josm.gui.layer.Layer)
      */
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {}
+	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+		routingDialog.refresh();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -213,11 +217,14 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 	public void layerAdded(Layer newLayer) {
 		// Add button(s) to the tool bar when the routing layer is added
 		if (newLayer instanceof RoutingLayer) {
-			newLayer.name=tr("Routing")+" ["+Main.map.mapView.getActiveLayer().name+"]";
 			addRouteNodeButton.setVisible(true);
 			removeRouteNodeButton.setVisible(true);
 			moveRouteNodeButton.setVisible(true);
 			menu.enableRestOfItems();
+			// Set layer on top and select layer, also refresh toggleDialog to reflect selection
+			Main.map.mapView.moveLayer(newLayer, 0);
+//			Main.map.mapView.setActiveLayer(newLayer);
+//			Main.map.toggleDialogs.repaint();
 			logger.debug("Added routing layer.");
 		}
 	}
@@ -227,14 +234,33 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 	 * @see org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener#layerRemoved(org.openstreetmap.josm.gui.layer.Layer)
 	 */
 	public void layerRemoved(Layer oldLayer) {
-		// Remove button(s) from the tool bar when the routing layer is removed
-		if (oldLayer instanceof RoutingLayer) {
+		if ((oldLayer instanceof RoutingLayer) & (layers.size()==1)) {
+			// Remove button(s) from the tool bar when the last routing layer is removed
 			addRouteNodeButton.setVisible(false);
 			removeRouteNodeButton.setVisible(false);
 			moveRouteNodeButton.setVisible(false);
 			menu.disableRestOfItems();
+			layers.remove(oldLayer);
     		logger.debug("Removed routing layer.");
+		} else if (oldLayer instanceof OsmDataLayer) {
+			// Remove all associated routing layers
+			// Convert to Array to prevent ConcurrentModificationException when removing layers from ArrayList
+			// FIXME: can't remove associated routing layers without triggering exceptions in some cases
+			RoutingLayer[] layersArray = layers.toArray(new RoutingLayer[0]);
+			for (int i=0;i<layersArray.length;i++) {
+				if (layersArray[i].getDataLayer().equals(oldLayer)) {
+					// Move layer to the top
+					Main.map.mapView.moveLayer(layersArray[i], 0);
+					try {
+						// Remove layer
+						Main.map.mapView.removeLayer(layersArray[i]);
+					} catch (IllegalArgumentException e) {
+					}
+				}
+			}
 		}
+		// Reload RoutingDialog table model
+		routingDialog.refresh();
 	}
 
 	/* (non-Javadoc)

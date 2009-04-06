@@ -37,7 +37,7 @@ import org.jgrapht.alg.BellmanFordShortestPath;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.AsUndirectedGraph;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -73,6 +73,11 @@ public class RoutingGraph {
 	 */
 	private RouteType routeType;
 
+    /**
+     * Associated Osm DataSet
+     */
+	private DataSet data;
+
 	/**
 	 * Logger.
 	 */
@@ -100,9 +105,10 @@ public class RoutingGraph {
 	/**
 	 * Default Constructor.
 	 */
-	public RoutingGraph() {
+	public RoutingGraph(DataSet data) {
 		this.graphState = false;
 		this.graph = null;
+		this.data = data;
 		routeType=RouteType.SHORTEST;
 		routingProfile=new RoutingProfile("default");
 		routingProfile.setOnewayUse(true); // Don't ignore oneways by default
@@ -117,11 +123,11 @@ public class RoutingGraph {
 	 */
 	public void createGraph() {
 
-		logger.debug("Init Create Graph");
+		logger.debug("Creating Graph...");
 		graph = new DirectedWeightedMultigraph<Node, OsmEdge>(OsmEdge.class);
 
 		// iterate all ways and segments for all nodes:
-		for (Way way : Main.ds.ways) {
+		for (Way way : data.ways) {
 			if (way != null && !way.deleted && this.isvalidWay(way)) {
 				Node from = null;
 				for (Node to : way.nodes) {

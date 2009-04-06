@@ -40,8 +40,13 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.Shortcut;
+
+import com.innovant.josm.plugin.routing.RoutingLayer;
+import com.innovant.josm.plugin.routing.RoutingModel;
 
 
 /**
@@ -118,8 +123,8 @@ public class RoutingDialog extends ToggleDialog {
 	 * Add item to the list of nodes
 	 * @param obj
 	 */
-	public void addNode(Object txt) {
-		model.addElement(txt);
+	public void addNode(Node n) {
+		model.addElement(n.id+" ["+n.coor.toDisplayString()+"]");
 	}
 
 	/**
@@ -127,8 +132,8 @@ public class RoutingDialog extends ToggleDialog {
 	 * @param index
 	 * @param obj
 	 */
-	public void insertNode(int index, Object txt) {
-		model.insertElementAt(txt, index);
+	public void insertNode(int index, Node n) {
+		model.insertElementAt(n.id+" ["+n.coor.toDisplayString()+"]", index);
 	}
 
 	/**
@@ -138,4 +143,14 @@ public class RoutingDialog extends ToggleDialog {
 		model.clear();
 	}
 
+	public void refresh() {
+		clearNodes();
+    	if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+    		RoutingLayer routingLayer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+    		RoutingModel routingModel = routingLayer.getRoutingModel();
+    		for (Node n : routingModel.getSelectedNodes()) {
+    			addNode(n);
+    		}
+    	}
+	}
 }

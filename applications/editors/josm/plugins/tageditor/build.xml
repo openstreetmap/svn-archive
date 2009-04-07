@@ -9,6 +9,17 @@
     <property name="ant.build.javac.target" value="1.5"/>
 		
     <target name="init">
+    	<!-- make sure we increment the build number ... -->
+    	<buildnumber file="build.number" />	
+    	
+    	<!-- ... and check it back in -->
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="commit"/>
+        	<arg value="--message"/>
+            <arg value="inc build number"/>
+            <arg value="build.number"/>
+		</exec>
         <mkdir dir="${plugin.build.dir}"/>
     </target>
     <target name="compile" depends="init">
@@ -40,11 +51,13 @@
         </jar>
     </target>
     <target name="revision">
+    	
+    	<!-- extract the SVN revision information for file build.number -->
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
             <arg value="--xml"/>
-            <arg value="."/>
+            <arg value="build.number"/>
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
@@ -62,4 +75,15 @@
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
+	
+	<target name="commit">
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="commit"/>
+        	<arg value="--message"/>
+            <arg value="manual build"/>
+            <arg value="../../dist/tageditor.jar"/>
+		</exec>
+	</target>
+	
 </project>

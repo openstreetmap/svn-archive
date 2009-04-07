@@ -88,10 +88,7 @@ public class TagEditorModel extends AbstractTableModel {
 
 	@Override public Object getValueAt(int rowIndex, int columnIndex) {
 		if (rowIndex >= getRowCount()) {
-			return null; 
-		}
-		if (columnIndex >= getColumnCount()) {
-			return null;
+			throw new IndexOutOfBoundsException("unexpected rowIndex: rowIndex=" + rowIndex);
 		}
 		
 		TagModel tag = tags.get(rowIndex);
@@ -103,6 +100,7 @@ public class TagEditorModel extends AbstractTableModel {
 			throw new IndexOutOfBoundsException("unexpected columnIndex: columnIndex=" + columnIndex);
 		}		
     }
+	
 	
 	/**
 	 * removes all tags in the model 
@@ -532,5 +530,22 @@ public class TagEditorModel extends AbstractTableModel {
 	
 	public void highlightCurrentPreset() {
 		fireTableDataChanged();
+	}
+	
+	
+	public void updateTagName(TagModel tag, String newName) {
+		String oldName = tag.getName();
+		tag.setName(newName);
+		if (! newName.equals(oldName)) {
+			setDirty(true);
+		}
+	}
+	
+	public void updateTagValue(TagModel tag, String newValue) {
+		String oldValue = tag.getValue();
+		tag.setValue(newValue);
+		if (! newValue.equals(oldValue)) {
+			setDirty(true);
+		}
 	}
 }

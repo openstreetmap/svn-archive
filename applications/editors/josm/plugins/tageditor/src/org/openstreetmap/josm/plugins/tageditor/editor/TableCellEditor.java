@@ -41,6 +41,7 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 	/** user input is matched against this list of auto completion items */
 	private AutoCompletionList autoCompletionList = null;
 	
+
 	/**
 	 * constructor 
 	 */
@@ -127,7 +128,6 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 			logger.log(Level.WARNING, "failed to initialize auto completion list with standard values", e);
 		}
 		
-		logger.info("acCache=" + acCache);
 		for (String value : acCache.getValues(forKey)) {
 			autoCompletionList.add(
 					new AutoCompletionListItem(value, AutoCompletionItemPritority.IS_IN_DATASET)
@@ -181,17 +181,7 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 		
 	@Override 
 	public Object getCellEditorValue() {
-		String value = "";
-		if (currentColumn == 0) {
-			currentTag.setName(editor.getText());
-		} else if (currentColumn == 1){
-			if (currentTag.getValueCount() > 1 && ! editor.getText().equals("")) {
-				currentTag.setValue(editor.getText());
-			} else if (currentTag.getValueCount() <= 1) {
-				currentTag.setValue(editor.getText());
-			}
-		}
-	    return value;
+		return editor.getText();
     }
 
 	
@@ -203,9 +193,18 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 
 	@Override
 	public boolean stopCellEditing() {
-		boolean ret = super.stopCellEditing();
-		return ret; 
 		
+		if (currentColumn == 0) {
+			currentTag.setName(editor.getText());
+		} else if (currentColumn == 1){
+			if (currentTag.getValueCount() > 1 && ! editor.getText().equals("")) {
+				currentTag.setValue(editor.getText());
+			} else if (currentTag.getValueCount() <= 1) {
+				currentTag.setValue(editor.getText());
+			}
+		}
+	    
+		return super.stopCellEditing(); 
 	}
 
 	/**
@@ -229,6 +228,7 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 	public void setAutoCompletionCache(AutoCompletionCache acCache) {
 		this.acCache = acCache;
 	}
+	
 
 	
 	@Override

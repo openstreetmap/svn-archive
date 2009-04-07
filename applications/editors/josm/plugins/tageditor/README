@@ -4,7 +4,7 @@ README
 The TagEditor plugin provides an alternative to the built-in dialogs
 for editing tags in JOSM.
 
-It's main features are:
+Its main features are:
 - can be launched from the "Edit" menu or using the shortcut 'T' 
   (mouseless operation)
 

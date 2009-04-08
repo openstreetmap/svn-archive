@@ -37,7 +37,7 @@
 	<property name="plugin.class"           value="fully.qualified.name.of.your.PluginClass"/>
 	<property name="plugin.description"     value="A Short description of your plugin (one line, to be displayed in the JOSMs plugin configuration dialog)"/>
 	<property name="plugin.doc.url"         value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/YourPlugin"/>
-	<property name="plugin.main.version"    value="0.1"/>	
+	<property name="plugin.main.version"    value="1"/>	
     <property name="plugin.jar.name"        value="${ant.project.name}.jar"/>
 	
     

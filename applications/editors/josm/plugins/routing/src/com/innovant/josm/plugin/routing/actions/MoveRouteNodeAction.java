@@ -85,7 +85,7 @@ public class MoveRouteNodeAction extends MapMode {
 	public MoveRouteNodeAction(MapFrame mapFrame) {
 		// TODO Use constructor with shortcut
 		super(tr("Routing"), "move",
-				tr("Click and drag to move route nodes."),
+				tr("Click and drag to move destination"),
 				mapFrame, ImageProvider.getCursor("normal", "move"));
         this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
 	}

@@ -207,7 +207,7 @@ public class RoutingLayer extends Layer {
 	public Component[] getMenuEntries() {
         Collection<Component> components = new ArrayList<Component>();
         components.add(new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)));
-        components.add(new JMenuItem(new LayerListDialog.ShowHideMarkerText(this)));
+//        components.add(new JMenuItem(new LayerListDialog.ShowHideMarkerText(this)));
         components.add(new JMenuItem(new LayerListDialog.DeleteLayerAction(this)));
         components.add(new JSeparator());
         components.add(new JMenuItem(new RenameLayerAction(associatedFile, this)));
@@ -222,14 +222,9 @@ public class RoutingLayer extends Layer {
 	 */
 	@Override
 	public String getToolTipText() {
-		if (routingModel.getRouteEdges() != null) {
-			// If there's a calculated route
-	        return "Showing calculated route. You can still add route nodes and compute a new route or delete layer to start a new route";
-		} else if (routingModel.getSelectedNodes() != null) {
-			// If there are some route nodes but not a calculated route
-	        return "Keep selecting route nodes and compute route";
-		}
-        return "Select as many route nodes as you want and compute route";
+		String tooltip = this.routingModel.routingGraph.getVertexCount() + " vertices, "
+				+ this.routingModel.routingGraph.getEdgeCount() + " edges";
+		return tooltip;
 	}
 
 	/*
@@ -256,6 +251,7 @@ public class RoutingLayer extends Layer {
 	 */
 	@Override
 	public void paint(Graphics g, MapView mv) {
+		boolean isActiveLayer = (mv.getActiveLayer().equals(this));
 		// Get routing nodes (start, middle, end)
         List<Node> nodes = routingModel.getSelectedNodes();
         if(nodes == null || nodes.size() == 0) {
@@ -264,17 +260,28 @@ public class RoutingLayer extends Layer {
         }
 
         // Get path stroke color from preferences
-//		Main.pref.hasKey(PreferencesKeys.KEY_ROUTE_COLOR.key);
-        String colorString = Main.pref.get(PreferencesKeys.KEY_ROUTE_COLOR.key);
-        if(colorString.length() == 0) {
-            colorString = ColorHelper.color2html(Color.RED);
-            // FIXME add after good color is found: Main.pref.put(KEY_ROUTE_COLOR, colorString);
+        // Color is different for active and inactive layers
+        String colorString;
+        if (isActiveLayer) {
+        	if (Main.pref.hasKey(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key))
+        			colorString = Main.pref.get(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key);
+        	else {
+        		colorString = ColorHelper.color2html(Color.RED);
+        		Main.pref.put(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key, colorString);
+        	}
+        } else {
+        	if (Main.pref.hasKey(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key))
+        		colorString = Main.pref.get(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key);
+        	else {
+        		colorString = ColorHelper.color2html(Color.decode("#dd2222"));
+        		Main.pref.put(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key, colorString);
+        	}
         }
         Color color = ColorHelper.html2color(colorString);
 
         // Get path stroke width from preferences
         String widthString = Main.pref.get(PreferencesKeys.KEY_ROUTE_WIDTH.key);
-        if(widthString.length() == 0) {
+        if (widthString.length() == 0) {
             widthString = "8";
             // FIXME add after good width is found: Main.pref.put(KEY_ROUTE_WIDTH, widthString);
         }

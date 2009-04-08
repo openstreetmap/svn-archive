@@ -131,7 +131,6 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
      */
 	public RoutingPlugin() {
 		super();
-		//FIXME: maybe check if plugin already exists
 		plugin = this; // Assign reference to the plugin class
 		DOMConfigurator.configure("log4j.xml");
 		logger.debug("Loading routing plugin...");
@@ -249,8 +248,6 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 			RoutingLayer[] layersArray = layers.toArray(new RoutingLayer[0]);
 			for (int i=0;i<layersArray.length;i++) {
 				if (layersArray[i].getDataLayer().equals(oldLayer)) {
-					// Move layer to the top
-					Main.map.mapView.moveLayer(layersArray[i], 0);
 					try {
 						// Remove layer
 						Main.map.mapView.removeLayer(layersArray[i]);

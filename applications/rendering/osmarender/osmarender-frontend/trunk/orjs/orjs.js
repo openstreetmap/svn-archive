@@ -1,6 +1,7 @@
 /**
  * @author Mario Ferraro <fadinlight@gmail.com>
  * Porting from or/p written by Frederik Ramm <frederik@remote.org>
+ * Based on 14382 or/p version
  * http://osmarenderfrontend.wordpress.com
  * Released under GPL v2 or later
  */
@@ -193,6 +194,86 @@ orjs.createInternalReference = function () {
 	//console.dir(orjs.relation_storage);
 }
 
+orjs.assemble_closed_ways = function (inputways, relation) {
+	if (inputways == undefined) return new Array();
+	var outputways = new Array();
+	while (inputways.length > 0) {
+		// Start with the first item in the list
+		var way = inputways.shift();
+		var nodes = way.nodes;
+		var tags = new Object();
+		var relations = way.relations; // TODO: Make sure no duplicate entries are present
+		for (let [key, value] in Iterator(way.tags)) {
+			tags[key] = value;
+		}
+		multipolygon_wayid += 1;
+		var wayobj = new orjs.way_object();
+			wayobj.layer = way.layer;
+			wayobj.timestamp = way.timestamp;
+			wayobj.user = way.user;
+			wayobj.nodes = nodes;
+			wayobj.relations = relations;
+			wayobj.id = "multipolygon"+multipolygon.wayid;
+			wayobj.tags = tags;
+
+		// $found stores information if new node where found in
+		// the last iteration though the nodelist
+		// if no new nodes are found but the list is still not
+		// empty there are 2 or more disjunct areas
+		// 1 = nodes were found in the last iteration or this 
+		//       is the first iteration
+		// 0 = no nodes were found, start a new way
+
+		var found = 1;
+		while (inputways.length > 0 && found) {
+			found = 0;
+			for (var index in inputways) {
+				var nodelist = inputways[index].nodes;
+				var sorted;
+				// Check if the way's direction is reversed;
+				if (nodes[nodes.length-1] != undefined && nodelist[nodelist.length-1] != undefined && (nodes[nodes.length-1] == nodelist[nodelist.length-1])) {
+					sorted = nodelist.reverse();
+				}
+				else {
+					sorted = nodelist;
+				}
+				// Check if the way matches
+				if (nodes[nodes.length-1] != undefined && sorted[0] != undefined && (nodes[nodes.length-1] == sorted[0])) {
+					// Add way segement
+					found = 1;
+					// Add tags to taglist
+					for (let [tagkey, tagvalue] in Iterator(inputways[index].tags)) {
+						tags[tagkey] = tagvalue;
+					}
+					relations.push(inputways[index].relations);
+					// Remove first node which is identical to
+					// the last node of the old way
+					sorted.shift();
+					nodes.push(sorted);
+					// Remove segment from the list of available segements
+					inputways.splice(index,1);
+					break;
+				}
+			}
+		}
+		outputways.push(wayobj);
+		//TODO: add debug
+		
+	}
+	return outputways;
+}
+
+// returns true if the first has a subset of the second object's tags,
+// with some tags being ignored
+
+orjs.tags_subset = function(first,second) {
+	for (let [tag,value] in Iterator(first.tags)) {
+		if (/^(name|created_by|note|layer|osmarender:areaCenterLat|osmarender:areaCenterLon|osmarender:areaSize)$/.test(tag)) continue;
+		if (!(second.tags[tag]!=undefined && first.tags[tag] == second.tags[tag])) return false;
+	}
+	return true;
+}
+
 orjs.buildReferences = function() {
 	//line 240-246
 	//update way reference in nodes
@@ -251,9 +332,62 @@ orjs.buildReferences = function() {
 	// TODO:
 	// - Label relation
 
-	for (let [relation_id, relation] in Iterator(orjs.relation_storage)) {
-		if (relation.tags.type==undefined || relation.tags.type!="multipolygon") continue;
-		//TODO: Implement the algorythm for multipolygons
+	for (let [relation_id, rel] in Iterator(orjs.relation_storage)) {
+		if (rel.tags.type==undefined || rel.tags.type!="multipolygon") continue;
+		var outerways = new Array();
+		var innerways = new Array();
+		multipolygon_wayid += 1;
+		var multipolygon = new orjs.mulipolygon_object();
+			multipolygon.multipolygon_relation = rel;
+			multipolygon.relations = new Array();
+			multipolygon.tags = new Array();
+			multipolygon.id = "multipolygon"+multipolygon_wayid;
+		// Copy tags from relation
+		for (let [key, value] in Iterator(relation.tags)) {
+			multipolygon.tags[key] = value;
+		}
+		for (member_index in rel.members) {
+			var member = rel.members[member_index];
+			var role = member[0];
+			var obj = member[1];
+			if (!(role != undefined && obj != undefined && (obj instanceof orjs.way_object) && obj.nodes != undefined)) continue;
+			if (role == "outer") {
+				outerways.push(obj);
+				multipolygon.relations.push(obj.relations);
+				for (let [tagkey, tagvalue] in Iterator(obj.tags)) {
+					multipolygon.tags[tagkey] = tagvalue;
+				}
+			}
+			else if (role == "inner") {
+				innerways.push(obj);
+			}
+			else {
+				if (orjs.debug) console.debug ("Unknown role");
+			}
+			obj.multipolygon = 1; // Mark object as beeing part of a multipolygon
+		}
+
+		// A list of all outer and inner nodes is assembled, now sort them
+		multipolygon.outer = orjs.assemble_closed_ways(outerways,rel);
+		multipolygon.inner = orjs.assemble_closed_ways(innerways,rel);
+
+		// Add inner ways to the global list of ways
+WAY:
+		for (var way_index in multipolygon.outer) {
+			var way = multipolygon.outer[way_index];
+			// Handle multipolygon in multipolygon
+			for (way_rel_index in way.relations) {
+				var way_rel = way.relations[way_rel_index];
+				var role = way_rel[0];
+				var wayrelation = way_rel[1];
+				if (role == "outer" && wayrelation.tags.type != undefined && wayrelation.tags.type == "multipolygon") continue WAY;
+				// Handle old-style multipolygons
+				if (orjs.tag_subset(way,multipolygon)) continue;
+				orjs.way_storage[way.id] = way;
+			}
+			// Add multipolygon object to the global list of ways
+			orjs.way_storage[multipolygon.id] = multipolygon;
+		}
 	}
 
 	// line 464 selection level 0

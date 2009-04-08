@@ -43,10 +43,9 @@ orjs.instructions = {
 
 orjs.drawing_commands = new Array();
 orjs.text_index = new Object();
-
+orjs.labelRelations = new Object();
 
 orjs.multipolygon_wayid = 0;
-
 
 var osm_file;
 var rule_file;
@@ -393,6 +392,43 @@ WAY:
 			}
 			// Add multipolygon object to the global list of ways
 			orjs.way_storage[multipolygon.id] = multipolygon;
+		}
+	}
+
+	// Lines 673
+	// load label relations
+
+	for (let [relation_id, relation] in Iterator(orjs.relation_storage)) {
+		var type = relation.tags.type;
+		if (!(type != undefined && type == "label")) continue;
+		var labelRelationInfo = new Array();
+		
+		// make list of labels
+		for (relation_member_index in relation.members) {
+			var relpair = relation.members[relation_member_index];
+			var role = relpair[0];
+			var ref = relpair[1];
+			if (role == "label" && (ref instanceof orjs.node_object)) {
+				labelRelationInfo.push(ref);
+			}
+		}
+
+		// assign labels to first object, other object will be empty
+		var first = 1;
+		for (relation_member_index in relation.members) {
+			var relpair = relation.members[relation_member_index];
+			var role = relpair[0];
+			var ref = relpair[1];
+			
+			if (role == "object") {
+				if (first) {
+					orjs.labelRelations[ref.id] = labelRelationInfo;
+					first = 0;
+				}
+				else {
+					orjs.labelRelations[ref.id] = new Array();
+				}
+			}
 		}
 	}
 
@@ -1583,7 +1619,110 @@ orjs.substitute_text = function(textnode,object) {
 	return text;
 }
 
-orjs.draw_area_text = function(linenode,layer,selected,dom) {}
+// -------------------------------------------------------------------
+// sub draw_area_text($rulenode, $layer, $selection)
+//
+// for each selected object referenced by the $selection structure,
+// draw the specified text inside the area.
+//
+// Parameters:
+// $rulenode - the XML::XPath::Node object for the <areaText> instruction
+//    in the rules file.
+// $layer - if not undef, process only objects on this layer
+// $selected - the list of currently selected objects
+//
+// Return value:
+// none.
+//
+// Only ways are read from the selection; other objects are
+// ignored.
+// -------------------------------------------------------------------
+
+orjs.draw_area_text = function(textnode,layer,selected,dom) {
+	for (selected_index in selected) {
+		var element = selected[selected_index];
+		var text = orjs.substitute_text(textnode,element);
+		if (text=="") continue;
+		// Skip ways that are already rendered
+		// because they are part of a multipolygon
+		if ((element instanceof orjs.way_object) && element.multipolygon!=undefined) continue;
+
+		if ((element instanceof orjs.way_object) || (element instanceof orjs.multipolygon_object)) {
+			// Area
+			var labelRelation = orjs.labelRelations[element.id];
+			if (labelRelation != undefined) {
+				// Draw text at users specifed position
+				for (ref_index in labelRelation) {
+					var ref = labelRelation[ref_index];
+					orjs.render_text(textnode,text,[ref.lat,ref.lon],dom);
+				}
+			}
+			else {
+				// Draw text at area center
+				var center = orjs.get_area_center(element);
+				orjs.render_text(textnode,text,center,dom);
+			}
+		}
+		else if (element instanceof orjs.node_object) {
+			// Node
+			orjs.render_text(textnode,text,[element.lat,element.lon],dom);
+		}
+		else {
+			if (orjs.debug) {
+				console.debug("Unhandled type in draw_area_text");
+				console.dir(element);
+			}
+		}
+	}
+}
+
+orjs.get_area_center = function(area) {
+	var lat = area.tags["osmarender:areaCenterLat"];
+	var lon = area.tags["osmarender:areaCenterLon"];
+	if (lat != undefined && lon != undefined) {
+		return [lat,lon];
+	}
+	else {
+		return orjs.find_area_center(area);
+	}
+}
+
+// Helper code for or/p
+//
+
+// -------------------------------------------------------------------
+// sub find_area_center($way)
+//
+// finds the centre point for an area where to place a text or
+// icon.
+//
+// simply returns the centre of the bounding box.
+
+orjs.find_area_center = function(way) {
+	var nodes = new Array();
+	if (way instanceof orjs.way_object) {
+		nodes = way.nodes;
+	}
+	else if (way instanceof orjs.multipolygon_object) {
+		for (way_index in way.outer) {
+			nodes.push(way.outer[way_index].nodes);
+		}
+	}
+	var maxlat = -180;
+	var maxlon = -180;
+	var minlat = 180;
+	var minlon = 180;
+
+	for (node_index in nodes) {
+		var element = nodes[node_index];
+		if (element.lat > maxlat) maxlat = element.lat;
+		if (element.lon > maxlon) maxlon = element.lon;
+		if (element.lat < minlat) minlat = element.lat;
+		if (element.lon < minlon) minlon = element.lon;
+	}
+
+	return [ (parseFloat(maxlat) + parseFloat(minlat)) / 2, (parseFloat(maxlon) + parseFloat(minlon)) / 2];
+}
 
 // -------------------------------------------------------------------
 // sub draw_path($rulenode, $path_id, $class, $style)

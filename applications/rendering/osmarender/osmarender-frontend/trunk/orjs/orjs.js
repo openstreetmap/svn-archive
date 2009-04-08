@@ -1364,7 +1364,73 @@ outer:
 
 orjs.draw_symbols = function(linenode,layer,selected,dom) {}
 
-orjs.draw_circles = function(linenode,layer,selected,dom) {}
+// -------------------------------------------------------------------
+// sub draw_circles($rulenode, $layer, $selection)
+//
+// for each selected object in $selection, draw a circle based 
+// on the parameters specified by $rulenode.
+//
+// Parameters:
+// $rulenode - the XML::XPath::Node object for the <circle> instruction
+//    in the rules file.
+// $layer - if not undef, process only objects on this layer
+// $selection - Set::Object that contains selected objects
+//
+// Return value:
+// none.
+//
+// Only nodes are read from the selection; other objects are
+// ignored.
+// -------------------------------------------------------------------
+
+orjs.draw_circles = function(circlenode,layer,selected,dom) {
+	for (selected_index in selected) {
+		var element = selected[selected_index];
+		// Skip ways that are already rendered
+		// because they are part of a multipolygon
+		if ((element instanceof orjs.way_object) && element.multipolygon != undefined) continue;
+		if ((element instanceof orjs.way_object) || (element instanceof orjs.multipolygon_object)) {
+			// Area
+			var labelRelation = orjs.labelRelations[element.id]
+			if (labelRelation != undefined) {
+				for (ref_index in labelRelation) {
+					var ref = labelRelation[ref_index];
+					var projected = orjs.project([ref.lat,ref.lon]);
+					var circle_tag = document.createElementNS(orjs.tagSvg,"circle");
+					circle_tag.setAttributeNS(null,"cx",projected[0]);
+					circle_tag.setAttributeNS(null,"cy",projected[1]);
+					orjs.copy_attributes_not_in_list(circlenode,["type","ref","scale","smart-linecap","cx","cy"],circle_tag);
+					dom.appendChild(circle_tag);
+				}
+			}
+			else {
+				// Draw icon at area center
+				var center = orjs.get_area_center(element);
+				var projected = orjs.project(center);
+				var circle_tag = document.createElementNS(orjs.tagSvg,"circle");
+				circle_tag.setAttributeNS(null,"cx",projected[0]);
+				circle_tag.setAttributeNS(null,"cy",projected[1]);
+				orjs.copy_attributes_not_in_list(circlenode,["type","ref","scale","smart-linecap","cx","cy"],circle_tag);
+				dom.appendChild(circle_tag);
+			}
+		}
+		else if (element instanceof orjs.node_object) {
+			// Node
+			var projected = orjs.project([element.lat,element.lon]);
+			var circle_tag = document.createElementNS(orjs.tagSvg,"circle");
+			circle_tag.setAttributeNS(null,"cx",projected[0]);
+			circle_tag.setAttributeNS(null,"cy",projected[1]);
+			orjs.copy_attributes_not_in_list(circlenode,["type","ref","scale","smart-linecap","cx","cy"],circle_tag);
+			dom.appendChild(circle_tag);
+		}
+		else {
+			if (orjs.debug) {
+				console.debug("Unhandled type in draw_circles");
+				console.dir(element);
+			}
+		}
+	}
+}
 
 // -------------------------------------------------------------------
 // sub draw_text($rulenode, $layer, $selection)

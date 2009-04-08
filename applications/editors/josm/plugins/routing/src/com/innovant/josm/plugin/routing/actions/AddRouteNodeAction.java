@@ -70,7 +70,7 @@ public class AddRouteNodeAction extends MapMode {
 	public AddRouteNodeAction(MapFrame mapFrame) {
 		// TODO Use constructor with shortcut
 		super(tr("Routing"), "add",
-				tr("Click to add route nodes."),
+				tr("Click to add destination."),
 				mapFrame, ImageProvider.getCursor("crosshair", null));
         this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
 	}

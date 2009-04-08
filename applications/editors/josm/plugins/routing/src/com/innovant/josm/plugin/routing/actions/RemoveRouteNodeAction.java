@@ -74,7 +74,7 @@ public class RemoveRouteNodeAction extends MapMode {
 	public RemoveRouteNodeAction(MapFrame mapFrame) {
 		// TODO Use constructor with shortcut
 		super(tr("Routing"), "remove",
-				tr("Remove route nodes"),
+				tr("Click to remove destination"),
 				mapFrame, ImageProvider.getCursor("normal", "delete"));
         this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
 	}

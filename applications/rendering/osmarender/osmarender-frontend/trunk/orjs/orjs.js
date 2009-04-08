@@ -535,14 +535,13 @@ orjs.processRules = function() {
 	while (current_rule = rule_list.iterateNext()) {
 		// First rule tag
 		var depth = 0;
-		var layer = 0;
 		if (orjs.withOSMLayers == "no") {
-			orjs.process_rule(current_rule,depth,layer);
+			orjs.process_rule(current_rule,depth,null);
 		}
 		else {
 
 			// Process all layers
-			orjs.process_rule(current_rule,depth,layer);
+			orjs.process_rule(current_rule,depth,null);
 
 			// TODO:z-mode=bottom
 			
@@ -1310,6 +1309,9 @@ orjs.draw_symbols = function(linenode,layer,selected,dom) {}
 
 orjs.draw_circles = function(linenode,layer,selected,dom) {}
 
+orjs.draw_text = function(linenode,layer,selected,dom) {}
+
+orjs.draw_area_text = function(linenode,layer,selected,dom) {}
 
 // -------------------------------------------------------------------
 // sub draw_path($rulenode, $path_id, $class, $style)

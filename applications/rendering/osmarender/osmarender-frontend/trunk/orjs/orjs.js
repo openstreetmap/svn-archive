@@ -6,6 +6,10 @@
  * Released under GPL v2 or later
  */
 
+//TODO: Fix processing of tunnels
+//TODO: Fix processing of text in paths. Why the wrong one is present?
+//TODO: Fix precision on placing text in paths
+
 var orjs = {};
 
 orjs.node_object = function() {};
@@ -38,6 +42,8 @@ orjs.instructions = {
 }
 
 orjs.drawing_commands = new Array();
+orjs.text_index = new Object();
+
 
 orjs.multipolygon_wayid = 0;
 
@@ -1131,6 +1137,21 @@ orjs.project = function(latlon) {
 	return [x,y];
 }
 
+orjs.distance = function (p1,p2) {
+	// from http://www.movable-type.co.uk/scripts/latlong.html
+	// toRad function is: element * Math.PI / 180
+	var R = 6378.135; // km
+	var dLat = ((90-p2.lat)-(90-p1.lat)) * Math.PI / 180;
+	var dLon = (p2.lon-p1.lon) * Math.PI / 180; 
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+		Math.cos((90-p1.lat)*Math.PI / 180) * Math.cos((90-p2.lat) * Math.PI / 180) * 
+		Math.sin(dLon/2) * Math.sin(dLon/2); 
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	var d = R * c;
+	// returning d * 1000 as original great_circle_distance in perl uses metres instead of kilometres
+	return d*1000;
+}
+
 //Implementation of orp-drawing.pl
 orjs.draw_lines = function(linenode,layer,selected,dom) {
 	// FIXME copy node svg: attributes
@@ -1309,7 +1330,258 @@ orjs.draw_symbols = function(linenode,layer,selected,dom) {}
 
 orjs.draw_circles = function(linenode,layer,selected,dom) {}
 
-orjs.draw_text = function(linenode,layer,selected,dom) {}
+// -------------------------------------------------------------------
+// sub draw_text($rulenode, $layer, $selection)
+//
+// for each selected object referenced by the $selection structure,
+// draw the specified text along the path or at the node.
+//
+// Parameters:
+// $rulenode - the XML::XPath::Node object for the <text> instruction
+//    in the rules file.
+// $layer - if not undef, process only objects on this layer
+// $selected - the list of currently selected objects
+//
+// Return value:
+// none.
+//
+// Processes ways and nodes from the selection.
+// -------------------------------------------------------------------
+
+orjs.draw_text = function(textnode,layer,selected,dom) {
+	// the text instruction has two different ways of accessing the text it is
+	// going to write:
+	// (a) <text k="name" ... />
+	//     This will write the value of the "name" tag without further ado.
+	// (b) <text>The name is <tag k="name"> and the ref is <tag k="ref"></text>
+	//     This inserts the values of the named tags into the given text and 
+	//     writes the result.
+	// both are supported (through the substitute_text function)
+
+	for (selected_index in selected) {
+		var element = selected[selected_index];
+		var text = orjs.substitute_text(textnode,element);
+		if (text != "") {
+			// This function only works on pathes
+			if (element instanceof orjs.multipolygon_object) continue;
+
+			if (element instanceof orjs.node_object) {
+				orjs.render_text(textnode,text,[element.lat,element.lon],dom);
+			}
+			else if (element instanceof orjs.way_object) {
+				orjs.draw_text_on_path(textnode,element,text,dom);
+			}
+			else {
+				if (orjs.debug) console.debug("Unhandled type in draw_text");
+			}
+		}
+	}
+	
+}
+
+//TODO: distance,
+
+// sub render_text($textnode, $text, $coordinates)
+//
+// render text at specified position
+//
+// Parameters:
+// $textnode - the XML::XPath::Node object for the <text> instruction
+// $text - caption text
+// $coordinates - text position coordinates
+
+orjs.render_text = function(textnode,text,coordinates,dom) {
+	var projected = orjs.project([coordinates[0],coordinates[1]]);
+	var text_tag = document.createElementNS(orjs.tagSvg,"text");
+	text_tag.setAttributeNS(null,"x",projected[0]);
+	text_tag.setAttributeNS(null,"y",projected[1]);
+	orjs.copy_attributes_not_in_list(textnode,["startOffset","method","spacing","lengthAdjust","textLength"],text_tag);
+	text_tag.appendChild(document.createTextNode(text));
+	dom.appendChild(text_tag);
+}
+
+// -------------------------------------------------------------------
+// sub draw_text_on_path($rulenode, $way)
+//
+// draws a text (usu. road name) onto an already defined path.
+// Contains a very
+// crude hack that tries to guess the way length and reduce the font
+// size. This hack is present in Osmarender as well so we're compatible
+// but it should really be replaced by something that does a proper
+// calculation based on projected data and possibly font metrics, 
+// rather than a crude approximation.
+// 
+// Parameters:
+// $rulenode - the XML::XPath::Node object for the <text> instruction
+//    in the rules file.
+// $way - the way object on whose path the text should be drawn
+//
+// Return value:
+// none.
+// -------------------------------------------------------------------
+
+orjs.draw_text_on_path = function(textnode,way,text,dom) {
+	var nodes = way.nodes;
+	var bucket;
+
+	if (/^1|yes|true$/.test(textnode.getAttribute("avoid-duplicates"))) {
+		var bucket1 = (parseInt(nodes[0].lat*2)+180) * 720 + parseInt(nodes[0].lon * 2) + 360;
+		var bucket2 = (parseInt(nodes[nodes.length -1].lat*2)+180) * 720 + parseInt(nodes[nodes.length-1].lon*2) + 360;
+		bucket = (bucket1 < bucket2) ? bucket1 : bucket2;
+		if (orjs.debug) console.debug("place "+text+" in bucket "+bucket);
+		for (label_index in orjs.text_index[bucket]) {
+			var label = orjs.text_index[bucket][label_index];
+			if (text == label.text) {
+				var d1 = orjs.distance(nodes[0],label.n0);
+				var d2 = orjs.distance(nodes[nodes.length-1],label.n1);
+				if (orjs.debug) console.debug("   distance to other: "+d1+" "+d2);
+				if (d1<1000 && d2 < 1000) {
+					if (orjs.debug) console.debug("ignoring text: "+text);
+					return;
+				}
+
+				// same check for reversed way
+				var d1 = orjs.distance(nodes[0],label.n1);
+				var d2 = orjs.distance(nodes[nodes.length-1],label.n0);
+				if (orjs.debug) console.debug("   distance to other: "+d1+" "+d2);
+				if (d1<1000 && d2 < 1000) {
+					if (orjs.debug) console.debug("ignoring text: "+text);
+					return;
+				}
+			}
+		}
+	}
+	var sumLon = 0;
+	var sumLat = 0;
+	var id = way.id;
+
+	for (var i = 1; i < nodes.length; i++) {
+		sumLat+=Math.abs(nodes[i].lat - nodes[i-1].lat);
+		sumLon+=Math.abs(nodes[i].lon - nodes[i-1].lon);
+	}
+
+	var reverse = (nodes[nodes.length-1].lon < nodes[0].lon);
+	var att = textnode.hasAttribute("textAttenuation") ? textnode.getAttribute("textAttenuation") : "";
+	if (att == "") {
+		if (orjs.textAttenuation != undefined) att = orjs.textAttenuation; else att = "";
+		if (att == "") att = 99999999;
+	}
+
+	var pathLength = Math.sqrt(Math.pow((sumLon*1000*att),2) + Math.pow((sumLat*1000*att*orjs.projection),2));
+
+	var fontsize;
+
+	var textLength = text.length;
+
+	if (textLength == 0) return;
+
+	if (pathLength > textLength) {
+		fontsize = 100;
+	}
+	else if (pathLength > (textLength * 0.9)) {
+		fontsize = 90;
+	}
+	else if (pathLength > (textLength * 0.8)) {
+		fontsize = 80;
+	}
+	else if (pathLength > (textLength * 0.7)) {
+		fontsize = 70;
+	}
+
+	if (fontsize != undefined) {
+		if (orjs.debug) console.debug("draw text on path "+text);
+		if (bucket != undefined) {
+			orjs.text_index[bucket] = new Array();
+			orjs.text_index[bucket].push({
+				"text": text,
+				"n0": nodes[0],
+				"n1": nodes[nodes.length - 1]
+			});
+		}
+		var path = orjs.get_way_href(id, (reverse) ? "reverse" : "normal");
+		var text_tag = document.createElementNS(orjs.tagSvg,"text");
+		orjs.copy_attributes_not_in_list(textnode,["startOffset","method","spacing","lengthAdjust","textLength"],text_tag);
+		var text_path = document.createElementNS(orjs.tagSvg,"textPath");
+		text_path.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",path);
+		if (fontsize != 100) text_path.setAttributeNS(null,"font-size",fontsize+"%");
+		orjs.copy_attributes_in_list(textnode,["font-size","startOffset","method","spacing","lengthAdjust","textLength"],text_path);
+		text_path.appendChild(document.createTextNode(text));
+		text_tag.appendChild(text_path);
+		dom.appendChild(text_tag);
+	}
+	else if (orjs.debug) {
+		console.debug("do not draw text on path: "+text+" - no room");
+	}
+}
+
+
+// -------------------------------------------------------------------
+// sub substitute_text($rulenode, $object)
+//
+// returns the string to be drawn by the given text rule.
+// 
+// Supports simple text instructions that have no content and just
+// a "k" attribute specifying the tag key whose value should be 
+// printed, as well as the complex text instruction where the text
+// instruction as abitrary fixed content interspresed with 
+// "<tag k=.../>" elements that insert tag values in their place.
+// 
+// Parameters:
+// $rulenode - the XML::XPath::Node object for the <text> instruction
+//    in the rules file.
+// $object - the object from which to read tag values
+//
+// Return value:
+// the string to be drawn.
+// -------------------------------------------------------------------
+
+orjs.substitute_text = function(textnode,object) {
+	var text = "";
+	var k_attr = textnode.getAttribute("k");
+
+	if (k_attr != "") {
+		// the simple case where the text is exactly one tag value
+		if (object.tags[k_attr] != undefined) {
+			text = object.tags[k_attr]
+		}
+		else {
+			text = "";
+		}
+	}
+	else {
+		// need to examine the child nodes of the text node.
+		for (child_index in textnode.childNodes) {
+			var child = textnode.childNodes[child_index];
+			if (child.nodeType == Node.TEXT_NODE) {
+				text += child.nodeValue;
+			}
+			else if (child.nodeType == Node.ELEMENT_NODE) {
+				var elname = child.nodeName;
+				if (elname == "tag") {
+					var k = child.getAttribute("k");
+					var d = child.getAttribute("default");
+					var val;
+					if (/^osm:(user|timestamp|id)$/.test(k)) {
+						val = object[/^osm:(user|timestamp|id)$/.exec(k)[1]];
+					}
+					else {
+						val = object["tags"][k];
+					}
+					if (val == undefined) val = d;
+					if (val != undefined) text += val;
+				}
+				else {
+					if (orjs.debug) console.debug("ignoring "+elname+" tag in text instruction");
+				}
+			}
+			else {
+				// Error
+				if (orjs.debug) console.debug ("error parsing text instruction");
+			}
+		}
+	}
+	return text;
+}
 
 orjs.draw_area_text = function(linenode,layer,selected,dom) {}
 
@@ -1389,6 +1661,56 @@ if (orjs.debug) console.debug("creo href per way id "+id+" e type "+type);
 	orjs.referenced_ways[id][type] = 1;
 if (orjs.debug) console.debug("ritorno "+"#way_"+type+"_"+id);
 	return "#way_"+type+"_"+id;
+}
+
+
+// -------------------------------------------------------------------
+// sub copy_attributes_in_list($node, $list)
+//
+// returns an array that contains altarnating keys and values of each
+// of $node's attributes, where the key is mentioned in the $list
+// array reference.
+//
+// used to supply attributes to XML::Writer methods.
+// -------------------------------------------------------------------
+// or/js: this function accept as last parameter the dom element to add the attributes to. It will append the attributes and returns nothing
+
+orjs.copy_attributes_in_list = function(node,list,dom) {
+	for (list_index in list) {
+		var key = list[list_index];
+		var attr = node.hasAttribute(key) ? node.getAttribute(key) : "";
+		if (attr != "") {
+			dom.setAttributeNS(null,key,attr);
+		}
+	}
+}
+
+// -------------------------------------------------------------------
+// sub copy_attributes_not_in_list($node, $list)
+//
+// returns an array that contains altarnating keys and values of each
+// of $node's attributes, where the key is not in the $list
+// array reference.
+//
+// used to supply attributes to XML::Writer methods.
+// -------------------------------------------------------------------
+// or/js: this function accept as last parameter the dom element to add the attributes to. It will append the attributes and returns nothing
+
+orjs.copy_attributes_not_in_list = function(node,list,dom) {
+	for (attribute_index in node.attributes) {
+		var attr = node.attributes[attribute_index];
+		var k = attr.nodeName;
+		for (list_index in list) {
+			var element = list[list_index];
+			if (element == k) {
+				attr = undefined;
+				break;
+			}
+		}
+		if (attr != undefined) {
+			dom.setAttributeNS(null,k,attr.nodeValue);
+		}
+	}
 }
 
 //HELPERS

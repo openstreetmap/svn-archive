@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ @author Mario Ferraro <fadinlight@gmail.com>
+ http://osmarenderfrontend.wordpress.com
+ Released under GPL v2 or later
+-->
+<!--?xml-stylesheet type="text/xsl" href="demo.xsl"?-->
+<!DOCTYPE html 
+      PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html	xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:svg="http://www.w3.org/2000/svg"
+		xml:lang="en">
+	<head>
+		<object id="AdobeSVG" classid="clsid:78156a80-c6a1-4bbf-8e6a-3cd390eeb4e2"></object>
+		<?import namespace="svg" urn="http://www.w3.org/2000/svg" implementation="#AdobeSVG"?>
+
+		<script type="text/javascript;version=1.7" src="orjs/orjs.js"></script>
+<!-- e4x=1 -->
+		<script type="text/javascript">
+			var my_osmfile;
+			var my_rulefile;
+			var my_orp_path;
+			var my_orp_file;
+			var my_perl_file;
+			function my_loadFile(type) {
+				netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+				var nsIFilePicker = Components.interfaces.nsIFilePicker;
+				var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+				fp.init(window, "Select a "+type+" File", nsIFilePicker.modeOpen);
+				var res = fp.show();
+				if (res == nsIFilePicker.returnOK) {
+					if (type=="osm") {
+						var my_span = document.getElementById("span_osm_file_loaded");
+						while (my_span.firstChild) {
+							my_span.removeChild(my_span.firstChild);
+						}
+						my_span.appendChild(document.createTextNode(fp.file.path));
+						my_osmfile = fp.file.path;
+					}
+					else {
+						var my_span = document.getElementById("span_rules_file_loaded");
+						while (my_span.firstChild) {
+							my_span.removeChild(my_span.firstChild);
+						}
+						my_span.appendChild(document.createTextNode(fp.file.path));
+						my_rulefile = fp.file.path;
+					}
+				}
+				netscape.security.PrivilegeManager.revertPrivilege('UniversalXPConnect');
+			}
+			
+			function my_setOrpPath() {
+				netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+				var nsIFilePicker = Components.interfaces.nsIFilePicker;
+				var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+				fp.init(window, "Select or/p.pl", nsIFilePicker.modeOpen);
+				var res = fp.show();
+				if (res == nsIFilePicker.returnOK) {
+					if (fp.file.leafName.toLowerCase()=="orp.pl") {
+						var my_span = document.getElementById("span_orp_path_loaded");
+						while (my_span.firstChild) {
+							my_span.removeChild(my_span.firstChild);
+						}
+						my_span.appendChild(document.createTextNode(fp.file.path));
+						my_orp_path = fp.file.parent.path;
+						my_orp_file = fp.file.path;
+					}
+					else {
+						var my_span = document.getElementById("span_orp_path_loaded");
+						while (my_span.firstChild) {
+							my_span.removeChild(my_span.firstChild);
+						}
+						my_span.appendChild(document.createTextNode("ERROR: orp.pl not found here!"));
+					}
+				}			
+				netscape.security.PrivilegeManager.revertPrivilege('UniversalXPConnect');
+			}
+			
+			function my_setPerlPath() {
+				netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+				var nsIFilePicker = Components.interfaces.nsIFilePicker;
+				var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+				fp.init(window, "Select perl", nsIFilePicker.modeOpen);
+				var res = fp.show();
+				if (res == nsIFilePicker.returnOK) {
+					if (fp.file.leafName.toLowerCase()=="perl") {
+						var my_span = document.getElementById("span_perl_path_loaded");
+						while (my_span.firstChild) {
+							my_span.removeChild(my_span.firstChild);
+						}
+						my_span.appendChild(document.createTextNode(fp.file.path));
+						my_perl_file = fp.file.path;
+					}
+					else {
+						var my_span = document.getElementById("span_perl_path_loaded");
+						while (my_span.firstChild) {
+							my_span.removeChild(my_span.firstChild);
+						}
+						my_span.appendChild(document.createTextNode("ERROR: perl not found here!"));
+					}
+				}			
+				netscape.security.PrivilegeManager.revertPrivilege('UniversalXPConnect');
+			}
+
+			function my_runOrJs() {
+				orjs.load(my_osmfile,my_rulefile,true);
+			}
+			
+			function my_runOrP() {
+				netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+				var perl_file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+				perl_file.initWithPath(my_perl_file);
+				var process = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
+				process.init(perl_file);
+				var args = [my_orp_file,"-r",my_rulefile,"-o",my_orp_path+"/pippo.svg",my_osmfile];
+				var orp_start_time = new Date().getTime();
+				process.run(true,args,args.length);
+				var orp_end_time = new Date().getTime();
+				var orp_elapsed = (orp_end_time - orp_start_time)/1000;
+				var my_span = document.getElementById("time_orp");
+				while (my_span.firstChild) {
+					my_span.removeChild(my_span.firstChild);
+				}
+				my_span.appendChild(document.createTextNode(orp_elapsed));
+				var orp_svg_file;
+				orp_svg_file = document.implementation.createDocument("","",null);
+				orp_svg_file.onload = function() {
+					var custom_zoom = parseInt(document.getElementById("text_custom_zoom").value);
+					orp_svg_file.documentElement.width.baseVal.value=orp_svg_file.documentElement.width.baseVal.value*custom_zoom;
+					orp_svg_file.documentElement.height.baseVal.value=orp_svg_file.documentElement.height.baseVal.value*custom_zoom;
+					document.getElementById("original_svg").appendChild(orp_svg_file.documentElement);
+				}
+				orp_svg_file.load(my_orp_path+"/pippo.svg");
+				netscape.security.PrivilegeManager.revertPrivilege('UniversalXPConnect');
+			}
+		</script>
+	</head>
+	<body>
+		<label for="text_custom_zoom">Custom zoom (Or/js = 5) </label><input id="text_custom_zoom" type="text" value="5" /><br />
+		<button id="button_perl_path" onclick="javascript:my_setPerlPath();">Load perl path</button><span id="span_perl_path_loaded"></span><br />
+		<button id="button_orp_path" onclick="javascript:my_setOrpPath();">Load or/p.pl</button><span id="span_orp_path_loaded"></span><br />
+		<button id="button_osm_load" onclick="javascript:my_loadFile('osm');">Load OSM File</button><span id="span_osm_file_loaded"></span><br />
+		<button id="button_rules_load" onclick="javascript:my_loadFile('rule');">Load Rules File</button><span id="span_rules_file_loaded"></span><br />
+		<button id="button_run_orjs" onclick="javascript:my_runOrJs();">Run or/js</button>
+		<button id="button_run_orp" onclick="javascript:my_runOrP();">Run or/p</button>
+		
+		<p>OR/JS (<span id="time_orjs"></span> secs)</p><div id="resulting_svg"></div>
+		<p>OR/P (<span id="time_orp"></span> secs)</p><div id="original_svg"></div>
+		<p>IMAGE</p><img id="image"></img>
+		<p>CANVAS</p><div id="resulting_canvas"><canvas id="canvas"></canvas></div>
+		<button id="encode_png" onclick="javascript:orjs.encodeToPNG();">Encode to PNG</button><br />
+	</body>
+</html>
+
+
+

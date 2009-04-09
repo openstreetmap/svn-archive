@@ -12,6 +12,10 @@
 
 var orjs = {};
 
+// Used for profiling
+orjs.starting_time;
+orjs.end_time;
+
 orjs.node_object = function() {};
 
 orjs.way_object = function() {};
@@ -44,6 +48,7 @@ orjs.instructions = {
 orjs.drawing_commands = new Array();
 orjs.text_index = new Object();
 orjs.labelRelations = new Object();
+orjs.symbols = new Object();
 
 orjs.multipolygon_wayid = 0;
 
@@ -102,6 +107,7 @@ orjs.style;
 orjs.outputFile;
 
 orjs.load = function (osm_file_path,rule_file_path,inBrowser) {
+	orjs.starting_time = new Date().getTime();
 	// If the resulting svg needs to be viewed in browser, we need to prepend svg: to tags
 	orjs.inBrowser = inBrowser;
 	if (orjs.inBrowser) orjs.tagSvg = "http://www.w3.org/2000/svg";
@@ -185,7 +191,7 @@ orjs.createInternalReference = function () {
 				case "tag":
 					var my_current_object = eval("orjs."+current_array+"["+parentNode.getAttribute("id")+"]");
 					if (my_current_object.tags==undefined) my_current_object.tags = new Object();
-					eval("my_current_object.tags."+getAttribute("k")+" = '"+getAttribute("v")+"'");
+					eval('my_current_object.tags["'+getAttribute("k")+'"] = "'+getAttribute("v")+'"');
 					if (getAttribute("k")=="layer") {
 						my_current_object.layer = getAttribute("v");
 					}
@@ -479,11 +485,22 @@ orjs.globalVariables = function() {
 	//TODO: retrieve bounds from other sources
 	var iterator = osm_file.evaluate("//bounds",osm_file.documentElement,null,XPathResult.UNORDERED_NODE_ITERATOR_TYPE,null);
 	var boundsnode = iterator.iterateNext();
-	with (boundsnode) {
-		orjs.minlat = parseFloat(getAttribute("minlat"));
-		orjs.minlon = parseFloat(getAttribute("minlon"));
-		orjs.maxlat = parseFloat(getAttribute("maxlat"));
-		orjs.maxlon = parseFloat(getAttribute("maxlon"));
+	if (boundsnode != undefined) {
+		with (boundsnode) {
+			orjs.minlat = parseFloat(getAttribute("minlat"));
+			orjs.minlon = parseFloat(getAttribute("minlon"));
+			orjs.maxlat = parseFloat(getAttribute("maxlat"));
+			orjs.maxlon = parseFloat(getAttribute("maxlon"));
+		}
+	}
+	else {
+		// Fallback to calculating based on nodes in data
+		for (let [node_id, node] in Iterator(orjs.node_storage)) {
+			if (orjs.maxlon == undefined || parseFloat(node.lon) > orjs.maxlon) orjs.maxlon = parseFloat(node.lon);
+			if (orjs.maxlat == undefined || parseFloat(node.lat) > orjs.maxlat) orjs.maxlat = parseFloat(node.lat);
+			if (orjs.minlon == undefined || parseFloat(node.lon) < orjs.minlon) orjs.minlon = parseFloat(node.lon);
+			if (orjs.minlat == undefined || parseFloat(node.lat) < orjs.minlat) orjs.minlat = parseFloat(node.lat);
+		}
 	}
 	// Calculate other variables
 	orjs.projection = 1 / Math.cos((orjs.maxlat + orjs.minlat) / 360 * Math.PI);
@@ -627,6 +644,15 @@ console.dir(orjs.drawing_commands);
 	}
 //	console.debug(XML((new XMLSerializer()).serializeToString(orjs.outputFile)).toXMLString());
 //	string_file_svg = (new XMLSerializer()).serializeToString(orjs.outputFile);
+	orjs.end_time = new Date().getTime();
+	var elapsed_time = (orjs.end_time - orjs.starting_time) / 1000;
+	if (document.getElementById("time_orjs")!=undefined) {
+		var my_span = document.getElementById("time_orjs");
+		while (my_span.firstChild) {
+			my_span.removeChild(my_span.firstChild);
+		}
+		my_span.appendChild(document.createTextNode(elapsed_time));
+	}
 	document.getElementById("resulting_svg").appendChild(orjs.outputFile.documentElement);
 }
 

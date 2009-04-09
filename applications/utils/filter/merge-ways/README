@@ -1,0 +1,21 @@
+README for merge-ways
+---------------------
+
+merge-ways is intended as a preprocessor for certain rendering or other actions
+performed on OSM files.
+
+It finds adjoining ways and merges them into one way provided they share certain 
+characterstics. Which characterstics these are is expressed in a function at the 
+top of the script.
+
+It does not yet handle relations (might even break them by removing a way that
+was used by a relation).
+
+Another known bug is that it will happily join the opposing lanes of a dual carriageway
+if they meet at an intersection, often leading to the street name written in a 180
+degree bend around the end of the street.
+
+The primary use is as a preprocessor for Osmarender when streets are split in many
+ways, none of which large enough to contain the street name.
+
+Written by Frederik Ramm <frederik@remote.org>, public domain.

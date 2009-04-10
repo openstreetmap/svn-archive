@@ -9,6 +9,7 @@
 //TODO: Fix processing of tunnels
 //TODO: Fix processing of text in paths. Why the wrong one is present?
 //TODO: Fix precision on placing text in paths
+//TODO: Why process_rule is never called with a layer!=null?
 
 var orjs = {};
 
@@ -106,19 +107,73 @@ orjs.svgHeight;
 orjs.style;
 orjs.outputFile;
 
-orjs.load = function (osm_file_path,rule_file_path,inBrowser) {
+
+orjs.osmurl2bounds = function(url) {
+	//from JOSM's osmurl2bounds
+	//TODO: Number error handling
+	var i = url.indexOf("?");
+	if (i == -1) return null;
+	args = url.substring(i+1).split("&");
+	var map = new Object();
+	for (arg_index in args) {
+		var arg = args[arg_index];
+		var eq = arg.indexOf("=");
+		if (eq != -1) {
+			map[arg.substring(0,eq)] = arg.substring(eq + 1);
+		}
+	}
+	var b = null;
+	if (map.hasOwnProperty("bbox")) {
+		var bbox = map["bbox"].split(",");
+		b = new Object();
+		b["lat1"] = parseFloat(bbox[1]);
+		b["lon1"] = parseFloat(bbox[0]);
+		b["lat2"] = parseFloat(bbox[3]);
+		b["lon2"] = parseFloat(bbox[2]);
+	}
+	else {
+		var size = 180.0 / Math.pow(2,parseInt(map["zoom"]));
+		b = new Object();
+		b["lat1"] = parseFloat(map["lat"]) - size/2;
+		b["lon1"] = parseFloat(map["lon"]) - size;
+		b["lat2"] = parseFloat(map["lat"]) + size/2;
+		b["lon2"] = parseFloat(map["lon"]) + size;
+	}
+	return b;
+}
+
+orjs.load = function (osm_file_path,rule_file_path,inBrowser,permalink) {
 	orjs.starting_time = new Date().getTime();
 	// If the resulting svg needs to be viewed in browser, we need to prepend svg: to tags
 	orjs.inBrowser = inBrowser;
+	var bounds;
+	if (permalink) {
+		bounds = orjs.osmurl2bounds(osm_file_path);
+		osm_file_path="http://api.openstreetmap.org/api/0.5/map?bbox="+bounds["lon1"]+","+bounds["lat1"]+","+bounds["lon2"]+","+bounds["lat2"];
+	}
 	if (orjs.inBrowser) orjs.tagSvg = "http://www.w3.org/2000/svg";
 	orjs.loadOsmFile(osm_file_path,rule_file_path);
 }
 
 orjs.loadOsmFile = function(file_path,rule_file_path) {
 	osm_file = document.implementation.createDocument("","",null);
-	osm_file.onload = orjs.loadRuleFile(rule_file_path);
-	// Line 233 of orp.pl
-	osm_file.load(file_path);
+	if (file_path.indexOf("http")==1) {
+		osm_file.onload = orjs.loadRuleFile(rule_file_path);
+		// Line 233 of orp.pl
+		osm_file.load(file_path);
+	}
+	else {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+		xmlhttp = new XMLHttpRequest();
+		xmlhttp.overrideMimeType("text/xml");
+		xmlhttp.open("GET", file_path, true); 
+		xmlhttp.send(null);
+		xmlhttp.onload = function() {
+			netscape.security.PrivilegeManager.revertPrivilege('UniversalXPConnect');
+			osm_file = xmlhttp.responseXML;
+			orjs.loadRuleFile(rule_file_path);
+		} 
+	}
 };
 
 orjs.loadRuleFile = function(file_path) {

@@ -105,9 +105,10 @@
 			}
 
 			function my_runOrJs() {
-				orjs.load(my_osmfile,my_rulefile,true);
+				var url_given = document.getElementById("text_permalink").value.length ? true : false;
+				if (url_given) my_osmfile = document.getElementById("text_permalink").value;
+				orjs.load(my_osmfile,my_rulefile,true,url_given);
 			}
-			
 			function my_runOrP() {
 				netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
 				var perl_file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
@@ -139,6 +140,7 @@
 	</head>
 	<body>
 		<label for="text_custom_zoom">Custom zoom (Or/js = 5) </label><input id="text_custom_zoom" type="text" value="5" /><br />
+		<label for="text_permalink">OSM permalink </label><input id="text_permalink" type="text" /><br />
 		<button id="button_perl_path" onclick="javascript:my_setPerlPath();">Load perl path</button><span id="span_perl_path_loaded"></span><br />
 		<button id="button_orp_path" onclick="javascript:my_setOrpPath();">Load or/p.pl</button><span id="span_orp_path_loaded"></span><br />
 		<button id="button_osm_load" onclick="javascript:my_loadFile('osm');">Load OSM File</button><span id="span_osm_file_loaded"></span><br />

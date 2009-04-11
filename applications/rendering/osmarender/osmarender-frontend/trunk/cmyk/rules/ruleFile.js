@@ -70,13 +70,11 @@ dojo.declare("cmyk.rules.ruleFile",null,{
 
 
 		_createModel = function() {
-console.debug("Creating model "+new Date().getMinutes()+":"+new Date().getSeconds());
 			// Create all objects to encapsulate rule file members
 			dojo.forEach(rulesFileRaw.childNodes,function(node,index,array) {
 				ruleFileMembers.push(ruleFileMemberFactory.createRuleFileMember(node));
 			});
 
-console.debug("Assigning CSS Section "+new Date().getMinutes()+":"+new Date().getSeconds());
 			// Assign the CSS section a global variable inside the ruleFile object
 			// This iteration can be useful for other kind of similar tasks
 			dojo.forEach(ruleFileMembers, function (member,index,array) {
@@ -91,14 +89,12 @@ console.debug("Assigning CSS Section "+new Date().getMinutes()+":"+new Date().ge
 				first_iteration(member);
 			});
 
-console.debug("Assigning Styles "+new Date().getMinutes()+":"+new Date().getSeconds());
 			dojo.forEach(ruleFileMembers,function(member,index,array) {
 				_assignStyles(member);
 			});
 
 			rulesSection = rulesFileRaw.getElementsByTagName("rules")[0];
 			var my_attributes = new Object();
-console.debug("Creating global attributes "+new Date().getMinutes()+":"+new Date().getSeconds());
 			with (rulesSection) {
 				dojo.forEach(attributes, function(attribute, index, array) {
 					if (attribute.nodeName!="xmlns:xlink" && attribute.nodeName!="xmlns:svg") {
@@ -133,7 +129,6 @@ console.debug("Creating global attributes "+new Date().getMinutes()+":"+new Date
 		}
 
 		this.write = function() {
-console.debug("Writing file "+new Date().getMinutes()+":"+new Date().getSeconds());
 			ruleFileRaw_output = document.implementation.createDocument('','rules',null);
 			ruleFileAttributes.write(ruleFileRaw_output.documentElement);
 			var xmlNode = ruleFileRaw_output.documentElement;

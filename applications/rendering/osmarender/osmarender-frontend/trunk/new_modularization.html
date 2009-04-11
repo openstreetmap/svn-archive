@@ -32,12 +32,13 @@
 			dojo.require("cmyk.utils.fileIO");
 			var initDND = function() {
 				var file_io = new cmyk.utils.fileIO();
-				var rule_file_path = file_io.loadFile();
+				//var rule_file_path = file_io.loadFile();
+				rule_file_path = "osm-map-features-z17-orjs.xml";
 				if (rule_file_path) {
 					var rule_file = new cmyk.rules.ruleFile(rule_file_path);
 					rule_file.write();
-					//console.debug(rule_file.getXMLOutputString());
-					file_io.saveFile(rule_file.getXMLOutputString());
+					console.debug(rule_file.getXMLOutputString());
+					//file_io.saveFile(rule_file.getXMLOutputString());
 				}
 			};
 			dojo.addOnLoad(initDND);

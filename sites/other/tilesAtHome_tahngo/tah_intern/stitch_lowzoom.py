@@ -6,7 +6,7 @@ import Image, ImageFilter, ImageChops
 script_path = sys.path[0]
 # we need to insert the basedir to the python path (strip 2 path components) if we want to directly execute this file
 sys.path.insert(0, os.path.dirname(os.path.dirname(sys.path[0])))
-os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
+if os.environ.get('DJANGO_SETTINGS_MODULE', None) == None: os.environ['DJANGO_SETTINGS_MODULE'] = "tah.settings"
 import time
 from datetime import datetime, timedelta
 from tah.tah_intern.Tileset import Tileset

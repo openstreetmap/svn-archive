@@ -19,9 +19,9 @@ class Tileset:
 
   def __init__(self, layer=None, base_z=None, x=None, y=None):
     self.layer = layer
-    self.base_z = int(base_z)
-    self.x = int(x)
-    self.y = int(y)
+    self.base_z = base_z
+    self.x = x
+    self.y = y
     self.tiles = {} # empty set contains no tiles yet
     if layer and base_z!=None and x!=None and y!=None: self.init=True
     else: self.init = False

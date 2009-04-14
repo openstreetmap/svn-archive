@@ -1,4 +1,4 @@
-CXXFLAGS = -g -I/usr/local/include -I../
+CXXFLAGS = -g -I/usr/local/include -I../ -fPIC
 LDFLAGS = -L/usr/local/lib -lexpat -lcurl -lshp -lccoord -L../ccoord/
 OBJ = Object.o Way.o Parser.o Components.o functions.o llgr.o FeaturesParser.o FeatureClassification.o Node.o
 NETOBJ = Client.o
@@ -35,7 +35,7 @@ test3: test3.o libosm.a libosmnet.a
 	$(CXX) -o test3 test3.o libosm.a libosmnet.a $(LDFLAGS)
 
 clean:
-	rm -f *.{o,a,so}
+	rm -f *.o *.a *.so
 
 test1.o test2.o test3.o rulestest.o: Parser.h Way.h Object.h Client.h 
 

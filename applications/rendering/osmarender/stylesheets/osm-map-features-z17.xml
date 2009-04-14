@@ -741,7 +741,7 @@
 					</else>
 				</rule>
 				<rule e="way" k="highway" v="service">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|cy">
+					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
 						<line class="highway-casing highway-service-cy1-casing"/>
 						<line class="highway-casing highway-service-cy2-casing"/>
 					</rule>

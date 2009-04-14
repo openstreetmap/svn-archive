@@ -784,6 +784,7 @@ sub UpdateClient
     {
         my $versionfile = "version.txt";
         DownloadFile($Config->get("VersionCheckURL"), $versionfile ,0);
+        
         return 1;
     }
 }
@@ -812,6 +813,7 @@ sub ClientModified
 
 sub NewClientVersion 
 {
+    return 1; # this client is outdated, using tags of tilesAtHome-dev now.
     my $Config = TahConf->getConfig();
     return 0 if (time() - $LastTimeVersionChecked < 600);
     my $versionfile = "version.txt";

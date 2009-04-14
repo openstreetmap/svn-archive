@@ -1,6 +1,8 @@
 /**
  * @author Mario Ferraro <fadinlight@gmail.com>
  * Porting from or/p written by Frederik Ramm <frederik@remote.org>
+ * osmarender.xsl is Copyright (C) 2006-2007  Etienne Cherdlu, Jochen Topf
+ * and released under GPL v2 or later.
  * Based on 14382 or/p version
  * http://osmarenderfrontend.wordpress.com
  * Released under GPL v2 or later

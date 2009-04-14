@@ -1,0 +1,29 @@
+amr2wav
+    Copyright (C) 2009   Graham Jones
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+amr2wav is intended for use in audio mapping using mobile phones, which tend to
+produce '.amr' audio files, whereas JOSM likes .wav files.
+amr2wav does two things:
+  1.  It scans through a GPX file and where it finds an audio waypoint, it adds
+       a <link href=....> tag which can be read by josm.
+  2.  It convers the associated .amr file to a .wav file using ffmpeg.
+
+Note that the version of ffmpeg that comes with Ubuntu does not support amr,
+so you may need to re-compile ffmpeg from sources.
+
+Any comments / problems, please email grahamjones139 at gmail.com.
+
+13 April 2009.

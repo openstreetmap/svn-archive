@@ -26,6 +26,11 @@ CFLAGS += $(shell mysql_config --cflags)
 LDFLAGS += $(shell mysql_config --libs)
 endif
 
+ifeq ($(DB),postgres)
+CFLAGS += -I$(shell pg_config --includedir)
+LDFLAGS += -L$(shell pg_config --libdir) -lpq
+endif
+
 MAINOBJS := main.o gpx.o mercator.o image.o log.o db.o filename.o interpolate.o quadtile.o
 
 ALLOBJS := $(DB).o $(MAINOBJS)

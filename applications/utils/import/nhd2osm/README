@@ -1,6 +1,15 @@
-The scripts in this directory convert USGS National Hydrography Dataset shapefiles into osm files (currently version 0.5).  One script is provided for each shapefile in a NHD extract.  Care must be used in employing these scripts because not every NHD ftype (feature type) is currently supported.  The user must check the list of feature types in his subbasin, and verify that they are supported by this script.  If they are not, he will need to add support or not import the basin.
+The scripts in this directory convert USGS National Hydrography Datase
+t shapefiles into osm files (currently version 0.5).  One script is pr
+ovided for each shapefile in a NHD extract.  Care must be used in empl
+oying these scripts because not every NHD ftype (feature type) is curr
+ently supported.  The user must check the list of feature types in his
+ subbasin, and verify that they are supported by this script.  If they
+ are not, he will need to add support or not import the basin.
 
-These scripts are based on the existing polyshp2osm and shape_to_osm engines, but the engines have been modified to support maximum way lengths.  Complex multipolygons are used to allow all ways to be split when they exceed the fixed length.
+These scripts are based on the existing polyshp2osm and shape_to_osm e
+ngines, but the engines have been modified to support maximum way leng
+ths.  Complex multipolygons are used to allow all ways to be split whe
+n they exceed the fixed length.
 
 The SVN archive will be updated as newer versions become available.
 

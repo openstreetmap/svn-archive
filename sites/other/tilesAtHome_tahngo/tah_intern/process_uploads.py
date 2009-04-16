@@ -178,7 +178,7 @@ class TileUpload (object):
       if outfile: outfile.close()
       return 0
     except:
-      logging.warning('unknown zip file error in file %s uploaded by user %s' % (self.upload.file, self.upload.user_id))
+      logging.warning('unknown zip file error in file %s uploaded by user %s (%s, %s)' % (self.upload.file, self.upload.user_id, str(sys.exc_info()[1]), dir))
       if outfile: outfile.close()
       return(0)
 

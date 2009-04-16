@@ -5,8 +5,8 @@
 #Therefore licensed under the GPL, I guess
 
 . /lib/lsb/init-functions
-DAEMON=/storage/openstreetmap/tah/tah_intern/process_uploads.py
-PIDFILE=/storage/openstreetmap/tah/var/tahngo_uploads.pid
+DAEMON=/var/www/tilesAtHome/tah/tah_intern/process_uploads.py
+PIDFILE=/var/www/tilesAtHome/tah/var/tahngo_uploads.pid
 
 test -x $DAEMON || exit 5
 
@@ -22,7 +22,7 @@ test -x $DAEMON || exit 5
 case $1 in
 	start)
 		echo "Starting T@HNGO server"
-                export PYTHONPATH=/storage/openstreetmap/django-1.0
+                export PYTHONPATH=/home/sspaeth/django
   		/sbin/start-stop-daemon --start --background --make-pidfile --oknodo --pidfile $PIDFILE --startas $DAEMON -- $TAH_OPTS
   		;;
 	stop)

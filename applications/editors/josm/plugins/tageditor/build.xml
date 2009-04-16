@@ -37,7 +37,7 @@
 	<property name="plugin.class"           value="org.openstreetmap.josm.plugins.tageditor.TagEditorPlugin"/>
 	<property name="plugin.description"     value="Provides a dialog for editing tags in a tabular grid."/>
 	<property name="plugin.doc.url"         value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/TagEditor"/>
-	<property name="plugin.main.version"    value="0.7"/>	
+	<property name="plugin.main.version"    value="1515"/>	
     <property name="plugin.jar.name"        value="${ant.project.name}.jar"/>
 	
     
@@ -72,7 +72,7 @@
             <arg value="build.number"/>
 		</exec>
         <mkdir dir="${plugin.build.dir}"/>
-    </target>
+    </target>	
 	
 	<!--
 	**********************************************************

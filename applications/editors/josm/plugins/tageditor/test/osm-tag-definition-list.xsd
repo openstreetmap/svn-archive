@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/osm-tag-definition-list" xmlns:tns="http://www.example.org/osm-tag-definition-list" elementFormDefault="qualified">
+
+ 	<simpleType name = "OsmTagType">
+    	<restriction base = "string">
+      	<enumeration value = "string"/>
+      	<enumeration value = "boolean"/>
+    	</restriction>
+ 	 </simpleType>
+
+
+    <complexType name="OsmTagDefinitionList">
+    	<sequence>
+    		<element name="osm-tag-definition" type="tns:OsmTagDefinition" minOccurs="0" maxOccurs="unbounded"></element>
+    	</sequence>
+    	<attribute name="version" type="string"></attribute>
+    </complexType>
+    
+
+    <complexType name="OsmTagDefinition">
+    	<sequence>
+    		<element ref="tns:displayName" minOccurs="0"
+    			maxOccurs="unbounded">
+    		</element>
+
+    		<element ref="tns:description" minOccurs="0"
+    			maxOccurs="unbounded">
+    		</element>
+    		<element name="label" type="tns:OsmLabelDefinition" minOccurs="0" 
+    		maxOccurs="unbounded"></element>
+    	</sequence>
+    	<attribute name="key" type="string" use="required"></attribute>
+    	<attribute name="iconName" type="string" use="optional"></attribute>
+    	<attribute name="applicableForNode" type="boolean"
+    		use="optional" default="true">
+    	</attribute>
+    	<attribute name="applicableForWay" type="boolean" use="optional"
+    		default="true">
+    	</attribute>
+    	<attribute name="applicableForArea" type="boolean"
+    		use="optional" default="true">
+    	</attribute>
+    	<attribute name="applicableForRelation" type="boolean"
+    		use="optional" default="true">
+    	</attribute>
+    	<attribute name="type" type="tns:OsmTagType" use="optional"
+    		default="string">
+    	</attribute>
+    </complexType>
+
+    <complexType name="OsmLabelDefinition">
+    	<sequence>
+    		<element name="value" type="string" minOccurs="1"
+    			maxOccurs="1">
+    		</element>
+    		<element ref="tns:displayName" minOccurs="0" maxOccurs="unbounded"></element>
+    		<element ref="tns:description" minOccurs="0" maxOccurs="unbounded"></element>
+    	</sequence>
+    	<attribute name="iconName" type="string" use="optional"></attribute>
+    	<attribute name="applicableForNode" type="boolean"
+    		use="optional" default="true">
+    	</attribute>
+    	<attribute name="applicableForWay" type="boolean" use="optional"
+    		default="true">
+    	</attribute>
+    	<attribute name="applicableForArea" type="boolean"
+    		use="optional" default="true">
+    	</attribute>
+    	<attribute name="applicableForRelation" type="boolean"
+    		use="optional" default="true">
+    	</attribute>
+    </complexType>
+
+
+
+    <complexType name="OsmLocalizedString">
+    	<simpleContent>
+    	 	<extension base="string">
+		    	<attribute name="locale" type="string" use="optional" default="en"></attribute>
+    	 	</extension>
+    	</simpleContent>
+    </complexType>
+
+ 
+
+    <element  name="displayName" type="tns:OsmLocalizedString"></element>
+    
+    <element  name="description" type="tns:OsmLocalizedString"></element>
+    
+    <element  name="osm-tag-definition-list" type="tns:OsmTagDefinitionList"></element>
+</schema>

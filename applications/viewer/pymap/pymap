@@ -23,6 +23,8 @@ class MyHttpHandler(BaseHTTPRequestHandler):
       tileurl = 'http://www.thunderflames.org/tiles/cycle/'+z+'/'+x+'/'+y+'.png'
     elif layer == 'PSV':
       tileurl = 'http://xn--pnvkarte-m4a.de/tiles/'+z+'/'+x+'/'+y+'.png'
+    elif layer == 'OSMB':
+      tileurl = 'http://www.openstreetbrowser.org/tiles/'+z+'/'+x+'/'+y+'.png'
     else: return None
 
     try: os.makedirs(os.path.dirname(localpath))

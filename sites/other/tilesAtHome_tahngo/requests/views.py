@@ -305,10 +305,13 @@ def upload_request(request):
               html="OK|Upload saved for later processing"
           except:
               # delete possibly uploaded file in case of exception
-              os.unlink(newUpload.file.path)
               import sys
+              try:
+                os.unlink(newUpload.file.path)
+              except:
+                #don't fail if unlinking doesn't work
+                pass
               html ="XX|Exception thrown. "+str(user.id)+str(sys.exc_info()[1])
-
           return HttpResponse(html)
 #-------------------------------------------------------
 # return upload queue load
@@ -378,7 +381,7 @@ def take(request):
 
     #"You provided a correct username and password!"
     # next, check for a valid client version
-    if not form['version'] in ['Ulm','Trondheim']:
+    if not form['version'] in ['Ulm']:
         # client version not in whitelist
         logging.info("User %s connects with disallowed client '%s'." %\
                      (user,form.cleaned_data['version']))

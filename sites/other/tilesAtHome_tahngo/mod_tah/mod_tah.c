@@ -25,9 +25,9 @@ module AP_MODULE_DECLARE_DATA tilesAtHome_module;
 #define MIN_VALID_OFFSET 4
 const char * const content_imagepng = "image/png";
 
-static char * basetilepath = "/storage/openstreetmap/tah/Tiles/";
-static char * statictilepath = "/storage/openstreetmap/tah/Tiles/";
-#define OCEANS_DB_FILE "/storage/openstreetmap/tah/Tiles/oceantiles_12.dat"
+static char * basetilepath = "/SX40/Tiles/";
+static char * statictilepath = "/SX40/Tiles/";
+#define OCEANS_DB_FILE "/SX40/oceantiles_12.dat"
 
 /* These layer return a transparent tile if no tileset file exists */
 const char * transparent_layers[] = {

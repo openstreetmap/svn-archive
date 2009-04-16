@@ -50,7 +50,7 @@ body {
             var layerCycle = new OpenLayers.Layer.TMS("Cycle",'/tiles/cycle/',{transitionEffect:'resize',getURL:getOSMURL});
             var layerOSMB = new OpenLayers.Layer.TMS("OpenStreetBrowser",'/tiles/OSMB/',{transitionEffect:'resize',getURL:getOSMURL});
             var layerPSV = new OpenLayers.Layer.TMS("PSV (z0-13)",'/tiles/PSV/',{transitionEffect:'resize',getURL:getOSMURL});
-            map.addLayers([layerMapnik,layerOsma,layerCycle,layerPSV]);
+            map.addLayers([layerMapnik,layerOsma,layerCycle,layerOSMB,layerPSV]);
             map.addControl(new OpenLayers.Control.LayerSwitcher());
             map.setCenter(new OpenLayers.LonLat(11.59,48.14).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913")), 5);
         }

@@ -1,0 +1,16 @@
+<annotations>
+    <group name="Group1" icon="presets/group1.png">
+        <item name="Item1" icon="presets/item1.png" type="way">
+      
+            <label text="Label for Item1" />
+            <space />
+            <key key="highway" value="motorway" />
+            <text key="ref" text="Reference" default="" delete_if_empty="true" />
+            <optional>
+                <text key="name" text="Name" default="" delete_if_empty="true" />
+                <combo key="layer" text="Layer" values="5,4,3,2,1,0,-1,-2,-3,-4,-5" default="" delete_if_empty="true" />
+                <check key="oneway" text="Oneway" default="on" delete_if_empty="true" />
+            </optional>
+        </item>
+     </group>
+</annotations>

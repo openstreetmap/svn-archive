@@ -339,6 +339,7 @@ public class TagTable extends JTable  {
 		// create the table cell editor and set it to key and value columns
 		//
 		editor = new TableCellEditor();
+		editor.setTagEditorModel((TagEditorModel)getModel());
 		getColumnModel().getColumn(0).setCellEditor(editor);
 		getColumnModel().getColumn(1).setCellEditor(editor);
 	
@@ -467,7 +468,6 @@ public class TagTable extends JTable  {
 		}
 
 	}
-	
-	
+
 	
 }

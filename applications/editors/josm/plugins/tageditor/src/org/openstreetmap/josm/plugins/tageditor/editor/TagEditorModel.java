@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
 import org.openstreetmap.josm.Main;
@@ -66,7 +67,7 @@ public class TagEditorModel extends AbstractTableModel {
 		propChangeSupport.removePropertyChangeListener(listener);
 	}
 	
-	protected void fireDirtyStateChanged(boolean oldValue, boolean newValue) {
+	protected void fireDirtyStateChanged(final boolean oldValue, final boolean newValue) {
 		propChangeSupport.firePropertyChange(PROP_DIRTY, oldValue, newValue);
 	}
 	
@@ -533,6 +534,13 @@ public class TagEditorModel extends AbstractTableModel {
 	}
 	
 	
+	/**
+	 * updates the name of a tag and sets the dirty state to  true if 
+	 * the new name is different from the old name.  
+	 * 
+	 * @param tag   the tag 
+	 * @param newName  the new name 
+	 */
 	public void updateTagName(TagModel tag, String newName) {
 		String oldName = tag.getName();
 		tag.setName(newName);
@@ -541,6 +549,13 @@ public class TagEditorModel extends AbstractTableModel {
 		}
 	}
 	
+	/**
+	 * updates the value value of a tag and sets the dirty state to true if the
+	 * new name is different from the old name 
+	 * 
+	 * @param tag  the tag 
+	 * @param newValue  the new value 
+	 */
 	public void updateTagValue(TagModel tag, String newValue) {
 		String oldValue = tag.getValue();
 		tag.setValue(newValue);

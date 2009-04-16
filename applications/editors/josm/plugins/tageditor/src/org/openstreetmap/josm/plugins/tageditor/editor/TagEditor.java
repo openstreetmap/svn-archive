@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.table.TableCellEditor;
+
 
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionCache;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionList;
@@ -102,8 +102,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 	public TagEditor() {
 		// creates a default model and a default cache 
 		//
-		tagEditorModel = new TagEditorModel();
-		
+		tagEditorModel = new TagEditorModel();		
 		
 		build();
 	}
@@ -124,6 +123,12 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 	 */
 	public void setTagEditorModel(TagEditorModel tagEditorModel) {
 		tblTagEditor.setModel(tagEditorModel);
+		for (int i=0; i<=1; i++) {
+			TableCellEditor editor = (TableCellEditor)tblTagEditor.getColumnModel().getColumn(i).getCellEditor();
+			if (editor != null) {
+				editor.setTagEditorModel(tagEditorModel);
+			}
+		}
 		presetManager.setModel(tagEditorModel);
 	}
 	
@@ -144,7 +149,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 
 	
 	public void stopEditing() {
-		TableCellEditor editor = tblTagEditor.getCellEditor();
+		TableCellEditor editor = (TableCellEditor) tblTagEditor.getCellEditor();
 		if (editor != null) {
 			editor.stopCellEditing();
 		}

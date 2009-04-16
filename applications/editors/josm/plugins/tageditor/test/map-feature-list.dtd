@@ -1,0 +1,59 @@
+<!-- *************************************************************************** -->
+<!-- This is the DTD for the machine-readable OSM map feature list.              -->
+<!--                                                                             -->
+<!-- see http://wiki.openstreetmap.org/wiki/Machine-readable_Map_Feature_list    -->
+<!-- *************************************************************************** -->
+
+<!ELEMENT map-feature-list     ((tag-def|category|preset)*)>
+<!ATTLIST map-feature-list  version      CDATA #REQUIRED>
+<!ATTLIST map-feature-list  release-id   CDATA #REQUIRED>
+<!ATTLIST map-feature-list  release-date CDATA #REQUIRED>
+<!ATTLIST map-feature-list  xml:lang     NMTOKEN  "en">
+
+<!ELEMENT description (#PCDATA)>
+<!ATTLIST description  xml:lang  NMTOKEN #IMPLIED>
+
+<!ELEMENT display-name (#PCDATA)>
+<!ATTLIST display-name  xml:lang  NMTOKEN #IMPLIED>
+
+<!ELEMENT value-summary (#PCDATA)>
+<!ATTLIST value-summary xml:lang  NMTOKEN #IMPLIED>
+
+
+<!ELEMENT tag-def              ((display-name|description|value-def|category|value-summary)*)>
+<!ATTLIST tag-def key          CDATA #REQUIRED>
+<!ATTLIST tag-def onnode       (yes|no)  "no">
+<!ATTLIST tag-def onway        (yes|no)  "no">
+<!ATTLIST tag-def onarea       (yes|no)  "no">
+<!ATTLIST tag-def onrelation   (yes|no)  "no">
+<!ATTLIST tag-def state        (proposed |accepted | rejected | deprecated)  "accepted">
+
+
+<!ELEMENT value-def              ((display-name|description)*)>
+<!ATTLIST value-def value         CDATA #REQUIRED>
+<!ATTLIST value-def onnode       (yes | no)  "no">
+<!ATTLIST value-def onway        (yes | no)  "no">
+<!ATTLIST value-def onarea       (yes | no)  "no">
+<!ATTLIST value-def onrelation   (yes | no)  "no">
+<!ATTLIST value-def state        (proposed | accepted | rejected | deprecated)  "accepted">
+
+
+<!ELEMENT category              ((display-name|description)*)>
+<!ATTLIST category  name        ID #IMPLIED>
+<!ATTLIST category  ref         IDREF #IMPLIED>
+
+
+<!ELEMENT implies                EMPTY>
+<!ATTLIST implies   key          CDATA #REQUIRED>
+<!ATTLIST implies   value        CDATA #REQUIRED>
+
+<!ELEMENT requires                EMPTY>
+<!ATTLIST requires   key          CDATA #REQUIRED>
+ 
+<!ELEMENT suggests                EMPTY>
+<!ATTLIST suggests   key           CDATA #REQUIRED>
+
+<!ELEMENT preset   ((implies|requires|suggests|display-name|description)*)>
+<!ATTLIST preset   name          NMTOKEN #REQUIRED>
+
+

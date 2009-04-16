@@ -33,6 +33,7 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 
 	private TagFieldEditor editor = null;
 	private TagModel currentTag = null;
+	private TagEditorModel tagEditorModel = null;
 	private int currentColumn = 0;
 
 	/** the cache of auto completion items derived from the current JOSM data set */
@@ -193,14 +194,18 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 
 	@Override
 	public boolean stopCellEditing() {
+		if (tagEditorModel == null) {
+			logger.warning("no tag editor model set. Can't update edited values. Please set tag editor model first");
+			return super.stopCellEditing();
+	    }
 		
 		if (currentColumn == 0) {
-			currentTag.setName(editor.getText());
+			tagEditorModel.updateTagName(currentTag, editor.getText());
 		} else if (currentColumn == 1){
 			if (currentTag.getValueCount() > 1 && ! editor.getText().equals("")) {
-				currentTag.setValue(editor.getText());
+				tagEditorModel.updateTagValue(currentTag, editor.getText());		
 			} else if (currentTag.getValueCount() <= 1) {
-				currentTag.setValue(editor.getText());
+				tagEditorModel.updateTagValue(currentTag, editor.getText());
 			}
 		}
 	    
@@ -240,6 +245,15 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 	
 	public TagFieldEditor getEditor() {
 		return editor;
+	}
+	
+	/**
+	 * sets the tag editor model
+	 *  
+	 * @param tagEditorModel  the tag editor model 
+	 */
+	public void setTagEditorModel(TagEditorModel tagEditorModel) {
+		this.tagEditorModel = tagEditorModel;
 	}
 	
 }

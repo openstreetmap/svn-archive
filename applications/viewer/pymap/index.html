@@ -48,6 +48,7 @@ body {
             var layerMapnik = new OpenLayers.Layer.TMS("Mapnik",'/tiles/mapnik/',{transitionEffect:'resize',getURL:getOSMURL});
             var layerOsma = new OpenLayers.Layer.TMS("Osmarender",'/tiles/osma/',{transitionEffect:'resize',getURL:getOSMURL});
             var layerCycle = new OpenLayers.Layer.TMS("Cycle",'/tiles/cycle/',{transitionEffect:'resize',getURL:getOSMURL});
+            var layerOSMB = new OpenLayers.Layer.TMS("OpenStreetBrowser",'/tiles/OSMB/',{transitionEffect:'resize',getURL:getOSMURL});
             var layerPSV = new OpenLayers.Layer.TMS("PSV (z0-13)",'/tiles/PSV/',{transitionEffect:'resize',getURL:getOSMURL});
             map.addLayers([layerMapnik,layerOsma,layerCycle,layerPSV]);
             map.addControl(new OpenLayers.Control.LayerSwitcher());

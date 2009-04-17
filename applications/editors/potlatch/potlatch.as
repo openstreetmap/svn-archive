@@ -128,11 +128,10 @@
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
 	var signature="Potlatch 0.11";	// current version
 	var maximised=false;			// minimised/maximised?
-	var sourcetags=new Array("Oberpfalz","","","","","NPE","OpenTopoMap");
+	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
 
-	var tileurls=new Array("http://oberpfalz.geofabrik.de/lvg-by-slippymap/!/!/!.png",
-						   "http://tile.openstreetmap.org/!/!/!.png",
+	var tileurls=new Array("http://tile.openstreetmap.org/!/!/!.png",
 						   "http://tah.openstreetmap.org/Tiles/tile/!/!/!.png",
 						   "http://tah.openstreetmap.org/Tiles/maplint/!/!/!.png",
 						   "http://andy.sandbox.cloudmade.com/tiles/cycle/!/!/!.png",

@@ -3,3 +3,5 @@
 /ivy
 /osmosis.jar
 /dist
+/*.externalToolBuilders
+/*.settings

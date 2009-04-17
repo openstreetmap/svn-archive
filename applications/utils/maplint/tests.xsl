@@ -122,6 +122,29 @@
 </xsl:when>
 <xsl:when test="starts-with(@k, 'opengeodb:')">
 </xsl:when>
+<xsl:when test="@k='TMC:LocationCode'">
+<xsl:choose>
+<xsl:when test="@v='see description'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='addr:city'">
+
+</xsl:when>
+<xsl:when test="@k='addr:country'">
+
+</xsl:when>
+<xsl:when test="@k='addr:housenumber'">
+
+</xsl:when>
+<xsl:when test="@k='addr:postcode'">
+
+</xsl:when>
+<xsl:when test="@k='addr:street'">
+
+</xsl:when>
 <xsl:when test="@k='aerialway'">
 <xsl:choose>
 <xsl:when test="@v='station'"/>
@@ -146,10 +169,12 @@
 <xsl:when test="@v='atm'"/>
 <xsl:when test="@v='baby_hatch'"/>
 <xsl:when test="@v='bank'"/>
+<xsl:when test="@v='bbq'"/>
 <xsl:when test="@v='bench'"/>
 <xsl:when test="@v='bicycle_parking'"/>
 <xsl:when test="@v='bicycle_rental'"/>
 <xsl:when test="@v='biergarten'"/>
+<xsl:when test="@v='brothel'"/>
 <xsl:when test="@v='bureau_de_change'"/>
 <xsl:when test="@v='bus_station'"/>
 <xsl:when test="@v='cafe'"/>
@@ -159,16 +184,21 @@
 <xsl:when test="@v='college'"/>
 <xsl:when test="@v='courthouse'"/>
 <xsl:when test="@v='crematorium'"/>
+<xsl:when test="@v='dentist'"/>
+<xsl:when test="@v='doctors'"/>
 <xsl:when test="@v='drinking_water'"/>
+<xsl:when test="@v='embassy'"/>
 <xsl:when test="@v='emergency_phone'"/>
 <xsl:when test="@v='fast_food'"/>
 <xsl:when test="@v='ferry_terminal'"/>
 <xsl:when test="@v='fire_station'"/>
+<xsl:when test="@v='food_court'"/>
 <xsl:when test="@v='fountain'"/>
 <xsl:when test="@v='fuel'"/>
 <xsl:when test="@v='grave_yard'"/>
 <xsl:when test="@v='grit_bin'"/>
 <xsl:when test="@v='hospital'"/>
+<xsl:when test="@v='hunting_stand'"/>
 <xsl:when test="@v='kindergarten'"/>
 <xsl:when test="@v='library'"/>
 <xsl:when test="@v='parking'"/>
@@ -183,6 +213,7 @@
 <xsl:when test="@v='restaurant'"/>
 <xsl:when test="@v='school'"/>
 <xsl:when test="@v='shelter'"/>
+<xsl:when test="@v='signpost'"/>
 <xsl:when test="@v='studio'"/>
 <xsl:when test="@v='taxi'"/>
 <xsl:when test="@v='telephone'"/>
@@ -196,19 +227,18 @@
 
 </xsl:choose>
 </xsl:when>
+<xsl:when test="@k='attribution'">
+
+</xsl:when>
 <xsl:when test="@k='barrier'">
 <xsl:choose>
 <xsl:when test="@v='bollard'"/>
 <xsl:when test="@v='cattle_grid'"/>
+<xsl:when test="@v='cycle_barrier'"/>
 <xsl:when test="@v='gate'"/>
-<xsl:when test="@v='hampshire_gate'"/>
-<xsl:when test="@v='kissing_gate'"/>
-<xsl:when test="@v='lift_gate'"/>
-<xsl:when test="@v='rotating_gate'"/>
 <xsl:when test="@v='sally_port'"/>
 <xsl:when test="@v='stile'"/>
 <xsl:when test="@v='toll_booth'"/>
-<xsl:when test="@v='v_gate'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -262,19 +292,15 @@
 <xsl:when test="@k='highway'">
 <xsl:choose>
 <xsl:when test="@v='bus_stop'"/>
-<xsl:when test="@v='cattle_grid'"/>
 <xsl:when test="@v='crossing'"/>
 <xsl:when test="@v='emergency_access_point'"/>
 <xsl:when test="@v='ford'"/>
-<xsl:when test="@v='gate'"/>
 <xsl:when test="@v='incline'"/>
 <xsl:when test="@v='incline_steep'"/>
 <xsl:when test="@v='mini_roundabout'"/>
 <xsl:when test="@v='motorway_junction'"/>
 <xsl:when test="@v='services'"/>
-<xsl:when test="@v='stile'"/>
 <xsl:when test="@v='stop'"/>
-<xsl:when test="@v='toll_booth'"/>
 <xsl:when test="@v='traffic_signals'"/>
 <xsl:when test="@v='turning_circle'"/>
 
@@ -285,10 +311,12 @@
 <xsl:when test="@v='archaeological_site'"/>
 <xsl:when test="@v='battlefield '"/>
 <xsl:when test="@v='castle'"/>
+<xsl:when test="@v='manor'"/>
 <xsl:when test="@v='memorial'"/>
 <xsl:when test="@v='monument'"/>
 <xsl:when test="@v='ruins'"/>
 <xsl:when test="@v='wreck '"/>
+<xsl:when test="@v='yes '"/>
 
 </xsl:choose>
 </xsl:when>
@@ -309,11 +337,31 @@
 </xsl:otherwise>
 </xsl:choose>
 </xsl:when>
+<xsl:when test="@k='incline'">
+<xsl:choose>
+<xsl:when test="@v='Number%'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
 <xsl:when test="@k='int_name'">
 
 </xsl:when>
 <xsl:when test="@k='int_ref'">
 
+</xsl:when>
+<xsl:when test="@k='internet_access'">
+<xsl:choose>
+<xsl:when test="@v='public'"/>
+<xsl:when test="@v='service'"/>
+<xsl:when test="@v='terminal'"/>
+<xsl:when test="@v='wired'"/>
+<xsl:when test="@v='wlan'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
 </xsl:when>
 <xsl:when test="@k='is_in'">
 
@@ -329,6 +377,7 @@
 <xsl:when test="@v='greenfield'"/>
 <xsl:when test="@v='industrial'"/>
 <xsl:when test="@v='landfill'"/>
+<xsl:when test="@v='meadow'"/>
 <xsl:when test="@v='military'"/>
 <xsl:when test="@v='quarry'"/>
 <xsl:when test="@v='recreation_ground'"/>
@@ -336,6 +385,7 @@
 <xsl:when test="@v='residential'"/>
 <xsl:when test="@v='retail'"/>
 <xsl:when test="@v='village_green'"/>
+<xsl:when test="@v='vineyard'"/>
 
 </xsl:choose>
 </xsl:when>
@@ -345,7 +395,9 @@
 <xsl:when test="@v='fishing'"/>
 <xsl:when test="@v='garden'"/>
 <xsl:when test="@v='golf_course'"/>
+<xsl:when test="@v='ice_rink'"/>
 <xsl:when test="@v='marina'"/>
+<xsl:when test="@v='miniature_golf '"/>
 <xsl:when test="@v='nature_reserve'"/>
 <xsl:when test="@v='park'"/>
 <xsl:when test="@v='pitch'"/>
@@ -363,6 +415,15 @@
 </xsl:when>
 <xsl:when test="@k='loc_ref'">
 
+</xsl:when>
+<xsl:when test="@k='lock'">
+<xsl:choose>
+<xsl:when test="@v='Tag:lock=yes'"/>
+<xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
 </xsl:when>
 <xsl:when test="@k='man_made'">
 <xsl:choose>
@@ -436,6 +497,14 @@
 
 </xsl:choose>
 </xsl:when>
+<xsl:when test="@k='noexit'">
+<xsl:choose>
+<xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
 <xsl:when test="@k='noname'">
 <xsl:choose>
 <xsl:when test="@v='yes'"/>
@@ -455,8 +524,9 @@
 </xsl:when>
 <xsl:when test="@k='opening_hours'">
 <xsl:choose>
+<xsl:when test="@v='''' mo md hh:mm-hh:mm. (read described syntax)'"/>
 <xsl:when test="@v='24'"/>
-<xsl:when test="@v='7 ; m d hh:mm'"/>
+<xsl:when test="@v='7 ''''"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -559,6 +629,7 @@
 </xsl:when>
 <xsl:when test="@k='shop'">
 <xsl:choose>
+<xsl:when test="@v='alcohol'"/>
 <xsl:when test="@v='bakery'"/>
 <xsl:when test="@v='beverages'"/>
 <xsl:when test="@v='bicycle'"/>
@@ -566,20 +637,33 @@
 <xsl:when test="@v='butcher'"/>
 <xsl:when test="@v='car'"/>
 <xsl:when test="@v='car_repair'"/>
+<xsl:when test="@v='chemist'"/>
 <xsl:when test="@v='clothes'"/>
+<xsl:when test="@v='computer'"/>
 <xsl:when test="@v='convenience'"/>
+<xsl:when test="@v='department_store'"/>
 <xsl:when test="@v='doityourself'"/>
 <xsl:when test="@v='dry_cleaning'"/>
+<xsl:when test="@v='electronics'"/>
 <xsl:when test="@v='florist'"/>
 <xsl:when test="@v='furniture'"/>
+<xsl:when test="@v='garden_centre'"/>
 <xsl:when test="@v='hairdresser'"/>
+<xsl:when test="@v='hardware'"/>
 <xsl:when test="@v='hifi'"/>
 <xsl:when test="@v='kiosk'"/>
 <xsl:when test="@v='laundry'"/>
 <xsl:when test="@v='mall'"/>
+<xsl:when test="@v='motorcycle'"/>
+<xsl:when test="@v='optician'"/>
+<xsl:when test="@v='organic'"/>
 <xsl:when test="@v='outdoor'"/>
+<xsl:when test="@v='shoes'"/>
+<xsl:when test="@v='sports'"/>
+<xsl:when test="@v='stationery'"/>
 <xsl:when test="@v='supermarket'"/>
-<xsl:when test="@v='trumpet'"/>
+<xsl:when test="@v='toys'"/>
+<xsl:when test="@v='video'"/>
 
 </xsl:choose>
 </xsl:when>
@@ -632,6 +716,7 @@
 <xsl:when test="@v='motor'"/>
 <xsl:when test="@v='multi'"/>
 <xsl:when test="@v='orienteering'"/>
+<xsl:when test="@v='paddle_tennis'"/>
 <xsl:when test="@v='pelota'"/>
 <xsl:when test="@v='racquet'"/>
 <xsl:when test="@v='rowing'"/>
@@ -653,6 +738,8 @@
 </xsl:when>
 <xsl:when test="@k='tourism'">
 <xsl:choose>
+<xsl:when test="@v='alpine_hut'"/>
+<xsl:when test="@v='aquarium'"/>
 <xsl:when test="@v='artwork'"/>
 <xsl:when test="@v='attraction'"/>
 <xsl:when test="@v='camp_site'"/>
@@ -667,6 +754,7 @@
 <xsl:when test="@v='picnic_site'"/>
 <xsl:when test="@v='theme_park'"/>
 <xsl:when test="@v='viewpoint'"/>
+<xsl:when test="@v='yes'"/>
 <xsl:when test="@v='zoo'"/>
 
 </xsl:choose>
@@ -682,6 +770,22 @@
 <xsl:when test="@v='rumble_strip'"/>
 <xsl:when test="@v='table'"/>
 <xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='traffic_sign'">
+<xsl:choose>
+<xsl:when test="@v='city_limit'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='url'">
+<xsl:choose>
+<xsl:when test="@v='URI'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -953,6 +1057,14 @@
 </xsl:when>
 <xsl:when test="starts-with(@k, 'opengeodb:')">
 </xsl:when>
+<xsl:when test="@k='TMC:LocationCode'">
+<xsl:choose>
+<xsl:when test="@v='see description'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
 <xsl:when test="@k='abutters'">
 <xsl:choose>
 <xsl:when test="@v='commercial'"/>
@@ -967,8 +1079,11 @@
 </xsl:when>
 <xsl:when test="@k='access'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -978,6 +1093,32 @@
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
 </xsl:choose>
+</xsl:when>
+<xsl:when test="@k='addr:city'">
+
+</xsl:when>
+<xsl:when test="@k='addr:country'">
+
+</xsl:when>
+<xsl:when test="@k='addr:housenumber'">
+
+</xsl:when>
+<xsl:when test="@k='addr:interpolation'">
+<xsl:choose>
+<xsl:when test="@v='all'"/>
+<xsl:when test="@v='alphabetic'"/>
+<xsl:when test="@v='even'"/>
+<xsl:when test="@v='odd'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='addr:postcode'">
+
+</xsl:when>
+<xsl:when test="@k='addr:street'">
+
 </xsl:when>
 <xsl:when test="@k='aerialway'">
 <xsl:choose>
@@ -990,7 +1131,9 @@
 </xsl:when>
 <xsl:when test="@k='aeroway'">
 <xsl:choose>
+<xsl:when test="@v='aerodrome'"/>
 <xsl:when test="@v='apron'"/>
+<xsl:when test="@v='helipad'"/>
 <xsl:when test="@v='runway'"/>
 <xsl:when test="@v='taxiway'"/>
 <xsl:when test="@v='terminal'"/>
@@ -999,8 +1142,11 @@
 </xsl:when>
 <xsl:when test="@k='agricultural'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -1016,22 +1162,50 @@
 </xsl:when>
 <xsl:when test="@k='amenity'">
 <xsl:choose>
+<xsl:when test="@v='arts_centre'"/>
 <xsl:when test="@v='baby_hatch'"/>
+<xsl:when test="@v='bank'"/>
 <xsl:when test="@v='bicycle_parking'"/>
+<xsl:when test="@v='bicycle_rental'"/>
+<xsl:when test="@v='biergarten'"/>
+<xsl:when test="@v='brothel'"/>
 <xsl:when test="@v='bus_station'"/>
+<xsl:when test="@v='cafe'"/>
 <xsl:when test="@v='car_rental'"/>
 <xsl:when test="@v='car_sharing'"/>
+<xsl:when test="@v='cinema'"/>
 <xsl:when test="@v='college'"/>
+<xsl:when test="@v='courthouse'"/>
 <xsl:when test="@v='crematorium'"/>
+<xsl:when test="@v='dentist'"/>
+<xsl:when test="@v='doctors'"/>
+<xsl:when test="@v='embassy'"/>
+<xsl:when test="@v='fast_food'"/>
 <xsl:when test="@v='ferry_terminal'"/>
+<xsl:when test="@v='fire_station'"/>
+<xsl:when test="@v='food_court'"/>
 <xsl:when test="@v='fountain'"/>
+<xsl:when test="@v='fuel'"/>
+<xsl:when test="@v='grave_yard'"/>
 <xsl:when test="@v='hospital'"/>
+<xsl:when test="@v='hunting_stand'"/>
 <xsl:when test="@v='kindergarten'"/>
+<xsl:when test="@v='library'"/>
+<xsl:when test="@v='marketplace'"/>
 <xsl:when test="@v='parking'"/>
 <xsl:when test="@v='place_of_worship'"/>
+<xsl:when test="@v='police'"/>
+<xsl:when test="@v='post_office'"/>
+<xsl:when test="@v='prison'"/>
+<xsl:when test="@v='pub'"/>
 <xsl:when test="@v='public_building'"/>
+<xsl:when test="@v='recycling'"/>
+<xsl:when test="@v='restaurant'"/>
 <xsl:when test="@v='school'"/>
+<xsl:when test="@v='shelter'"/>
+<xsl:when test="@v='studio'"/>
 <xsl:when test="@v='taxi'"/>
+<xsl:when test="@v='theatre'"/>
 <xsl:when test="@v='townhall'"/>
 <xsl:when test="@v='university'"/>
 <xsl:when test="@v='veterinary'"/>
@@ -1046,9 +1220,14 @@
 </xsl:otherwise>
 </xsl:choose>
 </xsl:when>
+<xsl:when test="@k='attribution'">
+
+</xsl:when>
 <xsl:when test="@k='barrier'">
 <xsl:choose>
+<xsl:when test="@v='bollard'"/>
 <xsl:when test="@v='city_wall'"/>
+<xsl:when test="@v='ditch'"/>
 <xsl:when test="@v='fence'"/>
 <xsl:when test="@v='hedge'"/>
 <xsl:when test="@v='retaining_wall'"/>
@@ -1060,8 +1239,11 @@
 </xsl:when>
 <xsl:when test="@k='bicycle'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -1074,8 +1256,11 @@
 </xsl:when>
 <xsl:when test="@k='boat'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -1110,6 +1295,14 @@
 <xsl:choose>
 <xsl:when test="@v='yes'"/>
 
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='cables'">
+<xsl:choose>
+<xsl:when test="@v='1, 2, 3, ...'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
 </xsl:choose>
 </xsl:when>
 <xsl:when test="@k='charge'">
@@ -1220,6 +1413,14 @@
 </xsl:otherwise>
 </xsl:choose>
 </xsl:when>
+<xsl:when test="@k='ele'">
+<xsl:choose>
+<xsl:when test="string(number(@v)) != 'NaN'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
 <xsl:when test="@k='embankment'">
 <xsl:choose>
 <xsl:when test="@v='yes'"/>
@@ -1258,8 +1459,11 @@
 </xsl:when>
 <xsl:when test="@k='foot'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -1272,8 +1476,28 @@
 </xsl:when>
 <xsl:when test="@k='goods'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
+<xsl:when test="@v='no'"/>
+<xsl:when test="@v='permissive'"/>
+<xsl:when test="@v='private'"/>
+<xsl:when test="@v='unknown'"/>
+<xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='hazmat'">
+<xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
+<xsl:when test="@v='designated'"/>
+<xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -1286,8 +1510,11 @@
 </xsl:when>
 <xsl:when test="@k='hgv'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -1306,6 +1533,7 @@
 <xsl:when test="@v='construction'"/>
 <xsl:when test="@v='cycleway'"/>
 <xsl:when test="@v='footway'"/>
+<xsl:when test="@v='ford'"/>
 <xsl:when test="@v='living_street'"/>
 <xsl:when test="@v='motorway'"/>
 <xsl:when test="@v='motorway_link'"/>
@@ -1316,7 +1544,9 @@
 <xsl:when test="@v='residential'"/>
 <xsl:when test="@v='road'"/>
 <xsl:when test="@v='secondary'"/>
+<xsl:when test="@v='secondary_link'"/>
 <xsl:when test="@v='service'"/>
+<xsl:when test="@v='services'"/>
 <xsl:when test="@v='steps'"/>
 <xsl:when test="@v='tertiary'"/>
 <xsl:when test="@v='track'"/>
@@ -1330,8 +1560,13 @@
 <xsl:choose>
 <xsl:when test="@v='archaeological_site'"/>
 <xsl:when test="@v='battlefield '"/>
+<xsl:when test="@v='castle'"/>
+<xsl:when test="@v='manor'"/>
+<xsl:when test="@v='memorial'"/>
+<xsl:when test="@v='monument'"/>
 <xsl:when test="@v='ruins'"/>
 <xsl:when test="@v='wreck '"/>
+<xsl:when test="@v='yes '"/>
 
 </xsl:choose>
 </xsl:when>
@@ -1340,8 +1575,11 @@
 </xsl:when>
 <xsl:when test="@k='horse'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -1367,6 +1605,14 @@
 <xsl:when test="@k='image'">
 <xsl:choose>
 <xsl:when test="@v='URI'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='incline'">
+<xsl:choose>
+<xsl:when test="@v='Number%'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -1404,6 +1650,7 @@
 <xsl:when test="@v='greenfield'"/>
 <xsl:when test="@v='industrial'"/>
 <xsl:when test="@v='landfill'"/>
+<xsl:when test="@v='meadow'"/>
 <xsl:when test="@v='military'"/>
 <xsl:when test="@v='quarry'"/>
 <xsl:when test="@v='railway'"/>
@@ -1413,6 +1660,7 @@
 <xsl:when test="@v='residential'"/>
 <xsl:when test="@v='retail'"/>
 <xsl:when test="@v='village_green'"/>
+<xsl:when test="@v='vineyard'"/>
 
 </xsl:choose>
 </xsl:when>
@@ -1441,7 +1689,9 @@
 <xsl:when test="@v='fishing'"/>
 <xsl:when test="@v='garden'"/>
 <xsl:when test="@v='golf_course'"/>
+<xsl:when test="@v='ice_rink'"/>
 <xsl:when test="@v='marina'"/>
+<xsl:when test="@v='miniature_golf '"/>
 <xsl:when test="@v='nature_reserve'"/>
 <xsl:when test="@v='park'"/>
 <xsl:when test="@v='pitch'"/>
@@ -1468,15 +1718,29 @@
 <xsl:when test="@k='loc_ref'">
 
 </xsl:when>
+<xsl:when test="@k='lock'">
+<xsl:choose>
+<xsl:when test="@v='Tag:lock=yes'"/>
+<xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
 <xsl:when test="@k='man_made'">
 <xsl:choose>
+<xsl:when test="@v='crane'"/>
+<xsl:when test="@v='gasometer'"/>
 <xsl:when test="@v='pier'"/>
 <xsl:when test="@v='pipeline'"/>
 <xsl:when test="@v='reservoir_covered'"/>
 <xsl:when test="@v='surveillance'"/>
 <xsl:when test="@v='wastewater_plant'"/>
+<xsl:when test="@v='water_tower'"/>
 <xsl:when test="@v='water_works'"/>
 <xsl:when test="@v='watermill'"/>
+<xsl:when test="@v='windmill'"/>
+<xsl:when test="@v='works'"/>
 
 </xsl:choose>
 </xsl:when>
@@ -1532,6 +1796,7 @@
 <xsl:choose>
 <xsl:when test="@v='airfield'"/>
 <xsl:when test="@v='barracks'"/>
+<xsl:when test="@v='bunker'"/>
 <xsl:when test="@v='danger_area'"/>
 <xsl:when test="@v='naval_base'"/>
 <xsl:when test="@v='range'"/>
@@ -1548,6 +1813,7 @@
 </xsl:when>
 <xsl:when test="@k='mooring'">
 <xsl:choose>
+<xsl:when test="@v='Tag:mooring=yes'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='private'"/>
 <xsl:when test="@v='yes'"/>
@@ -1558,8 +1824,11 @@
 </xsl:when>
 <xsl:when test="@k='motorboat'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -1572,8 +1841,11 @@
 </xsl:when>
 <xsl:when test="@k='motorcar'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -1586,13 +1858,40 @@
 </xsl:when>
 <xsl:when test="@k='motorcycle'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
 <xsl:when test="@v='unknown'"/>
 <xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='mtb:scale'">
+<xsl:choose>
+<xsl:when test="@v='0-5'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='mtb:scale:imba'">
+<xsl:choose>
+<xsl:when test="@v='0-4'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='mtb:scale:uphill'">
+<xsl:choose>
+<xsl:when test="@v='0-5'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -1639,14 +1938,6 @@
 <xsl:when test="@k='ncn_ref'">
 
 </xsl:when>
-<xsl:when test="@k='noexit'">
-<xsl:choose>
-<xsl:when test="@v='yes'"/>
-<xsl:otherwise>
-<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
-</xsl:otherwise>
-</xsl:choose>
-</xsl:when>
 <xsl:when test="@k='noname'">
 <xsl:choose>
 <xsl:when test="@v='yes'"/>
@@ -1664,21 +1955,11 @@
 <xsl:when test="@k='old_ref'">
 
 </xsl:when>
-<xsl:when test="@k='oneway'">
-<xsl:choose>
-<xsl:when test="@v='-1'"/>
-<xsl:when test="@v='1'"/>
-<xsl:when test="@v='no'"/>
-<xsl:when test="@v='yes'"/>
-<xsl:otherwise>
-<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
-</xsl:otherwise>
-</xsl:choose>
-</xsl:when>
 <xsl:when test="@k='opening_hours'">
 <xsl:choose>
+<xsl:when test="@v='''' mo md hh:mm-hh:mm. (read described syntax)'"/>
 <xsl:when test="@v='24'"/>
-<xsl:when test="@v='7 ; m d hh:mm'"/>
+<xsl:when test="@v='7 ''''"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -1766,8 +2047,11 @@
 </xsl:when>
 <xsl:when test="@k='psv'">
 <xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
 <xsl:when test="@v='designated'"/>
 <xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='permissive'"/>
 <xsl:when test="@v='private'"/>
@@ -1788,6 +2072,7 @@
 <xsl:when test="@v='platform'"/>
 <xsl:when test="@v='preserved'"/>
 <xsl:when test="@v='rail'"/>
+<xsl:when test="@v='station'"/>
 <xsl:when test="@v='subway'"/>
 <xsl:when test="@v='tram'"/>
 <xsl:when test="@v='turntable'"/>
@@ -1808,13 +2093,19 @@
 </xsl:when>
 <xsl:when test="@k='route'">
 <xsl:choose>
+<xsl:when test="@v='bicycle'"/>
 <xsl:when test="@v='bus'"/>
+<xsl:when test="@v='detour'"/>
 <xsl:when test="@v='ferry'"/>
 <xsl:when test="@v='flight'"/>
+<xsl:when test="@v='hiking'"/>
+<xsl:when test="@v='mtb'"/>
 <xsl:when test="@v='pub_crawl'"/>
+<xsl:when test="@v='road'"/>
 <xsl:when test="@v='ski'"/>
 <xsl:when test="@v='subsea'"/>
 <xsl:when test="@v='tour'"/>
+<xsl:when test="@v='tram'"/>
 
 </xsl:choose>
 </xsl:when>
@@ -1847,11 +2138,42 @@
 </xsl:when>
 <xsl:when test="@k='shop'">
 <xsl:choose>
+<xsl:when test="@v='alcohol'"/>
+<xsl:when test="@v='bakery'"/>
+<xsl:when test="@v='beverages'"/>
+<xsl:when test="@v='bicycle'"/>
+<xsl:when test="@v='books'"/>
+<xsl:when test="@v='butcher'"/>
+<xsl:when test="@v='car'"/>
+<xsl:when test="@v='car_repair'"/>
+<xsl:when test="@v='chemist'"/>
+<xsl:when test="@v='clothes'"/>
+<xsl:when test="@v='computer'"/>
+<xsl:when test="@v='convenience'"/>
+<xsl:when test="@v='department_store'"/>
+<xsl:when test="@v='doityourself'"/>
+<xsl:when test="@v='dry_cleaning'"/>
+<xsl:when test="@v='electronics'"/>
+<xsl:when test="@v='florist'"/>
+<xsl:when test="@v='furniture'"/>
+<xsl:when test="@v='garden_centre'"/>
+<xsl:when test="@v='hairdresser'"/>
+<xsl:when test="@v='hardware'"/>
+<xsl:when test="@v='hifi'"/>
 <xsl:when test="@v='kiosk'"/>
+<xsl:when test="@v='laundry'"/>
+<xsl:when test="@v='mall'"/>
+<xsl:when test="@v='motorcycle'"/>
+<xsl:when test="@v='optician'"/>
+<xsl:when test="@v='organic'"/>
+<xsl:when test="@v='outdoor'"/>
+<xsl:when test="@v='shoes'"/>
+<xsl:when test="@v='sports'"/>
+<xsl:when test="@v='stationery'"/>
 <xsl:when test="@v='supermarket'"/>
-<xsl:otherwise>
-<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
-</xsl:otherwise>
+<xsl:when test="@v='toys'"/>
+<xsl:when test="@v='video'"/>
+
 </xsl:choose>
 </xsl:when>
 <xsl:when test="@k='smoothness'">
@@ -1917,6 +2239,7 @@
 <xsl:when test="@v='horse_racing'"/>
 <xsl:when test="@v='motor'"/>
 <xsl:when test="@v='multi'"/>
+<xsl:when test="@v='paddle_tennis'"/>
 <xsl:when test="@v='pelota'"/>
 <xsl:when test="@v='racquet'"/>
 <xsl:when test="@v='rowing'"/>
@@ -1959,14 +2282,22 @@
 </xsl:when>
 <xsl:when test="@k='tourism'">
 <xsl:choose>
+<xsl:when test="@v='alpine_hut'"/>
+<xsl:when test="@v='aquarium'"/>
 <xsl:when test="@v='artwork'"/>
 <xsl:when test="@v='attraction'"/>
 <xsl:when test="@v='camp_site'"/>
 <xsl:when test="@v='caravan_site'"/>
 <xsl:when test="@v='chalet'"/>
+<xsl:when test="@v='guest_house'"/>
+<xsl:when test="@v='hostel'"/>
+<xsl:when test="@v='hotel'"/>
+<xsl:when test="@v='information'"/>
+<xsl:when test="@v='motel'"/>
 <xsl:when test="@v='museum'"/>
 <xsl:when test="@v='picnic_site'"/>
 <xsl:when test="@v='theme_park'"/>
+<xsl:when test="@v='yes'"/>
 <xsl:when test="@v='zoo'"/>
 
 </xsl:choose>
@@ -2020,6 +2351,14 @@
 </xsl:otherwise>
 </xsl:choose>
 </xsl:when>
+<xsl:when test="@k='url'">
+<xsl:choose>
+<xsl:when test="@v='URI'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
 <xsl:when test="@k='validate:bridge-or-tunnel-without-layer'">
 <xsl:choose>
 <xsl:when test="@v='ignore'"/>
@@ -2068,6 +2407,31 @@
 </xsl:otherwise>
 </xsl:choose>
 </xsl:when>
+<xsl:when test="@k='vehicle'">
+<xsl:choose>
+<xsl:when test="@v='agricultural'"/>
+<xsl:when test="@v='delivery'"/>
+<xsl:when test="@v='designated'"/>
+<xsl:when test="@v='destination'"/>
+<xsl:when test="@v='forestry'"/>
+<xsl:when test="@v='no'"/>
+<xsl:when test="@v='permissive'"/>
+<xsl:when test="@v='private'"/>
+<xsl:when test="@v='unknown'"/>
+<xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='voltage'">
+<xsl:choose>
+<xsl:when test="@v='... 110000,220000,380000,400000 ...'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
 <xsl:when test="@k='waterway'">
 <xsl:choose>
 <xsl:when test="@v='canal'"/>
@@ -2101,7 +2465,7 @@
 </xsl:when>
 <xsl:when test="@k='wires'">
 <xsl:choose>
-<xsl:when test="@v='*'"/>
+<xsl:when test="@v='single, double, triple, quad'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>

@@ -1,0 +1,39 @@
+		   API 0.5 -> 0.6 DB MIGRATION CODE
+		   ================================
+
+PLEASE NOTE: THIS IS A VERY GOOD EXAMPLE OF WHY IT IS *NOT* A GOOD
+IDEA TO "SCRIPT" IN C++!
+
+Overview
+========
+
+There are two major parts of the code: copy_table and changeset_synth.
+
+Copy table copies a set of tables from a MySQL server (possibly
+remote) to a PostgreSQL server (possibly remote) while changing the
+schema to match that of the 0.6 database. This involves some fairly
+nasty hacks with re-ordering tables, keeping track of versions,
+etc... Needless to say, it isn't pretty. You have been warned.
+
+Changeset synth takes the data tables and generates changesets
+according to the changeset rules (idle time 1 hour, no changeset lasts
+longer than 24 hours, no changeset contains more than 50,000 changes)
+and inserts them into the changesets table. To run this you need to
+add a column to nodes, ways and relations called "new_changeset_id",
+as the existing "changeset_id" column actually contains the user
+id. Its a good idea to build some indexes too. After the synth is done
+it is safe to drop changeset_id, rename new_changeset_id to
+changeset_id and then re-create the indexes and FK constraints. This
+might seem like a weird way to do it, but it was faster than
+overwriting the existing column.
+
+Disclaimer
+==========
+
+This isn't a late April Fool - you are advised to run screaming from
+this code. If any code gets in contact with your eyes or skin, or if
+any is ingested, seek medical attention IMMEDIATELY.
+
+And all the rest of that stuff about no warranties, etc... Seriously,
+this code could quite easily break your computer, burn down your house
+and steal your car/bike/$FAVOURITE_POSSESSION.

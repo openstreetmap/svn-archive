@@ -172,7 +172,6 @@ sub parse {
 
             $key = $self->_clean_wikitable_cell($key);
             $value = $self->_clean_wikitable_cell($value);
-            $elementtypes = $self->_clean_wikitable_cell($elementtypes);
             $description = $self->_clean_wikitable_cell($description);
 
             # Get all types for the feature

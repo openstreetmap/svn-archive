@@ -141,8 +141,11 @@ for waypt in pgpx.wayPts:
                 os.system("ffmpeg -y -v 0 -i %s.%s %s.%s" % \
                               (fnamebase,fnameext,fnamebase,"wav"))
             else:
-                os.system("ffmpeg -y -v 1 -i %s.%s %s.%s 2>! amr2wav.log" % \
+                os.system("ffmpeg -y -v 1 -i %s.%s %s.%s" % \
                           (fnamebase,fnameext,fnamebase,"wav"))
+                # This was supposed to just write ffmpeg output to a log file, but it doesn't work.
+#                os.system("ffmpeg -y -v 1 -i %s.%s %s.%s 2>! amr2wav.log" % \
+#                         (fnamebase,fnameext,fnamebase,"wav"))
 
             of.write('<link href="file://%s/%s.%s">audio</link>\n' \
                          % (os.getcwd(),fnamebase,"wav"))

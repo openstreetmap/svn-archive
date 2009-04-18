@@ -524,9 +524,8 @@
 </xsl:when>
 <!--xsl:when test="@k='opening_hours'">
 <xsl:choose>
-<xsl:when test="@v='''' mo md hh:mm-hh:mm. (read described syntax)'"/>
-<xsl:when test="@v='24'"/>
-<xsl:when test="@v='7 ''''"/>
+<xsl:when test="@v='24/7'"/>
+<xsl:when test="@v='mo md hh:mm-hh:mm. (read described syntax)'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -1957,9 +1956,8 @@
 </xsl:when>
 <!--xsl:when test="@k='opening_hours'">
 <xsl:choose>
-<xsl:when test="@v='''' mo md hh:mm-hh:mm. (read described syntax)'"/>
-<xsl:when test="@v='24'"/>
-<xsl:when test="@v='7 ''''"/>
+<xsl:when test="@v='24/7'"/>
+<xsl:when test="@v='mo md hh:mm-hh:mm. (read described syntax)'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>

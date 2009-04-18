@@ -522,7 +522,7 @@
 <xsl:when test="@k='old_ref'">
 
 </xsl:when>
-<!--xsl:when test="@k='opening_hours'">
+<xsl:when test="@k='opening_hours'">
 <xsl:choose>
 <xsl:when test="@v='24/7'"/>
 <xsl:when test="@v='mo md hh:mm-hh:mm. (read described syntax)'"/>
@@ -530,7 +530,7 @@
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
 </xsl:choose>
-</xsl:when-->
+</xsl:when>
 <xsl:when test="@k='operator'">
 
 </xsl:when>
@@ -1954,7 +1954,7 @@
 <xsl:when test="@k='old_ref'">
 
 </xsl:when>
-<!--xsl:when test="@k='opening_hours'">
+<xsl:when test="@k='opening_hours'">
 <xsl:choose>
 <xsl:when test="@v='24/7'"/>
 <xsl:when test="@v='mo md hh:mm-hh:mm. (read described syntax)'"/>
@@ -1962,7 +1962,7 @@
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
 </xsl:choose>
-</xsl:when-->
+</xsl:when>
 <xsl:when test="@k='operator'">
 
 </xsl:when>

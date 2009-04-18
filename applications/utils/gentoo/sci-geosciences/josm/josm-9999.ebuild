@@ -21,10 +21,11 @@ src_compile() {
 	svn info --xml ${ESVN_WC_PATH} > REVISION
 
 	eant -f build.xml compile
-	eant -f build.xml dist
 }
 
 src_install() {
+	eant -f build.xml dist
+
 	dobin "${FILESDIR}/josm" || die
 
 	insinto "/usr/$(get_libdir)/josm/"

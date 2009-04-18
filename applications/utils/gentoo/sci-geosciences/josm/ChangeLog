@@ -2,14 +2,21 @@
 # Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
-*josm-1.5_p1348 (30 Jan 2008)
-  30 Jan 2008; Dennis <dennis.lists@googlemail.com> +josm-1.5_p1212.ebuild, +josm-1.5_p1348.ebuild, -josm-1.5_p1096.ebuild, -josm-1.5_p1089.ebuild, -josm-1.5_p1091.ebuild:
+*josm-1.5_p1530
+  18 Apr 2009; Dennis <dennis.lists@googlemail.com> +josm-1.5_p1530.ebuild, -josm-1.5_p1212.ebuild, -josm-1.5_p1348.ebuild:
+  bump to most current version (needed for API 0.6!), removed old version which are removed upstream
+
+  18 Apr 2009; Dennis <dennis.lists@googlemail.com> josm-9999.ebuild:
+  put eant dist into src_install
+
+*josm-1.5_p1348 (30 Jan 2009)
+  30 Jan 2009; Dennis <dennis.lists@googlemail.com> +josm-1.5_p1212.ebuild, +josm-1.5_p1348.ebuild, -josm-1.5_p1096.ebuild, -josm-1.5_p1089.ebuild, -josm-1.5_p1091.ebuild:
   bump to most current version, deleted some old (which are removed upstream)
 
-  30 Jan 2008; Dennis <dennis.lists@googlemail.com> +josm-1.5_p1212.ebuild:
+  30 Jan 2009; Dennis <dennis.lists@googlemail.com> +josm-1.5_p1212.ebuild:
   added latest "-tested" from upstream as stable
 
-  30 Jan 2008; Dennis <dennis.lists@googlemail.com> josm-9999.ebuild, -files/svn_build_xml.patch:
+  30 Jan 2009; Dennis <dennis.lists@googlemail.com> josm-9999.ebuild, -files/svn_build_xml.patch:
   fixed svn-ebuild
  
 *josm-1.5_p1091 (30 Nov 2008)

@@ -111,7 +111,7 @@ while(<STDIN>)
             
             if (/version=['"](.*?)['"]/)
             {
-                die ("close-areas.pl does not support version $1") unless ($1 eq "0.5");
+                die ("close-areas.pl does not support version $1") unless ( ($1 eq "0.5") || ($1 eq "0.6") );
             }
         }
 

@@ -141,6 +141,7 @@ parser.add_option("-c", "--comment", dest="comment", help="ChangeSet Comment")
 parser.check_required("-i")
 parser.check_required("-u")
 parser.check_required("-p") 
+parser.check_required("-c")
 
 osmData=ET.parse(options.infile)
 httpObj = httplib2.Http()
@@ -184,14 +185,16 @@ for type in ('node','way','relation'):
         importProcessor.addItem(elem)
         if cnt >= importProcessor.getAPILimit():
             importProcessor.upload()
-            f=open(options.infile+".db","w")
+            f=open(options.infile+".db.tmp","w")
             pickle.dump(idMap,f)
             f.close()
+            os.rename(options.infile+".db.tmp", options.infile+".db")
             importProcessor=ImportProcessor(httpObj,options.comment,idMap)
             cnt=0
         cnt=cnt+1
     #for
 importProcessor.upload()
-f=open(options.infile+".db","w")
+f=open(options.infile+".db.tmp","w")
+os.rename(options.infile+".db.tmp", options.infile+".db")
 pickle.dump(idMap,f)
 f.close()

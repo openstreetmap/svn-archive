@@ -1,0 +1,11 @@
+			       osmbook
+
+* About
+
+"osmbook" is a application that wraps around a number of other OSM
+tools to produce a "map book".  A map region is gridded into
+sub-squares and the entire area is printed one grid square at a time
+onto a page.  A first page is printed with a preliminary high-level
+map containing a grid-overlay for quick page-number look-up.
+
+

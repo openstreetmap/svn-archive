@@ -1274,8 +1274,8 @@ sub RenderSVG
 
             if( $corrupt ){
                 ## this error is fatal because it needs human intervention before processing can continue
-                throw TilesetError("Inkscape preference file corrupt. Delete to continue", 'fatal');
                 addFault("fatal",1);
+                throw TilesetError("Inkscape preference file corrupt. Delete to continue", 'fatal');
             }
 
         } catch SVG::Rasterize::Engine::Error::Runtime with {

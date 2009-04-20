@@ -1,0 +1,323 @@
+#!/usr/bin/perl
+
+use Getopt::GUI::Long;
+use GD;
+
+my %opts = (
+	    'D' => 'mapdata',
+	    'X' => "osm-map-features-z14.xml",
+	    'O' => "osm-map-features-z06.xml",
+	   );
+
+Getopt::GUI::Long::Configure(qw(display_help no_ignore_case));
+GetOptions(\%opts,
+	   ["mx|min-x=s", "Minimum Longitude"],
+	   ["Mx|max-x=s", "Maximum Longitude"],
+	   ["my|min-y=s", "Minimum Latitude"],
+	   ["My|may-x=s", "Maximum Latitude"],
+	   ["n|number-steps=i", "Number of steps on a side"],
+	   ["D|map-data=s", "Map data directory"],
+
+	   ["M|maximum-squares=i", "limit the number of squares to actually perform to M"],
+	   ["X|xml-master=s", "XML Master Grid Rule File"],
+	   ["O|overview=s", "XML Master Overview Rule File"],
+	   ["l|latex-file=s", "Save Figure commands to a latex file"],
+	   ["ps",             "Expect a postscript generation instead"],
+	  ) || exit;
+
+die "need at least -mx -Mx -my -My and -n\n"
+  if (!$opts{'mx'} || !$opts{'Mx'} || !$opts{'my'} || !$opts{'My'} || !$opts{'n'});
+
+my $diffx = $opts{'Mx'} - $opts{'mx'};
+my $diffy = $opts{'My'} - $opts{'my'};
+
+my $segx = $diffx/$opts{'n'};
+my $segy = $diffy/$opts{'n'};
+
+my @osmfiles;
+
+mkdir ($opts{'D'}) if (! -d $opts{'D'});
+
+my $count;
+
+my $combinedosm  = "$opts{'D'}/combined.osm";
+my $combinedsvg  = "$opts{'D'}/combined.svg";
+my $combinedpng  = "$opts{'D'}/combined.png";
+my $overviewosm = "$opts{'D'}/overview.osm";
+my $overviewsvg = "$opts{'D'}/overview.svg";
+my $overvieweps = "$opts{'D'}/overview.eps";
+my $overviewpng = "$opts{'D'}/overview.png";
+if ($opts{'l'}) {
+    open(L,">$opts{'l'}");
+    printf L ("\\Overview{$overviewpng}{%s}{%s}{%s}{%s}\n",
+	      $opts{'mx'},$opts{'My'},$opts{'Mx'},$opts{'my'});
+}
+
+my $needoverview = 0;
+
+foreach my $y (reverse(1..$opts{'n'})) {
+    foreach my $x (1..$opts{'n'}) {
+
+	print "----------------------------------------------------------------------\n";
+	print "Starting grid " . (($y-1) * $opts{'n'} + $x) . "\n";
+	print "----------------------------------------------------------------------\n";
+
+	# calculate the bounding box (BB)
+	my $minx = $opts{'mx'} + ($x-1)*$segx;
+	my $miny = $opts{'my'} + ($y-1)*$segy;
+
+	my $maxx = $opts{'mx'} + ($x)*$segx;
+	my $maxy = $opts{'my'} + ($y)*$segy;
+	
+	my $file = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.osm";
+	push @osmfiles, $file;
+
+	if (! -f $file) {
+	    System("wget --no-proxy -O $file http://www.openstreetmap.org/api/0.5/map?bbox=$minx,$miny,$maxx,$maxy");
+	    $needoverview = 1;
+	}
+
+	my $xmlfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.xml";
+	# render the page
+	if (! -f $xmlfile || Stat($opts{'X'}, $xmlfile)) {
+	    print STDERR "creating $xmlfile\n";
+
+	    # sigh...  xmlstarlet already assumes the subdir for some reason
+	    my $osmfile = $file;
+	    $osmfile =~ s/$opts{'D'}\///;
+
+	    open(I, $opts{'X'});
+	    open(O,">$xmlfile");
+	    while (<I>) {
+		s/data.osm/$file/;
+#		s/data.osm/$osmfile/;
+		print O;
+	    }
+	    close(I);
+	    close(O);
+	}
+
+	# render the map as a svg
+	my $svgfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.svg";
+	if (! -f $svgfile || Stat($xmlfile, $svgfile)) {
+	    #System("xmlstarlet tr osmarender.xsl $xmlfile > $svgfile");
+	    System("perl orp.svn/orp.pl -r $xmlfile $opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.osm");
+	}
+
+	# convert to png
+	# inkscape -f map.svg -e map.png
+	my $pngfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.png";
+	if (! -f $pngfile || Stat($svgfile, $pngfile)) {
+	    System("inkscape -f $svgfile -e $pngfile");
+        }
+
+	# convert to eps
+	# inkscape -f map.svg -E map.eps
+	my $outfile;
+	if ($opts{'ps'}) {
+	    my $epsfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.eps";
+	    if (! -f $epsfile || Stat($svgfile, $epsfile)) {
+		System("inkscape -f $svgfile -E $epsfile");
+	    }
+	    $outfile = $epsfile;
+	} else {
+	    my $pdffile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.pdf";
+	    if (! -f $pdffile || Stat($svgfile, $pdffile)) {
+		System("inkscape -f $svgfile -E $pdffile");
+	    }
+	    $outfile = $pdffile;
+	}
+
+	$count++;
+	
+	if (defined($opts{'l'})) {
+	    if ($opts{'ps'}) {
+		print L "\\Map{$outfile}{$count}{$minx}{$maxy}{$maxx}{$miny}\n";
+	    } else {
+		print L "\\Map{$outfile}{$count}{$minx}{$maxy}{$maxx}{$miny}\n";
+	    }
+	}
+
+	if (defined($opts{'M'}) && $count >= $opts{'M'}) {
+	    print STDERR "reached maximum\n";
+	    exit;
+	}
+    }
+}
+
+#System("osmmerge all.osm ",join(" ",@osmfiles));
+# combine all the exsting OSM files into a single combined OSM file
+if ($needoverview || ! -f $combinedosm) {
+
+    # create the overview OSM file
+    my $cmd = "osmosis/bin/osmosis --read-xml " . 
+      join(" --s --merge --read-xml ", @osmfiles) . " --s --merge --write-xml $combinedosm";
+    $cmd =~ s/--merge//;
+    System($cmd);
+}
+
+
+# build the combined OSM file into a SVG (without the grid)
+if (! -f $combinedsvg || Stat($combinedosm, $combinedsvg) ||
+    Stat($opts{'O'}, $combinedsvg)) {
+
+    System("perl orp.svn/orp.pl -r $opts{'O'} $combinedosm");
+}
+
+# build the overview SVG that contains the grid over the combined OSM
+if (! -f $overviewosm || Stat($combinedosm, $overviewosm)) {
+    make_overview($overviewsvg, $opts{'n'}, $opts{'n'},
+		  $opts{'n'} * 10, $opts{'n'} * 10, $combinedsvg);
+}
+
+# render the overview SVG as EPS for later inclusion into latex
+if (! -f $combindepng  ||
+    Stat($combinedsvg, $combinedpng)) {
+    System("inkscape -d 45 -f $combinedsvg -e $combinedpng");
+#    Stat($overviewsvg, $overvieweps)) {
+#    System("inkscape -f $overviewsvg -E $overvieweps");
+}
+
+if (! -f $overviewpng  ||
+    Stat($combinedpng, $overviewpng)) {
+    make_overviewpng($combinedpng, $overviewpng, $opts{'n'}, $opts{'n'});
+}
+
+if ($opts{'ps'}) {
+    if (! -f $overvieweps  ||
+	Stat($overviewpng, $overvieweps)) {
+	System("convert $overviewpng $overvieweps");
+    }
+}
+
+
+sub System {
+    print join(" ",@_),"\n";
+    system(@_);
+}
+
+sub make_overview {
+    my ($out, $numx, $numy, $width, $height, $img) = @_;
+
+    use SVG;
+
+    print "Creating $out\n";
+
+    my $gridw = $width/$numx;
+    my $gridh = $height/$numy;
+
+    $svg = SVG->new(width => $width, height => $height);
+
+    $svg->image(x => 0, y => 0, width => $width, height => $height,
+		'-href' => $img, id => 'undermap');
+
+    # vertical grid lines
+    for my $x (0..($numx-1)) {
+	my $tag1 = $svg->line(
+			      id => "vert_$x",
+			      x1 => $x*$gridw, x2 => $x*$gridw,
+			      y1 => 0,  y2 => $height,
+			      style => {'stroke' => 'rgb(0,0,0)'}
+			     );
+    }
+    my $tag1 = $svg->line(
+			  id => "vert_last",
+			  x1 => $gridw-1, x2 => $gridw,
+			  y1 => 0,  y2 => $height,
+			  style => {'stroke' => 'rgb(0,0,0)'}
+			 );
+
+    # vertical grid lines
+    for my $y (0..($numy-1)) {
+	my $tag1 = $svg->line(
+			      id => "horz_$y",
+			      x1 => 0,  x2 => $width,
+			      y1 => $y*$gridh, y2 => $y*$gridh,
+			      style => {'stroke' => 'rgb(0,0,0)'}
+			     );
+    }
+    my $tag1 = $svg->line(
+			  id => "horz_max",
+			  x1 => 0,  x2 => $width,
+			  y1 => $gridh, y2 => $gridh,
+			  style => {'stroke' => 'rgb(0,0,0)'}
+			 );
+
+
+    # grid square labels
+    for my $x (0..($numx-1)) {
+	for my $y (0..($numy-1)) {
+	    $svg->text(x => $x*$gridw + $gridw/2,
+		       y => $y*$gridh + $gridh/2)
+	      ->cdata($y*$numx + $x + 1);
+	}
+    }
+
+    open(OVERVIEW,">$out");
+    print OVERVIEW $svg->xmlify,"\n";
+    close(OVERVIEW);
+}
+
+sub make_overviewpng {
+    my ($inpng, $outpng, $numx, $numy) = @_;
+
+    print "Creating $outpng\n";
+
+    my $overviewimg = GD::Image->newFromPng($inpng, 1);
+    die ("couldn't open/create $combinedpng") if (!$overviewimg);
+    my ($width, $height) = $overviewimg->getBounds();
+
+
+    my $black = $overviewimg->colorAllocate(32,32,32);
+    my $gridw = $width/$numx;
+    my $gridh = $height/$numy;
+
+    my $linewidth = int($width/400) || 1;
+
+    # vertical grid lines
+    for my $x (0..$numx) {
+	$overviewimg->filledRectangle(int($x*$gridw)-$linewidth, 0,
+				      int($x*$gridw)+$linewidth, $height,
+				      $black);
+    }
+
+    # horizontal grid lines
+    for my $y (0..$numy) {
+	$overviewimg->filledRectangle(0,      int($y*$gridh)-$linewidth,
+				      $width, int($y*$gridh)+$linewidth,
+				      $black);
+    }
+
+    # grid square labels
+    for my $x (0..($numx-1)) {
+	for my $y (0..($numy-1)) {
+# 	    $overviewimg->string(gdGiantFont,
+# 				 int($x*$gridw + $gridw/2),
+# 				 int($y*$gridh + $gridh/2),
+# 				 $y*$numx + $x + 1,
+# 				 $black);
+ 	    $overviewimg->stringFT($black, '/home/hardaker/docs/ham/maps/LiberationMono-Bold.ttf',
+				   int($width/30), 0,
+				   int($x*$gridw + $gridw/2),
+				   int($y*$gridh + $gridh/2),
+				   $y*$numx + $x + 1);
+	}
+    }
+
+    # save the results
+    open(OPNG, ">$outpng");
+    print OPNG $overviewimg->png;
+    close(OPNG);
+}
+
+
+# returns true if the timestamp from file ARG1 is newer than file ARG2
+sub Stat {
+    my ($file1, $file2) = @_;
+    my @attr1 = stat $file1;
+    my @attr2 = stat $file2;
+#    print STDERR "newer: $file1\n" if ($attr1[9] > $attr2[9]);
+#    print STDERR "newer: $file2\n" if ($attr1[9] <= $attr2[9]);
+    return $attr1[9] > $attr2[9];
+}
+

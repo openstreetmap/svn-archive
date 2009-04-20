@@ -14,6 +14,7 @@ my $poly_file;
 my $polybuf;
 my $outbuf;
 my $nodes;
+my $id=0;
 
 while(<>) 
 {
@@ -50,13 +51,15 @@ while(<>)
     }
     elsif (/^\s*<\/way/) 
     {
-        if (!(defined($polybuf) && defined($poly_file) && defined($poly_id)))
+        if (!defined($polybuf))
         {
             die("incomplete way definition");
         }
+        $poly_id = ++$id unless defined($poly_id);
         $outbuf .= "$poly_id\n$polybuf"."END\n";
         undef $polybuf;
     }
 }
+$poly_file = "polygon" unless defined($poly_file);
 print "$poly_file\n$outbuf"."END\n";
 

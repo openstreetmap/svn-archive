@@ -35,9 +35,10 @@ my $diffy = $opts{'My'} - $opts{'my'};
 # for the number of Y grid squares, use n*P*y/x
 # n = num x, P = paper aspect ratio (height/width), y/x = map area aspect ration
 # XXX: should round not int; requires a math package
+# XXX: or not...  need to default to fitting on the page, which is ceil()
+# (more squares)
 my $ygridnum = ceil($opts{'n'}*(17/20)*$diffy/$diffx);
 print "Y grid squares: $ygridnum  ($opts{'n'}*1.3*$diffy/$diffx)\n";
-exit;
 
 
 my $segx = $diffx/$opts{'n'};

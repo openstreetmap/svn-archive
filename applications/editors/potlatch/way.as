@@ -1107,10 +1107,10 @@
 		_root.lastwhichways=new Date();
 		if (_root.waycount>500) { purgeWays(); }
 		if (_root.poicount>500) { purgePOIs(); }
-		if (_root.edge_l>_root.bigedge_l &&
-			_root.edge_r<_root.bigedge_r &&
-			_root.edge_b>_root.bigedge_b &&
-			_root.edge_t<_root.bigedge_t) {
+		if (_root.edge_l>=_root.bigedge_l &&
+			_root.edge_r<=_root.bigedge_r &&
+			_root.edge_b>=_root.bigedge_b &&
+			_root.edge_t<=_root.bigedge_t) {
 			// we have already loaded this area, so ignore
 		} else {
 			whichresponder=function() {};

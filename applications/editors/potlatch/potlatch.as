@@ -103,8 +103,8 @@
 	var whichreceived=0;			// total number of whichways received
 	var redrawlist=new Array();		// list of ways to redraw (after zooming)
 	var redrawskip=true;			// skip redrawing ways, just do POIs?
-	var lastwhichways=new Date();	// last time whichways was requested
 	var lastresize=new Date();		// last time window was resized
+	var lastwhichways=new Date();	// last time whichways was requested
 	var mapdragged=false;			// map being dragged?
 	var drawpoint=-1;				// point being drawn? -1 no, 0+ yes (point order)
 	var lastpoint=0;				// last value of drawpoint (triple-click detection)
@@ -369,7 +369,7 @@
 
 	updateButtons();
 	updateScissors();
-	resizeWindow();
+	setSizes();
 	startChangeset('');
 	loadPresets();
 

@@ -38,6 +38,12 @@
 	// resizeWindow - user has enlarged/shrunk window
 
 	function resizeWindow() {
+		setSizes();
+		updateCoords(_root.map._x,_root.map._y);
+		_root.lastresize=new Date();
+	}
+
+	function setSizes() {
 		// resize Yahoo
 		clearInterval(_root.yahooresizer);
 		if (_root.yahooinited) {
@@ -64,9 +70,6 @@
 		for (var w in _root.windows) {
 			if (typeof(_root.windows[w])=='movieclip') { _root.windows[w].drawAreas(); }
 		}
-		// note time, so we can issue a whichWays soon
-		updateCoords(_root.map._x,_root.map._y);
-		_root.lastresize=new Date();
 	}
 
 	function setYahooSize() {

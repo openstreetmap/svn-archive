@@ -74,6 +74,9 @@
 			_root.map.relations[w].attr=result[1];
 			_root.map.relations[w].members=result[2];
 			_root.map.relations[w].version=result[3];
+if (_root.chat._visible) {
+	_root.chat.text+="Loaded "+w+"("+result[3]+"): "+result[2]+"\n";
+}
 			_root.map.relations[w].redraw();
 		};
 		remote_read.call('getrelation',responder,Math.floor(this._name));

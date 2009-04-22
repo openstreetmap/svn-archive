@@ -15,3 +15,9 @@ The SVN archive will be updated as newer versions become available.
 
 The author (Theodore Book) may be contacted at tbook at libero dot it.
 
+
+---------------------------------------------------------------------
+Revisions:
+22 Apr 2009:  The scripts now keep the files smaller than the specified
+size, except in cases where a single feature has more objects than the
+maximum number given.  Support for more ftypes.  Still OSM version 0.5

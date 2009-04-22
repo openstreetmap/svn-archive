@@ -47,6 +47,14 @@ fixed_tags = {
 # For these functions is that they are passed the attributes from a feature,
 # and they return a list of two-tuples which match to key/value pairs.
 
+# The following Ftypes are not imported
+# 46100 - Submerged Stream
+ignoreField = "FCode"
+ignoreValues = [46100]
+
+# The following Ftypes are imported, but don't have any OSM tags attached:
+# 36100 - Playa - An area from which water evaporates
+
 def ftype(data):
     """Type of body - From NHD Ftype"""  
     natural = {
@@ -139,7 +147,7 @@ def start_new_file():
     if open_file:
         close_file()
     open_file = open("%s.%s.osm" % (file_name, file_counter), "w")
-    print >>open_file, "<osm version='0.5'>"
+    print >>open_file, "<osm version='0.6'>"
 
 def clean_attr(val):
     """Internal. Hacky way to make attribute XML safe."""
@@ -148,7 +156,7 @@ def clean_attr(val):
     return val
 
 def add_ring_nodes(ring):
-    """Internal. Write the first ring nodes."""
+    """Internal. Write the outer ring nodes."""
     global open_file, id_counter
     ringways = []
     ids = []
@@ -211,7 +219,7 @@ counter = 0
 
 class AppError(Exception): pass
 
-def run(filename, slice_count=1, obj_count=50000, output_location=None, no_source=False):
+def run(filename, slice_count=1, obj_count=30000, output_location=None, no_source=False):
     """Run the converter. Requires open_file, file_name, id_counter,
     file_counter, counter to be defined in global space; not really a very good
     singleton."""
@@ -257,17 +265,29 @@ def run(filename, slice_count=1, obj_count=50000, output_location=None, no_sourc
                 f = l.GetNextFeature()
                 continue
             seen[f.GetFID()] = True             
-            
-            if (obj_counter - last_obj_split) > max_objs_per_file:
-                print "Splitting file with %s objs" % (obj_counter - last_obj_split)
-                start_new_file()
-                last_obj_split = obj_counter
 
+            while f.GetField(ignoreField) in ignoreValues:
+                f = l.GetNextFeature()
+            
             outerways = []
 	    innerways = []
         
             geom = f.GetGeometryRef()
             ring = geom.GetGeometryRef(0)
+
+            objcount = ring.GetPointCount()
+            for i in range(1, geom.GetGeometryCount()):
+	        objcount += geom.GetGeometryRef(i).GetPointCount()
+	        objcount += 1
+
+            if (obj_counter - last_obj_split + objcount) > max_objs_per_file:
+                print "Splitting file with %s objs" % (obj_counter - last_obj_split)
+                start_new_file()
+                last_obj_split = obj_counter
+
+            if objcount > max_objs_per_file:
+                print "Warning: a feature contains %i objects which is more than the %i object limit.  It will be placed in a file by itself." % (objcount, max_objs_per_file)
+
             ringways = add_ring_nodes(ring)
             if not ringways or len(ringways) == 0:
                 f = l.GetNextFeature()
@@ -309,6 +329,7 @@ def run(filename, slice_count=1, obj_count=50000, output_location=None, no_sourc
                         print >>open_file, "<tag k='%s' v='%s' />" % (name, clean_attr(value))
                     print >>open_file, "</way>"
             if (geom.GetGeometryCount() > 1) or (len(ringways) > 1):
+#add the inner ways
                 for i in range(1, geom.GetGeometryCount()):
                     ringways = add_ring_way(geom.GetGeometryRef(i)) 
                     for way in ringways:
@@ -340,8 +361,8 @@ if __name__ == "__main__":
                      action="store", type="int")
     parse.add_option("-o", "--obj-count", 
                      dest="obj_count", 
-                     help="Target Maximum number of objects in a single .osm file", 
-                     default=50000, type="int")
+                     help="Maximum number of objects in a single .osm file", 
+                     default=30000, type="int")
     parse.add_option("-n", "--no-source", dest="no_source", 
                      help="Do not store source attributes as tags.",
                      action="store_true", default=False)

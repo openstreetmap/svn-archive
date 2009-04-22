@@ -193,7 +193,7 @@
 					this.taggednodes[i]._xscale=this.taggednodes[i]._yscale=taggedscale;
 				}
 			}
-			redrawRelationsForMember('way', this._name);
+			redrawRelationsForMember('Way', this._name);
 		}
 	};
 
@@ -261,8 +261,8 @@
 	OSMWay.prototype.remove=function() {
 		this.deleteMergedWays();
 		this.removeNodeIndex();
-		memberDeleted('way', this._name);
-		var z=this.path; for (var i in z) { memberDeleted('node', z[i].id); }
+		memberDeleted('Way', this._name);
+		var z=this.path; for (var i in z) { memberDeleted('Node', z[i].id); }
 		uploadDirtyRelations();
 		if (this._name>=0 && !_root.sandbox && !this.historic) {
 			deleteresponder = function() { };
@@ -320,7 +320,7 @@
 			if (ow!=nw) {	// renumber way?
 				_root.map.ways[ow].renumberNodeIndex(nw);
 				_root.map.ways[ow]._name=nw;
-				renumberMemberOfRelation('way', result[0], nw);
+				renumberMemberOfRelation('Way', result[0], nw);
 				if (_root.map.areas[ow]) { _root.map.areas[ow]._name=nw; }
 				if (_root.panel.t_details.text==ow) { _root.panel.t_details.text=nw; _root.panel.t_details.setTextFormat(plainText); }
 				if (wayselected==ow) { selectWay(nw); }
@@ -336,7 +336,7 @@
 				var nid = result[2][oid];
 				nodes[oid].renumberTo(nid);
 				nodes[nid].addWay(nw);
-				renumberMemberOfRelation('node', oid, nid);
+				renumberMemberOfRelation('Node', oid, nid);
 			}
 			for (var oid in z) { delete _root.nodes[oid]; }	// delete -ve nodes
 			
@@ -1047,7 +1047,7 @@
 			_root.ws.highlightPoints(5000,"anchor");
 			removeMovieClip(_root.map.anchorhints);
 		}
-		redrawRelationsForMember('way',_root.wayselected);
+		redrawRelationsForMember('Way',_root.wayselected);
 		// Mark as unclean
 		_root.ws.clean=false;
 		markClean(false);

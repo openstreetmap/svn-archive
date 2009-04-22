@@ -140,17 +140,17 @@ if (_root.chat._visible) {
 
 		var ms = this.members;
 		for ( var m = 0; m < ms.length; m++ ) {
-			if ( ms[m][0] == 'way' && _root.map.ways[ms[m][1]] ) {
+			if ( ms[m][0] == 'Way' && _root.map.ways[ms[m][1]] ) {
 				var way = _root.map.ways[ms[m][1]];
 		
 				this.line.moveTo(way.path[0].x,way.path[0].y);
 				for (var i=1; i<way.path.length; i+=1) {
 					this.line.lineTo(way.path[i].x,way.path[i].y);
 				}
-			} else if ( ms[m][0] == 'node' && _root.map.pois[ms[m][1]] ) {
+			} else if ( ms[m][0] == 'Node' && _root.map.pois[ms[m][1]] ) {
 				var poi = _root.map.pois[ms[m][1]];
 				this.drawPoint(poi._x, poi._y);
-			} else if ( ms[m][0] == 'node' ) {
+			} else if ( ms[m][0] == 'Node' ) {
 				this.drawPoint(nodes[ms[m][1]].x,nodes[ms[m][1]].y);
 			}
 		}
@@ -176,7 +176,7 @@ if (_root.chat._visible) {
 	// ---- Editing and information functions
 
 	OSMRelation.prototype.getWayRole=function(way_id) {
-		return this.getRole('way', way_id);
+		return this.getRole('Way', way_id);
 	};
 
 	OSMRelation.prototype.getRole=function(type, id) {
@@ -221,7 +221,7 @@ if (_root.chat._visible) {
 	};
 
 	OSMRelation.prototype.setWayRole=function(way_id, role) {
-		this.setRole('way', way_id, role);
+		this.setRole('Way', way_id, role);
 	};
 
 	OSMRelation.prototype.hasWay=function(way_id) {
@@ -230,11 +230,11 @@ if (_root.chat._visible) {
 	};
 
 	OSMRelation.prototype.getNodeRole=function(node_id) {
-		return this.getRole('node', node_id);
+		return this.getRole('Node', node_id);
 	};
 
 	OSMRelation.prototype.setNodeRole=function(node_id, role) {
-		this.setRole('node', node_id, role);
+		this.setRole('Node', node_id, role);
 	};
 
 	OSMRelation.prototype.hasNode=function(node_id) {
@@ -259,11 +259,11 @@ if (_root.chat._visible) {
 	};
 
 	OSMRelation.prototype.removeWay=function(way_id) {
-		this.removeMember('way', way_id);
+		this.removeMember('Way', way_id);
 	};
 
 	OSMRelation.prototype.removeNode=function(node_id) {
-		this.removeMember('node', node_id);
+		this.removeMember('Node', node_id);
 	};
 
 	// ----- UI
@@ -331,7 +331,7 @@ function debugRelations() {
 }
 
 	function redrawRelationsForMember(type, id) {
-		var rels = type == 'way' ? getRelationsForWay(id) : getRelationsForNode(id);
+		var rels = type == 'Way' ? getRelationsForWay(id) : getRelationsForNode(id);
 		for ( r in rels )
 			_root.map.relations[rels[r]].redraw();
 	}
@@ -409,9 +409,9 @@ function debugRelations() {
 		var proptype = _root.panel.properties.proptype;
 		var type, id;
 		switch (proptype) {
-			case 'way':		type='way' ; id=wayselected; break;
-			case 'point':	type='node'; id=_root.ws.path[_root.pointselected].id; break;
-			case 'POI':		type='node'; id=poiselected; break;
+			case 'way':		type='Way' ; id=wayselected; break;
+			case 'point':	type='Node'; id=_root.ws.path[_root.pointselected].id; break;
+			case 'POI':		type='Node'; id=poiselected; break;
 		}
 		if ( type == undefined || id == undefined ) return;
 

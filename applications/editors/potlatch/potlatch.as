@@ -650,6 +650,7 @@
 			case 'C':		closeChangeset(); break;							// C - close current changeset
 			case 'G':		loadGPS(); break;									// G - load GPS
 			case 'H':		getHistory(); break;								// H - history
+case 'I':					debugRelations(); break;							// I - temporary relations debug
 			case 'L':		showPosition(); break;								// L - show latitude/longitude
 			case 'P':		askOffset(); break;									// O - parallel path
 			case 'R':		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes

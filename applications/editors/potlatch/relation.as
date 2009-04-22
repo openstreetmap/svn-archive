@@ -317,6 +317,16 @@
 	// ===============================
 	// Support functions for relations
 
+function debugRelations() {
+	_root.chat._visible=true;
+	_root.chat.text="";
+	var rels = _root.map.relations;
+	for (var r in rels) {
+		_root.chat.text+=r+": "+rels[r].members+"\n";
+		showObjects(rels[r].attr,0);
+	}
+}
+
 	function redrawRelationsForMember(type, id) {
 		var rels = type == 'way' ? getRelationsForWay(id) : getRelationsForNode(id);
 		for ( r in rels )

@@ -81,7 +81,7 @@ void OSMHandler::parseNode(const QXmlAttributes& atts)
 			Pt->layer()->remove(Pt);
 			theLayer->add(Pt);
 			Pt->setPosition(Coord(angToInt(Lat),angToInt(Lon)));
-			NewFeature = false;
+			NewFeature = true;
 			if (Pt->lastUpdated() == MapFeature::NotYetDownloaded)
 				Pt->setLastUpdated(MapFeature::OSMServer);
 		}

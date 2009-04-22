@@ -371,14 +371,14 @@ QString Downloader::getURLToFetchFull(MapFeature* aFeature)
 	if (aFeature->getClass() == "Relation")
 		What = "relation";
 	QString Id = aFeature->xmlId();
-	QString URL = QString("/api/0.5/%1/%2/full");
-	return URL.arg(What).arg(Id);
+	QString URL = QString("/api/%1/%2/%3/full");
+	return URL.arg(M_PREFS->apiVersion()).arg(What).arg(Id);
 }
 
 QString Downloader::getURLToFetch(const QString &What, const QString& Id)
 {
-	QString URL = QString("/api/0.5/%1/%2");
-	return URL.arg(What).arg(Id);
+	QString URL = QString("/api/%1/%2/%3");
+	return URL.arg(M_PREFS->apiVersion()).arg(What).arg(Id);
 }
 
 QString Downloader::getURLToCreate(const QString &What)
@@ -408,7 +408,7 @@ QString Downloader::getURLToMap()
 
 QString Downloader::getURLToTrackPoints()
 {
-	QString URL = QString("/api/0.5/trackpoints?bbox=%1,%2,%3,%4&page=%5");
+	QString URL = QString("/api/%1").arg(M_PREFS->apiVersion()) + QString("/trackpoints?bbox=%1,%2,%3,%4&page=%5");
 	return URL;
 }
 

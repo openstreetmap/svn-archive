@@ -395,7 +395,7 @@ void MerkaartorPreferences::on_requestFinished ( int id, bool error )
 
 void MerkaartorPreferences::initialize()
 {
-	Use06Api = Sets->value("osm/use06api", "").toBool();
+	Use06Api = Sets->value("osm/use06api", "true").toBool();
 	bgTypes.insert(Bg_None, tr("None"));
 	bgTypes.insert(Bg_Wms, tr("WMS adapter"));
 	bgTypes.insert(Bg_Tms, tr("TMS adapter"));

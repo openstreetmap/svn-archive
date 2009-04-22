@@ -67,7 +67,7 @@ class OSMBackend:
 
         opener = urllib2.build_opener(handler)
         try:
-            data = opener.open('http://www.openstreetmap.org/api/0.5/user/details').read() 
+            data = opener.open('http://www.openstreetmap.org/api/0.6/user/details').read() 
         except urllib2.HTTPError, e:
             # if e.code == 404: could be used for more specific action
             # The OSM auth was unsuccessful. Bail out without auth.

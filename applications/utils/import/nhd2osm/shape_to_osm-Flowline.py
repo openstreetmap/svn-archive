@@ -14,10 +14,11 @@ iAttrib="NHD"
 # Ways that include these fcodes should not be uploaded
 # 33400 = Connector
 # 55800 = Artificial Path
-ignoreFcodes = [ 33400, 55800 ]
+# 56600 = Coastline
+ignoreFcodes = [ 33400, 55800, 56600 ]
 
 #Files will be split when longer than this number of nodes
-maxNodes = 50000
+maxNodes = 30000
 
 # Set the maximum length of a way (in nodes) before it is split into
 # shorter ways
@@ -56,7 +57,7 @@ def parse_shp_for_osm( filename ):
     while poFeature:
         tags = {}
         
-        # WAY ID required
+        # WAY ID
         tags[iSource + ":way_id"] = int( poFeature.GetField("ComID") )
         
         # FEATURE NAME
@@ -72,6 +73,8 @@ def parse_shp_for_osm( filename ):
             if ftype == "Pipeline":
                 tags["man_made"] = "pipeline"
 		tags["type"] = "water"
+	    if ftype == "CanalDitch":
+		tags["waterway"] = "canal"
 	    tags["NHD:FType"] = ftype
 
 	fcode = int( poFeature.GetField("FCode") )
@@ -81,6 +84,18 @@ def parse_shp_for_osm( filename ):
 	comid = int( poFeature.GetField("ComID") )
 	if comid != None:
 	    tags["NHD:ComID"] = comid
+
+        gnis_id = poFeature.GetField("GNIS_ID") 
+	if gnis_id != None:
+	    tags["NHD:GNIS_ID"] = gnis_id
+
+        reachcode = int(poFeature.GetField("ReachCode") )
+	if reachcode != None:
+	    tags["NHD:ReachCode"] = reachcode
+
+	res = poFeature.GetField("RESOLUTION")
+        if res != None:
+	    tags["NHD:RESOLUTION"] = res
 
         if fcode not in ignoreFcodes:
             # COPY DOWN THE GEOMETRY

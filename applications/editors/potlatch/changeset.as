@@ -31,6 +31,7 @@
 			border=true;
 			borderColor=0xFFFFFF;
 			multiline=true;
+			wordWrap=true;
 		}
 		Selection.setFocus(box.search);
 		box.search.onChanged=function() {					// swallow 'C'

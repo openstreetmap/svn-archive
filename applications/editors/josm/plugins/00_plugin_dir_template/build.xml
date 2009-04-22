@@ -60,17 +60,6 @@
 	**********************************************************
 	-->
     <target name="init">
-    	<!-- make sure we increment the build number ... -->
-    	<buildnumber file="build.number" />	
-    	
-    	<!-- ... and check it back in -->
-        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="commit"/>
-        	<arg value="--message"/>
-            <arg value="increment build number"/>
-            <arg value="build.number"/>
-		</exec>
         <mkdir dir="${plugin.build.dir}"/>
     </target>
 	
@@ -125,12 +114,11 @@
 	-->	
     <target name="revision">
     	
-    	<!-- extract the SVN revision information for file build.number -->
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
             <arg value="--xml"/>
-            <arg value="build.number"/>
+            <arg value="."/>
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>

@@ -61,16 +61,54 @@ def ftype(data):
         'LakePond': 'water',
         'SwampMarsh': 'wetland'
     }
-    landuse = {
-        'Reservoir': 'reservoir'
-    }
 
     if 'ftype' in data:
         if data['ftype'] in natural:
             return [('natural', natural[data['ftype']])]
-        if data['ftype'] in landuse:
-            return [('landuse', landuse[data['ftype']])]
     return None   
+
+def fcode(data):
+    """For features where the ftype is not specific enough"""
+    landuse = {
+        '43600': 'reservoir', #Reservoir
+        '43601': 'reservoir', #Reservoir
+        '43602': 'reservoir', #Reservoir
+        '43603': 'reservoir', #Reservoir
+        '43604': 'reservoir', #Reservoir
+        '43605': 'reservoir', #Reservoir
+        '43606': 'reservoir', #Reservoir
+        '43607': 'reservoir', #Reservoir
+        '43609': 'reservoir', #Reservoir
+        '43610': 'reservoir', #Reservoir
+        '43611': 'reservoir', #Reservoir
+        '43612': 'reservoir', #Reservoir
+        '43614': 'reservoir', #Reservoir
+        '43615': 'reservoir', #Reservoir
+        '43616': 'reservoir', #Reservoir
+        '43617': 'reservoir', #Reservoir
+        '43618': 'reservoir', #Reservoir
+        '43619': 'reservoir', #Reservoir
+        '43620': 'reservoir' #Reservoir
+    }
+
+    manmade = {
+	'43613': 'reservoir_covered' #Covered Reservoir
+    }
+
+    leisure = {
+        '43608': 'swimming_pool' #Swimming Pool
+    }
+
+    if 'fcode' in data:
+        keys = []
+        if data['fcode'] in landuse:
+            keys.append( ('landuse', landuse[data['fcode']]) )
+        if data['fcode'] in manmade:
+            keys.append( ('man_made', manmade[data['fcode']]) )
+        if data['fcode'] in leisure:
+            keys.append( ('leisure', leisure[data['fcode']]) )
+        return keys
+    return None
 
 # The most important part of the code: define a set of key/value pairs
 # to iterate over to generate keys. This is a list of two-tuples: first
@@ -86,6 +124,7 @@ def ftype(data):
 
 tag_mapping = [ 
     ('ftype', ftype),
+    ('fcode', fcode),
     ('gnis_name', 'name'),
     ('elevation', 'ele'),
 ]    

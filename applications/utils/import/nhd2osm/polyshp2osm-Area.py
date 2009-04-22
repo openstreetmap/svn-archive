@@ -48,9 +48,10 @@ fixed_tags = {
 # and they return a list of two-tuples which match to key/value pairs.
 
 # The following Ftypes are not converted
+# 40309 - Controlled Inundation Area - Flood Area
 # 46100 - Submerged Stream
 ignoreField = "FCode"
-ignoreValues = [46100]
+ignoreValues = [40309, 46100]
 
 def ftype(data):
     """Type of body - from NHD feature type."""  
@@ -76,7 +77,7 @@ def ftype(data):
 def fcode(data):
     """For features where the ftype is not specific enough"""
     water = {
-	'40308': 'intermittent' #Inundation Area - Lake Shores
+	'40308': 'intermittent' #Controlled Inundation Area - Non-Flood
     }
 
     if 'fcode' in data:

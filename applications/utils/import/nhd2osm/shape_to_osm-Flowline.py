@@ -272,7 +272,7 @@ def shape_to_osm( shp_filename, base_filename, blank_way_id ):
     print "constructing osm xml file"
     ret = []
     ret.append( "<?xml version='1.0' encoding='UTF-8'?>" )
-    ret.append( "<osm version='0.5' generator='shape_to_osm.py'>" )
+    ret.append( "<osm version='0.6' generator='shape_to_osm.py'>" )
     
     for waykey, segments in waylist.iteritems():
         for segment in segments:
@@ -335,7 +335,7 @@ def shape_to_osm( shp_filename, base_filename, blank_way_id ):
                 seen = {}
                 ret = []
                 ret.append( "<?xml version='1.0' encoding='UTF-8'?>" )
-                ret.append( "<osm version='0.5' generator='shape_to_osm.py'>" )
+                ret.append( "<osm version='0.6' generator='shape_to_osm.py'>" )
         
     ret.append( "</osm>" )
     

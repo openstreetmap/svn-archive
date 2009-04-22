@@ -61,7 +61,7 @@ class OSMBackend:
 
     def checkOSMpasswd(self,username=None, password=None):
         password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-        top_level_url = "http://www.openstreetmap.org/api/0.5"
+        top_level_url = "http://www.openstreetmap.org/api/0.6"
         password_mgr.add_password(None, top_level_url, username, password)
         handler = urllib2.HTTPBasicAuthHandler(password_mgr)
 

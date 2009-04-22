@@ -66,8 +66,8 @@ class Tile:
     """
     (layer, base_z,base_x,base_y) = self.basetileset() 
     # basetilepath could be taken from the Settings, hardcode for efficiency 
-    basetilepath='/storage/openstreetmap/tah/Tiles'
-    blanktilepath='/storage/openstreetmap/tah/Tiles'
+    basetilepath='/SX40/Tiles'
+    blanktilepath='/SX40/Tiles'
     self.mtime = 0
     if base_z == None:
       # basetileset returns (None,None,None,None) if invalid
@@ -93,12 +93,9 @@ class Tile:
       #return  "(%d,%d,%d) as %d offset1 %d  offset2 %d " % (self.z,self.x,self.y,offset,d_offset,d_offset_next)
     except OSError, IOError:
       d_offset = 0
-      #next 3 lines are temporary fallback to legacy tiles
-      tilesetfile = self.serve_legacy_tile(layername)
-      if isinstance(tilesetfile,str):
-        d_length = os.stat(tilesetfile)[6] # tile length
-        return (tilesetfile,0, d_length)       # we found a tile, send entire file
-      else: d_offset = tilesetfile      # use returned blankness value
+      # check blanktiles.dat for blankness value
+      blankness = self.blankness_value(layername)
+      d_offset = blankness      # use returned blankness value
     if d_offset > 3:
       # we got a regular tilesetfile here
       #make sure that the second offset really points to data end and is not blank either
@@ -116,36 +113,32 @@ class Tile:
       return (tilesetfile, 0, d_length)
 
 
-  def serve_legacy_tile(self,layername):
-    """ Returns: a blanktile value (0,..,3) as 'int' or the file name of the tile file as 'str'. """
-    leg_basetiledir='/storage/openstreetmap/tah/Tiles'
-    oceantilesdat_path ='/storage/openstreetmap/tah/Tiles/oceantiles_12.dat'
+  def blankness_value(self, layername):
+    """ Returns: a blanktile value (0,..,3) as 'int' """
+    oceantilesdat_path ='/SX40/oceantiles_12.dat'
 
-    fname = os.path.join(leg_basetiledir,layername,"%02d"%(self.z),"%03d"%(self.x//1000),"%03d"%(self.x%1000),"%03d"%(self.y//1000),"%03d.png"%(self.y%1000))
-    if os.path.isfile(fname):
-      return fname
+    #fall to blanktile database
+    #Return transparent for hardcoded transparent layers
+    if layername in ['maplint','caption']: return 3
+
+    if self.z < 12:
+      #We only handle z12 and above this way. Lowzooms are required to have actual tiles
+      return 0
     else:
-      #There is no legacy tile either, fall back to blanktile database
-      #Return transparent for hardcoded transparent layers
-      if layername in ['maplint','caption']: return 3
-      if self.z < 12:
-        #We only handle z12 and above this way. Lowzooms are required to have actual tiles
+      #Lookup in the oceans tile
+      #For z12 and above the file will tell us directly what type it is
+      try:
+        (layern, base_z,base_x,base_y) = self.basetileset()
+        f_oceant = open(oceantilesdat_path,'rb')
+        f_oceant.seek((4096*base_y + base_x) >> 2)
+        data = ord(f_oceant.read(1));
+        #take 2 bits of the char
+        bit_off = 3 - (base_x % 4);
+        type = (data >> 2*bit_off) & 3
+        # map tile type to blankness type used in the server
+        blank = [0,2,1,1]
+        return blank[type]
+      except:
+        # return 0 if we don't find oceantiles.dat
         return 0
-      else:
-        #Lookup in the oceans tile
-        #For z12 and above the file will tell us directly what type it is
-        try:
-          (layern, base_z,base_x,base_y) = self.basetileset()
-          f_oceant = open(oceantilesdat_path,'rb')
-          f_oceant.seek((4096*base_y + base_x) >> 2)
-          data = ord(f_oceant.read(1));
-          #take 2 bits of the char
-          bit_off = 3 - (base_x % 4);
-          type = (data >> 2*bit_off) & 3
-          # map tile type to blankness type used in the server
-          blank = [0,2,1,1]
-          return blank[type]
-	except:
-          # return 0 if we don't find oceantiles.dat
-          return 0
  

@@ -941,7 +941,7 @@
 
 		box.attachMovie("menu","background",60);
 		box.background.init(24,12,preferences.data.tileset,
-			new Array("Aerial - Bavaria","OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Out-of-copyright map","OpenTopoMap"),
+			new Array("OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Out-of-copyright map","OpenTopoMap"),
 			'Choose the background to display',function(n) { preferences.data.tileset=n; _root.windows.options.box.bgoption.select(1); },null,0);
 
 		var w=box.bgoption[3].prompt._width+25;

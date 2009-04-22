@@ -801,7 +801,7 @@ sub ClientModified
     my $svn_status = `$Cmd`;
 
     chomp $svn_status;
-    #$svn_status =~ s/^M.*\n?//mg;  # FFS use a future date in version.txt instead of this line.
+
     if ($svn_status ne '')
     {
         statusMessage("svn status did not come back clean, check your installation",1,0);

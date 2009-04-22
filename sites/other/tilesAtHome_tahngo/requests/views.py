@@ -384,7 +384,7 @@ def take(request):
     if not form['version'] in ['Ulm']:
         # client version not in whitelist
         logging.info("User %s connects with disallowed client '%s'." %\
-                     (user,form.cleaned_data['version']))
+                     (user,form['version']))
         html="XX|%d|Invalid client version." %(PROT_VER)
         return HttpResponse(html)
 

@@ -773,14 +773,13 @@ sub UpdateClient
         $Config->get("Subversion"),
         $Config->get("SubversionUpdateCmd"));
 
-    statusMessage("Updating the Client",1,0);
-    runCommand($Cmd,$PID); # FIXME: evaluate output and handle locally changed files that need updating!
-
     if (ClientModified())
     {
         return cleanUpAndDie("Auto-update failed","EXIT",1);
     }
-    else
+    
+    statusMessage("Updating the Client",1,0);
+    if (runCommand($Cmd,$PID)) # FIXME: evaluate output and handle locally changed files that need updating!
     {
         my $versionfile = "version.txt";
         DownloadFile($Config->get("VersionCheckURL"), $versionfile ,0);

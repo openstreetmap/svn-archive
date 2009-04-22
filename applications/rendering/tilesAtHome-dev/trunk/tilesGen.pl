@@ -439,6 +439,9 @@ elsif ($Mode eq "")
     # ----------------------------------
     # Normal mode renders a single request from server and exits
     # ----------------------------------
+
+    exit (1) if ClientModified(); # don't interact with server if client was modified!
+
     my ($did_something, $message) = ProcessRequestsFromServer();
     
     if (! $did_something)

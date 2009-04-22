@@ -1,0 +1,121 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+
+\topmargin= 0in
+\oddsidemargin=-.5in
+\evensidemargin=-.5in
+\headheight= 0in
+\textheight= 9.9in
+\textwidth = 7in
+\title{Yolo County Maps}
+
+%%
+%% Grid
+%%
+\newcommand{\Grid}[8]{
+\multirow{3}{*}{
+\begin{Large}
+\begin{tabular}{c|c|c}
+#1 & #2 & #3 \\
+\hline
+#4 &    & #5 \\
+\hline
+#6 & #7 & #8 \\
+\end{tabular}
+\end{Large}
+}
+}
+
+
+%%%
+%%% Map
+%%%
+\newcommand{\Map}[7]{
+
+% \includegraphics[clip,width=\linewidth]{#1}
+
+\begin{tabular}{c|ccccccccccc}
+  & A & B & C & D & E & F & G & H & I & J \\
+\hline
+1 & \multicolumn{10}{|c|}{\multirow{10}{*}{\includegraphics[clip,width=\linewidth]{#1}}} \\
+%1 & \multicolumn{10}{|c|}{\multirow{10}{*}{foo}} \\
+2 & & & & & & & & & & & \\
+3 & & & & & & & & & & & \\
+4 & & & & & & & & & & & \\
+5 & & & & & & & & & & & \\
+6 & & & & & & & & & & & \\
+7 & & & & & & & & & & & \\
+8 & & & & & & & & & & & \\
+9 & & & & & & & & & & & \\
+0 & & & & & & & & & & & \\
+\hline
+\end{tabular}
+
+\begin{minipage}[b]{\linewidth}
+\centering
+\begin{Huge}
+\begin{tabular}{|c|rll|c}
+\hline
+Grid & NW: & N #4 & W #3 & #7 \\
+#2   & SE: & N #6 & W #5 & \\
+     &     &      &      & \\
+\hline
+\end{tabular}
+\end{Huge}
+\end{minipage}
+%\begin{center}
+%{\Huge Grid #2}
+%\end{center}
+\pagebreak
+}
+
+
+%%%
+%%% Overview
+%%%
+\newcommand{\Overview}[5]{
+
+    \includegraphics{#1}
+
+\vspace{.5in}
+
+\begin{minipage}[b]{\linewidth}
+\centering
+\begin{Huge}
+\begin{tabular}{|c|rll|}
+\hline
+Overview & NW: & N #3 & W #2 \\
+Map      & SE: & N #5 & W #4 \\
+\hline
+\end{tabular}
+\end{Huge}
+\end{minipage}
+%\begin{center}
+%{\Huge Grid #2}
+%\end{center}
+\pagebreak
+}
+
+\pagestyle{fancy}
+\lhead{}
+\rhead{}
+\lfoot{Created: \today}
+\rfoot{Yolo ARES}
+\cfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\begin{document}
+
+\fancyfoot[L]{Created: \today}
+\fancyfoot[R]{Yolo ARES}
+%\footrulewidth 0pt
+%\headrulewidth 0pt
+
+
+\include{maps}
+
+\end{document}

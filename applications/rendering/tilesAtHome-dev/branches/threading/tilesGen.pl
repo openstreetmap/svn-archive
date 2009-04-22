@@ -477,6 +477,9 @@ elsif ($Mode eq "")
     # ----------------------------------
     # Normal mode renders a single request from server and exits
     # ----------------------------------
+
+    exit (1) if ClientModified(); # don't interact with server if client was modified!
+
     my ($did_something, $message) = ProcessRequestsFromServer();
     
     if (! $did_something)
@@ -767,6 +770,7 @@ sub ProcessRequestsFromServer
         eval {
             $Server->putRequestBack($req, $err->text()) unless $Mode eq 'xy';
         }; # ignoring exceptions
+        statusMessage("\n ".$err->value." \n",1,10); #print only for debug (verbosity 10)
         if ($err->value() eq "fatal") {
             # $err->value() is "fatal" for fatal errors 
             cleanUpAndDie($err->text(), "EXIT", 1);

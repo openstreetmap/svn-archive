@@ -111,7 +111,7 @@ while(<STDIN>)
             
             if (/version=['"](.*?)['"]/)
             {
-                die ("close-areas.pl does not support version $1") unless ($1 eq "0.5");
+                die ("close-areas.pl does not support version $1") unless ( ($1 eq "0.5") || ($1 eq "0.6") );
             }
         }
 
@@ -570,6 +570,8 @@ sub check_segments_intersect
 		my $y2= $nodes->{$from}->{"lat"};
 		my $x3= $nodes->{$to}  ->{"lon"};
 		my $y3= $nodes->{$to}  ->{"lat"};
+		next if ( ($x2==$x1) && ($y2==$y1) ); # in an ideal world this would be unnecessary, but as we do numerical calculations...
+		next if ( ($x3==$x1) && ($y3==$y1) ); # in an ideal world this would be unnecessary, but as we do numerical calculations...
 		my ($ret)= intersect($x0, $y0, $x1, $y1, $x2, $y2, $x3, $y3);
 		if ($ret>0) # found intersection
 		{

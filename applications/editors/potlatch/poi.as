@@ -14,7 +14,7 @@
 	};
 	POI.prototype=new MovieClip();
 	POI.prototype.remove=function() {
-		memberDeleted('node', this._name);
+		memberDeleted('Node', this._name);
 		uploadDirtyRelations();
 		if (this._name>=0 && !_root.sandbox) {
 			poidelresponder = function() { };
@@ -50,7 +50,7 @@
 			var ni=result[1];	// new POI ID
 			if (result[0]!=ni) {
 				_root.map.pois[result[0]]._name=ni;
-				renumberMemberOfRelation('node', result[0], ni);
+				renumberMemberOfRelation('Node', result[0], ni);
 				if (poiselected==result[0]) {
 					poiselected=ni;
 					if (_root.panel.t_details.text==result[0]) { _root.panel.t_details.text=ni; _root.panel.t_details.setTextFormat(plainText); }
@@ -129,7 +129,7 @@
 		updateButtons();
 		updateScissors(false);
 		highlightSquare(this._x,this._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
-		redrawRelationsForMember('node', this._name);
+		redrawRelationsForMember('Node', this._name);
 	};
 	POI.prototype.recolour=function() { 
 		this.redden=new Color(this);

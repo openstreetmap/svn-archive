@@ -84,8 +84,11 @@
 	// updateLinks - update view/edit tabs
 
 	function updateLinks() {
-//		if (winie) { fscommand("maplinks",centrelong(0),centrelat(0),_root.scale); } else { 
-		getURL("javascript:updatelinks("+centrelong(0)+","+centrelat(0)+","+_root.scale+")");
+		if (winie) {
+			flash.external.ExternalInterface.call("updatelinks",centrelong(0),centrelat(0),_root.scale,'',_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
+		} else {
+			getURL("javascript:updatelinks("+centrelong(0)+","+centrelat(0)+","+_root.scale+",'',"+_root.edge_l+","+_root.edge_b+","+_root.edge_r+","+_root.edge_t+")");
+		}
 	}
 	
 	// maximiseSWF - call JavaScript to maximise/minimise

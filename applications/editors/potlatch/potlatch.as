@@ -375,9 +375,6 @@
 
 
 
-
-
-
 	// =====================================================================
 	// Map support functions
 	// mapRollOver/Out - user has rolled over/out the main map area
@@ -978,8 +975,7 @@
 
 	function markClean(a) {
 		if (!_root.sandbox) {
-			if (winie) { // _root.chat._visible=true; fscommand("changesaved",a);
-					   }
+			if (winie) { flash.external.ExternalInterface.call("markChanged",a); }
 				  else { getURL("javascript:var changesaved="+a); }
 		}
 	}

@@ -882,7 +882,8 @@ void TrackMapLayer::extractLayer()
 			PL.clear();
 
 			P = new TrackPoint( S->getNode(0)->position() );
-			P->setTag("created_by", QString("Merkaartor %1").arg(VERSION));
+			if (M_PREFS->apiVersionNum() < 0.6)
+				P->setTag("created_by", QString("Merkaartor %1").arg(VERSION));
 			P->setTime(S->getNode(0)->time());
 			P->setElevation(S->getNode(0)->elevation());
 			P->setSpeed(S->getNode(0)->speed());
@@ -891,7 +892,8 @@ void TrackMapLayer::extractLayer()
 			unsigned int startP = 0;
 
 			P = new TrackPoint( S->getNode(1)->position() );
-			P->setTag("created_by", QString("Merkaartor %1").arg(VERSION));
+			if (M_PREFS->apiVersionNum() < 0.6)
+				P->setTag("created_by", QString("Merkaartor %1").arg(VERSION));
 			P->setTime(S->getNode(1)->time());
 			P->setElevation(S->getNode(1)->elevation());
 			P->setSpeed(S->getNode(1)->speed());
@@ -901,7 +903,8 @@ void TrackMapLayer::extractLayer()
 
 			for (unsigned int j=2; j < S->size(); j++) {
 				P = new TrackPoint( S->getNode(j)->position() );
-				P->setTag("created_by", QString("Merkaartor %1").arg(VERSION));
+				if (M_PREFS->apiVersionNum() < 0.6)
+					P->setTag("created_by", QString("Merkaartor %1").arg(VERSION));
 				P->setTime(S->getNode(j)->time());
 				P->setElevation(S->getNode(j)->elevation());
 				P->setSpeed(S->getNode(j)->speed());
@@ -924,7 +927,8 @@ void TrackMapLayer::extractLayer()
 
 			Road* R = new Road();
 			R->setLastUpdated(MapFeature::OSMServer);
-			R->setTag("created_by", QString("Merkaartor %1").arg(VERSION));
+			if (M_PREFS->apiVersionNum() < 0.6)
+				R->setTag("created_by", QString("Merkaartor %1").arg(VERSION));
 			theList->add(new AddFeatureCommand(extL,R,true));
 			for (int i=0; i < PL.size(); i++) {
 				theList->add(new AddFeatureCommand(extL,PL[i],true));

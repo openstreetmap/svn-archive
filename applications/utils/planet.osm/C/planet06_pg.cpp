@@ -217,7 +217,7 @@ struct relation_member_stream
     resetList(roles);
     if (has_members) {
       while (id == next_id) {
-	addItem(members, (*r_itr)[1].c_str(), (*r_itr)[2].c_str(), 0);
+	addItem(members, (*r_itr)[2].c_str(), (*r_itr)[1].c_str(), 0);
 	addItem(roles, "", (*r_itr)[3].c_str(), 0);
 	next();
       }

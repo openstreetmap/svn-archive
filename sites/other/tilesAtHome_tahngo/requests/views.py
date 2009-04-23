@@ -440,8 +440,8 @@ def take(request):
 
 @cache_control(no_cache=True)
 def request_changedTiles(request):
-    #http://www.openstreetmap.org/api/0.5/changes?start=2008-08-18-18:40&end=now
-    #<osm version="0.5" generator="OpenStreetMap server">
+    #http://www.openstreetmap.org/api/0.6/changes?start=2008-08-18-18:40&end=now
+    #<osm version="0.6" generator="OpenStreetMap server">
     #<changes starttime="2008-08-18T18:40:00+01:00" endtime="2008-08-18T20:50:29+01:00">
     setting = Settings()
     #check if we access this page from the whitelisted ip address
@@ -451,7 +451,7 @@ def request_changedTiles(request):
       return HttpResponseForbidden('Access not allowed from this IP address.')
     #fetch the url that is called to retrieve the changed tiles
     url = setting.getSetting('changed_tiles_api_url')
-    if not url: url = setting.setSetting('changed_tiles_api_url','http://www.openstreetmap.org/api/0.5/changes?hours=2')
+    if not url: url = setting.setSetting('changed_tiles_api_url','http://www.openstreetmap.org/api/0.6/changes?hours=2')
 
     html="Requested tiles:\n"
     xml_dom = xml.dom.minidom.parse(urllib.urlopen(url))

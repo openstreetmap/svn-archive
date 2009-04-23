@@ -70,8 +70,8 @@
 		_root.windows.splashscreen.box.createTextField("prompt",3,15,35,500-30,180);
 		writeText(_root.windows.splashscreen.box.prompt,iText(
 			"Choose a button below to get editing. If you click 'Start', "+
-			"you'll be editing the main map directly - changes usually show "+
-			"up every Thursday. If you click 'Play', your changes won't be "+
+			"you'll be editing the main map as you work - most changes show "+
+			"up after an hour or two. If you click 'Play', your changes won't be "+
 			"saved, so you can practise editing.\n\n"+
 			"Remember the golden rules of OpenStreetMap:\n\n",'prompt_introduction')+
 			chr(0x278A)+"  "+iText("Don't copy from other maps"							,'prompt_dontcopy')+"\n"+

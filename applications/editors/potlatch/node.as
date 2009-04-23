@@ -54,6 +54,7 @@
 		nodes[id]=new Node(id,this.x,this.y,this.attr,this.version);
 		nodes[id].clean=this.clean;
 		var z=this.ways; for (var qway in z) {
+			nodes[id].addWay(qway);
 			for (var qs=0; qs<_root.map.ways[qway].path.length; qs+=1) {
 				if (_root.map.ways[qway].path[qs].id==old) {
 					_root.map.ways[qway].path[qs]=nodes[id];

@@ -92,6 +92,7 @@
 						nodes[id].moveTo(x,y,w);
 						nodes[id].attr=n[4];
 						nodes[id].version=n[3];
+						w.clean=false;
 					}
 					if (n[5]) { nodes[id].clean=true; }		// is visible and current version
 				} else {
@@ -329,7 +330,7 @@
 			var i,r,z,nw,ow;
 			ow=result[0];			// old way ID
 			nw=result[1];			// new way ID
-			if (ow!=nw) {	// renumber way?
+			if (ow!=nw) {			// renumber way?
 				_root.map.ways[ow].renumberNodeIndex(nw);
 				_root.map.ways[ow]._name=nw;
 				renumberMemberOfRelation('Way', result[0], nw);

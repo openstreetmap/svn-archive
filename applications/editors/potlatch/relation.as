@@ -197,6 +197,7 @@
 				set = true;
 				r=findLinkedHash(type,id); delete r[this._name];
 				findLinkedHash(type,new_id)[this._name]=mems[m][2];
+				this.clean = false;
 			}
 		}
 	};
@@ -330,6 +331,18 @@
 		else if (_root.map.pois[id]) { r=_root.map.pois[id].relations; }
 		else                         { r=nodes[id].relations; }
 		return r;
+	}
+
+	function getRelations(type, id) {
+		var rels = new Object();
+		var z = _root.map.relations;
+		for (var i in z) {
+			var mems=z[i].members;
+			for (var m in mems) {
+				if (mems[m][0]==type && mems[m][1]==id) { rels[i]=mems[m][2]; }
+			}
+		}
+		return rels;
 	}
 
 	function memberDeleted(type, id) {

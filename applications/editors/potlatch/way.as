@@ -37,6 +37,7 @@
 			_root.map.ways[w].removeNodeIndex();
 			_root.map.ways[w].path=[];
 			_root.map.ways[w].resetBBox();
+			_root.map.ways[w].relations=getRelations('Way',w);
 			for (i=0; i<result[1].length; i++) {
 				x =result[1][i][0];
 				y =result[1][i][1];
@@ -51,6 +52,7 @@
 					// doesn't exist, so create new node
 					_root.nodes[id]=new Node(id,x,y,result[1][i][3],result[1][i][4]);
 					_root.nodes[id].clean=true;
+					_root.nodes[id].relations=getRelations('Node',id);
 					if (id==prenode) { prepoint=i; }
 				}
 				_root.map.ways[w].path.push(_root.nodes[id]);
@@ -80,6 +82,7 @@
 			w.removeNodeIndex();
 			w.path=[];
 			w.resetBBox();
+			w.relations=getRelations('Way',result[0]);
 			for (i=0; i<result[1].length; i++) {
 				n=result[1][i];
 				x=n[0]; y=n[1]; id=n[2];					// 3:current version, 4:tags, 5:reuse?
@@ -97,6 +100,7 @@
 					if (n[5]) { nodes[id].clean=true; }		// is visible and current version
 				} else {
 					_root.nodes[id]=new Node(id,x,y,n[4],n[3]);
+					_root.nodes[id].relations=getRelations('Node',id);
 				}
 				w.path.push(_root.nodes[id]);
 				_root.nodes[id].addWay(result[0]);

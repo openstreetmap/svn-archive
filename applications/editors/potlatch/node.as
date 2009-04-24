@@ -9,6 +9,7 @@
 		this.attr=attr;
 		this.tagged=hasTags(attr);
 		this.ways=new Object();
+		this.relations=new Object();
 		this.version=version;
 		this.clean=false;		// set to true if just loaded from server
 	};
@@ -74,6 +75,7 @@
 	
 	Node.prototype.addWay=function(id) { this.ways[id]=true; };
 	Node.prototype.removeWay=function(id) { delete this.ways[id]; };
+	Node.prototype.numberOfWays=function() { var z=this.ways; var c=0; for (var i in z) { c++; } return c; };
 
 	// ------------------------------------------------------------------------
 	// Support functions

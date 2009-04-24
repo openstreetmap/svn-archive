@@ -7,6 +7,8 @@
 	// ** highlight isn't yellow if it's part of a relation (should be)
 	// ** default tags: type, name
 	// ** verboseText isn't very good
+	// ** some circumstances (while saving?) in which if you pan and a new version
+	//    is loaded, they're added to the relation all over again
 
 	// =====================================================================================
 	// Classes - OSMRelation
@@ -75,6 +77,10 @@
 			_root.map.relations[w].members=result[2];
 			_root.map.relations[w].version=result[3];
 			_root.map.relations[w].redraw();
+			var mems=result[2];
+			for (m in mems) {
+				findLinkedHash(mems[m][0],mems[m][1])[w]=mems[m][2];
+			}
 		};
 		remote_read.call('getrelation',responder,Math.floor(this._name));
 	};
@@ -108,6 +114,7 @@
 		if (!this.uploading && !this.locked && !_root.sandbox ) {
 			this.uploading=true;
 			_root.writesrequested++;
+//			_root.chat.text+="putrelation("+this._name+")";
 			remote_write.call('putrelation', putresponder,
 				_root.usertoken, _root.changeset, this.version,
 				Math.floor(this._name),
@@ -177,38 +184,35 @@
 	};
 
 	OSMRelation.prototype.getRole=function(type, id) {
-		var ws = this.members;
-		var role;
-		for ( var m = 0; m < ws.length && role == undefined; m++ ) {
-			if ( ws[m][0] == type && ws[m][1] == id ) {
-				role = ws[m][2];
-			}
-		}
-		return role;
+		return findLinkedHash(type,id)[this._name];
 	};
 
 	OSMRelation.prototype.renumberMember=function(type, id, new_id) {
-		var ws = this.members;
+		var mems = this.members;
 		var set = false;
-		for ( var m = 0; m < ws.length && !set; m++ ) {
-			if ( ws[m][0] == type && ws[m][1] == id ) {
-				ws[m][1] = new_id;
+		var r;
+		for ( var m = 0; m < mems.length && !set; m++ ) {
+			if ( mems[m][0] == type && mems[m][1] == id ) {
+				mems[m][1] = new_id;
 				set = true;
+				r=findLinkedHash(type,id); delete r[this._name];
+				findLinkedHash(type,new_id)[this._name]=mems[m][2];
 			}
 		}
 	};
 
 	OSMRelation.prototype.setRole=function(type, id, role) {
-		var ws = this.members;
+		var mems = this.members;
 		var set = false;
 		var diff = true;
-		for ( var m = 0; m < ws.length && !set; m++ ) {
-			if ( ws[m][0] == type && ws[m][1] == id ) {
-				diff = (ws[m][2] != role);
-				ws[m][2] = role;
+		for ( var m = 0; m < mems.length && !set; m++ ) {
+			if ( mems[m][0] == type && mems[m][1] == id ) {
+				diff = (mems[m][2] != role);
+				mems[m][2] = role;
 				set = true;
 			}
 		}
+		findLinkedHash(type,id)[this._name]=role;
 		if ( !set )
 			this.members.push([type, id, role]);
 		if ( diff ) {
@@ -244,15 +248,17 @@
 	};
 
 	OSMRelation.prototype.removeMemberDirty=function(type, id, markDirty) {
-		var ws = this.members;
-		for (var m in ws) {
-			if ( ws[m][0] == type && ws[m][1] == id ) {
-				ws.splice(m, 1);
+		var mems = this.members;
+		for (var m in mems) {
+			if ( mems[m][0] == type && mems[m][1] == id ) {
+				mems.splice(m, 1);
 				if ( markDirty )
 					this.clean = false;
 				this.redraw();
 			}
 		}
+		var r=findLinkedHash(type,id);
+		delete r[this._name];
 	};
 
 	OSMRelation.prototype.removeWay=function(way_id) {
@@ -317,13 +323,17 @@
 	// ===============================
 	// Support functions for relations
 
-	function redrawRelationsForMember(type, id) {
-		var rels = type == 'Way' ? getRelationsForWay(id) : getRelationsForNode(id);
-		for ( r in rels )
-			_root.map.relations[rels[r]].redraw();
+	function findLinkedHash(type,id) {
+		// returns hash of relations in way/POI/node object
+		var r;
+		if      (type=='Way')        { r=_root.map.ways[id].relations; }
+		else if (_root.map.pois[id]) { r=_root.map.pois[id].relations; }
+		else                         { r=nodes[id].relations; }
+		return r;
 	}
 
 	function memberDeleted(type, id) {
+//		_root.chat.text+="memberDeleted("+type+" "+id+")";
 		var rels = _root.map.relations;
 		for ( r in rels )
 			rels[r].removeMemberDirty(type, id, true);
@@ -335,40 +345,17 @@
 			rels[r].renumberMember(type, id, new_id);
 	}
 
-	function getRelationsForWay(way) {
-		var rels = [];
-		var z = _root.map.relations;
-		for ( var i in z ) {
-			if ( z[i].hasWay(way) )
-				rels.push(i);
-		}
-		return rels;
-	}
-
-	function getRelationsForNode(node) {
-		var rels = [];
-		var z = _root.map.relations;
-		for ( var i in z ) {
-			if ( z[i].hasNode(node) )
-				rels.push(i);
-		}
-		return rels;
-	}
-	
 	function markWayRelationsDirty(way) {
-		var z=_root.map.relations;
-		for (var i in z) {
-			if (z[i].hasWay(way)) { z[i].clean=false; }
-		}
+		var z=_root.map.ways[way].relations;
+		for (var i in z) { _root.map.relations[i].clean=false; }
+
 		var p=_root.map.ways[way].path;
 		for (var i in p) { markNodeRelationsDirty(_root.map.ways[way].path[i].id); }
 	}
 	
 	function markNodeRelationsDirty(node) {
-		var z=_root.map.relations;
-		for (var i in z) {
-			if (z[i].hasNode(node)) { z[i].clean=false; }
-		}
+		var z=findLinkedHash('Node',node);
+		for (var i in z) { _root.map.relations[i].clean=false; }
 	}
 
 	function uploadDirtyRelations() {
@@ -440,7 +427,12 @@
 										_root.map.relations.attachMovie("relation",w,++reldepth);
 										_root.map.relations[w].attr=rellist[r][1];
 										_root.map.relations[w].members=rellist[r][2];
+										_root.map.relations[w].version=rellist[r][3];
 										_root.relcount++;
+										var mems=rellist[r][2];
+										for (m in mems) {
+											findLinkedHash(mems[m][0],mems[m][1])[this._name]=mems[m][2];
+										}
 									}
 								}
 								createRelationMenu(_root.windows.relation.box,20);

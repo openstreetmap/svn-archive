@@ -6,6 +6,7 @@
 	
 	function POI() {
 		this.attr=new Object();
+		this.relations=new Object();
 		this.clean=true;
 		this.uploading=false;
 		this.locked=false;
@@ -129,7 +130,8 @@
 		updateButtons();
 		updateScissors(false);
 		highlightSquare(this._x,this._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
-		redrawRelationsForMember('Node', this._name);
+		var z=this.relations;
+		for (var rel in z) { _root.map.relations[rel].redraw(); }
 	};
 	POI.prototype.recolour=function() { 
 		this.redden=new Color(this);

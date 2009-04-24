@@ -9,6 +9,7 @@
 		this.path=new Array();			// list of nodes
 		this.attr=new Array();			// hash of tags
 		this.mergedways=new Array();	// list of ways merged into this
+		this.relations=new Object();	// hash of relations including this
 	};
 
 	OSMWay.prototype=new MovieClip();
@@ -193,7 +194,11 @@
 					this.taggednodes[i]._xscale=this.taggednodes[i]._yscale=taggedscale;
 				}
 			}
-			redrawRelationsForMember('Way', this._name);
+
+			// Draw relations
+
+			var z=this.relations;
+			for (var rel in z) { _root.map.relations[rel].redraw(); }
 		}
 	};
 
@@ -256,14 +261,20 @@
 	};
 	
 
+
 	// ----	Remove from server
 	
 	OSMWay.prototype.remove=function() {
+		memberDeleted('Way', this._name);
+		var cp=new Object; cp[this._name]=true;
+		var z=this.path; for (var i in z) {
+			if (z[i].numberOfWays()==1) { memberDeleted('Node', z[i].id); }
+		}
+		uploadDirtyRelations();
+
 		this.deleteMergedWays();
 		this.removeNodeIndex();
-		memberDeleted('Way', this._name);
-		var z=this.path; for (var i in z) { memberDeleted('Node', z[i].id); }
-		uploadDirtyRelations();
+
 		if (this._name>=0 && !_root.sandbox && !this.historic) {
 			deleteresponder = function() { };
 			deleteresponder.onResult = function(result) {
@@ -276,6 +287,7 @@
 			_root.writesrequested++;
 			var nodeversions=new Object(); var z=this.path;
 			for (var i in z) { nodeversions[z[i].id]=z[i].version; }
+//			_root.chat.text+="deleteway("+this._name+")";
 			remote_write.call('deleteway',deleteresponder,_root.usertoken,_root.changeset,Number(this._name),Number(this.version),nodeversions);
 		} // else {
 		if (this._name==wayselected) { stopDrawing(); deselectAll(); }
@@ -345,6 +357,7 @@
 			for (var nid in z) { nodes[nid].version=result[4][nid]; }
 			
 			_root.map.ways[nw].clearPOIs();
+			uploadDirtyRelations();
 			_root.map.ways[nw].deleteMergedWays();
 			_root.writesrequested--;
 			uploadDirtyWays();			// make sure dependencies are uploaded
@@ -595,9 +608,9 @@
 			if (newattr) { _root.map.ways[newwayid].attr=newattr; }
 					else { _root.map.ways[newwayid].attr=deepCopy(this.attr); }
 
-			z=getRelationsForWay(this._name);							// copy relations
+			z=this.relations;											// copy relations
 			for (i in z) {												//  | 
-				_root.map.relations[z[i]].setWayRole(newwayid,_root.map.relations[z[i]].getWayRole(this._name));
+				_root.map.relations[i].setWayRole(newwayid,z[i]);		//  |
 			}															//  |
 
 			this.path.splice(Math.floor(point)+1);						// current way
@@ -655,12 +668,13 @@
 		}
 
 		// Merge relations
-		z=getRelationsForWay(otherway._name);						// copy relations
-		for (i in z) {												//  | 
-			if (!_root.map.relations[z[i]].hasWay(this._name)) {	//  |
-				_root.map.relations[z[i]].setWayRole(this._name,_root.map.relations[z[i]].getWayRole(otherway._name));
-			}														//  |
-		}															//  |
+		z=otherway.relations;									// copy relations
+		for (i in z) {											//  | 
+			if (!this.relations[i]) {							//  |
+				_root.map.relations[i].setWayRole(this._name,z[i]);	
+			}													//  |
+		}														//  |
+		memberDeleted('Way', otherway._name);					// then remove old way from them
 
 		// Add to list of merged ways (so they can be deleted on next putway)
 		this.mergedways.push(new Array(otherway._name,otherway.version));
@@ -1046,8 +1060,9 @@
 			_root.ws.direction();
 			_root.ws.highlightPoints(5000,"anchor");
 			removeMovieClip(_root.map.anchorhints);
+			var z=_root.ws.relations;
+			for (var rel in z) { _root.map.relations[rel].redraw(); }
 		}
-		redrawRelationsForMember('Way',_root.wayselected);
 		// Mark as unclean
 		_root.ws.clean=false;
 		markClean(false);

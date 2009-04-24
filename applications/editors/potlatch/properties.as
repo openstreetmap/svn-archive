@@ -273,19 +273,19 @@
 		this.savedundo=false;
 		if (proptype=='') { return; }
 
-		this.relarr = [];
+		this.relarr = new Object();
 		switch (proptype) {
 			case 'point':
 				this.proparr=_root.ws.path[_root.pointselected].attr;
-				this.relarr=getRelationsForNode(_root.ws.path[_root.pointselected].id);
+				this.relarr=_root.ws.path[_root.pointselected].relations;
 				break;
 			case 'POI':
 				this.proparr=_root.map.pois[poiselected].attr;
-				this.relarr=getRelationsForNode(poiselected);
+				this.relarr=_root.map.pois[poiselected].relations;
 				break;
 			case 'way':
 				this.proparr=_root.ws.attr;
-				this.relarr=getRelationsForWay(wayselected);
+				this.relarr=_root.ws.relations;
 				break;
 			case 'relation':
 				this.proparr=_root.editingrelation.attr;
@@ -297,12 +297,12 @@
 		// Attach relations
 		relarr=this.relarr;
 		for (var rel in relarr) {
-			if (_root.map.relations[relarr[rel]]) {
+			if (_root.map.relations[rel]) {
 				this.attributes.attachMovie("relmember",this.tagcount, this.tagcount);
 				var pos = this.getXY(this.tagcount);
 				this.attributes[this.tagcount]._x=pos[0];
 				this.attributes[this.tagcount]._y=pos[1];
-				this.attributes[this.tagcount].init(relarr[rel]);
+				this.attributes[this.tagcount].init(rel);
 				this.attributes[this.tagcount].value.tabIndex=++this.tab;
 				this.attributes[this.tagcount].value.tabEnabled=true;
 				this.tagcount+=1;
@@ -445,13 +445,13 @@
 		this.saveUndo();
 		switch (this.proptype) {
 			case 'point':	proparr=_root.savedpointway.path[_root.saved['point']].attr; 
-							relarr=getRelationsForNode(_root.savedpointway.path[_root.saved['point']].id);
+							relarr=_root.savedpointway.path[_root.saved['point']].relations;
 							break;
 			case 'POI':		proparr=_root.saved['POI'].attr;
-							relarr=getRelationsForNode(_root.saved['POI']._name);
+							relarr=_root.saved['POI'].relations;
 							break; // ** formerly had _root.map.pois[poiselected].attr=new Array(); in here, no obvious reason why
 			case 'way':		proparr=_root.saved['way'].attr;
-							relarr=getRelationsForWay(_root.saved['way']._name);
+							relarr=_root.saved['way'].relations;
 							break;
 		}
 
@@ -473,11 +473,11 @@
 
 		// repeat relations
 		for (i in relarr) {
-			var r=_root.map.relations[relarr[i]];	// reference to this relation
+			var r=_root.map.relations[i];	// reference to this relation
 			switch (this.proptype) {
-				case 'point':	r.setNodeRole(_root.ws.path[_root.pointselected].id,r.getNodeRole(_root.savedpointway.path[_root.saved['point']].id)); break;
-				case 'POI':		r.setNodeRole(poiselected,r.getNodeRole(_root.saved['POI']._name)); break;
-				case 'way':		r.setWayRole (wayselected,r.getWayRole (_root.saved['way']._name)); break;
+				case 'point':	r.setNodeRole(_root.ws.path[_root.pointselected].id,relarr[i]); break;
+				case 'POI':		r.setNodeRole(poiselected,relarr[i]); break;
+				case 'way':		r.setWayRole (wayselected,relarr[i]); break;
 			}
 		}
 		if (this.proptype!='POI') { _root.ws.redraw(); }
@@ -828,8 +828,8 @@
 	RelMember.prototype.removeRelation=function() {
 		switch (this._parent._parent.proptype) {
 			case 'point': this.rel.removeNode(_root.ws.path[_root.pointselected].id); break;
-			case 'POI': this.rel.removeNode(poiselected); break;
-			case 'way': this.rel.removeWay(wayselected); break;
+			case 'POI':   this.rel.removeNode(poiselected); break;
+			case 'way':   this.rel.removeWay(wayselected); break;
 		}
 		_root.panel.properties.reinit();
 	};

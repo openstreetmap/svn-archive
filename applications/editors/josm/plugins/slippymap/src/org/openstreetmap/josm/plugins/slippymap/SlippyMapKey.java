@@ -10,11 +10,13 @@ package org.openstreetmap.josm.plugins.slippymap;
  * </p>
  * 
  * @author LuVar <lubomir.varga@freemap.sk>
+ * @author Dave Hansen <dave@sr71.net>
  *
  */
 public class SlippyMapKey {
 	private final int x;
 	private final int y;
+	private final int level;
 	
 	/**
 	 * <p>
@@ -25,9 +27,17 @@ public class SlippyMapKey {
 	 * @param x	x position in tiles table
 	 * @param y	y position in tiles table
 	 */
-	public SlippyMapKey(int x, int y) {
+	public final boolean valid;
+	public SlippyMapKey(int level, int x, int y) {
 		this.x = x;
 		this.y = y;
+		this.level = level;
+		if (level <= 0 || x < 0 || y < 0) {
+			this.valid = false;
+			System.err.println("invalid SlippyMapKey("+level+", "+x+", "+y+")");
+		} else {
+			this.valid = true;
+		}
 	}
 	
 	/**
@@ -41,7 +51,7 @@ public class SlippyMapKey {
 	public boolean equals(Object obj) {
 		if (obj instanceof SlippyMapKey) {
 			SlippyMapKey smk = (SlippyMapKey) obj;
-			if((smk.x == this.x) && (smk.y == this.y)) {
+			if((smk.x == this.x) && (smk.y == this.y) && (smk.level == this.level)) {
 				return true;
 			}
 		}
@@ -54,7 +64,7 @@ public class SlippyMapKey {
 	 */
 	@Override
 	public int hashCode() {
-		return new Integer(this.x + this.y * 10000).hashCode();
+		return new Integer(this.x + this.y * 10000 + this.level * 100000).hashCode();
 	}
 	
 	/**
@@ -62,7 +72,7 @@ public class SlippyMapKey {
 	 */
 	@Override
 	public String toString() {
-		return "SlippyMapKey(x=" + this.x + ",y=" + this.y + ")";
+		return "SlippyMapKey(x=" + this.x + ",y=" + this.y + ",level=" + level + ")";
 	}
 	
 }

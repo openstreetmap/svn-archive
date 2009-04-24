@@ -15,11 +15,13 @@ import java.net.URLConnection;
  * 
  * @author Frederik Ramm <frederik@remote.org>
  * @author LuVar <lubomir.varga@freemap.sk>
+ * @author Dave Hansen <dave@sr71.net>
  * 
  */
 public class SlippyMapTile
 {
     private Image  tileImage;
+	long timestamp;
 
     int x;
     int y;
@@ -32,6 +34,7 @@ public class SlippyMapTile
         this.x = x;
         this.y = y;
         this.z = z;
+		timestamp = System.currentTimeMillis();
     }
 
     public String getMetadata()
@@ -39,24 +42,40 @@ public class SlippyMapTile
         return metadata;
     }
 
-    public void loadImage()
+
+    public URL getImageURL()
     {
         try
         {
-            URL imageURL = new URL(SlippyMapPreferences.getMapUrl() + "/" + z
-                    + "/" + x + "/" + y + ".png");
-            
-            tileImage = Toolkit.getDefaultToolkit().createImage(imageURL);
+            return new URL(SlippyMapPreferences.getMapUrl() + "/" + z + "/" + x + "/" + y + ".png");
         }
         catch (MalformedURLException mfu)
         {
             mfu.printStackTrace();
         }
+            return null;
+        }
+
+    public void loadImage()
+    {
+        URL imageURL = this.getImageURL();
+        tileImage = Toolkit.getDefaultToolkit().createImage(imageURL);
+		Toolkit.getDefaultToolkit().sync();
+   		timestamp = System.currentTimeMillis();
     }
 
     public Image getImage()
     {
+        timestamp = System.currentTimeMillis();
         return tileImage;
+    }
+
+    public void dropImage()
+    {
+		tileImage = null;
+		//  This should work in theory but doesn't seem to actually
+		//  reduce the X server memory usage
+		//tileImage.flush();
     }
 
     public void loadMetadata()
@@ -73,7 +92,7 @@ public class SlippyMapTile
         }
         catch (Exception ex)
         {
-            metadata = tr("error loading metadata");
+            metadata = tr("error loading metadata" + ex.toString());
         }
 
     }
@@ -87,12 +106,18 @@ public class SlippyMapTile
             URLConnection devc = dev.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(devc
                     .getInputStream()));
+			timestamp = System.currentTimeMillis();
             metadata = tr("requested: {0}", tr(in.readLine()));
         }
         catch (Exception ex)
         {
             metadata = tr("error requesting update");
         }
+    }
+
+    public long access_time()
+    {
+        return timestamp;
     }
 
     public boolean equals(Object o)

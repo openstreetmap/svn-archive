@@ -132,7 +132,9 @@ void osm_relation(int id, struct keyval *members, struct keyval *roles, struct k
   if (listHasData(tags) || listHasData(members)) {
     printf(INDENT "<relation id=\"%d\" timestamp=\"%s\" version=\"%d\" changeset=\"%d\"%s>\n", id, ts, version, changeset, user);
     while (((p = popItem(members)) != NULL) && ((q = popItem(roles)) != NULL)) {
-      const char *m_type = p->key;
+      char *m_type = p->key;
+      char *i; 
+      for (i = m_type; *i; i++) *i = tolower(*i);
       const char *m_id   = p->value;
       const char *m_role = q->value;
       printf(INDENT INDENT "<member type=\"%s\" ref=\"%s\" role=\"%s\"/>\n", m_type, m_id, m_role);

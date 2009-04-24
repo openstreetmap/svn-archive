@@ -30,51 +30,41 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
     private JCheckBox autoloadTiles = new JCheckBox(tr("autoload tiles"));
     private JSpinner maxZoomLvl = new JSpinner();
     private JSlider fadeBackground = new JSlider(0, 100);
-
+    
     public void addGui(PreferenceDialog gui)
     {
         //String description = tr("A plugin that adds to JOSM new layer. This layer could render external tiles.");
         JPanel slippymapTab = gui.createPreferenceTab("slippymap.png", tr("SlippyMap"), tr("Settings for the SlippyMap plugin."));
-
-        JPanel mapUrlPanel = new JPanel();
         String[] allMapUrls = SlippyMapPreferences.getAllMapUrls();
         tileSourceCombo = new JComboBox(allMapUrls);
         tileSourceCombo.setEditable(true);
         String source = SlippyMapPreferences.getMapUrl();
         tileSourceCombo.setSelectedItem(source);
-        mapUrlPanel.add(new JLabel(tr("Tile Sources")), GBC.std());
-        mapUrlPanel.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
-        mapUrlPanel.add(tileSourceCombo, GBC.eol().fill(GBC.HORIZONTAL));
+        slippymapTab.add(new JLabel(tr("Tile Sources")), GBC.std());
+        slippymapTab.add(GBC.glue(5, 0), GBC.std());
+        slippymapTab.add(tileSourceCombo, GBC.eol().fill(GBC.HORIZONTAL));
         
-        JPanel autozoomPanel = new JPanel();
-        autozoomPanel.add(new JLabel(tr("Auto zoom: ")), GBC.std());
-        autozoomPanel.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
-        autozoomPanel.add(autozoomActive, GBC.eol().fill(GBC.HORIZONTAL));
+        slippymapTab.add(new JLabel(tr("Auto zoom: ")), GBC.std());
+        slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        slippymapTab.add(autozoomActive, GBC.eol().fill(GBC.HORIZONTAL));
         
-        JPanel autoloadPanel = new JPanel();
-        autoloadPanel.add(new JLabel(tr("Autoload Tiles: ")), GBC.std());
-        autoloadPanel.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
-        autoloadPanel.add(autoloadTiles, GBC.eol().fill(GBC.HORIZONTAL));
+        slippymapTab.add(new JLabel(tr("Autoload Tiles: ")), GBC.std());
+        slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        slippymapTab.add(autoloadTiles, GBC.eol().fill(GBC.HORIZONTAL));
         
-        JPanel maxZoomLvlPanel = new JPanel();
-        maxZoomLvlPanel.add(new JLabel(tr("Max zoom lvl: ")), GBC.std());
-        maxZoomLvlPanel.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
-        maxZoomLvlPanel.add(this.maxZoomLvl, GBC.eol().fill(GBC.HORIZONTAL));
+        slippymapTab.add(new JLabel(tr("Max zoom lvl: ")), GBC.std());
+        slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        slippymapTab.add(this.maxZoomLvl, GBC.eol().fill(GBC.HORIZONTAL));
         
-        JPanel fadeBackgroundPanel = new JPanel();
-        fadeBackgroundPanel.add(new JLabel(tr("Fade background: ")), GBC.std());
-        fadeBackgroundPanel.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
-        fadeBackgroundPanel.add(this.fadeBackground, GBC.eol().fill(GBC.HORIZONTAL));
+        slippymapTab.add(new JLabel(tr("Fade background: ")), GBC.std());
+        slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        slippymapTab.add(this.fadeBackground, GBC.eol().fill(GBC.HORIZONTAL));
         
-        slippymapTab.add(mapUrlPanel, GBC.eol().fill(GBC.HORIZONTAL));
-        slippymapTab.add(autozoomPanel, GBC.eol().fill(GBC.HORIZONTAL));
-        slippymapTab.add(autoloadPanel, GBC.eol().fill(GBC.HORIZONTAL));
-        slippymapTab.add(maxZoomLvlPanel, GBC.eol().fill(GBC.HORIZONTAL));
-        slippymapTab.add(fadeBackgroundPanel, GBC.eol().fill(GBC.HORIZONTAL));
         slippymapTab.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
-        
+
         this.loadSettings();
     }
+
 
     /**
      * <p>

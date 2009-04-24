@@ -646,7 +646,6 @@ QString Road::toXML(unsigned int lvl, QProgressDialog * progress)
 bool Road::toXML(QDomElement xParent, QProgressDialog & progress)
 {
 	bool OK = true;
-	if (!size()) return OK;
 
 	QDomElement e = xParent.ownerDocument().createElement("way");
 	xParent.appendChild(e);
@@ -655,19 +654,22 @@ bool Road::toXML(QDomElement xParent, QProgressDialog & progress)
 	e.setAttribute("timestamp", time().toString(Qt::ISODate)+"Z");
 	e.setAttribute("user", user());
 	e.setAttribute("actor", (int)lastUpdated());
+	e.setAttribute("version", versionNumber());
 	if (isDeleted())
 		e.setAttribute("deleted","true");
 
-	QDomElement n = xParent.ownerDocument().createElement("nd");
-	e.appendChild(n);
-	n.setAttribute("ref", get(0)->xmlId());
+	if (size()) {
+		QDomElement n = xParent.ownerDocument().createElement("nd");
+		e.appendChild(n);
+		n.setAttribute("ref", get(0)->xmlId());
 
-	for (unsigned int i=1; i<size(); ++i) {
-		if (get(i)->xmlId() != get(i-1)->xmlId()) {
-			QDomElement n = xParent.ownerDocument().createElement("nd");
-			e.appendChild(n);
+		for (unsigned int i=1; i<size(); ++i) {
+			if (get(i)->xmlId() != get(i-1)->xmlId()) {
+				QDomElement n = xParent.ownerDocument().createElement("nd");
+				e.appendChild(n);
 
-			n.setAttribute("ref", get(i)->xmlId());
+				n.setAttribute("ref", get(i)->xmlId());
+			}
 		}
 	}
 
@@ -685,6 +687,7 @@ Road * Road::fromXML(MapDocument* d, MapLayer * L, const QDomElement e)
 	QDateTime time = QDateTime::fromString(e.attribute("timestamp").left(19), "yyyy-MM-ddTHH:mm:ss");
 	QString user = e.attribute("user");
 	bool Deleted = (e.attribute("deleted") == "true");
+	int Version = e.attribute("version").toInt();
 	MapFeature::ActorType A;
 	if (e.hasAttribute("actor"))
 		A = (MapFeature::ActorType)(e.attribute("actor", "2").toInt());
@@ -712,6 +715,7 @@ Road * Road::fromXML(MapDocument* d, MapLayer * L, const QDomElement e)
 	R->setTime(time);
 	R->setUser(user);
 	R->setDeleted(Deleted);
+	R->setVersionNumber(Version);
 
 	QDomElement c = e.firstChildElement();
 	while(!c.isNull()) {

@@ -276,6 +276,7 @@ MainWindow::MainWindow(void)
     on_fileNewAction_triggered();
     MerkaartorPreferences::instance()->initialPosition(theView);
 
+	qDebug() << "Starting Merkaartor";
 
 #define NUMOP 3
 	static const char *opStr[NUMOP] = {

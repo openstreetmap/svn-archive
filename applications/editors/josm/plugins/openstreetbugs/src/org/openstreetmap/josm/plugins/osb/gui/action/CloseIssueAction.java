@@ -30,17 +30,22 @@ package org.openstreetmap.josm.plugins.osb.gui.action;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
-
-import javax.swing.JOptionPane;
+import java.util.List;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.CloseAction;
+import org.openstreetmap.josm.plugins.osb.api.EditAction;
+import org.openstreetmap.josm.plugins.osb.gui.dialogs.TextInputDialog;
+import org.openstreetmap.josm.plugins.osb.gui.historycombobox.HistoryChangedListener;
+import org.openstreetmap.josm.plugins.osb.gui.historycombobox.StringUtils;
 
 public class CloseIssueAction extends OsbAction {
 
     private static final long serialVersionUID = 1L;
 
     private CloseAction closeAction = new CloseAction();
+    private EditAction commentAction = new EditAction();
 
     public CloseIssueAction() {
         super(tr("Mark as done"));
@@ -48,18 +53,21 @@ public class CloseIssueAction extends OsbAction {
 
     @Override
     protected void doActionPerformed(ActionEvent e) throws Exception {
-        int closeOk = JOptionPane.showConfirmDialog(Main.parent,
-                tr("Really mark this issue as ''done''?"),
+        List<String> history = StringUtils.stringToList(Main.pref.get("osb.comment.history"), "§§§");
+        HistoryChangedListener l = new HistoryChangedListener() {
+            public void historyChanged(List<String> history) {
+                Main.pref.put("osb.comment.history", StringUtils.listToString(history, "§§§"));
+            }
+        };
+        String comment = TextInputDialog.showDialog(Main.map,
                 tr("Really close?"),
-                JOptionPane.YES_NO_OPTION);
+                tr("<html>Really mark this issue as ''done''?<br><br>You may add an optional comment:</html>"),
+                OsbPlugin.loadIcon("icon_valid22.png"),
+                history, l);
 
-        if(closeOk == JOptionPane.YES_OPTION) {
-            int addComment = JOptionPane.showConfirmDialog(Main.parent,
-                    tr("Do you want to add a comment?"),
-                    tr("Add comment?"),
-                    JOptionPane.YES_NO_OPTION);
-            if(addComment == JOptionPane.YES_OPTION) {
-                new AddCommentAction().doActionPerformed(new ActionEvent(this, 0, "add_comment"));
+        if(comment != null) {
+            if(comment.length() > 0) {
+                commentAction.execute(getSelectedNode(), comment);
             }
             closeAction.execute(getSelectedNode());
         }

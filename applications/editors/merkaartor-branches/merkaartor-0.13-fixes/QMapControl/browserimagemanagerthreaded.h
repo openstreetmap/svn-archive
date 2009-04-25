@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QPixmap>
+#include <QThread>
 
 #include <QtNetwork/QtNetwork>
 #include "qwebframe.h"
@@ -57,7 +58,7 @@ class BrowserWebPage : public QWebPage
 		int ox, oy, sw, sh;
 };
 
-class BrowserImageManager : public QObject, public IImageManager
+class BrowserImageManager : public QThread, public IImageManager
 {
 	Q_OBJECT;
 	public:
@@ -118,12 +119,13 @@ class BrowserImageManager : public QObject, public IImageManager
 		QVector<QString> prefetch;
 
 		QQueue<LoadingRequest> loadingRequests;
+		bool requestActive;
+		int requestDuration;
 		void launchRequest();
 
 		static BrowserImageManager* m_BrowserImageManagerInstance;
 
 		//QNetworkProxy* proxy;
-		QWebView *browser;
 		BrowserWebPage* page;
 		QWebFrame *frame;
 		QNetworkAccessManager* qnam;
@@ -137,6 +139,10 @@ class BrowserImageManager : public QObject, public IImageManager
 	private slots:
 		void pageLoadFinished(bool);
 		void slotLoadProgress(int p);
+		void checkRequests();
+
+	protected:
+		virtual void run();
 };
 
 #endif

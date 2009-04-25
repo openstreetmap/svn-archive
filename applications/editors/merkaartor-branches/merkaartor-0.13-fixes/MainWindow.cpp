@@ -44,8 +44,12 @@
 #include "Utils/SelectionDialog.h"
 #include "QMapControl/imagemanager.h"
 #ifdef YAHOO
+#ifdef BROWSERIMAGEMANAGER_IS_THREADED
+	#include "QMapControl/browserimagemanagerthreaded.h"
+#else
 	#include "QMapControl/browserimagemanager.h"
-#endif
+#endif // BROWSERIMAGEMANAGER_IS_THREADED
+#endif // YAHOO
 #include "QMapControl/mapadapter.h"
 #include "QMapControl/wmsmapadapter.h"
 #include "Tools/WorldOsbManager.h"

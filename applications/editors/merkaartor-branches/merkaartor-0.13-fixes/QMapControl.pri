@@ -3,7 +3,6 @@ HEADERS += QMapControl/curve.h \
            QMapControl/geometry.h \
            QMapControl/IImageManager.h \
            QMapControl/imagemanager.h \
-#           QMapControl/browserimagemanager.h \
            QMapControl/layer.h \
            QMapControl/layermanager.h \
            QMapControl/linestring.h \
@@ -17,16 +16,11 @@ HEADERS += QMapControl/curve.h \
  QMapControl/gps_position.h \
  QMapControl/osmmapadapter.h \
  QMapControl/geometrylayer.h \
-# QMapControl/yahoolegalmapadapter.h \
-# QMapControl/yahoomapadapter.h \
-# QMapControl/googlemapadapter.h \
-# QMapControl/googlesatmapadapter.h \
            QMapControl/tilemapadapter.h 
 SOURCES += QMapControl/curve.cpp \
            QMapControl/geometry.cpp \
            QMapControl/IImageManager.cpp \
            QMapControl/imagemanager.cpp \
-#           QMapControl/browserimagemanager.cpp \
            QMapControl/layer.cpp \
            QMapControl/layermanager.cpp \
            QMapControl/linestring.cpp \
@@ -40,10 +34,6 @@ SOURCES += QMapControl/curve.cpp \
  QMapControl/gps_position.cpp \
  QMapControl/osmmapadapter.cpp \
  QMapControl/geometrylayer.cpp \
-# QMapControl/yahoolegalmapadapter.cpp \
-# QMapControl/yahoomapadapter.cpp \
-# QMapControl/googlemapadapter.cpp
-# QMapControl/googlesatmapadapter.cpp
            QMapControl/tilemapadapter.cpp
 
 QT += network  

@@ -21,8 +21,12 @@
 
 #include "imagemanager.h"
 #ifdef YAHOO
-#include "browserimagemanager.h"
-#endif
+#ifdef BROWSERIMAGEMANAGER_IS_THREADED
+	#include "QMapControl/browserimagemanagerthreaded.h"
+#else
+	#include "QMapControl/browserimagemanager.h"
+#endif // BROWSERIMAGEMANAGER_IS_THREADED
+#endif // YAHOO
 
 LayerManager::LayerManager(QWidget* aParent, QSize size)
 	:scroll(QPoint(0,0)), size(size), whilenewscroll(QPoint(0,0))

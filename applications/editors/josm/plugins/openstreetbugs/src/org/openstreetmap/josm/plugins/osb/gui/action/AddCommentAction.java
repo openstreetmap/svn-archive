@@ -30,11 +30,14 @@ package org.openstreetmap.josm.plugins.osb.gui.action;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
-
-import javax.swing.JOptionPane;
+import java.util.List;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.EditAction;
+import org.openstreetmap.josm.plugins.osb.gui.dialogs.TextInputDialog;
+import org.openstreetmap.josm.plugins.osb.gui.historycombobox.HistoryChangedListener;
+import org.openstreetmap.josm.plugins.osb.gui.historycombobox.StringUtils;
 
 public class AddCommentAction extends OsbAction {
 
@@ -48,7 +51,19 @@ public class AddCommentAction extends OsbAction {
 
     @Override
     protected void doActionPerformed(ActionEvent e) throws Exception {
-        String comment = JOptionPane.showInputDialog(Main.parent, tr("Enter your comment"));
+        List<String> history = StringUtils.stringToList(Main.pref.get("osb.comment.history"), "§§§");
+        HistoryChangedListener l = new HistoryChangedListener() {
+            public void historyChanged(List<String> history) {
+                Main.pref.put("osb.comment.history", StringUtils.listToString(history, "§§§"));
+            }
+        };
+        String comment = TextInputDialog.showDialog(
+                Main.map,
+                tr("Add a comment"), 
+                tr("Enter your comment"),
+                OsbPlugin.loadIcon("add_comment22.png"),
+                history, l);
+        
         if(comment != null) {
             comment = addMesgInfo(comment);
             editAction.execute(getSelectedNode(), comment);

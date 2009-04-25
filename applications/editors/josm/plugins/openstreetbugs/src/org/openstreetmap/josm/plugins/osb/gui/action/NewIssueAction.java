@@ -34,6 +34,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
@@ -43,6 +44,9 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.NewAction;
+import org.openstreetmap.josm.plugins.osb.gui.dialogs.TextInputDialog;
+import org.openstreetmap.josm.plugins.osb.gui.historycombobox.HistoryChangedListener;
+import org.openstreetmap.josm.plugins.osb.gui.historycombobox.StringUtils;
 
 public class NewIssueAction extends OsbAction implements MouseListener {
 
@@ -92,11 +96,18 @@ public class NewIssueAction extends OsbAction implements MouseListener {
     }
 
     private void addNewIssue(MouseEvent e) {
-        // get the comment
-        String result = JOptionPane.showInputDialog(Main.parent,
+        List<String> history = StringUtils.stringToList(Main.pref.get("osb.new.history"), "§§§");
+        HistoryChangedListener l = new HistoryChangedListener() {
+            public void historyChanged(List<String> history) {
+                Main.pref.put("osb.new.history", StringUtils.listToString(history, "§§§"));
+            }
+        };
+        String result = TextInputDialog.showDialog(
+                Main.map,
+                tr("Create issue"), 
                 tr("Describe the problem precisely"),
-                tr("Create issue"),
-                JOptionPane.QUESTION_MESSAGE);
+                OsbPlugin.loadIcon("icon_error_add22.png"),
+                history, l);
 
         if(result != null && result.length() > 0) {
             try {

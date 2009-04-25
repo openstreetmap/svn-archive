@@ -67,6 +67,7 @@ public class CloseIssueAction extends OsbAction {
 
         if(comment != null) {
             if(comment.length() > 0) {
+                comment = addMesgInfo(comment);
                 commentAction.execute(getSelectedNode(), comment);
             }
             closeAction.execute(getSelectedNode());

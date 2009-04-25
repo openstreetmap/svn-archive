@@ -140,7 +140,7 @@ public class TextInputDialog extends JDialog {
                 pnlButtons = new JPanel();
                 FlowLayout pnlButtonsLayout = new FlowLayout();
                 pnlButtonsLayout.setAlignment(FlowLayout.RIGHT);
-                pnlMain.add(pnlButtons, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTHEAST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+                pnlMain.add(pnlButtons, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTHEAST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
                 pnlButtons.setLayout(pnlButtonsLayout);
                 {
                     btnOk = new JButton();
@@ -170,7 +170,7 @@ public class TextInputDialog extends JDialog {
     public static String showDialog(JComponent parent, String title, String description, Icon icon, List<String> history, HistoryChangedListener l) {
         TextInputDialog tid = new TextInputDialog();
         tid.setTitle(title);
-        tid.setSize(new Dimension(500, 180));
+        tid.setSize(new Dimension(550, 180));
         tid.setDescription(description);
         tid.setHistory(history);
         tid.addHistoryChangedListener(l);

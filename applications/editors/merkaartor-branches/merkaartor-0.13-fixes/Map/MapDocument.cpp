@@ -500,13 +500,13 @@ QString MapDocument::exportOSM(const CoordBox& aCoordBox, bool renderBounds)
 		}
 	}
 	theExport += "<?xml version='1.0' encoding='UTF-8'?>\n";
-	theExport += "<osm version='0.5' generator='Merkaartor'>\n";
+	theExport += QString("<osm version='%1' generator='Merkaartor'>\n").arg(M_PREFS->apiVersion());
 	theExport += "<bound box='";
 	theExport += QString().number(intToAng(aCoordBox.bottomLeft().lat()),'f',6) + ",";
 	theExport += QString().number(intToAng(aCoordBox.bottomLeft().lon()),'f',6) + ",";
 	theExport += QString().number(intToAng(aCoordBox.topRight().lat()),'f',6) + ",";
 	theExport += QString().number(intToAng(aCoordBox.topRight().lon()),'f',6);
-	theExport += "' origin='http://www.openstreetmap.org/api/0.5' />\n";
+	theExport += QString("' origin='http://www.openstreetmap.org/api/%1' />\n").arg(M_PREFS->apiVersion());
 	if (renderBounds) {
 		theExport += "<bounds ";
 		theExport += "minlat=\"" + QString().number(intToAng(aCoordBox.bottomLeft().lat()),'f',6) + "\" ";
@@ -536,13 +536,13 @@ QString MapDocument::exportOSM(QList<MapFeature*> aFeatures)
 		}
 	}
 	theExport += "<?xml version='1.0' encoding='UTF-8'?>\n";
-	theExport += "<osm version='0.5' generator='Merkaartor'>\n";
+	theExport += QString("<osm version='%1' generator='Merkaartor'>\n").arg(M_PREFS->apiVersion());
 	theExport += "<bound box='";
 	theExport += QString().number(intToAng(aCoordBox.bottomLeft().lat()),'f',6) + ",";
 	theExport += QString().number(intToAng(aCoordBox.bottomLeft().lon()),'f',6) + ",";
 	theExport += QString().number(intToAng(aCoordBox.topRight().lat()),'f',6) + ",";
 	theExport += QString().number(intToAng(aCoordBox.topRight().lon()),'f',6);
-	theExport += "' origin='http://www.openstreetmap.org/api/0.5' />\n";
+	theExport += QString("' origin='http://www.openstreetmap.org/api/%1' />\n").arg(M_PREFS->apiVersion());
 	theExport += coreExport;
 	theExport += "</osm>";
 

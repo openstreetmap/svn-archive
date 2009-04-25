@@ -19,8 +19,12 @@
 #include "QMapControl/layermanager.h"
 #include "QMapControl/imagemanager.h"
 #ifdef YAHOO
+#ifdef BROWSERIMAGEMANAGER_IS_THREADED
+	#include "QMapControl/browserimagemanagerthreaded.h"
+#else
 	#include "QMapControl/browserimagemanager.h"
-#endif
+#endif // BROWSERIMAGEMANAGER_IS_THREADED
+#endif // YAHOO
 #include "Preferences/MerkaartorPreferences.h"
 #include "Utils/SvgCache.h"
 
@@ -49,8 +53,10 @@ MapView::MapView(MainWindow* aMain) :
 #ifdef YAHOO
 	BrowserImageManager::instance()->setCacheDir(MerkaartorPreferences::instance()->getCacheDir());
 	BrowserImageManager::instance()->setCacheMaxSize(MerkaartorPreferences::instance()->getCacheSize());
+#ifdef BROWSERIMAGEMANAGER_IS_THREADED
 	BrowserImageManager::instance()->start();
-#endif
+#endif // BROWSERIMAGEMANAGER_IS_THREADED
+#endif // YAHOO
 	if (MerkaartorPreferences::instance()->getProxyUse()) {
 		ImageManager::instance()->setProxy(MerkaartorPreferences::instance()->getProxyHost(),
 			MerkaartorPreferences::instance()->getProxyPort());
@@ -99,10 +105,12 @@ MapView::~MapView()
 		delete theInteraction;
 	delete ImageManager::instance();
 #ifdef YAHOO
+#ifdef BROWSERIMAGEMANAGER_IS_THREADED
 	BrowserImageManager::instance()->quit();
 	BrowserImageManager::instance()->wait(1000);
+#endif //BROWSERIMAGEMANAGER_IS_THREADED
 	delete BrowserImageManager::instance();
-#endif
+#endif // YAHOO
 	delete layermanager;
 	delete StaticBackground;
 	delete StaticBuffer;

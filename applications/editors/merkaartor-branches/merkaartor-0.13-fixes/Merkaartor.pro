@@ -142,8 +142,16 @@ count(TRANSDIR_SYSTEM, 1) {
 isEmpty(NOUSEWEBKIT) {
    greaterThan(QT_VER_MAJ, 3) : greaterThan(QT_VER_MIN, 3) {
         DEFINES += YAHOO
-        SOURCES += QMapControl/yahoolegalmapadapter.cpp QMapControl/browserimagemanager.cpp
-        HEADERS += QMapControl/yahoolegalmapadapter.h QMapControl/browserimagemanager.h
+		lessThan(QT_VER_MIN,5) {
+        	SOURCES += QMapControl/browserimagemanager.cpp
+        	HEADERS += QMapControl/browserimagemanager.h
+		} else {
+			DEFINES += BROWSERIMAGEMANAGER_IS_THREADED
+        	SOURCES += QMapControl/browserimagemanagerthreaded.cpp
+        	HEADERS += QMapControl/browserimagemanagerthreaded.h
+		}
+        SOURCES += QMapControl/yahoolegalmapadapter.cpp
+        HEADERS += QMapControl/yahoolegalmapadapter.h
         QT += webkit
     }
 }

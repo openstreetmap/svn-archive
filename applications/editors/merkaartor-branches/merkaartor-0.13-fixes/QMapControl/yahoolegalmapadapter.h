@@ -22,7 +22,11 @@
 
 #include "tilemapadapter.h"
 
-#include "browserimagemanager.h"
+#ifdef BROWSERIMAGEMANAGER_IS_THREADED
+	#include "QMapControl/browserimagemanagerthreaded.h"
+#else
+	#include "QMapControl/browserimagemanager.h"
+#endif // BROWSERIMAGEMANAGER_IS_THREADED
 
 //! MapAdapter for WMS servers
 /*!

@@ -480,7 +480,11 @@ void PropertiesDock::resetValues()
 	{
 		Main->info()->setHtml(FullSelection[0]->toHtml());
 
-		if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(FullSelection[0]))
+		TrackPoint* Pt = dynamic_cast<TrackPoint*>(FullSelection[0]);
+		Road* R = dynamic_cast<Road*>(FullSelection[0]);
+		Relation* L = dynamic_cast<Relation*>(FullSelection[0]);
+
+		if ((Pt) && (NowShowing == TrackPointUiShowing))
 		{
 			TrackPointUi.Id->setText(Pt->id());
 			TrackPointUi.Latitude->setText(QString::number(intToAng(Pt->position().lat()),'g',8));
@@ -506,7 +510,7 @@ void PropertiesDock::resetValues()
  			Main->geoImage()->setImage(Pt);
  			#endif
 		}
-		else if (Road* R = dynamic_cast<Road*>(FullSelection[0]))
+		else if ((R) && (NowShowing == RoadUiShowing))
 		{
 			RoadUi.Id->setText(R->id());
 			//RoadUi.Name->setText(R->tagValue("name",""));
@@ -527,9 +531,9 @@ void PropertiesDock::resetValues()
 
 			CurrentTagView = RoadUi.TagView;
 		}
-		else if (Relation* R = dynamic_cast<Relation*>(FullSelection[0]))
+		else if ((L) && (NowShowing == RelationUiShowing))
 		{
-			RelationUi.MembersView->setModel(R->referenceMemberModel(Main));
+			RelationUi.MembersView->setModel(L->referenceMemberModel(Main));
 			RelationUi.TagView->setModel(theModel);
 			RelationUi.TagView->setItemDelegate(delegate);
 
@@ -540,7 +544,7 @@ void PropertiesDock::resetValues()
 				w->deleteLater();
 			}
 			if (theTemplates) {
-				w = theTemplates->getWidget(R);
+				w = theTemplates->getWidget(L);
 				w->installEventFilter(shortcutFilter);
 				RelationUi.variableLayout->addWidget(w);
 			}
@@ -552,7 +556,7 @@ void PropertiesDock::resetValues()
 		if (theTemplates)
 			theTemplates->apply(FullSelection[0]);
 	}
-	else if (FullSelection.size() > 1)
+	else if ((FullSelection.size() > 1)  && (NowShowing == MultiShowing))
 	{
 		Main->info()->setHtml("");
 		#ifdef GEOIMAGE

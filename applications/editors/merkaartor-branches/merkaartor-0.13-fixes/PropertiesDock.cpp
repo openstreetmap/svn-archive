@@ -235,6 +235,11 @@ void PropertiesDock::setMultiSelection(const std::vector<MapFeature*>& aFeatureL
 	Selection.clear();
 	MultiUi.TagView->setModel(theModel);
 	MultiUi.TagView->setItemDelegate(delegate);
+	Main->info()->setHtml("");
+	#ifdef GEOIMAGE
+	Main->geoImage()->setImage((TrackPoint *)NULL);
+	#endif
+	CurrentTagView = MultiUi.TagView;
 	theModel->setFeature(Current);
 	Selection = Current;
 	fillMultiUiSelectionBox();
@@ -798,7 +803,7 @@ void PropertiesDock::on_centerZoomAction_triggered()
 	if (CurrentTagView) {
 		Main->setUpdatesEnabled(false);
 		unsigned int idx = MultiUi.SelectionList->selectedItems()[0]->data(Qt::UserRole).toUInt();
-		CoordBox cb = FullSelection[idx]->boundingBox();
+		cb = FullSelection[idx]->boundingBox();
 		for (int i=1; i < MultiUi.SelectionList->selectedItems().size(); i++) {
 			idx = MultiUi.SelectionList->selectedItems()[i]->data(Qt::UserRole).toUInt();
 			cb.merge(FullSelection[idx]->boundingBox());

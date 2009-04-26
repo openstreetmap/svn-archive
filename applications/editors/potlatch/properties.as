@@ -277,15 +277,15 @@
 		switch (proptype) {
 			case 'point':
 				this.proparr=_root.ws.path[_root.pointselected].attr;
-				this.relarr=_root.ws.path[_root.pointselected].relations;
+				this.relarr=_root.noderels[_root.ws.path[pointselected].id];
 				break;
 			case 'POI':
 				this.proparr=_root.map.pois[poiselected].attr;
-				this.relarr=_root.map.pois[poiselected].relations;
+				this.relarr=_root.noderels[poiselected];
 				break;
 			case 'way':
 				this.proparr=_root.ws.attr;
-				this.relarr=_root.ws.relations;
+				this.relarr=_root.wayrels[wayselected];
 				break;
 			case 'relation':
 				this.proparr=_root.editingrelation.attr;
@@ -445,13 +445,13 @@
 		this.saveUndo();
 		switch (this.proptype) {
 			case 'point':	proparr=_root.savedpointway.path[_root.saved['point']].attr; 
-							relarr=_root.savedpointway.path[_root.saved['point']].relations;
+							relarr=_root.noderels[_root.savedpointway.path[_root.saved['point']].id];
 							break;
 			case 'POI':		proparr=_root.saved['POI'].attr;
-							relarr=_root.saved['POI'].relations;
+							relarr=_root.noderels[_root.saved['POI']._name];
 							break; // ** formerly had _root.map.pois[poiselected].attr=new Array(); in here, no obvious reason why
 			case 'way':		proparr=_root.saved['way'].attr;
-							relarr=_root.saved['way'].relations;
+							relarr=_root.wayrels[_root.saved['way']._name];
 							break;
 		}
 

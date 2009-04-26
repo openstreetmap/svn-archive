@@ -9,7 +9,6 @@
 		this.path=new Array();			// list of nodes
 		this.attr=new Array();			// hash of tags
 		this.mergedways=new Array();	// list of ways merged into this
-		this.relations=new Object();	// hash of relations including this
 	};
 
 	OSMWay.prototype=new MovieClip();
@@ -37,7 +36,6 @@
 			_root.map.ways[w].removeNodeIndex();
 			_root.map.ways[w].path=[];
 			_root.map.ways[w].resetBBox();
-			_root.map.ways[w].relations=getRelations('Way',w);
 			for (i=0; i<result[1].length; i++) {
 				x =result[1][i][0];
 				y =result[1][i][1];
@@ -52,7 +50,6 @@
 					// doesn't exist, so create new node
 					_root.nodes[id]=new Node(id,x,y,result[1][i][3],result[1][i][4]);
 					_root.nodes[id].clean=true;
-					_root.nodes[id].relations=getRelations('Node',id);
 					if (id==prenode) { prepoint=i; }
 				}
 				_root.map.ways[w].path.push(_root.nodes[id]);
@@ -82,7 +79,6 @@
 			w.removeNodeIndex();
 			w.path=[];
 			w.resetBBox();
-			w.relations=getRelations('Way',result[0]);
 			for (i=0; i<result[1].length; i++) {
 				n=result[1][i];
 				x=n[0]; y=n[1]; id=n[2];					// 3:current version, 4:tags, 5:reuse?
@@ -100,7 +96,6 @@
 					if (n[5]) { nodes[id].clean=true; }		// is visible and current version
 				} else {
 					_root.nodes[id]=new Node(id,x,y,n[4],n[3]);
-					_root.nodes[id].relations=getRelations('Node',id);
 				}
 				w.path.push(_root.nodes[id]);
 				_root.nodes[id].addWay(result[0]);
@@ -202,7 +197,7 @@
 
 			// Draw relations
 
-			var z=this.relations;
+			var z=_root.wayrels[this._name];
 			for (var rel in z) { _root.map.relations[rel].redraw(); }
 		}
 	};
@@ -336,6 +331,7 @@
 			nw=result[1];			// new way ID
 			if (ow!=nw) {			// renumber way?
 				_root.map.ways[ow].renumberNodeIndex(nw);
+				wayrels[nw]=wayrels[ow]; delete wayrels[ow];
 				_root.map.ways[ow]._name=nw;
 				renumberMemberOfRelation('Way', result[0], nw);
 				if (_root.map.areas[ow]) { _root.map.areas[ow]._name=nw; }
@@ -613,7 +609,7 @@
 			if (newattr) { _root.map.ways[newwayid].attr=newattr; }
 					else { _root.map.ways[newwayid].attr=deepCopy(this.attr); }
 
-			z=this.relations;											// copy relations
+			z=_root.wayrels[this._name];								// copy relations
 			for (i in z) {												//  | 
 				_root.map.relations[i].setWayRole(newwayid,z[i]);		//  |
 			}															//  |
@@ -673,9 +669,9 @@
 		}
 
 		// Merge relations
-		z=otherway.relations;									// copy relations
+		z=_root.wayrels[otherway._name];						// copy relations
 		for (i in z) {											//  | 
-			if (!this.relations[i]) {							//  |
+			if (!_root.wayrels[this._name][i]) {				//  |
 				_root.map.relations[i].setWayRole(this._name,z[i]);	
 			}													//  |
 		}														//  |
@@ -1065,7 +1061,7 @@
 			_root.ws.direction();
 			_root.ws.highlightPoints(5000,"anchor");
 			removeMovieClip(_root.map.anchorhints);
-			var z=_root.ws.relations;
+			var z=_root.wayrels[_root.wayselected];
 			for (var rel in z) { _root.map.relations[rel].redraw(); }
 		}
 		// Mark as unclean

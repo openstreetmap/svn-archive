@@ -6,7 +6,6 @@
 	
 	function POI() {
 		this.attr=new Object();
-		this.relations=new Object();
 		this.clean=true;
 		this.uploading=false;
 		this.locked=false;
@@ -51,6 +50,7 @@
 			var ni=result[1];	// new POI ID
 			if (result[0]!=ni) {
 				_root.map.pois[result[0]]._name=ni;
+				noderels[ni]=noderels[result[0]]; delete noderels[result[0]];
 				renumberMemberOfRelation('Node', result[0], ni);
 				if (poiselected==result[0]) {
 					poiselected=ni;
@@ -130,7 +130,7 @@
 		updateButtons();
 		updateScissors(false);
 		highlightSquare(this._x,this._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
-		var z=this.relations;
+		var z=_root.noderels[this._name];
 		for (var rel in z) { _root.map.relations[rel].redraw(); }
 	};
 	POI.prototype.recolour=function() { 

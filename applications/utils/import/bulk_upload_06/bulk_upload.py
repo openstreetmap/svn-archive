@@ -89,7 +89,7 @@ class ImportProcessor:
         resp,content = self.httpCon.request(api_host +
                                             '/api/0.6/changeset/'+self.changesetid+
                                             '/upload',
-                                            'POST', ET.tostring(xml))
+                                            'POST', ET.tostring(xml))        
         if resp.status != 200:
             print "Error uploading changeset:" + str(resp.status)
             print content
@@ -189,6 +189,7 @@ for type in ('node','way','relation'):
             pickle.dump(idMap,f)
             f.close()
             os.rename(options.infile+".db.tmp", options.infile+".db")
+            importProcessor.closeSet()
             importProcessor=ImportProcessor(httpObj,options.comment,idMap)
             cnt=0
         cnt=cnt+1
@@ -198,3 +199,4 @@ f=open(options.infile+".db.tmp","w")
 os.rename(options.infile+".db.tmp", options.infile+".db")
 pickle.dump(idMap,f)
 f.close()
+importProcessor.closeSet()

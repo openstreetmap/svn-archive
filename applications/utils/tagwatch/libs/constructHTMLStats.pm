@@ -1891,7 +1891,7 @@ sub getOsmFileList
 	my ($FileFolder) = @_;
 	my @FileList;
 
-	open(FILELIST, "<","$FileFolder/filelist.txt") || die("missing flilelist :: don't know what osm fiels should be used.");
+	open(FILELIST, "<","$FileFolder/filelist.txt") || die("missing filelist :: don't know what osm files should be used.");
 
 	while(my $Line = <FILELIST>)
 	{

@@ -130,6 +130,8 @@
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
+	var wayrels=new Object();		// which relations are in ways?
+	var noderels=new Object();		// which relations are in nodes?
 
 	var tileurls=new Array("http://tile.openstreetmap.org/!/!/!.png",
 						   "http://tah.openstreetmap.org/Tiles/tile/!/!/!.png",
@@ -281,9 +283,6 @@
 			moveTo(0, 2); lineTo(0, 10);
 		}
 	}
-
-// for (i in layernames) { _root.chat.text+=i+"="+layernames[i]+","; }
-// for (i in layernums ) { _root.chat.text+=i+"="+layernums[i]+","; }
 
 	// Text formats
 	

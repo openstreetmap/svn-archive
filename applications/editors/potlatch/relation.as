@@ -10,6 +10,8 @@
 	// ** some circumstances (while saving?) in which if you pan and a new version
 	//    is loaded, they're added to the relation all over again
 
+	// ** need to move relations hash out of way/nodes (so we can maintain it for unloaded ways)
+
 	// =====================================================================================
 	// Classes - OSMRelation
 
@@ -102,7 +104,13 @@
 			var code=result.shift(); if (code) { handleError(code,result); return; }
 			var nw=result[1];	// new relation ID
 			if (result[0]!=nw) {
-				_root.map.relations[result[0]]._name=nw;
+				_root.map.relations[result[0]]._name=nw;				// rename relation object
+				var mems=_root.map.relations[nw].members;				// make sure wayrels/noderels entries are up-to-date
+				for (var i in mems) {									//  |
+					var r=findLinkedHash(mems[i][0],mems[i][1]);		//  |
+					r[nw]=mems[i][2];									//  |
+					delete r[result[0]];								//  |
+				}
 			}
 			_root.map.relations[nw].uploading=false;
 			_root.map.relations[nw].version=result[2];
@@ -327,13 +335,18 @@
 	function findLinkedHash(type,id) {
 		// returns hash of relations in way/POI/node object
 		var r;
-		if      (type=='Way')        { r=_root.map.ways[id].relations; }
-		else if (_root.map.pois[id]) { r=_root.map.pois[id].relations; }
-		else                         { r=nodes[id].relations; }
+		if (type=='Way') {
+			if (!_root.wayrels[id]) { _root.wayrels[id]=new Object(); }
+			r=_root.wayrels[id]; 
+		} else {
+			if (!_root.noderels[id]) { _root.noderels[id]=new Object(); }
+			r=_root.noderels[id];
+		}
 		return r;
 	}
 
 	function getRelations(type, id) {
+		// this is very expensive and shouldn't be called unless really necessary
 		var rels = new Object();
 		var z = _root.map.relations;
 		for (var i in z) {
@@ -359,7 +372,7 @@
 	}
 
 	function markWayRelationsDirty(way) {
-		var z=_root.map.ways[way].relations;
+		var z=_root.wayrels[way];
 		for (var i in z) { _root.map.relations[i].clean=false; }
 
 		var p=_root.map.ways[way].path;
@@ -367,7 +380,7 @@
 	}
 	
 	function markNodeRelationsDirty(node) {
-		var z=findLinkedHash('Node',node);
+		var z=_root.noderels[node];
 		for (var i in z) { _root.map.relations[i].clean=false; }
 	}
 

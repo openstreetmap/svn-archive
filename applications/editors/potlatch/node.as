@@ -9,7 +9,6 @@
 		this.attr=attr;
 		this.tagged=hasTags(attr);
 		this.ways=new Object();
-		this.relations=new Object();
 		this.version=version;
 		this.clean=false;		// set to true if just loaded from server
 	};
@@ -52,6 +51,7 @@
 
 	Node.prototype.renumberTo=function(id) {
 		var old=this.id;
+		noderels[id]=noderels[old]; delete noderels[old];
 		nodes[id]=new Node(id,this.x,this.y,this.attr,this.version);
 		nodes[id].clean=this.clean;
 		var z=this.ways; for (var qway in z) {

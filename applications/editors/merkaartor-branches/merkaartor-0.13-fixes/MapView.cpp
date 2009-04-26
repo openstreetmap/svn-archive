@@ -747,9 +747,7 @@ void MapView::drawDownloadAreas(QPainter & P)
 	if (MerkaartorPreferences::instance()->getDownloadedVisible() == false)
 		return;
 
-	QPixmap pxDownloadAreas(width(), height());
-	pxDownloadAreas.fill(Qt::transparent);
-	QPainter D(&pxDownloadAreas);
+	P.save();
 	QRegion r(0, 0, width(), height());
 
 
@@ -770,10 +768,11 @@ void MapView::drawDownloadAreas(QPainter & P)
 		r -= QRegion(poly.toPolygon());
 	}
 
-	D.setClipRegion(r);
-	D.setClipping(true);
-	D.fillRect(pxDownloadAreas.rect(), b);
-	P.drawPixmap(0, 0, pxDownloadAreas);
+	P.setClipRegion(r);
+	P.setClipping(true);
+	P.fillRect(rect(), b);
+
+	P.restore();
 }
 
 void MapView::updateStaticBackground()

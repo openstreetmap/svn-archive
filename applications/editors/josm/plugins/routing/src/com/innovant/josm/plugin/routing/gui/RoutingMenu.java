@@ -98,8 +98,8 @@ public class RoutingMenu extends JMenu {
 					} else {
 						routingModel.routingGraph.setTypeRoute(RouteType.FASTEST);
 					}
-					routingModel.routingGraph.resetGraph();
-					routingModel.routingGraph.createGraph();
+				//	routingModel.routingGraph.resetGraph();
+				//	routingModel.routingGraph.createGraph();
 					//TODO: Change this way
 					//FIXME: do not change node but recalculate routing.
 					routingModel.setNodesChanged();
@@ -110,7 +110,6 @@ public class RoutingMenu extends JMenu {
 		});
 
 		JRadioButtonMenuItem rfaster = new JRadioButtonMenuItem(tr("Fastest"));
-
 		group.add(rshorter);
 		group.add(rfaster);
 		criteriaM.add(rshorter);

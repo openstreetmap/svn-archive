@@ -96,6 +96,7 @@ public class RoutingGraph {
 //	private DirectedWeightedMultigraph<Node, OsmEdge> graph;
 //	private WeightedMultigraph<Node, OsmEdge> graph;
 	private Graph<Node, OsmEdge> graph;
+	private RoutingGraphDelegator rgDelegator=null;
 
 	/**
 	 * Speeds
@@ -125,7 +126,8 @@ public class RoutingGraph {
 
 		logger.debug("Creating Graph...");
 		graph = new DirectedWeightedMultigraph<Node, OsmEdge>(OsmEdge.class);
-
+		rgDelegator=new RoutingGraphDelegator(graph);
+		rgDelegator.setRouteType(this.routeType);
 		// iterate all ways and segments for all nodes:
 		for (Way way : data.ways) {
 			if (way != null && !way.deleted && this.isvalidWay(way)) {
@@ -158,16 +160,35 @@ public class RoutingGraph {
 	 */
 	private void addEdge(Way way,Node from, Node to) {
 		double length = from.coor.greatCircleDistance(to.coor);
-		// edge = new OsmEdge(way, length);
+		
 		OsmEdge edge = new OsmEdge(way, from, to);
+		edge.setSpeed(12.1);
 		graph.addEdge(from, to, edge);
 		// weight = getWeight(way);
 		double weight = getWeight(way, length);
+		getWeight(edge, length);
 		logger.debug("edge for way " + way.id
 				     + "(from node " + from.id + " to node "
 				     + to.id + ") has weight: " + weight);
 		//((GraphDelegator<Node,OsmEdge>) graph).setEdgeWeight(edge, weight);
 		((DirectedWeightedMultigraph<Node,OsmEdge>)graph).setEdgeWeight(edge, weight);
+	}
+
+	/**
+	 * Returns the weight for the given segment depending on the highway type
+	 * and the length of the segment. The higher the value, the less it is used
+	 * in routing.
+	 *
+	 * @param way
+	 *            the way.
+	 * @return
+	 */
+	private void getWeight(OsmEdge osmedge, double length) {
+		
+		osmedge.setLength(length);
+		if (this.waySpeeds.containsKey(osmedge.getWay().get("highway")))
+			osmedge.setSpeed(this.waySpeeds.get(osmedge.getWay().get("highway")));
+					
 	}
 
 	/**
@@ -201,7 +222,7 @@ public class RoutingGraph {
 		// Return the time spent to traverse the way
 		return length / speed;
 	}
-
+	
 	/**
 	 * Check is One Way.
 	 *
@@ -267,13 +288,13 @@ public class RoutingGraph {
 			g = graph;
 		else
 			g = new AsUndirectedGraph<Node, OsmEdge>((DirectedWeightedMultigraph<Node,OsmEdge>)graph);
-
+		//TODO: Problemas no tiene encuenta el tema de oneway.
 		switch (algorithm) {
 		case ROUTING_ALG_DIJKSTRA:
 			logger.debug("Using Dijkstra algorithm");
 			DijkstraShortestPath<Node, OsmEdge> routingk = null;
 			for (int index = 1; index < nodes.size(); ++index) {
-				routingk = new DijkstraShortestPath<Node, OsmEdge>(g, nodes
+				routingk = new DijkstraShortestPath<Node, OsmEdge>(rgDelegator, nodes
 						.get(index - 1), nodes.get(index));
 				if (routingk.getPathEdgeList() == null) {
 					logger.debug("no path found!");
@@ -286,7 +307,7 @@ public class RoutingGraph {
 		case ROUTING_ALG_BELLMANFORD:
 			logger.debug("Using Bellman Ford algorithm");
 			for (int index = 1; index < nodes.size(); ++index) {
-				path = BellmanFordShortestPath.findPathBetween(g, nodes
+				path = BellmanFordShortestPath.findPathBetween(rgDelegator, nodes
 						.get(index - 1), nodes.get(index));
 				if (path == null) {
 					logger.debug("no path found!");
@@ -329,6 +350,7 @@ public class RoutingGraph {
 	 */
 	public void setTypeRoute(RouteType routetype) {
 		this.routeType = routetype;
+		this.rgDelegator.setRouteType(routetype);
 	}
 
 	/**

@@ -1,3 +1,2907 @@
+openstreetmap-josm (14790) unstable; urgency=low
+
+   * add non-public edit message
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Mon, 27 Apr 2009 22:40:28 +0200
+
+openstreetmap-josm (14781) unstable; urgency=low
+
+   * manual build
+
+ -- tstelmach via osm-dev List <dev@openstreetmap.org>  Mon, 27 Apr 2009 08:41:29 +0200
+
+openstreetmap-josm (14780) unstable; urgency=low
+
+   * increment build number
+
+ -- tstelmach via osm-dev List <dev@openstreetmap.org>  Mon, 27 Apr 2009 08:41:05 +0200
+
+openstreetmap-josm (14779) unstable; urgency=low
+
+   * PicLayer - remaining delivery
+
+ -- tstelmach via osm-dev List <dev@openstreetmap.org>  Mon, 27 Apr 2009 08:40:42 +0200
+
+openstreetmap-josm (14778) unstable; urgency=low
+
+   * Delivery of PicLayer.jar
+
+ -- tstelmach via osm-dev List <dev@openstreetmap.org>  Mon, 27 Apr 2009 08:34:08 +0200
+
+openstreetmap-josm (14777) unstable; urgency=low
+
+   * increment build number
+
+ -- tstelmach via osm-dev List <dev@openstreetmap.org>  Mon, 27 Apr 2009 08:21:58 +0200
+
+openstreetmap-josm (14776) unstable; urgency=low
+
+   * increment build number
+
+ -- tstelmach via osm-dev List <dev@openstreetmap.org>  Mon, 27 Apr 2009 08:19:38 +0200
+
+openstreetmap-josm (14775) unstable; urgency=low
+
+   * increment build number
+
+ -- tstelmach via osm-dev List <dev@openstreetmap.org>  Mon, 27 Apr 2009 08:18:36 +0200
+
+openstreetmap-josm (14774) unstable; urgency=low
+
+   * Adding PicLayer plugin - directory created
+
+ -- tstelmach via osm-dev List <dev@openstreetmap.org>  Mon, 27 Apr 2009 08:18:21 +0200
+
+openstreetmap-josm (14760) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- jvidal via osm-dev List <dev@openstreetmap.org>  Sun, 26 Apr 2009 13:58:25 +0200
+
+openstreetmap-josm (14756) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sun, 26 Apr 2009 02:00:10 +0200
+
+openstreetmap-josm (14755) unstable; urgency=low
+
+   * improved layout behaviour
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sun, 26 Apr 2009 01:59:45 +0200
+
+openstreetmap-josm (14754) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sun, 26 Apr 2009 00:32:22 +0200
+
+openstreetmap-josm (14753) unstable; urgency=low
+
+   * i18n for ok and cancel button
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sun, 26 Apr 2009 00:31:17 +0200
+
+openstreetmap-josm (14751) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sat, 25 Apr 2009 23:37:00 +0200
+
+openstreetmap-josm (14750) unstable; urgency=low
+
+   * attach username and date to the comment of the close action 
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sat, 25 Apr 2009 23:36:36 +0200
+
+openstreetmap-josm (14749) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sat, 25 Apr 2009 23:20:26 +0200
+
+openstreetmap-josm (14748) unstable; urgency=low
+
+   * - replaced joptionpanes with a custom dialog
+   * - added a history to the dialog input fields
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sat, 25 Apr 2009 23:15:22 +0200
+
+openstreetmap-josm (14732) unstable; urgency=low
+
+   * Applyied patch from Dave Hansen <dave@sr71.net>. His info about changes:
+   * 1. Change tileStorage from being a set of arrays of hashmaps (one per
+   *    zoom level) to being a single hash.  We do this by adding a 'level'
+   *    variable to the SlippyMapKey class.  This simplifies the code a good
+   *    amount, and gets rid of a warning when allocating the HashMap array. 
+   * 2. Introduce SlippyMapLayer.loadSingleTile().  This not only forces
+   *    the image to get loaded, but also checks the state of the entire
+   *    tileStorage, looking for extra tiles.
+   * 3. Add crude timestamping to SlippyMapTile.  Whenever a load of a
+   *    SlippyMapTile is requested, we timestamp it.  This lets us figure
+   *    out which have been least recently used later.
+   * 4. Bound the size of the tileStorage.  Every so often, go look at all
+   *    of the tiles.  Sort them by access time.  Drop the image from the
+   *    tile if it isn't one of the 100 most recent ones.  (Make this a
+   *    preference?)
+   * 5. Add some sanity checks to SlippyMapKey to make sure we don't add
+   *    negative indexes.  This keeps us from requesting urls like:
+   *    http://a.tile.openstreetmap.org/2/-1/-2.png
+   * 6. Introduce a new auto-zoom mechanism.  Right now, it attempts to
+   *    see how many tiles are on the screen.  This is OK, but it can cause
+   *    autozoom changes on just scrolling.  Say you have a screen which
+   *    exactly fits 6x6 tiles.  If you scroll over just a bit, you'll see
+   *    all of those 16 tiles, plus a few pixels of the next row over. 
+   *    You'll all of a sudden be seeing 6x7 tiles, and autozoom will kick
+   *    in.  This new mechanism attempts to detect how much tiles are being
+   *    squished or stretched.  Since it has to load a tile before it can
+   *    actually find out the tile's size, it also has the nice side-effect
+   *    of getting things drawn on the screen earlier.  Should these be
+   *    preferences too?
+   * 7. Add debugging to imageUpdate, printing the URL of images that fail to
+   *    load.  Also add a SlippyMapTile.getImageURL() helper to facilitate
+   *    this.
+   * 8. Make sure we redraw sooner when changing zoom levels
+
+ -- lvarga via osm-dev List <dev@openstreetmap.org>  Fri, 24 Apr 2009 19:34:33 +0200
+
+openstreetmap-josm (14730) unstable; urgency=low
+
+   * Applyied patch from "Bastian Voigt" <post@bastian-voigt.de>. It fix bad preferences gui rendering in mac osx.
+
+ -- lvarga via osm-dev List <dev@openstreetmap.org>  Fri, 24 Apr 2009 18:54:27 +0200
+
+openstreetmap-josm (14698) unstable; urgency=low
+
+   * build.number is obsolete
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 22 Apr 2009 20:13:58 +0200
+
+openstreetmap-josm (14697) unstable; urgency=low
+
+   * fixing JOSM Ticket #2422 - When compiling tageditor, it tries to commit to svn
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 22 Apr 2009 20:12:46 +0200
+
+openstreetmap-josm (14696) unstable; urgency=low
+
+   * fixing JOSM Ticket #2422 - When compiling tageditor, it tries to commit to svn
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 22 Apr 2009 20:12:26 +0200
+
+openstreetmap-josm (14674) unstable; urgency=low
+
+   * increment build number
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Wed, 22 Apr 2009 10:45:01 +0200
+
+openstreetmap-josm (14673) unstable; urgency=low
+
+   * increment build number
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Wed, 22 Apr 2009 10:43:34 +0200
+
+openstreetmap-josm (14524) unstable; urgency=low
+
+   * fixed problem with dirty state in tag editor dialog
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Thu, 16 Apr 2009 11:16:42 +0200
+
+openstreetmap-josm (14523) unstable; urgency=low
+
+   * increment build number
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Thu, 16 Apr 2009 11:11:57 +0200
+
+openstreetmap-josm (14522) unstable; urgency=low
+
+   * increment build number
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Thu, 16 Apr 2009 11:11:36 +0200
+
+openstreetmap-josm (14521) unstable; urgency=low
+
+   * fixing wrong check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Thu, 16 Apr 2009 11:09:01 +0200
+
+openstreetmap-josm (14520) unstable; urgency=low
+
+   * fixed problem with dirty state. Now sets the dialog into dirty state when either the name or the value of a tag is changed. 
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Thu, 16 Apr 2009 11:04:20 +0200
+
+openstreetmap-josm (14517) unstable; urgency=low
+
+   * give JOSM a maximum of 512MB heap space
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Thu, 16 Apr 2009 09:01:18 +0200
+
+openstreetmap-josm (14471) unstable; urgency=low
+
+   * added possibility to add a comment before the issue gets closed
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sat, 11 Apr 2009 21:42:09 +0200
+
+openstreetmap-josm (14443) unstable; urgency=low
+
+   * main version should be a natural number; otherwise JOSM throws a NumberFormatException
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 22:45:55 +0200
+
+openstreetmap-josm (14432) unstable; urgency=low
+
+   * renamed README
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 11:57:01 +0200
+
+openstreetmap-josm (14431) unstable; urgency=low
+
+   * manual build
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 11:54:16 +0200
+
+openstreetmap-josm (14430) unstable; urgency=low
+
+   * deleted build.old.xml
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 11:53:45 +0200
+
+openstreetmap-josm (14429) unstable; urgency=low
+
+   * update build.xml
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 11:53:12 +0200
+
+openstreetmap-josm (14428) unstable; urgency=low
+
+   * inital version
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 11:52:45 +0200
+
+openstreetmap-josm (14427) unstable; urgency=low
+
+   * initial version
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 11:52:11 +0200
+
+openstreetmap-josm (14426) unstable; urgency=low
+
+   * increment build number
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 11:49:52 +0200
+
+openstreetmap-josm (14425) unstable; urgency=low
+
+   * increment build number
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 11:47:50 +0200
+
+openstreetmap-josm (14424) unstable; urgency=low
+
+   * increment build number
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 11:46:39 +0200
+
+openstreetmap-josm (14423) unstable; urgency=low
+
+   * Added a different color for routing inactive layer. Fixed layer context menu entries.
+
+ -- juangui via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 02:23:40 +0200
+
+openstreetmap-josm (14422) unstable; urgency=low
+
+   * Added multiple routing layer support to routing plugin.
+
+ -- juangui via osm-dev List <dev@openstreetmap.org>  Wed, 08 Apr 2009 01:07:19 +0200
+
+openstreetmap-josm (14421) unstable; urgency=low
+
+   * added build number
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 23:15:15 +0200
+
+openstreetmap-josm (14420) unstable; urgency=low
+
+   * manual build
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 21:31:53 +0200
+
+openstreetmap-josm (14419) unstable; urgency=low
+
+   * inc build number
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 21:29:07 +0200
+
+openstreetmap-josm (14418) unstable; urgency=low
+
+   * inc build number
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 21:28:31 +0200
+
+openstreetmap-josm (14417) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 20:57:11 +0200
+
+openstreetmap-josm (14416) unstable; urgency=low
+
+   * cosmetics 
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 20:56:18 +0200
+
+openstreetmap-josm (14415) unstable; urgency=low
+
+   * manual build
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 20:38:13 +0200
+
+openstreetmap-josm (14414) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 20:32:41 +0200
+
+openstreetmap-josm (14413) unstable; urgency=low
+
+   * manual build
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 20:27:33 +0200
+
+openstreetmap-josm (14412) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 20:22:47 +0200
+
+openstreetmap-josm (14411) unstable; urgency=low
+
+   * bug fix: include DTD in distribution
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 20:19:38 +0200
+
+openstreetmap-josm (14410) unstable; urgency=low
+
+   * manual build
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 19:46:14 +0200
+
+openstreetmap-josm (14409) unstable; urgency=low
+
+   * manual build
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 19:15:01 +0200
+
+openstreetmap-josm (14408) unstable; urgency=low
+
+   * manual build
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 07 Apr 2009 18:33:27 +0200
+
+openstreetmap-josm (14406) unstable; urgency=low
+
+   * minof fixes to some JOSM plugins to reflect changes in the Visitor interface
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Mon, 06 Apr 2009 23:05:49 +0200
+
+openstreetmap-josm (14404) unstable; urgency=low
+
+   * Added support for multiple routing layers.
+
+ -- juangui via osm-dev List <dev@openstreetmap.org>  Mon, 06 Apr 2009 12:46:43 +0200
+
+openstreetmap-josm (14395) unstable; urgency=low
+
+   * Menu items are enabled or disabled according to availability of a routing layer.
+
+ -- juangui via osm-dev List <dev@openstreetmap.org>  Fri, 03 Apr 2009 13:19:41 +0200
+
+openstreetmap-josm (14387) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Thu, 02 Apr 2009 10:09:49 +0200
+
+openstreetmap-josm (14372) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 31 Mar 2009 17:27:02 +0200
+
+openstreetmap-josm (14371) unstable; urgency=low
+
+   * minor cleanups
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 31 Mar 2009 16:39:28 +0200
+
+openstreetmap-josm (14370) unstable; urgency=low
+
+   * removed old code
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 31 Mar 2009 16:36:43 +0200
+
+openstreetmap-josm (14369) unstable; urgency=low
+
+   * added tag editor
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 31 Mar 2009 16:36:00 +0200
+
+openstreetmap-josm (14368) unstable; urgency=low
+
+   * remove tabs
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 31 Mar 2009 16:32:36 +0200
+
+openstreetmap-josm (14367) unstable; urgency=low
+
+   * extended target clean for plugin tageditor
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Tue, 31 Mar 2009 15:35:38 +0200
+
+openstreetmap-josm (14365) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- juangui via osm-dev List <dev@openstreetmap.org>  Tue, 31 Mar 2009 01:49:33 +0200
+
+openstreetmap-josm (14359) unstable; urgency=low
+
+   * updated manifest
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 30 Mar 2009 16:36:41 +0200
+
+openstreetmap-josm (14358) unstable; urgency=low
+
+   * updated manifest
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 30 Mar 2009 16:35:29 +0200
+
+openstreetmap-josm (14357) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 30 Mar 2009 16:33:04 +0200
+
+openstreetmap-josm (14356) unstable; urgency=low
+
+   * close #2343 - wrong joining - patch by xeen
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 30 Mar 2009 16:32:25 +0200
+
+openstreetmap-josm (14340) unstable; urgency=low
+
+   * added tageditor plugin
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 20:20:45 +0200
+
+openstreetmap-josm (14339) unstable; urgency=low
+
+   * fixed a path
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 20:13:59 +0200
+
+openstreetmap-josm (14338) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 20:01:34 +0200
+
+openstreetmap-josm (14335) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 18:09:31 +0200
+
+openstreetmap-josm (14334) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:39:24 +0200
+
+openstreetmap-josm (14333) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:38:42 +0200
+
+openstreetmap-josm (14332) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:38:22 +0200
+
+openstreetmap-josm (14331) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:25:26 +0200
+
+openstreetmap-josm (14330) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:22:48 +0200
+
+openstreetmap-josm (14329) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:22:29 +0200
+
+openstreetmap-josm (14328) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:22:14 +0200
+
+openstreetmap-josm (14327) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:21:56 +0200
+
+openstreetmap-josm (14326) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:21:40 +0200
+
+openstreetmap-josm (14325) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:21:10 +0200
+
+openstreetmap-josm (14324) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:20:52 +0200
+
+openstreetmap-josm (14323) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:20:01 +0200
+
+openstreetmap-josm (14322) unstable; urgency=low
+
+   * first check-in
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 17:19:40 +0200
+
+openstreetmap-josm (14320) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- guggis via osm-dev List <dev@openstreetmap.org>  Sun, 29 Mar 2009 16:02:33 +0200
+
+openstreetmap-josm (14294) unstable; urgency=low
+
+   * Added new routing and openlayers plugins to dist.
+
+ -- juangui via osm-dev List <dev@openstreetmap.org>  Fri, 27 Mar 2009 17:55:59 +0100
+
+openstreetmap-josm (14290) unstable; urgency=low
+
+   * ClickCount in MouseWheelEvent seems to be zero on some OS. 
+   * => replaced the condition to center the zomm in / zoom out by a time based condition.
+
+ -- khris78 via osm-dev List <dev@openstreetmap.org>  Fri, 27 Mar 2009 15:48:22 +0100
+
+openstreetmap-josm (14289) unstable; urgency=low
+
+   * Added images for routing plugin.
+
+ -- juangui via osm-dev List <dev@openstreetmap.org>  Fri, 27 Mar 2009 15:06:43 +0100
+
+openstreetmap-josm (14287) unstable; urgency=low
+
+   * Added routing plugin.
+
+ -- juangui via osm-dev List <dev@openstreetmap.org>  Fri, 27 Mar 2009 15:01:07 +0100
+
+openstreetmap-josm (14277) unstable; urgency=low
+
+   * use wget settings, so we would download a new version of the webkit stuff
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Thu, 26 Mar 2009 10:29:15 +0100
+
+openstreetmap-josm (14252) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 24 Mar 2009 16:57:38 +0100
+
+openstreetmap-josm (14249) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 24 Mar 2009 09:34:37 +0100
+
+openstreetmap-josm (14247) unstable; urgency=low
+
+   * fixed manifest
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 24 Mar 2009 09:34:01 +0100
+
+openstreetmap-josm (14246) unstable; urgency=low
+
+   * added
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 24 Mar 2009 09:23:09 +0100
+
+openstreetmap-josm (14245) unstable; urgency=low
+
+   * fixed indent, updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 24 Mar 2009 09:19:10 +0100
+
+openstreetmap-josm (14233) unstable; urgency=low
+
+   * added file
+
+ -- Christof Dallermassl via osm-dev List <dev@openstreetmap.org>  Mon, 23 Mar 2009 22:05:17 +0100
+
+openstreetmap-josm (14232) unstable; urgency=low
+
+   * added GPL-v2
+
+ -- Christof Dallermassl via osm-dev List <dev@openstreetmap.org>  Mon, 23 Mar 2009 22:00:39 +0100
+
+openstreetmap-josm (14222) unstable; urgency=low
+
+   * fixed properties
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 23 Mar 2009 17:49:17 +0100
+
+openstreetmap-josm (14221) unstable; urgency=low
+
+   * added editgpx
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 23 Mar 2009 17:48:08 +0100
+
+openstreetmap-josm (14201) unstable; urgency=low
+
+   * add further plugins
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 18:32:37 +0100
+
+openstreetmap-josm (14200) unstable; urgency=low
+
+   * add AgPifoJ Plugin
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 17:44:47 +0100
+
+openstreetmap-josm (14198) unstable; urgency=low
+
+   * JOSM has reasonable default preferences, no need to write our own
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 16:52:35 +0100
+
+openstreetmap-josm (14197) unstable; urgency=low
+
+   * both setup files are identical now, remove one of them
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 16:42:01 +0100
+
+openstreetmap-josm (14196) unstable; urgency=low
+
+   * put plugins only into personal folders, otherwise we get in conflict with the JOSM internal plugin update mechanism
+   * cleanup of uninstall stuff
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 16:40:49 +0100
+
+openstreetmap-josm (14194) unstable; urgency=low
+
+   * fix webkit folders
+   * remove webkit stuff on uninstall
+   * remove a lot of old (already commented out) stuff
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 16:10:22 +0100
+
+openstreetmap-josm (14192) unstable; urgency=low
+
+   * add generated stuff to ignore list
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 14:47:05 +0100
+
+openstreetmap-josm (14191) unstable; urgency=low
+
+   * automatically detect the right settings for launch4j and makensis - now both files are equal
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 14:44:26 +0100
+
+openstreetmap-josm (14190) unstable; urgency=low
+
+   * remove some TODO stuff as it's done
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 14:41:54 +0100
+
+openstreetmap-josm (14189) unstable; urgency=low
+
+   * further unify files, add download/unzip of webkit stuff
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 13:58:03 +0100
+
+openstreetmap-josm (14186) unstable; urgency=low
+
+   * unify setup script
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 21 Mar 2009 11:48:31 +0100
+
+openstreetmap-josm (14134) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 19 Mar 2009 20:58:37 +0100
+
+openstreetmap-josm (14133) unstable; urgency=low
+
+   * fix #2273 - DirectUpload crashes trying to upload converted GPX - patch by xeen
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 19 Mar 2009 20:57:38 +0100
+
+openstreetmap-josm (14128) unstable; urgency=low
+
+   * cleanup build
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 19 Mar 2009 13:26:29 +0100
+
+openstreetmap-josm (14127) unstable; urgency=low
+
+   * removed old pluginmanager code
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 19 Mar 2009 10:38:52 +0100
+
+openstreetmap-josm (14126) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 19 Mar 2009 09:26:15 +0100
+
+openstreetmap-josm (14125) unstable; urgency=low
+
+   * fixed build
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 19 Mar 2009 09:24:41 +0100
+
+openstreetmap-josm (14124) unstable; urgency=low
+
+   * added plugin translations
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 18 Mar 2009 19:06:54 +0100
+
+openstreetmap-josm (14123) unstable; urgency=low
+
+   * fix #2296
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 18 Mar 2009 16:40:51 +0100
+
+openstreetmap-josm (14122) unstable; urgency=low
+
+   * close #2165 - NPE, fix indent
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 18 Mar 2009 16:37:03 +0100
+
+openstreetmap-josm (14121) unstable; urgency=low
+
+   * close #2302 - patch by jttt - optimizations and encapsulation
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 18 Mar 2009 15:57:27 +0100
+
+openstreetmap-josm (14120) unstable; urgency=low
+
+   * fix the menu changes in JOSM
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 18 Mar 2009 15:55:16 +0100
+
+openstreetmap-josm (14111) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 17 Mar 2009 19:40:54 +0100
+
+openstreetmap-josm (14110) unstable; urgency=low
+
+   * close #2291 - add pattern support to URL
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 17 Mar 2009 19:33:32 +0100
+
+openstreetmap-josm (14109) unstable; urgency=low
+
+   * close #2278 - missing translations
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 17 Mar 2009 19:30:58 +0100
+
+openstreetmap-josm (14073) unstable; urgency=low
+
+   * the seperator in the plugins setting is ; and not , as before
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sat, 14 Mar 2009 10:41:10 +0100
+
+openstreetmap-josm (14063) unstable; urgency=low
+
+   * added configurable connect and read timeouts for the http connection
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Thu, 12 Mar 2009 20:44:08 +0100
+
+openstreetmap-josm (14057) unstable; urgency=low
+
+   * Move to correct directory, add eclipse project
+
+ -- jttt via osm-dev List <dev@openstreetmap.org>  Wed, 11 Mar 2009 22:04:26 +0100
+
+openstreetmap-josm (14052) unstable; urgency=low
+
+   * remove namefinder plugin stuff
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Tue, 10 Mar 2009 10:19:52 +0100
+
+openstreetmap-josm (14049) unstable; urgency=low
+
+   * Yet another new version of the terracer plugin.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Mon, 09 Mar 2009 15:47:31 +0100
+
+openstreetmap-josm (14048) unstable; urgency=low
+
+   * Fixed bug in segment length method - index out of bounds.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Mon, 09 Mar 2009 15:46:56 +0100
+
+openstreetmap-josm (14046) unstable; urgency=low
+
+   * New version of terracer JOSM plugin.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Mon, 09 Mar 2009 14:21:53 +0100
+
+openstreetmap-josm (14045) unstable; urgency=low
+
+   * Small fix for ambiguity when terracing exact quadrilaterals. Reordered text input boxes for better usability. Better i18n in dialog box.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Mon, 09 Mar 2009 14:17:12 +0100
+
+openstreetmap-josm (14033) unstable; urgency=low
+
+   * updated translations
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 23:00:10 +0100
+
+openstreetmap-josm (14027) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 18:20:33 +0100
+
+openstreetmap-josm (14026) unstable; urgency=low
+
+   * Make terracer Java 1.5 compatible
+
+ -- jttt via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 18:15:21 +0100
+
+openstreetmap-josm (14020) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 15:43:12 +0100
+
+openstreetmap-josm (14019) unstable; urgency=low
+
+   * fixed
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 15:24:04 +0100
+
+openstreetmap-josm (14018) unstable; urgency=low
+
+   * fixed typo
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 15:23:45 +0100
+
+openstreetmap-josm (14017) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 14:47:46 +0100
+
+openstreetmap-josm (14016) unstable; urgency=low
+
+   * fixed
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 14:45:32 +0100
+
+openstreetmap-josm (14015) unstable; urgency=low
+
+   * some validator fixes, reenabled debug
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 14:39:18 +0100
+
+openstreetmap-josm (14008) unstable; urgency=low
+
+   * fixed
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 13:07:46 +0100
+
+openstreetmap-josm (14007) unstable; urgency=low
+
+   * fix
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 13:06:53 +0100
+
+openstreetmap-josm (14005) unstable; urgency=low
+
+   * sorted
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 12:29:33 +0100
+
+openstreetmap-josm (14004) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 12:08:48 +0100
+
+openstreetmap-josm (14003) unstable; urgency=low
+
+   * cleanup build scripts and manifests
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Mar 2009 12:02:49 +0100
+
+openstreetmap-josm (13998) unstable; urgency=low
+
+   * applications/editors/josm/i18n/build.xml:
+   * Remove the dependence on gettext-ant-tasks, because it does not appear
+   * to be possible to specify a mapping between "he" and "iw_IL" nor to
+   * have msgfmt spit out statistics.
+   * Resurrect the pre-r13964 exec task for invoking "find", but also invoke
+   * "sort" to generate a (hopefully) deterministic list of file names, to
+   * reduce the number of merge conflicts in po/*.po.
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Sat, 07 Mar 2009 21:02:38 +0100
+
+openstreetmap-josm (13996) unstable; urgency=low
+
+   * applications/editors/josm/i18n/build.xml:
+   * Add excludes="**/*.java" to the jar task.
+   * This fixes a bug that was introduced in r13964, which moved the
+   * generated files trans_*.java to the build directory.
+   * Spotted by Dirk St?\195?\182cker.
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Sat, 07 Mar 2009 19:55:58 +0100
+
+openstreetmap-josm (13991) unstable; urgency=low
+
+   * New version of Terracer plugin jar file.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Fri, 06 Mar 2009 19:56:31 +0100
+
+openstreetmap-josm (13990) unstable; urgency=low
+
+   * New version of Terracer plugin. Supports non-quadrilateral terraces and also fills out Karlsruhe schema tags automatically.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Fri, 06 Mar 2009 19:55:38 +0100
+
+openstreetmap-josm (13986) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 06 Mar 2009 16:15:40 +0100
+
+openstreetmap-josm (13985) unstable; urgency=low
+
+   * fixed image
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 06 Mar 2009 16:15:02 +0100
+
+openstreetmap-josm (13964) unstable; urgency=low
+
+   * applications/editors/josm/i18n/build.xml:
+   * Use gettext-ant-tasks instead of exec rules.
+   * Generate the trans_*.java files under the build directory.
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Tue, 03 Mar 2009 20:50:02 +0100
+
+openstreetmap-josm (13963) unstable; urgency=low
+
+   * Updated binary file of slippymap plugin. Version in manifest is 13961, and that is also revision for sources that was build from.
+
+ -- lvarga via osm-dev List <dev@openstreetmap.org>  Tue, 03 Mar 2009 19:06:44 +0100
+
+openstreetmap-josm (13961) unstable; urgency=low
+
+   * Added draw debug preference, not vizualized yet. If enabled, it will show tils info and lines between them.
+   * Fixed bug with zoom lvl set to 14 after start of plugin. If max zoom lvl was for example 12, this caused error.
+   * Added min zoom lvl preference, not vizualized yet.
+   * Tunned up fade to background.
+   * Main paint method need brutal refactoring. Loading images on background, do painting with lees code, etc.
+
+ -- lvarga via osm-dev List <dev@openstreetmap.org>  Tue, 03 Mar 2009 19:00:43 +0100
+
+openstreetmap-josm (13960) unstable; urgency=low
+
+   * reference to rxtx lib license, which is included in this repository for simplicity
+
+ -- ramack via osm-dev List <dev@openstreetmap.org>  Tue, 03 Mar 2009 17:50:48 +0100
+
+openstreetmap-josm (13959) unstable; urgency=low
+
+   * adding license file
+
+ -- ramack via osm-dev List <dev@openstreetmap.org>  Tue, 03 Mar 2009 17:40:45 +0100
+
+openstreetmap-josm (13948) unstable; urgency=low
+
+   * updated translations
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 01 Mar 2009 23:41:36 +0100
+
+openstreetmap-josm (13930) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 28 Feb 2009 20:37:03 +0100
+
+openstreetmap-josm (13929) unstable; urgency=low
+
+   * forgot file
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 28 Feb 2009 20:36:41 +0100
+
+openstreetmap-josm (13928) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 28 Feb 2009 20:35:42 +0100
+
+openstreetmap-josm (13927) unstable; urgency=low
+
+   * patch by xeen
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 28 Feb 2009 20:34:43 +0100
+
+openstreetmap-josm (13925) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 28 Feb 2009 18:50:11 +0100
+
+openstreetmap-josm (13923) unstable; urgency=low
+
+   * New build of slippy map with autozoom, settings and for example fade background. slippymap.jar 13712
+
+ -- lvarga via osm-dev List <dev@openstreetmap.org>  Sat, 28 Feb 2009 02:36:51 +0100
+
+openstreetmap-josm (13922) unstable; urgency=low
+
+   * Just an update of README...
+
+ -- lvarga via osm-dev List <dev@openstreetmap.org>  Sat, 28 Feb 2009 02:34:03 +0100
+
+openstreetmap-josm (13921) unstable; urgency=low
+
+   * Added "fade background" feature.
+
+ -- lvarga via osm-dev List <dev@openstreetmap.org>  Sat, 28 Feb 2009 01:56:46 +0100
+
+openstreetmap-josm (13918) unstable; urgency=low
+
+   * fix preset handling in validator
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 27 Feb 2009 12:05:10 +0100
+
+openstreetmap-josm (13833) unstable; urgency=low
+
+   * updated lang
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 22 Feb 2009 21:39:33 +0100
+
+openstreetmap-josm (13821) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 21 Feb 2009 14:53:08 +0100
+
+openstreetmap-josm (13820) unstable; urgency=low
+
+   * apply patch by xeen for #1876
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 21 Feb 2009 14:52:35 +0100
+
+openstreetmap-josm (13797) unstable; urgency=low
+
+   * fixed
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 19 Feb 2009 19:01:19 +0100
+
+openstreetmap-josm (13796) unstable; urgency=low
+
+   * apply patch from #2096
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 19 Feb 2009 18:59:32 +0100
+
+openstreetmap-josm (13788) unstable; urgency=low
+
+   * new version of cadastre-fr
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Thu, 19 Feb 2009 00:50:33 +0100
+
+openstreetmap-josm (13785) unstable; urgency=low
+
+   * check revision
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Wed, 18 Feb 2009 23:47:30 +0100
+
+openstreetmap-josm (13784) unstable; urgency=low
+
+   * Fix minor bugs, add the fixed size grab scale configurable, fix pbls in transparency.
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Wed, 18 Feb 2009 23:31:32 +0100
+
+openstreetmap-josm (13777) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 17 Feb 2009 17:08:09 +0100
+
+openstreetmap-josm (13776) unstable; urgency=low
+
+   * close #2195. patch by xeen
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 17 Feb 2009 17:01:25 +0100
+
+openstreetmap-josm (13775) unstable; urgency=low
+
+   * close #2124. patch by xeen
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 17 Feb 2009 16:59:56 +0100
+
+openstreetmap-josm (13765) unstable; urgency=low
+
+   * tcxplugin: Convert the first points of laps to waypoints named LAP1, LAP2, ...
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Mon, 16 Feb 2009 22:53:14 +0100
+
+openstreetmap-josm (13764) unstable; urgency=low
+
+   * Make tcxplugin compile, and fix the GPX export.
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Mon, 16 Feb 2009 22:42:05 +0100
+
+openstreetmap-josm (13748) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 15 Feb 2009 22:19:32 +0100
+
+openstreetmap-josm (13742) unstable; urgency=low
+
+   * fixed
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 15 Feb 2009 15:19:37 +0100
+
+openstreetmap-josm (13741) unstable; urgency=low
+
+   * close #2176
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 15 Feb 2009 15:18:29 +0100
+
+openstreetmap-josm (13727) unstable; urgency=low
+
+   * proper character encoding
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 14 Feb 2009 14:55:57 +0100
+
+openstreetmap-josm (13726) unstable; urgency=low
+
+   * Suppress warning
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 14 Feb 2009 14:38:04 +0100
+
+openstreetmap-josm (13725) unstable; urgency=low
+
+   * updated translations
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 14 Feb 2009 14:24:37 +0100
+
+openstreetmap-josm (13724) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 14 Feb 2009 13:35:34 +0100
+
+openstreetmap-josm (13723) unstable; urgency=low
+
+   * close #1652
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 14 Feb 2009 13:34:22 +0100
+
+openstreetmap-josm (13712) unstable; urgency=low
+
+   * Added preferences tab
+   * Added possibility to activate/deactivate autozoom and autoload of tiles
+   * Added setting for max zoom level
+   * Done some small refactoring
+   * In plan is to add button for selecting local tiles repository (someone is
+   * using it in this way also)
+
+ -- lvarga via osm-dev List <dev@openstreetmap.org>  Sat, 14 Feb 2009 01:13:09 +0100
+
+openstreetmap-josm (13677) unstable; urgency=low
+
+   * Add transparency to icons
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Thu, 12 Feb 2009 18:53:19 +0100
+
+openstreetmap-josm (13674) unstable; urgency=low
+
+   * update
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 12 Feb 2009 09:25:21 +0100
+
+openstreetmap-josm (13673) unstable; urgency=low
+
+   * close #2164 and #1954. patch by xeen
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 12 Feb 2009 09:24:58 +0100
+
+openstreetmap-josm (13667) unstable; urgency=low
+
+   * close #1905
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 11 Feb 2009 18:17:20 +0100
+
+openstreetmap-josm (13666) unstable; urgency=low
+
+   * apply fix of #1954
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 11 Feb 2009 18:14:31 +0100
+
+openstreetmap-josm (13665) unstable; urgency=low
+
+   * forgot this.
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Wed, 11 Feb 2009 10:38:39 +0100
+
+openstreetmap-josm (13654) unstable; urgency=low
+
+   * added menu item to toggle the alpha channel of the wms images
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Tue, 10 Feb 2009 22:39:13 +0100
+
+openstreetmap-josm (13652) unstable; urgency=low
+
+   * added menu item to toggle the alpha channel of the wms images
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Tue, 10 Feb 2009 20:57:50 +0100
+
+openstreetmap-josm (13649) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 10 Feb 2009 18:21:28 +0100
+
+openstreetmap-josm (13648) unstable; urgency=low
+
+   * fixed path
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 10 Feb 2009 18:21:01 +0100
+
+openstreetmap-josm (13646) unstable; urgency=low
+
+   * added caching
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 10 Feb 2009 17:46:15 +0100
+
+openstreetmap-josm (13645) unstable; urgency=low
+
+   * apply patches from xeen: #1954 and #1906
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 10 Feb 2009 17:42:52 +0100
+
+openstreetmap-josm (13637) unstable; urgency=low
+
+   * removed slippy_map_chooser
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 09 Feb 2009 17:21:54 +0100
+
+openstreetmap-josm (13636) unstable; urgency=low
+
+   * removed slippy_map_chooser
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 09 Feb 2009 17:21:42 +0100
+
+openstreetmap-josm (13635) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 09 Feb 2009 16:57:28 +0100
+
+openstreetmap-josm (13634) unstable; urgency=low
+
+   * fix #1875
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 09 Feb 2009 16:57:02 +0100
+
+openstreetmap-josm (13626) unstable; urgency=low
+
+   * added zoom
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Mon, 09 Feb 2009 08:43:44 +0100
+
+openstreetmap-josm (13625) unstable; urgency=low
+
+   * added zoom and autozoom. patch by lubomir.varga@freemap.sk
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Mon, 09 Feb 2009 08:42:12 +0100
+
+openstreetmap-josm (13620) unstable; urgency=low
+
+   * fix build bug
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 22:59:59 +0100
+
+openstreetmap-josm (13619) unstable; urgency=low
+
+   * updated, added ja
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 22:44:59 +0100
+
+openstreetmap-josm (13618) unstable; urgency=low
+
+   * fixed text
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 22:29:09 +0100
+
+openstreetmap-josm (13611) unstable; urgency=low
+
+   * Fix minor issues.
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 20:34:53 +0100
+
+openstreetmap-josm (13601) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 17:05:45 +0100
+
+openstreetmap-josm (13600) unstable; urgency=low
+
+   * added support for projection
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 17:05:17 +0100
+
+openstreetmap-josm (13599) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 16:17:27 +0100
+
+openstreetmap-josm (13598) unstable; urgency=low
+
+   * some minor updates
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 16:06:16 +0100
+
+openstreetmap-josm (13595) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 14:18:38 +0100
+
+openstreetmap-josm (13593) unstable; urgency=low
+
+   * typo
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 13:44:49 +0100
+
+openstreetmap-josm (13588) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 12:38:08 +0100
+
+openstreetmap-josm (13587) unstable; urgency=low
+
+   * minor cleanup
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 12:37:33 +0100
+
+openstreetmap-josm (13585) unstable; urgency=low
+
+   * some cleanup
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 11:39:04 +0100
+
+openstreetmap-josm (13584) unstable; urgency=low
+
+   * apply #2127
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 11:38:00 +0100
+
+openstreetmap-josm (13582) unstable; urgency=low
+
+   * added patch from 1572
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 08 Feb 2009 11:21:49 +0100
+
+openstreetmap-josm (13575) unstable; urgency=low
+
+   * close #2112. patch by xeen
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 07 Feb 2009 21:47:41 +0100
+
+openstreetmap-josm (13569) unstable; urgency=low
+
+   * fix build error
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 07 Feb 2009 16:19:58 +0100
+
+openstreetmap-josm (13563) unstable; urgency=low
+
+   * New plugin version (again, sorry, sorry) for version update terracer.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Fri, 06 Feb 2009 13:28:07 +0100
+
+openstreetmap-josm (13562) unstable; urgency=low
+
+   * New plugin version (again, sorry) for backwards compatibility fix to terracer.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Fri, 06 Feb 2009 13:27:13 +0100
+
+openstreetmap-josm (13561) unstable; urgency=low
+
+   * Fix terracer (again) for backwards compatibility with josm-tested.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Fri, 06 Feb 2009 13:26:41 +0100
+
+openstreetmap-josm (13560) unstable; urgency=low
+
+   * New version of terracer plugin with the bug fix.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Fri, 06 Feb 2009 13:12:39 +0100
+
+openstreetmap-josm (13559) unstable; urgency=low
+
+   * Fixed bug when not checking the return value of a dialogue box.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Fri, 06 Feb 2009 13:11:57 +0100
+
+openstreetmap-josm (13555) unstable; urgency=low
+
+   * Adding dist version of the Terracer jar.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Thu, 05 Feb 2009 20:36:00 +0100
+
+openstreetmap-josm (13554) unstable; urgency=low
+
+   * Fixed versioning in build.xml
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Thu, 05 Feb 2009 18:14:57 +0100
+
+openstreetmap-josm (13553) unstable; urgency=low
+
+   * Initial commit of the Terracer JOSM plugin.
+
+ -- zere via osm-dev List <dev@openstreetmap.org>  Thu, 05 Feb 2009 17:14:43 +0100
+
+openstreetmap-josm (13546) unstable; urgency=low
+
+   * Add municipality boundary import from SVG data delivered by cadastre WMS.
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Thu, 05 Feb 2009 01:01:54 +0100
+
+openstreetmap-josm (13545) unstable; urgency=low
+
+   * Add municipality boundary import from SVG data delivered by cadastre WMS.
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Thu, 05 Feb 2009 01:00:53 +0100
+
+openstreetmap-josm (13500) unstable; urgency=low
+
+   * applications/editors/josm/plugins/tcxplugin:
+   * TcxReader.parseDataFromActivities(): Name the first waypoint of each
+   * lap with the StartTime attribute of the Lap element.  In this way, the
+   * menu item "Markers From Named Points" of the generated GPX layer can be
+   * used for indicating the points where the Lap button was pressed.
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Sun, 01 Feb 2009 23:12:38 +0100
+
+openstreetmap-josm (13499) unstable; urgency=low
+
+   * applications/editors/josm/plugins/tcxplugin: TcxReader: Convert the
+   * TrackpointT timestamps in the TCX trace to WayPoint timestamps in the GPX
+   * trace.
+   * static WayPoint convertPoint(TrackpointT): Auxiliary function
+   * for converting TrackpointT to WayPoint.
+   * parseDataFromActivities(), parseDataFromCourses(): Use convertPoint().
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Sun, 01 Feb 2009 22:18:44 +0100
+
+openstreetmap-josm (13498) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 01 Feb 2009 22:04:29 +0100
+
+openstreetmap-josm (13497) unstable; urgency=low
+
+   * applications/editors/josm: Set svn:eol-style native on all *.java files
+   * in plugins.  Normalize the eol-style in 
+   * plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/StringEnumConfigurer.java.
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Sun, 01 Feb 2009 21:50:42 +0100
+
+openstreetmap-josm (13490) unstable; urgency=low
+
+   * updated all
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 01 Feb 2009 15:44:59 +0100
+
+openstreetmap-josm (13483) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sun, 01 Feb 2009 14:53:15 +0100
+
+openstreetmap-josm (13477) unstable; urgency=low
+
+   * moved adding of nickname and date to super class
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sun, 01 Feb 2009 14:23:24 +0100
+
+openstreetmap-josm (13476) unstable; urgency=low
+
+   * enabled inclusion of date information per default
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sun, 01 Feb 2009 14:22:10 +0100
+
+openstreetmap-josm (13475) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sun, 01 Feb 2009 14:20:08 +0100
+
+openstreetmap-josm (13469) unstable; urgency=low
+
+   * added relations stuff
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 31 Jan 2009 22:17:25 +0100
+
+openstreetmap-josm (13466) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 31 Jan 2009 18:19:47 +0100
+
+openstreetmap-josm (13459) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 31 Jan 2009 14:56:31 +0100
+
+openstreetmap-josm (13458) unstable; urgency=low
+
+   * close #1797
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 31 Jan 2009 14:55:06 +0100
+
+openstreetmap-josm (13457) unstable; urgency=low
+
+   * we need new JOSM for this
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 31 Jan 2009 14:53:20 +0100
+
+openstreetmap-josm (13456) unstable; urgency=low
+
+   * fixed #1721
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 31 Jan 2009 14:49:38 +0100
+
+openstreetmap-josm (13455) unstable; urgency=low
+
+   * close #2093
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 31 Jan 2009 14:23:36 +0100
+
+openstreetmap-josm (13426) unstable; urgency=low
+
+   * add municipality bbox in grab and cache
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Wed, 28 Jan 2009 21:44:10 +0100
+
+openstreetmap-josm (13420) unstable; urgency=low
+
+   * cleanup text
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 28 Jan 2009 16:57:31 +0100
+
+openstreetmap-josm (13417) unstable; urgency=low
+
+   * some text fixes
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 28 Jan 2009 15:58:23 +0100
+
+openstreetmap-josm (13409) unstable; urgency=low
+
+   * editors/josm/plugins: Adjust svn:ignore.
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Wed, 28 Jan 2009 10:11:45 +0100
+
+openstreetmap-josm (13404) unstable; urgency=low
+
+   * Fixed the missing SVN versioning number in manifest.
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Tue, 27 Jan 2009 19:58:20 +0100
+
+openstreetmap-josm (13403) unstable; urgency=low
+
+   * updated, added tr
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 27 Jan 2009 19:39:15 +0100
+
+openstreetmap-josm (13392) unstable; urgency=low
+
+   * i18n/conv*.pl: Generate Java code that compiles.
+
+ -- skela via osm-dev List <dev@openstreetmap.org>  Mon, 26 Jan 2009 10:35:02 +0100
+
+openstreetmap-josm (13391) unstable; urgency=low
+
+   * use #!/usr/bin/bash ; since we also use bash commands
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 26 Jan 2009 08:50:53 +0100
+
+openstreetmap-josm (13385) unstable; urgency=low
+
+   * updated, add bg
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 26 Jan 2009 00:24:42 +0100
+
+openstreetmap-josm (13383) unstable; urgency=low
+
+   * First commit of the french land registry WMS plugin for JOSM.
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Sun, 25 Jan 2009 23:33:54 +0100
+
+openstreetmap-josm (13382) unstable; urgency=low
+
+   * First commit of the french land registry WMS plugin for JOSM.
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Sun, 25 Jan 2009 23:25:21 +0100
+
+openstreetmap-josm (13374) unstable; urgency=low
+
+   * update
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 25 Jan 2009 13:50:35 +0100
+
+openstreetmap-josm (13373) unstable; urgency=low
+
+   * apply patch by xeen for bug #1635
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 25 Jan 2009 13:50:05 +0100
+
+openstreetmap-josm (13370) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 25 Jan 2009 13:09:40 +0100
+
+openstreetmap-josm (13369) unstable; urgency=low
+
+   * add toolbar text to support new toolbar features
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 25 Jan 2009 13:09:11 +0100
+
+openstreetmap-josm (13347) unstable; urgency=low
+
+   * moved namefinder into main josm
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 24 Jan 2009 13:50:09 +0100
+
+openstreetmap-josm (13346) unstable; urgency=low
+
+   * moved namefinder into main josm
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 24 Jan 2009 13:49:23 +0100
+
+openstreetmap-josm (13334) unstable; urgency=low
+
+   * updated, added sk
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 23 Jan 2009 23:30:34 +0100
+
+openstreetmap-josm (13333) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 23 Jan 2009 23:17:45 +0100
+
+openstreetmap-josm (13332) unstable; urgency=low
+
+   * fixes for new plugin handling
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 23 Jan 2009 22:36:04 +0100
+
+openstreetmap-josm (13328) unstable; urgency=low
+
+   * ADDED: New build of slippy_map_chooser with cycle map
+
+ -- tim via osm-dev List <dev@openstreetmap.org>  Fri, 23 Jan 2009 19:32:27 +0100
+
+openstreetmap-josm (13327) unstable; urgency=low
+
+   * ADDED: CycleMap is now available in slippy_map_chooser
+
+ -- tim via osm-dev List <dev@openstreetmap.org>  Fri, 23 Jan 2009 19:26:39 +0100
+
+openstreetmap-josm (13318) unstable; urgency=low
+
+   * remove linebreak which broke dependency handling
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Thu, 22 Jan 2009 23:10:56 +0100
+
+openstreetmap-josm (13315) unstable; urgency=low
+
+   * removed obsolete waypoints
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 22 Jan 2009 17:23:56 +0100
+
+openstreetmap-josm (13314) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 22 Jan 2009 17:09:25 +0100
+
+openstreetmap-josm (13313) unstable; urgency=low
+
+   * removed wrong version stuff
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 22 Jan 2009 17:07:55 +0100
+
+openstreetmap-josm (13295) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 20 Jan 2009 16:08:23 +0100
+
+openstreetmap-josm (13262) unstable; urgency=low
+
+   * added proxy stuff
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 19 Jan 2009 17:19:55 +0100
+
+openstreetmap-josm (13261) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 19 Jan 2009 16:22:56 +0100
+
+openstreetmap-josm (13260) unstable; urgency=low
+
+   * close #2020. patch by Detlef Reichl
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 19 Jan 2009 16:22:15 +0100
+
+openstreetmap-josm (13243) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 18 Jan 2009 14:20:25 +0100
+
+openstreetmap-josm (13237) unstable; urgency=low
+
+   * Commit new usertools jar on behalf of Chippy.  
+
+ -- crschmidt via osm-dev List <dev@openstreetmap.org>  Sat, 17 Jan 2009 19:39:37 +0100
+
+openstreetmap-josm (13212) unstable; urgency=low
+
+   * store current cursor and restore that cursor after the action finished
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Wed, 14 Jan 2009 21:52:11 +0100
+
+openstreetmap-josm (13210) unstable; urgency=low
+
+   * added new NPE maps
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 14 Jan 2009 18:19:59 +0100
+
+openstreetmap-josm (13194) unstable; urgency=low
+
+   * some fixes for Hebrew
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 13 Jan 2009 20:06:47 +0100
+
+openstreetmap-josm (13193) unstable; urgency=low
+
+   * updated, added he
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 13 Jan 2009 19:23:26 +0100
+
+openstreetmap-josm (13192) unstable; urgency=low
+
+   * lang fix
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 13 Jan 2009 19:13:12 +0100
+
+openstreetmap-josm (13140) unstable; urgency=low
+
+   * added some more stuff
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 11 Jan 2009 12:29:19 +0100
+
+openstreetmap-josm (13136) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 20:42:58 +0100
+
+openstreetmap-josm (13135) unstable; urgency=low
+
+   * made the display of button texts configurable
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 20:32:33 +0100
+
+openstreetmap-josm (13124) unstable; urgency=low
+
+   * updated translations, added el
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 16:37:11 +0100
+
+openstreetmap-josm (13119) unstable; urgency=low
+
+   * fixed #2002
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 10 Jan 2009 12:51:28 +0100
+
+openstreetmap-josm (13056) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 09 Jan 2009 10:05:48 +0100
+
+openstreetmap-josm (13055) unstable; urgency=low
+
+   * fixed #1986
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 09 Jan 2009 10:04:33 +0100
+
+openstreetmap-josm (12994) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 18:04:59 +0100
+
+openstreetmap-josm (12993) unstable; urgency=low
+
+   * updated to corrected strings
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 18:04:40 +0100
+
+openstreetmap-josm (12992) unstable; urgency=low
+
+   * added two missing plugins
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 17:49:06 +0100
+
+openstreetmap-josm (12991) unstable; urgency=low
+
+   * language updates
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 17:43:27 +0100
+
+openstreetmap-josm (12984) unstable; urgency=low
+
+   * text cleanup
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 15:50:39 +0100
+
+openstreetmap-josm (12983) unstable; urgency=low
+
+   * typo
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 15:05:09 +0100
+
+openstreetmap-josm (12968) unstable; urgency=low
+
+   * added nl, updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 10:01:12 +0100
+
+openstreetmap-josm (12967) unstable; urgency=low
+
+   * typo
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 06 Jan 2009 09:58:17 +0100
+
+openstreetmap-josm (12911) unstable; urgency=low
+
+   * added usertools
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 04 Jan 2009 17:52:33 +0100
+
+openstreetmap-josm (12910) unstable; urgency=low
+
+   * added usertools
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 04 Jan 2009 17:51:49 +0100
+
+openstreetmap-josm (12908) unstable; urgency=low
+
+   * added some tests from wiki
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 04 Jan 2009 16:17:34 +0100
+
+openstreetmap-josm (12896) unstable; urgency=low
+
+   * update
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 04 Jan 2009 00:42:54 +0100
+
+openstreetmap-josm (12895) unstable; urgency=low
+
+   * fixed typo
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 04 Jan 2009 00:42:27 +0100
+
+openstreetmap-josm (12894) unstable; urgency=low
+
+   * added lakewalker stuff
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 04 Jan 2009 00:27:57 +0100
+
+openstreetmap-josm (12893) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 04 Jan 2009 00:27:13 +0100
+
+openstreetmap-josm (12892) unstable; urgency=low
+
+   * fixed #1952 and #1936
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 04 Jan 2009 00:25:32 +0100
+
+openstreetmap-josm (12891) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 03 Jan 2009 23:00:40 +0100
+
+openstreetmap-josm (12890) unstable; urgency=low
+
+   * fixed #1487
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 03 Jan 2009 23:00:06 +0100
+
+openstreetmap-josm (12873) unstable; urgency=low
+
+   * updated, added da
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 03 Jan 2009 15:51:11 +0100
+
+openstreetmap-josm (12798) unstable; urgency=low
+
+   * removed
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 02 Jan 2009 12:41:16 +0100
+
+openstreetmap-josm (12789) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 23:57:16 +0100
+
+openstreetmap-josm (12781) unstable; urgency=low
+
+   * removed last references to local dist
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 19:01:14 +0100
+
+openstreetmap-josm (12780) unstable; urgency=low
+
+   * removed tab stop usage
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 18:55:45 +0100
+
+openstreetmap-josm (12778) unstable; urgency=low
+
+   * removed tab stop usage
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 18:28:53 +0100
+
+openstreetmap-josm (12777) unstable; urgency=low
+
+   * readded TagChecker, fixed problem with duplicate elements in data, added check for mappaint errors
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 18:22:57 +0100
+
+openstreetmap-josm (12768) unstable; urgency=low
+
+   * Fris?\195?\182r -> Friseur (laut Wikipediaseite)
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 13:06:08 +0100
+
+openstreetmap-josm (12766) unstable; urgency=low
+
+   * Dog Racing -> Hunderennen (nicht Hundeschule!)
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 12:27:43 +0100
+
+openstreetmap-josm (12759) unstable; urgency=low
+
+   * fixed message format bugs
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 11:40:41 +0100
+
+openstreetmap-josm (12748) unstable; urgency=low
+
+   * Updated
+
+ -- khris78 via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 07:48:49 +0100
+
+openstreetmap-josm (12747) unstable; urgency=low
+
+   * Fixed #1828
+
+ -- khris78 via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 07:05:23 +0100
+
+openstreetmap-josm (12746) unstable; urgency=low
+
+   * Fixed #1554, #1664
+
+ -- khris78 via osm-dev List <dev@openstreetmap.org>  Thu, 01 Jan 2009 06:56:26 +0100
+
+openstreetmap-josm (12743) unstable; urgency=low
+
+   * Fix #1661
+
+ -- khris78 via osm-dev List <dev@openstreetmap.org>  Wed, 31 Dec 2008 22:15:47 +0100
+
+openstreetmap-josm (12740) unstable; urgency=low
+
+   * Fix #1661
+
+ -- khris78 via osm-dev List <dev@openstreetmap.org>  Wed, 31 Dec 2008 21:33:29 +0100
+
+openstreetmap-josm (12719) unstable; urgency=low
+
+   * updated language due to original string changes
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 31 Dec 2008 14:05:58 +0100
+
+openstreetmap-josm (12707) unstable; urgency=low
+
+   * fixed text strings, thanks to Andrew Gee
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 31 Dec 2008 00:38:51 +0100
+
+openstreetmap-josm (12694) unstable; urgency=low
+
+   * fixed typo
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 15:25:37 +0100
+
+openstreetmap-josm (12692) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 14:11:23 +0100
+
+openstreetmap-josm (12691) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 14:00:08 +0100
+
+openstreetmap-josm (12688) unstable; urgency=low
+
+   * fixed version
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 13:06:14 +0100
+
+openstreetmap-josm (12677) unstable; urgency=low
+
+   * fixed typo
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 00:47:58 +0100
+
+openstreetmap-josm (12676) unstable; urgency=low
+
+   * fixed typo
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 30 Dec 2008 00:44:59 +0100
+
+openstreetmap-josm (12670) unstable; urgency=low
+
+   * fixed two wrong strings
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 29 Dec 2008 19:15:44 +0100
+
+openstreetmap-josm (12660) unstable; urgency=low
+
+   * fixed msgfmt warning
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 29 Dec 2008 12:48:37 +0100
+
+openstreetmap-josm (12645) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 28 Dec 2008 20:05:16 +0100
+
+openstreetmap-josm (12641) unstable; urgency=low
+
+   * updated, added es, fi
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 28 Dec 2008 20:01:13 +0100
+
+openstreetmap-josm (12640) unstable; urgency=low
+
+   * fixed typos
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 28 Dec 2008 19:52:15 +0100
+
+openstreetmap-josm (12639) unstable; urgency=low
+
+   * remove old debian/files on clean target
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Sun, 28 Dec 2008 18:51:41 +0100
+
+openstreetmap-josm (12638) unstable; urgency=low
+
+   * change dependency to java 1.6; add more description
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Sun, 28 Dec 2008 17:57:47 +0100
+
+openstreetmap-josm (12610) unstable; urgency=low
+
+   * Also compile and add webkit-image
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Sat, 27 Dec 2008 21:49:35 +0100
+
+openstreetmap-josm (12609) unstable; urgency=low
+
+   * execute pkg-config to get the correct Compiler flags
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Sat, 27 Dec 2008 21:48:21 +0100
+
+openstreetmap-josm (12604) unstable; urgency=low
+
+   * fixed bug #1536
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 27 Dec 2008 13:36:36 +0100
+
+openstreetmap-josm (12603) unstable; urgency=low
+
+   * fixed bug #1536
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 27 Dec 2008 13:23:39 +0100
+
+openstreetmap-josm (12602) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 27 Dec 2008 12:08:19 +0100
+
+openstreetmap-josm (12601) unstable; urgency=low
+
+   * close bug #1775 and #1704
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 27 Dec 2008 12:07:12 +0100
+
+openstreetmap-josm (12600) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 26 Dec 2008 23:46:42 +0100
+
+openstreetmap-josm (12599) unstable; urgency=low
+
+   * updated version
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 26 Dec 2008 23:41:43 +0100
+
+openstreetmap-josm (12598) unstable; urgency=low
+
+   * updated version
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 26 Dec 2008 23:39:11 +0100
+
+openstreetmap-josm (12591) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 25 Dec 2008 19:15:07 +0100
+
+openstreetmap-josm (12590) unstable; urgency=low
+
+   * cleanup
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 25 Dec 2008 19:14:27 +0100
+
+openstreetmap-josm (12589) unstable; urgency=low
+
+   * cleanup
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 25 Dec 2008 19:08:21 +0100
+
+openstreetmap-josm (12588) unstable; urgency=low
+
+   * updated a lot
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 25 Dec 2008 19:01:06 +0100
+
+openstreetmap-josm (12587) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 25 Dec 2008 18:55:20 +0100
+
+openstreetmap-josm (12579) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 25 Dec 2008 14:36:26 +0100
+
+openstreetmap-josm (12576) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 25 Dec 2008 14:26:40 +0100
+
+openstreetmap-josm (12575) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 25 Dec 2008 14:25:37 +0100
+
+openstreetmap-josm (12566) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 25 Dec 2008 11:41:32 +0100
+
+openstreetmap-josm (12563) unstable; urgency=low
+
+   * unified strings
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 25 Dec 2008 11:30:46 +0100
+
+openstreetmap-josm (12547) unstable; urgency=low
+
+   * fixed import bug
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 24 Dec 2008 22:22:14 +0100
+
+openstreetmap-josm (12545) unstable; urgency=low
+
+   * get svnrevision the new way
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Wed, 24 Dec 2008 16:58:42 +0100
+
+openstreetmap-josm (12534) unstable; urgency=low
+
+   * Initial try for a makefile
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Wed, 24 Dec 2008 12:23:42 +0100
+
+openstreetmap-josm (12519) unstable; urgency=low
+
+   * updated en_GB.po
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 23 Dec 2008 22:10:26 +0100
+
+openstreetmap-josm (12513) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 23 Dec 2008 14:55:22 +0100
+
+openstreetmap-josm (12505) unstable; urgency=low
+
+   * cleanup, update ro, fix fr
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 23 Dec 2008 12:27:30 +0100
+
+openstreetmap-josm (12494) unstable; urgency=low
+
+   * removed build dir
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 23:27:26 +0100
+
+openstreetmap-josm (12493) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 23:25:42 +0100
+
+openstreetmap-josm (12491) unstable; urgency=low
+
+   * minor cleanup
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 21:33:27 +0100
+
+openstreetmap-josm (12486) unstable; urgency=low
+
+   * updated shortcut handling
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 18:37:46 +0100
+
+openstreetmap-josm (12485) unstable; urgency=low
+
+   * added more texts
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 18:37:08 +0100
+
+openstreetmap-josm (12484) unstable; urgency=low
+
+   * added more texts
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 18:36:46 +0100
+
+openstreetmap-josm (12479) unstable; urgency=low
+
+   * removed unimplemented stuff
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 16:52:22 +0100
+
+openstreetmap-josm (12478) unstable; urgency=low
+
+   * updated it,de,sv, cleanup the others
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 14:51:18 +0100
+
+openstreetmap-josm (12477) unstable; urgency=low
+
+   * version 0.5.8
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 14:50:51 +0100
+
+openstreetmap-josm (12476) unstable; urgency=low
+
+   * avoid ConcurrentModificationException by copying data.nodes to an array before rendering
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 14:48:12 +0100
+
+openstreetmap-josm (12475) unstable; urgency=low
+
+   * new version
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 14:47:27 +0100
+
+openstreetmap-josm (12474) unstable; urgency=low
+
+   * Compile each plugin and only insert the ones compiling, use new target to compile josm; add more commets to build script; add color to build output; add logfiles for compilation and reduce compile output
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 14:21:04 +0100
+
+openstreetmap-josm (12473) unstable; urgency=low
+
+   * fixed texts
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 14:19:35 +0100
+
+openstreetmap-josm (12472) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 14:07:54 +0100
+
+openstreetmap-josm (12471) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 22 Dec 2008 14:07:28 +0100
+
+openstreetmap-josm (12458) unstable; urgency=low
+
+   * fix bug #1541
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 21 Dec 2008 23:42:25 +0100
+
+openstreetmap-josm (12451) unstable; urgency=low
+
+   * chalet: Sennh?\195?\188tte -> Ferienhaus
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sun, 21 Dec 2008 14:17:39 +0100
+
+openstreetmap-josm (12444) unstable; urgency=low
+
+   * remember id
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 20 Dec 2008 22:53:32 +0100
+
+openstreetmap-josm (12443) unstable; urgency=low
+
+   * fixed typo
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 20 Dec 2008 22:47:11 +0100
+
+openstreetmap-josm (12440) unstable; urgency=low
+
+   * fixed image shifting wmsplugin.jar
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 20 Dec 2008 14:56:48 +0100
+
+openstreetmap-josm (12439) unstable; urgency=low
+
+   * fixed image shifting
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 20 Dec 2008 14:56:13 +0100
+
+openstreetmap-josm (12438) unstable; urgency=low
+
+   * fixed image shifting
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 20 Dec 2008 14:55:53 +0100
+
+openstreetmap-josm (12437) unstable; urgency=low
+
+   * fixed text
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 20 Dec 2008 14:03:31 +0100
+
+openstreetmap-josm (12432) unstable; urgency=low
+
+   * new import action for JOSM remote control plugin
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Sat, 20 Dec 2008 02:03:14 +0100
+
+openstreetmap-josm (12431) unstable; urgency=low
+
+   * - new import command for JOSM remote control plugin
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Sat, 20 Dec 2008 02:02:42 +0100
+
+openstreetmap-josm (12427) unstable; urgency=low
+
+   * fixed typo
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 19 Dec 2008 18:57:55 +0100
+
+openstreetmap-josm (12421) unstable; urgency=low
+
+   * fixed large picture problem
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 19 Dec 2008 12:14:11 +0100
+
+openstreetmap-josm (12418) unstable; urgency=low
+
+   * new
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Thu, 18 Dec 2008 15:33:17 +0100
+
+openstreetmap-josm (12417) unstable; urgency=low
+
+   * + strassen nrw
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Thu, 18 Dec 2008 15:27:51 +0100
+
+openstreetmap-josm (12400) unstable; urgency=low
+
+   * version 0.5.7
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Wed, 17 Dec 2008 20:33:52 +0100
+
+openstreetmap-josm (12399) unstable; urgency=low
+
+   * version 0.5.7
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Wed, 17 Dec 2008 20:27:12 +0100
+
+openstreetmap-josm (12398) unstable; urgency=low
+
+   * assigned a name to the download thread
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Wed, 17 Dec 2008 20:01:06 +0100
+
+openstreetmap-josm (12397) unstable; urgency=low
+
+   * precise -> precisely
+
+ -- hampelratte via osm-dev List <dev@openstreetmap.org>  Wed, 17 Dec 2008 19:58:58 +0100
+
+openstreetmap-josm (12378) unstable; urgency=low
+
+   * Parkplatz -> Parken (betrifft ja jetzt auch Parkh?\195?\164user und Tiefgaragen)
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Tue, 16 Dec 2008 12:15:19 +0100
+
+openstreetmap-josm (12345) unstable; urgency=low
+
+   * added some translations
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 14 Dec 2008 15:12:53 +0100
+
+openstreetmap-josm (12344) unstable; urgency=low
+
+   * clarification of gate and castle
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sun, 14 Dec 2008 14:55:24 +0100
+
+openstreetmap-josm (12343) unstable; urgency=low
+
+   * finished german translation
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 14 Dec 2008 14:26:44 +0100
+
+openstreetmap-josm (12340) unstable; urgency=low
+
+   * improve some of the vending_machine translations
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sun, 14 Dec 2008 01:45:35 +0100
+
+openstreetmap-josm (12339) unstable; urgency=low
+
+   * add some more translations
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sun, 14 Dec 2008 01:19:06 +0100
+
+openstreetmap-josm (12338) unstable; urgency=low
+
+   * ?\195?\150ffentlicher Nahverkehr -> ?\195?\150ffentliche Verkehrsmittel (e.g. airport is usually not near)
+   * fix a typo
+
+ -- Ulf Lamping via osm-dev List <dev@openstreetmap.org>  Sun, 14 Dec 2008 00:20:11 +0100
+
+openstreetmap-josm (12336) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 20:17:59 +0100
+
+openstreetmap-josm (12335) unstable; urgency=low
+
+   * made defaults dynamic
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 20:17:21 +0100
+
+openstreetmap-josm (12334) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 20:17:15 +0100
+
+openstreetmap-josm (12333) unstable; urgency=low
+
+   * added sources.cfg
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 20:00:15 +0100
+
+openstreetmap-josm (12332) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 19:44:07 +0100
+
+openstreetmap-josm (12331) unstable; urgency=low
+
+   * updated URL's
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 19:43:45 +0100
+
+openstreetmap-josm (12330) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 19:21:35 +0100
+
+openstreetmap-josm (12329) unstable; urgency=low
+
+   * added Oberpfalz
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 19:21:09 +0100
+
+openstreetmap-josm (12328) unstable; urgency=low
+
+   * renamed
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 18:44:47 +0100
+
+openstreetmap-josm (12327) unstable; urgency=low
+
+   * updated ywms
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 18:42:38 +0100
+
+openstreetmap-josm (12326) unstable; urgency=low
+
+   * removed
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 18:40:43 +0100
+
+openstreetmap-josm (12325) unstable; urgency=low
+
+   * removed
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 18:40:18 +0100
+
+openstreetmap-josm (12322) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 18:19:28 +0100
+
+openstreetmap-josm (12321) unstable; urgency=low
+
+   * updated default entry handling
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 13 Dec 2008 18:11:39 +0100
+
+openstreetmap-josm (12280) unstable; urgency=low
+
+   * Trac#1807 use josm action to merge nodes (to avoid ways corruption).
+   * Create plugin directory if missing used to store ignorederrors file.
+   * Better support of projections (gridDetail)
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Tue, 09 Dec 2008 23:56:10 +0100
+
+openstreetmap-josm (12279) unstable; urgency=low
+
+   * Trac#1807 use josm action to merge nodes (to avoid ways corruption).
+   * Create plugin directory if missing used to store ignorederrors file.
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Tue, 09 Dec 2008 23:53:05 +0100
+
+openstreetmap-josm (12259) unstable; urgency=low
+
+   * publish new lakewalker after fix #1808
+
+ -- stephankn via osm-dev List <dev@openstreetmap.org>  Mon, 08 Dec 2008 01:49:21 +0100
+
+openstreetmap-josm (12257) unstable; urgency=low
+
+   * Grid detail fixing cells sizes in crossing ways detection is now different for the three existing projections (size closer than earlier). Not a definitive solution. Fixes heap memory exception with Lambert.
+
+ -- pieren via osm-dev List <dev@openstreetmap.org>  Mon, 08 Dec 2008 00:46:41 +0100
+
+openstreetmap-josm (12256) unstable; urgency=low
+
+   * updated required josm version because of renamed class Shortcut
+
+ -- stephankn via osm-dev List <dev@openstreetmap.org>  Sun, 07 Dec 2008 22:30:24 +0100
+
+openstreetmap-josm (12255) unstable; urgency=low
+
+   * Enable the user to control the maximum size/age of the lakewalker cache. Close ticket #1808
+
+ -- stephankn via osm-dev List <dev@openstreetmap.org>  Sun, 07 Dec 2008 22:09:45 +0100
+
+openstreetmap-josm (12190) unstable; urgency=low
+
+   * updated versions
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 02 Dec 2008 17:35:39 +0100
+
+openstreetmap-josm (12189) unstable; urgency=low
+
+   * added build to ignore
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 02 Dec 2008 17:35:03 +0100
+
+openstreetmap-josm (12187) unstable; urgency=low
+
+   * fixed some warnings, added new shortcur handling
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 02 Dec 2008 17:21:16 +0100
+
+openstreetmap-josm (12186) unstable; urgency=low
+
+   * fixed bug #1789
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 02 Dec 2008 16:58:23 +0100
+
+openstreetmap-josm (12155) unstable; urgency=low
+
+   * removed crap
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 01 Dec 2008 09:46:38 +0100
+
+openstreetmap-josm (12154) unstable; urgency=low
+
+   * new attempt at new translation...
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Mon, 01 Dec 2008 01:58:50 +0100
+
+openstreetmap-josm (12104) unstable; urgency=low
+
+   * fix JOSM bug 1483
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 27 Nov 2008 08:16:01 +0100
+
+openstreetmap-josm (12093) unstable; urgency=low
+
+   * finally found a way to handle resize events
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 26 Nov 2008 16:25:48 +0100
+
+openstreetmap-josm (12077) unstable; urgency=low
+
+   * fixed de a bit more, updated all others to current state
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 25 Nov 2008 19:39:37 +0100
+
+openstreetmap-josm (12075) unstable; urgency=low
+
+   * down to 15 missing translation for de
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Tue, 25 Nov 2008 19:27:19 +0100
+
+openstreetmap-josm (12022) unstable; urgency=low
+
+   * cleanup of build.xml
+
+ -- ramack via osm-dev List <dev@openstreetmap.org>  Fri, 21 Nov 2008 17:45:22 +0100
+
+openstreetmap-josm (12009) unstable; urgency=low
+
+   * fixed Windows problems?
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Thu, 20 Nov 2008 18:41:43 +0100
+
+openstreetmap-josm (12001) unstable; urgency=low
+
+   * new french translation by Frederic Bonifas
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Thu, 20 Nov 2008 00:17:42 +0100
+
+openstreetmap-josm (11991) unstable; urgency=low
+
+   * updated
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 19 Nov 2008 19:11:15 +0100
+
+openstreetmap-josm (11990) unstable; urgency=low
+
+   * sometimes white is not white
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 19 Nov 2008 19:09:03 +0100
+
+openstreetmap-josm (11988) unstable; urgency=low
+
+   * changed to JPEG
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 19 Nov 2008 18:48:14 +0100
+
+openstreetmap-josm (11986) unstable; urgency=low
+
+   * minor fix for windows
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Wed, 19 Nov 2008 18:16:40 +0100
+
+openstreetmap-josm (11979) unstable; urgency=low
+
+   * new JOSM plugin builds to match JOSM class name change
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Tue, 18 Nov 2008 20:19:49 +0100
+
+openstreetmap-josm (11978) unstable; urgency=low
+
+   * - fix destination path for OSB plugin build
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Tue, 18 Nov 2008 20:18:30 +0100
+
+openstreetmap-josm (11977) unstable; urgency=low
+
+   * fix basedir in OSB Plugin's build properties
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Tue, 18 Nov 2008 20:16:19 +0100
+
+openstreetmap-josm (11976) unstable; urgency=low
+
+   * manually bump version number since tcx plugin doesn't do it
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Tue, 18 Nov 2008 20:14:15 +0100
+
+openstreetmap-josm (11975) unstable; urgency=low
+
+   * manually bump version number for plugins that don't do so automatically
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Tue, 18 Nov 2008 20:12:58 +0100
+
+openstreetmap-josm (11974) unstable; urgency=low
+
+   * changes in some JOSM plugins due to a renamed class in JOSM.
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Tue, 18 Nov 2008 20:04:58 +0100
+
+openstreetmap-josm (11952) unstable; urgency=low
+
+   * explain that source of ewmsplugin.jar is actually in plugins/wmsplugin
+
+ -- lindi via osm-dev List <dev@openstreetmap.org>  Mon, 17 Nov 2008 11:41:41 +0100
+
+openstreetmap-josm (11949) unstable; urgency=low
+
+   * no Commit Message
+
+
+ -- subhodip via osm-dev List <dev@openstreetmap.org>  Mon, 17 Nov 2008 03:56:14 +0100
+
+openstreetmap-josm (11938) unstable; urgency=low
+
+   * some locale fixes
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 15 Nov 2008 13:55:26 +0100
+
+openstreetmap-josm (11937) unstable; urgency=low
+
+   * update to JOSM ShortCut handling
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 15 Nov 2008 13:35:53 +0100
+
+openstreetmap-josm (11936) unstable; urgency=low
+
+   * changed build a bit
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sat, 15 Nov 2008 13:35:07 +0100
+
+openstreetmap-josm (11934) unstable; urgency=low
+
+   * updated to current JOSM stuff
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 14 Nov 2008 22:04:35 +0100
+
+openstreetmap-josm (11925) unstable; urgency=low
+
+   * removed other obsolete stuff
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 14 Nov 2008 12:11:30 +0100
+
+openstreetmap-josm (11924) unstable; urgency=low
+
+   * updated lakewalker integration to current JOSM
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Fri, 14 Nov 2008 12:04:03 +0100
+
+openstreetmap-josm (11921) unstable; urgency=low
+
+   * new build, fix NPE
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Fri, 14 Nov 2008 01:30:55 +0100
+
+openstreetmap-josm (11920) unstable; urgency=low
+
+   * bugfix lakewalker NPE by Stephan <osm@stephans-server.de>
+
+ -- Frederik Ramm via osm-dev List <dev@openstreetmap.org>  Fri, 14 Nov 2008 01:25:22 +0100
+
+openstreetmap-josm (11861) unstable; urgency=low
+
+   * added ShortCut support
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Mon, 10 Nov 2008 09:13:31 +0100
+
+openstreetmap-josm (11824) unstable; urgency=low
+
+   * some more translations
+
+ -- stoecker via osm-dev List <dev@openstreetmap.org>  Sun, 09 Nov 2008 11:32:35 +0100
+
+openstreetmap-josm (11709) unstable; urgency=low
+
+   * josm/debian/changelog: chance coding of mail addresses in changelog
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Wed, 05 Nov 2008 20:27:14 +0100
+
 openstreetmap-josm (11708) unstable; urgency=low
 
    * josm/debian: before starting the package, remove all jar Files in order to have a clean compile

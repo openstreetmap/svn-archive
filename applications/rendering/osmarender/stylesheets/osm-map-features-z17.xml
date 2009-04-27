@@ -2226,10 +2226,13 @@
 		<rule e="way" k="man_made" v="breakwater">
 			<line class="breakwater"/>
 		</rule>
-		<rule e="way" k="man_made" v="pier">
+		<rule e="way" k="man_made" v="pier" closed="yes">
+			<line class="artificial-pier-area"/>
+		</rule>
+		<rule e="way" k="man_made" v="pier" closed="no">
 			<line class="artificial-pier-casing"/>
 		</rule>
-		<rule e="way" k="man_made" v="pier">
+		<rule e="way" k="man_made" v="pier" closed="no">
 			<line class="artificial-pier-core"/>
 		</rule>
 
@@ -4190,6 +4193,12 @@
 			fill: none;
 			stroke-width: 0.8px;
 			stroke: #707070;
+			}
+
+			.artificial-pier-area {
+			stroke: #d0d0d0;
+			stroke-width: 0.05px;
+			fill: #e4e4e4;
 			}
 
 			.artificial-pier-core {

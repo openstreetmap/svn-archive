@@ -1105,10 +1105,13 @@
 		</rule>
 		
 		<!-- Draw marine features -->
-		<rule e="way" k="man_made" v="pier">
+		<rule e="way" k="man_made" v="pier" closed="yes">
+			<line class="artificial-pier-area"/>
+		</rule>
+		<rule e="way" k="man_made" v="pier" closed="no">
 			<line class="artificial-pier-casing"/>
 		</rule>
-		<rule e="way" k="man_made" v="pier">
+		<rule e="way" k="man_made" v="pier" closed="no">
 			<line class="artificial-pier-core"/>
 		</rule>
 		
@@ -2036,6 +2039,12 @@
 			opacity: 0.5;
 			}
 			
+			.artificial-pier-area {
+			stroke: #d0d0d0;
+			stroke-width: 0.1px;
+			fill: #e4e4e4;
+			}
+
 			.artificial-pier-core {
 			stroke-width: 0.6px;
 			stroke-linecap: butt;

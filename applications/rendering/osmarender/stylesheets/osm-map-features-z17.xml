@@ -2223,6 +2223,9 @@
 		</rule>
 
 		<!-- Draw marine features -->
+		<rule e="way" k="man_made" v="breakwater">
+			<line class="breakwater"/>
+		</rule>
 		<rule e="way" k="man_made" v="pier">
 			<line class="artificial-pier-casing"/>
 		</rule>
@@ -4181,6 +4184,12 @@
 			fill: #fcffef;
 			stroke-dasharray: 0.3, 1.7;
 			opacity: 0.5;
+			}
+
+			.breakwater {
+			fill: none;
+			stroke-width: 0.8px;
+			stroke: #707070;
 			}
 
 			.artificial-pier-core {

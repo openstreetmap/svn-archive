@@ -1,4 +1,5 @@
 v0.13.2
+	* FIX : Set version of newly uploaded objects at 1.
     * FIX : Graphical corruption on Intel chipsets when "Show downloaded areas" was enabled
     * FIX : API 0.6: Fix info dock links
     * FIX : Problem with "center" & "center & zoom" from the properties dock

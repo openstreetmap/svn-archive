@@ -1141,6 +1141,14 @@
 		<rule e="node|way" k="amenity" v="hospital">
 			<symbol ref="hospital" position="center"/>
 		</rule>
+		<rule e="node|way" k="amenity" v="shelter">
+			<rule e="node|way" k="fireplace" v="yes">
+				<symbol ref="shelter-fireplace" position="center"/>
+			</rule>
+			<else>
+				<symbol ref="shelter" position="center"/>
+			</else>
+		</rule>
 		
 		<!-- ==================================== Layer -5 ======================================== -->
 		

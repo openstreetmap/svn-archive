@@ -73,7 +73,7 @@ for lib in ccoord libosm libimg  ; do
     echo "${BLUE}----------> applications/lib/$lib${NORMAL}"
     cd ../lib/$lib
 
-    rm build.log build.err
+    rm -f build.log build.err
     if [ -s "configure" ] ;then
 	./configure >>build.log 2>>build.err
     fi
@@ -108,7 +108,7 @@ for lib in Geo-OSM-MapFeatures ; do
     echo "${BLUE}----------> applications/lib/$lib${NORMAL} (Compile only)"
     cd ../lib/$lib
 
-    rm build.log build.err
+    rm -f build.log build.err
     if [ -s "configure" ] ;then
 	./configure >>build.log 2>>build.err
     fi
@@ -155,7 +155,7 @@ for import in `ls import/*/Makefile| sed 's,/Makefile,,;s,import/,,'` ; do
     echo "${BLUE}----------> applications/utils/import/$import${NORMAL}"
     cd import/$import/
 
-    rm build.log build.err
+    rm -f build.log build.err
     if [ -s "configure" ] ;then
 	./configure >>build.log 2>>build.err
     fi
@@ -189,7 +189,7 @@ for filter in `ls filter/*/Makefile| sed 's,/Makefile,,;s,filter/,,'` ; do
     echo "${BLUE}----------> applications/utils/filter/${filter}${NORMAL}"
     cd filter/${filter}  || exit -1
 
-    rm build.log build.err
+    rm -f build.log build.err
     if [ -s "configure" ] ;then
 	./configure >>build.log 2>>build.err
     fi
@@ -223,7 +223,7 @@ for export in `ls export/*/Makefile  export/*/CMakeLists.txt| sed 's,/Makefile,,
     echo "${BLUE}----------> applications/utils/export/${export}${NORMAL}"
     cd export/${export}  || exit -1
     
-    rm build.log build.err
+    rm -f build.log build.err
 
     if [ -s "configure" ] ;then
 	./configure >>build.log 2>>build.err
@@ -282,7 +282,7 @@ if true ; then
     echo "${BLUE}----------> applications/utils/color255${NORMAL}"
     cd color255 || exit -1
 
-    rm build.log build.err
+    rm -f build.log build.err
     if [ -s "configure" ] ;then
 	./configure >>build.log 2>>build.err
     fi
@@ -303,7 +303,7 @@ if true; then
     echo "${BLUE}----------> applications/planet.osm/C/UTF8Sanitizer${NORMAL}${NORMAL}"
     cd planet.osm/C/  || exit -1
 
-    rm build.log build.err
+    rm -f build.log build.err
     if [ -s "configure" ] ;then
 	./configure >>build.log 2>>build.err
     fi

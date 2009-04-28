@@ -3636,11 +3636,11 @@
 
 			.highway-unclassified-bridge-casing     { stroke-width: 2.2px; }
 			.highway-unclassified-bridge-core       { stroke-width: 2.0px; }
-			.highway-unclassified-casing            { stroke-width: 1.5px;  stroke: #707070; }
-			.highway-unclassified-cy1-casing        { stroke-width: 2.3px;  stroke: #707070; }
-			.highway-unclassified-cy2-casing        { stroke-width: 2.05px;  stroke: #d1fad1; }
+			.highway-unclassified-casing            { stroke-width: 1.7px;  stroke: #707070; }
+			.highway-unclassified-cy1-casing        { stroke-width: 2.5px;  stroke: #707070; }
+			.highway-unclassified-cy2-casing        { stroke-width: 2.25px;  stroke: #d1fad1; }
 			.highway-unclassified-area-casing       { stroke-width: 0.3px; }
-			.highway-unclassified-core              { stroke-width: 1.15px; stroke: #ffffff; }
+			.highway-unclassified-core              { stroke-width: 1.35px; stroke: #ffffff; }
 			.highway-residential-casing             { stroke-width: 1.5px;  stroke: #707070; }
 			.highway-residential-cy1-casing         { stroke-width: 2.3px;  stroke: #707070; }
 			.highway-residential-cy2-casing         { stroke-width: 2.15px; stroke: #d1fad1; }

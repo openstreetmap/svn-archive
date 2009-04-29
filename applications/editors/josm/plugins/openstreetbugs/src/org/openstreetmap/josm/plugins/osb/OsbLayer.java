@@ -77,7 +77,11 @@ public class OsbLayer extends Layer implements MouseListener {
             }
         });
 
-        Main.map.mapView.addMouseListener(this);
+        // if the map layer has been closed, while we are requesting the osb db,
+        // the mapframe is null, so we check that, before installing the mouse listener
+        if(Main.map != null && Main.map.mapView != null) { 
+            Main.map.mapView.addMouseListener(this);
+        }
     }
 
     @Override

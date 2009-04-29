@@ -107,53 +107,48 @@ public class TextInputDialog extends JDialog {
     }
 
     private void initGUI() {
-        BorderLayout thisLayout = new BorderLayout();
-        getContentPane().setLayout(thisLayout);
-        thisLayout.setHgap(5);
-        thisLayout.setVgap(5);
+        getContentPane().setLayout(new BorderLayout());
         {
-            pnlMain = new JPanel();
-            GridBagLayout pnlMainLayout = new GridBagLayout();
-            pnlMainLayout.rowWeights = new double[] {0.1, 0.1, 0.1};
-            pnlMainLayout.rowHeights = new int[] {7, 7, 7};
-            pnlMainLayout.columnWeights = new double[] {0.1, 0.1};
-            pnlMainLayout.columnWidths = new int[] {7, 7};
-            getContentPane().add(pnlMain, BorderLayout.CENTER);
-            pnlMain.setLayout(pnlMainLayout);
-            pnlMain.setPreferredSize(new java.awt.Dimension(487, 132));
+            lblIcon = new JLabel();
+            lblIcon.setVerticalAlignment(SwingConstants.TOP);
+            lblIcon.setVerticalTextPosition(SwingConstants.TOP);
+            lblIcon.setPreferredSize(new java.awt.Dimension(22, 109));
+            lblIcon.setMinimumSize(new java.awt.Dimension(22, 100));
+            JPanel pnlIcon = new JPanel(new GridBagLayout());
+            pnlIcon.add(lblIcon, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(10, 10, 10, 10), 0, 0));
+            getContentPane().add(pnlIcon, BorderLayout.WEST);
+        }
+        pnlMain = new JPanel();
+        GridBagLayout pnlMainLayout = new GridBagLayout();
+        getContentPane().add(pnlMain, BorderLayout.CENTER);
+        pnlMain.setLayout(pnlMainLayout);
+        pnlMain.setPreferredSize(new java.awt.Dimension(487, 132));
+        {
+            lblText = new JLabel();
+            pnlMain.add(lblText, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
+        }
+        {
+            input = new SuggestingJHistoryComboBox();
+            pnlMain.add(input, new GridBagConstraints(1, 1, 1, 1, 0.9, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 10), 0, 0));
+            input.setSize(503, 22);
+        }
+        {
+            pnlButtons = new JPanel();
+            FlowLayout pnlButtonsLayout = new FlowLayout();
+            pnlButtonsLayout.setAlignment(FlowLayout.RIGHT);
+            pnlMain.add(pnlButtons, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTHEAST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+            pnlButtons.setLayout(pnlButtonsLayout);
             {
-                lblIcon = new JLabel();
-                pnlMain.add(lblIcon, new GridBagConstraints(0, 0, 1, 3, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(10, 10, 10, 10), 0, 0));
-                lblIcon.setVerticalAlignment(SwingConstants.TOP);
-                lblIcon.setVerticalTextPosition(SwingConstants.TOP);
+                btnOk = new JButton();
+                pnlButtons.add(btnOk);
+                btnOk.setText(tr("OK"));
+                btnOk.setPreferredSize(new java.awt.Dimension(100, 25));
             }
             {
-                lblText = new JLabel();
-                pnlMain.add(lblText, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
-            }
-            {
-                input = new SuggestingJHistoryComboBox();
-                pnlMain.add(input, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-                input.setSize(503, 22);
-            }
-            {
-                pnlButtons = new JPanel();
-                FlowLayout pnlButtonsLayout = new FlowLayout();
-                pnlButtonsLayout.setAlignment(FlowLayout.RIGHT);
-                pnlMain.add(pnlButtons, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTHEAST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-                pnlButtons.setLayout(pnlButtonsLayout);
-                {
-                    btnOk = new JButton();
-                    pnlButtons.add(btnOk);
-                    btnOk.setText(tr("OK"));
-                    btnOk.setPreferredSize(new java.awt.Dimension(100, 25));
-                }
-                {
-                    btnCancel = new JButton();
-                    pnlButtons.add(btnCancel);
-                    btnCancel.setText(tr("Cancel"));
-                    btnCancel.setPreferredSize(new java.awt.Dimension(100, 25));
-                }
+                btnCancel = new JButton();
+                pnlButtons.add(btnCancel);
+                btnCancel.setText(tr("Cancel"));
+                btnCancel.setPreferredSize(new java.awt.Dimension(100, 25));
             }
         }
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

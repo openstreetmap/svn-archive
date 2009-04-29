@@ -96,10 +96,10 @@ public class NewIssueAction extends OsbAction implements MouseListener {
     }
 
     private void addNewIssue(MouseEvent e) {
-        List<String> history = StringUtils.stringToList(Main.pref.get("osb.new.history"), "§§§");
+        List<String> history = StringUtils.stringToList(Main.pref.get(ConfigKeys.OSB_NEW_HISTORY), "§§§");
         HistoryChangedListener l = new HistoryChangedListener() {
             public void historyChanged(List<String> history) {
-                Main.pref.put("osb.new.history", StringUtils.listToString(history, "§§§"));
+                Main.pref.put(ConfigKeys.OSB_NEW_HISTORY, StringUtils.listToString(history, "§§§"));
             }
         };
         String result = TextInputDialog.showDialog(

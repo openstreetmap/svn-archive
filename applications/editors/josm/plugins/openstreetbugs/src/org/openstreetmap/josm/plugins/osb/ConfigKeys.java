@@ -30,11 +30,13 @@ package org.openstreetmap.josm.plugins.osb;
 public class ConfigKeys {
     public static final String OSB_API_DISABLED = "osb.api.disabled";
     public static final String OSB_API_URI_CLOSE = "osb.uri.close";
-    public static final String OSB_API_URI_EDIT = "osb.uri.edit";
     public static final String OSB_API_URI_DOWNLOAD = "osb.uri.download";
+    public static final String OSB_API_URI_EDIT = "osb.uri.edit";
     public static final String OSB_API_URI_NEW = "osb.uri.new";
-    public static final String OSB_NICKNAME = "osb.nickname";
     public static final String OSB_AUTO_DOWNLOAD = "osb.auto_download";
     public static final String OSB_BUTTON_LABELS = "osb.button_labels";
+    public static final String OSB_COMMENT_HISTORY = "osb.comment.history";
     public static final String OSB_INCLUDE_DATE = "osb.include_date";
+    public static final String OSB_NEW_HISTORY = "osb.new.history";
+    public static final String OSB_NICKNAME = "osb.nickname";
 }

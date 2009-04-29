@@ -33,6 +33,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.EditAction;
 import org.openstreetmap.josm.plugins.osb.gui.dialogs.TextInputDialog;
@@ -51,10 +52,10 @@ public class AddCommentAction extends OsbAction {
 
     @Override
     protected void doActionPerformed(ActionEvent e) throws Exception {
-        List<String> history = StringUtils.stringToList(Main.pref.get("osb.comment.history"), "§§§");
+        List<String> history = StringUtils.stringToList(Main.pref.get(ConfigKeys.OSB_COMMENT_HISTORY), "§§§");
         HistoryChangedListener l = new HistoryChangedListener() {
             public void historyChanged(List<String> history) {
-                Main.pref.put("osb.comment.history", StringUtils.listToString(history, "§§§"));
+                Main.pref.put(ConfigKeys.OSB_COMMENT_HISTORY, StringUtils.listToString(history, "§§§"));
             }
         };
         String comment = TextInputDialog.showDialog(

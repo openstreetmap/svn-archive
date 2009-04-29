@@ -151,7 +151,12 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 
             // display the parsed data
             if(!dataSet.nodes.isEmpty()) {
-                updateGui();
+                // if the map layer has been closed, while we are requesting the osb db,
+                // we don't have to update the gui, because the user is not interested
+                // in this area anymore
+                if(Main.map != null && Main.map.mapView != null) {
+                    updateGui();
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(Main.parent, e.getMessage());

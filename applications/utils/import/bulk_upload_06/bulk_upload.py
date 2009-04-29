@@ -47,6 +47,9 @@ import os
 
 api_host='http://api.openstreetmap.org'
 #api_host='http://api06.dev.openstreetmap.org'
+headers = {
+    'User-Agent' : 'bulk_upload.py',
+}
 
 
 class ImportProcessor:

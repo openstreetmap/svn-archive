@@ -147,6 +147,7 @@
 			_root.map.ways[last].path.splice(poslist[qway],0,_root.nodes[id]);
 			_root.map.ways[last].clean=false;
 			_root.map.ways[last].redraw();
+			var z=_root.map.ways[last].deletednodes; delete z[id];
 		}
 		stopDrawing();
 		_root.map.ways[last].select();

@@ -9,6 +9,7 @@
 		this.path=new Array();			// list of nodes
 		this.attr=new Array();			// hash of tags
 		this.mergedways=new Array();	// list of ways merged into this
+		this.deletednodes=new Object();	// hash of nodes deleted from this
 	};
 
 	OSMWay.prototype=new MovieClip();
@@ -275,7 +276,7 @@
 		this.deleteMergedWays();
 		this.removeNodeIndex();
 
-		if (this._name>=0 && !_root.sandbox && !this.historic) {
+		if (this._name>=0 && !_root.sandbox && !this.historic && !this.locked) {
 			deleteresponder = function() { };
 			deleteresponder.onResult = function(result) {
 				var code=result.shift(); if (code) { handleError(code,result); return; }
@@ -285,10 +286,9 @@
 				_root.writesrequested--;
 			};
 			_root.writesrequested++;
-			var nodeversions=new Object(); var z=this.path;
-			for (var i in z) { nodeversions[z[i].id]=z[i].version; }
-//			_root.chat.text+="deleteway("+this._name+")";
-			remote_write.call('deleteway',deleteresponder,_root.usertoken,_root.changeset,Number(this._name),Number(this.version),nodeversions);
+			var z=shallowCopy(this.path); this.path=new Array();
+			for (var i in z) { this.markAsDeleted(z[i]); }
+			remote_write.call('deleteway',deleteresponder,_root.usertoken,_root.changeset,Number(this._name),Number(this.version),this.deletednodes);
 		} // else {
 		if (this._name==wayselected) { stopDrawing(); deselectAll(); }
 		removeMovieClip(_root.map.areas[this._name]);
@@ -353,9 +353,8 @@
 			}
 			for (var oid in z) { delete _root.nodes[oid]; }	// delete -ve nodes
 			
-			// set versions
-			z=result[4];
-			for (var nid in z) { nodes[nid].version=result[4][nid]; }
+			z=result[4]; for (var nid in z) { nodes[nid].version=result[4][nid]; }			// set versions
+			z=result[5]; for (var nid in z) { c=_root.map.ways[nw]; delete c.deletednodes[nid]; }	// remove deleted nodes
 			
 			_root.map.ways[nw].clearPOIs();
 			uploadDirtyRelations();
@@ -365,6 +364,8 @@
 		};
 
 		if (!this.uploading && !this.hasDependentNodes() && !this.locked && !_root.sandbox && this.path.length>1) {
+			this.deleteMergedWays();
+
 			// Assemble list of changed nodes, and send
 			this.uploading=true;
 			var sendpath =new Array();
@@ -380,7 +381,7 @@
 				}
 			}
 			_root.writesrequested++;
-			remote_write.call('putway',putresponder,_root.usertoken,_root.changeset,this.version,Number(this._name),sendpath,this.attr,sendnodes);
+			remote_write.call('putway',putresponder,_root.usertoken,_root.changeset,this.version,Number(this._name),sendpath,this.attr,sendnodes,this.deletednodes);
 			this.clean=true;
 		}
 	};
@@ -392,6 +393,7 @@
 			var i=this.mergedways.shift();
 			_root.map.ways.attachMovie("way",i[0],++waydepth);	// can't remove unless the movieclip exists!
 			_root.map.ways[i[0]].version=i[1];					//  |
+			_root.map.ways[i[2]].deletednodes=i[2];				//  |
 			_root.map.ways[i[0]].remove();
 		}
 	};
@@ -676,9 +678,11 @@
 			}													//  |
 		}														//  |
 		memberDeleted('Way', otherway._name);					// then remove old way from them
+		z=otherway.deletednodes;								//  | and its deletednodes
+		for (i in z) { memberDeleted('Node',z[i]); }			//  |
 
 		// Add to list of merged ways (so they can be deleted on next putway)
-		this.mergedways.push(new Array(otherway._name,otherway.version));
+		this.mergedways.push(new Array(otherway._name,otherway.version,otherway.deletednodes));
 		this.mergedways.concat(otherway.mergedways);
 		this.clean=false;
 		markClean(false);
@@ -745,6 +749,19 @@
 			}
 		}
 	};
+
+	// ----	Add node to deleted list
+	//		(should have been removed from way first)
+	
+	OSMWay.prototype.markAsDeleted=function(rnode) {
+		//	Check how many times it's used in this way
+		var z=this.path; var d=true;
+		for (var i in z) { if (this.path[i].id==rnode.id) { d=false; } }
+
+		if (d) { rnode.removeWay(this._name); }
+		if (rnode.numberOfWays()==0 && rnode.id>0) { this.deletednodes[rnode.id]=rnode.version; }
+	};
+
 
 	// ----	Check for duplicates (e.g. when C is removed from ABCB)
 	
@@ -826,9 +843,11 @@
 						  			new Array(this._name),
 						  			new Array(point)),
 						  iText("deleting a point",'action_deletepoint'));
-		this.path[point].removeWay(this._name);
+		var rnode=this.path[point];
 		this.path.splice(point,1);
 		this.removeDuplicates();
+		this.markAsDeleted(rnode);
+		if (rnode.numberOfWays()==0) { memberDeleted('Node', rnode.id); }
 		if (this.path.length<2) { this.remove(); }
 						   else { this.redraw(); this.clean=false; }
 	};

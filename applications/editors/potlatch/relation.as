@@ -122,7 +122,6 @@
 		if (!this.uploading && !this.locked && !_root.sandbox ) {
 			this.uploading=true;
 			_root.writesrequested++;
-//			_root.chat.text+="putrelation("+this._name+")";
 			remote_write.call('putrelation', putresponder,
 				_root.usertoken, _root.changeset, this.version,
 				Math.floor(this._name),
@@ -359,7 +358,6 @@
 	}
 
 	function memberDeleted(type, id) {
-//		_root.chat.text+="memberDeleted("+type+" "+id+")";
 		var rels = _root.map.relations;
 		for ( r in rels )
 			rels[r].removeMemberDirty(type, id, true);

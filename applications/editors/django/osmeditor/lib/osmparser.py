@@ -52,7 +52,7 @@ class OSMObj:
     >>> o.tags['created_by'] = 'osmparser'
     >>> xml = o.toxml()
     >>> xml
-    '<osm version="0.5">\\n  <node lat="-5" lon="-5">\\n    <tag k="created_by" v="osmparser" />\\n  </node>\\n</osm>'
+    '<osm version="0.6">\\n  <node lat="-5" lon="-5">\\n    <tag k="created_by" v="osmparser" />\\n  </node>\\n</osm>'
     >>> shortxml = o.toxml(indent=False)
     >>> len(xml) > len(shortxml)
     True
@@ -75,9 +75,11 @@ class OSMObj:
     """
     type = None
     id = None
+    version = None
+    changeset = None
+    uid = None
     user = None
     timestamp = None
-    
     loc = None
 
     tags = None
@@ -85,8 +87,9 @@ class OSMObj:
     nodes = None
     members = None
 
-    def __init__(self, id=None, type=None, site_url="http://openstreetmap.org"):
+    def __init__(self, id=None, type=None, version=None, site_url="http://openstreetmap.org"):
         self.id = id
+        self.version = version
         self.tags = {}
         if type:
             self.setType(type)
@@ -127,7 +130,7 @@ class OSMObj:
 
     def api_url(self):
         id = self.id or "create"
-        return "%s/api/0.5/%s/%s" % (self.site_url, self.type, id)
+        return "%s/api/0.6/%s/%s" % (self.site_url, self.type, id)
     
     def local_url(self):
         return "/%s/%s/" % (self.type, self.id)
@@ -142,10 +145,10 @@ class OSMObj:
         return "%s/browse/%s/%s" % (self.site_url, self.type, self.id)
     
     def __str__(self):
-        return "%s %s" % (self.type.title(), self.id)
+        return "%s %s (%s)" % (self.type.title(), self.id, self.version)
 
     def __repr__(self):
-        start =  "<OSM %s %s" % (self.type.title(), self.id) 
+        start =  "<OSM %s %s (%s)" % (self.type.title(), self.id, self.version) 
         middle = ""
         if self.nodes:
             middle = "%s nodes" % len(self.nodes)
@@ -204,6 +207,9 @@ class OSMObj:
         
         if self.id:
             element.attrib['id'] = str(self.id)
+            
+        if self.version:
+            element.attrib['version'] = str(self.version)
 
         keys = self.tags.keys()
         keys.sort()
@@ -214,7 +220,7 @@ class OSMObj:
         
         if needs_parent:
             if parent == None:
-                parent = Element("osm", {"version": "0.5"})
+                parent = Element("osm", {"version": "0.6"})
             parent.append(element)
         else:
             parent = element
@@ -250,7 +256,7 @@ class OSMObj:
             'not_ok': []
         }    
         h = httplib2.Http()
-        url = "%s/api/0.5/%s/%s/relations" % (self.site_url, self.type, id)
+        url = "%s/api/0.6/%s/%s/relations" % (self.site_url, self.type, id)
         resp, content = h.request(url)
         data = parseString(content)
         add_to = 'ok'
@@ -258,7 +264,7 @@ class OSMObj:
             add_to = 'not_ok'
 
         if self.type == "node":
-            url = "%s/api/0.5/%s/%s/ways" % (self.site_url, self.type, id)
+            url = "%s/api/0.6/%s/%s/ways" % (self.site_url, self.type, id)
             resp, content = h.request(url)
             data = parseString(content)
             add_to = 'ok'
@@ -324,9 +330,13 @@ class ParseObjects(ContentHandler):
          """Handle creating the self.current node, and pulling tags/nd refs."""
          
          if name in ['node', 'way', 'relation']:
-            self.current = OSMObj(int(attr['id']), name, site_url=self.site_url)
+            self.current = OSMObj(int(attr['id']), name, int(attr['version']), site_url=self.site_url)
+            if attr.has_key("changeset"):
+                self.current.changeset = int(attr['changeset'])
             if attr.has_key("user"):
                 self.current.user = attr['user']
+            if attr.has_key("uid"):
+                self.current.uid = int(attr['uid'])
             if attr.has_key("timestamp"):
                 self.current.timestamp = attr['timestamp']
          
@@ -354,7 +364,7 @@ class ParseObjects(ContentHandler):
 def parse(f, arrange=True, site_url = "http://openstreetmap.org"):
     """
     >>> import urllib
-    >>> u = urllib.urlopen("http://openstreetmap.org/api/0.5/way/29787178/full")
+    >>> u = urllib.urlopen("http://openstreetmap.org/api/0.6/way/29787178/full")
     >>> data = parse(u)
     >>> way = data['ways'][29787178]
     >>> node0 = way.nodes[0]
@@ -380,7 +390,7 @@ def parse(f, arrange=True, site_url = "http://openstreetmap.org"):
 
 def parseString(data, arrange=True, site_url = "http://openstreetmap.org"):
     """
-    >>> nodeXML = '<osm version="0.5" generator="OpenStreetMap server"><node id="327260132" lat="42.3621444" lon="-71.0996605" user="crschmidt" visible="true" timestamp="2009-01-05T15:35:26+00:00"/></osm>'
+    >>> nodeXML = '<osm version="0.6" generator="OpenStreetMap server"><node id="327260132" lat="42.3621444" lon="-71.0996605" version="1" changeset="736637" user="crschmidt" uid="1034" visible="true" timestamp="2009-01-05T15:35:26Z"/></osm>'
     >>> data = parseString(nodeXML)
     >>> len(data['nodes'])
     1

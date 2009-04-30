@@ -126,7 +126,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.11";	// current version
+	var signature="Potlatch 0.11a";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
@@ -141,6 +141,7 @@
 						   "http://tile.openaerialmap.org/tiles/1.0.0/opentopomap-900913/!/!/!.jpg");
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
+	if (custombg) { preferences.data.bgtype=3; preferences.data.tilecustom=custombg; }		// custom background layer from JavaScript
 	if (preferences.data.bgtype       ==undefined) { preferences.data.bgtype       =2; }	// 1=tiles, 2=Yahoo, 3=custom, 4=none
 	if (preferences.data.tileset      ==undefined) { preferences.data.tileset      =3; }	// background layer
 	if (preferences.data.tilecustom   ==undefined) { preferences.data.tilecustom   =''; }	// custom background URL
@@ -707,6 +708,7 @@
 	}
 
 	function keyDelete(doall) {
+		var rnode;
 		if (_root.poiselected) {
 			// delete POI
 			_root.map.pois[poiselected].saveUndo(iText("deleting",'deleting'));
@@ -717,9 +719,10 @@
 							  new Array(deepCopy(_root.ws.path[drawpoint]),
 										[wayselected],[drawpoint]),
 							  iText("deleting a point",'action_deletepoint'));
-			_root.ws.path[drawpoint].removeWay(_root.wayselected);
-			if (_root.drawpoint==0) { _root.ws.path.shift(); }
-							   else { _root.ws.path.pop(); _root.drawpoint-=1; }
+//			_root.ws.path[drawpoint].removeWay(_root.wayselected);
+			if (_root.drawpoint==0) { rnode=_root.ws.path.shift(); }
+							   else { rnode=_root.ws.path.pop(); _root.drawpoint-=1; }
+			_root.ws.markAsDeleted(rnode);
 			if (_root.ws.path.length) {
 				_root.ws.clean=false;
 				markClean(false);

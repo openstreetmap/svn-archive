@@ -20,13 +20,14 @@
 	};
 
 	Node.prototype.removeFromAllWays=function() {
-		var qway,qs,x,y,attr;
+		var qway,qs,x,y,attr; var d=true;
 		var waylist=new Array(); var poslist=new Array();
 		var z=this.ways; for (qway in z) {	// was in _root.map.ways
 			for (qs=0; qs<_root.map.ways[qway].path.length; qs+=1) {
 				if (_root.map.ways[qway].path[qs]==this) {
 					waylist.push(qway); poslist.push(qs);
 					_root.map.ways[qway].path.splice(qs,1);
+					if (d) { _root.map.ways[qway].deletednodes[this.id]=this.version; d=false; }
 				}
 			}
 			_root.map.ways[qway].clean=false;

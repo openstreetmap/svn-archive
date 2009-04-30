@@ -24,7 +24,7 @@ foreach my $arg (@ARGV)
       if($line =~ /name=\"Plugin-Description\" +value=\"(.*)\"/)
       {
         $printed = 1;
-        print "/* Plugin $plugin */\ntr(\"$1\");\n";
+        print "/* Plugin $plugin */\ntr(\"$1\");\n" if($plugin ne "myPluginName");
       }
       elsif($line =~ /project name=\"(.*?)\"/)
       {

@@ -4,81 +4,50 @@
 **
 ** Maintaining versions
 ** ====================
-** see README.template 
+** see README.template
 **
 ** Usage
 ** =====
 ** To build it run
-** 
+**
 **    > ant  dist
 **
-** To install the generated plugin locally (in you default plugin directory) run 
-** 
-**    > ant  install
-** 
-** The generated plugin jar is not automatically available in JOSMs plugin configuration
-** dialog. You have to check it in first. To check in run 
+** To install the generated plugin locally (in you default plugin directory) run
 **
-**   > ant publish 
+**    > ant  install
+**
+** The generated plugin jar is not automatically available in JOSMs plugin configuration
+** dialog. You have to check it in first.
 **
 -->
 <project name="PicLayer" default="dist" basedir=".">
-	
-
-	<!-- 
-		************************************************ 
-		** configure these properties. Most of them will be copied to the plugins
-		** manifest file. Property values will also show up in the list available 
-		** plugins: http://josm.openstreetmap.de/wiki/Plugins.
-		** 
-		************************************************   
-	-->
-	<property name="plugin.author"          value="Tomasz Stelmach"/>
-	<property name="plugin.class"           value="org.openstreetmap.josm.plugins.piclayer.PicLayerPlugin"/>
-	<property name="plugin.description"     value="This plugin allows to display any picture as a background in the editor and align it with the map."/>
-	<property name="plugin.doc.url"         value=""/>
-	<property name="plugin.main.version"    value="2"/>	
-    <property name="plugin.jar.name"        value="${ant.project.name}.jar"/>
-	
-    
-	<!-- 
-	  ************************************************ 
-	  ** should not be necessary to change the following properties   
-	 --> 
-	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
-	<property name="plugin.build.dir"       value="build"/>
-	<property name="plugin.src.dir"         value="src"/>
-	<!-- this is the directory where the plugin jar is copied to -->
+    <!--
+      ************************************************
+      ** should not be necessary to change the following properties
+     -->
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.build.dir"       value="build"/>
+    <property name="plugin.src.dir"         value="src"/>
+    <!-- this is the directory where the plugin jar is copied to -->
     <property name="plugin.dist.dir"        value="../../dist"/>
-	<property name="ant.build.javac.target" value="1.5"/>
-	<property name="plugin.dist.dir"        value="../../dist"/>		
-	<property name="plugin.jar"             value="${plugin.dist.dir}/${plugin.jar.name}"/>
-	
-	<!--
-	**********************************************************
-	** init - initializes the build
-	**********************************************************
-	-->
+    <property name="ant.build.javac.target" value="1.5"/>
+    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.jar"             value="${plugin.dist.dir}/${plugin.jar.name}"/>
+
+    <!--
+    **********************************************************
+    ** init - initializes the build
+    **********************************************************
+    -->
     <target name="init">
-    	<!-- make sure we increment the build number ... -->
-    	<buildnumber file="build.number" />	
-    	
-    	<!-- ... and check it back in -->
-        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="commit"/>
-        	<arg value="--message"/>
-            <arg value="increment build number"/>
-            <arg value="build.number"/>
-		</exec>
         <mkdir dir="${plugin.build.dir}"/>
     </target>
-	
-	<!--
-	**********************************************************
-	** compile - complies the source tree 
-	**********************************************************
-	-->	
+
+    <!--
+    **********************************************************
+    ** compile - complies the source tree
+    **********************************************************
+    -->
     <target name="compile" depends="init">
         <echo message="compiling sources for  ${plugin.jar.name} ... "/>
         <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
@@ -87,74 +56,73 @@
         </javac>
     </target>
 
-	<!--
-	**********************************************************
-	** dist - creates the plugin jar 
-	**********************************************************
-	-->	
-	<target name="dist" depends="compile,revision">
+    <!--
+    **********************************************************
+    ** dist - creates the plugin jar
+    **********************************************************
+    -->
+    <target name="dist" depends="compile,revision">
         <echo message="creating ${plugin.jar.name} ... "/>
-		<copy todir="${plugin.build.dir}/resources">
+        <copy todir="${plugin.build.dir}/resources">
             <fileset dir="resources"/>
         </copy>
-		<copy todir="${plugin.build.dir}/images">
+        <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
-		<copy todir="${plugin.build.dir}">
+        <copy todir="${plugin.build.dir}">
             <fileset dir=".">
-            	<include name="README" />
-            	<include name="LICENSE" />
+                <include name="README" />
+                <include name="LICENSE" />
             </fileset>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
             <manifest>
-                <attribute name="Author" value="${plugin.author}"/>
-                <attribute name="Plugin-Class" value="${plugin.class}"/>
+                <attribute name="Author" value="Tomasz Stelmach"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.piclayer.PicLayerPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="${plugin.description}"/>
-                <attribute name="Plugin-Link" value="${plugin.doc.url}"/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/> 
+                <attribute name="Plugin-Description" value="This plugin allows to display any picture as a background in the editor and align it with the map."/>
+                <attribute name="Plugin-Mainversion" value="1529"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>
     </target>
-	
-	<!--
-	**********************************************************
-	** revision - extracts the current revision number for the
-	**    file build.number and stores it in the XML property 
-	**    version.* 
-	**********************************************************
-	-->	
+
+    <!--
+    **********************************************************
+    ** revision - extracts the current revision number for the
+    **    file build.number and stores it in the XML property
+    **    version.*
+    **********************************************************
+    -->
     <target name="revision">
-    	
-    	<!-- extract the SVN revision information for file build.number -->
+
+        <!-- extract the SVN revision information for file build.number -->
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
             <arg value="--xml"/>
-            <arg value="build.number"/>
+            <arg value="."/>
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
     </target>
-	
-	<!--
-	**********************************************************
-	** clean - clean up the build environment
-	**********************************************************
-	-->		
+
+    <!--
+    **********************************************************
+    ** clean - clean up the build environment
+    **********************************************************
+    -->
     <target name="clean">
         <delete dir="${plugin.build.dir}"/>
         <delete file="${plugin.jar}"/>
     </target>
-    
-	<!--
-	**********************************************************
-	** install - install the plugin in your local JOSM installation 
-	**********************************************************
-	-->			
-	<target name="install" depends="dist">
+
+    <!--
+    **********************************************************
+    ** install - install the plugin in your local JOSM installation
+    **********************************************************
+    -->
+    <target name="install" depends="dist">
         <property environment="env"/>
         <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
             <and>
@@ -163,20 +131,4 @@
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
-	
-	<!--
-	**********************************************************
-	** publish - publish the plugin jar 
-	**********************************************************
-	-->			
-	<target name="publish">
-        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-            <env key="LANG" value="C"/>
-            <arg value="commit"/>
-        	<arg value="--message"/>
-            <arg value="manual build"/>
-            <arg value="${plugin.jar}"/>
-		</exec>
-	</target>
-	
 </project>

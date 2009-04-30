@@ -22,6 +22,7 @@
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
+        <ant antfile="build.xml" target="dist" dir="piclayer"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
         <ant antfile="build.xml" target="dist" dir="remotecontrol"/>
         <ant antfile="build.xml" target="dist" dir="routing"/>
@@ -59,6 +60,7 @@
         <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="clean" dir="openvisible"/>
         <ant antfile="build.xml" target="clean" dir="osmarender"/>
+        <ant antfile="build.xml" target="clean" dir="piclayer"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
         <ant antfile="build.xml" target="clean" dir="remotecontrol"/>
         <ant antfile="build.xml" target="clean" dir="routing"/>

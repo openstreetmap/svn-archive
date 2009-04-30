@@ -32,7 +32,7 @@
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="ant.build.javac.target" value="1.5"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
-    <property name="plugin.jar"             value="${plugin.dist.dir}/${plugin.jar.name}"/>
+    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
 
     <!--
     **********************************************************
@@ -49,7 +49,7 @@
     **********************************************************
     -->
     <target name="compile" depends="init">
-        <echo message="compiling sources for  ${plugin.jar.name} ... "/>
+        <echo message="compiling sources for  ${plugin.jar} ... "/>
         <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>

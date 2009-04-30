@@ -65,7 +65,7 @@ public class UploadDataGui extends ExtendedDialog {
     private JCheckBox publicCheckbox = new JCheckBox();
     
     // Constants used when generating upload request
-    private static final String API_VERSION = "0.5";
+    private static final String API_VERSION = "0.6";
     private static final String BOUNDARY = "----------------------------d10f7aa230e8";
     private static final String LINE_END = "\r\n";
     private static final String uploadTraceText = tr("Upload Trace");

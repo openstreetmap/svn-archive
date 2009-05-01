@@ -20,7 +20,6 @@ use strict;
 # true PD variant, re-implement the Haversine yourself.
 
 my $nodes = {};
-my $seglen = {};
 my $waysum = {};
 
 use constant PI => 4 * atan2 1, 1;
@@ -34,7 +33,7 @@ my $lastnode;
 
 while(<>) 
 {
-    if (/^\s*<node.*id=["'](\d+)['"].*lat=["']([0-9.-]+)["'] lon=["']([0-9.-]+)["']/)
+    if (/^\s*<node.*\sid=["'](\d+)['"].*lat=["']([0-9.-]+)["'].*lon=["']([0-9.-]+)["']/)
     {
         $nodes->{$1}=[$2,$3];
     }

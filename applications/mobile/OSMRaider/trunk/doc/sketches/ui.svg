@@ -43,16 +43,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="298.48863"
-     inkscape:cy="18.69807"
+     inkscape:zoom="3.959798"
+     inkscape:cx="82.510916"
+     inkscape:cy="167.4381"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1024"
      inkscape:window-height="738"
-     inkscape:window-x="1020"
-     inkscape:window-y="-4" />
+     inkscape:window-x="0"
+     inkscape:window-y="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -69,6 +69,13 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(110.69587,15.878068)">
+    <rect
+       style="opacity:1;fill:#00ff00;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3203"
+       width="24.243662"
+       height="7.0710678"
+       x="2.4412119"
+       y="16.895897" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#0000ff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1, 4;stroke-dashoffset:0"
        d="M 0.67344813,83.586266 L 131.99328,83.586266"
@@ -121,7 +128,7 @@
          y="174.22337">Add</tspan></text>
     <path
        sodipodi:type="arc"
-       style="opacity:1;fill:#808000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:4, 2;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="opacity:1;fill:#008000;fill-opacity:1;fill-rule:evenodd;stroke:#fc0000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="path2419"
        sodipodi:cx="6.0714288"
        sodipodi:cy="6.7142854"
@@ -138,7 +145,16 @@
          sodipodi:role="line"
          id="tspan2423"
          x="-107.78571"
-         y="2.0714285">receiver indicator</tspan></text>
+         y="2.0714285">receiver indicator</tspan><tspan
+         sodipodi:role="line"
+         x="-107.78571"
+         y="17.071428"
+         id="tspan2427"
+         style="fill:#ff0000">link indicator</tspan><tspan
+         sodipodi:role="line"
+         x="-107.78571"
+         y="32.07143"
+         id="tspan2425" /></text>
     <path
        sodipodi:type="arc"
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
@@ -319,17 +335,17 @@
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="-97.931358"
-       y="24.759346"
+       x="-92.375519"
+       y="35.618484"
        id="text2420"><tspan
          sodipodi:role="line"
          id="tspan2422"
-         x="-97.931358"
-         y="24.759346">signal strength</tspan><tspan
+         x="-92.375519"
+         y="35.618484">signal strength</tspan><tspan
          sodipodi:role="line"
-         x="-97.931358"
-         y="39.759346"
-         id="tspan2424">error strength</tspan></text>
+         x="-92.375519"
+         y="50.618484"
+         id="tspan2424">error level</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -340,5 +356,16 @@
          id="tspan3202"
          x="140.47029"
          y="98.024834">current cursor</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="-64.002151"
+       y="93.090363"
+       id="text3199"><tspan
+         sodipodi:role="line"
+         id="tspan3201"
+         x="-64.002151"
+         y="93.090363"
+         style="fill:#00ff00">waypoint</tspan></text>
   </g>
 </svg>

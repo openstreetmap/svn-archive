@@ -1115,6 +1115,12 @@
 			<line class="artificial-pier-core"/>
 		</rule>
 		
+		<rule e="node" k="power" v="generator">
+			<rule e="node" k="power_source" v="wind">
+				<symbol ref="windpower" position="center"/>
+			</rule>
+		</rule>
+
 		<!-- Non-physical routes -->
 		<rule e="way" k="route" v="ferry">
 			<line class="route-ferry"/>

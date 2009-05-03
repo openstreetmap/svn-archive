@@ -36,9 +36,7 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
 
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
@@ -96,11 +94,6 @@ public class RoutingLayer extends Layer {
      */
     private OsmDataLayer dataLayer;
 
-//    /**
-//     * Flag that manager activation layer
-//     */
-//    private boolean layerAdded = false;
-
     /**
      * Default constructor
      * @param name Layer name.
@@ -157,22 +150,6 @@ public class RoutingLayer extends Layer {
         }
         return nearest;
     }
-
-//	/**
-//	 * Check if layer is load.
-//	 * @return <code>true</code> Layer load.
-//	 *         <code>false</code> Layer don't load.
-//	 */
-//	public boolean isLayerAdded() {
-//		return layerAdded;
-//	}
-//
-//	/**
-//	 * Setter layer active.
-//	 */
-//	public void setLayerAdded() {
-//		layerAdded = true;
-//	}
 
 	/*
 	 * (non-Javadoc)

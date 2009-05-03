@@ -1,0 +1,33 @@
+"railway","aerialway","pass","symbolizer","z5","z6","z7","z8","z9","z10","z11","z12","z13","z14","z15","z16","z17","z18"
+,,,,13867008,6933504,3466752,1733376,866688,433344,216672,108336,54168,27084,13542,6771,"3385,5","1692,75"
+,,,,,,,,,,,,,,,,,
+"station",,"draw","point.file",,,,,,,"halt.png","halt.png","station_small.png","station_small.png","station.png","station.png","station.png","station.png"
+,,,,,,,,,,,,,,,,,
+"halt,tram_stop",,"draw","point.file",,,,,,,,,"halt.png","halt.png","station_small.png","station_small.png","station_small.png","station_small.png"
+,,,,,,,,,,,,,,,,,
+,"station","draw","point.file",,,,,,,,,"halt.png","halt.png","station_small.png","station_small.png","station_small.png","station_small.png"
+,,,,,,,,,,,,,,,,,
+"station",,"text","text.name",,,,,,,,,,"name","name","name","name","name"
+"station",,"text","text.face",,,,,,,,,,"DejaVu Sans Bold","DejaVu Sans Bold","DejaVu Sans Bold","DejaVu Sans Bold","DejaVu Sans Bold"
+"station",,"text","text.size",,,,,,,,,,9,11,11,11,11
+"station",,"text","text.fill",,,,,,,,,,"#66f","#66f","#66f","#66f","#66f"
+"station",,"text","text.dy",,,,,,,,,,-8,-14,-14,-14,-14
+,,,,,,,,,,,,,,,,,
+"halt,tram_stop",,"text","text.face",,,,,,,,,,"DejaVu Sans Book","DejaVu Sans Book","DejaVu Sans Book","DejaVu Sans Book","DejaVu Sans Book"
+"halt,tram_stop",,"text","text.size",,,,,,,,,,8,10,10,10,10
+"halt,tram_stop",,"text","text.fill",,,,,,,,,,"#66f","#66f","#66f","#66f","#66f"
+"halt,tram_stop",,"text","text.dy",,,,,,,,,,-8,-10,-10,-10,-10
+,,,,,,,,,,,,,,,,,
+,"station","text","text.face",,,,,,,,,,"DejaVu Sans Book","DejaVu Sans Book","DejaVu Sans Book","DejaVu Sans Book","DejaVu Sans Book"
+,"station","text","text.size",,,,,,,,,,8,10,10,10,10
+,"station","text","text.fill",,,,,,,,,,"#66f","#66f","#66f","#66f","#66f"
+,"station","text","text.dy",,,,,,,,,,-8,-10,-10,-10,-10
+,,,,,,,,,,,,,,,,,
+"station,halt,tram_stop",,"text","text.halo_radius",,,,,,,,,,1,1,1,1,1
+,"station","text","text.halo_radius",,,,,,,,,,1,1,1,1,1
+"station,halt,tram_stop",,"text","text.wrap_width",,,,,,,,,,0,0,0,0,0
+,"station","text","text.wrap_width",,,,,,,,,,0,0,0,0,0
+"all","all","text","text.name",,,,,,,,,,"name","name","name","name","name"
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+"level_crossing",,"draw","point.file",,,,,,,,,,"level_crossing.png","level_crossing.png","level_crossing.png","level_crossing.png","level_crossing.png"

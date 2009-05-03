@@ -1,0 +1,36 @@
+"aeroway","natural","man_made","power","power_source","highway","barrier","pass","symbolizer","z5","z6","z7","z8","z9","z10","z11","z12","z13","z14","z15","z16","z17","z18"
+,,,,,,,,,13867008,6933504,3466752,1733376,866688,433344,216672,108336,54168,27084,13542,6771,"3385,5","1692,75"
+,,,,,,,,,,,,,,,,,,,,,,
+"airport",,,,,,,"draw","point.file",,,,"airport.p.16.png","airport.p.16.png",,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,
+"airport",,,,,,,"draw","text.face",,,,"DejaVu Sans Bold","DejaVu Sans Bold","DejaVu Sans Bold","DejaVu Sans Bold","DejaVu Sans Bold",,,,,,
+"airport",,,,,,,"draw","text.size",,,,8,8,8,9,9,,,,,,
+"airport",,,,,,,"draw","text.fill",,,,"#6692da","#6692da","#6692da","#6692da","#6692da",,,,,,
+"airport",,,,,,,"draw","text.dy",,,,-12,-12,-12,,,,,,,,
+"airport",,,,,,,"draw","text.halo_radius",,,,1,1,1,1,1,,,,,,
+"airport",,,,,,,"draw","text.wrap_width",,,,0,0,0,0,0,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,
+"aerodrome",,,,,,,"draw","point.file",,,,,"aerodrome.p.16.png",,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,
+"aerodrome",,,,,,,"draw","text.face",,,,,"DejaVu Sans Bold","DejaVu Sans Bold","DejaVu Sans Bold","DejaVu Sans Bold",,,,,,
+"aerodrome",,,,,,,"draw","text.size",,,,,8,8,8,8,,,,,,
+"aerodrome",,,,,,,"draw","text.fill",,,,,"#6692da","#6692da","#6692da","#6692da",,,,,,
+"aerodrome",,,,,,,"draw","text.dy",,,,,-12,-12,,,,,,,,
+"aerodrome",,,,,,,"draw","text.halo_radius",,,,,1,1,1,1,,,,,,
+"aerodrome",,,,,,,"draw","text.wrap_width",,,,,0,0,0,0,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,
+,"peak",,,,,,"draw","point.file",,,,,,"peak.png","peak.png","peak.png","peak.png","peak.png","peak.png","peak.png","peak.png","peak.png"
+,,,,,,,,,,,,,,,,,,,,,,
+,"tree",,,,,,"draw","point.file",,,,,,,,,,,,"tree.png","tree.png","tree.png"
+,,,,,,,,,,,,,,,,,,,,,,
+,,"power_wind",,,,,"draw","point.file",,,,,,,,,,,"power_wind.png","power_wind.png","power_wind.png","power_wind.png"
+,,,"generator","wind",,,"draw","point.file",,,,,,,,,,,"power_wind.png","power_wind.png","power_wind.png","power_wind.png"
+,,,,,,,,,,,,,,,,,,,,,,
+,,"windmill",,,,,,,,,,,,,,,,,,"windmill.png","windmill.png","windmill.png"
+,,,,,,,,,,,,,,,,,,,,,,
+,,"mast",,,,,,,,,,,,,,,,,,,"communications.p.20.png","communications.p.20.png"
+,,,,,,,,,,,,,,,,,,,,,,
+,,,,,"mini_roundabout",,"draw","point.file",,,,,,,,,,,"mini_round.png","mini_round.png","mini_round.png","mini_round.png"
+,,,,,,,,,,,,,,,,,,,,,,
+,,,,,"gate",,"draw","point.file",,,,,,,,,,,"gate2.png","gate2.png","gate2.png","gate2.png"
+,,,,,,"gate","draw","point.file",,,,,,,,,,,"gate2.png","gate2.png","gate2.png","gate2.png"

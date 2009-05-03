@@ -1,0 +1,11 @@
+"boundary","landuse","way_area",,"pass","symbolizer","z1","z2","z3","z4","z5","z6","z7","z8","z9","z10","z11","z12","z13","z14","z15","z16","z17","z18"
+,,,,,,221872128,110936064,55468032,27734016,13867008,6933504,3466752,1733376,866688,433344,216672,108336,54168,27084,13542,6771,"3385,5","1692,75"
+,,,,,,,,,,,,,,,,,,,,,,,
+"national_park",,,,"fill","poly.fill",,"#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0","#cdf2d0"
+"national_park",,,,"fill","poly.fill-opacity",,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,
+,"residential",">4000000",,"fill","poly.fill",,,,,,"yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow"
+,,,,,,,,,,,,,,,,,,,,,,,
+,"residential",">4000000",,"border","line.stroke",,,,,,"black","black","black","black","black","black","black","black","black","black","black","black","black"
+,"residential",">4000000",,"border","line.stroke-width",,,,,,1,1,1,1,1,1,1,1,1,1,1,1,1

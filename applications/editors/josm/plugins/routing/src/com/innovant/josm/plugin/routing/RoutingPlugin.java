@@ -24,16 +24,12 @@
  *  http://public.grupoinnovant.com/blog
  *
  */
-/*
- * Christof Dallermassl
- * christof@dallermassl.at
- */
+
 
 package com.innovant.josm.plugin.routing;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
@@ -222,8 +218,6 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
 			menu.enableRestOfItems();
 			// Set layer on top and select layer, also refresh toggleDialog to reflect selection
 			Main.map.mapView.moveLayer(newLayer, 0);
-//			Main.map.mapView.setActiveLayer(newLayer);
-//			Main.map.toggleDialogs.repaint();
 			logger.debug("Added routing layer.");
 		}
 	}

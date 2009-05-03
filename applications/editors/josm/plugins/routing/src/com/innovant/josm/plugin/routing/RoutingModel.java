@@ -55,12 +55,12 @@ public class RoutingModel {
     /**
      * Graph to calculate route
      */
-	public RoutingGraph routingGraph;
+	public RoutingGraph routingGraph=null;
 
     /**
      * List of nodes that the route has to traverse
      */
-    private List<Node> nodes;
+    private List<Node> nodes=null;
 
     private List<OsmEdge> path=null;
     /**

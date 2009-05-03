@@ -52,6 +52,7 @@ headers = {
 }
 
 
+
 class ImportProcessor:
     def __init__(self,httpObj,comment,idMap):
         self.comment=comment
@@ -69,7 +70,7 @@ class ImportProcessor:
         createReq.append(change)
         xml=ET.tostring(createReq)
         resp,content=self.httpCon.request(api_host +
-                                          '/api/0.6/changeset/create','PUT',xml)
+                                          '/api/0.6/changeset/create','PUT',xml,headers=headers)
         if resp.status != 200:
             print 'Error creating changeset:' + str(resp.status)
             exit(-1)
@@ -92,7 +93,7 @@ class ImportProcessor:
         resp,content = self.httpCon.request(api_host +
                                             '/api/0.6/changeset/'+self.changesetid+
                                             '/upload',
-                                            'POST', ET.tostring(xml))        
+                                            'POST', ET.tostring(xml),headers=headers)        
         if resp.status != 200:
             print "Error uploading changeset:" + str(resp.status)
             print content
@@ -102,7 +103,7 @@ class ImportProcessor:
     def closeSet(self):
         resp,content=self.httpCon.request(api_host +
                                           '/api/0.6/changeset/' +
-                                          self.changesetid + '/close','PUT')
+                                          self.changesetid + '/close','PUT',headers=headers)
         if resp.status != 200:
             print "Error closing changeset " + self.changesetid + ":" + resp.status
     #

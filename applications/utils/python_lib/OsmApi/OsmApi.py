@@ -21,23 +21,35 @@
 
 import httplib, base64, xml.dom.minidom
 
+## Example :
+## api = OsmApi(username="EtienneChove", passwordfile="/home/etienne/osm/password")
+
 class OsmApi:
     
-    def __init__(self, api = "www.openstreetmap.org", username = "EtienneChove", password = None, created_by = "PythonOsmApi/0.2"):
+    def __init__(self, username = None, password = None, passwordfile = None, created_by = "PythonOsmApi/0.2", api = "www.openstreetmap.org"):
 
-        self._api        = api
-        self._username   = username
-        self._password   = password
+        # Get username
+        if username:
+            self._username = username
+        elif passwordfile:
+            self._username =  open(passwordfile).readline().split(":")[0].strip()            
+    
+        # Get password
+        if password:
+            self._password   = password
+        elif passwordfile:
+            for l in open(passwordfile).readlines():
+                l = l.strip().split(":")
+                if l[0] == self._username:
+                    self._password = l[1]
+
+        # Get API
+        self._api = api
+
+        # Get created_by
         self._created_by = created_by
 
-        try:
-            if password == None:
-                for l in open("/home/etienne/osm/passwords"):
-                    if l.strip().split(":")[0] == username:
-                        self._password = l.strip().split(":")[1]
-        except:
-            pass
-                        
+        # Initialisation     
         self._CurrentChangesetId = -1
 
     #######################################################################
@@ -85,6 +97,8 @@ class OsmApi:
         """ Creates a node. Returns updated NodeData (without timestamp). """
         if self._CurrentChangesetId == -1:
             raise Exception, "No changeset currently opened"
+        if NodeData.get(u"id", -1) > 0:
+            raise Exception, "This node already exists"
         NodeData[u"changeset"] = self._CurrentChangesetId
         result = self._put("/api/0.6/node/create", self._XmlBuild("node", NodeData))
         NodeData[u"id"]      = int(result.strip())
@@ -155,6 +169,8 @@ class OsmApi:
         """ Creates a way. Returns updated WayData (without timestamp). """
         if self._CurrentChangesetId == -1:
             raise Exception, "No changeset currently opened"
+        if NodeData.get(u"id", -1) > 0:
+            raise Exception, "This way already exists"
         WayData[u"changeset"] = self._CurrentChangesetId
         result = self._put("/api/0.6/way/create", self._XmlBuild("way", WayData))
         WayData[u"id"]      = int(result.strip())
@@ -225,6 +241,8 @@ class OsmApi:
         """ Creates a relation. Returns updated RelationData (without timestamp). """
         if self._CurrentChangesetId == -1:
             raise Exception, "No changeset currently opened"
+        if NodeData.get(u"id", -1) > 0:
+            raise Exception, "This relation already exists"
         RelationData[u"changeset"] = self._CurrentChangesetId
         result = self._put("/api/0.6/relation/create", self._XmlBuild("relation", RelationData))
         RelationData[u"id"]      = int(result.strip())
@@ -271,11 +289,17 @@ class OsmApi:
         """ Updates current changeset with ChangesetTags. """
         if self._CurrentChangesetId == -1:
             raise Exception, "No changeset currently opened"
+        if u"created_by" not in ChangesetTags:
+            ChangesetTags[u"created_by"] = self._created_by
         result = self._put("/api/0.6/changeset/"+str(self._CurrentChangesetId), self._XmlBuild("changeset", {u"tag": ChangesetTags}))
         return self._CurrentChangesetId
 
     def ChangesetCreate(self, ChangesetTags = {}):
         """ Opens a changeset. Returns #ChangesetId. """
+        if self._CurrentChangesetId <> -1:
+            raise Exception, "Changeset alreadey opened"
+        if u"created_by" not in ChangesetTags:
+            ChangesetTags[u"created_by"] = self._created_by
         result = self._put("/api/0.6/changeset/create", self._XmlBuild("changeset", {u"tag": ChangesetTags}))
         self._CurrentChangesetId   = int(result)
         self._CurrentChangesetTags = ChangesetTags

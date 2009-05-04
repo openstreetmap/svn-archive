@@ -69,7 +69,9 @@
 	};
 	POI.prototype.onRollOver=function() {
 		setPointer('');
+		var a=getName(this.attr,nodenames); if (a) { setFloater(a); }
 	};
+	POI.prototype.onRollOut=function() { clearFloater(); };
 	POI.prototype.onPress=function() {
 		removeWelcome(true);
 		if (_root.drawpoint>-1) {
@@ -154,6 +156,19 @@
 
 	// ==============================================================
 	// Support functions
+
+	function getName(attr,namelist) {
+		var a='';
+		if (attr['name']) {
+			a=attr['name'];
+		} else {
+			for (var i in namelist) {
+				if (attr[namelist[i]]) { a=attr[namelist[i]]; }
+			}
+		}
+		if (attr['ref']) { a=attr['ref']+" "+a; }
+		return a;
+	}
 
 	function resizePOIs() {
 		var n=Math.max(100/Math.pow(2,_root.scale-13),6.25);

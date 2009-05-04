@@ -266,6 +266,7 @@
 	// ----	Remove from server
 	
 	OSMWay.prototype.remove=function() {
+		clearFloater();
 		memberDeleted('Way', this._name);
 		var cp=new Object; cp[this._name]=true;
 		var z=this.path; for (var i in z) {
@@ -353,8 +354,11 @@
 			}
 			for (var oid in z) { delete _root.nodes[oid]; }	// delete -ve nodes
 			
-			z=result[4]; for (var nid in z) { nodes[nid].version=result[4][nid]; }			// set versions
-			z=result[5]; for (var nid in z) { c=_root.map.ways[nw]; delete c.deletednodes[nid]; }	// remove deleted nodes
+			// set versions, clean, not uploading
+			z=result[4]; for (var nid in z) { nodes[nid].version=result[4][nid]; nodes[nid].uploading=false; nodes[nid].clean=true; }
+
+			// remove deleted nodes
+			z=result[5]; for (var nid in z) { c=_root.map.ways[nw]; delete c.deletednodes[nid]; }
 			
 			_root.map.ways[nw].clearPOIs();
 			uploadDirtyRelations();
@@ -372,12 +376,12 @@
 			var sendnodes=new Array();
 			for (i=0; i<this.path.length; i++) {
 				sendpath.push(this.path[i].id);
-				if (!this.path[i].clean) {
+				if (!this.path[i].clean && !this.path[i].uploading) {
 					sendnodes.push(new Array(coord2long(this.path[i].x),
 											 coord2lat (this.path[i].y),
 											 this.path[i].id,this.path[i].version,
 											 deepCopy  (this.path[i].attr)));
-					this.path[i].clean=true;
+					this.path[i].uploading=true;
 				}
 			}
 			_root.writesrequested++;
@@ -430,12 +434,14 @@
 			setPointer('penplus');
 		} else if (_root.drawpoint>-1) { setPointer('penplus'); }
 								  else { setPointer(''); }
+		var a=getName(this.attr,nodenames); if (a) { setFloater(a); }
 	};
 	
 	OSMWay.prototype.onRollOut=function() {
 		if (_root.wayselected) { setPointer(''   ); }
 						  else { setPointer('pen'); }
 		_root.map.anchorhints.removeMovieClip();
+		clearFloater();
 	};
 	
 	OSMWay.prototype.onPress=function() {

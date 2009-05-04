@@ -63,7 +63,7 @@ class OsmApi:
     def NodeUpdate(self, NodeData):
         """ Updates node with NodeData. Returns updated NodeData (without timestamp). """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         NodeData[u"changeset"] = self._CurrentChangesetId
         result = self._put("/api/0.6/node/"+str(NodeData[u"id"]), self._XmlBuild("node", NodeData))
         NodeData[u"version"] = int(result.strip())
@@ -73,7 +73,7 @@ class OsmApi:
     def NodeDelete(self, NodeData):
         """ Delete node with NodeData. Returns updated NodeData (without timestamp). """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         NodeData[u"changeset"] = self._CurrentChangesetId
         result = self._delete("/api/0.6/node/"+str(NodeData[u"id"]), self._XmlBuild("node", NodeData))
         NodeData[u"version"] = int(result.strip())
@@ -84,7 +84,7 @@ class OsmApi:
     def NodeCreate(self, NodeData):
         """ Creates a node. Returns updated NodeData (without timestamp). """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         NodeData[u"changeset"] = self._CurrentChangesetId
         result = self._put("/api/0.6/node/create", self._XmlBuild("node", NodeData))
         NodeData[u"id"]      = int(result.strip())
@@ -133,7 +133,7 @@ class OsmApi:
     def WayUpdate(self, WayData):
         """ Updates way with WayData. Returns updated WayData (without timestamp). """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         WayData[u"changeset"] = self._CurrentChangesetId
         result = self._put("/api/0.6/way/"+str(WayData[u"id"]), self._XmlBuild("way", WayData))
         WayData[u"version"] = int(result.strip())
@@ -143,7 +143,7 @@ class OsmApi:
     def WayDelete(self, WayData):
         """ Delete way with WayData. Returns updated WayData (without timestamp). """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         WayData[u"changeset"] = self._CurrentChangesetId
         result = self._delete("/api/0.6/way/"+str(WayData[u"id"]), self._XmlBuild("way", WayData))
         WayData[u"version"] = int(result.strip())
@@ -154,7 +154,7 @@ class OsmApi:
     def WayCreate(self, WayData):
         """ Creates a way. Returns updated WayData (without timestamp). """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         WayData[u"changeset"] = self._CurrentChangesetId
         result = self._put("/api/0.6/way/create", self._XmlBuild("way", WayData))
         WayData[u"id"]      = int(result.strip())
@@ -203,7 +203,7 @@ class OsmApi:
     def RelationUpdate(self, RelationData):
         """ Updates relation with RelationData. Returns updated RelationData (without timestamp). """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         RelationData[u"changeset"] = self._CurrentChangesetId
         result = self._put("/api/0.6/relation/"+str(RelationData[u"id"]), self._XmlBuild("relation", RelationData))
         RelationData[u"version"] = int(result.strip())
@@ -213,7 +213,7 @@ class OsmApi:
     def RelationDelete(self, RelationData):
         """ Delete relation with RelationData. Returns updated RelationData (without timestamp). """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         RelationData[u"changeset"] = self._CurrentChangesetId
         result = self._delete("/api/0.6/relation/"+str(RelationData[u"id"]), self._XmlBuild("relation", RelationData))
         RelationData[u"version"] = int(result.strip())
@@ -224,7 +224,7 @@ class OsmApi:
     def RelationCreate(self, RelationData):
         """ Creates a relation. Returns updated RelationData (without timestamp). """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         RelationData[u"changeset"] = self._CurrentChangesetId
         result = self._put("/api/0.6/relation/create", self._XmlBuild("relation", RelationData))
         RelationData[u"id"]      = int(result.strip())
@@ -270,7 +270,7 @@ class OsmApi:
     def ChangesetUpdate(self, ChangesetTags = {}):
         """ Updates current changeset with ChangesetTags. """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         result = self._put("/api/0.6/changeset/"+str(self._CurrentChangesetId), self._XmlBuild("changeset", {u"tag": ChangesetTags}))
         return self._CurrentChangesetId
 
@@ -285,7 +285,7 @@ class OsmApi:
     def ChangesetClose(self):
         """ Closes current changeset. Returns #ChangesetId. """
         if self._CurrentChangesetId == -1:
-            raise Execption, "No changeset currently opened"
+            raise Exception, "No changeset currently opened"
         result = self._put("/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/close", u"")
         CurrentChangesetId = self._CurrentChangesetId
         self._CurrentChangesetId = -1

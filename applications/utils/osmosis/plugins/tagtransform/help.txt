@@ -1,0 +1,262 @@
+= Tag Transform Plugin =
+
+The tag transform Osmosis plugin allows arbitrary tag transforms to be applied to OSM
+data as a preprocessing step before using other tools. This allows other tools to concentrate
+on doing what ever they do, without having to handle numerous different tagging schemes
+and error corrections.
+
+The transforms apply regular expressions to both the tag keys and values, and enable
+customising output tags based on sub-matches.
+
+== Downloading ==
+
+The plugin is currently available [http://dev.openstreetmap.org/~random/tagtransform.jar here]
+
+The code is GPL and available from OSM svn:
+  http://svn.openstreetmap.org/applications/utils/osmosis/plugins/tagtransform
+
+
+== Installation ==
+
+To install the plugin, place the tagtransform.jar file somewhere on your file-system. Somewhere
+near osmosis maybe a good idea.
+
+To automatically have osmosis load the plugin, edit either your /etc/osmosis or ~/.osmosis file
+to show:
+ OSMOSIS_OPTIONS="-p uk.co.randomjunk.osmosis.transform.TransformPlugin"
+
+You also need to add the plugin to your classpath.
+
+A suggested solution is:
+  cd <osmosis dir>
+  mkdir plugins
+  mv <whereever it is>/tagtransform.jar plugins/
+
+Edit the bin/osmosis file -- on the EXEC= line, replace with:
+  EXEC="$JAVACMD $JAVACMD_OPTIONS -cp $MYAPP_HOME/osmosis.jar:$MYAPP_HOME/lib/mysql-connector-java-5.0.7-bin.jar:$MYAPP_HOME/lib/postgresql-8.3-603.jdbc4.jar:$MYAPP_HOME/lib/postgis_1.3.2.jar:$MYAPP_HOME/plugins/* $MAINCLASS $OSMOSIS_OPTIONS $@"
+
+
+== Running a transform ==
+
+The tasks provided are:
+
+====--tag-transform (--tt)====
+Transform the tags in the input stream according to the rules specified in a transform file.
+
+{| class="wikitable"
+|-
+! Pipe
+! Description
+|-
+| inPipe.0
+| Consumes an entity stream.
+|-
+| outPipe.0
+| Produces an entity stream.
+|}
+
+
+{| class="wikitable"
+|-
+! Option
+! Description
+! Valid Values
+! Default Value
+|-
+| file
+| The name of the file containing the transform description.
+|
+| transform.xml
+|-
+| stats
+| The name of a file to output statistics of match hit counts to.
+|
+| N/A
+|}
+
+== Specifying a transform ==
+
+Transforms are specified as an XML file containing a series of translations. Each translation is made up of the
+following parts:
+
+{| class="wikitable"
+|-
+! Part
+! Required
+! Description
+|-
+| name
+| 
+| Name of the translation -- used in stats output
+|-
+| description
+| 
+| Description of the translation for your own sanity and stats output
+|-
+| match
+| '''Y'''
+| Specifies the conditions that must be met for the output to be applied
+|-
+| find
+|
+| Specifies extra tags used in output that are not essential to achieve a match
+|-
+| output
+|
+| Specifies the tags to be output when an entity is matched
+|}
+
+Translations are executed on each entity, with the output of the first translation used as the input for the second etc.
+
+ 
+=== match and find ===
+
+There are a couple of different match types. The top level element must be ''match'' or ''find''.
+
+==== match ====
+
+The match element groups together other matches. It has two modes:
+* '''and''' (default) -- all contained matches must match (checking will stop at the first non-match)
+* '''or''' -- only one of the contained matches must match (all are checked regardless)
+
+'''find''' is a special case of '''or'''-mode and can only be used as a top level tag.
+
+The entity type to enable matches for can also be specified. Valid values are '''all''' (default), '''node''', '''way''',
+and '''relation'''.
+
+==== tag ====
+
+Matches individual or groups of tags. Tags are selected by regular expressions. These are standard
+Java regular expressions, and full information can be found at [http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html].
+
+Attributes are used to specify the regexes:
+* '''k''' the key regex to match
+* '''v''' the value regex to match
+* '''match_id''' the ID to reference in output
+
+The output may reference matches to output tags using the specified ID. Any groups extracted by the regex will be available to
+the output.
+
+==== notag ====
+
+Matches on non-presence of tags. If any tag is matched by the regexes then a parent And matcher will fail.
+
+* '''k''' the key regex to not match
+* '''v''' the value regex to not match
+
+=== output ===
+
+The output is specified as a series of operations which are executed in order. Tag keys are considered unique, and so
+any operation writing to an existing key will overwrite that existing tag.
+
+'''If no output section is specified then any matching entities will be dropped entirely
+
+==== copy-all ====
+Copies all the original tags to the output unchanged.
+
+==== copy-unmatched ====
+Copies any tags not matched by match or find expressions.
+
+==== copy-matched ====
+Copies any tags which were matched by match or find expressions.
+
+==== tag ====
+Output a specific tag, or multiple tags if referencing a match. The key and values for the new tag(s)
+are specified using output expressions. Within an output expression '''{0}''' will be replaced with
+the matched regex group of that number. 0 represents the whole match string, and the 1st matched group
+will be output by {1}.
+
+The attributes used are:
+* '''from_match''' -- the match_id to take values from
+* '''k''' -- the key to output
+* '''v''' -- the value to output
+
+If the referenced match doesn't exist (ie: it was part of find or an "or" mode match and no matching tags
+were found) then the tag output is omitted (even if groups aren't used in the strings).
+
+If no match is referenced at all then the key and value are treated as simple strings and output
+verbatim.
+
+
+=== Examples ===
+
+Many applications may require considerably less access types than are available (or frequently
+mistyped):
+ <?xml version="1.0"?>
+ <translations>
+ 
+  <translation>
+    <name>Simplify Access</name>
+    <description>Simplifies the access restrictions to yes/no. We could limit for specific keys, but lets live dangerously.</description>
+    <match mode="or">
+      <tag k=".*" match_id="yes" v="true|designated|public|permissive"/>
+      <tag k=".*" match_id="no" v="false|private|privat"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag from_match="yes" v="yes"/>
+      <tag from_match="no" v="no"/>
+    </output>
+  </translation>
+  
+ </translations>
+
+(XML surround omitted from now on for clarity)
+
+Convert a crossing tagged using the wiki-voted crossing scheme into the heavily used crossing=toucan used
+in rendering the cyclemap:
+  <translation>
+    <name>->Toucan</name>
+    <description>Convert wiki-voted crossings to toucans, and short-cut the crossing_ref case too</description>
+    <match mode="or" type="node">
+      <match>
+        <tag k="crossing" v="traffic_signals"/>
+        <tag k="bicycle" v="yes"/>
+      </match>
+      <tag k="crossing_ref" v="toucan"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag k="crossing" v="toucan"/>
+    </output>
+  </translation>
+
+There have been many ways of entering cycle routes suggested... we tend to use relations now,
+but lets regularise the legacy way tagging to ensure ncn=yes is placed on all ways
+  <translation>
+    <name>NCN</name>
+    <description>Find all the way ncn way variations and tag consistently</description>
+    <match>
+      <match mode="or">
+        <!-- this matches route=ncn, as well as route=bus;ncn etc. -->
+        <tag k="route" v="(.*;|^)ncn(;.*|$)" match_id="route"/>
+        <!-- sometimes ncn_ref has been specified without ncn=yes -->
+        <tag k="ncn_ref" v=".*"/>
+      </match>
+      <!-- don't match where ncn was already set to something else -->
+      <notag k="ncn" v=".*"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag k="ncn" v="yes"/>
+      <!-- output the route tag, but without the ncn part -->
+      <tag k="route" from_match="route" v="{1}{2}"/>
+    </output>
+  </translation>
+
+I might not like the prefixes used by the piste:lift scheme for whatever reason. Lets remove them:
+  <translation>
+    <name>Arbitrary Piste Remapping</name>
+    <description>Remap the piste:lift:* style tags to reduce tag length and remove ":" which aren't playing nice with tool X</description>
+    <match type="way">
+      <tag k="piste:lift" v=".*" match_id="type"/>
+    </match>
+    <find>
+      <tag k="piste:lift:(.*)" v=".*" match_id="piste_attr"/>
+    </find>
+    <output>
+      <copy-unmatched/>
+      <tag from_match="type" k="piste_lift"/>
+      <tag from_match="piste_attr" k="{1}" v="{0}"/>
+    </output>
+  </translation>

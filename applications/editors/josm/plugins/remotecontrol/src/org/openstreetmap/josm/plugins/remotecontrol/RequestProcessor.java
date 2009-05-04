@@ -74,7 +74,7 @@ public class RequestProcessor extends Thread
             Reader in = new InputStreamReader(new BufferedInputStream(request.getInputStream()), "ASCII");
 
             StringBuffer requestLine = new StringBuffer();
-            while (true)
+            while (requestLine.length() < 1024)
             {
                 int c = in.read();
                 if (c == '\r' || c == '\n') break;
@@ -84,10 +84,12 @@ public class RequestProcessor extends Thread
             System.out.println("RemoteControl received: " + requestLine);
             String get = requestLine.toString();
             StringTokenizer st = new StringTokenizer(get);
+            if (!st.hasMoreTokens()) { sendError(out); return; }
             String method = st.nextToken();
+            if (!st.hasMoreTokens()) { sendError(out); return; }
             String url = st.nextToken();
 
-            if(!method.equals("GET")) {
+            if (!method.equals("GET")) {
                 sendNotImplemented(out);
                 return;
             }

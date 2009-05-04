@@ -105,6 +105,14 @@
 			_root.panel.welcome.createEmptyMovieClip("convert",4);
 			drawButton(_root.panel.welcome.convert,150,73,iText("Track",'track'),iText("Convert your GPS track to (locked) ways for editing.",'prompt_track'));
 			_root.panel.welcome.convert.onPress=function() { gpxToWays(); removeWelcome(true); };
+		} else if (preferences.data.launcher) {
+			_root.panel.welcome.createEmptyMovieClip("launcher",4);
+			drawButton(_root.panel.welcome.launcher,150,73,iText("Launch",'launch'),iText("Launch an external URL at this location.",'prompt_launch'));
+			_root.panel.welcome.launcher.onPress=function() { 
+				var a=preferences.data.launcher.split('!');
+				getUrl(a[0]+_root.scale+a[1]+centrelong(0)+a[2]+centrelat(0)+a[3],"_blank");
+				removeWelcome(true);
+			};
 		}
 	}
 

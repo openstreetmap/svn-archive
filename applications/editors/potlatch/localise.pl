@@ -16,7 +16,7 @@
 	# -----	Get each page
 	
 	%translations=();
-	while ($index=~/\/index\.php\/([^:]+):Potlatch\/Translation/gs) {
+	while ($index=~/\/wiki\/([^:]+):Potlatch\/Translation/gs) {
 		$lang=lc $1; next if $lang eq 'template';
 		$req=HTTP::Request->new(GET=>"http://wiki.openstreetmap.org/index.php/$lang:Potlatch/Translation");
 		$res=$ua->request($req);

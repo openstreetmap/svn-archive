@@ -11,6 +11,7 @@
 		this.ways=new Object();
 		this.version=version;
 		this.clean=false;		// set to true if just loaded from server
+		this.uploading=false;
 	};
 
 	Node.prototype.markDirty=function() {
@@ -20,14 +21,16 @@
 	};
 
 	Node.prototype.removeFromAllWays=function() {
-		var qway,qs,x,y,attr; var d=true;
+		var qway,qs,x,y,attr;
 		var waylist=new Array(); var poslist=new Array();
 		var z=this.ways; for (qway in z) {	// was in _root.map.ways
 			for (qs=0; qs<_root.map.ways[qway].path.length; qs+=1) {
 				if (_root.map.ways[qway].path[qs]==this) {
 					waylist.push(qway); poslist.push(qs);
 					_root.map.ways[qway].path.splice(qs,1);
-					if (d) { _root.map.ways[qway].deletednodes[this.id]=this.version; d=false; }
+					_root.map.ways[qway].deletednodes[this.id]=this.version;
+					// needs to be in every way's .deletednodes - if it's just one, the API will refuse
+					// to delete it, because it's still in the other (not yet rewritten) way
 				}
 			}
 			_root.map.ways[qway].clean=false;

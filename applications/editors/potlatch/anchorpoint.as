@@ -155,7 +155,10 @@
 		} else {
 			setPointer('');
 		}
+		var a=getName(_root.nodes[this.node].attr,nodenames); if (a) { setFloater(a); }
 	};
+	
+	AnchorPoint.prototype.onRollOut=function() { clearFloater(); };
 
 	Object.registerClass("anchor",AnchorPoint);
 
@@ -171,15 +174,17 @@
 	AnchorHint.prototype=new MovieClip();
 	AnchorHint.prototype.onRollOver=function() {
 		if (this._name==0 || this._name==this.way.path.length-1) {
-			setTooltip(iText("over endpoint\nclick to join\nshift-click to merge",'hint_overendpoint'));
+			setTooltip(iText("over endpoint ($1)\nclick to join\nshift-click to merge",'hint_overendpoint',this.node));
 			setPointer('peno');
 		} else {
-			setTooltip(iText("over point\nclick to join",'hint_overpoint'));
+			setTooltip(iText("over point ($1)\nclick to join",'hint_overpoint',this.node));
 			setPointer('penx');
 		}
+		var a=getName(_root.nodes[this.node].attr,nodenames); if (a) { setFloater(a); }
 	};
 	AnchorHint.prototype.onRollOut=function() {
 		clearTooltip();
+		clearFloater();
 	};
 
 	AnchorHint.prototype.onPress=function() {

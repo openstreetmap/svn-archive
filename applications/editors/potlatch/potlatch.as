@@ -126,12 +126,15 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.11a";	// current version
+	var signature="Potlatch 0.11b";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
 	var wayrels=new Object();		// which relations are in ways?
 	var noderels=new Object();		// which relations are in nodes?
+
+	var waynames=new Array("highway","barrier","waterway","railway","man_made","leisure","amenity","military","shop","tourism","historic","landuse","natural","sport","cycleway","aeroway","boundary");
+	var nodenames=new Array("highway","barrier","waterway","railway","man_made","leisure","amenity","military","shop","tourism","historic","landuse","natural","sport");
 
 	var tileurls=new Array("http://tile.openstreetmap.org/!/!/!.png",
 						   "http://tah.openstreetmap.org/Tiles/tile/!/!/!.png",
@@ -145,6 +148,7 @@
 	if (preferences.data.bgtype       ==undefined) { preferences.data.bgtype       =2; }	// 1=tiles, 2=Yahoo, 3=custom, 4=none
 	if (preferences.data.tileset      ==undefined) { preferences.data.tileset      =3; }	// background layer
 	if (preferences.data.tilecustom   ==undefined) { preferences.data.tilecustom   =''; }	// custom background URL
+	if (preferences.data.launcher     ==undefined) { preferences.data.launcher     =''; }	// external launch URL
 	if (preferences.data.dimbackground==undefined) { preferences.data.dimbackground=true; }	// dim background?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
@@ -331,14 +335,16 @@
 
 	// Interaction with responder script
 	var loaderWaiting=false;
+	var readError=false;
+	var writeError=false;
 
 	remote_read=new NetConnection();
 	remote_read.connect(apiurl+'/read');
-	remote_read.onStatus=function(info) { _root.panel.i_warning._visible=true; };
+	remote_read.onStatus=function(info) { _root.panel.i_warning._visible=true; readError=true; };
 
 	remote_write=new NetConnection();
 	remote_write.connect(apiurl+'/write');
-	remote_write.onStatus=function(info) { _root.panel.i_warning._visible=true; };
+	remote_write.onStatus=function(info) { _root.panel.i_warning._visible=true; writeError=true; };
 
 	#include 'node.as'
 	#include 'anchorpoint.as'
@@ -780,8 +786,9 @@
 
 	function handleError(code,result) {
 		var h=150;
-		if (code==-2) { error=result[0]+iText("\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time.",'emailauthor'); h+=50; }
-				 else { error=result[0]; }
+		if (code==-2 && result[0].indexOf('allocate memory')==-1) {
+			error=result[0]+iText("\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time.",'emailauthor'); h+=50;
+		} else { error=result[0]; }
 		_root.windows.attachMovie("modal","error",++windowdepth);
 		_root.windows.error.init(350,h,new Array('Ok'),null);
 		_root.windows.error.box.createTextField("prompt",2,7,9,325,h-30);
@@ -792,26 +799,43 @@
 		_root.windows.attachMovie("modal","error",++windowdepth);
 		_root.windows.error.init(275,130,new Array('Retry','Cancel'),handleWarningAction);
 		_root.windows.error.box.createTextField("prompt",2,7,9,250,100);
-		writeText(_root.windows.error.box.prompt,iText("Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?",'error_connectionfailed'));
+		if (writeError) {
+			writeText(_root.windows.error.box.prompt,iText("Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?",'error_connectionfailed'));
+		} else {
+			writeText(_root.windows.error.box.prompt,iText("Sorry - the OpenStreetMap server didn't respond when asked for data.\n\nWould you like to try again?",'error_readfailed'));
+		}
 	};
 
 	function handleWarningAction(choice) {
+		_root.panel.i_warning._visible=false;
+		_root.writesrequested=0;
+		_root.waysrequested=_root.waysreceived=_root.whichrequested=_root.whichreceived=0;
 		if (choice=='Retry') {
-			// loop through all ways which are uploading, and reupload
-			_root.panel.i_warning._visible=false;
-			for (var qway in _root.map.ways) {
-				if (_root.map.ways[qway].uploading) {
-					_root.map.ways[qway].uploading=false;
-					_root.map.ways[qway].upload();
+			if (writeError) {
+				// loop through all ways which are uploading, and reupload
+				for (var qway in _root.map.ways) {
+					if (_root.map.ways[qway].uploading) {
+						_root.map.ways[qway].uploading=false;
+						var z=_root.map.ways[qway].path; for (var i in z) {
+							_root.map.ways[qway].path[i].uploading=false;
+						}
+						_root.map.ways[qway].upload();
+					}
+				}
+				for (var qrel in _root.map.relations) {
+					if (_root.map.relations[qrel].uploading) {
+						_root.map.relations[qrel].uploading=false;
+						_root.map.relations[qrel].upload();
+					}
 				}
 			}
-			for (var qrel in _root.map.relations) {
-				if (_root.map.relations[qrel].uploading) {
-					_root.map.relations[qrel].uploading=false;
-					_root.map.relations[qrel].upload();
-				}
+			if (readError) { 
+				bigedge_l=bigedge_b= 999999;
+				bigedge_r=bigedge_t=-999999;
+				whichWays();
 			}
 		}
+		writeError=false; readError=false;
 	};
 
 
@@ -925,8 +949,9 @@
 	// Options window
 	
 	function openOptionsWindow() {
+		_root.launcher=preferences.data.launcher;	// .variable doesn't work well with preferences.data...
 		_root.windows.attachMovie("modal","options",++windowdepth);
-		_root.windows.options.init(390,130,new Array('Ok'),function() { preferences.flush(); } );
+		_root.windows.options.init(390,175,new Array('Ok'),function() { preferences.data.launcher=_root.launcher; preferences.flush(); } );
 		var box=_root.windows.options.box;
 
 		// Background selector
@@ -970,6 +995,16 @@
 
 		box.attachMovie("checkbox","warnings",3);
 		box.warnings.init(220,75,iText("Show floating warnings",'option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
+
+		// External link
+		
+		box.createTextField('externalt',70,217,95,160,20);
+		with (box.externalt) { text=iText("External launch URL:",'option_external'); setTextFormat(plainSmall); selectable=false; }
+		box.createTextField('externali',71,219,115,160,17);
+		box.externali.setNewTextFormat(plainSmall); box.externali.type='input';
+		box.externali.text=_root.launcher; box.externali.variable="_root.launcher";
+		box.externali.background=true; box.externali.backgroundColor=0xDDDDDD;
+		box.externali.border=true; box.externali.borderColor=0xFFFFFF;
 
 	}
 	

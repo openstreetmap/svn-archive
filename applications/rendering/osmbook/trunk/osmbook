@@ -238,7 +238,8 @@ if (! -f $overviewpng  ||
 if ($opts{'ps'}) {
     if (! -f $overvieweps  ||
 	Stat($overviewpng, $overvieweps)) {
-	System("convert $overviewpng $overvieweps");
+	#System("convert $overviewpng $overvieweps");
+	System("inkscape -d 45 -f $overviewsvg -E $overvieweps");
     }
 }
 
@@ -255,59 +256,54 @@ sub make_overview {
 
     print "Creating $out\n";
 
+    # read in the existing SVG and determine the existing x/y bounds
+    open(IIMG, "<$img");
+    my $initline = <IIMG>;
+    print "looking at $initline\n";
+    ($width) = ($initline =~ /width=\"([\.\d]+)px\"/);
+    ($height) = ($initline =~ /height=\"([\.\d]+)(|px)\"/);
+
+    print "here: $width / $height\n";
+
+    open(OSVG, ">$out");
+    print OSVG $initline;
+    while (<IIMG>) {
+	last if (/<\/svg>/);
+	print OSVG;
+    }
+
+    # add in our grid lines
+
     my $gridw = $width/$numx;
     my $gridh = $height/$numy;
 
-    $svg = SVG->new(width => $width, height => $height);
-
-    $svg->image(x => 0, y => 0, width => $width, height => $height,
-		'-href' => $img, id => 'undermap');
+    print "gridhere: $gridw / $gridh\n";
 
     # vertical grid lines
     for my $x (0..($numx-1)) {
-	my $tag1 = $svg->line(
-			      id => "vert_$x",
-			      x1 => $x*$gridw, x2 => $x*$gridw,
-			      y1 => 0,  y2 => $height,
-			      style => {'stroke' => 'rgb(0,0,0)'}
-			     );
+	print OSVG "<line id=\"vert_$x\" style=\"stroke: rgb(0,0,0)\" x1=\"",
+	  $x * $gridw, "\" x2=\"", $x * $gridw, "\" y1=\"0\" y2=\"$height\" />\n";
     }
-    my $tag1 = $svg->line(
-			  id => "vert_last",
-			  x1 => $gridw-1, x2 => $gridw,
-			  y1 => 0,  y2 => $height,
-			  style => {'stroke' => 'rgb(0,0,0)'}
-			 );
+    print OSVG "<line id=\"vert_last\" style=\"stroke: rgb(0,0,0)\" x1=\"$gridw\"",
+      " x2=\"$gridw\" y1=\"0\" y2=\"$height\" />\n";
 
     # vertical grid lines
     for my $y (0..($numy-1)) {
-	my $tag1 = $svg->line(
-			      id => "horz_$y",
-			      x1 => 0,  x2 => $width,
-			      y1 => $y*$gridh, y2 => $y*$gridh,
-			      style => {'stroke' => 'rgb(0,0,0)'}
-			     );
+	print OSVG "<line id=\"horz_$y\" style=\"stroke: rgb(0,0,0)\" y1=\"",
+	  $y * $gridh, "\" y2=\"", $y * $gridh, "\" x1=\"0\" x2=\"$width\" />\n";
     }
-    my $tag1 = $svg->line(
-			  id => "horz_max",
-			  x1 => 0,  x2 => $width,
-			  y1 => $gridh, y2 => $gridh,
-			  style => {'stroke' => 'rgb(0,0,0)'}
-			 );
-
+    print OSVG "<line id=\"horz_last\" style=\"stroke: rgb(0,0,0)\" y1=\"$gridh\"",
+      " y2=\"$gridh\" x1=\"0\" x2=\"$width\" />\n";
 
     # grid square labels
     for my $x (0..($numx-1)) {
 	for my $y (0..($numy-1)) {
-	    $svg->text(x => $x*$gridw + $gridw/2,
-		       y => $y*$gridh + $gridh/2)
-	      ->cdata($y*$numx + $x + 1);
+	    print OSVG "<text x=\"", $x*$gridw + $gridw/2, "\" y=\"",
+	      $y*$gridh + $gridh/2, "\">", $y*$numx + $x + 1, "</text>\n";
 	}
     }
 
-    open(OVERVIEW,">$out");
-    print OVERVIEW $svg->xmlify,"\n";
-    close(OVERVIEW);
+    print OSVG "</svg>\n";
 }
 
 sub make_overviewpng {

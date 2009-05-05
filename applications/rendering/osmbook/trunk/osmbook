@@ -213,7 +213,7 @@ if ($needoverview || ! -f $combinedosm) {
 if (! -f $combinedsvg || Stat($combinedosm, $combinedsvg) ||
     Stat($opts{'O'}, $combinedsvg)) {
 
-    System("perl orp.svn/orp.pl -r $opts{'O'} $combinedosm");
+    System("perl orp.svn/orp.pl --minlat $opts{'my'} --maxlat $opts{'My'} --minlon $opts{'mx'} --maxlon $opts{'Mx'} -r $opts{'O'} $combinedosm");
 }
 
 # build the overview SVG that contains the grid over the combined OSM

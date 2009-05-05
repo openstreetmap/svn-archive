@@ -21,7 +21,7 @@
 \begin{tabular}{c|c|c}
 #1 & #2 & #3 \\
 \hline
-#4 &    & #5 \\
+#4 &  * & #5 \\
 \hline
 #6 & #7 & #8 \\
 \end{tabular}
@@ -33,38 +33,43 @@
 %%%
 %%% Map
 %%%
+
+\newcommand{\gridheight}{2cm}
+
 \newcommand{\Map}[7]{
 
 % \includegraphics[clip,width=\linewidth]{#1}
 
-\begin{tabular}{c|ccccccccccc}
-  & A & B & C & D & E & F & G & H & I & J \\
+%\begin{tabular}{c|ccccccccc}
+%\renewcommand{\arraystretch}{2}
+\begin{tabular}{c|p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}}
+  & A & B & C & D & E & F & G & H & I \\
 \hline
-1 & \multicolumn{10}{|c|}{\multirow{10}{*}{\includegraphics[clip,width=\linewidth]{#1}}} \\
-%1 & \multicolumn{10}{|c|}{\multirow{10}{*}{foo}} \\
-2 & & & & & & & & & & & \\
-3 & & & & & & & & & & & \\
-4 & & & & & & & & & & & \\
-5 & & & & & & & & & & & \\
-6 & & & & & & & & & & & \\
-7 & & & & & & & & & & & \\
-8 & & & & & & & & & & & \\
-9 & & & & & & & & & & & \\
-0 & & & & & & & & & & & \\
+1 & \multicolumn{9}{|c|}{\multirow{9}{*}{\includegraphics[clip,width=.9\linewidth]{#1}}} \\
+%1 \rule{0cm}{1cm} & \multicolumn{9}{|c|}{\multirow{9}{*}{foo}} \\
+2 \rule{0cm}{\gridheight} & & & & & & & & &  \\
+3 \rule{0cm}{\gridheight} & & & & & & & & &  \\
+4 \rule{0cm}{\gridheight} & & & & & & & & &  \\
+5 \rule{0cm}{\gridheight} & & & & & & & & &  \\
+6 \rule{0cm}{\gridheight} & & & & & & & & &  \\
+7 \rule{0cm}{\gridheight} & & & & & & & & &  \\
+8 \rule{0cm}{\gridheight} & & & & & & & & &  \\
+9 \rule{0cm}{\gridheight} & & & & & & & & &  \\
 \hline
+\vspace*{.25in}
 \end{tabular}
 
 \begin{minipage}[b]{\linewidth}
 \centering
-\begin{Huge}
-\begin{tabular}{|c|rll|c}
+\begin{Large}
+\begin{tabular}{|c|rll|c|}
 \hline
 Grid & NW: & N #4 & W #3 & #7 \\
 #2   & SE: & N #6 & W #5 & \\
      &     &      &      & \\
 \hline
 \end{tabular}
-\end{Huge}
+\end{Large}
 \end{minipage}
 %\begin{center}
 %{\Huge Grid #2}

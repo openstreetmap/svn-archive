@@ -166,7 +166,7 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
                 osd.append(tr("\nAltitude: {0} m", entry.elevation.longValue()));
             }
             if (entry.speed != null) {
-                osd.append(tr("\n{0} km/h", (long) (3.6 * entry.speed)));
+                osd.append(tr("\n{0} km/h", Math.round(entry.speed)));
             }
             imgDisplay.setOsdText(osd.toString());
         } else {

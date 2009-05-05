@@ -69,7 +69,7 @@ public class AgpifojLayer extends Layer {
         LatLon exifCoor;
         LatLon coor;
         EastNorth pos;
-        /** Speed in meter per second */
+        /** Speed in kilometer per second */
         Double speed;
         /** Elevation (altitude) in meters */
         Double elevation;

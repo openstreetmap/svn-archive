@@ -961,27 +961,44 @@ public class CorrelateGpxWithImages implements ActionListener {
         return ret;
     }
 
-    private int matchPoints(ArrayList<ImageEntry> dateImgLst, WayPoint prevWp, long prevDateWp, WayPoint curWp, long curDateWp) {
-        double interval = prevDateWp > 0 ? ((int)Math.abs(curDateWp - prevDateWp)) : 1;
+    private int matchPoints(ArrayList<ImageEntry> dateImgLst, WayPoint prevWp, long prevDateWp,
+                                                                   WayPoint curWp, long curDateWp) {
+        // Time between the track point and the previous one, 5 sec if first point, i.e. photos take
+        // 5 sec before the first track point can be assumed to be take at the starting position
+        long interval = prevDateWp > 0 ? ((int)Math.abs(curDateWp - prevDateWp)) : 5; 
         int ret = 0;
-        int i = getLastIndexOfListBefore(dateImgLst, curDateWp, interval);
-        if (i >= 0 && i < dateImgLst.size() && dateImgLst.get(i).time.getTime()/1000+interval > prevDateWp) {
-            Double speed = null;
-            Double prevElevation = null;
-            Double curElevation = null;
-            if (prevWp != null) {
-                double distance = getDistance(prevWp, curWp);
-                speed = new Double((1000 * distance) / (curDateWp - prevDateWp));
-                try {
-                    prevElevation = new Double((String) prevWp.attr.get("ele"));
-                } catch(Exception e) {}
-            }
-            try {
-                curElevation = new Double((String) curWp.attr.get("ele"));
-            } catch (Exception e) {}
+        
+        // i is the index of the timewise last photo that has the same or earlier EXIF time 
+        int i = getLastIndexOfListBefore(dateImgLst, curDateWp);
 
-            while(i >= 0 && inRadius(dateImgLst.get(i).time.getTime()/1000, curDateWp, interval)) {
-                if(dateImgLst.get(i).coor == null) {
+        // no photos match
+        if (i < 0)            
+            return 0;        
+            
+        Double speed = null;
+        Double prevElevation = null;
+        Double curElevation = null;
+        
+        if (prevWp != null) {
+            double distance = getDistance(prevWp, curWp);
+            // This is in km/h, 3.6 * m/s
+            if (curDateWp > prevDateWp)
+                speed = 3.6 * distance / (curDateWp - prevDateWp);   
+            try {
+                prevElevation = new Double((String) prevWp.attr.get("ele"));
+            } catch(Exception e) {}
+        }
+        
+        try {
+            curElevation = new Double((String) curWp.attr.get("ele"));
+        } catch (Exception e) {}
+        
+        // First trackpoint, then interval is set to five seconds, i.e. photos up to five seconds 
+        // before the first point will be geotagged with the starting point        
+        if(prevDateWp == 0 || curDateWp <= prevDateWp) {
+            while(i >= 0 && (dateImgLst.get(i).time.getTime()/1000) <= curDateWp
+                        && (dateImgLst.get(i).time.getTime()/1000) >= (curDateWp - interval)) {
+                if(dateImgLst.get(i).coor == null) {               
                     dateImgLst.get(i).pos = curWp.eastNorth;
                     dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
                     dateImgLst.get(i).speed = speed;
@@ -990,67 +1007,70 @@ public class CorrelateGpxWithImages implements ActionListener {
                 }
                 i--;
             }
+            return ret;
+        }
 
-            if (prevDateWp != 0) {
-                long imgDate;
-                while(i >= 0
-                        && (imgDate = dateImgLst.get(i).time.getTime()/1000) > prevDateWp) {
-                    if(dateImgLst.get(i).coor == null) {
-                        dateImgLst.get(i).pos = new EastNorth(
-                                prevWp.eastNorth.east() + ((curWp.eastNorth.east() - prevWp.eastNorth.east()) * (imgDate - prevDateWp)) / (curDateWp - prevDateWp),
-                                prevWp.eastNorth.north() + ((curWp.eastNorth.north() - prevWp.eastNorth.north()) * (imgDate - prevDateWp)) / (curDateWp - prevDateWp));
-                        dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
-                        dateImgLst.get(i).speed = speed;
-                        if (curElevation != null && prevElevation != null) {
-                            dateImgLst.get(i).elevation = prevElevation + ((curElevation - prevElevation) * (imgDate - prevDateWp)) / (curDateWp - prevDateWp);
-                        }
-                        ret++;
-                    }
-                    i--;
-                }
+        // This code gives a simple linear interpolation of the coordinates between current and
+        // previous track point assuming a constant speed in between
+        long imgDate;
+        while(i >= 0 && (imgDate = dateImgLst.get(i).time.getTime()/1000) >= prevDateWp) {
+
+            if(dateImgLst.get(i).coor == null) {
+                // The values of timeDiff are between 0 and 1, it is not seconds but a dimensionless
+                // variable
+                double timeDiff = (double)(imgDate - prevDateWp) / interval;
+                dateImgLst.get(i).pos = new EastNorth(
+                        interpolate(prevWp.eastNorth.east(),  curWp.eastNorth.east(),  timeDiff),
+                        interpolate(prevWp.eastNorth.north(), curWp.eastNorth.north(), timeDiff));
+                dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
+                dateImgLst.get(i).speed = speed;
+            
+                if (curElevation != null && prevElevation != null)
+                    dateImgLst.get(i).elevation = interpolate(prevElevation, curElevation, timeDiff);
+            
+                ret++;
             }
+            i--;
         }
         return ret;
     }
 
-    private int getLastIndexOfListBefore(ArrayList<ImageEntry> dateImgLst, long searchedDate, double interval) {
-        int lstSize = dateImgLst.size();
-        if (lstSize == 0 || searchedDate < dateImgLst.get(0).time.getTime()/1000) {
-            return -1;
-        } else if (searchedDate-interval > dateImgLst.get(lstSize - 1).time.getTime()/1000) {
-            return lstSize;
-        } else if (inRadius(searchedDate, dateImgLst.get(lstSize - 1).time.getTime()/1000, interval)) {
-            return lstSize - 1;
-        } else if (inRadius(searchedDate , dateImgLst.get(0).time.getTime()/1000, interval)) {
-            int curIndex = 0;
-            while (curIndex + 1 < lstSize
-                    && inRadius(dateImgLst.get(curIndex + 1).time.getTime()/1000, searchedDate, interval)) {
-                curIndex++;
-            }
-            return curIndex;
-        }
-
-        int curIndex = 0;
-        int startIndex=0;
-        int endIndex = lstSize - 1;
-        while (endIndex - startIndex > 1) {
-            curIndex = (endIndex + startIndex) / 2;
-            long curDate = dateImgLst.get(curIndex).time.getTime()/1000;
-            if (curDate-interval < searchedDate) {
-                startIndex = curIndex;
-            } else if (curDate+interval > searchedDate) {
-                endIndex = curIndex;
-            } else {
-                // Check that there is no image _after_ that one that have exactly the same date.
-                while (curIndex + 1 < lstSize
-                        && inRadius(dateImgLst.get(curIndex + 1).time.getTime()/1000, searchedDate, interval)) {
-                    curIndex++;
-                }
-                return curIndex;
-            }
-        }
-        return startIndex;
+    private double interpolate(double val1, double val2, double time) {
+        return val1 + (val2 - val1) * time;
     }
+
+    private int getLastIndexOfListBefore(ArrayList<ImageEntry> dateImgLst, long searchedDate) {
+        int lstSize= dateImgLst.size();
+
+        // No photos or the first photo taken is later than the search period
+        if(lstSize == 0 || searchedDate < dateImgLst.get(0).time.getTime()/1000)
+            return -1;
+            
+        // The search period is later than the last photo
+        if (searchedDate > dateImgLst.get(lstSize - 1).time.getTime() / 1000)
+            return lstSize-1;   
+
+        // The searched index is somewhere in the middle, do a binary search from the beginning
+        int curIndex= 0;
+        int startIndex= 0;
+        int endIndex= lstSize-1;
+        while (endIndex - startIndex > 1) {            
+            curIndex= (int) Math.round((double)(endIndex + startIndex)/2);
+            if (searchedDate > dateImgLst.get(curIndex).time.getTime()/1000)
+                startIndex= curIndex;
+            else
+                endIndex= curIndex;
+        }
+        if (searchedDate < dateImgLst.get(endIndex).time.getTime()/1000)
+            return startIndex;
+ 
+        // This final loop is to check if photos with the exact same EXIF time follows 
+        while ((endIndex < (lstSize-1)) && (dateImgLst.get(endIndex).time.getTime()
+                                                == dateImgLst.get(endIndex + 1).time.getTime()))
+            endIndex++;
+        return endIndex;
+    }
+
 
     private String formatTimezone(double timezone) {
         StringBuffer ret = new StringBuffer();
@@ -1158,9 +1178,5 @@ public class CorrelateGpxWithImages implements ActionListener {
                                 + Math.cos(p1Lat) * Math.cos(p2Lat) * Math.cos(p2Lon - p1Lon))
                      * 6372795; // Earth radius, in meters
         return ret;
-    }
-    
-    private boolean inRadius(long time1, long time2, double interval) {
-        return Math.abs(time1 - time2) < interval;
     }
 }

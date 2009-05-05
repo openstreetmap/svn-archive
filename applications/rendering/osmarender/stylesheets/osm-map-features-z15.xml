@@ -1348,10 +1348,10 @@
 		</rule>
 		<rule e="node|way" k="amenity" v="shelter">
 			<rule e="node|way" k="fireplace" v="yes">
-				<symbol ref="shelter-fireplace" position="center"/>
+				<symbol ref="shelter-fireplace" position="center" transform="scale(0.7)"/>
 			</rule>
 			<else>
-				<symbol ref="shelter" position="center"/>
+				<symbol ref="shelter" position="center" transform="scale(0.7)"/>
 			</else>
 		</rule>
 		

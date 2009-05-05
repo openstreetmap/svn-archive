@@ -21,14 +21,18 @@
 
 ## HomePage : http://wiki.openstreetmap.org/wiki/PythonOsmApi
 
+__version__ = '$Revision$'.split()[1]
+__date__    = '$Date$'.split()[1]
+
 import httplib, base64, xml.dom.minidom
+
 
 ###########################################################################
 ## Main class                                                            ##
 
 class OsmApi:
     
-    def __init__(self, username = None, password = None, passwordfile = None, created_by = "PythonOsmApi/0.2.1", api = "www.openstreetmap.org"):
+    def __init__(self, username = None, password = None, passwordfile = None, created_by = "PythonOsmApi/"+__version__, api = "www.openstreetmap.org"):
 
         # Get username
         if username:

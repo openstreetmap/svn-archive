@@ -23,7 +23,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.04';
 
 
 =head1 SYNOPSIS
@@ -155,7 +155,7 @@ sub parse {
         my($table) = $self->{content}{$featuretemplate}{expandtemplates} =~ /\{\|(.*)\|\}/s
             or throw Geo::OSM::MapFeatures::Error::Parse("Could not extract table on $featuretemplate");
 
-        my @rows = split(/\|-/, $table);
+        my @rows = split(/^\|-/m, $table);
         foreach my $row (@rows){
             my @columns = split("\n", $row);
 

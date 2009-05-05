@@ -21,8 +21,7 @@
 
 ## HomePage : http://wiki.openstreetmap.org/wiki/PythonOsmApi
 
-__version__ = '$Revision$'.split()[1]
-__date__    = '$Date$'.split()[1]
+__version__ = '$Revision: 0$'.split()[1]
 
 import httplib, base64, xml.dom.minidom
 

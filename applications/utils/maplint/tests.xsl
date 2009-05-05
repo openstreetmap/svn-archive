@@ -311,7 +311,6 @@
 <xsl:when test="@v='archaeological_site'"/>
 <xsl:when test="@v='battlefield '"/>
 <xsl:when test="@v='castle'"/>
-<xsl:when test="@v='manor'"/>
 <xsl:when test="@v='memorial'"/>
 <xsl:when test="@v='monument'"/>
 <xsl:when test="@v='ruins'"/>
@@ -705,6 +704,7 @@
 <xsl:when test="@v='cricket_nets'"/>
 <xsl:when test="@v='croquet'"/>
 <xsl:when test="@v='cycling'"/>
+<xsl:when test="@v='diving'"/>
 <xsl:when test="@v='dog_racing'"/>
 <xsl:when test="@v='equestrian'"/>
 <xsl:when test="@v='football'"/>
@@ -829,6 +829,16 @@
 <xsl:when test="@v='limited'"/>
 <xsl:when test="@v='no'"/>
 <xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='wood'">
+<xsl:choose>
+<xsl:when test="@v='coniferous'"/>
+<xsl:when test="@v='deciduous'"/>
+<xsl:when test="@v='mixed'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>
@@ -1560,7 +1570,6 @@
 <xsl:when test="@v='archaeological_site'"/>
 <xsl:when test="@v='battlefield '"/>
 <xsl:when test="@v='castle'"/>
-<xsl:when test="@v='manor'"/>
 <xsl:when test="@v='memorial'"/>
 <xsl:when test="@v='monument'"/>
 <xsl:when test="@v='ruins'"/>
@@ -1954,6 +1963,16 @@
 <xsl:when test="@k='old_ref'">
 
 </xsl:when>
+<xsl:when test="@k='oneway'">
+<xsl:choose>
+<xsl:when test="@v='-1'"/>
+<xsl:when test="@v='no'"/>
+<xsl:when test="@v='yes'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
 <xsl:when test="@k='opening_hours'">
 <xsl:choose>
 <xsl:when test="@v='24/7'"/>
@@ -2228,6 +2247,7 @@
 <xsl:when test="@v='cricket_nets'"/>
 <xsl:when test="@v='croquet'"/>
 <xsl:when test="@v='cycling'"/>
+<xsl:when test="@v='diving'"/>
 <xsl:when test="@v='dog_racing'"/>
 <xsl:when test="@v='equestrian'"/>
 <xsl:when test="@v='football'"/>
@@ -2464,6 +2484,16 @@
 <xsl:when test="@k='wires'">
 <xsl:choose>
 <xsl:when test="@v='single, double, triple, quad'"/>
+<xsl:otherwise>
+<maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:when test="@k='wood'">
+<xsl:choose>
+<xsl:when test="@v='coniferous'"/>
+<xsl:when test="@v='deciduous'"/>
+<xsl:when test="@v='mixed'"/>
 <xsl:otherwise>
 <maplint:result ref="not-in-map_features"><xsl:value-of select="concat('Value not in map features: ', @k, '=', @v)"/></maplint:result>
 </xsl:otherwise>

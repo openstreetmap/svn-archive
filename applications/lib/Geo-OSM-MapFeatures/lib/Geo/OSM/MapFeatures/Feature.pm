@@ -22,7 +22,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 SYNOPSIS
@@ -57,7 +57,8 @@ sub new {
     $self->key( new Geo::OSM::MapFeatures::Feature::Key($key) );
 
     # Value is single value or a list separated by "/", "|" or "or"
-    my @values = split( m#\s*(?:/|\bor\b|\|)\s*#, $value );
+    # With the exception of 24/7, 
+    my @values = split( m#\s*(?:(?<!24)/(?!7)|\'\'\'or\'\'\'|\bor\b|\|)\s*#, $value );
     foreach my $value ( @values ){
         #FIXME: use accessor instead
         push( @{$self->{values}}, new Geo::OSM::MapFeatures::Feature::Value($value) );

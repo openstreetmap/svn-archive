@@ -19,14 +19,16 @@
 ##                                                                       ##
 ###########################################################################
 
+## HomePage : http://wiki.openstreetmap.org/wiki/PythonOsmApi
+
 import httplib, base64, xml.dom.minidom
 
-## Example :
-## api = OsmApi(username="EtienneChove", passwordfile="/home/etienne/osm/password")
+###########################################################################
+## Main class                                                            ##
 
 class OsmApi:
     
-    def __init__(self, username = None, password = None, passwordfile = None, created_by = "PythonOsmApi/0.2", api = "www.openstreetmap.org"):
+    def __init__(self, username = None, password = None, passwordfile = None, created_by = "PythonOsmApi/0.2.1", api = "www.openstreetmap.org"):
 
         # Get username
         if username:
@@ -318,8 +320,23 @@ class OsmApi:
     def ChangesetUpload(self):
         raise NotImplemented
 
-    def ChangesetDownload(self):
-        raise NotImplemented
+    def ChangesetDownload(self, ChangesetId):
+        """ Download data from a changeset. Returns list of dict {type: node|way|relation, action: create|delete|modify, data: {}}. """
+        uri = "/api/0.6/changeset/"+str(ChangesetId)+"/download"
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = data.getElementsByTagName("osmChange")[0]
+        result = []
+        for action in data.childNodes:
+            if action.nodeName == u"#text": continue
+            for elem in action.childNodes:
+                if elem.nodeName == u"node":
+                    result.append({u"action":action.nodeName, u"type": elem.nodeName, u"data": self._DomParseNode(elem)})
+                elif elem.nodeName == u"way":
+                    result.append({u"action":action.nodeName, u"type": elem.nodeName, u"data": self._DomParseWay(elem)})                        
+                elif elem.nodeName == u"relation":
+                    result.append({u"action":action.nodeName, u"type": elem.nodeName, u"data": self._DomParseRelation(elem)})
+        return result
 
     def ChangesetsGet(self):
         raise NotImplemented
@@ -485,102 +502,48 @@ class OsmApi:
     def _XmlEncode(self, text):
         return text.replace("&", "&amp;").replace("\"", "&quot;")
 
-    #######################################################################
-    # End of class OsmApi                                                 #
-    #######################################################################
+## End of main class                                                     ##
+###########################################################################
 
-if __name__ == "__main__":
-    
-    z = OsmApi(api="api06.dev.openstreetmap.org")
-    
-    # Changeset open
 
-    c1 = {u"note": u"Python OsmApi tests"}
-    print "ChangesetCreate : " + str(c1)
-    c1 = z.ChangesetCreate(c1)
-    print "  => " + str(c1)
-    
-    # Node tests
-    
-    n1 = {u"lat":1, u"lon":1, u"tag":{u"name":u"Etienne Chové"}}
-    print "NodeCreate : " + str(n1)
-    n1 = z.NodeCreate(n1)
-    print "  => " + str(n1)
+###########################################################################
+## Reverting tools : DO NOT USE SINCE IT'S INT DEV                       ##
 
-    print "NodeGet : " + str(n1[u"id"])
-    n1 = z.NodeGet(n1[u"id"])
-    print "  => " + str(n1)
+def RevertAnalyse(self, ChangesetId):
+    """ Returns a string saying if changes are revertable or not. """
     
-    n1[u"tag"][u"note"] = u"This is a test"
-    print "NodeUpdate : " + str(n1)
-    n1 = z.NodeUpdate(n1)
-    print "  => " + str(n1)
+    data   = self.ChangesetDownload(ChangesetId)
+    result = u""
     
-    print "NodeDelete : " + str(n1)
-    n1 = z.NodeDelete(n1)
-    print "  => " + str(n1)
-    
-    print
-    
-    # Way tests
-    
-    n1 = {u"lat":1, u"lon":1, u"tag":{u"name":u"node 1"}}
-    n2 = {u"lat":1.1, u"lon":1.1, u"tag":{u"name":u"node 2"}}
-    n1 = z.NodeCreate(n1)
-    n2 = z.NodeCreate(n2)
-    w1 = {u"nd":[n1[u"id"], n2[u"id"]], u"tag":{}}
-    
-    print "WayCreate : " + str(w1)
-    w1 = z.WayCreate(w1)
-    print "  => " + str(w1)
+    for elem in data:
+                
+        if elem[u"type"] == u"node":
+            hist = self.NodeHistory(elem[u"data"][u"id"])
+            elem_latest = hist[sorted(hist.keys())[-1]]
+        elif elem[u"type"] == u"way":
+            hist = self.WayHistory(elem[u"data"][u"id"])
+            elem_latest = hist[sorted(hist.keys())[-1]]
+        elif elem[u"type"] == u"relation":
+            hist = self.RelationHistory(elem[u"data"][u"id"])
+            elem_latest = hist[sorted(hist.keys())[-1]]
+        
+        result += elem[u"action"]           + u" " * (10-len(elem[u"action"]))
+        result += elem[u"type"]             + u" " * (10-len(elem[u"type"]))
+        result += str(elem[u"data"][u"id"]) + u" " * (10-len(str(elem[u"data"][u"id"])))
+        result +=  u" => "
+        if elem[u"data"][u"version"] == elem_latest[u"version"]:
+            result += u"revertable\n"
+        else:
+            result += u"not revertable\n"
+            
+    return result.strip()
 
-    print "WayGet : " + str(w1[u"id"])
-    w1 = z.WayGet(w1[u"id"])
-    print "  => " + str(w1)
-    
-    w1[u"nd"].append(n1[u"id"])
-    print "WayUpdate : " + str(w1)
-    w1 = z.WayUpdate(w1)
-    print "  => " + str(w1)
-    
-    print "WayDelete : " + str(w1)
-    w1 = z.WayDelete(w1)
-    print "  => " + str(w1)
-    
-    z.NodeDelete(n1)
-    z.NodeDelete(n2)
-    
-    print
-    
-    # Relation tests
+def RevertIfPossible(self, ChangesetId):
+    """ Revert all changes if possible. """
+    return
 
-    n1 = {u"lat":1, u"lon":1, u"tag":{u"name":u"node 1"}}
-    n2 = {u"lat":1.1, u"lon":1.1, u"tag":{u"name":u"node 2"}}
-    n1 = z.NodeCreate(n1)
-    n2 = z.NodeCreate(n2)
-    r1 = {u"member":[{u"type": u"node", u"ref": n1[u"id"], u"role": u"role1"}], u"tag":{}}
-    
-    print "RelationCreate : " + str(r1)
-    r1 = z.RelationCreate(r1)
-    print "  => " + str(r1)
-    
-    print "RelationGet : " + str(r1[u"id"])
-    r1 = z.RelationGet(r1[u"id"])
-    print "  => " + str(r1)
-    
-    r1[u"member"].append({u"type": u"node", u"ref": n2[u"id"], u"role": u""})
-    print "RelationUpdate : " + str(w1)
-    r1 = z.RelationUpdate(r1)
-    print "  => " + str(r1)
-    
-    print "RelationDelete : " + str(r1)
-    r1 = z.RelationDelete(r1)
-    print "  => " + str(r1)
-    
-    print
-    
-    # Changeset close
+## End of reverting tools                                                ##
+###########################################################################
 
-    print "ChangesetClose"
-    c1 = z.ChangesetClose()
-    print "  => " + str(c1)
+#z = OsmApi()
+#print RevertAnalyse(z, 912290)

@@ -41,8 +41,8 @@
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>96.3797407402068</double> 
-     <double>253.94603557501358</double> 
+     <double>99.947362085215</double> 
+     <double>346.7041905452258</double> 
     </void> 
    </object> 
   </void> 
@@ -61,8 +61,8 @@
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>294.3797407402067</double> 
-     <double>255.94603557501358</double> 
+     <double>297.94736208521493</double> 
+     <double>348.7041905452258</double> 
     </void> 
    </object> 
   </void> 
@@ -76,8 +76,8 @@
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>474.3797407402067</double> 
-     <double>252.94603557501358</double> 
+     <double>477.94736208521493</double> 
+     <double>345.7041905452258</double> 
     </void> 
    </object> 
   </void> 
@@ -91,8 +91,8 @@
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>616.3797407402069</double> 
-     <double>255.94603557501358</double> 
+     <double>619.9473620852152</double> 
+     <double>348.7041905452258</double> 
     </void> 
    </object> 
   </void> 
@@ -136,8 +136,8 @@
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>97.3797407402068</double> 
-     <double>365.9460355750136</double> 
+     <double>100.947362085215</double> 
+     <double>458.7041905452258</double> 
     </void> 
    </object> 
   </void> 
@@ -151,8 +151,8 @@
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>620.3797407402069</double> 
-     <double>419.9460355750136</double> 
+     <double>626.9473620852152</double> 
+     <double>454.7041905452258</double> 
     </void> 
    </object> 
   </void> 
@@ -214,8 +214,8 @@ CellListener</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>13.24317153998912</double> 
-     <double>455.324449805019</double> 
+     <double>16.810792884997326</double> 
+     <double>548.0826047752311</double> 
     </void> 
    </object> 
   </void> 
@@ -229,8 +229,8 @@ CellListener</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>18.241181774687107</double> 
-     <double>655.7328308954709</double> 
+     <double>21.808803119695312</double> 
+     <double>748.4909858656832</double> 
     </void> 
    </object> 
   </void> 
@@ -244,8 +244,8 @@ CellListener</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>235.43171539989112</double> 
-     <double>473.35176364506253</double> 
+     <double>238.99933674489932</double> 
+     <double>566.1099186152745</double> 
     </void> 
    </object> 
   </void> 
@@ -259,8 +259,8 @@ CellListener</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>185.5163099404245</double> 
-     <double>658.6229122801959</double> 
+     <double>189.0839312854327</double> 
+     <double>751.3810672504081</double> 
     </void> 
    </object> 
   </void> 
@@ -274,8 +274,8 @@ CellListener</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>130.02200779923822</double> 
-     <double>577.4057280700491</double> 
+     <double>133.58962914424643</double> 
+     <double>670.1638830402613</double> 
     </void> 
    </object> 
   </void> 
@@ -289,8 +289,23 @@ CellListener</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>462.0</double> 
-     <double>535.0</double> 
+     <double>647.7308411301688</double> 
+     <double>648.413687131257</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object class="com.horstmann.violet.ClassNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>Layout Manager</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>501.95333138112096</double> 
+     <double>642.4396744610992</double> 
     </void> 
    </object> 
   </void> 

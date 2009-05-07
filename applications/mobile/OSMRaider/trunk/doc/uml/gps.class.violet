@@ -52,7 +52,7 @@ getState</string>
    <object id="ClassNode2" class="com.horstmann.violet.ClassNode"> 
     <void property="name"> 
      <void property="text"> 
-      <string>Blutooth</string> 
+      <string>Bluetooth</string> 
      </void> 
     </void> 
    </object> 
@@ -73,8 +73,8 @@ getState</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>463.0</double> 
-     <double>282.0</double> 
+     <double>438.0</double> 
+     <double>348.0</double> 
     </void> 
    </object> 
   </void> 
@@ -110,7 +110,7 @@ getDevices</string>
    <object id="ClassNode5" class="com.horstmann.violet.ClassNode"> 
     <void property="name"> 
      <void property="text"> 
-      <string>InternalConnection</string> 
+      <string>Internal</string> 
      </void> 
     </void> 
    </object> 
@@ -136,8 +136,8 @@ getDevices</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>581.0</double> 
-     <double>277.0</double> 
+     <double>569.0</double> 
+     <double>350.0</double> 
     </void> 
    </object> 
   </void> 
@@ -151,8 +151,8 @@ getDevices</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>463.0</double> 
-     <double>370.0</double> 
+     <double>440.0</double> 
+     <double>468.0</double> 
     </void> 
    </object> 
   </void> 
@@ -166,35 +166,14 @@ getDevices</string>
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>468.0</double> 
-     <double>463.0</double> 
+     <double>567.0</double> 
+     <double>497.0</double> 
     </void> 
    </object> 
   </void> 
   <void method="addNode"> 
    <object id="PointNode0" class="com.horstmann.violet.PointNode"> 
     <void id="Rectangle2D$Double0" property="bounds"> 
-     <void method="setRect"> 
-      <double>519.0</double> 
-      <double>390.0</double> 
-      <double>0.0</double> 
-      <double>0.0</double> 
-     </void> 
-    </void> 
-    <void property="bounds"> 
-     <object idref="Rectangle2D$Double0"/> 
-    </void> 
-   </object> 
-   <object class="java.awt.geom.Point2D$Double"> 
-    <void method="setLocation"> 
-     <double>519.0</double> 
-     <double>390.0</double> 
-    </void> 
-   </object> 
-  </void> 
-  <void method="addNode"> 
-   <object id="PointNode1" class="com.horstmann.violet.PointNode"> 
-    <void id="Rectangle2D$Double1" property="bounds"> 
      <void method="setRect"> 
       <double>516.0</double> 
       <double>500.0</double> 
@@ -203,7 +182,7 @@ getDevices</string>
      </void> 
     </void> 
     <void property="bounds"> 
-     <object idref="Rectangle2D$Double1"/> 
+     <object idref="Rectangle2D$Double0"/> 
     </void> 
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
@@ -228,6 +207,21 @@ no signal</string>
     <void method="setLocation"> 
      <double>682.0</double> 
      <double>90.0</double> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="addNode"> 
+   <object id="ClassNode8" class="com.horstmann.violet.ClassNode"> 
+    <void property="name"> 
+     <void property="text"> 
+      <string>PositionFilter</string> 
+     </void> 
+    </void> 
+   </object> 
+   <object class="java.awt.geom.Point2D$Double"> 
+    <void method="setLocation"> 
+     <double>300.0</double> 
+     <double>352.0</double> 
     </void> 
    </object> 
   </void> 
@@ -321,9 +315,16 @@ no signal</string>
    <object idref="PointNode0"/> 
   </void> 
   <void method="connect"> 
-   <object class="com.horstmann.violet.NoteEdge"/> 
-   <object idref="NoteNode0"/> 
-   <object idref="PointNode1"/> 
+   <object class="com.horstmann.violet.ClassRelationshipEdge"> 
+    <void property="bentStyle"> 
+     <object class="com.horstmann.violet.BentStyle" field="VHV"/> 
+    </void> 
+    <void property="endArrowHead"> 
+     <object class="com.horstmann.violet.ArrowHead" field="TRIANGLE"/> 
+    </void> 
+   </object> 
+   <object idref="ClassNode8"/> 
+   <object idref="ClassNode1"/> 
   </void> 
  </object> 
 </java> 

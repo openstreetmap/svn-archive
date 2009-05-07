@@ -243,7 +243,7 @@ int Components::getParentWayOfNode(int nodeid) const
 
 void Components::toXML(ostream &strm)
 {
-	strm << "<?xml version='1.0'?>" << endl << "<osm version='0.5'>" << endl;
+	strm << "<?xml version='1.0'?>" << endl << "<osm version='0.6'>" << endl;
 	rewindNodes();
 	while (hasMoreNodes())
 	{

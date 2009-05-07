@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 	OSM::Components *comp1 = OSM::Parser::parse(in);
 	in.close();
 
-	OSM::Client client("http://www.openstreetmap.org/api/0.5");
+	OSM::Client client("http://api.openstreetmap.org/api/0.6");
 	client.setLoginDetails(argv[2], argv[3]);
 
 	string osmData = client.grabOSM("map", -0.75, 51.02, -0.7, 51.07);

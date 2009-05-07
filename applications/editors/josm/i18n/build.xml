@@ -73,12 +73,15 @@
     <ant target="build-lang"><property name="language" value="el"/></ant>
     <ant target="build-lang"><property name="language" value="en_GB"/></ant>
     <ant target="build-lang"><property name="language" value="es"/></ant>
+    <ant target="build-lang"><property name="language" value="et"/></ant>
     <ant target="build-lang"><property name="language" value="fi"/></ant>
     <ant target="build-lang"><property name="language" value="fr"/></ant>
+    <ant target="build-lang"><property name="language" value="gl"/></ant>
     <ant target="build-lang"><property name="language" value="he"/><property name="jlanguage" value="iw_IL"/></ant>
     <ant target="build-lang"><property name="language" value="ja"/></ant>
     <ant target="build-lang"><property name="language" value="is"/></ant>
     <ant target="build-lang"><property name="language" value="it"/></ant>
+    <ant target="build-lang"><property name="language" value="nb"/></ant>
     <ant target="build-lang"><property name="language" value="nl"/></ant>
     <ant target="build-lang"><property name="language" value="pl"/></ant>
     <ant target="build-lang"><property name="language" value="ro"/></ant>

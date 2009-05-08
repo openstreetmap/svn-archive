@@ -229,6 +229,8 @@ struct relation_member_stream
 };
 
 void changesets(pqxx::work &xaction) {
+  // work around reformDate returning pointer to static storage :-(
+  static char created_at[64];
   struct keyval tags;
   initList(&tags);
 
@@ -254,9 +256,12 @@ void changesets(pqxx::work &xaction) {
 	resetList(&tags);
       }
 
+      // work around reformDate returning pointer to static data
+      strncpy(created_at, reformDate(row[2].c_str()), 64);
+
       osm_changeset(id,
 		    lookup_user(row[1].c_str()), // user_id
-		    reformDate(row[2].c_str()), // created_at
+		    created_at, // created_at
 		    reformDate(row[3].c_str()), // closed_at
 		    null_bbox ? 0 : 1,
 		    null_bbox ? 0 : row[5].as<int>() / SCALE, // min_lat

@@ -4,16 +4,15 @@ package uk.co.randomjunk.osmosis.transform;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.randomjunk.osmosis.transform.v0_5.TransformTaskFactory;
+import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
+import org.openstreetmap.osmosis.core.plugin.PluginLoader;
 
-import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
-import com.bretth.osmosis.core.plugin.PluginLoader;
 
 public class TransformPlugin implements PluginLoader {
 
 	@Override
 	public Map<String, TaskManagerFactory> loadTaskFactories() {
-		TransformTaskFactory v0_5 = new TransformTaskFactory();
+		uk.co.randomjunk.osmosis.transform.v0_5.TransformTaskFactory v0_5 = new uk.co.randomjunk.osmosis.transform.v0_5.TransformTaskFactory();
 		uk.co.randomjunk.osmosis.transform.v0_6.TransformTaskFactory v0_6 =
 			new uk.co.randomjunk.osmosis.transform.v0_6.TransformTaskFactory();
 		

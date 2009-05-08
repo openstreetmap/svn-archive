@@ -9,6 +9,10 @@
  */
 const char *xmlescape(const char *in);
 
+void osm_changeset(int id, const char *user, const char *created_at, const char *closed_at, int has_bbox, 
+		   long double min_lat, long double max_lat, long double min_lon, long double max_lon, 
+		   int open, struct keyval *tags);
+
 void osm_node(int id, 
 	      long double lat, long double lon, 
 	      struct keyval *tags, const char *ts, 

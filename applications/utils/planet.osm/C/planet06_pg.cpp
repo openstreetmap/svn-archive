@@ -85,7 +85,7 @@ class table_stream {
 public:
 
   table_stream(pqxx::work &x, string query, string name) 
-    : stream(x, query, name, 1000),
+    : stream(x, query, name, 10000),
       ic_itr(stream), ic_end(), next_id(0) {
     // initialise the iterators to the beginning of the table
     // and read the first element from it.
@@ -95,6 +95,8 @@ public:
       if (!(*r_itr)[0].to<id_type>(next_id)) {
 	throw std::runtime_error("ID is not numeric.");
       }
+    } else {
+      next_id = std::numeric_limits<id_type>::max();
     }
   }
 
@@ -225,6 +227,49 @@ struct relation_member_stream
     return has_members;
   }
 };
+
+void changesets(pqxx::work &xaction) {
+  struct keyval tags;
+  initList(&tags);
+
+  ostringstream query;
+  query << "select id, user_id, created_at, closed_at, num_changes, "
+	<< "min_lat, max_lat, min_lon, max_lon, closed_at > now() as open "
+	<< "from changesets c order by id";
+
+  icursorstream changesets(xaction, query.str(), "fetch_changesets", 1000);
+  tag_stream tagstream(xaction, "changeset_tags");
+
+  const icursor_iterator ic_end;
+  for (icursor_iterator ic_itr(changesets); ic_itr != ic_end; ++ic_itr) {
+    const pqxx::result &res = *ic_itr;
+    for (pqxx::result::const_iterator itr = res.begin();
+	 itr != res.end(); ++itr) {
+      const pqxx::result::tuple &row = *itr;
+      const int id = row[0].as<int>();
+      const int num_changes = row[4].as<int>();
+      const bool null_bbox = row[5].is_null() || row[6].is_null() || row[7].is_null() || row[8].is_null();
+
+      if (!tagstream.get(id, &tags)) {
+	resetList(&tags);
+      }
+
+      osm_changeset(id,
+		    lookup_user(row[1].c_str()), // user_id
+		    reformDate(row[2].c_str()), // created_at
+		    reformDate(row[3].c_str()), // closed_at
+		    null_bbox ? 0 : 1,
+		    null_bbox ? 0 : row[5].as<int>() / SCALE, // min_lat
+		    null_bbox ? 0 : row[6].as<int>() / SCALE, // max_lat
+		    null_bbox ? 0 : row[7].as<int>() / SCALE, // min_lon
+		    null_bbox ? 0 : row[8].as<int>() / SCALE, // max_lon
+		    row[9].as<bool>() ? 1 : 0, // open
+		    &tags);
+    }
+  }
+
+  resetList(&tags);
+}
 
 void nodes(pqxx::work &xaction) {
   struct keyval tags;
@@ -371,12 +416,14 @@ void relations(pqxx::work &xaction) {
 int main(int argc, char **argv)
 {
   int i;
-  int want_nodes, want_ways, want_relations;
+  int want_nodes, want_ways, want_relations, want_changesets;
     
   if (argc == 1)
+    // note: changesets not enabled by default, yet. client software will need
+    // time to prepare. suggestion is to have them as a separate download.
     want_nodes = want_ways = want_relations = 1;
   else {
-    want_nodes = want_ways = want_relations = 0;
+    want_nodes = want_ways = want_relations = want_changesets = 0;
     for(i=1; i<argc; i++) {
       if (!strcmp(argv[i], "--nodes"))
 	want_nodes = 1;
@@ -384,11 +431,14 @@ int main(int argc, char **argv)
 	want_ways = 1;
       else if (!strcmp(argv[i], "--relations"))
 	want_relations = 1;
+      else if (!strcmp(argv[i], "--changesets"))
+	want_changesets = 1;
       else {
 	fprintf(stderr, "Usage error:\n");
-	fprintf(stderr, "\t%s [--nodes] [--ways] [--relations]\n\n", argv[0]);
-	fprintf(stderr, "Writes OSM planet dump to STDOUT. If no flags are specified then all data is output.\n");
-	fprintf(stderr, "If one or more flags are set then only the requested data is dumped.\n");
+	fprintf(stderr, "\t%s [--nodes] [--ways] [--relations] [--changesets]\n\n", argv[0]);
+	fprintf(stderr, "Writes OSM planet dump to STDOUT. If no flags are specified then nodes, ways and\n");
+	fprintf(stderr, "relations are output. If one or more flags are set then only the requested data\n");
+	fprintf(stderr, "is dumped.\n");
 	exit(2);
       }
     }
@@ -410,6 +460,9 @@ int main(int argc, char **argv)
 
     osm_header();
     
+    if (want_changesets)
+      changesets(xaction);
+
     if (want_nodes)
       nodes(xaction);
 

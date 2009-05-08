@@ -93,6 +93,29 @@ void osm_tags(struct keyval *tags)
    resetList(tags);
 }
 
+void osm_changeset(int id, const char *user, const char *created_at, const char *closed_at, int has_bbox, 
+		   long double min_lat, long double max_lat, long double min_lon, long double max_lon, 
+		   int open, struct keyval *tags) {
+  printf(INDENT "<changeset id=\"%d\" created_at=\"%s\" ", id, created_at);
+  if (open) {
+    printf("open=\"true\" ");
+  } else {
+    printf("closed_at=\"%s\" open=\"false\" ", closed_at);
+  }
+  if (has_bbox) {
+    printf("min_lon=\"%.7Lf\" min_lat=\"%.7Lf\" max_lon=\"%.7Lf\" max_lat=\"%.7Lf\" ",
+	   min_lon, min_lat, max_lon, max_lat);
+  }
+  printf("%s", user);
+  if (listHasData(tags)) {
+    printf(">\n");
+    osm_tags(tags);
+    printf(INDENT "</changeset>\n");
+  } else {
+    printf("/>\n");
+  }
+}
+
 void osm_node(int id, long double lat, long double lon, struct keyval *tags, const char *ts, const char *user, int version, int changeset)
 {
   if (listHasData(tags)) {

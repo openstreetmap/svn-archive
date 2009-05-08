@@ -1,10 +1,10 @@
 package uk.co.randomjunk.osmosis.transform;
 
-import com.bretth.osmosis.core.domain.v0_6.EntityType;
+import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 
 public enum TTEntityType {
 
-	NODE, WAY, RELATION;
+	NODE, WAY, RELATION, BOUND;
 	
 	
 	public EntityType getEntityType0_6() {
@@ -12,15 +12,16 @@ public enum TTEntityType {
 		case NODE: return EntityType.Node;
 		case WAY: return EntityType.Way;
 		case RELATION: return EntityType.Relation;
+		case BOUND: return EntityType.Bound;
 		default: return null;
 		}
 	}
 	
-	public com.bretth.osmosis.core.domain.v0_5.EntityType getEntityType0_5() {
+	public org.openstreetmap.osmosis.core.domain.v0_5.EntityType getEntityType0_5() {
 		switch ( this ) {
-		case NODE: return com.bretth.osmosis.core.domain.v0_5.EntityType.Node;
-		case WAY: return com.bretth.osmosis.core.domain.v0_5.EntityType.Way;
-		case RELATION: return com.bretth.osmosis.core.domain.v0_5.EntityType.Relation;
+		case NODE: return org.openstreetmap.osmosis.core.domain.v0_5.EntityType.Node;
+		case WAY: return org.openstreetmap.osmosis.core.domain.v0_5.EntityType.Way;
+		case RELATION: return org.openstreetmap.osmosis.core.domain.v0_5.EntityType.Relation;
 		default: return null;
 		}
 	}
@@ -30,11 +31,12 @@ public enum TTEntityType {
 		case Node: return NODE;
 		case Way: return WAY;
 		case Relation: return RELATION;
+		case Bound: return BOUND;
 		default: return null;
 		}
 	}
 	
-	public static TTEntityType fromEntityType0_5(com.bretth.osmosis.core.domain.v0_5.EntityType entityType) {
+	public static TTEntityType fromEntityType0_5(org.openstreetmap.osmosis.core.domain.v0_5.EntityType entityType) {
 		switch ( entityType ) {
 		case Node: return NODE;
 		case Way: return WAY;

@@ -141,6 +141,9 @@ public class TransformLoader {
 			return TTEntityType.WAY;
 		if ( type.equals("relation") )
 			return TTEntityType.RELATION;
+		if ( type.equals("bound") ) {
+			return TTEntityType.BOUND;
+		}
 		return null;
 	}
 

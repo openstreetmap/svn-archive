@@ -14,29 +14,29 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openstreetmap.osmosis.core.container.v0_5.EntityContainer;
+import org.openstreetmap.osmosis.core.container.v0_5.NodeContainer;
+import org.openstreetmap.osmosis.core.container.v0_5.RelationContainer;
+import org.openstreetmap.osmosis.core.container.v0_5.WayContainer;
+import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
+import org.openstreetmap.osmosis.core.domain.common.TimestampFormat;
+import org.openstreetmap.osmosis.core.domain.common.UnparsedTimestampContainer;
+import org.openstreetmap.osmosis.core.domain.v0_5.Entity;
+import org.openstreetmap.osmosis.core.domain.v0_5.EntityType;
+import org.openstreetmap.osmosis.core.domain.v0_5.Node;
+import org.openstreetmap.osmosis.core.domain.v0_5.Relation;
+import org.openstreetmap.osmosis.core.domain.v0_5.Tag;
+import org.openstreetmap.osmosis.core.domain.v0_5.Way;
+import org.openstreetmap.osmosis.core.task.v0_5.Sink;
+import org.openstreetmap.osmosis.core.task.v0_5.SinkSource;
+import org.openstreetmap.osmosis.core.xml.common.XmlTimestampFormat;
+
 import uk.co.randomjunk.osmosis.transform.Match;
 import uk.co.randomjunk.osmosis.transform.Output;
 import uk.co.randomjunk.osmosis.transform.StatsSaveException;
 import uk.co.randomjunk.osmosis.transform.TTEntityType;
 import uk.co.randomjunk.osmosis.transform.Translation;
 import uk.co.randomjunk.osmosis.transform.impl.TransformLoader;
-
-import com.bretth.osmosis.core.container.v0_5.EntityContainer;
-import com.bretth.osmosis.core.container.v0_5.NodeContainer;
-import com.bretth.osmosis.core.container.v0_5.RelationContainer;
-import com.bretth.osmosis.core.container.v0_5.WayContainer;
-import com.bretth.osmosis.core.domain.common.TimestampContainer;
-import com.bretth.osmosis.core.domain.common.TimestampFormat;
-import com.bretth.osmosis.core.domain.common.UnparsedTimestampContainer;
-import com.bretth.osmosis.core.domain.v0_5.Entity;
-import com.bretth.osmosis.core.domain.v0_5.EntityType;
-import com.bretth.osmosis.core.domain.v0_5.Node;
-import com.bretth.osmosis.core.domain.v0_5.Relation;
-import com.bretth.osmosis.core.domain.v0_5.Tag;
-import com.bretth.osmosis.core.domain.v0_5.Way;
-import com.bretth.osmosis.core.task.v0_5.Sink;
-import com.bretth.osmosis.core.task.v0_5.SinkSource;
-import com.bretth.osmosis.core.xml.common.XmlTimestampFormat;
 
 public class TransformTask implements SinkSource {
 	private static Logger logger = Logger.getLogger(TransformTask.class.getName());

@@ -14,29 +14,31 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
+import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
+import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
+import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
+import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
+import org.openstreetmap.osmosis.core.domain.common.TimestampFormat;
+import org.openstreetmap.osmosis.core.domain.common.UnparsedTimestampContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
+import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
+import org.openstreetmap.osmosis.core.domain.v0_6.Node;
+import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
+import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
+import org.openstreetmap.osmosis.core.domain.v0_6.Way;
+import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
+import org.openstreetmap.osmosis.core.xml.common.XmlTimestampFormat;
+
 import uk.co.randomjunk.osmosis.transform.Match;
 import uk.co.randomjunk.osmosis.transform.Output;
 import uk.co.randomjunk.osmosis.transform.StatsSaveException;
 import uk.co.randomjunk.osmosis.transform.TTEntityType;
 import uk.co.randomjunk.osmosis.transform.Translation;
 import uk.co.randomjunk.osmosis.transform.impl.TransformLoader;
-
-import com.bretth.osmosis.core.container.v0_6.EntityContainer;
-import com.bretth.osmosis.core.container.v0_6.NodeContainer;
-import com.bretth.osmosis.core.container.v0_6.RelationContainer;
-import com.bretth.osmosis.core.container.v0_6.WayContainer;
-import com.bretth.osmosis.core.domain.common.TimestampContainer;
-import com.bretth.osmosis.core.domain.common.TimestampFormat;
-import com.bretth.osmosis.core.domain.common.UnparsedTimestampContainer;
-import com.bretth.osmosis.core.domain.v0_6.Entity;
-import com.bretth.osmosis.core.domain.v0_6.EntityType;
-import com.bretth.osmosis.core.domain.v0_6.Node;
-import com.bretth.osmosis.core.domain.v0_6.Relation;
-import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.domain.v0_6.Way;
-import com.bretth.osmosis.core.task.v0_6.Sink;
-import com.bretth.osmosis.core.task.v0_6.SinkSource;
-import com.bretth.osmosis.core.xml.common.XmlTimestampFormat;
 
 public class TransformTask implements SinkSource {
 	private static Logger logger = Logger.getLogger(TransformTask.class.getName());
@@ -83,7 +85,7 @@ public class TransformTask implements SinkSource {
 	public void process(EntityContainer entityContainer) {
 		Entity entity = entityContainer.getEntity();
 		EntityType entityType = entity.getType();
-		List<Tag> tagList = entity.getTagList();
+		Collection<Tag> tagList = entity.getTags();
 		Map<String, String> originalTags = new HashMap<String, String>();
 		for ( Tag tag : tagList ) {
 			originalTags.put(tag.getKey(), tag.getValue());
@@ -117,26 +119,29 @@ public class TransformTask implements SinkSource {
 			Node oldNode = (Node) entityContainer.getEntity();
 			output = new NodeContainer(
 					new Node(oldNode.getId(), oldNode.getVersion(), timestamp,
-							oldNode.getUser(), oldNode.getLatitude(),
+							oldNode.getUser(), oldNode.getChangesetId(), oldNode.getLatitude(),
 							oldNode.getLongitude()));
-			output.getEntity().addTags(newTags);
+			output.getEntity().getTags().addAll(newTags);
 			break;
 			
 		case Way:
 			Way oldWay = (Way) entityContainer.getEntity();
-			Way way = new Way(oldWay.getId(), oldWay.getVersion(), timestamp, oldWay.getUser());
-			way.addTags(newTags);
-			way.addWayNodes(oldWay.getWayNodeList());
+			Way way = new Way(oldWay.getId(), oldWay.getVersion(), timestamp, oldWay.getUser(),oldWay.getChangesetId());
+			way.getTags().addAll(newTags);
+			way.getWayNodes().addAll(oldWay.getWayNodes());
 			output = new WayContainer(way);
 			break;
 
 		case Relation:
 			Relation oldRelation = (Relation) entityContainer.getEntity();
 			Relation relation = new Relation(oldRelation.getId(), oldRelation.getVersion(),
-					timestamp, oldRelation.getUser());
-			relation.addTags(newTags);
-			relation.addMembers(oldRelation.getMemberList());
+					timestamp, oldRelation.getUser(), oldRelation.getChangesetId());
+			relation.getTags().addAll(newTags);
+			relation.getMembers().addAll(oldRelation.getMembers());
 			output = new RelationContainer(relation);
+			break;
+		case Bound:
+			output = new BoundContainer((Bound) entityContainer.getEntity());
 			break;
 
 		}

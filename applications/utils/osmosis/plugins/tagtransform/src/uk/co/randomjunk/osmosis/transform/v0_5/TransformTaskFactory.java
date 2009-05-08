@@ -2,10 +2,10 @@
 package uk.co.randomjunk.osmosis.transform.v0_5;
 
 
-import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
-import com.bretth.osmosis.core.pipeline.common.TaskManager;
-import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
-import com.bretth.osmosis.core.pipeline.v0_5.SinkSourceManager;
+import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
+import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
+import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
+import org.openstreetmap.osmosis.core.pipeline.v0_5.SinkSourceManager;
 
 public class TransformTaskFactory extends TaskManagerFactory {
 

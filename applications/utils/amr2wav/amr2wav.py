@@ -46,11 +46,13 @@ usage = "Usage %prog [options]\n\
 Reads the input GPX file and adds <link> tags to point to audio files associated\
 with the data.  \n\
 The method of determining the audio filename is specified by the mode option.\n\
+the difference between mode 'gpsmid' and 'gpsmid_lc' is that 'gpsmid_lc' converts\n\
+the filenames to lower case whereas 'gpsmid' uses the case from the gpx file.\n\
 It is assumed that the audio files are in amr format, and so they\
 are converted to .wav format using ffmpeg."
-version = "0.2"
+version = "0.3"
 
-modes = ["gjgpsmid","gpsmid"]
+modes = ["gjgpsmid","gpsmid_lc","gpsmid"]
 
 parser = OptionParser(usage=usage,version=version)
 parser.add_option("-i", "--infile", dest="infilename", 
@@ -68,7 +70,7 @@ parser.add_option("-v", "--verbose", action="store_true",dest="verbose",
 parser.add_option("-d", "--debug", action="store_true",dest="debug",
                   help="Include debug output")
 parser.set_defaults(
-    infilename="waypoints.gpx",
+    infilename="Waypoints.gpx",
     outfilename="waypoints_wav.gpx",
     modestr = "gpsmid",
     debug=False,
@@ -109,12 +111,16 @@ for waypt in pgpx.wayPts:
     of.write("<wpt lat='%s' lon='%s'>\n" % (waypt['lat'],waypt['lon']))
     if 'name' in waypt:
         of.write("<name>%s</name>\n" % waypt['name'])
-        if modeno==1:   # gpsmid mode
+        if modeno==1 or modeno==2:   # gpsmid mode
+            if options.debug: print "modeno=%d" % modeno
             namestr = waypt['name']
             nameparts = namestr.split('AudioMarker-')
             if options.debug: print "nameparts=%s" % nameparts
             fnamebase = nameparts[1]
-            fname = fnamebase.lower() + '.amr'
+            if modeno==1:
+                fname = fnamebase.lower() + '.amr'
+            else:
+                fname = fnamebase + '.amr'
             if options.debug: print "fname = %s" % fname
     if 't' in waypt:
         of.write("<com><time>%s</time></com>\n" % waypt['time'])

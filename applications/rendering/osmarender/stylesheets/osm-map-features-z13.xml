@@ -299,7 +299,7 @@
 				<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="cycleroad">
-				<rule e="way" k="motorcar" v="yes|destination|private">
+				<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 					<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
 				</rule>
 				<else>
@@ -441,7 +441,7 @@
 					<line class="highway-casing highway-unclassified-casing"/>
 				</rule>
 				<rule e="way" k="highway" v="cycleroad">
-					<rule e="way" k="motorcar" v="yes|destination|private">
+					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 						<line class="highway-casing highway-unclassified-casing"/>
 					</rule>
 					<else>
@@ -536,7 +536,7 @@
 				<area class="highway-core highway-unclassified-area no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="cycleroad">
-				<rule e="way" k="motorcar" v="yes|destination|private">
+				<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 					<area class="highway-core highway-unclassified-area no-bezier"/>
 				</rule>
 				<else>
@@ -705,7 +705,7 @@
 					<line class="highway-core highway-unclassified-core"/>
 				</rule>
 				<rule e="way" k="highway" v="cycleroad">
-					<rule e="way" k="motorcar" v="yes|destination|private">
+					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 						<line class="highway-core highway-unclassified-core"/>
 					</rule>
 					<else>

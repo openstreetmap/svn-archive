@@ -181,8 +181,8 @@
 			// Draw line and tagged nodes
 	
 			this.line.moveTo(this.path[0].x,this.path[0].y);
-			for (var i=1; i<this.path.length; i+=1) {
-				this.line.lineTo(this.path[i].x,this.path[i].y);
+			for (var i=0; i<this.path.length; i+=1) {
+				if (i>0) { this.line.lineTo(this.path[i].x,this.path[i].y); }
 				if (this.path[i].tagged) {
 					// **** attach correct icon:
 					// if (this.path[i].attr['frog']) {
@@ -434,7 +434,7 @@
 			setPointer('penplus');
 		} else if (_root.drawpoint>-1) { setPointer('penplus'); }
 								  else { setPointer(''); }
-		var a=getName(this.attr,nodenames); if (a) { setFloater(a); }
+		if (this._name!=_root.wayselected) { var a=getName(this.attr,nodenames); if (a) { setFloater(a); } }
 	};
 	
 	OSMWay.prototype.onRollOut=function() {

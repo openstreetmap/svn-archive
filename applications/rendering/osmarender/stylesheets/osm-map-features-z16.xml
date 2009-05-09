@@ -660,7 +660,8 @@
 						</rule>
 						<else>
 							<line class="highway-casing highway-footway-casing" smart-linecap="no"/>
-						</else></else>
+						</else>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="bridleway">
 					<line class="highway-casing highway-bridleway-casing" smart-linecap="no"/>
@@ -1139,8 +1140,11 @@
 						<line class="highway-core highway-service-core"/>
 					</else>
 				</rule>
-				<rule e="way" k="highway" v="unclassified|residential|minor">
+				<rule e="way" k="highway" v="unclassified|minor">
 					<line class="highway-core highway-unclassified-core"/>
+				</rule>
+				<rule e="way" k="highway" v="residential">
+					<line class="highway-core highway-residential-core"/>
 				</rule>
 				<rule e="way" k="highway" v="road">
 					<line class="highway-core highway-road-core"/>
@@ -2754,10 +2758,15 @@
 			.highway-unclassified-bridge-casing     { stroke-width: 3.1px; }
 			.highway-unclassified-bridge-core       { stroke-width: 2.9px; }
 			.highway-unclassified-casing            { stroke-width: 2.5px;  stroke: #707070; }
-			.highway-unclassified-cy1-casing               { stroke-width: 3.6px;     stroke: #707070; }
-			.highway-unclassified-cy2-casing               { stroke-width: 3.3px;     stroke: #d1fad1; }
+			.highway-unclassified-cy1-casing        { stroke-width: 3.6px;     stroke: #707070; }
+			.highway-unclassified-cy2-casing        { stroke-width: 3.3px;     stroke: #d1fad1; }
 			.highway-unclassified-area-casing       { stroke-width: 0.25px; }
 			.highway-unclassified-core              { stroke-width: 2.25px;   stroke: #ffffff; }
+			.highway-residential-casing             { stroke-width: 2.1px;  stroke: #707070; }
+			.highway-residential-cy1-casing         { stroke-width: 3.2px;  stroke: #707070; }
+			.highway-residential-cy2-casing         { stroke-width: 3.1px;  stroke: #d1fad1; }
+			.highway-residential-area-casing        { stroke-width: 0.15px; }
+			.highway-residential-core               { stroke-width: 2.25px; stroke: #ffffff; }
 			.highway-ford-core                      { stroke-width: 2.25px;   stroke: #b5d6f1; stroke-linecap: butt; }
 			.highway-unclassified-area              { fill: #ffffff; }
 			.highway-unclassified-name              { stroke-width: 0px;     font-size: 2.5px; }

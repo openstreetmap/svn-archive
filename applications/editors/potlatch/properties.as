@@ -127,8 +127,9 @@
 		if (this.field=='keyname') {
 			z=_root.autotags[this.pw.proptype];				// key
 			for (i in z) {
-				if (i.slice(0,curval.length)==curval) { possible.push(i); }
-				// ** shouldn't add if there's already a key of that name
+				if (!this.pw.proparr[i]) {					// don't add if there's already a key of that name
+					if (i.slice(0,curval.length)==curval) { possible.push(i); }
+				} 
 			}
 			possible.sort();
 		} else {
@@ -561,6 +562,7 @@
 			setTextFormat(boldSmall);
 			setNewTextFormat(boldSmall);
 			restrict="^"+chr(0)+"-"+chr(31);
+			maxChars=255;
 		};
 		this.keyname.onSetFocus =function() {
 			this._parent.scrollToField();
@@ -626,6 +628,7 @@
 			setTextFormat(plainSmall);
 			setNewTextFormat(plainSmall);
 			restrict="^"+chr(0)+"-"+chr(31);
+			maxChars=255;
 		};
 		this.value.text=this.getValueFromObject(key);
 		if (this.value.text.substr(0,6)=='(type ') { this.value.textColor=0x888888; }
@@ -797,6 +800,7 @@
 			setTextFormat(plainTiny);
 			setNewTextFormat(plainTiny);
 			restrict="^"+chr(0)+"-"+chr(31);
+			maxChars=255;
 		};
 		this.value.text=this.getRole();
 		this.value.onSetFocus =function() { this._parent.scrollToField();

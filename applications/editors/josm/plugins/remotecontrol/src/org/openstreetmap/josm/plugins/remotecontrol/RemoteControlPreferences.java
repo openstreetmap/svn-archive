@@ -52,10 +52,12 @@ public class RemoteControlPreferences implements PreferenceSetting
 
     }
 
-    public void ok() {
+    public boolean ok() {
         Main.pref.put("remotecontrol.permission.load-data", permissionLoadData.isSelected());
         Main.pref.put("remotecontrol.permission.change-selection", permissionChangeSelection.isSelected());
         Main.pref.put("remotecontrol.permission.change-viewport", permissionChangeViewport.isSelected());
         Main.pref.put("remotecontrol.always-confirm", alwaysAskUserConfirm.isSelected());
+        // FIXME confirm return value - really no restart needed?
+        return false /* no restart needed */;
     }
 }

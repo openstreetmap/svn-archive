@@ -1,6 +1,4 @@
 
-	System.security.loadPolicyFile("http://www.openstreetmap.org/api/crossdomain.xml");
-
 	// =====================================================================================
 	// Initialise
 

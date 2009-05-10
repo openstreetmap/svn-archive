@@ -1,4 +1,14 @@
 
+	# **********************************************
+	# Line width scaling factor
+	# For current Ming, set this to 1/20.
+	# For older Ming (e.g. 0.3), set this to 1.
+
+	$cw=1/20;
+
+	# **********************************************
+
+
 	# ----- Export symbols
 
 	#		Empty movie-clips for prototypes
@@ -30,12 +40,12 @@ if (0==1) {
 	#		Radio buttons
 	
 	$ec=new SWF::MovieClip(); $ch=new SWF::Shape();
-	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->movePenTo(5,5); $ch->setLine(20,0,0,0); $ch->drawCircle(6);
+	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->movePenTo(5,5); $ch->setLine(20*$cw,0,0,0); $ch->drawCircle(6);
 	$ec->add($ch); $ec->nextFrame(); $m->addExport($ec,"radio_off");
 
 	$ec=new SWF::MovieClip(); $ch=new SWF::Shape();
-	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->movePenTo(5,5); $ch->setLine(20,0,0,0); $ch->drawCircle(6);
-	$ch->setRightFill(0   ,0   ,0   ); $ch->movePenTo(5,5); $ch->setLine(20,0,0,0); $ch->drawCircle(3);
+	$ch->setRightFill(0xBB,0xBB,0xBB); $ch->movePenTo(5,5); $ch->setLine(20*$cw,0,0,0); $ch->drawCircle(6);
+	$ch->setRightFill(0   ,0   ,0   ); $ch->movePenTo(5,5); $ch->setLine(20*$cw,0,0,0); $ch->drawCircle(3);
 	$ec->add($ch); $ec->nextFrame(); $m->addExport($ec,"radio_on");
 
 	#		Whirling 'in progress' animation
@@ -46,7 +56,7 @@ if (0==1) {
 		$ch=new SWF::Shape();
 		for ($j=0; $j<12; $j++) {
 			$t=$i-$j; if ($t<0) { $t+=12; }
-			$t=$t*15.5; $ch->setLine(50,$t,$t,$t);
+			$t=$t*15.5; $ch->setLine(50*$cw,$t,$t,$t);
 			$ch->movePenTo(cos($j*$a)*5,sin($j*$a)*5);
 			$ch->drawLineTo(cos($j*$a)*10,sin($j*$a)*10);
 		}
@@ -61,7 +71,7 @@ if (0==1) {
 	$ec=new SWF::MovieClip();
 	$ch=new SWF::Shape();
 	$ch->setRightFill(0,155,0);
-	$ch->setLine(20,0,0,0);
+	$ch->setLine(20*$cw,0,0,0);
 	$ch->drawCircle(4);
 	$ec->add($ch);
 	$ec->nextFrame();
@@ -72,7 +82,7 @@ if (0==1) {
 	$ec=new SWF::MovieClip();
 	$ch=new SWF::Shape();
 	$ch->setRightFill(0,0,0);
-	$ch->setLine(20,0,0,0);
+	$ch->setLine(20*$cw,0,0,0);
 	$ch->drawCircle(3);
 	$ec->add($ch); $ec->nextFrame();
 	$m->addExport($ec,"poiinway");
@@ -108,7 +118,7 @@ if (0==1) {
 	$bq->drawCurveTo(20,0,20,10);
 	$bq->drawLineTo(20,20);
 	$bq->drawLineTo(0,20);
-	$bq->setLine(50,255,255,255);
+	$bq->setLine(50*$cw,255,255,255);
 	$bq->movePenTo(5,9); $bq->drawLineTo(15,9);
 	$bq->drawLineTo(10,9); $bq->drawLineTo(10,4); $bq->drawLineTo(10,14);
 	$bq->drawLineTo(10,9); $bq->drawLineTo(5,9);
@@ -125,7 +135,7 @@ if (0==1) {
 	$bq->drawCurveTo(20,20,20,10);
 	$bq->drawLineTo(20,0);
 	$bq->drawLineTo(0,0);
-	$bq->setLine(50,255,255,255);
+	$bq->setLine(50*$cw,255,255,255);
 	$bq->movePenTo(6,9); $bq->drawLineTo(14,9);
 	$ec->add($bq); $ec->nextFrame();
 	$m->addExport($ec,"zoomout");
@@ -134,7 +144,7 @@ if (0==1) {
 	
 	$ec=new SWF::MovieClip();
 	$s=new SWF::Shape();
-	$s->movePenTo(3,-2); $s->setLine(35,0,0,0); $s->drawCircle(2);
+	$s->movePenTo(3,-2); $s->setLine(35*$cw,0,0,0); $s->drawCircle(2);
 	$s->movePenTo(0,0); $s->setRightFill($s->addFill(0,0,0));
 	$s->drawLineTo(6,0); $s->drawLineTo(6,6);
 	$s->drawLineTo(0,6); $s->drawLineTo(0,0); 
@@ -629,7 +639,7 @@ if (0==1) {
 
 
 
-	#Ê=====	Menu icons
+	#ÃŠ=====	Menu icons
 		
 # ------ potlatch_iplace sprite
 
@@ -1521,7 +1531,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	$ec->add($s);
 
 	$s=new SWF::Shape();
-	$s->setLine(40,255,255,255);
+	$s->setLine(40*$cw,255,255,255);
 	$s->movePenTo(-2.5,-2.5); $s->drawLineTo(2.5, 2.5);
 	$s->movePenTo(-2.5, 2.5); $s->drawLineTo(2.5,-2.5);
 	$ec->add($s);

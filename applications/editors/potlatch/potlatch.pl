@@ -50,11 +50,12 @@
 	}
 	
 	if ($dev==1) { $actionscript=<<EOF;
-	var apiurl='http://main.dev.openstreetmap.org/api/0.6/amf';
-	var gpsurl='http://main.dev.openstreetmap.org/api/0.6/swf/trackpoints';
-	var gpxurl='http://main.dev.openstreetmap.org/trace/';
+	System.security.loadPolicyFile("http://api06.dev.openstreetmap.org/api/crossdomain.xml");
+	var apiurl='http://api06.dev.openstreetmap.org/api/0.6/amf';
+	var gpsurl='http://api06.dev.openstreetmap.org/api/0.6/swf/trackpoints';
+	var gpxurl='http://api06.dev.openstreetmap.org/trace/';
 	var tileprefix='';
-	var yahoourl='http://main.dev.openstreetmap.org/potlatch/ymap2.swf';
+	var yahoourl='http://api06.dev.openstreetmap.org/potlatch/ymap2.swf';
 	var gpxsuffix='/data.xml';
 EOF
 	} elsif ($dev==2) { $actionscript=<<EOF;
@@ -67,14 +68,16 @@ EOF
 	var gpxsuffix='/data.xml';
 EOF
 	} elsif ($dev==3) { $actionscript=<<EOF;
-	var apiurl='http://www.openstreetmap.org/api/0.5/amf';
-	var gpsurl='http://www.openstreetmap.org/api/0.5/swf/trackpoints';
+	System.security.loadPolicyFile("http://www.openstreetmap.org/api/crossdomain.xml");
+	var apiurl='http://www.openstreetmap.org/api/0.6/amf';
+	var gpsurl='http://www.openstreetmap.org/api/0.6/swf/trackpoints';
 	var gpxurl="http://www.openstreetmap.org/trace/";
 	var tileprefix='';
 	var yahoourl='/potlatch/ymap2.swf';
 	var gpxsuffix='/data.xml';
 EOF
 	} else { $actionscript=<<EOF;
+	System.security.loadPolicyFile("http://www.openstreetmap.org/api/crossdomain.xml");
 	var apiurl='../api/0.6/amf';
 	var gpsurl='../api/0.6/swf/trackpoints';
 	var gpxurl="http://"+this._url.split('/')[2]+"/trace/";
@@ -93,7 +96,7 @@ EOF
 			print "Reading $fn               \r";
 		}
 		local $/;
-		open TEXT,$fn or die "Can't openÊ$fn: $!\n";
+		open TEXT,$fn or die "Can't open $fn: $!\n";
 		$text=<TEXT>;
 		close TEXT;
 		for ($text=~/([^\x20-\x7F\n\t])/) {

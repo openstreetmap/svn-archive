@@ -9,7 +9,6 @@ Layout
   |- images                             images your plugin needs
   |- resources                          resources your plugin needs
 
-  build.number                          the build number, maintained by the build script
   LICENSE                               license file 
   README                                README for your plugin
   

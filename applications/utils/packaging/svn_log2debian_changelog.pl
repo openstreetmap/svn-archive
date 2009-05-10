@@ -134,7 +134,7 @@ sub print_user_line($$){
 	    #my $fake_e_mail=$full_name;
 	    #$fake_e_mail=~ s/ /_/g;
 	    #$full_name = "$full_name <$fake_e_mail-fake-tmf\@gpsdrive.de>";
-	    if ( $project_name =~ "gpsdrive" ) {
+	    if ( $project_name =~ m/gpsdrive/ ) {
 		$full_name = "$full_name via GPSdrive discussion list <gpsdrive\@lists.gpsdrivers.org>";
 	    } else {
 		$full_name = "$full_name via osm-dev List <dev\@openstreetmap.org>";

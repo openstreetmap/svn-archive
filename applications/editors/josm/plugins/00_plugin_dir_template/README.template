@@ -32,9 +32,7 @@ There are two versions maintained with each plugin:
 
    2) the build version
       The build version is unique for every build of the plugin. It is equal
-      to the SVN revision of the file 'build.number'. The build script automatically
-      increments the the build number and checks 'build.number' back in. Thus,
-      the SVN revision for build.number is incremented on every build.
+      to the SVN revision of your plugin directory. 
 
  Both the main version and the build version are included in properties of the plugins
  manifest:

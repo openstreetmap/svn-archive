@@ -103,21 +103,21 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="access" v="no" />
-		<icon src="vehicle/restrictions/access.png" />
+		<icon src="vehicle/restriction/access.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="bicycle" v="no" />
-		<icon src="vehicle/restrictions/bicycle.png" />
+		<icon src="vehicle/restriction/bicycle.png" />
 		<scale_min>1</scale_min>
 		<scale_max>5000</scale_max>
 	</rule>
 	<rule>
 		<condition k="bicycle" v="designated"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="vehicle/restrictions/bicycle-designated.png" />
+		<icon annotate="true" src="vehicle/restriction/bicycle-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
                 <routing bicycle="23"/> <!-- Also see cycleway -->
@@ -125,14 +125,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="foot" v="no" />
-		<icon src="vehicle/restrictions/foot.png" />
+		<icon src="vehicle/restriction/foot.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 	<rule>
 		<condition k="foot" v="designated"/>
 		<line width="1" realwidth="1" colour="#00ff00" />
-		<icon annotate="true" src="vehicle/restrictions/foot-designated.png" />
+		<icon annotate="true" src="vehicle/restriction/foot-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>10000</scale_max>
                 <routing bicycle="5" foot="5"/> <!-- Usually you can push
@@ -141,7 +141,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenetfoot" v="designated"/>
 		<line width="1" realwidth="1" colour="#00ff00" />
-		<icon annotate="true" src="vehicle/restrictions/foot-designated.png" />
+		<icon annotate="true" src="vehicle/restriction/foot-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>10000</scale_max>
                 <routing bicycle="20" foot="5"/> 
@@ -149,28 +149,28 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="goods" v="no" />
-		<icon src="vehicle/restrictions/goods.png" />
+		<icon src="vehicle/restriction/goods.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="hgv" v="no" />
-		<icon src="vehicle/restrictions/goods.png" />
+		<icon src="vehicle/restriction/goods.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="horse" v="no" />
-		<icon src="vehicle/restrictions/horse.png" />
+		<icon src="vehicle/restriction/horse.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 	<rule>
 		<condition k="horse" v="designated"/>
 		<line width="1" realwidth="2" colour="#c08000" />
-		<icon src="vehicle/restrictions/horse-designated.png" />
+		<icon src="vehicle/restriction/horse-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>30000</scale_max>
                 <routing bicycle="20" foot="5" horse="10"/> <!-- Also see bridleway -->
@@ -178,14 +178,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="motorcycle" v="no" />
-		<icon src="vehicle/restrictions/motorbike.png" />
+		<icon src="vehicle/restriction/motorbike.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="motorcar" v="no" />
-		<icon src="vehicle/restrictions/motorcar.png" />
+		<icon src="vehicle/restriction/motorcar.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
@@ -213,49 +213,49 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="noexit" v="yes" />
-		<icon src="vehicle/restrictions/dead_end.png" />
+		<icon src="vehicle/restriction/dead_end.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxweight" v="yes" />
-		<icon src="vehicle/restrictions/maxweight.png" />
+		<icon src="vehicle/restriction/maxweight.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxheight" v="yes" />
-		<icon src="vehicle/restrictions/maxheight.png" />
+		<icon src="vehicle/restriction/maxheight.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxwidth" v="yes" />
-		<icon src="vehicle/restrictions/maxwidth.png" />
+		<icon src="vehicle/restriction/maxwidth.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxlength" v="yes" />
-		<icon src="vehicle/restrictions/maxlength.png" />
+		<icon src="vehicle/restriction/maxlength.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="maxspeed" v="yes" />
-		<icon src="vehicle/restrictions/speed.png" />
+		<icon src="vehicle/restriction/speed.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="minspeed" v="yes" />
-		<icon src="vehicle/restrictions/minspeed.png" />
+		<icon src="vehicle/restriction/minspeed.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
@@ -276,7 +276,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="barrier" v="bollard" />
-		<icon annotate="true" src="vehicle/restrictions/bollard.png" />
+		<icon annotate="true" src="vehicle/restriction/bollard.png" />
 		<scale_min>1</scale_min>
 		<scale_max>5000</scale_max>
         <routing bicycle="1" foot="1" horse="1" motorcycle="1"/>
@@ -306,7 +306,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	
 	<rule>
 		<condition k="barrier" v="toll_booth" />
-		<icon annotate="true" src="vehicle/toll_station.png" />
+		<icon annotate="true" src="vehicle/toll_booth.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="1" foot="1" goods="1" hgv="1" motorcycle="1" motorcar="1" psv="1"/>
@@ -394,7 +394,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>700000</scale_max>
-        <routing bicycle="10" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
+        <routing bicycle="10" foot="5" goods="70" hgv="70" motorcycle="70" motorcar="70" psv="70"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="primary"/>
@@ -402,7 +402,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>700000</scale_max>
-        <routing bicycle="20" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
+        <routing bicycle="20" foot="5" goods="70" hgv="70" motorcycle="70" motorcar="70" psv="70"/>
 	</rule>
 
 	<rule>
@@ -411,7 +411,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
                 <scale_min>1</scale_min>
                 <scale_max>40000</scale_max>
-                <routing bicycle="10" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
+                <routing bicycle="10" foot="5" goods="70" hgv="70" motorcycle="70" motorcar="70" psv="70"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="primary_link"/>
@@ -419,7 +419,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
                 <scale_min>1</scale_min>
                 <scale_max>40000</scale_max>
-                <routing bicycle="20" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
+                <routing bicycle="20" foot="5" goods="70" hgv="70" motorcycle="70" motorcar="70" psv="70"/>
 	</rule>
 
 	<rule>
@@ -428,7 +428,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
-                <routing bicycle="11" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
+                <routing bicycle="11" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="secondary"/>
@@ -436,7 +436,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
-                <routing bicycle="20" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
+                <routing bicycle="20" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
 	</rule>
 
 	<rule>
@@ -445,7 +445,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
-                <routing bicycle="11" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
+                <routing bicycle="11" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
 	</rule>
 	<rule>
 		<condition k="cyclenethighway" v="secondary_link"/>
@@ -453,7 +453,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
-                <routing bicycle="20" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
+                <routing bicycle="20" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60"/>
 	</rule>
 
         <rule>
@@ -462,7 +462,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
-        <routing bicycle="12" foot="5" goods="40" hgv="40" motorcycle="40" motorcar="40" psv="40"/>
+        <routing bicycle="12" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
 	</rule>
         <rule>
         <condition k="cyclenethighway" v="tertiary"/>
@@ -470,7 +470,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
-        <routing bicycle="20" foot="5" goods="40" hgv="40" motorcycle="40" motorcar="40" psv="40"/>
+        <routing bicycle="20" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50"/>
 	</rule>
 
 	<rule>
@@ -647,21 +647,21 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="highway" v="mini_roundabout" />
-		<icon annotate="true" src="vehicle/restrictions/roundabout_left.png" />
+		<icon annotate="true" src="vehicle/restriction/roundabout_left.png" />
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="stop" />
-		<icon annotate="true" src="vehicle/restrictions/stop.png" />
+		<icon annotate="true" src="vehicle/restriction/stop.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="traffic_signals" />
-		<icon annotate="true" src="vehicle/restrictions/traffic-light.png" />
+		<icon annotate="true" src="vehicle/restriction/traffic-light.png" />
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
 	</rule>
@@ -669,6 +669,20 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="crossing" />
 		<icon annotate="true" src="vehicle/zebra_crossing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="traffic_calming" v="bump" />
+		<icon annotate="true" src="vehicle/bump.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="traffic_calming" v="table" />
+		<icon annotate="true" src="vehicle/bump.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -696,21 +710,21 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	
 	<rule>
 		<condition k="highway" v="toll_booth" />
-		<icon annotate="true" src="vehicle/toll_station.png" />
+		<icon annotate="true" src="vehicle/toll_booth.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 	
 	<rule>
 		<condition k="highway" v="incline" />
-		<icon annotate="true" src="vehicle/restrictions/incline.png" />
+		<icon annotate="true" src="vehicle/restriction/incline.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="incline_steep" />
-		<icon annotate="true" src="vehicle/restrictions/incline.png" />
+		<icon annotate="true" src="vehicle/restriction/incline.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -996,7 +1010,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="railway" v="station" />
 		<area colour="#f7efb7"/>
-		<icon annotate="true" src="transport/railway.png" />
+		<icon annotate="true" src="transport/railway_station.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1011,7 +1025,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="railway" v="tram_station" />
 		<area colour="#f7efb7"/>
-		<icon annotate="true" src="transport/railway.png" />
+		<icon annotate="true" src="transport/railway_station.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1243,7 +1257,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="piste:difficulty" v="easy"/>
 		<line width="6" colour="#0000FF"/>
-		<icon src="sports/skiing.png" />
+		<icon src="sport/skiing.png" />
 		<scale_min>1</scale_min>
 		<scale_max>30000</scale_max>
 	</rule>
@@ -1251,7 +1265,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="piste:difficulty" v="intermediate"/>
 		<line width="6" colour="#FF0000"/>
-		<icon src="sports/skiing.png" />
+		<icon src="sport/skiing.png" />
 		<scale_min>1</scale_min>
 		<scale_max>30000</scale_max>
 	</rule>
@@ -1259,7 +1273,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="piste:difficulty" v="advanced"/>
 		<line width="6" colour="#606060"/>
-		<icon src="sports/skiing.png" />
+		<icon src="sport/skiing.png" />
 		<scale_min>1</scale_min>
 		<scale_max>30000</scale_max>
 	</rule>
@@ -1267,7 +1281,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="piste:difficulty" v="freeride"/>
 		<line width="6" colour="#FFFF00"/>
-		<icon src="sports/skiing.png" />
+		<icon src="sport/skiing.png" />
 		<scale_min>1</scale_min>
 		<scale_max>30000</scale_max>
 	</rule>
@@ -1275,7 +1289,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="piste:difficulty" v="novice"/>
 		<line width="6" colour="#00FF00"/>
-		<icon src="sports/skiing.png" />
+		<icon src="sport/skiing.png" />
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
 	</rule>
@@ -1423,7 +1437,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="man_made" v="pier" />
         <line width="2" colour="#660000" />
-		<icon annotate="true" src="misc/landmark/pier.png" />
+		<icon annotate="true" src="nautical/pier.png" />
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
 	</rule>
@@ -1455,7 +1469,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 <!--leisure tags -->
 	<rule>
 		<condition k="leisure" v="sports_centre" />
-		<icon annotate="true" src="sports/centre.png" />
+		<icon annotate="true" src="sport/centre.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1463,7 +1477,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="golf_course" />
-		<icon annotate="true" src="sports/golf.png" />
+		<icon annotate="true" src="sport/golf.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1471,7 +1485,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="stadium" />
-		<icon annotate="true" src="sports/stadium.png" />
+		<icon annotate="true" src="sport/stadium.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1479,7 +1493,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="track" />
-		<icon annotate="true" src="sports/track.png" />
+		<icon annotate="true" src="sport/track.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1487,7 +1501,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="pitch" />
-		<icon annotate="true" src="sports/pitch.png" />
+		<icon annotate="true" src="sport/pitch.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1495,7 +1509,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="water_park" />
-		<icon annotate="true" src="recreation/water_park.png" />
+		<icon annotate="true" src="leisure/water_park.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1519,7 +1533,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="fishing" />
-		<icon annotate="true" src="sports/fishing.png" />
+		<icon annotate="true" src="sport/fishing.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1527,7 +1541,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="nature_reserve" />
-		<icon annotate="true" src="recreation/nature_reserve.png" />
+		<icon annotate="true" src="leisure/nature_reserve.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1535,7 +1549,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="park"/>
-		<icon annotate="true" src="recreation/park.png" />
+		<icon annotate="true" src="leisure/park.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1543,7 +1557,15 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="playground"/>
-		<icon annotate="true" src="recreation/playground.png" />
+		<icon annotate="true" src="leisure/playground.png" />
+		<area colour="#c7f1a3"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="dog_park"/>
+		<icon annotate="true" src="leisure/dog.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1551,7 +1573,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="garden" />
-		<icon annotate="true" src="recreation/garden.png" />
+		<icon annotate="true" src="leisure/garden.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1559,7 +1581,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="common" />
-		<icon annotate="true" src="recreation/common.png" />
+		<icon annotate="true" src="leisure/common.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1567,7 +1589,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="swimming_pool" />
-		<icon annotate="true" src="sports/pool.png" />
+		<icon annotate="true" src="sport/pool.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1575,7 +1597,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="leisure" v="miniature_golf" />
-		<icon annotate="true" src="sports/golf.png" />
+		<icon annotate="true" src="sport/golf.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1600,7 +1622,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="nightclub" />
-		<icon annotate="true" src="recreation/nightclub.png"  />
+		<icon annotate="true" src="leisure/nightclub.png"  />
 		<area colour="#ecba52"/>
         <scale_min>1</scale_min>
         <scale_max>25000</scale_max>
@@ -1656,7 +1678,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="bicycle_parking" />
-		<icon annotate="true" src="vehicle/parking/bike.png" />
+		<icon annotate="true" src="vehicle/parking/bicycle.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1664,7 +1686,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="bicycle_rental" />
-		<icon annotate="true" src="vehicle/bicycle_rental.png" />
+		<icon annotate="true" src="vehicle/rental/bicycle.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1672,7 +1694,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="car_rental" />
-		<icon annotate="true" src="vehicle/car_rental.png" />
+		<icon annotate="true" src="vehicle/rental.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1704,7 +1726,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="fuel" />
-		<icon annotate="true" src="vehicle/fuel_station.png" />
+		<icon annotate="true" src="vehicle/fuel.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
@@ -1712,7 +1734,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="telephone" />
-		<icon annotate="true" src="public/telephone.png" />
+		<icon annotate="true" src="service/telephone.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
@@ -1720,7 +1742,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="toilets" />
-		<icon annotate="true" src="public/toilets.png" />
+		<icon annotate="true" src="service/toilets.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
@@ -1728,7 +1750,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="recycling" />
-		<icon annotate="true" src="public/recycling.png" />
+		<icon annotate="true" src="service/recycling.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1769,14 +1791,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<!--the religion rules must be placed before the place_of_worship rule! -->
 	<rule>
 		<condition k="religion" v="bahai" />
-		<icon annotate="true" src="religion/church/bahai.png" />
+		<icon annotate="true" src="religion/bahai.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="buddhist" />
-		<icon annotate="true" src="religion/church/buddhism.png" />
+		<icon annotate="true" src="religion/buddhism.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1790,49 +1812,49 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="religion" v="hindu" />
-		<icon annotate="true" src="religion/church/hinduism.png" />
+		<icon annotate="true" src="religion/hinduism.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="jain" />
-		<icon annotate="true" src="religion/church/jainism.png" />
+		<icon annotate="true" src="religion/jainism.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="jewish" />
-		<icon annotate="true" src="religion/church/synagogue.png" />
+		<icon annotate="true" src="religion/synagogue.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="muslim" />
-		<icon annotate="true" src="religion/church/mosque.png" />
+		<icon annotate="true" src="religion/mosque.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="sikh" />
-		<icon annotate="true" src="religion/church/sikhism.png" />
+		<icon annotate="true" src="religion/sikhism.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="shinto" />
-		<icon annotate="true" src="religion/church/shinto.png" />
+		<icon annotate="true" src="religion/shinto.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="taoist" />
-		<icon annotate="true" src="religion/church/taoism.png" />
+		<icon annotate="true" src="religion/taoism.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1847,7 +1869,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="grave_yard" />
-		<icon annotate="true" src="religion/cemetery.png" />
+		<icon annotate="true" src="rendering/landuse/cemetery.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1863,7 +1885,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="post_office" />
-		<icon annotate="true" src="public/post_office.png" />
+		<icon annotate="true" src="service/post_office.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1871,7 +1893,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="amenity" v="post_box" />
-		<icon annotate="true" src="public/post_box.png" />
+		<icon annotate="true" src="service/post_box.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
@@ -1944,7 +1966,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="amenity" v="library" />
 		<area colour="#f7efb7"/>
-		<icon annotate="true" src="shopping/rental/library.png" />
+		<icon annotate="true" src="shop/rental/library.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1952,7 +1974,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="amenity" v="police" />
 		<area colour="#f7efb7"/>
-		<icon annotate="true" src="public/police.png" />
+		<icon annotate="true" src="service/police.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1960,7 +1982,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="amenity" v="fire_station" />
 		<area colour="#f7efb7"/>
-		<icon annotate="true" src="public/firebrigade.png" />
+		<icon annotate="true" src="service/firebrigade.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1976,7 +1998,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="amenity" v="theatre" />
 		<area colour="#f7efb7"/>
-		<icon annotate="true" src="recreation/theater.png" />
+		<icon annotate="true" src="leisure/theater.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1984,7 +2006,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="amenity" v="cinema" />
 		<area colour="#f7efb7"/>
-		<icon annotate="true" src="recreation/cinema.png" />
+		<icon annotate="true" src="leisure/cinema.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1992,7 +2014,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="amenity" v="arts_centre" />
 		<area colour="#f7efb7"/>
-		<icon annotate="true" src="public/arts_centre.png" />
+		<icon annotate="true" src="service/arts_centre.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -2000,7 +2022,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="amenity" v="courthouse" />
 		<area colour="#f7efb7"/>
-		<icon annotate="true" src="public/administration/court_of_law.png" />
+		<icon annotate="true" src="service/administration/court_of_law.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -2008,7 +2030,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="amenity" v="prison" />
 		<area colour="#f7efb7"/>
-		<icon annotate="true" src="public/administration/prison.png" />
+		<icon annotate="true" src="service/administration/prison.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -2057,7 +2079,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="supermarket" />
-		<icon annotate="true" src="shopping/supermarket.png" />
+		<icon annotate="true" src="shop/supermarket.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2065,7 +2087,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="convenience" />
-		<icon annotate="true" src="shopping/supermarket.png" />
+		<icon annotate="true" src="shop/supermarket.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
@@ -2073,7 +2095,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="bakery" />
-		<icon annotate="true" src="shopping/groceries/bakery.png" />
+		<icon annotate="true" src="shop/groceries/bakery.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
@@ -2081,7 +2103,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="butcher" />
-		<icon annotate="true" src="shopping/groceries/butcher.png" />
+		<icon annotate="true" src="shop/groceries/butcher.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
@@ -2089,7 +2111,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="bicycle" />
-		<icon annotate="true" src="sports/bicycle.png" />
+		<icon annotate="true" src="sport/bicycle.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
@@ -2097,7 +2119,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="doityourself" />
-		<icon annotate="true" src="shopping/diy_store.png" />
+		<icon annotate="true" src="shop/diy_store.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
@@ -2105,7 +2127,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="dry_cleaning" />
-		<icon annotate="true" src="shopping/laundry.png" />
+		<icon annotate="true" src="shop/laundry.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
@@ -2113,7 +2135,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="laundry" />
-		<icon annotate="true" src="shopping/laundry.png" />
+		<icon annotate="true" src="shop/laundry.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>15000</scale_max>
@@ -2121,7 +2143,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="outdoor" />
-		<icon annotate="true" src="shopping/sports/outdoor.png" />
+		<icon annotate="true" src="shop/sports/outdoor.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
@@ -2129,7 +2151,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="kiosk" />
-		<icon annotate="true" src="shopping/kiosk.png" />
+		<icon annotate="true" src="shop/kiosk.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2137,7 +2159,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="beverages" />
-		<icon annotate="true" src="shopping/beverages.png" />
+		<icon annotate="true" src="shop/beverages.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
@@ -2145,7 +2167,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="books" />
-		<icon annotate="true" src="shopping/rental/library.png" />
+		<icon annotate="true" src="shop/rental/library.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2177,7 +2199,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="chemist" />
-		<icon annotate="true" src="shopping/chemist.png" />
+		<icon annotate="true" src="shop/chemist.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2185,7 +2207,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="clothes" />
-		<icon annotate="true" src="shopping/clothes.png" />
+		<icon annotate="true" src="shop/clothes.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2193,7 +2215,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="computer" />
-		<icon annotate="true" src="shopping/computer.png" />
+		<icon annotate="true" src="shop/computer.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2201,7 +2223,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="cycle_repair" />
-		<icon annotate="true" src="sports/bicycle.png" />
+		<icon annotate="true" src="sport/bicycle.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2217,7 +2239,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="electronics" />
-		<icon annotate="true" src="shopping/electronics.png" />
+		<icon annotate="true" src="shop/electronics.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2225,7 +2247,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="furniture" />
-		<icon annotate="true" src="shopping/furniture.png" />
+		<icon annotate="true" src="shop/furniture.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2233,7 +2255,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="florist" />
-		<icon annotate="true" src="shopping/florist.png" />
+		<icon annotate="true" src="shop/florist.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2241,7 +2263,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="groceries" />
-		<icon annotate="true" src="shopping/groceries/fruits.png" />
+		<icon annotate="true" src="shop/groceries/fruits.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2249,7 +2271,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="garden_centre" />
-		<icon annotate="true" src="shopping/garden_centre.png" />
+		<icon annotate="true" src="shop/garden_centre.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2265,7 +2287,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="hardware" />
-		<icon annotate="true" src="shopping/diy_store.png" />
+		<icon annotate="true" src="shop/diy_store.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2273,7 +2295,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="hifi" />
-		<icon annotate="true" src="shopping/hifi.png" />
+		<icon annotate="true" src="shop/hifi.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2281,7 +2303,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="jewelry" />
-		<icon annotate="true" src="shopping/jewelry.png" />
+		<icon annotate="true" src="shop/jewelry.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2289,7 +2311,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="mall" />
-		<icon annotate="true" src="shopping/mall.png" />
+		<icon annotate="true" src="shop/mall.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2305,7 +2327,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="newsagent" />
-		<icon annotate="true" src="shopping/kiosk.png" />
+		<icon annotate="true" src="shop/kiosk.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2313,7 +2335,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="organic" />
-		<icon annotate="true" src="shopping/groceries/fruits.png" />
+		<icon annotate="true" src="shop/groceries/fruits.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2321,7 +2343,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="optician" />
-		<icon annotate="true" src="shopping/optician.png" />
+		<icon annotate="true" src="shop/optician.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2329,7 +2351,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="shoes" />
-		<icon annotate="true" src="shopping/shoes.png" />
+		<icon annotate="true" src="shop/shoes.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2345,7 +2367,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="travel_agency" />
-		<icon annotate="true" src="places/island.png" />
+		<icon annotate="true" src="place/island.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2353,7 +2375,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="toys" />
-		<icon annotate="true" src="shopping/toys.png" />
+		<icon annotate="true" src="shop/toys.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2361,7 +2383,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="shop" v="video" />
-		<icon annotate="true" src="shopping/video.png" />
+		<icon annotate="true" src="shop/video.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
@@ -2370,7 +2392,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<!-- duplicate of shopping_centre? -->
 	<rule>
 		<condition k="shop" v="shopping_center" />
-		<icon annotate="true" src="shopping/mall.png" />
+		<icon annotate="true" src="shop/mall.png" />
 		<area colour="#00005f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2443,7 +2465,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="tourism" v="picnic_site" />
-		<icon annotate="true" src="recreation/picnic.png" />
+		<icon annotate="true" src="leisure/picnic.png" />
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2459,7 +2481,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="tourism" v="theme_park" />
-		<icon annotate="true" src="recreation/theme_park.png" />
+		<icon annotate="true" src="leisure/theme_park.png" />
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2475,7 +2497,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
     <rule>
         <condition k="tourism" v="zoo"/>
-        <icon annotate="true" src="recreation/zoo.png"/>
+        <icon annotate="true" src="leisure/zoo.png"/>
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2483,7 +2505,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
     <rule>
         <condition k="tourism" v="artwork"/>
-        <icon annotate="true" src="public/arts_centre.png"/>
+        <icon annotate="true" src="service/arts_centre.png"/>
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -2711,7 +2733,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="landuse" v="cemetery"/>
 		<area colour="#b1efc8" />
-		<icon src="religion/cemetery.png" />
+		<icon src="rendering/landuse/cemetery.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -2719,7 +2741,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="landuse" v="village_green"/>
 		<area colour="#b1e0c2" />
-		<icon src="recreation/common.png" />
+		<icon src="leisure/common.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -2727,7 +2749,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="landuse" v="recreation_ground"/>
 		<area colour="#b1e0c2" />
-		<icon src="recreation/common.png" />
+		<icon src="leisure/common.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3047,7 +3069,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="australian_football" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/football.png" />
+		<icon src="sport/football.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3055,7 +3077,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="baseball" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/baseball.png" />
+		<icon src="sport/baseball.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3063,7 +3085,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="basketball" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/basketball.png" />
+		<icon src="sport/basketball.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3095,7 +3117,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="cricket" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/cricket.png" />
+		<icon src="sport/cricket.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3119,7 +3141,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="cycling" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/cycling.png" />
+		<icon src="sport/cycling.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3135,7 +3157,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="equestrian" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/riding.png" />
+		<icon src="sport/riding.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3143,7 +3165,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="football" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/football.png" />
+		<icon src="sport/football.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3151,7 +3173,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="golf" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/golf.png" />
+		<icon src="sport/golf.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3175,7 +3197,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="horse_racing" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/riding.png" />
+		<icon src="sport/riding.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3215,7 +3237,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="rugby" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/football.png" />
+		<icon src="sport/football.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3239,7 +3261,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="soccer" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/soccer.png" />
+		<icon src="sport/soccer.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3247,7 +3269,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="swimming" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/pool.png" />
+		<icon src="sport/pool.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3255,7 +3277,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="skiing" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/skiing.png" />
+		<icon src="sport/skiing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3263,7 +3285,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="table_tennis" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/table_tennis.png" />
+		<icon src="sport/table_tennis.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3271,7 +3293,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="tennis" />
 		<area colour="#bde3cb"/>
-		<icon src="sports/tennis.png" />
+		<icon src="sport/tennis.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3303,7 +3325,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="volleyball" />
 		<area colour="#bde3cb"/>
-		<icon annotate="true" src="sports/volleyball.png" />
+		<icon annotate="true" src="sport/volleyball.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3351,7 +3373,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="diving" />
 		<area colour="#bde3cb"/>
-		<icon annotate="true" src="sports/diving.png" />
+		<icon annotate="true" src="sport/diving.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3375,7 +3397,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="sport" v="fishing" />
 		<area colour="#bde3cb"/>
-		<icon annotate="true" src="sports/fishing.png" />
+		<icon annotate="true" src="sport/fishing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3426,7 +3448,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 <!--place tags -->
 	<rule>
 		<condition k="place" v="continent" />
-		<icon annotate="true" src="places/settlement/capital.png" />
+		<icon annotate="true" src="place/settlement/capital.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3434,7 +3456,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="place" v="country" />
-		<icon annotate="true" src="places/settlement/capital.png" />
+		<icon annotate="true" src="place/settlement/capital.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3442,7 +3464,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="place" v="state" />
-		<icon annotate="true" src="places/settlement/capital.png" />
+		<icon annotate="true" src="place/settlement/capital.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3450,7 +3472,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="place" v="region" />
-		<icon annotate="true" src="places/settlement/capital.png" />
+		<icon annotate="true" src="place/settlement/capital.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3458,7 +3480,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="place" v="county" />
-		<icon annotate="true" src="places/settlement/capital.png" />
+		<icon annotate="true" src="place/settlement/capital.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3506,7 +3528,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="place" v="locality" />
-		<icon annotate="true" src="places/locality.png" />
+		<icon annotate="true" src="place/locality.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
         <scale_max>100000</scale_max>
@@ -3523,42 +3545,42 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<!-- lot's of "openGeoDB:..." tags can be found in germany -->
 	<rule>
 		<condition k="openGeoDB:type" v="Stadt" />
-		<icon annotate="true" src="places/settlement/town.png" />
+		<icon annotate="true" src="place/settlement/town.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="openGeoDB:type" v="Kreis" />
-		<icon annotate="true" src="places/settlement/town.png" />
+		<icon annotate="true" src="place/settlement/town.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="openGeoDB:type" v="Gemeinde" />
-		<icon annotate="true" src="places/settlement/town.png" />
+		<icon annotate="true" src="place/settlement/town.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="openGeoDB:type" v="Ort" />
-		<icon annotate="true" src="places/settlement/town.png" />
+		<icon annotate="true" src="place/settlement/town.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="openGeoDB:type" v="District" />
-		<icon annotate="true" src="places/settlement/town.png" />
+		<icon annotate="true" src="place/settlement/town.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="openGeoDB:location" v="locality" />
-		<icon annotate="true" src="places/settlement/town.png" />
+		<icon annotate="true" src="place/settlement/town.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3694,6 +3716,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	</rule>
 	<rule>
 		<condition k="gosmore_note" v="yes"/>
+		<line width="1" realwidth="1" colour="#ff0000"/>
 		<icon annotate="true" src="misc/note.png" />
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>

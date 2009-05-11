@@ -6,14 +6,6 @@ import unittest
 import srtm
 import os
 import hashlib
-#Psyco provides about 3x speedup
-try:
-    import psyco
-    #psyco.full()
-    psyco.log()
-    psyco.profile()
-except ImportError:
-    pass
 
 class DownloaderTest(unittest.TestCase):
     """Testcases for the SRTMDownloader class"""
@@ -88,8 +80,9 @@ class TileTest(unittest.TestCase):
         self.assertEqual(self.tile.calcOffset(1200, 0), 1201*1201-1)
 
     def testNeighbouringLatLon(self):
-        # 5123 is a random number. It should not be an integer divider or multiple of 1199, 1200 or 1201
-        for testvalue in (1199, 1200, 1201, 5123, 50, 1000000):
+        # 5123 and 30 are random numbers. They should not be an integer
+        # dividers or multiples of 1199, 1200 or 1201
+        for testvalue in (1199, 1200, 1201, 5123, 50):
             for i in range(testvalue):
                 f = float(i)/testvalue
                 self.assertAlmostEqualInt(self.tile.getAltitudeFromLatLon(49.999999, 11+f), self.tileNorth.getAltitudeFromLatLon(50, 11+f))

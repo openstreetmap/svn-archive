@@ -10,6 +10,7 @@ import os.path
 import os
 import zipfile
 import array
+import math
 
 class NoSuchTileError(Exception):
     """Raised when there is no tile for a region."""
@@ -121,7 +122,7 @@ class SRTMDownloader:
             self.downloadTile(continent, filename)
         # TODO: Currently we create a new tile object each time.
         # Caching is required for improved performance.
-        return SRTM3Tile(self.cachedir + "/" + filename, int(lat), int(lon))
+        return SRTMTile(self.cachedir + "/" + filename, int(lat), int(lon))
 
     def downloadTile(self, continent, filename):
         """Download a tile from NASA's server and store it in the cache."""
@@ -156,18 +157,18 @@ class SRTMTile:
         easier for as to interpolate the value, because for every point we
         only have to look at a single tile.
         """
-    def __init__(self, f, size, lat, lon):
-        self.size = size
+    def __init__(self, f, lat, lon):
         zipf = zipfile.ZipFile(f, 'r')
         names = zipf.namelist()
         if len(names) != 1:
             raise InvalidTileError(lat, lon)
         data = zipf.read(names[0])
-        if len(data) != size * size * 2:
+        self.size = int(math.sqrt(len(data)/2)) #2 bytes per sample
+        if self.size != 1201: #Currently only SRTM3 is supported
             raise InvalidTileError(lat, lon)
         self.data = array.array('h', data)
         self.data.byteswap()
-        if len(self.data) != size * size:
+        if len(self.data) != self.size * self.size:
             raise InvalidTileError(lat, lon)
         self.lat = lat
         self.lon = lon
@@ -242,13 +243,6 @@ class SRTMTile:
         #print "%4d %4d | %4d\n%4d %4d | %4d\n-------------\n%4d" % (value00, value10, value1, value01, value11, value2, value)
         return value
 
-
-class SRTM3Tile(SRTMTile):
-    """SRTM class handling the specifics of SRTM3 tiles.
-        SRTM3 is sampled at 3 arc seconds => 1201x1201 pixels per tile.
-    """
-    def __init__(self, f, lat, lon):
-        SRTMTile.__init__(self, f, 1201, lat, lon)
 
 #DEBUG ONLY
 if __name__ == '__main__':

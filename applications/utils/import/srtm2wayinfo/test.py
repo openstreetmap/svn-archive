@@ -2,14 +2,18 @@
 
 """Testcases for the whole project"""
 
-# NOTE: Don't run these tests too often. They always download some amount of data.
-
 import unittest
 import srtm
 import os
 import hashlib
-
-#file://localhost/usr/share/doc/python2.5-doc/html/lib/minimal-example.html
+#Psyco provides about 3x speedup
+try:
+    import psyco
+    #psyco.full()
+    psyco.log()
+    psyco.profile()
+except ImportError:
+    pass
 
 class DownloaderTest(unittest.TestCase):
     """Testcases for the SRTMDownloader class"""
@@ -58,6 +62,56 @@ class DownloaderTest(unittest.TestCase):
         self.assert_(os.path.exists("testcache/N00E010.hgt.zip"))
         self.assert_(hashlib.sha1(open("testcache/N00E010.hgt.zip", 'rb').
             read()).hexdigest() == "168b1fddb4f22b8cdc6523ff0207e0eb6be314af")
+
+class TileTest(unittest.TestCase):
+    def setUp(self):
+        self.downloader =  srtm.SRTMDownloader(cachedir="testcache")
+        self.downloader.loadFileList()
+        self.tile      = self.downloader.getTile(49, 11)
+        self.tileNorth = self.downloader.getTile(50, 11)
+        self.tileEast  = self.downloader.getTile(49, 12)
+
+    def testOffset(self):
+        #  (0/1200)     0
+        #  (1200/1200)  1200
+        #  (0/1199)     1201
+        #  (1200/1199)  2401
+        #  (0/0)        1201*1200
+        #  (1200/0)     1201*1201-1
+        self.assertEqual(self.tile.calcOffset(0, 1200), 0)
+        self.assertEqual(self.tile.calcOffset(1200, 1200), 1200)
+        self.assertEqual(self.tile.calcOffset(0, 1199), 1201)
+        self.assertEqual(self.tile.calcOffset(1, 1199), 1202)
+        
+        self.assertEqual(self.tile.calcOffset(1200, 1199), 2401)
+        self.assertEqual(self.tile.calcOffset(0, 0), 1201*1200)
+        self.assertEqual(self.tile.calcOffset(1200, 0), 1201*1201-1)
+
+    def testNeighbouringLatLon(self):
+        # 5123 is a random number. It should not be an integer divider or multiple of 1199, 1200 or 1201
+        for testvalue in (1199, 1200, 1201, 5123, 50, 1000000):
+            for i in range(testvalue):
+                f = float(i)/testvalue
+                self.assertAlmostEqualInt(self.tile.getAltitudeFromLatLon(49.999999, 11+f), self.tileNorth.getAltitudeFromLatLon(50, 11+f))
+                self.assertAlmostEqualInt(self.tile.getAltitudeFromLatLon(49+f, 11.999999), self.tileEast.getAltitudeFromLatLon(49+f, 12))
+
+    def assertAlmostEqualInt(self, a, b):
+        a = int(a)
+        b = int(b)
+        if a == b:
+            return
+        if a + 1 == b:
+            return
+        if a - 1 == b:
+            return
+        self.fail("%d != %d (almost equal test)" % (a, b))
+
+    def testNeighbouringXY(self):
+        for i in range(1201):
+            self.assertEqual(self.tile.getPixelValue(i, 1200),
+                            self.tileNorth.getPixelValue(i, 0))
+            self.assertEqual(self.tile.getPixelValue(1200, i),
+                            self.tileEast.getPixelValue(0, i))
 
 if __name__ == '__main__':
     unittest.main()

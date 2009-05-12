@@ -299,6 +299,20 @@
 			</else>
 		</rule>
 
+		<!-- embankments & cutings -->
+		<rule e="way" k="embankment" v="yes|true">
+			<line class="embankment-cutting embankment-long-casing"   smart-linecap="no" />
+			<line class="embankment-cutting embankment-short-casing"  smart-linecap="no" />
+			<line class="embankment-cutting embankment-middle-casing" smart-linecap="no" />
+			<line class="embankment-cutting embankment-core"          smart-linecap="no" />
+		</rule>
+		<rule e="way" k="cutting" v="yes|true">
+			<line class="embankment-cutting cutting-casing"           smart-linecap="no" />
+			<line class="embankment-cutting cutting-long-core"        smart-linecap="no" />
+			<line class="embankment-cutting cutting-short-core"       smart-linecap="no" />
+			<line class="embankment-cutting cutting-middle-core"      smart-linecap="no" />
+		</rule>
+
 		<!-- Bridge casings -->
 		<rule e="way" k="bridge" v="yes|true">
 			<rule e="way" k="railway" v="rail">
@@ -3622,6 +3636,18 @@
 			}
 
 			.tunnel { stroke-dasharray: 0.4, 0.4; }
+
+			.embankment-cutting        { fill: none; stroke-linejoin: bevel; stroke-linecap: butt; }
+
+			.embankment-long-casing    { stroke-width: 3.8px; stroke: #d79331; stroke-dasharray: 0.1, 1.1; }
+			.embankment-short-casing   { stroke-width: 3.3px; stroke: #d79331; stroke-dasharray: 0.1, 0.5, 0.1, 0.5;  }
+			.embankment-middle-casing  { stroke-width: 2.8px; stroke: #d79331; stroke-dasharray: none; }
+			.embankment-core           { stroke-width: 2.6px; stroke: #f8f8f8; stroke-dasharray: none; }
+
+			.cutting-casing            { stroke-width: 3.8px; stroke: #d79331; stroke-dasharray: none; }
+			.cutting-long-core         { stroke-width: 3.6px; stroke: #f8f8f8; stroke-dasharray: 0.5, 0.1, 0.5, 0.1; }
+			.cutting-short-core        { stroke-width: 3.1px; stroke: #f8f8f8; stroke-dasharray: 1.1, 0.1; }
+			.cutting-middle-core       { stroke-width: 2.6px; stroke: #f8f8f8; stroke-dasharray: none; }
 
 			.railway-rail-bridge-casing             { stroke-width: 2.75px; }
 			.railway-rail-bridge-core               { stroke-width: 2.25px; }

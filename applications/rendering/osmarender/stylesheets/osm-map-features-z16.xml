@@ -714,12 +714,19 @@
 						<line class="highway-casing highway-unsurfaced-casing" smart-linecap="no"/>
 					</else>
 				</rule>
+
 				<rule e="way" k="highway" v="service">
 					<rule e="way" k="service" v="parking_aisle">
 						<line class="highway-casing highway-aisle-casing"/>
 					</rule>
 					<else>
-						<line class="highway-casing highway-service-casing"/>
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-service-cy1-casing"/>
+							<line class="highway-casing highway-service-cy2-casing"/>
+						</rule>
+						<else>
+							<line class="highway-casing highway-service-casing"/>
+						</else>
 					</else>
 				</rule>
 
@@ -2895,7 +2902,7 @@
 			.highway-unclassified-area-casing       { stroke-width: 0.25px; }
 			.highway-unclassified-core              { stroke-width: 2.25px;   stroke: #ffffff; }
 			.highway-residential-casing             { stroke-width: 2.5px;  stroke: #707070; }
-			.highway-residential-cy1-casing         { stroke-width: 3.2px;  stroke: #707070; }
+			.highway-residential-cy1-casing         { stroke-width: 3.3px;  stroke: #707070; }
 			.highway-residential-cy2-casing         { stroke-width: 3.1px;  stroke: #d1fad1; }
 			.highway-residential-area-casing        { stroke-width: 0.15px; }
 			.highway-residential-core               { stroke-width: 2.25px; stroke: #ffffff; }
@@ -2926,6 +2933,8 @@
 			.highway-service-bridge-casing          { stroke-width: 2.8px; }
 			.highway-service-bridge-core            { stroke-width: 2.6px; }
 			.highway-service-casing                 { stroke-width: 1.8px;   stroke: #707070; }
+			.highway-service-cy1-casing               { stroke-width: 2.9px;     stroke: #707070; }
+			.highway-service-cy2-casing               { stroke-width: 2.6px;     stroke: #d1fad1; }
 			.highway-service-area-casing            { stroke-width: 0.2px; }
 			.highway-service-core                   { stroke-width: 1.6px;   stroke: #ffffff; }
 			.highway-service-area                   { fill: #ffffff; }

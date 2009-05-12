@@ -449,31 +449,81 @@
 					</else>
 				</rule>
 				<rule e="way" k="highway" v="tertiary_link">
-					<line class="highway-casing highway-tertiary-link-casing"/>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="highway-casing highway-tertiary-link-mr2-casing"/>
+					</rule>
+					<else>
+						<line class="highway-casing highway-tertiary-link-casing"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="tertiary">
-					<line class="highway-casing highway-tertiary-casing"/>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="highway-casing highway-tertiary-mr2-casing"/>
+					</rule>
+					<else>
+						<line class="highway-casing highway-tertiary-casing"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="secondary_link">
-					<line class="highway-casing highway-secondary-link-casing"/>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="highway-casing highway-secondary-link-mr2-casing"/>
+					</rule>
+					<else>
+						<line class="highway-casing highway-secondary-link-casing"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="secondary">
-					<line class="highway-casing highway-secondary-casing"/>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="highway-casing highway-secondary-mr2-casing"/>
+					</rule>
+					<else>
+						<line class="highway-casing highway-secondary-casing"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="primary_link">
-					<line class="highway-casing highway-primary-link-casing"/>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="highway-casing highway-primary-link-mr2-casing"/>
+					</rule>
+					<else>
+						<line class="highway-casing highway-primary-link-casing"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="trunk_link">
-					<line class="highway-casing highway-trunk-link-casing"/>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="highway-casing highway-trunk-link-mr2-casing"/>
+					</rule>
+					<else>
+						<rule e="way" k="motorroad" v="no">
+							<line class="highway-casing highway-trunk-link-mr3-casing"/>
+						</rule>
+						<else>
+							<line class="highway-casing highway-trunk-link-casing"/>
+						</else>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="motorway_link">
 					<line class="highway-casing highway-motorway-link-casing"/>
 				</rule>
 				<rule e="way" k="highway" v="primary">
-					<line class="highway-casing highway-primary-casing"/>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="highway-casing highway-primary-mr2-casing"/>
+					</rule>
+					<else>
+						<line class="highway-casing highway-primary-casing"/>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="trunk">
-					<line class="highway-casing highway-trunk-casing"/>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="highway-casing highway-trunk-mr2-casing"/>
+					</rule>
+					<else>
+						<rule e="way" k="motorroad" v="no">
+							<line class="highway-casing highway-trunk-mr3-casing"/>
+						</rule>
+						<else>
+							<line class="highway-casing highway-trunk-casing"/>
+						</else>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="motorway">
 					<line class="highway-casing highway-motorway-casing"/>
@@ -1272,40 +1322,51 @@
 			.highway-motorway-link-area             { fill: #809BC0; }
 			
 			.highway-trunk-casing                   { stroke-width: 14px; stroke: #202020; }
+			.highway-trunk-mr2-casing               { stroke-width: 17px;     stroke: #809BC0; }
+			.highway-trunk-mr3-casing               { stroke-width: 17px;     stroke: #FDBF6F; }
 			.highway-trunk-area-casing              { stroke-width: 1px; }
 			.highway-trunk-core                     { stroke-width: 13px; stroke: #7FC97F; }
 			.highway-trunk-area                     { fill: #7FC97F; }
 			
 			.highway-trunk-link-casing              { stroke-width: 6px; stroke: #202020; }
+			.highway-trunk-link-mr2-casing          { stroke-width: 7px;     stroke: #809BC0; }
+			.highway-trunk-link-mr3-casing          { stroke-width: 7px;     stroke: #FDBF6F; }
+			.highway-trunk-link-area-casing         { stroke-width: 0.5px; }
 			.highway-trunk-link-core                { stroke-width: 5.5px; stroke: #7FC97F; }
 			.highway-trunk-link-area                { fill: #7FC97F; }
 			
 			.highway-primary-casing                 { stroke-width: 14px; stroke: #202020; }
+			.highway-primary-mr2-casing             { stroke-width: 17px;     stroke: #809BC0; }
 			.highway-primary-area-casing            { stroke-width: 1px; }
 			.highway-primary-core                   { stroke-width: 13px; stroke: #e46d71; }
 			.highway-primary-area                   { fill: #e46d71; }
 			
 			.highway-primary-link-casing            { stroke-width: 6px; stroke: #202020; }
+			.highway-primary-link-mr2-casing        { stroke-width: 7px;     stroke: #809BC0; }
 			.highway-primary-link-area-casing       { stroke-width: 0.5px; }
 			.highway-primary-link-core              { stroke-width: 5.5px; stroke: #e46d71; }
 			.highway-primary-link-area              { fill: #e46d71; }
 			
 			.highway-secondary-casing               { stroke-width: 12px; stroke: #202020; }
+			.highway-secondary-mr2-casing           { stroke-width: 14px;     stroke: #809BC0; }
 			.highway-secondary-area-casing          { stroke-width: 1px; }
 			.highway-secondary-core                 { stroke-width: 11px; stroke: #FDBF6F; }
 			.highway-secondary-area                 { fill: #FDBF6F; }
 			
 			.highway-secondary-link-casing          { stroke-width: 6px; stroke: #202020; }
+			.highway-secondary-link-mr2-casing      { stroke-width: 7px;     stroke: #809BC0; }
 			.highway-secondary-link-area-casing     { stroke-width: 1px; }
 			.highway-secondary-link-core            { stroke-width: 5.5px; stroke: #FDBF6F; }
 			.highway-secondary-link-area            { fill: #FDBF6F; }
 			
 			.highway-tertiary-casing                { stroke-width: 6px;  stroke: #202020; }
+			.highway-tertiary-mr2-casing            { stroke-width: 7px;     stroke: #809BC0; }
 			.highway-tertiary-area-casing           { stroke-width: 0.5px; }
 			.highway-tertiary-core                  { stroke-width: 5.5px;  stroke: #ffff90; }
 			.highway-tertiary-area                  { fill: #ffff90; }
 			
 			.highway-tertiary-link-casing           { stroke-width: 6px;  stroke: #202020; }
+			.highway-tertiary-link-mr2-casing       { stroke-width: 7px;     stroke: #809BC0; }
 			.highway-tertiary-link-area-casing      { stroke-width: 0.5px; }
 			.highway-tertiary-link-core             { stroke-width: 5.5px;  stroke: #ffff90; }
 			.highway-tertiary-link-area             { fill: #ffff90; }

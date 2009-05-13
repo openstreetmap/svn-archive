@@ -67,6 +67,10 @@ public class OsmTileSource {
             return url;
         }
 
+        public int getMaxZoom() {
+            return 17;
+        }
+
         public String getName() {
             return NAME;
         }

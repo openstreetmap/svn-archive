@@ -3603,7 +3603,7 @@
 			font-size: 1.0px; fill: #c0c0c0;
 			}
 
-			.highway-nobicycle-1 { stroke-width: 2.3px; stroke: #000080; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; fill: none; }
+			.highway-nobicycle-1 { stroke-width: 2.7px; stroke: #000080; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; fill: none; }
 			.highway-nobicycle-2 { stroke-width: 2.0px; stroke: #d1fad1; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; fill: none; }
 			.highway-nobicycle-3 { stroke-width: 0.2px; stroke: #000080; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; fill: none; }
 
@@ -3641,13 +3641,13 @@
 
 			.embankment-long-casing    { stroke-width: 3.8px; stroke: #d79331; stroke-dasharray: 0.1, 1.1; }
 			.embankment-short-casing   { stroke-width: 3.3px; stroke: #d79331; stroke-dasharray: 0.1, 0.5, 0.1, 0.5;  }
-			.embankment-middle-casing  { stroke-width: 2.8px; stroke: #d79331; stroke-dasharray: none; }
-			.embankment-core           { stroke-width: 2.6px; stroke: #f8f8f8; stroke-dasharray: none; }
+			.embankment-middle-casing  { stroke-width: 1.9px; stroke: #d79331; stroke-dasharray: none; }
+			.embankment-core           { stroke-width: 1.7px; stroke: #f8f8f8; stroke-dasharray: none; }
 
 			.cutting-casing            { stroke-width: 3.8px; stroke: #d79331; stroke-dasharray: none; }
 			.cutting-long-core         { stroke-width: 3.6px; stroke: #f8f8f8; stroke-dasharray: 0.5, 0.1, 0.5, 0.1; }
 			.cutting-short-core        { stroke-width: 3.1px; stroke: #f8f8f8; stroke-dasharray: 1.1, 0.1; }
-			.cutting-middle-core       { stroke-width: 2.6px; stroke: #f8f8f8; stroke-dasharray: none; }
+			.cutting-middle-core       { stroke-width: 2.1px; stroke: #f8f8f8; stroke-dasharray: none; }
 
 			.railway-rail-bridge-casing             { stroke-width: 2.75px; }
 			.railway-rail-bridge-core               { stroke-width: 2.25px; }

@@ -92,10 +92,8 @@ class Tile:
       (d_offset,d_offset_next) = struct.unpack('II',data)
       #return  "(%d,%d,%d) as %d offset1 %d  offset2 %d " % (self.z,self.x,self.y,offset,d_offset,d_offset_next)
     except OSError, IOError:
-      d_offset = 0
       # check blanktiles.dat for blankness value
-      blankness = self.blankness_value(layername)
-      d_offset = blankness      # use returned blankness value
+      d_offset = self.blankness_value(layername)
     if d_offset > 3:
       # we got a regular tilesetfile here
       #make sure that the second offset really points to data end and is not blank either

@@ -100,12 +100,21 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 <!--restrictions tags -->
 <!--the restrictions rules should be placed before the path rule! -->
+	<rule>
+		<!-- New tag that designates a road with motorway access restrictions
+			(replacement for trunk outside the UK) -->
+		<condition k="motorroad" v="yes" />
+		<icon src="misc/deprecated.png" />
+		<scale_min>1</scale_min>
+		<scale_max>5000</scale_max>
+		<routing goods="80" hgv="80" motorcycle="90" motorcar="90" psv="90" />
+	</rule>
 
 	<rule>
 		<condition k="access" v="no" />
 		<icon src="vehicle/restriction/access.png" />
-        <scale_min>1</scale_min>
-        <scale_max>5000</scale_max>
+        	<scale_min>1</scale_min>
+        	<scale_max>5000</scale_max>
 	</rule>
 
 	<rule>

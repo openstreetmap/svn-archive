@@ -105,7 +105,7 @@ class CityPlotter(handler.ContentHandler):
     parser = make_parser()
     parser.setContentHandler(self)
     if gazeteer == "osmxapi":
-      URL =  "http://www.informationfreeway.org/api/0.5/node[%s][bbox=%f,%f,%f,%f]" % ("place=city|town|village", proj.W, proj.S, proj.E, proj.N)
+      URL =  "http://www.informationfreeway.org/api/0.6/node[%s][bbox=%f,%f,%f,%f]" % ("place=city|town|village", proj.W, proj.S, proj.E, proj.N)
       print "Downloading gazeteer"
       sock = urllib.urlopen(URL)
       parser.parse(sock)

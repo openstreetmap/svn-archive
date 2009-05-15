@@ -554,26 +554,32 @@
 			</rule>
 			<rule e="way" k="highway" v="track">
 				<rule e="way" k="tracktype" v="grade1">
+					<area class="highway-casing highway-track-area-back-casing" smart-linecap="no"/>
 					<area class="highway-casing highway-track-casing highway-track-grade1-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 				</rule>
 				<else>
 					<rule e="way" k="tracktype" v="grade2">
+						<area class="highway-casing highway-track-area-back-casing" smart-linecap="no"/>
 						<area class="highway-casing highway-track-casing highway-track-grade2-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 					</rule>
 					<else>
 						<rule e="way" k="tracktype" v="grade3">
+					 		<area class="highway-casing highway-track-area-back-casing" smart-linecap="no"/>
 							<area class="highway-casing highway-track-casing highway-track-grade3-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 						</rule>
 						<else>
 							<rule e="way" k="tracktype" v="grade4">
+								<area class="highway-casing highway-track-area-back-casing" smart-linecap="no"/>
 								<area class="highway-casing highway-track-casing highway-track-grade4-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 							</rule>
 							<else>
 								<rule e="way" k="tracktype" v="grade5">
+									<area class="highway-casing highway-track-area-back-casing" smart-linecap="no"/>
 									<area class="highway-casing highway-track-casing highway-track-grade5-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 								</rule>
 								<else>
-									<area class="highway-casing highway-track-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
+									<area class="highway-casing highway-track-area-back-casing" smart-linecap="no"/>
+									<area class="highway-casing highway-track-casing highway-track-gradex-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 								</else>
 							</else>
 						</else>
@@ -717,22 +723,27 @@
 				</rule>
 				<rule e="way" k="highway" v="track">
 					<rule e="way" k="tracktype" v="grade1">
+						<line class="highway-casing highway-track-back-casing" smart-linecap="no"/>
 						<line class="highway-casing highway-track-casing highway-track-grade1-casing" smart-linecap="no"/>
 					</rule>
 					<else>
 						<rule e="way" k="tracktype" v="grade2">
+							<line class="highway-casing highway-track-back-casing" smart-linecap="no"/>
 							<line class="highway-casing highway-track-casing highway-track-grade2-casing" smart-linecap="no"/>
 						</rule>
 						<else>
 							<rule e="way" k="tracktype" v="grade3">
+								<line class="highway-casing highway-track-back-casing" smart-linecap="no"/>
 								<line class="highway-casing highway-track-casing highway-track-grade3-casing" smart-linecap="no"/>
 							</rule>
 							<else>
 								<rule e="way" k="tracktype" v="grade4">
+									<line class="highway-casing highway-track-back-casing" smart-linecap="no"/>
 									<line class="highway-casing highway-track-casing highway-track-grade4-casing" smart-linecap="no"/>
 								</rule>
 								<else>
 									<rule e="way" k="tracktype" v="grade5">
+										<line class="highway-casing highway-track-back-casing" smart-linecap="no"/>
 										<line class="highway-casing highway-track-casing highway-track-grade5-casing" smart-linecap="no"/>
 									</rule>
 									<else>
@@ -741,7 +752,8 @@
 											<line class="highway-racetrack-casing-red" smart-linecap="no"/>
 										</rule>
 										<else>
-											<line class="highway-casing highway-track-casing" smart-linecap="no"/>
+											<line class="highway-casing highway-track-back-casing" smart-linecap="no"/>
+											<line class="highway-casing highway-track-casing highway-track-gradex-casing" smart-linecap="no"/>
 										</else>
 									</else>
 								</else>
@@ -1254,45 +1266,7 @@
 						<line class="highway-racetrack-core" smart-linecap="no"/>
 					</rule>
 					<else>
-						<rule e="way" k="surface" v="grass">
-							<line class="highway-core highway-track-back highway-track-back-grass" smart-linecap="no"/>
-						</rule>
-						<else>
-							<line class="highway-core highway-track-back" smart-linecap="no"/>
-						</else>
-						<rule e="way" k="tracktype" v="grade3|grade4|grade5">
-							<rule e="way" k="surface" v="grass">
-								<rule e="way" k="tracktype" v="grade3">
-									<line class="highway-core highway-track-core" smart-linecap="no"/>
-									<line class="highway-core highway-track-midline-grade3 highway-track-midline-grade3-grass" smart-linecap="no"/>
-								</rule>
-								<rule e="way" k="tracktype" v="grade4">
-									<line class="highway-core highway-track-core highway-track-core-grade4" smart-linecap="no"/>
-									<line class="highway-core highway-track-midline-grade4 highway-track-midline-grade4-grass" smart-linecap="no"/>
-								</rule>
-								<rule e="way" k="tracktype" v="grade5">
-									<line class="highway-core highway-track-core highway-track-core-grade5" smart-linecap="no"/>
-									<line class="highway-core highway-track-midline-grade5 highway-track-midline-grade5-grass" smart-linecap="no"/>
-								</rule>
-							</rule>
-							<else>
-								<rule e="way" k="tracktype" v="grade3">
-									<line class="highway-core highway-track-core" smart-linecap="no"/>
-									<line class="highway-core highway-track-midline-grade3" smart-linecap="no"/>
-								</rule>
-								<rule e="way" k="tracktype" v="grade4">
-									<line class="highway-core highway-track-core highway-track-core-grade4" smart-linecap="no"/>
-									<line class="highway-core highway-track-midline-grade4" smart-linecap="no"/>
-								</rule>
-								<rule e="way" k="tracktype" v="grade5">
-									<line class="highway-core highway-track-core highway-track-core-grade5" smart-linecap="no"/>
-									<line class="highway-core highway-track-midline-grade5" smart-linecap="no"/>
-								</rule>
-							</else>
-						</rule>
-						<else>
-							<line class="highway-core highway-track-core" smart-linecap="no"/>
-						</else>
+						<line class="highway-core highway-track-core" smart-linecap="no"/>
 					</else>
 				</rule>
 				<rule e="way" k="highway" v="unsurfaced">
@@ -2037,6 +2011,1449 @@
 				</rule>
 			</else>
 		</rule>
+
+		<!-- surface & smoothness -->
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="paved">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="ispavd-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="ispavd-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="ispavd-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="ispavd-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="ispavd-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="ispavd-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="ispavd-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="ispavd-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="ispavd-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="ispavd-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="ispavd-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="ispavd-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="ispavd-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="ispavd-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="ispavd-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="ispavd-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="ispavd-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="ispavd-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="asphalt">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="asphal-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="asphal-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="asphal-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="asphal-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="asphal-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="asphal-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="asphal-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="asphal-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="asphal-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="asphal-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="asphal-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="asphal-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="asphal-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="asphal-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="asphal-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="asphal-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="asphal-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="asphal-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="concrete">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="concre-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="concre-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="concre-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="concre-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="concre-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="concre-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="concre-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="concre-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="concre-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="concre-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="concre-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="concre-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="concre-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="concre-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="concre-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="concre-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="concre-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="concre-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="paving_stones">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="paving-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="paving-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="paving-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="paving-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="paving-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="paving-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="paving-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="paving-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="paving-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="paving-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="paving-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="paving-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="paving-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="paving-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="paving-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="paving-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="paving-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="paving-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="cobblestone">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="cobble-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="cobble-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="cobble-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="cobble-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="cobble-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="cobble-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="cobble-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="cobble-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="cobble-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="cobble-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="cobble-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="cobble-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="cobble-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="cobble-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="cobble-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="cobble-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="cobble-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="cobble-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="wood|wooden">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="wooden-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="wooden-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="wooden-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="wooden-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="wooden-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="wooden-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="wooden-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="wooden-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="wooden-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="wooden-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="wooden-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="wooden-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="wooden-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="wooden-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="wooden-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="wooden-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="wooden-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="wooden-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="metal">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="metall-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="metall-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="metall-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="metall-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="metall-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="metall-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="metall-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="metall-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="metall-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="metall-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="metall-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="metall-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="metall-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="metall-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="metall-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="metall-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="metall-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="metall-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="grass_paver">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="grapav-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="grapav-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="grapav-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="grapav-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="grapav-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="grapav-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="grapav-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="grapav-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="grapav-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="grapav-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="grapav-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="grapav-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="grapav-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="grapav-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="grapav-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="grapav-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="grapav-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="grapav-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="compacted">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="compac-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="compac-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="compac-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="compac-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="compac-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="compac-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="compac-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="compac-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="compac-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="compac-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="compac-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="compac-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="compac-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="compac-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="compac-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="compac-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="compac-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="compac-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="gravel">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="gravel-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="gravel-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="gravel-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="gravel-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="gravel-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="gravel-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="gravel-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="gravel-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="gravel-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="gravel-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="gravel-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="gravel-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="gravel-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="gravel-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="gravel-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="gravel-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="gravel-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="gravel-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="pebblestone">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="pebble-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="pebble-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="pebble-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="pebble-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="pebble-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="pebble-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="pebble-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="pebble-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="pebble-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="pebble-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="pebble-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="pebble-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="pebble-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="pebble-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="pebble-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="pebble-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="pebble-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="pebble-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="grass">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="grasss-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="grasss-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="grasss-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="grasss-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="grasss-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="grasss-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="grasss-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="grasss-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="grasss-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="grasss-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="grasss-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="grasss-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="grasss-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="grasss-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="grasss-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="grasss-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="grasss-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="grasss-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="ground|earth|mud|dirt">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="ground-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="ground-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="ground-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="ground-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="ground-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="ground-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="ground-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="ground-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="ground-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="ground-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="ground-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="ground-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="ground-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="ground-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="ground-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="ground-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="ground-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="ground-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="sand">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="sandig-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="sandig-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="sandig-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="sandig-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="sandig-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="sandig-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="sandig-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="sandig-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="sandig-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="sandig-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="sandig-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="sandig-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="sandig-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="sandig-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="sandig-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="sandig-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="sandig-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="sandig-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="unpaved">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="unpavd-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="unpavd-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="unpavd-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="unpavd-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="unpavd-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="unpavd-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="unpavd-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="unpavd-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="unpavd-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="unpavd-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="unpavd-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="unpavd-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="unpavd-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="unpavd-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="unpavd-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="unpavd-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="unpavd-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="unpavd-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+		<rule e="way" k="highway" v="*">
+			<rule e="way" k="surface" v="ice_road">
+				<rule e="way" k="smoothness" v="excellent">
+					<rule k="area" v="yes|true">
+						<area class="iceroa-area-ex surface-area"/>
+					</rule>
+					<else>
+						<line class="iceroa-line-ex surface-line"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="smoothness" v="good">
+						<rule k="area" v="yes|true">
+							<area class="iceroa-area-go surface-area"/>
+						</rule>
+						<else>
+							<line class="iceroa-line-go surface-line"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="smoothness" v="intermediate">
+							<rule k="area" v="yes|true">
+								<area class="iceroa-area-in surface-area"/>
+							</rule>
+							<else>
+								<line class="iceroa-line-in surface-line"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="smoothness" v="bad">
+								<rule k="area" v="yes|true">
+									<area class="iceroa-area-ba surface-area"/>
+								</rule>
+								<else>
+									<line class="iceroa-line-ba surface-line"/>
+								</else>
+							</rule>
+							<else>
+								<rule e="way" k="smoothness" v="very_bad">
+									<rule k="area" v="yes|true">
+										<area class="iceroa-area-vb surface-area"/>
+									</rule>
+									<else>
+										<line class="iceroa-line-vb surface-line"/>
+									</else>
+								</rule>
+								<else>
+									<rule e="way" k="smoothness" v="horrible">
+										<rule k="area" v="yes|true">
+											<area class="iceroa-area-ho surface-area"/>
+										</rule>
+										<else>
+										<line class="iceroa-line-ho surface-line"/>
+										</else>
+									</rule>
+									<else>
+										<rule e="way" k="smoothness" v="very_horrible">
+											<rule k="area" v="yes|true">
+												<area class="iceroa-area-vh surface-area"/>
+											</rule>
+											<else>
+												<line class="iceroa-line-vh surface-line"/>
+											</else>
+										</rule>
+										<else>
+											<rule e="way" k="smoothness" v="impassable">
+												<rule k="area" v="yes|true">
+													<area class="iceroa-area-im surface-area"/>
+												</rule>
+												<else>
+													<line class="iceroa-line-im surface-line"/>
+												</else>
+											</rule>
+											<else>
+												<rule k="area" v="yes|true">
+													<area class="iceroa-area-xx surface-area"/>
+												</rule>
+												<else>
+													<line class="iceroa-line-xx surface-line"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+		</rule>
+
 
 		<!-- access restrictions -->
 		<rule e="way" k="highway" v="*">
@@ -3933,28 +5350,21 @@
 
 			.highway-track-bridge-casing            { stroke-width: 2.25px; }
 			.highway-track-bridge-core              { stroke-width: 1.75px; }
+			.highway-track-back-casing              { stroke-width: 1.1px;   stroke: #ffffff; }
 			.highway-track-casing                   { stroke-width: 1.0px;   stroke: #d79331; }
-			.highway-track-area-casing              { stroke-width: 0.2px; }
-			.highway-track-core                     { stroke-width: 0.7px;   stroke: #ffffff; }
-			.highway-track-core-grade4              { stroke-width: 0.6px; }
-			.highway-track-core-grade5              { stroke-width: 0.5px; }
-			.highway-track-back                     { stroke-width: 0.8px;   stroke: #ffebeb; }
-			.highway-track-midline-grade3           { stroke-width: 0.1px;   stroke: #ffebeb; }
-			.highway-track-midline-grade4           { stroke-width: 0.2px;   stroke: #ffebeb; }
-			.highway-track-midline-grade5           { stroke-width: 0.3px;   stroke: #ffebeb; }
-			.highway-track-back-grass               { stroke: #bde3cb; }
-			.highway-track-midline-grade3-grass     { stroke: #bde3cb; }
-			.highway-track-midline-grade4-grass     { stroke: #bde3cb; }
-			.highway-track-midline-grade5-grass     { stroke: #bde3cb; }
+			.highway-track-area-back-casing         { stroke-width: 0.45px;  stroke: #ffffff; }
+			.highway-track-area-casing              { stroke-width: 0.4px;   stroke: #d79331; }
+			.highway-track-core                     { stroke-width: 0.6px;   stroke: #ffffff; }
 			.highway-track-area                     { fill: #ffffff; }
 			.highway-track-name                     { stroke-width: 0px;     font-size: 1.25px; }
 			.highway-track-ref                      { stroke-width: 0px;     font-size: 1.25px; }
 
-			.highway-track-grade1-casing            { stroke: #707070; }
-			.highway-track-grade2-casing            { }
-			.highway-track-grade3-casing            { stroke-dasharray: 1.4, 1.0; stroke-linecap: butt; }
-			.highway-track-grade4-casing            { stroke-dasharray: 1.4, 1.0, 0.4, 1.0; stroke-linecap: butt; }
-			.highway-track-grade5-casing            { stroke-dasharray: 0.4, 1.0; stroke-linecap: butt; }
+			.highway-track-gradex-casing            { stroke-dasharray: 1.8, 0.2; stroke-linecap: butt; }
+			.highway-track-grade1-casing            { }
+			.highway-track-grade2-casing            { stroke-dasharray: 1.8, 0.9; stroke-linecap: butt; }
+			.highway-track-grade3-casing            { stroke-dasharray: 1.0, 1.3; stroke-linecap: butt; }
+			.highway-track-grade4-casing            { stroke-dasharray: 0.5, 1.0, 0.2, 1.0; stroke-linecap: butt; }
+			.highway-track-grade5-casing            { stroke-dasharray: 0.2, 1.0; stroke-linecap: butt; }
 
 			.highway-byway-bridge-casing            { stroke-width: 1.6px; }
 			.highway-byway-bridge-core              { stroke-width: 1.4px; }
@@ -5302,7 +6712,320 @@
 			.osmarender-mask-white { stroke: white; }
 			.osmarender-no-marker-start { marker-start: none; }
 			.osmarender-no-marker-end { marker-end: none; }
+
+.surface-area { stroke: none; }
+.surface-line { fill:   none; stroke-width: 1.5px; }
+.ispavd-line-xx { stroke: url(#ispavd-pattern-xx); }
+.ispavd-area-xx { fill:   url(#ispavd-pattern-xx); }
+.ispavd-line-ex { stroke: url(#ispavd-pattern-ex); }
+.ispavd-area-ex { fill:   url(#ispavd-pattern-ex); }
+.ispavd-line-go { stroke: url(#ispavd-pattern-go); }
+.ispavd-area-go { fill:   url(#ispavd-pattern-go); }
+.ispavd-line-in { stroke: url(#ispavd-pattern-in); }
+.ispavd-area-in { fill:   url(#ispavd-pattern-in); }
+.ispavd-line-ba { stroke: url(#ispavd-pattern-ba); }
+.ispavd-area-ba { fill:   url(#ispavd-pattern-ba); }
+.ispavd-line-vb { stroke: url(#ispavd-pattern-vb); }
+.ispavd-area-vb { fill:   url(#ispavd-pattern-vb); }
+.ispavd-line-ho { stroke: url(#ispavd-pattern-ho); }
+.ispavd-area-ho { fill:   url(#ispavd-pattern-ho); }
+.ispavd-line-vh { stroke: url(#ispavd-pattern-vh); }
+.ispavd-area-vh { fill:   url(#ispavd-pattern-vh); }
+.ispavd-line-im { stroke: url(#ispavd-pattern-im); }
+.ispavd-area-im { fill:   url(#ispavd-pattern-im); }
+.asphal-line-xx { stroke: url(#asphal-pattern-xx); }
+.asphal-area-xx { fill:   url(#asphal-pattern-xx); }
+.asphal-line-ex { stroke: url(#asphal-pattern-ex); }
+.asphal-area-ex { fill:   url(#asphal-pattern-ex); }
+.asphal-line-go { stroke: url(#asphal-pattern-go); }
+.asphal-area-go { fill:   url(#asphal-pattern-go); }
+.asphal-line-in { stroke: url(#asphal-pattern-in); }
+.asphal-area-in { fill:   url(#asphal-pattern-in); }
+.asphal-line-ba { stroke: url(#asphal-pattern-ba); }
+.asphal-area-ba { fill:   url(#asphal-pattern-ba); }
+.asphal-line-vb { stroke: url(#asphal-pattern-vb); }
+.asphal-area-vb { fill:   url(#asphal-pattern-vb); }
+.asphal-line-ho { stroke: url(#asphal-pattern-ho); }
+.asphal-area-ho { fill:   url(#asphal-pattern-ho); }
+.asphal-line-vh { stroke: url(#asphal-pattern-vh); }
+.asphal-area-vh { fill:   url(#asphal-pattern-vh); }
+.asphal-line-im { stroke: url(#asphal-pattern-im); }
+.asphal-area-im { fill:   url(#asphal-pattern-im); }
+.concre-line-xx { stroke: url(#concre-pattern-xx); }
+.concre-area-xx { fill:   url(#concre-pattern-xx); }
+.concre-line-ex { stroke: url(#concre-pattern-ex); }
+.concre-area-ex { fill:   url(#concre-pattern-ex); }
+.concre-line-go { stroke: url(#concre-pattern-go); }
+.concre-area-go { fill:   url(#concre-pattern-go); }
+.concre-line-in { stroke: url(#concre-pattern-in); }
+.concre-area-in { fill:   url(#concre-pattern-in); }
+.concre-line-ba { stroke: url(#concre-pattern-ba); }
+.concre-area-ba { fill:   url(#concre-pattern-ba); }
+.concre-line-vb { stroke: url(#concre-pattern-vb); }
+.concre-area-vb { fill:   url(#concre-pattern-vb); }
+.concre-line-ho { stroke: url(#concre-pattern-ho); }
+.concre-area-ho { fill:   url(#concre-pattern-ho); }
+.concre-line-vh { stroke: url(#concre-pattern-vh); }
+.concre-area-vh { fill:   url(#concre-pattern-vh); }
+.concre-line-im { stroke: url(#concre-pattern-im); }
+.concre-area-im { fill:   url(#concre-pattern-im); }
+.paving-line-xx { stroke: url(#paving-pattern-xx); }
+.paving-area-xx { fill:   url(#paving-pattern-xx); }
+.paving-line-ex { stroke: url(#paving-pattern-ex); }
+.paving-area-ex { fill:   url(#paving-pattern-ex); }
+.paving-line-go { stroke: url(#paving-pattern-go); }
+.paving-area-go { fill:   url(#paving-pattern-go); }
+.paving-line-in { stroke: url(#paving-pattern-in); }
+.paving-area-in { fill:   url(#paving-pattern-in); }
+.paving-line-ba { stroke: url(#paving-pattern-ba); }
+.paving-area-ba { fill:   url(#paving-pattern-ba); }
+.paving-line-vb { stroke: url(#paving-pattern-vb); }
+.paving-area-vb { fill:   url(#paving-pattern-vb); }
+.paving-line-ho { stroke: url(#paving-pattern-ho); }
+.paving-area-ho { fill:   url(#paving-pattern-ho); }
+.paving-line-vh { stroke: url(#paving-pattern-vh); }
+.paving-area-vh { fill:   url(#paving-pattern-vh); }
+.paving-line-im { stroke: url(#paving-pattern-im); }
+.paving-area-im { fill:   url(#paving-pattern-im); }
+.cobble-line-xx { stroke: url(#cobble-pattern-xx); }
+.cobble-area-xx { fill:   url(#cobble-pattern-xx); }
+.cobble-line-ex { stroke: url(#cobble-pattern-ex); }
+.cobble-area-ex { fill:   url(#cobble-pattern-ex); }
+.cobble-line-go { stroke: url(#cobble-pattern-go); }
+.cobble-area-go { fill:   url(#cobble-pattern-go); }
+.cobble-line-in { stroke: url(#cobble-pattern-in); }
+.cobble-area-in { fill:   url(#cobble-pattern-in); }
+.cobble-line-ba { stroke: url(#cobble-pattern-ba); }
+.cobble-area-ba { fill:   url(#cobble-pattern-ba); }
+.cobble-line-vb { stroke: url(#cobble-pattern-vb); }
+.cobble-area-vb { fill:   url(#cobble-pattern-vb); }
+.cobble-line-ho { stroke: url(#cobble-pattern-ho); }
+.cobble-area-ho { fill:   url(#cobble-pattern-ho); }
+.cobble-line-vh { stroke: url(#cobble-pattern-vh); }
+.cobble-area-vh { fill:   url(#cobble-pattern-vh); }
+.cobble-line-im { stroke: url(#cobble-pattern-im); }
+.cobble-area-im { fill:   url(#cobble-pattern-im); }
+.wooden-line-xx { stroke: url(#wooden-pattern-xx); }
+.wooden-area-xx { fill:   url(#wooden-pattern-xx); }
+.wooden-line-ex { stroke: url(#wooden-pattern-ex); }
+.wooden-area-ex { fill:   url(#wooden-pattern-ex); }
+.wooden-line-go { stroke: url(#wooden-pattern-go); }
+.wooden-area-go { fill:   url(#wooden-pattern-go); }
+.wooden-line-in { stroke: url(#wooden-pattern-in); }
+.wooden-area-in { fill:   url(#wooden-pattern-in); }
+.wooden-line-ba { stroke: url(#wooden-pattern-ba); }
+.wooden-area-ba { fill:   url(#wooden-pattern-ba); }
+.wooden-line-vb { stroke: url(#wooden-pattern-vb); }
+.wooden-area-vb { fill:   url(#wooden-pattern-vb); }
+.wooden-line-ho { stroke: url(#wooden-pattern-ho); }
+.wooden-area-ho { fill:   url(#wooden-pattern-ho); }
+.wooden-line-vh { stroke: url(#wooden-pattern-vh); }
+.wooden-area-vh { fill:   url(#wooden-pattern-vh); }
+.wooden-line-im { stroke: url(#wooden-pattern-im); }
+.wooden-area-im { fill:   url(#wooden-pattern-im); }
+.metall-line-xx { stroke: url(#metall-pattern-xx); }
+.metall-area-xx { fill:   url(#metall-pattern-xx); }
+.metall-line-ex { stroke: url(#metall-pattern-ex); }
+.metall-area-ex { fill:   url(#metall-pattern-ex); }
+.metall-line-go { stroke: url(#metall-pattern-go); }
+.metall-area-go { fill:   url(#metall-pattern-go); }
+.metall-line-in { stroke: url(#metall-pattern-in); }
+.metall-area-in { fill:   url(#metall-pattern-in); }
+.metall-line-ba { stroke: url(#metall-pattern-ba); }
+.metall-area-ba { fill:   url(#metall-pattern-ba); }
+.metall-line-vb { stroke: url(#metall-pattern-vb); }
+.metall-area-vb { fill:   url(#metall-pattern-vb); }
+.metall-line-ho { stroke: url(#metall-pattern-ho); }
+.metall-area-ho { fill:   url(#metall-pattern-ho); }
+.metall-line-vh { stroke: url(#metall-pattern-vh); }
+.metall-area-vh { fill:   url(#metall-pattern-vh); }
+.metall-line-im { stroke: url(#metall-pattern-im); }
+.metall-area-im { fill:   url(#metall-pattern-im); }
+.grapav-line-xx { stroke: url(#grapav-pattern-xx); }
+.grapav-area-xx { fill:   url(#grapav-pattern-xx); }
+.grapav-line-ex { stroke: url(#grapav-pattern-ex); }
+.grapav-area-ex { fill:   url(#grapav-pattern-ex); }
+.grapav-line-go { stroke: url(#grapav-pattern-go); }
+.grapav-area-go { fill:   url(#grapav-pattern-go); }
+.grapav-line-in { stroke: url(#grapav-pattern-in); }
+.grapav-area-in { fill:   url(#grapav-pattern-in); }
+.grapav-line-ba { stroke: url(#grapav-pattern-ba); }
+.grapav-area-ba { fill:   url(#grapav-pattern-ba); }
+.grapav-line-vb { stroke: url(#grapav-pattern-vb); }
+.grapav-area-vb { fill:   url(#grapav-pattern-vb); }
+.grapav-line-ho { stroke: url(#grapav-pattern-ho); }
+.grapav-area-ho { fill:   url(#grapav-pattern-ho); }
+.grapav-line-vh { stroke: url(#grapav-pattern-vh); }
+.grapav-area-vh { fill:   url(#grapav-pattern-vh); }
+.grapav-line-im { stroke: url(#grapav-pattern-im); }
+.grapav-area-im { fill:   url(#grapav-pattern-im); }
+.compac-line-xx { stroke: url(#compac-pattern-xx); }
+.compac-area-xx { fill:   url(#compac-pattern-xx); }
+.compac-line-ex { stroke: url(#compac-pattern-ex); }
+.compac-area-ex { fill:   url(#compac-pattern-ex); }
+.compac-line-go { stroke: url(#compac-pattern-go); }
+.compac-area-go { fill:   url(#compac-pattern-go); }
+.compac-line-in { stroke: url(#compac-pattern-in); }
+.compac-area-in { fill:   url(#compac-pattern-in); }
+.compac-line-ba { stroke: url(#compac-pattern-ba); }
+.compac-area-ba { fill:   url(#compac-pattern-ba); }
+.compac-line-vb { stroke: url(#compac-pattern-vb); }
+.compac-area-vb { fill:   url(#compac-pattern-vb); }
+.compac-line-ho { stroke: url(#compac-pattern-ho); }
+.compac-area-ho { fill:   url(#compac-pattern-ho); }
+.compac-line-vh { stroke: url(#compac-pattern-vh); }
+.compac-area-vh { fill:   url(#compac-pattern-vh); }
+.compac-line-im { stroke: url(#compac-pattern-im); }
+.compac-area-im { fill:   url(#compac-pattern-im); }
+.gravel-line-xx { stroke: url(#gravel-pattern-xx); }
+.gravel-area-xx { fill:   url(#gravel-pattern-xx); }
+.gravel-line-ex { stroke: url(#gravel-pattern-ex); }
+.gravel-area-ex { fill:   url(#gravel-pattern-ex); }
+.gravel-line-go { stroke: url(#gravel-pattern-go); }
+.gravel-area-go { fill:   url(#gravel-pattern-go); }
+.gravel-line-in { stroke: url(#gravel-pattern-in); }
+.gravel-area-in { fill:   url(#gravel-pattern-in); }
+.gravel-line-ba { stroke: url(#gravel-pattern-ba); }
+.gravel-area-ba { fill:   url(#gravel-pattern-ba); }
+.gravel-line-vb { stroke: url(#gravel-pattern-vb); }
+.gravel-area-vb { fill:   url(#gravel-pattern-vb); }
+.gravel-line-ho { stroke: url(#gravel-pattern-ho); }
+.gravel-area-ho { fill:   url(#gravel-pattern-ho); }
+.gravel-line-vh { stroke: url(#gravel-pattern-vh); }
+.gravel-area-vh { fill:   url(#gravel-pattern-vh); }
+.gravel-line-im { stroke: url(#gravel-pattern-im); }
+.gravel-area-im { fill:   url(#gravel-pattern-im); }
+.pebble-line-xx { stroke: url(#pebble-pattern-xx); }
+.pebble-area-xx { fill:   url(#pebble-pattern-xx); }
+.pebble-line-ex { stroke: url(#pebble-pattern-ex); }
+.pebble-area-ex { fill:   url(#pebble-pattern-ex); }
+.pebble-line-go { stroke: url(#pebble-pattern-go); }
+.pebble-area-go { fill:   url(#pebble-pattern-go); }
+.pebble-line-in { stroke: url(#pebble-pattern-in); }
+.pebble-area-in { fill:   url(#pebble-pattern-in); }
+.pebble-line-ba { stroke: url(#pebble-pattern-ba); }
+.pebble-area-ba { fill:   url(#pebble-pattern-ba); }
+.pebble-line-vb { stroke: url(#pebble-pattern-vb); }
+.pebble-area-vb { fill:   url(#pebble-pattern-vb); }
+.pebble-line-ho { stroke: url(#pebble-pattern-ho); }
+.pebble-area-ho { fill:   url(#pebble-pattern-ho); }
+.pebble-line-vh { stroke: url(#pebble-pattern-vh); }
+.pebble-area-vh { fill:   url(#pebble-pattern-vh); }
+.pebble-line-im { stroke: url(#pebble-pattern-im); }
+.pebble-area-im { fill:   url(#pebble-pattern-im); }
+.grasss-line-xx { stroke: url(#grasss-pattern-xx); }
+.grasss-area-xx { fill:   url(#grasss-pattern-xx); }
+.grasss-line-ex { stroke: url(#grasss-pattern-ex); }
+.grasss-area-ex { fill:   url(#grasss-pattern-ex); }
+.grasss-line-go { stroke: url(#grasss-pattern-go); }
+.grasss-area-go { fill:   url(#grasss-pattern-go); }
+.grasss-line-in { stroke: url(#grasss-pattern-in); }
+.grasss-area-in { fill:   url(#grasss-pattern-in); }
+.grasss-line-ba { stroke: url(#grasss-pattern-ba); }
+.grasss-area-ba { fill:   url(#grasss-pattern-ba); }
+.grasss-line-vb { stroke: url(#grasss-pattern-vb); }
+.grasss-area-vb { fill:   url(#grasss-pattern-vb); }
+.grasss-line-ho { stroke: url(#grasss-pattern-ho); }
+.grasss-area-ho { fill:   url(#grasss-pattern-ho); }
+.grasss-line-vh { stroke: url(#grasss-pattern-vh); }
+.grasss-area-vh { fill:   url(#grasss-pattern-vh); }
+.grasss-line-im { stroke: url(#grasss-pattern-im); }
+.grasss-area-im { fill:   url(#grasss-pattern-im); }
+.ground-line-xx { stroke: url(#ground-pattern-xx); }
+.ground-area-xx { fill:   url(#ground-pattern-xx); }
+.ground-line-ex { stroke: url(#ground-pattern-ex); }
+.ground-area-ex { fill:   url(#ground-pattern-ex); }
+.ground-line-go { stroke: url(#ground-pattern-go); }
+.ground-area-go { fill:   url(#ground-pattern-go); }
+.ground-line-in { stroke: url(#ground-pattern-in); }
+.ground-area-in { fill:   url(#ground-pattern-in); }
+.ground-line-ba { stroke: url(#ground-pattern-ba); }
+.ground-area-ba { fill:   url(#ground-pattern-ba); }
+.ground-line-vb { stroke: url(#ground-pattern-vb); }
+.ground-area-vb { fill:   url(#ground-pattern-vb); }
+.ground-line-ho { stroke: url(#ground-pattern-ho); }
+.ground-area-ho { fill:   url(#ground-pattern-ho); }
+.ground-line-vh { stroke: url(#ground-pattern-vh); }
+.ground-area-vh { fill:   url(#ground-pattern-vh); }
+.ground-line-im { stroke: url(#ground-pattern-im); }
+.ground-area-im { fill:   url(#ground-pattern-im); }
+.sandig-line-xx { stroke: url(#sandig-pattern-xx); }
+.sandig-area-xx { fill:   url(#sandig-pattern-xx); }
+.sandig-line-ex { stroke: url(#sandig-pattern-ex); }
+.sandig-area-ex { fill:   url(#sandig-pattern-ex); }
+.sandig-line-go { stroke: url(#sandig-pattern-go); }
+.sandig-area-go { fill:   url(#sandig-pattern-go); }
+.sandig-line-in { stroke: url(#sandig-pattern-in); }
+.sandig-area-in { fill:   url(#sandig-pattern-in); }
+.sandig-line-ba { stroke: url(#sandig-pattern-ba); }
+.sandig-area-ba { fill:   url(#sandig-pattern-ba); }
+.sandig-line-vb { stroke: url(#sandig-pattern-vb); }
+.sandig-area-vb { fill:   url(#sandig-pattern-vb); }
+.sandig-line-ho { stroke: url(#sandig-pattern-ho); }
+.sandig-area-ho { fill:   url(#sandig-pattern-ho); }
+.sandig-line-vh { stroke: url(#sandig-pattern-vh); }
+.sandig-area-vh { fill:   url(#sandig-pattern-vh); }
+.sandig-line-im { stroke: url(#sandig-pattern-im); }
+.sandig-area-im { fill:   url(#sandig-pattern-im); }
+.unpavd-line-xx { stroke: url(#unpavd-pattern-xx); }
+.unpavd-area-xx { fill:   url(#unpavd-pattern-xx); }
+.unpavd-line-ex { stroke: url(#unpavd-pattern-ex); }
+.unpavd-area-ex { fill:   url(#unpavd-pattern-ex); }
+.unpavd-line-go { stroke: url(#unpavd-pattern-go); }
+.unpavd-area-go { fill:   url(#unpavd-pattern-go); }
+.unpavd-line-in { stroke: url(#unpavd-pattern-in); }
+.unpavd-area-in { fill:   url(#unpavd-pattern-in); }
+.unpavd-line-ba { stroke: url(#unpavd-pattern-ba); }
+.unpavd-area-ba { fill:   url(#unpavd-pattern-ba); }
+.unpavd-line-vb { stroke: url(#unpavd-pattern-vb); }
+.unpavd-area-vb { fill:   url(#unpavd-pattern-vb); }
+.unpavd-line-ho { stroke: url(#unpavd-pattern-ho); }
+.unpavd-area-ho { fill:   url(#unpavd-pattern-ho); }
+.unpavd-line-vh { stroke: url(#unpavd-pattern-vh); }
+.unpavd-area-vh { fill:   url(#unpavd-pattern-vh); }
+.unpavd-line-im { stroke: url(#unpavd-pattern-im); }
+.unpavd-area-im { fill:   url(#unpavd-pattern-im); }
+.iceroa-line-xx { stroke: url(#iceroa-pattern-xx); }
+.iceroa-area-xx { fill:   url(#iceroa-pattern-xx); }
+.iceroa-line-ex { stroke: url(#iceroa-pattern-ex); }
+.iceroa-area-ex { fill:   url(#iceroa-pattern-ex); }
+.iceroa-line-go { stroke: url(#iceroa-pattern-go); }
+.iceroa-area-go { fill:   url(#iceroa-pattern-go); }
+.iceroa-line-in { stroke: url(#iceroa-pattern-in); }
+.iceroa-area-in { fill:   url(#iceroa-pattern-in); }
+.iceroa-line-ba { stroke: url(#iceroa-pattern-ba); }
+.iceroa-area-ba { fill:   url(#iceroa-pattern-ba); }
+.iceroa-line-vb { stroke: url(#iceroa-pattern-vb); }
+.iceroa-area-vb { fill:   url(#iceroa-pattern-vb); }
+.iceroa-line-ho { stroke: url(#iceroa-pattern-ho); }
+.iceroa-area-ho { fill:   url(#iceroa-pattern-ho); }
+.iceroa-line-vh { stroke: url(#iceroa-pattern-vh); }
+.iceroa-area-vh { fill:   url(#iceroa-pattern-vh); }
+.iceroa-line-im { stroke: url(#iceroa-pattern-im); }
+.iceroa-area-im { fill:   url(#iceroa-pattern-im); }
+.unknow-line-xx { stroke: url(#unknow-pattern-xx); }
+.unknow-area-xx { fill:   url(#unknow-pattern-xx); }
+.unknow-line-ex { stroke: url(#unknow-pattern-ex); }
+.unknow-area-ex { fill:   url(#unknow-pattern-ex); }
+.unknow-line-go { stroke: url(#unknow-pattern-go); }
+.unknow-area-go { fill:   url(#unknow-pattern-go); }
+.unknow-line-in { stroke: url(#unknow-pattern-in); }
+.unknow-area-in { fill:   url(#unknow-pattern-in); }
+.unknow-line-ba { stroke: url(#unknow-pattern-ba); }
+.unknow-area-ba { fill:   url(#unknow-pattern-ba); }
+.unknow-line-vb { stroke: url(#unknow-pattern-vb); }
+.unknow-area-vb { fill:   url(#unknow-pattern-vb); }
+.unknow-line-ho { stroke: url(#unknow-pattern-ho); }
+.unknow-area-ho { fill:   url(#unknow-pattern-ho); }
+.unknow-line-vh { stroke: url(#unknow-pattern-vh); }
+.unknow-area-vh { fill:   url(#unknow-pattern-vh); }
+.unknow-line-im { stroke: url(#unknow-pattern-im); }
+.unknow-area-im { fill:   url(#unknow-pattern-im); }
+
 		</style>
+
+		<!-- surface patterns -->
+		<include ref="surfacepatterns-z17.xml" />
 
 		<svg:pattern x="0" y="0" width="200" height="200" id="wood-deciduous-pattern" patternUnits="userSpaceOnUse" patternTransform="scale(0.05)">
 			<svg:rect fill="#6fc18e" width="205" height="205" x="0" y="0"/>
@@ -5451,6 +7174,7 @@
 		<svg:pattern id="access-no-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
 			<svg:path fill="none" stroke="#ff4040" stroke-width="0.1" d="M5,0 L0,5 M0,0 L5,5"/>
 		</svg:pattern>
+
 		<svg:marker fill="none" id="bridge-casing-start" markerHeight="2" markerUnits="strokeWidth" markerWidth="2" orient="auto" refX="1" refY="1" stroke="#707070" stroke-width="0.06px" viewBox="0 0 2 2">
 			<svg:path d="M 1.05,1.45 L 0.7,1.8 M 1.05,0.55 L 0.7, 0.2"/>
 		</svg:marker>

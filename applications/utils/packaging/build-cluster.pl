@@ -100,6 +100,7 @@ my %proj2path=(
     'gpsdrive-maemo' 	=> 'gpsdrive/contrib/maemo',
     'gpsdrive-data-maps'=> 'gpsdrive/data/maps',
     'gpsdrive'	 	=> 'gpsdrive',
+    'gpsdrive-2.10pre6'	=> 'gpsdrive-2.10pre6',
     'opencarbox' 	=> 'opencarbox',
     'osm2pgsql' 	=> 'openstreetmap-applications/utils/export/osm2pgsql',
     'merkaartor' 	=> 'openstreetmap-applications/editors/merkaartor',
@@ -114,21 +115,22 @@ my %proj2path=(
     'merkaartor-0.12' 	=> 'openstreetmap-applications/editors/merkaartor-branches/merkaartor-0.12-fixes',
     'merkaartor-0.11' 	=> 'openstreetmap-applications/editors/merkaartor-branches/merkaartor-0.11-fixes',
     'merkaartor-0.13' 	=> 'openstreetmap-applications/editors/merkaartor-branches/merkaartor-0.13-fixes',
-    'osm-editor-qt3' 	=> 'openstreetmap-applications/editors/openstreetmap-editor/qt3',
-    'osm-editor' 	=> 'openstreetmap-applications/editors/openstreetmap-editor',
-    'osm-editor-qt4' 	=> 'openstreetmap-applications/editors/openstreetmap-editor/qt4',
+    'osm-editor' 	=> 'openstreetmap-applications/editors/osm-editor',
+    'osm-editor-qt4' 	=> 'openstreetmap-applications/editors/osm-editor/qt4',
     );
 
 my %proj2debname=(
     'gpsdrive-maemo' 	=> 'gpsdrive',
     'gpsdrive-data-maps'=> 'gpsdrive-data-maps',
     'gpsdrive'	 	=> 'gpsdrive',
+    'gpsdrive-2.10pre5' => 'gpsdrive',
+    'gpsdrive-2.10pre6' => 'gpsdrive',
     'opencarbox' 	=> 'opencarbox',
     'osm2pgsql' 	=> 'osm2pgsql',
     'merkaartor' 	=> 'merkaartor',
     'josm' 		=> 'openstreetmap-josm',
     'osm-utils'		=> 'openstreetmap-utils',
-    'osm-world-boundaries' 	=> 'openstreetmap-mapnik-world-boundaries',
+    'osm-mapnik-world-boundaries' 	=> 'openstreetmap-mapnik-world-boundaries',
     'osm-mapnik-data' 	=> 'openstreetmap-mapnik-data',
     'map-icons' 	=> 'openstreetmap-map-icons',
     'osmosis' 		=> 'osmosis',
@@ -137,7 +139,6 @@ my %proj2debname=(
     'merkaartor-0.12' 	=> 'merkaartor-0.12-fixes',
     'merkaartor-0.11' 	=> 'merkaartor-0.11-fixes',
     'merkaartor-0.13' 	=> 'merkaartor-0.13-fixes',
-    'osm-editor-qt3' 	=> 'openstreetmap-editor',
     'osm-editor' 	=> 'openstreetmap-editor',
     'osm-editor-qt4' 	=> 'openstreetmap-editor',
     );
@@ -145,12 +146,14 @@ my %num_packages=(
     'gpsdrive-maemo' 	=> 1,
     'gpsdrive-data-maps'=> 1,
     'gpsdrive'	 	=> 3,
+    'gpsdrive-2.10pre5' => 3,
+    'gpsdrive-2.10pre6' => 3,
     'opencarbox' 	=> 1,
     'osm2pgsql' 	=> 1,
     'merkaartor' 	=> 1,
     'josm' 		=> 1,
     'osm-utils'		=> 5,
-    'osm-world-boundaries' 	=> 1,
+    'osm-mapnik-world-boundaries' 	=> 1,
     'osm-mapnik-data' 	=> 1,
     'map-icons' 	=> 14,
     'osmosis' 		=> 1,
@@ -158,7 +161,6 @@ my %num_packages=(
     'merkaartor-0.12' 	=> 1,
     'merkaartor-0.11' 	=> 1,
     'merkaartor-0.13' 	=> 1,
-    'osm-editor-qt3' 	=> 1,
     'osm-editor' 	=> 1,
     'osm-editor-qt4' 	=> 1,
     );
@@ -167,15 +169,20 @@ my %svn_repository_url=(
     'openstreetmap-applications' => 'http://svn.openstreetmap.org/applications',
     'gpsdrive'                   => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/trunk',
     'opencarbox'                 => 'https://opencarbox.svn.sourceforge.net/svnroot/opencarbox/OpenCarbox/trunk',
+
+    'gpsdrive-2.10pre5'          => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre5',
+    'gpsdrive-2.10pre6'          => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre6',
     );
 
 my %svn_update_done;
 
-my @available_proj=keys %num_packages;
+my @available_proj=  keys %num_packages;
+my @all_proj = grep { $_ !~ m/gpsdrive-maemo|merkaartor-0...|gpsdrive-2.10pre|osm-editor-qt4/ } @available_proj;
 
 my @projs;
 #@projs= keys %proj2path;
-my @default_projs=qw( gpsdrive-data-maps gpsdrive map-icons osm-utils);
+my @default_projs=@all_proj;
+#@default_projs=qw( gpsdrive-data-maps gpsdrive map-icons osm-utils);
 #@default_projs=qw( gpsdrive gpsdrive-data-maps map-icons osm-utils merkaartor opencarbox osm2pgsql   );# josm gosmore osmosis
 
 sub usage($);
@@ -222,13 +229,15 @@ my $getopt_result = GetOptions (
 },
     "projects=s"     => sub { my ($a,$b)=(@_);
 			      if ( '*' eq $b ) {
-				  @projs= keys %proj2path;
+				  @projs= @all_proj;
 			      } elsif ( $b =~ m/\*/ ) {
 				  $b =~ s,\*,\.\*,g;
-				  @projs= grep { $_ =~ m{$b} } keys %proj2path;
+				  @projs= grep { $_ =~ m{$b} } @available_proj;
 			      } else {
 				  @projs = split(',',$b);
 			      }
+},
+    'show-results'      => sub { show_results();
 },
     );
 
@@ -346,17 +355,55 @@ sub last_result($;$){
     if ( defined($new_result) ) {
 	my $svn_revision = $self->svn_revision_platform();
 	append_file( $last_log , "$new_result: $svn_revision\n" );
+	$self->{last_result}=$new_result;
     } else {
-	if ( -r $last_log ) {
+	my $last_result;
+	if ( -r "$last_log" ) {
 	    my @lines = read_file( $last_log ) ;
-	    my $last_result = pop(@lines);
+	    $last_result = pop(@lines);
 	    chomp $last_result;
-	    return $last_result;
 	} else {
-	    return '';
+	    $last_result='';
 	}
+	$self->{last_result}=$last_result;
+	return $last_result;
     }  
 }
+
+
+# ------------------------------------------------------------------
+# read the last good result of a package 
+sub last_good_result($){
+    my $self       = shift;
+
+    die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
+
+    my $platform = $self->platform();
+    my $proj     = $self->proj();
+
+    if ( ! -d $dir_log ) {
+	die "Cannot write Result, Directory '$dir_log' does not exist\n";
+    }
+    my $dst_dir="$dir_log/$platform-$proj";
+    if ( ! -d $dst_dir ) {
+	mkpath($dst_dir)
+	    or warn "WARNING: Cannot create Path '$dst_dir': $!\n";
+    }
+
+
+    my $last_log="$dst_dir/last_results.log";
+    my $last_result;
+    if ( -r "$last_log" ) {
+	my @lines = grep { $_ =~ m/success:/ } read_file( $last_log ) ;
+	$last_result = pop(@lines) ||'';
+	chomp $last_result;
+    } else {
+	$last_result='';
+    }
+    $last_result =~ s/.*\:\s*//g;
+    $self->{last_good_result}=$last_result;
+    return $last_result;
+		 };
 
 
 # ------------------------------------------------------------------
@@ -605,6 +652,10 @@ sub write_svn_revision($){
  
     my $repository_dir=$self->svn_dir_full($proj);
     
+    if ( ! -d "$repository_dir/debian" ) {
+	$self->error("No Debian directory found at '$repository_dir/debian'\n");
+	return -1;
+    }
     my $svn_revision=`cd $repository_dir; svn info . | grep "Last Changed Rev" | sed 's/Last Changed Rev: //'`;
     chomp $svn_revision;
     $self->debug(4,"write_svn_revision: SVN Revision($proj): '$svn_revision'");
@@ -617,10 +668,10 @@ sub write_svn_revision($){
 	    $dir = dirname($dir);
 	    my $build_xml = slurp( "$dir/build.xml" );
 	    if ( $build_xml =~ m/exec .*output="REVISION".*executable="svn"/ ) {
-		$self->debug(4,"svn REVISION at $dir");
+		$self->debug(5,"svn REVISION at $dir");
 		my $svn_revision=`cd $dir; export LANG=C; svn info --xml >REVISION`;
 	    } else {
-		$self->debug(4,"no svn REVISION at $dir requested");
+		$self->debug(5,"no svn REVISION at $dir requested");
 	    }		
 	}
     }
@@ -635,6 +686,7 @@ sub svn_revision($) {
     my $proj     = $self->proj();
     
     my $proj_sub_dir = $self->proj_sub_dir();
+    return '' unless -r "$dir_svn/$proj_sub_dir/debian/svnrevision";
     my $svn_revision = slurp( "$dir_svn/$proj_sub_dir/debian/svnrevision" );
     chomp $svn_revision;
 
@@ -652,6 +704,10 @@ sub svn_revision_platform($) {
     my $build_dir    = $self->build_dir();
     
     my $proj_sub_dir = $self->proj_sub_dir();
+
+    return '' 
+	unless -r  "$build_dir/debian/svnrevision";
+
     my $svn_revision = slurp( "$build_dir/debian/svnrevision" );
     chomp $svn_revision;
 
@@ -681,12 +737,18 @@ sub svn_update($){
 	return;
     };
 
+    if ( ! -d "$dir_svn/$proj_sub_dir" ) {
+	$self->debug(3,"Repository $proj_sub_dir for $proj not existing");
+	return 0;
+    }
+
     $self->debug(3,"svn up $dir_svn/$proj_sub_dir");
     my ($rc,$out,$err,$out_all) = $self->command("svn up $dir_svn/$proj_sub_dir");
-    if ( $rc) {
+    if ( $rc ) {
 	$self->warning("Error '$rc' in 'svn up $dir_svn/$proj_sub_dir'");
 	$self->warning("Error '$err'");
     }
+
     my @out = 
 	grep { $_ !~ m/^(\s*$|Fetching external|External at revision|At revision|Checked out external at revision)/ } split(/\n/,$out);
     $self->debug(4,"OUT-U: ".join("\n",@out));
@@ -699,6 +761,10 @@ sub svn_update($){
 	    $self->warning("Error '$err'");
 	}
     }
+    if ( $out !~ m/At revision/ ) {
+	$self->error("No final Revision in Output Found\n");
+	return 0;
+    }	
     if ( $err ) {
 	my $err_out=$err;
 	$self->error("ERR: $err_out\n");
@@ -763,7 +829,9 @@ sub svn_changelog($){
     my $command="$dir_svn/openstreetmap-applications/utils/packaging/svn_log2debian_changelog.pl";
     $command .= " --project_name='$debname' ";
 	      
-    if ( $proj =~ m/gpsdrive/ ) {
+    if ( $proj =~ m/gpsdrive-(.*pre.*)/ ) {
+	$command .= " --prefix=$1 ";
+    } elsif ( $proj =~ m/gpsdrive/ ) {
 	$command .= " --prefix=2.10svn ";
     };
     if ( $DEBUG ) {
@@ -797,8 +865,8 @@ sub svn_copy($$){
 
     if ( $do_fast ) {
 	if ( $self->svn_revision_platform() eq $self->svn_revision_platform() ){
-	    $self->debug(3,"svn copy already done");    
-	    return 0;
+#	    $self->debug(3,"svn copy already done");    
+#	    return 0;
 	}
     }
 
@@ -806,6 +874,10 @@ sub svn_copy($$){
 
     my $proj_svn_dir = "$dir_svn/$proj_sub_dir/";
     my $build_dir    = $self->build_dir();
+
+    if ( ! -d "$proj_svn_dir" ) {
+	$self->error("SVN Copy Direcoty $proj_svn_dir not found");
+    }
 
     find(
 	sub{
@@ -882,7 +954,7 @@ sub apply_pre_patch($){
     my $proj     = $self->proj();
     my $svn_dir_full = $self->svn_dir_full();
 
-    # For josm and all it's plugins write a REVISION File
+    # For josm and all it's plugins replace the svn-REVISION-Command with true-Command File
     if ( $proj =~ /josm/ ) {
 	for my $dir ( glob( "$svn_dir_full/*/build.xml"), glob("$svn_dir_full/*/*/build.xml" ) ) {
 	    $dir = dirname($dir);
@@ -954,6 +1026,7 @@ sub debuild($) {
 	    );
 	write_file($dep_file,"chroot $dir_chroot/$platform aptitude install ".
 		   join("\n", @dependencies)."\n");
+	$self->last_result("fail-dependency");
 	return -1;
     } else {
 	unlink($dep_file);
@@ -968,6 +1041,9 @@ sub debuild($) {
     # ------ Collect Resulting *.deb names
     my $result_dir=dirname("$dir_chroot/$platform/home/$user/$proj_sub_dir/");
     my @results= grep { $_ =~ m/\.deb$/ } glob("$result_dir/*$svn_revision*.deb");
+
+    @results= grep { $_ !~ m/2.10pre/ } @results;
+
     my $result_count=scalar(@results);
     $self->{'results'}->{'deb-count'}=$result_count;
     $self->{'results'}->{'packages'}= \@results;
@@ -997,6 +1073,62 @@ sub debuild($) {
 	my $fn=basename($result);
 	rename($result,"$dst_dir/$fn")
 	    || $self->error( "!!!!!!!! WARNING Cannot move result '$result' to '$dst_dir/$fn': $!");
+    }
+}
+
+
+# ------------------------------------------------------------------
+sub show_results(){
+    for my $proj ( @projs ) {
+	printf "%-28s ",$proj;
+	for my $platform ( @platforms ) {
+#	    print "$platform ";
+	    my $task = $RESULTS->{$platform}->{$proj};
+	    if ( ! defined ( $task ) )  {
+		$task = BuildTask->new( 
+		    proj     => $proj, 
+		    platform => $platform ,
+		    );
+	    };
+	    my $svn_revision_platform = $task->svn_revision_platform()||'';
+	    my $last_result=$task->last_result();
+	    if ( ! $svn_revision_platform ) {
+		$task->debug(5, "show_results Project: $proj has no Platform Revision ${NORMAL}");
+		$task->{color_res}="+$GREEN";
+	    } elsif ( $last_result eq "success: $svn_revision_platform" ) {
+		$task->debug(5, "show_results Project: $proj '$last_result' already build successfully${NORMAL}");
+		$task->{color_res}="+$GREEN";
+	    } else {
+		$task->debug(5, "show_results Project: $proj build not up to date: '$last_result'${NORMAL}");
+		$task->{color_res}="-$RED";
+	    };
+	    
+	    $RESULTS->{$platform}->{$proj}=$task;
+
+	    my $svn_revision = $task->svn_revision()||'';
+	    $RESULTS->{$platform}->{$proj}->{svn_base_revision}= $svn_revision;
+	    if ( $svn_revision eq $svn_revision_platform) {
+		$RESULTS->{$platform}->{$proj}->{svn_up_to_date}=1;
+		$RESULTS->{$platform}->{$proj}->{color_rev}=$GREEN;
+	    } else {
+		$RESULTS->{$platform}->{$proj}->{svn_up_to_date}=0;
+		$RESULTS->{$platform}->{$proj}->{color_rev}=$BLUE;
+	    }    
+
+	    my $color_rev = $task->{color_rev};
+	    my $color_res = $task->{color_res};
+	    my ( $res,$rev)  = split(/:\s*/,$task->last_result());
+	    my $rev_g  = $task->last_good_result();
+	    my $print_platform=$platform;
+	    $print_platform=~ s/(debian-|ubuntu-)//;
+
+	    print "$color_res". $print_platform."${NORMAL} " ;
+	    printf "$color_rev%-6s${NORMAL} ", $rev;
+	    if (  $rev_g && $rev ne $rev_g ) {
+		print "${GREEN}($rev_g)${NORMAL}";
+	    }
+	}
+	print "\n";
     }
 }
 
@@ -1084,12 +1216,12 @@ for my $platform ( @platforms ) {
 	    proj     => $proj, 
 	    platform => $platform ,
 	    );
-	$task->debug(3, "${MAGENTA}------------------------------------------------ Project: $proj${NORMAL}");
+	$task->debug(3, "${MAGENTA}------------------------------------------------  Platform: $platform${NORMAL}	Project: $proj${NORMAL}");
 
 	if ( $do_fast ) {
 	    my $svn_revision = $task->svn_revision_platform();
 	    my $last_result=$task->last_result();
-	    if ( $last_result eq "success: $svn_revision" ) {
+	    if ( $svn_revision && $last_result eq "success: $svn_revision" ) {
 		$task->debug(3, "${GREEN}---------------- Project: $proj '$last_result' already build successfully (skipping)${NORMAL}");
 		next;
 	    } else {

@@ -11,6 +11,10 @@ ngines, but the engines have been modified to support maximum way leng
 ths.  Complex multipolygons are used to allow all ways to be split whe
 n they exceed the fixed length.
 
+When you have uploaded a NHD subbasin, please update the web site at:
+http://wiki.openstreetmap.org/wiki/NHD  This will allow us to keep track
+of what has been done and what still remains.
+
 The SVN archive will be updated as newer versions become available.
 
 The author (Theodore Book) may be contacted at tbook at libero dot it.

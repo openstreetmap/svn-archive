@@ -10138,10 +10138,8 @@
     <nd ref='-2710' />
     <nd ref='-2450' />
     <nd ref='-2542' />
-    <tag k='surface' v='grass' />
-    <tag k='highway' v='track' />
-    <tag k='tracktype' v='grade1' />
-    <tag k='name' v='track grade1' />
+    <tag k='highway' v='steps' />
+    <tag k='name' v='steps' />
     <tag k='oneway' v='yes' />
   </way>
   <way id='-2961' action='modify' visible='true'>
@@ -10562,10 +10560,8 @@
     <nd ref='-897' />
     <nd ref='-740' />
     <nd ref='-809' />
-    <tag k='surface' v='grass' />
-    <tag k='tracktype' v='grade1' />
-    <tag k='highway' v='track' />
-    <tag k='name' v='track grade1' />
+    <tag k='highway' v='steps' />
+    <tag k='name' v='steps' />
     <tag k='bridge' v='yes' />
   </way>
   <way id='-3002' action='modify' visible='true'>
@@ -10583,10 +10579,8 @@
     <nd ref='-1209' />
     <nd ref='-1391' />
     <nd ref='-1108' />
-    <tag k='surface' v='grass' />
-    <tag k='tracktype' v='grade1' />
-    <tag k='highway' v='track' />
-    <tag k='name' v='track grade1' />
+    <tag k='highway' v='steps' />
+    <tag k='name' v='steps' />
     <tag k='tunnel' v='yes' />
   </way>
   <way id='-3004' action='modify' visible='true'>
@@ -10706,11 +10700,9 @@
     <nd ref='-286' />
     <nd ref='-283' />
     <nd ref='-281' />
-    <tag k='surface' v='grass' />
     <tag k='area' v='yes' />
-    <tag k='tracktype' v='grade1' />
-    <tag k='highway' v='track' />
-    <tag k='name' v='track grade1' />
+    <tag k='highway' v='steps' />
+    <tag k='name' v='steps' />
   </way>
   <way id='-3016' action='modify' visible='true'>
     <nd ref='-2075' />
@@ -11188,11 +11180,8 @@
     <nd ref='-382' />
     <nd ref='-446' />
     <nd ref='-500' />
-    <tag k='surface' v='grass' />
-    <tag k='tracktype' v='grade1' />
     <tag k='highway' v='construction' />
-    <tag k='name' v='track grade1' />
-    <tag k='construction' v='track' />
+    <tag k='construction' v='steps' />
   </way>
   <way id='-3056' action='modify' visible='true'>
     <nd ref='-2464' />
@@ -11682,11 +11671,9 @@
     <nd ref='-780' />
     <nd ref='-739' />
     <nd ref='-931' />
-    <tag k='surface' v='grass' />
     <tag k='area' v='yes' />
-    <tag k='tracktype' v='grade1' />
-    <tag k='highway' v='track' />
-    <tag k='name' v='track grade1' />
+    <tag k='highway' v='steps' />
+    <tag k='name' v='steps' />
     <tag k='bridge' v='yes' />
   </way>
   <way id='-3100' action='modify' visible='true'>
@@ -12693,12 +12680,10 @@
     <nd ref='-1941' />
     <nd ref='-1822' />
     <nd ref='-1868' />
-    <tag k='surface' v='grass' />
     <tag k='area' v='yes' />
-    <tag k='tracktype' v='grade1' />
     <tag k='highway' v='abandoned' />
     <tag k='name' v='track grade1' />
-    <tag k='abandoned' v='track' />
+    <tag k='abandoned' v='steps' />
   </way>
   <way id='-3195' action='modify' visible='true'>
     <nd ref='-834' />
@@ -13579,10 +13564,8 @@
     <nd ref='-284' />
     <nd ref='-280' />
     <nd ref='-278' />
-    <tag k='surface' v='grass' />
-    <tag k='tracktype' v='grade1' />
-    <tag k='highway' v='track' />
-    <tag k='name' v='track grade1' />
+    <tag k='highway' v='steps' />
+    <tag k='name' v='steps' />
   </way>
   <way id='-3283' action='modify' visible='true'>
     <nd ref='-1532' />
@@ -13897,12 +13880,10 @@
     <nd ref='-1473' />
     <nd ref='-1409' />
     <nd ref='-1470' />
-    <tag k='surface' v='grass' />
     <tag k='area' v='yes' />
-    <tag k='tracktype' v='grade1' />
     <tag k='highway' v='disused' />
-    <tag k='name' v='track grade1' />
-    <tag k='disused' v='track' />
+    <tag k='name' v='steps' />
+    <tag k='disused' v='steps' />
   </way>
   <way id='-3313' action='modify' visible='true'>
     <nd ref='-659' />
@@ -14360,11 +14341,9 @@
     <nd ref='-2217' />
     <nd ref='-2265' />
     <nd ref='-2073' />
-    <tag k='surface' v='grass' />
-    <tag k='tracktype' v='grade1' />
     <tag k='highway' v='planned' />
-    <tag k='name' v='track grade1' />
-    <tag k='planned' v='track' />
+    <tag k='name' v='steps' />
+    <tag k='planned' v='steps' />
   </way>
   <way id='-3357' action='modify' visible='true'>
     <nd ref='-1859' />
@@ -14507,11 +14486,9 @@
     <nd ref='-2412' />
     <nd ref='-2686' />
     <nd ref='-2541' />
-    <tag k='surface' v='grass' />
     <tag k='area' v='yes' />
-    <tag k='tracktype' v='grade1' />
-    <tag k='highway' v='track' />
-    <tag k='name' v='track grade1' />
+    <tag k='highway' v='steps' />
+    <tag k='name' v='steps' />
   </way>
   <way id='-3371' action='modify' visible='true'>
     <nd ref='-102' />
@@ -14687,11 +14664,9 @@
     <nd ref='-2732' />
     <nd ref='-2715' />
     <nd ref='-2710' />
-    <tag k='surface' v='grass' />
-    <tag k='tracktype' v='grade1' />
-    <tag k='highway' v='track' />
+    <tag k='highway' v='steps' />
     <tag k='cycleway' v='opposite' />
-    <tag k='name' v='track grade1' />
+    <tag k='name' v='steps' />
     <tag k='oneway' v='yes' />
   </way>
   <way id='-3387' action='modify' visible='true'>
@@ -14875,11 +14850,9 @@
     <nd ref='-1180' />
     <nd ref='-1229' />
     <nd ref='-1134' />
-    <tag k='surface' v='grass' />
     <tag k='area' v='yes' />
-    <tag k='tracktype' v='grade1' />
-    <tag k='highway' v='track' />
-    <tag k='name' v='track grade1' />
+    <tag k='highway' v='steps' />
+    <tag k='name' v='steps' />
     <tag k='tunnel' v='yes' />
   </way>
   <way id='-3404' action='modify' visible='true'>
@@ -15008,12 +14981,10 @@
     <nd ref='-514' />
     <nd ref='-501' />
     <nd ref='-562' />
-    <tag k='surface' v='grass' />
     <tag k='area' v='yes' />
-    <tag k='tracktype' v='grade1' />
     <tag k='highway' v='construction' />
-    <tag k='name' v='track grade1' />
-    <tag k='construction' v='track' />
+    <tag k='name' v='steps' />
+    <tag k='construction' v='steps' />
   </way>
   <way id='-3416' action='modify' visible='true'>
     <nd ref='-555' />
@@ -15536,12 +15507,10 @@
     <nd ref='-2264' />
     <nd ref='-2064' />
     <nd ref='-2333' />
-    <tag k='surface' v='grass' />
     <tag k='area' v='yes' />
-    <tag k='tracktype' v='grade1' />
     <tag k='highway' v='planned' />
-    <tag k='name' v='track grade1' />
-    <tag k='planned' v='track' />
+    <tag k='name' v='steps' />
+    <tag k='planned' v='steps' />
   </way>
   <way id='-3468' action='modify' visible='true'>
     <nd ref='-949' />
@@ -15569,11 +15538,9 @@
     <nd ref='-1660' />
     <nd ref='-1598' />
     <nd ref='-1599' />
-    <tag k='surface' v='grass' />
-    <tag k='tracktype' v='grade1' />
     <tag k='highway' v='disused' />
-    <tag k='name' v='track grade1' />
-    <tag k='disused' v='track' />
+    <tag k='name' v='steps' />
+    <tag k='disused' v='steps' />
   </way>
   <way id='-3471' action='modify' visible='true'>
     <nd ref='-2335' />
@@ -15750,11 +15717,9 @@
     <nd ref='-1853' />
     <nd ref='-1885' />
     <nd ref='-1852' />
-    <tag k='surface' v='grass' />
-    <tag k='tracktype' v='grade1' />
     <tag k='highway' v='abandoned' />
-    <tag k='name' v='track grade1' />
-    <tag k='abandoned' v='track' />
+    <tag k='name' v='steps' />
+    <tag k='abandoned' v='steps' />
   </way>
   <way id='-3488' action='modify' visible='true'>
     <nd ref='-2763' />

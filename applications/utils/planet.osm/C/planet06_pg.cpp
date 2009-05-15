@@ -63,10 +63,6 @@ const char *reformDate(const char *str)
     tm.tm_mon  -= 1;
     tm.tm_isdst = -1;
 
-    // Rails stores the timestamps in the DB using UK localtime (ugh), convert to UTC
-    tmp = mktime(&tm);
-    gmtime_r(&tmp, &tm);
-
     //2007-07-10T11:32:32Z
     snprintf(out, sizeof(out), "%d-%02d-%02dT%02d:%02d:%02dZ",
              tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);

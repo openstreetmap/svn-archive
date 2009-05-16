@@ -300,7 +300,7 @@ fi
 
 # ------------------------------------------------------------------
 if true; then
-    echo "${BLUE}----------> applications/planet.osm/C/UTF8Sanitizer${NORMAL}${NORMAL}"
+    echo "${BLUE}----------> applications/planet.osm/C/   UTF8Sanitizer${NORMAL}${NORMAL}"
     cd planet.osm/C/  || exit -1
 
     rm -f build.log build.err
@@ -310,12 +310,15 @@ if true; then
 
     make ${MAKEFLAGS} clean >>build.log 2>>build.err
     make ${MAKEFLAGS} >>build.log 2>>build.err
-    if [ "$?" -ne "0" ] ; then
-	echo "${RED}!!!!!! ERROR compiling color255 ${NORMAL}"
-	exit -1
-    fi
+    rc=$?
     cd ../..
-    cp planet.osm/C/UTF8Sanitizer $dst_path$sub_package/${bin_path} || exit -1 
+    if [ "$rc" -ne "0" ] ; then
+	echo "${RED}!!!!!! ERROR compiling UTF8Sanitizer ${NORMAL}"
+	echo "Ignored 'planet.osm/C/' because it does not compile on my debian machine"
+	#exit -1
+    else
+	cp planet.osm/C/UTF8Sanitizer $dst_path$sub_package/${bin_path} || exit -1 
+    fi
 fi
 
 # ------------------------------------------------------------------
@@ -368,6 +371,9 @@ echo "${BLUE}----------> applications/utils Copy Python Binaries${NORMAL}"
 find ./ -name "*.py" | while read src_fn ; do 
     dst_fn="$dst_path$sub_package/$bin_path/${src_fn##*/}"
     dst_fn="${dst_fn/.py}"
+    if [ "$src_fn" == "test.py" ] ; then
+	continue
+    fi
     if head -1 "$src_fn" | grep -q -e '^#! */usr/bin/python' -e '^#!/opt/python-2_5/bin/python' -e '^#!/usr/bin/env python'; then
 	cp "$src_fn" "$dst_fn"
     else

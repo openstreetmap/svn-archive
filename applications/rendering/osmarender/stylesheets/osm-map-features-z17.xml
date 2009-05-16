@@ -1544,7 +1544,7 @@
 				<line class="under-construction-1" smart-linecap="no"/>
 				<line class="highway-core highway-unclassified-core under-construction-2" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="construction" v="road|yes">
+			<rule e="way" k="construction" v="~|road|yes">
 				<line class="under-construction-1" smart-linecap="no"/>
 				<line class="highway-core highway-road-core under-construction-2" smart-linecap="no"/>
 			</rule>
@@ -1665,7 +1665,7 @@
 			<rule e="way" k="planned" v="unclassified|residential|minor|living_street|cycleroad">
 				<line class="highway-core highway-unclassified-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="road|yes">
+			<rule e="way" k="planned" v="~|road|yes">
 				<line class="highway-core highway-road-core planned" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="planned" v="tertiary_link">
@@ -1783,7 +1783,7 @@
 				<line class="highway-core highway-unclassified-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="disused" v="road|yes">
+			<rule e="way" k="disused" v="~|road|yes">
 				<line class="highway-core highway-road-core disused-1" smart-linecap="no"/>
 				<line class="disused-2" smart-linecap="no" />
 			</rule>
@@ -1919,7 +1919,7 @@
 				<line class="highway-core highway-unclassified-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="road|yes">
+			<rule e="way" k="abandoned" v="~|road|yes">
 				<line class="highway-core highway-road-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>

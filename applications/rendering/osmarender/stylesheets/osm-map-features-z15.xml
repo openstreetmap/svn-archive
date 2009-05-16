@@ -1277,7 +1277,7 @@
 			<rule e="way" k="construction" v="unclassified|residential|minor|living_street|cycleroad">
 				<line class="highway-core highway-unclassified-core under-construction"/>
 			</rule>
-			<rule e="way" k="construction" v="road|yes">
+			<rule e="way" k="construction" v="~|road|yes">
 				<line class="highway-core highway-road-core under-construction"/>
 			</rule>
 			<rule e="way" k="construction" v="tertiary_link">

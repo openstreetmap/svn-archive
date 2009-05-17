@@ -57,25 +57,26 @@ $ENV{DEB_BUILD_OPTIONS}="parallel=4";
 
 # define Colors
 my $ESC="\033";
-my $RED="${ESC}[91m";
-my $GREEN="${ESC}[92m";
-my $YELLOW="${ESC}[93m";
-my $BLUE="${ESC}[94m";
-my $MAGENTA="${ESC}[95m";
-my $CYAN="${ESC}[96m";
-my $WHITE="${ESC}[97m";
-my $BG_RED="${ESC}[41m";
-my $BG_GREEN="${ESC}[42m";
-my $BG_YELLOW="${ESC}[43m";
-my $BG_BLUE="${ESC}[44m";
-my $BG_MAGENTA="${ESC}[45m";
-my $BG_CYAN="${ESC}[46m";
-my $BG_WHITE="${ESC}[47m";
-my $BRIGHT="${ESC}[01m";
-my $UNDERLINE="${ESC}[04m";
-my $BLINK="${ESC}[05m";
-my $REVERSE="${ESC}[07m";
-my $NORMAL="${ESC}[0m";
+my %COLOR;
+$COLOR{RED}="${ESC}[91m";
+$COLOR{GREEN}="${ESC}[92m";
+$COLOR{YELLOW}="${ESC}[93m";
+$COLOR{BLUE}="${ESC}[94m";
+$COLOR{MAGENTA}="${ESC}[95m";
+$COLOR{CYAN}="${ESC}[96m";
+$COLOR{WHITE}="${ESC}[97m";
+$COLOR{BG_RED}="${ESC}[41m";
+$COLOR{BG_GREEN}="${ESC}[42m";
+$COLOR{BG_YELLOW}="${ESC}[43m";
+$COLOR{BG_BLUE}="${ESC}[44m";
+$COLOR{BG_MAGENTA}="${ESC}[45m";
+$COLOR{BG_CYAN}="${ESC}[46m";
+$COLOR{BG_WHITE}="${ESC}[47m";
+$COLOR{BRIGHT}="${ESC}[01m";
+$COLOR{UNDERLINE}="${ESC}[04m";
+$COLOR{BLINK}="${ESC}[05m";
+$COLOR{REVERSE}="${ESC}[07m";
+$COLOR{NORMAL}="${ESC}[0m";
 
 
 # Platform is a combination of "Distribution - Revision - 32/64Bit"
@@ -143,9 +144,9 @@ my %proj2debname=(
     'osm-editor-qt4' 	=> 'openstreetmap-editor',
     );
 my %num_packages=(
+    'gpsdrive'	 	=> 3,
     'gpsdrive-maemo' 	=> 1,
     'gpsdrive-data-maps'=> 1,
-    'gpsdrive'	 	=> 3,
     'gpsdrive-2.10pre5' => 3,
     'gpsdrive-2.10pre6' => 3,
     'opencarbox' 	=> 1,
@@ -176,7 +177,7 @@ my %svn_repository_url=(
 
 my %svn_update_done;
 
-my @available_proj=  keys %num_packages;
+my @available_proj=  sort keys %num_packages;
 my @all_proj = grep { $_ !~ m/gpsdrive-maemo|merkaartor-0...|gpsdrive-2.10pre|osm-editor-qt4/ } @available_proj;
 
 my @projs;
@@ -202,6 +203,13 @@ my $getopt_result = GetOptions (
     "fast!"         => \$do_fast,
     "force!"        => \$FORCE,
 
+    "color!"        => sub { my ($a,$b)=(@_);
+			     if ( ! $b  ) {
+				 for my $k ( keys %COLOR ) {
+				     $COLOR{$k}='';
+				 }
+			     }
+    },
     "svn!"          => sub { my ($a,$b)=(@_);
 			     $do_svn_up        = $b;
 			     $do_svn_co        = $b;
@@ -436,7 +444,7 @@ sub error($$){
     my ( @msg ) = split(/\n/,$msg);
 
     for my $m ( @msg ) {
-	print STDERR "${RED}!!!!! ERROR$msg1: $m${NORMAL}\n";
+	print STDERR "$COLOR{RED}!!!!! ERROR$msg1: $m$COLOR{NORMAL}\n";
     }
 }
 
@@ -458,7 +466,7 @@ sub warning($$){
     my ( @msg ) = split(/\n/,$msg);
 
     for my $m ( @msg ) {
-	print STDERR "${RED}!!!!! WARNING:$msg1: $m${NORMAL}\n";
+	print STDERR "$COLOR{RED}!!!!! WARNING:$msg1: $m$COLOR{NORMAL}\n";
     }
 }
 
@@ -562,6 +570,8 @@ sub dchroot($$$){
 
     my $platform = $self->platform();
     my $proj     = $self->proj();
+
+    # ERR: I: [debian-squeeze-64 chroot] Running command: "debuild clean"
 
     return $self->command("dchroot --chroot $platform --directory '/home/$user/$dir' '$command'");
 };
@@ -760,11 +770,11 @@ sub svn_update($){
 	    $self->warning("Error '$rc' in 'svn cleanup $dir_svn/$proj_sub_dir'");
 	    $self->warning("Error '$err'");
 	}
-    }
-    if ( $out !~ m/At revision/ ) {
+    } elsif ( $out !~ m/At revision/ ) {
 	$self->error("No final Revision in Output Found\n");
 	return 0;
     }	
+
     if ( $err ) {
 	my $err_out=$err;
 	$self->error("ERR: $err_out\n");
@@ -882,6 +892,7 @@ sub svn_copy($$){
     find(
 	sub{
 	    return if $File::Find::name =~ m,\.svn,;
+	    return if $File::Find::name =~ m,\/.#,; # Backup Files from Emacs
 	    return if -d $File::Find::name;
 	    my $src=$File::Find::name;
 	    my $dst=$File::Find::name;
@@ -1085,34 +1096,26 @@ sub show_results(){
 #	    print "$platform ";
 	    my $task = $RESULTS->{$platform}->{$proj};
 	    if ( ! defined ( $task ) )  {
-		$task = BuildTask->new( 
-		    proj     => $proj, 
-		    platform => $platform ,
-		    );
+		$task = BuildTask->new( proj => $proj, platform => $platform );
 	    };
 	    my $svn_revision_platform = $task->svn_revision_platform()||'';
+	    my $svn_revision = $task->svn_revision()||'';
 	    my $last_result=$task->last_result();
 	    if ( ! $svn_revision_platform ) {
-		$task->debug(5, "show_results Project: $proj has no Platform Revision ${NORMAL}");
-		$task->{color_res}="+$GREEN";
+		$task->{color_res}="+$COLOR{GREEN}";
 	    } elsif ( $last_result eq "success: $svn_revision_platform" ) {
-		$task->debug(5, "show_results Project: $proj '$last_result' already build successfully${NORMAL}");
-		$task->{color_res}="+$GREEN";
+		$task->{color_res}="+$COLOR{GREEN}";
 	    } else {
-		$task->debug(5, "show_results Project: $proj build not up to date: '$last_result'${NORMAL}");
-		$task->{color_res}="-$RED";
+		$task->{color_res}="-$COLOR{RED}";
 	    };
 	    
-	    $RESULTS->{$platform}->{$proj}=$task;
-
-	    my $svn_revision = $task->svn_revision()||'';
-	    $RESULTS->{$platform}->{$proj}->{svn_base_revision}= $svn_revision;
+	    $task->{svn_base_revision}= $svn_revision;
 	    if ( $svn_revision eq $svn_revision_platform) {
-		$RESULTS->{$platform}->{$proj}->{svn_up_to_date}=1;
-		$RESULTS->{$platform}->{$proj}->{color_rev}=$GREEN;
+		$task->{svn_up_to_date}=1;
+		$task->{color_rev}=$COLOR{GREEN};
 	    } else {
-		$RESULTS->{$platform}->{$proj}->{svn_up_to_date}=0;
-		$RESULTS->{$platform}->{$proj}->{color_rev}=$BLUE;
+		$task->{svn_up_to_date}=0;
+		$task->{color_rev}=$COLOR{BLUE};
 	    }    
 
 	    my $color_rev = $task->{color_rev};
@@ -1122,10 +1125,10 @@ sub show_results(){
 	    my $print_platform=$platform;
 	    $print_platform=~ s/(debian-|ubuntu-)//;
 
-	    print "$color_res". $print_platform."${NORMAL} " ;
-	    printf "$color_rev%-6s${NORMAL} ", $rev;
+	    print "$color_res". $print_platform."$COLOR{NORMAL} " ;
+	    printf "$color_rev%-6s$COLOR{NORMAL} ", $rev;
 	    if (  $rev_g && $rev ne $rev_g ) {
-		print "${GREEN}($rev_g)${NORMAL}";
+		print "$COLOR{GREEN}($rev_g)$COLOR{NORMAL}";
 	    }
 	}
 	print "\n";
@@ -1206,9 +1209,17 @@ for my $proj ( @projs ) {
     $task->svn_changelog()	if $do_svn_changelog;
 }
 
+
+if ( $DEBUG >= 3 ) {
+    print "----------------------------------------\n";
+    print "Platforms: " . join(" ",@platforms)."\n";
+    print "Projects:  " . join(" ",@projs)."\n";
+    print "----------------------------------------\n";
+}
+
 for my $platform ( @platforms ) {
     print "\n";
-    print STDERR "${BLUE}------------------------------------------------------------ Platform: $platform${NORMAL}\n";
+    print STDERR "$COLOR{BLUE}------------------------------------------------------------ Platform: $platform$COLOR{NORMAL}\n";
 
     for my $proj ( @projs ) {
 
@@ -1216,16 +1227,16 @@ for my $platform ( @platforms ) {
 	    proj     => $proj, 
 	    platform => $platform ,
 	    );
-	$task->debug(3, "${MAGENTA}------------------------------------------------  Platform: $platform${NORMAL}	Project: $proj${NORMAL}");
+	$task->debug(3, "$COLOR{MAGENTA}------------------------------------------------  Platform: $platform$COLOR{NORMAL}	Project: $proj$COLOR{NORMAL}");
 
 	if ( $do_fast ) {
 	    my $svn_revision = $task->svn_revision_platform();
 	    my $last_result=$task->last_result();
 	    if ( $svn_revision && $last_result eq "success: $svn_revision" ) {
-		$task->debug(3, "${GREEN}---------------- Project: $proj '$last_result' already build successfully (skipping)${NORMAL}");
+		$task->debug(3, "$COLOR{GREEN}---------------- Project: $proj '$last_result' already build successfully (skipping)$COLOR{NORMAL}");
 		next;
 	    } else {
-		$task->debug(3, "${BLUE}---------------- Project: $proj build not up to date: '$last_result'${NORMAL}");
+		$task->debug(3, "$COLOR{BLUE}---------------- Project: $proj build not up to date: '$last_result'$COLOR{NORMAL}");
 	    };
 	}
 

@@ -1,5 +1,11 @@
 package wmsplugin;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import org.openstreetmap.josm.Main;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
@@ -8,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -20,16 +25,18 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.tools.GBC;
 
 public class WMSPreferenceEditor implements PreferenceSetting {
-
     private Map<String,String> orig;
     private DefaultTableModel model;
     private HashMap<Integer, WMSInfo> oldValues = new HashMap<Integer, WMSInfo>();
+
+    JCheckBox overlapCheckBox;
+    JSpinner spinLat;
+    JSpinner spinLon;
 
     public void addGui(final PreferenceDialog gui) {
         JPanel p = gui.createPreferenceTab("wms", tr("WMS Plugin Preferences"), tr("Modify list of WMS servers displayed in the WMS plugin menu"));
@@ -58,9 +65,10 @@ public class WMSPreferenceEditor implements PreferenceSetting {
             modeldef.addRow(new String[]{i.getKey(), i.getValue()});
         }
 
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+
         JButton add = new JButton(tr("Add"));
-        p.add(Box.createHorizontalGlue(), GBC.std().fill(GBC.HORIZONTAL));
-        p.add(add, GBC.std().insets(0,5,0,0));
+        buttonPanel.add(add, GBC.std().insets(0,5,0,0));
         add.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 JPanel p = new JPanel(new GridBagLayout());
@@ -78,7 +86,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         });
 
         JButton delete = new JButton(tr("Delete"));
-        p.add(delete, GBC.std().insets(0,5,0,0));
+        buttonPanel.add(delete, GBC.std().insets(0,5,0,0));
         delete.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 if (list.getSelectedRow() == -1)
@@ -93,7 +101,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         });
 
         JButton copy = new JButton(tr("Copy Default"));
-        p.add(copy, GBC.std().insets(0,5,0,0));
+        buttonPanel.add(copy, GBC.std().insets(0,5,0,0));
         copy.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 Integer line = listdef.getSelectedRow();
@@ -106,6 +114,24 @@ public class WMSPreferenceEditor implements PreferenceSetting {
                 }
             }
         });
+
+        p.add(buttonPanel);
+        p.add(Box.createHorizontalGlue(), GBC.std().fill(GBC.HORIZONTAL));
+
+        overlapCheckBox = new JCheckBox(tr("Overlap tiles"), WMSPlugin.doOverlap );
+        JLabel labelLat = new JLabel(tr("% of lat:"));
+        JLabel labelLon = new JLabel(tr("% of lon:"));
+        spinLat = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapLat, 1, 50, 1));
+        spinLon = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapLon, 1, 50, 1));
+
+        JPanel overlapPanel = new JPanel(new FlowLayout());
+        overlapPanel.add(overlapCheckBox);
+        overlapPanel.add(labelLat);
+        overlapPanel.add(spinLat);
+        overlapPanel.add(labelLon);
+        overlapPanel.add(spinLon);
+
+        p.add(overlapPanel);
     }
 
     public boolean ok() {
@@ -144,6 +170,15 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         }
 
         if (change) WMSPlugin.refreshMenu();
+
+        WMSPlugin.doOverlap = overlapCheckBox.getModel().isSelected();
+        WMSPlugin.overlapLat = (Integer) spinLat.getModel().getValue();
+        WMSPlugin.overlapLon = (Integer) spinLon.getModel().getValue();
+
+        Main.pref.put("wmsplugin.url.overlap",    String.valueOf(WMSPlugin.doOverlap));
+        Main.pref.put("wmsplugin.url.overlapLat", String.valueOf(WMSPlugin.overlapLat));
+        Main.pref.put("wmsplugin.url.overlapLon", String.valueOf(WMSPlugin.overlapLon));
+
         return false;
     }
 

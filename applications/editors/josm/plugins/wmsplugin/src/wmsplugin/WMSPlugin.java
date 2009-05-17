@@ -37,6 +37,10 @@ public class WMSPlugin extends Plugin {
     static ArrayList<WMSInfo> wmsList = new ArrayList<WMSInfo>();
     static TreeMap<String,String> wmsListDefault = new TreeMap<String,String>();
 
+    static boolean doOverlap = false;
+    static int overlapLat = 4;
+    static int overlapLon = 14;
+
     // remember state of menu item to restore on changed preferences
     static private boolean menuEnabled = false;
 
@@ -76,6 +80,22 @@ public class WMSPlugin extends Plugin {
         Map<String,String> prefs = Main.pref.getAllPrefix("wmsplugin.url.");
 
         TreeSet<String> keys = new TreeSet<String>(prefs.keySet());
+
+        // Here we load the settings for "overlap" checkbox and spinboxes.
+
+        try {
+            doOverlap = Boolean.valueOf(prefs.get("wmsplugin.url.overlap"));
+        } catch (Exception e) {} // If sth fails, we drop to default settings.
+
+        try {
+            overlapLat = Integer.valueOf(prefs.get("wmsplugin.url.overlapLat"));
+        } catch (Exception e) {} // If sth fails, we drop to default settings.
+
+        try {
+            overlapLon = Integer.valueOf(prefs.get("wmsplugin.url.overlapLon"));
+        } catch (Exception e) {} // If sth fails, we drop to default settings.
+
+        // And then the names+urls of WMS servers
         int prefid = 0;
         String name = null;
         String url = null;

@@ -1,5 +1,6 @@
 package wmsplugin;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -79,6 +80,8 @@ public class GeorefImage implements Serializable {
         // but the performance improvements when moving are huge
         // Zooming is still slow because the images need to be resized
         if(diffx >= 0 && diffx <= 2 && diffy >= 0 && diffy <= 2 && reImg != null) {
+            /*g.setColor(Color.RED);
+              g.drawRect(minPt.x, minPt.y-height, width, height);*/
             g.drawImage(reImg, minPt.x, maxPt.y, null);
             return true;
         }
@@ -119,6 +122,8 @@ public class GeorefImage implements Serializable {
                 reImg.getGraphics().dispose();
 
                 reImgHash.setSize(width, height);
+                /*g.setColor(Color.RED);
+                  g.drawRect(minPt.x, minPt.y-height, width, height);*/
                 g.drawImage(reImg, minPt.x, maxPt.y, null);
             }
         } catch(Exception e) {
@@ -152,17 +157,17 @@ public class GeorefImage implements Serializable {
     }
 
     private Image clearAlpha(Image img) {
-		ImageProducer ip = img.getSource();
-		RGBImageFilter filter = new RGBImageFilter() {
-			public int filterRGB(int x, int y, int rgb) {
-				return rgb | 0xff000000;
-			}
-		};
-		ImageProducer filt_ip = new FilteredImageSource(ip, filter);
-		Image out_img = Toolkit.getDefaultToolkit().createImage(filt_ip);
+        ImageProducer ip = img.getSource();
+        RGBImageFilter filter = new RGBImageFilter() {
+            public int filterRGB(int x, int y, int rgb) {
+                return rgb | 0xff000000;
+            }
+        };
+        ImageProducer filt_ip = new FilteredImageSource(ip, filter);
+        Image out_img = Toolkit.getDefaultToolkit().createImage(filt_ip);
 
-		return out_img;
-	}
+        return out_img;
+    }
 
     public void flushedResizedCachedInstance() {
         reImg = null;

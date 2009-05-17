@@ -41,7 +41,6 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * fetched this way is tiled and managerd to the disc to reduce server load.
  */
 public class WMSLayer extends Layer {
-
     protected static final Icon icon =
         new ImageIcon(Toolkit.getDefaultToolkit().createImage(WMSPlugin.class.getResource("/images/wms_small.png")));
 
@@ -79,13 +78,14 @@ public class WMSLayer extends Layer {
         WMSGrabber.getProjection(baseURL, true);
         mv = Main.map.mapView;
         getPPD();
-        
+
         executor = Executors.newFixedThreadPool(3);
     }
-    
+
+    @Override
     public void destroy() {
-        try { 
-            executor.shutdown();  
+        try {
+            executor.shutdown();
         // Might not be initalized, so catch NullPointer as well
         } catch(Exception x) {}
     }
@@ -171,10 +171,11 @@ public class WMSLayer extends Layer {
             JOptionPane.showMessageDialog(Main.parent, tr("The requested area is too big. Please zoom in a little, or change resolution"));
             return;
         }
-        
+
         for(int x = bminx; x<bmaxx; ++x)
             for(int y = bminy; y<bmaxy; ++y){
                 GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
+                g.drawRect(x, y, dax, bminy);
                 if(!img.paint(g, mv, dx, dy) && !img.downloadingStarted){
                     img.downloadingStarted = true;
                     img.image = null;
@@ -183,8 +184,6 @@ public class WMSLayer extends Layer {
                     executor.submit(gr);
             }
         }
-
-        new wmsplugin.Cache().cleanUp();
     }
 
     @Override public void visitBoundingBox(BoundingXYVisitor v) {
@@ -247,12 +246,16 @@ public class WMSLayer extends Layer {
             mv.repaint();
         }
     }
-    
+
     public class reloadErrorTilesAction extends AbstractAction {
         public reloadErrorTilesAction() {
             super(tr("Reload erroneous tiles"));
         }
         public void actionPerformed(ActionEvent ev) {
+            // Delete small files, because they're probably blank tiles.
+            // See https://josm.openstreetmap.de/ticket/2307
+            new wmsplugin.Cache().deleteSmallFiles(2048);
+
             for (int x = 0; x < dax; ++x) {
                 for (int y = 0; y < day; ++y) {
                     GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
@@ -265,7 +268,7 @@ public class WMSLayer extends Layer {
             }
         }
     }
-    
+
     public class ToggleAlphaAction extends AbstractAction {
         public ToggleAlphaAction() {
             super(tr("Alpha channel"));
@@ -274,7 +277,7 @@ public class WMSLayer extends Layer {
             JCheckBoxMenuItem checkbox = (JCheckBoxMenuItem) ev.getSource();
             boolean alphaChannel = checkbox.isSelected();
             Main.pref.put("wmsplugin.alpha_channel", alphaChannel);
-            
+
             // clear all resized cached instances and repaint the layer
             for (int x = 0; x < dax; ++x) {
                 for (int y = 0; y < day; ++y) {

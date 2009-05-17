@@ -7,10 +7,10 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.imageio.*;
-
 
 import org.openstreetmap.josm.Main;
 
@@ -23,6 +23,8 @@ public class Cache {
     private boolean disabled = false;
     // If the cache is full, we don't want to delete just one file
     private final int cleanUpThreshold = 20;
+    // After how many file-writes do we want to check if the cache needs emptying?
+    private final int cleanUpInterval = 5;
 
     Cache() {
         this(Main.pref.get("wmsplugin.cache.path", WMSPlugin.getPrefsPath() + "cache"));
@@ -72,12 +74,19 @@ public class Cache {
             System.out.println(e.getMessage());
         }
 
-        // Clean up must be called manually
+        checkCleanUp();
     }
 
     public BufferedImage saveImg(String ident, BufferedImage image, boolean passThrough) {
         saveImg(ident, image);
         return image;
+    }
+
+    public void checkCleanUp() {
+        // The Cache class isn't persistent in its current implementation,
+        // therefore clean up on random intervals, but not every write
+        if(new Random().nextInt(cleanUpInterval) == 0)
+            cleanUp();
     }
 
     public void cleanUp() {
@@ -111,7 +120,16 @@ public class Cache {
         }
     }
 
+    public void deleteSmallFiles(int size) {
+        if(disabled) return;
+        for(File f : getFiles()) {
+            if(f.length() < size)
+                f.delete();
+        }
+    }
+
     private long getDirSize() {
+        if(disabled) return -1;
         long dirsize = 0;
 
         for(File f : getFiles())
@@ -120,6 +138,7 @@ public class Cache {
     }
 
     private File[] getFiles() {
+        if(disabled) return null;
         return dir.listFiles(
             new FileFilter() {
                 public boolean accept(File file) {

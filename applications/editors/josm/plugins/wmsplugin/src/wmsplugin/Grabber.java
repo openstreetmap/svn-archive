@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JOptionPane;
+import org.openstreetmap.josm.data.coor.LatLon;
 
 abstract public class Grabber implements Runnable {
     protected Bounds b;
@@ -20,9 +21,28 @@ abstract public class Grabber implements Runnable {
     protected WMSLayer layer;
     protected GeorefImage image;
 
-    Grabber(Bounds b, Projection proj,
-            double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer) {
-        this.b = b;
+    Grabber(Bounds b, Projection proj, double pixelPerDegree, GeorefImage image,
+    MapView mv, WMSLayer layer)
+    {
+        if (b.min != null && b.max != null && WMSPlugin.doOverlap)
+        {
+            double latCent = (b.min.lat() + b.max.lat()) / 2;
+            double lonCent = (b.min.lon() + b.max.lon()) / 2;
+
+            double latSize =  b.max.lat() - b.min.lat();
+            double lonSize =  b.max.lon() - b.min.lon();
+
+            double latCoef = (100.0 + WMSPlugin.overlapLat) / 100.0 / 2.0;
+            double lonCoef = (100.0 + WMSPlugin.overlapLon) / 100.0 / 2.0;
+
+            this.b = new Bounds( new LatLon(latCent - latCoef * latSize,
+                                            lonCent - lonCoef * lonSize),
+                                 new LatLon(latCent + latCoef * latSize,
+                                            lonCent + lonCoef * lonSize));
+        }
+        else
+            this.b = b;
+
         this.proj = proj;
         this.pixelPerDegree = pixelPerDegree;
         this.image = image;

@@ -32,6 +32,9 @@
 		<rule e="way" k="landuse" v="cemetery">
 			<area class="landuse-cemetery"/>
 		</rule>
+		<rule e="way" k="amenity" v="grave_yard">
+			<area class="landuse-cemetery"/>
+		</rule>
 		<rule e="way" k="landuse" v="vineyard">
 			<area class="landuse-vineyard"/>
 		</rule>

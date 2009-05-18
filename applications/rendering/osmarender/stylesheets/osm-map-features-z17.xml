@@ -3932,7 +3932,7 @@
 
 			.highway-track-bridge-casing            { stroke-width: 1.35px; }
 			.highway-track-bridge-core              { stroke-width: 1.15px; }
-			.highway-track-back-casing              { stroke-width: 1.15px;   stroke: #ffffff; stroke-linejoin: round; }
+			.highway-track-back-casing              { stroke-width: 1.15px;   stroke: #ffffff; stroke-linecap: round; }
 			.highway-track-casing                   { stroke-width: 1.0px;   stroke: #d79331; }
 			.highway-track-area-back-casing         { stroke-width: 0.4px;   stroke: #ffffff; }
 			.highway-track-area-casing              { stroke-width: 0.25px;   stroke: #d79331; }

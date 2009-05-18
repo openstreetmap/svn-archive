@@ -2232,7 +2232,7 @@
 			.highway-track-bridge-core              { stroke-width: 3.0px; }
 			.highway-track-name                     { stroke-width: 0px;     font-size: 2.5px; }
 			.highway-track-ref                      { stroke-width: 0px;     font-size: 2.5px; }
-			.highway-track-back-casing              { stroke-width: 2.1px;   stroke: #ffffff; stroke-linejoin: round; }
+			.highway-track-back-casing              { stroke-width: 2.1px;   stroke: #ffffff; stroke-linecap: round; }
 			.highway-track-casing                   { stroke-width: 1.8px;   stroke: #d79331; }
 			.highway-track-area-back-casing         { stroke-width: 0.7px;   stroke: #ffffff; }
 			.highway-track-area-casing              { stroke-width: 0.4px;   stroke: #d79331; }

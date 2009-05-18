@@ -2959,8 +2959,8 @@
 			.highway-track-bridge-core              { stroke-width: 2.0px; }
 			.highway-track-back-casing              { stroke-width: 2.0px;   stroke: #ffffff; stroke-linejoin: round; }
 			.highway-track-casing                   { stroke-width: 1.8px;   stroke: #d79331; }
-			.highway-track-area-back-casing         { stroke-width: 1.0px;   stroke: #ffffff; }
-			.highway-track-area-casing              { stroke-width: 0.8px;   stroke: #d79331; }
+			.highway-track-area-back-casing         { stroke-width: 0.55px;   stroke: #ffffff; }
+			.highway-track-area-casing              { stroke-width: 0.35px;   stroke: #d79331; }
 			.highway-track-core                     { stroke-width: 1.45px;   stroke: #ffffff; }
 			.highway-track-core2                    { stroke-width: 1.5px;   stroke: #ffffff; }
 			.highway-track-area                     { fill: #ffffff; }

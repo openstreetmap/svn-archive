@@ -81,7 +81,7 @@ class ImportProcessor:
     def deleteItem(self,item):
         item.attrib['changeset']=self.changesetid
         self.deleteElem.append(item)
-    def modifyITem(self,item):
+    def modifyItem(self,item):
         item.attrib['changeset']=self.changesetid
         self.modifyElem.append(item)
     def upload(self):
@@ -89,7 +89,7 @@ class ImportProcessor:
         xml.append(self.addElem)
         xml.append(self.modifyElem)
         xml.append(self.deleteElem)
-        print "Uploading change set:" + self.changesetid
+        print "Uploading change set:" + self.changesetid        
         resp,content = self.httpCon.request(api_host +
                                             '/api/0.6/changeset/'+self.changesetid+
                                             '/upload',
@@ -114,8 +114,11 @@ class ImportProcessor:
         diffResult=ET.fromstring(content)
         for child in diffResult.getchildren():
             old_id=child.attrib['old_id']
-            new_id=child.attrib['new_id']
-            idMap[old_id]=new_id
+            if child.attrib.has_key('new_id'):
+                new_id=child.attrib['new_id']
+                idMap[old_id]=new_id
+            else:
+                idMap[old_id]=old_id
     
     def getAPILimit(self):
         return 1000
@@ -162,19 +165,18 @@ if hasCache:
     idMap=pickle.load(f)
     f.close()
 
-
 importProcessor=ImportProcessor(httpObj,options.comment,idMap)
-for type in ('node','way','relation'):
+for type in ('node','way','relation'):    
     for elem in osmData.getiterator(type):
         # If elem.id is already mapped we can skip this object
         #
-        id=elem.attrib['id']
+        id=elem.attrib['id']        
         if idMap.has_key(id):
-            continue
+                continue
         #
         # If elem contains nodes, ways or relations as a child
         # then the ids need to be remapped.
-        if elem.tag=='way':
+        if elem.tag=='way':                    
             for child in elem.getiterator('nd'):
                 if child.attrib.has_key('ref'):
                     old_id=child.attrib['ref']
@@ -186,7 +188,12 @@ for type in ('node','way','relation'):
                     old_id=child.attrib['ref']
                     if idMap.has_key(old_id):
                         child.attrib['ref'] = idMap[old_id]
-        importProcessor.addItem(elem)
+        if elem.attrib.has_key('action') and elem.attrib['action']=='delete':
+            importProcessor.deleteItem(elem)
+        elif elem.attrib.has_key('action') and elem.attrib['action']=='modify':
+            importProcessor.modifyItem(elem)
+        else:
+            importProcessor.addItem(elem)
         if cnt >= importProcessor.getAPILimit():
             importProcessor.upload()
             f=open(options.infile+".db.tmp","w")

@@ -1,16 +1,17 @@
 #!/usr/bin/perl
-# Build_Cluster is a system to build various Debian Based Packages
-# we expect a chroot environment to already be setup in order to 
-# then be able to do the debuild commands inside these.
 
-# TODO:
-#  - writing Logfiles
-#  - Debug/Log -levels
-#  - Error Code checking
-#  - Help/manpage
-#  - Check for another build-cluster.pl already running
-#  - Add timeout to command execution. This might prevent hanging 
-#    javacompiler from blocking the rest of the build-cluster.pl
+=pod
+
+=head1 build-cluster
+
+Build_Cluster is a system to build various Debian Based Packages
+we expect a chroot environment to already be setup in order to 
+then be able to do the debuild commands inside these.
+
+
+Show a summary of all results. This also looks for cached results.
+
+=cut
 
 package BuildTask;
 
@@ -26,6 +27,7 @@ use File::Slurp qw( slurp write_file read_file append_file) ;
 use Getopt::Long;
 use Getopt::Std;
 use IO::Select;
+use IO::File;
 use IPC::Open3;
 use Symbol;
 
@@ -45,6 +47,9 @@ my $do_svn_up=1;
 my $do_svn_co=1;
 my $do_svn_changelog = 1;
 my $do_svn_cp= 1;
+my $do_show_results=0;
+my $do_write_html_results_only=0;
+
 my $RESULTS={};
 
 my $do_fast= 1; # Skip Stuff like debuild clean, ...
@@ -202,7 +207,6 @@ my $getopt_result = GetOptions (
 
     "fast!"         => \$do_fast,
     "force!"        => \$FORCE,
-
     "color!"        => sub { my ($a,$b)=(@_);
 			     if ( ! $b  ) {
 				 for my $k ( keys %COLOR ) {
@@ -220,7 +224,6 @@ my $getopt_result = GetOptions (
     "svn-co!"        => \$do_svn_co,
     "svn-changelog!" => \$do_svn_changelog,
     "svn-cp!"        => \$do_svn_cp,
-
     "dir-chroot=s"   => \$dir_chroot,     
     "dir-svn"        => \$dir_svn,
     "package-results" => \$package_results,
@@ -240,13 +243,13 @@ my $getopt_result = GetOptions (
 				  @projs= @all_proj;
 			      } elsif ( $b =~ m/\*/ ) {
 				  $b =~ s,\*,\.\*,g;
-				  @projs= grep { $_ =~ m{$b} } @available_proj;
+				  @projs= grep { $_ =~ m{$b} } @all_proj;
 			      } else {
 				  @projs = split(',',$b);
 			      }
 },
-    'show-results'      => sub { show_results();
-},
+    'show-results'      =>  \$do_show_results,
+    'write-html-results-only!' => \$do_write_html_results_only,
     );
 
 if ( ! $getopt_result ) {
@@ -312,6 +315,26 @@ sub section($;$){
 }
 
 # ------------------------------------------------------------------
+# Clear/Remove stored Log msgs
+sub Clear_Log($$$){
+    my $self = shift;
+
+    die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
+
+    my $platform = $self->platform();
+    my $proj     = $self->proj();
+    my $section  = $self->section();
+
+    if ( ! -d $dir_log ) {
+	die "Cannot Log, Directory '$dir_log' does not exist\n";
+    }
+    my $dst_dir="$dir_log/$proj/$platform";
+    for my $file ( glob("$dst_dir/*" ) ) {
+	unlink $file;
+    }
+}
+
+# ------------------------------------------------------------------
 # Log a msg
 sub Log($$$){
     my $self = shift;
@@ -327,15 +350,45 @@ sub Log($$$){
     if ( ! -d $dir_log ) {
 	die "Cannot Log, Directory '$dir_log' does not exist\n";
     }
-    my $dst_dir="$dir_log/$platform-$proj";
+    my $dst_dir="$dir_log/$proj/$platform";
     if ( ! -d $dst_dir ) {
 	mkpath($dst_dir)
 	    or warn "WARNING: Konnte Pfad $dst_dir nicht erzeugen: $!\n";
     }
 
-    write_file( "$dst_dir/$section.log", $msg );
+    my $log_file ="$dst_dir/$section.log.shtml"; 
+    if ( ! -s  $log_file ) {
+	append_file(  $log_file, "<html>\n<pre>\n" );
+    }
+    my $html_msg=$msg;
+    $html_msg =~ s/\</&lt;/g;
+    $html_msg =~ s/\>/&gt;/g;
+    append_file(  $log_file, "$html_msg\n" );
 
 }
+
+# ------------------------------------------------------------------
+# return the filename for the last_result log File
+sub last_result_file($){
+    my $self       = shift;
+
+    die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
+
+    my $platform = $self->platform();
+    my $proj     = $self->proj();
+
+    if ( ! -d $dir_log ) {
+	die "Cannot write Result, Directory '$dir_log' does not exist\n";
+    }
+    my $dst_dir="$dir_log/../last_result";
+    if ( ! -d $dst_dir ) {
+	mkpath($dst_dir)
+	    or warn "WARNING: Cannot create Path '$dst_dir': $!\n";
+    }
+
+    my $last_log="$dst_dir/result-$platform-$proj.log";
+    return $last_log;
+		 }
 
 # ------------------------------------------------------------------
 # write or read the last result of a package 
@@ -349,17 +402,8 @@ sub last_result($;$){
     my $platform = $self->platform();
     my $proj     = $self->proj();
 
-    if ( ! -d $dir_log ) {
-	die "Cannot write Result, Directory '$dir_log' does not exist\n";
-    }
-    my $dst_dir="$dir_log/$platform-$proj";
-    if ( ! -d $dst_dir ) {
-	mkpath($dst_dir)
-	    or warn "WARNING: Cannot create Path '$dst_dir': $!\n";
-    }
+    my $last_log=$self->last_result_file();
 
-
-    my $last_log="$dst_dir/last_results.log";
     if ( defined($new_result) ) {
 	my $svn_revision = $self->svn_revision_platform();
 	append_file( $last_log , "$new_result: $svn_revision\n" );
@@ -389,17 +433,8 @@ sub last_good_result($){
     my $platform = $self->platform();
     my $proj     = $self->proj();
 
-    if ( ! -d $dir_log ) {
-	die "Cannot write Result, Directory '$dir_log' does not exist\n";
-    }
-    my $dst_dir="$dir_log/$platform-$proj";
-    if ( ! -d $dst_dir ) {
-	mkpath($dst_dir)
-	    or warn "WARNING: Cannot create Path '$dst_dir': $!\n";
-    }
+    my $last_log=$self->last_result_file();
 
-
-    my $last_log="$dst_dir/last_results.log";
     my $last_result;
     if ( -r "$last_log" ) {
 	my @lines = grep { $_ =~ m/success:/ } read_file( $last_log ) ;
@@ -440,6 +475,8 @@ sub error($$){
     $self->{errors} .= "\n" if $self->{errors};
     $self->{errors} .= $msg;
 
+    $self->Log(1,"ERROR: $msg");
+
     my $msg1 = "($platform:$proj)";
     my ( @msg ) = split(/\n/,$msg);
 
@@ -461,6 +498,7 @@ sub warning($$){
     my $proj     = $self->{proj};
 
     $self->{warnings}.= $msg;
+    $self->Log(1,"WARNING: $msg");
 
     my $msg1 = "($platform:$proj)";
     my ( @msg ) = split(/\n/,$msg);
@@ -637,8 +675,9 @@ sub command($$){
     $self->debug(7,"Command: rc:$rc");
     $self->debug(7,"Command: ^^^^^^^^^^^^^^^^");
 
-    $self->Log(5,"Command: ",$cmd);
-    $self->Log(7,"Command: ",$data);
+    $self->Log(5,"Command: =====================");
+    $self->Log(5,"Command: $cmd");
+    $self->Log(7,"Command: $data");
     $self->Log(4,"Command: rc:$rc");
     $self->Log(7,"Command: ^^^^^^^^^^^^^^^^");
 
@@ -743,7 +782,7 @@ sub svn_update($){
     my $proj_sub_dir=$self->svn_dir_base($proj);
 
     if ( $svn_update_done{$proj_sub_dir} ) {
-	$self->debug(3,"Repository $proj_sub_dir for $proj already updated");
+	$self->debug(4,"Repository $proj_sub_dir for $proj already updated");
 	return;
     };
 
@@ -801,7 +840,7 @@ sub svn_checkout($){
     my $proj_sub_dir=$self->svn_dir_base($proj);
 
     if ( $svn_update_done{$proj_sub_dir} ) {
-	$self->debug(3,"Repository $proj_sub_dir for $proj already updated");
+	$self->debug(4,"Repository $proj_sub_dir for $proj already updated");
 	return;
     };
 
@@ -936,17 +975,35 @@ sub apply_patch($){
 
     my $patch_file="$dir_svn/$proj_sub_dir/debian/$platform.patch";
     if ( -s  $patch_file) {
-	my ($rc,$out,$err,$out_all) = $self->command("cp $dir_svn/$proj_sub_dir/debian/* $build_dir/debian/");
-	if ( $rc) {
-	    $self->warning("Error '$rc' in 'cp $dir_svn/$proj_sub_dir/debian/* $build_dir/debian/'");
-	    $self->warning("Error '$err'");
+	# copy files from SVN-DIR
+	for my $file ( glob("$dir_svn/$proj_sub_dir/debian/*") ){
+	    next if -d $file;
+	    copy($file,"$build_dir/debian/")
+		|| $self->error("Cannot copy $file ---> $build_dir/debian/: $!");
 	}
+
+	# apply patch
 	$self->debug(5,"apply_patch($patch_file)");
-	($rc,$out,$err,$out_all) = $self->command("cd $build_dir/debian/; patch <$patch_file");
-	if ( $rc) {
-	    $self->warning("Error '$rc' in 'patch <$patch_file'");
-	    $self->warning("Error '$err'");
+	my ($rc,$out,$err,$out_all) = $self->command("cd $build_dir/debian/; patch <$patch_file");
+	if ( $out_all =~ /Hunk .* FAILED at / ) {
+	    $self->error("Error in 'patch <$patch_file'\n".
+			 "Error '$out_all'");
+	    my (@files) = ($out_all =~ m/saving rejects to file (.+\.rej)/g );
+	    for my $file ( @files ){
+		my $txt = slurp("$build_dir/debian/$file");
+		$self->error("\n-------------------------------------------------------------------------\n".
+			     "Patch Error: '$file'\n".
+			     "-------------------------------------------------------------------------\n".
+			     $txt);
+		    }
+	    
+	    return -1;
 	}
+	if ( $rc ) {
+	    $self->error("Error '$rc' in 'patch <$patch_file'");
+	    $self->error("Error '$out_all'");
+	    return -1;
+	};
     }
 
 };
@@ -1101,13 +1158,6 @@ sub show_results(){
 	    my $svn_revision_platform = $task->svn_revision_platform()||'';
 	    my $svn_revision = $task->svn_revision()||'';
 	    my $last_result=$task->last_result();
-	    if ( ! $svn_revision_platform ) {
-		$task->{color_res}="+$COLOR{GREEN}";
-	    } elsif ( $last_result eq "success: $svn_revision_platform" ) {
-		$task->{color_res}="+$COLOR{GREEN}";
-	    } else {
-		$task->{color_res}="-$COLOR{RED}";
-	    };
 	    
 	    $task->{svn_base_revision}= $svn_revision;
 	    if ( $svn_revision eq $svn_revision_platform) {
@@ -1117,10 +1167,19 @@ sub show_results(){
 		$task->{svn_up_to_date}=0;
 		$task->{color_rev}=$COLOR{BLUE};
 	    }    
+	    if ( ! $svn_revision_platform ) {
+		$task->{color_res}="+$COLOR{GREEN}";
+	    } elsif ( $last_result eq "success: $svn_revision_platform" ) {
+		$task->{color_res}="+$COLOR{GREEN}";
+	    } else {
+		$task->{color_res}="-$COLOR{RED}";
+		$task->{color_rev}=$COLOR{RED};
+	    };
 
 	    my $color_rev = $task->{color_rev};
 	    my $color_res = $task->{color_res};
 	    my ( $res,$rev)  = split(/:\s*/,$task->last_result());
+	    $rev ||='';
 	    my $rev_g  = $task->last_good_result();
 	    my $print_platform=$platform;
 	    $print_platform=~ s/(debian-|ubuntu-)//;
@@ -1132,6 +1191,113 @@ sub show_results(){
 	    }
 	}
 	print "\n";
+    }
+}
+# ------------------------------------------------------------------
+sub write_html_results(){
+    my $html_report="$dir_log/results.shtml";
+    my $fh = IO::File->new(">$html_report");
+#    print $fh "<html>\n";
+    print $fh "<!--#include virtual=\"/header.shtml\" -->\n";
+    print $fh "<div id=\"content\">\n";
+    print $fh "<div>\n";
+    print $fh "<H1>Results from the Build-Cluster</H1>\n";
+    print $fh localtime(time())."\n";
+    print $fh "<br/>\n";
+    print $fh "<br/>\n";
+    print $fh "<br/>\n";
+    print $fh "<table border=1>\n";
+    
+    print  $fh "<tr><th>Project</th>";
+    for my $platform ( @platforms ) {
+	my $print_platform=$platform;
+	$print_platform=~ s/(debian|ubuntu)-/$1\<br\/\>/;
+	
+	print $fh "<th>$print_platform</th>" ;
+	
+    }
+    print  $fh "</tr>\n";
+
+    for my $proj ( @projs ) {
+	print  $fh "<tr><td>";
+	my $rel_proj_log_dir="$proj";
+	print $fh "<a href=\"$rel_proj_log_dir\">";
+	printf $fh "%-28s ",$proj;
+	print $fh "</a>\n";
+	for my $platform ( @platforms ) {
+#	    print $fh "$platform ";
+	    print $fh "</td><td>";
+	    my $task = $RESULTS->{$platform}->{$proj};
+	    my $rel_log_dir="$proj/$platform";
+	    if ( ! defined ( $task ) )  {
+		$task = BuildTask->new( proj => $proj, platform => $platform );
+	    };
+	    my $svn_revision_platform = $task->svn_revision_platform()||'';
+	    my $svn_revision = $task->svn_revision()||'';
+	    my $last_result=$task->last_result();
+	    my $color_rev;
+	    my $color_res;
+	    if ( $svn_revision eq $svn_revision_platform) {
+		$color_rev="GREEN";
+	    } else {
+		$color_rev="BLUE";
+	    }    
+	    if ( ! $svn_revision_platform ) {
+		$color_res="GREEN";
+	    } elsif ( $last_result eq "success: $svn_revision_platform" ) {
+		$color_res="GREEN";
+	    } else {
+		$color_res="RED";
+		$color_rev="RED";
+	    };
+
+	    my ( $res,$rev)  = split(/:\s*/,$task->last_result());
+	    $rev ||='';
+	    my $rev_g  = $task->last_good_result();
+	    my $print_platform=$platform;
+	    $print_platform=~ s/(debian-|ubuntu-)//;
+
+	    print $fh "<A href=\"$rel_log_dir\">";
+#	    print $fh "<FONT  color=\"$color_res\">". $print_platform." </font>" ;
+	    printf $fh "<FONT  color=\"$color_rev\">%-6s </font>", $rev;
+	    if (  $rev_g && $rev ne $rev_g ) {
+		print $fh "<FONT  color=\"GREEN\"($rev_g)</font>";
+	    }
+	}
+	print $fh "</a>\n";
+	print $fh "\n";
+	print  $fh "</td></tr>\n";
+    }
+    print $fh "</html>\n";
+    $fh->close();
+
+    # Create Index for each proj/platform
+    for my $proj ( @projs ) {
+	for my $platform ( @platforms ) {
+	    my $html_index_dir="$dir_log/$proj/$platform";
+	    if ( ! -d $html_index_dir ) {
+		mkpath($html_index_dir)
+		    or warn "WARNING: Konnte Pfad $html_index_dir nicht erzeugen: $!\n";
+	    }
+	    my $html_index="$html_index_dir/index.shtml";
+	    my $fh = IO::File->new(">$html_index");
+	    print $fh "<!--#include virtual=\"/header.shtml\" -->\n";
+	    print $fh "<div>\n";
+	    print $fh "<H1>Results from the Build-Cluster</H1>\n";
+	    print $fh "<H2>Project: $proj</H2>\n";
+	    print $fh "<H2>Platform: $platform</H2>\n";
+	    print $fh localtime(time())."\n";
+	    print $fh "<ul>";
+	    for my $file ( glob("$html_index_dir/*") ) {
+		my $file_name = basename($file);
+		next if $file_name eq "index.shtml";
+		print $fh "<li><A href=\"$file_name\">$file_name</a></li>\n";
+	    }
+	    print $fh "</ul>";
+	    print $fh "</div>\n";    
+	    print $fh "<!--#include virtual=\"/footer.shtml\" -->\n";
+	    $fh->close();
+	}
     }
 }
 
@@ -1181,6 +1347,11 @@ die "\n";
     unless @projs;
 
 
+if ( $do_write_html_results_only ) {
+    write_html_results();
+    exit 0;
+}
+
 if ( $DEBUG >= 3 ) {
     print "----------------------------------------\n";
     print "Platforms: " . join(" ",@platforms)."\n";
@@ -1194,6 +1365,9 @@ if ( $DEBUG >= 3 ) {
     print "\t--".($DEBUG        ?'':'no-')."debug\n";
     print "----------------------------------------\n";
 }
+
+show_results() 
+    if $do_show_results;
 
 # svn Update
 for my $proj ( @projs ) {
@@ -1229,6 +1403,8 @@ for my $platform ( @platforms ) {
 	    );
 	$task->debug(3, "$COLOR{MAGENTA}------------------------------------------------  Platform: $platform$COLOR{NORMAL}	Project: $proj$COLOR{NORMAL}");
 
+	$task->Clear_Log();
+
 	if ( $do_fast ) {
 	    my $svn_revision = $task->svn_revision_platform();
 	    my $last_result=$task->last_result();
@@ -1257,3 +1433,108 @@ if ( $DEBUG >= 3) {
     print Dumper(\$RESULTS);
 }
 
+show_results() 
+    if $do_show_results;
+
+write_html_results()
+    if $do_show_results;
+
+
+__END__
+
+=pod
+
+=head1 Options
+
+=over
+
+=item  C<--debug>
+
+Add some Debugging Output
+
+=item --verbose
+
+Be more verbose
+
+=item --fast
+
+Skip some not really needed tasks. (debuild clean, ...)
+And check for already successfully build packages.
+
+=item --no-color
+
+switch of coloring output. This is needed for example if run in a cronjob.
+
+=item --svn-up / --no-svn-up
+
+Switch on/off doing subversion update to the projects.
+
+=item --svn / --no-svn
+
+Switch on/off doing all subversion actions.
+
+=item --svn-co / --no-svn-co
+
+Switch on/off doing subversion co on the projects.
+
+=item --svn-changelog / --no-svn-changelog
+
+Switch on/off the creation of an automated changelog from subversion.
+
+=item --svn-cp / --no-svn-cp
+
+Switch on/off doing copying from the subversion folder to the chroot subdirectories.
+
+=item --dir-chroot
+
+Specify the directory where all chroots are located.
+
+=item --dir-svn
+
+Specify the directory where the svn checkou copy is located.
+
+=item --package-results
+
+Specify the directory where the resulting packages are located.
+
+=item --user
+
+Specify the username to use for the package build directories.
+
+=item --platforms=
+
+Specify the platforms to build for. a * can be used to specify multiple 
+platforms with a wildcard.
+
+=item --projects=
+
+Specify the projects to build for. a * can be used to specify multiple 
+projects with a wildcard.
+
+=item --show-results
+
+Show a summary of all results. This also looks for cached results.
+
+=item --write-html-results-only
+
+Write Html Pages for the Results and exit.
+
+
+
+=back
+
+
+
+
+=head1 TODO:
+
+  - Check for another build-cluster.pl already running
+
+  - Add timeout to command execution. This might prevent hanging 
+    javacompiler from blocking the rest of the build-cluster.pl
+
+  - writing Logfiles
+
+  - Help/manpage
+
+  - Error Code checking

@@ -88,7 +88,7 @@ public class RoutingGraph {
 	 * <code>true</code> Graph in memory.
 	 * <code>false</code> Graph not created.
 	 */
-	public boolean graphState;
+//	public boolean graphState;
 
 	/**
 	 * OSM Graph.
@@ -107,9 +107,9 @@ public class RoutingGraph {
 	 * Default Constructor.
 	 */
 	public RoutingGraph(DataSet data) {
-		this.graphState = false;
+//		this.graphState = false;
 		this.graph = null;
-		this.data = data;
+//		this.data = data;
 		routeType=RouteType.SHORTEST;
 		routingProfile=new RoutingProfile("default");
 		routingProfile.setOnewayUse(true); // Don't ignore oneways by default
@@ -146,7 +146,7 @@ public class RoutingGraph {
 				}
 			}
 		}
-		graph.vertexSet().size();
+//		graph.vertexSet().size();
 		logger.debug("End Create Graph");
 		logger.debug("Vertex: "+graph.vertexSet().size());
 		logger.debug("Edges: "+graph.edgeSet().size());
@@ -166,7 +166,7 @@ public class RoutingGraph {
 		graph.addEdge(from, to, edge);
 		// weight = getWeight(way);
 		double weight = getWeight(way, length);
-		getWeight(edge, length);
+		setWeight(edge, length);
 		logger.debug("edge for way " + way.id
 				     + "(from node " + from.id + " to node "
 				     + to.id + ") has weight: " + weight);
@@ -175,7 +175,7 @@ public class RoutingGraph {
 	}
 
 	/**
-	 * Returns the weight for the given segment depending on the highway type
+	 * Set the weight for the given segment depending on the highway type
 	 * and the length of the segment. The higher the value, the less it is used
 	 * in routing.
 	 *
@@ -183,7 +183,7 @@ public class RoutingGraph {
 	 *            the way.
 	 * @return
 	 */
-	private void getWeight(OsmEdge osmedge, double length) {
+	private void setWeight(OsmEdge osmedge, double length) {
 		
 		osmedge.setLength(length);
 		if (this.waySpeeds.containsKey(osmedge.getWay().get("highway")))

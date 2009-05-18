@@ -573,6 +573,10 @@ sub upload
 sub ProcessRequestsFromServer 
 {
     my $Config = TahConf->getConfig();
+
+    statusMessage("*** This client is outdated ***",1,0);
+    statusMessage("please run svn ".$Config->get("SubversionUpdateCmd"),1,0);
+
     if ($Config->get("LocalSlippymap"))
     {
         print "Config option LocalSlippymap is set. Downloading requests\n";
@@ -786,6 +790,11 @@ sub UpdateClient
         
         return 1;
     }
+    else  # runCommand failed somehow
+    {
+        statusMessage("Update Failed for some reason. Check \"subversion\" is installed.",1,0);
+        statusMessage("Command run was: \n".$Cmd,1,0);
+    }
 }
 
 #-----------------------------------------------------------------------------
@@ -813,6 +822,7 @@ sub ClientModified
 sub NewClientVersion 
 {
     return 1; # this client is outdated, using tags of tilesAtHome-dev now.
+
     my $Config = TahConf->getConfig();
     return 0 if (time() - $LastTimeVersionChecked < 600);
     my $versionfile = "version.txt";

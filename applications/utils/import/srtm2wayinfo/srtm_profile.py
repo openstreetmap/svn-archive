@@ -1,4 +1,6 @@
 #!/usr/bin/env python2.5
+"""Profile timecritical functions."""
+
 import srtm
 if True: #Enable or disable psyco here
     try:
@@ -6,13 +8,16 @@ if True: #Enable or disable psyco here
         psyco.full()
         #psyco.log()
         #psyco.profile()
+        print "Psyco loaded!"
     except ImportError:
-        pass
+        print "Psyco not found!"
 
 downloader =  srtm.SRTMDownloader(cachedir="testcache")
 downloader.loadFileList()
 tile       = downloader.getTile(49, 11)
+
 def test1():
+    """Call getAltitudeFromLatLon many times."""
     testvalue = 10000000
     for i in range(testvalue):
         f = float(i)/testvalue
@@ -20,7 +25,10 @@ def test1():
 
 test1()
 
-# Profiling slows done the execution a lot. Use fewer iterations to get results in reasonable time!
+# Profiling slows done the execution a lot.
+# Use fewer iterations to get results in reasonable time!
+# Profiling doesn't work with psyco.
+
 #import hotshot.stats
 #import hotshot
 #prof = hotshot.Profile("test1.prof")

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-
+# Pylint: Disable "line too long" and "invalid name" warnings.
+# pylint: disable-msg=C0301, C0103
 """Testcases for the whole project"""
 
 import unittest
@@ -10,6 +11,7 @@ import hashlib
 class DownloaderTest(unittest.TestCase):
     """Testcases for the SRTMDownloader class"""
     def setUp(self):
+        """Initialize vars used in all testcases."""
         #try:
             #os.remove("testcache/N00E010.hgt.zip")
         #except:
@@ -56,7 +58,9 @@ class DownloaderTest(unittest.TestCase):
             read()).hexdigest() == "168b1fddb4f22b8cdc6523ff0207e0eb6be314af")
 
 class TileTest(unittest.TestCase):
+    """Testcases for the SRTMTile class."""
     def setUp(self):
+        """Initialize vars used in all testcases."""
         self.downloader =  srtm.SRTMDownloader(cachedir="testcache")
         self.downloader.loadFileList()
         self.tile      = self.downloader.getTile(49, 11)
@@ -64,6 +68,7 @@ class TileTest(unittest.TestCase):
         self.tileEast  = self.downloader.getTile(49, 12)
 
     def testOffset(self):
+        """Verify the formula for offset calculation."""
         #  (0/1200)     0
         #  (1200/1200)  1200
         #  (0/1199)     1201
@@ -80,6 +85,9 @@ class TileTest(unittest.TestCase):
         self.assertEqual(self.tile.calcOffset(1200, 0), 1201*1201-1)
 
     def testNeighbouringLatLon(self):
+        """Verify that the overlapping part of two tiles is actually the same.
+            Helps finding errors in the offset calculation or in the
+            interpolation code. """
         # 5123 and 30 are random numbers. They should not be an integer
         # dividers or multiples of 1199, 1200 or 1201
         for testvalue in (1199, 1200, 1201, 5123, 50):
@@ -89,6 +97,7 @@ class TileTest(unittest.TestCase):
                 self.assertAlmostEqualInt(self.tile.getAltitudeFromLatLon(49+f, 11.999999), self.tileEast.getAltitudeFromLatLon(49+f, 12))
 
     def assertAlmostEqualInt(self, a, b):
+        """Helper function. Compares a == b +- 1"""
         a = int(a)
         b = int(b)
         if a == b:
@@ -100,6 +109,9 @@ class TileTest(unittest.TestCase):
         self.fail("%d != %d (almost equal test)" % (a, b))
 
     def testNeighbouringXY(self):
+        """Verify that the overlapping part of two tiles is actually the same.
+            Directly uses the pixel values.
+            Helps finding errors in the offset calculation. """
         for i in range(1201):
             self.assertEqual(self.tile.getPixelValue(i, 1200),
                             self.tileNorth.getPixelValue(i, 0))

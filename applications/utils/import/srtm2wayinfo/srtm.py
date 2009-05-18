@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Pylint: Disable name warnings
+# pylint: disable-msg=C0103
+
 """Load and process SRTM data."""
 
 from __future__ import with_statement
@@ -15,6 +18,7 @@ import math
 class NoSuchTileError(Exception):
     """Raised when there is no tile for a region."""
     def __init__(self, lat, lon):
+        Exception.__init__()
         self.lat = lat
         self.lon = lon
 
@@ -25,6 +29,7 @@ class NoSuchTileError(Exception):
 class WrongTileError(Exception):
     """Raised when the value of a pixel outside the tile area is requested."""
     def __init__(self, tile_lat, tile_lon, req_lat, req_lon):
+        Exception.__init__()
         self.tile_lat = tile_lat
         self.tile_lon = tile_lon
         self.req_lat = req_lat
@@ -37,6 +42,7 @@ class WrongTileError(Exception):
 class InvalidTileError(Exception):
     """Raised when the SRTM tile file contains invalid data."""
     def __init__(self, lat, lon):
+        Exception.__init__()
         self.lat = lat
         self.lon = lon
 
@@ -53,7 +59,8 @@ class SRTMDownloader:
         if not os.path.exists(cachedir):
             os.mkdir(cachedir)
         self.filelist = {}
-        self.filename_regex = re.compile(r"([NS])(\d{2})([EW])(\d{3})\.hgt\.zip")
+        self.filename_regex = re.compile(
+                r"([NS])(\d{2})([EW])(\d{3})\.hgt\.zip")
         self.filelist_file = self.cachedir + "/filelist"
         self.ftpfile = None
         self.ftp_bytes_transfered = 0
@@ -86,7 +93,8 @@ class SRTMDownloader:
                 ftp.cwd(self.directory+"/"+continent)
                 files = ftp.nlst()
                 for filename in files:
-                    self.filelist[self.parseFilename(filename)] = (continent, filename)
+                    self.filelist[self.parseFilename(filename)] = (
+                            continent, filename)
         finally:
             ftp.close()
         # Add meta info
@@ -163,8 +171,9 @@ class SRTMTile:
         if len(names) != 1:
             raise InvalidTileError(lat, lon)
         data = zipf.read(names[0])
-        self.size = int(math.sqrt(len(data)/2)) #2 bytes per sample
-        if self.size != 1201: #Currently only SRTM3 is supported
+        self.size = int(math.sqrt(len(data)/2)) # 2 bytes per sample
+        # Currently only SRTM1/3 is supported
+        if self.size not in (1201, 3601):
             raise InvalidTileError(lat, lon)
         self.data = array.array('h', data)
         self.data.byteswap()
@@ -173,7 +182,8 @@ class SRTMTile:
         self.lat = lat
         self.lon = lon
 
-    def _avg(self, value1, value2, weight):
+    @staticmethod
+    def _avg(value1, value2, weight):
         """Returns the weighted average of two values and handles the case where
             one value is None. If both values are None, None is returned.
         """
@@ -184,6 +194,8 @@ class SRTMTile:
         return value2 * weight + value1 * (1 - weight)
 
     def calcOffset(self, x, y):
+        """Calculate offset into data array. Only uses to test correctness
+            of the formula."""
         # Datalayout
         # X = longitude
         # Y = latitude
@@ -203,15 +215,15 @@ class SRTMTile:
         return x + self.size * (self.size - y - 1)
 
     def getPixelValue(self, x, y):
-        #print "pixel", x, y
-        assert x<self.size, "x: %d<%d" % (x, self.size)
-        assert y<self.size, "y: %d<%d" % (y, self.size)
-        #Same as calcOffset, inlined for performance reasons
+        """Get the value of a pixel from the data, handling voids in the
+            SRTM data."""
+        assert x < self.size, "x: %d<%d" % (x, self.size)
+        assert y < self.size, "y: %d<%d" % (y, self.size)
+        # Same as calcOffset, inlined for performance reasons
         offset = x + self.size * (self.size - y - 1)
         value = self.data[offset]
-        #print value
         if value == -32768:
-            return None #-32768 is a special value for areas with no data
+            return None # -32768 is a special value for areas with no data
         return value
         
 
@@ -219,20 +231,20 @@ class SRTMTile:
         """Get the altitude of a lat lon pair, using the four neighbouring
             pixels for interpolation.
         """
-        #print "-----\nFromLatLon", lon, lat
+        # print "-----\nFromLatLon", lon, lat
         lat -= self.lat
         lon -= self.lon
-        #print "lon, lat", lon, lat
+        # print "lon, lat", lon, lat
         if lat < 0.0 or lat >= 1.0 or lon < 0.0 or lon >= 1.0:
             raise WrongTileError(self.lat, self.lon, self.lat+lat, self.lon+lon)
         x = lon * (self.size - 1)
         y = lat * (self.size - 1)
-        #print "x,y", x, y
+        # print "x,y", x, y
         x_int = int(x)
         x_frac = x - int(x)
         y_int = int(y)
         y_frac = y - int(y)
-        #print "frac", x_int, x_frac, y_int, y_frac
+        # print "frac", x_int, x_frac, y_int, y_frac
         value00 = self.getPixelValue(x_int, y_int)
         value10 = self.getPixelValue(x_int+1, y_int)
         value01 = self.getPixelValue(x_int, y_int+1)
@@ -240,17 +252,12 @@ class SRTMTile:
         value1 = self._avg(value00, value10, x_frac)
         value2 = self._avg(value01, value11, x_frac)
         value  = self._avg(value1,  value2, y_frac)
-        #print "%4d %4d | %4d\n%4d %4d | %4d\n-------------\n%4d" % (value00, value10, value1, value01, value11, value2, value)
+        # print "%4d %4d | %4d\n%4d %4d | %4d\n-------------\n%4d" % (
+        #        value00, value10, value1, value01, value11, value2, value)
         return value
 
 
 #DEBUG ONLY
 if __name__ == '__main__':
-    x = SRTMDownloader()
-    x.loadFileList()
-    lat = 49.2
-    lon = 11.5
-    tile = x.getTile(lat, lon)
-    print tile.getAltitudeFromLatLon(lat, lon) #529.1
-    print tile.getAltitudeFromLatLon(49.37592, 11.44221) #should be 422m
-    #x.createFileList()
+    downloader = SRTMDownloader()
+    downloader.loadFileList()

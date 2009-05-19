@@ -368,12 +368,11 @@ done
 
 # --------------------------------------------
 echo "${BLUE}----------> applications/utils Copy Python Binaries${NORMAL}"
-find ./ -name "*.py" | while read src_fn ; do 
+find ./ -name "*.py" | \
+    grep -v test.py | \
+    while read src_fn ; do 
     dst_fn="$dst_path$sub_package/$bin_path/${src_fn##*/}"
     dst_fn="${dst_fn/.py}"
-    if [ "$src_fn" == "test.py" ] ; then
-	continue
-    fi
     if head -1 "$src_fn" | grep -q -e '^#! */usr/bin/python' -e '^#!/opt/python-2_5/bin/python' -e '^#!/usr/bin/env python'; then
 	cp "$src_fn" "$dst_fn"
     else

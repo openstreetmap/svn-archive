@@ -111,7 +111,7 @@ my %proj2path=(
     'osm2pgsql' 	=> 'openstreetmap-applications/utils/export/osm2pgsql',
     'merkaartor' 	=> 'openstreetmap-applications/editors/merkaartor',
     'josm' 		=> 'openstreetmap-applications/editors/josm',
-    'osm-utils'	=> 'openstreetmap-applications/utils',
+    'osm-utils'		=> 'openstreetmap-applications/utils',
     'osm-mapnik-world-boundaries' 	=> 'openstreetmap-applications/rendering/mapnik/openstreetmap-mapnik-world-boundaries',
     'osm-mapnik-data' 	=> 'openstreetmap-applications/rendering/mapnik/openstreetmap-mapnik-data',
     'map-icons' 	=> 'openstreetmap-applications/share/map-icons',
@@ -1205,7 +1205,6 @@ sub write_html_results(){
     print $fh localtime(time())."\n";
     print $fh "<br/>\n";
     print $fh "<br/>\n";
-    print $fh "<br/>\n";
     print $fh "<table border=1>\n";
     
     print  $fh "<tr><th>Project</th>";
@@ -1226,7 +1225,7 @@ sub write_html_results(){
 	print $fh "</a>\n";
 	for my $platform ( @platforms ) {
 #	    print $fh "$platform ";
-	    print $fh "</td><td>";
+	    print $fh "     <td>";
 	    my $task = $RESULTS->{$platform}->{$proj};
 	    my $rel_log_dir="$proj/$platform";
 	    if ( ! defined ( $task ) )  {
@@ -1253,21 +1252,33 @@ sub write_html_results(){
 
 	    my ( $res,$rev)  = split(/:\s*/,$task->last_result());
 	    $rev ||='';
-	    my $rev_g  = $task->last_good_result();
+	    my $rev_last_good  = $task->last_good_result();
 	    my $print_platform=$platform;
 	    $print_platform=~ s/(debian-|ubuntu-)//;
 
-	    print $fh "<A href=\"$rel_log_dir\">";
+	    print $fh "		<A href=\"$rel_log_dir\">\n";
 #	    print $fh "<FONT  color=\"$color_res\">". $print_platform." </font>" ;
-	    printf $fh "<FONT  color=\"$color_rev\">%-6s </font>", $rev;
-	    if (  $rev_g && $rev ne $rev_g ) {
-		print $fh "<FONT  color=\"GREEN\"($rev_g)</font>";
+	    printf $fh "		<FONT  color=\"$color_rev\">%-6s </font>\n", $rev;
+	    if (  $rev_last_good
+		  && ( $rev ne $rev_last_good ) 
+		) {
+		print $fh "		<FONT color=\"GREEN\">($rev_last_good)</font>\n";
 	    }
+	    print $fh "		</a>";
+	    print $fh "</td>\n\n";
 	}
-	print $fh "</a>\n";
 	print $fh "\n";
-	print  $fh "</td></tr>\n";
+	print  $fh "</tr>\n";
     }
+
+    print $fh "</table>\n";
+    print $fh "<br/>\n";
+    print $fh "Colors:\n";
+    print $fh "<ul>\n";
+    print $fh "<li><FONT color=\"green\">green</font>: Build successfull</li>\n";
+    print $fh "<li><FONT color=\"blue\">blue</font>: Build old but successfull</li>\n";
+    print $fh "<li><FONT color=\"red\">red</font>: Build failed</li>\n";
+    print $fh "</ul>\n";
     print $fh "</html>\n";
     $fh->close();
 
@@ -1291,7 +1302,8 @@ sub write_html_results(){
 	    for my $file ( glob("$html_index_dir/*") ) {
 		my $file_name = basename($file);
 		next if $file_name eq "index.shtml";
-		print $fh "<li><A href=\"$file_name\">$file_name</a></li>\n";
+		my ( $disp_name ) = ( $file_name =~ m/(.*)\.shtml/ );
+		print $fh "<li><A href=\"$file_name\">$disp_name</a></li>\n";
 	    }
 	    print $fh "</ul>";
 	    print $fh "</div>\n";    
@@ -1518,8 +1530,6 @@ Show a summary of all results. This also looks for cached results.
 =item --write-html-results-only
 
 Write Html Pages for the Results and exit.
-
-
 
 =back
 

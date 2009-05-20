@@ -1215,15 +1215,15 @@
 			.highway-secondary-link-core            { stroke-width: 6.75px; stroke: #FDBF6F; }
 			.highway-secondary-link-area            { fill: #FDBF6F; }
 			
-			.highway-tertiary-casing                { stroke-width: 6px;  stroke: #202020; }
+			.highway-tertiary-casing                { stroke-width: 6.5px;  stroke: #202020; }
 			.highway-tertiary-mr2-casing            { stroke-width: 7px;     stroke: #809BC0; }
-			.highway-tertiary-area-casing           { stroke-width: 0.25px; }
+			.highway-tertiary-area-casing           { stroke-width: 0.75px; }
 			.highway-tertiary-core                  { stroke-width: 5.75px;  stroke: #ffff90; }
 			.highway-tertiary-area                  { fill: #ffff90; }
 			
-			.highway-tertiary-link-casing           { stroke-width: 6px;  stroke: #202020; }
+			.highway-tertiary-link-casing           { stroke-width: 6.5px;  stroke: #202020; }
 			.highway-tertiary-link-mr2-casing       { stroke-width: 7px;     stroke: #809BC0; }
-			.highway-tertiary-link-area-casing      { stroke-width: 0.25px; }
+			.highway-tertiary-link-area-casing      { stroke-width: 0.75px; }
 			.highway-tertiary-link-core             { stroke-width: 5.75px;  stroke: #ffff90; }
 			.highway-tertiary-link-area             { fill: #ffff90; }
 			

@@ -38,7 +38,7 @@
 #include "input.h"
 
 #define MAX_NODE_ID (400*1024*1024)
-#define MAX_NODES_PER_WAY 10000
+#define MAX_NODES_PER_WAY 12000
 
 static int count_node,    max_node;
 static int count_way,     max_way;
@@ -136,6 +136,8 @@ void StartElement(xmlTextReaderPtr reader, const xmlChar *name)
         /* ignore */
     } else if (xmlStrEqual(name, BAD_CAST "bound")) {
         /* ignore */
+    } else if (xmlStrEqual(name, BAD_CAST "changeset")) {
+        /* ignore */
     } else {
         fprintf(stderr, "%s: Unknown element name: %s\n", __FUNCTION__, name);
     }
@@ -187,6 +189,8 @@ void EndElement(const xmlChar *name)
     } else if (xmlStrEqual(name, BAD_CAST "osm")) {
         printStatus();
     } else if (xmlStrEqual(name, BAD_CAST "bound")) {
+        /* ignore */
+    } else if (xmlStrEqual(name, BAD_CAST "changeset")) {
         /* ignore */
     } else {
         fprintf(stderr, "%s: Unknown element name: %s\n", __FUNCTION__, name);

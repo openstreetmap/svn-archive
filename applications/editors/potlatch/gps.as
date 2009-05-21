@@ -45,6 +45,7 @@
 												parsePoint(level4[l]);
 											}
 										}
+										lastTime=0;
 									}
 								}
 							} else if (level2[j].nodeName=='wpt') {
@@ -63,13 +64,13 @@
 				}
 				// Do waypoints last, because we might not have the base lat/lon at the start
 				for (i in waypoints) {
-					_root.map.pois.attachMovie("poi",--newpoiid,++poidepth);
-					_root.map.pois[newpoiid]._x=long2coord(waypoints[i][0]);
-					_root.map.pois[newpoiid]._y=lat2coord (waypoints[i][1]);
-					_root.map.pois[newpoiid].attr=waypoints[i][2];
-					_root.map.pois[newpoiid].locked=true;
-					_root.map.pois[newpoiid].clean=false;
-					_root.map.pois[newpoiid].recolour();
+					_root.map.pois.attachMovie("poi",--newnodeid,++poidepth);
+					_root.map.pois[newnodeid]._x=long2coord(waypoints[i][0]);
+					_root.map.pois[newnodeid]._y=lat2coord (waypoints[i][1]);
+					_root.map.pois[newnodeid].attr=waypoints[i][2];
+					_root.map.pois[newnodeid].locked=true;
+					_root.map.pois[newnodeid].clean=false;
+					_root.map.pois[newnodeid].recolour();
 					_root.poicount+=1;
 				}
 				_root.windows.pleasewait.remove();

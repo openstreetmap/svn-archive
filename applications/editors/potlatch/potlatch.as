@@ -9,7 +9,7 @@
 	resizeListener=new Object();
 	resizeListener.onResize=function() { resizeWindow(); };
 	Stage.addListener(resizeListener);
-	var panelheight=110;
+	var panelheight=135;
 	
 	// Master movieclip for map
 	_root.createEmptyMovieClip("map",10);
@@ -20,12 +20,19 @@
 	_root.panel._x=0; _root.panel._y=500;
 	_root.panel.beginFill(0xF3F3F3,100);
 	_root.panel.moveTo(0,0); _root.panel.lineTo(3000,0);
+	_root.panel.lineTo(3000,panelheight-25); _root.panel.lineTo(0,panelheight-25);
+	_root.panel.lineTo(0,0);
+	_root.panel.endFill();
+
+	_root.panel.beginFill(0xC0C0C0,100);
+	_root.panel.moveTo(0,panelheight-25); _root.panel.lineTo(3000,panelheight-25);
 	_root.panel.lineTo(3000,panelheight); _root.panel.lineTo(0,panelheight);
 	_root.panel.lineTo(0,0);
 	_root.panel.endFill();
-	_root.panel.createEmptyMovieClip("advice",0xFFFFFC);
 
-	_root.createEmptyMovieClip("windows",0xFFFFFD);
+	_root.createEmptyMovieClip("help",0xFFFFFD);
+	_root.panel.createEmptyMovieClip("advice",0xFFFFFB);
+	_root.createEmptyMovieClip("windows",0xFFFFFA);
 	var windowdepth=1;
 	var windowsopen=0;
 
@@ -110,7 +117,6 @@
 	var newrelid=-1;				// new relation ID  (for those not yet saved)
 	var newwayid=-1;				// new way ID		(for those not yet saved)
 	var newnodeid=-2;				// new node ID		(for those not yet saved)
-	var newpoiid=-1;				// new POI ID		(for those not yet saved)
 	var nodes=new Object();			// hash of nodes
 	var currentproptype='';			// type of property currently being edited
 	var pointertype='';				// current mouse pointer
@@ -124,12 +130,17 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 0.11b";	// current version
+	var signature="Potlatch 1.0";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
 	var wayrels=new Object();		// which relations are in ways?
 	var noderels=new Object();		// which relations are in nodes?
+	var uploading=false;			// are we currently doing an offline-style upload?
+	var changeset=null;				// has a changeset been set?
+    var changecomment=null;         // comment on current changeset
+	var waystodelete=new Object();	// hash of ways to delete (offline)
+	var poistodelete=new Object();	// hash of POIs to delete (offline)
 
 	var waynames=new Array("highway","barrier","waterway","railway","man_made","leisure","amenity","military","shop","tourism","historic","landuse","natural","sport","cycleway","aeroway","boundary");
 	var nodenames=new Array("highway","barrier","waterway","railway","man_made","leisure","amenity","military","shop","tourism","historic","landuse","natural","sport");
@@ -151,8 +162,9 @@
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
 	if (preferences.data.advice       ==undefined) { preferences.data.advice       =true; }	// show floating advice?
-	if (preferences.data.nosplash     ==undefined) { preferences.data.nosplash     =false; }// hide splash screen?
 	if (preferences.data.noname       ==undefined) { preferences.data.noname       =false; }// highlight unnamed ways?
+	if (preferences.data.memorise     ==undefined) { preferences.data.memorise     =new Array(); } // memorised tags
+
 
 	// =====================================================================================
 	// Icons
@@ -169,7 +181,7 @@
 	// Way-specific
 
 	_root.panel.attachMovie("scissors","i_scissors",32);
-	with (_root.panel.i_scissors) { _x=15; _y=63; };
+	with (_root.panel.i_scissors) { _x=10; _y=58; };
 	_root.panel.i_scissors.onPress   =function() { _root.ws.splitWay(_root.pointselected); };
 	_root.panel.i_scissors.onRollOver=function() { setFloater(iText("Split way at selected point (X)",'tip_splitway')); };
 	_root.panel.i_scissors.onRollOut =function() { clearFloater(); };
@@ -198,19 +210,19 @@
 	_root.panel.moveTo(5,78); _root.panel.lineTo(75,78);
 
 	_root.panel.attachMovie("undo","i_undo",38);
-	with (_root.panel.i_undo) { _x=15; _y=93; _alpha=50; };
+	with (_root.panel.i_undo) { _x=10; _y=88; _alpha=50; };
 	_root.panel.i_undo.onPress   =function() { _root.undo.rollback(); };
 	_root.panel.i_undo.onRollOver=function() { setFloater(iText("Nothing to undo",'tip_noundo')); };
 	_root.panel.i_undo.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("gps","i_gps",36);
-	with (_root.panel.i_gps) { _x=40; _y=93; };
+	with (_root.panel.i_gps) { _x=35; _y=88; };
 	_root.panel.i_gps.onPress   =function() { loadGPS(); };
 	_root.panel.i_gps.onRollOver=function() { setFloater(iText("Show GPS tracks (G)",'tip_gps')); };
 	_root.panel.i_gps.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("prefs","i_prefs",37);
-	with (_root.panel.i_prefs) { _x=65; _y=93; };
+	with (_root.panel.i_prefs) { _x=60; _y=88; };
 	_root.panel.i_prefs.onPress   =function() { openOptionsWindow(); };
 	_root.panel.i_prefs.onRollOver=function() { setFloater(iText("Set options (choose the map background)",'tip_options')); };
 	_root.panel.i_prefs.onRollOut =function() { clearFloater(); };
@@ -254,13 +266,13 @@
 
 	_root.createTextField('chat',20,130,315,400,80); // 515
 	with (_root.chat) {
-		multiline=true; wordWrap=true;  border=true; selectable = true; type = 'input';
+		multiline=true; wordWrap=true;  border=true; selectable = true; type = 'dynamic';
 		_visible=false;//#debug
 	};
 
 	_root.createTextField('coordmonitor',21,130,400,400,60); // 515
 	with (_root.coordmonitor) {
-		multiline=true; wordWrap=true; border=true; selectable = true; type = 'input';
+		multiline=true; wordWrap=true; border=true; selectable = true; type = 'dynamic';
 		_visible=false;//#debug
 	};
 
@@ -297,8 +309,11 @@
 	plainWhite=new TextFormat(); plainWhite.color=0xFFFFFF; plainWhite.size=12; plainWhite.font="_sans";
 	greySmall =new TextFormat(); greySmall.color =0x888888;	greySmall.size =12; greySmall.font ="_sans";
 	boldText  =new TextFormat(); boldText.color  =0x000000; boldText.size  =14; boldText.font  ="_sans"; boldText.bold =true;
+	boldLarge =new TextFormat(); boldLarge.color =0x000000; boldLarge.size =18; boldLarge.font ="_sans"; boldLarge.bold=true;
+//	boldMed   =new TextFormat(); boldMed.color   =0x000000; boldMed.size   =18; boldMed.font   ="_sans"; boldLarge.bold=true;
 	boldSmall =new TextFormat(); boldSmall.color =0x000000; boldSmall.size =12; boldSmall.font ="_sans"; boldSmall.bold=true;
 	boldWhite =new TextFormat(); boldWhite.color =0xFFFFFF; boldWhite.size =12; boldWhite.font ="_sans"; boldWhite.bold=true;
+	boldYellow=new TextFormat(); boldYellow.color=0xFFFF00; boldYellow.size=12; boldYellow.font="_sans"; boldYellow.bold=true;
 	menu_on	  =new TextFormat(); menu_on.color   =0x000000; menu_on.size   =12; menu_on.font   ="_sans"; menu_on.bold  =true;
 	menu_off  =new TextFormat(); menu_off.color  =0xFFFFFF; menu_off.size  =12; menu_off.font  ="_sans"; menu_off.bold =true;
 	auto_on	  =new TextFormat(); auto_on.color   =0x0000FF; auto_on.size   =12; auto_on.font   ="_sans"; auto_on.bold  =true;
@@ -325,6 +340,20 @@
 	_root.panel.createTextField('t_details',24,5,23,220,20);
 	with (_root.panel.t_details) { text=""; setTextFormat(plainText); selectable=false; };
 
+
+	// =====================================================================================
+	// Help bar
+
+	_root.panel.createEmptyMovieClip("help",80);
+	drawButton(_root.panel.help,7,114,iText("Help",'help'),"");
+	_root.panel.help.onPress=function() { openHelp(); };
+
+//	_root.panel.createEmptyMovieClip("manual",81);
+//	drawButton(_root.panel.manual,67,114,iText("Manual",'manual'),"");
+
+
+	// =====================================================================================
+	// Remote connections
 	
 	// MovieClip loader
 	var tileLoader=new MovieClipLoader();
@@ -356,9 +385,12 @@
 	#include 'tiles.as'
 	#include 'gps.as'
 	#include 'undo.as'
+	#include 'help.as'
 	#include 'advice.as'
 	#include 'changeset.as'
 	#include 'start.as'
+	#include 'offline.as'
+	#include 'error.as'
 
 	// =====================================================================================
 	// Start
@@ -374,7 +406,6 @@
 	updateButtons();
 	updateScissors();
 	setSizes();
-	startChangeset('');
 	loadPresets();
 
 
@@ -609,17 +640,30 @@
 		} else if (_root.windowsopen) {
 			if (k==187 && _root.windows.relation.box.properties!=undefined) {
 				_root.windows.relation.box.properties.enterNewAttribute();
-			};
+			} else if (k==13 && _root.windows.cs) { completeClose(iText("Ok","ok")); _root.windows.cs.remove(); }
 			return;
 		} else if (keytarget!='') { return; }
 
+		if (k>=48 && k<58) { c=k; }		// we don't want shifted numeric characters
 		if (c>48 && c<58 && (wayselected!=0 || poiselected!=0)) {
-			if (presetnames[_root.panel.properties.proptype][_root.panel.presets.group][c-48]!=null) {
-				_root.panel.presets.setAttributes(c-48);
-				_root.panel.presets.reflect();
-				if (_root.panel.properties.proptype=='way') { _root.ws.redraw(); }
+			if (Key.isDown(Key.SHIFT) && Key.isDown(Key.CONTROL)) {
+				// memorise
+				preferences.data.memorise[c-48]=shallowCopy(_root.panel.properties.proparr);
+				preferences.flush();
+				setAdvice(false,"Memorised tag combination "+(c-48));
+			} else if (Key.isDown(Key.SHIFT)) {
+				// apply memorised
+				_root.panel.properties.setAttributes(preferences.data.memorise[c-48]);
+				_root.panel.properties.reflect();
+			} else {
+				// apply presets
+				if (presetnames[_root.panel.properties.proptype][_root.panel.presets.group][c-48]!=null) {
+					_root.panel.presets.setAttributesFromPreset(c-48);
+					_root.panel.presets.reflect();
+					if (_root.panel.properties.proptype=='way') { _root.ws.redraw(); }
+				}
+				return;
 			}
-			return;
 		} else if (k>=112 && k<=120) {
 			preferences.data.dimbackground=Key.isDown(Key.SHIFT); 
 			switch (k) {
@@ -637,6 +681,7 @@
 							} else { keyDelete(1); }; break;					//  |
 			case 13:		_root.junction=false; stopDrawing(); break;			// ENTER - stop drawing line
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
+			case 48:		_root.panel.properties.nukeAttributes(); break;		// 0 - remove all tags
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
 			case Key.PGDN:	zoomOut(); break;									// Page Down - zoom out
 			case Key.LEFT:  moveMap( 140,0); updateLinks(); redrawBackground(); whichWays(); break;	// cursor keys
@@ -649,10 +694,11 @@
 		
 		switch (s) {
 			case 'C':		closeChangeset(); break;							// C - close current changeset
+			case 'S':		prepareUpload(); break;								// S - parallel path
 			case 'G':		loadGPS(); break;									// G - load GPS
 			case 'H':		getHistory(); break;								// H - history
 			case 'L':		showPosition(); break;								// L - show latitude/longitude
-			case 'P':		askOffset(); break;									// O - parallel path
+			case 'P':		askOffset(); break;									// P - parallel path
 			case 'R':		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes
 			case 'U':		getDeleted(); break;								// U - undelete
 			case 'X':		_root.ws.splitWay(_root.pointselected); break;		// X - split way
@@ -663,7 +709,7 @@
 			case '/':		cycleStacked(); break;								// '/' - cycle between stacked ways (191)
 			case 'M':		maximiseSWF(); break;								// 'M' - maximise/minimise Potlatch
 			case 'K':		keyLock(); break;									// 'K' - lock item
-			case 'S':		var s=''; switch (preferences.data.bgtype) {		// 'S' - set source tag
+			case 'B':		var s=''; switch (preferences.data.bgtype) {		// 'S' - set source tag
 								case 1: s=sourcetags[preferences.data.tileset]; break;
 								case 2: s='Yahoo'; break;
 								case 3: s=preferences.data.tilecustom; break;
@@ -712,6 +758,7 @@
 	}
 
 	function keyDelete(doall) {
+        clearFloater(); 
 		var rnode;
 		if (_root.poiselected) {
 			// delete POI
@@ -756,6 +803,7 @@
 	function keyRevert() {
 		if		(_root.wayselected<0) { _root.ws.saveUndo(iText("deleting",'deleting'));
 										stopDrawing();
+										memberDeleted('Way',wayselected);
 										removeMovieClip(_root.map.areas[wayselected]);
 										removeMovieClip(_root.ws); }
 		else if	(_root.wayselected>0) {	_root.ws.saveUndo(iText("cancelling changes to",'action_cancelchanges'));
@@ -764,8 +812,8 @@
 		else if (_root.poiselected>0) { _root.map.pois[poiselected].saveUndo(iText("cancelling changes to",'action_cancelchanges'));
 										_root.map.pois[poiselected].reload(); }
 		else if (_root.poiselected<0) { _root.map.pois[poiselected].saveUndo(iText("deleting",'deleting'));
+										memberDeleted('Node',poiselected);
 										removeMovieClip(_root.map.pois[poiselected]); }
-		revertDirtyRelations();
 		deselectAll();
 	};
 
@@ -782,59 +830,6 @@
 		}
 	}
 
-	function handleError(code,result) {
-		var h=150;
-		if (code==-2 && result[0].indexOf('allocate memory')==-1) {
-			error=result[0]+iText("\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time.",'emailauthor'); h+=50;
-		} else { error=result[0]; }
-		_root.windows.attachMovie("modal","error",++windowdepth);
-		_root.windows.error.init(350,h,new Array('Ok'),null);
-		_root.windows.error.box.createTextField("prompt",2,7,9,325,h-30);
-		writeText(_root.windows.error.box.prompt,error);
-	}
-
-	function handleWarning() {
-		_root.windows.attachMovie("modal","error",++windowdepth);
-		_root.windows.error.init(275,130,new Array('Retry','Cancel'),handleWarningAction);
-		_root.windows.error.box.createTextField("prompt",2,7,9,250,100);
-		if (writeError) {
-			writeText(_root.windows.error.box.prompt,iText("Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?",'error_connectionfailed'));
-		} else {
-			writeText(_root.windows.error.box.prompt,iText("Sorry - the OpenStreetMap server didn't respond when asked for data.\n\nWould you like to try again?",'error_readfailed'));
-		}
-	};
-
-	function handleWarningAction(choice) {
-		_root.panel.i_warning._visible=false;
-		_root.writesrequested=0;
-		_root.waysrequested=_root.waysreceived=_root.whichrequested=_root.whichreceived=0;
-		if (choice=='Retry') {
-			if (writeError) {
-				// loop through all ways which are uploading, and reupload
-				for (var qway in _root.map.ways) {
-					if (_root.map.ways[qway].uploading) {
-						_root.map.ways[qway].uploading=false;
-						var z=_root.map.ways[qway].path; for (var i in z) {
-							_root.map.ways[qway].path[i].uploading=false;
-						}
-						_root.map.ways[qway].upload();
-					}
-				}
-				for (var qrel in _root.map.relations) {
-					if (_root.map.relations[qrel].uploading) {
-						_root.map.relations[qrel].uploading=false;
-						_root.map.relations[qrel].upload();
-					}
-				}
-			}
-			if (readError) { 
-				bigedge_l=bigedge_b= 999999;
-				bigedge_r=bigedge_t=-999999;
-				whichWays();
-			}
-		}
-		writeError=false; readError=false;
-	};
 
 
 	// =====================================================================
@@ -842,8 +837,8 @@
 	
 	function iText(en,id,key1,key2) {
 		var t=en;
-		if (l!='en' && _root.i18n[id][_root.lang]) {
-			t=_root.i18n[id][_root.lang];
+		if (l!='en' && _root.i18n[id]) { // [_root.lang]) {
+			t=_root.i18n[id]; // [_root.lang];
 		}
 		t=replaceStr(t,'$1',key1);
 		t=replaceStr(t,'$2',key2);
@@ -1008,11 +1003,10 @@
 	
 	// markClean - set JavaScript variable for alert when leaving page
 
-	function markClean(a) {
-		if (!_root.sandbox) {
-			if (winie) { flash.external.ExternalInterface.call("markChanged",a); }
-				  else { getURL("javascript:var changesaved="+a); }
-		}
+	function markClean(state,override) {
+        if (_root.sandbox && state && !override) { state=false; }
+		if (winie) { flash.external.ExternalInterface.call("markChanged",state); }
+			  else { getURL("javascript:var changesaved="+state); }
 	}
 	
 	// deselectAll
@@ -1055,15 +1049,6 @@
 		uploadDirtyRelations();
 	};
 	
-	function uploadDirtyWays(allow_ws) {
-		var z=_root.map.ways;
-		for (i in z) {
-			if (!_root.map.ways[i].clean && (i!=wayselected || allow_ws) && !_root.map.ways[i].hasDependentNodes()) { 
-				_root.map.ways[i].upload();
-			}
-		}
-	};
-
 	// highlightSquare
 	
 	function highlightSquare(sx,sy,ss) {

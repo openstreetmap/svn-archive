@@ -5,12 +5,7 @@
 	// Load presets
 	
 	function loadPresets() {
-		_root.windows.attachMovie("modal","pleasewait",++windowdepth);
-		_root.windows.pleasewait.init(295,35,new Array(),null);
-		_root.windows.pleasewait.box.createTextField("prompt",2,37,8,280,20);
-		_root.windows.pleasewait.box.attachMovie("whirl","whirl",3);
-		with (_root.windows.pleasewait.box.whirl) { _x=20; _y=18; }
-		writeText(_root.windows.pleasewait.box.prompt,"Please wait - loading presets.");
+        pleaseWait("Please wait - loading presets.");
 		preresponder = function() { };
 		preresponder.onResult = function(result) {
 			_root.presets=result[0];
@@ -26,6 +21,12 @@
 			_root.i18n=result[10];
 			_root.panel.i_preset._visible=false;
 
+			var pages=result[11].split('<page/>');
+			_root.helppages=new Array();
+			for (var i in pages) {
+                helppages[i]=pages[i].split('<column/>');
+		    }
+
 			_root.waysloading._x=Stage.width-220;
 			_root.waysloading._y=5;
 			_root.waysloading.attachMovie("whirl","whirl",3);
@@ -39,92 +40,105 @@
 			if (gpx) { parseGPX(gpx); }					//  |
 				else { _root.windows.pleasewait.remove(); }
 			if (lat==undefined) { lat=0; long=0; startPotlatch(); }
-			if (!preferences.data.nosplash) { splashScreen(); }
+			splashScreen();
 			welcomeButtons();
 		};
-		remote_read.call('getpresets',preresponder);
+		remote_read.call('getpresets',preresponder,_root.lang);
+	}
+
+    function pleaseWait(a) {
+		_root.windows.attachMovie("modal","pleasewait",++windowdepth);
+		_root.windows.pleasewait.init(295,35,new Array(),null);
+		_root.windows.pleasewait.box.createTextField("prompt",2,37,8,280,20);
+		_root.windows.pleasewait.box.attachMovie("whirl","whirl",3);
+		with (_root.windows.pleasewait.box.whirl) { _x=20; _y=18; }
+		writeText(_root.windows.pleasewait.box.prompt,a);
 	}
 	
 	// -----------------------------------------------------------------------
 	// Create splash screen	
 	
 	function splashScreen() {
+        var h=267;
+        _root.dogpx=false;
+        if (gpx) { h+=20; }
+        if (preferences.data.launcher) { h+=30; }
+        
 		_root.windows.attachMovie("modal","splashscreen",++windowdepth);
-		_root.windows.splashscreen.init(500,225,[],null,true);
+		_root.windows.splashscreen.init(350,h,[],null,2);
+        _root.windows.splashscreen.box._alpha=85;
+        var box=_root.windows.splashscreen.box;
 
-		_root.windows.splashscreen.box.createTextField("title",1,7,7,500-14,20);
-		with (_root.windows.splashscreen.box.title) {
+		box.createTextField("title",1,0,15,350,40);
+		with (box.title) {
 			type='dynamic';
-			text=iText("Welcome to OpenStreetMap!",'prompt_welcome'); setTextFormat(boldText);
+			text=iText("Welcome to OpenStreetMap!",'prompt_welcome'); setTextFormat(boldLarge);
+            _x=(350-textWidth)/2;
+		}
+		box.createTextField("help",4,0,40,350,20);
+		with (box.help) {
+			type='dynamic';
+			text=iText("New user? Look in the bottom left for help.",'prompt_helpavailable'); setTextFormat(plainSmall);
+            _x=(350-textWidth)/2;
 		}
 
-		// Light grey background
-		_root.windows.splashscreen.box.createEmptyMovieClip('lightgrey',2);
-		with (_root.windows.splashscreen.box.lightgrey) {
-			beginFill(0xF3F3F3,100);
-			moveTo(10,30); lineTo(492,30);
-			lineTo(492,195); lineTo(10,195);
-			lineTo(10,30); endFill();
-		};
-		
-		_root.windows.splashscreen.box.createTextField("prompt",3,15,35,500-30,180);
-		writeText(_root.windows.splashscreen.box.prompt,iText(
-			"Choose a button below to get editing. If you click 'Start', "+
-			"you'll be editing the main map as you work - most changes show "+
-			"up after an hour or two. If you click 'Play', your changes won't be "+
-			"saved, so you can practise editing.\n\n"+
-			"Remember the golden rules of OpenStreetMap:\n\n",'prompt_introduction')+
-			chr(0x278A)+"  "+iText("Don't copy from other maps"							,'prompt_dontcopy')+"\n"+
-			chr(0x278B)+"  "+iText("Accuracy is important - only map places you've been",'prompt_accuracy')+"\n"+
-			chr(0x278C)+"  "+iText("And have fun!"										,'prompt_enjoy'   )+"\n");
+        box.attachMovie("editwithsave","start_save",50);
+        with (box.start_save) {
+            _x=90; _y=125;
+            _xscale=500; _yscale=500;
+        }
+		box.start_save.onPress=function() { removeSplash(false); };
 
-		_root.windows.splashscreen.box.attachMovie("checkbox","nosplash",5);
-		_root.windows.splashscreen.box.nosplash.init(12,205,iText("Don't show this message again",'dontshowagain'),preferences.data.nosplash,function(n) { preferences.data.nosplash=n; });
+        box.attachMovie("editlive","start_live",51);
+        with (box.start_live) {
+            _x=240; _y=107;
+            _xscale=375; _yscale=375;
+        }
+		box.start_live.onPress=function() { removeSplash(true); };
+
+		box.createEmptyMovieClip("button_save",2);
+		drawButton(box.button_save,50,225,iText("Edit with save",'prompt_editsave'),'',100);
+		box.button_save.onPress=function() { removeSplash(false); };
+
+		box.createEmptyMovieClip("button_live",3);
+		drawButton(box.button_live,200,225,iText("Edit live",'prompt_editlive'),'',100);
+		box.button_live.onPress=function() { removeSplash(true); };
+
+        // Optional buttons
+
+        var h=260;
+        if (gpx) { 
+    		box.attachMovie("checkbox","convert",5);
+    		box.convert.init(0,h,iText("Convert GPS track to ways",'prompt_track'),false,function(n) { _root.dogpx=n; });
+            box.convert._x=(350-13-box.convert.prompt.textWidth)/2;
+            h+=20;
+        }
+        if (preferences.data.launcher) {
+    		box.createEmptyMovieClip("button_launch",6);
+    		drawButton(box.button_launch,100,h+5,iText("Launch external URL",'prompt_launch'),'',150);
+			box.button_launch.onPress=function() { 
+				var a=preferences.data.launcher.split('!');
+				getUrl(a[0]+_root.scale+a[1]+centrelong(0)+a[2]+centrelat(0)+a[3],"_blank");
+			};
+        }
 	}
 
 	// -----------------------------------------------------------------------
 	// Create welcome buttons
 	
-	function welcomeButtons() {
-		_root.panel.properties._visible=false;
-		_root.panel.createEmptyMovieClip("welcome",61);
-	
-		_root.panel.welcome.createEmptyMovieClip("start",1);
-		drawButton(_root.panel.welcome.start,150,7,iText("Start",'start'),iText("Start mapping with OpenStreetMap.",'prompt_start'));
-		_root.panel.welcome.start.onPress=function() { removeWelcome(true); };
-
-		_root.panel.welcome.createEmptyMovieClip("play",2);
-		drawButton(_root.panel.welcome.play,150,29,iText("Play",'play'),iText("Practise mapping - your changes won't be saved.",'prompt_practise'));
-		_root.panel.welcome.play.onPress=function() { removeWelcome(false); };
-	
-		_root.panel.welcome.createEmptyMovieClip("help",3);
-		drawButton(_root.panel.welcome.help,150,51,iText("Help",'help'),iText("Find out how to use Potlatch, this map editor.",'prompt_help'));
-		_root.panel.welcome.help.onPress=function() { getUrl("http://wiki.openstreetmap.org/index.php/Potlatch","_blank"); };
-	
-		if (gpx) {
-			_root.panel.welcome.createEmptyMovieClip("convert",4);
-			drawButton(_root.panel.welcome.convert,150,73,iText("Track",'track'),iText("Convert your GPS track to (locked) ways for editing.",'prompt_track'));
-			_root.panel.welcome.convert.onPress=function() { gpxToWays(); removeWelcome(true); };
-		} else if (preferences.data.launcher) {
-			_root.panel.welcome.createEmptyMovieClip("launcher",4);
-			drawButton(_root.panel.welcome.launcher,150,73,iText("Launch",'launch'),iText("Launch an external URL at this location.",'prompt_launch'));
-			_root.panel.welcome.launcher.onPress=function() { 
-				var a=preferences.data.launcher.split('!');
-				getUrl(a[0]+_root.scale+a[1]+centrelong(0)+a[2]+centrelat(0)+a[3],"_blank");
-				removeWelcome(true);
-			};
-		}
-	}
-
-	function removeWelcome(live) {
-		if (!_root.panel.welcome) { return; }
-		removeMovieClip(_root.panel.welcome);
+	function removeSplash(live) {
 		_root.panel.properties._visible=true;
 		_root.panel.presets._visible=true;
 		_root.windows.splashscreen.remove();
-		if (live) { setEditingStatus(iText("Editing map",'editingmap')); }
-			 else { setEditingStatus(iText("Practice mode",'practicemode'));
-					_root.sandbox=true; }
+		if (_root.dogpx) { gpxToWays(); }
+		if (live) {
+		    setEditingStatus(iText("Editing live",'editinglive'),0xFF0000);
+            pleaseWait(iText("Opening changeset",'openchangeset'));
+	        _root.changecomment=''; startChangeset(true);
+		} else { 
+		    _root.sandbox=true;
+			setEditingStatus(iText("Editing offline",'editingoffline'),0x008800);
+		}
 	}
 
 	// -----------------------------------------------------------------------
@@ -148,9 +162,9 @@
 	// -----------------------------------------------------------------------
 	// Main start function
 
-	function setEditingStatus(str) {
+	function setEditingStatus(str,col) {
 		_root.createEmptyMovieClip("status",62);
-		_root.status.createTextField("btext",1,0,0,90,20);
+		_root.status.createTextField("btext",1,0,-1,90,20);
 		with (_root.status.btext) {
 			text=str;
 			setTextFormat(boldWhite);
@@ -159,15 +173,21 @@
 		setStatusPosition();
 		var tw=_root.status.btext.textWidth+5;
 		with (_root.status) {
-			if (preferences.data.baselayer==2) { _y-=32; }
-			beginFill(0xFF0000,100);
+			// if (preferences.data.baselayer==2) { _y-=32; }
+			beginFill(col,100);
 			moveTo(0,0); lineTo(tw,0); lineTo(tw,17);
 			lineTo(0,17); lineTo(0,0); endFill();
 		};
+		if (_root.sandbox) {
+			_root.status.createEmptyMovieClip("save",3);
+			drawButton(_root.status.save,tw+7,0,iText("Save",'save'),"");
+			_root.status.save.onPress=function() { prepareUpload(); };
+		}
 	};
 
 	function setStatusPosition() {
 		_root.status._x=Stage.width-_root.status.btext.textWidth-9;
-		_root.status._y=Stage.height-panelheight-22;
-		if (preferences.data.baselayer==2) { _root.status._y-=32; }
+		if (_root.sandbox) { _root.status._x-=60; }
+		_root.status._y=Stage.height-21; // panelheight-22;
+		// if (preferences.data.baselayer==2) { _root.status._y-=32; }
 	};

@@ -31,6 +31,7 @@
 		_root.panel.advice._visible=true;
 		_root.panel.advice._alpha=0;
 		_root.panel.advice.onPress=function() { clearAdvice(); };
+		clearInterval(_root.advicescroll);
 		_root.advicescroll=setInterval(scrollAdvice,85);
 		beep.start();
 
@@ -39,7 +40,7 @@
 		_root.advicepos+=20;
 		_root.panel.advice._alpha=_root.advicepos;
 		_root.panel.advice._y=-_root.advicepos/2.5;
-		if (_root.advicepos==100) { clearInterval(_root.advicescroll); }
+		if (_root.panel.advice._y<=-40) { clearInterval(_root.advicescroll); }
 	};
 	function clearAdvice() {
 		removeMovieClip(_root.panel.advice.bg);

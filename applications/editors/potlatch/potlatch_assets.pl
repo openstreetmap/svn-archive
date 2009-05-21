@@ -4,10 +4,9 @@
 	# For current Ming, set this to 1/20.
 	# For older Ming (e.g. 0.3), set this to 1.
 
-	$cw=1/20;
+	$cw=1;
 
 	# **********************************************
-
 
 	# ----- Export symbols
 
@@ -94,8 +93,19 @@ if (0==1) {
 	$ch->setRightFill(255,0,0); $ch->movePenTo(-2,-2);
 	$ch->drawLine( 4,0); $ch->drawLine(0, 4);
 	$ch->drawLine(-4,0); $ch->drawLine(0,-4);
-	$ec->add($ch); $ec->nextFrame();
+	$ec->add($ch);
+	$ec->nextFrame();
 	$m->addExport($ec,"anchor");
+
+	$ec=new SWF::MovieClip();
+	$c2=new SWF::Shape();
+	$c2->movePenTo(-3,-3);
+	$c2->setLine(20*$cw,0,0,0);
+	$c2->drawLine( 6,0); $c2->drawLine(0, 6);
+	$c2->drawLine(-6,0); $c2->drawLine(0,-6);
+	$ec->add($ch); $ec->add($c2);
+	$ec->nextFrame();
+	$m->addExport($ec,"anchor_junction");
 
 	#		Anchor (mouseover)
 
@@ -106,6 +116,11 @@ if (0==1) {
 	$ch->drawLine(-4,0); $ch->drawLine(0,-4);
 	$ec->add($ch); $ec->nextFrame();
 	$m->addExport($ec,"anchorhint");
+
+	$ec=new SWF::MovieClip();
+	$ec->add($ch); $ec->add($c2);
+	$ec->nextFrame();
+	$m->addExport($ec,"anchorhint_junction");
 
 	#		Zoom in
 
@@ -387,7 +402,8 @@ if (0==1) {
 	$s=new SWF::Shape();
 	$s->setRightFill($s->addFill(127,127,127));
 	drawLargeCircle();
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill($s->addFill(255,255,255));
@@ -407,7 +423,8 @@ if (0==1) {
 	$s->drawCurveTo(2.04,-3.76,1.66,-2.91);
 	$s->drawCurveTo(1.59,-2.77,1.50,-2.62);
 	$s->drawLineTo(0.93,-1.62);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill($s->addFill(255,255,255));
@@ -430,7 +447,8 @@ if (0==1) {
 	$s->drawLineTo(-1.47,-3.90);
 	$s->drawCurveTo(-0.99,-3.13,-0.60,-3.13);
 	$s->drawCurveTo(-0.56,-3.13,-0.45,-3.15);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill($s->addFill(255,255,255));
@@ -440,7 +458,8 @@ if (0==1) {
 	$s->drawCurveTo(-4.79,6.77,-4.79,5.94);
 	$s->drawCurveTo(-4.79,5.60,-4.73,5.22);
 	$s->drawLineTo(-0.92,-0.73);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill($s->addFill(127,127,127));
@@ -453,7 +472,8 @@ if (0==1) {
 	$s->drawCurveTo(4.94,-6.39,4.66,-6.68);
 	$s->drawCurveTo(4.39,-6.97,4.00,-6.97);
 	$s->drawCurveTo(3.37,-6.97,2.87,-5.99);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill($s->addFill(127,127,127));
@@ -466,7 +486,8 @@ if (0==1) {
 	$s->drawCurveTo(-3.46,-3.15,-2.66,-3.15);
 	$s->drawCurveTo(-2.12,-3.15,-2.12,-3.62);
 	$s->drawCurveTo(-2.12,-3.90,-2.47,-4.49);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill($s->addFill(127,127,127));
@@ -475,7 +496,8 @@ if (0==1) {
 	$s->drawCurveTo(0.30,-0.89,0.30,-1.25);
 	$s->drawCurveTo(0.30,-1.60,-0.04,-1.60);
 	$s->drawCurveTo(-0.38,-1.60,-0.38,-1.25);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$ec->nextFrame();
 	$m->addExport($ec,"scissors");
@@ -495,7 +517,8 @@ if (0==1) {
 	$s->drawCurveTo(1.96,10.00,0.00,10.00);
 	$s->drawCurveTo(-7.41,10.00,-9.58,2.89);
 	$s->drawCurveTo(-10.00,1.48,-10.00,0.00);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -504,7 +527,8 @@ if (0==1) {
 	$s->drawCurveTo(0.30,-0.89,0.30,-1.25);
 	$s->drawCurveTo(0.30,-1.60,-0.04,-1.60);
 	$s->drawCurveTo(-0.38,-1.60,-0.38,-1.25);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(255,255,255);
@@ -523,7 +547,8 @@ if (0==1) {
 	$s->drawCurveTo(-0.38,6.34,-0.19,6.17);
 	$s->drawCurveTo(1.83,4.33,2.51,2.66);
 	$s->drawCurveTo(3.80,-0.52,-0.65,-1.60);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$ec->nextFrame(); $m->addExport($ec,"undo");
 
@@ -534,7 +559,8 @@ if (0==1) {
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
 	drawLargeCircle();
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(255,255,255);
@@ -547,7 +573,8 @@ if (0==1) {
 	$s->drawLineTo(6.21,-6.18);
 	$s->drawCurveTo(6.75,-5.98,6.55,-5.45);
 	$s->drawLineTo(1.47,8.21);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -560,7 +587,8 @@ if (0==1) {
 	$s->drawLineTo(0.31,7.29);
 	$s->drawCurveTo(0.85,7.48,1.04,6.95);
 	$s->drawLineTo(3.86,-0.62);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -569,7 +597,8 @@ if (0==1) {
 	$s->drawCurveTo(4.70,-3.67,4.85,-4.07);
 	$s->drawCurveTo(5.00,-4.47,4.62,-4.61);
 	$s->drawCurveTo(4.24,-4.75,4.09,-4.36);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
@@ -578,10 +607,11 @@ if (0==1) {
 	$s->drawCurveTo(3.39,-2.71,3.54,-3.12);
 	$s->drawCurveTo(3.68,-3.52,3.30,-3.66);
 	$s->drawCurveTo(2.92,-3.80,2.77,-3.40);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 
 	$ec->nextFrame();
-	$m->addExport($ec,"gps");
+    $m->addExport($ec,"gps");
 	
 	#		Prefs
 
@@ -590,7 +620,8 @@ if (0==1) {
 	$s=new SWF::Shape();
 	$s->setRightFill(127,127,127);
 	drawLargeCircle();
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(255,255,255);
@@ -605,7 +636,8 @@ if (0==1) {
 	$s->drawLineTo(5.37,6.40);
 	$s->drawLineTo(5.37,-3.89);
 	$s->drawLineTo(4.29,-2.58);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$s=new SWF::Shape();
 	$s->setRightFill(255,255,255);
@@ -633,7 +665,8 @@ if (0==1) {
 	$s->drawCurveTo(4.57,-6.58,5.18,-6.76);
 	$s->drawCurveTo(5.78,-6.94,6.69,-7.00);
 	$s->drawLineTo(6.80,-6.73);
-	$ec->add($s);
+    $d=$ec->add($s);
+    $d->move(5,5);
 	
 	$ec->nextFrame(); $m->addExport($ec,"prefs");
 
@@ -2479,6 +2512,390 @@ $ec->nextFrame(); $m->addExport($ec,"preset_recreation");
 
 
 
+
+    # ------ editlive sprite
+
+    $ec=new SWF::MovieClip();
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->setRightFill(255,255,255);
+    $s->movePenTo(12.56,7.80);
+    $s->drawLineTo(19.00,11.73);
+    $s->drawCurveTo(19.00,11.74,18.99,11.74);
+    $s->drawCurveTo(18.94,11.80,18.87,11.89);
+    $s->drawCurveTo(18.10,12.76,17.17,13.83);
+    $s->drawCurveTo(7.05,25.41,6.29,26.77);
+    $s->drawCurveTo(5.53,28.13,4.65,28.81);
+    $s->drawCurveTo(4.57,28.87,4.51,28.91);
+    $s->drawCurveTo(4.50,28.92,4.50,28.92);
+    $s->drawCurveTo(4.47,28.91,4.44,28.90);
+    $s->drawCurveTo(4.11,28.76,3.68,28.59);
+    $s->drawCurveTo(-1.04,26.67,-3.91,25.16);
+    $s->drawCurveTo(-6.78,23.65,-9.08,22.03);
+    $s->drawCurveTo(-9.29,21.89,-9.44,21.78);
+    $s->drawCurveTo(-9.45,21.77,-9.46,21.76);
+    $s->drawLineTo(-7.14,19.07);
+    $s->drawLineTo(5.57,5.83);
+    $s->drawLineTo(12.56,7.80);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(0.56,27.49);
+    $s->drawLineTo(16.67,10.48);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(8.62,14.24);
+    $s->drawCurveTo(8.64,14.22,8.67,14.19);
+    $s->drawCurveTo(8.97,13.92,9.35,13.59);
+    $s->drawCurveTo(13.44,9.95,14.35,9.05);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(15.78,14.96);
+    $s->drawLineTo(10.23,11.55);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setRightFill(169,0,0);
+    $s->movePenTo(13.76,2.47);
+    $s->drawLineTo(12.69,7.57);
+    $s->drawLineTo(10.54,6.50);
+    $s->drawLineTo(12.42,14.29);
+    $s->drawLineTo(18.87,8.65);
+    $s->drawLineTo(16.18,8.11);
+    $s->drawLineTo(18.60,-3.97);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->setRightFill(255,255,255);
+    $s->movePenTo(-10.00,18.72);
+    $s->drawCurveTo(-10.00,18.71,-9.99,18.71);
+    $s->drawCurveTo(-9.95,18.65,-9.89,18.58);
+    $s->drawCurveTo(-9.23,17.77,-8.43,16.79);
+    $s->drawCurveTo(0.28,6.11,1.64,4.75);
+    $s->drawCurveTo(3.00,3.39,3.98,2.11);
+    $s->drawCurveTo(4.07,1.99,4.13,1.90);
+    $s->drawCurveTo(4.14,1.90,4.14,1.89);
+    $s->drawCurveTo(4.14,1.89,4.16,1.89);
+    $s->drawCurveTo(4.31,1.88,4.56,1.87);
+    $s->drawCurveTo(6.98,1.82,8.80,2.42);
+    $s->drawCurveTo(10.61,3.03,13.94,3.89);
+    $s->drawCurveTo(14.25,3.97,14.49,4.03);
+    $s->drawCurveTo(14.51,4.03,14.52,4.04);
+    $s->drawCurveTo(14.52,4.04,14.07,4.86);
+    $s->drawCurveTo(11.41,9.65,9.69,12.63);
+    $s->drawCurveTo(8.03,15.50,4.88,21.28);
+    $s->drawCurveTo(4.58,21.81,4.36,22.23);
+    $s->drawCurveTo(4.34,22.26,4.32,22.29);
+    $s->drawCurveTo(4.32,22.29,4.25,22.26);
+    $s->drawCurveTo(3.99,22.14,3.80,22.06);
+    $s->drawCurveTo(0.85,20.74,-1.23,20.15);
+    $s->drawCurveTo(-3.34,19.54,-9.00,18.84);
+    $s->drawCurveTo(-9.52,18.77,-9.93,18.72);
+    $s->drawCurveTo(-9.97,18.72,-10.00,18.72);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(-4.27,19.43);
+    $s->drawCurveTo(-4.25,19.39,-4.22,19.34);
+    $s->drawCurveTo(-3.95,18.81,-3.61,18.15);
+    $s->drawCurveTo(0.13,10.98,1.64,8.87);
+    $s->drawCurveTo(3.15,6.75,6.12,2.62);
+    $s->drawCurveTo(6.40,2.23,6.61,1.94);
+    $s->drawCurveTo(6.63,1.91,6.65,1.89);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(10.05,2.78);
+    $s->drawCurveTo(10.03,2.81,10.01,2.85);
+    $s->drawCurveTo(9.79,3.23,9.51,3.71);
+    $s->drawCurveTo(6.57,8.82,5.22,11.38);
+    $s->drawCurveTo(3.86,13.94,1.36,19.67);
+    $s->drawCurveTo(1.13,20.20,0.95,20.62);
+    $s->drawCurveTo(0.93,20.65,0.92,20.68);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(-5.17,12.45);
+    $s->drawCurveTo(-5.12,12.46,-5.07,12.47);
+    $s->drawCurveTo(-4.52,12.58,-3.81,12.73);
+    $s->drawCurveTo(3.89,14.37,7.36,16.03);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(-0.51,7.08);
+    $s->drawCurveTo(-0.47,7.09,-0.41,7.10);
+    $s->drawCurveTo(0.16,7.21,0.87,7.36);
+    $s->drawCurveTo(8.36,8.95,10.77,10.30);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(-7.85,18.89);
+    $s->drawCurveTo(-7.84,18.87,-7.82,18.83);
+    $s->drawCurveTo(-7.63,18.45,-7.39,17.98);
+    $s->drawCurveTo(-4.82,12.89,-3.91,11.38);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(-2.84,25.52);
+    $s->drawLineTo(-0.15,22.47);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(-6.60,23.37);
+    $s->drawLineTo(-5.52,22.30);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(8.26,23.73);
+    $s->drawLineTo(4.86,21.40);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->movePenTo(12.02,19.43);
+    $s->drawLineTo(7.36,16.75);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setRightFill(169,0,0);
+    $s->movePenTo(18.60,-3.97);
+    $s->drawLineTo(12.84,-1.68);
+    $s->drawLineTo(16.37,-8.57);
+    $s->drawLineTo(13.27,-7.85);
+    $s->drawLineTo(11.36,-10.00);
+    $s->drawLineTo(6.25,4.89);
+    $s->drawLineTo(13.76,2.47);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.27,0,0,0);
+    $s->setRightFill(0,0,0);
+    $s->movePenTo(4.32,22.30);
+    $s->drawCurveTo(4.27,22.30,4.22,22.30);
+    $s->drawCurveTo(3.59,22.35,2.79,22.39);
+    $s->drawCurveTo(-5.84,22.82,-9.46,21.76);
+    $s->drawLineTo(-7.14,19.07);
+    $s->drawCurveTo(-1.45,19.62,3.49,21.89);
+    $s->drawCurveTo(3.95,22.10,4.27,22.27);
+    $s->drawCurveTo(4.30,22.28,4.32,22.29);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.72,255,255,255);
+    $s->movePenTo(17.04,10.24);
+    $s->drawLineTo(18.87,8.65);
+    $s->drawLineTo(16.18,8.11);
+    $s->drawLineTo(18.60,-3.97);
+    $s->drawLineTo(12.84,-1.68);
+    $s->drawLineTo(16.37,-8.57);
+    $s->drawLineTo(13.27,-7.85);
+    $s->drawLineTo(11.36,-10.00);
+    $s->drawLineTo(6.25,4.89);
+    $s->drawLineTo(13.76,2.47);
+    $s->drawLineTo(13.55,3.47);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.72,255,255,255);
+    $s->movePenTo(11.43,10.19);
+    $s->drawLineTo(12.42,14.29);
+    $s->drawLineTo(17.04,10.24);
+    $ec->add($s);
+
+    $ec->nextFrame(); $m->addExport($ec,"editlive");
+
+    # ------ editwithsave sprite
+
+    $ec=new SWF::MovieClip();
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->setRightFill(255,255,255);
+    $s->movePenTo(7.05,2.03);
+    $s->drawLineTo(11.92,5.01);
+    $s->drawCurveTo(11.92,5.01,11.91,5.01);
+    $s->drawCurveTo(11.87,5.06,11.82,5.12);
+    $s->drawCurveTo(11.22,5.80,10.49,6.63);
+    $s->drawCurveTo(2.88,15.35,2.31,16.37);
+    $s->drawCurveTo(1.74,17.40,1.07,17.91);
+    $s->drawCurveTo(1.01,17.96,0.97,17.99);
+    $s->drawCurveTo(0.96,17.99,0.96,18.00);
+    $s->drawCurveTo(0.94,17.99,0.92,17.98);
+    $s->drawCurveTo(0.66,17.88,0.34,17.75);
+    $s->drawCurveTo(-3.23,16.30,-5.40,15.15);
+    $s->drawCurveTo(-7.57,14.01,-9.30,12.79);
+    $s->drawCurveTo(-9.46,12.68,-9.58,12.60);
+    $s->drawCurveTo(-9.59,12.59,-9.59,12.58);
+    $s->drawLineTo(-7.84,10.55);
+    $s->drawLineTo(1.77,0.54);
+    $s->drawLineTo(7.05,2.03);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->setRightFill(0,0,0);
+    $s->movePenTo(0.82,12.99);
+    $s->drawCurveTo(0.79,12.99,0.75,12.99);
+    $s->drawCurveTo(0.27,13.03,-0.33,13.06);
+    $s->drawCurveTo(-6.85,13.38,-9.59,12.58);
+    $s->drawLineTo(-7.84,10.55);
+    $s->drawCurveTo(-3.54,10.96,0.20,12.68);
+    $s->drawCurveTo(0.54,12.84,0.78,12.97);
+    $s->drawCurveTo(0.81,12.98,0.82,12.99);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(-2.02,16.91);
+    $s->drawLineTo(10.16,4.06);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(-4.59,15.42);
+    $s->drawLineTo(-2.56,13.12);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(4.07,6.90);
+    $s->drawCurveTo(4.09,6.88,4.11,6.86);
+    $s->drawCurveTo(4.35,6.65,4.64,6.39);
+    $s->drawCurveTo(7.72,3.66,8.40,2.98);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(-7.43,13.80);
+    $s->drawLineTo(-6.62,12.99);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(3.80,14.07);
+    $s->drawLineTo(1.23,12.31);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(6.64,10.82);
+    $s->drawLineTo(3.12,8.79);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(9.48,7.44);
+    $s->drawLineTo(5.29,4.87);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.54,255,255,255);
+    $s->setRightFill(0,164,0);
+    $s->movePenTo(10.93,-1.90);
+    $s->drawCurveTo(10.93,4.11,3.95,2.05);
+    $s->drawCurveTo(2.06,1.49,3.70,2.61);
+    $s->drawCurveTo(9.82,6.78,12.82,3.87);
+    $s->drawCurveTo(15.29,1.47,15.35,-1.47);
+    $s->drawCurveTo(15.35,-1.74,15.33,-1.94);
+    $s->drawCurveTo(15.33,-1.96,15.32,-1.97);
+    $s->drawLineTo(19.00,-1.14);
+    $s->drawLineTo(13.41,-10.00);
+    $s->drawLineTo(7.63,-1.34);
+    $s->drawLineTo(10.93,-1.90);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->setRightFill(255,255,255);
+    $s->movePenTo(-10.00,10.28);
+    $s->drawCurveTo(-10.00,10.28,-9.99,10.28);
+    $s->drawCurveTo(-9.96,10.24,-9.92,10.18);
+    $s->drawCurveTo(-9.42,9.57,-8.81,8.83);
+    $s->drawCurveTo(-2.23,0.76,-1.21,-0.27);
+    $s->drawCurveTo(-0.18,-1.30,0.57,-2.27);
+    $s->drawCurveTo(0.63,-2.36,0.68,-2.42);
+    $s->drawCurveTo(0.68,-2.43,0.69,-2.43);
+    $s->drawCurveTo(0.69,-2.43,0.70,-2.43);
+    $s->drawCurveTo(0.82,-2.44,1.00,-2.45);
+    $s->drawCurveTo(2.83,-2.49,4.21,-2.03);
+    $s->drawCurveTo(5.58,-1.57,8.09,-0.92);
+    $s->drawCurveTo(8.33,-0.86,8.51,-0.82);
+    $s->drawCurveTo(8.52,-0.82,8.53,-0.81);
+    $s->drawCurveTo(8.54,-0.81,8.19,-0.19);
+    $s->drawCurveTo(6.19,3.43,4.88,5.68);
+    $s->drawCurveTo(3.63,7.84,1.26,12.20);
+    $s->drawCurveTo(1.03,12.61,0.85,12.93);
+    $s->drawCurveTo(0.84,12.96,0.83,12.99);
+    $s->drawCurveTo(0.83,12.99,0.77,12.96);
+    $s->drawCurveTo(0.57,12.87,0.43,12.81);
+    $s->drawCurveTo(-1.80,11.81,-3.37,11.37);
+    $s->drawCurveTo(-4.97,10.91,-9.24,10.37);
+    $s->drawCurveTo(-9.64,10.33,-9.95,10.29);
+    $s->drawCurveTo(-9.98,10.29,-10.00,10.28);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(-5.67,10.82);
+    $s->drawCurveTo(-5.65,10.79,-5.64,10.76);
+    $s->drawCurveTo(-5.43,10.36,-5.17,9.86);
+    $s->drawCurveTo(-2.35,4.44,-1.21,2.84);
+    $s->drawCurveTo(-0.06,1.24,2.19,-1.89);
+    $s->drawCurveTo(2.39,-2.17,2.56,-2.40);
+    $s->drawCurveTo(2.57,-2.42,2.58,-2.43);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(5.15,-1.76);
+    $s->drawCurveTo(5.14,-1.74,5.13,-1.71);
+    $s->drawCurveTo(4.97,-1.43,4.76,-1.08);
+    $s->drawCurveTo(2.53,2.79,1.50,4.74);
+    $s->drawCurveTo(0.48,6.67,-1.41,10.98);
+    $s->drawCurveTo(-1.58,11.39,-1.72,11.72);
+    $s->drawCurveTo(-1.74,11.75,-1.75,11.77);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(-6.35,5.55);
+    $s->drawCurveTo(-6.31,5.55,-6.27,5.56);
+    $s->drawCurveTo(-5.84,5.65,-5.29,5.76);
+    $s->drawCurveTo(0.51,7.00,3.12,8.25);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(-2.83,1.49);
+    $s->drawCurveTo(-2.80,1.49,-2.76,1.50);
+    $s->drawCurveTo(-2.34,1.58,-1.82,1.69);
+    $s->drawCurveTo(3.87,2.90,5.69,3.92);
+    $ec->add($s);
+
+    $s=new SWF::Shape();
+    $s->setLine(0.20,0,0,0);
+    $s->movePenTo(-8.38,10.42);
+    $s->drawCurveTo(-8.37,10.40,-8.35,10.37);
+    $s->drawCurveTo(-8.21,10.09,-8.03,9.73);
+    $s->drawCurveTo(-6.08,5.88,-5.40,4.74);
+    $ec->add($s);
+
+    $ec->nextFrame(); $m->addExport($ec,"editwithsave");
 
 
 

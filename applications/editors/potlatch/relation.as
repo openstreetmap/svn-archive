@@ -71,6 +71,7 @@
 		responder = function() { };
 		responder.onResult = function(result) {
 			_root.relsreceived+=1;
+			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 			var w=result[0];
 			var i,id;
 			_root.map.relations[w].clean=true;
@@ -101,7 +102,8 @@
 	OSMRelation.prototype.upload=function() {
 		putresponder=function() { };
 		putresponder.onResult=function(result) {
-			var code=result.shift(); if (code) { handleError(code,result); return; }
+			_root.writesrequested--;
+			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 			var nw=result[1];	// new relation ID
 			if (result[0]!=nw) {
 				_root.map.relations[result[0]]._name=nw;				// rename relation object
@@ -114,12 +116,12 @@
 			}
 			_root.map.relations[nw].uploading=false;
 			_root.map.relations[nw].version=result[2];
-			_root.writesrequested--;
+			operationDone(result[0]);
 		};
 
 		// ways/nodes for negative IDs should have been previously put
 		// so the server should know about them
-		if (!this.uploading && !this.locked && !_root.sandbox ) {
+		if (!this.uploading && !this.locked && (!_root.sandbox || _root.uploading) ) {
 			this.uploading=true;
 			_root.writesrequested++;
 			remote_write.call('putrelation', putresponder,
@@ -260,8 +262,7 @@
 		for (var m in mems) {
 			if ( mems[m][0] == type && mems[m][1] == id ) {
 				mems.splice(m, 1);
-				if ( markDirty )
-					this.clean = false;
+				if ( markDirty ) { this.clean = false; }
 				this.redraw();
 			}
 		}
@@ -383,19 +384,11 @@
 	}
 
 	function uploadDirtyRelations() {
+		if (_root.sandbox) { return; }
 		var rs = _root.map.relations;
 		for ( var i in rs ) {
 			if ( !rs[i].clean ) {
 				rs[i].upload();
-			}
-		}
-	}
-
-	function revertDirtyRelations() {
-		var rs = _root.map.relations;
-		for ( var i in rs ) {
-			if ( !rs[i].clean ) {
-				rs[i].reload();
 			}
 		}
 	}

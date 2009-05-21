@@ -26,6 +26,7 @@
 		responder = function() { };
 		responder.onResult = function(result) {
 			_root.waysreceived+=1;
+			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 			var w=result[0];
 			if (length(result[1])==0) { removeMovieClip(_root.map.ways[w]); 
 										removeMovieClip(_root.map.areas[w]); return; }
@@ -71,7 +72,7 @@
 	OSMWay.prototype.loadFromDeleted=function(timestamp) {
 		delresponder=function() { };
 		delresponder.onResult=function(result) {
-			var code=result.shift(); if (code) { handleError(code,result); return; }
+			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 			var i,id,n;
 			var w=_root.map.ways[result[0]];
 			if (result[4]) { w.historic=false; w.clean=true;  }
@@ -157,11 +158,14 @@
 			// Draw fill/casing
 	
 			var f=this.getFill();
+			var br=false;
 			if (preferences.data.noname && this.attr["highway"] && (!this.attr["name"] || this.attr["name"].substr(0,6)=='(type ')) {
-				casingx=2; casingcol=0xFF0000;
-			} else if (this.attr["bridge"] && this.attr["bridge"]!="no") { casingx=2; }
-	
-			if ((f>-1 || casing[this.attr['highway']]) && !this.locked) {
+                casingx=2; casingcol=0xFF0000;
+			} else if (this.attr["bridge"] && this.attr["bridge"]!="no") {
+				casingx=2; br=true;
+			}
+
+			if ((f>-1 || br || casing[this.attr['highway']]) && !this.locked) {
 				if (!_root.map.areas[this._name]) { _root.map.areas.createEmptyMovieClip(this._name,++areadepth); }
 				with (_root.map.areas[this._name]) {
 					clear();
@@ -268,7 +272,6 @@
 	OSMWay.prototype.remove=function() {
 		clearFloater();
 		memberDeleted('Way', this._name);
-		var cp=new Object; cp[this._name]=true;
 		var z=this.path; for (var i in z) {
 			if (z[i].numberOfWays()==1) { memberDeleted('Node', z[i].id); }
 		}
@@ -277,24 +280,29 @@
 		this.deleteMergedWays();
 		this.removeNodeIndex();
 
-		if (this._name>=0 && !_root.sandbox && !this.historic && !this.locked) {
-			deleteresponder = function() { };
-			deleteresponder.onResult = function(result) {
-				var code=result.shift(); if (code) { handleError(code,result); return; }
-//				if (wayselected==result[0]) { deselectAll(); }
-//				removeMovieClip(_root.map.ways[result[0]]);
-//				removeMovieClip(_root.map.areas[result[0]]);
-				_root.writesrequested--;
-			};
-			_root.writesrequested++;
+		if (this._name>=0 && !this.historic && !this.locked) {
 			var z=shallowCopy(this.path); this.path=new Array();
-			for (var i in z) { this.markAsDeleted(z[i]); }
-			remote_write.call('deleteway',deleteresponder,_root.usertoken,_root.changeset,Number(this._name),Number(this.version),this.deletednodes);
-		} // else {
+			for (var i in z) { this.markAsDeleted(z[i],false); }
+			if (_root.sandbox) {
+				_root.waystodelete[this._name]=[this.version,deepCopy(this.deletednodes)];
+			} else {
+				deleteresponder = function() { };
+				deleteresponder.onResult = function(result) { deletewayRespond(result); };
+				_root.writesrequested++;
+				remote_write.call('deleteway',deleteresponder,_root.usertoken,_root.changeset,Number(this._name),Number(this.version),this.deletednodes);
+			}
+		}
+
 		if (this._name==wayselected) { stopDrawing(); deselectAll(); }
 		removeMovieClip(_root.map.areas[this._name]);
 		removeMovieClip(this);
-		// }
+	};
+
+	function deletewayRespond(result) {
+		_root.writesrequested--;
+		var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
+		var z=result[2]; for (var i in z) { delete _root.nodes[i]; }
+		operationDone(result[0]);
 	};
 
 	// ---- Variant with confirmation if any nodes have tags
@@ -324,9 +332,9 @@
 	OSMWay.prototype.upload=function() {
 		putresponder=function() { };
 		putresponder.onResult=function(result) {
-			var code=result.shift(); if (code) { handleError(code,result); return; }
+			_root.writesrequested--;
+			var code=result.shift(); var msg=result.shift(); if (code) { _root.map.ways[result[0]].notUploading(); handleError(code,msg,result); return; }
 
-			// ** needs to renumber versions as well as nodes
 			var i,r,z,nw,ow;
 			ow=result[0];			// old way ID
 			nw=result[1];			// new way ID
@@ -358,16 +366,16 @@
 			z=result[4]; for (var nid in z) { nodes[nid].version=result[4][nid]; nodes[nid].uploading=false; nodes[nid].clean=true; }
 
 			// remove deleted nodes
-			z=result[5]; for (var nid in z) { c=_root.map.ways[nw]; delete c.deletednodes[nid]; }
+			z=result[5]; for (var nid in z) { c=_root.map.ways[nw]; delete c.deletednodes[nid]; delete _root.nodes[nid]; }
 			
 			_root.map.ways[nw].clearPOIs();
 			uploadDirtyRelations();
 			_root.map.ways[nw].deleteMergedWays();
-			_root.writesrequested--;
 			uploadDirtyWays();			// make sure dependencies are uploaded
+			operationDone(ow);
 		};
 
-		if (!this.uploading && !this.hasDependentNodes() && !this.locked && !_root.sandbox && this.path.length>1) {
+		if (!this.uploading && !this.hasDependentNodes() && !this.locked && (!_root.sandbox || _root.uploading) && this.path.length>1) {
 			this.deleteMergedWays();
 
 			// Assemble list of changed nodes, and send
@@ -422,7 +430,7 @@
 		_root.undo.append(UndoStack.prototype.undo_deleteway,
 						  new Array(this._name,this._x,this._y,
 									deepCopy(this.attr),
-									deepCopy(this.path)),iText("$1 a way",'a_way',str));
+									deepCopy(this.path)),this.version,iText("$1 a way",'a_way',str));
 	};
 
 
@@ -434,7 +442,7 @@
 			setPointer('penplus');
 		} else if (_root.drawpoint>-1) { setPointer('penplus'); }
 								  else { setPointer(''); }
-		if (this._name!=_root.wayselected) { var a=getName(this.attr,nodenames); if (a) { setFloater(a); } }
+		if (this._name!=_root.wayselected) { var a=getName(this.attr,waynames); if (a) { setFloater(a); } }
 	};
 	
 	OSMWay.prototype.onRollOut=function() {
@@ -589,7 +597,8 @@
 		var group=atype+"s";
 		_root.map.createEmptyMovieClip(group,d);
 		for (var i=0; i<this.path.length; i+=1) {
-			_root.map[group].attachMovie(atype,i,i);
+			var asprite=atype; if (this.path[i].numberOfWays()>1) { asprite+="_junction"; }
+			_root.map[group].attachMovie(asprite,i,i);
 			_root.map[group][i]._x=this.path[i].x;
 			_root.map[group][i]._y=this.path[i].y;
 			_root.map[group][i]._xscale=anchorsize;
@@ -621,7 +630,7 @@
 			for (i in z) {												//  | 
 				_root.map.relations[i].setWayRole(newwayid,z[i]);		//  |
 			}															//  |
-
+ 
 			this.path.splice(Math.floor(point)+1);						// current way
 			this.redraw();												//  |
 			this.createNodeIndex();
@@ -688,11 +697,16 @@
 		for (i in z) { memberDeleted('Node',z[i]); }			//  |
 
 		// Add to list of merged ways (so they can be deleted on next putway)
-		this.mergedways.push(new Array(otherway._name,otherway.version,otherway.deletednodes));
-		this.mergedways.concat(otherway.mergedways);
+        if (_root.sandbox) {
+            otherway.remove();
+        } else {
+    		this.mergedways.push(new Array(otherway._name,otherway.version,otherway.deletednodes));
+    		this.mergedways.concat(otherway.mergedways);
+    	}
 		this.clean=false;
 		markClean(false);
 		if (otherway.locked) { this.locked=true; }
+		otherway.removeNodeIndex();
 		removeMovieClip(_root.map.areas[otherway._name]);
 		removeMovieClip(otherway);
 		if (this._name==_root.wayselected) { 
@@ -759,11 +773,13 @@
 	// ----	Add node to deleted list
 	//		(should have been removed from way first)
 	
-	OSMWay.prototype.markAsDeleted=function(rnode) {
-		//	Check how many times it's used in this way
-		var z=this.path; var d=true;
-		for (var i in z) { if (this.path[i].id==rnode.id) { d=false; } }
-
+	OSMWay.prototype.markAsDeleted=function(rnode,check2) {
+		var d=true;
+		// If we're just removing one point, check it's not used elsewhere in the way before removing from .ways
+		if (check2) {
+			var z=this.path; 
+			for (var i in z) { if (this.path[i].id==rnode.id) { d=false; } }
+		}
 		if (d) { rnode.removeWay(this._name); }
 		if (rnode.numberOfWays()==0 && rnode.id>0) { this.deletednodes[rnode.id]=rnode.version; }
 	};
@@ -852,7 +868,7 @@
 		var rnode=this.path[point];
 		this.path.splice(point,1);
 		this.removeDuplicates();
-		this.markAsDeleted(rnode);
+		this.markAsDeleted(rnode,true);
 		if (rnode.numberOfWays()==0) { memberDeleted('Node', rnode.id); }
 		if (this.path.length<2) { this.remove(); }
 						   else { this.redraw(); this.clean=false; }
@@ -872,6 +888,13 @@
 		this.ymax=Math.max(lat ,this.ymax);
 	};
 
+	// ----	Reset 'uploading' flag
+
+	OSMWay.prototype.notUploading=function() {
+		this.uploading=false;
+		var z=this.path; for (i in z) { this.path[i].uploading=false; }
+	};
+
 	// ----	Node->way associations
 	
 	OSMWay.prototype.createNodeIndex  =function() { var z=this.path; for (var i in z) { this.path[i].addWay(this._name);    } };
@@ -883,6 +906,7 @@
 		}
 	};
 	OSMWay.prototype.hasDependentNodes=function() {
+        if (_root.sandbox && _root.uploading) { return false; }    // not an issue in consecutive uploads
 		var d=false;
 		var z=this.path; for (var i in z) {
 			if (this.path[i].id<0) {
@@ -1144,27 +1168,27 @@
 	
 	// whichWays	- get list of ways from remoting server
 
-	function whichWays() {
+	function whichWays(force) {
 		_root.lastwhichways=new Date();
 		if (_root.waycount>500) { purgeWays(); }
 		if (_root.poicount>500) { purgePOIs(); }
 		if (_root.edge_l>=_root.bigedge_l &&
 			_root.edge_r<=_root.bigedge_r &&
 			_root.edge_b>=_root.bigedge_b &&
-			_root.edge_t<=_root.bigedge_t) {
+			_root.edge_t<=_root.bigedge_t && (!force)) {
 			// we have already loaded this area, so ignore
 		} else {
 			whichresponder=function() {};
 			whichresponder.onResult=function(result) {
-				var code=result.shift(); if (code) { handleError(code,result); return; }
 				_root.whichreceived+=1;
+				var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 				waylist  =result[0];
 				pointlist=result[1];
 				relationlist=result[2];
 
 				for (i in waylist) {										// ways
 					way=waylist[i][0];										//  |
-					if (!_root.map.ways[way] || _root.map.ways[way].version!=waylist[i][1]) {
+					if ((!_root.map.ways[way] || _root.map.ways[way].version!=waylist[i][1]) && !_root.waystodelete[way]) {
 						_root.map.ways.attachMovie("way",way,++waydepth);	//  |
 						_root.map.ways[way].load();							//  |
 						_root.waycount+=1;									//  |
@@ -1174,7 +1198,7 @@
 				
 				for (i in pointlist) {										// POIs
 					point=pointlist[i][0];									//  |
-					if (!_root.map.pois[point] || _root.map.pois[point].version!=pointlist[i][4]) {
+					if ((!_root.map.pois[point] || _root.map.pois[point].version!=pointlist[i][4]) && !_root.poistodelete[point]) {
 						// **** attach correct icon:
 						// if (pointlist[i][3]["place"]) {
 						// _root.map.pois.attachMovie("poi_22",point,++poidepth); 
@@ -1227,7 +1251,6 @@
 		}
 		_root.bigedge_l=_root.edge_l; _root.bigedge_r=_root.edge_r;
 		_root.bigedge_b=_root.edge_b; _root.bigedge_t=_root.edge_t;
-		// ** remove unused nodes (i.e. this.ways only contains dead ones)
 	}
 
 	function selectWay(id) {
@@ -1235,3 +1258,13 @@
 		_root.wayselected=Math.floor(id);
 		_root.ws=_root.map.ways[id];
 	}
+
+	function uploadDirtyWays(allow_ws) {
+		var z=_root.map.ways;
+		for (i in z) {
+			if (!_root.map.ways[i].clean && (i!=wayselected || allow_ws) && !_root.map.ways[i].hasDependentNodes()) { 
+				_root.map.ways[i].upload();
+			}
+		}
+	};
+

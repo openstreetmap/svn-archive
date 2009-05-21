@@ -41,6 +41,7 @@
 	
 	UndoStack.prototype.clear=function() { this.sp=0; };
 
+
 	// ----	Individual undo methods
 	
 	//		Added point into way
@@ -137,8 +138,10 @@
 		var poslist=params[2];
 
 		// create node if no longer in existence
-		if (_root.nodes(id)) { }
-						else { _root.nodes[id]=new Node(id,nodecopy.x,nodecopy.y,nodecopy.attr,nodecopy.version); }
+		if (!_root.nodes[id]) {
+			newnodeid--; id=newnodeid;
+			_root.nodes[id]=new Node(id,nodecopy.x,nodecopy.y,nodecopy.attr,nodecopy.version);
+		}
 
 		// reinstate at each place
 		for (qway in waylist) {
@@ -192,32 +195,33 @@
 	//		Deleted POI
 
 	UndoStack.prototype.undo_deletepoi=function(params) {
-		var poi=params[0];
+		var poi=params[0]; newnodeid--;
 		stopDrawing();
-		if (_root.map.pois[poi]) {} else {
-			_root.map.pois.attachMovie("poi",poi,++poidepth);
+		if (_root.map.pois[newnodeid]) {} else {
+			_root.map.pois.attachMovie("poi",newnodeid,++poidepth);
 		}
-		_root.map.pois[poi]._x=params[1];
-		_root.map.pois[poi]._y=params[2];
-		_root.map.pois[poi].attr=params[3];
-		_root.map.pois[poi].select();
-		_root.map.pois[poi].clean=false;
+		_root.map.pois[newnodeid]._x=params[1];
+		_root.map.pois[newnodeid]._y=params[2];
+		_root.map.pois[newnodeid].attr=params[3];
+		_root.map.pois[newnodeid].select();
+		_root.map.pois[newnodeid].clean=false;
 		markClean(false);
 	};
 	
 	//		Deleted way
 
 	UndoStack.prototype.undo_deleteway=function(params) {
-		var way=params[0];
+		var oldway=params[0]; newwayid--;
 		stopDrawing();
-		_root.map.ways.attachMovie("way",way,++waydepth);
-		_root.map.ways[way]._x=params[1];
-		_root.map.ways[way]._y=params[2];
-		_root.map.ways[way].attr=params[3];
-		_root.map.ways[way].path=params[4];
-		_root.map.ways[way].redraw();
-		_root.map.ways[way].select();
-		_root.map.ways[way].clean=false;
+		_root.map.ways.attachMovie("way",newwayid,++waydepth);
+		_root.map.ways[newwayid]._x=params[1];
+		_root.map.ways[newwayid]._y=params[2];
+		_root.map.ways[newwayid].attr=params[3];
+		_root.map.ways[newwayid].path=renumberDeleted(params[4],oldway,newwayid);
+		_root.map.ways[newwayid].version=params[5];
+		_root.map.ways[newwayid].redraw();
+		_root.map.ways[newwayid].select();
+		_root.map.ways[newwayid].clean=false;
 		markClean(false);
 	};
 
@@ -235,12 +239,20 @@
 	};
 
 
-	// Trace stuff - not used
-	// from .append
-// _root.chat.text="Stack now "+l;
-// _root.chat.text+="\nAppended "+task+","+params;
-	// from .rollback
-// _root.chat.text="Stack was "+this.length+"\n";
-// _root.chat.text+="rollback\npopped: "+popped[0]+";"+popped[1]+";"+popped[2]+"\n";
-// _root.chat.text+="\nStack now "+this.length;
+	// ----	renumberDeleted - give new ids to any nodes with only one way (i.e. deleted)
 
+	function renumberDeleted(path,oldway,newway) {
+		for (var i in path) {
+			if (path[i].numberOfWays()==1 && path[i].ways[oldway]) {
+				newnodeid--;
+				path[i].id=newnodeid;
+				path[i].version=0; path[i].clean=false;
+				path[i].ways=new Object(); path[i].ways[newway]=true;
+				_root.nodes[newnodeid]=path[i]; // path[i].renumberTo(newnodeid);
+			} else {
+				var z=path[i].ways; delete z[oldway]; z[newway]=true;
+				_root.nodes[path[i].id]=path[i];
+			}
+		}
+		return path;
+	}

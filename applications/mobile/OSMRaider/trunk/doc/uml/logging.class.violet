@@ -148,6 +148,13 @@ PositionListener</string>
 directory</string> 
      </void> 
     </void> 
+    <void property="methods"> 
+     <void property="text"> 
+      <string>openfile
+closefile
+appendfile</string> 
+     </void> 
+    </void> 
     <void property="name"> 
      <void property="text"> 
       <string>Logger</string> 

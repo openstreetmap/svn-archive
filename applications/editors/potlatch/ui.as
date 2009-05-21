@@ -268,7 +268,9 @@
 		var ox=(Stage.width-w)/2; var oy=(Stage.height-panelheight-h)/2;
 
 		// Blank all other areas
-		var bh=Stage.height; if (this.modalleave) { bh-=panelheight; }
+		var bh=Stage.height;
+		if (this.modalleave==2) { bh-=20; }
+		else if (this.modalleave) { bh-=panelheight; }
 		with (this.blank) {
 			clear();
 			beginFill(0xFFFFFF,20); moveTo(0,0); lineTo(Stage.width,0);
@@ -294,25 +296,26 @@
 	// Support functions
 
 	// drawButton		- draw white-on-grey button
-	// (object,x,y,button text, text to right)
+	// (object,x,y,button text, text to right,width)
 
-	function drawButton(buttonobject,x,y,btext,ltext) {
+	function drawButton(buttonobject,x,y,btext,ltext,bwidth) {
+        if (!bwidth) { bwidth=50; }
 		with (buttonobject) {
 			_x=x; _y=y;
 			beginFill(0x7F7F7F,100);
 			moveTo(0,0);
-			lineTo(50,0); lineTo(50,17);
+			lineTo(bwidth,0); lineTo(bwidth,17);
 			lineTo(0,17); lineTo(0,0); endFill();
 		}
 		buttonobject.useHandCursor=true;
-		buttonobject.createTextField('btext',1,0,-1,48,20);
+		buttonobject.createTextField('btext',1,0,-1,bwidth-2,20);
 		with (buttonobject.btext) {
 			text=btext; setTextFormat(boldWhite);
 			selectable=false; type='dynamic';
-			_x=(45-textWidth)/2;
+			_x=(bwidth-5-textWidth)/2;
 		}
 		if (ltext!="") {
-			buttonobject.createTextField("explain",2,54,-1,300,20);
+			buttonobject.createTextField("explain",2,bwidth+4,-1,300,20);
 			buttonobject.explain.autoSize=true;
 			writeText(buttonobject.explain,ltext);
 			buttonobject.explain.wordWrap=false;

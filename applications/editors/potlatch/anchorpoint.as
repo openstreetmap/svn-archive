@@ -16,14 +16,14 @@
 		if (this._name==0 && this.way.path.length==1) {
 			// solo double-click - create new POI
 			stopDrawing();
-			_root.map.pois.attachMovie("poi",--newpoiid,++poidepth);
-			_root.map.pois[newpoiid]._x=_root.map._xmouse;
-			_root.map.pois[newpoiid]._y=_root.map._ymouse;
-			_root.map.pois[newpoiid].select();
-			_root.map.pois[newpoiid].clean=false;
+			_root.map.pois.attachMovie("poi",--newnodeid,++poidepth);
+			_root.map.pois[newnodeid]._x=_root.map._xmouse;
+			_root.map.pois[newnodeid]._y=_root.map._ymouse;
+			_root.map.pois[newnodeid].select();
+			_root.map.pois[newnodeid].clean=false;
 			markClean(false);
 			_root.undo.append(UndoStack.prototype.undo_createpoi,
-							  [_root.map.pois[newpoiid]],iText("creating a POI",'action_createpoi'));
+							  [_root.map.pois[newnodeid]],iText("creating a POI",'action_createpoi'));
 
 		} else if (Key.isDown(Key.SHIFT) && !this.way.historic) {
 			_root.junction=true;				// flag to prevent elastic band stopping on _this_ mouseUp
@@ -49,7 +49,6 @@
 		_root.pointselected=this._name;
 		this.way.highlight();
 		setTypeText(iText("Point",'point'),this.node);
-		// _root.chat.text="Node "+this.node+" version "+_root.nodes[this.node].version;
 		_root.panel.properties.init('point',getPanelColumns(),4);
 		_root.panel.presets.init(_root.panel.properties);
 		updateButtons();
@@ -161,6 +160,7 @@
 	AnchorPoint.prototype.onRollOut=function() { clearFloater(); };
 
 	Object.registerClass("anchor",AnchorPoint);
+	Object.registerClass("anchor_junction",AnchorPoint);
 
 
 
@@ -213,4 +213,5 @@
 		}
 	};
 	Object.registerClass("anchorhint",AnchorHint);
+	Object.registerClass("anchorhint_junction",AnchorHint);
 

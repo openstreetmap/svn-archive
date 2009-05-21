@@ -16,24 +16,33 @@
 	POI.prototype.remove=function() {
 		memberDeleted('Node', this._name);
 		uploadDirtyRelations();
-		if (this._name>=0 && !_root.sandbox) {
-			poidelresponder = function() { };
-			poidelresponder.onResult = function(result) {
-				var code=result.shift(); if (code) { handleError(code,result); return; }
-				if (poiselected==result[0]) { deselectAll(); }
-				removeMovieClip(_root.map.pois[result[0]]);
-				_root.writesrequested--;
-			};
-			_root.writesrequested++;
-			remote_write.call('putpoi',poidelresponder,_root.usertoken,_root.changeset,Number(this.version),Number(this._name),coord2long(this._x),coord2lat(this._y),this.attr,0);
-		} else {
+		if (this._name>=0 && !this.locked) {
+			if (_root.sandbox) {
+				_root.poistodelete[this._name]=[this.version,coord2long(this._x),coord2lat(this._y),deepCopy(this.attr)];
+			} else {
+				poidelresponder = function() { };
+				poidelresponder.onResult = function(result) { deletepoiRespond(result); };
+				_root.writesrequested++;
+				remote_write.call('putpoi',poidelresponder,_root.usertoken,_root.changeset,Number(this.version),Number(this._name),coord2long(this._x),coord2lat(this._y),this.attr,0);
+			}
+		}
+		if (this.name<0 || _root.sandbox) {
 			if (this._name==poiselected) { deselectAll(); }
 			removeMovieClip(this);
 		}
 	};
+	function deletepoiRespond(result) {
+		_root.writesrequested--;
+		var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
+		if (poiselected==result[0]) { deselectAll(); }
+		delete _root.nodes[result[0]];
+		removeMovieClip(_root.map.pois[result[0]]);
+		operationDone(result[0]);
+	}
 	POI.prototype.reload=function(timestamp) {
 		poirelresponder=function() {};
 		poirelresponder.onResult=function(result) {
+			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 			_root.map.pois[result[0]]._x  =long2coord(result[1]);
 			_root.map.pois[result[0]]._y  =lat2coord (result[2]);
 			_root.map.pois[result[0]].attr=result[3];
@@ -46,7 +55,8 @@
 	POI.prototype.upload=function() {
 		poiresponder=function() { };
 		poiresponder.onResult=function(result) {
-			var code=result.shift(); if (code) { handleError(code,result); return; }
+			_root.writesrequested--;
+			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 			var ni=result[1];	// new POI ID
 			if (result[0]!=ni) {
 				_root.map.pois[result[0]]._name=ni;
@@ -59,9 +69,9 @@
 			}
 			_root.map.pois[ni].uploading=false;
 			_root.map.pois[ni].version=result[2];
-			_root.writesrequested--;
+			operationDone(result[0]);
 		};
-		if (!this.uploading && !this.locked && !_root.sandbox) {
+		if (!this.uploading && !this.locked && (!_root.sandbox || _root.uploading)) {
 			_root.writesrequested++;
 			remote_write.call('putpoi',poiresponder,_root.usertoken,_root.changeset,Number(this.version),Number(this._name),coord2long(this._x),coord2lat(this._y),this.attr,1);
 			this.clean=true;
@@ -142,7 +152,6 @@
 	};
 	
 	POI.prototype.saveUndo=function(str) {
-		// ** localisation not done
 		_root.undo.append(UndoStack.prototype.undo_deletepoi,
 						  new Array(this._name,this._x,this._y,
 									deepCopy(this.attr)),iText("$1 a POI",'a_poi',str));

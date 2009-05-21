@@ -80,6 +80,7 @@
 		} else if (nodes[_root.revertid]) { // node in way
 			noderesponder=function() {};
 			noderesponder.onResult=function(result) {
+				var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 				var n=result[0];
 				_root.nodes[n].attr=result[3];
 				var w=_root.nodes[n].moveTo(long2coord(result[1]),lat2coord(result[2]));
@@ -99,7 +100,7 @@
 	function getDeleted() {
 		whichdelresponder=function() {};
 		whichdelresponder.onResult=function(result) {
-			var code=result.shift(); if (code) { handleError(code,result); return; }
+			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 			_root.versioninfo=null;
 			waylist=result[0];
 			for (i in waylist) {										// ways

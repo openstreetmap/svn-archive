@@ -46,7 +46,7 @@
 		this.dropdown.init(30,5,value,
 						   presetnames[this.pw.proptype][this.group],
 						   'Choose from a menu of preset tags describing the '+pw.proptype,
-						   this.setAttributes,this,151);
+						   this.setAttributesFromPreset,this,151);
 	};
 	PresetMenu.prototype.reflect=function() {
 		var i,t;
@@ -78,18 +78,9 @@
 		this.setIcon();
 		this.initMenu(this.pw.findInPresetMenu(this.group));
 	};
-	PresetMenu.prototype.setAttributes=function(pre) {
+	PresetMenu.prototype.setAttributesFromPreset=function(pre) {
 		var pname=presetnames[this.pw.proptype][this.group][pre];
-		var pkeys=presets[pname];
-		var pkey;
-		this.pw.saveUndo();
-		for (pkey in pkeys) {
-			if (this.pw.proparr[pkey].length>0 && presets[pname][pkey].substr(0,6)=='(type ') {}
-			else { setValueInObject(this.pw.proptype, pkey, presets[pname][pkey]); }
-		}
-		this.pw.reinit();
-		this.pw.saveAttributes();
-		if (this.pw.proptype!='POI') { _root.ws.redraw(); }
+		this.pw.setAttributes(presets[pname]);
 	};
 
 	Object.registerClass("presetmenu",PresetMenu);
@@ -481,6 +472,26 @@
 				case 'way':		r.setWayRole (wayselected,relarr[i]); break;
 			}
 		}
+		if (this.proptype!='POI') { _root.ws.redraw(); }
+		this.reflect();
+		this.reinit();
+	};
+
+	PropertyWindow.prototype.setAttributes=function(pkeys) {
+		this.saveUndo();
+		for (var pkey in pkeys) {
+			if (this.proparr[pkey].length>0 && pkeys[pkey].substr(0,6)=='(type ') {}
+			else { setValueInObject(this.proptype, pkey, pkeys[pkey]); }
+		}
+		this.reinit();
+		this.saveAttributes();
+		if (this.proptype!='POI') { _root.ws.redraw(); }
+	};
+
+	PropertyWindow.prototype.nukeAttributes=function() {
+		var proparr=this.proparr;
+		this.saveUndo();
+		for (var el in proparr) { delete this.proparr[el]; setValueInObject(this.proptype,el,''); }
 		if (this.proptype!='POI') { _root.ws.redraw(); }
 		this.reflect();
 		this.reinit();

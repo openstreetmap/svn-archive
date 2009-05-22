@@ -25,6 +25,7 @@ GetOptions(\%opts,
 	   ["l|latex-file=s", "Save Figure commands to a latex file"],
 	   ["force-fetch",    "Force fetching of new data"],
 	   ["ps",             "Expect a postscript generation instead"],
+	   ["png",            "Make grid png files"],
 	  ) || exit;
 
 die "need at least -mx -Mx -my -My and -n\n"
@@ -34,21 +35,24 @@ my $diffx = $opts{'Mx'} - $opts{'mx'};
 my $diffy = $opts{'My'} - $opts{'my'};
 
 # for the number of Y grid squares, use n*y/x but only if it's < P
-# n = num x, y/x = map area aspect ration, P = paper aspect ratio (height/width)
+# n = num x, y/x = map area aspect ration, P = paper aspect ratio (width/height)
 # XXX: should round not int; requires a math package
 # XXX: or not...  need to default to fitting on the page, which is ceil()
 # (more squares)
-my $P = 20/17; # arbitrary based on space on the page
+my $P = 17/20; # arbitrary based on space on the page
+my $dydx = $diffy/$diffx;
 my $ygridnum = ceil($opts{'n'}*$diffy/$diffx);
 
 # if the grid is too tall and will overstretch the Y boundry on the
 # page, then keep adding more squares to the Y grid till we fall
 # within it.
+# IE: we're optimizing for the x-axis since we can control that in latex
 print "Y grid guess:   $ygridnum  ($opts{'n'}*$diffy/$diffx)\n";
-while ($ygridnum/$opts{'n'} > $P) {
+while ($opts{'n'}*$dydx/$ygridnum > $P) {
     $ygridnum++;
 }
 print "Y grid squares: $ygridnum\n";
+
 
 
 my $segx = $diffx/$opts{'n'};
@@ -151,10 +155,19 @@ foreach my $y (reverse(1..$ygridnum)) {
 	    }
 	}
 
+	# add a numeric/letter grid border to the svg file
+	my $svg2file = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy-gridded.svg";
+	# XXX: make optional
+	# XXX: make number of grid components on a side optional
+	if (! -f $svg2file || Stat($svgfile, $svg2file)) {
+	    make_svggrid($svgfile, $svg2file);
+	    $svgfile = $svg2file;
+	}
+
 	# convert to png
 	# inkscape -f map.svg -e map.png
 	my $pngfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.png";
-	if (! -f $pngfile || Stat($svgfile, $pngfile)) {
+	if ($opts{'png'} && ! -f $pngfile || Stat($svgfile, $pngfile)) {
 	    System("inkscape -f $svgfile -e $pngfile");
         }
 
@@ -272,8 +285,6 @@ sub make_overview {
     ($width) = ($initline =~ /width=\"([\.\d]+)px\"/);
     ($height) = ($initline =~ /height=\"([\.\d]+)(|px)\"/);
 
-    print "here: $width / $height\n";
-
     open(OSVG, ">$out");
     print OSVG $initline;
     while (<IIMG>) {
@@ -316,6 +327,90 @@ sub make_overview {
 
     print OSVG "</svg>\n";
 }
+
+sub make_svggrid {
+    my ($infile, $outfile) = @_;
+    open(I, $infile);
+    open(O, ">$outfile");
+
+    my $numx = 9;
+    my $numy = 9;
+    my @xlabels = (1..100);
+    my @ylabels = ('A' .. 'Z');
+
+    print "modifying SVG to add grids\n";
+
+    # extract the width/height and bourdary box of the original image
+    # so we know how much to scale it by.
+    my $initline = <I>;
+
+    my ($origwidth, $origheight);
+    ($origwidth) = ($initline =~ /width=\"([\.\d]+)px\"/);
+    ($origheight) = ($initline =~ /height=\"([\.\d]+)(|px)\"/);
+
+    my $width = $origwidth * 1.05;
+    my $height = $origheight * 1.05;
+
+    $initline =~ s/(width=\")([\.\d]+)(px\")/$1$width$3/;
+    $initline =~ s/(height=\")([\.\d]+)(px\")/$1$height$3/;
+    $initline =~ s/(viewBox=\"[-\.\d]+\s+[-\.\d]+\s+)[^\"]+/$1$width $height/;
+
+    # print out modified the first line
+    print O $initline;
+
+    # dump the rest of the file out
+    while (<I>) {
+	last if (/<\/svg>/);
+
+	# make the background bigger
+	# XXX: assumes height comes first on line
+	s/(<rect.*height=\")([^"]+)(\".*width=\")([^"]+)(\".*class=\"map-background\".*)/$1$height$3$width$5/;
+
+	print O $_;
+    }
+
+    # add in our own side grid lines
+
+    my $vlinetop = $height - $origheight * .05;
+    my $vlinegap = $origwidth / $numx;
+    my $hlinetop = $width - $origwidth * .05;
+    my $hlinegap = $origheight / $numx;
+    my $textstyle = "style=\"font-size: " . int($vlinegap/4) . "px;\"";
+
+
+    # add a blank white square underneath
+    print O "<rect id=\"marginalia-background\" x=\"0px\" y=\"$origheight\" height=\"${hlinegap}px\" width=\"${width}px\" class=\"map-marginalia-background\" />\n";
+    print O "<rect id=\"marginalia-background\" x=\"${origwidth}px\" y=\"0\" height=\"${height}px\" width=\"${vlinegap}px\" class=\"map-marginalia-background\" />\n";
+
+    # vertical grid lines and horizontal labels
+    for my $x (0..($numx)) {
+	print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"",
+	  $x * $vlinegap, "\" x2=\"", $x * $vlinegap, 
+	    "\" y1=\"$vlinetop\" y2=\"$height\" />\n";
+	if ($x != $numx) {
+	    print O "<text $textstyle x=\"", $x*$vlinegap + $vlinegap/2,
+	      "\" y=\"", $height - $hlinegap/4, "\">",
+		$xlabels[$x], "</text>\n";
+	}
+    }
+
+    # horizontal grid lines and virtical labels
+    for my $y (0..($numy)) {
+	print O "<line style=\"stroke: rgb(0,0,0)\" y1=\"",
+	  $y * $hlinegap, "\" y2=\"", $y * $hlinegap, 
+	    "\" x1=\"$hlinetop\" x2=\"$height\" />\n";
+	if ($y != $numy) {
+	    print O "<text $textstyle y=\"", $y*$hlinegap + $hlinegap/2,
+	      "\" x=\"", $width - $vlinegap/4, "\">",
+		$ylabels[$y], "</text>\n";
+	}
+    }
+
+    print O "</svg>\n";
+    close(I);
+    close(O);
+}
+
 
 sub make_overviewpng {
     my ($inpng, $outpng, $numx, $numy) = @_;

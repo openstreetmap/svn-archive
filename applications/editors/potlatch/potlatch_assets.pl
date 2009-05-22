@@ -2569,6 +2569,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_recreation");
     $s->drawLineTo(18.87,8.65);
     $s->drawLineTo(16.18,8.11);
     $s->drawLineTo(18.60,-3.97);
+		$s->drawLineTo(13.76,2.47);
     $ec->add($s);
 
     $s=new SWF::Shape();
@@ -2680,6 +2681,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_recreation");
     $s->drawLineTo(11.36,-10.00);
     $s->drawLineTo(6.25,4.89);
     $s->drawLineTo(13.76,2.47);
+    $s->drawLineTo(18.60,-3.97);
     $ec->add($s);
 
     $s=new SWF::Shape();

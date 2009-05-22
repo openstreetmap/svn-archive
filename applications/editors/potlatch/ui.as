@@ -300,13 +300,6 @@
 
 	function drawButton(buttonobject,x,y,btext,ltext,bwidth) {
         if (!bwidth) { bwidth=50; }
-		with (buttonobject) {
-			_x=x; _y=y;
-			beginFill(0x7F7F7F,100);
-			moveTo(0,0);
-			lineTo(bwidth,0); lineTo(bwidth,17);
-			lineTo(0,17); lineTo(0,0); endFill();
-		}
 		buttonobject.useHandCursor=true;
 		buttonobject.createTextField('btext',1,0,-1,bwidth-2,20);
 		with (buttonobject.btext) {
@@ -319,6 +312,21 @@
 			buttonobject.explain.autoSize=true;
 			writeText(buttonobject.explain,ltext);
 			buttonobject.explain.wordWrap=false;
+		}
+
+		// Resize if button is bigger than text
+		var t=buttonobject.btext.textWidth;
+		if (t+6>buttonobject.btext._width) { buttonobject.btext._width=t+4; }
+		if (t>bwidth) {
+			x-=(t-bwidth)/2; buttonobject.btext._x+=(t-bwidth)/2+2;
+			bwidth=t+4;
+		}
+		with (buttonobject) {
+			_x=x; _y=y;
+			beginFill(0x7F7F7F,100);
+			moveTo(0,0);
+			lineTo(bwidth,0); lineTo(bwidth,17);
+			lineTo(0,17); lineTo(0,0); endFill();
 		}
 	}
 

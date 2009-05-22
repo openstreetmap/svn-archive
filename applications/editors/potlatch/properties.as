@@ -883,7 +883,11 @@
 		_root.panel.historylink.onRollOver=function() {
 			var v;
 			if (_root.poiselected) { v=_root.map.pois[poiselected].version; }
-			else if (_root.pointselected>-2) { v=_root.ws.path[_root.pointselected].version; }
+			else if (_root.pointselected>-2) {
+				v=_root.ws.path[_root.pointselected].version+", in ways ";
+				var w=_root.ws.path[_root.pointselected].ways; for (var i in w) { v+=i+","; }
+				v=v.substr(0,v.length-1);
+			}
 			else { v=_root.ws.version; }
 			setFloater("Version "+v);
 		};

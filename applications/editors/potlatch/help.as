@@ -28,7 +28,7 @@
 
 		// Background
 		_root.help.createEmptyMovieClip("bg",2);
-		var w=700; var h=400;
+		var w=700; var h=450;
 		_root.help._x=(Stage.width-w)/2;
 		_root.help._y=(Stage.height-panelheight-h)/2;
 		with (_root.help.bg) {
@@ -72,7 +72,7 @@
 		
 		_root.help.createEmptyMovieClip("body",4);
 		for (i=0; i<=2; i++) {
-			_root.help.body.createTextField(i,i,i*230+10,50,210,330);
+			_root.help.body.createTextField(i,i,i*230+10,50,210,h-70);
 			with (_root.help.body[i]) { styleSheet=styles; html=true; multiline=true; wordWrap=true; }
 		}
 

@@ -159,15 +159,17 @@ foreach my $y (reverse(1..$ygridnum)) {
 	my $svg2file = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy-gridded.svg";
 	# XXX: make optional
 	# XXX: make number of grid components on a side optional
+	my $extrainkargs = "";
 	if (! -f $svg2file || Stat($svgfile, $svg2file)) {
-	    make_svggrid($svgfile, $svg2file);
+	    $extrainkargs = make_svggrid($svgfile, $svg2file);
 	    $svgfile = $svg2file;
 	}
 
 	# convert to png
 	# inkscape -f map.svg -e map.png
 	my $pngfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.png";
-	if ($opts{'png'} && ! -f $pngfile || Stat($svgfile, $pngfile)) {
+	if ($opts{'png'} && (! -f $pngfile || Stat($svgfile, $pngfile))) {
+	    print "here: $opts{'png'}\n";
 	    System("inkscape -f $svgfile -e $pngfile");
         }
 
@@ -177,13 +179,13 @@ foreach my $y (reverse(1..$ygridnum)) {
 	if ($opts{'ps'}) {
 	    my $epsfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.eps";
 	    if (! -f $epsfile || Stat($svgfile, $epsfile)) {
-		System("inkscape -f $svgfile -E $epsfile");
+		System("inkscape $extrainkargs -f $svgfile -E $epsfile");
 	    }
 	    $outfile = $epsfile;
 	} else {
 	    my $pdffile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.pdf";
 	    if (! -f $pdffile || Stat($svgfile, $pdffile)) {
-		System("inkscape -f $svgfile -E $pdffile");
+		System("inkscape -f $svgfile -A $pdffile");
 	    }
 	    $outfile = $pdffile;
 	}
@@ -247,7 +249,7 @@ if (! -f $overviewsvg || Stat($combinedsvg, $overviewsvg)) {
 # render the overview SVG as EPS for later inclusion into latex
 if (! -f $combindepng  ||
     Stat($combinedsvg, $combinedpng)) {
-    System("inkscape -d 45 -f $combinedsvg -e $combinedpng");
+    System("inkscape -f $combinedsvg -e $combinedpng");
 #    Stat($overviewsvg, $overvieweps)) {
 #    System("inkscape -f $overviewsvg -E $overvieweps");
 }
@@ -261,7 +263,7 @@ if ($opts{'ps'}) {
     if (! -f $overvieweps  ||
 	Stat($overviewpng, $overvieweps)) {
 	#System("convert $overviewpng $overvieweps");
-	System("inkscape -d 45 -f $overviewsvg -E $overvieweps");
+	System("inkscape -f $overviewsvg -E $overvieweps");
     }
 }
 
@@ -424,6 +426,8 @@ sub make_svggrid {
     print O "</svg>\n";
     close(I);
     close(O);
+
+    return "-a 0:0:$width:$height";
 }
 
 

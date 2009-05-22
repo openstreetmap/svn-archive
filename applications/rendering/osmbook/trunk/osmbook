@@ -333,6 +333,9 @@ sub make_svggrid {
     open(I, $infile);
     open(O, ">$outfile");
 
+    my $hsize = .03;
+    my $vsize = .03;
+
     my $numx = 9;
     my $numy = 9;
     my @xlabels = (1..100);
@@ -348,8 +351,8 @@ sub make_svggrid {
     ($origwidth) = ($initline =~ /width=\"([\.\d]+)px\"/);
     ($origheight) = ($initline =~ /height=\"([\.\d]+)(|px)\"/);
 
-    my $width = $origwidth * 1.05;
-    my $height = $origheight * 1.05;
+    my $width = $origwidth * (1 + $hsize);
+    my $height = $origheight * (1 + $vsize);
 
     $initline =~ s/(width=\")([\.\d]+)(px\")/$1$width$3/;
     $initline =~ s/(height=\")([\.\d]+)(px\")/$1$height$3/;
@@ -371,9 +374,9 @@ sub make_svggrid {
 
     # add in our own side grid lines
 
-    my $vlinetop = $height - $origheight * .05;
+    my $vlinetop = $height - $origheight * $vsize;
     my $vlinegap = $origwidth / $numx;
-    my $hlinetop = $width - $origwidth * .05;
+    my $hlinetop = $width - $origwidth * $hsize;
     my $hlinegap = $origheight / $numx;
     my $textstyle = "style=\"font-size: " . int($vlinegap/4) . "px;\"";
 
@@ -382,6 +385,18 @@ sub make_svggrid {
     print O "<rect id=\"marginalia-background\" x=\"0px\" y=\"$origheight\" height=\"${hlinegap}px\" width=\"${width}px\" class=\"map-marginalia-background\" />\n";
     print O "<rect id=\"marginalia-background\" x=\"${origwidth}px\" y=\"0\" height=\"${height}px\" width=\"${vlinegap}px\" class=\"map-marginalia-background\" />\n";
 
+    # outer black lines
+    # horizontal
+    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"1\" y2=\"1\" />\n";
+    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"$vlinetop\" y2=\"$vlinetop\" />\n";
+    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"" . ($height-1) . "\" y2=\"" . ($height-1) . "\" />\n";
+
+    # vertical
+    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"1\" y1=\"1\" y2=\"$height\" />\n";
+    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"$hlinetop\" x2=\"$hlinetop\" y1=\"1\" y2=\"$height\" />\n";
+    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"" . ($width-1) . "\" x2=\"" . ($width-1) . "\" y1=\"1\" y2=\"$height\" />\n";
+
+
     # vertical grid lines and horizontal labels
     for my $x (0..($numx)) {
 	print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"",
@@ -389,7 +404,7 @@ sub make_svggrid {
 	    "\" y1=\"$vlinetop\" y2=\"$height\" />\n";
 	if ($x != $numx) {
 	    print O "<text $textstyle x=\"", $x*$vlinegap + $vlinegap/2,
-	      "\" y=\"", $height - $hlinegap/4, "\">",
+	      "\" y=\"", $height - $hlinegap/16, "\">",
 		$xlabels[$x], "</text>\n";
 	}
     }

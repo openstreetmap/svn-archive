@@ -1,0 +1,26 @@
+<h1><%= h(@title) %></h1>
+
+<% content_for :head do %>
+<%= auto_discovery_link_tag :atom, :action => 'georss', :display_name => @display_name, :tag => @tag %>
+<% end %>
+
+<p>
+  <%= rss_link_to :action => 'georss', :display_name => @display_name, :tag => @tag %>
+  <% if @user.nil? or @display_name.nil? or @user.display_name != @display_name %>
+    | <%= link_to 'See just your traces, or upload a trace', :action => 'mine' %>
+  <% end %>
+  <% if @tag or @display_name %>
+    | <%= link_to 'See all traces', :controller => 'trace', :action => 'list' %>
+  <% end %>
+  <% if @tag and @user and @user.display_name == @display_name %>
+    | <%= link_to 'See all your traces', :controller => 'trace', :action => 'mine' %>
+  <% end %>
+</p>
+
+<% if @user and @user.traces.count(:conditions => ["inserted=?", false]) > 4 %>
+  <p>
+    You have <%= @user.traces.count(:conditions => ["inserted=?", false]) %> traces 
+    waiting for upload. Please consider waiting for these to finish before 
+    uploading any more, so as not to block the queue for other users.
+  </p>
+<% end %>

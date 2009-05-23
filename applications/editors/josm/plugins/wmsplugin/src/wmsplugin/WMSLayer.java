@@ -254,7 +254,7 @@ public class WMSLayer extends Layer {
         public void actionPerformed(ActionEvent ev) {
             // Delete small files, because they're probably blank tiles.
             // See https://josm.openstreetmap.de/ticket/2307
-            new wmsplugin.Cache().deleteSmallFiles(2048);
+            WMSPlugin.cache.customCleanUp(WMSPlugin.cache.CLEAN_SMALL_FILES, 2048);
 
             for (int x = 0; x < dax; ++x) {
                 for (int y = 0; y < day; ++y) {

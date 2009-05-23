@@ -1260,6 +1260,7 @@
 	}
 
 	function uploadDirtyWays(allow_ws) {
+		if (_root.sandbox) { return; }
 		var z=_root.map.ways;
 		for (i in z) {
 			if (!_root.map.ways[i].clean && (i!=wayselected || allow_ws) && !_root.map.ways[i].hasDependentNodes()) { 

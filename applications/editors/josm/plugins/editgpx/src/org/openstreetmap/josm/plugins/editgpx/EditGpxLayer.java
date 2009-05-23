@@ -169,8 +169,7 @@ public class EditGpxLayer extends Layer {
                 if (anonTime) {
                     wpt.attr.put("time", "1970-01-01T00:00:00");
                 } else {
-                    wpt.attr.put("time", tstamp);
-                    System.out.println("timestamp: "+tstamp);
+                    wpt.attr.put("time", WayPoint.GPXTIMEFMT.format(tstamp));
                 }
                 wpt.setTime();
 
@@ -188,7 +187,7 @@ public class EditGpxLayer extends Layer {
             if (anonTime) {
                 wpt.attr.put("time", "1970-01-01T00:00:00");
             } else {
-                wpt.attr.put("time", tstamp);
+                wpt.attr.put("time", WayPoint.GPXTIMEFMT.format(tstamp));
             }
             wpt.setTime();
 

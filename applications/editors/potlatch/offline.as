@@ -113,8 +113,8 @@
 			doNext=true;
 		} else {
 			// Remove task from list, do next if none left
-			var a=_root.uploadtasks[1]; delete a[id];
-			var c=0; for (i in _root.uploadtasks[1]) { c++; }
+			var a=_root.uploadtasks[0][1]; delete a[id];
+			var c=0; for (i in a) { c++; }
 			doNext=(c==0); if (doNext) { 
 				_root.uploadtasks.shift();
 			}

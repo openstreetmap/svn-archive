@@ -23,6 +23,7 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
@@ -30,6 +31,7 @@ import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 
 public class WMSPlugin extends Plugin {
+    static CacheFiles cache = new CacheFiles("wmsplugin");
 
     WMSLayer wmsLayer;
     static JMenu wmsJMenu;
@@ -53,6 +55,8 @@ public class WMSPlugin extends Plugin {
             e.printStackTrace();
         }
         refreshMenu();
+        cache.setExpire(cache.EXPIRE_MONTHLY, false);
+        cache.setMaxSize(70, false);
     }
 
     // this parses the preferences settings. preferences for the wms plugin have to
@@ -198,9 +202,9 @@ public class WMSPlugin extends Plugin {
     public static Grabber getGrabber(String _baseURL, Bounds _b, Projection _proj,
                      double _pixelPerDegree, GeorefImage _image, MapView _mv, WMSLayer _layer){
         if(_baseURL.startsWith("yahoo://"))
-            return new YAHOOGrabber(_baseURL, _b, _proj, _pixelPerDegree, _image, _mv, _layer);
+            return new YAHOOGrabber(_baseURL, _b, _proj, _pixelPerDegree, _image, _mv, _layer, cache);
         else
-            return new WMSGrabber(_baseURL, _b, _proj, _pixelPerDegree, _image, _mv, _layer);
+            return new WMSGrabber(_baseURL, _b, _proj, _pixelPerDegree, _image, _mv, _layer, cache);
         // OSBGrabber should be rewrite for thread support first
         //if (wmsurl.matches("(?i).*layers=npeoocmap.*") || wmsurl.matches("(?i).*layers=npe.*") ){
         //  return new OSGBGrabber(_b, _proj, _pixelPerDegree,  _images, _mv, _layer);

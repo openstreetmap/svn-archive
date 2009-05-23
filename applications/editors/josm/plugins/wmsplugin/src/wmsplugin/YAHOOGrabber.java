@@ -15,17 +15,17 @@ import javax.imageio.ImageIO;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.gui.MapView;
 
 
-public class YAHOOGrabber extends WMSGrabber{
+public class YAHOOGrabber extends WMSGrabber {
     protected String browserCmd;
-    protected Cache cache = new wmsplugin.Cache();
 
     YAHOOGrabber(String baseURL, Bounds b, Projection proj,
-            double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer) {
+            double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache) {
         super("file:///" + WMSPlugin.getPrefsPath() + "ymap.html?"
-        , b, proj, pixelPerDegree, image, mv, layer);
+        , b, proj, pixelPerDegree, image, mv, layer, cache);
         this.browserCmd = baseURL.replaceFirst("yahoo://", "");
     }
 
@@ -52,7 +52,9 @@ public class YAHOOGrabber extends WMSGrabber{
         } catch(IOException ioe) {
             throw new IOException( "Could not start browser. Please check that the executable path is correct.\n" + ioe.getMessage() );
         }
-
-        return cache.saveImg(urlstring, ImageIO.read(browser.getInputStream()), true);
+        
+        BufferedImage img = ImageIO.read(browser.getInputStream());
+        cache.saveImg(urlstring, img);
+        return img;
     }
 }

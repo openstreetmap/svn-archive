@@ -27,18 +27,18 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.ProgressInputStream;
 
 
 public class WMSGrabber extends Grabber {
     protected String baseURL;
-    protected Cache cache = new wmsplugin.Cache();
     private static Boolean shownWarning = false;
     private boolean urlWithPatterns;
 
     WMSGrabber(String baseURL, Bounds b, Projection proj,
-            double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer) {
-        super(b, proj, pixelPerDegree, image, mv, layer);
+            double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache) {
+        super(b, proj, pixelPerDegree, image, mv, layer, cache);
         this.baseURL = baseURL;
         /* URL containing placeholders? */
         urlWithPatterns = baseURL != null && baseURL.contains("{1}");
@@ -146,7 +146,8 @@ public class WMSGrabber extends Grabber {
         BufferedImage img = ImageIO.read(is);
         is.close();
         
-        return cache.saveImg(url.toString(), img, true);
+        cache.saveImg(url.toString(), img);
+        return img;
     }
 
     protected String readException(URLConnection conn) throws IOException {

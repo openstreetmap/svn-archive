@@ -36,6 +36,7 @@ my $dir_chroot = "/home/chroot";
 my $dir_log = "/home/chroot/log";
 my $dir_svn = "$dir_chroot/svn";
 my $package_results = "$dir_chroot/results";
+my $package_results_upload = "/home/httpd/gpsdrive.de"; #This is the upload Directory
 my $user = "tweety";
 my $DEBUG   = 3;
 my $VERBOSE = 1;
@@ -121,7 +122,8 @@ my %proj2path=(
     'merkaartor-0.12' 	=> 'openstreetmap-applications/editors/merkaartor-branches/merkaartor-0.12-fixes',
     'merkaartor-0.11' 	=> 'openstreetmap-applications/editors/merkaartor-branches/merkaartor-0.11-fixes',
     'merkaartor-0.13' 	=> 'openstreetmap-applications/editors/merkaartor-branches/merkaartor-0.13-fixes',
-    'osm-editor' 	=> 'openstreetmap-applications/editors/osm-editor',
+#    'osm-editor' 	=> 'openstreetmap-applications/editors/osm-editor',
+    'osm-editor-qt3' 	=> 'openstreetmap-applications/editors/osm-editor/qt3',
     'osm-editor-qt4' 	=> 'openstreetmap-applications/editors/osm-editor/qt4',
     );
 
@@ -145,30 +147,39 @@ my %proj2debname=(
     'merkaartor-0.12' 	=> 'merkaartor-0.12-fixes',
     'merkaartor-0.11' 	=> 'merkaartor-0.11-fixes',
     'merkaartor-0.13' 	=> 'merkaartor-0.13-fixes',
-    'osm-editor' 	=> 'openstreetmap-editor',
+#    'osm-editor' 	=> 'openstreetmap-editor',
+    'osm-editor-qt3' 	=> 'openstreetmap-editor',
     'osm-editor-qt4' 	=> 'openstreetmap-editor',
     );
-my %num_packages=(
-    'gpsdrive'	 	=> 3,
-    'gpsdrive-maemo' 	=> 1,
-    'gpsdrive-data-maps'=> 1,
-    'gpsdrive-2.10pre5' => 3,
-    'gpsdrive-2.10pre6' => 3,
-    'opencarbox' 	=> 1,
-    'osm2pgsql' 	=> 1,
-    'merkaartor' 	=> 1,
-    'josm' 		=> 1,
-    'osm-utils'		=> 5,
-    'osm-mapnik-world-boundaries' 	=> 1,
-    'osm-mapnik-data' 	=> 1,
-    'map-icons' 	=> 14,
-    'osmosis' 		=> 1,
-    'gosmore'	 	=> 1,
-    'merkaartor-0.12' 	=> 1,
-    'merkaartor-0.11' 	=> 1,
-    'merkaartor-0.13' 	=> 1,
-    'osm-editor' 	=> 1,
-    'osm-editor-qt4' 	=> 1,
+my %package_names=(
+    'gpsdrive'	 	=> [qw(gpsdrive gpsdrive-friendsd gpsdrive-utils)],
+    'gpsdrive-maemo' 	=> [qw(gpsdrive)],
+    'gpsdrive-data-maps'=> [qw(gpsdrive-data-maps)],
+    'gpsdrive-2.10pre5' => [qw(gpsdrive gpsdrive-friendsd gpsdrive-maps)],,
+    'gpsdrive-2.10pre6' => [qw(gpsdrive gpsdrive-friendsd gpsdrive-maps)],,
+    'opencarbox' 	=> [qw(opencarbox)],
+    'osm2pgsql' 	=> [qw(osm2pgsql)],
+    'merkaartor' 	=> [qw(merkaartor)],
+    'josm' 		=> [qw(openstreetmap-josm)],
+    'osm-utils'		=> [qw(openstreetmap-utils openstreetmap-utils-export openstreetmap-utils-filter
+                               openstreetmap-utils-lib openstreetmap-utils-import)],
+    'osm-mapnik-world-boundaries' 	=> [qw(openstreetmap-mapnik-world-boundaries)],
+    'osm-mapnik-data' 	=> [qw(openstreetmap-mapnik-data)],
+    'map-icons' 	=> [qw(openstreetmap-map-icons-classic.big openstreetmap-map-icons-classic.small
+                               openstreetmap-map-icons-info openstreetmap-map-icons-japan-png
+                               openstreetmap-map-icons-japan openstreetmap-map-icons-nickw
+                               openstreetmap-map-icons-square.big openstreetmap-map-icons-square.small-minimal
+                               openstreetmap-map-icons-square.small openstreetmap-map-icons-svg-png
+                               openstreetmap-map-icons-svg-twotone-png openstreetmap-map-icons-svg-twotone
+                               openstreetmap-map-icons-svg openstreetmap-map-icons)],
+    'osmosis' 		=> [qw(openstreetmap-osmosis)],
+    'gosmore'	 	=> [qw(openstreetmap-gosmore)],
+    'merkaartor-0.12' 	=> [qw(merkaartor)],
+    'merkaartor-0.11' 	=> [qw(merkaartor)],
+    'merkaartor-0.13' 	=> [qw(merkaartor)],
+#    'osm-editor' 	=> [qw(osm-editor)],
+#    'osm-editor-qt3' 	=> [qw(osm-editor)],
+#    'osm-editor-qt4' 	=> [qw(osm-editor)],
     );
 
 my %svn_repository_url=(
@@ -182,8 +193,8 @@ my %svn_repository_url=(
 
 my %svn_update_done;
 
-my @available_proj=  sort keys %num_packages;
-my @all_proj = grep { $_ !~ m/gpsdrive-maemo|merkaartor-0...|gpsdrive-2.10pre|osm-editor-qt4/ } @available_proj;
+my @available_proj=  sort keys %package_names;
+my @all_proj = grep { $_ !~ m/gpsdrive-maemo|merkaartor-0...|gpsdrive-2.10pre/ } @available_proj;# |osm-editor-qt4
 
 my @projs;
 #@projs= keys %proj2path;
@@ -280,10 +291,8 @@ sub debug($$$){
     my $level = shift;
     my $msg = shift;
 
-    die "Wrong Reference".ref($self)  unless ref($self) eq "BuildTask";
-
-    my $platform = $self->platform();
-    my $proj     = $self->proj();
+    my $platform = $self->{platform}||'';
+    my $proj     = $self->{proj}||'';
 
     return
 	unless $DEBUG >= $level;
@@ -329,7 +338,7 @@ sub Clear_Log($$$){
 	die "Cannot Log, Directory '$dir_log' does not exist\n";
     }
     my $dst_dir="$dir_log/$proj/$platform";
-    for my $file ( glob("$dst_dir/*" ) ) {
+    for my $file ( glob("$dst_dir/*.log*" ) ) {
 	unlink $file;
     }
 }
@@ -356,15 +365,21 @@ sub Log($$$){
 	    or warn "WARNING: Konnte Pfad $dst_dir nicht erzeugen: $!\n";
     }
 
-    my $log_file ="$dst_dir/$section.log.shtml"; 
+    # Normal Log Output
+    my $log_file ="$dst_dir/$section.log"; 
+    append_file(  $log_file, "$msg\n" );
+
+    # Html Log
+    $log_file ="$dst_dir/$section.log.shtml"; 
     if ( ! -s  $log_file ) {
 	append_file(  $log_file, "<html>\n<pre>\n" );
     }
     my $html_msg=$msg;
     $html_msg =~ s/\</&lt;/g;
     $html_msg =~ s/\>/&gt;/g;
+    $html_msg =~ s/^(.*(error|warn|No rule to make target|cannot read directory).*)$/<font color="RED">$1<\/font>/gmi;
+    $html_msg =~ s/^(.*(No package|was not found|No such file or directory|missing ).*)$/<font color="RED">$1<\/font>/gmi;
     append_file(  $log_file, "$html_msg\n" );
-
 }
 
 # ------------------------------------------------------------------
@@ -395,7 +410,7 @@ sub last_result_file($){
 # add caching of last result. This enables not building (successfull) two times the same package.
 sub last_result($;$){
     my $self       = shift;
-    my $new_result = shift;
+    my $new_result = shift; # success|fail|dependencies
 
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
 
@@ -545,6 +560,7 @@ sub proj($){
 
 # ------------------------------------------------------------------
 # subpath of the project directory
+# Example: openstreetmap-applications/utils/osmosis
 sub proj_sub_dir($) {
     my $self = shift;
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
@@ -561,6 +577,7 @@ sub proj_sub_dir($) {
 
 # ------------------------------------------------------------------
 # return the base directory for a specific build
+# Example: /home/chroot/debian-squeeze-64/home/tweety/openstreetmap-applications/utils/osmosis
 sub build_dir($){
     my $self = shift;
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
@@ -575,6 +592,7 @@ sub build_dir($){
 
 # ------------------------------------------------------------------
 # Directory where the svn Sourcetree is located for the project
+# Example: /home/chroot/svn/openstreetmap-applications/utils/osmosis
 sub svn_dir_full($){
     my $self = shift;
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
@@ -749,19 +767,19 @@ sub svn_revision_platform($) {
     my $self = shift;
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
 
-    my $proj     = $self->proj();
-    my $build_dir    = $self->build_dir();
+    my $proj      = $self->proj();
+    my $svn_dir_full = $self->svn_dir_full();
+    my $rev_file="$svn_dir_full/debian/svnrevision";
+    if ( ! -r  $rev_file ) {
+	warn "Cannot read Revision File for $proj: '$rev_file'\n";
+	return '';
+    }
+
+    my $svn_revision = slurp( $rev_file );
+    $svn_revision =~ s/\s\n//g;
     
-    my $proj_sub_dir = $self->proj_sub_dir();
-
-    return '' 
-	unless -r  "$build_dir/debian/svnrevision";
-
-    my $svn_revision = slurp( "$build_dir/debian/svnrevision" );
-    chomp $svn_revision;
-
     return $svn_revision;
-	     };
+		      };
 
 
 # ------------------------------------------------------------------
@@ -1066,8 +1084,6 @@ sub debuild($) {
     $self->debug(4,"Proj: $proj");
     my $proj_sub_dir = $self->proj_sub_dir();
 
-    my $svn_revision = $self->svn_revision_platform();
-
     if ( ! $do_fast ) {
 	my ($rc,$out,$err,$out_all) = $self->dchroot($proj_sub_dir ,"debuild clean");
 	if ( $err ) {
@@ -1092,7 +1108,7 @@ sub debuild($) {
 		     "\t".join("\n\t", @dependencies)."\n".
 		     "Written install suggestion to : '$dep_file'\n"	
 	    );
-	write_file($dep_file,"chroot $dir_chroot/$platform aptitude install ".
+	write_file($dep_file,"chroot $dir_chroot/$platform aptitude --assume-yes install ".
 		   join("\n", @dependencies)."\n");
 	$self->last_result("fail-dependency");
 	return -1;
@@ -1108,6 +1124,7 @@ sub debuild($) {
 
     # ------ Collect Resulting *.deb names
     my $result_dir=dirname("$dir_chroot/$platform/home/$user/$proj_sub_dir/");
+    my $svn_revision = $self->svn_revision_platform();
     my @results= grep { $_ =~ m/\.deb$/ } glob("$result_dir/*$svn_revision*.deb");
 
     @results= grep { $_ !~ m/2.10pre/ } @results;
@@ -1115,14 +1132,46 @@ sub debuild($) {
     my $result_count=scalar(@results);
     $self->{'results'}->{'deb-count'}=$result_count;
     $self->{'results'}->{'packages'}= \@results;
-    my $result_expected =$num_packages{$proj}; 
-    if ( $result_expected !=  $result_count ) {
+    my $result_expected = scalar(@{$package_names{$proj}});
+    if ( ! $result_count ) {
+	my $all_deb_in_results = join(",",glob("$result_dir/*$svn_revision*.deb"));
+	$self->error( "!!!!!!!! WARN: NO resulting Packages for Proj '$proj' on Platform $platform.\n".
+		      "Expecting $result_expected packages for svn-revision $svn_revision\n".
+		      "see results in '$result_dir'\n".
+		      "Other Debian Files:  $all_deb_in_results\n");
+	$self->last_result("fail");
+    } elsif ( $result_expected !=  $result_count ) {
 	$self->error( "!!!!!!!! WARN: Number of resulting Packages for Proj '$proj' on Platform $platform is Wrong.\n".
 		      "Expecting $result_expected packages for svn-revision $svn_revision, got: $result_count Packages\n".
 		      "see results in '$result_dir'");
 	$self->last_result("fail");
     } else {
-	$self->last_result("success");
+	# Check for missing result-packages
+	my @names=@{$package_names{$proj}};
+	my $missing=0;
+	for my $name ( @{$package_names{$proj}} ) {
+	    my $check_name="${name}_(|2\.10svn)${svn_revision}_(i386|amd64|all)\.deb";
+	    if ( ! grep { $_ =~ m/$check_name$/ } @results ) {
+		$self->error( "!!!!!!!! ERROR: Missing Result Package $name\n");
+		$missing++;
+	    };
+	}
+
+	my $wrong_name=0;
+	for my $name ( @results ) {
+	    my $short_name=basename($name);
+	    if ( ! grep { $short_name =~ m/${_}_(|2\.10svn)${svn_revision}_(i386|amd64|all)\.deb$/ }  @{$package_names{$proj}} ) {
+		$self->error( "!!!!!!!! ERROR: Unknown Result Package '$name'\n");
+		$wrong_name++;
+	    };
+	}
+	if ( $missing ) {
+	    $self->last_result("missing");
+	} elsif ( $wrong_name ) {
+	    $self->last_result("wrong_name");
+	} else {
+	    $self->last_result("success");
+	} 
     }
     $self->debug(3,"Resulting Packages($result_count):");
     $self->debug(4,"\n\t".join("\n\t",@results));
@@ -1207,10 +1256,11 @@ sub write_html_results(){
     print $fh "<br/>\n";
     print $fh "<table border=1>\n";
     
-    print  $fh "<tr><th>Project</th>";
+    print  $fh "<tr><th>Project</th><th>svn</th>";
     for my $platform ( @platforms ) {
 	my $print_platform=$platform;
 	$print_platform=~ s/(debian|ubuntu)-/$1\<br\/\>/;
+	$print_platform=~ s/-/ /g;
 	
 	print $fh "<th>$print_platform</th>" ;
 	
@@ -1218,14 +1268,15 @@ sub write_html_results(){
     print  $fh "</tr>\n";
 
     for my $proj ( @projs ) {
-	print  $fh "<tr><td>";
+	print  $fh "<tr>\n";
 	my $rel_proj_log_dir="$proj";
-	print $fh "<a href=\"$rel_proj_log_dir\">";
-	printf $fh "%-28s ",$proj;
-	print $fh "</a>\n";
+	printf $fh "	<td><a href=\"$rel_proj_log_dir\">%s</a></td>\n",$proj;
+
+	my $proj_rev=svn_revision_platform( bless({proj=>$proj,platform=>'independent'},'BuildTask') );
+	print $fh "     <td>$proj_rev</td>\n";
+
 	for my $platform ( @platforms ) {
 #	    print $fh "$platform ";
-	    print $fh "     <td>";
 	    my $task = $RESULTS->{$platform}->{$proj};
 	    my $rel_log_dir="$proj/$platform";
 	    if ( ! defined ( $task ) )  {
@@ -1256,16 +1307,14 @@ sub write_html_results(){
 	    my $print_platform=$platform;
 	    $print_platform=~ s/(debian-|ubuntu-)//;
 
-	    print $fh "		<A href=\"$rel_log_dir\">\n";
-#	    print $fh "<FONT  color=\"$color_res\">". $print_platform." </font>" ;
-	    printf $fh "		<FONT  color=\"$color_rev\">%-6s </font>\n", $rev;
+	    print $fh "     <td> <A href=\"$rel_log_dir\">";
+	    printf $fh "	<FONT  color=\"$color_rev\">%-6s </font>\t", $rev;
 	    if (  $rev_last_good
 		  && ( $rev ne $rev_last_good ) 
 		) {
-		print $fh "		<FONT color=\"GREEN\">($rev_last_good)</font>\n";
+		print $fh "\n		<FONT color=\"GREEN\">($rev_last_good)</font>\n";
 	    }
-	    print $fh "		</a>";
-	    print $fh "</td>\n\n";
+	    print $fh " </a> </td>\n\n";
 	}
 	print $fh "\n";
 	print  $fh "</tr>\n";
@@ -1276,7 +1325,7 @@ sub write_html_results(){
     print $fh "Colors:\n";
     print $fh "<ul>\n";
     print $fh "<li><FONT color=\"green\">green</font>: Build successfull</li>\n";
-    print $fh "<li><FONT color=\"blue\">blue</font>: Build old but successfull</li>\n";
+    print $fh "<li><FONT color=\"blue\">blue</font>: Build is old but successfull</li>\n";
     print $fh "<li><FONT color=\"red\">red</font>: Build failed</li>\n";
     print $fh "</ul>\n";
     print $fh "</html>\n";
@@ -1294,18 +1343,90 @@ sub write_html_results(){
 	    my $fh = IO::File->new(">$html_index");
 	    print $fh "<!--#include virtual=\"/header.shtml\" -->\n";
 	    print $fh "<div>\n";
-	    print $fh "<H1>Results from the Build-Cluster</H1>\n";
+	    print $fh "<H1><a href=\"../../results.shtml\">Results from the Build-Cluster</a></H1>\n";
 	    print $fh "<H2>Project: $proj</H2>\n";
 	    print $fh "<H2>Platform: $platform</H2>\n";
-	    print $fh localtime(time())."\n";
+
+	    print $fh "<table><tr>\n";
+	    print $fh "<td valign=\"top\">\n";
+
+	    print $fh "Log Files:";
 	    print $fh "<ul>";
-	    for my $file ( glob("$html_index_dir/*") ) {
+	    debug({proj=>$proj,platform=>$platform},5,"Files:");
+	    for my $file ( glob("$html_index_dir/*.shtml") ) {
 		my $file_name = basename($file);
+		debug({proj=>$proj,platform=>$platform},5,"              $file");
 		next if $file_name eq "index.shtml";
+
+		my @lines = read_file( $file ) ;
+		my $count_warn=(grep {$_ =~ m/warn/i } @lines);
+		my $count_error=(grep {$_ =~ m/error/i } @lines);
 		my ( $disp_name ) = ( $file_name =~ m/(.*)\.shtml/ );
-		print $fh "<li><A href=\"$file_name\">$disp_name</a></li>\n";
+		print $fh "<li><A href=\"$file_name\">$disp_name</a>";
+		print $fh "<br/>&nbsp;&nbsp;error: $count_error" if $count_error;
+		print $fh "<br/>&nbsp;&nbsp;warn: $count_warn" if $count_warn;
+		print $fh "</li>\n";
 	    }
 	    print $fh "</ul>";
+	    print $fh "</td>\n";
+
+
+	    # -----------------------------------------------------------------------
+	    # list of Debian Packages
+	    my $task=BuildTask->new( proj     => $proj ,
+				     platform => $platform );    
+	    my $rev_last_good  = $task->last_good_result();
+	    my $res_last  = $task->last_result();
+	    #print "rev_last_good($proj ,$platform) '$rev_last_good'\n";
+
+	    print $fh "<td valign=\"top\">\n";
+	    print $fh "Status:<br/><br/>\n";
+	    print $fh "Last Good Revision:<br/>&nbsp;&nbsp; $rev_last_good<br/><br/>\n";
+	    print $fh "Last Result:<br/>&nbsp;&nbsp; $res_last<br/>\n";
+	    print $fh "</td>\n";
+
+
+	    #$package_results
+	    my ($distri,$version,$bits)=split_platform($platform);
+
+	    my $platform_glob='{i386,amd64,all}';
+	    $platform_glob='{i386,all}' if $bits eq "32";
+	    $platform_glob='{amd64,all}' if $bits eq "64";
+
+	    print $fh "<td valign=\"top\">\n";
+	    print $fh "<A href=\"/$distri/pool/$version/\">Packages ($distri $version)</a>:\n";
+	    if ( ${rev_last_good} ) {
+
+		print $fh "\t<ul>\n";
+		for my $name ( @{$package_names{$proj}} ) {
+		    print $fh "\t<li>$name:\n";	
+
+		    $task->debug(7,"glob($package_results_upload/$distri/pool/$version/${name}_${rev_last_good}_${platform_glob}.deb");
+		    my @files = glob("$package_results_upload/$distri/pool/$version/${name}_*${rev_last_good}_${platform_glob}.deb");
+		    @files = grep { -s $_ } @files;
+		    if ( @files ) {
+			print $fh "\t<ul>\n";
+			for my $file ( @files ) {
+			    my $file_name = basename($file);
+			    my $link = $file;
+			    $link =~ s/^$package_results_upload//;
+			    #print "\t$link\n";	
+			    print $fh "\t<li><A href=\"$link\"> $file_name</a></li>\n";	
+			}
+			print $fh "\t</ul>\n";
+		    } else {
+			print $fh "<FONT color=\"RED\">No Files found</font>\n";
+		    }
+		    print $fh "</li>\n";
+		}
+		print $fh "\t<ul>\n";
+	    }
+	    print $fh "</td>\n";
+	    print $fh "</tr></table>\n";
+
+	    print $fh localtime(time())."\n";
+
+	    print $fh "<br/><br/><a href=\"../../results.shtml\">Back to Overview</a>\n";
 	    print $fh "</div>\n";    
 	    print $fh "<!--#include virtual=\"/footer.shtml\" -->\n";
 	    $fh->close();
@@ -1548,3 +1669,7 @@ Write Html Pages for the Results and exit.
   - Help/manpage
 
   - Error Code checking
+
+  - while doing "svn up" "svn co": Check if another 
+    svn command is running on the same directory
+

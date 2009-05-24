@@ -18,7 +18,7 @@ distri=debian
 release=lenny
 architecture=32
 
-log_dir="/var/log/chroot"
+log_dir="/home/chroot/log-setup"
 svn_co_base_dir=${chroot_base_dir}/svn
 
 mkdir -p "${log_dir}"

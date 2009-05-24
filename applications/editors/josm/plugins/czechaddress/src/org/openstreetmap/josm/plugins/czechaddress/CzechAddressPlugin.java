@@ -23,6 +23,8 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElemen
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.parser.MvcrParser;
 import org.openstreetmap.josm.plugins.czechaddress.actions.FactoryAction;
+import org.openstreetmap.josm.plugins.czechaddress.actions.HelpAction;
+import org.openstreetmap.josm.plugins.czechaddress.actions.ModifierAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.SplitAreaByEmptyWayAction;
 import org.openstreetmap.josm.plugins.czechaddress.gui.FactoryDialog;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
@@ -67,7 +69,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         mainDatabase = new Database();
         final MvcrParser parser = new MvcrParser();
         //parser.setFilter(null, null, null, "");
-        //parser.setFilter("BRNO", "BRNO", null, null);
+        parser.setFilter("HUSTOPEČE", "HUSTOPEČE", null, null);
         parser.setTargetDatabase(mainDatabase);
         parser.setStorageDir(pluginDir);
 
@@ -111,12 +113,19 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
     static public void initReasoner() {
 
         // Move houses from list of Houses to list of AddressElements.
-        List<House> tmp1 = location.getAllHouses();
-        ArrayList<AddressElement> tmp2 = new ArrayList<AddressElement>(tmp1.size());
-        for (House h : tmp1) tmp2.add(h);
+        List<House> houses   = location.getAllHouses();
+        ArrayList<AddressElement> pool
+                = new ArrayList<AddressElement>(houses.size());
+        for (House house : houses) pool.add(house);
+
+
+        /*Capitalizator cap = new Capitalizator(Main.ds.allPrimitives(),
+                                              location.getStreets());
+        for (Street s : cap.getClassifiedItems())
+            System.out.println(s.toString() + " --> " + cap.translate(s).getName());*/
 
         // And add them to the reasoner.
-        mainReasoner = new Reasoner(tmp2);
+        mainReasoner = new Reasoner(pool);
         mainReasoner.addPrimitives(Main.ds.allPrimitives());
     }
 
@@ -185,6 +194,8 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             menuItems.add(MainMenu.add(czechMenu, new PointManipulatorAction()));
             menuItems.add(MainMenu.add(czechMenu, new GroupManipulatorAction()));
             menuItems.add(MainMenu.add(czechMenu, new ConflictResolveAction()));
+            menuItems.add(MainMenu.add(czechMenu, new ModifierAction()));
+            menuItems.add(MainMenu.add(czechMenu, new HelpAction()));
             return;
         }
 

@@ -96,6 +96,7 @@
                 <pathelement location="${josm.jar}"/>
                 <pathelement path="${java.class.path}"/>
             </classpath>
+        <arg value="/home/radek/Desktop/Hustopeče.osm"/>
         </java>
     </target>
 

@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+
 /**
  * Street is a member of {@link ElementWithStreets}
  *
@@ -23,16 +25,24 @@ public class Street extends ElementWithHouses  {
         return (ElementWithStreets) parent;
     }
 
-
-
-    /*int[] getFieldMatchList(OsmPrimitive primitive) {
+    @Override
+    protected int[] getFieldMatchList(OsmPrimitive primitive) {
         int[] result = {0};
         
         if (primitive.get("highway") == null)
             return result;
         
         result[0] = matchField(name, primitive.get("name"));
-        
+
+        if (primitive.get("name") != null) {
+            String[] parts1 = primitive.get("name").split("\\.* +");
+            String[] parts2 =                  name.split("\\.* +");
+            for (String p : parts1)
+                System.out.println("X: " + p);
+            for (String p : parts2)
+                System.out.println("Y: " + p);
+        }
+
         return result;
-    }*/
+    }
 }

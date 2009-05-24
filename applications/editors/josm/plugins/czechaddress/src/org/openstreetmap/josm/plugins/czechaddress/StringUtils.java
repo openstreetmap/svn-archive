@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.czechaddress;
 
+import org.openstreetmap.josm.data.coor.LatLon;
+
 /**
  * Collection of utilities for manipulating strings.
  *
@@ -27,6 +29,57 @@ public class StringUtils {
                 break;
         }
         return result;
+    }
+
+    public static String coordinateToString(double coor) {
+        double degrees = Math.floor(coor);
+        double minutes = Math.floor( 60*(coor-degrees) );
+        double seconds = 60*60*(coor-degrees-minutes/60);
+
+        return String.valueOf(Math.round(    degrees))     + "°" +
+               String.valueOf(Math.round(    minutes))     + "'" +
+               String.valueOf(Math.round(100*seconds)/100.0) + "\"";
+    }
+
+    public static String latLonToString(LatLon position) {
+        assert position != null;
+        //if (position == null) return "";
+
+        return "(lat: " + coordinateToString(position.lat())
+             + " lon: " + coordinateToString(position.lon()) + ")";
+    }
+
+    /**
+     * String matcher with abbreviations
+     *
+     * <p>Returns {@code true} even if s1="Nám. Svobody" and
+     * s2="Náměstí Svobody".</p>
+     */
+    public boolean matchAbbrev(String s1, String s2) {
+        String[] parts1 = s1.split(" +");
+        String[] parts2 = s2.split(" +");
+
+        if (parts1.length != parts2.length)
+            return false;
+
+        for (int i=0; i<parts1.length; i++) {
+            String part1 = parts1[i];
+            String part2 = parts2[i];
+
+            if (part1.charAt(part1.length()-1) == '.')
+                part1 = part1.substring(0, part1.length()-1);
+
+            if (part2.charAt(part2.length()-1) == '.')
+                part2 = part2.substring(0, part2.length()-1);
+
+            int minLen = Math.min(part1.length(), part2.length());
+            part1 = part1.substring(0, minLen).toUpperCase();
+            part2 = part2.substring(0, minLen).toUpperCase();
+
+            if (!part1.equals(part2))
+                return false;
+        }
+        return true;
     }
 
 }

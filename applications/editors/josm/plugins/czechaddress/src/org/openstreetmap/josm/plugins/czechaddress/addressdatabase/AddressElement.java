@@ -4,6 +4,7 @@ import java.util.List;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Match;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
 
@@ -274,5 +275,31 @@ public abstract class AddressElement {
         }
         
         return 0; // <-- just to make compilers happy. We cannot get here.
-    }    
+    }
+
+
+
+    public String getIsIn() {
+        return getIsIn(null);
+    }
+
+    protected String getIsInName() {
+        return getName();
+    }
+
+    private String getIsIn(String childString) {
+
+        String result = "";
+
+        if (getIsInName() != null  &&  !getIsInName().equals(childString)) {
+            result += getIsInName() + ", ";
+        }
+
+        if (parent != null)
+            result += parent.getIsIn(getIsInName());
+        else
+            result += "CZ";
+        
+        return result;
+    }
 }

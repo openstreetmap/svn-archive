@@ -170,7 +170,7 @@ public class House extends AddressElement {
                                 prim.get(KEY_ADDR_STREET),
                                 pr.parentStreet.getName()));
         
-        if (pr.parentViToCi != null) {
+/*        if (pr.parentViToCi != null) {
             String targetIsIn = "";
 
             if ((pr.parentSuburb != null) &&
@@ -187,11 +187,14 @@ public class House extends AddressElement {
             props.add(getStringFieldDiff(KEY_ADDR_CITY,
                                 prim.get(KEY_ADDR_CITY),
                                 pr.parentViToCi.getName()));
-
+*/
+        
+        
+        if (parent.parent != null) // For sure our parent is a ElemWithStreets
             props.add(getStringFieldDiff(KEY_IS_IN,
                                 prim.get(KEY_IS_IN),
-                                targetIsIn));
-        }
+                                parent.parent.getIsIn()));
+/*        }*/
 
         // If we have added any proposal so far, add the source info as well.
         if (props.size() > 0)

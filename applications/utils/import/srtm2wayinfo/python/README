@@ -1,0 +1,1 @@
+This was an initial development version of the code, however the python implementation turned out to be to memory hungry to be usable. It took more than 800 MB for importing a 100 MB osm.bz2 file.

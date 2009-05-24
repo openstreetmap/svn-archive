@@ -1,60 +1,4 @@
-
-class QString;
-class QFile;
-#include <QObject>
-#include <QStringRef>
-#include <QList>
-#include <QMap>
-#include <QStringList>
-#include <QXmlStreamReader>
-
-class OsmNode
-{
-    public:
-        OsmNode() { lat = 361; lon = 361; }
-        OsmNode(QStringRef lat_ref, QStringRef lon_ref)
-        {
-            lat = lat_ref.toString().toFloat();
-            lon = lon_ref.toString().toFloat();
-        }
-        float lat, lon;
-};
-
-class OsmWay
-{
-    public:
-        OsmWay(QStringRef id_ref)
-        {
-            id = id_ref.toString();
-        }
-        
-        void addNode(QStringRef node_ref)
-        {
-            nodes.append(node_ref.toString().toInt());
-        }
-        QString id;
-        QList<int> nodes;
-};
-
-class OsmData
-{
-    private:
-            QStringList wayTags;
-    public:
-        OsmData() {
-            wayTags << "highway";
-        }
-        void parseFile(QString filename);
-        void parse(QFile *file);
-        QMap<int, OsmNode> nodes;
-        QList<OsmWay *> ways;
-    private:
-        OsmWay *currentWay;
-};
-
-
-//////////7
-
+#include "osm-parse.h"
 #include <QString>
 #include <QFile>
 #include <QDebug>
@@ -67,18 +11,22 @@ void OsmData::parseFile(QString filename)
     f.close();
 }
 
+#define WAYS
 void OsmData::parse(QFile *file)
 {
     bool keep = false;
-    int i = 0, kept=0, discarded=0;
+    int i = 0, kept = 0, discarded = 0, nodes_referenced = 0;
     QXmlStreamReader xml(file);
     qDebug() << "started parsing";
     while (!xml.atEnd()) {
         xml.readNext();
         //qDebug() << "read element" << xml.name().toString() << xml.errorString() << file->errorString();
+		#ifdef WAYS
         if (xml.isEndElement() && xml.name() == "way") {
             if (keep) {
+				currentWay->nodes.squeeze();
                 ways.append(currentWay);
+				nodes_referenced += currentWay->nodes.count();
                 kept++;
             } else {
                 delete currentWay;
@@ -87,6 +35,7 @@ void OsmData::parse(QFile *file)
             currentWay = 0;
             continue;
         }
+		#endif
 
         if (!xml.isStartElement()) continue;
 
@@ -106,6 +55,7 @@ void OsmData::parse(QFile *file)
             continue;
         }
 
+#ifdef WAYS
         if (xml.name() == "way") {
             keep = false;
             currentWay = new OsmWay(xml.attributes().value("id"));
@@ -114,8 +64,9 @@ void OsmData::parse(QFile *file)
         if (xml.name() == "nd") {
             currentWay->addNode(xml.attributes().value("ref"));
         }
+#endif
     }
-    qDebug() << kept << discarded;
+    qDebug() << kept << discarded << nodes_referenced;
 }
 
 int main(void)
@@ -123,4 +74,5 @@ int main(void)
     OsmData data;
     data.parseFile("/dev/stdin");
     qDebug() << data.nodes.count() << data.ways.count();
+	qDebug() << data.ways.capacity();
 }

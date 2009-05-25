@@ -26,6 +26,7 @@ import org.openstreetmap.josm.plugins.czechaddress.actions.FactoryAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.HelpAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.ModifierAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.SplitAreaByEmptyWayAction;
+import org.openstreetmap.josm.plugins.czechaddress.gui.DatabaseModifier;
 import org.openstreetmap.josm.plugins.czechaddress.gui.FactoryDialog;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.SelectionMonitor;
@@ -69,7 +70,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         mainDatabase = new Database();
         final MvcrParser parser = new MvcrParser();
         //parser.setFilter(null, null, null, "");
-        parser.setFilter("HUSTOPEČE", "HUSTOPEČE", null, null);
+        //parser.setFilter("HUSTOPEČE", "HUSTOPEČE", null, null);
         parser.setTargetDatabase(mainDatabase);
         parser.setStorageDir(pluginDir);
 
@@ -118,11 +119,8 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
                 = new ArrayList<AddressElement>(houses.size());
         for (House house : houses) pool.add(house);
 
-
-        /*Capitalizator cap = new Capitalizator(Main.ds.allPrimitives(),
-                                              location.getStreets());
-        for (Street s : cap.getClassifiedItems())
-            System.out.println(s.toString() + " --> " + cap.translate(s).getName());*/
+        // Update database according to the map
+        (new DatabaseModifier()).setVisible(true);
 
         // And add them to the reasoner.
         mainReasoner = new Reasoner(pool);

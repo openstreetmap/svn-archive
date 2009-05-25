@@ -58,20 +58,24 @@ public class DatabaseModifier extends ExtendedDialog {
         }
 
         streetTable.setModel(streetModel);
-        streetTable.setDefaultRenderer( Street.class,
-                                        new StreetRenderer());
+        streetTable.setDefaultRenderer( AddressElement.class,
+                                        new AddressElementRenderer());
 
         // And finalize initializing the form.
         setupDialog(mainPanel, new String[] { "ok.png", "cancel.png" });
-        setAlwaysOnTop(false);
-
-        // TODO: Why does it always crash if the modality is set in constructor?
-        setModal(false);
     }
 
     @Override
     protected void buttonAction(ActionEvent evt) {
         super.buttonAction(evt);
+
+        if (getValue() == 1) {
+            assert streetModel.elems.size() == streetModel.names.size();
+            
+            for(int i=0; i<streetModel.elems.size(); i++)
+                streetModel.elems.get(i).setName(streetModel.names.get(i));
+        }
+
         setVisible(false);
     }
 
@@ -150,21 +154,16 @@ public class DatabaseModifier extends ExtendedDialog {
     private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
-    private class StreetRenderer extends DefaultTableCellRenderer {
+    private class AddressElementRenderer extends DefaultTableCellRenderer {
+
+        public AddressElementRenderer() {}
 
         @Override
-        public Component getTableCellRendererComponent(JTable table,
-                Object value, boolean isSelected, boolean hasFocus,
-                int row, int column) {
-            Component c =  super.getTableCellRendererComponent(table, value,
-                    isSelected, hasFocus, row, column);
-
-            System.out.println("Tady som! " + value);
+        protected void setValue(Object value) {
+            super.setValue(value);
 
             if (value instanceof AddressElement)
                 setText(((AddressElement) value).getName() );
-
-            return c;
         }
     }
 

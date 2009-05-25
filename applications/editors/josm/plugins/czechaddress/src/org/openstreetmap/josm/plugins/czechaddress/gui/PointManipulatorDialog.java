@@ -30,11 +30,15 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * Dialog for adding/editing an address of a single primitive.
  *
+ * <p><b>TODO:</b> This dialog does not dispose and disconnect from
+ * message handling system after being closed. Reproduce: Create a node
+ * using this dialog, delete it and update reasoner.</p>
+ *
  * @author radomir.cernoch@gmail.com
  */
 public class PointManipulatorDialog extends ExtendedDialog implements StatusListener {
 
-    private Timer  updateMatchesTimes = null;
+    private Timer  updateMatchesTimer = null;
     private Action updateMatchesAction;
     private ProposalContainer proposalContainer;
 
@@ -87,6 +91,12 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
     protected void buttonAction(ActionEvent evt) {
         super.buttonAction(evt);
         if (getValue() == 1) {
+            
+            if (updateMatchesTimer.isRunning()) {
+                updateMatchesTimer.stop();
+                updateMatches();
+            }
+
             proposalContainer.applyAll();
 
             Main.ds.setSelected((Node) null); // TODO: This is an ugly hack.
@@ -290,12 +300,12 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
     }//GEN-LAST:event_changeLocationButtonActionPerformed
 
     private void keyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyReleased
-        if (updateMatchesTimes != null)
-            updateMatchesTimes.stop();
+        if (updateMatchesTimer != null)
+            updateMatchesTimer.stop();
         
-        updateMatchesTimes = new Timer(300, updateMatchesAction);
-        updateMatchesTimes.setRepeats(false);
-        updateMatchesTimes.start();
+        updateMatchesTimer = new Timer(300, updateMatchesAction);
+        updateMatchesTimer.setRepeats(false);
+        updateMatchesTimer.start();
     }//GEN-LAST:event_keyReleased
 
     private void proposalListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proposalListKeyReleased

@@ -15,6 +15,7 @@ iAttrib="TIGER"
 # H3010 Stream/River
 # H3013 Braided Stream
 # H3020 Canal, Ditch or Aqueduct
+# L4130 Point-to-Point Line
 # L4140 Property/Parcel Line (Including PLSS)
 # P0001 Nonvisible Linear Legal/Statistical Boundary
 # P0002 Perennial Shoreline
@@ -22,7 +23,7 @@ iAttrib="TIGER"
 # P0004 Other non-visible bounding Edge (e.g., Census water boundary, boundary of an areal feature)
 
 
-ignoremtfcc = [ "H1100", "H3010", "H3013", "H3020", "P0001", "P0002", "P0003", "P0004" ]
+ignoremtfcc = [ "H1100", "H3010", "H3013", "H3020", "L4130", "L4140", "P0001", "P0002", "P0003", "P0004" ]
 
 #Files will be split when longer than this number of nodes
 maxNodes = 300000
@@ -80,8 +81,20 @@ def parse_shp_for_osm( filename ):
 		tags["man_made"] = "pipeline"
 	    if mtfcc == "L4020":	#Powerline
 		tags["power"] = "line"
+	    if mtfcc == "L4031":	#Aerial Tramway/Ski Lift
+		tags["aerialway"] = "cable_car"
+	    if mtfcc == "L4110":	#Fence Line
+		tags["barrier"] = "fence"
+	    if mtfcc == "L4125":	#Cliff/Escarpment
+		tags["natural"] = "cliff"
+	    if mtfcc == "L4165":	#Ferry Crossing
+		tags["route"] = "ferry"
 	    if mtfcc == "R1011":	#Railroad Feature (Main, Spur, or Yard)
 		tags["railway"] = "rail"
+	    if mtfcc == "R1051":	#Carline, Streetcar Track, Monorail, Other Mass Transit Rail)
+		tags["railway"] = "light_rail"
+	    if mtfcc == "R1052":	#Cog Rail Line, Incline Rail Line, Tram
+		tags["railway"] = "incline"
 	    if mtfcc == "S1100":
 		tags["highway"] = "primary"
 	    if mtfcc == "S1200":

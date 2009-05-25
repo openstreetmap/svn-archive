@@ -198,7 +198,7 @@ public class House extends AddressElement {
 
         // If we have added any proposal so far, add the source info as well.
         if (props.size() > 0)
-            props.add(getListFieldDiff("source", prim.get("source:addr"), "mvcr:adresa"));
+            props.add(getListFieldDiff("source:addr", prim.get("source:addr"), "mvcr:adresa"));
 
         return props;
     }

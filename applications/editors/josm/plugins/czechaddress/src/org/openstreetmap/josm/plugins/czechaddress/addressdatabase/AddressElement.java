@@ -42,6 +42,16 @@ public abstract class AddressElement {
     }
 
     /**
+     * Sets the new name of this element.
+     *
+     * <p><b>NOTE:</b> Unlike in the default constructor, the name is <b>not</b>
+     * capitalized.</p>
+     */
+    public void setName(String newName) {
+        name = newName;
+    }
+
+    /**
      * Returns the name of this element.
      *
      * <p>The name is returned "as it was entered" in the constructor.</p>

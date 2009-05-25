@@ -33,8 +33,8 @@
         <manifest file="${plugin.build.dir}/${plugin.basepackage.dir}/MANIFEST.MF">
             <attribute name="Author" value="Radomír Černoch"/>
             <attribute name="Plugin-Description" value="Creating and handling address nodes and buildings within Czech Republic."/>
-            <attribute name="Plugin-Mainversion" value="1566"/>
-            <attribute name="Plugin-Version" value="0.1"/>
+            <attribute name="Plugin-Mainversion" value="1607"/>
+            <attribute name="Plugin-Version" value="0.1.1"/>
             <attribute name="Plugin-Class" value="${plugin.basepackage}.CzechAddressPlugin"/>
         </manifest>
 
@@ -96,7 +96,7 @@
                 <pathelement location="${josm.jar}"/>
                 <pathelement path="${java.class.path}"/>
             </classpath>
-        <arg value="/home/radek/Desktop/Hustopeče.osm"/>
+        <!--<arg value="/home/radek/Desktop/Hustopeče.osm"/>-->
         </java>
     </target>
 

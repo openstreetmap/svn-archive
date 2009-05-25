@@ -93,7 +93,7 @@ def parse_shp_for_osm( filename ):
 	    if mtfcc == "S1630":	#Ramp
 		tags["highway"] = "motorway_link"
 	    if mtfcc == "S1640":	#Service Drive usually along a limited access highway
-		tags["highway"] = "motorway_link"
+		tags["highway"] = "service"
 	    if mtfcc == "S1710":
 		tags["highway"] = "path"
 	    if mtfcc == "S1720":

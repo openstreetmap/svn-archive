@@ -3019,7 +3019,7 @@
 			.highway-track-grade2-core                     { stroke: #fff6e8; }
 			.highway-track-grade3-core                     { stroke: #fff2de; }
 			.highway-track-grade4-core                     { stroke: #ffeed4; }
-			.highway-track-grade5-core                     { stroke: #ffeac9; }
+			.highway-track-grade5-core                     { stroke: #ffeac9; } 
 			.highway-track-gradex-area                     { fill: #fff8ec; }
 			.highway-track-grade1-area                     { fill: #fffaf2; }
 			.highway-track-grade2-area                     { fill: #fff6e8; }

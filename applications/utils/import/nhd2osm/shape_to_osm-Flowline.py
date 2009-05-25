@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # based on the Massachusetts GIS script by christopher schmidt
 # based on version 0.1 downloaded from http://boston.freemap.in/osm/files/mgis_to_osm.py 
-# still setup for MassGIS data.  Compare with shp files avalible at same source as above to see how it should work.
-
-VERSION="0.2"
 # Version 0.2 changes to generalize the script some for use with other data by Dalep
+
+VERSION="0.3"
+# Version 0.3 Handles NHD Files - some changes to engine;
+#  adapted by Theodore Book
 
 # Tag Source  = iSource + _import_v + version + _ + date and time
 iSource="NHD"
@@ -292,7 +293,7 @@ def shape_to_osm( shp_filename, base_filename, blank_way_id ):
                     #print "Skipping node %d" %id
 
 	    #write the way
-            ret.append( "  <way id='-%d' action='modify' visible='true'>" % i )
+            ret.append( "  <way id='-%d' action='create' visible='true'>" % i )
             
             ids = [ nodelist[ round_point( point ) ][0] for point in segment ]
 
@@ -309,7 +310,7 @@ def shape_to_osm( shp_filename, base_filename, blank_way_id ):
                     ret.append( "  </way>" )
                     objectcount += 1
 		    i += 1
-                    ret.append( "  <way id='-%d' action='modify' visible='true'>" % i )
+                    ret.append( "  <way id='-%d' action='create' visible='true'>" % i )
                     ret.append( "    <nd ref='-%d' />" % id )
                 
             for k, v in waykey:

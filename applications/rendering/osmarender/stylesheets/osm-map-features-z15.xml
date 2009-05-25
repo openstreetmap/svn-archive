@@ -844,7 +844,32 @@
 				<area class="highway-core highway-byway-area no-bezier"/>
 			</rule>
 			<rule e="way" k="highway" v="track">
-				<area class="highway-core highway-track-area no-bezier"/>
+				<rule e="way" k="tracktype" v="grade1">
+					<area class="highway-core highway-track-grade1-area no-bezier" smart-linecap="no"/>
+				</rule>
+				<else>
+					<rule e="way" k="tracktype" v="grade2">
+						<area class="highway-core highway-track-grade2-area no-bezier" smart-linecap="no"/>
+					</rule>
+					<else>
+						<rule e="way" k="tracktype" v="grade3">
+							<area class="highway-core highway-track-grade3-area no-bezier" smart-linecap="no"/>
+						</rule>
+						<else>
+							<rule e="way" k="tracktype" v="grade4">
+								<area class="highway-core highway-track-grade4-area no-bezier" smart-linecap="no"/>
+							</rule>
+							<else>
+								<rule e="way" k="tracktype" v="grade5">
+									<area class="highway-core highway-track-grade5-area no-bezier" smart-linecap="no"/>
+								</rule>
+								<else>
+									<area class="highway-core highway-track-gradex-area no-bezier" smart-linecap="no"/>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
 			</rule>
 			<rule e="way" k="highway" v="unsurfaced">
 				<area class="highway-core highway-unsurfaced-area no-bezier"/>
@@ -990,7 +1015,32 @@
 						<line class="highway-racetrack-core"/>
 					</rule>
 					<else>
-						<line class="highway-core highway-track-core" smart-linecap="no"/>
+						<rule e="way" k="tracktype" v="grade1">
+							<line class="highway-core highway-track-core2 highway-track-grade1-core" smart-linecap="no"/>
+						</rule>
+						<else>
+							<rule e="way" k="tracktype" v="grade2">
+								<line class="highway-core highway-track-core2 highway-track-grade2-core" smart-linecap="no"/>
+							</rule>
+							<else>
+								<rule e="way" k="tracktype" v="grade3">
+									<line class="highway-core highway-track-core highway-track-grade3-core" smart-linecap="no"/>
+								</rule>
+								<else>
+									<rule e="way" k="tracktype" v="grade4">
+										<line class="highway-core highway-track-core highway-track-grade4-core" smart-linecap="no"/>
+									</rule>
+									<else>
+										<rule e="way" k="tracktype" v="grade5">
+											<line class="highway-core highway-track-core  highway-track-grade5-core" smart-linecap="no"/>
+										</rule>
+										<else>
+											<line class="highway-core highway-track-core2 highway-track-gradex-core" smart-linecap="no"/>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
 					</else>
 				</rule>
 				<rule e="way" k="highway" v="unsurfaced">
@@ -2195,11 +2245,12 @@
 
 			.highway-track-name                     { stroke-width: 0px;     font-size: 2.5px; }
 			.highway-track-ref                      { stroke-width: 0px;     font-size: 2.5px; }
-			.highway-track-back-casing              { stroke-width: 2.6px;   stroke: #ffffff; stroke-linecap: round; }
+			.highway-track-back-casing              { stroke-width: 2.6px;   stroke: #ffffff; stroke-linecap: round; stroke-opacity: 0.85; }
 			.highway-track-casing                   { stroke-width: 2.0px;   stroke: #d79331; }
 			.highway-track-area-back-casing         { stroke-width: 0.9px;   stroke: #ffffff; }
 			.highway-track-area-casing              { stroke-width: 0.6px;   stroke: #d79331; }
-			.highway-track-core                     { stroke-width: 1.4px;   stroke: #ffffff; }
+			.highway-track-core                     { stroke-width: 1.4px;   }
+			.highway-track-core2                    { stroke-width: 1.4px;   }
 			.highway-track-area                     { fill: #ffffff; }
 			.highway-track-name                     { stroke-width: 0px;     font-size: 2.5px; }
 			.highway-track-ref                      { stroke-width: 0px;     font-size: 2.5px; }
@@ -2211,6 +2262,19 @@
 			.highway-track-grade4-casing            { stroke-dasharray: 1.0, 2.0, 0.6, 2.0; stroke-linecap: butt; }
 			.highway-track-grade5-casing            { stroke-dasharray: 0.6, 2.0; stroke-linecap: butt; }
 			
+			.highway-track-gradex-core                     { stroke: #fff8ec; }
+			.highway-track-grade1-core                     { stroke: #fffaf2; }
+			.highway-track-grade2-core                     { stroke: #fff7eb; }
+			.highway-track-grade3-core                     { stroke: #fff4e3; }
+			.highway-track-grade4-core                     { stroke: #fff1db; }
+			.highway-track-grade5-core                     { stroke: #ffeed4; }
+			.highway-track-gradex-area                     { fill: #fff8ec; }
+			.highway-track-grade1-area                     { fill: #fffaf2; }
+			.highway-track-grade2-area                     { fill: #fff7eb; }
+			.highway-track-grade3-area                     { fill: #fff4e3; }
+			.highway-track-grade4-area                     { fill: #fff1db; }
+			.highway-track-grade5-area                     { fill: #ffeed4; }
+
 			.highway-byway-1-casing                 { stroke-width: 2px;     stroke: #505050;  stroke-dasharray: 1.4, 0.4; stroke-linecap: butt;}
 			.highway-byway-1-area-casing            { stroke-width: 0.4px; }
 			.highway-byway-2-casing                 { stroke-width: 1.6px;   stroke: #efadaa; }

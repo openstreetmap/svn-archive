@@ -126,6 +126,7 @@ tag_mapping = [
     ('ftype', ftype),
     ('fcode', fcode),
     ('gnis_name', 'name'),
+    ('gnis_id', 'gnis:feature_id'),
     ('elevation', 'ele'),
 ]    
 

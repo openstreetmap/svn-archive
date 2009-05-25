@@ -88,7 +88,7 @@ def parse_shp_for_osm( filename ):
 
         gnis_id = poFeature.GetField("GNIS_ID") 
 	if gnis_id != None:
-	    tags["NHD:GNIS_ID"] = gnis_id
+	    tags["gnis:feature_id"] = gnis_id
 
         reachcode = int(poFeature.GetField("ReachCode") )
 	if reachcode != None:

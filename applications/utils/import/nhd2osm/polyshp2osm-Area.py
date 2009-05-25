@@ -49,9 +49,10 @@ fixed_tags = {
 
 # The following Ftypes are not converted
 # 40309 - Controlled Inundation Area - Flood Area
+# 45500 - Spillway
 # 46100 - Submerged Stream
 ignoreField = "FCode"
-ignoreValues = [40309, 46100]
+ignoreValues = [40309, 45500, 46100]
 
 def ftype(data):
     """Type of body - from NHD feature type."""  
@@ -104,6 +105,7 @@ tag_mapping = [
     ('fcode', fcode),
     ('gnis_name', 'name'),
     ('elevation', 'ele'),
+    ('gnis_id', 'gnis:feature_id')
 ]    
 
 # These tags are not exported, even with the source data; this should be

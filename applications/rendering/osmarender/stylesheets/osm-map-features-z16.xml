@@ -2997,7 +2997,7 @@
 			
 			.highway-track-bridge-casing            { stroke-width: 2.8px; }
 			.highway-track-bridge-core              { stroke-width: 2.6px; }
-			.highway-track-back-casing              { stroke-width: 2.1px;   stroke: #ffffff; stroke-linecap: round; stroke-opacity: 0.8; }
+			.highway-track-back-casing              { stroke-width: 2.1px;   stroke: #ffffff; stroke-linecap: round; stroke-opacity: 0.7; }
 			.highway-track-casing                   { stroke-width: 1.8px;   stroke: #d79331; }
 			.highway-track-area-back-casing         { stroke-width: 0.55px;  stroke: #ffffff; }
 			.highway-track-area-casing              { stroke-width: 0.375px; stroke: #d79331; }
@@ -3014,18 +3014,18 @@
 			.highway-track-grade4-casing            { stroke-dasharray: 1.0, 2.0, 0.6, 2.0; stroke-linecap: butt; }
 			.highway-track-grade5-casing            { stroke-dasharray: 0.6, 2.0; stroke-linecap: butt; }
 			
-			.highway-track-gradex-core                     { stroke: #fff8ec; }
+			.highway-track-gradex-core                     { stroke: #fff2de; }
 			.highway-track-grade1-core                     { stroke: #fffaf2; }
-			.highway-track-grade2-core                     { stroke: #fff6e8; }
+			.highway-track-grade2-core                     { stroke: #fff2de; }
 			.highway-track-grade3-core                     { stroke: #fff2de; }
-			.highway-track-grade4-core                     { stroke: #ffeed4; }
-			.highway-track-grade5-core                     { stroke: #ffeac9; } 
-			.highway-track-gradex-area                     { fill: #fff8ec; }
+			.highway-track-grade4-core                     { stroke: #fff2de; }
+			.highway-track-grade5-core                     { stroke: #fff2de; } 
+			.highway-track-gradex-area                     { fill: #fff2de; }
 			.highway-track-grade1-area                     { fill: #fffaf2; }
-			.highway-track-grade2-area                     { fill: #fff6e8; }
+			.highway-track-grade2-area                     { fill: #fff2de; }
 			.highway-track-grade3-area                     { fill: #fff2de; }
-			.highway-track-grade4-area                     { fill: #ffeed4; }
-			.highway-track-grade5-area                     { fill: #ffeac9; }
+			.highway-track-grade4-area                     { fill: #fff2de; }
+			.highway-track-grade5-area                     { fill: #fff2de; }
 
 			.highway-byway-bridge-casing            { stroke-width: 2.8px; }
 			.highway-byway-bridge-core              { stroke-width: 2.6px; }

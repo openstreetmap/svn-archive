@@ -2732,15 +2732,34 @@
 			</rule>
 		</else>
 
-		<rule e="node" k="noexit" v="yes|true">
+		<rule e="node" k="noexit:foot" v="yes|true">
 			<wayMarker k="highway" class="noexit-all"/>
 		</rule>
-		<rule e="node" k="noexit" v="vehicle">
-			<wayMarker k="highway" class="noexit-veh"/>
-		</rule>
-		<rule e="node" k="noexit" v="motor_vehicle|motorcar">
-			<wayMarker k="highway" class="noexit-mot"/>
-		</rule>
+		<else>
+			<rule e="node" k="noexit:bicycle|noexit:vehicle" v="yes|true">
+				<wayMarker k="highway" class="noexit-veh"/>
+			</rule>
+			<else>
+				<rule e="node" k="noexit:motor_bicycle|noexit:motorcar|noexit:hgv|noexit:goods" v="yes|true">
+					<wayMarker k="highway" class="noexit-mot"/>
+				</rule>
+				<else>
+
+
+					<rule e="node" k="noexit" v="yes|true">
+						<wayMarker k="highway" class="noexit-all"/>
+					</rule>
+					<rule e="node" k="noexit" v="vehicle">
+						<wayMarker k="highway" class="noexit-veh"/>
+					</rule>
+					<rule e="node" k="noexit" v="motor_vehicle|motorcar">
+						<wayMarker k="highway" class="noexit-mot"/>
+					</rule>
+
+
+				</else>
+			</else>
+		</else>
 
 		<rule e="node" k="barrier|highway" v="gate|lift_gate">
 			<rule e="node" k="status" v="open">

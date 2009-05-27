@@ -1,0 +1,11 @@
+Columbus V-900 to GPX conversion program.  Written by Russ Nelson,
+<russ@cloudmade.com>.  This program is in the public domain.
+
+To use it, copy all the files from the Columbus's Micro-SD card into a
+subdirectory.  Run the enclosed python program, naming all the .CSV files
+on the command line.  It doesn't hurt to rewrite existing files, so this
+command line is appropriate:
+	./columbus-to-gpx.py *.CSV
+
+The WAV files should have a lower-case extension (".wav"), should your
+operating system have case-sensitive filenames.

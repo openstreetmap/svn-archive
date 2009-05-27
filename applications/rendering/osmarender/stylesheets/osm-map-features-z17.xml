@@ -293,7 +293,7 @@
 		</rule>
 
 		<rule e="way" k="highway" v="*">
-			<rule e="way" k="highway" v="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned">
+			<rule e="way" k="highway" v="motorway|motorway_link|footway|steps|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|proposed|disused|abandoned|dismantled">
 			</rule>
 			<else>
 				<rule e="way" k="motorroad" v="yes">
@@ -1924,20 +1924,20 @@
 		</rule>
 
 		<!-- Linear cores (planned) -->
-		<rule e="way" k="highway" v="planned">
-			<rule e="way" k="planned" v="steps">
+		<rule e="way" k="highway" v="planned|proposed">
+			<rule e="way" k="planned|proposed" v="steps">
 				<line class="highway-core highway-steps-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="footway|footpath">
+			<rule e="way" k="planned|proposed" v="footway|footpath">
 				<line class="highway-core highway-footway-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="pedestrian">
+			<rule e="way" k="planned|proposed" v="pedestrian">
 				<line class="highway-core highway-pedestrian-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="cycleway">
+			<rule e="way" k="planned|proposed" v="cycleway">
 				<line class="highway-core highway-cycleway-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="path">
+			<rule e="way" k="planned|proposed" v="path">
 				<rule e="way" k="bicycle" v="yes|designated">
 					<line class="highway-core highway-cycleway-core planned" smart-linecap="no"/>
 				</rule>
@@ -1949,55 +1949,55 @@
 						<line class="highway-core highway-footway-core planned" smart-linecap="no"/>
 					</else></else>
 			</rule>
-			<rule e="way" k="planned" v="bridleway">
+			<rule e="way" k="planned|proposed" v="bridleway">
 				<line class="highway-core highway-bridleway-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="byway">
+			<rule e="way" k="planned|proposed" v="byway">
 				<line class="highway-core highway-byway-1-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="track">
+			<rule e="way" k="planned|proposed" v="track">
 				<line class="highway-core highway-track-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="unsurfaced">
+			<rule e="way" k="planned|proposed" v="unsurfaced">
 				<line class="highway-core highway-unsurfaced-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="service">
+			<rule e="way" k="planned|proposed" v="service">
 				<line class="highway-core highway-service-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="unclassified|residential|minor|living_street|cycleroad">
+			<rule e="way" k="planned|proposed" v="unclassified|residential|minor|living_street|cycleroad">
 				<line class="highway-core highway-unclassified-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="~|road|yes">
+			<rule e="way" k="planned|proposed" v="~|road|yes">
 				<line class="highway-core highway-road-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="tertiary_link">
+			<rule e="way" k="planned|proposed" v="tertiary_link">
 				<line class="highway-core highway-tertiary-link-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="tertiary">
+			<rule e="way" k="planned|proposed" v="tertiary">
 				<line class="highway-core highway-tertiary-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="secondary_link">
+			<rule e="way" k="planned|proposed" v="secondary_link">
 				<line class="highway-core highway-secondary-link-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="secondary">
+			<rule e="way" k="planned|proposed" v="secondary">
 				<line class="highway-core highway-secondary-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="primary_link">
+			<rule e="way" k="planned|proposed" v="primary_link">
 				<line class="highway-core highway-primary-link-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="trunk_link">
+			<rule e="way" k="planned|proposed" v="trunk_link">
 				<line class="highway-core highway-trunk-link-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="motorway_link">
+			<rule e="way" k="planned|proposed" v="motorway_link">
 				<line class="highway-core highway-motorway-link-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="primary">
+			<rule e="way" k="planned|proposed" v="primary">
 				<line class="highway-core highway-primary-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="trunk">
+			<rule e="way" k="planned|proposed" v="trunk">
 				<line class="highway-core highway-trunk-core planned" smart-linecap="no"/>
 			</rule>
-			<rule e="way" k="planned" v="motorway">
+			<rule e="way" k="planned|proposed" v="motorway">
 				<line class="highway-core highway-motorway-core planned" smart-linecap="no"/>
 			</rule>
 		</rule>
@@ -2106,24 +2106,24 @@
 		</rule>
 
 		<!-- Linear cores (abandoned) -->
-		<rule e="way" k="highway" v="abandoned">
-			<rule e="way" k="abandoned" v="steps">
+		<rule e="way" k="highway" v="abandoned|dismantled">
+			<rule e="way" k="abandoned|dismantled" v="steps">
 				<line class="highway-core highway-steps-core abandoned-1"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="footway|footpath">
+			<rule e="way" k="abandoned|dismantled" v="footway|footpath">
 				<line class="highway-core highway-footway-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="pedestrian">
+			<rule e="way" k="abandoned|dismantled" v="pedestrian">
 				<line class="highway-core highway-pedestrian-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="cycleway">
+			<rule e="way" k="abandoned|dismantled" v="cycleway">
 				<line class="highway-core highway-cycleway-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="path">
+			<rule e="way" k="abandoned|dismantled" v="path">
 				<rule e="way" k="bicycle" v="yes|designated">
 					<line class="highway-core highway-cycleway-core abandoned-1" smart-linecap="no"/>
 					<line class="abandoned-2" smart-linecap="no" />
@@ -2138,78 +2138,78 @@
 						<line class="abandoned-2" smart-linecap="no" />
 					</else></else>
 			</rule>
-			<rule e="way" k="abandoned" v="bridleway">
+			<rule e="way" k="abandoned|dismantled" v="bridleway">
 				<line class="highway-core highway-bridleway-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="byway">
+			<rule e="way" k="abandoned|dismantled" v="byway">
 				<line class="highway-core highway-byway-1-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="track">
+			<rule e="way" k="abandoned|dismantled" v="track">
 				<line class="highway-core highway-track-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="unsurfaced">
+			<rule e="way" k="abandoned|dismantled" v="unsurfaced">
 				<line class="highway-core highway-unsurfaced-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="service">
+			<rule e="way" k="abandoned|dismantled" v="service">
 				<line class="highway-core highway-service-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="unclassified|residential|minor|living_street|cycleroad">
+			<rule e="way" k="abandoned|dismantled" v="unclassified|residential|minor|living_street|cycleroad">
 				<line class="highway-core highway-unclassified-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="~|road|yes">
+			<rule e="way" k="abandoned|dismantled" v="~|road|yes">
 				<line class="highway-core highway-road-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="tertiary_link">
+			<rule e="way" k="abandoned|dismantled" v="tertiary_link">
 				<line class="highway-core highway-tertiary-link-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="tertiary">
+			<rule e="way" k="abandoned|dismantled" v="tertiary">
 				<line class="highway-core highway-tertiary-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="secondary_link">
+			<rule e="way" k="abandoned|dismantled" v="secondary_link">
 				<line class="highway-core highway-secondary-link-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="secondary">
+			<rule e="way" k="abandoned|dismantled" v="secondary">
 				<line class="highway-core highway-secondary-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="primary_link">
+			<rule e="way" k="abandoned|dismantled" v="primary_link">
 				<line class="highway-core highway-primary-link-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="trunk_link">
+			<rule e="way" k="abandoned|dismantled" v="trunk_link">
 				<line class="highway-core highway-trunk-link-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="motorway_link">
+			<rule e="way" k="abandoned|dismantled" v="motorway_link">
 				<line class="highway-core highway-motorway-link-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="primary">
+			<rule e="way" k="abandoned|dismantled" v="primary">
 				<line class="highway-core highway-primary-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="trunk">
+			<rule e="way" k="abandoned|dismantled" v="trunk">
 				<line class="highway-core highway-trunk-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
-			<rule e="way" k="abandoned" v="motorway">
+			<rule e="way" k="abandoned|dismantled" v="motorway">
 				<line class="highway-core highway-motorway-core abandoned-1" smart-linecap="no"/>
 				<line class="abandoned-2" smart-linecap="no" />
 			</rule>
 		</rule>
 
 		<rule e="way" k="highway" v="*">
-			<rule e="way" k="highway" v="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned">
+			<rule e="way" k="highway" v="motorway|motorway_link|footway|steps|pedestrian|living_street|construction|planned|proposed|disused|abandoned|dismantled">
 			</rule>
 			<else>
 				<rule e="way" k="bicycle" v="no">
@@ -2228,7 +2228,7 @@
 
 		<!-- access restrictions -->
 		<rule e="way" k="highway" v="*">
-			<rule e="way" k="construction|planned|disused|abandoned" v="yes|true">
+			<rule e="way" k="construction|planned|proposed|disused|abandoned|dismantled" v="yes|true">
 				<line class="wrong-under-construction" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="area" v="yes|true">
@@ -3829,9 +3829,9 @@
 			font-size: 1.0px; fill: #c0c0c0;
 			}
 
-			.highway-nobicycle-1 { stroke-width: 2.7px; stroke: #000080; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; fill: none; }
-			.highway-nobicycle-2 { stroke-width: 2.0px; stroke: #d1fad1; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; fill: none; }
-			.highway-nobicycle-3 { stroke-width: 0.2px; stroke: #000080; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; fill: none; }
+			.highway-nobicycle-1 { stroke-width: 2.7px; stroke: #000080; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; fill: none; stroke-miterlimit: 0.1; }
+			.highway-nobicycle-2 { stroke-width: 2.0px; stroke: #d1fad1; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; fill: none; stroke-miterlimit: 0.1; }
+			.highway-nobicycle-3 { stroke-width: 0.2px; stroke: #000080; stroke-dasharray: 0.1,1.9; stroke-linecap: butt; fill: none; stroke-miterlimit: 0.1; }
 
 			.bridge-casing {
 			stroke-linecap: butt;

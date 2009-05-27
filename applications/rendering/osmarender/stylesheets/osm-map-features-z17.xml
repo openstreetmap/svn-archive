@@ -1797,7 +1797,7 @@
 							</else>
 						</else>
 					</else>
-					<line class="railway-rail-casing railway-tunnel-ends" suppress-markers-tag="tunnel"/>
+					<line class="railway-rail-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 				</rule>
 
 		</rule>

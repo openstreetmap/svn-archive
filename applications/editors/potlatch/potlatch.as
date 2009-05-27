@@ -367,11 +367,18 @@
 
 	remote_read=new NetConnection();
 	remote_read.connect(apiurl+'/read');
-	remote_read.onStatus=function(info) { _root.panel.i_warning._visible=true; readError=true; };
+	remote_read.onStatus=function(info) {
+        readError=true; 
+	    _root.panel.i_warning._visible=true;
+	};
 
 	remote_write=new NetConnection();
 	remote_write.connect(apiurl+'/write');
-	remote_write.onStatus=function(info) { _root.panel.i_warning._visible=true; writeError=true; };
+	remote_write.onStatus=function(info) {
+        writeError=true;
+ 	    _root.panel.i_warning._visible=true;
+        if (_root.uploading) { handleWarning(); }
+	};
 
 	#include 'node.as'
 	#include 'anchorpoint.as'

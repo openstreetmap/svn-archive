@@ -279,7 +279,7 @@
 		</rule>
 		
 		<rule e="way" k="highway" v="*">
-			<rule e="way" k="highway" v="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned">
+			<rule e="way" k="highway" v="motorway|motorway_link|footway|steps|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|proposed|disused|abandoned|dismantled">
 			</rule>
 			<else>
 				<rule e="way" k="motorroad" v="yes">
@@ -1729,7 +1729,7 @@
 		
 		
 		<rule e="way" k="highway" v="*">
-			<rule e="way" k="highway" v="motorway|motorway_link|footway|pedestrian|cycleway|bridleway|track|byway|path|cycleroad|living_street|construction|planned|disused|abandoned">
+			<rule e="way" k="highway" v="motorway|motorway_link|footway|steps|pedestrian|living_street|construction|planned|proposed|disused|abandoned|dismantled">
 			</rule>
 			<else>
 				<rule e="way" k="bicycle" v="no">
@@ -1744,7 +1744,7 @@
 
 		<!-- access restrictions -->
 		<rule e="way" k="highway" v="*">
-			<rule e="way" k="construction|planned|disused|abandoned" v="yes|true">
+			<rule e="way" k="construction|planned|disused|abandoned|proposed" v="yes|true">
 				<line class="wrong-under-construction" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="area" v="yes|true">
@@ -2806,9 +2806,9 @@
 			text-anchor: middle;
 			}
 			
-			.highway-nobicycle-1 { stroke-width: 5.2px; stroke: #000080; stroke-dasharray: 0.2,3.8; stroke-linecap: butt; fill: none; }
-			.highway-nobicycle-2 { stroke-width: 3.6px; stroke: #d1fad1; stroke-dasharray: 0.2,3.8; stroke-linecap: butt; fill: none; }
-			.highway-nobicycle-3 { stroke-width: 0.4px; stroke: #000080; stroke-dasharray: 0.2,3.8; stroke-linecap: butt; fill: none; }
+			.highway-nobicycle-1 { stroke-width: 5.2px; stroke: #000080; stroke-dasharray: 0.2,3.8; stroke-linecap: butt; fill: none; stroke-miterlimit: 0.1; }
+			.highway-nobicycle-2 { stroke-width: 3.6px; stroke: #d1fad1; stroke-dasharray: 0.2,3.8; stroke-linecap: butt; fill: none; stroke-miterlimit: 0.1; }
+			.highway-nobicycle-3 { stroke-width: 0.4px; stroke: #000080; stroke-dasharray: 0.2,3.8; stroke-linecap: butt; fill: none; stroke-miterlimit: 0.1; }
 
 			.bridge-casing {
 			stroke-linecap: butt;

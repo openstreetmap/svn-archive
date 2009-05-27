@@ -13,6 +13,7 @@
 		var todo;
 		if (!_root.sandbox) { return; }
 		if (_root.uploading) { return; }
+		deselectAll();
 
 		_root.uploadtasks=new Array();
 

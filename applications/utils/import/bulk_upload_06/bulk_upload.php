@@ -34,8 +34,8 @@ $make_backup = true;
 /// TODO: fix this, use mktempfile() or something
 $tmpfilename = '/tmp/bulk_upload_temp_' . posix_getpid() ;
 
-$node_batch_size = 25;
-$way_batch_size  = 10;
+$node_batch_size = 25000;
+$way_batch_size  = 10000;
 
 
 

@@ -26,11 +26,16 @@ $server_base_url = 'localhost:3000/api';
 // $file = 'osm/b0001c2.osm';
 $file = $argv[1];
 
+/// Set this to false in order to not save temporary files after every batch is uploaded.
+$make_backup = true;
+
+
+
 /// TODO: fix this, use mktempfile() or something
 $tmpfilename = '/tmp/bulk_upload_temp_' . posix_getpid() ;
 
-$node_batch_size = 25000;
-$way_batch_size  = 1000;
+$node_batch_size = 25;
+$way_batch_size  = 10;
 
 
 
@@ -129,7 +134,7 @@ function send_payload(&$payload)
 		die();
 	}
 	
-// 	echo "\n\nIDs updated: \"\n$payload_updates\n\"\n\n\n";
+	echo "\n\nIDs updated: \"\n$payload_updates\n\"\n\n\n";
 
 	update_ids($payload_updates);
 	
@@ -149,42 +154,154 @@ function send_payload(&$payload)
 	echo "Changeset $changeset closed, error was \"$error\"\n\n\n";
 	$changeset = NULL;
 	sleep(10);
+	
 }
-
 
 
 
 
 function update_ids($payload_updates)
 {
-	global $updated_node_ids;
+	global $nodes, $ways, $inverse_waynodes;
 
 	$updates = simplexml_load_string($payload_updates);
 	
 // 	print_r($updates);
-	$updated_node_count = 0;
-	$updated_way_count  = 0;
+	$updated_node_count    = 0;
+	$updated_way_count     = 0;
+	$updated_waynode_count = 0;
 	
 	foreach($updates->node as $updated_node)
 	{
-		$updated_node_ids[ (int) ($updated_node['old_id']) ] = (int) ($updated_node['new_id']);
-		$updated_node_count++;
+// 		$updated_node_ids[ (int) ($updated_node['old_id']) ] = (int) ($updated_node['new_id']);
+		$old_id = (int)$updated_node['old_id'];
+		$new_id = (int)$updated_node['new_id'];
+		if (!$nodes[$old_id])
+		{
+			echo " ERROR: API returned updated node id for non-existing node $old_id (new ID: $new_id). This should not happen.\n";
+		}
+		else
+		{
+			$node = $nodes[$old_id];
+			unset ($nodes[$old_id]);
+			$node['id'] = $new_id;
+			$node['version'] = 
+			$nodes[$new_id] = $node;
+			/// TODO: add sanity check to make sure that this updated node has been indeed uploaded
+			$updated_node_count++;
+// 			echo "Updated node: $old_id -> $new_id\n";
+		}
+		
+		if ($inverse_waynodes[$old_id])
+		{
+			foreach($inverse_waynodes[$old_id] as $way_id=>$foo)
+			{
+				foreach($ways[$way_id]->nd as $nd)	// Only change IDs of nodes if they have been just uploaded... positive IDs will remain the same. This will fail if there are negative IDs which have not been *just* uploaded.
+				{
+					if ( $nd['ref'] == $old_id )
+					{
+						$nd['ref'] = $new_id;
+						$updated_waynode_count++;
+// 						echo "Updated waynode: $way_id ($old_id) -> $new_id\n";
+					}
+				}
+			}
+			$inverse_waynodes[$new_id] = $inverse_waynodes[$old_id]; 
+			unset ($inverse_waynodes[$old_id]);
+		}
 	}
 	
 	foreach($updates->way as $updated_way)
 	{
-		$updated_way_ids[ (int) ($updated_way['old_id']) ] = (int) ($updated_way['new_id']);
-		$updated_way_count++;
+// 		$updated_way_ids[ (int) ($updated_way['old_id']) ] = (int) ($updated_way['new_id']);
+		$old_id = (int)$updated_way['old_id'];
+		$new_id = (int)$updated_way['new_id'];
+		if (!$ways[$old_id])
+		{
+			echo " ERROR: API returned updated node id for non-existing way $old_id (new ID: $new_id). This should not happen.\n";
+		}
+		else
+		{
+			$way = $ways[$old_id];
+			unset ($ways[$old_id]);
+			$way['id'] = $new_id;
+			$ways[$new_id] = $way;
+			/// TODO: add sanity check to make sure that this updated node has been indeed uploaded
+			$updated_way_count++;
+// 			echo "Updated way: $old_id -> $new_id\n";
+		}	
 	}
 	/// TODO: update relation IDs.
 	
-	if ($update_node_count) echo "Updated IDs of $update_node_count nodes.\n";
-	if ($update_way_count)  echo "Updated IDs of $update_way_count ways.\n";
-	
+	if ($updated_node_count)    echo "Updated IDs of $updated_node_count nodes.\n";
+	if ($updated_way_count)     echo "Updated IDs of $updated_way_count ways.\n";
+	if ($updated_waynode_count) echo "Updated IDs of $updated_waynode_count way nodes.\n";
+
+	global $make_backup;
+	if ($make_backup)
+	{
+		global $batch;
+		$file = "/tmp/bulk_uploader_backup_$batch.osm";
+		echo "Writing data backup after batch $batch to file $file ...\n";
+		$fd = fopen($file,'w');
+		fwrite($fd,"<?xml version='1.0' encoding='UTF-8'?><osm version='0.6' generator='php_bulk_uploader_backup'>");
+		foreach ($nodes as $node)
+		{
+			fwrite($fd,$node->asXML() . "\n");
+		}
+		foreach ($ways as $way)
+		{
+			fwrite($fd,$way->asXML() . "\n");
+		}
+		/// TODO: backup relations!!
+		fwrite($fd,"</osm>");
+		fclose($fd);
+		echo "Backup wrote.\n";
+	}
 }
 
 
 
+
+
+
+/// Main stuff
+
+
+
+
+/// Build up auxiliary arrays
+$nodes = array();
+$ways = array();
+$inverse_waynodes = array();
+
+echo "Preparing nodes...\n";
+if ($xml->node)
+foreach($xml->node as $node)
+{
+	$nodeid = (int) $node['id'];
+	$nodes[$nodeid] = $node;
+}
+
+echo "Preparing ways...\n";
+if ($xml->way)
+foreach($xml->way as $way)
+{
+	$wayid = (int) $way['id'];
+	$ways[$wayid] = $way;
+	foreach($way->nd as $nd)
+	{
+		$ref = (int) $nd['ref'];
+		$inverse_waynodes[$ref][$wayid] = true;
+	}
+	
+}
+echo "Data prepared.\n";
+unset($xml);
+
+// print_r($inverse_waynodes);
+
+// die();
 
 
 // open_changeset('node');
@@ -198,65 +315,93 @@ init_payload($payload);
 
 $i = 0;
 
-foreach($xml->node as $node)
+if ($nodes)
 {
-	if ($i == $node_batch_size) 
+	foreach($nodes as $node)
 	{
-		close_payload($payload);
-		send_payload($payload);
-		init_payload($payload);
-		open_changeset('node');
-		$i = 0;
+		if ($node['uploaded'])
+		{
+			echo "Skipping node " . $node['id'] . "\n";
+		}
+		else
+		{
+			if ($i == $node_batch_size) 
+			{
+				close_payload($payload);
+				send_payload($payload);
+				init_payload($payload);
+				open_changeset('node');
+				$i = 0;
+			}
+			
+			if (!$changeset)
+				open_changeset('node');
+			
+			$node->addAttribute('changeset',$changeset);	/// HACK to make it work with API 0.6
+		// 	$node->addAttribute('version',1);
+			$payload .= $node->asXML() ."\n";
+			
+			$node['uploaded'] = true;
+			
+			$i++;
+		}
 	}
-	
-	if (!$changeset)
-		open_changeset('node');
-	
-	$node->addAttribute('changeset',$changeset);	/// HACK to make it work with API 0.6
-// 	$node->addAttribute('version',1);
-	$payload .= $node->asXML() ."\n";
-	
-	$i++;
+
+	close_payload($payload);
+	send_payload($payload);
+	echo "All nodes from file $file fully uploaded; starting to upload ways.\n";
+}
+else
+{
+	echo "No nodes to upload\n";
 }
 
-close_payload($payload);
-send_payload($payload);
-
-echo "All nodes from file $file fully uploaded; starting to upload ways.\n";
 
 init_payload($payload);
 $changeset = null;
 $i = 0;
 
-foreach($xml->way as $way)
+if ($ways)
 {
-	if ($i == $way_batch_size) 
+	foreach($ways as $way)
 	{
-		close_payload($payload);
-		send_payload($payload);
-		init_payload($payload);
-		open_changeset('way');
-		$i = 0;
+		if ($way['uploaded'])
+		{
+			echo "Skipping way " . $node['id'] . "\n";
+		}
+		else
+		{
+			if ($i == $way_batch_size) 
+		{
+			close_payload($payload);
+			send_payload($payload);
+			init_payload($payload);
+			open_changeset('way');
+			$i = 0;
+		}
+		
+		if (!$changeset)
+			open_changeset('way');
+		
+		$way->addAttribute('changeset',$changeset);	/// HACK to make it work with API 0.6
+	// 	$node->addAttribute('version',1);
+	
+		$payload .= $way->asXML() ."\n";
+		
+		$way['uploaded'] = true;
+		
+		$i++;
+		}
 	}
 	
-	if (!$changeset)
-		open_changeset('way');
-	
-	$way->addAttribute('changeset',$changeset);	/// HACK to make it work with API 0.6
-// 	$node->addAttribute('version',1);
-	foreach($way->nd as $nd)	// Only change IDs of nodes if they have been just uploaded... positive IDs will remain the same. This will fail if there are negative IDs which have not been *just* uploaded.
-	{
-		if ( isset($updated_node_ids[ (int) $nd['ref']]) )
-			$nd['ref'] = $updated_node_ids[ (int) $nd['ref'] ];
-	}
-	$payload .= $way->asXML() ."\n";
-	$i++;
-	
+	close_payload($payload);
+	send_payload($payload);
+	echo "All nodes from file $file fully uploaded; starting to upload ways.\n";
 }
-
-close_payload($payload);
-send_payload($payload);
-
+else
+{
+	echo "No ways to upload\n";
+}
 
 /// TODO: upload relations !!!!
 

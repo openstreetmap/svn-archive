@@ -1198,19 +1198,12 @@
 			</rule>
 		</rule>
 
-		<!-- Bus platforms -->
-		<rule e="way" k="highway" v="platform" closed="yes">
-			<line class="highway-platform-area" />
-			<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
+		<!-- platforms casings -->
+		<rule e="way" k="highway|railway|public_transport" v="platform" closed="yes">
+			<line class="highway-platform-area-casing" />
 		</rule>
-		<rule e="way" k="highway" v="platform" closed="no">
+		<rule e="way" k="highway|railway|public_transport" v="platform" closed="no">
 			<line class="highway-platform-way-casing" />
-			<line class="highway-platform-way-core" />
-			<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
-		</rule>
-		<rule e="node" k="highway" v="platform">
-			<circle r="0.6px" class="highway-platform-node" />
-			<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
 		</rule>
 
 		<!-- Highway area cores -->
@@ -1818,6 +1811,14 @@
 				<line class="railway-rail-casing railway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
 
+		</rule>
+
+		<!-- platforms cores -->
+		<rule e="way" k="highway|railway|public_transport" v="platform" closed="yes">
+			<line class="highway-platform-area" />
+		</rule>
+		<rule e="way" k="highway|railway|public_transport" v="platform" closed="no">
+			<line class="highway-platform-way-core" />
 		</rule>
 
 		<!-- Linear cores (under construction) -->
@@ -2670,6 +2671,11 @@
 			<symbol ref="viewpoint" position="center"/>
 		</rule>
 
+		<!-- platforms nodes -->
+		<rule e="node" k="highway|railway|public_transport" v="platform">
+			<circle r="0.6px" class="highway-platform-node" />
+		</rule>
+
 		<!-- Railway stations -->
 		<rule e="node" k="railway" v="station">
 			<rule e="node" s="way" k="railway" v="rail">
@@ -2681,19 +2687,6 @@
 		</rule>
 		<rule e="node" k="railway" v="halt">
 			<circle r="0.4" class="railway-halt"/>
-		</rule>
-		<rule e="way" k="railway" v="platform" closed="yes">
-			<line class="railway-platform-area" />
-			<caption k="ref" startOffset="50%" class="railway-platform-ref" dy="0.3px" layer="5" />
-		</rule>
-		<rule e="way" k="railway" v="platform" closed="no">
-			<line class="railway-platform-way-casing" />
-			<line class="railway-platform-way-core" />
-			<caption k="ref" startOffset="50%" class="railway-platform-ref" dy="0.3px" layer="5" />
-		</rule>
-		<rule e="node" k="railway" v="platform">
-			<circle r="0.6px" class="railway-platform-node" />
-			<caption k="ref" startOffset="50%" class="railway-platform-ref" dy="0.3px" layer="5" />
 		</rule>
 
 		<!-- tram stops -->
@@ -2821,6 +2814,7 @@
 		<rule e="node" k="traffic_calming" v="*">
 			<wayMarker k="highway" class="traffic-calming"/>
 		</rule>
+
 
 		<!-- Bus stops -->
 		<rule e="node|way" k="highway" v="bus_stop">
@@ -3466,6 +3460,17 @@
 						<caption k="name" class="tourism-attraction-caption" layer="5"/>
 					</rule>
 				</else>
+			</rule>
+
+			<!-- platforms text -->
+			<rule e="way" k="highway|railway|public_transport" v="platform" closed="yes">
+				<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
+			</rule>
+			<rule e="way" k="highway|railway|public_transport" v="platform" closed="no">
+				<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
+			</rule>
+			<rule e="node" k="highway|railway|public_transport" v="platform">
+				<caption k="ref" startOffset="50%" class="highway-platform-ref" dy="0.3px" layer="5" />
 			</rule>
 
 			<rule e="node" k="railway" v="station" layer="5">
@@ -5025,15 +5030,12 @@ stroke-width: 2px;
 			.railway-halt                           { fill: #ec2d2d;        stroke: #606060; stroke-width: 0.1px; }
 			.railway-halt-caption-casing            { stroke-width: 0.4px;  font-size: 1.25px; }
 			.railway-halt-caption-core              { fill: #ec2d2d;        font-size: 1.25px; }
-			.railway-platform-area                  { stroke: #707070; stroke-width: 0.15px; fill: #9b9b79; }
-			.railway-platform-way-casing            { stroke: #707070; stroke-width: 0.6px; fill: none; stroke-linecap: square; }
-			.railway-platform-way-core              { stroke: #9b9b79; stroke-width: 0.3px; fill: none; }
-			.railway-platform-node                  { fill: #9b9b79; }
-			.railway-platform-ref                   { font-family: "DejaVu Sans"; font-size: 0.8px; stroke: #707070; stroke-width: 0.005px; text-anchor: middle;}
-			.highway-platform-area                  { stroke: #707070; stroke-width: 0.15px; fill: #9b9b79; }
+
+			.highway-platform-area                  { stroke: none; fill: #9b9b79; }
+			.highway-platform-area-casing           { stroke: #707070; stroke-width: 0.3px; fill: none; }
 			.highway-platform-way-casing            { stroke: #707070; stroke-width: 0.6px; fill: none; stroke-linecap: square; }
 			.highway-platform-way-core              { stroke: #9b9b79; stroke-width: 0.3px; fill: none; }
-			.highway-platform-node                  { fill: #9b9b79; }
+			.highway-platform-node                  { stroke: #707070; stroke-width: 0.15px; fill: #9b9b79; }
 			.highway-platform-ref                   { font-family: "DejaVu Sans"; font-size: 0.8px; stroke: #707070; stroke-width: 0.005px; text-anchor: middle;}
 
 			/* Tourism */

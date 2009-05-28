@@ -293,6 +293,14 @@
 			</else>
 		</rule>
 
+		<!-- platforms casings -->
+		<rule e="way" k="highway|railway|public_transport" v="platform" closed="yes">
+			<line class="highway-platform-area-casing" />
+		</rule>
+		<rule e="way" k="highway|railway|public_transport" v="platform" closed="no">
+			<line class="highway-platform-way-casing" />
+		</rule>
+
 		<!-- Highway area casings -->
 		<rule e="way" k="area" v="yes|true">
 			<rule e="way" k="highway" v="track">
@@ -854,6 +862,14 @@
 			</rule>
 		</rule>
 		
+		<!-- platforms cores -->
+		<rule e="way" k="highway|railway|public_transport" v="platform" closed="yes">
+			<line class="highway-platform-area" />
+		</rule>
+		<rule e="way" k="highway|railway|public_transport" v="platform" closed="no">
+			<line class="highway-platform-way-core" />
+		</rule>
+
 		<!-- Highway area cores -->
 		<rule e="way" k="area" v="yes|true">
 			<rule e="way" k="highway" v="footway|footpath">
@@ -1782,6 +1798,11 @@
 			<line class="route-ferry"/>
 		</rule>
 		
+		<!-- platforms nodes -->
+		<rule e="node" k="highway|railway|public_transport" v="platform">
+			<circle r="0.6px" class="highway-platform-node" />
+		</rule>
+
 		<!-- Railway stations -->
 		<rule e="node" k="railway" v="station">
 			<rule e="node" s="way" k="railway" v="rail">
@@ -2061,6 +2082,7 @@
 					<caption k="name" class="tourism-attraction-caption" layer="5"/>
 				</rule>
 			</rule>
+
 			<rule e="node" k="railway" v="station" layer="5">
 				<rule e="node" s="way" k="railway" v="rail" layer="5">
 					<caption k="name" class="caption-casing railway-station-caption-casing" dy="-5px" layer="5"/>
@@ -3195,6 +3217,11 @@ stroke-width: 6px;
 			.railway-halt-caption-casing            { stroke-width: 0.8px;  font-size: 5px; }
 			.railway-halt-caption-core              { fill: #ec2d2d;        font-size: 5px; }
 			
+			.highway-platform-area                  { stroke: none; fill: #9b9b79; }
+			.highway-platform-area-casing           { stroke: #707070; stroke-width: 0.4px; fill: none; }
+			.highway-platform-way-casing            { stroke: #707070; stroke-width: 1.0px; fill: none; stroke-linecap: square; }
+			.highway-platform-way-core              { stroke: #9b9b79; stroke-width: 0.6px; fill: none; }
+			.highway-platform-node                  { stroke: #707070; stroke-width: 0.2px; fill: #9b9b79; }
 			
 			/* Tourism */
 			.tourism-attraction {

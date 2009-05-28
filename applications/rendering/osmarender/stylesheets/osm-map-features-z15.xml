@@ -418,18 +418,6 @@
 				<rule e="way" k="highway" v="track">
 					<line class="highway-casing highway-track-back-casing" smart-linecap="no"/>
 				</rule>
-				<rule e="way" k="railway" v="monorail">
-					<line class="railway-casing railway-monorail-casing"/>
-				</rule>
-				<rule e="way" k="railway" v="preserved">
-					<line class="railway-casing railway-preserved-casing"/>
-				</rule>
-				<rule e="way" k="railway" v="narrow_gauge">
-					<line class="railway-casing railway-narrow-gauge-casing"/>
-				</rule>
-				<rule e="way" k="railway" v="rail">
-					<line class="railway-casing railway-rail-casing"/>
-				</rule>
 				<rule e="way" k="highway" v="raceway">
 					<rule e="way" k="use_status" v="~">
 						<line class="highway-raceway-casing"/>
@@ -795,14 +783,66 @@
 						<line class="highway-casing highway-motorway-casing"/>
 					</else>
 				</rule>
-				<rule e="way" k="railway" v="tram">
-					<line class="railway-casing railway-tram-casing"/>
-				</rule>
-				<rule e="way" k="railway" v="subway">
-					<line class="railway-casing railway-subway-casing"/>
-				</rule>
-				<rule e="way" k="railway" v="light_rail|incline">
-					<line class="railway-casing railway-light-rail-casing"/>
+				<rule e="way" k="railway" v="*">
+					<rule e="way" k="construction" v="*">
+						<line class="railway-con-casing railway-con-casing-color railway-casing" smart-linecap="no"/>
+					</rule>
+					<else>
+						<rule e="way" k="planned|proposed" v="*">
+							<line class="railway-pla-casing railway-pla-casing-color railway-casing" smart-linecap="no" />
+						</rule>
+						<else>
+							<rule e="way" k="disused" v="*">
+								<line class="railway-dis-casing railway-dis-casing-color railway-casing" smart-linecap="no" />
+							</rule>
+							<else>
+								<rule e="way" k="abandoned|dismantled" v="*">
+									<line class="railway-aba-casing railway-aba-casing-color railway-casing" smart-linecap="no" />
+								</rule>
+								<else>
+									<rule e="way" k="railway" v="construction">
+										<line class="railway-con-casing railway-con-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="planned|proposed">
+										<line class="railway-pla-casing railway-pla-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="disused">
+										<line class="railway-dis-casing railway-dis-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="abandoned|dismantled">
+										<line class="railway-aba-casing railway-aba-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="rail">
+										<line class="railway-rail-casing railway-rail-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="narrow_gauge">
+										<line class="railway-narrow-casing railway-narrow-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="preserved">
+										<line class="railway-preserved-casing railway-preserved-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="light_rail">
+										<line class="railway-light-casing railway-light-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="tram">
+										<line class="railway-tram-casing railway-tram-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="subway">
+										<line class="railway-subway-casing railway-subway-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="incline|funicular">
+										<line class="railway-funicular-casing railway-funicular-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="monorail">
+										<line class="railway-monorail-casing railway-monorail-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="spur|yard|siding">
+										<line class="railway-yard-casing railway-yard-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+								</else>
+							</else>
+						</else>
+					</else>
 				</rule>
 			</rule>
 		</rule>
@@ -944,19 +984,6 @@
 		<!-- Linear cores -->
 		<rule e="way" k="tunnel" v="~|false|no">
 			<rule e="way" k="area" v="~|false|no">
-				<rule e="way" k="railway" v="monorail">
-					<line class="railway-core railway-monorail-core"/>
-				</rule>
-				<rule e="way" k="railway" v="preserved">
-					<line class="railway-core railway-preserved-core"/>
-				</rule>
-				<rule e="way" k="railway" v="narrow_gauge">
-					<line class="railway-core railway-narrow-gauge-core"/>
-				</rule>
-				<rule e="way" k="railway" v="rail">
-					<line class="railway-core railway-rail-1-core"/>
-					<line class="railway-core railway-rail-2-core" smart-linecap="no"/>
-				</rule>
 				<rule e="way" k="highway" v="ford">
 					<line class="highway-core highway-ford-core" smart-linecap="no"/>
 				</rule>
@@ -1103,15 +1130,131 @@
 				<rule e="way" k="highway" v="motorway">
 					<line class="highway-core highway-motorway-core"/>
 				</rule>
-				<rule e="way" k="railway" v="tram">
-					<line class="railway-core railway-tram-core"/>
+
+				<rule e="way" k="railway" v="*">
+					<rule e="way" k="construction" v="*">
+						<line class="railway-con-1-core railway-con-1-core-color railway-1-core" smart-linecap="no" />
+					</rule>
+					<else>
+						<rule e="way" k="planned|proposed" v="*">
+							<line class="railway-pla-1-core railway-pla-1-core-color railway-1-core" smart-linecap="no" />
+						</rule>
+						<else>
+							<rule e="way" k="disused" v="*">
+								<line class="railway-dis-1-core railway-dis-1-core-color railway-1-core" smart-linecap="no" />
+							</rule>
+							<else>
+								<rule e="way" k="abandoned|dismantled" v="*">
+									<line class="railway-aba-1-core railway-aba-1-core-color railway-1-core" smart-linecap="no" />
+								</rule>
+								<else>
+									<rule e="way" k="railway" v="construction">
+										<line class="railway-con-1-core railway-con-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="planned|proposed">
+										<line class="railway-pla-1-core railway-pla-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="disused">
+										<line class="railway-dis-1-core railway-dis-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="abandoned|dismantled">
+										<line class="railway-aba-1-core railway-aba-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="rail">
+										<line class="railway-rail-1-core railway-rail-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="narrow_gauge">
+										<line class="railway-narrow-1-core railway-narrow-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="preserved">
+										<line class="railway-preserved-1-core railway-preserved-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="light_rail">
+										<line class="railway-light-1-core railway-light-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="tram">
+										<line class="railway-tram-1-core railway-tram-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="subway">
+										<line class="railway-subway-1-core railway-subway-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="incline|funicular">
+										<line class="railway-funicular-1-core railway-funicular-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="monorail">
+										<line class="railway-monorail-1-core railway-monorail-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="spur|yard|siding">
+										<line class="railway-yard-1-core railway-yard-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+								</else>
+							</else>
+						</else>
+					</else>
 				</rule>
-				<rule e="way" k="railway" v="subway">
-					<line class="railway-core railway-subway-core"/>
+
+				<rule e="way" k="railway" v="*">
+					<rule e="way" k="construction" v="*">
+						<line class="railway-con-2-core railway-con-2-core-color railway-2-core" smart-linecap="no" />
+					</rule>
+					<else>
+						<rule e="way" k="planned|proposed" v="*">
+							<line class="railway-pla-2-core railway-pla-2-core-color railway-2-core" smart-linecap="no" />
+						</rule>
+						<else>
+							<rule e="way" k="disused" v="*">
+								<line class="railway-dis-2-core railway-dis-2-core-color railway-2-core" smart-linecap="no" />
+							</rule>
+							<else>
+								<rule e="way" k="abandoned|dismantled" v="*">
+									<line class="railway-aba-2-core railway-aba-2-core-color railway-2-core" smart-linecap="no" />
+								</rule>
+								<else>
+									<rule e="way" k="railway" v="construction">
+										<line class="railway-con-2-core railway-con-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="planned|proposed">
+										<line class="railway-pla-2-core railway-pla-2-core-color railway-2-core"/>
+									</rule>
+									<rule e="way" k="railway" v="disused">
+										<line class="railway-dis-2-core railway-dis-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="abandoned|dismantled">
+										<line class="railway-aba-2-core railway-aba-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="rail">
+										<line class="railway-rail-2-core railway-rail-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="narrow_gauge">
+										<line class="railway-narrow-2-core railway-narrow-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="preserved">
+										<line class="railway-preserved-2-core railway-preserved-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="light_rail">
+										<line class="railway-light-2-core railway-light-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="tram">
+										<line class="railway-tram-2-core railway-tram-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="subway">
+										<line class="railway-subway-2-core railway-subway-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="incline|funicular">
+										<line class="railway-funicular-2-core railway-funicular-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="monorail">
+										<line class="railway-monorail-2-core railway-monorail-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="spur|yard|siding">
+										<line class="railway-yard-2-core railway-yard-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+								</else>
+							</else>
+						</else>
+					</else>
 				</rule>
-				<rule e="way" k="railway" v="light_rail|incline">
-					<line class="railway-core railway-light-rail-core"/>
-				</rule>
+
 				<rule e="way" k="aeroway" v="runway">
 					<line class="aeroway-runway-core"/>
 				</rule>
@@ -1222,34 +1365,87 @@
 				<line class="tunnel-casing highway-motorway-casing tunnel" mask-class="tunnel-core highway-motorway-core"/>
 				<line class="highway-motorway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
-			<rule e="way" k="railway" v="monorail">
-				<line class="tunnel-casing railway-monorail-casing tunnel" mask-class="tunnel-core railway-monorail-core"/>
-				<line class="railway-monorail-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
+			<rule e="way" k="railway" v="*">
+				<rule e="way" k="construction" v="yes|true">
+					<line class="railway-con-casing railway-con-casing-color tunnel-casing tunnel" mask-class="tunnel-core railway-con-1-core"/>
+					<line class="railway-con-2-core railway-con-2-core-color railway-2-core railway-con-tunnel-core tunnel"  smart-linecap="no" />
+				</rule>
+				<else>
+					<rule e="way" k="planned|proposed" v="yes|true">
+						<line class="railway-pla-casing railway-pla-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-pla-1-core"/>
+						<line class="railway-pla-2-core railway-pla-2-core-color railway-2-core railway-pla-tunnel-core tunnel"  smart-linecap="no" />
+					</rule>
+					<else>
+						<rule e="way" k="disused" v="yes|true">
+							<line class="railway-dis-casing railway-dis-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-dis-1-core"/>
+							<line class="railway-dis-2-core railway-dis-2-core-color railway-2-core railway-dis-tunnel-core tunnel"  smart-linecap="no" />
+						</rule>
+						<else>
+							<rule e="way" k="abandoned|dismantled" v="yes|true">
+								<line class="railway-aba-casing railway-aba-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-aba-1-core"/>
+								<line class="railway-aba-2-core railway-aba-2-core-color railway-2-core railway-aba-tunnel-core tunnel"  smart-linecap="no" />
+							</rule>
+							<else>
+								<rule e="way" k="railway" v="construction">
+									<line class="railway-con-casing railway-con-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-con-1-core"/>
+									<line class="railway-con-2-core railway-con-2-core-color railway-2-core railway-con-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="planned|proposed">
+									<line class="railway-pla-casing railway-pla-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-pla-1-core"/>
+									<line class="railway-pla-2-core railway-pla-2-core-color railway-2-core railway-pla-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="disused">
+									<line class="railway-dis-casing railway-dis-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-dis-1-core"/>
+									<line class="railway-dis-2-core railway-dis-2-core-color railway-2-core railway-dis-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="abandoned|dismantled">
+									<line class="railway-aba-casing railway-aba-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-aba-1-core"/>
+									<line class="railway-aba-2-core railway-aba-2-core-color railway-2-core railway-aba-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="rail">
+									<line class="railway-rail-casing railway-rail-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-rail-1-core"/>
+									<line class="railway-rail-2-core railway-rail-2-core-color railway-2-core railway-rail-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="narrow_gauge">
+									<line class="railway-narrow-casing railway-narrow-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-narrow-1-core"/>
+									<line class="railway-narrow-2-core railway-narrow-2-core-color railway-2-core railway-narrow-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="preserved">
+									<line class="railway-preserved-casing railway-preserved-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-preserved-1-core"/>
+									<line class="railway-preserved-2-core railway-preserved-2-core-color railway-2-core railway-preserved-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="light_rail">
+									<line class="railway-light-casing railway-light-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-light-1-core"/>
+									<line class="railway-light-2-core railway-light-2-core-color railway-2-core railway-light-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="tram">
+									<line class="railway-tram-casing railway-tram-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-tram-1-core"/>
+									<line class="railway-tram-2-core railway-tram-2-core-color railway-2-core railway-tram-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="subway">
+									<line class="railway-subway-casing railway-subway-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-subway-1-core"/>
+									<line class="railway-subway-2-core railway-subway-2-core-color railway-2-core railway-subway-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="incline|funicular">
+									<line class="railway-funicular-casing railway-funicular-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-funicular-t-core"/>
+									<line class="railway-funicular-1-core railway-funicular-1-core-color railway-1-core railway-funicular-tunnel-core tunnel"  smart-linecap="no" />
+									<line class="railway-funicular-2-core railway-funicular-2-core-color railway-2-core railway-funicular-tunnel-core tunnel-casing tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="monorail">
+									<line class="railway-monorail-casing railway-monorail-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-monorail-1-core"/>
+									<line class="railway-monorail-2-core railway-monorail-2-core-color railway-2-core railway-monorail-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+								<rule e="way" k="railway" v="spur|yard|siding">
+									<line class="railway-yard-casing railway-yard-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-yard-1-core"/>
+									<line class="railway-yard-2-core railway-yard-2-core-color railway-2-core railway-yard-tunnel-core tunnel"  smart-linecap="no" />
+								</rule>
+							</else>
+						</else>
+					</else>
+				</else>
+				<line class="railway-rail-casing railway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
-			<rule e="way" k="railway" v="preserved">
-				<line class="tunnel-casing railway-preserved-casing tunnel" mask-class="tunnel-core railway-preserved-core"/>
-				<line class="railway-preserved-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
-			</rule>
-			<rule e="way" k="railway" v="narrow_gauge">
-				<line class="tunnel-casing railway-narrow-gauge-casing tunnel" mask-class="tunnel-core railway-narrow-gauge-core"/>
-				<line class="railway-narrow-gauge-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
-			</rule>
-			<rule e="way" k="railway" v="tram">
-				<line class="tunnel-casing railway-tram-casing tunnel" mask-class="tunnel-core railway-tram-core"/>
-				<line class="railway-tram-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
-			</rule>
-			<rule e="way" k="railway" v="subway">
-				<line class="tunnel-casing railway-subway-casing tunnel" mask-class="tunnel-core railway-subway-core"/>
-				<line class="railway-subway-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
-			</rule>
-			<rule e="way" k="railway" v="light_rail|incline">
-				<line class="tunnel-casing railway-light-rail-casing tunnel" mask-class="tunnel-core railway-light-rail-core"/>
-				<line class="railway-light-rail-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
-			</rule>
-			<rule e="way" k="railway" v="rail">
-				<line class="tunnel-casing railway-rail-casing tunnel" mask-class="tunnel-core railway-rail-1-core"/>
-				<line class="railway-rail-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
-			</rule>
+
 		</rule>
 		
 		<!-- highway motorway-junctions -->
@@ -1337,34 +1533,7 @@
 				<line class="highway-core highway-motorway-core under-construction"/>
 			</rule>
 		</rule>
-		
-		<rule e="way" k="railway" v="construction">
-			<rule e="way" k="construction" v="monorail">
-				<line class="railway-core railway-monorail-core under-construction"/>
-			</rule>
-			<rule e="way" k="construction" v="preserved">
-				<line class="railway-core railway-preserved-core under-construction"/>
-			</rule>
-			<rule e="way" k="construction" v="narrow_gauge">
-				<line class="railway-core railway-narrow-gauge-core under-construction"/>
-			</rule>
-			<rule e="way" k="construction" v="tram">
-				<line class="railway-core railway-tram-core under-construction"/>
-			</rule>
-			<rule e="way" k="construction" v="subway">
-				<line class="railway-casing railway-subway-construction-casing"/>
-				<line class="railway-core railway-subway-construction-core"/>
-			</rule>
-			<rule e="way" k="construction" v="light_rail|incline">
-				<line class="railway-core railway-light-rail-core under-construction"/>
-			</rule>
-			<rule e="way" k="construction" v="rail">
-				<line class="railway-casing railway-rail-construction-casing"/>
-				<line class="railway-core railway-rail-1-construction-core"/>
-				<line class="railway-core railway-rail-2-construction-core" smart-linecap="no"/>
-			</rule>
-		</rule>
-		
+				
 		<rule e="way" k="highway" v="*">
 			<rule e="way" k="highway" v="motorway|motorway_link|footway|steps|pedestrian|living_street|construction|planned|proposed|disused|abandoned|dismantled">
 			</rule>
@@ -1915,21 +2084,6 @@
 			}
 			
 			
-			
-			/* Railways - generic styles */
-			.railway-casing {
-			stroke-linecap: butt;
-			stroke-linejoin: round;
-			fill: none;
-			}
-			
-			.railway-core {
-			stroke-linecap: butt;
-			stroke-linejoin: round;
-			fill: none;
-			}
-			
-			
 			/* Highways - generic styles */
 			.highway-casing {
 			stroke-linecap: square;
@@ -2009,49 +2163,124 @@
 			
 			.tunnel { stroke-dasharray: 0.8, 0.8; }
 			
-			
-			.railway-rail-bridge-casing             { stroke-width: 6.5px; }
-			.railway-rail-bridge-core               { stroke-width: 5.5px; }
-			.railway-rail-casing                    { stroke-width: 3.0px; stroke: #b0b0b0; }
-			.railway-rail-1-core                    { stroke-width: 1.8px; stroke: #ffffff; }
-			.railway-rail-2-core                    { stroke-width: 4.0px; stroke: #b0b0b0; stroke-dasharray: 0.3, 3.0; }
-			.railway-rail-construction-casing       { stroke-width: 3.0px; stroke: #b0b0b0; stroke-dasharray: 9.6, 9.6; }
-			.railway-rail-1-construction-core       { stroke-width: 1.8px; stroke: #ffffff; stroke-dasharray: 9.6, 9.6; }
-			.railway-rail-2-construction-core       { stroke-width: 4.0px; stroke: #b0b0b0; stroke-dasharray: 0.3, 3.0, 0.3, 15.6; stroke-dashoffset: 16.2; }
-			
-			.railway-light-rail-bridge-casing       { stroke-width: 4.6px; }
-			.railway-light-rail-bridge-core         { stroke-width: 3.6px; }
-			.railway-light-rail-casing              { stroke-width: 2.4px; stroke: #606060; }
-			.railway-light-rail-core                { stroke-width: 1.8px; stroke: #606060; }
-			
-			.railway-subway-bridge-casing           { stroke-width: 4.6px; }
-			.railway-subway-bridge-core             { stroke-width: 3.6px; }
-			.railway-subway-casing                  { stroke-width: 2.4px; stroke: #b0b0b0; }
-			.railway-subway-core                    { stroke-width: 1.8px; stroke: #ffffff; stroke-dasharray: 3, 9; }
-			.railway-subway-construction-casing     { stroke-width: 2.4px; stroke: #b0b0b0; stroke-dasharray: 12, 12; }
-			.railway-subway-construction-core       { stroke-width: 1.8px; stroke: #ffffff; stroke-dasharray: 3, 21; stroke-dashoffset: 19.5; }
-			
-			
-			.railway-tram-bridge-casing             { stroke-width: 4.6px; }
-			.railway-tram-bridge-core               { stroke-width: 3.6px; }
-			.railway-tram-casing                    { stroke-width: 2.4px; stroke: #606060; }
-			.railway-tram-core                      { stroke-width: 1.8px; stroke: #606060; }
-			
-			.railway-narrow-gauge-bridge-casing     { stroke-width: 4.6px; }
-			.railway-narrow-gauge-bridge-core       { stroke-width: 3.6px; }
-			.railway-narrow-gauge-casing            { stroke-width: 2.4px; stroke: #b0b0b0; }
-			.railway-narrow-gauge-core              { stroke-width: 1.8px; stroke: #b0b0b0; }
-			
-			.railway-preserved-bridge-casing        { stroke-width: 4.7px; }
-			.railway-preserved-bridge-core          { stroke-width: 3.7px; }
-			.railway-preserved-casing               { stroke-width: 2.2px; stroke: #606060; }
-			.railway-preserved-core                 { stroke-width: 1.8px; stroke: #606060; }
-			
-			.railway-monorail-bridge-casing         { stroke-width: 4.5px; }
-			.railway-monorail-bridge-core           { stroke-width: 3.5px; }
-			.railway-monorail-casing                { stroke-width: 2.0px; stroke: #606060; }
-			.railway-monorail-core                  { stroke-width: 1.6px; stroke: #bf5bc3; }
-			
+			.railway-casing { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
+			.railway-1-core { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
+			.railway-2-core { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
+			.railway-core   { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
+
+			.railway-tunnel-ends {
+			stroke-opacity: 0;
+			fill: none;
+			marker-start: url(#marker-tunnel-start);
+			marker-end: url(#marker-tunnel-end);
+stroke-width: 6px;
+			}
+
+			.railway-rail-casing                    { stroke-width: 2.4px; }
+			.railway-rail-1-core                    { stroke-width: 1.8px; }
+			.railway-rail-2-core                    { stroke-width: 1.8px; stroke-dasharray: 4.5,4.5; }
+			.railway-rail-casing-color              { stroke: #333333; }
+			.railway-rail-1-core-color              { stroke: #e6e6e6; }
+			.railway-rail-2-core-color              { stroke: #333333; }
+			.railway-rail-tunnel-core               { stroke-opacity: 0.15; }
+
+			.railway-narrow-casing                    { stroke-width: 1.8px; }
+			.railway-narrow-1-core                    { stroke-width: 1.2px; }
+			.railway-narrow-2-core                    { stroke-width: 1.2px; stroke-dasharray: 5.5,5.5; }
+			.railway-narrow-casing-color              { stroke: #333333; }
+			.railway-narrow-1-core-color              { stroke: #e6e6e6; }
+			.railway-narrow-2-core-color              { stroke: #333333; }
+			.railway-narrow-tunnel-core               { stroke-opacity: 0.15; }
+
+			.railway-preserved-casing                    { stroke-width: 1.8px; }
+			.railway-preserved-1-core                    { stroke-width: 1.2px; }
+			.railway-preserved-2-core                    { stroke-width: 1.2px; stroke-dasharray: 4.5,4.5; }
+			.railway-preserved-casing-color              { stroke: #909090; }
+			.railway-preserved-1-core-color              { stroke: #e6e6e6; }
+			.railway-preserved-2-core-color              { stroke: #333333; }
+			.railway-preserved-tunnel-core               { stroke-opacity: 0.15; }
+
+			.railway-light-casing                    { stroke-width: 1.8px; }
+			.railway-light-1-core                    { stroke-width: 1.2px; }
+			.railway-light-2-core                    { stroke-width: 1.2px; stroke-dasharray: 3.8,5.4; }
+			.railway-light-casing-color              { stroke: #0f4c0f; }
+			.railway-light-1-core-color              { stroke: #b7e6e6; }
+			.railway-light-2-core-color              { stroke: #0f4c0f; }
+			.railway-light-tunnel-core               { stroke-opacity: 0.3; }
+
+			.railway-tram-casing                    { stroke-width: 1.8px; }
+			.railway-tram-1-core                    { stroke-width: 1.2px; }
+			.railway-tram-2-core                    { stroke-width: 1.2px; stroke-dasharray: 3.6,5.4; }
+			.railway-tram-casing-color              { stroke: #4c0f4c; }
+			.railway-tram-1-core-color              { stroke: #e6b7e6; }
+			.railway-tram-2-core-color              { stroke: #4c0f4c; }
+			.railway-tram-tunnel-core               { stroke-opacity: 0.3; }
+
+			.railway-subway-casing                    { stroke-width: 1.8px; }
+			.railway-subway-1-core                    { stroke-width: 1.2px; }
+			.railway-subway-2-core                    { stroke-width: 1.2px; stroke-dasharray: 3.6,5.4; }
+			.railway-subway-casing-color              { stroke: #0f0f4c; }
+			.railway-subway-1-core-color              { stroke: #b7b7e6; }
+			.railway-subway-2-core-color              { stroke: #0f0f4c; }
+			.railway-subway-tunnel-core               { stroke-opacity: 0.3; }
+
+			.railway-funicular-casing                    { stroke-width: 1.8px; }
+			.railway-funicular-1-core                    { stroke-width: 1.2px; stroke-dasharray: 3.6,5.4; }
+			.railway-funicular-t-core                    { stroke-width: 1.2px; }
+			.railway-funicular-2-core                    { stroke-width: 0.3px; }
+			.railway-funicular-casing-color              { stroke: #4c0f0f; }
+			.railway-funicular-1-core-color              { stroke: #e6b7b7; }
+			.railway-funicular-2-core-color              { stroke: #4c0f0f; }
+			.railway-funicular-tunnel-core               { stroke-opacity: 0.3; }
+
+			.railway-monorail-casing                    { stroke-width: 1.8px; }
+			.railway-monorail-1-core                    { stroke-width: 1.2px; }
+			.railway-monorail-2-core                    { stroke-width: 0.3px; }
+			.railway-monorail-casing-color              { stroke: #4c0f0f; }
+			.railway-monorail-1-core-color              { stroke: #e6b7b7; }
+			.railway-monorail-2-core-color              { stroke: #ffffff; }
+			.railway-monorail-tunnel-core               { stroke-opacity: 0.3; }
+
+			.railway-yard-casing                    { stroke-width: 1.5px; }
+			.railway-yard-1-core                    { stroke-width: 1.2px; }
+			.railway-yard-2-core                    { stroke-width: 1.2px; stroke-dasharray: 3,6; }
+			.railway-yard-casing-color              { stroke: #333333; }
+			.railway-yard-1-core-color              { stroke: #e6e6e6; }
+			.railway-yard-2-core-color              { stroke: #333333; }
+			.railway-yard-tunnel-core               { stroke-opacity: 0.3; }
+
+			.railway-con-casing                { stroke-width: 1.8px; stroke-dasharray: 1.5,1.5; }
+			.railway-con-1-core                { stroke-width: 1.2px; }
+			.railway-con-2-core                { stroke-width: 1.2px; stroke-dasharray: 1.5,1.5,1.5,4.5; }
+			.railway-con-casing-color          { stroke: #606060; }
+			.railway-con-1-core-color          { stroke: #f2f2f2; }
+			.railway-con-2-core-color          { stroke: #606060; }
+			.railway-con-tunnel-core               { stroke-opacity: 0.1; }
+
+			.railway-pla-casing                { stroke-width: 1.8px; stroke-dasharray: 1.5,1.5; }
+			.railway-pla-1-core                { stroke-width: 1.2px; }
+			.railway-pla-2-core                { stroke-width: 1.2px; stroke-dasharray: 1.5,1.5,1.5,4.5; }
+			.railway-pla-casing-color          { stroke: #b2b2b2; }
+			.railway-pla-1-core-color          { stroke: #ffffff; }
+			.railway-pla-2-core-color          { stroke: #b2b2b2; }
+			.railway-pla-tunnel-core               { stroke-opacity: 0.1; }
+
+			.railway-dis-casing                { stroke-width: 1.8px; stroke-opacity: 0.7; }
+			.railway-dis-1-core                { stroke-width: 1.2px; stroke-opacity: 0.7; }
+			.railway-dis-2-core                { stroke-width: 1.2px; stroke-opacity: 0.7; stroke-dasharray: 4.5,4.5; }
+			.railway-dis-casing-color          { stroke: #808080; }
+			.railway-dis-1-core-color          { stroke: #f2f2f2; }
+			.railway-dis-2-core-color          { stroke: #808080; }
+			.railway-dis-tunnel-core               { stroke-opacity: 0.1; }
+
+			.railway-aba-casing                { stroke-width: 1.8px; stroke-opacity: 0.4; }
+			.railway-aba-1-core                { stroke-width: 1.2px; stroke-opacity: 0.4; }
+			.railway-aba-2-core                { stroke-width: 1.2px; stroke-opacity: 0.4; stroke-dasharray: 4.5,4.5; }
+			.railway-aba-casing-color          { stroke: #b2b2b2; }
+			.railway-aba-1-core-color          { stroke: #ffffff; }
+			.railway-aba-2-core-color          { stroke: #b2b2b2; }
+			.railway-aba-tunnel-core               { stroke-opacity: 0.1; }
+
 			.highway-motorway-casing                { stroke-width: 5.2px;  stroke: #707070; }
 			.highway-motorway-cy1-casing            { stroke-width: 6.9px;     stroke: #707070; }
 			.highway-motorway-cy2-casing            { stroke-width: 6.3px;     stroke: #d1fad1; }

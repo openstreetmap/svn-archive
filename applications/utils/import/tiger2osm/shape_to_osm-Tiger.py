@@ -2,13 +2,13 @@
 # Tiger road data to OSM conversion script
 # based on the Massachusetts GIS script by christopher schmidt
 
-VERSION="0.2"
-# Version 0.2 changes to generalize the script some for use with other data by Dalep
+VERSION="0.3"
+# Version 0.3 is optimized for the tiger road conversion
 
 # Tag Source  = iSource + _import_v + version + _ + date and time
-iSource="TIGER"
+iSource="tiger"
 # Tag Attribution = iAttrib
-iAttrib="TIGER"
+iAttrib="tiger"
 
 # Ways that include these mtfccs should not be uploaded
 # H1100 Connector
@@ -32,6 +32,9 @@ maxNodes = 300000
 # shorter ways
 Max_Waylength = 500
 
+# Sets the distance that the address ways should be from the main way, in feet.
+address_distance = 25
+
 try:
     from osgeo import ogr
     from osgeo import osr
@@ -46,6 +49,265 @@ except:
 # some tags will require changing a number to a meaningful value like the Highway tag.  See the metadata for the meaning of these tags.
 # For any measurements be sure to check the unit value of the original data, and convert if needed to the expected unit for osm.
 # ====================================
+
+# Long name, short name, ISO-3166-1 alpha-2
+# from http://www.census.gov/geo/www/ansi/statetables.html
+fipscodes = {
+    '01' : ('Alabama', 'AL', 'US'),
+    '02' : ('Alaska', 'AK', 'US'),
+    '04' : ('Arizona', 'AZ', 'US'),
+    '05' : ('Arkansas', 'AR', 'US'),
+    '06' : ('California', 'CA', 'US'),
+    '08' : ('Colorado', 'CO', 'US'),
+    '09' : ('Connecticut', 'CT', 'US'),
+    '10' : ('Delaware', 'DE', 'US'),
+    '11' : ('District of Columbia', 'DC', 'US'),
+    '12' : ('Florida', 'FL', 'US'),
+    '13' : ('Georgia', 'GA', 'US'),
+    '15' : ('Hawaii', 'HI', 'US'),
+    '16' : ('Idaho', 'ID', 'US'),
+    '17' : ('Illinois', 'IL', 'US'),
+    '18' : ('Indiana', 'IN', 'US'),
+    '19' : ('Iowa', 'IA', 'US'),
+    '20' : ('Kansas', 'KS', 'US'),
+    '21' : ('Kentucky', 'KY', 'US'),
+    '22' : ('Louisiana', 'LA', 'US'),
+    '23' : ('Maine', 'ME', 'US'),
+    '24' : ('Maryland', 'MD', 'US'),
+    '25' : ('Massachusetts', 'MA', 'US'),
+    '26' : ('Michigan', 'MI', 'US'),
+    '27' : ('Minnesota', 'MN', 'US'),
+    '28' : ('Mississippi', 'MS', 'US'),
+    '29' : ('Missouri', 'MO', 'US'),
+    '30' : ('Montana', 'MT', 'US'),
+    '31' : ('Nebraska', 'NE', 'US'),
+    '32' : ('Nevada', 'NV', 'US'),
+    '33' : ('New Hampshire', 'NH', 'US'),
+    '34' : ('New Jersey', 'NJ', 'US'),
+    '35' : ('New Mexico', 'NM', 'US'),
+    '36' : ('New York', 'NY', 'US'),
+    '37' : ('North Carolina', 'NC', 'US'),
+    '38' : ('North Dakota', 'ND', 'US'),
+    '39' : ('Ohio', 'OH', 'US'),
+    '40' : ('Oklahoma', 'OK', 'US'),
+    '41' : ('Oregon', 'OR', 'US'),
+    '42' : ('Pennsylvania', 'PA', 'US'),
+    '44' : ('Rhode Island', 'RI', 'US'),
+    '45' : ('South Carolina', 'SC', 'US'),
+    '46' : ('South Dakota', 'SD', 'US'),
+    '47' : ('Tennessee', 'TN', 'US'),
+    '48' : ('Texas', 'TX', 'US'),
+    '49' : ('Utah', 'UT', 'US'),
+    '50' : ('Vermont', 'VT', 'US'),
+    '51' : ('Virginia', 'VA', 'US'),
+    '53' : ('Washington', 'WA', 'US'),
+    '54' : ('West Virginia', 'WV', 'US'),
+    '55' : ('Wisconsin', 'WI', 'US'),
+    '56' : ('Wyoming', 'WY', 'US'),
+    # Outlying areas w/census data
+    '60' : ('American Samoa', 'AS', 'AS'),
+    '66' : ('Guam', 'GU', 'GU'),
+    '69' : ('Commonwealth of the Northern Mariana Islands', 'MP', 'MP'),
+    '72' : ('Puerto Rico', 'PR', 'PR'),
+    '78' : ('U.S. Virgin Islands', 'VI', 'VI'),
+    }
+
+import math
+def addressways(waylist, nodelist, first_id):
+    id = first_id
+    awaylist = {}
+    lat_feet = 364613  #The approximate number of feet in one degree of latitude
+    ret = []
+    ret.append( "<?xml version='1.0' encoding='UTF-8'?>" )
+    ret.append( "<osm version='0.6' generator='shape_to_osm.py'>" )
+
+    for waykey, segments in waylist.iteritems():
+        waykey = dict(waykey)
+        rsegments = []
+        lsegments = []
+        for segment in segments:
+            lsegment = []
+            rsegment = []
+            lastpoint = None
+            if "tiger:lfromadd" in waykey:
+                lfromadd = waykey["tiger:lfromadd"]
+            else:
+                lfromadd = None
+            if "tiger:ltoadd" in waykey:
+                ltoadd = waykey["tiger:ltoadd"]
+            else:
+                ltoadd = None
+            if "tiger:rfromadd" in waykey:
+                rfromadd = waykey["tiger:rfromadd"]
+            else: 
+                rfromadd = None
+            if "tiger:rtoadd" in waykey:
+                rtoadd = waykey["tiger:rtoadd"]
+            else:
+		rtoadd = None
+            if rfromadd != None and rtoadd != None:
+                right = True
+	    else:
+		right = False
+            if lfromadd != None and ltoadd != None:
+                left = True
+	    else:
+		left = False
+            if left or right:
+		first = True
+                for point in segment:
+                    pointid, (lat, lon) = nodelist[ round_point( point ) ]
+                    lrad = math.radians(lat)
+                    lon_feet = 365527.822 * math.cos(lrad) - 306.75853 * math.cos(3 * lrad) + 0.3937 * math.cos(5 * lrad)
+		    #The approximate number of feet in one degree of longitute
+                
+#Calculate the points of the offset ways
+                    if lastpoint != None:
+                        X = (lon - lastpoint[1]) * lon_feet
+		        Y = (lat - lastpoint[0]) * lat_feet
+                        if Y != 0:
+		            theta = math.pi/2 - math.atan( X / Y)
+		            Xp = math.sin(theta) * address_distance
+		            Yp = math.cos(theta) * address_distance
+                        else:
+                            Xp = 0
+                            Yp = float(address_distance)
+
+			if Y > 0:
+			    Xp = -Xp
+			else:
+			    Yp = -Yp
+				
+			if first:
+			    first = False
+			    if left:
+                                lpoint = (lastpoint[0] + (Yp / lat_feet), lastpoint[1] + (Xp / lon_feet))
+                                lsegment.append( (id, lpoint) )
+			        id += 1
+			    if right:
+                                rpoint = (lastpoint[0] - (Yp / lat_feet), lastpoint[1] - (Xp / lon_feet))
+                                rsegment.append( (id, rpoint) )
+			        id += 1
+
+			if left:
+                            lpoint = (lat + (Yp / lat_feet), lon + (Xp / lon_feet))
+                            lsegment.append( (id, lpoint) )
+			    id += 1
+                        if right: 
+                            rpoint = (lat - (Yp / lat_feet), lon - (Xp / lon_feet))
+                            rsegment.append( (id, rpoint) )
+                            id += 1
+                    lastpoint = (lat, lon)
+
+#Write the nodes of the offset ways
+		if right:
+                    first = True
+                    for i, point in rsegment:
+                        if not first:
+			    ret.append( "</node>" )
+		        ret.append( "<node id='-%d' action='create' visible='true' lat='%f' lon='%f' >" % (i, point[0], point[1] ) )
+	    	        if first:
+                            ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % rfromadd )
+                            first = False
+                    ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % rtoadd )
+		    ret.append( "</node>" )
+		if left:
+                    first = True
+                    for i, point in lsegment:
+                        if not first:
+			    ret.append( "</node>" )
+		        ret.append( "<node id='-%d' action='create' visible='true' lat='%f' lon='%f' >" % (i, point[0], point[1] ) )
+	    	        if first:
+                            ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % lfromadd )
+                            first = False
+                    ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % ltoadd )
+		    ret.append( "</node>" )
+		if right:
+                    rsegments.append( rsegment )
+		if left:
+                    lsegments.append( lsegment )
+	        if right:
+		    ret.append( "<way id='-%d' action='create' visible='true'> " % id)
+		    id += 1
+                    for rsegment in rsegments:
+                        for point in rsegment:
+                            ret.append( "<nd ref='-%d' /> " % point[0])
+
+		    tofromint = True	#Do the addresses convert to integers?
+		    try: rfromint = int(rfromadd)
+		    except:
+			print("Non integer address: %s" % rfromadd)
+			tofromint = False
+		    try: rtoint = int(rtoadd)
+		    except:
+			print("Non integer address: %s" % rtoint)
+			tofromint = False
+		    if tofromint == True:
+                        if ((int(rfromadd) % 2) == 0) and ((int(rtoadd) % 2) == 0):
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"even\" />" )
+                        elif ((int(rfromadd) % 2) == 1) and ((int(rtoadd) % 2) == 1):
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"odd\" />" )
+                    if "name" in waykey:
+                        name = waykey["name"]
+                    ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
+                    ret.append( "</way>" )
+		if left:
+		    ret.append( "<way id='-%d' action='create' visible='true'> " % id)
+		    id += 1
+                    for lsegment in lsegments:
+                        for point in lsegment:
+                            ret.append( "<nd ref='-%d' /> " % point[0])
+		    tofromint = True	#Do address convert to ints?
+		    try: lfromint = int(lfromadd)
+		    except:
+			print("Non integer address: %s" % lfromadd)
+			tofromint = False
+		    try: ltoint = int(ltoadd)
+		    except:
+			print("Non integer address: %s" % ltoint)
+			tofromint = False
+		    if tofromint == True:
+                        if (lfromint % 2) == 0 and (ltoint % 2) == 0:
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"even\" />" )
+                        elif (lfromint % 2) == 1 and (ltoint % 2) == 1:
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"odd\" />" )
+                    if "name" in waykey:
+                        name = waykey["name"]
+                    ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
+                    ret.append( "</way>" )
+
+    ret.append( "</osm>" )
+    return ret
+
+def fipsstate(fips):
+    tags = {}
+
+    if not fips:
+        tags['is_in'] = 'USA'
+        tags['is_in:country'] = 'USA'
+        tags['is_in:country_code'] = 'US'
+        return tags
+
+    if fips not in fipscodes:
+        raise KeyError, 'missing FIPS code', fips
+
+    state, statecode, isocode = fipscodes[fips]
+
+    tags["is_in"] =  'USA, '+state
+    tags["is_in:state"] =  state
+    tags["is_in:state_code"] = statecode
+    tags["is_in:country_code"] = isocode
+
+    if isocode == 'US':
+        tags["is_in:iso_3166_2"] =  isocode+':'+statecode
+        tags["is_in:country"] = "USA"
+
+    else:
+        # Reasonable to specify both here
+        tags["is_in:country"] = 'USA;'+state
+
+    return tags
+
 def parse_shp_for_osm( filename ):
     #ogr.RegisterAll()
 
@@ -128,12 +390,37 @@ def parse_shp_for_osm( filename ):
 		tags["highway"] = "cycleway"
 	    if mtfcc == "S1830":	#Bridle Path
 		tags["highway"] = "bridleway"
-	    tags["TIGER:MTFCC"] = mtfcc
+	    tags["tiger:mtfcc"] = mtfcc
 
-        divroad = poFeature.GetField("DIVROAD");
+        divroad = poFeature.GetField("DIVROAD")
         if divroad != None:
 	    if divroad == "Y" and tags["highway"] == "residential":
                 tags["highway"] = "tertiary"
+            tags["tiger:separated"] = divroad
+
+        statefp = poFeature.GetField("STATEFP")
+        if statefp != None:
+           tags.update( fipsstate(statefp) )
+
+        tlid = poFeature.GetField("TLID")
+        if tlid != None:
+            tags["tiger:tlid"] = tlid
+
+        lfromadd = poFeature.GetField("LFROMADD")
+        if lfromadd != None:
+            tags["tiger:lfromadd"] = lfromadd
+
+        rfromadd = poFeature.GetField("RFROMADD")
+        if rfromadd != None:
+            tags["tiger:rfromadd"] = rfromadd
+
+        ltoadd = poFeature.GetField("LTOADD")
+        if ltoadd != None:
+            tags["tiger:ltoadd"] = ltoadd
+
+        rtoadd = poFeature.GetField("RTOADD")
+        if rtoadd != None:
+            tags["tiger:rtoadd"] = rtoadd
 
         if mtfcc not in ignoremtfcc:
             # COPY DOWN THE GEOMETRY
@@ -306,6 +593,16 @@ def shape_to_osm( shp_filename, base_filename, blank_way_id ):
     filenumber = 1
     objectcount = 0
     seen = {}
+
+    print "preparing address ways"
+    ret = addressways(waylist, nodelist, i)
+    osm_filename = "%s%d.osm" % (base_filename, filenumber)
+    print "writing %s" %osm_filename
+    fp = open( osm_filename, "w" )
+    fp.write( "\n".join( ret ) )
+    fp.close()
+    filenumber += 1
+
     
     print "constructing osm xml file"
     ret = []
@@ -321,8 +618,6 @@ def shape_to_osm( shp_filename, base_filename, blank_way_id ):
                     seen[id] = True
 		    #write node
                     ret.append( "  <node id='-%d' action='create' visible='true' lat='%f' lon='%f' >" % (id, lat, lon) )
-#                    ret.append( "    <tag k=\"source\" v=\"%s_import_v%s_%s\" />" % (iSource, VERSION, import_guid) )
-#                    ret.append( "    <tag k=\"attribution\" v=\"%s\" />" % (iAttrib) )
                     ret.append( "  </node>" )
                     objectcount += 1
                 else:

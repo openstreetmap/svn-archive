@@ -21,7 +21,7 @@
 \begin{tabular}{c|c|c}
 #1 & #2 & #3 \\
 \hline
-#4 &  * & #5 \\
+#4 &  *  & #5 \\
 \hline
 #6 & #7 & #8 \\
 \end{tabular}
@@ -33,31 +33,11 @@
 %%%
 %%% Map
 %%%
-
-\newcommand{\gridheight}{2cm}
-
 \newcommand{\Map}[7]{
 
-% \includegraphics[clip,width=\linewidth]{#1}
+    \includegraphics[clip,width=\linewidth]{#1}
 
-%\begin{tabular}{c|ccccccccc}
-%\renewcommand{\arraystretch}{2}
-\begin{tabular}{c|p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}p{.08\linewidth}}
-  & A & B & C & D & E & F & G & H & I \\
-\hline
-1 & \multicolumn{9}{|c|}{\multirow{9}{*}{\includegraphics[clip,width=.9\linewidth]{#1}}} \\
-%1 \rule{0cm}{1cm} & \multicolumn{9}{|c|}{\multirow{9}{*}{foo}} \\
-2 \rule{0cm}{\gridheight} & & & & & & & & &  \\
-3 \rule{0cm}{\gridheight} & & & & & & & & &  \\
-4 \rule{0cm}{\gridheight} & & & & & & & & &  \\
-5 \rule{0cm}{\gridheight} & & & & & & & & &  \\
-6 \rule{0cm}{\gridheight} & & & & & & & & &  \\
-7 \rule{0cm}{\gridheight} & & & & & & & & &  \\
-8 \rule{0cm}{\gridheight} & & & & & & & & &  \\
-9 \rule{0cm}{\gridheight} & & & & & & & & &  \\
-\hline
-\vspace*{.25in}
-\end{tabular}
+\vspace{.5in}
 
 \begin{minipage}[b]{\linewidth}
 \centering
@@ -72,9 +52,15 @@ Grid & NW: & N #4 & W #3 & #7 \\
 \end{Large}
 \end{minipage}
 %\begin{center}
-%{\Huge Grid #2}
+%{\Large Grid #2}
 %\end{center}
 \pagebreak
+}
+
+\newcommand{\Note}[1]{
+\begin{itemize}
+\item #1
+\end{itemize}
 }
 
 
@@ -83,23 +69,23 @@ Grid & NW: & N #4 & W #3 & #7 \\
 %%%
 \newcommand{\Overview}[5]{
 
-    \includegraphics{#1}
+    \includegraphics[clip,width=.98\linewidth]{#1}
 
 \vspace{.5in}
 
 \begin{minipage}[b]{\linewidth}
 \centering
-\begin{Huge}
+\begin{Large}
 \begin{tabular}{|c|rll|}
 \hline
 Overview & NW: & N #3 & W #2 \\
 Map      & SE: & N #5 & W #4 \\
 \hline
 \end{tabular}
-\end{Huge}
+\end{Large}
 \end{minipage}
 %\begin{center}
-%{\Huge Grid #2}
+%{\Large Grid #2}
 %\end{center}
 \pagebreak
 }

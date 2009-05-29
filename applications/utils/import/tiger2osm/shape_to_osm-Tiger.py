@@ -112,6 +112,170 @@ fipscodes = {
     '78' : ('U.S. Virgin Islands', 'VI', 'VI'),
     }
 
+#Other states available at: http://www.census.gov/datamap/fipslist/AllSt.txt
+GAfips = {
+    '001' : 'Appling, GA',
+    '003' : 'Atkinson, GA',
+    '005' : 'Bacon, GA',
+    '007' : 'Baker, GA',
+    '009' : 'Baldwin, GA',
+    '011' : 'Banks, GA',
+    '013' : 'Barrow, GA',
+    '015' : 'Bartow, GA',
+    '017' : 'Ben Hill, GA',
+    '019' : 'Berrien, GA',
+    '021' : 'Bibb, GA',
+    '023' : 'Bleckley, GA',
+    '025' : 'Brantley, GA',
+    '027' : 'Brooks, GA',
+    '029' : 'Bryan, GA',
+    '031' : 'Bulloch, GA',
+    '033' : 'Burke, GA',
+    '035' : 'Butts, GA',
+    '037' : 'Calhoun, GA',
+    '039' : 'Camden, GA',
+    '043' : 'Candler, GA',
+    '045' : 'Carroll, GA',
+    '047' : 'Catoosa, GA',
+    '049' : 'Charlton, GA',
+    '051' : 'Chatham, GA',
+    '053' : 'Chattahoochee, GA',
+    '055' : 'Chattooga, GA',
+    '057' : 'Cherokee, GA',
+    '059' : 'Clarke, GA',
+    '061' : 'Clay, GA',
+    '063' : 'Clayton, GA',
+    '065' : 'Clinch, GA',
+    '067' : 'Cobb, GA',
+    '069' : 'Coffee, GA',
+    '071' : 'Colquitt, GA',
+    '073' : 'Columbia, GA',
+    '075' : 'Cook, GA',
+    '077' : 'Coweta, GA',
+    '079' : 'Crawford, GA',
+    '081' : 'Crisp, GA',
+    '083' : 'Dade, GA',
+    '085' : 'Dawson, GA',
+    '087' : 'Decatur, GA',
+    '089' : 'De Kalb, GA',
+    '091' : 'Dodge, GA',
+    '093' : 'Dooly, GA',
+    '095' : 'Dougherty, GA',
+    '097' : 'Douglas, GA',
+    '099' : 'Early, GA',
+    '101' : 'Echols, GA',
+    '103' : 'Effingham, GA',
+    '105' : 'Elbert, GA',
+    '107' : 'Emanuel, GA',
+    '109' : 'Evans, GA',
+    '111' : 'Fannin, GA',
+    '113' : 'Fayette, GA',
+    '115' : 'Floyd, GA',
+    '117' : 'Forsyth, GA',
+    '119' : 'Franklin, GA',
+    '121' : 'Fulton, GA',
+    '123' : 'Gilmer, GA',
+    '125' : 'Glascock, GA',
+    '127' : 'Glynn, GA',
+    '129' : 'Gordon, GA',
+    '131' : 'Grady, GA',
+    '133' : 'Greene, GA',
+    '135' : 'Gwinnett, GA',
+    '137' : 'Habersham, GA',
+    '139' : 'Hall, GA',
+    '141' : 'Hancock, GA',
+    '143' : 'Haralson, GA',
+    '145' : 'Harris, GA',
+    '147' : 'Hart, GA',
+    '149' : 'Heard, GA',
+    '151' : 'Henry, GA',
+    '153' : 'Houston, GA',
+    '155' : 'Irwin, GA',
+    '157' : 'Jackson, GA',
+    '159' : 'Jasper, GA',
+    '161' : 'Jeff Davis, GA',
+    '163' : 'Jefferson, GA',
+    '165' : 'Jenkins, GA',
+    '167' : 'Johnson, GA',
+    '169' : 'Jones, GA',
+    '171' : 'Lamar, GA',
+    '173' : 'Lanier, GA',
+    '175' : 'Laurens, GA',
+    '177' : 'Lee, GA',
+    '179' : 'Liberty, GA',
+    '181' : 'Lincoln, GA',
+    '183' : 'Long, GA',
+    '185' : 'Lowndes, GA',
+    '187' : 'Lumpkin, GA',
+    '189' : 'McDuffie, GA',
+    '191' : 'McIntosh, GA',
+    '193' : 'Macon, GA',
+    '195' : 'Madison, GA',
+    '197' : 'Marion, GA',
+    '199' : 'Meriwether, GA',
+    '201' : 'Miller, GA',
+    '205' : 'Mitchell, GA',
+    '207' : 'Monroe, GA',
+    '209' : 'Montgomery, GA',
+    '211' : 'Morgan, GA',
+    '213' : 'Murray, GA',
+    '215' : 'Muscogee, GA',
+    '217' : 'Newton, GA',
+    '219' : 'Oconee, GA',
+    '221' : 'Oglethorpe, GA',
+    '223' : 'Paulding, GA',
+    '225' : 'Peach, GA',
+    '227' : 'Pickens, GA',
+    '229' : 'Pierce, GA',
+    '231' : 'Pike, GA',
+    '233' : 'Polk, GA',
+    '235' : 'Pulaski, GA',
+    '237' : 'Putnam, GA',
+    '239' : 'Quitman, GA',
+    '241' : 'Rabun, GA',
+    '243' : 'Randolph, GA',
+    '245' : 'Richmond, GA',
+    '247' : 'Rockdale, GA',
+    '249' : 'Schley, GA',
+    '251' : 'Screven, GA',
+    '253' : 'Seminole, GA',
+    '255' : 'Spalding, GA',
+    '257' : 'Stephens, GA',
+    '259' : 'Stewart, GA',
+    '261' : 'Sumter, GA',
+    '263' : 'Talbot, GA',
+    '265' : 'Taliaferro, GA',
+    '267' : 'Tattnall, GA',
+    '269' : 'Taylor, GA',
+    '271' : 'Telfair, GA',
+    '273' : 'Terrell, GA',
+    '275' : 'Thomas, GA',
+    '277' : 'Tift, GA',
+    '279' : 'Toombs, GA',
+    '281' : 'Towns, GA',
+    '283' : 'Treutlen, GA',
+    '285' : 'Troup, GA',
+    '287' : 'Turner, GA',
+    '289' : 'Twiggs, GA',
+    '291' : 'Union, GA',
+    '293' : 'Upson, GA',
+    '295' : 'Walker, GA',
+    '297' : 'Walton, GA',
+    '299' : 'Ware, GA',
+    '301' : 'Warren, GA',
+    '303' : 'Washington, GA',
+    '305' : 'Wayne, GA',
+    '307' : 'Webster, GA',
+    '309' : 'Wheeler, GA',
+    '311' : 'White, GA',
+    '313' : 'Whitfield, GA',
+    '315' : 'Wilcox, GA',
+    '317' : 'Wilkes, GA',
+    '319' : 'Wilkinson, GA',
+    '321' : 'Worth, GA',
+    }
+
+
 import math
 def addressways(waylist, nodelist, first_id):
     id = first_id
@@ -194,7 +358,10 @@ def addressways(waylist, nodelist, first_id):
 		            Yp = math.cos(theta) * address_distance
                         else:
                             Xp = 0
-                            Yp = float(address_distance)
+			    if X > 0:
+                                Yp = -float(address_distance)
+			    else:
+                                Yp = float(address_distance)
 
 			if Y > 0:
 			    Xp = -Xp
@@ -278,6 +445,7 @@ def addressways(waylist, nodelist, first_id):
 		    except:
 		        print("Non integer address: %s" % ltoint)
 		        tofromint = False
+    	        import_guid = time.strftime( '%Y%m%d%H%M%S' )
 	        if right:
 		    ret.append( "<way id='-%d' action='create' visible='true'> " % id)
 		    id += 1
@@ -297,16 +465,20 @@ def addressways(waylist, nodelist, first_id):
                     if "name" in waykey:
                         name = waykey["name"]
                         ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
-
 		    if "is_in:state" in waykey:
 			state = waykey["is_in:state"]
                         ret.append( "<tag k=\"addr:state\" v=\"%s\" />" % state )
 		    if "tiger:zip_right" in waykey:
 			zipr = waykey["tiger:zip_right"]
                         ret.append( "<tag k=\"addr:postcode\" v=\"%s\" />" % zipr )
+		    if "tiger:county" in waykey:
+			county = waykey["tiger:county"]
+                        ret.append( "<tag k=\"addr:county\" v=\"%s\" />" % county )
 		    if "is_in:country_code" in waykey:
 			country = waykey["is_in:country_code"]
                         ret.append( "<tag k=\"addr:country\" v=\"%s\" />" % country )
+                    ret.append( "<tag k=\"source\" v=\"%s_import_v%s_%s\" />" % (iSource, VERSION, import_guid) )
+                    ret.append( "    <tag k=\"attribution\" v=\"%s\" />" % (iAttrib) )
 			
                     ret.append( "</way>" )
 		if left:
@@ -334,15 +506,20 @@ def addressways(waylist, nodelist, first_id):
 		    if "tiger:zip_left" in waykey:
 			zipl = waykey["tiger:zip_left"]
                         ret.append( "<tag k=\"addr:postcode\" v=\"%s\" />" % zipl )
+		    if "tiger:county" in waykey:
+			county = waykey["tiger:county"]
+                        ret.append( "<tag k=\"addr:county\" v=\"%s\" />" % county )
 		    if "is_in:country_code" in waykey:
 			country = waykey["is_in:country_code"]
                         ret.append( "<tag k=\"addr:country\" v=\"%s\" />" % country )
+                    ret.append( "<tag k=\"source\" v=\"%s_import_v%s_%s\" />" % (iSource, VERSION, import_guid) )
+                    ret.append( "    <tag k=\"attribution\" v=\"%s\" />" % (iAttrib) )
                     ret.append( "</way>" )
 
     ret.append( "</osm>" )
     return ret
 
-def fipsstate(fips):
+def fipsstate(fips,countyfp):
     tags = {}
 
     if not fips:
@@ -355,6 +532,12 @@ def fipsstate(fips):
         raise KeyError, 'missing FIPS code', fips
 
     state, statecode, isocode = fipscodes[fips]
+    if int(fips) != 13:
+	print "Only Georgia county names are supported at this time."
+    else:
+        county = GAfips[countyfp]
+	tags["tiger:county"] = county
+	tags["is_in:county"] = county
 
     tags["is_in"] =  'USA, '+state
     tags["is_in:state"] =  state
@@ -462,8 +645,9 @@ def parse_shp_for_osm( filename ):
             tags["tiger:separated"] = divroad
 
         statefp = poFeature.GetField("STATEFP")
-        if statefp != None:
-           tags.update( fipsstate(statefp) )
+        countyfp = poFeature.GetField("COUNTYFP")
+        if (statefp != None) and (countyfp != None):
+           tags.update( fipsstate(statefp, countyfp) )
 
         tlid = poFeature.GetField("TLID")
         if tlid != None:

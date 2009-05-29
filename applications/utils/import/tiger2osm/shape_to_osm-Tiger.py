@@ -296,7 +296,18 @@ def addressways(waylist, nodelist, first_id):
                         ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
                     if "name" in waykey:
                         name = waykey["name"]
-                    ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
+                        ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
+
+		    if "is_in:state" in waykey:
+			state = waykey["is_in:state"]
+                        ret.append( "<tag k=\"addr:state\" v=\"%s\" />" % state )
+		    if "tiger:zip_right" in waykey:
+			zipr = waykey["tiger:zip_right"]
+                        ret.append( "<tag k=\"addr:postcode\" v=\"%s\" />" % zipr )
+		    if "is_in:country_code" in waykey:
+			country = waykey["is_in:country_code"]
+                        ret.append( "<tag k=\"addr:country\" v=\"%s\" />" % country )
+			
                     ret.append( "</way>" )
 		if left:
 		    ret.append( "<way id='-%d' action='create' visible='true'> " % id)
@@ -316,7 +327,16 @@ def addressways(waylist, nodelist, first_id):
                         ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
                     if "name" in waykey:
                         name = waykey["name"]
-                    ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
+                        ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
+		    if "is_in:state" in waykey:
+			state = waykey["is_in:state"]
+                        ret.append( "<tag k=\"addr:state\" v=\"%s\" />" % state )
+		    if "tiger:zip_left" in waykey:
+			zipl = waykey["tiger:zip_left"]
+                        ret.append( "<tag k=\"addr:postcode\" v=\"%s\" />" % zipl )
+		    if "is_in:country_code" in waykey:
+			country = waykey["is_in:country_code"]
+                        ret.append( "<tag k=\"addr:country\" v=\"%s\" />" % country )
                     ret.append( "</way>" )
 
     ret.append( "</osm>" )
@@ -464,6 +484,14 @@ def parse_shp_for_osm( filename ):
         rtoadd = poFeature.GetField("RTOADD")
         if rtoadd != None:
             tags["tiger:rtoadd"] = rtoadd
+
+        zipl = poFeature.GetField("ZIPL")
+        if zipl != None:
+            tags["tiger:zip_left"] = zipl
+
+        zipr = poFeature.GetField("ZIPR")
+        if zipr != None:
+            tags["tiger:zip_right"] = zipr
 
         if mtfcc not in ignoremtfcc:
             # COPY DOWN THE GEOMETRY

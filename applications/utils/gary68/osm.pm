@@ -47,7 +47,9 @@
 # Version 4.4
 # -added relation analyzer link
 #
-
+# Version 4.41 (gary68)
+# - changed regex for openosmfile from /node/ to /<node/ - seems better since changesets are now in planet...
+#
 
 #
 # USAGE
@@ -123,7 +125,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '4.4' ; 
+$VERSION = '4.41' ; 
 
 require Exporter ;
 
@@ -153,7 +155,7 @@ sub openOsmFile {
 	}
 
 	nextLine() ;		
-	while ( ! (grep /node/, $line) ) {
+	while ( ! (grep /<node/, $line) ) {
 		nextLine() ;		
 	}
 	return 1 ;

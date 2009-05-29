@@ -155,14 +155,37 @@ def addressways(waylist, nodelist, first_id):
 		left = False
             if left or right:
 		first = True
+                firstpointid, firstpoint = nodelist[ round_point( segment[0] ) ]
+
+                finalpointid, finalpoint = nodelist[ round_point( segment[len(segment) - 1] ) ]
                 for point in segment:
                     pointid, (lat, lon) = nodelist[ round_point( point ) ]
+
+		    #The approximate number of feet in one degree of longitute
                     lrad = math.radians(lat)
                     lon_feet = 365527.822 * math.cos(lrad) - 306.75853 * math.cos(3 * lrad) + 0.3937 * math.cos(5 * lrad)
-		    #The approximate number of feet in one degree of longitute
-                
+
 #Calculate the points of the offset ways
                     if lastpoint != None:
+		        #Skip points too close to start
+			if math.sqrt((lat * lat_feet - firstpoint[0] * lat_feet)**2 + (lon * lon_feet - firstpoint[1] * lon_feet)**2) < address_distance:
+			    #Preserve very short ways (but will be rendered backwards)
+			    if pointid != finalpointid:
+			        continue
+		        #Skip points too close to end
+			if math.sqrt((lat * lat_feet - finalpoint[0] * lat_feet)**2 + (lon * lon_feet - finalpoint[1] * lon_feet)**2) < address_distance:
+			    #Preserve very short ways (but will be rendered backwards)
+			    if (pointid != firstpointid) and (pointid != finalpointid):
+			        continue
+
+			if not first:
+			    if left:
+                                lsegment.append( (id, lpoint) )
+                                id += 1
+			    if right:
+                                rsegment.append( (id, rpoint) )
+                                id += 1
+
                         X = (lon - lastpoint[1]) * lon_feet
 		        Y = (lat - lastpoint[0]) * lat_feet
                         if Y != 0:
@@ -180,25 +203,35 @@ def addressways(waylist, nodelist, first_id):
 				
 			if first:
 			    first = False
+			    dX = -Yp / lat_feet #Pull back the first point
+			    dY = Xp / lon_feet
 			    if left:
-                                lpoint = (lastpoint[0] + (Yp / lat_feet), lastpoint[1] + (Xp / lon_feet))
+                                lpoint = (lastpoint[0] + (Yp / lat_feet) - dY, lastpoint[1] + (Xp / lon_feet) - dX)
                                 lsegment.append( (id, lpoint) )
 			        id += 1
 			    if right:
-                                rpoint = (lastpoint[0] - (Yp / lat_feet), lastpoint[1] - (Xp / lon_feet))
+                                rpoint = (lastpoint[0] - (Yp / lat_feet) - dY, lastpoint[1] - (Xp / lon_feet) - dX)
                                 rsegment.append( (id, rpoint) )
 			        id += 1
 
 			if left:
                             lpoint = (lat + (Yp / lat_feet), lon + (Xp / lon_feet))
-                            lsegment.append( (id, lpoint) )
 			    id += 1
+
                         if right: 
                             rpoint = (lat - (Yp / lat_feet), lon - (Xp / lon_feet))
-                            rsegment.append( (id, rpoint) )
-                            id += 1
                     lastpoint = (lat, lon)
 
+
+#Add in the last node
+		if left:
+                    lpoint = (lastpoint[0] + (Yp / lat_feet) + (Xp / lon_feet), lastpoint[1] + (Xp / lon_feet) - (Yp / lat_feet))
+                    lsegment.append( (id, lpoint) )
+                    id += 1
+		if right:
+                    rpoint = (lastpoint[0] - (Yp / lat_feet) + (Xp / lon_feet), lastpoint[1] - (Xp / lon_feet) - (Yp / lat_feet))
+                    rsegment.append( (id, rpoint) )
+                    id += 1
 #Write the nodes of the offset ways
 		if right:
                     first = True
@@ -226,6 +259,25 @@ def addressways(waylist, nodelist, first_id):
                     rsegments.append( rsegment )
 		if left:
                     lsegments.append( lsegment )
+		tofromint = True	#Do the addresses convert to integers?
+		if right:
+		    try: rfromint = int(rfromadd)
+		    except:
+		        print("Non integer address: %s" % rfromadd)
+		        tofromint = False
+		    try: rtoint = int(rtoadd)
+		    except:
+		        print("Non integer address: %s" % rtoint)
+		        tofromint = False
+		if left:
+		    try: lfromint = int(lfromadd)
+		    except:
+		        print("Non integer address: %s" % lfromadd)
+		        tofromint = False
+		    try: ltoint = int(ltoadd)
+		    except:
+		        print("Non integer address: %s" % ltoint)
+		        tofromint = False
 	        if right:
 		    ret.append( "<way id='-%d' action='create' visible='true'> " % id)
 		    id += 1
@@ -233,20 +285,15 @@ def addressways(waylist, nodelist, first_id):
                         for point in rsegment:
                             ret.append( "<nd ref='-%d' /> " % point[0])
 
-		    tofromint = True	#Do the addresses convert to integers?
-		    try: rfromint = int(rfromadd)
-		    except:
-			print("Non integer address: %s" % rfromadd)
-			tofromint = False
-		    try: rtoint = int(rtoadd)
-		    except:
-			print("Non integer address: %s" % rtoint)
-			tofromint = False
-		    if tofromint == True:
-                        if ((int(rfromadd) % 2) == 0) and ((int(rtoadd) % 2) == 0):
+		    if tofromint and left:
+                        if ((int(rfromadd) % 2) == 0) and ((int(rtoadd) % 2) == 0) and ((int(lfromadd) % 2) == 1) and ((int(ltoadd) % 2) == 1):
                             ret.append( "<tag k=\"addr:interpolation\" v=\"even\" />" )
-                        elif ((int(rfromadd) % 2) == 1) and ((int(rtoadd) % 2) == 1):
+                        elif ((int(rfromadd) % 2) == 1) and ((int(rtoadd) % 2) == 1) and ((int(lfromadd) % 2) == 0) and ((int(ltoadd) % 2) == 0):
                             ret.append( "<tag k=\"addr:interpolation\" v=\"odd\" />" )
+			else:
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
+		    else:
+                        ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
                     if "name" in waykey:
                         name = waykey["name"]
                     ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
@@ -257,20 +304,16 @@ def addressways(waylist, nodelist, first_id):
                     for lsegment in lsegments:
                         for point in lsegment:
                             ret.append( "<nd ref='-%d' /> " % point[0])
-		    tofromint = True	#Do address convert to ints?
-		    try: lfromint = int(lfromadd)
-		    except:
-			print("Non integer address: %s" % lfromadd)
-			tofromint = False
-		    try: ltoint = int(ltoadd)
-		    except:
-			print("Non integer address: %s" % ltoint)
-			tofromint = False
-		    if tofromint == True:
-                        if (lfromint % 2) == 0 and (ltoint % 2) == 0:
+		    if tofromint and right:
+                        if (lfromint % 2) == 0 and (ltoint % 2) == 0 and (rfromint % 2) == 1 and (rtoint % 2) == 1:
+
                             ret.append( "<tag k=\"addr:interpolation\" v=\"even\" />" )
-                        elif (lfromint % 2) == 1 and (ltoint % 2) == 1:
+                        elif (lfromint % 2) == 1 and (ltoint % 2) == 1 and (rfromint %2 ) == 0 and (rtoint % 2) == 0:
                             ret.append( "<tag k=\"addr:interpolation\" v=\"odd\" />" )
+			else:
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
+		    else:
+                        ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
                     if "name" in waykey:
                         name = waykey["name"]
                     ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )

@@ -37,8 +37,6 @@
 
     \includegraphics[clip,width=\linewidth]{#1}
 
-\vspace{.5in}
-
 \begin{minipage}[b]{\linewidth}
 \centering
 \begin{Large}
@@ -54,15 +52,21 @@ Grid & NW: & N #4 & W #3 & #7 \\
 %\begin{center}
 %{\Large Grid #2}
 %\end{center}
-\pagebreak
+}
+
+\newcommand{\NotesBegin}{
+\begin{itemize}
 }
 
 \newcommand{\Note}[1]{
-\begin{itemize}
 \item #1
+}
+
+\newcommand{\NotesEnd}{
 \end{itemize}
 }
 
+\newcommand{\EndPage}{\pagebreak}
 
 %%%
 %%% Overview
@@ -70,8 +74,6 @@ Grid & NW: & N #4 & W #3 & #7 \\
 \newcommand{\Overview}[5]{
 
     \includegraphics[clip,width=.98\linewidth]{#1}
-
-\vspace{.5in}
 
 \begin{minipage}[b]{\linewidth}
 \centering

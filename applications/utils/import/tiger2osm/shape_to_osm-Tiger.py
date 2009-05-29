@@ -275,250 +275,6 @@ GAfips = {
     '321' : 'Worth, GA',
     }
 
-
-import math
-def addressways(waylist, nodelist, first_id):
-    id = first_id
-    awaylist = {}
-    lat_feet = 364613  #The approximate number of feet in one degree of latitude
-    ret = []
-    ret.append( "<?xml version='1.0' encoding='UTF-8'?>" )
-    ret.append( "<osm version='0.6' generator='shape_to_osm.py'>" )
-
-    for waykey, segments in waylist.iteritems():
-        waykey = dict(waykey)
-        rsegments = []
-        lsegments = []
-        for segment in segments:
-            lsegment = []
-            rsegment = []
-            lastpoint = None
-            if "tiger:lfromadd" in waykey:
-                lfromadd = waykey["tiger:lfromadd"]
-            else:
-                lfromadd = None
-            if "tiger:ltoadd" in waykey:
-                ltoadd = waykey["tiger:ltoadd"]
-            else:
-                ltoadd = None
-            if "tiger:rfromadd" in waykey:
-                rfromadd = waykey["tiger:rfromadd"]
-            else: 
-                rfromadd = None
-            if "tiger:rtoadd" in waykey:
-                rtoadd = waykey["tiger:rtoadd"]
-            else:
-		rtoadd = None
-            if rfromadd != None and rtoadd != None:
-                right = True
-	    else:
-		right = False
-            if lfromadd != None and ltoadd != None:
-                left = True
-	    else:
-		left = False
-            if left or right:
-		first = True
-                firstpointid, firstpoint = nodelist[ round_point( segment[0] ) ]
-
-                finalpointid, finalpoint = nodelist[ round_point( segment[len(segment) - 1] ) ]
-                for point in segment:
-                    pointid, (lat, lon) = nodelist[ round_point( point ) ]
-
-		    #The approximate number of feet in one degree of longitute
-                    lrad = math.radians(lat)
-                    lon_feet = 365527.822 * math.cos(lrad) - 306.75853 * math.cos(3 * lrad) + 0.3937 * math.cos(5 * lrad)
-
-#Calculate the points of the offset ways
-                    if lastpoint != None:
-		        #Skip points too close to start
-			if math.sqrt((lat * lat_feet - firstpoint[0] * lat_feet)**2 + (lon * lon_feet - firstpoint[1] * lon_feet)**2) < address_distance:
-			    #Preserve very short ways (but will be rendered backwards)
-			    if pointid != finalpointid:
-			        continue
-		        #Skip points too close to end
-			if math.sqrt((lat * lat_feet - finalpoint[0] * lat_feet)**2 + (lon * lon_feet - finalpoint[1] * lon_feet)**2) < address_distance:
-			    #Preserve very short ways (but will be rendered backwards)
-			    if (pointid != firstpointid) and (pointid != finalpointid):
-			        continue
-
-			if not first:
-			    if left:
-                                lsegment.append( (id, lpoint) )
-                                id += 1
-			    if right:
-                                rsegment.append( (id, rpoint) )
-                                id += 1
-
-                        X = (lon - lastpoint[1]) * lon_feet
-		        Y = (lat - lastpoint[0]) * lat_feet
-                        if Y != 0:
-		            theta = math.pi/2 - math.atan( X / Y)
-		            Xp = math.sin(theta) * address_distance
-		            Yp = math.cos(theta) * address_distance
-                        else:
-                            Xp = 0
-			    if X > 0:
-                                Yp = -float(address_distance)
-			    else:
-                                Yp = float(address_distance)
-
-			if Y > 0:
-			    Xp = -Xp
-			else:
-			    Yp = -Yp
-				
-			if first:
-			    first = False
-			    dX = -Yp / lat_feet #Pull back the first point
-			    dY = Xp / lon_feet
-			    if left:
-                                lpoint = (lastpoint[0] + (Yp / lat_feet) - dY, lastpoint[1] + (Xp / lon_feet) - dX)
-                                lsegment.append( (id, lpoint) )
-			        id += 1
-			    if right:
-                                rpoint = (lastpoint[0] - (Yp / lat_feet) - dY, lastpoint[1] - (Xp / lon_feet) - dX)
-                                rsegment.append( (id, rpoint) )
-			        id += 1
-
-			if left:
-                            lpoint = (lat + (Yp / lat_feet), lon + (Xp / lon_feet))
-			    id += 1
-
-                        if right: 
-                            rpoint = (lat - (Yp / lat_feet), lon - (Xp / lon_feet))
-                    lastpoint = (lat, lon)
-
-
-#Add in the last node
-		if left:
-                    lpoint = (lastpoint[0] + (Yp / lat_feet) + (Xp / lon_feet), lastpoint[1] + (Xp / lon_feet) - (Yp / lat_feet))
-                    lsegment.append( (id, lpoint) )
-                    id += 1
-		if right:
-                    rpoint = (lastpoint[0] - (Yp / lat_feet) + (Xp / lon_feet), lastpoint[1] - (Xp / lon_feet) - (Yp / lat_feet))
-                    rsegment.append( (id, rpoint) )
-                    id += 1
-#Write the nodes of the offset ways
-		if right:
-                    first = True
-                    for i, point in rsegment:
-                        if not first:
-			    ret.append( "</node>" )
-		        ret.append( "<node id='-%d' action='create' visible='true' lat='%f' lon='%f' >" % (i, point[0], point[1] ) )
-	    	        if first:
-                            ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % rfromadd )
-                            first = False
-                    ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % rtoadd )
-		    ret.append( "</node>" )
-		if left:
-                    first = True
-                    for i, point in lsegment:
-                        if not first:
-			    ret.append( "</node>" )
-		        ret.append( "<node id='-%d' action='create' visible='true' lat='%f' lon='%f' >" % (i, point[0], point[1] ) )
-	    	        if first:
-                            ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % lfromadd )
-                            first = False
-                    ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % ltoadd )
-		    ret.append( "</node>" )
-		if right:
-                    rsegments.append( rsegment )
-		if left:
-                    lsegments.append( lsegment )
-		tofromint = True	#Do the addresses convert to integers?
-		if right:
-		    try: rfromint = int(rfromadd)
-		    except:
-		        print("Non integer address: %s" % rfromadd)
-		        tofromint = False
-		    try: rtoint = int(rtoadd)
-		    except:
-		        print("Non integer address: %s" % rtoint)
-		        tofromint = False
-		if left:
-		    try: lfromint = int(lfromadd)
-		    except:
-		        print("Non integer address: %s" % lfromadd)
-		        tofromint = False
-		    try: ltoint = int(ltoadd)
-		    except:
-		        print("Non integer address: %s" % ltoint)
-		        tofromint = False
-    	        import_guid = time.strftime( '%Y%m%d%H%M%S' )
-	        if right:
-		    ret.append( "<way id='-%d' action='create' visible='true'> " % id)
-		    id += 1
-                    for rsegment in rsegments:
-                        for point in rsegment:
-                            ret.append( "<nd ref='-%d' /> " % point[0])
-
-		    if tofromint and left:
-                        if ((int(rfromadd) % 2) == 0) and ((int(rtoadd) % 2) == 0) and ((int(lfromadd) % 2) == 1) and ((int(ltoadd) % 2) == 1):
-                            ret.append( "<tag k=\"addr:interpolation\" v=\"even\" />" )
-                        elif ((int(rfromadd) % 2) == 1) and ((int(rtoadd) % 2) == 1) and ((int(lfromadd) % 2) == 0) and ((int(ltoadd) % 2) == 0):
-                            ret.append( "<tag k=\"addr:interpolation\" v=\"odd\" />" )
-			else:
-                            ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
-		    else:
-                        ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
-                    if "name" in waykey:
-                        name = waykey["name"]
-                        ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
-		    if "is_in:state" in waykey:
-			state = waykey["is_in:state"]
-                        ret.append( "<tag k=\"addr:state\" v=\"%s\" />" % state )
-		    if "tiger:zip_right" in waykey:
-			zipr = waykey["tiger:zip_right"]
-                        ret.append( "<tag k=\"addr:postcode\" v=\"%s\" />" % zipr )
-		    if "tiger:county" in waykey:
-			county = waykey["tiger:county"]
-                        ret.append( "<tag k=\"addr:county\" v=\"%s\" />" % county )
-		    if "is_in:country_code" in waykey:
-			country = waykey["is_in:country_code"]
-                        ret.append( "<tag k=\"addr:country\" v=\"%s\" />" % country )
-                    ret.append( "<tag k=\"source\" v=\"%s_import_v%s_%s\" />" % (iSource, VERSION, import_guid) )
-                    ret.append( "    <tag k=\"attribution\" v=\"%s\" />" % (iAttrib) )
-			
-                    ret.append( "</way>" )
-		if left:
-		    ret.append( "<way id='-%d' action='create' visible='true'> " % id)
-		    id += 1
-                    for lsegment in lsegments:
-                        for point in lsegment:
-                            ret.append( "<nd ref='-%d' /> " % point[0])
-		    if tofromint and right:
-                        if (lfromint % 2) == 0 and (ltoint % 2) == 0 and (rfromint % 2) == 1 and (rtoint % 2) == 1:
-
-                            ret.append( "<tag k=\"addr:interpolation\" v=\"even\" />" )
-                        elif (lfromint % 2) == 1 and (ltoint % 2) == 1 and (rfromint %2 ) == 0 and (rtoint % 2) == 0:
-                            ret.append( "<tag k=\"addr:interpolation\" v=\"odd\" />" )
-			else:
-                            ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
-		    else:
-                        ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
-                    if "name" in waykey:
-                        name = waykey["name"]
-                        ret.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
-		    if "is_in:state" in waykey:
-			state = waykey["is_in:state"]
-                        ret.append( "<tag k=\"addr:state\" v=\"%s\" />" % state )
-		    if "tiger:zip_left" in waykey:
-			zipl = waykey["tiger:zip_left"]
-                        ret.append( "<tag k=\"addr:postcode\" v=\"%s\" />" % zipl )
-		    if "tiger:county" in waykey:
-			county = waykey["tiger:county"]
-                        ret.append( "<tag k=\"addr:county\" v=\"%s\" />" % county )
-		    if "is_in:country_code" in waykey:
-			country = waykey["is_in:country_code"]
-                        ret.append( "<tag k=\"addr:country\" v=\"%s\" />" % country )
-                    ret.append( "<tag k=\"source\" v=\"%s_import_v%s_%s\" />" % (iSource, VERSION, import_guid) )
-                    ret.append( "    <tag k=\"attribution\" v=\"%s\" />" % (iAttrib) )
-                    ret.append( "</way>" )
-
-    ret.append( "</osm>" )
-    return ret
-
 def fipsstate(fips,countyfp):
     tags = {}
 
@@ -710,6 +466,250 @@ to_proj = osr.SpatialReference()
 to_proj.SetWellKnownGeogCS( "EPSG:4326" )
 
 tr = osr.CoordinateTransformation( from_proj, to_proj )
+
+import math
+def addressways(waylist, nodelist, first_id):
+    id = first_id
+    awaylist = {}
+    lat_feet = 364613  #The approximate number of feet in one degree of latitude
+    ret = []
+    ret.append( "<?xml version='1.0' encoding='UTF-8'?>" )
+    ret.append( "<osm version='0.6' generator='shape_to_osm.py'>" )
+
+    for waykey, segments in waylist.iteritems():
+        waykey = dict(waykey)
+        rsegments = []
+        lsegments = []
+        for segment in segments:
+            lsegment = []
+            rsegment = []
+            lastpoint = None
+            if "tiger:lfromadd" in waykey:
+                lfromadd = waykey["tiger:lfromadd"]
+            else:
+                lfromadd = None
+            if "tiger:ltoadd" in waykey:
+                ltoadd = waykey["tiger:ltoadd"]
+            else:
+                ltoadd = None
+            if "tiger:rfromadd" in waykey:
+                rfromadd = waykey["tiger:rfromadd"]
+            else: 
+                rfromadd = None
+            if "tiger:rtoadd" in waykey:
+                rtoadd = waykey["tiger:rtoadd"]
+            else:
+		rtoadd = None
+            if rfromadd != None and rtoadd != None:
+                right = True
+	    else:
+		right = False
+            if lfromadd != None and ltoadd != None:
+                left = True
+	    else:
+		left = False
+            if left or right:
+		first = True
+                firstpointid, firstpoint = nodelist[ round_point( segment[0] ) ]
+
+                finalpointid, finalpoint = nodelist[ round_point( segment[len(segment) - 1] ) ]
+                for point in segment:
+                    pointid, (lat, lon) = nodelist[ round_point( point ) ]
+
+		    #The approximate number of feet in one degree of longitute
+                    lrad = math.radians(lat)
+                    lon_feet = 365527.822 * math.cos(lrad) - 306.75853 * math.cos(3 * lrad) + 0.3937 * math.cos(5 * lrad)
+
+#Calculate the points of the offset ways
+                    if lastpoint != None:
+		        #Skip points too close to start
+			if math.sqrt((lat * lat_feet - firstpoint[0] * lat_feet)**2 + (lon * lon_feet - firstpoint[1] * lon_feet)**2) < address_distance:
+			    #Preserve very short ways (but will be rendered backwards)
+			    if pointid != finalpointid:
+			        continue
+		        #Skip points too close to end
+			if math.sqrt((lat * lat_feet - finalpoint[0] * lat_feet)**2 + (lon * lon_feet - finalpoint[1] * lon_feet)**2) < address_distance:
+			    #Preserve very short ways (but will be rendered backwards)
+			    if (pointid != firstpointid) and (pointid != finalpointid):
+			        continue
+
+			if not first:
+			    if left:
+                                lsegment.append( (id, lpoint) )
+                                id += 1
+			    if right:
+                                rsegment.append( (id, rpoint) )
+                                id += 1
+
+                        X = (lon - lastpoint[1]) * lon_feet
+		        Y = (lat - lastpoint[0]) * lat_feet
+                        if Y != 0:
+		            theta = math.pi/2 - math.atan( X / Y)
+		            Xp = math.sin(theta) * address_distance
+		            Yp = math.cos(theta) * address_distance
+                        else:
+                            Xp = 0
+			    if X > 0:
+                                Yp = -float(address_distance)
+			    else:
+                                Yp = float(address_distance)
+
+			if Y > 0:
+			    Xp = -Xp
+			else:
+			    Yp = -Yp
+				
+			if first:
+			    first = False
+			    dX = -Yp / lat_feet #Pull back the first point
+			    dY = Xp / lon_feet
+			    if left:
+                                lpoint = (lastpoint[0] + (Yp / lat_feet) - dY, lastpoint[1] + (Xp / lon_feet) - dX)
+                                lsegment.append( (id, lpoint) )
+			        id += 1
+			    if right:
+                                rpoint = (lastpoint[0] - (Yp / lat_feet) - dY, lastpoint[1] - (Xp / lon_feet) - dX)
+                                rsegment.append( (id, rpoint) )
+			        id += 1
+
+			if left:
+                            lpoint = (lat + (Yp / lat_feet), lon + (Xp / lon_feet))
+			    id += 1
+
+                        if right: 
+                            rpoint = (lat - (Yp / lat_feet), lon - (Xp / lon_feet))
+                    lastpoint = (lat, lon)
+
+
+#Add in the last node
+		if left:
+                    lpoint = (lastpoint[0] + (Yp / lat_feet) + (Xp / lon_feet), lastpoint[1] + (Xp / lon_feet) - (Yp / lat_feet))
+                    lsegment.append( (id, lpoint) )
+                    id += 1
+		if right:
+                    rpoint = (lastpoint[0] - (Yp / lat_feet) + (Xp / lon_feet), lastpoint[1] - (Xp / lon_feet) - (Yp / lat_feet))
+                    rsegment.append( (id, rpoint) )
+                    id += 1
+
+#Generate the tags for ways and nodes
+		rtags = []
+		ltags = []
+		tags = []
+    		if "tiger:zip_right" in waykey:
+		    zipr = waykey["tiger:zip_right"]
+                    rtags.append( "<tag k=\"addr:postcode\" v=\"%s\" />" % zipr )
+		if "tiger:zip_left" in waykey:
+		    zipl = waykey["tiger:zip_left"]
+                    ltags.append( "<tag k=\"addr:postcode\" v=\"%s\" />" % zipl )
+                if "name" in waykey:
+                    name = waykey["name"]
+                    tags.append( "<tag k=\"addr:street\" v=\"%s\" />" % name )
+		if "is_in:state" in waykey:
+		    state = waykey["is_in:state"]
+                    tags.append( "<tag k=\"addr:state\" v=\"%s\" />" % state )
+		if "tiger:county" in waykey:
+		    county = waykey["tiger:county"]
+                    tags.append( "<tag k=\"addr:county\" v=\"%s\" />" % county )
+		if "is_in:country_code" in waykey:
+		    country = waykey["is_in:country_code"]
+                    tags.append( "<tag k=\"addr:country\" v=\"%s\" />" % country )
+		ltags.extend(tags)
+		rtags.extend(tags)
+
+#Write the nodes of the offset ways
+		if right:
+                    first = True
+                    for i, point in rsegment:
+                        if not first:
+			    ret.append( "</node>" )
+		        ret.append( "<node id='-%d' action='create' visible='true' lat='%f' lon='%f' >" % (i, point[0], point[1] ) )
+	    	        if first:
+                            ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % rfromadd )
+			    ret.extend(rtags)
+                            first = False
+                    ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % rtoadd )
+		    ret.extend(rtags)
+		    ret.append( "</node>" )
+		if left:
+                    first = True
+                    for i, point in lsegment:
+                        if not first:
+			    ret.append( "</node>" )
+		        ret.append( "<node id='-%d' action='create' visible='true' lat='%f' lon='%f' >" % (i, point[0], point[1] ) )
+	    	        if first:
+                            ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % lfromadd )
+			    ret.extend(ltags)
+                            first = False
+                    ret.append( "<tag k=\"addr:housenumber\" v=\"%s\" />" % ltoadd )
+		    ret.extend(ltags)
+		    ret.append( "</node>" )
+		if right:
+                    rsegments.append( rsegment )
+		if left:
+                    lsegments.append( lsegment )
+		tofromint = True	#Do the addresses convert to integers?
+		if right:
+		    try: rfromint = int(rfromadd)
+		    except:
+		        print("Non integer address: %s" % rfromadd)
+		        tofromint = False
+		    try: rtoint = int(rtoadd)
+		    except:
+		        print("Non integer address: %s" % rtoint)
+		        tofromint = False
+		if left:
+		    try: lfromint = int(lfromadd)
+		    except:
+		        print("Non integer address: %s" % lfromadd)
+		        tofromint = False
+		    try: ltoint = int(ltoadd)
+		    except:
+		        print("Non integer address: %s" % ltoint)
+		        tofromint = False
+    	        import_guid = time.strftime( '%Y%m%d%H%M%S' )
+	        if right:
+		    ret.append( "<way id='-%d' action='create' visible='true'> " % id)
+		    id += 1
+                    for rsegment in rsegments:
+                        for point in rsegment:
+                            ret.append( "<nd ref='-%d' /> " % point[0])
+
+		    if tofromint and left:
+                        if ((int(rfromadd) % 2) == 0) and ((int(rtoadd) % 2) == 0) and ((int(lfromadd) % 2) == 1) and ((int(ltoadd) % 2) == 1):
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"even\" />" )
+                        elif ((int(rfromadd) % 2) == 1) and ((int(rtoadd) % 2) == 1) and ((int(lfromadd) % 2) == 0) and ((int(ltoadd) % 2) == 0):
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"odd\" />" )
+			else:
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
+		    else:
+                        ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
+		    ret.extend(rtags)
+                    ret.append( "<tag k=\"source\" v=\"%s_import_v%s_%s\" />" % (iSource, VERSION, import_guid) )
+                    ret.append( "<tag k=\"attribution\" v=\"%s\" />" % (iAttrib) )
+                    ret.append( "</way>" )
+		if left:
+		    ret.append( "<way id='-%d' action='create' visible='true'> " % id)
+		    id += 1
+                    for lsegment in lsegments:
+                        for point in lsegment:
+                            ret.append( "<nd ref='-%d' /> " % point[0])
+		    if tofromint and right:
+                        if (lfromint % 2) == 0 and (ltoint % 2) == 0 and (rfromint % 2) == 1 and (rtoint % 2) == 1:
+
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"even\" />" )
+                        elif (lfromint % 2) == 1 and (ltoint % 2) == 1 and (rfromint %2 ) == 0 and (rtoint % 2) == 0:
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"odd\" />" )
+			else:
+                            ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
+		    else:
+                        ret.append( "<tag k=\"addr:interpolation\" v=\"all\" />" )
+		    ret.extend(ltags)
+                    ret.append( "<tag k=\"source\" v=\"%s_import_v%s_%s\" />" % (iSource, VERSION, import_guid) )
+                    ret.append( "<tag k=\"attribution\" v=\"%s\" />" % (iAttrib) )
+                    ret.append( "</way>" )
+
+    ret.append( "</osm>" )
+    return ret
 
 def unproject( point ):
     pt = tr.TransformPoint( point[0], point[1] )

@@ -3,12 +3,10 @@
 use Getopt::GUI::Long;
 use GD;
 use POSIX qw(ceil floor);
+use XML::Simple;
+use Data::Dumper;
 
-my %opts = (
-	    'D' => 'mapdata',
-	    'X' => "osm-map-features-z14.xml",
-	    'O' => "osm-map-features-z06.xml",
-	   );
+my %opts = ();
 
 Getopt::GUI::Long::Configure(qw(display_help no_ignore_case));
 GetOptions(\%opts,
@@ -20,7 +18,7 @@ GetOptions(\%opts,
 	   ["D|map-data=s", "Map data directory"],
 
 	   ["M|maximum-squares=i", "limit the number of squares to actually perform to M"],
-	   ["X|xml-master=s", "XML Master Grid Rule File"],
+	   ["R|master-rule=s", "XML Master Grid Rule File"],
 	   ["O|overview=s", "XML Master Overview Rule File"],
 	   ["l|latex-file=s", "Save Figure commands to a latex file"],
 	   ["force-fetch",    "Force fetching of new data"],
@@ -28,11 +26,45 @@ GetOptions(\%opts,
 	   ["png",            "Make grid png files"],
 	  ) || exit;
 
-die "need at least -mx -Mx -my -My and -n\n"
-  if (!$opts{'mx'} || !$opts{'Mx'} || !$opts{'my'} || !$opts{'My'} || !$opts{'n'});
+#
+# read in the project definition file
+#
+if ($#ARGV != 0) {
+    print STDERR "You need to supply a project definition file\n";
+    exit(1);
+}
 
-my $diffx = $opts{'Mx'} - $opts{'mx'};
-my $diffy = $opts{'My'} - $opts{'my'};
+my $proj = XMLin($ARGV[0], ForceArray=> ['grid', 'note'], KeyAttr => 'name');
+if (!$proj) {
+    print STDERR "failed to read in the project file: $ARGV[0]\n";
+    exit(1);
+}
+#print Dumper($proj);
+#exit;
+
+
+#
+# map the command line arguments as overrides
+#
+$proj->{'minlon'}     	       = $opts{'mx'} || $proj->{'minlon'};
+$proj->{'maxlon'}     	       = $opts{'Mx'} || $proj->{'maxlon'};
+$proj->{'minlat'}     	       = $opts{'my'} || $proj->{'minlat'};
+$proj->{'maxlat'}     	       = $opts{'My'} || $proj->{'maxlat'};
+$proj->{'datadir'}    	       = $opts{'D'}  || $proj->{'datadir'};
+$proj->{'gridwidth'}  	       = $opts{'n'}  || $proj->{'gridwidth'};
+$proj->{'grid-rule-file'}      = $opts{'R'}  || $proj->{'grid-rule-file'};
+$proj->{'overview-rule-file'}  = $opts{'O'}  || $proj->{'overview-rule-file'};
+$proj->{'latex-file'}          = $opts{'l'}  || $proj->{'latex-file'};
+
+my $gridinfo = $proj->{'gridinfo'};
+print STDERR Dumper($proj);
+print STDERR Dumper($gridinfo);
+
+die "need at least -mx -Mx -my -My and -n\n"
+  if (!$proj->{'minlon'} || !$proj->{'maxlon'} || !$proj->{'minlat'} || !$proj->{'maxlat'} || !$proj->{'gridwidth'});
+
+my $diffx = $proj->{'maxlon'} - $proj->{'minlon'};
+my $diffy = $proj->{'maxlat'} - $proj->{'minlat'};
 
 # for the number of Y grid squares, use n*y/x but only if it's < P
 # n = num x, y/x = map area aspect ration, P = paper aspect ratio (width/height)
@@ -41,43 +73,43 @@ my $diffy = $opts{'My'} - $opts{'my'};
 # (more squares)
 my $P = 17/20; # arbitrary based on space on the page
 my $dydx = $diffy/$diffx;
-my $ygridnum = ceil($opts{'n'}*$diffy/$diffx);
+my $ygridnum = ceil($proj->{'gridwidth'}*$diffy/$diffx);
 
 # if the grid is too tall and will overstretch the Y boundry on the
 # page, then keep adding more squares to the Y grid till we fall
 # within it.
 # IE: we're optimizing for the x-axis since we can control that in latex
-print "Y grid guess:   $ygridnum  ($opts{'n'}*$diffy/$diffx)\n";
-while ($opts{'n'}*$dydx/$ygridnum > $P) {
+print "Y grid guess:   $ygridnum  ($proj->{'gridwidth'}*$diffy/$diffx)\n";
+while ($proj->{'gridwidth'}*$dydx/$ygridnum > $P) {
     $ygridnum++;
 }
 print "Y grid squares: $ygridnum\n";
 
 
 
-my $segx = $diffx/$opts{'n'};
+my $segx = $diffx/$proj->{'gridwidth'};
 my $segy = $diffy/$ygridnum;
 
 my @osmfiles;
 
-mkdir ($opts{'D'}) if (! -d $opts{'D'});
+mkdir ($proj->{'datadir'}) if (! -d $proj->{'datadir'});
 
 my $count;
 
-my $combinedosm  = "$opts{'D'}/combined.osm";
-my $combinedsvg  = "$opts{'D'}/combined.svg";
-my $combinedpng  = "$opts{'D'}/combined.png";
-my $overviewsvg = "$opts{'D'}/overview.svg";
-my $overvieweps = "$opts{'D'}/overview.eps";
-my $overviewpng = "$opts{'D'}/overview.png";
-if ($opts{'l'}) {
-    open(L,">$opts{'l'}");
+my $combinedosm  = "$proj->{'datadir'}/combined.osm";
+my $combinedsvg  = "$proj->{'datadir'}/combined.svg";
+my $combinedpng  = "$proj->{'datadir'}/combined.png";
+my $overviewsvg = "$proj->{'datadir'}/overview.svg";
+my $overvieweps = "$proj->{'datadir'}/overview.eps";
+my $overviewpng = "$proj->{'datadir'}/overview.png";
+if ($proj->{'latex-file'}) {
+    open(L,">$proj->{'latex-file'}");
     if ($opts{'ps'}) {
 	printf L ("\\Overview{$overvieweps}{%s}{%s}{%s}{%s}\n",
-		  $opts{'mx'},$opts{'My'},$opts{'Mx'},$opts{'my'});
+		  $proj->{'minlon'},$proj->{'maxlat'},$proj->{'maxlon'},$proj->{'minlat'});
     } else {
 	printf L ("\\Overview{$overviewpng}{%s}{%s}{%s}{%s}\n",
-		  $opts{'mx'},$opts{'My'},$opts{'Mx'},$opts{'my'});
+		  $proj->{'minlon'},$proj->{'maxlat'},$proj->{'maxlon'},$proj->{'minlat'});
     }
 }
 
@@ -86,14 +118,14 @@ my $needoverview = 0;
 sub get_grid_num {
     my ($x, $y) = @_;
     return "X" if ($y < 1 || $y > $ygridnum);
-    return "X" if ($x < 1 || $x > $opts{'n'});
+    return "X" if ($x < 1 || $x > $proj->{'gridwidth'});
 
-    return (($ygridnum - $y) * $opts{'n'} + $x);
+    return (($ygridnum - $y) * $proj->{'gridwidth'} + $x);
 }
 
 
 foreach my $y (reverse(1..$ygridnum)) {
-    foreach my $x (1..$opts{'n'}) {
+    foreach my $x (1..$proj->{'gridwidth'}) {
 
 	my $gridsquare = get_grid_num($x, $y);
 
@@ -102,15 +134,15 @@ foreach my $y (reverse(1..$ygridnum)) {
 	print "----------------------------------------------------------------------\n";
 
 	# calculate the bounding box (BB)
-	my $minx = $opts{'mx'} + ($x-1)*$segx;
-	my $miny = $opts{'my'} + ($y-1)*$segy;
+	my $minx = $proj->{'minlon'} + ($x-1)*$segx;
+	my $miny = $proj->{'minlat'} + ($y-1)*$segy;
 
-	my $maxx = $opts{'mx'} + ($x)*$segx;
-	my $maxy = $opts{'my'} + ($y)*$segy;
+	my $maxx = $proj->{'minlon'} + ($x)*$segx;
+	my $maxy = $proj->{'minlat'} + ($y)*$segy;
 	
-	my $smosmfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.osm";
+	my $smosmfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.osm";
 	my $osmfile = $smosmfile;
-	my $xmlfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.xml";
+	my $xmlfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.xml";
 
 	if (!$opts{'force-fetch'} && -f $combinedosm) {
 	    $osmfile = $combinedosm;
@@ -125,14 +157,14 @@ foreach my $y (reverse(1..$ygridnum)) {
 
 
 	# render the page
-	if (! -f $xmlfile || Stat($opts{'X'}, $xmlfile)) {
+	if (! -f $xmlfile || Stat($proj->{'grid-rule-file'}, $xmlfile)) {
 	    print STDERR "creating $xmlfile\n";
 
 	    # sigh...  xmlstarlet already assumes the subdir for some reason
 	    my $starfile = $osmfile;
-	    $starfile =~ s/$opts{'D'}\///;
+	    $starfile =~ s/$proj->{'datadir'}\///;
 
-	    open(I, $opts{'X'});
+	    open(I, $proj->{'grid-rule-file'});
 	    open(O,">$xmlfile");
 	    while (<I>) {
 		s/data.osm/$osmfile/;
@@ -144,7 +176,7 @@ foreach my $y (reverse(1..$ygridnum)) {
 	}
 
 	# render the map as a svg
-	my $svgfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.svg";
+	my $svgfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.svg";
 	if (! -f $svgfile || Stat($xmlfile, $svgfile)) {
 	    #System("xmlstarlet tr osmarender.xsl $xmlfile > $svgfile");
 	    System("perl orp.svn/orp.pl --minlat $miny --maxlat $maxy --minlon $minx --maxlon $maxx -r $xmlfile $osmfile");
@@ -156,7 +188,7 @@ foreach my $y (reverse(1..$ygridnum)) {
 	}
 
 	# add a numeric/letter grid border to the svg file
-	my $svg2file = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy-gridded.svg";
+	my $svg2file = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy-gridded.svg";
 	# XXX: make optional
 	# XXX: make number of grid components on a side optional
 	my $extrainkargs = "";
@@ -167,9 +199,8 @@ foreach my $y (reverse(1..$ygridnum)) {
 
 	# convert to png
 	# inkscape -f map.svg -e map.png
-	my $pngfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.png";
+	my $pngfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.png";
 	if ($opts{'png'} && (! -f $pngfile || Stat($svgfile, $pngfile))) {
-	    print "here: $opts{'png'}\n";
 	    System("inkscape -f $svgfile -e $pngfile");
         }
 
@@ -177,13 +208,13 @@ foreach my $y (reverse(1..$ygridnum)) {
 	# inkscape -f map.svg -E map.eps
 	my $outfile;
 	if ($opts{'ps'}) {
-	    my $epsfile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.eps";
+	    my $epsfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.eps";
 	    if (! -f $epsfile || Stat($svgfile, $epsfile)) {
 		System("inkscape $extrainkargs -f $svgfile -E $epsfile");
 	    }
 	    $outfile = $epsfile;
 	} else {
-	    my $pdffile = "$opts{'D'}/mapdata-$minx-$maxx-$miny-$maxy.pdf";
+	    my $pdffile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.pdf";
 	    if (! -f $pdffile || Stat($svgfile, $pdffile)) {
 		System("inkscape -f $svgfile -A $pdffile");
 	    }
@@ -192,7 +223,7 @@ foreach my $y (reverse(1..$ygridnum)) {
 
 	$count++;
 	
-	if (defined($opts{'l'})) {
+	if (defined($proj->{'latex-file'})) {
 	    # note: y numbers are functionally backwards (bottom to top)
 	    my $nw = get_grid_num($x-1, $y+1);
 	    my $n  = get_grid_num($x,   $y+1);
@@ -212,6 +243,16 @@ foreach my $y (reverse(1..$ygridnum)) {
 	    } else {
 		print L "\\Map{$outfile}{$gridsquare}{$minx}{$maxy}{$maxx}{$miny}{$gridstring}\n";
 	    }
+
+	    if ($#{$gridinfo->{'grid'}{$gridsquare}{'note'}} > -1)  {
+		print L "\\NotesBegin\n";
+		foreach my $note (@{$gridinfo->{'grid'}{$gridsquare}{'note'}}) {
+		    print STDERR "yay!: $note $gridnum\n";
+		    print L "\\Note{" . $note . "}\n";
+		}
+		print L "\\NotesEnd\n";
+	    }
+	    print L "\\EndPage\n";
 	}
 
 	if (defined($opts{'M'}) && $count >= $opts{'M'}) {
@@ -235,15 +276,15 @@ if ($needoverview || ! -f $combinedosm) {
 
 # build the combined OSM file into a SVG (without the grid)
 if (! -f $combinedsvg || Stat($combinedosm, $combinedsvg) ||
-    Stat($opts{'O'}, $combinedsvg)) {
+    Stat($proj->{'overview-rule-file'}, $combinedsvg)) {
 
-    System("perl orp.svn/orp.pl --minlat $opts{'my'} --maxlat $opts{'My'} --minlon $opts{'mx'} --maxlon $opts{'Mx'} -r $opts{'O'} $combinedosm");
+    System("perl orp.svn/orp.pl --minlat $proj->{'minlat'} --maxlat $proj->{'maxlat'} --minlon $proj->{'minlon'} --maxlon $proj->{'maxlon'} -r $proj->{'overview-rule-file'} $combinedosm");
 }
 
 # build the overview SVG that contains the grid over the combined OSM
 if (! -f $overviewsvg || Stat($combinedsvg, $overviewsvg)) {
-    make_overview($overviewsvg, $opts{'n'}, $ygridnum,
-		  $opts{'n'} * 10, $ygridnum * 10, $combinedsvg);
+    make_overview($overviewsvg, $proj->{'gridwidth'}, $ygridnum,
+		  $proj->{'gridwidth'} * 10, $ygridnum * 10, $combinedsvg);
 }
 
 # render the overview SVG as EPS for later inclusion into latex
@@ -256,7 +297,7 @@ if (! -f $combindepng  ||
 
 if (! -f $overviewpng  ||
     Stat($combinedpng, $overviewpng)) {
-    make_overviewpng($combinedpng, $overviewpng, $opts{'n'}, $ygridnum);
+    make_overviewpng($combinedpng, $overviewpng, $proj->{'gridwidth'}, $ygridnum);
 }
 
 if ($opts{'ps'}) {

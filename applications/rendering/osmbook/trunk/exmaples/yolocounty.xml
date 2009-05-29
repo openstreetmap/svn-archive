@@ -1,0 +1,18 @@
+<osmbook>
+  <datadir>mapdir-8</datadir>
+  <gridwidth>8</gridwidth>
+  <minlat>38.37205</minlat>
+  <maxlat>38.9122</maxlat>
+  <minlon>-122.39475</minlon>
+  <maxlon>-121.49005</maxlon>
+  <grid-rule-file>osm-map-features-z14.xml</grid-rule-file>
+  <overview-rule-file>osm-map-features-z06.xml</overview-rule-file>
+  <latex-file>maps.tex</latex-file>
+  <gridinfo>
+    <grid name="1"><note>test note</note></grid>
+    <grid name="2">
+      <note>note 1: this page is boring</note>
+      <note>note 2: something important at F3</note>
+    </grid>
+  </gridinfo>
+</osmbook>

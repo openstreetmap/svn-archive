@@ -2695,27 +2695,27 @@
 		</rule>
 
 		<!-- Level crossings -->
-		<!-- For everything, except trams, if it shares a node with a road then render a railroad crossing symbol.  -->
-		<rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail|incline|funicular">
+		<!-- If tagged explicitly -->
+		<rule e="node" k="railway" v="level_crossing">
 			<rule e="node" s="way" k="railway" v="rail">
-				<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|cycleroad|road|cycleway|path|footway">
-					<symbol ref="railway-crossing" position="center"/>
-				</rule>
+				<symbol ref="railway-crossing" position="center"/>
 			</rule>
 			<else>
-				<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|cycleroad|road|cycleway|path|footway">
-					<symbol ref="railway-crossing" position="center"/>
-				</rule>
+				<symbol ref="railway-crossing" position="center"/>
 			</else>
 		</rule>
-		<!-- If tagged explicitly -->
 		<else>
-			<rule e="node" k="railway" v="level_crossing">
+		<!-- For everything, except trams, if it shares a node with a road then render a railroad crossing symbol.  -->
+			<rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail|incline|funicular">
 				<rule e="node" s="way" k="railway" v="rail">
-					<symbol ref="railway-crossing" position="center"/>
+					<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|cycleroad|road|cycleway|path|footway">
+						<symbol ref="railway-crossing-small" position="center"/>
+					</rule>
 				</rule>
 				<else>
-					<symbol ref="railway-crossing" position="center"/>
+					<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|cycleroad|road|cycleway|path|footway">
+						<symbol ref="railway-crossing-small" position="center"/>
+					</rule>
 				</else>
 			</rule>
 		</else>
@@ -3893,8 +3893,8 @@
 stroke-width: 2px;
 			}
 
-			.railway-bridge-casing             { stroke-width: 1.7px; }
-			.railway-bridge-core               { stroke-width: 1.2px; }
+			.railway-bridge-casing             { stroke-width: 1.5px; }
+			.railway-bridge-core               { stroke-width: 1.0px; }
 
 			.railway-rail-casing                    { stroke-width: 0.55px; }
 			.railway-rail-1-core                    { stroke-width: 0.4px; }

@@ -155,8 +155,9 @@ sub openOsmFile {
 	}
 
 	nextLine() ;		
-	while ( ! (grep /<node/, $line) ) {
-		nextLine() ;		
+	while ( ! (grep /\<node/, $line) ) {
+		nextLine() ;
+		#print "LINE: $line" ;
 	}
 	return 1 ;
 }

@@ -26,96 +26,91 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
 public class LaunchAction extends JosmAction implements SelectionChangedListener {
-	 
+
 	protected void registerAsMenuItem() {
-        JMenuBar menu = Main.main.menu;
-        JMenu edit = null;
-        JMenuItem item = new JMenuItem(this);
+		JMenuBar menu = Main.main.menu;
+		JMenu edit = null;
+		JMenuItem item = new JMenuItem(this);
 
-        for (int i = 0; i < menu.getMenuCount(); ++i) {
-            if (menu.getMenu(i) != null
-                    && tr("Edit").equals(menu.getMenu(i).getText())) {
-                edit = menu.getMenu(i);
-                break;
-            }
-        }
+		for (int i = 0; i < menu.getMenuCount(); ++i) {
+			if (menu.getMenu(i) != null
+					&& tr("Edit").equals(menu.getMenu(i).getText())) {
+				edit = menu.getMenu(i);
+				break;
+			}
+		}
 
-        if (edit != null) {
-        	edit.insertSeparator(edit.getItemCount());
-        	JMenuItem mitem = edit.insert(this, edit.getItemCount());
-        	mitem.setAccelerator(KeyStroke.getKeyStroke('T'));
-        } else if (menu.getMenuCount() > 0) {
-            edit = menu.getMenu(0);
-            JMenuItem mitem = edit.insert(this, 0);
-        	mitem.setAccelerator(KeyStroke.getKeyStroke('T'));
+		if (edit != null) {
+			edit.insertSeparator(edit.getItemCount());
+			JMenuItem mitem = edit.insert(this, edit.getItemCount());
+			mitem.setAccelerator(KeyStroke.getKeyStroke('T'));
+		} else if (menu.getMenuCount() > 0) {
+			edit = menu.getMenu(0);
+			JMenuItem mitem = edit.insert(this, 0);
+			mitem.setAccelerator(KeyStroke.getKeyStroke('T'));
 
-        }
+		}
 
-        item.setVisible(true);
+		item.setVisible(true);
 	}
-	
-
 
 	public LaunchAction()  {
 		super(
-			tr("Edit tags"),
-			null, //TODO: set "tag-editor" and add /images/tag-editor.png to distrib
-			tr("Launches the tag editor dialog"),
-			Shortcut.registerShortcut(
-					"edit:launchtageditor", 
-					tr("Launches the tag editor dialog"),
-					KeyEvent.VK_T,
-					Shortcut.GROUP_EDIT),						
-			false // don't register, plugin will add the action to the menu
+				tr("Edit tags"),
+				null, //TODO: set "tag-editor" and add /images/tag-editor.png to distrib
+				tr("Launches the tag editor dialog"),
+				Shortcut.registerShortcut(
+						"edit:launchtageditor",
+						tr("Launches the tag editor dialog"),
+						KeyEvent.VK_T,
+						Shortcut.GROUP_EDIT),
+						false // don't register, plugin will add the action to the menu
 		);
-		
-		
+
+
 		// register as dataset selection listener
 		//
 		DataSet.selListeners.add(this);
-		
+
 		// insert a menu item
 		//
 		registerAsMenuItem();
-		
+
 		// initially not enabled; becomes enabled when the selection becomes non-empty
 		//
 		setEnabled(false);
-		
+
 	}
-	
+
 	/**
-	 *  
+	 * 
 	 * @return  the top window of the JOSM GUI; can be null
 	 */
 	protected Window getTopWindow() {
-		if (Main.contentPane == null) {
+		if (Main.contentPane == null)
 			return null;
-		}
 		Component c = Main.contentPane;
 		while(c.getParent() != null) {
 			c = c.getParent();
 		}
-		if (c instanceof Window) {
+		if (c instanceof Window)
 			return (Window)c;
-		} else {
+		else
 			return null;
-		}
 	}
-	
+
 	/**
-	 * tries to center the tag editor dialog on the top window or, alternatively, 
+	 * tries to center the tag editor dialog on the top window or, alternatively,
 	 * on the screen
 	 * 
-	 * @param dialog the dialog to be placed on the screen 
+	 * @param dialog the dialog to be placed on the screen
 	 */
 	protected void placeDialogOnScreen(TagEditorDialog dialog) {
 		Window w = getTopWindow();
-		if (w == null) {
-			// don't center 
+		if (w == null)
+			// don't center
 			return;
-		}
-		
+
 		GraphicsConfiguration gc = w.getGraphicsConfiguration();
 		Rectangle screenBounds = null;
 		if (gc != null) {
@@ -134,37 +129,30 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
 		}
 
 		dialog.setLocation(p);
-		
+
 	}
-	
+
 	/**
-	 * launch the editor 
+	 * launch the editor
 	 */
 	protected void launchEditor() {
-		if (!isEnabled()) {
+		if (!isEnabled())
 			return;
-		}
 		TagEditorDialog dialog = TagEditorDialog.getInstance();
 		placeDialogOnScreen(dialog);
-		dialog.startEditSession();		
-		dialog.setVisible(true);		
+		dialog.startEditSession();
+		dialog.setVisible(true);
 	}
-	
-	
-	
-	
-	@Override
+
 	public void actionPerformed(ActionEvent e) {
 		launchEditor();
 	}
 
-	
-	@Override
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 		setEnabled(newSelection != null && newSelection.size() >0);
 	}
 
-	
-	
+
+
 
 }

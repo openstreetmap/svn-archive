@@ -1,4 +1,5 @@
 package org.openstreetmap.josm.plugins.tageditor.tagspec.ui;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,9 +14,9 @@ import org.openstreetmap.josm.plugins.tageditor.tagspec.TagSpecifications;
 
 
 public class TagsTableModel extends AbstractTableModel {
-	
+
 	static private Logger logger = Logger.getLogger(TagsTableModel.class.getName());
-	
+
 	private ArrayList<KeyValuePair> items = null;
 	private ArrayList<KeyValuePair> visibleItems = null;
 
@@ -23,61 +24,55 @@ public class TagsTableModel extends AbstractTableModel {
 		items = new ArrayList<KeyValuePair>();
 		visibleItems = new ArrayList<KeyValuePair>();
 	}
-	
+
 	protected void sort() {
 		Collections.sort(
-			items,
-			new Comparator<KeyValuePair>() {
+				items,
+				new Comparator<KeyValuePair>() {
+					public int compare(KeyValuePair self,
+							KeyValuePair other) {
+						int ret =self.getKey().compareToIgnoreCase(other.getKey());
 
-				@Override
-				public int compare(KeyValuePair self,
-						KeyValuePair other) {
-					int ret =self.getKey().compareToIgnoreCase(other.getKey());
-					
-					if (ret == 0) {
-						return self.getValue().compareToIgnoreCase(other.getValue()); 						
-					} else {
-						return ret;
+						if (ret == 0)
+							return self.getValue().compareToIgnoreCase(other.getValue());
+						else
+							return ret;
 					}
-				}				
-			}				
+				}
 		);
 	}
-	
+
 	protected void clear() {
 		items.clear();
 		visibleItems.clear();
 	}
-	
+
 	public void initFromTagSpecifications() {
 		clear();
 		TagSpecifications spec;
-		
+
 		try {
 			spec = TagSpecifications.getInstance();
 		} catch(Exception e) {
 			logger.log(Level.SEVERE, "failed to init TagTableModel. Exception:" + e);
-			return; 
+			return;
 		}
-		
+
 		items = spec.asList();
 		sort();
 		for(KeyValuePair item : items) {
 			visibleItems.add(item);
 		}
 	}
-	
-	@Override
+
 	public int getColumnCount() {
 		return 2;
 	}
 
-	@Override
 	public int getRowCount() {
 		return visibleItems.size();
 	}
 
-	@Override
 	public Object getValueAt(int row, int col) {
 		KeyValuePair pair = visibleItems.get(row);
 		switch(col) {
@@ -85,10 +80,10 @@ public class TagsTableModel extends AbstractTableModel {
 		case 1: return pair.getValue();
 		default:
 			/* should not happen */
-			throw new IllegalArgumentException("unexpected column number " + col);			 
-		}	
+			throw new IllegalArgumentException(tr("unexpected column number {0}",col));
+		}
 	}
-	
+
 	public void filter(String filter) {
 		synchronized(this) {
 			if (filter == null || filter.trim().equals("")) {
@@ -96,15 +91,15 @@ public class TagsTableModel extends AbstractTableModel {
 				for(KeyValuePair pair: items) {
 					visibleItems.add(pair);
 				}
-			} else { 
+			} else {
 				visibleItems.clear();
 				filter = filter.toLowerCase();
 				for(KeyValuePair pair: items) {
 					if (pair.getKey().toLowerCase().trim().startsWith(filter)
-						 ||  pair.getValue().toLowerCase().trim().startsWith(filter)) {
+							||  pair.getValue().toLowerCase().trim().startsWith(filter)) {
 						visibleItems.add(pair);
 					}
-				}	
+				}
 			}
 			fireTableDataChanged();
 			fireTableStructureChanged();
@@ -113,13 +108,12 @@ public class TagsTableModel extends AbstractTableModel {
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return false; 
+		return false;
 	}
 
 	public KeyValuePair getVisibleItem(int row) {
-		if (row < 0 || row >= visibleItems.size()) {
+		if (row < 0 || row >= visibleItems.size())
 			throw new IndexOutOfBoundsException("row is out of bound: row=" + row);
-		}
 		return visibleItems.get(row);
 	}
 

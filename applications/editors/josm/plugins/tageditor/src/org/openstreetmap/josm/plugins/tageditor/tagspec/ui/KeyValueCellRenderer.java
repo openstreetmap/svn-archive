@@ -10,31 +10,30 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 public class KeyValueCellRenderer extends JLabel implements TableCellRenderer  {
-	
+
 	private static Logger logger = Logger.getLogger(KeyValueCellRenderer.class.getName());
 	public static final Color BG_COLOR_SELECTED = new Color(143,170,255);
-	
+
 
 	protected void init() {
 		setFont(new Font("Courier",Font.PLAIN,12));
 		setOpaque(true);
 	}
-	
+
 	public KeyValueCellRenderer() {
 		init();
 	}
-	
-	@Override
+
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int rowIndex, int colIndex) {
-	
+
 		if (isSelected) {
-			setBackground(BG_COLOR_SELECTED);			
+			setBackground(BG_COLOR_SELECTED);
 		} else  {
 			setBackground(Color.WHITE);
 		}
 		setText((String)value);
 		setIcon(null);
-		return this; 
+		return this;
 	}
 }

@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -41,8 +43,6 @@ import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.ui.ITagSelectorListener;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.ui.TabularTagSelector;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 /**
  * The dialog for editing name/value-pairs (aka <em>tags</em>) associated with {@link OsmPrimitive}s.
  * 
@@ -50,16 +50,16 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 @SuppressWarnings("serial")
 public class TagEditorDialog extends JDialog {
-	
+
 	static private Logger logger = Logger.getLogger(TagEditorDialog.class.getName());
-	
+
 	/** the unique instance */
 	static protected  TagEditorDialog instance = null;
-	
+
 	/**
-	 * Access to the singleton instance 
+	 * Access to the singleton instance
 	 * 
-	 * @return the singleton instance of the dialog 
+	 * @return the singleton instance of the dialog
 	 */
 	static public TagEditorDialog getInstance() {
 		if (instance == null) {
@@ -67,37 +67,37 @@ public class TagEditorDialog extends JDialog {
 		}
 		return instance;
 	}
-	
-	
+
+
 	/**
-	 * default preferred size 
+	 * default preferred size
 	 */
 	static public final Dimension PREFERRED_SIZE = new Dimension(700, 500);
-	
-	
-	/** the properties table */ 
+
+
+	/** the properties table */
 	private TagEditor tagEditor = null;
 	private TagEditorModel model = null;
 
 	/**  the auto completion list viewer */
 	private AutoCompletionListViewer aclViewer = null;
-	
+
 	/** the cache of auto completion values used by the tag editor */
 	private AutoCompletionCache acCache = null;
-	
+
 	/** widgets */
 	private JButton btnOK = null;
-	private JButton btnCancel = null; 
+	private JButton btnCancel = null;
 	private JButton btnAdd = null;
 	private JButton btnDelete = null;
 	private OKAction okAction = null;
 	private CancelAction cancelAction = null;
 
-	
+
 	public OKAction getOKAction() {
 		return okAction;
 	}
-	
+
 	/**
 	 * @return the tag editor model
 	 */
@@ -105,49 +105,49 @@ public class TagEditorDialog extends JDialog {
 		return model;
 	}
 
-	
-	
+
+
 	protected JPanel buildButtonRow() {
 		// create the rows of action buttons at the bottom
-		// of the dialog 
+		// of the dialog
 		//
 		JPanel pnl = new JPanel();
 		pnl.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		
-		// the ok button 
+
+		// the ok button
 		//
 		okAction = new OKAction();
 		btnOK = new JButton(okAction);
 		getModel().addPropertyChangeListener(okAction);
-		
-		// the cancel button 
+
+		// the cancel button
 		//
 		cancelAction = new CancelAction();
 		btnCancel = new JButton(cancelAction);
 		pnl.add(btnOK);
 		pnl.add(btnCancel);
-		
+
 		JPanel pnl1 = new JPanel();
 		pnl.setLayout(new FlowLayout(FlowLayout.LEFT));
-		
+
 		// the add button
 		//
 		btnAdd = new JButton(tagEditor.getAddAction());
 		btnDelete = new JButton(tagEditor.getDeleteAction());
-	
+
 		pnl1.add(btnAdd);
 		pnl1.add(btnDelete);
-		
+
 		JPanel pnl2 = new JPanel();
 		pnl2.setLayout(new BorderLayout());
 		pnl2.add(pnl1, BorderLayout.WEST);
 		pnl2.add(pnl, BorderLayout.EAST);
-		
-		return pnl2;		
+
+		return pnl2;
 	}
-	
+
 	/**
-	 * build the GUI 
+	 * build the GUI
 	 */
 	protected void build() {
 		getContentPane().setLayout(new BorderLayout());
@@ -157,46 +157,45 @@ public class TagEditorDialog extends JDialog {
 		setModal(true);
 		setSize(PREFERRED_SIZE);
 		setTitle(tr("JOSM Tag Editor Plugin"));
-		
-		
+
+
 		// create tag editor and inject an instance of the tag
 		// editor model
 		//
 		tagEditor = new TagEditor();
 		tagEditor.setTagEditorModel(model);
-		
+
 
 		// create the auto completion list viewer and connect it
-		// to the tag editor 
+		// to the tag editor
 		//
 		AutoCompletionList autoCompletionList = new AutoCompletionList();
 		aclViewer = new AutoCompletionListViewer(autoCompletionList);
 		tagEditor.setAutoCompletionList(autoCompletionList);
 		tagEditor.setAutoCompletionCache(acCache);
-		aclViewer.addAutoCompletionListListener(tagEditor);		
-		
+		aclViewer.addAutoCompletionListListener(tagEditor);
+
 		JPanel pnlTagGrid = new JPanel();
 		pnlTagGrid.setLayout(new BorderLayout());
 		pnlTagGrid.add(tagEditor, BorderLayout.CENTER);
 		pnlTagGrid.add(aclViewer, BorderLayout.EAST);
 		pnlTagGrid.setBorder(BorderFactory.createEmptyBorder(5, 0,0,0));
-		
-		
+
+
 		// create the preset selector
 		//
 		TabularPresetSelector presetSelector = new TabularPresetSelector();
 		presetSelector.addPresetSelectorListener(
 				new IPresetSelectorListener() {
-					@Override
 					public void itemSelected(Item item) {
 						tagEditor.stopEditing();
 						model.applyPreset(item);
 						tagEditor.requestFocusInTopLeftCell();
-					}					
+					}
 				}
 		);
-		
-		
+
+
 		JPanel pnlPresetSelector = new JPanel();
 		pnlPresetSelector.setLayout(new BorderLayout());
 		pnlPresetSelector.add(presetSelector,BorderLayout.CENTER);
@@ -218,32 +217,32 @@ public class TagEditorDialog extends JDialog {
 		pnlTagSelector.setLayout(new BorderLayout());
 		pnlTagSelector.add(tagSelector,BorderLayout.CENTER);
 		pnlTagSelector.setBorder(BorderFactory.createEmptyBorder(0,0,5,0	));
-		
-		
-		
-		
-		// create the tabbed pane 
+
+
+
+
+		// create the tabbed pane
 		//
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.add(pnlPresetSelector, tr("Presets"));
 		tabbedPane.add(pnlTagSelector, tr("Tags"));
-		
+
 		// create split pane
 		//
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-		                           tabbedPane, pnlTagGrid);
+				tabbedPane, pnlTagGrid);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setDividerLocation(200);
-	
+
 		Dimension minimumSize = new Dimension(100, 50);
 		presetSelector.setMinimumSize(minimumSize);
 		pnlTagGrid.setMinimumSize(minimumSize);
-		
+
 		getContentPane().add(splitPane,BorderLayout.CENTER);
-				
+
 		getContentPane().add(buildButtonRow(), BorderLayout.SOUTH);
 
-		
+
 		addWindowListener(
 				new WindowAdapter() {
 					@Override public void windowActivated(WindowEvent e) {
@@ -252,92 +251,90 @@ public class TagEditorDialog extends JDialog {
 							{
 								getModel().ensureOneTag();
 								tagEditor.clearSelection();
-								tagEditor.requestFocusInTopLeftCell();								
-							}							
+								tagEditor.requestFocusInTopLeftCell();
+							}
 						});
 					}
 				}
 		);
-		
-		
+
+
 		// makes sure that 'Ctrl-Enter' in the properties table
 		// and in the aclViewer is handled by okAction
-		//		
+		//
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke)cancelAction.getValue(Action.ACCELERATOR_KEY), okAction.getValue(AbstractAction.NAME));
 		getRootPane().getActionMap().put(cancelAction.getValue(Action.NAME), cancelAction);
 
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke)okAction.getValue(Action.ACCELERATOR_KEY), okAction.getValue(AbstractAction.NAME));
 		getRootPane().getActionMap().put(okAction.getValue(Action.NAME), okAction);
 
-		
-		// make sure the OK action is also enabled in sub components. I registered 
+
+		// make sure the OK action is also enabled in sub components. I registered
 		// the action in the input and action maps of the dialogs root pane and I expected
 		// it to get triggered regardless of what subcomponent had focus, but it didn't.
-		// 
+		//
 		aclViewer.installKeyAction(okAction);
 		aclViewer.installKeyAction(cancelAction);
 		presetSelector.installKeyAction(okAction);
 		presetSelector.installKeyAction(cancelAction);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * constructor
 	 */
 	protected TagEditorDialog() {
 		acCache = new AutoCompletionCache();
 		model = new TagEditorModel();
-		build();	
+		build();
 	}
-	
-	
+
+
 	@Override
 	public Dimension getPreferredSize() {
 		return PREFERRED_SIZE;
 	}
 
-	
-	
+
+
 	/**
 	 * start an editing session. This method should be called before the dialog
-	 * is shown on the screen, i.e. before {@link Dialog#setVisible(boolean)} is 
-	 * called. 
+	 * is shown on the screen, i.e. before {@link Dialog#setVisible(boolean)} is
+	 * called.
 	 */
-	public void startEditSession() {		
+	public void startEditSession() {
 		model.clearAppliedPresets();
-		model.initFromJOSMSelection();		
+		model.initFromJOSMSelection();
 		acCache.initFromJOSMDataset();
 		getModel().ensureOneTag();
 	}
 
-	
-	
+
+
 	@SuppressWarnings("serial")
 	class CancelAction extends AbstractAction {
-		
+
 		public CancelAction() {
 			putValue(Action.NAME, tr("Cancel"));
 			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0));
 		}
-		
-		@Override
+
 		public void actionPerformed(ActionEvent arg0) {
 			setVisible(false);
-		}		
+		}
 	}
-	
 
-	
+
+
 	@SuppressWarnings("serial")
 	class OKAction extends AbstractAction implements PropertyChangeListener {
- 
+
 		public OKAction() {
 			putValue(Action.NAME, tr("OK"));
 			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl ENTER"));
 		}
-		
-		@Override
+
 		public void actionPerformed(ActionEvent e) {
 			run();
 		}
@@ -346,22 +343,19 @@ public class TagEditorDialog extends JDialog {
 			tagEditor.stopEditing();
 			setVisible(false);
 			model.updateJOSMSelection();
-			
-			Collection<OsmPrimitive> sel = Main.ds.getSelected();			
+
+			Collection<OsmPrimitive> sel = Main.ds.getSelected();
 			DataSet.fireSelectionChanged(sel);
 			Main.parent.repaint(); // repaint all - drawing could have been changed
 		}
-		
-		@Override
+
 		public void propertyChange(PropertyChangeEvent evt) {
-			if (! evt.getPropertyName().equals(TagEditorModel.PROP_DIRTY)) {
+			if (! evt.getPropertyName().equals(TagEditorModel.PROP_DIRTY))
 				return;
-			}
-			if (! evt.getNewValue().getClass().equals(Boolean.class)) {
+			if (! evt.getNewValue().getClass().equals(Boolean.class))
 				return;
-			}
 			boolean dirty = (Boolean)evt.getNewValue();
 			setEnabled(dirty);
-		}		
+		}
 	}
 }

@@ -12,7 +12,7 @@ import javax.swing.table.TableCellRenderer;
 /**
  * This is the table cell renderer for the list of auto completion list items.
  * 
- * It uses an instance of {@Link JLabel} to render an {@link AutoCompletionListItem}.  
+ * It uses an instance of {@Link JLabel} to render an {@link AutoCompletionListItem}.
  * 
  *
  */
@@ -22,56 +22,56 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 	static public final String RES_OSM_ICON = "/resources/osm.gif";
 	static public final String RES_SELECTION_ICON = "/resources/selection.gif";
 	public static final Color BG_COLOR_SELECTED = new Color(143,170,255);
-	
+
 	/** the renderer component */
-	private JLabel renderer;
-	
+	private final JLabel renderer;
+
 	/** the icon used to decorate items of priority
-	 *  {@link AutoCompletionItemPritority#IS_IN_STANDARD} 
+	 *  {@link AutoCompletionItemPritority#IS_IN_STANDARD}
 	 */
 	private Icon iconStandard;
-	
-	/** the icon used to decorate items of priority 
+
+	/** the icon used to decorate items of priority
 	 *  {@link AutoCompletionItemPritority#IS_IN_SELECTION}
 	 */
 	private Icon iconSelection;
-	
+
 	/**
-	 * constructor 
+	 * constructor
 	 */
 	public AutoCompletionListRenderer() {
 		renderer = new JLabel();
 		renderer.setOpaque(true);
-		
+
 		loadIcons();
 	}
-	
+
 	/**
-	 * loads the icons 
+	 * loads the icons
 	 */
 	protected void loadIcons() {
 		java.net.URL imgURL = getClass().getResource(RES_OSM_ICON);
-	    if (imgURL != null) {
-	    	iconStandard = new ImageIcon(imgURL);
-	    } else {
-	        System.err.println("Could not load icon: " + RES_OSM_ICON);
-	        iconStandard = null;
-	    }
-	    
+		if (imgURL != null) {
+			iconStandard = new ImageIcon(imgURL);
+		} else {
+			System.err.println("Could not load icon: " + RES_OSM_ICON);
+			iconStandard = null;
+		}
+
 		imgURL = getClass().getResource(RES_SELECTION_ICON);
-	    if (imgURL != null) {
-	    	iconSelection = new ImageIcon(imgURL);
-	    } else {
-	        System.err.println("Could not load icon: " + RES_SELECTION_ICON);
-	        iconSelection = null;
-	    }
+		if (imgURL != null) {
+			iconSelection = new ImageIcon(imgURL);
+		} else {
+			System.err.println("Could not load icon: " + RES_SELECTION_ICON);
+			iconSelection = null;
+		}
 	}
-	
-	
+
+
 	/**
-	 * prepares the renderer for rendering a specific icon 
+	 * prepares the renderer for rendering a specific icon
 	 * 
-	 * @param item the item to be rendered 
+	 * @param item the item to be rendered
 	 */
 	protected void prepareRendererIcon(AutoCompletionListItem item) {
 		if (item.getPriority().equals(AutoCompletionItemPritority.IS_IN_STANDARD)) {
@@ -84,9 +84,9 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 			}
 		}
 	}
-	
+
 	/**
-	 * resets the renderer 
+	 * resets the renderer
 	 */
 	protected void resetRenderer() {
 		renderer.setIcon(null);
@@ -95,21 +95,20 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 		renderer.setBackground(Color.WHITE);
 		renderer.setForeground(Color.BLACK);
 	}
-	
+
 	/**
-	 * prepares background and text colors for a selected item 
+	 * prepares background and text colors for a selected item
 	 */
 	protected void renderSelected() {
 		renderer.setBackground(BG_COLOR_SELECTED);
 		renderer.setForeground(Color.WHITE);
 	}
-	
-	@Override
+
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
-		
+
 		resetRenderer();
-		// set icon and text 
+		// set icon and text
 		//
 		if (value instanceof AutoCompletionListItem) {
 			AutoCompletionListItem item = (AutoCompletionListItem)value;
@@ -120,18 +119,18 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 		} else {
 			renderer.setText("<null>");
 		}
-		
-		// prepare background and foreground for a selected item 
+
+		// prepare background and foreground for a selected item
 		//
 		if (isSelected) {
 			renderSelected();
 		}
-		
-		
+
+
 		return renderer;
-	
+
 	}
 
-	
-	
+
+
 }

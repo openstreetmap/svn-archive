@@ -14,31 +14,31 @@ import org.openstreetmap.josm.plugins.tageditor.preset.Presets;
 public class PresetsTableModel extends AbstractTableModel  {
 
 	private static final Logger logger = Logger.getLogger(PresetsTableModel.class.getName());
-	
-	 private ArrayList<TableModelListener> listeners = new ArrayList<TableModelListener>();
-	 private ArrayList<Item> items = new ArrayList<Item>();
-	 private ArrayList<Item> visibleItems = new ArrayList<Item>();
-	 private Presets presets = null;
-	 
-	 
-	 protected void initModelFromPresets(Presets presets) {
+
+	private final ArrayList<TableModelListener> listeners = new ArrayList<TableModelListener>();
+	private final ArrayList<Item> items = new ArrayList<Item>();
+	private final ArrayList<Item> visibleItems = new ArrayList<Item>();
+	private Presets presets = null;
+
+
+	protected void initModelFromPresets(Presets presets) {
 		for(Group group: presets.getGroups()) {
 			for(Item item: group.getItems()) {
 				items.add(item);
 				visibleItems.add(item);
 			}
 		}
-	 }
-	 
-	
-	 public PresetsTableModel() {
-	 }
-	 
-	 public PresetsTableModel(Presets presets) {
-		 setPresets(presets);
-	 }
-	 
-	
+	}
+
+
+	public PresetsTableModel() {
+	}
+
+	public PresetsTableModel(Presets presets) {
+		setPresets(presets);
+	}
+
+
 	public Presets getPresets() {
 		return presets;
 	}
@@ -56,9 +56,8 @@ public class PresetsTableModel extends AbstractTableModel  {
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 		synchronized(listeners) {
-			if (l == null) {
+			if (l == null)
 				return;
-			}
 			if (!listeners.contains(l)) {
 				listeners.add(l);
 			}
@@ -70,25 +69,21 @@ public class PresetsTableModel extends AbstractTableModel  {
 		return String.class;
 	}
 
-	@Override
 	public int getColumnCount() {
 		return 2;
 	}
 
-
-	@Override
 	public int getRowCount() {
 		return visibleItems.size();
 	}
 
-	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Item item = visibleItems.get(rowIndex);
 		switch(columnIndex) {
-			case 0: return item.getParent();
-			case 1: return item;
-			default: return "unknown"; 
-		
+		case 0: return item.getParent();
+		case 1: return item;
+		default: return "unknown";
+
 		}
 	}
 
@@ -103,24 +98,20 @@ public class PresetsTableModel extends AbstractTableModel  {
 			if (listeners.contains(l)) {
 				listeners.remove(l);
 			}
-		}		
+		}
 	}
 
 	@Override
 	public void setValueAt(Object value, int rowIndex, int columnIndex) {
-		// do nothing. No editing allowed 		
+		// do nothing. No editing allowed
 	}
 
-	
 	public Item getVisibleItem(int idx) {
-		if (idx < 0 || idx >= this.visibleItems.size()) {
+		if (idx < 0 || idx >= this.visibleItems.size())
 			throw new IndexOutOfBoundsException("index out of bounds. idx=" + idx);
-		}
 		return visibleItems.get(idx);
 	}
-	
-	
-	
+
 	public void filter(String filter) {
 		synchronized(this) {
 			if (filter == null || filter.trim().equals("")) {
@@ -128,19 +119,19 @@ public class PresetsTableModel extends AbstractTableModel  {
 				for(Item item: items) {
 					visibleItems.add(item);
 				}
-			} else { 
+			} else {
 				visibleItems.clear();
 				filter = filter.toLowerCase();
 				for(Item item: items) {
 					if (    (item.getName() != null && item.getName().toLowerCase().trim().startsWith(filter))
-					     || (item.getParent().getName() != null && item.getParent().getName().toLowerCase().trim().startsWith(filter))) {
+							|| (item.getParent().getName() != null && item.getParent().getName().toLowerCase().trim().startsWith(filter))) {
 						visibleItems.add(item);
 					}
-				}	
+				}
 			}
 			fireTableDataChanged();
 			fireTableStructureChanged();
 		}
-		
+
 	}
 }

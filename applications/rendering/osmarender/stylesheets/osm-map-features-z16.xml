@@ -2884,7 +2884,7 @@
 			fill: none;
 			marker-start: url(#marker-tunnel-start);
 			marker-end: url(#marker-tunnel-end);
-stroke-width: 4px;
+			stroke: #b0b0b0;
 			}
 
 			.railway-bridge-casing             { stroke-width: 2.4px; }

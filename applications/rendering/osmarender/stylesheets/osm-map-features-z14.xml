@@ -1659,7 +1659,7 @@
 			fill: none;
 			marker-start: url(#marker-tunnel-start);
 			marker-end: url(#marker-tunnel-end);
-stroke-width: 6px;
+			stroke: #b0b0b0;
 			}
 
 			.railway-rail-casing                    { stroke-width: 3.0px; }

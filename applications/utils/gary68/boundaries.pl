@@ -58,7 +58,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "2.0 BETA (005)" ;
+my $version = "2.0 BETA (006)" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -733,6 +733,7 @@ foreach $rel (keys %relationWays) {
 printHTMLTableFoot ($htmlFile) ;
 
 print $htmlFile "<h2>Invalid Relations</h2>\n" ;
+print $htmlFile "<p>ATTENTION: Also contains 'invalid' relations made so by selecting a certain admin_level at the moment</p>\n" ;
 printHTMLTableHead ($htmlFile) ;
 printHTMLTableHeadings ($htmlFile, ("RelationId")) ;
 foreach $rel (keys %relationWays) {

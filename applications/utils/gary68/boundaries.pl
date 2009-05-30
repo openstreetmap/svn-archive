@@ -43,7 +43,8 @@
 #
 # TODO
 # - command line error handling
-#
+# - qualify invalid relation list with causes of errors
+# 
 
 use strict ;
 use warnings ;
@@ -58,7 +59,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "2.0 BETA (006)" ;
+my $version = "2.0 BETA (007)" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -734,10 +735,13 @@ printHTMLTableFoot ($htmlFile) ;
 
 print $htmlFile "<h2>Invalid Relations</h2>\n" ;
 print $htmlFile "<p>ATTENTION: Also contains 'invalid' relations made so by selecting a certain admin_level at the moment</p>\n" ;
+print $htmlFile "<p>List reflects the moment the *.osm file was created and a relation may be invalid because one or more ways were clipped in the process of creating the *.osm file.</p>\n" ;
 printHTMLTableHead ($htmlFile) ;
 printHTMLTableHeadings ($htmlFile, ("RelationId")) ;
 foreach $rel (keys %relationWays) {
 	if (! $validRelation{$rel}) {
+		# TODO only certain admin_levels ?
+		# TODO qualify errors
 		printHTMLRowStart ($htmlFile) ;
 		printHTMLCellRight ($htmlFile, historyLink("relation", $rel) . "(osm) " .analyzerLink($rel) . "(analyzer)" ) ;
 		printHTMLRowEnd ($htmlFile) ;

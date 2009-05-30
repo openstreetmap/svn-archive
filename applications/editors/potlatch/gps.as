@@ -84,7 +84,8 @@
 		} else {									// Get root co-ords from first point in GPX
 			lat =xmlobj.attributes['lat'];			// (was briefly if (gpxpoints>4), but 
 			long=xmlobj.attributes['lon'];			//  obviously this broke lat2coord for the
-			startPotlatch();						//  first four points... ** need to fix)
+			scale=17; bscale=16;					//  first four points... ** need to fix)
+			startPotlatch();						//
 		}
 		var y= lat2coord(xmlobj.attributes['lat']);
 		var x=long2coord(xmlobj.attributes['lon']);

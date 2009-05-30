@@ -1,3 +1,5 @@
+puts "tclsh verify-hw.tcl startzoom endzoom  --> comparing highway widths, output to verify-hw.txt"
+
 set za [ lindex $argv 0 ]
 set ze [ lindex $argv 1 ]
 
@@ -178,6 +180,9 @@ puts $way
 }
 
 set fo [ open verify-hw.txt w ]
+
+puts $fo "  : bcas bcor bdif bdi2    cas core diff area cor2   cyc1 cyc2  ccy  cca    mr1  mr2  mcy  mca   mc1  mc2  mc3  mmm  mmy  mma  way" 
+
 foreach way $allways {
    for { set z $za } { $z <= $ze } { incr z } {
    set x "$z,$way"

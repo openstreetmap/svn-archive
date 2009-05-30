@@ -1,3 +1,5 @@
+if { ![ info exists za ] } { puts "call this file only using verify-*.tcl"; exit }
+
 set files [ glob osm-map-features-z*.xml ]
 set zooms {}
 foreach f $files {
@@ -17,6 +19,7 @@ foreach f $files {
       }
    }
 }
+puts $zooms
 set zooms [ lsort -integer $zooms ]
 foreach z $zooms {
    set widths($z) {}

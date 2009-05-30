@@ -1,772 +1,1023 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <osm version='0.5' generator='JOSM'>
-  <bound note='this tag is deprecated and only provided for backward compatiblity' box='0.0,0.0,0.025,0.025' origin='petschge' />
   <bounds minlat='0.0' minlon='0.0' maxlat='0.025' maxlon='0.025' origin='petschge' />
-  <node id='-1' action='modify' visible='true' lat='0.019826696629281187' lon='0.011645378841326019' />
-  <node id='-2' action='modify' visible='true' lat='0.02371524775405356' lon='0.020644901017164433' />
-  <node id='1' user='petschge' visible='true' lat='0.0' lon='0.0' />
-  <node id='-3' action='modify' visible='true' lat='0.022616712522720493' lon='0.020844634711917595' />
-  <node id='-4' action='modify' visible='true' lat='0.01872816137033364' lon='0.01184511253607918' />
-  <node id='-5' action='modify' visible='true' lat='0.01818928257084114' lon='0.0105583494321297' />
-  <node id='-6' action='modify' visible='true' lat='0.014300731321649711' lon='0.001558827256291286' />
-  <node id='-7' action='modify' visible='true' lat='0.011893705776374006' lon='0.0018764825850063115' />
-  <node id='-8' action='modify' visible='true' lat='0.01047250226238601' lon='0.002006817757463383' />
-  <node id='-9' action='modify' visible='true' lat='0.01493322133444923' lon='0.012725859375883128' />
-  <node id='-10' action='modify' visible='true' lat='0.014361053576562529' lon='0.011006339933301799' />
-  <node id='-11' action='modify' visible='true' lat='0.01633135714564885' lon='0.01229310303725128' />
-  <node id='-12' action='modify' visible='true' lat='0.020219908353323726' lon='0.021292625213089698' />
-  <node id='-13' action='modify' visible='true' lat='0.01882177257123302' lon='0.021725381551721542' />
-  <node id='-14' action='modify' visible='true' lat='0.01578225706845131' lon='0.010876004760844727' />
-  <node id='-15' action='modify' visible='true' lat='0.007666009299978778' lon='0.0018431936358807846' />
-  <node id='-16' action='modify' visible='true' lat='0.010299801878144553' lon='0.010906473085925218' />
-  <node id='-17' action='modify' visible='true' lat='0.012369972324755684' lon='0.012526125681129971' />
-  <node id='-18' action='modify' visible='true' lat='0.014926965693210286' lon='0.02169209260259602' />
-  <node id='19' user='petschge' visible='true' lat='0.0' lon='0.025' />
-  <node id='-19' action='modify' visible='true' lat='0.011554560650768115' lon='0.0108427158117192' />
-  <node id='-20' action='modify' visible='true' lat='0.006411250514004035' lon='0.0019069509100868036' />
-  <node id='-21' action='modify' visible='true' lat='0.01103841438754683' lon='0.012692570426757605' />
-  <node id='20' user='petschge' visible='true' lat='0.025' lon='0.0' />
-  <node id='-22' action='modify' visible='true' lat='0.016258523608891982' lon='0.02152564785696839' />
-  <node id='-23' action='modify' visible='true' lat='0.009500867111065502' lon='0.02185853734822366' />
-  <node id='-24' action='modify' visible='true' lat='0.004447202524511738' lon='0.013225193612766039' />
-  <node id='-25' action='modify' visible='true' lat='0.005063215643018755' lon='0.010876004760844729' />
-  <node id='-26' action='modify' visible='true' lat='0.008335753905806379' lon='0.022224715788604455' />
-  <node id='-27' action='modify' visible='true' lat='0.0011746642432910767' lon='0.001876482585006313' />
-  <node id='-28' action='modify' visible='true' lat='0.00561231573939573' lon='0.012859015172385241' />
-  <node id='-29' action='modify' visible='true' lat='0.003908323698486489' lon='0.011272651526306016' />
-  <node id='29' user='petschge' visible='true' lat='0.025' lon='0.025' />
-  <node id='-30' action='modify' visible='true' lat='1.9772295282064733E-5' lon='0.002273129350467601' />
-  <node id='-31' action='modify' visible='true' lat='0.006524634014482844' lon='0.011917443390303276' />
-  <node id='-32' action='modify' visible='true' lat='0.00453760212851207' lon='0.0022260165508243457' />
-  <node id='-33' action='modify' visible='true' lat='0.020672436958430955' lon='0.01055259647615666' />
-  <node id='-34' action='modify' visible='true' lat='0.01186513648591714' lon='0.021908470771911947' />
-  <node id='-35' action='modify' visible='true' lat='0.007371128418442837' lon='0.011256007051743252' />
-  <node id='-36' action='modify' visible='true' lat='0.007976585138720394' lon='0.01290894859607353' />
-  <node id='-37' action='modify' visible='true' lat='0.008426153509117467' lon='0.011225538726662761' />
-  <node id='-38' action='modify' visible='true' lat='0.00904183149897422' lon='0.012842370697822477' />
-  <node id='-39' action='modify' visible='true' lat='0.003482577030396275' lon='0.0022564848759048374' />
-  <node id='-40' action='modify' visible='true' lat='0.013761098482168778' lon='0.021093073043646358' />
-  <node id='-41' action='modify' visible='true' lat='0.00553962183487455' lon='0.002175287208469885' />
-  <node id='-42' action='modify' visible='true' lat='6.828702885802645E-4' lon='0.010581054059343672' />
-  <node id='-43' action='modify' visible='true' lat='0.01293038283298069' lon='0.0218418928736609' />
-  <node id='-44' action='modify' visible='true' lat='0.005941630576721472' lon='0.02297420586591681' />
-  <node id='1016' action='modify' visible='true' lat='0.021642117170440272' lon='0.02127898288788179' />
-  <node id='1010' action='modify' visible='true' lat='0.002631167474568915' lon='0.0023817792301428315' />
-  <node id='1011' action='delete' visible='true' lat='0.016484899624501163' lon='0.020889262011164728' />
-  <node id='1012' action='delete' visible='true' lat='0.008263423052337114' lon='0.0019714761759882598' />
-  <node id='1013' action='modify' visible='true' lat='0.017089239245438998' lon='0.020776828026953846' />
-  <node id='1014' action='modify' visible='true' lat='0.008867762692450685' lon='0.001859042191777378' />
-  <node id='1015' action='modify' visible='true' lat='0.01312640223556813' lon='0.0016269969918746871' />
-  <node id='102' action='modify' visible='true' lat='0.015322467439085056' lon='0.0014284920838342158' />
-  <node id='103' action='modify' visible='true' lat='0.024834784056692018' lon='0.020098621542462725' />
-  <node id='101' action='modify' visible='true' lat='0.019211018667997397' lon='0.010428014259672633' />
-  <node id='108' action='delete' visible='true' lat='0.0031250000976037503' lon='0.003984899058667798' />
-  <node id='109' action='modify' visible='true' lat='0.010652910490318924' lon='0.0216657435057001' />
-  <node id='106' action='modify' visible='true' lat='0.0074628964435515645' lon='0.02299193949233854' />
-  <node id='107' action='delete' visible='true' lat='0.01134647679594468' lon='0.02290268489384427' />
-  <node id='104' action='modify' visible='true' lat='0.01661330783058687' lon='0.0011808357072862494' />
-  <node id='105' action='modify' visible='true' lat='5.063997604708631E-4' lon='0.006870425383706358' />
-  <node id='-45' action='modify' visible='true' lat='0.019327272367190236' lon='0.007368711364882484' />
-  <node id='-46' visible='true' lat='0.018073270287323504' lon='0.007713704054368354' />
-  <node id='-47' visible='true' lat='0.016987788621208495' lon='0.007767978140215347' />
-  <node id='-48' visible='true' lat='0.016092266242056397' lon='0.007713704054368354' />
-  <node id='-49' visible='true' lat='0.014491180766645488' lon='0.007903663354832826' />
-  <node id='-50' visible='true' lat='0.013052917533286915' lon='0.007930800397756323' />
-  <node id='-51' visible='true' lat='0.011506106122218805' lon='0.008012211526526812' />
-  <node id='-52' visible='true' lat='0.010339213297732377' lon='0.008012211526526812' />
-  <node id='-53' visible='true' lat='0.009082225487594622' lon='0.008068656575807685' />
-  <node id='-54' visible='true' lat='0.008144369294766477' lon='0.008107733917617517' />
-  <node id='-55' visible='true' lat='0.007089281075238975' lon='0.008185888601237187' />
-  <node id='-56' visible='true' lat='0.005995115511712954' lon='0.008146811259427353' />
-  <node id='-57' visible='true' lat='0.004940027287666322' lon='0.008185888601237187' />
-  <node id='-58' visible='true' lat='0.00388493906194451' lon='0.008224965943047023' />
-  <node id='-59' visible='true' lat='0.0026735414678462745' lon='0.008303120626666691' />
-  <node id='-60' visible='true' lat='0.002048303999422826' lon='0.010374219742587926' />
-  <node id='-61' visible='true' lat='0.0018529172904869773' lon='0.013265943036515683' />
-  <node id='-62' visible='true' lat='0.002595386784309228' lon='0.015219810127007412' />
-  <node id='-63' visible='true' lat='0.004080325770521567' lon='0.014907191392528735' />
-  <node id='-64' visible='true' lat='0.005096336654306093' lon='0.014829036708909065' />
-  <node id='-65' visible='true' lat='0.006464043610657945' lon='0.014711804683479563' />
-  <node id='-66' visible='true' lat='0.00779267322187984' lon='0.014750882025289397' />
-  <node id='-67' visible='true' lat='0.008769606756909881' lon='0.014711804683479563' />
-  <node id='-68' visible='true' lat='0.009902849654331664' lon='0.014750882025289397' />
-  <node id='-69' visible='true' lat='0.011036092547879435' lon='0.014750882025289397' />
-  <node id='-70' visible='true' lat='0.012013026073351123' lon='0.014789959367099233' />
-  <node id='-71' visible='true' lat='0.013341655662333148' lon='0.014711804683479563' />
-  <node id='-72' visible='true' lat='0.014513975881970995' lon='0.014672727341669729' />
-  <node id='-73' visible='true' lat='0.01580352811653569' lon='0.014516417974430389' />
-  <node id='-74' visible='true' lat='0.01724938970331461' lon='0.014242876581761548' />
-  <node id='-75' visible='true' lat='0.018734328618834232' lon='0.01436010860719105' />
-  <node id='-76' visible='true' lat='0.019828494127536678' lon='0.01436010860719105' />
-  <node id='-77' visible='true' lat='0.021039891646577193' lon='0.01436010860719105' />
-  <node id='-78' visible='true' lat='0.022368521172754674' lon='0.014242876581761548' />
-  <node id='-79' visible='true' lat='0.017562008423367668' lon='0.0033793755586275344' />
-  <node id='-80' visible='true' lat='0.01607706949861806' lon='0.0033793755586275344' />
-  <node id='-81' visible='true' lat='0.015178290670433409' lon='0.003496607584057039' />
-  <node id='-82' visible='true' lat='0.01396689311353296' lon='0.0036919942931062117' />
-  <node id='-83' visible='true' lat='0.01263826352783802' lon='0.003652916951296377' />
-  <node id='-84' visible='true' lat='0.011192401912177895' lon='0.003770148976725881' />
-  <node id='-85' visible='true' lat='0.009668385606892437' lon='0.003887381002155385' />
-  <node id='-86' visible='true' lat='0.008574220050098745' lon='0.004004613027584887' />
-  <node id='-87' visible='true' lat='0.007206513099756179' lon='0.003965535685775054' />
-  <node id='-88' visible='true' lat='0.006229579561237609' lon='0.003926458343965218' />
-  <node id='-89' visible='true' lat='0.005174491337611828' lon='0.004043690369394723' />
-  <node id='-90' visible='true' lat='0.0041975577956451715' lon='0.004082767711204557' />
-  <node id='-91' visible='true' lat='0.0032206242524581733' lon='0.004121845053014392' />
-  <node id='-92' visible='true' lat='0.0019701493158512185' lon='0.004082767711204557' />
-  <node id='-93' visible='true' lat='8.369064037244955E-4' lon='0.004512618471112738' />
-  <node id='-94' visible='true' lat='0.0012276798217586604' lon='0.00845942999390603' />
-  <node id='-95' visible='true' lat='0.0012276798217586604' lon='0.012093622782220644' />
-  <node id='-96' visible='true' lat='0.005291723362552331' lon='0.021550339500200612' />
-  <node id='-97' visible='true' lat='0.006815739684584262' lon='0.021315875449341604' />
-  <node id='-98' visible='true' lat='0.007753595880429625' lon='0.02112048874029243' />
-  <node id='-99' visible='true' lat='0.009238534852836182' lon='0.020886024689433423' />
-  <node id='-100' visible='true' lat='0.010254545725178341' lon='0.02084694734762359' />
-  <node id='-101' visible='true' lat='0.011426865958469031' lon='0.02069063798038425' />
-  <node id='-102' visible='true' lat='0.0123647221416808' lon='0.02069063798038425' />
-  <node id='-103' visible='true' lat='0.013341655662333148' lon='0.020065400511426898' />
-  <node id='-104' visible='true' lat='0.014435821200845415' lon='0.020378019245905574' />
-  <node id='-105' visible='true' lat='0.015569064074463875' lon='0.01998724582780723' />
-  <node id='-106' visible='true' lat='0.016624152261677228' lon='0.01975278177694822' />
-  <node id='-107' visible='true' lat='0.018070013842334667' lon='0.019909091144187558' />
-  <node id='-108' visible='true' lat='0.01951587541148498' lon='0.01959647240970888' />
-  <node id='-109' visible='true' lat='0.020805427611351075' lon='0.019244776333420376' />
-  <node id='-110' visible='true' lat='0.02186051576706822' lon='0.019010312282561368' />
-  <node id='-111' visible='true' lat='0.022993758592719817' lon='0.01889308025713186' />
-  <node id='-112' visible='true' lat='0.02424423342436126' lon='0.018658616206272852' />
-  <node id='-113' action='modify' visible='true' lat='0.001162825961822987' lon='0.015133254398893799' />
-  <node id='-114' action='modify' visible='true' lat='0.004575030388966822' lon='0.023317220926137115' />
-  <way id='-115' action='modify' visible='true'>
-    <nd ref='-12' />
-    <nd ref='-108' />
-    <tag k='railway' v='planned' />
-    <tag k='bridge' v='yes' />
-    <tag k='planned' v='subway' />
-  </way>
-  <way id='-116' action='modify' visible='true'>
-    <nd ref='-34' />
-    <nd ref='-101' />
-    <tag k='railway' v='abandoned' />
-    <tag k='bridge' v='yes' />
-    <tag k='abandoned' v='tram' />
-  </way>
-  <way id='-117' action='modify' visible='true'>
-    <nd ref='-14' />
-    <nd ref='-49' />
-    <tag k='railway' v='construction' />
-    <tag k='construction' v='subway' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='1000' user='petschge' visible='true'>
-    <nd ref='1' />
-    <nd ref='20' />
-    <tag k='highway' v='residential' />
-  </way>
-  <way id='1017' action='modify' visible='true'>
-    <nd ref='109' />
-    <nd ref='-100' />
-    <tag k='railway' v='narrow_gauge' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='-118' action='modify' visible='true'>
-    <nd ref='-40' />
-    <nd ref='-103' />
-    <tag k='railway' v='tram' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='-119' action='modify' visible='true'>
-    <nd ref='-13' />
-    <nd ref='-107' />
-    <tag k='railway' v='abandoned' />
-    <tag k='bridge' v='yes' />
-    <tag k='abandoned' v='subway' />
-  </way>
-  <way id='1018' action='modify' visible='true'>
-    <nd ref='101' />
-    <nd ref='-46' />
-    <tag k='railway' v='construction' />
-    <tag k='construction' v='rail' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-120' action='modify' visible='true'>
-    <nd ref='-43' />
-    <nd ref='-102' />
-    <tag k='railway' v='planned' />
-    <tag k='bridge' v='yes' />
-    <tag k='planned' v='tram' />
-  </way>
-  <way id='-121' action='modify' visible='true'>
-    <nd ref='-19' />
-    <nd ref='-52' />
-    <tag k='railway' v='construction' />
-    <tag k='construction' v='light_rail' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='1019' action='delete' visible='true'>
-    <nd ref='1011' />
-    <nd ref='1012' />
-    <tag k='railway' v='subway' />
-  </way>
-  <way id='-122' action='modify' visible='true'>
-    <nd ref='-35' />
-    <nd ref='-56' />
-    <tag k='railway' v='disused' />
-    <tag k='disused' v='tram' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='1020' action='modify' visible='true'>
-    <nd ref='103' />
-    <nd ref='-112' />
-    <tag k='railway' v='rail' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='-123' action='modify' visible='true'>
-    <nd ref='-2' />
-    <nd ref='-111' />
-    <tag k='railway' v='planned' />
-    <tag k='bridge' v='yes' />
-    <tag k='planned' v='rail' />
-  </way>
-  <way id='1021' action='delete' visible='true'>
-    <nd ref='107' />
-    <nd ref='108' />
-    <tag k='railway' v='narrow_gauge' />
-  </way>
-  <way id='-124' action='modify' visible='true'>
-    <nd ref='-3' />
-    <nd ref='-110' />
-    <tag k='railway' v='abandoned' />
-    <tag k='bridge' v='yes' />
-    <tag k='abandoned' v='rail' />
-  </way>
-  <way id='1022' action='modify' visible='true'>
-    <nd ref='1013' />
-    <nd ref='-106' />
-    <tag k='railway' v='light_rail' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='-125' action='modify' visible='true'>
-    <nd ref='-5' />
-    <nd ref='-47' />
-    <tag k='railway' v='disused' />
-    <tag k='disused' v='rail' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='1023' action='modify' visible='true'>
-    <nd ref='106' />
-    <nd ref='-97' />
-    <tag k='railway' v='monorail' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='-126' action='modify' visible='true'>
-    <nd ref='-10' />
-    <nd ref='-50' />
-    <tag k='railway' v='disused' />
-    <tag k='disused' v='subway' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-127' action='modify' visible='true'>
-    <nd ref='-44' />
-    <nd ref='-96' />
-    <tag k='railway' v='preserved' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='1024' action='modify' visible='true'>
-    <nd ref='1016' />
-    <nd ref='-109' />
-    <tag k='railway' v='subway' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='-128' action='modify' visible='true'>
-    <nd ref='-25' />
-    <nd ref='-58' />
-    <tag k='railway' v='construction' />
-    <tag k='construction' v='narrow_gauge' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-129' action='modify' visible='true'>
-    <nd ref='-26' />
-    <nd ref='-98' />
-    <tag k='railway' v='abandoned' />
-    <tag k='bridge' v='yes' />
-    <tag k='abandoned' v='narrow_gauge' />
-  </way>
-  <way id='1009' user='petschge' visible='true'>
-    <nd ref='19' />
-    <nd ref='29' />
-    <tag k='highway' v='residential' />
-  </way>
-  <way id='-130' action='modify' visible='true'>
-    <nd ref='-29' />
-    <nd ref='-59' />
-    <tag k='railway' v='disused' />
-    <tag k='disused' v='narrow_gauge' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-131' action='modify' visible='true'>
-    <nd ref='-37' />
-    <nd ref='-55' />
-    <tag k='railway' v='construction' />
-    <tag k='construction' v='tram' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-132' action='modify' visible='true'>
-    <nd ref='-22' />
-    <nd ref='-105' />
-    <tag k='railway' v='planned' />
-    <tag k='bridge' v='yes' />
-    <tag k='planned' v='light_rail' />
-  </way>
-  <way id='-133' action='modify' visible='true'>
-    <nd ref='-18' />
-    <nd ref='-104' />
-    <tag k='railway' v='abandoned' />
-    <tag k='bridge' v='yes' />
-    <tag k='abandoned' v='light_rail' />
-  </way>
-  <way id='-134' action='modify' visible='true'>
-    <nd ref='-16' />
-    <nd ref='-53' />
-    <tag k='railway' v='disused' />
-    <tag k='disused' v='light_rail' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-135' action='modify' visible='true'>
-    <nd ref='-23' />
-    <nd ref='-99' />
-    <tag k='railway' v='planned' />
-    <tag k='bridge' v='yes' />
-    <tag k='planned' v='narrow_gauge' />
-  </way>
-  <way id='-136' action='modify' visible='true'>
-    <nd ref='-45' />
-    <nd ref='-79' />
-    <tag k='railway' v='rail' />
-  </way>
-  <way id='-137' action='modify' visible='true'>
-    <nd ref='-46' />
-    <nd ref='-80' />
-    <tag k='railway' v='construction' />
-    <tag k='construction' v='rail' />
-  </way>
-  <way id='-138' action='modify' visible='true'>
-    <nd ref='-47' />
-    <nd ref='-81' />
-    <tag k='railway' v='disused' />
-    <tag k='disused' v='rail' />
-  </way>
-  <way id='-139' action='modify' visible='true'>
-    <nd ref='-48' />
-    <nd ref='-82' />
-    <tag k='railway' v='subway' />
-  </way>
-  <way id='-140' action='modify' visible='true'>
-    <nd ref='-49' />
-    <nd ref='-83' />
-    <tag k='railway' v='construction' />
-    <tag k='construction' v='subway' />
-  </way>
-  <way id='-141' action='modify' visible='true'>
-    <nd ref='-50' />
-    <nd ref='-84' />
-    <tag k='railway' v='disused' />
-    <tag k='disused' v='subway' />
-  </way>
-  <way id='-142' action='modify' visible='true'>
-    <nd ref='-51' />
-    <nd ref='-85' />
-    <tag k='railway' v='light_rail' />
-  </way>
-  <way id='-143' action='modify' visible='true'>
-    <nd ref='-52' />
-    <nd ref='-86' />
-    <tag k='railway' v='construction' />
-    <tag k='construction' v='light_rail' />
-  </way>
-  <way id='-144' action='modify' visible='true'>
-    <nd ref='-53' />
-    <nd ref='-87' />
-    <tag k='railway' v='disused' />
-    <tag k='disused' v='light_rail' />
-  </way>
-  <way id='-145' action='modify' visible='true'>
-    <nd ref='-54' />
-    <nd ref='-88' />
-    <tag k='railway' v='tram' />
-  </way>
-  <way id='-146' action='modify' visible='true'>
-    <nd ref='-55' />
-    <nd ref='-89' />
-    <tag k='railway' v='construction' />
-    <tag k='construction' v='tram' />
-  </way>
-  <way id='-147' action='modify' visible='true'>
-    <nd ref='-56' />
-    <nd ref='-90' />
-    <tag k='railway' v='disused' />
-    <tag k='disused' v='tram' />
-  </way>
-  <way id='-148' action='modify' visible='true'>
-    <nd ref='-57' />
-    <nd ref='-91' />
-    <tag k='railway' v='narrow_gauge' />
-  </way>
-  <way id='-149' action='modify' visible='true'>
-    <nd ref='-58' />
-    <nd ref='-92' />
-    <tag k='railway' v='construction' />
-    <tag k='construction' v='narrow_gauge' />
-  </way>
-  <way id='-150' action='modify' visible='true'>
-    <nd ref='-59' />
-    <nd ref='-93' />
-    <tag k='railway' v='disused' />
-    <tag k='disused' v='narrow_gauge' />
-  </way>
-  <way id='-151' action='modify' visible='true'>
-    <nd ref='-60' />
-    <nd ref='-94' />
-    <tag k='railway' v='monorail' />
-  </way>
-  <way id='-152' action='modify' visible='true'>
-    <nd ref='-61' />
-    <nd ref='-95' />
-    <tag k='railway' v='preserved' />
-  </way>
-  <way id='-153' action='modify' visible='true'>
-    <nd ref='-62' />
-    <nd ref='-61' />
-    <tag k='railway' v='preserved' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-154' action='modify' visible='true'>
-    <nd ref='-63' />
-    <nd ref='-60' />
-    <tag k='railway' v='monorail' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-155' action='modify' visible='true'>
-    <nd ref='-64' />
-    <nd ref='-24' />
-    <tag k='railway' v='abandoned' />
-    <tag k='tunnel' v='yes' />
-    <tag k='abandoned' v='narrow_gauge' />
-  </way>
-  <way id='-156' action='modify' visible='true'>
-    <nd ref='-65' />
-    <nd ref='-28' />
-    <tag k='railway' v='planned' />
-    <tag k='planned' v='narrow_gauge' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-157' action='modify' visible='true'>
-    <nd ref='-66' />
-    <nd ref='-31' />
-    <tag k='railway' v='narrow_gauge' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-158' action='modify' visible='true'>
-    <nd ref='-67' />
-    <nd ref='-36' />
-    <tag k='railway' v='abandoned' />
-    <tag k='tunnel' v='yes' />
-    <tag k='abandoned' v='tram' />
-  </way>
-  <way id='-159' action='modify' visible='true'>
+  <node id='-1' action='modify' visible='true' version='0' lat='0.019826696629281187' lon='0.011645378841326019' />
+  <node id='-2' action='modify' visible='true' version='0' lat='0.02371524775405356' lon='0.020644901017164433' />
+  <node id='1' user='petschge' visible='true' version='0' lat='0.0' lon='0.0' />
+  <node id='-3' action='modify' visible='true' version='0' lat='0.022616712522720493' lon='0.020844634711917595' />
+  <node id='-4' action='modify' visible='true' version='0' lat='0.01872816137033364' lon='0.01184511253607918' />
+  <node id='-5' action='modify' visible='true' version='0' lat='0.01818928257084114' lon='0.0105583494321297' />
+  <node id='-6' action='modify' visible='true' version='0' lat='0.014300731321649711' lon='0.001558827256291286' />
+  <node id='-7' action='modify' visible='true' version='0' lat='0.011893705776374006' lon='0.0018764825850063115' />
+  <node id='-8' action='modify' visible='true' version='0' lat='0.01047250226238601' lon='0.002006817757463383' />
+  <node id='-9' action='modify' visible='true' version='0' lat='0.01493322133444923' lon='0.012725859375883128' />
+  <node id='-10' action='modify' visible='true' version='0' lat='0.014361053576562529' lon='0.011006339933301799' />
+  <node id='-11' action='modify' visible='true' version='0' lat='0.01633135714564885' lon='0.01229310303725128' />
+  <node id='-12' action='modify' visible='true' version='0' lat='0.020219908353323726' lon='0.021292625213089698' />
+  <node id='-13' action='modify' visible='true' version='0' lat='0.01882177257123302' lon='0.021725381551721542' />
+  <node id='-14' action='modify' visible='true' version='0' lat='0.01578225706845131' lon='0.010876004760844727' />
+  <node id='-15' action='modify' visible='true' version='0' lat='0.007666009299978778' lon='0.0018431936358807846' />
+  <node id='-16' action='modify' visible='true' version='0' lat='0.010299801878144553' lon='0.010906473085925218' />
+  <node id='-17' action='modify' visible='true' version='0' lat='0.012369972324755684' lon='0.012526125681129971' />
+  <node id='-18' action='modify' visible='true' version='0' lat='0.014926965693210286' lon='0.02169209260259602' />
+  <node id='19' user='petschge' visible='true' version='0' lat='0.0' lon='0.025' />
+  <node id='-19' action='modify' visible='true' version='0' lat='0.011554560650768115' lon='0.0108427158117192' />
+  <node id='-20' action='modify' visible='true' version='0' lat='0.006411250514004035' lon='0.0019069509100868036' />
+  <node id='-21' action='modify' visible='true' version='0' lat='0.01103841438754683' lon='0.012692570426757605' />
+  <node id='-22' action='modify' visible='true' version='0' lat='0.016258523608891982' lon='0.02152564785696839' />
+  <node id='20' user='petschge' visible='true' version='0' lat='0.025' lon='0.0' />
+  <node id='-23' action='modify' visible='true' version='0' lat='0.009500867111065502' lon='0.02185853734822366' />
+  <node id='-24' action='modify' visible='true' version='0' lat='0.004447202524511738' lon='0.013225193612766039' />
+  <node id='-25' action='modify' visible='true' version='0' lat='0.005063215643018755' lon='0.010876004760844729' />
+  <node id='-26' action='modify' visible='true' version='0' lat='0.008335753905806379' lon='0.022224715788604455' />
+  <node id='-27' action='modify' visible='true' version='0' lat='0.0011746642432910767' lon='0.001876482585006313' />
+  <node id='-28' action='modify' visible='true' version='0' lat='0.00561231573939573' lon='0.012859015172385241' />
+  <node id='-29' action='modify' visible='true' version='0' lat='0.003908323698486489' lon='0.011272651526306016' />
+  <node id='29' user='petschge' visible='true' version='0' lat='0.025' lon='0.025' />
+  <node id='-30' action='modify' visible='true' version='0' lat='1.9772295282064733E-5' lon='0.002273129350467601' />
+  <node id='-31' action='modify' visible='true' version='0' lat='0.006524634014482844' lon='0.011917443390303276' />
+  <node id='-32' action='modify' visible='true' version='0' lat='0.00453760212851207' lon='0.0022260165508243457' />
+  <node id='-33' action='modify' visible='true' version='0' lat='0.020672436958430955' lon='0.01055259647615666' />
+  <node id='-34' action='modify' visible='true' version='0' lat='0.01186513648591714' lon='0.021908470771911947' />
+  <node id='-35' action='modify' visible='true' version='0' lat='0.007371128418442837' lon='0.011256007051743252' />
+  <node id='-36' action='modify' visible='true' version='0' lat='0.007976585138720394' lon='0.01290894859607353' />
+  <node id='-37' action='modify' visible='true' version='0' lat='0.008426153509117467' lon='0.011225538726662761' />
+  <node id='-38' action='modify' visible='true' version='0' lat='0.00904183149897422' lon='0.012842370697822477' />
+  <node id='-39' action='modify' visible='true' version='0' lat='0.003482577030396275' lon='0.0022564848759048374' />
+  <node id='-40' action='modify' visible='true' version='0' lat='0.013761098482168778' lon='0.021093073043646358' />
+  <node id='-41' action='modify' visible='true' version='0' lat='0.00553962183487455' lon='0.002175287208469885' />
+  <node id='-42' action='modify' visible='true' version='0' lat='6.828702885802645E-4' lon='0.010581054059343672' />
+  <node id='-43' action='modify' visible='true' version='0' lat='0.01293038283298069' lon='0.0218418928736609' />
+  <node id='-44' action='modify' visible='true' version='0' lat='0.005941630576721472' lon='0.02297420586591681' />
+  <node id='-45' action='modify' visible='true' version='0' lat='0.019327272367190236' lon='0.007368711364882484' />
+  <node id='-46' visible='true' version='0' lat='0.018073270287323504' lon='0.007713704054368354' />
+  <node id='-47' visible='true' version='0' lat='0.016987788621208495' lon='0.007767978140215347' />
+  <node id='-48' visible='true' version='0' lat='0.016092266242056397' lon='0.007713704054368354' />
+  <node id='-49' visible='true' version='0' lat='0.014491180766645488' lon='0.007903663354832826' />
+  <node id='-50' visible='true' version='0' lat='0.013052917533286915' lon='0.007930800397756323' />
+  <node id='-51' visible='true' version='0' lat='0.011506106122218805' lon='0.008012211526526812' />
+  <node id='-52' visible='true' version='0' lat='0.010339213297732377' lon='0.008012211526526812' />
+  <node id='-53' visible='true' version='0' lat='0.009082225487594622' lon='0.008068656575807685' />
+  <node id='-54' visible='true' version='0' lat='0.008144369294766477' lon='0.008107733917617517' />
+  <node id='-55' visible='true' version='0' lat='0.007089281075238975' lon='0.008185888601237187' />
+  <node id='-56' visible='true' version='0' lat='0.005995115511712954' lon='0.008146811259427353' />
+  <node id='-57' visible='true' version='0' lat='0.004940027287666322' lon='0.008185888601237187' />
+  <node id='-58' visible='true' version='0' lat='0.00388493906194451' lon='0.008224965943047023' />
+  <node id='-59' visible='true' version='0' lat='0.0026735414678462745' lon='0.008303120626666691' />
+  <node id='-60' visible='true' version='0' lat='0.002048303999422826' lon='0.010374219742587926' />
+  <node id='-61' visible='true' version='0' lat='0.0018529172904869773' lon='0.013265943036515683' />
+  <node id='-62' visible='true' version='0' lat='0.002595386784309228' lon='0.015219810127007412' />
+  <node id='-63' visible='true' version='0' lat='0.004080325770521567' lon='0.014907191392528735' />
+  <node id='-64' visible='true' version='0' lat='0.005096336654306093' lon='0.014829036708909065' />
+  <node id='-65' visible='true' version='0' lat='0.006464043610657945' lon='0.014711804683479563' />
+  <node id='-66' visible='true' version='0' lat='0.00779267322187984' lon='0.014750882025289397' />
+  <node id='-67' visible='true' version='0' lat='0.008769606756909881' lon='0.014711804683479563' />
+  <node id='-68' visible='true' version='0' lat='0.009902849654331664' lon='0.014750882025289397' />
+  <node id='-69' visible='true' version='0' lat='0.011036092547879435' lon='0.014750882025289397' />
+  <node id='-70' visible='true' version='0' lat='0.012013026073351123' lon='0.014789959367099233' />
+  <node id='-71' visible='true' version='0' lat='0.013341655662333148' lon='0.014711804683479563' />
+  <node id='-72' visible='true' version='0' lat='0.014513975881970995' lon='0.014672727341669729' />
+  <node id='-73' visible='true' version='0' lat='0.01580352811653569' lon='0.014516417974430389' />
+  <node id='-74' visible='true' version='0' lat='0.01724938970331461' lon='0.014242876581761548' />
+  <node id='-75' visible='true' version='0' lat='0.018734328618834232' lon='0.01436010860719105' />
+  <node id='-76' visible='true' version='0' lat='0.019828494127536678' lon='0.01436010860719105' />
+  <node id='-77' visible='true' version='0' lat='0.021039891646577193' lon='0.01436010860719105' />
+  <node id='-78' visible='true' version='0' lat='0.022368521172754674' lon='0.014242876581761548' />
+  <node id='-79' visible='true' version='0' lat='0.017562008423367668' lon='0.0033793755586275344' />
+  <node id='-80' visible='true' version='0' lat='0.01607706949861806' lon='0.0033793755586275344' />
+  <node id='-81' visible='true' version='0' lat='0.015178290670433409' lon='0.003496607584057039' />
+  <node id='-82' visible='true' version='0' lat='0.01396689311353296' lon='0.0036919942931062117' />
+  <node id='-83' visible='true' version='0' lat='0.01263826352783802' lon='0.003652916951296377' />
+  <node id='-84' visible='true' version='0' lat='0.011192401912177895' lon='0.003770148976725881' />
+  <node id='-85' visible='true' version='0' lat='0.009668385606892437' lon='0.003887381002155385' />
+  <node id='-86' visible='true' version='0' lat='0.008574220050098745' lon='0.004004613027584887' />
+  <node id='-87' visible='true' version='0' lat='0.007206513099756179' lon='0.003965535685775054' />
+  <node id='-88' visible='true' version='0' lat='0.006229579561237609' lon='0.003926458343965218' />
+  <node id='-89' visible='true' version='0' lat='0.005174491337611828' lon='0.004043690369394723' />
+  <node id='-90' visible='true' version='0' lat='0.0041975577956451715' lon='0.004082767711204557' />
+  <node id='-91' visible='true' version='0' lat='0.0032206242524581733' lon='0.004121845053014392' />
+  <node id='-92' visible='true' version='0' lat='0.0019701493158512185' lon='0.004082767711204557' />
+  <node id='-93' visible='true' version='0' lat='8.369064037244955E-4' lon='0.004512618471112738' />
+  <node id='-94' visible='true' version='0' lat='0.0012276798217586604' lon='0.00845942999390603' />
+  <node id='-95' visible='true' version='0' lat='0.0012276798217586604' lon='0.012093622782220644' />
+  <node id='-96' visible='true' version='0' lat='0.005291723362552331' lon='0.021550339500200612' />
+  <node id='-97' visible='true' version='0' lat='0.006815739684584262' lon='0.021315875449341604' />
+  <node id='102' action='modify' visible='true' version='0' lat='0.015322467439085056' lon='0.0014284920838342158' />
+  <node id='-98' visible='true' version='0' lat='0.007753595880429625' lon='0.02112048874029243' />
+  <node id='103' action='modify' visible='true' version='0' lat='0.024834784056692018' lon='0.020098621542462725' />
+  <node id='-99' visible='true' version='0' lat='0.009238534852836182' lon='0.020886024689433423' />
+  <node id='-100' visible='true' version='0' lat='0.010254545725178341' lon='0.02084694734762359' />
+  <node id='101' action='modify' visible='true' version='0' lat='0.019211018667997397' lon='0.010428014259672633' />
+  <node id='-101' visible='true' version='0' lat='0.011426865958469031' lon='0.02069063798038425' />
+  <node id='-102' visible='true' version='0' lat='0.0123647221416808' lon='0.02069063798038425' />
+  <node id='-103' visible='true' version='0' lat='0.013341655662333148' lon='0.020065400511426898' />
+  <node id='-104' visible='true' version='0' lat='0.014435821200845415' lon='0.020378019245905574' />
+  <node id='-105' visible='true' version='0' lat='0.015569064074463875' lon='0.01998724582780723' />
+  <node id='-106' visible='true' version='0' lat='0.016624152261677228' lon='0.01975278177694822' />
+  <node id='-107' visible='true' version='0' lat='0.018070013842334667' lon='0.019909091144187558' />
+  <node id='108' action='delete' visible='true' version='0' lat='0.0031250000976037503' lon='0.003984899058667798' />
+  <node id='-108' visible='true' version='0' lat='0.01951587541148498' lon='0.01959647240970888' />
+  <node id='109' action='modify' visible='true' version='0' lat='0.010652910490318924' lon='0.0216657435057001' />
+  <node id='106' action='modify' visible='true' version='0' lat='0.0074628964435515645' lon='0.02299193949233854' />
+  <node id='-109' visible='true' version='0' lat='0.020805427611351075' lon='0.019244776333420376' />
+  <node id='107' action='delete' visible='true' version='0' lat='0.01134647679594468' lon='0.02290268489384427' />
+  <node id='-110' visible='true' version='0' lat='0.02186051576706822' lon='0.019010312282561368' />
+  <node id='104' action='modify' visible='true' version='0' lat='0.01661330783058687' lon='0.0011808357072862494' />
+  <node id='-111' visible='true' version='0' lat='0.022993758592719817' lon='0.01889308025713186' />
+  <node id='105' action='modify' visible='true' version='0' lat='5.063997604708631E-4' lon='0.006870425383706358' />
+  <node id='-112' visible='true' version='0' lat='0.02424423342436126' lon='0.018658616206272852' />
+  <node id='-113' action='modify' visible='true' version='0' lat='0.021038708801040282' lon='0.008612841618749454' />
+  <node id='-114' action='modify' visible='true' version='0' lat='0.001162825961822987' lon='0.015133254398893799' />
+  <node id='-115' action='modify' visible='true' version='0' lat='0.004575030388966822' lon='0.023317220926137115' />
+  <node id='-116' action='modify' visible='true' version='0' lat='0.023999800749819385' lon='0.013794947525230063' />
+  <node id='-117' action='modify' visible='true' version='0' lat='0.020653557202168504' lon='0.006040551786320664' />
+  <node id='-118' action='modify' visible='true' version='0' lat='0.01991108775430776' lon='0.004086684695828936' />
+  <node id='-119' action='modify' visible='true' version='0' lat='0.01874104081867018' lon='0.0014017957186569236' />
+  <node id='-120' action='modify' visible='true' version='0' lat='0.01928585032193732' lon='0.0029143644415338963' />
+  <node id='-121' action='modify' visible='true' version='0' lat='0.023032' lon='0.0013' />
+  <node id='-122' action='modify' visible='true' version='0' lat='0.023349893587995434' lon='0.012371081159513865' />
+  <node id='-123' action='modify' visible='true' version='0' lat='0.02338381488882884' lon='0.00986090468909046' />
+  <node id='-124' action='modify' visible='true' version='0' lat='0.021908645350781172' lon='0.006074473089975033' />
+  <node id='-125' action='modify' visible='true' version='0' lat='0.0199961289821443' lon='0.0014357170223112934' />
+  <node id='-126' action='modify' visible='true' version='0' lat='0.024271171154977258' lon='0.011929275824239693' />
+  <node id='-127' action='modify' visible='true' version='0' lat='0.021166175908855944' lon='0.004120605999483306' />
+  <node id='-128' action='modify' visible='true' version='0' lat='0.020540938481320374' lon='0.002948285745188266' />
+  <node id='-129' action='modify' visible='true' version='0' lat='0.023074' lon='0.0054' />
+  <node id='-130' action='modify' visible='true' version='0' lat='0.023032' lon='0.0053' />
+  <node id='-131' action='modify' visible='true' version='0' lat='0.023074' lon='0.0014' />
+  <node id='1016' action='modify' visible='true' version='0' lat='0.021642117170440272' lon='0.02127898288788179' />
+  <node id='1010' action='modify' visible='true' version='0' lat='0.002631167474568915' lon='0.0023817792301428315' />
+  <node id='1011' action='delete' visible='true' version='0' lat='0.016484899624501163' lon='0.020889262011164728' />
+  <node id='1012' action='delete' visible='true' version='0' lat='0.008263423052337114' lon='0.0019714761759882598' />
+  <node id='1013' action='modify' visible='true' version='0' lat='0.017089239245438998' lon='0.020776828026953846' />
+  <node id='1014' action='modify' visible='true' version='0' lat='0.008867762692450685' lon='0.001859042191777378' />
+  <node id='1015' action='modify' visible='true' version='0' lat='0.01312640223556813' lon='0.0016269969918746871' />
+  <node id='-132' action='modify' visible='true' lat='0.0039348712208074855' lon='0.021743555245815907'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-133' action='modify' visible='true' lat='0.0030189960238356122' lon='0.022286296104285827'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-134' action='modify' visible='true' lat='0.005054274237939703' lon='0.020929443958111017'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-135' action='modify' visible='true' lat='0.006343283770402647' lon='0.020386703099641097'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-136' action='modify' visible='true' lat='0.007225237659224902' lon='0.01991180484847991'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-137' action='modify' visible='true' lat='0.008649932399000027' lon='0.01977611963386243'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-138' action='modify' visible='true' lat='0.00970149279878613' lon='0.019606513115590578'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-139' action='modify' visible='true' lat='0.010786974498359476' lon='0.019369063990009986'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-140' action='modify' visible='true' lat='0.01156716446755894' lon='0.01906377225712065'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-141' action='modify' visible='true' lat='0.012754410068698978' lon='0.01879240182788569'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-142' action='modify' visible='true' lat='0.013636363940314724' lon='0.01872455922057695'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-143' action='modify' visible='true' lat='0.016044776418807853' lon='0.018453188791341984'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-144' action='modify' visible='true' lat='0.017299864600858188' lon='0.018317503576724507'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-145' action='modify' visible='true' lat='0.018894165793036176' lon='0.018249660969415767'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-146' action='modify' visible='true' lat='0.020284939161542524' lon='0.017876526629217692'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-147' action='modify' visible='true' lat='0.022286295938939684' lon='0.017605156199982732'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-148' action='modify' visible='true' lat='0.023609226675324103' lon='0.017164179252475913'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-149' action='modify' visible='true' lat='0.024423337891503367' lon='0.01641791057207977'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-150' visible='true' lat='0.023880597081254926' lon='0.015468114069757403' />
+  <node id='-151' visible='true' lat='0.023100407162781122' lon='0.015909091017264218' />
+  <node id='-152' visible='true' lat='0.02177747642174347' lon='0.016112618839190438' />
+  <node id='-153' visible='true' lat='0.02059023087500927' lon='0.016180461446499178' />
+  <node id='-154' visible='true' lat='0.019640434431231986' lon='0.01648575317938851' />
+  <node id='-155' visible='true' lat='0.01835142496323692' lon='0.01668928100131473' />
+  <node id='-156' visible='true' lat='0.016824966370755843' lon='0.016858887519586585' />
+  <node id='-157' visible='true' lat='0.015400271673644063' lon='0.016858887519586585' />
+  <node id='-158' visible='true' lat='0.013093623096612553' lon='0.016994572734204065' />
+  <node id='-159' visible='true' lat='0.012143826617335958' lon='0.017299864467093397' />
+  <node id='-160' visible='true' lat='0.010040705830295163' lon='0.017842605325563324' />
+  <node id='-161' visible='true' lat='0.009056988037991967' lon='0.017842605325563324' />
+  <node id='-162' visible='true' lat='0.008107191546335176' lon='0.018249660969415767' />
+  <node id='-163' visible='true' lat='0.006478968984170669' lon='0.018317503576724507' />
+  <node id='-164' visible='true' lat='0.005698779004531721' lon='0.018656716613268207' />
+  <node id='-165' visible='true' lat='0.004613297292003312' lon='0.019470827900973098' />
+  <node id='-166' visible='true' lat='0.0034599729706364948' lon='0.020251017885023613' />
+  <node id='-167' visible='true' lat='0.002238806040612369' lon='0.020997286565419757' />
+  <node id='-168' visible='true' lat='0.022896879357251577' lon='0.013331071939532074' />
+  <node id='-169' visible='true' lat='0.022862958056301824' lon='0.011261872416615486' />
+  <node id='-170' visible='true' lat='0.022930800658193296' lon='0.008683853338883342' />
+  <node id='-171' visible='true' lat='0.023575305374545392' lon='0.007903663354832826' />
+  <node id='-172' action='modify' visible='true' lat='0.02130096366529681' lon='0.01772774926205877'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <node id='-173' action='modify' visible='true' lat='0.014976205926576667' lon='0.018516269339807948'>
+    <tag k='railway' v='level_crossing' />
+  </node>
+  <way id='-174' action='modify' visible='true' version='0'>
     <nd ref='-68' />
     <nd ref='-38' />
     <tag k='railway' v='planned' />
     <tag k='planned' v='tram' />
     <tag k='tunnel' v='yes' />
   </way>
-  <way id='-160' action='modify' visible='true'>
+  <way id='-175' action='modify' visible='true' version='0'>
+    <nd ref='-103' />
+    <nd ref='-141' />
+    <nd ref='-159' />
     <nd ref='-69' />
-    <nd ref='-54' />
     <tag k='railway' v='tram' />
-    <tag k='tunnel' v='yes' />
   </way>
-  <way id='-161' action='modify' visible='true'>
-    <nd ref='-70' />
-    <nd ref='-21' />
-    <tag k='railway' v='abandoned' />
-    <tag k='tunnel' v='yes' />
-    <tag k='abandoned' v='light_rail' />
+  <way id='-176' action='modify' visible='true' version='0'>
+    <nd ref='-61' />
+    <nd ref='-95' />
+    <tag k='railway' v='preserved' />
   </way>
-  <way id='-162' action='modify' visible='true'>
-    <nd ref='-71' />
-    <nd ref='-17' />
-    <tag k='railway' v='planned' />
-    <tag k='planned' v='light_rail' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-163' action='modify' visible='true'>
-    <nd ref='-72' />
-    <nd ref='-51' />
-    <tag k='railway' v='light_rail' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-164' action='modify' visible='true'>
-    <nd ref='-73' />
-    <nd ref='-9' />
-    <tag k='railway' v='abandoned' />
-    <tag k='tunnel' v='yes' />
-    <tag k='abandoned' v='subway' />
-  </way>
-  <way id='-165' action='modify' visible='true'>
-    <nd ref='-74' />
-    <nd ref='-11' />
-    <tag k='railway' v='planned' />
-    <tag k='planned' v='subway' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-166' action='modify' visible='true'>
-    <nd ref='-75' />
-    <nd ref='-48' />
-    <tag k='railway' v='subway' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-167' action='modify' visible='true'>
-    <nd ref='-76' />
-    <nd ref='-4' />
-    <tag k='railway' v='abandoned' />
-    <tag k='tunnel' v='yes' />
-    <tag k='abandoned' v='rail' />
-  </way>
-  <way id='-168' action='modify' visible='true'>
-    <nd ref='-77' />
-    <nd ref='-1' />
-    <tag k='railway' v='planned' />
-    <tag k='planned' v='rail' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-169' action='modify' visible='true'>
-    <nd ref='-78' />
-    <nd ref='-33' />
-    <tag k='railway' v='rail' />
-    <tag k='tunnel' v='yes' />
-  </way>
-  <way id='-170' action='modify' visible='true'>
-    <nd ref='-79' />
-    <nd ref='104' />
-    <tag k='railway' v='rail' />
+  <way id='1017' action='modify' visible='true' version='0'>
+    <nd ref='109' />
+    <nd ref='-100' />
+    <tag k='railway' v='narrow_gauge' />
     <tag k='bridge' v='yes' />
   </way>
-  <way id='-171' action='modify' visible='true'>
-    <nd ref='-80' />
-    <nd ref='102' />
-    <tag k='railway' v='construction' />
-    <tag k='bridge' v='yes' />
-    <tag k='construction' v='rail' />
-  </way>
-  <way id='-172' action='modify' visible='true'>
-    <nd ref='-81' />
-    <nd ref='-6' />
-    <tag k='railway' v='disused' />
-    <tag k='bridge' v='yes' />
-    <tag k='disused' v='rail' />
-  </way>
-  <way id='-173' action='modify' visible='true'>
-    <nd ref='-82' />
-    <nd ref='1015' />
-    <tag k='railway' v='subway' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='-174' action='modify' visible='true'>
-    <nd ref='-83' />
-    <nd ref='-7' />
-    <tag k='railway' v='construction' />
-    <tag k='bridge' v='yes' />
-    <tag k='construction' v='subway' />
-  </way>
-  <way id='-175' action='modify' visible='true'>
+  <way id='-177' action='modify' visible='true' version='0'>
+    <nd ref='-50' />
     <nd ref='-84' />
-    <nd ref='-8' />
     <tag k='railway' v='disused' />
-    <tag k='bridge' v='yes' />
     <tag k='disused' v='subway' />
   </way>
-  <way id='-176' action='modify' visible='true'>
-    <nd ref='-85' />
-    <nd ref='1014' />
-    <tag k='railway' v='light_rail' />
-    <tag k='bridge' v='yes' />
+  <way id='-178' action='modify' visible='true' version='0'>
+    <nd ref='-66' />
+    <nd ref='-31' />
+    <tag k='railway' v='narrow_gauge' />
+    <tag k='tunnel' v='yes' />
   </way>
-  <way id='-177' action='modify' visible='true'>
-    <nd ref='-86' />
-    <nd ref='-15' />
+  <way id='1018' action='modify' visible='true' version='0'>
+    <nd ref='101' />
+    <nd ref='-46' />
     <tag k='railway' v='construction' />
-    <tag k='bridge' v='yes' />
-    <tag k='construction' v='light_rail' />
+    <tag k='construction' v='rail' />
+    <tag k='tunnel' v='yes' />
   </way>
-  <way id='-178' action='modify' visible='true'>
-    <nd ref='-87' />
-    <nd ref='-20' />
-    <tag k='railway' v='disused' />
-    <tag k='bridge' v='yes' />
-    <tag k='disused' v='light_rail' />
-  </way>
-  <way id='-179' action='modify' visible='true'>
-    <nd ref='-88' />
-    <nd ref='-41' />
-    <tag k='railway' v='tram' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='-180' action='modify' visible='true'>
+  <way id='-179' action='modify' visible='true' version='0'>
     <nd ref='-89' />
     <nd ref='-32' />
     <tag k='railway' v='construction' />
     <tag k='bridge' v='yes' />
     <tag k='construction' v='tram' />
   </way>
-  <way id='-181' action='modify' visible='true'>
-    <nd ref='-90' />
-    <nd ref='-39' />
+  <way id='-180' action='modify' visible='true' version='0'>
+    <nd ref='-67' />
+    <nd ref='-36' />
+    <tag k='railway' v='abandoned' />
+    <tag k='tunnel' v='yes' />
+    <tag k='abandoned' v='tram' />
+  </way>
+  <way id='1019' action='delete' visible='true' version='0'>
+    <nd ref='1011' />
+    <nd ref='1012' />
+    <tag k='railway' v='subway' />
+  </way>
+  <way id='-181' action='modify' visible='true' version='0'>
+    <nd ref='-14' />
+    <nd ref='-49' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='subway' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='1020' action='modify' visible='true' version='0'>
+    <nd ref='103' />
+    <nd ref='-112' />
+    <tag k='railway' v='rail' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-182' action='modify' visible='true' version='0'>
+    <nd ref='-126' />
+    <nd ref='-123' />
+    <tag k='railway' v='funicular' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-183' action='modify' visible='true' version='0'>
+    <nd ref='-37' />
+    <nd ref='-55' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='tram' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='1021' action='delete' visible='true' version='0'>
+    <nd ref='107' />
+    <nd ref='108' />
+    <tag k='railway' v='narrow_gauge' />
+  </way>
+  <way id='-184' action='modify' visible='true' version='0'>
+    <nd ref='-63' />
+    <nd ref='-60' />
+    <tag k='railway' v='monorail' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-185' action='modify' visible='true' version='0'>
+    <nd ref='-111' />
+    <nd ref='-147' />
+    <nd ref='-152' />
+    <nd ref='-77' />
+    <tag k='railway' v='planned' />
+    <tag k='planned' v='rail' />
+  </way>
+  <way id='1022' action='modify' visible='true' version='0'>
+    <nd ref='1013' />
+    <nd ref='-106' />
+    <tag k='railway' v='light_rail' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-186' action='modify' visible='true' version='0'>
+    <nd ref='-123' />
+    <nd ref='-170' />
+    <nd ref='-124' />
+    <tag k='railway' v='funicular' />
+  </way>
+  <way id='-187' action='modify' visible='true' version='0'>
+    <nd ref='-25' />
+    <nd ref='-58' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='narrow_gauge' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='1023' action='modify' visible='true' version='0'>
+    <nd ref='106' />
+    <nd ref='-97' />
+    <tag k='railway' v='monorail' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-188' action='modify' visible='true' version='0'>
+    <nd ref='-62' />
+    <nd ref='-61' />
+    <tag k='railway' v='preserved' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-189' action='modify' visible='true' version='0'>
+    <nd ref='-110' />
+    <nd ref='-172' />
+    <nd ref='-153' />
+    <nd ref='-76' />
+    <tag k='railway' v='abandoned' />
+    <tag k='abandoned' v='rail' />
+  </way>
+  <way id='-190' action='modify' visible='true' version='0'>
+    <nd ref='-35' />
+    <nd ref='-56' />
+    <tag k='railway' v='disused' />
+    <tag k='disused' v='tram' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='1024' action='modify' visible='true' version='0'>
+    <nd ref='1016' />
+    <nd ref='-109' />
+    <tag k='railway' v='subway' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-191' action='modify' visible='true' version='0'>
+    <nd ref='-99' />
+    <nd ref='-137' />
+    <nd ref='-162' />
+    <nd ref='-65' />
+    <tag k='railway' v='planned' />
+    <tag k='planned' v='narrow_gauge' />
+  </way>
+  <way id='-192' action='modify' visible='true' version='0'>
+    <nd ref='-13' />
+    <nd ref='-107' />
+    <tag k='railway' v='abandoned' />
+    <tag k='bridge' v='yes' />
+    <tag k='abandoned' v='subway' />
+  </way>
+  <way id='-193' action='modify' visible='true' version='0'>
+    <nd ref='-69' />
+    <nd ref='-54' />
+    <tag k='railway' v='tram' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='1009' user='petschge' visible='true' version='0'>
+    <nd ref='19' />
+    <nd ref='29' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='-194' action='modify' visible='true' version='0'>
+    <nd ref='-102' />
+    <nd ref='-140' />
+    <nd ref='-68' />
+    <tag k='railway' v='planned' />
+    <tag k='planned' v='tram' />
+  </way>
+  <way id='-195' visible='true' version='0'>
+    <nd ref='-31' />
+    <nd ref='-57' />
+    <tag k='railway' v='narrow_gauge' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-196' action='modify' visible='true' version='0'>
+    <nd ref='-100' />
+    <nd ref='-138' />
+    <nd ref='-161' />
+    <nd ref='-66' />
+    <tag k='railway' v='narrow_gauge' />
+  </way>
+  <way id='-197' action='modify' visible='true' version='0'>
+    <nd ref='-16' />
+    <nd ref='-53' />
+    <tag k='railway' v='disused' />
+    <tag k='disused' v='light_rail' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-198' action='modify' visible='true' version='0'>
+    <nd ref='-70' />
+    <nd ref='-21' />
+    <tag k='railway' v='abandoned' />
+    <tag k='tunnel' v='yes' />
+    <tag k='abandoned' v='light_rail' />
+  </way>
+  <way id='-199' action='modify' visible='true' version='0'>
+    <nd ref='-94' />
+    <nd ref='105' />
+    <tag k='railway' v='monorail' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-200' action='modify' visible='true' version='0'>
+    <nd ref='-65' />
+    <nd ref='-28' />
+    <tag k='railway' v='planned' />
+    <tag k='planned' v='narrow_gauge' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-201' action='modify' visible='true' version='0'>
+    <nd ref='-107' />
+    <nd ref='-144' />
+    <nd ref='-156' />
+    <nd ref='-73' />
+    <tag k='railway' v='abandoned' />
+    <tag k='abandoned' v='subway' />
+  </way>
+  <way id='-202' action='modify' visible='true' version='0'>
+    <nd ref='-77' />
+    <nd ref='-1' />
+    <tag k='railway' v='planned' />
+    <tag k='planned' v='rail' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-203' action='modify' visible='true' version='0'>
+    <nd ref='-43' />
+    <nd ref='-102' />
+    <tag k='railway' v='planned' />
+    <tag k='bridge' v='yes' />
+    <tag k='planned' v='tram' />
+  </way>
+  <way id='-204' action='modify' visible='true' version='0'>
+    <nd ref='-106' />
+    <nd ref='-143' />
+    <nd ref='-157' />
+    <nd ref='-72' />
+    <tag k='railway' v='light_rail' />
+  </way>
+  <way id='-205' action='modify' visible='true' version='0'>
+    <nd ref='-97' />
+    <nd ref='-135' />
+    <nd ref='-164' />
+    <nd ref='-63' />
+    <tag k='railway' v='monorail' />
+  </way>
+  <way id='1000' user='petschge' visible='true' version='0'>
+    <nd ref='1' />
+    <nd ref='20' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='-206' action='modify' visible='true' version='0'>
+    <nd ref='-53' />
+    <nd ref='-87' />
+    <tag k='railway' v='disused' />
+    <tag k='disused' v='light_rail' />
+  </way>
+  <way id='-207' action='modify' visible='true' version='0'>
+    <nd ref='-83' />
+    <nd ref='-7' />
+    <tag k='railway' v='construction' />
+    <tag k='bridge' v='yes' />
+    <tag k='construction' v='subway' />
+  </way>
+  <way id='-208' action='modify' visible='true' version='0'>
+    <nd ref='-87' />
+    <nd ref='-20' />
     <tag k='railway' v='disused' />
     <tag k='bridge' v='yes' />
-    <tag k='disused' v='tram' />
+    <tag k='disused' v='light_rail' />
   </way>
-  <way id='-182' action='modify' visible='true'>
+  <way id='-209' action='modify' visible='true' version='0'>
+    <nd ref='-84' />
+    <nd ref='-8' />
+    <tag k='railway' v='disused' />
+    <tag k='bridge' v='yes' />
+    <tag k='disused' v='subway' />
+  </way>
+  <way id='-210' action='modify' visible='true' version='0'>
+    <nd ref='-95' />
+    <nd ref='-42' />
+    <tag k='railway' v='preserved' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-211' action='modify' visible='true' version='0'>
+    <nd ref='-54' />
+    <nd ref='-88' />
+    <tag k='railway' v='tram' />
+  </way>
+  <way id='-212' action='modify' visible='true' version='0'>
+    <nd ref='-29' />
+    <nd ref='-59' />
+    <tag k='railway' v='disused' />
+    <tag k='disused' v='narrow_gauge' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-213' action='modify' visible='true' version='0'>
+    <nd ref='-82' />
+    <nd ref='1015' />
+    <tag k='railway' v='subway' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-214' action='modify' visible='true' version='0'>
+    <nd ref='-96' />
+    <nd ref='-134' />
+    <nd ref='-165' />
+    <nd ref='-62' />
+    <tag k='railway' v='preserved' />
+  </way>
+  <way id='-215' action='modify' visible='true' version='0'>
+    <nd ref='-79' />
+    <nd ref='104' />
+    <tag k='railway' v='rail' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-216' action='modify' visible='true' version='0'>
+    <nd ref='-10' />
+    <nd ref='-50' />
+    <tag k='railway' v='disused' />
+    <tag k='disused' v='subway' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-217' action='modify' visible='true' version='0'>
+    <nd ref='-80' />
+    <nd ref='102' />
+    <tag k='railway' v='construction' />
+    <tag k='bridge' v='yes' />
+    <tag k='construction' v='rail' />
+  </way>
+  <way id='-218' action='modify' visible='true' version='0'>
     <nd ref='-91' />
     <nd ref='1010' />
     <tag k='railway' v='narrow_gauge' />
     <tag k='bridge' v='yes' />
   </way>
-  <way id='-183' action='modify' visible='true'>
+  <way id='-219' action='modify' visible='true' version='0'>
+    <nd ref='-109' />
+    <nd ref='-146' />
+    <nd ref='-154' />
+    <nd ref='-75' />
+    <tag k='railway' v='subway' />
+  </way>
+  <way id='-220' action='modify' visible='true' version='0'>
+    <nd ref='-57' />
+    <nd ref='-91' />
+    <tag k='railway' v='narrow_gauge' />
+  </way>
+  <way id='-221' action='modify' visible='true' version='0'>
+    <nd ref='-52' />
+    <nd ref='-86' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='light_rail' />
+  </way>
+  <way id='-222' action='modify' visible='true' version='0'>
+    <nd ref='-127' />
+    <nd ref='-128' />
+    <tag k='railway' v='funicular' />
+  </way>
+  <way id='-223' action='modify' visible='true' version='0'>
+    <nd ref='-88' />
+    <nd ref='-41' />
+    <tag k='railway' v='tram' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-224' action='modify' visible='true' version='0'>
+    <nd ref='-64' />
+    <nd ref='-24' />
+    <tag k='railway' v='abandoned' />
+    <tag k='tunnel' v='yes' />
+    <tag k='abandoned' v='narrow_gauge' />
+  </way>
+  <way id='-225' action='modify' visible='true' version='0'>
+    <nd ref='-112' />
+    <nd ref='-148' />
+    <nd ref='-151' />
+    <nd ref='-78' />
+    <tag k='railway' v='rail' />
+  </way>
+  <way id='-226' action='modify' visible='true' version='0'>
+    <nd ref='-128' />
+    <nd ref='-125' />
+    <tag k='railway' v='funicular' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-227' action='modify' visible='true' version='0'>
+    <nd ref='-26' />
+    <nd ref='-98' />
+    <tag k='railway' v='abandoned' />
+    <tag k='bridge' v='yes' />
+    <tag k='abandoned' v='narrow_gauge' />
+  </way>
+  <way id='-228' action='modify' visible='true' version='0'>
+    <nd ref='-60' />
+    <nd ref='-94' />
+    <tag k='railway' v='monorail' />
+  </way>
+  <way id='-229' action='modify' visible='true' version='0'>
+    <nd ref='-22' />
+    <nd ref='-105' />
+    <tag k='railway' v='planned' />
+    <tag k='bridge' v='yes' />
+    <tag k='planned' v='light_rail' />
+  </way>
+  <way id='-230' action='modify' visible='true' version='0'>
+    <nd ref='-59' />
+    <nd ref='-93' />
+    <tag k='railway' v='disused' />
+    <tag k='disused' v='narrow_gauge' />
+  </way>
+  <way id='-231' action='modify' visible='true' version='0'>
+    <nd ref='-12' />
+    <nd ref='-108' />
+    <tag k='railway' v='planned' />
+    <tag k='bridge' v='yes' />
+    <tag k='planned' v='subway' />
+  </way>
+  <way id='-232' action='modify' visible='true' version='0'>
+    <nd ref='-58' />
+    <nd ref='-92' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='narrow_gauge' />
+  </way>
+  <way id='-233' action='modify' visible='true' version='0'>
+    <nd ref='-108' />
+    <nd ref='-145' />
+    <nd ref='-155' />
+    <nd ref='-74' />
+    <tag k='railway' v='planned' />
+    <tag k='planned' v='subway' />
+  </way>
+  <way id='-234' action='modify' visible='true' version='0'>
+    <nd ref='-124' />
+    <nd ref='-127' />
+    <tag k='railway' v='funicular' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-235' action='modify' visible='true' version='0'>
+    <nd ref='-81' />
+    <nd ref='-6' />
+    <tag k='railway' v='disused' />
+    <tag k='bridge' v='yes' />
+    <tag k='disused' v='rail' />
+  </way>
+  <way id='-236' action='modify' visible='true' version='0'>
+    <nd ref='-2' />
+    <nd ref='-111' />
+    <tag k='railway' v='planned' />
+    <tag k='bridge' v='yes' />
+    <tag k='planned' v='rail' />
+  </way>
+  <way id='-237' action='modify' visible='true' version='0'>
+    <nd ref='-130' />
+    <nd ref='-121' />
+    <tag k='railway' v='rail' />
+    <tag k='note' v='Gleis 1' />
+  </way>
+  <way id='-238' action='modify' visible='true' version='0'>
+    <nd ref='-122' />
+    <nd ref='-169' />
+    <nd ref='-117' />
+    <tag k='railway' v='yard' />
+  </way>
+  <way id='-239' action='modify' visible='true' version='0'>
+    <nd ref='-129' />
+    <nd ref='-131' />
+    <tag k='railway' v='rail' />
+    <tag k='note' v='Gleis 2' />
+  </way>
+  <way id='-240' action='modify' visible='true' version='0'>
+    <nd ref='-47' />
+    <nd ref='-81' />
+    <tag k='railway' v='disused' />
+    <tag k='disused' v='rail' />
+  </way>
+  <way id='-241' action='modify' visible='true' version='0'>
+    <nd ref='-117' />
+    <nd ref='-118' />
+    <tag k='railway' v='yard' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-242' action='modify' visible='true' version='0'>
     <nd ref='-92' />
     <nd ref='-27' />
     <tag k='railway' v='construction' />
     <tag k='bridge' v='yes' />
     <tag k='construction' v='narrow_gauge' />
   </way>
-  <way id='-184' action='modify' visible='true'>
+  <way id='-243' action='modify' visible='true' version='0'>
+    <nd ref='-101' />
+    <nd ref='-139' />
+    <nd ref='-160' />
+    <nd ref='-67' />
+    <tag k='railway' v='abandoned' />
+    <tag k='abandoned' v='tram' />
+  </way>
+  <way id='-244' action='modify' visible='true' version='0'>
+    <nd ref='-23' />
+    <nd ref='-99' />
+    <tag k='railway' v='planned' />
+    <tag k='bridge' v='yes' />
+    <tag k='planned' v='narrow_gauge' />
+  </way>
+  <way id='-245' action='modify' visible='true' version='0'>
+    <nd ref='-120' />
+    <nd ref='-119' />
+    <tag k='railway' v='yard' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-246' action='modify' visible='true' version='0'>
+    <nd ref='-56' />
+    <nd ref='-90' />
+    <tag k='railway' v='disused' />
+    <tag k='disused' v='tram' />
+  </way>
+  <way id='-247' action='modify' visible='true' version='0'>
+    <nd ref='-76' />
+    <nd ref='-4' />
+    <tag k='railway' v='abandoned' />
+    <tag k='tunnel' v='yes' />
+    <tag k='abandoned' v='rail' />
+  </way>
+  <way id='-248' action='modify' visible='true' version='0'>
+    <nd ref='-98' />
+    <nd ref='-136' />
+    <nd ref='-163' />
+    <nd ref='-64' />
+    <tag k='railway' v='abandoned' />
+    <tag k='abandoned' v='narrow_gauge' />
+  </way>
+  <way id='-249' action='modify' visible='true' version='0'>
+    <nd ref='-75' />
+    <nd ref='-48' />
+    <tag k='railway' v='subway' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-250' action='modify' visible='true' version='0'>
+    <nd ref='-55' />
+    <nd ref='-89' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='tram' />
+  </way>
+  <way id='-251' action='modify' visible='true' version='0'>
+    <nd ref='-78' />
+    <nd ref='-33' />
+    <tag k='railway' v='rail' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-252' action='modify' visible='true' version='0'>
+    <nd ref='-115' />
+    <nd ref='-132' />
+    <nd ref='-166' />
+    <nd ref='-114' />
+    <tag k='railway' v='incline' />
+  </way>
+  <way id='-253' action='modify' visible='true' version='0'>
+    <nd ref='-85' />
+    <nd ref='1014' />
+    <tag k='railway' v='light_rail' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-254' action='modify' visible='true' version='0'>
+    <nd ref='-40' />
+    <nd ref='-103' />
+    <tag k='railway' v='tram' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-255' action='modify' visible='true' version='0'>
+    <nd ref='-72' />
+    <nd ref='-51' />
+    <tag k='railway' v='light_rail' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-256' action='modify' visible='true' version='0'>
+    <nd ref='-44' />
+    <nd ref='-96' />
+    <tag k='railway' v='preserved' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-257' action='modify' visible='true' version='0'>
+    <nd ref='-71' />
+    <nd ref='-17' />
+    <tag k='railway' v='planned' />
+    <tag k='planned' v='light_rail' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-258' action='modify' visible='true' version='0'>
+    <nd ref='-33' />
+    <nd ref='-113' />
+    <nd ref='-45' />
+    <tag k='railway' v='rail' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-259' action='modify' visible='true' version='0'>
+    <nd ref='-74' />
+    <nd ref='-11' />
+    <tag k='railway' v='planned' />
+    <tag k='planned' v='subway' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-260' action='modify' visible='true' version='0'>
+    <nd ref='-116' />
+    <nd ref='-122' />
+    <tag k='railway' v='yard' />
+    <tag k='bridge' v='yes' />
+  </way>
+  <way id='-261' action='modify' visible='true' version='0'>
+    <nd ref='-86' />
+    <nd ref='-15' />
+    <tag k='railway' v='construction' />
+    <tag k='bridge' v='yes' />
+    <tag k='construction' v='light_rail' />
+  </way>
+  <way id='-262' action='modify' visible='true' version='0'>
+    <nd ref='-105' />
+    <nd ref='-173' />
+    <nd ref='-71' />
+    <tag k='railway' v='planned' />
+    <tag k='planned' v='light_rail' />
+  </way>
+  <way id='-263' action='modify' visible='true' version='0'>
+    <nd ref='-46' />
+    <nd ref='-80' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='rail' />
+  </way>
+  <way id='-264' action='modify' visible='true' version='0'>
     <nd ref='-93' />
     <nd ref='-30' />
     <tag k='railway' v='disused' />
     <tag k='bridge' v='yes' />
     <tag k='disused' v='narrow_gauge' />
   </way>
-  <way id='-185' action='modify' visible='true'>
-    <nd ref='-94' />
-    <nd ref='105' />
-    <tag k='railway' v='monorail' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='-186' action='modify' visible='true'>
-    <nd ref='-95' />
-    <nd ref='-42' />
-    <tag k='railway' v='preserved' />
-    <tag k='bridge' v='yes' />
-  </way>
-  <way id='-187' visible='true'>
-    <nd ref='-96' />
-    <nd ref='-62' />
-    <tag k='railway' v='preserved' />
-  </way>
-  <way id='-188' visible='true'>
-    <nd ref='-97' />
-    <nd ref='-63' />
-    <tag k='railway' v='monorail' />
-  </way>
-  <way id='-189' visible='true'>
-    <nd ref='-98' />
-    <nd ref='-64' />
+  <way id='-265' action='modify' visible='true' version='0'>
+    <nd ref='-73' />
+    <nd ref='-9' />
     <tag k='railway' v='abandoned' />
-    <tag k='abandoned' v='narrow_gauge' />
+    <tag k='tunnel' v='yes' />
+    <tag k='abandoned' v='subway' />
   </way>
-  <way id='-190' visible='true'>
-    <nd ref='-99' />
-    <nd ref='-65' />
-    <tag k='railway' v='planned' />
-    <tag k='planned' v='narrow_gauge' />
+  <way id='-266' action='modify' visible='true' version='0'>
+    <nd ref='-18' />
+    <nd ref='-104' />
+    <tag k='railway' v='abandoned' />
+    <tag k='bridge' v='yes' />
+    <tag k='abandoned' v='light_rail' />
   </way>
-  <way id='-191' visible='true'>
-    <nd ref='-100' />
-    <nd ref='-66' />
-    <tag k='railway' v='narrow_gauge' />
-  </way>
-  <way id='-192' visible='true'>
+  <way id='-267' action='modify' visible='true' version='0'>
+    <nd ref='-34' />
     <nd ref='-101' />
-    <nd ref='-67' />
     <tag k='railway' v='abandoned' />
+    <tag k='bridge' v='yes' />
     <tag k='abandoned' v='tram' />
   </way>
-  <way id='-193' visible='true'>
-    <nd ref='-102' />
-    <nd ref='-68' />
-    <tag k='railway' v='planned' />
-    <tag k='planned' v='tram' />
+  <way id='-268' action='modify' visible='true' version='0'>
+    <nd ref='-19' />
+    <nd ref='-52' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='light_rail' />
+    <tag k='tunnel' v='yes' />
   </way>
-  <way id='-194' visible='true'>
-    <nd ref='-103' />
-    <nd ref='-69' />
-    <tag k='railway' v='tram' />
+  <way id='-269' action='modify' visible='true' version='0'>
+    <nd ref='-51' />
+    <nd ref='-85' />
+    <tag k='railway' v='light_rail' />
   </way>
-  <way id='-195' visible='true'>
+  <way id='-270' action='modify' visible='true' version='0'>
     <nd ref='-104' />
+    <nd ref='-142' />
+    <nd ref='-158' />
     <nd ref='-70' />
     <tag k='railway' v='abandoned' />
     <tag k='abandoned' v='light_rail' />
   </way>
-  <way id='-196' visible='true'>
-    <nd ref='-105' />
-    <nd ref='-71' />
-    <tag k='railway' v='planned' />
-    <tag k='planned' v='light_rail' />
+  <way id='-271' action='modify' visible='true' version='0'>
+    <nd ref='-49' />
+    <nd ref='-83' />
+    <tag k='railway' v='construction' />
+    <tag k='construction' v='subway' />
   </way>
-  <way id='-197' visible='true'>
-    <nd ref='-106' />
-    <nd ref='-72' />
-    <tag k='railway' v='light_rail' />
+  <way id='-272' action='modify' visible='true' version='0'>
+    <nd ref='-90' />
+    <nd ref='-39' />
+    <tag k='railway' v='disused' />
+    <tag k='bridge' v='yes' />
+    <tag k='disused' v='tram' />
   </way>
-  <way id='-198' visible='true'>
-    <nd ref='-107' />
-    <nd ref='-73' />
-    <tag k='railway' v='abandoned' />
-    <tag k='abandoned' v='subway' />
-  </way>
-  <way id='-199' visible='true'>
-    <nd ref='-108' />
-    <nd ref='-74' />
-    <tag k='railway' v='planned' />
-    <tag k='planned' v='subway' />
-  </way>
-  <way id='-200' visible='true'>
-    <nd ref='-109' />
-    <nd ref='-75' />
+  <way id='-273' action='modify' visible='true' version='0'>
+    <nd ref='-48' />
+    <nd ref='-82' />
     <tag k='railway' v='subway' />
   </way>
-  <way id='-201' visible='true'>
+  <way id='-274' action='modify' visible='true' version='0'>
+    <nd ref='-118' />
+    <nd ref='-120' />
+    <tag k='railway' v='yard' />
+  </way>
+  <way id='-275' action='modify' visible='true' version='0'>
+    <nd ref='-5' />
+    <nd ref='-47' />
+    <tag k='railway' v='disused' />
+    <tag k='disused' v='rail' />
+    <tag k='tunnel' v='yes' />
+  </way>
+  <way id='-276' action='modify' visible='true' version='0'>
+    <nd ref='-3' />
     <nd ref='-110' />
-    <nd ref='-76' />
     <tag k='railway' v='abandoned' />
+    <tag k='bridge' v='yes' />
     <tag k='abandoned' v='rail' />
   </way>
-  <way id='-202' visible='true'>
-    <nd ref='-111' />
-    <nd ref='-77' />
-    <tag k='railway' v='planned' />
-    <tag k='planned' v='rail' />
-  </way>
-  <way id='-203' visible='true'>
-    <nd ref='-112' />
-    <nd ref='-78' />
-    <tag k='railway' v='rail' />
-  </way>
-  <way id='-204' visible='true'>
-    <nd ref='-33' />
+  <way id='-277' action='modify' visible='true' version='0'>
     <nd ref='-45' />
+    <nd ref='-79' />
     <tag k='railway' v='rail' />
-    <tag k='tunnel' v='yes' />
   </way>
-  <way id='-205' visible='true'>
-    <nd ref='-31' />
-    <nd ref='-57' />
-    <tag k='railway' v='narrow_gauge' />
-    <tag k='tunnel' v='yes' />
+  <way id='-278' action='modify' visible='true'>
+    <nd ref='-133' />
+    <nd ref='-132' />
+    <nd ref='-134' />
+    <nd ref='-135' />
+    <nd ref='-136' />
+    <nd ref='-137' />
+    <nd ref='-138' />
+    <nd ref='-139' />
+    <nd ref='-140' />
+    <nd ref='-141' />
+    <nd ref='-142' />
+    <nd ref='-173' />
+    <nd ref='-143' />
+    <nd ref='-144' />
+    <nd ref='-145' />
+    <nd ref='-146' />
+    <nd ref='-172' />
+    <nd ref='-147' />
+    <nd ref='-148' />
+    <nd ref='-149' />
+    <tag k='highway' v='residential' />
   </way>
-  <way id='-206' action='modify' visible='true'>
-    <nd ref='-114' />
-    <nd ref='-113' />
-    <tag k='railway' v='incline' />
+  <way id='-279' action='modify' visible='true'>
+    <nd ref='-171' />
+    <nd ref='-170' />
+    <nd ref='-169' />
+    <nd ref='-168' />
+    <nd ref='-150' />
+    <nd ref='-151' />
+    <nd ref='-152' />
+    <nd ref='-153' />
+    <nd ref='-154' />
+    <nd ref='-155' />
+    <nd ref='-156' />
+    <nd ref='-157' />
+    <nd ref='-158' />
+    <nd ref='-159' />
+    <nd ref='-160' />
+    <nd ref='-161' />
+    <nd ref='-162' />
+    <nd ref='-163' />
+    <nd ref='-164' />
+    <nd ref='-165' />
+    <nd ref='-166' />
+    <nd ref='-167' />
+    <tag k='highway' v='residential' />
   </way>
 </osm>

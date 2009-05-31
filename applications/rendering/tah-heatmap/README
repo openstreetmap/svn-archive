@@ -1,0 +1,22 @@
+This program generates a 4096x4096 PNG heatmap of the globe based on
+t@h tile sizes, see
+http://lists.openstreetmap.org/pipermail/tilesathome/2009-May/005858.html
+
+To generate the map, do:
+
+    wget http://tah.openstreetmap.org/media/filesizes.bz2
+    bzip2 -d filesizes.bz2
+    perl parse-filesize.pl filesizes > tile-sizes.dat
+    perl generate-heatmap.pl tile-sizes.dat > osm-heatmap.png
+
+extra stuff:
+
+    # Only tile sizes
+    awk '{print $2}' tile-sizes.dat |sort -n > sizes.dat
+
+    # Unique tile sizes
+    awk '{print $2}' tile-sizes.dat |sort -n > sizes-unique.dat
+
+See what RGB values are used for the heatmap:
+
+    perl heatmap-rgb-value.pl sizes-unique.dat $(tail -n1 sizes-unique.dat)

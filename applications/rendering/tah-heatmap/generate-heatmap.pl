@@ -84,6 +84,7 @@ sub parse_tile_size
         $do_size->($size);
         $hash{$tile} = $size;
     }
+    close $fh;
 
     return (\%hash, $smallest, $biggest);
 }

@@ -1,0 +1,17 @@
+a, a:visited, a:active, a:link, a:hover {
+  color: #00f;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+body {
+  font-family: Arial,sans-serif;
+  color: #000;
+  background-color: #fff;
+  margin: 0px;
+  padding: 0px;
+}
+

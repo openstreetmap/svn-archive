@@ -7,7 +7,7 @@
 # ways and relations, unsorted.
 # Then TOP lists are generated and displayed.
 # 
-# usage: statistics.pl <osm/xml file name>
+# usage: perl statistics2.pl -CIO < input.osm
 #
 # runtime 28 secs for hessen.osm (3.3 million lines) on 1.7GHz Windows Machine
 #
@@ -20,7 +20,7 @@ use warnings;
 my $xml = shift||'';
 if (!$xml)
 {
-    print STDERR "usage: statistics.pl <osm/xml file name> <user name>\n";
+    print STDERR "usage: perl -CIO statistics2.pl < input.osm\n";
 }
 
 # file present?
@@ -35,6 +35,7 @@ my $rel_count = 0 ;
 my $line_count = 0;
 my $key = "";
 my $temp ;
+my $num_keys;
 my $max_user = "" ;
 my $max_number = 0 ;
 my $top = 30 ;
@@ -59,13 +60,7 @@ while(my $line = <XML>) {
 		unless ($id) { next; }
 		unless ($user) { next; }
 		$way_count++;
-		if (exists ($user_ways {$user})) {
-			$user_ways {$user} = ($user_ways {$user} + 1) ;
-		} 
-		else {
-			$user_ways {$user} = 1 ;	
-		} 
-
+        $user_ways{$user}++;
 	}
 
 	# node data
@@ -75,13 +70,7 @@ while(my $line = <XML>) {
 		unless ($id) { next; }
 		unless ($user) { next; }
 		$node_count++;
-		if (exists ($user_nodes {$user})) {
-			$user_nodes {$user} = ($user_nodes {$user} + 1) ;
-		} 
-		else {
-			$user_nodes {$user} = 1 ;	
-		} 
-
+        $user_nodes{$user}++;
 	}
 
 	# relation data
@@ -91,12 +80,7 @@ while(my $line = <XML>) {
 		unless ($id) { next; }
 		unless ($user) { next; }
 		$rel_count++;
-		if (exists ($user_relations {$user})) {
-			$user_relations {$user} = ($user_relations {$user} + 1) ;
-		} 
-		else {
-			$user_relations {$user} = 1 ;	
-		} 
+        $user_relations{$user}++;
 	}
 
 	# ignore the rest (for now)
@@ -129,7 +113,8 @@ foreach $key ( sort keys %user_relations){
 print "\nTOP NODES\n" ;
 print "\n---------\n" ;
 $temp = 1;
-while ($temp <= $top) {
+$num_keys = scalar keys %user_nodes;
+while ($temp <= $top and $temp <= $num_keys) {
 	$max_user = "" ;
 	$max_number = 0 ;
 	foreach $key (keys %user_nodes) {
@@ -146,7 +131,8 @@ while ($temp <= $top) {
 print "\nTOP WAYS\n" ;
 print "\n--------\n" ;
 $temp = 1;
-while ($temp <= $top) {
+$num_keys = scalar keys %user_ways;
+while ($temp <= $top and $temp <= $num_keys) {
 	$max_user = "" ;
 	$max_number = 0 ;
 	foreach $key (keys %user_ways) {
@@ -163,7 +149,8 @@ while ($temp <= $top) {
 print "\nTOP RELATIONS\n" ;
 print "\n-------------\n" ;
 $temp = 1;
-while ($temp <= $top) {
+$num_keys = scalar keys %user_relations;
+while ($temp <= $top and $temp <= $num_keys) {
 	$max_user = "" ;
 	$max_number = 0 ;
 	foreach $key (keys %user_relations) {

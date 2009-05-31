@@ -55,7 +55,7 @@ while(my $line = <XML>) {
 	# way data?
 	if($line =~ /^\s*\<way/) {
 		my ($id)   = ($line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/);
-		my ($user) = ($line =~ /^.+user=[\'\"](\w+)[\'\"]/);
+		my ($user) = ($line =~ /^.+user=[\'\"](.*?)[\'\"]/);
 		unless ($id) { next; }
 		unless ($user) { next; }
 		$way_count++;
@@ -71,7 +71,7 @@ while(my $line = <XML>) {
 	# node data
 	if($line =~ /^\s*\<node/) {
 		my ($id)   = ($line =~ /^\s*\<node id=[\'\"](\d+)[\'\"]/);
-		my ($user) = ($line =~ /^.+user=[\'\"](\w+)[\'\"]/);
+		my ($user) = ($line =~ /^.+user=[\'\"](.*?)[\'\"]/);
 		unless ($id) { next; }
 		unless ($user) { next; }
 		$node_count++;
@@ -87,7 +87,7 @@ while(my $line = <XML>) {
 	# relation data
 	if($line =~ /^\s*\<relation/) {
 		my ($id)   = ($line =~ /^\s*\<relation id=[\'\"](\d+)[\'\"]/);
-		my ($user) = ($line =~ /^.+user=[\'\"](\w+)[\'\"]/);
+		my ($user) = ($line =~ /^.+user=[\'\"](.*?)[\'\"]/);
 		unless ($id) { next; }
 		unless ($user) { next; }
 		$rel_count++;

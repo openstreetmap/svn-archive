@@ -30,15 +30,11 @@ public abstract class AddressElement {
 
     /**
      * Constructor setting the name of this element.
-     *
-     * <p><b>TODO:</b> The name is capitalized during the assignment,
-     * because the database contains all names IN CAPITALS. However
-     * this should not be done here, but in the {@link DatabaseParser}.</p>
      */
     public AddressElement (String name) {
         if (name == null)
             throw new NullPointerException("You must specify the name of this AddressElement");
-        this.name = capitalize(name);
+        this.name = name;
     }
 
     /**
@@ -165,41 +161,6 @@ public abstract class AddressElement {
 
 
     /**
-     * Capitalizes the given string (first letter of every word upper-case,
-     * others lower-case). Czech grammar rules are more or less obeyed.
-     *
-     * <p><b>TODO:</b> This should be moved somewhere else.</p>
-     * 
-     * @param s string to be capitalized
-     * @return capitaized string
-     */
-    protected static String capitalize(String s) {
-
-        if (s == null)
-            return s;
-
-        String result = "";
-
-        char last = ' ';
-        for (char ch : s.toCharArray()) {
-            if ((last >= 'a') && (last <= 'ž') ||
-                (last >= 'A') && (last <= 'Ž'))
-                ch = Character.toLowerCase(ch);
-            else
-                ch = Character.toTitleCase(ch);
-
-            last = ch;
-            result = result + ch;
-        }
-
-        String[] noCapitalize = { "Nad", "Pod", "U", "Na" };
-        for (String noc : noCapitalize)
-            result = result.replaceAll(" "+noc+" ", " "+noc.toLowerCase()+" ");
-
-        return result;
-    }
-    
-    /**
      * Compute differences between two strings.
      *
      * <p>Typical usage of this function is during {@code OsmPrimitive} to
@@ -247,6 +208,10 @@ public abstract class AddressElement {
 
     public List<Proposal> getDiff(OsmPrimitive prim) {
         return null;
+    }
+
+    public boolean isMatchable(OsmPrimitive prim) {
+        return false;
     }
 
     

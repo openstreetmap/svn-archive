@@ -203,5 +203,14 @@ public class House extends AddressElement {
         return props;
     }
 
+    public boolean isMatchable(OsmPrimitive prim) {
+        
+        for (String key : prim.keySet()) {
+            String value = prim.get(key);
+            if (value != null && value.startsWith("addr:"))
+                return true;
+        }
 
+        return false;
+    }
 }

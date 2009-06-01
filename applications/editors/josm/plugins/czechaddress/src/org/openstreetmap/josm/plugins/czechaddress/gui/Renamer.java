@@ -4,7 +4,7 @@
  */
 
 /*
- * DatabaseModifier.java
+ * Renamer.java
  *
  * Created on 24.5.2009, 18:03:35
  */
@@ -30,12 +30,12 @@ import org.openstreetmap.josm.plugins.czechaddress.intelligence.Capitalizator;
  *
  * @author radek
  */
-public class DatabaseModifier extends ExtendedDialog {
+public class Renamer extends ExtendedDialog {
 
     StreetModel<Street> streetModel = new StreetModel<Street>();
 
-    /** Creates new form DatabaseModifier */
-    public DatabaseModifier() {
+    /** Creates new form Renamer */
+    public Renamer() {
 
         super(Main.parent, "Upravit databázi",
                                       new String[] { "OK", "Zrušit"}, true);

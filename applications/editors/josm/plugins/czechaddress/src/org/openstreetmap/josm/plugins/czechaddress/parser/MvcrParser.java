@@ -1,15 +1,21 @@
 package org.openstreetmap.josm.plugins.czechaddress.parser;
 
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.*;
+import static org.openstreetmap.josm.plugins.czechaddress.StringUtils.capitalize;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.czechaddress.DatabaseLoadException;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithHouses;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithStreets;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Region;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Suburb;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ViToCi;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -47,9 +53,9 @@ public class MvcrParser extends XMLParser {
 
             if (curRegion == null) {*/
                 curRegion = new Region(
-                    attributes.getValue("nazev"),
-                    attributes.getValue("kraj"),
-                    attributes.getValue("okres"));
+                    capitalize(attributes.getValue("nazev")),
+                    capitalize(attributes.getValue("kraj")),
+                    capitalize(attributes.getValue("okres")));
 
                 target.regions.add(curRegion);
             //}
@@ -59,7 +65,7 @@ public class MvcrParser extends XMLParser {
         if (curRegion == null)
             return;
 
-        // ========== PARSING ViToCI ========== //
+        // ========== PARSING ViToCi ========== //
         if (name.equals("obec")) {
 
             // If the viToCi filter is on, apply it!
@@ -68,7 +74,7 @@ public class MvcrParser extends XMLParser {
 
             //curViToCi = curRegion.findViToCi(attributes.getValue("nazev"));
             //if (curViToCi == null) {
-                curViToCi = new ViToCi(attributes.getValue("nazev"));
+                curViToCi = new ViToCi(capitalize(attributes.getValue("nazev")));
             //    System.out.println("Parser: " + curViToCi);
                 curRegion.addViToCi(curViToCi);
             //}
@@ -85,7 +91,7 @@ public class MvcrParser extends XMLParser {
 
             //curSuburb = curViToCi.findSuburb(attributes.getValue("nazev"));
             //if (curSuburb == null) {
-                curSuburb = new Suburb(attributes.getValue("nazev"));
+                curSuburb = new Suburb(capitalize(attributes.getValue("nazev")));
             //    System.out.println("Parser: " + curSuburb);
                 curViToCi.addSuburb(curSuburb);
             //}
@@ -104,7 +110,7 @@ public class MvcrParser extends XMLParser {
 
             //curStreet = topElem.findStreet(attributes.getValue("nazev"));
             //if (curStreet == null) {
-                curStreet = new Street(attributes.getValue("nazev"));
+                curStreet = new Street(capitalize(attributes.getValue("nazev")));
             //    System.out.println("Parser: " + curStreet);
                 topElem.addStreet(curStreet);
             //}

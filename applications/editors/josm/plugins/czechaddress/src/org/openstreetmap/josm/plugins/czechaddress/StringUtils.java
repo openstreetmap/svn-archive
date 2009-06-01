@@ -42,8 +42,7 @@ public class StringUtils {
     }
 
     public static String latLonToString(LatLon position) {
-        assert position != null;
-        //if (position == null) return "";
+        if (position == null) return "";
 
         return "(lat: " + coordinateToString(position.lat())
              + " lon: " + coordinateToString(position.lon()) + ")";
@@ -80,6 +79,41 @@ public class StringUtils {
                 return false;
         }
         return true;
+    }
+
+    /**
+     * Capitalizes the given string (first letter of every word upper-case,
+     * others lower-case). Czech grammar rules are more or less obeyed.
+     *
+     * <p><b>TODO:</b> This should be moved somewhere else.</p>
+     *
+     * @param s string to be capitalized
+     * @return capitaized string
+     */
+    public static String capitalize(String s) {
+
+        if (s == null)
+            return s;
+
+        String result = "";
+
+        char last = ' ';
+        for (char ch : s.toCharArray()) {
+            if ((last >= 'a') && (last <= 'ž') ||
+                (last >= 'A') && (last <= 'Ž'))
+                ch = Character.toLowerCase(ch);
+            else
+                ch = Character.toTitleCase(ch);
+
+            last = ch;
+            result = result + ch;
+        }
+
+        String[] noCapitalize = { "Nad", "Pod", "U", "Na" };
+        for (String noc : noCapitalize)
+            result = result.replaceAll(" "+noc+" ", " "+noc.toLowerCase()+" ");
+
+        return result;
     }
 
 }

@@ -2,9 +2,13 @@
 use feature ':5.10';
 use strict;
 use warnings;
-use List::Util 'sum';
-
 use GD;
+
+=head1 NAME
+
+generate-heatmap.pl - Make a 2^12 x 2^12 pixel heatmap of the world by looking at the size of z12 tiles
+
+=cut
 
 my $from = 0;
 my $to   = 2**12-1;
@@ -12,20 +16,13 @@ my $to   = 2**12-1;
 # Create a new image with each pixel = one z12 tile
 my $im = GD::Image->new(2**12, 2**12);
 
-# allocate some colors
-my $white = $im->colorAllocate(255,255,255);
-
-# make the background transparent and interlaced
-$im->transparent($white);
-$im->interlaced('true');
-
 my $file = shift;
 say STDERR "Parsing tile size file `$file'...";
 my ($hash, $min, $max) = parse_tile_size($file);
 say STDERR "Done parsing tile size";
 
 my $hash_num = scalar keys %$hash;
-
+my $median = ((sort { $a <=> $b } values %$hash)[int($hash_num/2)]);
 
 # say STDERR "Min = $min";
 # say STDERR "Max = $max";
@@ -36,7 +33,7 @@ my $hash_num = scalar keys %$hash;
 my $color;
 for my $x ($from .. $to)
 {
-    say STDERR "Processing $x/" . 2**12;
+    say STDERR "Processing $x/" . 2**12 if $x % 100 == 0;
 
     my $x_key = sprintf "%04d", $x;
 
@@ -49,6 +46,9 @@ for my $x ($from .. $to)
             my @rgb = heatmap(warp_size_for_heatmap($size));
             $color = $im->colorResolve(@rgb);
             $im->setPixel($x, $y, $color);
+        } else {
+            # Black background
+            $im->setPixel($x, $y, $im->colorResolve(0,0,0));
         }
     }
 }
@@ -58,6 +58,8 @@ binmode STDOUT;
 
 # Convert the image to PNG and print it on standard output
 print $im->png;
+
+exit 0;
 
 sub parse_tile_size
 {
@@ -95,7 +97,9 @@ sub warp_size_for_heatmap
 
     # FIXME: This results in a very lousy distribution, the map is all
     # blue
-    my $n = $size / $max;
+    my $n = $size / ($median * 32);
+
+    $n = 0.95 if $n >= 1;
 
     return $n;
 }

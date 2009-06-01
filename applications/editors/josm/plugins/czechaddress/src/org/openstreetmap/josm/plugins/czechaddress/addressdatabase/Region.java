@@ -68,8 +68,8 @@ public class Region extends ElementWithStreets {
      */
     public Region(String name, String nuts3name, String nuts4name) {
         super(name);
-        if (nuts3name != null) this.nuts3name = capitalize(nuts3name);
-        if (nuts4name != null) this.nuts4name = capitalize(nuts4name);
+        if (nuts3name != null) this.nuts3name = nuts3name;
+        if (nuts4name != null) this.nuts4name = nuts4name;
     }
     
     public String getNuts3Name() {

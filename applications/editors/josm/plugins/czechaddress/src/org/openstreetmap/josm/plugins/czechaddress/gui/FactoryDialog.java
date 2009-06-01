@@ -36,14 +36,6 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class FactoryDialog extends ToggleDialog
         implements SelectionChangedListener, StatusListener {
 
-    private static FactoryDialog singleton = null;
-    public static FactoryDialog getInstance() {
-        if (singleton == null)
-            singleton = new FactoryDialog();
-        return singleton;
-    }
-
-
     HouseListModel  houseModel  = new HouseListModel();
     StreetListModel streetModel = new StreetListModel();
     
@@ -64,7 +56,7 @@ public class FactoryDialog extends ToggleDialog
         setLayout(originalManager);
         add(mainPanel);
 
-        // Register to all listeners
+        // Register to all messages
         CzechAddressPlugin.addStatusListener(this);
 
         // And init all listeners to data model
@@ -93,7 +85,6 @@ public class FactoryDialog extends ToggleDialog
             houseList.setEnabled(true);
             keepOddityCheckBox.setEnabled(true);
             return;
-
         }
         
         if (message == MESSAGE_REASONER_REASONED) {
@@ -114,7 +105,7 @@ public class FactoryDialog extends ToggleDialog
     }
 
     public boolean existsAvailableHouse() {
-        Reasoner r = CzechAddressPlugin.getReasoner();
+        Reasoner r = CzechAddressPlugin.reasoner;
 
         int i = houseList.getSelectedIndex();
         while (i < houseModel.getSize()) {
@@ -135,13 +126,12 @@ public class FactoryDialog extends ToggleDialog
 
     public void selectNextUnmatchedHouse() {
 
-        Reasoner r = CzechAddressPlugin.getReasoner();
         int index = houseList.getSelectedIndex();
 
         index++;
         Object current;
         while ( (current = houseModel.getElementAt(index)) != null
-                && r.translate((House) current) != null)
+              && CzechAddressPlugin.reasoner.translate((House) current) != null)
             index++;
 
         if (index >= houseModel.getSize())
@@ -325,7 +315,7 @@ public class FactoryDialog extends ToggleDialog
 
     private void houseListClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_houseListClicked
         if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
-            Reasoner r = CzechAddressPlugin.getReasoner();
+            Reasoner r = CzechAddressPlugin.reasoner;
 
             if (r.translate(getSelectedHouse()) != null) {
                 MapUtils.zoomTo(r.translate(getSelectedHouse()));
@@ -346,7 +336,7 @@ public class FactoryDialog extends ToggleDialog
     }//GEN-LAST:event_houseListClicked
 
     private void ensureConsistencyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ensureConsistencyButtonActionPerformed
-        CzechAddressPlugin.getReasoner().ensureConsistency();
+        CzechAddressPlugin.reasoner.ensureConsistency();
 }//GEN-LAST:event_ensureConsistencyButtonActionPerformed
 
 
@@ -404,7 +394,7 @@ public class FactoryDialog extends ToggleDialog
             if (plainFont == null) plainFont = getFont().deriveFont(Font.PLAIN);
             if (boldFont == null) boldFont = getFont().deriveFont(Font.BOLD);
 
-            Reasoner r = CzechAddressPlugin.getReasoner();
+            Reasoner r = CzechAddressPlugin.reasoner;
 
             if (value instanceof House) {
                 House house = (House) value;
@@ -412,7 +402,7 @@ public class FactoryDialog extends ToggleDialog
                 setIcon(envelopeNormIcon);
                 setFont(plainFont);
 
-                if ( r.getConflicts(house) != null)
+                if ( r.conflicts(house) != null)
                     setIcon(envelopeExclIcon);
                 else if ( r.translate(house) == null) {
                     setIcon(envelopeStarIcon);
@@ -456,7 +446,7 @@ public class FactoryDialog extends ToggleDialog
         }
 
         public void rebuild() {
-            Reasoner r = CzechAddressPlugin.getReasoner();
+            Reasoner r = CzechAddressPlugin.reasoner;
             if (r == null) return;
 
             houses.clear();

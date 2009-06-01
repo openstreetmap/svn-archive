@@ -64,11 +64,11 @@ public class UniversalTreeRenderer extends DefaultTreeCellRenderer {
         else if (value instanceof RemoveKeyProposal)      setIcon(iconRemove);
 
 
-        if (value instanceof House) {
+        if (value instanceof House && r != null) {
             House house = (House) value;
 
             setIcon(envelopeNormIcon);
-            if ( r.getConflicts(house) != null )
+            if ( r.conflicts(house) != null )
                 setIcon(envelopeExclIcon);
             else if ( r.translate(house) == null)
                 setIcon(envelopeStarIcon);

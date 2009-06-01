@@ -367,7 +367,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
                 if (match.elem instanceof House) {
                     setIcon(envelopeStarIcon);
-                    if ( r.getConflicts(match.elem) != null )
+                    if ( r.conflicts(match.elem) != null )
                         setIcon(envelopeExclIcon);
                     else if ( r.translate(match.elem) != null)
                         setIcon(envelopeNormIcon);

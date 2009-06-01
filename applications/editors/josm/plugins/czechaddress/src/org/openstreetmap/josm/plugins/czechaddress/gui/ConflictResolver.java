@@ -257,7 +257,7 @@ public class ConflictResolver extends ExtendedDialog
              Match best = r.findMatch((AddressElement) selBestFit);
              if (best != null) best.qualityChanged();
 
-             List<Match> competitors = r.getConflicts((OsmPrimitive) selMainObj);
+             List<Match> competitors = r.conflicts((OsmPrimitive) selMainObj);
              if (competitors != null) for (Match competitor : competitors)
                  competitor.qualityChanged();
 
@@ -270,7 +270,7 @@ public class ConflictResolver extends ExtendedDialog
             Match best = r.findMatch((OsmPrimitive) selBestFit);
             if (best != null) best.qualityChanged();
 
-            List<Match> competitors = r.getConflicts((AddressElement) selMainObj);
+            List<Match> competitors = r.conflicts((AddressElement) selMainObj);
             if (competitors != null) for (Match competitor : competitors)
                  competitor.qualityChanged();
 
@@ -332,7 +332,7 @@ public class ConflictResolver extends ExtendedDialog
                     return r.getElementsInConflict().get(index);
 
                 if (parent instanceof AddressElement)
-                    return r.getConflicts((AddressElement) parent).get(index).prim;
+                    return r.conflicts((AddressElement) parent).get(index).prim;
 
             } catch (Exception e) {  }
             return null;
@@ -346,7 +346,7 @@ public class ConflictResolver extends ExtendedDialog
                     return r.getElementsInConflict().size();
 
                 if (parent instanceof AddressElement)
-                    return r.getConflicts((AddressElement) parent).size();
+                    return r.conflicts((AddressElement) parent).size();
                 
             } catch (Exception exp) { }
             return 0;
@@ -360,7 +360,7 @@ public class ConflictResolver extends ExtendedDialog
                     return r.getElementsInConflict().indexOf(child);
 
                 if (parent instanceof AddressElement)
-                    return r.getConflicts((AddressElement) parent).indexOf(child);
+                    return r.conflicts((AddressElement) parent).indexOf(child);
                 
             } catch (Exception exp) { }
             return -1;
@@ -382,7 +382,7 @@ public class ConflictResolver extends ExtendedDialog
                     return r.getPrimitivesInConflict().get(index);
 
                 if (parent instanceof OsmPrimitive)
-                    return r.getConflicts((OsmPrimitive) parent).get(index).elem;
+                    return r.getConflictsconflictsve) parent).get(index).elem;
                 
             } catch (Exception exp) { }
             return null;
@@ -396,7 +396,7 @@ public class ConflictResolver extends ExtendedDialog
                 if (parent == root)
                     return r.getPrimitivesInConflict().size();
                 if (parent instanceof OsmPrimitive)
-                    return r.getConflicts((OsmPrimitive) parent).size();
+                    return r.getConflictsconflictsve) parent).size();
 
             } catch (Exception exp) { }
             return 0;
@@ -411,7 +411,7 @@ public class ConflictResolver extends ExtendedDialog
                     return r.getPrimitivesInConflict().indexOf(child);
 
                 } else if (parent instanceof OsmPrimitive)
-                    return r.getConflicts((OsmPrimitive) parent).indexOf(child);
+                    return r.getConflictsconflictsve) parent).indexOf(child);
                 
             } catch (Exception exp) { }
             return -1;

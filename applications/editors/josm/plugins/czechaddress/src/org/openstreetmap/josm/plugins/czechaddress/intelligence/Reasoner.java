@@ -1,17 +1,18 @@
 package org.openstreetmap.josm.plugins.czechaddress.intelligence;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
-import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
-import org.openstreetmap.josm.plugins.czechaddress.StatusListener;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
-import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
-import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalDatabase;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 
 /**
  * Intended to concentrate all intelligence of
@@ -33,659 +34,344 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalDatabase;
  */
 public class Reasoner {
 
-    /** A database of all matches, which are not in a conflict. */
-    private NotNullList<Match> matches = new NotNullList<Match>();
+    /* A list of {@link OsmPrimitive}s, for which there was no suitable match. */
+    //private List<OsmPrimitive> notMatchable = new ArrayList<OsmPrimitive>();
 
-    /** A list of {@link Match}es, which are in a conflict. */
-    private NotNullList<Match> conflicts = new NotNullList<Match>();
+    private     Map<OsmPrimitive, AddressElement> primBestIndex
+      = new HashMap<OsmPrimitive, AddressElement> ();
+    private     Map<AddressElement, OsmPrimitive> elemBestIndex
+      = new HashMap<AddressElement, OsmPrimitive> ();
 
-    /** A list of {@link House}s, which have not yet been matched to any
-     * {@link OsmPrimitive} without a conflict. */
-    private ArrayList<AddressElement> elemPool = new ArrayList<AddressElement>();
+    private     Map<OsmPrimitive,   Map<AddressElement, Integer>> primMatchIndex
+      = new HashMap<OsmPrimitive,   Map<AddressElement, Integer>> ();
+    private     Map<AddressElement, Map<OsmPrimitive,   Integer>> elemMatchIndex
+      = new HashMap<AddressElement, Map<OsmPrimitive,   Integer>> ();
 
-    /** A list of {@link OsmPrimitive}s, for which there was no suitable match. */
-    private List<OsmPrimitive> notMatchable = new ArrayList<OsmPrimitive>();
+    private Set<OsmPrimitive>   primToUpdate = new HashSet<OsmPrimitive>();
+    private Set<AddressElement> elemToUpdate = new HashSet<AddressElement>();
+//  private Map<Object,Integer> statusBefore = new HashMap<Object,Integer>();
 
-    private HashMap<OsmPrimitive,   Match> primMatchHashIndex
-      = new HashMap<OsmPrimitive,   Match>();
-    private HashMap<AddressElement, Match> elemMatchHashIndex
-      = new HashMap<AddressElement, Match>();
+    public Logger logger = Logger.getLogger("Reasoner");
 
-    private List<OsmPrimitive>   primConflictListIndex = new ArrayList<OsmPrimitive>();
-    private List<AddressElement> elemConflictListIndex = new ArrayList<AddressElement>();
-    private HashMap<OsmPrimitive,   List<Match>> primConflictHashIndex
-      = new HashMap<OsmPrimitive,   List<Match>>();
-    private HashMap<AddressElement, List<Match>> elemConflictHashIndex
-      = new HashMap<AddressElement, List<Match>>();
+    public static final int STATUS_UNKNOWN = 0;
+    public static final int STATUS_CONFLICT = 1;
+    public static final int STATUS_MATCH = 2;
 
-
-    /**
-     * Default constructor, which initializes the pool of
-     * {@link AddressElement}s to be used for matching.
-     */
-    public Reasoner(ArrayList<AddressElement> elementPool) {
-        elemPool = elementPool;
-    }    
-    
-    /**
-     * Adds a single new primitive to the database, finds corresponding
-     * {@link House} for it and seeks for potential conflicts.
-     * 
-     * <p>If you intend to add a list of new primitives, {@link addPrimitives}
-     * will be faster, because conflicts are traced after adding all the
-     * primitives and not after every single one.</p>
-     *
-     * <p>Moreover there is one substantial difference discussed in
-     * {@link addPrimitives()}.</p>
-     *
-     * @param newPrimitive new primitive to be added
-     */
-    public synchronized void addPrimitive(OsmPrimitive newPrimitive) {
-
-        int firstNewIndex = matches.size();
-
-        matchPrimitive(newPrimitive);
-        
-        ensureConsistency(firstNewIndex);
+    private Reasoner() {}
+    private static Reasoner singleton = null;
+    public  static Reasoner getInstance() {
+        if (singleton == null)
+            singleton = new Reasoner();
+        return singleton;
     }
 
-    /**
-     * Adds new primitives to the database, finds suitable {@link House}s for
-     * them and afterwards seeks for potential conflicts.
-     *
-     * <p><b>NOTE:</b> Adding primitives through {@code addPrimitives()} has
-     * different effect from adding primitives one by one through
-     * {@code addPrimitive()}.</p>
-     * 
-     * <p>The preffered way of handling this is to add a large bunch of elements
-     * from the database via {@code addPrimitives()}, because the possible
-     * conflicts are between all possible element-primitive combinations.
-     * For adding single node by user, {@code addPrimitives()} is the preferred
-     * way, because immediatelly after the matching the best suitable element
-     * is removed from the element pool and it cannot be matched to any other
-     * primitive.</p>
-     */
-    public synchronized void addPrimitives(Collection<OsmPrimitive> newPrimitives) {
+    public void reset() {
+        primToUpdate.clear();
+        elemToUpdate.clear();
 
-        int firstNewIndex = matches.size();
-
-        for (OsmPrimitive primitive : newPrimitives)
-            matchPrimitive(primitive);
-
-        ensureConsistency(firstNewIndex);
+        primMatchIndex.clear();
+        elemMatchIndex.clear();
+        primBestIndex.clear();
+        primBestIndex.clear();
     }
 
-    /**
-     * Removes the given primitive from the database and cancels all conflicts
-     * which can be solved by this removal.
-     */
-    public synchronized void removePrimitive(OsmPrimitive primitive) {
+    private AddressElement getBest(OsmPrimitive prim) {
 
-        // TODO: Implement the removal of a primitive
-    }
+        Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
+        if (matches == null) return null;
 
-    /**
-     * Forcibly matches given house to given primitive.
-     *
-     * <p>This can be useful in cases, where the user manually resolves
-     * a conflict by stating that this particular combination of
-     * house-primitive it the correct one.</p>
-     *
-     * <p>The quality is set to {@link Match}{@code .MATCH_OVERWRITE}.</p>
-     */
-    public synchronized void overwriteMatch(AddressElement elem, OsmPrimitive prim) {
+        AddressElement bestE = null;
+        int bestQ = Match.MATCH_NOMATCH;
 
-        int firstNewIndex = matches.size();
+        for (AddressElement elem : matches.keySet()) {
+            if (matches.get(elem) == bestQ)
+                bestE = null;
 
-        matches.add(new Match(elem, prim, Match.MATCH_OVERWRITE));
-        matchesDirty = true;
-
-        reconsider(elem);
-        reconsider(prim);
-
-        ensureConsistency(firstNewIndex);
-    }
-
-    /**
-     * Returns all elements available for matching.
-     */
-    public List<AddressElement> getElementPool() {
-        return elemPool;
-    }
-
-    /** Returns all primitives, which have not been assigned any element during
-     * the matching. */
-    public List<OsmPrimitive> getNotMatchable() {
-        return notMatchable;
-    }
-
-    public List<Match> getAllMatches() {
-
-        return matches;
-    }
-
-    public Match findMatch(OsmPrimitive prim) {
-        return primMatchHashIndex.get(prim);
-    }
-
-    public Match findMatch(AddressElement elem) {
-        return primMatchHashIndex.get(elem);
-    }
-
-    /**
-     * Finds given primitive in list of {@code  matches} and returns
-     * the corresponding element.
-     * 
-     * <p>If the primitive is not found, {@code null} is returned.</p>
-     */
-    public AddressElement translate(OsmPrimitive prim) {
-        Match m = primMatchHashIndex.get(prim);
-        if (m == null) return null;
-        return m.elem;
-    }
-
-    /**
-     * Finds given element in list of {@code matches} and returns the corresponding
-     * primitive.
-     *
-     * <p>If the element is not found, {@code null} is returned.</p>
-     */
-    public OsmPrimitive translate(AddressElement elem) {
-        Match m = elemMatchHashIndex.get(elem);
-        if (m == null) return null;
-        return m.prim;
-    }
-
-    /**
-     * Returns a list all conflicts corresponding to the given {@link AddressElement}.
-     */
-    public List<Match> getConflicts(AddressElement elem) {
-        return elemConflictHashIndex.get(elem);
-    }
-
-    /**
-     * Returns a list all conflicts corresponding to the given {@link OsmPrimitive}.
-     */
-    public List<Match> getConflicts(OsmPrimitive prim) {
-        return primConflictHashIndex.get(prim);
-    }
-
-    /**
-     * Returns a sorted list of all elements in conflict.
-     */
-    public List<AddressElement> getElementsInConflict() {
-        return elemConflictListIndex;
-    }
-
-    /**
-     * Returns a sorted list of all primitives in conflict.
-     */
-    public List<OsmPrimitive> getPrimitivesInConflict() {
-        return primConflictListIndex;
-    }
-
-    /**
-     * Returns the list of all conflicts.
-     */
-    public List<Match> getAllConflicts() {
-        return conflicts;
-    }
-
-    /**
-     * Goes through all matches and returns proposals for changing
-     * every primitive (if it differs from the matched element).
-     */
-    public ProposalDatabase getProposals() {
-
-        ProposalDatabase proposals = new ProposalDatabase();
-
-        for (Match match : matches) {
-            
-            ProposalContainer proposalContainer
-                    = new ProposalContainer(match.prim);
-            
-            proposalContainer.addProposals(match.getDiff());
-
-            if (proposalContainer.getProposals().size() > 0)
-                proposals.addContainer(proposalContainer);
+            if (matches.get(elem) > bestQ) {
+                bestQ = matches.get(elem);
+                bestE = elem;
+            }
         }
 
-        return proposals;
+        return bestE;
     }
 
-    /**
-     * Finds suitable {@code Match}es in the pool of {@link AddressElement}s.
-     *
-     * @param primitive the primitive to be matched with elements of
-     * {@code elemPool}.
-     * @return the list of all matches, whose <i>quality</i> &gt;
-     * {@link Match}{@code .MATCH_NOMATCH}.
-     */
-    public NotNullList<Match> getMatchesForPrimitive(OsmPrimitive primitive) {
+    private OsmPrimitive getBest(AddressElement prim) {
 
-        NotNullList<Match> result = new NotNullList<Match>();
+        Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(prim);
+        if (matches == null) return null;
+
+        OsmPrimitive bestE = null;
+        int bestQ = Match.MATCH_NOMATCH;
+
+        for (OsmPrimitive elem : matches.keySet()) {
+            if (matches.get(elem) == bestQ)
+                bestE = null;
+
+            if (matches.get(elem) > bestQ) {
+                bestQ = matches.get(elem);
+                bestE = elem;
+            }
+        }
+
+        return bestE;
+    }
+
+    public void openTransaction() {
+        assert primToUpdate.size() == 0;
+        assert elemToUpdate.size() == 0;
+    }
+
+    public void closeTransaction() {
+
+        Set<Object> changes = new HashSet<Object>();
+
+        for (OsmPrimitive prim : primToUpdate) {
+            AddressElement bestMatch = getBest(prim);
+
+            if (primBestIndex.get(prim) != bestMatch) {
+                if (bestMatch == null) {
+                    logger.log(Level.INFO, "primitive has no longer best match",
+                            AddressElement.getName(prim));
+                    primBestIndex.remove(prim);
+                } else {
+                    logger.log(Level.INFO, "primitive has a new best match",
+                            "prim=„" + AddressElement.getName(prim) + "“ → " +
+                            "elem=„" + bestMatch + "“");
+                    primBestIndex.put(prim, bestMatch);
+                }
+                changes.add(prim);
+            }
+        }
+        primToUpdate.clear();
+
+
+        for (AddressElement elem : elemToUpdate) {
+            OsmPrimitive bestMatch = getBest(elem);
+
+            if (elemBestIndex.get(elem) != bestMatch) {
+                if (bestMatch == null) {
+                    logger.log(Level.INFO, "element has no longer best match", elem);
+                    elemBestIndex.remove(elem);
+                } else {
+                    logger.log(Level.INFO, "element has a new best match",
+                            "elem=„" + elem + "“ → " +
+                            "prim=„" + AddressElement.getName(bestMatch) + "“");
+                    elemBestIndex.put(elem, bestMatch);
+                }
+                changes.add(elem);
+            }
+        }
+        elemToUpdate.clear();
+
+        for (Object change : changes) {
+            if (change instanceof OsmPrimitive)
+                for (ReasonerListener listener : listeners)
+                    listener.primitiveChanged((OsmPrimitive) change);
+
+            if (change instanceof AddressElement)
+                for (ReasonerListener listener : listeners)
+                    listener.elementChanged((AddressElement) change);
+        }
+    }
+
+    private Set<ReasonerListener> listeners = new HashSet<ReasonerListener>();
+
+    public void reconsider(OsmPrimitive prim, AddressElement elem) {
+
+        int oldQ = getQ(prim, elem);
+        int newQ = Match.evalQ(prim, elem, oldQ);
+
+        if (oldQ != newQ) {
+            logger.log(Level.INFO, "reconsidering match",
+                    "q=" + String.valueOf(oldQ) + "→" + String.valueOf(newQ) + "; " +
+                    "elem=„" + elem + "“; " +
+                    "prim=„" + AddressElement.getName(prim) + "“");
+            putQ(prim, elem, newQ);
+
+            primToUpdate.add(prim);
+            elemToUpdate.add(elem);
+        }
+    }
+
+    public void consider(OsmPrimitive prim) {
+        logger.log(Level.FINE, "considering primitive", AddressElement.getName(prim));
+
+        Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
+        if (matches == null) {
+            logger.log(Level.INFO, "new primitive detected", AddressElement.getName(prim));
+            matches = new HashMap<AddressElement, Integer>();
+            primMatchIndex.put(prim, matches);
+        }
+
+        for (AddressElement elem : elemMatchIndex.keySet())
+            reconsider(prim, elem);
+    }
+
+    public void consider(AddressElement elem) {
+        logger.log(Level.FINE, "considering element", elem);
+
+        Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(elem);
+        if (matches == null) {
+            logger.log(Level.INFO, "new element detected", elem);
+            matches = new HashMap<OsmPrimitive, Integer>();
+            elemMatchIndex.put(elem, matches);
+        }
+
+        for (OsmPrimitive prim : primMatchIndex.keySet())
+            reconsider(prim, elem);
+    }
+
+    /*private int getStatus(OsmPrimitive prim) {
+        if (primMatchIndex.get(prim) == null)   return STATUS_UNKNOWN;
+        if (primMatchIndex.get(prim).size()==0) return STATUS_UNKNOWN;
+        if (translate(prim) != null)            return STATUS_MATCH;
+        return STATUS_CONFLICT;
+    }
+
+    private int getStatus(AddressElement elem) {
+        if (elemMatchIndex.get(elem) == null)   return STATUS_UNKNOWN;
+        if (elemMatchIndex.get(elem).size()==0) return STATUS_UNKNOWN;
+        if (translate(elem) != null)            return STATUS_MATCH;
+        return STATUS_CONFLICT;
+    }*/
+
+    public int getQ(OsmPrimitive prim, AddressElement elem) {
+        if (primMatchIndex.get(prim) == null) return 0;
+        if (elemMatchIndex.get(elem) == null) return 0;
+
+        assert primMatchIndex.get(prim).get(elem) == elemMatchIndex.get(elem).get(prim);
+
+        if (primMatchIndex.get(prim).get(elem) == null)
+            return 0;
+        else
+            return primMatchIndex.get(prim).get(elem);
+    }
+
+    public void putQ(OsmPrimitive prim, AddressElement elem, int qVal) {
         
-        for (AddressElement elem : elemPool)
-            result.add(Match.createMatch(elem, primitive));
+        if (qVal == Match.MATCH_NOMATCH) {
+            primMatchIndex.get(prim).remove(elem);
+            elemMatchIndex.get(elem).remove(prim);
+
+            if (primMatchIndex.get(prim).size() == 0)
+                primMatchIndex.put(prim, null);
+            if (elemMatchIndex.get(elem).size() == 0)
+                elemMatchIndex.put(elem, null);
+
+        } else {
+            primMatchIndex.get(prim).put(elem, qVal);
+            elemMatchIndex.get(elem).put(prim, qVal);
+        }
+    }
+
+    public AddressElement translate(OsmPrimitive prim) {
+        AddressElement elem = primBestIndex.get(prim);
+        if (elemBestIndex.get(elem) == prim)
+            return elem;
+        return null;
+    }
+
+    public OsmPrimitive translate(AddressElement elem) {
+        OsmPrimitive prim = elemBestIndex.get(elem);
+        if (primBestIndex.get(prim) == elem)
+            return prim;
+        return null;
+    }
+
+    public Set<AddressElement> conflicts(OsmPrimitive prim) {
+
+        Set<AddressElement> result = new HashSet<AddressElement>();
+        result.addAll(primMatchIndex.get(prim).keySet());
+        
+        AddressElement match = translate(prim);
+        if (match != null)
+            result.remove(match);
+
         return result;
     }
 
-    /**
-     * Method for adding matches for a single primitive into the resoner.
-     *
-     * <p>This method uses {@code getMatchesForPrimitive()} for getting the
-     * list of suitable matches for the given primitive. Then it selects
-     * <u>all</u> matches with the highest {@code quality} and adds them
-     * into the {@code matches} list.
-     */
-    protected void matchPrimitive(OsmPrimitive prim) {
-        boolean assertions = false;
-        assert  assertions = true;
+    public Set<OsmPrimitive> conflicts(AddressElement elem) {
 
-        if (prim.deleted) return;
+        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
+        result.addAll(elemMatchIndex.get(elem).keySet());
 
-        NotNullList<Match> suitable = getMatchesForPrimitive(prim);
-        NotNullList<Match> toDelete = new NotNullList<Match>(suitable.size());
+        OsmPrimitive match = translate(elem);
+        if (match != null)
+            result.remove(match);
 
-        for (Match match1 : suitable)
-            for (Match match2 : suitable)
-                if (   match1        != match2
-                    && match1.quality > match2.quality) {
-                    toDelete.add(match2);
-                    if (assertions)
-                        System.out.println("Reasoner: Dominated match: " + match2.toString());
-                }
-
-        suitable.removeAll(toDelete);
-
-        // Make sure we reconsider all elements.
-        for (Match match : matches) {
-            reconsider(match.elem);
-            reconsider(match.prim);
-        }
-
-        if (suitable.size() > 0) {
-            matches.addAll(suitable);
-            matchesDirty = true;
-        } else
-            notMatchable.add(prim);
+        return result;
     }
 
-//==============================================================================
-//  MESSAGE HANDLING SYSTEM
-//==============================================================================
-
-    /**
-     * Should be true whenever {@code matches} have changed, but the
-     * {@link StatusListener}{@code .MESSAGE_MATCHES_CHANGED} message has
-     * not yet been sent.
-     */
-    protected boolean matchesDirty = false;
-
-    /**
-     * Should be true whenever {@code conflicts} have changed, but the
-     * {@link StatusListener}{@code .MESSAGE_CONFLICT_CHANGED} message has
-     * not yet been sent.
-     */
-    protected boolean conflictsDirty = false;
-
-    /**
-     * Broadcasts information about the changes of reasoner status.
-     *
-     * <p>If the {@code matchesDirty} or {@code conflictsDirty} flag is
-     * {@link true}, this method informs all listeners about the change
-     * of plugin's status.</p>
-     */
-    protected void handleDirt() {
-
-        if (matchesDirty || conflictsDirty)
-            regenerateIndexes();
-
-        if (matchesDirty) CzechAddressPlugin.broadcastStatusChanged(
-                StatusListener.MESSAGE_MATCHES_CHANGED);
-
-        if (conflictsDirty) CzechAddressPlugin.broadcastStatusChanged(
-                StatusListener.MESSAGE_CONFLICT_CHANGED);
-
-        matchesDirty = conflictsDirty = false;
-    }
-
-//==============================================================================
-//  CONSISTENCY CHECKING
-//==============================================================================
-
-    /**
-     * Should be called after modifying <b>anything</b> to put reasoner into
-     * consistent state.
-     *
-     * <p>This method should be called at the end of every public method,
-     * which changes anything in the reasoner.</p>
-     */
-    public void ensureConsistency() {
-        ensureConsistency(0);
-    }
-
-    /**
-     * Should be called after modifying <b>anything</b> to put reasoner into
-     * consistent state.
-     *
-     * <p>This method should be called at the end of every public method,
-     * which changes anything in the reasoner.</p>
-     *
-     * <p>Checking every match with every match is computationally inefficient.
-     * Therefore by specifying {@code startElementIndex > 0}, we can
-     * reduce this cost by checking <i>every match</i> with <i>every match,
-     * whose index is greater than {@code startElementIndex}.</p>
-     */
-    public void ensureConsistency(int startElementIndex) {
-        startElementIndex = 0;
-
-        NotNullList<Match> toDel = new NotNullList<Match>(10);
-        for (Match match1 : matches) for (Match match2 : matches) {
-
-            if (match1 == match2) continue;
-
-            if (match1.prim == match2.prim && match1.quality > match2.quality) {
-                System.out.println("Reasoner: Redundancy clean: " + match2);
-                toDel.add(match2);
-                matchesDirty = true;
-            }
-
-            if (match1.prim == match2.prim && match1.quality >= match2.quality
-             && match1.elem == match2.elem && !toDel.contains(match1)) {
-                System.out.println("Reasoner: Hyper redundancy: " + match2);
-                toDel.add(match2);
-                matchesDirty = true;
-            }
-        }
-        matches.removeAll(toDel);
-
-        toDel.clear();
-        for (Match conflict1 : conflicts) for (Match conflict2 : conflicts) {
-
-            if (conflict1 == conflict2) continue;
-
-            if (conflict1.prim == conflict2.prim
-             && conflict1.elem == conflict2.elem && !toDel.contains(conflict1)) {
-                System.out.println("Reasoner: Confl redundancy: " + conflict2);
-                toDel.add(conflict2);
-                conflictsDirty = true;
-            }
-        }
-        conflicts.removeAll(toDel);
-
-        for (Match match : matches)
-            for (Match conflict : conflicts) {
-                assert match      != conflict;
-                assert match.prim != conflict.prim;
-            }
-
-
-
-        if (handleDeletedPrimitivesSlowButSafe())
-            startElementIndex = 0;
-        handleInconsistentMatches(startElementIndex);
-        handleDirt();
-
-        CzechAddressPlugin.broadcastStatusChanged(
-                                    StatusListener.MESSAGE_REASONER_REASONED);
-    }
-
-    /**
-     * Finds conflicts in the {@code matches} list and moves them to
-     * {@code conflicts} list.
-     */
-    protected void handleInconsistentMatches(int startElementIndex) {
-        boolean assertions = false;
-        assert  assertions = true;
-
-
-        // Move all conflicting matches into 'conflicts' array.
-        int pos1 = 0;
-        while (pos1 < matches.size()) {
-
-            int pos2 = Math.max(pos1 + 1, startElementIndex);
-            while (pos2 < matches.size()) {
-
-                Match item1 = matches.get(pos1);
-                Match item2 = matches.get(pos2);
-
-                if ((item1.elem == item2.elem) || (item1.prim == item2.prim)) {
-
-                    if (assertions) {
-                        System.out.println("1. match in conflict: " + item2);
-                        System.out.println("2. match in conflict: " + item1);
-                    }
-
-                    if (item1.quality >= item2.quality) {
-                        if (assertions)
-                            System.out.println("1. match moved to 'conflicts'.");
-                        matches.remove(pos2);
-                        conflicts.add(item2);
-                        matchesDirty = conflictsDirty = true;
-                        pos2--;
-                    }
-
-                    if (item1.quality <= item2.quality) {
-                        if (assertions) {
-                            System.out.println("2. match moved to 'conflicts'.");
-                            System.out.println("----------------------------------------------------------------------");
-                        }
-                        matches.remove(pos1);
-                        conflicts.add(item1);
-                        matchesDirty = conflictsDirty = true;
-                        pos1--;
-                        break;
-                    }
-
-                    if (assertions)
-                        System.out.println("----------------------------------------------------------------------");
-                }
-
-                pos2++;
-            }
-            pos1++;
-        }
-    }
-
-    /**
-     * Seeks and handles primitives, which have been deleted.
-     *
-     * <p>If a primitive has been deleted, the first immediate action is to
-     * remove it from the {@code matches} and {@code conflicts} lists.
-     * However there might be another conflict, which was caused by the
-     * deleted primitive. This method finds such conflicts and
-     * moves them back to {@code matches} list to
-     * be reconsideres later.</p>
-     */
-    protected boolean handleDeletedPrimitives() {
-
-        boolean somethingChanged = false;
-        NotNullList<OsmPrimitive> blockers = new NotNullList<OsmPrimitive>();
-
-        // Firstly create a list of all primitives, which were deleted.
-        for (Match match : matches)
-            if (match.prim.deleted)
-                blockers.add(match.prim);
-
-        for (Match conflict : conflicts)
-            if (conflict.prim.deleted)
-                blockers.add(conflict.prim);
-
-        // Now for every deleted primitive...
-        int i=0;
-        while (i < blockers.size()) {
-            OsmPrimitive blocker = blockers.get(i);
-
-            // ... remove its' entries in the 'matches' ...
-            if (primMatchHashIndex.get(blocker) != null) {
-                Match toRemove = primMatchHashIndex.get(blocker);
-                matches.remove(toRemove);
-                primMatchHashIndex.remove(toRemove.prim);
-                elemMatchHashIndex.remove(toRemove.elem);
-                somethingChanged = matchesDirty = true;
-            }
-
-            // ... and reconsider all 'conflicts', which may have been caused
-            // by the deleted primitive. We must do it recursively...
-
-            // Every conflict, which has the 'blocker' as a primitive
-            if (primConflictHashIndex.get(blocker) != null) {
-                for (Match match : primConflictHashIndex.get(blocker)) {
-                    // Find the correspoding element and find all primitives,
-                    // which are mapped to this element.
-                    if (elemConflictHashIndex.get(match.elem) != null) {
-                        for (Match novy : elemConflictHashIndex.get(match.elem)) {
-                            // If this primitive has not yet been handled, do it!
-                            if (!blockers.contains(novy.prim))
-                                blockers.add(novy.prim);
-                            // And move the conflict back to 'matches' for reconsideration.
-                            if (!novy.prim.deleted && !matches.contains(novy)) {
-                                matches.add(novy);
-                                somethingChanged = matchesDirty = true;
-                            }
-                        }
-                        // Finally remove the reconsidered conflicts...
-                        conflicts.removeAll(elemConflictHashIndex.get(match.elem));
-                        elemConflictHashIndex.remove(match.elem);
-                        elemConflictListIndex.remove(match.elem);
-                        somethingChanged = conflictsDirty = true;
-                    }
-                    // [move the conflict back to 'matches' for reconsideration]
-                    if (!match.prim.deleted && !matches.contains(match)) {
-                        matches.add(match);
-                        somethingChanged = matchesDirty = true;
-                    }
-                }
-                // ...and once again remove reconsidered conflicts.
-                conflicts.removeAll(primConflictHashIndex.get(blocker));
-                primConflictHashIndex.remove(blocker);
-                primConflictListIndex.remove(blocker);
-                somethingChanged = conflictsDirty = true;
-            }
-            i++;
-        }
-
-        return somethingChanged;
-    }
-
-    /**
-     * Seeks and handles primitives, which have been deleted.
-     *
-     * <p>Slower, but safer counterpart of {@code handleDeletedPrimitives))}.</p>
-     */
-    protected boolean handleDeletedPrimitivesSlowButSafe() {
-
-        boolean fire = false;
-
-        for (Match match : matches)
-            fire |= match.qualityChanged();
-
-        for (Match conflict : conflicts)
-            fire |= conflict.qualityChanged();
-
-        if (fire) {
-            matches.addAll(conflicts);
-            conflicts.clear();
-            matchesDirty = conflictsDirty = true;
-
-            int i=0;
-            while (i<matches.size()) {
-                Match match = matches.get(i);
-                if (match.quality <= Match.MATCH_NOMATCH) {
-                    System.out.println("Reasoner: Deleting " + matches.get(i));
-                    matches.remove(i);
-
-                    assert fire;
-                    assert !matches.contains(match);
-                } else
-                    i++;
-            }
-        }
-
-        return fire;
-    }
-
-    protected void reconsider(OsmPrimitive prim) {
-
-        List<Match> reconsider;
-
-        reconsider = getConflicts(prim);
-        if (reconsider != null) {
-            matches.addAll(reconsider);
-            conflicts.removeAll(reconsider);
-            matchesDirty = conflictsDirty = true;
-        }
-    }
-
-    protected void reconsider(AddressElement elem) {
-
-        List<Match> reconsider;
-
-        reconsider = getConflicts(elem);
-        if (reconsider != null) {
-            matches.addAll(reconsider);
-            conflicts.removeAll(reconsider);
-            matchesDirty = conflictsDirty = true;
-        }
-    }
-
-    /**
-     * Recreates all {@code *Index} fields if this reasoner.
-     */
-    protected void regenerateIndexes() {
-        boolean assertions = false;
-        assert  assertions = true;
-
-        elemMatchHashIndex.clear();
-        primMatchHashIndex.clear();
-        elemConflictHashIndex.clear();
-        primConflictHashIndex.clear();
-        elemConflictListIndex.clear();
-        primConflictListIndex.clear();
-
-        for (Match match : matches) {
-            elemMatchHashIndex.put(match.elem, match);
-            primMatchHashIndex.put(match.prim, match);
-        }
-
-        for (Match conflict : conflicts) {
-
-            List<Match> elemConflicts = elemConflictHashIndex.get(conflict.elem);
-            if (elemConflicts == null) {
-                elemConflicts = new ArrayList<Match>();
-                elemConflictHashIndex.put(conflict.elem, elemConflicts);
-            }
-            elemConflicts.add(conflict);
-
-            List<Match> primConflicts = primConflictHashIndex.get(conflict.prim);
-            if (primConflicts == null) {
-                primConflicts = new ArrayList<Match>();
-                primConflictHashIndex.put(conflict.prim, primConflicts);
-            }
-            primConflicts.add(conflict);
-        }
-
-        for (AddressElement elem : elemConflictHashIndex.keySet())
-            elemConflictListIndex.add(elem);
-
-        for (OsmPrimitive prim : primConflictHashIndex.keySet())
-            primConflictListIndex.add(prim);
-
-        assert elemConflictHashIndex.size() == elemConflictListIndex.size();
-        assert primConflictHashIndex.size() == primConflictListIndex.size();
-
-        for (AddressElement elem : elemConflictListIndex)
-            assert elemConflictHashIndex.get(elem) != null;
-        for (OsmPrimitive prim : primConflictListIndex)
-            assert primConflictHashIndex.get(prim) != null;
-
-        if (assertions) {
-            System.out.println("Spárovaných dvojic: " + String.valueOf(matches.size()));
-            System.out.println("Konfliktů (celkem): " + String.valueOf(conflicts.size())
-                    + "; " + String.valueOf(elemConflictListIndex.size())
-                    + "+"  + String.valueOf(primConflictListIndex.size())
-                    + " elementů+primitiv");
+    public static void main(String[] args) {
+        try {
+
+            Reasoner r = new Reasoner();
+
+            Handler  h = new FileHandler("log.xml");
+
+            r.logger.addHandler(h);
+            r.logger.setLevel(Level.ALL);
+            
+            Match.logger.addHandler(h);
+            Match.logger.setLevel(Level.ALL);
+
+
+            Street s1 = new Street("Jarní");
+            Street s2 = new Street("Letní");
+
+            House h1 = new House("240", "1"); s1.addHouse(h1); r.consider(h1);
+            House h2 = new House("241", "2"); s1.addHouse(h2); r.consider(h2);
+            House h3 = new House("241", "3"); s1.addHouse(h3); r.consider(h3);
+            House h4 = new House("242", "4"); s1.addHouse(h4); r.consider(h4);
+
+            House i1 = new House("42",  "1"); s2.addHouse(i1); r.consider(i1);
+            House i2 = new House("45",  "2"); s2.addHouse(i2); r.consider(i2);
+            House i3 = new House("61",  "3"); s2.addHouse(i3); r.consider(i3);
+            House i4 = new House("240", "4"); s2.addHouse(i4); r.consider(i4);
+
+
+            
+            Node n1 = new Node(1);
+            n1.put("addr:street", "Jarní");
+            n1.put("addr:alternatenumber", "242");
+
+            r.openTransaction();
+            r.consider(n1);
+            r.closeTransaction();
+            assert r.translate(n1) == h4;
+            assert r.conflicts(n1).size() == 0;
+
+
+
+            Node n2 = new Node(2);
+            n2.put("addr:alternatenumber", "240");
+            r.openTransaction();
+            r.consider(n2);
+            r.closeTransaction();
+            assert r.translate(n2) == null;
+            assert r.conflicts(n2).contains(h1);
+            assert r.conflicts(n2).contains(i4);
+
+            n2.put("addr:street", "Letní");
+            n2.put("addr:housenumber", "4");
+            r.openTransaction();
+            r.consider(n2);
+            r.closeTransaction();
+            assert r.translate(n2) == i4;
+            assert r.conflicts(n2).contains(h1);
+
+
+            n2.deleted = true;
+            r.openTransaction();
+            r.consider(n2);
+            r.closeTransaction();
+
+            assert r.translate(n2) == null;
+            
+        } catch (Exception ex) {
+            
+            ex.printStackTrace();
         }
     }
 }

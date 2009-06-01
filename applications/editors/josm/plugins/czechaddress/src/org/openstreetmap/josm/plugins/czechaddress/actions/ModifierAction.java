@@ -8,7 +8,7 @@ package org.openstreetmap.josm.plugins.czechaddress.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.plugins.czechaddress.gui.DatabaseModifier;
+import org.openstreetmap.josm.plugins.czechaddress.gui.Renamer;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -16,8 +16,6 @@ import org.openstreetmap.josm.tools.Shortcut;
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
 public class ModifierAction extends JosmAction {
-
-//    DatabaseModifier modifier = null;
 
     public ModifierAction() {
         super("Upravit databázi",
@@ -30,6 +28,6 @@ public class ModifierAction extends JosmAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        (new DatabaseModifier()).setVisible(true);
+        (new Renamer()).setVisible(true);
     }
 }

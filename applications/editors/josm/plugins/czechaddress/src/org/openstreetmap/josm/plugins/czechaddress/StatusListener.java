@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.czechaddress;
 
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
-import org.openstreetmap.josm.plugins.czechaddress.parser.DatabaseParser;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 
 /**
@@ -66,7 +65,6 @@ public interface StatusListener {
      * {@link CzechAddressPlugin}{@code .getDatabase()}.</p>
      *
      * @see CzechAddressPlugin
-     * @see DatabaseParser
      * @see Database
      */
     static final int MESSAGE_DATABASE_LOADED   = 4;

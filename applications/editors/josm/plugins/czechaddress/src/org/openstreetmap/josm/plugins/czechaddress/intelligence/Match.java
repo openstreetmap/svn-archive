@@ -1,7 +1,8 @@
 package org.openstreetmap.josm.plugins.czechaddress.intelligence;
 
 import java.util.List;
-import org.openstreetmap.josm.data.osm.Node;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
@@ -19,29 +20,23 @@ public class Match {
     public static final int MATCH_CONFLICT  = 1;
     public static final int MATCH_NOMATCH   = 0;
     
-    public int quality;
+    public int qVal;
     public OsmPrimitive prim;
     public AddressElement elem;
 
     public String checkSum;
+    public static Logger logger = Logger.getLogger("Match");
 
     public Match(AddressElement element, OsmPrimitive primitive,
                  int qualityFactor) {
         
         assert primitive != null;
-        assert element != null;
-        assert qualityFactor <= MATCH_OVERWRITE;
-        assert qualityFactor > MATCH_NOMATCH
-             : "MATCH_NOMATCH represents no relation."
-             + "It's pointless to waste memory for it.";
-
+        assert element   != null;
         assert !primitive.deleted;
 
         prim = primitive;
         elem = element;
-        quality = qualityFactor;
-
-        checkSum = toString();
+        qVal = qualityFactor;
     }
 
     public List<Proposal> getDiff() {
@@ -52,35 +47,41 @@ public class Match {
                                     OsmPrimitive primitive) {
 
         int quality = element.getMatchQuality(primitive);
+
+        logger.log(Level.FINE, "asked to create match",
+                               new Object[] {element, primitive, quality});
+
         if (quality > MATCH_NOMATCH)
             return new Match(element, primitive, quality);
 
         return null;
     }
+/*
+    public boolean setQ(int desiredQ) {
+        int oldQ = evalQ();
+        qVal = desiredQ;
+        int newQ = evalQ();
 
-    public boolean qualityChanged() {
-        int newQuality
-        = prim.deleted ? MATCH_NOMATCH
-                       : quality == MATCH_OVERWRITE ? MATCH_OVERWRITE
-                                                    : elem.getMatchQuality(prim);
-        if (prim instanceof Node) {
-            Node node = (Node) prim;
-            if (node.coor == null || node.eastNorth == null) {
-                newQuality = MATCH_NOMATCH;
-                System.out.println("Suspicious node, ignoring it: " + AddressElement.getName(node));
-            }
-        }
-            
+        if (oldQ != newQ)
+            logger.log(Level.INFO, "changing match value: " + oldQ + " --> " + newQ
+                                 + " (desired value is " + desiredQ + ")", this);
+        return oldQ != evalQ();
+    }
+*/
+    public static int evalQ(OsmPrimitive prim, AddressElement elem, Integer oldQ) {
         
-        boolean difference = newQuality != quality;
-        quality = newQuality;
+        if (prim.deleted)
+            return MATCH_NOMATCH;
 
-        return difference;
+        if (oldQ == MATCH_OVERWRITE)
+            return MATCH_OVERWRITE;
+
+        return elem.getMatchQuality(prim);
     }
 
     @Override
     public String toString() {
-        return "{Match: q=" + String.valueOf(quality)
+        return "{Match: q=" + String.valueOf(qVal)
                    + "; elem='" + elem.toString()
                    +"'; prim='" + AddressElement.getName(prim) + "'}";
     }

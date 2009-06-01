@@ -12,7 +12,7 @@ if (-f $arg) {
         say rgb_str($max ? ($_ / $max) : $_);
     }
 } else {
-    say rgb_str($max ? ($_ / $max) : $_);
+    say rgb_str($max ? ($arg / $max) : $arg);
 }
 
 sub rgb_str

@@ -5,8 +5,8 @@
 #include <QCoreApplication>
 #include <QProcess>
 #include "math.h"
-
 QCoreApplication *app;
+SRTMTile errorTile("error", -1000, -1000); //TODO
 
 /** Constructor for SRTMDownloader.
   * \param server Hostname of SRTM server.
@@ -82,22 +82,34 @@ void SRTMDownloader::ftpListInfo(const QUrlInfo &info)
     fileList[latLonToIndex(lat, lon)] = currentContinent+"/"+info.name();
 }
 
-/** Get tile for a specified location. */
+/** Get tile for a specified location.
+  * \note The tile object returned is owned by this SRTMDownloader instance. It
+  *       _must_ _not_ be deleted by the user. However it _may_ be deleted by
+  *       SRTMDownloader during any later call to getTile()
+  */
 SRTMTile *SRTMDownloader::getTile(float lat, float lon)
 {
     int index = latLonToIndex(int(lat), int(lon));
+    SRTMTile *tile = tileCache[index];
+
+    if (tile) return tile;
+
     if (fileList.contains(index)) {
         QStringList splitted = fileList[index].split("/", QString::SkipEmptyParts);
         if (!QFile(cachedir + splitted[1]).exists()) {
             downloadTile(fileList[index]);
         }
-        return new SRTMTile(cachedir + splitted[1], int(lat), int(lon)); //TODO: Caching
+        tile = new SRTMTile(cachedir + splitted[1], int(lat), int(lon));
+        tileCache.insert(index, tile);
+        Q_ASSERT(tileCache[index] != 0);
+        return tile;
     } else {
-       return new SRTMTile("error", -1000, -1000);
+       return &errorTile;
     }
 }
 
 /** Download a tile from the server.
+    \param filename must be in the format continent/tilename.hgt.zip
     \note You should _not_ call this function when you need tile data. Use getTile instead. */
 void SRTMDownloader::downloadTile(QString filename)
 {
@@ -133,33 +145,44 @@ void SRTMDownloader::ftpDone(int /*command_id*/, bool error)
     if (error) qDebug() << "FTP-Error:" << ftp.errorString();
 }
 
-/** Create a new tile object. Unzips the tile data if necessary. */
+/** Create a new tile object. Unzips the tile data if necessary.
+  * \note Special filename: "error" returns an invalid tile.
+  */
 SRTMTile::SRTMTile(QString filename, int lat, int lon)
 {
-    qDebug() << "Creating new tile object for " << lat << lon;
     this->lat = lat;
     this->lon = lon;
-    //TODO: This problem needs a better solution!
-    QStringList args;
-    QProcess process;
-    args << "-n" << QFileInfo(filename).fileName();
-    process.setWorkingDirectory(QFileInfo(filename).path());
-    process.setProcessChannelMode(QProcess::ForwardedChannels);
-    process.start("unzip", args);
-    if (!process.waitForStarted() || !process.waitForFinished()) {
-        qDebug() << "Could not unzip" << filename;
-    }
+    valid = false;
+    if (filename == "error") return;
+    
+    qDebug() << "Creating new tile object for " << lat << lon;
     QFileInfo fi(filename);
     QString filename2 = fi.path()+'/'+fi.completeBaseName();
-    qDebug() << filename2;
+
+    //TODO: Unzip needs a better solution!
+    if (!QFile(filename2).exists()) {
+        QStringList args;
+        QProcess process;
+        args << "-n" << QFileInfo(filename).fileName();
+        process.setWorkingDirectory(QFileInfo(filename).path());
+        process.setProcessChannelMode(QProcess::ForwardedChannels);
+        process.start("unzip", args);
+        if (!process.waitForStarted() || !process.waitForFinished()) {
+            qDebug() << "Could not unzip" << filename;
+            return;
+        }
+    }
     file.setFileName(filename2);
     if (!file.open(QIODevice::ReadOnly)) {
         qCritical() << "Could not open file" << filename2 << file.errorString();
-    } else {
-        qDebug() << "file is open";
+        return;
     }
     Q_ASSERT(file.size() == 2*1201*1201 || file.size() == 2*3601*3601);
     size = sqrt(file.size()/2);
+    buffer = new qint16[file.size()/2];
+    file.read((char *)buffer, file.size());
+    file.close();
+    valid = true;
 }
 
 /** Get the value of a pixel from the data using a coordinate system
@@ -169,16 +192,30 @@ SRTMTile::SRTMTile(QString filename, int lat, int lon)
 int SRTMTile::getPixelValue(int x, int y)
 {
     int offset = x + size * (size - y - 1);
-//     qDebug() << "offset" << offset;
-    file.seek(offset * 2); //TODO: Errorhandling
     qint16 value;
-//     qDebug() << "bytes" <<
-    file.read((char *)&value, 2);
-//      << file.errorString() << size;
-//     qDebug() << "value raw" << value;
-    value = qFromBigEndian(value);
-//     qDebug() << "value system" << value;
+    value = qFromBigEndian(buffer[offset]);
     return value;
+}
+
+float SRTMTile::getAltitudeFromLatLon(float lat, float lon)
+{
+    if (!valid) return SRTM_DATA_VOID;
+    lat -= this->lat;
+    lon -= this->lon; //TODO: Does this work for negative values?
+    Q_ASSERT(lat >= 0.0 && lat < 1.0 && lon >= 0.0 && lon < 1.0);
+    float x = lon * (size -1);
+    float y = lat * (size -1);
+    /* Variable names:
+        valueXY with X,Y as offset from calculated value, _ for average
+    */
+    float value00 = getPixelValue(x, y);
+    float value10 = getPixelValue(x+1, y);
+    float value01 = getPixelValue(x, y+1);
+    float value11 = getPixelValue(x+1, y+1);
+    float value_0 = avg(value00, value10, x-int(x));
+    float value_1 = avg(value01, value11, x-int(x));
+    float value__ = avg(value_0, value_1, y-int(y));
+    return value__;
 }
 
 SRTMDownloader downloader;
@@ -191,8 +228,9 @@ int main(int argc, char **argv)
     SRTMTile *tile = downloader.getTile(49.12, 12.12);
     tile->getPixelValue(567, 234);
     int i;
-    for (i=0; i<10000000; i++)
+    for (i=0; i<100000000; i++)
     {
-        tile->getPixelValue(567, 234);
+        tile->getAltitudeFromLatLon(49.1234, 12.56789);
     }
+    qDebug() <<  tile->getAltitudeFromLatLon(49.1234, 12.56789);
 }

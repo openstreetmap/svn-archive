@@ -140,125 +140,7 @@ foreach my $y (reverse(1..$ygridnum)) {
 	my $maxx = $proj->{'minlon'} + ($x)*$segx;
 	my $maxy = $proj->{'minlat'} + ($y)*$segy;
 	
-	my $smosmfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.osm";
-	my $osmfile = $smosmfile;
-	my $xmlfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.xml";
-
-	if (!$opts{'force-fetch'} && -f $combinedosm) {
-	    $osmfile = $combinedosm;
-	} else {
-	    if (! -f $osmfile) {
-		System("wget --no-proxy -O $osmfile http://www.openstreetmap.org/api/0.5/map?bbox=$minx,$miny,$maxx,$maxy");
-		$needoverview = 1;
-	    }
-
-	    push @osmfiles, $osmfile;
-	}
-
-
-	# render the page
-	if (! -f $xmlfile || Stat($proj->{'grid-rule-file'}, $xmlfile)) {
-	    print STDERR "creating $xmlfile\n";
-
-	    # sigh...  xmlstarlet already assumes the subdir for some reason
-	    my $starfile = $osmfile;
-	    $starfile =~ s/$proj->{'datadir'}\///;
-
-	    open(I, $proj->{'grid-rule-file'});
-	    open(O,">$xmlfile");
-	    while (<I>) {
-		s/data.osm/$osmfile/;
-#		s/data.osm/$starfile/;
-		print O;
-	    }
-	    close(I);
-	    close(O);
-	}
-
-	# render the map as a svg
-	my $svgfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.svg";
-	if (! -f $svgfile || Stat($xmlfile, $svgfile)) {
-	    #System("xmlstarlet tr osmarender.xsl $xmlfile > $svgfile");
-	    System("perl orp.svn/orp.pl --minlat $miny --maxlat $maxy --minlon $minx --maxlon $maxx -r $xmlfile $osmfile");
-	    if ($osmfile ne $smosmfile) {
-		my $combinedsvg = $osmfile;
-		$combinedsvg =~ s/osm$/svg/;
-		rename($combinedsvg, $svgfile);
-	    }
-	}
-
-	# add a numeric/letter grid border to the svg file
-	my $svg2file = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy-gridded.svg";
-	# XXX: make optional
-	# XXX: make number of grid components on a side optional
-	my $extrainkargs = "";
-	if (! -f $svg2file || Stat($svgfile, $svg2file)) {
-	    $extrainkargs = make_svggrid($svgfile, $svg2file);
-	    $svgfile = $svg2file;
-	}
-
-	# convert to png
-	# inkscape -f map.svg -e map.png
-	my $pngfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.png";
-	if ($opts{'png'} && (! -f $pngfile || Stat($svgfile, $pngfile))) {
-	    System("inkscape -f $svgfile -e $pngfile");
-        }
-
-	# convert to eps
-	# inkscape -f map.svg -E map.eps
-	my $outfile;
-	if ($opts{'ps'}) {
-	    my $epsfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.eps";
-	    if (! -f $epsfile || Stat($svgfile, $epsfile)) {
-		System("inkscape $extrainkargs -f $svgfile -E $epsfile");
-	    }
-	    $outfile = $epsfile;
-	} else {
-	    my $pdffile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.pdf";
-	    if (! -f $pdffile || Stat($svgfile, $pdffile)) {
-		System("inkscape -f $svgfile -A $pdffile");
-	    }
-	    $outfile = $pdffile;
-	}
-
-	$count++;
-	
-	if (defined($proj->{'latex-file'})) {
-	    # note: y numbers are functionally backwards (bottom to top)
-	    my $nw = get_grid_num($x-1, $y+1);
-	    my $n  = get_grid_num($x,   $y+1);
-	    my $ne = get_grid_num($x+1, $y+1);
-
-	    my $w  = get_grid_num($x-1, $y);
-	    my $e  = get_grid_num($x+1, $y);
-
-	    my $sw = get_grid_num($x-1, $y-1);
-	    my $s  = get_grid_num($x,   $y-1);
-	    my $se = get_grid_num($x+1, $y-1);
-
-	    my $gridstring = "\\Grid{$nw}{$n}{$ne}{$w}{$e}{$sw}{$s}{$se}";
-
-	    if ($opts{'ps'}) {
-		print L "\\Map{$outfile}{$gridsquare}{$minx}{$maxy}{$maxx}{$miny}{$gridstring}\n";
-	    } else {
-		print L "\\Map{$outfile}{$gridsquare}{$minx}{$maxy}{$maxx}{$miny}{$gridstring}\n";
-	    }
-
-	    if ($#{$gridinfo->{'grid'}{$gridsquare}{'note'}} > -1)  {
-		print L "\\NotesBegin\n";
-		foreach my $note (@{$gridinfo->{'grid'}{$gridsquare}{'note'}}) {
-		    print STDERR "yay!: $note $gridnum\n";
-		    print L "\\Note{" . $note . "}\n";
-		}
-		print L "\\NotesEnd\n";
-	    }
-	    print L "\\EndPage\n";
-	}
-
-	if (defined($opts{'M'}) && $count >= $opts{'M'}) {
-	    print STDERR "reached maximum\n";
-	    exit;
-	}
+	do_grid($gridsquare, $minx, $miny, $maxx, $maxy, $x, $y);
     }
 }
 
@@ -312,6 +194,130 @@ if ($opts{'ps'}) {
 sub System {
     print join(" ",@_),"\n";
     system(@_);
+}
+
+sub do_grid {
+    my ($label, $minx, $miny, $maxx, $maxy, $x, $y) = @_;
+
+    my $smosmfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.osm";
+    my $osmfile = $smosmfile;
+    my $xmlfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.xml";
+
+    if (!$opts{'force-fetch'} && -f $combinedosm) {
+	$osmfile = $combinedosm;
+    } else {
+	if (! -f $osmfile) {
+	    System("wget --no-proxy -O $osmfile http://www.openstreetmap.org/api/0.6/map?bbox=$minx,$miny,$maxx,$maxy");
+	    $needoverview = 1;
+	}
+
+	push @osmfiles, $osmfile;
+    }
+
+
+    # render the page
+    if (! -f $xmlfile || Stat($proj->{'grid-rule-file'}, $xmlfile)) {
+	print STDERR "creating $xmlfile\n";
+
+	# sigh...  xmlstarlet already assumes the subdir for some reason
+	my $starfile = $osmfile;
+	$starfile =~ s/$proj->{'datadir'}\///;
+
+	open(I, $proj->{'grid-rule-file'});
+	open(O,">$xmlfile");
+	while (<I>) {
+	    s/data.osm/$osmfile/;
+	    #		s/data.osm/$starfile/;
+	    print O;
+	}
+	close(I);
+	close(O);
+    }
+
+    # render the map as a svg
+    my $svgfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.svg";
+    if (! -f $svgfile || Stat($xmlfile, $svgfile)) {
+	#System("xmlstarlet tr osmarender.xsl $xmlfile > $svgfile");
+	System("perl orp.svn/orp.pl --minlat $miny --maxlat $maxy --minlon $minx --maxlon $maxx -r $xmlfile $osmfile");
+	if ($osmfile ne $smosmfile) {
+	    my $combinedsvg = $osmfile;
+	    $combinedsvg =~ s/osm$/svg/;
+	    rename($combinedsvg, $svgfile);
+	}
+    }
+
+    # add a numeric/letter grid border to the svg file
+    my $svg2file = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy-gridded.svg";
+    # XXX: make optional
+    # XXX: make number of grid components on a side optional
+    my $extrainkargs = "";
+    if (! -f $svg2file || Stat($svgfile, $svg2file)) {
+	$extrainkargs = make_svggrid($svgfile, $svg2file);
+	$svgfile = $svg2file;
+    }
+
+    # convert to png
+    # inkscape -f map.svg -e map.png
+    my $pngfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.png";
+    if ($opts{'png'} && (! -f $pngfile || Stat($svgfile, $pngfile))) {
+	System("inkscape -f $svgfile -e $pngfile");
+    }
+
+    # convert to eps
+    # inkscape -f map.svg -E map.eps
+    my $outfile;
+    if ($opts{'ps'}) {
+	my $epsfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.eps";
+	if (! -f $epsfile || Stat($svgfile, $epsfile)) {
+	    System("inkscape $extrainkargs -f $svgfile -E $epsfile");
+	}
+	$outfile = $epsfile;
+    } else {
+	my $pdffile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.pdf";
+	if (! -f $pdffile || Stat($svgfile, $pdffile)) {
+	    System("inkscape -f $svgfile -A $pdffile");
+	}
+	$outfile = $pdffile;
+    }
+
+    $count++;
+	
+    if (defined($proj->{'latex-file'})) {
+	# note: y numbers are functionally backwards (bottom to top)
+	my $nw = get_grid_num($x-1, $y+1);
+	my $n  = get_grid_num($x,   $y+1);
+	my $ne = get_grid_num($x+1, $y+1);
+
+	my $w  = get_grid_num($x-1, $y);
+	my $e  = get_grid_num($x+1, $y);
+
+	my $sw = get_grid_num($x-1, $y-1);
+	my $s  = get_grid_num($x,   $y-1);
+	my $se = get_grid_num($x+1, $y-1);
+
+	my $gridstring = "\\Grid{$nw}{$n}{$ne}{$w}{$e}{$sw}{$s}{$se}";
+
+	if ($opts{'ps'}) {
+	    print L "\\Map{$outfile}{$label}{$minx}{$maxy}{$maxx}{$miny}{$gridstring}\n";
+	} else {
+	    print L "\\Map{$outfile}{$label}{$minx}{$maxy}{$maxx}{$miny}{$gridstring}\n";
+	}
+
+	if ($#{$gridinfo->{'grid'}{$label}{'note'}} > -1) {
+	    print L "\\NotesBegin\n";
+	    foreach my $note (@{$gridinfo->{'grid'}{$label}{'note'}}) {
+		print STDERR "yay!: $note $gridnum\n";
+		print L "\\Note{" . $note . "}\n";
+	    }
+	    print L "\\NotesEnd\n";
+	}
+	print L "\\EndPage\n";
+    }
+
+    if (defined($opts{'M'}) && $count >= $opts{'M'}) {
+	print STDERR "reached maximum\n";
+	exit;
+    }
 }
 
 sub make_overview {

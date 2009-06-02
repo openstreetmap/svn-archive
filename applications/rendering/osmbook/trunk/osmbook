@@ -462,7 +462,7 @@ sub make_svggrid {
     for my $y (0..($numy)) {
 	print O "<line style=\"stroke: rgb(0,0,0)\" y1=\"",
 	  $y * $hlinegap, "\" y2=\"", $y * $hlinegap, 
-	    "\" x1=\"$hlinetop\" x2=\"$height\" />\n";
+	    "\" x1=\"$hlinetop\" x2=\"$width\" />\n";
 	if ($y != $numy) {
 	    print O "<text $textstyle y=\"", $y*$hlinegap + $hlinegap/2,
 	      "\" x=\"", $width - $vlinegap/4, "\">",

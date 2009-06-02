@@ -69,6 +69,7 @@ void OsmData::parse(QFile *file)
     qDebug() << kept << discarded << nodes_referenced;
 }
 
+#if 0
 int main(void)
 {
     OsmData data;
@@ -76,3 +77,4 @@ int main(void)
     qDebug() << data.nodes.count() << data.ways.count();
 	qDebug() << data.ways.capacity();
 }
+#endif

@@ -61,7 +61,7 @@ class SRTMDownloader:
         self.filelist = {}
         self.filename_regex = re.compile(
                 r"([NS])(\d{2})([EW])(\d{3})\.hgt\.zip")
-        self.filelist_file = self.cachedir + "/filelist"
+        self.filelist_file = self.cachedir + "/filelist_python"
         self.ftpfile = None
         self.ftp_bytes_transfered = 0
 
@@ -221,6 +221,7 @@ class SRTMTile:
         assert y < self.size, "y: %d<%d" % (y, self.size)
         # Same as calcOffset, inlined for performance reasons
         offset = x + self.size * (self.size - y - 1)
+        print offset
         value = self.data[offset]
         if value == -32768:
             return None # -32768 is a special value for areas with no data
@@ -261,3 +262,5 @@ class SRTMTile:
 if __name__ == '__main__':
     downloader = SRTMDownloader()
     downloader.loadFileList()
+    tile = downloader.getTile(49, 12)
+    print tile.getPixelValue(567, 234)

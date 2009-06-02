@@ -1,3 +1,13 @@
-This directory will contain the Summer of Code 2009 project of Hermann Kraus.
+This directory contains the Summer of Code 2009 project of Hermann Kraus.
 
+Compilation
+-----------
+cmake
+make
+
+
+Documentation
+--------------
 ftp://e0srp01u.ecs.nasa.gov/srtm/version2/Documentation/
+http://doc.trolltech.com/4.4/
+

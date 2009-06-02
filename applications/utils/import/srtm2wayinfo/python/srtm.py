@@ -263,4 +263,4 @@ if __name__ == '__main__':
     downloader = SRTMDownloader()
     downloader.loadFileList()
     tile = downloader.getTile(49, 12)
-    print tile.getPixelValue(567, 234)
+    print tile.getAltitudeFromLatLon(49.1234, 12.56789)

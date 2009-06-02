@@ -2183,7 +2183,7 @@
 			fill: none;
 			}
 			
-			.tunnel { stroke-dasharray: 0.8, 0.8; }
+			.tunnel { stroke-dasharray: 1.4, 1.4; }
 			
 			.railway-casing { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
 			.railway-1-core { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }

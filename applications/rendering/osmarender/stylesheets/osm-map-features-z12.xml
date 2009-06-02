@@ -1201,7 +1201,7 @@
 			fill: none;
 			}
 			
-			.tunnel { stroke-dasharray: 1.6, 1.6; }
+			.tunnel { stroke-dasharray: 6, 6; }
 			
 			.railway-casing { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
 			.railway-1-core { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
@@ -1216,79 +1216,79 @@
 			stroke: #b0b0b0;
 			}
 
-			.railway-rail-casing                    { stroke-width: 8px; }
+			.railway-rail-casing                    { stroke-width: 9.5px; }
 			.railway-rail-2-core                    { stroke-width: 7px; }
 			.railway-rail-casing-color              { stroke: #404040; }
 			.railway-rail-2-core-color              { stroke: #404040; }
 			.railway-rail-tunnel-core               { stroke-opacity: 0.1; }
 
-			.railway-narrow-casing                    { stroke-width: 6px; }
+			.railway-narrow-casing                    { stroke-width: 7.5px; }
 			.railway-narrow-2-core                    { stroke-width: 5px; }
 			.railway-narrow-casing-color              { stroke: #404040; }
 			.railway-narrow-2-core-color              { stroke: #404040; }
 			.railway-narrow-tunnel-core               { stroke-opacity: 0.1; }
 
-			.railway-preserved-casing                    { stroke-width: 5px; }
+			.railway-preserved-casing                    { stroke-width: 7.5px; }
 			.railway-preserved-2-core                    { stroke-width: 4px; }
 			.railway-preserved-casing-color              { stroke: #595959; }
 			.railway-preserved-2-core-color              { stroke: #595959; }
 			.railway-preserved-tunnel-core               { stroke-opacity: 0.1; }
 
-			.railway-light-casing                    { stroke-width: 5px; }
+			.railway-light-casing                    { stroke-width: 7.5px; }
 			.railway-light-2-core                    { stroke-width: 4px; }
 			.railway-light-casing-color              { stroke: #008000; }
 			.railway-light-2-core-color              { stroke: #008000; }
 			.railway-light-tunnel-core               { stroke-opacity: 0.2; }
 
-			.railway-tram-casing                    { stroke-width: 5px; }
+			.railway-tram-casing                    { stroke-width: 7.5px; }
 			.railway-tram-2-core                    { stroke-width: 4px; }
 			.railway-tram-casing-color              { stroke: #800080; }
 			.railway-tram-2-core-color              { stroke: #800080; }
 			.railway-tram-tunnel-core               { stroke-opacity: 0.2; }
 
-			.railway-subway-casing                    { stroke-width: 5px; }
+			.railway-subway-casing                    { stroke-width: 7.5px; }
 			.railway-subway-2-core                    { stroke-width: 4px; }
 			.railway-subway-casing-color              { stroke: #000080; }
 			.railway-subway-2-core-color              { stroke: #000080; }
 			.railway-subway-tunnel-core               { stroke-opacity: 0.2; }
 
-			.railway-funicular-casing                    { stroke-width: 5px; }
+			.railway-funicular-casing                    { stroke-width: 7.5px; }
 			.railway-funicular-2-core                    { stroke-width: 4px; }
 			.railway-funicular-casing-color              { stroke: #800000; }
 			.railway-funicular-2-core-color              { stroke: #800000; }
 			.railway-funicular-tunnel-core               { stroke-opacity: 0.2; }
 
-			.railway-monorail-casing                    { stroke-width: 5px; }
+			.railway-monorail-casing                    { stroke-width: 7.5px; }
 			.railway-monorail-2-core                    { stroke-width: 4px; }
 			.railway-monorail-casing-color              { stroke: #b20000; }
 			.railway-monorail-2-core-color              { stroke: #b20000; }
 			.railway-monorail-tunnel-core               { stroke-opacity: 0.2; }
 
-			.railway-yard-casing                    { stroke-width: 3px; }
+			.railway-yard-casing                    { stroke-width: 4.5px; }
 			.railway-yard-2-core                    { stroke-width: 2px; }
 			.railway-yard-casing-color              { stroke: #404040; }
 			.railway-yard-2-core-color              { stroke: #404040; }
 			.railway-yard-tunnel-core               { stroke-opacity: 0.1; }
 
-			.railway-con-casing                { stroke-width: 4px; }
+			.railway-con-casing                { stroke-width: 5.5px; }
 			.railway-con-2-core                { stroke-width: 3px; stroke-dasharray: 4,4; }
 			.railway-con-casing-color          { stroke: #404040; }
 			.railway-con-2-core-color          { stroke: #404040; }
 			.railway-con-tunnel-core               { stroke-opacity: 0.1; }
 
-			.railway-pla-casing                { stroke-width: 3px; }
+			.railway-pla-casing                { stroke-width: 4.5px; }
 			.railway-pla-2-core                { stroke-width: 2px; stroke-dasharray: 2,2; }
 			.railway-pla-casing-color          { stroke: #b2b2b2; }
 			.railway-pla-2-core-color          { stroke: #b2b2b2; }
 			.railway-pla-tunnel-core               { stroke-opacity: 0.1; }
 
-			.railway-dis-casing                { stroke-width: 3px; }
+			.railway-dis-casing                { stroke-width: 4.5px; }
 			.railway-dis-2-core                { stroke-width: 2px; stroke-opacity: 0.5; }
 			.railway-dis-casing-color          { stroke: #808080; }
 			.railway-dis-2-core-color          { stroke: #808080; }
 			.railway-dis-tunnel-core               { stroke-opacity: 0.1; }
 
-			.railway-aba-casing                { stroke-width: 2px; }
+			.railway-aba-casing                { stroke-width: 3px; }
 			.railway-aba-2-core                { stroke-width: 1px; stroke-opacity: 0.3; }
 			.railway-aba-casing-color          { stroke: #b2b2b2; }
 			.railway-aba-2-core-color          { stroke: #b2b2b2; }

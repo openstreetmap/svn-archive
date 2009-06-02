@@ -4,10 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.Mac;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
@@ -34,8 +33,7 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
  */
 public class Reasoner {
 
-    /* A list of {@link OsmPrimitive}s, for which there was no suitable match. */
-    //private List<OsmPrimitive> notMatchable = new ArrayList<OsmPrimitive>();
+    /* A list of {@link OsmPrimitive}s, for which there was no suitable match.*/
 
     private     Map<OsmPrimitive, AddressElement> primBestIndex
       = new HashMap<OsmPrimitive, AddressElement> ();
@@ -49,13 +47,8 @@ public class Reasoner {
 
     private Set<OsmPrimitive>   primToUpdate = new HashSet<OsmPrimitive>();
     private Set<AddressElement> elemToUpdate = new HashSet<AddressElement>();
-//  private Map<Object,Integer> statusBefore = new HashMap<Object,Integer>();
 
-    public Logger logger = Logger.getLogger("Reasoner");
-
-    public static final int STATUS_UNKNOWN = 0;
-    public static final int STATUS_CONFLICT = 1;
-    public static final int STATUS_MATCH = 2;
+    public static Logger logger = Logger.getLogger(Reasoner.class.getName());
 
     private Reasoner() {}
     private static Reasoner singleton = null;
@@ -73,12 +66,53 @@ public class Reasoner {
         elemMatchIndex.clear();
         primBestIndex.clear();
         primBestIndex.clear();
+
+        for (ReasonerListener listener : listeners)
+            listener.resonerReseted();
+    }
+    
+    public Set<AddressElement> getCandidates(OsmPrimitive prim) {
+
+        int best = Match.MATCH_NOMATCH;
+        for (AddressElement elem : primMatchIndex.get(prim).keySet()) {
+            int cand = primMatchIndex.get(prim).get(elem);
+            if (best < cand)
+                best = cand;
+        }
+
+        Set<AddressElement> result = new HashSet<AddressElement>();
+
+        for (AddressElement elem : primMatchIndex.get(prim).keySet()) {
+            int cand = primMatchIndex.get(prim).get(elem);
+            if (best == cand)
+                result.add(elem);
+        }
+        return result;
     }
 
-    private AddressElement getBest(OsmPrimitive prim) {
+    public Set<OsmPrimitive> getCandidates(AddressElement elem) {
+
+        int best = Match.MATCH_NOMATCH;
+        for (OsmPrimitive prim : elemMatchIndex.get(elem).keySet()) {
+            int cand = elemMatchIndex.get(elem).get(prim);
+            if (best < cand)
+                best = cand;
+        }
+
+        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
+        
+        for (OsmPrimitive prim : elemMatchIndex.get(elem).keySet()) {
+            int cand = elemMatchIndex.get(elem).get(prim);
+            if (best == cand)
+                result.add(prim);
+        }
+        return result;
+    }
+
+    public AddressElement getStrictlyBest(OsmPrimitive prim) {
 
         Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
-        if (matches == null) return null;
+        //if (matches == null) return null;
 
         AddressElement bestE = null;
         int bestQ = Match.MATCH_NOMATCH;
@@ -96,10 +130,10 @@ public class Reasoner {
         return bestE;
     }
 
-    private OsmPrimitive getBest(AddressElement prim) {
+    public OsmPrimitive getStrictlyBest(AddressElement prim) {
 
         Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(prim);
-        if (matches == null) return null;
+        //if (matches == null) return null;
 
         OsmPrimitive bestE = null;
         int bestQ = Match.MATCH_NOMATCH;
@@ -124,55 +158,60 @@ public class Reasoner {
 
     public void closeTransaction() {
 
-        Set<Object> changes = new HashSet<Object>();
+        Set<AddressElement> elemChanges = new HashSet<AddressElement>();
+        Set<OsmPrimitive>   primChanges = new HashSet<OsmPrimitive>();
 
         for (OsmPrimitive prim : primToUpdate) {
-            AddressElement bestMatch = getBest(prim);
+            AddressElement bestMatch = getStrictlyBest(prim);
 
             if (primBestIndex.get(prim) != bestMatch) {
                 if (bestMatch == null) {
-                    logger.log(Level.INFO, "primitive has no longer best match",
+                    logger.log(Level.FINE, "primitive has no longer best match",
                             AddressElement.getName(prim));
                     primBestIndex.remove(prim);
                 } else {
-                    logger.log(Level.INFO, "primitive has a new best match",
+                    logger.log(Level.FINE, "primitive has a new best match",
                             "prim=„" + AddressElement.getName(prim) + "“ → " +
                             "elem=„" + bestMatch + "“");
+                    elemChanges.add(primBestIndex.get(prim));
                     primBestIndex.put(prim, bestMatch);
                 }
-                changes.add(prim);
             }
         }
-        primToUpdate.clear();
 
 
         for (AddressElement elem : elemToUpdate) {
-            OsmPrimitive bestMatch = getBest(elem);
+            OsmPrimitive bestMatch = getStrictlyBest(elem);
 
             if (elemBestIndex.get(elem) != bestMatch) {
                 if (bestMatch == null) {
-                    logger.log(Level.INFO, "element has no longer best match", elem);
+                    logger.log(Level.FINE, "element has no longer best match", elem);
                     elemBestIndex.remove(elem);
                 } else {
-                    logger.log(Level.INFO, "element has a new best match",
+                    logger.log(Level.FINE, "element has a new best match",
                             "elem=„" + elem + "“ → " +
                             "prim=„" + AddressElement.getName(bestMatch) + "“");
+                    primChanges.add(elemBestIndex.get(elem));
                     elemBestIndex.put(elem, bestMatch);
                 }
-                changes.add(elem);
             }
         }
-        elemToUpdate.clear();
 
-        for (Object change : changes) {
-            if (change instanceof OsmPrimitive)
-                for (ReasonerListener listener : listeners)
-                    listener.primitiveChanged((OsmPrimitive) change);
+        elemToUpdate.addAll(elemChanges);
+        primToUpdate.addAll(primChanges);
 
-            if (change instanceof AddressElement)
-                for (ReasonerListener listener : listeners)
-                    listener.elementChanged((AddressElement) change);
+        for (ReasonerListener listener : listeners) {
+            for (AddressElement elem : elemToUpdate)
+                if (elem != null)
+                    listener.elementChanged(elem);
+            
+            for (OsmPrimitive prim : primToUpdate)
+                if (prim != null)
+                    listener.primitiveChanged(prim);
         }
+        
+        primToUpdate.clear();
+        elemToUpdate.clear();
     }
 
     private Set<ReasonerListener> listeners = new HashSet<ReasonerListener>();
@@ -183,7 +222,7 @@ public class Reasoner {
         int newQ = Match.evalQ(prim, elem, oldQ);
 
         if (oldQ != newQ) {
-            logger.log(Level.INFO, "reconsidering match",
+            logger.log(Level.FINE, "reconsidering match",
                     "q=" + String.valueOf(oldQ) + "→" + String.valueOf(newQ) + "; " +
                     "elem=„" + elem + "“; " +
                     "prim=„" + AddressElement.getName(prim) + "“");
@@ -191,15 +230,18 @@ public class Reasoner {
 
             primToUpdate.add(prim);
             elemToUpdate.add(elem);
+
+            primToUpdate.addAll(elemMatchIndex.get(elem).keySet());
+            elemToUpdate.addAll(primMatchIndex.get(prim).keySet());
         }
     }
 
     public void consider(OsmPrimitive prim) {
-        logger.log(Level.FINE, "considering primitive", AddressElement.getName(prim));
+        logger.log(Level.FINER, "considering primitive", AddressElement.getName(prim));
 
         Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
         if (matches == null) {
-            logger.log(Level.INFO, "new primitive detected", AddressElement.getName(prim));
+            logger.log(Level.FINE, "new primitive detected", AddressElement.getName(prim));
             matches = new HashMap<AddressElement, Integer>();
             primMatchIndex.put(prim, matches);
         }
@@ -209,11 +251,11 @@ public class Reasoner {
     }
 
     public void consider(AddressElement elem) {
-        logger.log(Level.FINE, "considering element", elem);
+        logger.log(Level.FINER, "considering element", elem);
 
         Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(elem);
         if (matches == null) {
-            logger.log(Level.INFO, "new element detected", elem);
+            logger.log(Level.FINE, "new element detected", elem);
             matches = new HashMap<OsmPrimitive, Integer>();
             elemMatchIndex.put(elem, matches);
         }
@@ -222,25 +264,9 @@ public class Reasoner {
             reconsider(prim, elem);
     }
 
-    /*private int getStatus(OsmPrimitive prim) {
-        if (primMatchIndex.get(prim) == null)   return STATUS_UNKNOWN;
-        if (primMatchIndex.get(prim).size()==0) return STATUS_UNKNOWN;
-        if (translate(prim) != null)            return STATUS_MATCH;
-        return STATUS_CONFLICT;
-    }
-
-    private int getStatus(AddressElement elem) {
-        if (elemMatchIndex.get(elem) == null)   return STATUS_UNKNOWN;
-        if (elemMatchIndex.get(elem).size()==0) return STATUS_UNKNOWN;
-        if (translate(elem) != null)            return STATUS_MATCH;
-        return STATUS_CONFLICT;
-    }*/
-
     public int getQ(OsmPrimitive prim, AddressElement elem) {
-        if (primMatchIndex.get(prim) == null) return 0;
-        if (elemMatchIndex.get(elem) == null) return 0;
-
-        assert primMatchIndex.get(prim).get(elem) == elemMatchIndex.get(elem).get(prim);
+        assert primMatchIndex.get(prim).get(elem)
+            == elemMatchIndex.get(elem).get(prim);
 
         if (primMatchIndex.get(prim).get(elem) == null)
             return 0;
@@ -253,12 +279,6 @@ public class Reasoner {
         if (qVal == Match.MATCH_NOMATCH) {
             primMatchIndex.get(prim).remove(elem);
             elemMatchIndex.get(elem).remove(prim);
-
-            if (primMatchIndex.get(prim).size() == 0)
-                primMatchIndex.put(prim, null);
-            if (elemMatchIndex.get(elem).size() == 0)
-                elemMatchIndex.put(elem, null);
-
         } else {
             primMatchIndex.get(prim).put(elem, qVal);
             elemMatchIndex.get(elem).put(prim, qVal);
@@ -266,6 +286,8 @@ public class Reasoner {
     }
 
     public AddressElement translate(OsmPrimitive prim) {
+        if (prim == null) return null;
+
         AddressElement elem = primBestIndex.get(prim);
         if (elemBestIndex.get(elem) == prim)
             return elem;
@@ -273,17 +295,17 @@ public class Reasoner {
     }
 
     public OsmPrimitive translate(AddressElement elem) {
+        if (elem == null) return null;
+
         OsmPrimitive prim = elemBestIndex.get(elem);
         if (primBestIndex.get(prim) == elem)
             return prim;
         return null;
     }
 
-    public Set<AddressElement> conflicts(OsmPrimitive prim) {
+    public Set<AddressElement> getConflicts(OsmPrimitive prim) {
 
-        Set<AddressElement> result = new HashSet<AddressElement>();
-        result.addAll(primMatchIndex.get(prim).keySet());
-        
+        Set<AddressElement> result = getCandidates(prim);
         AddressElement match = translate(prim);
         if (match != null)
             result.remove(match);
@@ -291,11 +313,9 @@ public class Reasoner {
         return result;
     }
 
-    public Set<OsmPrimitive> conflicts(AddressElement elem) {
+    public Set<OsmPrimitive> getConflicts(AddressElement elem) {
 
-        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
-        result.addAll(elemMatchIndex.get(elem).keySet());
-
+        Set<OsmPrimitive> result = getCandidates(elem);
         OsmPrimitive match = translate(elem);
         if (match != null)
             result.remove(match);
@@ -303,20 +323,20 @@ public class Reasoner {
         return result;
     }
 
+    public void addListener(ReasonerListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(ReasonerListener listener) {
+        listeners.remove(listener);
+    }
+
     public static void main(String[] args) {
         try {
 
-            Reasoner r = new Reasoner();
-
-            Handler  h = new FileHandler("log.xml");
-
-            r.logger.addHandler(h);
-            r.logger.setLevel(Level.ALL);
+            Reasoner r = Reasoner.getInstance();
+            Reasoner.logger.setLevel(Level.ALL);
             
-            Match.logger.addHandler(h);
-            Match.logger.setLevel(Level.ALL);
-
-
             Street s1 = new Street("Jarní");
             Street s2 = new Street("Letní");
 
@@ -340,7 +360,7 @@ public class Reasoner {
             r.consider(n1);
             r.closeTransaction();
             assert r.translate(n1) == h4;
-            assert r.conflicts(n1).size() == 0;
+            assert r.getConflicts(n1).size() == 0;
 
 
 
@@ -350,8 +370,8 @@ public class Reasoner {
             r.consider(n2);
             r.closeTransaction();
             assert r.translate(n2) == null;
-            assert r.conflicts(n2).contains(h1);
-            assert r.conflicts(n2).contains(i4);
+            assert r.getConflicts(n2).contains(h1);
+            assert r.getConflicts(n2).contains(i4);
 
             n2.put("addr:street", "Letní");
             n2.put("addr:housenumber", "4");
@@ -359,19 +379,61 @@ public class Reasoner {
             r.consider(n2);
             r.closeTransaction();
             assert r.translate(n2) == i4;
-            assert r.conflicts(n2).contains(h1);
 
 
             n2.deleted = true;
             r.openTransaction();
             r.consider(n2);
             r.closeTransaction();
-
             assert r.translate(n2) == null;
             
         } catch (Exception ex) {
             
             ex.printStackTrace();
         }
+    }
+
+    public void doOverwrite(OsmPrimitive prim, AddressElement elem) {
+        logger.log(Level.FINER, "overwriting match",
+                    "elem=„" + elem + "“; " +
+                    "prim=„" + AddressElement.getName(prim) + "“");
+
+        consider(prim);
+        consider(elem);
+        putQ(prim, elem, Match.MATCH_OVERWRITE);
+
+        primToUpdate.add(prim);
+        elemToUpdate.add(elem);
+    }
+
+    public void unOverwrite(OsmPrimitive prim, AddressElement elem) {
+        logger.log(Level.FINER, "unoverwriting match",
+                    "elem=„" + elem + "“; " +
+                    "prim=„" + AddressElement.getName(prim) + "“");
+
+        consider(prim);
+        consider(elem);
+        putQ(prim, elem, Match.evalQ(prim, elem, Match.MATCH_NOMATCH));
+
+        primToUpdate.add(prim);
+        elemToUpdate.add(elem);
+    }
+
+    public boolean inConflict(OsmPrimitive prim) {
+        return primMatchIndex.get(prim).size() > 0
+            && translate(translate(prim)) != prim;
+    }
+
+    public boolean inConflict(AddressElement elem) {
+        return elemMatchIndex.get(elem).size() > 0
+            && translate(translate(elem)) != elem;
+    }
+
+    public Set<AddressElement> getUnassignedElements() {
+        Set<AddressElement> result = new HashSet<AddressElement>();
+        for (AddressElement elem : elemMatchIndex.keySet())
+            if (elemMatchIndex.get(elem).size() == 0)
+                result.add(elem);
+        return result;
     }
 }

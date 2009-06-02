@@ -1,34 +1,40 @@
 package org.openstreetmap.josm.plugins.czechaddress;
 
 import java.awt.event.KeyEvent;
-import org.openstreetmap.josm.plugins.czechaddress.actions.PointManipulatorAction;
-import org.openstreetmap.josm.plugins.czechaddress.gui.LocationSelector;
-import org.openstreetmap.josm.plugins.czechaddress.actions.GroupManipulatorAction;
-import org.openstreetmap.josm.plugins.czechaddress.gui.ConflictResolver;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
-import javax.swing.AbstractButton;
+import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithStreets;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.czechaddress.actions.ConflictResolveAction;
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
+import org.openstreetmap.josm.plugins.czechaddress.actions.GroupManipulatorAction;
+import org.openstreetmap.josm.plugins.czechaddress.actions.PointManipulatorAction;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithStreets;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.parser.MvcrParser;
 import org.openstreetmap.josm.plugins.czechaddress.actions.FactoryAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.HelpAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.ModifierAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.SplitAreaByEmptyWayAction;
-import org.openstreetmap.josm.plugins.czechaddress.gui.Inspector;
-import org.openstreetmap.josm.plugins.czechaddress.gui.Renamer;
+import org.openstreetmap.josm.plugins.czechaddress.gui.ConflictResolver;
 import org.openstreetmap.josm.plugins.czechaddress.gui.FactoryDialog;
+import org.openstreetmap.josm.plugins.czechaddress.gui.LocationSelector;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.SelectionMonitor;
 
@@ -40,43 +46,55 @@ import org.openstreetmap.josm.plugins.czechaddress.intelligence.SelectionMonitor
 public class CzechAddressPlugin extends Plugin implements StatusListener {
 
 
-    JMenu czechMenu;
-    List<JMenuItem> menuItems = new ArrayList<JMenuItem>();
+    private JMenu czechMenu;
+    private List<JMenuItem> menuItems = new ArrayList<JMenuItem>();
+    private static Logger logger = Logger.getLogger(CzechAddressPlugin.class.getName());
 
-    List<AbstractButton> pluginButtons =
-            new ArrayList<AbstractButton>();
+    public void initLoggers() {
 
-    static public Reasoner reasoner = null;
-    static public Database database = null;
+        String filename = getPluginDir() + "-log.xml";
+        /*final Logger[] loggers = new Logger[]
+            {logger, Reasoner.logger, ConflictResolver.logger};*/
 
-    static public FactoryDialog     factoryDialog    = null;
-    static public ConflictResolver  conflictResolver = null;
+        try {
+            Handler fileHandler = new FileHandler(filename);
+            fileHandler.setLevel(Level.ALL);
+            for (Enumeration<String> e = LogManager.getLogManager().getLoggerNames();
+                    e.hasMoreElements();) {
+                String name = e.nextElement();
+                if (!name.startsWith(CzechAddressPlugin.class.getPackage().getName()))
+                    continue;
 
-    static public Renamer   renamer  = null;
-    static public Inspector inspector = null;
-
-
-    static private String pluginDir = null;
+                System.err.println(name);
+                Logger.getLogger(name).setLevel(Level.FINE);
+                Logger.getLogger(name).addHandler(fileHandler);
+            }
+            
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "cannot create file", ex);
+        } catch (SecurityException ex) {
+            logger.log(Level.SEVERE, "permission denied", ex);
+        }
+    }
 
     public CzechAddressPlugin() {
 
-        pluginDir = getPluginDir();
         addStatusListener(this);
+        
+        Reasoner.getInstance();
+        ConflictResolver.getInstance();
+        SelectionMonitor.getInstance();
 
-        factoryDialog    = new FactoryDialog();
-        conflictResolver = new ConflictResolver();
-
+        initLoggers();
         
         MainMenu.add(Main.main.menu.toolsMenu, new SplitAreaByEmptyWayAction());
 
-
         // Prepare for filling the database.
-        database = new Database();
         final MvcrParser parser = new MvcrParser();
-        //parser.setFilter(null, null, null, "");
-        //parser.setFilter("HUSTOPEČE", "HUSTOPEČE", null, null);
-        parser.setTargetDatabase(database);
-        parser.setStorageDir(pluginDir);
+        parser.setTargetDatabase(Database.getInstance());
+        parser.setStorageDir(getPluginDir());
+
+        parser.setFilter("HUSTOPEČE", "HUSTOPEČE", null, null);
 
         // Fill the database in separate thread.
         Thread t = new Thread() { @Override public void run() {
@@ -101,32 +119,38 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         if (newFrame == null)
             return;
         
-        newFrame.addToggleDialog(factoryDialog);
+        newFrame.addToggleDialog(FactoryDialog.getInstance());
         newFrame.addMapMode(new IconToggleButton(new FactoryAction(newFrame)));
     }
 
     static public void initReasoner() {
+        Reasoner reasoner = Reasoner.getInstance();
 
-        // Move houses from list of Houses to list of AddressElements.
-        List<House> houses   = location.getAllHouses();
-        ArrayList<AddressElement> pool
-                = new ArrayList<AddressElement>(houses.size());
-        for (House house : houses) pool.add(house);
-
-        // Update database according to the map
-        (new Renamer()).setVisible(true);
-        (new Inspector()).setVisible(true);
-
-        // And add them to the reasoner.
-        reasoner = new Reasoner(pool);
-        reasoner.addPrimitives(Main.ds.allPrimitives());
+        synchronized(reasoner) {
+            reasoner.reset();
+            reasoner.openTransaction();
+            //Reasoner.logger.setLevel(Level.OFF);
+            for (House house : location.getAllHouses())
+                reasoner.consider(house);
+            for (OsmPrimitive prim : Main.ds.allPrimitives()) {
+                boolean include = false;
+                for (String key : prim.keySet())
+                    if (key.startsWith("addr:")) {
+                        include = true;
+                        break;
+                    }
+                if (include)
+                    reasoner.consider(prim);
+            }
+            //Reasoner.logger.setLevel(Level.ALL);
+            reasoner.closeTransaction();
+        }
     }
 
     static private ElementWithStreets location = null;
     static public  ElementWithStreets getLocation() {
         if (location == null)
             changeLocation();
-
         return location;
     }
 
@@ -138,24 +162,13 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             broadcastStatusChange(MESSAGE_LOCATION_CHANGED);
         }
     }
-
-
     
-    static private List<StatusListener> listeners =
-                    new ArrayList<StatusListener>();
-
-    static public void addStatusListener(StatusListener l) {
-        if (!listeners.contains(l))
-            listeners.add(l);
-    }
-
-    static public void removeStatusListener(StatusListener l) {
-        listeners.remove(l);
-    }
-
+    static private Set<StatusListener> listeners = new HashSet<StatusListener>();
+    static public void addStatusListener(StatusListener l)    {listeners.add(l);}
+    static public void removeStatusListener(StatusListener l) {listeners.remove(l);}
     static public void broadcastStatusChange(int statusMessage) {
-        for (StatusListener l : listeners)
-            l.pluginStatusChanged(statusMessage);
+        for (StatusListener listener : listeners)
+            listener.pluginStatusChanged(statusMessage);
     }
 
     public void pluginStatusChanged(int message) {
@@ -173,13 +186,5 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             initReasoner();
             return;
         }
-
-
-        // SelectionMonitor cannot be used because of synchronization problems.
-        /*if (message == MESSAGE_REASONER_REASONED) {
-            System.out.println("ReasonerReasoned");
-            if (selectionMonitor == null)
-                selectionMonitor = new SelectionMonitor();
-        }*/
     }
 }

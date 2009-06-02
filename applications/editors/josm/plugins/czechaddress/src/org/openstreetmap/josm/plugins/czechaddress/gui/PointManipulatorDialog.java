@@ -90,7 +90,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
     @Override
     protected void buttonAction(ActionEvent evt) {
         super.buttonAction(evt);
-        if (getValue() == 1) {
+/*        if (getValue() == 1) {
             
             if (updateMatchesTimer.isRunning()) {
                 updateMatchesTimer.stop();
@@ -107,7 +107,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
             if (m != null) {
                 r.overwriteMatch(m.elem, m.prim);
             }
-        }
+        }*/
 
         CzechAddressPlugin.removeStatusListener(this);
     }
@@ -124,7 +124,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
      */
     public void updateMatches() {
         
-        if (proposalContainer.getTarget().deleted) {
+/*        if (proposalContainer.getTarget().deleted) {
             setVisible(false);
         }
         
@@ -155,13 +155,13 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         House fakeHouse = new House(alternateNumberEdit.getText(), null);
         fakeHouse.setParent(CzechAddressPlugin.getLocation());
         proposalContainer.setProposals(
-                fakeHouse.getDiff(proposalContainer.getTarget()));
+                fakeHouse.getDiff(proposalContainer.getTarget()));*/
     }
 
     public void pluginStatusChanged(int message) {
 
         // If location changes, we block the dialog until reasoning is done.
-        if (message == MESSAGE_LOCATION_CHANGED) {
+/*        if (message == MESSAGE_LOCATION_CHANGED) {
             updateLocation();
             mainPanel.setEnabled(false);
 
@@ -169,7 +169,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         } else if (message == MESSAGE_MATCHES_CHANGED) {
             updateMatches();
             mainPanel.setEnabled(true);
-        }
+        }*/
     }
 
     /**
@@ -325,7 +325,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
     }//GEN-LAST:event_matchChanged
 
     private void ensureConsistencyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ensureConsistencyButtonActionPerformed
-        CzechAddressPlugin.getReasoner().ensureConsistency();
+//        CzechAddressPlugin.getReasoner().ensureConsistency();
     }//GEN-LAST:event_ensureConsistencyButtonActionPerformed
 
 
@@ -357,7 +357,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-            Reasoner r = CzechAddressPlugin.getReasoner();
+/*            Reasoner r = CzechAddressPlugin.getReasoner();
             setIcon(null);
 
             if (value instanceof Match) {
@@ -372,7 +372,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
                     else if ( r.translate(match.elem) != null)
                         setIcon(envelopeNormIcon);
                 }
-            }
+            }*/
 
             return c;
         }

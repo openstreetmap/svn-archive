@@ -17,16 +17,16 @@
         <td><font size="-3"><xsl:value-of select="date"/></font></td>
         <xsl:choose>
             <xsl:when test="level = 'FINEST'">
-                <td><font color='#AAAAAA'><xsl:value-of select="level"/></font></td>
-                <td><xsl:value-of select="message"/></td>
+                <td><font color='#AAAAAA'><i><xsl:value-of select="level"/></i></font></td>
+		<td><i><xsl:value-of select="message"/></i></td>
             </xsl:when>
             <xsl:when test="level = 'FINER'">
                 <td><font color='#999999'><xsl:value-of select="level"/></font></td>
                 <td><xsl:value-of select="message"/></td>
             </xsl:when>
             <xsl:when test="level = 'FINE'">
-                <td><font color='#444444'><xsl:value-of select="level"/></font></td>
-                <td><xsl:value-of select="message"/></td>
+                <td><font color='#444444'><b><xsl:value-of select="level"/></b></font></td>
+                <td><b><xsl:value-of select="message"/></b></td>
             </xsl:when>
             <xsl:when test="level = 'INFO'">
                 <td><font color='black'><b><xsl:value-of select="level"/></b></font></td>

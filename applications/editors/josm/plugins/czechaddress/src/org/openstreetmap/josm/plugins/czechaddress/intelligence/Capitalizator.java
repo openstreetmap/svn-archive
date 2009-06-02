@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.czechaddress.intelligence;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
 import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
@@ -62,7 +58,6 @@ public class Capitalizator {
 
         private AddressElement elem;
         private List<OsmPrimitive> prims;
-        private StringUtils strUtils = new StringUtils();
 
         public StreetMatcher(AddressElement elem, List<OsmPrimitive> prims) {
             this.elem = elem;
@@ -80,7 +75,7 @@ public class Capitalizator {
                 if (prim.get("name").equals(elem.getName()))
                     return prim;
                 
-                if (strUtils.matchAbbrev(prim.get("name"), elem.getName()))
+                if (StringUtils.matchAbbrev(prim.get("name"), elem.getName()))
                     candidate = prim;
             }
 

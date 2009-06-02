@@ -15,18 +15,10 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
  * 
  * @author Radomír Černoch radomir.cernoch@gmail.com
  */
-public abstract class AddressElement {
+public abstract class AddressElement implements Comparable<AddressElement> {
 
     protected String name;
     protected AddressElement parent = null;
-
-    protected static final String KEY_ADDR_CP      = "addr:alternatenumber";
-    protected static final String KEY_ADDR_CO      = "addr:housenumber";
-    protected static final String KEY_ADDR_STREET  = "addr:street";
-    protected static final String KEY_ADDR_CITY    = "addr:city";
-    protected static final String KEY_ADDR_COUNTRY = "addr:country";
-    protected static final String KEY_IS_IN        = "is_in";
-    protected static final String KEY_NAME         = "name";
 
     /**
      * Constructor setting the name of this element.
@@ -198,7 +190,15 @@ public abstract class AddressElement {
         return (primValue.trim().toUpperCase().equals(
                 elemValue.trim().toUpperCase())) ? 1 : -1;
     }
-    
+
+    public static int matchFieldAbbrev(String elemValue, String primValue) {
+
+        if (elemValue == null) return  0;
+        if (primValue == null) return -1;
+
+        return StringUtils.matchAbbrev(primValue, elemValue) ? 1 : -1;
+    }
+
     
     protected int[] getFieldMatchList(OsmPrimitive primitive) {
         int[] result = {0};        
@@ -210,11 +210,6 @@ public abstract class AddressElement {
         return null;
     }
 
-    public boolean isMatchable(OsmPrimitive prim) {
-        return false;
-    }
-
-    
     public int getMatchQuality(OsmPrimitive primitive) {
         
         // Firstly get integers representing a match of every matchable field.
@@ -276,5 +271,16 @@ public abstract class AddressElement {
             result += "CZ";
         
         return result;
+    }
+
+    public int compareTo(AddressElement elem) {
+
+        ParentResolver r1 = new ParentResolver(this);
+        ParentResolver r2 = new ParentResolver(elem);
+
+        int retVal = r1.compareTo(r2);
+        if (retVal != 0) return retVal;
+
+        return getName().compareTo(((AddressElement) elem).getName());
     }
 }

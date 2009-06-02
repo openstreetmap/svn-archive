@@ -14,6 +14,15 @@ import java.util.ArrayList;
  */
 public class Database {
 
+    private Database() {}
+    private static Database singleton = null;
+    public  static Database getInstance() {
+        if (singleton == null)
+            singleton = new Database();
+
+        return singleton;
+    }
+
     /**
      * List of regions, which are in this database.
      */

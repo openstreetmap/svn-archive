@@ -23,6 +23,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
 
 /**
  * Dialog for selecting the current loaction.
@@ -57,7 +58,7 @@ public class LocationSelector extends ExtendedDialog {
         castObceComboBox.setRenderer(new AddressElementRenderer());
 
         oblastComboBox.setModel(new DefaultComboBoxModel(
-                CzechAddressPlugin.getDatabase().regions.toArray()));
+                Database.getInstance().regions.toArray()));
 
         autodetectLocation();
         oblastComboBoxItemStateChanged(null);
@@ -139,7 +140,7 @@ public class LocationSelector extends ExtendedDialog {
                 System.out.println("AUTO: Best fit " + bestFit.getName()
                                  + "\t " + bestFit.get("name"));
             
-            for (Region oblast : CzechAddressPlugin.getDatabase().regions) {
+            for (Region oblast : Database.getInstance().regions) {
                 for (ViToCi obec : oblast.getViToCis()) {
                     if (!bestFit.get("place").equals("suburb")) {
                         if (obec.getName().toUpperCase().equals(bestFit.get("name").toUpperCase())) {

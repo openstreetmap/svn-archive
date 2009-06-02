@@ -3,6 +3,8 @@ package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 import java.util.List;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
+import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
+import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
 
 import static org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalFactory.getStringFieldDiff;
@@ -138,12 +140,13 @@ public class House extends AddressElement {
         int[] result = {0, 0};
                 
         // First field is the AlternateNubmer
-        result[0] = matchField(this.cp, prim.get(KEY_ADDR_CP));
+        result[0] = matchField(this.cp, prim.get(PrimUtils.KEY_ADDR_CP));
         
         // Second field is the Housenumber
         if (parent instanceof Street)
-            result[1] = Math.min( matchField(parent.getName(), prim.get(KEY_ADDR_STREET)),
-                                  matchField(this.co,          prim.get(KEY_ADDR_CO)) );
+            result[1] = Math.min(
+                matchFieldAbbrev(parent.getName(), prim.get(PrimUtils.KEY_ADDR_STREET)),
+                matchField(      this.co,          prim.get(PrimUtils.KEY_ADDR_CO)) );
         return result;
     }
     
@@ -159,42 +162,21 @@ public class House extends AddressElement {
         List<Proposal> props = new NotNullList<Proposal>();
         ParentResolver pr = new ParentResolver(this);
 
-        props.add(getStringFieldDiff(KEY_ADDR_CP, prim.get(KEY_ADDR_CP), getCP()));
-        props.add(getStringFieldDiff(KEY_ADDR_CO, prim.get(KEY_ADDR_CO), getCO()));
+        props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_CP, prim.get(PrimUtils.KEY_ADDR_CP), getCP()));
+        props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_CO, prim.get(PrimUtils.KEY_ADDR_CO), getCO()));
 
-        props.add(getStringFieldDiff(KEY_ADDR_COUNTRY,
-                            prim.get(KEY_ADDR_COUNTRY), "CZ"));
+        props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_COUNTRY,
+                            prim.get(PrimUtils.KEY_ADDR_COUNTRY), "CZ"));
 
         if (pr.parentStreet != null)
-            props.add(getStringFieldDiff(KEY_ADDR_STREET,
-                                prim.get(KEY_ADDR_STREET),
+            props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_STREET,
+                                prim.get(PrimUtils.KEY_ADDR_STREET),
                                 pr.parentStreet.getName()));
-        
-/*        if (pr.parentViToCi != null) {
-            String targetIsIn = "";
 
-            if ((pr.parentSuburb != null) &&
-                !(pr.parentViToCi.getName().equals(pr.parentSuburb.getName())))
-                targetIsIn += pr.parentSuburb.getName() + ", ";
-
-            targetIsIn += pr.parentViToCi.getName() + ", ";
-
-            if (pr.parentRegion != null)
-                targetIsIn += pr.parentRegion.getNuts3Name() + " kraj, ";
-
-            targetIsIn += "CZ";
-
-            props.add(getStringFieldDiff(KEY_ADDR_CITY,
-                                prim.get(KEY_ADDR_CITY),
-                                pr.parentViToCi.getName()));
-*/
-        
-        
         if (parent.parent != null) // For sure our parent is a ElemWithStreets
-            props.add(getStringFieldDiff(KEY_IS_IN,
-                                prim.get(KEY_IS_IN),
+            props.add(getStringFieldDiff(PrimUtils.KEY_IS_IN,
+                                prim.get(PrimUtils.KEY_IS_IN),
                                 parent.parent.getIsIn()));
-/*        }*/
 
         // If we have added any proposal so far, add the source info as well.
         if (props.size() > 0)
@@ -203,14 +185,33 @@ public class House extends AddressElement {
         return props;
     }
 
-    public boolean isMatchable(OsmPrimitive prim) {
+    public static boolean isMatchable(OsmPrimitive prim) {
         
         for (String key : prim.keySet()) {
             String value = prim.get(key);
             if (value != null && value.startsWith("addr:"))
                 return true;
         }
-
         return false;
+    }
+
+    @Override
+    public int compareTo(AddressElement o) {
+        // Most important criterion is the street
+        int val = super.compareTo(o);
+        if (val != 0) return val;
+        if (!(o instanceof House)) return val;
+
+        House house = (House) o;
+
+        // Second most important is the "CO"
+        if (co != null && house.co != null)
+            val = co.compareTo(house.co);
+        if (val != 0) return val;
+
+        // Third most important is the "CP"
+        if (cp != null && house.cp != null)
+            val = cp.compareTo(house.cp);
+        return val;
     }
 }

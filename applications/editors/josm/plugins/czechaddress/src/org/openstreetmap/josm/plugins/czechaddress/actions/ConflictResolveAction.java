@@ -38,7 +38,6 @@ public class ConflictResolveAction extends JosmAction {
      * from {@link CzechAddressPlugin}{@code .conflictResolver}.
      */
     public void actionPerformed(ActionEvent e) {
-        if (CzechAddressPlugin.conflictResolver == null) return;
-        CzechAddressPlugin.conflictResolver.setVisible(true);
+        ConflictResolver.getInstance().setVisible(true);
     }
 }

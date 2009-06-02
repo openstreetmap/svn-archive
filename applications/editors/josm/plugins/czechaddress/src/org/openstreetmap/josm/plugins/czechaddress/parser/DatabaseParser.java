@@ -102,7 +102,7 @@ public abstract class DatabaseParser {
             // Check the status error code from server
             if (con.getResponseCode() != 200)
                 throw new DatabaseLoadException(
-                        "Požadavek na server MVČR selhal, číslo chyby: " + String.valueOf( con.getResponseCode() ));
+                        "Požadavek na server selhal, číslo chyby: " + String.valueOf( con.getResponseCode() ));
 
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(getDatabasePath()));
 

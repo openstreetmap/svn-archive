@@ -25,26 +25,66 @@
                 
         <!-- compile the plugin -->
         <javac srcdir="src"
-               sourcepath=""
                classpath="${josm.jar}"
                destdir="${plugin.build.dir}"
-               debug="true">
+               debug="true"/>
 
-            <include name="**/Status*.java"/>
-            <include name="**/StringUtils.java"/>
-            <include name="**/NotNull*.java"/>
-            <include name="**/addressdatabase/*.java"/>
-            <include name="**/proposal*/*.java"/>
-            <include name="**/intelligence/Reasoner*.java"/>
-            <include name="**/intelligence/Match.java"/>
-        </javac>
+        <!-- create the manifest -->
+        <manifest file="${plugin.build.dir}/${plugin.basepackage.dir}/MANIFEST.MF">
+            <attribute name="Author" value="Radomír Černoch"/>
+            <attribute name="Plugin-Description" value="Creating and handling address nodes and buildings within Czech Republic."/>
+            <attribute name="Plugin-Mainversion" value="1607"/>
+            <attribute name="Plugin-Version" value="0.1.2"/>
+            <attribute name="Plugin-Class" value="${plugin.basepackage}.CzechAddressPlugin"/>
+        </manifest>
 
+        <!-- include the images -->
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
+        </copy>
     </target>
 
+    <target name="dist"
+            depends="compile"
+            description="Create the .jar file for distribution">
+        <mkdir dir="${plugin.dist.dir}"/>
+        <jar destfile="${plugin.jar}"
+             basedir="${plugin.build.dir}"
+             manifest="${plugin.build.dir}/${plugin.basepackage.dir}/MANIFEST.MF"/>
+    </target>
+
+    <target name="doc" description="Create Javadoc API documentation">
+        <ant antfile="build.xml" target="doc" dir="${josm.base}"/>
+        <mkdir dir="${plugin.javadoc.dir}"/>
+        <javadoc sourcepath="src"
+                 packagenames="*"
+                 destdir="${plugin.javadoc.dir}"
+                 use="true"
+                 charset="UTF-8">
+            <doctitle><![CDATA[Czech Address JOSM plugin]]></doctitle>
+            <bottom><![CDATA[<i>Licenced under GPLv3. Bugreports should be sent to
+                    <a href='mailto:radomir.cernoch@gmail.com'>Radomír Černoch</a></i>]]>
+            </bottom>
+            <!--<tag name="todo" scope="all" description="To do:"/>-->
+            <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+            <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+            <!--<link href="file://${user.home}/devel/core/doc"/>-->
+        </javadoc>
+    </target>
+
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir"
+                   value="${env.APPDATA}/JOSM/plugins"
+                   else="${user.home}/.josm/plugins">
+            <and><os family="windows"/></and>
+        </condition>
+        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
+    </target>
 
     <!-- Before running "run" target, please "ant dist" the JOSM. -->
     <target name="run" depends="compile">
-        <java classname="org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner">
+        <java classname="JOSM" fork="true">
             <jvmarg value="-Xmx1024m"/>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-ea"/>
@@ -56,11 +96,8 @@
                 <pathelement location="${josm.jar}"/>
                 <pathelement path="${java.class.path}"/>
             </classpath>
+        <arg value="/home/radek/Desktop/Hustopeče.osm"/>
         </java>
-        <exec executable="xsltproc" output="log.html">
-            <arg value="log.xsl"/>
-            <arg value="log.xml"/>
-        </exec>
     </target>
 
 </project>

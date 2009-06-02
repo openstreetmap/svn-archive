@@ -10,6 +10,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
+import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -52,14 +53,9 @@ public class FactoryAction extends MapMode {
         super.enterMode();
         Main.map.mapView.addMouseListener(this);
 
-        if (CzechAddressPlugin.reasoner == null) {
-            exitMode();
-            return;
-        }
-
         // Switch to next unassigned house.
-        FactoryDialog d = CzechAddressPlugin.factoryDialog;
-        if (CzechAddressPlugin.reasoner.translate(d.getSelectedHouse()) != null)
+        FactoryDialog d = FactoryDialog.getInstance();
+        if (Reasoner.getInstance().translate(d.getSelectedHouse()) != null)
             d.selectNextUnmatchedHouseByCheckBox();
     }
 
@@ -85,7 +81,7 @@ public class FactoryAction extends MapMode {
         super.mouseClicked(e);
 
         // Get the currently selected House in the FactoryDialog.
-        House house = CzechAddressPlugin.factoryDialog.getSelectedHouse();
+        House house = FactoryDialog.getInstance().getSelectedHouse();
         if (house == null)
             return; // TODO: Some meaningful messageBox would be useful.
 
@@ -96,11 +92,16 @@ public class FactoryAction extends MapMode {
         container.setProposals(house.getDiff(newNode));
         container.applyAll();
 
+        Reasoner r = Reasoner.getInstance();
+        synchronized(r) {
+            r.openTransaction();
+            r.doOverwrite(newNode, house);
+            r.closeTransaction();
+        }
+        FactoryDialog.getInstance().selectNextUnmatchedHouseByCheckBox();
+
         // And make the new node selected.
         Main.ds.addPrimitive(newNode);
         Main.ds.setSelected(newNode);
-
-        CzechAddressPlugin.reasoner.overwriteMatch(house, newNode);
-        CzechAddressPlugin.factoryDialog.selectNextUnmatchedHouseByCheckBox();
     }
 }

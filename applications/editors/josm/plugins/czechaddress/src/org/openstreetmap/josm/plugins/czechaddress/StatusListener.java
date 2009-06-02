@@ -37,28 +37,6 @@ public interface StatusListener {
     static final int MESSAGE_LOCATION_CHANGED  = 1;
 
     /**
-     * List of {@code matches} from the reasoner has changed.
-     *
-     * <p>The current reasoner can be obtained by
-     * {@link CzechAddressPlugin}{@code .getReasoner()}.</p>
-     *
-     * @see Reasoner
-     * @see Match
-     */
-    static final int MESSAGE_MATCHES_CHANGED = 2;
-
-    /**
-     * There is a new conflict spotted by the reasoner.
-     *
-     * <p>The current reasoner can be obtained by
-     * {@link CzechAddressPlugin}{@code .getReasoner()}.</p>
-     *
-     * @see Reasoner
-     * @see Match
-     */
-    static final int MESSAGE_CONFLICT_CHANGED  = 3;
-
-    /**
      * All parsers have finished their parsing.
      *
      * <p>The current database can be obtained by
@@ -67,20 +45,7 @@ public interface StatusListener {
      * @see CzechAddressPlugin
      * @see Database
      */
-    static final int MESSAGE_DATABASE_LOADED   = 4;
-
-    /**
-     * The reasoner has finished his reasoning.
-     *
-     * <p>First such message also signalizes, that there is a reasoner
-     * available.</p>
-     *
-     * <p>The current reasoner can be obtained by
-     * {@link CzechAddressPlugin}{@code .getReasoner()}.</p>
-     *
-     * @see Reasoner
-     */
-     static final int MESSAGE_REASONER_REASONED = 5;
+    static final int MESSAGE_DATABASE_LOADED   = 2;
 
     /**
      * Called when status of the plugin has changed.

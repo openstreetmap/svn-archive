@@ -11,7 +11,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
-public class StringUtils {
+public abstract class StringUtils {
 
     /**
      * Returns a substring equivalent to <tt>^[0-9]*</tt> regexp match.
@@ -54,7 +54,7 @@ public class StringUtils {
      * <p>Returns {@code true} even if s1="Nám. Svobody" and
      * s2="Náměstí Svobody".</p>
      */
-    public boolean matchAbbrev(String s1, String s2) {
+    public static boolean matchAbbrev(String s1, String s2) {
         String[] parts1 = s1.split(" +");
         String[] parts2 = s2.split(" +");
 
@@ -115,5 +115,4 @@ public class StringUtils {
 
         return result;
     }
-
 }

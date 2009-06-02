@@ -24,12 +24,10 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <Component id="streetComboBox" pref="92" max="32767" attributes="0"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <Component id="streetComboBox" pref="199" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="relocateButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="ensureConsistencyButton" min="-2" max="-2" attributes="0"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <Component id="keepOddityCheckBox" pref="278" max="32767" attributes="0"/>
@@ -44,7 +42,6 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="streetComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="relocateButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ensureConsistencyButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" pref="125" max="32767" attributes="0"/>
@@ -103,21 +100,6 @@
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="ensureConsistencyButton">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="ImageProvider.get(&quot;actions&quot;, &quot;refresh-small.png&quot;)" type="code"/>
-            </Property>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="&quot;&quot;" type="code"/>
-            </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Provede nov&#xe9; p&#x159;i&#x159;azen&#xed; prvk&#x16f; mapy na elementy datab&#xe1;ze.&#xa;Touto volbou se zru&#x161;&#xed; v&#x161;echny manu&#xe1;ln&#x11b; vy&#x159;e&#x161;en&#xe9; konflikty."/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ensureConsistencyButtonActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>

@@ -66,7 +66,7 @@ public class GroupManipulatorDialog extends ExtendedDialog implements StatusList
     }
 
     public void pluginStatusChanged(int message) {
-        if (message == StatusListener.MESSAGE_MATCHES_CHANGED) {
+        /*if (message == StatusListener.MESSAGE_MATCHES_CHANGED) {
             int retval = (new ExtendedDialog(Main.parent, "Změna umístění",
                     "Došlo ke změně v přiřazení databáze.\n" +
                     "Přejete si znovu načíst seznam navrhovaných změn?",
@@ -75,7 +75,7 @@ public class GroupManipulatorDialog extends ExtendedDialog implements StatusList
 
             if (retval == 1)
                 recreateProposals();
-        }
+        }*/
     }
 
     @Override
@@ -92,10 +92,10 @@ public class GroupManipulatorDialog extends ExtendedDialog implements StatusList
     }
 
     public void recreateProposals() {
-        locationTextField.setText(CzechAddressPlugin.getLocation().toString());
+/*        locationTextField.setText(CzechAddressPlugin.getLocation().toString());
         
         Reasoner r = CzechAddressPlugin.getReasoner();
-        proposalTree.setModel(r.getProposals());
+        proposalTree.setModel(r.getProposals());*/
     }
 
     /**

@@ -2208,28 +2208,25 @@
 		<!-- Level crossings -->
 		<!-- If tagged explicitly -->
 		<rule e="node" k="railway" v="level_crossing">
-			<rule e="node" s="way" k="railway" v="rail">
-				<symbol ref="railway-crossing" position="center"/>
-			</rule>
-			<else>
-				<symbol ref="railway-crossing" position="center"/>
-			</else>
+			<symbol ref="railway-crossing" position="center"/>
 		</rule>
-		<else>
-		<!-- For everything, except trams, if it shares a node with a road then render a railroad crossing symbol.  -->
-			<rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail|incline|funicular">
-				<rule e="node" s="way" k="railway" v="rail">
-					<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|cycleroad|road|cycleway|path|footway">
-						<symbol ref="railway-crossing-small" position="center"/>
-					</rule>
-				</rule>
-				<else>
-					<rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|cycleroad|road|cycleway|path|footway">
-						<symbol ref="railway-crossing-small" position="center"/>
-					</rule>
-				</else>
-			</rule>
-		</else>
+		<rule e="node" k="railway" v="crossing">
+			<symbol ref="railway-crossing-small" position="center"/>
+		</rule>
+
+		<!-- For everything, except trams, if it shares a node with a road then render a railroad crossing symbol. 
+			not feasible
+			beware for historic reasons and as example fpr s="..."
+		else
+			rule e="node" s="way" k="railway" v="rail|light_rail|subway|narrow_gauge|preserved|monorail|incline|funicular"
+				rule e="node" s="way" k="railway" v="rail"
+					rule e="node" s="way" k="highway" v="motorway|trunk|primary|secondary|tertiary|minor|unclassified|residential|service|unsurfaced|track|living_street|cycleroad|road|cycleway|path|footway"
+						symbol ref="railway-crossing-small" position="center"
+					/rule
+				/rule
+			/rule
+		/else
+		-->
 
 		<!-- Barriers -->
 		<rule e="way" k="barrier" v="bollard|hedge|fence|wall|retaining_wall|city_wall">

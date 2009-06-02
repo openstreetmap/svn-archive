@@ -2907,6 +2907,10 @@
 			</else>
 		</rule>
 
+		<rule e="node" k="amenity" v="bicycle_rental">
+			<symbol ref="bicycle_rental" position="center"/>
+		</rule>
+
 		<!-- Parking -->
 		<rule e="node|way" k="amenity" v="parking">
 			<rule e="node|way" k="access" v="~|permissive">

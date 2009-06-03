@@ -19,7 +19,10 @@ import org.openstreetmap.josm.gui.MapView;
  */
 public abstract class MapUtils {
 
-    static final double NODE_ZOOM_LEVEL = 0.00000007;
+    /**
+     * Zoom level used for zooming to a single node.
+     */
+    public static final double NODE_ZOOM_LEVEL = 0.00000007;
 
 
     /**

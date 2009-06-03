@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.openstreetmap.josm.plugins.czechaddress.gui.utils;
 
 import java.awt.Component;
@@ -10,6 +5,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
 /**
+ * List renderer for AddressElements and OsmPrimitives.
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */

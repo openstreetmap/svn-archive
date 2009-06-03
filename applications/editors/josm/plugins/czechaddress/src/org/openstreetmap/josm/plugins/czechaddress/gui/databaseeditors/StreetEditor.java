@@ -1,14 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * StreetEditor.java
- *
- * Created on 3.6.2009, 20:50:45
- */
-
 package org.openstreetmap.josm.plugins.czechaddress.gui.databaseeditors;
 
 import javax.swing.DefaultComboBoxModel;
@@ -19,8 +8,9 @@ import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalListRender
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 
 /**
+ * Dialog for editing a {@link Street}
  *
- * @author radek
+ * @author Radomír Černoch radomir.cernoch@gmail.com
  */
 public class StreetEditor extends ExtendedDialog {
 

@@ -199,6 +199,9 @@ public class House extends AddressElement {
         return props;
     }
 
+    /**
+     * Determies whether the given primitive can be matched to a House.
+     */
     public static boolean isMatchable(OsmPrimitive prim) {
         for (String key : prim.keySet())
             if (key.startsWith("addr:"))

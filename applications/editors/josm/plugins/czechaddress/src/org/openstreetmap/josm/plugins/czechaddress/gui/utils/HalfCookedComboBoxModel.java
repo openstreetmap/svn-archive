@@ -1,13 +1,13 @@
-package org.openstreetmap.josm.plugins.czechaddress.gui;
+package org.openstreetmap.josm.plugins.czechaddress.gui.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ListModel;
+import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 /**
- * Class for shorter and faster implementations of {@link ListModel}s.
+ * Class for shorter and faster implementations of {@link ComboBoxModel}s.
  *
  * <p>This creates a list of {@link ListDataListener}s and implements
  * method for adding and removing them. Moreover it allows to notify all
@@ -15,7 +15,7 @@ import javax.swing.event.ListDataListener;
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
-public abstract class HalfCookedListModel implements ListModel {
+public abstract class HalfCookedComboBoxModel implements ComboBoxModel {
 
     List<ListDataListener> listeners = new ArrayList<ListDataListener>();
 

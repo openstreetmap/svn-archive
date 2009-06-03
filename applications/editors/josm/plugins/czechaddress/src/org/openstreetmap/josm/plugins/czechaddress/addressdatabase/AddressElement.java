@@ -12,7 +12,7 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
 /**
  * The most general element of the houses and streets database.
  *
- * <p>Every element must hav a name and may have a parent element.</p>
+ * <p>Every element must have a <i>name</i> and may have a <i>parent</i>.</p>
  * 
  * @author Radomír Černoch radomir.cernoch@gmail.com
  */
@@ -192,6 +192,12 @@ public abstract class AddressElement implements Comparable<AddressElement> {
                 elemValue.trim().toUpperCase())) ? 1 : -1;
     }
 
+    /**
+     * Does the same as {@code matchField()}, but allows the string to contain
+     * abbreviations.
+     *
+     * <p>For detailed description see {@code matchField()}.</p>
+     */
     public static int matchFieldAbbrev(String elemValue, String primValue) {
 
         if (elemValue == null) return  0;
@@ -211,10 +217,19 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         return result;
     }
 
+    /**
+     * Makes the given primitive have the same key-values as the current element.
+     */
     public List<Proposal> getDiff(OsmPrimitive prim) {
         return null;
     }
 
+    /**
+     * Returns the "quality" of a element-primitive match.
+     *
+     * <p>Returns a value from {@link Reasoner}{@code .MATCH_*}, which
+     * describes how well does the given primitive match to this element.</p>
+     */
     public int getQ(OsmPrimitive primitive) {
         
         // Firstly get integers representing a match of every matchable field.

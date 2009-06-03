@@ -1,11 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
 /**
+ * Disassemles the <i>parent</i>-><i>parent</i>... branch of an AddressElement.
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
@@ -39,6 +35,9 @@ public class ParentResolver implements Comparable<ParentResolver> {
         }
     }
 
+    /**
+     * Returns the value for the 'is_in=*' tag.
+     */
     public String getIsIn() {
         String result = "";
         String last = "";

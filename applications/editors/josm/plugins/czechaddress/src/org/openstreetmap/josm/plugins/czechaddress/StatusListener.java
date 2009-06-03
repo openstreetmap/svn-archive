@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.czechaddress;
 
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
-import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 
 /**
  * Listener capable of sensing plugin status.

@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedComboBoxModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -21,7 +22,6 @@ import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalListRender
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
-import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Dialog for adding/editing an address of a single primitive.

@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.openstreetmap.josm.plugins.czechaddress.gui.utils;
 
 import javax.swing.ImageIcon;
@@ -20,6 +15,7 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.RemoveKeyProposal;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
+ * Helper for getting icons and texts for {@code Universal*} renderers.
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
@@ -30,7 +26,6 @@ public abstract class UniversalRenderer {
 
     private static final ImageIcon nodeIcon      = ImageProvider.get("data/node.png");
     private static final ImageIcon wayIcon       = ImageProvider.get("data/way.png");
-//  private static final ImageIcon closedWayIcon = ImageProvider.get("Mf_closedway.png");
     private static final ImageIcon relationIcon  = ImageProvider.get("data/relation.png");
 
     private static final ImageIcon envelopeNormIcon = ImageProvider.get("envelope-closed-small.png");

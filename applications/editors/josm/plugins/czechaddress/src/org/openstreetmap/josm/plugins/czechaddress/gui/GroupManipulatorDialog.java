@@ -9,7 +9,6 @@ import javax.swing.tree.TreePath;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
-import org.openstreetmap.josm.plugins.czechaddress.StatusListener;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.ReasonerListener;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
@@ -20,8 +19,8 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalDatabase;
  * A dialog window proposing changes to addresses. It allows to browse the
  * proposals, delete or confirm them.
  *
- * Apart from proposals, it also shows a list of conflicts, which arouse
- * during the address completion.
+ * <p>Apart from proposals, it also shows a list of conflicts, which arouse
+ * during the address completion.</p>
  *
  * @author Radomír Černoch radomir.cernoch@gmail.com
  *

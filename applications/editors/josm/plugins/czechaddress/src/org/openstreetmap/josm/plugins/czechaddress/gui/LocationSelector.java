@@ -65,6 +65,8 @@ public class LocationSelector extends ExtendedDialog {
     }
 
     /**
+     * Hardly ever working method for autodetecting the current location.
+     *
      * @deprecated 
      */
     private void autodetectLocation() {

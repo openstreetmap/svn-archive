@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedListModel;
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedComboBoxModel;
 import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
 import java.awt.Component;
 import java.awt.Font;

@@ -1,7 +1,6 @@
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
 import java.util.ArrayList;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**
  * Region is an area within the country. It contains {@link ViToCi}s (villages,

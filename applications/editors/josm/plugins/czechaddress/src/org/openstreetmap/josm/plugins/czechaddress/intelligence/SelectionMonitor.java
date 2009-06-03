@@ -9,7 +9,7 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 
 /**
- * Listenes to the current selection for reasoning
+ * Listenes to the current selection and updates all selected elements.
  *
  * <p>Currently JOSM has no way of giving notice about a changed or deleted
  * node. This class tries to overcome this at the cost of computational

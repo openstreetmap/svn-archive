@@ -30,6 +30,9 @@ public class NotNullList<E> extends ArrayList<E> {
             return false;
     }
 
+    /**
+     * Checks each item and if it isn't {@code null}, it is added.
+     */
     @Override
     public boolean addAll(Collection<? extends E> c) {
 

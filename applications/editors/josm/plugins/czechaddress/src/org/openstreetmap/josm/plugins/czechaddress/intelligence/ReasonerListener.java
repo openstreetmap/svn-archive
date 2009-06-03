@@ -4,6 +4,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 
 /**
+ * Interface capable of sensing changes in the {@link Reasoner}.
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */

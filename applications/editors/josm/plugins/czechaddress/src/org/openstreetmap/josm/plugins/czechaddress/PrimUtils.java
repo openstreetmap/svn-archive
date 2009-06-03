@@ -26,9 +26,11 @@ public class PrimUtils {
         {KEY_PLACE, KEY_NAME, KEY_ADDR_COUNTRY, KEY_ADDR_CITY, KEY_IS_IN,
          KEY_ADDR_STREET, KEY_ADDR_CO, KEY_ADDR_CP };
 
+    /**
+     * Comparator for {@link OsmPrimitive}, which looks at 'addr:*' tags.
+     */
     public static final Comparator<OsmPrimitive> comparator =
         new Comparator<OsmPrimitive>() {
-
         public int compare(OsmPrimitive o1, OsmPrimitive o2) {
 
             for (String key : keysToCompare) {

@@ -1,16 +1,11 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
-import java.awt.Component;
-import java.awt.event.MouseEvent;
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedTreeModel;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
-import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalTreeRenderer;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
@@ -22,9 +17,18 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Suburb;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ViToCi;
 import org.openstreetmap.josm.plugins.czechaddress.gui.databaseeditors.StreetEditor;
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalTreeRenderer;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Capitalizator;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 
+/**
+ * Editing the database of {@link AddressElement}s.
+ *
+ * <p>Currently allows to display the current location + its children and
+ * automatic street renaming.</p>
+ *
+ * @author Radomír Černoch radomir.cernoch@gmail.com
+ */
 public class ManagerDialog extends ExtendedDialog {
 
     RenameModel<Street> streetModel = new RenameModel<Street>();

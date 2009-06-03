@@ -1,16 +1,18 @@
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
 import java.util.ArrayList;
+import org.openstreetmap.josm.plugins.czechaddress.parser.DatabaseParser;
 
 /**
- * Stores the whole database of all regions, municipalities, suburbs, streets
- * and houses in the Czech republic. The database can be feeded via
- * XML and is capable of downloading it from www.mvcr.cz
+ * Stores the whole database.
+ *
+ * <p>Contains the tree of all regions, municipalities, suburbs, streets
+ * and houses in the Czech republic.</p>
  * 
  * @see AddressElement
  * @see DatabaseParser
 
- * @author Radomir Cernoch radomir.cernoch@gmail.com
+ * @author Radomír Černoch radomir.cernoch@gmail.com
  */
 public class Database {
 

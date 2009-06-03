@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.czechaddress.parser;
 
-import org.openstreetmap.josm.plugins.czechaddress.parser.DatabaseParser;
 import java.io.IOException;
 import org.openstreetmap.josm.plugins.czechaddress.DatabaseLoadException;
 import org.xml.sax.ContentHandler;

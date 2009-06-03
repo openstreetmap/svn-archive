@@ -1,7 +1,5 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
-import java.awt.Component;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,7 +9,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JList;
 import javax.swing.event.ListDataListener;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -23,7 +20,6 @@ import org.openstreetmap.josm.plugins.czechaddress.MapUtils;
 import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
 import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithHouses;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
@@ -32,7 +28,7 @@ import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalListRender
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * Dialog for displaying and handling getConflicts.
+ * Dialog for displaying and handling conflicts.
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
@@ -56,8 +52,6 @@ public class ConflictResolver extends ExtendedDialog {
         initComponents();
 
         mainField.setModel(conflictModel);
-//        conflictModel.addListDataListener(mainField);
-
         Reasoner.getInstance().addListener(new ReasonerHook());
 
         // Create those lovely 'zoom' icons for professional look.
@@ -296,6 +290,9 @@ public class ConflictResolver extends ExtendedDialog {
 
 //==============================================================================
 
+    /**
+     * Listenes to the {@link Reasoner} and updates data models.
+     */
     private class ReasonerHook implements ReasonerListener {
 
         public void elementChanged(AddressElement elem) {
@@ -566,123 +563,4 @@ public class ConflictResolver extends ExtendedDialog {
             listeners.remove(l);
         }
     }
-
-    private class CandidatesRenderer extends UniversalListRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value,
-                        int index, boolean isSelected, boolean cellHasFocus) {
-            Component c = super.getListCellRendererComponent(list, value, index,
-                            isSelected, cellHasFocus);
-
-            if (   (value instanceof AddressElement &&
-                    Reasoner.getInstance().translate((AddressElement) value) != null)
-                || (value instanceof OsmPrimitive &&
-                    Reasoner.getInstance().translate((OsmPrimitive) value) != null) )
-                setFont(getFont().deriveFont(Font.BOLD));
-                
-            return c;
-        }
-    }
-
-/*
-    private class ElemTreeModel extends HalfCookedTreeModel {
-
-        public ElemTreeModel() {
-            root = "Konflikty podle objektů v databázi";
-        }
-
-        public Object getChild(Object parent, int index) {
-            try {
-                Reasoner r = CzechAddressPlugin.getReasoner();
-
-                if (parent == root)
-                    return r.getElementsInConflict().get(index);
-
-                if (parent instanceof AddressElement)
-                    return r.getConflicts((AddressElement) parent).get(index).prim;
-
-            } catch (Exception e) {  }
-            return null;
-        }
-
-        public int getChildCount(Object parent) {
-            try {
-                Reasoner r = CzechAddressPlugin.getReasoner();
-
-                if (parent == root)
-                    return r.getElementsInConflict().size();
-
-                if (parent instanceof AddressElement)
-                    return r.getConflicts((AddressElement) parent).size();
-                
-            } catch (Exception exp) { }
-            return 0;
-        }
-
-        public int getIndexOfChild(Object parent, Object child) {
-            try{
-                Reasoner r = CzechAddressPlugin.getReasoner();
-
-                if (parent == root)
-                    return r.getElementsInConflict().indexOf(child);
-
-                if (parent instanceof AddressElement)
-                    return r.getConflicts((AddressElement) parent).indexOf(child);
-                
-            } catch (Exception exp) { }
-            return -1;
-        }
-    }
-
-
-    private class PrimTreeModel extends HalfCookedTreeModel {
-
-        public PrimTreeModel() {
-            root = "Podle objeků databáze";
-        }
-
-        public Object getChild(Object parent, int index) {
-            try {
-                Reasoner r = CzechAddressPlugin.getReasoner();
-
-                if (parent == root)
-                    return r.getPrimitivesInConflict().get(index);
-
-                if (parent instanceof OsmPrimitive)
-                    return r.getConflictsconflictsve) parent).get(index).elem;
-                
-            } catch (Exception exp) { }
-            return null;
-        }
-
-        public int getChildCount(Object parent) {
-
-            try {
-                Reasoner r = CzechAddressPlugin.getReasoner();
-
-                if (parent == root)
-                    return r.getPrimitivesInConflict().size();
-                if (parent instanceof OsmPrimitive)
-                    return r.getConflictsconflictsve) parent).size();
-
-            } catch (Exception exp) { }
-            return 0;
-        }
-
-        public int getIndexOfChild(Object parent, Object child) {
-            
-            try {
-                Reasoner r = CzechAddressPlugin.getReasoner();
-
-                if (parent == root) {
-                    return r.getPrimitivesInConflict().indexOf(child);
-
-                } else if (parent instanceof OsmPrimitive)
-                    return r.getConflictsconflictsve) parent).indexOf(child);
-                
-            } catch (Exception exp) { }
-            return -1;
-        }
-    }*/
 }

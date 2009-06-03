@@ -5,7 +5,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
-import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalRenderer;
 
 /**
  * Renderer for rendering trees with {@link OsmPrimitive}s and

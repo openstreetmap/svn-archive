@@ -1808,7 +1808,7 @@
 						</else>
 					</else>
 				</else>
-				<line class="railway-rail-casing railway-tunnel-ends" suppress-markers-tag="tunnel"/>
+				<line class="railway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
 
 		</rule>
@@ -3888,6 +3888,7 @@
 			marker-start: url(#marker-tunnel-start);
 			marker-end: url(#marker-tunnel-end);
 			stroke: #b0b0b0;
+			stroke-width: 1.5px;
 			}
 
 			.railway-bridge-casing             { stroke-width: 1.5px; }

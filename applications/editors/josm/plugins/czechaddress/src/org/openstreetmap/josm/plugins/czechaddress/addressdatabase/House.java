@@ -4,7 +4,6 @@ import java.util.List;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
 import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
-import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
 
 import static org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalFactory.getStringFieldDiff;
@@ -132,13 +131,14 @@ public class House extends AddressElement {
      * <p>Values of the array are described in
      * {@link AddressElement}{@code .getFieldMatchList()}.</p>
      *
-     * <p>First elemtn of the returned array corresponds to the CP
+     * <p>First element of the returned array corresponds to the CP
      * (číslo popisné), the second one to the combination of Street+CO.</p>
      */
     @Override
     protected int[] getFieldMatchList(OsmPrimitive prim) {
         int[] result = {0, 0};
-                
+        if (!isMatchable(prim)) return result;
+
         // First field is the AlternateNubmer
         result[0] = matchField(this.cp, prim.get(PrimUtils.KEY_ADDR_CP));
         
@@ -149,7 +149,19 @@ public class House extends AddressElement {
                 matchField(      this.co,          prim.get(PrimUtils.KEY_ADDR_CO)) );
         return result;
     }
+
+    @Override
+    protected int[] getAdditionalFieldMatchList(OsmPrimitive prim) {
+        int[] result = {0};
+        if (!isMatchable(prim)) return result;
+
+        ParentResolver resolver = new ParentResolver(this);
+        result[0] = matchField(resolver.getIsIn(), prim.get(PrimUtils.KEY_IS_IN));
+        return result;
+    }
+
     
+
     /**
      * Gives all proposals to make the primitive be an address primitive.
      *
@@ -160,7 +172,7 @@ public class House extends AddressElement {
     public List<Proposal> getDiff(OsmPrimitive prim) {
         
         List<Proposal> props = new NotNullList<Proposal>();
-        ParentResolver pr = new ParentResolver(this);
+        ParentResolver resolver = new ParentResolver(this);
 
         props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_CP, prim.get(PrimUtils.KEY_ADDR_CP), getCP()));
         props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_CO, prim.get(PrimUtils.KEY_ADDR_CO), getCO()));
@@ -168,15 +180,17 @@ public class House extends AddressElement {
         props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_COUNTRY,
                             prim.get(PrimUtils.KEY_ADDR_COUNTRY), "CZ"));
 
-        if (pr.parentStreet != null)
+        if (resolver.parentStreet != null)
             props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_STREET,
                                 prim.get(PrimUtils.KEY_ADDR_STREET),
-                                pr.parentStreet.getName()));
+                                resolver.parentStreet.getName()));
 
-        if (parent.parent != null) // For sure our parent is a ElemWithStreets
+        AddressElement isInElem = parent;
+        if (isInElem instanceof Street) isInElem = parent.parent;
+        if (isInElem != null) // For sure our parent is a ElemWithStreets
             props.add(getStringFieldDiff(PrimUtils.KEY_IS_IN,
                                 prim.get(PrimUtils.KEY_IS_IN),
-                                parent.parent.getIsIn()));
+                                resolver.getIsIn()));
 
         // If we have added any proposal so far, add the source info as well.
         if (props.size() > 0)
@@ -186,12 +200,9 @@ public class House extends AddressElement {
     }
 
     public static boolean isMatchable(OsmPrimitive prim) {
-        
-        for (String key : prim.keySet()) {
-            String value = prim.get(key);
-            if (value != null && value.startsWith("addr:"))
+        for (String key : prim.keySet())
+            if (key.startsWith("addr:"))
                 return true;
-        }
         return false;
     }
 

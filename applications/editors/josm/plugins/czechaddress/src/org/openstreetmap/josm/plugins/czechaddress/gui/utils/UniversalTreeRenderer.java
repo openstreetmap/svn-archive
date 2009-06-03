@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.czechaddress.gui;
+package org.openstreetmap.josm.plugins.czechaddress.gui.utils;
 
 import java.awt.Component;
 import javax.swing.JTree;

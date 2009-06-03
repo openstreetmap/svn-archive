@@ -107,7 +107,7 @@ public abstract class DatabaseParser {
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(getDatabasePath()));
 
             int total = 0, count;
-            byte[] buffer = new byte[1024*128];
+            byte[] buffer = new byte[1024*512];
             while ((count = con.getInputStream().read(buffer)) >= 0) {
                 bos.write(buffer, 0, count);
                 total += count;

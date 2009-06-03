@@ -34,7 +34,7 @@
             <attribute name="Author" value="Radomír Černoch"/>
             <attribute name="Plugin-Description" value="Creating and handling address nodes and buildings within Czech Republic."/>
             <attribute name="Plugin-Mainversion" value="1607"/>
-            <attribute name="Plugin-Version" value="0.1.2"/>
+            <attribute name="Plugin-Version" value="0.2.0"/>
             <attribute name="Plugin-Class" value="${plugin.basepackage}.CzechAddressPlugin"/>
         </manifest>
 
@@ -54,7 +54,7 @@
     </target>
 
     <target name="doc" description="Create Javadoc API documentation">
-        <ant antfile="build.xml" target="doc" dir="${josm.base}"/>
+        <!--<ant antfile="build.xml" target="doc" dir="${josm.base}"/>-->
         <mkdir dir="${plugin.javadoc.dir}"/>
         <javadoc sourcepath="src"
                  packagenames="*"
@@ -96,7 +96,6 @@
                 <pathelement location="${josm.jar}"/>
                 <pathelement path="${java.class.path}"/>
             </classpath>
-        <arg value="/home/radek/Desktop/Hustopeče.osm"/>
         </java>
     </target>
 

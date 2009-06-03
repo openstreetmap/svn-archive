@@ -8,7 +8,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
@@ -98,10 +97,11 @@ public class FactoryAction extends MapMode {
             r.doOverwrite(newNode, house);
             r.closeTransaction();
         }
+        
+        FactoryDialog.getInstance().selectionListenerActivated = false;
         FactoryDialog.getInstance().selectNextUnmatchedHouseByCheckBox();
-
-        // And make the new node selected.
-        Main.ds.addPrimitive(newNode);
+        Main.ds.addPrimitive(newNode);        
         Main.ds.setSelected(newNode);
+        FactoryDialog.getInstance().selectionListenerActivated = true;
     }
 }

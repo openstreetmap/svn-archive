@@ -43,8 +43,13 @@ public class MvcrParser extends XMLParser {
         if (name.equals("oblast")) {
 
             // If the region filter is on, apply it!
-            if (filRegion != null && !attributes.getValue("nazev").equals(filRegion))
+            if (filRegion != null && !attributes.getValue("nazev").equals(filRegion)) {
+                curRegion = null;
+                curViToCi = null;
+                curSuburb = null;
+                curStreet = null;
                 return;
+            }
 
             /*curRegion = target.findRegion(
                 attributes.getValue("nazev"),
@@ -69,8 +74,12 @@ public class MvcrParser extends XMLParser {
         if (name.equals("obec")) {
 
             // If the viToCi filter is on, apply it!
-            if (filViToCi != null && !attributes.getValue("nazev").equals(filViToCi))
+            if (filViToCi != null && !attributes.getValue("nazev").equals(filViToCi)) {
+                curViToCi = null;
+                curSuburb = null;
+                curStreet = null;
                 return;
+            }
 
             //curViToCi = curRegion.findViToCi(attributes.getValue("nazev"));
             //if (curViToCi == null) {
@@ -86,8 +95,11 @@ public class MvcrParser extends XMLParser {
                 return;
 
             // If the suburb filter is on, apply it!
-            if (filSuburb != null && !attributes.getValue("nazev").equals(filSuburb))
+            if (filSuburb != null && !attributes.getValue("nazev").equals(filSuburb)) {
+                curSuburb = null;
+                curStreet = null;
                 return;
+            }
 
             //curSuburb = curViToCi.findSuburb(attributes.getValue("nazev"));
             //if (curSuburb == null) {
@@ -101,8 +113,10 @@ public class MvcrParser extends XMLParser {
         if (name.equals("ulice")) {
 
             // If the street filter is on, apply it!
-            if (filStreet != null && !attributes.getValue("nazev").equals(filStreet))
+            if (filStreet != null && !attributes.getValue("nazev").equals(filStreet)) {
+                curStreet = null;
                 return;
+            }
 
             ElementWithStreets   topElem = curSuburb;
             if (topElem == null) topElem = curViToCi;

@@ -94,16 +94,4 @@ public class Region extends ElementWithStreets {
         
         return thisString;
     }
-
-    @Override
-    protected String getIsInName() {
-
-        if (nuts3name != null)
-            return nuts3name + " kraj";
-
-        if (nuts4name != null)
-            return nuts3name + " okres";
-
-        return null;
-    }
 }

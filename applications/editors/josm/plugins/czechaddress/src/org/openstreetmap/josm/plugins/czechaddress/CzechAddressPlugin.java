@@ -30,11 +30,13 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.parser.MvcrParser;
 import org.openstreetmap.josm.plugins.czechaddress.actions.FactoryAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.HelpAction;
-import org.openstreetmap.josm.plugins.czechaddress.actions.ModifierAction;
+import org.openstreetmap.josm.plugins.czechaddress.actions.ManagerAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.SplitAreaByEmptyWayAction;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 import org.openstreetmap.josm.plugins.czechaddress.gui.ConflictResolver;
 import org.openstreetmap.josm.plugins.czechaddress.gui.FactoryDialog;
 import org.openstreetmap.josm.plugins.czechaddress.gui.LocationSelector;
+import org.openstreetmap.josm.plugins.czechaddress.gui.ManagerDialog;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.SelectionMonitor;
 
@@ -81,11 +83,14 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
 
         addStatusListener(this);
         
-        Reasoner.getInstance();
         ConflictResolver.getInstance();
         SelectionMonitor.getInstance();
+        FactoryDialog.getInstance();
+        Reasoner.getInstance();
 
-        initLoggers();
+        boolean assertionsEnabled = false;
+        assert assertionsEnabled = true;
+        if (assertionsEnabled) initLoggers();
         
         MainMenu.add(Main.main.menu.toolsMenu, new SplitAreaByEmptyWayAction());
 
@@ -93,8 +98,6 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         final MvcrParser parser = new MvcrParser();
         parser.setTargetDatabase(Database.getInstance());
         parser.setStorageDir(getPluginDir());
-
-        parser.setFilter("HUSTOPEČE", "HUSTOPEČE", null, null);
 
         // Fill the database in separate thread.
         Thread t = new Thread() { @Override public void run() {
@@ -129,22 +132,21 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         synchronized(reasoner) {
             reasoner.reset();
             reasoner.openTransaction();
-            //Reasoner.logger.setLevel(Level.OFF);
             for (House house : location.getAllHouses())
-                reasoner.consider(house);
+                reasoner.update(house);
+
+            for (Street street : location.getAllStreets())
+                reasoner.update(street);
+
             for (OsmPrimitive prim : Main.ds.allPrimitives()) {
-                boolean include = false;
-                for (String key : prim.keySet())
-                    if (key.startsWith("addr:")) {
-                        include = true;
-                        break;
-                    }
-                if (include)
-                    reasoner.consider(prim);
+                if (House.isMatchable(prim) || Street.isMatchable(prim))
+                    reasoner.update(prim);
             }
-            //Reasoner.logger.setLevel(Level.ALL);
             reasoner.closeTransaction();
         }
+        ManagerDialog dialog = new ManagerDialog();
+        if (dialog.countAutomaticRenameProposals() > 0)
+            dialog.setVisible(true);
     }
 
     static private ElementWithStreets location = null;
@@ -177,7 +179,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             menuItems.add(MainMenu.add(czechMenu, new PointManipulatorAction()));
             menuItems.add(MainMenu.add(czechMenu, new GroupManipulatorAction()));
             menuItems.add(MainMenu.add(czechMenu, new ConflictResolveAction()));
-            menuItems.add(MainMenu.add(czechMenu, new ModifierAction()));
+            menuItems.add(MainMenu.add(czechMenu, new ManagerAction()));
             menuItems.add(MainMenu.add(czechMenu, new HelpAction()));
             return;
         }

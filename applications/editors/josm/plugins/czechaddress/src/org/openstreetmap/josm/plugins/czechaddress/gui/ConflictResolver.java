@@ -23,6 +23,7 @@ import org.openstreetmap.josm.plugins.czechaddress.MapUtils;
 import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
 import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithHouses;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
@@ -133,6 +134,11 @@ public class ConflictResolver extends ExtendedDialog {
 
         candPickButton.setText("     ");
         candPickButton.setEnabled(false);
+        candPickButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                candPickButtonActionPerformed(evt);
+            }
+        });
 
         mainPickButton.setText("     ");
         mainPickButton.setEnabled(false);
@@ -211,6 +217,15 @@ public class ConflictResolver extends ExtendedDialog {
         }
     }
 
+    public void focusElement(AddressElement elem) {
+        int index = Collections.binarySearch(conflictModel.elements, elem);
+        if (index >= 0) {
+            mainField.setSelectedIndex(index);
+            mainField.repaint();
+            setVisible(true);
+        }
+    }
+
     private void reassignButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reassignButtonActionPerformed
 
         Reasoner r = Reasoner.getInstance();
@@ -257,8 +272,14 @@ public class ConflictResolver extends ExtendedDialog {
     }//GEN-LAST:event_reassignButtonActionPerformed
 
     private void mainPickButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mainPickButtonActionPerformed
-        // TODO add your handling code here:
+        if (mainField.getSelectedItem() instanceof House)
+            FactoryDialog.getInstance().setSelectedHouse((House) mainField.getSelectedItem());
     }//GEN-LAST:event_mainPickButtonActionPerformed
+
+    private void candPickButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_candPickButtonActionPerformed
+        if (candField.getSelectedItem() instanceof House)
+            FactoryDialog.getInstance().setSelectedHouse((House) candField.getSelectedItem());
+    }//GEN-LAST:event_candPickButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox candField;
@@ -278,8 +299,8 @@ public class ConflictResolver extends ExtendedDialog {
     private class ReasonerHook implements ReasonerListener {
 
         public void elementChanged(AddressElement elem) {
-            String delStr = Reasoner.getInstance().inConflict(elem) ? " in conflict" : " no conflict";
-            logger.log(Level.FINER, "hook: element changed", elem.getName() + delStr);
+            if (!(elem instanceof House)) return;
+            logger.log(Level.FINER, "hook: element changed", elem.getName());
 
             if (Reasoner.getInstance().inConflict(elem))
                 conflictModel.put(elem);
@@ -288,8 +309,8 @@ public class ConflictResolver extends ExtendedDialog {
         }
 
         public void primitiveChanged(OsmPrimitive prim) {
-            String delStr = Reasoner.getInstance().inConflict(prim) ? " in conflict" : " no conflict";
-            logger.log(Level.FINER, "hook: primitive changed", AddressElement.getName(prim) + delStr);
+            if (!House.isMatchable(prim)) return;
+            logger.log(Level.FINER, "hook: primitive changed", AddressElement.getName(prim));
 
             if (Reasoner.getInstance().inConflict(prim))
                 conflictModel.put(prim);
@@ -332,11 +353,11 @@ public class ConflictResolver extends ExtendedDialog {
         }
 
         public void put(OsmPrimitive prim) {
-            int index = Collections.binarySearch(primitives, prim, new PrimUtils());
+            int index = Collections.binarySearch(primitives, prim, PrimUtils.comparator);
             if (index < 0) {
                 logger.log(Level.FINE, "conflicts: adding primitive",
-                                        "[" + String.valueOf(-index-1) + "]=„"
-                                        + AddressElement.getName(prim) + "“");
+                                       "["+String.valueOf(-index-1)+"]=„"
+                                        +AddressElement.getName(prim) + "“");
                 primitives.add(-index-1, prim);
                 
                 ListDataEvent evt = new ListDataEvent(this,
@@ -451,7 +472,7 @@ public class ConflictResolver extends ExtendedDialog {
             AddressElement selElem = (AddressElement) selected;
             List<OsmPrimitive> conflPrims = new NotNullList<OsmPrimitive>();
             conflPrims.addAll(Reasoner.getInstance().getCandidates(selElem));
-            Collections.sort(conflPrims, new PrimUtils());
+            Collections.sort(conflPrims, PrimUtils.comparator);
             candField.setModel(new CandidatesModel<OsmPrimitive>(conflPrims));
 
         } else if (selected instanceof OsmPrimitive) {

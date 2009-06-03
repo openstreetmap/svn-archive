@@ -95,23 +95,30 @@ public class FactoryDialog extends ToggleDialog
             houseList.setEnabled(true);
             keepOddityCheckBox.setEnabled(true);
             return;
-        }
-        
-/*      if (message == MESSAGE_REASONER_REASONED) {
-            ensureConsistencyButton.setEnabled(true);
-        }
-        
-        if (message == MESSAGE_MATCHES_CHANGED || message == MESSAGE_CONFLICT_CHANGED) {
-            houseModel.notifyAllListeners();
-            return;
-        }*/
+        }        
+    }
+
+    public void setSelectedHouse(House house) {
+
+        for (int i=0; i<streetModel.getSize(); i++)
+            if (streetModel.getElementAt(i) == house.getParent()) {
+                streetComboBox.setSelectedIndex(i);
+                streetComboBox.repaint();
+                break;
+            }
+
+        for (int i=0; i<houseModel.getSize(); i++)
+            if (houseModel.getHouseAt(i) == house) {
+                houseList.setSelectedIndex(i);
+                houseList.ensureIndexIsVisible(i);
+                break;
+            }
     }
 
     public House getSelectedHouse() {
         if (houseList.getSelectedValue() instanceof House)
             return (House) houseList.getSelectedValue();
-        else
-            return null;
+        return null;
     }
 
     public boolean existsAvailableHouse() {
@@ -137,10 +144,10 @@ public class FactoryDialog extends ToggleDialog
     public void selectNextUnmatchedHouse() {
         int index = houseList.getSelectedIndex();
 
-        index++;
-        Object current;
-        while ( (current = houseModel.getElementAt(index)) != null
-              && Reasoner.getInstance().translate((House) current) != null)
+        index++; // Initial kick to do at least one move.
+        House current;
+        while ( (current = houseModel.getHouseAt(index))  != null
+             && Reasoner.getInstance().translate(current) != null)
             index++;
 
         if (index >= houseModel.getSize())
@@ -170,8 +177,8 @@ public class FactoryDialog extends ToggleDialog
                     oldNum = Integer.valueOf(oldStr);
                 newNum = Integer.valueOf(newStr);
 
-            } while ( (oldNum + newNum) % 2 == 1 &&
-                      houseList.getSelectedIndex() != 0 );
+            } while ((oldNum + newNum) % 2 == 1 &&
+                     houseList.getSelectedIndex() != 0);
             
         } catch (Exception exp) {}
     }
@@ -183,12 +190,13 @@ public class FactoryDialog extends ToggleDialog
             selectNextUnmatchedHouse();
     }
 
+    public boolean selectionListenerActivated = true;
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 
+        if (!selectionListenerActivated) return;
         if (newSelection.size() != 1) return;
 
         OsmPrimitive selectedPrim = (OsmPrimitive) newSelection.toArray()[0];
-
         String streetName;
 
         if ((streetName = selectedPrim.get("addr:street")) == null) {
@@ -214,7 +222,7 @@ public class FactoryDialog extends ToggleDialog
         House bestHouse = null;
         for (House currHouse : selectedStreet.getHouses()) {
 
-            int currQuality = currHouse.getMatchQuality(selectedPrim);
+            int currQuality = currHouse.getQ(selectedPrim);
 
             if (currQuality > bestQuality) {
                 bestQuality = currQuality;
@@ -224,6 +232,7 @@ public class FactoryDialog extends ToggleDialog
 
         if (bestHouse == null) return;
         houseList.setSelectedValue(bestHouse, true);
+        houseList.ensureIndexIsVisible(houseList.getSelectedIndex());
         houseModel.notifyAllListeners();
     }
 
@@ -312,21 +321,10 @@ public class FactoryDialog extends ToggleDialog
         if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
             Reasoner r = Reasoner.getInstance();
 
-            if (r.translate(getSelectedHouse()) != null) {
+            if (r.translate(getSelectedHouse()) != null)
                 MapUtils.zoomTo(r.translate(getSelectedHouse()));
-                return;
-            }
-
-            // TODO: The following code does not work... for some reason.
-/*            List<Match> getConflicts = r.getConflictsForElement(getSelectegetConflicts if (getConflicts != null) {
-                List<OsmPrimitive> toZoom
-                        = new ArrayList<OsmPrimitive>(getConflicts.size());
-                for (Match conflict : getConflicts)
-                    toZoom.add(conflict.prim);
-
-                MapUtils.zoomToMany(toZoom);
-                return;
-*/
+            else
+                ConflictResolver.getInstance().focusElement(getSelectedHouse());
         }
     }//GEN-LAST:event_houseListClicked
 
@@ -343,37 +341,30 @@ public class FactoryDialog extends ToggleDialog
     public void elementChanged(AddressElement elem) {
         houseModel.notifyAllListeners();
     }
-
     public void primitiveChanged(OsmPrimitive prim) {}
+    public void resonerReseted() {}
 
-    public void resonerReseted() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+//==============================================================================
 
     private class StreetListRenderer extends DefaultListCellRenderer {
-
-        Font plainFont = null;
-        Font boldFont = null;
-
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-            if (plainFont == null) plainFont = getFont().deriveFont(Font.PLAIN);
-            if (boldFont  == null)  boldFont = getFont().deriveFont(Font.BOLD);
-
             if (value instanceof Street) {
-                setFont(plainFont);
+                setFont(getFont().deriveFont(Font.PLAIN));
                 setText(((Street) value).getName());
                 
             } else if (value instanceof ElementWithHouses) {
-                setFont(boldFont);
+                setFont(getFont().deriveFont(Font.BOLD));
                 setText("[" + ((ElementWithHouses) value).getName() + "]");
             }
-
+            
             return c;
         }
     }
+
+//==============================================================================
 
     private class HouseListRenderer extends DefaultListCellRenderer {
 
@@ -391,18 +382,16 @@ public class FactoryDialog extends ToggleDialog
             if (plainFont == null) plainFont = getFont().deriveFont(Font.PLAIN);
             if (boldFont == null) boldFont = getFont().deriveFont(Font.BOLD);
 
-            Reasoner r = Reasoner.getInstance();
-
             if (value instanceof House) {
                 House house = (House) value;
 
                 setIcon(envelopeNormIcon);
                 setFont(plainFont);
 
-                if (r.inConflict(house))
+                if (Reasoner.getInstance().inConflict(house))
                     setIcon(envelopeExclIcon);
 
-                else if (r.translate(house) == null) {
+                else if (Reasoner.getInstance().translate(house) == null) {
                     setIcon(envelopeStarIcon);
                     setFont(boldFont);
                 }
@@ -412,6 +401,8 @@ public class FactoryDialog extends ToggleDialog
             return c;
         }
     }
+
+//==============================================================================
 
     private class AllStreetProvider extends ElementWithHouses {
         public AllStreetProvider() {
@@ -430,17 +421,7 @@ public class FactoryDialog extends ToggleDialog
         public FreeStreetProvider() {
             super("nepřiřazené domy");
             Reasoner.getInstance().addListener(this);
-            rebuild();
-        }
 
-        @Override
-        public void setHouses(List<House> houses) {
-            this.houses = houses;
-        }
-
-
-        public void rebuild() {
-            houses.clear();
             for (AddressElement house : Reasoner.getInstance().getUnassignedElements())
                 if (house instanceof House)
                     houses.add((House) house);
@@ -451,20 +432,21 @@ public class FactoryDialog extends ToggleDialog
         public void resonerReseted() { houses.clear(); }
         public void primitiveChanged(OsmPrimitive prim) {}
         public void elementChanged(AddressElement elem) {
-            if (!(elem instanceof House))
-                return;
+            if (!(elem instanceof House)) return;
             House house = (House) elem;
+            int index = Collections.binarySearch(houses, house);
             
-            if (Reasoner.getInstance().translate(house) != null)
-                houses.remove(house);
-            else if (!houses.contains(house)) {
-                houses.add(house);
-                Collections.sort(houses);
+            if (Reasoner.getInstance().translate(house) != null) {
+                if (index >= 0) houses.remove(index);
+            } else {
+                if (index < 0)  houses.add(-index-1, house);
             }
+            
+            houseModel.notifyAllListeners();
         }
-
-
     }
+
+//==============================================================================
 
     private class StreetListModel extends HalfCookedComboBoxModel {
 
@@ -480,8 +462,6 @@ public class FactoryDialog extends ToggleDialog
             metaElem.add(new FreeStreetProvider());
         }
 
-
-
         public int getSize() {
             if (parent == null) return 0;
             return parent.getStreets().size() + metaElem.size();
@@ -490,24 +470,22 @@ public class FactoryDialog extends ToggleDialog
         public void setParent(ElementWithStreets parent) {
             if (parent == null) return;
 
-            selected = parent;
-            this.parent = parent;
+            this.selected = parent;
+            this.parent   = parent;
+            
             metaElem.set(0, parent);
-
             metaElem.get(1).setHouses(parent.getAllHouses());
             notifyAllListeners();
         }
 
         public Object getElementAt(int index) {
-
             if (parent == null) return null;
-            if (index <  0) return null;
 
             if (index < metaElem.size())
                 return metaElem.get(index);
 
             index -= metaElem.size();
-            // Now the index points to the list of streets
+
             if (index < parent.getStreets().size())
                 return parent.getStreets().get(index);
 
@@ -525,7 +503,14 @@ public class FactoryDialog extends ToggleDialog
         }
     }
 
-    private class HouseListModel extends HalfCookedListModel {
+//==============================================================================
+
+    private class HouseListModel extends HalfCookedListModel
+                                 implements ReasonerListener {
+
+        public HouseListModel() {
+            Reasoner.getInstance().addListener(this);
+        }
 
         public int getSize() {
             if (streetComboBox.getSelectedItem() == null) return 0;
@@ -547,6 +532,15 @@ public class FactoryDialog extends ToggleDialog
 
         public Object getElementAt(int index) {
             return getHouseAt(index);
+        }
+
+        public void primitiveChanged(OsmPrimitive prim) {}
+        public void elementChanged(AddressElement elem) {
+            notifyAllListeners();
+        }
+
+        public void resonerReseted() {
+            notifyAllListeners();
         }
     }
 }

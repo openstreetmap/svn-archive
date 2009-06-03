@@ -8,6 +8,7 @@ import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
 
 /**
  * Class encapsulating an {@link OsmPrimitive} and a list of proposed
@@ -21,7 +22,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  * @see OsmPrimitive
  * @see Proposal
  */
-public class ProposalContainer implements ListModel {
+public class ProposalContainer implements ListModel, Comparable<ProposalContainer> {
 
 
     /**
@@ -213,6 +214,10 @@ public class ProposalContainer implements ListModel {
 
     public void removeListDataListener(ListDataListener l) {
         listeners.remove(l);
+    }
+
+    public int compareTo(ProposalContainer o) {
+        return PrimUtils.comparator.compare(this.target, o.target);
     }
 
 }

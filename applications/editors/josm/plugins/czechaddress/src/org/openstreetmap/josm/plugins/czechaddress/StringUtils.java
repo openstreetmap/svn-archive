@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.czechaddress;
 
+import java.text.Normalizer;
 import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
@@ -49,14 +50,14 @@ public abstract class StringUtils {
     }
 
     /**
-     * String matcher with abbreviations
+     * String matcher with abbreviations and regardless of diacritics.
      *
-     * <p>Returns {@code true} even if s1="Nám. Svobody" and
+     * <p>Returns {@code true} even if s1="Nam. Svobody" and
      * s2="Náměstí Svobody".</p>
      */
     public static boolean matchAbbrev(String s1, String s2) {
-        String[] parts1 = s1.split(" +");
-        String[] parts2 = s2.split(" +");
+        String[] parts1 = anglicize(s1).split(" +");
+        String[] parts2 = anglicize(s2).split(" +");
 
         if (parts1.length != parts2.length)
             return false;
@@ -109,10 +110,30 @@ public abstract class StringUtils {
             result = result + ch;
         }
 
-        String[] noCapitalize = { "Nad", "Pod", "U", "Na" };
+        String[] noCapitalize = { "Nad", "Pod", "U", "Na", "Z" };
         for (String noc : noCapitalize)
             result = result.replaceAll(" "+noc+" ", " "+noc.toLowerCase()+" ");
 
         return result;
+    }
+
+    /**
+     * Remove diacritics from the string.
+     *
+     * <p>This method was posted on the
+     * <a href='http://forums.sun.com/thread.jspa?messageID=10190825#10190825'>
+     * SUN forum</a> by
+     * <a href='http://forums.sun.com/profile.jspa?userID=43408'>
+     * <i>Alan Moore</i></a>.</p>
+     */
+    public static String anglicize(String str) {
+        String strNFD = Normalizer.normalize(str, Normalizer.Form.NFD);
+        StringBuilder sb = new StringBuilder();
+        for (char ch : strNFD.toCharArray()) {
+            if (Character.getType(ch) != Character.NON_SPACING_MARK) {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
     }
 }

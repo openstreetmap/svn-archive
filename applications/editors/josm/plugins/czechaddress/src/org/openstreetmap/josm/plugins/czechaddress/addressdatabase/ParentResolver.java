@@ -39,6 +39,29 @@ public class ParentResolver implements Comparable<ParentResolver> {
         }
     }
 
+    public String getIsIn() {
+        String result = "";
+        String last = "";
+
+        if (parentSuburb != null && !last.equals(parentSuburb.getName())) {
+            result += parentSuburb.getName() + ", ";
+            last = parentSuburb.getName();
+        }
+
+        if (parentViToCi != null && !last.equals(parentViToCi.getName())) {
+            result += parentViToCi.getName() + ", ";
+            last = parentViToCi.getName();
+        }
+
+        if (parentRegion != null && parentRegion.getNuts3Name() != null &&
+                                    !last.equals(parentRegion.getNuts3Name())) {
+            result += parentRegion.getNuts3Name() + " kraj, ";
+            last = parentRegion.getNuts3Name();
+        }
+
+        return result + "CZ";
+    }
+
     public int compareTo(ParentResolver o) {
         int val = 0;
 

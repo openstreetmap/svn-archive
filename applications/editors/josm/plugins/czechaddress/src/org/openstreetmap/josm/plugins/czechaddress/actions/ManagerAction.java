@@ -1,23 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.openstreetmap.josm.plugins.czechaddress.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.plugins.czechaddress.gui.Renamer;
+import org.openstreetmap.josm.plugins.czechaddress.gui.ManagerDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
-public class ModifierAction extends JosmAction {
+public class ManagerAction extends JosmAction {
 
-    public ModifierAction() {
+    public ManagerAction() {
         super("Upravit databázi",
               null,//"envelope-closed-big.png",
               "Upravit jména elemntů dle mapy",
@@ -28,6 +23,6 @@ public class ModifierAction extends JosmAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        (new Renamer()).setVisible(true);
+        (new ManagerDialog()).setVisible(true);
     }
 }

@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
 import java.util.List;
 import java.util.ArrayList;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**
  * ViToCi is either a village, town or a city.
@@ -54,5 +53,21 @@ public class ViToCi extends ElementWithStreets {
                 return suburb;
 
         return null;
+    }
+
+    @Override
+    public List<Street> getAllStreets() {
+        List<Street> result = super.getAllStreets();
+        for (Suburb suburb : suburbs)
+            result.addAll(suburb.getAllStreets());
+        return result;
+    }
+
+    @Override
+    public List<House> getAllHouses() {
+        List<House> result = super.getAllHouses();
+        for (Suburb suburb : suburbs)
+            result.addAll(suburb.getAllHouses());
+        return result;
     }
 }

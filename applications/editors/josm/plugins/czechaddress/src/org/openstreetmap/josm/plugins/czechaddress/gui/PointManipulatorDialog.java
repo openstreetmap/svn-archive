@@ -1,15 +1,11 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JList;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.ImageIcon;
 import javax.swing.Timer;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
@@ -20,11 +16,10 @@ import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
 import org.openstreetmap.josm.plugins.czechaddress.StatusListener;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
-import org.openstreetmap.josm.plugins.czechaddress.intelligence.Match;
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalListRenderer;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
-import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalListPainter;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -54,7 +49,6 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
         // Create action for delaying the database query...
         updateMatchesAction = new AbstractAction() {
-            boolean shouldDraw = false;
             public void actionPerformed(ActionEvent e) {
                 updateMatches();
             }
@@ -67,11 +61,11 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         // A the beginning there are no proposals.
         proposalContainer = new ProposalContainer(primitive);
         proposalList.setModel(proposalContainer);
-        proposalList.setCellRenderer(new ProposalListPainter());
+        proposalList.setCellRenderer(new UniversalListRenderer());
 
         // Init the "match" combobox.
         matchesComboBox.setModel(new MatchesComboBoxModel());
-        matchesComboBox.setRenderer(new MatchesComboBoxPainter());
+        matchesComboBox.setRenderer(new UniversalListRenderer());
 
         if (primitive.get("addr:alternatenumber") != null) {
             alternateNumberEdit.setText(primitive.get("addr:alternatenumber"));
@@ -90,7 +84,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
     @Override
     protected void buttonAction(ActionEvent evt) {
         super.buttonAction(evt);
-/*        if (getValue() == 1) {
+        if (getValue() == 1) {
             
             if (updateMatchesTimer.isRunning()) {
                 updateMatchesTimer.stop();
@@ -102,12 +96,16 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
             Main.ds.setSelected((Node) null); // TODO: This is an ugly hack.
             Main.ds.setSelected(proposalContainer.getTarget());
             
-            Reasoner r = CzechAddressPlugin.getReasoner();
-            Match    m = (Match) matchesComboBox.getSelectedItem();
-            if (m != null) {
-                r.overwriteMatch(m.elem, m.prim);
+            AddressElement elem = (AddressElement) matchesComboBox.getSelectedItem();
+            if (elem != null) {
+                Reasoner r = Reasoner.getInstance();
+                synchronized (r) {
+                    r.openTransaction();
+                    r.doOverwrite(proposalContainer.getTarget(), elem);
+                    r.closeTransaction();
+                }
             }
-        }*/
+        }
 
         CzechAddressPlugin.removeStatusListener(this);
     }
@@ -124,28 +122,29 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
      */
     public void updateMatches() {
         
-/*        if (proposalContainer.getTarget().deleted) {
+        if (proposalContainer.getTarget().deleted)
             setVisible(false);
+        OsmPrimitive prim = this.proposalContainer.getTarget();
+        Reasoner r = Reasoner.getInstance();
+        List<AddressElement> elems = new NotNullList<AddressElement>();
+
+        synchronized (r) {
+            Map<String,String> backup = prim.keys;
+            r.openTransaction();
+            prim.keys = null;
+            prim.put("addr:alternatenumber", alternateNumberEdit.getText());
+            r.update(prim);
+            elems.addAll(r.getCandidates(prim));
+            prim.keys = backup;
+            r.update(prim);
+            r.closeTransaction();
         }
         
-        OsmPrimitive prim = this.proposalContainer.getTarget();
-        
-        Map<String,String> backup = prim.keys; 
-        prim.keys = null;
-        prim.put("addr:alternatenumber", alternateNumberEdit.getText());
-        
-        Reasoner r = CzechAddressPlugin.getReasoner();
-        NotNullList<Match> matches = r.getMatchesForPrimitive(prim);
-
-        prim.keys = backup;
-        
-        // TODO: Here we should sort matches according to their quality.
-
         MatchesComboBoxModel matchesModel =
                 ((MatchesComboBoxModel) matchesComboBox.getModel());
 
         // Fill the combobox with suitable houses.
-        matchesModel.setMatches(matches);
+        matchesModel.setElements(elems);
         if (matchesModel.getSize() > 0) {
             matchesComboBox.setSelectedIndex(0);
             return;
@@ -155,21 +154,16 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         House fakeHouse = new House(alternateNumberEdit.getText(), null);
         fakeHouse.setParent(CzechAddressPlugin.getLocation());
         proposalContainer.setProposals(
-                fakeHouse.getDiff(proposalContainer.getTarget()));*/
+                fakeHouse.getDiff(proposalContainer.getTarget()));
     }
 
     public void pluginStatusChanged(int message) {
 
         // If location changes, we block the dialog until reasoning is done.
-/*        if (message == MESSAGE_LOCATION_CHANGED) {
+        if (message == MESSAGE_LOCATION_CHANGED) {
             updateLocation();
             mainPanel.setEnabled(false);
-
-        // When reasoning is done, dialog gets enabled and new proposals are added.
-        } else if (message == MESSAGE_MATCHES_CHANGED) {
-            updateMatches();
-            mainPanel.setEnabled(true);
-        }*/
+        }
     }
 
     /**
@@ -194,7 +188,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         proposalList = new javax.swing.JList();
         matchesComboBox = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
-        ensureConsistencyButton = new javax.swing.JButton();
+        statusLabel = new javax.swing.JLabel();
 
         jLabel4.setText("jLabel4");
 
@@ -237,14 +231,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
         jLabel6.setText("Zaznam v databazi:");
 
-        ensureConsistencyButton.setIcon(ImageProvider.get("actions", "refresh-small.png"));
-        ensureConsistencyButton.setText("");
-        ensureConsistencyButton.setToolTipText("Provede nové přiřazení prvků mapy na elementy databáze.\nTouto volbou se zruší všechny manuálně vyřešené konflikty."); // NOI18N
-        ensureConsistencyButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ensureConsistencyButtonActionPerformed(evt);
-            }
-        });
+        statusLabel.setText(" ");
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -258,16 +245,13 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                        .addComponent(locationEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                        .addComponent(locationEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(changeLocationButton))
-                    .addComponent(alternateNumberEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                        .addComponent(matchesComboBox, 0, 208, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ensureConsistencyButton))))
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
+                    .addComponent(alternateNumberEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                    .addComponent(matchesComboBox, 0, 293, Short.MAX_VALUE)))
+            .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -283,13 +267,11 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(matchesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ensureConsistencyButton))
-                .addContainerGap(179, Short.MAX_VALUE))
-            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addGap(92, 92, 92)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)))
+                    .addComponent(matchesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statusLabel))
         );
 
         getContentPane().add(mainPanel);
@@ -318,21 +300,17 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
     private void matchChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_matchChanged
 
         if (matchesComboBox.getSelectedItem() == null) return;        
-        Match match = (Match) matchesComboBox.getSelectedItem();
+        AddressElement selectedElement
+                           = (AddressElement) matchesComboBox.getSelectedItem();
 
-        proposalContainer.setProposals(match.elem.getDiff(
+        proposalContainer.setProposals(selectedElement.getDiff(
                                                 proposalContainer.getTarget()));
     }//GEN-LAST:event_matchChanged
-
-    private void ensureConsistencyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ensureConsistencyButtonActionPerformed
-//        CzechAddressPlugin.getReasoner().ensureConsistency();
-    }//GEN-LAST:event_ensureConsistencyButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField alternateNumberEdit;
     private javax.swing.JButton changeLocationButton;
-    private javax.swing.JButton ensureConsistencyButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -342,63 +320,35 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
     private javax.swing.JPanel mainPanel;
     private javax.swing.JComboBox matchesComboBox;
     private javax.swing.JList proposalList;
+    private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
-
-    /**
-     * Painter for adding icons to the {@code matchesComboBox}.
-     */
-    private class MatchesComboBoxPainter extends DefaultListCellRenderer {
-
-        ImageIcon envelopeNormIcon = ImageProvider.get("envelope-closed-small.png");
-        ImageIcon envelopeStarIcon = ImageProvider.get("envelope-closed-star-small.png");
-        ImageIcon envelopeExclIcon = ImageProvider.get("envelope-closed-exclamation-small.png");
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-/*            Reasoner r = CzechAddressPlugin.getReasoner();
-            setIcon(null);
-
-            if (value instanceof Match) {
-                Match match = (Match) value;
-
-                setText(AddressElement.getName(match.elem));
-
-                if (match.elem instanceof House) {
-                    setIcon(envelopeStarIcon);
-                    if ( r.conflicts(match.elem) != null )
-                        setIcon(envelopeExclIcon);
-                    else if ( r.translate(match.elem) != null)
-                        setIcon(envelopeNormIcon);
-                }
-            }*/
-
-            return c;
-        }
-    }
 
     /**
      * Container for all Houses, which match the given 'alternatenumber'.
      */
     private class MatchesComboBoxModel extends HalfCookedComboBoxModel {
 
-        private List<Match> matches = null;
-        int selectedIndex = -1;
+        private List<AddressElement> matches = null;
+        AddressElement selected = null;
 
-        public void setMatches(List<Match> matches) {
-            this.matches = matches;
-            selectedIndex = -1;
+        public void setElements(List<AddressElement> elements) {
+            this.matches = elements;
+            selected = null;
             notifyAllListeners();
         }
 
         public void setSelectedItem(Object anItem) {
             if (matches == null) return;
-            selectedIndex = matches.indexOf(anItem);
+            selected = (AddressElement) anItem;
+            if (Reasoner.getInstance().translate(selected) != proposalContainer.getTarget())
+                statusLabel.setText("Vybraná adresa už v mapě existuje."+
+                                    " Potvrzením vznikne konflikt.");
+            else
+                statusLabel.setText(" ");
         }
 
         public Object getSelectedItem() {
-            return getElementAt(selectedIndex);
+            return selected;
         }
 
         public int getSize() {
@@ -408,7 +358,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
         public Object getElementAt(int index) {
             if (matches == null) return null;
-            if ((index < 0) || (index >= matches.size())) return null;
+            if (index >= matches.size()) return null;
             return matches.get(index);
         }
     }

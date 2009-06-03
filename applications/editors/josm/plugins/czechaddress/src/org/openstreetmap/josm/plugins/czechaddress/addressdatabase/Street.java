@@ -1,6 +1,12 @@
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
+import java.util.List;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
+import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
+import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
+
+import static org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalFactory.getStringFieldDiff;
 
 /**
  * Street is a member of {@link ElementWithStreets}
@@ -28,21 +34,22 @@ public class Street extends ElementWithHouses  {
     @Override
     protected int[] getFieldMatchList(OsmPrimitive primitive) {
         int[] result = {0};
+        if (!isMatchable(primitive)) return result;
         
-        if (primitive.get("highway") == null)
-            return result;
-        
-        result[0] = matchField(name, primitive.get("name"));
-
-        if (primitive.get("name") != null) {
-            String[] parts1 = primitive.get("name").split("\\.* +");
-            String[] parts2 =                  name.split("\\.* +");
-            for (String p : parts1)
-                System.out.println("X: " + p);
-            for (String p : parts2)
-                System.out.println("Y: " + p);
-        }
-
+        result[0] = matchFieldAbbrev(name, primitive.get("name"));
         return result;
     }
+
+    @Override
+    public List<Proposal> getDiff(OsmPrimitive prim) {
+        List<Proposal> props = new NotNullList<Proposal>();
+        
+        props.add(getStringFieldDiff(PrimUtils.KEY_NAME, prim.get(PrimUtils.KEY_NAME), getName()));
+        return props;
+    }
+
+    public static boolean isMatchable(OsmPrimitive prim) {
+        return (prim.get(PrimUtils.KEY_HIGHWAY) != null);
+    }
+
 }

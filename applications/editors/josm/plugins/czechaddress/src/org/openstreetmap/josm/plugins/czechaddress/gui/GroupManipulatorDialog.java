@@ -1,5 +1,8 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalTreeRenderer;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.tree.TreePath;
@@ -8,6 +11,7 @@ import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 import org.openstreetmap.josm.plugins.czechaddress.StatusListener;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
+import org.openstreetmap.josm.plugins.czechaddress.intelligence.ReasonerListener;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalDatabase;
@@ -24,7 +28,7 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalDatabase;
  * @see ProposalDatabase
  * @see ConflictDatabase
  */
-public class GroupManipulatorDialog extends ExtendedDialog implements StatusListener {
+public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerListener {
 
     private static GroupManipulatorDialog singleton = null;
     public static GroupManipulatorDialog getInstence() {
@@ -32,6 +36,8 @@ public class GroupManipulatorDialog extends ExtendedDialog implements StatusList
             singleton = new GroupManipulatorDialog();
         return singleton;
     }
+
+    private ProposalDatabase database = null;
 
     /**
      * Creates a new dialog window and sets the list of primitives
@@ -51,9 +57,6 @@ public class GroupManipulatorDialog extends ExtendedDialog implements StatusList
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setAlwaysOnTop(false);
 
-        // Start receiving plugin-wide messages.
-        CzechAddressPlugin.addStatusListener(this);
-
         // TODO: Why does it always crash if the modality is set in constructor?
         setModal(false);
     }
@@ -62,40 +65,26 @@ public class GroupManipulatorDialog extends ExtendedDialog implements StatusList
     protected void buttonAction(ActionEvent evt) {
         super.buttonAction(evt);
         if (getValue() == 1)
-            ((ProposalDatabase) proposalTree.getModel()).applyAll();
-    }
-
-    public void pluginStatusChanged(int message) {
-        /*if (message == StatusListener.MESSAGE_MATCHES_CHANGED) {
-            int retval = (new ExtendedDialog(Main.parent, "Změna umístění",
-                    "Došlo ke změně v přiřazení databáze.\n" +
-                    "Přejete si znovu načíst seznam navrhovaných změn?",
-                    new String[] {"Ano", "Ne"},
-                    new String[] {"ok.png", "cancel.png"})).getValue();
-
-            if (retval == 1)
-                recreateProposals();
-        }*/
+            database.applyAll();
     }
 
     @Override
-    public void setVisible(boolean b) {
-        if (!isVisible() && b)
+    public void setVisible(boolean visible) {
+
+        if (!isVisible() && visible) {
+            Reasoner.getInstance().addListener(this);
             recreateProposals();
+        } else
+            Reasoner.getInstance().removeListener(this);
 
-        if (b)
-            CzechAddressPlugin.addStatusListener(this);
-        else
-            CzechAddressPlugin.removeStatusListener(this);
-
-        super.setVisible(b);
+        super.setVisible(visible);
     }
 
     public void recreateProposals() {
-/*        locationTextField.setText(CzechAddressPlugin.getLocation().toString());
+        locationTextField.setText(CzechAddressPlugin.getLocation().toString());
         
-        Reasoner r = CzechAddressPlugin.getReasoner();
-        proposalTree.setModel(r.getProposals());*/
+        database = Reasoner.getInstance().getProposals();
+        proposalTree.setModel(database);
     }
 
     /**
@@ -208,5 +197,27 @@ public class GroupManipulatorDialog extends ExtendedDialog implements StatusList
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTree proposalTree;
     // End of variables declaration//GEN-END:variables
+
+    public void elementChanged(AddressElement elem) {
+        for (ProposalContainer container : database.getContainers()) {
+            if (Reasoner.getInstance().translate(elem) == container.getTarget()) {
+                recreateProposals();
+                break;
+            }
+        }
+    }
+
+    public void primitiveChanged(OsmPrimitive prim) {
+        for (ProposalContainer container : database.getContainers()) {
+            if (container.getTarget() == prim) {
+                recreateProposals();
+                break;
+            }
+        }
+    }
+
+    public void resonerReseted() {
+        recreateProposals();
+    }
 
 }

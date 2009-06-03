@@ -5,7 +5,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
-import org.openstreetmap.josm.plugins.czechaddress.intelligence.Match;
+import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
 
 /**
@@ -205,12 +205,16 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         return result;
     }
 
+    protected int[] getAdditionalFieldMatchList(OsmPrimitive primitive) {
+        int[] result = {0};
+        return result;
+    }
 
     public List<Proposal> getDiff(OsmPrimitive prim) {
         return null;
     }
 
-    public int getMatchQuality(OsmPrimitive primitive) {
+    public int getQ(OsmPrimitive primitive) {
         
         // Firstly get integers representing a match of every matchable field.
         int[] fieldMatches = getFieldMatchList(primitive);
@@ -233,44 +237,18 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         // If the best among all fields is 'neutral' match, the given primitive
         // has nothing to do with our field.
         if (maxVal <= 0)
-            return Match.MATCH_NOMATCH;
+            return Reasoner.MATCH_NOMATCH;
         
         // If all fields are 1    --> ROCKSOLID MATCH
         // If some are 1, none -1 --> PARTIAL MATCH
         // If some are 1, some -1 --> CONFLICT
         switch (minVal * maxVal) {
-            case -1 : return Match.MATCH_CONFLICT;
-            case  0 : return Match.MATCH_PARTIAL;
-            case +1 : return Match.MATCH_ROCKSOLID;   
+            case -1 : return Reasoner.MATCH_CONFLICT;
+            case  0 : return Reasoner.MATCH_PARTIAL;
+            case +1 : return Reasoner.MATCH_ROCKSOLID;
         }
         
         return 0; // <-- just to make compilers happy. We cannot get here.
-    }
-
-
-
-    public String getIsIn() {
-        return getIsIn(null);
-    }
-
-    protected String getIsInName() {
-        return getName();
-    }
-
-    private String getIsIn(String childString) {
-
-        String result = "";
-
-        if (getIsInName() != null  &&  !getIsInName().equals(childString)) {
-            result += getIsInName() + ", ";
-        }
-
-        if (parent != null)
-            result += parent.getIsIn(getIsInName());
-        else
-            result += "CZ";
-        
-        return result;
     }
 
     public int compareTo(AddressElement elem) {
@@ -281,6 +259,6 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         int retVal = r1.compareTo(r2);
         if (retVal != 0) return retVal;
 
-        return getName().compareTo(((AddressElement) elem).getName());
+        return toString().compareTo(((AddressElement) elem).toString());
     }
 }

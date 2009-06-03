@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+<Form version="1.3" maxVersion="1.3" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
     <Property name="title" type="java.lang.String" value="V&#xfd;b&#x11b;r um&#xed;st&#x11b;n&#xed;"/>
     <Property name="modal" type="boolean" value="true"/>
-    <Property name="name" type="java.lang.String" value="locationSelector"/>
+    <Property name="name" type="java.lang.String" value="locationSelector" noResource="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="2"/>
@@ -40,9 +40,9 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="castObceComboBox" pref="340" max="32767" attributes="0"/>
-                      <Component id="obecComboBox" pref="340" max="32767" attributes="0"/>
-                      <Component id="oblastComboBox" pref="340" max="32767" attributes="0"/>
+                      <Component id="suburbComboBox" pref="341" max="32767" attributes="0"/>
+                      <Component id="vitociComboBox" pref="341" max="32767" attributes="0"/>
+                      <Component id="oblastComboBox" pref="341" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -57,12 +57,12 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="obecLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="obecComboBox" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                      <Component id="vitociComboBox" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="castObceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="castObceComboBox" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                      <Component id="suburbComboBox" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -80,24 +80,24 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="oblastComboBoxItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="castObceComboBox">
+        <Component class="javax.swing.JComboBox" name="suburbComboBox">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="castObceComboBoxItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="suburbComboBoxItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="obecComboBox">
+        <Component class="javax.swing.JComboBox" name="vitociComboBox">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="obecComboBoxItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="vitociComboBoxItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="obecLabel">
@@ -112,7 +112,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="oblastLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Oblast:"/>
+            <Property name="text" type="java.lang.String" value="ORP:"/>
           </Properties>
         </Component>
       </SubComponents>

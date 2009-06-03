@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Radomir Cernoch radomir.cernoch@gmail.com
  */
-abstract public class ElementWithStreets extends ElementWithHouses {
+public abstract class ElementWithStreets extends ElementWithHouses {
 
     private ArrayList<Street> streets = new ArrayList<Street>();
 
@@ -58,6 +58,11 @@ abstract public class ElementWithStreets extends ElementWithHouses {
     public List<Street> getStreets() {
         return streets;
     }
+
+    public List<Street> getAllStreets() {
+        return getStreets();
+    }
+
 
     public Street findStreet(String streetName) {
 

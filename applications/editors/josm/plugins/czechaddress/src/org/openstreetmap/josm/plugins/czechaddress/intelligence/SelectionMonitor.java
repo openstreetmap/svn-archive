@@ -5,6 +5,8 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 
 /**
  * Listenes to the current selection for reasoning
@@ -36,9 +38,11 @@ public class SelectionMonitor implements SelectionChangedListener {
         synchronized(r) {
             r.openTransaction();
             for (OsmPrimitive selectedPrim :newSelection)
-                r.consider(selectedPrim);
+                if (House.isMatchable(selectedPrim) || Street.isMatchable(selectedPrim))
+                    r.update(selectedPrim);
             for (OsmPrimitive selectedPrim :lastSelection)
-                r.consider(selectedPrim);
+                if (House.isMatchable(selectedPrim) || Street.isMatchable(selectedPrim))
+                    r.update(selectedPrim);
             r.closeTransaction();
         }
 

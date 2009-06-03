@@ -1,39 +1,46 @@
 package org.openstreetmap.josm.plugins.czechaddress.intelligence;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.Mac;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
+import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
+import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalDatabase;
 
 /**
  * Intended to concentrate all intelligence of
- * {@link House}-{@link OsmPrimitive} matching.
+ * {@link AddressElement}-{@link OsmPrimitive} matching.
  *
- * <p>HouseReasoner holds the relations between House and OsmPrimitive
- * and also tries to keep it consistent with the state of the map.
- * Firstly it is initialised by {@code initReasoner()} and subsequently and
- * change done to the map should be reflected in HouseReasoner by calling
- * {@code addPrimitive} or {@code removePrimitive}.</p>
+ * <p>Reasoner holds the relations between AddressElement and OsmPrimitive
+ * and also tries to keep it consistent with the state of the map.</p>
+ *
+ * <p>You can imagine data model as a big matrix, whose rows consist of
+ * {@code AddressElement}s and columns are {@code OsmPrimitive}s. The cell
+ * of this matrix is a so-called "quality", which says how well the primitive
+ * and element fit together (see {@code MATCH_*} for details).
+ * Through the documentation we will use <tt><b>Q(prim, elem)</b></tt> notation
+ * for this matrix. The reasoner is memory-efficient iff most of the Q values
+ * are equal to {@code MATCH_NOMATCH}.</p>
  *
  * <p><b>NOTE:</b> Currently there is no known way of adding a hook into JOSM
- * to detect changed or deleted elements. Therefore every call of
- * {@code ensureConsistency()} checks for deleted elements, which is rather
- * inefficient. Moreover there is a listener for selectionChanged, which
- * checks deselcted items for their change. Again, inefficient.</p>
+ * to detect changed or deleted elements. Therefore there is a
+ * {@link SelectionMonitor}, which passes every selected primitive to
+ * the reasoner.</p>
  *
  * @author Radomír Černoch radomir.cernoch@gmail.com
  */
 public class Reasoner {
 
-    /* A list of {@link OsmPrimitive}s, for which there was no suitable match.*/
+    public static final int MATCH_OVERWRITE = 4;
+    public static final int MATCH_ROCKSOLID = 3;
+    public static final int MATCH_PARTIAL   = 2;
+    public static final int MATCH_CONFLICT  = 1;
+    public static final int MATCH_NOMATCH   = 0;
 
     private     Map<OsmPrimitive, AddressElement> primBestIndex
       = new HashMap<OsmPrimitive, AddressElement> ();
@@ -58,6 +65,13 @@ public class Reasoner {
         return singleton;
     }
 
+//==============================================================================
+// INPUT METHODS
+//==============================================================================
+
+    /**
+     * Brings the reasoner to the initial state
+     */
     public void reset() {
         primToUpdate.clear();
         elemToUpdate.clear();
@@ -67,96 +81,50 @@ public class Reasoner {
         primBestIndex.clear();
         primBestIndex.clear();
 
+        transactionOpened = false;
+
         for (ReasonerListener listener : listeners)
             listener.resonerReseted();
     }
-    
-    public Set<AddressElement> getCandidates(OsmPrimitive prim) {
 
-        int best = Match.MATCH_NOMATCH;
-        for (AddressElement elem : primMatchIndex.get(prim).keySet()) {
-            int cand = primMatchIndex.get(prim).get(elem);
-            if (best < cand)
-                best = cand;
-        }
+    /**
+     * Indicates whether there is currently an open transaction
+     */
+    private boolean transactionOpened = false;
 
-        Set<AddressElement> result = new HashSet<AddressElement>();
-
-        for (AddressElement elem : primMatchIndex.get(prim).keySet()) {
-            int cand = primMatchIndex.get(prim).get(elem);
-            if (best == cand)
-                result.add(elem);
-        }
-        return result;
-    }
-
-    public Set<OsmPrimitive> getCandidates(AddressElement elem) {
-
-        int best = Match.MATCH_NOMATCH;
-        for (OsmPrimitive prim : elemMatchIndex.get(elem).keySet()) {
-            int cand = elemMatchIndex.get(elem).get(prim);
-            if (best < cand)
-                best = cand;
-        }
-
-        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
-        
-        for (OsmPrimitive prim : elemMatchIndex.get(elem).keySet()) {
-            int cand = elemMatchIndex.get(elem).get(prim);
-            if (best == cand)
-                result.add(prim);
-        }
-        return result;
-    }
-
-    public AddressElement getStrictlyBest(OsmPrimitive prim) {
-
-        Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
-        //if (matches == null) return null;
-
-        AddressElement bestE = null;
-        int bestQ = Match.MATCH_NOMATCH;
-
-        for (AddressElement elem : matches.keySet()) {
-            if (matches.get(elem) == bestQ)
-                bestE = null;
-
-            if (matches.get(elem) > bestQ) {
-                bestQ = matches.get(elem);
-                bestE = elem;
-            }
-        }
-
-        return bestE;
-    }
-
-    public OsmPrimitive getStrictlyBest(AddressElement prim) {
-
-        Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(prim);
-        //if (matches == null) return null;
-
-        OsmPrimitive bestE = null;
-        int bestQ = Match.MATCH_NOMATCH;
-
-        for (OsmPrimitive elem : matches.keySet()) {
-            if (matches.get(elem) == bestQ)
-                bestE = null;
-
-            if (matches.get(elem) > bestQ) {
-                bestQ = matches.get(elem);
-                bestE = elem;
-            }
-        }
-
-        return bestE;
-    }
-
+    /**
+     * Prepares reasoner to modify its data.
+     *
+     * <p>This method must be called before <u>any</u> method, which might
+     * modify the data in the reasoner.
+     * The only exception is {@code reset()}.</p>
+     * 
+     * <p>When there's an open transaction, the result of most output methods
+     * undefined. Exceptions to this rules are indicated.</p>
+     *
+     * <p><b>Transactions:</b> This method requires a closed transaction.</p>
+     */
     public void openTransaction() {
         assert primToUpdate.size() == 0;
         assert elemToUpdate.size() == 0;
+        assert !transactionOpened;
+
+        primToUpdate.clear();
+        elemToUpdate.clear();
+        transactionOpened = true;
     }
 
+    /**
+     * Turns the reasoner back into consistent state.
+     *
+     * <p>Recreates {@code *BestIndex} indexes, sends notification to
+     * all listeners about changed elements/primitives and closes
+     * the transaction.</p>
+     *
+     * <p><b>Transactions:</b> This method requires an open transaction.</p>
+     */
     public void closeTransaction() {
+        assert transactionOpened;
 
         Set<AddressElement> elemChanges = new HashSet<AddressElement>();
         Set<OsmPrimitive>   primChanges = new HashSet<OsmPrimitive>();
@@ -167,7 +135,7 @@ public class Reasoner {
             if (primBestIndex.get(prim) != bestMatch) {
                 if (bestMatch == null) {
                     logger.log(Level.FINE, "primitive has no longer best match",
-                            AddressElement.getName(prim));
+                                           AddressElement.getName(prim));
                     primBestIndex.remove(prim);
                 } else {
                     logger.log(Level.FINE, "primitive has a new best match",
@@ -199,27 +167,85 @@ public class Reasoner {
 
         elemToUpdate.addAll(elemChanges);
         primToUpdate.addAll(primChanges);
+        transactionOpened = false;
 
         for (ReasonerListener listener : listeners) {
             for (AddressElement elem : elemToUpdate)
                 if (elem != null)
                     listener.elementChanged(elem);
-            
+
             for (OsmPrimitive prim : primToUpdate)
                 if (prim != null)
                     listener.primitiveChanged(prim);
         }
-        
+
         primToUpdate.clear();
         elemToUpdate.clear();
     }
 
-    private Set<ReasonerListener> listeners = new HashSet<ReasonerListener>();
+    /**
+     * Update all relations of the given primitive.
+     *
+     * <p>If the primitive is unknown to the reasoner, it's added.
+     * Then it updates all cells in the Q matrix's column, which corresponds
+     * to the provided primitive. In the Q-matrix analogy is roughly equivalent
+     * to doing an update
+     * <center>∀ elem. Q(elem, prim) ← elem.getQ(prim).</center>
+     * Hence its time complexity is linear.</p>
+     *
+     * <p><b>Transactions:</b> This method requires an open transaction.</p>
+     */
+    public void update(OsmPrimitive prim) {
+        logger.log(Level.FINER, "considering primitive", AddressElement.getName(prim));
+        assert transactionOpened;
 
-    public void reconsider(OsmPrimitive prim, AddressElement elem) {
+
+        Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
+        if (matches == null) {
+            logger.log(Level.FINE, "new primitive detected", AddressElement.getName(prim));
+            matches = new HashMap<AddressElement, Integer>();
+            primMatchIndex.put(prim, matches);
+        }
+
+        for (AddressElement elem : elemMatchIndex.keySet())
+            reconsider(prim, elem);
+    }
+
+    /**
+     * Update all relations of the given element
+     *
+     * <p>If the primitive is unknown to the reasoner, it's added.
+     * Then it updates all cells in the Q matrix's row, which corresponds
+     * to the provided element.In the Q-matrix analogy is roughly equivalent
+     * to doing an update
+     * <center>∀ prim. Q(elem, prim) ← elem.getQ(prim).</center>
+     * Hence its time complexity is linear.</p>
+     *
+     * <p><b>Transactions:</b> This method requires an open transaction.</p>
+     */
+    public void update(AddressElement elem) {
+        logger.log(Level.FINER, "considering element", elem);
+        assert transactionOpened;
+
+        Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(elem);
+        if (matches == null) {
+            logger.log(Level.FINE, "new element detected", elem);
+            matches = new HashMap<OsmPrimitive, Integer>();
+            elemMatchIndex.put(elem, matches);
+        }
+
+        for (OsmPrimitive prim : primMatchIndex.keySet())
+            reconsider(prim, elem);
+    }
+
+    /**
+     * Internal method for doing the actual Q value update.
+     */
+    private void reconsider(OsmPrimitive prim, AddressElement elem) {
+        assert transactionOpened;
 
         int oldQ = getQ(prim, elem);
-        int newQ = Match.evalQ(prim, elem, oldQ);
+        int newQ = evalQ(prim, elem, oldQ);
 
         if (oldQ != newQ) {
             logger.log(Level.FINE, "reconsidering match",
@@ -236,35 +262,55 @@ public class Reasoner {
         }
     }
 
-    public void consider(OsmPrimitive prim) {
-        logger.log(Level.FINER, "considering primitive", AddressElement.getName(prim));
+    /**
+     * Sets the relation's Q value to highest possible.
+     *
+     * <p>Regardless of how well the primitive and element pair fits
+     * together, it assings their Q value to {@code MATCH_OVERWRITE}.</p>
+     *
+     * <p><b>Transactions:</b> This method requires an open transaction.</p>
+     */
+    public void doOverwrite(OsmPrimitive prim, AddressElement elem) {
+        logger.log(Level.FINER, "overwriting match",
+                    "elem=„" + elem + "“; " +
+                    "prim=„" + AddressElement.getName(prim) + "“");
+        assert transactionOpened;
 
-        Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
-        if (matches == null) {
-            logger.log(Level.FINE, "new primitive detected", AddressElement.getName(prim));
-            matches = new HashMap<AddressElement, Integer>();
-            primMatchIndex.put(prim, matches);
-        }
+        update(prim);
+        update(elem);
+        putQ(prim, elem, MATCH_OVERWRITE);
 
-        for (AddressElement elem : elemMatchIndex.keySet())
-            reconsider(prim, elem);
+        primToUpdate.add(prim);
+        elemToUpdate.add(elem);
     }
 
-    public void consider(AddressElement elem) {
-        logger.log(Level.FINER, "considering element", elem);
+    /**
+     * Sets the relation to its original Q value.
+     *
+     * <p>If the element-primitive pair was previously edited by
+     * {@code doOverwrite()} method, this returns their Q to the
+     * original value, which is determined by {@code evalQ()}.</p>
+     *
+     * <p><b>Transactions:</b> This method requires an open transaction.</p>
+     */
+    public void unOverwrite(OsmPrimitive prim, AddressElement elem) {
+        logger.log(Level.FINER, "unoverwriting match",
+                    "elem=„" + elem + "“; " +
+                    "prim=„" + AddressElement.getName(prim) + "“");
+        assert transactionOpened;
 
-        Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(elem);
-        if (matches == null) {
-            logger.log(Level.FINE, "new element detected", elem);
-            matches = new HashMap<OsmPrimitive, Integer>();
-            elemMatchIndex.put(elem, matches);
-        }
+        update(prim);
+        update(elem);
+        putQ(prim, elem, evalQ(prim, elem, MATCH_NOMATCH));
 
-        for (OsmPrimitive prim : primMatchIndex.keySet())
-            reconsider(prim, elem);
+        primToUpdate.add(prim);
+        elemToUpdate.add(elem);
     }
 
-    public int getQ(OsmPrimitive prim, AddressElement elem) {
+    /**
+     * Returns the Q value of the given primitive-element relation.
+     */
+    private int getQ(OsmPrimitive prim, AddressElement elem) {
         assert primMatchIndex.get(prim).get(elem)
             == elemMatchIndex.get(elem).get(prim);
 
@@ -274,9 +320,12 @@ public class Reasoner {
             return primMatchIndex.get(prim).get(elem);
     }
 
-    public void putQ(OsmPrimitive prim, AddressElement elem, int qVal) {
-        
-        if (qVal == Match.MATCH_NOMATCH) {
+    /**
+     * Sets the Q value of the given primitive-element relation.
+     */
+    private void putQ(OsmPrimitive prim, AddressElement elem, int qVal) {
+
+        if (qVal == MATCH_NOMATCH) {
             primMatchIndex.get(prim).remove(elem);
             elemMatchIndex.get(elem).remove(prim);
         } else {
@@ -285,155 +334,351 @@ public class Reasoner {
         }
     }
 
+    /**
+     * Evaluates the Q value between the given primitive and element.
+     *
+     * <p>If {@code oldQ} is {@code MATCH_OVERWRITE}, it is preserved.</p>
+     */
+    private int evalQ(OsmPrimitive prim, AddressElement elem, Integer oldQ) {
+
+        if (prim.deleted)
+            return MATCH_NOMATCH;
+
+        if (oldQ == MATCH_OVERWRITE)
+            return MATCH_OVERWRITE;
+
+        return elem.getQ(prim);
+    }
+
+//==============================================================================
+// OUTPUT METHODS
+//==============================================================================
+
+    /**
+     * Returns the primitive, which is a unique counterpart of the element.
+     *
+     * <p>This method is probably the single most used method of the reasoner.
+     * It allows the unique translation between map and the database.</p>
+     *
+     * <p>An element <i>elem</i> and primitive <i>prim</i> can be translated
+     * between each other iff
+     * <center>[∄ <i>prim'</i>. Q(elem, prim') ≥ Q(elem, prim)] ∧
+     *         [∄ <i>elem'</i>. Q(elem', prim) ≥ Q(elem, prim)].</center>
+     * In other words, the cell at Q(elem, prim) is the strictly greatest one
+     * in both its row and the column of the Q matrix.</p>
+     *
+     * <p>This method depends on {@code getStrictlyBest()}, which induces its
+     * complexity properties.</p>
+     *
+     * <p><b>Transactions:</b> Can be called regardless of transaction state.
+     * However if the transaction is closed, its time-complexity reduces to
+     * constant thanks to using indexes.</p>
+     */
     public AddressElement translate(OsmPrimitive prim) {
         if (prim == null) return null;
 
-        AddressElement elem = primBestIndex.get(prim);
-        if (elemBestIndex.get(elem) == prim)
+        AddressElement elem = getStrictlyBest(prim);
+        if (getStrictlyBest(elem) == prim)
             return elem;
+        
         return null;
     }
 
+    /**
+     * Returns the element, which is a unique counterpart of the primitive.
+     *
+     * <p>This method is probably the single most used method of the reasoner.
+     * It allows the unique translation between map and the database.</p>
+     *
+     * <p>An element <i>elem</i> and primitive <i>prim</i> can be translated
+     * between each other iff
+     * <center>[∄ <i>prim'</i>. Q(elem, prim') ≥ Q(elem, prim)] ∧
+     *         [∄ <i>elem'</i>. Q(elem', prim) ≥ Q(elem, prim)].</center>
+     * In other words, the cell at Q(elem, prim) is the strictly greatest one
+     * in both its row and the column of the Q matrix.</p>
+     *
+     * <p>This method depends on {@code getStrictlyBest()}, which induces its
+     * complexity properties.</p>
+     *
+     * <p><b>Transactions:</b> Can be called regardless of transaction state.
+     * However if the transaction is closed, its time-complexity reduces to
+     * constant thanks to using indexes.</p>
+     */
     public OsmPrimitive translate(AddressElement elem) {
         if (elem == null) return null;
 
-        OsmPrimitive prim = elemBestIndex.get(elem);
-        if (primBestIndex.get(prim) == elem)
+        OsmPrimitive prim = getStrictlyBest(elem);
+        if (getStrictlyBest(prim) == elem)
             return prim;
+        
         return null;
     }
 
-    public Set<AddressElement> getConflicts(OsmPrimitive prim) {
-
-        Set<AddressElement> result = getCandidates(prim);
-        AddressElement match = translate(prim);
-        if (match != null)
-            result.remove(match);
-
-        return result;
-    }
-
-    public Set<OsmPrimitive> getConflicts(AddressElement elem) {
-
-        Set<OsmPrimitive> result = getCandidates(elem);
-        OsmPrimitive match = translate(elem);
-        if (match != null)
-            result.remove(match);
-
-        return result;
-    }
-
-    public void addListener(ReasonerListener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(ReasonerListener listener) {
-        listeners.remove(listener);
-    }
-
-    public static void main(String[] args) {
-        try {
-
-            Reasoner r = Reasoner.getInstance();
-            Reasoner.logger.setLevel(Level.ALL);
-            
-            Street s1 = new Street("Jarní");
-            Street s2 = new Street("Letní");
-
-            House h1 = new House("240", "1"); s1.addHouse(h1); r.consider(h1);
-            House h2 = new House("241", "2"); s1.addHouse(h2); r.consider(h2);
-            House h3 = new House("241", "3"); s1.addHouse(h3); r.consider(h3);
-            House h4 = new House("242", "4"); s1.addHouse(h4); r.consider(h4);
-
-            House i1 = new House("42",  "1"); s2.addHouse(i1); r.consider(i1);
-            House i2 = new House("45",  "2"); s2.addHouse(i2); r.consider(i2);
-            House i3 = new House("61",  "3"); s2.addHouse(i3); r.consider(i3);
-            House i4 = new House("240", "4"); s2.addHouse(i4); r.consider(i4);
-
-
-            
-            Node n1 = new Node(1);
-            n1.put("addr:street", "Jarní");
-            n1.put("addr:alternatenumber", "242");
-
-            r.openTransaction();
-            r.consider(n1);
-            r.closeTransaction();
-            assert r.translate(n1) == h4;
-            assert r.getConflicts(n1).size() == 0;
-
-
-
-            Node n2 = new Node(2);
-            n2.put("addr:alternatenumber", "240");
-            r.openTransaction();
-            r.consider(n2);
-            r.closeTransaction();
-            assert r.translate(n2) == null;
-            assert r.getConflicts(n2).contains(h1);
-            assert r.getConflicts(n2).contains(i4);
-
-            n2.put("addr:street", "Letní");
-            n2.put("addr:housenumber", "4");
-            r.openTransaction();
-            r.consider(n2);
-            r.closeTransaction();
-            assert r.translate(n2) == i4;
-
-
-            n2.deleted = true;
-            r.openTransaction();
-            r.consider(n2);
-            r.closeTransaction();
-            assert r.translate(n2) == null;
-            
-        } catch (Exception ex) {
-            
-            ex.printStackTrace();
-        }
-    }
-
-    public void doOverwrite(OsmPrimitive prim, AddressElement elem) {
-        logger.log(Level.FINER, "overwriting match",
-                    "elem=„" + elem + "“; " +
-                    "prim=„" + AddressElement.getName(prim) + "“");
-
-        consider(prim);
-        consider(elem);
-        putQ(prim, elem, Match.MATCH_OVERWRITE);
-
-        primToUpdate.add(prim);
-        elemToUpdate.add(elem);
-    }
-
-    public void unOverwrite(OsmPrimitive prim, AddressElement elem) {
-        logger.log(Level.FINER, "unoverwriting match",
-                    "elem=„" + elem + "“; " +
-                    "prim=„" + AddressElement.getName(prim) + "“");
-
-        consider(prim);
-        consider(elem);
-        putQ(prim, elem, Match.evalQ(prim, elem, Match.MATCH_NOMATCH));
-
-        primToUpdate.add(prim);
-        elemToUpdate.add(elem);
-    }
-
+    /**
+     * Says whether the given primitive has a conflict.
+     *
+     * <p>There are two conditions for a primitive to be in a conflict. It must
+     * be at least partially fitting to some element, but it cannot be
+     * uniquely translatable.
+     * <center> [∃ elem. Q(elem, prim) > NO_MATCH] ∧
+     *          ]∄ elem. elem = translate(prim)] ,</center>
+     * which is equivalent to saying that
+     * <center>|getCandidates(prim)| ≥ 2</center></p>
+     */
     public boolean inConflict(OsmPrimitive prim) {
+        if (primMatchIndex.get(prim) == null) return false;
         return primMatchIndex.get(prim).size() > 0
             && translate(translate(prim)) != prim;
     }
 
+    /**
+     * Says whether the given element has a conflict.
+     *
+     * <p>There are two conditions for a element to be in a conflict. It must
+     * be at least partially fitting to some primitive, but it cannot be
+     * uniquely translatable.
+     * <center> [∃ prim. Q(elem, prim) > NO_MATCH] ∧
+     *          [∄ prim. prim = translate(elem)] ,</center>
+     * which is equivalent to saying that
+     * <center>|getCandidates(prim)| ≥ 2</center></p>
+     */
     public boolean inConflict(AddressElement elem) {
+        if (elemMatchIndex.get(elem) == null) return false;
         return elemMatchIndex.get(elem).size() > 0
             && translate(translate(elem)) != elem;
     }
 
+
+    /**
+     * Returns elements having the best quality for the given primitive.
+     *
+     * <p>It searches among all Q values corresponding to the given primitive
+     * and returns a set of all elements, whose relation has the greatest
+     * Q value. Formally we can write that the output is a set
+     * <center>{elem |   Q(elem, prim) > MATCH_NOMATCH
+     *                 ∧ ∀ elem'. Q(elem, prim) ≥ Q(elem', prim)}.</center></p>
+     *
+     * <p><b>Transactions:</b> Can be called regardless of transaction state.</p>
+     *
+     * @return A new set, which can be freely manipulated. Changes are not
+     * reflected in the reasoner.
+     */
+    public Set<AddressElement> getCandidates(OsmPrimitive prim) {
+
+        int best = MATCH_NOMATCH;
+        for (AddressElement elem : primMatchIndex.get(prim).keySet()) {
+            int cand = primMatchIndex.get(prim).get(elem);
+            if (best < cand)
+                best = cand;
+        }
+
+        Set<AddressElement> result = new HashSet<AddressElement>();
+
+        for (AddressElement elem : primMatchIndex.get(prim).keySet()) {
+            int cand = primMatchIndex.get(prim).get(elem);
+            if (best == cand)
+                result.add(elem);
+        }
+        return result;
+    }
+
+    /**
+     * Returns primitives having the best quality for the given element.
+     *
+     * <p>It searches among all Q values corresponding to the given element
+     * and returns a set of all primitives, whose relation has the greatest
+     * Q value. Formally we can write that the output is a set
+     * <center>{prim |   Q(elem, prim) > MATCH_NOMATCH
+     *                 ∧ ∀ prim'. Q(elem, prim) ≥ Q(elem, prim')}.</center></p>
+     *
+     * <p><b>Transactions:</b> Can be called regardless of transaction state.</p>
+     *
+     * @return A new set, which can be freely manipulated. Changes are not
+     * reflected in the reasoner.
+     */
+    public Set<OsmPrimitive> getCandidates(AddressElement elem) {
+
+        int best = MATCH_NOMATCH;
+        for (OsmPrimitive prim : elemMatchIndex.get(elem).keySet()) {
+            int cand = elemMatchIndex.get(elem).get(prim);
+            if (best < cand)
+                best = cand;
+        }
+
+        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
+        
+        for (OsmPrimitive prim : elemMatchIndex.get(elem).keySet()) {
+            int cand = elemMatchIndex.get(elem).get(prim);
+            if (best == cand)
+                result.add(prim);
+        }
+        return result;
+    }
+
+    /**
+     * Returns the element having the best quality for the given primitive.
+     *
+     * <p>It searches among all Q values corresponding to the given primitive
+     * and returns such an element, whose relation has the greatest
+     * Q value. If there are more of them, {@code null} is returned.
+     * Formally we can write that the output is a primitive
+     * <center>elem: Q(elem, prim) > MATCH_NOMATCH
+     *             ∧ ∀ elem'. Q(elem, prim) > Q(elem', prim)}.</center></p>
+     *
+     * <p>If {@code getCandidates(prim)} returns exactly one element,
+     * this method should return the same one. Otherwise {@code null}.</p>
+     *
+     * <p><b>Transactions:</b> Can be called regardless of transaction state.
+     * However if the transaction is closed, its time-complexity reduces to
+     * constant thanks to using indexes.</p>
+     */
+    public AddressElement getStrictlyBest(OsmPrimitive prim) {
+
+        if (!transactionOpened)
+            return primBestIndex.get(prim);
+
+        Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
+        AddressElement bestE = null;
+        int bestQ = MATCH_NOMATCH;
+
+        for (AddressElement elem : matches.keySet()) {
+            if (matches.get(elem) == bestQ)
+                bestE = null;
+
+            if (matches.get(elem) > bestQ) {
+                bestQ = matches.get(elem);
+                bestE = elem;
+            }
+        }
+
+        return bestE;
+    }
+
+    /**
+     * Returns the primitive having the best quality for the given element.
+     *
+     * <p>It searches among all Q values corresponding to the given element
+     * and returns sucha  primitive, whose relation has the greatest
+     * Q value. If there are more of them, {@code null} is returned.
+     * Formally we can write that the output is a primitive
+     * <center>prim: Q(elem, prim) > MATCH_NOMATCH
+     *             ∧ ∀ prim'. Q(elem, prim) > Q(elem', prim)}.</center></p>
+     *
+     * <p>If {@code getCandidates(elem)} returns exactly one primitive,
+     * this method should return the same one. Otherwise {@code null}.</p>
+     *
+     * <p><b>Transactions:</b> Can be called regardless of transaction state.
+     * However if the transaction is closed, its time-complexity reduces to
+     * constant thanks to using indexes.</p>
+     */
+    public OsmPrimitive getStrictlyBest(AddressElement elem) {
+
+        if (!transactionOpened)
+            return elemBestIndex.get(elem);
+
+        Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(elem);
+        OsmPrimitive bestE = null;
+        int bestQ = MATCH_NOMATCH;
+
+        for (OsmPrimitive prim : matches.keySet()) {
+            if (matches.get(prim) == bestQ)
+                bestE = null;
+
+            if (matches.get(prim) > bestQ) {
+                bestQ = matches.get(prim);
+                bestE = prim;
+            }
+        }
+
+        return bestE;
+    }
+
+    /**
+     * Returns all elements which are not translatable.
+     */
     public Set<AddressElement> getUnassignedElements() {
         Set<AddressElement> result = new HashSet<AddressElement>();
         for (AddressElement elem : elemMatchIndex.keySet())
-            if (elemMatchIndex.get(elem).size() == 0)
+            if (translate(elem) == null)
                 result.add(elem);
         return result;
     }
+
+    /**
+     * Returns all primitives which are not translatable.
+     */
+    public Set<OsmPrimitive> getUnassignedPrimitives() {
+        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
+        for (OsmPrimitive prim : primMatchIndex.keySet())
+            if (translate(prim) == null)
+                result.add(prim);
+        return result;
+    }
+
+    /**
+     * Returns all elements, which were {@code update}d from
+     * the last {@code reset}.
+     */
+    public Set<AddressElement> getAllElements() {
+        Set<AddressElement> result = new HashSet<AddressElement>();
+        result.addAll(elemMatchIndex.keySet());
+        return result;
+    }
+
+    /**
+     * Returns all elements, which were {@code update}d from
+     * the last {@code reset}.
+     */
+    public Set<OsmPrimitive> getAllPrimitives() {
+        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
+        result.addAll(primMatchIndex.keySet());
+        return result;
+    }
+
+//==============================================================================
+// MISC METHODS
+//==============================================================================
+
+    /**
+     * Returns proposals to fit all translatable primitives to their elements.
+     */
+    public ProposalDatabase getProposals() {
+        ProposalDatabase database = new ProposalDatabase();
+
+        // We can go only over primBestIndex to save some iterations.
+        // A primitive cannot be translated unless contained in primBestIndex.
+        for (OsmPrimitive prim : primBestIndex.keySet()) {
+            AddressElement elem = translate(prim);
+            if (elem == null) continue;
+
+            ProposalContainer container = new ProposalContainer(prim);
+            container.addProposals(elem.getDiff(prim));
+            
+            if (container.getProposals().size() > 0)
+                database.addContainer(container);
+        }
+
+        Collections.sort(database.getContainers());
+        return database;
+    }
+
+    /**
+     * Set of listeners currently hooked to changes in this reasoner.
+     */
+    private Set<ReasonerListener> listeners = new HashSet<ReasonerListener>();
+
+    /**
+     * Adds a new listener to receive reasoner's status changes.
+     */
+    public void addListener(ReasonerListener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * Stops the listener to receive reasoner's status changes.
+     */
+    public void removeListener(ReasonerListener listener) {
+        listeners.remove(listener);
+    }
+
 }

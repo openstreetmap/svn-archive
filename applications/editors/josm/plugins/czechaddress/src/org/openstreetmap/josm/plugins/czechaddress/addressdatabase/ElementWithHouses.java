@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Radomir Cernoch radomir.cernoch@gmail.com
  */
-abstract public class ElementWithHouses extends AddressElement {
+public abstract class ElementWithHouses extends AddressElement {
 
     /**
      * Default constructor setting the name of this element.

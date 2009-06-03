@@ -13,6 +13,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
+import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
 import org.openstreetmap.josm.plugins.czechaddress.StatusListener;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
@@ -67,8 +68,8 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         matchesComboBox.setModel(new MatchesComboBoxModel());
         matchesComboBox.setRenderer(new UniversalListRenderer());
 
-        if (primitive.get("addr:alternatenumber") != null) {
-            alternateNumberEdit.setText(primitive.get("addr:alternatenumber"));
+        if (primitive.get(PrimUtils.KEY_ADDR_CP) != null) {
+            alternateNumberEdit.setText(primitive.get(PrimUtils.KEY_ADDR_CP));
             updateMatches();
         }
 
@@ -132,7 +133,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
             Map<String,String> backup = prim.keys;
             r.openTransaction();
             prim.keys = null;
-            prim.put("addr:alternatenumber", alternateNumberEdit.getText());
+            prim.put(PrimUtils.KEY_ADDR_CP, alternateNumberEdit.getText());
             r.update(prim);
             elems.addAll(r.getCandidates(prim));
             prim.keys = backup;

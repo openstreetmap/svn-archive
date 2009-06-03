@@ -4,6 +4,7 @@ import java.util.List;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
 import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
@@ -60,11 +61,11 @@ public abstract class AddressElement implements Comparable<AddressElement> {
     }
 
     public static String getName(OsmPrimitive prim) {
-        String cp     = prim.get("addr:alternatenumber");
-        String co     = prim.get("addr:housenumber");
-        String street = prim.get("addr:street");
-        String city   = prim.get("addr:city");
-        String name   = prim.get("name");
+        String cp     = prim.get(PrimUtils.KEY_ADDR_CP);
+        String co     = prim.get(PrimUtils.KEY_ADDR_CO);
+        String street = prim.get(PrimUtils.KEY_ADDR_STREET);
+        String city   = prim.get(PrimUtils.KEY_ADDR_CITY);
+        String name   = prim.get(PrimUtils.KEY_NAME);
 
         String result = "";
 

@@ -180,23 +180,6 @@ public class ProposalContainer implements ListModel, Comparable<ProposalContaine
      */
     @Override
     public String toString() {
-        /*if (target.keySet().contains("name"))
-            return target.get("name");
-
-        if (   target.keySet().contains("addr:alternatenumber")
-            || target.keySet().contains("addr:housenumber")) {
-
-            String cp = target.get("addr:alternatenumber");
-            String co = target.get("addr:housenumber");
-            String ul = target.get("addr:street");
-
-            if (cp == null) cp = "?";
-            if (co == null) co = "?";
-            if (ul == null) ul = "" ; else ul = " " + ul;
-
-            return "Dům " + String.valueOf(cp) + "/" + String.valueOf(co) + ul;
-        }*/
-
         return target.toString();
     }
 

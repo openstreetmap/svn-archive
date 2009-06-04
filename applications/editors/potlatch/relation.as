@@ -72,20 +72,24 @@
 		responder.onResult = function(result) {
 			_root.relsreceived+=1;
 			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
-			var w=result[0];
-			var i,id;
-			_root.map.relations[w].clean=true;
-			_root.map.relations[w].locked=false;
-			_root.map.relations[w].attr=result[1];
-			_root.map.relations[w].members=result[2];
-			_root.map.relations[w].version=result[3];
-			_root.map.relations[w].redraw();
-			var mems=result[2];
-			for (m in mems) {
-				findLinkedHash(mems[m][0],mems[m][1])[w]=mems[m][2];
-			}
+			defineRelationFromAMF(result);
 		};
 		remote_read.call('getrelation',responder,Math.floor(this._name));
+	};
+
+	function defineRelationFromAMF(result) {
+		var w=result[0];
+		var i,id;
+		_root.map.relations[w].clean=true;
+		_root.map.relations[w].locked=false;
+		_root.map.relations[w].attr=result[1];
+		_root.map.relations[w].members=result[2];
+		_root.map.relations[w].version=result[3];
+		_root.map.relations[w].redraw();
+		var mems=result[2];
+		for (m in mems) {
+			findLinkedHash(mems[m][0],mems[m][1])[w]=mems[m][2];
+		}
 	};
 
 	OSMRelation.prototype.reload=function() {
@@ -439,17 +443,9 @@
 							findresponder=function() {};
 							findresponder.onResult=function(rellist) {
 								for (r in rellist) {
-									var w=rellist[r][0];
-									if (!_root.map.relations[w]) {
-										_root.map.relations.attachMovie("relation",w,++reldepth);
-										_root.map.relations[w].attr=rellist[r][1];
-										_root.map.relations[w].members=rellist[r][2];
-										_root.map.relations[w].version=rellist[r][3];
-										_root.relcount++;
-										var mems=rellist[r][2];
-										for (m in mems) {
-											findLinkedHash(mems[m][0],mems[m][1])[this._name]=mems[m][2];
-										}
+									if (!_root.map.relations[rellist[r][0]]) {
+										_root.map.relations.attachMovie("relation",rellist[r][0],++reldepth);
+										defineRelationFromAMF(rellist[r]);
 									}
 								}
 								createRelationMenu(_root.windows.relation.box,20);

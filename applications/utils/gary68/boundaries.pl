@@ -39,11 +39,12 @@
 # - check for max nesting level when parsing relation members being relations (prevent loops eating memory and terminate program)
 # - resize option (-resize, -factor (float > 1.0)
 # - pics with resized polygons
+# - distinguish between invalid and selected
+# - qualify invalid relation list with causes of errors
 #
 #
 # TODO
 # - command line error handling
-# - qualify invalid relation list with causes of errors
 # 
 
 use strict ;
@@ -59,7 +60,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "2.0 BETA (007)" ;
+my $version = "2.0 BETA (008)" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -88,7 +89,8 @@ my @neededWays = () ;	# will be used to load only needed data
 my %wayNodesHash = () ;	# nodes forming a way
 my %relationWays = () ;	# ways contained (first directly, later also indirect by relation reference) in relation
 my %relationRelations = () ;	# relations contained in relation (referenced)
-my %validRelation = () ;	# can be used for evaluation
+my %validRelation = () ;	# checked and valid
+my %selectedRelation = () ;	# can be used for evaluation, selected
 my %completeWay = () ;		# this is the boundary as built by checkSegments, all nodes in correct order
 my %relationName = () ;		# relation data
 my %relationType = () ;		# relation data
@@ -100,6 +102,9 @@ my %relationPolygonSimplified = () ;	# relation simplified polygon
 my %relationPolygonResized = () ;	# relation resized polygon
 my %relationIsIn = () ; 	# lists boundaries this relation is inside
 my %relationSize = () ; 	# area as returned by math::polygon->area (no projection applied, so no real value! used only to sort is_ins)
+my %relationSegments = () ;	# 
+my %relationOpen = () ;	# 
+my %relationWaysValid = () ;	# 
 
 my $relationCount = 0 ;		# total
 my $wayCount = 0 ; 
@@ -213,6 +218,11 @@ while ($relationId != -1) {
 		@{$relationWays{$relationId}} = () ;
 		@{$relationRelations{$relationId}} = () ;
 		@{$relationIsIn{$relationId}} = () ;
+		$validRelation{$relationId} = 1 ;
+		$selectedRelation{$relationId} = 1 ;
+		$relationSegments{$relationId} = 0 ;
+		$relationOpen{$relationId} = 0 ;
+		$relationWaysValid{$relationId} = 1 ;
 		if ($verbose) { print "\nfound relation id=$relationId\nname=$name\ntype=$type\nboundary=$boundary\nadminLevel=$adminLevel\nlandArea=$landArea\n" ; }
 		for ($i=0; $i<scalar (@relationMembers); $i++) {
 			# way?
@@ -350,15 +360,17 @@ foreach $rel (keys %relationWays) {
 
 	# if the relation ain't got a single way...
 	if (scalar (@{$relationWays{$rel}}) == 0)  { 
-		$waysValid = 0 ; 
-		print "INVALID relation $rel due to no ways\n" ; 
+		$waysValid = 0 ;
+		$relationWaysValid{$rel} = 0 ;
+		if ($verbose eq "1") { print "INVALID relation $rel due to no ways\n" ; }
 	}
 
 	# if the boundary contains an invalid way. chances for success are low :-)
 	foreach $way (@{$relationWays{$rel}}) {
 		if ($invalidWays{$way} == 1) { 
 			$waysValid = 0 ; 
-			print "INVALID RELATION id=$rel, name=$relationName{$rel} due to invalid way $way\n" ; 
+			$relationWaysValid{$rel} = 0 ;
+			if ($verbose eq "1") { print "INVALID RELATION id=$rel, name=$relationName{$rel} due to invalid way $way\n" ; }
 		}
 	}
 
@@ -368,6 +380,7 @@ foreach $rel (keys %relationWays) {
 		if ($temp[$i] == $temp[$i+1]) {
 			print "ERROR RELATION id=$rel name=$relationName{$rel} contains way $temp[$i] twice\n" ;
 			$waysValid = 0 ;
+			$relationWaysValid{$rel} = 0 ;
 		} 
 	}
 
@@ -383,29 +396,34 @@ foreach $rel (keys %relationWays) {
 			$valid ++ ;
 			$validRelation {$rel} = 1 ;
 			@{$completeWay{$rel}} = @way ;
+			$relationSegments{$rel} = $segments ;
+			$relationOpen{$rel} = $open ;
 			if ($verbose) { print "complete and closed way found for relation $rel, name=$relationName{$rel}\n" ; }
 		}
 		else {
 			$invalid ++ ;
 			$validRelation {$rel} = 0 ;
-			print "INVALID RELATION id=$rel, name=$relationName{$rel}, segments=$segments, open=$open, waysValid=$waysValid\n" ;
+			$relationSegments{$rel} = $segments ;
+			$relationOpen{$rel} = $open ;
+			if ($verbose eq "1") { print "INVALID RELATION id=$rel, name=$relationName{$rel}, segments=$segments, open=$open, waysValid=$waysValid\n" ; }
 		}
 	}
 	else {
 		$invalid ++ ;
 		$validRelation {$rel} = 0 ;
 		print "INVALID RELATION id=$rel, no ways given.\n" ;
+		$relationWaysValid{$rel} = 0 ;
 	}
 
 	# check for admin level given as option
 	if (($adminLevelOpt ne "") and ($adminLevelOpt ne $relationAdminLevel{$rel})) {
-		$validRelation {$rel} = 0 ; # invalidate but keep for reference!
+		$selectedRelation {$rel} = 0 ;
 		$adminInvalidCount++ ;
 	}
 }
 print "done.\n" ;
 print "\nTOTAL $valid valid relations, $invalid invalid relations.\n" ;
-print "$adminInvalidCount relations invalidated due to admin level selection.\n" ;
+print "$adminInvalidCount relations selected by admin level.\n" ;
 print "REMAINING for evaluation: ", $valid - $adminInvalidCount, " relations\n\n" ;
 
 # 
@@ -476,7 +494,7 @@ print "done (node and way check).\n" ;
 #
 print "calc length, build polygons, (simplify, resize)...\n" ; 
 foreach $rel (keys %relationWays) {
-	if ($validRelation{$rel}) {
+	if ( ($validRelation{$rel}) and ($selectedRelation{$rel}) ) {
 		my (@wayNodes) = @{$completeWay{$rel}} ;
 		my $length = 0 ;
 		my $i ;
@@ -525,7 +543,7 @@ print "done.\n" ;
 if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 	print "write poly files...\n" ; 
 	foreach $rel (keys %relationWays) {
-		if ($validRelation{$rel}) {
+		if ( ($validRelation{$rel}) and ($selectedRelation{$rel}) ) {
 			my @way ; my $polyFileName = "" ; my @points = () ; my $text = "" ;
 			if ($verbose) { print "write poly file for relation $rel $relationName{$rel} (", scalar (@points) , " nodes) ...\n" ; }
 
@@ -583,7 +601,7 @@ if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 if ( ($polyBaseName ne "") and ($picOpt eq "1") ) {
 	print "write picture files...\n" ; 
 	foreach $rel (keys %relationWays) {
-		if ($validRelation{$rel}) {
+		if ( ($validRelation{$rel}) and ($selectedRelation{$rel}) ) {
 			drawPic ($rel) ;
 		}
 	}
@@ -597,7 +615,7 @@ if ($hirarchyOpt eq "1") {
 	my $rel ; my $rel1 ; my $rel2 ; 
 	foreach $rel1 (keys %relationName) {
 		foreach $rel2 (keys %relationName) {
-			if ( ($rel1 < $rel2) and ($validRelation{$rel1}) and ($validRelation{$rel2}) ) {
+			if ( ($rel1 < $rel2) and ($validRelation{$rel1}) and ($validRelation{$rel2}) and ($selectedRelation{$rel1}) and ($selectedRelation{$rel2}) ) {
 				my $res ;
 				if ($simplifyOpt eq "1") {
 					$res = isIn ($relationPolygonSimplified{$rel1}, $relationPolygonSimplified{$rel2}) ;
@@ -633,7 +651,7 @@ if ($hirarchyOpt eq "1") {
 	my $line = 0 ;
 	# TODO optimize loop!
 	foreach $rel (keys %relationName) {
-		if ( $validRelation{$rel} ) {
+		if ( ($validRelation{$rel}) and ($selectedRelation{$rel}) ) {
 		#if (($validRelation{$rel}) and (scalar (@{$relationIsIn{$rel}}) > 0 ) ) {
 			
 			my @is_in = () ;
@@ -704,7 +722,7 @@ printHTMLTableHeadings ($htmlFile, ("Line", "RelationId", "Name", "Type", "Bound
 
 my $line = 0 ;
 foreach $rel (keys %relationWays) {
-	if ($validRelation{$rel}) {
+	if ( ($validRelation{$rel}) and ($selectedRelation{$rel}) ) {
 		$line++ ;
 		my $nodesPerKm = int ( scalar ( @{$completeWay{$rel}} / $relationLength{$rel} * 100 ) ) / 100 ;
 		print $csvFile $line, ";" ;
@@ -734,16 +752,16 @@ foreach $rel (keys %relationWays) {
 printHTMLTableFoot ($htmlFile) ;
 
 print $htmlFile "<h2>Invalid Relations</h2>\n" ;
-print $htmlFile "<p>ATTENTION: Also contains 'invalid' relations made so by selecting a certain admin_level at the moment</p>\n" ;
 print $htmlFile "<p>List reflects the moment the *.osm file was created and a relation may be invalid because one or more ways were clipped in the process of creating the *.osm file.</p>\n" ;
 printHTMLTableHead ($htmlFile) ;
-printHTMLTableHeadings ($htmlFile, ("RelationId")) ;
+printHTMLTableHeadings ($htmlFile, ("RelationId", "#segments", "#open segments", "ways valid")) ;
 foreach $rel (keys %relationWays) {
 	if (! $validRelation{$rel}) {
-		# TODO only certain admin_levels ?
-		# TODO qualify errors
 		printHTMLRowStart ($htmlFile) ;
 		printHTMLCellRight ($htmlFile, historyLink("relation", $rel) . "(osm) " .analyzerLink($rel) . "(analyzer)" ) ;
+		printHTMLCellRight ($htmlFile, $relationSegments{$rel} ) ;
+		printHTMLCellRight ($htmlFile, $relationOpen{$rel} ) ;
+		printHTMLCellRight ($htmlFile, $relationWaysValid{$rel} ) ;
 		printHTMLRowEnd ($htmlFile) ;
 	}
 }

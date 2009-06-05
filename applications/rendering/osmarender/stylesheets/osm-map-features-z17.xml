@@ -2960,6 +2960,9 @@
 		<rule e="node|way" k="amenity" v="fuel">
 			<symbol ref="petrolStation" position="center"/>
 		</rule>
+		<rule e="node" k="amenity" v="bicycle_rental"> 
+		        <symbol ref="bicycle_rental"  position="center"/> 
+		</rule> 
 		<rule e="node|way" k="amenity" v="recycling">
 			<symbol ref="recycling" position="center"/>
 		</rule>

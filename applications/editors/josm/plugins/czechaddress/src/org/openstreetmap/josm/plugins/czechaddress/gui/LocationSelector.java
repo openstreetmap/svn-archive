@@ -292,9 +292,9 @@ public class LocationSelector extends ExtendedDialog {
 
         if (obec.getSuburbs().size() > 0) {
             Object[] suburbs = new Object[obec.getSuburbs().size() + 1];
-            suburbs[0] = obec;
             for (int i=0; i<obec.getSuburbs().size(); i++)
-                suburbs[i+1] = obec.getSuburbs().get(i);
+                suburbs[i] = obec.getSuburbs().get(i);
+            suburbs[obec.getSuburbs().size()] = obec;
             suburbComboBox.setModel(new DefaultComboBoxModel(suburbs));
         } else
             suburbComboBox.setModel(new DefaultComboBoxModel());
@@ -360,7 +360,8 @@ public class LocationSelector extends ExtendedDialog {
 
             if (value instanceof ViToCi) {
                 setFont(getFont().deriveFont(Font.BOLD));
-                setText(((ViToCi) value).getName() + ", všechny části obce");
+//                setText(((ViToCi) value).getName() + ", všechny části [experimentální]");
+                setText("všechny části obce [experimentální]");
             } else
                 setFont(getFont().deriveFont(Font.PLAIN));
 

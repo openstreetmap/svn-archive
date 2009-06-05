@@ -63,6 +63,22 @@ public class House extends AddressElement {
     }
 
     /**
+     * Returns the number unique in a suburb (číslo popisné)
+     */
+    public void setCP(String cp) {
+        this.cp = cp;
+        this.name = generateName(this.cp, this.co);
+    }
+
+    /**
+     * Returns the number unique in a street (číslo orientační)
+     */
+    public void setCO(String co) {
+        this.co = co;
+        this.name = generateName(this.cp, this.co);
+    }
+
+    /**
      * Generates a name from house numbers.
      *
      * <p><b>WARNING:</b> Only one number can be {@link null}.</p>

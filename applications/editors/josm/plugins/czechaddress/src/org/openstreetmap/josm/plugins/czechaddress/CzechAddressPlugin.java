@@ -20,6 +20,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.czechaddress.actions.ConflictResolveAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.GroupManipulatorAction;
@@ -189,4 +190,12 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             return;
         }
     }
+
+    @Override
+    public PreferenceSetting getPreferenceSetting() {
+        return Preferences.getInstance();
+    }
+
+
+
 }

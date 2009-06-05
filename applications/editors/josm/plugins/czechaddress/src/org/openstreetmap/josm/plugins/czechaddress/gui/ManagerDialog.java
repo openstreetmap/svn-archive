@@ -16,10 +16,11 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Region;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Suburb;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ViToCi;
-import org.openstreetmap.josm.plugins.czechaddress.gui.databaseeditors.StreetEditor;
+import org.openstreetmap.josm.plugins.czechaddress.gui.databaseeditors.EditorFactory;
 import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalTreeRenderer;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Capitalizator;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Editing the database of {@link AddressElement}s.
@@ -39,6 +40,8 @@ public class ManagerDialog extends ExtendedDialog {
 
         dbTree.setModel(new DatabaseModel());
         dbTree.setCellRenderer(new UniversalTreeRenderer());
+
+        dbEditButton.setIcon(ImageProvider.get("actions", "edit.png"));
 
         Capitalizator cap = new Capitalizator(
                                 Main.ds.allPrimitives(),
@@ -324,13 +327,15 @@ public class ManagerDialog extends ExtendedDialog {
 
     private void dbTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_dbTreeValueChanged
         dbTreeValue = (AddressElement) dbTree.getSelectionPath().getLastPathComponent();
-        dbEditButton.setEnabled(dbTreeValue instanceof Street);
+        dbEditButton.setEnabled( EditorFactory.isEditable(dbTreeValue) );
     }//GEN-LAST:event_dbTreeValueChanged
 
     private void dbEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dbEditButtonActionPerformed
-        if (dbTreeValue instanceof Street)
-            if (StreetEditor.editStreet((Street) dbTreeValue))
+        if (EditorFactory.isEditable(dbTreeValue)) {
+            if (EditorFactory.edit((AddressElement) dbTreeValue))
                 dbTree.repaint();
+        } else
+            dbEditButton.setEnabled(false);
     }//GEN-LAST:event_dbEditButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

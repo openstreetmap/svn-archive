@@ -14,12 +14,14 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
+import org.openstreetmap.josm.plugins.czechaddress.Preferences;
 import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
 import org.openstreetmap.josm.plugins.czechaddress.StatusListener;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalListRenderer;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
+import org.openstreetmap.josm.plugins.czechaddress.proposal.AddKeyValueProposal;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
 
@@ -301,11 +303,14 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
     private void matchChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_matchChanged
 
         if (matchesComboBox.getSelectedItem() == null) return;        
-        AddressElement selectedElement
-                           = (AddressElement) matchesComboBox.getSelectedItem();
+        AddressElement selectedElement = (AddressElement) matchesComboBox.getSelectedItem();
+        proposalContainer.setProposals(selectedElement.getDiff(proposalContainer.getTarget()));
 
-        proposalContainer.setProposals(selectedElement.getDiff(
-                                                proposalContainer.getTarget()));
+        Preferences p = Preferences.getInstance();
+        if (p.addNewTag && proposalContainer.getTarget().keySet().size() == 0)
+            proposalContainer.addProposal(new AddKeyValueProposal(
+                                               p.addNewTagKey, p.addNewTagValue));
+
     }//GEN-LAST:event_matchChanged
 
 

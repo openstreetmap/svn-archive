@@ -8,8 +8,10 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.plugins.czechaddress.Preferences;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
+import org.openstreetmap.josm.plugins.czechaddress.proposal.AddKeyValueProposal;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -78,6 +80,7 @@ public class FactoryAction extends MapMode {
     @Override
     public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
+        Preferences p = Preferences.getInstance();
 
         // Get the currently selected House in the FactoryDialog.
         House house = FactoryDialog.getInstance().getSelectedHouse();
@@ -89,6 +92,8 @@ public class FactoryAction extends MapMode {
 
         ProposalContainer container = new ProposalContainer(newNode);
         container.setProposals(house.getDiff(newNode));
+        if (p.addNewTag)
+            container.addProposal(new AddKeyValueProposal(p.addNewTagKey, p.addNewTagValue));
         container.applyAll();
 
         Reasoner r = Reasoner.getInstance();

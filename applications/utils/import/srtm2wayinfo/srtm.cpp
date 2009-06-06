@@ -1,11 +1,14 @@
 #include "srtm.h"
+
+#include "main.h"
+
+#include <math.h>
+
 #include <QDir>
 #include <QStringList>
 #include <QString>
-#include <QCoreApplication>
 #include <QProcess>
-#include "math.h"
-QCoreApplication *app;
+
 SRTMTile errorTile("error", -1000, -1000); //TODO
 
 /** Constructor for SRTMDownloader.
@@ -70,7 +73,6 @@ void SRTMDownloader::ftpListInfo(const QUrlInfo &info)
     if (regex.indexIn(info.name()) == -1) {
         qDebug() << "Regex did not match!";
     }
-    //qDebug() << currentContinent << info.name() << regex.capturedTexts();
     int lat = regex.cap(2).toInt();
     int lon = regex.cap(4).toInt();
     if (regex.cap(1) == "S") {
@@ -135,14 +137,26 @@ void SRTMDownloader::connectFtp()
     if (ftp.state() == QFtp::LoggedIn) return;
     ftp.connectToHost(server);
     ftp.login();
-    while (ftp.currentId()) app->processEvents();
-    qDebug() << "Connected to FTP";
+    while (ftp.currentId()) {
+        app->processEvents();
+    }
+//     qDebug() << "Connected to FTP";
 }
 
 /** FTP error handler. */
 void SRTMDownloader::ftpDone(int /*command_id*/, bool error)
 {
     if (error) qDebug() << "FTP-Error:" << ftp.errorString();
+}
+
+/** Get altitude and download necessary tiles automatically. */
+float SRTMDownloader::getAltitudeFromLatLon(float lat, float lon)
+{
+    SRTMTile *tile = getTile(lat, lon);
+    if (tile)
+        return tile->getAltitudeFromLatLon(lat, lon);
+    else
+        return SRTM_DATA_VOID;
 }
 
 /** Create a new tile object. Unzips the tile data if necessary.
@@ -191,6 +205,7 @@ SRTMTile::SRTMTile(QString filename, int lat, int lon)
   */
 int SRTMTile::getPixelValue(int x, int y)
 {
+    Q_ASSERT(x >= 0 && x < size && y >= 0 && y < size);
     int offset = x + size * (size - y - 1);
     qint16 value;
     value = qFromBigEndian(buffer[offset]);
@@ -216,21 +231,4 @@ float SRTMTile::getAltitudeFromLatLon(float lat, float lon)
     float value_1 = avg(value01, value11, x-int(x));
     float value__ = avg(value_0, value_1, y-int(y));
     return value__;
-}
-
-SRTMDownloader downloader;
-    
-int main(int argc, char **argv)
-{
-    QCoreApplication myApp(argc, argv);
-    app = &myApp;
-    downloader.loadFileList();
-    SRTMTile *tile = downloader.getTile(49.12, 12.12);
-    tile->getPixelValue(567, 234);
-    int i;
-    for (i=0; i<100000000; i++)
-    {
-        tile->getAltitudeFromLatLon(49.1234, 12.56789);
-    }
-    qDebug() <<  tile->getAltitudeFromLatLon(49.1234, 12.56789);
 }

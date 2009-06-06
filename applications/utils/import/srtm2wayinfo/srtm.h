@@ -8,6 +8,7 @@
 #include <QRegExp>
 
 #define SRTM_DATA_VOID -32768
+
 class SRTMTile
 {
     public:
@@ -39,6 +40,7 @@ class SRTMDownloader : public QObject
         SRTMTile *getTile(float lat, float lon);
         QMap<int, QString> fileList;
         void downloadTile(QString filename);
+        float getAltitudeFromLatLon(float lat, float lon);
     private:
         QString server;
         QString directory;

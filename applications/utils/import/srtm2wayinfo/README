@@ -11,3 +11,11 @@ Documentation
 ftp://e0srp01u.ecs.nasa.gov/srtm/version2/Documentation/
 http://doc.trolltech.com/4.4/
 
+TODO
+----
+- Interpolate points every 90m
+- Optimize for large datasets
+- Error handling
+- Find a replacement for QFtp that doesn't need an event loop to run. libcurl?
+- Include a library for processing zip files
+- Write testcases

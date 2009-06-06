@@ -9,14 +9,14 @@
 #include <QString>
 #include <QProcess>
 
-SRTMTile errorTile("error", -1000, -1000); //TODO
+SrtmTile errorTile("error", -1000, -1000); //TODO
 
-/** Constructor for SRTMDownloader.
-  * \param server Hostname of SRTM server.
-  * \param directory Absolute path to base directory of SRTM server. Must start with a slash!
+/** Constructor for SrtmDownloader.
+  * \param server Hostname of Srtm server.
+  * \param directory Absolute path to base directory of Srtm server. Must start with a slash!
   * \param cachedir Directory in which the downloaded files are stored.
   */
-SRTMDownloader::SRTMDownloader(QString server, QString directory, QString cachedir)
+SrtmDownloader::SrtmDownloader(QString server, QString directory, QString cachedir)
 {
     this->server = server;
     this->directory = directory+"/";
@@ -31,7 +31,7 @@ SRTMDownloader::SRTMDownloader(QString server, QString directory, QString cached
 }
 
 /** Create a new file list by getting directory contents from server. */
-void SRTMDownloader::createFileList()
+void SrtmDownloader::createFileList()
 {
     QStringList continents;
     continents << "Africa" << "Australia" << "Eurasia" << "Islands" << "North_America" << "South_America";
@@ -54,7 +54,7 @@ void SRTMDownloader::createFileList()
 }
 
 /** Load a file list or create a new one if it doesn't exist. */
-void SRTMDownloader::loadFileList()
+void SrtmDownloader::loadFileList()
 {
     QFile file(cachedir+"filelist");
     if (!file.open(QIODevice::ReadOnly)) {
@@ -68,7 +68,7 @@ void SRTMDownloader::loadFileList()
 }
 
 /** SLOT called by the ftp object to return information about the file. */
-void SRTMDownloader::ftpListInfo(const QUrlInfo &info)
+void SrtmDownloader::ftpListInfo(const QUrlInfo &info)
 {
     if (regex.indexIn(info.name()) == -1) {
         qDebug() << "Regex did not match!";
@@ -85,14 +85,14 @@ void SRTMDownloader::ftpListInfo(const QUrlInfo &info)
 }
 
 /** Get tile for a specified location.
-  * \note The tile object returned is owned by this SRTMDownloader instance. It
+  * \note The tile object returned is owned by this SrtmDownloader instance. It
   *       _must_ _not_ be deleted by the user. However it _may_ be deleted by
-  *       SRTMDownloader during any later call to getTile()
+  *       SrtmDownloader during any later call to getTile()
   */
-SRTMTile *SRTMDownloader::getTile(float lat, float lon)
+SrtmTile *SrtmDownloader::getTile(float lat, float lon)
 {
     int index = latLonToIndex(int(lat), int(lon));
-    SRTMTile *tile = tileCache[index];
+    SrtmTile *tile = tileCache[index];
 
     if (tile) return tile;
 
@@ -101,7 +101,7 @@ SRTMTile *SRTMDownloader::getTile(float lat, float lon)
         if (!QFile(cachedir + splitted[1]).exists()) {
             downloadTile(fileList[index]);
         }
-        tile = new SRTMTile(cachedir + splitted[1], int(lat), int(lon));
+        tile = new SrtmTile(cachedir + splitted[1], int(lat), int(lon));
         tileCache.insert(index, tile);
         Q_ASSERT(tileCache[index] != 0);
         return tile;
@@ -113,7 +113,7 @@ SRTMTile *SRTMDownloader::getTile(float lat, float lon)
 /** Download a tile from the server.
     \param filename must be in the format continent/tilename.hgt.zip
     \note You should _not_ call this function when you need tile data. Use getTile instead. */
-void SRTMDownloader::downloadTile(QString filename)
+void SrtmDownloader::downloadTile(QString filename)
 {
     qDebug() << "Downloading" << filename;
     QStringList splitted = filename.split("/", QString::SkipEmptyParts);
@@ -131,7 +131,7 @@ void SRTMDownloader::downloadTile(QString filename)
 /** Open the FTP connection if not already done.
     FTP connections are reused.
 */
-void SRTMDownloader::connectFtp()
+void SrtmDownloader::connectFtp()
 {
     qDebug() << "Connecting to FTP";
     if (ftp.state() == QFtp::LoggedIn) return;
@@ -144,15 +144,15 @@ void SRTMDownloader::connectFtp()
 }
 
 /** FTP error handler. */
-void SRTMDownloader::ftpDone(int /*command_id*/, bool error)
+void SrtmDownloader::ftpDone(int /*command_id*/, bool error)
 {
     if (error) qDebug() << "FTP-Error:" << ftp.errorString();
 }
 
 /** Get altitude and download necessary tiles automatically. */
-float SRTMDownloader::getAltitudeFromLatLon(float lat, float lon)
+float SrtmDownloader::getAltitudeFromLatLon(float lat, float lon)
 {
-    SRTMTile *tile = getTile(lat, lon);
+    SrtmTile *tile = getTile(lat, lon);
     if (tile)
         return tile->getAltitudeFromLatLon(lat, lon);
     else
@@ -162,7 +162,7 @@ float SRTMDownloader::getAltitudeFromLatLon(float lat, float lon)
 /** Create a new tile object. Unzips the tile data if necessary.
   * \note Special filename: "error" returns an invalid tile.
   */
-SRTMTile::SRTMTile(QString filename, int lat, int lon)
+SrtmTile::SrtmTile(QString filename, int lat, int lon)
 {
     this->lat = lat;
     this->lon = lon;
@@ -203,7 +203,7 @@ SRTMTile::SRTMTile(QString filename, int lat, int lon)
   * starting in the upper left (NW) edge growing to the lower right
   * egde (SE) instead of the SRTM coordinate system.
   */
-int SRTMTile::getPixelValue(int x, int y)
+int SrtmTile::getPixelValue(int x, int y)
 {
     Q_ASSERT(x >= 0 && x < size && y >= 0 && y < size);
     int offset = x + size * (size - y - 1);
@@ -212,7 +212,7 @@ int SRTMTile::getPixelValue(int x, int y)
     return value;
 }
 
-float SRTMTile::getAltitudeFromLatLon(float lat, float lon)
+float SrtmTile::getAltitudeFromLatLon(float lat, float lon)
 {
     if (!valid) return SRTM_DATA_VOID;
     lat -= this->lat;

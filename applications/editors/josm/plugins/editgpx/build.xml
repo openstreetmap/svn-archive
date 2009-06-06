@@ -23,7 +23,7 @@
                 <attribute name="Author" value="Martin Garbe" />
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.editgpx.EditGpxPlugin" />
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="The main feature of the plugin is the possibility to delete points of the GPX track. This plugin can be used to prepare  tracks for uploading to OSM eg. deleting uninteresting parts of track." />
+                <attribute name="Plugin-Description" value="Allows the user to anonymize timestamps and delete parts of huge GPX tracks very fast." />
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/EditGpx" />
                 <attribute name="Plugin-Mainversion" value="1500" />
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

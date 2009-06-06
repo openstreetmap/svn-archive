@@ -69,10 +69,10 @@ import com.innovant.josm.jrt.osm.OsmEdge;
  */
 public class RoutingLayer extends Layer {
 
-	/**
-	 * Logger
-	 */
-	static Logger logger = Logger.getLogger(RoutingLayer.class);
+    /**
+     * Logger
+     */
+    static Logger logger = Logger.getLogger(RoutingLayer.class);
 
     /**
      * Constant
@@ -98,41 +98,41 @@ public class RoutingLayer extends Layer {
      * Default constructor
      * @param name Layer name.
      */
-	public RoutingLayer(String name, OsmDataLayer dataLayer) {
-		super(name);
-		logger.debug("Creating Routing Layer...");
+    public RoutingLayer(String name, OsmDataLayer dataLayer) {
+        super(name);
+        logger.debug("Creating Routing Layer...");
         if(startIcon == null) startIcon = ImageProvider.get("routing", "startflag");
         if(middleIcon == null) middleIcon = ImageProvider.get("routing", "middleflag");
         if(endIcon == null) endIcon = ImageProvider.get("routing", "endflag");
         this.dataLayer = dataLayer;
         this.routingModel = new RoutingModel(dataLayer.data);
         logger.debug("Routing Layer created.");
-	}
+    }
 
-	/**
-	 * Getter Routing Model.
-	 * @return the routingModel
-	 */
-	public RoutingModel getRoutingModel() {
-		return this.routingModel;
-	}
+    /**
+     * Getter Routing Model.
+     * @return the routingModel
+     */
+    public RoutingModel getRoutingModel() {
+        return this.routingModel;
+    }
 
-	/**
-	 * Gets associated data layer
-	 * @return OsmDataLayer associated to the RoutingLayer
-	 */
-	public OsmDataLayer getDataLayer() {
-		return dataLayer;
-	}
+    /**
+     * Gets associated data layer
+     * @return OsmDataLayer associated to the RoutingLayer
+     */
+    public OsmDataLayer getDataLayer() {
+        return dataLayer;
+    }
 
-	/**
-	 * Gets nearest node belonging to a highway tagged way
-	 * @param p Point on the screen
-	 * @return The nearest highway node, in the range of the snap distance
-	 */
+    /**
+     * Gets nearest node belonging to a highway tagged way
+     * @param p Point on the screen
+     * @return The nearest highway node, in the range of the snap distance
+     */
     public final Node getNearestHighwayNode(Point p) {
-    	Node nearest = null;
-    	double minDist = 0;
+        Node nearest = null;
+        double minDist = 0;
         for (Way w : dataLayer.data.ways) {
             if (w.deleted || w.incomplete || w.get("highway")==null) continue;
             for (Node n : w.nodes) {
@@ -141,98 +141,98 @@ public class RoutingLayer extends Layer {
                 Point P = Main.map.mapView.getPoint(n.eastNorth);
                 double dist = p.distanceSq(P);
                 if (dist < NavigatableComponent.snapDistance) {
-                	if ((nearest == null) || (dist < minDist)) {
-                		nearest = n;
-                		minDist = dist;
-                	}
+                    if ((nearest == null) || (dist < minDist)) {
+                        nearest = n;
+                        minDist = dist;
+                    }
                 }
             }
         }
         return nearest;
     }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.layer.Layer#getIcon()
-	 */
-	@Override
-	public Icon getIcon() {
+    /*
+     * (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.layer.Layer#getIcon()
+     */
+    @Override
+    public Icon getIcon() {
         Icon icon = ImageProvider.get("layer", "routing_small");
         return icon;
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.layer.Layer#getInfoComponent()
-	 */
-	@Override
-	public Object getInfoComponent() {
-		String info = "<html>"
-						+ "<body>"
-							+"Graph Vertex: "+this.routingModel.routingGraph.getVertexCount()+"<br/>"
-							+"Graph Edges: "+this.routingModel.routingGraph.getEdgeCount()+"<br/>"
-						+ "</body>"
-					+ "</html>";
+    /*
+     * (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.layer.Layer#getInfoComponent()
+     */
+    @Override
+    public Object getInfoComponent() {
+        String info = "<html>"
+                        + "<body>"
+                            +"Graph Vertex: "+this.routingModel.routingGraph.getVertexCount()+"<br/>"
+                            +"Graph Edges: "+this.routingModel.routingGraph.getEdgeCount()+"<br/>"
+                        + "</body>"
+                    + "</html>";
         return info;
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.layer.Layer#getMenuEntries()
-	 */
-	@Override
-	public Component[] getMenuEntries() {
+    /*
+     * (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.layer.Layer#getMenuEntries()
+     */
+    @Override
+    public Component[] getMenuEntries() {
         Collection<Component> components = new ArrayList<Component>();
         components.add(new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)));
 //        components.add(new JMenuItem(new LayerListDialog.ShowHideMarkerText(this)));
         components.add(new JMenuItem(new LayerListDialog.DeleteLayerAction(this)));
         components.add(new JSeparator());
-        components.add(new JMenuItem(new RenameLayerAction(associatedFile, this)));
+        components.add(new JMenuItem(new RenameLayerAction(getAssociatedFile(), this)));
         components.add(new JSeparator());
         components.add(new JMenuItem(new LayerListPopup.InfoAction(this)));
         return components.toArray(new Component[0]);
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.layer.Layer#getToolTipText()
-	 */
-	@Override
-	public String getToolTipText() {
-		String tooltip = this.routingModel.routingGraph.getVertexCount() + " vertices, "
-				+ this.routingModel.routingGraph.getEdgeCount() + " edges";
-		return tooltip;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.layer.Layer#getToolTipText()
+     */
+    @Override
+    public String getToolTipText() {
+        String tooltip = this.routingModel.routingGraph.getVertexCount() + " vertices, "
+                + this.routingModel.routingGraph.getEdgeCount() + " edges";
+        return tooltip;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.layer.Layer#isMergable(org.openstreetmap.josm.gui.layer.Layer)
-	 */
-	@Override
-	public boolean isMergable(Layer other) {
-		return false;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.layer.Layer#isMergable(org.openstreetmap.josm.gui.layer.Layer)
+     */
+    @Override
+    public boolean isMergable(Layer other) {
+        return false;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.layer.Layer#mergeFrom(org.openstreetmap.josm.gui.layer.Layer)
-	 */
-	@Override
-	public void mergeFrom(Layer from) {
-		// This layer is not mergable, so do nothing
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.layer.Layer#mergeFrom(org.openstreetmap.josm.gui.layer.Layer)
+     */
+    @Override
+    public void mergeFrom(Layer from) {
+        // This layer is not mergable, so do nothing
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.layer.Layer#paint(java.awt.Graphics, org.openstreetmap.josm.gui.MapView)
-	 */
-	@Override
-	public void paint(Graphics g, MapView mv) {
-		boolean isActiveLayer = (mv.getActiveLayer().equals(this));
-		// Get routing nodes (start, middle, end)
+    /*
+     * (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.layer.Layer#paint(java.awt.Graphics, org.openstreetmap.josm.gui.MapView)
+     */
+    @Override
+    public void paint(Graphics g, MapView mv) {
+        boolean isActiveLayer = (mv.getActiveLayer().equals(this));
+        // Get routing nodes (start, middle, end)
         List<Node> nodes = routingModel.getSelectedNodes();
         if(nodes == null || nodes.size() == 0) {
-        	logger.debug("no nodes selected");
+            logger.debug("no nodes selected");
             return;
         }
 
@@ -240,19 +240,19 @@ public class RoutingLayer extends Layer {
         // Color is different for active and inactive layers
         String colorString;
         if (isActiveLayer) {
-        	if (Main.pref.hasKey(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key))
-        			colorString = Main.pref.get(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key);
-        	else {
-        		colorString = ColorHelper.color2html(Color.RED);
-        		Main.pref.put(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key, colorString);
-        	}
+            if (Main.pref.hasKey(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key))
+                    colorString = Main.pref.get(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key);
+            else {
+                colorString = ColorHelper.color2html(Color.RED);
+                Main.pref.put(PreferencesKeys.KEY_ACTIVE_ROUTE_COLOR.key, colorString);
+            }
         } else {
-        	if (Main.pref.hasKey(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key))
-        		colorString = Main.pref.get(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key);
-        	else {
-        		colorString = ColorHelper.color2html(Color.decode("#dd2222"));
-        		Main.pref.put(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key, colorString);
-        	}
+            if (Main.pref.hasKey(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key))
+                colorString = Main.pref.get(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key);
+            else {
+                colorString = ColorHelper.color2html(Color.decode("#dd2222"));
+                Main.pref.put(PreferencesKeys.KEY_INACTIVE_ROUTE_COLOR.key, colorString);
+            }
         }
         Color color = ColorHelper.html2color(colorString);
 
@@ -276,50 +276,50 @@ public class RoutingLayer extends Layer {
         Node node = nodes.get(0);
         Point screen = mv.getPoint(node.eastNorth);
         startIcon.paintIcon(mv, g, screen.x - startIcon.getIconWidth()/2,
-        		screen.y - startIcon.getIconHeight());
+                screen.y - startIcon.getIconHeight());
 
         // paint middle icons
         for(int index = 1; index < nodes.size() - 1; ++index) {
             node = nodes.get(index);
             screen = mv.getPoint(node.eastNorth);
             middleIcon.paintIcon(mv, g, screen.x - startIcon.getIconWidth()/2,
-            		screen.y - middleIcon.getIconHeight());
+                    screen.y - middleIcon.getIconHeight());
         }
         // paint end icon
         if(nodes.size() > 1) {
             node = nodes.get(nodes.size() - 1);
             screen = mv.getPoint(node.eastNorth);
             endIcon.paintIcon(mv, g, screen.x - startIcon.getIconWidth()/2,
-            		screen.y - endIcon.getIconHeight());
+                    screen.y - endIcon.getIconHeight());
         }
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.layer.Layer#visitBoundingBox(org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor)
-	 */
-	@Override
-	public void visitBoundingBox(BoundingXYVisitor v) {
+    /*
+     * (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.layer.Layer#visitBoundingBox(org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor)
+     */
+    @Override
+    public void visitBoundingBox(BoundingXYVisitor v) {
         for (Node node : routingModel.getSelectedNodes()) {
             v.visit(node);
         }
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.layer.Layer#destroy()
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * @see org.openstreetmap.josm.gui.layer.Layer#destroy()
+     */
+    @Override
     public void destroy() {
-		routingModel.reset();
-//		layerAdded = false;
-	}
+        routingModel.reset();
+//      layerAdded = false;
+    }
 
     /**
      * Draw a line with the given color.
      */
     private void drawEdge(Graphics g, MapView mv, OsmEdge edge, Color col, int width,
-    		boolean showDirection) {
+            boolean showDirection) {
         g.setColor(col);
         Point from;
         Point to;

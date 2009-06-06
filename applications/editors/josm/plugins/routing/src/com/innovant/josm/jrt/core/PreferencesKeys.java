@@ -27,15 +27,15 @@
 package com.innovant.josm.jrt.core;
 
 public enum PreferencesKeys {
-	KEY_ACTIVE_ROUTE_COLOR ("routing.active.route.color"),
-	KEY_INACTIVE_ROUTE_COLOR ("routing.inactive.route.color"),
-	KEY_ROUTE_WIDTH ("routing.route.width"),
-	KEY_ROUTE_SELECT ("routing.route.select");
+    KEY_ACTIVE_ROUTE_COLOR ("routing.active.route.color"),
+    KEY_INACTIVE_ROUTE_COLOR ("routing.inactive.route.color"),
+    KEY_ROUTE_WIDTH ("routing.route.width"),
+    KEY_ROUTE_SELECT ("routing.route.select");
 
-	public final String key;
-	PreferencesKeys (String key) {
-		this.key=key;
-	}
+    public final String key;
+    PreferencesKeys (String key) {
+        this.key=key;
+    }
 
-	public String getKey() {return key;};
+    public String getKey() {return key;};
 }

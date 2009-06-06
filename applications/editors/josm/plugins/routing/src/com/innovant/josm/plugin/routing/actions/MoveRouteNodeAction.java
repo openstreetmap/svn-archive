@@ -53,24 +53,24 @@ import com.innovant.josm.plugin.routing.gui.RoutingDialog;
  *
  */
 public class MoveRouteNodeAction extends MapMode {
-	/**
-	 * Serial.
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * Serial.
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Square of the distance radius where route nodes can be selected for dragging
-	 */
-	private static final int DRAG_SQR_RADIUS = 100;
+    /**
+     * Square of the distance radius where route nodes can be selected for dragging
+     */
+    private static final int DRAG_SQR_RADIUS = 100;
 
-	/**
-	 * Logger.
-	 */
-	static Logger logger = Logger.getLogger(RoutingLayer.class);
+    /**
+     * Logger.
+     */
+    static Logger logger = Logger.getLogger(RoutingLayer.class);
 
-	/**
-	 * Routing Dialog.
-	 */
+    /**
+     * Routing Dialog.
+     */
     private RoutingDialog routingDialog;
 
     /**
@@ -82,13 +82,13 @@ public class MoveRouteNodeAction extends MapMode {
      * Constructor
      * @param mapFrame
      */
-	public MoveRouteNodeAction(MapFrame mapFrame) {
-		// TODO Use constructor with shortcut
-		super(tr("Routing"), "move",
-				tr("Click and drag to move destination"),
-				mapFrame, ImageProvider.getCursor("normal", "move"));
+    public MoveRouteNodeAction(MapFrame mapFrame) {
+        // TODO Use constructor with shortcut
+        super(tr("Routing"), "move",
+                tr("Click and drag to move destination"),
+                mapFrame, ImageProvider.getCursor("normal", "move"));
         this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
-	}
+    }
 
     @Override public void enterMode() {
         super.enterMode();
@@ -103,31 +103,31 @@ public class MoveRouteNodeAction extends MapMode {
     @Override public void mousePressed(MouseEvent e) {
         // If left button is pressed
         if (e.getButton() == MouseEvent.BUTTON1) {
-        	if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-        		RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
-        		RoutingModel routingModel = layer.getRoutingModel();
-            	// Search for the nearest node in the list
-            	List<Node> nl = routingModel.getSelectedNodes();
-            	index = -1;
-            	double dmax = DRAG_SQR_RADIUS; // maximum distance, in pixels
-               	for (int i=0;i<nl.size();i++) {
-               		Node node = nl.get(i);
-            		double d = Main.map.mapView.getPoint(node.eastNorth).distanceSq(e.getPoint());
-            		if (d < dmax) {
-            			dmax = d;
-            			index = i;
-            		}
-            	}
-               	if (index>=0)
+            if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+                RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+                RoutingModel routingModel = layer.getRoutingModel();
+                // Search for the nearest node in the list
+                List<Node> nl = routingModel.getSelectedNodes();
+                index = -1;
+                double dmax = DRAG_SQR_RADIUS; // maximum distance, in pixels
+                for (int i=0;i<nl.size();i++) {
+                    Node node = nl.get(i);
+                    double d = Main.map.mapView.getPoint(node.eastNorth).distanceSq(e.getPoint());
+                    if (d < dmax) {
+                        dmax = d;
+                        index = i;
+                    }
+                }
+                if (index>=0)
                     logger.debug("Moved from node " + nl.get(index));
-        	}
+            }
         }
     }
 
     @Override public void mouseReleased(MouseEvent e) {
-    	// If left button is released and a route node is being dragged
-    	if ((e.getButton() == MouseEvent.BUTTON1) && (index>=0)) {
-    		searchAndReplaceNode(e.getPoint());
+        // If left button is released and a route node is being dragged
+        if ((e.getButton() == MouseEvent.BUTTON1) && (index>=0)) {
+            searchAndReplaceNode(e.getPoint());
         }
     }
 
@@ -135,22 +135,22 @@ public class MoveRouteNodeAction extends MapMode {
     }
 
     private void searchAndReplaceNode(Point point) {
-    	if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-    		RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
-    		RoutingModel routingModel = layer.getRoutingModel();
-        	// Search for nearest highway node
-        	Node node = null;
-    		node = layer.getNearestHighwayNode(point);
+        if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+            RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+            RoutingModel routingModel = layer.getRoutingModel();
+            // Search for nearest highway node
+            Node node = null;
+            node = layer.getNearestHighwayNode(point);
             if (node == null) {
-            	logger.debug("Didn't found a close node to move to.");
+                logger.debug("Didn't found a close node to move to.");
                 return;
             }
             logger.debug("Moved to node " + node);
             routingModel.removeNode(index);
-    		routingDialog.removeNode(index);
+            routingDialog.removeNode(index);
             routingModel.insertNode(index, node);
-    		routingDialog.insertNode(index, node);
+            routingDialog.insertNode(index, node);
             Main.map.repaint();
-    	}
+        }
     }
 }

@@ -28,7 +28,9 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
+import org.openstreetmap.josm.io.GpxImporter;
 import org.openstreetmap.josm.io.GpxReader;
+import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.io.OsmReader;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
@@ -99,18 +101,18 @@ public class OpenVisibleAction extends JosmAction {
 
     private void openAsData(File file) throws SAXException, IOException, FileNotFoundException {
         String fn = file.getName();
-        if (ExtensionFileFilter.filters[ExtensionFileFilter.OSM].acceptName(fn)) {
+        if (new OsmImporter().acceptFile(file)) {
             DataSet dataSet = OsmReader.parseDataSet(new FileInputStream(file), null, Main.pleaseWaitDlg);
-            OsmDataLayer layer = new OsmDataLayer(dataSet, file.getName(), file);
+            OsmDataLayer layer = new OsmDataLayer(dataSet, fn, file);
             Main.main.addLayer(layer);
         }
         else
-            JOptionPane.showMessageDialog(Main.parent, fn+": "+tr("Unknown file extension: {0}", fn.substring(file.getName().lastIndexOf('.')+1)));
+            JOptionPane.showMessageDialog(Main.parent, fn+": "+tr("Unknown file extension: {0}", fn.substring(fn.lastIndexOf('.')+1)));
     }
 
     private void openFileAsGpx(File file) throws SAXException, IOException, FileNotFoundException {
         String fn = file.getName();
-        if (ExtensionFileFilter.filters[ExtensionFileFilter.GPX].acceptName(fn)) {
+        if (new GpxImporter().acceptFile(file)) {
             GpxReader r = null;
             if (file.getName().endsWith(".gpx.gz")) {
                 r = new GpxReader(new GZIPInputStream(new FileInputStream(file)), file.getAbsoluteFile().getParentFile());

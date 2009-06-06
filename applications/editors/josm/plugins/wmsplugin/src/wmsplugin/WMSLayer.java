@@ -22,10 +22,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
-import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -294,7 +293,8 @@ public class WMSLayer extends Layer {
             super(tr("Save WMS layer to file"), ImageProvider.get("save"));
         }
         public void actionPerformed(ActionEvent ev) {
-            File f = openFileDialog(false);
+            File f = DiskAccessAction.createAndOpenSaveFileChooser(
+            tr("Save WMS layer"), ".wms");
             try
             {
                 FileOutputStream fos = new FileOutputStream(f);
@@ -321,7 +321,10 @@ public class WMSLayer extends Layer {
             super(tr("Load WMS layer from file"), ImageProvider.get("load"));
         }
         public void actionPerformed(ActionEvent ev) {
-            File f = openFileDialog(true);
+            JFileChooser fc = DiskAccessAction.createAndOpenFileChooser(true,
+            false, tr("Load WMS layer"));
+            if(fc == null) return;
+            File f = fc.getSelectedFile();
             if (f == null) return;
             try
             {
@@ -357,51 +360,5 @@ public class WMSLayer extends Layer {
                 return;
             }
         }
-    }
-
-    protected static JFileChooser createAndOpenFileChooser(boolean open, boolean multiple) {
-        String curDir = Main.pref.get("lastDirectory");
-        if (curDir.equals(""))
-            curDir = ".";
-        JFileChooser fc = new JFileChooser(new File(curDir));
-        fc.setMultiSelectionEnabled(multiple);
-        for (int i = 0; i < ExtensionFileFilter.filters.length; ++i)
-            fc.addChoosableFileFilter(ExtensionFileFilter.filters[i]);
-        fc.setAcceptAllFileFilterUsed(true);
-
-        int answer = open ? fc.showOpenDialog(Main.parent) : fc.showSaveDialog(Main.parent);
-        if (answer != JFileChooser.APPROVE_OPTION)
-            return null;
-
-        if (!fc.getCurrentDirectory().getAbsolutePath().equals(curDir))
-            Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
-
-        if (!open) {
-            File file = fc.getSelectedFile();
-            if (file == null || (file.exists() && JOptionPane.YES_OPTION !=
-                JOptionPane.showConfirmDialog(Main.parent, tr("File exists. Overwrite?"), tr("Overwrite"), JOptionPane.YES_NO_OPTION)))
-                return null;
-        }
-
-        return fc;
-    }
-
-    public static File openFileDialog(boolean open) {
-        JFileChooser fc = createAndOpenFileChooser(open, false);
-        if (fc == null)
-            return null;
-
-        File file = fc.getSelectedFile();
-
-        String fn = file.getPath();
-        if (fn.indexOf('.') == -1) {
-            FileFilter ff = fc.getFileFilter();
-            if (ff instanceof ExtensionFileFilter)
-                fn = "." + ((ExtensionFileFilter)ff).defaultExtension;
-            else
-                fn += ".osm";
-            file = new File(fn);
-        }
-        return file;
     }
 }

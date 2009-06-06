@@ -64,12 +64,12 @@ public class OsmEdge extends DefaultWeightedEdge {
    * @param length
    */
   public OsmEdge(Way way, Node from, Node to) {
-	  	super();
-	  	this.way = way;
-	  	this.from = from;
-	  	this.to = to;
-	  	this.length = from.coor.greatCircleDistance(to.coor);
-	  }
+        super();
+        this.way = way;
+        this.from = from;
+        this.to = to;
+        this.length = from.coor.greatCircleDistance(to.coor);
+      }
 
   /**
    * @return the way
@@ -91,18 +91,18 @@ public class OsmEdge extends DefaultWeightedEdge {
    * @return length of segment in meters.
    */
   public double getLength() {
-  	return length;
+    return length;
   }
   
   public void setLength(double length) {
-	this.length = length;
+    this.length = length;
 }
 
 public double getSpeed() {
-		return speed;
+        return speed;
   }
 
   public void setSpeed(double speed) {
-		this.speed = speed;
+        this.speed = speed;
   }
 }

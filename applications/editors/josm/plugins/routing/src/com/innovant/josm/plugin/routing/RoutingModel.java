@@ -47,15 +47,15 @@ import com.innovant.josm.jrt.osm.OsmEdge;
  */
 public class RoutingModel {
 
-	/**
-	 * Logger
-	 */
-	static Logger logger = Logger.getLogger(RoutingModel.class);
+    /**
+     * Logger
+     */
+    static Logger logger = Logger.getLogger(RoutingModel.class);
 
     /**
      * Graph to calculate route
      */
-	public RoutingGraph routingGraph=null;
+    public RoutingGraph routingGraph=null;
 
     /**
      * List of nodes that the route has to traverse
@@ -70,10 +70,11 @@ public class RoutingModel {
     /**
      * Default Constructor.
      */
-	public RoutingModel(DataSet data) {
+    public RoutingModel(DataSet data) {
         nodes = new ArrayList<Node>();
+System.out.println("gr " + data);
         routingGraph = new RoutingGraph(data);
-	}
+    }
 
     /**
      * Method that returns the selected nodes to calculate route.
@@ -97,10 +98,10 @@ public class RoutingModel {
      * @param index the index of the node to remove.
      */
     public void removeNode(int index) {
-    	if (nodes.size()>index)	{
-    		nodes.remove(index);
-    		this.changeNodes=true;
-    	}
+        if (nodes.size()>index) {
+            nodes.remove(index);
+            this.changeNodes=true;
+        }
     }
 
     /**
@@ -109,22 +110,22 @@ public class RoutingModel {
      * @param node the node to be inserted
      */
     public void insertNode(int index, Node node) {
-    	if (nodes.size()>=index) {
-    		nodes.add(index, node);
-    		this.changeNodes=true;
-    	}
+        if (nodes.size()>=index) {
+            nodes.add(index, node);
+            this.changeNodes=true;
+        }
     }
 
     /**
      * Reverse list of nodes
      */
     public void reverseNodes() {
-    	List<Node> aux = new ArrayList<Node>();
-    	for (Node n : nodes) {
-    		aux.add(0,n);
-    	}
-    	nodes = aux;
-    	this.changeNodes=true;
+        List<Node> aux = new ArrayList<Node>();
+        for (Node n : nodes) {
+            aux.add(0,n);
+        }
+        nodes = aux;
+        this.changeNodes=true;
     }
 
     /**
@@ -132,19 +133,19 @@ public class RoutingModel {
      * @return A list of edges forming the shortest path
      */
     public List<OsmEdge> getRouteEdges() {
-    	if (this.changeNodes || path==null)
-    	{
-    		path=this.routingGraph.applyAlgorithm(nodes, Algorithm.ROUTING_ALG_DIJKSTRA);
-    		this.changeNodes=false;
-    	}
-    	return path;
+        if (this.changeNodes || path==null)
+        {
+            path=this.routingGraph.applyAlgorithm(nodes, Algorithm.ROUTING_ALG_DIJKSTRA);
+            this.changeNodes=false;
+        }
+        return path;
     }
 
     /**
      * Marks that some node or the node order has changed so the path should be computed again
      */
     public void setNodesChanged() {
-    	this.changeNodes = true;
+        this.changeNodes = true;
     }
 
     /**

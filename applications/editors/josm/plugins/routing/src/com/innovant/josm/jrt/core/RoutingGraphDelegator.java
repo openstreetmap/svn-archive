@@ -18,43 +18,43 @@ import com.innovant.josm.jrt.osm.OsmEdge;
  */
 public class RoutingGraphDelegator extends GraphDelegator<Node, OsmEdge> {
 
-	/**
-	 * Logger.
-	 */
-	static Logger logger = Logger.getLogger(RoutingGraphDelegator.class);
-	
-	/**
-	 *
-	 */
-	private RouteType routeType;
-	
-	public RoutingGraphDelegator(Graph<Node, OsmEdge> arg0) {
-		super(arg0);
-	}
-	
+    /**
+     * Logger.
+     */
+    static Logger logger = Logger.getLogger(RoutingGraphDelegator.class);
+    
+    /**
+     *
+     */
+    private RouteType routeType;
+    
+    public RoutingGraphDelegator(Graph<Node, OsmEdge> arg0) {
+        super(arg0);
+    }
+    
 
-	public RouteType getRouteType() {
-		return routeType;
-	}
+    public RouteType getRouteType() {
+        return routeType;
+    }
 
-	public void setRouteType(RouteType routeType) {
-		this.routeType = routeType;
-	}
+    public void setRouteType(RouteType routeType) {
+        this.routeType = routeType;
+    }
 
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	public double getEdgeWeight(OsmEdge edge) {
-		double weight=Double.MAX_VALUE;
-		
-		if (routeType==RouteType.SHORTEST) weight=edge.getLength();
-		if (routeType==RouteType.FASTEST) weight=edge.getLength() / edge.getSpeed();
-		// Return the time spent to traverse the way
-		return weight;
-	}
+    @Override
+    public double getEdgeWeight(OsmEdge edge) {
+        double weight=Double.MAX_VALUE;
+        
+        if (routeType==RouteType.SHORTEST) weight=edge.getLength();
+        if (routeType==RouteType.FASTEST) weight=edge.getLength() / edge.getSpeed();
+        // Return the time spent to traverse the way
+        return weight;
+    }
 
 }

@@ -79,7 +79,7 @@ public class OpenLayersLayer extends Layer implements PreferenceChangedListener,
             new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
             new JSeparator(),
             // color,
-            new JMenuItem(new RenameLayerAction(associatedFile, this)),
+            new JMenuItem(new RenameLayerAction(getAssociatedFile(), this)),
             new JSeparator(),
             new JMenuItem(new LayerListPopup.InfoAction(this)) };
     }

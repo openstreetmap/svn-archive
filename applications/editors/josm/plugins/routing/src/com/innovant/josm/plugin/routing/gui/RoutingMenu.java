@@ -72,7 +72,7 @@ public class RoutingMenu extends JMenu {
      */
     public RoutingMenu(final String name) {
         MainMenu mm = Main.main.menu;
-        menu = mm.addMenu(name, KeyEvent.VK_R, mm.defaultMenuPos);
+        menu = mm.addMenu(name, KeyEvent.VK_O, mm.defaultMenuPos);
 
         startMI = new JMenuItem(tr("Add routing layer"));
         startMI.addActionListener(new ActionListener() {

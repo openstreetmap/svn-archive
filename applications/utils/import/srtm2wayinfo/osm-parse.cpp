@@ -1,9 +1,18 @@
+/** Minimalistic OSM parser.
+  * Only handles the attributes required for this project and ignores everything else.
+  */
 #include "osm-parse.h"
+
 #include <QString>
 #include <QFile>
 #include <QDebug>
+#include <stdio.h>
 
-void OsmData::parseFile(QString filename)
+/** Parse an OSM-XML file.
+  * This function is just a wrapper that creates an QFile object
+  * and calls parse(QFile *).
+  */
+void OsmData::parse(QString filename)
 {
     QFile f(filename);
     f.open(QIODevice::ReadOnly);
@@ -11,7 +20,9 @@ void OsmData::parseFile(QString filename)
     f.close();
 }
 
-#define WAYS
+/** Parse an OSM-XML file.
+  * Stores information about the parsed data in the "nodes" and "ways" arrays.
+  */
 void OsmData::parse(QFile *file)
 {
     bool keep = false;
@@ -21,12 +32,14 @@ void OsmData::parse(QFile *file)
     while (!xml.atEnd()) {
         xml.readNext();
         //qDebug() << "read element" << xml.name().toString() << xml.errorString() << file->errorString();
-		#ifdef WAYS
         if (xml.isEndElement() && xml.name() == "way") {
             if (keep) {
-				currentWay->nodes.squeeze();
+                currentWay->nodes.squeeze();
                 ways.append(currentWay);
-				nodes_referenced += currentWay->nodes.count();
+                foreach(int nodeid, currentWay->nodes) {
+                    nodes[nodeid].incUsageCounter();
+                }
+                nodes_referenced += currentWay->nodes.count();
                 kept++;
             } else {
                 delete currentWay;
@@ -35,7 +48,6 @@ void OsmData::parse(QFile *file)
             currentWay = 0;
             continue;
         }
-		#endif
 
         if (!xml.isStartElement()) continue;
 
@@ -49,13 +61,13 @@ void OsmData::parse(QFile *file)
         }
 
         if (xml.name() == "node") {
-            nodes[xml.attributes().value("id").toString().toInt()] = OsmNode(
+            int nodeid = xml.attributes().value("id").toString().toInt();
+            nodes[nodeid] = OsmNode(
                 xml.attributes().value("lat"),
                 xml.attributes().value("lon"));
             continue;
         }
 
-#ifdef WAYS
         if (xml.name() == "way") {
             keep = false;
             currentWay = new OsmWay(xml.attributes().value("id"));
@@ -64,17 +76,6 @@ void OsmData::parse(QFile *file)
         if (xml.name() == "nd") {
             currentWay->addNode(xml.attributes().value("ref"));
         }
-#endif
     }
     qDebug() << kept << discarded << nodes_referenced;
 }
-
-#if 0
-int main(void)
-{
-    OsmData data;
-    data.parseFile("/dev/stdin");
-    qDebug() << data.nodes.count() << data.ways.count();
-	qDebug() << data.ways.capacity();
-}
-#endif

@@ -8,7 +8,7 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += osm-parse.h srtm.h
-SOURCES += osm-parse.cpp srtm.cpp
+HEADERS += osm-parse.h srtm.h main.h
+SOURCES += osm-parse.cpp srtm.cpp main.cpp
 QT           += network
 CONFIG += console debug

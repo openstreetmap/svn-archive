@@ -1,8 +1,8 @@
 #ifndef __OSM_PARSE_H__
 #define __OSM_PARSE_H__
 
-class QString;
 class QFile;
+
 #include <QObject>
 #include <QStringRef>
 #include <QList>
@@ -13,16 +13,26 @@ class QFile;
 #include <QXmlStreamReader>
 #include <QLinkedList>
 
+/** Stores information about an OSM node.
+  * Most functions should be defined in the header so the can be inlined
+  * because they will be called very often.
+  */
 class OsmNode
 {
     public:
-        OsmNode() { lat = 361; lon = 361; }
+        OsmNode() { lat_ = 361; lon_ = 361; used = 0;}
         OsmNode(QStringRef lat_ref, QStringRef lon_ref)
         {
-            lat = lat_ref.toString().toFloat();
-            lon = lon_ref.toString().toFloat();
+            lat_ = lat_ref.toString().toFloat();
+            lon_ = lon_ref.toString().toFloat();
+            used = 0;
         }
-        float lat, lon;
+        float lat() { return lat_; }
+        float lon() { return lon_; }
+        void incUsageCounter() {used++;}
+    private:
+        float lat_, lon_;
+        uint used;
 };
 
 class OsmWay
@@ -43,17 +53,16 @@ class OsmWay
 
 class OsmData
 {
-    private:
-            QStringList wayTags;
     public:
         OsmData() {
             wayTags << "highway";
         }
-        void parseFile(QString filename);
+        void parse(QString filename);
         void parse(QFile *file);
         QMap<int, OsmNode> nodes;
         QVector<OsmWay *> ways;
     private:
         OsmWay *currentWay;
+        QStringList wayTags;
 };
 #endif

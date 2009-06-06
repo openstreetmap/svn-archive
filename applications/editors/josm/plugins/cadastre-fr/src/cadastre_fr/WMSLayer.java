@@ -24,10 +24,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
-import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.Bounds;
@@ -45,7 +44,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
  */
 public class WMSLayer extends Layer {
 
-    Component[] component = null;  
+    Component[] component = null;
 
     public int lambertZone = -1;
 
@@ -53,25 +52,25 @@ public class WMSLayer extends Layer {
             CadastrePlugin.class.getResource("/images/cadastre_small.png")));
 
     protected ArrayList<GeorefImage> images = new ArrayList<GeorefImage>();
-    
+
     protected final int serializeFormatVersion = 2;
-    
+
     private ArrayList<EastNorthBound> dividedBbox = new ArrayList<EastNorthBound>();
-    
+
     private CacheControl cacheControl = null;
-    
+
     private String location = "";
 
     private String codeCommune = "";
-    
+
     private EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0,0), new EastNorth(0,0));
-    
+
     private boolean isRaster = false;
-    
+
     private EastNorth rasterMin;
-    
+
     private EastNorth rasterCenter;
-    
+
     private double rasterRatio;
 
     double cRasterMaxSizeX = 12286;
@@ -80,7 +79,7 @@ public class WMSLayer extends Layer {
     public WMSLayer() {
         this(tr("Blank Layer"), "", -1);
     }
-    
+
     public WMSLayer(String location, String codeCommune, int lambertZone) {
         super(buildName(location, codeCommune));
         this.location = location;
@@ -89,7 +88,7 @@ public class WMSLayer extends Layer {
         // enable auto-sourcing option
         CadastrePlugin.pluginUsed = true;
     }
-    
+
     private static String buildName(String location, String codeCommune) {
         String ret = new String(location.toUpperCase());
         if (codeCommune != null && !codeCommune.equals(""))
@@ -137,7 +136,7 @@ public class WMSLayer extends Layer {
     }
 
     /**
-     * 
+     *
      * @param b      the original bbox, usually the current bbox on screen
      * @param factor 1 = source bbox 1:1
      *               2 = source bbox divided by 2x2 smaller boxes
@@ -201,7 +200,7 @@ public class WMSLayer extends Layer {
     @Override
     public void paint(Graphics g, final MapView mv) {
         for (GeorefImage img : images)
-            img.paint((Graphics2D) g, mv, CadastrePlugin.backgroundTransparent, 
+            img.paint((Graphics2D) g, mv, CadastrePlugin.backgroundTransparent,
                     CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
     }
 
@@ -243,9 +242,9 @@ public class WMSLayer extends Layer {
         }
         return null;
     }
-    
+
     public boolean isOverlapping(Bounds bounds) {
-        GeorefImage georefImage = 
+        GeorefImage georefImage =
             new GeorefImage(new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB ), // not really important
             Main.proj.latlon2eastNorth(bounds.min),
             Main.proj.latlon2eastNorth(bounds.max));
@@ -261,7 +260,7 @@ public class WMSLayer extends Layer {
             getCacheControl().saveCache(image);
         }
     }
-    
+
     public void saveNewCache() {
         if (CacheControl.cacheEnabled) {
             getCacheControl().deleteCacheFile();
@@ -269,13 +268,13 @@ public class WMSLayer extends Layer {
                 getCacheControl().saveCache(image);
         }
     }
-    
+
     public CacheControl getCacheControl() {
         if (cacheControl == null)
             cacheControl = new CacheControl(this);
         return cacheControl;
     }
-    
+
     public class SaveWmsAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
 
@@ -284,7 +283,8 @@ public class WMSLayer extends Layer {
         }
 
         public void actionPerformed(ActionEvent ev) {
-            File f = openFileDialog(false);
+            File f = DiskAccessAction.createAndOpenSaveFileChooser(
+            tr("Save WMS layer"), ".wms");
             try {
                 FileOutputStream fos = new FileOutputStream(f);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -310,9 +310,11 @@ public class WMSLayer extends Layer {
         }
 
         public void actionPerformed(ActionEvent ev) {
-            File f = openFileDialog(true);
-            if (f == null)
-                return;
+            JFileChooser fc = DiskAccessAction.createAndOpenFileChooser(true,
+            false, tr("Load WMS layer"));
+            if(fc == null) return;
+            File f = fc.getSelectedFile();
+            if (f == null) return;
             try {
                 FileInputStream fis = new FileInputStream(f);
                 ObjectInputStream ois = new ObjectInputStream(fis);
@@ -339,53 +341,6 @@ public class WMSLayer extends Layer {
                 return;
             }
         }
-    }
-
-    protected static JFileChooser createAndOpenFileChooser(boolean open, boolean multiple) {
-        String curDir = Main.pref.get("lastDirectory");
-        if (curDir.equals(""))
-            curDir = ".";
-        JFileChooser fc = new JFileChooser(new File(curDir));
-        fc.setMultiSelectionEnabled(multiple);
-        for (int i = 0; i < ExtensionFileFilter.filters.length; ++i)
-            fc.addChoosableFileFilter(ExtensionFileFilter.filters[i]);
-        fc.setAcceptAllFileFilterUsed(true);
-
-        int answer = open ? fc.showOpenDialog(Main.parent) : fc.showSaveDialog(Main.parent);
-        if (answer != JFileChooser.APPROVE_OPTION)
-            return null;
-
-        if (!fc.getCurrentDirectory().getAbsolutePath().equals(curDir))
-            Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
-
-        if (!open) {
-            File file = fc.getSelectedFile();
-            if (file == null
-                    || (file.exists() && JOptionPane.YES_OPTION != JOptionPane.showConfirmDialog(Main.parent,
-                            tr("File exists. Overwrite?"), tr("Overwrite"), JOptionPane.YES_NO_OPTION)))
-                return null;
-        }
-
-        return fc;
-    }
-
-    public static File openFileDialog(boolean open) {
-        JFileChooser fc = createAndOpenFileChooser(open, false);
-        if (fc == null)
-            return null;
-
-        File file = fc.getSelectedFile();
-
-        String fn = file.getPath();
-        if (fn.indexOf('.') == -1) {
-            FileFilter ff = fc.getFileFilter();
-            if (ff instanceof ExtensionFileFilter)
-                fn = "." + ((ExtensionFileFilter) ff).defaultExtension;
-            else
-                fn += ".osm";
-            file = new File(fn);
-        }
-        return file;
     }
 
     /**
@@ -433,7 +388,7 @@ public class WMSLayer extends Layer {
 
     /**
      * Set the eastNorth position in rasterMin which is the 0,0 coordinate (bottom left corner).
-     * The bounds width is the raster width and height is calculate on a fixed image ratio. 
+     * The bounds width is the raster width and height is calculate on a fixed image ratio.
      * @param bounds
      */
     public void setRasterBounds(Bounds bounds) {
@@ -469,13 +424,13 @@ public class WMSLayer extends Layer {
         for (GeorefImage img : images)
             img.resize(rasterCenter, proportion);
     }
-    
+
     public void rotate(double angle) {
         this.rasterMin = rasterMin.rotate(rasterCenter, angle);
         for (GeorefImage img : images)
             img.rotate(rasterCenter, angle);
     }
-    
+
     /**
      * Repaint the LayerList dialog.
      * This is the only way I found to refresh the layer name in the layer list when it changes
@@ -490,7 +445,7 @@ public class WMSLayer extends Layer {
             }
         }
     }
-    
+
     /**
      * Called by CacheControl when a new cache file is created on disk
      * @param oos
@@ -502,7 +457,7 @@ public class WMSLayer extends Layer {
         oos.writeObject(this.codeCommune);
         oos.writeInt(this.lambertZone);
         oos.writeBoolean(this.isRaster);
-        if (this.isRaster) { 
+        if (this.isRaster) {
             oos.writeObject(this.rasterMin);
             oos.writeObject(this.rasterCenter);
             oos.writeDouble(this.rasterRatio);
@@ -513,7 +468,7 @@ public class WMSLayer extends Layer {
             oos.writeObject(img);
         }
     }
-    
+
     /**
      * Called by CacheControl when a cache file is read from disk
      * @param ois
@@ -531,7 +486,7 @@ public class WMSLayer extends Layer {
         this.setCodeCommune((String) ois.readObject());
         this.lambertZone = ois.readInt();
         this.isRaster = ois.readBoolean();
-        if (this.isRaster) { 
+        if (this.isRaster) {
             this.rasterMin = (EastNorth) ois.readObject();
             this.rasterCenter = (EastNorth) ois.readObject();
             this.rasterRatio = ois.readDouble();

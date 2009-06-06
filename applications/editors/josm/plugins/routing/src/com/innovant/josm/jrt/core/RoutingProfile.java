@@ -28,134 +28,134 @@ import org.openstreetmap.josm.Main;
  *
  */
 public class RoutingProfile {
-	/**
-	 * logger
-	 */
-	static Logger logger = Logger.getLogger(RoutingProfile.class);
-	/**
-	 * True if oneway is used for routing (i.e. for cars).
-	 */
-	private boolean useOneway;
+    /**
+     * logger
+     */
+    static Logger logger = Logger.getLogger(RoutingProfile.class);
+    /**
+     * True if oneway is used for routing (i.e. for cars).
+     */
+    private boolean useOneway;
 
-	/**
-	 * True if turn restrictions are used for routing (i.e. for cars).
-	 */
-	private boolean useRestrictions;
+    /**
+     * True if turn restrictions are used for routing (i.e. for cars).
+     */
+    private boolean useRestrictions;
 
-	/**
-	 * True if maximum allowed speed of ways is considered for routing (i.e. for cars).
-	 */
-	private boolean useMaxAllowedSpeed;
+    /**
+     * True if maximum allowed speed of ways is considered for routing (i.e. for cars).
+     */
+    private boolean useMaxAllowedSpeed;
 
-	/**
-	 * Name of the routing profile, for identification issues (i.e. "pedestrian").
-	 */
-	private String name;
+    /**
+     * Name of the routing profile, for identification issues (i.e. "pedestrian").
+     */
+    private String name;
 
-	/**
-	 * Holds traverse speed for each type of way, using the type as key.
-	 * A speed of zero means that this type of way cannot be traversed.
-	 */
-	private Map<String,Double> waySpeeds;
+    /**
+     * Holds traverse speed for each type of way, using the type as key.
+     * A speed of zero means that this type of way cannot be traversed.
+     */
+    private Map<String,Double> waySpeeds;
 
 
 
-	/**
-	 * Holds permission of use for each type of transport mode, using the mode as key.
-	 */
-	private Map<String,Boolean> allowedModes;
+    /**
+     * Holds permission of use for each type of transport mode, using the mode as key.
+     */
+    private Map<String,Boolean> allowedModes;
 
-	/**
-	 * Constructor
-	 * @param name The name for the routing profile. Please use a name that is
-	 * self descriptive, i.e., something that an application user would
-	 * understand (like "pedestrian", "motorbike", "bicycle", etc.)
-	 */
-	public RoutingProfile(String name) {
-		logger.debug("Init RoutingProfile with name: "+name);
-		this.name = name;
-		waySpeeds=new HashMap<String,Double>();
-		Map<String,String> prefs=Main.pref.getAllPrefix("routing.profile."+name+".speed");
-		for(String key:prefs.keySet()){
-			waySpeeds.put((key.split("\\.")[4]), Double.valueOf(prefs.get(key)));
-		}
-		for (String key:waySpeeds.keySet())
-			logger.debug(key+ "-- speed: "+waySpeeds.get(key));
-		logger.debug("End init RoutingProfile with name: "+name);
-	}
+    /**
+     * Constructor
+     * @param name The name for the routing profile. Please use a name that is
+     * self descriptive, i.e., something that an application user would
+     * understand (like "pedestrian", "motorbike", "bicycle", etc.)
+     */
+    public RoutingProfile(String name) {
+        logger.debug("Init RoutingProfile with name: "+name);
+        this.name = name;
+        waySpeeds=new HashMap<String,Double>();
+        Map<String,String> prefs=Main.pref.getAllPrefix("routing.profile."+name+".speed");
+        for(String key:prefs.keySet()){
+            waySpeeds.put((key.split("\\.")[4]), Double.valueOf(prefs.get(key)));
+        }
+        for (String key:waySpeeds.keySet())
+            logger.debug(key+ "-- speed: "+waySpeeds.get(key));
+        logger.debug("End init RoutingProfile with name: "+name);
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setOnewayUse(boolean useOneway) {
-		this.useOneway = useOneway;
-	}
+    public void setOnewayUse(boolean useOneway) {
+        this.useOneway = useOneway;
+    }
 
-	public boolean isOnewayUsed() {
-		return useOneway;
-	}
+    public boolean isOnewayUsed() {
+        return useOneway;
+    }
 
-	public void setRestrictionsUse(boolean useRestrictions) {
-		this.useRestrictions = useRestrictions;
-	}
+    public void setRestrictionsUse(boolean useRestrictions) {
+        this.useRestrictions = useRestrictions;
+    }
 
-	public boolean isRestrictionsUsed() {
-		return useRestrictions;
-	}
+    public boolean isRestrictionsUsed() {
+        return useRestrictions;
+    }
 
-	public void setMaxAllowedSpeedUse(boolean useMaxAllowedSpeed) {
-		this.useMaxAllowedSpeed = useMaxAllowedSpeed;
-	}
+    public void setMaxAllowedSpeedUse(boolean useMaxAllowedSpeed) {
+        this.useMaxAllowedSpeed = useMaxAllowedSpeed;
+    }
 
-	public boolean isMaxAllowedSpeedUsed() {
-		return useMaxAllowedSpeed;
-	}
+    public boolean isMaxAllowedSpeedUsed() {
+        return useMaxAllowedSpeed;
+    }
 
-	public void setWayTypeSpeed(String type, double speed) {
-		waySpeeds.put(type, speed);
-	}
+    public void setWayTypeSpeed(String type, double speed) {
+        waySpeeds.put(type, speed);
+    }
 
-	public void setTransportModePermission(String mode, boolean permission) {
-		allowedModes.put(mode, permission);
-	}
+    public void setTransportModePermission(String mode, boolean permission) {
+        allowedModes.put(mode, permission);
+    }
 
-	/**
-	 * Return whether the driving profile specifies that a particular type of way
-	 * can be traversed
-	 * @param type Key for the way type
-	 * @return True if the way type can be traversed
-	 */
-	public boolean isWayTypeAllowed(String type) {
-		if (waySpeeds.get(type) != 0.0)
-			return true;
-		return false;
-	}
+    /**
+     * Return whether the driving profile specifies that a particular type of way
+     * can be traversed
+     * @param type Key for the way type
+     * @return True if the way type can be traversed
+     */
+    public boolean isWayTypeAllowed(String type) {
+        if (waySpeeds.get(type) != 0.0)
+            return true;
+        return false;
+    }
 
-	/**
-	 * Return whether the driving profile specifies that a particular type of transport
-	 * mode can be used
-	 * @param mode Key for the way type
-	 * @return True if the way type can be traversed
-	 */
-	public boolean isTransportModeAllowed(String mode) {
-		return allowedModes.get(mode);
-	}
+    /**
+     * Return whether the driving profile specifies that a particular type of transport
+     * mode can be used
+     * @param mode Key for the way type
+     * @return True if the way type can be traversed
+     */
+    public boolean isTransportModeAllowed(String mode) {
+        return allowedModes.get(mode);
+    }
 
-	public double getSpeed(String key){
-		if(!waySpeeds.containsKey(key)) return 0.0;
-		return waySpeeds.get(key);
-	}
+    public double getSpeed(String key){
+        if(!waySpeeds.containsKey(key)) return 0.0;
+        return waySpeeds.get(key);
+    }
 
-	public Map<String, Double> getWaySpeeds() {
-		return waySpeeds;
-	}
+    public Map<String, Double> getWaySpeeds() {
+        return waySpeeds;
+    }
 
-	public void setWaySpeeds(Map<String, Double> waySpeeds) {
-		this.waySpeeds = waySpeeds;
-	}
+    public void setWaySpeeds(Map<String, Double> waySpeeds) {
+        this.waySpeeds = waySpeeds;
+    }
 }

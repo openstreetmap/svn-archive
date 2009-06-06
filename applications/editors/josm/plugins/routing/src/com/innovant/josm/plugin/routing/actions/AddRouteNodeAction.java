@@ -50,30 +50,30 @@ import com.innovant.josm.plugin.routing.gui.RoutingDialog;
  *
  */
 public class AddRouteNodeAction extends MapMode {
-	/**
-	 * Serial.
-	 */
-	private static final long serialVersionUID = 1L;
-	/**
-	 * Logger.
-	 */
-	static Logger logger = Logger.getLogger(AddRouteNodeAction.class);
-	/**
-	 * Routing Dialog.
-	 */
+    /**
+     * Serial.
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * Logger.
+     */
+    static Logger logger = Logger.getLogger(AddRouteNodeAction.class);
+    /**
+     * Routing Dialog.
+     */
     private RoutingDialog routingDialog;
 
     /**
      * Constructor
      * @param mapFrame
      */
-	public AddRouteNodeAction(MapFrame mapFrame) {
-		// TODO Use constructor with shortcut
-		super(tr("Routing"), "add",
-				tr("Click to add destination."),
-				mapFrame, ImageProvider.getCursor("crosshair", null));
+    public AddRouteNodeAction(MapFrame mapFrame) {
+        // TODO Use constructor with shortcut
+        super(tr("Routing"), "add",
+                tr("Click to add destination."),
+                mapFrame, ImageProvider.getCursor("crosshair", null));
         this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
-	}
+    }
 
     @Override public void enterMode() {
         super.enterMode();
@@ -88,19 +88,19 @@ public class AddRouteNodeAction extends MapMode {
     @Override public void mouseClicked(MouseEvent e) {
         // If left button is clicked
         if (e.getButton() == MouseEvent.BUTTON1) {
-        	// Search for nearest highway node
-        	Node node = null;
-        	if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-        		RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
-        		node = layer.getNearestHighwayNode(e.getPoint());
+            // Search for nearest highway node
+            Node node = null;
+            if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+                RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+                node = layer.getNearestHighwayNode(e.getPoint());
                 if(node == null) {
-                	logger.debug("no selected node");
+                    logger.debug("no selected node");
                     return;
                 }
                 logger.debug("selected node " + node);
                 layer.getRoutingModel().addNode(node);
                 routingDialog.addNode(node);
-        	}
+            }
         }
         Main.map.repaint();
     }

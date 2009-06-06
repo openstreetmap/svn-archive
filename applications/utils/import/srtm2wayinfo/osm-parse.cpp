@@ -1,4 +1,5 @@
-/** Minimalistic OSM parser.
+/** \file
+  * Minimalistic OSM parser.
   * Only handles the attributes required for this project and ignores everything else.
   */
 #include "osm-parse.h"
@@ -36,8 +37,8 @@ void OsmData::parse(QFile *file)
             if (keep) {
                 currentWay->nodes.squeeze();
                 ways.append(currentWay);
-                foreach(int nodeid, currentWay->nodes) {
-                    nodes[nodeid].incUsageCounter();
+                foreach(OsmNodeId nodeid, currentWay->nodes) {
+                    nodes[nodeid].incOrder();
                 }
                 nodes_referenced += currentWay->nodes.count();
                 kept++;
@@ -61,7 +62,7 @@ void OsmData::parse(QFile *file)
         }
 
         if (xml.name() == "node") {
-            int nodeid = xml.attributes().value("id").toString().toInt();
+            OsmNodeId nodeid = xml.attributes().value("id").toString().toInt();
             nodes[nodeid] = OsmNode(
                 xml.attributes().value("lat"),
                 xml.attributes().value("lon"));

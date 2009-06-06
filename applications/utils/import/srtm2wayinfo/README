@@ -2,12 +2,15 @@ This directory contains the Summer of Code 2009 project of Hermann Kraus.
 
 Compilation
 -----------
-cmake
+qmake
 make
 
 
 Documentation
 --------------
+This project is documented in doxygen format. Just run "doxygen" and
+you'll find docs in "docs/html".
+
 ftp://e0srp01u.ecs.nasa.gov/srtm/version2/Documentation/
 http://doc.trolltech.com/4.4/
 
@@ -19,3 +22,4 @@ TODO
 - Find a replacement for QFtp that doesn't need an event loop to run. libcurl?
 - Include a library for processing zip files
 - Write testcases
+- Make sure code is not locale depenend

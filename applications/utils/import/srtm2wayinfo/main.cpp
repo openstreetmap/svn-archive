@@ -2,6 +2,7 @@
 
 #include "srtm.h"
 #include "osm-parse.h"
+#include "relations.h"
 
 #include <QCoreApplication>
 
@@ -11,11 +12,17 @@ int main(int argc, char **argv)
 {
     app = new QCoreApplication(argc, argv);
     
-    OsmData data;
-    SRTMDownloader downloader;
+    SrtmDownloader downloader;
     downloader.loadFileList();
+
+    OsmData data;
+    data.parse("/dev/stdin");
 
     QFile output("output.xml");
     output.open(QIODevice::WriteOnly); //TODO: Error handling
-    data.parse("/dev/stdin");
+
+    RelationWriter writer(&data, &output);
+    writer.writeRelations();
+    
+    output.close();
 }

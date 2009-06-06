@@ -1,7 +1,16 @@
 #ifndef __OSM_PARSE_H__
 #define __OSM_PARSE_H__
 
+/** \file
+  * Minimalistic OSM parser.
+  * Only handles the attributes required for this project and ignores everything else.
+  */
+
 class QFile;
+
+typedef int OsmNodeId;
+typedef int OsmWayId;
+typedef int OsmRelationId;
 
 #include <QObject>
 #include <QStringRef>
@@ -16,23 +25,39 @@ class QFile;
 /** Stores information about an OSM node.
   * Most functions should be defined in the header so the can be inlined
   * because they will be called very often.
+  * This class should be optimized for storage size and can store different
+  * values together. All data is accessed via functions to allow unpacking of
+  * data.
   */
 class OsmNode
 {
     public:
-        OsmNode() { lat_ = 361; lon_ = 361; used = 0;}
+        /** Default constructor.
+          * Creates an invalid node.
+          * \note This function is required for QList<OsmNode>.
+          */
+        OsmNode() { lat_ = 361; lon_ = 361; order = 0;}
+        /** Constructor with initialisation.
+          * Takes the QStringRefs from the XML parser and constructs a node. */
         OsmNode(QStringRef lat_ref, QStringRef lon_ref)
         {
             lat_ = lat_ref.toString().toFloat();
             lon_ = lon_ref.toString().toFloat();
-            used = 0;
+            order = 0;
         }
+        /** Return latitude value. */
         float lat() { return lat_; }
+        /** Return longitude value. */
         float lon() { return lon_; }
-        void incUsageCounter() {used++;}
+        /** Increase order of this node.
+          * \note The counter is only required to count up to order 2, but is
+          * allowed to count up to any value. */
+        void incOrder() { order++; }
+        /** Check if a node is an intersection. */
+        bool isIntersection() { return order >= 2; }
     private:
         float lat_, lon_;
-        uint used;
+        uint order;
 };
 
 class OsmWay
@@ -47,8 +72,8 @@ class OsmWay
         {
             nodes.append(node_ref.toString().toInt());
         }
-        int id;
-        QVector<int> nodes;
+        OsmWayId id;
+        QVector<OsmNodeId> nodes;
 };
 
 class OsmData
@@ -59,7 +84,7 @@ class OsmData
         }
         void parse(QString filename);
         void parse(QFile *file);
-        QMap<int, OsmNode> nodes;
+        QMap<OsmNodeId, OsmNode> nodes;
         QVector<OsmWay *> ways;
     private:
         OsmWay *currentWay;

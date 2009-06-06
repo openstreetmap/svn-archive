@@ -9,13 +9,23 @@
 
 #define SRTM_DATA_VOID -32768
 
-class SRTMTile
+class SrtmTile
 {
     public:
-        SRTMTile(QString file, int lat, int lon);
+        SrtmTile(QString file, int lat, int lon);
         int getPixelValue(int x, int y);
         float getAltitudeFromLatLon(float lat, float lon);
     private:
+        /** Returns the weighted average of a and b.
+          *
+          * weight == 0 => a only
+          *
+          * weight == 1 => b only
+          *
+          * If one of the values is SRTM_DATA_VOID the other
+          * value is returned, if both void then SRTM_DATA_VOID
+          * is returned.
+          */
         float avg(float a, float b, float weight) {
             if (a == SRTM_DATA_VOID) return b;
             if (b == SRTM_DATA_VOID) return a;
@@ -29,15 +39,15 @@ class SRTMTile
         bool valid;
 };
 
-class SRTMDownloader : public QObject
+class SrtmDownloader : public QObject
 {
     Q_OBJECT
     public:
-        SRTMDownloader(QString server_="e0srp01u.ecs.nasa.gov",
+        SrtmDownloader(QString server_="e0srp01u.ecs.nasa.gov",
             QString directory_="/srtm/version2/SRTM3", QString cachedir_="cache");
         void createFileList();
         void loadFileList();
-        SRTMTile *getTile(float lat, float lon);
+        SrtmTile *getTile(float lat, float lon);
         QMap<int, QString> fileList;
         void downloadTile(QString filename);
         float getAltitudeFromLatLon(float lat, float lon);
@@ -49,7 +59,7 @@ class SRTMDownloader : public QObject
         int listCommand;
         QString currentContinent;
         QRegExp regex;
-        QCache<int, SRTMTile> tileCache;
+        QCache<int, SrtmTile> tileCache;
         int latLonToIndex(int lat, int lon) { return lat * 1000 + lon; }
         void connectFtp();
     public slots:

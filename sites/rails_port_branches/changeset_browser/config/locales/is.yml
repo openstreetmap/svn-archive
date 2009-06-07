@@ -1,0 +1,710 @@
+is:
+  activerecord:
+    # Translates all the model names, which is used in error handling on the web site
+    models:
+      acl: "Access Control List"
+      changeset: "Changeset"
+      changeset_tag: "Changeset Tag"
+      country: "Country"
+      diary_comment: "Diary Comment"
+      diary_entry: "Diary Entry"
+      friend: "Friend"
+      language: "Language"
+      message: "Message"
+      node: "Node"
+      node_tag: "Node Tag"
+      notifier: "Notifier"
+      old_node: "Old Node"
+      old_node_tag: "Old Node Tag"
+      old_relation: "Old Relation"
+      old_relation_member: "Old Relation Member"
+      old_relation_tag: "Old Relation Tag"
+      old_way: "Old Way"
+      old_way_node: "Old Way Node"
+      old_way_tag: "Old Way Tag"
+      relation: "Relation"
+      relation_member: "Relation Member"
+      relation_tag: "Relation Tag"
+      session: "Session"
+      trace: "Trace"
+      tracepoint: "Trace Point"
+      tracetag: "Trace Tag"
+      user: "User"
+      user_preference: "User Preference"
+      user_token: "User Token"
+      way: "Way"
+      way_node: "Way Node"
+      way_tag: "Way Tag"
+    # Translates all the model attributes, which is used in error handling on the web site
+    # Only the ones that are used on the web site are translated at the moment
+    attributes:
+      diary_comment:
+        body: "Body"
+      diary_entry:
+        user: "User"
+        title: "Title"
+        latitude: "Latitude"
+        longitude: "Longitude"
+        language: "Language"
+      friend:
+        user: "User"
+        friend: "Friend"
+      trace:
+        user: "User"
+        visible: "Visible"
+        name: "Name"
+        size: "Size"
+        latitude: "Latitude"
+        longitude: "Longitude"
+        public: "Public"
+        description: "Description"
+      message:
+        sender: "Sender"
+        title: "Title"
+        body: "Body"
+        recipient: "Recipient"
+      user:
+        email: "Tölvupóstfang"
+        active: "Active"
+        display_name: "Display Name"
+        description: "Description"
+        languages: "Tungumál"
+        pass_crypt: "Lykilorð"
+  map:
+    view: "Kort"
+    edit: "Breyta"
+    coordinates: "Hnit:"
+  browse:
+    changeset:
+      title: "Breytingarsett"
+      changeset: "Breytingarsett:"
+      download: "Niðurhala breytingunni á {{changeset_xml_link}} sniði eða á {{osmchange_xml_link}} sniði"
+      changesetxml: "Breytingarsetts XML"
+      osmchangexml: "osmChange XML"
+    changeset_details:
+      created_at: "Búið til:"
+      closed_at: "Lokað:"
+      belongs_to: "Höfundur:"
+      bounding_box: "Svæðismörk:"
+      no_bounding_box: "Engin svæðismörk voru vistuð ásamt þessu breytingarsetti."
+      show_area_box: "Sýna svæðismörk á aðalkorti"
+      box: "svæðismörk"
+      has_nodes: "Inniheldur {{node_count}} hnúta:"
+      has_ways: "Inniheldur {{way_count}} vegi:"
+      has_relations: "Inniheldur {{relation_count}} vensl:"
+    common_details: 
+      edited_at: "Breytt:"
+      edited_by: "Breytt af:"
+      version: "Útgáfa:"
+      in_changeset: "Í breytingarsetti:"
+    containing_relation:
+      relation: "Venslunum „{{relation_name}}“"
+      relation_as: "(sem {{relation_role}})"
+    map:
+      loading: "Hleð..."
+      deleted: "Eytt"
+      view_larger_map: "Skoða á stærra korti"
+    node_details:
+      coordinates: "Hnit: "
+      part_of: "Hluti af:"
+    node_history:
+      node_history: "Breytingarskrá hnúts"
+      download: "{{download_xml_link}} eða {{view_details_link}}"
+      download_xml: "Hala niður á XML sniði"
+      view_details: "sýna breytingarsögu"
+    node:
+      node: "Hnútur"
+      node_title: "Hnútur: {{node_name}}"
+      download: "{{download_xml_link}} eða {{view_history_link}}"
+      download_xml: "Hala niður á XML sniði"
+      view_history: "sýna breytingarsögu"
+    not_found:
+      sorry: "Því miður {{type}} með kennitöluna {{id}}."
+      type:
+        node: fannst ekki hnútur
+        way: fannst ekki vegur
+        relation: fundust ekki vensli
+    paging_nav:
+      showing_page: "Sýni síðu"
+      of: "af"
+    relation_details:
+      members: "Stök:"
+      part_of: "Hluti af:"
+    relation_history:
+      relation_history: "Breytingarskrá vensla "
+      relation_history_title: "Breytingarskrá vensla: {{relation_name}}"
+    relation_member:
+      as: "sem"
+    relation:
+      relation: "Vensl"
+      relation_title: "Vensl: {{relation_name}}"
+      download: "{{download_xml_link}} eða {{view_history_link}}"
+      download_xml: "Hala niður á XML sniði"
+      view_history: "sýna breytingarsögu"
+    start:
+      view_data: "Sýna gögn fyrir núverandi kortasýn"
+      manually_select: "Velja svæði á kortinu"
+    start_rjs:
+      data_frame_title: "Gögn"
+      zoom_or_select: "Þú verður að þysja að eða velja svæði á kortinu"
+      drag_a_box: "Teiknaðu kassa á kortið til að velja svæði"
+      manually_select: "Velja annað svæði á kortinu"
+      loaded_an_area_with_num_features: "Þú hefur valið svæði sem á eru {{num_features}} hlutir. Sumir vafrar höndla illa fleiri en 100 hluti í einu, en þú getur hlaðið þeim inn þrátt fyrir það ef þú telur þig geta höndlað það."
+      load_data: "Hlaða inn gögnum"
+      unable_to_load_size: "Gat ekki hlaðið gögnum: Svæði af stærðinni {{bbox_size}} er of stórt, svæðið verður að vera minna en {{max_bbox_size}}"
+      loading: "Hleð inn gögnum..."
+      show_history: "Sýna breytingarsögu"
+      wait: "Augnablik..."
+      history_for_feature: "Breytingarskrá fyrir {{feature}}"
+      details: "Nánar"
+      private_user: "ónafngreindum"
+      edited_by_user_at_timestamp: "Breytt af {{user}} klukkan {{timestamp}}"
+      object_list:
+        heading: "Hlutir"
+        back: "Aftur á listann yfir hluti á þessu svæði"
+        type:
+          node: "Hnúturinn"
+          way: "Vegurinn"
+        api: "Niðurhala þessu svæði úr forritunarviðmótinu"
+        details: "Nánar"
+        selected:
+          type:
+            node: "Hnútur {{id}}"
+            way: "Vegur {{id}}"
+            # There's no 'relation' type because it isn't represented in OpenLayers
+        history:
+          type:
+            node: "hnút {{id}}"
+            way: "veg {{id}}"
+            # There's no 'relation' type because it isn't represented in OpenLayers
+    tag_details:
+      tags: "Eigindi:"
+    way_details:
+      nodes: "Hnútar:"
+      part_of: "Hluti af:"
+      also_part_of:
+        one: "einnig hluti af {{related_ways}}"
+        other: "einnig hluti af {{related_ways}}"
+    way_history:
+      way_history: "Breytingarskrá vegs"
+      way_history_title: "Breytingarskrá vegs: {{way_name}}"
+      download: "{{download_xml_link}} eða {{view_details_link}}"
+      download_xml: "Hala niður á XML sniði"
+      view_details: "sýna breytingarsögu"
+    way:
+      way: "Veginum"
+      way_title: "Vegur: {{way_name}}"
+      download: "{{download_xml_link}} eða {{view_history_link}}"
+      download_xml: "Hala niður á XML sniði"
+      view_history: "sýna breytingarsögu"
+  changeset:
+    changeset_paging_nav: 
+      showing_page: "Sýni síðu"
+      of: "af"
+    changeset:
+      still_editing: "(enn að breyta)"
+      anonymous: "Ónafngreindur"
+      no_comment: "(engin)"
+      no_edits: "(engar breytingar)"
+      show_area_box: "sýna svæðismörk"
+      big_area: "(stórt)"
+      view_changeset_details: "Skoða breytingarsett"
+      more: "meira"
+    changesets:
+      id: "Kennitala"
+      saved_at: "Vistað"
+      user: "Notandi"
+      comment: "Athugasemd"
+      area: "Svæði"
+    list_bbox:
+      history: "Breytingarskrá"
+      changesets_within_the_area: "Breytingarsett innan svæðisins:"
+      show_area_box: "sýna svæðismörk"
+      no_changesets: "Engin breytingarsett"
+      all_changes_everywhere: "Sjá {{recent_changes_link}} óháð svæði"
+      recent_changes: "nýlegar breytingar"
+      no_area_specified: "Engin svæðsmörk tilgreind"
+      first_use_view: "Notaðu {{view_tab_link}} til að þysja á það svæði sem þú hefur áhuga á, farðu svo í breytingarskránna."
+      view_the_map: "Opna kortasjá"
+      view_tab: "kortasjánna"
+      alternatively_view: "Einnig er hægt að skoða allar {{recent_changes_link}}"
+    list:
+      recent_changes: "Nýlegar breytingar"
+      recently_edited_changesets: "Breytingarsettum sem var nýlega breytt:"
+      for_more_changesets: "Til að sjá fleiri breytingarsett veldu notanda og kannaðu breytingar hans, eða skoðaðu breytingarsöguna fyrir tiltekið svæði."
+    list_user:
+      edits_by_username: "Framlög {{username_link}}"
+      no_visible_edits_by: "Engin sýnileg framlög skráð á {{name}}."
+      for_all_changes: "Sjá {{recent_changes_link}} til að sjá breytingar eftir alla notendur"
+      recent_changes: "nýlegar breytingar"
+  diary_entry:
+    new:
+      title: "Ný bloggfærsla"
+    list:
+      title: "Blogg notenda"
+      user_title: "Blogg {{user}}"
+      new: "Ný bloggfærsla"
+      new_title: "Semja nýja færslu á bloggið þitt"
+      no_entries: "Engar bloggfærslur"
+      recent_entries: "Nýlegar færslur: "
+      older_entries: "Eldri færslur"
+      newer_entries: "Nýrri færslur"
+    edit:
+      title: "Breyta bloggfærslu"
+      subject: "Titill: "
+      body: "Texti: "
+      language: "Tungumál: "
+      location: "Staðsetning: "
+      latitude: "Lengdargráða: "
+      longitude: "Breiddargráða: "
+      use_map_link: "finna á korti"
+      save_button: "Vista"
+      marker_text: Diary entry location
+    view:
+      title: "Blogg | {{user}}"
+      user_title: "Blogg {{user}}"
+      leave_a_comment: "Bæta við athugasemd"
+      login_to_leave_a_comment: "{{login_link}} til að bæta við athugasemd"
+      login: "Innskráðu þig"
+      save_button: "Vista"
+    no_such_entry:
+      heading: "No entry with the id: {{id}}"
+      body: "Sorry, there is no diary entry or comment with the id {{id}}. Please check your spelling, or maybe the link you clicked is wrong."
+    no_such_user:
+      title: "Notandi ekki til"
+      heading: "Notandinn {{user}} er ekki til"
+      body: "Það er ekki til notandi með nafninu {{user}}. Kannski slóstu nafnið rangt inn eða fylgdir ógildum tengli."
+    diary_entry:
+      posted_by: "Sett inn af {{link_user}} klukkan {{created}} á {{language}}"
+      comment_link: "Bæta við athugasemd"
+      reply_link: "Senda höfund skilaboð"
+      comment_count:
+        one: "1 athugasemd"
+        other: "{{count}} athugasemdir"
+      edit_link: "Breyta þessari færslu"
+    diary_comment:
+      comment_from: "Athugasemd eftir {{link_user}} þann {{comment_created_at}}"
+  export:
+    start:
+      area_to_export: "Svæði til að niðurhala"
+      manually_select: "Velja annað svæði á kortinu"
+      format_to_export: "Skráasnið"
+      osm_xml_data: "OpenStreetMap XML gögn"
+      mapnik_image: "Mapnik mynd"
+      osmarender_image: "Osmarender mynd"
+      embeddable_html: "HTML til að bæta á vefsíðu"
+      licence: "Leyfi"
+      export_details: 'OpenStreetMap gögnin eru undir <a href="http://creativecommons.org/licenses/by-sa/2.0/">Creative Commons Attribution-ShareAlike 2.0 leyfinu</a>.'
+      options: "Valmöguleikar"
+      format: "Snið"
+      scale: "Skali"
+      max: "hámark"
+      image_size: "Stærð myndar:"
+      zoom: "Þys"
+      add_marker: "Bæta punkti á kortið"
+      latitude: "Lengdargráða:"
+      longitude: "Breiddargráða:"
+      output: "Úttak"
+      paste_html: "Notaðu þennan HTML kóða til að bæta kortinu á vefsíðu"
+      export_button: "Niðurhala"
+    start_rjs:
+      export: "Niðurhala"
+      drag_a_box: "Teiknaðu kassa á kortið til að velja svæði"
+      manually_select: "Velja annað svæði á kortinu"
+      click_add_marker: "Smelltu á kortið til að bæta við punkti"
+      change_marker: "Breyta staðsetningu punktsins"
+      add_marker: "Bæta við punkt á kortið"
+      view_larger_map: "View Larger Map"
+  geocoder:
+    results:
+      results: "Niðurstöður"
+      type_from_source: "{{type}} frá {{source_link}}"
+      no_results: "Ekkert fannst"
+  layouts:
+    welcome_user: "Hæ {{user_link}}"
+    inbox: "innhólf ({{size}})"
+    logout: "útskrá"
+    log_in: "innskrá"
+    sign_up: "búa til aðgang"
+    view: "Kort"
+    view_tooltip: "Kortasýn"
+    edit: "Breyta"
+    edit_tooltip: "Breyta kortagögnunum"
+    history: "Breytingarskrá"
+    history_tooltip: "Sjá skrá yfir breytingarsett"
+    export: "Niðurhala"
+    export_tooltip: "Niðurhala kortagögnum á hinum ýmsu sniðum"
+    gps_traces: "GPS ferlar"
+    gps_traces_tooltip: "Sjá alla GPS ferla"
+    user_diaries: "Blogg notenda"
+    user_diaries_tooltip: "Sjá blogg notenda"
+    tag_line: "Frjálsa wiki heimskortið"
+    intro_1: "OpenStreetMap er frjálst heimskort sem hver sem er getur breytt. Líka þú!"
+    intro_2: "OpenStreetMap gerir þér kleift að skoða, breyta og nota kortagögn í samvinnu við aðra."
+    intro_3: "Hýsíng verkefnisins er studd af {{ucl}} og {{bytemark}}."
+    osm_offline: "The OpenStreetMap database is currently offline while essential database maintenance work is carried out."
+    osm_read_only: "The OpenStreetMap database is currently in read-only mode while essential database maintenance work is carried out."
+    donate: "Support OpenStreetMap by {{link}} to the Hardware Upgrade Fund."
+    donate_link_text: donating
+    help_wiki: "Hjálp &amp; Wiki"
+    news_blog: "Fréttablogg"
+    shop: "Verslun"
+    sotm: 'Come to the 2009 OpenStreetMap Conference, The State of the Map, July 10-12 in Amsterdam!'
+    alt_donation: Make a Donation
+  notifier:
+    diary_comment_notification:
+      subject: "[OpenStreetMap] {{user}} bætti við athugasemd á bloggfærslu þína"
+      banner1: "*                        Ekki svara þessum pósti.                         *"
+      banner2: "*                Notaðu OpenStreetMap vefinn til að svara.                *"
+      hi: "Hæ {{to_user}},"
+      header: "{{from_user}} hefur bætt við athugasemd á OpenStreetMap bloggið þitt með titlinum „{{subject}}“:"
+      footer: "Þú getur einnig lesið athugasemdina á {{readurl}} og skrifað athugasemd á {{commenturl}} eða svarað á {{replyurl}}"
+    message_notification:
+      subject: "[OpenStreetMap] {{user}} sendi þér ný skilaboð"
+      banner1: "*                        Ekki svara þessum pósti.                         *"
+      banner2: "*                Notaðu OpenStreetMap vefinn til að svara.                *"
+      hi: "Hæ {{to_user}},"
+      header: "{{from_user}} hefur send þér skilaboð á OpenStreetMap með titlinum „{{subject}}“:"
+      footer1: "Þú getur einnig lesið skilaboðin á {{readurl}}"
+      footer2: "og svarað á {{replyurl}}"
+    friend_notification:
+      subject: "[OpenStreetMap] {{user}} bætti þér við sem vin"
+      had_added_you: "Notandinn {{user}} hefur bætt þér við sem vini á OpenStreetMap."
+      see_their_profile: "Þú getur séð notandasíðu notandans á {{userurl}} og jafnvel bætt honum við sem vini líka."
+    signup_confirm:
+      subject: "[OpenStreetMap] Staðfestu tölvupóstfangið þitt"
+    signup_confirm_plain:
+      greeting: "Hi there!"
+      hopefully_you: "Someone (hopefully you) would like to create an account over at"
+      # next two translations run-on : please word wrap appropriately
+      click_the_link_1: "If this is you, welcome! Please click the link below to confirm your"
+      click_the_link_2: "account and read on for more information about OpenStreetMap."
+      introductory_video: "You can watch an introductory video to OpenStreetMap here:"
+      more_videos: "There are more videos here:"
+      the_wiki: "Get reading about OpenStreetMap on the wiki:"
+      opengeodata: "OpenGeoData.org is OpenStreetMap's blog, and it has podcasts too:"
+      wiki_signup: "You may also want to sign up to the OpenStreetMap wiki at:"
+      # next four translations are in pairs : please word wrap appropriately
+      user_wiki_1: "It is recommended that you create a user wiki page, which includes"
+      user_wiki_2: "category tags noting where you are, such as [[Category:Users_in_London]]."
+      current_user_1: "A list of current users in categories, based on where in the world"
+      current_user_2: "they are, is available from:"
+    signup_confirm_html:
+      greeting: "Hi there!"
+      hopefully_you: "Someone (hopefully you) would like to create an account over at"
+      click_the_link: "If this is you, welcome! Please click the link below to confirm that account and read on for more information about OpenStreetMap"
+      introductory_video: "You can watch an {{introductory_video_link}}."
+      video_to_openstreetmap: "introductory video to OpenStreetMap"
+      more_videos: "There are {{more_videos_link}}."
+      more_videos_here: "more videos here"
+      get_reading: 'Get reading about OpenStreetMap <a href="http://wiki.openstreetmap.org/wiki/Beginners%27_Guide">on the wiki</p> or  <a href="http://www.opengeodata.org/">the opengeodata blog</a> which has <a href="http://www.opengeodata.org/?cat=13">podcasts to listen to</a> also!'
+      wiki_signup: 'You may also want to <a href="http://wiki.openstreetmap.org/index.php?title=Special:Userlogin&type=signup&returnto=Main_Page">sign up to the OpenStreetMap wiki</a>.'
+      user_wiki_page: 'It is recommended that you create a user wiki page, which includes category tags noting where you are, such as <a href="http://wiki.openstreetmap.org/wiki/Category:Users_in_London">[[Category:Users_in_London]]</a>.'
+      current_user: 'A list of current users in categories, based on where in the world they are, is available from <a href="http://wiki.openstreetmap.org/wiki/Category:Users_by_geographical_region">Category:Users_by_geographical_region</a>.'
+    email_confirm:
+      subject: "[OpenStreetMap] Staðfestu tölvupóstfangið þitt"
+    email_confirm_plain:
+      greeting: "Hæ,"
+      hopefully_you_1: "Einhver (vonandi þú) vill breyta tölvupóstfanginu sínu á"
+      hopefully_you_2: "{{server_url}} í {{new_address}}."
+      click_the_link: "Ef þú óskaðir eftir þessari breytingu fylgdu tenglinum hér fyrir neðan til að staðfesta breytinguna."
+    email_confirm_html:
+      greeting: "Hi,"
+      hopefully_you: "Einhver (vonandi þú) vill breyta tölvupóstfanginu sínu á {{server_url}} í {{new_address}}."
+      click_the_link: "Ef þú óskaðir eftir þessari breytingu fylgdu tenglinum hér fyrir neðan til að staðfesta breytinguna."
+    lost_password:
+      subject: "[OpenStreetMap] Beðni um að endurstilla lykilorð"
+    lost_password_plain:
+      greeting: "Hæ,"
+      hopefully_you_1: "Einhver (vonandi þú) hefur beðið um að endurstilla lykilorðið á reikningnum"
+      hopefully_you_2: "með þetta tölvupóstfang á openstreetmap.org"
+      click_the_link: "Ef þú óskaðir eftir þessari endurstillingu fylgdu tenglinum hér fyrir neðan til að staðfesta breytinguna."
+    lost_password_html:
+      greeting: "Hæ,"
+      hopefully_you: "Einhver (vonandi þú) hefur beðið um að endurstilla lykilorðið á reikningnum með þetta tölvupóstfang á openstreetmap.org"
+      click_the_link: "Ef þú óskaðir eftir þessari endurstillingu fylgdu tenglinum hér fyrir neðan til að staðfesta breytinguna."
+    reset_password:
+      subject: "[OpenStreetMap] Lykilorði breytt"
+    reset_password_plain:
+      greeting: "Hæ,"
+      reset: "Lykilorðinu þínu hefur verið breytt í {{new_password}}"
+    reset_password_html:
+      greeting: "Hæ,"
+      reset: "Lykilorðinu þínu hefur verið breytt í {{new_password}}"
+  message:
+    inbox:
+      title: "Innhólf"
+      my_inbox: "Mitt innhólf"
+      outbox: "úthólf"
+      you_have: "Þú hefur {{new_count}} ólesin skilaboð og {{old_count}} lesin skilaboð"
+      from: "Frá"
+      subject: "Titill"
+      date: "Dagsetning"
+      no_messages_yet: "You have no messages yet. Why not get in touch with some of the {{people_mapping_nearby_link}}?"
+      people_mapping_nearby: "people mapping nearby" 
+    message_summary:
+      unread_button: "Merkja sem ólesin"
+      read_button: "Merkja sem lesin"
+      reply_button: "Svara"
+    new:
+      title: "Send message"
+      send_message_to: "Senda skilaboð til {{name}}"
+      subject: "Titill"
+      body: "Texti"
+      send_button: "Senda"
+      back_to_inbox: "Aftur í innhólf"
+      message_sent: "Skilaboðin hafa verið send"
+    no_such_user:
+      title: "Notandi eða skilaboð ekki til"
+      heading: "Notandi eða skilaboð ekki til"
+      body: "Það eru engin skilaboð eða notandi til með nafni"
+    outbox:
+      title: "Úthólf"
+      my_inbox: "Mitt {{inbox_link}}"
+      inbox: "innhólf"
+      outbox: "úthólf"
+      you_have_sent_messages: "Þú hefur sent {{sent_count}} skeyti"
+      to: "Til"
+      subject: "Titill"
+      date: "Dags"
+      no_sent_messages: "Þú hefur ekki seint nein skeyti, hví ekki að hafa samband við einhverja {{people_mapping_nearby_link}}?"
+      people_mapping_nearby: "nálæga notendur"
+    read:
+      title: "Lesa skilaboð"
+      reading_your_messages: "Les móttekin skilaboð"
+      from: "Frá"
+      subject: "Titill"
+      date: "Dags"
+      reply_button: "Svara"
+      unread_button: "Merkja sem ólesin"
+      back_to_inbox: "Aftur í innhólf"
+      reading_your_sent_messages: "Les send skilaboð"
+      to: "Til"
+      back_to_outbox: "Aftur í úthólf"
+    mark:
+      as_read: "Skilaboðin voru merkt sem lesin"
+      as_unread: "Skilaboðin voru merkt sem ólesin"
+  site:
+    index:
+      home: "heim"
+      js_1: "You are either using a browser that doesn't support javascript, or you have disabled javascript."
+      js_2: "OpenStreetMap uses javascript for its slippy map."
+      js_3: 'You may want to try the <a href="http://tah.openstreetmap.org/Browse/">Tiles@Home static tile browser</a> if you are unable to enable javascript.'
+      permalink: "Varanlegur tengill"
+      license: "Licensed under the Creative Commons Attribution-Share Alike 2.0 license by the OpenStreetMap project and its contributors."
+    edit:
+      not_public: "You haven't set your edits to be public."
+      not_public_description: "You can no longer edit the map unless you do so. You can set your edits as public from your {{user_page}}."
+      user_page_link: user page
+      anon_edits: "({{link}})"
+      anon_edits_link: "http://wiki.openstreetmap.org/wiki/Disabling_anonymous_edits"
+      anon_edits_link_text: "Find out why this is the case."
+      flash_player_required: 'You need a Flash player to use Potlatch, the OpenStreetMap Flash editor. You can <a href="http://www.adobe.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash">download Flash Player from Adobe.com</a>. <a href="http://wiki.openstreetmap.org/wiki/Editing">Several other options</a> are also available for editing OpenStreetMap.'
+      potlatch_unsaved_changes: "You have unsaved changes. (To save in Potlatch, you should deselect the current way or point, if editing in list mode, or click save if you have a save button.)"
+    sidebar:
+      search_results: "Leitarniðurstöður"
+      close: "Loka"
+    search:
+      search: "Leita"
+      where_am_i: "Hvar er ég?"
+      submit_text: "Ok"
+      searching: "Leita..."
+      search_help: "dæmi: „Akureyri“, „Laugavegur, Reykjavík“ eða „post offices near Lünen“. Sjá einnig <a href='http://wiki.openstreetmap.org/wiki/Search'>leitarhjálpina</a>."
+    key:
+      map_key: "Kortaskýringar"
+  trace:
+    create:
+      upload_trace: "Upphala GPS feril"
+      trace_uploaded: "Your GPX file has been uploaded and is awaiting insertion in to the database. This will usually happen within half an hour, and an email will be sent to you on completion."
+    edit:
+      filename: "Filename:"
+      uploaded_at: "Uploaded at:"
+      points: "Points:"
+      start_coord: "Start coordinate:"
+      edit: "edit"
+      owner: "Owner:"
+      description: "Lýsing:"
+      tags: "Tögg:"
+      save_button: "Save Changes"
+    no_such_user:
+      title: "Notandi ekki til"
+      heading: "Notandinn {{user}} er ekki til"
+      body: "Það er ekki til notandi með nafninu {{user}}. Kannski slóstu nafnið rangt inn eða fylgdir ógildum tengli."
+    trace_form:
+      upload_gpx: "Upphala GPX skrá"
+      description: "Lýsing"
+      tags: "Tögg"
+      public: "Sjáanleg öðrum?"
+      upload_button: "Upphala"
+      help: "Hjálp"
+    trace_header:
+      see_just_your_traces: "Sýna aðeins þína ferla, eða hlaða upp feril"
+      see_all_traces: "Sjá alla ferla"
+      see_your_traces: "Sjá aðeins þína ferla"
+      traces_waiting: "You have {{count}} traces waiting for upload. Please consider waiting for these to finish before uploading any more, so as not to block the queue for other users."
+    trace_optionals:
+      tags: "Tögg"
+    view:
+      pending: "Í BIÐ"
+      filename: "Skráarnafn:"
+      download: "niðurhala"
+      uploaded: "Hlaðið upp:"
+      points: "Points:"
+      start_coordinates: "Byrjunarhnit:"
+      map: "kort"
+      edit: "breyta"
+      owner: "Eigandi:"
+      description: "Lýsing:"
+      tags: "Tögg"
+      none: "None"
+      make_public: "Gera þennan feril sjáanlegan öðrum til frambúðar"
+      edit_track: "Breyta"
+      delete_track: "Eyða"
+      viewing_trace: "Skoða ferilinn {{name}}"
+      trace_not_found: "Þessi ferill fannst ekki!"
+    trace_paging_nav:
+      showing: "Sýni síðu"
+      of: "af"
+    trace:
+      pending: "Í BIÐ"
+      count_points: "{{count}} punktar"
+      ago: "{{time_in_words_ago}} síðan"
+      more: "upplýsingar"
+      trace_details: "Sýna upplýsingar um ferilinn"
+      view_map: "Sjá kort"
+      edit: "breyta"
+      edit_map: "Breyta kortinu með ferilin til hliðsjónar"
+      public: "ALLIR SJÁ"
+      private: "BARA ÞÚ SÉRÐ"
+      by: "eftir"
+      in: "í"
+      map: "kort"
+    list:
+      public_traces: "Allir ferlar"
+      your_traces: "Þínir ferlar"
+      public_traces_from: "Ferlar eftir {{user}}"
+      tagged_with: " tagged with {{tags}}"
+    delete:
+      scheduled_for_deletion: "Þessum feril verður eitt"
+    make_public:
+      made_public: "Ferilinn var gerður sjáanlegur"
+  user:
+    login:
+      title: "Innskrá"
+      heading: "Innskrá"
+      please login: "Vinsamlegast innskráðu þig eða {{create_user_link}}."
+      create_account: "stofnaðu aðgang"
+      email or username: "Tölvupóstfang eða notandanafn: "
+      password: "Lykilorð: "
+      lost password link: "Gleymt lykilorð?"
+      login_button: "Innskrá"
+      account not active: "Þessi reikningur er ekki virkur.<br>Vinsamlegast smelltu á tengilinn í staðfestingarpóstinum sem þú fékkst til að virkja reikninginn."
+      auth failure: "Þetta notandanafn eða lykilorð er rangt."
+    lost_password:
+      title: "gleymt lykilorð"
+      heading: "Gleymt lykilorð?"
+      email address: "Tölvupóstfang:"
+      new password button: "Senda nýtt lykilorð með tölvupósti"
+      notice email on way: "Nýtt lykilorð er á leiðinni í innhólfið þitt."
+      notice email cannot find: "Þetta tölvupóstfang fannst ekki."
+    reset_password:
+      title: "lykilorð endurstillt"
+      flash changed check mail: "Nýtt lykilorð hefur verið búið til fyrir þig og sent til þín í pósti"
+      flash token bad: "Didn't find that token, check the URL maybe?"
+    new:
+      title: "Nýskrá"
+      heading: "Nýskrá"
+      no_auto_account_create: "Unfortunately we are not currently able to create an account for you automatically."
+      contact_webmaster: 'Please contact the <a href="mailto:webmaster@openstreetmap.org">webmaster</a> to arrange for an account to be created - we will try and deal with the request as quickly as possible. '
+      fill_form: "Filltu út þetta form og við munum senda þér tölvupóst svo þú getir virkjað reikninginn þinn."
+      license_agreement: 'Með því að búa til reikning samþykkiru að öll framlög þín til verkefnisins falli undir <a href="http://creativecommons.org/licenses/by-sa/2.0/">Creative Commons Attribution-Share Alike (BY-SA)</a> leyfið.'
+      email address: "Tölvupóstfang: "
+      confirm email address: "Staðfestu tölvupóstfang: "
+      not displayed publicly: 'Ekki sýnt opinberlega (sjá <a href="http://wiki.openstreetmap.org/wiki/Privacy_Policy" title="Meðferð persónuupplýsinga, þ.á.m. tölvupóstfanga">meðferð persónuupplýsinga</a>)'
+      display name: "Sýnilegt nafn: "
+      password: "Lykilorð: "
+      confirm password: "Staðfestu lykilorðið: "
+      signup: "Nýskrá"
+      flash create success message: "User was successfully created. Check your email for a confirmation note, and you\'ll be mapping in no time :-)<br /><br />Please note that you won't be able to login until you've received and confirmed your email address.<br /><br />If you use an antispam system which sends confirmation requests then please make sure you whitelist webmaster@openstreetmap.org as we are unable to reply to any confirmation requests."
+    no_such_user:
+      title: "Notandi ekki til"
+      heading: "Notandinn {{user}} er ekki til"
+      body: "Það er ekki til notandi með nafninu {{user}}. Kannski slóstu nafnið rangt inn eða fylgdir ógildum tengli."
+    view:
+      my diary: bloggið mitt
+      new diary entry: ný bloggfærsla
+      my edits: mínar breytingar
+      my traces: mínir ferlar
+      my settings: mínar stillingar
+      send message: senda póst
+      diary: blogg
+      edits: breytingar
+      traces: ferlar
+      remove as friend: fjarlægja sem vin
+      add as friend: bæta við sem vin
+      mapper since: "Notandi síðan: "
+      ago: "({{time_in_words_ago}} ago)"
+      user image heading: Notandamynd
+      delete image: Eyða myndinni
+      upload an image: Upphala mynd
+      add image: Upphala
+      description: Lýsing
+      user location: "Staðsetning"
+      no home location: "Engin staðsetning hefur verið stillt.."
+      if set location: "Ef þú vistar staðsetningu þína mun kortasjá birtast hér fyrir neðan með þér og nálægum notendum. Þú getur stillt staðsetninguna á {{settings_link}}."
+      settings_link_text: "stillingarsíðunni"
+      your friends: Vinir þínir
+      no friends: Þú átt enga vini
+      km away: "í {{distance}} km fjarlægð"
+      nearby users: "Nálægir notendur:"
+      no nearby users: "Engir notendur hafa stillt staðsetningu sína nálægt þér."
+      change your settings: "breyttu stillingunum þínum"
+    friend_map:
+      your location: Your location
+      nearby mapper: "Nearby mapper: "
+    account:
+      title: "Stillingar"
+      my settings: Mínar stillingar
+      email never displayed publicly: "(aldrei sýnt opinberlega)"
+      public editing:
+        heading: "Ónafngreindur notandi?: "
+        enabled: "Nei, nafngreindur og getur breytt gögnum."
+        enabled link: "http://wiki.openstreetmap.org/wiki/Disabling_anonymous_edits"
+        enabled link text: "nánar"
+        disabled: "Disabled and cannot edit data, all previous edits are anonymous."
+        disabled link text: "why can't I edit?"
+      profile description: "Lýsing á þér: "
+      preferred languages: "Viðmótstungumál: "
+      home location: "Staðsetning: "
+      no home location: "Þú hefur ekki stillt staðsetningu þína."
+      latitude: "Lengdargráða: "
+      longitude: "Breiddargráða: "
+      update home location on click: "Uppfæra staðsetninguna þegar ég smelli á kortið"
+      save changes button: "Vista breytingar"
+      make edits public button: Make all my edits public
+      return to profile: "Aftur á mína síðu"
+      flash update success confirm needed: "User information updated successfully. Check your email for a note to confirm your new email address."
+      flash update success: "Stillingarnar þínar voru uppfærðar."
+    confirm:
+      heading: "Staðfesta notanda"
+      press confirm button: "Hér getur þú staðfest að þú viljir búa til notanda.."
+      button: "Staðfesta"
+      success: "Notandinn þinn hefur verið staðfestur."
+      failure: "Notandi hefur þegar verið staðfestur með þessum lykli."
+    confirm_email:
+      heading: "Staðfesta breytingu á tölvupóstfangi"
+      press confirm button: "Hér getur þú staðfest breytingu á tölvupóstfangi."
+      button: "Staðfesta"
+      success: "Tölvupóstfangið þitt hefur verið staðfest."
+      failure: "Tölvupóstfanga hefur þegar verið staðfest með þessum lykli."
+    set_home:
+      flash success: "Home location saved successfully"
+    go_public:
+      flash success: "All your edits are now public, and you are now allowed to edit."
+    make_friend:
+      success: "{{name}} er núna vinur þinn."
+      failed: "Gat ekki bætt {{name}} á vinalistann þinn."
+      already_a_friend: "{{name}} er þegar vinur þinn."
+    remove_friend:
+      success: "{{name}} er ekki lengur vinur þinn."
+      not_a_friend: "{{name}} er ekki vinur þinn."

@@ -1,0 +1,63 @@
+<h2><%= h(@title) %></h2>
+
+  <% if @trace.inserted %>
+    <img src="<%= url_for :controller => 'trace', :action => 'picture', :id => @trace.id, :display_name => @trace.user.display_name %>">
+  <% else %>
+    <span style="color:red"><%= t'trace.view.pending' %></span>
+  <% end %>
+
+<table border="0">
+  <tr>
+    <td><%= t'trace.view.filename' %></td>
+    <td><%= @trace.name %> (<%= link_to t('trace.view.download'), :controller => 'trace', :action => 'data', :id => @trace.id %>)</td>
+  </tr> 
+  <tr>
+    <td><%= t'trace.view.uploaded' %></td>
+    <td><%= @trace.timestamp %></td>
+  </tr>
+  <% if @trace.inserted? %>
+  <tr>
+    <td><%= t'trace.view.points' %></td>
+    <td><%= @trace.size.to_s.gsub(/(\d)(?=(\d{3})+$)/,'\1,') %></td></tr>
+  <tr>
+    <td><%= t'trace.view.start_coordinates' %></td>
+    <td><div class="geo" style="display: inline"><span class="latitude"><%= @trace.latitude %></span>; <span class="longitude"><%= @trace.longitude %></span></div> (<%=link_to t('trace.view.map'), :controller => 'site', :action => 'index', :lat => @trace.latitude, :lon => @trace.longitude, :zoom => 14 %> / <%=link_to t('trace.view.edit'), :controller => 'site', :action => 'edit', :lat => @trace.latitude, :lon => @trace.longitude, :gpx=> @trace.id, :zoom => 14 %>)</td>
+  </tr>
+  <% end %>
+  <tr>
+    <td><%= t'trace.view.owner' %></td>
+    <td><%= link_to h(@trace.user.display_name), {:controller => 'user', :action => 'view', :display_name => @trace.user.display_name} %></td>
+  </tr>
+  <tr>
+    <td><%= t'trace.view.description' %></td>
+    <td><%= h(@trace.description) %></td>
+  </tr>
+  <tr>
+    <td><%= t'trace.view.tags' %></td>
+    <td>
+    <% if @trace.tags %>
+      <% @trace.tags.each do |tag| %>
+        <%= link_to tag.tag, { :controller => 'trace', :action => 'list', :tag => tag.tag, :id => nil } %>
+      <% end %>
+    <% else %>
+      <%= t'trace.view.none' %>
+    <% end %>
+    </td>
+  </tr>
+</table>
+
+<br /><br />
+
+<table>
+  <tr>
+    <% unless @trace.public? %>
+    <td><%= button_to t('trace.view.make_public'), :controller => 'trace', :action => 'make_public', :id => @trace.id %></td>
+    <% end %>
+    <% if @trace.user == @user %>
+    <td><%= button_to t('trace.view.edit_track'), :controller => 'trace', :action => 'edit', :id => @trace.id %></td>
+    <% end %>
+    <% if @trace.user == @user %>
+    <td><%= button_to t('trace.view.delete_track'), :controller => 'trace', :action => 'delete', :id => @trace.id %></td>
+    <% end %>
+  </tr>
+</table>

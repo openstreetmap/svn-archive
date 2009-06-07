@@ -1,6 +1,8 @@
 package org.openstreetmap.josm.plugins.czechaddress;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.List;
 import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
@@ -56,29 +58,54 @@ public abstract class StringUtils {
      * s2="Náměstí Svobody".</p>
      */
     public static boolean matchAbbrev(String s1, String s2) {
-        String[] parts1 = anglicize(s1).split(" +");
-        String[] parts2 = anglicize(s2).split(" +");
 
-        if (parts1.length != parts2.length)
+        s1 = anglicize(s1);
+        s2 = anglicize(s2);
+        List<Integer> beg1 = new ArrayList<Integer>(4);
+        List<Integer> beg2 = new ArrayList<Integer>(4);
+
+        char lastChar = ' ';
+        for (int i=0; i<s1.length(); i++) {
+            if (s1.charAt(i) != ' ' && lastChar == ' ')
+                beg1.add(i);
+            lastChar = s1.charAt(i);
+        }
+
+        lastChar = ' ';
+        for (int i=0; i<s2.length(); i++) {
+            if (s2.charAt(i) != ' ' && lastChar == ' ')
+                beg2.add(i);
+            lastChar = s2.charAt(i);
+        }
+
+        if (beg1.size() != beg2.size())
             return false;
 
-        for (int i=0; i<parts1.length; i++) {
-            String part1 = parts1[i];
-            String part2 = parts2[i];
+        for (int i=0; i<beg1.size(); i++) {
 
-            if (part1.charAt(part1.length()-1) == '.')
-                part1 = part1.substring(0, part1.length()-1);
+            int pos1 = beg1.get(i);
+            int pos2 = beg2.get(i);
 
-            if (part2.charAt(part2.length()-1) == '.')
-                part2 = part2.substring(0, part2.length()-1);
+            boolean doContinue = false;
+            while (pos1 < s1.length() && pos2 < s2.length()) {
+                if (s1.charAt(pos1) == '.' || s2.charAt(pos2) == '.')
+                    {doContinue = true; break;}
+                if (s1.charAt(pos1) == ' ' && s2.charAt(pos2) == ' ')
+                     {doContinue = true; break;}
 
-            int minLen = Math.min(part1.length(), part2.length());
-            part1 = part1.substring(0, minLen).toUpperCase();
-            part2 = part2.substring(0, minLen).toUpperCase();
+                if (Character.toUpperCase(s1.charAt(pos1)) !=
+                    Character.toUpperCase(s2.charAt(pos2)))
+                    return false;
 
-            if (!part1.equals(part2))
+                pos1++;
+                pos2++;
+            }
+            if (doContinue) continue;
+
+            if (pos1 >= s1.length() ^ pos2 >= s2.length())
                 return false;
         }
+        
         return true;
     }
 
@@ -92,28 +119,27 @@ public abstract class StringUtils {
      * @return capitaized string
      */
     public static String capitalize(String s) {
+        if (s == null) return null;
 
-        if (s == null)
-            return s;
-
-        String result = "";
-
+        char[] charr = s.toCharArray();
         char last = ' ';
-        for (char ch : s.toCharArray()) {
+        char ch = last;
+        for (int i=0; i<charr.length; i++) {
+            ch = charr[i];
             if ((last >= 'a') && (last <= 'ž') ||
                 (last >= 'A') && (last <= 'Ž'))
                 ch = Character.toLowerCase(ch);
             else
                 ch = Character.toTitleCase(ch);
 
-            last = ch;
-            result = result + ch;
+            last = charr[i] = ch;
         }
 
         String[] noCapitalize = { "Nad", "Pod", "U", "Na", "Z" };
+        String result = String.valueOf(charr);
+
         for (String noc : noCapitalize)
             result = result.replaceAll(" "+noc+" ", " "+noc.toLowerCase()+" ");
-
         return result;
     }
 
@@ -128,7 +154,7 @@ public abstract class StringUtils {
      */
     public static String anglicize(String str) {
         String strNFD = Normalizer.normalize(str, Normalizer.Form.NFD);
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(str.length());
         for (char ch : strNFD.toCharArray()) {
             if (Character.getType(ch) != Character.NON_SPACING_MARK) {
                 sb.append(ch);

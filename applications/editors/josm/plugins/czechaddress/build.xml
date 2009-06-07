@@ -1,35 +1,72 @@
 <project name="czechaddress" default="dist" basedir=".">
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="josm.classpath"         value="../../core/build"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+    <property name="plugin.manifest"        value="${plugin.build.dir}/org/openstreetmap/josm/plugins/czechaddress/MANIFEST.MF"/>
     <property name="ant.build.javac.target" value="1.5"/>
+
+
+
+    <target name="clean" description="Removes all build files and the plugins's jar">
+        <delete dir="${plugin.build.dir}"/>
+        <delete file="${plugin.jar}"/>
+    </target>
+
+
+
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
+        <mkdir dir="${plugin.dist.dir}"/>
     </target>
-    <target name="compile" depends="init">
-        <echo message="creating ${plugin.jar}"/>
-        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+
+
+
+    <target name="compile" depends="init"
+            description="Compile the plugin and make it ready for running">
+
+        <fail message="You must firstly compile the JOSM itself"><condition><not>
+            <resourcecount count="1" when="ge">
+                <fileset id="josm" dir="${josm.classpath}"/>
+            </resourcecount>
+        </not></condition></fail>
+
+        <javac srcdir="src"
+               classpath="${josm}"
+               debug="true"
+               destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
-    </target>
-    <target name="dist" depends="compile,revision">
+
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-          <manifest>
-                <attribute name="Author" value="Radomír Černoch"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Creating and handling address nodes and buildings within Czech Republic."/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/SlippyMap"/>
-                <attribute name="Plugin-Mainversion" value="1607"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-        </jar>
+
+        <manifest file="${plugin.manifest}">
+            <attribute name="Author" value="Radomír Černoch"/>
+            <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin"/>
+            <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+            <attribute name="Plugin-Description" value="Creating and handling address nodes and buildings within Czech Republic."/>
+            <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/Cz:JOSM/Plugins/CzechAddress"/>
+            <attribute name="Plugin-Mainversion" value="1607"/>
+            <!--<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>-->
+            <attribute name="Plugin-Version" value="0.2.2"/>
+        </manifest>
+
     </target>
+
+
+
+    <target name="dist" depends="compile">
+        <jar destfile="${plugin.jar}"
+             basedir ="${plugin.build.dir}"
+             manifest="${plugin.build.dir}/org/openstreetmap/josm/plugins/czechaddress/MANIFEST.MF"/>
+    </target>
+
+
+
     <target name="revision">
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
@@ -40,17 +77,61 @@
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
     </target>
-    <target name="clean">
-        <delete dir="${plugin.build.dir}"/>
-        <delete file="${plugin.jar}"/>
-    </target>
+
+
+
     <target name="install" depends="dist">
         <property environment="env"/>
-        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
-            <and>
-                <os family="windows"/>
-            </and>
+        <condition property="josm.plugins.dir"
+                   value="${env.APPDATA}/JOSM/plugins"
+                   else="${user.home}/.josm/plugins">
+            <and><os family="windows"/></and>
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
+    </target>
+
+
+
+    <target name="run" depends="compile">
+        <fail message="You must firstly compile the JOSM itself"><condition><not>
+            <resourcecount count="1" when="gt">
+                <fileset id="josm" dir="${josm.classpath}" includes="*"/>
+            </resourcecount>
+        </not></condition></fail>
+
+        <java classname="JOSM" fork="true">
+            <jvmarg value="-Xmx1024m"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-ea"/>
+            <classpath>
+                <pathelement location="${plugin.build.dir}"/>
+                <pathelement path="${java.class.path}"/>
+            </classpath>
+            <classpath>
+                <pathelement location="${josm}"/>
+                <pathelement path="${java.class.path}"/>
+            </classpath>
+        </java>
+    </target>
+
+
+
+    <target name="profile" depends="compile" description="Profile CzechAddress">
+        <fail unless="netbeans.home">This target can only run inside the NetBeans IDE.</fail>
+        <nbprofiledirect>
+            <classpath><pathelement location="${plugin.build.dir}"/></classpath>
+        </nbprofiledirect>
+        <java classname="JOSM" fork="true">
+            <jvmarg value="${profiler.info.jvmargs.agent}"/>
+            <jvmarg value="-Xmx1024m"/>
+            <classpath>
+                <pathelement location="${plugin.build.dir}"/>
+                <pathelement path="${java.class.path}"/>
+            </classpath>
+            <classpath>
+                <pathelement location="${josm}"/>
+                <pathelement path="${java.class.path}"/>
+            </classpath>
+        </java>
     </target>
 </project>

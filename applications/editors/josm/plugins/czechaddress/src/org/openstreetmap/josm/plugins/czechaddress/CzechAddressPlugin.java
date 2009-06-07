@@ -68,7 +68,6 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
                 if (!name.startsWith(CzechAddressPlugin.class.getPackage().getName()))
                     continue;
 
-                System.err.println(name);
                 Logger.getLogger(name).setLevel(Level.FINE);
                 Logger.getLogger(name).addHandler(fileHandler);
             }
@@ -81,6 +80,12 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
     }
 
     public CzechAddressPlugin() {
+
+        /*boolean x;
+        x = StringUtils.matchAbbrev("Ahoj lidi", "Ahoj lidi");
+        System.out.println(x ? "Match" : "Differ");
+        x = StringUtils.matchAbbrev("Bož. Němcové", "Boženy Němca.");
+        System.out.println(x ? "Match" : "Differ");*/
 
         addStatusListener(this);
         
@@ -101,7 +106,8 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         parser.setStorageDir(getPluginDir());
 
         // Fill the database in separate thread.
-        Thread t = new Thread() { @Override public void run() {
+        Thread t = new Thread("CzechAddress: DB preload") {
+          @Override public void run() {
             super.run();
             try {
                parser.fillDatabase();

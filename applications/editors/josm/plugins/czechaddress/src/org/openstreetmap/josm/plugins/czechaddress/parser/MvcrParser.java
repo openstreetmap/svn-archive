@@ -39,6 +39,91 @@ public class MvcrParser extends XMLParser {
     public void startElement(String uri, String localName, String name,
                                 Attributes attributes) throws SAXException {
 
+        // ========== PARSING HOUSE ========== //
+        if (name.equals("a")) {
+
+            String cp = attributes.getValue("p");
+            String co = attributes.getValue("o");
+            if ((cp == null) && (co == null))
+                return;
+
+            ElementWithHouses    topElem = curStreet;
+            if (topElem == null) topElem = curSuburb;
+            if (topElem == null) topElem = curViToCi;
+            if (topElem == null) topElem = curRegion;
+
+            topElem.addHouse(new House(cp, co));
+            return;
+        }
+        
+        // ========== PARSING STREET ========== //
+        if (name.equals("ulice")) {
+            String nazev = attributes.getValue("nazev");
+
+            // If the street filter is on, apply it!
+            if (filStreet != null && !nazev.equals(filStreet)) {
+                curStreet = null;
+                return;
+            }
+
+            ElementWithStreets   topElem = curSuburb;
+            if (topElem == null) topElem = curViToCi;
+            if (topElem == null) topElem = curRegion;
+
+            //curStreet = topElem.findStreet(attributes.getValue("nazev"));
+            //if (curStreet == null) {
+                curStreet = new Street(capitalize(nazev));
+            //    System.out.println("Parser: " + curStreet);
+                topElem.addStreet(curStreet);
+            //}
+            return;
+        }
+
+        // ========== PARSING SUBURB ========== //
+        if (name.equals("cast")) {
+            if (curViToCi == null)
+                return;
+
+            String nazev = attributes.getValue("nazev");
+
+            // If the suburb filter is on, apply it!
+            if (filSuburb != null && !nazev.equals(filSuburb)) {
+                curSuburb = null;
+                curStreet = null;
+                return;
+            }
+
+            //curSuburb = curViToCi.findSuburb(attributes.getValue("nazev"));
+            //if (curSuburb == null) {
+                curSuburb = new Suburb(capitalize(nazev));
+            //    System.out.println("Parser: " + curSuburb);
+                curViToCi.addSuburb(curSuburb);
+            //}
+            return;
+        }
+
+        // ========== PARSING ViToCi ========== //
+        if (name.equals("obec")) {
+
+            String nazev = attributes.getValue("nazev");
+
+            // If the viToCi filter is on, apply it!
+            if (filViToCi != null && !nazev.equals(filViToCi)) {
+                curViToCi = null;
+                curSuburb = null;
+                curStreet = null;
+                return;
+            }
+
+            //curViToCi = curRegion.findViToCi(attributes.getValue("nazev"));
+            //if (curViToCi == null) {
+                curViToCi = new ViToCi(capitalize(nazev));
+            //    System.out.println("Parser: " + curViToCi);
+                curRegion.addViToCi(curViToCi);
+            //}
+            return;
+        }
+
         // ========== PARSING REGION ========== //
         if (name.equals("oblast")) {
 
@@ -64,87 +149,7 @@ public class MvcrParser extends XMLParser {
 
                 target.regions.add(curRegion);
             //}
-        }
-
-        // Everything must belong to some region
-        if (curRegion == null)
             return;
-
-        // ========== PARSING ViToCi ========== //
-        if (name.equals("obec")) {
-
-            // If the viToCi filter is on, apply it!
-            if (filViToCi != null && !attributes.getValue("nazev").equals(filViToCi)) {
-                curViToCi = null;
-                curSuburb = null;
-                curStreet = null;
-                return;
-            }
-
-            //curViToCi = curRegion.findViToCi(attributes.getValue("nazev"));
-            //if (curViToCi == null) {
-                curViToCi = new ViToCi(capitalize(attributes.getValue("nazev")));
-            //    System.out.println("Parser: " + curViToCi);
-                curRegion.addViToCi(curViToCi);
-            //}
-        }
-
-        // ========== PARSING SUBURB ========== //
-        if (name.equals("cast")) {
-            if (curViToCi == null)
-                return;
-
-            // If the suburb filter is on, apply it!
-            if (filSuburb != null && !attributes.getValue("nazev").equals(filSuburb)) {
-                curSuburb = null;
-                curStreet = null;
-                return;
-            }
-
-            //curSuburb = curViToCi.findSuburb(attributes.getValue("nazev"));
-            //if (curSuburb == null) {
-                curSuburb = new Suburb(capitalize(attributes.getValue("nazev")));
-            //    System.out.println("Parser: " + curSuburb);
-                curViToCi.addSuburb(curSuburb);
-            //}
-        }
-
-        // ========== PARSING STREET ========== //
-        if (name.equals("ulice")) {
-
-            // If the street filter is on, apply it!
-            if (filStreet != null && !attributes.getValue("nazev").equals(filStreet)) {
-                curStreet = null;
-                return;
-            }
-
-            ElementWithStreets   topElem = curSuburb;
-            if (topElem == null) topElem = curViToCi;
-            if (topElem == null) topElem = curRegion;
-
-            //curStreet = topElem.findStreet(attributes.getValue("nazev"));
-            //if (curStreet == null) {
-                curStreet = new Street(capitalize(attributes.getValue("nazev")));
-            //    System.out.println("Parser: " + curStreet);
-                topElem.addStreet(curStreet);
-            //}
-
-        }
-
-        // ========== PARSING HOUSE ========== //
-        if (name.equals("a")) {
-
-            if (   (attributes.getValue("p") == null)
-                && (attributes.getValue("o") == null))
-                return;
-
-            ElementWithHouses    topElem = curStreet;
-            if (topElem == null) topElem = curSuburb;
-            if (topElem == null) topElem = curViToCi;
-            if (topElem == null) topElem = curRegion;
-
-            topElem.addHouse(new House(attributes.getValue("p"),
-                                       attributes.getValue("o")));
         }
     }
 

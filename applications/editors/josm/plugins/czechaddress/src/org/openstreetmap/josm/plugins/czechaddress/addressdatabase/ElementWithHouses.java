@@ -17,7 +17,7 @@ public abstract class ElementWithHouses extends AddressElement {
         super(name);
     }
 
-    protected List<House> houses = new ArrayList<House>();
+    protected List<House> houses = new ArrayList<House>(30);
 
     /**
      * Inserts a new house into this element.

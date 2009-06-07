@@ -288,6 +288,7 @@
 		var rel = this;
 		var completeEdit = function() {
 			rel.setHighlight(false);
+			_root.windows.relation.box.properties.tidy();
 			_root.panel.properties.reinit();
 		};
 

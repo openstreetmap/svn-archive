@@ -544,7 +544,7 @@
 	PropertyWindow.prototype.tidy=function() {
 		var proparr=this.proparr;
 		for (var el in proparr) {
-			if (proparr[el]=='' || proparr[el].substr(0,6)=='(type ') { delete this.proparr[el]; }
+			if (proparr[el]=='' || proparr[el].substr(0,6)=='(type ' || !proparr[el]) { delete this.proparr[el]; }
 		}
 	};
 

@@ -158,9 +158,6 @@
 		whichWays();
 		_root.onEnterFrame=function() { everyFrame(); };
 	}
-	
-	// -----------------------------------------------------------------------
-	// Main start function
 
 	function setEditingStatus(str,col) {
 		_root.createEmptyMovieClip("status",62);
@@ -190,4 +187,21 @@
 		if (_root.sandbox) { _root.status._x-=60; }
 		_root.status._y=Stage.height-21; // panelheight-22;
 		// if (preferences.data.baselayer==2) { _root.status._y-=32; }
+	};
+
+	function establishConnections() {
+		_root.remote_read=new NetConnection();
+		_root.remote_read.connect(apiurl+'/read');
+		_root.remote_read.onStatus=function(info) {
+	        readError=true; 
+		    _root.panel.i_warning._visible=true;
+		};
+
+		_root.remote_write=new NetConnection();
+		_root.remote_write.connect(apiurl+'/write');
+		_root.remote_write.onStatus=function(info) {
+	        writeError=true;
+	 	    _root.panel.i_warning._visible=true;
+	        if (_root.uploading) { handleWarning(); }
+		};
 	};

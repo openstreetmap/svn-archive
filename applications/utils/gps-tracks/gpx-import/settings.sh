@@ -18,6 +18,12 @@ setting PATH_TRACES /home/osm/traces
 setting PATH_IMAGES /home/osm/images
 setting PATH_TEMPLATES templates/
 
+# PostgreSQL connection
+#setting PGSQL_HOST localhost
+#setting PGSQL_USER openstreetmap
+#setting PGSQL_DB openstreetmap
+#setting PGSQL_PASS openstreetmap
+
 # MySQL connection
 setting MYSQL_HOST localhost
 setting MYSQL_USER openstreetmap

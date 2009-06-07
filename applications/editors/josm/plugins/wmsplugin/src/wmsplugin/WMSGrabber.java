@@ -102,7 +102,7 @@ public class WMSGrabber extends Grabber {
     static public String getProjection(String baseURL, Boolean warn)
     {
         String projname = Main.proj.toCode();
-        if(projname.equals("EPSG:3785")) // don't use mercator code
+        if(Main.proj instanceof org.openstreetmap.josm.data.projection.Mercator) // don't use mercator code
             projname = "EPSG:4326";
         String res = "";
         try

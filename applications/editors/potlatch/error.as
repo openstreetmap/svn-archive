@@ -42,6 +42,7 @@
         var retry=(choice==iText('Retry','retry'));
 		if (writeError) {
 			// loop through all ways which are uploading, and reupload
+			if (retry) { establishConnections(); }
 			for (var q in _root.map.ways) {
 				if (_root.map.ways[q].uploading) {
 					_root.map.ways[q].uploading=_root.map.ways[q].clean=false;

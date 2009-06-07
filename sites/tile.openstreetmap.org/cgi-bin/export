@@ -12,6 +12,9 @@ import resource
 # Limit maximum CPU time
 # The Postscript output format can sometimes take hours
 resource.setrlimit(resource.RLIMIT_CPU,(300,300))
+# Limit memory usage
+# Some odd requests can cause extreme memory usage
+resource.setrlimit(resource.RLIMIT_AS,(4000000000, 4000000000))
 
 # Routine to output HTTP headers
 def output_headers(content_type, filename = "", length = 0):

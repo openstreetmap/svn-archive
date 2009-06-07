@@ -311,6 +311,11 @@ public class Reasoner {
      * Returns the Q value of the given primitive-element relation.
      */
     private int getQ(OsmPrimitive prim, AddressElement elem) {
+
+        // TODO: This is a workaround. We should not be here at all.
+        if (elemMatchIndex.get(elem) == null) return MATCH_NOMATCH;
+        if (primMatchIndex.get(prim) == null) return MATCH_NOMATCH;
+
         assert primMatchIndex.get(prim).get(elem)
             == elemMatchIndex.get(elem).get(prim);
 
@@ -465,14 +470,15 @@ public class Reasoner {
      */
     public Set<AddressElement> getCandidates(OsmPrimitive prim) {
 
+        Set<AddressElement> result = new HashSet<AddressElement>();
+        if (primMatchIndex.get(prim) == null) return result;
+
         int best = MATCH_NOMATCH;
         for (AddressElement elem : primMatchIndex.get(prim).keySet()) {
             int cand = primMatchIndex.get(prim).get(elem);
             if (best < cand)
                 best = cand;
         }
-
-        Set<AddressElement> result = new HashSet<AddressElement>();
 
         for (AddressElement elem : primMatchIndex.get(prim).keySet()) {
             int cand = primMatchIndex.get(prim).get(elem);
@@ -498,14 +504,15 @@ public class Reasoner {
      */
     public Set<OsmPrimitive> getCandidates(AddressElement elem) {
 
+        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
+        if (elemMatchIndex.get(elem) == null) return result;
+
         int best = MATCH_NOMATCH;
         for (OsmPrimitive prim : elemMatchIndex.get(elem).keySet()) {
             int cand = elemMatchIndex.get(elem).get(prim);
             if (best < cand)
                 best = cand;
         }
-
-        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
         
         for (OsmPrimitive prim : elemMatchIndex.get(elem).keySet()) {
             int cand = elemMatchIndex.get(elem).get(prim);
@@ -538,6 +545,7 @@ public class Reasoner {
             return primBestIndex.get(prim);
 
         Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
+        if (matches == null) return null;
         AddressElement bestE = null;
         int bestQ = MATCH_NOMATCH;
 
@@ -577,6 +585,7 @@ public class Reasoner {
             return elemBestIndex.get(elem);
 
         Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(elem);
+        if (matches == null) return null;
         OsmPrimitive bestE = null;
         int bestQ = MATCH_NOMATCH;
 

@@ -3,17 +3,17 @@ To build gpx-import:
 You will need a C compiler, and the following Debian/Ubuntu packages:
   zlib1g-dev libbz2-dev libarchive-dev libexpat1-dev libgd2-noxpm-dev
 
-If you're using PostgreSQL you need to change this line in src/Makefile:
-
     DB := mysql
-
-to this:
-
-    DB := postgres
 
 Then run:
 
-    make -C src
+    make DB=mysql -C src
+
+or:
+
+    make DB=postgres -C src
+
+depending on whether you're using a mysql or postgres database.
 
 Then edit settings.sh to suit your environment, and then run
 gpx-import:

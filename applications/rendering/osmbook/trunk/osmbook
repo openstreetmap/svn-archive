@@ -53,6 +53,8 @@ $proj->{'maxlat'}     	       = $opts{'My'} || $proj->{'maxlat'};
 $proj->{'datadir'}    	       = $opts{'D'}  || $proj->{'datadir'};
 $proj->{'gridwidth'}  	       = $opts{'n'}  || $proj->{'gridwidth'};
 $proj->{'grid-rule-file'}      = $opts{'R'}  || $proj->{'grid-rule-file'};
+$proj->{'subgrid-rule-file'}   = $opts{'S'}  || $proj->{'subgrid-rule-file'} ||
+                                 $proj->{'grid-rule-file'};
 $proj->{'overview-rule-file'}  = $opts{'O'}  || $proj->{'overview-rule-file'};
 $proj->{'latex-file'}          = $opts{'l'}  || $proj->{'latex-file'};
 
@@ -140,7 +142,26 @@ foreach my $y (reverse(1..$ygridnum)) {
 	my $maxx = $proj->{'minlon'} + ($x)*$segx;
 	my $maxy = $proj->{'minlat'} + ($y)*$segy;
 	
-	do_grid($gridsquare, $minx, $miny, $maxx, $maxy, $x, $y);
+	if ($gridinfo->{'grid'}{$gridsquare}{'subgrid'}) {
+	    my $numsubx = $gridinfo->{'grid'}{$gridsquare}{'subgrid'};
+	    my $numsuby = $gridinfo->{'grid'}{$gridsquare}{'subgrid'};
+	    foreach my $suby (reverse(0..($numsuby-1))) {
+		foreach my $subx (0..($numsubx-1)) {
+		    my $newminx = $minx + $subx * ($maxx-$minx)/$numsubx;
+		    my $newminy = $miny + $suby * ($maxy-$miny)/$numsuby;
+
+		    my $newmaxx = $minx + ($subx+1) * ($maxx-$minx)/$numsubx;
+		    my $newmaxy = $miny + ($suby+1) * ($maxy-$miny)/$numsuby;
+
+		    do_grid("$gridsquare-" . get_grid_num($subx, $suby),
+			    $newminx, $newminy,
+			    $newmaxx, $newmaxy, $x, $y,
+			    $proj->{'subgrid-rule-file'});
+		}
+	    }
+	} else {
+	    do_grid($gridsquare, $minx, $miny, $maxx, $maxy, $x, $y);
+	}
     }
 }
 
@@ -197,7 +218,9 @@ sub System {
 }
 
 sub do_grid {
-    my ($label, $minx, $miny, $maxx, $maxy, $x, $y) = @_;
+    my ($label, $minx, $miny, $maxx, $maxy, $x, $y, $rulefile) = @_;
+
+    $rulefile ||= $proj->{'grid-rule-file'};
 
     my $smosmfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.osm";
     my $osmfile = $smosmfile;
@@ -216,14 +239,14 @@ sub do_grid {
 
 
     # render the page
-    if (! -f $xmlfile || Stat($proj->{'grid-rule-file'}, $xmlfile)) {
+    if (! -f $xmlfile || Stat($rulefile, $xmlfile)) {
 	print STDERR "creating $xmlfile\n";
 
 	# sigh...  xmlstarlet already assumes the subdir for some reason
 	my $starfile = $osmfile;
 	$starfile =~ s/$proj->{'datadir'}\///;
 
-	open(I, $proj->{'grid-rule-file'});
+	open(I, $rulefile);
 	open(O,">$xmlfile");
 	while (<I>) {
 	    s/data.osm/$osmfile/;

@@ -2185,10 +2185,10 @@
 			
 			.tunnel { stroke-dasharray: 1.4, 1.4; }
 			
-			.railway-casing { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
-			.railway-1-core { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
-			.railway-2-core { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
-			.railway-core   { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
+			.railway-casing { stroke-linecap: butt; stroke-linejoin: round; fill: none; }
+			.railway-1-core { stroke-linecap: butt; stroke-linejoin: round; fill: none; }
+			.railway-2-core { stroke-linecap: butt; stroke-linejoin: round; fill: none; }
+			.railway-core   { stroke-linecap: butt; stroke-linejoin: round; fill: none; }
 
 			.railway-tunnel-ends {
 			stroke-opacity: 0;

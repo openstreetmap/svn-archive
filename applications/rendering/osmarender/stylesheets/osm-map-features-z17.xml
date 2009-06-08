@@ -3880,10 +3880,10 @@
 			.cutting-short-core        { stroke-width: 3.1px; stroke: #f8f8f8; stroke-dasharray: 1.1, 0.1; }
 			.cutting-middle-core       { stroke-width: 2.1px; stroke: #f8f8f8; stroke-dasharray: none; }
 
-			.railway-casing { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
-			.railway-1-core { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
-			.railway-2-core { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
-			.railway-core   { stroke-linecap: butt; stroke-linejoin: butt; fill: none; }
+			.railway-casing { stroke-linecap: butt; stroke-linejoin: round; fill: none; }
+			.railway-1-core { stroke-linecap: butt; stroke-linejoin: round; fill: none; }
+			.railway-2-core { stroke-linecap: butt; stroke-linejoin: round; fill: none; }
+			.railway-core   { stroke-linecap: butt; stroke-linejoin: round; fill: none; }
 
 			.railway-tunnel-ends {
 			stroke-opacity: 0;

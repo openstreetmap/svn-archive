@@ -45,22 +45,23 @@
 			if (retry) { establishConnections(); }
 			for (var q in _root.map.ways) {
 				if (_root.map.ways[q].uploading) {
-					_root.map.ways[q].uploading=_root.map.ways[q].clean=false;
-					var z=_root.map.ways[q].path; for (var i in z) {
-						_root.map.ways[q].path[i].uploading=false;
-					}
+					_root.map.ways[q].uploading=false;
+					_root.map.ways[q].clean=false;
+					var z=_root.map.ways[q].path; for (var i in z) { z[i].uploading=false; }
 					if (!_root.sandbox && retry) { _root.map.ways[q].upload(); }
 				}
 			}
 			for (var q in _root.map.relations) {
 				if (_root.map.relations[q].uploading) {
-					_root.map.relations[q].uploading=root.map.relations[q].clean=false;
+					_root.map.relations[q].uploading=false;
+					_root.map.relations[q].clean=false;
 					if (!_root.sandbox && retry) { _root.map.relations[q].upload(); }
 				}
 			}
 			for (var q in _root.map.pois) {
 				if (_root.map.pois[q].uploading) {
-					_root.map.pois[q].uploading=_root.map.pois[q].clean=false;
+					_root.map.pois[q].uploading=false;
+					_root.map.pois[q].clean=false;
 					if (!_root.sandbox && retry) { _root.map.pois[q].upload(); }
 				}
 			}

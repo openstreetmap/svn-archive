@@ -28,7 +28,7 @@
 				if (_root.map.ways[qway].path[qs]==this) {
 					waylist.push(qway); poslist.push(qs);
 					_root.map.ways[qway].path.splice(qs,1);
-					_root.map.ways[qway].deletednodes[this.id]=this.version;
+					if (this.id>0) { _root.map.ways[qway].deletednodes[this.id]=this.version; }
 					// needs to be in every way's .deletednodes - if it's just one, the API will refuse
 					// to delete it, because it's still in the other (not yet rewritten) way
 				}

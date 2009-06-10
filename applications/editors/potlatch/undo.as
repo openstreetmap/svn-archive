@@ -76,7 +76,7 @@
 			way.attr=params[1];
 			way.splitWay(params[3],params[2]);
 		} else {
-			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
+			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way.id)));
 			this.clear();
 		}
 	};
@@ -88,7 +88,7 @@
 		if (way1.mergeAtCommonPoint(way2)) {
 			way2.redraw(); way2.select();
 		} else {
-			handleError(-1,new Array(iText("Ways $1 and $2 don't share a common point any more, so I can't undo the split.",'error_nosharedpoint',way1,way2)));
+			handleError(-1,new Array(iText("Ways $1 and $2 don't share a common point any more, so I can't undo the split.",'error_nosharedpoint',way1.id,way2.id)));
 			this.clear();
 		}
 	};
@@ -98,7 +98,7 @@
 	
 	UndoStack.prototype.undo_waytags=function(params) {
 		var way=params[0]; if (!way) {
-			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
+			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way.id)));
 			this.clear(); return;
 		} else {
 			way.attr=params[1];
@@ -109,7 +109,7 @@
 	};
 	UndoStack.prototype.undo_pointtags=function(params) {
 		var way=params[0]; var point=params[1]; if (!way) {
-			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
+			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way.id)));
 			this.clear(); return;
 		} else {
 			way.path[point].attr=params[2];
@@ -172,7 +172,7 @@
 
 	UndoStack.prototype.undo_movenodes=function(params) {
 		var way=params[0]; if (!way) {
-			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
+			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way.id)));
 			this.clear(); return;
 		} else {
 			way.moveNodes(-params[1],-params[2]);
@@ -185,7 +185,7 @@
 
 	UndoStack.prototype.undo_reverse=function(params) {
 		var way=params[0]; if (!way) {
-			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way)));
+			handleError(-1,new Array(iText("Way $1 cannot be found (perhaps you've panned away?) so I can't undo.",'error_noway',way.id)));
 			this.clear(); return;
 		} else {
 			way.reverseWay();

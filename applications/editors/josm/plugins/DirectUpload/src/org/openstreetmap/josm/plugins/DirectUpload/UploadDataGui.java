@@ -59,11 +59,14 @@ public class UploadDataGui extends ExtendedDialog {
     private String password = Main.pref.get("osm-server.password");
 
     // Fields are declared here for easy access
-    private JMultilineLabel OutputDisplay = new JMultilineLabel("");
-    private JTextField descriptionField = new JTextField();
-    private JTextField tagsField = new JTextField();
+    // Do not remove the space in JMultilineLabel. Otherwise the label will be empty
+    // as we don't know its contents yet and therefore have a height of 0. This will
+    // lead to unnecessary scrollbars.
+    private JMultilineLabel OutputDisplay = new JMultilineLabel(" ");
+    private JTextField descriptionField = new JTextField(50);
+    private JTextField tagsField = new JTextField(50);
     private JCheckBox publicCheckbox = new JCheckBox();
-    
+
     // Constants used when generating upload request
     private static final String API_VERSION = "0.6";
     private static final String BOUNDARY = "----------------------------d10f7aa230e8";
@@ -73,7 +76,7 @@ public class UploadDataGui extends ExtendedDialog {
     // Filename and current date. Date will be used as fallback if filename not available
     private String datename = new SimpleDateFormat("yyMMddHHmmss").format(new Date());
     private String filename = "";
-    
+
     private boolean cancelled = false;
 
     public UploadDataGui() {
@@ -85,15 +88,12 @@ public class UploadDataGui extends ExtendedDialog {
         );
         JPanel content = initComponents();
         autoSelectTrace();
-        
-        contentConstraints = GBC.eol().fill().insets(5,10,5,0);
+
         setupDialog(content, new String[] { "uploadtrace.png", "cancel.png" });
-        
+
         buttons.get(0).setEnabled(!checkForGPXLayer());
-        
-        setSize(findMaxDialogSize());
     }
-    
+
     /**
      * Sets up the dialog window elements
      * @return JPanel with components
@@ -108,8 +108,7 @@ public class UploadDataGui extends ExtendedDialog {
         JLabel tagsLabel = new JLabel(tr("Tags"));
         tagsField.setToolTipText(tr("Please enter tags about your trace."));
 
-        JPanel p = new JPanel();
-        p.setLayout(new GridBagLayout());
+        JPanel p = new JPanel(new GridBagLayout());
 
         OutputDisplay.setMaxWidth(findMaxDialogSize().width-10);
         p.add(OutputDisplay, GBC.eol());
@@ -124,7 +123,7 @@ public class UploadDataGui extends ExtendedDialog {
 
         return p;
     }
-    
+
     /**
      * This function will automatically select a GPX layer if it's the only one.
      * If a GPX layer is found, its filename will be parsed and displayed
@@ -167,42 +166,42 @@ public class UploadDataGui extends ExtendedDialog {
     private void upload(String description, String tags, Boolean isPublic, GpxData gpxData) throws IOException {
         if(checkForErrors(username, password, description, gpxData))
             return;
-        
+
         // Clean description/tags from disallowed chars
         description = description.replaceAll("[&?/\\\\]"," ");
         tags = tags.replaceAll("[&?/\\\\.,;]"," ");
-        
+
         // Set progress dialog to indeterminate while connecting
         Main.pleaseWaitDlg.progress.setValue(0);
-        Main.pleaseWaitDlg.setIndeterminate(true); 
+        Main.pleaseWaitDlg.setIndeterminate(true);
         Main.pleaseWaitDlg.currentAction.setText(tr("Connecting..."));
 
         try {
             // Generate data for upload
-            ByteArrayOutputStream baos  = new ByteArrayOutputStream();            
+            ByteArrayOutputStream baos  = new ByteArrayOutputStream();
             writeGpxFile(baos, "file", gpxData);
             writeField(baos, "description", description);
             writeField(baos, "tags", (tags != null && tags.length() > 0) ? tags : "");
             writeField(baos, "public", isPublic ? "1" : "0");
             writeString(baos, "--" + BOUNDARY + "--" + LINE_END);
-            
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());            
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             HttpURLConnection conn = setupConnection(baos.size());
-            
+
             Main.pleaseWaitDlg.progress.setMaximum(baos.size());
-            Main.pleaseWaitDlg.setIndeterminate(false); 
-            
+            Main.pleaseWaitDlg.setIndeterminate(false);
+
             try {
                 flushToServer(bais, conn.getOutputStream());
             } catch(Exception e) {}
-            
+
             if(cancelled) {
                 conn.disconnect();
                 OutputDisplay.setText(tr("Upload cancelled"));
                 buttons.get(0).setEnabled(true);
                 cancelled = false;
             } else {
-                boolean success = finishUpConnection(conn);            
+                boolean success = finishUpConnection(conn);
                 buttons.get(0).setEnabled(!success);
                 if(success)
                     buttons.get(1).setText(tr("Close"));
@@ -212,7 +211,7 @@ public class UploadDataGui extends ExtendedDialog {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * This function sets up the upload URL and logs in using the username and password given
      * in the preferences.
@@ -224,40 +223,40 @@ public class UploadDataGui extends ExtendedDialog {
         CharsetEncoder encoder = Charset.forName("UTF-8").newEncoder();
         String auth = username + ":" + password;
         ByteBuffer bytes = encoder.encode(CharBuffer.wrap(auth));
-        
+
         // Upload URL
         URL url = new URL("http://www.openstreetmap.org/api/" + API_VERSION + "/gpx/create");
-        
+
         // Set up connection and log in
         HttpURLConnection c = (HttpURLConnection) url.openConnection();
         c.setFixedLengthStreamingMode(contentLength);
         c.setConnectTimeout(15000);
         c.setRequestMethod("POST");
         c.setDoOutput(true);
-        c.addRequestProperty("Authorization", "Basic " + Base64.encode(bytes));            
+        c.addRequestProperty("Authorization", "Basic " + Base64.encode(bytes));
         c.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
         c.addRequestProperty("Connection", "close"); // counterpart of keep-alive
         c.addRequestProperty("Expect", "");
         c.connect();
-        
+
         return c;
     }
-    
+
     /**
      * This function checks if the given connection finished up fine, closes it and returns the result.
      * It also posts the result (or errors) to OutputDisplay.
-     
+
      * @param HttpURLConnection The connection to check/finish up
      */
     private boolean finishUpConnection(HttpURLConnection c) throws Exception {
         String returnMsg = c.getResponseMessage();
         boolean success = returnMsg.equals("OK");
-        
+
         if (c.getResponseCode() != 200) {
             if (c.getHeaderField("Error") != null)
                 returnMsg += "\n" + c.getHeaderField("Error");
         }
-        
+
         OutputDisplay.setText(success
             ? tr("GPX upload was successful")
             : tr("Upload failed. Server returned the following message: ") + returnMsg);
@@ -265,7 +264,7 @@ public class UploadDataGui extends ExtendedDialog {
         c.disconnect();
         return success;
     }
-    
+
     /**
      * Uploads a given InputStream to a given OutputStream and sets progress
      * @param InputSteam
@@ -273,27 +272,27 @@ public class UploadDataGui extends ExtendedDialog {
      */
     private void flushToServer(InputStream in, OutputStream out) throws Exception {
         // Upload in 10 kB chunks
-		byte[] buffer = new byte[10000];
-		int nread;
-		int cur = 0;
-		synchronized (in) {
-			while ((nread = in.read(buffer, 0, buffer.length)) >= 0) {
-				out.write(buffer, 0, nread);
-				cur += nread;
+        byte[] buffer = new byte[10000];
+        int nread;
+        int cur = 0;
+        synchronized (in) {
+            while ((nread = in.read(buffer, 0, buffer.length)) >= 0) {
+                out.write(buffer, 0, nread);
+                cur += nread;
                 out.flush();
                 Main.pleaseWaitDlg.progress.setValue(cur);
                 Main.pleaseWaitDlg.currentAction.setText(getProgressText(cur));
-                
+
                 if(cancelled)
                     break;
-			}
-		}
-		if(!cancelled)
+            }
+        }
+        if(!cancelled)
             out.flush();
         Main.pleaseWaitDlg.currentAction.setText("Waiting for server reply...");
-		buffer = null;
-	}
-    
+        buffer = null;
+    }
+
     /**
      * Generates the output string displayed in the PleaseWaitDialog.
      * @param int Bytes already uploaded
@@ -305,7 +304,7 @@ public class UploadDataGui extends ExtendedDialog {
         return tr("Uploading GPX track: {0}% ({1} of {2})",
                         percent, formatBytes(cur), formatBytes(max));
     }
-    
+
     /**
      * Nicely calculates given bytes into MB, kB and B (with units)
      * @param int Bytes
@@ -350,7 +349,7 @@ public class UploadDataGui extends ExtendedDialog {
     }
 
     /**
-     * Checks if a GPX layer is selected and returns the result. Also writes an error 
+     * Checks if a GPX layer is selected and returns the result. Also writes an error
      * message to OutputDisplay if result is false.
      * @return boolean True, if /no/ GPX layer is selected
      */
@@ -365,13 +364,13 @@ public class UploadDataGui extends ExtendedDialog {
         return false;
     }
 
-    
+
     /**
      * This creates the uploadTask that does the actual work and hands it to the main.worker to be executed.
      */
     private void setupUpload() {
         if(checkForGPXLayer()) return;
-        
+
         // Disable Upload button so users can't just upload that track again
         buttons.get(0).setEnabled(false);
 
@@ -388,10 +387,10 @@ public class UploadDataGui extends ExtendedDialog {
                 cancelled = true;
             }
         };
-        
+
         Main.worker.execute(uploadTask);
     }
-    
+
     /**
      * Writes textfields (like in webbrowser) to the given ByteArrayOutputStream
      * @param ByteArrayOutputStream
@@ -424,7 +423,7 @@ public class UploadDataGui extends ExtendedDialog {
         new GpxWriter(baos).write(gpxData);
         writeLineEnd(baos);
     }
-    
+
     /**
      * Writes a String to the given ByteArrayOutputStream
      * @param ByteArrayOutputStream
@@ -435,7 +434,7 @@ public class UploadDataGui extends ExtendedDialog {
             baos.write(s.getBytes());
         } catch(Exception e) {}
     }
-    
+
     /**
      * Writes a newline to the given ByteArrayOutputStream
      * @param ByteArrayOutputStream
@@ -443,7 +442,7 @@ public class UploadDataGui extends ExtendedDialog {
     private void writeLineEnd(ByteArrayOutputStream baos) {
         writeString(baos, LINE_END);
     }
-    
+
     /**
      * Writes a boundary line to the given ByteArrayOutputStream
      * @param ByteArrayOutputStream
@@ -452,7 +451,7 @@ public class UploadDataGui extends ExtendedDialog {
         writeString(baos, "--" + BOUNDARY);
         writeLineEnd(baos);
     }
-    
+
     /**
      * Returns the filename of the GPX file to be upload. If not available, returns current date
      * as an alternative
@@ -461,15 +460,7 @@ public class UploadDataGui extends ExtendedDialog {
     private String getFilename() {
        return filename.equals("") ? datename : filename;
     }
-    
-    /**
-     * Defines a default size for the dialog
-     */
-    @Override protected Dimension findMaxDialogSize() {
-        setResizable(false);
-        return new Dimension(300, 230);
-    }
-    
+
     /**
      * Overrides the default actions. Will not close the window when upload trace is clicked
      */

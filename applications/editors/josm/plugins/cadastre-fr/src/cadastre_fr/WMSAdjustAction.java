@@ -32,7 +32,7 @@ public class WMSAdjustAction extends MapMode implements
 
 	public WMSAdjustAction(MapFrame mapFrame) {
 		super(tr("Adjust WMS"), "adjustxywms", 
-						tr("Adjust the position of the WMS layer"), mapFrame, 
+						tr("Adjust the position of the WMS layer (raster images only)"), mapFrame, 
 						ImageProvider.getCursor("normal", "move"));
 	}
 
@@ -81,7 +81,7 @@ public class WMSAdjustAction extends MapMode implements
         else
             mode = Mode.moveXY;
         for (Layer layer : Main.map.mapView.getAllLayers()) {
-            if (layer.visible && layer instanceof WMSLayer) {
+            if (layer.visible && layer instanceof WMSLayer && ((WMSLayer)layer).isRaster()) {
                 prevEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
                 selectedLayer = ((WMSLayer) layer);
                 selectedImage = selectedLayer.findImage(prevEastNorth);

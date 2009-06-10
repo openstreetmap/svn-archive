@@ -4,11 +4,67 @@ use strict;
 use warnings;
 use GD;
 
+use Getopt::Long ();
+use Pod::Usage ();
+
 =head1 NAME
 
 generate-heatmap.pl - Make a 2^12 x 2^12 pixel heatmap of the world by looking at the size of z12 tiles
 
+=head1 SYNOPSIS
+
+    To generate the map, do:
+
+     wget http://tah.openstreetmap.org/media/filesizes.bz2
+     bzip2 -d filesizes.bz2
+     perl parse-filesize.pl filesizes > tile-sizes.dat
+     perl generate-heatmap.pl tile-sizes.dat > osm-heatmap.png
+
+=head1 DESCRIPTION
+
+This program generates a 4096x4096 PNG heatmap of the globe based on
+t@h tile sizes, see
+L<http://lists.openstreetmap.org/pipermail/tilesathome/2009-May/005858.html>
+
+=head1 OPTIONS
+
+=over
+
+=item --help
+
+This help message.
+
+=item --warp-size
+
+A bit of Perl code that will be evaluated to warp the size of the
+current tileset (given with the C<$size> variable) on a scale of 0-1.
+
+It has access to almost all the variables in the program, including:
+
+    $max     The maximum tileset size we've found
+    $min     The minimum tileset size we've found
+    $median  The median size of the tilesets
+
+=back
+
+=head1 LICENSE
+
+GNU general public licence (since that's what ViewCVS's heatmap subroutine was under)
+
+The output is CC-BY-SA 2.0 presumably if you source OSM data
+
 =cut
+
+Getopt::Long::Parser->new(
+        config => [ qw< bundling no_ignore_case no_require_order > ],
+)->getoptions(
+    'h|help' => \my $help,
+    'warp-size=s' => \my $warp_size,
+) or help();
+
+# --help
+help( verbose => 1, exitval => 0 )
+    if $help;
 
 my $from = 0;
 my $to   = 2**12-1;
@@ -94,12 +150,14 @@ sub parse_tile_size
 sub warp_size_for_heatmap
 {
     my $size = shift;
+    my $n;
 
-    # FIXME: This results in a very lousy distribution, the map is all
-    # blue
-    my $n = $size / ($median * 32);
-
-    $n = 0.95 if $n >= 1;
+    unless ($warp_size) {
+        $n = $size / ($median * 32);
+        $n = 0.95 if $n >= 1;
+    } else {
+        $n = eval $warp_size;
+    }
 
     return $n;
 }
@@ -129,4 +187,14 @@ sub heatmap {
         push @rgb => $y * 255;
     }
     map { int } @rgb;
+}
+
+sub help
+{
+    my %arg = @_;
+
+    Pod::Usage::pod2usage(
+        -verbose => $arg{ verbose },
+        -exitval => $arg{ exitval } || 0,
+    );
 }

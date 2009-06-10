@@ -4,3 +4,6 @@ Revisions
 
 27 May, 2009
 The script (in a very hacky way) now creates Karlsruhe Schema address ways beside the main ways
+
+10 Jun, 2009
+Some enhancements to the Karlsruhe ways:  They are now smoother and pulled back from the intersections to make things clearer.

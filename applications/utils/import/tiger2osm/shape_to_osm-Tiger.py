@@ -4,8 +4,8 @@
 # based on the Massachusetts GIS script by christopher schmidt
 
 #BUGS:
-# On very short ways, the first and last node of the address way may be swapped.
 # On very tight curves, a loop may be generated in the address way.
+# It would be nice if the ends of the address ways were not pulled back from dead ends
 
 VERSION="0.3"
 # Version 0.3 is optimized for the tiger road conversion
@@ -38,10 +38,10 @@ maxNodes = 300000
 Max_Waylength = 500
 
 # Sets the distance that the address ways should be from the main way, in feet.
-address_distance = 25
+address_distance = 30
 
 # Sets the distance that the ends of the address ways should be pulled back from the ends of the main way, in feet
-address_pullback = 40
+address_pullback = 45
 
 try:
     from osgeo import ogr
@@ -476,11 +476,27 @@ to_proj.SetWellKnownGeogCS( "EPSG:4326" )
 tr = osr.CoordinateTransformation( from_proj, to_proj )
 
 import math
+def length(segment, nodelist):
+    '''Returns the length (in feet) of a segment'''
+    first = True
+    distance = 0
+    lat_feet = 364613  #The approximate number of feet in one degree of latitude
+    for point in segment:
+        pointid, (lat, lon) = nodelist[ round_point( point ) ]
+        if first:
+            first = False
+	else:
+	    #The approximate number of feet in one degree of longitute
+            lrad = math.radians(lat)
+            lon_feet = 365527.822 * math.cos(lrad) - 306.75853 * math.cos(3 * lrad) + 0.3937 * math.cos(5 * lrad)
+	    distance += math.sqrt(((lat - previous[0])*lat_feet)**2 + ((lon - previous[1])*lon_feet)**2)
+	previous = (lat, lon)
+    return distance
+
 def addressways(waylist, nodelist, first_id):
     id = first_id
     awaylist = {}
     lat_feet = 364613  #The approximate number of feet in one degree of latitude
-    pullback = float(address_pullback)
     distance = float(address_distance)
     ret = []
     ret.append( "<?xml version='1.0' encoding='UTF-8'?>" )
@@ -494,6 +510,13 @@ def addressways(waylist, nodelist, first_id):
             lsegment = []
             rsegment = []
             lastpoint = None
+
+	    #Don't pull back the ends of very short ways too much
+	    seglength = length(segment, nodelist)
+	    if seglength < float(address_pullback) * 3.0:
+		pullback = seglength / 3.0
+	    else:
+                pullback = float(address_pullback)
             if "tiger:lfromadd" in waykey:
                 lfromadd = waykey["tiger:lfromadd"]
             else:

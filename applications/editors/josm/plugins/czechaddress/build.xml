@@ -23,7 +23,7 @@
 
 
 
-    <target name="compile" depends="init"
+    <target name="compile" depends="init,revision"
             description="Compile the plugin and make it ready for running">
 
         <fail message="You must firstly compile the JOSM itself"><condition><not>
@@ -52,7 +52,7 @@
             <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/Cz:JOSM/Plugins/CzechAddress"/>
             <attribute name="Plugin-Mainversion" value="1607"/>
             <!--<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>-->
-            <attribute name="Plugin-Version" value="0.2.2"/>
+            <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
         </manifest>
 
     </target>

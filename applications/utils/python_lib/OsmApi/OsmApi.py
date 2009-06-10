@@ -551,8 +551,8 @@ def RevertIfPossible(self, ChangesetId):
     """ Revert all changes if possible. """
     return
 
-## End of reverting tools                                                ##
-###########################################################################
-
 #z = OsmApi()
 #print RevertAnalyse(z, 912290)
+
+## End of reverting tools                                                ##
+###########################################################################

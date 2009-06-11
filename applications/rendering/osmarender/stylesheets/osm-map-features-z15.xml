@@ -123,6 +123,15 @@
 		<rule e="way" k="leisure" v="swimming_pool">
 			<area class="leisure-swimming-pool"/>
 		</rule>
+		<rule e="way" k="man_made" v="wastewater_plant" layer="-5" closed="yes">
+			<area class="man_made-wastewater" layer="-5"/>
+		</rule>
+		<rule e="way" k="man_made" v="wastewater_plant">
+			<symbol ref="wastewater" position="center"/>
+		</rule>
+		<rule e="node" k="man_made" v="wastewater_plant">
+			<symbol ref="wastewater" position="center"/>
+		</rule>
 		
 		<!-- Airports and runways -->
 		<rule e="way" k="aeroway" v="apron">
@@ -3411,6 +3420,10 @@
 			fill: #a0f0ff;
 			stroke: #00bcdf;
 			stroke-width: 0.4px;
+			}
+			
+			.man_made-wastewater {
+			fill: #e4e4e4;
 			}
 			
 			/* Power line */

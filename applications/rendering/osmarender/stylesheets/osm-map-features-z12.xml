@@ -78,6 +78,9 @@
 			<line class="leisure-track-casing"/>
 			<line class="leisure-track-core"/>
 		</rule>
+		<rule e="way" k="man_made" v="wastewater_plant" layer="-5" closed="yes">
+			<area class="man_made-wastewater" layer="-5"/>
+		</rule>
 		
 		<!-- Airports and runways -->
 		<rule e="way" k="aeroway" v="apron">
@@ -1855,6 +1858,10 @@
 			stroke: #808080;
 			stroke-dasharray: 0.3, 1.7;
 			opacity: 0.5;
+			}
+			
+			.man_made-wastewater {
+			fill: #e4e4e4;
 			}
 			
 			/* Tourism */

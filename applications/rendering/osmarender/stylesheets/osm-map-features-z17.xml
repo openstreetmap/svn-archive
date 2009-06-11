@@ -3130,6 +3130,15 @@
 		</rule>
 
 		<!-- Artificial landuse -->
+		<rule e="way" k="man_made" v="wastewater_plant" layer="-5" closed="yes">
+			<area class="man_made-wastewater" layer="-5"/>
+		</rule>
+		<rule e="way" k="man_made" v="wastewater_plant">
+			<symbol ref="wastewater" position="center"/>
+		</rule>
+		<rule e="node" k="man_made" v="wastewater_plant">
+			<symbol ref="wastewater" position="center"/>
+		</rule>
 		<rule e="way" k="amenity" v="school|college|university" layer="-5">
 			<area class="amenity-school" layer="-5"/>
 		</rule>
@@ -5069,6 +5078,10 @@
 
 			.man_made-lighthouse-caption-casing  { stroke-width: .5px;   font-size: 1px; }
 			.man_made-lighthouse-caption-core    { fill: #ec2d2d;        font-size: 1px; }
+
+			.man_made-wastewater {
+			fill: #e4e4e4;
+			}
 
 			.amenity-pub-caption-casing          { stroke-width: .5px;   font-size: 1px; }
 			.amenity-pub-caption-core            { fill: #ec2d2d;        font-size: 1px; }

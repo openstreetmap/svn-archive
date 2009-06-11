@@ -69,6 +69,8 @@ import org.openstreetmap.josm.data.projection.Lambert;
  * 1.0 18-Feb-2009 - fix various bugs in color management and preference dialog
  *                 - increase PNG picture size requested to WMS (800x1000)
  *                 - set 4th grab scale fixed size configurable (from 25 to 1000 meters)
+ * 1.1 11-Jun-2009 - fixed a null exception error when trying to displace a vectorized layer
+ *                 - propose to use shortcut F11 for grabbing
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "1.0";
@@ -187,6 +189,32 @@ public class CadastrePlugin extends Plugin {
             backgroundTransparent = false;
             transparency = 1.0f;
         }
+        // overwrite F11 shortcut used from the beginning by this plugin and recently used 
+        // for full-screen switch in JOSM core
+        int i = 0;
+        String p = Main.pref.get("shortcut.shortcut."+i, null);
+        boolean alreadyRedefined = false;
+        while (p != null) {
+            String[] s = p.split(";");
+            alreadyRedefined = alreadyRedefined || s[0].equals("menu:view:fullscreen");
+            i++;
+            p = Main.pref.get("shortcut.shortcut."+i, null);
+        }
+        if (!alreadyRedefined) {
+            int reply = JOptionPane.showConfirmDialog(null, 
+                    "Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"+
+                    "which is currently allocated for full-screen switch by default\n"+
+                    "Would you like to restore F11 for grab action ?",
+                    "Restore grab shortcut F11",
+                    JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.OK_OPTION) {
+                System.out.println("redefine fullscreen shortcut F11 to shift+F11");
+                Main.pref.put("shortcut.shortcut."+i, "menu:view:fullscreen;Toggle Full Screen view;122;5;122;64;false;true");
+                JOptionPane.showMessageDialog(Main.parent,tr("JOSM is stopped for the change to take effect."));
+                System.exit(0);
+            }
+        } else
+            System.out.println("shortcut F11 already redefined; do not change");
     }
 
     @Override

@@ -128,6 +128,9 @@
 		</rule>
 
 		<!-- Airports and runways -->
+		<rule e="way" k="aeroway" v="aerodrome" closed="yes">
+			<area class="aeroway-aerodrome"/>
+		</rule>
 		<rule e="way" k="aeroway" v="apron">
 			<area class="aeroway-apron"/>
 		</rule>
@@ -4342,6 +4345,12 @@
 			.highway-scramble-name                  { stroke-width: 0.5px;   fill: black;  font-size: 1.25px; }
 
 			/* Aeroways */
+			.aeroway-aerodrome {
+			stroke-width: 0.5px;
+			stroke: #000000;
+			fill: #d8dcce;
+			}
+
 			.aeroway-apron {
 			stroke-width: 0.3px;
 			stroke: none;

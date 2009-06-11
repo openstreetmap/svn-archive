@@ -970,12 +970,6 @@
                 stroke-width: 0.2px;
             }
 
-            .leisure-track {
-                fill: #bde3cb;
-                stroke: #6fc18e;
-                stroke-width: 0.2px;
-            }
-
             .sport {
                 fill: #bde3cb;
                 stroke: #6fc18e;

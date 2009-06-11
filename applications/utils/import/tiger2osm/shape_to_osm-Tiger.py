@@ -340,11 +340,6 @@ def parse_shp_for_osm( filename ):
         # WAY ID
         tags[iSource + ":way_id"] = int( poFeature.GetField("TLID") )
         
-        # FEATURE NAME
-        if poFeature.GetField("FULLNAME"):
-            #capitalizes the first letter of each word
-            tags["name"] = poFeature.GetField( "FULLNAME" )
-
 	# FEATURE IDENTIFICATION
         mtfcc = poFeature.GetField("MTFCC");
         if mtfcc != None:
@@ -363,6 +358,13 @@ def parse_shp_for_osm( filename ):
 		tags["route"] = "ferry"
 	    if mtfcc == "R1011":	#Railroad Feature (Main, Spur, or Yard)
 		tags["railway"] = "rail"
+		ttyp = poFeature.GetField("TTYP")
+		if ttyp != None:
+		    if ttyp == "S":
+		        tags["service"] = "spur"
+		    if ttyp == "Y":
+		        tags["service"] = "yard"
+	            tags["tiger:ttyp"] = ttyp
 	    if mtfcc == "R1051":	#Carline, Streetcar Track, Monorail, Other Mass Transit Rail)
 		tags["railway"] = "light_rail"
 	    if mtfcc == "R1052":	#Cog Rail Line, Incline Rail Line, Tram
@@ -379,7 +381,7 @@ def parse_shp_for_osm( filename ):
 		tags["highway"] = "motorway_link"
 	    if mtfcc == "S1640":	#Service Drive usually along a limited access highway
 		tags["highway"] = "service"
-	    if mtfcc == "S1710":
+	    if mtfcc == "S1710":	#Walkway/Pedestrian Trail
 		tags["highway"] = "path"
 	    if mtfcc == "S1720":
 		tags["highway"] = "steps"
@@ -401,6 +403,23 @@ def parse_shp_for_osm( filename ):
 	    if mtfcc == "S1830":	#Bridle Path
 		tags["highway"] = "bridleway"
 	    tags["tiger:mtfcc"] = mtfcc
+
+        # FEATURE NAME
+        if poFeature.GetField("FULLNAME"):
+            #capitalizes the first letter of each word
+            name = poFeature.GetField( "FULLNAME" )
+            tags["name"] = name
+
+	    #Attempt to guess highway grade
+	    if name[0:2] == "I-":
+		tags["highway"] = "motorway"
+	    if name[0:3] == "US ":
+		tags["highway"] = "primary"
+	    if name[0:3] == "US-":
+		tags["highway"] = "primary"
+	    if name[0:3] == "Hwy":
+		if tags["highway"] != "primary":
+		    tags["highway"] = "secondary"
 
         divroad = poFeature.GetField("DIVROAD")
         if divroad != None:

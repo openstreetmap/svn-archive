@@ -27,25 +27,28 @@
     interactive="no">
 
 
-    <!-- Select all nodes and ways (unless they have an osmarender:render=no tag) -->
-    <rule e="node|way" k="osmarender:render" v="~|yes">
+	<!-- Select all nodes and ways (unless they have an osmarender:render=no tag) -->
+	<rule e="node|way" k="osmarender:render" v="~|yes">
 
-        <!-- Draw land areas first -->
-        <rule e="way" k="natural" v="land">
-            <area class='natural-land' />
-        </rule>
-
-        <!-- Natural features -->
-        <rule e="way" k="natural" v="coastline">
-            <area class='natural-coastline'/>
-        </rule>
-		<rule e="way" k="natural" v="glacier">
-		   <line class='natural-glacier'/> 
+		<!-- Draw land areas first -->
+		<rule e="way" k="natural" v="land">
+			<area class='natural-land' />
 		</rule>
-        
+
+		<!-- Natural features -->
+		<rule e="way" k="natural" v="coastline">
+			<area class='natural-coastline'/>
+		</rule>
+		<rule e="way" k="natural" v="glacier">
+			<line class='natural-glacier'/>
+		</rule>
+
 		<!-- Airports and runways -->
+		<rule e="way" k="aeroway" v="aerodrome" closed="yes">
+			<area class='aeroway-aerodrome'/>
+		</rule>
 		<rule e="way" k="aeroway" v="apron">
-			<area class='aeroway-apron'/>			
+			<area class='aeroway-apron'/>
 		</rule>
 		<rule e="way" k="landuse" v="runway">
 			<rule e="way" k="use_status" v="~">
@@ -669,6 +672,12 @@
 
 
             /* Aeroways */
+            .aeroway-aerodrome {
+                stroke-width: 0.5px;
+                stroke: #000000;
+                fill: #d8dcce;
+            }
+
             .aeroway-apron {
                 stroke-width: 0.3px;
                 stroke: none;

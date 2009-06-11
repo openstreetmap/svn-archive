@@ -83,6 +83,9 @@
 		</rule>
 		
 		<!-- Airports and runways -->
+		<rule e="way" k="aeroway" v="aerodrome" closed="yes">
+			<area class="aeroway-aerodrome"/>
+		</rule>
 		<rule e="way" k="aeroway" v="apron">
 			<area class="aeroway apron"/>
 		</rule>
@@ -1432,6 +1435,12 @@
 			
 			
 			/* Aeroways */
+			.aeroway-aerodrome {
+			stroke-width: 0.5px;
+			stroke: #000000;
+			fill: #d8dcce;
+			}
+
 			.apron {
 			stroke-width: 0.3px;
 			stroke: none;

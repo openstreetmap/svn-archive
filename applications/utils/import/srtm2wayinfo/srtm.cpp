@@ -91,7 +91,9 @@ void SrtmDownloader::ftpListInfo(const QUrlInfo &info)
   */
 SrtmTile *SrtmDownloader::getTile(float lat, float lon)
 {
-    int index = latLonToIndex(int(lat), int(lon));
+    int intlat = int(floor(lat)), intlon = int(floor(lon));
+    //qDebug() << "downloading tile for" << lat << lon << intlat << intlon;
+    int index = latLonToIndex(intlat, intlon);
     SrtmTile *tile = tileCache[index];
 
     if (tile) return tile;
@@ -101,7 +103,7 @@ SrtmTile *SrtmDownloader::getTile(float lat, float lon)
         if (!QFile(cachedir + splitted[1]).exists()) {
             downloadTile(fileList[index]);
         }
-        tile = new SrtmTile(cachedir + splitted[1], int(lat), int(lon));
+        tile = new SrtmTile(cachedir + splitted[1], intlat, intlon);
         tileCache.insert(index, tile);
         Q_ASSERT(tileCache[index] != 0);
         return tile;
@@ -218,8 +220,8 @@ float SrtmTile::getAltitudeFromLatLon(float lat, float lon)
     lat -= this->lat;
     lon -= this->lon; //TODO: Does this work for negative values?
     Q_ASSERT(lat >= 0.0 && lat < 1.0 && lon >= 0.0 && lon < 1.0);
-    float x = lon * (size -1);
-    float y = lat * (size -1);
+    float x = lon * (size - 1);
+    float y = lat * (size - 1);
     /* Variable names:
         valueXY with X,Y as offset from calculated value, _ for average
     */

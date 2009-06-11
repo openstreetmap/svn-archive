@@ -27,9 +27,9 @@ void OsmData::parse(QString filename)
 void OsmData::parse(QFile *file)
 {
     bool keep = false;
-    int i = 0, kept = 0, discarded = 0, nodes_referenced = 0;
+    int i = 0;
+    //kept = 0, discarded = 0, nodes_referenced = 0;
     QXmlStreamReader xml(file);
-    qDebug() << "started parsing";
     while (!xml.atEnd()) {
         xml.readNext();
         //qDebug() << "read element" << xml.name().toString() << xml.errorString() << file->errorString();
@@ -40,11 +40,11 @@ void OsmData::parse(QFile *file)
                 foreach(OsmNodeId nodeid, currentWay->nodes) {
                     nodes[nodeid].incOrder();
                 }
-                nodes_referenced += currentWay->nodes.count();
-                kept++;
+                //nodes_referenced += currentWay->nodes.count();
+                //kept++;
             } else {
                 delete currentWay;
-                discarded++;
+                //discarded++;
             }
             currentWay = 0;
             continue;
@@ -78,5 +78,5 @@ void OsmData::parse(QFile *file)
             currentWay->addNode(xml.attributes().value("ref"));
         }
     }
-    qDebug() << kept << discarded << nodes_referenced;
+    //qDebug() << kept << discarded << nodes_referenced;
 }

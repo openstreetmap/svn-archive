@@ -58,22 +58,24 @@ public class WMSLayer extends Layer {
     JCheckBoxMenuItem startstop = new JCheckBoxMenuItem(tr("Automatic downloading"), true);
     protected JCheckBoxMenuItem alphaChannel = new JCheckBoxMenuItem(new ToggleAlphaAction());
     protected String baseURL;
+    protected String cookies;
     protected final int serializeFormatVersion = 4;
 
     private ExecutorService executor = null;
 
     public WMSLayer() {
-        this(tr("Blank Layer"), null);
+        this(tr("Blank Layer"), null, null);
         initializeImages();
         mv = Main.map.mapView;
     }
 
-    public WMSLayer(String name, String baseURL) {
+    public WMSLayer(String name, String baseURL, String cookies) {
         super(name);
         alphaChannel.setSelected(Main.pref.getBoolean("wmsplugin.alpha_channel"));
         background = true; /* set global background variable */
         initializeImages();
         this.baseURL = baseURL;
+        this.cookies = cookies;
         WMSGrabber.getProjection(baseURL, true);
         mv = Main.map.mapView;
         getPPD();
@@ -85,7 +87,7 @@ public class WMSLayer extends Layer {
     public void destroy() {
         try {
             executor.shutdown();
-        // Might not be initalized, so catch NullPointer as well
+            // Might not be initalized, so catch NullPointer as well
         } catch(Exception x) {}
     }
 
@@ -127,15 +129,12 @@ public class WMSLayer extends Layer {
 
     private Bounds XYtoBounds (int x, int y) {
         return new Bounds(
-            new LatLon( x * ImageSize / pixelPerDegree,
-                         y * ImageSize / pixelPerDegree),
-            new LatLon((x + 1) *  ImageSize / pixelPerDegree,
-                       (y + 1) * ImageSize / pixelPerDegree));
+            new LatLon(      x * ImageSize / pixelPerDegree,       y * ImageSize / pixelPerDegree),
+            new LatLon((x + 1) * ImageSize / pixelPerDegree, (y + 1) * ImageSize / pixelPerDegree));
     }
 
     private int modulo (int a, int b) {
-      if(a%b>=0)return a%b;
-      else return a%b+b;
+        return a % b >= 0 ? a%b : a%b+b;
     }
 
     protected Bounds bounds(){
@@ -179,10 +178,10 @@ public class WMSLayer extends Layer {
                     img.downloadingStarted = true;
                     img.image = null;
                     img.flushedResizedCachedInstance();
-                    Grabber gr = WMSPlugin.getGrabber(baseURL, XYtoBounds(x,y), Main.main.proj, pixelPerDegree, img, mv, this);
+                    Grabber gr = WMSPlugin.getGrabber(XYtoBounds(x,y), img, mv, this);
                     executor.submit(gr);
+                }
             }
-        }
     }
 
     @Override public void visitBoundingBox(BoundingXYVisitor v) {
@@ -219,9 +218,9 @@ public class WMSLayer extends Layer {
     public GeorefImage findImage(EastNorth eastNorth) {
         for(int x = 0; x<dax; ++x)
             for(int y = 0; y<day; ++y)
-                    if(images[x][y].image!=null && images[x][y].min!=null && images[x][y].max!=null)
-                        if(images[x][y].contains(eastNorth, dx, dy))
-                            return images[x][y];
+                if(images[x][y].image!=null && images[x][y].min!=null && images[x][y].max!=null)
+                    if(images[x][y].contains(eastNorth, dx, dy))
+                        return images[x][y];
         return null;
     }
 
@@ -293,8 +292,7 @@ public class WMSLayer extends Layer {
             super(tr("Save WMS layer to file"), ImageProvider.get("save"));
         }
         public void actionPerformed(ActionEvent ev) {
-            File f = DiskAccessAction.createAndOpenSaveFileChooser(
-            tr("Save WMS layer"), ".wms");
+            File f = DiskAccessAction.createAndOpenSaveFileChooser(tr("Save WMS layer"), ".wms");
             try
             {
                 FileOutputStream fos = new FileOutputStream(f);
@@ -322,7 +320,7 @@ public class WMSLayer extends Layer {
         }
         public void actionPerformed(ActionEvent ev) {
             JFileChooser fc = DiskAccessAction.createAndOpenFileChooser(true,
-            false, tr("Load WMS layer"));
+                    false, tr("Load WMS layer"));
             if(fc == null) return;
             File f = fc.getSelectedFile();
             if (f == null) return;
@@ -333,9 +331,9 @@ public class WMSLayer extends Layer {
                 int sfv = ois.readInt();
                 if (sfv != serializeFormatVersion) {
                     JOptionPane.showMessageDialog(Main.parent,
-                        tr("Unsupported WMS file version; found {0}, expected {1}", sfv, serializeFormatVersion),
-                        tr("File Format Error"),
-                        JOptionPane.ERROR_MESSAGE);
+                            tr("Unsupported WMS file version; found {0}, expected {1}", sfv, serializeFormatVersion),
+                            tr("File Format Error"),
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 startstop.setSelected(false);
@@ -354,9 +352,9 @@ public class WMSLayer extends Layer {
                 // FIXME be more specific
                 ex.printStackTrace(System.out);
                 JOptionPane.showMessageDialog(Main.parent,
-                    tr("Error loading file"),
-                    tr("Error"),
-                    JOptionPane.ERROR_MESSAGE);
+                        tr("Error loading file"),
+                        tr("Error"),
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }

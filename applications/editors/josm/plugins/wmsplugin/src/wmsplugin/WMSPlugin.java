@@ -5,30 +5,34 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.TreeMap;
-import java.io.*;
+import java.util.TreeSet;
 
-import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.MirroredInputStream;
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.plugins.Plugin;
 
 public class WMSPlugin extends Plugin {
     static CacheFiles cache = new CacheFiles("wmsplugin");
@@ -103,6 +107,7 @@ public class WMSPlugin extends Plugin {
         int prefid = 0;
         String name = null;
         String url = null;
+        String cookies = "";
         int lastid = -1;
         for (String key : keys) {
             String[] elements = key.split("\\.");
@@ -119,14 +124,16 @@ public class WMSPlugin extends Plugin {
                 name = prefs.get(key);
             else if (elements[3].equals("url"))
                 url = prefs.get(key);
+            else if (elements[3].equals("cookies"))
+                cookies = prefs.get(key);
             if (name != null && url != null)
-                wmsList.add(new WMSInfo(name, url, prefid));
+                wmsList.add(new WMSInfo(name, url, cookies, prefid));
         }
         String source = "http://svn.openstreetmap.org/applications/editors/josm/plugins/wmsplugin/sources.cfg";
         try
         {
             MirroredInputStream s = new MirroredInputStream(source,
-            Main.pref.getPreferencesDir() + "plugins/wmsplugin/", -1);
+                    Main.pref.getPreferencesDir() + "plugins/wmsplugin/", -1);
             InputStreamReader r;
             try
             {
@@ -199,18 +206,17 @@ public class WMSPlugin extends Plugin {
         }
     }
 
-    public static Grabber getGrabber(String _baseURL, Bounds _b, Projection _proj,
-                     double _pixelPerDegree, GeorefImage _image, MapView _mv, WMSLayer _layer){
-        if(_baseURL.startsWith("yahoo://"))
-            return new YAHOOGrabber(_baseURL, _b, _proj, _pixelPerDegree, _image, _mv, _layer, cache);
+    // baseURL, XYtoBounds(x,y), Main.main.proj, pixelPerDegree, img, mv, this
+    // Grabber gr = WMSPlugin.getGrabber(XYtoBounds(x,y), img, mv, this);
+    public static Grabber getGrabber(Bounds bounds, GeorefImage img, MapView mv, WMSLayer layer){
+        if(layer.baseURL.startsWith("yahoo://"))
+            return new YAHOOGrabber(bounds, img, mv, layer, cache);
         else
-            return new WMSGrabber(_baseURL, _b, _proj, _pixelPerDegree, _image, _mv, _layer, cache);
+            return new WMSGrabber(bounds, img, mv, layer, cache);
+
         // OSBGrabber should be rewrite for thread support first
-        //if (wmsurl.matches("(?i).*layers=npeoocmap.*") || wmsurl.matches("(?i).*layers=npe.*") ){
+        //if (wmsurl.matches("(?i).*layers=npeoocmap.*") || wmsurl.matches("(?i).*layers=npe.*") )
         //  return new OSGBGrabber(_b, _proj, _pixelPerDegree,  _images, _mv, _layer);
-        //} else {
-        //  return new WMSGrabber(_b, _proj, _pixelPerDegree,  _images, _mv, _layer);
-        //}
     }
 
     private static void setEnabledAll(boolean isEnabled) {
@@ -219,14 +225,14 @@ public class WMSPlugin extends Plugin {
 
             if(item != null) item.setEnabled(isEnabled);
         }
-               menuEnabled = isEnabled;
+        menuEnabled = isEnabled;
     }
 
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame==null && newFrame!=null) {
             setEnabledAll(true);
             Main.map.addMapMode(new IconToggleButton
-                        (new WMSAdjustAction(Main.map)));
+                    (new WMSAdjustAction(Main.map)));
         } else if (oldFrame!=null && newFrame==null ) {
             setEnabledAll(false);
         }

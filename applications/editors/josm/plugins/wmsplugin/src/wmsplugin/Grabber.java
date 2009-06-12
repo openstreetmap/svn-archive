@@ -2,16 +2,16 @@ package wmsplugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.image.BufferedImage;
-import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.io.CacheFiles;
 
 abstract public class Grabber implements Runnable {
@@ -23,8 +23,7 @@ abstract public class Grabber implements Runnable {
     protected GeorefImage image;
     protected CacheFiles cache;
 
-    Grabber(Bounds b, Projection proj, double pixelPerDegree, GeorefImage image,
-    MapView mv, WMSLayer layer, CacheFiles cache)
+    Grabber(Bounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache)
     {
         if (b.min != null && b.max != null && WMSPlugin.doOverlap)
         {
@@ -45,8 +44,8 @@ abstract public class Grabber implements Runnable {
         else
             this.b = b;
 
-        this.proj = proj;
-        this.pixelPerDegree = pixelPerDegree;
+        this.proj = Main.main.proj;
+        this.pixelPerDegree = layer.pixelPerDegree;
         this.image = image;
         this.mv = mv;
         this.layer = layer;

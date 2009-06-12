@@ -6,13 +6,10 @@ import java.awt.event.ActionEvent;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.data.Bounds;
 
 public class WMSDownloadAction extends JosmAction {
 
-    private WMSInfo info;
+    private final WMSInfo info;
 
     public WMSDownloadAction(WMSInfo info) {
         super(info.name, "wmsmenu", tr("Download WMS tile from {0}",info.name), null, false);
@@ -23,13 +20,13 @@ public class WMSDownloadAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         System.out.println(info.url);
 
-        WMSLayer wmsLayer = new WMSLayer(info.name, info.url);
+        WMSLayer wmsLayer = new WMSLayer(info.name, info.url, info.cookies);
         Main.main.addLayer(wmsLayer);
     }
 
     public static WMSLayer getLayer(WMSInfo info) {
         // FIXME: move this to WMSPlugin/WMSInfo/preferences.
-        WMSLayer wmsLayer = new WMSLayer(info.name, info.url);
+        WMSLayer wmsLayer = new WMSLayer(info.name, info.url, info.cookies);
         Main.main.addLayer(wmsLayer);
         return wmsLayer;
     }

@@ -16,7 +16,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +24,6 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.ProgressInputStream;
@@ -33,13 +31,11 @@ import org.openstreetmap.josm.io.ProgressInputStream;
 
 public class WMSGrabber extends Grabber {
     protected String baseURL;
-    private static Boolean shownWarning = false;
-    private boolean urlWithPatterns;
+    private final boolean urlWithPatterns;
 
-    WMSGrabber(String baseURL, Bounds b, Projection proj,
-            double pixelPerDegree, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache) {
-        super(b, proj, pixelPerDegree, image, mv, layer, cache);
-        this.baseURL = baseURL;
+    WMSGrabber(Bounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache) {
+        super(b, image, mv, layer, cache);
+        this.baseURL = layer.baseURL;
         /* URL containing placeholders? */
         urlWithPatterns = baseURL != null && baseURL.contains("{1}");
     }
@@ -70,17 +66,16 @@ public class WMSGrabber extends Grabber {
         }
     }
 
-    public static final NumberFormat
-        latLonFormat = new DecimalFormat("###0.0000000",
+    public static final NumberFormat latLonFormat = new DecimalFormat("###0.0000000",
             new DecimalFormatSymbols(Locale.US));
 
     protected URL getURL(double w, double s,double e,double n,
             int wi, int ht) throws MalformedURLException {
         String str = baseURL;
-        String bbox = latLonFormat.format(w) + "," +
-                      latLonFormat.format(s) + "," +
-                      latLonFormat.format(e) + "," +
-                      latLonFormat.format(n);
+        String bbox = latLonFormat.format(w) + ","
+                           + latLonFormat.format(s) + ","
+                           + latLonFormat.format(e) + ","
+                           + latLonFormat.format(n);
 
         if (urlWithPatterns) {
             String proj = Main.proj.toCode();
@@ -131,8 +126,10 @@ public class WMSGrabber extends Grabber {
     protected BufferedImage grab(URL url) throws IOException {
         BufferedImage cached = cache.getImg(url.toString());
         if(cached != null) return cached;
-    
+
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        if(layer.cookies != null && !layer.cookies.equals(""))
+            conn.setRequestProperty("Cookie", layer.cookies);
         conn.setConnectTimeout(Main.pref.getInteger("wmsplugin.timeout.connect", 30) * 1000);
         conn.setReadTimeout(Main.pref.getInteger("wmsplugin.timeout.read", 30) * 1000);
 
@@ -145,7 +142,7 @@ public class WMSGrabber extends Grabber {
         InputStream is = new ProgressInputStream(conn, null);
         BufferedImage img = ImageIO.read(is);
         is.close();
-        
+
         cache.saveImg(url.toString(), img);
         return img;
     }

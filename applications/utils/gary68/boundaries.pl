@@ -43,8 +43,6 @@
 # - qualify invalid relation list with causes of errors
 #
 #
-# TODO
-# - command line error handling
 # 
 
 use strict ;
@@ -60,7 +58,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "2.0 BETA (008)" ;
+my $version = "2.0" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes

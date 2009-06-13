@@ -38,7 +38,7 @@ my $dir_svn = "$dir_chroot/svn";
 my $package_results = "$dir_chroot/results";
 my $package_results_upload = "/home/httpd/gpsdrive.de"; #This is the upload Directory
 my $user = "tweety";
-my $DEBUG   = 3;
+my $DEBUG   = 0;
 my $VERBOSE = 1;
 my $MANUAL=0;
 my $HELP=0;
@@ -194,7 +194,7 @@ my %svn_repository_url=(
 my %svn_update_done;
 
 my @available_proj=  sort keys %package_names;
-my @all_proj = grep { $_ !~ m/gpsdrive-maemo|merkaartor-0...|gpsdrive-2.10pre/ } @available_proj;# |osm-editor-qt4
+my @all_proj = grep { $_ !~ m/osmosis|gpsdrive-maemo|merkaartor-0...|gpsdrive-2.10pre/ } @available_proj;# |osm-editor-qt4
 
 my @projs;
 #@projs= keys %proj2path;
@@ -379,6 +379,10 @@ sub Log($$$){
     $html_msg =~ s/\>/&gt;/g;
     $html_msg =~ s/^(.*(error|warn|No rule to make target|cannot read directory).*)$/<font color="RED">$1<\/font>/gmi;
     $html_msg =~ s/^(.*(No package|was not found|No such file or directory|missing ).*)$/<font color="RED">$1<\/font>/gmi;
+    $html_msg =~ s{\033\[0m}{<\/font>}g;
+    $html_msg =~ s{\033\[91m}{<font color="RED">}g;
+    $html_msg =~ s{\033\[92m}{<font color="GREEN">}g;
+    $html_msg =~ s{\033\[94m}{<font color="BLUE">}g;
     append_file(  $log_file, "$html_msg\n" );
 }
 
@@ -746,6 +750,7 @@ sub write_svn_revision($){
 
 # ------------------------------------------------------------------
 # Get the svn-revision from the local stored svnrevision File
+# This reflects the revision checked out for ALL others
 sub svn_revision($) {
     my $self = shift;
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
@@ -762,16 +767,17 @@ sub svn_revision($) {
 
 # ------------------------------------------------------------------
 # Get the svn-revision from the local stored svnrevision File
-# in the platform directory
+# in the specified platform directory
 sub svn_revision_platform($) {
     my $self = shift;
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
 
-    my $proj      = $self->proj();
-    my $svn_dir_full = $self->svn_dir_full();
-    my $rev_file="$svn_dir_full/debian/svnrevision";
+    my $proj       = $self->proj();
+    my $platform   = $self->platform();
+    my $build_dir  = $self->build_dir();
+    my $rev_file="$build_dir/debian/svnrevision";
     if ( ! -r  $rev_file ) {
-	warn "Cannot read Revision File for $proj: '$rev_file'\n";
+	warn "Cannot read Revision File for '$platform' '$proj': '$rev_file'\n";
 	return '';
     }
 
@@ -827,10 +833,11 @@ sub svn_update($){
 	    $self->warning("Error '$rc' in 'svn cleanup $dir_svn/$proj_sub_dir'");
 	    $self->warning("Error '$err'");
 	}
-    } elsif ( $out !~ m/At revision/ ) {
-	$self->error("No final Revision in Output Found\n");
-	return 0;
-    }	
+    } 
+#     elsif ( $out !~ m/At revision/ ) {
+#	$self->error("No final Revision in Output Found\n");
+#	return 0;
+#    }	
 
     if ( $err ) {
 	my $err_out=$err;
@@ -886,16 +893,18 @@ sub svn_changelog($){
 
     my $proj     = $self->proj();
 
-    print "\n";
-    print "------------\n";
-    print "svn Changelog update:\n";
-    print "Proj: $proj\n";
+    if ( $DEBUG>1 ) {
+	print STDERR "\n";
+	print STDERR "------------\n";
+	print STDERR "svn Changelog update:\n";
+	print STDERR "Proj: $proj\n";
+    }
     my $proj_sub_dir = $self->proj_sub_dir();
     my $debname = $proj2debname{$proj};
 
     my $command="$dir_svn/openstreetmap-applications/utils/packaging/svn_log2debian_changelog.pl";
     $command .= " --project_name='$debname' ";
-	      
+    
     if ( $proj =~ m/gpsdrive-(.*pre.*)/ ) {
 	$command .= " --prefix=$1 ";
     } elsif ( $proj =~ m/gpsdrive/ ) {
@@ -1196,8 +1205,29 @@ sub debuild($) {
 
 # ------------------------------------------------------------------
 sub show_results(){
+    printf "%-15s %6s ","Project","svn";
+    for my $platform ( @platforms ) {
+	my $print_platform=$platform;
+	$print_platform=~ s/(debian|ubuntu)-//;
+	$print_platform=~ s/-.*//g;
+	printf "%-7s ",$print_platform ;
+    }
+    print  "\n";
+    printf "%-15s %6s ","","";
+    for my $platform ( @platforms ) {
+	my $print_platform=$platform;
+	$print_platform=~ s/(debian|ubuntu)-//;
+	$print_platform=~ s/.*-//g;
+	printf "%-7s ",$print_platform ;
+    }
+    print  "\n";
+
     for my $proj ( @projs ) {
-	printf "%-28s ",$proj;
+	my $proj_rev=svn_revision( bless({proj=>$proj,platform=>'independent'},'BuildTask') );
+	my $p_proj=$proj;
+	$p_proj=~ s/osm-mapnik-world-boundaries/osm-world-bound/;
+	$p_proj=~ s/gpsdrive-data-maps/gpsdrive-maps/;
+	printf "%-15s %6d ",$p_proj,$proj_rev;
 	for my $platform ( @platforms ) {
 #	    print "$platform ";
 	    my $task = $RESULTS->{$platform}->{$proj};
@@ -1233,7 +1263,7 @@ sub show_results(){
 	    my $print_platform=$platform;
 	    $print_platform=~ s/(debian-|ubuntu-)//;
 
-	    print "$color_res". $print_platform."$COLOR{NORMAL} " ;
+	    print "$color_res"; #. $print_platform."$COLOR{NORMAL} " ;
 	    printf "$color_rev%-6s$COLOR{NORMAL} ", $rev;
 	    if (  $rev_g && $rev ne $rev_g ) {
 		print "$COLOR{GREEN}($rev_g)$COLOR{NORMAL}";
@@ -1272,7 +1302,7 @@ sub write_html_results(){
 	my $rel_proj_log_dir="$proj";
 	printf $fh "	<td><a href=\"$rel_proj_log_dir\">%s</a></td>\n",$proj;
 
-	my $proj_rev=svn_revision_platform( bless({proj=>$proj,platform=>'independent'},'BuildTask') );
+	my $proj_rev=svn_revision( bless({proj=>$proj,platform=>'independent'},'BuildTask') );
 	print $fh "     <td>$proj_rev</td>\n";
 
 	for my $platform ( @platforms ) {
@@ -1485,7 +1515,7 @@ if ( $do_write_html_results_only ) {
     exit 0;
 }
 
-if ( $DEBUG >= 3 ) {
+if ( $DEBUG >= 1 ) {
     print "----------------------------------------\n";
     print "Platforms: " . join(" ",@platforms)."\n";
     print "Projects:  " . join(" ",@projs)."\n";
@@ -1525,8 +1555,9 @@ if ( $DEBUG >= 3 ) {
 }
 
 for my $platform ( @platforms ) {
-    print "\n";
-    print STDERR "$COLOR{BLUE}------------------------------------------------------------ Platform: $platform$COLOR{NORMAL}\n";
+    #print STDERR "\n";
+    print STDERR "$COLOR{BLUE}------------------------------------------------------------ Platform: $platform$COLOR{NORMAL}\n"
+	if $DEBUG > 3;
 
     for my $proj ( @projs ) {
 
@@ -1534,7 +1565,9 @@ for my $platform ( @platforms ) {
 	    proj     => $proj, 
 	    platform => $platform ,
 	    );
-	$task->debug(3, "$COLOR{MAGENTA}------------------------------------------------  Platform: $platform$COLOR{NORMAL}	Project: $proj$COLOR{NORMAL}");
+	if ( $DEBUG>2 || $VERBOSE>2 ) {
+	    print STDERR 	"$COLOR{MAGENTA}------------------------------------------------  Platform: $platform$COLOR{NORMAL}	Project: $proj$COLOR{NORMAL}\n";
+	}
 
 	$task->Clear_Log();
 
@@ -1542,10 +1575,12 @@ for my $platform ( @platforms ) {
 	    my $svn_revision = $task->svn_revision_platform();
 	    my $last_result=$task->last_result();
 	    if ( $svn_revision && $last_result eq "success: $svn_revision" ) {
-		$task->debug(3, "$COLOR{GREEN}---------------- Project: $proj '$last_result' already build successfully (skipping)$COLOR{NORMAL}");
+		if ( $VERBOSE >1 || $DEBUG >2 ) {
+		    print STDERR "$COLOR{GREEN}---- Project: $proj ($platform) '$last_result' up-to-date --> skipping$COLOR{NORMAL}\n";
+		}
 		next;
 	    } else {
-		$task->debug(3, "$COLOR{BLUE}---------------- Project: $proj build not up to date: '$last_result'$COLOR{NORMAL}");
+		$task->debug(3, "$COLOR{BLUE}------ Project: $proj build not up to date: '$last_result'$COLOR{NORMAL}");
 	    };
 	}
 
@@ -1557,6 +1592,11 @@ for my $platform ( @platforms ) {
 	$task->section("summary");
 	$task->Log( 1,"\n\nRESULTS:\n".
 		    Dumper(\$task) );
+
+	my $last_result=$task->last_result();
+	if ( $VERBOSE || $DEBUG ) {
+	    print STDERR 	"$COLOR{MAGENTA}---  Platform: $platform$COLOR{NORMAL}	Project: $proj	$last_result $COLOR{NORMAL}\n";
+	}
 	
     }
 };

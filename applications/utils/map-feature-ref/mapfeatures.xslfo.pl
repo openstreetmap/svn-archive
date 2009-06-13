@@ -15,17 +15,14 @@ my $root = $doc->createElement('mapfeatures');
 $doc->setDocumentElement( $root );
 
 foreach my $section ( $mf->categories() ){
-    print STDERR "$section\n";
     my $sectionelem = $root->appendChild( $doc->createElement('section') );
     $sectionelem->setAttribute('name', $section);
 
     foreach my $feature ( $mf->features($section) ){
-        print STDERR " -> ".$feature->key()."\n";
         my $featureelem = $sectionelem->appendChild( $doc->createElement('feature') );
         $featureelem->setAttribute('key', $feature->key());
         next unless $feature->values();
         foreach my $value ( @{$feature->values()} ){
-            print STDERR "     -> $value\n";
             my $valueelem = $featureelem->appendChild( $doc->createElement('value') );
             $valueelem->setAttribute('name', "$value");
         }

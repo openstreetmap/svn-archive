@@ -194,7 +194,7 @@ my %svn_repository_url=(
 my %svn_update_done;
 
 my @available_proj=  sort keys %package_names;
-my @all_proj = grep { $_ !~ m/osmosis|gpsdrive-maemo|merkaartor-0...|gpsdrive-2.10pre/ } @available_proj;# |osm-editor-qt4
+my @all_proj = grep { $_ !~ m/osmosis|gpsdrive-maemo|merkaartor|merkaartor-0...|gpsdrive-2.10pre/ } @available_proj;# |osm-editor-qt4
 
 my @projs;
 #@projs= keys %proj2path;

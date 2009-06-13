@@ -115,7 +115,7 @@
 		</rule>
 		
 		<!-- Man-made areas -->
-		<rule e="way" k="sport" v="*">
+		<rule e="way" k="sport" v="*" closed="yes">
 			<area class="sport"/>
 		</rule>
 		<rule e="way" k="amenity" v="parking">

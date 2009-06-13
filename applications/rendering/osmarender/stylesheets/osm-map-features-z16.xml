@@ -176,7 +176,7 @@
 						<area class="sport-tennis"/>
 					</rule>
 					<else>
-						<rule e="way" k="sport" v="*">
+						<rule e="way" k="sport" v="*" closed="yes">
 							<area class="sport"/>
 						</rule>
 					</else>

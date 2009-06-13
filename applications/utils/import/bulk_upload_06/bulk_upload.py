@@ -105,7 +105,7 @@ class ImportProcessor:
                                           '/api/0.6/changeset/' +
                                           self.changesetid + '/close','PUT',headers=headers)
         if resp.status != 200:
-            print "Error closing changeset " + self.changesetid + ":" + resp.status
+            print "Error closing changeset " + str(self.changesetid) + ":" + str(resp.status)
     #
     # Uploading a change set returns a <diffResult> containing elements
     # that map the old id to the new id

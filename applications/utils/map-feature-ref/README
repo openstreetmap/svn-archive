@@ -1,0 +1,70 @@
+This is a collection of stylesheets for generating quick reference
+documents from the Map Features pages on the OpenStreetMap wiki[1].
+
+
+REQUIREMENTS
+
+  * Geo-OSM-MapFeatures <http://search.cpan.org/dist/Geo-OSM-MapFeatures/>
+  * An XSLT processor:
+    - xsltproc: <http://xmlsoft.org/XSLT/>
+  * An XSL-FO processor:
+    - FOP: <http://xmlgraphics.apache.org/fop/>
+
+
+USAGE
+
+To generate all files, simply run:
+
+    make
+
+The following files will be generated:
+
+    mapfeatures-11-tab-sec.pdf
+    mapfeatures-11-tab-sec.ps
+    mapfeatures-1n-tab-sec.pdf
+    mapfeatures-1n-tab-sec.ps
+
+To generate only PDF documents:
+
+    make pdf
+
+To generate only PS documents:
+
+   make ps
+
+To generate a specific document run one of:
+
+    make mapfeatures-11-tab-sec.pdf
+    make mapfeatures-11-tab-sec.ps
+    make mapfeatures-1n-tab-sec.pdf
+    make mapfeatures-1n-tab-sec.ps
+
+The name of each file is mnemonic to the style of the output:
+
+  * ‘11’ means there is always a one‐to‐one mapping of keys to values,
+    e.g.:
+
+        highway     motorway
+        highway     motorway_link
+        highway     trunk
+        …           …
+        junction    roundabout
+
+  * ‘1n’ means that there is a one‐to‐many mapping of keys to values,
+    e.g:
+
+        highway     motorway
+                    motorway_link
+                    trunk
+                    …
+        junction    roundabout
+
+  * ‘tab’ means the tags are listed in tabular format.
+
+  * ‘sec’ means tags are grouped into sections.
+
+
+AUTHORS
+
+mapfeatures.xslfo.pl — Knut Arne Bjørndal (aka bobkare)
+XSLT stylesheets — Simon Ward (aka sward)

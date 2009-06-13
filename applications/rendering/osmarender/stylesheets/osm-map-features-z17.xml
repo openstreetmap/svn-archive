@@ -2499,7 +2499,7 @@
 				</rule>
 				<else>
 					<rule e="way" k="ref" v="*">
-						<pathText k="ref" dy="2px" class="piste-downhill-ref" text-anchor="middle" startOffset="75%"/>
+						<pathText k="ref" dy="2px" class="piste-downhill-ref" text-anchor="middle" startOffset="25%"/>
 					</rule>
 					<rule e="way" k="name" v="*">
 						<pathText k="name" dy="2px" class="piste-downhill-name" text-anchor="middle" startOffset="75%"/>

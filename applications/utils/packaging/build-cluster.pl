@@ -35,8 +35,8 @@ use Symbol;
 my $dir_chroot = "/home/chroot";
 my $dir_log = "/home/chroot/log";
 my $dir_svn = "$dir_chroot/svn";
-my $package_results = "$dir_chroot/results";
-my $package_results_upload = "/home/httpd/gpsdrive.de"; #This is the upload Directory
+my $package_result_dir = "$dir_chroot/results";
+my $package_result_upload_dir = "/home/httpd/gpsdrive.de"; #This is the upload Directory
 my $user = "tweety";
 my $DEBUG   = 0;
 my $VERBOSE = 1;
@@ -237,7 +237,7 @@ my $getopt_result = GetOptions (
     "svn-cp!"        => \$do_svn_cp,
     "dir-chroot=s"   => \$dir_chroot,     
     "dir-svn"        => \$dir_svn,
-    "package-results" => \$package_results,
+    "package-results" => \$package_result_dir,
     "user"           => \$user,
     "platforms=s"    => sub { my ($a,$b)=(@_);
 			      if ( '*' eq $b ) {
@@ -1190,7 +1190,7 @@ sub debuild($) {
 
     # Move Result to one Result Place
     my ($distri,$version,$bits)=split_platform($platform);
-    my $dst_dir="$package_results/$distri/pool/$version";
+    my $dst_dir="$package_result_dir/$distri/pool/$version";
     if ( ! -d $dst_dir ) {
 	mkpath($dst_dir)
 	    or $self->error( "!!!!!!!! WARNING: Konnte Pfad $dst_dir nicht erzeugen: $!");
@@ -1416,7 +1416,7 @@ sub write_html_results(){
 	    print $fh "</td>\n";
 
 
-	    #$package_results
+	    #$package_result_dir
 	    my ($distri,$version,$bits)=split_platform($platform);
 
 	    my $platform_glob='{i386,amd64,all}';
@@ -1431,15 +1431,15 @@ sub write_html_results(){
 		for my $name ( @{$package_names{$proj}} ) {
 		    print $fh "\t<li>$name:\n";	
 
-		    $task->debug(7,"glob($package_results_upload/$distri/pool/$version/${name}_${rev_last_good}_${platform_glob}.deb");
-		    my @files = glob("$package_results_upload/$distri/pool/$version/${name}_*${rev_last_good}_${platform_glob}.deb");
+		    $task->debug(7,"glob($package_result_upload_dir/$distri/pool/$version/${name}_${rev_last_good}_${platform_glob}.deb");
+		    my @files = glob("$package_result_upload_dir/$distri/pool/$version/${name}_*${rev_last_good}_${platform_glob}.deb");
 		    @files = grep { -s $_ } @files;
 		    if ( @files ) {
 			print $fh "\t<ul>\n";
 			for my $file ( @files ) {
 			    my $file_name = basename($file);
 			    my $link = $file;
-			    $link =~ s/^$package_results_upload//;
+			    $link =~ s/^$package_result_upload_dir//;
 			    #print "\t$link\n";	
 			    print $fh "\t<li><A href=\"$link\"> $file_name</a></li>\n";	
 			}
@@ -1492,7 +1492,7 @@ The svn Checkout is done to:
        $dir_svn
 
 Results are collected in the DIrectory
-       $package_results
+       $package_result_dir
 
 EOUSAGE
 

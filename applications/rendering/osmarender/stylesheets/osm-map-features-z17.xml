@@ -2782,7 +2782,7 @@
 					<rule e="node" k="noexit" v="motor_vehicle|motorcar">
 						<wayMarker k="highway" class="noexit-mot"/>
 					</rule>
-					<rule e="node" k="noexit" v="no">
+					<rule e="node" k="noexit" v="no|false">
 						<wayMarker k="highway" class="noexit-no"/>
 					</rule>
 

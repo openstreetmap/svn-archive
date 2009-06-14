@@ -202,10 +202,10 @@ public class CadastrePlugin extends Plugin {
         }
         if (!alreadyRedefined) {
             int reply = JOptionPane.showConfirmDialog(null, 
-                    "Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"+
+                    tr("Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"+
                     "which is currently allocated for full-screen switch by default\n"+
-                    "Would you like to restore F11 for grab action ?",
-                    "Restore grab shortcut F11",
+                    "Would you like to restore F11 for grab action ?"),
+                    tr("Restore grab shortcut F11"),
                     JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.OK_OPTION) {
                 System.out.println("redefine fullscreen shortcut F11 to shift+F11");

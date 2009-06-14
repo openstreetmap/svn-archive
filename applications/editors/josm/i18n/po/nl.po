@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-09 18:51+0200\n"
-"PO-Revision-Date: 2009-05-31 17:26+0000\n"
-"Last-Translator: mvexel <mvexel@gmail.com>\n"
+"POT-Creation-Date: 2009-06-14 16:51+0200\n"
+"PO-Revision-Date: 2009-06-10 15:21+0000\n"
+"Last-Translator: Willem1 <willem.sonke@planet.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-06-09 16:47+0000\n"
+"X-Launchpad-Export-Date: 2009-06-14 14:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:189
@@ -34,6 +34,8 @@ msgstr "Help"
 #: ../core/src/org/openstreetmap/josm/Main.java:261
 msgid "The projection could not be read from preferences. Using Mercartor"
 msgstr ""
+"De projectie kon niet worden gelezen uit de voorkeuren. Mercator wordt "
+"gebruikt."
 
 #: ../core/src/org/openstreetmap/josm/Main.java:349
 msgid "Hint: Some changes came from uploading new data to the server."
@@ -69,11 +71,11 @@ msgstr "Negeer veranderingen en verlaat JOSM"
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:151
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:191
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:48
-#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:36
+#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:38
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:89
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:99
 #: ../core/src/org/openstreetmap/josm/actions/UpdateDataAction.java:79
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:116
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:130
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:116
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:149
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:156
@@ -92,7 +94,7 @@ msgstr "Negeer veranderingen en verlaat JOSM"
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:257
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:87
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:129
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:83
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:86
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:559
 #: ../plugins/grid/src/grid/GridLayer.java:162
 #: ../plugins/grid/src/grid/GridLayer.java:199
@@ -101,6 +103,7 @@ msgstr "Negeer veranderingen en verlaat JOSM"
 #: ../plugins/utilsplugin/src/UtilsPlugin/JoinAreasAction.java:126
 #: ../plugins/utilsplugin/src/UtilsPlugin/JoinAreasAction.java:318
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:105
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:150
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -500,8 +503,8 @@ msgstr "Geselecteerde objecten verwijderen."
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:51
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:98
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:99
-#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:36
+#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:38
 msgid "Overwrite"
 msgstr "Overschrijven?"
 
@@ -536,7 +539,7 @@ msgstr "Kaart downloaden van de OSM-server."
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:33
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:28
 #: ../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:25
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:68
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:82
 #, java-format
 msgid "File: {0}"
 msgstr "Bestand: {0}"
@@ -643,10 +646,10 @@ msgstr ""
 "{1}"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:167
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:291
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:540
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:544
 #: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:55
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:81
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
@@ -656,7 +659,7 @@ msgstr ""
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:126
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveEditLayerTimerTask.java:69
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveGpsLayerTimerTask.java:86
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:358
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:356
 msgid "Error"
 msgstr "Fout"
 
@@ -715,6 +718,8 @@ msgid ""
 "Helppage missing. Create it in <A HREF=\"{0}\">english</A> or <A HREF=\"{1}"
 "\">your language</A>."
 msgstr ""
+"De helppagina bestaat niet. Maak hem aan in het <A HREF=\"{0}\">Engels</A> "
+"of in <A HREF=\"{1}\">je eigen taal</A>."
 
 #: ../core/src/org/openstreetmap/josm/actions/HistoryInfoAction.java:26
 #: ../core/src/org/openstreetmap/josm/actions/HistoryInfoAction.java:29
@@ -794,15 +799,15 @@ msgstr "{0} knopen samenvoegen"
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:36
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:70
 msgid "Mirror"
-msgstr ""
+msgstr "Spiegelen"
 
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:35
 msgid "Mirror selected nodes and ways."
-msgstr ""
+msgstr "Spiegel de geselecteerde knopen en wegen."
 
 #: ../core/src/org/openstreetmap/josm/actions/MirrorAction.java:53
 msgid "Please select at least one node or way."
-msgstr ""
+msgstr "Selecteer ten minste één knoop of weg."
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:36
 msgid "up"
@@ -1030,10 +1035,10 @@ msgstr "Opslaan"
 msgid "Save the current data."
 msgstr "Huidige gegevens opslaan."
 
-#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:35
+#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:37
 #, java-format
 msgid "File {0} exists. Overwrite?"
-msgstr ""
+msgstr "Het bestand {0} bestaat al. Overschrijven?"
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:81
 msgid ""
@@ -1086,7 +1091,7 @@ msgstr "GPX-bestand opslaan"
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:112
 msgid "Save Layer"
-msgstr ""
+msgstr "Laag opslaan"
 
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:122
 msgid "Could not back up file."
@@ -1153,7 +1158,7 @@ msgid "Copy to clipboard and close"
 msgstr "Klembord kopiëren en sluiten"
 
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:93
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:208
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:207
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:871
 msgid "Close"
 msgstr "Sluiten"
@@ -1382,55 +1387,86 @@ msgid ""
 msgstr ""
 "Deze opdracht zal {0} individuele downloadverzoeken vereisen. Toch doorgaan?"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:67
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:68
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:81
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:82
 msgid "Upload to OSM..."
 msgstr "Naar OSM uploaden..."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:67
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:81
 msgid "Upload all changes to the OSM server."
 msgstr "Upload alle aanpassingen naar de OSM-server."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:82
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:96
 msgid "Objects to add:"
 msgstr "Objecten om toe te voegen:"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:90
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:104
 msgid "Objects to modify:"
 msgstr "Objecten om te bewerken:"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:98
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:112
 msgid "Objects to delete:"
 msgstr "Objecten om aan te verwijderen:"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:105
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:119
 msgid "Provide a brief comment for the changes you are uploading:"
 msgstr "Beschrijf kort de veranderingen die je upload:"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:114
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:128
 msgid "Upload these changes?"
 msgstr "Deze veranderingen uploaden?"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:116
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:130
 msgid "Upload Changes"
 msgstr "Aanpassingen uploaden"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:138
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:154
 msgid "Nothing to upload. Get some data first."
 msgstr "Niets om te uploaden. Creëer eerst gegevens."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:143
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:159
 msgid "There are unresolved conflicts. You have to resolve these first."
 msgstr "Er zijn nog onopgeloste conflicten, deze dien je eerst op te lossen."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:164
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:182
 msgid "No changes to upload."
 msgstr "Geen aanpassingen aanwezig om te uploaden."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:180
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:380
-msgid "Uploading data"
-msgstr "Gegevens uploaden"
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:205
+msgid "Uploading"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:250
+#, java-format
+msgid ""
+"<html>Uploading <strong>failed</strong> because the server has a newer "
+"version of one<br>of your nodes, ways or relations.<br>The conflict is "
+"caused by the <strong>{0}</strong> with id <strong>{1}</strong>,<br>the "
+"server has version {2}, your version is {3}.<br>Please synchronize your "
+"local dataset using <br><strong>File-&gt;Update Data</strong>, "
+"resolve<br>any conflicts and try to upload again.</html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:260
+msgid ""
+"<html>Uploading failed because the server has a newer version of one<br>of "
+"your nodes, ways or relations.<br>Please synchronize your local dataset "
+"using <br><strong>File-&gt;Update Data</strong>, resolve<br>any conflicts "
+"and try to upload again.</html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:270
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:279
+msgid "Upload to OSM API failed"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:287
+#: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:51
+#, java-format
+msgid ""
+"Failed to initialize communication with the OSM server {0}.\n"
+"Check the server URL in your preferences and your internet connection."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:15
 #: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:16
@@ -1807,13 +1843,15 @@ msgstr "<b>name:Lange</b> - 'Lang' ergens in de naam."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:87
 msgid "<b>type=route</b> - key 'type' with value exactly 'route'."
-msgstr ""
+msgstr "<b>type=route</b> - sleutel 'type' met exacte waarde 'route'."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:88
 msgid ""
 "<b>type=*</b> - key 'type' with any value. Try also <b>*=value</b>, "
 "<b>type=</b>, <b>*=*</b>, <b>*=</b>"
 msgstr ""
+"<b>type=*</b> - sleutel 'type' met elke waarde. Probeer ook <b>*=value</b>, "
+"<b>type=</b>, <b>*=*</b>, <b>*=</b>"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:89
 msgid "<b>-name:Bak</b> - not 'Bak' in the name."
@@ -2174,7 +2212,7 @@ msgstr "Verplaatsen"
 #: ../core/src/org/openstreetmap/josm/command/RelationMemberConflictResolverCommand.java:52
 #, java-format
 msgid "Resolve conflicts in member list of of relation {0}"
-msgstr ""
+msgstr "Conflicten in ledenlijst van relatie {0} oplossen"
 
 #: ../core/src/org/openstreetmap/josm/command/RemoveRelationMemberCommand.java:66
 msgid "RemoveRelationMember"
@@ -2191,12 +2229,12 @@ msgstr "Volgorde"
 #: ../core/src/org/openstreetmap/josm/command/TagConflictResolveCommand.java:84
 #, java-format
 msgid "Resolve {0} tag conflicts in {1} {2}"
-msgstr ""
+msgstr "Los {0} tag-conflicten op in {1} {2}"
 
 #: ../core/src/org/openstreetmap/josm/command/VersionConflictResolveCommand.java:57
 #, java-format
 msgid "Resolve version conflicts for {0} {1}"
-msgstr ""
+msgstr "Versieconflicten voor {0} {1} oplossen"
 
 #: ../core/src/org/openstreetmap/josm/command/WayNodesConflictResolverCommand.java:52
 #, java-format
@@ -2302,7 +2340,7 @@ msgid "different"
 msgstr "verschillend"
 
 #: ../core/src/org/openstreetmap/josm/data/conflict/DeleteConflict.java:15
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:263
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:262
 msgid "deleted"
 msgstr "verwijderd"
 
@@ -2888,7 +2926,7 @@ msgstr "Volledig scherm"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:246
 msgid "Toggle Full Screen view"
-msgstr ""
+msgstr "Volledig scherm aan-/uitzetten"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:286
 msgid "Audio"
@@ -3006,21 +3044,21 @@ msgstr "Initialiseren"
 #.
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ComparePairType.java:17
 msgid "My with Their"
-msgstr ""
+msgstr "Mijn met Hun"
 
 #. *
 #. * compare my version of an {@see OsmPrimitive} with the merged version
 #.
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ComparePairType.java:22
 msgid "My with Merged"
-msgstr ""
+msgstr "Mijn met Samengevoegd"
 
 #. *
 #. * compare their version of an {@see OsmPrimitive} with the merged veresion
 #.
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ComparePairType.java:27
 msgid "Their with Merged"
-msgstr ""
+msgstr "Hun met Samengevoegd"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ComparePairType.java:82
 #, java-format
@@ -3030,7 +3068,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:63
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:124
 msgid "Properties"
-msgstr ""
+msgstr "Eigenschappen"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:68
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:93
@@ -3042,7 +3080,7 @@ msgstr "Tags"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:73
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:163
 msgid "Nodes"
-msgstr ""
+msgstr "Knopen"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:78
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:158
@@ -3052,21 +3090,21 @@ msgstr "Leden"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:94
 msgid "No pending tag conflicts to be resolved"
-msgstr ""
+msgstr "Geen tag-conflicten om op te lossen"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:97
 #, java-format
 msgid "Tags({0} conflicts)"
-msgstr ""
+msgstr "Tags ({0} conflicten)"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:98
 #, java-format
 msgid "{0} pending tag conflicts to be resolved"
-msgstr ""
+msgstr "{0} tag-conflicten om op te lossen"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:104
 msgid "Nodes(resolved)"
-msgstr ""
+msgstr "Knopen (opgelost)"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:105
 msgid ""
@@ -3075,15 +3113,15 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:108
 msgid "Nodes(with conflicts)"
-msgstr ""
+msgstr "Knopen (met conflicten)"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:109
 msgid "Pending conflicts in the node list of this way"
-msgstr ""
+msgstr "Conflicten in de knopen van deze weg"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:113
 msgid "Members(resolved)"
-msgstr ""
+msgstr "Leden (opgelost)"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:114
 msgid ""
@@ -3093,7 +3131,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:117
 msgid "Members(with conflicts)"
-msgstr ""
+msgstr "Leden (met conflicten)"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:118
 msgid "Pending conflicts in the member list of this relation"
@@ -3143,22 +3181,22 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:228
 msgid "Compare "
-msgstr ""
+msgstr "Vergelijk "
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:263
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:76
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:75
 msgid "My version"
-msgstr ""
+msgstr "Mijn versie"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:264
 msgid "List of elements in my dataset, i.e. the local dataset"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:269
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:82
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:81
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMerger.java:137
 msgid "Merged version"
-msgstr ""
+msgstr "Samengevoegde versie"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:270
 msgid ""
@@ -3167,9 +3205,9 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:275
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:88
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:87
 msgid "Their version"
-msgstr ""
+msgstr "Hun versie"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:276
 msgid "List of elements in their dataset, i.e. the server dataset"
@@ -3229,11 +3267,11 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:634
 msgid "Move up the selected elements by one position"
-msgstr ""
+msgstr "Geselecteerde elementen één positie omhoog schuiven"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:664
 msgid "Down"
-msgstr ""
+msgstr "Omlaag"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:666
 msgid "Move down the selected entries by one position"
@@ -3320,8 +3358,9 @@ msgstr[1] ""
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMergeItem.java:56
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMergeItem.java:76
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMergeItem.java:106
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:140
 msgid "parameter '{0}' must not be null"
-msgstr ""
+msgstr "parameter '{0}' mag niet leeg zijn"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:884
 #, java-format
@@ -3337,7 +3376,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/nodes/NodeListColumnModel.java:27
 msgid "Node"
-msgstr ""
+msgstr "Knoop"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/nodes/NodeListMergeModel.java:71
 msgid "Merged nodes not frozen yet. Can't build resolution command"
@@ -3349,59 +3388,59 @@ msgstr ""
 msgid "unexpected column index. Got {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:77
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:76
 msgid "Properties in my dataset, i.e. the local dataset"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:83
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:82
 msgid ""
 "Properties in the merged element. They will replace properties in my "
 "elements when  merge decisions are applied."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:89
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:88
 msgid "Properties in their dataset, i.e. the server dataset"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:102
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:101
 msgid "Coordinates:"
-msgstr ""
+msgstr "Coördinaten:"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:175
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:174
 msgid "Deleted State:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:249
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:261
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:248
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:260
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/PresetItemListCellRenderer.java:28
 msgid "(none)"
-msgstr ""
+msgstr "(geen)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:265
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:264
 msgid "not deleted"
-msgstr ""
+msgstr "niet verwijderd"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:335
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:334
 msgid "Keep my coordiates"
-msgstr ""
+msgstr "Mijn coördinaten houden"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:350
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:349
 msgid "Keep their coordiates"
-msgstr ""
+msgstr "Hun coördinaten houden"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:365
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:364
 msgid "Undecide conflict between different coordinates"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:380
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:379
 msgid "Keep my deleted state"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:395
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:394
 msgid "Keep their deleted state"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:410
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:409
 msgid "Undecide conflict between deleted state"
 msgstr ""
 
@@ -3429,7 +3468,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TheirTableCellRenderer.java:47
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TheirTableCellRenderer.java:60
 msgid "<undefined>"
-msgstr ""
+msgstr "<ongedefinieerd>"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/MergedTableCellRenderer.java:38
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/MergedTableCellRenderer.java:41
@@ -3466,7 +3505,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMerger.java:257
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMerger.java:286
 msgid ">"
-msgstr ""
+msgstr ">"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMerger.java:259
 msgid "Keep the selected key/value pairs from the local dataset"
@@ -3570,7 +3609,7 @@ msgstr "Conflicten: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:129
 msgid "Resolve conflicts"
-msgstr ""
+msgstr "Conflicten oplossen"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:150
 msgid "Cancel conflict resolution and close the dialog"
@@ -3578,7 +3617,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:164
 msgid "Apply resolved conflicts and close the dialog"
-msgstr ""
+msgstr "Opgeloste conflicten toepassen en dialoog sluiten"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:165
 msgid "Apply Resolution"
@@ -3590,7 +3629,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:174
 msgid "Continue resolving"
-msgstr ""
+msgstr "Doorgaan met oplossen"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:176
 #, java-format
@@ -4640,7 +4679,7 @@ msgstr "buiten gedownload gebied"
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:218
 #, java-format
 msgid "version {0}"
-msgstr ""
+msgstr "versie {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:364
 #, java-format
@@ -4659,7 +4698,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:371
 #, java-format
 msgid "API version: {0}"
-msgstr ""
+msgstr "API-versie: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:463
 #: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:205
@@ -6745,60 +6784,52 @@ msgstr "NMEA-import gelukt"
 msgid "NMEA import faliure!"
 msgstr "Importeren NMEA is mislukt!"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:149
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:82
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:153
+#, java-format
+msgid "preference {0} missing. Can't initialize OsmApi"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:206
 msgid "This version of JOSM is incompatible with the configured server."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:150
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:207
 #, java-format
 msgid ""
 "It supports protocol versions 0.5 and 0.6, while the server says it supports "
 "{0} to {1}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:154
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:211
 #, java-format
 msgid "Communications with {0} established using protocol version {1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:192
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:207
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:250
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:265
 msgid "Cannot read numeric value from response"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:275
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:336
 msgid "Opening changeset..."
 msgstr "Changeset openen"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:289
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:351
 msgid "Closing changeset..."
 msgstr "Changeset sluiten"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:305
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:367
 msgid "No changeset present for diff upload"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:328
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:376
 msgid "Preparing..."
 msgstr "Voorbereiden…"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:333
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:381
 msgid "Uploading..."
 msgstr "Uploaden..."
-
-#. shouldn't happen, but just in case
-#.
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:405
-msgid "Data upload failed for unknown reason"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:449
-msgid "Not initialized"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:533
-msgid "Unknown host"
-msgstr "Onbekende host"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmBzip2Importer.java:18
 msgid "OSM Server Files bzip2 compressed"
@@ -6932,15 +6963,7 @@ msgstr "Misvormde knoop-id"
 msgid "Contacting Server..."
 msgstr "Met server verbinden..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:51
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:77
-#, java-format
-msgid ""
-"Failed to initialize communication with the OSM server {0}.\n"
-"Check the server URL in your preferences and your internet connection."
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:85
+#: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:86
 msgid ""
 "Couldn't connect to the osm server. Please check your internet connection."
 msgstr ""
@@ -6954,7 +6977,14 @@ msgstr ""
 "Server antwoordde met interne fout. Verklein het gebied of probeer het later "
 "nog eens."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:127
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:103
+#, java-format
+msgid ""
+"WARNING: preference '{0}' or api version {1} of dataset requires to use "
+"changesets, but API is not handle them. Ignoring changesets."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:134
 #, java-format
 msgid "{0}% ({1}/{2}), {3} left. Uploading {4}: {5} (id: {6})"
 msgstr "{0}% ({1}/{2}), {3} te gaan. Uploading {4}: {5} (id: {6})"
@@ -7322,11 +7352,11 @@ msgstr ""
 msgid "Create a grid of ways"
 msgstr ""
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:71
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:74
 msgid "Upload Trace"
 msgstr "Spoor uploaden"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:82
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:85
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:35
 msgid "Upload Traces"
@@ -7354,54 +7384,54 @@ msgstr ""
 msgid "Please enter tags about your trace."
 msgstr ""
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:155
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:154
 #, java-format
 msgid "Selected track: {0}"
 msgstr "Geselecteerde track: {0}"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:178
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:177
 msgid "Connecting..."
 msgstr "Verbinden..."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:201
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:200
 msgid "Upload cancelled"
 msgstr "Uploaden afgebroken"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:211
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:210
 msgid "Error while uploading"
 msgstr "Uploaden is mislukt"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:262
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:261
 msgid "GPX upload was successful"
 msgstr "GPX-track is geupload"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:263
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:262
 msgid "Upload failed. Server returned the following message: "
 msgstr "Upload is mislukt. Server gaf de volgende melding: "
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:305
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:304
 #, java-format
 msgid "Uploading GPX track: {0}% ({1} of {2})"
 msgstr "GPX-track uploaden: {0}% ({1} van {2})"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:337
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:336
 msgid "No description provided. Please provide some description."
 msgstr "Geen beschrijving opgegeven. Voer deze s.v.p. in,"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:340
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:362
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:339
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:361
 msgid "No GPX layer selected. Cannot upload a trace."
 msgstr "Geen GPX-laag geselecteerd. Kan geen spoor uploaden."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:343
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:342
 msgid "No username provided."
 msgstr "Geen gebruikersnaam opgegeven."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:346
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:345
 msgid "No password provided."
 msgstr "Geen wachtwoord opgegeven."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:378
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:377
 msgid "Uploading GPX Track"
 msgstr "GPX-track uploaden"
 
@@ -7757,7 +7787,7 @@ msgstr "Bestand {0} gaat fout"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:339
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:357
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:355
 msgid "Error loading file"
 msgstr "Laden bestand is mislukt"
 
@@ -7804,30 +7834,45 @@ msgstr "Gemeente selecteren"
 msgid "Select Tableau d'Assemblage"
 msgstr "Tableau d'Assemblage selecteren"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:129
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:131
 msgid "Cadastre"
 msgstr "Kadaster"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:138
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:140
 msgid "Auto sourcing"
 msgstr "Automatisch vullen"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:163
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:165
 msgid "Invalid projection"
 msgstr "Onjuiste projectie"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:164
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:166
 #, java-format
 msgid "Change the projection to {0} first."
 msgstr "Verander eerste de projectie in {0}."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:168
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:170
 msgid ""
 "To enable the cadastre WMS plugin, change\n"
 "the JOSM projection to Lambert and restart"
 msgstr ""
 "Verander de JOSM-projectie en herstart om\n"
 "de kadaster-WMS-plugin in te schakelen."
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:205
+msgid ""
+"Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"
+"which is currently allocated for full-screen switch by default\n"
+"Would you like to restore F11 for grab action ?"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:208
+msgid "Restore grab shortcut F11"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:213
+msgid "JOSM is stopped for the change to take effect."
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:28
 msgid "Replace original background by JOSM background color."
@@ -8082,11 +8127,11 @@ msgid "Adjust WMS"
 msgstr "WMS aanpassen"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSAdjustAction.java:35
-msgid "Adjust the position of the WMS layer"
-msgstr "De positie van de WMS-laag aanpassen"
+msgid "Adjust the position of the WMS layer (raster images only)"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSDownloadAction.java:19
-#: ../plugins/wmsplugin/src/wmsplugin/WMSDownloadAction.java:18
+#: ../plugins/wmsplugin/src/wmsplugin/WMSDownloadAction.java:15
 #, java-format
 msgid "Download WMS tile from {0}"
 msgstr "WMS-tegel downloaden van {0}"
@@ -8100,8 +8145,8 @@ msgstr ""
 "Selecteer er eerst één en probeer dan opnieuw"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:80
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:66
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:169
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:67
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:176
 msgid "Blank Layer"
 msgstr "Lege laag"
 
@@ -8129,33 +8174,33 @@ msgid "Commune bbox: {0}"
 msgstr "Omvattende reschthoek gemeente: {0}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:282
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:293
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:292
 msgid "Save WMS layer to file"
 msgstr "WMS-laag in bestand opslaan"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:287
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:297
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:295
 msgid "Save WMS layer"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:309
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:321
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:319
 msgid "Load WMS layer from file"
 msgstr "WMS-laag uit bestand laden"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:314
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:325
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:323
 msgid "Load WMS layer"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:324
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:336
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:334
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr "Niet-ondersteunde WMS-bestandsversie; is {0}, verwachtte {1}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:325
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:337
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:335
 msgid "File Format Error"
 msgstr "Fout in bestandsindeling"
 
@@ -10465,7 +10510,7 @@ msgstr ""
 msgid "Reached a junction"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/Grabber.java:76
+#: ../plugins/wmsplugin/src/wmsplugin/Grabber.java:75
 msgid "Exception occurred"
 msgstr "Uitzondering opgetreden"
 
@@ -10533,29 +10578,60 @@ msgstr ""
 msgid "WMS Plugin Help"
 msgstr "WMS-pluginhulp"
 
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:20
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:66
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:70
 msgid "Rectified Image..."
 msgstr "Geogerefereerde afbeelding..."
 
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:20
-msgid "Download Rectified Image from Metacarta's Map Rectifier WMS"
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:68
+msgid "Download Rectified Images From Various Services"
 msgstr ""
-"Geogerefereerde afbeelding van Metacarta's Map Rectifier WMS downloaden"
 
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:24
-msgid "Metacarta Map Rectifier image id"
-msgstr "Afbeeldings-id Metacarta Map Rectifier"
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:32
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:70
 #, java-format
-msgid "rectifier id={0}"
-msgstr "rectifier-id={0}"
+msgid "WMS: {0}"
+msgstr ""
+
+#. This service serves the purpose of "just this once" without forcing the user
+#. to commit the link to the preferences
+#. Clipboard content gets trimmed, so matching whitespace only ensures that this
+#. service will never be selected automatically.
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:106
+msgid "Custom WMS Link"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:111
+msgid "Supported Rectifier Services:"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:135
+msgid "Visit Homepage"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:144
+msgid "WMS URL or Image ID:"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:148
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:150
+msgid "Add Rectified Image"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:198
+msgid ""
+"Couldn't match the entered link or id to the selected service. Please try "
+"again."
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:199
+msgid "No valid WMS URL or id"
+msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:28
 msgid "Adjust the position of the selected WMS layer"
 msgstr "De positie van de geselecteerde WMS-laag aanpassen"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:117
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:112
 #, java-format
 msgid ""
 "The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
@@ -10569,43 +10645,43 @@ msgstr ""
 msgid "Automatic downloading"
 msgstr "Automatisch downloaden"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:116
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:118
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
 msgstr "WMS-laag ({0}), automatisch in zoom {1} downloaden"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:118
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:120
 #, java-format
 msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr "WMS-laag ({0}), in zoom {1} downloaden"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:170
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:169
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 "Het gevraagde gebied is te groot. Zoom iets in of verander de resolutie"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:230
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:229
 msgid "Download visible tiles"
 msgstr "Zichtbare tegels downloaden"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:239
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:238
 msgid "Change resolution"
 msgstr "Resolutie veranderen"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:251
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:250
 msgid "Reload erroneous tiles"
 msgstr "Foutieve tegels herladen"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:273
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:272
 msgid "Alpha channel"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:156
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:163
 msgid "WMS"
 msgstr "WMS"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:169
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:176
 msgid "Open a blank WMS layer to load data from a file"
 msgstr "Een lege WMS-laag openen om gegevens uit een bestand in te laden"
 
@@ -22051,6 +22127,12 @@ msgstr ""
 msgid "Terraserver Urban"
 msgstr ""
 
+#~ msgid "Uploading data"
+#~ msgstr "Gegevens uploaden"
+
+#~ msgid "Unknown host"
+#~ msgstr "Onbekende host"
+
 #~ msgid "Add either site-josm.xml or Wiki Pages."
 #~ msgstr "site-josm.xml of Wiki-paginas toevoegen."
 
@@ -22075,6 +22157,15 @@ msgstr ""
 #~ "Zoom: muiswiel of dubbelklik.  Verplaats kaart: rechter muisknop "
 #~ "indrukken en muis bewegen. Selecteer"
 
+#~ msgid "Metacarta Map Rectifier image id"
+#~ msgstr "Afbeeldings-id Metacarta Map Rectifier"
+
+#~ msgid "rectifier id={0}"
+#~ msgstr "rectifier-id={0}"
+
+#~ msgid "Adjust the position of the WMS layer"
+#~ msgstr "De positie van de WMS-laag aanpassen"
+
 #~ msgid "Charge"
 #~ msgstr "Lading"
 
@@ -22098,6 +22189,10 @@ msgstr ""
 
 #~ msgid "Really mark this issue as ''done''?"
 #~ msgstr "Dit onderwerp zeker als ''uitgevoerd'' markeren?"
+
+#~ msgid "Download Rectified Image from Metacarta's Map Rectifier WMS"
+#~ msgstr ""
+#~ "Geogerefereerde afbeelding van Metacarta's Map Rectifier WMS downloaden"
 
 #~ msgid "Portcullis"
 #~ msgstr "Valhek"

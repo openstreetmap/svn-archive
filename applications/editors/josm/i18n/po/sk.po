@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-09 18:51+0200\n"
-"PO-Revision-Date: 2009-06-08 04:20+0000\n"
+"POT-Creation-Date: 2009-06-14 16:51+0200\n"
+"PO-Revision-Date: 2009-06-13 05:07+0000\n"
 "Last-Translator: Vlado <babicvm@szm.sk>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Launchpad-Export-Date: 2009-06-09 16:47+0000\n"
+"X-Launchpad-Export-Date: 2009-06-14 14:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:189
@@ -68,11 +68,11 @@ msgstr "Zrušiť a Ukončiť"
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:151
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:191
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:48
-#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:36
+#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:38
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:89
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:99
 #: ../core/src/org/openstreetmap/josm/actions/UpdateDataAction.java:79
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:116
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:130
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:116
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:149
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:156
@@ -91,7 +91,7 @@ msgstr "Zrušiť a Ukončiť"
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:257
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:87
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:129
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:83
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:86
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:559
 #: ../plugins/grid/src/grid/GridLayer.java:162
 #: ../plugins/grid/src/grid/GridLayer.java:199
@@ -100,6 +100,7 @@ msgstr "Zrušiť a Ukončiť"
 #: ../plugins/utilsplugin/src/UtilsPlugin/JoinAreasAction.java:126
 #: ../plugins/utilsplugin/src/UtilsPlugin/JoinAreasAction.java:318
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:105
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:150
 msgid "Cancel"
 msgstr "Zrušiť"
 
@@ -497,8 +498,8 @@ msgstr "Zmazať zvolené objekty."
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:51
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:98
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:99
-#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:36
+#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:38
 msgid "Overwrite"
 msgstr "Prepísať"
 
@@ -533,7 +534,7 @@ msgstr "Stiahnutie mapových údajov z OSM servera."
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:33
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:28
 #: ../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:25
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:68
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:82
 #, java-format
 msgid "File: {0}"
 msgstr "Súbor: {0}"
@@ -640,10 +641,10 @@ msgstr ""
 "{1}"
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:167
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:291
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:540
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:544
 #: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:55
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:81
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
@@ -653,7 +654,7 @@ msgstr ""
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:126
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveEditLayerTimerTask.java:69
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveGpsLayerTimerTask.java:86
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:358
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:356
 msgid "Error"
 msgstr "Chyba"
 
@@ -1029,7 +1030,7 @@ msgstr "Uložiť"
 msgid "Save the current data."
 msgstr "Uložiť aktuálne dáta."
 
-#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:35
+#: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:37
 #, java-format
 msgid "File {0} exists. Overwrite?"
 msgstr "Súbor {0} existuje. Prepísať ho?"
@@ -1152,7 +1153,7 @@ msgid "Copy to clipboard and close"
 msgstr "Kopírovať do schránky a zavrieť"
 
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:93
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:208
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:207
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:871
 msgid "Close"
 msgstr "Zavrieť"
@@ -1383,55 +1384,89 @@ msgstr ""
 "Táto činnosť vyžaduje {0} individuálne požiadavky na stiahnutie. Prajete si "
 "pokračovať?"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:67
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:68
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:81
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:82
 msgid "Upload to OSM..."
 msgstr "Uložiť do OSM..."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:67
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:81
 msgid "Upload all changes to the OSM server."
 msgstr "Uložiť všetky zmeny na OSM server."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:82
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:96
 msgid "Objects to add:"
 msgstr "Pridané objekty:"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:90
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:104
 msgid "Objects to modify:"
 msgstr "Upravené objekty:"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:98
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:112
 msgid "Objects to delete:"
 msgstr "Odstránené objekty:"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:105
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:119
 msgid "Provide a brief comment for the changes you are uploading:"
 msgstr "Doplniť krátky komentár k nahrávaným zmenám"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:114
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:128
 msgid "Upload these changes?"
 msgstr "Uložiť tieto úpravy?"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:116
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:130
 msgid "Upload Changes"
 msgstr "Nahrať zmeny"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:138
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:154
 msgid "Nothing to upload. Get some data first."
 msgstr "Nie je nič k nahratiu. Najskôr musíte mať nejaké dáta."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:143
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:159
 msgid "There are unresolved conflicts. You have to resolve these first."
 msgstr "Sú tu nevyriešené konflikty. Musíte jich najskôr vyriešiť."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:164
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:182
 msgid "No changes to upload."
 msgstr "Žiadne zmeny pre uloženie."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:180
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:380
-msgid "Uploading data"
-msgstr "Nahrávam dáta"
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:205
+msgid "Uploading"
+msgstr "Nahrávanie"
+
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:250
+#, java-format
+msgid ""
+"<html>Uploading <strong>failed</strong> because the server has a newer "
+"version of one<br>of your nodes, ways or relations.<br>The conflict is "
+"caused by the <strong>{0}</strong> with id <strong>{1}</strong>,<br>the "
+"server has version {2}, your version is {3}.<br>Please synchronize your "
+"local dataset using <br><strong>File-&gt;Update Data</strong>, "
+"resolve<br>any conflicts and try to upload again.</html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:260
+msgid ""
+"<html>Uploading failed because the server has a newer version of one<br>of "
+"your nodes, ways or relations.<br>Please synchronize your local dataset "
+"using <br><strong>File-&gt;Update Data</strong>, resolve<br>any conflicts "
+"and try to upload again.</html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:270
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:279
+msgid "Upload to OSM API failed"
+msgstr "Nahrávanie na OSM API neúspešné"
+
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:287
+#: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:51
+#, java-format
+msgid ""
+"Failed to initialize communication with the OSM server {0}.\n"
+"Check the server URL in your preferences and your internet connection."
+msgstr ""
+"Nepodarilo sa nadviazať spojenie s OSM serverom {0}.\n"
+"Skontrolujte URL servera vo vašich nastaveniach a funkčnosť vašeho "
+"pripojenia na internet."
 
 #: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:15
 #: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:16
@@ -2115,13 +2150,13 @@ msgstr[2] "vzťahov (relations)"
 #: ../core/src/org/openstreetmap/josm/command/CoordinateConflictResolveCommand.java:68
 #, java-format
 msgid "Resolve conflicts in coordinates in {0}"
-msgstr ""
+msgstr "Vyriešte rozpor v súradniciach v {0}"
 
 #. should not happen
 #: ../core/src/org/openstreetmap/josm/command/CoordinateConflictResolveCommand.java:88
 #: ../core/src/org/openstreetmap/josm/command/DeletedStateConflictResolveCommand.java:73
 msgid "cannot resolve undecided conflict"
-msgstr ""
+msgstr "nemôžem vyriešiť nerozhodnutý konflikt"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:81
 #, java-format
@@ -2180,7 +2215,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/command/DeletedStateConflictResolveCommand.java:53
 #, java-format
 msgid "Resolve conflicts in deleted state in {0}"
-msgstr ""
+msgstr "Vyriešte konflikty v zmazaných (state) v {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/MoveCommand.java:118
 msgid "Move"
@@ -2316,7 +2351,7 @@ msgid "different"
 msgstr "rôzne"
 
 #: ../core/src/org/openstreetmap/josm/data/conflict/DeleteConflict.java:15
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:263
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:262
 msgid "deleted"
 msgstr "zmazané"
 
@@ -3041,7 +3076,7 @@ msgstr "funkcia {0} sa nenachádza v porovnávenej dvojici {1}"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:63
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:124
 msgid "Properties"
-msgstr ""
+msgstr "Vlastnosti"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:68
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:93
@@ -3053,7 +3088,7 @@ msgstr "Značky"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:73
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:163
 msgid "Nodes"
-msgstr ""
+msgstr "Body"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:78
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:158
@@ -3116,15 +3151,15 @@ msgstr "Nevyriešené konflikty v zozname členov v tejto relácii"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:125
 msgid "No pending property conflicts"
-msgstr ""
+msgstr "Nevyriešený konflikt vo vlastnostiech"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:128
 msgid "Properties(with conflicts)"
-msgstr ""
+msgstr "Vlastnosti (s konfliktmi)"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:129
 msgid "Pending property conflicts to be resolved"
-msgstr ""
+msgstr "Nebyriešený konflikty vlastností musia byť vyriešené"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ConflictResolver.java:193
 msgid "Conflict Resolution"
@@ -3161,7 +3196,7 @@ msgid "Compare "
 msgstr "Porovnať "
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:263
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:76
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:75
 msgid "My version"
 msgstr "Moja verzia"
 
@@ -3170,7 +3205,7 @@ msgid "List of elements in my dataset, i.e. the local dataset"
 msgstr "Zoznam elementov v mojej dátovej sade, i.e. miestna dátová sada"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:269
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:82
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:81
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMerger.java:137
 msgid "Merged version"
 msgstr "Spojovaná verzia"
@@ -3184,7 +3219,7 @@ msgstr ""
 "rozhodnutie pre spojenie bude aplikované"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:275
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:88
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:87
 msgid "Their version"
 msgstr "Ich verzia"
 
@@ -3355,8 +3390,9 @@ msgstr[2] "Ich verzia ({0} vstupov)"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMergeItem.java:56
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMergeItem.java:76
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagMergeItem.java:106
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:140
 msgid "parameter '{0}' must not be null"
-msgstr ""
+msgstr "parameter '{0}' nesmie byť nulový"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/ListMerger.java:884
 #, java-format
@@ -3386,59 +3422,59 @@ msgstr "Spojované body sú ešte neblokované. Nie je možné dať vykonávací
 msgid "unexpected column index. Got {0}"
 msgstr "neočakávaný index stĺpca. Got {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:77
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:76
 msgid "Properties in my dataset, i.e. the local dataset"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:83
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:82
 msgid ""
 "Properties in the merged element. They will replace properties in my "
 "elements when  merge decisions are applied."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:89
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:88
 msgid "Properties in their dataset, i.e. the server dataset"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:102
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:101
 msgid "Coordinates:"
-msgstr ""
+msgstr "Súradnice:"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:175
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:174
 msgid "Deleted State:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:249
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:261
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:248
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:260
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/PresetItemListCellRenderer.java:28
 msgid "(none)"
 msgstr "(žiadny)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:265
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:264
 msgid "not deleted"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:335
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:334
 msgid "Keep my coordiates"
-msgstr ""
+msgstr "Ponechaj moje súradnice"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:350
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:349
 msgid "Keep their coordiates"
-msgstr ""
+msgstr "Ponechaj ich súradnice"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:365
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:364
 msgid "Undecide conflict between different coordinates"
-msgstr ""
+msgstr "Nerozhodnuté konflikty medzi rôznymi súradnicami"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:380
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:379
 msgid "Keep my deleted state"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:395
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:394
 msgid "Keep their deleted state"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:410
+#: ../core/src/org/openstreetmap/josm/gui/conflict/properties/PropertiesMerger.java:409
 msgid "Undecide conflict between deleted state"
 msgstr ""
 
@@ -6795,13 +6831,19 @@ msgstr "NMEA import úspešný"
 msgid "NMEA import faliure!"
 msgstr "NMEA import zlyhal!"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:149
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:82
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:153
+#, java-format
+msgid "preference {0} missing. Can't initialize OsmApi"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:206
 msgid "This version of JOSM is incompatible with the configured server."
 msgstr ""
 "Táto verzia JOSMu nie je kompatibilná s vybraný serverom uloženým v "
 "nastaveniach."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:150
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:207
 #, java-format
 msgid ""
 "It supports protocol versions 0.5 and 0.6, while the server says it supports "
@@ -6810,49 +6852,35 @@ msgstr ""
 "Podporuje protokol verzií 0.5 a 0.6, zatiaľ čo server hlási podporu {0} to "
 "{1}."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:154
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:211
 #, java-format
 msgid "Communications with {0} established using protocol version {1}"
 msgstr "Komunikácia s {0} je ustálená, používa protokol verzie {1}"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:192
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:207
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:250
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:265
 msgid "Cannot read numeric value from response"
 msgstr "Nemôžem čítať číselné hodnoty z odpovede"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:275
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:336
 msgid "Opening changeset..."
 msgstr "Otváranie kontroly..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:289
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:351
 msgid "Closing changeset..."
 msgstr "Zatváranie kontroly..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:305
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:367
 msgid "No changeset present for diff upload"
 msgstr "Nie sú prítomné zmenené súbory(changeset) pre diff nahratie."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:328
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:376
 msgid "Preparing..."
 msgstr "Pripravujem..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:333
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:381
 msgid "Uploading..."
 msgstr "Nahrávam..."
-
-#. shouldn't happen, but just in case
-#.
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:405
-msgid "Data upload failed for unknown reason"
-msgstr "Chyba pri nahrávaní z neznámeho dôvodu"
-
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:449
-msgid "Not initialized"
-msgstr "Nie je inicializované"
-
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:533
-msgid "Unknown host"
-msgstr "Neznámy hostiteľ"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmBzip2Importer.java:18
 msgid "OSM Server Files bzip2 compressed"
@@ -6987,18 +7015,7 @@ msgstr "Zle formulované id bodu"
 msgid "Contacting Server..."
 msgstr "Kontaktujem server..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:51
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:77
-#, java-format
-msgid ""
-"Failed to initialize communication with the OSM server {0}.\n"
-"Check the server URL in your preferences and your internet connection."
-msgstr ""
-"Nepodarilo sa nadviazať spojenie s OSM serverom {0}.\n"
-"Skontrolujte URL servera vo vašich nastaveniach a funkčnosť vašeho "
-"pripojenia na internet."
-
-#: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:85
+#: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:86
 msgid ""
 "Couldn't connect to the osm server. Please check your internet connection."
 msgstr ""
@@ -7013,7 +7030,14 @@ msgstr ""
 "Server vrátil vnútornú chybu. Skúste to za chvíľu znovu alebo skúste zmenšiť "
 "oblasť."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:127
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:103
+#, java-format
+msgid ""
+"WARNING: preference '{0}' or api version {1} of dataset requires to use "
+"changesets, but API is not handle them. Ignoring changesets."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:134
 #, java-format
 msgid "{0}% ({1}/{2}), {3} left. Uploading {4}: {5} (id: {6})"
 msgstr "{0}% ({1}/{2}), {3} ostáva. Odosielam {4}: {5} (id: {6})"
@@ -7382,11 +7406,11 @@ msgstr "Vybrať dve cesty bez spoločného bodu"
 msgid "Create a grid of ways"
 msgstr "Vytvoriť cestnú sieť"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:71
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:74
 msgid "Upload Trace"
 msgstr "Nahrať stopu"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:82
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:85
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:34
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:35
 msgid "Upload Traces"
@@ -7414,54 +7438,54 @@ msgstr "Prosím zapíšte popis a vašej stope(trace)"
 msgid "Please enter tags about your trace."
 msgstr "Prosím zapíšte značky o vašej stope(trace)"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:155
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:154
 #, java-format
 msgid "Selected track: {0}"
 msgstr "Vybratá stopa: {0}"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:178
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:177
 msgid "Connecting..."
 msgstr "Pripájam sa..."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:201
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:200
 msgid "Upload cancelled"
 msgstr "Nahrávanie je zrušené"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:211
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:210
 msgid "Error while uploading"
 msgstr "Chyba počas nahrávania"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:262
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:261
 msgid "GPX upload was successful"
 msgstr "Nahratie GPS stopy bolo úspešné"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:263
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:262
 msgid "Upload failed. Server returned the following message: "
 msgstr "Chyba pri nahrávaní. Server napísal nasledujúcu správu: "
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:305
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:304
 #, java-format
 msgid "Uploading GPX track: {0}% ({1} of {2})"
 msgstr "Nahrávam GPS stopu(track): {0}% ({1} of {2})"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:337
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:336
 msgid "No description provided. Please provide some description."
 msgstr "Nie je poskytnutý žiaden popis. Prosím doplňte nejaký popis"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:340
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:362
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:339
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:361
 msgid "No GPX layer selected. Cannot upload a trace."
 msgstr "Nie je vybratá GPX vrstva. Nemôžem nahrať stopu (trace)."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:343
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:342
 msgid "No username provided."
 msgstr "Nie je doplnené užívateľské meno."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:346
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:345
 msgid "No password provided."
 msgstr "Nie je doplnené heslo."
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:378
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:377
 msgid "Uploading GPX Track"
 msgstr "Nahrávam GPX stopu (track)"
 
@@ -7816,7 +7840,7 @@ msgstr "Chyba v súbore {0}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:339
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:357
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:355
 msgid "Error loading file"
 msgstr "Chyba pri nahrávaní súboru"
 
@@ -7863,30 +7887,45 @@ msgstr "Vybrať hranice obce(samosprávy)"
 msgid "Select Tableau d'Assemblage"
 msgstr "Vybrať Tableau d'Assemblage"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:129
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:131
 msgid "Cadastre"
 msgstr "Cadastre"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:138
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:140
 msgid "Auto sourcing"
 msgstr "Automatické získavanie"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:163
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:165
 msgid "Invalid projection"
 msgstr "Chybná projekcia"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:164
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:166
 #, java-format
 msgid "Change the projection to {0} first."
 msgstr "Najskôr zmente projekciu na {0}."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:168
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:170
 msgid ""
 "To enable the cadastre WMS plugin, change\n"
 "the JOSM projection to Lambert and restart"
 msgstr ""
 "K zapnutiu cadastre WMS pluginu, zmeňte\n"
 "projekciu na Lambert a reštartujte JOSM"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:205
+msgid ""
+"Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"
+"which is currently allocated for full-screen switch by default\n"
+"Would you like to restore F11 for grab action ?"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:208
+msgid "Restore grab shortcut F11"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:213
+msgid "JOSM is stopped for the change to take effect."
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:28
 msgid "Replace original background by JOSM background color."
@@ -8135,11 +8174,11 @@ msgid "Adjust WMS"
 msgstr "Nastaviť WMS"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSAdjustAction.java:35
-msgid "Adjust the position of the WMS layer"
-msgstr "Upraviť pozíciu WMS vrstvy"
+msgid "Adjust the position of the WMS layer (raster images only)"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSDownloadAction.java:19
-#: ../plugins/wmsplugin/src/wmsplugin/WMSDownloadAction.java:18
+#: ../plugins/wmsplugin/src/wmsplugin/WMSDownloadAction.java:15
 #, java-format
 msgid "Download WMS tile from {0}"
 msgstr "Sťahovať WMS dlaždice z {0}"
@@ -8153,8 +8192,8 @@ msgstr ""
 "Najskôr vyberte jednu z nich a potom zopakujte"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:80
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:66
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:169
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:67
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:176
 msgid "Blank Layer"
 msgstr "Prázdna vrstva"
 
@@ -8182,33 +8221,33 @@ msgid "Commune bbox: {0}"
 msgstr "Hranice obce bbox: {0}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:282
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:293
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:292
 msgid "Save WMS layer to file"
 msgstr "Uložiť WMS vrstvu do súboru"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:287
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:297
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:295
 msgid "Save WMS layer"
 msgstr "Uložiť WMS vrstvu"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:309
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:321
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:319
 msgid "Load WMS layer from file"
 msgstr "Nahrať WMS vrstvu zo súboru"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:314
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:325
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:323
 msgid "Load WMS layer"
 msgstr "Načítať WMS vrstvu"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:324
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:336
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:334
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr "Nepodporovaná verzia WMS súboru; nájdené {0}, očakávané {1}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:325
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:337
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:335
 msgid "File Format Error"
 msgstr "Chyba formátu súboru"
 
@@ -10519,7 +10558,7 @@ msgstr "Je dosiahnutý koniec línie"
 msgid "Reached a junction"
 msgstr "Je dosiahnuté spojenie"
 
-#: ../plugins/wmsplugin/src/wmsplugin/Grabber.java:76
+#: ../plugins/wmsplugin/src/wmsplugin/Grabber.java:75
 msgid "Exception occurred"
 msgstr "Nastavenie výnimky"
 
@@ -10585,28 +10624,60 @@ msgstr ""
 msgid "WMS Plugin Help"
 msgstr "Nápoveda WMS Pluginu"
 
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:20
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:66
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:70
 msgid "Rectified Image..."
 msgstr "Prekreslený obrázok..."
 
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:20
-msgid "Download Rectified Image from Metacarta's Map Rectifier WMS"
-msgstr "Sťahovať Prekreslený Obrázok z Metacarta's Map Rectifier WMS"
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:68
+msgid "Download Rectified Images From Various Services"
+msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:24
-msgid "Metacarta Map Rectifier image id"
-msgstr "Metacarta Map Rectifier(prekresľovač) obrázka id"
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:32
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:70
 #, java-format
-msgid "rectifier id={0}"
-msgstr "prekresľovač id={0}"
+msgid "WMS: {0}"
+msgstr ""
+
+#. This service serves the purpose of "just this once" without forcing the user
+#. to commit the link to the preferences
+#. Clipboard content gets trimmed, so matching whitespace only ensures that this
+#. service will never be selected automatically.
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:106
+msgid "Custom WMS Link"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:111
+msgid "Supported Rectifier Services:"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:135
+msgid "Visit Homepage"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:144
+msgid "WMS URL or Image ID:"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:148
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:150
+msgid "Add Rectified Image"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:198
+msgid ""
+"Couldn't match the entered link or id to the selected service. Please try "
+"again."
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:199
+msgid "No valid WMS URL or id"
+msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:28
 msgid "Adjust the position of the selected WMS layer"
 msgstr "Nastavte polohu vybratej WMS vrstvy"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:117
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:112
 #, java-format
 msgid ""
 "The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
@@ -10620,43 +10691,43 @@ msgstr ""
 msgid "Automatic downloading"
 msgstr "Automatické sťahovanie"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:116
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:118
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
 msgstr "WMS vrstva ({0}), sa automaticky sťahuje vo zväčšení (zoom) {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:118
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:120
 #, java-format
 msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr "WMS vrstva ({0}), sťahovaná vo zväčšení (zoom) {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:170
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:169
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 "Požadovaná oblasť je príliš veľká. Prosím priblížte ju, alebo zmente oblasť."
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:230
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:229
 msgid "Download visible tiles"
 msgstr "Stiahnuť viditeľné dlaždice"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:239
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:238
 msgid "Change resolution"
 msgstr "Zmena rozlíšenia"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:251
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:250
 msgid "Reload erroneous tiles"
 msgstr "Nahrať poškodené dlaždice"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:273
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:272
 msgid "Alpha channel"
 msgstr "Alfa kanál"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:156
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:163
 msgid "WMS"
 msgstr "WMS"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:169
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:176
 msgid "Open a blank WMS layer to load data from a file"
 msgstr "Otvoriť prázdnu WMS vrstvu, aby sa nahrali dáta zo súboru"
 
@@ -22159,6 +22230,12 @@ msgstr "Terraserver Topo"
 msgid "Terraserver Urban"
 msgstr "Terraserver Urban"
 
+#~ msgid "Uploading data"
+#~ msgstr "Nahrávam dáta"
+
+#~ msgid "Unknown host"
+#~ msgstr "Neznámy hostiteľ"
+
 #~ msgid "Add either site-josm.xml or Wiki Pages."
 #~ msgstr "Vložte buď site-josm.xml alebo wiki stránku"
 
@@ -22184,6 +22261,15 @@ msgstr "Terraserver Urban"
 #~ "Zväčšenie: Koliesko myši, alebo dvojitý kľuk. Posun mapy: Držte pravé "
 #~ "tlačítko myši a hýbte myšou. Výber: Kľuk."
 
+#~ msgid "Metacarta Map Rectifier image id"
+#~ msgstr "Metacarta Map Rectifier(prekresľovač) obrázka id"
+
+#~ msgid "rectifier id={0}"
+#~ msgstr "prekresľovač id={0}"
+
+#~ msgid "Adjust the position of the WMS layer"
+#~ msgstr "Upraviť pozíciu WMS vrstvy"
+
 #~ msgid "Charge"
 #~ msgstr "Poplatok"
 
@@ -22207,6 +22293,9 @@ msgstr "Terraserver Urban"
 
 #~ msgid "Really mark this issue as ''done''?"
 #~ msgstr "Naozaj označiť tento problém ako \"hotový\"?"
+
+#~ msgid "Download Rectified Image from Metacarta's Map Rectifier WMS"
+#~ msgstr "Sťahovať Prekreslený Obrázok z Metacarta's Map Rectifier WMS"
 
 #~ msgid "Portcullis"
 #~ msgstr "Mreže"
@@ -22261,3 +22350,9 @@ msgstr "Terraserver Urban"
 
 #~ msgid "Error processing changeset upload response"
 #~ msgstr "Chyba pri odpovedi počas nahrávania zmenených súborov."
+
+#~ msgid "Not initialized"
+#~ msgstr "Nie je inicializované"
+
+#~ msgid "Data upload failed for unknown reason"
+#~ msgstr "Chyba pri nahrávaní z neznámeho dôvodu"

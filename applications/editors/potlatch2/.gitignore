@@ -1,0 +1,35 @@
+/<?xml version="1.0" encoding="UTF-8"?>
+/<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+/<plist version="1.0">
+/<dict>
+/	<key>documents</key>
+/	<array>
+/		<dict>
+/			<key>filename</key>
+/			<string>map_features.xml</string>
+/		</dict>
+/		<dict>
+/			<key>expanded</key>
+/			<true/>
+/			<key>name</key>
+/			<string>net</string>
+/			<key>regexFolderFilter</key>
+/			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+/			<key>sourceDirectory</key>
+/			<string>net</string>
+/		</dict>
+/		<dict>
+/			<key>filename</key>
+/			<string>halcyon.mxml</string>
+/		</dict>
+/	</array>
+/	<key>fileHierarchyDrawerWidth</key>
+/	<integer>200</integer>
+/	<key>metaData</key>
+/	<dict/>
+/	<key>showFileHierarchyDrawer</key>
+/	<true/>
+/	<key>windowFrame</key>
+/	<string>{{244, 41}, {743, 567}}</string>
+/</dict>
+/</plist>

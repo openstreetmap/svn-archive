@@ -11,7 +11,6 @@
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
         <ant antfile="build.xml" target="dist" dir="Create_grid_of_ways"/>
         <ant antfile="build.xml" target="dist" dir="DirectUpload"/>
-        <ant antfile="build.xml" target="dist" dir="czechaddress"/>
         <ant antfile="build.xml" target="dist" dir="editgpx"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
@@ -23,7 +22,6 @@
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
-        <ant antfile="build.xml" target="dist" dir="piclayer"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
         <ant antfile="build.xml" target="dist" dir="remotecontrol"/>
         <ant antfile="build.xml" target="dist" dir="routing"/>
@@ -36,10 +34,12 @@
         <ant antfile="build.xml" target="dist" dir="usertools"/>
         <ant antfile="build.xml" target="dist" dir="utilsplugin"/>
         <ant antfile="build.xml" target="dist" dir="validator"/>
-        <ant antfile="build.xml" target="dist" dir="waydownloader"/>
         <ant antfile="build.xml" target="dist" dir="wmsplugin"/>
     </target>
     <target name="build_defect" depends="compile">
+        <ant antfile="build.xml" target="dist" dir="waydownloader"/>
+        <ant antfile="build.xml" target="dist" dir="piclayer"/>
+        <ant antfile="build.xml" target="dist" dir="czechaddress"/>
         <ant antfile="build.xml" target="dist" dir="duplicateway"/>
         <ant antfile="build.xml" target="dist" dir="grid"/>
     </target>

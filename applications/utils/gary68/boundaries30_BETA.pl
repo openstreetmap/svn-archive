@@ -126,6 +126,7 @@ my $hirarchyOpt = 0 ;
 my $simplifyOpt = "" ;
 my $debugOpt = "" ;
 my $picOpt = "" ;
+my $allPicsOpt = "" ;
 my $picSize = 1024 ; # default pic size longitude in pixels
 my $resizeOpt = "" ;
 my $resizeFactor = 1.05 ; # 5% bigger default
@@ -152,6 +153,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"npk:f" 	=> \$simplifyNpk,	# max nodes per km when simplifying
 				"debug"		=> \$debugOpt,		
 				"pics" 		=> \$picOpt,		# specifies if pictures of polygons are drawn. polybasename must be given.
+				"allpics"	=> \$allPicsOpt,	# also invalid and unselected will be drawn
 				"hirarchy" 	=> \$hirarchyOpt,	# specifies if hirarchies of boundaries are calculated. don't together use with adminlevel. can/should be used with -simplify, then simplified polygons are used for building the hirarchy - much faster
 				"resize"	=> \$resizeOpt,	# specifies if new resized polygon will be produced (-polygon must be specified, maybe use -factor, if -simplify is given, simplified polygon will be resized)
 				"factor:f"	=> \$resizeFactor,	# specifies how much bigger the resized polygon will be
@@ -397,10 +399,13 @@ foreach $rel (keys %relationWays) {
 		if ($waysValid == 1) {
 			if ($verbose) { print "call checksegments rel = $rel --- ways = @{$relationWays{$rel}}\n" ; } 
 			# now let's see if we can build a single closed way out of all these ways...
-			($segments, $open, @waysClosed, @waysOpen) = checkSegments4 ( @{$relationWays{$rel}} ) ; 
+			my $refClosed ; my $refOpen ;
+			($segments, $open, $refClosed, $refOpen) = checkSegments4 ( @{$relationWays{$rel}} ) ; 
 
-			@{$relationOpenWays{$rel}} = @waysOpen ;
-			@{$relationClosedWays{$rel}} = @waysClosed ;
+			@{$relationOpenWays{$rel}} = @$refOpen ;
+			@{$relationClosedWays{$rel}} = @$refClosed ;
+
+			# print "rel $rel number: $segments openreturned: $open openways:", scalar (@{$relationOpenWays{$rel}}), " closedways:", scalar (@{$relationClosedWays{$rel}}), "\n" ;
 		}
 
 		if ( ($open == 0) and ($waysValid == 1) ) {
@@ -660,7 +665,7 @@ if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 if ( ($polyBaseName ne "") and ($picOpt eq "1") ) {
 	print "write picture files...\n" ; 
 	foreach $rel (keys %relationWays) {
-		if ( ($validRelation{$rel}) and ($selectedRelation{$rel}) ) {
+		if ( (($validRelation{$rel}) and ($selectedRelation{$rel})) or ($allPicsOpt eq "1")) {
 			drawPic ($rel) ;
 		}
 	}
@@ -1070,15 +1075,15 @@ sub checkSegments4 {
 	# evaluation
 
 #	#print "\nSUB RESULT\n" ;
-#	foreach $way (keys %wayStart) {
-#		#print "way $way start $wayStart{$way} end $wayEnd{$way}\n" ;
-#		if ($wayStart{$way} != $wayEnd{$way}) {
-#			$openSegments++ ;
-#			#print "   open!\n" ;
-#			push @openEnds, $wayStart{$way}, $wayEnd{$way} ;
-#		}
-#	}
-#	#print "SUB RESULT END\n" ;
+	foreach $way (keys %wayStart) {
+		#print "way $way start $wayStart{$way} end $wayEnd{$way}\n" ;
+		if ($wayStart{$way} != $wayEnd{$way}) {
+			$openSegments++ ;
+			#print "   open!\n" ;
+			push @openEnds, $wayStart{$way}, $wayEnd{$way} ;
+		}
+	}
+	#print "SUB RESULT END\n" ;
 
 	my @openWays = () ;
 	my @closedWays = () ;
@@ -1091,7 +1096,7 @@ sub checkSegments4 {
 		}
 	}
 
-	return (scalar (keys %wayStart), $openSegments, @closedWays, @openWays) ;
+	return (scalar (keys %wayStart), $openSegments, \@closedWays, \@openWays) ;
 }
 
 sub removeElement {
@@ -1188,14 +1193,14 @@ sub drawPic {
 #		foreach $pt ($relationPolygonResized{$rel}->points) {
 #			push @coordinates, $pt->[0], $pt->[1] ;
 #		}
-#		drawWay ("red", 1, @coordinates) ;
+#		drawWay ("orange", 1, @coordinates) ;
 #	}
 
 	# drawNodeCircle (center ($relationPolygon{$rel}), "black", 4) ;
 
 	drawHead ($program . " ". $version . " by Gary68" . " RelId = " . $rel . " name = " . $relationName{$rel}, "black", 3) ;
 	drawFoot ("data by openstreetmap.org" . " " . $osmName . " " .ctime(stat($osmName)->mtime), "gray", 3) ;
-	drawLegend (3, "Center", "black", "Resized", "red", "Simplified", "blue", "Original", "green") ;
+	drawLegend (3, "Center", "black", "Resized", "orange", "Open", "red", "Simplified", "blue", "Original", "green") ;
 	drawRuler ("black") ;
 	writeGraph ($polyBaseName . "." . $rel . ".png") ;
 }

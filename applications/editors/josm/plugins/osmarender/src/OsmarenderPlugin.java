@@ -64,7 +64,10 @@ public class OsmarenderPlugin extends Plugin {
             }
             for (OsmPrimitive p : new HashSet<OsmPrimitive>(backRefsV.data)) {
                 if (p instanceof Way) {
-                    backRefsV.data.addAll(((Way) p).nodes);
+                    for (Node n : ((Way) p).nodes) {
+                        if (n.coor.isWithin(b))
+                            backRefsV.data.add(n);
+                    }
                 }
             }
             for (OsmPrimitive p : backRefsV.data)
@@ -78,6 +81,7 @@ public class OsmarenderPlugin extends Plugin {
                 w.writeDataSources(fromDataSet);
                 w.writeContent(fromDataSet);
                 w.footer();
+                w.close();
 
                 // get the exec line
                 String exec = firefox;

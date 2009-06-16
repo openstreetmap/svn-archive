@@ -23,9 +23,10 @@
 # OUT: file.csv (list)
 # OUT: file.hirarchy.htm (list)
 # OUT: file.hirarchy.csv (list)
-# OUT: fileXXXXX.poly (borders original)
-# OUT: fileSimplifiedXXXXX.poly (borders simplified)
-# OUT: fileXXXXX.png (map of border)
+# OUT: file.XXXXX.poly (borders original)
+# OUT: file.Simplified.XXXXX.poly (borders simplified)
+# OUT: file.Resized.XXXXX.poly (borders resized and potentially simplified)
+# OUT: file.XXXXX.png (map of border)
 #
 # relation member roles used: outer and none
 # 
@@ -153,7 +154,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"npk:f" 	=> \$simplifyNpk,	# max nodes per km when simplifying
 				"debug"		=> \$debugOpt,		
 				"pics" 		=> \$picOpt,		# specifies if pictures of polygons are drawn. polybasename must be given.
-				"allpics"	=> \$allPicsOpt,	# also invalid and unselected will be drawn
+				"allpics"	=> \$allPicsOpt,	# also invalid and unselected will be drawn (don't use adminlevel selection then)
 				"hirarchy" 	=> \$hirarchyOpt,	# specifies if hirarchies of boundaries are calculated. don't together use with adminlevel. can/should be used with -simplify, then simplified polygons are used for building the hirarchy - much faster
 				"resize"	=> \$resizeOpt,	# specifies if new resized polygon will be produced (-polygon must be specified, maybe use -factor, if -simplify is given, simplified polygon will be resized)
 				"factor:f"	=> \$resizeFactor,	# specifies how much bigger the resized polygon will be
@@ -519,7 +520,7 @@ print "done (node and way check).\n" ;
 #
 print "calc length, build polygons, (simplify, resize)...\n" ; 
 foreach $rel (keys %relationWays) {
-	if ( $selectedRelation{$rel}) {
+	if ( $selectedRelation{$rel} ) {	
 
 		my $wayNodes ;
 		my $length = 0 ;
@@ -602,14 +603,14 @@ if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 	foreach $rel (keys %relationWays) {
 		if ($selectedRelation{$rel}) {
 
-			# TODO for ALL polygons, open and closed. get FORMAT to do so!
+			# TODO for ALL polygons, open and closed.
 
 			my @way ; my $polyFileName = "" ; my @points = () ; my $text = "" ;
 			if ($verbose) { print "write poly file for relation $rel $relationName{$rel} (", scalar (@points) , " nodes) ...\n" ; }
 
 
 #			if ($simplifyOpt eq "1") { 
-#				$polyFileName = $polyBaseName . ".simplified." . $rel . ".poly" ;
+#				$polyFileName = $polyBaseName . ".Simplified." . $rel . ".poly" ;
 #				@points = $relationPolygonSimplified{$rel}->points ;
 #				$text = " (SIMPLIFIED)" ;
 #				open ($polyFile, ">", $polyFileName) or die ("can't open poly output file") ;
@@ -624,7 +625,7 @@ if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 #			}
 
 #			if ($resizeOpt eq "1") { 
-#				$polyFileName = $polyBaseName . ".resized." . $rel . ".poly" ;
+#				$polyFileName = $polyBaseName . ".Resized." . $rel . ".poly" ;
 #				@points = $relationPolygonResized{$rel}->points ;
 #				$text = " (RESIZED)" ;
 #				open ($polyFile, ">", $polyFileName) or die ("can't open poly output file") ;

@@ -115,7 +115,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         });
 
         p.add(buttonPanel);
-        p.add(Box.createHorizontalGlue(), GBC.std().fill(GBC.HORIZONTAL));
+        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
 
         overlapCheckBox = new JCheckBox(tr("Overlap tiles"), WMSPlugin.doOverlap );
         JLabel labelLat = new JLabel(tr("% of lat:"));

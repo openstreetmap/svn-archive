@@ -5,6 +5,7 @@ use GD;
 use POSIX qw(ceil floor);
 use XML::Simple;
 use Data::Dumper;
+use strict;
 
 my %opts = ();
 
@@ -118,13 +119,46 @@ if ($proj->{'latex-file'}) {
 my $needoverview = 0;
 
 sub get_grid_num {
-    my ($x, $y) = @_;
-    return "X" if ($y < 1 || $y > $ygridnum);
-    return "X" if ($x < 1 || $x > $proj->{'gridwidth'});
+    my ($x, $y, $numsubx, $numsuby) = @_;
 
-    return (($ygridnum - $y) * $proj->{'gridwidth'} + $x);
+    $numsubx ||= $proj->{'gridwidth'};
+    $numsuby ||= $ygridnum;
+
+    return "X" if ($y < 1 || $y > $numsuby);
+    return "X" if ($x < 1 || $x > $numsubx);
+
+    return (($numsuby - $y) * $numsubx + $x);
 }
 
+sub get_grid_display_num {
+    my ($x, $y) = @_;
+
+    my $gridnum = get_grid_num($x, $y);
+
+    return $gridnum if ($gridnum eq "X");
+
+    # if a sub-grid, return it as a latex table
+    if ($gridinfo->{'grid'}{$gridnum}{'subgrid'}) {
+	my $numsubs = $gridinfo->{'grid'}{$gridnum}{'subgrid'};
+	my $out = "\\begin{tiny}\n";
+	$out   .= "\\begin{tabular}{" . "c|" x $numsubs . "}\n";
+	$out =~ s/\|}\n$/}\n/;
+
+	foreach my $xn (1 .. $numsubs) {
+	    foreach my $yn (1 .. $numsubs) {
+		$out .= $gridnum . "-" . ($numsubs*($yn-1) + $xn) . " & ";
+	    }
+	    $out =~ s/\& $/\\\\\n\\hline\n/;
+	}
+	$out =~ s/\\hline\n$//m;
+	$out .= "\\end{tabular}\n";
+	$out .= "\\end{tiny}\n";
+	return $out;
+    }
+
+    # return the original singual grid square
+    return $gridnum;
+}
 
 foreach my $y (reverse(1..$ygridnum)) {
     foreach my $x (1..$proj->{'gridwidth'}) {
@@ -153,7 +187,8 @@ foreach my $y (reverse(1..$ygridnum)) {
 		    my $newmaxx = $minx + ($subx+1) * ($maxx-$minx)/$numsubx;
 		    my $newmaxy = $miny + ($suby+1) * ($maxy-$miny)/$numsuby;
 
-		    do_grid("$gridsquare-" . get_grid_num($subx, $suby),
+		    do_grid("$gridsquare-" . get_grid_num($subx+1, $suby+1,
+							  $numsubx, $numsuby),
 			    $newminx, $newminy,
 			    $newmaxx, $newmaxy, $x, $y,
 			    $proj->{'subgrid-rule-file'});
@@ -191,7 +226,7 @@ if (! -f $overviewsvg || Stat($combinedsvg, $overviewsvg)) {
 }
 
 # render the overview SVG as EPS for later inclusion into latex
-if (! -f $combindepng  ||
+if (! -f $combinedpng  ||
     Stat($combinedsvg, $combinedpng)) {
     System("inkscape -f $combinedsvg -e $combinedpng");
 #    Stat($overviewsvg, $overvieweps)) {
@@ -307,18 +342,19 @@ sub do_grid {
 	
     if (defined($proj->{'latex-file'})) {
 	# note: y numbers are functionally backwards (bottom to top)
-	my $nw = get_grid_num($x-1, $y+1);
-	my $n  = get_grid_num($x,   $y+1);
-	my $ne = get_grid_num($x+1, $y+1);
+	my $nw = get_grid_display_num($x-1, $y+1);
+	my $n  = get_grid_display_num($x,   $y+1);
+	my $ne = get_grid_display_num($x+1, $y+1);
 
-	my $w  = get_grid_num($x-1, $y);
-	my $e  = get_grid_num($x+1, $y);
+	my $w  = get_grid_display_num($x-1, $y);
+	my $here = get_grid_display_num($x, $y);
+	my $e  = get_grid_display_num($x+1, $y);
 
-	my $sw = get_grid_num($x-1, $y-1);
-	my $s  = get_grid_num($x,   $y-1);
-	my $se = get_grid_num($x+1, $y-1);
+	my $sw = get_grid_display_num($x-1, $y-1);
+	my $s  = get_grid_display_num($x,   $y-1);
+	my $se = get_grid_display_num($x+1, $y-1);
 
-	my $gridstring = "\\Grid{$nw}{$n}{$ne}{$w}{$e}{$sw}{$s}{$se}";
+	my $gridstring = "\\Grid{$nw}{$n}{$ne}{$w}{$here}{$e}{$sw}{$s}{$se}";
 
 	if ($opts{'ps'}) {
 	    print L "\\Map{$outfile}{$label}{$minx}{$maxy}{$maxx}{$miny}{$gridstring}\n";
@@ -329,7 +365,7 @@ sub do_grid {
 	if ($#{$gridinfo->{'grid'}{$label}{'note'}} > -1) {
 	    print L "\\NotesBegin\n";
 	    foreach my $note (@{$gridinfo->{'grid'}{$label}{'note'}}) {
-		print STDERR "yay!: $note $gridnum\n";
+		print STDERR "yay!: $note $label\n";
 		print L "\\Note{" . $note . "}\n";
 	    }
 	    print L "\\NotesEnd\n";
@@ -368,8 +404,6 @@ sub make_overview {
 
     my $gridw = $width/$numx;
     my $gridh = $height/$numy;
-
-    print "gridhere: $gridw / $gridh\n";
 
     make_overview_grid($gridw, $gridh, $width, $height ,0, 0, $numx, $numy, "");
     print OSVG "</svg>\n";
@@ -417,7 +451,6 @@ sub make_overview_grid {
     for my $x (0..($numx-1)) {
 	for my $y (0..($numy-1)) {
 	    my $gridsquare = $y*$numx + $x + 1;
-	    print "here: $gridsquare\n";
 	    if (!$prefix &&
 		$gridinfo->{'grid'}{$gridsquare}{'subgrid'}) {
 		my $subnum = $gridinfo->{'grid'}{$gridsquare}{'subgrid'};

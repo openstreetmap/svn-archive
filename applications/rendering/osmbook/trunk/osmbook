@@ -371,33 +371,70 @@ sub make_overview {
 
     print "gridhere: $gridw / $gridh\n";
 
-    # vertical grid lines
-    for my $x (0..($numx-1)) {
-	print OSVG "<line id=\"vert_$x\" style=\"stroke: rgb(0,0,0)\" x1=\"",
-	  $x * $gridw, "\" x2=\"", $x * $gridw, "\" y1=\"0\" y2=\"$height\" />\n";
-    }
-    print OSVG "<line id=\"vert_last\" style=\"stroke: rgb(0,0,0)\" x1=\"$gridw\"",
-      " x2=\"$gridw\" y1=\"0\" y2=\"$height\" />\n";
+    make_overview_grid($gridw, $gridh, $width, $height ,0, 0, $numx, $numy, "");
+    print OSVG "</svg>\n";
+}
+
+#
+# gridw/gridh = size of each grid square
+# width/height = total size of grid area
+# woffset, hoffset = offset into range where grid is located (ie, base)
+# numx/numy = number of grid squares in x and y space to draw
+# prefix = prefix to prepend to label
+#
+sub make_overview_grid {
+    my ($gridw, $gridh, $width, $height, $woffset, $hoffset,
+	$numx, $numy, $prefix) = @_;
 
     # vertical grid lines
-    for my $y (0..($numy-1)) {
-	print OSVG "<line id=\"horz_$y\" style=\"stroke: rgb(0,0,0)\" y1=\"",
-	  $y * $gridh, "\" y2=\"", $y * $gridh, "\" x1=\"0\" x2=\"$width\" />\n";
+    for my $x (0..($numx-1)) {
+	print OSVG "<line id=\"vert_$prefix$x\" style=\"stroke: rgb(0,0,0)\" x1=\"",
+	  ($woffset + $x * $gridw), "\" x2=\"", ($woffset + $x * $gridw),
+	    "\" y1=\"$hoffset\" y2=\"", ($hoffset + $height), "\" />\n";
     }
-    print OSVG "<line id=\"horz_last\" style=\"stroke: rgb(0,0,0)\" y1=\"$gridh\"",
-      " y2=\"$gridh\" x1=\"0\" x2=\"$width\" />\n";
+
+    print OSVG "<line id=\"vert_${prefix}last\" style=\"stroke: rgb(0,0,0)\" x1=\"",
+      ($woffset + $width), "\"",
+	" x2=\"", ($woffset + $width), "\" y1=\"$hoffset\" y2=\"",
+	  ($hoffset + $height), "\" />\n";
+
+    # horizontal grid lines
+    for my $y (0..($numy-1)) {
+	print OSVG "<line id=\"horz_$prefix$y\" style=\"stroke: rgb(0,0,0)\" y1=\"",
+	  ($hoffset + $y * $gridh), "\" y2=\"",
+	    ($hoffset + $y * $gridh), "\" x1=\"", ($woffset), "\" x2=\"",
+	      ($woffset + $width), "\" />\n";
+    }
+
+    print OSVG "<line id=\"horz_${prefix}last\" style=\"stroke: rgb(0,0,0)\" y1=\"",
+      ($hoffset + $height), "\"",
+	" y2=\"", ($hoffset + $height), "\" x1=\"$woffset\" x2=\"",
+	  ($woffset + $width), "\" />\n";
 
     my $textstyle = "style=\"font-size: " . int($gridw/4) . "px;\"";
 
     # grid square labels
     for my $x (0..($numx-1)) {
 	for my $y (0..($numy-1)) {
-	    print OSVG "<text $textstyle x=\"", $x*$gridw + $gridw/2, "\" y=\"",
-	      $y*$gridh + $gridh/2, "\">", $y*$numx + $x + 1, "</text>\n";
+	    my $gridsquare = $y*$numx + $x + 1;
+	    print "here: $gridsquare\n";
+	    if (!$prefix &&
+		$gridinfo->{'grid'}{$gridsquare}{'subgrid'}) {
+		my $subnum = $gridinfo->{'grid'}{$gridsquare}{'subgrid'};
+		make_overview_grid($gridw/$subnum, $gridh/$subnum,
+				   $gridw, $gridh,
+				   $x*$gridw, $y*$gridh,
+				   $subnum, $subnum,
+				   ($y*$numx + $x + 1) . "-")
+	    } else {
+		print OSVG "<text $textstyle x=\"",
+		  $woffset + $x*$gridw + $gridw/3,
+		  "\" y=\"", $hoffset + $y*$gridh + $gridh/2, "\">$prefix",
+		    $y*$numx + $x + 1, "</text>\n";
+	    }
 	}
     }
 
-    print OSVG "</svg>\n";
 }
 
 sub make_svggrid {

@@ -13,39 +13,31 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.Box;
 import javax.swing.AbstractAction;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.JCheckBox;
-import javax.swing.JSeparator;
+import javax.swing.Box;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
-import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 
 /**
@@ -213,7 +205,6 @@ public class MeasurementLayer extends Layer {
     public static double angleBetween(LatLon p1, LatLon p2){
         double lat1, lon1, lat2, lon2;
         double dlon;
-        double heading;
 
         lat1 = p1.lat() * Math.PI / 180.0;
         lon1 = p1.lon() * Math.PI / 180.0;
@@ -256,8 +247,6 @@ public class MeasurementLayer extends Layer {
 
     private class GPXLayerImportAction extends AbstractAction {
 
-    private MeasurementLayer layer;
-
     /**
      * The data model for the list component.
      */
@@ -268,7 +257,6 @@ public class MeasurementLayer extends Layer {
      */
     public GPXLayerImportAction(MeasurementLayer layer) {
         super(tr("Import path from GPX layer"), ImageProvider.get("dialogs", "edit")); // TODO: find better image
-        this.layer = layer;
     }
 
     public void actionPerformed(ActionEvent e) {

@@ -12,19 +12,17 @@ import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.util.Collection;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.SideButton;
-import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.openstreetmap.josm.Main;
 
 /**
  * A small tool dialog for displaying the current measurement data.
@@ -106,7 +104,7 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
         final MeasurementDialog dlg = this;
        //TODO: is this enough?
 
-        Main.ds.selListeners.add(new SelectionChangedListener(){
+        DataSet.selListeners.add(new SelectionChangedListener(){
 
             public void selectionChanged(Collection<? extends OsmPrimitive> arg0) {
                 double length = 0.0;
@@ -119,8 +117,8 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
                                         if(lastNode == null){
                                             lastNode = n;
                                         }else{
-                                            length += MeasurementLayer.calcDistance(lastNode.coor, n.coor);
-                                            segAngle = MeasurementLayer.angleBetween(lastNode.coor, n.coor);
+                                            length += MeasurementLayer.calcDistance(lastNode.getCoor(), n.getCoor());
+                                            segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
                                             lastNode = n;
                                         }
                                     } else if(p instanceof Way){
@@ -128,10 +126,10 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
                                         Node lastN = null;
                                         for(Node n: w.nodes){
                                             if(lastN != null){
-                                                length += MeasurementLayer.calcDistance(lastN.coor, n.coor);
+                                                length += MeasurementLayer.calcDistance(lastN.getCoor(), n.getCoor());
                                                 //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
-                                                area += (MeasurementLayer.calcX(n.coor) * MeasurementLayer.calcY(lastN.coor))
-                              - (MeasurementLayer.calcY(n.coor) * MeasurementLayer.calcX(lastN.coor));
+                                                area += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
+                              - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
                                             }
                                             lastN = n;
                                         }

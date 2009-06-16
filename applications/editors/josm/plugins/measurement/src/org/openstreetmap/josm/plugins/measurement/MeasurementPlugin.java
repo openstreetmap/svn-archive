@@ -35,7 +35,7 @@ public class MeasurementPlugin extends Plugin {
         if(currentLayer == null){
             currentLayer = new MeasurementLayer(tr("Measurements"));
             Main.main.addLayer(currentLayer);
-            currentLayer.listeners.add(new LayerChangeListener(){
+            Layer.listeners.add(new LayerChangeListener(){
                 public void activeLayerChange(final Layer oldLayer, final Layer newLayer) {
                     if(newLayer instanceof MeasurementLayer)
                         MeasurementPlugin.currentLayer = (MeasurementLayer)newLayer;

@@ -15,16 +15,16 @@ public class WMSDownloadAction extends JosmAction {
 
     private static final long serialVersionUID = 1L;
 
-	public WMSDownloadAction(String layerName) {
-		super(layerName, "wmsmenu", tr("Download WMS tile from {0}",layerName), null, false);
-	}
-	
-	public void actionPerformed(ActionEvent e) {		
-		DownloadWMSTask.download(getLayer());
-	}
+    public WMSDownloadAction(String layerName) {
+        super(layerName, "wmsmenu", tr("Download WMS tile from {0}",layerName), null, false);
+    }
 
-	public static WMSLayer getLayer() {
-		// check if we already have a layer created. if not, create; if yes, reuse.
+    public void actionPerformed(ActionEvent e) {
+        DownloadWMSTask.download(getLayer());
+    }
+
+    public static WMSLayer getLayer() {
+        // check if we already have a layer created. if not, create; if yes, reuse.
         if (Main.map != null) {
             Layer activeLayer = Main.map.mapView.getActiveLayer();
             if (activeLayer instanceof WMSLayer)
@@ -43,6 +43,6 @@ public class WMSDownloadAction extends JosmAction {
                     tr("More than one WMS layer present\nSelect one of them first, then retry"));
         }
         return null;
-	}
+    }
 };
 

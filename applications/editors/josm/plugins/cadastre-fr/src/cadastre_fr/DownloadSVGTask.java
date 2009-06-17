@@ -28,9 +28,10 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.io.ProgressInputStream;
 /**
- * Grab the SVG administrative boundaries of the active commune layer (cadastre), 
+ * Grab the SVG administrative boundaries of the active commune layer (cadastre),
  * isolate the SVG path of the concerned commune (other municipalities are also
  * downloaded in the SVG data), convert to OSM nodes and way plus simplify.
  * Thanks to Frederic Rodrigo for his help.
@@ -42,7 +43,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     private CadastreInterface wmsInterface;
     private String svg = null;
     private EastNorthBound viewBox = null;
-    
+
     public DownloadSVGTask(WMSLayer wmsLayer) {
         super(tr("Downloading {0}", wmsLayer.name));
 
@@ -51,7 +52,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     }
 
     @Override
-    public void realRun() throws IOException {
+    public void realRun() throws IOException, OsmTransferException {
         Main.pleaseWaitDlg.currentAction.setText(tr("Contacting WMS Server..."));
         try {
             if (wmsInterface.retrieveInterface(wmsLayer)) {
@@ -82,21 +83,21 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     private boolean getViewBox(String svg) {
         double[] box = new SVGParser().getViewBox(svg);
         if (box != null) {
-            viewBox = new EastNorthBound(new EastNorth(box[0], box[1]), 
+            viewBox = new EastNorthBound(new EastNorth(box[0], box[1]),
                     new EastNorth(box[0]+box[2], box[1]+box[3]));
             return true;
         }
         System.out.println("Unable to parse SVG data (viewBox)");
         return false;
     }
-    
+
     /**
      *  The svg contains more than one commune boundary defined by path elements. So detect
      *  which path element is the best fitting to the viewBox and convert it to OSM objects
      */
     private void createWay(String svg) {
         String[] SVGpaths = new SVGParser().getClosedPaths(svg);
-        ArrayList<Double> fitViewBox = new ArrayList<Double>();  
+        ArrayList<Double> fitViewBox = new ArrayList<Double>();
         ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<ArrayList<EastNorth>>();
         for (int i=0; i< SVGpaths.length; i++) {
             ArrayList<EastNorth> eastNorth = new ArrayList<EastNorth>();
@@ -117,16 +118,16 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
             wayToAdd.nodes.add(node);
         }
         wayToAdd.nodes.add(wayToAdd.nodes.get(0)); // close the circle
-        
+
         // simplify the way
         double threshold = Double.parseDouble(Main.pref.get("cadastrewms.simplify-way-boundary", "1.0"));
         new SimplifyWay().simplifyWay(wayToAdd, Main.ds, threshold);
-        
+
         cmds.add(new AddCommand(wayToAdd));
         Main.main.undoRedo.add(new SequenceCommand(tr("Create boundary"), cmds));
         Main.map.repaint();
     }
-    
+
     private double createNodes(String SVGpath, ArrayList<EastNorth> eastNorth) {
         // looks like "M981283.38 368690.15l143.81 72.46 155.86 ..."
         String[] coor = SVGpath.split("[MlZ ]"); //coor[1] is x, coor[2] is y
@@ -138,14 +139,14 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         double maxX = Double.MIN_VALUE;
         for (int i=3; i<coor.length; i+=2){
             double east = dx+=Double.parseDouble(coor[i]);
-            double north = dy+=Double.parseDouble(coor[i+1]); 
+            double north = dy+=Double.parseDouble(coor[i+1]);
             eastNorth.add(new EastNorth(east,north));
-            minX = minX > east ? east : minX; 
-            minY = minY > north ? north : minY; 
-            maxX = maxX < east ? east : maxX; 
-            maxY = maxY < north ? north : maxY; 
+            minX = minX > east ? east : minX;
+            minY = minY > north ? north : minY;
+            maxX = maxX < east ? east : maxX;
+            maxY = maxY < north ? north : maxY;
         }
-        // flip the image (svg using a reversed Y coordinate system)            
+        // flip the image (svg using a reversed Y coordinate system)
         double pivot = viewBox.min.getY() + (viewBox.max.getY() - viewBox.min.getY()) / 2;
         for (EastNorth en : eastNorth) {
             en.setLocation(en.east(), 2 * pivot - en.north());
@@ -153,9 +154,8 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         return Math.abs(minX - viewBox.min.getX())+Math.abs(maxX - viewBox.max.getX())
         +Math.abs(minY - viewBox.min.getY())+Math.abs(maxY - viewBox.max.getY());
     }
-    
-    private String grabBoundary(EastNorthBound bbox) throws IOException {
 
+    private String grabBoundary(EastNorthBound bbox) throws IOException, OsmTransferException {
         try {
             URL url = null;
             url = getURLsvg(bbox);
@@ -165,7 +165,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
             throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);
         }
     }
-    
+
     private URL getURLsvg(EastNorthBound bbox) throws MalformedURLException {
         String str = new String(wmsInterface.baseURL+"/scpc/wms?version=1.1&request=GetMap");
         str += "&layers=";
@@ -182,7 +182,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         return new URL(str.replace(" ", "%20"));
     }
 
-    private String grabSVG(URL url) throws IOException {
+    private String grabSVG(URL url) throws IOException, OsmTransferException {
         wmsInterface.urlConn = (HttpURLConnection)url.openConnection();
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();

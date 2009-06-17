@@ -17,14 +17,14 @@ public class ImageModifier {
 
     public static final int cadastreBackground = -1; // white
 
-    public static final int cadastreBackgroundTransp = 1; // original white but transparent 
+    public static final int cadastreBackgroundTransp = 1; // original white but transparent
 
     public BufferedImage bufferedImage;
 
     private boolean withBackground = false;
 
     private int backgroundPixel = 0;
-    
+
     private int backgroundSampleX, backgroundSampleY;
 
     public ImageModifier(BufferedImage bi) {
@@ -33,7 +33,7 @@ public class ImageModifier {
             makeTransparent();
         else if (Main.pref.getBoolean("cadastrewms.alterColors"))
             replaceBackground();
-        
+
         if (Main.pref.getBoolean("cadastrewms.invertGrey"))
             invertGrey();
     }
@@ -58,7 +58,7 @@ public class ImageModifier {
             }
         }
     }
-    
+
     /**
      * Invert black/white/grey pixels (to change original black characters to white).
      */
@@ -77,7 +77,7 @@ public class ImageModifier {
 
     /**
      * Reverse the grey value if the pixel is grey (light grey becomes dark grey)
-     * Used for texts. 
+     * Used for texts.
      * @param pixel
      * @return
      */

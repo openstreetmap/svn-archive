@@ -4,10 +4,10 @@ since it is not providing most of the standard services. It is also
 just delivering data for one municipality at a time. A special request
 is required at the beginning to specify which municipality is desired.
 
-The plugin is today only requesting PNG images on user request only. The 
+The plugin is today only requesting PNG images on user request only. The
 images can be stored in a cache file and reloaded later. The grabed images
 can be done at any zoom level and the drawing method will always select the
-best images (highest scale) to be displayed in front of worst images 
+best images (highest scale) to be displayed in front of worst images
 (lowest scale).
 
 Also the plugin is able to transform original images to add the transparency

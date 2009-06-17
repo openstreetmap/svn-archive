@@ -23,12 +23,12 @@ import org.openstreetmap.josm.tools.GBC;
 
 /**
  * This hook is called at JOSM upload and will check if new nodes and ways provide
- * a tag "source=". If not and if auto-sourcing is enabled, it will add 
+ * a tag "source=". If not and if auto-sourcing is enabled, it will add
  * automatically a tag "source"="Cadastre..." as defined in the plugin preferences.
  */
 public class CheckSourceUploadHook implements UploadHook
 {
-	/** Serializable ID */
+    /** Serializable ID */
     private static final long serialVersionUID = -1;
 
     /**
@@ -39,7 +39,7 @@ public class CheckSourceUploadHook implements UploadHook
         if (CadastrePlugin.autoSourcing && CadastrePlugin.pluginUsed && !add.isEmpty()) {
             Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>();
             for (OsmPrimitive osm : add) {
-                if ((osm instanceof Node || osm instanceof Way) 
+                if ((osm instanceof Node || osm instanceof Way)
                         && (osm.keys == null || !tagSourceExist(osm))) {
                     sel.add(osm);
                 }
@@ -50,7 +50,7 @@ public class CheckSourceUploadHook implements UploadHook
         }
         return true;
     }
-    
+
     /**
      * Check whenever one of the keys of the object is "source"
      * @param OsmPrimitive
@@ -64,13 +64,13 @@ public class CheckSourceUploadHook implements UploadHook
         }
         return false;
     }
-    
+
     /**
-     * Displays a screen with the list of objects which will be tagged with 
+     * Displays a screen with the list of objects which will be tagged with
      * source="cadastre.." if it is approved.
      * @param sel the list of elements added without a key "source"
      */
-    private void displaySource(Collection<OsmPrimitive> sel) 
+    private void displaySource(Collection<OsmPrimitive> sel)
     {
         if (!sel.isEmpty()) {
             JPanel p = new JPanel(new GridBagLayout());
@@ -85,6 +85,6 @@ public class CheckSourceUploadHook implements UploadHook
             if (bContinue)
                 Main.main.undoRedo.add(new ChangePropertyCommand(sel, "source", CadastrePlugin.source));
         }
-                
-    }    
+
+    }
 }

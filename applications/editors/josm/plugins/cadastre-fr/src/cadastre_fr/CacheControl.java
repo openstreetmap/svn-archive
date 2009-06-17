@@ -3,9 +3,9 @@ package cadastre_fr;
  * This class handles the WMS layer cache mechanism. The design is oriented for a good performance (no
  * wait status on GUI, fast saving even in big file). A separate thread is created for each WMS
  * layer to not suspend the GUI until disk I/O is terminated (a file for the cache can take
- * several MB's). If the cache file already exists, new images are just appended to the file 
- * (performance). Since we use the ObjectStream methods, it is required to modify the standard 
- * ObjectOutputStream in order to have objects appended readable (otherwise a stream header 
+ * several MB's). If the cache file already exists, new images are just appended to the file
+ * (performance). Since we use the ObjectStream methods, it is required to modify the standard
+ * ObjectOutputStream in order to have objects appended readable (otherwise a stream header
  * is inserted before each append and an exception is raised at objects read).
  */
 
@@ -30,15 +30,15 @@ public class CacheControl implements Runnable {
     }
 
     public static boolean cacheEnabled = true;
-    
+
     public static int cacheSize = 500;
-    
-    
+
+
     public WMSLayer wmsLayer = null;
-    
+
     private ArrayList<GeorefImage> imagesToSave = new ArrayList<GeorefImage>();
     private Lock imagesLock = new ReentrantLock();
-      
+
     public CacheControl(WMSLayer wmsLayer) {
         cacheEnabled = Main.pref.getBoolean("cadastrewms.enableCaching", true);
         this.wmsLayer = wmsLayer;
@@ -54,7 +54,7 @@ public class CacheControl implements Runnable {
             checkDirSize(path);
         new Thread(this).start();
     }
-    
+
     private void checkDirSize(File path) {
         long size = 0;
         long oldestFileDate = Long.MAX_VALUE;
@@ -68,18 +68,18 @@ public class CacheControl implements Runnable {
             }
         }
         if (size > cacheSize*1024*1024) {
-            System.out.println("Delete oldest file  \""+ files[oldestFile].getName() 
+            System.out.println("Delete oldest file  \""+ files[oldestFile].getName()
                     + "\" in cache dir to stay under the limit of " + cacheSize + " MB.");
             files[oldestFile].delete();
             checkDirSize(path);
         }
     }
-    
+
     public boolean loadCacheIfExist() {
         try {
             File file = new File(CadastrePlugin.cacheDir + wmsLayer.name + "." + String.valueOf(wmsLayer.lambertZone+1));
             if (file.exists()) {
-                int reply = JOptionPane.showConfirmDialog(null, 
+                int reply = JOptionPane.showConfirmDialog(null,
                         "Location \""+wmsLayer.name+"\" found in cache.\n"+
                         "Load cache first ?\n"+
                         "(No = new cache)",
@@ -89,13 +89,13 @@ public class CacheControl implements Runnable {
                     return loadCache(file, wmsLayer.lambertZone);
                 } else
                     file.delete();
-            }            
+            }
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
         return false;
     }
-    
+
     public void deleteCacheFile() {
         try {
             File file = new File(CadastrePlugin.cacheDir + wmsLayer.name + "." + String.valueOf(wmsLayer.lambertZone+1));
@@ -105,7 +105,7 @@ public class CacheControl implements Runnable {
             e.printStackTrace(System.out);
         }
     }
-    
+
     public boolean loadCache(File file, int currentLambertZone) {
         try {
             FileInputStream fis = new FileInputStream(file);
@@ -165,5 +165,4 @@ public class CacheControl implements Runnable {
             }
         }
     }
-
 }

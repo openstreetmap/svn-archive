@@ -199,7 +199,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
     setStatus(tr("Running Douglas-Peucker approximation..."));
 
-    nodelist = lw.douglasPeucker(nodelist, epsilon);
+    nodelist = lw.douglasPeucker(nodelist, epsilon, 0);
 
     //System.out.println("After Douglas-Peucker approximation "+nodelist.size()+" nodes remain.");
 

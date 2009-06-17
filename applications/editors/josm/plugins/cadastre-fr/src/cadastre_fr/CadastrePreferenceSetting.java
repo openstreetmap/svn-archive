@@ -14,23 +14,23 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Preference settings for the French Cadastre plugin
- * 
+ *
  * @author Pieren <pieren3@gmail.com>
  */
 public class CadastrePreferenceSetting implements PreferenceSetting {
-    
+
     static final int TRANS_MIN = 1;
     static final int TRANS_MAX = 10;
-    private JSlider sliderTrans = new JSlider(JSlider.HORIZONTAL, TRANS_MIN, TRANS_MAX, TRANS_MAX); 
-    
+    private JSlider sliderTrans = new JSlider(JSlider.HORIZONTAL, TRANS_MIN, TRANS_MAX, TRANS_MAX);
+
     private JTextField sourcing = new JTextField(20);
 
     private JCheckBox alterColors = new JCheckBox(tr("Replace original background by JOSM background color."));
 
     private JCheckBox reversGrey = new JCheckBox(tr("Reverse grey colors (for black backgrounds)."));
-    
+
     private JCheckBox transparency = new JCheckBox(tr("Set background transparent."));
-    
+
     private JCheckBox drawBoundaries = new JCheckBox(tr("Draw boundaries of downloaded data."));
 
     private JRadioButton grabMultiplier1 = new JRadioButton("", true);
@@ -38,7 +38,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     private JRadioButton grabMultiplier2 = new JRadioButton("", true);
 
     private JRadioButton grabMultiplier3 = new JRadioButton("", true);
-    
+
     private JRadioButton grabMultiplier4 = new JRadioButton("", true);
 
     static final int DEFAULT_SQUARE_SIZE = 100;
@@ -96,7 +96,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         sliderTrans.setPaintTicks(true);
         sliderTrans.setPaintLabels(false);
         cadastrewms.add(sliderTrans, GBC.eol().fill(GBC.HORIZONTAL).insets(20, 0, 250, 0));
-        
+
         // option to draw boundaries of downloaded data
         drawBoundaries.setSelected(Main.pref.getBoolean("cadastrewms.drawBoundaries", false));
         drawBoundaries.setToolTipText(tr("Draw a rectangle around downloaded data from WMS server."));
@@ -149,7 +149,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         grabMultiplier4Size.setToolTipText(tr("Fixed size (from 25 to 1000 meters)"));
         grabMultiplier4Size.setEnabled(currentScale.equals(Scale.SQUARE_100M.value));
         cadastrewms.add(grabMultiplier4Size, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
-        
+
         // option to enable automatic caching
         enableCache.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -196,7 +196,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
             }
         }
         Main.pref.put("cadastrewms.enableCaching", enableCache.isSelected());
-        
+
         // spread data into objects instead of restarting the application
         try {
             CacheControl.cacheSize = Integer.parseInt(cacheSize.getText());

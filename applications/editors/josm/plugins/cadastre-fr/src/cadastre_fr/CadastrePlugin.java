@@ -189,7 +189,7 @@ public class CadastrePlugin extends Plugin {
             backgroundTransparent = false;
             transparency = 1.0f;
         }
-        // overwrite F11 shortcut used from the beginning by this plugin and recently used 
+        // overwrite F11 shortcut used from the beginning by this plugin and recently used
         // for full-screen switch in JOSM core
         int i = 0;
         String p = Main.pref.get("shortcut.shortcut."+i, null);
@@ -201,7 +201,7 @@ public class CadastrePlugin extends Plugin {
             p = Main.pref.get("shortcut.shortcut."+i, null);
         }
         if (!alreadyRedefined) {
-            int reply = JOptionPane.showConfirmDialog(null, 
+            int reply = JOptionPane.showConfirmDialog(null,
                     tr("Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"+
                     "which is currently allocated for full-screen switch by default\n"+
                     "Would you like to restore F11 for grab action ?"),

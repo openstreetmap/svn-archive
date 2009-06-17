@@ -13,20 +13,21 @@ import javax.imageio.ImageIO;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.io.ProgressInputStream;
 
 public class CadastreGrabber {
 
-	public static final double epsilon = 1e-11;
-	
-	private CadastreInterface wmsInterface = new CadastreInterface(this);
+    public static final double epsilon = 1e-11;
+
+    private CadastreInterface wmsInterface = new CadastreInterface(this);
     private String lastWMSLayerName = null;
-	
-	CadastreGrabber() {
-        getWmsInterface().downloadCancelled = false;	    
-	}
-	
-    public GeorefImage grab(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax) throws IOException {
+
+    CadastreGrabber() {
+        getWmsInterface().downloadCancelled = false;
+    }
+
+    public GeorefImage grab(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax) throws IOException, OsmTransferException {
 
         try {
             URL url = null;
@@ -57,36 +58,36 @@ public class CadastreGrabber {
 
     private URL getURLVector(EastNorth lambertMin, EastNorth lambertMax) throws MalformedURLException {
         String str = new String(wmsInterface.baseURL+"/scpc/wms?version=1.1&request=GetMap");
-		str += "&layers=CDIF:LS3,CDIF:LS2,CDIF:LS1,CDIF:PARCELLE,CDIF:NUMERO";
-		str += ",CDIF:PT3,CDIF:PT2,CDIF:PT1,CDIF:LIEUDIT";
-		str += ",CDIF:SUBSECTION";
-		str += ",CDIF:SECTION";
-		str += ",CDIF:COMMUNE";
-		str += "&format=image/png";
-		//str += "&format=image/jpeg";
-		str += "&bbox="+lambertMin.east()+",";
-		str += lambertMin.north() + ",";
-		str += lambertMax.east() + ",";
-		str += lambertMax.north();
-		//str += "&width=800&height=600"; // maximum allowed by wms server
+        str += "&layers=CDIF:LS3,CDIF:LS2,CDIF:LS1,CDIF:PARCELLE,CDIF:NUMERO";
+        str += ",CDIF:PT3,CDIF:PT2,CDIF:PT1,CDIF:LIEUDIT";
+        str += ",CDIF:SUBSECTION";
+        str += ",CDIF:SECTION";
+        str += ",CDIF:COMMUNE";
+        str += "&format=image/png";
+        //str += "&format=image/jpeg";
+        str += "&bbox="+lambertMin.east()+",";
+        str += lambertMin.north() + ",";
+        str += lambertMax.east() + ",";
+        str += lambertMax.north();
+        //str += "&width=800&height=600"; // maximum allowed by wms server
         str += "&width=1000&height=800"; // maximum allowed by wms server
-		str += "&styles=LS3_90,LS2_90,LS1_90,PARCELLE_90,NUMERO_90,PT3_90,PT2_90,PT1_90,LIEUDIT_90";
-		str += ",SUBSECTION_90";
-		str += ",SECTION_90";
-		str += ",COMMUNE_90";
-		System.out.println("URL="+str);
+        str += "&styles=LS3_90,LS2_90,LS1_90,PARCELLE_90,NUMERO_90,PT3_90,PT2_90,PT1_90,LIEUDIT_90";
+        str += ",SUBSECTION_90";
+        str += ",SECTION_90";
+        str += ",COMMUNE_90";
+        System.out.println("URL="+str);
         return new URL(str.replace(" ", "%20"));
-	}
+    }
 
-	private BufferedImage grab(URL url) throws IOException {
-	    wmsInterface.urlConn = (HttpURLConnection)url.openConnection();
-	    wmsInterface.urlConn.setRequestMethod("GET");
-	    wmsInterface.setCookie();
-		InputStream is = new ProgressInputStream(wmsInterface.urlConn, Main.pleaseWaitDlg);
-		BufferedImage img = ImageIO.read(is);
+    private BufferedImage grab(URL url) throws IOException, OsmTransferException {
+        wmsInterface.urlConn = (HttpURLConnection)url.openConnection();
+        wmsInterface.urlConn.setRequestMethod("GET");
+        wmsInterface.setCookie();
+        InputStream is = new ProgressInputStream(wmsInterface.urlConn, Main.pleaseWaitDlg);
+        BufferedImage img = ImageIO.read(is);
         is.close();
         return img;
-	}
+    }
 
     public CadastreInterface getWmsInterface() {
         return wmsInterface;

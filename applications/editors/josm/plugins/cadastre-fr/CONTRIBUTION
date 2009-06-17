@@ -1,4 +1,4 @@
-The French Cadastre plugin is designed and coded by Pieren <pieren3@gmail.com> 
+The French Cadastre plugin is designed and coded by Pieren <pieren3@gmail.com>
 and is inspired by the wmsplugin for the special handling required by
 the french cadastre WMS www.cadatre.gouv.fr.
-This particular WMS provides vectorized or raster images for only one municipality at a time. 
+This particular WMS provides vectorized or raster images for only one municipality at a time.

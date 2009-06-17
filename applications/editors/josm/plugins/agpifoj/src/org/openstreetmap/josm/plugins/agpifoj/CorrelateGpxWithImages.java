@@ -558,10 +558,10 @@ public class CorrelateGpxWithImages implements ActionListener {
                 panel,
                 new String[] { tr("Correlate"), tr("Auto-Guess"), tr("Cancel") },
                 new String[] { "ok.png", "dialogs/gpx2imgManual.png", "cancel.png" }).getValue();
-            
+
             if(answer != 1 && answer != 2)
                 return;
-                
+
             // Check the selected values
             Object item = cbGpx.getSelectedItem();
 
@@ -571,7 +571,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                 continue;
             }
             selectedGpx = ((GpxDataWrapper) item);
-            
+
             if (answer == 2) {
                 autoGuess(selectedGpx.data);
                 return;
@@ -642,7 +642,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                                                          : JOptionPane.INFORMATION_MESSAGE));
 
     }
-    
+
     // These variables all belong to "auto guess" but need to be accessible
     // from the slider change listener
     private int dayOffset;
@@ -658,7 +658,7 @@ public class CorrelateGpxWithImages implements ActionListener {
     private ArrayList<ImageEntry> autoImgs;
     private long firstGPXDate = -1;
     private long firstExifDate = -1;
-    
+
     /**
      * Tries to automatically match opened photos to a given GPX track. Changes are applied
      * immediately. Presents dialog with sliders for manual adjust.
@@ -668,7 +668,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         autoGpx = gpx;
         autoImgs = getSortedImgList(true, false);
         PrimaryDateParser dateParser = new PrimaryDateParser();
-        
+
         // no images found, exit
         if(autoImgs.size() <= 0) {
             JOptionPane.showMessageDialog(Main.parent,
@@ -676,29 +676,29 @@ public class CorrelateGpxWithImages implements ActionListener {
                 tr("Photos don't contain time information"), JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
         // Free the user's vision
         Main.pleaseWaitDlg.setVisible(false);
         AgpifojDialog dialog = AgpifojDialog.getInstance();
         dialog.action.button.setSelected(true);
-        dialog.action.actionPerformed(null); 
+        dialog.action.actionPerformed(null);
         // Will show first photo if none is selected yet
         if(!dialog.hasImage())
             yLayer.showNextPhoto();
         // FIXME: If the dialog is minimized it will not be maximized. ToggleDialog is
-        // in need of a complete re-write to allow this in a reasonable way. 
+        // in need of a complete re-write to allow this in a reasonable way.
 
         // Init variables
         firstExifDate = autoImgs.get(0).time.getTime()/1000;
-        
-        
+
+
         // Finds first GPX point
         outer: for (GpxTrack trk : gpx.tracks) {
             for (Collection<WayPoint> segment : trk.trackSegs) {
                 for (WayPoint curWp : segment) {
                     String curDateWpStr = (String) curWp.attr.get("time");
                     if (curDateWpStr == null) continue;
-                    
+
                     try {
                         firstGPXDate = dateParser.parse(curDateWpStr).getTime()/1000;
                         break outer;
@@ -706,7 +706,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                 }
             }
         }
-        
+
         // No GPX timestamps found, exit
         if(firstGPXDate < 0) {
             JOptionPane.showMessageDialog(Main.parent,
@@ -714,20 +714,20 @@ public class CorrelateGpxWithImages implements ActionListener {
                 tr("GPX Track has no time information"), JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
         // seconds
         long diff = (yLayer.hasTimeoffset)
             ? yLayer.timeoffset
-            : firstExifDate - firstGPXDate;         
+            : firstExifDate - firstGPXDate;
         yLayer.timeoffset = diff;
         yLayer.hasTimeoffset = true;
-        
+
         double diffInH = (double)diff/(60*60);    // hours
 
         // Find day difference
         dayOffset = (int)Math.round(diffInH / 24); // days
         double timezone = diff - dayOffset*24*60*60;  // seconds
-        
+
         // In hours, rounded to two decimal places
         timezone = (double)Math.round(timezone*100/(60*60)) / 100;
 
@@ -735,7 +735,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         // -2 minutes offset. This determines the real timezone and finds offset.
         double fixTimezone = (double)Math.round(timezone * 2)/2; // hours, rounded to one decimal place
         int offset = (int)Math.round(diff - fixTimezone*60*60) - dayOffset*24*60*60; // seconds
-        
+
         /*System.out.println("phto " + firstExifDate);
         System.out.println("gpx  " + firstGPXDate);
         System.out.println("diff " + diff);
@@ -744,7 +744,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         System.out.println("time " + timezone);
         System.out.println("fix  " + fixTimezone);
         System.out.println("offt " + offset);*/
-        
+
         // This is called whenever one of the sliders is moved.
         // It updates the labels and also calls the "match photos" code
         class sliderListener implements ChangeListener {
@@ -755,24 +755,24 @@ public class CorrelateGpxWithImages implements ActionListener {
                     ? (int)Math.floor(tz/2) + ":00"
                     : (int)Math.floor(tz/2) + ":30";
                 if(sldTimezone.getValue() < 0) zone = "-" + zone;
-                
+
                 lblTimezone.setText(tr("Timezone: {0}", zone));
                 lblMinutes.setText(tr("Minutes: {0}", sldMinutes.getValue()));
                 lblSeconds.setText(tr("Seconds: {0}", sldSeconds.getValue()));
-                
+
                 float gpstimezone = parseTimezone(zone).floatValue();
-                
+
                 // Reset previous position
                 for(ImageEntry x : autoImgs) {
                     x.coor = null;
                     x.pos = null;
                 }
-                
+
                 long timediff = (long) (gpstimezone * 3600)
                         + dayOffset*24*60*60
                         + sldMinutes.getValue()*60
                         + sldSeconds.getValue();
-                
+
                 int matched = matchGpxTrack(autoImgs, autoGpx, timediff);
 
                 lblMatches.setText(
@@ -782,7 +782,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                         : " " + tr("(Time difference of {0} days)", Math.abs(dayOffset))
                       )
                 );
-                
+
                 int offset = (int)(firstGPXDate+timediff-firstExifDate);
                 int o = Math.abs(offset);
                 lblOffset.setText(
@@ -796,7 +796,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                 Main.main.map.repaint();
             }
         }
-        
+
         // Info Labels
         lblMatches = new JLabel();
         lblOffset = new JLabel();
@@ -806,7 +806,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         // steps. Therefore the range is -24 to 24.
         lblTimezone = new JLabel();
         sldTimezone = new JSlider(-24, 24, 0);
-        sldTimezone.setPaintLabels(true);        
+        sldTimezone.setPaintLabels(true);
         Hashtable labelTable = new Hashtable();
         labelTable.put(-24, new JLabel("-12:00"));
         labelTable.put(-12, new JLabel( "-6:00"));
@@ -814,19 +814,19 @@ public class CorrelateGpxWithImages implements ActionListener {
         labelTable.put( 12, new JLabel(  "6:00"));
         labelTable.put( 24, new JLabel( "12:00"));
         sldTimezone.setLabelTable(labelTable);
-        
+
         // Minutes Slider
         lblMinutes = new JLabel();
-        sldMinutes = new JSlider(-15, 15, 0);        
-        sldMinutes.setPaintLabels(true);   
-        sldMinutes.setMajorTickSpacing(5);  
-        
+        sldMinutes = new JSlider(-15, 15, 0);
+        sldMinutes.setPaintLabels(true);
+        sldMinutes.setMajorTickSpacing(5);
+
         // Seconds slider
         lblSeconds = new JLabel();
-        sldSeconds = new JSlider(-60, 60, 0);        
-        sldSeconds.setPaintLabels(true);   
-        sldSeconds.setMajorTickSpacing(30);  
-        
+        sldSeconds = new JSlider(-60, 60, 0);
+        sldSeconds.setPaintLabels(true);
+        sldSeconds.setMajorTickSpacing(30);
+
         // Put everything together
         JPanel p = new JPanel(new GridBagLayout());
         p.setPreferredSize(new Dimension(400, 230));
@@ -838,7 +838,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         p.add(sldMinutes, GBC.eol().fill().insets(0, 0, 0, 10));
         p.add(lblSeconds, GBC.eol().fill());
         p.add(sldSeconds, GBC.eol().fill());
-        
+
         // If there's an error in the calculation the found values
         // will be off range for the sliders. Catch this error
         // and inform the user about it.
@@ -848,12 +848,12 @@ public class CorrelateGpxWithImages implements ActionListener {
             sldSeconds.setValue(offset%60);
         } catch(Exception e) {
             JOptionPane.showMessageDialog(Main.parent,
-                tr("An error occured while trying to match the photos to the GPX track."
+                tr("An error occurred while trying to match the photos to the GPX track."
                     +" You can adjust the sliders to manually match the photos."),
                 tr("Matching photos to track failed"),
                 JOptionPane.WARNING_MESSAGE);
         }
-        
+
         // Call the sliderListener once manually so labels get adjusted
         new sliderListener().stateChanged(null);
         // Listeners added here, otherwise it tries to match three times
@@ -861,24 +861,24 @@ public class CorrelateGpxWithImages implements ActionListener {
         sldTimezone.addChangeListener(new sliderListener());
         sldMinutes.addChangeListener(new sliderListener());
         sldSeconds.addChangeListener(new sliderListener());
-        
+
         // There is no way to cancel this dialog, all changes get applied
         // immediately. Therefore "Close" is marked with an "OK" icon.
-        // Settings are only saved temporarily to the layer. 
+        // Settings are only saved temporarily to the layer.
         int answer = new ExtendedDialog(Main.parent,
             tr("Adjust timezone and offset"),
             p,
             new String[] { tr("Close"),  tr("Default Values") },
             new String[] { "ok.png", "dialogs/refresh.png"}
         ).getValue();
-        
+
         // User wants default values; discard old result and re-open dialog
         if(answer == 2) {
             yLayer.hasTimeoffset = false;
             autoGuess(gpx);
         }
     }
-    
+
     /**
      * Returns a list of images that fulfill the given criteria.
      * Default setting is to return untagged images, but may be overwritten.
@@ -912,13 +912,13 @@ public class CorrelateGpxWithImages implements ActionListener {
                 }
             }
         }
-        
+
         Collections.sort(dateImgLst, new Comparator<ImageEntry>() {
             public int compare(ImageEntry arg0, ImageEntry arg1) {
                 return arg0.time.compareTo(arg1.time);
             }
         });
-        
+
         return dateImgLst;
     }
 
@@ -965,40 +965,40 @@ public class CorrelateGpxWithImages implements ActionListener {
                                                                    WayPoint curWp, long curDateWp) {
         // Time between the track point and the previous one, 5 sec if first point, i.e. photos take
         // 5 sec before the first track point can be assumed to be take at the starting position
-        long interval = prevDateWp > 0 ? ((int)Math.abs(curDateWp - prevDateWp)) : 5; 
+        long interval = prevDateWp > 0 ? ((int)Math.abs(curDateWp - prevDateWp)) : 5;
         int ret = 0;
-        
-        // i is the index of the timewise last photo that has the same or earlier EXIF time 
+
+        // i is the index of the timewise last photo that has the same or earlier EXIF time
         int i = getLastIndexOfListBefore(dateImgLst, curDateWp);
 
         // no photos match
-        if (i < 0)            
-            return 0;        
-            
+        if (i < 0)
+            return 0;
+
         Double speed = null;
         Double prevElevation = null;
         Double curElevation = null;
-        
+
         if (prevWp != null) {
             double distance = getDistance(prevWp, curWp);
             // This is in km/h, 3.6 * m/s
             if (curDateWp > prevDateWp)
-                speed = 3.6 * distance / (curDateWp - prevDateWp);   
+                speed = 3.6 * distance / (curDateWp - prevDateWp);
             try {
                 prevElevation = new Double((String) prevWp.attr.get("ele"));
             } catch(Exception e) {}
         }
-        
+
         try {
             curElevation = new Double((String) curWp.attr.get("ele"));
         } catch (Exception e) {}
-        
-        // First trackpoint, then interval is set to five seconds, i.e. photos up to five seconds 
-        // before the first point will be geotagged with the starting point        
+
+        // First trackpoint, then interval is set to five seconds, i.e. photos up to five seconds
+        // before the first point will be geotagged with the starting point
         if(prevDateWp == 0 || curDateWp <= prevDateWp) {
             while(i >= 0 && (dateImgLst.get(i).time.getTime()/1000) <= curDateWp
                         && (dateImgLst.get(i).time.getTime()/1000) >= (curDateWp - interval)) {
-                if(dateImgLst.get(i).coor == null) {               
+                if(dateImgLst.get(i).coor == null) {
                     dateImgLst.get(i).pos = curWp.eastNorth;
                     dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
                     dateImgLst.get(i).speed = speed;
@@ -1024,10 +1024,10 @@ public class CorrelateGpxWithImages implements ActionListener {
                         interpolate(prevWp.eastNorth.north(), curWp.eastNorth.north(), timeDiff));
                 dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
                 dateImgLst.get(i).speed = speed;
-            
+
                 if (curElevation != null && prevElevation != null)
                     dateImgLst.get(i).elevation = interpolate(prevElevation, curElevation, timeDiff);
-            
+
                 ret++;
             }
             i--;
@@ -1045,16 +1045,16 @@ public class CorrelateGpxWithImages implements ActionListener {
         // No photos or the first photo taken is later than the search period
         if(lstSize == 0 || searchedDate < dateImgLst.get(0).time.getTime()/1000)
             return -1;
-            
+
         // The search period is later than the last photo
         if (searchedDate > dateImgLst.get(lstSize - 1).time.getTime() / 1000)
-            return lstSize-1;   
+            return lstSize-1;
 
         // The searched index is somewhere in the middle, do a binary search from the beginning
         int curIndex= 0;
         int startIndex= 0;
         int endIndex= lstSize-1;
-        while (endIndex - startIndex > 1) {            
+        while (endIndex - startIndex > 1) {
             curIndex= (int) Math.round((double)(endIndex + startIndex)/2);
             if (searchedDate > dateImgLst.get(curIndex).time.getTime()/1000)
                 startIndex= curIndex;
@@ -1063,8 +1063,8 @@ public class CorrelateGpxWithImages implements ActionListener {
         }
         if (searchedDate < dateImgLst.get(endIndex).time.getTime()/1000)
             return startIndex;
- 
-        // This final loop is to check if photos with the exact same EXIF time follows 
+
+        // This final loop is to check if photos with the exact same EXIF time follows
         while ((endIndex < (lstSize-1)) && (dateImgLst.get(endIndex).time.getTime()
                                                 == dateImgLst.get(endIndex + 1).time.getTime()))
             endIndex++;

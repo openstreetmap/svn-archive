@@ -93,7 +93,7 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 
     public OsbDialog(final OsbPlugin plugin) {
         super(tr("Open OpenStreetBugs"), "icon_error22",
-                tr("Open the OpenStreetBugs window and activate the automatic download"), Shortcut.registerShortcut(
+                tr("Opens the OpenStreetBugs window and activates the automatic download"), Shortcut.registerShortcut(
                         "view:openstreetbugs", tr("Toggle: {0}", tr("Open OpenStreetBugs")), KeyEvent.VK_O,
                         Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT), 150);
 

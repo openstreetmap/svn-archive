@@ -11,7 +11,7 @@ export destdir = $(CURDIR)/debian/openstreetmap-josm
 
 
 build: build-stamp 
-build-stamp: clean
+build-stamp: 
 	dh_testdir
 
 	# Add here commands to compile the package.
@@ -28,18 +28,26 @@ clean:
 
 	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
-
+	for dir in `ls plugins/*/build.xml | sed s,/build.xml,,`; do \
+	    echo "-------- Cleanup Plugin '$$dir'"; \
+	    cd $$dir; \
+	    rm -f dist/*.jar; \
+	    rm -f ../../dist/$dir.jar; \
+	    rm -f *.log; \
+	    ant -q clean; \
+	    cd ../..; \
+	done
+	cd core;   ant -q clean
 	dh_clean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
 	dh_installdirs
 
 #	./debian/update_svn_revision.sh
-	./debian/make_install_files.sh --dest-path=${destdir} || exit -1
-
+	bash ./debian/make_install_files.sh --dest-path=${destdir} --no-clean || exit -1
+	# Install done
 
 # Build architecture-independent files here.
 binary-indep: build install

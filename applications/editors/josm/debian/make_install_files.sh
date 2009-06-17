@@ -11,12 +11,13 @@ do_update_josm=true
 do_update_josm_ng=true
 do_update_plugins=true
 do_remove_jar=true
+do_cleanup=true
 
 for arg in "$@" ; do
     case $arg in
 	--dest-path=*) # Destination path to install the final *.jar Files
-	dst_path=${arg#*=}
-	;;
+	    dst_path=${arg#*=}
+	    ;;
 	
 	--no-update-icons) # Do not update icons
 	    do_update_icons=false
@@ -37,7 +38,11 @@ for arg in "$@" ; do
 	--no-remove-jar) # Do not remove old jar Files
 	    do_remove_jar=false
 	    ;;
-	
+
+	--no-clean) # no cleanup before build
+	    do_cleanup=false
+	    ;;
+
 	*)
 	    echo ""
 	    echo "!!!!!!!!! Unknown option $arg"
@@ -124,15 +129,17 @@ mkdir -p "$dst_path/usr/lib/josm"
 # ------------------------------------------------------------------
 # Remove Old Jar Files in dist/*.jar
 
-$do_remove_jar && rm -f dist/*.jar
-$do_remove_jar && rm -f plugins/*/dist/*.jar
+$do_cleanup && {
+    $do_remove_jar && rm -f dist/*.jar
+    $do_remove_jar && rm -f plugins/*/dist/*.jar
+    }
 
 # ------------------------------------------------------------------
 # Compile the Josm Main File(s)
 if $do_update_josm ; then
     echo "------------- Compile Josm"
     cd core
-    ant -q clean 2>build.err
+    $do_cleanup && ant -q clean 2>build.err
     ant -q dist >>build.log 2>>build.err
     rc=$?
     if [ "$rc" -ne "0" ] ; then 
@@ -147,7 +154,7 @@ fi
 if $do_update_plugins ; then
     echo "------------- Compile Josm Plugin webkit-image for wmsplugin"
     cd plugins/wmsplugin
-    make clean
+    $do_cleanup &&     make clean
     make
     cd ../..
     cp plugins/wmsplugin/webkit-image $bin_path/webkit-image
@@ -164,12 +171,14 @@ if $do_update_plugins ; then
     for dir in $plugins; do 
 	cd $dir
 	echo -n -e "----- $dir\r"
-	$do_remove_jar && rm -f dist/*.jar
-	$do_remove_jar && rm -f ../../dist/$dir.jar
-	rm -f *.log
-	echo "ant clean" >build.log
-	echo "ant clean" >build.err
-	ant -q clean >>build.log 2>>build.err
+	$do_cleanup && {
+	    $do_remove_jar && rm -f dist/*.jar
+	    $do_remove_jar && rm -f ../../dist/$dir.jar
+	    rm -f *.log
+	    echo "ant clean" >build.log
+	    echo "ant clean" >build.err
+	    ant -q clean >>build.log 2>>build.err
+	}
 	echo "ant dist" >>build.log
 	echo "ant dist" >>build.err
 	ant -q dist >>build.log 2>>build.err
@@ -212,7 +221,7 @@ fi
 if $do_update_josm_ng ; then
     echo "------------- Compile Josm-ng"
     cd ../josm-ng
-    ant -q clean
+    $do_cleanup && ant -q clean
     ant -q josm-ng-impl.jar  >>build.log 2>>build.err
     rc=$?
     if [ "$rc" -ne "0" ] ; then 
@@ -262,17 +271,31 @@ echo "$plugins"
 
 # Copy words.cfg for spelling 
 mkdir -p "$jar_path/speller"
-cp ../../utils/planet.osm/java/speller/words.cfg "$jar_path/speller/"
+cp ../../utils/planet.osm/java/speller/words.cfg "$jar_path/speller/" || {
+    echo "!!!!!!!!!! words.cfg is missing"
+    exit -1
+}
+
 
 # ------------------------------------------------------------------
-cp "debian/bin/josm.sh" "$bin_path/josm" || exit -1 
+cp "debian/bin/josm.sh" "$bin_path/josm" || {
+    echo "!!!!!!!!!! josm.sh is missing"
+    exit -1
+}
+
 cp "debian/bin/josm-ng.sh" "$bin_path/josm-ng" || {
     echo "!!!!!!!!!!!!!!!!! WARNING Josm-NG is not included into the package"
     #exit -1
 }
 
 # add plugins to default preferences
-sed "s/PLUGIN_LIST/$plugins/;" <debian/bin/preferences >"$jar_path/preferences"
+sed "s/PLUGIN_LIST/$plugins/;" <debian/bin/preferences >"$jar_path/preferences" || {
+    echo "!!!!!!!! WARNING cannot create preferences"
+    exit -1
+}
+    
 
 # Copy default Bookmarks
 cp nsis/bookmarks "$jar_path/bookmarks"
+
+exit 0

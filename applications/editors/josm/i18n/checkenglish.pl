@@ -40,9 +40,11 @@ sub fixstr($)
   $msgid =~ s/(gr)a(y)/$1e$2/ig;
   $msgid =~ s/([^\w]+cent|met)(e)(r)/$1$3$2/ig;
   $msgid =~ s/^(cent|met)(e)(r)/$1$3$2/ig;
-  $msgid =~ s/(Orthogonali|synchroni|Initiali|customi)z/$1s/ig;
+  $msgid =~ s/(minimi|maximi|vectori|anonymi|Orthogonali|synchroni|Initiali|customi)z/$1s/ig;
   $msgid =~ s/(licen)s/$1c/ig;
+  $msgid =~ s/dialog/dialogue/ig;
   $msgid =~ s/(spel)led/$1t/ig;
+  $msgid =~ s/_/ /ig;
   return $msgid;
 }
 

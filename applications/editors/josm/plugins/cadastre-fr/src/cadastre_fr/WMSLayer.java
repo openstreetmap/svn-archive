@@ -495,7 +495,7 @@ public class WMSLayer extends Layer {
         }
         if (this.lambertZone != currentLambertZone) {
             JOptionPane.showMessageDialog(Main.parent, tr("Lambert zone {0} in cache "+
-                    " incompatible with current Lambert zone {1}",
+                    "incompatible with current Lambert zone {1}",
                     this.lambertZone+1, currentLambertZone), tr("Cache Lambert Zone Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }

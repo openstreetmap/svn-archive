@@ -192,7 +192,7 @@ public class JoinAreasAction extends JosmAction {
             Main.map.mapView.repaint();
             DataSet.fireSelectionChanged(Main.ds.getSelected());
         } else
-            JOptionPane.showMessageDialog(Main.parent, tr("No intersections found. Nothing was changed."));
+            JOptionPane.showMessageDialog(Main.parent, tr("No intersection found. Nothing was changed."));
     }
 
 

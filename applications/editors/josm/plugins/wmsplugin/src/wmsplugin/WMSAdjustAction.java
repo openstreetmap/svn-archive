@@ -1,4 +1,4 @@
-package wmsplugin; 
+package wmsplugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -24,8 +24,8 @@ public class WMSAdjustAction extends MapMode implements
     EastNorth prevEastNorth;
 
     public WMSAdjustAction(MapFrame mapFrame) {
-        super(tr("Adjust WMS"), "adjustwms", 
-                        tr("Adjust the position of the selected WMS layer"), mapFrame, 
+        super(tr("Adjust WMS"), "adjustwms",
+                        tr("Adjust the position of the selected WMS layer"), mapFrame,
                         ImageProvider.getCursor("normal", "move"));
     }
 
@@ -44,7 +44,7 @@ public class WMSAdjustAction extends MapMode implements
     @Override public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
-        
+
         Layer layer=Main.map.mapView.getActiveLayer();
         if (layer.visible && layer instanceof WMSLayer) {
             prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());
@@ -62,7 +62,7 @@ public class WMSAdjustAction extends MapMode implements
             EastNorth eastNorth=
                     Main.map.mapView.getEastNorth(e.getX(),e.getY());
             selectedLayer.displace(
-                eastNorth.east()-prevEastNorth.east(), 
+                eastNorth.east()-prevEastNorth.east(),
                 eastNorth.north()-prevEastNorth.north()
             );
             prevEastNorth = eastNorth;
@@ -73,7 +73,7 @@ public class WMSAdjustAction extends MapMode implements
     @Override public void mouseReleased(MouseEvent e) {
         Main.map.mapView.repaint();
         Main.map.mapView.setCursor(Cursor.getDefaultCursor());
-        selectedImage = null;   
+        selectedImage = null;
         prevEastNorth = null;
         selectedLayer = null;
     }
@@ -87,7 +87,7 @@ public class WMSAdjustAction extends MapMode implements
 
     @Override public void mouseClicked(MouseEvent e) {
     }
-    
+
     // This only makes the buttons look disabled, but since no keyboard shortcut is
     // provided there aren't any other means to activate this tool
     @Override public boolean layerIsSupported(Layer l) {

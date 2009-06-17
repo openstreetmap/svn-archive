@@ -556,7 +556,7 @@ foreach $rel (keys %relationWays) {
 					# calc poly length $pl
 					my $i ; my $pl = 0 ; 
 					my (@coords) = $p->points ;
-					for ($i=0; $i<#$coords; $i++) {
+					for ($i=0; $i<$#coords; $i++) {
 						$pl += distance ($coords[$i]->[0], $coords[$i]->[1], $coords[$i+1]->[0], $coords[$i+1]->[1]) ;
 					}
 					my ($maxNodes) = int ($pl * $simplifyNpk ) ; 
@@ -569,16 +569,16 @@ foreach $rel (keys %relationWays) {
 
 			if ($resizeOpt eq "1") { 
 				if ($simplifyOpt eq "1") { 
-					foreach my $p ( @{$relationPolygonsSimplified{$rel}} ) {
+					foreach my $p ( @{$relationPolygonSimplified{$rel}} ) {
 						my ($x, $y) = center( $p ) ;
-						my ($pr) = $relationPolygonSimplified{$rel}->resize (center => [$x, $y], scale => $resizeFactor) ;
+						my ($pr) = $p->resize (center => [$x, $y], scale => $resizeFactor) ;
 						push @{$relationPolygonResized{$rel}}, $pr ; 
 					}
 				}
 				else {
 					foreach my $p ( @{$relationPolygonsClosed{$rel}} ) {
 						my ($x, $y) = center( $p ) ;
-						my ($pr) = $relationPolygonSimplified{$rel}->resize (center => [$x, $y], scale => $resizeFactor) ;
+						my ($pr) = $p->resize (center => [$x, $y], scale => $resizeFactor) ;
 						push @{$relationPolygonResized{$rel}}, $pr ; 
 					}
 				}
@@ -598,7 +598,7 @@ print "done.\n" ;
 if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 	print "write poly files...\n" ; 
 	foreach $rel (keys %relationWays) {
-		if ($selectedRelation{$rel}) {
+		if ( ($selectedRelation{$rel}) and ($validRelation{$rel}) ) {
 
 			my @way ; my $polyFileName = "" ; my @points = () ; my $text = "" ;
 			if ($verbose) { print "write poly file for relation $rel $relationName{$rel} (", scalar (@points) , " nodes) ...\n" ; }
@@ -609,7 +609,7 @@ if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 				open ($polyFile, ">", $polyFileName) or die ("can't open poly output file") ;
 				print $polyFile $relationName{$rel}, $text, "\n" ; # name
 				my ($num) = 0 ;
-				foreach my $p (@{$relationPolygonsSimplified{$rel}}) {
+				foreach my $p (@{$relationPolygonSimplified{$rel}}) {
 					$num++ ;
 					print $polyFile "$num\n" ;
 					foreach my $pt ( $p->points ) {
@@ -628,7 +628,7 @@ if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 				open ($polyFile, ">", $polyFileName) or die ("can't open poly output file") ;
 				print $polyFile $relationName{$rel}, $text, "\n" ; # name
 				my ($num) = 0 ;
-				foreach my $p (@{$relationPolygonsResized{$rel}}) {
+				foreach my $p (@{$relationPolygonResized{$rel}}) {
 					$num++ ;
 					print $polyFile "$num\n" ;
 					foreach my $pt ( $p->points ) {
@@ -687,7 +687,7 @@ if ($hirarchyOpt eq "1") {
 					$res = isIn ( \@{$relationPolygonSimplified{$rel1}}, \@{$relationPolygonSimplified{$rel2}} ) ;
 				}
 				else {
-					$res = isIn ( \@{$relationPolygonsClosed{$rel1}}, \@{$relationsPolygonsClosed{$rel2}} ) ;
+					$res = isIn ( \@{$relationPolygonsClosed{$rel1}}, \@{$relationPolygonsClosed{$rel2}} ) ;
 				}
 				if ($res == 2) { push @{$relationIsIn{$rel2}}, $rel1 ; }
 				if ($res == 1) { push @{$relationIsIn{$rel1}}, $rel2 ; }
@@ -787,7 +787,7 @@ printHTMLTableHeadings ($htmlFile, ("Line", "RelationId", "Name", "Type", "Bound
 
 my $line = 0 ;
 foreach $rel (keys %relationWays) {
-	if ( $selectedRelation{$rel} ) {
+	if ( ( $selectedRelation{$rel} ) and ($validRelation{$rel}) ) {
 
 		$line++ ;
 		my $pts = 0 ;
@@ -795,7 +795,7 @@ foreach $rel (keys %relationWays) {
 			$pts += $p->nrPoints ;
 		}
 
-		my $nodesPerKm = int ( $pts / $relationLength{$rel} * 100 ) ) / 100 ;
+		my $nodesPerKm = int ( $pts / $relationLength{$rel} * 100 ) / 100 ;
 		print $csvFile $line, ";" ;
 		print $csvFile $rel, ";" ;
 		print $csvFile "\"", $relationName{$rel}, "\";" ;
@@ -825,11 +825,12 @@ printHTMLTableFoot ($htmlFile) ;
 print $htmlFile "<h2>Invalid Relations</h2>\n" ;
 print $htmlFile "<p>List reflects the moment the *.osm file was created and a relation may be invalid because one or more ways were clipped in the process of creating the *.osm file.</p>\n" ;
 printHTMLTableHead ($htmlFile) ;
-printHTMLTableHeadings ($htmlFile, ("RelationId", "#segments", "#open segments", "ways valid")) ;
+printHTMLTableHeadings ($htmlFile, ("RelationId", "Name", "#segments", "#open segments", "ways valid")) ;
 foreach $rel (keys %relationWays) {
 	if (! $validRelation{$rel}) {
 		printHTMLRowStart ($htmlFile) ;
 		printHTMLCellRight ($htmlFile, historyLink("relation", $rel) . "(osm) " .analyzerLink($rel) . "(analyzer)" ) ;
+		printHTMLCellLeft ($htmlFile, $relationName{$rel}) ;
 		printHTMLCellRight ($htmlFile, $relationSegments{$rel} ) ;
 		printHTMLCellRight ($htmlFile, $relationOpen{$rel} ) ;
 		printHTMLCellRight ($htmlFile, $relationWaysValid{$rel} ) ;
@@ -1147,22 +1148,22 @@ sub drawPic {
 	}
 
 	if ($simplifyOpt eq "1") {	
-		foreach $p (@{$relationPolygonsSimplified{$rel}}) {
+		foreach $p (@{$relationPolygonSimplified{$rel}}) {
 			my @coordinates = () ; 
 			foreach $pt ($p->points) {
 				push @coordinates, $pt->[0], $pt->[1] ;
 			}
-			drawWay ("blue", 1, @coordinates) ;
+			drawWay ("blue", 2, @coordinates) ;
 		}
 	}
 
 	if ($resizeOpt eq "1") {	
-		foreach $p (@{$relationPolygonsResized{$rel}}) {
+		foreach $p (@{$relationPolygonResized{$rel}}) {
 			my @coordinates = () ; 
 			foreach $pt ($p->points) {
 				push @coordinates, $pt->[0], $pt->[1] ;
 			}
-			drawWay ("orange", 1, @coordinates) ;
+			drawWay ("black", 2, @coordinates) ;
 		}
 	}
 
@@ -1170,7 +1171,7 @@ sub drawPic {
 
 	drawHead ($program . " ". $version . " by Gary68" . " RelId = " . $rel . " name = " . $relationName{$rel}, "black", 3) ;
 	drawFoot ("data by openstreetmap.org" . " " . $osmName . " " .ctime(stat($osmName)->mtime), "gray", 3) ;
-	drawLegend (3, "Center", "black", "Resized", "orange", "Open", "red", "Simplified", "blue", "Original", "green") ;
+	drawLegend (3, "Resized", "black", "Open", "red", "Simplified", "blue", "Original", "green") ;
 	drawRuler ("black") ;
 	writeGraph ($polyBaseName . "." . $rel . ".png") ;
 }
@@ -1228,11 +1229,11 @@ sub isIn {
 					# good
 				}
 				else {
-					inside = 0 ; last first ;
+					$inside = 0 ; last first ;
 				}
 			}
 		}
-		if (inside == 1) {
+		if ($inside == 1) {
 			$p1In2 = 1 ; last second ;
 		}
 	}
@@ -1249,11 +1250,11 @@ sub isIn {
 					# good
 				}
 				else {
-					inside = 0 ; last third ;
+					$inside = 0 ; last third ;
 				}
 			}
 		}
-		if (inside == 1) {
+		if ($inside == 1) {
 			$p2In1 = 1 ; last fourth ;
 		}
 	}

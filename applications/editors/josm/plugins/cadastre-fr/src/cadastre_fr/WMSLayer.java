@@ -34,6 +34,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.data.coor.EastNorth;
 
@@ -109,6 +110,9 @@ public class WMSLayer extends Layer {
                 newImage = grabber.grab(this, n.min, n.max);
             } catch (IOException e) {
                 System.out.println("Download action cancelled by user or server did not respond");
+                break;
+            } catch (OsmTransferException e) {
+                System.out.println("OSM transfer failed");
                 break;
             }
             if (grabber.getWmsInterface().downloadCancelled) {

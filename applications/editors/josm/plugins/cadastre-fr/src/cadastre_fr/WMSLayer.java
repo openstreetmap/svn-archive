@@ -6,27 +6,19 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.Bounds;
@@ -35,7 +27,6 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.OsmTransferException;
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.data.coor.EastNorth;
 
 /**
@@ -223,15 +214,8 @@ public class WMSLayer extends Layer {
 
     @Override
     public Component[] getMenuEntries() {
-        /*
-        return new Component[] { new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-                new JMenuItem(new LayerListDialog.DeleteLayerAction(this)), new JMenuItem(new LoadWmsAction()),
-                new JMenuItem(new SaveWmsAction()), new JSeparator(),
-                new JMenuItem(new LayerListPopup.InfoAction(this)) };
-                */
         component = new Component[] { new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-                new JMenuItem(new LayerListDialog.DeleteLayerAction(this)), new JMenuItem(new LoadWmsAction()),
-                new JMenuItem(new SaveWmsAction()), new JSeparator(),
+                new JMenuItem(new LayerListDialog.DeleteLayerAction(this)), new JMenuItem(new MenuActionLoadFromCache()),
                 new JMenuItem(new LayerListPopup.InfoAction(this)) };
         return component;
     }
@@ -277,74 +261,6 @@ public class WMSLayer extends Layer {
         if (cacheControl == null)
             cacheControl = new CacheControl(this);
         return cacheControl;
-    }
-
-    public class SaveWmsAction extends AbstractAction {
-        private static final long serialVersionUID = 1L;
-
-        public SaveWmsAction() {
-            super(tr("Save WMS layer to file"), ImageProvider.get("save"));
-        }
-
-        public void actionPerformed(ActionEvent ev) {
-            File f = DiskAccessAction.createAndOpenSaveFileChooser(
-            tr("Save WMS layer"), ".wms");
-            try {
-                FileOutputStream fos = new FileOutputStream(f);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeInt(serializeFormatVersion);
-                oos.writeInt(lambertZone);
-                oos.writeInt(images.size());
-                for (GeorefImage img : images) {
-                    oos.writeObject(img);
-                }
-                oos.close();
-                fos.close();
-            } catch (Exception ex) {
-                ex.printStackTrace(System.out);
-            }
-        }
-    }
-
-    public class LoadWmsAction extends AbstractAction {
-        private static final long serialVersionUID = 1L;
-
-        public LoadWmsAction() {
-            super(tr("Load WMS layer from file"), ImageProvider.get("load"));
-        }
-
-        public void actionPerformed(ActionEvent ev) {
-            JFileChooser fc = DiskAccessAction.createAndOpenFileChooser(true,
-            false, tr("Load WMS layer"));
-            if(fc == null) return;
-            File f = fc.getSelectedFile();
-            if (f == null) return;
-            try {
-                FileInputStream fis = new FileInputStream(f);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                int sfv = ois.readInt();
-                if (sfv != serializeFormatVersion) {
-                    JOptionPane.showMessageDialog(Main.parent, tr(
-                            "Unsupported WMS file version; found {0}, expected {1}", sfv, serializeFormatVersion),
-                            tr("File Format Error"), JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                lambertZone = ois.readInt();
-                int numImg = ois.readInt();
-                for (int i = 0; i < numImg; i++) {
-                    GeorefImage img = (GeorefImage) ois.readObject();
-                    images.add(img);
-                }
-                ois.close();
-                fis.close();
-            } catch (Exception ex) {
-                // FIXME be more specific
-                ex.printStackTrace(System.out);
-                JOptionPane.showMessageDialog(Main.parent, tr("Error loading file"), tr("Error"),
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }
     }
 
     /**

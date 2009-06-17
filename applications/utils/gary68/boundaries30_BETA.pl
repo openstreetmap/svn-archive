@@ -43,6 +43,8 @@
 # - distinguish between invalid and selected
 # - qualify invalid relation list with causes of errors
 #
+# Version 3
+# - support multipolygons, multiple border segments
 #
 # TODO
 # - command line error handling
@@ -61,7 +63,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "3.0 BETA (001)" ;
+my $version = "3.0 BETA (002)" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -92,7 +94,6 @@ my %relationWays = () ;	# ways contained (first directly, later also indirect by
 my %relationRelations = () ;	# relations contained in relation (referenced)
 my %validRelation = () ;	# checked and valid
 my %selectedRelation = () ;	# can be used for evaluation, selected
-my %completeWay = () ;		# this is the boundary as built by checkSegments, all nodes in correct order
 my %relationName = () ;		# relation data
 my %relationType = () ;		# relation data
 my %relationBoundary = () ;	# relation data
@@ -399,40 +400,27 @@ foreach $rel (keys %relationWays) {
 		my $segments = 0 ; my $open = 0 ; my @waysClosed = () ; my @waysOpen = () ;
 		if ($waysValid == 1) {
 			if ($verbose) { print "call checksegments rel = $rel --- ways = @{$relationWays{$rel}}\n" ; } 
-			# now let's see if we can build a single closed way out of all these ways...
+			# now let's see if we can build closed ways out of all these ways...
 			my $refClosed ; my $refOpen ;
 			($segments, $open, $refClosed, $refOpen) = checkSegments4 ( @{$relationWays{$rel}} ) ; 
-
 			@{$relationOpenWays{$rel}} = @$refOpen ;
 			@{$relationClosedWays{$rel}} = @$refClosed ;
-
-			# print "rel $rel number: $segments openreturned: $open openways:", scalar (@{$relationOpenWays{$rel}}), " closedways:", scalar (@{$relationClosedWays{$rel}}), "\n" ;
 		}
 
 		if ( ($open == 0) and ($waysValid == 1) ) {
 			$valid ++ ;
 			$validRelation {$rel} = 1 ;
-
-			# @{$completeWay{$rel}} = @way ; # TODO needed? CHANGE!
-
 			$relationSegments{$rel} = $segments ;
 			$relationOpen{$rel} = $open ;
-			if ($verbose) { print "complete and closed: relation $rel, name=$relationName{$rel}\n" ; }
+			if ($verbose) { print "complete and all segments closed: relation $rel, name=$relationName{$rel}\n" ; }
 		}
 		else {
 			$invalid ++ ;
-
-			$validRelation {$rel} = 0 ; # TODO correct?
-
+			$validRelation {$rel} = 0 ; 
 			$relationSegments{$rel} = $segments ;
 			$relationOpen{$rel} = $open ;
 			if ($verbose eq "1") { print "INVALID RELATION id=$rel, name=$relationName{$rel}, segments=$segments, open=$open, waysValid=$waysValid\n" ; }
 		}
-
-		# TODO add closed and open ways to %completeWays successor
-		# %relationOpenWays
-		# %relationClosedWays
-
 	}
 	else {
 		$invalid ++ ;
@@ -551,7 +539,7 @@ foreach $rel (keys %relationWays) {
 				}
 				my ($p) = Math::Polygon->new(@poly) ;
 				push @{$relationPolygonsClosed{$rel}}, $p ;
-				$relationSize{$rel} = $p->area ;
+				$relationSize{$rel} += $p->area ;
 			}
 
 			foreach $way ( @{$relationOpenWays{$rel}} ) {
@@ -563,30 +551,39 @@ foreach $rel (keys %relationWays) {
 				push @{$relationPolygonsOpen{$rel}}, $p ;
 			}
 
+			if ($simplifyOpt eq "1") { 
+				foreach my $p ( @{$relationPolygonsClosed{$rel}} ) {
+					# calc poly length $pl
+					my $i ; my $pl = 0 ; 
+					my (@coords) = $p->points ;
+					for ($i=0; $i<#$coords; $i++) {
+						$pl += distance ($coords[$i]->[0], $coords[$i]->[1], $coords[$i+1]->[0], $coords[$i+1]->[1]) ;
+					}
+					my ($maxNodes) = int ($pl * $simplifyNpk ) ; 
+					my ($ps) = $p->simplify (max_points => $maxNodes, same => $simplifySame, slope => $simplifySlope ) ;
+					push @{$relationPolygonSimplified{$rel}}, $ps ; 
+					my ($percent) = int ($ps->nrPoints / $p->nrPoints * 100 ) ;
+					if ($verbose) { print "relation $rel: new size of polygon=", $percent, "%\n" ; } 
+				}
+			} # simplify
 
-			# TODO for all polygons!
+			if ($resizeOpt eq "1") { 
+				if ($simplifyOpt eq "1") { 
+					foreach my $p ( @{$relationPolygonsSimplified{$rel}} ) {
+						my ($x, $y) = center( $p ) ;
+						my ($pr) = $relationPolygonSimplified{$rel}->resize (center => [$x, $y], scale => $resizeFactor) ;
+						push @{$relationPolygonResized{$rel}}, $pr ; 
+					}
+				}
+				else {
+					foreach my $p ( @{$relationPolygonsClosed{$rel}} ) {
+						my ($x, $y) = center( $p ) ;
+						my ($pr) = $relationPolygonSimplified{$rel}->resize (center => [$x, $y], scale => $resizeFactor) ;
+						push @{$relationPolygonResized{$rel}}, $pr ; 
+					}
+				}
+			} # resize
 
-#			if ($simplifyOpt eq "1") { 
-#				my ($maxNodes) = int ($relationLength{$rel} * $simplifyNpk ) ; 
-#				$relationPolygonSimplified{$rel} = $relationPolygon{$rel}->simplify (max_points => $maxNodes, same => $simplifySame, slope => $simplifySlope ) ;
-#				if ($verbose) { print "simplify $rel: nodes=", scalar(@wayNodes), " maxNodes=$maxNodes length=$relationLength{$rel}" ; } 
-#				if ($verbose) { print " new node count=", $relationPolygonSimplified{$rel}->nrPoints, "" ; } 
-#				my ($percent) = int ($relationPolygonSimplified{$rel}->nrPoints / scalar(@wayNodes) * 100 ) ;
-#				if ($verbose) { print " new size of polygon=", $percent, "%\n" ; } 
-#			}
-
-			# TODO for all polygons!
-
-#			if ($resizeOpt eq "1") { 
-#				if ($simplifyOpt eq "1") { 
-#					my ($x, $y) = center( $relationPolygonSimplified{$rel} ) ;
-#					$relationPolygonResized{$rel} = $relationPolygonSimplified{$rel}->resize (center => [$x, $y], scale => $resizeFactor) ;
-#				}
-#				else {
-#					my ($x, $y) = center( $relationPolygon{$rel} ) ;
-#					$relationPolygonResized{$rel} = $relationPolygon{$rel}->resize (center => [$x, $y], scale => $resizeFactor) ;
-#				}
-#			}
 		}
 	}
 	else {
@@ -603,41 +600,45 @@ if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 	foreach $rel (keys %relationWays) {
 		if ($selectedRelation{$rel}) {
 
-			# TODO for ALL polygons, open and closed.
-
 			my @way ; my $polyFileName = "" ; my @points = () ; my $text = "" ;
 			if ($verbose) { print "write poly file for relation $rel $relationName{$rel} (", scalar (@points) , " nodes) ...\n" ; }
 
+			if ($simplifyOpt eq "1") { 
+				$polyFileName = $polyBaseName . ".Simplified." . $rel . ".poly" ;
+				$text = " (SIMPLIFIED)" ;
+				open ($polyFile, ">", $polyFileName) or die ("can't open poly output file") ;
+				print $polyFile $relationName{$rel}, $text, "\n" ; # name
+				my ($num) = 0 ;
+				foreach my $p (@{$relationPolygonsSimplified{$rel}}) {
+					$num++ ;
+					print $polyFile "$num\n" ;
+					foreach my $pt ( $p->points ) {
+						printf $polyFile "   %E   %E\n", $pt->[0], $pt->[1] ;
+					}
+					print $polyFile "END\n" ;
+				}
+				print $polyFile "END\n" ;
+				close ($polyFile) ;
+			}
 
-#			if ($simplifyOpt eq "1") { 
-#				$polyFileName = $polyBaseName . ".Simplified." . $rel . ".poly" ;
-#				@points = $relationPolygonSimplified{$rel}->points ;
-#				$text = " (SIMPLIFIED)" ;
-#				open ($polyFile, ">", $polyFileName) or die ("can't open poly output file") ;
-#				print $polyFile $relationName{$rel}, $text, "\n" ; # name
-#				print $polyFile "1\n" ;
-#				foreach my $pt ( @points ) {
-#					printf $polyFile "   %E   %E\n", $pt->[0], $pt->[1] ;
-#				}
-#				print $polyFile "END\n" ;
-#				print $polyFile "END\n" ;
-#				close ($polyFile) ;
-#			}
-
-#			if ($resizeOpt eq "1") { 
-#				$polyFileName = $polyBaseName . ".Resized." . $rel . ".poly" ;
-#				@points = $relationPolygonResized{$rel}->points ;
-#				$text = " (RESIZED)" ;
-#				open ($polyFile, ">", $polyFileName) or die ("can't open poly output file") ;
-#				print $polyFile $relationName{$rel}, $text, "\n" ; # name
-#				print $polyFile "1\n" ;
-#				foreach my $pt ( @points ) {
-#					printf $polyFile "   %E   %E\n", $pt->[0], $pt->[1] ;
-#				}
-#				print $polyFile "END\n" ;
-#				print $polyFile "END\n" ;
-#				close ($polyFile) ;
-#			}
+			if ($resizeOpt eq "1") { 
+				$polyFileName = $polyBaseName . ".Resized." . $rel . ".poly" ;
+				$text = " (RESIZED)" ;
+				if ($simplifyOpt eq "1") { $text = " (SIMPLIFIED/RESIZED)" ; }
+				open ($polyFile, ">", $polyFileName) or die ("can't open poly output file") ;
+				print $polyFile $relationName{$rel}, $text, "\n" ; # name
+				my ($num) = 0 ;
+				foreach my $p (@{$relationPolygonsResized{$rel}}) {
+					$num++ ;
+					print $polyFile "$num\n" ;
+					foreach my $pt ( $p->points ) {
+						printf $polyFile "   %E   %E\n", $pt->[0], $pt->[1] ;
+					}
+					print $polyFile "END\n" ;
+				}
+				print $polyFile "END\n" ;
+				close ($polyFile) ;
+			}
 
 			$polyFileName = $polyBaseName . "." . $rel . ".poly" ;
 
@@ -683,17 +684,10 @@ if ($hirarchyOpt eq "1") {
 			if ( ($rel1 < $rel2) and ($validRelation{$rel1}) and ($validRelation{$rel2}) and ($selectedRelation{$rel1}) and ($selectedRelation{$rel2}) ) {
 				my $res ;
 				if ($simplifyOpt eq "1") {
-					
-					# TODO pass all polygons, only if all polygons are valid
-					# $res = isIn ($relationPolygonSimplified{$rel1}, $relationPolygonSimplified{$rel2}) ;
-
+					$res = isIn ( \@{$relationPolygonSimplified{$rel1}}, \@{$relationPolygonSimplified{$rel2}} ) ;
 				}
 				else {
-					if ($debugOpt eq "1") { print "call isIn $rel1 $rel2\n" ; }
-
-					# TODO pass all polygons, only if all polygons are valid
-					# $res = isIn ($relationPolygon{$rel1}, $relationPolygon{$rel2}) ;
-
+					$res = isIn ( \@{$relationPolygonsClosed{$rel1}}, \@{$relationsPolygonsClosed{$rel2}} ) ;
 				}
 				if ($res == 2) { push @{$relationIsIn{$rel2}}, $rel1 ; }
 				if ($res == 1) { push @{$relationIsIn{$rel1}}, $rel2 ; }
@@ -795,14 +789,13 @@ my $line = 0 ;
 foreach $rel (keys %relationWays) {
 	if ( $selectedRelation{$rel} ) {
 
-
-		# TODO print valid value
-
-		# TODO completeWay update
-
 		$line++ ;
-		# my $nodesPerKm = int ( scalar ( @{$completeWay{$rel}} / $relationLength{$rel} * 100 ) ) / 100 ;
-		my $nodesPerKm = 0 ;
+		my $pts = 0 ;
+		foreach my $p ( @{$relationPolygonsClosed{$rel}}, @{$relationPolygonsOpen{$rel}}) {
+			$pts += $p->nrPoints ;
+		}
+
+		my $nodesPerKm = int ( $pts / $relationLength{$rel} * 100 ) ) / 100 ;
 		print $csvFile $line, ";" ;
 		print $csvFile $rel, ";" ;
 		print $csvFile "\"", $relationName{$rel}, "\";" ;
@@ -810,13 +803,8 @@ foreach $rel (keys %relationWays) {
 		print $csvFile $relationBoundary{$rel}, ";" ;
 		print $csvFile $relationAdminLevel{$rel}, ";" ;
 		print $csvFile $relationLength{$rel}, ";" ;
-		#print $csvFile scalar ( @{$completeWay{$rel}} ), ";" ;
-		print $csvFile "TODO;" ;
+		print $csvFile $pts, ";" ;
 		print $csvFile $nodesPerKm, "\n" ;
-
-		# TODO print valid value
-
-		# TODO completeWay update
 
 		printHTMLRowStart ($htmlFile) ;
 		printHTMLCellRight ($htmlFile, $line) ;
@@ -826,8 +814,7 @@ foreach $rel (keys %relationWays) {
 		printHTMLCellLeft ($htmlFile, $relationBoundary{$rel}) ;
 		printHTMLCellRight ($htmlFile, $relationAdminLevel{$rel}) ;
 		printHTMLCellRight ($htmlFile, $relationLength{$rel}) ;
-		# printHTMLCellRight ($htmlFile, scalar ( @{$completeWay{$rel}} ) ) ;
-		printHTMLCellRight ($htmlFile, "TODO" ) ;
+		printHTMLCellRight ($htmlFile, $pts ) ;
 		printHTMLCellRight ($htmlFile, $nodesPerKm) ;
 		printHTMLRowEnd ($htmlFile) ;
 
@@ -862,14 +849,11 @@ print "\n", $program, " ", $osmName, " FINISHED after ", stringTimeSpent (time -
 
 
 
-
-
 sub checkSegments4 {
 	# sub builds segments for given set of ways. 
-	# returns number of segments, number of open segments and complete way if one closed segment was found.
+	# returns number of segments, number of open segments and closed and open segments as ways (array refs)
 	my (@ways) = @_ ;
 	my $way ; my $node ;
-	my @openEnds = () ;
 	my $segments = 0 ; my $openSegments = 0 ;
 	my $found = 1 ;
 	my $way1 ; my $way2 ;
@@ -877,7 +861,6 @@ sub checkSegments4 {
 	my %starts = () ; my %ends = () ;
 	my %wayStart = () ; my %wayEnd = () ;
 	my %wayNodes = () ;
-	my @completeWay = () ;
 
 	#init
 	foreach $way (@ways) {
@@ -1074,17 +1057,12 @@ sub checkSegments4 {
 	}
 
 	# evaluation
-
-#	#print "\nSUB RESULT\n" ;
 	foreach $way (keys %wayStart) {
 		#print "way $way start $wayStart{$way} end $wayEnd{$way}\n" ;
 		if ($wayStart{$way} != $wayEnd{$way}) {
 			$openSegments++ ;
-			#print "   open!\n" ;
-			push @openEnds, $wayStart{$way}, $wayEnd{$way} ;
 		}
 	}
-	#print "SUB RESULT END\n" ;
 
 	my @openWays = () ;
 	my @closedWays = () ;
@@ -1125,18 +1103,12 @@ sub drawPic {
 	# draws simple picture of relation/boundary. original and possibly simplified/resized boundary.
 	my ($rel) = shift ;
 	my $buffer = 0.1 ;
-	my $lonMin = 999 ;
-	my $latMin = 999 ;
-	my $lonMax = -999 ; 
-	my $latMax = -999 ; 
+	my $lonMin = 999 ; my $latMin = 999 ; my $lonMax = -999 ; my $latMax = -999 ; 
 	my $node ;
-	my $p ;
-	my $pt ; 
+	my $p ; my $pt ; 
 
-	# TODO for each polygon! distinguish (color) between open and closed polygons. 
-	#      use polygons instead of way
-
-	foreach $p (@{$relationPolygonsClosed{$rel}}) {
+	# TODO merged with next loop. ok?
+	foreach $p ( @{$relationPolygonsClosed{$rel}}, @{$relationPolygonsOpen{$rel}} ) {
 		foreach $pt ($p->points) {
 			if ($pt->[0] > $lonMax) { $lonMax = $pt->[0] ; }
 			if ($pt->[1] > $latMax) { $latMax = $pt->[1] ; }
@@ -1144,14 +1116,14 @@ sub drawPic {
 			if ($pt->[1] < $latMin) { $latMin = $pt->[1] ; }
 		}
 	}
-	foreach $p (@{$relationPolygonsOpen{$rel}}) {
-		foreach $pt ($p->points) {
-			if ($pt->[0] > $lonMax) { $lonMax = $pt->[0] ; }
-			if ($pt->[1] > $latMax) { $latMax = $pt->[1] ; }
-			if ($pt->[0] < $lonMin) { $lonMin = $pt->[0] ; }
-			if ($pt->[1] < $latMin) { $latMin = $pt->[1] ; }
-		}
-	}
+#	foreach $p (@{$relationPolygonsOpen{$rel}}) {
+#		foreach $pt ($p->points) {
+#			if ($pt->[0] > $lonMax) { $lonMax = $pt->[0] ; }
+#			if ($pt->[1] > $latMax) { $latMax = $pt->[1] ; }
+#			if ($pt->[0] < $lonMin) { $lonMin = $pt->[0] ; }
+#			if ($pt->[1] < $latMin) { $latMin = $pt->[1] ; }
+#		}
+#	}
 	$lonMin = $lonMin - ($buffer * ($lonMax - $lonMin)) ;
 	$latMin = $latMin - ($buffer * ($latMax - $latMin)) ;
 	$lonMax = $lonMax + ($buffer * ($lonMax - $lonMin)) ;
@@ -1174,28 +1146,25 @@ sub drawPic {
 		drawWay ("red", 3, @coordinates) ;
 	}
 
+	if ($simplifyOpt eq "1") {	
+		foreach $p (@{$relationPolygonsSimplified{$rel}}) {
+			my @coordinates = () ; 
+			foreach $pt ($p->points) {
+				push @coordinates, $pt->[0], $pt->[1] ;
+			}
+			drawWay ("blue", 1, @coordinates) ;
+		}
+	}
 
-
-
-	# TODO for all polygons!
-
-#	if ($simplifyOpt eq "1") {	
-#		@coordinates = () ;
-#		foreach $pt ($relationPolygonSimplified{$rel}->points) {
-#			push @coordinates, $pt->[0], $pt->[1] ;
-#		}
-#		drawWay ("blue", 1, @coordinates) ;
-#	}
-
-	# TODO for all polygons!
-
-#	if ($resizeOpt eq "1") {	
-#		@coordinates = () ;
-#		foreach $pt ($relationPolygonResized{$rel}->points) {
-#			push @coordinates, $pt->[0], $pt->[1] ;
-#		}
-#		drawWay ("orange", 1, @coordinates) ;
-#	}
+	if ($resizeOpt eq "1") {	
+		foreach $p (@{$relationPolygonsResized{$rel}}) {
+			my @coordinates = () ; 
+			foreach $pt ($p->points) {
+				push @coordinates, $pt->[0], $pt->[1] ;
+			}
+			drawWay ("orange", 1, @coordinates) ;
+		}
+	}
 
 	# drawNodeCircle (center ($relationPolygon{$rel}), "black", 4) ;
 
@@ -1240,35 +1209,55 @@ sub isIn {
 	# return 0 = neither
 	#        1 = p1 is in p2
 	#        2 = p2 is in p1
-	my ($p1, $p2) = @_ ;
+	my ($p1ref, $p2ref) = @_ ;
 
-	# TODO implement multi polygon check! we get arrays of polygons, but only closed ones!
-	# if all points of all polygons of b1 are placed inside ONE polygon of b2 then b1 is_in b2
-	# and vice versa
-	
-	my $p1In2 = 1 ;
-	first:
-	foreach my $pt ($p1->points) {
-		if ($p2->contains ($pt) ) {
-			# ok
-		}
-		else {
-			$p1In2 = 0 ;
-			last first ;
-		}
-	}
+	my (@polygons1) = @$p1ref ;
+	my (@polygons2) = @$p2ref ;
+	my ($p1In2) = 0 ;
+	my ($p2In1) = 0 ;
 
-	my $p2In1 = 1 ;
+	# p1 in p2 ?
+
 	second:
-	foreach my $pt ($p2->points) {
-		if ($p1->contains ($pt) ) {
-			# ok
+	foreach my $p2 (@polygons2) {
+		my ($inside) = 1 ;
+		first:
+		foreach my $p1 (@polygons1) {
+			foreach my $pt1 ($p1->points) {
+				if ($p2->contains ($pt1) ) {
+					# good
+				}
+				else {
+					inside = 0 ; last first ;
+				}
+			}
 		}
-		else {
-			$p2In1 = 0 ;
-			last second ;
+		if (inside == 1) {
+			$p1In2 = 1 ; last second ;
 		}
 	}
+
+	# p2 in p1 ?
+
+	fourth:
+	foreach my $p1 (@polygons1) {
+		my ($inside) = 1 ;
+		third:
+		foreach my $p2 (@polygons2) {
+			foreach my $pt2 ($p2->points) {
+				if ($p1->contains ($pt2) ) {
+					# good
+				}
+				else {
+					inside = 0 ; last third ;
+				}
+			}
+		}
+		if (inside == 1) {
+			$p2In1 = 1 ; last fourth ;
+		}
+	}
+
 
 	if ($p1In2 == 1) {
 		return 1 ;

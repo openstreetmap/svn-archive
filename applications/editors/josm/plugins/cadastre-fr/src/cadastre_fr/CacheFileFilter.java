@@ -12,11 +12,11 @@ public class CacheFileFilter extends FileFilter {
     private final String extension;
     private final String description;
 
-    public static CacheFileFilter[] filters = { 
+    public static CacheFileFilter[] filters = {
         new CacheFileFilter("1", tr("Lambert Zone 1 cache file (.1)")),
         new CacheFileFilter("2", tr("Lambert Zone 2 cache file (.2)")),
         new CacheFileFilter("3", tr("Lambert Zone 3 cache file (.3)")),
-        new CacheFileFilter("4", tr("Lambert Zone 4 cache file (.4)")) 
+        new CacheFileFilter("4", tr("Lambert Zone 4 cache file (.4)"))
         };
 
     /**

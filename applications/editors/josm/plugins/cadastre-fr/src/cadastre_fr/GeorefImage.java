@@ -27,9 +27,9 @@ public class GeorefImage implements Serializable {
     public EastNorth org_min, org_max;
 
     public BufferedImage image;
-    
+
     private double angle = 0; // in radian
-    
+
     private BufferedImage rotated_image; // only if angle <> 0
 
     double pixelPerEast;
@@ -46,20 +46,20 @@ public class GeorefImage implements Serializable {
         min = new EastNorth(min.east() + dx, min.north() + dy);
         max = new EastNorth(max.east() + dx, max.north() + dy);
     }
-    
+
     public void resize(EastNorth rasterCenter, double proportion) {
         min = min.interpolate(rasterCenter, proportion);
         max = max.interpolate(rasterCenter, proportion);
         updatePixelPer();
     }
-    
+
     public void rotate(EastNorth pivot, double delta) {
         if (angle == 0) {
-            org_min = min; 
+            org_min = min;
             org_max = max;
         }
         this.angle += delta;
-        
+
         EastNorth imageCenter = org_min.interpolate(org_max, 0.5);
         EastNorth newimageCenter = imageCenter.rotate(pivot, angle);
         min.setLocation(org_min.east() + newimageCenter.east()-imageCenter.east(),
@@ -73,10 +73,10 @@ public class GeorefImage implements Serializable {
         min2 = min2.rotate(newimageCenter, angle);
         max2 = max2.rotate(newimageCenter, angle);
         getNewBounding(min, max, min2, max2);
-        
+
         rotated_image = tilt(image, angle);
     }
-    
+
     public static BufferedImage tilt(BufferedImage image, double angle) {
         double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
         int w = image.getWidth(), h = image.getHeight();
@@ -95,7 +95,7 @@ public class GeorefImage implements Serializable {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         return gd.getDefaultConfiguration();
     }
-    
+
     private void getNewBounding(EastNorth min, EastNorth max, EastNorth c, EastNorth d) {
         EastNorth pt[] = new EastNorth[4];
         pt[0] = min;
@@ -115,7 +115,7 @@ public class GeorefImage implements Serializable {
         min.setLocation(smallestEast, smallestNorth);
         max.setLocation(highestEast, highestNorth);
     }
-    
+
     public boolean contains(EastNorth en) {
         return min.east() <= en.east() && en.east() <= max.east() && min.north() <= en.north()
                 && en.north() <= max.north();
@@ -164,7 +164,7 @@ public class GeorefImage implements Serializable {
 
     /**
      * Make all pixels masked by the given georefImage transparent in this image
-     * 
+     *
      * @param georefImage
      */
     public void withdraw(GeorefImage georefImage) {

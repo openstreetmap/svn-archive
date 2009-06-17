@@ -28,6 +28,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.io.ProgressInputStream;
 
 public class DownloadSVGBuilding extends PleaseWaitRunnable {
@@ -38,7 +39,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     private String svg = null;
     private static EastNorthBound currentView = null;
     private EastNorthBound viewBox = null;
-    
+
     public DownloadSVGBuilding(WMSLayer wmsLayer) {
         super(tr("Downloading {0}", wmsLayer.name));
 
@@ -47,7 +48,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     }
 
     @Override
-    public void realRun() throws IOException {
+    public void realRun() throws IOException, OsmTransferException {
         Main.pleaseWaitDlg.currentAction.setText(tr("Contacting WMS Server..."));
         try {
             if (wmsInterface.retrieveInterface(wmsLayer)) {
@@ -76,14 +77,14 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     private boolean getViewBox(String svg) {
         double[] box = new SVGParser().getViewBox(svg);
         if (box != null) {
-            viewBox = new EastNorthBound(new EastNorth(box[0], box[1]), 
+            viewBox = new EastNorthBound(new EastNorth(box[0], box[1]),
                     new EastNorth(box[0]+box[2], box[1]+box[3]));
             return true;
         }
         System.out.println("Unable to parse SVG data (viewBox)");
         return false;
     }
-    
+
     /**
      *  The svg contains more than one commune boundary defined by path elements. So detect
      *  which path element is the best fitting to the viewBox and convert it to OSM objects
@@ -91,8 +92,8 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     private void createBuildings(String svg) {
         String[] SVGpaths = new SVGParser().getClosedPaths(svg);
         ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<ArrayList<EastNorth>>();
-        
-        // convert SVG nodes to eastNorth coordinates 
+
+        // convert SVG nodes to eastNorth coordinates
         for (int i=0; i< SVGpaths.length; i++) {
             ArrayList<EastNorth> eastNorth = new ArrayList<EastNorth>();
             createNodes(SVGpaths[i], eastNorth);
@@ -106,8 +107,8 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
             Way wayToAdd = new Way();
             for (EastNorth eastNorth : path) {
                 Node nodeToAdd = new Node(Main.proj.eastNorth2latlon(eastNorth));
-                // check if new node is not already created by another new path 
-                Node nearestNewNode = checkNearestNode(nodeToAdd, svgDataSet.nodes); 
+                // check if new node is not already created by another new path
+                Node nearestNewNode = checkNearestNode(nodeToAdd, svgDataSet.nodes);
                 if (nearestNewNode == nodeToAdd)
                     svgDataSet.addPrimitive(nearestNewNode);
                 wayToAdd.nodes.add(nearestNewNode); // either a new node or an existing one
@@ -115,7 +116,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
             wayToAdd.nodes.add(wayToAdd.nodes.get(0)); // close the way
             svgDataSet.addPrimitive(wayToAdd);
         }
-        
+
         // TODO remove small boxes (4 nodes with less than 1 meter distance)
         /*
         for (Way w : svgDataSet.ways)
@@ -129,7 +130,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
             new SimplifyWay().simplifyWay(wayToAdd, svgDataSet, 0.5);
         // check if the new way or its nodes is already in OSM layer
         for (Node n : svgDataSet.nodes) {
-            Node nearestNewNode = checkNearestNode(n, Main.ds.nodes); 
+            Node nearestNewNode = checkNearestNode(n, Main.ds.nodes);
             if (nearestNewNode != n) {
                 // replace the SVG node by the OSM node
                 for (Way w : svgDataSet.ways) {
@@ -144,7 +145,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 }
                 n.delete(true);
             }
-                
+
         }
 
         Collection<Command> cmds = new LinkedList<Command>();
@@ -157,7 +158,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         Main.main.undoRedo.add(new SequenceCommand(tr("Create buildings"), cmds));
         Main.map.repaint();
     }
-    
+
     private void createNodes(String SVGpath, ArrayList<EastNorth> eastNorth) {
         // looks like "M981283.38 368690.15l143.81 72.46 155.86 ..."
         String[] coor = SVGpath.split("[MlZ ]"); //coor[1] is x, coor[2] is y
@@ -169,10 +170,10 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 return;
             }
             double east = dx+=Double.parseDouble(coor[i]);
-            double north = dy+=Double.parseDouble(coor[i+1]); 
+            double north = dy+=Double.parseDouble(coor[i+1]);
             eastNorth.add(new EastNorth(east,north));
         }
-        // flip the image (svg using a reversed Y coordinate system)            
+        // flip the image (svg using a reversed Y coordinate system)
         double pivot = viewBox.min.getY() + (viewBox.max.getY() - viewBox.min.getY()) / 2;
         for (EastNorth en : eastNorth) {
             en.setLocation(en.east(), 2 * pivot - en.north());
@@ -182,8 +183,8 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
 
     /**
      * Check if node can be reused.
-     * @param nodeToAdd the candidate as new node 
-     * @return the already existing node (if any), otherwise the new node candidate. 
+     * @param nodeToAdd the candidate as new node
+     * @return the already existing node (if any), otherwise the new node candidate.
      */
     private Node checkNearestNode(Node nodeToAdd, Collection<Node> nodes) {
         double epsilon = 0.05; // smallest distance considering duplicate node
@@ -198,8 +199,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         return nodeToAdd;
     }
 
-    private String grabBoundary(EastNorthBound bbox) throws IOException {
-
+    private String grabBoundary(EastNorthBound bbox) throws IOException, OsmTransferException {
         try {
             URL url = null;
             url = getURLsvg(bbox);
@@ -209,7 +209,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
             throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);
         }
     }
-    
+
     private URL getURLsvg(EastNorthBound bbox) throws MalformedURLException {
         String str = new String(wmsInterface.baseURL+"/scpc/wms?version=1.1&request=GetMap");
         str += "&layers=";
@@ -227,7 +227,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         return new URL(str.replace(" ", "%20"));
     }
 
-    private String grabSVG(URL url) throws IOException {
+    private String grabSVG(URL url) throws IOException, OsmTransferException {
         wmsInterface.urlConn = (HttpURLConnection)url.openConnection();
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
@@ -258,7 +258,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         MapView mv = Main.map.mapView;
         currentView = new EastNorthBound(mv.getEastNorth(0, mv.getHeight()),
                 mv.getEastNorth(mv.getWidth(), 0));
-        if ((currentView.max.east() - currentView.min.east()) > 1000 || 
+        if ((currentView.max.east() - currentView.min.east()) > 1000 ||
                 (currentView.max.north() - currentView.min.north() > 1000)) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("To avoid cadastre WMS overload,\nbuilding import size is limited to 1 km2 max."));

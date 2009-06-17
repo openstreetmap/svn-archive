@@ -9,7 +9,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 public class MenuActionResetCookie extends JosmAction {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 

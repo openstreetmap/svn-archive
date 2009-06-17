@@ -1,4 +1,4 @@
-package cadastre_fr; 
+package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -19,29 +19,29 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.gui.layer.Layer;
 
 public class WMSAdjustAction extends MapMode implements
-		MouseListener, MouseMotionListener{
+        MouseListener, MouseMotionListener{
 
     private static final long serialVersionUID = 1L;
     GeorefImage selectedImage;
     private ArrayList<WMSLayer> modifiedLayers = new ArrayList<WMSLayer>();
-	WMSLayer selectedLayer;
-	private boolean rasterMoved;
-	private EastNorth prevEastNorth;
+    WMSLayer selectedLayer;
+    private boolean rasterMoved;
+    private EastNorth prevEastNorth;
     enum Mode { moveXY, moveZ, rotate}
     private Mode mode = null;
 
-	public WMSAdjustAction(MapFrame mapFrame) {
-		super(tr("Adjust WMS"), "adjustxywms", 
-						tr("Adjust the position of the WMS layer (raster images only)"), mapFrame, 
-						ImageProvider.getCursor("normal", "move"));
-	}
+    public WMSAdjustAction(MapFrame mapFrame) {
+        super(tr("Adjust WMS"), "adjustxywms",
+                        tr("Adjust the position of the WMS layer (raster images only)"), mapFrame,
+                        ImageProvider.getCursor("normal", "move"));
+    }
 
-	@Override public void enterMode() {
-		super.enterMode();
-		Main.map.mapView.addMouseListener(this);
-		Main.map.mapView.addMouseMotionListener(this);
-		rasterMoved = false;
-		/*/ FOR TEST
+    @Override public void enterMode() {
+        super.enterMode();
+        Main.map.mapView.addMouseListener(this);
+        Main.map.mapView.addMouseMotionListener(this);
+        rasterMoved = false;
+        /*/ FOR TEST
         for (Layer layer : Main.map.mapView.getAllLayers()) {
             if (layer.visible && layer instanceof WMSLayer) {
                 WMSLayer wmsLayer = (WMSLayer)layer;
@@ -49,25 +49,25 @@ public class WMSAdjustAction extends MapMode implements
             }
         }
         Main.map.mapView.repaint();*/
-	}
+    }
 
-	@Override public void exitMode() {
-		super.exitMode();
-		Main.map.mapView.removeMouseListener(this);
-		Main.map.mapView.removeMouseMotionListener(this);
-		if (rasterMoved && CacheControl.cacheEnabled) {
-            int reply = JOptionPane.showConfirmDialog(null, 
+    @Override public void exitMode() {
+        super.exitMode();
+        Main.map.mapView.removeMouseListener(this);
+        Main.map.mapView.removeMouseMotionListener(this);
+        if (rasterMoved && CacheControl.cacheEnabled) {
+            int reply = JOptionPane.showConfirmDialog(null,
                     "Save the changes in cache ?",
                     "Update cache",
-                    JOptionPane.YES_NO_OPTION);		    
+                    JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.OK_OPTION) {
                 saveModifiedLayers();
             }
-		}
-		modifiedLayers.clear();
-	}
+        }
+        modifiedLayers.clear();
+    }
 
-	@Override
+    @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
@@ -92,64 +92,64 @@ public class WMSAdjustAction extends MapMode implements
         }
     }
 
-	@Override public void mouseDragged(MouseEvent e) {
-		if(selectedImage != null && (mode == Mode.moveXY || mode == Mode.moveZ || mode == Mode.rotate)) {
+    @Override public void mouseDragged(MouseEvent e) {
+        if(selectedImage != null && (mode == Mode.moveXY || mode == Mode.moveZ || mode == Mode.rotate)) {
             EastNorth newEastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
-		    if (mode == Mode.moveXY) {
-		        displace(prevEastNorth, newEastNorth);
-	        } else if (mode == Mode.moveZ) {
-	            resize(newEastNorth);
-	        } else if (mode == Mode.rotate) {
-	            rotate(prevEastNorth, newEastNorth);
-	        }
+            if (mode == Mode.moveXY) {
+                displace(prevEastNorth, newEastNorth);
+            } else if (mode == Mode.moveZ) {
+                resize(newEastNorth);
+            } else if (mode == Mode.rotate) {
+                rotate(prevEastNorth, newEastNorth);
+            }
             rasterMoved = true;
             if (!modifiedLayers.contains(selectedLayer))
                 modifiedLayers.add(selectedLayer);
             Main.map.mapView.repaint();
             prevEastNorth = newEastNorth;
-		}
-	}
-	
-	private void displace(EastNorth start, EastNorth end) {
+        }
+    }
+
+    private void displace(EastNorth start, EastNorth end) {
         selectedLayer.displace(end.east()-start.east(), end.north()-start.north());
-	}
-	
-	private void resize(EastNorth newEastNorth) {
+    }
+
+    private void resize(EastNorth newEastNorth) {
         double dPrev = prevEastNorth.distance(selectedLayer.getRasterCenter().east(), selectedLayer.getRasterCenter().north());
         double dNew = newEastNorth.distance(selectedLayer.getRasterCenter().east(), selectedLayer.getRasterCenter().north());
         selectedLayer.resize(1 - dNew/dPrev);
-	}
-	
-	private void rotate(EastNorth start, EastNorth end) {
-	    EastNorth pivot = selectedLayer.getRasterCenter();
-	    double startAngle = Math.atan2(start.east()-pivot.east(), start.north()-pivot.north());
-	    double endAngle = Math.atan2(end.east()-pivot.east(), end.north()-pivot.north());
+    }
+
+    private void rotate(EastNorth start, EastNorth end) {
+        EastNorth pivot = selectedLayer.getRasterCenter();
+        double startAngle = Math.atan2(start.east()-pivot.east(), start.north()-pivot.north());
+        double endAngle = Math.atan2(end.east()-pivot.east(), end.north()-pivot.north());
         double rotationAngle = endAngle - startAngle;
-        selectedLayer.rotate(rotationAngle);              	    
-	}
+        selectedLayer.rotate(rotationAngle);
+    }
 
-	@Override public void mouseReleased(MouseEvent e) {
-		//Main.map.mapView.repaint();
-		Main.map.mapView.setCursor(Cursor.getDefaultCursor());
-		selectedImage = null;	
-		prevEastNorth = null;
-		selectedLayer = null;
-		mode = null;
-	}
+    @Override public void mouseReleased(MouseEvent e) {
+        //Main.map.mapView.repaint();
+        Main.map.mapView.setCursor(Cursor.getDefaultCursor());
+        selectedImage = null;
+        prevEastNorth = null;
+        selectedLayer = null;
+        mode = null;
+    }
 
-	public void mouseEntered(MouseEvent e) {
-	}
-	public void mouseExited(MouseEvent e) {
-	}
-	public void mouseMoved(MouseEvent e) {
-	}
+    public void mouseEntered(MouseEvent e) {
+    }
+    public void mouseExited(MouseEvent e) {
+    }
+    public void mouseMoved(MouseEvent e) {
+    }
 
-	@Override public void mouseClicked(MouseEvent e) {
-	}
-	
-	private void saveModifiedLayers() {
+    @Override public void mouseClicked(MouseEvent e) {
+    }
+
+    private void saveModifiedLayers() {
         for (WMSLayer wmsLayer : modifiedLayers) {
             wmsLayer.saveNewCache();
         }
-	}
+    }
 }

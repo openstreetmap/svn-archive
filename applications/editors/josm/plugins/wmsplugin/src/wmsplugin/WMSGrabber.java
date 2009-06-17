@@ -26,6 +26,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
+import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.io.ProgressInputStream;
 
 
@@ -123,7 +124,7 @@ public class WMSGrabber extends Grabber {
         return res;
     }
 
-    protected BufferedImage grab(URL url) throws IOException {
+    protected BufferedImage grab(URL url) throws IOException, OsmTransferException {
         BufferedImage cached = cache.getImg(url.toString());
         if(cached != null) return cached;
 

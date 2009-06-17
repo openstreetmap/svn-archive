@@ -30,7 +30,7 @@ public class MenuActionLoadFromCache extends JosmAction {
             String filename = file.getName();
             String ext = (filename.lastIndexOf(".")==-1)?"":filename.substring(filename.lastIndexOf(".")+1,filename.length());
             String location = filename.substring(0, filename.lastIndexOf("."));
-            // check the extension and its Lambert zone consistency 
+            // check the extension and its Lambert zone consistency
             try {
                 int cacheZone = Integer.parseInt(ext) - 1;
                 if (cacheZone >=0 && cacheZone <= 3) {
@@ -62,7 +62,7 @@ public class MenuActionLoadFromCache extends JosmAction {
             if (wmsLayer.getCacheControl().loadCache(file, Lambert.layoutZone))
                 Main.main.addLayer(wmsLayer);
         }
-        
+
     }
 
     protected static JFileChooser createAndOpenFileChooser() {

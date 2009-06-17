@@ -40,14 +40,14 @@ public class CadastreInterface {
     final String cOptionListEnd = "</option>";
     final String cBBoxCommunStart = "new GeoBox(";
     final String cBBoxCommunEnd = ")";
-    
+
     final String cInterfaceVector = "afficherCarteCommune.do";
     final String cInterfaceRaster = "afficherCarteTa.do";
-        
+
     CadastreInterface(CadastreGrabber cadastreGrabber) {
         this.cadastreGrabber = cadastreGrabber;
     }
-    
+
     public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException {
         if (wmsLayer.name.equals(""))
             return false;
@@ -63,7 +63,7 @@ public class CadastreInterface {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Town/city {0} not found or not available in WMS.\n" +
-                    		"Please check its availibility on www.cadastre.gouv.fr", wmsLayer.getLocation()));
+                            "Please check its availibility on www.cadastre.gouv.fr", wmsLayer.getLocation()));
             return false;
         }
         return true;
@@ -98,17 +98,17 @@ public class CadastreInterface {
     public void resetCookie() {
         cadastreGrabber.setLastWMSLayerName(null);
     }
-    
+
     public void resetCookieIfNewLayer(String newWMSLayerName) {
         if (!newWMSLayerName.equals(cadastreGrabber.getLastWMSLayerName())) {
             resetCookie();
         }
     }
-    
+
     public void setCookie() {
         urlConn.setRequestProperty("Cookie", cookie);
     }
-    
+
     private void getInterface(WMSLayer wmsLayer) throws IOException, DuplicateLayerException {
         // first attempt : search for given name without codeCommune
         interfaceRef = postForm(wmsLayer, "");
@@ -133,11 +133,11 @@ public class CadastreInterface {
                 }
             }
         }
-        
+
         if (interfaceRef == null)
             throw new IOException("Town/city " + wmsLayer.getLocation() + " not found.");
     }
-    
+
     private void openInterface() throws IOException  {
         try {
             // finally, open the interface on server side giving access to the wms server
@@ -157,12 +157,12 @@ public class CadastreInterface {
                 "CadastreGrabber: Illegal url.").initCause(e);
         }
     }
-    
+
     /**
      * Post the form with the commune name and check the returned answer which is embedded
      * in HTTP XML packets. This function doesn't use an XML parser yet but that would be a good idea
      * for the next releases.
-     * Two possibilities : 
+     * Two possibilities :
      * - either the commune name matches and we receive an URL starting with "afficherCarteCommune.do" or
      * - we don't receive a single answer but a list of possible values. This answer looks like:
      *   <select name="codeCommune" class="long erreur" id="codeCommune">
@@ -170,7 +170,7 @@ public class CadastreInterface {
      *   <option value="50061" >COLMARS - 04370</option>
      *   <option value="QK066" >COLMAR - 68000</option>
      *   </select>
-     * 
+     *
      * @param location
      * @param codeCommune
      * @return retURL url to available cadastre vectorised master piece; "" if not found
@@ -244,7 +244,7 @@ public class CadastreInterface {
         }
         return null;
     }
-    
+
     private void parseCommuneList(String input) {
         if (input.indexOf(c0ptionListStart) != -1) {
             while (input.indexOf("<option value=\"") != -1) {
@@ -263,7 +263,7 @@ public class CadastreInterface {
             }
         }
     }
-    
+
     private void parseTAList(String input) {
         while (input.indexOf(cInterfaceRaster) != -1) {
             input = input.substring(input.indexOf(cInterfaceRaster));
@@ -271,7 +271,7 @@ public class CadastreInterface {
             codeTA = codeTA.substring(codeTA.indexOf("=")+1);
             if (!listOfTA.contains(codeTA)) {
                 System.out.println("parse "+codeTA);
-                listOfTA.add(codeTA);                
+                listOfTA.add(codeTA);
             }
             input = input.substring(cInterfaceRaster.length());
         }
@@ -313,7 +313,7 @@ public class CadastreInterface {
     private String buildRasterInterfaceRef(String codeCommune) {
         return cInterfaceRaster + "?f=" + codeCommune;
     }
-    
+
     public EastNorthBound retrieveCommuneBBox() throws IOException {
         if (interfaceRef == null)
             return null;
@@ -339,7 +339,7 @@ public class CadastreInterface {
         urlConn.disconnect();
         return parseBBoxCommune(line);
     }
-    
+
     private EastNorthBound parseBBoxCommune(String input) {
         if (input.indexOf(cBBoxCommunStart) != -1) {
             input = input.substring(input.indexOf(cBBoxCommunStart));
@@ -355,7 +355,7 @@ public class CadastreInterface {
         }
         return null;
     }
-    
+
     private void checkLayerDuplicates(WMSLayer wmsLayer) throws DuplicateLayerException {
         if (Main.map != null) {
             for (Layer l : Main.map.mapView.getAllLayers()) {
@@ -368,8 +368,8 @@ public class CadastreInterface {
             }
         }
     }
-    
-    public void cancel() {      
+
+    public void cancel() {
         Main.pleaseWaitDlg.currentAction.setText(tr("Aborting..."));
         if (urlConn != null) {
             urlConn.setConnectTimeout(1);

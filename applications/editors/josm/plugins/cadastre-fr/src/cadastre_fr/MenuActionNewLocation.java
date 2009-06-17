@@ -20,19 +20,19 @@ import org.openstreetmap.josm.tools.GBC;
 
 public class MenuActionNewLocation extends JosmAction {
 
-	private static final long serialVersionUID = 1L;
-	
-	public MenuActionNewLocation() {
-		super(tr("Change location"), "cadastre_small", tr("Set a new location for the next request"), null, false);
-	}
+    private static final long serialVersionUID = 1L;
 
-	public void actionPerformed(ActionEvent e) {
+    public MenuActionNewLocation() {
+        super(tr("Change location"), "cadastre_small", tr("Set a new location for the next request"), null, false);
+    }
+
+    public void actionPerformed(ActionEvent e) {
         WMSLayer wmsLayer = addNewLayer(new ArrayList<WMSLayer>());
         if (wmsLayer != null)
             DownloadWMSTask.download(wmsLayer);
     }
-	
-	public WMSLayer addNewLayer(ArrayList<WMSLayer> existingLayers) {
+
+    public WMSLayer addNewLayer(ArrayList<WMSLayer> existingLayers) {
         if (Main.map == null) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Open a layer first (GPX, OSM, cache)"));
@@ -87,7 +87,7 @@ public class MenuActionNewLocation extends JosmAction {
                 Main.main.addLayer(wmsLayer);
                 System.out.println("Add new layer with Location:" + inputTown.getText());
             } else if (existingLayers != null && existingLayers.size() > 0 && inputWMSList.getSelectedIndex() > 0) {
-                wmsLayer = existingLayers.get(inputWMSList.getSelectedIndex()-1);            
+                wmsLayer = existingLayers.get(inputWMSList.getSelectedIndex()-1);
                 resetCookie = true;
             }
 
@@ -96,5 +96,5 @@ public class MenuActionNewLocation extends JosmAction {
             return wmsLayer;
         }
     }
-	
+
 }

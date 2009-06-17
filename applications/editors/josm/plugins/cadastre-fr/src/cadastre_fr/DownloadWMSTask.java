@@ -37,7 +37,7 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
                         }
                     }
                     if (wmsLayer.isRaster())
-                        // set raster image commune bounding box based on current view (before adjustment) 
+                        // set raster image commune bounding box based on current view (before adjustment)
                         wmsLayer.setRasterBounds(bounds);
                     else
                         // set vectorized commune bounding box by opening the standard web window

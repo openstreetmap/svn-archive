@@ -14,9 +14,6 @@ build: build-stamp
 build-stamp: 
 	dh_testdir
 
-	# Add here commands to compile the package.
-	# $(MAKE)
-
 	touch build-stamp
 
 clean:
@@ -27,15 +24,11 @@ clean:
 	rm -f debian/files
 
 	# Add here commands to clean up after the build process.
-	-$(MAKE) distclean
 	for dir in `ls plugins/*/build.xml | sed s,/build.xml,,`; do \
-	    echo "-------- Cleanup Plugin '$$dir'"; \
-	    cd $$dir; \
-	    rm -f dist/*.jar; \
-	    rm -f ../../dist/$dir.jar; \
-	    rm -f *.log; \
-	    ant -q clean; \
-	    cd ../..; \
+	    ( cd "$$dir"; \
+	      echo "-------- Cleanup Plugin '$$dir' ..."; \
+	      rm -f dist/*.jar ../../dist/$dir.jar *.log ; \
+	      ant -q clean ); \
 	done
 	cd core;   ant -q clean
 	dh_clean

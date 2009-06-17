@@ -289,8 +289,8 @@ public class Lakewalker {
         }
     }
 
-    public ArrayList<double[]> douglasPeuckerNR(ArrayList<double[]> nodes, double epsilon){
         /*
+    public ArrayList<double[]> douglasPeuckerNR(ArrayList<double[]> nodes, double epsilon){
         command_stack = [(0, len(nodes) - 1)]
 
         Vector result_stack = new Vector();
@@ -350,14 +350,14 @@ public class Lakewalker {
         } else {
             return [nodes[0], nodes[-1]];
         }
-        */
         return nodes;
     }
+        */
 
-    public ArrayList<double[]> douglasPeucker(ArrayList<double[]> nodes, double epsilon){
+    public ArrayList<double[]> douglasPeucker(ArrayList<double[]> nodes, double epsilon, int depth){
 
         // Check if node list is empty
-        if(nodes.size()<=1){
+        if(nodes.size()<=1 || depth > 500){
             return nodes;
         }
 
@@ -382,8 +382,8 @@ public class Lakewalker {
         ArrayList<double[]> seg_b = new ArrayList<double[]>();
 
         if(farthest_dist > epsilon){
-            seg_a = douglasPeucker(sublist(nodes,0,farthest_node+1),epsilon);
-            seg_b = douglasPeucker(sublist(nodes,farthest_node,nodes.size()-1),epsilon);
+            seg_a = douglasPeucker(sublist(nodes,0,farthest_node+1),epsilon, depth+1);
+            seg_b = douglasPeucker(sublist(nodes,farthest_node,nodes.size()-1),epsilon,depth+1);
 
             new_nodes.addAll(seg_a);
             new_nodes.addAll(seg_b);

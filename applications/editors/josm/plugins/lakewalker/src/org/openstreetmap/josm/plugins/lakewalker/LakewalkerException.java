@@ -1,11 +1,13 @@
 package org.openstreetmap.josm.plugins.lakewalker;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 class LakewalkerException extends Exception {
     String error;
 
     public LakewalkerException(){
         super();
-        this.error = "An unknown error has occured";
+        this.error = tr("An unknown error has occurred");
     }
 
     public LakewalkerException(String err){

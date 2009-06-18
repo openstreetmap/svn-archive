@@ -63,7 +63,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "3.0 BETA (002)" ;
+my $version = "3.0 BETA (004)" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -231,16 +231,19 @@ while ($relationId != -1) {
 		$selectedRelation{$relationId} = 1 ;
 		$relationSegments{$relationId} = 0 ;
 		$relationOpen{$relationId} = 0 ;
+		$relationSize{$relationId} = 0 ;
 		$relationWaysValid{$relationId} = 1 ;
 		if ($verbose) { print "\nfound relation id=$relationId\nname=$name\ntype=$type\nboundary=$boundary\nadminLevel=$adminLevel\nlandArea=$landArea\n" ; }
 		for ($i=0; $i<scalar (@relationMembers); $i++) {
 			# way?
-			if ( (${$relationMembers[$i]}[0] eq "way") and ((${$relationMembers[$i]}[2] eq "none") or (${$relationMembers[$i]}[2] eq "outer")) ){ 
+			if ( (${$relationMembers[$i]}[0] eq "way") and 
+				((${$relationMembers[$i]}[2] eq "none") or (${$relationMembers[$i]}[2] eq "outer") or (${$relationMembers[$i]}[2] eq "exclave") ) ){ 
 				push @neededWays, ${$relationMembers[$i]}[1] ; 
 				push @{$relationWays{$relationId}}, ${$relationMembers[$i]}[1] ; 
 			}
 			# relation?
-			if ( (${$relationMembers[$i]}[0] eq "relation") and ((${$relationMembers[$i]}[2] eq "none") or (${$relationMembers[$i]}[2] eq "outer")) ){ 
+			if ( (${$relationMembers[$i]}[0] eq "relation") and 
+				((${$relationMembers[$i]}[2] eq "none") or (${$relationMembers[$i]}[2] eq "outer") or (${$relationMembers[$i]}[2] eq "exclave") ) ){ 
 				if (${$relationMembers[$i]}[1] == $relationId) {
 					print "ERROR: relation $relationId contains itself as a member. entry discarded.\n" ;
 				}
@@ -653,7 +656,6 @@ if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 				}
 				print $polyFile "END\n" ;
 			}
-
 			print $polyFile "END\n" ;
 			close ($polyFile) ;
 		}
@@ -667,7 +669,7 @@ if ( ($polyBaseName ne "") and ($polyOpt eq "1") ) {
 if ( ($polyBaseName ne "") and ($picOpt eq "1") ) {
 	print "write picture files...\n" ; 
 	foreach $rel (keys %relationWays) {
-		if ( (($validRelation{$rel}) and ($selectedRelation{$rel})) or ($allPicsOpt eq "1")) {
+		if ( ( ($validRelation{$rel}) or ($allPicsOpt eq "1") ) and ($selectedRelation{$rel} ) ) {
 			drawPic ($rel) ;
 		}
 	}
@@ -717,7 +719,6 @@ if ($hirarchyOpt eq "1") {
 
 	foreach $rel (keys %relationName) {
 		if ( ($validRelation{$rel}) and ($selectedRelation{$rel}) ) {
-		#if (($validRelation{$rel}) and (scalar (@{$relationIsIn{$rel}}) > 0 ) ) {
 			
 			my @is_in = () ;
 			foreach my $r2 ( @{$relationIsIn{$rel}} ) {
@@ -752,9 +753,7 @@ if ($hirarchyOpt eq "1") {
 				print $htmlFile $relationName{$r2->[0]}, "<br>\n" ;
 			}
 			print $htmlFile "</td>\n" ;
-
 			printHTMLRowEnd ($htmlFile) ;
-
 		}
 	}
 
@@ -1108,7 +1107,6 @@ sub drawPic {
 	my $node ;
 	my $p ; my $pt ; 
 
-	# TODO merged with next loop. ok?
 	foreach $p ( @{$relationPolygonsClosed{$rel}}, @{$relationPolygonsOpen{$rel}} ) {
 		foreach $pt ($p->points) {
 			if ($pt->[0] > $lonMax) { $lonMax = $pt->[0] ; }
@@ -1117,14 +1115,7 @@ sub drawPic {
 			if ($pt->[1] < $latMin) { $latMin = $pt->[1] ; }
 		}
 	}
-#	foreach $p (@{$relationPolygonsOpen{$rel}}) {
-#		foreach $pt ($p->points) {
-#			if ($pt->[0] > $lonMax) { $lonMax = $pt->[0] ; }
-#			if ($pt->[1] > $latMax) { $latMax = $pt->[1] ; }
-#			if ($pt->[0] < $lonMin) { $lonMin = $pt->[0] ; }
-#			if ($pt->[1] < $latMin) { $latMin = $pt->[1] ; }
-#		}
-#	}
+
 	$lonMin = $lonMin - ($buffer * ($lonMax - $lonMin)) ;
 	$latMin = $latMin - ($buffer * ($latMax - $latMin)) ;
 	$lonMax = $lonMax + ($buffer * ($lonMax - $lonMin)) ;
@@ -1166,8 +1157,6 @@ sub drawPic {
 			drawWay ("black", 2, @coordinates) ;
 		}
 	}
-
-	# drawNodeCircle (center ($relationPolygon{$rel}), "black", 4) ;
 
 	drawHead ($program . " ". $version . " by Gary68" . " RelId = " . $rel . " name = " . $relationName{$rel}, "black", 3) ;
 	drawFoot ("data by openstreetmap.org" . " " . $osmName . " " .ctime(stat($osmName)->mtime), "gray", 3) ;

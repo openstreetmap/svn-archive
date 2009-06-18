@@ -467,6 +467,7 @@ foreach $node (@neededNodes) {
 print "checking if all needed ways could be found in osm file...\n" ;
 my $waysMissing = 0 ; my $way ;
 foreach $way (@neededWays) {
+	# TODO warning only once per way id would be nice... way may occur more than once in @neededWays.
 	if ( ! (defined ( @{$wayNodesHash{$way}} ) ) ) {
 		if ($invalidWays{$way}) {
 			print "WARNING way $way invalid in osm file.\n" ;

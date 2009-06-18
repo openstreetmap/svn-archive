@@ -2440,7 +2440,7 @@ int WINAPI WinMain(
     FILE *newWayFile = fopen (fname, "w");
     if (newWayFile) {
       fprintf (newWayFile, "<?xml version='1.0' encoding='UTF-8'?>\n"
-                           "<osm version='0.5' generator='gosmore'>\n");
+                           "<osm version='0.6' generator='gosmore'>\n");
       for (int j, id = -1, i = 0; i < newWayCnt; i++) {
         for (j = 0; j < newWays[i].cnt; j++) {
           fprintf (newWayFile, "<node id='%d' visible='true' lat='%.5lf' "

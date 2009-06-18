@@ -377,16 +377,14 @@ foreach $rel (keys %relationWays) {
 		if ($verbose eq "1") { print "INVALID relation $rel due to no ways\n" ; }
 	}
 
-#	in version 3 those ways are not invalidated
-# 
-#	# if the boundary contains an invalid way. chances for success are low :-)
-#	foreach $way (@{$relationWays{$rel}}) {
-#		if ($invalidWays{$way} == 1) { 
-#			$waysValid = 0 ; 
-#			$relationWaysValid{$rel} = 0 ;
-#			if ($verbose eq "1") { print "INVALID RELATION id=$rel, name=$relationName{$rel} due to invalid way $way\n" ; }
-#		}
-#	}
+	# if the boundary contains an invalid way. chances for success are low :-)
+	foreach $way (@{$relationWays{$rel}}) {
+		if ($invalidWays{$way} == 1) { 
+			$waysValid = 0 ; 
+			$relationWaysValid{$rel} = 0 ;
+			if ($verbose eq "1") { print "INVALID RELATION id=$rel, name=$relationName{$rel} due to invalid way $way\n" ; }
+		}
+	}
 
 	# check for multiple usage of ways. checkSegments doesn't like that.
 	my (@temp) = sort (@{$relationWays{$rel}}) ; my $i ;

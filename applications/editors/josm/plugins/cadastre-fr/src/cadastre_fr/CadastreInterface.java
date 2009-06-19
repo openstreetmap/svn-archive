@@ -51,7 +51,7 @@ public class CadastreInterface {
     public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException {
         if (wmsLayer.name.equals(""))
             return false;
-        // open the session with the french Cadastre web front end
+        // open the session with the French Cadastre web front end
         downloadCancelled = false;
         try {
             if (cookie == null || !wmsLayer.name.equals(cadastreGrabber.getLastWMSLayerName())) {

@@ -23,7 +23,7 @@
                 <attribute name="Author" value="Pieren"/>
                 <attribute name="Plugin-Class" value="cadastre_fr.CadastrePlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="A special handler for the french land registry WMS server."/>
+                <attribute name="Plugin-Description" value="A special handler for the French land registry WMS server."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/FR:JOSM/Fr:Plugin/Cadastre"/>
                 <attribute name="Plugin-Mainversion" value="1646"/>
                 <attribute name="Plugin-Stage" value="60"/>

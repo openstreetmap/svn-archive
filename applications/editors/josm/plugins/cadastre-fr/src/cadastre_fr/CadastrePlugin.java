@@ -27,7 +27,7 @@ import org.openstreetmap.josm.data.projection.Lambert;
 
 /**
  *
- * Plugin to access the french Cadastre WMS server at www.cadastre.gouv.fr This
+ * Plugin to access the French Cadastre WMS server at www.cadastre.gouv.fr This
  * WMS server requires some specific handling like retrieving a cookie for a
  * limitation in case of no activity, or the request to the server shall provide
  * a city/town/village code.

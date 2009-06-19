@@ -52,8 +52,8 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     public void addGui(final PreferenceDialog gui) {
 
-        String description = tr("A special handler of the french cadastre wms at www.cadastre.gouv.fr" + "<BR><BR>"
-                + "Please read the Terms and Conditions of Use here (in french): <br>"
+        String description = tr("A special handler of the French cadastre wms at www.cadastre.gouv.fr" + "<BR><BR>"
+                + "Please read the Terms and Conditions of Use here (in French): <br>"
                 + "<a href=\"http://www.cadastre.gouv.fr/scpc/html/CU_01_ConditionsGenerales_fr.html\"> "
                 + "http://www.cadastre.gouv.fr/scpc/html/CU_01_ConditionsGenerales_fr.html</a> <BR>"
                 + "before any upload of data created by this plugin.");

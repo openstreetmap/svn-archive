@@ -30,7 +30,7 @@ import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.data.coor.EastNorth;
 
 /**
- * This is a layer that grabs the current screen from the french cadastre WMS
+ * This is a layer that grabs the current screen from the French cadastre WMS
  * server. The data fetched this way is tiled and managed to the disc to reduce
  * server load.
  */

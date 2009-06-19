@@ -8,19 +8,23 @@ import sys, os, re, stat, time
 model = [
 """<?xml version="1.0" encoding="UTF-8"?>
 <gpx
-  version="1.0"
+  version="1.1"
   creator="makegpx"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://www.topografix.com/GPX/1/0"
-  xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
-<time>%s</time>
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<metadata>
+    <time>%s</time>
+</metadata>
   <trk>
 ""","""    <trkseg>
 ""","""      <trkpt lat="%s" lon="%s"><time>%s</time></trkpt>
 ""","""      <trkpt lat="%s" lon="%s"><desc>%s</desc><time>%s</time></trkpt>
 ""","""    </trkseg>
 ""","""  </trk>
-""","""  <wpt lat="%s" lon="%s"><desc>%s</desc><link>%s</link></wpt>
+""","""  <wpt lat="%s" lon="%s">
+    <desc>%s</desc><link href="%s"><text>%s</text></link>
+  </wpt>
 ""","""</gpx>
 """]
     
@@ -49,6 +53,9 @@ def convertone(fn, outfn):
         else:
             lon = "-" + lon[:-1]
         outf.write(model[2] % (lat, lon, trkptdate))
+        if not locals().has_key('oldlat'):
+            oldlat = lat
+            oldlon = lon
         if fields[1] == 'V':
             audiofn = fields[9].replace("\000", "").rstrip()
             waypoints.append((oldlat, oldlon, trkptdate, audiofn+".wav"))
@@ -60,9 +67,12 @@ def convertone(fn, outfn):
     outf.write(model[4])
     outf.write(model[5])
     for wp in waypoints:
-        outf.write(model[6] % wp)
+        args = list(wp[:])
+        args.append(wp[-1])
+        outf.write(model[6] % tuple(args))
     outf.write(model[7])
     
 for fn in sys.argv[1:]:
+    print fn
     convertone(fn, fn+".gpx")
 

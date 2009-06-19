@@ -9,3 +9,9 @@ command line is appropriate:
 
 The WAV files should have a lower-case extension (".wav"), should your
 operating system have case-sensitive filenames.
+
+Changes since 16010:
+  o Moved the lat/lon to the beginning of the recording rather than the end.
+    The beginning is more easily chosen.
+  o convinced it to generate GPX 1.1 output, the better to work with JOSM.
+  o It now prints out the filename of the file it's processing.

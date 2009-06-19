@@ -63,7 +63,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "3.0 BETA (005)" ;
+my $version = "3.0 BETA (006)" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -86,8 +86,8 @@ my @relationTags ;
 
 my %lon = () ; my %lat = () ;	# all node positions
 
-my @neededNodes = () ;	# will be used to load only needed data
-my @neededWays = () ;	# will be used to load only needed data
+my %neededNodesHash = () ;	# will be used to load only needed data
+my %neededWaysHash = () ;	# will be used to load only needed data
 
 my %wayNodesHash = () ;	# nodes forming a way
 my %relationWays = () ;	# ways contained (first directly, later also indirect by relation reference) in relation
@@ -238,7 +238,7 @@ while ($relationId != -1) {
 			# way?
 			if ( (${$relationMembers[$i]}[0] eq "way") and 
 				((${$relationMembers[$i]}[2] eq "none") or (${$relationMembers[$i]}[2] eq "outer") or (${$relationMembers[$i]}[2] eq "exclave") ) ){ 
-				push @neededWays, ${$relationMembers[$i]}[1] ; 
+				$neededWaysHash{${$relationMembers[$i]}[1]} = 1 ;
 				push @{$relationWays{$relationId}}, ${$relationMembers[$i]}[1] ; 
 			}
 			# relation?
@@ -286,21 +286,17 @@ print "- skipping nodes...\n" ;
 skipNodes() ;
 print "- reading ways...\n" ;
 
-@neededWays = sort { $a <=> $b } @neededWays ;
-
 ($wayId, $wayUser, $aRef1, $aRef2) = getWay () ;
 if ($wayId != -1) {
 	@wayNodes = @$aRef1 ;
 	@wayTags = @$aRef2 ;
 }
 while ($wayId != -1) {	
-	my $needed = 0 ;
-	$needed = binSearch ($wayId, \@neededWays ) ;
 	if (scalar (@wayNodes) >= 2) {
-		if ($needed >= 0) {
+		if (defined ($neededWaysHash{$wayId} ) ) {
 			$wayCount++ ;
 			@{$wayNodesHash{$wayId}} = @wayNodes ;
-			push @neededNodes, @wayNodes ;
+			foreach (@wayNodes) { $neededNodesHash{$_} = 1 ; }
 			$invalidWays{$wayId} = 0 ;
 		}
 	}
@@ -329,7 +325,7 @@ if ($verbose) { print "\nthere are $invalidWayCount invalid ways\n\n" ; }
 print "\nparsing nodes...\n" ;
 openOsmFile ($osmName) ;
 
-@neededNodes = sort { $a <=> $b } @neededNodes ;
+#foreach (@neededNodes) { $neededNodesHash{$_} = 1 ; }
 
 ($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode () ;
 if ($nodeId != -1) {
@@ -337,10 +333,7 @@ if ($nodeId != -1) {
 }
 
 while ($nodeId != -1) {
-	my $needed = 0 ;
-
-	$needed = binSearch ($nodeId, \@neededNodes ) ;
-	if ($needed >= 0) { 
+	if (defined ($neededNodesHash{$nodeId})) { 
 		$lon{$nodeId} = $nodeLon ; 
 		$lat{$nodeId} = $nodeLat ;
 	}
@@ -446,7 +439,7 @@ print "REMAINING for evaluation: ", $valid - $adminInvalidCount, " relations\n\n
 # 
 print "checking if all needed nodes could be found in osm file...\n" ;
 my $nodesMissing = 0 ; my $node ;
-foreach $node (@neededNodes) {
+foreach $node (keys %neededNodesHash) {
 	if ( (! (defined ($lon{$node}))) or (!(defined ($lat{$node}))) ) {
 		print "ERROR: lon/lat for node $node missing. node not found or not valid in osm file.\n" ;
 		$nodesMissing = 1 ; my $way ;
@@ -466,8 +459,7 @@ foreach $node (@neededNodes) {
 # 
 print "checking if all needed ways could be found in osm file...\n" ;
 my $waysMissing = 0 ; my $way ;
-foreach $way (@neededWays) {
-	# TODO warning only once per way id would be nice... way may occur more than once in @neededWays.
+foreach $way (keys %neededWaysHash) {
 	if ( ! (defined ( @{$wayNodesHash{$way}} ) ) ) {
 		if ($invalidWays{$way}) {
 			print "WARNING way $way invalid in osm file.\n" ;

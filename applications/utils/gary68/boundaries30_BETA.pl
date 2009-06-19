@@ -63,7 +63,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "3.0 BETA (006)" ;
+my $version = "3.0 BETA (008)" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -504,6 +504,8 @@ print "calc length, build polygons, (simplify, resize)...\n" ;
 foreach $rel (keys %relationWays) {
 	if ( $selectedRelation{$rel} ) {	
 
+		if ($debugOpt eq "1") { print "  - relId: $rel\n" ;}
+
 		my $wayNodes ;
 		my $length = 0 ;
 		my $i ;
@@ -536,6 +538,7 @@ foreach $rel (keys %relationWays) {
 				$relationSize{$rel} += $p->area ;
 			}
 
+			if ($debugOpt eq "1") { print "    - create\n" ;}
 			foreach $way ( @{$relationOpenWays{$rel}} ) {
 				my @poly = () ; my $node ;
 				foreach $node ( @{$way} ) {
@@ -546,7 +549,9 @@ foreach $rel (keys %relationWays) {
 			}
 
 			if ($simplifyOpt eq "1") { 
+				if ($debugOpt eq "1") { print "    - simplify\n" ;}
 				foreach my $p ( @{$relationPolygonsClosed{$rel}} ) {
+
 					# calc poly length $pl
 					my $i ; my $pl = 0 ; 
 					my (@coords) = $p->points ;
@@ -554,6 +559,9 @@ foreach $rel (keys %relationWays) {
 						$pl += distance ($coords[$i]->[0], $coords[$i]->[1], $coords[$i+1]->[0], $coords[$i+1]->[1]) ;
 					}
 					my ($maxNodes) = int ($pl * $simplifyNpk ) ; 
+					if ($maxNodes < 10) { $maxNodes = 10 ; }
+					if ($debugOpt eq "1") { print "      - max nodes allowed: $maxNodes\n" ;}
+					if ($debugOpt eq "1") { print "      - number nodes p: ", $p->nrPoints, "\n" ;}
 					my ($ps) = $p->simplify (max_points => $maxNodes, same => $simplifySame, slope => $simplifySlope ) ;
 					push @{$relationPolygonSimplified{$rel}}, $ps ; 
 					my ($percent) = int ($ps->nrPoints / $p->nrPoints * 100 ) ;
@@ -562,6 +570,7 @@ foreach $rel (keys %relationWays) {
 			} # simplify
 
 			if ($resizeOpt eq "1") { 
+				if ($debugOpt eq "1") { print "    - resize\n" ;}
 				if ($simplifyOpt eq "1") { 
 					foreach my $p ( @{$relationPolygonSimplified{$rel}} ) {
 						my ($x, $y) = center( $p ) ;
@@ -672,9 +681,21 @@ if ( ($polyBaseName ne "") and ($picOpt eq "1") ) {
 if ($hirarchyOpt eq "1") {
 	print "building hirarchies...\n" ;
 	my $rel ; my $rel1 ; my $rel2 ; 
+	my $count = 0 ; my ($max) = 0 ;
+	# calc max number of checks
+	foreach $rel1 (keys %relationName) {
+		if ( ($validRelation{$rel1}) and ($selectedRelation{$rel1}) ) { $max++ ; }
+	}
+	$max = int ($max * $max / 2 ) ;
+
 	foreach $rel1 (keys %relationName) {
 		foreach $rel2 (keys %relationName) {
 			if ( ($rel1 < $rel2) and ($validRelation{$rel1}) and ($validRelation{$rel2}) and ($selectedRelation{$rel1}) and ($selectedRelation{$rel2}) ) {
+				$count++ ;
+				if ( ($count % 100000) == 0 ) { 
+					my ($percent) = int ($count / $max * 100) ;
+					print "  $percent % is_in checks done...\n" ; 
+				}
 				my $res ;
 				if ($simplifyOpt eq "1") {
 					$res = isIn ( \@{$relationPolygonSimplified{$rel1}}, \@{$relationPolygonSimplified{$rel2}} ) ;
@@ -687,6 +708,7 @@ if ($hirarchyOpt eq "1") {
 			}
 		}
 	}
+	print "\n$count is_in checks done.\n" ; 
 
 	my ($csvNameHirarchy) = $csvName ;
 	my ($htmlNameHirarchy) = $htmlName ;

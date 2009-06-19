@@ -28,8 +28,8 @@ DownloadTimeout=1800
 # APIServers are used for standard map downloads and XAPIServers are used for downloads 
 # with the specification of predicates.
 # The actual download URLs need to be defined by API_<NAME> and XAPI_<NAME> settings.
-# Currently defined servers are API, ROMA and XAPI for APIServers and XAPI for XAPIServers.
-#APIServers = API,ROMA,XAPI
+# Currently defined servers are API, TRAPI, ROMA and XAPI for APIServers and XAPI for XAPIServers.
+#APIServers = API,TRAPI,ROMA,XAPI
 #XAPIServers = XAPI
 
 # Hand back render requests that have a tileset on a server bigger than

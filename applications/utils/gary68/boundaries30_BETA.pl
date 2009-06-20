@@ -63,7 +63,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "3.0 BETA (008)" ;
+my $version = "3.0 BETA (009)" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -775,7 +775,7 @@ if ($hirarchyOpt eq "1") {
 
 	close ($htmlFile) ;
 	close ($csvFile) ;
-	print "done.\n" ;
+	print "building hirarchies done.\n" ;
 } # hirarchy
 
 

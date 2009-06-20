@@ -63,7 +63,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "3.0 BETA (010)" ;
+my $version = "3.0 BETA (012)" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -128,8 +128,10 @@ my $hirarchyOpt = 0 ;
 my $simplifyOpt = "" ;
 my $debugOpt = "" ;
 my $picOpt = "" ;
+my $bigPicOpt = "" ;
 my $allPicsOpt = "" ;
 my $picSize = 1024 ; # default pic size longitude in pixels
+my $bigPicSize = 2048 ; # default big pic size longitude in pixels
 my $resizeOpt = "" ;
 my $resizeFactor = 1.05 ; # 5% bigger default
 my $osmName = "" ; 
@@ -155,11 +157,13 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"npk:f" 	=> \$simplifyNpk,	# max nodes per km when simplifying
 				"debug"		=> \$debugOpt,		
 				"pics" 		=> \$picOpt,		# specifies if pictures of polygons are drawn. polybasename must be given.
+				"bigpic" 	=> \$bigPicOpt,		# specifies if big pictures of all polygons are drawn. polybasename must be given.
 				"allpics"	=> \$allPicsOpt,	# also invalid and unselected will be drawn (don't use adminlevel selection then)
 				"hirarchy" 	=> \$hirarchyOpt,	# specifies if hirarchies of boundaries are calculated. don't together use with adminlevel. can/should be used with -simplify, then simplified polygons are used for building the hirarchy - much faster
 				"resize"	=> \$resizeOpt,	# specifies if new resized polygon will be produced (-polygon must be specified, maybe use -factor, if -simplify is given, simplified polygon will be resized)
 				"factor:f"	=> \$resizeFactor,	# specifies how much bigger the resized polygon will be
 				"picsize:i"	=> \$picSize,		# specifies pic size longitude in pixels
+				"bigpicsize:i"	=> \$bigPicSize,	# specifies big pic size longitude in pixels
 				"adminlevel:s"	=> \$adminLevelOpt,	# specifies which boundaries to look at
 				"verbose" 	=> \$verbose) ;		# turns twitter on
 
@@ -675,6 +679,16 @@ if ( ($polyBaseName ne "") and ($picOpt eq "1") ) {
 	}
 	print "done.\n" ; 
 }
+
+# 
+# WRITE BIG PIC IF SPECIFIED
+#
+if ( ($polyBaseName ne "") and ($bigPicOpt eq "1") ) {
+	print "write big picture file...\n" ; 
+	drawBigPic () ;
+	print "done.\n" ; 
+}
+
 #
 # BUILD AND PRINT HIRARCHIES
 #
@@ -1179,6 +1193,76 @@ sub drawPic {
 	drawLegend (3, "Resized", "black", "Open", "red", "Simplified", "blue", "Original", "green") ;
 	drawRuler ("black") ;
 	writeGraph ($polyBaseName . "." . $rel . ".png") ;
+}
+
+sub drawBigPic {
+	my $buffer = 0.1 ;
+	my $lonMin = 999 ; my $latMin = 999 ; my $lonMax = -999 ; my $latMax = -999 ; 
+	my $node ;
+	my $p ; my $pt ; 
+
+	foreach my $rel (keys %relationName) {
+		if ($selectedRelation{$rel}) {
+			foreach $p ( @{$relationPolygonsClosed{$rel}}, @{$relationPolygonsOpen{$rel}} ) {
+				foreach $pt ($p->points) {
+					if ($pt->[0] > $lonMax) { $lonMax = $pt->[0] ; }
+					if ($pt->[1] > $latMax) { $latMax = $pt->[1] ; }
+					if ($pt->[0] < $lonMin) { $lonMin = $pt->[0] ; }
+					if ($pt->[1] < $latMin) { $latMin = $pt->[1] ; }
+				}
+			}
+		}
+	}
+
+	$lonMin = $lonMin - ($buffer * ($lonMax - $lonMin)) ;
+	$latMin = $latMin - ($buffer * ($latMax - $latMin)) ;
+	$lonMax = $lonMax + ($buffer * ($lonMax - $lonMin)) ;
+	$latMax = $latMax + ($buffer * ($latMax - $latMin)) ;
+
+	initGraph ($bigPicSize, $lonMin, $latMin, $lonMax, $latMax) ;
+	
+	# for all admin levels backward
+	my $level ;
+	for ($level = 1; $level <= 11; $level++) {
+		foreach my $rel (keys %relationName) {
+			if ($relationAdminLevel{$rel} eq $level) {
+				my $color ;
+				my ($size) = (12 - $level) * 4 + 1 ;
+				my ($colorRef) = $level % 4 ;
+				if ($colorRef == 0) { $color = "blue" ; }
+				if ($colorRef == 1) { $color = "black" ; }
+				if ($colorRef == 2) { $color = "green" ; }
+				if ($colorRef == 3) { $color = "red" ; }
+
+				foreach $p (@{$relationPolygonsClosed{$rel}}, @{$relationPolygonsOpen{$rel}}) {
+					my @coordinates = () ; 
+				 	foreach $pt ($p->points) {
+						push @coordinates, $pt->[0], $pt->[1] ;
+					}
+					drawWay ($color, $size, @coordinates) ;
+				}
+			}
+		}
+	}
+
+	foreach my $rel (keys %relationName) {
+		if ($relationAdminLevel{$rel} eq "") {
+			foreach $p (@{$relationPolygonsClosed{$rel}}, @{$relationPolygonsOpen{$rel}}) {
+				my @coordinates = () ; 
+			 	foreach $pt ($p->points) {
+					push @coordinates, $pt->[0], $pt->[1] ;
+				}
+				drawWay ("gray", 2, @coordinates) ;
+			}
+		}
+	}
+
+
+	drawHead ($program . " ". $version . " by Gary68 - big picture", "black", 3) ;
+	drawFoot ("data by openstreetmap.org" . " " . $osmName . " " .ctime(stat($osmName)->mtime), "gray", 3) ;
+	# drawLegend (3, "Resized", "black", "Open", "red", "Simplified", "blue", "Original", "green") ;
+	drawRuler ("black") ;
+	writeGraph ($polyBaseName . ".BIG" . ".png") ;
 }
 
 sub getWays {

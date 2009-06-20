@@ -63,7 +63,7 @@ use OSM::osmgraph ;
 
 my $program = "boundaries.pl" ;
 my $usage = $program . " see code GetOptions" ;
-my $version = "3.0 BETA (009)" ;
+my $version = "3.0 BETA (010)" ;
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -837,10 +837,13 @@ printHTMLTableFoot ($htmlFile) ;
 print $htmlFile "<h2>Invalid Relations</h2>\n" ;
 print $htmlFile "<p>List reflects the moment the *.osm file was created and a relation may be invalid because one or more ways were clipped in the process of creating the *.osm file.</p>\n" ;
 printHTMLTableHead ($htmlFile) ;
-printHTMLTableHeadings ($htmlFile, ("RelationId", "Name", "#segments", "#open segments", "ways valid")) ;
+printHTMLTableHeadings ($htmlFile, ("Line", "RelationId", "Name", "#segments", "#open segments", "ways valid")) ;
+$line = 0 ;
 foreach $rel (keys %relationWays) {
-	if (! $validRelation{$rel}) {
+	if ( (! $validRelation{$rel}) and ( $selectedRelation{$rel} ) ) {
+		$line++ ;
 		printHTMLRowStart ($htmlFile) ;
+		printHTMLCellRight ($htmlFile, $line ) ;
 		printHTMLCellRight ($htmlFile, historyLink("relation", $rel) . "(osm) " .analyzerLink($rel) . "(analyzer)" ) ;
 		printHTMLCellLeft ($htmlFile, $relationName{$rel}) ;
 		printHTMLCellRight ($htmlFile, $relationSegments{$rel} ) ;

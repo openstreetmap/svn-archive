@@ -9,7 +9,6 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +21,7 @@ import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.gui.jmapviewer.JobDispatcher.JobThread;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
+import org.openstreetmap.gui.jmapviewer.interfaces.MapSquare;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
@@ -52,7 +52,11 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     protected TileSource tileSource;
 
     protected List<MapMarker> mapMarkerList;
+    protected List<MapSquare> mapSquareList;
+
     protected boolean mapMarkersVisible;
+    protected boolean mapSquaresVisible;
+
     protected boolean tileGridVisible;
 
     /**
@@ -91,7 +95,9 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         this.tileCache = tileCache;
         jobDispatcher = JobDispatcher.getInstance();
         mapMarkerList = new LinkedList<MapMarker>();
+        mapSquareList = new LinkedList<MapSquare>();
         mapMarkersVisible = true;
+        mapSquaresVisible = true;
         tileGridVisible = false;
         setLayout(null);
         initializeZoomSlider();
@@ -252,18 +258,26 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         setDisplayPosition(x, y, newZoom);
     }
 
-    public Point2D.Double getPosition() {
+    public Coordinate getPosition() {
         double lon = OsmMercator.XToLon(center.x, zoom);
         double lat = OsmMercator.YToLat(center.y, zoom);
-        return new Point2D.Double(lat, lon);
+        return new Coordinate(lat, lon);
     }
 
-    public Point2D.Double getPosition(Point mapPoint) {
+    public Coordinate getPosition(Point mapPoint) {
         int x = center.x + mapPoint.x - getWidth() / 2;
         int y = center.y + mapPoint.y - getHeight() / 2;
         double lon = OsmMercator.XToLon(x, zoom);
         double lat = OsmMercator.YToLat(y, zoom);
-        return new Point2D.Double(lat, lon);
+        return new Coordinate(lat, lon);
+    }
+
+    public Coordinate getPosition(int mapPointX, int mapPointY) {
+        int x = center.x + mapPointX - getWidth() / 2;
+        int y = center.y + mapPointY - getHeight() / 2;
+        double lon = OsmMercator.XToLon(x, zoom);
+        double lat = OsmMercator.YToLat(y, zoom);
+        return new Coordinate(lat, lon);
     }
 
     /**
@@ -356,13 +370,28 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         g.drawRect(w2 - center.x, h2 - center.y, mapSize, mapSize);
 
         // g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
-        if (!mapMarkersVisible || mapMarkerList == null)
-            return;
-        for (MapMarker marker : mapMarkerList) {
-            Point p = getMapPosition(marker.getLat(), marker.getLon());
-            // System.out.println(marker + " -> " + p);
-            if (p != null)
-                marker.paint(g, p);
+
+        if (mapSquaresVisible && mapSquareList != null) {
+            for (MapSquare square : mapSquareList) {
+                Coordinate topLeft = square.getTopLeft();
+                Coordinate bottomRight = square.getBottomRight();
+                if (topLeft != null && bottomRight != null) {
+                    Point pTopLeft = getMapPosition(topLeft.getLat(), topLeft.getLon());
+                    Point pBottomRight = getMapPosition(bottomRight.getLat(), bottomRight.getLon());
+                    if (pTopLeft != null && pBottomRight != null) {
+                        square.paint(g, pTopLeft, pBottomRight);
+                    }
+                }
+            }
+        }
+
+        if (mapMarkersVisible && mapMarkerList != null) {
+            for (MapMarker marker : mapMarkerList) {
+                Point p = getMapPosition(marker.getLat(), marker.getLon());
+                if (p != null) {
+                    marker.paint(g, p);
+                }
+            }
         }
     }
 
@@ -418,10 +447,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     public void setZoom(int zoom, Point mapPoint) {
         if (zoom > tileSource.getMaxZoom() || zoom < tileSource.getMinZoom() || zoom == this.zoom)
             return;
-        Point2D.Double zoomPos = getPosition(mapPoint);
+        Coordinate zoomPos = getPosition(mapPoint);
         jobDispatcher.cancelOutstandingJobs(); // Clearing outstanding load
         // requests
-        setDisplayPositionByLatLon(mapPoint, zoomPos.x, zoomPos.y, zoom);
+        setDisplayPositionByLatLon(mapPoint, zoomPos.getLat(), zoomPos.getLon(), zoom);
     }
 
     public void setZoom(int zoom) {
@@ -504,8 +533,28 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         return mapMarkerList;
     }
 
+    public void setMapSquareList(List<MapSquare> mapSquareList) {
+        this.mapSquareList = mapSquareList;
+        repaint();
+    }
+
+    public List<MapSquare> getMapSquareList() {
+        return mapSquareList;
+    }
+
     public void addMapMarker(MapMarker marker) {
         mapMarkerList.add(marker);
+        repaint();
+    }
+
+    public void addMapSquare(MapSquare square) {
+        mapSquareList.add(square);
+        repaint();
+    }
+
+    public void removeMapSquare(MapSquare square) {
+        mapSquareList.remove(square);
+        repaint();
     }
 
     public void setZoomContolsVisible(boolean visible) {
@@ -556,4 +605,19 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         repaint();
     }
 
+    public boolean isMapSquaresVisible() {
+        return mapSquaresVisible;
+    }
+
+    /**
+     * Enables or disables painting of the {@link MapSquare}
+     * 
+     * @param mapMarkersVisible
+     * @see #addMapSquare(MapSquare)
+     * @see #getMapSquareList()
+     */
+    public void setMapSquaresVisible(boolean mapSquaresVisible) {
+        this.mapSquaresVisible = mapSquaresVisible;
+        repaint();
+    }
 }

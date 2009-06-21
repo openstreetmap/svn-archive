@@ -8,7 +8,7 @@ import java.awt.Point;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 
 /**
- * Interface to be implemented by all elements that can be displayed on the map.
+ * Interface to be implemented by all one dimensional elements that can be displayed on the map.
  * 
  * @author Jan Peter Stotz
  * @see JMapViewer#addMapMarker(MapMarker)

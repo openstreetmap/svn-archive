@@ -1,0 +1,19 @@
+   17 72 45 38 50 90 = a << 0
+   2E E4 8A 70 A1 20 = a << 1 // 295
+   5D C9 14 E1 42 40 = a << 2 // 1021
+   BB 92 29 C2 84 80 = a << 3 // 3
+01 77 24 53 85 09 00 = a << 4 // 514
+02 EE 48 A7 0A 12 00 = a << 5 // 1
+05 DC 91 4E 14 24 00 = a << 6 // 291
+0B B9 22 9C 28 48 00 = a << 7 // 259
+
+for ((I=0; I\< 0; I++)) ; do echo -n ' ' ; done|bzip2 -c|od -t x1|cut -c8-|sed 's/ /\\x/g'
+for ((I=0; I\< 295; I++)) ; do echo -n ' ' ; done|bzip2 -c|od -t x1|cut -c8-|sed 's/ /\\x/g'
+for ((I=0; I\< 1021; I++)) ; do echo -n ' ' ; done|bzip2 -c|od -t x1|cut -c8-|sed 's/ /\\x/g'
+for ((I=0; I\< 3; I++)) ; do echo -n ' ' ; done|bzip2 -c|od -t x1|cut -c8-|sed 's/ /\\x/g'
+for ((I=0; I\< 514; I++)) ; do echo -n ' ' ; done|bzip2 -c|od -t x1|cut -c8-|sed 's/ /\\x/g'
+for ((I=0; I\< 1; I++)) ; do echo -n ' ' ; done|bzip2 -c|od -t x1|cut -c8-|sed 's/ /\\x/g'
+for ((I=0; I\< 291; I++)) ; do echo -n ' ' ; done|bzip2 -c|od -t x1|cut -c8-|sed 's/ /\\x/g'
+for ((I=0; I\< 259; I++)) ; do echo -n ' ' ; done|bzip2 -c|od -t x1|cut -c8-|sed 's/ /\\x/g'
+
+

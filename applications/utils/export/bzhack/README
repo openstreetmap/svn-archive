@@ -1,0 +1,8 @@
+An open source tool to access the OSM data from
+planet.bz2 directly by a generated index to bz2 blocks.
+
+The big advantage is one can use every HTTP mirror site which host
+planet.bz2 without requiring users to (completely) download, extract and
+load the file in a database. 
+I'm also planning to use HTTP range requests to seek in the remote bz2
+file.

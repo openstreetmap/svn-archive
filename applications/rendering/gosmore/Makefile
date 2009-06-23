@@ -8,7 +8,7 @@ DESTDIR=
 prefix = /usr/local
 bindir = $(prefix)/bin
 
-CFLAGS=-O2
+CFLAGS=-O2 -DRES_DIR=\"$(prefix)/share/gosmore/\"
 WARNFLAGS= -W -Wall
 
 #------------------------ Compiling with cegcc : ---------------------------
@@ -39,7 +39,6 @@ all: gosmore
 
 gosmore:	gosmore.cpp libgosm.cpp libgosm.h
 		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
-		  -D RES_DIR='"$(prefix)/share/"' \
                   gosmore.cpp libgosm.cpp -o gosmore ${EXTRA}
 
 gosm_arm.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h translations.c \

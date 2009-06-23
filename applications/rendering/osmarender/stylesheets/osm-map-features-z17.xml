@@ -313,16 +313,144 @@
 
 		<!-- embankments & cutings -->
 		<rule e="way" k="embankment" v="yes|true">
-			<line class="embankment-cutting embankment-long-casing"   smart-linecap="no" />
-			<line class="embankment-cutting embankment-short-casing"  smart-linecap="no" />
-			<line class="embankment-cutting embankment-middle-casing" smart-linecap="no" />
-			<line class="embankment-cutting embankment-core"          smart-linecap="no" />
+			<rule e="way" k="highway" v="*">
+				<rule e="way" k="cycleway" v="yes|track|lane">
+					<line class="embankment-cutting embankment-wide-long-casing"   smart-linecap="no" />
+					<line class="embankment-cutting embankment-wide-short-casing"  smart-linecap="no" />
+					<line class="embankment-cutting embankment-wide-middle-casing" smart-linecap="no" />
+					<line class="embankment-cutting embankment-wide-core"          smart-linecap="no" />
+				</rule>
+				<else>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="embankment-cutting embankment-wide-long-casing"   smart-linecap="no" />
+						<line class="embankment-cutting embankment-wide-short-casing"  smart-linecap="no" />
+						<line class="embankment-cutting embankment-wide-middle-casing" smart-linecap="no" />
+						<line class="embankment-cutting embankment-wide-core"          smart-linecap="no" />
+					</rule>
+					<else>
+						<rule e="way" k="highway" v="motorway|trunk">
+							<line class="embankment-cutting embankment-wide-long-casing"   smart-linecap="no" />
+							<line class="embankment-cutting embankment-wide-short-casing"  smart-linecap="no" />
+							<line class="embankment-cutting embankment-wide-middle-casing" smart-linecap="no" />
+							<line class="embankment-cutting embankment-wide-core"          smart-linecap="no" />
+						</rule>
+						<else>
+							<rule e="way" k="highway" v="path|footway|cycleway|bridleway|service|track|steps">
+								<line class="embankment-cutting embankment-small-long-casing"   smart-linecap="no" />
+								<line class="embankment-cutting embankment-small-short-casing"  smart-linecap="no" />
+								<line class="embankment-cutting embankment-small-middle-casing" smart-linecap="no" />
+								<line class="embankment-cutting embankment-small-core"          smart-linecap="no" />
+							</rule>
+							<else>
+								<line class="embankment-cutting embankment-long-casing"   smart-linecap="no" />
+								<line class="embankment-cutting embankment-short-casing"  smart-linecap="no" />
+								<line class="embankment-cutting embankment-middle-casing" smart-linecap="no" />
+								<line class="embankment-cutting embankment-core"          smart-linecap="no" />
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+			<else>
+				<line class="embankment-cutting embankment-small-long-casing"   smart-linecap="no" />
+				<line class="embankment-cutting embankment-small-short-casing"  smart-linecap="no" />
+				<line class="embankment-cutting embankment-small-middle-casing" smart-linecap="no" />
+				<line class="embankment-cutting embankment-small-core"          smart-linecap="no" />
+			</else>
 		</rule>
+
+		<rule e="way" k="man_made" v="dyke|dike|levee|embankment">
+			<rule e="way" k="highway" v="*">
+				<rule e="way" k="cycleway" v="yes|track|lane">
+					<line class="dyke embankment-wide-long-casing"   smart-linecap="no" />
+					<line class="dyke embankment-wide-short-casing"  smart-linecap="no" />
+					<line class="dyke embankment-wide-middle-casing" smart-linecap="no" />
+					<line class="dyke embankment-wide-core"          smart-linecap="no" />
+				</rule>
+				<else>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="dyke embankment-wide-long-casing"   smart-linecap="no" />
+						<line class="dyke embankment-wide-short-casing"  smart-linecap="no" />
+						<line class="dyke embankment-wide-middle-casing" smart-linecap="no" />
+						<line class="dyke embankment-wide-core"          smart-linecap="no" />
+					</rule>
+					<else>
+						<rule e="way" k="highway" v="motorway|trunk">
+							<line class="dyke embankment-wide-long-casing"   smart-linecap="no" />
+							<line class="dyke embankment-wide-short-casing"  smart-linecap="no" />
+							<line class="dyke embankment-wide-middle-casing" smart-linecap="no" />
+							<line class="dyke embankment-wide-core"          smart-linecap="no" />
+						</rule>
+						<else>
+							<rule e="way" k="highway" v="path|footway|cycleway|bridleway|service|track|steps">
+								<line class="dyke embankment-small-long-casing"   smart-linecap="no" />
+								<line class="dyke embankment-small-short-casing"  smart-linecap="no" />
+								<line class="dyke embankment-small-middle-casing" smart-linecap="no" />
+								<line class="dyke embankment-small-core"          smart-linecap="no" />
+							</rule>
+							<else>
+								<line class="dyke embankment-long-casing"   smart-linecap="no" />
+								<line class="dyke embankment-short-casing"  smart-linecap="no" />
+								<line class="dyke embankment-middle-casing" smart-linecap="no" />
+								<line class="dyke embankment-core"          smart-linecap="no" />
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+			<else>
+				<line class="dyke embankment-small-long-casing"   smart-linecap="no" />
+				<line class="dyke embankment-small-short-casing"  smart-linecap="no" />
+				<line class="dyke embankment-small-middle-casing" smart-linecap="no" />
+				<line class="dyke embankment-small-core"          smart-linecap="no" />
+			</else>
+		</rule>
+
 		<rule e="way" k="cutting" v="yes|true">
-			<line class="embankment-cutting cutting-casing"           smart-linecap="no" />
-			<line class="embankment-cutting cutting-long-core"        smart-linecap="no" />
-			<line class="embankment-cutting cutting-short-core"       smart-linecap="no" />
-			<line class="embankment-cutting cutting-middle-core"      smart-linecap="no" />
+			<rule e="way" k="highway" v="*">
+				<rule e="way" k="cycleway" v="yes|track|lane">
+					<line class="embankment-cutting cutting-wide-casing"           smart-linecap="no" />
+					<line class="embankment-cutting cutting-wide-long-core"        smart-linecap="no" />
+					<line class="embankment-cutting cutting-wide-short-core"       smart-linecap="no" />
+					<line class="embankment-cutting cutting-wide-middle-core"      smart-linecap="no" />
+				</rule>
+				<else>
+					<rule e="way" k="motorroad" v="yes">
+						<line class="embankment-cutting cutting-wide-casing"           smart-linecap="no" />
+						<line class="embankment-cutting cutting-wide-long-core"        smart-linecap="no" />
+						<line class="embankment-cutting cutting-wide-short-core"       smart-linecap="no" />
+						<line class="embankment-cutting cutting-wide-middle-core"      smart-linecap="no" />
+					</rule>
+					<else>
+						<rule e="way" k="highway" v="motorway|trunk">
+							<line class="embankment-cutting cutting-wide-casing"           smart-linecap="no" />
+							<line class="embankment-cutting cutting-wide-long-core"        smart-linecap="no" />
+							<line class="embankment-cutting cutting-wide-short-core"       smart-linecap="no" />
+							<line class="embankment-cutting cutting-wide-middle-core"      smart-linecap="no" />
+						</rule>
+						<else>
+							<rule e="way" k="highway" v="path|footway|cycleway|bridleway|service|track|steps">
+								<line class="embankment-cutting cutting-small-casing"           smart-linecap="no" />
+								<line class="embankment-cutting cutting-small-long-core"        smart-linecap="no" />
+								<line class="embankment-cutting cutting-small-short-core"       smart-linecap="no" />
+								<line class="embankment-cutting cutting-small-middle-core"      smart-linecap="no" />
+							</rule>
+							<else>
+								<line class="embankment-cutting cutting-casing"           smart-linecap="no" />
+								<line class="embankment-cutting cutting-long-core"        smart-linecap="no" />
+								<line class="embankment-cutting cutting-short-core"       smart-linecap="no" />
+								<line class="embankment-cutting cutting-middle-core"      smart-linecap="no" />
+							</else>
+						</else>
+					</else>
+				</else>
+			</rule>
+			<else>
+				<line class="embankment-cutting cutting-small-casing"           smart-linecap="no" />
+				<line class="embankment-cutting cutting-small-long-core"        smart-linecap="no" />
+				<line class="embankment-cutting cutting-small-short-core"       smart-linecap="no" />
+				<line class="embankment-cutting cutting-small-middle-core"      smart-linecap="no" />
+			</else>
 		</rule>
 
 		<!-- Bridge casings -->
@@ -3892,17 +4020,38 @@
 
 			.tunnel { stroke-dasharray: 0.4, 0.4; }
 
-			.embankment-cutting        { fill: none; stroke-linejoin: bevel; stroke-linecap: butt; }
+			.embankment-cutting              { fill: none; stroke-linejoin: bevel; stroke-linecap: butt; stroke: #6f4a18; }
+			.dyke                            { fill: none; stroke-linejoin: bevel; stroke-linecap: butt; stroke: #6fc13d; }
 
-			.embankment-long-casing    { stroke-width: 3.8px; stroke: #6f4a18; stroke-dasharray: 0.1, 1.1; }
-			.embankment-short-casing   { stroke-width: 3.3px; stroke: #6f4a18; stroke-dasharray: 0.1, 0.5, 0.1, 0.5;  }
-			.embankment-middle-casing  { stroke-width: 1.9px; stroke: #6f4a18; stroke-dasharray: none; }
-			.embankment-core           { stroke-width: 1.7px; stroke: #f8f8f8; stroke-dasharray: none; }
+			.embankment-long-casing          { stroke-width: 3.6px; stroke-dasharray: 0.1, 1.1; }
+			.embankment-short-casing         { stroke-width: 3.0px; stroke-dasharray: 0.1, 0.5, 0.1, 0.5;  }
+			.embankment-middle-casing        { stroke-width: 1.9px; stroke-dasharray: none; }
+			.embankment-core                 { stroke-width: 1.7px; stroke: #f8f8f8; stroke-dasharray: none; }
 
-			.cutting-casing            { stroke-width: 3.8px; stroke: #6f4a18; stroke-dasharray: none; }
-			.cutting-long-core         { stroke-width: 3.6px; stroke: #f8f8f8; stroke-dasharray: 0.5, 0.1, 0.5, 0.1; }
-			.cutting-short-core        { stroke-width: 3.1px; stroke: #f8f8f8; stroke-dasharray: 1.1, 0.1; }
-			.cutting-middle-core       { stroke-width: 2.1px; stroke: #f8f8f8; stroke-dasharray: none; }
+			.embankment-small-long-casing    { stroke-width: 3.1px; stroke-dasharray: 0.1, 1.1; }
+			.embankment-small-short-casing   { stroke-width: 2.5px; stroke-dasharray: 0.1, 0.5, 0.1, 0.5;  }
+			.embankment-small-middle-casing  { stroke-width: 1.4px; stroke-dasharray: none; }
+			.embankment-small-core           { stroke-width: 1.2px; stroke: #f8f8f8; stroke-dasharray: none; }
+
+			.embankment-wide-long-casing     { stroke-width: 4.3px; stroke-dasharray: 0.1, 1.1; }
+			.embankment-wide-short-casing    { stroke-width: 3.6px; stroke-dasharray: 0.1, 0.5, 0.1, 0.5;  }
+			.embankment-wide-middle-casing   { stroke-width: 2.4px; stroke-dasharray: none; }
+			.embankment-wide-core            { stroke-width: 2.2px; stroke: #f8f8f8; stroke-dasharray: none; }
+
+			.cutting-casing                  { stroke-width: 3.6px; stroke-dasharray: none; }
+			.cutting-long-core               { stroke-width: 3.4px; stroke: #f8f8f8; stroke-dasharray: 0.5, 0.1, 0.5, 0.1; }
+			.cutting-short-core              { stroke-width: 2.9px; stroke: #f8f8f8; stroke-dasharray: 1.1, 0.1; }
+			.cutting-middle-core             { stroke-width: 2.1px; stroke: #f8f8f8; stroke-dasharray: none; }
+
+			.cutting-small-casing            { stroke-width: 3.1px; stroke-dasharray: none; }
+			.cutting-small-long-core         { stroke-width: 2.9px; stroke: #f8f8f8; stroke-dasharray: 0.5, 0.1, 0.5, 0.1; }
+			.cutting-small-short-core        { stroke-width: 2.4px; stroke: #f8f8f8; stroke-dasharray: 1.1, 0.1; }
+			.cutting-small-middle-core       { stroke-width: 1.6px; stroke: #f8f8f8; stroke-dasharray: none; }
+
+			.cutting-wide-casing             { stroke-width: 4.3px; stroke-dasharray: none; }
+			.cutting-wide-long-core          { stroke-width: 4.1px; stroke: #f8f8f8; stroke-dasharray: 0.5, 0.1, 0.5, 0.1; }
+			.cutting-wide-short-core         { stroke-width: 3.4px; stroke: #f8f8f8; stroke-dasharray: 1.1, 0.1; }
+			.cutting-wide-middle-core        { stroke-width: 2.6px; stroke: #f8f8f8; stroke-dasharray: none; }
 
 			.railway-casing { stroke-linecap: butt; stroke-linejoin: round; fill: none; }
 			.railway-1-core { stroke-linecap: butt; stroke-linejoin: round; fill: none; }

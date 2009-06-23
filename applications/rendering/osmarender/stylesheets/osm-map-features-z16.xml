@@ -307,53 +307,6 @@
 		</rule>
 
 		<!-- embankments & cutings -->
-		<rule e="way" k="embankment" v="yes|true">
-			<rule e="way" k="highway" v="*">
-				<rule e="way" k="cycleway" v="yes|track|lane">
-					<line class="embankment-cutting embankment-wide-long-casing"   smart-linecap="no" />
-					<line class="embankment-cutting embankment-wide-short-casing"  smart-linecap="no" />
-					<line class="embankment-cutting embankment-wide-middle-casing" smart-linecap="no" />
-					<line class="embankment-cutting embankment-wide-core"          smart-linecap="no" />
-				</rule>
-				<else>
-					<rule e="way" k="motorroad" v="yes">
-						<line class="embankment-cutting embankment-wide-long-casing"   smart-linecap="no" />
-						<line class="embankment-cutting embankment-wide-short-casing"  smart-linecap="no" />
-						<line class="embankment-cutting embankment-wide-middle-casing" smart-linecap="no" />
-						<line class="embankment-cutting embankment-wide-core"          smart-linecap="no" />
-					</rule>
-					<else>
-						<rule e="way" k="highway" v="motorway|trunk">
-							<line class="embankment-cutting embankment-wide-long-casing"   smart-linecap="no" />
-							<line class="embankment-cutting embankment-wide-short-casing"  smart-linecap="no" />
-							<line class="embankment-cutting embankment-wide-middle-casing" smart-linecap="no" />
-							<line class="embankment-cutting embankment-wide-core"          smart-linecap="no" />
-						</rule>
-						<else>
-							<rule e="way" k="highway" v="path|footway|cycleway|bridleway|service|track|steps">
-								<line class="embankment-cutting embankment-small-long-casing"   smart-linecap="no" />
-								<line class="embankment-cutting embankment-small-short-casing"  smart-linecap="no" />
-								<line class="embankment-cutting embankment-small-middle-casing" smart-linecap="no" />
-								<line class="embankment-cutting embankment-small-core"          smart-linecap="no" />
-							</rule>
-							<else>
-								<line class="embankment-cutting embankment-long-casing"   smart-linecap="no" />
-								<line class="embankment-cutting embankment-short-casing"  smart-linecap="no" />
-								<line class="embankment-cutting embankment-middle-casing" smart-linecap="no" />
-								<line class="embankment-cutting embankment-core"          smart-linecap="no" />
-							</else>
-						</else>
-					</else>
-				</else>
-			</rule>
-			<else>
-				<line class="embankment-cutting embankment-small-long-casing"   smart-linecap="no" />
-				<line class="embankment-cutting embankment-small-short-casing"  smart-linecap="no" />
-				<line class="embankment-cutting embankment-small-middle-casing" smart-linecap="no" />
-				<line class="embankment-cutting embankment-small-core"          smart-linecap="no" />
-			</else>
-		</rule>
-
 		<rule e="way" k="man_made" v="dyke|dike|levee|embankment">
 			<rule e="way" k="highway" v="*">
 				<rule e="way" k="cycleway" v="yes|track|lane">
@@ -400,6 +353,54 @@
 				<line class="dyke embankment-small-core"          smart-linecap="no" />
 			</else>
 		</rule>
+		<else>
+			<rule e="way" k="embankment" v="yes|true">
+				<rule e="way" k="highway" v="*">
+					<rule e="way" k="cycleway" v="yes|track|lane">
+						<line class="embankment-cutting embankment-wide-long-casing"   smart-linecap="no" />
+						<line class="embankment-cutting embankment-wide-short-casing"  smart-linecap="no" />
+						<line class="embankment-cutting embankment-wide-middle-casing" smart-linecap="no" />
+						<line class="embankment-cutting embankment-wide-core"          smart-linecap="no" />
+					</rule>
+					<else>
+						<rule e="way" k="motorroad" v="yes">
+							<line class="embankment-cutting embankment-wide-long-casing"   smart-linecap="no" />
+							<line class="embankment-cutting embankment-wide-short-casing"  smart-linecap="no" />
+							<line class="embankment-cutting embankment-wide-middle-casing" smart-linecap="no" />
+							<line class="embankment-cutting embankment-wide-core"          smart-linecap="no" />
+						</rule>
+						<else>
+							<rule e="way" k="highway" v="motorway|trunk">
+								<line class="embankment-cutting embankment-wide-long-casing"   smart-linecap="no" />
+								<line class="embankment-cutting embankment-wide-short-casing"  smart-linecap="no" />
+								<line class="embankment-cutting embankment-wide-middle-casing" smart-linecap="no" />
+								<line class="embankment-cutting embankment-wide-core"          smart-linecap="no" />
+							</rule>
+							<else>
+								<rule e="way" k="highway" v="path|footway|cycleway|bridleway|service|track|steps">
+									<line class="embankment-cutting embankment-small-long-casing"   smart-linecap="no" />
+									<line class="embankment-cutting embankment-small-short-casing"  smart-linecap="no" />
+									<line class="embankment-cutting embankment-small-middle-casing" smart-linecap="no" />
+									<line class="embankment-cutting embankment-small-core"          smart-linecap="no" />
+								</rule>
+								<else>
+									<line class="embankment-cutting embankment-long-casing"   smart-linecap="no" />
+									<line class="embankment-cutting embankment-short-casing"  smart-linecap="no" />
+									<line class="embankment-cutting embankment-middle-casing" smart-linecap="no" />
+									<line class="embankment-cutting embankment-core"          smart-linecap="no" />
+								</else>
+							</else>
+						</else>
+					</else>
+				</rule>
+				<else>
+					<line class="embankment-cutting embankment-small-long-casing"   smart-linecap="no" />
+					<line class="embankment-cutting embankment-small-short-casing"  smart-linecap="no" />
+					<line class="embankment-cutting embankment-small-middle-casing" smart-linecap="no" />
+					<line class="embankment-cutting embankment-small-core"          smart-linecap="no" />
+				</else>
+			</rule>
+		</else>
 
 		<rule e="way" k="cutting" v="yes|true">
 			<rule e="way" k="highway" v="*">

@@ -129,21 +129,21 @@ BOOL CALLBACK DlgSearchProc (
 	LPARAM lParam);
 #else
 const char *FindResource (const char *fname)
-{
-  static string s;
+{ // Occasional minor memory leak : The caller never frees the memory.
+  string s;
   struct stat dummy;
   // first check in current working directory
-  if (stat (fname, &dummy) == 0) return fname;
+  if (stat (fname, &dummy) == 0) return strdup (fname);
   // then check in $HOME
   s = (string) getenv ("HOME") + "/.gosmore/" + fname;
-  if (stat (s.c_str (), &dummy) == 0) return s.c_str();
+  if (stat (s.c_str (), &dummy) == 0) return strdup (s.c_str());
   // then check in RES_DIR
   s = (string) RES_DIR + fname;
-  if (stat (s.c_str (), &dummy) == 0) return s.c_str();
+  if (stat (s.c_str (), &dummy) == 0) return strdup (s.c_str());
   // and then fall back on current working directory if it cannot be
   // found anywhere else (this is so new files are created in the
   // current working directory)
-  return fname;
+  return strdup (fname);
 }
 #endif
 

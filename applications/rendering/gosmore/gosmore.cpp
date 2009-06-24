@@ -363,7 +363,7 @@ xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com
 <trk>\n\
 <trkseg>\n");
   for (best = first; best; best = best->dptr) { // Iterate the linked list
-    fprintf (gpx, "<trkpt lat=\"%12.9lf\" lon=\"%12.9lf\">\n",
+    fprintf (gpx, "<trkpt lat=\"%.9lf\" lon=\"%.9lf\">\n",
       best->fix.latitude, best->fix.longitude);
     if (best->fix.ele < 1e+8) {
       fprintf (gpx, "<ele>%.3lf</ele>\n", best->fix.ele);
@@ -1797,6 +1797,9 @@ int main (int argc, char *argv[])
   bool rebuild = false;
   const char* master = "";
   int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
+  
+  setlocale (LC_ALL, ""); /* Ensure decimal sign is "." for NMEA parsing. */
+  
   if (argc > 1 && stricmp(argv[1], "rebuild") == 0) {
     if (argc < 6 && argc > 4) {
       fprintf (stderr, 

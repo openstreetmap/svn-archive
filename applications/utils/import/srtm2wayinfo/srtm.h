@@ -3,9 +3,11 @@
 
 #include <QString>
 #include <QObject>
-#include <QtNetwork>
 #include <QMap>
 #include <QRegExp>
+#include <QFile>
+#include <QCache>
+#include <curl/curl.h>
 
 #define SRTM_DATA_VOID -32768
 
@@ -43,28 +45,23 @@ class SrtmDownloader : public QObject
 {
     Q_OBJECT
     public:
-        SrtmDownloader(QString server_="e0srp01u.ecs.nasa.gov",
-            QString directory_="/srtm/version2/SRTM3", QString cachedir_="cache");
+        SrtmDownloader(QString url="http://dds.cr.usgs.gov/srtm/version2/SRTM3/", QString cachedir="cache");
+        ~SrtmDownloader() { curl_easy_cleanup(curl); }
         void createFileList();
         void loadFileList();
         SrtmTile *getTile(float lat, float lon);
         QMap<int, QString> fileList;
         void downloadTile(QString filename);
         float getAltitudeFromLatLon(float lat, float lon);
+        void curlAddData(void *ptr, int size);
+        QString curlData;
     private:
-        QString server;
-        QString directory;
+        QString url;
         QString cachedir;
-        QFtp ftp;
-        int listCommand;
-        QString currentContinent;
         QRegExp regex;
+        CURL *curl;
         QCache<int, SrtmTile> tileCache;
         int latLonToIndex(int lat, int lon) { return lat * 1000 + lon; }
-        void connectFtp();
-    public slots:
-        void ftpListInfo(const QUrlInfo & info);
-        void ftpDone(int command_id, bool error);
 };
 
 #endif

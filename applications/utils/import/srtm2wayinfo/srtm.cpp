@@ -8,44 +8,95 @@
 #include <QStringList>
 #include <QString>
 #include <QProcess>
+#include <QDebug>
+#include <qendian.h>
 
 SrtmTile errorTile("error", -1000, -1000); //TODO
 
+size_t curl_data_callback(void *ptr, size_t size, size_t nmemb, void *stream)
+{
+    SrtmDownloader *downloader = static_cast<SrtmDownloader*>(stream);
+    downloader->curlAddData(ptr, size*nmemb);
+    return size*nmemb;
+}
+
+size_t curl_file_callback(char *ptr, size_t size, size_t nmemb, void *stream)
+{
+    QFile *file = static_cast<QFile *>(stream);
+    int size_left = size * nmemb;
+    while (size_left > 0) {
+        int result = file->write(ptr, size_left);
+        if (result == -1) {
+            qCritical() << "Error while writing to file!" << file->errorString();
+        } else {
+            ptr += result;
+            size_left -= result;
+        }
+    }
+    return size*nmemb;
+}
+
 /** Constructor for SrtmDownloader.
-  * \param server Hostname of Srtm server.
-  * \param directory Absolute path to base directory of Srtm server. Must start with a slash!
+  * \note This downloader currently only supports SRTM3 data.
+  * \param url URL to the SRTM data. 
   * \param cachedir Directory in which the downloaded files are stored.
   */
-SrtmDownloader::SrtmDownloader(QString server, QString directory, QString cachedir)
+SrtmDownloader::SrtmDownloader(QString url, QString cachedir)
 {
-    this->server = server;
-    this->directory = directory+"/";
+    this->url = url;
     this->cachedir = cachedir+"/";
-    regex.setPattern("([NS])(\\d{2})([EW])(\\d{3})\\.hgt\\.zip");
+    regex.setPattern("<a href=\"([NS])(\\d{2})([EW])(\\d{3})\\.hgt\\.zip");
     QDir dir;
     if (!dir.exists(cachedir)) {
         dir.mkpath(cachedir);
     }
-    connect(&ftp, SIGNAL(commandFinished(int, bool)), this, SLOT(ftpDone(int, bool)));
-    connect(&ftp, SIGNAL(listInfo(const QUrlInfo &)), this, SLOT(ftpListInfo(const QUrlInfo &)));
+    curl = curl_easy_init();
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+}
+
+void SrtmDownloader::curlAddData(void *ptr, int size)
+{
+    curlData += QString::fromAscii(static_cast<char*>(ptr), size);
 }
 
 /** Create a new file list by getting directory contents from server. */
 void SrtmDownloader::createFileList()
 {
+    //Store data in memory
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_data_callback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, this);
+    
     QStringList continents;
     continents << "Africa" << "Australia" << "Eurasia" << "Islands" << "North_America" << "South_America";
-    connectFtp();
-    ftp.cd(directory);
     foreach (QString continent, continents) {
         qDebug() << "Downloading data for" << continent;
-        currentContinent = continent;
-        ftp.list(continent);
-        while (ftp.currentId()) app->processEvents();
+        curlData.clear();
+        curl_easy_setopt(curl, CURLOPT_URL, QString(url+continent+"/").toAscii().constData());
+        int error = curl_easy_perform(curl);
+        if (error) {
+            qCritical() << "Error downloading data for" << continent;
+            //TODO: Terminate program???
+        }
+        int index = -1;
+        while ((index = curlData.indexOf(regex, index+1)) != -1) {
+            int lat = regex.cap(2).toInt();
+            int lon = regex.cap(4).toInt();
+            if (regex.cap(1) == "S") {
+                lat = -lat;
+            }
+            if (regex.cap(3) == "W") {
+                lon = - lon;
+            }
+            //S00E000.hgt.zip
+            //123456789012345 => 15 bytes long
+            fileList[latLonToIndex(lat, lon)] = continent+"/"+regex.cap().right(15);
+        }
     }
+    curlData.clear(); //Free mem
+    
     QFile file(cachedir+"filelist");
     if (!file.open(QIODevice::WriteOnly)) {
-        qDebug() << "Could not open file" << cachedir+"filelist";
+        qCritical() << "Could not open file" << cachedir+"filelist";
         return;
     }
     QDataStream stream(&file);
@@ -65,23 +116,6 @@ void SrtmDownloader::loadFileList()
     QDataStream stream(&file);
     stream >> fileList; //TODO: Detect corrupted list
     file.close();
-}
-
-/** SLOT called by the ftp object to return information about the file. */
-void SrtmDownloader::ftpListInfo(const QUrlInfo &info)
-{
-    if (regex.indexIn(info.name()) == -1) {
-        qDebug() << "Regex did not match!";
-    }
-    int lat = regex.cap(2).toInt();
-    int lon = regex.cap(4).toInt();
-    if (regex.cap(1) == "S") {
-        lat = -lat;
-    }
-    if (regex.cap(3) == "W") {
-        lon = - lon;
-    }
-    fileList[latLonToIndex(lat, lon)] = currentContinent+"/"+info.name();
 }
 
 /** Get tile for a specified location.
@@ -119,36 +153,17 @@ void SrtmDownloader::downloadTile(QString filename)
 {
     qDebug() << "Downloading" << filename;
     QStringList splitted = filename.split("/", QString::SkipEmptyParts);
-    connectFtp();
-    ftp.cd(directory+splitted[0]);
+    
     QFile file(cachedir+splitted[1]);
     if (!file.open(QIODevice::WriteOnly)) {
-        qDebug() << "Could not create file" << cachedir+splitted[1];
+        qCritical() << "Could not create file" << cachedir+splitted[1];
         return;
     }
-    ftp.get(splitted[1], &file);
-    while (ftp.currentId()) app->processEvents();
-}
-
-/** Open the FTP connection if not already done.
-    FTP connections are reused.
-*/
-void SrtmDownloader::connectFtp()
-{
-    qDebug() << "Connecting to FTP";
-    if (ftp.state() == QFtp::LoggedIn) return;
-    ftp.connectToHost(server);
-    ftp.login();
-    while (ftp.currentId()) {
-        app->processEvents();
-    }
-//     qDebug() << "Connected to FTP";
-}
-
-/** FTP error handler. */
-void SrtmDownloader::ftpDone(int /*command_id*/, bool error)
-{
-    if (error) qDebug() << "FTP-Error:" << ftp.errorString();
+    curlData.clear();
+    curl_easy_setopt(curl, CURLOPT_URL, QString(url+filename).toAscii().constData());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_file_callback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
+    curl_easy_perform(curl);
 }
 
 /** Get altitude and download necessary tiles automatically. */
@@ -184,7 +199,7 @@ SrtmTile::SrtmTile(QString filename, int lat, int lon)
         process.setProcessChannelMode(QProcess::ForwardedChannels);
         process.start("unzip", args);
         if (!process.waitForStarted() || !process.waitForFinished()) {
-            qDebug() << "Could not unzip" << filename;
+            qCritical() << "Could not unzip" << filename;
             return;
         }
     }

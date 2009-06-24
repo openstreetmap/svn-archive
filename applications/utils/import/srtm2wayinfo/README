@@ -1,5 +1,9 @@
 This directory contains the Summer of Code 2009 project of Hermann Kraus.
 
+Dependencies
+------------
+libcurl (debian packages: libcurl3 and libcurl4-gnutls-dev or libcurl4-openssl-dev)
+
 Compilation
 -----------
 qmake
@@ -23,3 +27,4 @@ TODO
 - Include a library for processing zip files
 - Write testcases
 - Make sure code is not locale depenend
+- Length calculation

@@ -480,7 +480,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
         malloc ((sizeof (*route) + sizeof (*routeHeap)) * dhashSize))) {
       dhashSize = dhashSize / 4 * 3;
     }
-    memset (route, 0, sizeof (dhashSize) * dhashSize);
+    memset (route, 0, (sizeof (*route) + sizeof (*routeHeap)) * dhashSize); 
     #endif
     routeHeapSize = 1; /* Leave position 0 open to simplify the math */
     routeHeap = (routeNodeType**) (route + dhashSize) - 1;

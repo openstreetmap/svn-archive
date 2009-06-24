@@ -5,6 +5,8 @@
 
 #include "osm-parse.h"
 #include "srtm.h"
+
+#include <math.h>
  
 #include <QIODevice>
 
@@ -82,7 +84,10 @@ void RelationWriter::writeRelation(OsmWayId wayId, OsmNodeId startNode, OsmNodeI
 /** Calculates distance and altitude differences between two nodes. */
 void RelationWriter::calc(OsmNodeId from, OsmNodeId to, float *length, float *up, float *down)
 {
-    *length += 1.0; //TODO
+    //Distances are small => Assume earth is flat in this region to simplify calculation and avoid rounding errors that easily get very large with great circle distance calculations
+    float delta_lat = (data->nodes[to].lat() - data->nodes[from].lat()) * 111.11; //TODO: Exact value
+    float delta_lon = (data->nodes[to].lon() - data->nodes[from].lon()) * 111.11 * cos(data->nodes[to].lat()/360.0*2.0*M_PI);
+    *length += sqrt(delta_lat*delta_lat + delta_lon*delta_lon);
     float alt_from = downloader->getAltitudeFromLatLon(data->nodes[from].lat(), data->nodes[from].lon());
     float alt_to = downloader->getAltitudeFromLatLon(data->nodes[to].lat(), data->nodes[to].lon());
     if (alt_from == SRTM_DATA_VOID || alt_to == SRTM_DATA_VOID) return; //Do nothing when no data is available.

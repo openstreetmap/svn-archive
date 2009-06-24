@@ -4,13 +4,11 @@
 #include "osm-parse.h"
 #include "relations.h"
 
-#include <QCoreApplication>
+#include <curl/curl.h>
 
-QCoreApplication *app;
-
-int main(int argc, char **argv)
+int main(/*int argc, char **argv*/)
 {
-    app = new QCoreApplication(argc, argv);
+    curl_global_init(CURL_GLOBAL_DEFAULT);
     
     SrtmDownloader downloader;
     downloader.loadFileList();
@@ -25,4 +23,5 @@ int main(int argc, char **argv)
     writer.writeRelations();
     
     output.close();
+    curl_global_cleanup();
 }

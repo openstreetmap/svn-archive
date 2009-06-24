@@ -7,7 +7,7 @@
 #include <QString>
 #include <QFile>
 #include <QDebug>
-#include <stdio.h>
+// #include <stdio.h>
 
 /** Parse an OSM-XML file.
   * This function is just a wrapper that creates an QFile object

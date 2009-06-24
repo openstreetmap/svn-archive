@@ -6,6 +6,7 @@ TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
 INCLUDEPATH += .
+LIBS += `curl-config --libs`
 
 # Input
 HEADERS += osm-parse.h srtm.h main.h relations.h

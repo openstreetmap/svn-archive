@@ -4022,7 +4022,7 @@
 			.tunnel { stroke-dasharray: 0.4, 0.4; }
 
 			.embankment-cutting              { fill: none; stroke-linejoin: bevel; stroke-linecap: butt; stroke: #6f4a18; }
-			.dyke                            { fill: none; stroke-linejoin: bevel; stroke-linecap: butt; stroke: #6fc13d; }
+			.dyke                            { fill: none; stroke-linejoin: bevel; stroke-linecap: butt; stroke: #3a7019; }
 
 			.embankment-long-casing          { stroke-width: 3.6px; stroke-dasharray: 0.1, 1.1; }
 			.embankment-short-casing         { stroke-width: 3.0px; stroke-dasharray: 0.1, 0.5, 0.1, 0.5;  }

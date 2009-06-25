@@ -108,13 +108,13 @@ if ($bRunGosmore) {
 	}
 	$dir = $yours_dir.$gosmore;
 	$command = "ulimit -t ".$ulimit." && ".$query." nice ./gosmore ".$pak." ".$style;
-/*	
+	
 	$fh = fopen($www_dir.'/commands.log', 'a+');
 	if ($fh) {
 		fwrite($fh, date('Y-m-d H:i:s').", ".$dir.', '.$command."\n");
 		fclose($fh);
 	}
-*/
+
 	$res = chdir($dir);
 	$gosmore_start = microtime(true);
 	$result = exec($command, $output);
@@ -218,7 +218,7 @@ if ($bRunGosmore) {
 //Chop the KML into bits so that the network can transport is faster (aledgidly)
 echobig($kml, 1024);
 
-/*
+
 if ($bRunGosmore) {
 	$file = $www_dir.'/requests.csv';
 	if (!file_exists($file)) {
@@ -239,7 +239,7 @@ if ($bRunGosmore) {
 		fclose($fh);
 	}
 }
-*/
+
 
 // Chop a string into bits
 function echobig($string, $bufferSize = 8192)

@@ -16,7 +16,8 @@
 					<table>
 						<tr><td>
 							<!--<font color=red>Note: Routing in the Northeastern part of the American continent isn't possible due to server limitations.</font>-->
-							<font color=red>Note: Namefinder service currently not available or very slow.</font>
+							<!--<font color=red>Note: Routing database update failed so routing is not working at the moment. Namefinder service can be slow.</font>-->
+							<font color=red>Note: Namefinder service can sometimes be slow.</font>
 						</td></tr>
 					</table>
 		      		<table>

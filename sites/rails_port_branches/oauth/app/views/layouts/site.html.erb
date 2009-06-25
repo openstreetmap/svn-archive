@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<%= I18n.locale %>" lang="<%= I18n.locale %>" dir="<% t'html.dir' %>">
+  <head>
+    <%= javascript_include_tag 'prototype' %>
+    <%= javascript_include_tag 'site' %>
+    <!--[if lt IE 7]><%= javascript_include_tag 'pngfix' %><![endif]--> <!-- thanks, microsoft! -->
+    <%= stylesheet_link_tag 'site' %>
+    <%= stylesheet_link_tag 'print', :media => "print" %>
+    <%= tag("link", { :rel => "search", :type => "application/opensearchdescription+xml", :title => "OpenStreetMap Search", :href => "/opensearch/osm.xml" }) %>
+    <%= tag("meta", { :name => "description", :content => "OpenStreetMap is the free wiki world map." }) %>
+    <%= yield :head %>
+    <title><%= t 'layouts.project_name.title' %><%= ' | '+ h(@title) if @title %></title>
+  </head>
+  <body>
+    <div id="content">
+      <% if @notice || flash[:notice] %>
+        <div id="notice"><%= @notice || flash[:notice] %></div>
+      <% end %>
+
+      <%= yield %>
+    </div>
+
+    <span id="greeting">
+      <% if @user and @user.id %>
+        <%= t 'layouts.welcome_user', :user_link => (link_to h(@user.display_name), {:controller => 'user', :action => 'view', :display_name => @user.display_name}, :title => t('layouts.welcome_user_link_tooltip')) %> | 
+        <%= yield :greeting %>
+        <%
+        inbox_attributes = {}
+        inbox_attributes[:class] = 'greeting-bar-unread' if @user.new_messages.size > 0
+        inbox_attributes[:title] = t 'layouts.inbox_tooltip', :count => @user.new_messages.size
+        %>
+        <%= link_to t('layouts.inbox', :count => @user.new_messages.size), {:controller => 'message', :action => 'inbox', :display_name => @user.display_name}, inbox_attributes %> |
+        <%= link_to t('layouts.logout'), {:controller => 'user', :action => 'logout', :referer => request.request_uri}, {:id => 'logoutanchor', :title => t('layouts.logout_tooltip')}%>
+      <% else %>
+        <%= link_to t('layouts.log_in'), {:controller => 'user', :action => 'login', :referer => request.request_uri}, {:id => 'loginanchor', :title => t('layouts.log_in_tooltip')} %> |
+        <%= link_to t('layouts.sign_up'), {:controller => 'user', :action => 'new'}, {:id => 'registeranchor', :title => t('layouts.sign_up_tooltip')} %>
+      <% end %>
+    </span>
+
+    <div>
+      <ul id="tabnav">
+        <%
+        viewclass = ''
+        editclass = ''
+        historyclass = ''
+        exportclass = ''
+        traceclass = ''
+        viewclass = 'active' if params['controller'] == 'site' and params['action'] == 'index' 
+        editclass = 'active' if params['controller'] == 'site' and params['action'] == 'edit' 
+        historyclass = 'active' if params['controller'] == 'changeset' and params['action'] == 'list_bbox' 
+        exportclass = 'active' if params['controller'] == 'site' and params['action'] == 'export'
+        traceclass = 'active' if params['controller'] == 'trace'
+        diaryclass = 'active' if params['controller'] == 'diary_entry'
+        %>
+        <li><%= link_to t('layouts.view'), {:controller => 'site', :action => 'index'}, {:id => 'viewanchor', :title => t('layouts.view_tooltip'), :class => viewclass} %></li>
+        <li><%= link_to t('layouts.edit'), {:controller => 'site', :action => 'edit'}, {:id => 'editanchor', :title => t('layouts.edit_tooltip'), :class => editclass} %></li>
+        <li><%= link_to t('layouts.history'), {:controller => 'changeset', :action => 'list_bbox' }, {:id => 'historyanchor', :title => t('layouts.history_tooltip'), :class => historyclass} %></li>
+        <% if params['controller'] == 'site' and (params['action'] == 'index' or params['action'] == 'export') %>
+        <li><%= link_to_remote t('layouts.export'), {:url => {:controller => 'export', :action => 'start'}}, {:id => 'exportanchor', :title => t('layouts.export_tooltip'), :class => exportclass, :href => url_for(:controller => 'site', :action => 'export')} %></li>
+        <% else %>
+        <li><%= link_to t('layouts.export'), {:controller => 'site', :action => 'export'}, {:id => 'exportanchor', :title => t('layouts.export_tooltip'), :class => exportclass} %></li>
+        <% end %>
+        <li><%= link_to t('layouts.gps_traces'), {:controller => 'trace', :action => 'list'}, {:id => 'traceanchor', :title => t('layouts.gps_traces_tooltip'), :class => traceclass} %></li>
+        <li><%= link_to t('layouts.user_diaries'), {:controller => 'diary_entry', :action => 'list', :display_name => nil}, {:id => 'diaryanchor', :title => t('layouts.user_diaries_tooltip'), :class => diaryclass} %></li>
+      </ul>
+    </div>
+
+    <div id="left">
+
+      <div id="logo">
+        <center>
+          <h1><%= t 'layouts.project_name.h1' %></h1>
+          <%= link_to(image_tag("osm_logo.png", :size => "120x120", :border => 0, :alt => t('layouts.logo.alt_text')), :controller => 'site', :action => 'index') %><br/>
+          <h2 class="nowrap"><%= t('layouts.tag_line') %></h2>
+        </center>
+      </div>
+
+      <% unless @user %>
+      <div id="intro">
+        <p>
+          <%= t 'layouts.intro_1' %>
+        </p>
+        <p>
+          <%= t 'layouts.intro_2' %>
+        </p>
+        <p>
+        <%= t 'layouts.intro_3', 
+              :ucl => link_to(t('layouts.intro_3_ucl'), "http://www.vr.ucl.ac.uk"), 
+              :bytemark => link_to(t('layouts.intro_3_bytemark'), "http://www.bytemark.co.uk") %>
+        </p>
+      </div>
+      <% end %>
+
+      <% if OSM_STATUS == :database_offline or OSM_STATUS == :api_offline %>
+      <div id="alert">
+        <%= t 'layouts.osm_offline' %>
+      </div>
+      <% elsif OSM_STATUS == :database_readonly or OSM_STATUS == :api_readonly %>
+      <div id="alert">
+        <%= t 'layouts.osm_read_only' %>
+      </div>
+      <% end %>
+
+      <% if false %>
+      <div id="donate" class="notice">
+        <%= t 'layouts.donate', :link => "<a href=\"http://donate.openstreetmap.org/\">#{t('layouts.donate_link_text')}</a>" %>
+      </div>
+      <% end %>
+
+      <div id="left_menu" class="left_menu">
+        <a href="<%= t 'layouts.help_wiki_url' %>" title="<%= t 'layouts.help_wiki_tooltip' %>"><%= t 'layouts.help_wiki' %></a><br />
+        <a href="http://www.opengeodata.org" title="<%= t 'layouts.news_blog_tooltip' %>"><%= t 'layouts.news_blog' %></a><br />
+        <a href="<%= t 'layouts.shop_url' %>" title="<%= t 'layouts.shop_tooltip' %>"><%= t 'layouts.shop' %></a><br />
+        <%= yield :left_menu %>
+      </div>
+
+      <div id="sotm" class="notice">
+        <%= link_to image_tag("sotm.png", :alt => t('layouts.sotm'), :title => t('layouts.sotm'), :border => "0"), "http://www.stateofthemap.org/register" %>
+      </div>
+
+      <%= yield :optionals %>
+
+      <center>
+        <div class="button" style="width: 115px">
+          <a href="http://donate.openstreetmap.org/"><img src="/images/donate.png" border="0" alt="<%= t 'layouts.alt_donation' %>" title="<%= t 'layouts.alt_donation' %>" /></a>
+        </div>
+
+        <div id="cclogo" class="button" style="width: 88px">
+          <%= link_to image_tag("cc_button.png", :alt => "CC by-sa 2.0", :border => "0"), "http://creativecommons.org/licenses/by-sa/2.0/" %>
+        </div>
+      </center>
+    </div>
+  </body>
+</html>

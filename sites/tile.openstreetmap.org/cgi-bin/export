@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import cairo
 import cgi
@@ -51,8 +52,14 @@ def output_error(message):
 # Parse CGI parameters
 form = cgi.FieldStorage()
 
+# Abort if the load average on the machine is too high
+loadavg = float(open("/proc/loadavg").readline().split(" ")[0])
+if loadavg > 40.0:
+  print "Status: 503 Service Unavailable"
+  output_error("The load average on the server is too high at the moment. Please wait a few minutes before trying again.")
+ 
 # Validate the parameters
-if not form.has_key("bbox"):
+elif not form.has_key("bbox"):
   # No bounding box specified
   output_error("No bounding box specified")
 elif not form.has_key("scale"):

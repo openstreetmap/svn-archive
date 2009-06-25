@@ -405,14 +405,15 @@ function loadGmlLayer(flonlat, tlonlat) {
 function addRouteLayer(vector, distance) {
 	if (typeof(routelayer) != 'undefined') {
 		routelayer.onFeatureInsert = function(feature) {
-			feature_info(feature);
+			//alert("2"+distance);
+			feature_info(feature, distance);
 		}
 		routelayer.addFeatures(vector);
 		map.addLayer(routelayer);
 	}
 }
 
-var distance;
+//var distance;
 var nodes;
 function processRouteXML(request) {
 	document.forms['route'].elements['to'].disabled = false;
@@ -433,8 +434,10 @@ function processRouteXML(request) {
 	}
 	var format = new OpenLayers.Format.XML();
 	nodes = format.getElementsByTagNameNS(doc, 'http://earth.google.com/kml/2.0', 'distance');
-	distance = format.getChildValue(nodes[0], 'unknown');
-    
+	var distance = format.getChildValue(nodes[0]);
+	//var distance = format.getChildValue(nodes[0], 'unknown'); //due to changed behavior of OpenLayers this line is rewritten
+    //alert("1"+distance);
+	
     var options = {};
 	options.externalProjection = map.displayProjection;
 	options.internalProjection = map.projection;
@@ -758,7 +761,7 @@ function processNamefinderXML(which, response) {
 	}
 }
 
-function feature_info(feature) {
+function feature_info(feature, distance) {
 	map.zoomToExtent(feature.geometry.getBounds());
 	
 	len = feature.geometry.getLength();

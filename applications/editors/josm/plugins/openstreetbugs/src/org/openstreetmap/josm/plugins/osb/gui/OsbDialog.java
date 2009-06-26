@@ -257,7 +257,7 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
 
     public void zoomToNode(Node node) {
         double scale = Main.map.mapView.getScale();
-        Main.map.mapView.zoomTo(node.eastNorth, scale);
+        Main.map.mapView.zoomTo(node.getEastNorth(), scale);
     }
 
     public void mouseClicked(MouseEvent e) {

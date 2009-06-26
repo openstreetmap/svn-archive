@@ -1,9 +1,10 @@
+/** \file
+  * SRTM data downloader and tile handler.
+  */
 #include "srtm.h"
-
-#include "main.h"
+#include "zip.h"
 
 #include <math.h>
-
 #include <QDir>
 #include <QStringList>
 #include <QString>
@@ -11,8 +12,10 @@
 #include <QDebug>
 #include <qendian.h>
 
+/** Standard error tile that is returned when something goes wrong. */
 SrtmTile errorTile("error", -1000, -1000); //TODO
 
+/** Callback from curl for data that is not stored in a file but kept in memory. */
 size_t curl_data_callback(void *ptr, size_t size, size_t nmemb, void *stream)
 {
     SrtmDownloader *downloader = static_cast<SrtmDownloader*>(stream);
@@ -20,6 +23,7 @@ size_t curl_data_callback(void *ptr, size_t size, size_t nmemb, void *stream)
     return size*nmemb;
 }
 
+/** Callback from curl for data that is stored in a file. */
 size_t curl_file_callback(char *ptr, size_t size, size_t nmemb, void *stream)
 {
     QFile *file = static_cast<QFile *>(stream);
@@ -54,6 +58,7 @@ SrtmDownloader::SrtmDownloader(QString url, QString cachedir)
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 }
 
+/** One line helper function. */
 void SrtmDownloader::curlAddData(void *ptr, int size)
 {
     curlData += QString::fromAscii(static_cast<char*>(ptr), size);
@@ -93,6 +98,8 @@ void SrtmDownloader::createFileList()
         }
     }
     curlData.clear(); //Free mem
+
+    Q_ASSERT(fileList.size() == SRTM_FILE_COUNT);
     
     QFile file(cachedir+"filelist");
     if (!file.open(QIODevice::WriteOnly)) {
@@ -109,13 +116,15 @@ void SrtmDownloader::loadFileList()
 {
     QFile file(cachedir+"filelist");
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Creating new list";
         createFileList();
         return;
     }
     QDataStream stream(&file);
-    stream >> fileList; //TODO: Detect corrupted list
+    stream >> fileList;
     file.close();
+    if (fileList.size() != SRTM_FILE_COUNT) {
+        createFileList();
+    }
 }
 
 /** Get tile for a specified location.
@@ -126,7 +135,6 @@ void SrtmDownloader::loadFileList()
 SrtmTile *SrtmDownloader::getTile(float lat, float lon)
 {
     int intlat = int(floor(lat)), intlon = int(floor(lon));
-    //qDebug() << "downloading tile for" << lat << lon << intlat << intlon;
     int index = latLonToIndex(intlat, intlon);
     SrtmTile *tile = tileCache[index];
 
@@ -164,6 +172,7 @@ void SrtmDownloader::downloadTile(QString filename)
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_file_callback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
     curl_easy_perform(curl);
+    //File is closed automatically
 }
 
 /** Get altitude and download necessary tiles automatically. */
@@ -185,34 +194,9 @@ SrtmTile::SrtmTile(QString filename, int lat, int lon)
     this->lon = lon;
     valid = false;
     if (filename == "error") return;
-    
-    qDebug() << "Creating new tile object for " << lat << lon;
-    QFileInfo fi(filename);
-    QString filename2 = fi.path()+'/'+fi.completeBaseName();
-
-    //TODO: Unzip needs a better solution!
-    if (!QFile(filename2).exists()) {
-        QStringList args;
-        QProcess process;
-        args << "-n" << QFileInfo(filename).fileName();
-        process.setWorkingDirectory(QFileInfo(filename).path());
-        process.setProcessChannelMode(QProcess::ForwardedChannels);
-        process.start("unzip", args);
-        if (!process.waitForStarted() || !process.waitForFinished()) {
-            qCritical() << "Could not unzip" << filename;
-            return;
-        }
-    }
-    file.setFileName(filename2);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qCritical() << "Could not open file" << filename2 << file.errorString();
-        return;
-    }
-    Q_ASSERT(file.size() == 2*1201*1201 || file.size() == 2*3601*3601);
-    size = sqrt(file.size()/2);
-    buffer = new qint16[file.size()/2];
-    file.read((char *)buffer, file.size());
-    file.close();
+    size = SrtmZipFile::getData(filename, &buffer);
+    Q_ASSERT(size == 1201 || size == 3601);
+    Q_ASSERT(buffer != 0);
     valid = true;
 }
 
@@ -229,11 +213,12 @@ int SrtmTile::getPixelValue(int x, int y)
     return value;
 }
 
+/** Gets the altitude in meters for a given coordinate. */
 float SrtmTile::getAltitudeFromLatLon(float lat, float lon)
 {
     if (!valid) return SRTM_DATA_VOID;
     lat -= this->lat;
-    lon -= this->lon; //TODO: Does this work for negative values?
+    lon -= this->lon;
     Q_ASSERT(lat >= 0.0 && lat < 1.0 && lon >= 0.0 && lon < 1.0);
     float x = lon * (size - 1);
     float y = lat * (size - 1);

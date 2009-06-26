@@ -3,11 +3,24 @@ This directory contains the Summer of Code 2009 project of Hermann Kraus.
 Dependencies
 ------------
 libcurl (debian packages: libcurl3 and libcurl4-gnutls-dev or libcurl4-openssl-dev)
+zziplib (debian packages: libzzip-0-13 and libzzip-dev)
 
 Compilation
 -----------
 qmake
 make
+
+Using viking to verify results
+------------------------------
+http://viking.sf.net/
+How to use it:
+
+1. Add a map layer and search for the location.
+2. Add a TrackWaypoint layer and use the "Create Track" tool.
+3. Add a DEM layer, use the download tool to get the SRTM data for the area.
+4. Right click the track in the left pane and select "Apply DEM data".
+5. Open the track properties. All relevant information is there.
+
 
 
 Documentation
@@ -23,8 +36,6 @@ TODO
 - Interpolate points every 90m
 - Optimize for large datasets
 - Error handling
-- Find a replacement for QFtp that doesn't need an event loop to run. libcurl?
-- Include a library for processing zip files
 - Write testcases
 - Make sure code is not locale depenend
-- Length calculation
+- Check which Q_ASSERTs should be turned into real error messages

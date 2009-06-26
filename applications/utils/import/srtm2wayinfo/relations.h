@@ -1,3 +1,6 @@
+/** \file
+  * Create altitude relations from an OSMData object.
+  */
 #ifndef __RELATIONS_H__
 #define __RELATIONS_H__
 
@@ -6,6 +9,7 @@
 class QFile;
 class SrtmDownloader;
 
+/** Writes relations and calculates the neccessary data. */
 class RelationWriter
 {
     public:

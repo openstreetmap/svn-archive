@@ -1,3 +1,6 @@
+/** \file
+  * SRTM data downloader and tile handler.
+  */
 #ifndef __SRTM_H__
 #define __SRTM_H__
 
@@ -9,8 +12,15 @@
 #include <QCache>
 #include <curl/curl.h>
 
+/** Value of pixels where no SRTM data is available. */
 #define SRTM_DATA_VOID -32768
+/** Total number of SRTM files on NASA's server. */
+#define SRTM_FILE_COUNT 14546
 
+/** Handles the loading and parsing of an SRTM tile.
+  *
+  * This class should work for both SRTM1 and SRTM3 data.
+  */
 class SrtmTile
 {
     public:
@@ -41,25 +51,25 @@ class SrtmTile
         bool valid;
 };
 
-class SrtmDownloader : public QObject
+/** Downloads SRTM data from NASA's server. */
+class SrtmDownloader
 {
-    Q_OBJECT
     public:
         SrtmDownloader(QString url="http://dds.cr.usgs.gov/srtm/version2/SRTM3/", QString cachedir="cache");
         ~SrtmDownloader() { curl_easy_cleanup(curl); }
         void createFileList();
         void loadFileList();
         SrtmTile *getTile(float lat, float lon);
-        QMap<int, QString> fileList;
         void downloadTile(QString filename);
         float getAltitudeFromLatLon(float lat, float lon);
         void curlAddData(void *ptr, int size);
-        QString curlData;
     private:
         QString url;
         QString cachedir;
         QRegExp regex;
         CURL *curl;
+        QString curlData;
+        QMap<int, QString> fileList;
         QCache<int, SrtmTile> tileCache;
         int latLonToIndex(int lat, int lon) { return lat * 1000 + lon; }
 };

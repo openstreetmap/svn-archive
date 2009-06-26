@@ -16,7 +16,6 @@ import java.net.URLConnection;
  * @author Frederik Ramm <frederik@remote.org>
  * @author LuVar <lubomir.varga@freemap.sk>
  * @author Dave Hansen <dave@sr71.net>
- * @author Dave Hansen <dave@linux.vnet.ibm.com>
  * 
  */
 public class SlippyMapTile

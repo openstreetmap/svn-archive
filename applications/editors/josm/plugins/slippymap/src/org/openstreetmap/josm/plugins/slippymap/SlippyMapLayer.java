@@ -4,15 +4,18 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.TreeSet;
@@ -41,7 +44,6 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Frederik Ramm <frederik@remote.org>
  * @author LuVar <lubomir.varga@freemap.sk>
  * @author Dave Hansen <dave@sr71.net>
- * @author Dave Hansen <dave@linux.vnet.ibm.com>
  * 
  */
 public class SlippyMapLayer extends Layer implements ImageObserver,
@@ -295,52 +297,24 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     
     void loadAllTiles() {
         MapView mv = Main.map.mapView;
-        int zoom = currentZoomLevel;
         LatLon topLeft = mv.getLatLon(0, 0);
         LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
-        z12x0 = lonToTileX(topLeft.lon(), zoom);
-        z12x1 = lonToTileX(botRight.lon(), zoom);
-        z12y0 = latToTileY(topLeft.lat(), zoom);
-        z12y1 = latToTileY(botRight.lat(), zoom);
-        if (z12x0 > z12x1) {
-            int tmp = z12x0;
-            z12x0 = z12x1;
-            z12x1 = tmp;
-        }
-        if (z12y0 > z12y1) {
-            int tmp = z12y0;
-            z12y0 = z12y1;
-            z12y1 = tmp;
-        }
+
+        TileSet ts = new TileSet(topLeft, botRight, currentZoomLevel);
+        
         // if there is more than 18 tiles on screen in any direction, do not
         // load all tiles!
-        if (z12x1 - z12x0 > 18) {
-            System.out
-                    .println("Not downloading all tiles because there is more than 18 tiles on X axis!");
-            return;
-        }
-        if (z12y1 - z12y0 > 18) {
-            System.out
-                    .println("Not downloading all tiles because there is more than 18 tiles on Y axis!");
-            return;
+        if (ts.tilesSpanned() > (18*18)) {
+        	System.out.println("Not downloading all tiles because there is more than 18 tiles on an axis!");
+        	return;
         }
 
-        for (int x = z12x0 - 1; x <= z12x1; x++) {
-            for (int y = z12y0 - 1; y <= z12y1; y++) {
-                SlippyMapKey key = new SlippyMapKey(x, y, currentZoomLevel);
-                SlippyMapTile tile = tileStorage.get(key);
-                if (!key.valid) {
-                        System.out.println("paint-1() made invalid key");
-                        continue;
-                }
-                if (tile == null)
-                    tileStorage.put(key,
-                            tile = new SlippyMapTile(x, y, currentZoomLevel));
-                if (tile.getImage() == null) {
-                    this.loadSingleTile(tile);
-                }
-            }
-        }
+        for (Tile t : ts.allTiles()) {
+        	SlippyMapTile tile = getOrCreateTile(t.x, t.y, currentZoomLevel);
+        	if (tile.getImage() == null) {
+        		this.loadSingleTile(tile);
+        	}
+        }//end of for Tile t
     }
 
 	/*
@@ -654,39 +628,35 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         }
         g.setColor(Color.black);
         g.drawString("currentZoomLevel=" + currentZoomLevel, 120, 120);
-    }// end of paint metod
+    }// end of paint method
 
+    /**
+     * This isn't very efficient, but it is only used when the
+     * user right-clicks on the map.
+     */
     SlippyMapTile getTileForPixelpos(int px, int py) {
-        int tilex = z12x1;
-        int tiley = z12y1;
-        for (int x = z12x0; x <= z12x1; x++) {
-
-            if (pixelpos[x - z12x0 + 1][0].x > px) {
-                tilex = x - 1;
-                break;
-            }
+    	MapView mv = Main.map.mapView;
+    	Point clicked = new Point(px, py);
+    	LatLon topLeft = mv.getLatLon(0, 0);
+    	LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
+    	TileSet ts = new TileSet(topLeft, botRight, currentZoomLevel);
+    	int z = currentZoomLevel;
+    	
+    	Tile clickedTile = null;
+        for (Tile t1 : ts.allTiles()) {
+            Tile t2 = new Tile(t1.x+1, t1.y+1);
+            Point p1 = t1.pixelPos(z);
+            Point p2 = t2.pixelPos(z);
+            Rectangle r = new Rectangle(p1,new Dimension(p2.x, p2.y));
+            if (!r.contains(clicked))
+                continue;
+            clickedTile  = t1;
+            break;
         }
-        if (tilex == -1)
-            return null;
-        for (int y = z12y0; y <= z12y1; y++) {
-
-            if (pixelpos[0][y - z12y0 + 1].y > py) {
-                tiley = y - 1;
-                break;
-            }
-        }
-        if (tiley == -1) {
-            return null;
-        }
-
-        SlippyMapKey key = new SlippyMapKey(tilex, tiley, currentZoomLevel);
-        if (!key.valid) {
-            System.err.println("getTileForPixelpos("+px+","+py+") made invalid key");
-            return null;
-        }
-        SlippyMapTile tile = tileStorage.get(key);
-        if (tile == null)
-            tileStorage.put(key, tile = new SlippyMapTile(tilex, tiley, currentZoomLevel));
+        if (clickedTile == null)
+             return null;
+        System.out.println("clicked on tile: " + clickedTile.x + " " + clickedTile.y);
+        SlippyMapTile tile = getOrCreateTile(clickedTile.x, clickedTile.y, currentZoomLevel);
         checkTileStorage();
         return tile;
     }
@@ -751,28 +721,56 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     	return x * 45.0 / Math.pow(2.0, zoom - 3) - 180.0;
     }
 
-    public boolean imageUpdate(Image img, int infoflags, int x, int y,
-            int width, int height) {
-        boolean done = ((infoflags & (ERROR | FRAMEBITS | ALLBITS)) != 0);
-        if ((infoflags & ERROR) != 0) {
-                String url = "unknown";
-                for (SlippyMapTile tile : tileStorage.values()) {
-                        if (tile.getImage() != img)
-                                continue;
-                        url = tile.getImageURL().toString();
-                }
-                System.err.println("imageUpdate(" + img + ") error " + url +")");
-        }
-        if ((infoflags & SOMEBITS) != 0) {
-                //if (y%100 == 0)
-                //    System.out.println("imageUpdate("+img+") SOMEBITS ("+x+","+y+")");
-        }
-        // Repaint immediately if we are done, otherwise batch up
-        // repaint requests every 100 milliseconds
-        needRedraw = true;
-        Main.map.repaint(done ? 0 : 100);
-        return !done;
-    }
+    private SlippyMapTile imgToTile(Image img) {
+		// we use the enumeration to avoid ConcurrentUpdateExceptions
+		// with other users of the tileStorage
+		Enumeration<SlippyMapTile> e = tileStorage.elements();
+		while (e.hasMoreElements()) {
+			SlippyMapTile t = e.nextElement();
+			if (t.getImageNoTimestamp() != img) {
+				continue;
+			}
+			return t;
+		}
+		return null;
+	}
+    
+    private static int nr_loaded = 0;
+    private static int at_zoom = -1;
+    
+    public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+		boolean done = ((infoflags & (ERROR | FRAMEBITS | ALLBITS)) != 0);
+		SlippyMapTile imageTile = imgToTile(img);
+		if (imageTile == null) {
+			return false;
+		}
+
+		if ((infoflags & ERROR) != 0) {
+			String url; // = "unknown";
+			url = imageTile.getImageURL().toString();
+			System.err.println("imageUpdate(" + img + ") error " + url + ")");
+		}
+		if (((infoflags & ALLBITS) != 0)) {
+			int z = imageTile.getZoom();
+			if (z == at_zoom) {
+				nr_loaded++;
+			} else {
+				System.out.println("downloaded " + nr_loaded + " at: " + at_zoom + " now going to " + z);
+				nr_loaded = 0;
+				at_zoom = z;
+			}
+			imageTile.markAsDownloaded();
+		}
+		if ((infoflags & SOMEBITS) != 0) {
+			// if (y%100 == 0)
+			//System.out.println("imageUpdate("+img+") SOMEBITS ("+x+","+y+")");
+		}
+		// Repaint immediately if we are done, otherwise batch up
+		// repaint requests every 100 milliseconds
+		needRedraw = true;
+		Main.map.repaint(done ? 0 : 100);
+		return !done;
+	}
 
     /*
      * (non-Javadoc)

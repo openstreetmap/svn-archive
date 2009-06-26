@@ -1,10 +1,13 @@
 package org.openstreetmap.josm.plugins.validator.util;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.LinkedList;
 
-import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.AbstractVisitor;
 
 /**

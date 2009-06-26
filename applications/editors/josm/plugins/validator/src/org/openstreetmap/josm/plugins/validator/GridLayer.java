@@ -159,8 +159,8 @@ public class GridLayer extends Layer
 
         public void visit(Node n) 
         {
-            double x = n.eastNorth.east() * gridDetail;
-            double y = n.eastNorth.north()* gridDetail + 1;
+            double x = n.getEastNorth().east() * gridDetail;
+            double y = n.getEastNorth().north()* gridDetail + 1;
 
             drawCell( Math.floor(x), Math.floor(y) );
         }

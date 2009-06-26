@@ -93,8 +93,8 @@ public class WronglyOrderedWays extends Test  {
 
             for (int node = 1; node < w.nodes.size(); node++)
             {
-                area2 += (w.nodes.get(node-1).coor.lon() * w.nodes.get(node).coor.lat()
-                - w.nodes.get(node).coor.lon() * w.nodes.get(node-1).coor.lat());
+                area2 += (w.nodes.get(node-1).getCoor().lon() * w.nodes.get(node).getCoor().lat()
+                - w.nodes.get(node).getCoor().lon() * w.nodes.get(node-1).getCoor().lat());
             }
 
             if(((natural.equals("coastline") || natural.equals("land")) && area2 < 0.)

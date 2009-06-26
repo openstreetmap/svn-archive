@@ -58,7 +58,7 @@ public class DuplicateNode extends Test
     public void visit(Node n)
     {
         if(!n.deleted && !n.incomplete)
-            nodes.add(n.coor, n);
+            nodes.add(n.getCoor(), n);
     }
 
     /**

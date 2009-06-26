@@ -126,6 +126,17 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
                         Main.map.repaint();
                     }
                 }));
+        
+        tileOptionMenu.add(new JMenuItem(
+        		new AbstractAction(tr("Flush Tile Cache")) {
+        			public void actionPerformed(ActionEvent ae) {
+        				System.out.print("flushing all tiles...");
+        				for (SlippyMapTile t : tileStorage.values()) {
+        					t.dropImage();
+        					}
+        				System.out.println("done");
+        				}
+        			}));
         // end of adding menu commands
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -160,8 +171,10 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
     /**
      * Zoom in, go closer to map.
+     * 
+     * @return	true, if zoom increasing was successfull, false othervise
      */
-    public void increaseZoomLevel() {
+    public boolean increaseZoomLevel() {
         if (currentZoomLevel < SlippyMapPreferences.getMaxZoomLvl()) {
             currentZoomLevel++;
             Main.debug("increasing zoom level to: " + currentZoomLevel);
@@ -169,20 +182,26 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         } else {
             System.err.println("current zoom lvl ("+currentZoomLevel+") couldnt be increased. "+
                              "MaxZoomLvl ("+SlippyMapPreferences.getMaxZoomLvl()+") reached.");
-        }
+            return false;
+            }
+        return true;
     }
 
     /**
      * Zoom out from map.
+     * 
+     * @return	true, if zoom increasing was successfull, false othervise
      */
-    public void decreaseZoomLevel() {
+    public boolean decreaseZoomLevel() {
         if (currentZoomLevel > SlippyMapPreferences.getMinZoomLvl()) {
             Main.debug("decreasing zoom level to: " + currentZoomLevel);
             currentZoomLevel--;
             needRedraw = true;
         } else {
             System.err.println("current zoom lvl couldnt be decreased. MinZoomLvl reached.");
+            return false;
         }
+        return true;
     }
 
     public void clearTileStorage() {
@@ -248,12 +267,13 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
     void loadAllTiles() {
         MapView mv = Main.map.mapView;
+        int zoom = currentZoomLevel;
         LatLon topLeft = mv.getLatLon(0, 0);
         LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
-        z12x0 = lonToTileX(topLeft.lon());
-        z12x1 = lonToTileX(botRight.lon());
-        z12y0 = latToTileY(topLeft.lat());
-        z12y1 = latToTileY(botRight.lat());
+        z12x0 = lonToTileX(topLeft.lon(), zoom);
+        z12x1 = lonToTileX(botRight.lon(), zoom);
+        z12y0 = latToTileY(topLeft.lat(), zoom);
+        z12y1 = latToTileY(botRight.lat(), zoom);
         if (z12x0 > z12x1) {
             int tmp = z12x0;
             z12x0 = z12x1;
@@ -364,10 +384,11 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         bufferImage = mv.createImage(mv.getWidth(), mv.getHeight());
         g = bufferImage.getGraphics();
 
-        z12x0 = lonToTileX(topLeft.lon());
-        z12x1 = lonToTileX(botRight.lon());
-        z12y0 = latToTileY(topLeft.lat());
-        z12y1 = latToTileY(botRight.lat());
+        int zoom = currentZoomLevel;
+        z12x0 = lonToTileX(topLeft.lon(), zoom);
+        z12x1 = lonToTileX(botRight.lon(), zoom);
+        z12y0 = latToTileY(topLeft.lat(), zoom);
+        z12y1 = latToTileY(botRight.lat(), zoom);
 
         if (z12x0 > z12x1) {
             int tmp = z12x0;
@@ -386,9 +407,9 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             return;
 
         for (int x = z12x0 - 1; x <= z12x1 + 1; x++) {
-            double lon = tileXToLon(x);
+            double lon = tileXToLon(x, zoom);
             for (int y = z12y0 - 1; y <= z12y1 + 1; y++) {
-                LatLon tmpLL = new LatLon(tileYToLat(y), lon);
+                LatLon tmpLL = new LatLon(tileYToLat(y, zoom), lon);
                 pixelpos[x - z12x0 + 1][y - z12y0 + 1] = mv.getPoint(Main.proj
                         .latlon2eastNorth(tmpLL));
             }
@@ -604,24 +625,24 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     public void visitBoundingBox(BoundingXYVisitor v) {
     }
 
-    private int latToTileY(double lat) {
+    private int latToTileY(double lat, int zoom) {
         double l = lat / 180 * Math.PI;
         double pf = Math.log(Math.tan(l) + (1 / Math.cos(l)));
-        return (int) (Math.pow(2.0, currentZoomLevel - 1) * (Math.PI - pf) / Math.PI);
+        return (int) (Math.pow(2.0, zoom - 1) * (Math.PI - pf) / Math.PI);
     }
 
-    private int lonToTileX(double lon) {
-        return (int) (Math.pow(2.0, currentZoomLevel - 3) * (lon + 180.0) / 45.0);
+    private int lonToTileX(double lon, int zoom) {
+    	return (int) (Math.pow(2.0, zoom - 3) * (lon + 180.0) / 45.0);
     }
 
-    private double tileYToLat(int y) {
+    private double tileYToLat(int y, int zoom) {
         return Math.atan(Math.sinh(Math.PI
-                - (Math.PI * y / Math.pow(2.0, currentZoomLevel - 1))))
+        		- (Math.PI * y / Math.pow(2.0, zoom - 1))))
                 * 180 / Math.PI;
     }
 
-    private double tileXToLon(int x) {
-        return x * 45.0 / Math.pow(2.0, currentZoomLevel - 3) - 180.0;
+    private double tileXToLon(int x, int zoom) {
+    	return x * 45.0 / Math.pow(2.0, zoom - 3) - 180.0;
     }
 
     public boolean imageUpdate(Image img, int infoflags, int x, int y,

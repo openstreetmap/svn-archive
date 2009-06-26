@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -86,27 +88,41 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             Main.pref.put(ConfigKeys.OSB_API_DISABLED, debug);
         }
         
+        // check, which api is used
+        String uriNew = Main.pref.get(ConfigKeys.OSB_API_URI_NEW);
+        boolean oldApi = uriNew != null && uriNew.contains("appspot");
+        boolean switchApi = true;
+        if(oldApi) {
+            int choice = JOptionPane.showConfirmDialog(Main.parent, 
+                    tr("<html>The openstreetbus plugin is using the old server at appspot.com.<br>" +
+                    		"A new server is available at schokokeks.org.<br>" +
+                    		"Do you want to switch to the new server? (Strongly recommended)</html>"), 
+                    tr("Switch to new openstreetbugs server?"),
+                    JOptionPane.YES_NO_OPTION);
+            switchApi = choice == JOptionPane.YES_OPTION;
+        }
+                
         String uri = Main.pref.get(ConfigKeys.OSB_API_URI_EDIT);
-        if(uri == null || uri.length() == 0) {
-            uri = "http://openstreetbugs.appspot.com/editPOIexec";
+        if(uri == null || uri.length() == 0 || switchApi) {
+            uri = "http://openstreetbugs.schokokeks.org/api/0.1/editPOIexec";
             Main.pref.put(ConfigKeys.OSB_API_URI_EDIT, uri);
         }
         
         uri = Main.pref.get(ConfigKeys.OSB_API_URI_CLOSE);
-        if(uri == null || uri.length() == 0) {
-            uri = "http://openstreetbugs.appspot.com/closePOIexec";
+        if(uri == null || uri.length() == 0 || switchApi) {
+            uri = "http://openstreetbugs.schokokeks.org/api/0.1/closePOIexec";
             Main.pref.put(ConfigKeys.OSB_API_URI_CLOSE, uri);
         }
         
         uri = Main.pref.get(ConfigKeys.OSB_API_URI_DOWNLOAD);
-        if(uri == null || uri.length() == 0) {
-            uri = "http://openstreetbugs.appspot.com/getBugs";
+        if(uri == null || uri.length() == 0 || switchApi) {
+            uri = "http://openstreetbugs.schokokeks.org/api/0.1/getBugs";
             Main.pref.put(ConfigKeys.OSB_API_URI_DOWNLOAD, uri);
         }
         
         uri = Main.pref.get(ConfigKeys.OSB_API_URI_NEW);
-        if(uri == null || uri.length() == 0) {
-            uri = "http://openstreetbugs.appspot.com/addPOIexec";
+        if(uri == null || uri.length() == 0 || switchApi) {
+            uri = "http://openstreetbugs.schokokeks.org/api/0.1/addPOIexec";
             Main.pref.put(ConfigKeys.OSB_API_URI_NEW, uri);
         }
         

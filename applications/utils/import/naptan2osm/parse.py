@@ -163,7 +163,7 @@ class ParseNaptan(ParseXML):
         'Crossing': '',
         'Indicator': ''
     }
-    defaultareatags = {'type': 'public_transport', 'public_transport': 'stop_area'}
+    defaultareatags = {'type': 'site', 'site': 'stop_area'}
     watchnodes = ('StopPoints', 'StopArea', 'AlternativeDescriptors', 'StopClassification')
     
     # dict of form {stoparearef: [osmstoppointid, osmstoparearaid, ...]}
@@ -243,7 +243,6 @@ class ParseNaptan(ParseXML):
                 if st == 'BCT' or st == 'BCQ' or st == 'BCS':
                     if not self.passive:
                         self.feature.tags['highway'] = 'bus_stop'
-                        self.feature.tags['public_transport'] = 'platform'
                 #elif st == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
                     #self.feature.tag['amenity'] = 'bus_station'
                 elif st == 'TXR' or st == 'STR':

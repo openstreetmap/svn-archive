@@ -207,7 +207,7 @@ for type in ('node','way','relation'):
     #for
 importProcessor.upload()
 f=open(options.infile+".db.tmp","w")
-os.rename(options.infile+".db.tmp", options.infile+".db")
 pickle.dump(idMap,f)
 f.close()
+os.rename(options.infile+".db.tmp", options.infile+".db")
 importProcessor.closeSet()

@@ -6,10 +6,10 @@ TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
 INCLUDEPATH += .
-LIBS += `curl-config --libs`
+LIBS += `curl-config --libs` `pkg-config --libs zzipmmapped zziplib`
 
 # Input
-HEADERS += osm-parse.h srtm.h main.h relations.h
-SOURCES += osm-parse.cpp srtm.cpp main.cpp relations.cpp
+HEADERS += osm-parse.h srtm.h relations.h zip.h
+SOURCES += osm-parse.cpp srtm.cpp main.cpp relations.cpp zip.cpp
 QT           += network
 CONFIG += console debug

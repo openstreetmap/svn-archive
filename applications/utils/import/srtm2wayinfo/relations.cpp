@@ -2,12 +2,10 @@
   * Create altitude relations from an OSMData object.
   */
 #include "relations.h"
-
 #include "osm-parse.h"
 #include "srtm.h"
 
 #include <math.h>
- 
 #include <QIODevice>
 
 /** Create a new relation writer object.

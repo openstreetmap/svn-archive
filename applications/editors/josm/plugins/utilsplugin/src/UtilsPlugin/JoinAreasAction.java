@@ -2,29 +2,23 @@ package UtilsPlugin;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
-import static org.openstreetmap.josm.tools.I18n.trn;
 
+import java.awt.GridBagLayout;
+import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.GridBagLayout;
-import java.awt.Point;
-import java.awt.Polygon;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 import javax.swing.Box;
 import javax.swing.JComboBox;
@@ -32,18 +26,18 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.CombineWayAction;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.ReverseWayAction;
 import org.openstreetmap.josm.actions.SplitWayAction;
-
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
-
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -53,19 +47,10 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.TigerUtils;
-import org.openstreetmap.josm.data.osm.visitor.CollectBackReferencesVisitor;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.WaySegment;
-import org.openstreetmap.josm.data.projection.Epsg4326;
-import org.openstreetmap.josm.data.projection.Lambert;
-import org.openstreetmap.josm.data.projection.Mercator;
-import org.openstreetmap.josm.data.UndoRedoHandler;
-
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class JoinAreasAction extends JosmAction {
@@ -82,7 +67,7 @@ public class JoinAreasAction extends JosmAction {
         public NodeToSegs(int pos, Node n, LatLon dis) {
             this.pos = pos;
             this.n = n;
-            this.dis = n.coor.greatCircleDistance(dis);
+            this.dis = n.getCoor().greatCircleDistance(dis);
         }
 
         public int compareTo(NodeToSegs o) {
@@ -159,7 +144,7 @@ public class JoinAreasAction extends JosmAction {
                 if(askedAlready) break;
                 boolean isInsideOneBoundingBox = false;
                 for (Bounds b : bounds) {
-                    if (b.contains(node.coor)) {
+                    if (b.contains(node.getCoor())) {
                         isInsideOneBoundingBox = true;
                         break;
                     }
@@ -361,10 +346,10 @@ public class JoinAreasAction extends JosmAction {
                     continue;
                 }
                 LatLon intersection = getLineLineIntersection(
-                        a.nodes.get(i)  .eastNorth.east(), a.nodes.get(i)  .eastNorth.north(),
-                        a.nodes.get(i+1).eastNorth.east(), a.nodes.get(i+1).eastNorth.north(),
-                        b.nodes.get(j)  .eastNorth.east(), b.nodes.get(j)  .eastNorth.north(),
-                        b.nodes.get(j+1).eastNorth.east(), b.nodes.get(j+1).eastNorth.north());
+                        a.nodes.get(i)  .getEastNorth().east(), a.nodes.get(i)  .getEastNorth().north(),
+                        a.nodes.get(i+1).getEastNorth().east(), a.nodes.get(i+1).getEastNorth().north(),
+                        b.nodes.get(j)  .getEastNorth().east(), b.nodes.get(j)  .getEastNorth().north(),
+                        b.nodes.get(j+1).getEastNorth().east(), b.nodes.get(j+1).getEastNorth().north());
                 if(intersection == null) continue;
 
                 // Create the node. Adding them to the ways must be delayed because we still loop over them
@@ -372,11 +357,11 @@ public class JoinAreasAction extends JosmAction {
                 cmds.add(new AddCommand(n));
                 nodes.add(n);
                 // The distance is needed to sort and add the nodes in direction of the way
-                nodesA.add(new NodeToSegs(i,  n, a.nodes.get(i).coor));
+                nodesA.add(new NodeToSegs(i,  n, a.nodes.get(i).getCoor()));
                 if(same)
-                    nodesA.add(new NodeToSegs(j,  n, a.nodes.get(j).coor));
+                    nodesA.add(new NodeToSegs(j,  n, a.nodes.get(j).getCoor()));
                 else
-                    nodesB.add(new NodeToSegs(j,  n, b.nodes.get(j).coor));
+                    nodesB.add(new NodeToSegs(j,  n, b.nodes.get(j).getCoor()));
             }
         }
 
@@ -422,7 +407,6 @@ public class JoinAreasAction extends JosmAction {
      */
     private void addNodesToWay(Way a, ArrayList<NodeToSegs> nodes) {
         Way ax=new Way(a);
-        List<NodeToSegs> newnodes = new ArrayList<NodeToSegs>();
         Collections.sort(nodes);
 
         int numOfAdds = 1;
@@ -538,10 +522,10 @@ public class JoinAreasAction extends JosmAction {
         Collection<Way> innerWays = new ArrayList<Way>();
         for(Way w: multigonWays) {
             Polygon poly = new Polygon();
-            for(Node n: ((Way)w).nodes) poly.addPoint(latlonToXY(n.coor.lat()), latlonToXY(n.coor.lon()));
+            for(Node n: (w).nodes) poly.addPoint(latlonToXY(n.getCoor().lat()), latlonToXY(n.getCoor().lon()));
 
             for(Node n: multigonNodes) {
-                if(!((Way)w).nodes.contains(n) && poly.contains(latlonToXY(n.coor.lat()), latlonToXY(n.coor.lon()))) {
+                if(!(w).nodes.contains(n) && poly.contains(latlonToXY(n.getCoor().lat()), latlonToXY(n.getCoor().lon()))) {
                     getWaysByNode(innerWays, multigonWays, n);
                 }
             }
@@ -563,7 +547,7 @@ public class JoinAreasAction extends JosmAction {
      */
     private void getWaysByNode(Collection<Way> innerWays, Collection<Way> w, Node n) {
         for(Way way : w) {
-            if(!((Way)way).nodes.contains(n)) continue;
+            if(!(way).nodes.contains(n)) continue;
             if(!innerWays.contains(way)) innerWays.add(way); // Will need this later for multigons
         }
     }

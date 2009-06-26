@@ -1,8 +1,8 @@
 /**
  * Terracer: A JOSM Plugin for terraced houses.
- * 
+ *
  * Copyright 2009 CloudMade Ltd.
- * 
+ *
  * Released under the GPLv2, see LICENSE file for details.
  */
 package terracer;
@@ -10,7 +10,6 @@ package terracer;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
-import java.awt.BorderLayout;
 import java.awt.Choice;
 import java.awt.Component;
 import java.awt.GridBagLayout;
@@ -19,25 +18,17 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -52,7 +43,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.tagging.TaggingPreset.Item;
 import org.openstreetmap.josm.tools.AutoCompleteComboBox;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Pair;
@@ -61,11 +51,11 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  * Terraces a quadrilateral, closed way into a series of quadrilateral,
  * closed ways.
- * 
+ *
  * At present it only works on quadrilaterals, but there is no reason
- * why it couldn't be extended to work with other shapes too. The 
- * algorithm employed is naive, but it works in the simple case. 
- * 
+ * why it couldn't be extended to work with other shapes too. The
+ * algorithm employed is naive, but it works in the simple case.
+ *
  * @author zere
  */
 public final class TerracerAction extends JosmAction {
@@ -75,12 +65,12 @@ public final class TerracerAction extends JosmAction {
 	private static String lastSelectedValue = "";
 
 	public TerracerAction() {
-		super(tr("Terrace a building"), 
-				"terrace", 
+		super(tr("Terrace a building"),
+				"terrace",
 				tr("Creates individual buildings from a long building."),
-				Shortcut.registerShortcut("tools:Terracer", 
+				Shortcut.registerShortcut("tools:Terracer",
 						tr("Tool: {0}", tr("Terrace a building")),
-						KeyEvent.VK_T, Shortcut.GROUP_EDIT, 
+						KeyEvent.VK_T, Shortcut.GROUP_EDIT,
 						Shortcut.SHIFT_DEFAULT),
 						true);
 	}
@@ -111,15 +101,15 @@ public final class TerracerAction extends JosmAction {
 
 					optionPane.createDialog(Main.parent, title).setVisible(true);
 					Object answerObj = optionPane.getValue();
-					if (answerObj != null && 
+					if (answerObj != null &&
 							answerObj != JOptionPane.UNINITIALIZED_VALUE &&
-							(answerObj instanceof Integer && 
+							(answerObj instanceof Integer &&
 									(Integer)answerObj == JOptionPane.OK_OPTION)) {
 
 						// call out to the method which does the actual
 						// terracing.
-						terraceBuilding(way, 
-								dialog.numberFrom(), 
+						terraceBuilding(way,
+								dialog.numberFrom(),
 								dialog.numberTo(),
 								dialog.stepSize(),
 								dialog.streetName());
@@ -136,19 +126,19 @@ public final class TerracerAction extends JosmAction {
 		}
 
 		if (badSelect) {
-			JOptionPane.showMessageDialog(Main.parent, 
+			JOptionPane.showMessageDialog(Main.parent,
 					tr("Select a single, closed way of at least four nodes."));
 		}
 	}
 
 	/**
 	 * Terraces a single, closed, quadrilateral way.
-	 * 
+	 *
 	 * Any node must be adjacent to both a short and long edge, we naively
 	 * choose the longest edge and its opposite and interpolate along them
 	 * linearly to produce new nodes. Those nodes are then assembled into
 	 * closed, quadrilateral ways and left in the selection.
-	 * 
+	 *
 	 * @param w The closed, quadrilateral way to terrace.
 	 */
 	private void terraceBuilding(Way w, int from, int to, int step, String streetName) {
@@ -166,10 +156,10 @@ public final class TerracerAction extends JosmAction {
 		Collection<Command> commands = new LinkedList<Command>();
 		Collection<Way> ways = new LinkedList<Way>();
 
-		// create intermediate nodes by interpolating. 
+		// create intermediate nodes by interpolating.
 		for (int i = 0; i <= nb; ++i) {
-			new_nodes[0][i] = interpolateAlong(interp.a, frontLength * (double)(i) / (double)(nb));
-			new_nodes[1][i] = interpolateAlong(interp.b, backLength * (double)(i) / (double)(nb));
+			new_nodes[0][i] = interpolateAlong(interp.a, frontLength * (i) / (nb));
+			new_nodes[1][i] = interpolateAlong(interp.b, backLength * (i) / (nb));
 			commands.add(new AddCommand(new_nodes[0][i]));
 			commands.add(new AddCommand(new_nodes[1][i]));
 		}
@@ -213,11 +203,11 @@ public final class TerracerAction extends JosmAction {
 	/**
 	 * Creates a node at a certain distance along a way, as calculated by the
 	 * great circle distance.
-	 * 
-	 * Note that this really isn't an efficient way to do this and leads to 
+	 *
+	 * Note that this really isn't an efficient way to do this and leads to
 	 * O(N^2) running time for the main algorithm, but its simple and easy
 	 * to understand, and probably won't matter for reasonable-sized ways.
-	 * 
+	 *
 	 * @param w The way to interpolate.
 	 * @param l The length at which to place the node.
 	 * @return A node at a distance l along w from the first point.
@@ -225,7 +215,7 @@ public final class TerracerAction extends JosmAction {
 	private Node interpolateAlong(Way w, double l) {
 		Node n = null;
 		for (Pair<Node,Node> p : w.getNodePairs(false)) {
-			final double seg_length = p.a.coor.greatCircleDistance(p.b.coor);
+			final double seg_length = p.a.getCoor().greatCircleDistance(p.b.getCoor());
 			if (l <= seg_length) {
 				n = interpolateNode(p.a, p.b, l / seg_length);
 				break;
@@ -244,23 +234,23 @@ public final class TerracerAction extends JosmAction {
 	/**
 	 * Calculates the great circle length of a way by summing the great circle
 	 * distance of each pair of nodes.
-	 * 
+	 *
 	 * @param w The way to calculate length of.
 	 * @return The length of the way.
 	 */
 	private double wayLength(Way w) {
 		double length = 0.0;
 		for (Pair<Node,Node> p : w.getNodePairs(false)) {
-			length += p.a.coor.greatCircleDistance(p.b.coor);
+			length += p.a.getCoor().greatCircleDistance(p.b.getCoor());
 		}
 		return length;
 	}
 
 	/**
-	 * Given a way, try and find a definite front and back by looking at the 
+	 * Given a way, try and find a definite front and back by looking at the
 	 * segments to find the "sides". Sides are assumed to be single segments
 	 * which cannot be contiguous.
-	 * 
+	 *
 	 * @param w The way to analyse.
 	 * @return A pair of ways (front, back) pointing in the same directions.
 	 */
@@ -326,19 +316,19 @@ public final class TerracerAction extends JosmAction {
 	private double sideLength(Way w, int i) {
 		Node a = w.nodes.get(i);
 		Node b = w.nodes.get((i+1) % (w.nodes.size() - 1));
-		return a.coor.greatCircleDistance(b.coor);
+		return a.getCoor().greatCircleDistance(b.getCoor());
 	}
 
 	/**
 	 * Given an array of doubles (but this could made generic very easily) sort
 	 * into order and return the array of indexes such that, for a returned array
 	 * x, a[x[i]] is sorted for ascending index i.
-	 * 
+	 *
 	 * This isn't efficient at all, but should be fine for the small arrays we're
 	 * expecting. If this gets slow - replace it with some more efficient algorithm.
-	 * 
+	 *
 	 * @param a The array to sort.
-	 * @return An array of indexes, the same size as the input, such that a[x[i]] 
+	 * @return An array of indexes, the same size as the input, such that a[x[i]]
 	 * is in sorted order.
 	 */
 	private int[] sortedIndexes(final double[] a) {
@@ -369,7 +359,7 @@ public final class TerracerAction extends JosmAction {
 	}
 
 	/**
-	 * Calculate "sideness" metric for each segment in a way.  
+	 * Calculate "sideness" metric for each segment in a way.
 	 */
 	private double[] calculateSideness(Way w) {
 		final int length = w.nodes.size() - 1;
@@ -384,7 +374,7 @@ public final class TerracerAction extends JosmAction {
 					w.nodes.get(i+1), w.nodes.get(i+2));
 		}
 		sideness[length-1] = calculateSideness(
-				w.nodes.get(length - 2), w.nodes.get(length - 1), 
+				w.nodes.get(length - 2), w.nodes.get(length - 1),
 				w.nodes.get(length), w.nodes.get(1));
 
 		return sideness;
@@ -396,12 +386,12 @@ public final class TerracerAction extends JosmAction {
 	 * for the segment b-c.
 	 */
 	private double calculateSideness(Node a, Node b, Node c, Node d) {
-		final double ndx = b.coor.getX() - a.coor.getX();
-		final double pdx = d.coor.getX() - c.coor.getX();
-		final double ndy = b.coor.getY() - a.coor.getY();
-		final double pdy = d.coor.getY() - c.coor.getY();
+		final double ndx = b.getCoor().getX() - a.getCoor().getX();
+		final double pdx = d.getCoor().getX() - c.getCoor().getX();
+		final double ndy = b.getCoor().getY() - a.getCoor().getY();
+		final double pdy = d.getCoor().getY() - c.getCoor().getY();
 
-		return (ndx * pdx + ndy * pdy) / 
+		return (ndx * pdx + ndy * pdy) /
 		Math.sqrt((ndx * ndx + ndy * ndy) * (pdx * pdx + pdy * pdy));
 	}
 
@@ -425,12 +415,12 @@ public final class TerracerAction extends JosmAction {
 			clo = new JSpinner(lo);
 			chi = new JSpinner(hi);
 
-			lo.addChangeListener(new ChangeListener() { 
+			lo.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
 					hi.setMinimum((Integer)lo.getNumber());
 				}
 			});
-			hi.addChangeListener(new ChangeListener() { 
+			hi.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
 					lo.setMaximum((Integer)hi.getNumber());
 				}
@@ -520,7 +510,7 @@ public final class TerracerAction extends JosmAction {
 	}
 
 	/**
-	 * Generates a list of all visible names of highways in order to do 
+	 * Generates a list of all visible names of highways in order to do
 	 * autocompletion on the road name.
 	 */
 	private TreeSet<String> createAutoCompletionInfo() {
@@ -538,7 +528,7 @@ public final class TerracerAction extends JosmAction {
 	/**
 	 * Creates a new node at the interpolated position between the argument
 	 * nodes. Interpolates linearly in Lat/Lon coordinates.
-	 * 
+	 *
 	 * @param a First node, at which f=0.
 	 * @param b Last node, at which f=1.
 	 * @param f Fractional position between first and last nodes.
@@ -550,9 +540,9 @@ public final class TerracerAction extends JosmAction {
 	}
 
 	/**
-	 * Calculates the interpolated position between the argument nodes. Interpolates 
+	 * Calculates the interpolated position between the argument nodes. Interpolates
 	 * linearly in Lat/Lon coordinates.
-	 * 
+	 *
 	 * @param a First node, at which f=0.
 	 * @param b Last node, at which f=1.
 	 * @param f Fractional position between first and last nodes.
@@ -562,7 +552,7 @@ public final class TerracerAction extends JosmAction {
 		// this isn't quite right - we should probably be interpolating
 		// screen coordinates rather than lat/lon, but it doesn't seem to
 		// make a great deal of difference at the scale of most terraces.
-		return new LatLon(a.coor.lat() * (1.0 - f) + b.coor.lat() * f,
-				a.coor.lon() * (1.0 - f) + b.coor.lon() * f);
+		return new LatLon(a.getCoor().lat() * (1.0 - f) + b.getCoor().lat() * f,
+				a.getCoor().lon() * (1.0 - f) + b.getCoor().lon() * f);
 	}
 }

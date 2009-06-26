@@ -54,7 +54,7 @@ public class SimplifyWayAction extends JosmAction {
                     for (Node node : way.nodes) {
                         boolean isInsideOneBoundingBox = false;
                         for (Bounds b : bounds) {
-                            if (b.contains(node.coor)) {
+                            if (b.contains(node.getCoor())) {
                                 isInsideOneBoundingBox = true;
                                 break;
                             }
@@ -160,8 +160,8 @@ public class SimplifyWayAction extends JosmAction {
         for (int i = from + 1; i < to; i++) {
             Node n = wnew.nodes.get(i);
             double xte = Math.abs(EARTH_RAD
-                    * xtd(fromN.coor.lat() * Math.PI / 180, fromN.coor.lon() * Math.PI / 180, toN.coor.lat() * Math.PI
-                            / 180, toN.coor.lon() * Math.PI / 180, n.coor.lat() * Math.PI / 180, n.coor.lon() * Math.PI
+                    * xtd(fromN.getCoor().lat() * Math.PI / 180, fromN.getCoor().lon() * Math.PI / 180, toN.getCoor().lat() * Math.PI
+                            / 180, toN.getCoor().lon() * Math.PI / 180, n.getCoor().lat() * Math.PI / 180, n.getCoor().lon() * Math.PI
                             / 180));
             if (xte > xtemax) {
                 xtemax = xte;

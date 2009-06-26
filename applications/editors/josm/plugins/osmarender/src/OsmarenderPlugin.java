@@ -1,16 +1,14 @@
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.File;
-import java.util.Collection;
 import java.util.HashSet;
 
-import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -22,11 +20,11 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.CollectBackReferencesVisitor;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.io.OsmWriter;
@@ -57,7 +55,7 @@ public class OsmarenderPlugin extends Plugin {
             DataSet fromDataSet = new DataSet();
             for (Node n : Main.ds.nodes) {
                 if (n.deleted || n.incomplete) continue;
-                if (n.coor.isWithin(b)) {
+                if (n.getCoor().isWithin(b)) {
                     fromDataSet.nodes.add(n);
                     n.visit(backRefsV);
                 }
@@ -65,7 +63,7 @@ public class OsmarenderPlugin extends Plugin {
             for (OsmPrimitive p : new HashSet<OsmPrimitive>(backRefsV.data)) {
                 if (p instanceof Way) {
                     for (Node n : ((Way) p).nodes) {
-                        if (n.coor.isWithin(b))
+                        if (n.getCoor().isWithin(b))
                             backRefsV.data.add(n);
                     }
                 }

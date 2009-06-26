@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -58,7 +59,6 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     Point[][] pixelpos = new Point[21][21];
     LatLon lastTopLeft;
     LatLon lastBotRight;
-    int z12x0, z12x1, z12y0, z12y1;
     private Image bufferImage;
     private SlippyMapTile clickedTile;
     private boolean needRedraw;
@@ -357,6 +357,109 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         return drawArea / realArea;
     }
 
+	boolean imageLoaded(Image i) {
+		if (i == null)
+			return false;
+
+		int status = Toolkit.getDefaultToolkit().checkImage(i, -1, -1, this);
+		if ((status & ALLBITS) != 0)
+			return true;
+		return false;
+	}
+
+	Double paintTileImages(Graphics g, TileSet ts, int zoom) {
+		Double imageScale = null;
+		Image img = null;
+		for (Tile t : ts.allTiles()) {
+			SlippyMapTile tile = getTile(t.x, t.y, zoom);
+			if (tile == null) {
+				// Don't trigger tile loading if this isn't
+				// the exact zoom level we're looking for
+				if (zoom != currentZoomLevel)
+					continue;
+				tile = getOrCreateTile(t.x, t.y, zoom);
+				if (SlippyMapPreferences.getAutoloadTiles())
+					loadSingleTile(tile);
+			}
+			img = tile.getImage();
+			if (img == null)
+				continue;
+			if ((zoom != currentZoomLevel) && !tile.isDownloaded())
+				continue;
+			Point p = t.pixelPos(zoom);
+			/*
+			 * We need to get a box in which to draw, so advance by one tile in
+			 * each direction to find the other corner of the box
+			 */
+			Tile t2 = new Tile(t.x + 1, t.y + 1);
+			Point p2 = t2.pixelPos(zoom);
+
+			g.drawImage(img, p.x, p.y, p2.x - p.x, p2.y - p.y, this);
+			if (img == null)
+				continue;
+			if (imageScale == null && zoom == currentZoomLevel)
+				imageScale = new Double(getImageScaling(img, p, p2));
+			float fadeBackground = SlippyMapPreferences.getFadeBackground();
+			if (fadeBackground != 0f) {
+				// dimm by painting opaque rect...
+				g.setColor(new Color(1f, 1f, 1f, fadeBackground));
+				g.fillRect(p.x, p.y, p2.x - p.x, p2.y - p.y);
+			}
+		}// end of for
+		return imageScale;
+	}
+
+	void paintTileText(TileSet ts, Graphics g, MapView mv, int zoom, Tile t) {
+		int fontHeight = g.getFontMetrics().getHeight();
+
+		SlippyMapTile tile = getTile(t.x, t.y, zoom);
+		if (tile == null) {
+			return;
+		}
+		if (tile.getImage() == null) {
+			loadSingleTile(tile);
+		}
+		Point p = t.pixelPos(zoom);
+		int texty = p.y + 2 + fontHeight;
+
+		if (SlippyMapPreferences.getDrawDebug()) {
+			g.drawString("x=" + t.x + " y=" + t.y + " z=" + zoom + "", p.x + 2, texty);
+			texty += 1 + fontHeight;
+			if ((t.x % 32 == 0) && (t.y % 32 == 0)) {
+				g.drawString("x=" + t.x / 32 + " y=" + t.y / 32 + " z=7", p.x + 2, texty);
+				texty += 1 + fontHeight;
+			}
+		}// end of if draw debug
+
+		String md = tile.getMetadata();
+		if (md != null) {
+			g.drawString(md, p.x + 2, texty);
+			texty += 1 + fontHeight;
+		}
+
+		Image tileImage = tile.getImage();
+		if (tileImage == null) {
+			g.drawString(tr("image not loaded"), p.x + 2, texty);
+			texty += 1 + fontHeight;
+		}
+		if (!imageLoaded(tileImage)) {
+			g.drawString(tr("image loading..."), p.x + 2, texty);
+			needRedraw = true;
+			Main.map.repaint(100);
+			texty += 1 + fontHeight;
+		}
+
+		if (SlippyMapPreferences.getDrawDebug()) {
+			if (ts.leftTile(t)) {
+				if (t.y % 32 == 31) {
+					g.fillRect(0, p.y - 1, mv.getWidth(), 3);
+				} else {
+					g.drawLine(0, p.y, mv.getWidth(), p.y);
+				}
+			}
+		}// /end of if draw debug
+	}
+	
 	private class Tile {
 		public int x;
 		public int y;
@@ -439,196 +542,119 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
      */
     @Override
     public void paint(Graphics g, MapView mv) {
-        long start = System.currentTimeMillis();
-        LatLon topLeft = mv.getLatLon(0, 0);
-        LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
-        Graphics oldg = g;
+		long start = System.currentTimeMillis();
+		LatLon topLeft = mv.getLatLon(0, 0);
+		LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
+		Graphics oldg = g;
 
-        if (botRight.lon() == 0.0 || botRight.lat() == 0) {
-                // probably still initializing
-                return;
-        }
-        if (lastTopLeft != null && lastBotRight != null
-                && topLeft.equalsEpsilon(lastTopLeft)
-                && botRight.equalsEpsilon(lastBotRight) && bufferImage != null
-                && mv.getWidth() == bufferImage.getWidth(null)
-                && mv.getHeight() == bufferImage.getHeight(null) && !needRedraw) {
+		if (botRight.lon() == 0.0 || botRight.lat() == 0) {
+			// probably still initializing
+			return;
+		}
+		if (lastTopLeft != null && lastBotRight != null && topLeft.equalsEpsilon(lastTopLeft)
+				&& botRight.equalsEpsilon(lastBotRight) && bufferImage != null
+				&& mv.getWidth() == bufferImage.getWidth(null) && mv.getHeight() == bufferImage.getHeight(null)
+				&& !needRedraw) {
 
-            g.drawImage(bufferImage, 0, 0, null);
-            return;
-        }
+			g.drawImage(bufferImage, 0, 0, null);
+			return;
+		}
 
-        needRedraw = false;
-        lastTopLeft = topLeft;
-        lastBotRight = botRight;
-        bufferImage = mv.createImage(mv.getWidth(), mv.getHeight());
-        g = bufferImage.getGraphics();
+		needRedraw = false;
+		lastTopLeft = topLeft;
+		lastBotRight = botRight;
+		bufferImage = mv.createImage(mv.getWidth(), mv.getHeight());
+		g = bufferImage.getGraphics();
 
-        int zoom = currentZoomLevel;
-        z12x0 = lonToTileX(topLeft.lon(), zoom);
-        z12x1 = lonToTileX(botRight.lon(), zoom);
-        z12y0 = latToTileY(topLeft.lat(), zoom);
-        z12y1 = latToTileY(botRight.lat(), zoom);
+		TileSet ts = new TileSet(topLeft, botRight, currentZoomLevel);
+		int zoom = currentZoomLevel;
 
-        if (z12x0 > z12x1) {
-            int tmp = z12x0;
-            z12x0 = z12x1;
-            z12x1 = tmp;
-        }
-        if (z12y0 > z12y1) {
-            int tmp = z12y0;
-            z12y0 = z12y1;
-            z12y1 = tmp;
-        }
+		if (ts.tilesSpanned() > (18*18)) {
+			System.out.println("too many tiles, decreasing zoom from " + currentZoomLevel);
+			if (decreaseZoomLevel()) {
+				this.paint(oldg, mv);
+			}
+			return;
+		}//end of if more than 18*18
+		
+		if (ts.tilesSpanned() <= 0) {
+			System.out.println("doesn't even cover one tile, increasing zoom from " + currentZoomLevel);
+			if (increaseZoomLevel()) {
+				this.paint(oldg, mv);
+			}
+			return;
+		}
 
-        if (z12x1 - z12x0 > 18)
-            return;
-        if (z12y1 - z12y0 > 18)
-            return;
+		int fontHeight = g.getFontMetrics().getHeight();
 
-        for (int x = z12x0 - 1; x <= z12x1 + 1; x++) {
-            double lon = tileXToLon(x, zoom);
-            for (int y = z12y0 - 1; y <= z12y1 + 1; y++) {
-                LatLon tmpLL = new LatLon(tileYToLat(y, zoom), lon);
-                pixelpos[x - z12x0 + 1][y - z12y0 + 1] = mv.getPoint(Main.proj
-                        .latlon2eastNorth(tmpLL));
-            }
-        }
+		g.setColor(Color.DARK_GRAY);
 
-        int fontHeight = g.getFontMetrics().getHeight();
+		float fadeBackground = SlippyMapPreferences.getFadeBackground();
 
-        g.setColor(Color.DARK_GRAY);
+		/*
+		  * Go looking for tiles in zoom levels *other* than the current
+		  * one.  Even if they might look bad, they look better than a
+		  *  blank tile.
+		  */
+		int otherZooms[] = {2, -2, 1, -1};
+		for (int zoomOff : otherZooms) {
+			int zoom2 = currentZoomLevel + zoomOff;
+			if ((zoom <= 0) || (zoom > SlippyMapPreferences.getMaxZoomLvl())) {
+				continue;
+			}
+			TileSet ts2 = new TileSet(topLeft, botRight, zoom2);
+			this.paintTileImages(g, ts2, zoom2);
+			}
+		/*
+		 * Save this for last since it will get painted over all the others
+		 */
+		Double imageScale = this.paintTileImages(g, ts, currentZoomLevel);
+		g.setColor(Color.red);
+		
+		for (Tile t : ts.allTiles()) {
+			// This draws the vertical lines for the entire
+			// column.  Only draw them for the top tile in
+			// the column.
+			if (ts.topTile(t)) {
+				Point p = t.pixelPos(currentZoomLevel);
+				if (SlippyMapPreferences.getDrawDebug()) {
+					if (t.x % 32 == 0) {
+						// level 7 tile boundary
+						g.fillRect(p.x - 1, 0, 3, mv.getHeight());
+					} else {
+						g.drawLine(p.x, 0, p.x, mv.getHeight());
+					}
+				}
+			}
+			this.paintTileText(ts, g, mv, currentZoomLevel, t);
+		}
 
-        float fadeBackground = SlippyMapPreferences.getFadeBackground();
+		oldg.drawImage(bufferImage, 0, 0, null);
 
-        Double imageScale = null;
-        int count = 0;
-        for (int x = z12x0 - 1; x <= z12x1; x++) {
-            for (int y = z12y0 - 1; y <= z12y1; y++) {
-                SlippyMapKey key = new SlippyMapKey(x, y, currentZoomLevel);
-                SlippyMapTile tile;
-                tile = tileStorage.get(key);
-                if (!key.valid) {
-                        System.out.println("loadAllTiles() made invalid key");
-                        continue;
-                }
-                if (tile == null) {
-                    tile = new SlippyMapTile(x, y, currentZoomLevel);
-                    tileStorage.put(key, tile);
-                    if (SlippyMapPreferences.getAutoloadTiles()) {
-                        // TODO probably do on background
-                        loadSingleTile(tile);
-                    }
-                    checkTileStorage();
-                }
-                Image img = tile.getImage();
+		if (imageScale != null) {
+			// If each source image pixel is being stretched into > 3
+			// drawn pixels, zoom in... getting too pixelated
+			if (imageScale > 3) {
+				if (SlippyMapPreferences.getAutozoom()) {
+					Main.debug("autozoom increase: scale: " + imageScale);
+					increaseZoomLevel();
+				}
+				this.paint(oldg, mv);
+			}
 
-                if (img != null) {
-                    Point p = pixelpos[x - z12x0 + 1][y - z12y0 + 1];
-                    Point p2 = pixelpos[x - z12x0 + 2][y - z12y0 + 2];
-                    g.drawImage(img, p.x, p.y, p2.x - p.x, p2.y - p.y, this);
-                    if (imageScale == null)
-                        imageScale = new Double(getImageScaling(img, p, p2));
-                    count++;
-                    if (fadeBackground != 0f) {
-                        // dimm by painting opaque rect...
-                        g.setColor(new Color(1f, 1f, 1f, fadeBackground));
-                        g.fillRect(p.x, p.y, p2.x - p.x, p2.y - p.y);
-                    }// end of if dim != 0
-                }// end of if img != null
-            }// end of for
-        }// end of for
-        g.setColor(Color.red);
-        for (int x = z12x0 - 1; x <= z12x1; x++) {
-            Point p = pixelpos[x - z12x0 + 1][0];
-
-            if(SlippyMapPreferences.getDrawDebug()) {
-                if (x % 32 == 0) {
-                    // level 7 tile boundary
-                    g.fillRect(p.x - 1, 0, 3, mv.getHeight());
-                } else {
-                    g.drawLine(p.x, 0, p.x, mv.getHeight());
-                }
-            }//end of if draw debug
-
-            for (int y = z12y0 - 1; y <= z12y1; y++) {
-                SlippyMapKey key = new SlippyMapKey(currentZoomLevel, x, y);
-                int texty = p.y + 2 + fontHeight;
-                SlippyMapTile tile = tileStorage.get(key);
-                if (tile == null) {
-                    continue;
-                }
-                if (!key.valid) {
-                        System.out.println("paint-0() made invalid key");
-                        continue;
-                }
-                if (tile.getImage() == null) {
-                        loadSingleTile(tile);
-                }
-                p = pixelpos[x - z12x0 + 1][y - z12y0 + 2];
-
-                if(SlippyMapPreferences.getDrawDebug()) {
-                    g.drawString("x=" + x + " y=" + y + " z=" + currentZoomLevel
-                            + "", p.x + 2, texty);
-                    texty += 1 + fontHeight;
-                    if ((x % 32 == 0) && (y % 32 == 0)) {
-                        g.drawString("x=" + x / 32 + " y=" + y / 32 + " z=7",
-                                p.x + 2, texty);
-                        texty += 1 + fontHeight;
-                    }
-                }//end of if draw debug
-
-                String md = tile.getMetadata();
-                if (md != null) {
-                    g.drawString(md, p.x + 2, texty);
-                    texty += 1 + fontHeight;
-                }
-
-                if (tile.getImage() == null) {
-                    g.drawString(tr("image not loaded"), p.x + 2, texty);
-                    texty += 1 + fontHeight;
-                }
-
-                if(SlippyMapPreferences.getDrawDebug()) {
-                    if (x == z12x0 - 1) {
-                        if (y % 32 == 31) {
-                            g.fillRect(0, p.y - 1, mv.getWidth(), 3);
-                        } else {
-                            g.drawLine(0, p.y, mv.getWidth(), p.y);
-                        }
-                    }
-                }//end of if draw debug
-            } // end of for
-        }
-
-        oldg.drawImage(bufferImage, 0, 0, null);
-
-        if (imageScale != null) {
-            // If each source image pixel is being stretched into > 3
-            // drawn pixels, zoom in... getting too pixelated
-            if (imageScale > 3) {
-                if (SlippyMapPreferences.getAutozoom()) {
-                    Main.debug("autozoom increase: "+z12x1+" " + z12x0 + " " + z12y1 + " " + z12y0
-                                    + topLeft + " " + botRight + " scale: " + imageScale);
-                    increaseZoomLevel();
-                }
-                this.paint(oldg, mv);
-            }
-
-            // If each source image pixel is being squished into > 0.32
-            // of a drawn pixels, zoom out.
-            if (imageScale < 0.32) {
-                if (SlippyMapPreferences.getAutozoom()) {
-                    Main.debug("autozoom decrease: "+z12x1+" " + z12x0 + " " + z12y1 + " " + z12y0
-                                    + topLeft + " " + botRight + " scale: " + imageScale);
-                    decreaseZoomLevel();
-                }
-                this.paint(oldg, mv);
-            }
-        }
-        g.setColor(Color.black);
-        g.drawString("currentZoomLevel=" + currentZoomLevel, 120, 120);
-    }// end of paint method
+			// If each source image pixel is being squished into > 0.32
+			// of a drawn pixels, zoom out.
+			if (imageScale < 0.32) {
+				if (SlippyMapPreferences.getAutozoom()) {
+					Main.debug("autozoom decrease: scale: " + imageScale);
+					decreaseZoomLevel();
+				}
+				this.paint(oldg, mv);
+			}
+		}
+		g.setColor(Color.black);
+		g.drawString("currentZoomLevel=" + currentZoomLevel, 120, 120);
+	}// end of paint method
 
     /**
      * This isn't very efficient, but it is only used when the

@@ -66,7 +66,7 @@ public class UnconnectedWays extends Test
         {
             for(MyWaySegment s : ways)
             {
-                if(s.highway && s.nearby(en, mindist) && (a == null || a.contains(en.coor)))
+                if(s.highway && s.nearby(en, mindist) && (a == null || a.contains(en.getCoor())))
                     map.put(en, s.w);
             }
         }
@@ -84,7 +84,7 @@ public class UnconnectedWays extends Test
         {
             for(MyWaySegment s : ways)
             {
-                if(!s.highway && s.nearby(en, mindist) && !s.isArea() && (a == null || a.contains(en.coor)))
+                if(!s.highway && s.nearby(en, mindist) && !s.isArea() && (a == null || a.contains(en.getCoor())))
                     map.put(en, s.w);
             }
         }
@@ -92,7 +92,7 @@ public class UnconnectedWays extends Test
         {
             for(MyWaySegment s : ways)
             {
-                if(s.nearby(en, mindist) && !s.isArea() && (a == null || a.contains(en.coor)))
+                if(s.nearby(en, mindist) && !s.isArea() && (a == null || a.contains(en.getCoor())))
                     map.put(en, s.w);
             }
         }
@@ -113,7 +113,7 @@ public class UnconnectedWays extends Test
             {
                 for(MyWaySegment s : ways)
                 {
-                    if(s.nearby(en, minmiddledist) && (a == null || a.contains(en.coor)))
+                    if(s.nearby(en, minmiddledist) && (a == null || a.contains(en.getCoor())))
                         map.put(en, s.w);
                 }
             }
@@ -131,7 +131,7 @@ public class UnconnectedWays extends Test
             {
                 for(MyWaySegment s : ways)
                 {
-                    if(s.nearby(en, minmiddledist) && (a == null || a.contains(en.coor)))
+                    if(s.nearby(en, minmiddledist) && (a == null || a.contains(en.getCoor())))
                         map.put(en, s.w);
                 }
             }
@@ -159,14 +159,14 @@ public class UnconnectedWays extends Test
         {
             this.w = w;
             this.highway = w.get("highway") != null || w.get("railway") != null;
-            line = new Line2D.Double(n1.eastNorth.east(), n1.eastNorth.north(),
-            n2.eastNorth.east(), n2.eastNorth.north());
+            line = new Line2D.Double(n1.getEastNorth().east(), n1.getEastNorth().north(),
+            n2.getEastNorth().east(), n2.getEastNorth().north());
         }
 
         public boolean nearby(Node n, double dist)
         {
             return !w.nodes.contains(n)
-            && line.ptSegDist(n.eastNorth.east(), n.eastNorth.north()) < dist;
+            && line.ptSegDist(n.getEastNorth().east(), n.getEastNorth().north()) < dist;
         }
         
         public boolean isArea() {

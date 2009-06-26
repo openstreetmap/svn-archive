@@ -202,10 +202,10 @@ public class CrossingWays extends Test
             }
 
             return Line2D.linesIntersect(
-                n1.eastNorth.east(), n1.eastNorth.north(),
-                n2.eastNorth.east(), n2.eastNorth.north(),
-                s2.n1.eastNorth.east(), s2.n1.eastNorth.north(),
-                s2.n2.eastNorth.east(), s2.n2.eastNorth.north());
+                n1.getEastNorth().east(), n1.getEastNorth().north(),
+                n2.getEastNorth().east(), n2.getEastNorth().north(),
+                s2.n1.getEastNorth().east(), s2.n1.getEastNorth().north(),
+                s2.n2.getEastNorth().east(), s2.n2.getEastNorth().north());
         }
     }
 }

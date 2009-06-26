@@ -11,7 +11,6 @@ import java.util.Set;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin;
 
 /**
@@ -50,10 +49,10 @@ public class Util
         Point2D cell;
 
         // First, round coordinates
-        long x0 = Math.round(n1.eastNorth.east()  * OSMValidatorPlugin.griddetail);
-        long y0 = Math.round(n1.eastNorth.north() * OSMValidatorPlugin.griddetail);
-        long x1 = Math.round(n2.eastNorth.east()  * OSMValidatorPlugin.griddetail);
-        long y1 = Math.round(n2.eastNorth.north() * OSMValidatorPlugin.griddetail);
+        long x0 = Math.round(n1.getEastNorth().east()  * OSMValidatorPlugin.griddetail);
+        long y0 = Math.round(n1.getEastNorth().north() * OSMValidatorPlugin.griddetail);
+        long x1 = Math.round(n2.getEastNorth().east()  * OSMValidatorPlugin.griddetail);
+        long y1 = Math.round(n2.getEastNorth().north() * OSMValidatorPlugin.griddetail);
 
         // Start of the way
         cell = new Point2D.Double(x0, y0);
@@ -81,10 +80,10 @@ public class Util
         }
 
         // Then floor coordinates, in case the way is in the border of the cell.
-        x0 = (long)Math.floor(n1.eastNorth.east()  * OSMValidatorPlugin.griddetail);
-        y0 = (long)Math.floor(n1.eastNorth.north() * OSMValidatorPlugin.griddetail);
-        x1 = (long)Math.floor(n2.eastNorth.east()  * OSMValidatorPlugin.griddetail);
-        y1 = (long)Math.floor(n2.eastNorth.north() * OSMValidatorPlugin.griddetail);
+        x0 = (long)Math.floor(n1.getEastNorth().east()  * OSMValidatorPlugin.griddetail);
+        y0 = (long)Math.floor(n1.getEastNorth().north() * OSMValidatorPlugin.griddetail);
+        x1 = (long)Math.floor(n2.getEastNorth().east()  * OSMValidatorPlugin.griddetail);
+        y1 = (long)Math.floor(n2.getEastNorth().north() * OSMValidatorPlugin.griddetail);
 
         // Start of the way
         cell = new Point2D.Double(x0, y0);
@@ -130,10 +129,10 @@ public class Util
     public static List<Point2D> getSegmentCells(Node n1, Node n2, double gridDetail)
     {
         List<Point2D> cells = new ArrayList<Point2D>();
-        double x0 = n1.eastNorth.east() * gridDetail;
-        double x1 = n2.eastNorth.east() * gridDetail;
-        double y0 = n1.eastNorth.north() * gridDetail + 1;
-        double y1 = n2.eastNorth.north() * gridDetail + 1;
+        double x0 = n1.getEastNorth().east() * gridDetail;
+        double x1 = n2.getEastNorth().east() * gridDetail;
+        double y0 = n1.getEastNorth().north() * gridDetail + 1;
+        double y1 = n2.getEastNorth().north() * gridDetail + 1;
 
         if( x0 > x1 )
         {

@@ -11,8 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.TreeSet;
 
 import javax.swing.AbstractAction;
@@ -49,7 +51,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
      * {@link SlippyMapPreferences#getMinZoomLvl()}.
      */
     public int currentZoomLevel = SlippyMapPreferences.getMinZoomLvl();
-    private HashMap<SlippyMapKey, SlippyMapTile> tileStorage = null;
+    private Hashtable<SlippyMapKey, SlippyMapTile> tileStorage = null;
 
     Point[][] pixelpos = new Point[21][21];
     LatLon lastTopLeft;
@@ -208,7 +210,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         // when max zoom lvl is begin saved, this method is called and probably
         // the setting isnt saved yet.
         int maxZoom = 30; // SlippyMapPreferences.getMaxZoomLvl();
-        tileStorage = new HashMap<SlippyMapKey, SlippyMapTile>();
+        tileStorage = new Hashtable<SlippyMapKey, SlippyMapTile>();
 
         checkTileStorage();
     }
@@ -265,6 +267,32 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         this.checkTileStorage();
     }
 
+    synchronized SlippyMapTile getTile(int x, int y, int zoom) {
+		SlippyMapKey key = new SlippyMapKey(x, y, zoom);
+		if (!key.valid) {
+			key = null;
+		}
+		return tileStorage.get(key);
+	}
+
+	synchronized SlippyMapTile putTile(SlippyMapTile tile, int x, int y, int zoom) {
+		SlippyMapKey key = new SlippyMapKey(x, y, zoom);
+		if (!key.valid) {
+			key = null;
+		}
+		return tileStorage.put(key, tile);
+	}
+
+	synchronized SlippyMapTile getOrCreateTile(int x, int y, int zoom) {
+		SlippyMapTile tile = getTile(x, y, zoom);
+		if (tile != null) {
+			return tile;
+		}
+		tile = new SlippyMapTile(x, y, zoom);
+		putTile(tile, x, y, zoom);
+		return tile;
+	}
+    
     void loadAllTiles() {
         MapView mv = Main.map.mapView;
         int zoom = currentZoomLevel;
@@ -355,6 +383,84 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         return drawArea / realArea;
     }
 
+	private class Tile {
+		public int x;
+		public int y;
+
+		Tile(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		public Point pixelPos(int zoom) {
+			double lon = tileXToLon(this.x, zoom);
+			LatLon tmpLL = new LatLon(tileYToLat(this.y, zoom), lon);
+			MapView mv = Main.map.mapView;
+			return mv.getPoint(Main.proj.latlon2eastNorth(tmpLL));
+		}
+	}
+
+	private class TileSet {
+		int z12x0, z12x1, z12y0, z12y1;
+		int zoom;
+
+		TileSet(LatLon topLeft, LatLon botRight, int zoom) {
+			this.zoom = zoom;
+			z12x0 = lonToTileX(topLeft.lon(), zoom);
+			z12x1 = lonToTileX(botRight.lon(), zoom);
+			z12y0 = latToTileY(topLeft.lat(), zoom);
+			z12y1 = latToTileY(botRight.lat(), zoom);
+			if (z12x0 > z12x1) {
+				int tmp = z12x0;
+				z12x0 = z12x1;
+				z12x1 = tmp;
+			}
+			if (z12y0 > z12y1) {
+				int tmp = z12y0;
+				z12y0 = z12y1;
+				z12y1 = tmp;
+			}
+		}
+
+		int tilesSpanned() {
+			int x_span = z12x1 - z12x0;
+			int y_span = z12y1 - z12y0;
+			return x_span * y_span;
+		}
+
+		/*
+		 * This is pretty silly. Should probably just be implemented as an
+		 * iterator to keep from having to instantiate all these tiles.
+		 */
+		List<Tile> allTiles()
+        {
+            List<Tile> ret = new ArrayList<Tile>();
+            for (int x = z12x0 - 1; x <= z12x1 + 1; x++) {
+                if (x < 0)
+                    continue;
+                for (int y = z12y0 - 1; y <= z12y1 + 1; y++) {
+                    if (y < 0)
+                        continue;
+                    Tile t = new Tile(x, y);
+                    ret.add(t);
+                }
+            }
+            return ret;
+        }
+
+		boolean topTile(Tile t) {
+			if (t.y == z12y0 - 1)
+				return true;
+			return false;
+		}
+
+		boolean leftTile(Tile t) {
+			if (t.x == z12x0 - 1)
+				return true;
+			return false;
+		}
+	}
+	
     /**
      */
     @Override

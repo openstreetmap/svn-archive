@@ -67,13 +67,13 @@ public class NewAction {
             result = HttpUtils.post(uri, null, post, CHARSET);
         }
 
-        Pattern resultPattern = Pattern.compile("ok\\s+(\\d+)");
+        Pattern resultPattern = Pattern.compile("ok\\s+(\\d+)\\s*");
         Matcher m = resultPattern.matcher(result);
         String id = "-1";
         if(m.matches()) {
             id = m.group(1);
         } else {
-            throw new RuntimeException(tr("Couldn't create new bug. Result: {0}" + result));
+            throw new RuntimeException(tr("Couldn't create new bug. Result: {0}", result));
         }
 
         Node osmNode = new Node(latlon);

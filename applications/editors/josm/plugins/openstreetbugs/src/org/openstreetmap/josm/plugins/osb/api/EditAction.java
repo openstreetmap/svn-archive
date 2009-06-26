@@ -59,7 +59,7 @@ public class EditAction {
             result = HttpUtils.post(uri, null, post, CHARSET);
         }
 
-        if("ok".equalsIgnoreCase(result)) {
+        if("ok".equalsIgnoreCase(result) || "comment added\n".equalsIgnoreCase(result)) {
             String desc = n.get("note");
             desc = desc.concat("<hr />").concat(comment);
             n.put("note", desc);

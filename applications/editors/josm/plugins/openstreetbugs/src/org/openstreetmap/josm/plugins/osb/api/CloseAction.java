@@ -56,7 +56,7 @@ public class CloseAction {
             result = HttpUtils.post(uri, null, post, CHARSET);
         }
 
-        if("ok".equalsIgnoreCase(result)) {
+        if("ok".equalsIgnoreCase(result.trim())) {
             n.put("state", "1");
             Main.map.mapView.repaint();
         } else {

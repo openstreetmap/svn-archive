@@ -13,6 +13,10 @@ try:
     import xml.etree.cElementTree as ET
 except ImportError:
     import cElementTree as ET
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 class Feature(osmparser.OSMObj):
     filtered = False
@@ -35,12 +39,12 @@ class ParseXML:
     filter = []       # Filtering for a particular element in the naptan
     passive = False
     
-    def __init__(self, of, filt, passive=False):
+    def __init__(self, of, options):
         self.parentnodes = dict.fromkeys(self.watchnodes, False)
         self.outfile = of
-        if filt:
+        self.options = options
+        if options.filter:
             self.filter = filt.upper().split(':')
-        self.passive = passive
         
     def startElement(self, elem):
         node = self.cleannode(elem)
@@ -101,7 +105,7 @@ class ParseXML:
                 self.feature.tags[key] = value
 
             # Only do the first tag (most often empty, so copies naptan:value)
-            if self.passive:
+            if self.options.passive:
                 break
 
     def addtomap(self, text, feature, map, features=[]):
@@ -168,9 +172,6 @@ class ParseNaptan(ParseXML):
     
     # dict of form {stoparearef: [osmstoppointid, osmstoparearaid, ...]}
     stopareamap = {}
-    # Some ParentStopAreas are in other datasets (eg national), make a note so we can link back.
-    # TODO: mechanism for pulling in PSAs that are already imported.
-    missingparentarea = []
     # Used when storing StopAreas which could require further modification
     features = {}
     
@@ -241,7 +242,7 @@ class ParseNaptan(ParseXML):
                 # This is a 'legacy' node according to the schema, but it should still work
                 st = elem.text
                 if st == 'BCT' or st == 'BCQ' or st == 'BCS':
-                    if not self.passive:
+                    if not self.options.passive:
                         self.feature.tags['highway'] = 'bus_stop'
                 #elif st == 'BST':       # check exactly what NaPTAN means by "busCoachStationAccessArea"
                     #self.feature.tag['amenity'] = 'bus_station'
@@ -257,6 +258,8 @@ class ParseNaptan(ParseXML):
                     self.cancelfeature()
                 elif bst == 'CUS':
                     self.feature.tags['naptan:BusStopType'] = 'CUS'
+                    if self.feature.tags['highway']:
+                      del self.feature.tags['highway']
             
             elif node == 'StopAreaRef':
                 self.addtomap(elem.text, self.feature, self.stopareamap)
@@ -304,10 +307,14 @@ class ParseNaptan(ParseXML):
             else:
                 areacount -= 1
         self.features = None
+
+        pickles = open("%s.noparentarea.pkl" % (self.options.filenamebase), 'wb')
+        pickle.dump(self.stopareamap, pickles)
+        pickles.close()
         
-        print "Parsed %s StopPoints and %s StopAreas" % (self.nodecounter, self.relationcounter)
-        print "Output %s StopPoints and %s StopAreas" % (self.pointcount, areacount)
-        print self.stopareamap
+        print "Parsed %d StopPoints and %d StopAreas" % (self.nodecounter, self.relationcounter)
+        print "Output %d StopPoints and %d StopAreas" % (self.pointcount, areacount)
+        print "Pickled %d missing parental StopArea references" % (len(self.stopareamap))
 
 
 class ParseNPTG(ParseXML):
@@ -325,9 +332,9 @@ def treeparse(f, of, options):
     event, root = it.next()
     
     if root.tag == ParseNaptan.namespace + 'NaPTAN':
-        parser = ParseNaptan(of, options.filter, options.passive)
+        parser = ParseNaptan(of, options)
     elif root.tag == ParseNPTG.namespace + 'NationalPublicTransportGazetteer':
-        parser = ParseNPTG(of, options.filter, options.passive)
+        parser = ParseNPTG(of, options)
     else:
         raise Exception, "Unknown XML type"
     
@@ -360,9 +367,11 @@ if __name__ == "__main__":
     
     filename = args[0]
     infile = open(filename)
+
+    options.filenamebase = filename.rpartition('.')[0]
     
     if not options.outfile:
-        options.outfile = '%s.osm' % (filename.rpartition('.')[0])
+        options.outfile = '%s.osm' % (options.filenamebase)
     outfile = open(options.outfile, 'w')
     
     xml = treeparse(infile, outfile, options)

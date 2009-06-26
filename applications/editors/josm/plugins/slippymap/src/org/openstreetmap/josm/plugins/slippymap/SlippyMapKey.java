@@ -11,7 +11,6 @@ package org.openstreetmap.josm.plugins.slippymap;
  * 
  * @author LuVar <lubomir.varga@freemap.sk>
  * @author Dave Hansen <dave@sr71.net>
- * @author Dave Hansen <dave@linux.vnet.ibm.com>
  *
  */
 public class SlippyMapKey {

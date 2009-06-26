@@ -39,7 +39,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Frederik Ramm <frederik@remote.org>
  * @author LuVar <lubomir.varga@freemap.sk>
  * @author Dave Hansen <dave@sr71.net>
- *
+ * @author Dave Hansen <dave@linux.vnet.ibm.com>
+ * 
  */
 public class SlippyMapLayer extends Layer implements ImageObserver,
     PreferenceChangedListener {
@@ -278,7 +279,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
         for (int x = z12x0 - 1; x <= z12x1; x++) {
             for (int y = z12y0 - 1; y <= z12y1; y++) {
-                SlippyMapKey key = new SlippyMapKey(currentZoomLevel, x, y);
+                SlippyMapKey key = new SlippyMapKey(x, y, currentZoomLevel);
                 SlippyMapTile tile = tileStorage.get(key);
                 if (!key.valid) {
                         System.out.println("paint-1() made invalid key");
@@ -294,21 +295,41 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         }
     }
 
-    /*
-     * Attempt to approximate how much the image is
-     * being scaled.  For instance, a 100x100 image
-     * being scaled to 50x50 would return 0.25.
-     */
-    double getImageScaling(Image img, Point p0, Point p1)
-    {
-        int realWidth = img.getWidth(this);
-        int realHeight = img.getHeight(this);
-        if (realWidth == -1 || realHeight == -1)
-                return 1.0;
-        int drawWidth = p1.x - p0.x;
-        int drawHeight = p1.x - p0.x;
+	/*
+	 * Attempt to approximate how much the image is being scaled. For instance,
+	 * a 100x100 image being scaled to 50x50 would return 0.25.
+	 */
+	Image lastScaledImage = null;
 
-        double drawArea = drawWidth * drawHeight;
+	double getImageScaling(Image img, Point p0, Point p1) {
+		int realWidth = img.getWidth(this);
+		int realHeight = img.getHeight(this);
+		if (realWidth == -1 || realHeight == -1) {
+			/*
+			 * We need a good image against which to work. If
+			 * the current one isn't loaded, then try the last one.
+			 * Should be good enough. If we've never seen one, then
+			 * guess.        
+			 */
+			if (lastScaledImage != null) {
+				return getImageScaling(lastScaledImage, p0, p1);
+			}
+			realWidth = 256;
+			realHeight = 256;
+		} else {
+			lastScaledImage = img;
+		}
+		/*
+		 * If the zoom scale gets really, really off, these can get into
+		 * the millions, so make this a double to prevent integer
+		 * overflows.        
+		 */
+		double drawWidth = p1.x - p0.x;
+		double drawHeight = p1.x - p0.x;
+		// stem.out.println("drawWidth: " + drawWidth + " drawHeight: " +
+		// drawHeight);
+
+		double drawArea = drawWidth * drawHeight;
         double realArea = realWidth * realHeight;
 
         return drawArea / realArea;
@@ -383,7 +404,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         int count = 0;
         for (int x = z12x0 - 1; x <= z12x1; x++) {
             for (int y = z12y0 - 1; y <= z12y1; y++) {
-                SlippyMapKey key = new SlippyMapKey(currentZoomLevel, x, y);
+                SlippyMapKey key = new SlippyMapKey(x, y, currentZoomLevel);
                 SlippyMapTile tile;
                 tile = tileStorage.get(key);
                 if (!key.valid) {
@@ -531,7 +552,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             return null;
         }
 
-        SlippyMapKey key = new SlippyMapKey(currentZoomLevel, tilex, tiley);
+        SlippyMapKey key = new SlippyMapKey(tilex, tiley, currentZoomLevel);
         if (!key.valid) {
             System.err.println("getTileForPixelpos("+px+","+py+") made invalid key");
             return null;
@@ -560,7 +581,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
                 new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
                 new JSeparator(),
                 // color,
-                new JMenuItem(new RenameLayerAction(getAssociatedFile(), this)),
+                new JMenuItem(new RenameLayerAction(this.getAssociatedFile(), this)),
                 new JSeparator(),
                 new JMenuItem(new LayerListPopup.InfoAction(this)) };
     }

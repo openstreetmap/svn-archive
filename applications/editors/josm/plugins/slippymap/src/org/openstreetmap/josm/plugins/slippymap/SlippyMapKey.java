@@ -11,6 +11,7 @@ package org.openstreetmap.josm.plugins.slippymap;
  * 
  * @author LuVar <lubomir.varga@freemap.sk>
  * @author Dave Hansen <dave@sr71.net>
+ * @author Dave Hansen <dave@linux.vnet.ibm.com>
  *
  */
 public class SlippyMapKey {
@@ -28,7 +29,7 @@ public class SlippyMapKey {
 	 * @param y	y position in tiles table
 	 */
 	public final boolean valid;
-	public SlippyMapKey(int level, int x, int y) {
+	public SlippyMapKey(int x, int y, int level) {
 		this.x = x;
 		this.y = y;
 		this.level = level;

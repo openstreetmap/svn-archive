@@ -1,0 +1,8 @@
+README 
+======
+
+This plugin adds additional file formats into file open dialog.
+
+Following file formats are support:
+
+- TangoGPS

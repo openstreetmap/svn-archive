@@ -7,6 +7,7 @@ VERSION = 0.0.0.$(TODAY)
 DESTDIR=
 prefix = /usr/local
 bindir = $(prefix)/bin
+datarootdir = $(prefix)/share
 
 CFLAGS=-O2 -DRES_DIR=\"$(prefix)/share/gosmore/\"
 WARNFLAGS= -W -Wall
@@ -108,8 +109,10 @@ zip:
 install: gosmore
 	mkdir -p $(DESTDIR)$(bindir)
 	cp gosmore $(DESTDIR)$(bindir)/.
-	mkdir -p $(DESTDIR)$(prefix)/share/gosmore
-	cp -a elemstyles.xml icons.csv icons.xpm $(DESTDIR)$(prefix)/share/gosmore
+	mkdir -p $(DESTDIR)$(datarootdir)/gosmore
+	cp -a elemstyles.xml icons.csv icons.xpm $(DESTDIR)$(datarootdir)/gosmore
+	mkdir -p $(DESTDIR)$(datarootdir)/man/man1
+	gzip <gosmore.1 >$(DESTDIR)$(datarootdir)/man/man1/gosmore.1.gz
 
 dist:
 	mkdir gosmore-$(VERSION)

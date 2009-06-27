@@ -1,0 +1,54 @@
+.TH GOSMORE 1 "27 June 2009"
+
+.SH NAME
+gosmore \- Viewer for OpenStreetMap data, with routing and searching
+
+.SH SYNONPSIS
+\fBgosmore\fP [\fBrebuild\fR [minlatitude minlongitude maxlat maxlong]
+
+QUERY_STRING="flat=...&flon=...&tlat=...&tlon=...&fast=[01]&v=..." gosmore
+
+.SH DESCRIPTION
+\fBgosmore\fR is a GTK+ application for viewing OpenStreetMap data. It can
+calculate the fastest route between two points. It can also has incremental
+search capability and the results are ordered by distance from the current
+viewpoint.
+
+See the wiki page for details on two pass bounding box rebuilding.
+
+Note that the binary file format is not yet stable and rebuilding is
+recommended after upgrading.
+
+.SH FILES
+.TP
+.I /usr/share/gosmore/elemstyles.xml ~/.gosmore/elemstyles.xml
+.RS
+This file determines how each OSM element is rendered and how it affects
+routing. A list of valid icons cans be found in /usr/share/gosmore/icons.csv
+.RE
+.I gosmore.pak
+.RS
+The binary data created during rebuild
+.RE
+
+.SH ENVIRONMENT
+.TP
+\fBQUERY_STRING\fR If this variable is set, gosmore will try to compute the
+specified route, output the result and then exit (ie. headless query).
+
+.SH EXAMPLE
+.TP
+wget http://download.cloudmade.com/europe/denmark/denmark.osm.bz2
+.TP
+bzcat denmark.osm.bz2 | gosmore rebuild
+.TP
+gosmore
+
+.SH SEE ALSO
+\fBJOSM\fR, \fBgpds\fR \fBnav-it\fR
+
+http://wiki.openstreetmap.org/wiki/Gosmore
+
+.SH AUTHOR
+\fBNic Roets <nroets@gmail.com>\fR with contributions from David Dean and
+many others.

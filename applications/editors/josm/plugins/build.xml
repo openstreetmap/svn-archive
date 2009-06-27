@@ -10,6 +10,7 @@
         <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
         <ant antfile="build.xml" target="dist" dir="Create_grid_of_ways"/>
+        <ant antfile="build.xml" target="dist" dir="dataimport"/>
         <ant antfile="build.xml" target="dist" dir="DirectUpload"/>
         <ant antfile="build.xml" target="dist" dir="editgpx"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
@@ -49,6 +50,7 @@
         <ant antfile="build.xml" target="clean" dir="colorscheme"/>
         <ant antfile="build.xml" target="clean" dir="Create_grid_of_ways"/>
         <ant antfile="build.xml" target="clean" dir="czechaddress"/>
+        <ant antfile="build.xml" target="clean" dir="dataimport"/>
         <ant antfile="build.xml" target="clean" dir="DirectUpload"/>
         <ant antfile="build.xml" target="clean" dir="duplicateway"/>
         <ant antfile="build.xml" target="clean" dir="editgpx"/>

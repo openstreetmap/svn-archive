@@ -90,6 +90,7 @@
     <ant target="build-lang"><property name="language" value="sl"/></ant>
     <ant target="build-lang"><property name="language" value="sv"/></ant>
     <ant target="build-lang"><property name="language" value="tr"/></ant>
+    <ant target="build-lang"><property name="language" value="zh_TW"/></ant>
 
     <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
       <env key="LANG" value="C"/>

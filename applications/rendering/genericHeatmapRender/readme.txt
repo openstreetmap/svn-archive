@@ -39,6 +39,7 @@ your mileage may vary if you use older libs than this.
 
 Matplotlib 0.98.5.2 (http://matplotlib.sourceforge.net/users/installing.html)
 Numpy 1.3.0
+Python Flickr API (http://stuvel.eu/projects/flickrapi)
 
 You'll need to be using Python 2.5 or later.
 

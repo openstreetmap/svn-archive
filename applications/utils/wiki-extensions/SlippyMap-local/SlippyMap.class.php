@@ -173,6 +173,8 @@ class SlippyMap {
 			$layerObjectDef = 'OpenLayers.Layer.OSM.Mapnik("Mapnik"); ';
 		} elseif ( $layer == 'maplint' ) {
 			$layerObjectDef = 'OpenLayers.Layer.OSM.Maplint("Maplint"); ';
+		} elseif ( $layer == 'cycle' ) {
+			$layerObjectDef = 'OpenLayers.Layer.OSM.CycleMap("OpenCycleMap"); ';
 		} else {
 			$error = wfMsg( 'slippymap_invalidlayer',  htmlspecialchars( $layer ) );
 		}

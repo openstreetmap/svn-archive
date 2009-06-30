@@ -106,6 +106,7 @@ poitagmap = {
      (0x6500, 0x650d): {'natural': 'water'},
      (0x6501,): {'natural': 'glacier'}, # added by JR - TODO tourism=attraction too?
      (0x6508,): {'waterway': 'waterfall'},
+     (0x650c,): {'place': 'islet'},  # added by JR - v2
      (0x6511,): {'natural': 'spring'}, # added by JR - natural spring source
      (0x6513,): {'natural': 'wetland'}, # added by JR
      (0x6600,): {'place': 'locality', 'natural': 'hill', 'linz:comment': 'FIXME - hill?'}, # added by JR.. TODO check these, most seem to be in northland
@@ -157,6 +158,7 @@ polygontagmap = {
      (0x8,): {'landuse': 'retail', 'building': 'shops'}, # added by JR, cf. 0x8 polyline which is a ramp
      (0xd,): {'landuse': 'reservation', 'area': 'yes'}, # reservation is not even a proposed value TODO JR: this looks weird to me
      (0x13,): {'building': 'yes', 'area': 'yes'}, # added by JR - buildings, including hospitals or other random ones, esp present in Waikato
+	(0x14,0x15): {'natural': 'wood', 'area': 'yes'}, # added by JR - v2
      (0x17,): {'leisure': 'park', 'area': 'yes'}, # added by JR - city park
      (0x18,): {'leisure': 'golf_course', 'area': 'yes'},
      (0x19,): {'leisure': 'sports_centre', 'area': 'yes', 'linz:todo': 'check type'}, # added by JR, TODO (check, sports_centre implies a building, but is at least rendered green). examples found in LINZ include sports parks, race courses, stadiums, cricket 'domains'..
@@ -170,8 +172,9 @@ polygontagmap = {
     }
 
 sufi=None
-
+found=False
 for line in file_mp:
+    print line
     # Marker for start of sections
     if line.startswith(';sufi'):
      sufi = line.split('=')[1].strip();
@@ -242,10 +245,14 @@ for line in file_mp:
             typecode = int(typecode, 16)
             for codes, taglist in elementtagmap.iteritems():
                 if typecode in codes:
+                    found=True
                     for key, value in taglist.iteritems():
                         tag = ET.Element('tag', k=key, v=value)
                         tag.tail = '\n    '
                         node.append(tag)
+            if found==False :
+                print 'ptang missing 0x%x poi:%s line:%s poly:%s sufi:%s' % (typecode, poi, polyline, polygon, sufi)
+                found=False;
         if line.startswith('RoadID'):
             roadid = line.split('=')[1].strip()
             tag = ET.Element('tag', k='linz:RoadID',v=roadid)

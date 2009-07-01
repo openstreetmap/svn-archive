@@ -25,6 +25,7 @@ class SrtmTile
 {
     public:
         SrtmTile(QString file, int lat, int lon);
+        ~SrtmTile();
         int getPixelValue(int x, int y);
         float getAltitudeFromLatLon(float lat, float lon);
     private:

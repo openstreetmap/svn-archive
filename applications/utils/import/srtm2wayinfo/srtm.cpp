@@ -80,7 +80,6 @@ void SrtmDownloader::createFileList()
         int error = curl_easy_perform(curl);
         if (error) {
             qCritical() << "Error downloading data for" << continent;
-            //TODO: Terminate program???
         }
         int index = -1;
         while ((index = curlData.indexOf(regex, index+1)) != -1) {
@@ -99,11 +98,15 @@ void SrtmDownloader::createFileList()
     }
     curlData.clear(); //Free mem
 
-    Q_ASSERT(fileList.size() == SRTM_FILE_COUNT);
+    if (fileList.size() != SRTM_FILE_COUNT) {
+        qCritical() << "Could not download complete list of tiles from SRTM server.";
+        exit(1);
+    }
     
     QFile file(cachedir+"filelist");
     if (!file.open(QIODevice::WriteOnly)) {
         qCritical() << "Could not open file" << cachedir+"filelist";
+        //Not a fatal error. We just can't cache the list.
         return;
     }
     QDataStream stream(&file);
@@ -171,7 +174,9 @@ void SrtmDownloader::downloadTile(QString filename)
     curl_easy_setopt(curl, CURLOPT_URL, QString(url+filename).toAscii().constData());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_file_callback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
-    curl_easy_perform(curl);
+    if (curl_easy_perform(curl)) {
+        qCritical() << "Could not download" << filename;
+    }
     //File is closed automatically
 }
 
@@ -194,10 +199,17 @@ SrtmTile::SrtmTile(QString filename, int lat, int lon)
     this->lon = lon;
     valid = false;
     if (filename == "error") return;
+    buffer = 0;
     size = SrtmZipFile::getData(filename, &buffer);
     Q_ASSERT(size == 1201 || size == 3601);
     Q_ASSERT(buffer != 0);
     valid = true;
+}
+
+/** Free resources. */
+SrtmTile::~SrtmTile()
+{
+    if (buffer) delete buffer;
 }
 
 /** Get the value of a pixel from the data using a coordinate system

@@ -28,7 +28,7 @@
 
 #ifdef LIBXML_READER_ENABLED
 
-#define OSM_VERSION	"0.5"
+#define OSM_VERSION	"0.6"
 
 void die(char *message) {
     fprintf(stderr, "%s\n", message);

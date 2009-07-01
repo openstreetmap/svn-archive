@@ -31,11 +31,11 @@
         </jar>
     </target>
     <target name="revision">
-        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+        <exec append="false" output="REVISION" executable="perl" failifexecutionfails="false">
             <env key="LANG" value="C"/>
-            <arg value="info"/>
-            <arg value="--xml"/>
-            <arg value="."/>
+            <arg value="../getrevision.pl"/>
+            <arg value="xslt"/>
+            <arg value="stylesheets"/>
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>

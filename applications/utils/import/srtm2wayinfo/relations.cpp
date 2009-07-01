@@ -67,6 +67,7 @@ void RelationWriter::processWay(OsmWay *way)
 /** Writes a single relation to file. */
 void RelationWriter::writeRelation(OsmWayId wayId, OsmNodeId startNode, OsmNodeId endNode, float length, float up, float down)
 {
+    //Note: QString::arg is not locale dependent except if the parameter is written as %L1
     QString text =
         QString("<relation id=\"%1\" visible=\"true\">\n"
         "\t<member type=\"way\" ref=\"%2\" role=\"\"/>\n"

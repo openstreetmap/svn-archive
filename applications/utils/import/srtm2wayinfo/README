@@ -7,7 +7,12 @@ zziplib (debian packages: libzzip-0-13 and libzzip-dev)
 
 Compilation
 -----------
-qmake
+cmake is used as the build system. It allows out of source builds (http://www.cmake.org/Wiki/CMake_FAQ#What_is_an_.22out-of-source.22_build.3F).
+
+
+mkdir build
+cd build
+cmake ..
 make
 
 Using viking to verify results
@@ -36,7 +41,6 @@ TODO
 - Interpolate points every 90m
 - Optimize for large datasets
 - Write testcases
-- Proper build system
 - Command line parsing
 - Optionally store uncompressed data on disk
 

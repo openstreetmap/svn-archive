@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -374,11 +375,20 @@ public class TileListDownloader
         {
             download = false;
         }
-        if (!isOverwriteExistingFiles() && !download) {
-            result.setCode(TileDownloadResult.CODE_OK);
-            result.setMessage(TileDownloadResult.MSG_OK);
-            return result;
-        }
+
+        if (!download) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.HOUR, -24*7); // 1 week, TODO: make configurable
+            if (!isOverwriteExistingFiles()) {
+                result.setCode(TileDownloadResult.CODE_OK);
+                result.setMessage(TileDownloadResult.MSG_OK);
+                return result;
+            } else if (file.lastModified() >= cal.getTimeInMillis()) {
+                result.setCode(TileDownloadResult.CODE_OK);
+                result.setMessage(TileDownloadResult.MSG_OK);
+                return result;
+             }
+         }
 
         HttpURLConnection urlConnection = null;
         try

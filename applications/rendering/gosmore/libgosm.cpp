@@ -1194,7 +1194,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 						? BAD_CAST tag_k : BAD_CAST avalue);
 	  }
 	}
-	if (stricmp (aname, "k") == 0) {
+	if (stricmp (aname, "k") == 0) { /* Prevent useless tags from ending up in the pak file */
 	  xmlFree (tag_k);
 	  tag_k = avalue;
 	  if (strncasecmp (tag_k, "tiger:", 6) == 0 ||
@@ -1202,7 +1202,11 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	      strncasecmp (tag_k, "source", 6) == 0 ||
 	      strncasecmp (tag_k, "AND_", 4) == 0 ||
 	      strncasecmp (tag_k, "AND:", 4) == 0 ||
-	      strncasecmp (tag_k, "KSJ2:", 4) == 0 || K_IS ("note:ja") ||
+	      strncasecmp (tag_k, "KSJ2:", 5) == 0 || 
+		  strncasecmp (tag_k, "geobase:", 8) == 0 ||
+		  strncasecmp (tag_k, "kms:", 4) == 0 ||
+		  strncasecmp (tag_k, "openGeoDB:", 10) == 0 ||
+		  K_IS ("note:ja") ||
 	      K_IS ("attribution") /* Mostly MassGIS */ ||
 	      K_IS ("time") || K_IS ("ele") || K_IS ("hdop") ||
 	      K_IS ("sat") || K_IS ("pdop") || K_IS ("speed") ||

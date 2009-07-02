@@ -368,15 +368,8 @@ public class TileListDownloader
     {
         TileDownloadResult result = new TileDownloadResult();
 
-        boolean download = true;
-
         File file = new File(fileName);
-        if (file.exists())
-        {
-            download = false;
-        }
-
-        if (!download) {
+        if (file.exists()) {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.HOUR, -24*7); // 1 week, TODO: make configurable
             if (!isOverwriteExistingFiles()) {

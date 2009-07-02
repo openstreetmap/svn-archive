@@ -1,11 +1,15 @@
 package org.openstreetmap.fma.jtiledownloader.views.main.inputpanel;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -13,6 +17,7 @@ import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxL
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
+import org.openstreetmap.fma.jtiledownloader.views.main.SlippyMapChooserWindow;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -57,6 +62,7 @@ public class BBoxLatLonPanel
     JTextField _textMaxLat = new JTextField();
     JLabel _labelMaxLon = new JLabel("Max. Longitude:");
     JTextField _textMaxLon = new JTextField();
+    JButton _buttonSlippyMapChooser = new JButton("Slippy Map chooser");
 
     private DownloadConfigurationBBoxLatLon _downloadConfig;
 
@@ -103,6 +109,13 @@ public class BBoxLatLonPanel
 
         _textMaxLon.setName(COMPONENT_MAXLON);
         _textMaxLon.addFocusListener(new MyFocusListener());
+
+        _buttonSlippyMapChooser.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                SlippyMapChooserWindow smc = new SlippyMapChooserWindow((BBoxLatLonPanel) ((Component)arg0.getSource()).getParent());
+                smc.setVisible(true);
+            }
+        });
     }
 
     /**
@@ -137,6 +150,15 @@ public class BBoxLatLonPanel
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_textMaxLon, constraints);
 
+        add(_buttonSlippyMapChooser, constraints);
+    }
+
+    public void setCoordinates(double minLatitude, double minLongitude,double maxLatitude, double maxLongitude) {
+        _textMaxLon.setText(String.valueOf(maxLongitude));
+        _textMaxLat.setText(String.valueOf(maxLatitude));
+        _textMinLon.setText(String.valueOf(minLongitude));
+        _textMinLat.setText(String.valueOf(minLatitude));
+        updateTileList();
     }
 
     /**

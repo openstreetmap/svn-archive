@@ -307,12 +307,13 @@ public class UpdateTilesPanel
                 getProgressBar().setMaximum(updateList.getElementCount());
             }
 
+            // design problem: AppConfiguration doesn't provide the real current config
             setTileListDownloader(new TileListDownloader(getFolder(), updateList));
-            getTileListDownloader().setWaitAfterTiles(getAppConfiguration().getWaitAfterNrTiles());
-            getTileListDownloader().setWaitAfterTilesAmount(getAppConfiguration().getWaitNrTiles());
-            getTileListDownloader().setWaitAfterTilesSeconds(getAppConfiguration().getWaitSeconds());
+            getTileListDownloader().setWaitAfterTiles(_mainView.getOptionsPanel().isWaitAfterNumberOfTiles());
+            getTileListDownloader().setWaitAfterTilesAmount(_mainView.getOptionsPanel().getWaitNrTiles());
+            getTileListDownloader().setWaitAfterTilesSeconds(_mainView.getOptionsPanel().getWaitSeconds());
 
-            getTileListDownloader().setOverwriteExistingFiles(getAppConfiguration().isOverwriteExistingFiles());
+            getTileListDownloader().setOverwriteExistingFiles(_mainView.getOptionsPanel().isOverwriteExistingFiles());
 
             getTileListDownloader().setListener(getInstance());
 

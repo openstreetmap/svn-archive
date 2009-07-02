@@ -369,17 +369,12 @@ public class TileListDownloader
 
         boolean download = true;
 
-        if (!isOverwriteExistingFiles())
+        File file = new File(fileName);
+        if (file.exists())
         {
-            File file = new File(fileName);
-            if (file.exists())
-            {
-                download = false;
-            }
+            download = false;
         }
-
-        if (!download)
-        {
+        if (!isOverwriteExistingFiles() && !download) {
             result.setCode(TileDownloadResult.CODE_OK);
             result.setMessage(TileDownloadResult.MSG_OK);
             return result;
@@ -392,7 +387,9 @@ public class TileListDownloader
             urlConnection.setRequestProperty("User-Agent", "JTileDownloader/" + Constants.VERSION);
             urlConnection.setUseCaches(false);
 
-            long lastModified = urlConnection.getLastModified();
+            // iflastmodifiedsince would work like this and you would get a 304 response code
+            // but it seems as if no tile server supports this so far
+            urlConnection.setIfModifiedSince(file.lastModified());
 
             //            Map headerFields = urlConnection.getHeaderFields();
 

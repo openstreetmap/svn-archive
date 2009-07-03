@@ -764,7 +764,6 @@ public class CorrelateGpxWithImages implements ActionListener {
 
                 // Reset previous position
                 for(ImageEntry x : autoImgs) {
-                    x.coor = null;
                     x.pos = null;
                 }
 
@@ -892,7 +891,6 @@ public class CorrelateGpxWithImages implements ActionListener {
             for (ImageEntry e : yLayer.data) {
                 if (e.time != null) {
                     // Reset previous position
-                    e.coor = null;
                     e.pos = null;
                     dateImgLst.add(e);
                 }
@@ -907,7 +905,7 @@ public class CorrelateGpxWithImages implements ActionListener {
 
         } else {
             for (ImageEntry e : yLayer.data) {
-                if (e.time != null && e.coor == null) {
+                if (e.time != null && e.pos == null) {
                     dateImgLst.add(e);
                 }
             }
@@ -998,9 +996,8 @@ public class CorrelateGpxWithImages implements ActionListener {
         if(prevDateWp == 0 || curDateWp <= prevDateWp) {
             while(i >= 0 && (dateImgLst.get(i).time.getTime()/1000) <= curDateWp
                         && (dateImgLst.get(i).time.getTime()/1000) >= (curDateWp - interval)) {
-                if(dateImgLst.get(i).coor == null) {
-                    dateImgLst.get(i).pos = curWp.eastNorth;
-                    dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
+                if(dateImgLst.get(i).pos == null) {
+                    dateImgLst.get(i).setCoor(curWp.getCoor());
                     dateImgLst.get(i).speed = speed;
                     dateImgLst.get(i).elevation = curElevation;
                     ret++;
@@ -1015,28 +1012,21 @@ public class CorrelateGpxWithImages implements ActionListener {
         long imgDate;
         while(i >= 0 && (imgDate = dateImgLst.get(i).time.getTime()/1000) >= prevDateWp) {
 
-            if(dateImgLst.get(i).coor == null) {
+            if(dateImgLst.get(i).pos == null) {
                 // The values of timeDiff are between 0 and 1, it is not seconds but a dimensionless
                 // variable
                 double timeDiff = (double)(imgDate - prevDateWp) / interval;
-                dateImgLst.get(i).pos = new EastNorth(
-                        interpolate(prevWp.eastNorth.east(),  curWp.eastNorth.east(),  timeDiff),
-                        interpolate(prevWp.eastNorth.north(), curWp.eastNorth.north(), timeDiff));
-                dateImgLst.get(i).coor = Main.proj.eastNorth2latlon(dateImgLst.get(i).pos);
+                dateImgLst.get(i).setCoor(prevWp.getCoor().interpolate(curWp.getCoor(), timeDiff));
                 dateImgLst.get(i).speed = speed;
 
                 if (curElevation != null && prevElevation != null)
-                    dateImgLst.get(i).elevation = interpolate(prevElevation, curElevation, timeDiff);
+                    dateImgLst.get(i).elevation = prevElevation + (curElevation - prevElevation) * timeDiff;
 
                 ret++;
             }
             i--;
         }
         return ret;
-    }
-
-    private double interpolate(double val1, double val2, double time) {
-        return val1 + (val2 - val1) * time;
     }
 
     private int getLastIndexOfListBefore(ArrayList<ImageEntry> dateImgLst, long searchedDate) {
@@ -1167,10 +1157,10 @@ public class CorrelateGpxWithImages implements ActionListener {
     /** Return the distance in meters between 2 points
      * Formula and earth radius from : http://en.wikipedia.org/wiki/Great-circle_distance */
     public double getDistance(WayPoint p1, WayPoint p2) {
-        double p1Lat = p1.latlon.lat() * Math.PI / 180;
-        double p1Lon = p1.latlon.lon() * Math.PI / 180;
-        double p2Lat = p2.latlon.lat() * Math.PI / 180;
-        double p2Lon = p2.latlon.lon() * Math.PI / 180;
+        double p1Lat = p1.getCoor().lat() * Math.PI / 180;
+        double p1Lon = p1.getCoor().lon() * Math.PI / 180;
+        double p2Lat = p2.getCoor().lat() * Math.PI / 180;
+        double p2Lon = p2.getCoor().lon() * Math.PI / 180;
         double ret = Math.atan2(Math.sqrt(Math.pow(Math.cos(p2Lat) * Math.sin(p2Lon - p1Lon), 2)
                                           + Math.pow(Math.cos(p1Lat) * Math.sin(p2Lat)
                                                      - Math.sin(p1Lat) * Math.cos(p2Lat) * Math.cos(p2Lon - p1Lon), 2)),

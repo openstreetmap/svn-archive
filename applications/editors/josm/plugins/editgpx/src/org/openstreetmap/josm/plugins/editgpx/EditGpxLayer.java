@@ -33,6 +33,7 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.tools.DateUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -166,9 +167,9 @@ public class EditGpxLayer extends Layer {
 
                 WayPoint wpt = new WayPoint(n.getCoor());
                 if (anonTime) {
-                    wpt.attr.put("time", "1970-01-01T00:00:00");
+                    wpt.attr.put("time", "1970-01-01T00:00:00Z");
                 } else {
-                    wpt.attr.put("time", WayPoint.GPXTIMEFMT.format(tstamp));
+                    wpt.attr.put("time", DateUtils.fromDate(tstamp));
                 }
                 wpt.setTime();
 
@@ -184,9 +185,9 @@ public class EditGpxLayer extends Layer {
 
             WayPoint wpt = new WayPoint(n.getCoor());
             if (anonTime) {
-                wpt.attr.put("time", "1970-01-01T00:00:00");
+                wpt.attr.put("time", "1970-01-01T00:00:00Z");
             } else {
-                wpt.attr.put("time", WayPoint.GPXTIMEFMT.format(tstamp));
+                wpt.attr.put("time", DateUtils.fromDate(tstamp));
             }
             wpt.setTime();
 

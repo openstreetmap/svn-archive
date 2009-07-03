@@ -124,7 +124,7 @@ public class OsbLayer extends Layer implements MouseListener {
                 continue;
             }
 
-            Point p = mv.getPoint(node.getEastNorth());
+            Point p = mv.getPoint(node);
 
             ImageIcon icon = OsbPlugin.loadIcon("icon_error16.png");
             if("1".equals(node.get("state"))) {
@@ -199,7 +199,7 @@ public class OsbLayer extends Layer implements MouseListener {
         for (Node n : data.nodes) {
             if (n.deleted || n.incomplete)
                 continue;
-            Point sp = Main.map.mapView.getPoint(n.getEastNorth());
+            Point sp = Main.map.mapView.getPoint(n);
             double dist = p.distanceSq(sp);
             if (minDistanceSq > dist && p.distance(sp) < snapDistance) {
                 minDistanceSq = p.distanceSq(sp);

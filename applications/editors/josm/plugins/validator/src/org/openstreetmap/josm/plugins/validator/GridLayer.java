@@ -22,16 +22,16 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * A debug layer for testing the grid cells a way crosses.
- * 
+ *
  * @author frsantos
  */
 public class GridLayer extends Layer
 {
     /**
-     * Constructor 
+     * Constructor
      * @param name
      */
-    public GridLayer(String name) 
+    public GridLayer(String name)
     {
         super(name);
     }
@@ -46,12 +46,12 @@ public class GridLayer extends Layer
     /**
      * Draw the grid and highlight all cells acuppied by any selected primitive.
      */
-    @Override 
-    public void paint(final Graphics g, final MapView mv) 
+    @Override
+    public void paint(final Graphics g, final MapView mv)
     {
         if( !Main.pref.hasKey(PreferenceEditor.PREF_DEBUG + ".grid") )
             return;
-        
+
         int gridWidth = Integer.parseInt(Main.pref.get(PreferenceEditor.PREF_DEBUG + ".grid") );
         int width = mv.getWidth();
         int height = mv.getHeight();
@@ -66,15 +66,15 @@ public class GridLayer extends Layer
         HighlightCellVisitor visitor = new HighlightCellVisitor(g, mv, gridWidth);
         for(OsmPrimitive p : Main.ds.getSelected() )
             p.visit(visitor);
-        
+
         long x0 = (long)Math.floor(origin.east()  * gridWidth);
         long x1 = (long)Math.floor(border.east()  * gridWidth);
         long y0 = (long)Math.floor(origin.north() * gridWidth) + 1;
-        long y1 = (long)Math.floor(border.north() * gridWidth) + 1;        
+        long y1 = (long)Math.floor(border.north() * gridWidth) + 1;
         long aux;
         if( x0 > x1 ) { aux = x0; x0 = x1; x1 = aux; }
         if( y0 > y1 ) { aux = y0; y0 = y1; y1 = aux; }
-        
+
         g.setColor(Color.RED.brighter().brighter());
         for( double x = x0; x <= x1; x++)
         {
@@ -89,31 +89,31 @@ public class GridLayer extends Layer
         }
     }
 
-    @Override 
-    public String getToolTipText() 
+    @Override
+    public String getToolTipText()
     {
         return null;
     }
 
-    @Override 
+    @Override
     public void mergeFrom(Layer from) {}
 
-    @Override 
+    @Override
     public boolean isMergable(Layer other) {
         return false;
     }
 
-    @Override 
+    @Override
     public void visitBoundingBox(BoundingXYVisitor v) {}
 
-    @Override 
-    public Object getInfoComponent() 
+    @Override
+    public Object getInfoComponent()
     {
         return getToolTipText();
     }
 
-    @Override 
-    public Component[] getMenuEntries() 
+    @Override
+    public Component[] getMenuEntries()
     {
         return new Component[]{
                 new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
@@ -125,7 +125,7 @@ public class GridLayer extends Layer
     }
 
     @Override public void destroy() { }
-    
+
     /**
      * Visitor that highlights all cells the selected primitives go through
      */
@@ -151,13 +151,13 @@ public class GridLayer extends Layer
             this.g = g;
             this.mv = mv;
             this.gridDetail = gridDetail;
-            
+
             Point p = mv.getPoint( new EastNorth(0, 0) );
             Point p2 = mv.getPoint( new EastNorth(1d/gridDetail, 1d/gridDetail) );
             cellWidth = Math.abs(p2.x - p.x);
         }
 
-        public void visit(Node n) 
+        public void visit(Node n)
         {
             double x = n.getEastNorth().east() * gridDetail;
             double y = n.getEastNorth().north()* gridDetail + 1;
@@ -165,7 +165,7 @@ public class GridLayer extends Layer
             drawCell( Math.floor(x), Math.floor(y) );
         }
 
-        public void visit(Way w) 
+        public void visit(Way w)
         {
             Node lastN = null;
             for (Node n : w.nodes) {
@@ -181,8 +181,8 @@ public class GridLayer extends Layer
         }
 
         public void visit(Relation r) {}
-        
-        /** 
+
+        /**
          * Draws a solid cell at the (x,y) location
          * @param x
          * @param y

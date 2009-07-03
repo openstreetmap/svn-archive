@@ -67,7 +67,7 @@ public class EditGpxMode extends MapMode {
 
             //go through nodes and mark the ones in the selection rect as deleted
             for (Node n: dataSet.nodes) {
-                Point p = Main.map.mapView.getPoint(n.getEastNorth());
+                Point p = Main.map.mapView.getPoint(n);
                 if (r.contains(p)) {
                     n.deleted = true; //only set as deleted. this makes reset to beginning possible
                 }

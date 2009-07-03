@@ -114,13 +114,10 @@ class GPXLayerImportAction extends AbstractAction {
                     for (Collection<WayPoint> segment : trk.trackSegs) {
                         Way w = new Way();
                         for (WayPoint p : segment) {
-                            Node n = new Node(p.latlon);
+                            Node n = new Node(p.getCoor());
                             String timestr = p.getString("time");
                             if(timestr != null)
-                            {
-                                timestr = timestr.replace("Z","+00:00");
                                 n.setTimestamp(DateUtils.fromString(timestr));
-                            }
                             dataSet.nodes.add(n);
                             w.nodes.add(n); //TODO what to do with these while deletion
                         }

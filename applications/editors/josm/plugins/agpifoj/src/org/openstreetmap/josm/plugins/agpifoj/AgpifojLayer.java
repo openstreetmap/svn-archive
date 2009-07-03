@@ -28,6 +28,7 @@ import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
+import org.openstreetmap.josm.data.coor.CachedLatLon;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -52,7 +53,7 @@ public class AgpifojLayer extends Layer {
     private Icon selectedIcon = ImageProvider.get("dialogs/agpifoj-marker-selected");
 
     private int currentPhoto = -1;
-    
+
     // These are used by the auto-guess function to store the result,
     // so when the dialig is re-opened the users modifications don't
     // get overwritten
@@ -67,13 +68,16 @@ public class AgpifojLayer extends Layer {
         File file;
         Date time;
         LatLon exifCoor;
-        LatLon coor;
-        EastNorth pos;
+        CachedLatLon pos;
         /** Speed in kilometer per second */
         Double speed;
         /** Elevation (altitude) in meters */
         Double elevation;
 
+        public void setCoor(LatLon latlon)
+        {
+            pos = new CachedLatLon(latlon);
+        }
         public int compareTo(ImageEntry image) {
             if (time != null && image.time != null) {
                 return time.compareTo(image.time);
@@ -361,7 +365,7 @@ public class AgpifojLayer extends Layer {
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
         for (ImageEntry e : data)
-            v.visit(e.pos);
+            v.visit(e.pos.getEastNorth());
     }
 
     /*
@@ -410,12 +414,10 @@ public class AgpifojLayer extends Layer {
 
             // Store values
 
-            e.coor = new LatLon(lat, lon);
-            e.exifCoor = e.coor;
-            e.pos = Main.proj.latlon2eastNorth(e.coor);
+            e.setCoor(new LatLon(lat, lon));
+            e.exifCoor = e.pos;
 
         } catch (Exception p) {
-            e.coor = null;
             e.pos = null;
         }
     }

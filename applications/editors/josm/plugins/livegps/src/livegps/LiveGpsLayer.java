@@ -73,7 +73,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public void center()
     {
         if (lastPoint != null)
-            Main.map.mapView.zoomTo(lastPoint.eastNorth);
+            Main.map.mapView.zoomTo(lastPoint.getCoor());
     }
 
 //  void setStatus(String status)
@@ -115,7 +115,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 
             if (lastPoint != null)
             {
-                Point screen = mv.getPoint(lastPoint.eastNorth);
+                Point screen = mv.getPoint(lastPoint.getCoor());
                 g.setColor(Main.pref.getColor(KEY_LIVEGPS_COLOR, Color.RED));
                 g.drawOval(screen.x-10, screen.y-10,20,20);
                 g.drawOval(screen.x-9, screen.y-9,18,18);

@@ -138,7 +138,7 @@ public class RoutingLayer extends Layer {
             for (Node n : w.nodes) {
                 if (n.deleted || n.incomplete) continue;
 
-                Point P = Main.map.mapView.getPoint(n.getEastNorth());
+                Point P = Main.map.mapView.getPoint(n);
                 double dist = p.distanceSq(P);
                 if (dist < NavigatableComponent.snapDistance) {
                     if ((nearest == null) || (dist < minDist)) {
@@ -274,21 +274,21 @@ public class RoutingLayer extends Layer {
 
         // paint start icon
         Node node = nodes.get(0);
-        Point screen = mv.getPoint(node.getEastNorth());
+        Point screen = mv.getPoint(node);
         startIcon.paintIcon(mv, g, screen.x - startIcon.getIconWidth()/2,
                 screen.y - startIcon.getIconHeight());
 
         // paint middle icons
         for(int index = 1; index < nodes.size() - 1; ++index) {
             node = nodes.get(index);
-            screen = mv.getPoint(node.getEastNorth());
+            screen = mv.getPoint(node);
             middleIcon.paintIcon(mv, g, screen.x - startIcon.getIconWidth()/2,
                     screen.y - middleIcon.getIconHeight());
         }
         // paint end icon
         if(nodes.size() > 1) {
             node = nodes.get(nodes.size() - 1);
-            screen = mv.getPoint(node.getEastNorth());
+            screen = mv.getPoint(node);
             endIcon.paintIcon(mv, g, screen.x - startIcon.getIconWidth()/2,
                     screen.y - endIcon.getIconHeight());
         }

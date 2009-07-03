@@ -279,7 +279,7 @@ public class TestError {
          * @param color The circle color
          */
         public void drawNode(Node n, Color color) {
-            Point p = mv.getPoint(n.getEastNorth());
+            Point p = mv.getPoint(n);
             g.setColor(color);
             if (selected) {
                 g.fillOval(p.x - 5, p.y - 5, 10, 10);
@@ -294,8 +294,8 @@ public class TestError {
          * @param color The color
          */
         public void drawSegment(Node n1, Node n2, Color color) {
-            Point p1 = mv.getPoint(n1.getEastNorth());
-            Point p2 = mv.getPoint(n2.getEastNorth());
+            Point p1 = mv.getPoint(n1);
+            Point p2 = mv.getPoint(n2);
             g.setColor(color);
 
             double t = Math.atan2(p2.x - p1.x, p2.y - p1.y);
@@ -364,7 +364,7 @@ public class TestError {
          * @return true if the node is visible
          */
         protected boolean isNodeVisible(Node n) {
-            Point p = mv.getPoint(n.getEastNorth());
+            Point p = mv.getPoint(n);
             return !((p.x < 0) || (p.y < 0) || (p.x > mv.getWidth()) || (p.y > mv.getHeight()));
         }
 
@@ -376,8 +376,8 @@ public class TestError {
          * @return true if the segment is visible
          */
         protected boolean isSegmentVisible(Node n1, Node n2) {
-            Point p1 = mv.getPoint(n1.getEastNorth());
-            Point p2 = mv.getPoint(n2.getEastNorth());
+            Point p1 = mv.getPoint(n1);
+            Point p2 = mv.getPoint(n2);
             if ((p1.x < 0) && (p2.x < 0))
                 return false;
             if ((p1.y < 0) && (p2.y < 0))

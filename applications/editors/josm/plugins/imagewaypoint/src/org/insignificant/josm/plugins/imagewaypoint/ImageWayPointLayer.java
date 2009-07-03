@@ -149,10 +149,8 @@ public final class ImageWayPointLayer extends Layer {
             for (int index = 0; index < images.length; index++) {
                 final ImageEntry imageEntry = images[index];
 
-                if (null != imageEntry.getWayPoint()
-                && null != imageEntry.getWayPoint().eastNorth) {
-                    visitor.visit(imageEntry.getWayPoint().eastNorth);
-                }
+                if (imageEntry.getWayPoint() != null)
+                    visitor.visit(imageEntry.getWayPoint().getCoor());
             }
         }
     }

@@ -302,9 +302,9 @@ public class GridLayer extends Layer {
             ll0 = gridtoworld.transform(new LatLon(lat,lon));
             lli = gridtoworld.transform(new LatLon(lat+latspacing,lon));
             llj = gridtoworld.transform(new LatLon(lat,lon+lonspacing));
-            Point p0=mv.getPoint(Main.proj.latlon2eastNorth(ll0));
-            Point pi=mv.getPoint(Main.proj.latlon2eastNorth(lli));
-            Point pj=mv.getPoint(Main.proj.latlon2eastNorth(llj));
+            Point p0=mv.getPoint(ll0);
+            Point pi=mv.getPoint(lli);
+            Point pj=mv.getPoint(llj);
 
             if(Math.round(lon/lonspacing)%lonmaj==0)
             g.setColor(majcol);
@@ -334,8 +334,8 @@ public class GridLayer extends Layer {
     }
 
     private void drawGridLine(Graphics g, final MapView mv, LatLon ll0, LatLon ll1){
-        Point p0=mv.getPoint(Main.proj.latlon2eastNorth(ll0));
-        Point p1=mv.getPoint(Main.proj.latlon2eastNorth(ll1));
+        Point p0=mv.getPoint(ll0);
+        Point p1=mv.getPoint(ll1);
 
         if(Math.abs(ll0.lon()-ll1.lon())<180){
             g.drawLine(p0.x,p0.y,p1.x,p1.y);
@@ -346,8 +346,8 @@ public class GridLayer extends Layer {
             if(lon0<0) lon0+=360;
             if(lon1<0) lon1+=360;
             latm = ll0.lat() + (180-lon0)*(ll1.lat()-ll0.lat())/(lon1-lon0);
-            Point pm1 = mv.getPoint(Main.proj.latlon2eastNorth(new LatLon(latm,180)));
-            Point pm2 = mv.getPoint(Main.proj.latlon2eastNorth(new LatLon(latm,-180)));
+            Point pm1 = mv.getPoint(new LatLon(latm,180));
+            Point pm2 = mv.getPoint(new LatLon(latm,-180));
             if(lon0<=180){
                 g.drawLine(p0.x,p0.y,pm1.x,pm1.y);
                 g.drawLine(p1.x,p1.y,pm2.x,pm2.y);

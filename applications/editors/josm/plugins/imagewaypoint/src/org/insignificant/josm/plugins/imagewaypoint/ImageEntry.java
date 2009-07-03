@@ -150,7 +150,7 @@ public final class ImageEntry implements Comparable<ImageEntry> {
     if (null == this.wayPoint) {
         bounds = null;
     } else {
-        final Point point = mapView.getPoint(this.getWayPoint().eastNorth);
+        final Point point = mapView.getPoint(this.getWayPoint().getCoor());
         bounds = new Rectangle(point.x - ImageEntry.ICON_WIDTH,
         point.y - ImageEntry.ICON_HEIGHT,
         ImageEntry.ICON_WIDTH,

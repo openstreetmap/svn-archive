@@ -74,8 +74,7 @@ public class MeasurementLayer extends Layer {
         g.setColor(Color.green);
         Point l = null;
         for(WayPoint p:points){
-            LatLon c = p.latlon;
-            Point pnt = Main.map.mapView.getPoint(Main.proj.latlon2eastNorth(c));
+            Point pnt = Main.map.mapView.getPoint(p.getCoor());
             if (l != null){
                 g.drawLine(l.x, l.y, pnt.x, pnt.y);
             }
@@ -195,11 +194,11 @@ public class MeasurementLayer extends Layer {
     }
 
     public static double calcDistance(WayPoint p1, WayPoint p2){
-        return calcDistance(p1.latlon, p2.latlon);
+        return calcDistance(p1.getCoor(), p2.getCoor());
     }
 
     public static double angleBetween(WayPoint p1, WayPoint p2){
-        return angleBetween(p1.latlon, p2.latlon);
+        return angleBetween(p1.getCoor(), p2.getCoor());
     }
 
     public static double angleBetween(LatLon p1, LatLon p2){

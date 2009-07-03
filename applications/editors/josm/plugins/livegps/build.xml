@@ -25,7 +25,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Support live GPS input (moving dot) through a connection to gpsd server."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/LiveGPS"/>
-                <attribute name="Plugin-Mainversion" value="1722"/>
+                <attribute name="Plugin-Mainversion" value="1725"/>
                 <attribute name="Plugin-Stage" value="50"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

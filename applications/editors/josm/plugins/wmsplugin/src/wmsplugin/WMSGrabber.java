@@ -23,7 +23,11 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.ProjectionBounds;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.projection.Epsg4326;
+import org.openstreetmap.josm.data.projection.Mercator;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -34,7 +38,7 @@ public class WMSGrabber extends Grabber {
     protected String baseURL;
     private final boolean urlWithPatterns;
 
-    WMSGrabber(Bounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache) {
+    WMSGrabber(ProjectionBounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache) {
         super(b, image, mv, layer, cache);
         this.baseURL = layer.baseURL;
         /* URL containing placeholders? */
@@ -50,13 +54,14 @@ public class WMSGrabber extends Grabber {
         URL url = null;
         try {
             url = getURL(
-                b.min.lon(), b.min.lat(),
-                b.max.lon(), b.max.lat(),
+                b.min.east(), b.min.north(),
+                b.max.east(), b.max.north(),
                 width(), height());
 
-            image.min = proj.latlon2eastNorth(b.min);
-            image.max = proj.latlon2eastNorth(b.max);
+            image.min = b.min;
+            image.max = b.max;
 
+System.out.println(url + " " + b + " " + image.min + " " + image.max);
             if(image.isVisible(mv)) { //don't download, if the image isn't visible already
                 image.image = grab(url);
                 image.flushedResizedCachedInstance();
@@ -72,6 +77,27 @@ public class WMSGrabber extends Grabber {
 
     protected URL getURL(double w, double s,double e,double n,
             int wi, int ht) throws MalformedURLException {
+        String proj = Main.proj.toCode();
+        if(Main.proj instanceof Mercator) // don't use mercator code directly
+        {
+            LatLon sw = Main.proj.eastNorth2latlon(new EastNorth(s, w));
+            LatLon ne = Main.proj.eastNorth2latlon(new EastNorth(n, e));
+            proj = "EPSG:4326";
+            s = sw.lat();
+            w = sw.lon();
+            n = ne.lat();
+            e = ne.lon();
+        }
+/*        else if(!(Main.proj instanceof Epsg4326))
+        {
+            EastNorth sw = Main.proj.latlon2eastNorth(new LatLon(s, w));
+            EastNorth ne = Main.proj.latlon2eastNorth(new LatLon(n, e));
+            s = sw.north();
+            w = sw.east();
+            n = ne.north();
+            e = ne.east();
+        }
+*/
         String str = baseURL;
         String bbox = latLonFormat.format(w) + ","
                            + latLonFormat.format(s) + ","
@@ -79,10 +105,6 @@ public class WMSGrabber extends Grabber {
                            + latLonFormat.format(n);
 
         if (urlWithPatterns) {
-            String proj = Main.proj.toCode();
-            if(Main.proj instanceof org.openstreetmap.josm.data.projection.Mercator) // don't use mercator code directly
-                proj = "EPSG:4326";
-
             str = MessageFormat.format(str, proj, bbox, wi, ht);
         } else {
             if(!str.endsWith("?"))
@@ -98,7 +120,7 @@ public class WMSGrabber extends Grabber {
     static public String getProjection(String baseURL, Boolean warn)
     {
         String projname = Main.proj.toCode();
-        if(Main.proj instanceof org.openstreetmap.josm.data.projection.Mercator) // don't use mercator code
+        if(Main.proj instanceof Mercator) // don't use mercator code
             projname = "EPSG:4326";
         String res = "";
         try

@@ -50,17 +50,13 @@ public class ExtractAddressIntoNodeProposal extends Proposal {
 
         if (!isApplicable(primitive))
             return;
-        
+
         Way way = (Way) primitive;
 
         BoundingXYVisitor visitor = new BoundingXYVisitor();
         way.visit(visitor);
-        LatLon center = new LatLon(
-                (visitor.getBounds().max.lat() + visitor.getBounds().min.lat())/2,
-                (visitor.getBounds().max.lon() + visitor.getBounds().min.lon())/2
-            );
-        
-        Node addrNode = new Node(center);
+
+        Node addrNode = new Node(visitor.getBounds().getCenter());
 
         for (String key : way.keySet())
             if (key.startsWith("addr"))
@@ -74,7 +70,7 @@ public class ExtractAddressIntoNodeProposal extends Proposal {
 
     /**
      * Returns textual representation of this proposal.
-     * 
+     *
      * Currently the string is in Czech language (see {@link CzechAddressPlugin}).
      */
     @Override
@@ -82,6 +78,6 @@ public class ExtractAddressIntoNodeProposal extends Proposal {
         return "Vytvořit z budovy samostatný adresní uzel.";
     }
 
-    
+
 
 }

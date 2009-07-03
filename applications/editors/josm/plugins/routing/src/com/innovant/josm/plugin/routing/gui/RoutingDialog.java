@@ -124,7 +124,7 @@ public class RoutingDialog extends ToggleDialog {
      * @param obj
      */
     public void addNode(Node n) {
-        model.addElement(n.id+" ["+n.coor.toDisplayString()+"]");
+        model.addElement(n.id+" ["+n.getCoor().toDisplayString()+"]");
     }
 
     /**
@@ -133,7 +133,7 @@ public class RoutingDialog extends ToggleDialog {
      * @param obj
      */
     public void insertNode(int index, Node n) {
-        model.insertElementAt(n.id+" ["+n.coor.toDisplayString()+"]", index);
+        model.insertElementAt(n.id+" ["+n.getCoor().toDisplayString()+"]", index);
     }
 
     /**

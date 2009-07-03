@@ -112,8 +112,7 @@ public class EditGpxLayer extends Layer {
         synchronized(layerImport.importing) {
             for(Node n: dataSet.nodes) {
                 if (!n.deleted) {
-                    LatLon c = n.coor;
-                    Point pnt = Main.map.mapView.getPoint(Main.proj.latlon2eastNorth(c));
+                    Point pnt = Main.map.mapView.getPoint(n.getEastNorth());
                     g.drawOval(pnt.x - 2, pnt.y - 2, 4, 4);
                 }
             }
@@ -165,7 +164,7 @@ public class EditGpxLayer extends Layer {
                 }
                 doneNodes.add(n);
 
-                WayPoint wpt = new WayPoint(n.coor);
+                WayPoint wpt = new WayPoint(n.getCoor());
                 if (anonTime) {
                     wpt.attr.put("time", "1970-01-01T00:00:00");
                 } else {
@@ -183,7 +182,7 @@ public class EditGpxLayer extends Layer {
 
             Date tstamp = n.getTimestamp();
 
-            WayPoint wpt = new WayPoint(n.coor);
+            WayPoint wpt = new WayPoint(n.getCoor());
             if (anonTime) {
                 wpt.attr.put("time", "1970-01-01T00:00:00");
             } else {

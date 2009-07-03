@@ -159,7 +159,7 @@ public class RoutingGraph {
      * @param to
      */
     private void addEdge(Way way,Node from, Node to) {
-        double length = from.coor.greatCircleDistance(to.coor);
+        double length = from.getCoor().greatCircleDistance(to.getCoor());
 
         OsmEdge edge = new OsmEdge(way, from, to);
         edge.setSpeed(12.1);

@@ -33,10 +33,6 @@ public class WMSPreferenceEditor implements PreferenceSetting {
     private DefaultTableModel model;
     private HashMap<Integer, WMSInfo> oldValues = new HashMap<Integer, WMSInfo>();
 
-    JCheckBox overlapCheckBox;
-    JSpinner spinLat;
-    JSpinner spinLon;
-
     public void addGui(final PreferenceDialog gui) {
         JPanel p = gui.createPreferenceTab("wms", tr("WMS Plugin Preferences"), tr("Modify list of WMS servers displayed in the WMS plugin menu"));
 
@@ -116,21 +112,6 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 
         p.add(buttonPanel);
         p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
-
-        overlapCheckBox = new JCheckBox(tr("Overlap tiles"), WMSPlugin.doOverlap );
-        JLabel labelLat = new JLabel(tr("% of lat:"));
-        JLabel labelLon = new JLabel(tr("% of lon:"));
-        spinLat = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapLat, 1, 50, 1));
-        spinLon = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapLon, 1, 50, 1));
-
-        JPanel overlapPanel = new JPanel(new FlowLayout());
-        overlapPanel.add(overlapCheckBox);
-        overlapPanel.add(labelLat);
-        overlapPanel.add(spinLat);
-        overlapPanel.add(labelLon);
-        overlapPanel.add(spinLon);
-
-        p.add(overlapPanel);
     }
 
     public boolean ok() {
@@ -169,14 +150,6 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         }
 
         if (change) WMSPlugin.refreshMenu();
-
-        WMSPlugin.doOverlap = overlapCheckBox.getModel().isSelected();
-        WMSPlugin.overlapLat = (Integer) spinLat.getModel().getValue();
-        WMSPlugin.overlapLon = (Integer) spinLon.getModel().getValue();
-
-        Main.pref.put("wmsplugin.url.overlap",    String.valueOf(WMSPlugin.doOverlap));
-        Main.pref.put("wmsplugin.url.overlapLat", String.valueOf(WMSPlugin.overlapLat));
-        Main.pref.put("wmsplugin.url.overlapLon", String.valueOf(WMSPlugin.overlapLon));
 
         return false;
     }

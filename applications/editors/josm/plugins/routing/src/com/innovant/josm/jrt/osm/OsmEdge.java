@@ -68,7 +68,7 @@ public class OsmEdge extends DefaultWeightedEdge {
         this.way = way;
         this.from = from;
         this.to = to;
-        this.length = from.coor.greatCircleDistance(to.coor);
+        this.length = from.getCoor().greatCircleDistance(to.getCoor());
       }
 
   /**
@@ -79,11 +79,11 @@ public class OsmEdge extends DefaultWeightedEdge {
   }
 
   public EastNorth fromEastNorth() {
-      return this.from.eastNorth;
+      return this.from.getEastNorth();
   }
 
   public EastNorth toEastNorth() {
-      return this.to.eastNorth;
+      return this.to.getEastNorth();
   }
 
   /**

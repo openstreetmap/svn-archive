@@ -36,6 +36,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.api.util.HttpUtils;
 
@@ -47,8 +48,9 @@ public class DownloadAction {
         // create the URI for the data download
         String uri = Main.pref.get(ConfigKeys.OSB_API_URI_DOWNLOAD);
 
+        int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
         // check zoom level
-        if(Main.map.mapView.zoom() > 15 || Main.map.mapView.zoom() < 9) {
+        if(zoom > 15 || zoom < 9) {
             return;
         }
 

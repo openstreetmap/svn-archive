@@ -42,10 +42,8 @@ public class JumpToAction extends JosmAction implements MouseListener {
         lat.setText(java.lang.Double.toString(curPos.lat()));
         lon.setText(java.lang.Double.toString(curPos.lon()));
 
-        LatLon ll1 = Main.map.mapView.getLatLon(0,0);
-        LatLon ll2 = Main.map.mapView.getLatLon(100,0);
-        double dist = ll1.greatCircleDistance(ll2);
-        zoomFactor = Main.map.mapView.getScale()/dist;
+        double dist = Main.map.mapView.getDist100Pixel();
+        zoomFactor = 1/dist;
 
         zm.setText(java.lang.Long.toString(Math.round(dist*100)/100));
         updateUrl(true);
@@ -115,7 +113,7 @@ public class JumpToAction extends JosmAction implements MouseListener {
             }
         }
 
-        Main.map.mapView.zoomTo(Main.proj.latlon2eastNorth(ll), zoomFactor * zoomLvl);
+        Main.map.mapView.zoomToFactor(Main.proj.latlon2eastNorth(ll), zoomFactor * zoomLvl);
     }
 
     private void parseURL() {

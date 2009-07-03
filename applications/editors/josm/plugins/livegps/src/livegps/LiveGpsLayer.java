@@ -73,7 +73,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public void center()
     {
         if (lastPoint != null)
-            Main.map.mapView.zoomTo(lastPoint.eastNorth, Main.map.mapView.getScale());
+            Main.map.mapView.zoomTo(lastPoint.eastNorth);
     }
 
 //  void setStatus(String status)

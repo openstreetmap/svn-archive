@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
@@ -193,14 +194,13 @@ public class RequestProcessor extends Thread
                     });
                 } else if (Main.pref.getBoolean("remotecontrol.permission.change-viewport", true)) {
                     // after downloading, zoom to downloaded area.
-                    final LatLon min = new LatLon(minlat, minlon);
-                    final LatLon max = new LatLon(maxlat, maxlon);
+                    final Bounds bounds = new Bounds(new LatLon(minlat, minlon),
+                        new LatLon(maxlat, maxlon));
 
                     Main.worker.execute(new Runnable() {
                         public void run() {
                             BoundingXYVisitor bbox = new BoundingXYVisitor();
-                            bbox.min = Main.proj.latlon2eastNorth(min);
-                            bbox.max = Main.proj.latlon2eastNorth(max);
+                            bbox.visit(bounds);
                             Main.map.mapView.recalculateCenterScale(bbox);
                         }
                     });

@@ -74,6 +74,7 @@ import org.openstreetmap.josm.plugins.osb.gui.action.NewIssueAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.OsbAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.OsbActionObserver;
 import org.openstreetmap.josm.plugins.osb.gui.action.PopupFactory;
+import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectionListener, LayerChangeListener,
@@ -117,8 +118,9 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
         refresh.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
+                int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
                 // check zoom level
-                if (Main.map.mapView.zoom() > 15 || Main.map.mapView.zoom() < 9) {
+                if (zoom > 15 || zoom < 9) {
                     JOptionPane.showMessageDialog(Main.parent,
                             tr("The visible area is either too small or too big to download data from OpenStreetBugs"),
                             tr("Warning"), JOptionPane.INFORMATION_MESSAGE);
@@ -256,8 +258,7 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
     }
 
     public void zoomToNode(Node node) {
-        double scale = Main.map.mapView.getScale();
-        Main.map.mapView.zoomTo(node.getEastNorth(), scale);
+        Main.map.mapView.zoomTo(node.getEastNorth());
     }
 
     public void mouseClicked(MouseEvent e) {

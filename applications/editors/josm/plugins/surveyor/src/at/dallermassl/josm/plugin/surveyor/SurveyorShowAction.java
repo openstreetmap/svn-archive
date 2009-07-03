@@ -80,7 +80,7 @@ public class SurveyorShowAction extends JosmAction {
             actionMap.put("zoomout", new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     if(Main.map != null && Main.map.mapView != null) {
-                        Main.map.mapView.zoomTo(Main.map.mapView.getCenter(), Main.map.mapView.getScale()*2);
+                        Main.map.mapView.zoomToFactor(2);
                     }
                 }
             });
@@ -89,7 +89,7 @@ public class SurveyorShowAction extends JosmAction {
             actionMap.put("zoomin", new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     if(Main.map != null && Main.map.mapView != null) {
-                        Main.map.mapView.zoomTo(Main.map.mapView.getCenter(), Main.map.mapView.getScale()/2);
+                        Main.map.mapView.zoomToFactor(1/2);
                     }
                 }
             });

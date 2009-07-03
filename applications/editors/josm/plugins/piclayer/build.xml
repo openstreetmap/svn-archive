@@ -80,7 +80,7 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.piclayer.PicLayerPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="This plugin allows to display any picture as a background in the editor and align it with the map."/>
-                <attribute name="Plugin-Mainversion" value="1529"/>
+                <attribute name="Plugin-Mainversion" value="1722"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

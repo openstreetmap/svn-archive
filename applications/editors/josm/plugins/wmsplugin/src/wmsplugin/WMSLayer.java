@@ -25,7 +25,7 @@ import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
-import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -78,7 +78,7 @@ public class WMSLayer extends Layer {
         this.cookies = cookies;
         WMSGrabber.getProjection(baseURL, true);
         mv = Main.map.mapView;
-        getPPD();
+        pixelPerDegree = getPPD();
 
         executor = Executors.newFixedThreadPool(3);
     }
@@ -91,8 +91,9 @@ public class WMSLayer extends Layer {
         } catch(Exception x) {}
     }
 
-    public void getPPD(){
-        pixelPerDegree = mv.getWidth() / (bounds().max.lon() - bounds().min.lon());
+    public double getPPD(){
+        ProjectionBounds bounds = mv.getProjectionBounds();
+        return mv.getWidth() / (bounds.max.east() - bounds.min.east());
     }
 
     public void initializeImages() {
@@ -127,26 +128,20 @@ public class WMSLayer extends Layer {
     @Override public void mergeFrom(Layer from) {
     }
 
-    private Bounds XYtoBounds (int x, int y) {
-        return new Bounds(
-            new LatLon(      x * ImageSize / pixelPerDegree,       y * ImageSize / pixelPerDegree),
-            new LatLon((x + 1) * ImageSize / pixelPerDegree, (y + 1) * ImageSize / pixelPerDegree));
+    private ProjectionBounds XYtoBounds (int x, int y) {
+        return new ProjectionBounds(
+            new EastNorth(      x * ImageSize / pixelPerDegree,       y * ImageSize / pixelPerDegree),
+            new EastNorth((x + 1) * ImageSize / pixelPerDegree, (y + 1) * ImageSize / pixelPerDegree));
     }
 
     private int modulo (int a, int b) {
         return a % b >= 0 ? a%b : a%b+b;
     }
 
-    protected Bounds bounds(){
-        return new Bounds(
-            mv.getLatLon(0, mv.getHeight()),
-            mv.getLatLon(mv.getWidth(), 0));
-    }
-
     @Override public void paint(Graphics g, final MapView mv) {
         if(baseURL == null) return;
 
-        if( !startstop.isSelected() || (pixelPerDegree / (mv.getWidth() / (bounds().max.lon() - bounds().min.lon())) > minZoom) ){ //don't download when it's too outzoomed
+        if( !startstop.isSelected() || (pixelPerDegree / getPPD() > minZoom) ){ //don't download when it's too outzoomed
             for(int x = 0; x<dax; ++x)
                 for(int y = 0; y<day; ++y)
                     images[modulo(x,dax)][modulo(y,day)].paint(g, mv, dx, dy);
@@ -160,10 +155,11 @@ public class WMSLayer extends Layer {
     }
 
     protected void downloadAndPaintVisible(Graphics g, final MapView mv){
-        int bminx= (int)Math.floor ((bounds().min.lat() * pixelPerDegree ) / ImageSize );
-        int bminy= (int)Math.floor ((bounds().min.lon() * pixelPerDegree ) / ImageSize );
-        int bmaxx= (int)Math.ceil  ((bounds().max.lat() * pixelPerDegree ) / ImageSize );
-        int bmaxy= (int)Math.ceil  ((bounds().max.lon() * pixelPerDegree ) / ImageSize );
+        ProjectionBounds bounds = mv.getProjectionBounds();
+        int bminx= (int)Math.floor ((bounds.min.east() * pixelPerDegree ) / ImageSize );
+        int bminy= (int)Math.floor ((bounds.min.north() * pixelPerDegree ) / ImageSize );
+        int bmaxx= (int)Math.ceil  ((bounds.max.east() * pixelPerDegree ) / ImageSize );
+        int bmaxy= (int)Math.ceil  ((bounds.max.north() * pixelPerDegree ) / ImageSize );
 
         if((bmaxx - bminx > dax) || (bmaxy - bminy > day)){
             JOptionPane.showMessageDialog(Main.parent, tr("The requested area is too big. Please zoom in a little, or change resolution"));
@@ -240,7 +236,7 @@ public class WMSLayer extends Layer {
         public void actionPerformed(ActionEvent ev) {
             initializeImages();
             resolution = scale();
-            getPPD();
+            pixelPerDegree = getPPD();
             mv.repaint();
         }
     }

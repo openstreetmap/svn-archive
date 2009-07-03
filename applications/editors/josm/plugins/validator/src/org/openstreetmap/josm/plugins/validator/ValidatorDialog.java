@@ -261,7 +261,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
             return;
         ValidatorBoundingXYVisitor bbox = new ValidatorBoundingXYVisitor();
         popupMenuError.visitHighlighted(bbox);
-        if (bbox.min == null || bbox.max == null)
+        if (bbox.getBounds() == null)
             return;
         bbox.enlargeBoundingBox();
         Main.map.mapView.recalculateCenterScale(bbox);

@@ -112,7 +112,7 @@ public class MoveRouteNodeAction extends MapMode {
                 double dmax = DRAG_SQR_RADIUS; // maximum distance, in pixels
                 for (int i=0;i<nl.size();i++) {
                     Node node = nl.get(i);
-                    double d = Main.map.mapView.getPoint(node.eastNorth).distanceSq(e.getPoint());
+                    double d = Main.map.mapView.getPoint(node.getEastNorth()).distanceSq(e.getPoint());
                     if (d < dmax) {
                         dmax = d;
                         index = i;

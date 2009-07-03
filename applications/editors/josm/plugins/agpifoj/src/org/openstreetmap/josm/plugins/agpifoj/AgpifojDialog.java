@@ -123,7 +123,7 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
         } else if (COMMAND_CENTERVIEW.equals(e.getActionCommand())) {
             centerView = ((JToggleButton) e.getSource()).isSelected();
             if (centerView && currentEntry != null && currentEntry.pos != null) {
-                Main.map.mapView.zoomTo(currentEntry.pos, Main.map.mapView.getScale());
+                Main.map.mapView.zoomTo(currentEntry.pos);
             }
 
         } else if (COMMAND_ZOOM.equals(e.getActionCommand())) {
@@ -152,7 +152,7 @@ public class AgpifojDialog extends ToggleDialog implements ActionListener {
             }
 
             if (centerView && Main.map != null && entry != null && entry.pos != null) {
-                Main.map.mapView.zoomTo(entry.pos, Main.map.mapView.getScale());
+                Main.map.mapView.zoomTo(entry.pos);
             }
 
             currentLayer = layer;

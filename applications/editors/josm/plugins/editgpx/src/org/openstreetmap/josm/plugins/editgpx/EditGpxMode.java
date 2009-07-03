@@ -63,21 +63,11 @@ public class EditGpxMode extends MapMode {
         } else {
             Point pointReleased = e.getPoint();
 
-            //prepare vars
-            EastNorth en;
-            double scale = Main.map.mapView.getScale();
-            EastNorth center = Main.map.mapView.getCenter(); //Center n/e coordinate of the desired screen center.
-            int width = Main.map.mapView.getWidth();
-            int height = Main.map.mapView.getHeight();
             Rectangle r = createRect(pointReleased, pointPressed);
 
             //go through nodes and mark the ones in the selection rect as deleted
             for (Node n: dataSet.nodes) {
-                en = n.eastNorth;
-                //calculate point on screen from node n
-                double x = (en.east()-center.east())/scale + width/2;
-                double y = (center.north()-en.north())/scale + height/2;
-                Point p = new Point((int)x,(int)y);
+                Point p = Main.map.mapView.getPoint(n.getEastNorth());
                 if (r.contains(p)) {
                     n.deleted = true; //only set as deleted. this makes reset to beginning possible
                 }

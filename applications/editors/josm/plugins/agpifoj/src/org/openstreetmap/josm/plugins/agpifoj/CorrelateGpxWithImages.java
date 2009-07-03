@@ -622,7 +622,7 @@ public class CorrelateGpxWithImages implements ActionListener {
             if (l != yLayer) {
                 BoundingXYVisitor bbox = new BoundingXYVisitor();
                 l.visitBoundingBox(bbox);
-                if (bbox.min != null && bbox.max != null) {
+                if (bbox.getBounds() != null) {
                     boundingBoxedLayerFound = true;
                     break;
                 }

@@ -8,14 +8,14 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.ProjectionBounds;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
 
 abstract public class Grabber implements Runnable {
-    protected Bounds b;
+    protected ProjectionBounds b;
     protected Projection proj;
     protected double pixelPerDegree;
     protected MapView mv;
@@ -23,27 +23,9 @@ abstract public class Grabber implements Runnable {
     protected GeorefImage image;
     protected CacheFiles cache;
 
-    Grabber(Bounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache)
+    Grabber(ProjectionBounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache)
     {
-        if (b.min != null && b.max != null && WMSPlugin.doOverlap)
-        {
-            double latCent = (b.min.lat() + b.max.lat()) / 2;
-            double lonCent = (b.min.lon() + b.max.lon()) / 2;
-
-            double latSize =  b.max.lat() - b.min.lat();
-            double lonSize =  b.max.lon() - b.min.lon();
-
-            double latCoef = (100.0 + WMSPlugin.overlapLat) / 100.0 / 2.0;
-            double lonCoef = (100.0 + WMSPlugin.overlapLon) / 100.0 / 2.0;
-
-            this.b = new Bounds( new LatLon(latCent - latCoef * latSize,
-                                            lonCent - lonCoef * lonSize),
-                                 new LatLon(latCent + latCoef * latSize,
-                                            lonCent + lonCoef * lonSize));
-        }
-        else
-            this.b = b;
-
+        this.b = b;
         this.proj = Main.main.proj;
         this.pixelPerDegree = layer.pixelPerDegree;
         this.image = image;
@@ -55,10 +37,10 @@ abstract public class Grabber implements Runnable {
     abstract void fetch() throws Exception; // the image fetch code
 
     int width(){
-        return (int) ((b.max.lon() - b.min.lon()) * pixelPerDegree);
+        return (int) ((b.max.north() - b.min.north()) * pixelPerDegree);
     }
     int height(){
-        return (int) ((b.max.lat() - b.min.lat()) * pixelPerDegree);
+        return (int) ((b.max.east() - b.min.east()) * pixelPerDegree);
     }
 
     protected void grabError(Exception e){ // report error when grabing image

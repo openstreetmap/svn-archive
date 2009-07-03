@@ -39,7 +39,7 @@ public class LocationSelector extends ExtendedDialog {
     public static ElementWithStreets selectLocation() {
         LocationSelector ls = new LocationSelector();
         ls.setVisible(true);
-        
+
         if (ls.getValue() == 1)
             return ls.selectedElement;
         else
@@ -49,7 +49,7 @@ public class LocationSelector extends ExtendedDialog {
     private LocationSelector() {
         super(Main.parent, "Výběr umístění",
                             new String[] { "OK", "Zrušit"}, true);
-        
+
         initComponents();
         setupDialog(mainPanel, new String[] { "ok.png", "cancel.png"});
 
@@ -67,7 +67,7 @@ public class LocationSelector extends ExtendedDialog {
     /**
      * Hardly ever working method for autodetecting the current location.
      *
-     * @deprecated 
+     * @deprecated
      */
     private void autodetectLocation() {
         boolean assertions = false;
@@ -92,13 +92,7 @@ public class LocationSelector extends ExtendedDialog {
         LatLon center;
 
         try {
-            Bounds bounds = visitor.getBounds();
-            LatLon max = bounds.max;
-            LatLon min = bounds.min;
-            center = new LatLon(
-                    (max.getX() + min.getX()) / 2,
-                    (max.getY() + min.getY()) / 2);
-
+            center = Main.proj.eastNorth2latlon(visitor.getBounds().getCenter());
         } catch (Exception e) {
             System.err.println("AUTO: No bounds to determine autolocation.");
             return;
@@ -127,7 +121,7 @@ public class LocationSelector extends ExtendedDialog {
                 continue;
             }
 
-            double currLen = multiplicator * (node.coor.distance(center));
+            double currLen = multiplicator * (node.getCoor().distance(center));
 
 
             if ((bestFit == null) || (currLen < bestLen)) {
@@ -137,11 +131,11 @@ public class LocationSelector extends ExtendedDialog {
         }
 
         if (bestFit != null) {
-            
+
             if (assertions)
                 System.out.println("AUTO: Best fit " + bestFit.getName()
                                  + "\t " + bestFit.get("name"));
-            
+
             for (Region oblast : Database.getInstance().regions) {
                 for (ViToCi obec : oblast.getViToCis()) {
                     if (!bestFit.get("place").equals("suburb")) {
@@ -262,7 +256,7 @@ public class LocationSelector extends ExtendedDialog {
 
         ItemEvent event = new ItemEvent(this,
                    ItemEvent.DESELECTED, selectedElement, ItemEvent.DESELECTED);
-        
+
         for (ItemListener i : listeners)
             i.itemStateChanged(event);
 
@@ -270,7 +264,7 @@ public class LocationSelector extends ExtendedDialog {
 
         event = new ItemEvent(this,
                        ItemEvent.SELECTED, selectedElement, ItemEvent.SELECTED);
-        
+
         for (ItemListener i : listeners)
                 i.itemStateChanged(event);
     }*/
@@ -322,7 +316,7 @@ public class LocationSelector extends ExtendedDialog {
 
         else if (oblastComboBox.getSelectedItem() != null)
             selectedElement = ((ElementWithStreets) oblastComboBox.getSelectedItem());
-        
+
         }//GEN-LAST:event_suburbComboBoxItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

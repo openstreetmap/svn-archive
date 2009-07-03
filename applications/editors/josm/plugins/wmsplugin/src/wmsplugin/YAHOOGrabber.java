@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
 
-import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
 
@@ -17,7 +17,7 @@ import org.openstreetmap.josm.io.CacheFiles;
 public class YAHOOGrabber extends WMSGrabber {
     protected String browserCmd;
 
-    YAHOOGrabber(Bounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache) {
+    YAHOOGrabber(ProjectionBounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache) {
         super(b, image, mv, layer, cache);
         this.baseURL = "file:///" + WMSPlugin.getPrefsPath() + "ymap.html?";
         this.browserCmd = layer.baseURL.replaceFirst("yahoo://", "");

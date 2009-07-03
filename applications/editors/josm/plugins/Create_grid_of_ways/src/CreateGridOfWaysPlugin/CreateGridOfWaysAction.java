@@ -74,8 +74,8 @@ public final class CreateGridOfWaysAction extends JosmAction {
         int c1=0,c2;
         double latDif,lonDif;
         for (Node n1 : nodesWay1) {
-            latDif = n1.coor.lat()-nodeCommon.coor.lat();
-            lonDif = n1.coor.lon()-nodeCommon.coor.lon();
+            latDif = n1.getCoor().lat()-nodeCommon.getCoor().lat();
+            lonDif = n1.getCoor().lon()-nodeCommon.getCoor().lon();
             c2=0;
             for (Node n2 : nodesWay2) {
                 if (n1.equals(nodeCommon) && n2.equals(nodeCommon))
@@ -88,7 +88,7 @@ public final class CreateGridOfWaysAction extends JosmAction {
                     w2[c2++].nodes.add(n2);
                     continue;
                 }
-                Node nodeOfGrid = new Node(new LatLon(n2.coor.lat()+latDif,n2.coor.lon()+lonDif));
+                Node nodeOfGrid = new Node(new LatLon(n2.getCoor().lat()+latDif,n2.getCoor().lon()+lonDif));
                 cmds.add(new AddCommand(nodeOfGrid));
                 w1[c1].nodes.add(nodeOfGrid);
                 w2[c2++].nodes.add(nodeOfGrid);

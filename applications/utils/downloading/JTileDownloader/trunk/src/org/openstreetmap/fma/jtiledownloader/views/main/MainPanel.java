@@ -28,6 +28,7 @@ import org.openstreetmap.fma.jtiledownloader.TileServerList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileServer;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxLatLonPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxXYPanel;
+import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.GPXPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.UrlSquarePanel;
 
@@ -96,6 +97,7 @@ public class MainPanel
     private UrlSquarePanel _urlSquarePanel;
     private BBoxLatLonPanel _bBoxLatLonPanel;
     private BBoxXYPanel _bBoxXYPanel;
+    private GPXPanel _gpxPanel;
 
     private JTabbedPane _inputTabbedPane;
 
@@ -237,6 +239,8 @@ public class MainPanel
         _inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_LATLON], _bBoxLatLonPanel);
         _bBoxXYPanel = new BBoxXYPanel(_mainView);
         _inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_XY], _bBoxXYPanel);
+        _gpxPanel = new GPXPanel(_mainView);
+        _inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_GPX], _gpxPanel);
 
         add(_inputTabbedPane, constraints);
         _inputTabbedPane.addChangeListener(new InputTabListener(_mainView));
@@ -385,6 +389,11 @@ public class MainPanel
     public final BBoxXYPanel getBBoxXYPanel()
     {
         return _bBoxXYPanel;
+    }
+
+    public final GPXPanel getGPXPanel()
+    {
+        return _gpxPanel;
     }
 
     class MainViewFocusListener
@@ -581,7 +590,10 @@ public class MainPanel
                 return getBBoxLatLonPanel();
             case TYPE_BOUNDINGBOX_XY:
                 return getBBoxXYPanel();
+            case TYPE_GPX:
+                return getGPXPanel();
 
+                
             default:
                 return null;
         }

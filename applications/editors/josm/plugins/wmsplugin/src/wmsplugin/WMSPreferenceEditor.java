@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -31,6 +32,7 @@ import org.openstreetmap.josm.tools.GBC;
 public class WMSPreferenceEditor implements PreferenceSetting {
     private Map<String,String> orig;
     private DefaultTableModel model;
+    private JComboBox browser;
     private HashMap<Integer, WMSInfo> oldValues = new HashMap<Integer, WMSInfo>();
 
     public void addGui(final PreferenceDialog gui) {
@@ -68,8 +70,8 @@ public class WMSPreferenceEditor implements PreferenceSetting {
             public void actionPerformed(ActionEvent e) {
                 JPanel p = new JPanel(new GridBagLayout());
                 p.add(new JLabel(tr("Menu Name")), GBC.std().insets(0,0,5,0));
-                JTextField key = new JTextField(10);
-                JTextField value = new JTextField(10);
+                JTextField key = new JTextField(40);
+                JTextField value = new JTextField(40);
                 p.add(key, GBC.eop().insets(5,0,0,0).fill(GBC.HORIZONTAL));
                 p.add(new JLabel(tr("WMS URL")), GBC.std().insets(0,0,5,0));
                 p.add(value, GBC.eol().insets(5,0,0,0).fill(GBC.HORIZONTAL));
@@ -112,6 +114,15 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 
         p.add(buttonPanel);
         p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
+        browser = new JComboBox(new String[]{
+        "webkit-image {0}",
+        "gnome-web-photo --mode=photo --format=png {0} /dev/stdout",
+        "gnome-web-photo-fixed {0}",
+        "webkit-image-gtk {0}"});
+        browser.setEditable(true);
+        browser.setSelectedItem(Main.pref.get("wmsplugin.browser", "webkit-image {0}"));
+        p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GBC.HORIZONTAL));
+        p.add(browser, GBC.eol().fill(GBC.HORIZONTAL));
     }
 
     public boolean ok() {
@@ -151,6 +162,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 
         if (change) WMSPlugin.refreshMenu();
 
+        Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString());
         return false;
     }
 

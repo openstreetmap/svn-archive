@@ -42,7 +42,7 @@ public class WMSGrabber extends Grabber {
         super(b, image, mv, layer, cache);
         this.baseURL = layer.baseURL;
         /* URL containing placeholders? */
-        urlWithPatterns = baseURL != null && baseURL.contains("{1}");
+        urlWithPatterns = baseURL != null && baseURL.contains("{") && baseURL.contains("}");
     }
 
     public void run() {
@@ -61,7 +61,6 @@ public class WMSGrabber extends Grabber {
             image.min = b.min;
             image.max = b.max;
 
-System.out.println(url + " " + b + " " + image.min + " " + image.max);
             if(image.isVisible(mv)) { //don't download, if the image isn't visible already
                 image.image = grab(url);
                 image.flushedResizedCachedInstance();
@@ -80,24 +79,15 @@ System.out.println(url + " " + b + " " + image.min + " " + image.max);
         String proj = Main.proj.toCode();
         if(Main.proj instanceof Mercator) // don't use mercator code directly
         {
-            LatLon sw = Main.proj.eastNorth2latlon(new EastNorth(s, w));
-            LatLon ne = Main.proj.eastNorth2latlon(new EastNorth(n, e));
+            LatLon sw = Main.proj.eastNorth2latlon(new EastNorth(w, s));
+            LatLon ne = Main.proj.eastNorth2latlon(new EastNorth(e, n));
             proj = "EPSG:4326";
             s = sw.lat();
             w = sw.lon();
             n = ne.lat();
             e = ne.lon();
         }
-/*        else if(!(Main.proj instanceof Epsg4326))
-        {
-            EastNorth sw = Main.proj.latlon2eastNorth(new LatLon(s, w));
-            EastNorth ne = Main.proj.latlon2eastNorth(new LatLon(n, e));
-            s = sw.north();
-            w = sw.east();
-            n = ne.north();
-            e = ne.east();
-        }
-*/
+
         String str = baseURL;
         String bbox = latLonFormat.format(w) + ","
                            + latLonFormat.format(s) + ","
@@ -105,9 +95,14 @@ System.out.println(url + " " + b + " " + image.min + " " + image.max);
                            + latLonFormat.format(n);
 
         if (urlWithPatterns) {
-            str = MessageFormat.format(str, proj, bbox, wi, ht);
+            str = str.replaceAll("{proj}", proj)
+            .replaceAll("{bbox}", bbox)
+            .replaceAll("{width}", String.valueOf(wi))
+            .replaceAll("{height}", String.valueOf(ht));
         } else {
-            if(!str.endsWith("?"))
+            if(!str.contains("?"))
+                str += "?";
+            else if(!str.endsWith("?"))
                 str += "&";
             str += "bbox="
                 + bbox

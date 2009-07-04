@@ -15,9 +15,6 @@
         </javac>
     </target>
     <target name="dist" depends="compile,revision">
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>

@@ -18,7 +18,7 @@ public class WMSDownloadAction extends JosmAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        System.out.println(info.url);
+        //System.out.println(info.url);
 
         WMSLayer wmsLayer = new WMSLayer(info.name, info.url, info.cookies);
         Main.main.addLayer(wmsLayer);

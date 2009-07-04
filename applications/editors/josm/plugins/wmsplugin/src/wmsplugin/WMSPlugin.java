@@ -47,13 +47,6 @@ public class WMSPlugin extends Plugin {
     static private boolean menuEnabled = false;
 
     public WMSPlugin() {
-        try
-        {
-            copy("/resources/ymap.html", "ymap.html");
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
         refreshMenu();
         cache.setExpire(cache.EXPIRE_MONTHLY, false);
         cache.setMaxSize(70, false);
@@ -189,8 +182,8 @@ public class WMSPlugin extends Plugin {
     }
 
     public static Grabber getGrabber(ProjectionBounds bounds, GeorefImage img, MapView mv, WMSLayer layer){
-        if(layer.baseURL.startsWith("yahoo://"))
-            return new YAHOOGrabber(bounds, img, mv, layer, cache);
+        if(layer.baseURL.startsWith("html:"))
+            return new HTMLGrabber(bounds, img, mv, layer, cache);
         else
             return new WMSGrabber(bounds, img, mv, layer, cache);
     }

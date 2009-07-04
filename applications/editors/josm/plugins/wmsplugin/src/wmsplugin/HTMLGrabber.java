@@ -9,36 +9,30 @@ import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
 
-
-public class YAHOOGrabber extends WMSGrabber {
-    protected String browserCmd;
-
-    YAHOOGrabber(ProjectionBounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache) {
+public class HTMLGrabber extends WMSGrabber {
+    HTMLGrabber(ProjectionBounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache) {
         super(b, image, mv, layer, cache);
-        this.baseURL = "file:///" + WMSPlugin.getPrefsPath() + "ymap.html?";
-        this.browserCmd = layer.baseURL.replaceFirst("yahoo://", "");
+        this.baseURL = layer.baseURL.replaceFirst("html:", "");
     }
 
     @Override
     protected BufferedImage grab(URL url) throws IOException {
         String urlstring = url.toExternalForm();
-        // work around a problem in URL removing 2 slashes
-        if(!urlstring.startsWith("file:///"))
-            urlstring = urlstring.replaceFirst("file:", "file://");
 
         BufferedImage cached = cache.getImg(urlstring);
         if(cached != null) return cached;
 
         ArrayList<String> cmdParams = new ArrayList<String>();
-        StringTokenizer st = new StringTokenizer(MessageFormat.format(browserCmd, urlstring));
+        StringTokenizer st = new StringTokenizer(MessageFormat.format(
+        Main.pref.get("wmsplugin.browser", "webkit-image {0}"), urlstring));
         while( st.hasMoreTokens() )
             cmdParams.add(st.nextToken());
 
-        System.out.println("WMS::Browsing YAHOO: " + cmdParams);
         ProcessBuilder builder = new ProcessBuilder( cmdParams);
 
         Process browser;

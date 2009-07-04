@@ -116,7 +116,7 @@ public abstract class PicLayerAbstract extends Layer
             // Geographical position of the image
             m_initial_position = m_position = Main.map.mapView.getCenter();
             // Initial scale at which the image was loaded
-            m_initial_scale = Main.map.mapView.getMapScale();
+            m_initial_scale = Main.map.mapView.getDist100Pixel();
         } else {
             throw new IOException( "Could not find the map object." );
         }
@@ -189,7 +189,7 @@ public abstract class PicLayerAbstract extends Layer
             // Rotate
             g.rotate( m_angle * Math.PI / 180.0 );
             // Scale
-            double scale = m_scale * m_initial_scale / Main.map.mapView.getMapScale();
+            double scale = m_scale * m_initial_scale / Main.map.mapView.getDist100Pixel();
             g.scale( scale, scale );
 
             // Draw picture

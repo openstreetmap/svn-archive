@@ -59,7 +59,7 @@ $Fields = array(
 	  'Export', 
 	  'Community', 
 	  'Report error', 
-	  'Debug',
+	  #'Debug',
 	  'API')),
   "gpx"=>array(
       'name'=>"GPX trace", 
@@ -468,9 +468,12 @@ switch($Data['mode'])
     }
   case 'Export':
     {
-    printf("<p>Your map:</p>");
+    printf("<p><a href='http://tinyurl.com/create.php?url=%s'>Make a TinyURL</a> to your map</p>",
+      htmlentities(urlencode(FullImageURL())));
+
     ShowImage();
     printf("<p>Right-click the image and &quot;save as&quot; to get an image that you can use in any document</p>"); // TODO: different instructions depending on user-agent?
+
 
     printf("<h2>HTML code</h2><p>(paste this to your website)</p>");
 
@@ -503,6 +506,9 @@ switch($Data['mode'])
 
     printf("<p>Use this map to <a href='%s'>illustrate a wikipedia article</a> <i>(link goes to wikiproject page, not an upload form)</i></p>",
       'http://en.wikipedia.org/wiki/Wikipedia:WikiProject_Maps');
+
+    printf("<p>Make a <a href='http://tinyurl.com/create.php?url=%s'>TinyURL</a></p>",
+      htmlentities(urlencode(FullImageURL())));
 
     printf("<h2>Edit the maps</h2>\n<p>Get involved with <a href='%s'>editing OpenStreetmap</a></p>\n", 
       "http://wiki.openstreetmap.org/wiki/Beginners%27_Guide");
@@ -555,6 +561,8 @@ switch($Data['mode'])
 	  break;
 	case 'tab':
 	  print "one of the tab names</p>\n";
+	case 'colour':
+	  print "in 3-character hexadecimal RGB format, from 000 = black to F00 = red to FFF = white</p>\n";
 	default:
 	  print "</p>\n";
 	}

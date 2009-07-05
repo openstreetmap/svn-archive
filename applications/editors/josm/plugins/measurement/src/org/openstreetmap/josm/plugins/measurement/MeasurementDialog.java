@@ -112,7 +112,8 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
                                 double area = 0.0;
                                 Node lastNode = null;
                 for(OsmPrimitive p:arg0){
-                                    if(p instanceof Node){
+                                    // ignore incomplete nodes
+                                    if(p instanceof Node && !((Node)p).incomplete){
                                         Node n =(Node)p;
                                         if(lastNode == null){
                                             lastNode = n;

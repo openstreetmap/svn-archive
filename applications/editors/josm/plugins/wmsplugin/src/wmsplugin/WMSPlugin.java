@@ -98,7 +98,11 @@ public class WMSPlugin extends Plugin {
             if (elements[3].equals("name"))
                 name = prefs.get(key);
             else if (elements[3].equals("url"))
-                url = prefs.get(key);
+            {
+                /* FIXME: Remove the if clause after some time */
+                if(!prefs.get(key).startsWith("yahoo:")) /* legacy stuff */
+                    url = prefs.get(key);
+            }
             else if (elements[3].equals("cookies"))
                 cookies = prefs.get(key);
             if (name != null && url != null)

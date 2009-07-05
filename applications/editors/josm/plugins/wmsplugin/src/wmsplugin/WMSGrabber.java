@@ -95,10 +95,10 @@ public class WMSGrabber extends Grabber {
                            + latLonFormat.format(n);
 
         if (urlWithPatterns) {
-            str = str.replaceAll("{proj}", proj)
-            .replaceAll("{bbox}", bbox)
-            .replaceAll("{width}", String.valueOf(wi))
-            .replaceAll("{height}", String.valueOf(ht));
+            str = str.replaceAll("\\{proj\\}", proj)
+            .replaceAll("\\{bbox\\}", bbox)
+            .replaceAll("\\{width\\}", String.valueOf(wi))
+            .replaceAll("\\{height\\}", String.valueOf(ht));
         } else {
             if(!str.contains("?"))
                 str += "?";

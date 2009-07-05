@@ -59,3 +59,10 @@ h1
 {
   border:4px solid black;
 }
+.api
+{
+  border: 2px dotted black;
+  margin: 0.5em;
+  padding: 0.5em;
+  background-color: #EFF;
+}

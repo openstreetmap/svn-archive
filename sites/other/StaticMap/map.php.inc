@@ -34,27 +34,30 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Layer, $Format, $AddAttribu
       for($yi = -$GridSizeY; $yi <= $GridSizeY; $yi++)
       {
 	$Filename = cacheableTile($X + $xi, $Y + $yi, $Zoom, $LayerData);
-
-	$ToX = (floor($Width/2) - $XA + $xi * $Tilesize);
-	$ToY = (floor($Height/2) - $YA + $yi * $Tilesize);
-
-	if($ToX > -$Tilesize && $ToX < $Width
-	  && $ToY > -$Tilesize && $ToY < $Height)
+	if($Filename)
 	  {
-	  
-	  $Part = '';
-	  if(substr($Filename,-3) == "png")
-	    $Part = imagecreatefrompng($Filename);
-	  elseif(substr($Filename,-4) == "jpeg")
-	    $Part = imagecreatefromjpeg($Filename);
-	  
-	  if($Part)
+
+	  $ToX = (floor($Width/2) - $XA + $xi * $Tilesize);
+	  $ToY = (floor($Height/2) - $YA + $yi * $Tilesize);
+
+	  if($ToX > -$Tilesize && $ToX < $Width
+	    && $ToY > -$Tilesize && $ToY < $Height)
 	    {
-	    imagecopy($Image, $Part, 
-	      $ToX,
-	      $ToY, 
-	      0, 0, 
-	      $Tilesize, $Tilesize);
+	    
+	    $Part = '';
+	    if(substr($Filename,-3) == "png")
+	      $Part = imagecreatefrompng($Filename);
+	    elseif(substr($Filename,-4) == "jpeg")
+	      $Part = imagecreatefromjpeg($Filename);
+	    
+	    if($Part)
+	      {
+	      imagecopy($Image, $Part, 
+		$ToX,
+		$ToY, 
+		0, 0, 
+		$Tilesize, $Tilesize);
+	      }
 	    }
 	  }
 	}
@@ -194,6 +197,9 @@ function addText($Image, $Width, $Height, $Text)
 
 function cacheableTile($X,$Y,$Z, $LayerData)
 {
+  if(!tileValid($X,$Y,$Z))
+    return("");
+
   $RemoteFilename = tileURL($X,$Y,$Z, $LayerData);
   $LocalFilename = sprintf("%s/%s_%02d_%05d_%05d.%s", 
     cacheDir(),
@@ -253,6 +259,9 @@ function cacheDir()
 
 function tileURL($X,$Y,$Z, $LayerData)
 {
+  if(!tileValid($X,$Y,$Z))
+    return("");
+
   $Base = $LayerData["tiles"];
   $Format = $LayerData["format"];
     

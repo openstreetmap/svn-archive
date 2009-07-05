@@ -12,7 +12,7 @@ $Fields = array(
   "layer"=>array("Base map", 'option', array_keys(getLayers())),
   "fmt"=>array("Image format", 'option', array('jpg','png')),
   "lang"=>array("Language", 'option', array('en')),
-  "mode"=>array("Edit mode", 'tab', array('Start', 'Edit', 'Recentre', 'Resize', 'Add icon', 'Draw', 'Export', 'Community', 'Report error', 'Help')),
+  "mode"=>array("Edit mode", 'tab', array('Start', 'Edit', 'Recentre', 'Resize', 'Style', 'Add icon', 'Draw', 'Export', 'Community', 'Report error', 'Help')),
   "gpx"=>array("GPX trace", 'numeric', -1, -1, 1E10),
   "rel"=>array("Relation", 'numeric', -1, -1, 1E10),
   "mlat"=>array("Marker latitude", 'numeric', 0, -90, 90),
@@ -165,7 +165,29 @@ switch($Data['mode'])
     printf("<p><input type='submit' value='OK'></p>\n");
     printf("</form>");
     break;
+    }
+  case 'Style':
+    {
+    $SampleSize = 200;
+    printf("<table border=0>\n");
+    foreach(getLayers() as $Layer => $LayerData)
+      {
+      printf("<tr%s>", $Layer == $Data['layer'] ? " id='selected_style'":"");
 
+      printf("<td><h2>%s</h2></td>", $Layer);
+      printf("<td><a href='%s'><img src='%s' width='%d' height='%d'/></a></td>\n",
+	LinkSelf(array('layer'=>$Layer)),
+	LinkSelf(array('w'=>$SampleSize, 'h'=>$SampleSize, 'layer'=>$Layer)). "show=1",
+	$SampleSize,
+	$SampleSize);
+      printf("<td>");
+      foreach($LayerData as $FieldName => $FieldValue)
+	{
+	printf("%s: %s<br/>", $FieldName, htmlentities($FieldValue));
+	}
+      printf("</td></tr>\n");
+      }
+    printf("</table>\n");
     break;
     }
   case 'Add icon':
@@ -262,7 +284,33 @@ switch($Data['mode'])
     }
   case 'Help':
     {
-    printf("");
+    printf("<h2>Using this site</h2><p>TODO: help file</p>");
+
+    printf("<h2>API help</h2>\n");
+    printf("<p><b>show</b> (Returns the image rather than this web interface)</p><ul><li>0 = view image-editing tools</li><li>1 = view as image</li></ul>");
+    foreach($Fields as $Field => $Options)
+      {
+      printf("<p><b>%s</b> (%s): ", $Field, $Options[0]);
+      switch($Options[1])
+	{
+	case "numeric":
+	  printf("numeric (%1.2f to %1.2f)\n", $Options[3], $Options[4]);
+	  break;
+	case 'option':
+	  printf("</p><ul>\n");
+	  foreach($Options[2] as $Layer)
+	    {
+	    printf("<li>%s</li>\n", $Layer);
+	    }
+	  printf("</ul>\n");
+	  break;
+	case 'tab':
+	  print "one of the tab names</p>\n";
+	default:
+	  print "</p>\n";
+	}
+      }
+    printf("<p><b>&?123,456</b> (imagemap coordinates, must be at end of query string): handles actions caused by clicking on a server-side imagemap.  Which action is taken depends on <b>mode=</b></p>");
     break;
     }
   }

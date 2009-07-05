@@ -1,3 +1,4 @@
+<?php header("Content-type: text/CSS"); ?>
 body
 {
   background-color: #FFC;
@@ -33,4 +34,8 @@ h1
   background-color: white;
   border: 2px solid blue;
   padding: 0.5em;
+}
+#selected_style
+{
+  background-color: #CCF;
 }

@@ -90,41 +90,49 @@ function addDrawings($Image, $Data)
   for($i = 0; $i < MaxDrawings(); $i++)
     {
     $lastX = $lastY = $lastValid = 0;
-    $Colour = imagecolorallocate($Image, 0,0,128);
-    $Points = array();
-    $NumPoints = 0;
-    $Style = $Data["d{$i}_style"];
 
-    for($j = 0; $j < MaxPoints(); $j++)
+    if(preg_match("/^([0-9A-F])([0-9A-F])([0-9A-F])$/", $Data["d${i}_colour"], $Matches))
       {
-      $Lat = $Data["d{$i}p${j}lat"];
-      $Lon = $Data["d{$i}p${j}lon"];
+      
+      $R = hexdec($Matches[1]) * 16;
+      $G = hexdec($Matches[2]) * 16;
+      $B = hexdec($Matches[3]) * 16;
+      $Colour = imagecolorallocate($Image, $R, $G, $B);
 
-      if($Lat != 0 || $Lon != 0)
+      $Points = array();
+      $NumPoints = 0;
+      $Style = $Data["d{$i}_style"];
+
+      for($j = 0; $j < MaxPoints(); $j++)
 	{
-	list($mx,$my) = imagemap_ll2xy($Lat, $Lon, $Data);
+	$Lat = $Data["d{$i}p${j}lat"];
+	$Lon = $Data["d{$i}p${j}lon"];
 
-	if($lastValid && $Style == "line")
+	if($Lat != 0 || $Lon != 0)
 	  {
-	  imageLineThick($Image, $lastX, $lastY, $mx, $my, $Colour, 4);
-	  }
+	  list($mx,$my) = imagemap_ll2xy($Lat, $Lon, $Data);
 
-	array_push($Points, $mx);
-	array_push($Points, $my);
-	$NumPoints++;
-	
-	$lastX = $mx;
-	$lastY = $my;
-	$lastValid = true;
+	  if($lastValid && $Style == "line")
+	    {
+	    imageLineThick($Image, $lastX, $lastY, $mx, $my, $Colour, 4);
+	    }
+
+	  array_push($Points, $mx);
+	  array_push($Points, $my);
+	  $NumPoints++;
+	  
+	  $lastX = $mx;
+	  $lastY = $my;
+	  $lastValid = true;
+	  }
+	}
+
+      if($NumPoints > 2 && $Style=="polygon")
+	{
+	$Colour = imagecolorallocatealpha($Image, $R, $G, $B, 64);
+	imagefilledpolygon($Image, $Points, $NumPoints, $Colour);
 	}
       }
-
-    if($NumPoints > 2 && $Style=="polygon")
-      {
-      $Colour = imagecolorallocatealpha($Image, 0,128,0, 64);
-      imagefilledpolygon($Image, $Points, $NumPoints, $Colour);
-      }
-
     }
 
 }

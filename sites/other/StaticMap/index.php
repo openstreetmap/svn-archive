@@ -122,6 +122,11 @@ for($i = 0; $i < $MaxDrawings; $i++)
       'type'=>'option',  
       'options'=> array('line','polygon'));
 
+  $Fields["d${i}_colour"] = array(
+      'name'=>"Colour of drawing $i", 
+      'type'=>'colour',  
+      'default'=> "008");
+
   for($j = 0; $j < $MaxPoints; $j++)
     {
     $Fields["d${i}p${j}lat"] = array(
@@ -412,6 +417,7 @@ switch($Data['mode'])
 	printf("<h2>Drawing %d: (<a href='%s'>delete</a>)</h2>\n", $i, LinkSelf($DelAll));
 
 	printf("<p>Style: %s</p>", OptionList("d${i}_style"));
+	printf("%s", ColourChooser("d${i}_colour"));
 
 	printf("%s\n", $Html);
 	}
@@ -607,6 +613,10 @@ function ReadFields($Req)
 	if(!in_array($Value, $Details['options']))
 	  $Value = FieldDefault($Field);
 	break;
+      case "colour":
+	if(!preg_match("/^[0-9A-F]{3}$/", $Value))
+	  $Value = FieldDefault($Field);
+	break;
       default:
 	printf("<p>Unrecognised field type %s (default-deny means you need to specify what values are valid!)</p>", htmlentities($Details['type']));
 	$Value = 0;
@@ -628,6 +638,8 @@ function FieldDefault($Field)
     case "tab":
     case "option":
       return($Fields[$Field]['options'][0]);
+    case "color":
+      return("00F"); // what's a good default-default colour?
     }
   return(0);
 }
@@ -644,6 +656,30 @@ function OptionList($Field)
       LinkSelf(array($Field => $Style)),
       $Style);
     }
+  return($Html);
+}
+
+function ColourChooser($Field)
+{
+  $Html = "<div class='colour_chooser'><table border='0'><tr><td>";
+  global $Data;
+  $Stops = array(0,4,8,12,15);
+  foreach($Stops as $g)
+    {
+    foreach($Stops as $b)
+      {
+      foreach($Stops as $r)
+	{
+	$Colour = sprintf("%X%X%X", $r,$g,$b);
+	$Html .= sprintf("<a class='colour' href='%s' style='background-color:#%s;'>&nbsp;</a>", 
+	  LinkSelf(array($Field=>$Colour)),
+	  $Colour);
+	}
+      }
+    $Html .= "<br/>";
+    }
+  $Html .= sprintf("</td><td style='background-color:#%s;width:3em;'>&nbsp;", $Data[$Field]);;
+  $Html .= "</td></tr></table></div>";
   return($Html);
 }
 

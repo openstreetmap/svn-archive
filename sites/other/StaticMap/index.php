@@ -450,7 +450,10 @@ function LinkSelf($Changes = array())
   $Query = "";
   foreach($Fields as $Field => $Details)
     {
-    $Query .= sprintf("%s=%s&", urlencode($Field), urlencode($NewData[$Field]));
+    if($NewData[$Field] != FieldDefault($Field))
+      {
+      $Query .= sprintf("%s=%s&", urlencode($Field), urlencode($NewData[$Field]));
+      }
     }
 
   $Base = ".";
@@ -469,9 +472,12 @@ function HiddenFields($Omit = array())
     {
     if(!in_array($Field, $Omit))
       {
-      printf("<input type='hidden' name='%s' value='%s'/>\n", 
-	htmlentities($Field), 
-	htmlentities($Data[$Field]));
+      if($Data[$Field] != FieldDefault($Field))
+	{
+	printf("<input type='hidden' name='%s' value='%s'/>\n", 
+	  htmlentities($Field), 
+	  htmlentities($Data[$Field]));
+	}
       }
     }
   return("./?" . $Query);

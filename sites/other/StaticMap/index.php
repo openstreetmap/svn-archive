@@ -458,7 +458,7 @@ switch($Data['mode'])
     }
   case 'Report error':
     {
-    $URL = sprintf("http://openstreetbugs.appspot.com/?lat=%f&lon=-%f&z=14", $Data['lat'], $Data['lon']);
+    $URL = sprintf("http://openstreetbugs.appspot.com/?lat=%f&lon=%f&z=14", $Data['lat'], $Data['lon']);
     printf("<h2>Report an error with the map data</h2>");
     printf("<p>This will report a map error to <a href='%s/'>OpenStreetBugs</a></p>",$URL);
     printf("<form method='post' action='http://openstreetbugs.appspot.com/addPOIexec'>\n");

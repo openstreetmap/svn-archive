@@ -17,6 +17,7 @@ $Fields = array(
   "rel"=>array("Relation", 'numeric', -1, -1, 1E10),
   "mlat"=>array("Marker latitude", 'numeric', 0, -90, 90),
   "mlon"=>array("Marker longitude", 'numeric', 0, -180, 180),
+  "show_icon_list"=>array("Show choice of icons", 'numeric', 0, 0, 1),
   );
 
 $MaxIcons = 10;
@@ -24,7 +25,12 @@ for($i = 0; $i < $MaxIcons; $i++)
 {
   $Fields["mlat$i"] = array("Marker $i latitude", 'numeric', 0, -90, 90);
   $Fields["mlon$i"] = array("Marker $i longitude", 'numeric', 0, -180, 180);
+  $Fields["mico$i"] = array("Marker $i icon", 'numeric', 0, 0, 65535);
 }
+$Fields["choose_marker_icon"] = array("Which marker's icon to modify", 'numeric', 0, 0, $MaxIcons);
+
+
+
 
 if(1 && $_GET["clear_cache"] == "yes") // TODO: disable in general use
 {
@@ -192,38 +198,51 @@ switch($Data['mode'])
     }
   case 'Add icon':
     {
-    ShowImage(true);
-    printf("<p>Click to add a marker</p>");
-    $Count = 0;
-    for($i = 0; $i < $MaxIcons; $i++)
+    if($Data['show_icon_list'])
       {
-      if(markerInUse($i))
-	{
-	printf("<p>%d: Location (%1.5f, %1.5f) <a href='%s'>delete</a></p>\n", 
-	  $i,
-	  $Data["mlat$i"],
-	  $Data["mlon$i"],
-	  LinkSelf(array("mlat$i" => 0, "mlon$i" => 0)));
-	$Count++;
-	}
+      iconSelector(sprintf("mico%d", $Data['choose_marker_icon']));
       }
-
-    if($Count == $MaxIcons)
+    else
       {
-      printf("<p>Reached the limit of %d markers</p>\n", $MaxIcons);
-      }
-
-    if($Count > 1)
-      {
-      $DelAll = array();
+      ShowImage(true);
+      printf("<p>Click map to add a new marker</p>");
+      $Count = 0;
       for($i = 0; $i < $MaxIcons; $i++)
 	{
-	$DelAll["mlat$i"] = 0;
-	$DelAll["mlon$i"] = 0;
-	}
-      printf("<p><a href='%s'>Delete all markers</a></p>\n", LinkSelf($DelAll));
-      }
+	if(markerInUse($i))
+	  {
+	  // TODO: image align no longer in HTML?
+	  $Icon = sprintf("<a href='%s'><img src='%s' align='middle' border='0' title='Click to change icon'/></a>",
+	    LinkSelf(array("choose_marker_icon" => $i, 'show_icon_list'=>1)),
+	    iconName($Data["mico$i"]));
 
+	  printf("<p>%s marker %d: Location (%1.5f, %1.5f)  <a href='%s'>delete</a></p>\n", 
+	    $Icon,
+	    $i,
+	    $Data["mlat$i"],
+	    $Data["mlon$i"],
+	    LinkSelf(array("mlat$i" => 0, "mlon$i" => 0)));
+	  $Count++;
+	  }
+	}
+      printf("<hr/><p>&nbsp;&nbsp;<b>&uarr;</b> <i>click icons to change them</i></p>\n");
+
+      if($Count == $MaxIcons)
+	{
+	printf("<p>Reached the limit of %d markers</p>\n", $MaxIcons);
+	}
+
+      if($Count > 1)
+	{
+	$DelAll = array();
+	for($i = 0; $i < $MaxIcons; $i++)
+	  {
+	  $DelAll["mlat$i"] = 0;
+	  $DelAll["mlon$i"] = 0;
+	  }
+	printf("<p><a href='%s'>Delete all markers</a></p>\n", LinkSelf($DelAll));
+	}
+      }
     break;
     }
   case 'Draw':
@@ -416,5 +435,32 @@ function ReadFields($Req)
   return($Data);
 }
 
+function iconSelector($OutputSymbol)
+{
+  $SymbolDir = "symbols";
+  printf("<p>Choose an image for %s<br/>\n", htmlentities($OutputSymbol));
+  if($fp = opendir($SymbolDir))
+    {
+    while(($File = readdir($fp)) !== false)
+      {
+      if(preg_match("{(\d+)\.png}", $File, $Matches))
+	{
+	$FullFile = sprintf("%s/%s", $SymbolDir, $File);
+	$IconID = $Matches[1];
+
+	printf("<span style='symbol'><a href='%s'><img src='%s' border=0 alt='icon $IconID' title='icon $IconID' /></a></span>\n", 
+	  LinkSelf(array('show_icon_list'=>0, $OutputSymbol=>$IconID)),
+	  $FullFile);
+	}
+      }
+    
+    closedir($fp);
+    }
+  printf("</p>");
+}
+function iconName($IconID)
+{
+  return(sprintf("symbols/%d.png", $IconID));
+}
 
 ?>

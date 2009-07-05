@@ -59,6 +59,7 @@ $Fields = array(
 	  'Export', 
 	  'Community', 
 	  'Report error', 
+	  'Debug',
 	  'API')),
   "gpx"=>array(
       'name'=>"GPX trace", 
@@ -174,8 +175,33 @@ if(0 && $_GET["clear_cache"] == "yes") // TODO: disable in general use
   exit;
 }
 
+
+# if mlat/mlon but not lat/lon supplied, then use those for map centre
+if((array_key_exists('mlat', $_REQUEST) && array_key_exists('mlon', $_REQUEST)) && !(array_key_exists('lat', $_REQUEST) && array_key_exists('lon', $_REQUEST)))
+{
+  $_REQUEST['lat'] = $_REQUEST['mlat'];
+  $_REQUEST['lon'] = $_REQUEST['mlon'];
+}
+
+# Handle 'standard' field names as used in other slippy-maps
+foreach(array("zoom"=>"z", "mlat" => "mlat0", "mlon" => "mlon0") as $k => $v)
+{
+  if(array_key_exists($k, $_REQUEST))
+    {
+    $_REQUEST[$v] = $_REQUEST[$k];
+    }
+}
+
+
+# if zoom supplied but not lat/lon, kill it!!!
+if(array_key_exists('z', $_REQUEST) && 
+  !(array_key_exists('lat', $_REQUEST) && array_key_exists('lon', $_REQUEST)))
+{
+  $_REQUEST['z'] = FieldDefault('z');
+}
+
 # Handle imagemaps
-if(preg_match("{&?(\d+),(\d+)$}", $_SERVER['QUERY_STRING'], $Matches))
+if(preg_match("{\&\?(\d+),(\d+)$}", $_SERVER['QUERY_STRING'], $Matches))
 {
   switch($_REQUEST['mode'])
     {
@@ -189,7 +215,6 @@ if(preg_match("{&?(\d+),(\d+)$}", $_SERVER['QUERY_STRING'], $Matches))
     case 'Location':
       {
       $Data = ReadFields($_REQUEST);
-
       list($_REQUEST['lat'], $_REQUEST['lon']) 
 	= imagemap_xy2ll($Matches[1], $Matches[2], $Data);
 
@@ -267,7 +292,7 @@ print "</div>\n\n<div class='main'>\n\n";
 
 switch($Data['mode'])
   {
-  case "Form":
+  case "Debug":
     {
     ShowImage();
 
@@ -376,7 +401,9 @@ switch($Data['mode'])
 	  $Count++;
 	  }
 	}
-      printf("<hr/><p>&nbsp;&nbsp;<b>&uarr;</b> <i>click icons to change them</i></p>\n");
+
+      if($Count > 0)
+	printf("<hr/><p>&nbsp;&nbsp;<b>&uarr;</b> <i>click icons to change them</i></p>\n");
 
       if($Count == $MaxIcons)
 	{

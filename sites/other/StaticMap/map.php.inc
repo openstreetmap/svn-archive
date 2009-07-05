@@ -90,6 +90,7 @@ function addDrawings($Image, $Data)
     $Colour = imagecolorallocate($Image, 0,0,128);
     $Points = array();
     $NumPoints = 0;
+    $Style = $Data["d{$i}_style"];
 
     for($j = 0; $j < MaxPoints(); $j++)
       {
@@ -100,7 +101,7 @@ function addDrawings($Image, $Data)
 	{
 	list($mx,$my) = imagemap_ll2xy($Lat, $Lon, $Data);
 
-	if($lastValid)
+	if($lastValid && $Style == "line")
 	  {
 	  imageLineThick($Image, $lastX, $lastY, $mx, $my, $Colour, 4);
 	  }
@@ -115,7 +116,7 @@ function addDrawings($Image, $Data)
 	}
       }
 
-    if($NumPoints > 2)
+    if($NumPoints > 2 && $Style=="polygon")
       {
       $Colour = imagecolorallocatealpha($Image, 0,128,0, 64);
       imagefilledpolygon($Image, $Points, $NumPoints, $Colour);

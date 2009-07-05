@@ -444,21 +444,33 @@ switch($Data['mode'])
       $Data['lon']);
 
     $Html = sprintf("<img src=\"%s\" width=\"%d\" height=\"%d\" alt=\"%s\" />", 
-      "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "show=1",
+      FullImageURL(),
       $Data['w'],
       $Data['h'],
       $AltText);
 
     printf("<form><textarea rows='10' cols='80'>%s</textarea></form>", htmlentities($Html));
+
+    printf("<h2>Image URL</h2><p>(paste this anywhere that you have to enter an image URL)</p>");
+    printf("<form><textarea rows='7' cols='80'>%s</textarea></form>", htmlentities(FullImageURL()));
+    printf("<p>(right-clicking on the image above and selecting <i>'copy image location'</i> should also give you the same URL)</p>");
+
     break;
     }
   case 'Community':
     {
+    printf("<h2>Share this map</h2>\n");
     printf("<p><a href='http://delicious.com/search?p=osm_static_maps'>Browse other people's maps</a></p>");
 
     // TODO; doesn't work
     printf("<p><a href='http://delicious.com/save?tags=osm_static_maps&url=%s'>Share this map on Del.icio.us</a> (account required)</p>", 
-      urlencode($_SERVER["HTTP_HOST"] .  $_SERVER['REQUEST_URI'] . 'show=1'));
+      htmlentities(urlencode(FullImageURL())));
+
+    printf("<p>Use this map to <a href='%s'>illustrate a wikipedia article</a> <i>(link goes to wikiproject page, not an upload form)</i></p>",
+      'http://en.wikipedia.org/wiki/Wikipedia:WikiProject_Maps');
+
+    printf("<h2>Edit the maps</h2>\n<p>Get involved with <a href='%s'>editing OpenStreetmap</a></p>\n", 
+      "http://wiki.openstreetmap.org/wiki/Beginners%27_Guide");
 
     break;
     }
@@ -549,7 +561,7 @@ function footer()
   $URL = "openstreetmap.org";
   return("<hr><p>Map data <a href='$OsmLicense'>CC-BY-SA 2.0</a>. Main site: <a href=http://'$URL'>$URL</a><br><span class='help_footer'>Use your browser's <i>back</i> button to undo mistakes.  Bookmark the page to save your map.</span></p>");
 }
-function LinkSelf($Changes = array())
+function LinkSelf($Changes = array(), $Base = "./")
 {
   global $Data;
   global $Fields;
@@ -567,13 +579,15 @@ function LinkSelf($Changes = array())
       }
     }
 
-  $Base = ".";
-
-  return($Base . "/?" . $Query);
+  return($Base . "?" . $Query);
 }
-function imageUrl()
+function imageUrl($Changes = array(), $Base="./")
 {
-  return(LinkSelf() . "show=1");
+  return(LinkSelf($Changes, $Base) . "show=1");
+}
+function FullImageUrl()
+{
+  return(imageUrl(array(), "http://" . $_SERVER["HTTP_HOST"] . "/~ojw/StaticMap/"));
 }
 function HiddenFields($Omit = array())
 {

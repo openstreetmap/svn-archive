@@ -64,12 +64,7 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Layer, $Format, $AddAttribu
   walkCache('expire');
 
   imagealphablending($Image, true);
-  for($i = 0; $i < 10; $i++)
-    {
-    list($mx,$my) = imagemap_ll2xy($Data["mlat$i"], $Data["mlon$i"], $Data);
-    $Color = imagecolorallocatealpha($Image, 255,0,0, 0.5);
-    imagefilledellipse($Image, $mx, $my, 20, 20, $Color);
-    }
+  addIcons($Image, $Data);
 
   if($AddAttribution)
     addText($Image, $Width, $Height, attribution($Layer));
@@ -83,6 +78,27 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Layer, $Format, $AddAttribu
     imagepng($Image);
   }
 
+}
+
+function addIcons($Image, $Data)
+{
+  for($i = 0; $i < 10; $i++)
+    {
+    list($mx,$my) = imagemap_ll2xy($Data["mlat$i"], $Data["mlon$i"], $Data);
+
+    $IconSize = 40; // TODO: query from icon image
+
+    if($Icon = imagecreatefrompng(sprintf("symbols/%d.png", $Data["mico$i"])))
+      {
+      imagecopy(
+	$Image,
+	$Icon, 
+	$mx - 0.5 * $IconSize,
+	$my - 0.5 * $IconSize, 
+	0, 0, 
+	$IconSize, $IconSize);
+      }
+    }
 }
 
 function attribution($Layer)

@@ -39,3 +39,7 @@ h1
 {
   background-color: #CCF;
 }
+.help_footer
+{
+  color:#888;
+}

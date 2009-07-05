@@ -1,6 +1,7 @@
 <?php
-include("map.php.inc");
-include("imagemap_projection.php");
+include_once("map.php.inc");
+include_once("imagemap_projection.php");
+include_once("limits.php.inc");
 
 # Standard fields
 $Fields = array(
@@ -70,7 +71,12 @@ $Fields = array(
       'max'=> 1),
   );
 
-$MaxIcons = 10;
+
+
+//----------------------------------------------------------------------------
+// Generate the fields used to specify and edit map-markers
+//----------------------------------------------------------------------------
+$MaxIcons = MaxIcons();;
 for($i = 0; $i < $MaxIcons; $i++)
 {
   $Fields["mlat$i"] = array(
@@ -100,6 +106,44 @@ $Fields["choose_marker_icon"] = array(
       'max'=> $MaxIcons);
 
 
+//----------------------------------------------------------------------------
+// Generate the fields used to specify and edit lines and polygons
+//----------------------------------------------------------------------------
+$MaxDrawings = MaxDrawings();
+$MaxPoints = MaxPoints(); // per drawing
+for($i = 0; $i < $MaxDrawings; $i++)
+{
+  for($j = 0; $j < $MaxPoints; $j++)
+  {
+  $Fields["d${i}p${j}lat"] = array(
+      'name'=>"Latitude of point $j in drawing $i", 
+      'type'=>'numeric',  
+      'default'=> 0,  
+      'min'=> -90, 
+      'max'=> 90);
+  $Fields["d${i}p${j}lon"] = array(
+      'name'=>"Longitude of point $j in drawing $i", 
+      'type'=>'numeric',  
+      'default'=> 0,  
+      'min'=> -180, 
+      'max'=> 180);
+  }
+}
+$Fields["d_num"] = array(
+      'name'=>"Which drawing to modify", 
+      'type'=>'numeric', 
+      'default'=> 0,  
+      'min'=> 0, 
+      'max'=> $MaxDrawings);
+
+$Fields["dp_num"] = array(
+      'name'=>"Which point to insert next in drawing", 
+      'type'=>'numeric', 
+      'default'=> 0,  
+      'min'=> 0, 
+      'max'=> $MaxPoints);
+
+
 if(1 && $_GET["clear_cache"] == "yes") // TODO: disable in general use
 {
   walkCache('del');
@@ -127,8 +171,13 @@ if(preg_match("{&?(\d+),(\d+)$}", $_SERVER['QUERY_STRING'], $Matches))
       }
     case 'Draw':
       {
-      list($_REQUEST['plat'], $_REQUEST['plon']) 
-	= imagemap_xy2ll($Matches[1], $Matches[2], ReadFields($_REQUEST));
+      $Data = ReadFields($_REQUEST);
+      $FieldBase = sprintf("d%dp%d", $Data["d_num"], $Data["dp_num"]);
+
+      list($_REQUEST[$FieldBase.'lat'], $_REQUEST[$FieldBase.'lon']) 
+	= imagemap_xy2ll($Matches[1], $Matches[2], $Data);
+
+      $_REQUEST['dp_num'] = min($Data["dp_num"]+1, $MaxPoints);
       break;
       }
     case 'Add icon':
@@ -316,7 +365,40 @@ switch($Data['mode'])
   case 'Draw':
     {
     ShowImage(true);
-    printf("<p>TODO: click to create polygons and polylines</p>");
+    printf("<p>Click image to add point %d to drawing %d</p><hr/>\n", $Data["dp_num"], $Data["d_num"]);
+    
+    for($i = 0; $i < $MaxDrawings; $i++)
+      {
+      $Html = "";
+      $Count = 0;
+      $DelAll = array();
+      for($j = 0; $j < $MaxPoints; $j++)
+	{
+	$FieldLat = "d${i}p${j}lat";
+	$FieldLon = "d${i}p${j}lon";
+
+	$Lat = $Data[$FieldLat];
+	$Lon = $Data[$FieldLon];
+	if($Lat != 0 && $Lon != 0)
+	  {
+	  $Html .= sprintf("<p>%d: %f, %f</p>\n", $j, $Lat, $Lon);
+	  $Count++;
+	  }
+	$DelAll[$FieldLat] = 0;
+	$DelAll[$FieldLon] = 0;
+	}
+      if($Count)
+	{
+	printf("<p>Drawing %d: (<a href='%s'>delete</a>)</p>\n", $i, LinkSelf($DelAll));
+	printf("%s\n", $Html);
+	}
+      else
+	{
+	printf("<p>Drawing %d: <a href='%s'>Start</a></p>\n", $i, LinkSelf(array('d_num'=>$i, 'dp_num'=>0)));
+	}
+      }
+
+
     break;
     }
   case 'Export':
@@ -436,7 +518,7 @@ function footer()
 {
   $OsmLicense = "http://creativecommons.org/licenses/by-sa/2.0/";
   $URL = "openstreetmap.org";
-  return("<hr><p>Map data <a href='$OsmLicense'>CC-BY-SA 2.0</a>. Main site: <a href=http://'$URL'>$URL</a></p>");
+  return("<hr><p>Map data <a href='$OsmLicense'>CC-BY-SA 2.0</a>. Main site: <a href=http://'$URL'>$URL</a><br><span class='help_footer'>Use your browser's <i>back</i> button to undo mistakes.  Bookmark the page to save your map.</span></p>");
 }
 function LinkSelf($Changes = array())
 {
@@ -541,7 +623,10 @@ function iconSelector($OutputSymbol)
 	$IconID = $Matches[1];
 
 	printf("<span style='symbol'><a href='%s'><img src='%s' border=0 alt='icon $IconID' title='icon $IconID' /></a></span>\n", 
-	  LinkSelf(array('show_icon_list'=>0, $OutputSymbol=>$IconID)),
+	  LinkSelf(array(
+	    'show_icon_list'=>0, 
+	    'choose_marker_icon'=>0,
+	    $OutputSymbol=>$IconID)),
 	  $FullFile);
 	}
       }

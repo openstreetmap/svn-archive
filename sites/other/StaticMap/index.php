@@ -50,7 +50,16 @@ $Fields = array(
   "mode"=>array(
       'name'=>"Edit mode", 
       'type'=>'tab',  
-      'options'=>array('Location', 'Resize', 'Style', 'Add icon', 'Draw', 'Export', 'Community', 'Report error', 'Help')),
+      'options'=>array(
+	  'Location', 
+	  'Resize', 
+	  'Style', 
+	  'Add icon', 
+	  'Draw', 
+	  'Export', 
+	  'Community', 
+	  'Report error', 
+	  'API')),
   "gpx"=>array(
       'name'=>"GPX trace", 
       'type'=>'numeric',  
@@ -96,7 +105,7 @@ for($i = 0; $i < $MaxIcons; $i++)
       'min'=> -180, 
       'max'=> 180);
   $Fields["mico$i"] = array(
-      'name'=>"Marker $i icon", 
+      'name'=>"Marker $i icon (see list in <a href='symbols/'>symbols</a> directory)", 
       'type'=>'numeric',  
       'default'=> 0,  
       'min'=> 0, 
@@ -462,7 +471,6 @@ switch($Data['mode'])
     printf("<h2>Share this map</h2>\n");
     printf("<p><a href='http://delicious.com/search?p=osm_static_maps'>Browse other people's maps</a></p>");
 
-    // TODO; doesn't work
     printf("<p><a href='http://delicious.com/save?tags=osm_static_maps&url=%s'>Share this map on Del.icio.us</a> (account required)</p>", 
       htmlentities(urlencode(FullImageURL())));
 
@@ -492,11 +500,15 @@ switch($Data['mode'])
 
     break;
     }
-  case 'Help':
+  case 'API':
     {
-    printf("<h2>Using this site</h2><p>TODO: help file</p>");
+    printf("<h2>API for accessing these maps</h2>\n");
+    printf("<p>All aspects of this site are available through HTTP GET requests.  The fields are described below:</p>");
+    ##printf("<p><i>Many of these fields are generated</i></p>");
+    printf("<p>Some of these fields are for navigating the website, and would not typically be used when requesting an image (e.g. show_icon_list or zoom_to_clicks)</p>");
+    printf("<p>Be sure to include show=1 to get the image instead of the website!</p>");
+    printf("<hr/>\n<div class='api'>");
 
-    printf("<h2>API help</h2>\n");
     printf("<p><b>show</b> (Returns the image rather than this web interface)</p><ul><li>0 = view image-editing tools</li><li>1 = view as image</li></ul>");
     foreach($Fields as $Field => $Details)
       {
@@ -521,6 +533,7 @@ switch($Data['mode'])
 	}
       }
     printf("<p><b>&?123,456</b> (imagemap coordinates, must be at end of query string): handles actions caused by clicking on a server-side imagemap.  Which action is taken depends on <b>mode=</b></p>");
+    printf("</div>"); // api
     break;
     }
   }

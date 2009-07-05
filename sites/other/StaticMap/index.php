@@ -113,6 +113,11 @@ $MaxDrawings = MaxDrawings();
 $MaxPoints = MaxPoints(); // per drawing
 for($i = 0; $i < $MaxDrawings; $i++)
 {
+  $Fields["d${i}_style"] = array(
+      'name'=>"Style of drawing $i", 
+      'type'=>'option',  
+      'options'=> array('line','polygon'));
+
   for($j = 0; $j < $MaxPoints; $j++)
   {
   $Fields["d${i}p${j}lat"] = array(
@@ -328,7 +333,7 @@ switch($Data['mode'])
 	{
 	if(markerInUse($i))
 	  {
-	  // TODO: image align no longer in HTML?
+	  // TODO: image-align no longer in HTML spec?
 	  $Icon = sprintf("<a href='%s'><img src='%s' align='middle' border='0' title='Click to change icon'/></a>",
 	    LinkSelf(array("choose_marker_icon" => $i, 'show_icon_list'=>1)),
 	    iconName($Data["mico$i"]));
@@ -390,6 +395,17 @@ switch($Data['mode'])
       if($Count)
 	{
 	printf("<p>Drawing %d: (<a href='%s'>delete</a>)</p>\n", $i, LinkSelf($DelAll));
+
+	printf("<p>Style: ");
+	foreach($Fields["d0_style"]['options'] as $Style)
+	  {
+	  printf("<a %s href='%s'>%s</a> ",
+	    $Data["d${i}_style"] == $Style ? " class='selected_drawing_style'":"",
+	    LinkSelf(array("d${i}_style" => $Style)),
+	    $Style);
+	  }
+	printf("</p>\n");
+
 	printf("%s\n", $Html);
 	}
       else

@@ -39,6 +39,13 @@ h1
 {
   background-color: #CCF;
 }
+.selected_drawing_style
+{
+  font-weight:bold;
+  background-color: #CCF;
+  border:1px solid blue;
+  padding:0.1em;
+}
 .help_footer
 {
   color:#888;

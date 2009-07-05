@@ -50,3 +50,12 @@ h1
 {
   color:#888;
 }
+.colour, .selected_colour
+{
+  text-decoration: none;
+  padding-left: 0.3em;
+}
+.selected_colour
+{
+  border:4px solid black;
+}

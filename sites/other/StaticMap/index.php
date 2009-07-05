@@ -4,32 +4,100 @@ include("imagemap_projection.php");
 
 # Standard fields
 $Fields = array(
-  "lat"=>array("Latitude", 'numeric', 52, -90, 90),
-  "lon"=>array("Longitude", 'numeric', -1, -180, 180),
-  "z"=>array("Zoom", 'numeric', 8, 4, 18),
-  "w"=>array("Width, px", 'numeric', 400, 40, 2000),
-  "h"=>array("Height, px", 'numeric', 300, 30, 1500),
-  "layer"=>array("Base map", 'option', array_keys(getLayers())),
-  "fmt"=>array("Image format", 'option', array('jpg','png')),
-  "lang"=>array("Language", 'option', array('en')),
-  "mode"=>array("Edit mode", 'tab', array('Start', 'Edit', 'Recentre', 'Resize', 'Style', 'Add icon', 'Draw', 'Export', 'Community', 'Report error', 'Help')),
-  "gpx"=>array("GPX trace", 'numeric', -1, -1, 1E10),
-  "rel"=>array("Relation", 'numeric', -1, -1, 1E10),
-  "mlat"=>array("Marker latitude", 'numeric', 0, -90, 90),
-  "mlon"=>array("Marker longitude", 'numeric', 0, -180, 180),
-  "show_icon_list"=>array("Show choice of icons", 'numeric', 0, 0, 1),
+  "lat"=>array(
+      'name'=>"Latitude", 
+      'type'=>'numeric', 
+      'default'=>52,  
+      'min'=> -90, 
+      'max'=> 90),
+  "lon"=>array(
+      'name'=>"Longitude", 
+      'type'=>'numeric',  
+      'default'=>-1,  
+      'min'=> -180, 
+      'max'=> 180),
+  "z"=>array(
+      'name'=>"Zoom", 
+      'type'=>'numeric', 
+      'default'=> 8,  
+      'min'=> 4, 
+      'max'=> 18),
+  "w"=>array(
+      'name'=>"Width, px", 
+      'type'=>'numeric', 
+      'default'=> 400,  
+      'min'=> 40, 
+      'max'=> 2000),
+  "h"=>array(
+      'name'=>"Height, px", 
+      'type'=>'numeric',  
+      'default'=> 300,  
+      'min'=> 30, 
+      'max'=> 1500),
+  "layer"=>array(
+      'name'=>"Base map", 
+      'type'=>'option',  
+      'options'=>array_keys(getLayers())),
+  "fmt"=>array(
+      'name'=>"Image format", 
+      'type'=>'option',  
+      'options'=>array('jpg','png')),
+  "lang"=>array(
+      'name'=>"Language", 
+      'type'=>'option', 
+       'options'=>array('en')),
+  "mode"=>array(
+      'name'=>"Edit mode", 
+      'type'=>'tab',  
+      'options'=>array('Start', 'Edit', 'Recentre', 'Resize', 'Style', 'Add icon', 'Draw', 'Export', 'Community', 'Report error', 'Help')),
+  "gpx"=>array(
+      'name'=>"GPX trace", 
+      'type'=>'numeric',  
+      'default'=> -1,  
+      'min'=> -1, 
+      'max'=> 1E10),
+  "rel"=>array(
+      'name'=>"Relation", 
+      'type'=>'numeric',  
+      'default'=> -1,  
+      'min'=> -1, 
+      'max'=> 1E10),
+  "show_icon_list"=>array(
+      'name'=>"Show choice of icons", 
+      'type'=>'numeric', 
+      'default'=> 0,  
+      'min'=> 0, 
+      'max'=> 1),
   );
 
 $MaxIcons = 10;
 for($i = 0; $i < $MaxIcons; $i++)
 {
-  $Fields["mlat$i"] = array("Marker $i latitude", 'numeric', 0, -90, 90);
-  $Fields["mlon$i"] = array("Marker $i longitude", 'numeric', 0, -180, 180);
-  $Fields["mico$i"] = array("Marker $i icon", 'numeric', 0, 0, 65535);
+  $Fields["mlat$i"] = array(
+      'name'=>"Marker $i latitude", 
+      'type'=>'numeric',  
+      'default'=> 0,  
+      'min'=> -90, 
+      'max'=> 90);
+  $Fields["mlon$i"] = array(
+      'name'=>"Marker $i longitude", 
+      'type'=>'numeric',  
+      'default'=> 0,  
+      'min'=> -180, 
+      'max'=> 180);
+  $Fields["mico$i"] = array(
+      'name'=>"Marker $i icon", 
+      'type'=>'numeric',  
+      'default'=> 0,  
+      'min'=> 0, 
+      'max'=> 65535);
 }
-$Fields["choose_marker_icon"] = array("Which marker's icon to modify", 'numeric', 0, 0, $MaxIcons);
-
-
+$Fields["choose_marker_icon"] = array(
+      'name'=>"Which marker's icon to modify", 
+      'type'=>'numeric', 
+      'default'=> 0,  
+      'min'=> 0, 
+      'max'=> $MaxIcons);
 
 
 if(1 && $_GET["clear_cache"] == "yes") // TODO: disable in general use
@@ -109,7 +177,7 @@ printf("<h1>%s</h1>\n", T(title()));
 
 printf("<div class='everything'>\n");
 printf("<div class='tabs'>\n");
-foreach($Fields['mode'][2] as $Mode)
+foreach($Fields['mode']['options'] as $Mode)
 {
   printf(" <a href='%s' class='tab%s'>%s</a>\n", 
     LinkSelf(array('mode' => $Mode)), 
@@ -125,9 +193,9 @@ switch($Data['mode'])
     ShowImage();
 
     printf("<form action='.' method='get'>");
-    foreach($Fields as $Field => $Options)
+    foreach($Fields as $Field)
     {
-      printf("<p>%s:", $Options[0]);
+      printf("<p>%s:", $Field['name']);
       switch($Options[1])
       {
 	case "numeric":
@@ -307,19 +375,19 @@ switch($Data['mode'])
 
     printf("<h2>API help</h2>\n");
     printf("<p><b>show</b> (Returns the image rather than this web interface)</p><ul><li>0 = view image-editing tools</li><li>1 = view as image</li></ul>");
-    foreach($Fields as $Field => $Options)
+    foreach($Fields as $Field => $FieldDetails)
       {
-      printf("<p><b>%s</b> (%s): ", $Field, $Options[0]);
+      printf("<p><b>%s</b> (%s): ", $Field, $FieldDetails['name']);
       switch($Options[1])
 	{
 	case "numeric":
-	  printf("numeric (%1.2f to %1.2f)\n", $Options[3], $Options[4]);
+	  printf("numeric (%1.2f to %1.2f)\n", $FieldDetails['min'], $FieldDetails['max']);
 	  break;
 	case 'option':
 	  printf("</p><ul>\n");
-	  foreach($Options[2] as $Layer)
+	  foreach($FieldDetails['options'] as $Option)
 	    {
-	    printf("<li>%s</li>\n", $Layer);
+	    printf("<li>%s</li>\n", $Option);
 	    }
 	  printf("</ul>\n");
 	  break;
@@ -380,7 +448,7 @@ function LinkSelf($Changes = array())
     $NewData[$k] = $v;
     }
   $Query = "";
-  foreach($Fields as $Field => $Options)
+  foreach($Fields as $Field => $Details)
     {
     $Query .= sprintf("%s=%s&", urlencode($Field), urlencode($NewData[$Field]));
     }
@@ -397,11 +465,13 @@ function HiddenFields($Omit = array())
 {
   global $Data;
   global $Fields;
-  foreach($Fields as $Field => $Options)
+  foreach($Fields as $Field => $Details)
     {
     if(!in_array($Field, $Omit))
       {
-      printf("<input type='hidden' name='%s' value='%s'/>\n", htmlentities($Field), htmlentities($Data[$Field]));
+      printf("<input type='hidden' name='%s' value='%s'/>\n", 
+	htmlentities($Field), 
+	htmlentities($Data[$Field]));
       }
     }
   return("./?" . $Query);
@@ -412,23 +482,20 @@ function ReadFields($Req)
   global $Fields;
   # Interpret our standard fields
   $Data = array();
-  foreach($Fields as $Field => $Options)
+  foreach($Fields as $Field => $Details)
   {
     $Value = $Req[$Field];
-    switch($Options[1])
+    switch($Details['type'])
     {
       case "numeric":
-	list($Name, $Type, $Default, $Min, $Max) = $Options;
-	if($Value < $Min || $Value > $Max)
-	  $Value = $Default;
+	if($Value < $Details['min'] || $Value > $Details['max'])
+	  $Value = $Details['default'];
 	break;
       case "tab":
       case "option":
-	$FieldOptions = $Options[2];
-	if(!in_array($Value, $FieldOptions))
-	  $Value = $FieldOptions[0];
+	if(!in_array($Value, $Details['options']))
+	  $Value = $Details['options'][0]; # default to the first one in array TODO: optional default here
 	break;
-
     }
     $Data[$Field] = $Value;
   }

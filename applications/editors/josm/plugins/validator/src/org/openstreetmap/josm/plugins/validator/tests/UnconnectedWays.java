@@ -65,8 +65,9 @@ public class UnconnectedWays extends Test
         Map<Node, Way> map = new HashMap<Node, Way>();
         for(Node en : endnodes_highway)
         {
+            Boolean isexit = OsmUtils.getOsmBoolean(en.get("noexit"));
             if("turning_circle".equals(en.get("highway")) ||
-            OsmUtils.getOsmBoolean(en.get("noexit")) || en.get("barrier") != null)
+            (isexit != null && isexit) || en.get("barrier") != null)
                 continue;
             for(MyWaySegment s : ways)
             {

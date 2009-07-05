@@ -20,7 +20,7 @@
 	$conn->query("SET NAMES utf8");
 
 	echo "<H3>Number of tagpairs seen in the current import</H3>\n";
-	$result =& $conn->query("SELECT COUNT(*) FROM tagpairs WHERE nc_node+nc_way+nc_relation+nc_other <> 0;");
+	$result =& $conn->query("SELECT COUNT(*) FROM tagpairs WHERE nc_node+nc_way+nc_relation+nc_other <> 0");
 	if (DB::isError($result) || $result->numRows() != 1) {
 		die ("SELECT failed: " . $result->getMessage() . "\n");
 	}

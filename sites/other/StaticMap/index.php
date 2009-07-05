@@ -193,10 +193,10 @@ switch($Data['mode'])
     ShowImage();
 
     printf("<form action='.' method='get'>");
-    foreach($Fields as $Field)
+    foreach($Fields as $Field => $Details)
     {
-      printf("<p>%s:", $Field['name']);
-      switch($Options[1])
+      printf("<p>%s:", $Details['name']);
+      switch($Details['type'])
       {
 	case "numeric":
 	  printf("<input type='text' name='%s' value='%s'/></p>\n", 
@@ -205,9 +205,9 @@ switch($Data['mode'])
 	  break;
 	case 'option':
 	  printf("<select name='%s'>\n", $Field);
-	  foreach($Options[2] as $Layer)
+	  foreach($Details['options'] as $Option)
 	  {
-	    printf(" <option%s>%s</option>\n", $Data[$Field]==$Layer ? " selected":"", $Layer);
+	    printf(" <option%s>%s</option>\n", $Data[$Field]==$Option ? " selected":"", $Option);
 	  }
 	  printf("</select>");
 	  break;
@@ -375,17 +375,17 @@ switch($Data['mode'])
 
     printf("<h2>API help</h2>\n");
     printf("<p><b>show</b> (Returns the image rather than this web interface)</p><ul><li>0 = view image-editing tools</li><li>1 = view as image</li></ul>");
-    foreach($Fields as $Field => $FieldDetails)
+    foreach($Fields as $Field => $Details)
       {
-      printf("<p><b>%s</b> (%s): ", $Field, $FieldDetails['name']);
-      switch($Options[1])
+      printf("<p><b>%s</b> (%s): ", $Field, $Details['name']);
+      switch($Details['type'])
 	{
 	case "numeric":
-	  printf("numeric (%1.2f to %1.2f)\n", $FieldDetails['min'], $FieldDetails['max']);
+	  printf("numeric (%1.2f to %1.2f)\n", $Details['min'], $Details['max']);
 	  break;
 	case 'option':
 	  printf("</p><ul>\n");
-	  foreach($FieldDetails['options'] as $Option)
+	  foreach($Details['options'] as $Option)
 	    {
 	    printf("<li>%s</li>\n", $Option);
 	    }
@@ -489,17 +489,36 @@ function ReadFields($Req)
     {
       case "numeric":
 	if($Value < $Details['min'] || $Value > $Details['max'])
-	  $Value = $Details['default'];
+	  $Value = FieldDefault($Field);
 	break;
       case "tab":
       case "option":
 	if(!in_array($Value, $Details['options']))
-	  $Value = $Details['options'][0]; # default to the first one in array TODO: optional default here
+	  $Value = FieldDefault($Field);
+	break;
+      default:
+	printf("<p>Unrecognised field type %s (default-deny means you need to specify what values are valid!)</p>", htmlentities($Details['type']));
+	$Value = 0;
 	break;
     }
     $Data[$Field] = $Value;
   }
   return($Data);
+}
+
+function FieldDefault($Field)
+{
+  global $Fields;
+  if(array_key_exists('default', $Fields[$Field]))
+    return($Fields[$Field]['default']);
+  
+  switch($Fields[$Field]['type'])
+    {
+    case "tab":
+    case "option":
+      return($Fields[$Field]['options'][0]);
+    }
+  return(0);
 }
 
 function iconSelector($OutputSymbol)

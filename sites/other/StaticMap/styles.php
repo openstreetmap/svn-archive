@@ -39,7 +39,7 @@ h1
 {
   background-color: #CCF;
 }
-.selected_drawing_style
+.selected_span
 {
   font-weight:bold;
   background-color: #CCF;

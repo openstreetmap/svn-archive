@@ -8,31 +8,31 @@ $Fields = array(
   "lat"=>array(
       'name'=>"Latitude", 
       'type'=>'numeric', 
-      'default'=>52,  
+      'default'=>45,  
       'min'=> -90, 
       'max'=> 90),
   "lon"=>array(
       'name'=>"Longitude", 
       'type'=>'numeric',  
-      'default'=>-1,  
+      'default'=>0,  
       'min'=> -180, 
       'max'=> 180),
   "z"=>array(
       'name'=>"Zoom", 
       'type'=>'numeric', 
-      'default'=> 8,  
+      'default'=> 3,  
       'min'=> 4, 
       'max'=> 18),
   "w"=>array(
       'name'=>"Width, px", 
       'type'=>'numeric', 
-      'default'=> 400,  
+      'default'=> 600,  
       'min'=> 40, 
       'max'=> 2000),
   "h"=>array(
       'name'=>"Height, px", 
       'type'=>'numeric',  
-      'default'=> 300,  
+      'default'=> 450,  
       'min'=> 30, 
       'max'=> 1500),
   "layer"=>array(
@@ -50,7 +50,7 @@ $Fields = array(
   "mode"=>array(
       'name'=>"Edit mode", 
       'type'=>'tab',  
-      'options'=>array('Start', 'Edit', 'Recentre', 'Resize', 'Style', 'Add icon', 'Draw', 'Export', 'Community', 'Report error', 'Help')),
+      'options'=>array('Location', 'Resize', 'Style', 'Add icon', 'Draw', 'Export', 'Community', 'Report error', 'Help')),
   "gpx"=>array(
       'name'=>"GPX trace", 
       'type'=>'numeric',  
@@ -69,6 +69,10 @@ $Fields = array(
       'default'=> 0,  
       'min'=> 0, 
       'max'=> 1),
+  "zoom_to_clicks"=>array(
+      'name'=>"Zoom to mouse position when recentering map", 
+      'type'=>'option', 
+      'options'=> array('on', 'off')),
   );
 
 
@@ -112,28 +116,28 @@ $Fields["choose_marker_icon"] = array(
 $MaxDrawings = MaxDrawings();
 $MaxPoints = MaxPoints(); // per drawing
 for($i = 0; $i < $MaxDrawings; $i++)
-{
+  {
   $Fields["d${i}_style"] = array(
       'name'=>"Style of drawing $i", 
       'type'=>'option',  
       'options'=> array('line','polygon'));
 
   for($j = 0; $j < $MaxPoints; $j++)
-  {
-  $Fields["d${i}p${j}lat"] = array(
-      'name'=>"Latitude of point $j in drawing $i", 
-      'type'=>'numeric',  
-      'default'=> 0,  
-      'min'=> -90, 
-      'max'=> 90);
-  $Fields["d${i}p${j}lon"] = array(
-      'name'=>"Longitude of point $j in drawing $i", 
-      'type'=>'numeric',  
-      'default'=> 0,  
-      'min'=> -180, 
-      'max'=> 180);
+    {
+    $Fields["d${i}p${j}lat"] = array(
+	'name'=>"Latitude of point $j in drawing $i", 
+	'type'=>'numeric',  
+	'default'=> 0,  
+	'min'=> -90, 
+	'max'=> 90);
+    $Fields["d${i}p${j}lon"] = array(
+	'name'=>"Longitude of point $j in drawing $i", 
+	'type'=>'numeric',  
+	'default'=> 0,  
+	'min'=> -180, 
+	'max'=> 180);
+    }
   }
-}
 $Fields["d_num"] = array(
       'name'=>"Which drawing to modify", 
       'type'=>'numeric', 
@@ -149,7 +153,7 @@ $Fields["dp_num"] = array(
       'max'=> $MaxPoints);
 
 
-if(1 && $_GET["clear_cache"] == "yes") // TODO: disable in general use
+if(0 && $_GET["clear_cache"] == "yes") // TODO: disable in general use
 {
   walkCache('del');
   walkCache('stat');
@@ -168,10 +172,16 @@ if(preg_match("{&?(\d+),(\d+)$}", $_SERVER['QUERY_STRING'], $Matches))
       $_REQUEST['mode'] = "Edit";
       break;
       }
-    case 'Recentre':
+    case 'Location':
       {
+      $Data = ReadFields($_REQUEST);
+
       list($_REQUEST['lat'], $_REQUEST['lon']) 
-	= imagemap_xy2ll($Matches[1], $Matches[2], ReadFields($_REQUEST));
+	= imagemap_xy2ll($Matches[1], $Matches[2], $Data);
+
+      if($Data["zoom_to_clicks"] == 'on')
+	$_REQUEST['z'] = $Data['z'] + 2;
+
       break;
       }
     case 'Draw':
@@ -227,6 +237,7 @@ printf("<html><head><title>%s</title>\n", T(title()));
 printf("<link rel='stylesheet' href='styles.php?look=default'/>");
 printf("</head>\n");
 
+printf("<p style='float:right'><a href='./'>Restart</a></p>");
 printf("<h1>%s</h1>\n", T(title()));
 
 printf("<div class='everything'>\n");
@@ -242,7 +253,7 @@ print "</div>\n\n<div class='main'>\n\n";
 
 switch($Data['mode'])
   {
-  case "Edit":
+  case "Form":
     {
     ShowImage();
 
@@ -275,11 +286,15 @@ switch($Data['mode'])
     }
   case "Start":
     printf("<p>TODO: slippy-map here</p>");
-  case 'Recentre':
+  case 'Location':
     {
+    printf("<p>");
+    printf("<a class='zoom' href='%s'>Zoom Out</a> ", LinkSelf(array('z'=>$Data['z']-1)));
+    printf("<a class='zoom' href='%s'>Zoom In</a>", LinkSelf(array('z'=>$Data['z']+1)));
+    printf("</p>");
+
     ShowImage(true);
-    printf("<p>Click map to recenter</p>");
-    printf("<p>Select one of the other tabs to edit the image</p>");
+    printf("<p>Click map to recenter (zooming to mouse click: %s)</p>", OptionList("zoom_to_clicks"));
     break;
     }
   case 'Resize':
@@ -394,23 +409,15 @@ switch($Data['mode'])
 	}
       if($Count)
 	{
-	printf("<p>Drawing %d: (<a href='%s'>delete</a>)</p>\n", $i, LinkSelf($DelAll));
+	printf("<h2>Drawing %d: (<a href='%s'>delete</a>)</h2>\n", $i, LinkSelf($DelAll));
 
-	printf("<p>Style: ");
-	foreach($Fields["d0_style"]['options'] as $Style)
-	  {
-	  printf("<a %s href='%s'>%s</a> ",
-	    $Data["d${i}_style"] == $Style ? " class='selected_drawing_style'":"",
-	    LinkSelf(array("d${i}_style" => $Style)),
-	    $Style);
-	  }
-	printf("</p>\n");
+	printf("<p>Style: %s</p>", OptionList("d${i}_style"));
 
 	printf("%s\n", $Html);
 	}
       else
 	{
-	printf("<p>Drawing %d: <a href='%s'>Start</a></p>\n", $i, LinkSelf(array('d_num'=>$i, 'dp_num'=>0)));
+	printf("<h2>Drawing %d:</h2>\n<p><a href='%s'>Start</a></p>\n", $i, LinkSelf(array('d_num'=>$i, 'dp_num'=>0)));
 	}
       }
 
@@ -548,7 +555,7 @@ function LinkSelf($Changes = array())
   $Query = "";
   foreach($Fields as $Field => $Details)
     {
-    if($NewData[$Field] != FieldDefault($Field))
+    if($NewData[$Field] != FieldDefault($Field) || $Field == "mode")
       {
       $Query .= sprintf("%s=%s&", urlencode($Field), urlencode($NewData[$Field]));
       }
@@ -623,6 +630,21 @@ function FieldDefault($Field)
       return($Fields[$Field]['options'][0]);
     }
   return(0);
+}
+
+function OptionList($Field)
+{
+  global $Fields;
+  global $Data;
+  $Html = "";
+  foreach($Fields[$Field]['options'] as $Style)
+    {
+    $Html .= sprintf("<a %s href='%s'>%s</a> ",
+      $Data[$Field] == $Style ? " class='selected_span'":"",
+      LinkSelf(array($Field => $Style)),
+      $Style);
+    }
+  return($Html);
 }
 
 function iconSelector($OutputSymbol)

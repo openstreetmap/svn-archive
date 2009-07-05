@@ -97,7 +97,7 @@ function addDrawings($Image, $Data)
       $Lat = $Data["d{$i}p${j}lat"];
       $Lon = $Data["d{$i}p${j}lon"];
 
-      if($Lat != 0 && $Lon != 0)
+      if($Lat != 0 || $Lon != 0)
 	{
 	list($mx,$my) = imagemap_ll2xy($Lat, $Lon, $Data);
 
@@ -130,19 +130,25 @@ function addIcons($Image, $Data)
 {
   for($i = 0; $i < MaxIcons(); $i++)
     {
-    list($mx,$my) = imagemap_ll2xy($Data["mlat$i"], $Data["mlon$i"], $Data);
-
-    $IconSize = 40; // TODO: query from icon image
-
-    if($Icon = imagecreatefrompng(sprintf("symbols/%d.png", $Data["mico$i"])))
+    $Lat = $Data["mlat$i"];
+    $Lon = $Data["mlon$i"];
+    
+    if($Lat != 0 || $Lon != 0)
       {
-      imagecopy(
-	$Image,
-	$Icon, 
-	$mx - 0.5 * $IconSize,
-	$my - 0.5 * $IconSize, 
-	0, 0, 
-	$IconSize, $IconSize);
+      list($mx,$my) = imagemap_ll2xy($Lat, $Lon, $Data);
+
+      $IconSize = 40; // TODO: query from icon image
+
+      if($Icon = imagecreatefrompng(sprintf("symbols/%d.png", $Data["mico$i"])))
+	{
+	imagecopy(
+	  $Image,
+	  $Icon, 
+	  $mx - 0.5 * $IconSize,
+	  $my - 0.5 * $IconSize, 
+	  0, 0, 
+	  $IconSize, $IconSize);
+	}
       }
     }
 }

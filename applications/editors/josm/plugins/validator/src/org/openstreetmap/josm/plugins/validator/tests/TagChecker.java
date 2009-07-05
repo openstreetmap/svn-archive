@@ -65,6 +65,7 @@ public class TagChecker extends Test
 {
     /** The default data files */
     public static final String DATA_FILE = "http://svn.openstreetmap.org/applications/editors/josm/plugins/validator/tagchecker.cfg";
+    public static final String IGNORE_FILE = "http://svn.openstreetmap.org/applications/editors/josm/plugins/validator/ignoretags.cfg";
     public static final String SPELL_FILE = "http://svn.openstreetmap.org/applications/utils/planet.osm/java/speller/words.cfg";
 
     /** The spell check key substitutions: the key should be substituted by the value */
@@ -73,6 +74,10 @@ public class TagChecker extends Test
     protected static Bag<String, String> presetsValueData;
     /** The TagChecker data */
     protected static List<CheckerData> checkerData = new ArrayList<CheckerData>();
+    protected static ArrayList<String> ignoreDataStartsWith = new ArrayList<String>();
+    protected static ArrayList<String> ignoreDataEquals = new ArrayList<String>();
+    protected static ArrayList<String> ignoreDataEndsWith = new ArrayList<String>();
+    protected static ArrayList<IgnoreKeyPair> ignoreDataKeyPair = new ArrayList<IgnoreKeyPair>();
 
     /** The preferences prefix */
     protected static final String PREFIX = PreferenceEditor.PREFIX + "." + TagChecker.class.getSimpleName();
@@ -85,6 +90,7 @@ public class TagChecker extends Test
 
     public static final String PREF_SOURCES = PREFIX + ".sources";
     public static final String PREF_USE_DATA_FILE = PREFIX + ".usedatafile";
+    public static final String PREF_USE_IGNORE_FILE = PREFIX + ".useignorefile";
     public static final String PREF_USE_SPELL_FILE = PREFIX + ".usespellfile";
 
     public static final String PREF_CHECK_KEYS_BEFORE_UPLOAD = PREF_CHECK_KEYS + "BeforeUpload";
@@ -112,6 +118,7 @@ public class TagChecker extends Test
     protected JCheckBox prefCheckPaintBeforeUpload;
 
     protected JCheckBox prefUseDataFile;
+    protected JCheckBox prefUseIgnoreFile;
     protected JCheckBox prefUseSpellFile;
 
     protected JButton addSrcButton;
@@ -168,6 +175,13 @@ public class TagChecker extends Test
             else
                 sources = DATA_FILE + ";" + sources;
         }
+        if(Main.pref.getBoolean(PREF_USE_IGNORE_FILE, true))
+        {
+            if( sources == null || sources.length() == 0)
+                sources = IGNORE_FILE;
+            else
+                sources = IGNORE_FILE + ";" + sources;
+        }
         if(Main.pref.getBoolean(PREF_USE_SPELL_FILE, true))
         {
             if( sources == null || sources.length() == 0)
@@ -197,6 +211,7 @@ public class TagChecker extends Test
 
                 String okValue = null;
                 Boolean tagcheckerfile = false;
+                Boolean ignorefile = false;
                 String line;
                 while((line = reader.readLine()) != null && (tagcheckerfile || line.length() != 0))
                 {
@@ -204,6 +219,40 @@ public class TagChecker extends Test
                     {
                         if(line.startsWith("# JOSM TagChecker"))
                             tagcheckerfile = true;
+                        if(line.startsWith("# JOSM IgnoreTags"))
+                            ignorefile = true;
+                        continue;
+                    }
+                    else if(ignorefile)
+                    {
+                        line = line.trim();
+                        if(line.length() < 4)
+                            continue;
+
+                        String key = line.substring(0, 2);
+                        line = line.substring(2);
+
+                        if(key.equals("S:"))
+                        {
+                            ignoreDataStartsWith.add(line);
+                        }
+                        else if(key.equals("E:"))
+                        {
+                            ignoreDataEquals.add(line);
+                        }
+                        else if(key.equals("F:"))
+                        {
+                            ignoreDataEndsWith.add(line);
+                        }
+                        else if(key.equals("K:"))
+                        {
+                            IgnoreKeyPair tmp = new IgnoreKeyPair();
+                            int mid = line.indexOf("=");
+                            tmp.key = line.substring(0, mid);
+                            tmp.value = line.substring(mid+1);
+                            ignoreDataKeyPair.add(tmp);
+                        }
+                        continue;
                     }
                     else if(tagcheckerfile)
                     {
@@ -390,14 +439,17 @@ public class TagChecker extends Test
                 if(values == null)
                 {
                     Boolean ignore = false;
-                    for(String a : Main.pref.getCollection(PreferenceEditor.PREFIX + ".startswithkeys",
-                    Arrays.asList(new String[]{"opengeodb","openGeoDB","name:","note:"})))
+                    for(String a : ignoreDataStartsWith)
                     {
                         if(key.startsWith(a))
                             ignore = true;
                     }
-                    for(String a : Main.pref.getCollection(PreferenceEditor.PREFIX + ".endswithkeys",
-                    Arrays.asList(new String[]{":forward",":backward",":left",":right"})))
+                    for(String a : ignoreDataEquals)
+                    {
+                        if(key.equals(a))
+                            ignore = true;
+                    }
+                    for(String a : ignoreDataEndsWith)
                     {
                         if(key.endsWith(a))
                             ignore = true;
@@ -412,10 +464,20 @@ public class TagChecker extends Test
                 }
                 else if(values.size() > 0 && !values.contains(prop.getValue()))
                 {
-                    String i = marktr("Value ''{0}'' for key ''{1}'' not in presets.");
-                    errors.add( new TestError(this, Severity.OTHER, tr("Presets do not contain property value"),
-                    tr(i, prop.getValue(), key), MessageFormat.format(i, prop.getValue(), key), INVALID_VALUE, p) );
-                    withErrors.add(p, "UPV");
+                    boolean ignore = false;
+                    for(IgnoreKeyPair a : ignoreDataKeyPair)
+                    {
+                        if(key.equals(a.key) && value.equals(a.value))
+                            ignore = true;
+                    }
+
+                    if(!ignore)
+                    {
+                        String i = marktr("Value ''{0}'' for key ''{1}'' not in presets.");
+                        errors.add( new TestError(this, Severity.OTHER, tr("Presets do not contain property value"),
+                        tr(i, prop.getValue(), key), MessageFormat.format(i, prop.getValue(), key), INVALID_VALUE, p) );
+                        withErrors.add(p, "UPV");
+                    }
                 }
             }
             if( checkFixmes && value != null && value.length() > 0 )
@@ -601,6 +663,10 @@ public class TagChecker extends Test
         prefUseDataFile.setToolTipText(tr("Use the default data file (recommended)."));
         testPanel.add(prefUseDataFile, GBC.eol().insets(20,0,0,0));
 
+        prefUseIgnoreFile = new JCheckBox(tr("Use default tag ignore file."), Main.pref.getBoolean(PREF_USE_IGNORE_FILE, true));
+        prefUseIgnoreFile.setToolTipText(tr("Use the default tag ignore file (recommended)."));
+        testPanel.add(prefUseIgnoreFile, GBC.eol().insets(20,0,0,0));
+
         prefUseSpellFile = new JCheckBox(tr("Use default spellcheck file."), Main.pref.getBoolean(PREF_USE_SPELL_FILE, true));
         prefUseSpellFile.setToolTipText(tr("Use the default spellcheck file (recommended)."));
         testPanel.add(prefUseSpellFile, GBC.eol().insets(20,0,0,0));
@@ -634,6 +700,7 @@ public class TagChecker extends Test
         Main.pref.put(PREF_CHECK_FIXMES_BEFORE_UPLOAD, prefCheckFixmesBeforeUpload.isSelected());
         Main.pref.put(PREF_CHECK_PAINT_BEFORE_UPLOAD, prefCheckPaintBeforeUpload.isSelected());
         Main.pref.put(PREF_USE_DATA_FILE, prefUseDataFile.isSelected());
+        Main.pref.put(PREF_USE_IGNORE_FILE, prefUseIgnoreFile.isSelected());
         Main.pref.put(PREF_USE_SPELL_FILE, prefUseSpellFile.isSelected());
         String sources = "";
         if( Sources.getModel().getSize() > 0 )
@@ -708,6 +775,11 @@ public class TagChecker extends Test
         }
 
         return false;
+    }
+
+    private static class IgnoreKeyPair {
+        public String key;
+        public String value;
     }
 
     private static class CheckerData {

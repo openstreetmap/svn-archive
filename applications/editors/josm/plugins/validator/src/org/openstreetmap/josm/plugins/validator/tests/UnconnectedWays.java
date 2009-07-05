@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
@@ -64,9 +65,12 @@ public class UnconnectedWays extends Test
         Map<Node, Way> map = new HashMap<Node, Way>();
         for(Node en : endnodes_highway)
         {
+            if("turning_circle".equals(en.get("highway")) ||
+            OsmUtils.getOsmBoolean(en.get("noexit")) || en.get("barrier") != null)
+                continue;
             for(MyWaySegment s : ways)
             {
-                if(s.highway && s.nearby(en, mindist) && (a == null || a.contains(en.getCoor())))
+                if(!s.isBoundary && !s.isAbandoned && s.highway && s.nearby(en, mindist) && (a == null || a.contains(en.getCoor())))
                     map.put(en, s.w);
             }
         }
@@ -84,7 +88,7 @@ public class UnconnectedWays extends Test
         {
             for(MyWaySegment s : ways)
             {
-                if(!s.highway && s.nearby(en, mindist) && !s.isArea() && (a == null || a.contains(en.getCoor())))
+                if(!s.isBoundary && !s.isAbandoned && !s.highway && s.nearby(en, mindist) && !s.isArea() && (a == null || a.contains(en.getCoor())))
                     map.put(en, s.w);
             }
         }
@@ -92,7 +96,7 @@ public class UnconnectedWays extends Test
         {
             for(MyWaySegment s : ways)
             {
-                if(s.nearby(en, mindist) && !s.isArea() && (a == null || a.contains(en.getCoor())))
+                if(!s.isBoundary && !s.isAbandoned && s.nearby(en, mindist) && !s.isArea() && (a == null || a.contains(en.getCoor())))
                     map.put(en, s.w);
             }
         }
@@ -113,7 +117,7 @@ public class UnconnectedWays extends Test
             {
                 for(MyWaySegment s : ways)
                 {
-                    if(s.nearby(en, minmiddledist) && (a == null || a.contains(en.getCoor())))
+                    if(!s.isBoundary && !s.isAbandoned && s.nearby(en, minmiddledist) && (a == null || a.contains(en.getCoor())))
                         map.put(en, s.w);
                 }
             }
@@ -131,7 +135,7 @@ public class UnconnectedWays extends Test
             {
                 for(MyWaySegment s : ways)
                 {
-                    if(s.nearby(en, minmiddledist) && (a == null || a.contains(en.getCoor())))
+                    if(!s.isBoundary && !s.isAbandoned && s.nearby(en, minmiddledist) && (a == null || a.contains(en.getCoor())))
                         map.put(en, s.w);
                 }
             }
@@ -153,12 +157,17 @@ public class UnconnectedWays extends Test
     {
         private Line2D line;
         public Way w;
+        public Boolean isAbandoned = false;
+        public Boolean isBoundary = false;
         public Boolean highway;
 
         public MyWaySegment(Way w, Node n1, Node n2)
         {
             this.w = w;
-            this.highway = w.get("highway") != null || w.get("railway") != null;
+            String railway = w.get("railway");
+            this.isAbandoned = railway != null && railway.equals("abandoned");
+            this.highway = w.get("highway") != null || (railway != null && !isAbandoned);
+            this.isBoundary = w.get("boundary") != null && w.get("boundary").equals("administrative") && !this.highway;
             line = new Line2D.Double(n1.getEastNorth().east(), n1.getEastNorth().north(),
             n2.getEastNorth().east(), n2.getEastNorth().north());
         }
@@ -168,7 +177,7 @@ public class UnconnectedWays extends Test
             return !w.nodes.contains(n)
             && line.ptSegDist(n.getEastNorth().east(), n.getEastNorth().north()) < dist;
         }
-        
+
         public boolean isArea() {
             return w.get("landuse") != null
                 || w.get("leisure") != null

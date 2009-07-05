@@ -365,7 +365,7 @@ public class AgpifojLayer extends Layer {
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
         for (ImageEntry e : data)
-            v.visit(e.pos.getEastNorth());
+            v.visit(e.pos);
     }
 
     /*

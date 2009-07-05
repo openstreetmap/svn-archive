@@ -978,7 +978,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         Double curElevation = null;
 
         if (prevWp != null) {
-            double distance = getDistance(prevWp, curWp);
+            double distance = prevWp.getCoor().greatCircleDistance(curWp.getCoor());
             // This is in km/h, 3.6 * m/s
             if (curDateWp > prevDateWp)
                 speed = 3.6 * distance / (curDateWp - prevDateWp);
@@ -1152,21 +1152,5 @@ public class CorrelateGpxWithImages implements ActionListener {
         } else {
             return new Float((h + m / 60.0) * (sgnTimezone == '-' ? -1 : 1));
         }
-    }
-
-    /** Return the distance in meters between 2 points
-     * Formula and earth radius from : http://en.wikipedia.org/wiki/Great-circle_distance */
-    public double getDistance(WayPoint p1, WayPoint p2) {
-        double p1Lat = p1.getCoor().lat() * Math.PI / 180;
-        double p1Lon = p1.getCoor().lon() * Math.PI / 180;
-        double p2Lat = p2.getCoor().lat() * Math.PI / 180;
-        double p2Lon = p2.getCoor().lon() * Math.PI / 180;
-        double ret = Math.atan2(Math.sqrt(Math.pow(Math.cos(p2Lat) * Math.sin(p2Lon - p1Lon), 2)
-                                          + Math.pow(Math.cos(p1Lat) * Math.sin(p2Lat)
-                                                     - Math.sin(p1Lat) * Math.cos(p2Lat) * Math.cos(p2Lon - p1Lon), 2)),
-                                Math.sin(p1Lat) * Math.sin(p2Lat)
-                                + Math.cos(p1Lat) * Math.cos(p2Lat) * Math.cos(p2Lon - p1Lon))
-                     * 6372795; // Earth radius, in meters
-        return ret;
     }
 }

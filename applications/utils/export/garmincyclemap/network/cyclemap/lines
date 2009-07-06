@@ -1,0 +1,117 @@
+# ------------------------------------------------------------------------------------
+# Preprocessing
+# ------------------------------------------------------------------------------------
+
+# -----	Generic rules for track quality
+
+highway=track | highway=cycleway | highway=footway | highway=bridleway | highway=byway | highway=unsurfaced | highway=path { set offroad=yes; }
+surface=dirt | surface=grass | surface=mud { set difficult=yes; }
+tracktype=grade5 { set difficult=yes; }
+bicycle=impassable | bicycle:mtb=impassable | bicycle:hybrid=difficult | bicycle:hybrid=impassable { set difficult=yes; }
+
+# -----	Generic rules for "cyclable roads" - those which are particularly good for cycling
+#		c1,c2 etc. - 'points' for cyclability
+#		c_override -  not suited for cycling
+
+#traffic=low { set c1=yes; }
+#scenic=yes { set c2=yes; }
+#traffic=high { set c_override=yes; }
+#c1=yes & c2=yes & c_override!=* { set cyclable=yes; }
+
+# ----- Downgrade tracks where bicycles are banned
+#		(ignore motorway/trunk as this'll look stupid)
+
+bicycle=no & ( highway!=motorway & highway!=trunk ) { set highway=footway; }
+access=private { set highway=private; }
+
+# -----	Route names
+
+highway=* { name 
+	'${ncn_ref|highway-symbol:box} R${rcn_ref} ${name} (${ref})' |
+	'${ncn_ref|highway-symbol:box} R${rcn_ref} ${name}' |
+	'${ncn_ref|highway-symbol:box} R${rcn_ref} (${ref})' |
+	'${ncn_ref|highway-symbol:box}  R${rcn_ref}' |
+	'${ncn_ref|highway-symbol:box} ${name} (${ref})' |
+	'${ncn_ref|highway-symbol:box}  ${name}' |
+	'${ncn_ref|highway-symbol:box}  (${ref})' |
+	'${ncn_ref|highway-symbol:box}' |
+	'${rcn_ref|highway-symbol:box} ${name} (${ref})' |
+	'${rcn_ref|highway-symbol:box}  ${name}' |
+	'${rcn_ref|highway-symbol:box}  (${ref})' |
+	'${rcn_ref|highway-symbol:box}' |
+	'${name} (${ref})' |
+	'${name}' |
+	'${ref}' }
+
+
+# ------------------------------------------------------------------------------------
+# Cycle routes
+# ------------------------------------------------------------------------------------
+
+(ncn=yes | ncn_ref=*) & offroad=yes 		[0x02 road_class=4 road_speed=7 resolution 16]
+(rcn=yes | rcn_ref=*) & offroad=yes			[0x04 road_class=4 road_speed=7 resolution 16]
+(ncn=yes | ncn_ref=*) & national_byway=yes  [0x06 road_class=4 road_speed=7 resolution 16]
+(rcn=yes | rcn_ref=*) & national_byway=yes  [0x07 road_class=4 road_speed=7 resolution 16]
+(ncn=yes | ncn_ref=*) & difficult=yes		[0x18 resolution 16]
+(rcn=yes | rcn_ref=*) & difficult=yes		[0x19 resolution 16]
+(ncn=yes | ncn_ref=*)						[0x01 road_class=4 road_speed=7 resolution 16]
+(rcn=yes | rcn_ref=*)						[0x03 road_class=4 road_speed=7 resolution 16]
+national_byway=yes				    		[0x05 road_class=4 road_speed=7 resolution 16]
+#highway=secondary & cyclable=yes			[0x08 road_class=3 resolution 20]
+#highway=tertiary & cyclable=yes			[0x09 road_class=3 resolution 20]
+#( highway=unclassified | highway=residential ) & cyclable=yes [0x0A road_class=3 resolution 20]
+
+# ------------------------------------------------------------------------------------
+# Standard roads
+# ------------------------------------------------------------------------------------
+
+# Roads
+highway=motorway [0x1C road_class=0 road_speed=1 resolution 16]
+highway=motorway_link [0x1C road_class=0 road_speed=1 resolution 16]
+highway=trunk  [0x0B road_class=0 road_speed=1 resolution 16]
+highway=trunk_link [0x0B road_class=0 road_speed=1 resolution 16]
+highway=primary [0x0C road_class=1 road_speed=2 resolution 18]
+highway=primary_link [0x0C road_class=1 road_speed=2 resolution 18]
+highway=secondary [0x0D road_class=2 road_speed=3 resolution 20]
+highway=tertiary [0x0E road_class=2 road_speed=4 resolution 20]
+highway=unclassified | highway=minor [0x0F road_class=3 road_speed=5 resolution 20]
+highway=residential | highway=living_street | highway=service [0x10 road_class=3 road_speed=5 resolution 22]
+
+# Unroutable paths
+highway=track & difficult=yes [0x26 resolution 22]
+highway=bridleway & difficult=yes [0x27 resolution 22]
+highway=footway | highway=path | highway=steps [0x28 resolution 22]
+highway=pedestrian & area!=yes [0x28 resolution 22]
+
+# Routable paths
+highway=track | highway=byway | highway=unsurfaced [0x11 road_class=4 road_speed=4 resolution 20]
+highway=bridleway [0x12 road_class=3 road_speed=3 resolution 20]
+highway=cycleway [0x13 road_class=4 road_speed=5 resolution 20]
+
+highway=* & area!=yes [0x17 ]
+
+# ------------------------------------------------------------------------------------
+# Contours - needs improving
+# ------------------------------------------------------------------------------------
+
+# Contours take their name from the elevation setting.
+contour=elevation | contour_ext=elevation
+	{ name '${ele|conv:m=>ft}'; }
+	[0x21 resolution 20]
+
+
+# ------------------------------------------------------------------------------------
+# Miscellaneous stuff
+# ------------------------------------------------------------------------------------
+
+railway=light_rail [0x14 resolution 18]
+railway=rail [0x14 resolution 18]
+railway=subway [0x14 resolution 20]
+railway=tram [0x14 resolution 20]
+natural=coastline [0x15 resolution 12]
+route=ferry [0x1a road_class=0 resolution 18]
+waterway=stream [0x1e resolution 22]
+waterway=canal [0x1f resolution 20]
+waterway=drain [0x1f resolution 22]
+waterway=river [0x1f resolution 18]
+

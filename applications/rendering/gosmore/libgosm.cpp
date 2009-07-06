@@ -1206,6 +1206,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 		  strncasecmp (tag_k, "geobase:", 8) == 0 ||
 		  strncasecmp (tag_k, "kms:", 4) == 0 ||
 		  strncasecmp (tag_k, "openGeoDB:", 10) == 0 ||
+		  strncasecmp (tag_k, "gnis:", 5) == 0 ||
 		  K_IS ("note:ja") ||
 	      K_IS ("attribution") /* Mostly MassGIS */ ||
 	      K_IS ("time") || K_IS ("ele") || K_IS ("hdop") ||

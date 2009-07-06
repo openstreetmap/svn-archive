@@ -100,12 +100,7 @@ public class WMSGrabber extends Grabber {
             .replaceAll("\\{width\\}", String.valueOf(wi))
             .replaceAll("\\{height\\}", String.valueOf(ht));
         } else {
-            if(!str.contains("?"))
-                str += "?";
-            else if(!str.endsWith("?"))
-                str += "&";
-            str += "bbox="
-                + bbox
+            str += "bbox=" + bbox
                 + getProjection(baseURL, false)
                 + "&width=" + wi + "&height=" + ht;
         }

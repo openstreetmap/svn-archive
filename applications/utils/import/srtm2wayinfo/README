@@ -38,7 +38,6 @@ http://doc.trolltech.com/4.4/
 
 TODO
 ----
-- Interpolate points every 90m
 - Optimize for large datasets
 - Write testcases
 - Command line parsing

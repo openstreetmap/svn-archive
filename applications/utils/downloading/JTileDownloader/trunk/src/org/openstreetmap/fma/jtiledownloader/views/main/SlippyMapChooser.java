@@ -67,7 +67,7 @@ public class SlippyMapChooser extends JMapViewer {
         super();
         cachedLoader = new OsmFileCacheTileLoader(this);
         uncachedLoader = new OsmTileLoader(this);
-        setZoomContolsVisible(false);
+        setZoomContolsVisible(true);
         setMapMarkerVisible(false);
         setMinimumSize(new Dimension(350, 350 / 2));
         // We need to set an initial size - this prevents a wrong zoom selection for 

@@ -63,6 +63,8 @@ public class TileListDownloader
 
     private boolean _overwriteExistingFiles = true;
 
+    private int _minimumAgeInDays = 7;
+
     /**
      * @param downloadPath
      * @param tilesToDownload
@@ -371,7 +373,7 @@ public class TileListDownloader
         File file = new File(fileName);
         if (file.exists()) {
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.HOUR, -24*7); // 1 week, TODO: make configurable
+            cal.add(Calendar.HOUR, -24 * getMinimumAgeInDays());
             if (!isOverwriteExistingFiles()) {
                 result.setCode(TileDownloadResult.CODE_OK);
                 result.setMessage(TileDownloadResult.MSG_OK);
@@ -695,5 +697,23 @@ public class TileListDownloader
     public final void setOverwriteExistingFiles(boolean overwriteExistingFiles)
     {
         _overwriteExistingFiles = overwriteExistingFiles;
+    }
+
+    /**
+     * Getter for minimumAgeInDays
+     @return the minimumAgeInDays
+     */
+    public int getMinimumAgeInDays() {
+        return _minimumAgeInDays;
+        }
+
+    /**
+     * Setter for minimumAgeInDays
+     * @param minimumAgeInDays the minimumAgeInDays to set
+     */
+    public void setMinimumAgeInDays(int minimumAgeInDays) {
+        if (minimumAgeInDays >= 0) {
+            _minimumAgeInDays = minimumAgeInDays;
+        }
     }
 }

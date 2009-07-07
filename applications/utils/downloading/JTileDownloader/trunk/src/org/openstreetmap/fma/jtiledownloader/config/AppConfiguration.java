@@ -40,6 +40,8 @@ public class AppConfiguration
 
     private boolean _overwriteExistingFiles = true;
 
+    private int _minimumAgeInDays = 7;
+
     private boolean _waitAfterNrTiles = true;
     private int _waitSeconds = 5;
     private int _waitNrTiles = 50;
@@ -56,6 +58,8 @@ public class AppConfiguration
     private static final String AUTO_CLOSE_TILE_PREVIEW = "AutoCloseTilePreview";
 
     private static final String OVERWRITE_EXISTING_FILES = "OverwriteExistingFiles";
+
+    private static final String MINIMUM_AGE_IN_DAYS = "MinimumAgeInDays";
 
     private static final String WAIT_AFTER_NR_TILES = "WaitAfterNrTiles";
     private static final String WAIT_SECONDS = "WaitSeconds";
@@ -76,6 +80,8 @@ public class AppConfiguration
         setProperty(prop, AUTO_CLOSE_TILE_PREVIEW, "" + isAutoCloseTilePreview());
 
         setProperty(prop, OVERWRITE_EXISTING_FILES, "" + isOverwriteExistingFiles());
+
+        setProperty(prop, MINIMUM_AGE_IN_DAYS, "" + getMinimumAgeInDays());
 
         setProperty(prop, WAIT_AFTER_NR_TILES, "" + getWaitAfterNrTiles());
         setProperty(prop, WAIT_SECONDS, "" + getWaitSeconds());
@@ -120,6 +126,8 @@ public class AppConfiguration
         setAutoCloseTilePreview(Boolean.valueOf(prop.getProperty(AUTO_CLOSE_TILE_PREVIEW, "true")).booleanValue());
 
         setOverwriteExistingFiles(Boolean.valueOf(prop.getProperty(OVERWRITE_EXISTING_FILES, "true")).booleanValue());
+
+        setMinimumAgeInDays(Integer.parseInt(prop.getProperty(MINIMUM_AGE_IN_DAYS, "7")));
 
         setWaitAfterNrTiles(Boolean.valueOf(prop.getProperty(WAIT_AFTER_NR_TILES, "true")).booleanValue());
         setWaitSeconds(Integer.parseInt(prop.getProperty(WAIT_SECONDS, "10")));
@@ -345,4 +353,21 @@ public class AppConfiguration
         _overwriteExistingFiles = overwriteExistingFiles;
     }
 
+    /**
+     * Getter for minimumAgeInDays
+     @return the minimumAgeInDays
+     */
+    public int getMinimumAgeInDays() {
+        return _minimumAgeInDays;
+        }
+
+    /**
+     * Setter for minimumAgeInDays
+     * @param minimumAgeInDays the minimumAgeInDays to set
+     */
+    public void setMinimumAgeInDays(int minimumAgeInDays) {
+        if (minimumAgeInDays >= 0) {
+            _minimumAgeInDays = minimumAgeInDays;
+        }
+    }
 }

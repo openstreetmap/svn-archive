@@ -332,6 +332,8 @@ public class JTileDownloaderMainView
 
         tld.setOverwriteExistingFiles(getAppConfiguration().isOverwriteExistingFiles());
 
+        tld.setMinimumAgeInDays(getAppConfiguration().getMinimumAgeInDays());
+
         return tld;
     }
 

@@ -198,6 +198,8 @@ public class JTileDownloaderCommandLine
 
         _tld.setOverwriteExistingFiles(_appConfiguration.isOverwriteExistingFiles());
 
+        _tld.setMinimumAgeInDays(_appConfiguration.getMinimumAgeInDays());
+
         _tld.setListener(this);
         _tld.start();
     }

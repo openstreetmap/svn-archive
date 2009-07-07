@@ -315,6 +315,8 @@ public class UpdateTilesPanel
 
             getTileListDownloader().setOverwriteExistingFiles(_mainView.getOptionsPanel().isOverwriteExistingFiles());
 
+            getTileListDownloader().setMinimumAgeInDays(_mainView.getOptionsPanel().getMinimumAgeInDays());
+
             getTileListDownloader().setListener(getInstance());
 
             getButtonSearch().setEnabled(false);

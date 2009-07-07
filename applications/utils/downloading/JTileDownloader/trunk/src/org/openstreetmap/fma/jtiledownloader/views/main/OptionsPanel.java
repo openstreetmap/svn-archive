@@ -44,6 +44,9 @@ public class OptionsPanel
     JLabel _labelWaitNrTiles = new JLabel("Wait after <m> tiles:");
     JTextField _textWaitNrTiles = new JTextField();
 
+    JLabel _labelMinimumAgeInDays = new JLabel("Minimum age in days:");
+    JTextField _textMinimumAgeInDays = new JTextField();
+
     JCheckBox _chkShowTilePreview = new JCheckBox("Show TilePreview");
     JCheckBox _chkAutoCloseTilePreview = new JCheckBox("AutoClose TilePreview");
 
@@ -110,6 +113,12 @@ public class OptionsPanel
         otherOptions.setLayout(new GridBagLayout());
         Border borderOtherOptions = new TitledBorder("Other Options");
         otherOptions.setBorder(borderOtherOptions);
+
+        constraintsWaitOptions.gridwidth = GridBagConstraints.RELATIVE;
+        otherOptions.add(_labelMinimumAgeInDays, constraintsWaitOptions);
+        constraintsWaitOptions.gridwidth = GridBagConstraints.REMAINDER;
+        otherOptions.add(_textMinimumAgeInDays, constraintsWaitOptions);
+
         otherOptions.add(_chkShowTilePreview, constraintsOtherOptions);
         otherOptions.add(_chkAutoCloseTilePreview, constraintsOtherOptions);
         constraintsOtherOptions.gridwidth = GridBagConstraints.RELATIVE;
@@ -128,6 +137,8 @@ public class OptionsPanel
         _chkWaitAfterNrTiles.setSelected(_appConfiguration.getWaitAfterNrTiles());
         _textWaitSeconds.setText("" + _appConfiguration.getWaitSeconds());
         _textWaitNrTiles.setText("" + _appConfiguration.getWaitNrTiles());
+
+        _textMinimumAgeInDays.setText("" + _appConfiguration.getMinimumAgeInDays());
 
         _chkShowTilePreview.setSelected(_appConfiguration.isShowTilePreview());
         _chkAutoCloseTilePreview.setSelected(_appConfiguration.isAutoCloseTilePreview());
@@ -181,6 +192,14 @@ public class OptionsPanel
     public int getWaitNrTiles()
     {
         return Integer.parseInt(_textWaitNrTiles.getText());
+    }
+
+    /**
+     * @return
+     */
+    public int getMinimumAgeInDays()
+    {
+        return Integer.parseInt(_textMinimumAgeInDays.getText());
     }
 
 }

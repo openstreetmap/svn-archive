@@ -68,6 +68,19 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Layer, $Format, $AddAttribu
   walkCache('expire');
 
   imagealphablending($Image, true);
+
+
+  if($Data['gpx'] > 0)
+    {
+    addLayer($Image, $Data, sprintf(
+      "http://dev.openstreetmap.org/~ojw/gpx/tile.php?gpx=%d&t=", $Data['gpx']));
+    }
+  if($Data['rel'] > 0)
+    {
+    addLayer($Image, $Data, sprintf(
+      "http://dev.openstreetmap.org/~ojw/relation/relation.php?rel=%d&t=", $Data['rel']));
+    }
+
   addDrawings($Image, $Data);
   addIcons($Image, $Data);
 
@@ -82,6 +95,47 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Layer, $Format, $AddAttribu
     header("Content-Type: image/png");
     imagepng($Image);
   }
+
+}
+
+function addLayer($Image, $Data, $Base)
+{
+  $Tilesize = 256;
+  $GridSizeX = ceil(($Data['w'] / 2.0) / $Tilesize);
+  $GridSizeY = ceil(($Data['h'] / 2.0) / $Tilesize);
+
+  list($X,$Y) = XY($Data['lat'], $Data['lon'], $Data['z']);
+
+  $XC = floor($X);
+  $YC = floor($Y);
+  
+  $XA = ($X - $XC) * $Tilesize;
+  $YA = ($Y - $YC) * $Tilesize;
+  for($xi = -$GridSizeX; $xi <= $GridSizeX; $xi++)
+    {
+    for($yi = -$GridSizeY; $yi <= $GridSizeY; $yi++)
+      {
+      $ToX = (floor($Data['w']/2) - $XA + $xi * $Tilesize);
+      $ToY = (floor($Data['h']/2) - $YA + $yi * $Tilesize);
+
+      if($ToX > -$Tilesize && $ToX < $Data['w']
+	&& $ToY > -$Tilesize && $ToY < $Data['h'])
+	{
+	
+	$Part = imagecreatefrompng(sprintf("%s%d/%d/%d.png", 
+	  $Base,
+	  $Data['z'], $X + $xi, $Y + $yi));
+	if($Part)
+	  {
+	  imagecopy($Image, $Part, 
+	    $ToX,
+	    $ToY, 
+	    0, 0, 
+	    $Tilesize, $Tilesize);
+	  }
+	}
+      }
+    }
 
 }
 

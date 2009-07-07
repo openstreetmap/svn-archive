@@ -539,7 +539,7 @@ switch($Data['mode'])
     printf("<p>All aspects of this site are available through HTTP GET requests.  The fields are described below:</p>");
     ##printf("<p><i>Many of these fields are generated</i></p>");
     printf("<p>Some of these fields are for navigating the website, and would not typically be used when requesting an image (e.g. show_icon_list or zoom_to_clicks)</p>");
-    printf("<p>Be sure to include show=1 to get the image instead of the website!</p>");
+    printf("<p>Be sure to include show=1 to get the image instead of this website!</p>");
     printf("<hr/>\n<div class='api'>");
 
     printf("<p><b>show</b> (Returns the image rather than this web interface)</p><ul><li>0 = view image-editing tools</li><li>1 = view as image</li></ul>");
@@ -561,13 +561,14 @@ switch($Data['mode'])
 	  break;
 	case 'tab':
 	  print "one of the tab names</p>\n";
+          break;
 	case 'colour':
 	  print "in 3-character hexadecimal RGB format, from 000 = black to F00 = red to FFF = white</p>\n";
 	default:
 	  print "</p>\n";
 	}
       }
-    printf("<p><b>&?123,456</b> (imagemap coordinates, must be at end of query string): handles actions caused by clicking on a server-side imagemap.  Which action is taken depends on <b>mode=</b></p>");
+    printf("<p><b>&?123,456</b> (imagemap coordinates, must be at end of query string): handles actions caused by clicking on a server-side imagemap.  The action taken depends on <b>mode=</b> (e.g. <i>mode=Location</i> causes the map to be centred on this pixel, and possibly zoomed-in if <i>zoom_to_clicks=on</i>)</p>");
     printf("</div>"); // api
     break;
     }

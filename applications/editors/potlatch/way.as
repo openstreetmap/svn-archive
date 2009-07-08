@@ -314,9 +314,15 @@
 							  new Array(this._name,deepCopy(this.path),deepCopy(this.deletednodes),deepCopy(this.attr)),
 							  iText("tidying a way",'action_tidyway'));
 
+			var el=long2coord(_root.bigedge_l);		// We don't want to delete any off-screen nodes
+			var er=long2coord(_root.bigedge_r);		// (because they might be used in other ways)
+			var et= lat2coord(_root.bigedge_t);
+			var eb= lat2coord(_root.bigedge_b);
 			var retain=new Array(a);
 			for (var i=1; i<this.path.length-1; i++) {
-				if (this.path[i].numberOfWays()>1 || hasTags(this.path[i].attr)) {
+				if (this.path[i].numberOfWays()>1 || hasTags(this.path[i].attr) ||
+					this.path[i].x<el || this.path[i].x>er || 
+					this.path[i].y<et || this.path[i].y>eb) {
 					u=((this.path[i].x-a.x)*(b.x-a.x)+
 					   (this.path[i].y-a.y)*(b.y-a.y))/
 					   (Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2));

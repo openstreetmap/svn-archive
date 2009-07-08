@@ -93,7 +93,7 @@ public class JobDispatcher {
         return jobThread;
     }
 
-    protected class JobThread extends Thread {
+    public class JobThread extends Thread {
 
         Runnable job;
         boolean firstThread = false;

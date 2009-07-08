@@ -55,7 +55,7 @@
 		}
 		
 		// Ask for changeset comment if not already created
-		if (_root.changeset) { startUpload(); } 
+		if (_root.changeset) { renewChangeset(); startUpload(); } 
 		                else { changesetRequest(iText("Save changes",'prompt_savechanges'),completeClose,''); }
 	}
 
@@ -138,7 +138,7 @@
 //		box[1].onPress=function() { _root.windows.upload.remove(); };
         _root.windows.upload.remove(); 
 		setAdvice(false,iText("All data successfully uploaded",'advice_uploadsuccess'));
-        markClean(true,true);
+        markClean(true);
 	}
 
 	// -------------------------------------------------------------------------------------

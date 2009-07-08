@@ -30,6 +30,8 @@
 	function coord2lat(a)	{ return y2lat(a/-masterscale+basey); }
 	function long2coord(a)	{ return (a-baselong)*masterscale; }
 	function coord2long(a)	{ return a/masterscale+baselong; }
+	function y2coord(a)		{ return (a-basey)*-masterscale; }
+	function coord2y(a)		{ return a/-masterscale+basey; }
 	function y2lat(a) { return 180/Math.PI * (2 * Math.atan(Math.exp(a*Math.PI/180)) - Math.PI/2); }
 	function lat2y(a) { return 180/Math.PI * Math.log(Math.tan(Math.PI/4+a*(Math.PI/180)/2)); }
 	function centrelat(o)  { return  coord2lat((yradius-_root.map._y-o)/Math.pow(2,_root.scale-13)); }
@@ -85,9 +87,12 @@
 
 	function updateLinks() {
 		if (winie) {
-			flash.external.ExternalInterface.call("updatelinks",centrelong(0),centrelat(0),_root.scale,'',_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
+			if (gpx) { flash.external.ExternalInterface.call("updatelinks",centrelong(0),centrelat(0),_root.scale,'',_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t,'gpx',gpx); }
+				else { flash.external.ExternalInterface.call("updatelinks",centrelong(0),centrelat(0),_root.scale,'',_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t); }
 		} else {
-			getURL("javascript:updatelinks("+centrelong(0)+","+centrelat(0)+","+_root.scale+",'',"+_root.edge_l+","+_root.edge_b+","+_root.edge_r+","+_root.edge_t+")");
+			var url="javascript:updatelinks("+centrelong(0)+","+centrelat(0)+","+_root.scale+",'',"+_root.edge_l+","+_root.edge_b+","+_root.edge_r+","+_root.edge_t;
+			if (gpx) { url+=",'gpx',"+gpx; }
+			url=url+")"; getURL(url);
 		}
 	}
 	
@@ -143,10 +148,12 @@
 			_root.linewidth=3;
 			_root.taggedscale=100/Math.pow(2,_root.scale-13); 
 		} else {
-			_root.linewidth=3+Math.pow(Math.max(0,_root.scale-15),2);
+			_root.linewidth=Math.min(12, 3+Math.pow(Math.max(0,_root.scale-15),2));
 			_root.taggedscale=Math.max(100/Math.pow(2,_root.scale-13),10);
 			if (_root.scale==16 || _root.scale==17) { _root.taggedscale*=1.3; }
 		}
+		if (preferences.data.thinareas) { _root.areawidth=_root.linewidth/3; }
+								   else { _root.areawidth=_root.linewidth; }
 	}
 
 	function redrawWays(skip) {

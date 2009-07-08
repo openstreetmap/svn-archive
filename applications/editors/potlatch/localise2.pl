@@ -10,7 +10,7 @@
 	$ua=LWP::UserAgent->new;
 	$ua->agent("localise.pl");
 
-	$config="../../../sites/rails_port/config/potlatch";
+	unless ($config=shift @ARGV) { $config="../../../sites/rails_port/config/potlatch"; }
 	
 	# -----	Get index page	
 
@@ -23,14 +23,15 @@
 
 	while ($index=~/\/wiki\/([^:]+):Potlatch\/Translation/gs) {
 		$lang=lc $1; next if $lang eq 'template';
-		$req=HTTP::Request->new(GET=>"http://wiki.openstreetmap.org/index.php/$lang:Potlatch/Translation");
+		$req=HTTP::Request->new(GET=>"http://wiki.openstreetmap.org/index.php/$1:Potlatch/Translation");
 		$res=$ua->request($req);
 		if ($res->is_success) { $wiki=$res->content; }
 						 else { die "Bugger! ".$res->status_line."\n"; }
 		print "Reading $lang\n";
 		$lang=~s/[\-_](.+)/\-\U$1\E/;	# dialect in uppercase
+		$ct=0;
 		while ($wiki=~/^<td>\s*([^<]+)<\/td><td>\s*([^<]+)<\/td><td>\s*(.+)$/gm) {
-			$id=$1; $en=$2; $tr=$3;
+			$id=$1; $en=$2; $tr=$3; $ct++;
 			$id=~s/\s+$//g;
 			$en=~s/\s+$//g;
 			$tr=~s/&nbsp;/ /g; $tr=~s/^\s+//;
@@ -44,14 +45,16 @@
 			unless (exists $translations{$lang}) { $translations{$lang}=''; }
 			$translations{$lang}.="\"$id\": $tr\n";
 		}
+		unless ($ct) { print "WARNING: no translations read\n"; }
 	}
 
 	# -----	Output translation file
 	
 	print "Writing output files\n";
 	foreach $lang (sort keys %translations) {
-		unless (-d "$config/localised/$lang") { mkdir "$config/localised/$lang"; }
+		unless (-d "$config/localised/$lang") { mkdir "$config/localised/$lang"; print "Creating $config/localised/$lang\n"; }
 		open (OUTFILE,">$config/localised/$lang/localised.yaml") or die "Can't open output file: $!\n";
+		print "Writing $config/localised/$lang/localised.yaml\n";
 		print OUTFILE chr(0xEF).chr(0xBB).chr(0xBF);	# utf8 BOM
 		print OUTFILE $translations{$lang};
 		close OUTFILE;

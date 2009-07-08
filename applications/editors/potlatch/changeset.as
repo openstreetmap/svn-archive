@@ -16,6 +16,17 @@
 		}
 	}
 
+	// -----------------------------------------------------------------------
+	// renewChangeset
+	// renew a right changeset within us (if it's over an hour since the last)
+	
+	function renewChangeset() {
+		if (!_root.changeset) { return; }
+		var t=new Date(); if (t.getTime()-_root.csopened<3400000) { return; }
+		pleaseWait(iText("Opening changeset",'openchangeset'));
+		_root.changeset=null; startChangeset(true);
+	}
+
 	// changesetRequest(text,exit routine,comment)
 
 	function changesetRequest(prompt,doOnClose,comment) {
@@ -70,6 +81,7 @@
 			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 			// ** probably needs to fail really catastrophically here...
 			_root.changeset=result[0];
+			var t=new Date(); _root.csopened=t.getTime();
 			if (_root.windows.pleasewait) { _root.windows.pleasewait.remove(); }
             if (_root.sandbox && !_root.uploading && _root.changeset) { startUpload(); }
 		};

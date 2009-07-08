@@ -26,7 +26,7 @@
                 <attribute name="Plugin-Class" value="at.dallermassl.josm.plugin.colorscheme.ColorSchemePlugin" />
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Allows the user to create different color schemes and to switch between them. Just change the colors and create a new scheme. Used to switch to a white background with matching colors for better visibility in bright sunlight. See dialog in JOSM's preferences and 'Map Settings' (strange but true :-)" />
-                <attribute name="Plugin-Mainversion" value="1180"/>
+                <attribute name="Plugin-Mainversion" value="1742"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

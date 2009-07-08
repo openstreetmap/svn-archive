@@ -27,6 +27,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource.TileUpdate;
  * If a tile is present in this file cache it will not be loaded from OSM again.
  * 
  * @author Jan Peter Stotz
+ * @author Stefan Zeller
  */
 public class OsmFileCacheTileLoader extends OsmTileLoader {
 
@@ -44,20 +45,40 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
     protected long maxCacheFileAge = FILE_AGE_ONE_WEEK;
     protected long recheckAfter = FILE_AGE_ONE_DAY;
 
-    public OsmFileCacheTileLoader(TileLoaderListener map) {
+    /**
+     * Create a OSMFileCacheTileLoader with given cache directory.
+     * If cacheDir is <code>null</code> the system property temp dir
+     * is used. If not set an IOException will be thrown.
+     * @param map
+     * @param cacheDir
+     */
+    public OsmFileCacheTileLoader(TileLoaderListener map, File cacheDir) {
         super(map);
         String tempDir = System.getProperty("java.io.tmpdir");
         try {
-            if (tempDir == null)
-                throw new IOException();
-            File cacheDir = new File(tempDir, "JMapViewerTiles");
+            if (cacheDir == null) {
+                if (tempDir == null) {
+                    throw new IOException("No temp directory set");
+                }
+                cacheDir = new File(tempDir, "JMapViewerTiles");
+            }
             log.finest("Tile cache directory: " + cacheDir);
-            if (!cacheDir.exists() && !cacheDir.mkdirs())
+            if (!cacheDir.exists() && !cacheDir.mkdirs()) {
                 throw new IOException();
+            }
             cacheDirBase = cacheDir.getAbsolutePath();
         } catch (Exception e) {
             cacheDirBase = "tiles";
         }
+    }
+    
+    /**
+     * Create a OSMFileCacheTileLoader with system property temp dir. 
+     * If not set an IOException will be thrown.
+     * @param map
+     */
+    public OsmFileCacheTileLoader(TileLoaderListener map) {
+        this(map, null);
     }
 
     public Runnable createTileLoaderJob(final TileSource source, final int tilex, final int tiley, final int zoom) {

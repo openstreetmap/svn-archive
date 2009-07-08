@@ -1,7 +1,10 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.io;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -11,10 +14,14 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.gui.layer.GpxLayer;
+import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.io.tcx.ActivityLapT;
 import org.openstreetmap.josm.io.tcx.ActivityT;
 import org.openstreetmap.josm.io.tcx.CourseT;
@@ -22,6 +29,7 @@ import org.openstreetmap.josm.io.tcx.PositionT;
 import org.openstreetmap.josm.io.tcx.TrackT;
 import org.openstreetmap.josm.io.tcx.TrackpointT;
 import org.openstreetmap.josm.io.tcx.TrainingCenterDatabaseT;
+
 
 /**
  * TCX Reader. This class is based on code genarated by the Java Architecture
@@ -42,29 +50,48 @@ import org.openstreetmap.josm.io.tcx.TrainingCenterDatabaseT;
  * Note: if you get an exception that JAXB 2.1 is not supported on your system, you will have to add the jaxb-api.jar
  * to the endorsed directory (create it if necessary) of your JRE. Usually it is something like this:
  * \<program files>\Java\jre<java version>\lib\endorsed
- * 
+ *
  * @author adrian <as@nitegate.de>
- * 
+ *
  */
-public class TcxReader {
+public class Tcx extends FileImporter {
 
-    private File tcxFile;
+    //private File tcxFile;
 
     private GpxData gpxData;
+
+
+    public Tcx() {
+        super(new ExtensionFileFilter("tcx", "tcx",tr("TCX Files (*.tcx)")));
+    }
 
     /**
      * @param tcxFile
      */
-    public TcxReader(File tcxFile) {
-        super();
-        this.tcxFile = tcxFile;
-        parseFile();
+    @Override
+    public void importData(File tcxFile) throws IOException {
+        //this.tcxFile = tcxFile;
+        parseFile(tcxFile);
+
+        GpxData gpxData = getGpxData();
+        gpxData.storageFile = tcxFile;
+        GpxLayer gpxLayer = new GpxLayer(gpxData, tcxFile.getName());
+        Main.main.addLayer(gpxLayer);
+        if (Main.pref.getBoolean("marker.makeautomarkers", true))
+        {
+            MarkerLayer ml = new MarkerLayer(gpxData, tr("Markers from {0}", tcxFile.getName()), tcxFile, gpxLayer);
+            if (ml.data.size() > 0)
+            {
+                Main.main.addLayer(ml);
+            }
+        }
+
     }
 
     /**
-     * 
+     *
      */
-    @SuppressWarnings("unchecked") private void parseFile() {
+    @SuppressWarnings("unchecked") private void parseFile(File tcxFile) {
         try {
             JAXBContext jc = JAXBContext
                     .newInstance(TrainingCenterDatabaseT.class);
@@ -95,10 +122,9 @@ public class TcxReader {
 
         PositionT p = tp.getPosition();
 
-        if (p == null) {
+        if (p == null)
             // If the TrackPointT lacks a position, return null.
             return null;
-        }
 
         WayPoint waypt = new WayPoint(new LatLon(p.getLatitudeDegrees(),
                                                  p.getLongitudeDegrees()));
@@ -188,7 +214,7 @@ public class TcxReader {
         }
     }
 
-    public GpxData getGpxData() {
+    private GpxData getGpxData() {
         return gpxData;
     }
 }

@@ -50,9 +50,15 @@
     -->
     <target name="compile" depends="init">
         <echo message="compiling sources for  ${plugin.jar} ... "/>
-        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
+            <classpath>
+                <pathelement location="${josm}"/>
+                <fileset dir="lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
         </javac>
     </target>
 
@@ -78,7 +84,13 @@
         **
         ************************************************
     -->
-            <manifest>
+          <zipfileset src="lib/jsr173-1.0_api.jar" includes="**/*.class"/>
+          <zipfileset src="lib/jaxb-api.jar" includes="**/*.class"/>
+          <zipfileset src="lib/jaxb-api.jar" includes="**/*.properties"/>
+
+          <zipfileset src="lib/jaxb-impl.jar" includes="**/*.class"/>
+
+          <manifest>
                 <attribute name="Author" value="Dieter Muecke"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.DataImport"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>

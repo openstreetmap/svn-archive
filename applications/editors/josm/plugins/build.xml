@@ -32,7 +32,6 @@
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="dist" dir="tageditor"/>
-        <ant antfile="build.xml" target="dist" dir="tcxplugin"/>
         <ant antfile="build.xml" target="dist" dir="terracer"/>
         <ant antfile="build.xml" target="dist" dir="usertools"/>
         <ant antfile="build.xml" target="dist" dir="utilsplugin"/>
@@ -73,7 +72,6 @@
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="clean" dir="tageditor"/>
-        <ant antfile="build.xml" target="clean" dir="tcxplugin"/>
         <ant antfile="build.xml" target="clean" dir="terracer"/>
         <ant antfile="build.xml" target="clean" dir="usertools"/>
         <ant antfile="build.xml" target="clean" dir="utilsplugin"/>

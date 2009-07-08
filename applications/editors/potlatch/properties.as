@@ -917,6 +917,14 @@
 		_root.panel.i_repeatattr._alpha=100-50*(pt=='' || _root.saved[pt]=='');
 		_root.panel.i_newattr._alpha   =100-50*(pt=='');
 		_root.panel.i_newrel._alpha    =100-50*(pt=='');
+		
+		var t=50;
+		if (_root.wayselected!=0) {
+			if (_root.ws.path[0].id==_root.ws.path[_root.ws.path.length-1].id) {
+				if (_root.ws.path.length>3) { t=100; }
+			} else if (_root.ws.path.length>2) { t=100; }
+		}
+		_root.panel.i_tidy._alpha=t;
 	}
 
 	function updateScissors(v) {

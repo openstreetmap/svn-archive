@@ -5,9 +5,18 @@
 	// loadGPS		- load GPS backdrop from server
 
 	function loadGPS() {
-		_root.map.createEmptyMovieClip('gps',3);
-		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&token='+_root.usertoken,_root.map.gps); }
-							  else { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale,_root.map.gps); }
+		var q='?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale;
+		if (q==_root.lastgps) {
+			_root.gpsoffset+=1;
+		} else {
+			_root.gpsoffset=0;
+			_root.map.createEmptyMovieClip('gps',3);
+		}
+		_root.map.gps.createEmptyMovieClip(_root.gpsoffset,_root.gpsoffset);
+		_root.lastgps=q;
+
+		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+q+'&offset='+(_root.gpsoffset*10000)+'&token='+_root.usertoken,_root.map.gps[_root.gpsoffset]); }
+							  else { loadMovie(gpsurl+q+'&offset='+(_root.gpsoffset*10000),_root.map.gps[_root.gpsoffset]); }
 	}
 
 	// parseGPX		- parse GPX file
@@ -84,7 +93,7 @@
 		} else {									// Get root co-ords from first point in GPX
 			lat =xmlobj.attributes['lat'];			// (was briefly if (gpxpoints>4), but 
 			long=xmlobj.attributes['lon'];			//  obviously this broke lat2coord for the
-			scale=17; bscale=16;					//  first four points... ** need to fix)
+			changeScaleTo(17); bscale=16;			//  first four points... ** need to fix)
 			startPotlatch();						//
 		}
 		var y= lat2coord(xmlobj.attributes['lat']);

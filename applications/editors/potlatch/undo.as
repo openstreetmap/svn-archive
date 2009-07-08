@@ -225,6 +225,28 @@
 		markClean(false);
 	};
 
+	//		Changed path (for tidying)
+
+	UndoStack.prototype.undo_changeway=function(params) {
+		var way=params[0]; var w=_root.map.ways[way];
+		var path=params[1]; var done=new Object();
+		// we need to be careful not to end up with duplicate versions of
+		// the same node
+		w.path=new Array();
+		for (var i=0; i<path.length; i++) {
+			if (!done[path[i].id]) { _root.nodes[path[i].id]=deepCopy(path[i]); }
+			w.path.push(_root.nodes[path[i].id]);
+			done[path[i].id]=true;
+		}
+		w.deletednodes=params[2];
+		w.attr=params[3];
+		stopDrawing();
+		w.redraw();
+		w.select();
+		w.clean=false;
+		markClean(false);
+	};
+
 	//		Created POI
 
 	UndoStack.prototype.undo_createpoi=function(params) {

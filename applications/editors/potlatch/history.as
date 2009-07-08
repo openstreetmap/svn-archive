@@ -50,8 +50,10 @@
 				_root.windows.history.box.revert._alpha=a;
 				_root.reverttime   =versioninfo[n][0]; 
 				_root.revertauthor =versioninfo[n][2];
+				_root.revertname   =versioninfo[n][1];
 			},null,256);
 		_root.reverttime  =versioninfo[0][0];
+		_root.revertname  =versioninfo[0][1];
 		_root.revertauthor=versioninfo[0][2];
 	};
 
@@ -65,7 +67,7 @@
 	function doMail() {
 		_root.windows.history.remove();
 		if (_root.revertauthor>0) {
-			getURL("http://www.openstreetmap.org/message/new/"+_root.revertauthor,"_blank");
+			getURL("http://www.openstreetmap.org/message/new/"+_root.revertname,"_blank");
 		} else {
 			handleError(-1,new Array(iText("You cannot contact an anonymous mapper.",'error_anonymous')));
 		}
@@ -75,7 +77,11 @@
 		if (_root.windows.history.box.revert._alpha<50) { return; }
 		_root.windows.history.remove();
 		if (_root.reverttype=='way') {
-			_root.map.ways[_root.revertid].saveUndo(iText("reverting",'reverting'));
+			_root.undo.append(UndoStack.prototype.undo_changeway,
+							  new Array(_root.revertid,deepCopy(_root.map.ways[_root.revertid].path),
+													   deepCopy(_root.map.ways[_root.revertid].deletednodes),
+													   deepCopy(_root.map.ways[_root.revertid].attr)),
+							  iText("reverting a way",'action_revertway'));
 			_root.map.ways[_root.revertid].loadFromDeleted(_root.reverttime);
 		} else if (nodes[_root.revertid]) { // node in way
 			noderesponder=function() {};

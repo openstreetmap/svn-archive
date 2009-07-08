@@ -4,7 +4,7 @@
 	# For current Ming, set this to 1/20.
 	# For older Ming (e.g. 0.3), set this to 1.
 
-	$cw=1;
+	$cw=1/20;
 
 	# **********************************************
 
@@ -64,6 +64,46 @@ if (0==1) {
 		$ec->nextFrame(); $ec->nextFrame();
 	}
 	$m->addExport($ec,"whirl");
+
+	#		Photo
+	
+	$ec=new SWF::MovieClip();
+	$ch=new SWF::Shape();
+
+	$ch->setRightFill(127,255,127);
+	$ch->setLine(20*$cw,127,255,127);
+	$ch->movePenTo(-6,-6);
+	$ch->drawLineTo(6,-6); $ch->drawLineTo(6,6);
+	$ch->drawLineTo(-6,6); $ch->drawLineTo(-6,-6);
+	$ec->add($ch);
+
+	$ch=new SWF::Shape();
+	$ch->setRightFill(0,0,0);
+	$ch->movePenTo(-6,-6);
+	$ch->drawLineTo(6,-6); $ch->drawLineTo(6,6);
+	$ch->drawLineTo(-6,6); $ch->drawLineTo(-6,-6);
+	
+	for ($i=-5.5; $i<=3.5; $i+=3) {
+		for ($j=-5; $j<=3.5; $j+=8) {
+			$ch->setRightFill(255,255,255);
+			$ch->movePenTo($j,$i);
+			$ch->drawLineTo($j,$i+2);
+			$ch->drawLineTo($j+2,$i+2);
+			$ch->drawLineTo($j+2,$i);
+			$ch->drawLineTo($j,$i);
+		}
+	}
+	for ($i=-5; $i<3.5; $i+=6) {
+		$ch->setRightFill(255,255,255);
+		$ch->movePenTo(-2,$i);
+		$ch->drawLineTo(-2,$i+4);
+		$ch->drawLineTo(-2+4,$i+4);
+		$ch->drawLineTo(-2+4,$i);
+		$ch->drawLineTo(-2,$i);
+	}
+	$ec->add($ch);
+	$ec->nextFrame();
+	$m->addExport($ec,"photo");
 
 	#		POI
 	
@@ -551,6 +591,112 @@ if (0==1) {
     $d->move(5,5);
 	
 	$ec->nextFrame(); $m->addExport($ec,"undo");
+
+	#		Photo-mapping
+	#		(ok, so this is just the tourism icon reshaped a bit...)
+	
+	$ec=new SWF::MovieClip();
+
+	$s=new SWF::Shape();
+	$s->setRightFill(127,127,127);
+	drawLargeCircle();
+    $d=$ec->add($s);
+    $d->move(5,5);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(11.74,5.18);
+$s->drawLineTo(-4.19,5.18);
+$s->drawCurveTo(-4.23,5.17,-4.27,5.16);
+$s->drawCurveTo(-4.70,4.99,-4.72,4.49);
+$s->drawCurveTo(-4.77,3.61,-4.77,1.27);
+$s->drawCurveTo(-4.77,-1.67,-4.63,-2.52);
+$s->drawCurveTo(-4.45,-3.62,-4.34,-4.16);
+$s->drawCurveTo(-4.33,-4.21,-4.32,-4.24);
+$s->drawCurveTo(-4.31,-4.27,-4.29,-4.30);
+$s->drawCurveTo(-4.14,-4.66,-3.82,-4.74);
+$s->drawCurveTo(-3.81,-4.74,-3.67,-4.78);
+$s->drawCurveTo(-2.37,-5.11,-1.61,-4.93);
+$s->drawCurveTo(-1.50,-4.90,-1.41,-4.87);
+$s->drawCurveTo(-1.43,-4.89,-1.41,-5.11);
+$s->drawCurveTo(-1.41,-5.13,-1.41,-5.15);
+$s->drawCurveTo(-1.38,-5.17,-1.33,-5.21);
+$s->drawCurveTo(-0.87,-5.52,0.03,-5.52);
+$s->drawCurveTo(0.93,-5.52,1.58,-5.21);
+$s->drawCurveTo(1.64,-5.18,1.69,-5.15);
+$s->drawCurveTo(1.69,-5.15,1.69,-5.15);
+$s->drawLineTo(1.72,-4.71);
+$s->drawCurveTo(1.77,-4.70,1.82,-4.69);
+$s->drawCurveTo(2.36,-4.63,2.73,-5.37);
+$s->drawCurveTo(3.09,-6.10,3.76,-7.13);
+$s->drawCurveTo(3.83,-7.22,3.87,-7.30);
+$s->drawCurveTo(3.88,-7.30,3.88,-7.31);
+$s->drawCurveTo(3.88,-7.31,3.89,-7.31);
+$s->drawCurveTo(3.94,-7.34,4.02,-7.37);
+$s->drawCurveTo(4.86,-7.75,5.79,-7.75);
+$s->drawCurveTo(6.72,-7.75,7.80,-7.40);
+$s->drawCurveTo(7.90,-7.37,7.97,-7.34);
+$s->drawCurveTo(7.98,-7.34,7.98,-7.34);
+$s->drawLineTo(9.36,-5.05);
+$s->drawCurveTo(9.38,-5.01,9.41,-4.97);
+$s->drawCurveTo(9.74,-4.48,10.24,-4.43);
+$s->drawCurveTo(11.79,-4.27,12.21,-3.04);
+$s->drawCurveTo(12.30,-2.79,12.33,-2.49);
+$s->drawCurveTo(12.44,-1.56,12.41,1.16);
+$s->drawCurveTo(12.39,2.61,12.34,4.21);
+$s->drawCurveTo(12.34,4.36,12.33,4.47);
+$s->drawCurveTo(12.33,4.48,12.33,4.49);
+$s->drawCurveTo(12.33,4.49,12.33,4.50);
+$s->drawCurveTo(12.34,4.54,12.33,4.60);
+$s->drawCurveTo(12.29,5.18,11.74,5.18);
+$d=$ec->add($s); $d->move(2,4.5); $d->scale(0.9); $d->rotate(-15);
+
+$s=new SWF::Shape();
+$s->setRightFill(150,150,150);
+$s->movePenTo(1.75,0.33);
+$s->drawCurveTo(1.75,-3.83,5.92,-3.83);
+$s->drawCurveTo(10.08,-3.83,10.08,0.33);
+$s->drawCurveTo(10.08,4.49,5.92,4.49);
+$s->drawCurveTo(1.75,4.49,1.75,0.33);
+$d=$ec->add($s); $d->move(2,4.5); $d->scale(0.9); $d->rotate(-15);
+
+$s=new SWF::Shape();
+$s->setLine(1.34,127,127,127);
+$s->movePenTo(-0.56,4.59);
+$s->drawCurveTo(-0.56,4.56,-0.56,4.53);
+$s->drawCurveTo(-0.60,4.17,-0.63,3.73);
+$s->drawCurveTo(-0.97,-0.97,-0.03,-3.02);
+$d=$ec->add($s); $d->move(2,4.5); $d->scale(0.9); $d->rotate(-15);
+
+$s=new SWF::Shape();
+$s->setLine(0.67,127,127,127);
+$s->movePenTo(3.60,-5.37);
+$s->drawLineTo(8.17,-5.37);
+$d=$ec->add($s); $d->move(2,4.5); $d->scale(0.9); $d->rotate(-15);
+
+
+	$ec->nextFrame();
+    $m->addExport($ec,"camera");
+
+	#		Align
+
+	$ec=new SWF::MovieClip();
+
+	$s=new SWF::Shape();
+	$s->setRightFill(127,127,127);
+	drawLargeCircle();
+    $d=$ec->add($s);
+
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(0,0); $s->drawLineTo(4,0); $s->drawLineTo(4,4);
+	$s->drawLineTo(0,4); $s->drawLineTo(0,0);
+	$d=$ec->add($s); $d->move(-6,2); 
+	$d=$ec->add($s); $d->move(-2,-2); 
+	$d=$ec->add($s); $d->move(2,-6); 
+	
+	$ec->nextFrame();
+    $m->addExport($ec,"tidy");
 
 	#		GPS
 

@@ -126,6 +126,7 @@
 		// ways/nodes for negative IDs should have been previously put
 		// so the server should know about them
 		if (!this.uploading && !this.locked && (!_root.sandbox || _root.uploading) ) {
+			renewChangeset();
 			this.uploading=true;
 			_root.writesrequested++;
 			remote_write.call('putrelation', putresponder,

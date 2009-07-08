@@ -17,6 +17,7 @@
 	OSMWay.prototype.uploading=false;			// currently uploading?
 	OSMWay.prototype.locked=false;				// locked against upload?
 	OSMWay.prototype.version=0;					// version number?
+	OSMWay.prototype.uid=0;						// user ID (used for TIGER detection)
 	OSMWay.prototype.historic=false;			// is this an undeleted, not-uploaded way?
 	OSMWay.prototype.checkconnections=false;	// check shared nodes on reload
 
@@ -30,11 +31,12 @@
 			var w=result[0];
 			if (length(result[1])==0) { removeMovieClip(_root.map.ways[w]); 
 										removeMovieClip(_root.map.areas[w]); return; }
-			var i,id,x,y,prepoint;
+			var i,id,x,y,prepoint,redrawws;
 			_root.map.ways[w].clean=true;
 			_root.map.ways[w].locked=false;
 			_root.map.ways[w].historic=false;
 			_root.map.ways[w].version=result[3];
+			_root.map.ways[w].uid=result[4];
 			_root.map.ways[w].removeNodeIndex();
 			_root.map.ways[w].path=[];
 			_root.map.ways[w].resetBBox();
@@ -56,9 +58,11 @@
 				}
 				_root.map.ways[w].path.push(_root.nodes[id]);
 				_root.nodes[id].addWay(w);
+				if (_root.nodes[id].ways[_root.wayselected] && w!=_root.wayselected) { redrawws=true; }
 			}
 			_root.map.ways[w].attr=result[2];
 			_root.map.ways[w].redraw();
+			if (redrawws)  { _root.ws.highlightPoints(5000,"anchor"); }	// need to redraw [_]s if new connections loaded
 			if (w==preway) { _root.map.ways[w].select(); preway=undefined; }
 			if (prepoint)  { _root.map.ways[w].select(); 
 							 _root.map.anchors[prepoint].select();
@@ -75,6 +79,8 @@
 			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 			var i,id,n;
 			var w=_root.map.ways[result[0]];
+			var oldpath=new Object();		// make sure to delete any nodes not in reverted way
+			for (i=0; i<w.path.length; i++) { oldpath[w.path[i].id]=w.path[i].version; }
 			if (result[4]) { w.historic=false; w.clean=true;  }
 			          else { w.historic=true;  w.clean=false; }
 			w.version=result[3];
@@ -85,6 +91,7 @@
 				n=result[1][i];
 				x=n[0]; y=n[1]; id=n[2];					// 3:current version, 4:tags, 5:reuse?
 				if (id<0) { id=--_root.newnodeid; }			// assign negative IDs to anything moved
+				delete oldpath[id];
 				w.updateBBox(x,y);
 				x=long2coord(x); y=lat2coord(y);
 				if (nodes[id]) {
@@ -102,6 +109,7 @@
 				w.path.push(_root.nodes[id]);
 				_root.nodes[id].addWay(result[0]);
 			}
+			for (i in oldpath) { if (i>0) { w.deletednodes[i]=oldpath[i]; } }
 			w.attr=result[2];
 			if (w==ws) { w.select(); }
 				  else { w.locked=true; }
@@ -145,6 +153,7 @@
 	
 			// Set stroke
 	
+			var f=this.getFill();
 			if		(this.locked)					 { this.line.lineStyle(linewidth,0xFF0000,linealpha,false,"none"); }
 			else if (colours[this.attr["highway"]])  { this.line.lineStyle(linewidth,colours[this.attr["highway" ]],linealpha,false,"none"); }
 			else if (colours[this.attr["waterway"]]) { this.line.lineStyle(linewidth,colours[this.attr["waterway"]],linealpha,false,"none"); }
@@ -152,14 +161,15 @@
 			else {
 				var c=0xAAAAAA; var z=this.attr;
 				for (var i in z) { if (i!='created_by' && this.attr[i]!='' && this.attr[i].substr(0,6)!='(type ') { c=0x707070; } }
-				this.line.lineStyle(linewidth,c,linealpha,false,"none");
+				this.line.lineStyle((f>-1) ? areawidth : linewidth,c,linealpha,false,"none");
 			}
 			
 			// Draw fill/casing
 	
-			var f=this.getFill();
 			var br=false;
-			if (preferences.data.noname && this.attr["highway"] && (!this.attr["name"] || this.attr["name"].substr(0,6)=='(type ')) {
+			if (preferences.data.tiger && this.uid==7168 && this.version==1 && this.clean && this.attr["tiger:tlid"]) {
+                casingx=2; casingcol=0xFF00FF;
+			} else if (preferences.data.noname && this.attr["highway"] && (!this.attr["name"] || this.attr["name"].substr(0,6)=='(type ')) {
                 casingx=2; casingcol=0xFF0000;
 			} else if (this.attr["bridge"] && this.attr["bridge"]!="no") {
 				casingx=2; br=true;
@@ -216,6 +226,120 @@
 		}
 		return f;
 	};
+
+	// ----	Tidy in line/circle
+	
+	OSMWay.prototype.tidy=function() {
+		var a=this.path[0]; var b=this.path[this.path.length-1];
+		var w=new Object(); w[this._name]=true;
+		if (a.id==b.id) {
+			// Tidy in circle
+			if (this.path.length<4) { return; }
+			_root.undo.append(UndoStack.prototype.undo_changeway,
+							  new Array(this._name,deepCopy(this.path),deepCopy(this.deletednodes),deepCopy(this.attr)),
+							  iText("tidying a way",'action_tidyway'));
+			
+			// Find centre-point
+			var patharea=0;
+			var cx=0; var lx=b.x; //coord2long(b.x);
+			var cy=0; var ly=b.y; //coord2y(b.y);
+			for (var i=0; i<this.path.length; i++) {
+                var latp=this.path[i].y; //coord2y(this.path[i].y);
+                var lon =this.path[i].x; // coord2long(this.path[i].x);
+				var sc = (lx*latp-lon*ly); //*masterscale;
+				cx += (lx+lon)*sc;
+				cy += (ly+latp)*sc;
+				patharea += sc;
+				lx=lon; ly=latp;
+			}
+			patharea/=2;
+			cx=cx/patharea/6; //long2coord(cx/patharea/6);
+			cy=cy/patharea/6; //y2coord(cy/patharea/6);
+
+			// Average distance to centre
+			var d=0; var angles=[];
+			for (var i=0; i<this.path.length; i++) {
+				d+=Math.sqrt(Math.pow(this.path[i].x-cx,2)+Math.pow(this.path[i].y-cy,2));
+			}
+			d=d/this.path.length;
+			
+			// Move each node
+			for (var i=0; i<this.path.length-1; i++) {
+				var c=Math.sqrt(Math.pow(this.path[i].x-cx,2)+Math.pow(this.path[i].y-cy,2));
+				this.path[i].x=cx+(this.path[i].x-cx)/c*d;
+				this.path[i].y=cy+(this.path[i].y-cy)/c*d;
+				var l=this.path[i].ways; for (var o in l) { w[o]=true; }
+			}
+
+			// Insert extra nodes to make circle
+			// clockwise: angles decrease, wrapping round from -170 to 170
+			var newpath=[]; var diff,b;
+			var clockwise=_root.panel.i_clockwise._visible;
+			for (var i=0; i<this.path.length-1; i++) {
+				var j=(i+1) % this.path.length;
+				newpath.push(this.path[i]);
+				a1=Math.atan2(this.path[i].x-cx,this.path[i].y-cy)*(180/Math.PI);
+				a2=Math.atan2(this.path[j].x-cx,this.path[j].y-cy)*(180/Math.PI);
+
+				if (clockwise) {
+					if (a2>a1) { a2=a2-360; }
+					diff=a1-a2;
+					if (diff>20) {
+						for (var ang=a1; ang>a2; ang-=20) {
+							_root.newnodeid--;
+							_root.nodes[newnodeid]=new Node(newnodeid,cx+Math.sin(ang*Math.PI/180)*d,cy+Math.cos(ang*Math.PI/180)*d,new Object(),0);
+							newpath.push(_root.nodes[newnodeid]);
+						}
+					}
+				} else {
+					if (a1>a2) { a1=a1-360; }
+					diff=a2-a1;
+					if (diff>20) {
+						for (var ang=a1; ang<a2; ang+=20) {
+							_root.newnodeid--;
+							_root.nodes[newnodeid]=new Node(newnodeid,cx+Math.sin(ang*Math.PI/180)*d,cy+Math.cos(ang*Math.PI/180)*d,new Object(),0);
+							newpath.push(_root.nodes[newnodeid]);
+						}
+					}
+				}
+
+			}
+			newpath.push(this.path[this.path.length-1]);
+			this.path=newpath;
+
+		} else {
+			// Tidy in line
+			if (this.path.length<3) { return; }
+			_root.undo.append(UndoStack.prototype.undo_changeway,
+							  new Array(this._name,deepCopy(this.path),deepCopy(this.deletednodes),deepCopy(this.attr)),
+							  iText("tidying a way",'action_tidyway'));
+
+			var retain=new Array(a);
+			for (var i=1; i<this.path.length-1; i++) {
+				if (this.path[i].numberOfWays()>1 || hasTags(this.path[i].attr)) {
+					u=((this.path[i].x-a.x)*(b.x-a.x)+
+					   (this.path[i].y-a.y)*(b.y-a.y))/
+					   (Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2));
+					this.path[i].x=a.x+u*(b.x-a.x);
+					this.path[i].y=a.y+u*(b.y-a.y);
+					this.path[i].clean=false;
+					var l=this.path[i].ways; for (var o in l) { w[o]=true; }
+					retain.push(this.path[i]);
+				} else {
+					this.markAsDeleted(this.path[i],true);
+					memberDeleted('Node', this.path[i].id);
+				}
+			}
+			retain.push(b);
+			this.path=retain;
+			this.removeDuplicates();
+		}
+		this.clean=false; markClean(false);
+		for (var i in w) { _root.map.ways[i].redraw(); }
+		this.select();
+	};
+
+
 
 	// ----	Show direction
 
@@ -285,7 +409,9 @@
 			for (var i in z) { this.markAsDeleted(z[i],false); }
 			if (_root.sandbox) {
 				_root.waystodelete[this._name]=[this.version,deepCopy(this.deletednodes)];
+				markClean(false);
 			} else {
+				renewChangeset();
 				deleteresponder = function() { };
 				deleteresponder.onResult = function(result) { deletewayRespond(result); };
 				_root.writesrequested++;
@@ -316,11 +442,12 @@
 		if (c) {
 			_root.ws.saveUndo(iText("deleting",'deleting'));
 			this.remove();
+			markClean(true);
 		} else {
 			_root.windows.attachMovie("modal","confirm",++windowdepth);
 			_root.windows.confirm.init(275,80,new Array(iText('Cancel','cancel'),iText('Delete','delete')),
 				function(choice) {
-					if (choice==iText('Delete','delete')) { _root.ws.saveUndo(iText("deleting",'deleting')); _root.ws.remove(); }
+					if (choice==iText('Delete','delete')) { _root.ws.saveUndo(iText("deleting",'deleting')); _root.ws.remove(); markClean(true); }
 				});
 			_root.windows.confirm.box.createTextField("prompt",2,7,9,250,100);
 			writeText(_root.windows.confirm.box.prompt,iText("Some of the points on this way are tagged. Really delete?",'prompt_taggedpoints'));
@@ -379,6 +506,7 @@
 			this.deleteMergedWays();
 
 			// Assemble list of changed nodes, and send
+			renewChangeset();
 			this.uploading=true;
 			var sendpath =new Array();
 			var sendnodes=new Array();
@@ -405,7 +533,7 @@
 			var i=this.mergedways.shift();
 			_root.map.ways.attachMovie("way",i[0],++waydepth);	// can't remove unless the movieclip exists!
 			_root.map.ways[i[0]].version=i[1];					//  |
-			_root.map.ways[i[2]].deletednodes=i[2];				//  |
+			_root.map.ways[i[0]].deletednodes=i[2];				//  |
 			_root.map.ways[i[0]].remove();
 		}
 	};
@@ -429,15 +557,15 @@
 	OSMWay.prototype.saveUndo=function(str) {
 		_root.undo.append(UndoStack.prototype.undo_deleteway,
 						  new Array(this._name,this._x,this._y,
-									deepCopy(this.attr),
-									deepCopy(this.path)),this.version,iText("$1 a way",'a_way',str));
+									deepCopy(this.attr),deepCopy(this.path),this.version),
+									iText("$1 a way",'a_way',str));
 	};
 
 
 	// ----	Click handling	
 
 	OSMWay.prototype.onRollOver=function() {
-		if (this._name!=_root.wayselected && _root.drawpoint>-1) {
+		if (this._name!=_root.wayselected && _root.drawpoint>-1 && !_root.map.anchorhints) {
 			this.highlightPoints(5001,"anchorhint");
 			setPointer('penplus');
 		} else if (_root.drawpoint>-1) { setPointer('penplus'); }
@@ -446,6 +574,7 @@
 	};
 	
 	OSMWay.prototype.onRollOut=function() {
+		if (this.hitTest(_root._xmouse,_root._ymouse,true)) { return; }	// false rollout
 		if (_root.wayselected) { setPointer(''   ); }
 						  else { setPointer('pen'); }
 		_root.map.anchorhints.removeMovieClip();

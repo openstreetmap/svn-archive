@@ -19,7 +19,9 @@
 		if (this._name>=0 && !this.locked) {
 			if (_root.sandbox) {
 				_root.poistodelete[this._name]=[this.version,coord2long(this._x),coord2lat(this._y),deepCopy(this.attr)];
+				markClean(false);
 			} else {
+				renewChangeset();
 				poidelresponder = function() { };
 				poidelresponder.onResult = function(result) { deletepoiRespond(result); };
 				_root.writesrequested++;
@@ -72,6 +74,7 @@
 			operationDone(result[0]);
 		};
 		if (!this.uploading && !this.locked && (!_root.sandbox || _root.uploading)) {
+			renewChangeset();
 			_root.writesrequested++;
 			remote_write.call('putpoi',poiresponder,_root.usertoken,_root.changeset,Number(this.version),Number(this._name),coord2long(this._x),coord2lat(this._y),this.attr,1);
 			this.clean=true;
@@ -176,6 +179,7 @@
 			}
 		}
 		if (attr['ref']) { a=attr['ref']+" "+a; }
+		if (attr['tiger:reviewed']=='aerial') { a+="*"; }
 		return a;
 	}
 
@@ -186,6 +190,9 @@
 		}
 		if (_root.poiselected) {
 			highlightSquare(_root.map.pois[poiselected]._x,_root.map.pois[poiselected]._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
+		}
+		for (var qp in _root.map.photos) {
+			_root.map.photos[qp]._xscale=_root.map.photos[qp]._yscale=n;
 		}
 	}
 

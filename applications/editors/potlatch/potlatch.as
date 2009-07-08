@@ -83,6 +83,7 @@
 	_root.map.createEmptyMovieClip("relations",10); var reldepth=1;
 	_root.map.createEmptyMovieClip("ways"     ,11); var waydepth=1;
 	_root.map.createEmptyMovieClip("pois"	  ,12); var poidepth=1;
+	_root.map.createEmptyMovieClip("photos"	  ,13); var photodepth=1;
 	_root.map.createEmptyMovieClip("elastic"  ,5003); // elastic line
 	initTiles();					// create tile clips on layer 7
 
@@ -130,7 +131,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 1.0";	// current version
+	var signature="Potlatch 1.1";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
@@ -158,11 +159,14 @@
 	if (preferences.data.tileset      ==undefined) { preferences.data.tileset      =3; }	// background layer
 	if (preferences.data.tilecustom   ==undefined) { preferences.data.tilecustom   =''; }	// custom background URL
 	if (preferences.data.launcher     ==undefined) { preferences.data.launcher     =''; }	// external launch URL
+	if (preferences.data.photokml     ==undefined) { preferences.data.photokml     ='http://www.openstreetphoto.org/openstreetphoto.kml'; }	// photo KML
 	if (preferences.data.dimbackground==undefined) { preferences.data.dimbackground=true; }	// dim background?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
+	if (preferences.data.thinareas    ==undefined) { preferences.data.thinareas    =false;}	// use extra-thin lines for areas
 	if (preferences.data.advice       ==undefined) { preferences.data.advice       =true; }	// show floating advice?
 	if (preferences.data.noname       ==undefined) { preferences.data.noname       =false; }// highlight unnamed ways?
+	if (preferences.data.tiger        ==undefined) { preferences.data.tiger        =false; }// highlight unchanged TIGER ways?
 	if (preferences.data.memorise     ==undefined) { preferences.data.memorise     =new Array(); } // memorised tags
 
 
@@ -204,10 +208,17 @@
 	_root.panel.i_anticlockwise.onRollOver=function() { setFloater(iText("Anti-clockwise circular way - click to reverse",'tip_anticlockwise')); };
 	_root.panel.i_anticlockwise.onRollOut =function() { clearFloater(); };
 
+	_root.panel.attachMovie("tidy","i_tidy",47);
+	with (_root.panel.i_tidy) { _x=65; _y=63; _visible=true; };
+	_root.panel.i_tidy.onPress=function() { _root.ws.tidy(); };
+	_root.panel.i_tidy.onRollOver=function() { setFloater(iText("Tidy points in way (T)",'tip_tidy')); };
+	_root.panel.i_tidy.onRollOut =function() { clearFloater(); };
+
+
 	// General tools
 
 	_root.panel.lineStyle(1,0xCCCCCC,100);
-	_root.panel.moveTo(5,78); _root.panel.lineTo(75,78);
+	_root.panel.moveTo(5,78); _root.panel.lineTo(100,78);
 
 	_root.panel.attachMovie("undo","i_undo",38);
 	with (_root.panel.i_undo) { _x=10; _y=88; _alpha=50; };
@@ -226,6 +237,12 @@
 	_root.panel.i_prefs.onPress   =function() { openOptionsWindow(); };
 	_root.panel.i_prefs.onRollOver=function() { setFloater(iText("Set options (choose the map background)",'tip_options')); };
 	_root.panel.i_prefs.onRollOut =function() { clearFloater(); };
+
+	_root.panel.attachMovie("camera","i_photo",43);
+	with (_root.panel.i_photo) { _x=85; _y=88; };
+	_root.panel.i_photo.onPress   =function() { loadPhotos(); };
+	_root.panel.i_photo.onRollOver=function() { setFloater(iText("Load photos",'tip_photo')); };
+	_root.panel.i_photo.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("newattr","i_newattr",33);
 	with (_root.panel.i_newattr) { _x=690; _y=95; };
@@ -247,7 +264,7 @@
 	_root.panel.i_repeatattr.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("exclamation","i_warning",35);
-	with (_root.panel.i_warning) { _x=58; _y=50; _visible=false; };
+	with (_root.panel.i_warning) { _x=80; _y=50; _visible=false; };
 	_root.panel.i_warning.onPress=function() { handleWarning(); };
 	_root.panel.i_warning.onRollOver=function() { setFloater(iText("An error occurred - click for details",'tip_alert')); };
 	_root.panel.i_warning.onRollOut =function() { clearFloater(); };
@@ -367,6 +384,7 @@
 	establishConnections();
 
 	#include 'node.as'
+	#include 'photos.as'
 	#include 'anchorpoint.as'
 	#include 'poi.as'
 	#include 'relation.as'
@@ -515,9 +533,9 @@
 					setTypeText(iText("Way",'way'),_root.wayselected);
 					_root.panel.properties.tidy();
 					_root.panel.properties.init('way',getPanelColumns(),4);
-					updateButtons();
-					updateScissors(false);
 				}
+				updateButtons();
+				updateScissors(false);
 				addEndPoint(_root.nodes[newnodeid]);
 				restartElastic();
 
@@ -693,6 +711,7 @@
 			case 'L':		showPosition(); break;								// L - show latitude/longitude
 			case 'P':		askOffset(); break;									// P - parallel path
 			case 'R':		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes
+			case 'T':		_root.ws.tidy(); break;								// T - tidy
 			case 'U':		getDeleted(); break;								// U - undelete
 			case 'X':		_root.ws.splitWay(_root.pointselected); break;		// X - split way
 			case 'Z':		_root.undo.rollback(); break;						// Z - undo
@@ -766,6 +785,7 @@
 //			_root.ws.path[drawpoint].removeWay(_root.wayselected);
 			if (_root.drawpoint==0) { rnode=_root.ws.path.shift(); }
 							   else { rnode=_root.ws.path.pop(); _root.drawpoint-=1; }
+			if (!_root.ws.path[pointselected]) { pointselected--; }
 			_root.ws.markAsDeleted(rnode);
 			if (_root.ws.path.length) {
 				_root.ws.clean=false;
@@ -776,9 +796,10 @@
 				restartElastic();
 			} else {
 				_root.map.anchors[_root.drawpoint].endElastic();
+				_root.ws.saveUndo(iText("deleting",'deleting'));
 				_root.ws.remove();
-				_root.drawpoint=-1;
 				deselectAll();
+				markClean(true);
 			}
 		} else if (_root.pointselected>-2) {
 			// delete selected point
@@ -936,8 +957,13 @@
 	
 	function openOptionsWindow() {
 		_root.launcher=preferences.data.launcher;	// .variable doesn't work well with preferences.data...
+		_root.photokml=preferences.data.photokml;	//   |
 		_root.windows.attachMovie("modal","options",++windowdepth);
-		_root.windows.options.init(390,175,new Array('Ok'),function() { preferences.data.launcher=_root.launcher; preferences.flush(); } );
+		_root.windows.options.init(390,185,new Array('Ok'),function() {
+			preferences.data.launcher=_root.launcher; 
+			preferences.data.photokml=_root.photokml; 
+			preferences.flush();
+		} );
 		var box=_root.windows.options.box;
 
 		// Background selector
@@ -973,31 +999,45 @@
 		box.attachMovie("checkbox","linepref",8);
 		box.linepref.init(220,15,iText("Use thin lines at all scales",'option_thinlines'),preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
 
+		box.attachMovie("checkbox","tiger",12);
+		box.tiger.init(220,35,iText("Use thinner lines for areas",'option_thinareas'),preferences.data.thinareas,function(n) { preferences.data.thinareas=n; changeScaleTo(_root.scale); redrawWays(); });
+
 		box.attachMovie("checkbox","noname",10);
-		box.noname.init(220,35,iText("Highlight unnamed roads",'option_noname'),preferences.data.noname,function(n) { preferences.data.noname=n; redrawWays(); });
+		box.noname.init(220,55,iText("Highlight unnamed roads",'option_noname'),preferences.data.noname,function(n) { preferences.data.noname=n; redrawWays(); });
+
+		box.attachMovie("checkbox","tiger",11);
+		box.tiger.init(220,75,iText("Highlight unchanged TIGER",'option_tiger'),preferences.data.tiger,function(n) { preferences.data.tiger=n; redrawWays(); });
 
 		box.attachMovie("checkbox","pointer",4);
-		box.pointer.init(220,55,iText("Use pen and hand pointers",'option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+		box.pointer.init(220,95,iText("Use pen and hand pointers",'option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
 
 		box.attachMovie("checkbox","warnings",3);
-		box.warnings.init(220,75,iText("Show floating warnings",'option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
+		box.warnings.init(220,115,iText("Show floating warnings",'option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
 
-		// External link
+		// External link and photo
 		
-		box.createTextField('externalt',70,217,95,160,20);
-		with (box.externalt) { text=iText("External launch URL:",'option_external'); setTextFormat(plainSmall); selectable=false; }
-		box.createTextField('externali',71,219,115,160,17);
+		box.createTextField('externalt',70, 8,155,160,20);
+		with (box.externalt) { text=iText("External launch:",'option_external'); setTextFormat(plainSmall); selectable=false; }
+		box.createTextField('externali',71,box.externalt.textWidth+15,155,173-box.externalt.textWidth,17);
 		box.externali.setNewTextFormat(plainSmall); box.externali.type='input';
 		box.externali.text=_root.launcher; box.externali.variable="_root.launcher";
 		box.externali.background=true; box.externali.backgroundColor=0xDDDDDD;
 		box.externali.border=true; box.externali.borderColor=0xFFFFFF;
 
+		box.createTextField('photot',72, 8,125,160,20);
+		with (box.photot) { text=iText("Photo KML:",'option_photo'); setTextFormat(plainSmall); selectable=false; }
+		box.createTextField('photoi',73,box.photot.textWidth+15,125,173-box.photot.textWidth,17);
+		box.photoi.setNewTextFormat(plainSmall); box.photoi.type='input';
+		box.photoi.text=_root.photokml; box.photoi.variable="_root.photokml";
+		box.photoi.background=true; box.photoi.backgroundColor=0xDDDDDD;
+		box.photoi.border=true; box.photoi.borderColor=0xFFFFFF;
+
 	}
 	
-	// markClean - set JavaScript variable for alert when leaving page
+	// markClean -	set JavaScript variable for alert when leaving page
+	//				true: don't show alert		false: show alert
 
-	function markClean(state,override) {
-        if (_root.sandbox && state && !override) { state=false; }
+	function markClean(state) {
 		if (winie) { flash.external.ExternalInterface.call("markChanged",state); }
 			  else { getURL("javascript:var changesaved="+state); }
 	}
@@ -1006,6 +1046,7 @@
 
 	function deselectAll() {
 		_root.map.createEmptyMovieClip("anchors",5000); 
+		_root.map.createEmptyMovieClip("anchorhints",5001); drawpoint=-1;
 		_root.map.elastic.clear();
 		removeMovieClip(_root.map.highlight);
 		_root.panel.i_clockwise._visible=false;
@@ -1026,13 +1067,14 @@
 		pointselected=-2;
 		lastpoint=0;
 		selectWay(0);
-		markClean(true);
+		// markClean(true);
 	};
 	
 	// uploadSelected
 	
 	function uploadSelected() {
 		_root.panel.properties.tidy();
+		if (_root.sandbox) { return; }
 		if (_root.wayselected!=0 && !_root.ws.clean) {
 			uploadDirtyWays(true);
 		}
@@ -1040,6 +1082,7 @@
 			_root.map.pois[poiselected].upload();
 		}
 		uploadDirtyRelations();
+		markClean(true);
 	};
 	
 	// highlightSquare

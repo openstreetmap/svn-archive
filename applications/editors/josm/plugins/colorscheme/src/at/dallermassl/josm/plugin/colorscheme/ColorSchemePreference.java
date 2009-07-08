@@ -39,13 +39,13 @@ public class ColorSchemePreference implements PreferenceSetting {
     private DefaultListModel listModel;
     private List<String>colorKeys;
     private ColorPreference colorPreference;
-    
+
     /**
-     * Default Constructor 
+     * Default Constructor
      */
     public ColorSchemePreference() {
     }
-    
+
 
     /* (non-Javadoc)
      * @see org.openstreetmap.josm.gui.preferences.PreferenceSetting#addGui(org.openstreetmap.josm.gui.preferences.PreferenceDialog)
@@ -57,7 +57,7 @@ public class ColorSchemePreference implements PreferenceSetting {
         listModel = new DefaultListModel();
         schemesList = new JList(listModel);
         String schemes = Main.pref.get(PREF_KEY_SCHEMES_NAMES);
-        StringTokenizer st = new StringTokenizer(schemes, ";");        
+        StringTokenizer st = new StringTokenizer(schemes, ";");
         String schemeName;
         while (st.hasMoreTokens()) {
             schemeName = st.nextToken();
@@ -71,7 +71,7 @@ public class ColorSchemePreference implements PreferenceSetting {
                     JOptionPane.showMessageDialog(Main.parent, tr("Please select a scheme to use."));
                 else {
                     String schemeName = (String) listModel.get(schemesList.getSelectedIndex());
-                    getColorPreference().setColorModel(getColorMap(schemeName));
+                    getColorPreference(gui).setColorModel(getColorMap(schemeName));
                 }
             }
         });
@@ -82,7 +82,7 @@ public class ColorSchemePreference implements PreferenceSetting {
                 if (schemeName == null)
                     return;
                 schemeName = schemeName.replaceAll("\\.", "_");
-                setColorScheme(schemeName, getColorPreference().getColorModel());
+                setColorScheme(schemeName, getColorPreference(gui).getColorModel());
                 listModel.addElement(schemeName);
                 saveSchemeNamesToPref();
             }
@@ -117,9 +117,9 @@ public class ColorSchemePreference implements PreferenceSetting {
         buttonPanel.add(addScheme, GBC.std().insets(0,5,5,0));
         buttonPanel.add(deleteScheme, GBC.std().insets(0,5,5,0));
     }
-    
+
     /**
-     * Saves the names of the schemes to the preferences. 
+     * Saves the names of the schemes to the preferences.
      */
     public void saveSchemeNamesToPref() {
         if (schemesList.getModel().getSize() > 0) {
@@ -128,13 +128,13 @@ public class ColorSchemePreference implements PreferenceSetting {
                 sb.append(";"+schemesList.getModel().getElementAt(i));
             Main.pref.put(PREF_KEY_SCHEMES_NAMES, sb.toString().substring(1));
         } else
-            Main.pref.put(PREF_KEY_SCHEMES_NAMES, null);        
+            Main.pref.put(PREF_KEY_SCHEMES_NAMES, null);
     }
 
     public boolean ok() {
         return false;// nothing to do
     }
-    
+
     /**
      * Remove all color entries for the given scheme from the preferences.
      * @param schemeName the name of the scheme.
@@ -144,9 +144,9 @@ public class ColorSchemePreference implements PreferenceSetting {
         Map<String, String> colors = Main.pref.getAllPrefix(PREF_KEY_SCHEMES_PREFIX + schemeName + ".");
         for(String key : colors.keySet()) {
             Main.pref.put(key, null);
-        }       
+        }
     }
-    
+
     /**
      * Copy all color entries from the given map to entries in preferences with the scheme name.
      * @param schemeName the name of the scheme.
@@ -159,9 +159,9 @@ public class ColorSchemePreference implements PreferenceSetting {
             Main.pref.put(key, colorMap.get(colorKey));
         }
     }
-    
+
     /**
-     * Reads all colors for a scheme and returns them in a map (key = color key without prefix, 
+     * Reads all colors for a scheme and returns them in a map (key = color key without prefix,
      * value = html color code).
      * @param schemeName the name of the scheme.
      */
@@ -176,9 +176,9 @@ public class ColorSchemePreference implements PreferenceSetting {
         return colorMap;
     }
 
-    public ColorPreference getColorPreference() {
+    public ColorPreference getColorPreference(PreferenceDialog gui) {
         if(colorPreference == null) {
-            for(PreferenceSetting setting : PreferenceDialog.settings) {
+            for(PreferenceSetting setting : gui.getSettings()) {
                 if(setting instanceof ColorPreference) {
                     colorPreference = (ColorPreference) setting;
                     break;

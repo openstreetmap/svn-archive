@@ -131,7 +131,7 @@ public class ErrorLayer extends Layer implements LayerChangeListener {
      * If layer is the OSM Data layer, remove all errors
      */
     public void layerRemoved(Layer oldLayer) {
-        if (oldLayer == Main.map.mapView.editLayer) {
+        if (oldLayer == Main.map.mapView.getEditLayer()) {
             Main.map.mapView.removeLayer(this);
         } else if (oldLayer == this) {
             OSMValidatorPlugin.errorLayer = null;

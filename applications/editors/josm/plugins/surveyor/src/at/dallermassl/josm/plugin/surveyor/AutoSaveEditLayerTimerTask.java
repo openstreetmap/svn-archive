@@ -38,10 +38,10 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
      */
     @Override
     public void run() {
-        if(Main.map == null || Main.map.mapView == null || Main.map.mapView.editLayer == null) {
+        if(Main.map == null || Main.map.mapView == null || Main.map.mapView.getEditLayer() == null) {
             return;
         }
-        OsmDataLayer layer = Main.map.mapView.editLayer;
+        OsmDataLayer layer = Main.map.mapView.getEditLayer();
         try {
             DataSet dataset = layer.data;
 

@@ -49,6 +49,7 @@
 		_root.pointselected=this._name;
 		this.way.highlight();
 		setTypeText(iText("Point",'point'),this.node);
+		removeIconPanel();
 		_root.panel.properties.init('point',getPanelColumns(),4);
 		_root.panel.presets.init(_root.panel.properties);
 		updateButtons();

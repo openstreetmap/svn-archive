@@ -694,6 +694,7 @@
 		removeMovieClip(_root.map.anchorhints);
 		this.highlight();
 		setTypeText(iText("Way",'way'),this._name);
+		removeIconPanel();
 		_root.panel.properties.init('way',getPanelColumns(),4);
 		_root.panel.presets.init(_root.panel.properties);
 		updateButtons();
@@ -1333,16 +1334,15 @@
 				for (i in pointlist) {										// POIs
 					point=pointlist[i][0];									//  |
 					if ((!_root.map.pois[point] || _root.map.pois[point].version!=pointlist[i][4]) && !_root.poistodelete[point]) {
-						// **** attach correct icon:
-						// if (pointlist[i][3]["place"]) {
-						// _root.map.pois.attachMovie("poi_22",point,++poidepth); 
-						_root.map.pois.attachMovie("poi",point,++poidepth);	//  |
+						var a=getPOIIcon(pointlist[i][3]);				//  |
+						_root.map.pois.attachMovie(a,point,++poidepth);	//  |
 						_root.map.pois[point]._x=long2coord(pointlist[i][1]);// |
 						_root.map.pois[point]._y=lat2coord (pointlist[i][2]);// |
 						_root.map.pois[point]._xscale=
 						_root.map.pois[point]._yscale=Math.max(100/Math.pow(2,_root.scale-13),6.25);
 						_root.map.pois[point].version=pointlist[i][4];		//  |
 						_root.map.pois[point].attr=pointlist[i][3];			//  |
+						_root.map.pois[point].icon=a;						//  |
 						_root.poicount+=1;									//  |
 						if (point==prenode) { deselectAll(); prenode=undefined;
 											  _root.map.pois[point].select(); }

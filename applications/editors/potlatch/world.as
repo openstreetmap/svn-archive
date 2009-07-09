@@ -61,6 +61,8 @@
 		// resize panel window
 		if (_root.panel.properties.proptype!='') {
 			_root.panel.properties.init(_root.panel.properties.proptype,getPanelColumns(),4);
+		} else {
+			drawIconPanel();
 		}
 		_root.panel.i_repeatattr._x=
 		_root.panel.i_newattr._x=

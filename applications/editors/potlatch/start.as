@@ -18,10 +18,13 @@
 			_root.relcolours=result[7];
 			_root.relalphas=result[8];
 			_root.relwidths=result[9];
-			_root.i18n=result[10];
+			_root.iconlist=result[10];
+			_root.iconnames=result[11];
+			_root.icontags=result[12];
+			_root.i18n=result[13];
 			_root.panel.i_preset._visible=false;
 
-			var pages=result[11].split('<page/>');
+			var pages=result[14].split('<page/>');
 			_root.helppages=new Array();
 			for (var i in pages) {
                 helppages[i]=pages[i].split('<column/>');
@@ -35,6 +38,10 @@
 			_root.waysloading.whirl._xscale=
 			_root.waysloading.whirl._yscale=75;
 			_root.io=0;
+
+			for (var icon in iconlist) {
+				Object.registerClass("poi_"+iconlist[icon],POI);
+			}
 
 			if (lat!=undefined) { startPotlatch(); }	// Parse GPX if supplied
 			if (gpx) { parseGPX(gpx); }					//  |
@@ -130,6 +137,7 @@
 		_root.panel.properties._visible=true;
 		_root.panel.presets._visible=true;
 		_root.windows.splashscreen.remove();
+		if (_root.panel.properties.proptype=='') { drawIconPanel(); }
 		if (_root.dogpx) { gpxToWays(); }
 		if (live) {
 		    setEditingStatus(iText("Editing live",'editinglive'),0xFF0000);

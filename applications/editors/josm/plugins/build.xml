@@ -34,8 +34,8 @@
         <ant antfile="build.xml" target="dist" dir="tageditor"/>
         <ant antfile="build.xml" target="dist" dir="terracer"/>
         <ant antfile="build.xml" target="dist" dir="usertools"/>
-<!--        <ant antfile="build.xml" target="dist" dir="utilsplugin"/>
--->        <ant antfile="build.xml" target="dist" dir="validator"/>
+        <ant antfile="build.xml" target="dist" dir="utilsplugin"/>
+        <ant antfile="build.xml" target="dist" dir="validator"/>
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>
         <ant antfile="build.xml" target="dist" dir="wmsplugin"/>
     </target>

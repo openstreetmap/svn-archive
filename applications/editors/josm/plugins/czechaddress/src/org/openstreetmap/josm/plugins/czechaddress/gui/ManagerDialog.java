@@ -326,7 +326,14 @@ public class ManagerDialog extends ExtendedDialog {
     private AddressElement dbTreeValue = null;
 
     private void dbTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_dbTreeValueChanged
-        dbTreeValue = (AddressElement) dbTree.getSelectionPath().getLastPathComponent();
+        try {
+            dbTreeValue = (AddressElement) dbTree.getSelectionPath().getLastPathComponent();
+        } catch (NullPointerException except) {
+            dbTreeValue = null;
+            System.err.println("Strange exception has occured."+
+                " If you find a way to reproduce it, please report a bug!");
+            except.printStackTrace();
+        }
         dbEditButton.setEnabled( EditorFactory.isEditable(dbTreeValue) );
     }//GEN-LAST:event_dbTreeValueChanged
 

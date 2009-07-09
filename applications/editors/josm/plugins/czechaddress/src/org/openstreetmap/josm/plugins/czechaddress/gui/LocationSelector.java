@@ -16,7 +16,6 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithSt
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ViToCi;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Region;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -60,7 +59,9 @@ public class LocationSelector extends ExtendedDialog {
         oblastComboBox.setModel(new DefaultComboBoxModel(
                 Database.getInstance().regions.toArray()));
 
-        autodetectLocation();
+        try {
+            autodetectLocation();
+        } catch (Exception e) {}
         oblastComboBoxItemStateChanged(null);
     }
 

@@ -540,26 +540,35 @@ public class Reasoner {
      * constant thanks to using indexes.</p>
      */
     public AddressElement getStrictlyBest(OsmPrimitive prim) {
+        
+        AddressElement result = null;
+        try {
+            if (!transactionOpened)
+                return primBestIndex.get(prim);
 
-        if (!transactionOpened)
-            return primBestIndex.get(prim);
-
-        Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
-        if (matches == null) return null;
-        AddressElement bestE = null;
-        int bestQ = MATCH_NOMATCH;
-
-        for (AddressElement elem : matches.keySet()) {
-            if (matches.get(elem) == bestQ)
-                bestE = null;
-
-            if (matches.get(elem) > bestQ) {
-                bestQ = matches.get(elem);
-                bestE = elem;
+            Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
+            if (matches == null) {
+                return null;
             }
-        }
 
-        return bestE;
+            int bestQ = MATCH_NOMATCH;
+            for (AddressElement elem : matches.keySet()) {
+                if (matches.get(elem) == bestQ)
+                    result = null;
+
+                if (matches.get(elem) > bestQ) {
+                    bestQ = matches.get(elem);
+                    result = elem;
+                }
+            }
+            
+        } catch (NullPointerException except) {
+            System.err.println("Strange exception occured." +
+                " If you find a way to reproduce this situation, please "+
+                "e-mail the author of the CzechAddress plugin.");
+            except.printStackTrace();
+        }
+        return result;
     }
 
     /**
@@ -581,25 +590,35 @@ public class Reasoner {
      */
     public OsmPrimitive getStrictlyBest(AddressElement elem) {
 
-        if (!transactionOpened)
-            return elemBestIndex.get(elem);
+        OsmPrimitive result = null;
+        try {
+            if (!transactionOpened)
+                return elemBestIndex.get(elem);
 
-        Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(elem);
-        if (matches == null) return null;
-        OsmPrimitive bestE = null;
-        int bestQ = MATCH_NOMATCH;
-
-        for (OsmPrimitive prim : matches.keySet()) {
-            if (matches.get(prim) == bestQ)
-                bestE = null;
-
-            if (matches.get(prim) > bestQ) {
-                bestQ = matches.get(prim);
-                bestE = prim;
+            Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(elem);
+            if (matches == null) {
+                return null;
             }
-        }
+            
+            int bestQ = MATCH_NOMATCH;
+            for (OsmPrimitive prim : matches.keySet()) {
+                if (matches.get(prim) == bestQ) {
+                    result = null;
+                }
 
-        return bestE;
+                if (matches.get(prim) > bestQ) {
+                    bestQ = matches.get(prim);
+                    result = prim;
+                }
+            }
+
+        } catch (NullPointerException except) {
+            System.err.println("Strange exception occured." +
+                " If you find a way to reproduce this situation, please "+
+                "e-mail the author of the CzechAddress plugin.");
+            except.printStackTrace();
+        }
+        return result;
     }
 
     /**

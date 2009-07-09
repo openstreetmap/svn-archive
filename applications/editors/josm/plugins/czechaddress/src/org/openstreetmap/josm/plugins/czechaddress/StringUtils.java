@@ -61,6 +61,7 @@ public abstract class StringUtils {
 
         s1 = anglicize(s1);
         s2 = anglicize(s2);
+
         List<Integer> beg1 = new ArrayList<Integer>(4);
         List<Integer> beg2 = new ArrayList<Integer>(4);
 
@@ -113,8 +114,6 @@ public abstract class StringUtils {
      * Capitalizes the given string (first letter of every word upper-case,
      * others lower-case). Czech grammar rules are more or less obeyed.
      *
-     * <p><b>TODO:</b> This should be moved somewhere else.</p>
-     *
      * @param s string to be capitalized
      * @return capitaized string
      */
@@ -134,13 +133,31 @@ public abstract class StringUtils {
 
             last = charr[i] = ch;
         }
-
-        String[] noCapitalize = { "Nad", "Pod", "U", "Na", "Z" };
         String result = String.valueOf(charr);
 
+        result = result.replaceAll("Nábř. ", "nábřeží ");
+        result = result.replaceAll("Ul. ",   "ulice ");
+        result = result.replaceAll("Nám. ",  "náměstí ");
+        result = result.replaceAll("Kpt. ",  "kapitána ");
+        result = result.replaceAll("Bří. ",  "bratří ");
+
+        String[] noCapitalize = { "Nad", "Pod", "U", "Na", "Z" };
         for (String noc : noCapitalize)
             result = result.replaceAll(" "+noc+" ", " "+noc.toLowerCase()+" ");
-        return result;
+
+
+        String[] mesice = {"Ledna", "Února", "Března", "Dubna", "Května",
+            "Máje", "Června", "Července", "Srpna", "Září", "Října",
+            "Listopadu", "Prosince"};
+        for (String mesic : mesice)
+            result = result.replaceAll("."+mesic, ". " + mesic.toLowerCase());
+
+
+        String[] noBegCap = {"Třída", "Ulice", "Náměstí", "Nábřeží"};
+        for (String noc : noBegCap)
+            result = result.replaceAll(noc, noc.toLowerCase());
+
+        return result.replaceAll("  ", " ");
     }
 
     /**

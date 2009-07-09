@@ -89,7 +89,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         super.buttonAction(evt);
         if (getValue() == 1) {
             
-            if (updateMatchesTimer.isRunning()) {
+            if (updateMatchesTimer != null && updateMatchesTimer.isRunning()) {
                 updateMatchesTimer.stop();
                 updateMatches();
             }
@@ -134,6 +134,8 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         synchronized (r) {
             Map<String,String> backup = prim.keys;
             r.openTransaction();
+            for (AddressElement elem : r.getCandidates(prim))
+                r.unOverwrite(prim, elem);
             prim.keys = null;
             prim.put(PrimUtils.KEY_ADDR_CP, alternateNumberEdit.getText());
             r.update(prim);

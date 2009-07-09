@@ -61,11 +61,16 @@
 		this.onMouseUp  =function() { this.endDrag();   };
 		_root.firstxmouse=_root.map._xmouse;
 		_root.firstymouse=_root.map._ymouse;
+		_root.oldx=_root.ws.path[this._name].x;
+		_root.oldy=_root.ws.path[this._name].y;
+		clearFloater();
 	};
 
 	AnchorPoint.prototype.trackDrag=function() {
 		this._x=_root.map._xmouse;
 		this._y=_root.map._ymouse;
+		_root.ws.path[this._name].moveTo(this._x,this._y,undefined);
+		_root.ws.highlight();
 	};
 	
 	AnchorPoint.prototype.endDrag=function() {
@@ -81,6 +86,8 @@
 		if ((xdist>=tolerance   || ydist>=tolerance  ) ||
 		   ((xdist>=tolerance/2 || ydist>=tolerance/2) && longclick)) {
 			// ====	Move existing point
+			_root.ws.path[this._name].x=_root.oldx;	// just so it's saved for undo
+			_root.ws.path[this._name].y=_root.oldy;	//  |
 			_root.undo.append(UndoStack.prototype.undo_movenode,
 							  new Array(deepCopy(_root.ws.path[this._name])),
 							  iText("moving a point",'action_movepoint'));
@@ -92,8 +99,7 @@
 			markClean(false);
 
 		} else {
-			this._x=_root.ws.path[this._name].x;	// Return point to original position
-			this._y=_root.ws.path[this._name].y;	//  | (in case dragged slightly)
+			_root.ws.path[this._name].moveTo(_root.oldx,_root.oldy,undefined);	// Return point to original position
 			if ((this._name==0 || this._name==_root.ws.path.length-1) && !Key.isDown(17)) {
 				// ===== Clicked at start or end of line
 				if (_root.drawpoint==0 || _root.drawpoint==_root.ws.path.length-1) {

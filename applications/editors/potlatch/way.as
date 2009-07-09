@@ -285,7 +285,7 @@
 					if (a2>a1) { a2=a2-360; }
 					diff=a1-a2;
 					if (diff>20) {
-						for (var ang=a1; ang>a2; ang-=20) {
+						for (var ang=a1-20; ang>a2+10; ang-=20) {
 							_root.newnodeid--;
 							_root.nodes[newnodeid]=new Node(newnodeid,cx+Math.sin(ang*Math.PI/180)*d,cy+Math.cos(ang*Math.PI/180)*d,new Object(),0);
 							newpath.push(_root.nodes[newnodeid]);
@@ -295,14 +295,13 @@
 					if (a1>a2) { a1=a1-360; }
 					diff=a2-a1;
 					if (diff>20) {
-						for (var ang=a1; ang<a2; ang+=20) {
+						for (var ang=a1+20; ang<a2-10; ang+=20) {
 							_root.newnodeid--;
 							_root.nodes[newnodeid]=new Node(newnodeid,cx+Math.sin(ang*Math.PI/180)*d,cy+Math.cos(ang*Math.PI/180)*d,new Object(),0);
 							newpath.push(_root.nodes[newnodeid]);
 						}
 					}
 				}
-
 			}
 			newpath.push(this.path[this.path.length-1]);
 			this.path=newpath;

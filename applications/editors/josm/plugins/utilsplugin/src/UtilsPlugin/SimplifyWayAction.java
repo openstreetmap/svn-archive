@@ -39,7 +39,7 @@ public class SimplifyWayAction extends JosmAction {
 
         int ways = 0;
         LinkedList<Bounds> bounds = new LinkedList<Bounds>();
-        OsmDataLayer dataLayer = Main.main.editLayer();
+        OsmDataLayer dataLayer = Main.map.mapView.getEditLayer();
         for (DataSource ds : dataLayer.data.dataSources) {
             if (ds.bounds != null)
                 bounds.add(ds.bounds);

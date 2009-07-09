@@ -19,6 +19,7 @@ import javax.swing.event.DocumentListener;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.tools.GBC;
@@ -165,9 +166,11 @@ public class JumpToAction extends JosmAction implements MouseListener {
     public int getZoom(double scale) {
         double sizex = scale * Main.map.mapView.getWidth();
         double sizey = scale * Main.map.mapView.getHeight();
-        for (int zoom = 0; zoom <= 32; zoom++, sizex *= 2, sizey *= 2)
-            if (sizex > NavigatableComponent.world.east() || sizey > NavigatableComponent.world.north())
+    	ProjectionBounds b = Main.proj.getWorldBounds();
+        for (int zoom = 0; zoom <= 32; zoom++, sizex *= 2, sizey *= 2) {        	
+            if (sizex > b.max.east() || sizey > b.max.north())
                 return zoom;
+        }
         return 32;
     }
 

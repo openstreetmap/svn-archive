@@ -87,6 +87,7 @@ public class JoinAreasAction extends JosmAction {
             this.role = role;
         }
 
+        @Override
         public boolean equals(Object other) {
             if (!(other instanceof RelationRole)) return false;
             RelationRole otherMember = (RelationRole) other;
@@ -118,7 +119,7 @@ public class JoinAreasAction extends JosmAction {
         Way[] selWays = new Way[2];
 
         LinkedList<Bounds> bounds = new LinkedList<Bounds>();
-        OsmDataLayer dataLayer = Main.main.editLayer();
+        OsmDataLayer dataLayer = Main.map.mapView.getEditLayer();
         for (DataSource ds : dataLayer.data.dataSources) {
             if (ds.bounds != null)
                 bounds.add(ds.bounds);

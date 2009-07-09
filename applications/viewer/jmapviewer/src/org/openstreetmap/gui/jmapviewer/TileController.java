@@ -45,9 +45,13 @@ public class TileController {
         }
         return tile;
     }
-    
+
     public TileCache getTileCache() {
         return tileCache;
+    }
+
+    public void setTileCache(TileCache tileCache) {
+        this.tileCache = tileCache;
     }
 
     public TileLoader getTileLoader() {
@@ -69,7 +73,7 @@ public class TileController {
     public void setTileSource(TileSource tileSource) {
         this.tileSource = tileSource;
     }
-    
+
     /**
      * 
      */

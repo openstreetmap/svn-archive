@@ -84,6 +84,7 @@
     <ant target="build-lang"><property name="language" value="nb"/></ant>
     <ant target="build-lang"><property name="language" value="nl"/></ant>
     <ant target="build-lang"><property name="language" value="pl"/></ant>
+    <ant target="build-lang"><property name="language" value="pt_BR"/></ant>
     <ant target="build-lang"><property name="language" value="ro"/></ant>
     <ant target="build-lang"><property name="language" value="ru"/></ant>
     <ant target="build-lang"><property name="language" value="sk"/></ant>

@@ -25,6 +25,7 @@
 
 	use SWF qw(:ALL);
 	use SWF::Constants qw(:Button);
+	use Cwd 'abs_path';
 
 	# -----	Initialise
 
@@ -103,6 +104,7 @@ EOF
 			print "Control character ".ord($1)." in $fn\n";
 		}
 		$actionscript=~s/#include '$fn'/$text/;
+		$actionscript=~s/#iconlist/$iconlist/;
 	}
 
 	# $i=0; foreach $l (split(/\n/,$actionscript)) { print "$i: $l\n"; $i++; };

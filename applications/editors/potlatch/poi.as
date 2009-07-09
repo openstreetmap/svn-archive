@@ -9,6 +9,7 @@
 		this.clean=true;
 		this.uploading=false;
 		this.locked=false;
+		this.icon='poi';
 		this.version=0;
 		this._xscale=this._yscale=Math.max(100/Math.pow(2,_root.scale-13),6.25);
 	};
@@ -28,7 +29,7 @@
 				remote_write.call('putpoi',poidelresponder,_root.usertoken,_root.changeset,Number(this.version),Number(this._name),coord2long(this._x),coord2lat(this._y),this.attr,0);
 			}
 		}
-		if (this.name<0 || _root.sandbox) {
+		if (this._name<0 || _root.sandbox) {
 			if (this._name==poiselected) { deselectAll(); }
 			removeMovieClip(this);
 		}
@@ -104,6 +105,7 @@
 		}
 	};
 	POI.prototype.beginDrag=function() {
+		clearFloater();
 		this.onMouseMove=function() { this.trackDrag(); };
 		this.onMouseUp  =function() { this.endDrag();   };
 		_root.firstxmouse=_root.map._xmouse;
@@ -140,11 +142,12 @@
 		_root.panel.properties.saveAttributes();
 		_root.poiselected=this._name;
 		setTypeText(iText("Point",'point'),this._name);
+		removeIconPanel();
 		_root.panel.properties.init('POI',getPanelColumns(),4);
 		_root.panel.presets.init(_root.panel.properties);
 		updateButtons();
 		updateScissors(false);
-		highlightSquare(this._x,this._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
+		this.highlight();
 		var z=_root.noderels[this._name];
 		for (var rel in z) { _root.map.relations[rel].redraw(); }
 	};
@@ -160,9 +163,19 @@
 									deepCopy(this.attr)),iText("$1 a POI",'a_poi',str));
 	};
 
+	POI.prototype.highlight=function() {
+		var s=8/Math.pow(2,Math.min(_root.scale,16)-13);
+		if (this.icon!="poi") { s*=1.3; }
+		highlightSquare(this._x,this._y,s);
+	};
+	
+	POI.prototype.redraw=function() {
+		var a=getPOIIcon(this.attr);
+		if (this.icon==a) { return; }
+		replaceIcon(this,a);
+	};
+
 	Object.registerClass("poi",POI);
-	// **** register all POI types here
-	// Object.registerClass("poi_22",POI);
 
 
 
@@ -189,13 +202,36 @@
 			_root.map.pois[qpoi]._xscale=_root.map.pois[qpoi]._yscale=n;
 		}
 		if (_root.poiselected) {
-			highlightSquare(_root.map.pois[poiselected]._x,_root.map.pois[poiselected]._y,8/Math.pow(2,Math.min(_root.scale,16)-13));
+			_root.map.pois[poiselected].highlight();
 		}
 		for (var qp in _root.map.photos) {
 			_root.map.photos[qp]._xscale=_root.map.photos[qp]._yscale=n;
 		}
 	}
+	
+	function getPOIIcon(attr) {
+		var a='poi';
+		for (var i in icontags) {
+			var ok=true;
+			for (var k in icontags[i]) {
+				if (!attr[k] || attr[k]!=icontags[i][k]) { ok=false; }
+			}
+			if (ok) { a='poi_'+i; }
+		}
+		return a;
+	}
 
+	function replaceIcon(poi,newicon) {
+		var x=poi._x; var y=poi._y;
+		var s=poi._xscale; var v=poi.version; var a=deepCopy(poi.attr);
+		var d=poi.getDepth(); var n=poi._name;
+		_root.map.pois.attachMovie(newicon,n,d);
+		poi=_root.map.pois[n];
+		poi._x=x; poi._y=y;
+		poi._xscale=poi._yscale=s;
+		poi.version=v; poi.attr=a; poi.icon=newicon;
+		if (n==_root.poiselected) { poi.highlight(); }
+	}
 
 	// purgePOIs - remove any clean POIs outside current view
 

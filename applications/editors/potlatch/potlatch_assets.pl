@@ -25,17 +25,30 @@
 	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"modal");
 
 	#		POI icons
-if (0==1) {	
-	for ($i=0; $i<8; $i++) {
-		for ($j=0; $j<8; $j++) {
-			$ec=new SWF::MovieClip();
-			$di=$ec->add(new SWF::Bitmap("icons/icon$i$j.dbl"));
-			$di->moveTo(-12,-12);
-			$ec->nextFrame();
-			$m->addExport($ec,"poi_$i$j");
-		}
+
+	$iconlist='';
+	opendir(DBL,"icons_dbl") or die "Can't open PNG directory: $!\n";
+	foreach $fn (sort readdir(DBL)) {
+		next unless ($fn=~/^(.+)\.dbl$/);
+		$iconlist.="$1;";
+
+		# add once as the actual POI...
+		$ec=new SWF::MovieClip();
+		$di=$ec->add(new SWF::Bitmap("icons_dbl/$fn"));
+		$di->moveTo(-8,-8);
+		$ec->nextFrame();
+		$m->addExport($ec,"poi_$1");
+
+		# ...then again for the panel (different prototype)
+		$ec=new SWF::MovieClip();
+		$di=$ec->add(new SWF::Bitmap("icons_dbl/$fn"));
+		$di->moveTo(-8,-8);
+		$ec->nextFrame();
+		$m->addExport($ec,"icon_$1");
 	}
-}
+	closedir DBL;
+	chop $iconlist;
+
 	#		Radio buttons
 	
 	$ec=new SWF::MovieClip(); $ch=new SWF::Shape();

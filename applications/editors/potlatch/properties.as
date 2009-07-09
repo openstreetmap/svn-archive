@@ -162,7 +162,7 @@
 				Selection.setFocus(null);
 				_root.keytarget='';
 			}
-			if (this.pw.proptype!='POI') { _root.ws.redraw(); }
+			this.pw.redrawObject();
 		};
 
 		this.createEmptyMovieClip("triangle",2);
@@ -472,9 +472,16 @@
 				case 'way':		r.setWayRole (wayselected,relarr[i]); break;
 			}
 		}
-		if (this.proptype!='POI') { _root.ws.redraw(); }
+		this.redrawObject();
 		this.reflect();
 		this.reinit();
+	};
+
+	PropertyWindow.prototype.redrawObject=function() {
+		switch (this.proptype) {
+			case 'POI':	_root.map.pois[poiselected].redraw();
+			default:	_root.ws.redraw();
+		}
 	};
 
 	PropertyWindow.prototype.setAttributes=function(pkeys) {
@@ -485,14 +492,14 @@
 		}
 		this.reinit();
 		this.saveAttributes();
-		if (this.proptype!='POI') { _root.ws.redraw(); }
+		this.redrawObject();
 	};
 
 	PropertyWindow.prototype.nukeAttributes=function() {
 		var proparr=this.proparr;
 		this.saveUndo();
 		for (var el in proparr) { delete this.proparr[el]; setValueInObject(this.proptype,el,''); }
-		if (this.proptype!='POI') { _root.ws.redraw(); }
+		this.redrawObject();
 		this.reflect();
 		this.reinit();
 	};
@@ -572,7 +579,7 @@
 			type='input';
 			setTextFormat(boldSmall);
 			setNewTextFormat(boldSmall);
-			restrict="^"+chr(0)+"-"+chr(31);
+//			restrict="^"+chr(0)+"-"+chr(31);
 			maxChars=255;
 		};
 		this.keyname.onSetFocus =function() {
@@ -621,7 +628,7 @@
 					_root.redopropertywindow=this._parent._parent._parent; 
 				}
 			}
-			if (this._parent._parent._parent.proptype!='POI') { _root.ws.redraw(); }
+			this._parent._parent._parent.redrawObject();
 			_root.auto.remove();
 			this._parent._parent._parent.reflect();
 			this._parent.lastvalue=this.text;
@@ -638,7 +645,7 @@
 			type='input';
 			setTextFormat(plainSmall);
 			setNewTextFormat(plainSmall);
-			restrict="^"+chr(0)+"-"+chr(31);
+//			restrict="^"+chr(0)+"-"+chr(31);
 			maxChars=255;
 		};
 		this.value.text=this.getValueFromObject(key);
@@ -663,10 +670,11 @@
 			setValueFromTextfield(this._parent.value);
 			_root.auto.remove();
 			this._parent._parent._parent.reflect();
-			if (this._parent._parent._parent.proptype!='POI') { _root.ws.redraw(); }
+			this._parent._parent._parent.redrawObject();
 			_root.redopropertywindow=this._parent._parent._parent;
 		};
 	};
+
 
 	// KeyValue.getValueFromObject(key)
 	// for a given key, returns the value from the way, point or POI
@@ -810,7 +818,7 @@
 			type='input';
 			setTextFormat(plainTiny);
 			setNewTextFormat(plainTiny);
-			restrict="^"+chr(0)+"-"+chr(31);
+//			restrict="^"+chr(0)+"-"+chr(31);
 			maxChars=255;
 		};
 		this.value.text=this.getRole();

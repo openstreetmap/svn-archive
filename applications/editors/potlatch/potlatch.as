@@ -171,7 +171,7 @@
 
 
 	// =====================================================================================
-	// Icons
+	// App icons
 
 	_root.attachMovie("zoomin","i_zoomin",30);
 	with (_root.i_zoomin) { _x=5; _y=5; };
@@ -387,6 +387,7 @@
 	#include 'photos.as'
 	#include 'anchorpoint.as'
 	#include 'poi.as'
+	#include 'iconpanel.as'
 	#include 'relation.as'
 	#include 'way.as'
 	#include 'history.as'
@@ -403,6 +404,8 @@
 	#include 'offline.as'
 	#include 'error.as'
 
+
+
 	// =====================================================================================
 	// Start
 
@@ -410,6 +413,7 @@
 
 	_root.panel.attachMovie("propwindow","properties",50);
 	with (_root.panel.properties) { _x=110; _y=25; _visible=false; };
+	_root.panel.properties.init('');
 
 	_root.panel.attachMovie("presetmenu","presets",60);
 	with (_root.panel.presets) { _x=110; _y=1; _visible=false; };
@@ -1061,6 +1065,7 @@
 		_root.panel.properties.tidy();
 		_root.panel.properties.init('');
 		_root.panel.presets.init();
+		drawIconPanel();
 		updateButtons();
 		updateScissors(false);
 		poiselected=0;

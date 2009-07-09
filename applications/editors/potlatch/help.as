@@ -3,6 +3,7 @@
 
 	var topicselected=0;
 	var topics=new Array(iText('Introduction','heading_introduction'),
+	                     iText('Getting started','heading_pois'),
 	                     iText('Surveying','heading_surveying'),
 	                     iText('Drawing','heading_drawing'),
 	                     iText('Tagging','heading_tagging'),

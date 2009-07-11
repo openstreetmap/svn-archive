@@ -268,6 +268,7 @@
 				var c=Math.sqrt(Math.pow(this.path[i].x-cx,2)+Math.pow(this.path[i].y-cy,2));
 				this.path[i].x=cx+(this.path[i].x-cx)/c*d;
 				this.path[i].y=cy+(this.path[i].y-cy)/c*d;
+				this.path[i].clean=false;
 				var l=this.path[i].ways; for (var o in l) { w[o]=true; }
 			}
 

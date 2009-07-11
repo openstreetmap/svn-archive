@@ -136,7 +136,7 @@
 		if (skip) {
 			// We're at the same scale as previously, so don't redraw
 			// ** will refactor this when we do proper POI icons
-			for (var i=1; i<this.path.length; i+=1) {
+			for (var i=0; i<this.path.length; i+=1) {
 				if (this.path[i].tagged) {
 					this.taggednodes.attachMovie("poiinway",i,i);
 					this.taggednodes[i]._x=this.path[i].x;

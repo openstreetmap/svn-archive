@@ -78,7 +78,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
             new rectifierService("Metacarta Map Rectifier",
                 "http://labs.metacarta.com/rectifier/",
                 "http://labs.metacarta.com/rectifier/wms.cgi?id=__s__&srs=EPSG:4326"
-                + "&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png",
+                + "&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png&",
                 // This matches more than the "classic" WMS link, so users can pretty much
                 // copy any link as long as it includes the ID
                 "labs\\.metacarta\\.com/(?:.*?)(?:/|=)([0-9]+)(?:\\?|/|\\.|$)",
@@ -91,7 +91,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
             new rectifierService("Geothings Map Warper",
                 "http://warper.geothings.net/",
                 "http://warper.geothings.net/maps/wms/__s__?request=GetMap&version=1.1.1"
-                + "&styles=&format=image/png&srs=epsg:4326&exceptions=application/vnd.ogc.se_inimage",
+                + "&styles=&format=image/png&srs=epsg:4326&exceptions=application/vnd.ogc.se_inimage&",
                 // This matches more than the "classic" WMS link, so users can pretty much
                 // copy any link as long as it includes the ID
                 "(?:mapwarper\\.net|warper\\.geothings\\.net)/(?:.*?)/([0-9]+)(?:\\?|/|\\.|$)",

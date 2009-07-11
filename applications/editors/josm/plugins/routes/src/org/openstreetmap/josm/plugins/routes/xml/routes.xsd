@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema 
+xmlns="http://www.w3.org/2001/XMLSchema" 
+targetNamespace="http://www.example.org/routes" 
+xmlns:tns="http://www.example.org/routes" 
+elementFormDefault="qualified"
+xmlns:jxb="http://java.sun.com/xml/ns/jaxb" 
+jxb:version="1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/jaxb/bindingschema_1_0.xsd">
+
+<annotation>
+	<appinfo>
+		<jxb:schemaBindings>	
+			<jxb:nameXmlTransform>
+				<jxb:typeName prefix="RoutesXML"/>
+			</jxb:nameXmlTransform>
+		</jxb:schemaBindings>
+	</appinfo>
+</annotation>
+
+<element name="routes">
+	<complexType>
+		<sequence>
+			<element name="layer" type="tns:layer" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+</element>
+
+<complexType name="layer">
+	<sequence>
+		<element name="route" type="tns:route" minOccurs="0" maxOccurs="unbounded"/>
+	</sequence>
+	<attribute name="name" type="string"/>
+</complexType>
+
+<complexType name="route">
+	<sequence>
+		<element name="pattern" type="string"/>		
+	</sequence>
+	<attribute name="color" type="string"/>
+</complexType>
+
+</schema>

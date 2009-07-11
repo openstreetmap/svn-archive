@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns="http://www.example.org/routes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/routes routes.xsd ">
+<!-- pattern is the same pattern as used in SearchAction -->
+	<layer name="Czech hiking trails">
+		<route color="#FF0000">
+			<pattern>
+			((type:relation | type:way) kct_red=*) | (color=red type=route route=hiking network=cz:kct)
+			</pattern>
+		</route>
+		<route color="#FFFF00">
+			<pattern>
+			((type:relation | type:way) kct_yellow=*) | (color=yellow type=route route=hiking network=cz:kct)
+			</pattern>			
+		</route>
+		<route color="#0000FF">
+			<pattern>
+			((type:relation | type:way) kct_blue=*) | (color=blue type=route route=hiking network=cz:kct)
+			</pattern>
+		</route>
+		<route color="#00FF00">
+			<pattern>
+			((type:relation | type:way) kct_green=*) | (color=green type=route route=hiking network=cz:kct)
+			</pattern>		
+		</route>
+	</layer>
+	<layer name="Cycle routes">
+		<route color="#FF00FF">
+			<pattern>
+			(type:way (ncn=* | (lcn=* | rcn=* ))) | (type:relation type=route route=bicycle)
+			</pattern>
+		</route>
+	</layer>
+</routes>

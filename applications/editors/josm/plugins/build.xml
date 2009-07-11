@@ -27,6 +27,7 @@
         <ant antfile="build.xml" target="dist" dir="piclayer"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
         <ant antfile="build.xml" target="dist" dir="remotecontrol"/>
+        <ant antfile="build.xml" target="dist" dir="routes"/>
         <ant antfile="build.xml" target="dist" dir="routing"/>
         <ant antfile="build.xml" target="dist" dir="slippymap"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>

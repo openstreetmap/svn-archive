@@ -435,7 +435,6 @@ public class TagChecker extends Test
                     errors.add( new TestError(this, d.getSeverity(), tr("Illegal tag/value combinations"),
                     d.getDescription(), d.getDescriptionOrig(), d.getCode(), p) );
                     withErrors.add(p, "TC");
-                    break;
                 }
             }
         }

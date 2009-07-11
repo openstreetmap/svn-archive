@@ -102,7 +102,7 @@ public class WronglyOrderedWays extends Test  {
             {
                 List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
                 primitives.add(w);
-                errors.add( new TestError(this, Severity.WARNING, errortype, type, primitives) );
+                errors.add( new TestError(this, Severity.OTHER, errortype, type, primitives) );
                 _errorWays.add(w,w);
             }
         }

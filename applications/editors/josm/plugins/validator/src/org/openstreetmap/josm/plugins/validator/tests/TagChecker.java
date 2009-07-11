@@ -78,6 +78,7 @@ public class TagChecker extends Test
     protected static ArrayList<String> ignoreDataEquals = new ArrayList<String>();
     protected static ArrayList<String> ignoreDataEndsWith = new ArrayList<String>();
     protected static ArrayList<IgnoreKeyPair> ignoreDataKeyPair = new ArrayList<IgnoreKeyPair>();
+    protected static ArrayList<IgnoreTwoKeyPair> ignoreDataTwoKeyPair = new ArrayList<IgnoreTwoKeyPair>();
 
     /** The preferences prefix */
     protected static final String PREFIX = PreferenceEditor.PREFIX + "." + TagChecker.class.getSimpleName();
@@ -252,6 +253,19 @@ public class TagChecker extends Test
                             tmp.value = line.substring(mid+1);
                             ignoreDataKeyPair.add(tmp);
                         }
+                        else if(key.equals("T:"))
+                        {
+                            IgnoreTwoKeyPair tmp = new IgnoreTwoKeyPair();
+                            int mid = line.indexOf("=");
+                            int split = line.indexOf("|");
+                            tmp.key1 = line.substring(0, mid);
+                            tmp.value1 = line.substring(mid+1, split);
+                            line = line.substring(split+1);
+                            mid = line.indexOf("=");
+                            tmp.key2 = line.substring(0, mid);
+                            tmp.value2 = line.substring(mid+1);
+                            ignoreDataTwoKeyPair.add(tmp);
+                        }
                         continue;
                     }
                     else if(tagcheckerfile)
@@ -374,6 +388,46 @@ public class TagChecker extends Test
 
         if(checkComplex)
         {
+            Map<String, String> props = (p.keys == null) ? Collections.<String, String>emptyMap() : p.keys;
+            for(Entry<String, String> prop: props.entrySet() )
+            {
+                boolean ignore = true;
+                String key1 = prop.getKey();
+                String value1 = prop.getValue();
+
+                for(IgnoreTwoKeyPair a : ignoreDataTwoKeyPair)
+                {
+                    if(key1.equals(a.key1) && value1.equals(a.value1))
+                    {
+                        ignore = false;
+                        for(Entry<String, String> prop2: props.entrySet() )
+                        {
+                            String key2 = prop2.getKey();
+                            String value2 = prop2.getValue();
+                            for(IgnoreTwoKeyPair b : ignoreDataTwoKeyPair)
+                            {
+                                if(key2.equals(b.key2) && value2.equals(b.value2))
+                                {
+                                    ignore = true;
+                                    break;
+                                }
+                            }
+                            if(ignore)
+                                break;
+                        }
+                    }
+                    if(ignore)
+                        break;
+                }
+
+                if(!ignore)
+                {
+                    errors.add( new TestError(this, Severity.ERROR, tr("Illegal tag/value combinations"),
+                    tr("Illegal tag/value combinations"), tr("Illegal tag/value combinations"), 1272, p) );
+                    withErrors.add(p, "TC");
+                }
+            }
+
             for(CheckerData d : checkerData)
             {
                 if(d.match(p))
@@ -468,6 +522,12 @@ public class TagChecker extends Test
                     for(IgnoreKeyPair a : ignoreDataKeyPair)
                     {
                         if(key.equals(a.key) && value.equals(a.value))
+                            ignore = true;
+                    }
+
+                    for(IgnoreTwoKeyPair a : ignoreDataTwoKeyPair)
+                    {
+                        if(key.equals(a.key2) && value.equals(a.value2))
                             ignore = true;
                     }
 
@@ -775,6 +835,13 @@ public class TagChecker extends Test
         }
 
         return false;
+    }
+
+    private static class IgnoreTwoKeyPair {
+        public String key1;
+        public String value1;
+        public String key2;
+        public String value2;
     }
 
     private static class IgnoreKeyPair {

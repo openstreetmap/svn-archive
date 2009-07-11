@@ -32,6 +32,8 @@ public class UntaggedWay extends Test
     protected static final int UNNAMED_WAY  = 303;
     /** One node way error */
     protected static final int ONE_NODE_WAY = 304;
+    /** Unnamed junction error */
+    protected static final int UNNAMED_JUNCTION  = 305;
 
     private LinkedList<Way> multipolygonways;
 
@@ -87,7 +89,7 @@ public class UntaggedWay extends Test
                     if( !hasName && !isRoundabout)
                         errors.add( new TestError(this, Severity.WARNING, tr("Unnamed ways"), UNNAMED_WAY, w) );
 		    else if(isRoundabout)
-                        errors.add( new TestError(this, Severity.WARNING, tr("Unnamed Junction"), UNNAMED_WAY, w) );
+                        errors.add( new TestError(this, Severity.WARNING, tr("Unnamed junction"), UNNAMED_JUNCTION, w) );
                 }
             }
         }

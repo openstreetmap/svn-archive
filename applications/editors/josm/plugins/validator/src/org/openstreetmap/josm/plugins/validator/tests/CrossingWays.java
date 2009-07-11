@@ -105,6 +105,8 @@ public class CrossingWays extends Test
                     boolean isCoastline2 = coastline2 != null && (coastline2.equals("water") || coastline2.equals("coastline"));
                     if( isCoastline1 != isCoastline2 ) continue;
 
+                    if((es1.railway != null && es1.railway.equals("abandoned")) || (railway2 != null && railway2.equals("abandoned"))) continue;
+
                     prims = Arrays.asList(es1.ws.way, es2.ws.way);
                     if ((highlight = ways_seen.get(prims)) == null)
                     {

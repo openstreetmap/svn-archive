@@ -28,6 +28,7 @@
             <zipfileset src="lib/jsr173-1.0_api.jar" includes="**/*"/>
             <zipfileset src="lib/jaxb-api.jar" includes="**/*"/>
             <zipfileset src="lib/jaxb-impl.jar" includes="**/*.class"/>
+            <zipfileset src="lib/activation.jar" includes="**/*.class"/>
             <manifest>
                 <attribute name="Author" value="Jiri Klement"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.routes.RoutesPlugin"/>

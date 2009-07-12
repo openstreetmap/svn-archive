@@ -264,6 +264,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
                     break;
             t.dropImage();
             nr_to_drop--;
+            tileStorage.remove(t.getKey());
         }
     }
     long lastCheck = 0;

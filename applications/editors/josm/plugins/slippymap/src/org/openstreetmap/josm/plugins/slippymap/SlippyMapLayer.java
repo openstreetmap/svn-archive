@@ -137,10 +137,11 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
                         System.out.print("flushing all tiles...");
                         for (SlippyMapTile t : tileStorage.values()) {
                             t.dropImage();
-                            }
-                        System.out.println("done");
                         }
-                    }));
+                        System.out.println("done");
+                        shrinkTileStorage(0);
+                    }
+                }));
         // end of adding menu commands
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -233,27 +234,22 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             }
     }
 
-    long lastCheck = 0;
     /**
      * <p>
-     * Check if tiles.size() is not more than max_nr_tiles. If yes, oldest tiles by timestamp
-     * are fired out from cache.
+     * Check if tiles.size() is not more than maxNrTiles.
+     * If yes, oldest tiles by timestamp are flushed from
+     * the cache.
      * </p>
      */
-    public void checkTileStorage() {
-        int maxZoom = 30; // SlippyMapPreferences.getMaxZoomLvl();
-        long now = System.currentTimeMillis();
-        if (now - lastCheck < 1000)
-                return;
-        lastCheck = now;
+    public void shrinkTileStorage(int maxNrTiles)
+    {
         TreeSet<SlippyMapTile> tiles = new TreeSet<SlippyMapTile>(new TileTimeComp());
         tiles.addAll(tileStorage.values());
-        int max_nr_tiles = 100;
-        if (tiles.size() < max_nr_tiles) {
-            Main.debug("total of " + tiles.size() + " loaded tiles, size OK " + now);
+        if (tiles.size() < maxNrTiles) {
+            Main.debug("total of " + tiles.size() + " loaded tiles, size OK (< " + maxNrTiles + ")");
             return;
         }
-        int nr_to_drop = tiles.size() - max_nr_tiles;;
+        int nr_to_drop = tiles.size() - maxNrTiles;;
         Main.debug("total of " + tiles.size() + " tiles, need to flush " + nr_to_drop + " tiles");
         for (SlippyMapTile t : tiles) {
             if (nr_to_drop <= 0)
@@ -261,6 +257,15 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             t.dropImage();
             nr_to_drop--;
         }
+    }
+    long lastCheck = 0;
+    public void checkTileStorage() {
+        int maxZoom = 30; // SlippyMapPreferences.getMaxZoomLvl();
+        long now = System.currentTimeMillis();
+        if (now - lastCheck < 1000)
+                return;
+        lastCheck = now;
+	shrinkTileStorage(150);
     }
 
     void loadSingleTile(SlippyMapTile tile)

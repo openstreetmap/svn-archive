@@ -494,13 +494,13 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 	private class TileSet {
 		int z12x0, z12x1, z12y0, z12y1;
 		int zoom;
-
+		int tileMax;
 		TileSet(LatLon topLeft, LatLon botRight, int zoom) {
 			this.zoom = zoom;
-			z12x0 = lonToTileX(topLeft.lon(), zoom);
-			z12x1 = lonToTileX(botRight.lon(), zoom);
-			z12y0 = latToTileY(topLeft.lat(), zoom);
-			z12y1 = latToTileY(botRight.lat(), zoom);
+			z12x0 = lonToTileX(topLeft.lon(), zoom) - 1;
+			z12y0 = latToTileY(topLeft.lat(),  zoom) - 1;
+			z12x1 = lonToTileX(botRight.lon(), zoom) + 1;
+			z12y1 = latToTileY(botRight.lat(), zoom) + 1;
 			if (z12x0 > z12x1) {
 				int tmp = z12x0;
 				z12x0 = z12x1;
@@ -511,6 +511,11 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 				z12y0 = z12y1;
 				z12y1 = tmp;
 			}
+			tileMax = (int)Math.pow(2.0, zoom);
+			if (z12x0 < 0) z12x0 = 0;
+			if (z12y0 < 0) z12y0 = 0;
+			if (z12x1 > tileMax) z12x1 = tileMax;
+			if (z12y1 > tileMax) z12y1 = tileMax;
 		}
 
 		int tilesSpanned() {
@@ -526,13 +531,8 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 		List<Tile> allTiles()
         {
             List<Tile> ret = new ArrayList<Tile>();
-			int tileMax = (int)Math.pow(2.0, zoom);
-            for (int x = z12x0 - 1; x <= z12x1 + 1; x++) {
-                if (x < 0)
-                    continue;
-                for (int y = z12y0 - 1; y <= z12y1 + 1; y++) {
-                    if (y < 0)
-                        continue;
+            for (int x = z12x0; x <= z12x1; x++) {
+                for (int y = z12y0; y <= z12y1; y++) {
                     Tile t = new Tile(x % tileMax, y % tileMax);
                     ret.add(t);
                 }
@@ -541,13 +541,13 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         }
 
 		boolean topTile(Tile t) {
-			if (t.y == z12y0 - 1)
+			if (t.y == z12y0 )
 				return true;
 			return false;
 		}
 
 		boolean leftTile(Tile t) {
-			if (t.x == z12x0 - 1)
+			if (t.x == z12x0 )
 				return true;
 			return false;
 		}

@@ -179,8 +179,12 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
      * 
      * @return	true, if zoom increasing was successfull, false othervise
      */
-    public boolean increaseZoomLevel() {
-        if (currentZoomLevel < SlippyMapPreferences.getMaxZoomLvl()) {
+    public boolean zoomIncreaseAllowed()
+	{
+        return currentZoomLevel < SlippyMapPreferences.getMaxZoomLvl();
+	}
+	public boolean increaseZoomLevel() {
+		if (zoomIncreaseAllowed()) {
             currentZoomLevel++;
             Main.debug("increasing zoom level to: " + currentZoomLevel);
             needRedraw = true;
@@ -197,13 +201,18 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
      * 
      * @return	true, if zoom increasing was successfull, false othervise
      */
-    public boolean decreaseZoomLevel() {
-        if (currentZoomLevel > SlippyMapPreferences.getMinZoomLvl()) {
+    public boolean zoomDecreaseAllowed()
+	{
+        return currentZoomLevel > SlippyMapPreferences.getMinZoomLvl();
+	}
+	public boolean decreaseZoomLevel() {
+		int minZoom = SlippyMapPreferences.getMinZoomLvl();
+		if (zoomDecreaseAllowed()) {
             Main.debug("decreasing zoom level to: " + currentZoomLevel);
             currentZoomLevel--;
             needRedraw = true;
         } else {
-            System.err.println("current zoom lvl couldnt be decreased. MinZoomLvl reached.");
+            System.err.println("current zoom lvl couldnt be decreased. MinZoomLvl("+minZoom+") reached.");
             return false;
         }
         return true;
@@ -212,9 +221,8 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     public void clearTileStorage() {
         // when max zoom lvl is begin saved, this method is called and probably
         // the setting isnt saved yet.
-        int maxZoom = 30; // SlippyMapPreferences.getMaxZoomLvl();
+	int maxZoom = SlippyMapPreferences.getMaxZoomLvl();
         tileStorage = new Hashtable<SlippyMapKey, SlippyMapTile>();
-
         checkTileStorage();
     }
 
@@ -517,13 +525,14 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 		List<Tile> allTiles()
         {
             List<Tile> ret = new ArrayList<Tile>();
+			int tileMax = (int)Math.pow(2.0, zoom);
             for (int x = z12x0 - 1; x <= z12x1 + 1; x++) {
                 if (x < 0)
                     continue;
                 for (int y = z12y0 - 1; y <= z12y1 + 1; y++) {
                     if (y < 0)
                         continue;
-                    Tile t = new Tile(x, y);
+                    Tile t = new Tile(x % tileMax, y % tileMax);
                     ret.add(t);
                 }
             }
@@ -574,15 +583,15 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 		TileSet ts = new TileSet(topLeft, botRight, currentZoomLevel);
 		int zoom = currentZoomLevel;
 
-		if (ts.tilesSpanned() > (18*18)) {
-			System.out.println("too many tiles, decreasing zoom from " + currentZoomLevel);
+		if (zoomDecreaseAllowed() && (ts.tilesSpanned() > (18*18))) {
+			this.debug("too many tiles, decreasing zoom from " + currentZoomLevel);
             if (decreaseZoomLevel())
 				this.paint(oldg, mv);
-            return;
-	    }
-		
-		if (ts.tilesSpanned() <= 0) {
-			System.out.println("doesn't even cover one tile, increasing zoom from " + currentZoomLevel);
+			return;
+		}
+		if (zoomIncreaseAllowed() && (ts.tilesSpanned() <= 0)) {
+			this.debug("doesn't even cover one tile (" + ts.tilesSpanned() 
+					   + "), increasing zoom from " + currentZoomLevel);
             if (increaseZoomLevel())
                  this.paint(oldg, mv);
             return;
@@ -637,7 +646,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 		if (imageScale != null) {
 			// If each source image pixel is being stretched into > 3
 			// drawn pixels, zoom in... getting too pixelated
-			if (imageScale > 3) {
+			if (imageScale > 3 && zoomIncreaseAllowed()) {
 				if (SlippyMapPreferences.getAutozoom()) {
 					Main.debug("autozoom increase: scale: " + imageScale);
 					increaseZoomLevel();
@@ -647,7 +656,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
 			// If each source image pixel is being squished into > 0.32
 			// of a drawn pixels, zoom out.
-			if (imageScale < 0.32) {
+			if ((imageScale < 0.32) && (imageScale > 0) && zoomDecreaseAllowed()) {
 				if (SlippyMapPreferences.getAutozoom()) {
 					Main.debug("autozoom decrease: scale: " + imageScale);
 					decreaseZoomLevel();

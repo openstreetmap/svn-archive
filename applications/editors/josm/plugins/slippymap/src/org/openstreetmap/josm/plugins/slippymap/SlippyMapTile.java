@@ -181,4 +181,8 @@ public class SlippyMapTile implements ImageObserver
         SlippyMapTile other = (SlippyMapTile) o;
         return (this.x == other.x && this.y == other.y && this.z == other.z);
     }
+    SlippyMapKey getKey()
+    {
+	    return new SlippyMapKey(x, y, z);
+    }
 }

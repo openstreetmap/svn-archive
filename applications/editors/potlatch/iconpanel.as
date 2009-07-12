@@ -57,7 +57,7 @@
 		_root.map.pois.attachMovie("poi_"+o._name,--newnodeid,++poidepth);
 		_root.map.pois[newnodeid]._x=mpos.x;
 		_root.map.pois[newnodeid]._y=mpos.y;
-		_root.map.pois[newnodeid].icon=o._name;
+		_root.map.pois[newnodeid].icon="poi_"+o._name;
 		_root.map.pois[newnodeid].attr=deepCopy(icontags[o._name]);
 		_root.map.pois[newnodeid].attr['name']="(type name here)";
 		_root.map.pois[newnodeid].select();

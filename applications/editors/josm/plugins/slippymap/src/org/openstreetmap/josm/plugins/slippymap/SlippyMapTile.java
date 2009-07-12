@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.ImageObserver;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -18,7 +19,7 @@ import java.net.URLConnection;
  * @author Dave Hansen <dave@sr71.net>
  * 
  */
-public class SlippyMapTile
+public class SlippyMapTile implements ImageObserver
 {
     private Image  tileImage;
 	private long timestamp;
@@ -26,6 +27,12 @@ public class SlippyMapTile
 	private int x;
 	private int y;
 	private int z;
+	// Setting this to pending is a bit of a hack
+	// as it requires knowledge that SlippyMapLayer
+	// will put this tile in a queue before it calls
+	// loadImage().  But, this gives the best message
+	// to the user.
+	private String status = "pending download";
     
     private boolean imageDownloaded = false;
 
@@ -39,11 +46,14 @@ public class SlippyMapTile
 		timestamp = System.currentTimeMillis();
     }
 
+    public String getStatus()
+    {
+        return status;
+    }
     public String getMetadata()
     {
         return metadata;
     }
-
 
     public URL getImageURL()
     {
@@ -58,13 +68,35 @@ public class SlippyMapTile
             return null;
         }
 
-    public void loadImage()
+    public Image loadImage()
     {
+		// We do not update the timestamp in this function
+		// The download code prioritizes the most recent
+		// downloads and will download the oldest tiles last.
         URL imageURL = this.getImageURL();
         tileImage = Toolkit.getDefaultToolkit().createImage(imageURL);
+        Toolkit.getDefaultToolkit().prepareImage(tileImage, -1, -1, this);
 		Toolkit.getDefaultToolkit().sync();
-   		timestamp = System.currentTimeMillis();
+		status = "being downloaded";
+		return tileImage;
     }
+	public String toString()
+	{
+			return "SlippyMapTile{zoom=" + z + " (" + x + "," + y + ") '" + status + "'}";
+	}
+	synchronized public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height)
+	{
+		if ((infoflags & ALLBITS) != 0) {
+    	    imageDownloaded = true;
+	        status = "downloaded";
+			if (tileImage == null) {
+                System.out.println("completed null'd image: " + this.toString());
+			}
+			tileImage = img;
+			return false;
+        }
+		return true;
+	}
 
     public Image getImageNoTimestamp() {
     	return tileImage;
@@ -80,32 +112,23 @@ public class SlippyMapTile
     	return z;
     }
     
-    public void dropImage()
+    synchronized public void dropImage()
     {
 		if(tileImage != null) {
 			tileImage.flush();
+		    status = "dropped";
 		}
 		tileImage = null;
 		//  This should work in theory but doesn't seem to actually
 		//  reduce the X server memory usage
 		//tileImage.flush();
-    }
-    
-    public void markAsDownloaded() {
-    	imageDownloaded = true;
+	    imageDownloaded = false;
     }
     
     public boolean isDownloaded() {
     	return imageDownloaded;
     }
     
-    public void abortDownload() {
-    	if (imageDownloaded) {
-    		return;
-    	}
-    	dropImage();
-    }
-
     public void loadMetadata()
     {
         try
@@ -127,6 +150,9 @@ public class SlippyMapTile
 
     public void requestUpdate()
     {
+		if (z != 12) {
+            metadata = tr("error requesting update: not zoom-level 12");
+		}
         try
         {
             URL dev = new URL("http://tah.openstreetmap.org/Request/create/?x=" + x

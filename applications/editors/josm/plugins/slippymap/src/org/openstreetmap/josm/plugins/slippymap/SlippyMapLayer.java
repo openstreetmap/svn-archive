@@ -518,10 +518,10 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 			if (z12y1 > tileMax) z12y1 = tileMax;
 		}
 
-		int tilesSpanned() {
+		double tilesSpanned() {
 			int x_span = z12x1 - z12x0;
 			int y_span = z12y1 - z12y0;
-			return x_span * y_span;
+			return Math.sqrt(1.0 * x_span * y_span);
 		}
 
 		/*
@@ -584,13 +584,13 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 		TileSet ts = new TileSet(topLeft, botRight, currentZoomLevel);
 		int zoom = currentZoomLevel;
 
-		if (zoomDecreaseAllowed() && (ts.tilesSpanned() > (18*18))) {
+		if (zoomDecreaseAllowed() && (ts.tilesSpanned() > 18)) {
 			this.debug("too many tiles, decreasing zoom from " + currentZoomLevel);
             if (decreaseZoomLevel())
 				this.paint(oldg, mv);
 			return;
 		}
-		if (zoomIncreaseAllowed() && (ts.tilesSpanned() <= 0)) {
+		if (zoomIncreaseAllowed() && (ts.tilesSpanned() < 1.0)) {
 			this.debug("doesn't even cover one tile (" + ts.tilesSpanned() 
 					   + "), increasing zoom from " + currentZoomLevel);
             if (increaseZoomLevel())

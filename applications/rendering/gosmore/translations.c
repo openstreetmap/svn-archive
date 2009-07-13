@@ -1,20 +1,19 @@
-// <pre>
 { // Please translate these words to German. Keep the formatting.
 "Navigieren",
-"Weg oder Punkt hinzufügen",
+"Linie oder Punkt hinzufügen",
 "Suchen",
-"Startpunkt", // Starting Point of the route
-"Ziel",
+"Route beginnen",
+"Route beenden",
 "Einnorden",
 "Schnellste Strecke",
 "Fahrzeug",
 "Deutsch",
 "Schaltflächen-Größe",
-"Piktogramm-Satz",
+"Symbolsatz",
 "Detaillierungsgrad",
-"Comm Port", // Same in German
-"Baud Rate", // Same in German
-"Quick Options", // What are Quick Options? Do slow options exist?
+"Comm Port",
+"Baud Rate",
+"Schnellwahl",
 "Beenden",
 "Vergrößern Taste",
 "Verkleinern Taste",
@@ -22,10 +21,10 @@
 "Zoom Tasten verbergen",
 "Koordinaten anzeigen",
 "Spur anzeigen",
-"Randlose Dialoge",
-"Full screen", // New options
-"Validate Mode",
-"Display Off"
+"Freie Dialoge",
+"Vollbild",
+"Betriebsart überprüfen",
+"Bildschirm aus"
 },
 { // Please translate these words to Spanish. Keep the formatting.
 "Seguir GPS",
@@ -79,7 +78,7 @@
 "Voir les coordonnées",
 "Afficher le trace GPS",
 "Modeless Dialogs",
-"Full screen", // New options
+"Full screen",
 "Validate Mode",
 "Display Off"
 },
@@ -107,13 +106,13 @@
 "Mostra Coordinate",
 "Mostra Traccia",
 "Modeless Dialogs",
-"Full screen", // New options
+"Full screen",
 "Validate Mode",
 "Display Off"
 },
 { // Please translate these words to Dutch. Keep the formatting.
 "Volg GPS",
-"Weg Of Node Toevoegen",
+"Weg of node toevoegen",
 "Zoeken",
 "Start Route",
 "Einde Route",
@@ -124,23 +123,23 @@
 "Knopgrootte",
 "Pictogrammen",
 "Detailniveau",
-"Comm Poort",
-"Baud Rate",
-"Snelle Opties",
+"Comm poort",
+"Baud rate",
+"Snelle opties",
 "Sluiten",
 "Inzoomtoets",
 "Uitzoomtoets",
 "Menutoets",
-"Zoomtoetsen Verbergen",
-"Coördinaten Tonen",
-"Trace Tonen",
+"Zoomtoetsen verbergen",
+"Coördinaten tonen",
+"Trace tonen",
 "Prominente Dialoogschermen",
-"Full screen", // New options
-"Validate Mode",
-"Display Off"
+"Volledig scherm",
+"Valideermodus",
+"Display uit"
 },
 { // Please translate these words to Slovenian. Keep the formatting.
-"Sledi GPSr",
+"Sledi GPSu",
 "Dodaj pot ali točko",
 "Najdi",
 "Začetek poti",
@@ -163,9 +162,9 @@
 "Prikaži koordinate",
 "Prikaži sled",
 "Modeless Dialogs",
-"Full screen", // New options
-"Validate Mode",
-"Display Off"
+"Čez cel zaslon",
+"Preverjalni način",
+"Ugasnjen zaslon"
 },
 { // Please translate these words to Portuguese. Keep the formatting.
 "Seguir GPS",
@@ -191,9 +190,9 @@
 "Ver as coordenadas",
 "Mostrar o traçado GPS",
 "Modeless Dialogs",
-"Full screen", // New options
-"Validate Mode",
-"Display Off"
+"Ecrã Inteiro",
+"Modo Validação",
+"Apagar Ecrã"
 },
 { // Please translate these words to Romanian. Keep the formatting.
 "Navigare GPS",
@@ -219,9 +218,65 @@
 "Arată Coordonatele",
 "Arată Drum Înregistrat",
 "Opţiuni Generale",
-"Ecran Mare", // New options
+"Ecran Mare",
 "Mod Validare",
 "Inchide Ecran"
+},
+{ // Please translate these words to Russian. Keep the formatting.
+"Перемещаться по GPS",
+"Добавить точку или линию",
+"Поиск",
+"Начало пути",
+"Конец пути",
+"Ориентировать на север",
+"Самый быстрый маршрут",
+"Транспортное средство",
+"Язык",
+"Рамер кнопок",
+"Набор иконок",
+"Уровень детализации",
+"COM порт",
+"Скорость порта",
+"Быстрые настройки",
+"Выход",
+"Приблизить",
+"Отдалить",
+"Кнопка меню",
+"Скрыть кнопки изменения масштаба",
+"Показать координаты",
+"Показать трассу",
+"Modeless Dialogs",
+"Полноэкранный режим",
+"Режим валидации",
+"Отключить дисплей"
+},
+{ // Please translate these words to Hungarian. Keep the formatting.
+"GPS-vevő követése",
+"Vonal vagy pont hozzáadása",
+"Keresés",
+"Útvonal kezdőpontja",
+"Útvonal végpontja",
+"Észak orientált nézet",
+"Leggyorsabb útvonal",
+"Jármű",
+"Magyar",
+"Gombok mérete",
+"Ikonkészlet",
+"Részletesség szintje",
+"Comm Port",
+"Baud Rate",
+"Gyorsbeállítások",
+"Kilépés",
+"Nagyítás gomb",
+"Kicsinyítés gomb",
+"Menü gomb",
+"Nagyítógombok elrejtése",
+"Koordináták kijelzése",
+"Nyomvonal megjelenítése",
+"Szabad párbeszédablakok",
+"Teljes képernyő",
+"Validáló mód",
+"Kijelző kikapcsolása"
 },
 { // To add gosmore support for a language, please copy this
 // array and translate the copy to that language.
@@ -249,7 +304,7 @@
 "Show Coordinates",
 "Show Trace",
 "Modeless Dialogs",
-"Full screen", // New options
+"Full screen",
 "Validate Mode",
 "Display Off"
 },

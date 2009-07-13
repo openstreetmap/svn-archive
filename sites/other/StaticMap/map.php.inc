@@ -206,13 +206,17 @@ function addIcons($Image, $Data)
 
       if($Icon = imagecreatefrompng(sprintf("symbols/%d.png", $Data["mico$i"])))
 	{
+        $ImgBg = imagecolorallocate($Image, 255, 255, 200);
+        # $Icon = imagerotate($Icon, 30, $ImgBg);
+        $sx = imagesx($Icon);
+	$sy = imagesy($Icon);
 	imagecopy(
 	  $Image,
 	  $Icon, 
-	  $mx - 0.5 * $IconSize,
-	  $my - 0.5 * $IconSize, 
+	  $mx - 0.5 * $sx,
+	  $my - 0.5 * $sy,
 	  0, 0, 
-	  $IconSize, $IconSize);
+	  $sx, $sy);
 	}
       }
     }

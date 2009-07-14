@@ -390,14 +390,14 @@ function _imagefilter($Image, $Mode)
 	  $B = pow($B, 0.5);
 	  break;
 	case "dark":
-	  $R = pow($R, 2.5);
-	  $G = pow($G, 2.5);
-	  $B = pow($B, 2.5);
+	  $R *= 0.25;
+	  $G *= 0.25;
+	  $B *= 0.25;
 	  break;
 	case "verydark":
-	  $R = pow($R, 5);
-	  $G = pow($G, 5);
-	  $B = pow($B, 5);
+	  $R = 0.25 * pow($R, 0.5);
+	  $G = 0.25 * pow($G, 0.5);
+	  $B = 0.25 * pow($B, 0.5);
 	  break;
 	case "invert":
 	  $R = 1.0 - $R;

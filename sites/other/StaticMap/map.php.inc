@@ -84,8 +84,18 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Layer, $Format, $AddAttribu
   addDrawings($Image, $Data);
   addIcons($Image, $Data);
 
-  if($AddAttribution)
-    addText($Image, $Width, $Height, attribution($Layer));
+  switch($Data['att'])
+    {
+    case 'text':
+      addText($Image, $Width, $Height, attribution($Layer));
+      break;
+    case 'logo':
+      $Logo1 = imagecreatefrompng('gfx/osm_small.png');
+      $Logo2 = imagecreatefrompng('gfx/cc_by_sa.png');
+      imagecopy($Image, $Logo1, 10, 10, 0, 0, imagesx($Logo1), imagesy($Logo1));
+      imagecopy($Image, $Logo2, 20 + imagesx($Logo1), 10, 0, 0, imagesx($Logo2), imagesy($Logo2));
+      break;
+    }
   
   if($Format == "jpeg"){
     header("Content-Type: image/jpeg");

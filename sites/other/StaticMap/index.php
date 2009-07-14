@@ -43,6 +43,10 @@ $Fields = array(
       'name'=>"Image format", 
       'type'=>'option',  
       'options'=>array('jpg','png')),
+  "filter"=>array(
+      'name'=>"Filter for base-image", 
+      'type'=>'option',  
+      'options'=>array('none','grey','lightgrey','darkgrey','invert','bright','dark','verydark')),
   "lang"=>array(
       'name'=>"Language", 
       'type'=>'option', 
@@ -56,6 +60,7 @@ $Fields = array(
 	  'Style', 
 	  'Add icon', 
 	  'Draw', 
+	  'Overlays',
 	  'Export', 
 	  'Community', 
 	  'Report error', 
@@ -83,6 +88,13 @@ $Fields = array(
       'name'=>"Zoom to mouse position when recentering map", 
       'type'=>'option', 
       'options'=> array('on', 'off')),
+  "att"=>array(
+      'name'=>"Attribution", 
+      'type'=>'option',  
+      'options'=>array(
+	  'text', 
+	  'logo', 
+	  'none'))
   );
 
 
@@ -370,6 +382,9 @@ switch($Data['mode'])
       printf("</td></tr>\n");
       }
     printf("</table>\n");
+
+    printf("\n\n<hr>\n<h2>Filters</h2>\n<p>%s</p>\n", OptionList('filter'));
+
     break;
     }
   case 'Add icon':
@@ -466,6 +481,23 @@ switch($Data['mode'])
 
     break;
     }
+  case 'Overlays':
+    {
+    printf("<h2>GPS tracklogs</h2>\n<form action='.' method='get'>");
+    printf("<p>GPX trace ID: <input type='text' name='gpx' value='%d' size='6' />", $Data['gpx']);
+    HiddenFields(array('gpx'));
+    printf("<input type='submit' value='OK'></p>\n</form>\n");
+    printf("<p><i>This must be the ID of an openstreetmap public GPX trace. <a href='%s'>Upload files here</a> (account required)</i></p>\n",
+      "http://www.openstreetmap.org/traces/mine");
+
+    printf("<h2>Routes</h2>\n<form action='.' method='get'>");
+    printf("<p>Route ID: <input type='text' name='rel' value='%d' size='6' />", $Data['gpx']);
+    HiddenFields(array('rel'));
+    printf("<input type='submit' value='OK'></p>\n</form>\n");
+    printf("<p><i>This must be the ID of an openstreetmap <a href='%s'>route relation</a>, e.g. a bus route, train line, or cycle route</i></p>\n",
+      "http://wiki.openstreetmap.org/wiki/Relation:route");
+    break;
+    }
   case 'Export':
     {
     printf("<p><a href='http://tinyurl.com/create.php?url=%s'>Make a TinyURL</a> to your map</p>",
@@ -501,7 +533,7 @@ switch($Data['mode'])
     printf("<h2>Share this map</h2>\n");
     printf("<p><a href='http://delicious.com/search?p=osm_static_maps'>Browse other people's maps</a></p>");
 
-    printf("<p><a href='http://delicious.com/save?tags=osm_static_maps&url=%s'>Share this map on Del.icio.us</a> (account required)</p>", 
+    printf("<p><a href='http://delicious.com/save?url=%s'>Share this map on Del.icio.us</a> (account required) and give it a tag of <i>osm_static_maps</i></p>", 
       htmlentities(urlencode(FullImageURL())));
 
     printf("<p>Use this map to <a href='%s'>illustrate a wikipedia article</a> <i>(link goes to wikiproject page, not an upload form)</i></p>",

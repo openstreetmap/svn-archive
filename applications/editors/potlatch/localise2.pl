@@ -23,7 +23,7 @@
 
 	while ($index=~/\/wiki\/([^:]+):Potlatch\/Translation/gs) {
 		$lang=lc $1; next if $lang eq 'template';
-		$req=HTTP::Request->new(GET=>"http://wiki.openstreetmap.org/index.php/$1:Potlatch/Translation");
+		$req=HTTP::Request->new(GET=>"http://wiki.openstreetmap.org/index.php?title=$1:Potlatch/Translation&smashcache=" . rand);
 		$res=$ua->request($req);
 		if ($res->is_success) { $wiki=$res->content; }
 						 else { die "Bugger! ".$res->status_line."\n"; }

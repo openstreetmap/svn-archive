@@ -97,8 +97,6 @@ $Fields = array(
 	  'none'))
   );
 
-
-
 //----------------------------------------------------------------------------
 // Generate the fields used to specify and edit map-markers
 //----------------------------------------------------------------------------
@@ -179,6 +177,14 @@ $Fields["dp_num"] = array(
       'min'=> 0, 
       'max'=> $MaxPoints);
 
+
+# Option to export the API documentation
+if($_REQUEST['api'] == "json")
+{
+  header("content-type: text/plain"); // or could be text/x-json
+  print json_encode($Fields);
+  exit;
+}
 
 if(0 && $_GET["clear_cache"] == "yes") // TODO: disable in general use
 {
@@ -572,6 +578,9 @@ switch($Data['mode'])
     ##printf("<p><i>Many of these fields are generated</i></p>");
     printf("<p>Some of these fields are for navigating the website, and would not typically be used when requesting an image (e.g. show_icon_list or zoom_to_clicks)</p>");
     printf("<p>Be sure to include show=1 to get the image instead of this website!</p>");
+
+    printf("<p><a href='./?api=json'>Get this API as JSON</a></p>");
+
     printf("<hr/>\n<div class='api'>");
 
     printf("<p><b>show</b> (Returns the image rather than this web interface)</p><ul><li>0 = view image-editing tools</li><li>1 = view as image</li></ul>");

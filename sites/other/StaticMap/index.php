@@ -489,19 +489,25 @@ switch($Data['mode'])
     }
   case 'Overlays':
     {
+    ShowImage(false);
+
     printf("<h2>GPS tracklogs</h2>\n<form action='.' method='get'>");
     printf("<p>GPX trace ID: <input type='text' name='gpx' value='%d' size='6' />", $Data['gpx']);
     HiddenFields(array('gpx'));
     printf("<input type='submit' value='OK'></p>\n</form>\n");
-    printf("<p><i>This must be the ID of an openstreetmap public GPX trace. <a href='%s'>Upload files here</a> (account required)</i></p>\n",
+    printf("<p class='note'>This must be the ID of an openstreetmap public GPX trace. <a href='%s'>Upload files here</a> (account required)</p>\n",
       "http://www.openstreetmap.org/traces/mine");
 
     printf("<h2>Routes</h2>\n<form action='.' method='get'>");
     printf("<p>Route ID: <input type='text' name='rel' value='%d' size='6' />", $Data['gpx']);
     HiddenFields(array('rel'));
     printf("<input type='submit' value='OK'></p>\n</form>\n");
-    printf("<p><i>This must be the ID of an openstreetmap <a href='%s'>route relation</a>, e.g. a bus route, train line, or cycle route</i></p>\n",
+    printf("<p class='note'>This must be the ID of an openstreetmap <a href='%s'>route relation</a>, e.g. a bus route, train line, or cycle route</p>\n",
       "http://wiki.openstreetmap.org/wiki/Relation:route");
+
+    printf("<h2>Attribution</h2>\n<p>%s</p>\n", OptionList('att'));
+    print("<p class='note'>If you select none, then attribution should be provided elsewhere, e.g. in the website or document which includes the image</p>\n");
+
     break;
     }
   case 'Export':

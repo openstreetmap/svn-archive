@@ -377,7 +377,7 @@ switch($Data['mode'])
       printf("<td><h2>%s</h2></td>", $Layer);
       printf("<td><a href='%s'><img src='%s' width='%d' height='%d'/></a></td>\n",
 	LinkSelf(array('layer'=>$Layer)),
-	LinkSelf(array('w'=>$SampleSize, 'h'=>$SampleSize, 'layer'=>$Layer)). "show=1",
+	LinkSelf(array('w'=>$SampleSize, 'h'=>$SampleSize, 'layer'=>$Layer, 'att'=>'none')). "show=1",
 	$SampleSize,
 	$SampleSize);
       printf("<td>");

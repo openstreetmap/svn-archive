@@ -379,7 +379,7 @@ function _imagefilter($Image, $Mode)
 	  $R = $G = $B = ($R + $G + $B) / 3.0;
 	  break;
 	case "lightgrey":
-	  $R = $G = $B = 0.75 + 0.5 * ($R + $G + $B) / 3.0;
+	  $R = $G = $B = 0.75 + 0.25 * ($R + $G + $B) / 3.0;
 	  break;
 	case "darkgrey":
 	  $R = $G = $B = 0.25 * ($R + $G + $B) / 3.0;

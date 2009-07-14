@@ -499,7 +499,7 @@ switch($Data['mode'])
       "http://www.openstreetmap.org/traces/mine");
 
     printf("<h2>Routes</h2>\n<form action='.' method='get'>");
-    printf("<p>Route ID: <input type='text' name='rel' value='%d' size='6' />", $Data['gpx']);
+    printf("<p>Route ID: <input type='text' name='rel' value='%d' size='6' />", $Data['rel']);
     HiddenFields(array('rel'));
     printf("<input type='submit' value='OK'></p>\n</form>\n");
     printf("<p class='note'>This must be the ID of an openstreetmap <a href='%s'>route relation</a>, e.g. a bus route, train line, or cycle route</p>\n",

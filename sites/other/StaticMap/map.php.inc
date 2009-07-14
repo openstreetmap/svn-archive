@@ -64,8 +64,8 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Layer, $Format, $AddAttribu
       }
     } // End of base-map
 
-  // Expire old cache entries
-  walkCache('expire');
+  _imagefilter($Image, $Data['filter']);
+  
 
   imagealphablending($Image, true);
 
@@ -359,6 +359,63 @@ function imagelinethick($image, $x1, $y1, $x2, $y2, $color, $thick = 1)
     );
     imagefilledpolygon($image, $points, 4, $color);
     return imagepolygon($image, $points, 4, $color);
+}
+
+function _imagefilter($Image, $Mode)
+{
+  if($Mode == "none" or $Mode == "normal" or $Mode == "")
+    return;
+
+  $w = imagesx($Image);
+  $h = imagesy($Image);
+  for($x = 0; $x < $w; $x++)
+    {
+    for($y = 0; $y < $w; $y++)
+      {
+      list($R,$G,$B) = int2rgb(imagecolorat($Image, $x, $y));
+      switch($Mode)
+	{
+	case "grey":
+	  $R = $G = $B = ($R + $G + $B) / 3.0;
+	  break;
+	case "lightgrey":
+	  $R = $G = $B = 0.75 + 0.5 * ($R + $G + $B) / 3.0;
+	  break;
+	case "darkgrey":
+	  $R = $G = $B = 0.25 * ($R + $G + $B) / 3.0;
+	  break;
+	case "bright":
+	  $R = pow($R, 0.5);
+	  $G = pow($G, 0.5);
+	  $B = pow($B, 0.5);
+	  break;
+	case "dark":
+	  $R = pow($R, 2.5);
+	  $G = pow($G, 2.5);
+	  $B = pow($B, 2.5);
+	  break;
+	case "verydark":
+	  $R = pow($R, 5);
+	  $G = pow($G, 5);
+	  $B = pow($B, 5);
+	  break;
+	case "invert":
+	  $R = 1.0 - $R;
+	  $G = 1.0 - $G;
+	  $B = 1.0 - $B;
+	  break;
+	}
+      imagesetpixel($Image, $x, $y, imagecolorallocate($Image, $R*255,$G*255,$B*255));
+      }
+    }
+}
+
+function int2rgb($Int)
+{
+  $R = ($Int >> 16) & 0xFF;
+  $G = ($Int >> 8) & 0xFF;
+  $B = ($Int) & 0xFF;
+  return(array($R / 255.0, $G / 255.0,$B / 255.0));
 }
 
 #-----------------------------------------------------------------------------

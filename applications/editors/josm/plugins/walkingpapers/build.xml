@@ -1,0 +1,56 @@
+<project name="walkingpapers" default="dist" basedir=".">
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.build.dir"       value="build"/>
+    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+    <property name="ant.build.javac.target" value="1.5"/>
+    <target name="init">
+        <mkdir dir="${plugin.build.dir}"/>
+    </target>
+    <target name="compile" depends="init">
+        <echo message="creating ${plugin.jar}"/>
+        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+    <target name="dist" depends="compile,revision">
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
+        </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <manifest>
+                <attribute name="Author" value="Frederik Ramm"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.walkingpapers.WalkingPapersPlugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="Supports downloading tiled, scanned maps from walking-papers.org."/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/WalkingPapers"/>
+                <attribute name="Plugin-Mainversion" value="1465"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="revision">
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="info"/>
+            <arg value="--xml"/>
+            <arg value="."/>
+        </exec>
+        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+        <delete file="REVISION"/>
+    </target>
+    <target name="clean">
+        <delete dir="${plugin.build.dir}"/>
+        <delete file="${plugin.jar}"/>
+    </target>
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
+        </condition>
+        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
+    </target>
+</project>

@@ -1,0 +1,215 @@
+<accessRuleset>
+
+	<classes>
+		<class name="access">
+			<class name="foot"/>
+			<class name="horse"/>
+			<class name="vehicle">
+				<class name="bicycle" />
+				<class name="carriage" />
+				<class name="motor_vehicle">
+					<class name="motorcycle">
+						<class name="moped"/>
+					</class>
+					<class name="motorcar">
+						<class name="caravan"/>
+						<class name="goods"/>
+						<class name="hgv"/>
+						<class name="psv"/>
+						<class name="agricultural"/>
+						<class name="emergency"/>
+						<class name="hazmat"/>
+					</class>
+					<class name="motorboat"/>
+					<class name="boat"/>
+				</class>
+				<class name="bicycle" />
+			</class>
+		</class>
+	</classes>
+	
+	<basetags>
+		<tag k="highway" v="motorway"/>
+		<tag k="highway" v="motorway_link"/>
+		<tag k="highway" v="trunk"/>
+		<tag k="highway" v="trunk_link"/>
+		<tag k="highway" v="primary"/>
+		<tag k="highway" v="primary_link"/>
+		<tag k="highway" v="secondary"/>
+		<tag k="highway" v="secondary_link"/>
+		<tag k="highway" v="tertiary"/>
+		<tag k="highway" v="unclassified"/>
+		<tag k="highway" v="road"/>
+		<tag k="highway" v="residential"/>
+		<tag k="highway" v="living_street"/>
+		<tag k="highway" v="service"/>
+		<tag k="highway" v="track"/>
+		<tag k="highway" v="pedestrian"/>
+		<tag k="highway" v="path"/>
+		<tag k="highway" v="cycleway"/>
+		<tag k="highway" v="footway"/>
+		<tag k="highway" v="bridleway"/>
+		<tag k="highway" v="byway"/>
+		<tag k="highway" v="steps"/>
+		<tag k="highway" v="platform"/>
+		<tag k="railway" v="platform"/>
+	</basetags>
+		
+	<implications>
+			
+		<!-- implications based on 
+		     http://wiki.openstreetmap.org/wiki/OSM_tags_for_routing/Access-Restrictions
+		     section Germany  -->
+	
+		<implication>
+			<condition>
+				<tag k="highway" v="motorway" />
+			</condition>
+			<implies>
+				<tag k="access"  v="yes"/>
+				<tag k="moped"   v="no"/>
+				<tag k="horse"   v="no"/>
+				<tag k="bicycle" v="no"/>
+				<tag k="foot"    v="no"/>
+			</implies>
+		</implication>
+		<implication>
+			<condition>
+				<or>
+					<tag k="highway" v="trunk" />
+					<tag k="highway" v="primary" />
+					<tag k="highway" v="secondary" />
+					<tag k="highway" v="tertiary" />
+					<tag k="highway" v="unclassified" />
+					<tag k="highway" v="residential" />
+					<tag k="highway" v="living_street" />
+					<tag k="highway" v="road" />
+				</or>
+			</condition>
+			<implies>
+				<tag k="access"  v="yes"/>
+			</implies>
+		</implication>
+			
+		<implication>
+			<condition>
+				<tag k="highway" v="path" />
+			</condition>
+			<implies>
+				<tag k="access"  v="no"/>
+				<tag k="horse"   v="yes"/>
+				<tag k="bicycle" v="yes"/>
+				<tag k="foot"    v="yes"/>
+			</implies>
+		</implication>
+		
+		<implication>
+			<condition>
+				<tag k="highway" v="bridleway" />
+			</condition>
+			<implies>
+				<tag k="access" v="no"/>
+				<tag k="horse"  v="designated"/>
+			</implies>
+		</implication>
+		<implication>
+			<condition>
+				<tag k="highway" v="cycleway" />
+			</condition>
+			<implies>
+				<tag k="access"  v="no"/>
+				<tag k="bicycle" v="designated"/>
+			</implies>
+		</implication>
+		<implication>
+			<condition>
+				<or>
+					<tag k="highway" v="footway" />
+					<tag k="highway" v="pedestrian" />
+				</or>
+			</condition>
+			<implies>
+				<tag k="access" v="no"/>
+				<tag k="foot"   v="designated"/>
+			</implies>
+		</implication>
+		
+		<!--  local non-base-tags -->
+		
+		<implication>
+			<condition>
+				<tag k="motorroad" v="yes"/>
+			</condition>
+			<implies>
+				<tag k="minspeed"     v="60"/>
+				<tag k="foot"         v="no"/>
+				<tag k="bicycle"      v="no"/>				
+				<tag k="moped"        v="no"/>								
+				<tag k="horse"        v="no"/>								
+				<tag k="agricultural" v="no"/>
+			</implies>		
+		</implication>
+				
+		<!--  barriers -->
+		
+		<implication>
+			<condition>
+				<key k="barrier" />				
+			</condition>
+			<implies>
+				<tag k="access" v="no" />
+			</implies>
+		</implication>
+		
+		<implication>
+			<condition>
+				<tag k="barrier" v="bollard" />				
+			</condition>
+			<implies>
+				<tag k="foot" v="yes" />
+				<tag k="bicycle" v="yes" />
+			</implies>
+		</implication>
+			
+		<!--  direct implications -->
+		
+		<implication>
+			<condition>
+				<tag k="highway" v="motorway" />
+			</condition>
+			<implies>
+				<tag k="oneway" v="yes" />
+			</implies>
+		</implication>
+		
+		<implication>
+			<condition>
+				<tag k="highway" v="motorway_link" />
+			</condition>
+			<implies>
+				<tag k="oneway" v="yes" />
+			</implies>
+		</implication>
+		
+		<implication>
+			<condition>
+				<tag k="junction" v="roundabout" />
+			</condition>
+			<implies>
+				<tag k="oneway"  v="yes"/>
+			</implies>
+		</implication>
+		
+		<implication>
+			<condition>
+				<tag k="highway" v="steps" />
+			</condition>
+			<implies>
+				<tag k="access"  v="no"/>
+				<tag k="foot"  v="yes"/>
+			</implies>
+		</implication>
+		
+	</implications>
+	
+</accessRuleset>

@@ -1,0 +1,108 @@
+<project name="graphview" default="dist" basedir=".">
+
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.build.dir"       value="build"/>
+    <property name="plugin.src.dir"         value="src"/>
+    <!-- this is the directory where the plugin jar is copied to -->
+    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="ant.build.javac.target" value="1.5"/>
+    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+
+    <!--
+    **********************************************************
+    ** init - initializes the build
+    **********************************************************
+    -->
+    <target name="init">
+        <mkdir dir="${plugin.build.dir}"/>
+    </target>
+
+    <!--
+    **********************************************************
+    ** compile - complies the source tree
+    **********************************************************
+    -->
+    <target name="compile" depends="init">
+        <echo message="compiling sources for  ${plugin.jar} ... "/>
+        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+
+    <!--
+    **********************************************************
+    ** dist - creates the plugin jar
+    **********************************************************
+    -->
+    <target name="dist" depends="compile,revision">
+        <echo message="creating ${plugin.jar} ... "/>
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/files">
+            <fileset dir="files"/>
+        </copy>
+        <copy todir="${plugin.build.dir}">
+            <fileset dir=".">
+                <include name="LICENSE" />
+            </fileset>
+        </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <manifest>
+                <attribute name="Author" value="Tobias Knerr"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.graphview.plugin.GraphViewPlugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="Visualizes routing information as a routing graph."/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Graphview"/>
+                <attribute name="Plugin-Mainversion" value="0.1"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!--
+    **********************************************************
+    ** revision - extracts the current revision number for the
+    **    file build.number and stores it in the XML property
+    **    version.*
+    **********************************************************
+    -->
+    <target name="revision">
+
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+            <env key="LANG" value="C"/>
+            <arg value="info"/>
+            <arg value="--xml"/>
+            <arg value="."/>
+        </exec>
+        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+        <delete file="REVISION"/>
+    </target>
+
+    <!--
+    **********************************************************
+    ** clean - clean up the build environment
+    **********************************************************
+    -->
+    <target name="clean">
+        <delete dir="${plugin.build.dir}"/>
+        <delete file="${plugin.jar}"/>
+    </target>
+
+    <!--
+    **********************************************************
+    ** install - install the plugin in your local JOSM installation
+    **********************************************************
+    -->
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+            <and>
+                <os family="windows"/>
+            </and>
+        </condition>
+        <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
+    </target>
+</project>

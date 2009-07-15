@@ -27,7 +27,7 @@ my $version = "1.0 BETA (001)" ;
 #
 
 # enter destination node id here
-my $root = destinationNodeId ;
+my $root = 88453792 ;
 
 # add all allowed pathes here
 my %allowedPaths = () ;
@@ -49,6 +49,7 @@ my %prev ;
 my @s ;
 my %usedNodes ;
 my @unsolved ;
+my %wayCount = () ;
 
 my $labelMinLength = 0.1 ; # min length of street so that it will be labled / needs adjustment according to picture size
 
@@ -92,7 +93,7 @@ if (!$pngName)
 $size = shift||'';
 if (!$size)
 {
-	$size = 2048 ; # default size
+	$size = 4096 ; # default size
 }
 
 print "\n$programName $version for file $osmName\n" ;
@@ -181,7 +182,7 @@ while ($wayId != -1) {
 	}	
 
 	# init dijkstra data
-	if ( (defined ($allowedPaths{$highway})) and (scalar (@wayNodes) > 1 ) ) 
+	if ( (defined ($allowedPaths{$highway})) and (scalar (@wayNodes) > 1 ) ) {
 		# set distances
 		my $i ;
 		for ($i=0; $i<$#wayNodes; $i++) {
@@ -201,6 +202,8 @@ while ($wayId != -1) {
 			$usedNodes{$node} = 1 ;
 		}
 	
+	}	
+
 	($wayId, $wayUser, $aRef1, $aRef2) = getWay () ;
 	if ($wayId != -1) {
 		@wayNodes = @$aRef1 ;
@@ -218,7 +221,7 @@ foreach my $node (keys %usedNodes) { push @unsolved, $node ; }
 
 # alg
 # all dist = infinity
-foreach $n (keys %usedNodes) { 
+foreach my $n (keys %usedNodes) { 
 	$dist{$n} = $infinity ; 
 	$prev{$n}=$n ; 
 }
@@ -226,9 +229,10 @@ foreach $n (keys %usedNodes) {
 $dist{$root} = 0;
 
 # loop while we have unsolved nodes
-while (@unresolved) {
-	@unresolved = sort byDistance @unresolved;
-	push @s, $n = shift @unresolved;
+while (@unsolved) {
+	my ($n, $n2) ;
+	@unsolved = sort byDistance @unsolved;
+	push @s, $n = shift @unsolved;
 	foreach $n2 (keys %{$edge{$n}}) {
 		if (($dist{$n2} eq $infinity) ||
 			($dist{$n2} > ($dist{$n} + $edge{$n}{$n2}) )) {
@@ -337,7 +341,7 @@ foreach $key (keys %placeName) {
 foreach my $node (keys %wayCount) {
 	if ($wayCount{$node} > 1) {
 		my $d = int ($dist{$node} * 1000) / 1000 ;
-		drawTextPos ($lon{$node}, $lat{$node}, 0, 0, $d, "blue", 2) ;
+		drawTextPos ($lon{$node}, $lat{$node}, 0, 0, $d, "blue", 1) ;
 	}
 }
 
@@ -378,11 +382,11 @@ foreach my $node (keys %wayCount) {
 	if ($wayCount{$node} > 1) {
 		my $id = 1000000000 + $node ;
 		print $osm2File "  <node id=\"", $id, "\" timestamp=\"2009-07-14T00:00:00+00:00\" user=\"distancemap\"" ;
-		print $osm2File " lat=\"", $lat{$node}, "\" ;
+		print $osm2File " lat=\"", $lat{$node}, "\"" ;
 		print $osm2File " lon=\"", $lon{$node}, "\">\n" ;
-		print $osm2File "    <tag k=\"type\" v=\"distance\">\n" ;
-		print $osm2File "    <tag k=\"distance\" \" v=\"", $dist{$node}, "\">\n" ;
-		print osm2File "  </node>\n" ;
+		print $osm2File "    <tag k=\"type\" v=\"distance\"/>\n" ;
+		print $osm2File "    <tag k=\"distance\" v=\"", $dist{$node}, "\"/>\n" ;
+		print $osm2File "  </node>\n" ;
 	}
 }
 close ($osm2File) ;

@@ -10,7 +10,6 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 
 /**
@@ -32,7 +31,7 @@ public class WalkingPapersPlugin extends Plugin
         walkingPapersMenu = menu.addMenu("Walking Papers", KeyEvent.VK_K, menu.defaultMenuPos);
         walkingPapersMenu.add(new JMenuItem(new WalkingPapersAddLayerAction()));
         
-        JOptionPane.showMessageDialog(Main.parent,tr("You are running the highly experimental Walking Papers plugin. Please report all problems."));
+        JOptionPane.showMessageDialog(Main.parent,tr("You are running the highly experimental Walking Papers plugin. Expect a rougher than usual ride..."));
     }
 
 }

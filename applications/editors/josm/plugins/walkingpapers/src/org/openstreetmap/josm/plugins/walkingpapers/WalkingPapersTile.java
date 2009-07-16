@@ -1,14 +1,8 @@
 package org.openstreetmap.josm.plugins.walkingpapers;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Class that contains information about one single slippy map tile.
@@ -38,12 +32,7 @@ public class WalkingPapersTile {
     }
 
     public URL getImageUrl() {
-        try {
-            return new URL("http://paperwalking-uploads.s3.amazonaws.com/scans/" + parentLayer.getWalkingPapersId() + "/" + z + "/" + x + "/" + y + ".jpg");
-        } catch (MalformedURLException mfu) {
-        	mfu.printStackTrace();
-        }
-        return null;
+    	return parentLayer.formatImageUrl(x, y, z);
     }
 
     public void loadImage() {

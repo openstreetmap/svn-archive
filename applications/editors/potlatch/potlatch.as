@@ -34,7 +34,6 @@
 	_root.panel.createEmptyMovieClip("advice",0xFFFFFB);
 	_root.createEmptyMovieClip("windows",0xFFFFFA);
 	var windowdepth=1;
-	var windowsopen=0;
 
 	// Sound
 	beep=new Sound();
@@ -652,7 +651,7 @@
 			if (_root.auto!=undefined) { _root.auto.keyRespond(k); }
 					   else if (k==13) { autoEnter(); }
 			return;
-		} else if (_root.windowsopen) {
+		} else if (hashLength(_root.windows)) {
 			if (k==187 && _root.windows.relation.box.properties!=undefined) {
 				_root.windows.relation.box.properties.enterNewAttribute();
 			} else if (k==13 && _root.windows.cs) { completeClose(iText("Ok","ok")); _root.windows.cs.remove(); }

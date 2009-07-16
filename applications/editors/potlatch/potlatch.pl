@@ -14,6 +14,7 @@
 	# perl potlatch.pl [options] [destination path]
 
 	# Options:
+	# --ming3	- use Ming 0.3
 	# --dev		- use OSM dev server instead of localhost
 	# --trace	- enable trace windows
 	# Destination path is ./potlatch.swf if not specified
@@ -37,18 +38,20 @@
 	$m->setRate(12);
 	$m->setBackground(0xFF,0xFF,0xFF);
 
-	require "potlatch_assets.pl";
-
 	# -----	Get server addresses
 
-	$ofn=''; $debug=0; $dev=0;
+	$ofn=''; $debug=0; $dev=0; $ming=0.4;
 	foreach $a (@ARGV) {
 		if    ($a eq '--trace'   ) { $debug=1; }
 		elsif ($a eq '--dev'     ) { $dev  =1; }
 		elsif ($a eq '--local'   ) { $dev  =2; }
 		elsif ($a eq '--absolute') { $dev  =3; }
-		else					{ $ofn=$a;  }
+		elsif ($a eq '--ming3'   ) { $ming =0.3; }
+		else					   { $ofn  =$a;  }
 	}
+	if ($ming==0.3) { $cw=1; } else { $cw=1/20; }	# scaling factor
+
+	require "potlatch_assets.pl";
 	
 	if ($dev==1) { $actionscript=<<EOF;
 	System.security.loadPolicyFile("http://api06.dev.openstreetmap.org/api/crossdomain.xml");
@@ -109,6 +112,7 @@ EOF
 
 	# $i=0; foreach $l (split(/\n/,$actionscript)) { print "$i: $l\n"; $i++; };
 
+	if ($ming==0.4) { $actionscript=~s/\^/^^/g; }
 	if ($debug) { $actionscript=~s!false;//#debug!true;!g; }
 	$m->add(new SWF::Action($actionscript));
 	

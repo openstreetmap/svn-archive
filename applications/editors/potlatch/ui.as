@@ -239,7 +239,6 @@
 		this.modalheight=h;		//  |
 		this.modalleave=leavepanel;
 		this.drawAreas();
-		_root.windowsopen++;
 		
 		// Create buttons
 		for (var i=0; i<buttons.length; i+=1) {
@@ -258,7 +257,6 @@
 	};
 
 	ModalDialogue.prototype.remove=function() {
-		_root.windowsopen--;
 		removeMovieClip(this);
 	};
 

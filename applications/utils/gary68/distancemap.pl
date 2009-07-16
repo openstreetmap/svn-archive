@@ -19,7 +19,7 @@ use OSM::osmgraph 2.0 ;
 
 my $programName = "distancemap.pl" ;
 my $usage = "distancemap.pl file.osm out.png size" ; # svg and other output names are automatic
-my $version = "1.0 BETA (001)" ;
+my $version = "1.0" ;
 
 #
 # ENTER INFORMATION IN THIS SECTION
@@ -339,7 +339,7 @@ foreach $key (keys %placeName) {
 
 # draw node dist information 
 foreach my $node (keys %wayCount) {
-	if ($wayCount{$node} > 1) {
+	if ( ($wayCount{$node} > 1) and ($dist{$node} > 0) ) {
 		my $d = int ($dist{$node} * 1000) / 1000 ;
 		drawTextPos ($lon{$node}, $lat{$node}, 0, 0, $d, "blue", 1) ;
 	}

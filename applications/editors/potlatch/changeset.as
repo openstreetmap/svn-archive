@@ -65,7 +65,7 @@
 			if ((box.cscomment.text.toUpperCase()=='C' || box.cscomment.text.toUpperCase()=='S') && !_root.csswallowed ) {
 				box.cscomment.text='';
 			}
-			box.csswallowed=true;
+			_root.csswallowed=true;
 		};
 	}
 	

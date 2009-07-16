@@ -216,7 +216,7 @@ done
 sub_package="-export"
 for export in `ls export/*/Makefile  export/*/CMakeLists.txt| sed 's,/Makefile,,;s,/CMakeLists.txt,,;s,export/,,'` ; do 
     allow_error=false
-    if echo $export | grep -q -e osmgarminmap -e osm2shp -e osmgoogleearth; then
+    if echo $export | grep -q -e osmgarminmap -e osm2shp -e osmgoogleearth -e bzhack; then
 	allow_error=true
     fi
 

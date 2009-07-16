@@ -332,7 +332,7 @@
 					var l=this.path[i].ways; for (var o in l) { w[o]=true; }
 					retain.push(this.path[i]);
 				} else {
-					this.markAsDeleted(this.path[i],true);
+					this.markAsDeleted(this.path[i],false);
 					memberDeleted('Node', this.path[i].id);
 				}
 			}
@@ -481,6 +481,7 @@
 				if (wayselected==ow) { selectWay(nw); }
 			}
 			// ** used to have bbox code here, but don't think we need it
+			_root.map.ways[nw].clean=true;
 			_root.map.ways[nw].uploading=false;
 			_root.map.ways[nw].historic=false;
 			_root.map.ways[nw].version=result[3];
@@ -528,7 +529,6 @@
 			}
 			_root.writesrequested++;
 			remote_write.call('putway',putresponder,_root.usertoken,_root.changeset,this.version,Number(this._name),sendpath,this.attr,sendnodes,this.deletednodes);
-			this.clean=true;
 		}
 	};
 

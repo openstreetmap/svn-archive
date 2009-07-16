@@ -19,12 +19,14 @@
 	// -----------------------------------------------------------------------
 	// renewChangeset
 	// renew a right changeset within us (if it's over an hour since the last)
+	// returns false if it hasn't requested a new one, true if it has
 	
 	function renewChangeset() {
-		if (!_root.changeset) { return; }
-		var t=new Date(); if (t.getTime()-_root.csopened<3400000) { return; }
+		if (!_root.changeset) { return false; }
+		var t=new Date(); if (t.getTime()-_root.csopened<3400000) { return false; }
 		pleaseWait(iText("Opening changeset",'openchangeset'));
 		_root.changeset=null; startChangeset(true);
+		return true;
 	}
 
 	// changesetRequest(text,exit routine,comment)
@@ -56,11 +58,15 @@
 			wordWrap=true;
 			text=comment;
 		}
+		_root.csswallowed=false;
 		Selection.setFocus(box.cscomment);
 		box.cscomment.onChanged=function() {				// swallow 'C'
-			if (box.cscomment.text.toUpperCase()=='C' || box.cscomment.text.toUpperCase()=='S' ) { box.cscomment.text=''; }
-			box.cscomment.onChanged=null;					//  |
-		};													//  |
+			fixUTF8();
+			if ((box.cscomment.text.toUpperCase()=='C' || box.cscomment.text.toUpperCase()=='S') && !_root.csswallowed ) {
+				box.cscomment.text='';
+			}
+			box.csswallowed=true;
+		};
 	}
 	
 	function completeClose(button) {

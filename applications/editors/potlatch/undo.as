@@ -234,9 +234,25 @@
 		// the same node
 		w.path=new Array();
 		for (var i=0; i<path.length; i++) {
-			if (!done[path[i].id]) { _root.nodes[path[i].id]=deepCopy(path[i]); }
-			w.path.push(_root.nodes[path[i].id]);
-			done[path[i].id]=true;
+			var id=path[i].id;
+			if (!done[id]) {
+				if (_root.nodes[id]) {
+					_root.nodes[id].x=path[i].x;
+					_root.nodes[id].y=path[i].y;
+					_root.nodes[id].attr=path[i].attr;
+					_root.nodes[id].tagged=hasTags(path[i].attr);
+					_root.nodes[id].version=path[i].version;
+					_root.nodes[id].clean=false;
+					_root.nodes[id].addWay(way);
+				} else {
+					_root.nodes[id]=deepCopy(path[i]);
+				}
+				if (_root.nodes[id].numberOfWays()>1) {
+					_root.nodes[id].redrawWays();
+				}
+			}
+			w.path.push(_root.nodes[id]);
+			done[id]=true;
 		}
 		w.deletednodes=params[2];
 		w.attr=params[3];

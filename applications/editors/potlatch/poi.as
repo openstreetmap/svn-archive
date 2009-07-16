@@ -70,6 +70,7 @@
 					if (_root.panel.t_details.text==result[0]) { _root.panel.t_details.text=ni; _root.panel.t_details.setTextFormat(plainText); }
 				}
 			}
+			_root.map.pois[ni].clean=true;
 			_root.map.pois[ni].uploading=false;
 			_root.map.pois[ni].version=result[2];
 			operationDone(result[0]);
@@ -77,8 +78,8 @@
 		if (!this.uploading && !this.locked && (!_root.sandbox || _root.uploading)) {
 			renewChangeset();
 			_root.writesrequested++;
+			this.uploading=true;
 			remote_write.call('putpoi',poiresponder,_root.usertoken,_root.changeset,Number(this.version),Number(this._name),coord2long(this._x),coord2lat(this._y),this.attr,1);
-			this.clean=true;
 		}
 	};
 	POI.prototype.onRollOver=function() {
@@ -184,7 +185,7 @@
 
 	function getName(attr,namelist) {
 		var a='';
-		if (attr['name']) {
+		if (attr['name'] && attr['name'].substr(0,6)!='(type ') {
 			a=attr['name'];
 		} else {
 			for (var i in namelist) {
@@ -213,7 +214,7 @@
 		var a='poi';
 		for (var i in icontags) {
 			var ok=true;
-			for (var k in icontags[i]) {
+			var t=icontags[i]; for (var k in t) {
 				if (!attr[k] || attr[k]!=icontags[i][k]) { ok=false; }
 			}
 			if (ok) { a='poi_'+i; }

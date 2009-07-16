@@ -50,7 +50,7 @@
 			splashScreen();
 			welcomeButtons();
 		};
-		remote_read.call('getpresets',preresponder,_root.lang);
+		remote_read.call('getpresets',preresponder,_root.usertoken,_root.lang);
 	}
 
     function pleaseWait(a) {

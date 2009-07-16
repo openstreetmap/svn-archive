@@ -579,7 +579,7 @@
 			type='input';
 			setTextFormat(boldSmall);
 			setNewTextFormat(boldSmall);
-//			restrict="^"+chr(0)+"-"+chr(31);
+			restrict="^"+chr(0)+"-"+chr(31);
 			maxChars=255;
 		};
 		this.keyname.onSetFocus =function() {
@@ -595,6 +595,7 @@
 			this._parent._parent._parent.reflect();
 		};
 		this.keyname.onChanged=function(tf) {
+			fixUTF8();
 			if (tf.text=='+' || tf.text=='=') {
 				// if FP has picked up the "+" keypress, ignore it and set back to 'key'
 				tf.text='key';
@@ -634,6 +635,7 @@
 			this._parent.lastvalue=this.text;
 		};
 		this.value.onChanged=function(tf) {
+			fixUTF8();
 			setValueFromTextfield(tf);
 			if (!_root.auto) { _root.attachMovie("auto","auto",75); }
 			_root.auto.redraw(tf);
@@ -645,7 +647,7 @@
 			type='input';
 			setTextFormat(plainSmall);
 			setNewTextFormat(plainSmall);
-//			restrict="^"+chr(0)+"-"+chr(31);
+			restrict="^"+chr(0)+"-"+chr(31);
 			maxChars=255;
 		};
 		this.value.text=this.getValueFromObject(key);
@@ -818,14 +820,14 @@
 			type='input';
 			setTextFormat(plainTiny);
 			setNewTextFormat(plainTiny);
-//			restrict="^"+chr(0)+"-"+chr(31);
+			restrict="^"+chr(0)+"-"+chr(31);
 			maxChars=255;
 		};
 		this.value.text=this.getRole();
 		this.value.onSetFocus =function() { this._parent.scrollToField();
 											_root.keytarget='value'; };
 		this.value.onKillFocus=function() { _root.keytarget=''; };
-		this.value.onChanged  =function(tf) { this._parent.setRole(tf); };
+		this.value.onChanged  =function(tf) { fixUTF8(); this._parent.setRole(tf); };
 	};
 
 	RelMember.prototype.getRole=function() {
@@ -947,3 +949,37 @@
 		return l;
 	}
 
+	// fixUTF8 - bugfix for Flash Player Linux encoding
+
+	function fixUTF8() {
+		if (System.capabilities.os.indexOf('Linux')==-1) { return; }
+
+		kl.text="Pressed "+Key.getCode().toString(16)+", char "+Key.getAscii().toString(16);
+		
+		var s=eval(Selection.getFocus()); var t=s.text;
+		var i=Selection.getCaretIndex()-1; var d=i;
+		while (t.charCodeAt(i)>=0x80 && t.charCodeAt(i)<=0xBF && i>0) { i--; }
+		if (i==d) { return; }
+
+		var u=0;
+		if (t.charCodeAt(i)>=0xC2 && t.charCodeAt(i)<=0xDF && d-i==1) {
+			// two-byte sequence
+			u= (t.charCodeAt(i+1) & 0x3F)       + 
+			  ((t.charCodeAt(i  ) & 3   ) << 6) +
+			  ((t.charCodeAt(i  ) & 0x1C) << 6);
+
+		} else if (t.charCodeAt(i)>=0xE0 && t.charCodeAt(i)<=0xEF && d-i==2) {
+			// three-byte sequence
+			// (Flash Player doesn't cope with any more obscure Unicode)
+			u= (t.charCodeAt(i+2) & 0x3F)        + 
+			  ((t.charCodeAt(i+1) & 3   ) << 6 ) + 
+			  ((t.charCodeAt(i+1) & 0x3C) << 6 ) +
+			  ((t.charCodeAt(i  ) & 0x0F) << 12);
+		}
+		
+		if (u!=0) {
+			kl.text+=" replacing with "+u.toString(16)+" from "+t.charCodeAt(i).toString(16)+","+t.charCodeAt(i+1).toString(16);
+			s.text=t.slice(0,i)+String.fromCharCode(u)+t.slice(d+1);
+			s.text=s.text.split(String.fromCharCode(0x03)).join('');
+		}
+	}

@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.ImageObserver;
+import java.net.URL;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -48,41 +49,39 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 	private int viewportMinX, viewportMaxX, viewportMinY, viewportMaxY;
 	private Image bufferImage;
 	private boolean needRedraw;
-	// FIXME need to find out bounds of Walking Papers scan: private int minx, maxx, miny, maxy, 
+
 	private int minzoom, maxzoom;
+	private Bounds printBounds;
+	private String tileUrlTemplate;
 	private String walkingPapersId;
 	
 	@SuppressWarnings("serial")
-	public WalkingPapersLayer(String id, Bounds b, /*int minx, int maxx, int miny, int maxy,*/ int minz, int maxz) {
+	public WalkingPapersLayer(String id, String tile, Bounds b, int minz, int maxz) {
 		super(tr("Walking Papers: " +id));
 		background = true;
 		walkingPapersId = id;
 
-		/*
-		this.minx = minx; this.maxx = maxx;
-		this.miny = miny; this.maxy = maxy;
-		*/
+		tileUrlTemplate = tile;
+		this.printBounds = b;
 		this.minzoom = minz; this.maxzoom = maxz;
 		currentZoomLevel = minz;
 		
 		clearTileStorage();
-		final Bounds copyOfB = b;
 		
 	    Layer.listeners.add(new LayerChangeListener() {
 	        public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+	        	// if user changes to a walking papers layer, zoom there just as if
+	        	// it was newly added
 	        	layerAdded(newLayer);
 	        }
 
 	        public void layerAdded(Layer newLayer) {
-	            /*Main.worker.execute(new Runnable() {
-	                public void run() {
-	                	*/
-	                    BoundingXYVisitor bbox = new BoundingXYVisitor();
-	                    bbox.visit(copyOfB);
-	                    Main.map.mapView.recalculateCenterScale(bbox);
-	             /*   }
-	            });*/
-	        	
+	        	// only do something if we are affected
+	        	if (newLayer != WalkingPapersLayer.this) return;
+	        	BoundingXYVisitor bbox = new BoundingXYVisitor();
+	        	bbox.visit(printBounds);
+	        	Main.map.mapView.recalculateCenterScale(bbox);
+	        	needRedraw = true;
 	        }
 
 	        public void layerRemoved(Layer oldLayer) {
@@ -223,14 +222,8 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 			viewportMaxY = tmp;
 		}
 		
-		boolean protectServerFromOverload = false;
-		if ((viewportMaxX-viewportMinX) * (viewportMaxY-viewportMinY) > 100) {
-			System.out.println("more than 100 visible tiles - will not download new ones");
-			protectServerFromOverload = true;
-		}
 		if (viewportMaxX-viewportMinX > 18) return;
 		if (viewportMaxY-viewportMinY > 18) return;
-		
 
 		for (int x = viewportMinX - 1; x <= viewportMaxX + 1; x++) {
 			double lon = tileXToLon(x);
@@ -254,7 +247,10 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 				tile = tileStorage.get(key);
 				if (!key.valid) continue;
 				if (tile == null) {
-					if (protectServerFromOverload) continue;
+					// check if tile is in range
+					Bounds tileBounds = new Bounds(new LatLon(tileYToLat(y+1), tileXToLon(x)), 
+						new LatLon(tileYToLat(y), tileXToLon(x+1)));
+					if (!tileBounds.asRect().intersects(printBounds.asRect())) continue;
 					tile = new WalkingPapersTile(x, y, currentZoomLevel, this);
 					tileStorage.put(key, tile);
 					loadSingleTile(tile);
@@ -271,6 +267,12 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 					count++;
 				}
 			}
+		}
+		
+		if (count == 0)
+		{
+			//System.out.println("no images on " + walkingPapersId + ", return");
+			return;
 		}
 
 		oldg.drawImage(bufferImage, 0, 0, null);
@@ -405,6 +407,16 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 		return walkingPapersId;
 	}
 	
-
+	public URL formatImageUrl(int x, int y, int z) {
+		String urlstr = tileUrlTemplate.
+			replace("{x}", String.valueOf(x)).
+			replace("{y}", String.valueOf(y)).
+			replace("{z}", String.valueOf(z));
+		try {
+			return new URL(urlstr);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
 	
 }

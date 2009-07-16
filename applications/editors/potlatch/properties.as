@@ -954,8 +954,6 @@
 	function fixUTF8() {
 		if (System.capabilities.os.indexOf('Linux')==-1) { return; }
 
-		kl.text="Pressed "+Key.getCode().toString(16)+", char "+Key.getAscii().toString(16);
-		
 		var s=eval(Selection.getFocus()); var t=s.text;
 		var i=Selection.getCaretIndex()-1; var d=i;
 		while (t.charCodeAt(i)>=0x80 && t.charCodeAt(i)<=0xBF && i>0) { i--; }
@@ -978,7 +976,6 @@
 		}
 		
 		if (u!=0) {
-			kl.text+=" replacing with "+u.toString(16)+" from "+t.charCodeAt(i).toString(16)+","+t.charCodeAt(i+1).toString(16);
 			s.text=t.slice(0,i)+String.fromCharCode(u)+t.slice(d+1);
 			s.text=s.text.split(String.fromCharCode(0x03)).join('');
 		}

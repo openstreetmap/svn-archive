@@ -4,6 +4,7 @@
 
 	function handleError(code,msg,result) {
 		if (code==-2 && msg.indexOf('allocate memory')>-1) { code=-1; }
+		if (msg.indexOf('changeset')>-1) { _root.changeset=null; msg+=iText("\nPlease try again: Potlatch will start a new changeset.",'newchangeset'); }	// we really need a dedicated error code for this
 		switch (code) {
 			case -1:	errorDialogue(msg,150); break;
 			case -2:	errorDialogue(msg+iText("\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time.",'emailauthor'),200); break;

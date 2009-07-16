@@ -31,32 +31,38 @@
 			htmlText=htmlText.split('HREF="').join('href="');
 			htmlText=htmlText.split('href="').join('target="_blank" href="');
 		}
-		var w=_root.popup.desc._width;
-		var h=Math.max(150,_root.popup.desc._height);
-
-		with (_root.popup) {
-			beginFill(0,80); moveTo(0,0); lineTo(w,0);
-			lineTo(w,h); lineTo(0,h); lineTo(0,0); endFill();
-		}
+		var w=_root.popup.desc._width+10;
+		var h=Math.max(150,_root.popup.desc._height+10);
 
 		_root.popup.createEmptyMovieClip("drag",2);
-		with (_root.popup.drag) {
-			beginFill(0,100); moveTo(0,0); lineTo(w,0);
-			lineTo(w,-17); lineTo(0,-17); lineTo(0,0); endFill();
+		_root.popup.createEmptyMovieClip("resize",3);
+		with (_root.popup.resize) {
+			beginFill(0xFFFFFF,50); moveTo(0,0); lineTo(-10,0);
+			lineTo(-10,-10); lineTo(0,-10); lineTo(0,0); endFill();
+			lineStyle(1,0xFFFFFF);
+			moveTo(-9,-2); lineTo(-2,-9);
+			moveTo(-6,-2); lineTo(-2,-6);
+			moveTo(-3,-2); lineTo(-2,-3);
 		}
-
-		_root.popup.drag.onPress=function() { _root.popup.startDrag(); };
-		_root.popup.drag.onRelease=function() { _root.popup.stopDrag(); };
-
-		_root.popup.attachMovie("closecross","cross",3);
-		_root.popup.cross.onPress=function() { _root.popup.removeMovieClip(); };
-		_root.popup.cross._x=10;
-		_root.popup.cross._y=-9;
 
 		_root.popup.createTextField('name',4,20,-18,w-20,19);
 		_root.popup.name.text=this.name;
 		_root.popup.name.setTextFormat(plainWhite);
 		_root.popup.name.selectable=false;
+
+		redrawPopup(w,h);
+		_root.popup.drag.onPress=function() { _root.popup.startDrag(); };
+		_root.popup.drag.onRelease=function() { _root.popup.stopDrag(); };
+
+		_root.popup.attachMovie("closecross","closex",5);
+		_root.popup.closex._x=10;
+		_root.popup.closex._y=-9;
+		_root.popup.closex.onPress=function() {
+			removeMovieClip(_root.popup); 
+		};
+		
+		_root.popup.resize.onPress=function() { _root.popup.resize.onMouseMove=resizePopup; };
+		_root.popup.resize.onMouseUp=function() { _root.popup.resize.onMouseMove=null; };
 	};
 	
 	Object.registerClass("photo",Photo);
@@ -66,6 +72,31 @@
 	// ================================================================
 	// Support functions
 	
+	// popup redraw and resize
+	
+	function resizePopup() {
+		var w=_root._xmouse-_root.popup._x;
+		var h=_root._ymouse-_root.popup._y;
+		redrawPopup(w,h);
+	}
+	
+	function redrawPopup(w,h) {
+		if (w<50 || h<50) { return; }
+		with (_root.popup) {
+			clear();
+			beginFill(0,80); moveTo(0,0); lineTo(w,0);
+			lineTo(w,h); lineTo(0,h); lineTo(0,0); endFill();
+		}
+		with (_root.popup.drag) {
+			clear();
+			beginFill(0,100); moveTo(0,0); lineTo(w,0);
+			lineTo(w,-17); lineTo(0,-17); lineTo(0,0); endFill();
+		}
+		with (_root.popup.resize) { _x=w; _y=h; }
+		with (_root.popup.desc) { _width=w-10; _height=h-10; }
+		_root.popup.name._width=w-20;
+	}
+
 	// loadPhotos
 
 	function loadPhotos() {

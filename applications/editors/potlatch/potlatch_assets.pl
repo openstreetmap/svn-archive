@@ -4,7 +4,7 @@
 	# For current Ming, set this to 1/20.
 	# For older Ming (e.g. 0.3), set this to 1.
 
-	$cw=1/20;
+	$cw=1;
 
 	# **********************************************
 

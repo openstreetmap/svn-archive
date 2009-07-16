@@ -80,6 +80,7 @@
 	Node.prototype.addWay=function(id) { this.ways[id]=true; };
 	Node.prototype.removeWay=function(id) { delete this.ways[id]; };
 	Node.prototype.numberOfWays=function() { var z=this.ways; var c=0; for (var i in z) { c++; } return c; };
+	Node.prototype.redrawWays=function() { var z=this.ways; for (var i in z) { _root.map.ways[i].redraw(); } };
 
 	// ------------------------------------------------------------------------
 	// Support functions

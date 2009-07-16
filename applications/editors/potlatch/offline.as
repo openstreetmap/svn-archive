@@ -55,7 +55,7 @@
 		}
 		
 		// Ask for changeset comment if not already created
-		if (_root.changeset) { renewChangeset(); startUpload(); } 
+		if (_root.changeset) { if (!renewChangeset()) { startUpload(); } } 
 		                else { changesetRequest(iText("Save changes",'prompt_savechanges'),completeClose,''); }
 	}
 
@@ -91,10 +91,15 @@
 	// Stop upload in case of failure
 
 	function abortUpload() {
+		var i,z;
 		if (!_root.uploading) { return; }
 		_root.uploading=false;
 		setAdvice(false,iText("Upload stopped",'advice_uploadfail'));
 		_root.windows.upload.remove();
+		z=_root.map.pois; for (i in z) { z[i].uploading=false; }
+		z=_root.map.ways; for (i in z) { z[i].uploading=false; }
+		z=_root.map.nodes; for (i in z) { z[i].uploading=false; }
+		z=_root.map.relations; for (i in z) { z[i].uploading=false; }
 	}
 
 	// ----------------------------------------------------------------------------------------

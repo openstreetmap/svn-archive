@@ -119,6 +119,7 @@
 				}
 			}
 			_root.map.relations[nw].uploading=false;
+			_root.map.relations[nw].clean=true;
 			_root.map.relations[nw].version=result[2];
 			operationDone(result[0]);
 		};
@@ -133,7 +134,6 @@
 				_root.usertoken, _root.changeset, this.version,
 				Math.floor(this._name),
 				this.attr, this.members, 1);
-			this.clean=true;
 		}
 	};
 

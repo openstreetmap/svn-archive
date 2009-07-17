@@ -107,8 +107,10 @@ my %proj2path=(
     'gpsdrive-maemo' 	=> 'gpsdrive/contrib/maemo',
     'gpsdrive-data-maps'=> 'gpsdrive/data/maps',
     'gpsdrive'	 	=> 'gpsdrive',
-    'gpsdrive-2.10pre6'	=> 'gpsdrive-2.10pre6',
+    'gpsdrive-2.10pre7'	=> 'gpsdrive-2.10pre7',
+    'gpsdrive-data-maps-2.10pre7'=> 'gpsdrive-2.10pre7/data/maps',
     'opencarbox' 	=> 'opencarbox',
+    'mod_tile'		=> 'openstreetmap-applications/utils/mod_tile',
     'osm2pgsql' 	=> 'openstreetmap-applications/utils/export/osm2pgsql',
     'merkaartor' 	=> 'openstreetmap-applications/editors/merkaartor',
     'josm' 		=> 'openstreetmap-applications/editors/josm',
@@ -132,9 +134,11 @@ my %proj2debname=(
     'gpsdrive-data-maps'=> 'gpsdrive-data-maps',
     'gpsdrive'	 	=> 'gpsdrive',
     'gpsdrive-2.10pre5' => 'gpsdrive',
-    'gpsdrive-2.10pre6' => 'gpsdrive',
+    'gpsdrive-2.10pre7' => 'gpsdrive',
+    'gpsdrive-data-maps-2.10pre7'=> 'gpsdrive-data-maps',
     'opencarbox' 	=> 'opencarbox',
     'osm2pgsql' 	=> 'osm2pgsql',
+    'mod_tile'		=> 'libapache2-mod-tile',
     'merkaartor' 	=> 'merkaartor',
     'josm' 		=> 'openstreetmap-josm',
     'osm-utils'		=> 'openstreetmap-utils',
@@ -155,9 +159,11 @@ my %package_names=(
     'gpsdrive'	 	=> [qw(gpsdrive gpsdrive-friendsd gpsdrive-utils)],
     'gpsdrive-maemo' 	=> [qw(gpsdrive)],
     'gpsdrive-data-maps'=> [qw(gpsdrive-data-maps)],
-    'gpsdrive-2.10pre5' => [qw(gpsdrive gpsdrive-friendsd gpsdrive-maps)],,
-    'gpsdrive-2.10pre6' => [qw(gpsdrive gpsdrive-friendsd gpsdrive-maps)],,
+    'gpsdrive-2.10pre5' => [qw(gpsdrive gpsdrive-friendsd gpsdrive-utils)],
+    'gpsdrive-2.10pre7' => [qw(gpsdrive gpsdrive-friendsd gpsdrive-utils)],
+    'gpsdrive-data-maps-2.10pre7'=> [qw(gpsdrive-data-maps)],
     'opencarbox' 	=> [qw(opencarbox)],
+    'mod_tile'		=> [qw(libapache2-mod-tile renderd)],
     'osm2pgsql' 	=> [qw(osm2pgsql)],
     'merkaartor' 	=> [qw(merkaartor)],
     'josm' 		=> [qw(openstreetmap-josm)],
@@ -189,6 +195,8 @@ my %svn_repository_url=(
 
     'gpsdrive-2.10pre5'          => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre5',
     'gpsdrive-2.10pre6'          => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre6',
+    'gpsdrive-2.10pre7'          => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre7',
+    'gpsdrive-data-maps-2.10pre7'          => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/branches/gpsdrive-2.10pre7',
     );
 
 my %svn_update_done;
@@ -237,7 +245,7 @@ my $getopt_result = GetOptions (
     "svn-cp!"        => \$do_svn_cp,
     "dir-chroot=s"   => \$dir_chroot,     
     "dir-svn"        => \$dir_svn,
-    "package-results" => \$package_result_dir,
+    "dir-package-results" => \$package_result_dir,
     "user"           => \$user,
     "platforms=s"    => sub { my ($a,$b)=(@_);
 			      if ( '*' eq $b ) {
@@ -816,7 +824,7 @@ sub svn_update($){
     }
 
     $self->debug(3,"svn up $dir_svn/$proj_sub_dir");
-    my ($rc,$out,$err,$out_all) = $self->command("svn up $dir_svn/$proj_sub_dir");
+    my ($rc,$out,$err,$out_all) = $self->command("svn up --accept theirs-full $dir_svn/$proj_sub_dir");
     if ( $rc ) {
 	$self->warning("Error '$rc' in 'svn up $dir_svn/$proj_sub_dir'");
 	$self->warning("Error '$err'");
@@ -905,8 +913,8 @@ sub svn_changelog($){
     my $command="$dir_svn/openstreetmap-applications/utils/packaging/svn_log2debian_changelog.pl";
     $command .= " --project_name='$debname' ";
     
-    if ( $proj =~ m/gpsdrive-(.*pre.*)/ ) {
-	$command .= " --prefix=$1 ";
+    if ( $proj =~ m/gpsdrive-[^\.\d]*([\.\d]+pre\d+)(-)?/ ) {
+	$command .= " --prefix=2.10svn --release=$1";
     } elsif ( $proj =~ m/gpsdrive/ ) {
 	$command .= " --prefix=2.10svn ";
     };
@@ -1134,24 +1142,30 @@ sub debuild($) {
     # ------ Collect Resulting *.deb names
     my $result_dir=dirname("$dir_chroot/$platform/home/$user/$proj_sub_dir/");
     my $svn_revision = $self->svn_revision_platform();
-    my @results= grep { $_ =~ m/\.deb$/ } glob("$result_dir/*$svn_revision*.deb");
-
-    @results= grep { $_ !~ m/2.10pre/ } @results;
+    my $revision_string= $svn_revision;
+    if ( $proj =~ m/gpsdrive-[^\.\d]*([\.\d]+pre\d+)(-)?/ ) {
+	$revision_string= "$1";
+    }
+    my @results= grep { $_ =~ m/\.deb$/ } glob("$result_dir/*$revision_string*.deb");
+    if ( $proj =~ m/gpsdrive-(.*pre.*)/ ) {
+    } else {
+	@results= grep { $_ !~ m/2.10pre/ } @results;
+    }
 
     my $result_count=scalar(@results);
     $self->{'results'}->{'deb-count'}=$result_count;
     $self->{'results'}->{'packages'}= \@results;
     my $result_expected = scalar(@{$package_names{$proj}});
     if ( ! $result_count ) {
-	my $all_deb_in_results = join(",",glob("$result_dir/*$svn_revision*.deb"));
+	my $all_deb_in_results = join(",",glob("$result_dir/*$revision_string*.deb"));
 	$self->error( "!!!!!!!! WARN: NO resulting Packages for Proj '$proj' on Platform $platform.\n".
-		      "Expecting $result_expected packages for svn-revision $svn_revision\n".
+		      "Expecting $result_expected packages for svn-revision $revision_string\n".
 		      "see results in '$result_dir'\n".
 		      "Other Debian Files:  $all_deb_in_results\n");
 	$self->last_result("fail");
     } elsif ( $result_expected !=  $result_count ) {
 	$self->error( "!!!!!!!! WARN: Number of resulting Packages for Proj '$proj' on Platform $platform is Wrong.\n".
-		      "Expecting $result_expected packages for svn-revision $svn_revision, got: $result_count Packages\n".
+		      "Expecting $result_expected packages for svn-revision $revision_string, got: $result_count Packages\n".
 		      "see results in '$result_dir'");
 	$self->last_result("fail");
     } else {
@@ -1159,7 +1173,7 @@ sub debuild($) {
 	my @names=@{$package_names{$proj}};
 	my $missing=0;
 	for my $name ( @{$package_names{$proj}} ) {
-	    my $check_name="${name}_(|2\.10svn)${svn_revision}_(i386|amd64|all)\.deb";
+	    my $check_name="${name}_(|2\.10svn)${revision_string}_(i386|amd64|all)\.deb";
 	    if ( ! grep { $_ =~ m/$check_name$/ } @results ) {
 		$self->error( "!!!!!!!! ERROR: Missing Result Package $name\n");
 		$missing++;
@@ -1169,7 +1183,7 @@ sub debuild($) {
 	my $wrong_name=0;
 	for my $name ( @results ) {
 	    my $short_name=basename($name);
-	    if ( ! grep { $short_name =~ m/${_}_(|2\.10svn)${svn_revision}_(i386|amd64|all)\.deb$/ }  @{$package_names{$proj}} ) {
+	    if ( ! grep { $short_name =~ m/${_}_(|2\.10svn)${revision_string}_(i386|amd64|all)\.deb$/ }  @{$package_names{$proj}} ) {
 		$self->error( "!!!!!!!! ERROR: Unknown Result Package '$name'\n");
 		$wrong_name++;
 	    };
@@ -1259,14 +1273,14 @@ sub show_results(){
 	    my $color_res = $task->{color_res};
 	    my ( $res,$rev)  = split(/:\s*/,$task->last_result());
 	    $rev ||='';
-	    my $rev_g  = $task->last_good_result();
+	    my $rev_last_good  = $task->last_good_result();
 	    my $print_platform=$platform;
 	    $print_platform=~ s/(debian-|ubuntu-)//;
 
 	    print "$color_res"; #. $print_platform."$COLOR{NORMAL} " ;
 	    printf "$color_rev%-6s$COLOR{NORMAL} ", $rev;
-	    if (  $rev_g && $rev ne $rev_g ) {
-		print "$COLOR{GREEN}($rev_g)$COLOR{NORMAL}";
+	    if (  $rev_last_good && $rev ne $rev_last_good ) {
+		print "$COLOR{GREEN}($rev_last_good)$COLOR{NORMAL}";
 	    }
 	}
 	print "\n";
@@ -1525,12 +1539,12 @@ if ( $DEBUG >= 1 ) {
     print "\t--".($do_svn_cp    ?'':'no-')."svn-cp\n";
     print "\t--".($do_fast      ?'':'no-')."fast\n";
     print "\t--".($FORCE        ?'':'no-')."force\n";
-    print "\t--".($DEBUG        ?'':'no-')."debug\n";
+    print "\t--".($DEBUG        ?'':'no-')."debug = $DEBUG\n";
     print "----------------------------------------\n";
 }
 
 show_results() 
-    if $do_show_results;
+    if ( $DEBUG > 1 || $VERBOSE > 1 ) && $do_show_results;
 
 # svn Update
 for my $proj ( @projs ) {
@@ -1666,7 +1680,7 @@ Specify the directory where all chroots are located.
 
 Specify the directory where the svn checkou copy is located.
 
-=item --package-results
+=item --dir-package-results
 
 Specify the directory where the resulting packages are located.
 

@@ -5,10 +5,13 @@ use warnings;
 use IO::File;
 use Getopt::Long;
 use Pod::Usage;
+use Time::Local;
+use POSIX qw(strftime);
 
 my $project_name="";
 
 my $append=0;
+my $release=0;
 my $prefix="";
 my $debug = 0;
 
@@ -20,6 +23,7 @@ GetOptions (
     'project_name:s'	=> \$project_name,
     'prefix:s'		=> \$prefix,
     'append'		=> \$append,
+    'release:s'		=> \$release,
     'debug'		=> \$debug,
     ) or pod2usage(1);
 
@@ -100,11 +104,14 @@ my $user2full_name={
     tomhughes	=> "Tom Hughes",
     twalraet	=> "Thomas Walraet",
     tweety	=> "Joerg Ostertag (Debian Packages) <debian${t}ostertag.name>",
+    ostertag	=> "Joerg Ostertag (Debian Packages) <debian${t}ostertag.name>",
     ulf		=> "Ulf Lamping",
+    ulflulfl	=> "Ulf Lamping",
     charles	=> "Charles Curley <charlescurley${t}charlescurley.com>",
     cjastram	=> "Christopher Jastram",
-    commiter	=> "",
+    commiter	=> "Taken from last tar File",
     dse		=> "Guenther Meyer <d.s.e${t}sordidmusic.com>",
+    d_s_e	=> "Guenther Meyer <d.s.e${t}sordidmusic.com>",
     ganter	=> "Fritz Ganter",
     gladiac	=> "Andreas Schneider",
     hamish	=> "Hamish <hamish_b${t}yahoo.com>",
@@ -140,12 +147,34 @@ sub print_user_line($$){
 		$full_name = "$full_name via osm-dev List <dev\@openstreetmap.org>";
 	    }
 	}
+
+#	print "Date: $date\n";
+	my ($date_dummy,$date_time,$date_offset,$date_date) = split(m/\s+/,$date,4);
+	$date_date =~ s/[\(\)]//g;
+
 	print $fo "\n -- $full_name  $date_date $date_time $date_offset\n\n";
     }
 }
 
 my $commitmessage_seen=0;
 my $entry_no=0;
+
+if ( $release ) {
+    print $fo "$project_name (${release}) unstable; urgency=med\n";
+    print $fo "\n";
+    print $fo "   * Release";
+    print $fo "-Candidate" if $release =~ m/rc\d+/;
+    print $fo "-Pre Version" if $release =~ m/pre\d+/;
+    print $fo " $project_name-${release}\n";
+    my $date=strftime("%Y-%m-%d %T %Z %z (%a, %d %B %Y)",localtime(time()));
+    $date =~ s/CEST\s*//;
+
+    print_user_line("ostertag",$date);
+    print $fo "\n";
+}
+
+
+
 while ( my $line = $fi->getline()) {
     if ( $line =~ m/^-+$/) {
 	if ( $entry_no && ! $commitmessage_seen ) {
@@ -204,6 +233,10 @@ svn_log2debian_changelog.pl --project_name="openstreetmap-utils" --prefix="2.10s
 
     --append
          Append to an existing File
+
+    --release=<Release-Version>
+         Build a release changelog.
+         Release-Version could be something like 2.10pre7
 
     --debug
          also printout which users could not be inserted with there full name

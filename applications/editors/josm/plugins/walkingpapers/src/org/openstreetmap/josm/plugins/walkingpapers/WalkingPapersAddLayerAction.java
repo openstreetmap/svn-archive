@@ -26,13 +26,16 @@ public class WalkingPapersAddLayerAction extends JosmAction {
 
     public void actionPerformed(ActionEvent e) {
         String wpid = JOptionPane.showInputDialog(Main.parent, 
-        	tr("Image id from walking-papers.org (the bit after the ?id= in the URL)"),
+        	tr("Enter a walking-papers.org URL or ID (the bit after the ?id= in the URL)"),
         		Main.pref.get("walkingpapers.last-used-id"));
 
-        if (wpid == null || wpid.equals("")) return;
+        // Grab id= from the URL if we need to, otherwise get an ID
+        String mungedWpId = this.getWalkingPapersId(wpid);
+
+        if (mungedWpId == null || mungedWpId.equals("")) return;
 
         // screen-scrape details about this id from walking-papers.org
-        String wpUrl = "http://walking-papers.org/scan.php?id=" + wpid;
+        String wpUrl = "http://walking-papers.org/scan.php?id=" + mungedWpId;
 
         Pattern spanPattern = Pattern.compile("<span class=\"(\\S+)\">(\\S+)</span>");
         Matcher m;
@@ -66,13 +69,28 @@ public class WalkingPapersAddLayerAction extends JosmAction {
         	return;
         }
 
-        Main.pref.put("walkingpapers.last-used-id", wpid);
+        Main.pref.put("walkingpapers.last-used-id", mungedWpId);
 
         Bounds b = new Bounds(new LatLon(south, west), new LatLon(north, east));
         
-        WalkingPapersLayer wpl = new WalkingPapersLayer(wpid, tile, b, minz, maxz);
+        WalkingPapersLayer wpl = new WalkingPapersLayer(mungedWpId, tile, b, minz, maxz);
         Main.main.addLayer(wpl);
 
     }
 
+    public static String getWalkingPapersId(String wpid) {
+        if (!wpid.contains("id=")) {
+            return wpid;
+        } else {
+            // To match e.g. http://walking-papers.org/scan.php?id=53h78bbx
+            final Pattern pattern = Pattern.compile("\\?id=(\\S+)");
+            final Matcher matcher = pattern.matcher(wpid);
+            final boolean found   = matcher.find();
+
+            if (found) {
+                return matcher.group(1);
+            }
+        }
+        return null;
+    }
 }

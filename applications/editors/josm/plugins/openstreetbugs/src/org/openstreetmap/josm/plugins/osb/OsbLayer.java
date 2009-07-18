@@ -161,17 +161,12 @@ public class OsbLayer extends Layer implements MouseListener {
                         tooltipWidth = Math.max(tooltipWidth, (int)fontBounds.getWidth());
                     }
 
-                    // FIXME hiehgt calculations doesn't work with all LAFs
-                    int lineCount = lines.length;
-                    int HR_SIZE = 10;
-                    int tooltipHeight = lineCount * (int)fontBounds.getHeight() + HR_SIZE * (lineCount - 1);
-
                     // draw description as a tooltip
                     tooltip.setTipText(desc);
-                    tooltip.setSize(tooltipWidth+10, tooltipHeight + 6);
-
+                    tooltip.setSize(tooltip.getUI().getPreferredSize(tooltip));
+                    
                     int tx = p.x + (width / 2) + 5;
-                    int ty = (int)(p.y - height / 2);
+                    int ty = (int)(p.y - height / 2) -1;
                     g.translate(tx, ty);
                     tooltip.paint(g);
                     g.translate(-tx, -ty);

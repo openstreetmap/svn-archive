@@ -52,8 +52,10 @@ public class OsbListCellRenderer implements ListCellRenderer {
         label.setOpaque(true);
 
         if(isSelected) {
+            label.setForeground(UIManager.getColor("List.selectionForeground"));
             label.setBackground(UIManager.getColor("List.selectionBackground"));
         } else {
+            label.setForeground(UIManager.getColor("List.foreground"));
             label.setBackground(index % 2 == 0 ? background : altBackground);
         }
 

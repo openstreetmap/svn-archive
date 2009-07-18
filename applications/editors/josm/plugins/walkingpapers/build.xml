@@ -23,7 +23,7 @@
                 <attribute name="Author" value="Frederik Ramm"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.walkingpapers.WalkingPapersPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Supports downloading tiled, scanned maps from walking-papers.org."/>
+                <attribute name="Plugin-Description" value="Supports downloading tiled, scanned maps from walking-papers.org. This plugin is still under early development and may be buggy."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/WalkingPapers"/>
                 <attribute name="Plugin-Mainversion" value="1725"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

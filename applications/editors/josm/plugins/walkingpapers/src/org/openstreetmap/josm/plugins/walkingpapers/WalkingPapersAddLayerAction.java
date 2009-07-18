@@ -29,6 +29,8 @@ public class WalkingPapersAddLayerAction extends JosmAction {
         	tr("Enter a walking-papers.org URL or ID (the bit after the ?id= in the URL)"),
         		Main.pref.get("walkingpapers.last-used-id"));
 
+        if (wpid == null || wpid.equals("")) return;
+
         // Grab id= from the URL if we need to, otherwise get an ID
         String mungedWpId = this.getWalkingPapersId(wpid);
 

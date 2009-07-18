@@ -33,11 +33,11 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.historycombobox.HistoryChangedListener;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.EditAction;
 import org.openstreetmap.josm.plugins.osb.gui.dialogs.TextInputDialog;
-import org.openstreetmap.josm.plugins.osb.gui.historycombobox.HistoryChangedListener;
 import org.openstreetmap.josm.plugins.osb.gui.historycombobox.StringUtils;
 
 public class AddCommentAction extends OsbAction {

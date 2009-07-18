@@ -67,7 +67,7 @@ public class WalkingPapersAddLayerAction extends JosmAction {
         	r.close();
         	if ((tile == null) || (north == 0 && south == 0) || (east == 0 && west == 0)) throw new Exception();
         } catch (Exception ex) {
-        	JOptionPane.showMessageDialog(Main.parent,tr("Could not read information from walking-papers.org for this id."));
+        	JOptionPane.showMessageDialog(Main.parent,tr("Could not read information from walking-papers.org the id \"{0}\"", mungedWpId));
         	return;
         }
 

@@ -29,7 +29,7 @@ use OSM::osm 4.4 ;
 
 my $program = "listrelations.pl" ;
 my $usage = $program . " file.osm out.htm out.csv" ;
-my $version = "1.0 BETA (002)" ;
+my $version = "1.0" ;
 
 
 my $wayId ;

@@ -57,7 +57,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 	
 	@SuppressWarnings("serial")
 	public WalkingPapersLayer(String id, String tile, Bounds b, int minz, int maxz) {
-		super(tr("Walking Papers: " +id));
+		super(tr("Walking Papers: {0}", id));
 		background = true;
 		walkingPapersId = id;
 

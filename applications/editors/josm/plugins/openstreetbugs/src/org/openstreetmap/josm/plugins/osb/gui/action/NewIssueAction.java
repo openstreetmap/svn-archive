@@ -41,11 +41,11 @@ import javax.swing.JToggleButton;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.gui.historycombobox.HistoryChangedListener;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.NewAction;
 import org.openstreetmap.josm.plugins.osb.gui.dialogs.TextInputDialog;
-import org.openstreetmap.josm.plugins.osb.gui.historycombobox.HistoryChangedListener;
 import org.openstreetmap.josm.plugins.osb.gui.historycombobox.StringUtils;
 
 public class NewIssueAction extends OsbAction implements MouseListener {

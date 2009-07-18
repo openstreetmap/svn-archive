@@ -49,8 +49,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.plugins.osb.gui.historycombobox.HistoryChangedListener;
-import org.openstreetmap.josm.plugins.osb.gui.historycombobox.SuggestingJHistoryComboBox;
+import org.openstreetmap.josm.gui.historycombobox.HistoryChangedListener;
+import org.openstreetmap.josm.gui.historycombobox.SuggestingJHistoryComboBox;
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo

@@ -11,8 +11,8 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.io.ProgressInputStream;
 
@@ -83,7 +83,7 @@ public class CadastreGrabber {
         wmsInterface.urlConn = (HttpURLConnection)url.openConnection();
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
-        InputStream is = new ProgressInputStream(wmsInterface.urlConn, Main.pleaseWaitDlg);
+        InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE);
         BufferedImage img = ImageIO.read(is);
         is.close();
         return img;

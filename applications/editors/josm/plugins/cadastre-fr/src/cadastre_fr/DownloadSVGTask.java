@@ -28,6 +28,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.io.ProgressInputStream;
 /**
@@ -53,17 +54,17 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
 
     @Override
     public void realRun() throws IOException, OsmTransferException {
-        Main.pleaseWaitDlg.currentAction.setText(tr("Contacting WMS Server..."));
+    	progressMonitor.indeterminateSubTask(tr("Contacting WMS Server..."));
         try {
             if (wmsInterface.retrieveInterface(wmsLayer)) {
                 svg = grabBoundary(wmsLayer.getCommuneBBox());
                 if (svg == null)
                     return;
-                Main.pleaseWaitDlg.currentAction.setText(tr("Extract SVG ViewBox..."));
+                progressMonitor.indeterminateSubTask(tr("Extract SVG ViewBox..."));
                 getViewBox(svg);
                 if (viewBox == null)
                     return;
-                Main.pleaseWaitDlg.currentAction.setText(tr("Extract best fitting boundary..."));
+                progressMonitor.indeterminateSubTask(tr("Extract best fitting boundary..."));
                 createWay(svg);
             }
         } catch (DuplicateLayerException e) {
@@ -186,7 +187,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         wmsInterface.urlConn = (HttpURLConnection)url.openConnection();
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
-        InputStream is = new ProgressInputStream(wmsInterface.urlConn, Main.pleaseWaitDlg);
+        InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE);
         File file = new File(CadastrePlugin.cacheDir + "boundary.svg");
         String svg = new String();
         try {

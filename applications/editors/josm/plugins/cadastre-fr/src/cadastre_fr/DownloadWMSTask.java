@@ -3,10 +3,11 @@ package cadastre_fr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.IOException;
+
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.PleaseWaitRunnable;
-import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 
 public class DownloadWMSTask extends PleaseWaitRunnable {
 
@@ -25,7 +26,7 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
 
     @Override
     public void realRun() throws IOException {
-        Main.pleaseWaitDlg.currentAction.setText(tr("Contacting WMS Server..."));
+        progressMonitor.indeterminateSubTask(tr("Contacting WMS Server..."));
         try {
             if (grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
                 if (wmsLayer.images.isEmpty()) {

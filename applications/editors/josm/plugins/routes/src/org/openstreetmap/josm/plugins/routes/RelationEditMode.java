@@ -64,7 +64,7 @@ public class RelationEditMode extends MapMode {
 	public void mouseClicked(MouseEvent e) {
     	Way way = Main.map.mapView.getNearestWay(e.getPoint());
     	
-    	Collection<OsmPrimitive> selectedRelations = Main.ds.getSelectedRelations();
+    	Collection<OsmPrimitive> selectedRelations = Main.main.getCurrentDataSet().getSelectedRelations();
     	
     	if (way != null) {
     		

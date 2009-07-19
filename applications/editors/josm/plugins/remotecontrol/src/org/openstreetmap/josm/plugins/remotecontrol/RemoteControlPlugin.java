@@ -2,18 +2,17 @@ package org.openstreetmap.josm.plugins.remotecontrol;
 
 import java.io.IOException;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 
 /**
 
  */
-public class RemoteControlPlugin extends Plugin 
+public class RemoteControlPlugin extends Plugin
 {
     /** The HTTP server this plugin launches */
     static HttpServer server;
-    
+
     /**
      * Creates the plugin, and starts the HTTP server
      */
@@ -21,13 +20,13 @@ public class RemoteControlPlugin extends Plugin
     {
         restartServer();
     }
-    
+
     @Override
-    public PreferenceSetting getPreferenceSetting() 
+    public PreferenceSetting getPreferenceSetting()
     {
         return new RemoteControlPreferences();
     }
-    
+
     /**
      * Starts or restarts the HTTP server
      *
@@ -38,7 +37,7 @@ public class RemoteControlPlugin extends Plugin
         {
             if (server != null)
                 server.stopServer();
-            
+
             int port = HttpServer.DEFAULT_PORT;
             server = new HttpServer(port);
             server.start();

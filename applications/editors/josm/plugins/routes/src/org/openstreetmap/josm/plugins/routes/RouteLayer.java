@@ -96,7 +96,7 @@ public class RouteLayer extends Layer {
 
 		pathBuilder.clear();
 
-		for (Relation relation:Main.ds.relations) {
+		for (Relation relation:Main.main.getCurrentDataSet().relations) {
 			for (RouteDefinition route:routes) {
 				if (route.matches(relation)) {
 					addRelation(relation, route);
@@ -104,7 +104,7 @@ public class RouteLayer extends Layer {
 			}			
 		}
 
-		for (Way way:Main.ds.ways) {
+		for (Way way:Main.main.getCurrentDataSet().ways) {
 			for (RouteDefinition route:routes) {
 				if (route.matches(way)) {
 					pathBuilder.addWay(way, route);

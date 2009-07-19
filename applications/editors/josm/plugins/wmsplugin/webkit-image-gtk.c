@@ -7,7 +7,7 @@
 #define WIDTH 2000
 
 /* compile with:
-gcc `pkg-config --cflags --libs webkit-1.0` -o webkit-image-gtk webkit-image-gtk.c
+gcc -o webkit-image-gtk webkit-image-gtk.c `pkg-config --cflags --libs webkit-1.0`
 */
 
 static void

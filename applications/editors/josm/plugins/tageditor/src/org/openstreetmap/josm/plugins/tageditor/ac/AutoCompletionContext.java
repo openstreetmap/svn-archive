@@ -1,25 +1,26 @@
 package org.openstreetmap.josm.plugins.tageditor.ac;
 
 import org.openstreetmap.josm.Main;
+import static org.openstreetmap.josm.plugins.tageditor.josm.CompatibilityUtil.getCurrentDataSet;
 
 public class AutoCompletionContext {
-	
+
 	private boolean selectionIncludesNodes = false;
 	private boolean selectionIncludesWays = false;
 	private boolean selectionIncludesRelations = false;
-	private boolean selectionEmpty = false; 
-	
+	private boolean selectionEmpty = false;
+
 	public AutoCompletionContext(){
 	}
 
 	public void initFromJOSMSelection() {
-		selectionIncludesNodes = ! Main.ds.getSelectedNodes().isEmpty();
-		selectionIncludesWays = !Main.ds.getSelectedWays().isEmpty();
-		selectionIncludesRelations = !Main.ds.getSelectedRelations().isEmpty();
-		selectionEmpty = (Main.ds.getSelected().size() == 0);
+		selectionIncludesNodes = ! getCurrentDataSet().getSelectedNodes().isEmpty();
+		selectionIncludesWays = !getCurrentDataSet().getSelectedWays().isEmpty();
+		selectionIncludesRelations = !getCurrentDataSet().getSelectedRelations().isEmpty();
+		selectionEmpty = (getCurrentDataSet().getSelected().size() == 0);
 	}
-	
-	
+
+
 	public boolean isSelectionEmpty() {
 		return selectionEmpty;
 	}
@@ -47,8 +48,8 @@ public class AutoCompletionContext {
 	public void setSelectionIncludesRelations(boolean selectionIncludesRelations) {
 		this.selectionIncludesRelations = selectionIncludesRelations;
 	}
-	
-	
-	
+
+
+
 
 }

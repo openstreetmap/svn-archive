@@ -10,42 +10,38 @@ package org.openstreetmap.josm.plugins.DirectUpload;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
-import java.io.BufferedOutputStream;
+import java.awt.event.ActionEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.String;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.JMultilineLabel;
-import org.openstreetmap.josm.gui.layer.GpxLayer;
-import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.layer.GpxLayer;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.GpxWriter;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.Base64;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -163,53 +159,56 @@ public class UploadDataGui extends ExtendedDialog {
      * @param boolean Shall the GPX track be public
      * @param GpxData The GPX Data to upload
      */
-    private void upload(String description, String tags, Boolean isPublic, GpxData gpxData) throws IOException {
-        if(checkForErrors(username, password, description, gpxData))
-            return;
+    private void upload(String description, String tags, Boolean isPublic, GpxData gpxData, ProgressMonitor progressMonitor) throws IOException {
+    	progressMonitor.beginTask(null);
+    	try {
+    		if(checkForErrors(username, password, description, gpxData))
+    			return;
 
-        // Clean description/tags from disallowed chars
-        description = description.replaceAll("[&?/\\\\]"," ");
-        tags = tags.replaceAll("[&?/\\\\.,;]"," ");
+    		// Clean description/tags from disallowed chars
+    		description = description.replaceAll("[&?/\\\\]"," ");
+    		tags = tags.replaceAll("[&?/\\\\.,;]"," ");
 
-        // Set progress dialog to indeterminate while connecting
-        Main.pleaseWaitDlg.progress.setValue(0);
-        Main.pleaseWaitDlg.setIndeterminate(true);
-        Main.pleaseWaitDlg.currentAction.setText(tr("Connecting..."));
+    		// Set progress dialog to indeterminate while connecting
+    		progressMonitor.indeterminateSubTask(tr("Connecting..."));
 
-        try {
-            // Generate data for upload
-            ByteArrayOutputStream baos  = new ByteArrayOutputStream();
-            writeGpxFile(baos, "file", gpxData);
-            writeField(baos, "description", description);
-            writeField(baos, "tags", (tags != null && tags.length() > 0) ? tags : "");
-            writeField(baos, "public", isPublic ? "1" : "0");
-            writeString(baos, "--" + BOUNDARY + "--" + LINE_END);
+    		try {
+    			// Generate data for upload
+    			ByteArrayOutputStream baos  = new ByteArrayOutputStream();
+    			writeGpxFile(baos, "file", gpxData);
+    			writeField(baos, "description", description);
+    			writeField(baos, "tags", (tags != null && tags.length() > 0) ? tags : "");
+    			writeField(baos, "public", isPublic ? "1" : "0");
+    			writeString(baos, "--" + BOUNDARY + "--" + LINE_END);
 
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            HttpURLConnection conn = setupConnection(baos.size());
+    			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+    			HttpURLConnection conn = setupConnection(baos.size());
 
-            Main.pleaseWaitDlg.progress.setMaximum(baos.size());
-            Main.pleaseWaitDlg.setIndeterminate(false);
+    			progressMonitor.setTicksCount(baos.size());
+    			progressMonitor.subTask(null);
 
-            try {
-                flushToServer(bais, conn.getOutputStream());
-            } catch(Exception e) {}
+    			try {
+    				flushToServer(bais, conn.getOutputStream(), progressMonitor);
+    			} catch(Exception e) {}
 
-            if(cancelled) {
-                conn.disconnect();
-                OutputDisplay.setText(tr("Upload cancelled"));
-                buttons.get(0).setEnabled(true);
-                cancelled = false;
-            } else {
-                boolean success = finishUpConnection(conn);
-                buttons.get(0).setEnabled(!success);
-                if(success)
-                    buttons.get(1).setText(tr("Close"));
-            }
-        } catch(Exception e) {
-            OutputDisplay.setText(tr("Error while uploading"));
-            e.printStackTrace();
-        }
+    			if(cancelled) {
+    				conn.disconnect();
+    				OutputDisplay.setText(tr("Upload cancelled"));
+    				buttons.get(0).setEnabled(true);
+    				cancelled = false;
+    			} else {
+    				boolean success = finishUpConnection(conn);
+    				buttons.get(0).setEnabled(!success);
+    				if(success)
+    					buttons.get(1).setText(tr("Close"));
+    			}
+    		} catch(Exception e) {
+    			OutputDisplay.setText(tr("Error while uploading"));
+    			e.printStackTrace();
+    		}
+    	} finally {
+    		progressMonitor.finishTask();
+    	}
     }
 
     /**
@@ -270,7 +269,7 @@ public class UploadDataGui extends ExtendedDialog {
      * @param InputSteam
      * @param OutputStream
      */
-    private void flushToServer(InputStream in, OutputStream out) throws Exception {
+    private void flushToServer(InputStream in, OutputStream out, ProgressMonitor progressMonitor) throws Exception {
         // Upload in 10 kB chunks
         byte[] buffer = new byte[10000];
         int nread;
@@ -280,8 +279,8 @@ public class UploadDataGui extends ExtendedDialog {
                 out.write(buffer, 0, nread);
                 cur += nread;
                 out.flush();
-                Main.pleaseWaitDlg.progress.setValue(cur);
-                Main.pleaseWaitDlg.currentAction.setText(getProgressText(cur));
+                progressMonitor.worked(nread);
+                progressMonitor.subTask(getProgressText(cur, progressMonitor));
 
                 if(cancelled)
                     break;
@@ -289,7 +288,7 @@ public class UploadDataGui extends ExtendedDialog {
         }
         if(!cancelled)
             out.flush();
-        Main.pleaseWaitDlg.currentAction.setText("Waiting for server reply...");
+        progressMonitor.subTask("Waiting for server reply...");
         buffer = null;
     }
 
@@ -298,8 +297,8 @@ public class UploadDataGui extends ExtendedDialog {
      * @param int Bytes already uploaded
      * @return String Message
      */
-    private String getProgressText(int cur) {
-        int max = Main.pleaseWaitDlg.progress.getMaximum();
+    private String getProgressText(int cur, ProgressMonitor progressMonitor) {
+        int max = progressMonitor.getTicksCount();
         int percent = Math.round(cur * 100 / max);
         return tr("Uploading GPX track: {0}% ({1} of {2})",
                         percent, formatBytes(cur), formatBytes(max));
@@ -379,7 +378,8 @@ public class UploadDataGui extends ExtendedDialog {
                   upload(descriptionField.getText(),
                          tagsField.getText(),
                          publicCheckbox.isSelected(),
-                         ((GpxLayer)Main.map.mapView.getActiveLayer()).data
+                         ((GpxLayer)Main.map.mapView.getActiveLayer()).data,
+                         progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false)
                   );
             }
             @Override protected void finish() {}

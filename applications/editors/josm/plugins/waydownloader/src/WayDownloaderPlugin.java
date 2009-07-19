@@ -4,21 +4,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.actions.MergeNodesAction;
+import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.DataSource;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -91,7 +91,7 @@ public class WayDownloaderPlugin extends Plugin {
                     if (connectedWays.size()==0) {
                         errMsg = tr("Select a starting node on the end of a way");
                     } else {
-                        priorConnectedWay =(Way) connectedWays.get(0);
+                        priorConnectedWay =connectedWays.get(0);
 
                         //Download a little rectangle around the selected node
                         double latbuffer=0.0003; //TODO make this an option
@@ -101,7 +101,8 @@ public class WayDownloaderPlugin extends Plugin {
                                                selectedNode.getCoor().lat()-latbuffer,
                                                selectedNode.getCoor().lon()-lonbuffer,
                                                selectedNode.getCoor().lat()+latbuffer,
-                                               selectedNode.getCoor().lon()+lonbuffer);
+                                               selectedNode.getCoor().lon()+lonbuffer,
+                                               new PleaseWaitProgressMonitor());
 
                         //The download is scheduled to be executed.
                         //Now schedule the run() method (below) to be executed once that's completed.
@@ -156,8 +157,8 @@ public class WayDownloaderPlugin extends Plugin {
                 //Two connected ways (The "normal" way downloading case)
                 //Figure out which of the two is new.
                 System.out.println("connectedWays.toString()=" + connectedWays.toString());
-                Way wayA = (Way) connectedWays.get(0);
-                Way wayB = (Way) connectedWays.get(1);
+                Way wayA = connectedWays.get(0);
+                Way wayB = connectedWays.get(1);
                 Way nextWay = wayA;
                 if (priorConnectedWay.equals(wayA)) nextWay = wayB;
 
@@ -175,9 +176,7 @@ public class WayDownloaderPlugin extends Plugin {
 
     /** See if there's another node at the same coordinates. If so return it. Otherwise null */
     private Node duplicateNode() {
-        Iterator nodesIter = Main.ds.nodes.iterator();
-        while (nodesIter.hasNext()) {
-            Node onNode = (Node) nodesIter.next();
+    	for (Node onNode:Main.ds.nodes) {
             if (!onNode.equals(this.selectedNode)
                     && onNode.getCoor().lat()==selectedNode.getCoor().lat()
                     && onNode.getCoor().lon()==selectedNode.getCoor().lon()) {
@@ -199,11 +198,7 @@ public class WayDownloaderPlugin extends Plugin {
         ArrayList<Way> connectedWays = new ArrayList<Way>();
 
         //loop through every way
-        Iterator waysIter = Main.ds.ways.iterator();
-        while (waysIter.hasNext()) {
-            Way onWay = (Way) waysIter.next();
-
-
+        for (Way onWay:Main.ds.ways) {
             Object[] nodes = onWay.nodes.toArray();
             if (nodes.length<2) {
                 //Should never happen should it? TODO: investigate. For the moment ignore these
@@ -232,7 +227,7 @@ public class WayDownloaderPlugin extends Plugin {
             return false;
         } else {
             Way selectedWay = (Way) selection.toArray()[0];
-            selectedNode = (Node) selectedWay.nodes.get(0);
+            selectedNode = selectedWay.nodes.get(0);
 
             if (isDownloaded(selectedNode)) {
                 selectedNode = findOtherEnd(selectedWay, selectedNode);
@@ -245,9 +240,7 @@ public class WayDownloaderPlugin extends Plugin {
     }
 
     private boolean isDownloaded(Node node) {
-        Iterator downloadedAreasIter = Main.ds.dataSources.iterator();
-        while (downloadedAreasIter.hasNext()) {
-            DataSource datasource = (DataSource) downloadedAreasIter.next();
+        for (DataSource datasource:Main.ds.dataSources) {
             Bounds bounds = datasource.bounds;
 
             if (node.getCoor().lat()>bounds.min.lat() &&

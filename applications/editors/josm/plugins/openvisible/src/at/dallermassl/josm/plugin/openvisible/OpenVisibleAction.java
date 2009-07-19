@@ -7,7 +7,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -20,7 +19,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -28,6 +26,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
+import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.GpxImporter;
 import org.openstreetmap.josm.io.GpxReader;
 import org.openstreetmap.josm.io.OsmImporter;
@@ -102,7 +101,7 @@ public class OpenVisibleAction extends JosmAction {
     private void openAsData(File file) throws SAXException, IOException, FileNotFoundException {
         String fn = file.getName();
         if (new OsmImporter().acceptFile(file)) {
-            DataSet dataSet = OsmReader.parseDataSet(new FileInputStream(file), null, Main.pleaseWaitDlg);
+            DataSet dataSet = OsmReader.parseDataSet(new FileInputStream(file), NullProgressMonitor.INSTANCE);
             OsmDataLayer layer = new OsmDataLayer(dataSet, fn, file);
             Main.main.addLayer(layer);
         }

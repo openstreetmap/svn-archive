@@ -5,28 +5,29 @@
  */
 package org.openstreetmap.josm.plugins.globalsat;
 
-import java.util.*;
-import java.util.logging.*;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import gnu.io.CommPortIdentifier;
+import gnu.io.PortInUseException;
+import gnu.io.SerialPort;
+import gnu.io.UnsupportedCommOperationException;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.lang.Exception;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import gnu.io.*;
-
-import org.kaintoch.gps.globalsat.dg100.Response;
+import org.kaintoch.gps.globalsat.dg100.ByteHelper;
 import org.kaintoch.gps.globalsat.dg100.Dg100Config;
 import org.kaintoch.gps.globalsat.dg100.FileInfoRec;
 import org.kaintoch.gps.globalsat.dg100.GpsRec;
-import org.kaintoch.gps.globalsat.dg100.ByteHelper;
-
-import org.openstreetmap.josm.Main;
+import org.kaintoch.gps.globalsat.dg100.Response;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 
 /**
  * @author ramack
@@ -131,41 +132,44 @@ public class GlobalsatDg100
      * Export DG-100's complete data to a GPX file.
      * @param port DG-100 is connected to port.
      */
-    public GpxData readData() throws ConnectionException {
-        GpxData result = null;
-        int cnt = 0;
-        cancelled = false;
-        if(port == null){
-            connect();
-        }
-        Main.pleaseWaitDlg.progress.setValue(0);
+    public GpxData readData(ProgressMonitor progressMonitor) throws ConnectionException {
+    	progressMonitor.beginTask(null);
+    	try {
+    		GpxData result = null;
+    		cancelled = false;
+    		if(port == null){
+    			connect();
+    		}
 
-        List<FileInfoRec> fileInfoList = readFileInfoList();
-        List<GpsRec> gpsRecList = readGpsRecList(fileInfoList);
+    		List<FileInfoRec> fileInfoList = readFileInfoList();
+    		List<GpsRec> gpsRecList = readGpsRecList(fileInfoList);
 
-        Main.pleaseWaitDlg.progress.setMaximum(gpsRecList.size());
-        if(gpsRecList.size() > 0){
-            GpsRec last = null;
-            GpxTrack trk = new GpxTrack();
-            Collection<WayPoint> seg = new ArrayList<WayPoint>(100);
-            result = new GpxData();
-            result.tracks.add(trk);
-            trk.trackSegs.add(seg);
-            for(GpsRec r:gpsRecList){
-                if(cancelled){
-                    return result;
-                }
-                WayPoint p = wayPointFrom(r);
-                if(r.equals(last)){
-                    result.waypoints.add(p);
-                }else{
-                    seg.add(p);
-                }
-                last = r;
-                Main.pleaseWaitDlg.progress.setValue(cnt++);
-            }
-        }
-        return result;
+    		progressMonitor.setTicksCount(gpsRecList.size());
+    		if(gpsRecList.size() > 0){
+    			GpsRec last = null;
+    			GpxTrack trk = new GpxTrack();
+    			Collection<WayPoint> seg = new ArrayList<WayPoint>(100);
+    			result = new GpxData();
+    			result.tracks.add(trk);
+    			trk.trackSegs.add(seg);
+    			for(GpsRec r:gpsRecList){
+    				if(cancelled){
+    					return result;
+    				}
+    				WayPoint p = wayPointFrom(r);
+    				if(r.equals(last)){
+    					result.waypoints.add(p);
+    				}else{
+    					seg.add(p);
+    				}
+    				last = r;
+    				progressMonitor.worked(1);
+    			}
+    		}
+    		return result;
+    	} finally {
+    		progressMonitor.finishTask();
+    	}
     }
 
     private WayPoint wayPointFrom(GpsRec r){

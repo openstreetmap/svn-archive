@@ -7,11 +7,17 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 
-
+/**
+ * Static helper for the transition from JOSM with {@see Main#ds} to {@see Main#getCurrentDataSet()}.
+ * 
+ *
+ */
 public class CompatibilityUtil {
 
 	private static boolean useMainDs = false;
 	private static boolean useGetCurrentDataSet = false;
+
+	private CompatibilityUtil(){}
 
 	private static boolean hasMainDs() {
 		try {
@@ -65,6 +71,13 @@ public class CompatibilityUtil {
 		return ds;
 	}
 
+	/**
+	 * Replies the current data set in JOSM. Depending on the JOSM version, either uses
+	 * {@see Main#ds} or {@see Main#getCurrentDataSet()}.
+	 * 
+	 * @return the current dataset. <strong>This may be null</strong>
+	 * @throws RuntimeException thrown, if the current data set can't be read
+	 */
 	static public DataSet getCurrentDataSet() throws RuntimeException {
 		analyse();
 		if (useMainDs)

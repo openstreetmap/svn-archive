@@ -1,30 +1,25 @@
 package org.openstreetmap.josm.plugins.globalsat;
 /// @author Raphael Mack <ramack@raphael-mack.de>
 import static org.openstreetmap.josm.tools.I18n.tr;
+import gnu.io.CommPortIdentifier;
 
-import java.io.IOException;
-import org.xml.sax.SAXException;
-
-import java.util.Enumeration;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.IconToggleButton;
-import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.GpxLayer;
-import org.openstreetmap.josm.gui.PleaseWaitRunnable;
-import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.layer.GpxLayer;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.tools.Shortcut;
-
-import gnu.io.*;
+import org.xml.sax.SAXException;
 
 public class GlobalsatPlugin extends Plugin {
     private static GlobalsatDg100 device = null;
@@ -50,10 +45,9 @@ public class GlobalsatPlugin extends Plugin {
         }
 
         @Override public void realRun() throws IOException, SAXException {
-            Main.pleaseWaitDlg.progress.setValue(0);
-            Main.pleaseWaitDlg.currentAction.setText(tr("Importing data from DG100..."));
+        	progressMonitor.subTask(tr("Importing data from DG100..."));
             try{
-                data = GlobalsatPlugin.dg100().readData();
+                data = GlobalsatPlugin.dg100().readData(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, true));
             }catch(Exception e){
                 eee = e;
             }

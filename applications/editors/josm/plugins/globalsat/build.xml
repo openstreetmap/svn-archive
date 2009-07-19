@@ -31,7 +31,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Download GPS points from Globalsat dg100 data logger directly in JOSM."/>
                 <attribute name="Plugin-Link" value="http://www.raphael-mack.de/josm-globalsat-gpx-import-plugin/"/>
-                <attribute name="Plugin-Mainversion" value="1465"/>
+                <attribute name="Plugin-Mainversion" value="1813"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

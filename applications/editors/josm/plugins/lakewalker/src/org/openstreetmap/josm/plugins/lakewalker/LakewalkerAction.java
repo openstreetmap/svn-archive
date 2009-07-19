@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -25,9 +24,9 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
@@ -151,9 +150,11 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     try {
         PleaseWaitRunnable lakewalkerTask = new PleaseWaitRunnable(tr("Tracing")){
           @Override protected void realRun() throws SAXException {
-              setStatus(tr("checking cache..."));
+        	  progressMonitor.subTask(tr("checking cache..."));
               cleanupCache();
-              processnodelist(pos, topLeft, botRight, waylen,maxnode,threshold,epsilon,resolution,tilesize,startdir,wmslayer,working_dir);
+              processnodelist(pos, topLeft, botRight, waylen, maxnode, threshold,
+            		  epsilon,resolution,tilesize,startdir,wmslayer, working_dir,
+            		  progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
           }
           @Override protected void finish() {
 
@@ -170,128 +171,134 @@ class LakewalkerAction extends JosmAction implements MouseListener {
       }
   }
 
-  private void processnodelist(LatLon pos, LatLon topLeft, LatLon botRight, int waylen, int maxnode, int threshold, double epsilon, int resolution, int tilesize, String startdir, String wmslayer, File workingdir){
+  private void processnodelist(LatLon pos, LatLon topLeft, LatLon botRight, int waylen, int maxnode, int threshold, double epsilon, int resolution, int tilesize, String startdir, String wmslayer, File workingdir, ProgressMonitor progressMonitor){
+	  progressMonitor.beginTask(null, 3);
+	  try {
+		  ArrayList<double[]> nodelist = new ArrayList<double[]>();
 
-    ArrayList<double[]> nodelist = new ArrayList<double[]>();
+		  Lakewalker lw = new Lakewalker(waylen,maxnode,threshold,epsilon,resolution,tilesize,startdir,wmslayer,workingdir);
+		  try {
+			  nodelist = lw.trace(pos.lat(),pos.lon(),topLeft.lon(),botRight.lon(),topLeft.lat(),botRight.lat(),
+					  progressMonitor.createSubTaskMonitor(1, false));
+		  } catch(LakewalkerException e){
+			  System.out.println(e.getError());
+		  }
 
-    Lakewalker lw = new Lakewalker(waylen,maxnode,threshold,epsilon,resolution,tilesize,startdir,wmslayer,workingdir);
-    try {
-        nodelist = lw.trace(pos.lat(),pos.lon(),topLeft.lon(),botRight.lon(),topLeft.lat(),botRight.lat());
-    } catch(LakewalkerException e){
-        System.out.println(e.getError());
-    }
+		  System.out.println(nodelist.size()+" nodes generated");
 
-    System.out.println(nodelist.size()+" nodes generated");
+		  /**
+		   * Run the nodelist through a vertex reduction algorithm
+		   */
 
-    /**
-     * Run the nodelist through a vertex reduction algorithm
-     */
+		  progressMonitor.subTask(tr("Running vertex reduction..."));
 
-    setStatus(tr("Running vertex reduction..."));
+		  nodelist = lw.vertexReduce(nodelist, epsilon);
 
-    nodelist = lw.vertexReduce(nodelist, epsilon);
+		  //System.out.println("After vertex reduction "+nodelist.size()+" nodes remain.");
 
-    //System.out.println("After vertex reduction "+nodelist.size()+" nodes remain.");
+		  /**
+		   * And then through douglas-peucker approximation
+		   */
 
-    /**
-     * And then through douglas-peucker approximation
-     */
+		  progressMonitor.worked(1);
+		  progressMonitor.subTask(tr("Running Douglas-Peucker approximation..."));
 
-    setStatus(tr("Running Douglas-Peucker approximation..."));
+		  nodelist = lw.douglasPeucker(nodelist, epsilon, 0);
 
-    nodelist = lw.douglasPeucker(nodelist, epsilon, 0);
+		  //System.out.println("After Douglas-Peucker approximation "+nodelist.size()+" nodes remain.");
 
-    //System.out.println("After Douglas-Peucker approximation "+nodelist.size()+" nodes remain.");
+		  /**
+		   * And then through a duplicate node remover
+		   */
 
-    /**
-     * And then through a duplicate node remover
-     */
+		  progressMonitor.worked(1);
+		  progressMonitor.subTask(tr("Removing duplicate nodes..."));
 
-    setStatus(tr("Removing duplicate nodes..."));
+		  nodelist = lw.duplicateNodeRemove(nodelist);
 
-    nodelist = lw.duplicateNodeRemove(nodelist);
-
-    //System.out.println("After removing duplicate nodes, "+nodelist.size()+" nodes remain.");
-
-
-    // if for some reason (image loading failed, ...) nodelist is empty, no more processing required.
-    if (nodelist.size() == 0) {
-        return;
-    }
-
-    /**
-     * Turn the arraylist into osm nodes
-     */
-
-    Way way = new Way();
-    Node n = null;
-    Node fn = null;
-
-    double eastOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_EAST_OFFSET, 0.0);
-    double northOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_NORTH_OFFSET, 0.0);
-
-    int nodesinway = 0;
-
-    for(int i = 0; i< nodelist.size(); i++){
-        if (cancel) {
-            return;
-        }
-
-        try {
-          LatLon ll = new LatLon(nodelist.get(i)[0]+northOffset, nodelist.get(i)[1]+eastOffset);
-          n = new Node(ll);
-          if(fn==null){
-            fn = n;
-          }
-          commands.add(new AddCommand(n));
-
-        } catch (Exception ex) {
-        }
-
-        way.nodes.add(n);
-
-        if(nodesinway > Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_SEG, 500)){
-            String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
-
-            if(!waytype.equals("none")){
-              way.put("natural",waytype);
-            }
-
-            way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "Landsat"));
-            commands.add(new AddCommand(way));
-
-            way = new Way();
-
-            way.nodes.add(n);
-
-            nodesinway = 0;
-        }
-        nodesinway++;
-    }
+		  //System.out.println("After removing duplicate nodes, "+nodelist.size()+" nodes remain.");
 
 
-    String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
+		  // if for some reason (image loading failed, ...) nodelist is empty, no more processing required.
+		  if (nodelist.size() == 0) {
+			  return;
+		  }
 
-    if(!waytype.equals("none")){
-      way.put("natural",waytype);
-    }
+		  /**
+		   * Turn the arraylist into osm nodes
+		   */
 
-    way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "Landsat"));
+		  Way way = new Way();
+		  Node n = null;
+		  Node fn = null;
 
-    way.nodes.add(fn);
+		  double eastOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_EAST_OFFSET, 0.0);
+		  double northOffset = Main.pref.getDouble(LakewalkerPreferences.PREF_NORTH_OFFSET, 0.0);
 
-    commands.add(new AddCommand(way));
+		  int nodesinway = 0;
 
-    if (!commands.isEmpty()) {
-        Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
-        Main.ds.setSelected(ways);
-    } else {
-      System.out.println("Failed");
-    }
+		  for(int i = 0; i< nodelist.size(); i++){
+			  if (cancel) {
+				  return;
+			  }
 
-    commands = new LinkedList<Command>();
-    ways = new ArrayList<Way>();
+			  try {
+				  LatLon ll = new LatLon(nodelist.get(i)[0]+northOffset, nodelist.get(i)[1]+eastOffset);
+				  n = new Node(ll);
+				  if(fn==null){
+					  fn = n;
+				  }
+				  commands.add(new AddCommand(n));
 
+			  } catch (Exception ex) {
+			  }
+
+			  way.nodes.add(n);
+
+			  if(nodesinway > Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_SEG, 500)){
+				  String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
+
+				  if(!waytype.equals("none")){
+					  way.put("natural",waytype);
+				  }
+
+				  way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "Landsat"));
+				  commands.add(new AddCommand(way));
+
+				  way = new Way();
+
+				  way.nodes.add(n);
+
+				  nodesinway = 0;
+			  }
+			  nodesinway++;
+		  }
+
+
+		  String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
+
+		  if(!waytype.equals("none")){
+			  way.put("natural",waytype);
+		  }
+
+		  way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "Landsat"));
+
+		  way.nodes.add(fn);
+
+		  commands.add(new AddCommand(way));
+
+		  if (!commands.isEmpty()) {
+			  Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
+			  Main.ds.setSelected(ways);
+		  } else {
+			  System.out.println("Failed");
+		  }
+
+		  commands = new LinkedList<Command>();
+		  ways = new ArrayList<Way>();
+	  } finally {
+		  progressMonitor.finishTask();
+	  }
   }
 
   public void cancel() {
@@ -314,9 +321,5 @@ class LakewalkerAction extends JosmAction implements MouseListener {
   }
 
   public void mouseReleased(MouseEvent e) {
-  }
-  protected void setStatus(String s) {
-      Main.pleaseWaitDlg.currentAction.setText(s);
-      Main.pleaseWaitDlg.repaint();
   }
 }

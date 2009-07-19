@@ -1,7 +1,9 @@
 package org.openstreetmap.josm.plugins.lakewalker;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+
+import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 
 public class LakewalkerApp {
     public static void main(String[] args){
@@ -36,7 +38,7 @@ public class LakewalkerApp {
 
         Lakewalker lw = new Lakewalker(waylen,maxnode,threshold,dp,resolution,tilesize,startdir,wmslayer,working_dir);
         try {
-            nodelist = lw.trace(lat,lon,leftlon,rightlon,toplat,botlat);
+            nodelist = lw.trace(lat,lon,leftlon,rightlon,toplat,botlat, NullProgressMonitor.INSTANCE);
         } catch(LakewalkerException e){
             System.out.println(e.getError());
         }

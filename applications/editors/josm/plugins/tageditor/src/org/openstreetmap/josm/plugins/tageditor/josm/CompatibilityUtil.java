@@ -64,7 +64,7 @@ public class CompatibilityUtil {
 		DataSet ds = null;
 		try {
 			Method m = Main.class.getMethod("getCurrentDataSet");
-			ds = (DataSet) m.invoke(null);
+			ds = (DataSet) m.invoke(Main.main);
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}

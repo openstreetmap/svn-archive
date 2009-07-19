@@ -77,7 +77,7 @@ public class CadastreInterface {
             urlConn.setRequestMethod("GET");
             urlConn.connect();
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw (IOException) new IOException("Cannot get Cadastre cookie.");
+                throw new IOException("Cannot get Cadastre cookie.");
             }
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
             while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
@@ -147,7 +147,7 @@ public class CadastreInterface {
             setCookie();
             urlConn.connect();
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw (IOException) new IOException("Cannot open Cadastre interface. GET response:"+urlConn.getResponseCode());
+                throw new IOException("Cannot open Cadastre interface. GET response:"+urlConn.getResponseCode());
             }
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
             while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
@@ -329,7 +329,7 @@ public class CadastreInterface {
         setCookie();
         urlConn.connect();
         if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            throw (IOException) new IOException("Cannot get Cadastre response.");
+            throw new IOException("Cannot get Cadastre response.");
         }
         BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
         while ((ln = in.readLine()) != null) {
@@ -370,7 +370,6 @@ public class CadastreInterface {
     }
 
     public void cancel() {
-        Main.pleaseWaitDlg.currentAction.setText(tr("Aborting..."));
         if (urlConn != null) {
             urlConn.setConnectTimeout(1);
             urlConn.setReadTimeout(1);

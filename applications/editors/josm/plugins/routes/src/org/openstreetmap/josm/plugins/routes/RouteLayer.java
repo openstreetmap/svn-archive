@@ -34,31 +34,17 @@ public class RouteLayer extends Layer {
 		super(xmlLayer.getName());
 		
 		int index = 0;
-		for (RoutesXMLRoute route:xmlLayer.getRoute()) {
-			Color color = ColorHelper.html2color(route.getColor());
-			if (color == null) {
-				color = Color.RED;
-				System.err.printf("Routes plugin - unable to convert color (%s)\n", route.getColor());
+		for (RoutesXMLRoute route:xmlLayer.getRoute()) {			
+			if (route.isEnabled()) {
+				Color color = ColorHelper.html2color(route.getColor());
+				if (color == null) {
+					color = Color.RED;
+					System.err.printf("Routes plugin - unable to convert color (%s)\n", route.getColor());
+				}
+				routes.add(new RouteDefinition(index++, color, route.getPattern()));
 			}
-			routes.add(new RouteDefinition(index++, color, route.getPattern()));
 		}
 		
-		/*routes.add(new RouteDefinition(Color.RED, 
-			"((type:relation | type:way) kct_red=*) | (color=red type=route route=hiking network=cz:kct)"));
-		
-		routes.add(new RouteDefinition(Color.YELLOW, 
-			"((type:relation | type:way) kct_yellow=*) | (color=yellow type=route route=hiking network=cz:kct)"));
-
-		routes.add(new RouteDefinition(Color.BLUE, 
-			"((type:relation | type:way) kct_blue=*) | (color=blue type=route route=hiking network=cz:kct)"));
-
-		routes.add(new RouteDefinition(Color.GREEN, 
-			"((type:relation | type:way) kct_green=*) | (color=green type=route route=hiking network=cz:kct)"));
-		
-		routes.add(new RouteDefinition(Color.MAGENTA,
-				"(type:way (ncn=* | (lcn=* | rcn=* ))) | (type:relation type=route route=bicycle)"));
-				
-				*/
 		if ("wide".equals(Main.pref.get("routes.painter"))) {
 			pathPainter = new WideLinePainter(this);
 		} else {

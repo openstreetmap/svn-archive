@@ -19,7 +19,7 @@ import sun.java2d.loops.ScaledBlit;
 public class Item  implements INameIconProvider {
 
 	private static Logger logger = Logger.getLogger(Item.class.getName());
-	
+
 	private String name;
 	private String iconName;
 	private ImageIcon icon;
@@ -27,10 +27,10 @@ public class Item  implements INameIconProvider {
 	private List<Tag> tags;
 	private Group parent;
 
-	public Item() {	
+	public Item() {
 		tags = new ArrayList<Tag>();
 	}
-	
+
 	public Group getParent() {
 		return parent;
 	}
@@ -39,7 +39,7 @@ public class Item  implements INameIconProvider {
 		this.parent = parent;
 	}
 
-	
+
 	public String getLabel() {
 		return label;
 	}
@@ -48,7 +48,7 @@ public class Item  implements INameIconProvider {
 		this.label = label;
 	}
 
-	
+
 	public Item(String name) {
 		setName(name);
 	}
@@ -68,11 +68,11 @@ public class Item  implements INameIconProvider {
 	public void setIconName(String iconName) {
 		this.iconName = iconName;
 	}
-	
+
 	public Icon getIcon() {
 		if (icon == null) {
 			// load the icon from the JOSM resources, use Main classloader
-			// for loading 
+			// for loading
 			URL url = Main.class.getResource("/images/" + getIconName());
 			if (url == null) {
 				logger.warning("failed to create URL for resource 'images/" + getIconName() + "'");
@@ -82,19 +82,19 @@ public class Item  implements INameIconProvider {
 			}
 			Image i = icon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
 			icon = new ImageIcon(i);
-			
+
 		}
-		return icon;	
+		return icon;
 	}
-	
+
 	public void addTag(Tag tag) {
 		tags.add(tag);
 	}
-	
+
 	public List<Tag> getTags() {
-		return tags; 
+		return tags;
 	}
-	
+
 	public void dump(IndentWriter writer) throws IOException {
 		writer.indent();
 		writer.write("<item ");
@@ -109,19 +109,18 @@ public class Item  implements INameIconProvider {
 		}
 		writer.decLevel();
 		writer.writeLine("</item>");
-	} 
-	
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder builder  = new StringBuilder();
 		builder.append("[")
-			.append(getClass().getName())
-			.append(":")
-			.append("name=")
-			.append(name)
-			.append("]");
-		
+		.append(getClass().getName())
+		.append(":")
+		.append("name=")
+		.append(name)
+		.append("]");
+
 		return builder.toString();
 	}
-	
-	
 }

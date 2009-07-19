@@ -4,7 +4,14 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.util.Date;
@@ -18,7 +25,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -26,6 +32,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.download.DownloadDialog.DownloadTask;
+import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 
 /**
  * Processes HTTP "remote control" requests.
@@ -36,7 +43,6 @@ public class RequestProcessor extends Thread
     private Socket request;
 
     private class AlreadyLoadedException extends Exception {};
-    private class DeniedException extends Exception {};
     private class LoadDeniedException extends Exception {};
 
     /**
@@ -153,7 +159,7 @@ public class RequestProcessor extends Thread
                         maxlat = downloadBounds.getMaxY();
                         maxlon = downloadBounds.getMaxX();
                     }
-                    osmTask.download(null, minlat,minlon,maxlat,maxlon);
+                    osmTask.download(null, minlat,minlon,maxlat,maxlon, new PleaseWaitProgressMonitor());
                 } catch (AlreadyLoadedException ex) {
                     System.out.println("RemoteControl: no download necessary");
                 } catch (LoadDeniedException ex) {

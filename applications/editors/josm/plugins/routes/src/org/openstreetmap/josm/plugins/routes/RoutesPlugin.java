@@ -60,7 +60,9 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
             Routes routes = (Routes)unmarshaller.unmarshal(
                 new FileInputStream(getPluginDir() + File.separator + "routes.xml"));
             for (RoutesXMLLayer layer:routes.getLayer()) {
-                routeLayers.add(new RouteLayer(layer));
+            	if (layer.isEnabled()) {
+            		routeLayers.add(new RouteLayer(layer));
+            	}
             }
         } catch (Exception e) {
             e.printStackTrace();

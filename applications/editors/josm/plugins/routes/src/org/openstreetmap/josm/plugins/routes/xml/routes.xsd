@@ -32,6 +32,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/j
 		<element name="route" type="tns:route" minOccurs="0" maxOccurs="unbounded"/>
 	</sequence>
 	<attribute name="name" type="string"/>
+	<attribute name="enabled" type="boolean" default="true"/>
 </complexType>
 
 <complexType name="route">
@@ -39,6 +40,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/j
 		<element name="pattern" type="string"/>		
 	</sequence>
 	<attribute name="color" type="string"/>
+	<attribute name="enabled" type="boolean" default="true"/>
 </complexType>
 
 </schema>

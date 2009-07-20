@@ -1,11 +1,12 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
-import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedTreeModel;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
@@ -17,6 +18,7 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Suburb;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ViToCi;
 import org.openstreetmap.josm.plugins.czechaddress.gui.databaseeditors.EditorFactory;
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedTreeModel;
 import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalTreeRenderer;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Capitalizator;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
@@ -44,7 +46,7 @@ public class ManagerDialog extends ExtendedDialog {
         dbEditButton.setIcon(ImageProvider.get("actions", "edit.png"));
 
         Capitalizator cap = new Capitalizator(
-                                Main.ds.allPrimitives(),
+                                Main.main.getCurrentDataSet().allPrimitives(),
                                 CzechAddressPlugin.getLocation().getStreets());
 
         for (Street capStreet : cap.getCapitalised()) {
@@ -177,7 +179,7 @@ public class ManagerDialog extends ExtendedDialog {
         public int getIndexOfChild(Object parent, Object child) {
             return 0;
         }
-        
+
     }
 
     /** This method is called from within the constructor to
@@ -339,7 +341,7 @@ public class ManagerDialog extends ExtendedDialog {
 
     private void dbEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dbEditButtonActionPerformed
         if (EditorFactory.isEditable(dbTreeValue)) {
-            if (EditorFactory.edit((AddressElement) dbTreeValue))
+            if (EditorFactory.edit(dbTreeValue))
                 dbTree.repaint();
         } else
             dbEditButton.setEnabled(false);

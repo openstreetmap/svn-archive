@@ -2,19 +2,13 @@ package org.openstreetmap.josm.plugins.czechaddress.gui;
 
 import java.awt.Component;
 import java.awt.Font;
-import java.util.ArrayList;
-
 import java.awt.event.ItemListener;
-
+import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Suburb;
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithStreets;
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ViToCi;
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Region;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
@@ -22,7 +16,12 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithStreets;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Region;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Suburb;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ViToCi;
 
 /**
  * Dialog for selecting the current loaction.
@@ -70,7 +69,8 @@ public class LocationSelector extends ExtendedDialog {
      *
      * @deprecated
      */
-    private void autodetectLocation() {
+    @Deprecated
+	private void autodetectLocation() {
         boolean assertions = false;
         assert  assertions = true;
 
@@ -82,7 +82,7 @@ public class LocationSelector extends ExtendedDialog {
         // obrazovky.
 
         BoundingXYVisitor visitor = new BoundingXYVisitor();
-        for (OsmPrimitive op : Main.ds.allPrimitives()) {
+        for (OsmPrimitive op : Main.main.getCurrentDataSet().allPrimitives()) {
             if (op instanceof Node) {
                 ((Node) op).visit(visitor);
             } else if (op instanceof Way) {
@@ -102,7 +102,7 @@ public class LocationSelector extends ExtendedDialog {
         if (assertions)
             System.out.println("AUTO: Center is " + center);
 
-        for (OsmPrimitive op : Main.ds.allPrimitives()) {
+        for (OsmPrimitive op : Main.main.getCurrentDataSet().allPrimitives()) {
 
             if (!(op instanceof Node)) {
                 continue;

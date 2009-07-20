@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.czechaddress.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -41,7 +42,7 @@ public class PointManipulatorAction extends JosmAction {
      * selected. If both conditions are satisfied, dialog is opened.</p>
      */
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> data = Main.ds.getSelected();
+        Collection<OsmPrimitive> data = Main.main.getCurrentDataSet().getSelected();
 
         if (data.size() != 1) return;
         OsmPrimitive primitive = (OsmPrimitive) data.toArray()[0];

@@ -12,6 +12,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
@@ -23,16 +24,15 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.czechaddress.actions.ConflictResolveAction;
+import org.openstreetmap.josm.plugins.czechaddress.actions.FactoryAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.GroupManipulatorAction;
+import org.openstreetmap.josm.plugins.czechaddress.actions.HelpAction;
+import org.openstreetmap.josm.plugins.czechaddress.actions.ManagerAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.PointManipulatorAction;
+import org.openstreetmap.josm.plugins.czechaddress.actions.SplitAreaByEmptyWayAction;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithStreets;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
-import org.openstreetmap.josm.plugins.czechaddress.parser.MvcrParser;
-import org.openstreetmap.josm.plugins.czechaddress.actions.FactoryAction;
-import org.openstreetmap.josm.plugins.czechaddress.actions.HelpAction;
-import org.openstreetmap.josm.plugins.czechaddress.actions.ManagerAction;
-import org.openstreetmap.josm.plugins.czechaddress.actions.SplitAreaByEmptyWayAction;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 import org.openstreetmap.josm.plugins.czechaddress.gui.ConflictResolver;
 import org.openstreetmap.josm.plugins.czechaddress.gui.FactoryDialog;
@@ -40,10 +40,11 @@ import org.openstreetmap.josm.plugins.czechaddress.gui.LocationSelector;
 import org.openstreetmap.josm.plugins.czechaddress.gui.ManagerDialog;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.SelectionMonitor;
+import org.openstreetmap.josm.plugins.czechaddress.parser.MvcrParser;
 
 /**
  * Plugin for handling address nodes within the Czech Republic.
- * 
+ *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
 public class CzechAddressPlugin extends Plugin implements StatusListener {
@@ -71,7 +72,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
                 Logger.getLogger(name).setLevel(Level.FINE);
                 Logger.getLogger(name).addHandler(fileHandler);
             }
-            
+
         } catch (IOException ex) {
             logger.log(Level.SEVERE, "cannot create file", ex);
         } catch (SecurityException ex) {
@@ -88,7 +89,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         System.out.println(x ? "Match" : "Differ");*/
 
         addStatusListener(this);
-        
+
         ConflictResolver.getInstance();
         SelectionMonitor.getInstance();
         FactoryDialog.getInstance();
@@ -97,7 +98,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         boolean assertionsEnabled = false;
         assert assertionsEnabled = true;
         if (assertionsEnabled) initLoggers();
-        
+
         MainMenu.add(Main.main.menu.toolsMenu, new SplitAreaByEmptyWayAction());
 
         // Prepare for filling the database.
@@ -128,7 +129,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
 
         if (newFrame == null)
             return;
-        
+
         newFrame.addToggleDialog(FactoryDialog.getInstance());
         newFrame.addMapMode(new IconToggleButton(new FactoryAction(newFrame)));
     }
@@ -145,7 +146,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             for (Street street : location.getAllStreets())
                 reasoner.update(street);
 
-            for (OsmPrimitive prim : Main.ds.allPrimitives()) {
+            for (OsmPrimitive prim : Main.main.getCurrentDataSet().allPrimitives()) {
                 if (House.isMatchable(prim) || Street.isMatchable(prim))
                     reasoner.update(prim);
             }
@@ -171,7 +172,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             broadcastStatusChange(MESSAGE_LOCATION_CHANGED);
         }
     }
-    
+
     static private Set<StatusListener> listeners = new HashSet<StatusListener>();
     static public void addStatusListener(StatusListener l)    {listeners.add(l);}
     static public void removeStatusListener(StatusListener l) {listeners.remove(l);}

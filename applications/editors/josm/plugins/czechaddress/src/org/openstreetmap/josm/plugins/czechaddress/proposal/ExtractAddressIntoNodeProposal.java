@@ -1,11 +1,11 @@
 package org.openstreetmap.josm.plugins.czechaddress.proposal;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 
 /**
  * Extracts address from a {@link Way} and creates
@@ -65,7 +65,7 @@ public class ExtractAddressIntoNodeProposal extends Proposal {
         for (String key : addrNode.keySet())
            way.remove(key);
 
-        Main.ds.addPrimitive(addrNode);
+        Main.main.getCurrentDataSet().addPrimitive(addrNode);
     }
 
     /**

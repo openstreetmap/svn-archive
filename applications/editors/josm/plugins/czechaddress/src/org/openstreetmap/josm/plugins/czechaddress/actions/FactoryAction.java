@@ -1,15 +1,16 @@
 package org.openstreetmap.josm.plugins.czechaddress.actions;
 
-import org.openstreetmap.josm.plugins.czechaddress.gui.FactoryDialog;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.czechaddress.Preferences;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
+import org.openstreetmap.josm.plugins.czechaddress.gui.FactoryDialog;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.AddKeyValueProposal;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
@@ -102,11 +103,11 @@ public class FactoryAction extends MapMode {
             r.doOverwrite(newNode, house);
             r.closeTransaction();
         }
-        
+
         FactoryDialog.getInstance().selectionListenerActivated = false;
         FactoryDialog.getInstance().selectNextUnmatchedHouseByCheckBox();
-        Main.ds.addPrimitive(newNode);        
-        Main.ds.setSelected(newNode);
+        Main.main.getCurrentDataSet().addPrimitive(newNode);
+        Main.main.getCurrentDataSet().setSelected(newNode);
         FactoryDialog.getInstance().selectionListenerActivated = true;
     }
 }

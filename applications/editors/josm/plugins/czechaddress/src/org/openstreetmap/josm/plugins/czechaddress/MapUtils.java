@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.czechaddress;
 
 import java.util.Collection;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -20,7 +21,7 @@ public abstract class MapUtils {
      * Selects and zooms the JOSM viewport to given primitives.
      */
     public static void zoomToMany(Collection<OsmPrimitive> primitives) {
-        Main.ds.setSelected(primitives);
+        Main.main.getCurrentDataSet().setSelected(primitives);
         (new AutoScaleAction("selection")).actionPerformed(null);
     }
 
@@ -28,7 +29,7 @@ public abstract class MapUtils {
      * Selects and zooms the JOSM viewport to given primitive.
      */
     public static void zoomTo(OsmPrimitive primitive) {
-        Main.ds.setSelected(primitive);
+        Main.main.getCurrentDataSet().setSelected(primitive);
         (new AutoScaleAction("selection")).actionPerformed(null);
     }
 }

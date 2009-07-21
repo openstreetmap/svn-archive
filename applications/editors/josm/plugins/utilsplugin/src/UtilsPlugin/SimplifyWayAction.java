@@ -35,7 +35,7 @@ public class SimplifyWayAction extends JosmAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = Main.ds.getSelected();
+        Collection<OsmPrimitive> selection = Main.main.getCurrentDataSet().getSelected();
 
         int ways = 0;
         LinkedList<Bounds> bounds = new LinkedList<Bounds>();
@@ -106,7 +106,7 @@ public class SimplifyWayAction extends JosmAction {
 
         int toI = wnew.nodes.size() - 1;
         for (int i = wnew.nodes.size() - 1; i >= 0; i--) {
-            CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(Main.ds, false);
+            CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(Main.main.getCurrentDataSet(), false);
             backRefsV.visit(wnew.nodes.get(i));
             boolean used = false;
             if (backRefsV.data.size() == 1) {

@@ -113,7 +113,7 @@ public class JoinAreasAction extends JosmAction {
             new String[] {"joinareas.png", "cancel.png"}).getValue();
         if(result != 1) return;
 
-        Collection<OsmPrimitive> selection = Main.ds.getSelectedWays();
+        Collection<OsmPrimitive> selection = Main.main.getCurrentDataSet().getSelectedWays();
 
         int ways = 0;
         Way[] selWays = new Way[2];
@@ -176,7 +176,7 @@ public class JoinAreasAction extends JosmAction {
 
         if(joinAreas(selWays[0], selWays[ways == 2 ? 1 : 0])) {
             Main.map.mapView.repaint();
-            DataSet.fireSelectionChanged(Main.ds.getSelected());
+            DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
         } else
             JOptionPane.showMessageDialog(Main.parent, tr("No intersection found. Nothing was changed."));
     }
@@ -447,7 +447,7 @@ public class JoinAreasAction extends JosmAction {
      */
     private ArrayList<RelationRole> removeFromRelations(OsmPrimitive osm) {
         ArrayList<RelationRole> result = new ArrayList<RelationRole>();
-        for (Relation r : Main.ds.relations) {
+        for (Relation r : Main.main.getCurrentDataSet().relations) {
             if (r.deleted || r.incomplete) continue;
             for (RelationMember rm : r.members) {
                 if (rm.member != osm) continue;
@@ -478,11 +478,11 @@ public class JoinAreasAction extends JosmAction {
         List<OsmPrimitive> affected = new ArrayList<OsmPrimitive>();
         for (Way way : ways) {
             nodes.add(way);
-            Main.ds.setSelected(nodes);
+            Main.main.getCurrentDataSet().setSelected(nodes);
             nodes.remove(way);
             new SplitWayAction().actionPerformed(null);
             cmdsCount++;
-            affected.addAll(Main.ds.getSelectedWays());
+            affected.addAll(Main.main.getCurrentDataSet().getSelectedWays());
         }
         return osmprim2way(affected);
     }
@@ -583,12 +583,12 @@ public class JoinAreasAction extends JosmAction {
     private Way closeWay(Way w) {
         if(w.isClosed())
             return w;
-        Main.ds.setSelected(w);
+        Main.main.getCurrentDataSet().setSelected(w);
         Way wnew = new Way(w);
         wnew.addNode(wnew.firstNode());
         cmds.add(new ChangeCommand(w, wnew));
         commitCommands(marktr("Closed Way"));
-        return (Way)(Main.ds.getSelectedWays().toArray())[0];
+        return (Way)(Main.main.getCurrentDataSet().getSelectedWays().toArray())[0];
     }
 
     /**
@@ -609,19 +609,19 @@ public class JoinAreasAction extends JosmAction {
             }
             if(a.nodes.get(0).equals(b.nodes.get(0)) ||
                a.nodes.get(a.nodes.size()-1).equals(b.nodes.get(b.nodes.size()-1))) {
-                Main.ds.setSelected(b);
+                Main.main.getCurrentDataSet().setSelected(b);
                 new ReverseWayAction().actionPerformed(null);
                 cmdsCount++;
             }
             a = b;
         }
-        Main.ds.setSelected(ways);
+        Main.main.getCurrentDataSet().setSelected(ways);
         // TODO: It might be possible that a confirmation dialog is presented even after reversing (for
         // "strange" ways). If the user cancels this, makeCommitsOneAction will wrongly consume a previous
         // action. Make CombineWayAction either silent or expose its combining capabilities.
         new CombineWayAction().actionPerformed(null);
         cmdsCount++;
-        return (Way)(Main.ds.getSelectedWays().toArray())[0];
+        return (Way)(Main.main.getCurrentDataSet().getSelectedWays().toArray())[0];
     }
 
     /**

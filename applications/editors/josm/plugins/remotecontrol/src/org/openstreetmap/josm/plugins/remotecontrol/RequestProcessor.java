@@ -147,7 +147,7 @@ public class RequestProcessor extends Thread
                         throw new LoadDeniedException();
 
                     // find out whether some data has already been downloaded
-                    Area present = Main.ds.getDataSourceArea();
+                    Area present = Main.main.getCurrentDataSet().getDataSourceArea();
                     if (present != null && !present.isEmpty()) {
                         Area toDownload = new Area(new Rectangle2D.Double(minlon,minlat,maxlon-minlon,maxlat-minlat));
                         toDownload.subtract(present);
@@ -190,10 +190,10 @@ public class RequestProcessor extends Thread
                                     System.out.println("RemoteControl: invalid selection '"+item+"' ignored");
                                 }
                             }
-                            for (Way w : Main.ds.ways) if (ways.contains(w.id)) newSel.add(w);
-                            for (Node n : Main.ds.nodes) if (nodes.contains(n.id)) newSel.add(n);
-                            for (Relation r : Main.ds.relations) if (relations.contains(r.id)) newSel.add(r);
-                            Main.ds.setSelected(newSel);
+                            for (Way w : Main.main.getCurrentDataSet().ways) if (ways.contains(w.id)) newSel.add(w);
+                            for (Node n : Main.main.getCurrentDataSet().nodes) if (nodes.contains(n.id)) newSel.add(n);
+                            for (Relation r : Main.main.getCurrentDataSet().relations) if (relations.contains(r.id)) newSel.add(r);
+                            Main.main.getCurrentDataSet().setSelected(newSel);
                             if (Main.pref.getBoolean("remotecontrol.permission.change-viewport", true))
                                 new AutoScaleAction("selection").actionPerformed(null);
                         }

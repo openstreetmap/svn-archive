@@ -289,7 +289,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
 		  if (!commands.isEmpty()) {
 			  Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
-			  Main.ds.setSelected(ways);
+			  Main.main.getCurrentDataSet().setSelected(ways);
 		  } else {
 			  System.out.println("Failed");
 		  }

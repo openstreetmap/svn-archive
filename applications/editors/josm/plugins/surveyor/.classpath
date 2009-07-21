@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/josm-plugin-livegps"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/livegps"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

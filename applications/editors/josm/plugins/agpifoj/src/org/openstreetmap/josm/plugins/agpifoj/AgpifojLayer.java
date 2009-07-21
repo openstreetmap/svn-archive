@@ -29,7 +29,6 @@ import javax.swing.JSeparator;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.coor.CachedLatLon;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
@@ -102,6 +101,7 @@ public class AgpifojLayer extends Layer {
         private AgpifojLayer layer;
         private final File[] selection;
         private HashSet<String> loadedDirectories = new HashSet<String>();
+        private String errorMessage = "";
 
         public Loader(File[] selection) {
             super(tr("Extracting GPS locations from EXIF"));
@@ -110,7 +110,7 @@ public class AgpifojLayer extends Layer {
 
         @Override protected void realRun() throws IOException {
 
-            Main.pleaseWaitDlg.currentAction.setText(tr("Starting directory scan"));
+            progressMonitor.subTask(tr("Starting directory scan"));
             List<File> files = new ArrayList<File>();
             try {
                 addRecursiveFiles(files, selection);
@@ -122,14 +122,11 @@ public class AgpifojLayer extends Layer {
                 return;
             }
 
-            Main.pleaseWaitDlg.currentAction.setText(tr("Read photos..."));
+            progressMonitor.subTask(tr("Read photos..."));
+            progressMonitor.setTicksCount(files.size());
 
             // read the image files
             ArrayList<ImageEntry> data = new ArrayList<ImageEntry>(files.size());
-
-            int progress = 0;
-            Main.pleaseWaitDlg.progress.setMaximum(files.size());
-            Main.pleaseWaitDlg.progress.setValue(progress);
 
             for (File f : files) {
 
@@ -137,8 +134,8 @@ public class AgpifojLayer extends Layer {
                     break;
                 }
 
-                Main.pleaseWaitDlg.currentAction.setText(tr("Reading {0}...", f.getName()));
-                Main.pleaseWaitDlg.progress.setValue(progress++);
+                progressMonitor.subTask(tr("Reading {0}...", f.getName()));
+                progressMonitor.worked(1);
 
                 ImageEntry e = new ImageEntry();
 
@@ -156,6 +153,7 @@ public class AgpifojLayer extends Layer {
             }
             layer = new AgpifojLayer(data);
             files.clear();
+            progressMonitor.setErrorMessage(errorMessage);
         }
 
         private void addRecursiveFiles(List<File> files, File[] sel) {
@@ -188,7 +186,7 @@ public class AgpifojLayer extends Layer {
 
                     File[] children = f.listFiles(AgpifojPlugin.JPEG_FILE_FILTER);
                     if (children != null) {
-                        Main.pleaseWaitDlg.currentAction.setText(tr("Scanning directory {0}", f.getPath()));
+                        progressMonitor.subTask(tr("Scanning directory {0}", f.getPath()));
                         try {
                             addRecursiveFiles(files, children);
                         } catch(NullPointerException npe) {
@@ -196,7 +194,7 @@ public class AgpifojLayer extends Layer {
                             errorMessage += tr("Found null file in directory {0}\n", f.getPath());
                         }
                     } else {
-                        errorMessage += tr("Error while getting files from directory {0}\n", f.getPath());
+                    	errorMessage += tr("Error while getting files from directory {0}\n", f.getPath());
                     }
 
                 } else {

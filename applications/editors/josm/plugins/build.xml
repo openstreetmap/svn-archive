@@ -15,6 +15,7 @@
         <ant antfile="build.xml" target="dist" dir="DirectUpload"/>
         <ant antfile="build.xml" target="dist" dir="editgpx"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
+        <ant antfile="build.xml" target="dist" dir="graphview"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="dist" dir="lakewalker"/>
         <ant antfile="build.xml" target="dist" dir="livegps"/>
@@ -37,6 +38,7 @@
         <ant antfile="build.xml" target="dist" dir="usertools"/>
         <ant antfile="build.xml" target="dist" dir="utilsplugin"/>
         <ant antfile="build.xml" target="dist" dir="validator"/>
+        <ant antfile="build.xml" target="dist" dir="walkingpapers"/>
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>
         <ant antfile="build.xml" target="dist" dir="wmsplugin"/>
     </target>
@@ -55,6 +57,7 @@
         <ant antfile="build.xml" target="clean" dir="duplicateway"/>
         <ant antfile="build.xml" target="clean" dir="editgpx"/>
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
+        <ant antfile="build.xml" target="clean" dir="graphview"/>
         <ant antfile="build.xml" target="clean" dir="grid"/>
         <ant antfile="build.xml" target="clean" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="clean" dir="lakewalker"/>
@@ -68,6 +71,7 @@
         <ant antfile="build.xml" target="clean" dir="piclayer"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
         <ant antfile="build.xml" target="clean" dir="remotecontrol"/>
+        <ant antfile="build.xml" target="clean" dir="routes"/>
         <ant antfile="build.xml" target="clean" dir="routing"/>
         <ant antfile="build.xml" target="clean" dir="slippymap"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
@@ -77,6 +81,7 @@
         <ant antfile="build.xml" target="clean" dir="usertools"/>
         <ant antfile="build.xml" target="clean" dir="utilsplugin"/>
         <ant antfile="build.xml" target="clean" dir="validator"/>
+        <ant antfile="build.xml" target="clean" dir="walkingpapers"/>
         <ant antfile="build.xml" target="clean" dir="waydownloader"/>
         <ant antfile="build.xml" target="clean" dir="wmsplugin"/>
     </target>

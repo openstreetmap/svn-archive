@@ -119,7 +119,7 @@ public class ValidateUploadHook implements UploadHook
         {
             plugin.validationDialog.tree.setErrors(errors);
             plugin.validationDialog.setVisible(true);
-            DataSet.fireSelectionChanged(Main.ds.getSelected());
+            DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
         }
         return res == JOptionPane.YES_OPTION;
     }

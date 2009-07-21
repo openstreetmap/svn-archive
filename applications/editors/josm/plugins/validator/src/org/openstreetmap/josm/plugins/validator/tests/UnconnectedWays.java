@@ -5,15 +5,15 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.geom.Area;
 import java.awt.geom.Line2D;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -61,7 +61,7 @@ public class UnconnectedWays extends Test
     @Override
     public void endTest()
     {
-        Area a = Main.ds.getDataSourceArea();
+        Area a = Main.main.getCurrentDataSet().getDataSourceArea();
         Map<Node, Way> map = new HashMap<Node, Way>();
         for(Node en : endnodes_highway)
         {

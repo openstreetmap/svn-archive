@@ -36,7 +36,7 @@ public class ValidateAction extends JosmAction {
      * Constructor
      */
     public ValidateAction(OSMValidatorPlugin plugin) {
-        super(tr("Validation"), "validator", tr("Performs the data validation"), 
+        super(tr("Validation"), "validator", tr("Performs the data validation"),
         Shortcut.registerShortcut("tools:validate", tr("Tool: {0}", tr("Validation")), KeyEvent.VK_V, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
         this.plugin = plugin;
     }
@@ -67,9 +67,9 @@ public class ValidateAction extends JosmAction {
 
         Collection<OsmPrimitive> selection;
         if (getSelectedItems) {
-            selection = Main.ds.getSelected();
+            selection = Main.main.getCurrentDataSet().getSelected();
             if (selection.isEmpty()) {
-                selection = Main.ds.allNonDeletedPrimitives();
+                selection = Main.main.getCurrentDataSet().allNonDeletedPrimitives();
                 lastSelection = null;
             } else {
                 AgregatePrimitivesVisitor v = new AgregatePrimitivesVisitor();
@@ -78,7 +78,7 @@ public class ValidateAction extends JosmAction {
             }
         } else {
             if (lastSelection == null)
-                selection = Main.ds.allNonDeletedPrimitives();
+                selection = Main.main.getCurrentDataSet().allNonDeletedPrimitives();
             else
                 selection = lastSelection;
         }
@@ -108,6 +108,6 @@ public class ValidateAction extends JosmAction {
 
         plugin.validationDialog.tree.setErrors(errors);
         plugin.validationDialog.setVisible(true);
-        DataSet.fireSelectionChanged(Main.ds.getSelected());
+        DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
     }
 }

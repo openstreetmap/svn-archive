@@ -1,6 +1,9 @@
 package org.openstreetmap.josm.plugins.validator;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import javax.swing.Icon;
@@ -10,9 +13,12 @@ import javax.swing.JSeparator;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.AbstractVisitor;
+import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -64,7 +70,7 @@ public class GridLayer extends Layer
 
         g.setColor(Color.RED.darker().darker());
         HighlightCellVisitor visitor = new HighlightCellVisitor(g, mv, gridWidth);
-        for(OsmPrimitive p : Main.ds.getSelected() )
+        for(OsmPrimitive p : Main.main.getCurrentDataSet().getSelected() )
             p.visit(visitor);
 
         long x0 = (long)Math.floor(origin.east()  * gridWidth);

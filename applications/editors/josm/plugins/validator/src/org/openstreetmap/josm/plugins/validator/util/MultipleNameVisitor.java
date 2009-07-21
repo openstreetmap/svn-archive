@@ -9,7 +9,6 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.visitor.NameVisitor;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**

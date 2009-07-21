@@ -2,12 +2,15 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.openstreetmap.josm.actions.MergeNodesAction;
-import org.openstreetmap.josm.command.*;
+import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -89,7 +92,7 @@ public class DuplicateNode extends Test
         if (target == null)
             target = nodes.iterator().next();
 
-        MergeNodesAction.mergeNodes(nodes, target);
+        new  MergeNodesAction().mergeNodes(nodes, target);
 
         return null; // undoRedo handling done in mergeNodes
     }

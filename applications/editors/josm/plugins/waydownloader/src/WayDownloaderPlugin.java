@@ -59,14 +59,14 @@ public class WayDownloaderPlugin extends Plugin {
             String errMsg = null;
 
             selectedNode = null;
-            Collection<OsmPrimitive> selection = Main.ds.getSelectedNodes();
+            Collection<OsmPrimitive> selection = Main.main.getCurrentDataSet().getSelectedNodes();
 
             if (selection.size()==0) {
-                selection = Main.ds.getSelectedWays();
+                selection = Main.main.getCurrentDataSet().getSelectedWays();
                 if (!workFromWaySelection(selection)) {
                     errMsg = tr("Select a starting node on the end of a way");
                 }
-                selection = Main.ds.getSelectedNodes();
+                selection = Main.main.getCurrentDataSet().getSelectedNodes();
             }
 
             if ( selection.size()==0 || selection.size()>1 ) {
@@ -137,7 +137,7 @@ public class WayDownloaderPlugin extends Plugin {
                     if (JOptionPane.showConfirmDialog(null, "Merge duplicate node?")==JOptionPane.YES_OPTION) {
                         LinkedList<Node> dupeNodes = new LinkedList<Node>();
                         dupeNodes.add(dupeNode);
-                        MergeNodesAction.mergeNodes(dupeNodes, selectedNode);
+                        new MergeNodesAction().mergeNodes(dupeNodes, selectedNode);
 
                         connectedWays = findConnectedWays(); //Carry on
                     }
@@ -165,7 +165,7 @@ public class WayDownloaderPlugin extends Plugin {
                 Node nextNode = findOtherEnd(nextWay, selectedNode);
 
                 //Select the next node
-                Main.ds.setSelected(nextNode);
+                Main.main.getCurrentDataSet().setSelected(nextNode);
 
                 Main.map.mapView.zoomTo(nextNode.getEastNorth());
             }
@@ -176,7 +176,7 @@ public class WayDownloaderPlugin extends Plugin {
 
     /** See if there's another node at the same coordinates. If so return it. Otherwise null */
     private Node duplicateNode() {
-    	for (Node onNode:Main.ds.nodes) {
+    	for (Node onNode:Main.main.getCurrentDataSet().nodes) {
             if (!onNode.equals(this.selectedNode)
                     && onNode.getCoor().lat()==selectedNode.getCoor().lat()
                     && onNode.getCoor().lon()==selectedNode.getCoor().lon()) {
@@ -198,7 +198,7 @@ public class WayDownloaderPlugin extends Plugin {
         ArrayList<Way> connectedWays = new ArrayList<Way>();
 
         //loop through every way
-        for (Way onWay:Main.ds.ways) {
+        for (Way onWay:Main.main.getCurrentDataSet().ways) {
             Object[] nodes = onWay.nodes.toArray();
             if (nodes.length<2) {
                 //Should never happen should it? TODO: investigate. For the moment ignore these
@@ -235,12 +235,12 @@ public class WayDownloaderPlugin extends Plugin {
                 if (isDownloaded(selectedNode)) return false;
             }
         }
-        Main.ds.setSelected(selectedNode);
+        Main.main.getCurrentDataSet().setSelected(selectedNode);
         return true;
     }
 
     private boolean isDownloaded(Node node) {
-        for (DataSource datasource:Main.ds.dataSources) {
+        for (DataSource datasource:Main.main.getCurrentDataSet().dataSources) {
             Bounds bounds = datasource.bounds;
 
             if (node.getCoor().lat()>bounds.min.lat() &&

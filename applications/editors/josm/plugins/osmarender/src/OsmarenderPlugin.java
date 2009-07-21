@@ -51,9 +51,9 @@ public class OsmarenderPlugin extends Plugin {
                 //how handle the exception?
             }
 
-            CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(Main.ds, true);
+            CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(Main.main.getCurrentDataSet(), true);
             DataSet fromDataSet = new DataSet();
-            for (Node n : Main.ds.nodes) {
+            for (Node n : Main.main.getCurrentDataSet().nodes) {
                 if (n.deleted || n.incomplete) continue;
                 if (n.getCoor().isWithin(b)) {
                     fromDataSet.nodes.add(n);

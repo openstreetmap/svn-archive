@@ -112,7 +112,7 @@ public class LakewalkerReader {
 
     		if (!commands.isEmpty()) {
     			Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
-    			Main.ds.setSelected(ways);
+    			Main.main.getCurrentDataSet().setSelected(ways);
     		}
     	} finally {
     		progressMonitor.finishTask();

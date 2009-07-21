@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.LinkedList;
+
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
@@ -13,11 +14,11 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
  * Crea una grilla de vías usando como base las dos seleccionadas que tengan un nodo en común
@@ -45,7 +46,7 @@ public final class CreateGridOfWaysAction extends JosmAction {
      * existing ones (--this is from a translation machine--)
      */
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> sel = Main.ds.getSelected();
+        Collection<OsmPrimitive> sel = Main.main.getCurrentDataSet().getSelected();
         Collection<Node> nodesWay1 = new LinkedList<Node>();
         Collection<Node> nodesWay2 = new LinkedList<Node>();
         if ((sel.size() != 2) || !(sel.toArray()[0] instanceof Way) || !(sel.toArray()[1] instanceof Way)) {

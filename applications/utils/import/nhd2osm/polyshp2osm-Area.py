@@ -47,12 +47,13 @@ fixed_tags = {
 # For these functions is that they are passed the attributes from a feature,
 # and they return a list of two-tuples which match to key/value pairs.
 
-# The following Ftypes are not converted
+# The following FCodes are not converted
 # 40309 - Controlled Inundation Area - Flood Area
 # 45500 - Spillway
 # 46100 - Submerged Stream
+# 44500 - Sea / Ocean
 ignoreField = "FCode"
-ignoreValues = [40309, 45500, 46100]
+ignoreValues = [40309, 45500, 46100, 44500]
 
 def ftype(data):
     """Type of body - from NHD feature type."""  
@@ -284,8 +285,14 @@ def run(filename, slice_count=1, obj_count=30000, output_location=None, no_sourc
                 continue
             seen[f.GetFID()] = True             
 
+	    done = False
             while f.GetField(ignoreField) in ignoreValues:
+		if l.GetNextFeature() == None:
+		    done = True
+		    break
                 f = l.GetNextFeature()
+	    if done == True:
+		break
             
             outerways = []
 	    innerways = []

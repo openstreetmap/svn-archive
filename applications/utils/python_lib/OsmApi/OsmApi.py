@@ -24,11 +24,12 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.2   2009-07-13 can identify applications built on top of the lib  ##
 ## 0.2.1   2009-05-05 some changes in constructor -- chove@crans.org     ##
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 import httplib, base64, xml.dom.minidom
 
@@ -37,7 +38,7 @@ import httplib, base64, xml.dom.minidom
 
 class OsmApi:
     
-    def __init__(self, username = None, password = None, passwordfile = None, created_by = "PythonOsmApi/"+__version__, api = "www.openstreetmap.org"):
+    def __init__(self, username = None, password = None, passwordfile = None, appid = "", created_by = "PythonOsmApi/"+__version__, api = "www.openstreetmap.org"):
 
         # Get username
         if username:
@@ -58,7 +59,10 @@ class OsmApi:
         self._api = api
 
         # Get created_by
-        self._created_by = created_by
+        if appid == "":
+                self._created_by = created_by
+        else:
+                self._created_by = appid + " (" + created_by + ")"
 
         # Initialisation     
         self._CurrentChangesetId = -1

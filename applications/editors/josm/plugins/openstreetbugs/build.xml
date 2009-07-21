@@ -25,7 +25,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Imports issues from OpenStreetBugs"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/OpenStreetBugs"/>
-                <attribute name="Plugin-Mainversion" value="1725"/>
+                <attribute name="Plugin-Mainversion" value="1815"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

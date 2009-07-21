@@ -70,7 +70,7 @@ public class SetNodeAction implements SurveyorAction {
         node.put("created_by", "JOSM-surveyor-plugin");
         synchronized(LiveGpsLock.class) {
             Main.map.mapView.getEditLayer().data.nodes.add(node);
-            Main.ds.setSelected(node);
+            Main.main.getCurrentDataSet().setSelected(node);
         }
         Main.map.repaint();
     }

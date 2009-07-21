@@ -62,7 +62,7 @@ public final class TerracerAction extends JosmAction {
 
 	// smsms1 asked for the last value to be remembered to make it easier to do
 	// repeated terraces. this is the easiest, but not necessarily nicest, way.
-	private static String lastSelectedValue = "";
+	//private static String lastSelectedValue = "";
 
 	public TerracerAction() {
 		super(tr("Terrace a building"),
@@ -80,7 +80,7 @@ public final class TerracerAction extends JosmAction {
 	 * calls to terraceBuilding(), which does all the real work.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		Collection<OsmPrimitive> sel = Main.ds.getSelected();
+		Collection<OsmPrimitive> sel = Main.main.getCurrentDataSet().getSelected();
 		boolean badSelect = false;
 
 		if (sel.size() == 1) {
@@ -197,7 +197,7 @@ public final class TerracerAction extends JosmAction {
 		commands.add(new AddCommand(relatedStreet));
 
 		Main.main.undoRedo.add(new SequenceCommand(tr("Terrace"), commands));
-		Main.ds.setSelected(ways);
+		Main.main.getCurrentDataSet().setSelected(ways);
 	}
 
 	/**
@@ -515,7 +515,7 @@ public final class TerracerAction extends JosmAction {
 	 */
 	private TreeSet<String> createAutoCompletionInfo() {
 		final TreeSet<String> names = new TreeSet<String>();
-		for (OsmPrimitive osm : Main.ds.allNonDeletedPrimitives()) {
+		for (OsmPrimitive osm : Main.main.getCurrentDataSet().allNonDeletedPrimitives()) {
 			if (osm.keys != null &&
 					osm.keys.containsKey("highway") &&
 					osm.keys.containsKey("name")) {

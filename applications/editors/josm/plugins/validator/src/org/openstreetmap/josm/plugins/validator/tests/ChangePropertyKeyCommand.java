@@ -13,12 +13,12 @@ import javax.swing.tree.MutableTreeNode;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.visitor.NameVisitor;
+import org.openstreetmap.josm.plugins.validator.util.NameVisitor;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Command that replaces the key of several objects
- * 
+ *
  */
 public class ChangePropertyKeyCommand extends Command {
     /**
@@ -33,10 +33,10 @@ public class ChangePropertyKeyCommand extends Command {
      * The mew key.
      */
     private final String newKey;
-    
+
     /**
      * Constructor
-     * 
+     *
      * @param objects all objects subject to change replacement
      * @param key The key to replace
      * @param newKey the new value of the key
@@ -46,11 +46,11 @@ public class ChangePropertyKeyCommand extends Command {
         this.key = key;
         this.newKey = newKey;
     }
-    
+
     @Override public boolean executeCommand() {
         if (!super.executeCommand()) return false; // save old
         for (OsmPrimitive osm : objects) {
-            if(osm.keys != null) 
+            if(osm.keys != null)
             {
                 osm.modified = true;
                 osm.put(newKey, osm.keys.remove(key) );

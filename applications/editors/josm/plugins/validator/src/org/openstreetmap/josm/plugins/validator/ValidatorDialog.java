@@ -41,7 +41,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * A small tool dialog for displaying the current errors. The selection manager
  * respects clicks into the selection list. Ctrl-click will remove entries from
  * the list while single click will make the clicked entry the only selection.
- * 
+ *
  * @author frsantos
  */
 public class ValidatorDialog extends ToggleDialog implements ActionListener, SelectionChangedListener {
@@ -126,7 +126,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
 
     /**
      * Fix selected errors
-     * 
+     *
      * @param e
      */
     @SuppressWarnings("unchecked")
@@ -162,12 +162,12 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
 
         Main.map.repaint();
         tree.resetErrors();
-        DataSet.fireSelectionChanged(Main.ds.getSelected());
+        DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
     }
 
     /**
      * Set selected errors to ignore state
-     * 
+     *
      * @param e
      */
     @SuppressWarnings("unchecked")
@@ -294,7 +294,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
             }
         }
 
-        Main.ds.setSelected(sel);
+        Main.main.getCurrentDataSet().setSelected(sel);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -312,7 +312,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
     /**
      * Checks for fixes in selected element and, if needed, adds to the sel
      * parameter all selected elements
-     * 
+     *
      * @param sel
      *            The collection where to add all selected elements
      * @param addSelected
@@ -380,7 +380,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
             fixButton.setEnabled(hasFixes);
 
             if (isDblClick) {
-                Main.ds.setSelected(sel);
+                Main.main.getCurrentDataSet().setSelected(sel);
             }
         }
 

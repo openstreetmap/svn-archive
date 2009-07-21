@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Create_grid_of_ways</name>
+	<name>JOSM-create_grid_of_ways</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -14,16 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>build</name>
-			<type>2</type>
-			<location>/home/chamorro/workspace/Create_grid_of_ways/build</location>
-		</link>
-		<link>
-			<name>src</name>
-			<type>2</type>
-			<location>/home/chamorro/workspace/Create_grid_of_ways/src</location>
-		</link>
-	</linkedResources>
 </projectDescription>

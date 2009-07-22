@@ -34,14 +34,14 @@ class ParseXML:
     nodecounter = 0     # OSM feature id incrementor
     relationcounter = 0
     feature = None      # The OSM feature we're building
-    outfile = None
+    output = None
 
     filter = []       # Filtering for a particular element in the naptan
     passive = False
     
-    def __init__(self, of, options):
+    def __init__(self, output, options):
         self.parentnodes = dict.fromkeys(self.watchnodes, False)
-        self.outfile = of
+        self.output = output
         self.options = options
         if options.filter:
             self.filter = filt.upper().split(':')
@@ -207,8 +207,7 @@ class ParseNaptan(ParseXML):
             if node == 'StopPoint':
                 if (not self.filter) or (self.filter and self.feature.filtered):
                     # That's all for this point, wrap up the feature's xml ready for the next one
-                    self.outfile.write(self.feature.toxml(needs_parent=False, indent=False))
-                    self.outfile.write("\n")
+                    self.output.write(self.feature)
                     self.pointcount += 1
                 self.feature = None
             
@@ -299,22 +298,26 @@ class ParseNaptan(ParseXML):
     def finish(self):
         # Write out any other features
         areacount = len(self.features)
-        for feature in self.features.values():
+        
+        for idx in self.features.copy():
             # Ignore relations with no members
-            if len(feature.members):
-                self.outfile.write(feature.toxml(needs_parent=False, indent=False))
-                self.outfile.write("\n")
+            if len(self.features[idx].members):
+                self.output.write(self.features[idx])
+                del self.features[idx]
             else:
                 areacount -= 1
-        self.features = None
 
+        pickles = open("%s.emptyarea.pkl" % (self.options.filenamebase), 'wb')
+        pickle.dump(self.features, pickles)
+        pickles.close()
+        
         pickles = open("%s.noparentarea.pkl" % (self.options.filenamebase), 'wb')
         pickle.dump(self.stopareamap, pickles)
         pickles.close()
         
         print "Parsed %d StopPoints and %d StopAreas" % (self.nodecounter, self.relationcounter)
         print "Output %d StopPoints and %d StopAreas" % (self.pointcount, areacount)
-        print "Pickled %d missing parental StopArea references" % (len(self.stopareamap))
+        print "Pickled %d missing parental StopArea references and %d empty StopAreas" % (len(self.stopareamap), len(self.features))
 
 
 class ParseNPTG(ParseXML):
@@ -325,16 +328,33 @@ class ParseNPTG(ParseXML):
     def endElement(self, elem):
         pass
 
-def treeparse(f, of, options):
-    of.write('<osm version="0.5">')
+class OSMWriter:
+    def __init__(self, outfile):
+        self.of = outfile
+        self.of.write('<osm version="0.6">')
 
+    def write(self, osmobj):
+        if self.of:
+            self.of.write(osmobj.toxml(needs_parent=False, indent=False))
+            self.of.write("\n")
+        else:
+            raise Exception, "Outfile already closed"
+
+    def close(self):
+        self.of.write('</osm>')
+        self.of.close()
+        self.of = None
+
+def treeparse(f, of, options):
     it = iter(ET.iterparse(f, events=('start', 'end')))
     event, root = it.next()
+
+    output = OSMWriter(of)
     
     if root.tag == ParseNaptan.namespace + 'NaPTAN':
-        parser = ParseNaptan(of, options)
+        parser = ParseNaptan(output, options)
     elif root.tag == ParseNPTG.namespace + 'NationalPublicTransportGazetteer':
-        parser = ParseNPTG(of, options)
+        parser = ParseNPTG(output, options)
     else:
         raise Exception, "Unknown XML type"
     
@@ -347,8 +367,7 @@ def treeparse(f, of, options):
             elem.clear()
             
     parser.finish()
-
-    of.write('</osm>')
+    output.close()
     
 if __name__ == "__main__":
     from optparse import OptionParser
@@ -375,5 +394,4 @@ if __name__ == "__main__":
     outfile = open(options.outfile, 'w')
     
     xml = treeparse(infile, outfile, options)
-    
-    outfile.close()
+

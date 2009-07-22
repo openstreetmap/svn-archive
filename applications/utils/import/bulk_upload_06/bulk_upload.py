@@ -89,11 +89,11 @@ class ImportProcessor:
         xml.append(self.addElem)
         xml.append(self.modifyElem)
         xml.append(self.deleteElem)
-        print "Uploading change set:" + self.changesetid        
+        print "Uploading change set:" + self.changesetid
         resp,content = self.httpCon.request(api_host +
                                             '/api/0.6/changeset/'+self.changesetid+
                                             '/upload',
-                                            'POST', ET.tostring(xml),headers=headers)        
+                                            'POST', ET.tostring(xml),headers=headers)
         if resp.status != 200:
             print "Error uploading changeset:" + str(resp.status)
             print content
@@ -113,13 +113,15 @@ class ImportProcessor:
     def processResult(self,content):
         diffResult=ET.fromstring(content)
         for child in diffResult.getchildren():
+            id_type = child.tag
             old_id=child.attrib['old_id']
             if child.attrib.has_key('new_id'):
                 new_id=child.attrib['new_id']
-                idMap[old_id]=new_id
+                idMap[id_type][old_id]=new_id
             else:
-                idMap[old_id]=old_id
-    
+                # (Object deleted)
+                idMap[id_type][old_id]=old_id
+
     def getAPILimit(self):
         return 1000
 
@@ -153,7 +155,7 @@ parser.check_required("-c")
 osmData=ET.parse(options.infile)
 httpObj = httplib2.Http()
 httpObj.add_credentials(options.user,options.password)
-idMap={}
+idMap={'node': {}, 'way': {}, 'relation': {}}
 cnt=0
 try:
     if os.stat(options.infile + ".db"):
@@ -166,28 +168,29 @@ if hasCache:
     f.close()
 
 importProcessor=ImportProcessor(httpObj,options.comment,idMap)
-for type in ('node','way','relation'):    
+for type in ('node','way','relation'):
     for elem in osmData.getiterator(type):
         # If elem.id is already mapped we can skip this object
         #
-        id=elem.attrib['id']        
-        if idMap.has_key(id):
+        id=elem.attrib['id']
+        if idMap[type].has_key(id):
                 continue
         #
         # If elem contains nodes, ways or relations as a child
         # then the ids need to be remapped.
-        if elem.tag=='way':                    
+        if elem.tag=='way':
             for child in elem.getiterator('nd'):
                 if child.attrib.has_key('ref'):
                     old_id=child.attrib['ref']
-                    if idMap.has_key(old_id):
-                        child.attrib['ref'] = idMap[old_id]
+                    if idMap['node'].has_key(old_id):
+                        child.attrib['ref'] = idMap['node'][old_id]
         elif elem.tag=='relation':
-            for child in elem.getiterator():
+            for child in elem.getiterator('member'):
                 if child.attrib.has_key('ref'):
                     old_id=child.attrib['ref']
-                    if idMap.has_key(old_id):
-                        child.attrib['ref'] = idMap[old_id]
+                    old_id_type = child.attrib['type']
+                    if idMap[old_id_type].has_key(old_id):
+                        child.attrib['ref'] = idMap[old_id_type][old_id]
         if elem.attrib.has_key('action') and elem.attrib['action']=='delete':
             importProcessor.deleteItem(elem)
         elif elem.attrib.has_key('action') and elem.attrib['action']=='modify':

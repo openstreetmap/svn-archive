@@ -359,8 +359,8 @@ switch($Data['mode'])
     printf("<p><a href='%s'><img src='gfx/screen_sizes.png' ismap/></a></p>", LinkSelf());
 
     printf("<form action='.' method='get'>");
-    printf("<input type='text' name='h' value='%u' size='4' /> &times; \n", $Data['h']);
-    printf("<input type='text' name='w' value='%u' size='4' />\n", $Data['w']);
+    printf("<input type='text' name='w' value='%u' size='4' /> &times; \n", $Data['w']);
+    printf("<input type='text' name='h' value='%u' size='4' />\n", $Data['h']);
     HiddenFields(array('h','w'));
     printf("<p><input type='submit' value='OK'></p>\n");
     printf("</form>");

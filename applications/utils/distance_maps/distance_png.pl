@@ -12,8 +12,6 @@
 #
 # interpolation  0 = all nodes in SOURCE.OSM
 # interpolation -1 = junction/terminus nodes in SOURCE.OSM
-# interpolation >0 = all nodes in SOURCE.OSM, plus interpolated nodes seperated
-#                    by no more than 'X'm
 
 # NODES:
 #   * $nodes = { "1234" => { "lat" => 1.2, "lon" => "2.3", "nb" => [

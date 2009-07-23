@@ -45,8 +45,8 @@ import httplib2
 import pickle
 import os
 
-#api_host='http://api.openstreetmap.org'
-api_host='http://oauth.dev.openstreetmap.org'
+api_host='http://api.openstreetmap.org'
+#api_host='http://api06.dev.openstreetmap.org'
 headers = {
     'User-Agent' : 'bulk_upload.py',
 }
@@ -92,11 +92,18 @@ class ImportProcessor:
         xml.append(self.addElem)
         xml.append(self.modifyElem)
         xml.append(self.deleteElem)
-        print "Uploading to change set:" + self.changesetid
+        print "Uploading to changeset:" + self.changesetid
+
+        xmlstr = ET.tostring(xml)
+        #f = open("/tmp/%s.osc" % self.changesetid, 'a')
+        #f.write(xmlstr)
+        #f.write("\n\n")
+        #f.close()
+
         resp,content = self.httpCon.request(api_host +
                                             '/api/0.6/changeset/'+self.changesetid+
                                             '/upload',
-                                            'POST', ET.tostring(xml),headers=headers)
+                                            'POST', xmlstr,headers=headers)
         if resp.status != 200:
             print "Error uploading changeset:" + str(resp.status)
             print content

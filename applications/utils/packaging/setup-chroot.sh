@@ -648,7 +648,7 @@ function install_devtools {
     development_tools="pbuilder subversion wget gnupg nano subversion vim cmake less"
     development_tools="$development_tools devscripts debconf debhelper"
     development_tools="$development_tools debian-archive-keyring debian-edu-archive-keyring debian-keyring"
-    development_tools="$development_tools sun-java6-jdk openssh-server"
+    development_tools="$development_tools sun-java6-jdk openssh-server apt-utils dpatch"
     case $distri in
 	debian)
 	    development_tools="$development_tools python-central"

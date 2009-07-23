@@ -68,21 +68,19 @@ draw_graph(2000);
 sub draw_graph
 {
     timer_start("draw_graph");
-    open (MYFILE, '>data.txt');
+    open (MYFILE, '>data.osm');
 
-    print MYFILE "#<?xml version='1.0' encoding='UTF-8'?>\n";
-    print MYFILE "#<osm version='0.5' generator='mkcntr'>\n";
+    print MYFILE "<?xml version='1.0' encoding='UTF-8'?>\n";
+    print MYFILE "<osm version='0.5' generator='distance.pl'>\n";
 
     foreach my $node(values %$nodes)
     {
         next unless defined $node->{dist}; 
         if ($max_between>=0 || @{$node->{nb}}!=2) 
         {
-            print MYFILE "#<node id='", $node->{id}, "' lat='",$node->{lat},"' lon='", $node->{lon}, "' >\n";
-            print MYFILE "#<tag k='distance' v='", $node->{dist}, "' />\n";
-            print MYFILE "#</node>\n";
-
-            print MYFILE $node->{lon}, " ", $node->{lat}, " ", $node->{dist}, "\n";
+            print MYFILE "<node id='", $node->{id}, "' lat='",$node->{lat},"' lon='", $node->{lon}, "' >\n";
+            print MYFILE "<tag k='distance' v='", $node->{dist}, "' />\n";
+            print MYFILE "</node>\n";
         }
 
         next if ($max_between <= 0);
@@ -93,22 +91,20 @@ sub draw_graph
             
             for (my $numerator=1; $numerator < $denominator; $numerator++)
             {
-                my $new_lat = ($node->{lon} + (($other->{nd}{lon} - $node->{lon}) / $denominator) * $numerator);
-                my $new_lon = ($node->{lat} + (($other->{nd}{lat} - $node->{lat}) / $denominator) * $numerator);
+                my $new_lon = ($node->{lon} + (($other->{nd}{lon} - $node->{lon}) / $denominator) * $numerator);
+                my $new_lat = ($node->{lat} + (($other->{nd}{lat} - $node->{lat}) / $denominator) * $numerator);
                 my $new_dist = ($node->{dist}  + (($other->{nd}{dist} - $node->{dist}) / $denominator) * $numerator);
 
-                print MYFILE "#<node id='", $new_node, "' lat='",$new_lat,"' lon='", $new_lon, "' >\n";
-                print MYFILE "#<tag k='distance' v='", $new_dist, "' />\n";
-                print MYFILE "#</node>\n";
-
-                print MYFILE $new_lon, " ", $new_lat, " ", $new_dist, "\n";
+                print MYFILE "<node id='", $new_node, "' lat='",$new_lat,"' lon='", $new_lon, "' >\n";
+                print MYFILE "<tag k='distance' v='", $new_dist, "' />\n";
+                print MYFILE "</node>\n";
 
                 $new_node--;
             }
         }
     }
 
-    print MYFILE "#</osm>";
+    print MYFILE "</osm>";
     close (MYFILE);
     timer_stop();
 }

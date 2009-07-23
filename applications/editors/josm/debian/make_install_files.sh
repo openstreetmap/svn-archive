@@ -139,11 +139,13 @@ $do_cleanup && {
 if $do_update_josm ; then
     echo "------------- Compile Josm"
     cd core
-    $do_cleanup && ant -q clean 2>build.err
-    ant -q dist >>build.log 2>>build.err
+    $do_cleanup && ant clean 2>build.err
+    ant dist >>build.log 2>>build.err
     rc=$?
     if [ "$rc" -ne "0" ] ; then 
-	echo "${BG_RED}!!!!!!!!!! ERROR compiling josm core${NORMAL}"
+	cat build.log build.err
+	echo "${BG_RED}!!!!!!!!!! ERROR $rc compiling josm core${NORMAL}"
+	echo "${BG_RED}!!!!!!!!!! See build.log build.err${NORMAL}"
 	exit -1 
     fi
     cd ..

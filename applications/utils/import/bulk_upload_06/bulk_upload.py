@@ -45,8 +45,8 @@ import httplib2
 import pickle
 import os
 
-api_host='http://api.openstreetmap.org'
-#api_host='http://api06.dev.openstreetmap.org'
+#api_host='http://api.openstreetmap.org'
+api_host='http://oauth.dev.openstreetmap.org'
 headers = {
     'User-Agent' : 'bulk_upload.py',
 }
@@ -54,14 +54,17 @@ headers = {
 
 
 class ImportProcessor:
-    def __init__(self,httpObj,comment,idMap):
+    def __init__(self,httpObj,comment,idMap,changesetid=None):
         self.comment=comment
         self.addElem=ET.Element('create')
         self.modifyElem=ET.Element('modify')
         self.deleteElem=ET.Element('delete')
         self.idMap = idMap
         self.httpCon = httpObj
-        self.createChangeSet()
+        if changesetid:
+            self.changesetid = changesetid
+        else:
+            self.createChangeSet()
     def createChangeSet(self):
         createReq=ET.Element('osm',version="0.6")
         change=ET.Element('changeset')
@@ -89,7 +92,7 @@ class ImportProcessor:
         xml.append(self.addElem)
         xml.append(self.modifyElem)
         xml.append(self.deleteElem)
-        print "Uploading change set:" + self.changesetid
+        print "Uploading to change set:" + self.changesetid
         resp,content = self.httpCon.request(api_host +
                                             '/api/0.6/changeset/'+self.changesetid+
                                             '/upload',
@@ -122,8 +125,11 @@ class ImportProcessor:
                 # (Object deleted)
                 idMap[id_type][old_id]=old_id
 
-    def getAPILimit(self):
+    def getDiffUploadLimit(self):
         return 1000
+
+    def getChangesetLimit(self):
+        return 50000
 
 # Allow enforcing of required arguements
 # code from http://www.python.org/doc/2.3/lib/optparse-extending-examples.html
@@ -156,7 +162,8 @@ osmData=ET.parse(options.infile)
 httpObj = httplib2.Http()
 httpObj.add_credentials(options.user,options.password)
 idMap={'node': {}, 'way': {}, 'relation': {}}
-cnt=0
+dcnt = 0
+ccnt = 0
 try:
     if os.stat(options.infile + ".db"):
         hasCache=True
@@ -197,16 +204,24 @@ for type in ('node','way','relation'):
             importProcessor.modifyItem(elem)
         else:
             importProcessor.addItem(elem)
-        if cnt >= importProcessor.getAPILimit():
+
+        dcnt += 1
+        ccnt += 1
+        if (dcnt >= importProcessor.getDiffUploadLimit()
+            or ccnt >= importProcessor.getChangesetLimit()):
             importProcessor.upload()
             f=open(options.infile+".db.tmp","w")
             pickle.dump(idMap,f)
             f.close()
             os.rename(options.infile+".db.tmp", options.infile+".db")
-            importProcessor.closeSet()
-            importProcessor=ImportProcessor(httpObj,options.comment,idMap)
-            cnt=0
-        cnt=cnt+1
+            dcnt = 0
+            if ccnt >= importProcessor.getChangesetLimit():
+                importProcessor.closeSet()
+                importProcessor=ImportProcessor(httpObj,options.comment,idMap)
+                ccnt=0
+            else:
+                changesetid = importProcessor.changesetid
+                importProcessor = ImportProcessor(httpObj,options.comment,idMap,changesetid)
     #for
 importProcessor.upload()
 f=open(options.infile+".db.tmp","w")

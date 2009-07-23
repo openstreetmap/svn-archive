@@ -52,6 +52,7 @@ headers = {
 }
 
 
+class XMLException(Exception): pass
 
 class ImportProcessor:
     def __init__(self,httpObj,comment,idMap,changesetid=None):
@@ -166,6 +167,10 @@ parser.check_required("-p")
 parser.check_required("-c")
 
 osmData=ET.parse(options.infile)
+osmRoot = osmData.getroot()
+if osmRoot.tag != "osm":
+    raise XMLException("Input file must be a .osm XML file (JOSM-style)")
+
 httpObj = httplib2.Http()
 httpObj.add_credentials(options.user,options.password)
 idMap={'node': {}, 'way': {}, 'relation': {}}
@@ -183,7 +188,7 @@ if hasCache:
 
 importProcessor=ImportProcessor(httpObj,options.comment,idMap)
 for type in ('node','way','relation'):
-    for elem in osmData.getiterator(type):
+    for elem in osmRoot.getiterator(type):
         # If elem.id is already mapped we can skip this object
         #
         id=elem.attrib['id']

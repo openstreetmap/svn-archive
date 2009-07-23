@@ -188,6 +188,9 @@ my %package_names=(
 #    'osm-editor-qt4' 	=> [qw(osm-editor)],
     );
 
+my %NO_BUILD=(
+    'mod_tile'		=> qw(ubuntu-intrepid|debian-lenny|ubuntu-hardy),
+    );
 my %svn_repository_url=(
     'openstreetmap-applications' => 'http://svn.openstreetmap.org/applications',
     'gpsdrive'                   => 'https://gpsdrive.svn.sourceforge.net/svnroot/gpsdrive/trunk',
@@ -425,9 +428,6 @@ sub last_result($;$){
     my $new_result = shift; # success|fail|dependencies
 
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
-
-    my $platform = $self->platform();
-    my $proj     = $self->proj();
 
     my $last_log=$self->last_result_file();
 
@@ -762,9 +762,7 @@ sub write_svn_revision($){
 sub svn_revision($) {
     my $self = shift;
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
-
-    my $proj     = $self->proj();
-    
+  
     my $proj_sub_dir = $self->proj_sub_dir();
     return '' unless -r "$dir_svn/$proj_sub_dir/debian/svnrevision";
     my $svn_revision = slurp( "$dir_svn/$proj_sub_dir/debian/svnrevision" );
@@ -1119,14 +1117,17 @@ sub debuild($) {
     # --- Check on missing Build dependencies
     my @dependencies= grep { $_ =~ m/^dpkg-checkbuilddeps:/ } split(/\n/,$err);
     @dependencies = grep { s/.*Unmet build dependencies: //g; }  @dependencies;
+    @dependencies = grep { s/\([^)]+\)//g; }  @dependencies; # remove  "(>> 0.5.0-1)"
     my $dep_file="$dir_chroot/$platform/home/$user/install-debian-dependencies-$proj.sh";
     if (  @dependencies ) {
+	write_file($dep_file,
+		   "chroot $dir_chroot/$platform apt-get update\n".
+		   "chroot $dir_chroot/$platform aptitude --assume-yes install ".
+		   join("\n", @dependencies)."\n");
 	$self->error("!!!!!!!!!!!!!!!!!!!!!! Cannot Build Debian Package because of Missing Dependencies: \n".
 		     "\t".join("\n\t", @dependencies)."\n".
 		     "Written install suggestion to : '$dep_file'\n"	
 	    );
-	write_file($dep_file,"chroot $dir_chroot/$platform aptitude --assume-yes install ".
-		   join("\n", @dependencies)."\n");
 	$self->last_result("fail-dependency");
 	return -1;
     } else {
@@ -1277,6 +1278,12 @@ sub show_results(){
 	    my $print_platform=$platform;
 	    $print_platform=~ s/(debian-|ubuntu-)//;
 
+	    if ( $NO_BUILD{$proj} && ($platform =~ m{$NO_BUILD{$proj}} )) {
+		print "Do not build $proj on $platform\n";
+		$rev= "no-build";
+		$color_res="blue";
+	    }
+
 	    print "$color_res"; #. $print_platform."$COLOR{NORMAL} " ;
 	    printf "$color_rev%-6s$COLOR{NORMAL} ", $rev;
 	    if (  $rev_last_good && $rev ne $rev_last_good ) {
@@ -1350,6 +1357,11 @@ sub write_html_results(){
 	    my $rev_last_good  = $task->last_good_result();
 	    my $print_platform=$platform;
 	    $print_platform=~ s/(debian-|ubuntu-)//;
+
+	    if ( $NO_BUILD{$proj} && ($platform =~ m{$NO_BUILD{$proj}} )) {
+		$rev= "no-build";
+		$color_rev="black";
+	    }
 
 	    print $fh "     <td> <A href=\"$rel_log_dir\">";
 	    printf $fh "	<FONT  color=\"$color_rev\">%-6s </font>\t", $rev;
@@ -1574,6 +1586,11 @@ for my $platform ( @platforms ) {
 	if $DEBUG > 3;
 
     for my $proj ( @projs ) {
+
+	if ( $NO_BUILD{$proj} && $platform =~ m {$NO_BUILD{$proj}} ) {
+	    print "Do not build $proj on $platform\n";
+	    next;
+	}
 
 	my $task = BuildTask->new( 
 	    proj     => $proj, 

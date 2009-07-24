@@ -8,6 +8,8 @@
 
 #include <zzip/lib.h>
 
+bool zip_store_uncompressed_data = false;
+
 /** Creates a buffer of all the data in the SRTM file. The uncompressed version is used if available.
   *
   * \returns The length of the side of the data (e.g. 1201 or 3601)

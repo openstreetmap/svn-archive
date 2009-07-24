@@ -42,7 +42,7 @@ TODO
 - Write testcases
 - Command line parsing
 - Optionally store uncompressed data on disk
-
+- Make SRTM server configurable
 
 Optional
 --------

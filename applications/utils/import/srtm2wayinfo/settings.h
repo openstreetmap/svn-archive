@@ -7,6 +7,8 @@ class Settings
         Settings() {
             store_uncompressed = false;
             srtm_server = 0;
+            input = 0;
+            output = 0;
         };
         void parseSettings(int argc, char **argv);
         const char *getInput() const {
@@ -17,12 +19,21 @@ class Settings
             if (output) return output;
             return "/dev/stdout";
         }
+        const char *getSrtmServer() const {
+            if (srtm_server) return srtm_server;
+            return "http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/";
+        }
+        const char *getCacheDir() const {
+            if (cache_dir) return cache_dir;
+            return "cache";
+        }
         void usage();
     private:
         bool store_uncompressed;
         char *srtm_server;
         char *input;
         char *output;
+        char *cache_dir;
 };
 
 extern Settings global_settings;

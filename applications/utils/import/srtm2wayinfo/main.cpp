@@ -22,22 +22,18 @@ int main(int argc, char **argv)
      * QString::toDouble first tries converting using the locale, then using the "C" locale.*/
     QLocale::setDefault(QLocale::C);
 
-    SrtmDownloader downloader;
+    //Download file lists first, so we can stop here if we notice an error
+    SrtmDownloader downloader(global_settings.getSrtmServer(), global_settings.getCacheDir());
     downloader.loadFileList();
 
     OsmData data;
-    if (argc < 2) {
-        data.parse(global_settings.getInput());
-    } else {
-        data.parse(argv[1]);
-    }
-
+    data.parse(global_settings.getInput());
     QFile output(global_settings.getOutput());
     output.open(QIODevice::WriteOnly); //TODO: Error handling
 
-    RelationWriter writer(&data, &output);
+    RelationWriter writer(&data, &output, &downloader);
     writer.writeRelations();
-    
+
     output.close();
     curl_global_cleanup();
 }

@@ -15,10 +15,6 @@ RelationWriter::RelationWriter(OsmData *data, QIODevice *output, SrtmDownloader 
     this->data = data;
     this->output = output;
     relationId = -1;
-    if (!downloader) {
-        downloader = new SrtmDownloader();
-        downloader->loadFileList();
-    }
     this->downloader = downloader;
 }
 

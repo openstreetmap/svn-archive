@@ -1,14 +1,14 @@
 /** \file
     Read SRTM zip files. */
 #include "zip.h"
+#include "settings.h"
+
 #include <QFileInfo>
 #include <QDebug>
-
-#include "math.h"
-
 #include <zzip/lib.h>
+#include <math.h>
 
-bool zip_store_uncompressed_data = false;
+
 
 /** Creates a buffer of all the data in the SRTM file. The uncompressed version is used if available.
   *

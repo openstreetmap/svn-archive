@@ -56,7 +56,7 @@ class SrtmTile
 class SrtmDownloader
 {
     public:
-        SrtmDownloader(QString url="http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/", QString cachedir="cache");
+        SrtmDownloader(QString url, QString cachedir);
         ~SrtmDownloader() { curl_easy_cleanup(curl); }
         void createFileList();
         void loadFileList();

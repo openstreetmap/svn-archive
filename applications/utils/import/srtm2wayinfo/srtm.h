@@ -15,7 +15,7 @@
 /** Value of pixels where no SRTM data is available. */
 #define SRTM_DATA_VOID -32768
 /** Total number of SRTM files on NASA's server. */
-#define SRTM_FILE_COUNT 14546
+#define SRTM_FILE_COUNT 14047
 
 /** Handles the loading and parsing of an SRTM tile.
   *
@@ -56,7 +56,7 @@ class SrtmTile
 class SrtmDownloader
 {
     public:
-        SrtmDownloader(QString url="http://dds.cr.usgs.gov/srtm/version2/SRTM3/", QString cachedir="cache");
+        SrtmDownloader(QString url="http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/", QString cachedir="cache");
         ~SrtmDownloader() { curl_easy_cleanup(curl); }
         void createFileList();
         void loadFileList();

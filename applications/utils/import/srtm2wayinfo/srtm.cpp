@@ -56,6 +56,7 @@ SrtmDownloader::SrtmDownloader(QString url, QString cachedir)
     }
     curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1); //Make sure error reporting works
 }
 
 /** One line helper function. */
@@ -74,12 +75,12 @@ void SrtmDownloader::createFileList()
     QStringList continents;
     continents << "Africa" << "Australia" << "Eurasia" << "Islands" << "North_America" << "South_America";
     foreach (QString continent, continents) {
-        qDebug() << "Downloading data for" << continent;
+        qDebug() << "Downloading data from" << url+continent+"/";
         curlData.clear();
         curl_easy_setopt(curl, CURLOPT_URL, QString(url+continent+"/").toAscii().constData());
-        int error = curl_easy_perform(curl);
+        CURLcode error = curl_easy_perform(curl);
         if (error) {
-            qCritical() << "Error downloading data for" << continent;
+            qCritical() << "Error downloading data for" << continent << "(" << curl_easy_strerror(error) << ")";
         }
         int index = -1;
         while ((index = curlData.indexOf(regex, index+1)) != -1) {
@@ -99,7 +100,7 @@ void SrtmDownloader::createFileList()
     curlData.clear(); //Free mem
 
     if (fileList.size() != SRTM_FILE_COUNT) {
-        qCritical() << "Could not download complete list of tiles from SRTM server.";
+        qCritical() << "Could not download complete list of tiles from SRTM server. Got" << fileList.size() << "tiles but" << SRTM_FILE_COUNT << "were expected.";
         exit(1);
     }
     
@@ -174,8 +175,9 @@ void SrtmDownloader::downloadTile(QString filename)
     curl_easy_setopt(curl, CURLOPT_URL, QString(url+filename).toAscii().constData());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_file_callback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
-    if (curl_easy_perform(curl)) {
-        qCritical() << "Could not download" << filename;
+    CURLcode error;
+    if ((error = curl_easy_perform(curl))) {
+        qCritical() << "Could not download" << filename << "("<< curl_easy_strerror(error) << ")";
     }
     //File is closed automatically
 }

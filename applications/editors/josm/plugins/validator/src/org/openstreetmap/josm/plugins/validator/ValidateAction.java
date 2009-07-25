@@ -110,4 +110,9 @@ public class ValidateAction extends JosmAction {
         plugin.validationDialog.setVisible(true);
         DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
     }
+
+    @Override
+    public void updateEnabledState() {
+        setEnabled(getEditLayer() != null);
+    }
 }

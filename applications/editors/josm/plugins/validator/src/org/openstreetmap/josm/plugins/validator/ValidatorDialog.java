@@ -97,8 +97,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
                 tr("Set the selected elements on the map to the selected items in the list above."), this);
         selectButton.setEnabled(false);
         buttonPanel.add(selectButton);
-        buttonPanel.add(new SideButton(marktr("Validate"), "refresh", "Validator",
-                tr("Validate either current selection or complete dataset."), this));
+        buttonPanel.add(new SideButton(plugin.validateAction), "refresh");
         fixButton = new SideButton(marktr("Fix"), "fix", "Validator", tr("Fix the selected errors."), this);
         fixButton.setEnabled(false);
         buttonPanel.add(fixButton);
@@ -301,8 +300,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
         String actionCommand = e.getActionCommand();
         if (actionCommand.equals("Select"))
             setSelectedItems();
-        else if (actionCommand.equals("Validate"))
-            plugin.validateAction.actionPerformed(e);
         else if (actionCommand.equals("Fix"))
             fixErrors(e);
         else if (actionCommand.equals("Ignore"))

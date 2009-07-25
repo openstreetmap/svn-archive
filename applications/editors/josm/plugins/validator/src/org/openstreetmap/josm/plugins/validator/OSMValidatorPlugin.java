@@ -71,7 +71,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
 
     /** The list of errors per layer*/
     Map<Layer, List<TestError>> layerErrors = new HashMap<Layer, List<TestError>>();
-    
+
     /** Grid detail, multiplier of east,north values for valuable cell sizing */
     public static double griddetail;
 
@@ -121,7 +121,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
             e.printStackTrace();
         }
     }
-    
+
     private void loadIgnoredErrors() {
         ignoredErrors.clear();
         if (Main.pref.getBoolean(PreferenceEditor.PREF_USE_IGNORE, true)) {
@@ -249,7 +249,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
 
     /**
      * Initialize grid details based on current projection system. Values based on
-     * the original value fixed for EPSG:4326 (10000) using heuristics (that is, test&error 
+     * the original value fixed for EPSG:4326 (10000) using heuristics (that is, test&error
      * until most bugs were discovered while keeping the processing time reasonable)
      */
     public void initializeGridDetail() {
@@ -260,7 +260,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
         else if (Main.proj.toString().equals(new Lambert().toString()))
             OSMValidatorPlugin.griddetail = 0.1;
     }
-    
+
     /**
      * Initializes all tests
      * @param allTests The tests to initialize

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.Icon;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
@@ -29,12 +30,12 @@ public class RouteLayer extends Layer {
 	private final PathPainter pathPainter;
 	private final PathBuilder pathBuilder = new PathBuilder();
 	private final List<RouteDefinition> routes = new ArrayList<RouteDefinition>();
-	
+
 	public RouteLayer(RoutesXMLLayer xmlLayer) {
 		super(xmlLayer.getName());
-		
+
 		int index = 0;
-		for (RoutesXMLRoute route:xmlLayer.getRoute()) {			
+		for (RoutesXMLRoute route:xmlLayer.getRoute()) {
 			if (route.isEnabled()) {
 				Color color = ColorHelper.html2color(route.getColor());
 				if (color == null) {
@@ -44,7 +45,7 @@ public class RouteLayer extends Layer {
 				routes.add(new RouteDefinition(index++, color, route.getPattern()));
 			}
 		}
-		
+
 		if ("wide".equals(Main.pref.get("routes.painter"))) {
 			pathPainter = new WideLinePainter(this);
 		} else {
@@ -79,7 +80,7 @@ public class RouteLayer extends Layer {
 
 	@Override
 	public void mergeFrom(Layer from) {
-
+		// Merging is not supported
 	}
 
 	private void addRelation(Relation relation, RouteDefinition route) {
@@ -88,23 +89,29 @@ public class RouteLayer extends Layer {
 				Way way = (Way)member.member;
 				pathBuilder.addWay(way, route);
 			}
-		}		
+		}
 	}
 
 	@Override
 	public void paint(Graphics g, MapView mv) {
 
+		DataSet dataset = Main.main.getCurrentDataSet();
+
+		if (dataset == null) {
+			return;
+		}
+
 		pathBuilder.clear();
 
-		for (Relation relation:Main.main.getCurrentDataSet().relations) {
+		for (Relation relation:dataset.relations) {
 			for (RouteDefinition route:routes) {
 				if (route.matches(relation)) {
 					addRelation(relation, route);
 				}
-			}			
+			}
 		}
 
-		for (Way way:Main.main.getCurrentDataSet().ways) {
+		for (Way way:dataset.ways) {
 			for (RouteDefinition route:routes) {
 				if (route.matches(way)) {
 					pathBuilder.addWay(way, route);
@@ -121,7 +128,7 @@ public class RouteLayer extends Layer {
 	public void visitBoundingBox(BoundingXYVisitor v) {
 
 	}
-	
+
 	public List<RouteDefinition> getRoutes() {
 		return routes;
 	}

@@ -3,6 +3,8 @@
 # -----------------------------------------------------------------------
 # Takes a batch of images from a video, and matches them against a GPX
 # tracklog to get georeferenced images
+#
+# Documentation: http://wiki.openstreetmap.org/wiki/Georeference_video
 # -----------------------------------------------------------------------
 # Copyright 2009, Oliver White
 #

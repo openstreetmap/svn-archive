@@ -117,8 +117,13 @@
 			<area class="leisure-stadium"/>
 		</rule>
 		<rule e="way" k="leisure" v="track">
-			<line class="leisure-track-casing"/>
-			<line class="leisure-track-core"/>
+			<rule e="way" k="area" v="yes|true">
+				<area class="leisure-track-area"/>
+			</rule>
+			<else>
+				<line class="leisure-track-casing"/>
+				<line class="leisure-track-core"/>
+			</else>
 		</rule>
 		<rule e="way" k="leisure" v="swimming_pool">
 			<area class="leisure-swimming-pool"/>
@@ -2986,6 +2991,12 @@
 			fill: #bde3cb;
 			stroke: #6fc18e;
 			stroke-width: 0.4px;
+			}
+			
+			.leisure-track-area {
+			fill: #bde3cb;
+			stroke: #6fc18e;
+			stroke-width: 0.025px;
 			}
 			
 			.leisure-track-casing {

@@ -21,7 +21,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.NavigatableComponent;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -39,11 +39,12 @@ public class JumpToAction extends JosmAction implements MouseListener {
 
     private double zoomFactor = 0;
     public void showJumpToDialog() {
-        LatLon curPos=Main.proj.eastNorth2latlon(Main.map.mapView.getCenter());
+        MapView mv = Main.map.mapView;
+        LatLon curPos=mv.getProjection().eastNorth2latlon(mv.getCenter());
         lat.setText(java.lang.Double.toString(curPos.lat()));
         lon.setText(java.lang.Double.toString(curPos.lon()));
 
-        double dist = Main.map.mapView.getDist100Pixel();
+        double dist = mv.getDist100Pixel();
         zoomFactor = 1/dist;
 
         zm.setText(java.lang.Long.toString(Math.round(dist*100)/100));
@@ -114,7 +115,7 @@ public class JumpToAction extends JosmAction implements MouseListener {
             }
         }
 
-        Main.map.mapView.zoomToFactor(Main.proj.latlon2eastNorth(ll), zoomFactor * zoomLvl);
+        mv.zoomToFactor(mv.getProjection().latlon2eastNorth(ll), zoomFactor * zoomLvl);
     }
 
     private void parseURL() {
@@ -164,9 +165,10 @@ public class JumpToAction extends JosmAction implements MouseListener {
      * @param double scale
      */
     public int getZoom(double scale) {
-        double sizex = scale * Main.map.mapView.getWidth();
-        double sizey = scale * Main.map.mapView.getHeight();
-    	ProjectionBounds b = Main.proj.getWorldBounds();
+        MapView mv = Main.map.mapView;
+        double sizex = scale * mv.getWidth();
+        double sizey = scale * mv.getHeight();
+        ProjectionBounds b = mv.getMaxProjectionBounds();
         for (int zoom = 0; zoom <= 32; zoom++, sizex *= 2, sizey *= 2) {        	
             if (sizex > b.max.east() || sizey > b.max.north())
                 return zoom;

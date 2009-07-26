@@ -1,21 +1,45 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <osm version='0.5' generator='JOSM'>
   <bounds minlat='0.0' minlon='0.0' maxlat='0.025' maxlon='0.025' origin='petschge' />
-  <node id='102' visible='true' lat='0.016276068390020753' lon='0.007034555938057584' />
-  <node id='1' user='petschge' visible='true' lat='0.0' lon='0.0' />
-  <node id='103' visible='true' lat='0.014990066427008345' lon='0.006689443612476971' />
-  <node id='101' visible='true' lat='0.01686133918081602' lon='0.00803290824182998' />
-  <node id='110' visible='true' lat='0.016839992465617515' lon='0.01176458611993961' />
-  <node id='108' visible='true' lat='0.016387569561160515' lon='0.012800097992172677' />
-  <node id='109' visible='true' lat='0.013643719238514816' lon='0.00795132818280173' />
-  <node id='106' visible='true' lat='0.013957594365877955' lon='0.012734037228725079' />
-  <node id='107' visible='true' lat='0.015382024435171794' lon='0.013296352432142668' />
-  <node id='104' visible='true' lat='0.013921983487847867' lon='0.007339423463969448' />
-  <node id='105' visible='true' lat='0.013562119286204611' lon='0.011678247152957007' />
-  <node id='19' user='petschge' visible='true' lat='0.0' lon='0.025' />
-  <node id='20' user='petschge' visible='true' lat='0.025' lon='0.0' />
-  <node id='29' user='petschge' visible='true' lat='0.025' lon='0.025' />
-  <way id='111' visible='true'>
+  <node id='102' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.016276068390020753' lon='0.007034555938057584' />
+  <node id='1' timestamp='2009-07-26T11:45:30Z' user='petschge' visible='true' version='0' lat='0.0' lon='0.0' />
+  <node id='103' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.014990066427008345' lon='0.006689443612476971' />
+  <node id='101' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.01686133918081602' lon='0.00803290824182998' />
+  <node id='110' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.016839992465617515' lon='0.01176458611993961' />
+  <node id='108' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.016387569561160515' lon='0.012800097992172677' />
+  <node id='109' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.013643719238514816' lon='0.00795132818280173' />
+  <node id='106' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.013957594365877955' lon='0.012734037228725079' />
+  <node id='107' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.015382024435171794' lon='0.013296352432142668' />
+  <node id='104' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.013921983487847867' lon='0.007339423463969448' />
+  <node id='105' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.013562119286204611' lon='0.011678247152957007' />
+  <node id='19' timestamp='2009-07-26T11:45:30Z' user='petschge' visible='true' version='0' lat='0.0' lon='0.025' />
+  <node id='20' timestamp='2009-07-26T11:45:30Z' user='petschge' visible='true' version='0' lat='0.025' lon='0.0' />
+  <node id='29' timestamp='2009-07-26T11:45:30Z' user='petschge' visible='true' version='0' lat='0.025' lon='0.025' />
+  <node id='-1' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.011695377621730037' lon='0.011482258478917515' />
+  <node id='-2' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.008812979464048255' lon='0.012451709587702984' />
+  <node id='-3' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.011131453533769558' lon='0.00675222829703549' />
+  <node id='-4' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.010237409560342452' lon='0.013014024791120574' />
+  <node id='-5' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.009845451544443017' lon='0.006407115971454876' />
+  <node id='-6' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.01124295470731707' lon='0.012517770351150582' />
+  <node id='-7' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.008777368585378703' lon='0.007057095822947354' />
+  <node id='-8' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.008499104331162544' lon='0.007669000541779636' />
+  <node id='-9' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.00841750437743786' lon='0.011395919511934914' />
+  <node id='-10' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0' lat='0.01171672433740255' lon='0.007750580600807886' />
+  <node id='-11' visible='true' lat='0.01023489959918262' lon='0.018183725012564107' />
+  <node id='-12' visible='true' lat='0.012919463387706791' lon='0.01591862426954963' />
+  <node id='-13' visible='true' lat='0.012709731842673431' lon='0.004047818523751532' />
+  <node id='-14' visible='true' lat='0.016233221774418483' lon='0.002076341951127819' />
+  <way id='1009' timestamp='2009-07-26T11:45:30Z' user='petschge' visible='true' version='0'>
+    <nd ref='19' />
+    <nd ref='29' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1000' timestamp='2009-07-26T11:45:30Z' user='petschge' visible='true' version='0'>
+    <nd ref='1' />
+    <nd ref='20' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='111' timestamp='2009-07-26T11:45:30Z' visible='true' version='0'>
     <nd ref='109' />
     <nd ref='105' />
     <nd ref='106' />
@@ -31,14 +55,28 @@
     <tag k='sport' v='soccer' />
     <tag k='leisure' v='stadium' />
   </way>
-  <way id='1000' user='petschge' visible='true'>
-    <nd ref='1' />
-    <nd ref='20' />
-    <tag k='highway' v='residential' />
+  <way id='-15' action='modify' timestamp='2009-07-26T11:45:30Z' visible='true' version='0'>
+    <nd ref='-8' />
+    <nd ref='-9' />
+    <nd ref='-2' />
+    <nd ref='-4' />
+    <nd ref='-6' />
+    <nd ref='-1' />
+    <nd ref='-10' />
+    <nd ref='-3' />
+    <nd ref='-5' />
+    <nd ref='-7' />
+    <nd ref='-8' />
+    <tag k='area' v='yes' />
+    <tag k='name' v='track-area' />
+    <tag k='leisure' v='track' />
   </way>
-  <way id='1009' user='petschge' visible='true'>
-    <nd ref='19' />
-    <nd ref='29' />
-    <tag k='highway' v='residential' />
+  <way id='-16' action='modify' visible='true'>
+    <nd ref='-11' />
+    <nd ref='-12' />
+    <nd ref='-13' />
+    <nd ref='-14' />
+    <tag k='name' v='track' />
+    <tag k='leisure' v='track' />
   </way>
 </osm>

@@ -75,8 +75,13 @@
 			<area class="leisure stadium"/>
 		</rule>
 		<rule e="way" k="leisure" v="track">
-			<line class="leisure-track-casing"/>
-			<line class="leisure-track-core"/>
+			<rule e="way" k="area" v="yes|true">
+				<area class="leisure-track-area"/>
+			</rule>
+			<else>
+				<line class="leisure-track-casing"/>
+				<line class="leisure-track-core"/>
+			</else>
 		</rule>
 		<rule e="way" k="man_made" v="wastewater_plant" layer="-5" closed="yes">
 			<area class="man_made-wastewater" layer="-5"/>
@@ -1716,6 +1721,12 @@
 			
 			.stadium, .sport {
 			fill: #bde3cb;
+			}
+			
+			.leisure-track-area {
+			fill: #bde3cb;
+			stroke: #6fc18e;
+			stroke-width: 0.15px;
 			}
 			
 			.leisure-track-casing {

@@ -129,8 +129,7 @@ class imageLoader:
 
 def mergeVideoAndGpx(videoImageDir, gpxFilename, startTime, fps):
   tracklog = gpxReader(gpxFilename)
-  print "Read %d points from tracklog" % len(tracklog.points)
-  print "spanning %s to %s" % (formatT(tracklog.points[0][2]), formatT(tracklog.points[-1][2]))
+  print "Read %d points from tracklog spanning %s to %s" % (len(tracklog.points), formatT(tracklog.points[0][2]), formatT(tracklog.points[-1][2]))
 
   if(0):
     for p in tracklog.points:
@@ -140,32 +139,41 @@ def mergeVideoAndGpx(videoImageDir, gpxFilename, startTime, fps):
 
   start = parseTime(startTime)
   b = imageLoader(videoImageDir)
-  print "Loaded %d images, expecting %d" % (len(b.images), len(b.images) / fps)
-  print "spanning %s to %s" % (formatT(start), formatT(start + len(b.images) / float(fps)))
+  print "Loaded %d images, spanning %s to %s, expect to use %d images" % (len(b.images), formatT(start), formatT(start + len(b.images) / float(fps)), len(b.images) / fps)
+
+  outputImageDir = "frames" # the 1 image per second actually used will be copied in here
+  if(not os.path.exists(outputImageDir)):
+    os.mkdir(outputImageDir)
 
   out = open("output.kml", "w")
   out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
   out.write("<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n")
   out.write("<Document>\n")
   count = 0
+  stats = {'ok':0,'fail':0}
   for i in b.images.keys():
     if(count % fps == 0): # 1 per sec
       t = start + (float(count) / float(fps))
       (lat,lon,notes) = tracklog.getPositionAt(t)
       if(notes):
 	out.write("  <Placemark><name>%s</name>\n" % formatT(t))
-	imageLink = "frames/%06d.jpg" % i
-	imageURL = "http://dev.openstreetmap.org/~ojw/StreetPhotos/" + imageLink # eww! TODO
+	imageLink = "%s/%06d.jpg" % (outputImageDir, i)
+	imageURL = "http://dev.openstreetmap.org/~ojw/StreetPhotos/test2/" + imageLink # eww! TODO
 	shutil.copy2(b.images[i], imageLink)
 	out.write("    <description><img src=\"%s\" /><br/>Location (%f, %f)<br/>Taken at %s</description>\n" % (imageURL, lat, lon, formatT(t)))
 	out.write("    <Point><coordinates>%f,%f,0</coordinates></Point>\n" % (lon,lat))
 	out.write("  </Placemark>\n")
+	stats['ok'] += 1
       else:
-	pass 
-	#print "fail %s"%formatT(t)
+	stats['fail'] += 1
     count += 1
   out.write("</Document>\n</kml>\n")
   out.close()
+  for k,v in stats.items():
+    print "* %-10s: %d" % (k,v)
 
 if(__name__ == "__main__"):
-  mergeVideoAndGpx("video", "../latest.gpx", "2009-07-26T09:52:17Z", 25) # TODO: command-line options
+  if(len(sys.argv) < 5):
+    print "Usage: %s [path_to_images] [gpx_filename] [start_time] [fps]" % sys.argv[0]
+  else:
+    mergeVideoAndGpx(sys.argv[1], sys.argv[2], sys.argv[3], float(sys.argv[4]))

@@ -25,6 +25,10 @@ typedef long long __int64;
 #define M_PI 3.14159265358979323846 // Not in math ??
 #endif
 
+#if __FreeBSD__ || __APPLE__
+#define fopen64(x,y) fopen(x,y)
+#endif
+
 #ifndef TRUE
 #define TRUE 1
 #define FALSE 0

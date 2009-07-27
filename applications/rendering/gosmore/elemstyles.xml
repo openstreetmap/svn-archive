@@ -43,7 +43,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
      </rule>
     <rule>
        <condition k="bridge" v="no"/>
-       <line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
+       <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
        <icon annotate="true" src="misc/deprecated.png" />
        <scale_min>1</scale_min>
        <scale_max>40000</scale_max>

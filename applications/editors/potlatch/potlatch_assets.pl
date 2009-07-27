@@ -16,6 +16,7 @@
 	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"radio");
 	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"auto");
 	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"modal");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"palette");
 
 	#		POI icons
 

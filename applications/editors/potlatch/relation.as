@@ -144,14 +144,15 @@
 
 	OSMRelation.prototype.redraw=function() {
 		this.createEmptyMovieClip("line",1);					// clear line
-		var linewidth=Math.max(_root.linewidth*3,10);
+		var linewidth=Math.max(_root.linewidth*3,10); if (scale>17) { linewidth*=0.8; }
 		var linealpha= this.isHighlighting ? 75 : 50;
 		var c = this.isHighlighting ? 0xff8800 : 0x8888ff;
 
 		var type = this.getType();
 		if ( !this.isHighlighting ) {
 			if ( relcolours[type] != undefined ) {
-				c = relcolours[type]; linewidth = relwidths[type]; linealpha = relalphas[type];
+				c = relcolours[type]; // linewidth = relwidths[type];
+				linealpha = relalphas[type];
 			}
 		}
 		this.line.lineStyle(linewidth,c,linealpha,false,"none");

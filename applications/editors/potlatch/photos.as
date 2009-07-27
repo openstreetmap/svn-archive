@@ -1,68 +1,20 @@
 
-	var photocss=new TextField.StyleSheet();
-	photocss.load("/potlatch/photos.css?d=1");
-
 	function Photo() {
 	};
 
 	Photo.prototype.init=function(lat,lon,thumb,desc,name) {
 		this._x=long2coord(lon);
 		this._y=lat2coord(lat); 
-		this._xscale=this._yscale=Math.max(100/Math.pow(2,_root.scale-13),6.25);
+		this._xscale=this._yscale=Math.max(100/Math.pow(2,_root.scale-13),2);
 		this.thumb=thumb; this.desc=desc; this.name=name;
 	};
 	
 	Photo.prototype.onPress=function() {
-		_root.createEmptyMovieClip("popup",19);
-		pos=new Object(); pos.x=this._x; pos.y=this._y;
+		var pos=new Object(); pos.x=this._x; pos.y=this._y;
 		_root.map.localToGlobal(pos);
-		_root.popup._x=pos.x+10; if (pos.x>Stage.width-200) { _root.popup._x=pos.x-200; }
-		_root.popup._y=Math.max(20,pos.y);
-
-		_root.popup.createTextField('desc',1,5,5,190,290); 
-		var p=this;
-		with (_root.popup.desc) {
-			multiline=true; wordWrap=true; selectable=true; type='dynamic';
-			autoSize='left';
-			styleSheet=_root.photocss;
-			html=true;
-			htmlText=p.desc;
-			htmlText=htmlText.split('TARGET=""').join('');
-			htmlText=htmlText.split('HREF="').join('href="');
-			htmlText=htmlText.split('href="').join('target="_blank" href="');
-		}
-		var w=_root.popup.desc._width+10;
-		var h=Math.max(150,_root.popup.desc._height+10);
-
-		_root.popup.createEmptyMovieClip("drag",2);
-		_root.popup.createEmptyMovieClip("resize",3);
-		with (_root.popup.resize) {
-			beginFill(0xFFFFFF,50); moveTo(0,0); lineTo(-10,0);
-			lineTo(-10,-10); lineTo(0,-10); lineTo(0,0); endFill();
-			lineStyle(1,0xFFFFFF);
-			moveTo(-9,-2); lineTo(-2,-9);
-			moveTo(-6,-2); lineTo(-2,-6);
-			moveTo(-3,-2); lineTo(-2,-3);
-		}
-
-		_root.popup.createTextField('name',4,20,-18,w-20,19);
-		_root.popup.name.text=this.name;
-		_root.popup.name.setTextFormat(plainWhite);
-		_root.popup.name.selectable=false;
-
-		redrawPopup(w,h);
-		_root.popup.drag.onPress=function() { _root.popup.startDrag(); };
-		_root.popup.drag.onRelease=function() { _root.popup.stopDrag(); };
-
-		_root.popup.attachMovie("closecross","closex",5);
-		_root.popup.closex._x=10;
-		_root.popup.closex._y=-9;
-		_root.popup.closex.onPress=function() {
-			removeMovieClip(_root.popup); 
-		};
-		
-		_root.popup.resize.onPress=function() { _root.popup.resize.onMouseMove=resizePopup; };
-		_root.popup.resize.onMouseUp=function() { _root.popup.resize.onMouseMove=null; };
+		palettedepth++; var pn="p"+palettedepth;
+		_root.palettes.attachMovie("palette",pn,palettedepth);
+		_root.palettes[pn].initHTML(pos.x, pos.y, this.name, this.desc);
 	};
 	
 	Object.registerClass("photo",Photo);
@@ -72,30 +24,6 @@
 	// ================================================================
 	// Support functions
 	
-	// popup redraw and resize
-	
-	function resizePopup() {
-		var w=_root._xmouse-_root.popup._x;
-		var h=_root._ymouse-_root.popup._y;
-		redrawPopup(w,h);
-	}
-	
-	function redrawPopup(w,h) {
-		if (w<50 || h<50) { return; }
-		with (_root.popup) {
-			clear();
-			beginFill(0,80); moveTo(0,0); lineTo(w,0);
-			lineTo(w,h); lineTo(0,h); lineTo(0,0); endFill();
-		}
-		with (_root.popup.drag) {
-			clear();
-			beginFill(0,100); moveTo(0,0); lineTo(w,0);
-			lineTo(w,-17); lineTo(0,-17); lineTo(0,0); endFill();
-		}
-		with (_root.popup.resize) { _x=w; _y=h; }
-		with (_root.popup.desc) { _width=w-10; _height=h-10; }
-		_root.popup.name._width=w-20;
-	}
 
 	// loadPhotos
 

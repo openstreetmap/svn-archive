@@ -13,6 +13,8 @@ if ($bRunGosmore) {
 	$yours_dir = '/home/lambertus/planet/yours';
 	$ulimit = 30;
 
+	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+	
 	$query = "QUERY_STRING='";
 
 	//Coordinates
@@ -235,7 +237,7 @@ if ($bRunGosmore) {
 		$script = $script_end - $script_start;
 		$runtime = $gosmore_end - $gosmore_start;
 		
-		fwrite($fh, date('Y-m-d H:i:s').", ".$query.", ".strlen($kml).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
+		fwrite($fh, date('Y-m-d H:i:s').", ".$user_agent.", ".$query.", ".strlen($kml).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
 		fclose($fh);
 	}
 }

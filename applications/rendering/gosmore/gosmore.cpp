@@ -95,10 +95,6 @@ char docPrefix[80] = "";
 #include <gtk/gtk.h>
 #endif
 
-#if __FreeBSD__ || __APPLE__ // Thanks to Ted Mielczarek & Dmitry
-#define fopen64(x,y) fopen(x,y)
-#endif
-
 // We emulate just enough of gtk to make it work
 #ifdef _WIN32_WCE
 #define gtk_widget_queue_clear(x) // After Click() returns we Invalidate

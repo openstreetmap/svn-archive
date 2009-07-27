@@ -131,7 +131,7 @@
 	// ----	Draw line
 
 	OSMWay.prototype.redraw=function(skip) {
-		this.createEmptyMovieClip("taggednodes",2);
+		this.createEmptyMovieClip("taggednodes",3);
 
 		if (skip) {
 			// We're at the same scale as previously, so don't redraw
@@ -148,8 +148,9 @@
 
 			// Either the line has changed, or we've changed scale
 			this.createEmptyMovieClip("line",1);					// clear line
+			this.createEmptyMovieClip("arrows",2);					//  |
 			var linealpha=100; // -50*(this.locked==true);
-			var casingx=1.5; var casingcol=0;
+			var casingx=(scale<17) ? 1.5 : 1.3; var casingcol=0x222222;
 	
 			// Set stroke
 	
@@ -172,7 +173,7 @@
 			} else if (preferences.data.noname && this.attr["highway"] && (!this.attr["name"] || this.attr["name"].substr(0,6)=='(type ')) {
                 casingx=2; casingcol=0xFF0000;
 			} else if (this.attr["bridge"] && this.attr["bridge"]!="no") {
-				casingx=2; br=true;
+				casingx=(scale<17) ? 2 : 1.8; br=true;
 			}
 
 			if ((f>-1 || br || casing[this.attr['highway']]) && !this.locked) {
@@ -214,6 +215,12 @@
 
 			var z=_root.wayrels[this._name];
 			for (var rel in z) { _root.map.relations[rel].redraw(); }
+			
+			// Draw direction arrows
+			
+			if (this.attr["oneway"]) {
+				this.drawArrows(this.attr["oneway"]);
+			}
 		}
 	};
 
@@ -225,6 +232,62 @@
 			for (var i in z) { if (areas[i] && this.attr[i]!='' && this.attr[i]!='coastline') { f=areas[i]; } }
 		}
 		return f;
+	};
+
+	OSMWay.prototype.drawArrows=function(dir) {
+		if (dir=='no' || dir=='false') { return; }
+		var dashes=[4,1,1,1,1,10];
+		var widths=[2,7,5,3,1,0];
+		if (dir=="-1") { dashes.reverse(); widths.reverse(); }
+		var arrowcol=0x6C70D5; if (this.attr['highway']=='primary' || this.attr['highway']=='primary_link' || 
+								   this.attr['highway']=='trunk' || this.attr['highway']=='trunk_link' || 
+								   this.attr['highway']=='motorway' || this.attr['highway']=='motorway_link') { arrowcol=0; }
+		
+		var draw=false;
+		var dashleft=0;
+		var segleft=0;
+		var dc=[]; var wc=[];
+		var a,xc,yc,curx,cury,dx,dy;
+		var i=0;
+
+		var g=this.arrows;
+		g.moveTo(this.path[0].x,this.path[0].y);
+		while (i<this.path.length-1 || segleft>0) {
+			if (dashleft<=0) {
+				if (dc.length==0) { dc=dashes.slice(0); wc=widths.slice(0); }
+				dashleft=dc.shift()/bscale*2;
+				dashwidth=wc.shift();
+			}
+			if (segleft<=0) {
+				curx=this.path[i].x; dx=this.path[i+1].x-curx;
+				cury=this.path[i].y; dy=this.path[i+1].y-cury;
+				a=Math.atan2(dy,dx); xc=Math.cos(a); yc=Math.sin(a);
+				segleft=Math.sqrt(dx*dx+dy*dy);
+				i++;
+			}
+
+			if (segleft<=dashleft) {
+				// the path segment is shorter than the dash
+	 			curx+=dx; cury+=dy;
+				moveLine(g,curx,cury,dashwidth,arrowcol);
+				dashleft-=segleft; segleft=0;
+			} else {
+				// the path segment is longer than the dash
+				curx+=dashleft*xc; dx-=dashleft*xc;
+				cury+=dashleft*yc; dy-=dashleft*yc;
+				moveLine(g,curx,cury,dashwidth,arrowcol);
+				segleft-=dashleft; dashleft=0;
+			}
+		}
+	};
+
+	function moveLine(g,x,y,dashwidth,colour) {
+		if (dashwidth==0) {
+			g.moveTo(x,y);
+		} else {
+			g.lineStyle(dashwidth,colour,100,false,"none","none");
+			g.lineTo(x,y);
+		}
 	};
 
 	// ----	Tidy in line/circle
@@ -1187,6 +1250,31 @@
 	};
 
     function det(a,b,c,d) { return a*d-b*c; }
+
+	// =====================================================================================
+	// Inspector
+	
+	OSMWay.prototype.inspect=function() {
+		var str='';
+
+		// Connections to other ways of same type
+		var principal='';
+		if      (this.attr['highway' ]) { principal='highway';  }
+		else if (this.attr['waterway']) { principal='waterway'; }
+		else if (this.attr['railway' ]) { principal='railway';  }
+		var same=0; var different=0;
+		var z=this.path; for (i in z) {
+			var w=z[i].ways; for (id in w) {
+				if (id!=this._name) {
+					if (_root.map.ways[id].attr[principal]==this.attr[principal]) { same++; }
+					else if (_root.map.ways[id].attr[principal]) { different++; }
+				}
+			}
+		}
+		str="Connects to "+same+" "+this.attr[principal]+" and "+different+" other "+principal;
+		return "<p>"+str+"</p>";
+	};
+
 
 
 	Object.registerClass("way",OSMWay);

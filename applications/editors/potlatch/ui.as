@@ -3,6 +3,104 @@
 	// Standard UI
 	// =====================================================================================
 
+	// Floating palette
+
+	var palettecss=new TextField.StyleSheet();
+	palettecss.load("/potlatch/photos.css?d=1");
+	
+	UIPalette=function() {};
+	UIPalette.prototype=new MovieClip();
+
+	UIPalette.prototype.init=function(x,y,w,h,n) {
+		this.w=w;
+		this.h=h;
+		this.setPosition(x,y);
+		this.createControls();
+		this.redraw(n);
+	};
+
+	UIPalette.prototype.initHTML=function(x,y,n,tx) {
+		this.createTextField('desc',1,5,5,190,290); 
+		with (this.desc) {
+			multiline=true; wordWrap=true; selectable=true; type='dynamic';
+			autoSize='left';
+			styleSheet=_root.palettecss;
+			html=true;
+			htmlText=tx;
+			htmlText=htmlText.split('TARGET=""').join('');
+			htmlText=htmlText.split('HREF="').join('href="');
+			htmlText=htmlText.split('href="').join('target="_blank" href="');
+		}
+		this.w=this.desc._width+10;
+		this.h=Math.max(150,this.desc._height+10);
+		this.setPosition(x,y);
+		this.createControls(n);
+		this.redraw();
+	};
+	
+	UIPalette.prototype.setPosition=function(x,y) {
+		if (x>Stage.width-this.w) { x=x-this.w-20; }
+		this._x=x; 
+		this._y=Math.max(20,y);
+	};
+	
+	UIPalette.prototype.createControls=function(n) {
+
+		this.createEmptyMovieClip("drag",2);
+		
+		this.createEmptyMovieClip("resizeHandle",3);
+		with (this.resizeHandle) {
+			beginFill(0xFFFFFF,50); moveTo(0,0); lineTo(-10,0);
+			lineTo(-10,-10); lineTo(0,-10); lineTo(0,0); endFill();
+			lineStyle(1,0xFFFFFF);
+			moveTo(-9,-2); lineTo(-2,-9);
+			moveTo(-6,-2); lineTo(-2,-6);
+			moveTo(-3,-2); lineTo(-2,-3);
+		}
+
+		this.createTextField('titleText',4,20,-18,w-20,19);
+		this.titleText.text=n;
+		this.titleText.setTextFormat(plainWhite);
+		this.titleText.selectable=false;
+
+		this.drag.onPress=function() { this._parent.startDrag(); };
+		this.drag.onRelease=function() { this._parent.stopDrag(); };
+
+		this.attachMovie("closecross","closex",5);
+		this.closex._x=10;
+		this.closex._y=-9;
+		this.closex.onPress=function() { removeMovieClip(this._parent); };
+
+		this.resizeHandle.onPress=function() { this.onMouseMove=function() { this._parent.resize(); }; };
+		this.resizeHandle.onMouseUp=function() { this.onMouseMove=null; };
+	};
+
+	UIPalette.prototype.resize=function() {
+		var w=_root._xmouse-this._x;
+		var h=_root._ymouse-this._y;
+		if (w<50 || h<50) { return; }
+		this.w=w; this.h=h; this.redraw();
+	};
+
+	UIPalette.prototype.redraw=function() {
+		with (this) {
+			clear();
+			beginFill(0,80); moveTo(0,0); lineTo(this.w,0);
+			lineTo(this.w,this.h); lineTo(0,h); lineTo(0,0); endFill();
+		}
+		with (this.drag) {
+			clear();
+			beginFill(0,100); moveTo(0,0); lineTo(this.w,0);
+			lineTo(this.w,-17); lineTo(0,-17); lineTo(0,0); endFill();
+		}
+		with (this.resizeHandle) { _x=this.w; _y=this.h; }
+		with (this.desc) { _width=this.w-10; _height=this.h-10; }
+		this.titleText._width=this.w-20;
+	};
+
+	Object.registerClass("palette",UIPalette);
+
+
 	// Radio buttons
 	// UIRadio.init
 	// UIRadio.addButton(x,y,text)
@@ -83,11 +181,12 @@
 	function UIMenu() {
 	};
 	UIMenu.prototype=new MovieClip();
-	UIMenu.prototype.init=function(x,y,selected,options,tooltip,closefunction,closethis,menuwidth) {
+	UIMenu.prototype.init=function(x,y,selected,options,tooltip,closefunction,closethis,menuwidth,closedtitle) {
 		var i,w,h;
 		this._x=x; this._y=y;
 		this.selected=selected; this.original=selected;
 		this.options=options;
+		this.closedtitle=closedtitle ? closedtitle : '';
 
 		// create (invisible) movieclip for opened menu
 		this.createEmptyMovieClip("opened",2);
@@ -95,12 +194,14 @@
 		// create child for each option
 		var tw=0;
 		for (i=0; i<options.length; i+=1) {
-			this.opened.createTextField(i,i+1,3,i*16-1,100,19);
-			this.opened[i].text=options[i];
-			this.opened[i].background=true;
-			this.opened[i].backgroundColor=0x888888;
-			this.opened[i].setTextFormat(menu_off);
-			if (this.opened[i].textWidth*1.05>tw) { tw=this.opened[i].textWidth*1.05; }
+			if (options[i]!='--') {
+				this.opened.createTextField(i,i+1,3,i*16-1,100,19);
+				this.opened[i].text=options[i];
+				this.opened[i].background=true;
+				this.opened[i].backgroundColor=0x888888;
+				this.opened[i].setTextFormat(menu_off);
+				if (this.opened[i].textWidth*1.05>tw) { tw=this.opened[i].textWidth*1.05; }
+			}
 		};
 		// create box around menu
 		this.opened.createEmptyMovieClip("box",0);
@@ -114,9 +215,15 @@
 			lineTo(w,0); lineTo(w,h);
 			lineTo(0,h); lineTo(0,0); endFill();
 		};
-		// adjust all menus to have correct highlight
+		// adjust all menus to have correct highlight, and draw dividers
+		this.opened.box.lineStyle(1,0xFFFFFF,50);
 		for (i=0; i<options.length; i+=1) {
-			this.opened[i]._width=this.itemwidth;
+			if (options[i]=='--') {
+				this.opened.box.moveTo(5,i*16+10);
+				this.opened.box.lineTo(this.itemwidth,i*16+10);
+			} else {
+				this.opened[i]._width=this.itemwidth;
+			}
 		}
 
 		// create (visible) movieclip for closed menu
@@ -133,7 +240,7 @@
 			lineTo(w-7,13); lineTo(w-11,7); endFill();
 		};
 		this.closed.createTextField("current",2,3,-1,this.itemwidth,19);
-		this.closed.current.text=options[selected];
+		this.closed.current.text=(this.closedtitle=='') ? options[selected] : this.closedtitle;
 		this.closed.current.setTextFormat(menu_off);
 		this.closed.current.background=false;
 //		this.closed.current.backgroundColor=0x888888;
@@ -175,7 +282,7 @@
 	UIMenu.prototype.closeMenu=function() {
 		if (this.selected>-1) {
 			this.original=this.selected;
-			this.closed.current.text=this.options[this.selected];
+			this.closed.current.text=(this.closedtitle=='') ? this.options[this.selected] : this.closedtitle;
 			this.closed.current.setTextFormat(menu_off);
 			this.closed._alpha=100;
 			this.opened._visible=false;
@@ -183,7 +290,7 @@
 			mflashid=setInterval(function() { mflash.menuFlash(); }, 40);
 			this.doOnClose.call(this.closeThis,this.selected);
 		} else {
-			this.closed.current.text=this.options[this.original];
+			this.closed.current.text=(this.closedtitle=='') ? this.options[this.original] : this.closedtitle;
 			this.closed.current.setTextFormat(menu_off);
 			this.closed._alpha=100;
 			this.opened._visible=false;
@@ -193,7 +300,7 @@
 		this.opened[this.selected].backgroundColor=0x888888;
 		this.opened[this.selected].setTextFormat(menu_off);
 		this.selected=n; this.original=n;
-		this.closed.current.text=this.options[this.selected];
+		this.closed.current.text=(this.closedtitle=='') ? this.options[this.selected] : this.closedtitle;
 		this.closed.current.setTextFormat(menu_off);
 	};
 	UIMenu.prototype.whichSelection=function() {
@@ -202,7 +309,8 @@
 		mpos.y=_root._ymouse;
 		this.opened.globalToLocal(mpos);
 		if (mpos.x>0 && mpos.x<this.itemwidth && mpos.y>0 && mpos.y<this.options.length*15) {
-			return Math.floor((mpos.y)/15);
+			var i=Math.floor((mpos.y)/15);
+			if (this.opened[i]) { return i; }
 		}
 		return -1;
 	};

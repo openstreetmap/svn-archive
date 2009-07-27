@@ -59,6 +59,7 @@
 		_root.map.pois[newnodeid]._y=mpos.y;
 		_root.map.pois[newnodeid].icon="poi_"+o._name;
 		_root.map.pois[newnodeid].attr=deepCopy(icontags[o._name]);
+		_root.map.pois[newnodeid]._xscale=_root.map.pois[newnodeid]._yscale=_root.iconscale;
 		_root.map.pois[newnodeid].attr['name']="(type name here)";
 		_root.map.pois[newnodeid].select();
 		_root.map.pois[newnodeid].clean=false;

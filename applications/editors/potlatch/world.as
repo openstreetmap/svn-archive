@@ -22,6 +22,8 @@
 		_root.tile_b=lat2tile (coord2lat ((-_root.bgyoffset-_root.map._y+2*yradius)/bscale));
 		_root.tile_l=long2tile(coord2long((-_root.bgxoffset-_root.map._x          )/bscale));
 		_root.tile_r=long2tile(coord2long((-_root.bgxoffset-_root.map._x+2*xradius)/bscale));
+		
+		if (_root.panel.scale._visible) { setTypeText('',''); }
 	}
 
 	// lat/long <-> coord conversion
@@ -146,13 +148,16 @@
 		if (_root.scale==_root.maxscale) { _root.i_zoomin._alpha =25;  }
 									else { _root.i_zoomin._alpha =100; }
 		_root.tolerance=4/Math.pow(2,_root.scale-13);
+		_root.poiscale=Math.max(100/Math.pow(2,_root.scale-13),3);
+		_root.iconscale=100/Math.pow(2,_root.scale-13);
 		if (preferences.data.thinlines) {
 			_root.linewidth=3;
 			_root.taggedscale=100/Math.pow(2,_root.scale-13); 
 		} else {
-			_root.linewidth=Math.min(12, 3+Math.pow(Math.max(0,_root.scale-15),2));
-			_root.taggedscale=Math.max(100/Math.pow(2,_root.scale-13),10);
-			if (_root.scale==16 || _root.scale==17) { _root.taggedscale*=1.3; }
+			_root.linewidth=Math.min(10, 3+Math.pow(Math.max(0,_root.scale-15),2));
+			_root.taggedscale=Math.max(100/Math.pow(2,_root.scale-13),5);
+			if (_root.scale>=16 && _root.scale<=18) { _root.taggedscale*=1.3; }
+			if (_root.scale>=17 && _root.scale<=18) { _root.poiscale   *=1.3; }
 		}
 		if (preferences.data.thinareas) { _root.areawidth=_root.linewidth/3; }
 								   else { _root.areawidth=_root.linewidth; }

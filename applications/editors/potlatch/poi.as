@@ -11,7 +11,7 @@
 		this.locked=false;
 		this.icon='poi';
 		this.version=0;
-		this._xscale=this._yscale=Math.max(100/Math.pow(2,_root.scale-13),6.25);
+		this._xscale=this._yscale=_root.poiscale;
 	};
 	POI.prototype=new MovieClip();
 	POI.prototype.remove=function() {
@@ -165,7 +165,7 @@
 	};
 
 	POI.prototype.highlight=function() {
-		var s=8/Math.pow(2,Math.min(_root.scale,16)-13);
+		var s=9*_root.poiscale/100;
 		if (this.icon!="poi") { s*=1.3; }
 		highlightSquare(this._x,this._y,s);
 	};
@@ -198,15 +198,15 @@
 	}
 
 	function resizePOIs() {
-		var n=Math.max(100/Math.pow(2,_root.scale-13),6.25);
 		for (var qpoi in _root.map.pois) {
-			_root.map.pois[qpoi]._xscale=_root.map.pois[qpoi]._yscale=n;
+			if (_root.map.pois.icon=='poi') { _root.map.pois[qpoi]._xscale=_root.map.pois[qpoi]._yscale=_root.poiscale; }
+									   else { _root.map.pois[qpoi]._xscale=_root.map.pois[qpoi]._yscale=_root.iconscale; }
 		}
 		if (_root.poiselected) {
 			_root.map.pois[poiselected].highlight();
 		}
 		for (var qp in _root.map.photos) {
-			_root.map.photos[qp]._xscale=_root.map.photos[qp]._yscale=n;
+			_root.map.photos[qp]._xscale=_root.map.photos[qp]._yscale=_root.poiscale;
 		}
 	}
 	

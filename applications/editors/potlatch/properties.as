@@ -903,36 +903,53 @@
 	// setTypeText - set contents of type window
 	
 	function setTypeText(a,b) {
-		_root.panel.t_type.text=a;    _root.panel.t_type.setTextFormat(boldText);
-		_root.panel.t_details.text=b; _root.panel.t_details.setTextFormat(plainText);
-		if (_root.ws.locked ||
-			_root.map.pois[_root.poiselected].locked) {
-			_root.panel.padlock._visible=true;
-			_root.panel.padlock._x=_root.panel.t_details.textWidth+15;
+		if (a=='') {
+			_root.panel.scale._visible=true;
+			_root.panel.t_type._visible=_root.panel.t_details._visible=_root.panel.padlock._visible=false;
+			removeMovieClip(_root.panel.historylink);
+
+			var thislat=coord2lat(_root.map._y);
+			var latfactor=Math.cos(thislat/(180/Math.PI));
+			var m=Math.floor((111200*latfactor)*90/masterscale/bscale);
+
+			_root.panel.scale.dist.text=m+'m (z'+_root.scale+')';
+			_root.panel.scale.dist.setTextFormat(plainSmall);
+			_root.panel.scale.dist.selectable=false;
+			_root.panel.scale.dist._x=(90-_root.panel.scale.dist.textWidth)/2;
 		} else {
-			_root.panel.padlock._visible=false;
-		}
-		_root.panel.createEmptyMovieClip('historylink',25);
-		with (_root.panel.historylink) {
-			beginFill(0,0); moveTo(5,23);
-			lineTo(7+_root.panel.t_details.textWidth,23);
-			lineTo(7+_root.panel.t_details.textWidth,23+_root.panel.t_details.textHeight);
-			lineTo(5,23+_root.panel.t_details.textHeight); lineTo(5,23);
-		};
-		_root.panel.historylink.onPress=getHistory;
-		_root.panel.historylink.useHandCursor=true;
-		_root.panel.historylink.onRollOver=function() {
-			var v;
-			if (_root.poiselected) { v=_root.map.pois[poiselected].version; }
-			else if (_root.pointselected>-2) {
-				v=_root.ws.path[_root.pointselected].version+", in ways ";
-				var w=_root.ws.path[_root.pointselected].ways; for (var i in w) { v+=i+","; }
-				v=v.substr(0,v.length-1);
+			_root.panel.scale._visible=false;
+			_root.panel.t_type._visible=_root.panel.t_details._visible=true;
+			_root.panel.t_type.text=a;    _root.panel.t_type.setTextFormat(boldText);
+			_root.panel.t_details.text=b; _root.panel.t_details.setTextFormat(plainText);
+			if (_root.ws.locked ||
+				_root.map.pois[_root.poiselected].locked) {
+				_root.panel.padlock._visible=true;
+				_root.panel.padlock._x=_root.panel.t_details.textWidth+15;
+			} else {
+				_root.panel.padlock._visible=false;
 			}
-			else { v=_root.ws.version; }
-			setFloater("Version "+v);
-		};
-		_root.panel.historylink.onRollOut =function() { clearFloater(); };
+			_root.panel.createEmptyMovieClip('historylink',25);
+			with (_root.panel.historylink) {
+				beginFill(0,0); moveTo(5,23);
+				lineTo(7+_root.panel.t_details.textWidth,23);
+				lineTo(7+_root.panel.t_details.textWidth,23+_root.panel.t_details.textHeight);
+				lineTo(5,23+_root.panel.t_details.textHeight); lineTo(5,23);
+			};
+			_root.panel.historylink.onPress=getHistory;
+			_root.panel.historylink.useHandCursor=true;
+			_root.panel.historylink.onRollOver=function() {
+				var v;
+				if (_root.poiselected) { v=_root.map.pois[poiselected].version; }
+				else if (_root.pointselected>-2) {
+					v=_root.ws.path[_root.pointselected].version+", in ways ";
+					var w=_root.ws.path[_root.pointselected].ways; for (var i in w) { v+=i+","; }
+					v=v.substr(0,v.length-1);
+				}
+				else { v=_root.ws.version; }
+				setFloater("Version "+v);
+			};
+			_root.panel.historylink.onRollOut =function() { clearFloater(); };
+		}
 	}
 
 	// getPanelColumns - how many columns can fit into the panel?

@@ -33,7 +33,9 @@
 	_root.createEmptyMovieClip("help",0xFFFFFD);
 	_root.panel.createEmptyMovieClip("advice",0xFFFFFB);
 	_root.createEmptyMovieClip("windows",0xFFFFFA);
+	_root.createEmptyMovieClip("palettes",19);
 	var windowdepth=1;
+	var palettedepth=1;
 
 	// Sound
 	beep=new Sound();
@@ -356,17 +358,19 @@
 	_root.panel.createTextField('t_details',24,5,23,220,20);
 	with (_root.panel.t_details) { text=""; setTextFormat(plainText); selectable=false; };
 
-
-	// =====================================================================================
-	// Help bar
-
-	_root.panel.createEmptyMovieClip("help",80);
-	drawButton(_root.panel.help,7,114,iText("Help",'help'),"");
-	_root.panel.help.onPress=function() { openHelp(); };
-
-//	_root.panel.createEmptyMovieClip("manual",81);
-//	drawButton(_root.panel.manual,67,114,iText("Manual",'manual'),"");
-
+	// Scale
+	
+	_root.panel.createEmptyMovieClip('scale',49);
+	_root.panel.scale._x=7; _root.panel.scale._y=10;
+	with (_root.panel.scale) {
+		lineStyle(1,0x666666);
+		moveTo(0,0); lineTo(0,10);
+		moveTo(90,0); lineTo(90,10);
+		lineStyle(2,0x666666);
+		moveTo(1,5); lineTo(90,5);
+	}
+	_root.panel.scale.createTextField('dist',1,0,7,100,17);
+	_root.panel.scale._visible=false;
 
 	// =====================================================================================
 	// Remote connections
@@ -402,7 +406,20 @@
 	#include 'start.as'
 	#include 'offline.as'
 	#include 'error.as'
+	#include 'inspector.as'
 
+
+	// =====================================================================================
+	// Help bar
+
+	_root.panel.createEmptyMovieClip("help",80);
+	drawButton(_root.panel.help,7,114,iText("Help",'help'),"");
+	_root.panel.help.onPress=function() { openHelp(); };
+
+	_root.panel.attachMovie("menu","advanced",81);
+	_root.panel.advanced.init(67,114,1,
+		new Array("Parallel way","Way history","--","Inspector","Undelete","Close changeset","Maximise window"),
+		'Advanced editing actions',advancedAction,null,85,"Advanced");
 
 
 	// =====================================================================================
@@ -634,6 +651,19 @@
 	
 
 
+	// =====================================================================================
+	// Advanced menu
+
+	function advancedAction(n) {
+		switch (n) {
+			case 0:	askOffset(); break;							// parallel way
+			case 1:	getHistory(); break;						// history
+			case 3:	toggleInspector(); break;					// inspector
+			case 4:	getDeleted(); break;						// undelete
+			case 5:	closeChangeset(); break;					// close changeset
+			case 6:	maximiseSWF(); break;						// maximise window
+		}
+	}
 
 	// =====================================================================================
 	// Keypress functions
@@ -708,9 +738,10 @@
 		
 		switch (s) {
 			case 'C':		closeChangeset(); break;							// C - close current changeset
-			case 'S':		prepareUpload(); break;								// S - parallel path
+			case 'S':		prepareUpload(); break;								// S - save
 			case 'G':		loadGPS(); break;									// G - load GPS
 			case 'H':		getHistory(); break;								// H - history
+			case 'I':		toggleInspector(); break;							// I - inspector
 			case 'L':		showPosition(); break;								// L - show latitude/longitude
 			case 'P':		askOffset(); break;									// P - parallel path
 			case 'R':		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes
@@ -927,9 +958,9 @@
 			  				else if (loading) { setIOStatus(1); }
 			  							 else { _root.io=0; _root.waysloading._visible=false; }
 
-		// ---- Redraw lines if necessary (5 per frame)
+		// ---- Redraw lines if necessary
 		if (_root.redrawlist.length) {
-			for (var i=0; i<5; i++) {
+			for (var i=0; i<20; i++) {
 				var w=_root.redrawlist.pop();
 				_root.map.ways[w].redraw(_root.redrawskip);
 			}

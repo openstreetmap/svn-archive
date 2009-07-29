@@ -29,6 +29,7 @@ Disclaimer: Please do not use for navigation.
 
 #include <stdlib.h>
 #include <glib.h>
+#include <glib/gstdio.h>
 #include <locale.h>
 #include <string.h>
 #include <sqlite3.h>
@@ -41,12 +42,13 @@ Disclaimer: Please do not use for navigation.
 #define DB_OSMFILE "./osm.db"
 #define MAX_TAGS_PER_NODE 10
 
-#define PGM_VERSION "0.2"
+#define PGM_VERSION "0.3"
 
 
 
 
 sqlite3 *geoinfo_db, *osm_db;
+sqlite3_stmt *ppStmt;
 gint status = 0;
 gchar *error_string;
 gulong count = 0;
@@ -130,19 +132,22 @@ match_types_osm_fine_cb (gpointer datum, gint columns, gchar **values, gchar **n
 	gint t_res = 0;
 	gchar *t_query;
 	gchar **t_buf;
+	gchar *t_buf1;
 
 	t_buf = g_strsplit (values[1], "=", 2);
+	t_buf1 = escape_sql_string (t_buf[1]);
 	if (strcmp ("name", t_buf[0]) == 0)
 	{
 		t_query = g_strdup_printf ("UPDATE poi SET poi_type='%s' WHERE name LIKE '%s';",
-			values[0], t_buf[1]);
+			values[0], t_buf1);
 	}
 	else
 	{
 		t_query = g_strdup_printf ("UPDATE poi SET poi_type='%s' WHERE poi_id IN"
 			" (SELECT poi_id FROM poi_extra WHERE field_name='%s' AND entry LIKE '%s');",
-			values[0], t_buf[0], t_buf[1]);
+			values[0], t_buf[0], t_buf1);
 	}
+	g_free (t_buf1);
 
 	if (verbose)
 		g_print ("    %s\t--->\t%s\t\n", values[1], values[0]);
@@ -173,7 +178,6 @@ add_new_poi (node_struct *data)
 	gchar query[500];
 	guint i = 0;
 	gulong t_id;
-	gchar *t_buf1, *t_buf2;
 	gchar *t_buf3, *t_buf4;
 
 	if (verbose)
@@ -184,17 +188,40 @@ add_new_poi (node_struct *data)
 	}
 
 	/* insert basic data into poi table */
-	t_buf1 = escape_sql_string (data->name);
-	t_buf2 = escape_sql_string (data->poi_type);
-	g_snprintf (query, sizeof (query),
-		"INSERT INTO poi (name,lat,lon,poi_type,source_id,last_modified)"
-		" VALUES ('%s','%.6f','%.6f','%s','4',CURRENT_TIMESTAMP);",
-		t_buf1, data->lat, data->lon, t_buf2);
-	status = sqlite3_exec(osm_db, query, NULL, NULL, &error_string);
+	status = sqlite3_reset(ppStmt);
 	if (status != SQLITE_OK )
 	{
-		g_print ("\n\nSQLite error: %s\n%s\n\n", error_string, query);
-		sqlite3_free(error_string);
+		g_print ("\n\nSQLite reset error\n");
+		exit (EXIT_FAILURE);
+	}
+	status = sqlite3_bind_text(ppStmt, 1, data->name, -1, SQLITE_TRANSIENT);
+	if (status != SQLITE_OK )
+	{
+		g_print ("\n\nSQLite bind error\n");
+		exit (EXIT_FAILURE);
+	}
+	status = sqlite3_bind_double(ppStmt, 2, (double)data->lat);
+	if (status != SQLITE_OK )
+	{
+		g_print ("\n\nSQLite bind error\n");
+		exit (EXIT_FAILURE);
+	}
+	status = sqlite3_bind_double(ppStmt, 3, (double)data->lon);
+	if (status != SQLITE_OK )
+	{
+		g_print ("\n\nSQLite bind error\n");
+		exit (EXIT_FAILURE);
+	}
+	status = sqlite3_bind_text(ppStmt, 4, data->poi_type, -1, SQLITE_TRANSIENT);
+	if (status != SQLITE_OK )
+	{
+		g_print ("\n\nSQLite bind error\n");
+		exit (EXIT_FAILURE);
+	}
+	status = sqlite3_step(ppStmt);
+	if (status != SQLITE_DONE )
+	{
+		g_print ("\n\nSQLite error: %s\n", sqlite3_errmsg(osm_db));
 		exit (EXIT_FAILURE);
 	}
 
@@ -228,141 +255,152 @@ add_new_poi (node_struct *data)
 			}
 		}
 	}
-
-	g_free (t_buf1);
-	g_free (t_buf2);
-
 }
 
 
 /* *****************************************************************************
  * callback for parsing node xml data
  */
-gint
-parse_node_cb (void)
+void
+parse_node_cb (node_struct *node)
 {
-	xmlChar *name, *value;
 	xmlChar *t_bid, *t_bla, *t_blo;
-	gint type, status;
-	gchar buf[255];
-	gchar *pt_pointer;
-	gboolean found_poi = FALSE;
-	node_struct node;
 
-	node.tag_count = 0;
+	node->tag_count = 0;
 	t_bid = xmlTextReaderGetAttribute (xml_reader, BAD_CAST "id");
 	t_bla = xmlTextReaderGetAttribute (xml_reader, BAD_CAST "lat");
 	t_blo = xmlTextReaderGetAttribute (xml_reader, BAD_CAST "lon");
-	node.id = strtol ((gpointer) t_bid, NULL, 10);
-	node.lat = g_strtod ((gpointer) t_bla, NULL);
-	node.lon = g_strtod ((gpointer) t_blo, NULL);
+	node->id = strtol ((gpointer) t_bid, NULL, 10);
+	node->lat = g_strtod ((gpointer) t_bla, NULL);
+	node->lon = g_strtod ((gpointer) t_blo, NULL);
 	xmlFree (t_bid);
 	xmlFree (t_bla);
 	xmlFree (t_blo);
 
-	g_strlcpy (node.name, "", sizeof (node.name));
+	g_strlcpy (node->name, "", sizeof (node->name));
+}
 
-	status = xmlTextReaderRead (xml_reader);
-	type = xmlTextReaderNodeType (xml_reader);
-	name = xmlTextReaderName (xml_reader);
+/* *****************************************************************************
+ * callback for parsing tag xml data
+ */
+void
+parse_tag_cb (node_struct *node, gboolean *found_poi)
+{
+	gchar buf[255];
+	gchar *pt_pointer;
 
-	/* we assume, that the next 'node' xml-node is the closing node for the
-	 * previously opened 'node' element, so we omit the check for that. */
-	while (!xmlStrEqual(name, BAD_CAST "node") /*|| type != XML_READER_TYPE_END_ELEMENT*/)
-	{
-		//g_print ("parse_node_cb (): node\n");
-		if (type == XML_READER_TYPE_ELEMENT
-		    && xmlStrEqual (name, BAD_CAST "tag"))
-		{
-			xmlChar *t_key, *t_val;
+	xmlChar *t_key, *t_val;
 
-			/* check if type of point is known, and set poi_type */
-			t_key = xmlTextReaderGetAttribute (xml_reader, BAD_CAST "k");
-			t_val = xmlTextReaderGetAttribute (xml_reader, BAD_CAST "v");
-			g_snprintf (buf, sizeof (buf), "%s=%s", t_key, t_val);
-			xmlFree (t_key);
-			xmlFree (t_val);
-			pt_pointer = g_hash_table_lookup (poitypes_hash, buf);
-			if (pt_pointer)
-			{
-				poi_count++;
-				g_strlcpy (node.poi_type, pt_pointer, sizeof (node.poi_type));
-				found_poi = TRUE;
-			}
-			else if (node.tag_count < MAX_TAGS_PER_NODE)
-			{
-				t_key = xmlTextReaderGetAttribute (xml_reader, BAD_CAST "k");
-				g_strlcpy (node.key[node.tag_count], t_key,
-					sizeof (node.key[node.tag_count]));
-				xmlFree (t_key);
+	if (node->tag_count >= MAX_TAGS_PER_NODE)
+		return;
 
-				/* skip 'created_by' tag */
-				if (strcmp ("created_by", node.key[node.tag_count]) == 0)
-				{
-					if (name)
-						xmlFree (name);
-					status = xmlTextReaderRead (xml_reader);
-					type = xmlTextReaderNodeType (xml_reader);
-					name = xmlTextReaderName (xml_reader);
-					continue;
-				}
+	/* check if type of point is known, and set poi_type */
+	t_key = xmlTextReaderGetAttribute (xml_reader, BAD_CAST "k");
+	t_val = xmlTextReaderGetAttribute (xml_reader, BAD_CAST "v");
+	g_strlcpy (node->key[node->tag_count], (const gchar *)t_key,
+		sizeof node->key[node->tag_count]);
+	g_strlcpy (node->value[node->tag_count], (const gchar *)t_val,
+		sizeof (node->value[node->tag_count]));
+	xmlFree (t_key);
+	xmlFree (t_val);
 
-				t_val = xmlTextReaderGetAttribute (xml_reader, BAD_CAST "v");
-				g_strlcpy (node.value[node.tag_count], t_val,
-					sizeof (node.value[node.tag_count]));
-				xmlFree (t_val);
-
-				/* override poi_type if 'poi' tag is available */
-				if (strcmp ("poi", node.key[node.tag_count]) == 0)
-					g_strlcpy (node.poi_type, node.value[node.tag_count],
-					sizeof (node.poi_type));
-				/* get name of node */
-				else if (strcmp ("name", node.key[node.tag_count]) == 0)
-					g_strlcpy (node.name, node.value[node.tag_count],
-					sizeof (node.name));
-				else
-					node.tag_count++;
-			}
-		}
-		if (name)
-			xmlFree (name);
-		status = xmlTextReaderRead (xml_reader);
-		type = xmlTextReaderNodeType (xml_reader);
-		name = xmlTextReaderName (xml_reader);
+	/* skip 'created_by' tag */
+	if (strcmp ("created_by", node->key[node->tag_count]) == 0) {
+		return;
+	} else if (strcmp ("poi", node->key[node->tag_count]) == 0) {
+		/* override poi_type if 'poi' tag is available */
+		g_strlcpy (node->poi_type, node->value[node->tag_count],
+			sizeof (node->poi_type));
+		return;
+	} else if (strcmp ("name", node->key[node->tag_count]) == 0) {
+		/* get name of node */
+		g_strlcpy (node->name, node->value[node->tag_count],
+			sizeof (node->name));
+		return;
 	}
-	if (name)
-		xmlFree (name);
 
-	if (found_poi)
-		add_new_poi (&node);
+	g_snprintf (buf, sizeof (buf), "%s=%s",
+		node->key[node->tag_count],
+		node->value[node->tag_count]);
+	pt_pointer = g_hash_table_lookup (poitypes_hash, buf);
+	if (pt_pointer)
+	{
+		poi_count++;
+		g_strlcpy (node->poi_type, pt_pointer, sizeof (node->poi_type));
+		*found_poi = TRUE;
+	}
+	else
+	{
+		node->tag_count++;
+	}
+}
 
-/*
-    name = xmlTextReaderName(xml);
-    if (name == NULL)
-        name = xmlStrdup(BAD_CAST "--");
-    value = xmlTextReaderValue(xml);
+gint processXmlNode (void) {
+	gint xml_type;
+	gint depth;
+	const xmlChar *xml_name;
+	static gint child_node;
+	static node_struct node;
+	static gboolean found_poi;
 
-    printf("%d %d %s %d",
-            xmlTextReaderDepth(xml),
-            xmlTextReaderNodeType(xml),
-            name,
-            xmlTextReaderIsEmptyElement(xml));
-    xmlFree(name);
-    if (value == NULL)
-        printf("\n");
-    else {
-        printf(" %s\n", value);
-        xmlFree(value);
-    }
+	xml_type = xmlTextReaderNodeType(xml_reader);
+	if (xml_type == XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
+		return 1;
 
-*/
+	if (count % 10000 == 0)
+		g_print ("\r  poi: %ld / nodes: %ld / others: %ld", poi_count, node_count, count - poi_count - node_count);
 
+	depth = xmlTextReaderDepth (xml_reader);
+	if (depth < 1)
+		return 1;
 
-//	count += rows;
-//	if (verbose)
-//		g_print ("[%d]\n", rows);
-//	else
-//		g_print ("\b%c", spinner[spinpos++%4]);
+	if (depth == 1) {
+		count++;
+		if (xml_type == XML_READER_TYPE_ELEMENT) {
+			if (xmlTextReaderIsEmptyElement(xml_reader))
+				return 1;
+			xml_name = xmlTextReaderConstName(xml_reader);
+			if (xmlStrEqual(xml_name, BAD_CAST "node")) {
+				child_node = 1;
+				node_count++;
+				parse_node_cb (&node);
+				found_poi = FALSE;
+			} else {
+				child_node = 0;
+				/* Usually the *.osm dump files are sorted in the
+				 * order node/way/relation. So we can assume, that
+				 * there will appear no more nodes after a 'way' or
+				 * 'relation' element is found, and stop reading to
+				 * speed up the processing */
+				if (!nodes_done) {
+					if (xmlStrEqual(xml_name, BAD_CAST "way")
+					    || xmlStrEqual(xml_name, BAD_CAST "relation"))
+					{
+						nodes_done = TRUE;
+						if (stop_on_way) {
+							g_print ("\r  Reached end of nodes, terminating...\n");
+							return 0;
+						} else {
+							g_print ("\n\n\nFOUND WAY OR RELATION TAG!\n"
+								"END OF NODES SECTION REACHED???\n\n\n");
+						}
+					}
+				}
+			}
+		} else if (xml_type == XML_READER_TYPE_END_ELEMENT
+			&& child_node == 1) {
+			child_node = 0;
+			if (found_poi)
+				add_new_poi (&node);
+		}
+	} else if (depth == 2 && child_node) {
+		xml_name = xmlTextReaderConstName(xml_reader);
+		if (xml_type == XML_READER_TYPE_ELEMENT
+		    && xmlStrEqual (xml_name, BAD_CAST "tag"))
+			parse_tag_cb (&node, &found_poi);
+	}
+
+	return 1;
 }
 
 
@@ -402,9 +440,6 @@ main (int argc, char *argv[])
 	gchar *osm_file = NULL;
 	GError *error = NULL;
 	GTimer *timer;
-	gint xml_type = 0;
-	xmlChar *xml_name = NULL;
-	gulong count = 0;
 	gint parsing_time = 0;
 
 	setlocale(LC_NUMERIC,"C");
@@ -463,7 +498,7 @@ main (int argc, char *argv[])
 	if (show_version)
 	{
 		g_print (" (C) 2008 Guenther Meyer <d.s.e (at) sordidmusic.com>\n"
-			"\n Version %s\n\n"), rcsid;
+			"\n Version %s\n\n", rcsid);
 		exit (EXIT_SUCCESS);
 	}
 
@@ -553,7 +588,7 @@ main (int argc, char *argv[])
 		read_poi_types_cb, NULL, &error_string);
 	if (status != SQLITE_OK )
 	{
-		g_print ("   SQLite error: %s\n"), error_string;
+		g_print ("   SQLite error: %s\n", error_string);
 		sqlite3_free(error_string);
 		exit (EXIT_FAILURE);
 	}
@@ -573,68 +608,59 @@ main (int argc, char *argv[])
 		xml_reader = xmlReaderForFd (STDIN_FILENO, "", NULL, 0);
 	else
 		xml_reader = xmlNewTextReaderFilename (argv[1]);
-	if (xml_reader != NULL)
-	{
-		g_print (" + Parsing OSM data from %s\n", argv[1]);
-		parsing_active = TRUE;
-		status = xmlTextReaderRead (xml_reader);
-		while (status == 1)
-		{
-			if (count % 10000 == 0)
-				g_print ("\r  poi: %ld / nodes: %ld / others: %ld", poi_count, node_count, count);
-
-			xml_name = xmlTextReaderName(xml_reader);
-			if (xmlStrEqual(xml_name, BAD_CAST "node"))
-			{
-				if (xmlTextReaderNodeType(xml_reader) == XML_READER_TYPE_ELEMENT)
-				{
-					node_count++;
-					parse_node_cb ();
-				}
-			}
-			else
-				count++;
-			/* Usually the *.osm dump files are sorted in the
-			 * order node/way/relation. So we can assume, that
-			 * there will appear no more nodes after a 'way' or
-			 * 'relation' element is found, and stop reading to
-			 * speed up the processing */
-			if (!nodes_done)
-			{
-				if (xmlStrEqual(xml_name, BAD_CAST "way")
-				    || xmlStrEqual(xml_name, BAD_CAST "relation"))
-				{
-					nodes_done = TRUE;
-					if (stop_on_way)
-					{
-						g_print ("\r  Reached end of nodes, terminating...\n");
-						status = 0;
-						break;
-					}
-					else
-						g_print ("\n\n\nFOUND WAY OR RELATION TAG!\n"
-							"END OF NODES SECTION REACHED???\n\n\n");
-				}
-			}
-			if (xml_name)
-				xmlFree (xml_name);
-			status = xmlTextReaderRead (xml_reader);
-			if (parsing_active==FALSE)
-			{
-				status = 0;
-				break;
-			}
-        	}
-        	xmlFreeTextReader (xml_reader);
-        	if (status != 0)
-        		g_print ("  Failed to parse '%s'\n", argv[1]);
-	}
-	else
+	if (xml_reader == NULL)
 	{
 		g_print ("\nERROR: Unable to open %s\n", argv[1]);
 		g_print ("Please specify a valid OpenStreetMap XML file!\n");
 		exit (EXIT_FAILURE);
 	}
+
+	/* Open a transaction Entity */
+	status = sqlite3_exec(osm_db, "begin", NULL, NULL, &error_string);
+	if (status != SQLITE_OK )
+	{
+		g_print ("SQLite error: %s\n", error_string);
+		sqlite3_free(error_string);
+	}
+
+	status = sqlite3_prepare_v2(osm_db,
+		"INSERT INTO poi (name,lat,lon,poi_type,source_id,last_modified)"
+			" VALUES (?,?,?,?,'4',CURRENT_TIMESTAMP);",
+		-1, &ppStmt, NULL);
+	if (status != SQLITE_OK )
+	{
+		g_print ("SQLite error: %s\n", sqlite3_errmsg(osm_db));
+		exit (EXIT_FAILURE);
+	}
+
+	g_print (" + Parsing OSM data from %s\n", argv[1]);
+	parsing_active = TRUE;
+	while (1)
+	{
+		status = xmlTextReaderRead (xml_reader);
+		if (status != 1)
+			break;
+		status = processXmlNode ();
+		if (status != 1)
+			break;
+		if (parsing_active==FALSE)
+		{
+			status = 0;
+			break;
+		}
+       	}
+       	xmlFreeTextReader (xml_reader);
+       	if (status != 0)
+       		g_print ("  Failed to parse '%s'\n", argv[1]);
+
+	status = sqlite3_finalize(ppStmt);
+	if (status != SQLITE_OK )
+	{
+		g_print ("SQLite error: %s\n", error_string);
+		sqlite3_free(error_string);
+	}
+
+
 	parsing_active = FALSE;
 	parsing_time = g_timer_elapsed (timer, NULL);
 	if (parsing_time < 60)
@@ -644,6 +670,14 @@ main (int argc, char *argv[])
 		g_print ("\r  %ld of %ld nodes identified as POI in %d:%2d minutes\n",
 			poi_count, node_count, parsing_time/60, parsing_time%60);
 
+
+	/* Close transaction Entity */
+	status = sqlite3_exec(osm_db, "commit", NULL, NULL, &error_string);
+	if (status != SQLITE_OK )
+	{
+		g_print ("SQLite error: %s\n", error_string);
+		sqlite3_free(error_string);
+	}
 
 	/* remove dummmy row */
 	status = sqlite3_exec(osm_db, "DELETE FROM poi WHERE poi_id='99999999';",
@@ -684,7 +718,7 @@ main (int argc, char *argv[])
 	status = sqlite3_exec(osm_db,
 		"CREATE INDEX poi_lat ON poi (lat); "
 		"CREATE INDEX poi_lon ON poi (lon); "
-		"CREATE UNIQUE INDEX poi_latlontype ON poi (lat,lon,poi_type); "
+		"CREATE INDEX poi_latlontype ON poi (lat,lon,poi_type); "
 		"CREATE INDEX poi_type ON poi (poi_type); "
 		"CREATE INDEX poi_name ON poi (name,comment); "
 		"CREATE INDEX poi_id ON poi_extra (poi_id); "

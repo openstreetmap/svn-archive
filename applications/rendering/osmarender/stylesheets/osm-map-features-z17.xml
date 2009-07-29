@@ -2803,7 +2803,12 @@
 			<symbol ref="campSite" position="center"/>
 		</rule>
 		<rule e="node|way" k="tourism" v="information">
-			<symbol ref="information" position="center"/>
+			<rule e="node" k="information" v="guidepost">
+				<symbol ref="information-guidepost" position="center"/>			
+			</rule>
+			<else>
+				<symbol ref="information" position="center"/>
+			</else>	
 		</rule>
 		<rule e="node" k="tourism" v="viewpoint">
 			<symbol ref="viewpoint" position="center"/>

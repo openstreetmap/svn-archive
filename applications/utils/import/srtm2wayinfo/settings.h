@@ -27,6 +27,7 @@ class Settings
             if (cache_dir) return cache_dir;
             return "cache";
         }
+        bool getStoreUncompressed() const { return store_uncompressed; }
         void usage();
     private:
         bool store_uncompressed;

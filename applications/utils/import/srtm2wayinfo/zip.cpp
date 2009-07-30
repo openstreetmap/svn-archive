@@ -72,6 +72,15 @@ int SrtmZipFile::getData(QString filename, qint16 **buffer)
             return 0;
         }
 
+        if (global_settings.getStoreUncompressed()) {
+            QFile file(uncompressedFile);
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+                qCritical() << "ZIP(Writing): Could not open file" << uncompressedFile << file.errorString();
+            } else {
+                file.write((char *)*buffer, stat.st_size);
+                file.close();
+            }
+        }
         zzip_file_close(fp);
         zzip_dir_close(dir);
     }

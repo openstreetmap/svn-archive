@@ -39,7 +39,6 @@ http://doc.trolltech.com/4.4/
 TODO
 ----
 - Optimize for large datasets
-- Optionally store uncompressed data on disk
 
 Optional
 --------

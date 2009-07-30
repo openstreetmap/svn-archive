@@ -30,6 +30,7 @@ package org.openstreetmap.josm.plugins.osb.gui.action;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
@@ -39,7 +40,6 @@ import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.CloseAction;
 import org.openstreetmap.josm.plugins.osb.api.EditAction;
 import org.openstreetmap.josm.plugins.osb.gui.dialogs.TextInputDialog;
-import org.openstreetmap.josm.plugins.osb.gui.historycombobox.StringUtils;
 
 public class CloseIssueAction extends OsbAction {
 
@@ -54,10 +54,10 @@ public class CloseIssueAction extends OsbAction {
 
     @Override
     protected void doActionPerformed(ActionEvent e) throws Exception {
-        List<String> history = StringUtils.stringToList(Main.pref.get(ConfigKeys.OSB_COMMENT_HISTORY), "§§§");
+        List<String> history = new LinkedList<String>(Main.pref.getCollection(ConfigKeys.OSB_COMMENT_HISTORY, new LinkedList<String>()));
         HistoryChangedListener l = new HistoryChangedListener() {
             public void historyChanged(List<String> history) {
-                Main.pref.put(ConfigKeys.OSB_COMMENT_HISTORY, StringUtils.listToString(history, "§§§"));
+                Main.pref.putCollection(ConfigKeys.OSB_COMMENT_HISTORY, history);
             }
         };
         String comment = TextInputDialog.showDialog(Main.map,

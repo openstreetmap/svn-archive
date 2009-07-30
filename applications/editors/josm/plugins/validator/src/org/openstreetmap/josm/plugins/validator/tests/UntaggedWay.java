@@ -151,6 +151,6 @@ public class UntaggedWay extends Test
     @Override
     public Command fixError(TestError testError)
     {
-        return DeleteCommand.delete(testError.getPrimitives());
+        return DeleteCommand.delete(Main.map.mapView.getEditLayer(), testError.getPrimitives());
     }
 }

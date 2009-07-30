@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
@@ -57,7 +58,7 @@ public class DuplicatedWayNodes extends Test {
         }
         if (wnew.nodes.size() < 2) {
             // Empty way, delete
-            return DeleteCommand.delete(Collections.singleton(w));
+            return DeleteCommand.delete(Main.map.mapView.getEditLayer(), Collections.singleton(w));
         } else {
             return new ChangeCommand(w, wnew);
         }

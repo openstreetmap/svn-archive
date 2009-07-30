@@ -32,7 +32,7 @@ void OsmData::processTag(char *tag)
         //qDebug() << "node" << nodeid << lat << lon;
         nodes[nodeid] = OsmNode(lat, lon);
     } else if (!strncmp(tag, "way", 4)) {
-        keep = true;
+        keep = false;
         currentWay = new OsmWay(wayid);
     } else if (!strncmp(tag, "nd", 3)) {
         currentWay->addNode(noderef);
@@ -43,11 +43,11 @@ void OsmData::processTag(char *tag)
             foreach(OsmNodeId nodeid, currentWay->nodes) {
                 nodes[nodeid].incOrder();
             }
-            //nodes_referenced += currentWay->nodes.count();
-            //kept++;
+            nodes_referenced += currentWay->nodes.count();
+            kept++;
         } else {
             delete currentWay;
-//             discarded++;
+            discarded++;
         }
         currentWay = 0;
     }
@@ -68,6 +68,8 @@ void OsmData::processParam(char *tag, char *name, char *value)
         } else {
             wayid = atoi(value);
         }
+    } else if (!strcmp("k", name) && !strcmp("highway", value)) {
+        keep = true;
     }
 }
 
@@ -79,6 +81,7 @@ void OsmData::processParam(char *tag, char *name, char *value)
   */
 void OsmData::parse(QFile *file)
 {
+    kept = discarded = nodes_referenced = 0;
     qDebug() << "Using new parser!";
     QDataStream stream(file);
     #define BUFFER_LEN 1024
@@ -108,7 +111,6 @@ void OsmData::parse(QFile *file)
             char c = buffer[i];
             //Shortcuts to keep processing time low
             if ((state == state_waiting_for_tag_start) && (c != '<')) continue;
-            /*TODO: if ((state == state_waiting_for_param_end) && !isParamEnd(c)) continue;*/
             if ((state == state_waiting_for_tag_end) && (c != '>')) continue;
             if (c == '<') {
                 //A < always starts a new tag (except in CDATA areas which we don't have in OSM data)
@@ -181,4 +183,5 @@ void OsmData::parse(QFile *file)
         }
     }
     while (count > 0);
+    qDebug() << "Kept:" << kept << "Discarded:" << discarded <<  "Noderefs:" << nodes_referenced << "Nodes:" << nodes.count();
 }

@@ -321,7 +321,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             // This is a FIFO queue.  The reasoning is
             // that we want to draw the most recently
             // requested images now.  We may have panned
-            // or zoomed away 
+            // or zoomed away
             tile = downloadQueue.removeLast();
             Image img = tile.loadImage();
             if (imageLoaded(img))
@@ -398,7 +398,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
              * We need a good image against which to work. If
              * the current one isn't loaded, then try the last one.
              * Should be good enough. If we've never seen one, then
-             * guess.        
+             * guess.
              */
             if (lastScaledImage != null) {
                 return getImageScaling(lastScaledImage, p0, p1);
@@ -411,7 +411,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         /*
          * If the zoom scale gets really, really off, these can get into
          * the millions, so make this a double to prevent integer
-         * overflows.        
+         * overflows.
          */
         double drawWidth = p1.x - p0.x;
         double drawHeight = p1.x - p0.x;
@@ -613,7 +613,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             return false;
         }
     }
-    
+
     /**
      */
     @Override
@@ -654,7 +654,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             return;
         }
         if (zoomIncreaseAllowed() && (ts.tilesSpanned() < 1.0)) {
-            this.debug("doesn't even cover one tile (" + ts.tilesSpanned() 
+            this.debug("doesn't even cover one tile (" + ts.tilesSpanned()
                        + "), increasing zoom from " + currentZoomLevel);
             if (increaseZoomLevel())
                  this.paint(oldg, mv);
@@ -695,7 +695,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
          */
         this.paintTileImages(g, ts, currentZoomLevel);
         g.setColor(Color.red);
-        
+
         for (Tile t : ts.allTiles()) {
             // This draws the vertical lines for the entire
             // column.  Only draw them for the top tile in

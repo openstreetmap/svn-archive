@@ -119,5 +119,7 @@ class OsmData
         OsmWayId wayid;
         float lat, lon;
         bool keep;
+    private:
+        int kept, discarded, nodes_referenced;
 };
 #endif

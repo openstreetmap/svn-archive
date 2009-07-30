@@ -43,6 +43,12 @@ class OsmNode
             lon_ = lon_ref.toString().toFloat();
             order = 0;
         }
+        OsmNode(float lat, float lon)
+        {
+            lat_ = lat;
+            lon_ = lon;
+            order = 0;
+        }
         /** Return latitude value. */
         float lat() { return lat_; }
         /** Return longitude value. */
@@ -68,10 +74,20 @@ class OsmWay
             id = id_ref.toString().toInt();
         }
 
+        OsmWay(OsmWayId id_)
+        {
+            id = id_;
+        }
+
         /** Add a node to this way. */
         void addNode(QStringRef node_ref)
         {
             nodes.append(node_ref.toString().toInt());
+        }
+
+        void addNode(OsmNodeId nodeid)
+        {
+            nodes.append(nodeid);
         }
 
         /** Way id. */
@@ -97,5 +113,11 @@ class OsmData
     private:
         OsmWay *currentWay;
         QStringList wayTags;
+        void processTag(char *tag);
+        void processParam(char *tag, char *name, char *value);
+        OsmNodeId nodeid, noderef;
+        OsmWayId wayid;
+        float lat, lon;
+        bool keep;
 };
 #endif

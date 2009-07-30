@@ -675,7 +675,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
         /*
          * Go looking for tiles in zoom levels *other* than the current
-         * one.  Even if they might look bad, they look better than a
+         * one. Even if they might look bad, they look better than a
          * blank tile.
          */
         int otherZooms[] = {-5, -4, -3, 2, -2, 1, -1};
@@ -698,7 +698,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
         for (Tile t : ts.allTiles()) {
             // This draws the vertical lines for the entire
-            // column.  Only draw them for the top tile in
+            // column. Only draw them for the top tile in
             // the column.
             if (ts.topTile(t)) {
                 Point p = t.pixelPos(currentZoomLevel);

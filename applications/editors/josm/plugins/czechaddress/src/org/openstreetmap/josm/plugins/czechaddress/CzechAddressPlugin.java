@@ -146,7 +146,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             for (Street street : location.getAllStreets())
                 reasoner.update(street);
 
-            for (OsmPrimitive prim : Main.ds.allPrimitives()) {
+            for (OsmPrimitive prim : Main.main.getCurrentDataSet().allPrimitives()) {
                 if (House.isMatchable(prim) || Street.isMatchable(prim))
                     reasoner.update(prim);
             }

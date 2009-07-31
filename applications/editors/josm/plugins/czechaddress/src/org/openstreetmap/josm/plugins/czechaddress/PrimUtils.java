@@ -13,8 +13,9 @@ public class PrimUtils {
     public static final String KEY_HIGHWAY      = "highway";
     public static final String KEY_PLACE        = "place";
 
-    public static final String KEY_ADDR_CP      = "addr:alternatenumber";
-    public static final String KEY_ADDR_CO      = "addr:housenumber";
+    public static final String KEY_ADDR_CP      = "addr:conscriptionnumber";
+    public static final String KEY_ADDR_CO      = "addr:streetnumber";
+    public static final String KEY_ADDR_HOUSE_N = "addr:housenumber";
     public static final String KEY_ADDR_STREET  = "addr:street";
     public static final String KEY_ADDR_CITY    = "addr:city";
     public static final String KEY_ADDR_COUNTRY = "addr:country";

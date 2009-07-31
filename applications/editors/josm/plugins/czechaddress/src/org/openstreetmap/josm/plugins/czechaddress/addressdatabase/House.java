@@ -92,14 +92,14 @@ public class House extends AddressElement {
      */
     public static String generateName(String cp, String co) {
 
-        if ((cp != null) && (co != null))
-            return cp + "/" + co;
-
-        if (co != null) return co;
-        if (cp != null) return cp;
-
-        assert false;
-        return ""; // <-- just to make compiler happy.
+        if (co == null)
+            return cp;
+        else {
+            if (cp == null)
+                return "?/"+co;
+            else
+                return cp+"/"+co;
+        }
     }
 
     /**
@@ -152,11 +152,12 @@ public class House extends AddressElement {
      */
     @Override
     protected int[] getFieldMatchList(OsmPrimitive prim) {
-        int[] result = {0, 0};
+        int[] result = {0, 0, 0};
         if (!isMatchable(prim)) return result;
 
         // First field is the AlternateNubmer
         result[0] = matchField(this.cp, prim.get(PrimUtils.KEY_ADDR_CP));
+        result[2] = matchField(name,    prim.get(PrimUtils.KEY_ADDR_HOUSE_N));
         
         // Second field is the Housenumber
         if (parent instanceof Street)
@@ -189,6 +190,8 @@ public class House extends AddressElement {
         
         List<Proposal> props = new NotNullList<Proposal>();
         ParentResolver resolver = new ParentResolver(this);
+
+        props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_HOUSE_N, prim.get(PrimUtils.KEY_ADDR_HOUSE_N), name));
 
         props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_CP, prim.get(PrimUtils.KEY_ADDR_CP), getCP()));
         props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_CO, prim.get(PrimUtils.KEY_ADDR_CO), getCO()));

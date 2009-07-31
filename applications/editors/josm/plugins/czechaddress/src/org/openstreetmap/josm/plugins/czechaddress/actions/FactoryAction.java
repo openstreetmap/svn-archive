@@ -106,8 +106,8 @@ public class FactoryAction extends MapMode {
 
         FactoryDialog.getInstance().selectionListenerActivated = false;
         FactoryDialog.getInstance().selectNextUnmatchedHouseByCheckBox();
-        Main.main.getCurrentDataSet().addPrimitive(newNode);
-        Main.main.getCurrentDataSet().setSelected(newNode);
+        Main.ds.addPrimitive(newNode);
+        Main.ds.setSelected(newNode);
         FactoryDialog.getInstance().selectionListenerActivated = true;
     }
 }

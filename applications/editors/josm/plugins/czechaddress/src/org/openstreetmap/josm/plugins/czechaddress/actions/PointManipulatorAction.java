@@ -42,7 +42,7 @@ public class PointManipulatorAction extends JosmAction {
      * selected. If both conditions are satisfied, dialog is opened.</p>
      */
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> data = Main.main.getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> data = Main.ds.getSelected();
 
         if (data.size() != 1) return;
         OsmPrimitive primitive = (OsmPrimitive) data.toArray()[0];

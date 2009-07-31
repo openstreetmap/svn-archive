@@ -98,8 +98,8 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
             proposalContainer.applyAll();
 
-            Main.main.getCurrentDataSet().setSelected((Node) null); // TODO: This is an ugly hack.
-            Main.main.getCurrentDataSet().setSelected(proposalContainer.getTarget());
+            Main.ds.setSelected((Node) null); // TODO: This is an ugly hack.
+            Main.ds.setSelected(proposalContainer.getTarget());
 
             AddressElement elem = (AddressElement) matchesComboBox.getSelectedItem();
             if (elem != null) {

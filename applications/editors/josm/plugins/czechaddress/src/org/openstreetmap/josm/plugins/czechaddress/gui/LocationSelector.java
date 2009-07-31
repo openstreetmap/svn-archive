@@ -82,7 +82,7 @@ public class LocationSelector extends ExtendedDialog {
         // obrazovky.
 
         BoundingXYVisitor visitor = new BoundingXYVisitor();
-        for (OsmPrimitive op : Main.main.getCurrentDataSet().allPrimitives()) {
+        for (OsmPrimitive op : Main.ds.allPrimitives()) {
             if (op instanceof Node) {
                 ((Node) op).visit(visitor);
             } else if (op instanceof Way) {
@@ -102,7 +102,7 @@ public class LocationSelector extends ExtendedDialog {
         if (assertions)
             System.out.println("AUTO: Center is " + center);
 
-        for (OsmPrimitive op : Main.main.getCurrentDataSet().allPrimitives()) {
+        for (OsmPrimitive op : Main.ds.allPrimitives()) {
 
             if (!(op instanceof Node)) {
                 continue;

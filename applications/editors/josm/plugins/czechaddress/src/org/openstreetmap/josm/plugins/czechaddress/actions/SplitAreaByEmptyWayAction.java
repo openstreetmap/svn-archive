@@ -50,14 +50,14 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
      */
     public void actionPerformed(ActionEvent e) {
 
-        Collection<OsmPrimitive> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
-        Collection<OsmPrimitive> newSelection = Main.main.getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selectedWays = Main.ds.getSelectedWays();
+        Collection<OsmPrimitive> newSelection = Main.ds.getSelected();
 
         for (OsmPrimitive prim : selectedWays) {
             if (!((Way) prim).isClosed()) continue;
                 Way area = (Way) prim;
 
-            for (OsmPrimitive prim2 : Main.main.getCurrentDataSet().allNonDeletedPrimitives()) {
+            for (OsmPrimitive prim2 : Main.ds.allNonDeletedPrimitives()) {
                 if (!(prim2 instanceof Way)) continue;
                 if (prim2.equals(prim))      continue;
                	Way border = (Way) prim2;
@@ -79,8 +79,8 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
                 }
 
                 if (errorCode == 0) {
-                    Main.main.getCurrentDataSet().addPrimitive(newArea1);
-                    Main.main.getCurrentDataSet().addPrimitive(newArea2);
+                    Main.ds.addPrimitive(newArea1);
+                    Main.ds.addPrimitive(newArea2);
 
                     area.delete(true);
                     border.delete(true);
@@ -95,7 +95,7 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
             }
         }
 
-        Main.main.getCurrentDataSet().setSelected(newSelection);
+        Main.ds.setSelected(newSelection);
     }
 
     /**
@@ -123,7 +123,7 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
             index2 = area.nodes.indexOf(tempBorder.lastNode());
         }
 
-        for (Relation relation : Main.main.getCurrentDataSet().relations)
+        for (Relation relation : Main.ds.relations)
             for (RelationMember areaMember : relation.members)
                 if (area.equals(areaMember.member))
                     return 2;

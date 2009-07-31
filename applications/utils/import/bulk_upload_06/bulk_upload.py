@@ -235,7 +235,6 @@ class DiffSet:
         self.changeset = changeset
         self.idMap = idMap
         self.httpObj = httpObj
-        print "new diffset: %s" % self.itemcount
 
     def __getitem__(self, item):
         return self.elems[item]
@@ -247,8 +246,6 @@ class DiffSet:
 
         self.itemcount += 1
         if self.itemcount >= self.getItemLimit():
-            print self.itemcount
-            print self.getItemLimit()
             self.upload()
 
     def upload(self):
@@ -273,7 +270,6 @@ class DiffSet:
         if resp.status != 200:
             print "Error uploading changeset:" + str(resp.status)
             print content
-            print self.idMap.idMap
             exit(-1)
         else:
             self.processResult(content)

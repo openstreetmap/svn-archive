@@ -65,7 +65,7 @@ public class ExtractAddressIntoNodeProposal extends Proposal {
         for (String key : addrNode.keySet())
            way.remove(key);
 
-        Main.main.getCurrentDataSet().addPrimitive(addrNode);
+        Main.ds.addPrimitive(addrNode);
     }
 
     /**

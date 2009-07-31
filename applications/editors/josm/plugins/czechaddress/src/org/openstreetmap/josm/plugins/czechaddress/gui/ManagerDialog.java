@@ -46,7 +46,7 @@ public class ManagerDialog extends ExtendedDialog {
         dbEditButton.setIcon(ImageProvider.get("actions", "edit.png"));
 
         Capitalizator cap = new Capitalizator(
-                                Main.main.getCurrentDataSet().allPrimitives(),
+                                Main.ds.allPrimitives(),
                                 CzechAddressPlugin.getLocation().getStreets());
 
         for (Street capStreet : cap.getCapitalised()) {

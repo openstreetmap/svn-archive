@@ -21,7 +21,7 @@ public abstract class MapUtils {
      * Selects and zooms the JOSM viewport to given primitives.
      */
     public static void zoomToMany(Collection<OsmPrimitive> primitives) {
-        Main.main.getCurrentDataSet().setSelected(primitives);
+        Main.ds.setSelected(primitives);
         (new AutoScaleAction("selection")).actionPerformed(null);
     }
 
@@ -29,7 +29,7 @@ public abstract class MapUtils {
      * Selects and zooms the JOSM viewport to given primitive.
      */
     public static void zoomTo(OsmPrimitive primitive) {
-        Main.main.getCurrentDataSet().setSelected(primitive);
+        Main.ds.setSelected(primitive);
         (new AutoScaleAction("selection")).actionPerformed(null);
     }
 }

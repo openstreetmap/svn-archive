@@ -14,7 +14,7 @@ my $colorRoute = "pink" ;
 
 my $programName = "todomap.pl" ;
 my $usage = "todomap.pl file.osm bugs.gpx route.gpx out.png size" ; # svg name is automatic
-my $version = "1.0 (BETA 002)" ;
+my $version = "1.0 (BETA 003)" ;
 
 my $labelMinLength = 0.1 ; # min length of street so that it will be labeled / needs adjustment according to picture size
 
@@ -458,42 +458,44 @@ else {
 
 # PROCESS ROUTE FILE
 
-print "\nprocessing file: $routeName\n" ;
 
-open ($routeFile, "<", $routeName) || die "can't open input file" ;
+$success = open ($routeFile, "<", $routeName) ;
 my $first = 1 ;
 my $lastLon ;
 my $lastLat ;
-while ($line = <$routeFile>) {
-	if (grep /<rtept/, $line) {
-#		print $line, "\n" ;
-		# if inside box draw bug!
-		my ($lon) = ($line =~ /^.*\lon=[\'\"]([-\d,\.]+)[\'\"]/) ;
-		my ($lat) = ($line =~ /^.*\lat=[\'\"]([-\d,\.]+)[\'\"]/) ;
-#		print $lon, "\n" ;
-#		print $lat, "\n" ;
-#		print $desc, "\n" ;
-		if ( (defined $lon) and (defined $lat) ) {
-			if ( ($lon > $lonMin) and ($lon < $lonMax) and ($lat > $latMin) and ($lat < $latMax) ) {
-				if ($first) {
-					$first = 0 ;
-					$lastLon = $lon ;
-					$lastLat = $lat ;
-				}
-				else {
-					drawWay ($colorRoute, 2, $lastLon, $lastLat, $lon, $lat) ; 
-#					print "$lastLon, $lastLat, $lon, $lat\n" ; 
-					$lastLon = $lon ;
-					$lastLat = $lat ;
+if ($success) {
+	print "\nprocessing file: $routeName\n" ;
+	while ($line = <$routeFile>) {
+		if (grep /<rtept/, $line) {
+	#		print $line, "\n" ;
+			# if inside box draw bug!
+			my ($lon) = ($line =~ /^.*\lon=[\'\"]([-\d,\.]+)[\'\"]/) ;
+			my ($lat) = ($line =~ /^.*\lat=[\'\"]([-\d,\.]+)[\'\"]/) ;
+	#		print $lon, "\n" ;
+	#		print $lat, "\n" ;
+	#		print $desc, "\n" ;
+			if ( (defined $lon) and (defined $lat) ) {
+				if ( ($lon > $lonMin) and ($lon < $lonMax) and ($lat > $latMin) and ($lat < $latMax) ) {
+					if ($first) {
+						$first = 0 ;
+						$lastLon = $lon ;
+						$lastLat = $lat ;
+					}
+					else {
+						drawWay ($colorRoute, 2, $lastLon, $lastLat, $lon, $lat) ; 
+	#					print "$lastLon, $lastLat, $lon, $lat\n" ; 
+						$lastLon = $lon ;
+						$lastLat = $lat ;
+					}
 				}
 			}
 		}
 	}
+	close ($routeFile) ;
 }
-
-close ($routeFile) ;
-
-
+else {
+	print "\nNOT processing file: $routeName\n" ;
+}
 
 
 # DRAW OTHER INFORMATION

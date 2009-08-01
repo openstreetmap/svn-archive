@@ -14,7 +14,7 @@ my $colorRoute = "pink" ;
 
 my $programName = "todomap.pl" ;
 my $usage = "todomap.pl file.osm bugs.gpx route.gpx out.png size" ; # svg name is automatic
-my $version = "1.0 (BETA 001)" ;
+my $version = "1.0 (BETA 002)" ;
 
 my $labelMinLength = 0.1 ; # min length of street so that it will be labeled / needs adjustment according to picture size
 
@@ -426,32 +426,35 @@ closeOsmFile () ;
 
 # PROCESS GPX FILE
 
-print "\nprocessing file: $gpxName\n" ;
-
-open ($gpxFile, "<", $gpxName) || die "can't open input file" ;
+my $success ;
+$success = open ($gpxFile, "<", $gpxName) ;
 my $line ;
-while ($line = <$gpxFile>) {
-	if (grep /<wpt/, $line) {
-		# if inside box draw bug!
-		my ($lon) = ($line =~ /^\.*\<wpt lon=[\'\"]([-\d,\.]+)[\'\"]/) ;
-		my ($lat) = ($line =~ /^.*\lat=[\'\"]([-\d,\.]+)[\'\"]/) ;
-		my ($desc) = ($line =~ /<desc>(.+)<\/desc>/) ;
-#		print $lon, "\n" ;
-#		print $lat, "\n" ;
-#		print $desc, "\n" ;
-		if ( (defined $lon) and (defined $lat) and (defined $desc) ) {
-			if ( ($lon > $lonMin) and ($lon < $lonMax) and ($lat > $latMin) and ($lat < $latMax) ) {
-				$desc =~ s/<!\[CDATA\[// ;
-				$desc =~ s/\]\]>// ;
-				drawNodeDot ($lon, $lat, $colorBug, 5) ;
-				drawTextPos ($lon, $lat, 0, 0, $desc, "black", 2) 
+if ($success) {
+	print "\nprocessing file: $gpxName\n" ;
+	while ($line = <$gpxFile>) {
+		if (grep /<wpt/, $line) {
+			# if inside box draw bug!
+			my ($lon) = ($line =~ /^\.*\<wpt lon=[\'\"]([-\d,\.]+)[\'\"]/) ;
+			my ($lat) = ($line =~ /^.*\lat=[\'\"]([-\d,\.]+)[\'\"]/) ;
+			my ($desc) = ($line =~ /<desc>(.+)<\/desc>/) ;
+	#		print $lon, "\n" ;
+	#		print $lat, "\n" ;
+	#		print $desc, "\n" ;
+			if ( (defined $lon) and (defined $lat) and (defined $desc) ) {
+				if ( ($lon > $lonMin) and ($lon < $lonMax) and ($lat > $latMin) and ($lat < $latMax) ) {
+					$desc =~ s/<!\[CDATA\[// ;
+					$desc =~ s/\]\]>// ;
+					drawNodeDot ($lon, $lat, $colorBug, 5) ;
+					drawTextPos ($lon, $lat, 0, 0, $desc, "black", 2) 
+				}
 			}
 		}
 	}
+	close ($gpxFile) ;
 }
-
-close ($gpxFile) ;
-
+else {
+	print "\nNOT processing file: $gpxName\n" ;
+}
 
 # PROCESS ROUTE FILE
 

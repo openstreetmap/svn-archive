@@ -29,9 +29,7 @@ o although I tried to mimic the behaviour of a standard browser like Firefox as
   You therefore have to configure the WMS adapter with a valid session ID which
   you have to retrieve from the WMS server of Bern using your preferred web
   browser (see below in section Usage). 
-
-o currently, tiles for orthofotos of Bern overlap considerably. 
-  
+   
 
 INSTALLATION
 ------------
@@ -50,9 +48,9 @@ o Add the WMS adapter as WMS server
   - select the configuration screen for WMS server
   - add an entry with
        menu name = Orthofotos Bern 
-       WMS-URL   = http://localhost:8787/orthofotos-bern?action=getmap
-       
-    
+       WMS-URL   = http://localhost:8787/orthofotos-bern?    !!! Note the trailing '?' !!!
+
+             
 
 USAGE 
 ------------

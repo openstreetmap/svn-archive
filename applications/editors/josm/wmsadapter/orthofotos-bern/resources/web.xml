@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app>
+
+    <display-name>
+      Adapter for Orthofotos of Bern  
+    </display-name>
+    <description>
+      This servlet provides an adapter for the WMS server of the city of Bern. It 
+      allows JOSM to access orthofotos of Bern through its WMS plugin.
+    </description>
+
+    <context-param>
+    </context-param>
+
+    <servlet>
+      <servlet-name>OrthofotoBernWMSAdapter</servlet-name>
+      <description> This servlet provides an adapter for the WMS server of the city of Bern. It 
+      allows JOSM to access orthofotos of Bern through its WMS plugin.</description>
+      <servlet-class>ch.guggis.josm.bern.servlet.OrthofotoBernWMSAdapter</servlet-class>
+      <init-param>
+      </init-param>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>OrthofotoBernWMSAdapter</servlet-name>
+      <url-pattern>/orthofotos-bern/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>

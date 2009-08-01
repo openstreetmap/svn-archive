@@ -2,34 +2,39 @@
 from bulk_upload import bulk_upload
 from parse import Feature
 import os
+import pickle
 
 class IdMap(bulk_upload.IdMap):
+    noparentarea = None
+    pafilename = None
     def __init__(self, filenamebase):
         self.pafilename = filenamebase + '.noparentarea.pkl'
         bulk_upload.IdMap.__init__(self, filenamebase + '.osm.db')
-        print "Init naptan idmap"
-        print self.idMap
+
+    def load(self):
+        bulk_upload.IdMap.load(self)
+        try:
+            if os.stat(self.pafilename):
+                f=open(self.pafilename, "r")
+                self.noparentarea = pickle.load(f)
+                f.close()
+        except IOError:
+            pass
 
     def save(self):
         bulk_upload.IdMap.save(self)
-        
-        try:
-        if os.stat(self.pafilename):
-            f=open(self.pafilename, "r")
-            noparentarea = pickle.load(f)
-            f.close()
-
-            for arr in noparentarea.values():
-                print arr
-                for ft in arr:
+        for arr in self.noparentarea.values():
+            # Scanning the no parent areas each time will be quicker than the idMap
+            for ft in arr:
+                try:
                     ft.id = self.idMap[ft.type][ft.id]
+                except KeyError:
+                    pass
 
-            f=open(self.pafilename+".tmp","w")
-            pickle.dump(self.noparentarea,f)
-            f.close()
-            os.rename(self.pafilename+".tmp", self.pafilename)
-        except IOError:
-            pass
+        f=open(self.pafilename+".tmp","w")
+        pickle.dump(self.noparentarea,f)
+        f.close()
+        os.rename(self.pafilename+".tmp", self.pafilename)
 
 if __name__ == "__main__":
     import optparse

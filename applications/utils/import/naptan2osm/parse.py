@@ -23,7 +23,7 @@ class Feature(osmparser.OSMObj):
 
 class ParseXML:
     namespace = '{http://www.naptan.org.uk/}'
-    defaulttags = {'source': 'naptan_import', 'created_by': 'naptan2osm', 'naptan:unverified': 'yes'}
+    defaulttags = {'naptan:verified': 'no'}
     tagprefix = ''
     tagmap = {}         # The basic tag mappings that are a simple one to one mapping
     
@@ -109,7 +109,13 @@ class ParseXML:
                 break
 
     def addtomap(self, text, feature, map, features=[]):
-        """Add feature to given pre-relation mappings."""
+        """Add feature to given pre-relation mappings.
+
+        text {String}:  Key to search by
+        feature:        Object to add (Point or Area)
+        map:            Mapping sorted by parent StopAreaCode of features to their parent StopArea
+        features:       Dict of created StopAreas to check against first
+        """
         if text in features:
             # The parent StopArea's feature has already been created
             features[text].members.append(feature)
@@ -152,7 +158,6 @@ class ParseNaptan(ParseXML):
         'Indicator': '',            # For when the ref-parsing code below fails
         'Notes': '',
         'CompassPoint': 'naptan:Bearing',   # Slightly hacky
-        'AdministrativeAreaRef': '',
         'PlusbusZoneRef': '',
         # StopArea tagging begins here
         'StopAreaCode': '',
@@ -167,7 +172,7 @@ class ParseNaptan(ParseXML):
         'Crossing': '',
         'Indicator': ''
     }
-    defaultareatags = {'type': 'site', 'site': 'stop_area'}
+    defaultareatags = {'public_transport': 'stop_place'}
     watchnodes = ('StopPoints', 'StopArea', 'AlternativeDescriptors', 'StopClassification')
     
     # dict of form {stoparearef: [osmstoppointid, osmstoparearaid, ...]}
@@ -301,7 +306,7 @@ class ParseNaptan(ParseXML):
         
         for idx in self.features.copy():
             # Ignore relations with no members
-            if len(self.features[idx].members):
+            if len(self.features[idx].members) > 1:
                 self.output.write(self.features[idx])
                 del self.features[idx]
             else:
@@ -317,7 +322,7 @@ class ParseNaptan(ParseXML):
         
         print "Parsed %d StopPoints and %d StopAreas" % (self.nodecounter, self.relationcounter)
         print "Output %d StopPoints and %d StopAreas" % (self.pointcount, areacount)
-        print "Pickled %d missing parental StopArea references and %d empty StopAreas" % (len(self.stopareamap), len(self.features))
+        print "Pickled %d missing parental StopArea references and %d empty (or 1 member) StopAreas" % (len(self.stopareamap), len(self.features))
 
 
 class ParseNPTG(ParseXML):

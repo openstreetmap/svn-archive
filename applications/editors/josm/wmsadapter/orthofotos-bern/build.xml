@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="orthofoto-bern" default="default">
+    <description>
+     
+    </description>
+	
+	<property name="source.dir" value="${basedir}/src"/>
+	<property name="library.dir" value="${basedir}/lib"/>
+	<property name="build.dir" value="${basedir}/build"/>
+	<property name="build.dir.classes" value="${build.dir}/classes"/>
+	<property name="build.dir.lib" value="${build.dir}/lib"/>
+
+	<path id="javax.servlet.classpath">
+		  <fileset dir="${basedir}/../javax.servlet" includes="*.jar" />
+	</path>
+	
+	<path id="project.classpath">
+		 <path refid="javax.servlet.classpath" /> 
+	</path>
+
+	<!-- *********************************************************************************** -->
+    <target name="default" depends="clean,compile,servlet.war" description="description">       
+    </target>
+	<!-- *********************************************************************************** -->
+	<target name="init">
+    	<buildnumber file="build.number" />
+		
+	</target>
+	<!-- *********************************************************************************** -->
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<mkdir dir="${build.dir}"/>	
+		<mkdir dir="${build.dir.classes}"/>
+		<mkdir dir="${build.dir.lib}"/>
+	</target>
+	<!-- *********************************************************************************** -->
+	<target name="compile">
+		<javac srcdir="${source.dir}"
+			destdir="${build.dir.classes}"
+			classpathref="project.classpath">
+	    </javac>
+	</target>
+
+	<!-- *********************************************************************************** -->
+	<target name="servlet.war" >
+		
+		<tstamp>
+			<format property="timestamp" pattern="yyyy-MM-dd HH:mm:ss"/>
+		 </tstamp>
+
+		<war destfile="${build.dir.lib}/orthofoto-bern-wms-adapter.war"
+			webxml="${basedir}/resources/web.xml">	
+			<classes dir="${build.dir.classes}"> 
+				<include name="ch/guggis/josm/bern/servlet/**/*.class" />
+			</classes>
+			<manifest> 			
+	      		<attribute name="Built-By" value="${user.name}"/>
+	      		<attribute name="Built-On" value="${timestamp}"/>
+	      		<attribute name="Build-Id" value="${build.number}"/>      		
+			</manifest> 
+		</war>		
+	</target>
+	
+	<!-- *********************************************************************************** -->
+	<target name="deploy" depends="init,default">
+		<copy file="${build.dir.lib}/orthofoto-bern-wms-adapter.war" todir="C:\data\projekte\osm\bern-proxy" />
+	</target>
+
+	
+	<!-- *********************************************************************************** -->	
+	<target name="make-distrib" depends="init,default">
+		<mkdir dir="${build.dir}/distrib"/>
+		<mkdir dir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}"/>
+		
+		<tstamp>
+			<format property="timestamp" pattern="yyyy-MM-dd HH:mm:ss"/>
+		 </tstamp>
+
+		<echo file="VERSION.txt" append="false">
+Built-On: ${timestamp}
+Build-ID: ${build.number}			
+		</echo>
+		
+		<copy file="${build.dir.lib}/orthofoto-bern-wms-adapter.war" todir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}" />
+		<copy file="${library.dir}/winstone-0.9.10.jar" todir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}" />
+		<copy file="${basedir}/README.txt" todir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}" />
+		<copy file="${basedir}/VERSION.txt" todir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}" />
+		
+		<zip destfile="${basedir}/distrib/orthofoto-bern-wms-adapter-${build.number}.zip">
+			<zipfileset dir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}" includes="**/*" prefix="orthofoto-bern-wms-adapter-${build.number}"/>
+		</zip>
+		
+	</target>
+</project>

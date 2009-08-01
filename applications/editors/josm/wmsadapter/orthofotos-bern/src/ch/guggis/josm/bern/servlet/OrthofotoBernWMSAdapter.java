@@ -488,6 +488,10 @@ public class OrthofotoBernWMSAdapter extends HttpServlet {
 		logger.info("handling request <" + req.getRequestURI() + ">");
 
 		String action = req.getParameter("action");
+		if (action == null && req.getParameter("bbox") != null) {
+			action = "getmap";
+		}
+		logger.info("action is <" + action + ">");
 		if ("ping".equals(action)) {
 			handlePing(req, resp);
 		} else if ("show-session-id".equals(action)) {

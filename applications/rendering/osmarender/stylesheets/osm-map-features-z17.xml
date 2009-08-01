@@ -510,7 +510,7 @@
 				<line class="bridge-casing highway-residential-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<rule e="way" k="service" v="parking_aisle">
+				<rule e="way" k="service" v="parking_aisle|driveway|driveway">
 					<line class="bridge-casing highway-aisle-bridge-casing" smart-linecap="no" suppress-markers-tag="bridge"/>
 				</rule>
 				<else>
@@ -598,7 +598,7 @@
 				<line class="bridge-core highway-residential-bridge-core" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<rule e="way" k="service" v="parking_aisle">
+				<rule e="way" k="service" v="parking_aisle|driveway|driveway">
 					<line class="bridge-core highway-aisle-bridge-core" smart-linecap="no"/>
 				</rule>
 				<else>
@@ -709,7 +709,7 @@
 				<area class="highway-casing highway-unsurfaced-casing highway-unsurfaced-area-casing no-bezier" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<rule e="way" k="service" v="parking_aisle">
+				<rule e="way" k="service" v="parking_aisle|driveway">
 					<area class="highway-casing highway-aisle-casing highway-aisle-area-casing no-bezier"/>
 				</rule>
 				<else>
@@ -868,7 +868,7 @@
 					</else>
 				</rule>
 				<rule e="way" k="highway" v="service">
-					<rule e="way" k="service" v="parking_aisle">
+					<rule e="way" k="service" v="parking_aisle|driveway">
 						<line class="highway-casing highway-aisle-casing"/>
 					</rule>
 					<else>
@@ -1118,7 +1118,7 @@
 					</rule>
 				</rule>
 				<rule e="way" k="highway" v="service">
-					<rule e="way" k="service" v="parking_aisle">
+					<rule e="way" k="service" v="parking_aisle|driveway">
 						<line class="highway-casing highway-aisle-casing"/>
 					</rule>
 					<else>
@@ -1405,7 +1405,7 @@
 				<area class="highway-core highway-unsurfaced-area no-bezier" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<rule e="way" k="service" v="parking_aisle">
+				<rule e="way" k="service" v="parking_aisle|driveway">
 					<area class="highway-core highway-aisle-area no-bezier"/>
 				</rule>
 				<else>
@@ -1567,7 +1567,7 @@
 					<line class="highway-core highway-unsurfaced-core" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="service">
-					<rule e="way" k="service" v="parking_aisle">
+					<rule e="way" k="service" v="parking_aisle|driveway">
 						<line class="highway-core highway-aisle-core"/>
 					</rule>
 					<else>
@@ -1810,7 +1810,7 @@
 				<line class="highway-unsurfaced-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
 			<rule e="way" k="highway" v="service">
-				<rule e="way" k="service" v="parking_aisle">
+				<rule e="way" k="service" v="parking_aisle|driveway">
 					<line class="tunnel-casing highway-aisle-casing tunnel" mask-class="tunnel-core highway-aisle-core"/>
 					<line class="highway-aisle-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 				</rule>
@@ -2807,7 +2807,12 @@
 				<symbol ref="information-guidepost" position="center"/>			
 			</rule>
 			<else>
-				<symbol ref="information" position="center"/>
+				<rule e="node" k="information" v="office">
+					<symbol ref="information-office" position="center"/>			
+				</rule>
+				<else>
+					<symbol ref="information" position="center"/>
+				</else>	
 			</else>	
 		</rule>
 		<rule e="node" k="tourism" v="viewpoint">
@@ -3045,7 +3050,7 @@
 							<symbol ref="khanda" position="center"/>
 						</rule>
 						<else>
-							<symbol ref="peak" position="center"/>
+							<symbol ref="religion" position="center"/>
 						</else>
 					</else>
 				</else>
@@ -3054,7 +3059,7 @@
 
 		<!-- Parking -->
 		<rule e="node|way" k="amenity" v="parking">
-			<rule e="node|way" k="access" v="~|permissive">
+			<rule e="node|way" k="access" v="~">
 				<rule e="node|way" k="parking" v="park_and_ride">
 					<symbol ref="park_and_ride" position="center"/>
 				</rule>
@@ -3077,6 +3082,31 @@
 					</else>
 				</else>
 			</rule>
+			<else>
+				<rule e="node|way" k="access" v="permissive">
+					<rule e="node|way" k="parking" v="park_and_ride">
+						<symbol ref="park_and_ride-permissive" position="center"/>
+					</rule>
+					<else>
+						<rule e="node|way" k="parking" v="multi-storey|underground">
+							<rule e="node|way" k="fee" v="yes">
+								<symbol ref="parking_roof_fee-permissive" position="center"/>
+							</rule>
+							<else>
+								<symbol ref="parking_roof-permissive" position="center"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="node|way" k="fee" v="yes">
+								<symbol ref="parking_fee-permissive" position="center"/>
+							</rule>
+							<else>
+								<symbol ref="parking-permissive" position="center"/>
+							</else>
+						</else>
+					</else>
+				</rule>
+			</else>
 		</rule>
 
 		<rule e="node" k="highway" v="traffic_signals">

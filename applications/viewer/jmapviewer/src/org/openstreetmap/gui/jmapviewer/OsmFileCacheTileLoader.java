@@ -20,6 +20,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource.TileUpdate;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * A {@link TileLoader} implementation that loads tiles from OSM via HTTP and
@@ -52,15 +53,20 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
      * @param map
      * @param cacheDir
      */
-    public OsmFileCacheTileLoader(TileLoaderListener map, File cacheDir) {
+    public OsmFileCacheTileLoader(TileLoaderListener map, File cacheDir) throws SecurityException{
         super(map);
-        String tempDir = System.getProperty("java.io.tmpdir");
+        String tempDir = null;
         String userName = System.getProperty("user.name");
         try {
+            tempDir = System.getProperty("java.io.tmpdir");
+        } catch(SecurityException e) {
+            log.warning(tr("Failed to access system property ''{0}'' for security reasons. Exception was: {1}", "java.io.tmpdir", e.toString()));
+            throw e; // rethrow
+        }
+        try {
             if (cacheDir == null) {
-                if (tempDir == null) {
+                if (tempDir == null)
                     throw new IOException("No temp directory set");
-                }
                 String subDirName = "JMapViewerTiles";
                 // On Linux/Unix systems we do not have a per user tmp directory. 
                 // Therefore we add the user name for getting a unique dir name.  
@@ -69,9 +75,8 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                 cacheDir = new File(tempDir, subDirName);
             }
             log.finest("Tile cache directory: " + cacheDir);
-            if (!cacheDir.exists() && !cacheDir.mkdirs()) {
+            if (!cacheDir.exists() && !cacheDir.mkdirs())
                 throw new IOException();
-            }
             cacheDirBase = cacheDir.getAbsolutePath();
         } catch (Exception e) {
             cacheDirBase = "tiles";
@@ -79,14 +84,15 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
     }
 
     /**
-     * Create a OSMFileCacheTileLoader with system property temp dir. 
+     * Create a OSMFileCacheTileLoader with system property temp dir.
      * If not set an IOException will be thrown.
      * @param map
      */
-    public OsmFileCacheTileLoader(TileLoaderListener map) {
+    public OsmFileCacheTileLoader(TileLoaderListener map) throws SecurityException {
         this(map, null);
     }
 
+    @Override
     public Runnable createTileLoaderJob(final TileSource source, final int tilex, final int tiley, final int zoom) {
         return new FileLoadJob(source, tilex, tiley, zoom);
     }
@@ -119,8 +125,9 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                 tile.loading = true;
             }
             tileCacheDir = new File(cacheDirBase, source.getName());
-            if (!tileCacheDir.exists())
+            if (!tileCacheDir.exists()) {
                 tileCacheDir.mkdirs();
+            }
             if (loadTileFromFile())
                 return;
             if (fileTilePainted) {
@@ -199,8 +206,9 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
             } catch (Exception e) {
                 tile.setImage(Tile.ERROR_IMAGE);
                 listener.tileLoadingFinished(tile, false);
-                if (input == null)
+                if (input == null) {
                     System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());
+                }
             } finally {
                 tile.loading = false;
                 tile.setLoaded(true);
@@ -248,10 +256,11 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
             boolean finished = false;
             do {
                 int read = input.read(buffer);
-                if (read >= 0)
+                if (read >= 0) {
                     bout.write(buffer, 0, read);
-                else
+                } else {
                     finished = true;
+                }
             } while (!finished);
             if (bout.size() == 0)
                 return null;

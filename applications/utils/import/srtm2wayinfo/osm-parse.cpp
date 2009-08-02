@@ -28,10 +28,17 @@ static bool isDelim(char c)
 void OsmData::processTag(char *tag)
 {
     //qDebug() << "tag" << tag;
+    #define NODES
+    #define WAYS
+    #ifdef NODES
     if (!strncmp(tag, "node", 5)) {
         //qDebug() << "node" << nodeid << lat << lon;
         nodes[nodeid] = OsmNode(lat, lon);
-    } else if (!strncmp(tag, "way", 4)) {
+    }
+    #endif
+    #ifdef WAYS
+//     else
+    if (!strncmp(tag, "way", 4)) {
         keep = false;
         currentWay = new OsmWay(wayid);
     } else if (!strncmp(tag, "nd", 3)) {
@@ -51,6 +58,7 @@ void OsmData::processTag(char *tag)
         }
         currentWay = 0;
     }
+    #endif
 }
 
 void OsmData::processParam(char *tag, char *name, char *value)

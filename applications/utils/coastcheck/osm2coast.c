@@ -123,7 +123,8 @@ void StartElement(xmlTextReaderPtr reader, const xmlChar *name)
 
         int id = strtol((char *)xid, NULL, 10);
         if( id > 0 && nd_count < MAX_NODES_PER_WAY)
-            nds[nd_count++] = id;
+            nds[nd_count] = id;
+        nd_count++;
         xmlFree(xid);
     } else if (xmlStrEqual(name, BAD_CAST "relation")) {
         count_rel++;

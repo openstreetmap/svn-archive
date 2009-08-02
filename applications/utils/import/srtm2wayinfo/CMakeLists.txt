@@ -12,6 +12,7 @@ SET(SRTM2WAYINFO_SOURCES
     srtm.cpp
     zip.cpp
     settings.cpp
+    osmtypes.cpp
 )
 
 SET(EXE_NAME "srtm2wayinfo")

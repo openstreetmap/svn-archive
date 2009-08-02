@@ -14,6 +14,7 @@
 
 int main(int argc, char **argv)
 {
+    qDebug() << sizeof(OsmNode) << sizeof(OsmWay) << sizeof(OsmData);
     global_settings.parseSettings(argc, argv);
 
     curl_global_init(CURL_GLOBAL_DEFAULT);

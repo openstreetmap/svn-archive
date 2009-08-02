@@ -1,5 +1,10 @@
+/* Copyright (c) 2009 Hermann Kraus
+ * This software is available under a "MIT Style" license
+ * (see COPYING).
+ */
 /** \file
   * Main function
+  *
   * Handles command line processing, etc.
   */
 

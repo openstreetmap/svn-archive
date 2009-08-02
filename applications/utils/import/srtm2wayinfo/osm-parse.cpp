@@ -1,3 +1,7 @@
+/* Copyright (c) 2009 Hermann Kraus
+ * This software is available under a "MIT Style" license
+ * (see COPYING).
+ */
 /** \file
   * Minimalistic OSM parser.
   * Only handles the attributes required for this project and ignores everything else.
@@ -20,13 +24,15 @@ void OsmData::parse(QString filename)
     f.close();
 }
 
-static bool isDelim(char c)
+/** Checks if c is a character that ends a parameter value. */
+static inline bool isDelim(char c)
 {
     return (c == ' ') || (c == '<') || (c == '\t') || (c == '>') || (c == '/');
 }
 
 void OsmData::processTag(char *tag)
 {
+    //TODO: DEBUGGING ONLY
     #define NODES
     #define WAYS
     #ifdef NODES
@@ -89,9 +95,13 @@ void OsmData::parse(QFile *file)
     kept = discarded = nodes_referenced = 0;
     qDebug() << "Using new parser!";
     QDataStream stream(file);
+    /** Length of the main read buffer. */
     #define BUFFER_LEN 1024
+    /** Maximum tag name length. Longer values are truncated.*/
     #define TAG_LEN 16
+    /** Maxmim parameter name length. Longer values are truncated.*/
     #define PARAM_NAME_LEN 16
+    /** Maximum parameter value length. Longer values are truncated. */
     #define PARAM_VALUE_LEN 16
     char buffer[BUFFER_LEN];
     char tag[TAG_LEN];
@@ -174,7 +184,6 @@ void OsmData::parse(QFile *file)
                     param_value[value_pos] = 0;
                     state = state_param_name;
                     name_pos = 0;
-                    //qDebug() << "\tValue2:" << param_value;
                     processParam(tag, param_name, param_value);
                     value_pos = 0;
                     continue;

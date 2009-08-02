@@ -1,3 +1,7 @@
+/* Copyright (c) 2009 Hermann Kraus
+ * This software is available under a "MIT Style" license
+ * (see COPYING).
+ */
 /** \file
   * Create altitude relations from an OSMData object.
   */
@@ -7,9 +11,7 @@
 
 #include <QIODevice>
 
-/** Create a new relation writer object.
-  * \param downloader Optional downloader object. If none is given
-  *        a new one is constructed and initialized.*/
+/** Create a new relation writer object. */
 RelationWriter::RelationWriter(OsmData *data, QIODevice *output, SrtmDownloader *downloader)
 {
     this->data = data;

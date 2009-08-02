@@ -1,4 +1,7 @@
-# A lot of this code is copied from the CMakeList.txt files from scribus.
+# Copyright (c) 2009 Hermann Kraus
+# This software is available under a "MIT Style" license
+# (see COPYING).
+
 
 project(SRTM2WAYINFO)
 cmake_minimum_required (VERSION 2.6)

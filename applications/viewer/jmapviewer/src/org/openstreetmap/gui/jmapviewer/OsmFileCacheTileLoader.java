@@ -55,12 +55,18 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
     public OsmFileCacheTileLoader(TileLoaderListener map, File cacheDir) {
         super(map);
         String tempDir = System.getProperty("java.io.tmpdir");
+        String userName = System.getProperty("user.name");
         try {
             if (cacheDir == null) {
                 if (tempDir == null) {
                     throw new IOException("No temp directory set");
                 }
-                cacheDir = new File(tempDir, "JMapViewerTiles");
+                String subDirName = "JMapViewerTiles";
+                // On Linux/Unix systems we do not have a per user tmp directory. 
+                // Therefore we add the user name for getting a unique dir name.  
+                if (userName != null && userName.length() > 0)
+                    subDirName += "_" + userName;
+                cacheDir = new File(tempDir, subDirName);
             }
             log.finest("Tile cache directory: " + cacheDir);
             if (!cacheDir.exists() && !cacheDir.mkdirs()) {
@@ -71,7 +77,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
             cacheDirBase = "tiles";
         }
     }
-    
+
     /**
      * Create a OSMFileCacheTileLoader with system property temp dir. 
      * If not set an IOException will be thrown.

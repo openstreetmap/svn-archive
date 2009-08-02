@@ -1,3 +1,7 @@
+/* Copyright (c) 2009 Hermann Kraus
+ * This software is available under a "MIT Style" license
+ * (see COPYING).
+ */
 /** \file
     Read SRTM zip files. */
 #ifndef __SRTM_ZIP_H__

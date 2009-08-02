@@ -1,3 +1,7 @@
+/* Copyright (c) 2009 Hermann Kraus
+ * This software is available under a "MIT Style" license
+ * (see COPYING).
+ */
 /** \file
   * Create altitude relations from an OSMData object.
   */
@@ -17,7 +21,7 @@ class SrtmDownloader;
 class RelationWriter
 {
     public:
-        RelationWriter(OsmData *data, QIODevice *output, SrtmDownloader *downloader = 0);
+        RelationWriter(OsmData *data, QIODevice *output, SrtmDownloader *downloader);
         void writeRelations();
     private:
         void processWay(OsmWay *way);

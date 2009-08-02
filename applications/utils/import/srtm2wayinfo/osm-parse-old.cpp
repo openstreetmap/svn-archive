@@ -1,5 +1,9 @@
+/* Copyright (c) 2009 Hermann Kraus
+ * This software is available under a "MIT Style" license
+ * (see COPYING).
+ */
 /** \file
-  * Minimalistic OSM parser.
+  * Minimalistic OSM parser (old and slow).
   * Only handles the attributes required for this project and ignores everything else.
   * \note This is a old version of the parser which uses QXmlStreamReader. It is therefore
   * standard compliant, but also takes much longer to parse the data (5 to 10 times slower).
@@ -65,18 +69,18 @@ void OsmData::parse(QFile *file)
         if (xml.name() == "node") {
             OsmNodeId nodeid = xml.attributes().value("id").toString().toInt();
             nodes[nodeid] = OsmNode(
-                xml.attributes().value("lat"),
-                xml.attributes().value("lon"));
+                xml.attributes().value("lat").toString().toFloat(),
+                xml.attributes().value("lon").toString().toFloat());
             continue;
         }
 
         if (xml.name() == "way") {
             keep = false;
-            currentWay = new OsmWay(xml.attributes().value("id"));
+            currentWay = new OsmWay(xml.attributes().value("id").toString().toInt());
         }
 
         if (xml.name() == "nd") {
-            currentWay->addNode(xml.attributes().value("ref"));
+            currentWay->addNode(xml.attributes().value("ref").toString().toInt());
         }
     }
     qDebug() << "Kept:" << kept << "Discarded:" << discarded <<  "Noderefs:" << nodes_referenced << "Nodes:" << nodes.count();

@@ -1,3 +1,7 @@
+/* Copyright (c) 2009 Hermann Kraus
+ * This software is available under a "MIT Style" license
+ * (see COPYING).
+ */
 /** \file
   * Minimalistic OSM parser.
   * Only handles the attributes required for this project and ignores everything else.

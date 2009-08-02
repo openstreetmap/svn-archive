@@ -382,6 +382,7 @@ static int processList(char *filename, char *output_prefix)
   DBFAddField( dbf_arc, "length", FTInteger, 10, 0 );
   DBFAddField( dbf_arc, "way_id", FTInteger, 10, 0 );
   DBFAddField( dbf_point, "type", FTInteger, 5, 0 );
+  DBFAddField( dbf_point, "way_id", FTInteger, 10, 0 );
   
   int shp_poly_count = 0, shp_arc_count = 0;
   
@@ -423,6 +424,7 @@ static int processList(char *filename, char *output_prefix)
       int idx = SHPWriteObject( shp_point, -1, p );
       if( idx < 0 ) { fprintf(stderr, "Write failure: %m\n"); exit(1); }
       DBFWriteIntegerAttribute( dbf_point, idx, 0, t );
+      DBFWriteIntegerAttribute( dbf_point, idx, 1, 0 );
       SHPDestroyObject(p);
       
       continue;
@@ -615,6 +617,7 @@ static int processList(char *filename, char *output_prefix)
       idx = SHPWriteObject( shp_point, -1, p );
       if( idx < 0 ) { fprintf(stderr, "Write failure: %m\n"); exit(1); }
       DBFWriteIntegerAttribute( dbf_point, idx, 0, 2 );
+      DBFWriteIntegerAttribute( dbf_point, idx, 1, way_id );
       SHPDestroyObject(p);
       
       if( type != 'C' )
@@ -623,6 +626,7 @@ static int processList(char *filename, char *output_prefix)
         idx = SHPWriteObject( shp_point, -1, p );
         if( idx < 0 ) { fprintf(stderr, "Write failure: %m\n"); exit(1); }
         DBFWriteIntegerAttribute( dbf_point, idx, 0, 2 );
+        DBFWriteIntegerAttribute( dbf_point, idx, 1, -way_id );
         SHPDestroyObject(p);
       }
     }

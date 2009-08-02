@@ -171,6 +171,7 @@ sub processXML {
 		}
 		else {
 			print STDERR "Unknown line $line\n";
+                        exit 1;
 		};
 	}
 
@@ -394,5 +395,6 @@ sub OutputWay
   my $complete = shift;
   my @list = Consolidate(\%ways, $way);
   $ways_output += scalar(@list);
-  print "",($complete?"C":"I"),scalar(@list)," ",join(" ",@list),"\n";
+  print "",($complete?"C":"I"),scalar(@list)," ",join(" ",@list),"\n" or die "Output error ($!)\n";
 }
+

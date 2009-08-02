@@ -1,9 +1,14 @@
+/** \file
+  * Handles command line parsing and stores the options.
+  */
 #include "settings.h"
 #include <getopt.h>
 #include <QDebug>
 
+/** Settings are global for the whole program. */
 Settings global_settings;
 
+/** Show usage instructions. */
 void Settings::usage()
 {
     qWarning() <<
@@ -24,6 +29,11 @@ void Settings::usage()
     "                                are cached.\n";
 }
 
+/** Parses the command line and fills the settings structure.
+  *
+  * This function uses the getopt functions provided by glibc
+  * and has GNU style option handling.
+  */
 void Settings::parseSettings(int argc, char **argv)
 {
     static struct option long_options[] =

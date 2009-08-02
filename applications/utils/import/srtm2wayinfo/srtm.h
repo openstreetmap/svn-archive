@@ -20,6 +20,7 @@
 /** Handles the loading and parsing of an SRTM tile.
   *
   * This class should work for both SRTM1 and SRTM3 data.
+  * But currently only SRTM3 is used.
   */
 class SrtmTile
 {

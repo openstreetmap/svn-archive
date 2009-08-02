@@ -27,12 +27,10 @@ static bool isDelim(char c)
 
 void OsmData::processTag(char *tag)
 {
-    //qDebug() << "tag" << tag;
     #define NODES
     #define WAYS
     #ifdef NODES
     if (!strncmp(tag, "node", 5)) {
-        //qDebug() << "node" << nodeid << lat << lon;
         nodes[nodeid] = OsmNode(lat, lon);
     }
     #endif
@@ -63,7 +61,6 @@ void OsmData::processTag(char *tag)
 
 void OsmData::processParam(char *tag, char *name, char *value)
 {
-    //qDebug() << "\tparam" << tag << name << value;
     if (!strcmp("lat", name)) {
         lat = atof(value);
     } else if (!strcmp("lon", name)) {
@@ -140,7 +137,6 @@ void OsmData::parse(QFile *file)
             }
             /******************************************************************/
             if (state == state_tag) {
-                //if (c == '/') state = state_waiting_for_tag_start; //End tag
                 if (isblank(c)) {
                     if (!tag_pos) continue; //Tag text has not started yes
                     else {

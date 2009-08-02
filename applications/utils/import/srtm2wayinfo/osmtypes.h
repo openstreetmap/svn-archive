@@ -1,3 +1,6 @@
+/** \file
+  * The basic types (nodes, ways) and efficient storage for them.
+  */
 #ifndef __OSMTYPES_H__
 #define __OSMTYPES_H__
 
@@ -69,10 +72,6 @@ class OsmNode
         /** Check if a node is an intersection. */
         bool isIntersection() { return lat_ > 290.0; }
 
-
-        /*void *operator new(size_t size);
-        void *operator new(size_t size, OsmNode* node);
-        void operator delete(void *p);*/
     private:
         float lat_, lon_;
 };

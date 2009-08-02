@@ -1,6 +1,8 @@
 /** \file
   * Minimalistic OSM parser.
   * Only handles the attributes required for this project and ignores everything else.
+  * \note This is a old version of the parser which uses QXmlStreamReader. It is therefore
+  * standard compliant, but also takes much longer to parse the data (5 to 10 times slower).
   */
 #include "osm-parse.h"
 

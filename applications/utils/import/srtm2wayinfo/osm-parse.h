@@ -36,6 +36,7 @@ class OsmData
         OsmWayId wayid;
         float lat, lon;
         bool keep;
+    /* For debugging / optimization only: */
     private:
         int kept, discarded, nodes_referenced;
 };

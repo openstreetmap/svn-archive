@@ -50,6 +50,9 @@
 # Version 4.41 (gary68)
 # - changed regex for openosmfile from /node/ to /<node/ - seems better since changesets are now in planet...
 #
+# Version 4.5 (gary68)
+# - OSB address changed
+#
 
 #
 # USAGE
@@ -125,7 +128,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '4.41' ; 
+$VERSION = '4.5' ; 
 
 require Exporter ;
 
@@ -791,7 +794,7 @@ sub osbLink {
 	my $lon = shift ;
 	my $lat = shift ;
 	my $zoom = shift ;
-	my $string = "<A HREF=\"http://openstreetbugs.appspot.com/?lon=" . $lon . "&lat=" . $lat . "&zoom=" . $zoom . "\">OSB</A>" ;
+	my $string = "<A HREF=\"http://openstreetbugs.schokokeks.org/?lon=" . $lon . "&lat=" . $lat . "&zoom=" . $zoom . "\">OSB</A>" ;
 	return ($string) ;
 }
 

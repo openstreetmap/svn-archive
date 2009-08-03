@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.UrlLabel;
@@ -194,7 +195,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
             }
 
             // and display an error message. The while(true) ensures that the dialog pops up again
-            JOptionPane.showMessageDialog(Main.parent,
+            OptionPaneUtil.showMessageDialog(Main.parent,
                     tr("Couldn't match the entered link or id to the selected service. Please try again."),
                     tr("No valid WMS URL or id"),
                     JOptionPane.ERROR_MESSAGE);

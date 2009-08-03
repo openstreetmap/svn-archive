@@ -25,6 +25,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.tools.GBC;
@@ -52,6 +53,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         final DefaultTableModel modeldef = new DefaultTableModel(
         new String[]{tr("Menu Name (Default)"), tr("WMS URL (Default)")}, 0);
         final JTable listdef = new JTable(modeldef){
+        	@Override
             public boolean isCellEditable(int row,int column){return false;}
         };;
         JScrollPane scrolldef = new JScrollPane(listdef);
@@ -75,7 +77,11 @@ public class WMSPreferenceEditor implements PreferenceSetting {
                 p.add(key, GBC.eop().insets(5,0,0,0).fill(GBC.HORIZONTAL));
                 p.add(new JLabel(tr("WMS URL")), GBC.std().insets(0,0,5,0));
                 p.add(value, GBC.eol().insets(5,0,0,0).fill(GBC.HORIZONTAL));
-                int answer = JOptionPane.showConfirmDialog(gui, p, tr("Enter a menu name and WMS URL"), JOptionPane.OK_CANCEL_OPTION);
+                int answer = OptionPaneUtil.showConfirmationDialog(
+                		gui, p, 
+                		tr("Enter a menu name and WMS URL"), 
+                		JOptionPane.OK_CANCEL_OPTION,
+                		JOptionPane.QUESTION_MESSAGE);
                 if (answer == JOptionPane.OK_OPTION) {
                     model.addRow(new String[]{key.getText(), value.getText()});
                 }
@@ -103,7 +109,12 @@ public class WMSPreferenceEditor implements PreferenceSetting {
             public void actionPerformed(ActionEvent e) {
                 Integer line = listdef.getSelectedRow();
                 if (line == -1)
-                    JOptionPane.showMessageDialog(gui, tr("Please select the row to copy."));
+                    OptionPaneUtil.showMessageDialog(
+                    		gui, 
+                    		tr("Please select the row to copy."),
+                    		tr("Information"),
+                    		JOptionPane.INFORMATION_MESSAGE
+                    		);
                 else
                 {
                     model.addRow(new String[]{modeldef.getValueAt(line, 0).toString(),

@@ -46,7 +46,7 @@ public class WMSAdjustAction extends MapMode implements
             return;
 
         Layer layer=Main.map.mapView.getActiveLayer();
-        if (layer.visible && layer instanceof WMSLayer) {
+        if (layer.isVisible() && layer instanceof WMSLayer) {
             prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());
             selectedLayer = ((WMSLayer)layer);
             selectedImage = selectedLayer.findImage(prevEastNorth);
@@ -77,11 +77,16 @@ public class WMSAdjustAction extends MapMode implements
         prevEastNorth = null;
         selectedLayer = null;
     }
-
+    
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
+    
+    @Override
     public void mouseExited(MouseEvent e) {
     }
+    
+    @Override
     public void mouseMoved(MouseEvent e) {
     }
 
@@ -91,6 +96,6 @@ public class WMSAdjustAction extends MapMode implements
     // This only makes the buttons look disabled, but since no keyboard shortcut is
     // provided there aren't any other means to activate this tool
     @Override public boolean layerIsSupported(Layer l) {
-        return (l instanceof WMSLayer) && l.visible;
+        return (l instanceof WMSLayer) && l.isVisible();
     }
 }

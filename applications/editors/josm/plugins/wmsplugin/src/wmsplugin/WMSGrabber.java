@@ -29,6 +29,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Epsg4326;
 import org.openstreetmap.josm.data.projection.Mercator;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.io.ProgressInputStream;
@@ -50,6 +51,7 @@ public class WMSGrabber extends Grabber {
         mv.repaint();
     }
 
+    @Override
     void fetch() throws Exception{
         URL url = null;
         try {
@@ -121,10 +123,12 @@ public class WMSGrabber extends Grabber {
                 projname = projname.toLowerCase();
                 if(!projname.equals(m.group(1)) && warn)
                 {
-                    JOptionPane.showMessageDialog(Main.parent,
+                    OptionPaneUtil.showMessageDialog(Main.parent,
                     tr("The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
                     + "This may lead to wrong coordinates.",
-                    m.group(1), projname));
+                    m.group(1), projname),
+                    tr("Warning"),
+                    JOptionPane.WARNING_MESSAGE);
                 }
             }
             else

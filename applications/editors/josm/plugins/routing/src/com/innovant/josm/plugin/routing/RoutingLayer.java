@@ -47,7 +47,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
@@ -183,9 +182,9 @@ public class RoutingLayer extends Layer {
     @Override
     public Component[] getMenuEntries() {
         Collection<Component> components = new ArrayList<Component>();
-        components.add(new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)));
+        components.add(new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)));
 //        components.add(new JMenuItem(new LayerListDialog.ShowHideMarkerText(this)));
-        components.add(new JMenuItem(new LayerListDialog.DeleteLayerAction(this)));
+        components.add(new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)));
         components.add(new JSeparator());
         components.add(new JMenuItem(new RenameLayerAction(getAssociatedFile(), this)));
         components.add(new JSeparator());

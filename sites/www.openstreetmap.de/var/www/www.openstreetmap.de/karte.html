@@ -16,17 +16,33 @@
 var map;
 var layer_mapnik;
 var layer_tah;
-var layer_news;
-var layer_events;
-var layer_local;
+var layer_marker;
+
+var mlon, mlat;
+var baselayer;
+
+var projmerc = new OpenLayers.Projection("EPSG:900913");
+var proj4326 = new OpenLayers.Projection("EPSG:4326");
+
+var marker;
 
 function init() {
-//    return;
-
     OpenLayers.Lang.setCode('de');
     var lon = 10.31;
     var lat = 51.37;
     var zoom = 5;
+
+    parseParams(function(param, v) {
+        switch (param) {
+            case 'type': baselayer = v;           break;
+            case 'lon':        lon = Number(v);   break;
+            case 'lat':        lat = Number(v);   break;
+            case 'zoom':      zoom = parseInt(v); break;
+            case 'z':         zoom = parseInt(v); break;
+            case 'mlon':      mlon = Number(v);   break;
+            case 'mlat':      mlat = Number(v);   break;
+        }
+    });
 
     var overviewctrl = new OpenLayers.Control.OverviewMap();
     map = new OpenLayers.Map('map', {
@@ -35,7 +51,7 @@ function init() {
         controls: [
             new OpenLayers.Control.MouseDefaults(),
             new OpenLayers.Control.LayerSwitcher(),
-            new OpenLayers.Control.ScaleLine({ div: $('customScaleLine') }),
+          /*  new OpenLayers.Control.ScaleLine({ div: $('customScaleLine') }),*/
             new OpenLayers.Control.MousePosition({ div: $('customMousePosition') }),
             new OpenLayers.Control.Permalink('permalink'),
             overviewctrl,
@@ -78,9 +94,16 @@ function init() {
             return url + path;
         }
     }
-    /* jump to default location if none is set */
-    if (map.getCenter() == null) {
-        jumpTo(lon, lat, zoom)
+
+    var lonlat = new OpenLayers.LonLat(lon, lat);
+    lonlat.transform(proj4326, projmerc);
+    map.setCenter(lonlat, zoom);
+
+    layer_marker = new OpenLayers.Layer.Markers("Marker");
+    map.addLayer(layer_marker);
+
+    if (mlon != null && mlat != null) {
+        setMarker();
     }
 }
 

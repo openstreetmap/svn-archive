@@ -340,8 +340,8 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 	@Override
 	public Component[] getMenuEntries() {
 		return new Component[] {
-				new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-				new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
+				new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
+				new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
 				new JSeparator(),
 				// color,
 				// new JMenuItem(new RenameLayerAction(associatedFile, this)),

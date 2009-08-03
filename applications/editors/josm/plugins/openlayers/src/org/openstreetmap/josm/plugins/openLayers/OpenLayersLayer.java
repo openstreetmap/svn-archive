@@ -75,8 +75,8 @@ public class OpenLayersLayer extends Layer implements PreferenceChangedListener,
     @Override
     public Component[] getMenuEntries() {
         return new Component[] {
-            new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-            new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
+            new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
+            new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
             new JSeparator(),
             // color,
             new JMenuItem(new RenameLayerAction(getAssociatedFile(), this)),
@@ -117,7 +117,7 @@ public class OpenLayersLayer extends Layer implements PreferenceChangedListener,
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if( !visible )
+        if( !isVisible() )
             return;
 
             String prop = evt.getPropertyName();

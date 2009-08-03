@@ -49,15 +49,15 @@ public class CadastreInterface {
     }
 
     public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException {
-        if (wmsLayer.name.equals(""))
+        if (wmsLayer.getName().equals(""))
             return false;
         // open the session with the French Cadastre web front end
         downloadCancelled = false;
         try {
-            if (cookie == null || !wmsLayer.name.equals(cadastreGrabber.getLastWMSLayerName())) {
+            if (cookie == null || !wmsLayer.getName().equals(cadastreGrabber.getLastWMSLayerName())) {
                 getCookie();
                 getInterface(wmsLayer);
-                cadastreGrabber.setLastWMSLayerName(wmsLayer.name);
+                cadastreGrabber.setLastWMSLayerName(wmsLayer.getName());
             }
             openInterface();
         } catch (IOException e) {
@@ -359,8 +359,8 @@ public class CadastreInterface {
     private void checkLayerDuplicates(WMSLayer wmsLayer) throws DuplicateLayerException {
         if (Main.map != null) {
             for (Layer l : Main.map.mapView.getAllLayers()) {
-                if (l instanceof WMSLayer && l.name.equals(wmsLayer.name) && (l != wmsLayer)) {
-                    System.out.println("Try to grab into a new layer when "+wmsLayer.name+" is already opened.");
+                if (l instanceof WMSLayer && l.getName().equals(wmsLayer.getName()) && (l != wmsLayer)) {
+                    System.out.println("Try to grab into a new layer when "+wmsLayer.getName()+" is already opened.");
                     // remove the duplicated layer
                     Main.map.mapView.removeLayer(wmsLayer);
                     throw new DuplicateLayerException();

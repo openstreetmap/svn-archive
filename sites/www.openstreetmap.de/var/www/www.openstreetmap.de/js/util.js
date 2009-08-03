@@ -1,4 +1,15 @@
 
+function parseParams(handler) {
+    var perma = location.search.substr(1);
+    if (perma != '') {
+        paras = perma.split('&');
+        for (var i = 0; i < paras.length; i++) {
+            var p = paras[i].split('=');
+            handler(p[0], p[1]);
+        }
+    }
+}
+
 function jumpTo(lon, lat, zoom) {
     var x = Lon2Merc(lon);
     var y = Lat2Merc(lat);
@@ -69,5 +80,18 @@ function doSearch() {
         parameters: Form.serialize(this)
     });
     return false;
+}
+
+function setMarker() {
+    if (marker != null) {
+        layer_marker.removeMarker(marker);
+        marker.destroy();
+    }
+    var size = new OpenLayers.Size(21, 25);
+    var offset = new OpenLayers.Pixel(-size.w/2-1, -size.h-1);
+    var icon = new OpenLayers.Icon('/img/marker.png', size, offset);
+    var lonlat = new OpenLayers.LonLat(mlon, mlat);
+    marker = new OpenLayers.Marker(lonlat.transform(proj4326, projmerc), icon);
+    layer_marker.addMarker(marker);
 }
 

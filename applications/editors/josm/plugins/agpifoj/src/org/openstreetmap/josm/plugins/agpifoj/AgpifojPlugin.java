@@ -81,6 +81,7 @@ public class AgpifojPlugin extends Plugin {
      * You can use this callback to tweak the newFrame to your needs, as example install
      * an alternative Painter.
      */
+    @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
             AgpifojDialog dialog = AgpifojDialog.getInstance();

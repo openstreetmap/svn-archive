@@ -92,8 +92,8 @@ public class OsbLayer extends Layer implements MouseListener {
     @Override
     public Component[] getMenuEntries() {
         return new Component[]{
-                new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-                new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
+                new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
+                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
                 new JSeparator(),
                 new JMenuItem(new RenameLayerAction(null, this)),
                 new JSeparator(),

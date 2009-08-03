@@ -47,10 +47,10 @@ function init() {
 
     layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
     layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
-    layer_news = new OpenLayers.Layer.Markers("News", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });
-    layer_events = new OpenLayers.Layer.Markers("Events", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });
+/*    layer_news = new OpenLayers.Layer.Markers("News", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });
+    layer_events = new OpenLayers.Layer.Markers("Events", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });*/
     layer_local = new OpenLayers.Layer.Markers("Lokale Gruppen", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });
-    map.addLayers([layer_mapnik, layer_tah, layer_news, layer_events, layer_local]);
+    map.addLayers([layer_mapnik, layer_tah, /*layer_news, layer_events,*/ layer_local]);
 
     createMarkers();
 
@@ -173,11 +173,11 @@ function init() {
                 <a href="http://www.openstreetmap.info/"><img src="/img/openstreetmap-buch-cover.png" alt="OpenStreetMap: Die freie Weltkarte nutzen und mitgestalten"/></a>
                 <a href="http://www.openstreetmap.info/">www.openstreetmap.info</a>
             </div>
-            <div class="box" id="sotm">
+<!--            <div class="box" id="sotm">
                 <a href="http://www.stateofthemap.org/"><img src="/img/sotm.png" alt="State of the Map"/></a><br/>
                 10. - 12. Juli 2009<br/>
                 Amsterdam
-            </div>
+            </div>-->
 
             <div class="box" id="press" style="text-align: center;">
                 <img src="/img/arleft.png"/>

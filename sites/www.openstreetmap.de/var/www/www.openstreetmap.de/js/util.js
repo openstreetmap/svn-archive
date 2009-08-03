@@ -95,3 +95,12 @@ function setMarker() {
     layer_marker.addMarker(marker);
 }
 
+
+function updateMapKey() {
+    var layer = map.baseLayer.name.toLowerCase().replace(/\s+/g, "_");
+    var zoom = map.getZoom();
+
+    var mapkey = document.getElementById('mapkey_area');
+    mapkey.innerHTML = '<iframe src="http://www.openstreetmap.org/key?layer=' + layer + '&zoom=' + zoom + '"/>';
+}
+

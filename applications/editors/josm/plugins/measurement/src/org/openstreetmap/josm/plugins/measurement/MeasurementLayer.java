@@ -93,7 +93,7 @@ public class MeasurementLayer extends Layer {
 
     @Override public Component[] getMenuEntries() {
         return new Component[]{
-            new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
+            new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
             // TODO: implement new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
             new JSeparator(),
             new JMenuItem(new GPXLayerImportAction(this)),
@@ -281,7 +281,7 @@ public class MeasurementLayer extends Layer {
                         @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                             Layer layer = (Layer)value;
                             JLabel label = (JLabel)super.getListCellRendererComponent(list,
-                                                                                      layer.name, index, isSelected, cellHasFocus);
+                                                                                      layer.getName(), index, isSelected, cellHasFocus);
                             Icon icon = layer.getIcon();
                             label.setIcon(icon);
                             label.setToolTipText(layer.getToolTipText());

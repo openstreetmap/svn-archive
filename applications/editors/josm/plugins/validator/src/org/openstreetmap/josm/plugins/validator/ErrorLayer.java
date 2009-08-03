@@ -111,8 +111,9 @@ public class ErrorLayer extends Layer implements LayerChangeListener {
 
     @Override
     public Component[] getMenuEntries() {
-        return new Component[] { new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-                new JMenuItem(new LayerListDialog.DeleteLayerAction(this)), new JSeparator(),
+        return new Component[] { new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
+                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)), 
+                new JSeparator(),
                 new JMenuItem(new RenameLayerAction(null, this)), new JSeparator(),
                 new JMenuItem(new LayerListPopup.InfoAction(this)) };
     }

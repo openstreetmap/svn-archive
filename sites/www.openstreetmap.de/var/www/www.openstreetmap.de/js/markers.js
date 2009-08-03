@@ -30,7 +30,7 @@ function createMarkers() {
     addMarker(layer_local, 9.739, 52.375,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/wiki/Stammtisch_Hannover">Hannover</a></b><br/>Monatliche Treffen</p>'
     );
-    addMarker(layer_local, 9.20677, 49.13925
+    addMarker(layer_local, 9.20677, 49.13925,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/wiki/OSM-Treff_Heilbronn">Heilbronn</a></b><br/>Monatliche Treffen</p>'
     );
     addMarker(layer_local, 8.403978, 49.009192,

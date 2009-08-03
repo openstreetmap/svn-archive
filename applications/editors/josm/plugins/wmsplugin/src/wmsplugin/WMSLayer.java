@@ -30,6 +30,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -116,9 +117,9 @@ public class WMSLayer extends Layer {
 
     @Override public String getToolTipText() {
         if(startstop.isSelected())
-            return tr("WMS layer ({0}), automatically downloading in zoom {1}", name, resolution);
+            return tr("WMS layer ({0}), automatically downloading in zoom {1}", getName(), resolution);
         else
-            return tr("WMS layer ({0}), downloading in zoom {1}", name, resolution);
+            return tr("WMS layer ({0}), downloading in zoom {1}", getName(), resolution);
     }
 
     @Override public boolean isMergable(Layer other) {
@@ -162,7 +163,12 @@ public class WMSLayer extends Layer {
         int bmaxy= (int)Math.ceil  ((bounds.max.north() * pixelPerDegree ) / ImageSize );
 
         if((bmaxx - bminx > dax) || (bmaxy - bminy > day)){
-            JOptionPane.showMessageDialog(Main.parent, tr("The requested area is too big. Please zoom in a little, or change resolution"));
+            OptionPaneUtil.showMessageDialog(
+            		Main.parent, 
+            		tr("The requested area is too big. Please zoom in a little, or change resolution"),
+            		tr("Error"),
+            		JOptionPane.ERROR_MESSAGE
+            		);
             return;
         }
 
@@ -195,8 +201,8 @@ public class WMSLayer extends Layer {
 
     @Override public Component[] getMenuEntries() {
         return new Component[]{
-                new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-                new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
+                new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
+                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
                 new JSeparator(),
                 new JMenuItem(new LoadWmsAction()),
                 new JMenuItem(new SaveWmsAction()),
@@ -298,7 +304,7 @@ public class WMSLayer extends Layer {
                 oos.writeInt(day);
                 oos.writeInt(ImageSize);
                 oos.writeDouble(pixelPerDegree);
-                oos.writeObject(name);
+                oos.writeObject(getName());
                 oos.writeObject(baseURL);
                 oos.writeObject(images);
                 oos.close();
@@ -326,7 +332,7 @@ public class WMSLayer extends Layer {
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 int sfv = ois.readInt();
                 if (sfv != serializeFormatVersion) {
-                    JOptionPane.showMessageDialog(Main.parent,
+                    OptionPaneUtil.showMessageDialog(Main.parent,
                             tr("Unsupported WMS file version; found {0}, expected {1}", sfv, serializeFormatVersion),
                             tr("File Format Error"),
                             JOptionPane.ERROR_MESSAGE);
@@ -337,7 +343,7 @@ public class WMSLayer extends Layer {
                 day = ois.readInt();
                 ImageSize = ois.readInt();
                 pixelPerDegree = ois.readDouble();
-                name = (String) ois.readObject();
+                setName((String)ois.readObject());
                 baseURL = (String) ois.readObject();
                 images = (GeorefImage[][])ois.readObject();
                 ois.close();
@@ -347,7 +353,7 @@ public class WMSLayer extends Layer {
             catch (Exception ex) {
                 // FIXME be more specific
                 ex.printStackTrace(System.out);
-                JOptionPane.showMessageDialog(Main.parent,
+                OptionPaneUtil.showMessageDialog(Main.parent,
                         tr("Error loading file"),
                         tr("Error"),
                         JOptionPane.ERROR_MESSAGE);

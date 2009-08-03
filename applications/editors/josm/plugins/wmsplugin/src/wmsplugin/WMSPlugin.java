@@ -57,6 +57,7 @@ public class WMSPlugin extends Plugin {
     // wmsplugin.1.name=Landsat
     // wmsplugin.1.url=http://and.so.on/
 
+    @Override
     public void copy(String from, String to) throws FileNotFoundException, IOException
     {
         File pluginDir = new File(getPrefsPath());
@@ -201,6 +202,7 @@ public class WMSPlugin extends Plugin {
         menuEnabled = isEnabled;
     }
 
+    @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame==null && newFrame!=null) {
             setEnabledAll(true);
@@ -211,6 +213,7 @@ public class WMSPlugin extends Plugin {
         }
     }
 
+    @Override
     public PreferenceSetting getPreferenceSetting() {
         return new WMSPreferenceEditor();
     }

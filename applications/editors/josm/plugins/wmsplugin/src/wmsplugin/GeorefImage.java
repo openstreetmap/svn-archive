@@ -159,6 +159,7 @@ public class GeorefImage implements Serializable {
     private Image clearAlpha(Image img) {
         ImageProducer ip = img.getSource();
         RGBImageFilter filter = new RGBImageFilter() {
+        	@Override
             public int filterRGB(int x, int y, int rgb) {
                 return rgb | 0xff000000;
             }

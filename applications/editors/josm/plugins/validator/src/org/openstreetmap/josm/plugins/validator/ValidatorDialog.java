@@ -32,6 +32,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -189,9 +190,9 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
                 // ask if the whole set should be ignored
                 if (asked == JOptionPane.DEFAULT_OPTION) {
                     String[] a = new String[] { tr("Whole group"), tr("Single elements"), tr("Nothing") };
-                    asked = JOptionPane.showOptionDialog(Main.parent, tr("Ignore whole group or individual elements?"),
+                    asked = OptionPaneUtil.showOptionDialog(Main.parent, tr("Ignore whole group or individual elements?"),
                             tr("Ignoring elements"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-                            ImageProvider.get("dialogs", "delete"), a, a[1]);
+                            a, a[1]);
                 }
                 if (asked == JOptionPane.YES_NO_OPTION) {
                     Enumeration<DefaultMutableTreeNode> children = node.breadthFirstEnumeration();

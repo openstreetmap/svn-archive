@@ -43,6 +43,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.gui.preferences.TaggingPresetPreference;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 import org.openstreetmap.josm.io.MirroredInputStream;
@@ -618,7 +619,12 @@ public class TagChecker extends Test
         addSrcButton = new JButton(tr("Add"));
         addSrcButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                String source = JOptionPane.showInputDialog(Main.parent, tr("TagChecker source"));
+                String source = OptionPaneUtil.showInputDialog(
+                		Main.parent, 
+                		tr("TagChecker source"),
+                		tr("TagChecker source"),
+                		JOptionPane.QUESTION_MESSAGE
+                		);
                 if (source != null)
                     ((DefaultListModel)Sources.getModel()).addElement(source);
                 Sources.clearSelection();
@@ -638,17 +644,26 @@ public class TagChecker extends Test
                 {
                     if(Sources.getModel().getSize() == 0)
                     {
-                        String source = JOptionPane.showInputDialog(Main.parent, tr("TagChecker source"));
+                        String source = OptionPaneUtil.showInputDialog(Main.parent, tr("TagChecker source"), tr("TagChecker source"), JOptionPane.QUESTION_MESSAGE);
                         if (source != null)
                             ((DefaultListModel)Sources.getModel()).addElement(source);
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog(Main.parent, tr("Please select the row to edit."));
+                        OptionPaneUtil.showMessageDialog(
+                        		Main.parent, 
+                        		tr("Please select the row to edit."),
+                        		tr("Information"),
+                        		JOptionPane.INFORMATION_MESSAGE
+                        		);
                     }
                 }
                 else {
-                    String source = JOptionPane.showInputDialog(Main.parent, tr("TagChecker source"), Sources.getSelectedValue());
+                	String source = (String)OptionPaneUtil.showInputDialog(Main.parent,
+                			tr("TagChecker source"),
+                			tr("TagChecker source"),
+                			JOptionPane.QUESTION_MESSAGE, null, null,
+                			Sources.getSelectedValue());
                     if (source != null)
                         ((DefaultListModel)Sources.getModel()).setElementAt(source, row);
                 }
@@ -660,7 +675,7 @@ public class TagChecker extends Test
         deleteSrcButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 if (Sources.getSelectedIndex() == -1)
-                    JOptionPane.showMessageDialog(Main.parent, tr("Please select the row to delete."));
+                    OptionPaneUtil.showMessageDialog(Main.parent, tr("Please select the row to delete."), tr("Information"), JOptionPane.QUESTION_MESSAGE);
                 else {
                     ((DefaultListModel)Sources.getModel()).remove(Sources.getSelectedIndex());
                 }

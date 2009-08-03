@@ -3,6 +3,8 @@
  */
 package org.openstreetmap.josm.plugins.editgpx;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -20,7 +22,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
@@ -35,8 +36,6 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.DateUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
-
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 
 public class EditGpxLayer extends Layer {
@@ -79,8 +78,8 @@ public class EditGpxLayer extends Layer {
     @Override
     public Component[] getMenuEntries() {
         return new Component[] {
-            new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-            new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
+            new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
+            new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
             new JSeparator(),
             new JMenuItem(layerImport),
             new JMenuItem(new ConvertToGpxLayerAction()),
@@ -205,7 +204,7 @@ public class EditGpxLayer extends Layer {
             super(tr("Convert to GPX layer"), ImageProvider.get("converttogpx"));
         }
         public void actionPerformed(ActionEvent e) {
-            Main.main.addLayer(new GpxLayer(toGpxData(false), tr("Converted from: {0}", name)));
+            Main.main.addLayer(new GpxLayer(toGpxData(false), tr("Converted from: {0}", getName())));
             Main.main.removeLayer(EditGpxLayer.this);
         }
     }
@@ -216,7 +215,7 @@ public class EditGpxLayer extends Layer {
             super(tr("Convert to GPX layer with anonymised time"), ImageProvider.get("converttogpx"));
         }
         public void actionPerformed(ActionEvent e) {
-            Main.main.addLayer(new GpxLayer(toGpxData(true), tr("Converted from: {0}", name)));
+            Main.main.addLayer(new GpxLayer(toGpxData(true), tr("Converted from: {0}", getName())));
             Main.main.removeLayer(EditGpxLayer.this);
         }
     }

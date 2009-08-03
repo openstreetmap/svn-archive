@@ -80,7 +80,7 @@ class GPXLayerImportAction extends AbstractAction {
                     @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                         Layer layer = (Layer)value;
                         JLabel label = (JLabel)super.getListCellRendererComponent(list,
-                                                                                  layer.name, index, isSelected, cellHasFocus);
+                                                                                  layer.getName(), index, isSelected, cellHasFocus);
                         Icon icon = layer.getIcon();
                         label.setIcon(icon);
                         label.setToolTipText(layer.getToolTipText());

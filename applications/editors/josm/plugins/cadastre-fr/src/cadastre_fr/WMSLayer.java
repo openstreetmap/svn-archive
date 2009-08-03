@@ -173,7 +173,7 @@ public class WMSLayer extends Layer {
 
     @Override
     public String getToolTipText() {
-        String str = tr("WMS layer ({0}), {1} tile(s) loaded", name, images.size());
+        String str = tr("WMS layer ({0}), {1} tile(s) loaded", getName(), images.size());
         if (isRaster) {
             str += "\n"+tr("Is not vectorized.");
             str += "\n"+tr("Raster center: {0}", rasterCenter);
@@ -214,8 +214,8 @@ public class WMSLayer extends Layer {
 
     @Override
     public Component[] getMenuEntries() {
-        component = new Component[] { new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-                new JMenuItem(new LayerListDialog.DeleteLayerAction(this)), new JMenuItem(new MenuActionLoadFromCache()),
+        component = new Component[] { new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
+                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)), new JMenuItem(new MenuActionLoadFromCache()),
                 new JMenuItem(new LayerListPopup.InfoAction(this)) };
         return component;
     }
@@ -284,8 +284,7 @@ public class WMSLayer extends Layer {
 
     public void setLocation(String location) {
         this.location = location;
-        this.name = rebuildName();
-        repaintLayerListDialog();
+        setName(rebuildName());
     }
 
     public String getCodeCommune() {
@@ -294,8 +293,7 @@ public class WMSLayer extends Layer {
 
     public void setCodeCommune(String codeCommune) {
         this.codeCommune = codeCommune;
-        this.name = rebuildName();
-        repaintLayerListDialog();
+        setName(rebuildName());
     }
 
     public boolean isRaster() {
@@ -349,21 +347,6 @@ public class WMSLayer extends Layer {
         this.rasterMin = rasterMin.rotate(rasterCenter, angle);
         for (GeorefImage img : images)
             img.rotate(rasterCenter, angle);
-    }
-
-    /**
-     * Repaint the LayerList dialog.
-     * This is the only way I found to refresh the layer name in the layer list when it changes
-     * later (after the construction).
-     */
-    private void repaintLayerListDialog() {
-        if (Main.map != null) {
-            for (Component c : Main.map.toggleDialogs.getComponents()) {
-                if (c instanceof LayerListDialog) {
-                    c.repaint();
-                }
-            }
-        }
     }
 
     /**

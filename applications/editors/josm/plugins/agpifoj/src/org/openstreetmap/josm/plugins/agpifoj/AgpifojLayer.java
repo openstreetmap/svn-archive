@@ -120,7 +120,9 @@ public class AgpifojLayer extends Layer {
 
             if (cancelled) {
                 return;
-            }
+            }            
+            progressMonitor.subTask(tr("Read photos..."));
+            progressMonitor.setTicksCount(files.size());
 
             progressMonitor.subTask(tr("Read photos..."));
             progressMonitor.setTicksCount(files.size());
@@ -153,7 +155,9 @@ public class AgpifojLayer extends Layer {
             }
             layer = new AgpifojLayer(data);
             files.clear();
-            progressMonitor.setErrorMessage(errorMessage);
+            if (errorMessage != null && ! errorMessage.trim().equals("")) {
+            	progressMonitor.setErrorMessage(errorMessage);
+            }
         }
 
         private void addRecursiveFiles(List<File> files, File[] sel) {
@@ -193,6 +197,7 @@ public class AgpifojLayer extends Layer {
                             npe.printStackTrace();
                             errorMessage += tr("Found null file in directory {0}\n", f.getPath());
                         }
+                        progressMonitor.finishTask();
                     } else {
                     	errorMessage += tr("Error while getting files from directory {0}\n", f.getPath());
                     }
@@ -263,8 +268,8 @@ public class AgpifojLayer extends Layer {
         correlateItem.addActionListener(new CorrelateGpxWithImages(this));
 
         return new Component[] {
-                new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
-                new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
+                new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
+                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
                 new JMenuItem(new RenameLayerAction(null, this)),
                 new JSeparator(),
                 correlateItem
@@ -322,7 +327,7 @@ public class AgpifojLayer extends Layer {
             }
         }
 
-        name = l.name;
+        setName(l.getName());
 
     }
 
@@ -470,7 +475,7 @@ public class AgpifojLayer extends Layer {
                 if (e.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
-                if (visible)
+                if (isVisible())
                     Main.map.mapView.repaint();
             }
 
@@ -478,7 +483,7 @@ public class AgpifojLayer extends Layer {
                 if (ev.getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
-                if (!visible) {
+                if (!isVisible()) {
                     return;
                 }
                 for (int i = data.size() - 1; i >= 0; --i) {

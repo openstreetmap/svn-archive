@@ -33,7 +33,7 @@
                 <attribute name="Plugin-Description" value="Another geotag plugin for JOSM. Correlates pictures with GPS tracks or import EXIF geotagged pictures."/>
                 <attribute name="Plugin-Early" value="false"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/AgPifoJ"/>
-                <attribute name="Plugin-Mainversion" value="1815"/>
+                <attribute name="Plugin-Mainversion" value="1893"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

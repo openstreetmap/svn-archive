@@ -156,7 +156,7 @@
 		                    <env key="LANG" value="C"/>
 		                    <arg value="commit"/>
                 			<arg value="-m &quot;${commit.message}&quot;"/>
-		                    <arg value="../../dist/${plugin.jar}"/>
+		                    <arg value="../dist/${plugin.jar}"/>
 		    </exec>	    
    	</target>
 	

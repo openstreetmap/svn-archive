@@ -132,7 +132,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 1.1a";	// current version
+	var signature="Potlatch 1.2";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
@@ -146,6 +146,7 @@
 
 	var waynames=new Array("highway","barrier","waterway","railway","man_made","leisure","amenity","military","shop","tourism","historic","landuse","natural","sport","cycleway","aeroway","boundary");
 	var nodenames=new Array("highway","barrier","waterway","railway","man_made","leisure","amenity","military","shop","tourism","historic","landuse","natural","sport");
+	var freeform=new Object(); freeform['name']=freeform['ref']=freeform['note']=freeform['description']=true;
 
 	var tileurls=new Array("http://tile.openstreetmap.org/!/!/!.png",
 						   "http://tah.openstreetmap.org/Tiles/tile/!/!/!.png",
@@ -334,6 +335,7 @@
 	boldYellow=new TextFormat(); boldYellow.color=0xFFFF00; boldYellow.size=12; boldYellow.font="_sans"; boldYellow.bold=true;
 	menu_on	  =new TextFormat(); menu_on.color   =0x000000; menu_on.size   =12; menu_on.font   ="_sans"; menu_on.bold  =true;
 	menu_off  =new TextFormat(); menu_off.color  =0xFFFFFF; menu_off.size  =12; menu_off.font  ="_sans"; menu_off.bold =true;
+	menu_dis  =new TextFormat(); menu_dis.color  =0xBBBBBB; menu_dis.size  =12; menu_dis.font  ="_sans"; menu_dis.bold =true;
 	auto_on	  =new TextFormat(); auto_on.color   =0x0000FF; auto_on.size   =12; auto_on.font   ="_sans"; auto_on.bold  =true;
 	auto_off  =new TextFormat(); auto_off.color  =0xFFFFFF; auto_off.size  =12; auto_off.font  ="_sans"; auto_off.bold =true;
 
@@ -417,9 +419,16 @@
 	_root.panel.help.onPress=function() { openHelp(); };
 
 	_root.panel.attachMovie("menu","advanced",81);
-	_root.panel.advanced.init(67,114,1,
-		new Array("Parallel way","Way history","--","Inspector","Undelete","Close changeset","Maximise window"),
+	_root.panel.advanced.init(67,114,-1,
+		new Array(iText("Parallel way","advanced_parallel"),
+				  iText("Way history","advanced_history"),
+				  "--",
+				  iText("Inspector","advanced_inspector"),
+				  iText("Undelete","advanced_undelete"),
+				  iText("Close changeset","advanced_close"),
+				  iText("Maximise window","advanced_maximise")),
 		'Advanced editing actions',advancedAction,null,85,"Advanced");
+	selectWay(0);	// just to update the menu items
 
 
 	// =====================================================================================
@@ -772,8 +781,11 @@
 							if (zz>100) { _root.chat.text+=id+":"+zz+";"; } }
 
 	function showObjects(z,indnt) {
+		ASSetPropFlags(z,null,6,true);
 		for (var i in z) {
-			_root.chat.text+=indnt+i+" ("+typeof(z[i])+")\n";
+			_root.chat.text+=indnt+i+" ("+typeof(z[i]);
+			if (typeof(z[i])=='string' || typeof(z[i])=='boolean') { _root.chat.text+="="+z[i]; }
+			_root.chat.text+=")\n";
 			if (typeof(z[i])=='movieclip' || typeof(z[i])=='object') {
 				showObjects(z[i],indnt+" ");
 			}
@@ -830,7 +842,7 @@
 				restartElastic();
 			} else {
 				_root.map.anchors[_root.drawpoint].endElastic();
-				_root.ws.saveUndo(iText("deleting",'deleting'));
+				_root.ws.saveDeleteUndo(iText("deleting",'deleting'));
 				_root.ws.remove();
 				deselectAll();
 				markClean(true);
@@ -849,17 +861,21 @@
 	};
 
 	function keyRevert() {
-		if		(_root.wayselected<0) { _root.ws.saveUndo(iText("deleting",'deleting'));
+		if		(_root.wayselected<0) { setAdvice(false,iText("Deleting way (Z to undo)",'advice_deletingway'));
+										_root.ws.saveDeleteUndo(iText("deleting",'deleting'));
 										stopDrawing();
 										memberDeleted('Way',wayselected);
 										removeMovieClip(_root.map.areas[wayselected]);
 										removeMovieClip(_root.ws); }
-		else if	(_root.wayselected>0) {	_root.ws.saveUndo(iText("cancelling changes to",'action_cancelchanges'));
+		else if	(_root.wayselected>0) {	setAdvice(false,iText("Reverting to last saved way (Z to undo)",'advice_revertingway'));
+										_root.ws.saveChangeUndo(iText("cancelling changes to",'action_cancelchanges'));
 										stopDrawing();
 										_root.ws.reload(); }
-		else if (_root.poiselected>0) { _root.map.pois[poiselected].saveUndo(iText("cancelling changes to",'action_cancelchanges'));
+		else if (_root.poiselected>0) { setAdvice(false,iText("Reverting to last saved POI (Z to undo)",'advice_revertingpoi'));
+										_root.map.pois[poiselected].saveUndo(iText("cancelling changes to",'action_cancelchanges'));
 										_root.map.pois[poiselected].reload(); }
-		else if (_root.poiselected<0) { _root.map.pois[poiselected].saveUndo(iText("deleting",'deleting'));
+		else if (_root.poiselected<0) { setAdvice(false,iText("Deleting POI (Z to undo)",'advice_deletingpoi'));
+										_root.map.pois[poiselected].saveUndo(iText("deleting",'deleting'));
 										memberDeleted('Node',poiselected);
 										removeMovieClip(_root.map.pois[poiselected]); }
 		deselectAll();
@@ -1074,6 +1090,7 @@
 	function markClean(state) {
 		if (winie) { flash.external.ExternalInterface.call("markChanged",state); }
 			  else { getURL("javascript:var changesaved="+state); }
+		updateInspector();
 	}
 	
 	// deselectAll

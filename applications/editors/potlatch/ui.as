@@ -187,6 +187,7 @@
 		this.selected=selected; this.original=selected;
 		this.options=options;
 		this.closedtitle=closedtitle ? closedtitle : '';
+		this.enable=[];
 
 		// create (invisible) movieclip for opened menu
 		this.createEmptyMovieClip("opened",2);
@@ -196,10 +197,11 @@
 		for (i=0; i<options.length; i+=1) {
 			if (options[i]!='--') {
 				this.opened.createTextField(i,i+1,3,i*16-1,100,19);
-				this.opened[i].text=options[i];
 				this.opened[i].background=true;
 				this.opened[i].backgroundColor=0x888888;
+				this.opened[i].text=options[i];
 				this.opened[i].setTextFormat(menu_off);
+				this.enable[i]=true;
 				if (this.opened[i].textWidth*1.05>tw) { tw=this.opened[i].textWidth*1.05; }
 			}
 		};
@@ -264,8 +266,10 @@
 			this.opened[this.selected].backgroundColor=0x888888;
 			this.opened[this.selected].setTextFormat(menu_off);
 			this.selected=this.whichSelection();
-			this.opened[this.selected].backgroundColor=0xDDDDDD;
-			this.opened[this.selected].setTextFormat(menu_on);
+			if (this.selected>-1) {
+				this.opened[this.selected].backgroundColor=0xDDDDDD;
+				this.opened[this.selected].setTextFormat(menu_on);
+			}
 		}
 	};
 	UIMenu.prototype.openMenu=function() {
@@ -309,8 +313,8 @@
 		mpos.y=_root._ymouse;
 		this.opened.globalToLocal(mpos);
 		if (mpos.x>0 && mpos.x<this.itemwidth && mpos.y>0 && mpos.y<this.options.length*15) {
-			var i=Math.floor((mpos.y)/15);
-			if (this.opened[i]) { return i; }
+			var i=Math.floor((mpos.y)/16);
+			if (this.opened[i] && this.enable[i]) { return i; }
 		}
 		return -1;
 	};
@@ -325,6 +329,17 @@
 			this.closed.current.setTextFormat(menu_off);
 		}
 		updateAfterEvent();
+	};
+	UIMenu.prototype.enableOption=function(i) {
+		this.enable[i]=true;
+		this.opened[i].setTextFormat(menu_off);
+	};
+	UIMenu.prototype.disableOption=function(i) {
+		this.enable[i]=false;
+		this.opened[i].setTextFormat(menu_dis);
+	};
+	UIMenu.prototype.renameOption=function(i,t) {
+		this.opened[i].text=t;
 	};
 
 	Object.registerClass("menu",UIMenu);

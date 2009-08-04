@@ -146,6 +146,7 @@
 		} else { 
 		    _root.sandbox=true;
 			setEditingStatus(iText("Editing offline",'editingoffline'),0x008800);
+			_root.panel.advanced.disableOption(5);
 		}
 	}
 

@@ -203,14 +203,11 @@
 		if (Key.isDown(Key.SHIFT)) {
 			// Merge ways
 			if (this._name==0 || this._name==this.way.path.length-1) {
-				_root.ws.mergeWay(_root.drawpoint,this.way,this._name);
-				_root.drawpoint=-1;
-				_root.ws.redraw();
-//				_root.ws.upload();
-//				this.way.remove(wayselected);
-				clearTooltip();
+				var w=this.way;
+				addEndPoint(_root.nodes[this.node]);
+				_root.drawpoint=-1; clearTooltip();
 				_root.map.elastic.clear();
-				_root.ws.select();	// removes anchorhints, so must be last
+				mergeWayKeepingID(w,_root.ws);
 			}
 		} else { 
 			// Join ways (i.e. junction)

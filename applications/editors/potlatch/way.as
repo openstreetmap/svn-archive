@@ -298,9 +298,7 @@
 		if (a.id==b.id) {
 			// Tidy in circle
 			if (this.path.length<4) { return; }
-			_root.undo.append(UndoStack.prototype.undo_changeway,
-							  new Array(this._name,deepCopy(this.path),deepCopy(this.deletednodes),deepCopy(this.attr)),
-							  iText("tidying a way",'action_tidyway'));
+			this.saveChangeUndo();
 			
 			// Find centre-point
 			var patharea=0;
@@ -373,9 +371,7 @@
 		} else {
 			// Tidy in line
 			if (this.path.length<3) { return; }
-			_root.undo.append(UndoStack.prototype.undo_changeway,
-							  new Array(this._name,deepCopy(this.path),deepCopy(this.deletednodes),deepCopy(this.attr)),
-							  iText("tidying a way",'action_tidyway'));
+			this.saveChangeUndo();
 
 			var el=long2coord(_root.bigedge_l);		// We don't want to delete any off-screen nodes
 			var er=long2coord(_root.bigedge_r);		// (because they might be used in other ways)
@@ -509,14 +505,14 @@
 			if (this.path[i].tagged && hashLength(this.path[i].ways)==1) { c=false; }
 		}
 		if (c) {
-			_root.ws.saveUndo(iText("deleting",'deleting'));
+			_root.ws.saveDeleteUndo(iText("deleting",'deleting'));
 			this.remove();
 			markClean(true);
 		} else {
 			_root.windows.attachMovie("modal","confirm",++windowdepth);
 			_root.windows.confirm.init(275,80,new Array(iText('Cancel','cancel'),iText('Delete','delete')),
 				function(choice) {
-					if (choice==iText('Delete','delete')) { _root.ws.saveUndo(iText("deleting",'deleting')); _root.ws.remove(); markClean(true); }
+					if (choice==iText('Delete','delete')) { _root.ws.saveDeleteUndo(iText("deleting",'deleting')); _root.ws.remove(); markClean(true); }
 				});
 			_root.windows.confirm.box.createTextField("prompt",2,7,9,250,100);
 			writeText(_root.windows.confirm.box.prompt,iText("Some of the points on this way are tagged. Really delete?",'prompt_taggedpoints'));
@@ -534,16 +530,7 @@
 			var i,r,z,nw,ow;
 			ow=result[0];			// old way ID
 			nw=result[1];			// new way ID
-			if (ow!=nw) {			// renumber way?
-				_root.map.ways[ow].renumberNodeIndex(nw);
-				wayrels[nw]=wayrels[ow]; delete wayrels[ow];
-				_root.map.ways[ow]._name=nw;
-				renumberMemberOfRelation('Way', result[0], nw);
-				if (_root.map.areas[ow]) { _root.map.areas[ow]._name=nw; }
-				if (_root.panel.t_details.text==ow) { _root.panel.t_details.text=nw; _root.panel.t_details.setTextFormat(plainText); }
-				if (wayselected==ow) { selectWay(nw); }
-			}
-			// ** used to have bbox code here, but don't think we need it
+			if (ow!=nw) { renumberWay(ow,nw); }
 			_root.map.ways[nw].clean=true;
 			_root.map.ways[nw].uploading=false;
 			_root.map.ways[nw].historic=false;
@@ -570,6 +557,7 @@
 			_root.map.ways[nw].deleteMergedWays();
 			uploadDirtyWays();			// make sure dependencies are uploaded
 			operationDone(ow);
+			updateInspector();
 		};
 
 		if (!this.uploading && !this.hasDependentNodes() && !this.locked && (!_root.sandbox || _root.uploading) && this.path.length>1) {
@@ -592,6 +580,7 @@
 			}
 			_root.writesrequested++;
 			remote_write.call('putway',putresponder,_root.usertoken,_root.changeset,this.version,Number(this._name),sendpath,this.attr,sendnodes,this.deletednodes);
+			updateInspector();
 		}
 	};
 
@@ -623,11 +612,17 @@
 	
 	// ----	Save for undo
 
-	OSMWay.prototype.saveUndo=function(str) {
+	OSMWay.prototype.saveDeleteUndo=function(str) {
 		_root.undo.append(UndoStack.prototype.undo_deleteway,
 						  new Array(this._name,this._x,this._y,
 									deepCopy(this.attr),deepCopy(this.path),this.version),
 									iText("$1 a way",'a_way',str));
+	};
+	
+	OSMWay.prototype.saveChangeUndo=function(str) {
+		_root.undo.append(UndoStack.prototype.undo_changeway,
+						  new Array(this._name,deepCopy(this.path),deepCopy(this.deletednodes),deepCopy(this.attr)),
+						  iText("changes to a way",'action_changeway'));
 	};
 
 
@@ -661,11 +656,7 @@
 				this.insertAnchorPointAtMouse();
 			} else {
 				// shift-click other way: merge two ways
-				this.mergeAtCommonPoint(_root.ws);
-				_root.ws.redraw();
-				_root.ws.select();
-//				_root.ws.upload();
-//				_root.map.ways[this._name ].remove(wayselected);
+				mergeWayKeepingID(this,_root.ws);
 			}
 		} else if (_root.drawpoint>-1) {
 			// click other way while drawing: insert point as junction
@@ -1053,6 +1044,7 @@
 						  new Array(waylist,poslist), iText("adding a node into a way",'action_insertnode'));
 		_root.ws.highlightPoints(5000,"anchor");
 		_root.map.anchors[pointselected].beginDrag();
+		updateInspector();
 	};
 
 	// ----	Remove point from this way (only)
@@ -1092,6 +1084,7 @@
 	OSMWay.prototype.notUploading=function() {
 		this.uploading=false;
 		var z=this.path; for (i in z) { this.path[i].uploading=false; }
+		updateInspector();
 	};
 
 	// ----	Node->way associations
@@ -1257,6 +1250,16 @@
 	OSMWay.prototype.inspect=function() {
 		var str='';
 
+		// Status
+		if (!this.clean) { str+="Unsaved"; }
+		if (this.uploading) { str+=" (uploading)"; }
+		if (str!='') { str+="\n"; }
+
+		// Number of nodes
+		str+=this.path.length+" nodes";
+		if (this.path[this.path.length-1]==this.path[0]) { str+=" (closed)"; }
+		str+="\n";
+
 		// Connections to other ways of same type
 		var principal='';
 		if      (this.attr['highway' ]) { principal='highway';  }
@@ -1271,7 +1274,13 @@
 				}
 			}
 		}
-		str="Connects to "+same+" "+this.attr[principal]+" and "+different+" other "+principal;
+		str+="Connects to ";
+		if (this.attr[principal]==undefined) { 
+			str+=same+" ways";
+		} else {
+			str+=same+" "+this.attr[principal]+" and "+different+" other "+principal;
+		}
+
 		return "<p>"+str+"</p>";
 	};
 
@@ -1345,6 +1354,7 @@
 		_root.undo.append(UndoStack.prototype.undo_addpoint,
 						  new Array(new Array(_root.ws),poslist),
 						  iText("adding a node to the end of a way",'action_addpoint'));
+		updateInspector();
 	}
 
 	function stopDrawing() {
@@ -1356,6 +1366,7 @@
 			removeMovieClip(_root.map.areas[wayselected]);
 			removeMovieClip(_root.ws);
 			removeMovieClip(_root.map.anchors);
+			updateInspector();
 		}
 		_root.map.elastic.clear();
 		clearTooltip();
@@ -1480,6 +1491,36 @@
 		_root.lastwayselected=_root.wayselected;
 		_root.wayselected=Math.floor(id);
 		_root.ws=_root.map.ways[id];
+		
+		if (id==0) {
+			_root.panel.advanced.disableOption(0);
+			_root.panel.advanced.disableOption(1);
+		} else {
+			_root.panel.advanced.enableOption(0);
+			_root.panel.advanced.enableOption(1);
+		}
+		updateInspector();
+	}
+	
+	function renumberWay(ow,nw) {
+		_root.map.ways[ow].renumberNodeIndex(nw);
+		wayrels[nw]=wayrels[ow]; delete wayrels[ow];
+		_root.map.ways[ow]._name=nw;
+		renumberMemberOfRelation('Way', result[0], nw);
+		if (_root.map.areas[ow]) { _root.map.areas[ow]._name=nw; }
+		if (_root.panel.t_details.text==ow) { _root.panel.t_details.text=nw; _root.panel.t_details.setTextFormat(plainText); }
+		if (wayselected==ow) { selectWay(nw); }
+	}
+	
+	function mergeWayKeepingID(w1,w2) {
+		var t=(w1==_root.ws || w2==_root.ws);
+		var w,s;
+		if (Number(w1._name)<0 && Number(w2._name)>0) {
+			s=w1.mergeAtCommonPoint(w2); w=w2;
+		} else {
+			s=w2.mergeAtCommonPoint(w1); w=w1;
+		}
+		if (s) { w.redraw(); if (t) { w.select(); } }
 	}
 
 	function uploadDirtyWays(allow_ws) {

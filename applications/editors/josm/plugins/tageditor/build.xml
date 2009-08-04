@@ -187,6 +187,6 @@
 		    </exec>	    
    	</target>
 	
-	<target name="deploy" depends="core-info,commit-current,update-current,dist,commit-dist">
+	<target name="deploy" depends="core-info,commit-current,update-current,clean,dist,commit-dist">
 	</target>
 </project>

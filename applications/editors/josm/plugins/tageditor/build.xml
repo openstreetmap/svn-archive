@@ -135,7 +135,7 @@
     </target>
 
 	<target name="commit-current">
-	    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 	                    <env key="LANG" value="C"/>
 	                    <arg value="commit"/>
 	                    <arg value="-m &quot;${commit.message}&quot;"/>
@@ -144,7 +144,7 @@
 	</target>
 
 	<target name="update-current">
-	    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 	                    <env key="LANG" value="C"/>
 	                    <arg value="up"/>
 	                    <arg value="."/>
@@ -152,7 +152,7 @@
 	</target>
 	
 	<target name="commit-dist">
-		    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 		                    <env key="LANG" value="C"/>
 		                    <arg value="commit"/>
                 			<arg value="-m &quot;${commit.message}&quot;"/>

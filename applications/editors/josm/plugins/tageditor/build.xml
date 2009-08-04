@@ -152,6 +152,7 @@
 
 	
 	<target name="commit-current">
+		<echo>Commiting the plugin source ...</echo>
 	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 	                    <env key="LANG" value="C"/>
 	                    <arg value="commit"/>
@@ -177,7 +178,7 @@
 	</target>
 	
 	<target name="commit-dist">
-			<echo>Commiting basedir ...</echo>
+			<echo>Commiting ../dist/${plugin.jar} ...</echo>
 		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 		                    <env key="LANG" value="C"/>
 		                    <arg value="commit"/>

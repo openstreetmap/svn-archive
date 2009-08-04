@@ -108,7 +108,7 @@
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
     </target>
-
+	
     <!--
     **********************************************************
     ** clean - clean up the build environment
@@ -133,4 +133,33 @@
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
+
+	<target name="commit-current">
+	    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+	                    <env key="LANG" value="C"/>
+	                    <arg value="commit"/>
+	                    <arg value="-m &quot;${commit.message}&quot;"/>
+	                    <arg value="."/>
+	    </exec>	    
+	</target>
+
+	<target name="update-current">
+	    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+	                    <env key="LANG" value="C"/>
+	                    <arg value="up"/>
+	                    <arg value="."/>
+	    </exec>	    
+	</target>
+	
+	<target name="commit-dist">
+		    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+		                    <env key="LANG" value="C"/>
+		                    <arg value="commit"/>
+                			<arg value="-m &quot;${commit.message}&quot;"/>
+		                    <arg value="../../dist/${plugin.jar}"/>
+		    </exec>	    
+   	</target>
+	
+	<target name="deploy" depends="commit-current,update-current,dist,commit-dist">
+	</target>
 </project>

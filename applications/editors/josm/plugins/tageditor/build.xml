@@ -144,14 +144,22 @@
 	</target>
 
 	<target name="update-current">
+		<echo>Updating basedir ...</echo>
 	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 	                    <env key="LANG" value="C"/>
 	                    <arg value="up"/>
 	                    <arg value="."/>
 	    </exec>	    
+		<echo>Updating ${plugin.jar} ...</echo>
+	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+	                    <env key="LANG" value="C"/>
+	                    <arg value="up"/>
+	                    <arg value="../dist/${plugin.jar}"/>
+	    </exec>	    
 	</target>
 	
 	<target name="commit-dist">
+			<echo>Commiting basedir ...</echo>
 		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 		                    <env key="LANG" value="C"/>
 		                    <arg value="commit"/>

@@ -12,6 +12,7 @@ import javax.swing.Timer;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
@@ -314,6 +315,11 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         if (p.addNewTag && proposalContainer.getTarget().keySet().size() == 0)
             proposalContainer.addProposal(new AddKeyValueProposal(
                                                p.addNewTagKey, p.addNewTagValue));
+
+        if (p.addBuildingTag && proposalContainer.getTarget() instanceof Way
+                && proposalContainer.getTarget().get("building") == null)
+            proposalContainer.addProposal(new AddKeyValueProposal("building", "yes"));
+
 
     }//GEN-LAST:event_matchChanged
 

@@ -25,7 +25,7 @@ public class AccessRulesetReader {
 			super(message);
 		};
 		public AccessRulesetSyntaxException(Throwable t) {
-			super(t);
+			super(t.toString());
 		}
 	}
 

@@ -56,7 +56,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Visualizes routing information as a routing graph."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Graphview"/>
-                <attribute name="Plugin-Mainversion" value="1815"/>
+                <attribute name="Plugin-Mainversion" value="1893"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

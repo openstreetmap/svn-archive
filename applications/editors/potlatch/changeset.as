@@ -9,6 +9,7 @@
 	function closeChangeset() {
         if (_root.sandbox) {
             if (!_root.changeset) { return; }
+			_root.panel.advanced.disableOption(5);
             pleaseWait(iText("Closing changeset",'closechangeset'));
 		    startChangeset(false);
         } else {
@@ -96,4 +97,5 @@
 		cstags['created_by']=_root.signature;	//  |
 
 		remote_write.call('startchangeset',csresponder,_root.usertoken,cstags,_root.changeset,_root.changecomment,open_new);
+		if (open_new) {	_root.panel.advanced.enableOption(5); }
 	}

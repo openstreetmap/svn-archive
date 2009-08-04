@@ -288,9 +288,13 @@
 
 	OSMRelation.prototype.editRelation = function() {
 		var rel = this;
-		var completeEdit = function() {
+		var completeEdit = function(button) {
+			if (button==iText("Ok",'ok') ) {
+				_root.windows.relation.box.properties.tidy();
+			} else {
+				_root.editingrelation.attr=_root.editingrelationattr;
+			}
 			rel.setHighlight(false);
-			_root.windows.relation.box.properties.tidy();
 			_root.panel.properties.reinit();
 		};
 
@@ -298,7 +302,7 @@
 		_root.panel.properties.enableTabs(false);
 		
 		_root.windows.attachMovie("modal","relation",++windowdepth);
-		_root.windows.relation.init(402, 255, ["OK"], completeEdit);
+		_root.windows.relation.init(402, 255, [iText("Cancel",'cancel'), iText("Ok",'ok')], completeEdit);
 		var z=5;
 		var box=_root.windows.relation.box;
 		
@@ -321,6 +325,7 @@
 		box.attachMovie("propwindow","properties",z++);
 		with (box.properties) { _x=14; _y=34; };
 		_root.editingrelation = this;
+		_root.editingrelationattr = deepCopy(this.attr);
 		box.properties.ynumber = 9;
 		box.properties.init("relation",2,9);
 

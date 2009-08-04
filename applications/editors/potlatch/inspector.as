@@ -13,5 +13,9 @@
 	};
 
 	function updateInspector() {
-		_root.palettes.inspector.desc.htmlText=_root.ws.inspect();
+		if (!_root.palettes.inspector) { return; }
+
+		var t='';
+		if (_root.ws) { t=_root.ws.inspect(); }
+		_root.palettes.inspector.desc.htmlText=t;
 	};

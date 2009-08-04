@@ -109,25 +109,22 @@
 	// =====================================================================
 	// Conflict management
 
-	function resolveConflict(msg,result) {
-		//  msg[0] is type (node/way)
-		//  msg[1] is version
-		// (msg[2] is type actually causing conflict, and msg[3] id, if in a way)
-		//  result[0] is id
-		_root.cmsg=msg; _root.cresult=result;		// _root. so we can access them from the "Ok" function
-		var ctype=msg[0]; var cid=result[0];
-		var t1,t2;
+	function resolveConflict(rootobj,conflictobj) {
+		//  rootobj is     [root object, id]
+		//  conflictobj is [conflicting object, id, version]
+		_root.croot=rootobj; _root.cconflict=conflictobj;		// _root. so we can access them from the "Ok" function
+		var t1,t2; var id=rootobj[1];
 
 		abortUpload();
-		switch (ctype) {
-			case 'way':		var n=getName(_root.map.ways[cid].attr,waynames); if (n) { n=" ("+n+")"; }
-							t1=iText("Since you started editing, someone else has changed way $1$2.","conflict_waychanged",cid,n);
+		switch (rootobj[0]) {
+			case 'way':		var n=getName(_root.map.ways[id].attr,waynames); if (n) { n=" ("+n+")"; }
+							t1=iText("Since you started editing, someone else has changed way $1$2.","conflict_waychanged",id,n);
 							t2=iText("Click 'Ok' to show the way.","conflict_visitway"); break;
-			case 'node':	var n=getName(_root.map.pois[cid].attr,nodenames); if (n) { n=" ("+n+")"; }
-							t1=iText("Since you started editing, someone else has changed point $1$2.","conflict_poichanged",cid,n);
+			case 'node':	var n=getName(_root.map.pois[id].attr,nodenames); if (n) { n=" ("+n+")"; }
+							t1=iText("Since you started editing, someone else has changed point $1$2.","conflict_poichanged",id,n);
 							t2=iText("Click 'Ok' to show the point.","conflict_visitpoi"); break;
-			case 'relation':var n=_root.map.relations[cid].verboseText(); if (n) { n=" ("+n+")"; }
-							t1=iText("Since you started editing, someone else has changed relation $1$2.","conflict_relchanged",cid,n);
+			case 'relation':var n=_root.map.relations[id].verboseText(); if (n) { n=" ("+n+")"; }
+							t1=iText("Since you started editing, someone else has changed relation $1$2.","conflict_relchanged",id,n);
 							t2=""; break;
 		}
 		_root.windows.attachMovie("modal","resolve",++windowdepth);
@@ -150,7 +147,7 @@
 	
 	function handleConflictAction(choice) {
 		var tx,ty;
-		var ctype=_root.cmsg[0]; var cid=_root.cresult[0];
+		var ctype=_root.croot[0]; var cid=_root.croot[1];
 		if		(ctype=='way'  && _root.map.ways[cid]) { preway=cid;  tx=_root.map.ways[cid].path[0].x; ty=_root.map.ways[cid].path[0].y; }
 		else if (ctype=='node' && _root.map.pois[cid]) { prenode=cid; tx=_root.nodes[cid].x; ty=_root.nodes[cid].y; }
 
@@ -167,13 +164,14 @@
 			if		(ctype=='way' ) { _root.map.ways[cid].select(); }
 			else if (ctype=='node') { _root.map.pois[cid].select(); }
 			// change version number
-			var v=_root.cmsg[1]; var rtype,rid;
-			if (_root.cmsg[2]) { rtype=_root.cmsg[2]; rid=_root.cmsg[3]; ctype=ctype+","+rtype; }
-			switch (ctype) {
-				case 'way,way':		_root.map.ways[cid].version=v; _root.map.ways[cid].clean=false; break;
-				case 'way,node':	_root.nodes[rid].version=v; _root.nodes[rid].markDirty(); _root.map.ways[cid].clean=false; break;
-				case 'node':		_root.nodes[cid].version=v; _root.nodes[cid].markDirty(); _root.map.pois[cid].clean=false; break;
-				case 'relation':	_root.map.relations[cid].version=v; _root.map.relations[cid].clean=false; break;
+			var rtype=_root.cconflict[0];
+			var rid  =_root.cconflict[1];
+			var v    =_root.cconflict[2];
+			switch (ctype+","+_root.cconflict[0]) {
+				case 'way,way':				_root.map.ways[cid].version=v; _root.map.ways[cid].clean=false; break;
+				case 'way,node':			_root.nodes[rid].version=v; _root.nodes[rid].markDirty(); _root.map.ways[cid].clean=false; break;
+				case 'node,node':			_root.nodes[cid].version=v; _root.nodes[cid].markDirty(); _root.map.pois[cid].clean=false; break;
+				case 'relation,relation':	_root.map.relations[cid].version=v; _root.map.relations[cid].clean=false; break;
 			}
 		}
 	}

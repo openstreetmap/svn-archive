@@ -138,7 +138,7 @@
 	};
 	POI.prototype.select=function() {
 		_root.pointselected=-2;
-		_root.wayselected=0;
+		selectWay(0);
 		_root.panel.properties.tidy();
 		_root.panel.properties.saveAttributes();
 		_root.poiselected=this._name;

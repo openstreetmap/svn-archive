@@ -103,8 +103,8 @@
 	// maximiseSWF - call JavaScript to maximise/minimise
 	
 	function maximiseSWF() {
-		if (_root.maximised) { getURL("javascript:minimiseMap()"); }
-						else { getURL("javascript:maximiseMap()"); }
+		if (_root.maximised) { getURL("javascript:minimiseMap()"); _root.panel.advanced.renameOption(6,iText("Maximise window","advanced_maximise")); }
+						else { getURL("javascript:maximiseMap()"); _root.panel.advanced.renameOption(6,iText("Minimise window","advanced_minimise")); }
 		_root.maximised=!_root.maximised;
 	}
 

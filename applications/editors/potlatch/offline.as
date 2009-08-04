@@ -18,33 +18,42 @@
 		_root.uploadtasks=new Array();
 
 		// Assemble POIs
-		var poi=new Object(); todo=false;
+		var poi=new Object(); todo=0;
 		for (var id in _root.map.pois) {
-			if (!_root.map.pois[id].clean && !_root.map.pois[id].locked) { poi[id]=true; todo=true; }
+			if (!_root.map.pois[id].clean && !_root.map.pois[id].locked) {
+				poi[id]=true; todo++;
+				if (todo==5) { uploadtasks.push([uploadPOIs,poi]); poi=new Object(); todo=0; }
+			}
 		}
-		if (todo) { uploadtasks.push([uploadPOIs,poi]); }
+		if (todo>0) { uploadtasks.push([uploadPOIs,poi]); }
 		
 		// Assemble ways
-		var way=new Object(); todo=false;
+		var way=new Object(); todo=0;
 		for (var id in _root.map.ways) {
-			if (!_root.map.ways[id].clean && !_root.map.ways[id].locked) { way[id]=true; todo=true; }
+			if (!_root.map.ways[id].clean && !_root.map.ways[id].locked) {
+				way[id]=true; todo++;
+				if (todo==5) { uploadtasks.push([uploadWays,way]); way=new Object(); todo=0; }
+			}
 		}
-		if (todo) { uploadtasks.push([uploadWays,way]); }
+		if (todo>0) { uploadtasks.push([uploadWays,way]); }
 		
 		// Assemble relations
-		var rel=new Object(); todo=false;
+		var rel=new Object(); todo=0;
 		for (var id in _root.map.relations) {
-			if (!_root.map.relations[id].clean && !_root.map.relations[id].locked) { rel[id]=true; todo=true; }
+			if (!_root.map.relations[id].clean && !_root.map.relations[id].locked) {
+				rel[id]=true; todo++;
+				if (todo==5) { uploadtasks.push([uploadRelations,rel]); rel=new Object(); todo=0; }
+			}
 		}
-		if (todo) { uploadtasks.push([uploadRelations,rel]); }
+		if (todo>0) { uploadtasks.push([uploadRelations,rel]); }
 
 		// Assemble ways to delete
-		todo=false; var z=_root.waystodelete;
+		var z=_root.waystodelete; todo=false;
 		for (var id in z) { todo=true; }
 		if (todo) { uploadtasks.push([uploadDeletedWays,deepCopy(_root.waystodelete)]); }
 
 		// Assemble POIs to delete
-		todo=false; var z=_root.poistodelete;
+		var z=_root.poistodelete; todo=false;
 		for (var id in z) { todo=true; }
 		if (todo) { uploadtasks.push([uploadDeletedPOIs,deepCopy(_root.poistodelete)]); }
 
@@ -150,30 +159,24 @@
 	// individual upload tasks
 
 	function uploadPOIs(list) {
-        _root.windows.upload.box.progress.text+="Uploading POIs";
 		for (var id in list) {
-            _root.windows.upload.box.progress.text+=".";
+            _root.windows.upload.box.progress.text+="Uploading POI "+id+", "+getName(_root.map.pois[id].attr,nodenames)+"\n";
 			_root.map.pois[id].upload();
 		}
-        _root.windows.upload.box.progress.text+="\n";
 	}
 
 	function uploadWays(list) {
-        _root.windows.upload.box.progress.text+="Uploading ways";
 		for (var id in list) {
-            _root.windows.upload.box.progress.text+=".";
+            _root.windows.upload.box.progress.text+="Uploading way "+id+", "+getName(_root.map.ways[id].attr,waynames)+"\n";
 			_root.map.ways[id].upload();
 		}
-        _root.windows.upload.box.progress.text+="\n";
 	}
 	
 	function uploadRelations(list) {
-        _root.windows.upload.box.progress.text+="Uploading relations";
 		for (var id in list) {
-            _root.windows.upload.box.progress.text+=".";
+            _root.windows.upload.box.progress.text+="Uploading relation "+id+", "+getName(_root.map.relations[id].attr,[])+"\n";
 			_root.map.relations[id].upload();
 		}
-        _root.windows.upload.box.progress.text+="\n";
 	}
 	
 	function uploadDeletedWays(list) {

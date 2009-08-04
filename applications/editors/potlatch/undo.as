@@ -211,17 +211,20 @@
 	//		Deleted way
 
 	UndoStack.prototype.undo_deleteway=function(params) {
-		var oldway=params[0]; newwayid--;
+		var w;
+		if (_root.sandbox) { w=params[0]; }
+					  else { w=newwayid--; }
 		stopDrawing();
-		_root.map.ways.attachMovie("way",newwayid,++waydepth);
-		_root.map.ways[newwayid]._x=params[1];
-		_root.map.ways[newwayid]._y=params[2];
-		_root.map.ways[newwayid].attr=params[3];
-		_root.map.ways[newwayid].path=renumberDeleted(params[4],oldway,newwayid);
-		_root.map.ways[newwayid].version=params[5];
-		_root.map.ways[newwayid].redraw();
-		_root.map.ways[newwayid].select();
-		_root.map.ways[newwayid].clean=false;
+		_root.map.ways.attachMovie("way",w,++waydepth);
+		_root.map.ways[w]._x=params[1];
+		_root.map.ways[w]._y=params[2];
+		_root.map.ways[w].attr=params[3];
+		if (_root.sandbox) { _root.map.ways[w].path=params[4]; delete _root.waystodelete[w]; }
+					  else { _root.map.ways[w].path=renumberDeleted(params[4],params[0],w); }
+		_root.map.ways[w].version=params[5];
+		_root.map.ways[w].redraw();
+		_root.map.ways[w].select();
+		_root.map.ways[w].clean=false;
 		markClean(false);
 	};
 

@@ -1,13 +1,13 @@
 package org.openstreetmap.josm.plugins.tageditor.ac;
 
+import static org.openstreetmap.josm.plugins.tageditor.josm.CompatibilityUtil.getCurrentDataSet;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import static org.openstreetmap.josm.plugins.tageditor.josm.CompatibilityUtil.getCurrentDataSet;
 /**
  * AutoCompletionCache temporarily holds a cache of keys with a list of
  * possible auto completion values for each key.

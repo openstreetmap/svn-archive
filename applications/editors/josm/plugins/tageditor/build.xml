@@ -12,12 +12,15 @@
 **
 **    > ant  dist
 **
-** To install the generated plugin locally (in you default plugin directory) run
+** To install the generated plugin locally (in your default plugin directory) run
 **
 **    > ant  install
 **
-** The generated plugin jar is not automatically available in JOSMs plugin configuration
-** dialog. You have to check it in first.
+** To build against the core in ../../core, create a correct manifest and deploy to
+** SVN, run
+**
+**    > ant  deploy
+**
 **
 -->
 <project name="tageditor" default="dist" basedir=".">
@@ -33,6 +36,7 @@
     <property name="ant.build.javac.target" value="1.5"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+    <property name="commit.message" value="" />	
 
     <!--
     **********************************************************
@@ -84,7 +88,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Provides a dialog for editing tags in a tabular grid."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/TagEditor"/>
-                <attribute name="Plugin-Mainversion" value="1900"/>
+                <attribute name="Plugin-Mainversion" value="${coreversion.info.entry.revision}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>
@@ -134,6 +138,19 @@
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
 
+	<target name="core-info">
+        <exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
+                    <env key="LANG" value="C"/>
+                    <arg value="info"/>
+                    <arg value="--xml"/>
+                    <arg value="../../core"/>
+        </exec>
+        <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
+		<echo>Building against core revision ${coreversion.info.entry.revision} ...</echo>
+		<delete file="core.info.xml" />
+	</target>
+
+	
 	<target name="commit-current">
 	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 	                    <env key="LANG" value="C"/>
@@ -143,6 +160,7 @@
 	    </exec>	    
 	</target>
 
+	
 	<target name="update-current">
 		<echo>Updating basedir ...</echo>
 	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
@@ -168,6 +186,6 @@
 		    </exec>	    
    	</target>
 	
-	<target name="deploy" depends="commit-current,update-current,dist,commit-dist">
+	<target name="deploy" depends="core-info,commit-current,update-current,dist,commit-dist">
 	</target>
 </project>

@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.tageditor.ac;
 
-import org.openstreetmap.josm.Main;
 import static org.openstreetmap.josm.plugins.tageditor.josm.CompatibilityUtil.getCurrentDataSet;
 
 public class AutoCompletionContext {

@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
@@ -20,7 +21,6 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource.TileUpdate;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * A {@link TileLoader} implementation that loads tiles from OSM via HTTP and
@@ -53,14 +53,16 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
      * @param map
      * @param cacheDir
      */
-    public OsmFileCacheTileLoader(TileLoaderListener map, File cacheDir) throws SecurityException{
+    public OsmFileCacheTileLoader(TileLoaderListener map, File cacheDir) throws SecurityException {
         super(map);
         String tempDir = null;
         String userName = System.getProperty("user.name");
         try {
             tempDir = System.getProperty("java.io.tmpdir");
-        } catch(SecurityException e) {
-            log.warning(tr("Failed to access system property ''{0}'' for security reasons. Exception was: {1}", "java.io.tmpdir", e.toString()));
+        } catch (SecurityException e) {
+            log.log(Level.WARNING,
+                    "Failed to access system property ''java.io.tmpdir'' for security reasons. Exception was: "
+                            + e.toString());
             throw e; // rethrow
         }
         try {

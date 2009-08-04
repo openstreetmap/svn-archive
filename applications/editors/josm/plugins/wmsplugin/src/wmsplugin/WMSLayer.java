@@ -79,6 +79,7 @@ public class WMSLayer extends Layer {
         this.cookies = cookies;
         WMSGrabber.getProjection(baseURL, true);
         mv = Main.map.mapView;
+        resolution = mv.getDist100PixelText();
         pixelPerDegree = getPPD();
 
         executor = Executors.newFixedThreadPool(3);
@@ -106,13 +107,6 @@ public class WMSLayer extends Layer {
 
     @Override public Icon getIcon() {
         return icon;
-    }
-
-    public String scale(){
-        LatLon ll1 = mv.getLatLon(0,0);
-        LatLon ll2 = mv.getLatLon(100,0);
-        double dist = ll1.greatCircleDistance(ll2);
-        return dist > 1000 ? (Math.round(dist/100)/10.0)+" km" : Math.round(dist*10)/10+" m";
     }
 
     @Override public String getToolTipText() {
@@ -241,7 +235,7 @@ public class WMSLayer extends Layer {
         }
         public void actionPerformed(ActionEvent ev) {
             initializeImages();
-            resolution = scale();
+            resolution = mv.getDist100PixelText();
             pixelPerDegree = getPPD();
             mv.repaint();
         }

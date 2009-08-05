@@ -1506,7 +1506,7 @@
 		_root.map.ways[ow].renumberNodeIndex(nw);
 		wayrels[nw]=wayrels[ow]; delete wayrels[ow];
 		_root.map.ways[ow]._name=nw;
-		renumberMemberOfRelation('Way', result[0], nw);
+		renumberMemberOfRelation('Way', ow, nw);
 		if (_root.map.areas[ow]) { _root.map.areas[ow]._name=nw; }
 		if (_root.panel.t_details.text==ow) { _root.panel.t_details.text=nw; _root.panel.t_details.setTextFormat(plainText); }
 		if (wayselected==ow) { selectWay(nw); }

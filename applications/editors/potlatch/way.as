@@ -868,7 +868,7 @@
 			if (otherway.attr[i].substr(0,6)=='(type ') { otherway.attr[i]=null; }
 			if (this.attr[i].substr(0,6)=='(type ') { this.attr[i]=null; }
 			if (this.attr[i]) {
-				if (this.attr[i]!=otherway.attr[i] && otherway.attr[i]) { this.attr[i]+='; '+otherway.attr[i]; conflict=true; }
+				if (this.attr[i]!=otherway.attr[i] && otherway.attr[i]) { var s=this.attr[i]+'; '+otherway.attr[i]; this.attr[i]=s.substr(0,255); conflict=true; }
 			} else {
 				this.attr[i]=otherway.attr[i];
 			}
@@ -1253,9 +1253,10 @@
 		var str='';
 
 		// Status
+		if (this.locked) { str+="Locked\n"; }
 		if (!this.clean) { str+="Unsaved"; }
 		if (this.uploading) { str+=" (uploading)"; }
-		if (str!='') { str+="\n"; }
+		if (!this.clean || this.uploading) { str+="\n"; }
 
 		// Number of nodes
 		str+=this.path.length+" nodes";
@@ -1330,7 +1331,8 @@
 		// Redraw line (if possible, just extend it to save time)
 		if (_root.ws.getFill()>-1 || 
 			_root.ws.path.length<3 ||
-			_root.pointselected>-2) {
+			_root.pointselected>-2 ||
+			_root.ws.attr['oneway']) {
 			_root.ws.redraw();
 			_root.ws.select();
 		} else {

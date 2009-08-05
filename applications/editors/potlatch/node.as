@@ -44,11 +44,11 @@
 						  "deleting a point");
 	};
 
-	Node.prototype.moveTo=function(newx,newy,ignoreway) {
+	Node.prototype.moveTo=function(newx,newy,ignoreway,ignore_oneway) {
 		this.x=newx; this.y=newy; this.markDirty();
 		var qchanged;
 		var z=this.ways; for (var qway in z) {
-			if (qway!=ignoreway) { _root.map.ways[qway].redraw(false,true); qchanged=qway; }
+			if (qway!=ignoreway) { _root.map.ways[qway].redraw(false,ignore_oneway); qchanged=qway; }
 		}
 		return qchanged;	// return ID of last changed way
 	};

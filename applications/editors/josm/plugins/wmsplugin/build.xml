@@ -1,9 +1,38 @@
+<!--
+** This is a template build file for a JOSM  plugin.
+**
+** Maintaining versions
+** ====================
+** see README.template
+**
+** Usage
+** =====
+** To build it run
+**
+**    > ant  dist
+**
+** To install the generated plugin locally (in your default plugin directory) run
+**
+**    > ant  install
+**
+** To build against the core in ../../core, create a correct manifest and deploy to
+** SVN, run
+**    - set the property commit.message 
+**    - set the property josm.reference.release to lowest JOSM release number this
+**      plugin build is compatible with
+**    > ant  deploy
+**
+**
+-->
 <project name="wmsplugin" default="dist" basedir=".">
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="ant.build.javac.target" value="1.5"/>
+	<property name="commit.message"         value="fixing JOSM issue #3186" />
+	<property name="josm.reference.release" value="1914" />
+	
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
@@ -15,6 +44,7 @@
         </javac>
     </target>
     <target name="dist" depends="compile,revision">
+    	<echo message="building ${plugin.jar} with version ${version.entry.commit.revision} for JOSM version ${josm.reference.release} "/>
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
@@ -25,7 +55,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Display georeferenced images as background in JOSM (WMS servers, Yahoo, ...)."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/WMSPlugin"/>
-                <attribute name="Plugin-Mainversion" value="1908"/>
+                <attribute name="Plugin-Mainversion" value="${josm.reference.release}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
                 <attribute name="de_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/DE:JOSM/Plugins/WMSPlugin"/>
             </manifest>
@@ -54,4 +84,56 @@
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
+	
+	<target name="core-info">
+	        <exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
+	                    <env key="LANG" value="C"/>
+	                    <arg value="info"/>
+	                    <arg value="--xml"/>
+	                    <arg value="../../core"/>
+	        </exec>
+	        <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
+			<echo>Building against core revision ${coreversion.info.entry.revision} ...</echo>
+			<delete file="core.info.xml" />
+		</target>
+
+		
+		<target name="commit-current">
+			<echo>Commiting the plugin source ...</echo>
+		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		                    <env key="LANG" value="C"/>
+		                    <arg value="commit"/>
+		                    <arg value="-m &quot;${commit.message}&quot;"/>
+		                    <arg value="."/>
+		    </exec>	    
+		</target>
+
+		
+		<target name="update-current">
+			<echo>Updating basedir ...</echo>
+		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		                    <env key="LANG" value="C"/>
+		                    <arg value="up"/>
+		                    <arg value="."/>
+		    </exec>	    
+			<echo>Updating ${plugin.jar} ...</echo>
+		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		                    <env key="LANG" value="C"/>
+		                    <arg value="up"/>
+		                    <arg value="${plugin.jar}"/>
+		    </exec>	    
+		</target>
+		
+		<target name="commit-dist">
+				<echo>Commiting ${plugin.jar} ...</echo>
+			    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			                    <env key="LANG" value="C"/>
+			                    <arg value="commit"/>
+	                			<arg value="-m &quot;${commit.message}&quot;"/>
+			                    <arg value="${plugin.jar}"/>
+			    </exec>	    
+	   	</target>
+		
+		<target name="deploy" depends="core-info,commit-current,update-current,clean,dist,commit-dist">
+		</target>
 </project>

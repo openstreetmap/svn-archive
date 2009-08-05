@@ -130,10 +130,10 @@
 
 	// ----	Draw line
 
-	OSMWay.prototype.redraw=function(skip) {
+	OSMWay.prototype.redraw=function(skip,skiponeway) {
 		this.createEmptyMovieClip("taggednodes",3);
 
-		if (skip) {
+		if (skip && !this.attr["oneway"]) {
 			// We're at the same scale as previously, so don't redraw
 			// ** will refactor this when we do proper POI icons
 			for (var i=0; i<this.path.length; i+=1) {
@@ -150,7 +150,7 @@
 			this.createEmptyMovieClip("line",1);					// clear line
 			this.createEmptyMovieClip("arrows",2);					//  |
 			var linealpha=100; // -50*(this.locked==true);
-			var casingx=(scale<17) ? 1.5 : 1.3; var casingcol=0x222222;
+			var casingx=(scale<17 || preferences.data.thinlines) ? 1.5 : 1.3; var casingcol=0x222222;
 	
 			// Set stroke
 	
@@ -218,7 +218,7 @@
 			
 			// Draw direction arrows
 			
-			if (this.attr["oneway"]) {
+			if (this.attr["oneway"] && !skiponeway) {
 				this.drawArrows(this.attr["oneway"]);
 			}
 		}

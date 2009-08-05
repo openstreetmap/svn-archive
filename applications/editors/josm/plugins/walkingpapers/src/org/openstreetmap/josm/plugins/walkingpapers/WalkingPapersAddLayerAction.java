@@ -37,7 +37,7 @@ public class WalkingPapersAddLayerAction extends JosmAction {
         if (mungedWpId == null || mungedWpId.equals("")) return;
 
         // screen-scrape details about this id from walking-papers.org
-        String wpUrl = "http://walking-papers.org/scan.php?id=" + mungedWpId;
+        String wpUrl = Main.pref.get("walkingpapers.base-url", "http://walking-papers.org/") + "scan.php?id=" + mungedWpId;
 
         Pattern spanPattern = Pattern.compile("<span class=\"(\\S+)\">(\\S+)</span>");
         Matcher m;

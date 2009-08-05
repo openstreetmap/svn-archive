@@ -1232,12 +1232,14 @@
 	
 			_root.newnodeid--;
 			_root.nodes[newnodeid]=new Node(newnodeid,x,y,new Object(),0);
+			_root.nodes[newnodeid].addWay(newwayid);
 			nw.path.push(_root.nodes[newnodeid]);
 		}
 	
 		_root.newnodeid--;
 		_root.nodes[newnodeid]=new Node(newnodeid,this.path[i].x+tpoffset*offsetx[i-1],
 												  this.path[i].y+tpoffset*offsety[i-1],new Object(),0);
+		_root.nodes[newnodeid].addWay(newwayid);
 		nw.path.push(_root.nodes[newnodeid]);
 		nw.redraw();
 	};

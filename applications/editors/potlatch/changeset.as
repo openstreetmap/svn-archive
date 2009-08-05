@@ -7,8 +7,8 @@
 	// and starts a new one
 
 	function closeChangeset() {
+		if (!_root.changeset) { return; }
         if (_root.sandbox) {
-            if (!_root.changeset) { return; }
 			_root.panel.advanced.disableOption(5);
             pleaseWait(iText("Closing changeset",'closechangeset'));
 		    startChangeset(false);

@@ -471,7 +471,8 @@
 	function processMapDrag() {
 		if (mapDragging() || Key.isDown(Key.SPACE)) {
 			if (_root.pointertype!='hand') { setPointer('hand'); }
-
+			clearFloater();
+			
 			if (preferences.data.bgtype==2) {
 				var t=new Date();
 				if ((t.getTime()-yahootime.getTime())<500) {
@@ -508,6 +509,7 @@
 			_root.bgxoffset+=xdiff; _root.map.tiles._x+=xdiff;
 			_root.bgyoffset+=ydiff; _root.map.tiles._y+=ydiff;
 			updateCoords(_root.map._x,_root.map._y);
+			_root.mapdragged=true;
 		} else {
 			_root.map._x+=xdiff;
 			_root.map._y+=ydiff;
@@ -807,6 +809,7 @@
 			_root.ws.redraw();
 			_root.panel.padlock._visible=_root.ws.locked;
 			if (!_root.ws.locked) { markWayRelationsDirty(_root.wayselected); }
+			updateInspector();
 		} else if (_root.poiselected) {
 			_root.map.pois[poiselected].locked=!_root.map.pois[poiselected].locked;
 			_root.map.pois[poiselected].recolour();
@@ -861,8 +864,10 @@
 	};
 
 	function keyRevert() {
-		if		(_root.wayselected<0) { setAdvice(false,iText("Deleting way (Z to undo)",'advice_deletingway'));
-										_root.ws.saveDeleteUndo(iText("deleting",'deleting'));
+		if		(_root.wayselected<0) { if (_root.ws.path.length>1) {
+											setAdvice(false,iText("Deleting way (Z to undo)",'advice_deletingway'));
+											_root.ws.saveDeleteUndo(iText("deleting",'deleting'));
+										}
 										stopDrawing();
 										memberDeleted('Way',wayselected);
 										removeMovieClip(_root.map.areas[wayselected]);

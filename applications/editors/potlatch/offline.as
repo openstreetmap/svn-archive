@@ -76,14 +76,14 @@
 	    _root.uploading=true;
 
 		_root.windows.attachMovie("modal","upload",++windowdepth);
-		_root.windows.upload.init(200,250,[iText('Cancel','cancel')],abortUpload);
+		_root.windows.upload.init(300,250,[iText('Cancel','cancel')],abortUpload);
 
         box=_root.windows.upload.box;
 		box.createTextField("title",10,7,7,280,20);
 		box.title.text = iText("Uploading...","uploading");
 		with (box.title) { setTextFormat(boldText); selectable=false; type='dynamic'; }
 
-        box.createTextField("progress",11,10,40,180,170);
+        box.createTextField("progress",11,10,40,280,170);
         with (box.progress) {
             background=true; backgroundColor=0xF3F3F3;
             border=true; borderColor=0xFFFFFF;
@@ -160,21 +160,24 @@
 
 	function uploadPOIs(list) {
 		for (var id in list) {
-            _root.windows.upload.box.progress.text+="Uploading POI "+id+", "+getName(_root.map.pois[id].attr,nodenames)+"\n";
+			var n=getName(_root.map.pois[id].attr,nodenames); if (n!='') { n=", "+n; }
+            _root.windows.upload.box.progress.text+="Uploading POI "+id+n+"\n";
 			_root.map.pois[id].upload();
 		}
 	}
 
 	function uploadWays(list) {
 		for (var id in list) {
-            _root.windows.upload.box.progress.text+="Uploading way "+id+", "+getName(_root.map.ways[id].attr,waynames)+"\n";
+			var n=getName(_root.map.ways[id].attr,waynames); if (n!='') { n=", "+n; }
+            _root.windows.upload.box.progress.text+="Uploading way "+id+n+"\n";
 			_root.map.ways[id].upload();
 		}
 	}
 	
 	function uploadRelations(list) {
 		for (var id in list) {
-            _root.windows.upload.box.progress.text+="Uploading relation "+id+", "+getName(_root.map.relations[id].attr,[])+"\n";
+			var n=getName(_root.map.relations[id].attr,[]); if (n!='') { n=", "+n; }
+            _root.windows.upload.box.progress.text+="Uploading relation "+id+n+"\n";
 			_root.map.relations[id].upload();
 		}
 	}

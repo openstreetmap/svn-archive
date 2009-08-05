@@ -70,7 +70,7 @@
 	AnchorPoint.prototype.trackDrag=function() {
 		this._x=_root.map._xmouse;
 		this._y=_root.map._ymouse;
-		_root.ws.path[this._name].moveTo(this._x,this._y,undefined);
+		_root.ws.path[this._name].moveTo(this._x,this._y,undefined,true);
 		_root.ws.highlight();
 	};
 	
@@ -200,15 +200,13 @@
 			restartElastic(); return;	// can't merge/join to historic ways
 		}
 		var i,z;
-		if (Key.isDown(Key.SHIFT)) {
+		if (Key.isDown(Key.SHIFT) && (this._name==0 || this._name==this.way.path.length-1)) {
 			// Merge ways
-			if (this._name==0 || this._name==this.way.path.length-1) {
-				var w=this.way;
-				addEndPoint(_root.nodes[this.node]);
-				_root.drawpoint=-1; clearTooltip();
-				_root.map.elastic.clear();
-				mergeWayKeepingID(w,_root.ws);
-			}
+			var w=this.way;
+			addEndPoint(_root.nodes[this.node]);
+			_root.drawpoint=-1; clearTooltip();
+			_root.map.elastic.clear();
+			mergeWayKeepingID(w,_root.ws);
 		} else { 
 			// Join ways (i.e. junction)
 			addEndPoint(_root.nodes[this.node]);

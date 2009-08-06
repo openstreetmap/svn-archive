@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = SRTM2Wayinfo
-PROJECT_NUMBER         = 0.1
+PROJECT_NUMBER         = 0.9
 OUTPUT_DIRECTORY       = ./docs/
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English

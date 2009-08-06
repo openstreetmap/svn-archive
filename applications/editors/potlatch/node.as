@@ -74,6 +74,32 @@
 		}
 	};
 
+	Node.prototype.inspect=function() {
+		var str;
+		str ="Lat "+Math.floor(coord2lat (this.y)*10000)/10000+"\n";
+		str+="Lon "+Math.floor(coord2long(this.x)*10000)/10000+"\n";
+
+		// Status
+		if (!this.clean) { str+="Unsaved"; }
+		if (this.uploading) { str+=" (uploading)"; }
+		if (!this.clean) { str+="\n"; }
+
+		// Which ways is this in?
+		if (this.numberOfWays()==0) { 
+			str+="Not in any ways (POI)\n";
+		} else {
+			str+="In ways ";
+			var w=this.ways; for (var i in w) {
+				str+=i;
+				var n=getName(_root.map.ways[i].attr,waynames); if (n) { str+=" ("+n+")"; }
+				str+=", ";
+			}
+			str=str.substr(0,str.length-2);
+		}
+
+		return "<p>"+str+"</p>";
+	};
+
 	// ------------------------------------------------------------------------
 	// Node->way mapping
 	

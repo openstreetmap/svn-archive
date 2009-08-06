@@ -54,6 +54,7 @@
 		_root.panel.presets.init(_root.panel.properties);
 		updateButtons();
 		updateScissors(true);
+		updateInspector();
 		setTooltip(iText("point selected\n(shift-click point to\nstart new line)",'hint_pointselected'),0);
 	};
 
@@ -64,6 +65,7 @@
 		_root.firstymouse=_root.map._ymouse;
 		_root.oldx=_root.ws.path[this._name].x;
 		_root.oldy=_root.ws.path[this._name].y;
+		this.oldclean=_root.ws.path[this._name].clean;
 		clearFloater();
 	};
 
@@ -101,6 +103,7 @@
 
 		} else {
 			_root.ws.path[this._name].moveTo(_root.oldx,_root.oldy,undefined);	// Return point to original position
+			_root.ws.path[this._name].clean=this.oldclean;						//  | (don't make dirty)
 			if ((this._name==0 || this._name==_root.ws.path.length-1) && !Key.isDown(17)) {
 				// ===== Clicked at start or end of line
 				if (_root.drawpoint==0 || _root.drawpoint==_root.ws.path.length-1) {

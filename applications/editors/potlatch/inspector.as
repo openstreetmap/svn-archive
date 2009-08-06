@@ -16,6 +16,8 @@
 		if (!_root.palettes.inspector) { return; }
 
 		var t='';
-		if (_root.ws) { t=_root.ws.inspect(); }
+		if (_root.poiselected) { t=_root.map.pois[poiselected].inspect(); }
+		else if (_root.pointselected>-2) { t=_root.ws.path[pointselected].inspect(); }
+		else if (_root.ws) { t=_root.ws.inspect(); }
 		_root.palettes.inspector.desc.htmlText=t;
 	};

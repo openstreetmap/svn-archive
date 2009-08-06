@@ -148,6 +148,7 @@
 		_root.panel.presets.init(_root.panel.properties);
 		updateButtons();
 		updateScissors(false);
+		updateInspector();
 		this.highlight();
 		var z=_root.noderels[this._name];
 		for (var rel in z) { _root.map.relations[rel].redraw(); }
@@ -175,6 +176,18 @@
 		if (this.icon==a) { return; }
 		replaceIcon(this,a);
 	};
+
+	POI.prototype.inspect=function() {
+		var str;
+		str ="Lat "+Math.floor(coord2lat (this._y)*10000)/10000+"\n";
+		str+="Lon "+Math.floor(coord2long(this._x)*10000)/10000+"\n";
+
+		if (this.locked) { str+="Locked\n"; }
+		if (!this.clean) { str+="Unsaved"; }
+		if (this.uploading) { str+=" (uploading)"; }
+		return "<p>"+str+"</p>";
+	};
+
 
 	Object.registerClass("poi",POI);
 

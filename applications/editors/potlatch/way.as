@@ -742,8 +742,8 @@
 		_root.panel.properties.tidy();
 		if (_root.wayselected!=this._name || _root.poiselected!=0) { uploadSelected(); }
 //		_root.panel.properties.saveAttributes();
-		selectWay(this._name);
 		_root.pointselected=-2;
+		selectWay(this._name);
 		_root.poiselected=0;
 		this.highlightPoints(5000,"anchor");
 		removeMovieClip(_root.map.anchorhints);

@@ -17,9 +17,9 @@
 #include <QDebug>
 #include <QLocale>
 
+/** Main function. */
 int main(int argc, char **argv)
 {
-    qDebug() << sizeof(OsmNode) << sizeof(OsmWay) << sizeof(OsmData);
     global_settings.parseSettings(argc, argv);
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -32,10 +32,14 @@ int main(int argc, char **argv)
     SrtmDownloader downloader(global_settings.getSrtmServer(), global_settings.getCacheDir());
     downloader.loadFileList();
 
+    QFile output(global_settings.getOutput());
+    if (!output.open(QIODevice::WriteOnly)) {
+        qCritical() << "Could not open output file" << global_settings.getOutput();
+        exit(1);
+    }
+
     OsmData data;
     data.parse(global_settings.getInput());
-    QFile output(global_settings.getOutput());
-    output.open(QIODevice::WriteOnly); //TODO: Error handling
 
     RelationWriter writer(&data, &output, &downloader);
     writer.writeRelations();

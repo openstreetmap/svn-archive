@@ -19,7 +19,7 @@ SET(SRTM2WAYINFO_SOURCES
 )
 
 SET(EXE_NAME "srtm2wayinfo")
-SET(VERSION 0.1)
+SET(VERSION 0.9)
 
 #################################################################################
 

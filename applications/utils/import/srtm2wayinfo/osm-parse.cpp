@@ -30,17 +30,22 @@ static inline bool isDelim(char c)
     return (c == ' ') || (c == '<') || (c == '\t') || (c == '>') || (c == '/');
 }
 
+//NOTE: These defines are for debugging only.
+// #define NO_NODES
+// #define NO_WAYS
+
+
 void OsmData::processTag(char *tag)
 {
-    //TODO: DEBUGGING ONLY
-    #define NODES
-    #define WAYS
-    #ifdef NODES
+    #ifndef NO_NODES
     if (!strncmp(tag, "node", 5)) {
         nodes[nodeid] = OsmNode(lat, lon);
     }
+    #else
+    #warning Parsing of nodes is disabled.
     #endif
-    #ifdef WAYS
+    
+    #ifndef NO_WAYS
 //     else
     if (!strncmp(tag, "way", 4)) {
         keep = false;
@@ -62,6 +67,8 @@ void OsmData::processTag(char *tag)
         }
         currentWay = 0;
     }
+    #else
+    #warning Parsing of ways is disabled.
     #endif
 }
 
@@ -84,6 +91,15 @@ void OsmData::processParam(char *tag, char *name, char *value)
     }
 }
 
+/** Length of the main read buffer. */
+#define BUFFER_LEN 1024
+/** Maximum tag name length. Longer values are truncated.*/
+#define TAG_LEN 16
+/** Maximum parameter name length. Longer values are truncated.*/
+#define PARAM_NAME_LEN 16
+/** Maximum parameter value length. Longer values are truncated. */
+#define PARAM_VALUE_LEN 16
+
 /** Parse an OSM-XML file.
   * Stores information about the parsed data in the "nodes" and "ways" arrays.
   * \note This parser doesn't fail when the input data is invalid. It goes on
@@ -93,16 +109,7 @@ void OsmData::processParam(char *tag, char *name, char *value)
 void OsmData::parse(QFile *file)
 {
     kept = discarded = nodes_referenced = 0;
-    qDebug() << "Using new parser!";
     QDataStream stream(file);
-    /** Length of the main read buffer. */
-    #define BUFFER_LEN 1024
-    /** Maximum tag name length. Longer values are truncated.*/
-    #define TAG_LEN 16
-    /** Maxmim parameter name length. Longer values are truncated.*/
-    #define PARAM_NAME_LEN 16
-    /** Maximum parameter value length. Longer values are truncated. */
-    #define PARAM_VALUE_LEN 16
     char buffer[BUFFER_LEN];
     char tag[TAG_LEN];
     char param_name[PARAM_NAME_LEN];

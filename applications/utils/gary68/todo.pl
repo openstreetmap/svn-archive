@@ -1,7 +1,7 @@
 use strict ;
 use warnings ;
 
-use OSM::osm ;
+use OSM::osm 4.0 ;
 use OSM::osmgraph 2.0 ;
 
 my $minLength = 0.05 ;
@@ -11,10 +11,11 @@ my $colorFixme = "orange" ;
 my $colorName = "black" ;
 my $colorBug = "red" ;
 my $colorRoute = "pink" ;
+my $colorInterpolationWay = "orange" ;
 
 my $programName = "todomap.pl" ;
 my $usage = "todomap.pl file.osm bugs.gpx route.gpx out.png size" ; # svg name is automatic
-my $version = "1.0 (BETA 003)" ;
+my $version = "1.0" ;
 
 my $labelMinLength = 0.1 ; # min length of street so that it will be labeled / needs adjustment according to picture size
 
@@ -162,8 +163,6 @@ while ($wayId != -1) {
 		if ($key eq "landuse:residential") {
 			drawArea ("lightgray", nodes2Coordinates(@wayNodes)) ;
 		}
-		
-		# TODO DRAW HOUSES / BUILDINGS
 	}	
 	
 	($wayId, $wayUser, $aRef1, $aRef2) = getWay () ;
@@ -259,7 +258,7 @@ while ($wayId != -1) {
 
 			# DRAW HOUSE NUMBER WAYS
 			if (grep /addr:interpolation/, $key) {
-				drawWay ("orange", 2, nodes2Coordinates(@wayNodes)) ;
+				drawWay ($colorInterpolationWay, 2, nodes2Coordinates(@wayNodes)) ;
 			}
 	
 		}
@@ -307,10 +306,10 @@ while ($nodeId != -1) {
 	foreach my $tag (@nodeTags) {
 		if ($tag->[0] eq "building") { $building = 1 ; }
 		if ($tag->[0] eq "addr:housenumber") { $number = $tag->[1] ; }
-		if ( grep /fixme/, $tag->[0]) { $fixme = 1 ; }
-		if ( grep /fixme/, $tag->[1]) { $fixme = 1 ; }
-		if ( grep /todo/, $tag->[0]) { $fixme = 1 ; }
-		if ( grep /todo/, $tag->[1]) { $fixme = 1 ; }
+		if ( grep /fixme/i, $tag->[0]) { $fixme = 1 ; }
+		if ( grep /fixme/i, $tag->[1]) { $fixme = 1 ; }
+		if ( grep /todo/i, $tag->[0]) { $fixme = 1 ; }
+		if ( grep /todo/i, $tag->[1]) { $fixme = 1 ; }
 	}
 
 	# DRAW BUILDINGS FROM NODES
@@ -407,8 +406,8 @@ while ($wayId != -1) {
 
 		if ($stub == 1) {
 			drawWay ($colorStub, 3, nodes2Coordinates(@wayNodes)) ;
-			drawNodeDot ($lon{$wayNodes[0]}, $lat{$wayNodes[0]}, $colorStub, 3) ;
-			drawNodeDot ($lon{$wayNodes[-1]}, $lat{$wayNodes[-1]}, $colorStub, 3) ;
+#			drawNodeDot ($lon{$wayNodes[0]}, $lat{$wayNodes[0]}, $colorStub, 3) ;
+#			drawNodeDot ($lon{$wayNodes[-1]}, $lat{$wayNodes[-1]}, $colorStub, 3) ;
 		}
 	}	
 	

@@ -1,4 +1,7 @@
 
+var projmerc = new OpenLayers.Projection("EPSG:900913");
+var proj4326 = new OpenLayers.Projection("EPSG:4326");
+
 function parseParams(handler) {
     var perma = location.search.substr(1);
     if (perma != '') {
@@ -11,34 +14,30 @@ function parseParams(handler) {
 }
 
 function jumpTo(lon, lat, zoom) {
-    var x = Lon2Merc(lon);
-    var y = Lat2Merc(lat);
-    map.setCenter(new OpenLayers.LonLat(x, y), zoom);
+    var lonlat = new OpenLayers.LonLat(lon, lat);
+    lonlat.transform(proj4326, projmerc);
+    map.setCenter(lonlat, zoom);
     return false;
 }
 
-function Lon2Merc(lon) {
-    return 20037508.34 * lon / 180;
+function makeIcon(url, x, y) {
+    var size = new OpenLayers.Size(x, y);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
+    return new OpenLayers.Icon(url, size, offset);
 }
 
-function Lat2Merc(lat) {
-    var PI = 3.14159265358979323846;
-    lat = Math.log(Math.tan( (90 + lat) * PI / 360)) / (PI / 180);
-    return 20037508.34 * lat / 180;
-}
+var icon = makeIcon('/img/reddot.png', 16, 16);
 
 function addMarker(layer, lon, lat, popupContentHTML) {
-    var ll = new OpenLayers.LonLat(Lon2Merc(lon), Lat2Merc(lat));
-    var feature = new OpenLayers.Feature(layer, ll); 
+    var lonlat = new OpenLayers.LonLat(lon, lat);
+    lonlat.transform(proj4326, projmerc);
+    var feature = new OpenLayers.Feature(layer, lonlat); 
     feature.closeBox = true;
     feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {minSize: new OpenLayers.Size(300, 180) } );
     feature.data.popupContentHTML = popupContentHTML;
     feature.data.overflow = "hidden";
             
-    var size = new OpenLayers.Size(16, 16);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -(size.h/2));
-    var icon = new OpenLayers.Icon('/img/reddot.png', size, offset);
-    var marker = new OpenLayers.Marker(ll, icon);
+    var marker = new OpenLayers.Marker(lonlat, icon.clone());
     marker.feature = feature;
 
     var markerClick = function(evt) {
@@ -56,32 +55,6 @@ function addMarker(layer, lon, lat, popupContentHTML) {
     layer.addMarker(marker);
 }
 
-function showLayer(l) {
-    for (i=0; i < map.layers.length; i++) {
-        if (!map.layers[i].isBaseLayer && map.layers[i] != l) {
-            map.layers[i].setVisibility(false);
-        }
-    }
-    l.setVisibility(true);
-}
-
-function startSearch() {
-}
-
-function endSearch() {
-}
-
-function doSearch() {
-    new Ajax.Request('/geocoder/search', {
-        asynchronous: true,
-        evalScripts: true,
-        onComplete: function(request){endSearch()},
-        onLoading: function(request){startSearch()},
-        parameters: Form.serialize(this)
-    });
-    return false;
-}
-
 function setMarker() {
     if (marker != null) {
         layer_marker.removeMarker(marker);
@@ -96,11 +69,24 @@ function setMarker() {
 }
 
 
-function updateMapKey() {
-    var layer = map.baseLayer.name.toLowerCase().replace(/\s+/g, "_");
-    var zoom = map.getZoom();
+function updateMapKey(force) {
+    if (force || jQuery('#mapkey_area iframe').size() > 0) {
+        var layer = map.baseLayer.name.toLowerCase().replace(/\s+/g, "_");
+        var zoom = map.getZoom();
 
-    var mapkey = document.getElementById('mapkey_area');
-    mapkey.innerHTML = '<iframe src="http://www.openstreetmap.org/key?layer=' + layer + '&zoom=' + zoom + '"/>';
+        var mapkey = jQuery('#mapkey_area');
+        mapkey.html('<iframe src="http://www.openstreetmap.org/key?layer=' + layer + '&zoom=' + zoom + '"/>');
+    }
+}
+
+function mapMoved() {
+    var lonlat = map.getCenter();
+    lonlat.transform(projmerc, proj4326);
+    var pos = '?lon=' + lonlat.lon.toFixed(5) + '&lat=' + lonlat.lat.toFixed(5) + '&zoom=' + map.getZoom();
+    jQuery('#editlink')[0].href = 'http://www.openstreetmap.org/edit' + pos;
+    jQuery('#buglink')[0].href = 'http://www.openstreetbugs.org/' + pos;
+    if (jQuery('#largemap').size() > 0) {
+        jQuery('#largemap')[0].href = '/karte.html' + pos;
+    }
 }
 

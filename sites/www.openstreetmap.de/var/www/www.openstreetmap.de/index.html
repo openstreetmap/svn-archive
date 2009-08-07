@@ -7,52 +7,50 @@
         <link rel="stylesheet" type="text/css" href="/css/common.css" />
         <link rel="stylesheet" type="text/css" href="/css/main.css" />
         <link rel="shortcut icon" href="/img/favicon.png" />
-
-        <script src="/js/prototype.js" type="text/javascript"></script>
-        <script type="text/javascript" src="/ol/OpenLayers.js"></script>
+        <script type="text/javascript" src="/js/jquery.js"></script>
+        <script type="text/javascript" src="/ol28/OpenLayers.js"></script>
         <script type="text/javascript" src="/js/OpenStreetMap.js"></script>
         <script type="text/javascript" src="/js/util.js"></script>
         <script type="text/javascript" src="/js/markers.js"></script>
         <script type="text/javascript">
 
 var map;
-var layer_mapnik;
-var layer_tah;
-var layer_news;
-var layer_events;
 var layer_local;
 
 function init() {
-//    return;
-
     OpenLayers.Lang.setCode('de');
     var lon = 10.3;
     var lat = 51.3;
     var zoom = 5;
 
     map = new OpenLayers.Map('map', {
-        projection: new OpenLayers.Projection("EPSG:900913"),
-        displayProjection: new OpenLayers.Projection("EPSG:4326"),
+        projection: projmerc,
+        displayProjection: proj4326,
         controls: [
-            new OpenLayers.Control.MouseDefaults(),
+            new OpenLayers.Control.Navigation(),
             new OpenLayers.Control.LayerSwitcher(),
-            new OpenLayers.Control.PanZoomBar()],
-        maxExtent:
-            new OpenLayers.Bounds(-20037508.34,-20037508.34,
-                                    20037508.34, 20037508.34),
+            new OpenLayers.Control.PanZoomBar()
+        ],
+        maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34, 20037508.34, 20037508.34),
         numZoomLevels: 18,
         maxResolution: 156543,
         units: 'meters'
     });
 
-    layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
-    layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
-    layer_local = new OpenLayers.Layer.Markers("Lokale Gruppen", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });
-    map.addLayers([layer_mapnik, layer_tah, layer_local]);
+    map.addLayers([
+        new OpenLayers.Layer.OSM.Mapnik("Mapnik"),
+        new OpenLayers.Layer.OSM.Osmarender("Osmarender")
+    ]);
+
+    layer_local = new OpenLayers.Layer.Markers("Lokale Gruppen", { visibility: false });
+    map.addLayer(layer_local);
 
     createMarkers();
 
-    jumpTo(lon, lat, zoom)
+    jumpTo(lon, lat, zoom);
+
+    map.events.register('move', null, mapMoved);
+    mapMoved();
 }
 
         </script>
@@ -100,7 +98,7 @@ function init() {
                 <a href="/community.html#irc">IRC</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
                 <a href="/community.html#party">Mapping&nbsp;Parties</a><br/>
                 <div class="localgroup">
-                    <img class="tomap" onclick="showLayer(layer_local);" src="/img/tomapl.png" alt="Auf die Karte" title="Auf die Karte" width="20" height="20"/>
+                    <img class="tomap" onclick="layer_local.setVisibility(true);" src="/img/tomapl.png" alt="Auf die Karte" title="Auf die Karte" width="20" height="20"/>
                     <a href="/community.html#local">Lokale Gruppen:</a><br/>
 
                         <a href="http://wiki.openstreetmap.org/wiki/Aschaffenburg">AB</a> <img src="/img/bullet.gif" width="7" height="9" alt="|"/>
@@ -130,15 +128,9 @@ function init() {
             <div class="box" id="aktionen">
                 <a href="/aktionen.html"><h2>Aktionen</h2></a>
                 <p>
-
                     <a href="/gps-verleih/"><img style="padding: 2px 7px 2px 5px;" src="/gps-verleih/etrex-title.png" alt=""/></a>
                     GPS-Geräte zum Ausleihen für OSM-Aktionen. <a href="/gps-verleih/">Mehr...</a>
                 </p>
-<!--                <p>
-                    <a href="http://wiki.openstreetmap.org/wiki/De:Merchandise"><img style="padding: 2px 3px 2px 1px;" src="/img/warnweste-titel.jpg" alt="" /></a>
-                    Bestellt Euch Eure <a href="http://wiki.openstreetmap.org/wiki/De:Merchandise">OSM-Warnweste!</a>
-                </p>-->
-
                 <p>
                     <a href="/aktionen.html#flyer"><img style="padding: 2px 3px 2px 0px;" src="/img/flyer-titel.png" alt=""/></a>
                     OSM-Prospekte zum Verteilen. <a href="/aktionen.html#flyer">Mehr...</a>
@@ -212,7 +204,7 @@ function init() {
                     <a href="#" onclick="jumpTo(10.3, 51.3, 5)"><img src="/img/germany.gif" alt="Zoom auf Deutschland" title="Zoom auf Deutschland" width="32" height="40"/></a>
                 </div>
                 <div id="fullscreen">
-                    <a href="/karte.html"><img src="/img/view-fullscreen.gif" alt="[Große Karte]" title="Große Karte" width="42" height="40"/></a>
+                    <a id="largemap" href="/karte.html"><img src="/img/view-fullscreen.gif" alt="[Gro&szlig;e Karte]" title="Gro&szlig;e Karte" width="42" height="40"/></a>
                 </div>
 
                 <div id="destinations">
@@ -222,7 +214,9 @@ function init() {
                     <img src="/img/arrow.gif" alt=" " width="7" height="9"/><a href="#" onclick="jumpTo(6.95, 50.94, 13)">Köln</a>
                 </div>
                 <div id="hinweis">
-                    Fehler in der Karte? <a href="/123/index.html">Selbst korrigieren</a> oder <a href="http://www.openstreetbugs.org/">hier melden</a>.
+                    Fehler in der Karte? <a id="editlink" target="_blank" href="http://www.openstreetmap.org/edit">Selbst korrigieren</a>
+                    (<a target="_blank" href="/123/index.html">Anleitung</a>)
+                    oder <a target="_blank" id="buglink" href="http://www.openstreetbugs.org/">hier melden</a>.
                 </div>
                 <div id="corners">
                     <img id="border-bl" src="/img/border-bl.gif" alt="" width="10" height="10"/>

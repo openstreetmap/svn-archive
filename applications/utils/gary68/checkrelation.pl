@@ -27,7 +27,11 @@
 # ...
 # END
 # 
-# 
+# version 1.2
+# - analyzerLink definition removed from file. is defined in osm.pm
+#
+# version 1.3
+# - double way in relation check added. according output added to html
 #
 
 
@@ -43,7 +47,7 @@ use OSM::osmgraph 2.1 ;
 
 my $program = "checkrelation.pl" ;
 my $usage = $program . " <mode> file.osm baseDir baseName [borderName]\nmode=[M|Re|Ro|B|P]\nM=multipolygon, Re=restriction, Ro=route, B=boundary P=picture" ;
-my $version = "1.1" ;
+my $version = "1.3" ;
 
 my @restrictions = qw (no_right_turn no_left_turn no_u_turn no_straight_on only_right_turn only_left_turn only_straight_on) ;
 my @typesChecked = qw (restriction multipolygon boundary route) ; 
@@ -315,11 +319,12 @@ if ($relationId != -1) {
 my $work = 0 ;
 while ($relationId != -1) {
 	my $i ;
-	my $type = "" ; my $tagText = "" ;
+	my $type = "" ; my $tagText = "" ; my $double = 0 ;
 	my $from = 0 ; my $via = 0  ; my $to = 0  ; my $restrictionType = "" ; my $viaNode = 0 ; my $viaWay = 0 ;
 	my @openEnds ;
 
 	$work++ ;
+	# print "checking relation $relationId\n" ;
 	if (($work % 1000) == 0) { print "...$work relations checked.\n" ; }
 
 	if (scalar (@relationTags) > 0) {
@@ -332,6 +337,27 @@ while ($relationId != -1) {
 			else {
 				$tagText = $tagText . ${$relationTags[$i]}[0] . " : " . ${$relationTags[$i]}[1] . "<br>\n" ;
 			}
+		}
+	}
+
+	my %count = () ;
+	my @doubleWays = () ;
+	foreach my $member (@relationMembers) {
+		if ($member->[0] eq "way") {
+			if (defined ($count{$member->[1]})) {
+				$count{$member->[1]}++ ;
+			}
+			else {
+				$count{$member->[1]} = 1 ;
+			}
+		}
+	}
+
+	foreach my $way (keys %count) {
+		if ( $count{$way} > 1 ) {
+			print "ERROR: relation $relationId contains way $way at least TWICE\n" ;
+			$double = 1 ;
+			push @doubleWays, $way ;
 		}
 	}
 
@@ -395,8 +421,6 @@ while ($relationId != -1) {
 		# parse members
 		for ($i=0; $i<scalar (@relationMembers); $i++) {
 
-			# TODO relation members
-
 			if ( (${$relationMembers[$i]}[0] eq "way") and (${$relationMembers[$i]}[2] eq "inner") ) { 
 				if (defined ($invalidWays{${$relationMembers[$i]}[1]})) { $check = 0 ; }
 				$inner++ ; push @innerWays, ${$relationMembers[$i]}[1] ; 
@@ -414,7 +438,7 @@ while ($relationId != -1) {
 			}
 		}
 
-		if ($check) {
+		if ( ($check) and ($double == 0) ) {
 			my $openTextInner = "" ; my $openTextOuter = "" ; my $noOuterText = "" ; 
 	
 			# CHECK OPEN WAYS/SEGMENTS
@@ -501,6 +525,19 @@ while ($relationId != -1) {
 				}
 			}
 		}
+		else {
+			if ($double == 1) {
+				$line++ ;
+				$problems++ ;
+				printHTMLRowStart ($html) ;
+				printHTMLCellLeft ($html, $line ) ;
+				printHTMLCellLeft ($html, historyLink ("relation", $relationId) . "(OSM)<br>" . analyzerLink ($relationId) ) ;
+				printHTMLCellLeft ($html, $tagText ) ;
+				printHTMLCellLeft ($html, "Relation contains ways twice: @doubleWays\n" ) ;
+				printHTMLCellLeft ($html, "" ) ;
+				printHTMLRowEnd ($html) ;
+			}
+		}
 	} # multipolygon
 
 
@@ -536,7 +573,7 @@ while ($relationId != -1) {
 			}
 		}
 
-		if ($check) {
+		if ( ($check) and ($double == 0) ) {
 			my $segCount ; my $segOpenCount ;
 			my $openTextInner = "" ; my $openTextOuter = "" ; my $openTextBoundary = "" ;
 
@@ -628,6 +665,19 @@ while ($relationId != -1) {
 
 			}
 		}
+		else {
+			if ($double == 1) {
+				$line++ ;
+				$problems++ ;
+				printHTMLRowStart ($html) ;
+				printHTMLCellLeft ($html, $line ) ;
+				printHTMLCellLeft ($html, historyLink ("relation", $relationId) . "(OSM)<br>" . analyzerLink ($relationId) ) ;
+				printHTMLCellLeft ($html, $tagText ) ;
+				printHTMLCellLeft ($html, "Relation contains ways twice: @doubleWays\n" ) ;
+				printHTMLCellLeft ($html, "" ) ;
+				printHTMLRowEnd ($html) ;
+			}
+		}
 	} # boundary 
 
 	#######
@@ -673,7 +723,7 @@ while ($relationId != -1) {
 			}
 		}
 
-		if ($check) {
+		if ( ($check) and ($double == 0) ) {
 			my $segCount ; my $segOpenCount ;
 
 			# forward
@@ -756,6 +806,19 @@ while ($relationId != -1) {
 
 			}
 		}
+		else {
+			if ($double == 1) {
+				$line++ ;
+				$problems++ ;
+				printHTMLRowStart ($html) ;
+				printHTMLCellLeft ($html, $line ) ;
+				printHTMLCellLeft ($html, historyLink ("relation", $relationId) . "(OSM)<br>" . analyzerLink ($relationId) ) ;
+				printHTMLCellLeft ($html, $tagText ) ;
+				printHTMLCellLeft ($html, "Relation contains ways twice: @doubleWays\n" ) ;
+				printHTMLCellLeft ($html, "" ) ;
+				printHTMLRowEnd ($html) ;
+			}
+		}
 	} # route
 
 	#next
@@ -823,14 +886,6 @@ close ($gpx) ;
 statistics ( ctime(stat($osmName)->mtime),  $program,  $baseName, $osmName,  $checkedRelationCount,  $problems) ;
 
 print "\n$program finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;
-
-
-sub analyzerLink {
-	my $id = shift ;
-
-	my $result = "<A HREF=\"http://betaplace.emaitie.de/webapps.relation-analyzer/analyze.jsp?relationId=" . $id . "\">" . $id . "</A> (RA)" ;
-	return $result ;
-}
 
 sub listEnds {
 	my (@ends) = @_ ;

@@ -1,11 +1,6 @@
 /* markers.js */
 
 function createMarkers() {
-    /* news */
-
-    /* events */
-
-    /* local groups */
     addMarker(layer_local, 9.146, 49.974,
         '<p>Lokale Gruppe in<br/><b><a href="http://wiki.openstreetmap.org/wiki/Aschaffenburg">Aschaffenburg</a></b></p>'
     );

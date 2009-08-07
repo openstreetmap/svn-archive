@@ -350,6 +350,7 @@
 						for (var ang=a1-20; ang>a2+10; ang-=20) {
 							_root.newnodeid--;
 							_root.nodes[newnodeid]=new Node(newnodeid,cx+Math.sin(ang*Math.PI/180)*d,cy+Math.cos(ang*Math.PI/180)*d,new Object(),0);
+							_root.nodes[newnodeid].addWay(this._name);
 							newpath.push(_root.nodes[newnodeid]);
 						}
 					}
@@ -360,6 +361,7 @@
 						for (var ang=a1+20; ang<a2-10; ang+=20) {
 							_root.newnodeid--;
 							_root.nodes[newnodeid]=new Node(newnodeid,cx+Math.sin(ang*Math.PI/180)*d,cy+Math.cos(ang*Math.PI/180)*d,new Object(),0);
+							_root.nodes[newnodeid].addWay(this._name);
 							newpath.push(_root.nodes[newnodeid]);
 						}
 					}
@@ -1213,6 +1215,7 @@
 		_root.nodes[newnodeid]=new Node(newnodeid,this.path[0].x+tpoffset*offsetx[0],
 												  this.path[0].y+tpoffset*offsety[0],
 												  new Object(),0);
+		_root.nodes[newnodeid].addWay(newwayid);
 		nw.path.push(_root.nodes[newnodeid]);
 		
 		for (i=1; i<(this.path.length-1); i++) {

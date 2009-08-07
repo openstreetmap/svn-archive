@@ -167,6 +167,24 @@
 		var a=getName(_root.nodes[this.node].attr,nodenames); if (a) { setFloater(a); }
 	};
 	
+	AnchorPoint.prototype.joinNodes=function() {
+		var t=new Object(); t.x=this._x; t.y=this._y;
+		_root.map.localToGlobal(t);
+
+		var waylist=new Array(); var poslist=new Array();
+		for (qway in _root.map.ways) {
+			if (_root.map.ways[qway].hitTest(t.x,t.y,true) && qway!=this.way._name && !_root.nodes[this.node].ways[qway]) {
+				poslist.push(_root.map.ways[qway].insertAnchorPoint(_root.nodes[this.node]));
+				waylist.push(_root.map.ways[qway]);
+			}
+		}
+		if (poslist.length==0) { return; }
+		_root.undo.append(UndoStack.prototype.undo_addpoint,
+						  new Array(waylist,poslist), iText("adding a node into a way",'action_insertnode'));
+		_root.ws.highlightPoints(5000,"anchor");
+		updateInspector();
+	};
+	
 	AnchorPoint.prototype.onRollOut=function() { clearFloater(); };
 
 	Object.registerClass("anchor",AnchorPoint);

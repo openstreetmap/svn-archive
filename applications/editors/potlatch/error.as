@@ -18,7 +18,7 @@
 		abortUpload();
 		_root.windows.attachMovie("modal","error",++windowdepth);
 		_root.windows.error.init(350,h,new Array(iText('Ok','ok')),null);
-		_root.windows.error.box.createTextField("prompt",2,7,9,325,h-30);
+		_root.windows.error.box.createTextField("prompt",2,7,9,325,h-40);
 		writeText(_root.windows.error.box.prompt,t);
 		_root.windows.error.box.prompt.selectable=true;
 	}

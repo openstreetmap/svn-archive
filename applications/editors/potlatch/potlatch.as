@@ -753,6 +753,10 @@
 			case 'G':		loadGPS(); break;									// G - load GPS
 			case 'H':		getHistory(); break;								// H - history
 			case 'I':		toggleInspector(); break;							// I - inspector
+			case 'J':		if (pointselected>-2) { 							// J - join nodes
+								_root.map.anchors[pointselected].joinNodes();	//   | 
+								break;											//   |
+							}													// I - inspector
 			case 'L':		showPosition(); break;								// L - show latitude/longitude
 			case 'P':		askOffset(); break;									// P - parallel path
 			case 'R':		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes

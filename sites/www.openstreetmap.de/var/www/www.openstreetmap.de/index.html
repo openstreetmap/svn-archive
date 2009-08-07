@@ -47,10 +47,8 @@ function init() {
 
     layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
     layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
-/*    layer_news = new OpenLayers.Layer.Markers("News", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });
-    layer_events = new OpenLayers.Layer.Markers("Events", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });*/
     layer_local = new OpenLayers.Layer.Markers("Lokale Gruppen", { projection: new OpenLayers.Projection("EPSG:4326"), visibility: false });
-    map.addLayers([layer_mapnik, layer_tah, /*layer_news, layer_events,*/ layer_local]);
+    map.addLayers([layer_mapnik, layer_tah, layer_local]);
 
     createMarkers();
 
@@ -178,35 +176,25 @@ function init() {
                 <a href="http://www.openstreetmap.info/"><img src="/img/openstreetmap-buch-cover.png" alt="OpenStreetMap: Die freie Weltkarte nutzen und mitgestalten"/></a>
                 <a href="http://www.openstreetmap.info/">www.openstreetmap.info</a>
             </div>
-<!--            <div class="box" id="sotm">
-                <a href="http://www.stateofthemap.org/"><img src="/img/sotm.png" alt="State of the Map"/></a><br/>
-                10. - 12. Juli 2009<br/>
-                Amsterdam
-            </div>-->
 
-            <div class="box" id="press" style="text-align: center;">
-                <img src="/img/arleft.png"/>
-                <a href="http://wiki.openstreetmap.org/wiki/WikiProject_Germany/DeutschePresse">OSM in der Presse</a>
-                <img src="/img/arright.png"/>
-            </div>
             <div class="box" id="showcase">
                 <a href="schaufenster/index.html"><h2>Schaufenster</h2></a>
                 <a href="schaufenster/index.html"><img src="/schaufenster/schaufenster-overview.png" alt="" width="180" height="53"/></a><br/>
 
                 Ein Blick in die OpenStreetMap-Welt
             </div>
+            <div class="box" id="123" style="text-align: center;">
+                <a href="/123/index.html"><img src="/img/123.png" alt="OSM Schritt für Schritt" width="180" height="75"/></a>
+
+            </div>
             <div class="box" id="screencasts" style="text-align: center;">
                 <img src="/img/arleft.png"/>
                 <a href="http://wiki.openstreetmap.org/wiki/WikiProject_Germany/Screencasts">Filme für Einsteiger</a>
                 <img src="/img/arright.png"/>
             </div>
-            <div class="box" id="123" style="text-align: center;">
-                <a href="/123/index.html"><img src="/img/123.png" alt="OSM Schritt für Schritt" width="180" height="75"/></a>
-
-            </div>
             <div class="box" id="fossgis" style="text-align: center;">
                 <a href="http://www.fossgis.de/"><img src="/img/fossgis-ev.png" alt="FOSSGIS e.V." width="180" height="56"/></a>
-                Der FOSSGIS e.V. betreibt diese Webseiten für und mit der OSM-Community.
+                Der FOSSGIS e.V. betreibt diese Webseiten mit der und für die OSM-Community.
             </div>
         </div>
 
@@ -221,10 +209,10 @@ function init() {
             </div>
             <div id="marginalia">
                 <div id="germany">
-                    <a href="#" onclick="jumpTo(10.3, 51.3, 5)"><img src="/img/germany.gif" alt="Zoom auf Deutschland" width="32" height="40"/></a>
+                    <a href="#" onclick="jumpTo(10.3, 51.3, 5)"><img src="/img/germany.gif" alt="Zoom auf Deutschland" title="Zoom auf Deutschland" width="32" height="40"/></a>
                 </div>
                 <div id="fullscreen">
-                    <a href="/karte.html"><img src="/img/view-fullscreen.gif" alt="[Große Karte]" width="42" height="40"/></a>
+                    <a href="/karte.html"><img src="/img/view-fullscreen.gif" alt="[Große Karte]" title="Große Karte" width="42" height="40"/></a>
                 </div>
 
                 <div id="destinations">
@@ -245,7 +233,7 @@ function init() {
                 <tr>
 
                     <td class="tdcontent" id="news">
-                        <h2><a href="/news.html">News</a> <img style="position: absolute; margin-left: 10px; margin-top: 3px;" onclick="showLayer(layer_news);" src="/img/tomap.png" alt="Auf die Karte" title="Auf die Karte" width="20" height="20"/></h2>
+                        <h2><a href="/news.html">News</a></h2>
 
                         <p><b>Neuigkeiten beim Potlatch</b><br/>
                         <span style="font-size: small">14. Juli 2009</span>
@@ -255,32 +243,20 @@ Wer jetzt auf den "Bearbeiten"-Reiter klickt, wird vielleicht überrascht werden
                 <span style="font-size: small">11. Juli 2009</span>
                 Die panogate GmbH hat für Ihr _sightwalk-Projekt in mehrere Großstädten
 Deutschlands Straßenzüge fotografiert. Diese Aufnahmen stehen ab sofort als
-Datenquelle für OpenStreetMap zur Verfügung. <a href="http://wiki.openstreetmap.org/wiki/Sightwalk">Mehr Infos</a>.</p>
-
-
-						<p><b>Braunschweig komplett erfasst</b><br/>
-                         <span style="font-size: small">23. März 2009</span>
-Seit dem 23.03. sind die über 2000 Straßen <a href="http://www.openstreetmap.org/?lat=52.2589&lon=10.5201&zoom=12&layers=B000FTF">Braunschweigs</a> bei
-OpenStreetMap komplett erfasst.  <a href="./news.html#Braunschweig">Mehr&nbsp;...</a></p>
-
-						<p><b>Wikipedia und Openstreetmap wollen enger zusammenarbeiten</b><br/>
-                         <span style="font-size: small">17. März 2009</span>
-Eine Hardwarespende der Wikimedia Deutschland macht den Anfang.  <a href="./news.html#Wikipedia">Mehr&nbsp;...</a></p>
-
-						<p><b>Openstreetmap hat 100000 User</b><br/>
-                         <span style="font-size: small">17. März 2009</span>
-Die Anzahl eingetragener User hat sechs Stellen erreicht. <a href="./news.html#100000">Mehr&nbsp;...</a></p>
+Datenquelle für OpenStreetMap zur Verfügung. <a href="http://wiki.openstreetmap.org/wiki/Sightwalk">Mehr...</a></p>
 
                     <td class="tdcontent" id="events">
 
                         <h2><a href="http://wiki.openstreetmap.org/wiki/Current_events">Events</a></h2>
-    <p>Events im OpenStreetMap-Wiki:
-                <img src="/img/arleft.png"/><b><a href="http://wiki.openstreetmap.org/wiki/Current_events">Alle weltweiten Events</a></b></p>
-                <p>Die deutsche OpenStreetMap-Konferenz:
-                <img src="/img/arleft.png"/><b><a href="fossgis2010.html">FOSSGIS 2010</a> vom 2. bis 5. M&auml;rz 2010</b></p>
 
-<!--                        <h2><a href="/events.html">Events</a> <img style="position: absolute; margin-left: 10px; margin-top: 3px;" onclick="showLayer(layer_events);" src="/img/tomap.png" alt="Auf die Karte" title="Auf die Karte" width="20" height="20"/></h2>-->
-<!--                        <h2><a href="http://wiki.openstreetmap.org/wiki/Current_events">Events</a> <img style="position: absolute; margin-left: 10px; margin-top: 3px;" onclick="showLayer(layer_events);" src="/img/tomap.png" alt="Auf die Karte" title="Auf die Karte" width="20" height="20"/></h2>-->
+                <img class="logo" src="/img/fossgis2010s.png" alt="FOSSGIS 2010" title="FOSSGIS 2010"/>
+                <p>Die deutsche OpenStreetMap-Konferenz:<br/>
+                <b><a href="fossgis2010.html">FOSSGIS 2010</a></b><br/>
+                2. bis 5. M&auml;rz 2010<br/>
+                Osnabrück</p>
+
+    <p class="curreventslink"><img src="/img/arleft.png" alt=""/><b><a href="http://wiki.openstreetmap.org/wiki/Current_events">Alle weltweiten Events im Wiki</a></b></p>
+
                     </td>
                 </tr>
             </table>

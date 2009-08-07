@@ -122,7 +122,7 @@ div#hinweis {
 /* boxes on left and right side */
 
 div.box {
-    margin: 2px 0px 10px 0px;
+    margin: 2px 0px 6px 0px;
     padding: 2px 0px 4px 4px;
     width: 100%;
 }
@@ -305,5 +305,17 @@ img.tomap {
     padding-top: 2px;
     padding-right: 8px;
     z-index: 100;
+}
+
+td#events img.logo {
+    float: left;
+    padding: 16px 8px 0 0;
+}
+
+p.curreventslink {
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #f0f0f0;
+    text-align: center;
 }
 

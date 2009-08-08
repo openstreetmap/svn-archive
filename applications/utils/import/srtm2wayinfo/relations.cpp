@@ -47,7 +47,7 @@ void RelationWriter::processWay(OsmWay *way)
         }
         calc(lastNode, id, &length, &up, &down);
         lastNode = id;
-        if (data->nodes[id].isIntersection()) {
+        if ((*data->nodes)[id].isIntersection()) {
             writeRelation(way->id, startNode, id, length, up, down);
             startNode = id;
             length = 0;
@@ -80,8 +80,8 @@ void RelationWriter::writeRelation(OsmWayId wayId, OsmNodeId startNode, OsmNodeI
 /** Calculates distance and altitude differences between two nodes. */
 void RelationWriter::calc(OsmNodeId from, OsmNodeId to, float *length, float *up, float *down)
 {
-    *length += distance(data->nodes[from].lat(), data->nodes[from].lon(), data->nodes[to].lat(), data->nodes[to].lon());
-    calcUpDown(data->nodes[from].lat(), data->nodes[from].lon(), data->nodes[to].lat(), data->nodes[to].lon(), up, down);
+    *length += distance((*data->nodes)[from].lat(), (*data->nodes)[from].lon(), (*data->nodes)[to].lat(), (*data->nodes)[to].lon());
+    calcUpDown((*data->nodes)[from].lat(), (*data->nodes)[from].lon(), (*data->nodes)[to].lat(), (*data->nodes)[to].lon(), up, down);
 }
 
 /** Calculate the altitude differences.

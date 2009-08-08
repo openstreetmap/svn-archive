@@ -30,7 +30,12 @@ void Settings::usage()
     "  -k, --keep                 Keep uncompressed SRTM tiles on disk\n"
     "                                (uses more diskspace but less cpu time)\n"
     "  -c, --cache=DIRECTORY      Directory in which the downloaded SRTM tiles\n"
-    "                                are cached.\n";
+    "                                are cached.\n"
+    "  -S, --size=SIZE            Optimize data structures for a certain\n"
+    "                                size of the dataset. SIZE can be\n"
+    "                                - \"small\" (default, best for files < 300 MB)\n"
+    "                                - \"medium\" (300 MB - 2 GB)\n"
+    "                                - \"large\" (> 2 GB)\n";
 }
 
 /** Parses the command line and fills the settings structure.
@@ -48,11 +53,12 @@ void Settings::parseSettings(int argc, char **argv)
             {"cache",       required_argument, 0, 'c'},
             {"keep",        no_argument,       0, 'k'},
             {"help",        no_argument,       0, 'h'},
+            {"size",        required_argument, 0, 'S'},
             {0, 0, 0, 0}
             };
     while (1) {
         int option_index = 0;
-        int c = getopt_long(argc, argv, "s:i:o:kz", long_options, &option_index);
+        int c = getopt_long(argc, argv, "s:i:o:kzS:", long_options, &option_index);
         if (c == -1) break;
         switch (c) {
             case 0:
@@ -80,6 +86,19 @@ void Settings::parseSettings(int argc, char **argv)
             case 'h':
                 usage();
                 exit(0);
+                break;
+            case 'S':
+                if (!strcasecmp(optarg, "large")) {
+                    size = size_large;
+                } else if (!strcmp(optarg, "medium")) {
+                    size = size_medium;
+                } else if (!strcmp(optarg, "small")) {
+                    size = size_small;
+                } else {
+                    qWarning() << "Size must be either \"small\", \"medium\" or \"large\"";
+                    usage();
+                    exit(1);
+                }
                 break;
             default:
                 qCritical() << "Unhandled option" << c;

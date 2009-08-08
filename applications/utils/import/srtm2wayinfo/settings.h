@@ -8,6 +8,13 @@
 #ifndef __SETTINGS_H__
 #define __SETTINGS_H__
 
+/** Defines for different input sizes. */
+typedef enum {
+    size_small,
+    size_medium,
+    size_large,
+} dataset_size;
+
 /** Stores all settings. */
 class Settings
 {
@@ -17,6 +24,7 @@ class Settings
             srtm_server = 0;
             input = 0;
             output = 0;
+            size = size_small;
         };
         
         void parseSettings(int argc, char **argv);
@@ -53,12 +61,16 @@ class Settings
         bool getStoreUncompressed() const { return store_uncompressed; }
         
         void usage();
+
+        /** For which input data size should the node and way storage be optimized? */
+        dataset_size getDatasetSize() const { return size; }
     private:
         bool store_uncompressed;
         char *srtm_server;
         char *input;
         char *output;
         char *cache_dir;
+        dataset_size size;
 };
 
 extern Settings global_settings;

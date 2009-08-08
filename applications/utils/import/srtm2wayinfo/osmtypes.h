@@ -10,6 +10,8 @@
 
 #include <QStringRef>
 #include <QVector>
+#include <QMap>
+#include <QDebug>
 
 /** Typedef for node IDs. Allows easy identification of node IDs in code and changing to a different data type possible. */
 typedef int OsmNodeId;
@@ -104,4 +106,48 @@ class OsmWay
         QVector<OsmNodeId> nodes;
 };
 
+
+/** Provides optimized storage for OsmNode objects.
+  * Can be configured to behave differently depending on the input
+  * dataset size.
+  * \note This is an abstract base class.
+  */
+class OsmNodeStorage
+{
+    public:
+        virtual OsmNode& operator[](OsmNodeId id) = 0;
+};
+
+/** Node storage for a small amount of nodes. */
+class OsmNodeStorageSmall: public OsmNodeStorage
+{
+    public:
+        OsmNodeStorageSmall() { qDebug() << "Small node storage."; };
+        virtual OsmNode& operator[](OsmNodeId id) { return nodes[id]; }
+    private:
+        QMap<OsmNodeId, OsmNode> nodes;
+};
+
+/** Node storage for a small amount of nodes. */
+class OsmNodeStorageMedium: public OsmNodeStorage
+{
+    public:
+        OsmNodeStorageMedium();
+        virtual OsmNode& operator[](OsmNodeId id);
+    private:
+        QMap<int, OsmNode*> blocks; /*maps blocknr to block-array*/
+        OsmNode dummyNode;
+};
+
+/** Node storage for a large amount of nodes. */
+class OsmNodeStorageLarge: public OsmNodeStorage
+{
+    public:
+        OsmNodeStorageLarge();
+        virtual OsmNode& operator[](OsmNodeId id);
+    private:
+        OsmNode** nodes;
+        QMap<OsmNodeId, OsmNode> negative_nodes;
+        OsmNode dummyNode;
+};
 #endif

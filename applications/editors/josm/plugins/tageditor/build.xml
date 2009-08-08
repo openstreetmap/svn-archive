@@ -88,7 +88,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Provides a dialog for editing tags in a tabular grid."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/TagEditor"/>
-                <attribute name="Plugin-Mainversion" value="${coreversion.info.entry.revision}"/>
+                <attribute name="Plugin-Mainversion" value="1935"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

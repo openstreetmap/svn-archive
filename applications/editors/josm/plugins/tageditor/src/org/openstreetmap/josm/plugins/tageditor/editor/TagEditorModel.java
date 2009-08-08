@@ -326,10 +326,10 @@ public class TagEditorModel extends AbstractTableModel {
 		ArrayList<Command> commands = new ArrayList<Command>();
 
 		for (OsmPrimitive primitive : primitives) {
-			if (primitive.keys == null) {
+			if (primitive.getKeys() == null) {
 				continue;
 			}
-			for (String oldkey : primitive.keys.keySet()) {
+			for (String oldkey : primitive.keySet()) {
 				if (!currentkeys.contains(oldkey)) {
 					ChangePropertyCommand deleteCommand =
 						new ChangePropertyCommand(primitive,oldkey,null);

@@ -5,6 +5,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -26,9 +28,16 @@ public class MenuActionGrab extends JosmAction {
 
     public void actionPerformed(ActionEvent e) {
         if (Main.map != null) {
-            WMSLayer wmsLayer = WMSDownloadAction.getLayer();
-            if (wmsLayer != null)
-                DownloadWMSTask.download(wmsLayer);
+            if (CadastrePlugin.isCadastreProjection()) {
+                WMSLayer wmsLayer = WMSDownloadAction.getLayer();
+                if (wmsLayer != null)
+                    DownloadWMSTask.download(wmsLayer);
+            } else {
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("To enable the cadastre WMS plugin, change\n"
+                         + "the current projection to one of the cadastre\n"
+                         + "projection and retry"));
+            }
         }
     }
 

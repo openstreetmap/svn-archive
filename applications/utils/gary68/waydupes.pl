@@ -4,7 +4,7 @@ use warnings ;
 use OSM::osm 4.0 ;
 
 my $programName = "waydupes.pl" ;
-my $usage = "todomap.pl file.osm out.htm out.gpx" ; 
+my $usage = "waydupes.pl file.osm out.htm out.gpx" ; 
 my $version = "1.0" ;
 
 my $wayId ;

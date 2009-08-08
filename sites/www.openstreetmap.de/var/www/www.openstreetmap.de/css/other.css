@@ -104,3 +104,37 @@ img.frame {
     padding: 1px;
 }
 
+table.mob {
+    border-collapse: collapse;
+}
+
+table.mob td {
+    vertical-align: top;
+    padding: 4px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+table.tk {
+}
+
+table.tk td {
+    width: 50%;
+    vertical-align: top;
+}
+
+p.thumb {
+    float: left;
+    margin: 0;
+    padding-right: 4px;
+    clear: both;
+}
+
+p.thumb img {
+    padding: 1px;
+    border: 1px solid #bfc0d8;
+}
+
+p.desc {
+    margin: 0;
+}
+

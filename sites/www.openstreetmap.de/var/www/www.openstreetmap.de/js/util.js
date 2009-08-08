@@ -26,7 +26,7 @@ function makeIcon(url, x, y) {
     return new OpenLayers.Icon(url, size, offset);
 }
 
-var icon = makeIcon('/img/reddot.png', 16, 16);
+var icon = makeIcon('/img/localgroup.png', 16, 16);
 
 function addMarker(layer, lon, lat, popupContentHTML) {
     var lonlat = new OpenLayers.LonLat(lon, lat);

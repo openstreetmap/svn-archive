@@ -7,6 +7,7 @@
   * Only handles the attributes required for this project and ignores everything else.
   */
 #include "osm-parse.h"
+#include "settings.h"
 
 #include <QString>
 #include <QFile>
@@ -18,6 +19,15 @@
   */
 void OsmData::parse(QString filename)
 {
+    if (!nodes) {
+        if (global_settings.getDatasetSize() == size_small) {
+            nodes = new OsmNodeStorageSmall();
+        } else if (global_settings.getDatasetSize() == size_medium) {
+            nodes = new OsmNodeStorageMedium();
+        } else {
+            nodes = new OsmNodeStorageLarge();
+        }
+    }
     QFile f(filename);
     f.open(QIODevice::ReadOnly);
     parse(&f);
@@ -30,16 +40,19 @@ static inline bool isDelim(char c)
     return (c == ' ') || (c == '<') || (c == '\t') || (c == '>') || (c == '/');
 }
 
-//NOTE: These defines are for debugging only.
+// NOTE: These defines are for debugging only.
 // #define NO_NODES
 // #define NO_WAYS
+// #define STOP_AT_FIRST_WAY
 
 
 void OsmData::processTag(char *tag)
 {
     #ifndef NO_NODES
     if (!strncmp(tag, "node", 5)) {
-        nodes[nodeid] = OsmNode(lat, lon);
+        (*nodes)[nodeid] = OsmNode(lat, lon);
+        nodes_total++;
+        if (!(nodes_total & 0x3ffff)) qDebug() << "Nodes:" << nodes_total;
     }
     #else
     #warning Parsing of nodes is disabled.
@@ -57,7 +70,7 @@ void OsmData::processTag(char *tag)
             currentWay->nodes.squeeze();
             ways.append(currentWay);
             foreach(OsmNodeId nodeid, currentWay->nodes) {
-                nodes[nodeid].incOrder();
+                (*nodes)[nodeid].incOrder();
             }
             nodes_referenced += currentWay->nodes.count();
             kept++;
@@ -69,6 +82,11 @@ void OsmData::processTag(char *tag)
     }
     #else
     #warning Parsing of ways is disabled.
+    #ifdef STOP_AT_FIRST_WAY
+        if (!strncmp(tag, "way", 4)) {
+            exit(0);
+        }
+    #endif
     #endif
 }
 
@@ -108,7 +126,7 @@ void OsmData::processParam(char *tag, char *name, char *value)
   */
 void OsmData::parse(QFile *file)
 {
-    kept = discarded = nodes_referenced = 0;
+    kept = discarded = nodes_referenced = nodes_total = 0;
     QDataStream stream(file);
     char buffer[BUFFER_LEN];
     char tag[TAG_LEN];
@@ -203,5 +221,5 @@ void OsmData::parse(QFile *file)
         }
     }
     while (count > 0);
-    qDebug() << "Kept:" << kept << "Discarded:" << discarded <<  "Noderefs:" << nodes_referenced << "Nodes:" << nodes.count();
+    qDebug() << "Kept:" << kept << "Discarded:" << discarded <<  "Noderefs:" << nodes_referenced << "Nodes:" << nodes_total;
 }

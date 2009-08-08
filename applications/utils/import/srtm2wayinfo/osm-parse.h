@@ -24,11 +24,12 @@ class OsmData
     public:
         OsmData() {
             wayTags << "highway";
+            nodes = 0;
         }
         void parse(QString filename);
         void parse(QFile *file);
         /** Maps all node IDs for to their node objects. */
-        QMap<OsmNodeId, OsmNode> nodes;
+        OsmNodeStorage *nodes;
         /** List of all way objects. */
         QVector<OsmWay *> ways;
     private:
@@ -42,6 +43,6 @@ class OsmData
         bool keep;
     /* For debugging / optimization only: */
     private:
-        int kept, discarded, nodes_referenced;
+        int kept, discarded, nodes_referenced, nodes_total;
 };
 #endif

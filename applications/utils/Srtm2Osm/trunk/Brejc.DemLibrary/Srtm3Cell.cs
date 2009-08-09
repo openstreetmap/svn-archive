@@ -43,7 +43,7 @@ namespace Brejc.DemLibrary
         static public Srtm3Cell CreateSrtm3Cell (string fileName, bool load)
         {
             Regex regex = new Regex ("^(?'latSign'[N|S])(?'latitude'[0-9]{2})(?'longSign'[W|E])(?'longitude'[0-9]{3})",
-                RegexOptions.ExplicitCapture);
+                RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
 
             Match match = regex.Match (fileName);
             if (false == match.Success)
@@ -53,9 +53,9 @@ namespace Brejc.DemLibrary
             Int16 cellLat = Int16.Parse (match.Groups["latitude"].Value, System.Globalization.CultureInfo.InvariantCulture);
             char lonSign = match.Groups["longSign"].Value[0];
             Int16 cellLon = Int16.Parse (match.Groups["longitude"].Value, System.Globalization.CultureInfo.InvariantCulture);
-            if (latSign == 'S')
+            if ((latSign == 'S') || (latSign == 's'))
                 cellLat = (Int16)(-cellLat);
-            if (lonSign == 'W')
+            if ((lonSign == 'W') || (lonSign == 'w'))
                 cellLon = (Int16)(-cellLon);
 
             Srtm3Cell cell = new Srtm3Cell (cellLon, cellLat);

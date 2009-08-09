@@ -50,7 +50,7 @@ namespace Brejc.DemLibrary
         /// </summary>
         public void Generate ()
         {
-            ftpClient.setRemoteHost ("e0srp01u.ecs.nasa.gov");
+            ftpClient.setRemoteHost ("dds.cs.usgs.gov");
             ftpClient.setRemotePath (@"srtm/version2/SRTM3");
 
             ftpClient.login ();

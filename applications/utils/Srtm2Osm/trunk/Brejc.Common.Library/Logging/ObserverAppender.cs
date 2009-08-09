@@ -8,7 +8,12 @@ namespace Brejc.Common.Logging
 {
     public class ObserverAppender : AppenderSkeleton, ILogPublisher
     {
-        public EventHandler<LoggingEventEventArgs> LoggingEventArrived { get; set; }
+        private event EventHandler<LoggingEventEventArgs> _loggingEventArrived = null;
+
+        public EventHandler<LoggingEventEventArgs> LoggingEventArrived {
+            get { return _loggingEventArrived ; }
+            set { this._loggingEventArrived = value ; }
+        }
 
         protected override void Append (log4net.Core.LoggingEvent loggingEvent)
         {

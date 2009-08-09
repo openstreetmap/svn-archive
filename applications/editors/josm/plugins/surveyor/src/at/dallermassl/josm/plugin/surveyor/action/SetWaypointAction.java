@@ -58,9 +58,9 @@ public class SetWaypointAction extends AbstractSurveyorAction {
         Object source = event.getSource();
         if(source instanceof JToggleButton) {
             if(((JToggleButton)source).isSelected()) {
-                markerTitle = markerTitle + " " + tr("start");
+                markerTitle = tr("{0} start", markerTitle);
             } else {
-                markerTitle = markerTitle + " " + tr("end");
+                markerTitle = tr("{0} end", markerTitle);
             }
         }
 
@@ -83,10 +83,11 @@ public class SetWaypointAction extends AbstractSurveyorAction {
         GpxLayer gpsLayer = getGpxLayer();
         WayPoint waypoint = new WayPoint(event.getCoordinates());
         waypoint.attr.put("name", markerText);
-        waypoint.attr.put("sym", iconName);
+        if(iconName != null)
+            waypoint.attr.put("sym", iconName);
         synchronized(LiveGpsLock.class) {
             //layer.data.add(new Marker(event.getCoordinates(), markerText, iconName));
-        layer.data.add(new Marker(event.getCoordinates(), markerText, iconName, null, -1.0, 0.0));
+            layer.data.add(new Marker(event.getCoordinates(), markerText, iconName, null, -1.0, 0.0));
             if(gpsLayer != null) {
                 gpsLayer.data.waypoints.add(waypoint);
             }
@@ -106,7 +107,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
             if(markerLayer == null) {
                 // not found, add a new one
                 //markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null);
-        markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null, null);
+                markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null, null);
                 Main.main.addLayer(markerLayer);
             }
         }

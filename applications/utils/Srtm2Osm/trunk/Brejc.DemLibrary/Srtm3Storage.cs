@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Net;
 using ICSharpCode.SharpZipLib.Zip;
 using Brejc.Geometry;
 
@@ -80,11 +81,6 @@ namespace Brejc.DemLibrary
             // then fetch a list of already downloaded cells
             IDictionary<int, Srtm3Cell> cachedCells = FetchCachedCellsList ();
 
-            // then download and load all the needed cells
-            bool connectedToFtp = false;
-            string currentGlobalArea = null;
-            string parentDir = String.Empty;
-
             try
             {
                 foreach (Srtm3Cell cell in cellsToUse.Values)
@@ -103,34 +99,31 @@ namespace Brejc.DemLibrary
                             continue;
                         }
 
-                        // connect to FTP site
-                        if (false == connectedToFtp)
-                        {
-                            ftpClient = new FtpClient ();
+                        string filename = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}.zip", cell.CellFileName);
+                        string url = "http://" + srtmFtpHost + "/" + srtm3RemoteDir + "/" + continentalRegion.ToString() + "/" + filename;
 
-                            ftpClient.setRemoteHost (srtmFtpHost);
-                            ftpClient.setRemotePath (srtm3RemoteDir);
-
-                            ftpClient.login ();
-                            connectedToFtp = true;
-
-                            ftpClient.setBinaryMode (true);
-                        }
-                        
-                        string newGlobalArea = continentalRegion.ToString ();
-
-                        if (newGlobalArea != currentGlobalArea)
-                        {
-                            ftpClient.chdir (String.Format (System.Globalization.CultureInfo.InvariantCulture, @"{0}{1}", parentDir, newGlobalArea));
-                            currentGlobalArea = newGlobalArea;
-                            parentDir = @"../";
-                        }
-
-                        // ...and download it
-                        string filename = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.zip", cell.CellFileName);
                         string localFilename = Path.Combine (srtm3CachePath, filename);
 
-                        ftpClient.download (filename, localFilename);
+                        WebRequest request = HttpWebRequest.Create(new System.Uri(url));
+                        HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            // Get the stream containing content returned by the server.
+                            Stream dataStream = response.GetResponseStream();
+
+                            FileStream fileStream = new FileStream(localFilename, FileMode.OpenOrCreate);
+
+                            //Download in chuncks
+                            byte[] buffer = new byte[1024];
+                            int bytesRead;
+                            while((bytesRead = dataStream.Read(buffer, 0, buffer.Length)) > 0) {
+                                fileStream.Write(buffer, 0, bytesRead);
+                            }
+                            fileStream.Close();
+                            dataStream.Close();
+
+                        }
+                        response.Close();
 
                         // unzip it and delete the zip file
                         FastZip zip = new FastZip();
@@ -144,11 +137,6 @@ namespace Brejc.DemLibrary
             }
             finally
             {
-                if (connectedToFtp)
-                {
-                    ftpClient.close ();
-                    connectedToFtp = false;
-                }
             }
  
             // create elevation data
@@ -231,6 +219,6 @@ namespace Brejc.DemLibrary
         private FtpClient ftpClient;
 
         private string srtmFtpHost = @"dds.cr.usgs.gov";
-        private string srtm3RemoteDir = @"srtm/version2/SRTM3";
+        private string srtm3RemoteDir = @"srtm/version2_1/SRTM3";
     }
 }

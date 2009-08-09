@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.IO;
+using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Diagnostics.CodeAnalysis;
 
@@ -25,12 +27,6 @@ namespace Brejc.DemLibrary
     [Serializable]
     public class SrtmIndex
     {
-        public FtpClient FtpClient
-        {
-            get { return ftpClient; }
-            set { ftpClient = value; }
-        }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage ("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "latitude+90")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage ("Microsoft.Usage", "CA2233:OperationsShouldNotOverflow", MessageId = "longitude+180")]
         public int GetValueForCell (int longitude, int latitude)
@@ -45,41 +41,54 @@ namespace Brejc.DemLibrary
             data[longitude + 180 + 360 * (latitude + 90)] = value;
         }
 
+        private static string host = "dds.cr.usgs.gov";
+        private static string basedir = "srtm/version2_1/SRTM3";
+        private static string pattern = "href=\"([A-Za-z0-9]*\\.hgt\\.zip)\"";
+
         /// <summary>
         /// Generates an index file by listing all available SRTM cells on the FTP site.
         /// </summary>
         public void Generate ()
         {
-            ftpClient.setRemoteHost ("dds.cs.usgs.gov");
-            ftpClient.setRemotePath (@"srtm/version2/SRTM3");
-
-            ftpClient.login ();
-
-            try
+            for (SrtmContinentalRegion continentalRegion = (SrtmContinentalRegion)(SrtmContinentalRegion.None + 1); 
+                 continentalRegion < SrtmContinentalRegion.End;
+                 continentalRegion++)
             {
-                for (SrtmContinentalRegion continentalRegion = (SrtmContinentalRegion)(SrtmContinentalRegion.None + 1); 
-                    continentalRegion < SrtmContinentalRegion.End;
-                    continentalRegion++)
-                {
-                    ftpClient.chdir (continentalRegion.ToString());
-                    string[] fileList = ftpClient.getFileList ("*.hgt.zip");
+                string region = continentalRegion.ToString();
+                string url = "http://" + host + "/" + basedir + "/" + region + "/";
 
-                    foreach (string filename in fileList)
+                WebRequest request = HttpWebRequest.Create(new System.Uri(url));
+                HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    // Get the stream containing content returned by the server.
+                    Stream dataStream = response.GetResponseStream();
+                    // Open the stream using a StreamReader for easy access.
+                    StreamReader reader = new StreamReader(dataStream);
+                    // Read the content.
+                    string responseFromServer = reader.ReadToEnd();
+                    MatchCollection matches = Regex.Matches(responseFromServer, pattern, RegexOptions.IgnoreCase);
+                    // Process each match.
+                    foreach (Match match in matches)
                     {
-                        string trimmedFilename = filename.Trim ();
-                        if (trimmedFilename.Length == 0)
+                        GroupCollection groups = match.Groups;
+                        string filename = groups[1].Value.Trim();
+                        if (filename.Length == 0)
                             continue;
 
-                        Srtm3Cell srtm3Cell = Srtm3Cell.CreateSrtm3Cell (trimmedFilename, false);
-                        SetValueForCell (srtm3Cell.CellLon, srtm3Cell.CellLat, (int)continentalRegion);
+                        Srtm3Cell srtm3Cell = Srtm3Cell.CreateSrtm3Cell(filename, false);
+                        SetValueForCell(srtm3Cell.CellLon, srtm3Cell.CellLat, (int)continentalRegion);
                     }
-
-                    ftpClient.chdir ("..");
+                    // Cleanup the streams and the response.
+                    reader.Close();
+                    dataStream.Close();
                 }
-            }
-            finally
-            {
-                ftpClient.close ();
+                else
+                {
+                    Console.WriteLine("Request for {0} returned {1}.", url, response.StatusDescription);
+                }
+                response.Close();
+
             }
         }
 
@@ -113,9 +122,6 @@ namespace Brejc.DemLibrary
 
             return index;
         }
-
-        [NonSerialized]
-        private FtpClient ftpClient = new FtpClient ();
 
         private int[] data = new int[360*180];
     }

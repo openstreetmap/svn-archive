@@ -197,7 +197,6 @@ public class AgpifojLayer extends Layer {
                             npe.printStackTrace();
                             errorMessage += tr("Found null file in directory {0}\n", f.getPath());
                         }
-                        progressMonitor.finishTask();
                     } else {
                     	errorMessage += tr("Error while getting files from directory {0}\n", f.getPath());
                     }

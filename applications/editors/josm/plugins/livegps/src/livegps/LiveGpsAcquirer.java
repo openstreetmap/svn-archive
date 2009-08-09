@@ -39,6 +39,16 @@ public class LiveGpsAcquirer implements Runnable {
     }
 
     /**
+     * Remove a property change listener from the acquirer.
+     * @param listener the new listener
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if(propertyChangeListener.contains(listener)) {
+            propertyChangeListener.remove(listener);
+        }
+    }
+
+    /**
      * Fire a gps status change event. Fires events with key "gpsstatus" and a {@link LiveGpsStatus}
      * object as value.
      * @param status the status.

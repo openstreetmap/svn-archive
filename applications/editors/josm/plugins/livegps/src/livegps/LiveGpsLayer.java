@@ -137,7 +137,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        if(!visible) {
+        if(!isVisible()) {
             return;
         }
         if("gpsdata".equals(evt.getPropertyName())) {
@@ -153,7 +153,5 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
                 Main.map.repaint();
             }
         }
-
     }
-
 }

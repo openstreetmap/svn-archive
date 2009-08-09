@@ -130,7 +130,7 @@ public class LiveGpsPlugin extends Plugin
         else if(enable)
         {
             if (acquirer == null) {
-                acquirer = new LiveGpsAcquirer(getPluginDir());
+                acquirer = new LiveGpsAcquirer();
                 if (lgpslayer == null) {
                     lgpslayer = new LiveGpsLayer(data);
                     Main.main.addLayer(lgpslayer);

@@ -3,6 +3,8 @@
  */
 package livegps;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Point;
 
 import org.openstreetmap.josm.Main;
@@ -108,7 +110,6 @@ public class LiveGpsData {
     public String toString() {
         return getClass().getSimpleName() + "[fix=" + fix + ", lat=" + latLon.lat()
         + ", long=" + latLon.lon() + ", speed=" + speed + ", course=" + course + "]";
-
     }
 
     /**
@@ -126,7 +127,7 @@ public class LiveGpsData {
                 if(tmp != null) {
                     builder.append(tmp);
                 } else {
-                    builder.append("no name");
+                    builder.append(tr("no name"));
                 }
                 tmp = way.get("ref");
                 if(tmp != null) {
@@ -162,12 +163,10 @@ public class LiveGpsData {
      */
     public Way getWay() {
         if(way == null) {
-            EastNorth eastnorth = Main.proj.latlon2eastNorth(getLatLon());
-            Point xy = Main.map.mapView.getPoint(eastnorth);
+            Point xy = Main.map.mapView.getPoint(getLatLon());
             way = Main.map.mapView.getNearestWay(xy);
         }
         return way;
-
     }
 
     /* (non-Javadoc)
@@ -205,7 +204,4 @@ public class LiveGpsData {
             return false;
         return true;
     }
-
-
-
 }

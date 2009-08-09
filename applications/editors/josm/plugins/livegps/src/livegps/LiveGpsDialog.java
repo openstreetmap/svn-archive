@@ -83,7 +83,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
                 if(wayString.length() > 0) {
                     wayLabel.setText(wayString);
                 } else {
-                    wayLabel.setText("unknown");
+                    wayLabel.setText(tr("unknown"));
                 }
 
             } else {

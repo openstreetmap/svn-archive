@@ -18,10 +18,12 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class LiveGpsPlugin extends Plugin
+public class LiveGpsPlugin extends Plugin implements LayerChangeListener
 {
     private LiveGpsAcquirer acquirer = null;
     private Thread acquirerThread = null;
@@ -33,8 +35,7 @@ public class LiveGpsPlugin extends Plugin
     List<PropertyChangeListener>listenerQueue;
 
     private GpxData data = new GpxData();
-    private LiveGpsLayer lgpslayer;
-
+    private LiveGpsLayer lgpslayer = null;
 
     public class CaptureAction extends JosmAction {
         public CaptureAction() {
@@ -73,6 +74,23 @@ public class LiveGpsPlugin extends Plugin
             if(lgpslayer != null) {
                 setAutoCenter(lgpsautocenter.isSelected());
             }
+        }
+    }
+
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    }
+
+    public void layerAdded(Layer newLayer) {
+    }
+
+    public void layerRemoved(Layer oldLayer) {
+        if(oldLayer == lgpslayer)
+        {
+            enableTracking(false);
+            lgpscapture.setSelected(false);
+            removePropertyChangeListener(lgpslayer);
+            Layer.listeners.remove(this);
+            lgpslayer = null;
         }
     }
 
@@ -134,6 +152,7 @@ public class LiveGpsPlugin extends Plugin
                 if (lgpslayer == null) {
                     lgpslayer = new LiveGpsLayer(data);
                     Main.main.addLayer(lgpslayer);
+                    Layer.listeners.add(this);
                     lgpslayer.setAutoCenter(isAutoCenter());
                 }
                 // connect layer with acquirer:
@@ -169,6 +188,16 @@ public class LiveGpsPlugin extends Plugin
         }
     }
 
+    /**
+     * Remove a listener for gps events.
+     * @param listener the listener.
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if(acquirer != null)
+            acquirer.removePropertyChangeListener(listener);
+        else if(listenerQueue != null && listenerQueue.contains(listener))
+            listenerQueue.remove(listener);
+    }
 
     /* (non-Javadoc)
      * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)
@@ -183,13 +212,10 @@ public class LiveGpsPlugin extends Plugin
         }
     }
 
-
     /**
      * @return the lgpsmenu
      */
     public JMenu getLgpsMenu() {
         return this.lgpsmenu;
     }
-
 }
-

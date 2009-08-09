@@ -162,7 +162,7 @@ public class LiveGpsData {
      * @return the closest way to this position.
      */
     public Way getWay() {
-        if(way == null) {
+        if(way == null && Main.map != null && Main.map.mapView != null) {
             Point xy = Main.map.mapView.getPoint(getLatLon());
             way = Main.map.mapView.getNearestWay(xy);
         }

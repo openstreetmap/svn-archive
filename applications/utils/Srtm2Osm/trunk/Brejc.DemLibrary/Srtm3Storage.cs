@@ -230,7 +230,7 @@ namespace Brejc.DemLibrary
 
         private FtpClient ftpClient;
 
-        private string srtmFtpHost = @"e0srp01u.ecs.nasa.gov";
+        private string srtmFtpHost = @"dds.cr.usgs.gov";
         private string srtm3RemoteDir = @"srtm/version2/SRTM3";
     }
 }

@@ -9,6 +9,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.PlatformHookOsx;
+
 /**
  * Default map controller which implements map moving by pressing the right
  * mouse button and zooming by double click or by mouse wheel.
@@ -17,11 +20,12 @@ import java.awt.event.MouseWheelListener;
  * 
  */
 public class DefaultMapController extends JMapController implements MouseListener, MouseMotionListener,
-        MouseWheelListener {
+MouseWheelListener {
 
     private static final int MOUSE_BUTTONS_MASK = MouseEvent.BUTTON3_DOWN_MASK | MouseEvent.BUTTON1_DOWN_MASK
-            | MouseEvent.BUTTON2_DOWN_MASK;
+    | MouseEvent.BUTTON2_DOWN_MASK;
 
+    private static final int MAC_MOUSE_BUTTON3_MASK = MouseEvent.CTRL_DOWN_MASK | MouseEvent.BUTTON1_DOWN_MASK;
     public DefaultMapController(JMapViewer map) {
         super(map);
     }
@@ -54,27 +58,29 @@ public class DefaultMapController extends JMapController implements MouseListene
     }
 
     public void mouseClicked(MouseEvent e) {
-        if (doubleClickZoomEnabled && e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
+        if (doubleClickZoomEnabled && e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
             map.zoomIn(e.getPoint());
+        }
     }
 
     public void mousePressed(MouseEvent e) {
-        if (e.getButton() == movementMouseButton) {
+        if (e.getButton() == movementMouseButton || isPlatformOsx() && e.getModifiersEx() == MAC_MOUSE_BUTTON3_MASK) {
             lastDragPoint = null;
             isMoving = true;
         }
     }
 
     public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == movementMouseButton) {
+        if (e.getButton() == movementMouseButton || isPlatformOsx() && e.getButton() == MouseEvent.BUTTON1) {
             lastDragPoint = null;
             isMoving = false;
         }
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (wheelZoomEnabled)
+        if (wheelZoomEnabled) {
             map.setZoom(map.getZoom() - e.getWheelRotation(), e.getPoint());
+        }
     }
 
     public boolean isMovementEnabled() {
@@ -145,6 +151,33 @@ public class DefaultMapController extends JMapController implements MouseListene
     }
 
     public void mouseMoved(MouseEvent e) {
+        // Mac OSX simulates with  ctrl + mouse 1  the second mouse button hence no dragging events get fired.
+        //
+        if (isPlatformOsx()) {
+            if (!movementEnabled || !isMoving)
+                return;
+            // Is only the selected mouse button pressed?
+            if (e.getModifiersEx() == MouseEvent.CTRL_DOWN_MASK) {
+                Point p = e.getPoint();
+                if (lastDragPoint != null) {
+                    int diffx = lastDragPoint.x - p.x;
+                    int diffy = lastDragPoint.y - p.y;
+                    map.moveMap(diffx, diffy);
+                }
+                lastDragPoint = p;
+            }
+
+        }
+
+    }
+
+    /**
+     * Replies true if we are currently running on OSX
+     *
+     * @return true if we are currently running on OSX
+     */
+    public static boolean isPlatformOsx() {
+        return Main.platform != null && Main.platform instanceof PlatformHookOsx;
     }
 
 }

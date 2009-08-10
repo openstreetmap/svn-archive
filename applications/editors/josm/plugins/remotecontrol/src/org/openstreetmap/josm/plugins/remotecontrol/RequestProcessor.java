@@ -26,6 +26,7 @@ import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -149,7 +150,7 @@ public class RequestProcessor extends Thread
                     // find out whether some data has already been downloaded
                     Area present = null;
                     if (Main.main.getCurrentDataSet() != null)
-                    	present = Main.main.getCurrentDataSet().getDataSourceArea();
+                        present = Main.main.getCurrentDataSet().getDataSourceArea();
                     if (present != null && !present.isEmpty()) {
                         Area toDownload = new Area(new Rectangle2D.Double(minlon,minlat,maxlon-minlon,maxlat-minlat));
                         toDownload.subtract(present);

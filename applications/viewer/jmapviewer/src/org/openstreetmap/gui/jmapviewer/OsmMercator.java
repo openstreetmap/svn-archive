@@ -89,15 +89,23 @@ public class OsmMercator {
     /**
      * Transforms pixel coordinate X to longitude
      * 
+     * <p>
+     * Mathematical optimization<br>
+     * <code>
+     * lon = toDegree((aX - falseEasting(aZoomlevel)) / radius(aZoomlevel))<br>
+     * lon = 180 / PI * ((aX - getMaxPixels(aZoomlevel) / 2) / getMaxPixels(aZoomlevel) / (2 * PI)<br>
+     * lon = 180 * ((aX - getMaxPixels(aZoomlevel) / 2) / getMaxPixels(aZoomlevel))<br>
+     * lon = 360 / getMaxPixels(aZoomlevel) * (aX - getMaxPixels(aZoomlevel) / 2)<br>
+     * lon = 360 * aX / getMaxPixels(aZoomlevel) - 180<br>
+     * </code>
+     * </p>
      * @param aX
      *            [0..2^Zoomlevel*TILE_WIDTH[
      * @return ]-180..180[
+     * @author Jan Peter Stotz
      */
     public static double XToLon(int aX, int aZoomlevel) {
-        aX -= falseEasting(aZoomlevel);
-        double longRadians = aX / radius(aZoomlevel);
-        double longDegrees = Math.toDegrees(longRadians);
-        return longDegrees;
+        return ((360d * aX) / getMaxPixels(aZoomlevel)) - 180.0;
     }
 
     /**

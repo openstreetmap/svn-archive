@@ -53,6 +53,9 @@
 # Version 4.5 (gary68)
 # - OSB address changed
 #
+# Version 4.6 (gary68)
+# - getnode2 error correction
+#
 
 #
 # USAGE
@@ -128,7 +131,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '4.5' ; 
+$VERSION = '4.6' ; 
 
 require Exporter ;
 
@@ -286,37 +289,33 @@ sub getNode2 {
 			$u = "unknown" ;
 		}
 
-		if (!$id or !$lat or !$lon) {
+		if (!$id or (! (defined ($lat))) or ( ! (defined ($lon))) ) {
 			print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line, "\n" ; 
 		}
-
-		unless ($id) { next; }
-		unless ($lat) { next; }
-		unless ($lon) { next; }
-		if ( (grep (/">/, $line)) or (grep (/'>/, $line)) ) {                  # more lines, get tags
-			nextLine() ;
-			while (!grep(/<\/node>/, $line)) {
-
-				#my ($k) = ($line =~ /^\s*\<tag k=[\'\"]([-\w\d\s\.\,\;\:]+)[\'\"]/);   # get key
-				#my ($v) = ($line =~ /v=[\'\"]([-\w\d\s\.\,\;\:äöüÄÖÜß\/\(\)\+\&]+)[\'\"]/) ;
-				#my ($k) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]/);   # get key
-				#my ($v) = ($line =~ /v=[\'\"](.+)[\'\"]/) ;
-				my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
-
-				if ( (defined ($k)) and (defined ($v)) ) {
-					my $tag = [$k, $v] ;
-					push @gTags, $tag ;
-				}
-				else {
-					#print "WARNING tag not recognized: ", $line, "\n" ;
+		else {
+			if ( (grep (/">/, $line)) or (grep (/'>/, $line)) ) {                  # more lines, get tags
+				nextLine() ;
+				while (!grep(/<\/node>/, $line)) {
+	
+					my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
+	
+					if ( (defined ($k)) and (defined ($v)) ) {
+						my $tag = [$k, $v] ;
+						push @gTags, $tag ;
+					}
+					else {
+						#print "WARNING tag not recognized: ", $line, "\n" ;
+					}
+					nextLine() ;
 				}
 				nextLine() ;
 			}
-			nextLine() ;
+			else {
+				nextLine() ;
+			}
+
 		}
-		else {
-			nextLine() ;
-		}
+
 		$gId = $id ;
 		$gLon = $lon ;
 		$gLat = $lat ;

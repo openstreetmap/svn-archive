@@ -147,7 +147,9 @@ public class RequestProcessor extends Thread
                         throw new LoadDeniedException();
 
                     // find out whether some data has already been downloaded
-                    Area present = Main.main.getCurrentDataSet().getDataSourceArea();
+                    Area present = null;
+                    if (Main.main.getCurrentDataSet() != null)
+                    	present = Main.main.getCurrentDataSet().getDataSourceArea();
                     if (present != null && !present.isEmpty()) {
                         Area toDownload = new Area(new Rectangle2D.Double(minlon,minlat,maxlon-minlon,maxlat-minlat));
                         toDownload.subtract(present);

@@ -1,0 +1,1 @@
+php_value output_handler ob_gzhandler

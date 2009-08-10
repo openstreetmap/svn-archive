@@ -2,8 +2,11 @@
 #
 # version 1.1
 # - added tags in output
+# version 1.2
+# - check only ways with more than one node...
 #
 #
+
 
 use strict ;
 use warnings ;
@@ -12,7 +15,7 @@ use OSM::osm 4.0 ;
 
 my $programName = "waydupes.pl" ;
 my $usage = "waydupes.pl file.osm out.htm out.gpx" ; 
-my $version = "1.1" ;
+my $version = "1.2" ;
 
 my $wayId ;
 my $wayUser ;
@@ -111,23 +114,25 @@ print "comparing ways...\n" ;
 
 my $comparisons = 0 ;
 foreach my $number (keys %numberNodesHash) {
-	# print "checking ways with length $number nodes.\n" ;
-	foreach my $way1 (@{$numberNodesHash{$number}}) {
-		foreach my $way2 (@{$numberNodesHash{$number}}) {
-			if ($way1 < $way2) {
-				$comparisons++ ;
-				if (($comparisons % 10000000) == 0 ) { print "$comparisons comparisons done...\n" ; }
-				my %count = () ;
-				my $different = 0 ;
-				foreach my $item (@{$wayNodesHash{$way1}}, @{$wayNodesHash{$way2}}) { $count{$item}++ ; }
-				foreach my $item (keys %count) {
-					if ($count{$item} != 2) { $different = 1 ; }
-				}
-				if ($different == 0) {
-					# print "$way1 and $way2 are dupes\n" ; 
-					$dupes++ ;
-					$neededNodes{$wayNodesHash{$way1}[0]} = 1 ;
-					push @problems, [$way1, $way2] ;
+	if ($number > 1) {
+		# print "checking ways with length $number nodes.\n" ;
+		foreach my $way1 (@{$numberNodesHash{$number}}) {
+			foreach my $way2 (@{$numberNodesHash{$number}}) {
+				if ($way1 < $way2) {
+					$comparisons++ ;
+					if (($comparisons % 10000000) == 0 ) { print "$comparisons comparisons done...\n" ; }
+					my %count = () ;
+					my $different = 0 ;
+					foreach my $item (@{$wayNodesHash{$way1}}, @{$wayNodesHash{$way2}}) { $count{$item}++ ; }
+					foreach my $item (keys %count) {
+						if ($count{$item} != 2) { $different = 1 ; }
+					}
+					if ($different == 0) {
+						# print "$way1 and $way2 are dupes\n" ; 
+						$dupes++ ;
+						$neededNodes{$wayNodesHash{$way1}[0]} = 1 ;
+						push @problems, [$way1, $way2] ;
+					}
 				}
 			}
 		}

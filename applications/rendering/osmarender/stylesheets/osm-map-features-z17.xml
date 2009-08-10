@@ -3147,6 +3147,9 @@
 		<rule e="node|way" k="amenity" v="toilets">
 			<symbol ref="toilets" position="center"/>
 		</rule>
+		<rule e="node|way" k="amenity" v="fountain">
+			<symbol ref="fountain" position="center"/>
+		</rule>
 		<rule e="node|way" k="amenity" v="drinking_water">
 			<symbol ref="drinking_water" position="center"/>
 		</rule>

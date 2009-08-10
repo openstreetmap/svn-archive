@@ -13,6 +13,8 @@ if ($bRunGosmore) {
 	$yours_dir = '/home/lambertus/planet/yours';
 	$ulimit = 30;
 
+	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+	
 	$query = "QUERY_STRING='";
 
 	//Coordinates
@@ -108,13 +110,13 @@ if ($bRunGosmore) {
 	}
 	$dir = $yours_dir.$gosmore;
 	$command = "ulimit -t ".$ulimit." && ".$query." nice ./gosmore ".$pak." ".$style;
-/*	
+	
 	$fh = fopen($www_dir.'/commands.log', 'a+');
 	if ($fh) {
 		fwrite($fh, date('Y-m-d H:i:s').", ".$dir.', '.$command."\n");
 		fclose($fh);
 	}
-*/
+
 	$res = chdir($dir);
 	$gosmore_start = microtime(true);
 	$result = exec($command, $output);
@@ -216,9 +218,11 @@ if ($bRunGosmore) {
 }
 
 //Chop the KML into bits so that the network can transport is faster (aledgidly)
-echobig($kml, 1024);
+//echobig($kml, 1024);
 
-/*
+echo $kml;
+
+
 if ($bRunGosmore) {
 	$file = $www_dir.'/requests.csv';
 	if (!file_exists($file)) {
@@ -235,11 +239,11 @@ if ($bRunGosmore) {
 		$script = $script_end - $script_start;
 		$runtime = $gosmore_end - $gosmore_start;
 		
-		fwrite($fh, date('Y-m-d H:i:s').", ".$query.", ".strlen($kml).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
+		fwrite($fh, date('Y-m-d H:i:s').", ".$user_agent.", ".$query.", ".strlen($kml).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
 		fclose($fh);
 	}
 }
-*/
+
 
 // Chop a string into bits
 function echobig($string, $bufferSize = 8192)
@@ -277,10 +281,6 @@ function getProcesses()
 
 	foreach ($ps as $row => $process)
 	{
-		//echo "$process<br>";
-	}
-	foreach ($ps as $row => $process)
-	{
 		$properties = array();
 		$properties = split(" ", $process);
 		
@@ -296,4 +296,4 @@ function getProcesses()
 	}
 	return $nProcesses;
 }
-?>
+

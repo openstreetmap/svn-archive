@@ -218,7 +218,9 @@ if ($bRunGosmore) {
 }
 
 //Chop the KML into bits so that the network can transport is faster (aledgidly)
-echobig($kml, 1024);
+//echobig($kml, 1024);
+
+echo $kml;
 
 
 if ($bRunGosmore) {
@@ -279,10 +281,6 @@ function getProcesses()
 
 	foreach ($ps as $row => $process)
 	{
-		//echo "$process<br>";
-	}
-	foreach ($ps as $row => $process)
-	{
 		$properties = array();
 		$properties = split(" ", $process);
 		
@@ -298,4 +296,4 @@ function getProcesses()
 	}
 	return $nProcesses;
 }
-?>
+

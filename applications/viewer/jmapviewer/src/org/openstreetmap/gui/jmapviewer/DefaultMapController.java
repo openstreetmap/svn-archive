@@ -9,9 +9,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.tools.PlatformHookOsx;
-
 /**
  * Default map controller which implements map moving by pressing the right
  * mouse button and zooming by double click or by mouse wheel.
@@ -114,17 +111,17 @@ MouseWheelListener {
     public void setMovementMouseButton(int movementMouseButton) {
         this.movementMouseButton = movementMouseButton;
         switch (movementMouseButton) {
-        case MouseEvent.BUTTON1:
-            movementMouseButtonMask = MouseEvent.BUTTON1_DOWN_MASK;
-            break;
-        case MouseEvent.BUTTON2:
-            movementMouseButtonMask = MouseEvent.BUTTON2_DOWN_MASK;
-            break;
-        case MouseEvent.BUTTON3:
-            movementMouseButtonMask = MouseEvent.BUTTON3_DOWN_MASK;
-            break;
-        default:
-            throw new RuntimeException("Unsupported button");
+            case MouseEvent.BUTTON1:
+                movementMouseButtonMask = MouseEvent.BUTTON1_DOWN_MASK;
+                break;
+            case MouseEvent.BUTTON2:
+                movementMouseButtonMask = MouseEvent.BUTTON2_DOWN_MASK;
+                break;
+            case MouseEvent.BUTTON3:
+                movementMouseButtonMask = MouseEvent.BUTTON3_DOWN_MASK;
+                break;
+            default:
+                throw new RuntimeException("Unsupported button");
         }
     }
 
@@ -177,7 +174,7 @@ MouseWheelListener {
      * @return true if we are currently running on OSX
      */
     public static boolean isPlatformOsx() {
-        return Main.platform != null && Main.platform instanceof PlatformHookOsx;
+        String os = System.getProperty("os.name");
+        return os != null && os.toLowerCase().startsWith("mac os x");
     }
-
 }

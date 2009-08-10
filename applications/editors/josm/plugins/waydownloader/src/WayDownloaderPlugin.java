@@ -178,6 +178,7 @@ public class WayDownloaderPlugin extends Plugin {
     private Node duplicateNode() {
     	for (Node onNode:Main.main.getCurrentDataSet().nodes) {
             if (!onNode.equals(this.selectedNode)
+            		&& !onNode.incomplete
                     && onNode.getCoor().lat()==selectedNode.getCoor().lat()
                     && onNode.getCoor().lon()==selectedNode.getCoor().lon()) {
                 return onNode;
@@ -188,8 +189,8 @@ public class WayDownloaderPlugin extends Plugin {
 
     /** Given the the node on one end of the way, return the node on the other end */
     private Node findOtherEnd(Way way, Node firstEnd) {
-        Node otherEnd = way.nodes.get(0);
-        if (otherEnd.equals(firstEnd)) otherEnd = way.nodes.get(way.nodes.size()-1);
+        Node otherEnd = way.firstNode();
+        if (otherEnd.equals(firstEnd)) otherEnd = way.lastNode();
         return otherEnd;
     }
 
@@ -199,15 +200,8 @@ public class WayDownloaderPlugin extends Plugin {
 
         //loop through every way
         for (Way onWay:Main.main.getCurrentDataSet().ways) {
-            Object[] nodes = onWay.nodes.toArray();
-            if (nodes.length<2) {
-                //Should never happen should it? TODO: investigate. For the moment ignore these
-                System.err.println("WayDownloader plugin encountered a way with " + nodes.length + " nodes :" + onWay.toString());
-            } else {
-                Node firstNode = (Node) nodes[0];
-                Node lastNode = (Node) nodes[nodes.length-1];
-
-                if (firstNode.equals(selectedNode) || lastNode.equals(selectedNode)) {
+            if (onWay.getNodesCount() >= 2) {
+                if (onWay.isFirstLastNode(selectedNode)) {
                     //Found it
                     connectedWays.add(onWay);
                 }
@@ -227,7 +221,7 @@ public class WayDownloaderPlugin extends Plugin {
             return false;
         } else {
             Way selectedWay = (Way) selection.toArray()[0];
-            selectedNode = selectedWay.nodes.get(0);
+            selectedNode = selectedWay.firstNode();
 
             if (isDownloaded(selectedNode)) {
                 selectedNode = findOtherEnd(selectedWay, selectedNode);

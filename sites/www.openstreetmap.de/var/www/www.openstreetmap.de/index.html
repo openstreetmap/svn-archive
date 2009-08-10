@@ -42,7 +42,7 @@ function init() {
         new OpenLayers.Layer.OSM.Osmarender("Osmarender")
     ]);
 
-    layer_local = new OpenLayers.Layer.Markers("Lokale Gruppen", { visibility: false });
+    layer_local = new OpenLayers.Layer.Markers("Lokale Gruppen");
     map.addLayer(layer_local);
 
     createMarkers();

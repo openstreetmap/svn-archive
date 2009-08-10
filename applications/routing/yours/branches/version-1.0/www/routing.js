@@ -452,7 +452,7 @@ function processRouteXML(request) {
 
 function addAltitudeProfile(vect) {
 	var geom = vect[0].geometry.clone();
-	length = geom.components.length;
+	var length = geom.components.length;
 	if (length < 300) {
 		// Build the profile GET request
 		url = "";

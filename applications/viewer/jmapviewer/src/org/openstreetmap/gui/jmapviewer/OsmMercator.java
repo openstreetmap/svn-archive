@@ -45,14 +45,25 @@ public class OsmMercator {
     /**
      * Transform longitude to pixelspace
      * 
+     * <p>
+     * Mathematical optimization<br>
+     * <code>
+     * x = radius(aZoomlevel) * toRadians(aLongitude) + falseEasting(aZoomLevel)<br>
+     * x = getMaxPixels(aZoomlevel) / (2 * PI) * (aLongitude * PI) / 180 + getMaxPixels(aZoomlevel) / 2<br>
+     * x = getMaxPixels(aZoomlevel) * aLongitude / 360 + 180 * getMaxPixels(aZoomlevel) / 360<br>
+     * x = getMaxPixels(aZoomlevel) * (aLongitude + 180) / 360<br>
+     * </code>
+     * </p>
+     * 
      * @param aLongitude
      *            [-180..180]
      * @return [0..2^Zoomlevel*TILE_SIZE[
+     * @author Jan Peter Stotz
      */
     public static int LonToX(double aLongitude, int aZoomlevel) {
-        double longitude = Math.toRadians(aLongitude);
-        int x = (int) ((radius(aZoomlevel) * longitude) + falseEasting(aZoomlevel));
-        x = Math.min(x, getMaxPixels(aZoomlevel) - 1);
+        int mp = getMaxPixels(aZoomlevel);
+        int x = (int) ((mp * (aLongitude + 180l)) / 360l);
+        x = Math.min(x, mp - 1);
         return x;
     }
 

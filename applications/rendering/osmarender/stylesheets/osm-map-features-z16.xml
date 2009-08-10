@@ -2478,6 +2478,9 @@
 				<symbol ref="shelter" position="center"/>
 			</else>
 		</rule>
+		<rule e="node|way" k="amenity" v="fountain">
+			<symbol ref="fountain" position="center"/>
+		</rule>
 		
 		<!-- ==================================== Layer -5 ======================================== -->
 		

@@ -176,9 +176,9 @@ public class WayDownloaderPlugin extends Plugin {
 
     /** See if there's another node at the same coordinates. If so return it. Otherwise null */
     private Node duplicateNode() {
-    	for (Node onNode:Main.main.getCurrentDataSet().nodes) {
+        for (Node onNode:Main.main.getCurrentDataSet().nodes) {
             if (!onNode.equals(this.selectedNode)
-            		&& !onNode.incomplete
+                    && !onNode.incomplete
                     && onNode.getCoor().lat()==selectedNode.getCoor().lat()
                     && onNode.getCoor().lon()==selectedNode.getCoor().lon()) {
                 return onNode;
@@ -216,18 +216,15 @@ public class WayDownloaderPlugin extends Plugin {
      */
     private boolean workFromWaySelection(Collection<OsmPrimitive> selection) {
 
-        if (selection.size()>1) {
-            //more than one way selected
+        if (selection.size() != 1)
             return false;
-        } else {
-            Way selectedWay = (Way) selection.toArray()[0];
-            selectedNode = selectedWay.firstNode();
+        Way selectedWay = (Way) selection.iterator().next();
+        selectedNode = selectedWay.firstNode();
 
-            if (isDownloaded(selectedNode)) {
-                selectedNode = findOtherEnd(selectedWay, selectedNode);
+        if (isDownloaded(selectedNode)) {
+            selectedNode = selectedWay.lastNode();
 
-                if (isDownloaded(selectedNode)) return false;
-            }
+            if (isDownloaded(selectedNode)) return false;
         }
         Main.main.getCurrentDataSet().setSelected(selectedNode);
         return true;

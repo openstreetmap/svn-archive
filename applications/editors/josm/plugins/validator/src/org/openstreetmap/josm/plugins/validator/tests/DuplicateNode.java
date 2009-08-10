@@ -2,15 +2,21 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.geom.Area;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.MergeNodesAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -92,7 +98,8 @@ public class DuplicateNode extends Test
         if (target == null)
             target = nodes.iterator().next();
 
-        new  MergeNodesAction().mergeNodes(nodes, target);
+        if(checkAndConfirmOutlyingDeletes(nodes))
+            new MergeNodesAction().mergeNodes(nodes, target);
 
         return null; // undoRedo handling done in mergeNodes
     }
@@ -101,5 +108,35 @@ public class DuplicateNode extends Test
     public boolean isFixable(TestError testError)
     {
         return (testError.getTester() instanceof DuplicateNode);
+    }
+
+    /**
+     * Check whether user is about to delete data outside of the download area.
+     * Request confirmation if he is.
+     */
+    private static boolean checkAndConfirmOutlyingDeletes(LinkedList<Node> del) {
+        Area a = Main.main.getCurrentDataSet().getDataSourceArea();
+        if (a != null) {
+            for (OsmPrimitive osm : del) {
+                if (osm instanceof Node && osm.id != 0) {
+                    Node n = (Node) osm;
+                    if (!a.contains(n.getCoor())) {
+                        return ConditionalOptionPaneUtil.showConfirmationDialog(
+                            "delete_outside_nodes",
+                            Main.parent,
+                            tr("You are about to delete nodes outside of the area you have downloaded." +
+                                                "<br>" +
+                                                "This can cause problems because other objects (that you don't see) might use them." +
+                                                "<br>" +
+                                        "Do you really want to delete?") + "</html>",
+                            tr("Confirmation"),
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            JOptionPane.YES_OPTION);
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

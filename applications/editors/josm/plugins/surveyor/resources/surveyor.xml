@@ -3,7 +3,7 @@
   <!-- icons can either be absolute paths or relative paths to the .josm directory -->
   <!-- action class: either fully qualified classnames or if not found,
        package at.dallermassl.josm.plugin.surveyor.action is assumed -->
-  <button label="Tunnel Start" hotkey="T" icon="tunnel">
+  <button label="Tunnel Start" hotkey="T" icon="styles/standard/vehicle/tunnel.png">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="tunnel start"/>
     <!--action class="ConsolePrinterAction" params="tunnel start,tunnel"/-->
@@ -13,7 +13,7 @@
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="bridge"/>
   </button>
-  <button label="Village/City" hotkey="V" icon="place">
+  <button label="Village/City" hotkey="V" icon="styles/standard/place.png">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="village"/>
     <!--
@@ -21,43 +21,43 @@
     <action class="AnnotationPresetAction" params="Places"/>
     -->
   </button>
-  <button label="Parking" hotkey="P" icon="parking">
+  <button label="Parking" hotkey="P" icon="styles/standard/vehicle/parking.png">
     <!--action class="SetNodeAction" params="amenity=parking"/-->
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Parking"/>
   </button>
-  <button label="One Way" hotkey="O" icon="noentry">
+  <button label="One Way" hotkey="O" icon="presets/oneway.png">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="oneway=yes"/>
   </button>
-  <button label="Church" hotkey="C" icon="church">
+  <button label="Church" hotkey="C" icon="styles/standard/religion/church.png">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetNodeAction" params="amenity=place_of_worship,denomination=christian"/>
     <action class="SetWaypointAction" params="Church"/>
   </button>
-  <button label="Fuel Station" hotkey="F" icon="fuel">
+  <button label="Fuel Station" hotkey="F" icon="styles/standard/vehicle/fuel.png">
     <!--action class="SetNodeAction" params="amenity=fuel"/-->
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Fuel"/>
   </button>
-  <button label="Hotel" hotkey="H" icon="bed">
+  <button label="Hotel" hotkey="H" icon="styles/standard/accommodation/hotel.png">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Hotel"/>
   </button>
-  <button label="Restaurant" hotkey="R" icon="restaurant">
+  <button label="Restaurant" hotkey="R" icon="styles/standard/food/restaurant.png">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetNodeAction" params="amenity=restaurant"/>
     <action class="SetWaypointAction" params="Restaurant"/>
   </button>
-  <button label="Shopping" hotkey="S" icon="shopping">
+  <button label="Shopping" hotkey="S" icon="styles/standard/shop.png">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Info"/>
   </button>
-  <button label="WC" hotkey="W" icon="toilet">
+  <button label="WC" hotkey="W" icon="styles/standard/vehicle/parking/restarea_toilets.png">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Info"/>
   </button>
-  <button label="Camping" hotkey="Z" icon="caravan">
+  <button label="Camping" hotkey="Z" icon="styles/standard/accommodation/camping/caravan.png">
     <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
     <action class="SetWaypointAction" params="Camping"/>
   </button>

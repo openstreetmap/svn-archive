@@ -1,3 +1,10 @@
+#
+#
+# version 1.1
+# - added tags in output
+#
+#
+
 use strict ;
 use warnings ;
 
@@ -5,7 +12,7 @@ use OSM::osm 4.0 ;
 
 my $programName = "waydupes.pl" ;
 my $usage = "waydupes.pl file.osm out.htm out.gpx" ; 
-my $version = "1.0" ;
+my $version = "1.1" ;
 
 my $wayId ;
 my $wayUser ;
@@ -197,8 +204,14 @@ foreach my $problem (@problems) {
 	
 	print $html "<tr>\n" ;
 	print $html "<td>", $line , "</td>\n" ;
-	print $html "<td>", historyLink ("way", $problem->[0]) , "</td>\n" ;
-	print $html "<td>", historyLink ("way", $problem->[1]) , "</td>\n" ;
+	print $html "<td>", historyLink ("way", $problem->[0]), "\n"  ;
+	foreach my $tag (@{$wayTagsHash{$problem->[0]}}) { print $html "<br>\n", $tag->[0], ":", $tag->[1] ; }
+	print $html "</td>\n" ;
+
+	print $html "<td>", historyLink ("way", $problem->[1]) ;
+	foreach my $tag (@{$wayTagsHash{$problem->[1]}}) { print $html "<br>\n", $tag->[0], ":", $tag->[1] ; }
+	print $html "</td>\n" ;
+
 	print $html "<td>", osmLink ($lo, $la, 16) , "<br>\n" ;
 	print $html "<td>", osbLink ($lo, $la, 16) , "<br>\n" ;
 	print $html "<td>", josmLinkSelectWays ($lo, $la, 0.01, $problem->[0], $problem->[1]), "</td>\n" ;

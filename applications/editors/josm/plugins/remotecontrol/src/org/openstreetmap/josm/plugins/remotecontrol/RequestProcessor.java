@@ -149,8 +149,9 @@ public class RequestProcessor extends Thread
 
                     // find out whether some data has already been downloaded
                     Area present = null;
-                    if (Main.main.getCurrentDataSet() != null)
-                        present = Main.main.getCurrentDataSet().getDataSourceArea();
+                    DataSet ds = Main.main.getCurrentDataSet();
+                    if (ds != null)
+                        present = ds.getDataSourceArea();
                     if (present != null && !present.isEmpty()) {
                         Area toDownload = new Area(new Rectangle2D.Double(minlon,minlat,maxlon-minlon,maxlat-minlat));
                         toDownload.subtract(present);

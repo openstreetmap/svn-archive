@@ -69,20 +69,32 @@ public class OsmMercator {
 
     /**
      * Transforms latitude to pixelspace
+     * <p>
+     * Mathematical optimization<br>
+     * <code>
+     * log(u) := log((1.0 + sin(toRadians(aLat))) / (1.0 - sin(toRadians(aLat))<br>
      * 
+     * y = -1 * (radius(aZoomlevel) / 2 * log(u)))) - falseNorthing(aZoomlevel))<br>
+     * y = -1 * (getMaxPixel(aZoomlevel) / 2 * PI / 2 * log(u)) - -1 * getMaxPixel(aZoomLevel) / 2<br>
+     * y = getMaxPixel(aZoomlevel) / (-4 * PI) * log(u)) + getMaxPixel(aZoomLevel) / 2<br>
+     * y = getMaxPixel(aZoomlevel) * ((log(u) / (-4 * PI)) + 1/2)<br>
+     * </code>
+     * </p>
      * @param aLat
      *            [-90...90]
      * @return [0..2^Zoomlevel*TILE_SIZE[
+     * @author Jan Peter Stotz
      */
     public static int LatToY(double aLat, int aZoomlevel) {
         if (aLat < MIN_LAT)
             aLat = MIN_LAT;
         else if (aLat > MAX_LAT)
             aLat = MAX_LAT;
-        double latitude = Math.toRadians(aLat);
-        int y = (int) (-1
-                * (radius(aZoomlevel) / 2.0 * Math.log((1.0 + Math.sin(latitude)) / (1.0 - Math.sin(latitude)))) - falseNorthing(aZoomlevel));
-        y = Math.min(y, getMaxPixels(aZoomlevel) - 1);
+        double sinLat = Math.sin(Math.toRadians(aLat));
+        double log = Math.log((1.0 + sinLat) / (1.0 - sinLat));
+        int mp = getMaxPixels(aZoomlevel);
+        int y = (int) (mp * (0.5 - (log / (4.0 * Math.PI))));
+        y = Math.min(y, mp - 1);
         return y;
     }
 

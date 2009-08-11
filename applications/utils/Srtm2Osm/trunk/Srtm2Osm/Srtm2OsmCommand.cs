@@ -28,6 +28,7 @@ namespace Srtm2Osm
         Categories,
         Feet,
         LargeAreaMode,
+        CorrectionXY,
     }
 
     public class Srtm2OsmCommand : IConsoleApplicationCommand
@@ -64,7 +65,11 @@ namespace Srtm2Osm
             }
 
             Srtm3Storage storage = new Srtm3Storage (Path.Combine (srtmDir, "SrtmCache"), srtmIndex);
-            IRasterDigitalElevationModel dem = (IRasterDigitalElevationModel) storage.LoadDemForArea (bounds);
+
+            Bounds2 corrBounds = new Bounds2(bounds.MinX + corrX, bounds.MinY + corrY, 
+                bounds.MaxX + corrX, bounds.MaxY + corrY);
+     
+            IRasterDigitalElevationModel dem = (IRasterDigitalElevationModel) storage.LoadDemForArea (corrBounds);
 
             ConsoleActivityLogger activityLogger = new ConsoleActivityLogger ();
             activityLogger.LogLevel = ActivityLogLevel.Verbose;
@@ -128,8 +133,8 @@ namespace Srtm2Osm
 
                                     OsmUtils.OsmSchema.osmNode node = new osmNode ();
                                     node.Id = nodeId++;
-                                    node.Lat = point.Y;
-                                    node.Lon = point.X;
+                                    node.Lat = point.Y - corrY;
+                                    node.Lon = point.X - corrY;
 
                                     if (i == 0)
                                         firstNodeId = node.Id;
@@ -176,8 +181,8 @@ namespace Srtm2Osm
                         {
                             Point3<double> point = polyline.Vertices[i];
 
-                            OsmNode node = new OsmNode (nodeId++, point.Y, point.X);
-                            osmDb.AddNode (node);
+                            OsmNode node = new OsmNode(nodeId++, point.Y - corrY, point.X - corrX);
+                            osmDb.AddNode(node);
 
                             isohypseWay.AddNode (node.ObjectId);
                         }
@@ -261,6 +266,7 @@ namespace Srtm2Osm
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.Categories, "cat", 2));
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.Feet, "feet", 0));
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.LargeAreaMode, "large", 0));
+            options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.CorrectionXY, "corrxy", 2));
 
             startFrom = options.ParseArgs (args, startFrom);
 
@@ -268,6 +274,14 @@ namespace Srtm2Osm
             {
                 switch ((Srtm2OsmCommandOption)option.OptionId)
                 {
+                    case Srtm2OsmCommandOption.CorrectionXY:
+                        {
+                            corrX = Double.Parse(option.Parameters[0],
+                                System.Globalization.CultureInfo.InvariantCulture);
+                            corrY = Double.Parse(option.Parameters[1],
+                                System.Globalization.CultureInfo.InvariantCulture);
+                            continue;
+                        }
                     case Srtm2OsmCommandOption.Bounds1:
                         {
                             double minLat = Double.Parse (option.Parameters[0],
@@ -429,6 +443,8 @@ namespace Srtm2Osm
         }
 
         private Bounds2 bounds;
+        private double corrX = 0;
+        private double corrY = 0;
         private bool generateIndex;
         private string srtmDir = "srtm";
         private int elevationStep = 20;

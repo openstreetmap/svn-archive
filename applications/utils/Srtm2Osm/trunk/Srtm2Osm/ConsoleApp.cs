@@ -60,7 +60,8 @@ namespace Srtm2Osm
             System.Console.Out.WriteLine ("-large: runs in 'large area mode' in which each contour is written to OSM file ");
             System.Console.Out.WriteLine ("       immediately upon discovery. This prevents 'out-of-memory' errors, but");
             System.Console.Out.WriteLine ("       some other options cannot be used in this mode.");
-            System.Console.Out.WriteLine ();
+            System.Console.Out.WriteLine ("-corrxy <corrLng> <corrLat>: correction values to shift contours");
+            System.Console.Out.WriteLine();
 
             // http://www.openstreetmap.org/?lat=46.523362283296755&lon=15.628250113735774&zoom=12&layers=0BF
             // http://www.openstreetmap.org/?lat=46.79387319944362&lon=13.599213077626766&zoom=11&layers=0BF

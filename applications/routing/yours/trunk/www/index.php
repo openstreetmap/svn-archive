@@ -1,93 +1,153 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>OpenStreetMap routing service</title>
-    <link rel="stylesheet" href="main.css">
-    <script src="http://openlayers.org/api/OpenLayers.js" type="text/javascript"></script>
-    <script src="config.js" type="text/javascript"></script>
-    <script src="routing.js" type="text/javascript"></script>
-    <script src="http://openstreetmap.org/openlayers/OpenStreetMap.js"></script>
-  </head>
-  <body onload="init();">
-	<div id="header">
-    	<center>
-			<h1>OpenStreetMap routing service</h1>
-			<div id="controls">
-				<form name="route">
-					<table>
-						<tr><td>
-							<!--<font color=red>Note: Routing in the Northeastern part of the American continent isn't possible due to server limitations.</font>-->
-							<!--<font color=red>Note: Routing database update failed so routing is not working at the moment. Namefinder service can be slow.</font>-->
-							<font color=red>Note: Namefinder service can sometimes be slow.</font>
-						</td></tr>
-					</table>
-		      		<table>
-						<tr>
-							<td><input type="button" name="from" onclick="elementClick(this);" value="From:" tabindex=5></td>
-							<td><input type="text" name="from_text" onclick="elementClick(this);" onchange="elementChange(this);" value="e.g. Street, City" tabindex=1 onfocus="this.select()"></td>
-							<td><input type="button" name="to" onclick="elementClick(this);" value="To:" tabindex=6></td>
-							<td><input type="text" name="to_text" onclick="elementClick(this);" onchange="elementChange(this);" value="e.g. Street, City" tabindex=2 onfocus="this.select()"></td>
-							<td><input type="button" name="calculate" onclick="elementClick(this);" value="Find route" tabindex=3></td>
-			        		<td><input type="button" name="clear" onclick="elementClick(this);" value="Clear" tabindex=4></td>
-			        		<td><input type="button" name="reverse" onclick="reverseRoute(this);" value="Reverse" tabindex=7></td>
-			        		<td><div id="status"></div></td>
-						</tr>
-					</table>
-				</form>
-			</div>
-		</center>
-	</div>
 
-	<div id="main1">
-		<div id="main2">
-			<div id="navigation">
-				<div class="menu-block">
-					<p class="menu-header">Site menu</p>
-					<ul>
-						<li><a href="index.php">Home</a></li>
-						<li><a href="help.html">Help</a></li>
-						<li><a href="about.html">About</a></li>
-					</ul>
-				</div>
-				<div class="menu-block">
-					<form name="parameters">
-						<p class="menu-header">Routing</p>
-						<ul>
-							<li><input type="radio" name="type" value="motorcar" checked>Car</a></li>
-							<li><input type="radio" name="type" value="bicycle">Bicycle</a></li>
-							<li><input type="radio" name="type" value="foot">Foot</a></li>
-						</ul>
-						<ul>
-							<li><input type="radio" name="method" value="fast" checked>Fastest</a></li>
-							<li><input type="radio" name="method" value="short">Shortest</a></li>
-						</ul>
-					</form>
-				</div>
-				<div class="menu-block">
-					<form name="export" >
-						<p class="menu-header">Export</p>
-						<ul>
-							<li><input type="radio" name="type" value="gpx" checked>GPS exchange format (.gpx)</a></li>
-							<li><input type="radio" name="type" value="wpt">Waypoint (.wpt)</a></li>
-						</ul>
-						<!--<input type="button" name="export" onclick="document.open(getRouteAs()); return false" value="Save">-->
-						<input type="button" name="export" onclick="document.open(getRouteAs(), null, null); return false" value="Save">
-					</form>
-				</div>
-			</div>
-			<div id="right">
-				<div id="feature_info"></div>
-			</div>
-			
-			<div id="middle">
-				<div id="map"></div>
-			</div>
-			<div class="cleaner">&nbsp;</div>
-		</div>
-	</div>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Your navigation</title>
+		<link rel="stylesheet" href="main.css"/>
+		<!--<link rel="stylesheet" href="http://dev.jquery.com/view/tags/ui/latest/themes/flora/flora.all.css" type="text/css" media="screen" title="Flora (Default)">-->
+		<link rel="stylesheet" href="tabs.css"/>
+		<script src="http://openlayers.org/api/OpenLayers.js" type="text/javascript"></script>
+		<script src="config.js" type="text/javascript"></script>
+		<script src="routing.js" type="text/javascript"></script>
+		<script src="http://openstreetmap.org/openlayers/OpenStreetMap.js" type="text/javascript"></script>
+		<script src="jquery/jquery.js" type="text/javascript"></script>
+		<script src="jquery/jquery-ui.js" type="text/javascript"></script>
 		
-	<div id="footer">
-		<p>
-			<i>This site is hosted on the Netherlands tileserver, sponsored by <a href="http://www.oxilion.nl/">Oxilion</a>. Routing data from planet file: 
+		<script>
+  $(document).ready(function(){
+	/* Make the navigation tabs */
+    $("#nav_header > ul").tabs();
+  });
+  </script>
+
+	</head>
+	<body onload="init();">	
+		<div id="header">
+			<div id="title">
+				<h1>OpenStreetMap routing service</h1>
+			</div>
+		
+			<div id="help_about">
+				<a href="index.php');">Home</a>
+				<a href="help.html">Help</a>
+				<a href="about.html">About</a>
+			</div>
+		</div>
+		<div id="main">
+			<div id="outer">
+				<div id="navigation">
+					<!-- Tabs -->
+					<div id="nav_header">
+						<ul>
+			                <li><a href="#fragment-route"><span>Route</span></a></li>
+			                <li><a href="#fragment-directions"><span>Directions</span></a></li>
+			                <li><a href="#fragment-info"><span>Info</span></a></li>
+							<li><a href="#fragment-export"><span>Export</span></a></li>
+			            </ul>
+					</div>
+					<div id="fragment-route">
+						<form id="via" action="#">
+							<ul class="route_via">
+								<li>
+									<div class="hover">
+										<img src="markers/route1.png" height="30" align="middle"/>
+										<input type="button" width="50" name="from" onclick="elementClick(this);" value="From:" tabindex="5"/><input type="text" name="from_text" onclick="elementClick(this);" onchange="elementChange(this);" value="e.g. Street, City" tabindex="1" onfocus="this.select()"/>
+									</div>
+									<div class="route_plus">
+										<input type="button" name="+1" onclick="elementClick(this);" value="+" tabindex="5"/>
+									</div>
+								</li>
+								<li>
+									<div class="route_coord">
+										<img src="markers/route2.png" height="30" align="middle"/>
+										<input type="button" width="50" name="to" onclick="elementClick(this);" value="To:" tabindex="6"/><input type="text" name="to_text" onclick="elementClick(this);" onchange="elementChange(this);" value="e.g. Street, City" tabindex="2" onfocus="this.select()"/>
+									</div>
+									<div class="route_plus">
+										<input type="button" name="+1" onclick="elementClick(this);" value="+" tabindex="5"/>
+									</div>
+								</li>
+						</form>
+						<form id="parameters" action="#">
+						<!--<div id="parameters">-->
+							<p>Parameters</p>
+							<ul>
+								<li><input type="radio" name="type" value="motorcar" checked="checked" />Car</li>
+								<li><input type="radio" name="type" value="hgv"/>Heavy goods</li>
+								<li><input type="radio" name="type" value="psv"/>Public service</li>
+								<li><input type="radio" name="type" value="bicycle"/>Bicycle</li>
+								<li><input type="radio" name="type" value="foot"/>Foot</li>
+							</ul>
+							<ul>
+								<li><input type="radio" name="method" value="fast" checked="checked" />Fastest</li>
+								<li><input type="radio" name="method" value="short"/>Shortest</li>
+							</ul>
+						<!--</div>-->
+					</form>
+					<form id="route" action="#">
+						<div id="route_action">
+							<input type="button" name="calculate" onclick="elementClick(this);" value="Find route" tabindex="3"/>
+							<input type="button" name="clear" onclick="elementClick(this);" value="Clear" tabindex="4"/>
+							<input type="button" name="reverse" onclick="reverseRoute(this);" value="Reverse" tabindex="7"/>
+						</div>
+						
+						
+					</form>
+					<div id="status"></div>
+					
+					</div>
+					<div id="fragment-directions" class="nav_content">1</div>
+					<div id="fragment-info" class="nav_content">
+						<div id="feature_info"></div>
+					</div>
+					<div id="fragment-export" class="nav_content">
+						<form id="export" action="#">
+							<p>Export</p>
+							<ul>
+								<li><input type="radio" name="type" value="gpx" checked="checked"  />GPS exchange format (.gpx)</li>
+								<li><input type="radio" name="type" value="wpt"/>Waypoint (.wpt)</li>
+							</ul>
+							<p>
+								<input type="button" name="export" value="Export" onclick="document.open(getRouteAs(), null, null); return false" />
+							</p>
+						</form>
+					</div>
+					
+						
+						
+						<!--
+							<form id="parameters" action="#">
+							<p>Parameters</p>
+							<ul>
+								<li><input type="radio" name="type" value="motorcar" checked="checked"  />Car</li>
+								<li><input type="radio" name="type" value="bicycle"/>Bicycle</li>
+								<li><input type="radio" name="type" value="foot"/>Foot</li>
+							</ul>
+							<ul>
+								<li><input type="radio" name="method" value="fast" checked="checked" />Fastest</li>
+								<li><input type="radio" name="method" value="short"/>Shortest</li>
+							</ul>
+							</form>
+						-->
+						
+
+
+						
+					</div>
+					<div id="extra">
+						
+					</div>
+				</div>
+				
+				<div id="content">
+					<div id="map"></div>
+				</div>
+
+				<div id="clearfooter">&nbsp;</div>
+			</div>
+
+		</div>
+		<div id="footer">
+			<i>This site is hosted on the Netherlands tileserver, sponsored by <a href="http://www.jronline.nl/">JROnline</a>. Routing data from planet file: 
 <?php 
 /*
 	$output = array();
@@ -99,7 +159,7 @@
 		}
 	}
 */
-$datefile = "../../planet/yours/planet-date.txt";
+$datefile = "planet-date.txt";
 if (file_exists($datefile)) {
 	$myFile = $datefile;
 	$fh = fopen($myFile, 'r');
@@ -108,10 +168,8 @@ if (file_exists($datefile)) {
 	echo $theData;
 }
 ?>
-			. Please report any routing problems <a href="http://wiki.openstreetmap.org/index.php/YOURS/weird_routes">here</a>.</i>
-		</p>
-		<div id="edit"></div>
-	</div>
+			</i>		
 
-</body>
+		</div>
+	</body>
 </html>

@@ -55,8 +55,6 @@ function init(){
 					 wrapDateLine: true
 					 });
 
-	layerTest = new OpenLayers.Layer.OSM.Mapnik("Test");
-	
 	markers = new OpenLayers.Layer.Markers("Markers",
 		{
 			projection: new OpenLayers.Projection("EPSG:4326"),
@@ -134,27 +132,24 @@ function init(){
 						}
 					}
 				}				
-				break;	
+				break;
 			case 'layer':
 				switch (fields[1]) {
 				case 'cycle':
-					map.addLayers([layerCycle, layerMapnik, layerCycleNetworks, layerTest]);
+					map.addLayers([layerCycle, layerMapnik, layerCycleNetworks]);
 					break;
 				case 'cn':
-					map.addLayers([layerCycleNetworks, layerMapnik, layerCycle, layerTest]);
-					break;
-				case 'test':
-					map.addLayers([layerTest, layerMapnik, layerCycle, layerCycleNetworks]);
+					map.addLayers([layerCycleNetworks, layerMapnik, layerCycle]);
 					break;
 				default:
-					map.addLayers([layerMapnik, layerCycle, layerCycleNetworks, layerTest]);
+					map.addLayers([layerMapnik, layerCycle, layerCycleNetworks]);
 					break;
 				}
 			}
 		}
 		if (null == map.baseLayer) {
 			//Fallback for old permalinks that don't list the layer property
-			map.addLayers([layerMapnik, layerCycle, layerCycleNetworks, layerTest]);
+			map.addLayers([layerMapnik, layerCycle, layerCycleNetworks]);
 		}
 		
 		//markerFrom = new OpenLayers.Marker(flonlat.transform(map.displayProjection,map.projection), marker-green.clone());
@@ -169,11 +164,12 @@ function init(){
 		
 		document.forms['route'].elements['clear'].disabled = false;
 		document.forms['route'].elements['calculate'].disabled = true;
-		document.forms['route'].elements['to'].disabled = false;
-		document.forms['route'].elements['from'].disabled = false;
+		
+		document.forms['via'].elements['to'].disabled = false;
+		document.forms['via'].elements['from'].disabled = false;
 	} else {
 		//No preference for any layer, load Mapnik layer first
-		map.addLayers([layerMapnik, layerCycle, layerCycleNetworks, layerTest]);
+		map.addLayers([layerMapnik, layerCycle, layerCycleNetworks]);
 		
 		if (!map.getCenter()) {
 			var pos;
@@ -181,7 +177,7 @@ function init(){
 			map.setCenter(pos.transform(map.displayProjection,map.projection), 3);
 		} 
 		if (typeof(document.baseURI) != 'undefined') {
-			if (document.baseURI.indexOf('devel') > 0) {
+			if (document.baseURI.indexOf('-devel') > 0) {
 				// Zoom in automatically to save some time when developing
 				var pos;
 				pos = new OpenLayers.LonLat(6, 52.2);
@@ -191,8 +187,9 @@ function init(){
 		
 		document.forms['route'].elements['clear'].disabled = true;
 		document.forms['route'].elements['calculate'].disabled = true;
-		document.forms['route'].elements['to'].disabled = false;
-		document.forms['route'].elements['from'].disabled = false;
+		
+		document.forms['via'].elements['to'].disabled = false;
+		document.forms['via'].elements['from'].disabled = false;
 	}
 	
     var control = new OpenLayers.Control.SelectFeature(routelayer,
@@ -231,7 +228,6 @@ function get_osm_url (bounds) {
 // Called when the baselayer is changed
 function onChangeBaseLayer(e) {
 	if (undefined != map.baseLayer) {
-		//alert('Baselayer changed'+map.baseLayer.name);
 		switch (map.baseLayer.name) {
 		case 'Cycle Networks':
 			for (j = 0; j < document.forms['parameters'].type.length; j++) {
@@ -243,6 +239,7 @@ function onChangeBaseLayer(e) {
 			}
 			break;
 		default:
+			//alert('Baselayer changed'+document.forms['parameters']);
 			for (j = 0; j < document.forms['parameters'].type.length; j++) {
 				if (document.forms['parameters'].type[j].value == 'foot' 
 					|| document.forms['parameters'].type[j].value == 'bicycle'
@@ -320,9 +317,9 @@ function editMap() {
 }
 */
 function reverseRoute(element) {
-	to = document.forms['route'].elements['to_text'].value;
-	document.forms['route'].elements['to_text'].value = document.forms['route'].elements['from_text'].value;
-	document.forms['route'].elements['from_text'].value = to;
+	to = document.forms['via'].elements['to_text'].value;
+	document.forms['via'].elements['to_text'].value = document.forms['via'].elements['from_text'].value;
+	document.forms['via'].elements['from_text'].value = to;
 	
 	markers.clearMarkers();
 	markerTemp = addMarker(markerTo.lonlat, 'from');
@@ -336,10 +333,10 @@ function reverseRoute(element) {
 function calculateRoute() {
 	if (markerTo && markerFrom) {
 		document.forms['route'].elements['calculate'].disabled = true;
-		document.forms['route'].elements['to'].disabled = true;
-		document.forms['route'].elements['from'].disabled = true;
-		document.forms['route'].elements['to_text'].disabled = true;
-		document.forms['route'].elements['from_text'].disabled = true;
+		document.forms['via'].elements['to'].disabled = true;
+		document.forms['via'].elements['from'].disabled = true;
+		document.forms['via'].elements['to_text'].disabled = true;
+		document.forms['via'].elements['from_text'].disabled = true;
 		
 		// Delete existing route layer
 		if (typeof(routelayer) != 'undefined')
@@ -389,9 +386,6 @@ function loadGmlLayer(flonlat, tlonlat) {
 			case 'Mapnik':
 				routeURL += '&layer=mapnik';
 				break;
-			case 'Test':
-				routeURL += '&layer=test';
-				break;
 			}
 		}
 	}
@@ -405,21 +399,21 @@ function loadGmlLayer(flonlat, tlonlat) {
 function addRouteLayer(vector, distance) {
 	if (typeof(routelayer) != 'undefined') {
 		routelayer.onFeatureInsert = function(feature) {
-			//alert("2"+distance);
-			feature_info(feature, distance);
+			feature_info(feature);
 		}
 		routelayer.addFeatures(vector);
 		map.addLayer(routelayer);
 	}
 }
 
-//var distance;
+var distance;
 var nodes;
+var kml;
 function processRouteXML(request) {
-	document.forms['route'].elements['to'].disabled = false;
-	document.forms['route'].elements['from'].disabled = false;
-	document.forms['route'].elements['from_text'].disabled = false;
-	document.forms['route'].elements['to_text'].disabled = false;
+	document.forms['via'].elements['to'].disabled = false;
+	document.forms['via'].elements['from'].disabled = false;
+	document.forms['via'].elements['from_text'].disabled = false;
+	document.forms['via'].elements['to_text'].disabled = false;
 	
 	if (request.responseText == "" && request.responseXML == null) {
 		alert('No route found!');
@@ -434,15 +428,13 @@ function processRouteXML(request) {
 	}
 	var format = new OpenLayers.Format.XML();
 	nodes = format.getElementsByTagNameNS(doc, 'http://earth.google.com/kml/2.0', 'distance');
-	var distance = format.getChildValue(nodes[0]);
-	//var distance = format.getChildValue(nodes[0], 'unknown'); //due to changed behavior of OpenLayers this line is rewritten
-    //alert("1"+distance);
-	
+	distance = format.getChildValue(nodes[0], 'unknown');
+    
     var options = {};
 	options.externalProjection = map.displayProjection;
 	options.internalProjection = map.projection;
         
-	var kml = new OpenLayers.Format.KML(options);
+	kml = new OpenLayers.Format.KML(options);
 	var vect = kml.read(doc);
 	
 	addRouteLayer(vect, distance);
@@ -454,20 +446,19 @@ function addAltitudeProfile(vect) {
 	var geom = vect[0].geometry.clone();
 	var length = geom.components.length;
 	if (length < 300) {
-		// Build the profile GET request
-		url = "";
+		//url = "http://altitude-pg.sprovoost.nl/profile/gchart";
+		url = "http://altitude.openstreetmap.nl/profile/gchart";
 		lats = "?lats=";
 		lons ="&lons=";
-		for (i = 0; i < geom.components.length; i++) {
+		for (i = 0; i < length; i++) {
 			if (i > 0) {
 				lats+=",";
 				lons+=",";
 			}
 			point = geom.components[i].transform(map.projection, map.displayProjection);
-			lons += roundNumber(point.x, 5);
-			lats += roundNumber(point.y, 5);
+			lons += point.x;
+			lats += point.y;
 		}
-		
 		// Determine which profile server to query
 		// The server configurations shoul come from a config file someday
 		start = geom.components[0];
@@ -598,7 +589,7 @@ function elementChange(element) {
 				markerFrom = undefined;
 			}
 			nameFinderRequest = 'from';
-			document.forms['route'].elements['to_text'].disabled = true;
+			document.forms['via'].elements['to_text'].disabled = true;
 			xmlhttp['what'] = 'from';
 			document.forms['route'].elements['clear'].disabled = false;
 			break;
@@ -608,7 +599,7 @@ function elementChange(element) {
 				markerTo = undefined;
 			}
 			nameFinderRequest = 'to';
-			document.forms['route'].elements['from_text'].disabled = true;
+			document.forms['via'].elements['from_text'].disabled = true;
 			xmlhttp['what'] = 'to';
 			document.forms['route'].elements['clear'].disabled = false;
 			break;
@@ -616,9 +607,8 @@ function elementChange(element) {
 		document.forms['route'].elements['calculate'].disabled = true;
 		
 		url = "http://gazetteer.openstreetmap.org/namefinder/search.xml&find=" + Url.encode(trim(element.value)) + "&max=1";
-		
-		//xmlhttp['url'] = "cgi-bin/proxy.cgi/?url=" + url;	// does not work because OpenLayers proxy script does not proxy the url parameters
 		xmlhttp['url'] = "transport.php?url=" + url;
+		
 		loadxmldoc(xmlhttp);
 	}
 }
@@ -652,14 +642,14 @@ function elementClick(element) {
 	    		routelayer.destroyFeatures();
 	    	}
 	    	OpenLayers.Util.getElement('feature_info').innerHTML = "";
-	    	document.forms['route'].elements['from_text'].value = "";
-	    	document.forms['route'].elements['to_text'].value = "";
+	    	document.forms['via'].elements['from_text'].value = "";
+	    	document.forms['via'].elements['to_text'].value = "";
 	    	document.forms['route'].elements['calculate'].disabled = true;
 	    	document.forms['route'].elements['clear'].disabled = true;
-	    	document.forms['route'].elements['to'].disabled = false;
-	    	document.forms['route'].elements['from'].disabled = false;
-	    	document.forms['route'].elements['from_text'].disabled = false;
-	    	document.forms['route'].elements['to_text'].disabled = false;
+	    	document.forms['via'].elements['to'].disabled = false;
+	    	document.forms['via'].elements['from'].disabled = false;
+	    	document.forms['via'].elements['from_text'].disabled = false;
+	    	document.forms['via'].elements['to_text'].disabled = false;
 	    	break;
 	    case 'calculate':
 	    	if (markerTo && markerFrom) {
@@ -749,11 +739,11 @@ function processNamefinderXML(which, response) {
 		switch (which) {
 		case 'from':
 			markerFrom = addMarker(lonlat, 'from');
-			document.forms['route'].elements['to_text'].disabled = false;
+			document.forms['via'].elements['to_text'].disabled = false;
 			break;
 		case 'to':
 			markerTo = addMarker(lonlat, 'to');
-			document.forms['route'].elements['from_text'].disabled = false;
+			document.forms['via'].elements['from_text'].disabled = false;
 			break;
 		}
 		document.forms['route'].elements['calculate'].disabled = false;
@@ -761,7 +751,7 @@ function processNamefinderXML(which, response) {
 	}
 }
 
-function feature_info(feature, distance) {
+function feature_info(feature) {
 	map.zoomToExtent(feature.geometry.getBounds());
 	
 	len = feature.geometry.getLength();

@@ -299,6 +299,10 @@ div.localgroup {
     margin-top: 4px;
 }
 
+div.localgroup-list {
+    font-size: 80%;
+}
+
 /* to map icon */
 img.tomap {
     float: right;

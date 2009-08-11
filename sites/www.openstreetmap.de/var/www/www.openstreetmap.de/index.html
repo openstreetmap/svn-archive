@@ -100,6 +100,7 @@ function init() {
                 <div class="localgroup">
                     <img class="tomap" onclick="layer_local.setVisibility(true);" src="/img/tomapl.png" alt="Auf die Karte" title="Auf die Karte" width="20" height="20"/>
                     <a href="/community.html#local">Lokale Gruppen:</a><br/>
+                    <div class="localgroup-list">
 <a href='http://wiki.openstreetmap.org/wiki/Aschaffenburg'>AB</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/Berlin/Stammtisch'>B</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/Bonn_Stammtisch'>BN</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
@@ -110,6 +111,7 @@ function init() {
 <a href='http://wiki.openstreetmap.org/wiki/Essen/OSM-Treffen'>E</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/Frankfurt_am_Main'>F</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/Stammtisch_Mittelhessen'>GI</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
+<a href='http://wiki.openstreetmap.org/wiki/Göttingen/Stammtisch'>Gö</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/Stammtisch_Hannover'>H</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/Hamburger_Mappertreffen'>HH</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/OSM-Treff_Heilbronn'>HN</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
@@ -119,11 +121,13 @@ function init() {
 <a href='http://wiki.openstreetmap.org/wiki/Lueneburger_Mappertreffen'>LG</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/München/Treffen'>M</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/NFE-Treffen'>NFE</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
-<a href='http://wiki.openstreetmap.org/wiki/Siegen'>SI</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/OWL-Treffen'>OWL</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/Pirna/OSM-Treff'>PIR</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
 <a href='http://wiki.openstreetmap.org/wiki/Schwäbisch_Hall'>SHA</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
-<a href='http://wiki.openstreetmap.org/wiki/Würzburg'>WÜ</a>
+<a href='http://wiki.openstreetmap.org/wiki/Siegen'>SI</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
+<a href='http://wiki.openstreetmap.org/wiki/Würzburg'>WÜ</a>&nbsp;<img src='/img/bullet.gif' width='7' height='9' alt='|'/>
+<a href='http://wiki.openstreetmap.org/wiki/OSM-Stammtisch_Zittau'>ZI</a>
+                    </div>
                 </div>
             </div>
             <div class="box" id="aktionen">
@@ -230,6 +234,11 @@ function init() {
                     <td class="tdcontent" id="news">
                         <h2><a href="/news.html">News</a></h2>
 
+                        <p><b>Dortmunder Stra&szlig;en komplett erfasst</b><br/>
+                        <span style="font-size: small;">9. August 2009</span>
+                        Die letzte fehlende Stra&szlig;e wurde in Dortmund in
+                        einer kleinen Mappingparty erfasst. <a href="./news.html#dortmund_komplett">Mehr ...</a>
+                        </>
                         <p><b>Neuigkeiten beim Potlatch</b><br/>
                         <span style="font-size: small">14. Juli 2009</span>
 Wer jetzt auf den "Bearbeiten"-Reiter klickt, wird vielleicht überrascht werden: Der unter Flash im Browser laufende OSM-Editor Potlatch hat sein Äußeres deutlich geändert. <a href="./news.html#potlatch11">Mehr ...</a>

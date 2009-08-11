@@ -10,11 +10,10 @@ if ($bRunGosmore) {
 	$script_start = microtime(true);
 
 	$www_dir = '/home/lambertus/public_html/yours';
-	$yours_dir = '/home/lambertus/planet/yours';
+	$gosmore_dir = '/home/lambertus/planet/yours';
 	$ulimit = 30;
 
 	$user_agent = $_SERVER['HTTP_USER_AGENT'];
-	
 	$query = "QUERY_STRING='";
 
 	//Coordinates
@@ -82,7 +81,6 @@ if ($bRunGosmore) {
 	}
 
 	$query .= "'";
-	//$dir = $yours_dir.'/normal';
 	
 	// Geographic pak file selection
 	if ($flon > -168 and $flon < -30) {
@@ -139,30 +137,46 @@ if ($bRunGosmore) {
 			$pos = strripos($line, ',');
 			if ($pos)
 			{
-				$node = split(",", $line);
-				for ($i = 0; $i < count($node); $i++)
+				$line_elements = split(",", $line);
+				for ($i = 0; $i < count($line_elements); $i++)
 				{
 					switch ($i)
 					{
 					case 0:
-						$lat = trim($node[0], "\n\r0");
+						$lat = trim($line_elements[0], "\n\r0");
 						break;
 					case 1:
-						$lon = trim($node[1], "\n\r0");
+						$lon = trim($line_elements[1], "\n\r0");
 						break;
 					case 2:
-						$junction = trim($node[2], "\n\r0");
+						$junction = trim($line_elements[2], "\n\r0");
 						break;
 					case 3:
-						$street = trim($node[3], "\n\r0");
+						$type = trim($line_elements[3], "\n\r0");
+						break;
+					case 4:
+						$name = trim($line_elements[4], "\n\r0");
 						break;
 					}
-				}			
+				}
 				$coords .= $lon.",".$lat."\n";
+				
+				// Directions
+				switch ($junction)
+				{
+				case "J":
+					$directions .= addDirection($name, getDistance($flat, $flon, $lat, $lon));
+					break;
+				}
+				
+				
+				// Distance
 				if ($flat < 360)
 				{
 					$distance += getDistance($flat, $flon, $lat, $lon);
 				}
+				
+				// Prepare for the next route result
 				$flat = $lat;
 				$flon = $lon;
 				$nodes++;
@@ -171,12 +185,12 @@ if ($bRunGosmore) {
 		
 		// KML body
 		$kml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-		$kml .= '<kml xmlns="http://earth.google.com/kml/2.0">'."\n";
+		$kml .= '<kml xmlns="http://earth.google.com/kml/2.2">'."\n";
 	  	$kml .= '  <Document>'."\n";
 	    $kml .= '    <name>KML Samples</name>'."\n";
 	    $kml .= '    <open>1</open>'."\n";
-	    $kml .= '    <distance>'.$distance.'</distance>'."\n";
-	    $kml .= '    <description>Unleash your creativity with the help of these examples!</description>'."\n";
+	    //$kml .= '    <distance>'.$distance.'</distance>'."\n";
+	    $kml .= '    <description>Routing information provided by YOURS the opensource OpenStreetMap routing website </description>'."\n";
 	    $kml .= '    <Folder>'."\n";
 	    $kml .= '      <name>Paths</name>'."\n";
 	    $kml .= '      <visibility>0</visibility>'."\n";
@@ -191,6 +205,13 @@ if ($bRunGosmore) {
 	    $kml .= $coords;
 		$kml .= '          </coordinates>'."\n";
 	    $kml .= '        </LineString>'."\n";
+		$kml .= '        <ExtendedData>'."\n";
+		$kml .= '          <Data name="distance">'."\n";
+	    $kml .= '            <displayName>Distance</displayName> '."\n";
+		$kml .= '            <value>'.$distance.'</value>'."\n";
+	    $kml .= '          </Data>'."\n";
+	    $kml .= $directions;
+		$kml .= '        </ExtendedData>'."\n";
 	    $kml .= '      </Placemark>'."\n";
 	    $kml .= '    </Folder>'."\n";
 	    $kml .= '  </Document>'."\n";
@@ -215,13 +236,8 @@ if ($bRunGosmore) {
 		}
 		
 	}
-}
 
-//Chop the KML into bits so that the network can transport is faster (aledgidly)
-//echobig($kml, 1024);
-
-echo $kml;
-
+	echo $kml;
 
 if ($bRunGosmore) {
 	$file = $www_dir.'/requests.csv';
@@ -244,14 +260,14 @@ if ($bRunGosmore) {
 	}
 }
 
-
-// Chop a string into bits
-function echobig($string, $bufferSize = 8192)
+function addDirection($description, $length)
 {
-  // suggest doing a test for Integer & positive bufferSize
-  for ($chars=strlen($string)-1,$start=0;$start <= $chars;$start += $bufferSize) {
-    echo substr($string,$start,$bufferSize);
-  }
+	$kml .= '          <Data name="direction">'."\n";
+    $kml .= '            <displayName>'.$description.'</displayName> '."\n";
+	$kml .= '            <value>'.$length.'</value>'."\n";
+    $kml .= '          </Data>'."\n";
+	
+	return $kml;
 }
 
 function getDistance($latitudeFrom, $longitudeFrom,

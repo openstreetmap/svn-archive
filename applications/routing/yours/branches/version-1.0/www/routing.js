@@ -71,7 +71,7 @@ function init(){
 	// Check if a permalink is used
 	if (location.search.length > 0) {
 		// Load the permalink
-		xmlhttp['url'] = 'gosmore.php'+location.search;
+		xmlhttp['url'] = 'api/1.0/gosmore.php'+location.search;
 		xmlhttp['what'] = 'route';
 		loadxmldoc(xmlhttp);
 	
@@ -397,7 +397,7 @@ function loadGmlLayer(flonlat, tlonlat) {
 	}
 	permalink = location.protocol+'//'+location.host+location.pathname+routeURL;
 	
-	xmlhttp['url'] = 'gosmore.php'+routeURL;
+	xmlhttp['url'] = 'api/1.0/gosmore.php'+routeURL;
 	xmlhttp['what'] = 'route';
 	loadxmldoc(xmlhttp);
 }
@@ -564,7 +564,7 @@ function getRouteAs() {
 		if (type == 'wpt') {
 			alert('this format is not supported yet');
 		}
-		url = 'saveas.php?type='+type+'&data=';
+		url = 'api/1.0/saveas.php?type='+type+'&data=';
 	
 		for (i = 0; i < routelayer.features[0].geometry.components.length; i++) {
 			point = routelayer.features[0].geometry.components[i];

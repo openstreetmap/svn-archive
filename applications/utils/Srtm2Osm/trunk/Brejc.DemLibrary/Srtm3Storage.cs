@@ -33,6 +33,18 @@ namespace Brejc.DemLibrary
             set { srtm3CachePath = value; }
         }
 
+        public static string SrtmHost
+        {
+            get { return srtmFtpHost; }
+            set { if (value.Length != 0) srtmFtpHost = value; }
+        }
+
+        public static string SrtmDir
+        {
+            get { return srtm3RemoteDir; }
+            set { if (value.Length != 0) srtm3RemoteDir = value; }
+        }
+
         public FtpClient FtpClient
         {
             get { return ftpClient; }
@@ -218,7 +230,8 @@ namespace Brejc.DemLibrary
 
         private FtpClient ftpClient;
 
-        private string srtmFtpHost = @"dds.cr.usgs.gov";
-        private string srtm3RemoteDir = @"srtm/version2_1/SRTM3";
+        private static string srtmFtpHost = "dds.cr.usgs.gov";
+        private static string srtm3RemoteDir = "srtm/version2_1/SRTM3";
+
     }
 }

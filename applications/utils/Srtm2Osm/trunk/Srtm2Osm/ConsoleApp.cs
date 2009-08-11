@@ -61,6 +61,8 @@ namespace Srtm2Osm
             System.Console.Out.WriteLine ("       immediately upon discovery. This prevents 'out-of-memory' errors, but");
             System.Console.Out.WriteLine ("       some other options cannot be used in this mode.");
             System.Console.Out.WriteLine ("-corrxy <corrLng> <corrLat>: correction values to shift contours");
+            System.Console.Out.WriteLine ("-srtmhost <hostname>: host used for download (dds.cr.usgs.gov)");
+            System.Console.Out.WriteLine ("-srtmdir <directory>: directory that contains SRTM data (srtm/version2_1/SRTM3)");
             System.Console.Out.WriteLine();
 
             // http://www.openstreetmap.org/?lat=46.523362283296755&lon=15.628250113735774&zoom=12&layers=0BF

@@ -41,6 +41,18 @@ namespace Brejc.DemLibrary
             data[longitude + 180 + 360 * (latitude + 90)] = value;
         }
 
+        public static string SrtmHost
+        {
+            get { return host; }
+            set { if (value.Length != 0) host = value; }
+        }
+
+        public static string SrtmDir
+        {
+            get { return basedir; }
+            set { if (value.Length != 0) basedir = value; }
+        }
+
         private static string host = "dds.cr.usgs.gov";
         private static string basedir = "srtm/version2_1/SRTM3";
         private static string pattern = "href=\"([A-Za-z0-9]*\\.hgt\\.zip)\"";

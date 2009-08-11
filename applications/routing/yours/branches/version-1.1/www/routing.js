@@ -118,6 +118,21 @@ function init(){
 					break;
 				}
 				break;
+			case 'fast':
+				if (parseInt(fields[1]) == 1) {
+					for (j = 0; j < document.forms['parameters'].method.length; j++) {
+						if (document.forms['parameters'].method[j].value == 'fast') {
+							document.forms['parameters'].method[j].checked = true;
+						}
+					}
+				} else {
+					for (j = 0; j < document.forms['parameters'].method.length; j++) {
+						if (document.forms['parameters'].method[j].value == 'short') {
+							document.forms['parameters'].method[j].checked = true;
+						}
+					}
+				}				
+				break;
 			case 'layer':
 				switch (fields[1]) {
 				case 'cycle':
@@ -405,7 +420,7 @@ function processRouteXML(request) {
 		return;
 	} 
 	
-	doc = request.responseXML;
+	var doc = request.responseXML;
 
 	if (!doc || !doc.documentElement) {
 		alert('text');
@@ -429,12 +444,13 @@ function processRouteXML(request) {
 
 function addAltitudeProfile(vect) {
 	var geom = vect[0].geometry.clone();
-	if (geom.components.length < 300) {
+	var length = geom.components.length;
+	if (length < 300) {
 		//url = "http://altitude-pg.sprovoost.nl/profile/gchart";
 		url = "http://altitude.openstreetmap.nl/profile/gchart";
 		lats = "?lats=";
 		lons ="&lons=";
-		for (i = 0; i < geom.components.length; i++) {
+		for (i = 0; i < length; i++) {
 			if (i > 0) {
 				lats+=",";
 				lons+=",";
@@ -443,42 +459,53 @@ function addAltitudeProfile(vect) {
 			lons += point.x;
 			lats += point.y;
 		}
-		url += lats + lons;
-		//alert('Trying to download altitude profile');
-		html = OpenLayers.Util.getElement('feature_info').innerHTML;
-		html += '<p>Altitude profile:<br><img src="'+url+'" alt="altitude profile for this route">';
-		html += "</p>";
-		//html += '<p><font color="red">Note: Altitude profile works only in Europe.</font></p>';
-		html += '<p><font color="red">Note: Altitude profile only available in <a href="http://wiki.openstreetmap.org/index.php/YOURS#Altitude_profile">certain areas</a>.</font></p>';
-		OpenLayers.Util.getElement('feature_info').innerHTML = html;
-	}
-}
-/*
-function addAltitudeProfile(vect) {
-	var geom = vect[0].geometry.clone();
-	if (geom.components.length < 400) {
-		url = "http://altitude-pg.sprovoost.nl/profile/gchart";
-		lats = "?lats=";
-		lons ="&lons=";
-		for (i = 0; i < geom.components.length; i++) {
-			if (i > 0) {
-				lats+=",";
-				lons+=",";
-			}
-			point = geom.components[i].transform(map.projection, map.displayProjection);
-			lons += point.x;
-			lats += point.y;
+		// Determine which profile server to query
+		// The server configurations shoul come from a config file someday
+		start = geom.components[0];
+		stop  = geom.components[length-1];
+		
+		if (start.x > 0 && start.x < 10 && start.y > 49 && start.y < 54 && stop.x > 0 && stop.x < 10 && stop.y > 49 && stop.y < 54) {
+			// Benelux + western Germany
+			url = "http://altitude.openstreetmap.nl/profile/gchart";
 		}
-		url += lats + lons;
-		//alert('Trying to download altitude profile');
+		else if (start.x > 20 && start.x < 31 && start.y > 43 && start.y < 49 && stop.x > 20 && stop.x < 31 && stop.y > 43 && stop.y < 49) {
+			// Romania + Moldova
+			url = "http://profile.fedoramd.org/profile/gchart";
+		}
+		else if (start.x > 10 && start.x < 16 && start.y > 49 && start.y < 55 && stop.x > 10 && stop.x < 16 && stop.y > 49 && stop.y < 55) {
+			// Eastern Germany
+			url = "http://profile.fedoramd.org/profile/gchart";
+		}
+		else if (start.x > -179 && start.x < -44 && start.y > -56 && start.y < 60 && stop.x > -179 && stop.x < -44 && stop.y > -56 && stop.y < 60) {
+			// North and South America
+			url = "http://labs.metacarta.com/altitude/profile/gchart";
+		}
+		else if (start.x > 23 && start.x < 33 && start.y > 50 && start.y < 57 && stop.x > 23 && stop.x < 33 && stop.y > 50 && stop.y < 57) {
+			// Belarus
+			url = "http://altitude.komzpa.net/profile/gchart";
+		}
+		/*
+		else {
+			// Everything else
+			url = "http://labs.metacarta.com/altitude/profile/gchart";
+		}
+		*/
+		
+		// Load the profile image in the browser
 		html = OpenLayers.Util.getElement('feature_info').innerHTML;
-		html += '<p>Altitude profile:<br><img src="'+url+'" alt="altitude profile for this route">';
-		html += "</p>";
-		html += '<p><font color="red">Note: Altitude profile works only in Europe.</font></p>';
+		if (url.length > 0) {
+			url += lats + lons;
+			//alert(url);
+			html += '<p>Altitude profile:<br><img src="'+url+'" alt="altitude profile for this route">';
+			html += "</p>";
+		}
+		else {
+			html += '<p><font color="red">Note: Altitude profile only available in <a href="http://wiki.openstreetmap.org/index.php/YOURS#Altitude_profile">certain areas</a>.</font></p>';
+		}
 		OpenLayers.Util.getElement('feature_info').innerHTML = html;
 	}
 }
-*/
+
 function roundNumber(num, dec) {
 	var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
 	return result;
@@ -579,7 +606,9 @@ function elementChange(element) {
 		}
 		document.forms['route'].elements['calculate'].disabled = true;
 		
-		xmlhttp['url'] = "/cgi-bin/proxy.cgi/?url=http://gazetteer.openstreetmap.org/namefinder/search.xml?find="+escape(escape(trim(element.value)));
+		url = "http://gazetteer.openstreetmap.org/namefinder/search.xml&find=" + Url.encode(trim(element.value)) + "&max=1";
+		xmlhttp['url'] = "transport.php?url=" + url;
+		
 		loadxmldoc(xmlhttp);
 	}
 }
@@ -657,21 +686,29 @@ function processNamefinderXML(which, response) {
 	doc = xml.read(response);
 	
 	var bError = false;
-	if (doc.documentElement.nodeName == "searchresults") {
-		error = doc.documentElement;
-		for (j = 0; j < error.attributes.length; j++) {
-			switch(error.attributes[j].nodeName)
-			{
-			case "error":
-				html = '<font color="red">Status: Namefinder reports: '+(error.attributes[j].nodeValue)+'</font>';
-				bError = true;
-				break;
+	if (doc.childNodes.length > 0) {
+		if (doc.documentElement.nodeName == "searchresults") {
+			error = doc.documentElement;
+			for (j = 0; j < error.attributes.length; j++) {
+				switch(error.attributes[j].nodeName)
+				{
+				case "error":
+					html = '<font color="red">Status: Namefinder reports: '+(error.attributes[j].nodeValue)+'</font>';
+					bError = true;
+					break;
+				}
 			}
+			OpenLayers.Util.getElement('status').innerHTML = html;
 		}
-		OpenLayers.Util.getElement('status').innerHTML = html;
+		else if (doc.documentElement.nodeName == "parsererror") {
+			//html = '<font color="red">Status: Namefinder reports: '+(doc.documentElement.lastChild.textContent)+'</font>';
+			html = '<font color="red">Status: Namefinder could not find any results, please try other search words</font>';
+			bError = true;
+			OpenLayers.Util.getElement('status').innerHTML = html;
+		}
 	}
-	else if (doc.documentElement.nodeName == "parsererror") {
-		html = '<font color="red">Status: Namefinder reports: '+(doc.documentElement.lastChild.textContent)+'</font>';
+	else {
+		html = '<font color="red">Status: Namefinder could not find any results, please try other search words</font>';
 		bError = true;
 		OpenLayers.Util.getElement('status').innerHTML = html;
 	}
@@ -808,4 +845,81 @@ function xmlcheckreadystate(obj) {
   return false;
 }
 
+/**
+*
+*  URL encode / decode
+*  http://www.webtoolkit.info/
+*
+**/
 
+var Url = {
+
+    // public method for url encoding
+    encode : function (string) {
+        return escape(this._utf8_encode(string));
+    },
+
+    // public method for url decoding
+    decode : function (string) {
+        return this._utf8_decode(unescape(string));
+    },
+
+    // private method for UTF-8 encoding
+    _utf8_encode : function (string) {
+        string = string.replace(/\r\n/g,"\n");
+        var utftext = "";
+
+        for (var n = 0; n < string.length; n++) {
+
+            var c = string.charCodeAt(n);
+
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            }
+            else if((c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+            else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+
+        }
+
+        return utftext;
+    },
+
+    // private method for UTF-8 decoding
+    _utf8_decode : function (utftext) {
+        var string = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+
+        while ( i < utftext.length ) {
+
+            c = utftext.charCodeAt(i);
+
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            }
+            else if((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            }
+            else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+
+        }
+
+        return string;
+    }
+
+}

@@ -196,6 +196,7 @@ div#book {
 div#book h2 {
     color: #606060;
 }
+
 div#book img {
     border: 1px solid #bfc0d8;
 }
@@ -231,10 +232,6 @@ div#showcase h2 {
 
 
 /* content table */
-
-table#content {
-/    width: 100%;
-}
 
 table#content td.tdcontent {
     width: 50%;

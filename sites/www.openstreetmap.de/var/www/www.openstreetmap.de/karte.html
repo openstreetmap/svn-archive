@@ -102,7 +102,7 @@ div#map {
     right: 0px;
     /* for ie */
     width:expression((document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth)-200);
-    height:expression((document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)-56);
+    height:expression((document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)-86);
     padding: 1px;
 }
 
@@ -111,6 +111,14 @@ div#mapkey_link {
     top: 420px;
     left: 0;
     width: 100px;
+}
+
+div.left {
+    z-index: 20000;
+}
+
+div#mapkey_area {
+    z-index: 20001;
 }
 
 div#mapkey_area iframe {
@@ -122,7 +130,7 @@ div#mapkey_area iframe {
     border: none;
     background-color: #ffffff;
     border: 1px solid #bfc0d8;
-    z-index: 20000;
+    z-index: 20002;
 }
 
 div#content {
@@ -134,7 +142,7 @@ div#content {
     right: 0px;
     /* for ie */
     width:expression((document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth)-200);
-    top:expression((document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)-48);
+    top:expression((document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)-78);
     background-image: url('/img/marginaliabg.png');
     border-bottom: 1px solid #bfc0d8;
 }
@@ -168,6 +176,8 @@ div#attribution img {
 div#hinweis {
     position: absolute;
     bottom: 2px;
+    /* for ie */
+    top:expression((document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)-26);
     text-align: center;
     width: 100%;
 }

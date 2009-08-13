@@ -201,7 +201,7 @@ public class OsbLayer extends Layer implements MouseListener {
                 minPrimitive = n;
             }
             // prefer already selected node when multiple nodes on one point
-            else if(minDistanceSq == dist && n.selected && !minPrimitive.selected)
+            else if(minDistanceSq == dist && n.isSelected() && !minPrimitive.isSelected())
             {
                 minPrimitive = n;
             }

@@ -72,8 +72,8 @@ namespace Srtm2Osm
             Srtm3Storage.SrtmDir = srtmSourceDir;
             Srtm3Storage storage = new Srtm3Storage(Path.Combine(srtmDir, "SrtmCache"), srtmIndex);
 
-            Bounds2 corrBounds = new Bounds2(bounds.MinX + corrX, bounds.MinY + corrY, 
-                bounds.MaxX + corrX, bounds.MaxY + corrY);
+            Bounds2 corrBounds = new Bounds2(bounds.MinX - corrX, bounds.MinY - corrY, 
+                bounds.MaxX - corrX, bounds.MaxY - corrY);
      
             IRasterDigitalElevationModel dem = (IRasterDigitalElevationModel) storage.LoadDemForArea (corrBounds);
 
@@ -139,8 +139,8 @@ namespace Srtm2Osm
 
                                     OsmUtils.OsmSchema.osmNode node = new osmNode ();
                                     node.Id = nodeId++;
-                                    node.Lat = point.Y - corrY;
-                                    node.Lon = point.X - corrY;
+                                    node.Lat = point.Y + corrY;
+                                    node.Lon = point.X + corrX;
 
                                     if (i == 0)
                                         firstNodeId = node.Id;
@@ -187,7 +187,7 @@ namespace Srtm2Osm
                         {
                             Point3<double> point = polyline.Vertices[i];
 
-                            OsmNode node = new OsmNode(nodeId++, point.Y - corrY, point.X - corrX);
+                            OsmNode node = new OsmNode(nodeId++, point.Y + corrY, point.X + corrX);
                             osmDb.AddNode(node);
 
                             isohypseWay.AddNode (node.ObjectId);

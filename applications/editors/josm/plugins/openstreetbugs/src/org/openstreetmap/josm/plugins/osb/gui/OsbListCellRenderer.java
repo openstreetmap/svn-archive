@@ -72,7 +72,7 @@ public class OsbListCellRenderer implements ListCellRenderer {
         if(text.indexOf("<hr />") > 0) {
             text = text.substring(0, text.indexOf("<hr />"));
         }
-        label.setText(text);
+        label.setText("<html>" + text + "</html>");
 
         Dimension d = label.getPreferredSize();
         d.height += 10;

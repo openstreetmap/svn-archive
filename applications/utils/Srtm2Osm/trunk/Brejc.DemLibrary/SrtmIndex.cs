@@ -57,7 +57,7 @@ namespace Brejc.DemLibrary
             }
         }
 
-        private static string srtmSource = "http://dds.cr.usgs.gov/srtm/version2_1/SRTM3";
+        private static string srtmSource = "http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/";
 
         private static string fileNamePattern = "href=\"([A-Za-z0-9]*\\.hgt\\.zip)\"";
 

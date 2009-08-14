@@ -29,8 +29,7 @@ namespace Srtm2Osm
         Feet,
         LargeAreaMode,
         CorrectionXY,
-        SourceHost,
-        SourceDir,
+        SrtmSource,
     }
 
     public class Srtm2OsmCommand : IConsoleApplicationCommand
@@ -46,8 +45,7 @@ namespace Srtm2Osm
 
             string srtmIndexFilename = Path.Combine (srtmDir, "SrtmIndex.dat");
             SrtmIndex srtmIndex = null;
-            SrtmIndex.SrtmHost = srtmSourceHost;
-            SrtmIndex.SrtmDir = srtmSourceDir;
+            SrtmIndex.SrtmSource = srtmSource;
 
             try
             {
@@ -68,8 +66,7 @@ namespace Srtm2Osm
                 srtmIndex = SrtmIndex.Load (srtmIndexFilename);
             }
 
-            Srtm3Storage.SrtmHost = srtmSourceHost;
-            Srtm3Storage.SrtmDir = srtmSourceDir;
+            Srtm3Storage.SrtmSource = srtmSource;
             Srtm3Storage storage = new Srtm3Storage(Path.Combine(srtmDir, "SrtmCache"), srtmIndex);
 
             Bounds2 corrBounds = new Bounds2(bounds.MinX - corrX, bounds.MinY - corrY, 
@@ -273,8 +270,7 @@ namespace Srtm2Osm
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.Feet, "feet", 0));
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.LargeAreaMode, "large", 0));
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.CorrectionXY, "corrxy", 2));
-            options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.SourceHost, "srtmhost", 1));
-            options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.SourceDir, "srtmdir", 1));
+            options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.SrtmSource, "source", 1));
 
             startFrom = options.ParseArgs (args, startFrom);
 
@@ -291,12 +287,8 @@ namespace Srtm2Osm
                             continue;
                         }
 
-                    case Srtm2OsmCommandOption.SourceHost:
-                        srtmSourceHost = option.Parameters[0];
-                        continue;
-
-                    case Srtm2OsmCommandOption.SourceDir:
-                        srtmSourceDir = option.Parameters[0];
+                    case Srtm2OsmCommandOption.SrtmSource:
+                        srtmSource= option.Parameters[0];
                         continue;
 
                     case Srtm2OsmCommandOption.Bounds1:
@@ -471,8 +463,7 @@ namespace Srtm2Osm
         private double majorFactor, mediumFactor;
         private IContourMarker contourMarker = new DefaultContourMarker ();
         private bool largeAreaMode;
-        private string srtmSourceHost = "";
-        private string srtmSourceDir = "";
+        private string srtmSource = "";
 
         private int[] zoomLevels = {0, 0, 111000000, 55000000, 28000000, 14000000, 7000000, 3000000, 2000000, 867000,
             433000, 217000, 108000, 54000, 27000, 14000, 6771, 3385, 1693};

@@ -33,22 +33,20 @@ namespace Brejc.DemLibrary
             set { srtm3CachePath = value; }
         }
 
-        public static string SrtmHost
+        public static string SrtmSource
         {
-            get { return srtmFtpHost; }
-            set { if (value.Length != 0) srtmFtpHost = value; }
-        }
-
-        public static string SrtmDir
-        {
-            get { return srtm3RemoteDir; }
-            set { if (value.Length != 0) srtm3RemoteDir = value; }
-        }
-
-        public FtpClient FtpClient
-        {
-            get { return ftpClient; }
-            set { ftpClient = value; }
+            get { return srtmSource; }
+            set
+            {
+                if (value.Length != 0)
+                {
+                    srtmSource = value;
+                    if (!srtmSource.EndsWith("/", StringComparison.Ordinal))
+                    {
+                        srtmSource += "/";
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -112,29 +110,26 @@ namespace Brejc.DemLibrary
                         }
 
                         string filename = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}.zip", cell.CellFileName);
-                        string url = "http://" + srtmFtpHost + "/" + srtm3RemoteDir + "/" + continentalRegion.ToString() + "/" + filename;
+                        string url = srtmSource + continentalRegion.ToString() + "/" + filename;
 
                         string localFilename = Path.Combine (srtm3CachePath, filename);
 
-                        WebRequest request = HttpWebRequest.Create(new System.Uri(url));
-                        HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-                        if (response.StatusCode == HttpStatusCode.OK)
+                        WebRequest request = WebRequest.Create(new System.Uri(url));
+                        WebResponse response = request.GetResponse();
+                        // Get the stream containing content returned by the server.
+                        Stream dataStream = response.GetResponseStream();
+
+                        FileStream fileStream = new FileStream(localFilename, FileMode.OpenOrCreate);
+
+                        //Download in chuncks
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = dataStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
-                            // Get the stream containing content returned by the server.
-                            Stream dataStream = response.GetResponseStream();
-
-                            FileStream fileStream = new FileStream(localFilename, FileMode.OpenOrCreate);
-
-                            //Download in chuncks
-                            byte[] buffer = new byte[1024];
-                            int bytesRead;
-                            while((bytesRead = dataStream.Read(buffer, 0, buffer.Length)) > 0) {
-                                fileStream.Write(buffer, 0, bytesRead);
-                            }
-                            fileStream.Close();
-                            dataStream.Close();
-
+                            fileStream.Write(buffer, 0, bytesRead);
                         }
+                        fileStream.Close();
+                        dataStream.Close();
                         response.Close();
 
                         // unzip it and delete the zip file
@@ -228,10 +223,7 @@ namespace Brejc.DemLibrary
 
         private string srtm3CachePath;
 
-        private FtpClient ftpClient;
-
-        private static string srtmFtpHost = "dds.cr.usgs.gov";
-        private static string srtm3RemoteDir = "srtm/version2_1/SRTM3";
+        private static string srtmSource = "http://dds.cr.usgs.gov/srtm/version2_1/SRTM3";
 
     }
 }

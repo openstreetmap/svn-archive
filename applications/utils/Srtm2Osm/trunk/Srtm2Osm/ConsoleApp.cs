@@ -53,16 +53,17 @@ namespace Srtm2Osm
             System.Console.Out.WriteLine ("-feet: uses feet units for elevation instead of meters");
             System.Console.Out.WriteLine ("-step <elevation>: elevation step between contours (default: 20 units)");
             System.Console.Out.WriteLine ("-cat <major> <medium>: adds contour category tag to OSM ways");
-            System.Console.Out.WriteLine ("       example: -mkkmap 400 100 20 will mark:");
+            System.Console.Out.WriteLine ("       example: -cat 400 100 will mark:");
             System.Console.Out.WriteLine ("           contours 400, 800, 1200 etc as contour_ext=elevation_major");
             System.Console.Out.WriteLine ("           contours 100, 200, 300, 500 etc as contour_ext=elevation_medium");
-            System.Console.Out.WriteLine ("           and all others as contour=elevation_minor");
+            System.Console.Out.WriteLine ("           and all others as contour_ext=elevation_minor");
             System.Console.Out.WriteLine ("-large: runs in 'large area mode' in which each contour is written to OSM file ");
             System.Console.Out.WriteLine ("       immediately upon discovery. This prevents 'out-of-memory' errors, but");
             System.Console.Out.WriteLine ("       some other options cannot be used in this mode.");
             System.Console.Out.WriteLine ("-corrxy <corrLng> <corrLat>: correction values to shift contours");
-            System.Console.Out.WriteLine ("-source <url>: base URL used for download (http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/)");
-            System.Console.Out.WriteLine();
+            System.Console.Out.WriteLine ("-source <url>: base URL used for download");
+            System.Console.Out.WriteLine ("       (default 'http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/')");
+            System.Console.Out.WriteLine ();
 
             // http://www.openstreetmap.org/?lat=46.523362283296755&lon=15.628250113735774&zoom=12&layers=0BF
             // http://www.openstreetmap.org/?lat=46.79387319944362&lon=13.599213077626766&zoom=11&layers=0BF

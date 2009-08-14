@@ -223,7 +223,7 @@ namespace Brejc.DemLibrary
 
         private string srtm3CachePath;
 
-        private static string srtmSource = "http://dds.cr.usgs.gov/srtm/version2_1/SRTM3";
+        private static string srtmSource = "http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/";
 
     }
 }

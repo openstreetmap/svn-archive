@@ -37,28 +37,39 @@ namespace Brejc.Common.Console
         {
             try
             {
-                ShowBanner ();
+                ShowBanner();
 
-                IList<IConsoleApplicationCommand> commands = ParseArguments ();
+                IList<IConsoleApplicationCommand> commands = ParseArguments();
 
                 if (commands == null)
-                    ShowHelp ();
+                {
+                    ShowHelp();
+                    Environment.Exit(1);
+                }
                 else
                 {
                     foreach (IConsoleApplicationCommand command in commands)
-                        command.Execute ();
+                        command.Execute();
                 }
             }
             catch (ArgumentException ex)
             {
-                System.Console.Error.WriteLine ();
-                System.Console.Error.WriteLine ("ERROR: {0}", ex.Message);
-                ShowHelp ();
+                System.Console.Error.WriteLine();
+                System.Console.Error.WriteLine("ERROR: {0}", ex.Message);
+                ShowHelp();
+                Environment.Exit(1);
+            }
+            catch (System.Net.WebException ex)
+            {
+                System.Console.Error.WriteLine();
+                System.Console.Error.WriteLine("ERROR: {0}", ex.Message);
+                System.Console.Error.WriteLine("while accessing: {0}", ex.Response.ResponseUri);
+                Environment.Exit(2);
             }
             catch (Exception ex)
             {
-                System.Console.Error.WriteLine ();
-                System.Console.Error.WriteLine ("ERROR: {0}", ex.Message);
+                System.Console.Error.WriteLine();
+                System.Console.Error.WriteLine("ERROR: {0}", ex.Message);
                 throw;
             }
         }

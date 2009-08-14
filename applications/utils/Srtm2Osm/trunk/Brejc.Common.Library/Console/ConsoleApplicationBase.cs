@@ -70,7 +70,7 @@ namespace Brejc.Common.Console
             {
                 System.Console.Error.WriteLine();
                 System.Console.Error.WriteLine("ERROR: {0}", ex.Message);
-                throw;
+                Environment.Exit(2);
             }
         }
 

@@ -41,21 +41,25 @@ namespace Brejc.DemLibrary
             data[longitude + 180 + 360 * (latitude + 90)] = value;
         }
 
-        public static string SrtmHost
+        public static string SrtmSource
         {
-            get { return host; }
-            set { if (value.Length != 0) host = value; }
+            get { return srtmSource; }
+            set
+            {
+                if (value.Length != 0)
+                {
+                    srtmSource = value;
+                    if (!srtmSource.EndsWith("/", StringComparison.Ordinal))
+                    {
+                        srtmSource += "/";
+                    }
+                }
+            }
         }
 
-        public static string SrtmDir
-        {
-            get { return basedir; }
-            set { if (value.Length != 0) basedir = value; }
-        }
+        private static string srtmSource = "http://dds.cr.usgs.gov/srtm/version2_1/SRTM3";
 
-        private static string host = "dds.cr.usgs.gov";
-        private static string basedir = "srtm/version2_1/SRTM3";
-        private static string pattern = "href=\"([A-Za-z0-9]*\\.hgt\\.zip)\"";
+        private static string fileNamePattern = "href=\"([A-Za-z0-9]*\\.hgt\\.zip)\"";
 
         /// <summary>
         /// Generates an index file by listing all available SRTM cells on the FTP site.
@@ -67,40 +71,32 @@ namespace Brejc.DemLibrary
                  continentalRegion++)
             {
                 string region = continentalRegion.ToString();
-                string url = "http://" + host + "/" + basedir + "/" + region + "/";
+                string url = srtmSource + region + "/";
 
-                WebRequest request = HttpWebRequest.Create(new System.Uri(url));
-                HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-                if (response.StatusCode == HttpStatusCode.OK)
+                WebRequest request = WebRequest.Create(new System.Uri(url));
+                WebResponse response = (HttpWebResponse) request.GetResponse();
+                // Get the stream containing content returned by the server.
+                Stream dataStream = response.GetResponseStream();
+                // Open the stream using a StreamReader for easy access.
+                StreamReader reader = new StreamReader(dataStream);
+                // Read the content.
+                string responseFromServer = reader.ReadToEnd();
+                MatchCollection matches = Regex.Matches(responseFromServer, fileNamePattern, RegexOptions.IgnoreCase);
+                // Process each match.
+                foreach (Match match in matches)
                 {
-                    // Get the stream containing content returned by the server.
-                    Stream dataStream = response.GetResponseStream();
-                    // Open the stream using a StreamReader for easy access.
-                    StreamReader reader = new StreamReader(dataStream);
-                    // Read the content.
-                    string responseFromServer = reader.ReadToEnd();
-                    MatchCollection matches = Regex.Matches(responseFromServer, pattern, RegexOptions.IgnoreCase);
-                    // Process each match.
-                    foreach (Match match in matches)
-                    {
-                        GroupCollection groups = match.Groups;
-                        string filename = groups[1].Value.Trim();
-                        if (filename.Length == 0)
-                            continue;
+                    GroupCollection groups = match.Groups;
+                    string filename = groups[1].Value.Trim();
+                    if (filename.Length == 0)
+                        continue;
 
-                        Srtm3Cell srtm3Cell = Srtm3Cell.CreateSrtm3Cell(filename, false);
-                        SetValueForCell(srtm3Cell.CellLon, srtm3Cell.CellLat, (int)continentalRegion);
-                    }
-                    // Cleanup the streams and the response.
-                    reader.Close();
-                    dataStream.Close();
+                    Srtm3Cell srtm3Cell = Srtm3Cell.CreateSrtm3Cell(filename, false);
+                    SetValueForCell(srtm3Cell.CellLon, srtm3Cell.CellLat, (int)continentalRegion);
                 }
-                else
-                {
-                    Console.WriteLine("Request for {0} returned {1}.", url, response.StatusDescription);
-                }
+                // Cleanup the streams and the response.
+                reader.Close();
+                dataStream.Close();
                 response.Close();
-
             }
         }
 

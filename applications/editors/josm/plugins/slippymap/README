@@ -14,4 +14,3 @@ http://lists.openstreetmap.org/pipermail/josm-dev/2008-August/001462.html
 2. update to latest revision (your local copy revision number is old and you want it set to new)
 3. build josm plugin by build.xml ant script
 4. commit plugin binary to svn ("cd ../../dist;svn commit slippymap.jar;" if you dont have in your local copy that folder, you should make some temp directory and download there dist directory, copy there your fresh build binary and comit it back "mkdir someDir;cd someDir;svn co http://svn.openstreetmap.org/applications/editors/josm/dist .;cp myActualBinary.jar slippymap.jar;svn commit slippymap.jar")
-5. edit https://josm.openstreetmap.de/wiki/Plugins and set there your version (version is in manifest file in jar, doublecheck it!)

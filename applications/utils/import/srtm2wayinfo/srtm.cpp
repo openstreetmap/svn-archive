@@ -61,6 +61,7 @@ SrtmDownloader::SrtmDownloader(QString url, QString cachedir)
     curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
     curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1); //Make sure error reporting works
+    loadFileList();
 }
 
 /** One line helper function. */

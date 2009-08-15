@@ -30,7 +30,6 @@ int main(int argc, char **argv)
 
     //Download file lists first, so we can stop here if we notice an error
     SrtmDownloader downloader(global_settings.getSrtmServer(), global_settings.getCacheDir());
-    downloader.loadFileList();
 
     QFile output(global_settings.getOutput());
     if (!output.open(QIODevice::WriteOnly)) {

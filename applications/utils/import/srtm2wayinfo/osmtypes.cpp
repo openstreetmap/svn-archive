@@ -10,32 +10,14 @@
 #include <QDebug>
 
 /** Defines the block size. 2^BLOCK_SHIFT nodes are allocated at a time. */
-#define BLOCK_SHIFT 5
-
-/** Number of nodes in a block. */
-#define PER_BLOCK  (1 << BLOCK_SHIFT)
-
-/** Number of blocks. */
-#define NUM_BLOCKS (1 << (31 - BLOCK_SHIFT))
-
-/** Returns the block id for a given nodeid. */
-static inline int id2block(int id)
-{
-    return (id >> BLOCK_SHIFT);
-}
-
-/** Returns the offset into the block for a given nodeid.
-\sa id2block()
-*/
-static inline int id2offset(int id)
-{
-    return id & (PER_BLOCK-1);
-}
+#define LARGE_BLOCK_SHIFT 8
+/** Defines the block size. 2^BLOCK_SHIFT nodes are allocated at a time. */
+#define MEDIUM_BLOCK_SHIFT 5
 
 OsmNodeStorageLarge::OsmNodeStorageLarge()
 {
     qDebug() << "Large node storage.";
-    nodes = new OsmNode*[NUM_BLOCKS];
+    nodes = new OsmNode*[(1 << (31 - LARGE_BLOCK_SHIFT))];
 }
 
 /** Returns the node object for the given id.
@@ -46,12 +28,12 @@ OsmNode& OsmNodeStorageLarge::operator[](OsmNodeId id)
         /* This saves a lot of overhead for the usually very few IDs */
         return negative_nodes[id];
     }
-    int block  = id2block(id);
-    int offset = id2offset(id);
+    int block  =  (id >> LARGE_BLOCK_SHIFT);
+    int offset = id & ((1 << LARGE_BLOCK_SHIFT)-1);
     if (!nodes[block]) {
-        nodes[block] = (OsmNode *)malloc(PER_BLOCK * sizeof(OsmNode));
+        nodes[block] = (OsmNode *)malloc((1 << LARGE_BLOCK_SHIFT) * sizeof(OsmNode));
         if (!nodes[block]) {
-            qDebug() << "Error allocating nodes";
+            qCritical() << "Error allocating nodes";
             exit(1);
         }
     }
@@ -69,12 +51,12 @@ OsmNodeStorageMedium::OsmNodeStorageMedium()
   * If required additional storage space is allocated. */
 OsmNode& OsmNodeStorageMedium::operator[](OsmNodeId id)
 {
-    int block  = id2block(id);
-    int offset = id2offset(id);
+    int block  =  (id >> MEDIUM_BLOCK_SHIFT);
+    int offset = id & ((1 << MEDIUM_BLOCK_SHIFT)-1);
     if (!blocks.contains(block)) {
-        blocks[block] = (OsmNode *)malloc(PER_BLOCK * sizeof(OsmNode));
+        blocks[block] = (OsmNode *)malloc((1 << MEDIUM_BLOCK_SHIFT) * sizeof(OsmNode));
         if (!blocks[block]) {
-            qDebug() << "Error allocating nodes";
+            qCritical() << "Error allocating nodes";
             exit(1);
         }
     }

@@ -41,6 +41,10 @@
 # Version 1.2
 # - stat 2
 #
+# Version 1.3
+# - ignore way starts and ends that are connected
+#
+#
 
 
 use strict ;
@@ -53,7 +57,7 @@ use Time::localtime;
 
 my $program = "checktouch.pl" ;
 my $usage = $program . " def.xml file.osm out.htm out.gpx" ;
-my $version = "1.2" ;
+my $version = "1.3" ;
 
 my $threshold = 0.005 ; # ~500m 0.5km degrees!
 my $maxDist = 0.002 ; # in km 
@@ -100,6 +104,7 @@ my %wayCategory ;
 my %wayHash ;
 my %noExit ;
 my %layer ;
+my %wayCount ;	# number ways using this node
 
 my $touches = 0 ;
 my %touchingsHash ;
@@ -217,6 +222,7 @@ while ($wayId != -1) {
 			push @neededNodes, @wayNodes ;
 			$layer{$wayId} = $layerTemp ;
 			$wayCategory{$wayId} = 2 ;
+			foreach my $node (@wayNodes) { $wayCount{$node}++ ; }
 		}
 
 		$found = 0 ;
@@ -232,6 +238,7 @@ while ($wayId != -1) {
 			push @neededNodes, @wayNodes ;
 			$layer{$wayId} = $layerTemp ;
 			$wayCategory{$wayId} = 1 ;
+			foreach my $node (@wayNodes) { $wayCount{$node}++ ; }
 		}
 	}
 	else {
@@ -360,13 +367,10 @@ foreach $wayId1 (@againstWays) {
 				# don't do anything because same way!
 			}
 			else {
-
-				# TODO noExit !
-
 				$checksDone++ ;
 				for ($b=0; $b<$#{$wayNodesHash{$wayId2}}; $b++) {
 					# check start id1
-					if ($noExit{$wayNodesHash{$wayId1}[0]} == 0) {
+					if ( ($noExit{$wayNodesHash{$wayId1}[0]} == 0) and ($wayCount{$wayNodesHash{$wayId1}[0]} == 1 ) ) {
 						if ( ($wayNodesHash{$wayId1}[0] != $wayNodesHash{$wayId2}[$b]) and ($wayNodesHash{$wayId1}[0] != $wayNodesHash{$wayId2}[$b+1]) ) {
 							my ($d1) = shortestDistance ($lon{$wayNodesHash{$wayId2}[$b]},
 											$lat{$wayNodesHash{$wayId2}[$b]},
@@ -382,7 +386,7 @@ foreach $wayId1 (@againstWays) {
 					}
 
 					# check end id1	
-					if ($noExit{$wayNodesHash{$wayId1}[-1]} == 0) {
+					if ( ($noExit{$wayNodesHash{$wayId1}[-1]} == 0) and ($wayCount{$wayNodesHash{$wayId1}[-1]} == 1 ) ) {
 						if ( ($wayNodesHash{$wayId1}[-1] != $wayNodesHash{$wayId2}[$b]) and ($wayNodesHash{$wayId1}[-1] != $wayNodesHash{$wayId2}[$b+1]) ) {
 							my ($d1) = shortestDistance ($lon{$wayNodesHash{$wayId2}[$b]},
 											$lat{$wayNodesHash{$wayId2}[$b]},
@@ -420,7 +424,7 @@ open ($html, ">", $htmlName) || die ("Can't open html output file") ;
 open ($gpx, ">", $gpxName) || die ("Can't open gpx output file") ;
 
 
-printHTMLHeader ($html, "Touch Check by Gary68") ;
+printHTMLiFrameHeader ($html, "Touch Check by Gary68") ;
 printGPXHeader ($gpx) ;
 
 print $html "<H1>Touch Check by Gary68</H1>\n" ;
@@ -471,7 +475,7 @@ foreach $key (keys %touchingsHash) {
 	}
 	print $html "<td>", osmLink ($x, $y, 16) , "</td>\n" ;
 	print $html "<td>", osbLink ($x, $y, 16) , "</td>\n" ;
-	print $html "<td>", josm2Link ($x, $y, 0.01, $id1, $id2), "</td>\n" ;
+	print $html "<td>", josmLinkSelectWays ($x, $y, 0.01, $id1, $id2), "</td>\n" ;
 	print $html "<td>", picLinkOsmarender ($x, $y, 16), "</td>\n" ;
 	print $html "</tr>\n" ;
 
@@ -498,28 +502,6 @@ statistics ( ctime(stat($osmName)->mtime),  $program,  $defName, $osmName,  $che
 
 print "\n$program finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;
 
-
-
-sub josm2Link {
-	my $lon = shift ;
-	my $lat = shift ;
-	my $span = shift ;
-	my $way = shift ;
-	my $way2 = shift ;
-	my ($string) = "<A HREF=\"http://localhost:8111/load_and_zoom?" ;
-	my $temp = $lon - $span ;
-	$string = $string . "left=" . $temp ;
-	$temp = $lon + $span ;
-	$string = $string . "&right=" . $temp ;
-	$temp = $lat + $span ;
-	$string = $string . "&top=" . $temp ;
-	$temp = $lat - $span ;
-	$string = $string . "&bottom=" . $temp ;
-	$string = $string . "&select=way" . $way ;
-	$string = $string . ",way" . $way2 ;
-	$string = $string . "\">Local JOSM</a>" ;
-	return ($string) ;
-}
 
 sub statistics {
 	my ($date, $program, $def, $area, $total, $errors) = @_ ;

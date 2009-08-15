@@ -51,7 +51,7 @@ use strict ;
 use warnings ;
 
 use List::Util qw[min max] ;
-use OSM::osm ;
+use OSM::osm 4.7 ;
 use File::stat;
 use Time::localtime;
 

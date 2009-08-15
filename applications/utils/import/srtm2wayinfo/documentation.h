@@ -89,6 +89,40 @@ segment a relation is created:
 
 
 \page structure Program structure
-\todo Write this section.
+\li SrtmDownloader (srtm.cpp) is responsible for downloading the SRTM tiles (if available) and returning the
+altitude data.
+SrtmDownloader::getAltitudeFromLatLon() should be the only function you have to use after initialization, but of if you want to do other things with the tiles you can get the SrtmTile objects directly. An
+enhancement in the future might to be to download SRTM1 tiles where available. This is possible with the current achitecture, but not implemented yet. SrtmDownloader does not depend on other parts of the project and could easily be reused. It only need the server's address, which it gets in the main() function, by calling the functions from the Settings object.
+\li An OsmData object is used to parse the input file and create an internal representation using OsmNode and OsmWay. The format for storing nodes and ways depends on a Settings parameter and influences which OsmNodeStorage and OsmWayStorage class is used. This is a critical parameter, as memory usage and speed varies.
+\li A RelationWriter object then is used to produce the final output. This class could be customized by changing the RelationWriter::writeRelation() function to produce different output formats. It should be noted that the ways can only be accessed sequentially and therefore this class must not try to use random access.
+\li SrtmZipFile is just a helper class the does the zip file decompression using zziplib.
 
+Dependency graph: (connection from Settings to Output not shown for clarity)
+\dot
+  digraph structure {
+    srtmserver [label="SRTM server", shape=ellipse]
+    SrtmDownloader [URL="\ref SrtmDownloader", shape=box]
+    Settings [URL="\ref Settings", shape=box, color=blue]
+    Input [color=red]
+    Output [color=red]
+    OsmData [URL="\ref OsmData", shape=box]
+    OsmWayStorage [URL="\ref OsmWayStorage", shape=box]
+    OsmNodeStorage [URL="\ref OsmNodeStorage", shape=box]
+    RelationWriter [URL="\ref RelationWriter", shape=box]
+    SrtmZipFile [URL="\ref SrtmZipFile", shape=box]
+    srtmserver -> SrtmZipFile -> SrtmDownloader
+    Settings -> srtmserver [dir = none, color=blue]
+    Settings -> OsmWayStorage [dir = none, color=blue]
+    Settings -> OsmNodeStorage [dir = none, color=blue]
+    Settings -> Input [dir = none, color=blue]
+#    Settings -> Output [dir = none, color=blue]
+    Settings -> SrtmZipFile [dir = none, color=blue]
+    OsmNodeStorage -> OsmData [dir = both]
+    OsmWayStorage -> OsmData [dir = both]
+    Input -> OsmData [color=red]
+    RelationWriter -> Output [color=red]
+    OsmData -> RelationWriter
+    SrtmDownloader -> RelationWriter
+ }
+\enddot
 */

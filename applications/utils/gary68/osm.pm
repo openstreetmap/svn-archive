@@ -56,6 +56,9 @@
 # Version 4.6 (gary68)
 # - getnode2 error correction
 #
+# Version 4.7 (gary68)
+# - hidden iframe for josm links
+#
 
 #
 # USAGE
@@ -93,6 +96,7 @@
 # printHTMLCellRight ($file, $value)
 # printHTMLFoot ($file) 				> print foot to file
 # printHTMLHeader ($file, $title) 			> print header to file
+# printHTMLHeaderiFrame ($file)				> print iFrame code for josm links, call before body
 # printHTMLRowStart ($file)
 # printHTMLRowEnd ($file)
 # printHTMLTableFoot ($file)
@@ -131,13 +135,13 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '4.6' ; 
+$VERSION = '4.7' ; 
 
 require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue tileNumber openOsmFile osmLink osbLink mapCompareLink josmLink josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd ) ;
+@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue tileNumber openOsmFile osmLink osbLink mapCompareLink josmLink josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader) ;
 
 our $line ; 
 our $file ; 
@@ -823,7 +827,7 @@ sub josmLink {
 	$temp = $lat - $span ;
 	$string = $string . "&bottom=" . $temp ;
 	$string = $string . "&select=way" . $way ;
-	$string = $string . "\">Local JOSM</a>" ;
+	$string = $string . "\" target=\"hiddenIframe\">Local JOSM</a>" ;
 	return ($string) ;
 }
 
@@ -842,7 +846,7 @@ sub josmLinkSelectWay {
 	$temp = $lat - $span ;
 	$string = $string . "&bottom=" . $temp ;
 	$string = $string . "&select=way" . $way ;
-	$string = $string . "\">Local JOSM</a>" ;
+	$string = $string . "\" target=\"hiddenIframe\">Local JOSM</a>" ;
 	return ($string) ;
 }
 
@@ -864,7 +868,7 @@ sub josmLinkSelectWays {
 			$string = $string . ",way" . $ways[$i] ;
 		}
 	}
-	$string = $string . "\">Local JOSM</a>" ;
+	$string = $string . "\" target=\"hiddenIframe\">Local JOSM</a>" ;
 	return ($string) ;
 }
 
@@ -883,7 +887,7 @@ sub josmLinkSelectNode {
 	$temp = $lat - $span ;
 	$string = $string . "&bottom=" . $temp ;
 	$string = $string . "&select=node" . $node ;
-	$string = $string . "\">Local JOSM</a>" ;
+	$string = $string . "\" target=\"hiddenIframe\">Local JOSM</a>" ;
 	return ($string) ;
 }
 
@@ -978,6 +982,20 @@ sub printProgress {
 ######
 # html
 ######
+
+sub printHTMLiFrameHeader {
+	my $file = shift ;
+	my $title = shift ;
+	print $file "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"";
+	print $file "  \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
+	print $file "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n";
+	print $file "<head><title>", $title, "</title>\n";
+	print $file "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />\n";
+	print $file "</head>\n";
+	print $file "<iframe style=\"display:none\" id=\"hiddenIframe\" name=\"hiddenIframe\"></iframe>\n" ;
+	print $file "<body>\n";
+	return (1) ;
+}
 
 sub printHTMLHeader {
 	my $file = shift ;
@@ -1088,6 +1106,11 @@ sub printHTMLRowStart {
 sub printHTMLRowEnd {
 	my ($file) = shift ;
 	print $file "</tr>\n" ;
+}
+
+sub printHTMLiFrame {
+	my ($file) = shift ;
+	print $file "<iframe style=\"display:none\" id=\"hiddenIframe\" name=\"hiddenIframe\"></iframe>\n" ;
 }
 
 sub getBugs {

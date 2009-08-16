@@ -59,6 +59,9 @@
 # Version 4.7 (gary68)
 # - hidden iframe for josm links
 #
+# Version 4.8
+# - josm dont select added
+#
 
 #
 # USAGE
@@ -78,6 +81,7 @@
 # getWay2 ()						> ($gId, $gU, \@gNodes, \@gTags) ; # in main @array = @$ref // returns k/v as array, not string!
 # hashValue ($lon, $lat)				> $hashValue
 # historyLink ($type, $key) 				> $htmlString
+# josmLinkDontSelect ($lon, $lat, $span)		> $htmlString
 # josmLinkSelectWay ($lon, $lat, $span, $wayId)		> $htmlString
 # josmLinkSelectWays ($lon, $lat, $span, @wayIds)	> $htmlString
 # josmLinkSelectNode ($lon, $lat, $span, $nodeId)	> $htmlString
@@ -135,13 +139,13 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '4.7' ; 
+$VERSION = '4.8' ; 
 
 require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue tileNumber openOsmFile osmLink osbLink mapCompareLink josmLink josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader) ;
+@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue tileNumber openOsmFile osmLink osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader) ;
 
 our $line ; 
 our $file ; 
@@ -827,6 +831,24 @@ sub josmLink {
 	$temp = $lat - $span ;
 	$string = $string . "&bottom=" . $temp ;
 	$string = $string . "&select=way" . $way ;
+	$string = $string . "\" target=\"hiddenIframe\">Local JOSM</a>" ;
+	return ($string) ;
+}
+
+sub josmLinkDontSelect {
+	my $lon = shift ;
+	my $lat = shift ;
+	my $span = shift ;
+	my $way = shift ;
+	my ($string) = "<A HREF=\"http://localhost:8111/load_and_zoom?" ;
+	my $temp = $lon - $span ;
+	$string = $string . "left=" . $temp ;
+	$temp = $lon + $span ;
+	$string = $string . "&right=" . $temp ;
+	$temp = $lat + $span ;
+	$string = $string . "&top=" . $temp ;
+	$temp = $lat - $span ;
+	$string = $string . "&bottom=" . $temp ;
 	$string = $string . "\" target=\"hiddenIframe\">Local JOSM</a>" ;
 	return ($string) ;
 }

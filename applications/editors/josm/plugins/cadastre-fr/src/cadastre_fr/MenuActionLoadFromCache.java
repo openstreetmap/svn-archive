@@ -51,7 +51,7 @@ public class MenuActionLoadFromCache extends JosmAction {
             // check if the selected cache is not already displayed
             if (Main.map != null) {
                 for (Layer l : Main.map.mapView.getAllLayers()) {
-                    if (l instanceof WMSLayer && l.name.equals(location)) {
+                    if (l instanceof WMSLayer && l.getName().equals(location)) {
                         System.out.println("The location " + filename + " is already on screen. Cache not loaded.");
                         continue nextFile;
                     }

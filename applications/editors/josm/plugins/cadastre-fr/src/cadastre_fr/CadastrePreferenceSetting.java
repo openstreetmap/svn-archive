@@ -49,6 +49,9 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     static final int DEFAULT_CACHE_SIZE = 500;
     JLabel jLabelCacheSize = new JLabel(tr("Max. cache size (in MB)"));
     private JTextField cacheSize = new JTextField(20);
+    
+    static final String DEFAULT_RASTER_DIVIDER = "5";
+    private JTextField rasterDivider = new JTextField(10);
 
     public void addGui(final PreferenceDialog gui) {
 
@@ -102,8 +105,8 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         drawBoundaries.setToolTipText(tr("Draw a rectangle around downloaded data from WMS server."));
         cadastrewms.add(drawBoundaries, GBC.eop().insets(0, 0, 0, 5));
 
-        // the downloaded images multiplier
-        JLabel jLabelScale = new JLabel(tr("Image grab multiplier:"));
+        // the vectorized images multiplier
+        JLabel jLabelScale = new JLabel(tr("Vector images grab multiplier:"));
         cadastrewms.add(jLabelScale, GBC.std().insets(0, 5, 10, 0));
         ButtonGroup bg = new ButtonGroup();
         ActionListener multiplierActionListener = new ActionListener() {
@@ -150,6 +153,14 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         grabMultiplier4Size.setEnabled(currentScale.equals(Scale.SQUARE_100M.value));
         cadastrewms.add(grabMultiplier4Size, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
 
+        // for raster images (not vectorized), image grab divider (from 1 to 10)
+        String savedRasterDivider = Main.pref.get("cadastrewms.rasterDivider", DEFAULT_RASTER_DIVIDER);
+        JLabel jLabelRasterDivider = new JLabel(tr("Raster images grab multiplier:"));
+        rasterDivider.setText(savedRasterDivider);
+        rasterDivider.setToolTipText("Raster image grab division, from 1 to 10; 10 is very high definition");
+        cadastrewms.add(jLabelRasterDivider, GBC.std().insets(0, 5, 10, 0));
+        cadastrewms.add(rasterDivider, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
+
         // option to enable automatic caching
         enableCache.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -166,8 +177,8 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         cacheSize.setText(String.valueOf(size));
         cacheSize.setToolTipText(tr("Oldest files are automatically deleted when this size is exceeded"));
         cadastrewms.add(jLabelCacheSize, GBC.std().insets(20, 0, 0, 0));
-        cadastrewms.add(cacheSize, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
-
+        cadastrewms.add(cacheSize, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
+        
         cadastrewms.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
 
     }
@@ -194,6 +205,12 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
                     Main.pref.put("cadastrewms.squareSize", grabMultiplier4Size.getText());
             } catch (NumberFormatException e) { // ignore the last input
             }
+        }
+        try {
+            int i = Integer.parseInt(rasterDivider.getText());
+            if (i > 0 && i < 11)
+                Main.pref.put("cadastrewms.rasterDivider", String.valueOf(i));
+        } catch (NumberFormatException e) { // ignore the last input
         }
         Main.pref.put("cadastrewms.enableCaching", enableCache.isSelected());
 

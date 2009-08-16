@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.Vector;
 
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -25,12 +26,21 @@ public class CadastreInterface {
     public boolean downloadCancelled = false;
     public HttpURLConnection urlConn = null;
 
-    private CadastreGrabber cadastreGrabber;
     private String cookie;
     private String interfaceRef = null;
+    private String lastWMSLayerName = null;
     private URL searchFormURL;
     private Vector<String> listOfCommunes = new Vector<String>();
     private Vector<String> listOfTA = new Vector<String>();
+    class PlanImage {
+        String name;
+        String ref;
+        PlanImage(String name, String ref) {
+            this.name = name;
+            this.ref = ref;
+        }
+    }
+    private Vector<PlanImage> listOfFeuilles = new Vector<PlanImage>();
 
     final String baseURL = "http://www.cadastre.gouv.fr";
     final String cImageFormat = "Cette commune est au format ";
@@ -42,11 +52,10 @@ public class CadastreInterface {
     final String cBBoxCommunEnd = ")";
 
     final String cInterfaceVector = "afficherCarteCommune.do";
-    final String cInterfaceRaster = "afficherCarteTa.do";
-
-    CadastreInterface(CadastreGrabber cadastreGrabber) {
-        this.cadastreGrabber = cadastreGrabber;
-    }
+    final String cInterfaceRasterTA = "afficherCarteTa.do";
+    final String cInterfaceRasterFeuille = "afficherCarteFeuille.do";
+    final String cImageLinkStart = "title=\"image\"><a href=\"#\" onClick=\"popup('afficherCarteFeuille.do?f=";
+    final String cImageNameStart = ">Feuille ";
 
     public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException {
         if (wmsLayer.getName().equals(""))
@@ -54,16 +63,25 @@ public class CadastreInterface {
         // open the session with the French Cadastre web front end
         downloadCancelled = false;
         try {
-            if (cookie == null || !wmsLayer.getName().equals(cadastreGrabber.getLastWMSLayerName())) {
+            if (cookie == null || !wmsLayer.getName().equals(lastWMSLayerName)) {
                 getCookie();
                 getInterface(wmsLayer);
-                cadastreGrabber.setLastWMSLayerName(wmsLayer.getName());
+                this.lastWMSLayerName = wmsLayer.getName();
             }
             openInterface();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(Main.parent,
+            /*JOptionPane.showMessageDialog(Main.parent,
                     tr("Town/city {0} not found or not available in WMS.\n" +
-                            "Please check its availibility on www.cadastre.gouv.fr", wmsLayer.getLocation()));
+                            "Please check its availibility on www.cadastre.gouv.fr", wmsLayer.getLocation()));*/
+            JOptionPane pane = new JOptionPane(
+                    tr("Town/city {0} not found or not available in WMS.\n" +
+                            "Please check its availibility on www.cadastre.gouv.fr", wmsLayer.getLocation()),
+                            JOptionPane.INFORMATION_MESSAGE);
+            // this below is a temporary workaround to fix the "always on top" issue
+            JDialog dialog = pane.createDialog(Main.parent, tr("Select commune"));
+            CadastrePlugin.prepareDialog(dialog);
+            dialog.setVisible(true);
+            // till here
             return false;
         }
         return true;
@@ -79,6 +97,7 @@ public class CadastreInterface {
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new IOException("Cannot get Cadastre cookie.");
             }
+            System.out.println("GET "+searchFormURL);
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
             while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
             String headerName=null;
@@ -96,19 +115,23 @@ public class CadastreInterface {
     }
 
     public void resetCookie() {
-        cadastreGrabber.setLastWMSLayerName(null);
+        lastWMSLayerName = null;
     }
 
     public void resetCookieIfNewLayer(String newWMSLayerName) {
-        if (!newWMSLayerName.equals(cadastreGrabber.getLastWMSLayerName())) {
+        if (!newWMSLayerName.equals(lastWMSLayerName)) {
             resetCookie();
         }
     }
 
     public void setCookie() {
-        urlConn.setRequestProperty("Cookie", cookie);
+        this.urlConn.setRequestProperty("Cookie", this.cookie);
     }
 
+    public void setCookie(HttpURLConnection urlConn) {
+        urlConn.setRequestProperty("Cookie", this.cookie);
+    }
+    
     private void getInterface(WMSLayer wmsLayer) throws IOException, DuplicateLayerException {
         // first attempt : search for given name without codeCommune
         interfaceRef = postForm(wmsLayer, "");
@@ -125,11 +148,15 @@ public class CadastreInterface {
                     checkLayerDuplicates(wmsLayer);
                     interfaceRef = postForm(wmsLayer, wmsLayer.getCodeCommune());
                 }
-                if (wmsLayer.isRaster() && listOfTA.size() > 1) {
-                    // commune known but raster format. Select "tableau d'assemblage" from list.
-                    wmsLayer.setCodeCommune(selectTADialog());
-                    checkLayerDuplicates(wmsLayer);
-                    interfaceRef = buildRasterInterfaceRef(wmsLayer.getCodeCommune());
+                if (listOfCommunes.size() == 1 && wmsLayer.isRaster()) {
+                    // commune known but raster format. Select "Feuille" (non-georeferenced image) from list.
+                    int res = selectFeuilleDialog();
+                    if (res != -1) {
+                        // TODO
+                        wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).name);
+                        checkLayerDuplicates(wmsLayer);
+                        interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
+                    }
                 }
             }
         }
@@ -141,6 +168,8 @@ public class CadastreInterface {
     private void openInterface() throws IOException  {
         try {
             // finally, open the interface on server side giving access to the wms server
+            String lines = null;
+            String ln = null;
             URL interfaceURL = new URL(baseURL + "/scpc/"+interfaceRef);
             urlConn = (HttpURLConnection)interfaceURL.openConnection();
             urlConn.setRequestMethod("GET");
@@ -149,9 +178,12 @@ public class CadastreInterface {
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new IOException("Cannot open Cadastre interface. GET response:"+urlConn.getResponseCode());
             }
+            System.out.println("GET "+interfaceURL);
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-            while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
-            System.out.println("GET to open interface sent");
+            //while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
+            while ((ln = in.readLine()) != null) {
+                lines += ln;
+            }
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(
                 "CadastreGrabber: Illegal url.").initCause(e);
@@ -170,16 +202,18 @@ public class CadastreInterface {
      *   <option value="50061" >COLMARS - 04370</option>
      *   <option value="QK066" >COLMAR - 68000</option>
      *   </select>
+     * The returned string is the interface name used in further requests, e.g. "afficherCarteCommune.do?c=QP224"
+     * where QP224 is the code commune known by the WMS (or "afficherCarteTa.do?c=..." for raster images).
      *
      * @param location
      * @param codeCommune
-     * @return retURL url to available cadastre vectorised master piece; "" if not found
+     * @return retURL url to available code commune in the cadastre; "" if not found
      * @throws IOException
      */
     private String postForm(WMSLayer wmsLayer, String codeCommune) throws IOException {
         try {
             String ln = null;
-            String line = null;
+            String lines = null;
             listOfCommunes.clear();
             listOfTA.clear();
             // send a POST request with a city/town/village name
@@ -202,39 +236,48 @@ public class CadastreInterface {
             setCookie();
             OutputStream wr = urlConn.getOutputStream();
             wr.write(content.getBytes());
+            System.out.println("POST "+content);
             wr.flush();
             wr.close();
             BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
             while ((ln = rd.readLine()) != null) {
-                line += ln;
+                lines += ln;
             }
             rd.close();
             urlConn.disconnect();
-            System.out.println("POST="+line);
-            if (line.indexOf(cImageFormat) != -1) {
-                int i = line.indexOf(cImageFormat);
-                int j = line.indexOf(".", i);
-                wmsLayer.setRaster(line.substring(i+cImageFormat.length(), j).equals("image"));
+            if (lines.indexOf(cImageFormat) != -1) {
+                int i = lines.indexOf(cImageFormat);
+                int j = lines.indexOf(".", i);
+                wmsLayer.setRaster(lines.substring(i+cImageFormat.length(), j).equals("image"));
             }
-            if (!wmsLayer.isRaster() && line.indexOf(cInterfaceVector) != -1) {  // "afficherCarteCommune.do"
+            if (!wmsLayer.isRaster() && lines.indexOf(cInterfaceVector) != -1) {  // "afficherCarteCommune.do"
                 // shall be something like: interfaceRef = "afficherCarteCommune.do?c=X2269";
-                line = line.substring(line.indexOf(cInterfaceVector),line.length());
-                line = line.substring(0, line.indexOf("'"));
-                System.out.println("interface ref.:"+line);
-                return line;
-            } else if (wmsLayer.isRaster() && line.indexOf(cInterfaceRaster) != -1) { // "afficherCarteTa.do"
-                // list of values parsed in listOfTA (Tableau d'assemblage)
-                parseTAList(line.substring(line.indexOf(cInterfaceRaster)));
-                if (listOfTA.size() == 1) {
-                    wmsLayer.setCodeCommune(listOfTA.firstElement());
-                    return buildRasterInterfaceRef(listOfTA.firstElement());
+                lines = lines.substring(lines.indexOf(cInterfaceVector),lines.length());
+                lines = lines.substring(0, lines.indexOf("'"));
+                System.out.println("interface ref.:"+lines);
+                return lines;
+            } else if (wmsLayer.isRaster() && lines.indexOf(cInterfaceRasterTA) != -1) { // "afficherCarteTa.do"
+                // list of values parsed in listOfFeuilles (list all non-georeferenced images)
+                lines = getFeuillesList();
+                parseFeuillesList(lines);
+                if (listOfFeuilles.size() > 0) {
+                    int res = selectFeuilleDialog();
+                    if (res != -1) {
+                        wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).name);
+                        checkLayerDuplicates(wmsLayer);
+                        interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
+                        wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).ref);
+                        lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.elementAt(res).ref);
+                        System.out.println("interface ref.:"+lines);
+                        return lines;
+                    }
                 }
                 return null;
-            } else if (line.indexOf(cCommuneListStart) != -1 && line.indexOf(cCommuneListEnd) != -1) {
+            } else if (lines.indexOf(cCommuneListStart) != -1 && lines.indexOf(cCommuneListEnd) != -1) {
                 // list of values parsed in listOfCommunes
-                int i = line.indexOf(cCommuneListStart);
-                int j = line.indexOf(cCommuneListEnd, i);
-                parseCommuneList(line.substring(i, j));
+                int i = lines.indexOf(cCommuneListStart);
+                int j = lines.indexOf(cCommuneListEnd, i);
+                parseCommuneList(lines.substring(i, j));
             }
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(
@@ -264,19 +307,43 @@ public class CadastreInterface {
         }
     }
 
-    private void parseTAList(String input) {
-        while (input.indexOf(cInterfaceRaster) != -1) {
-            input = input.substring(input.indexOf(cInterfaceRaster));
-            String codeTA = input.substring(0, input.indexOf("'"));
-            codeTA = codeTA.substring(codeTA.indexOf("=")+1);
-            if (!listOfTA.contains(codeTA)) {
-                System.out.println("parse "+codeTA);
-                listOfTA.add(codeTA);
+    private String getFeuillesList() {
+        // get all images in one html page
+        String ln = null;
+        String lines = null;
+        HttpURLConnection urlConn2 = null;
+        try {
+            URL getAllImagesURL = new URL(baseURL + "/scpc/listerFeuillesParcommune.do?keepVolatileSession=&offset=2000");
+            urlConn2 = (HttpURLConnection)getAllImagesURL.openConnection();
+            setCookie(urlConn2);
+            urlConn2.connect();
+            System.out.println("GET "+getAllImagesURL);
+            BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn2.getInputStream()));
+            while ((ln = rd.readLine()) != null) {
+                lines += ln;
             }
-            input = input.substring(cInterfaceRaster.length());
+            rd.close();
+            urlConn2.disconnect();
+            //System.out.println("GET="+lines);
+        } catch (IOException e) {
+            listOfFeuilles.clear();
+            e.printStackTrace();
+        }
+        return lines;
+    }
+    
+    private void parseFeuillesList(String input) {
+        listOfFeuilles.clear();
+        while (input.indexOf(cImageLinkStart) != -1) {
+            input = input.substring(input.indexOf(cImageLinkStart)+cImageLinkStart.length());
+            String refFeuille = input.substring(0, input.indexOf("'"));
+            String nameFeuille = input.substring(
+                    input.indexOf(cImageNameStart)+cImageNameStart.length(),
+                    input.indexOf(" -"));
+            listOfFeuilles.add(new PlanImage(nameFeuille, refFeuille));
         }
     }
-
+    
     private String selectCommuneDialog() {
         JPanel p = new JPanel(new GridBagLayout());
         String[] communeList = new String[listOfCommunes.size() + 1];
@@ -289,29 +356,41 @@ public class CadastreInterface {
         JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null) {
             private static final long serialVersionUID = 1L;
         };
-        pane.createDialog(Main.parent, tr("Select commune")).setVisible(true);
+        //pane.createDialog(Main.parent, tr("Select commune")).setVisible(true);
+        // this below is a temporary workaround to fix the "always on top" issue
+        JDialog dialog = pane.createDialog(Main.parent, tr("Select commune"));
+        CadastrePlugin.prepareDialog(dialog);
+        dialog.setVisible(true);
+        // till here
         if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
             return null;
         String result = listOfCommunes.elementAt(inputCommuneList.getSelectedIndex()-1);
         return result.substring(1, result.indexOf(">")-2);
     }
 
-    private String selectTADialog() {
+    private int selectFeuilleDialog() {
         JPanel p = new JPanel(new GridBagLayout());
-        JComboBox inputTAList = new JComboBox(listOfTA);
-        p.add(inputTAList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
-        JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null) {
-            private static final long serialVersionUID = 1L;
-        };
-        pane.createDialog(Main.parent, tr("Select Tableau d'Assemblage")).setVisible(true);
+        Vector<String> ImageNames = new Vector<String>();
+        for (PlanImage src : listOfFeuilles) {
+            ImageNames.add(src.name);
+        }
+        JComboBox inputFeuilleList = new JComboBox(ImageNames);
+        p.add(inputFeuilleList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
+        JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
+        //pane.createDialog(Main.parent, tr("Select Feuille")).setVisible(true);
+        // this below is a temporary workaround to fix the "always on top" issue
+        JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
+        CadastrePlugin.prepareDialog(dialog);
+        dialog.setVisible(true);
+        // till here
         if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
-            return null;
-        String result = listOfTA.elementAt(inputTAList.getSelectedIndex());
+            return -1;
+        int result = inputFeuilleList.getSelectedIndex();
         return result;
     }
 
-    private String buildRasterInterfaceRef(String codeCommune) {
-        return cInterfaceRaster + "?f=" + codeCommune;
+    private String buildRasterFeuilleInterfaceRef(String codeCommune) {
+        return cInterfaceRasterFeuille + "?f=" + codeCommune;
     }
 
     public EastNorthBound retrieveCommuneBBox() throws IOException {
@@ -323,7 +402,6 @@ public class CadastreInterface {
         String content = baseURL + "/scpc/" + interfaceRef;
         content += "&dontSaveLastForward&keepVolatileSession=";
         searchFormURL = new URL(content);
-        System.out.println("HEAD:"+content);
         urlConn = (HttpURLConnection)searchFormURL.openConnection();
         urlConn.setRequestMethod("GET");
         setCookie();
@@ -331,6 +409,7 @@ public class CadastreInterface {
         if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
             throw new IOException("Cannot get Cadastre response.");
         }
+        System.out.println("GET "+searchFormURL);
         BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
         while ((ln = in.readLine()) != null) {
             line += ln;
@@ -376,7 +455,7 @@ public class CadastreInterface {
             //urlConn.disconnect();
         }
         downloadCancelled = true;
-        cadastreGrabber.setLastWMSLayerName(null);
+        lastWMSLayerName = null;
     }
 
 }

@@ -5,13 +5,16 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -34,7 +37,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
  * server. The data fetched this way is tiled and managed to the disc to reduce
  * server load.
  */
-public class WMSLayer extends Layer {
+public class WMSLayer extends Layer implements ImageObserver {
 
     Component[] component = null;
 
@@ -43,7 +46,7 @@ public class WMSLayer extends Layer {
     protected static final Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
             CadastrePlugin.class.getResource("/images/cadastre_small.png")));
 
-    protected ArrayList<GeorefImage> images = new ArrayList<GeorefImage>();
+    protected Vector<GeorefImage> images = new Vector<GeorefImage>();
 
     protected final int serializeFormatVersion = 2;
 
@@ -55,18 +58,15 @@ public class WMSLayer extends Layer {
 
     private String codeCommune = "";
 
-    private EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0,0), new EastNorth(0,0));
+    public EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0,0), new EastNorth(0,0));
 
     private boolean isRaster = false;
 
     private EastNorth rasterMin;
-
-    private EastNorth rasterCenter;
-
+    private EastNorth rasterMax;
     private double rasterRatio;
-
-    double cRasterMaxSizeX = 12286;
-    double cRasterMaxSizeY = 8730;
+    
+    private JMenuItem saveAsPng;
 
     public WMSLayer() {
         this(tr("Blank Layer"), "", -1);
@@ -93,7 +93,12 @@ public class WMSLayer extends Layer {
     }
 
     public void grab(CadastreGrabber grabber, Bounds b) throws IOException {
-        divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())));
+        if (isRaster) {
+            b = new Bounds(Main.proj.eastNorth2latlon(rasterMin), Main.proj.eastNorth2latlon(rasterMax));
+            divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider", 
+                    CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
+        } else
+            divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())));
 
         for (EastNorthBound n : dividedBbox) {
             GeorefImage newImage;
@@ -147,7 +152,7 @@ public class WMSLayer extends Layer {
         double dEast = (lambertMax.east() - minEast) / factor;
         double dNorth = (lambertMax.north() - minNorth) / factor;
         dividedBbox.clear();
-        if (factor < 4) {
+        if (factor < 4 || isRaster) {
             for (int xEast = 0; xEast < factor; xEast++)
                 for (int xNorth = 0; xNorth < factor; xNorth++) {
                     dividedBbox.add(new EastNorthBound(new EastNorth(minEast + xEast * dEast, minNorth + xNorth * dNorth),
@@ -176,7 +181,7 @@ public class WMSLayer extends Layer {
         String str = tr("WMS layer ({0}), {1} tile(s) loaded", getName(), images.size());
         if (isRaster) {
             str += "\n"+tr("Is not vectorized.");
-            str += "\n"+tr("Raster center: {0}", rasterCenter);
+            str += "\n"+tr("Raster size: {0}", communeBBox);
         } else
             str += "\n"+tr("Is vectorized.");
             str += "\n"+tr("Commune bbox: {0}", communeBBox);
@@ -194,9 +199,11 @@ public class WMSLayer extends Layer {
 
     @Override
     public void paint(Graphics g, final MapView mv) {
-        for (GeorefImage img : images)
-            img.paint((Graphics2D) g, mv, CadastrePlugin.backgroundTransparent,
-                    CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
+        synchronized(this){
+            for (GeorefImage img : images)
+                img.paint((Graphics2D) g, mv, CadastrePlugin.backgroundTransparent,
+                        CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
+        }
     }
 
     @Override
@@ -214,9 +221,15 @@ public class WMSLayer extends Layer {
 
     @Override
     public Component[] getMenuEntries() {
+        saveAsPng = new JMenuItem(new MenuActionSaveRasterAs(this));
+        saveAsPng.setEnabled(isRaster);
         component = new Component[] { new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)), new JMenuItem(new MenuActionLoadFromCache()),
-                new JMenuItem(new LayerListPopup.InfoAction(this)) };
+                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
+                new JMenuItem(new MenuActionLoadFromCache()),
+                saveAsPng,
+                new JMenuItem(new LayerListPopup.InfoAction(this)),
+                
+        };
         return component;
     }
 
@@ -244,7 +257,7 @@ public class WMSLayer extends Layer {
     }
 
     public void saveToCache(GeorefImage image) {
-        if (CacheControl.cacheEnabled) {
+        if (CacheControl.cacheEnabled && !isRaster()) {
             getCacheControl().saveCache(image);
         }
     }
@@ -302,51 +315,29 @@ public class WMSLayer extends Layer {
 
     public void setRaster(boolean isRaster) {
         this.isRaster = isRaster;
+        if (saveAsPng != null)
+            saveAsPng.setEnabled(isRaster);
     }
 
     /**
-     * Set the eastNorth position in rasterMin which is the 0,0 coordinate (bottom left corner).
-     * The bounds width is the raster width and height is calculate on a fixed image ratio.
-     * @param bounds
+     * Set raster positions used for grabbing and georeferencing. 
+     * rasterMin is the Eaast North of bottom left corner raster image on the screen when image is grabbed.
+     * The bounds width and height are the raster width and height. The image width matches the current view
+     * and the image height is adapted.
+     * Required: the communeBBox must be set (normally it is catched by CadastreInterface and saved by DownloadWMSPlanImage)   
+     * @param bounds the current main map view boundaries
      */
     public void setRasterBounds(Bounds bounds) {
-        rasterMin = new EastNorth(Main.proj.latlon2eastNorth(bounds.min).east(), Main.proj.latlon2eastNorth(bounds.min).north());
-        EastNorth rasterMax = new EastNorth(Main.proj.latlon2eastNorth(bounds.max).east(), Main.proj.latlon2eastNorth(bounds.max).north());
-        // now, resize on same proportion as wms server raster images (bounds center)
-        double rasterHalfHeight = (rasterMax.east() - rasterMin.east())/cRasterMaxSizeX*cRasterMaxSizeY/2;
-        double rasterMid = rasterMin.north() + (rasterMax.north()-rasterMin.north())/2;
-        rasterMin.setLocation(rasterMin.east(), rasterMid - rasterHalfHeight);
-        rasterMax.setLocation(rasterMax.east(), rasterMid + rasterHalfHeight);
-        rasterCenter = new EastNorth(rasterMin.east()+(rasterMax.east()-rasterMin.east())/2,
-                rasterMin.north()+(rasterMax.north()-rasterMin.north())/2);
-        rasterRatio = (rasterMax.east() - rasterMin.east()) / cRasterMaxSizeX;
-    }
-
-    public EastNorth getRasterMin() {
-        return rasterMin;
-    }
-
-    public void setRasterMin(EastNorth rasterMin) {
-        this.rasterMin = rasterMin;
-    }
-
-    public void displace(double dx, double dy) {
-        this.rasterMin = new EastNorth(rasterMin.east() + dx, rasterMin.north() + dy);
-        this.rasterCenter = new EastNorth(rasterCenter.east() + dx, rasterCenter.north() + dy);
-        for (GeorefImage img : images)
-            img.displace(dx, dy);
-    }
-
-    public void resize(double proportion) {
-        this.rasterMin = rasterMin.interpolate(rasterCenter, proportion);
-        for (GeorefImage img : images)
-            img.resize(rasterCenter, proportion);
-    }
-
-    public void rotate(double angle) {
-        this.rasterMin = rasterMin.rotate(rasterCenter, angle);
-        for (GeorefImage img : images)
-            img.rotate(rasterCenter, angle);
+        EastNorth rasterCenter = Main.proj.latlon2eastNorth(bounds.getCenter());
+        EastNorth eaMin = Main.proj.latlon2eastNorth(bounds.min);
+        EastNorth eaMax = Main.proj.latlon2eastNorth(bounds.max);
+        double rasterSizeX = communeBBox.max.getX() - communeBBox.min.getX(); 
+        double rasterSizeY = communeBBox.max.getY() - communeBBox.min.getY();
+        double ratio = rasterSizeY/rasterSizeX;
+        // keep same ratio on screen as WMS bbox (stored in communeBBox)
+        rasterMin = new EastNorth(eaMin.getX(), rasterCenter.getY()-(eaMax.getX()-eaMin.getX())*ratio/2);
+        rasterMax = new EastNorth(eaMax.getX(), rasterCenter.getY()+(eaMax.getX()-eaMin.getX())*ratio/2);
+        rasterRatio = (rasterMax.getX()-rasterMin.getX())/rasterSizeX;
     }
 
     /**
@@ -362,13 +353,14 @@ public class WMSLayer extends Layer {
         oos.writeBoolean(this.isRaster);
         if (this.isRaster) {
             oos.writeObject(this.rasterMin);
-            oos.writeObject(this.rasterCenter);
+            oos.writeObject(this.rasterMax);
             oos.writeDouble(this.rasterRatio);
-        } else {
-            oos.writeObject(this.communeBBox);
         }
-        for (GeorefImage img : imgs) {
-            oos.writeObject(img);
+        oos.writeObject(this.communeBBox);
+        synchronized(this){
+            for (GeorefImage img : imgs) {
+                oos.writeObject(img);
+            }
         }
     }
 
@@ -388,57 +380,109 @@ public class WMSLayer extends Layer {
         this.setLocation((String) ois.readObject());
         this.setCodeCommune((String) ois.readObject());
         this.lambertZone = ois.readInt();
-        this.isRaster = ois.readBoolean();
+        this.setRaster(ois.readBoolean());
         if (this.isRaster) {
             this.rasterMin = (EastNorth) ois.readObject();
-            this.rasterCenter = (EastNorth) ois.readObject();
+            this.rasterMax = (EastNorth) ois.readObject();
             this.rasterRatio = ois.readDouble();
-        } else {
-            this.communeBBox = (EastNorthBound) ois.readObject();
         }
+        this.communeBBox = (EastNorthBound) ois.readObject();
         if (this.lambertZone != currentLambertZone) {
             JOptionPane.showMessageDialog(Main.parent, tr("Lambert zone {0} in cache "+
                     "incompatible with current Lambert zone {1}",
                     this.lambertZone+1, currentLambertZone), tr("Cache Lambert Zone Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        boolean EOF = false;
-        try {
-            while (!EOF) {
-                GeorefImage newImage = (GeorefImage) ois.readObject();
-                for (GeorefImage img : this.images) {
-                    if (CadastrePlugin.backgroundTransparent) {
-                        if (img.overlap(newImage))
-                            // mask overlapping zone in already grabbed image
-                            img.withdraw(newImage);
-                        else
-                            // mask overlapping zone in new image only when
-                            // new image covers completely the existing image
-                            newImage.withdraw(img);
+        synchronized(this){
+            boolean EOF = false;
+            try {
+                while (!EOF) {
+                    GeorefImage newImage = (GeorefImage) ois.readObject();
+                    for (GeorefImage img : this.images) {
+                        if (CadastrePlugin.backgroundTransparent) {
+                            if (img.overlap(newImage))
+                                // mask overlapping zone in already grabbed image
+                                img.withdraw(newImage);
+                            else
+                                // mask overlapping zone in new image only when
+                                // new image covers completely the existing image
+                                newImage.withdraw(img);
+                        }
                     }
+                    this.images.add(newImage);
                 }
-                this.images.add(newImage);
+            } catch (EOFException ex) {
+                // expected exception when all images are read
             }
-        } catch (EOFException ex) {
-            // expected exception when all images are read
         }
         return true;
     }
-
-    public double getRasterRatio() {
-        return rasterRatio;
+    
+    /**
+     * Join the grabbed images into one single.
+     * Works only for images grabbed from non-georeferenced images (Feuilles cadastrales)(same amount of
+     * images in x and y)
+     */
+    public void joinRasterImages() {
+        if (images.size() > 1) {
+            EastNorth min = images.get(0).min;
+            EastNorth max = images.get(images.size()-1).max;
+            int oldImgWidth = images.get(0).image.getWidth();
+            int oldImgHeight = images.get(0).image.getHeight(); 
+            int newWidth = oldImgWidth*(int)Math.sqrt(images.size());
+            int newHeight = oldImgHeight*(int)Math.sqrt(images.size());
+            BufferedImage new_img = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+            Graphics g = new_img.getGraphics();
+            // Coordinate (0,0) is on top,left corner where images are grabbed from bottom left
+            int rasterDivider = (int)Math.sqrt(images.size());
+            for (int h = 0; h < rasterDivider; h++) {
+                for (int v = 0; v < rasterDivider; v++) {
+                    int newx = h*oldImgWidth;
+                    int newy = newHeight - oldImgHeight - (v*oldImgHeight);
+                    int j = h*rasterDivider + v;
+                    g.drawImage(images.get(j).image, newx, newy, this);
+                }
+            }
+            synchronized(this) {
+                images.clear();
+                images.add(new GeorefImage(new_img, min, max));
+            }
+        }
     }
-
-    public void setRasterRatio(double rasterRatio) {
-        this.rasterRatio = rasterRatio;
-    }
-
-    public EastNorth getRasterCenter() {
-        return rasterCenter;
-    }
-
-    public void setRasterCenter(EastNorth rasterCenter) {
-        this.rasterCenter = rasterCenter;
+    
+    /**
+     * Image cropping based on two EN coordinates pointing to two corners in diagonal
+     * Because it's coming from user mouse clics, we have to sort de positions first.
+     * Works only for raster image layer (only one image in collection).
+     * Updates layer georeferences. 
+     * @param en1
+     * @param en2
+     */
+    public void cropImage(EastNorth en1, EastNorth en2){
+        // adj1 is corner bottom, left 
+        EastNorth adj1 = new EastNorth(en1.east() <= en2.east() ? en1.east() : en2.east(),
+                en1.north() <= en2.north() ? en1.north() : en2.north());
+        // adj2 is corner top, right
+        EastNorth adj2 = new EastNorth(en1.east() > en2.east() ? en1.east() : en2.east(),
+                en1.north() > en2.north() ? en1.north() : en2.north());
+        // s1 and s2 have 0,0 at top, left where all EastNorth coord. have 0,0 at bottom, left
+        int sx1 = (int)((adj1.getX() - images.get(0).min.getX())*images.get(0).getPixelPerEast());
+        int sy1 = (int)((images.get(0).max.getY() - adj2.getY())*images.get(0).getPixelPerNorth());
+        int sx2 = (int)((adj2.getX() - images.get(0).min.getX())*images.get(0).getPixelPerEast());
+        int sy2 = (int)((images.get(0).max.getY() - adj1.getY())*images.get(0).getPixelPerNorth());
+        int newWidth = Math.abs(sx2 - sx1);
+        int newHeight = Math.abs(sy2 - sy1);
+        BufferedImage new_img = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = new_img.getGraphics();
+        g.drawImage(images.get(0).image, 0, 0, newWidth-1, newHeight-1,
+                (int)sx1, (int)sy1, (int)sx2, (int)sy2,
+                this);
+        images.set(0, new GeorefImage(new_img, adj1, adj2));
+        // important: update the layer georefs !
+        rasterMin = adj1;
+        rasterMax = adj2;
+        rasterRatio = (rasterMax.getX()-rasterMin.getX())/(communeBBox.max.getX() - communeBBox.min.getX());
+        setCommuneBBox(new EastNorthBound(new EastNorth(0,0), new EastNorth(newWidth-1,newHeight-1)));
     }
 
     public EastNorthBound getCommuneBBox() {
@@ -447,6 +491,13 @@ public class WMSLayer extends Layer {
 
     public void setCommuneBBox(EastNorthBound entireCommune) {
         this.communeBBox = entireCommune;
+    }
+
+    /**
+     * Method required by ImageObserver when drawing an image 
+     */
+    public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+        return false;
     }
 
 }

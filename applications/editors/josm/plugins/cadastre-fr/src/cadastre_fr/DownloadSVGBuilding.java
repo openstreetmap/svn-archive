@@ -204,7 +204,6 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         try {
             URL url = null;
             url = getURLsvg(bbox);
-            System.out.println("grab:"+url);
             return grabSVG(url);
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);

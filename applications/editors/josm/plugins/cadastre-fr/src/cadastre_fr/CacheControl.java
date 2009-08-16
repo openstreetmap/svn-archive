@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 
@@ -77,14 +78,20 @@ public class CacheControl implements Runnable {
 
     public boolean loadCacheIfExist() {
         try {
-            File file = new File(CadastrePlugin.cacheDir + wmsLayer.name + "." + String.valueOf(wmsLayer.lambertZone+1));
+            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + String.valueOf(wmsLayer.lambertZone+1));
             if (file.exists()) {
-                int reply = JOptionPane.showConfirmDialog(null,
-                        "Location \""+wmsLayer.name+"\" found in cache.\n"+
+                JOptionPane pane = new JOptionPane(
+                        tr("Location \"{0}\" found in cache.\n"+
                         "Load cache first ?\n"+
-                        "(No = new cache)",
-                        "Location in cache",
-                        JOptionPane.YES_NO_OPTION);
+                        "(No = new cache)", wmsLayer.getName()),
+                        JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null);
+                // this below is a temporary workaround to fix the "always on top" issue
+                JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
+                CadastrePlugin.prepareDialog(dialog);
+                dialog.setVisible(true);
+                int reply = (Integer)pane.getValue();
+                // till here
+
                 if (reply == JOptionPane.OK_OPTION) {
                     return loadCache(file, wmsLayer.lambertZone);
                 } else
@@ -98,7 +105,7 @@ public class CacheControl implements Runnable {
 
     public void deleteCacheFile() {
         try {
-            File file = new File(CadastrePlugin.cacheDir + wmsLayer.name + "." + String.valueOf(wmsLayer.lambertZone+1));
+            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + String.valueOf(wmsLayer.lambertZone+1));
             if (file.exists())
                 file.delete();
         } catch (Exception e) {
@@ -141,7 +148,7 @@ public class CacheControl implements Runnable {
             imagesToSave.clear();
             imagesLock.unlock();
             if (images != null && !images.isEmpty()) {
-                File file = new File(CadastrePlugin.cacheDir + wmsLayer.name + "." + String.valueOf((wmsLayer.lambertZone + 1)));
+                File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + String.valueOf((wmsLayer.lambertZone + 1)));
                 try {
                     if (file.exists()) {
                         ObjectOutputStreamAppend oos = new ObjectOutputStreamAppend(

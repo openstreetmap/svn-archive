@@ -9,7 +9,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 
-public class DownloadWMSTask extends PleaseWaitRunnable {
+public class DownloadWMSVectorImage extends PleaseWaitRunnable {
 
     private WMSLayer wmsLayer;
 
@@ -17,8 +17,8 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
 
     private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;
 
-    public DownloadWMSTask(WMSLayer wmsLayer, Bounds bounds) {
-        super(tr("Downloading {0}", wmsLayer.name));
+    public DownloadWMSVectorImage(WMSLayer wmsLayer, Bounds bounds) {
+        super(tr("Downloading {0}", wmsLayer.getName()));
 
         this.wmsLayer = wmsLayer;
         this.bounds = bounds;
@@ -66,7 +66,7 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
         MapView mv = Main.map.mapView;
         Bounds bounds = new Bounds(mv.getLatLon(0, mv.getHeight()), mv.getLatLon(mv.getWidth(), 0));
 
-        Main.worker.execute(new DownloadWMSTask(wmsLayer, bounds));
+        Main.worker.execute(new DownloadWMSVectorImage(wmsLayer, bounds));
 
     }
 }

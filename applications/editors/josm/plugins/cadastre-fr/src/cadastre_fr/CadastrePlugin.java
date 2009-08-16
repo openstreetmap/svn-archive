@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -134,6 +135,7 @@ public class CadastrePlugin extends Plugin {
             if (ks != null) {
                 menuGrab.setAccelerator(ks);
             }
+            JMenuItem menuActionGrabPlanImage = new JMenuItem(new MenuActionGrabPlanImage());
             JMenuItem menuSettings = new JMenuItem(new MenuActionNewLocation());
             final JCheckBoxMenuItem menuSource = new JCheckBoxMenuItem(tr("Auto sourcing"));
             menuSource.setSelected(autoSourcing);
@@ -151,6 +153,7 @@ public class CadastrePlugin extends Plugin {
             //JMenuItem menuActionBuildings = new JMenuItem(new MenuActionBuildings());
 
             cadastreJMenu.add(menuGrab);
+            cadastreJMenu.add(menuActionGrabPlanImage);
             cadastreJMenu.add(menuSettings);
             cadastreJMenu.add(menuSource);
             cadastreJMenu.add(menuResetCookie);
@@ -213,7 +216,8 @@ public class CadastrePlugin extends Plugin {
         for (int i = 0; i < cadastreJMenu.getItemCount(); i++) {
             JMenuItem item = cadastreJMenu.getItem(i);
             if (item != null)
-                if (item.getText().equals(MenuActionGrab.name) /* ||
+                if (item.getText().equals(MenuActionGrab.name) ||
+                    item.getText().equals(MenuActionGrabPlanImage.name) /* ||
                     item.getText().equals(MenuActionBoundaries.name) ||
                     item.getText().equals(MenuActionBuildings.name)*/) {
                     item.setEnabled(isEnabled);
@@ -228,8 +232,8 @@ public class CadastrePlugin extends Plugin {
         if (cadastreJMenu != null) {
             if (oldFrame == null && newFrame != null) {
                 setEnabledAll(true);
-                Main.map.addMapMode(new IconToggleButton
-                        (new WMSAdjustAction(Main.map)));
+                /*Main.map.addMapMode(new IconToggleButton
+                        (new WMSAdjustAction(Main.map)));*/
             } else if (oldFrame != null && newFrame == null) {
                 setEnabledAll(false);
                 Lambert.layoutZone = -1;
@@ -245,4 +249,24 @@ public class CadastrePlugin extends Plugin {
             || Main.proj.toString().equals(new GaussLaborde_Reunion().toString());
     }
 
+    public static void safeSleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {}
+    }
+
+    // See OptionPaneUtil
+    // FIXME: this is a temporary solution. 
+    public static void prepareDialog(JDialog dialog) {
+        if (Main.pref.getBoolean("window-handling.option-pane-always-on-top", true)) {
+            try {
+                dialog.setAlwaysOnTop(true);
+            } catch(SecurityException e) {
+                System.out.println(tr("Warning: failed to put option pane dialog always on top. Exception was: {0}", e.toString()));
+            }
+        }
+        dialog.setModal(true);
+        dialog.toFront();
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    }
 }

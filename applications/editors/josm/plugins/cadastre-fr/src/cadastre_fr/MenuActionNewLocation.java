@@ -29,7 +29,7 @@ public class MenuActionNewLocation extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         WMSLayer wmsLayer = addNewLayer(new ArrayList<WMSLayer>());
         if (wmsLayer != null)
-            DownloadWMSTask.download(wmsLayer);
+            DownloadWMSVectorImage.download(wmsLayer);
     }
 
     public WMSLayer addNewLayer(ArrayList<WMSLayer> existingLayers) {
@@ -78,7 +78,7 @@ public class MenuActionNewLocation extends JosmAction {
                 Main.pref.put("cadastrewms.location", location);
                 Main.pref.put("cadastrewms.codeCommune", codeCommune);
                 for (Layer l : Main.map.mapView.getAllLayers()) {
-                    if (l instanceof WMSLayer && l.name.equalsIgnoreCase(location + codeDepartement)) {
+                    if (l instanceof WMSLayer && l.getName().equalsIgnoreCase(location + codeDepartement)) {
                         return null;
                     }
                 }
@@ -92,7 +92,7 @@ public class MenuActionNewLocation extends JosmAction {
             }
 
             if (resetCookie)
-                CadastrePlugin.cadastreGrabber.getWmsInterface().resetCookieIfNewLayer(wmsLayer.name);
+                CadastrePlugin.cadastreGrabber.getWmsInterface().resetCookieIfNewLayer(wmsLayer.getName());
             return wmsLayer;
         }
     }

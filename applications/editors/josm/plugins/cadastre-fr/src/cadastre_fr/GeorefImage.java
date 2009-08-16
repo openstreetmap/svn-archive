@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
 import javax.imageio.ImageIO;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -22,18 +23,12 @@ import org.openstreetmap.josm.gui.NavigatableComponent;
 public class GeorefImage implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public EastNorth min, max;
-
-    public EastNorth org_min, org_max;
-
+    public EastNorth min;
+    public EastNorth max;
     public BufferedImage image;
 
-    private double angle = 0; // in radian
-
-    private BufferedImage rotated_image; // only if angle <> 0
-
-    double pixelPerEast;
-    double pixelPerNorth;
+    private double pixelPerEast;
+    private double pixelPerNorth;
 
     public GeorefImage(BufferedImage img, EastNorth min, EastNorth max) {
         image = img;
@@ -42,54 +37,6 @@ public class GeorefImage implements Serializable {
         updatePixelPer();
     }
 
-    public void displace(double dx, double dy) {
-        min = new EastNorth(min.east() + dx, min.north() + dy);
-        max = new EastNorth(max.east() + dx, max.north() + dy);
-    }
-
-    public void resize(EastNorth rasterCenter, double proportion) {
-        min = min.interpolate(rasterCenter, proportion);
-        max = max.interpolate(rasterCenter, proportion);
-        updatePixelPer();
-    }
-
-    public void rotate(EastNorth pivot, double delta) {
-        if (angle == 0) {
-            org_min = min;
-            org_max = max;
-        }
-        this.angle += delta;
-
-        EastNorth imageCenter = org_min.interpolate(org_max, 0.5);
-        EastNorth newimageCenter = imageCenter.rotate(pivot, angle);
-        min.setLocation(org_min.east() + newimageCenter.east()-imageCenter.east(),
-                org_min.north() + newimageCenter.north()-imageCenter.north());
-        max.setLocation(org_max.east() + newimageCenter.east()-imageCenter.east(),
-                org_max.north() + newimageCenter.north()-imageCenter.north());
-        EastNorth min2 = new EastNorth(min.east(), max.north());
-        EastNorth max2 = new EastNorth(max.east(), min.north());
-        min = org_min.rotate(newimageCenter, angle);
-        max = org_max.rotate(newimageCenter, angle);
-        min2 = min2.rotate(newimageCenter, angle);
-        max2 = max2.rotate(newimageCenter, angle);
-        getNewBounding(min, max, min2, max2);
-
-        rotated_image = tilt(image, angle);
-    }
-
-    public static BufferedImage tilt(BufferedImage image, double angle) {
-        double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
-        int w = image.getWidth(), h = image.getHeight();
-        int neww = (int)Math.floor(w*cos+h*sin), newh = (int)Math.floor(h*cos+w*sin);
-        GraphicsConfiguration gc = getDefaultConfiguration();
-        BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
-        Graphics2D g = result.createGraphics();
-        g.translate((neww-w)/2, (newh-h)/2);
-        g.rotate(angle, w/2, h/2);
-        g.drawRenderedImage(image, null);
-        g.dispose();
-        return result;
-    }
     public static GraphicsConfiguration getDefaultConfiguration() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
@@ -126,12 +73,6 @@ public class GeorefImage implements Serializable {
         if (image == null || min == null || max == null)
             return;
 
-        BufferedImage toDisplay;
-        if (angle != 0)
-            toDisplay = rotated_image;
-        else
-            toDisplay = image;
-
         Point minPt = nc.getPoint(min), maxPt = nc.getPoint(max);
 
         if (!g.hitClip(minPt.x, maxPt.y, maxPt.x - minPt.x, minPt.y - maxPt.y))
@@ -143,8 +84,8 @@ public class GeorefImage implements Serializable {
             g.setColor(Color.green);
             g.drawRect(minPt.x, maxPt.y, maxPt.x - minPt.x, minPt.y - maxPt.y);
         }
-        g.drawImage(toDisplay, minPt.x, maxPt.y, maxPt.x, minPt.y, // dest
-                0, 0, toDisplay.getWidth(), toDisplay.getHeight(), // src
+        g.drawImage(image, minPt.x, maxPt.y, maxPt.x, minPt.y, // dest
+                0, 0, image.getWidth(), image.getHeight(), // src
                 null);
         if (backgroundTransparent && transparency < 1.0f)
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
@@ -182,11 +123,14 @@ public class GeorefImage implements Serializable {
             Graphics g = image.getGraphics();
             for (int x = minXMaskPixel; x < minXMaskPixel + widthXMaskPixel; x++)
                 for (int y = minYMaskPixel; y < minYMaskPixel + heightYMaskPixel; y++)
-                    image.setRGB(x, y, ImageModifier.cadastreBackgroundTransp);
+                    image.setRGB(x, y, VectorImageModifier.cadastreBackgroundTransp);
             g.dispose();
         }
     }
 
+    /*
+     * Method required by BufferedImage serialization
+     */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         max = (EastNorth) in.readObject();
         min = (EastNorth) in.readObject();
@@ -194,21 +138,91 @@ public class GeorefImage implements Serializable {
         updatePixelPer();
     }
 
-
-    private void updatePixelPer() {
-        pixelPerEast = image.getWidth()/(max.east()-min.east());
-        pixelPerNorth = image.getHeight()/(max.north()-min.north());
-    }
-
+    /*
+     * Method required by BufferedImage serialization
+     */
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeObject(max);
         out.writeObject(min);
         ImageIO.write(image, "png", ImageIO.createImageOutputStream(out));
     }
 
+    private void updatePixelPer() {
+        pixelPerEast = image.getWidth()/(max.east()-min.east());
+        pixelPerNorth = image.getHeight()/(max.north()-min.north());
+    }
+
+    public double getPixelPerEast() {
+        return pixelPerEast;
+    }
+
+    public double getPixelPerNorth() {
+        return pixelPerNorth;
+    }
+
     @Override
     public String toString() {
         return "GeorefImage[min=" + min + ", max=" + max + ", image" + image + "]";
+    }
+
+    /*
+     * Following methods are used for affine transformation of two points p1 and p2
+     */
+    /**
+     * Add a translation (dx, dy) to this image min,max coordinates
+     * @param dx delta added to X image coordinate
+     * @param dy delta added to Y image coordinate
+     */
+    public void shear(double dx, double dy) {
+        min = new EastNorth(min.east() + dx, min.north() + dy);
+        max = new EastNorth(max.east() + dx, max.north() + dy);
+    }
+    
+    /**
+     * Change this image scale by moving the min,max coordinates around an anchor
+     * @param anchor 
+     * @param proportion
+     */
+    public void scale(EastNorth anchor, double proportion) {
+        min = anchor.interpolate(min, proportion);
+        max = anchor.interpolate(max, proportion);
+        updatePixelPer();
+    }
+
+    /**
+     * Rotate this image and its min/max coordinates around anchor point
+     * @param anchor anchor of rotation
+     * @param angle angle of rotation (in radians)
+     */
+    public void rotate(EastNorth anchor, double angle) {
+        EastNorth min2 = new EastNorth(min.east(), max.north());
+        EastNorth max2 = new EastNorth(max.east(), min.north());
+        min = min.rotate(anchor, angle);
+        max = max.rotate(anchor, angle);
+        min2 = min2.rotate(anchor, angle);
+        max2 = max2.rotate(anchor, angle);
+        getNewBounding(min, max, min2, max2);
+        image = tilt(image, angle);
+    }
+
+    /**
+     * Rotate by copying original buffered image into a new one with new dimensions 
+     * @param image
+     * @param angle
+     * @return
+     */
+    public static BufferedImage tilt(BufferedImage image, double angle) {
+        double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
+        int w = image.getWidth(), h = image.getHeight();
+        int neww = (int)Math.floor(w*cos+h*sin), newh = (int)Math.floor(h*cos+w*sin);
+        GraphicsConfiguration gc = getDefaultConfiguration();
+        BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
+        Graphics2D g = result.createGraphics();
+        g.translate((neww-w)/2, (newh-h)/2);
+        g.rotate(angle, w/2, h/2);
+        g.drawRenderedImage(image, null);
+        g.dispose();
+        return result;
     }
 
 }

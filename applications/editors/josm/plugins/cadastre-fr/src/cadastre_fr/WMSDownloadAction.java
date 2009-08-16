@@ -20,7 +20,7 @@ public class WMSDownloadAction extends JosmAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        DownloadWMSTask.download(getLayer());
+        DownloadWMSVectorImage.download(getLayer());
     }
 
     public static WMSLayer getLayer() {

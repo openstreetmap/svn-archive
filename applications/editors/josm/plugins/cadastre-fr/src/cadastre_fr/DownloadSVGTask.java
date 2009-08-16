@@ -46,7 +46,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     private EastNorthBound viewBox = null;
 
     public DownloadSVGTask(WMSLayer wmsLayer) {
-        super(tr("Downloading {0}", wmsLayer.name));
+        super(tr("Downloading {0}", wmsLayer.getName()));
 
         this.wmsLayer = wmsLayer;
         this.wmsInterface = grabber.getWmsInterface();
@@ -160,7 +160,6 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         try {
             URL url = null;
             url = getURLsvg(bbox);
-            System.out.println("grab:"+url);
             return grabSVG(url);
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);

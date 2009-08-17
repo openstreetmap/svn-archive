@@ -44,8 +44,8 @@ import httplib2
 import pickle
 import os
 
-#api_host='http://api.openstreetmap.org'
-api_host='http://api06.dev.openstreetmap.org'
+api_host='http://api.openstreetmap.org'
+#api_host='http://api06.dev.openstreetmap.org'
 headers = {
     'User-Agent' : 'bulk_upload.py',
 }

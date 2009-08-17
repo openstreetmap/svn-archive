@@ -25,8 +25,10 @@ void RelationWriter::writeRelations()
 {
     output->write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
         "<osm version=\"0.6\" generator=\"SRTM2Wayinfo\">\n");
-    foreach (OsmWay *way, data->ways) {
-        processWay(way);
+    OsmWay way;
+    data->ways->startReading();
+    while (data->ways->get(way)) {
+        processWay(&way);
     }
     output->write("</osm>\n");
 }

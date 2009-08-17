@@ -22,6 +22,19 @@ int main(int argc, char **argv)
 {
     global_settings.parseSettings(argc, argv);
 
+    OsmWayStorage *ways;
+    OsmNodeStorage *nodes;
+    if (global_settings.getDatasetSize() == size_small) {
+        nodes = new OsmNodeStorageSmall();
+        ways = new OsmWayStorageMem();
+    } else if (global_settings.getDatasetSize() == size_medium) {
+        nodes = new OsmNodeStorageMedium();
+        ways = new OsmWayStorageDisk(".");
+    } else {
+        nodes = new OsmNodeStorageLarge();
+        ways = new OsmWayStorageDisk(".");
+    }
+
     curl_global_init(CURL_GLOBAL_DEFAULT);
     /* Setting the locale should not be required but it can't harm.
      * QString::arg() is safe.
@@ -37,12 +50,14 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    OsmData data;
+    OsmData data(ways, nodes);
     data.parse(global_settings.getInput());
 
     RelationWriter writer(&data, &output, &downloader);
     writer.writeRelations();
 
     output.close();
+    delete nodes;
+    delete ways;
     curl_global_cleanup();
 }

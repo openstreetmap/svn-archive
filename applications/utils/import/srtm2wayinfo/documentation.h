@@ -18,6 +18,8 @@ This manual is divided in the following sections:
 - \subpage output
 - \subpage structure
 
+If you have any problems using this program contact me at <b>h e r m (at) s c r i b u s (dot) i n f o</b>.
+
 \page installation Installation
 \section Dependencies
 This program uses the following libraries:
@@ -89,7 +91,7 @@ segment a relation is created:
 
 
 \page structure Program structure
-\li SrtmDownloader (srtm.cpp) is responsible for downloading the SRTM tiles (if available) and returning the
+\li SrtmDownloader is responsible for downloading the SRTM tiles (if available) and returning the
 altitude data.
 SrtmDownloader::getAltitudeFromLatLon() should be the only function you have to use after initialization, but of if you want to do other things with the tiles you can get the SrtmTile objects directly. An
 enhancement in the future might to be to download SRTM1 tiles where available. This is possible with the current achitecture, but not implemented yet. SrtmDownloader does not depend on other parts of the project and could easily be reused. It only need the server's address, which it gets in the main() function, by calling the functions from the Settings object.

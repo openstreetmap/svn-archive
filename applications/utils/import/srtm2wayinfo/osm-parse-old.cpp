@@ -40,18 +40,15 @@ void OsmData::parse(QFile *file)
         xml.readNext();
         if (xml.isEndElement() && xml.name() == "way") {
             if (keep) {
-                currentWay->nodes.squeeze();
-                ways.append(currentWay);
-                foreach(OsmNodeId nodeid, currentWay->nodes) {
-                    nodes[nodeid].incOrder();
+                ways->append(currentWay);
+                foreach(OsmNodeId nodeid, currentWay.nodes) {
+                    (*nodes)[nodeid].incOrder();
                 }
-                nodes_referenced += currentWay->nodes.count();
+                nodes_referenced += currentWay.nodes.count();
                 kept++;
             } else {
-                delete currentWay;
                 discarded++;
             }
-            currentWay = 0;
             continue;
         }
 
@@ -60,15 +57,16 @@ void OsmData::parse(QFile *file)
         i++;
         if ((i & 65535) == 0) qDebug() << i;
         if (xml.name() == "tag") {
-            if (currentWay && wayTags.contains(xml.attributes().value("k").toString())) {
+            if (wayTags.contains(xml.attributes().value("k").toString())) {
                 keep = true;
             }
             continue;
         }
 
         if (xml.name() == "node") {
+            nodes_total++;
             OsmNodeId nodeid = xml.attributes().value("id").toString().toInt();
-            nodes[nodeid] = OsmNode(
+            (*nodes)[nodeid] = OsmNode(
                 xml.attributes().value("lat").toString().toFloat(),
                 xml.attributes().value("lon").toString().toFloat());
             continue;
@@ -76,12 +74,13 @@ void OsmData::parse(QFile *file)
 
         if (xml.name() == "way") {
             keep = false;
-            currentWay = new OsmWay(xml.attributes().value("id").toString().toInt());
+            currentWay.clear();
+            currentWay.setId(xml.attributes().value("id").toString().toInt());
         }
 
         if (xml.name() == "nd") {
-            currentWay->addNode(xml.attributes().value("ref").toString().toInt());
+            currentWay.addNode(xml.attributes().value("ref").toString().toInt());
         }
     }
-    qDebug() << "Kept:" << kept << "Discarded:" << discarded <<  "Noderefs:" << nodes_referenced << "Nodes:" << nodes.count();
+    qDebug() << "Kept:" << kept << "Discarded:" << discarded <<  "Noderefs:" << nodes_referenced << "Nodes:" << nodes_total;
 }

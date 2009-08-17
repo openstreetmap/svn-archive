@@ -550,7 +550,7 @@ function addMarker(lonlat, type) {
 	}
 	return marker;
 }
-
+/*
 function getRouteAs() {
 	if (routelayer.features.length > 0) {
 		for (i = 0; i < document.forms['export'].elements.length; i++) {
@@ -581,13 +581,51 @@ function getRouteAs() {
 		alert('There is no route to export');
 	} 
 }
-
-// Determines which OL control is active
-/*
-function toggleControls(element) {
-
-}
 */
+function getRouteAs() {
+	if (routelayer.features.length > 0) {
+		
+		
+		for (i = 0; i < document.forms['export'].elements.length; i++) {
+			element = document.forms['export'].elements[i];
+			if (element.name == 'type') {
+				if (element.checked == true) {
+					type = element.value;
+				}
+			}
+		}
+		if (type == 'wpt') {
+			alert('this format is not supported yet');
+			return;
+		}
+		var newWindow = window.open("api/1.0/saveas.php", "Download");
+		if (!newWindow) return false;
+		var html = "";
+		var data = "";
+		html += "<html><head></head><body><form id='formid' method='post' action='" + ' api/1.0/saveas.php'  + "'>";
+		html += "<input type='hidden' name='type' value='" + type + "'/>";
+
+		for (i = 0; i < routelayer.features[0].geometry.components.length; i++) {
+			point = routelayer.features[0].geometry.components[i];
+
+			lonlat = new OpenLayers.LonLat(parseFloat(point.x), parseFloat(point.y));
+			lonlat.transform(map.projection, map.displayProjection);
+			if (i > 0) {
+				data += ',';
+			}
+			data += roundNumber(lonlat.lon, 6) + ' ' + roundNumber(lonlat.lat, 6);
+			//html += "<input type='hidden' name='coord" + i + "' value='" + (roundNumber(lonlat.lon, 6) + ' ' + roundNumber(lonlat.lat, 6)) + "'/>";
+		}
+		html += "<input type='hidden' name='data' value='" + data + "'/>";
+		html += "</form><script type='text/javascript'>document.getElementById(\"formid\").submit()</script></body></html>";
+
+		newWindow.document.write(html);
+		aler('document written' )
+	} else {
+		alert('There is no route to export');
+	} 
+}
+
 
 function elementChange(element) {
 	if (element.value.length > 0) {

@@ -69,8 +69,9 @@
 							<li><input type="radio" name="type" value="gpx" checked>GPS exchange format (.gpx)</a></li>
 							<li><input type="radio" name="type" value="wpt">Waypoint (.wpt)</a></li>
 						</ul>
-						<!--<input type="button" name="export" onclick="document.open(getRouteAs()); return false" value="Save">-->
-						<input type="button" name="export" onclick="document.open(getRouteAs(), null, null); return false" value="Save">
+						<!--<input type="button" name="export" onclick="window.open(getRouteAs() method="post"); return false" value="Save">-->
+						<!--<input type="button" name="export" onclick="document.open(getRouteAs(), null, null); return false" value="Save">-->
+						<input type="button" name="export" onclick="getRouteAs();" value="Save">
 					</form>
 				</div>
 			</div>

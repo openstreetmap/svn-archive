@@ -1,10 +1,16 @@
 <?
 if (isset($_GET['type'])) {
+	$methode="get";
 	$type = $_GET['type'];
+} else if (isset($_POST['type'])) {
+	$method="post";
+	$type = $_POST['type'];
 }
 
 if (isset($_GET['data'])) {
 	$data = $_GET['data'];
+} else if (isset($_POST['data'])) {
+	$data = $_POST['data'];
 }
 
 if (isset($type)) {
@@ -35,17 +41,16 @@ function GPX($data) {
     $xml .= '    <name>Route</name>'."\n";
     $xml .= '    <trkseg>'."\n";
     
-    $route = split(",", trim($data));
+	$route = split(",", trim($data));
     
-    foreach ($route as $pair) {
-    	//echo $data.' '.count($route);
-    	$lonlat = split(' ', trim($pair));
-    	//echo $pair.' '.count($lonlat);
-    	if (count($lonlat) > 0) {
-	    	
-	    	$xml .= '      <trkpt lon="'.$lonlat[0].'" lat="'.$lonlat[1].'"></trkpt>'."\n";
-	   	}
-	}
+	foreach ($route as $pair) {
+	    	//echo $data.' '.count($route);
+	    	$lonlat = split(' ', trim($pair));
+	    	//echo $pair.' '.count($lonlat);
+	    	if (count($lonlat) > 0) {    	
+    			$xml .= '      <trkpt lon="'.$lonlat[0].'" lat="'.$lonlat[1].'"></trkpt>'."\n";
+   		}
+	}
 	$xml .= '    </trkseg>'."\n";
 	$xml .= '  </trk>'."\n";
 	$xml .= '</gpx>'."\n"; 

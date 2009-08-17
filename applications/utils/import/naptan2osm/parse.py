@@ -380,8 +380,8 @@ if __name__ == "__main__":
     parser = OptionParser(usage="%prog [args] naptan.xml", version=__version__)
     parser.add_option("-f", "--filter", action="store", dest="filter",
     type="string", default=None, help="Only import Points matching FILTER. FILTER is in the form element:value")
-    parser.add_option("-o", "--outfile", action="store", dest="outfile",
-    type="string", default=None, help="Write OSM data to OUTFILE. Defaults to filename.osm")
+    parser.add_option("-o", "--outdir", action="store", dest="outdir",
+    type="string", default=".", help="Write OSM data into dir, defaults to .")
     parser.add_option("-p", "--passive", action="store_true", dest="passive",
     help="'Passive' conversion, don't tag the data visibly, require it to be reviewed before being useful.")
     (options, args) = parser.parse_args()
@@ -392,10 +392,9 @@ if __name__ == "__main__":
     filename = args[0]
     infile = open(filename)
 
-    options.filenamebase = filename.rpartition('.')[0]
+    options.filenamebase = "%s/%s" % (options.outdir, filename.rpartition('.')[0])
     
-    if not options.outfile:
-        options.outfile = '%s.osm' % (options.filenamebase)
+    options.outfile = '%s.osm' % (options.filenamebase)
     outfile = open(options.outfile, 'w')
     
     xml = treeparse(infile, outfile, options)

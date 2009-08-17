@@ -12,6 +12,7 @@
 #include <QVector>
 #include <QMap>
 #include <QDebug>
+#include <QTemporaryFile>
 
 /** Typedef for node IDs. Allows easy identification of node IDs in code and changing to a different data type possible. */
 typedef int OsmNodeId;
@@ -87,8 +88,8 @@ class OsmWay
 {
     public:
 
-        /** Create a new way. */
-        OsmWay(OsmWayId id_)
+        /** Sets the way id */
+        void setId(OsmWayId id_)
         {
             id = id_;
         }
@@ -97,6 +98,13 @@ class OsmWay
         void addNode(OsmNodeId nodeid)
         {
             nodes.append(nodeid);
+        }
+
+        /** Deletes all data and make this way object reusable. */
+        void clear()
+        {
+            nodes.clear();
+            id = 0;
         }
 
         /** Way id. */
@@ -150,4 +158,39 @@ class OsmNodeStorageLarge: public OsmNodeStorage
         QMap<OsmNodeId, OsmNode> negative_nodes;
         OsmNode dummyNode;
 };
+
+/** FIFO system storing ways. */
+class OsmWayStorage
+{
+    public:
+        virtual ~OsmWayStorage() {}
+        virtual void append(OsmWay &input)=0;
+        virtual void startReading() {};
+        virtual bool get(OsmWay &output)=0;
+};
+
+class OsmWayStorageMem: public OsmWayStorage
+{
+    public:
+        OsmWayStorageMem() { pos = 0; }
+        virtual void append(OsmWay &input);
+        virtual bool get(OsmWay &output);
+    private:
+        QVector<OsmWay *> ways;
+        int pos;
+};
+
+class OsmWayStorageDisk: public OsmWayStorage
+{
+    public:
+        OsmWayStorageDisk(QString tmp_dir);
+        virtual ~OsmWayStorageDisk();
+        virtual void append(OsmWay &input);
+        virtual bool get(OsmWay &output);
+        virtual void startReading();
+    private:
+        QDataStream stream;
+        QTemporaryFile *file;
+};
+
 #endif

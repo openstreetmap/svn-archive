@@ -7,7 +7,6 @@
   * Only handles the attributes required for this project and ignores everything else.
   */
 #include "osm-parse.h"
-#include "settings.h"
 
 #include <QString>
 #include <QFile>
@@ -19,15 +18,6 @@
   */
 void OsmData::parse(QString filename)
 {
-    if (!nodes) {
-        if (global_settings.getDatasetSize() == size_small) {
-            nodes = new OsmNodeStorageSmall();
-        } else if (global_settings.getDatasetSize() == size_medium) {
-            nodes = new OsmNodeStorageMedium();
-        } else {
-            nodes = new OsmNodeStorageLarge();
-        }
-    }
     QFile f(filename);
     f.open(QIODevice::ReadOnly);
     parse(&f);
@@ -62,23 +52,22 @@ void OsmData::processTag(char *tag)
 //     else
     if (!strncmp(tag, "way", 4)) {
         keep = false;
-        currentWay = new OsmWay(wayid);
+        currentWay.clear();
+        currentWay.setId(wayid);
     } else if (!strncmp(tag, "nd", 3)) {
-        currentWay->addNode(noderef);
+        currentWay.addNode(noderef);
     } else if (!strncmp(tag, "/way", 5)) {
         if (keep) {
-            currentWay->nodes.squeeze();
-            ways.append(currentWay);
-            foreach(OsmNodeId nodeid, currentWay->nodes) {
+            ways->append(currentWay);
+            foreach(OsmNodeId nodeid, currentWay.nodes) {
                 (*nodes)[nodeid].incOrder();
             }
-            nodes_referenced += currentWay->nodes.count();
+            nodes_referenced += currentWay.nodes.count();
             kept++;
         } else {
-            delete currentWay;
+            //The way object will be reused
             discarded++;
         }
-        currentWay = 0;
     }
     #else
     #warning Parsing of ways is disabled.

@@ -62,3 +62,57 @@ OsmNode& OsmNodeStorageMedium::operator[](OsmNodeId id)
     }
     return blocks[block][offset];
 }
+
+
+void OsmWayStorageMem::append(OsmWay &way)
+{
+    OsmWay *cloned = new OsmWay(way);
+    cloned->nodes.squeeze();
+    ways.append(cloned);
+}
+
+bool OsmWayStorageMem::get(OsmWay &output)
+{
+    if (pos >= ways.size()) {
+        return false;
+    }
+    output = *(ways.at(pos++));
+    return true;
+}
+
+OsmWayStorageDisk::OsmWayStorageDisk(QString tmp_dir)
+{
+    file = new QTemporaryFile(tmp_dir+"/ways_XXXXXX");
+    if (file->open()) {
+        stream.setDevice(file);
+    } else {
+        qCritical() << "Could not create temporary file in" << tmp_dir;
+        exit(1);
+    }
+}
+
+
+void OsmWayStorageDisk::append(OsmWay &input)
+{
+    stream << input.id << input.nodes;
+}
+
+void OsmWayStorageDisk::startReading()
+{
+    file->seek(0);
+}
+
+
+bool OsmWayStorageDisk::get(OsmWay &output)
+{
+    stream >> output.id >> output.nodes;
+    return stream.status() == QDataStream::Ok;
+}
+
+
+OsmWayStorageDisk::~OsmWayStorageDisk()
+{
+    stream.setDevice(0);
+    file->close();
+    //delete file;
+}

@@ -22,18 +22,19 @@ class QFile;
 class OsmData
 {
     public:
-        OsmData() {
+        OsmData(OsmWayStorage *ways, OsmNodeStorage *nodes) {
             wayTags << "highway";
-            nodes = 0;
+            this->nodes = nodes;
+            this->ways = ways;
         }
         void parse(QString filename);
         void parse(QFile *file);
         /** Maps all node IDs for to their node objects. */
         OsmNodeStorage *nodes;
         /** List of all way objects. */
-        QVector<OsmWay *> ways;
-    private:
-        OsmWay *currentWay;
+        OsmWayStorage *ways;
+    protected:
+        OsmWay currentWay;
         QStringList wayTags;
         void processTag(char *tag);
         void processParam(char *tag, char *name, char *value);

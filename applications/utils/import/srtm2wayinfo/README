@@ -34,10 +34,6 @@ you'll find docs in "docs/html".
 http://dds.cr.usgs.gov/srtm/version2/Documentation/
 http://doc.trolltech.com/4.4/
 
-TODO
-----
-- Optimize for large datasets
-
 Optional TODO
 -------------
 - Add bzip2 support for reading and writing.

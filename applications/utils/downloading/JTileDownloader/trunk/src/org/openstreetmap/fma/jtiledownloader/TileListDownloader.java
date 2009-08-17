@@ -399,7 +399,8 @@ public class TileListDownloader
             long lastModified = urlConnection.getLastModified();
 
             // do not overwrite file if not changed: required because setIfModifiedSince doesn't work for tile-servers atm
-            if (file.lastModified() >= lastModified) {
+            // Mapnik-Servers do not send LastModified-headers...
+            if (lastModified != 0 && file.lastModified() >= lastModified) {
                 result.setCode(TileDownloadResult.CODE_OK);
                 result.setMessage(TileDownloadResult.MSG_OK);
                 return result;

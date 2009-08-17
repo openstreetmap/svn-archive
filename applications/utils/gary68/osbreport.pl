@@ -5,13 +5,13 @@ use OSM::osm 4.8 ;
 use OSM::osmgraph 2.0 ;
 
 
-my @test = qw (2x spielplatz doppelt übereinander altglas altkleider recycling) ;
+my @test = qw (2x doppelt übereinander altglas altkleider recycling 3x dreifach bank beschriftung bridge tunnel briefkasten haltestelle cafe campingplatz restaurant parkplatz apotheke kindergarten feuerwehr schule sportplatz telefon hotel imbiss kapelle spielplatz parkhaus rathaus schwimmbad sparkasse stadthalle supermarkt tankstelle volksbank wegweiser zebrastreifen bäckerei bahnübergang brücke überlagert gaststätte parkplätze überwachungskamera) ;
 
-@test = (@test, "2 mal", "brücke oder tunnel", "bridge or tunnel" ) ; 
+@test = (@test, "2 mal", "brücke oder tunnel", "bridge or tunnel", "burger king", "mc donalds", "mc donald's", "bus stop", "post ") ; 
 
 my $programName = "osbreport.pl" ;
 my $usage = "osbreport.pl osb.gpx out.htm" ; 
-my $version = "1.0" ;
+my $version = "1.1" ;
 
 my $count = 0 ;
 
@@ -42,7 +42,7 @@ print "\n$programName $version for file $gpxName\n" ;
 $time0 = time() ;
 
 print "texts to check: \n" ; 
-foreach my $t (@test) { print "- $t\n" ; }
+foreach my $t (sort @test) { print "- $t\n" ; }
 print "\n" ; 
 
 
@@ -53,7 +53,7 @@ print $html "<p>Version ", $version, "</p>\n" ;
 print $html "<H2>Info</H2>\n" ;
 print $html "<p>", stringFileInfo ($gpxName), "<br>\n" ;
 print $html "<H3>check texts:</H3>\n<p>" ;
-foreach my $t (@test) { print $html "- $t<br>\n" ; }
+foreach my $t (sort @test) { print $html "- $t<br>\n" ; }
 print $html "</p>\n" ; 
 
 print $html "<H2>OSB entries</H2>\n" ;

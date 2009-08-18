@@ -148,7 +148,7 @@ public class JTileDownloaderMainView
      */
     protected TileListDownloader createTileListDownloader(String outputFolder, TileList tilesToDownload)
     {
-        TileListDownloader tld = new TileListDownloader(outputFolder, tilesToDownload, _mainPanel.getTileProvider());
+        TileListDownloader tld = new TileListDownloader(outputFolder, tilesToDownload, _mainPanel.getSelectedTileProvider());
         return tld;
     }
 

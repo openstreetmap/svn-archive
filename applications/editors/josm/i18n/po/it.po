@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm 20081003\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-15 13:47+0200\n"
+"POT-Creation-Date: 2009-08-18 13:46+0200\n"
 "PO-Revision-Date: 2009-08-10 13:15+0000\n"
 "Last-Translator: Davide Prade <davalv@alice.it>\n"
 "Language-Team: Italian <talk-it@lists.openstreetmap.org>\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-08-15 11:37+0000\n"
+"X-Launchpad-Export-Date: 2009-08-18 11:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:186
@@ -85,7 +85,7 @@ msgstr ""
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:153
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:177
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:186
-#: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
+#: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:126
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:28
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:28
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:65
@@ -97,8 +97,8 @@ msgstr ""
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/Presets.java:77
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:281
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:288
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:164
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:353
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:163
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:352
 msgid "Error"
 msgstr "Errore"
 
@@ -3303,9 +3303,8 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:168
-#, fuzzy
 msgid "IO Exception"
-msgstr "Eccezione inattesa"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:190
 #, java-format
@@ -3639,6 +3638,7 @@ msgid "Layer ''{0}'' must be in list of layers"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/OptionPaneUtil.java:56
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:265
 #, java-format
 msgid ""
 "Warning: failed to put option pane dialog always on top. Exception was: {0}"
@@ -9375,8 +9375,25 @@ msgstr "Caricamento {0}"
 msgid "Error on file {0}"
 msgstr "Errore nel file {0}"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:119
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:352
+#: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:84
+#, java-format
+msgid ""
+"Location \"{0}\" found in cache.\n"
+"Load cache first ?\n"
+"(No = new cache)"
+msgstr ""
+
+#. this below is a temporary workaround to fix the "always on top" issue
+#. pane.createDialog(Main.parent, tr("Select Feuille")).setVisible(true);
+#. this below is a temporary workaround to fix the "always on top" issue
+#: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:89
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:382
+#, fuzzy
+msgid "Select Feuille"
+msgstr "Seleziona tutto"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:126
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:351
 msgid "Error loading file"
 msgstr "Errore durante il caricamento del file"
 
@@ -9396,13 +9413,13 @@ msgstr "File cache della zona 3 di Lambert (.3)"
 msgid "Lambert Zone 4 cache file (.4)"
 msgstr "File cache della zona 4 di Lambert (.4)"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:43
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:210
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:166
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:41
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:209
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:165
 msgid "CadastreGrabber: Illegal url."
 msgstr "CadastreGrabber: indirizzo url non valido."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:65
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:77
 #, java-format
 msgid ""
 "Town/city {0} not found or not available in WMS.\n"
@@ -9411,27 +9428,27 @@ msgstr ""
 "La località {0} non è stata trovata nel WMS.\n"
 "Verificane la presenza su www.cadastre.gouv.fr"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:283
-msgid "Choose from..."
-msgstr "Scegliere da..."
-
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:292
+#. this below is a temporary workaround to fix the "always on top" issue
+#. pane.createDialog(Main.parent, tr("Select commune")).setVisible(true);
+#. this below is a temporary workaround to fix the "always on top" issue
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:81
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:361
 msgid "Select commune"
 msgstr "Seleziona il comune"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:306
-msgid "Select Tableau d'Assemblage"
-msgstr "Selezionare la tabella di assemblaggio"
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:350
+msgid "Choose from..."
+msgstr "Scegliere da..."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:130
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:131
 msgid "Cadastre"
 msgstr "Catasto"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:138
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:140
 msgid "Auto sourcing"
 msgstr "Sorgente auto-determinata"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:192
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:195
 msgid ""
 "Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"
 "which is currently allocated for full-screen switch by default\n"
@@ -9442,11 +9459,11 @@ msgstr ""
 "che è attualmente riservata per la modalità a tutto schermo\n"
 "Si desidera ripristinare F11 per l'azione di cattura ?"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:195
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:198
 msgid "Restore grab shortcut F11"
 msgstr "Ripristino della scorciatoia F11 di cattura"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:200
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:203
 msgid "JOSM is stopped for the change to take effect."
 msgstr "JOSM si è fermato in attesa che il cambiamento abbia effetto."
 
@@ -9474,7 +9491,7 @@ msgstr "Abilita la cache automatica."
 msgid "Max. cache size (in MB)"
 msgstr "Massima dimensione della cache (in MB)"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:55
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:58
 msgid ""
 "A special handler of the French cadastre wms at www.cadastre.gouv."
 "fr<BR><BR>Please read the Terms and Conditions of Use here (in French): "
@@ -9490,22 +9507,22 @@ msgstr ""
 "CU_01_ConditionsGenerales_fr.html</a> <BR>prima di effettuare qualsiasi "
 "caricamento di dati creati da questa estensione."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:60
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:63
 msgid "French cadastre WMS"
 msgstr "WMS francese del catasto"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:64
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:67
 msgid "<html>Value of key \"source\" when autosourcing is enabled</html>"
 msgstr ""
 "<html>Valore della chiave \"source\" quando è abilitata la sorgente "
 "automatica</html>"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:65
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:68
 msgid "Source"
 msgstr "Sorgente"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:71
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:161
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:74
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:172
 msgid ""
 "Replace the original white background by the backgound color defined in JOSM "
 "preferences."
@@ -9513,7 +9530,7 @@ msgstr ""
 "Sostituire lo sfondo bianco originale con il colore di sfondo definito nelle "
 "preferenze di JOSM."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:76
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:79
 msgid ""
 "Invert the original black and white colors (and all intermediate greys). "
 "Useful for texts on dark backgrounds."
@@ -9521,40 +9538,46 @@ msgstr ""
 "Inverti i colori nero e bianco originali (e tutti i livelli di grigio "
 "intermedi). Utile per testi su sfondi scuri."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:87
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:90
 msgid "Allows multiple layers stacking"
 msgstr "Permette la sovrapposizione di livelli multipli"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:92
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:95
 msgid "Set WMS layers transparency. Right is opaque, left is transparent."
 msgstr ""
 "Imposta la trasparenza dei livelli WMS. Destra è opaco, sinistra è "
 "trasparente."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:102
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:105
 msgid "Draw a rectangle around downloaded data from WMS server."
 msgstr "Traccia un rettangolo attorno i dati scaricati dal server WMS."
 
-#. the downloaded images multiplier
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:106
-msgid "Image grab multiplier:"
+#. the vectorized images multiplier
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:109
+#, fuzzy
+msgid "Vector images grab multiplier:"
 msgstr "Moltiplicatore di attrazione dell'immagine:"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:121
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:125
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:124
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:128
 msgid "Grab smaller images (higher quality but use more memory)"
 msgstr ""
 "Ottieni immagini più piccole (maggiore qualità ma più utilizzo di memoria)"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:129
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:132
 msgid "Fixed size square (default is 100m)"
 msgstr "Dimensioni fisse riquadro (predefinito è 100m)"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:149
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:152
 msgid "Fixed size (from 25 to 1000 meters)"
 msgstr "Dimensioni fisse (da 25 a 1000 metri)"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:167
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:158
+#, fuzzy
+msgid "Raster images grab multiplier:"
+msgstr "Moltiplicatore di attrazione dell'immagine:"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:178
 msgid "Oldest files are automatically deleted when this size is exceeded"
 msgstr ""
 "I file più vecchi sono automaticamente eliminati quando superano questa "
@@ -9570,14 +9593,15 @@ msgstr "Aggiungere \"source=...\" agli elementi?"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:45
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:49
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:21
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSPlanImage.java:27
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSVectorImage.java:21
 #, java-format
 msgid "Downloading {0}"
 msgstr "Scaricamento di {0}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:53
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:57
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSTask.java:29
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSVectorImage.java:29
 msgid "Contacting WMS Server..."
 msgstr "Collegamento al Server WMS in corso..."
 
@@ -9585,7 +9609,7 @@ msgstr "Collegamento al Server WMS in corso..."
 msgid "Create buildings"
 msgstr "Crea un edificio"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:265
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:264
 msgid ""
 "To avoid cadastre WMS overload,\n"
 "building import size is limited to 1 km2 max."
@@ -9593,8 +9617,8 @@ msgstr ""
 "Per evitare un sovraccarico del WMS del catasto,\n"
 "la dimensione massima di importazione dell'edificio è di 1 km2."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:270
-#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:216
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGBuilding.java:269
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:215
 msgid "Please, enable auto-sourcing and check cadastre millesime."
 msgstr "Abilitare la sorgente automatica e controllare l'annata del catasto."
 
@@ -9609,6 +9633,22 @@ msgstr "Estrai il riquadro più appropriato..."
 #: ../plugins/cadastre-fr/src/cadastre_fr/DownloadSVGTask.java:128
 msgid "Create boundary"
 msgstr "Creazione confine"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSPlanImage.java:32
+#, fuzzy
+msgid "Contacting cadastre WMS ..."
+msgstr "Collegamento al Server WMS in corso..."
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSPlanImage.java:38
+#, fuzzy
+msgid "Image already loaded"
+msgstr "immagine non caricata"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/DownloadWMSPlanImage.java:74
+msgid ""
+"Municipality vectorized !\n"
+"Use the normal Cadastre Grab menu."
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:20
 msgid "Extract commune boundary"
@@ -9634,11 +9674,64 @@ msgid "Cadastre: {0}"
 msgstr "Catasto: {0}"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrab.java:37
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:81
 msgid ""
 "To enable the cadastre WMS plugin, change\n"
 "the current projection to one of the cadastre\n"
 "projection and retry"
 msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:44
+msgid "Grab non-georeferenced image"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:65
+msgid "Georeferencing interrupted"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:95
+msgid ""
+"Click first corner for image cropping\n"
+"(two points required)"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:116
+msgid "Click second corner for image cropping"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:123
+msgid ""
+"Click first Lambert crosspiece for georeferencing\n"
+"(two points required)"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:132
+msgid "Click second Lambert crosspiece for georeferencing\n"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:148
+#, fuzzy
+msgid "Enter cadastre east,north position"
+msgstr "Inserire Lat/Lon a cui andare."
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:149
+msgid "(Warning: verify north with arrow !!)"
+msgstr ""
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:151
+#, fuzzy
+msgid "East"
+msgstr "est"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:152
+#, fuzzy
+msgid "North"
+msgstr "nord"
+
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:162
+#, fuzzy
+msgid "Set Lambert coordinate"
+msgstr "Mantieni le loro coordinate"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLambertZone.java:25
 msgid "Set manually the Lambert zone (e.g. for locations between two zones)"
@@ -9697,6 +9790,10 @@ msgstr "Reimposta il cookie"
 msgid "Get a new cookie (session timeout)"
 msgstr "Ottieni un nuovo cookie (sessione scaduta)"
 
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionSaveRasterAs.java:25
+msgid "Export as PNG format (only raster images)"
+msgstr ""
+
 #: ../plugins/cadastre-fr/src/cadastre_fr/SimplifyWay.java:58
 #: ../plugins/utilsplugin/src/UtilsPlugin/SimplifyWayAction.java:136
 #, java-format
@@ -9704,15 +9801,6 @@ msgid "Simplify Way (remove {0} node)"
 msgid_plural "Simplify Way (remove {0} nodes)"
 msgstr[0] "Semplifica percorso (rimuovi {0} nodo)"
 msgstr[1] "Semplifica percorso (rimuovi {0} nodi)"
-
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSAdjustAction.java:34
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:42
-msgid "Adjust WMS"
-msgstr "Regola WMS"
-
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSAdjustAction.java:35
-msgid "Adjust the position of the WMS layer (raster images only)"
-msgstr "Regola la posizione del livello WMS (solo immagini non vettoriali)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSDownloadAction.java:19
 #: ../plugins/wmsplugin/src/wmsplugin/WMSDownloadAction.java:15
@@ -9729,35 +9817,35 @@ msgstr ""
 "Selezionare prima uno di questi, e poi riprovare"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:72
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:69
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:68
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:156
 msgid "Blank Layer"
 msgstr "Livello vuoto"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:176
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:181
 #, java-format
 msgid "WMS layer ({0}), {1} tile(s) loaded"
 msgstr "Layer WMS ({0}), {1} tile scaricate"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:178
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:183
 msgid "Is not vectorized."
 msgstr "Non è vettorializzato"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:179
-#, java-format
-msgid "Raster center: {0}"
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:184
+#, fuzzy, java-format
+msgid "Raster size: {0}"
 msgstr "Centro del easter: {0}"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:181
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:186
 msgid "Is vectorized."
 msgstr "E' stato vettorializzato"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:182
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:187
 #, java-format
 msgid "Commune bbox: {0}"
 msgstr "Riquadro del comune: {0}"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:384
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:376
 #, java-format
 msgid ""
 "Unsupported cache file version; found {0}, expected {1}\n"
@@ -9766,18 +9854,18 @@ msgstr ""
 "Versione del file cache non supportata; trovata {0}, attesa {1}\n"
 "Crearne uno nuovo."
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:385
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:377
 msgid "Cache Format Error"
 msgstr "Errore nel formato della cache"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:400
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:391
 #, java-format
 msgid "Lambert zone {0} in cache incompatible with current Lambert zone {1}"
 msgstr ""
 "Zona di Lambert {0} nella cache non compatibile con la zona di Lambert {1} "
 "corrente"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:402
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:393
 msgid "Cache Lambert Zone Error"
 msgstr "Errore nella zona di Lambert della cache"
 
@@ -12314,6 +12402,10 @@ msgstr ""
 msgid "No valid WMS URL or id"
 msgstr "Nessun id o indirizzo URL WMS valido"
 
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:42
+msgid "Adjust WMS"
+msgstr "Regola WMS"
+
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:43
 msgid "Adjust the position of the selected WMS layer"
 msgstr "Correggere la posizione del layer WMS selezionato"
@@ -12347,66 +12439,66 @@ msgstr ""
 "La proiezione ''{0}'' della URL e quella in uso ''{1}'' non coincidono.\n"
 "Potrebbero essere presenti errori nelle coordinate."
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:60
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:59
 msgid "Automatic downloading"
 msgstr "Scaricamento automatico"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:115
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:114
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
 msgstr ""
 "Livello WMS ({0}), scaricamento automatico al livello di ingrandimento {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:117
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:116
 #, java-format
 msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr "Livello WMS ({0}), scaricamento per il livello di ingrandimento {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:163
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:162
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 "L'area richiesta è troppo grande. Per favore scegli uno zoom più piccolo, "
 "oppure cambia risoluzione"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:226
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:225
 msgid "Download visible tiles"
 msgstr "Scarica i tasselli visibili"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:235
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:234
 msgid "Change resolution"
 msgstr "Cambia risoluzione"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:247
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:246
 msgid "Reload erroneous tiles"
 msgstr "Ricarica tile sbagliati"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:269
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:268
 msgid "Alpha channel"
 msgstr "Alpha channel"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:289
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:288
 msgid "Save WMS layer to file"
 msgstr "Salva il livello WMS su file"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:292
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:291
 msgid "Save WMS layer"
 msgstr "Salva livello WMS"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:316
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:315
 msgid "Load WMS layer from file"
 msgstr "Carica il livello WMS da file"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:320
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:319
 msgid "Load WMS layer"
 msgstr "Carica livello WMS"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:331
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:330
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr "Versione del file WMS non supportata; trovata {0}, attesa {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:332
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:331
 msgid "File Format Error"
 msgstr "Errore nel formato del file"
 
@@ -14980,15 +15072,13 @@ msgstr "Modifica scaletta"
 
 #. item "Barriers/Stile" check "Bicycle"
 #: build/trans_presets.java:1017
-#, fuzzy
 msgid "Turnstile"
-msgstr "Piattaforma ferroviaria girevole"
+msgstr ""
 
 #. item
 #: build/trans_presets.java:1018
-#, fuzzy
 msgid "Edit Turnstile"
-msgstr "Modifica scaletta"
+msgstr ""
 
 #. item "Barriers/Turnstile" check "Bicycle"
 #: build/trans_presets.java:1026
@@ -19877,9 +19967,8 @@ msgstr "Rete"
 
 #. item "Relations/Route" text "Operator"
 #: build/trans_presets.java:3021
-#, fuzzy
 msgid "Route state"
-msgstr "Tipo di percorso"
+msgstr ""
 
 #. item "Relations/Route" combo "Route state"
 #: build/trans_presets.java:3021
@@ -24207,6 +24296,12 @@ msgstr "Terraserver Topo"
 msgid "Terraserver Urban"
 msgstr "Terraserver Urban"
 
+#~ msgid "Select Tableau d'Assemblage"
+#~ msgstr "Selezionare la tabella di assemblaggio"
+
+#~ msgid "Adjust the position of the WMS layer (raster images only)"
+#~ msgstr "Regola la posizione del livello WMS (solo immagini non vettoriali)"
+
 #~ msgid "Not implemented yet."
 #~ msgstr "Non ancora implementato."
 
@@ -24366,9 +24461,6 @@ msgstr "Terraserver Urban"
 
 #~ msgid "Charge"
 #~ msgstr "Costo"
-
-#~ msgid "image not loaded"
-#~ msgstr "immagine non caricata"
 
 #~ msgid ""
 #~ "Zoom: Mousewheel or double click.   Move map: Hold right mousebutton and "

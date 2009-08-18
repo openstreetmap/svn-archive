@@ -18,6 +18,7 @@ import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadResult;
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.network.ProxyConnection;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
@@ -47,7 +48,7 @@ public class TileListDownloader
 {
     private Vector<Tile> _tilesToDownload;
     private String _downloadPath;
-    private String _serverBasePath;
+    private TileProviderIf _tileProvider;
     private TileListDownloaderThread downloaderThread = null;
 
     private TileDownloaderListener _listener = null;
@@ -56,12 +57,12 @@ public class TileListDownloader
      * @param downloadPath
      * @param tilesToDownload
      */
-    public TileListDownloader(String downloadPath, TileList tilesToDownload, String serverBasePath)
+    public TileListDownloader(String downloadPath, TileList tilesToDownload, TileProviderIf tileProvider)
     {
         super();
         setDownloadPath(downloadPath);
         setTilesToDownload(tilesToDownload.getTileListToDownload());
-        _serverBasePath = serverBasePath;
+        _tileProvider = tileProvider;
     }
 
     public void start()
@@ -98,7 +99,7 @@ public class TileListDownloader
         URL url = null;
         try
         {
-            url = new URL(_serverBasePath + tileToDownload + ".png");
+            url = new URL(_tileProvider.getTileUrl(tileToDownload));
         }
         catch (MalformedURLException e)
         {
@@ -107,8 +108,8 @@ public class TileListDownloader
             return result;
         }
 
-        String fileName = getDownloadPath() + File.separator + getFileName(tileToDownload);
-        String filePath = getDownloadPath() + File.separator + getFilePath(tileToDownload);
+        String fileName = getDownloadPath() + File.separator + _tileProvider.getTileFilename(tileToDownload);
+        String filePath = getDownloadPath() + File.separator + tileToDownload.getPath();
 
         File testDir = new File(filePath);
         if (!testDir.exists())
@@ -147,29 +148,6 @@ public class TileListDownloader
         }
 
         return result;
-    }
-
-    /**
-     * @param tileToDownload
-     * @return
-     */
-    protected final String getFileName(Tile theTileToDownload)
-    {
-        return theTileToDownload.toString() + ".png";
-    }
-
-    /**
-     * @param tileToDownload
-     * @return
-     */
-    protected final String getFilePath(Tile theTileToDownload)
-    {
-        String fileName = getFileName(theTileToDownload);
-        int posFileName = fileName.lastIndexOf("/");
-
-        String path = fileName.substring(0, posFileName);
-
-        return path;
     }
 
     /**

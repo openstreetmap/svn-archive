@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -34,17 +35,17 @@ public class TileListExporter
 {
     private Vector<Tile> _tilesToDownload;
     private final String _downloadPathBase;
-    private String _serverBasePath;
+    private TileProviderIf _tileProvider;
 
     /**
      * @param tilesToDownload
      */
-    public TileListExporter(String downloadPathBase, Vector<Tile> tilesToDownload, String serverBasePath)
+    public TileListExporter(String downloadPathBase, Vector<Tile> tilesToDownload, TileProviderIf tileProvider)
     {
         super();
         _downloadPathBase = downloadPathBase;
         _tilesToDownload = tilesToDownload;
-        _serverBasePath = serverBasePath;
+        _tileProvider = tileProvider;
     }
 
     public void doExport()
@@ -91,7 +92,7 @@ public class TileListExporter
 
     private void doSingleExport(Tile tileToDownload, BufferedWriter fileWriter) throws IOException
     {
-        fileWriter.write(_serverBasePath + tileToDownload + ".png");
+        fileWriter.write(_tileProvider.getTileUrl(tileToDownload));
         fileWriter.newLine();
         log("added url " + tileToDownload);
     }

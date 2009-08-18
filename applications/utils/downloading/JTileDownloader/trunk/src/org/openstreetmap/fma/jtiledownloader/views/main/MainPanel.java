@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListExporter;
 import org.openstreetmap.fma.jtiledownloader.TileServerList;
+import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileServer;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxLatLonPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxXYPanel;
@@ -460,7 +461,7 @@ public class MainPanel
             {
                 valuesChanged();
 
-                TileListExporter tle = new TileListExporter(_textOutputFolder.getText(), getInputPanel().getTileList().getTileListToDownload(), getSelectedTileServer());
+                TileListExporter tle = new TileListExporter(_textOutputFolder.getText(), getInputPanel().getTileList().getTileListToDownload(), new GenericTileProvider(getSelectedTileServer()));
                 tle.doExport();
                 JOptionPane.showMessageDialog(_mainView, "Exported Tilelist to " + _textOutputFolder.getText() + File.separator + "export.txt", "Info", JOptionPane.INFORMATION_MESSAGE);
             }

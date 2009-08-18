@@ -11,6 +11,7 @@ import javax.swing.event.ChangeListener;
 import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
+import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 
 /**
@@ -147,7 +148,7 @@ public class JTileDownloaderMainView
      */
     protected TileListDownloader createTileListDownloader(String outputFolder, TileList tilesToDownload)
     {
-        TileListDownloader tld = new TileListDownloader(outputFolder, tilesToDownload, _mainPanel.getTileServer());
+        TileListDownloader tld = new TileListDownloader(outputFolder, tilesToDownload, new GenericTileProvider(_mainPanel.getTileServer()));
         return tld;
     }
 

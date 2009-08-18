@@ -28,6 +28,7 @@ import java.io.File;
 public class GenericTileProvider
     implements TileProviderIf
 {
+    protected String name;
     protected String url;
 
     protected GenericTileProvider()
@@ -38,6 +39,21 @@ public class GenericTileProvider
      */
     public GenericTileProvider(String url)
     {
+        if (!url.endsWith("/"))
+        {
+            url = url + "/";
+        }
+        this.name = url;
+        this.url = url;
+    }
+
+    /**
+     * @param string
+     * @param string2
+     */
+    public GenericTileProvider(String name, String url)
+    {
+        this.name = name;
         this.url = url;
     }
 
@@ -65,7 +81,7 @@ public class GenericTileProvider
      */
     public String getName()
     {
-        return url;
+        return name;
     }
 
     /**
@@ -83,7 +99,7 @@ public class GenericTileProvider
      */
     public String getTileUrl(Tile tile)
     {
-        return getTileServerUrl() + "/" + tile.getZ() + "/" + tile.getX() + "/" + tile.getY() + "." + getTileType();
+        return getTileServerUrl() + tile.getZ() + "/" + tile.getX() + "/" + tile.getY() + "." + getTileType();
     }
 
     /**

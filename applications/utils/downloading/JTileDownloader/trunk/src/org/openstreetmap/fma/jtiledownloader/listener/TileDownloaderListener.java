@@ -46,12 +46,7 @@ public interface TileDownloaderListener
     /**
      * @param message
      */
-    void waitResume(String message);
-
-    /**
-     * @param message
-     */
-    void waitWaitHttp500ErrorToResume(String message);
+    void setInfo(String message);
 
     /**
      * @param actCount

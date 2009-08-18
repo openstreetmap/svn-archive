@@ -48,7 +48,6 @@ public class OptionsPanel
     JTextField _textMinimumAgeInDays = new JTextField();
 
     JCheckBox _chkShowTilePreview = new JCheckBox("Show TilePreview");
-    JCheckBox _chkAutoCloseTilePreview = new JCheckBox("AutoClose TilePreview");
 
     JCheckBox _chkOverwriteExistingFiles = new JCheckBox("Overwrite existing files");
 
@@ -120,7 +119,6 @@ public class OptionsPanel
         otherOptions.add(_textMinimumAgeInDays, constraintsWaitOptions);
 
         otherOptions.add(_chkShowTilePreview, constraintsOtherOptions);
-        otherOptions.add(_chkAutoCloseTilePreview, constraintsOtherOptions);
         constraintsOtherOptions.gridwidth = GridBagConstraints.RELATIVE;
         otherOptions.add(_chkOverwriteExistingFiles, constraintsOtherOptions);
 
@@ -141,7 +139,6 @@ public class OptionsPanel
         _textMinimumAgeInDays.setText("" + _appConfiguration.getMinimumAgeInDays());
 
         _chkShowTilePreview.setSelected(_appConfiguration.isShowTilePreview());
-        _chkAutoCloseTilePreview.setSelected(_appConfiguration.isAutoCloseTilePreview());
         _chkOverwriteExistingFiles.setSelected(_appConfiguration.isOverwriteExistingFiles());
 
     }
@@ -152,14 +149,6 @@ public class OptionsPanel
     public boolean isShowTilePreview()
     {
         return _chkShowTilePreview.isSelected();
-    }
-
-    /**
-     * @return
-     */
-    public boolean isAutoCloseTilePreview()
-    {
-        return _chkAutoCloseTilePreview.isSelected();
     }
 
     /**

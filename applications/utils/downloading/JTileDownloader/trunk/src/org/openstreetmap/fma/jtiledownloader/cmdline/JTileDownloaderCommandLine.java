@@ -282,4 +282,12 @@ public class JTileDownloaderCommandLine
         log("Stopped download at  tile " + actCount + "/" + maxCount);
     }
 
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#setInfo(java.lang.String)
+     * {@inheritDoc}
+     */
+    public void setInfo(String message)
+    {
+        log(message);
+    }
 }

@@ -2,8 +2,6 @@ package org.openstreetmap.fma.jtiledownloader.views.main;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Enumeration;
-import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -13,12 +11,7 @@ import javax.swing.event.ChangeListener;
 import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
-import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
-import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
-import org.openstreetmap.fma.jtiledownloader.views.errortilelist.ErrorTileListView;
-import org.openstreetmap.fma.jtiledownloader.views.preview.TilePreview;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -42,15 +35,13 @@ import org.openstreetmap.fma.jtiledownloader.views.preview.TilePreview;
  */
 public class JTileDownloaderMainView
     extends JFrame
-    implements TileDownloaderListener, Constants
+    implements Constants
 {
     private static final long serialVersionUID = 1L;
 
     private TileListDownloader _tileListDownloader;
 
     private AppConfiguration _appConfiguration;
-
-    private TilePreview _tilePreview = null;
 
     private MainPanel _mainPanel;
     private OptionsPanel _optionsPanel;
@@ -165,162 +156,6 @@ public class JTileDownloaderMainView
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String)
-     * {@inheritDoc}
-     */
-    public void downloadedTile(final int actCount, final int maxCount, String filePathName)
-    {
-        System.out.println("downloadedTile: actCount=" + actCount + ", maxCount=" + maxCount + ",path=" + filePathName);
-
-        if (_mainPanel != null)
-        {
-            _mainPanel.getProgressBar().setValue(actCount);
-            _mainPanel.getProgressBar().setString("Download tile " + actCount + "/" + maxCount);
-        }
-
-        if (getAppConfiguration().isShowTilePreview())
-        {
-            if (_tilePreview == null)
-            {
-                _tilePreview = new TilePreview();
-                _tilePreview.setLocation(getX() + (getWidth() / 2) - (_tilePreview.getWidth() / 2), getY() + (getHeight() / 2) - (_tilePreview.getHeight() / 2));
-            }
-            if (!_tilePreview.isVisible())
-            {
-                _tilePreview.setVisible(true);
-            }
-
-            _tilePreview.showImage(filePathName);
-        }
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, java.lang.String)
-     * {@inheritDoc}
-     */
-    public void errorOccured(int actCount, int maxCount, String tile)
-    {
-        if (_mainPanel != null)
-        {
-            _mainPanel.getProgressBar().setValue(actCount);
-            _mainPanel.getProgressBar().setString("Error downloading tile " + actCount + "/" + maxCount);
-        }
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadStopped(int, int)
-     * {@inheritDoc}
-     */
-    public void downloadStopped(int actCount, int maxCount)
-    {
-        if (_mainPanel != null)
-        {
-            _mainPanel.getButtonDownload().setText(MainPanel.DOWNLOAD_TILES);
-            _mainPanel.getButtonDownload().setActionCommand(MainPanel.COMMAND_DOWNLOAD);
-
-            _mainPanel.getProgressBar().setValue(actCount);
-            _mainPanel.getProgressBar().setString("Stopped download at tile " + actCount + "/" + maxCount);
-        }
-
-        getTileListDownloader().setListener(null);
-        setTileListDownloader(null);
-
-        closeTilePreview();
-
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete()
-     * {@inheritDoc}
-     */
-    public void downloadComplete(final int errorCount, Vector errorTileList)
-    {
-
-        _mainPanel.getProgressBar().setString("Completed with " + errorCount + " error(s)");
-
-        _mainPanel.getButtonDownload().setText(MainPanel.DOWNLOAD_TILES);
-        _mainPanel.getButtonDownload().setActionCommand(MainPanel.COMMAND_DOWNLOAD);
-        _mainPanel.getButtonExport().setEnabled(true);
-
-        getTileListDownloader().setListener(null);
-        setTileListDownloader(null);
-
-        closeTilePreview();
-
-        if (errorTileList != null && errorTileList.size() > 0)
-        {
-            ErrorTileListView view = new ErrorTileListView(this, errorTileList);
-            view.setVisible(true);
-            int exitCode = view.getExitCode();
-            view = null;
-
-            if (exitCode == ErrorTileListView.CODE_RETRY)
-            {
-                TileListSimple tiles = new TileListSimple();
-                for (Enumeration enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
-                {
-                    TileDownloadError tde = (TileDownloadError) enumeration.nextElement();
-                    tiles.addTile(tde.getTile());
-                }
-
-                setTileListDownloader(createTileListDownloader(_mainPanel.getOutputfolder(), tiles));
-
-                _mainPanel.getProgressBar().setMinimum(0);
-                _mainPanel.getProgressBar().setMaximum(tiles.getElementCount());
-                _mainPanel.getProgressBar().setStringPainted(true);
-                _mainPanel.getProgressBar().setString("Retry download ...");
-
-                getTileListDownloader().setListener(this);
-                getTileListDownloader().start();
-
-            }
-
-        }
-
-    }
-
-    /**
-     * 
-     */
-    private void closeTilePreview()
-    {
-        if (getAppConfiguration().isAutoCloseTilePreview())
-        {
-            if (_tilePreview != null)
-            {
-                try
-                {
-                    Thread.sleep(500);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-                _tilePreview.setVisible(false);
-                _tilePreview = null;
-            }
-        }
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#waitResume(java.lang.String)
-     * {@inheritDoc}
-     */
-    public void waitResume(String message)
-    {
-        _mainPanel.getProgressBar().setString(message);
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#waitWaitHttp500ErrorToResume(java.lang.String)
-     * {@inheritDoc}
-     */
-    public void waitWaitHttp500ErrorToResume(String message)
-    {
-        _mainPanel.getProgressBar().setString(message);
-    }
-
-    /**
      * 
      */
     protected TileListDownloader createTileListDownloader(String outputFolder, TileList tilesToDownload)
@@ -349,7 +184,6 @@ public class JTileDownloaderMainView
         getAppConfiguration().setUseProxyServerAuth(_networkPanel.isUseProxyServerAuth());
         getAppConfiguration().setProxyServerUser(_networkPanel.getProxyServerUser());
         getAppConfiguration().setShowTilePreview(_optionsPanel.isShowTilePreview());
-        getAppConfiguration().setAutoCloseTilePreview(_optionsPanel.isAutoCloseTilePreview());
         getAppConfiguration().setOverwriteExistingFiles(_optionsPanel.isOverwriteExistingFiles());
         getAppConfiguration().setWaitAfterNrTiles(_optionsPanel.isWaitAfterNumberOfTiles());
         getAppConfiguration().setWaitSeconds(_optionsPanel.getWaitSeconds());

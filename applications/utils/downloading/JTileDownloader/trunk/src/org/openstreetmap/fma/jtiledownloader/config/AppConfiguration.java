@@ -36,7 +36,6 @@ public class AppConfiguration
     private String _proxyServerUser = "";
 
     private boolean _showTilePreview = true;
-    private boolean _autoCloseTilePreview = true;
 
     private boolean _overwriteExistingFiles = true;
 
@@ -77,7 +76,6 @@ public class AppConfiguration
         setProperty(prop, USE_PROXY_SERVER_AUTH, "" + _useProxyServerAuth);
         setProperty(prop, PROXY_SERVER_USER, "" + _proxyServerUser);
         setProperty(prop, SHOW_TILE_PREVIEW, "" + isShowTilePreview());
-        setProperty(prop, AUTO_CLOSE_TILE_PREVIEW, "" + isAutoCloseTilePreview());
 
         setProperty(prop, OVERWRITE_EXISTING_FILES, "" + isOverwriteExistingFiles());
 
@@ -123,7 +121,6 @@ public class AppConfiguration
         _useProxyServerAuth = Boolean.valueOf(prop.getProperty(USE_PROXY_SERVER_AUTH, "false")).booleanValue();
         _proxyServerUser = prop.getProperty(PROXY_SERVER_USER, "");
         setShowTilePreview(Boolean.valueOf(prop.getProperty(SHOW_TILE_PREVIEW, "true")).booleanValue());
-        setAutoCloseTilePreview(Boolean.valueOf(prop.getProperty(AUTO_CLOSE_TILE_PREVIEW, "true")).booleanValue());
 
         setOverwriteExistingFiles(Boolean.valueOf(prop.getProperty(OVERWRITE_EXISTING_FILES, "true")).booleanValue());
 
@@ -243,24 +240,6 @@ public class AppConfiguration
     public boolean isShowTilePreview()
     {
         return _showTilePreview;
-    }
-
-    /**
-     * Setter for autoCloseTilePreview
-     * @param autoCloseTilePreview the autoCloseTilePreview to set
-     */
-    public void setAutoCloseTilePreview(boolean autoCloseTilePreview)
-    {
-        _autoCloseTilePreview = autoCloseTilePreview;
-    }
-
-    /**
-     * Getter for autoCloseTilePreview
-     * @return the autoCloseTilePreview
-     */
-    public boolean isAutoCloseTilePreview()
-    {
-        return _autoCloseTilePreview;
     }
 
     /**

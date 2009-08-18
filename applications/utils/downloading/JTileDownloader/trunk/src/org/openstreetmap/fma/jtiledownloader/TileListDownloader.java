@@ -573,7 +573,7 @@ public class TileListDownloader
     {
         if (_listener != null)
         {
-            _listener.waitResume(message);
+            _listener.setInfo(message);
         }
     }
 
@@ -584,7 +584,7 @@ public class TileListDownloader
     {
         if (_listener != null)
         {
-            _listener.waitResume(message);
+            _listener.setInfo(message);
         }
     }
 

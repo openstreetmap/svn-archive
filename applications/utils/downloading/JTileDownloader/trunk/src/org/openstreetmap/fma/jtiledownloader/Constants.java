@@ -20,7 +20,7 @@ package org.openstreetmap.fma.jtiledownloader;
  *    General Public License along with JTileDownloader.  
  *    If not, see <http://www.gnu.org/licenses/>.
  */
-public interface Constants
+public class Constants
 {
     public static final String VERSION = "0.5pre";
 

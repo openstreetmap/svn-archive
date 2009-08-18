@@ -25,7 +25,7 @@ import org.openstreetmap.fma.jtiledownloader.Constants;
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 public class TileListSimple
-    implements TileList, Constants
+    implements TileList
 {
 
     Vector _tileList;

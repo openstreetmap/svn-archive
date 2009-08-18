@@ -37,7 +37,7 @@ import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 public class JTileDownloaderCommandLine
-    implements TileDownloaderListener, Constants
+    implements TileDownloaderListener
 {
 
     private static final Object CMDLINE_DL = "DL";
@@ -81,15 +81,15 @@ public class JTileDownloaderCommandLine
      */
     private void handleDownloadTemplate(String type, String propertyFile)
     {
-        if (type.equalsIgnoreCase(CONFIG_TYPE[TYPE_URLSQUARE]))
+        if (type.equalsIgnoreCase(Constants.CONFIG_TYPE[Constants.TYPE_URLSQUARE]))
         {
             handleUrlSquare(propertyFile);
         }
-        else if (type.equalsIgnoreCase(CONFIG_TYPE[TYPE_BOUNDINGBOX_LATLON]))
+        else if (type.equalsIgnoreCase(Constants.CONFIG_TYPE[Constants.TYPE_BOUNDINGBOX_LATLON]))
         {
             handleBBoxLatLon(propertyFile);
         }
-        else if (type.equalsIgnoreCase(CONFIG_TYPE[TYPE_BOUNDINGBOX_XY]))
+        else if (type.equalsIgnoreCase(Constants.CONFIG_TYPE[Constants.TYPE_BOUNDINGBOX_XY]))
         {
             handleBBoxXY(propertyFile);
         }

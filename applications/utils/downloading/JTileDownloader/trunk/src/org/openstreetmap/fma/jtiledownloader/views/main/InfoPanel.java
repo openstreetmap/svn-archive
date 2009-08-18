@@ -32,7 +32,6 @@ import org.openstreetmap.fma.jtiledownloader.datatypes.TileServer;
  */
 public class InfoPanel
     extends JPanel
-    implements Constants
 {
     private static final long serialVersionUID = 1L;
 
@@ -83,7 +82,7 @@ public class InfoPanel
         _textInfo.setWrapStyleWord(true);
         _textInfo.setRows(10);
 
-        _textInfo.setText("JTileDownloader Version " + VERSION + "\n");
+        _textInfo.setText("JTileDownloader Version " + Constants.VERSION + "\n");
         _textInfo.append("-------------------------------------------------------\n");
         _textInfo.append("JTileDownloader  Copyright (C) 2008  Friedrich Maier\n");
         _textInfo.append("This program comes with ABSOLUTELY NO WARRANTY.\n");

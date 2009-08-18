@@ -1,14 +1,15 @@
 package org.openstreetmap.fma.jtiledownloader;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
 
 /**
  * Copyright 2008, Friedrich Maier 
+ * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader. 
  * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
@@ -63,43 +64,32 @@ public class TileListExporter
             exportFileTest.delete();
         }
 
-        int count = 0;
-        for (Enumeration enumeration = _tilesToDownload.elements(); enumeration.hasMoreElements();)
-        {
-            String tileToDownload = (String) enumeration.nextElement();
-            doSingleExport(tileToDownload, exportFile);
-            count++;
-        }
-
-    }
-
-    private boolean doSingleExport(String tileToDownload, String exportFile)
-    {
-        FileOutputStream outputStream = null;
+        BufferedWriter fileWriter;
         try
         {
-            outputStream = new FileOutputStream(exportFile, true);
-            for (int i = 0; i < tileToDownload.length(); i++)
+            fileWriter = new BufferedWriter(new FileWriter(exportFile));
+
+            int count = 0;
+            for (Enumeration enumeration = _tilesToDownload.elements(); enumeration.hasMoreElements();)
             {
-                outputStream.write((byte) tileToDownload.charAt(i));
+                String tileToDownload = (String) enumeration.nextElement();
+                doSingleExport(tileToDownload, fileWriter);
+                count++;
             }
-            outputStream.write((byte) "\r".charAt(0));
-            outputStream.write((byte) "\n".charAt(0));
-            outputStream.close();
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-            return false;
+
+            fileWriter.close();
         }
         catch (IOException e)
         {
-            e.printStackTrace();
-            return false;
+            System.out.println(e);
         }
-        System.out.println("added url " + tileToDownload + " to export file " + exportFile);
+    }
 
-        return true;
+    private void doSingleExport(String tileToDownload, BufferedWriter fileWriter) throws IOException
+    {
+        fileWriter.write("tileToDownload");
+        fileWriter.newLine();
+        log("added url " + tileToDownload);
     }
 
     /**

@@ -1,9 +1,10 @@
 <?php
 
+$output = "";
 $bRunGosmore = true;
 if (getProcesses() > 2) {
 	$bRunGosmore = false; 
-	$kml = "Server is busy, please try again later (".getProcesses().")";
+	$output = "Server is busy, please try again later (".getProcesses().")";
 }
 
 if ($bRunGosmore) {
@@ -81,6 +82,14 @@ if ($bRunGosmore) {
 		$layer = 'mapnik';
 	}
 
+	// Query result return format
+	$format = 'kml';
+	if (isset($_GET['format'])) {
+		if (in_array($_GET['format'], array('kml', 'geojson')) == true) {
+			$format = $_GET['format'];
+		}
+	}
+ 
 	$query .= "'";
 	//$dir = $yours_dir.'/normal';
 	
@@ -122,7 +131,6 @@ if ($bRunGosmore) {
 	$result = exec($command, $output);
 	$gosmore_end = microtime(true);
 
-	$kml = '';
 	$nodes = 0;
 
 	if (count($output) > 1)
@@ -133,7 +141,7 @@ if ($bRunGosmore) {
 		// Loop through all the coordinates
 		$flat = $flon = 360.0;
 		$distance = 0;
-		$coords = '';
+		$elements = array();
 		foreach ($output as $line)
 		{
 			$pos = strripos($line, ',');
@@ -154,11 +162,13 @@ if ($bRunGosmore) {
 						$junction = trim($node[2], "\n\r0");
 						break;
 					case 3:
-						$street = trim($node[3], "\n\r0");
+						$name = trim($node[3], "\n\r0");
 						break;
 					}
-				}			
-				$coords .= $lon.",".$lat."\n";
+				}
+				$element = array("lat" => $lat, "lon" => $lon, "junction" => $junction, "name" => $name);
+				array_push($elements, $element);
+				
 				if ($flat < 360)
 				{
 					$distance += getDistance($flat, $flon, $lat, $lon);
@@ -169,32 +179,17 @@ if ($bRunGosmore) {
 			}
 		}
 		
-		// KML body
-		$kml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-		$kml .= '<kml xmlns="http://earth.google.com/kml/2.0">'."\n";
-	  	$kml .= '  <Document>'."\n";
-	    $kml .= '    <name>KML Samples</name>'."\n";
-	    $kml .= '    <open>1</open>'."\n";
-	    $kml .= '    <distance>'.$distance.'</distance>'."\n";
-	    $kml .= '    <description>Unleash your creativity with the help of these examples!</description>'."\n";
-	    $kml .= '    <Folder>'."\n";
-	    $kml .= '      <name>Paths</name>'."\n";
-	    $kml .= '      <visibility>0</visibility>'."\n";
-	    $kml .= '      <description>Examples of paths.</description>'."\n";
-	    $kml .= '      <Placemark>'."\n";
-	    $kml .= '        <name>Tessellated</name>'."\n";
-	    $kml .= '        <visibility>0</visibility>'."\n";
-	    $kml .= '        <description><![CDATA[If the <tessellate> tag has a value of 1, the line will contour to the underlying terrain]]></description>'."\n";
-	    $kml .= '        <LineString>'."\n";
-	    $kml .= '          <tessellate>1</tessellate>'."\n";
-	    $kml .= '          <coordinates> ';
-	    $kml .= $coords;
-		$kml .= '          </coordinates>'."\n";
-	    $kml .= '        </LineString>'."\n";
-	    $kml .= '      </Placemark>'."\n";
-	    $kml .= '    </Folder>'."\n";
-	    $kml .= '  </Document>'."\n";
-		$kml .= '</kml>'."\n";
+		// Convert the returned coordinates to the requested output format
+		switch ($format) {
+		case 'kml':
+			$output = asKML($elements, $distance);
+			break;
+		case 'geojson':
+			$output = asGeoJSON($elements, $distance);
+			break;
+		default:
+			$output = "unrecognised output format given";
+		}
 	}
 
 	if ($nodes == 0) 
@@ -202,27 +197,25 @@ if ($bRunGosmore) {
 		if (count($output) > 1)
 		{
 			if (strcmp($output[2], 'No route found')) {
-				$kml = 'Unable to calculate a route';
+				$output = 'Unable to calculate a route';
 			}
 			else
 			{
-				$kml = "An unexpected error occured in Gosmore:\n".print_r($output);
+				$output = "An unexpected error occured in Gosmore:\n".print_r($output);
 			}	
 		}
 		else if (count($output) == 0)
 		{
-			$kml = "An unexpected error occured in Gosmore:\n".$result;
+			$output = "An unexpected error occured in Gosmore:\n".$result;
 		}
 		
 	}
 }
 
-//Chop the KML into bits so that the network can transport is faster (aledgidly)
-//echobig($kml, 1024);
+// Return the result
+echo $output;
 
-echo $kml;
-
-
+// Do some housekeeping (update logfiles)
 if ($bRunGosmore) {
 	$file = $www_dir.'/requests.csv';
 	if (!file_exists($file)) {
@@ -239,20 +232,10 @@ if ($bRunGosmore) {
 		$script = $script_end - $script_start;
 		$runtime = $gosmore_end - $gosmore_start;
 		
-		fwrite($fh, date('Y-m-d H:i:s').", ".$user_agent.", ".$query.", ".strlen($kml).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
+		fwrite($fh, date('Y-m-d H:i:s').", ".$user_agent.", ".$query.", ".strlen($output).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
 		fclose($fh);
 	}
-}
-
-
-// Chop a string into bits
-function echobig($string, $bufferSize = 8192)
-{
-  // suggest doing a test for Integer & positive bufferSize
-  for ($chars=strlen($string)-1,$start=0;$start <= $chars;$start += $bufferSize) {
-    echo substr($string,$start,$bufferSize);
-  }
-}
+}  // Done!
 
 function getDistance($latitudeFrom, $longitudeFrom,
     $latituteTo, $longitudeTo)
@@ -295,5 +278,58 @@ function getProcesses()
 		}
 	}
 	return $nProcesses;
+}
+
+function asKML($elements, $distance) {
+	// KML body
+	$kml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+	$kml .= '<kml xmlns="http://earth.google.com/kml/2.0">'."\n";
+	$kml .= '  <Document>'."\n";	$kml .= '    <name>KML Samples</name>'."\n";
+	$kml .= '    <open>1</open>'."\n";
+	$kml .= '    <distance>'.$distance.'</distance>'."\n";
+	$kml .= '    <description>Unleash your creativity with the help of these examples!</description>'."\n";
+	$kml .= '    <Folder>'."\n";
+	$kml .= '      <name>Paths</name>'."\n";
+	$kml .= '      <visibility>0</visibility>'."\n";
+	$kml .= '      <description>Examples of paths.</description>'."\n";
+	$kml .= '      <Placemark>'."\n";
+	$kml .= '        <name>Tessellated</name>'."\n";
+	$kml .= '        <visibility>0</visibility>'."\n";
+	$kml .= '        <description><![CDATA[If the <tessellate> tag has a value of 1, the line will contour to the underlying terrain]]></description>'."\n";
+	$kml .= '        <LineString>'."\n";
+	$kml .= '          <tessellate>1</tessellate>'."\n";
+	$kml .= '          <coordinates> ';
+	foreach($elements as $element) {
+		$kml .= $element["lon"].",".$element["lat"]."\n";
+	}
+	$kml .= '          </coordinates>'."\n";
+	$kml .= '        </LineString>'."\n";
+	$kml .= '      </Placemark>'."\n";
+	$kml .= '    </Folder>'."\n";
+	$kml .= '  </Document>'."\n";
+	$kml .= '</kml>'."\n";
+	return $kml;
+}
+function asGeoJSON($elements, $distance) {
+	$geoJSON = "{\n";
+	$geoJSON .= "  \"type\": \"LineString\",\n";
+	$geoJSON .= "  \"crs\": {\n";
+	$geoJSON .= "    \"type\": \"name\",\n";
+	$geoJSON .= "    \"properties\": {\n";
+	$geoJSON .= "      \"name\": \"urn:ogc:def:crs:OGC:1.3:CRS84\"\n";
+	$geoJSON .= "    }\n";
+	$geoJSON .= "  },\n";
+	$geoJSON .= "  \"coordinates\":\n";
+	$geoJSON .= "  [\n";
+	foreach($elements as $element) {
+		$geoJSON .= "    [".$element["lon"].", ".$element["lat"]."],\n";
+	}
+	$geoJSON .= "  ],";
+	$geoJSON .= "  \"properties\": {\n";
+	$geoJSON .= "    \"distance\": \"".$distance."\",\n";
+	$geoJSON .= "    \"description\": \"GeoJSON route result created by http://www.yournavigation.org\"\n";
+	$geoJSON .= "    }\n";
+	$geoJSON .= "}\n";
+	return $geoJSON;
 }
 

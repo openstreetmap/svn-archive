@@ -186,9 +186,12 @@ public class JTileDownloaderCommandLine
      */
     private void startDownload(String server)
     {
-        _tld = new TileListDownloader(_downloadTemplate.getOutputLocation(), _tileList, new GenericTileProvider(server));
-        _tld.setListener(this);
-        _tld.start();
+        if (_tileList.getTileListToDownload().size() > 0)
+        {
+            _tld = new TileListDownloader(_downloadTemplate.getOutputLocation(), _tileList, new GenericTileProvider(server));
+            _tld.setListener(this);
+            _tld.start();
+        }
     }
 
     /**

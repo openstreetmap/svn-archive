@@ -116,10 +116,6 @@ public class TileListCommonGPX
                 ioe.printStackTrace();
             }
         }
-        if (tilesToDownload.isEmpty())
-        {
-            tilesToDownload.add(new Tile(0,0,0));
-        }
     }
 
     private void handleTrkPt(Node item, int zoomLevel)

@@ -61,18 +61,14 @@ public class UpdateTilesPanel
     private JTable _updateTilesTable;
 
     JLabel _labelFolder = new JLabel("Folder:");
-    //    JTextField _textFolder = new JTextField();
     JLabel _textFolder = new JLabel();
-    //    JButton _buttonSelectFolder = new JButton("...");
     JLabel _labelTileServer = new JLabel("TileServer:");
     JLabel _textTileServer = new JLabel();
 
     JButton _buttonSearch = new JButton("Search");
     public static final String UPDATE = "Update";
-    public static final String STOP = "Stop";
     JButton _buttonUpdate = new JButton(UPDATE);
 
-    public static final String COMMAND_SELECT_FOLDER = "selectFolder";
     public static final String COMMAND_SEARCH = "search";
     public static final String COMMAND_UPDATE = "update";
 
@@ -130,9 +126,6 @@ public class UpdateTilesPanel
         panelFolder.add(_labelTileServer, constraintsFolder);
         constraintsFolder.gridwidth = GridBagConstraints.REMAINDER;
         panelFolder.add(_textTileServer, constraintsFolder);
-        //        constraintsFolder.weightx = 0.01;
-        constraintsFolder.insets = new Insets(5, 0, 0, 5);
-        //        panelFolder.add(_buttonSelectFolder, constraintsFolder);
         add(panelFolder, constraints);
 
         JPanel panelUpdate = new JPanel();
@@ -164,10 +157,6 @@ public class UpdateTilesPanel
     private void initialize()
     {
         _textFolder.setText(getFolder());
-
-        //        _buttonSelectFolder.addActionListener(new MyActionListener());
-        //        _buttonSelectFolder.setActionCommand(COMMAND_SELECT_FOLDER);
-        //        _buttonSelectFolder.setPreferredSize(new Dimension(25, 19));
 
         _buttonSearch.addActionListener(new MyActionListener());
         _buttonSearch.setActionCommand(COMMAND_SEARCH);
@@ -213,20 +202,7 @@ public class UpdateTilesPanel
             String actionCommand = e.getActionCommand();
             System.out.println("button pressed -> " + actionCommand);
 
-            if (actionCommand.equalsIgnoreCase(COMMAND_SELECT_FOLDER))
-            {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                chooser.setCurrentDirectory(new File(_textFolder.getText()));
-                if (JFileChooser.APPROVE_OPTION == chooser.showDialog(null, "Select"))
-                {
-                    File dir = chooser.getSelectedFile();
-                    System.out.println(dir.getAbsolutePath());
-                    _textFolder.setText(dir.getAbsolutePath());
-                }
-
-            }
-            else if (actionCommand.equalsIgnoreCase(COMMAND_SEARCH))
+            if (actionCommand.equalsIgnoreCase(COMMAND_SEARCH))
             {
                 getButtonSearch().setEnabled(false);
                 setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -283,9 +259,9 @@ public class UpdateTilesPanel
             System.out.println("tileServer:" + getTileServer());
 
             // design problem: AppConfiguration doesn't provide the real current config
-            setTileListDownloader(new TileListDownloader(getFolder(), updateList, new GenericTileProvider(_textTileServer.getText())));
+            TileListDownloader tld = new TileListDownloader(getFolder(), updateList, new GenericTileProvider(_textTileServer.getText()));
 
-            ProgressBar pg = new ProgressBar(1, getTileListDownloader());
+            ProgressBar pg = new ProgressBar(1, tld);
         }
 
         /**
@@ -380,14 +356,6 @@ public class UpdateTilesPanel
 
     }
 
-    //    /**
-    //     * @see javax.swing.event.TableModelListener#tableChanged(javax.swing.event.TableModelEvent)
-    //     * {@inheritDoc}
-    //     */
-    //    public void tableChanged(TableModelEvent e)
-    //    {
-    //    }
-
     /**
      * Getter for tileServer
      * @return the tileServer
@@ -423,51 +391,6 @@ public class UpdateTilesPanel
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.Vector)
-     * {@inheritDoc}
-     */
-    public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList)
-    {
-        getButtonSearch().setEnabled(true);
-        getButtonUpdate().setText(UPDATE);
-        getButtonUpdate().setActionCommand(COMMAND_UPDATE);
-
-        getTileListDownloader().setListener(null);
-        setTileListDownloader(null);
-
-        if (errorTileList != null && errorTileList.size() > 0)
-        {
-            // TODO: show List of failed tiles
-            ErrorTileListView view = new ErrorTileListView(errorTileList);
-            view.setVisible(true);
-            int exitCode = view.getExitCode();
-            view = null;
-
-            if (exitCode == ErrorTileListView.CODE_RETRY)
-            {
-                TileListSimple tiles = new TileListSimple();
-                for (Enumeration<TileDownloadError> enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
-                {
-                    TileDownloadError tde = enumeration.nextElement();
-                    tiles.addTile(tde.getTile());
-                }
-
-                setTileListDownloader(getMainView().createTileListDownloader(getFolder(), tiles));
-
-                getTileListDownloader().start();
-
-            }
-
-        }
-
-    }
-
-    public UpdateTilesPanel getInstance()
-    {
-        return this;
-    }
-
-    /**
      * Getter for mainView
      * @return the mainView
      */
@@ -475,16 +398,6 @@ public class UpdateTilesPanel
     {
         return _mainView;
     }
-
-    /**
-     * Setter for tileListDownloader
-     * @param tileListDownloader the tileListDownloader to set
-     */
-    public void setTileListDownloader(TileListDownloader tileListDownloader)
-    {
-        _tileListDownloader = tileListDownloader;
-    }
-
     /**
      * Getter for tileListDownloader
      * @return the tileListDownloader

@@ -24,6 +24,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import org.openstreetmap.fma.jtiledownloader.Constants;
+import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.TileListExporter;
 import org.openstreetmap.fma.jtiledownloader.TileProviderList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
@@ -463,10 +464,10 @@ public class MainPanel
                 _mainView.updateActualDownloadConfig();
                 _mainView.updateAppConfig();
 
-                _mainView.setTileListDownloader(_mainView.createTileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList()));
-                if (_mainView.getTileListDownloader().getTilesToDownload().size() > 0)
+                if (getInputPanel().getTileList().getTileListToDownload().size() > 0)
                 {
-                    ProgressBar pg = new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), _mainView.getTileListDownloader());
+                    TileListDownloader tld = new TileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList(), _mainView.getMainPanel().getSelectedTileProvider());
+                    ProgressBar pg = new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), tld);
                 }
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_EXPORT))

@@ -113,6 +113,7 @@ public class NetworkPanel
         _textProxyPort.setText(AppConfiguration.getInstance().getProxyServerPort());
         _chkAuthRequired.setSelected(AppConfiguration.getInstance().getUseProxyServerAuth());
         _textProxyUser.setText(AppConfiguration.getInstance().getProxyServerUser());
+        _textProxyPassWord.setText(AppConfiguration.getInstance().getProxyServerPassword());
     }
 
     /**
@@ -153,6 +154,14 @@ public class NetworkPanel
     public String getProxyServerUser()
     {
         return _textProxyUser.getText().trim();
+    }
+
+    /**
+     * @return
+     */
+    public String getProxyServerPassword()
+    {
+        return _textProxyPassWord.getText().trim();
     }
 
 }

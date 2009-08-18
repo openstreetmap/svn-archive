@@ -255,7 +255,7 @@ public class AppConfiguration
      */
     public final void setProxyServerPassword(String proxyServerPassword)
     {
-        _proxyServerUser = proxyServerPassword;
+        _proxyServerPassword = proxyServerPassword;
     }
 
     /**

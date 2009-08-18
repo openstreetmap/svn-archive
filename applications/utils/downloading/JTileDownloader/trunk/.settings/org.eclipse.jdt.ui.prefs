@@ -1,5 +1,7 @@
-#Wed Oct 22 15:54:47 CEST 2008
+#Sat Jul 11 20:49:55 GMT+01:00 2009
 eclipse.preferences.version=1
+formatter_profile=_JTileDownloader
+formatter_settings_version=11
 org.eclipse.jdt.ui.exception.name=e
 org.eclipse.jdt.ui.gettersetter.use.is=true
 org.eclipse.jdt.ui.javadoc=true

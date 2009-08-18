@@ -90,18 +90,15 @@ public class UpdateTilesPanel
     private String _tileServer = "";
     private String _folder = "";
 
-    private final AppConfiguration _appConfiguration;
-
     private final JTileDownloaderMainView _mainView;
     private TileListDownloader _tileListDownloader;
 
     /**
      * 
      */
-    public UpdateTilesPanel(AppConfiguration appConfiguration, JTileDownloaderMainView mainView)
+    public UpdateTilesPanel(JTileDownloaderMainView mainView)
     {
         super();
-        _appConfiguration = appConfiguration;
         _mainView = mainView;
 
         createPanel();
@@ -294,15 +291,8 @@ public class UpdateTilesPanel
 
             // design problem: AppConfiguration doesn't provide the real current config
             setTileListDownloader(new TileListDownloader(getFolder(), updateList));
-            getTileListDownloader().setWaitAfterTiles(_mainView.getOptionsPanel().isWaitAfterNumberOfTiles());
-            getTileListDownloader().setWaitAfterTilesAmount(_mainView.getOptionsPanel().getWaitNrTiles());
-            getTileListDownloader().setWaitAfterTilesSeconds(_mainView.getOptionsPanel().getWaitSeconds());
 
-            getTileListDownloader().setOverwriteExistingFiles(_mainView.getOptionsPanel().isOverwriteExistingFiles());
-
-            getTileListDownloader().setMinimumAgeInDays(_mainView.getOptionsPanel().getMinimumAgeInDays());
-
-            ProgressBar pg = new ProgressBar(1, getTileListDownloader(), getAppConfiguration().isShowTilePreview());
+            ProgressBar pg = new ProgressBar(1, getTileListDownloader());
         }
 
         /**
@@ -482,15 +472,6 @@ public class UpdateTilesPanel
     public UpdateTilesPanel getInstance()
     {
         return this;
-    }
-
-    /**
-     * Getter for appConfiguration
-     * @return the appConfiguration
-     */
-    public AppConfiguration getAppConfiguration()
-    {
-        return _appConfiguration;
     }
 
     /**

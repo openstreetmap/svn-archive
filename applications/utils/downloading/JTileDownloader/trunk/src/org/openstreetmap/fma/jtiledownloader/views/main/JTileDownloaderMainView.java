@@ -41,8 +41,6 @@ public class JTileDownloaderMainView
 
     private TileListDownloader _tileListDownloader;
 
-    private AppConfiguration _appConfiguration;
-
     private MainPanel _mainPanel;
     private OptionsPanel _optionsPanel;
     private NetworkPanel _networkPanel;
@@ -54,9 +52,6 @@ public class JTileDownloaderMainView
     public JTileDownloaderMainView()
     {
         super();
-
-        setAppConfiguration(new AppConfiguration());
-        getAppConfiguration().loadFromFile();
 
         generateView();
 
@@ -73,16 +68,16 @@ public class JTileDownloaderMainView
         setTitle("JTileDownloader" + " Version: " + VERSION);
 
         _mainPanel = new MainPanel(getMainView());
-        int tabIndex = getAppConfiguration().getInputPanelIndex();
+        int tabIndex = AppConfiguration.getInstance().getInputPanelIndex();
         if (tabIndex >= 0 && tabIndex < _mainPanel.getInputTabbedPane().getTabCount())
         {
             _mainPanel.getInputTabbedPane().setSelectedIndex(tabIndex);
             setInputTabSelectedIndex(tabIndex);
         }
 
-        _updateTilesPanel = new UpdateTilesPanel(getAppConfiguration(), getMainView());
-        _optionsPanel = new OptionsPanel(getAppConfiguration());
-        _networkPanel = new NetworkPanel(getAppConfiguration());
+        _updateTilesPanel = new UpdateTilesPanel(getMainView());
+        _optionsPanel = new OptionsPanel();
+        _networkPanel = new NetworkPanel();
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Main", _mainPanel);
@@ -161,14 +156,6 @@ public class JTileDownloaderMainView
     protected TileListDownloader createTileListDownloader(String outputFolder, TileList tilesToDownload)
     {
         TileListDownloader tld = new TileListDownloader(outputFolder, tilesToDownload);
-        tld.setWaitAfterTiles(getAppConfiguration().getWaitAfterNrTiles());
-        tld.setWaitAfterTilesAmount(getAppConfiguration().getWaitNrTiles());
-        tld.setWaitAfterTilesSeconds(getAppConfiguration().getWaitSeconds());
-
-        tld.setOverwriteExistingFiles(getAppConfiguration().isOverwriteExistingFiles());
-
-        tld.setMinimumAgeInDays(getAppConfiguration().getMinimumAgeInDays());
-
         return tld;
     }
 
@@ -178,17 +165,17 @@ public class JTileDownloaderMainView
     public void updateAppConfig()
     {
 
-        getAppConfiguration().setUseProxyServer(_networkPanel.isUseProxyServer());
-        getAppConfiguration().setProxyServer(_networkPanel.getProxyServer());
-        getAppConfiguration().setProxyServerPort(_networkPanel.getProxyServerPort());
-        getAppConfiguration().setUseProxyServerAuth(_networkPanel.isUseProxyServerAuth());
-        getAppConfiguration().setProxyServerUser(_networkPanel.getProxyServerUser());
-        getAppConfiguration().setShowTilePreview(_optionsPanel.isShowTilePreview());
-        getAppConfiguration().setOverwriteExistingFiles(_optionsPanel.isOverwriteExistingFiles());
-        getAppConfiguration().setWaitAfterNrTiles(_optionsPanel.isWaitAfterNumberOfTiles());
-        getAppConfiguration().setWaitSeconds(_optionsPanel.getWaitSeconds());
-        getAppConfiguration().setWaitNrTiles(_optionsPanel.getWaitNrTiles());
-        getAppConfiguration().saveToFile();
+        AppConfiguration.getInstance().setUseProxyServer(_networkPanel.isUseProxyServer());
+        AppConfiguration.getInstance().setProxyServer(_networkPanel.getProxyServer());
+        AppConfiguration.getInstance().setProxyServerPort(_networkPanel.getProxyServerPort());
+        AppConfiguration.getInstance().setUseProxyServerAuth(_networkPanel.isUseProxyServerAuth());
+        AppConfiguration.getInstance().setProxyServerUser(_networkPanel.getProxyServerUser());
+        AppConfiguration.getInstance().setShowTilePreview(_optionsPanel.isShowTilePreview());
+        AppConfiguration.getInstance().setOverwriteExistingFiles(_optionsPanel.isOverwriteExistingFiles());
+        AppConfiguration.getInstance().setWaitAfterNrTiles(_optionsPanel.isWaitAfterNumberOfTiles());
+        AppConfiguration.getInstance().setWaitSeconds(_optionsPanel.getWaitSeconds());
+        AppConfiguration.getInstance().setWaitNrTiles(_optionsPanel.getWaitNrTiles());
+        AppConfiguration.getInstance().saveToFile();
 
     }
 
@@ -208,24 +195,6 @@ public class JTileDownloaderMainView
     protected final void setTileListDownloader(TileListDownloader tileListDownloader)
     {
         _tileListDownloader = tileListDownloader;
-    }
-
-    /**
-     * Setter for appConfiguration
-     * @param appConfiguration the appConfiguration to set
-     */
-    public void setAppConfiguration(AppConfiguration appConfiguration)
-    {
-        _appConfiguration = appConfiguration;
-    }
-
-    /**
-     * Getter for appConfiguration
-     * @return the appConfiguration
-     */
-    public AppConfiguration getAppConfiguration()
-    {
-        return _appConfiguration;
     }
 
     /**
@@ -284,7 +253,7 @@ public class JTileDownloaderMainView
 
         //select new panel & load config
         _inputTabSelectedIndex = inputTabSelectedIndex;
-        getAppConfiguration().setInputPanelIndex(inputTabSelectedIndex);
+        AppConfiguration.getInstance().setInputPanelIndex(inputTabSelectedIndex);
         getMainPanel().getInputPanel().loadConfig();
         getMainPanel().valuesChanged();
 

@@ -44,7 +44,6 @@ public class JTileDownloaderCommandLine
 
     private final HashMap _arguments;
 
-    private AppConfiguration _appConfiguration;
     private DownloadConfiguration _downloadTemplateCommon;
     private DownloadConfiguration _downloadTemplate;
     private TileList _tileList;
@@ -67,9 +66,6 @@ public class JTileDownloaderCommandLine
 
         if (_arguments.containsKey(CMDLINE_DL))
         {
-            _appConfiguration = new AppConfiguration();
-            _appConfiguration.loadFromFile();
-
             String propertyFile = (String) _arguments.get(CMDLINE_DL);
 
             _downloadTemplateCommon = new DownloadConfiguration(propertyFile);
@@ -192,14 +188,6 @@ public class JTileDownloaderCommandLine
     private void startDownload()
     {
         _tld = new TileListDownloader(_downloadTemplate.getOutputLocation(), _tileList);
-        _tld.setWaitAfterTiles(_appConfiguration.getWaitAfterNrTiles());
-        _tld.setWaitAfterTilesAmount(_appConfiguration.getWaitNrTiles());
-        _tld.setWaitAfterTilesSeconds(_appConfiguration.getWaitSeconds());
-
-        _tld.setOverwriteExistingFiles(_appConfiguration.isOverwriteExistingFiles());
-
-        _tld.setMinimumAgeInDays(_appConfiguration.getMinimumAgeInDays());
-
         _tld.setListener(this);
         _tld.start();
     }

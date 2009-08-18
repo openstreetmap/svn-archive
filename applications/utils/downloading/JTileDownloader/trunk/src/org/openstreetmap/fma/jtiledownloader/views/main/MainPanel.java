@@ -456,7 +456,7 @@ public class MainPanel
 
                 _mainView.setTileListDownloader(_mainView.createTileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList()));
 
-                ProgressBar pg = new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), _mainView.getTileListDownloader(),_mainView.getAppConfiguration().isShowTilePreview());
+                ProgressBar pg = new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), _mainView.getTileListDownloader());
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_STOP))
             {

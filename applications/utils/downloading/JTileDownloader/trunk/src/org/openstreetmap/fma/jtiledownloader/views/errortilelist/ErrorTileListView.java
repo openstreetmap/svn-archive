@@ -3,7 +3,6 @@ package org.openstreetmap.fma.jtiledownloader.views.errortilelist;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -2,7 +2,7 @@
 
     function createMarkers() {
             addMarker(layer_local, 6.098, 50.7681
-, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Aachen_Community">Städteregion Aachen</a></b></p><p>Treffen: 26. August '09 19Uhr</p>');
+, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Aachen_Community">Städteregion Aachen</a></b></p><p>Treffen: 26. August 2009 19Uhr</p>');
             addMarker(layer_local, 9.146, 49.974, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Aschaffenburg">Aschaffenburg</a></b></p><p>Treffen: </p>');
             addMarker(layer_local, 13.3481, 52.54885, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Berlin/Stammtisch">Berlin und Brandenburg</a></b></p><p>Treffen: 2. Donnerstag im Monat<br/>Mailingliste: <a href="http://wiki.openstreetmap.org/wiki/Berlin/Diskussionsliste">Webseite</a> | <a href="https://lists.openstreetmap.de/pipermail/berlin/">Archiv</a></p>');
             addMarker(layer_local, 7.095, 50.738, '<p>Lokale Gruppe <br/><b style="font-size: 120%;"><a href="http://wiki.openstreetmap.org/wiki/Bonn_Stammtisch">Bonn</a></b></p><p>Treffen: Jeden 4. Montag im Monat</p>');

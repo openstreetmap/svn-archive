@@ -9,9 +9,27 @@
 # version 2.0
 # - new algorhithm
 #
+# version 2.1
+# - added check output
+#
 
-my @test = (["highway", "residential"]) ;
-#my @test = (["highway", "residential"], ["highway", "tertiary"]) ;
+
+my @test = (	["highway", "residential"],
+		 ["highway", "service"],
+		 ["highway", "roundabout"],
+		 ["highway", "motorway"],
+		 ["highway", "motorway_link"],
+		 ["highway", "trunk"],
+		 ["highway", "trunk_link"],
+		 ["highway", "primary"],
+		 ["highway", "primary_link"],
+		 ["highway", "secondary"],
+		 ["highway", "secondary_link"],
+		 ["highway", "tertiary"],
+		 ["highway", "unclassified"],
+		 ["highway", "cycleway"],
+		 ["highway", "footway"],
+		 ["highway", "track"]) ;
 
 use strict ;
 use warnings ;
@@ -20,7 +38,7 @@ use OSM::osm 4.0 ;
 
 my $programName = "waydupes.pl" ;
 my $usage = "waydupes.pl file.osm out.htm out.gpx" ; 
-my $version = "2.0" ;
+my $version = "2.1" ;
 
 my $wayId ;
 my $wayUser ;
@@ -75,6 +93,10 @@ if (!$gpxName)
 
 print "\n$programName $version for file $osmName\n" ;
 
+print "\ncheck ways:\n" ;
+foreach my $w (@test) { print $w->[0], " ", $w->[1], "\n" ; } 
+print "\n\n" ;
+
 $time0 = time() ;
 
 openOsmFile ($osmName) ;
@@ -113,7 +135,7 @@ while ($wayId != -1) {
 closeOsmFile() ;
 
 print "done.\n" ;
-print "$highwayCount highways found.\n" ;
+print "$highwayCount ways found.\n" ;
 
 print "comparing ways...\n" ;
 
@@ -187,6 +209,10 @@ printGPXHeader ($gpx) ;
 
 print $html "<H1>Dupe Way Check by Gary68</H1>\n" ;
 print $html "<p>Version ", $version, "</p>\n" ;
+
+print $html "<H2>Check ways</H2>\n<p>" ;foreach my $w (@test) { print $html $w->[0], " ", $w->[1], "<br>\n" ; } 
+print $html "</p>\n" ;
+
 print $html "<H2>Statistics</H2>\n" ;
 print $html "<p>", stringFileInfo ($osmName), "<br>\n" ;
 print $html "number ways total: $highwayCount<br>\n" ;

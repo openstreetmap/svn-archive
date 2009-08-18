@@ -50,8 +50,6 @@ public class TileListDownloader
 
     private TileDownloaderListener _listener = null;
 
-    private boolean _stopFlag = false;
-
     /**
      * @param downloadPath
      * @param tilesToDownload
@@ -67,6 +65,14 @@ public class TileListDownloader
     {
         downloaderThread = new TileListDownloaderThread();
         downloaderThread.start();
+    }
+
+    public void abort()
+    {
+        if (downloaderThread != null)
+        {
+            downloaderThread.interrupt();
+        }
     }
 
     /**
@@ -432,14 +438,6 @@ public class TileListDownloader
         return _tilesToDownload;
     }
 
-    /**
-     * @param b
-     */
-    public void setStopFlag(boolean stopFlag)
-    {
-        _stopFlag = stopFlag;
-    }
-
     public class TileListDownloaderThread
         extends Thread
     {
@@ -449,7 +447,6 @@ public class TileListDownloader
          */
         public void run()
         {
-            _stopFlag = false;
             Vector errorTileList = new Vector();
 
             if (getTilesToDownload() == null || getTilesToDownload().size() == 0)
@@ -473,7 +470,7 @@ public class TileListDownloader
             int tileCounter = 0;
             for (Enumeration enumeration = getTilesToDownload().elements(); enumeration.hasMoreElements();)
             {
-                if (_stopFlag)
+                if (interrupted())
                 {
                     fireDownloadStoppedEvent(tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
                     return;
@@ -509,7 +506,7 @@ public class TileListDownloader
                         }
                         catch (InterruptedException e)
                         {
-                            e.printStackTrace();
+                            interrupt();
                         }
                     }
                 }

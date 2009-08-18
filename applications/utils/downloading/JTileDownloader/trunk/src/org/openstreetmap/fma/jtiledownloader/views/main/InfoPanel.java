@@ -7,8 +7,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.openstreetmap.fma.jtiledownloader.Constants;
-import org.openstreetmap.fma.jtiledownloader.TileServerList;
-import org.openstreetmap.fma.jtiledownloader.datatypes.TileServer;
+import org.openstreetmap.fma.jtiledownloader.TileProviderList;
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -102,11 +102,10 @@ public class InfoPanel
         _textInfo.append("\n");
         _textInfo.append("-------------------------------------------------------\n");
         _textInfo.append("Predefined tile servers are:\n");
-        TileServerList tileServers = new TileServerList();
-        TileServer[] tileServerList = tileServers.getTileServerList();
+        TileProviderIf[] tileServerList = new TileProviderList().getTileProviderList();
         for (int index = 0; index < tileServerList.length; index++)
         {
-            _textInfo.append(tileServerList[index].getTileServerName() + "\n");
+            _textInfo.append(tileServerList[index].getName() + "\n");
             _textInfo.append(tileServerList[index].getTileServerUrl() + "\n");
         }
 

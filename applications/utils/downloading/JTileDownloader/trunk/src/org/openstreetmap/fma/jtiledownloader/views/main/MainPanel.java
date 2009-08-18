@@ -23,9 +23,9 @@ import javax.swing.JTextField;
 
 import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListExporter;
-import org.openstreetmap.fma.jtiledownloader.TileServerList;
+import org.openstreetmap.fma.jtiledownloader.TileProviderList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
-import org.openstreetmap.fma.jtiledownloader.datatypes.TileServer;
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxLatLonPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxXYPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.GPXPanel;
@@ -89,7 +89,7 @@ public class MainPanel
 
     private final JTileDownloaderMainView _mainView;
 
-    private TileServer[] _tileServers;
+    private TileProviderIf[] _tileProviders;
 
     private UrlSquarePanel _urlSquarePanel;
     private BBoxLatLonPanel _bBoxLatLonPanel;
@@ -109,7 +109,7 @@ public class MainPanel
         //_downloadTemplate = downloadTemplate;
         _mainView = mainView;
 
-        _tileServers = new TileServerList().getTileServerList();
+        _tileProviders = new TileProviderList().getTileProviderList();
 
         createMainPanel();
         initializeMainPanel();
@@ -136,9 +136,9 @@ public class MainPanel
         _textOutputZoomLevels.setName(COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT);
         initializeOutputZoomLevel(getInputPanel().getDownloadZoomLevel());
 
-        for (int index = 0; index < _tileServers.length; index++)
+        for (int index = 0; index < _tileProviders.length; index++)
         {
-            _comboTileServer.addItem(_tileServers[index].getTileServerName());
+            _comboTileServer.addItem(_tileProviders[index].getName());
         }
         String url = getInputPanel().getTileServerBaseUrl();
         initializeTileServer(url);
@@ -164,9 +164,9 @@ public class MainPanel
     public void initializeTileServer(String tileServer)
     {
         int foundTileServerIndex = -1;
-        for (int index = 0; index < _tileServers.length; index++)
+        for (int index = 0; index < _tileProviders.length; index++)
         {
-            if (_tileServers[index].getTileServerUrl().equals(tileServer)) //_downloadTemplate.getTileServer()))
+            if (_tileProviders[index].getTileServerUrl().equals(tileServer)) //_downloadTemplate.getTileServer()))
             {
                 foundTileServerIndex = index;
             }
@@ -317,11 +317,11 @@ public class MainPanel
         String altTileServer = getAltTileServer();
         if (altTileServer == null || altTileServer.length() == 0)
         {
-            getInputPanel().setTileServerBaseUrl("" + getTileServer());
+            getInputPanel().setTileServerBaseUrl(getTileProvider().getTileServerUrl());
         }
         else
         {
-            getInputPanel().setTileServerBaseUrl("" + altTileServer);
+            getInputPanel().setTileServerBaseUrl(altTileServer);
         }
         getInputPanel().setOutputLocation(getOutputfolder());
         getInputPanel().updateAll();
@@ -461,7 +461,7 @@ public class MainPanel
             {
                 valuesChanged();
 
-                TileListExporter tle = new TileListExporter(_textOutputFolder.getText(), getInputPanel().getTileList().getTileListToDownload(), new GenericTileProvider(getSelectedTileServer()));
+                TileListExporter tle = new TileListExporter(_textOutputFolder.getText(), getInputPanel().getTileList().getTileListToDownload(), getSelectedTileProvider());
                 tle.doExport();
                 JOptionPane.showMessageDialog(_mainView, "Exported Tilelist to " + _textOutputFolder.getText() + File.separator + "export.txt", "Info", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -540,26 +540,22 @@ public class MainPanel
      * Returns the selected tile server
      * @return selected tile server
      */
-    public String getSelectedTileServer()
+    public TileProviderIf getSelectedTileProvider()
     {
-        String server = getTileServer();
+        TileProviderIf provider = getTileProvider();
         if (!getAltTileServer().isEmpty())
         {
-            server = getAltTileServer();
+            provider = new GenericTileProvider(getAltTileServer());
         }
-        if (!server.endsWith("/"))
-        {
-            server = server + "/";
-        }
-        return server;
+        return provider;
     }
 
     /**
      * @return
      */
-    public String getTileServer()
+    public TileProviderIf getTileProvider()
     {
-        return _tileServers[_comboTileServer.getSelectedIndex()].getTileServerUrl();
+        return _tileProviders[_comboTileServer.getSelectedIndex()];
     }
 
     /**

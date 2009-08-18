@@ -136,7 +136,7 @@ public class JTileDownloaderMainView
                 // selected update tab
                 getUpdateTilesPanel().setFolder(getMainPanel().getOutputfolder());
 
-                getUpdateTilesPanel().setTileServer(getMainPanel().getSelectedTileServer());
+                getUpdateTilesPanel().setTileServer(getMainPanel().getSelectedTileProvider().getTileServerUrl());
 
             }
 
@@ -148,7 +148,7 @@ public class JTileDownloaderMainView
      */
     protected TileListDownloader createTileListDownloader(String outputFolder, TileList tilesToDownload)
     {
-        TileListDownloader tld = new TileListDownloader(outputFolder, tilesToDownload, new GenericTileProvider(_mainPanel.getTileServer()));
+        TileListDownloader tld = new TileListDownloader(outputFolder, tilesToDownload, _mainPanel.getTileProvider());
         return tld;
     }
 

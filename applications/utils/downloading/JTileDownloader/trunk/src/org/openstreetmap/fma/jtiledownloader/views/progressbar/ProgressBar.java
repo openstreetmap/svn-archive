@@ -150,7 +150,6 @@ public class ProgressBar
      */
     public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList)
     {
-        setVisible(false);
         if (errorTileList != null && errorTileList.size() > 0)
         {
             ErrorTileListView view = new ErrorTileListView(errorTileList);
@@ -169,7 +168,11 @@ public class ProgressBar
 
                 downloader.setTilesToDownload(tiles.getFileListToDownload());
                 downloader.start();
+            } else {
+                setVisible(false);
             }
+        } else {
+            setVisible(false);
         }
     }
 

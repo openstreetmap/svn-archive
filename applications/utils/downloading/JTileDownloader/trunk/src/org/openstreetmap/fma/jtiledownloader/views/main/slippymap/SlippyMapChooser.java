@@ -3,7 +3,7 @@
 
 // Adapted for JTileDownloader by Sven Strickroth <email@cs-ware.de>, 2009
 
-package org.openstreetmap.fma.jtiledownloader.views.main;
+package org.openstreetmap.fma.jtiledownloader.views.main.slippymap;
 
 import java.awt.Color;
 import java.awt.Component;

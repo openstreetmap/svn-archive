@@ -1,4 +1,4 @@
-package org.openstreetmap.fma.jtiledownloader.views.main;
+package org.openstreetmap.fma.jtiledownloader.views.main.slippymap;
 
 import java.awt.Graphics;
 import java.awt.Point;

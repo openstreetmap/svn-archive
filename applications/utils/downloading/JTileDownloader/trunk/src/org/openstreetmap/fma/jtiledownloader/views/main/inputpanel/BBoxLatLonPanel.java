@@ -17,7 +17,7 @@ import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxL
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
-import org.openstreetmap.fma.jtiledownloader.views.main.SlippyMapChooserWindow;
+import org.openstreetmap.fma.jtiledownloader.views.main.slippymap.SlippyMapChooserWindow;
 
 /**
  * Copyright 2008, Friedrich Maier 

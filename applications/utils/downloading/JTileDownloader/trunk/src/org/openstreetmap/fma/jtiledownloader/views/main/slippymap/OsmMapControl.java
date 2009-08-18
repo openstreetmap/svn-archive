@@ -1,6 +1,6 @@
 // This code has been adapted and copied from code that has been written by Immanuel Scholz and others for JOSM.
 // License: GPL. Copyright 2007 by Tim Haussmann
-package org.openstreetmap.fma.jtiledownloader.views.main;
+package org.openstreetmap.fma.jtiledownloader.views.main.slippymap;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;

@@ -18,6 +18,7 @@ import javax.swing.JDialog;
 import javax.swing.JProgressBar;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
+import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
@@ -58,7 +59,7 @@ public class ProgressBar
     private TilePreviewViewComponent tilePreviewViewComponent = new TilePreviewViewComponent();
     private TileListDownloader downloader = null;
 
-    public ProgressBar(int tilesCount, TileListDownloader downloader, boolean isPreviewVisible)
+    public ProgressBar(int tilesCount, TileListDownloader downloader)
     {
         super();
         setTitle("Download progress...");
@@ -88,7 +89,7 @@ public class ProgressBar
         showPreview.addActionListener(this);
 
         tilePreviewViewComponent.setPreferredSize(new Dimension(256, 256));
-        setShowPreview(isPreviewVisible);
+        setShowPreview(AppConfiguration.getInstance().isShowTilePreview());
         downloader.setListener(this);
         downloader.start();
         setVisible(true);

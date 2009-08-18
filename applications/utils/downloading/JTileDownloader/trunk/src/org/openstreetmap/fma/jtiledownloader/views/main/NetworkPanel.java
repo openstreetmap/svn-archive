@@ -50,15 +50,12 @@ public class NetworkPanel
     JLabel _labelProxyPassword = new JLabel("Proxy Password:");
     JTextField _textProxyPassWord = new JPasswordField();
 
-    private final AppConfiguration _appConfiguration;
-
     /**
      * 
      */
-    public NetworkPanel(AppConfiguration appConfiguration)
+    public NetworkPanel()
     {
         super();
-        _appConfiguration = appConfiguration;
 
         createNetworkPanel();
         initializeNetworkPanel();
@@ -111,11 +108,11 @@ public class NetworkPanel
      */
     private void initializeNetworkPanel()
     {
-        _chkUseProxyServer.setSelected(_appConfiguration.getUseProxyServer());
-        _textProxyServer.setText(_appConfiguration.getProxyServer());
-        _textProxyPort.setText(_appConfiguration.getProxyServerPort());
-        _chkAuthRequired.setSelected(_appConfiguration.getUseProxyServerAuth());
-        _textProxyUser.setText(_appConfiguration.getProxyServerUser());
+        _chkUseProxyServer.setSelected(AppConfiguration.getInstance().getUseProxyServer());
+        _textProxyServer.setText(AppConfiguration.getInstance().getProxyServer());
+        _textProxyPort.setText(AppConfiguration.getInstance().getProxyServerPort());
+        _chkAuthRequired.setSelected(AppConfiguration.getInstance().getUseProxyServerAuth());
+        _textProxyUser.setText(AppConfiguration.getInstance().getProxyServerUser());
     }
 
     /**

@@ -29,6 +29,8 @@ public class AppConfiguration
 {
     private static final String APP_CONFIG_PROPERTIES = "appConfig.xml";
 
+    private static AppConfiguration instance = new AppConfiguration();
+    
     private boolean _useProxyServer = false;
     private String _proxyServer = "";
     private String _proxyServerPort = "";
@@ -65,6 +67,14 @@ public class AppConfiguration
     private static final String WAIT_NR_TILES = "WaitNrTiles";
 
     private static final String INPUT_PANEL_INDEX = "InputPanelIndex";
+
+    private AppConfiguration() {
+        loadFromFile();
+    }
+
+    public static AppConfiguration getInstance() {
+        return instance;
+    }
 
     public void saveToFile()
     {
@@ -103,7 +113,7 @@ public class AppConfiguration
         prop.setProperty(key, value);
     }
 
-    public void loadFromFile()
+    private void loadFromFile()
     {
         Properties prop = new Properties();
         try

@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadResult;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
@@ -48,22 +49,7 @@ public class TileListDownloader
 
     private TileDownloaderListener _listener = null;
 
-    private boolean _useProxyServer = false;
-    private boolean _useProxyServerAuth = false;
-    private String _proxyServer = "localhost";
-    private String _proxyServerUser = "local";
-    private String _proxyServerPort = "8080";
-    private String _proxyServerPassword = "pass";
-
-    private boolean _waitAfterTiles = false;
-    private int _waitAfterTilesAmount = 0;
-    private int _waitAfterTilesSeconds = 1;
-
     private boolean _stopFlag = false;
-
-    private boolean _overwriteExistingFiles = true;
-
-    private int _minimumAgeInDays = 7;
 
     /**
      * @param downloadPath
@@ -74,114 +60,6 @@ public class TileListDownloader
         super();
         setDownloadPath(downloadPath);
         setTilesToDownload(tilesToDownload.getFileListToDownload());
-    }
-
-    /**
-     * Getter for proxyServer
-     * @return the proxyServer
-     */
-    public final String getProxyServer()
-    {
-        return _proxyServer;
-    }
-
-    /**
-     * Setter for proxyServer
-     * @param proxyServer the proxyServer to set
-     */
-    public final void setProxyServer(String proxyServer)
-    {
-        _proxyServer = proxyServer;
-    }
-
-    /**
-     * Getter for useProxyServer
-     * @return the useProxyServer
-     */
-    public final boolean isUseProxyServer()
-    {
-        return _useProxyServer;
-    }
-
-    /**
-     * Setter for useProxyServer
-     * @param useProxyServer the useProxyServer to set
-     */
-    public final void setUseProxyServer(boolean useProxyServer)
-    {
-        _useProxyServer = useProxyServer;
-    }
-
-    /**
-     * Getter for useProxyServerAuth
-     * @return the useProxyServerAuth
-     */
-    public final boolean isUseProxyServerAuth()
-    {
-        return _useProxyServerAuth;
-    }
-
-    /**
-     * Setter for useProxyServerAuth
-     * @param useProxyServerAuth the useProxyServerAuth to set
-     */
-    public final void setUseProxyServerAuth(boolean useProxyServerAuth)
-    {
-        _useProxyServerAuth = useProxyServerAuth;
-    }
-
-    /**
-     * Getter for proxyServerUser
-     * @return the proxyServerUser
-     */
-    public final String getProxyServerUser()
-    {
-        return _proxyServerUser;
-    }
-
-    /**
-     * Setter for proxyServerUser
-     * @param proxyServerUser the proxyServerUser to set
-     */
-    public final void setProxyServerUser(String proxyServerUser)
-    {
-        _proxyServerUser = proxyServerUser;
-    }
-
-    /**
-     * Getter for proxyServerPort
-     * @return the proxyServerPort
-     */
-    public final String getProxyServerPort()
-    {
-        return _proxyServerPort;
-    }
-
-    /**
-     * Setter for proxyServerPort
-     * @param proxyServerPort the proxyServerPort to set
-     */
-    public final void setProxyServerPort(String proxyServerPort)
-    {
-        _proxyServerPort = proxyServerPort;
-    }
-
-    /**
-     * Getter for proxyServerPassword
-     * @return the proxyServerPassword
-     */
-    public final String getProxyServerPassword()
-    {
-        return _proxyServerPassword;
-    }
-
-    /**
-     * Setter for proxyServerPassword
-     * @param proxyServerPassword the proxyServerPassword to set
-     */
-    public final void setProxyServerPassword(String proxyServerPassword)
-    {
-        _proxyServerPassword = proxyServerPassword;
     }
 
     /**
@@ -198,15 +76,15 @@ public class TileListDownloader
             return;
         }
 
-        if (isUseProxyServer())
+        if (AppConfiguration.getInstance().getUseProxyServer())
         {
-            if (isUseProxyServerAuth())
+            if (AppConfiguration.getInstance().getUseProxyServerAuth())
             {
-                new ProxyConnection(getProxyServer(), Integer.parseInt(getProxyServerPort()), getProxyServerUser(), getProxyServerPassword());
+                new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()), AppConfiguration.getInstance().getProxyServerUser(), "");
             }
             else
             {
-                new ProxyConnection(getProxyServer(), Integer.parseInt(getProxyServerPort()));
+                new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()));
             }
         }
 
@@ -236,13 +114,13 @@ public class TileListDownloader
                 fireErrorOccuredEvent(tileToDownload, tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
             }
 
-            if ((tileCounter < getNumberOfTilesToDownload(getTilesToDownload())) && isWaitAfterTiles())
+            if ((tileCounter < getNumberOfTilesToDownload(getTilesToDownload())) && AppConfiguration.getInstance().getWaitAfterNrTiles())
             {
-                if ((tileCounter) % (getWaitAfterTilesAmount()) == 0)
+                if ((tileCounter) % (AppConfiguration.getInstance().getWaitNrTiles()) == 0)
                 {
                     try
                     {
-                        int waitSeconds = getWaitAfterTilesSeconds();
+                        int waitSeconds = AppConfiguration.getInstance().getWaitSeconds();
                         String waitMsg = "Waiting " + waitSeconds + " sec to resume";
                         System.out.println(waitMsg);
                         fireWaitResume(waitMsg);
@@ -374,8 +252,8 @@ public class TileListDownloader
         if (file.exists())
         {
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.HOUR, -24 * getMinimumAgeInDays());
-            if (!isOverwriteExistingFiles())
+            cal.add(Calendar.HOUR, -24 * AppConfiguration.getInstance().getMinimumAgeInDays());
+            if (!AppConfiguration.getInstance().isOverwriteExistingFiles())
             {
                 result.setCode(TileDownloadResult.CODE_OK);
                 result.setMessage(TileDownloadResult.MSG_OK);
@@ -589,60 +467,6 @@ public class TileListDownloader
     }
 
     /**
-     * Getter for waitAfterTiles
-     * @return the waitAfterTiles
-     */
-    public final boolean isWaitAfterTiles()
-    {
-        return _waitAfterTiles;
-    }
-
-    /**
-     * Setter for waitAfterTiles
-     * @param waitAfterTiles the waitAfterTiles to set
-     */
-    public final void setWaitAfterTiles(boolean waitAfterTiles)
-    {
-        _waitAfterTiles = waitAfterTiles;
-    }
-
-    /**
-     * Getter for waitAfterTilesAmount
-     * @return the waitAfterTilesAmount
-     */
-    public final int getWaitAfterTilesAmount()
-    {
-        return _waitAfterTilesAmount;
-    }
-
-    /**
-     * Setter for waitAfterTilesAmount
-     * @param waitAfterTilesAmount the waitAfterTilesAmount to set
-     */
-    public final void setWaitAfterTilesAmount(int waitAfterTilesAmount)
-    {
-        _waitAfterTilesAmount = waitAfterTilesAmount;
-    }
-
-    /**
-     * Getter for waitAfterTilesSeconds
-     * @return the waitAfterTilesSeconds
-     */
-    public final int getWaitAfterTilesSeconds()
-    {
-        return _waitAfterTilesSeconds;
-    }
-
-    /**
-     * Setter for waitAfterTilesSeconds
-     * @param waitAfterTilesSeconds the waitAfterTilesSeconds to set
-     */
-    public final void setWaitAfterTilesSeconds(int waitAfterTilesSeconds)
-    {
-        _waitAfterTilesSeconds = waitAfterTilesSeconds;
-    }
-
-    /**
      * Setter for downloadPath
      * @param downloadPath the downloadPath to set
      */
@@ -685,44 +509,5 @@ public class TileListDownloader
     {
         _stopFlag = stopFlag;
 
-    }
-
-    /**
-     * Getter for overwriteExistingFiles
-     * @return the overwriteExistingFiles
-     */
-    public final boolean isOverwriteExistingFiles()
-    {
-        return _overwriteExistingFiles;
-    }
-
-    /**
-     * Setter for overwriteExistingFiles
-     * @param overwriteExistingFiles the overwriteExistingFiles to set
-     */
-    public final void setOverwriteExistingFiles(boolean overwriteExistingFiles)
-    {
-        _overwriteExistingFiles = overwriteExistingFiles;
-    }
-
-    /**
-     * Getter for minimumAgeInDays
-     @return the minimumAgeInDays
-     */
-    public int getMinimumAgeInDays()
-    {
-        return _minimumAgeInDays;
-    }
-
-    /**
-     * Setter for minimumAgeInDays
-     * @param minimumAgeInDays the minimumAgeInDays to set
-     */
-    public void setMinimumAgeInDays(int minimumAgeInDays)
-    {
-        if (minimumAgeInDays >= 0)
-        {
-            _minimumAgeInDays = minimumAgeInDays;
-        }
     }
 }

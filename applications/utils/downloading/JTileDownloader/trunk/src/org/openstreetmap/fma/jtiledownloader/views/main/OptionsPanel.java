@@ -51,15 +51,12 @@ public class OptionsPanel
 
     JCheckBox _chkOverwriteExistingFiles = new JCheckBox("Overwrite existing files");
 
-    private final AppConfiguration _appConfiguration;
-
     /**
      * 
      */
-    public OptionsPanel(AppConfiguration appConfiguration)
+    public OptionsPanel()
     {
         super();
-        _appConfiguration = appConfiguration;
 
         createOptionsPanel();
         initializeOptionsPanel();
@@ -132,14 +129,14 @@ public class OptionsPanel
      */
     private void initializeOptionsPanel()
     {
-        _chkWaitAfterNrTiles.setSelected(_appConfiguration.getWaitAfterNrTiles());
-        _textWaitSeconds.setText("" + _appConfiguration.getWaitSeconds());
-        _textWaitNrTiles.setText("" + _appConfiguration.getWaitNrTiles());
+        _chkWaitAfterNrTiles.setSelected(AppConfiguration.getInstance().getWaitAfterNrTiles());
+        _textWaitSeconds.setText("" + AppConfiguration.getInstance().getWaitSeconds());
+        _textWaitNrTiles.setText("" + AppConfiguration.getInstance().getWaitNrTiles());
 
-        _textMinimumAgeInDays.setText("" + _appConfiguration.getMinimumAgeInDays());
+        _textMinimumAgeInDays.setText("" + AppConfiguration.getInstance().getMinimumAgeInDays());
 
-        _chkShowTilePreview.setSelected(_appConfiguration.isShowTilePreview());
-        _chkOverwriteExistingFiles.setSelected(_appConfiguration.isOverwriteExistingFiles());
+        _chkShowTilePreview.setSelected(AppConfiguration.getInstance().isShowTilePreview());
+        _chkOverwriteExistingFiles.setSelected(AppConfiguration.getInstance().isOverwriteExistingFiles());
 
     }
 

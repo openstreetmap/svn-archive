@@ -1,5 +1,7 @@
 package org.openstreetmap.fma.jtiledownloader.datatypes;
 
+import java.io.File;
+
 /**
  * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
@@ -66,6 +68,15 @@ public class Tile
     public int getZ()
     {
         return z;
+    }
+
+    /**
+     * Returns the relative path of a tile
+     * @return relative tile-image path
+     */
+    public String getPath()
+    {
+        return z + File.separator + x;
     }
 
     /**

@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
+import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
@@ -185,7 +186,7 @@ public class JTileDownloaderCommandLine
      */
     private void startDownload(String server)
     {
-        _tld = new TileListDownloader(_downloadTemplate.getOutputLocation(), _tileList, server);
+        _tld = new TileListDownloader(_downloadTemplate.getOutputLocation(), _tileList, new GenericTileProvider(server));
         _tld.setListener(this);
         _tld.start();
     }

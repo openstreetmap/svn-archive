@@ -24,6 +24,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
+import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.datatypes.UpdateTileList;
@@ -282,7 +283,7 @@ public class UpdateTilesPanel
             System.out.println("tileServer:" + getTileServer());
 
             // design problem: AppConfiguration doesn't provide the real current config
-            setTileListDownloader(new TileListDownloader(getFolder(), updateList, _textTileServer.getText()));
+            setTileListDownloader(new TileListDownloader(getFolder(), updateList, new GenericTileProvider(_textTileServer.getText())));
 
             ProgressBar pg = new ProgressBar(1, getTileListDownloader());
         }

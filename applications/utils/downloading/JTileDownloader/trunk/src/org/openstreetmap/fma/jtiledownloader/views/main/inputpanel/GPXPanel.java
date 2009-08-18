@@ -42,117 +42,133 @@ import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
 /**
  * 
  */
-public class GPXPanel extends InputPanel {
-	private static final long serialVersionUID = 1L;
+public class GPXPanel
+    extends InputPanel
+{
+    private static final long serialVersionUID = 1L;
 
-	private static final String COMPONENT_GPX_FILE = "gpxFile";
+    private static final String COMPONENT_GPX_FILE = "gpxFile";
 
-	private TileListCommonGPX _tileList = new TileListCommonGPX();
+    private TileListCommonGPX _tileList = new TileListCommonGPX();
 
-	JLabel _labelGPXFile = new JLabel("GPX File:");
-	JTextField _textGPXFile = new JTextField();
+    JLabel _labelGPXFile = new JLabel("GPX File:");
+    JTextField _textGPXFile = new JTextField();
 
-	private DownloadConfigurationUrlSquare _downloadConfig;
+    private DownloadConfigurationUrlSquare _downloadConfig;
 
-	/**
-	 * 
-	 */
-	public GPXPanel(JTileDownloaderMainView mainView) {
-		super(mainView);
+    /**
+     * 
+     */
+    public GPXPanel(JTileDownloaderMainView mainView)
+    {
+        super(mainView);
 
-		createPanel();
-		initializePanel();
-	}
+        createPanel();
+        initializePanel();
+    }
 
-	/**
-	 * 
-	 */
-	public void loadConfig() {
-		_downloadConfig = new DownloadConfigurationUrlSquare();
-		_downloadConfig.loadFromFile();
+    /**
+     * 
+     */
+    public void loadConfig()
+    {
+        _downloadConfig = new DownloadConfigurationUrlSquare();
+        _downloadConfig.loadFromFile();
 
-		setCommonValues(_downloadConfig);
-	}
+        setCommonValues(_downloadConfig);
+    }
 
-	/**
-	 * 
-	 */
-	private void initializePanel() {
-		_textGPXFile.setPreferredSize(new Dimension(330, 20));
-		_textGPXFile.addFocusListener(new MyFocusListener());
-		_textGPXFile.setName(COMPONENT_GPX_FILE);
-	}
+    /**
+     * 
+     */
+    private void initializePanel()
+    {
+        _textGPXFile.setPreferredSize(new Dimension(330, 20));
+        _textGPXFile.addFocusListener(new MyFocusListener());
+        _textGPXFile.setName(COMPONENT_GPX_FILE);
+    }
 
-	/**
-	 * 
-	 */
-	private void createPanel() {
-		setLayout(new GridBagLayout());
+    /**
+     * 
+     */
+    private void createPanel()
+    {
+        setLayout(new GridBagLayout());
 
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.weightx = 1.0;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = new Insets(5, 5, 0, 5);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        constraints.weightx = 1.0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets(5, 5, 0, 5);
 
-		add(_labelGPXFile, constraints);
-		add(_textGPXFile, constraints);
-	}
+        add(_labelGPXFile, constraints);
+        add(_textGPXFile, constraints);
+    }
 
-	public void saveConfig() {
-		if (_downloadConfig == null) {
-			return;
-		}
-	}
+    public void saveConfig()
+    {
+        if (_downloadConfig == null)
+        {
+            return;
+        }
+    }
 
-	/**
-	 * @return
-	 */
-	public int getNumberOfTilesToDownload() {
-		return _tileList.getFileListToDownload().size();
-	}
+    /**
+     * @return
+     */
+    public int getNumberOfTilesToDownload()
+    {
+        return _tileList.getFileListToDownload().size();
+    }
 
-	class MyFocusListener implements FocusListener {
+    class MyFocusListener
+        implements FocusListener
+    {
 
-		/**
-		 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
-		 * {@inheritDoc}
-		 */
-		public void focusGained(FocusEvent focusevent) {
+        /**
+         * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
+         * {@inheritDoc}
+         */
+        public void focusGained(FocusEvent focusevent)
+        {
 
-		}
+        }
 
-		/**
-		 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
-		 * {@inheritDoc}
-		 */
-		public void focusLost(FocusEvent focusevent) {
-			String componentName = focusevent.getComponent().getName();
-			System.out.println("focusLost: " + componentName);
+        /**
+         * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
+         * {@inheritDoc}
+         */
+        public void focusLost(FocusEvent focusevent)
+        {
+            String componentName = focusevent.getComponent().getName();
+            System.out.println("focusLost: " + componentName);
 
-			if (componentName.equalsIgnoreCase(COMPONENT_GPX_FILE)) {
-				updateAll();
-			}
-		}
-	}
+            if (componentName.equalsIgnoreCase(COMPONENT_GPX_FILE))
+            {
+                updateAll();
+            }
+        }
+    }
 
-	/**
-	 * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#updateAll()
-	 * {@inheritDoc}
-	 */
-	public void updateAll() {
-		_tileList.setDownloadZoomLevels(getDownloadZoomLevel());
-		_tileList.setTileServerBaseUrl(getTileServerBaseUrl());
-		_tileList.updateList(_textGPXFile.getText());
-		updateNumberOfTiles();
-	}
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#updateAll()
+     * {@inheritDoc}
+     */
+    public void updateAll()
+    {
+        _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
+        _tileList.setTileServerBaseUrl(getTileServerBaseUrl());
+        _tileList.updateList(_textGPXFile.getText());
+        updateNumberOfTiles();
+    }
 
-	/**
-	 * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getTileList()
-	 * {@inheritDoc}
-	 */
-	public TileList getTileList() {
-		return _tileList;
-	}
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getTileList()
+     * {@inheritDoc}
+     */
+    public TileList getTileList()
+    {
+        return _tileList;
+    }
 
 }

@@ -35,94 +35,123 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-public class TileListCommonGPX extends TileListCommon {
-	private Vector tilesToDownload = new Vector();
+public class TileListCommonGPX
+    extends TileListCommon
+{
+    private Vector tilesToDownload = new Vector();
 
-	public void updateList(String fileName) {
-		tilesToDownload.clear();
-		File file = new File(fileName);
-		if (file.exists() && file.isFile()) {
-			try {
-				DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-				domFactory.setNamespaceAware(true); // never forget this!
-				DocumentBuilder builder = domFactory.newDocumentBuilder();
-				Document document = builder.parse(file);
+    public void updateList(String fileName)
+    {
+        tilesToDownload.clear();
+        File file = new File(fileName);
+        if (file.exists() && file.isFile())
+        {
+            try
+            {
+                DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+                domFactory.setNamespaceAware(true); // never forget this!
+                DocumentBuilder builder = domFactory.newDocumentBuilder();
+                Document document = builder.parse(file);
 
-				Node gpxNode = document.getFirstChild();
-				if (!gpxNode.getNodeName().equalsIgnoreCase("gpx")) {
-					throw new RuntimeException("invalid file!");
-				}
+                Node gpxNode = document.getFirstChild();
+                if (!gpxNode.getNodeName().equalsIgnoreCase("gpx"))
+                {
+                    throw new RuntimeException("invalid file!");
+                }
 
-				//Object result = expr.evaluate(document, XPathConstants.NODESET);
-				//NodeList nodes = (NodeList) result;
-				NodeList nodes = gpxNode.getChildNodes();
-				int detectedTrackNumber = 0;
-				for (int i = 0; i < nodes.getLength(); i++) {
-					if (nodes.item(i).getLocalName() != null && nodes.item(i).getLocalName().equalsIgnoreCase("trk")) {
-						detectedTrackNumber++;
-						//if (detectedTrackNumber == 1) {
-							// Download all zoomlevels
-							for (int zoomLevel : getDownloadZoomLevels()) {
-								// handle all trgSegments
-								NodeList trkSegs = nodes.item(i).getChildNodes();
-								for (int j = 0; j < trkSegs.getLength(); j++) {
-									if (trkSegs.item(j).getLocalName() != null && trkSegs.item(j).getLocalName().equalsIgnoreCase("trkseg")) {
-										// handle all trkpts
-										NodeList trkPts = trkSegs.item(j).getChildNodes();
-										for (int k = 0; k < trkPts.getLength(); k++) {
-											if (trkPts.item(k).getLocalName() != null && trkPts.item(k).getLocalName().equalsIgnoreCase("trkpt")) {
-												handleTrkPt(trkPts.item(k), zoomLevel);
-											}
-										}
-									}
-								}
-							}
-						//}
-					}
-				}
-			} catch (SAXParseException spe) {
-				System.out.println("\n** Parsing error, line " + spe.getLineNumber() + ", uri " + spe.getSystemId());
-				System.out.println("   " + spe.getMessage());
-				Exception e = (spe.getException() != null) ? spe.getException() : spe;
-				e.printStackTrace();
-			} catch (SAXException sxe) {
-				Exception e = (sxe.getException() != null) ? sxe.getException() : sxe;
-				e.printStackTrace();
-			} catch (ParserConfigurationException pce) {
-				pce.printStackTrace();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-		}
-		if (tilesToDownload.isEmpty()) {
-			tilesToDownload.add(getTileServerBaseUrl() + "0/0/0.png");
-		}
-	}
+                //Object result = expr.evaluate(document, XPathConstants.NODESET);
+                //NodeList nodes = (NodeList) result;
+                NodeList nodes = gpxNode.getChildNodes();
+                int detectedTrackNumber = 0;
+                for (int i = 0; i < nodes.getLength(); i++)
+                {
+                    if (nodes.item(i).getLocalName() != null && nodes.item(i).getLocalName().equalsIgnoreCase("trk"))
+                    {
+                        detectedTrackNumber++;
+                        //if (detectedTrackNumber == 1) {
+                        // Download all zoomlevels
+                        for (int zoomLevel : getDownloadZoomLevels())
+                        {
+                            // handle all trgSegments
+                            NodeList trkSegs = nodes.item(i).getChildNodes();
+                            for (int j = 0; j < trkSegs.getLength(); j++)
+                            {
+                                if (trkSegs.item(j).getLocalName() != null && trkSegs.item(j).getLocalName().equalsIgnoreCase("trkseg"))
+                                {
+                                    // handle all trkpts
+                                    NodeList trkPts = trkSegs.item(j).getChildNodes();
+                                    for (int k = 0; k < trkPts.getLength(); k++)
+                                    {
+                                        if (trkPts.item(k).getLocalName() != null && trkPts.item(k).getLocalName().equalsIgnoreCase("trkpt"))
+                                        {
+                                            handleTrkPt(trkPts.item(k), zoomLevel);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        //}
+                    }
+                }
+            }
+            catch (SAXParseException spe)
+            {
+                System.out.println("\n** Parsing error, line " + spe.getLineNumber() + ", uri " + spe.getSystemId());
+                System.out.println("   " + spe.getMessage());
+                Exception e = (spe.getException() != null) ? spe.getException() : spe;
+                e.printStackTrace();
+            }
+            catch (SAXException sxe)
+            {
+                Exception e = (sxe.getException() != null) ? sxe.getException() : sxe;
+                e.printStackTrace();
+            }
+            catch (ParserConfigurationException pce)
+            {
+                pce.printStackTrace();
+            }
+            catch (IOException ioe)
+            {
+                ioe.printStackTrace();
+            }
+        }
+        if (tilesToDownload.isEmpty())
+        {
+            tilesToDownload.add(getTileServerBaseUrl() + "0/0/0.png");
+        }
+    }
 
-	private void handleTrkPt(Node item, int zoomLevel) {
-		NamedNodeMap attrs = item.getAttributes();
-		if (attrs.getNamedItem("lat") != null && attrs.getNamedItem("lon") != null) {
-			try {
-				Double lat = Double.parseDouble(attrs.getNamedItem("lat").getTextContent());
-				Double lon = Double.parseDouble(attrs.getNamedItem("lon").getTextContent());
-				int downloadTileXIndex = calculateTileX(lon, zoomLevel);
-				int downloadTileYIndex = calculateTileY(lat, zoomLevel);
-				String urlPathToFile = getTileServerBaseUrl() + zoomLevel + "/" + downloadTileXIndex + "/" + downloadTileYIndex + ".png";
-				if (!tilesToDownload.contains(urlPathToFile)) {
-					log("add " + urlPathToFile + " to download list.");
-					tilesToDownload.add(urlPathToFile);
-				}
-			} catch (NumberFormatException e) {
-				// ignore ;)
-			}
-		}
-	}
+    private void handleTrkPt(Node item, int zoomLevel)
+    {
+        NamedNodeMap attrs = item.getAttributes();
+        if (attrs.getNamedItem("lat") != null && attrs.getNamedItem("lon") != null)
+        {
+            try
+            {
+                Double lat = Double.parseDouble(attrs.getNamedItem("lat").getTextContent());
+                Double lon = Double.parseDouble(attrs.getNamedItem("lon").getTextContent());
+                int downloadTileXIndex = calculateTileX(lon, zoomLevel);
+                int downloadTileYIndex = calculateTileY(lat, zoomLevel);
+                String urlPathToFile = getTileServerBaseUrl() + zoomLevel + "/" + downloadTileXIndex + "/" + downloadTileYIndex + ".png";
+                if (!tilesToDownload.contains(urlPathToFile))
+                {
+                    log("add " + urlPathToFile + " to download list.");
+                    tilesToDownload.add(urlPathToFile);
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                // ignore ;)
+            }
+        }
+    }
 
-	/**
-	 * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getFileListToDownload()
-	 * {@inheritDoc}
-	 */
-	public Vector getFileListToDownload() {
-		return tilesToDownload;
-	}
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getFileListToDownload()
+     * {@inheritDoc}
+     */
+    public Vector getFileListToDownload()
+    {
+        return tilesToDownload;
+    }
 }

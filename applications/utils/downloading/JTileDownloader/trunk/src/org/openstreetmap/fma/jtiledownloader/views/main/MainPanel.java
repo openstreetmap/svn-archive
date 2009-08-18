@@ -322,7 +322,7 @@ public class MainPanel
         String textZoomLevels = _textOutputZoomLevels.getText().trim();
         if (textZoomLevels.length() == 0)
         {
-            getInputPanel().setDownloadZoomLevel(new int[] {Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()) });
+            getInputPanel().setDownloadZoomLevel(new int[] { Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()) });
         }
         else
         {
@@ -354,7 +354,7 @@ public class MainPanel
 
         if (zoomLevelsString == null || zoomLevelsString.length == 0)
         {
-            return new int[] {12 };
+            return new int[] { 12 };
         }
 
         int[] zoomLevel = new int[zoomLevelsString.length];
@@ -593,7 +593,6 @@ public class MainPanel
             case TYPE_GPX:
                 return getGPXPanel();
 
-                
             default:
                 return null;
         }

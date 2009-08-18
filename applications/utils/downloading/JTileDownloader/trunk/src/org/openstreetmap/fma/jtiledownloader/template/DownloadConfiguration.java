@@ -29,7 +29,7 @@ public class DownloadConfiguration
 {
     private String _propertyFileName = "downloadConfig.xml";
 
-    private int[] _outputZoomLevels = new int[] {12 };
+    private int[] _outputZoomLevels = new int[] { 12 };
     private String _tileServer = "";
     private String _outputLocation = "";
     private String _type = "";
@@ -125,7 +125,7 @@ public class DownloadConfiguration
 
         if (zoomLevelsString == null || zoomLevelsString.length == 0)
         {
-            return new int[] {12 };
+            return new int[] { 12 };
         }
 
         int[] zoomLevel = new int[zoomLevelsString.length];

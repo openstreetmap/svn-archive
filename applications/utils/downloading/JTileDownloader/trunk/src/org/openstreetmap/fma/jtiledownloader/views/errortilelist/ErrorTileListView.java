@@ -43,8 +43,8 @@ public class ErrorTileListView
     extends JDialog
 {
 
-    private static final String[] COL_HEADS = new String[] {"No", "Tile", "Error" };
-    private static final int[] COL_SIZE = new int[] {30, 300, 80 };
+    private static final String[] COL_HEADS = new String[] { "No", "Tile", "Error" };
+    private static final int[] COL_SIZE = new int[] { 30, 300, 80 };
 
     private static final int VIEW_SIZE_X = 550;
     private static final int VIEW_SIZE_Y = 480;
@@ -66,8 +66,7 @@ public class ErrorTileListView
      * @param title
      * @throws HeadlessException
      */
-    public ErrorTileListView(Frame owner, Vector errorTileList)
-        throws HeadlessException
+    public ErrorTileListView(Frame owner, Vector errorTileList) throws HeadlessException
     {
         super(owner, "ErrorTileListView", true);
         _errorTileList = errorTileList;

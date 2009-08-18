@@ -18,11 +18,14 @@ import org.openstreetmap.gui.jmapviewer.JMapViewer;
  * @author Jan Peter Stotz
  * 
  */
-public class SlippyMapChooserWindow extends JFrame {
+public class SlippyMapChooserWindow
+    extends JFrame
+{
 
     private static final long serialVersionUID = 1L;
 
-    public SlippyMapChooserWindow(BBoxLatLonPanel bboxlatlonpanel) {
+    public SlippyMapChooserWindow(BBoxLatLonPanel bboxlatlonpanel)
+    {
         super("Slippy Map Chooser");
         setSize(400, 400);
         final SlippyMapChooser map = new SlippyMapChooser(bboxlatlonpanel);

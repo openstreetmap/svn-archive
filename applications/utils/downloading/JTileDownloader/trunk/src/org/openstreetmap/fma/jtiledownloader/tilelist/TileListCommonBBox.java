@@ -28,10 +28,10 @@ import java.util.Vector;
 public class TileListCommonBBox
     extends TileListCommon
 {
-    private int[] _xTopLeft = new int[] {0 };
-    private int[] _yTopLeft = new int[] {0 };
-    private int[] _xBottomRight = new int[] {0 };
-    private int[] _yBottomRight = new int[] {0 };
+    private int[] _xTopLeft = new int[] { 0 };
+    private int[] _yTopLeft = new int[] { 0 };
+    private int[] _xBottomRight = new int[] { 0 };
+    private int[] _yBottomRight = new int[] { 0 };
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getFileListToDownload()

@@ -34,7 +34,7 @@ public abstract class InputPanel
 {
 
     private static final long serialVersionUID = 1L;
-    private int[] _downloadZoomLevel = new int[] {12 };
+    private int[] _downloadZoomLevel = new int[] { 12 };
     private String _tileServerBaseUrl = "";
     private String _outputLocation = "tiles";
     private final JTileDownloaderMainView _mainView;

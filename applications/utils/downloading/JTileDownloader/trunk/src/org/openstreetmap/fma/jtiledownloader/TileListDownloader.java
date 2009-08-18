@@ -371,19 +371,23 @@ public class TileListDownloader
         TileDownloadResult result = new TileDownloadResult();
 
         File file = new File(fileName);
-        if (file.exists()) {
+        if (file.exists())
+        {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.HOUR, -24 * getMinimumAgeInDays());
-            if (!isOverwriteExistingFiles()) {
+            if (!isOverwriteExistingFiles())
+            {
                 result.setCode(TileDownloadResult.CODE_OK);
                 result.setMessage(TileDownloadResult.MSG_OK);
                 return result;
-            } else if (file.lastModified() >= cal.getTimeInMillis()) {
+            }
+            else if (file.lastModified() >= cal.getTimeInMillis())
+            {
                 result.setCode(TileDownloadResult.CODE_OK);
                 result.setMessage(TileDownloadResult.MSG_OK);
                 return result;
-             }
-         }
+            }
+        }
 
         HttpURLConnection urlConnection = null;
         try
@@ -400,7 +404,8 @@ public class TileListDownloader
 
             // do not overwrite file if not changed: required because setIfModifiedSince doesn't work for tile-servers atm
             // Mapnik-Servers do not send LastModified-headers...
-            if (lastModified != 0 && file.lastModified() >= lastModified) {
+            if (lastModified != 0 && file.lastModified() >= lastModified)
+            {
                 result.setCode(TileDownloadResult.CODE_OK);
                 result.setMessage(TileDownloadResult.MSG_OK);
                 return result;
@@ -704,16 +709,19 @@ public class TileListDownloader
      * Getter for minimumAgeInDays
      @return the minimumAgeInDays
      */
-    public int getMinimumAgeInDays() {
+    public int getMinimumAgeInDays()
+    {
         return _minimumAgeInDays;
-        }
+    }
 
     /**
      * Setter for minimumAgeInDays
      * @param minimumAgeInDays the minimumAgeInDays to set
      */
-    public void setMinimumAgeInDays(int minimumAgeInDays) {
-        if (minimumAgeInDays >= 0) {
+    public void setMinimumAgeInDays(int minimumAgeInDays)
+    {
+        if (minimumAgeInDays >= 0)
+        {
             _minimumAgeInDays = minimumAgeInDays;
         }
     }

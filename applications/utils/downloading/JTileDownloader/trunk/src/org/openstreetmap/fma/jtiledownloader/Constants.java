@@ -31,8 +31,8 @@ public interface Constants
     public static final double MIN_LON = -85.0511;
     public static final double MAX_LON = 85.0511;
 
-    public static final String[] INPUT_TAB_TYPE = new String[] {"Paste URL (Square)", "Bounding Box (Lat/Lon)", "Bounding Box (X/Y)", "GPX File" };
-    public static final String[] CONFIG_TYPE = new String[] {"UrlSquare", "BBoxLatLon", "BBoxXY", "GPX" };
+    public static final String[] INPUT_TAB_TYPE = new String[] { "Paste URL (Square)", "Bounding Box (Lat/Lon)", "Bounding Box (X/Y)", "GPX File" };
+    public static final String[] CONFIG_TYPE = new String[] { "UrlSquare", "BBoxLatLon", "BBoxXY", "GPX" };
     public static final int TYPE_URLSQUARE = 0;
     public static final int TYPE_BOUNDINGBOX_LATLON = 1;
     public static final int TYPE_BOUNDINGBOX_XY = 2;

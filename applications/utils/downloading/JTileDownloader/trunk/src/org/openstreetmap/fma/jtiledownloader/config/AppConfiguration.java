@@ -357,16 +357,19 @@ public class AppConfiguration
      * Getter for minimumAgeInDays
      @return the minimumAgeInDays
      */
-    public int getMinimumAgeInDays() {
+    public int getMinimumAgeInDays()
+    {
         return _minimumAgeInDays;
-        }
+    }
 
     /**
      * Setter for minimumAgeInDays
      * @param minimumAgeInDays the minimumAgeInDays to set
      */
-    public void setMinimumAgeInDays(int minimumAgeInDays) {
-        if (minimumAgeInDays >= 0) {
+    public void setMinimumAgeInDays(int minimumAgeInDays)
+    {
+        if (minimumAgeInDays >= 0)
+        {
             _minimumAgeInDays = minimumAgeInDays;
         }
     }

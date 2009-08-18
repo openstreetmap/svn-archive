@@ -87,7 +87,7 @@ public class TileListExporter
 
     private void doSingleExport(String tileToDownload, BufferedWriter fileWriter) throws IOException
     {
-        fileWriter.write("tileToDownload");
+        fileWriter.write(tileToDownload);
         fileWriter.newLine();
         log("added url " + tileToDownload);
     }

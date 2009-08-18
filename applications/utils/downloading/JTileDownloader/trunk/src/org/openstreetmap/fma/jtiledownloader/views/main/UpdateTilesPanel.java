@@ -24,6 +24,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
+import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.datatypes.UpdateTileList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.YDirectory;
@@ -253,7 +254,7 @@ public class UpdateTilesPanel
             TileListSimple updateList = new TileListSimple();
             for (int index = 0; index < selectedRows.length; index++)
             {
-                String zoomLevel = (String) _updateTilesTable.getValueAt(selectedRows[index], 0);
+                int zoomLevel = Integer.parseInt((String) _updateTilesTable.getValueAt(selectedRows[index], 0));
                 System.out.println("selected zoom level " + zoomLevel);
 
                 for (int indexTileList = 0; indexTileList < _updateList.size(); indexTileList++)
@@ -269,7 +270,7 @@ public class UpdateTilesPanel
                             String[] tiles = yDir.getTiles();
                             for (int indexTiles = 0; indexTiles < tiles.length; indexTiles++)
                             {
-                                updateList.addTile(getTileServer() + zoomLevel + "/" + yDir.getName() + "/" + tiles[indexTiles]);
+                                updateList.addTile(new Tile(Integer.parseInt(tiles[indexTiles]),Integer.parseInt(yDir.getName()),zoomLevel));
                             }
                         }
 
@@ -281,7 +282,7 @@ public class UpdateTilesPanel
             System.out.println("tileServer:" + getTileServer());
 
             // design problem: AppConfiguration doesn't provide the real current config
-            setTileListDownloader(new TileListDownloader(getFolder(), updateList));
+            setTileListDownloader(new TileListDownloader(getFolder(), updateList, _textTileServer.getText()));
 
             ProgressBar pg = new ProgressBar(1, getTileListDownloader());
         }

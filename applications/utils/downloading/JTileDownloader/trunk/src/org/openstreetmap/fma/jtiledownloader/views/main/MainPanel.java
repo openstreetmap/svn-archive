@@ -460,7 +460,7 @@ public class MainPanel
             {
                 valuesChanged();
 
-                TileListExporter tle = new TileListExporter(_textOutputFolder.getText(), getInputPanel().getTileList().getFileListToDownload());
+                TileListExporter tle = new TileListExporter(_textOutputFolder.getText(), getInputPanel().getTileList().getTileListToDownload(), getSelectedTileServer());
                 tle.doExport();
                 JOptionPane.showMessageDialog(_mainView, "Exported Tilelist to " + _textOutputFolder.getText() + File.separator + "export.txt", "Info", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -533,6 +533,24 @@ public class MainPanel
     public String getAltTileServer()
     {
         return _textAltTileServer.getText().trim();
+    }
+
+    /**
+     * Returns the selected tile server
+     * @return selected tile server
+     */
+    public String getSelectedTileServer()
+    {
+        String server = getTileServer();
+        if (!getAltTileServer().isEmpty())
+        {
+            server = getAltTileServer();
+        }
+        if (!server.endsWith("/"))
+        {
+            server = server + "/";
+        }
+        return server;
     }
 
     /**

@@ -146,7 +146,6 @@ public class BBoxXYPanel
     private void updateTileList()
     {
         _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
-        _tileList.setTileServerBaseUrl(getTileServerBaseUrl());
 
         _tileList.initXTopLeft(getMinX(), getDownloadZoomLevel());
         _tileList.initYTopLeft(getMinY(), getDownloadZoomLevel());

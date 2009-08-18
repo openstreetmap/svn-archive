@@ -169,7 +169,6 @@ public class BBoxLatLonPanel
     private void updateTileList()
     {
         _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
-        _tileList.setTileServerBaseUrl(getTileServerBaseUrl());
         _tileList.setMinLat(getMinLat());
         _tileList.setMinLon(getMinLon());
         _tileList.setMaxLat(getMaxLat());

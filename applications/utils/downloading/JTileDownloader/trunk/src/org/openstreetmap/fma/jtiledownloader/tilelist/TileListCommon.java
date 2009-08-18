@@ -29,7 +29,6 @@ public abstract class TileListCommon
     implements TileList
 {
     private int[] _downloadZoomLevels;
-    private String _tileServerBaseUrl;
 
     /**
      * @param lat
@@ -86,24 +85,6 @@ public abstract class TileListCommon
     public final void setDownloadZoomLevels(int[] downloadZoomLevel)
     {
         _downloadZoomLevels = downloadZoomLevel;
-    }
-
-    /**
-     * Getter for tileServerBaseUrl
-     * @return the tileServerBaseUrl
-     */
-    public final String getTileServerBaseUrl()
-    {
-        return _tileServerBaseUrl;
-    }
-
-    /**
-     * Setter for tileServerBaseUrl
-     * @param tileServerBaseUrl the tileServerBaseUrl to set
-     */
-    public final void setTileServerBaseUrl(String tileServerBaseUrl)
-    {
-        _tileServerBaseUrl = tileServerBaseUrl;
     }
 
     /**

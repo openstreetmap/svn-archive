@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
+
 /**
  * Copyright 2008, Friedrich Maier 
  * Copyright 2009, Sven Strickroth <email@cs-ware.de>
@@ -30,17 +32,19 @@ import java.util.Vector;
  */
 public class TileListExporter
 {
-    private Vector<String> _tilesToDownload;
+    private Vector<Tile> _tilesToDownload;
     private final String _downloadPathBase;
+    private String _serverBasePath;
 
     /**
      * @param tilesToDownload
      */
-    public TileListExporter(String downloadPathBase, Vector<String> tilesToDownload)
+    public TileListExporter(String downloadPathBase, Vector<Tile> tilesToDownload, String serverBasePath)
     {
         super();
         _downloadPathBase = downloadPathBase;
         _tilesToDownload = tilesToDownload;
+        _serverBasePath = serverBasePath;
     }
 
     public void doExport()
@@ -70,9 +74,9 @@ public class TileListExporter
             fileWriter = new BufferedWriter(new FileWriter(exportFile));
 
             int count = 0;
-            for (Enumeration<String> enumeration = _tilesToDownload.elements(); enumeration.hasMoreElements();)
+            for (Enumeration<Tile> enumeration = _tilesToDownload.elements(); enumeration.hasMoreElements();)
             {
-                String tileToDownload = enumeration.nextElement();
+                Tile tileToDownload = enumeration.nextElement();
                 doSingleExport(tileToDownload, fileWriter);
                 count++;
             }
@@ -85,9 +89,9 @@ public class TileListExporter
         }
     }
 
-    private void doSingleExport(String tileToDownload, BufferedWriter fileWriter) throws IOException
+    private void doSingleExport(Tile tileToDownload, BufferedWriter fileWriter) throws IOException
     {
-        fileWriter.write(tileToDownload);
+        fileWriter.write(_serverBasePath + tileToDownload + ".png");
         fileWriter.newLine();
         log("added url " + tileToDownload);
     }

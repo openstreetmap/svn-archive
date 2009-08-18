@@ -2,6 +2,8 @@ package org.openstreetmap.fma.jtiledownloader.tilelist;
 
 import java.util.Vector;
 
+import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
+
 /**
  * Copyright 2008, Friedrich Maier 
  * 
@@ -26,22 +28,22 @@ public class TileListSimple
     implements TileList
 {
 
-    Vector<String> _tileList;
+    Vector<Tile> _tileList;
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getFileListToDownload()
+     * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getTileListToDownload()
      * {@inheritDoc}
      */
-    public Vector<String> getFileListToDownload()
+    public Vector<Tile> getTileListToDownload()
     {
         return _tileList;
     }
 
-    public void addTile(String tile)
+    public void addTile(Tile tile)
     {
         if (_tileList == null)
         {
-            _tileList = new Vector<String>();
+            _tileList = new Vector<Tile>();
         }
 
         _tileList.add(tile);

@@ -28,6 +28,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -38,7 +39,7 @@ import org.xml.sax.SAXParseException;
 public class TileListCommonGPX
     extends TileListCommon
 {
-    private Vector<String> tilesToDownload = new Vector<String>();
+    private Vector<Tile> tilesToDownload = new Vector<Tile>();
 
     public void updateList(String fileName)
     {
@@ -117,7 +118,7 @@ public class TileListCommonGPX
         }
         if (tilesToDownload.isEmpty())
         {
-            tilesToDownload.add(getTileServerBaseUrl() + "0/0/0.png");
+            tilesToDownload.add(new Tile(0,0,0));
         }
     }
 
@@ -132,11 +133,11 @@ public class TileListCommonGPX
                 Double lon = Double.parseDouble(attrs.getNamedItem("lon").getTextContent());
                 int downloadTileXIndex = calculateTileX(lon, zoomLevel);
                 int downloadTileYIndex = calculateTileY(lat, zoomLevel);
-                String urlPathToFile = getTileServerBaseUrl() + zoomLevel + "/" + downloadTileXIndex + "/" + downloadTileYIndex + ".png";
-                if (!tilesToDownload.contains(urlPathToFile))
+                Tile tile = new Tile(downloadTileXIndex,downloadTileYIndex,zoomLevel);
+                if (!tilesToDownload.contains(tile))
                 {
-                    log("add " + urlPathToFile + " to download list.");
-                    tilesToDownload.add(urlPathToFile);
+                    log("add " + tile + " to download list.");
+                    tilesToDownload.add(tile);
                 }
             }
             catch (NumberFormatException e)
@@ -147,10 +148,10 @@ public class TileListCommonGPX
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getFileListToDownload()
+     * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getTileListToDownload()
      * {@inheritDoc}
      */
-    public Vector<String> getFileListToDownload()
+    public Vector<Tile> getTileListToDownload()
     {
         return tilesToDownload;
     }

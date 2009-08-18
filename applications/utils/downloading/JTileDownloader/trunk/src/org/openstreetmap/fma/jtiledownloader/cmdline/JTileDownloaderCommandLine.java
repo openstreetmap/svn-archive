@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
+import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration;
@@ -116,9 +117,8 @@ public class JTileDownloaderCommandLine
         ((TileListCommonBBox) _tileList).initYBottomRight(((DownloadConfigurationBBoxXY) _downloadTemplate).getMaxY(), _downloadTemplate.getOutputZoomLevels());
 
         ((TileListCommonBBox) _tileList).setDownloadZoomLevels(_downloadTemplate.getOutputZoomLevels());
-        ((TileListCommonBBox) _tileList).setTileServerBaseUrl(_downloadTemplate.getTileServer());
 
-        startDownload();
+        startDownload(_downloadTemplate.getTileServer());
     }
 
     /**
@@ -137,11 +137,10 @@ public class JTileDownloaderCommandLine
         ((TileListBBoxLatLon) _tileList).setMaxLon(((DownloadConfigurationBBoxLatLon) _downloadTemplate).getMaxLon());
 
         ((TileListBBoxLatLon) _tileList).setDownloadZoomLevels(_downloadTemplate.getOutputZoomLevels());
-        ((TileListBBoxLatLon) _tileList).setTileServerBaseUrl(_downloadTemplate.getTileServer());
 
         ((TileListBBoxLatLon) _tileList).calculateTileValuesXY();
 
-        startDownload();
+        startDownload(_downloadTemplate.getTileServer());
     }
 
     /**
@@ -175,19 +174,18 @@ public class JTileDownloaderCommandLine
 
         ((TileListUrlSquare) _tileList).setRadius(((DownloadConfigurationUrlSquare) _downloadTemplate).getRadius() * 1000);
         ((TileListUrlSquare) _tileList).setDownloadZoomLevels(_downloadTemplate.getOutputZoomLevels());
-        ((TileListUrlSquare) _tileList).setTileServerBaseUrl(_downloadTemplate.getTileServer());
 
         ((TileListUrlSquare) _tileList).calculateTileValuesXY();
 
-        startDownload();
+        startDownload(_downloadTemplate.getTileServer());
     }
 
     /**
      * 
      */
-    private void startDownload()
+    private void startDownload(String server)
     {
-        _tld = new TileListDownloader(_downloadTemplate.getOutputLocation(), _tileList);
+        _tld = new TileListDownloader(_downloadTemplate.getOutputLocation(), _tileList, server);
         _tld.setListener(this);
         _tld.start();
     }
@@ -256,7 +254,7 @@ public class JTileDownloaderCommandLine
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, java.lang.String)
      * {@inheritDoc}
      */
-    public void errorOccured(int actCount, int maxCount, String tile)
+    public void errorOccured(int actCount, int maxCount, Tile tile)
     {
         log("Error downloading tile " + actCount + "/" + maxCount + " from " + tile);
     }

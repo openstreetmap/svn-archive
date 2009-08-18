@@ -2,6 +2,8 @@ package org.openstreetmap.fma.jtiledownloader.tilelist;
 
 import java.util.Vector;
 
+import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
+
 /**
  * Copyright 2008, Friedrich Maier 
  * 
@@ -26,8 +28,8 @@ public interface TileList
 {
 
     /**
-     * @return {@link Vector} containing Strings
+     * @return {@link Vector} containing Tiles
      */
-    public abstract Vector<String> getFileListToDownload();
+    public abstract Vector<Tile> getTileListToDownload();
 
 }

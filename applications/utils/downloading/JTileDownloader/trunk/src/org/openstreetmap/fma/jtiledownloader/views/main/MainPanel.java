@@ -453,9 +453,12 @@ public class MainPanel
                 _mainView.updateActualDownloadConfig();
                 _mainView.updateAppConfig();
 
-                _mainView.setTileListDownloader(_mainView.createTileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList()));
+                if (_mainView.getTileListDownloader().getTilesToDownload().size() > 0)
+                {
+                    _mainView.setTileListDownloader(_mainView.createTileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList()));
 
-                ProgressBar pg = new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), _mainView.getTileListDownloader());
+                    ProgressBar pg = new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), _mainView.getTileListDownloader());
+                }
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_EXPORT))
             {

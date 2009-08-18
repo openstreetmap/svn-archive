@@ -35,7 +35,6 @@ import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
  */
 public class JTileDownloaderMainView
     extends JFrame
-    implements Constants
 {
     private static final long serialVersionUID = 1L;
 
@@ -65,7 +64,7 @@ public class JTileDownloaderMainView
         addWindowListener(new MainViewWindowListener());
         setResizable(false);
 
-        setTitle("JTileDownloader" + " Version: " + VERSION);
+        setTitle("JTileDownloader" + " Version: " + Constants.VERSION);
 
         _mainPanel = new MainPanel(getMainView());
         int tabIndex = AppConfiguration.getInstance().getInputPanelIndex();

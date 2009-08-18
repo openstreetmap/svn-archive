@@ -26,7 +26,7 @@ import org.openstreetmap.fma.jtiledownloader.Constants;
  * 
  */
 public abstract class TileListCommon
-    implements TileList, Constants
+    implements TileList
 {
     private int[] _downloadZoomLevels;
     private String _tileServerBaseUrl;
@@ -38,13 +38,13 @@ public abstract class TileListCommon
      */
     public int calculateTileY(double lat, int zoomLevel)
     {
-        if (lat < MIN_LAT)
+        if (lat < Constants.MIN_LAT)
         {
-            lat = MIN_LAT;
+            lat = Constants.MIN_LAT;
         }
-        if (lat > MAX_LAT)
+        if (lat > Constants.MAX_LAT)
         {
-            lat = MAX_LAT;
+            lat = Constants.MAX_LAT;
         }
         int y = (int) Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * (1 << zoomLevel));
         return y;
@@ -57,13 +57,13 @@ public abstract class TileListCommon
      */
     public int calculateTileX(double lon, int zoomLevel)
     {
-        if (lon < MIN_LON)
+        if (lon < Constants.MIN_LON)
         {
-            lon = MIN_LON;
+            lon = Constants.MIN_LON;
         }
-        if (lon > MAX_LON)
+        if (lon > Constants.MAX_LON)
         {
-            lon = MAX_LON;
+            lon = Constants.MAX_LON;
         }
 
         int x = (int) Math.floor((lon + 180) / 360 * (1 << zoomLevel));

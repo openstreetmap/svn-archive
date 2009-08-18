@@ -1,5 +1,7 @@
 package org.openstreetmap.fma.jtiledownloader.tilelist;
 
+import org.openstreetmap.fma.jtiledownloader.Constants;
+
 /**
  * Copyright 2008, Friedrich Maier 
  * 
@@ -38,10 +40,10 @@ public class TileListUrlSquare
             _radius = 6370000 * 2 * 4;
         }
 
-        double minLat = _latitude - 360 * (_radius / EARTH_CIRC_POLE);
-        double minLon = _longitude - 360 * (_radius / (EARTH_CIRC_EQUATOR * Math.cos(_longitude * Math.PI / 180)));
-        double maxLat = _latitude + 360 * (_radius / EARTH_CIRC_POLE);
-        double maxLon = _longitude + 360 * (_radius / (EARTH_CIRC_EQUATOR * Math.cos(_longitude * Math.PI / 180)));
+        double minLat = _latitude - 360 * (_radius / Constants.EARTH_CIRC_POLE);
+        double minLon = _longitude - 360 * (_radius / (Constants.EARTH_CIRC_EQUATOR * Math.cos(_longitude * Math.PI / 180)));
+        double maxLat = _latitude + 360 * (_radius / Constants.EARTH_CIRC_POLE);
+        double maxLon = _longitude + 360 * (_radius / (Constants.EARTH_CIRC_EQUATOR * Math.cos(_longitude * Math.PI / 180)));
 
         log("minLat=" + minLat);
         log("minLon=" + minLon);

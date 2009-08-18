@@ -54,7 +54,6 @@ import org.openstreetmap.fma.jtiledownloader.views.progressbar.ProgressBar;
  */
 public class MainPanel
     extends JPanel
-    implements Constants
 {
     private static final long serialVersionUID = 1L;
 
@@ -230,13 +229,13 @@ public class MainPanel
         _inputTabbedPane = new JTabbedPane();
 
         _urlSquarePanel = new UrlSquarePanel(_mainView);
-        _inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_URLSQUARE], _urlSquarePanel);
+        _inputTabbedPane.addTab(Constants.INPUT_TAB_TYPE[Constants.TYPE_URLSQUARE], _urlSquarePanel);
         _bBoxLatLonPanel = new BBoxLatLonPanel(_mainView);
-        _inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_LATLON], _bBoxLatLonPanel);
+        _inputTabbedPane.addTab(Constants.INPUT_TAB_TYPE[Constants.TYPE_BOUNDINGBOX_LATLON], _bBoxLatLonPanel);
         _bBoxXYPanel = new BBoxXYPanel(_mainView);
-        _inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_BOUNDINGBOX_XY], _bBoxXYPanel);
+        _inputTabbedPane.addTab(Constants.INPUT_TAB_TYPE[Constants.TYPE_BOUNDINGBOX_XY], _bBoxXYPanel);
         _gpxPanel = new GPXPanel(_mainView);
-        _inputTabbedPane.addTab(INPUT_TAB_TYPE[TYPE_GPX], _gpxPanel);
+        _inputTabbedPane.addTab(Constants.INPUT_TAB_TYPE[Constants.TYPE_GPX], _gpxPanel);
 
         add(_inputTabbedPane, constraints);
         _inputTabbedPane.addChangeListener(new InputTabListener(_mainView));
@@ -499,7 +498,7 @@ public class MainPanel
         {
             switch (_mainView.getInputTabSelectedIndex())
             {
-                case TYPE_URLSQUARE:
+                case Constants.TYPE_URLSQUARE:
                     if (getUrlSquarePanel().getPasteUrl() == null || getUrlSquarePanel().getPasteUrl().length() == 0)
                     {
                         JOptionPane.showMessageDialog(_mainView, "Please enter a URL in the input field Paste URL!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -560,13 +559,13 @@ public class MainPanel
     {
         switch (_mainView.getInputTabSelectedIndex())
         {
-            case TYPE_URLSQUARE:
+            case Constants.TYPE_URLSQUARE:
                 return getUrlSquarePanel();
-            case TYPE_BOUNDINGBOX_LATLON:
+            case Constants.TYPE_BOUNDINGBOX_LATLON:
                 return getBBoxLatLonPanel();
-            case TYPE_BOUNDINGBOX_XY:
+            case Constants.TYPE_BOUNDINGBOX_XY:
                 return getBBoxXYPanel();
-            case TYPE_GPX:
+            case Constants.TYPE_GPX:
                 return getGPXPanel();
 
             default:

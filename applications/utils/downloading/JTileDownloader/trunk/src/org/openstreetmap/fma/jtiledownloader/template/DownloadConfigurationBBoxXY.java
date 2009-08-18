@@ -26,7 +26,6 @@ import org.openstreetmap.fma.jtiledownloader.Constants;
  */
 public class DownloadConfigurationBBoxXY
     extends DownloadConfiguration
-    implements Constants
 {
 
     private int _minX = 0;
@@ -63,7 +62,7 @@ public class DownloadConfigurationBBoxXY
     public Properties saveToFile()
     {
         Properties prop = super.saveToFile();
-        setTemplateProperty(prop, TYPE, "" + CONFIG_TYPE[TYPE_BOUNDINGBOX_XY]);
+        setTemplateProperty(prop, TYPE, "" + Constants.CONFIG_TYPE[Constants.TYPE_BOUNDINGBOX_XY]);
         setTemplateProperty(prop, MIN_X, "" + _minX);
         setTemplateProperty(prop, MIN_Y, "" + _minY);
         setTemplateProperty(prop, MAX_X, "" + _maxX);

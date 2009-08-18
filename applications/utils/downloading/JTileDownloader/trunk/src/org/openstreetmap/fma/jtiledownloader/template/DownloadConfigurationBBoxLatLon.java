@@ -26,7 +26,6 @@ import org.openstreetmap.fma.jtiledownloader.Constants;
  */
 public class DownloadConfigurationBBoxLatLon
     extends DownloadConfiguration
-    implements Constants
 {
 
     private double _minLat = 0.0;
@@ -63,7 +62,7 @@ public class DownloadConfigurationBBoxLatLon
     public Properties saveToFile()
     {
         Properties prop = super.saveToFile();
-        setTemplateProperty(prop, TYPE, "" + CONFIG_TYPE[TYPE_BOUNDINGBOX_LATLON]);
+        setTemplateProperty(prop, TYPE, "" + Constants.CONFIG_TYPE[Constants.TYPE_BOUNDINGBOX_LATLON]);
         setTemplateProperty(prop, MIN_LAT, "" + _minLat);
         setTemplateProperty(prop, MIN_LON, "" + _minLon);
         setTemplateProperty(prop, MAX_LAT, "" + _maxLat);

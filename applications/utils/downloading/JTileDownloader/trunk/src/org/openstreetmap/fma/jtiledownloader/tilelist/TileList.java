@@ -28,6 +28,6 @@ public interface TileList
     /**
      * @return {@link Vector} containing Strings
      */
-    public abstract Vector getFileListToDownload();
+    public abstract Vector<String> getFileListToDownload();
 
 }

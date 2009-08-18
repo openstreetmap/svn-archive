@@ -36,13 +36,13 @@ public class ErrorTileListViewTableModel
     /**
      * @param errorTileList
      */
-    public ErrorTileListViewTableModel(Vector errorTileList)
+    public ErrorTileListViewTableModel(Vector<TileDownloadError> errorTileList)
     {
         _data = new Vector();
         int count = 0;
-        for (Enumeration enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
+        for (Enumeration<TileDownloadError> enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
         {
-            TileDownloadError tde = (TileDownloadError) enumeration.nextElement();
+            TileDownloadError tde = enumeration.nextElement();
             count++;
             Vector rowData = new Vector();
             rowData.add("" + count);

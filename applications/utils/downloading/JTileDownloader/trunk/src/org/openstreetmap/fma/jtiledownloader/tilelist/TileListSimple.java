@@ -26,13 +26,13 @@ public class TileListSimple
     implements TileList
 {
 
-    Vector _tileList;
+    Vector<String> _tileList;
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getFileListToDownload()
      * {@inheritDoc}
      */
-    public Vector getFileListToDownload()
+    public Vector<String> getFileListToDownload()
     {
         return _tileList;
     }
@@ -41,7 +41,7 @@ public class TileListSimple
     {
         if (_tileList == null)
         {
-            _tileList = new Vector();
+            _tileList = new Vector<String>();
         }
 
         _tileList.add(tile);

@@ -36,7 +36,7 @@ public class UpdateTilesTableModel
     /**
      * @param errorTileList
      */
-    public UpdateTilesTableModel(Vector updateTileList)
+    public UpdateTilesTableModel(Vector<UpdateTileList> updateTileList)
     {
         _data = new Vector();
         int count = 0;
@@ -46,9 +46,9 @@ public class UpdateTilesTableModel
             return;
         }
 
-        for (Enumeration enumeration = updateTileList.elements(); enumeration.hasMoreElements();)
+        for (Enumeration<UpdateTileList> enumeration = updateTileList.elements(); enumeration.hasMoreElements();)
         {
-            UpdateTileList utl = (UpdateTileList) enumeration.nextElement();
+            UpdateTileList utl = enumeration.nextElement();
             count++;
             Vector rowData = new Vector();
             rowData.add(utl.getZoomLevel());

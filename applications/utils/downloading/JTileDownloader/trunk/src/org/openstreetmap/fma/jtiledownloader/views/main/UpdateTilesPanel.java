@@ -81,7 +81,7 @@ public class UpdateTilesPanel
 
     private JScrollPane _scrollPane;
 
-    private Vector _updateList;
+    private Vector<UpdateTileList> _updateList;
 
     private String _tileServer = "";
     private String _folder = "";
@@ -258,14 +258,14 @@ public class UpdateTilesPanel
 
                 for (int indexTileList = 0; indexTileList < _updateList.size(); indexTileList++)
                 {
-                    UpdateTileList updateTileList = (UpdateTileList) _updateList.elementAt(indexTileList);
+                    UpdateTileList updateTileList = _updateList.elementAt(indexTileList);
                     if (updateTileList.getZoomLevel().equals(zoomLevel))
                     {
                         System.out.println("found updateTileList for zoom level " + zoomLevel);
-                        Vector directory = updateTileList.getYDirectory();
+                        Vector<YDirectory> directory = updateTileList.getYDirectory();
                         for (int indexDirectoryY = 0; indexDirectoryY < directory.size(); indexDirectoryY++)
                         {
-                            YDirectory yDir = (YDirectory) directory.elementAt(indexDirectoryY);
+                            YDirectory yDir = directory.elementAt(indexDirectoryY);
                             String[] tiles = yDir.getTiles();
                             for (int indexTiles = 0; indexTiles < tiles.length; indexTiles++)
                             {
@@ -303,7 +303,7 @@ public class UpdateTilesPanel
                 return;
             }
 
-            _updateList = new Vector();
+            _updateList = new Vector<UpdateTileList>();
 
             File[] zoomLevels = file.listFiles();
 
@@ -360,13 +360,13 @@ public class UpdateTilesPanel
         /**
          * @param updateList
          */
-        private void updateTable(Vector updateList)
+        private void updateTable(Vector<UpdateTileList> updateList)
         {
             if (_updateList != null)
             {
                 for (int index = 0; index < _updateList.size(); index++)
                 {
-                    UpdateTileList list = (UpdateTileList) _updateList.elementAt(index);
+                    UpdateTileList list = _updateList.elementAt(index);
                     System.out.println("zoom level = " + list.getZoomLevel() + " count = " + list.getFileCount());
                 }
 
@@ -424,7 +424,7 @@ public class UpdateTilesPanel
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.Vector)
      * {@inheritDoc}
      */
-    public void downloadComplete(int errorCount, Vector errorTileList)
+    public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList)
     {
         getButtonSearch().setEnabled(true);
         getButtonUpdate().setText(UPDATE);
@@ -444,9 +444,9 @@ public class UpdateTilesPanel
             if (exitCode == ErrorTileListView.CODE_RETRY)
             {
                 TileListSimple tiles = new TileListSimple();
-                for (Enumeration enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
+                for (Enumeration<TileDownloadError> enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
                 {
-                    TileDownloadError tde = (TileDownloadError) enumeration.nextElement();
+                    TileDownloadError tde = enumeration.nextElement();
                     tiles.addTile(tde.getTile());
                 }
 

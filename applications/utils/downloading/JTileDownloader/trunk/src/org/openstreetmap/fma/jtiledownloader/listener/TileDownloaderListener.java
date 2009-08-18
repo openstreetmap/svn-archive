@@ -2,6 +2,8 @@ package org.openstreetmap.fma.jtiledownloader.listener;
 
 import java.util.Vector;
 
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
+
 /**
  * Copyright 2008, Friedrich Maier 
  * 
@@ -35,7 +37,7 @@ public interface TileDownloaderListener
      * @param errorCount
      * @param errorTileList
      */
-    void downloadComplete(int errorCount, Vector errorTileList);
+    void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList);
 
     /**
      * @param actCount

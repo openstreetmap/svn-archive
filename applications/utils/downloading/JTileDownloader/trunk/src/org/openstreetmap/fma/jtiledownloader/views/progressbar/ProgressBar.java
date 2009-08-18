@@ -148,7 +148,7 @@ public class ProgressBar
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.Vector)
      * {@inheritDoc}
      */
-    public void downloadComplete(int errorCount, Vector errorTileList)
+    public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList)
     {
         setVisible(false);
         if (errorTileList != null && errorTileList.size() > 0)
@@ -161,9 +161,9 @@ public class ProgressBar
             if (exitCode == ErrorTileListView.CODE_RETRY)
             {
                 TileListSimple tiles = new TileListSimple();
-                for (Enumeration enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
+                for (Enumeration<TileDownloadError> enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
                 {
-                    TileDownloadError tde = (TileDownloadError) enumeration.nextElement();
+                    TileDownloadError tde = enumeration.nextElement();
                     tiles.addTile(tde.getTile());
                 }
 

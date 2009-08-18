@@ -8,8 +8,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
@@ -48,24 +50,24 @@ public class UrlSquarePanel
 
     private TileListUrlSquare _tileList = new TileListUrlSquare();
 
-    JLabel _labelPasteUrl = new JLabel("Paste URL:");
-    JTextField _textPasteUrl = new JTextField();
+    private JLabel _labelPasteUrl = new JLabel("Paste URL:");
+    private JTextField _textPasteUrl = new JTextField();
 
-    JLabel _labelLatitude = new JLabel("Latitude:");
-    JTextField _textLatitude = new JTextField();
-    JLabel _labelLongitude = new JLabel("Longitude:");
-    JTextField _textLongitude = new JTextField();
-    JLabel _labelRadius = new JLabel("Radius (km):");
-    JTextField _textRadius = new JTextField();
+    private JLabel _labelLatitude = new JLabel("Latitude:");
+    private JTextField _textLatitude = new JTextField();
+    private JLabel _labelLongitude = new JLabel("Longitude:");
+    private JTextField _textLongitude = new JTextField();
+    private JLabel _labelRadius = new JLabel("Radius (km):");
+    private JTextField _textRadius = new JTextField();
 
     private DownloadConfigurationUrlSquare _downloadConfig;
 
     /**
      * 
      */
-    public UrlSquarePanel(JTileDownloaderMainView mainView)
+    public UrlSquarePanel(GlobalConfigIf globalConfig)
     {
-        super(mainView);
+        super(globalConfig);
 
         createPanel();
         initializePanel();
@@ -177,6 +179,7 @@ public class UrlSquarePanel
      */
     private void updateTileListSquare()
     {
+        parsePasteUrl();
         try
         {
             _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
@@ -197,11 +200,8 @@ public class UrlSquarePanel
             return;
         }
 
-        _downloadConfig.setOutputLocation(getOutputLocation());
-        _downloadConfig.setOutputZoomLevels(getDownloadZoomLevel());
         _downloadConfig.setPasteUrl(getPasteUrl());
         _downloadConfig.setRadius(getRadius());
-        _downloadConfig.setTileServer(getTileServerBaseUrl());
         _downloadConfig.saveToFile();
     }
 
@@ -280,4 +280,40 @@ public class UrlSquarePanel
         return _tileList;
     }
 
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
+     * {@inheritDoc}
+     */
+    public String getInputName()
+    {
+        return "Paste URL (Square)";
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getConfigFileName()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getConfigFileName()
+    {
+        return "UrlSquare";
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#isDownloadOkay()
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isDownloadOkay()
+    {
+        if (getPasteUrl() == null || getPasteUrl().length() == 0)
+        {
+            JOptionPane.showMessageDialog(this, "Please enter a URL in the input field Paste URL!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 }

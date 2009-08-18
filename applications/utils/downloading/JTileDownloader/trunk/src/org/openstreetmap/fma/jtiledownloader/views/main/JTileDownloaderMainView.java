@@ -44,8 +44,6 @@ public class JTileDownloaderMainView
 
     private UpdateTilesPanel _updateTilesPanel;
 
-    private int _inputTabSelectedIndex;
-
     public JTileDownloaderMainView()
     {
         super();
@@ -64,13 +62,7 @@ public class JTileDownloaderMainView
 
         setTitle("JTileDownloader" + " Version: " + Constants.VERSION);
 
-        _mainPanel = new MainPanel(getMainView());
-        int tabIndex = AppConfiguration.getInstance().getInputPanelIndex();
-        if (tabIndex >= 0 && tabIndex < _mainPanel.getInputTabbedPane().getTabCount())
-        {
-            _mainPanel.getInputTabbedPane().setSelectedIndex(tabIndex);
-            setInputTabSelectedIndex(tabIndex);
-        }
+        _mainPanel = new MainPanel(getMainView(),AppConfiguration.getInstance().getInputPanelIndex());
 
         _updateTilesPanel = new UpdateTilesPanel(getMainView());
         _optionsPanel = new OptionsPanel();
@@ -108,7 +100,7 @@ public class JTileDownloaderMainView
         {
             System.out.println("WindowEvent windowClosing");
 
-            updateActualDownloadConfig();
+            //updateActualDownloadConfig();
             updateAppConfig();
 
             e.getWindow().dispose();
@@ -133,7 +125,7 @@ public class JTileDownloaderMainView
                 // selected update tab
                 getUpdateTilesPanel().setFolder(getMainPanel().getOutputfolder());
 
-                getUpdateTilesPanel().setTileServer(getMainPanel().getSelectedTileProvider().getTileServerUrl());
+                //getUpdateTilesPanel().setTileServer(getMainPanel().getSelectedTileProvider().getTileServerUrl());
 
             }
 
@@ -165,7 +157,7 @@ public class JTileDownloaderMainView
      * Getter for mainPanel
      * @return the mainPanel
      */
-    public final MainPanel getMainPanel()
+    private final MainPanel getMainPanel()
     {
         return _mainPanel;
     }
@@ -196,40 +188,4 @@ public class JTileDownloaderMainView
     {
         return _updateTilesPanel;
     }
-
-    /**
-     * Getter for inputTabSelectedIndex
-     * @return the inputTabSelectedIndex
-     */
-    public final int getInputTabSelectedIndex()
-    {
-        return _inputTabSelectedIndex;
-    }
-
-    /**
-     * Setter for inputTabSelectedIndex
-     * @param inputTabSelectedIndex the inputTabSelectedIndex to set
-     */
-    public final void setInputTabSelectedIndex(int inputTabSelectedIndex)
-    {
-        // save actual input panel
-        updateActualDownloadConfig();
-
-        //select new panel & load config
-        _inputTabSelectedIndex = inputTabSelectedIndex;
-        AppConfiguration.getInstance().setInputPanelIndex(inputTabSelectedIndex);
-        getMainPanel().getInputPanel().loadConfig();
-        getMainPanel().valuesChanged();
-
-    }
-
-    /**
-     * 
-     */
-    public void updateActualDownloadConfig()
-    {
-        getMainPanel().valuesChanged();
-        getMainPanel().getInputPanel().saveConfig();
-    }
-
 }

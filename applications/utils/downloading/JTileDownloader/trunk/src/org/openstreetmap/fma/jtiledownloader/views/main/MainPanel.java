@@ -13,6 +13,7 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,11 +23,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import org.openstreetmap.fma.jtiledownloader.Constants;
+import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.TileListExporter;
 import org.openstreetmap.fma.jtiledownloader.TileProviderList;
+import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxLatLonPanel;
@@ -38,6 +42,7 @@ import org.openstreetmap.fma.jtiledownloader.views.progressbar.ProgressBar;
 
 /**
  * Copyright 2008, Friedrich Maier 
+ * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader. 
  * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
@@ -58,6 +63,7 @@ import org.openstreetmap.fma.jtiledownloader.views.progressbar.ProgressBar;
  */
 public class MainPanel
     extends JPanel
+    implements GlobalConfigIf
 {
     private static final long serialVersionUID = 1L;
 
@@ -84,7 +90,6 @@ public class MainPanel
     JLabel _labelNumberOfTiles = new JLabel("Number Tiles:");
     JTextField _textNumberOfTiles = new JTextField("---");
 
-    public static final String STOP_DOWNLOAD = "Stop Download";
     public static final String DOWNLOAD_TILES = "Download Tiles";
 
     JButton _buttonDownload = new JButton(DOWNLOAD_TILES);
@@ -94,29 +99,46 @@ public class MainPanel
 
     private TileProviderIf[] _tileProviders;
 
-    private UrlSquarePanel _urlSquarePanel;
-    private BBoxLatLonPanel _bBoxLatLonPanel;
-    private BBoxXYPanel _bBoxXYPanel;
-    private GPXPanel _gpxPanel;
-
     private JTabbedPane _inputTabbedPane;
 
+    private List<InputPanel> inputPanels;
+
     /**
+     * @param i 
      * @param downloadTemplate 
      * 
      */
-    public MainPanel(JTileDownloaderMainView mainView)
+    public MainPanel(JTileDownloaderMainView mainView, int tabIndex)
     {
         super();
 
-        //_downloadTemplate = downloadTemplate;
         _mainView = mainView;
 
         _tileProviders = new TileProviderList().getTileProviderList();
 
+        registerInputPanels();
+
         createMainPanel();
         initializeMainPanel();
 
+        if (tabIndex >= 0 && tabIndex < _inputTabbedPane.getTabCount())
+        {
+            _inputTabbedPane.setSelectedIndex(tabIndex);
+        }
+    }
+
+    /**
+     * Register all input panels
+     */
+    private void registerInputPanels()
+    {
+        inputPanels = new LinkedList<InputPanel>();
+
+        // TODO: use reflections here
+        inputPanels.add(new UrlSquarePanel(this));
+        inputPanels.add(new BBoxLatLonPanel(this));
+        inputPanels.add(new BBoxXYPanel(this));
+        inputPanels.add(new GPXPanel(this));
     }
 
     /**
@@ -137,16 +159,17 @@ public class MainPanel
             _comboOutputZoomLevel.addItem("" + outputZoomLevel);
         }
         _textOutputZoomLevels.setName(COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT);
-        initializeOutputZoomLevel(getInputPanel().getDownloadZoomLevel());
+        //initializeOutputZoomLevel(getInputPanel().getDownloadZoomLevel());
 
         for (int index = 0; index < _tileProviders.length; index++)
         {
             _comboTileServer.addItem(_tileProviders[index].getName());
         }
-        String url = getInputPanel().getTileServerBaseUrl();
-        initializeTileServer(url);
-
-        _textOutputFolder.setText(getInputPanel().getOutputLocation());//_downloadTemplate.getOutputLocation());
+        initializeTileServer("");
+        //TODO
+        //String url = getInputPanel().getTileServerBaseUrl();
+        //initializeTileServer(url);
+        //_textOutputFolder.setText(getInputPanel().getOutputLocation());//_downloadTemplate.getOutputLocation());
 
         _textNumberOfTiles.setEditable(false);
         _textNumberOfTiles.setFocusable(false);
@@ -232,17 +255,12 @@ public class MainPanel
 
         _inputTabbedPane = new JTabbedPane();
 
-        _urlSquarePanel = new UrlSquarePanel(_mainView);
-        _inputTabbedPane.addTab(Constants.INPUT_TAB_TYPE[Constants.TYPE_URLSQUARE], _urlSquarePanel);
-        _bBoxLatLonPanel = new BBoxLatLonPanel(_mainView);
-        _inputTabbedPane.addTab(Constants.INPUT_TAB_TYPE[Constants.TYPE_BOUNDINGBOX_LATLON], _bBoxLatLonPanel);
-        _bBoxXYPanel = new BBoxXYPanel(_mainView);
-        _inputTabbedPane.addTab(Constants.INPUT_TAB_TYPE[Constants.TYPE_BOUNDINGBOX_XY], _bBoxXYPanel);
-        _gpxPanel = new GPXPanel(_mainView);
-        _inputTabbedPane.addTab(Constants.INPUT_TAB_TYPE[Constants.TYPE_GPX], _gpxPanel);
-
+        for (InputPanel inputPanel : inputPanels)
+        {
+            _inputTabbedPane.addTab(inputPanel.getInputName(), inputPanel);
+        }
         add(_inputTabbedPane, constraints);
-        _inputTabbedPane.addChangeListener(new InputTabListener(_mainView));
+        _inputTabbedPane.addChangeListener(new InputTabListener());
 
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         add(_labelOutputZoomLevel, constraints);
@@ -288,38 +306,8 @@ public class MainPanel
         //        return panel;
     }
 
-    /**
-     * Getter for buttonDownload
-     * @return the buttonDownload
-     */
-    protected final JButton getButtonExport()
-    {
-        return _buttonExport;
-    }
-
-    /**
-     * Getter for buttonDownload
-     * @return the buttonDownload
-     */
-    protected final JButton getButtonDownload()
-    {
-        return _buttonDownload;
-    }
-
     public void valuesChanged()
     {
-        getInputPanel().setDownloadZoomLevel(getOutputZoomLevelArray());
-
-        String altTileServer = getAltTileServer();
-        if (altTileServer == null || altTileServer.length() == 0)
-        {
-            getInputPanel().setTileServerBaseUrl(getTileProvider().getTileServerUrl());
-        }
-        else
-        {
-            getInputPanel().setTileServerBaseUrl(altTileServer);
-        }
-        getInputPanel().setOutputLocation(getOutputfolder());
         getInputPanel().updateAll();
     }
 
@@ -327,7 +315,7 @@ public class MainPanel
      * @param property
      * @return int[]
      */
-    private int[] getOutputZoomLevelArray()
+    public int[] getOutputZoomLevelArray()
     {
         LinkedList<Integer> zoomLevels = new LinkedList<Integer>();
         if (_textOutputZoomLevels.getText().isEmpty())
@@ -362,35 +350,6 @@ public class MainPanel
             parsedLevels[i] = zoomLevels.get(i);
         }
         return parsedLevels;
-    }
-
-    /**
-     * @return {@link UrlSquarePanel}
-     */
-    public final UrlSquarePanel getUrlSquarePanel()
-    {
-        return _urlSquarePanel;
-    }
-
-    /** {@link BBoxLatLonPanel}
-     * @return
-     */
-    public final BBoxLatLonPanel getBBoxLatLonPanel()
-    {
-        return _bBoxLatLonPanel;
-    }
-
-    /** {@link BBoxXYPanel}
-     * @return
-     */
-    public final BBoxXYPanel getBBoxXYPanel()
-    {
-        return _bBoxXYPanel;
-    }
-
-    public final GPXPanel getGPXPanel()
-    {
-        return _gpxPanel;
     }
 
     class MainViewFocusListener
@@ -457,17 +416,18 @@ public class MainPanel
 
             if (actionCommand.equalsIgnoreCase(COMMAND_DOWNLOAD))
             {
-                if (!preCheckDoDownload())
+                if (!getInputPanel().isDownloadOkay())
                 {
                     return;
                 }
+                valuesChanged();
 
-                _mainView.updateActualDownloadConfig();
+                //_mainView.updateActualDownloadConfig();
                 _mainView.updateAppConfig();
 
                 if (getInputPanel().getTileList().getTileListToDownload().size() > 0)
                 {
-                    TileListDownloader tld = new TileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList(), _mainView.getMainPanel().getSelectedTileProvider());
+                    TileListDownloader tld = new TileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList(), getSelectedTileProvider());
                     ProgressBar pg = new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), tld);
                 }
             }
@@ -497,38 +457,12 @@ public class MainPanel
             }
 
         }
-
-        /**
-         * 
-         */
-        private boolean preCheckDoDownload()
-        {
-            switch (_mainView.getInputTabSelectedIndex())
-            {
-                case Constants.TYPE_URLSQUARE:
-                    if (getUrlSquarePanel().getPasteUrl() == null || getUrlSquarePanel().getPasteUrl().length() == 0)
-                    {
-                        JOptionPane.showMessageDialog(_mainView, "Please enter a URL in the input field Paste URL!", "Error", JOptionPane.ERROR_MESSAGE);
-                        return false;
-                    }
-
-                    break;
-
-                default:
-                    break;
-            }
-
-            valuesChanged();
-
-            return true;
-        }
-
     }
 
     /**
      * @return
      */
-    public String getOutputfolder()
+    String getOutputfolder()
     {
         return _textOutputFolder.getText().trim();
     }
@@ -536,30 +470,22 @@ public class MainPanel
     /**
      * @return
      */
-    public String getOutputZoomLevel()
+    private String getOutputZoomLevel()
     {
         String selectedItem = (String) _comboOutputZoomLevel.getSelectedItem();
         return selectedItem.trim();
     }
 
     /**
-     * @return
-     */
-    public String getAltTileServer()
-    {
-        return _textAltTileServer.getText().trim();
-    }
-
-    /**
      * Returns the selected tile server
      * @return selected tile server
      */
-    public TileProviderIf getSelectedTileProvider()
+    private TileProviderIf getSelectedTileProvider()
     {
         TileProviderIf provider = getTileProvider();
-        if (!getAltTileServer().isEmpty())
+        if (!_textAltTileServer.getText().trim().isEmpty())
         {
-            provider = new GenericTileProvider(getAltTileServer());
+            provider = new GenericTileProvider(_textAltTileServer.getText().trim());
         }
         return provider;
     }
@@ -573,51 +499,72 @@ public class MainPanel
     }
 
     /**
-     * Getter for urlSquarePanel
-     * @return the urlSquarePanel
+     * Getter for input panels
+     * @return a inputpanel
      */
-    public final InputPanel getInputPanel()
+    private final InputPanel getInputPanel()
     {
-        switch (_mainView.getInputTabSelectedIndex())
-        {
-            case Constants.TYPE_URLSQUARE:
-                return getUrlSquarePanel();
-            case Constants.TYPE_BOUNDINGBOX_LATLON:
-                return getBBoxLatLonPanel();
-            case Constants.TYPE_BOUNDINGBOX_XY:
-                return getBBoxXYPanel();
-            case Constants.TYPE_GPX:
-                return getGPXPanel();
+        return inputPanels.get(_inputTabbedPane.getSelectedIndex());
+    }
 
-            default:
-                return null;
+    /**
+     * Sets the number of tiles to download
+     */
+    public void setNumberOfTiles(int numberOfTiles)
+    {
+        _textNumberOfTiles.setText(String.valueOf(numberOfTiles));
+    }
+
+    class TabChangeListener
+        implements ChangeListener
+    {
+
+        /**
+         * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+         * {@inheritDoc}
+         */
+        public void stateChanged(ChangeEvent e)
+        {
+
         }
     }
 
-    /**
-     * Getter for textNumberOfTiles
-     * @return the textNumberOfTiles
-     */
-    public final JTextField getTextNumberOfTiles()
+    private class InputTabListener
+        implements ChangeListener
     {
-        return _textNumberOfTiles;
-    }
 
-    /**
-     * Getter for textOutputFolder
-     * @return the textOutputFolder
-     */
-    public final JTextField getTextOutputFolder()
-    {
-        return _textOutputFolder;
-    }
+        /**
+         * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+         * {@inheritDoc}
+         */
+        public void stateChanged(ChangeEvent evt)
+        {
+            JTabbedPane pane = (JTabbedPane) evt.getSource();
+            // Get current tab
+            int selectedTab = pane.getSelectedIndex();
+            setInputTabSelectedIndex(selectedTab);
+        }
 
-    /**
-     * Getter for inputTabbedPane
-     * @return the inputTabbedPane
-     */
-    public final JTabbedPane getInputTabbedPane()
-    {
-        return _inputTabbedPane;
+        /**
+         * Setter for inputTabSelectedIndex
+         * @param inputTabSelectedIndex the inputTabSelectedIndex to set
+         */
+        public final void setInputTabSelectedIndex(int inputTabSelectedIndex)
+        {
+            //select new panel & load config
+            AppConfiguration.getInstance().setInputPanelIndex(inputTabSelectedIndex);
+            getInputPanel().loadConfig();
+            valuesChanged();
+
+        }
+
+        /**
+         * 
+         */
+        public void upDDDDdateActualDownloadConfig()
+        {
+        //getMainPanel().valuesChanged();
+        //getMainPanel().getInputPanel().saveConfig();
+        }
     }
 }

@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
@@ -54,24 +55,24 @@ public class BBoxLatLonPanel
 
     private TileListBBoxLatLon _tileList = new TileListBBoxLatLon();
 
-    JLabel _labelMinLat = new JLabel("Min. Latitude:");
-    JTextField _textMinLat = new JTextField();
-    JLabel _labelMinLon = new JLabel("Min. Longitude:");
-    JTextField _textMinLon = new JTextField();
-    JLabel _labelMaxLat = new JLabel("Max. Latitude:");
-    JTextField _textMaxLat = new JTextField();
-    JLabel _labelMaxLon = new JLabel("Max. Longitude:");
-    JTextField _textMaxLon = new JTextField();
-    JButton _buttonSlippyMapChooser = new JButton("Slippy Map chooser");
+    private JLabel _labelMinLat = new JLabel("Min. Latitude:");
+    private JTextField _textMinLat = new JTextField();
+    private JLabel _labelMinLon = new JLabel("Min. Longitude:");
+    private JTextField _textMinLon = new JTextField();
+    private JLabel _labelMaxLat = new JLabel("Max. Latitude:");
+    private JTextField _textMaxLat = new JTextField();
+    private JLabel _labelMaxLon = new JLabel("Max. Longitude:");
+    private JTextField _textMaxLon = new JTextField();
+    private JButton _buttonSlippyMapChooser = new JButton("Slippy Map chooser");
 
     private DownloadConfigurationBBoxLatLon _downloadConfig;
 
     /**
      * 
      */
-    public BBoxLatLonPanel(JTileDownloaderMainView mainView)
+    public BBoxLatLonPanel(GlobalConfigIf globalConfig)
     {
-        super(mainView);
+        super(globalConfig);
 
         createPanel();
         initializePanel();
@@ -184,9 +185,6 @@ public class BBoxLatLonPanel
             return;
         }
 
-        _downloadConfig.setOutputLocation(getOutputLocation());
-        _downloadConfig.setOutputZoomLevels(getDownloadZoomLevel());
-        _downloadConfig.setTileServer(getTileServerBaseUrl());
         _downloadConfig.setMinLat(getMinLat());
         _downloadConfig.setMinLon(getMinLon());
         _downloadConfig.setMaxLat(getMaxLat());
@@ -313,4 +311,21 @@ public class BBoxLatLonPanel
         return _tileList;
     }
 
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
+     * {@inheritDoc}
+     */
+    public String getInputName()
+    {
+        return "Bounding Box (Lat/Lon)";
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getConfigFileName()
+     * {@inheritDoc}
+     */
+    public String getConfigFileName()
+    {
+        return "BBoxLatLon";
+    }
 }

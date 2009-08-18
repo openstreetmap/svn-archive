@@ -81,8 +81,8 @@ public class UpdateTilesPanel
     public static final String COMMAND_UPDATE = "update";
     public static final String COMMAND_STOP = "stop";
 
-    private static final String[] COL_HEADS = new String[] {"Zoom Level", "Number of Tiles" };
-    private static final int[] COL_SIZE = new int[] {100, 290 };
+    private static final String[] COL_HEADS = new String[] { "Zoom Level", "Number of Tiles" };
+    private static final int[] COL_SIZE = new int[] { 100, 290 };
 
     private DefaultTableColumnModel _cm;
 

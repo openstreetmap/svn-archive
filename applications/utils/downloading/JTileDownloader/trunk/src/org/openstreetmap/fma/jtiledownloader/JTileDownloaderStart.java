@@ -61,8 +61,7 @@ public class JTileDownloaderStart
         }
         else
         {
-            SwingUtilities.invokeLater(new Runnable()
-            {
+            SwingUtilities.invokeLater(new Runnable() {
                 public void run()
                 {
                     try

@@ -111,8 +111,9 @@ public class BBoxLatLonPanel
         _textMaxLon.addFocusListener(new MyFocusListener());
 
         _buttonSlippyMapChooser.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                SlippyMapChooserWindow smc = new SlippyMapChooserWindow((BBoxLatLonPanel) ((Component)arg0.getSource()).getParent());
+            public void actionPerformed(ActionEvent arg0)
+            {
+                SlippyMapChooserWindow smc = new SlippyMapChooserWindow((BBoxLatLonPanel) ((Component) arg0.getSource()).getParent());
                 smc.setVisible(true);
             }
         });
@@ -153,7 +154,8 @@ public class BBoxLatLonPanel
         add(_buttonSlippyMapChooser, constraints);
     }
 
-    public void setCoordinates(double minLatitude, double minLongitude,double maxLatitude, double maxLongitude) {
+    public void setCoordinates(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
+    {
         _textMaxLon.setText(String.valueOf(maxLongitude));
         _textMaxLat.setText(String.valueOf(maxLatitude));
         _textMinLon.setText(String.valueOf(minLongitude));

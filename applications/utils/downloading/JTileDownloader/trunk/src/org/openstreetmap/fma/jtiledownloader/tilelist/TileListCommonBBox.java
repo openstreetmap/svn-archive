@@ -43,15 +43,15 @@ public class TileListCommonBBox
 
         for (int indexZoomLevel = 0; indexZoomLevel < getDownloadZoomLevels().length; indexZoomLevel++)
         {
-            long xStart = getMin(_xTopLeft[indexZoomLevel], _xBottomRight[indexZoomLevel]);
-            long xEnd = getMax(_xTopLeft[indexZoomLevel], _xBottomRight[indexZoomLevel]);
+            int xStart = getMin(_xTopLeft[indexZoomLevel], _xBottomRight[indexZoomLevel]);
+            int xEnd = getMax(_xTopLeft[indexZoomLevel], _xBottomRight[indexZoomLevel]);
 
-            long yStart = getMin(_yTopLeft[indexZoomLevel], _yBottomRight[indexZoomLevel]);
-            long yEnd = getMax(_yTopLeft[indexZoomLevel], _yBottomRight[indexZoomLevel]);
+            int yStart = getMin(_yTopLeft[indexZoomLevel], _yBottomRight[indexZoomLevel]);
+            int yEnd = getMax(_yTopLeft[indexZoomLevel], _yBottomRight[indexZoomLevel]);
 
-            for (long downloadTileXIndex = xStart; downloadTileXIndex <= xEnd; downloadTileXIndex++)
+            for (int downloadTileXIndex = xStart; downloadTileXIndex <= xEnd; downloadTileXIndex++)
             {
-                for (long downloadTileYIndex = yStart; downloadTileYIndex <= yEnd; downloadTileYIndex++)
+                for (int downloadTileYIndex = yStart; downloadTileYIndex <= yEnd; downloadTileYIndex++)
                 {
                     String urlPathToFile = getTileServerBaseUrl() + getDownloadZoomLevels()[indexZoomLevel] + "/" + downloadTileXIndex + "/" + downloadTileYIndex + ".png";
 
@@ -159,7 +159,7 @@ public class TileListCommonBBox
      * @param bottomRight
      * @return
      */
-    private long getMax(long topLeft, long bottomRight)
+    private int getMax(int topLeft, int bottomRight)
     {
         if (topLeft > bottomRight)
         {
@@ -173,7 +173,7 @@ public class TileListCommonBBox
      * @param bottomRight
      * @return
      */
-    private long getMin(long topLeft, long bottomRight)
+    private int getMin(int topLeft, int bottomRight)
     {
         if (topLeft > bottomRight)
         {

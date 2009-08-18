@@ -30,13 +30,13 @@ import java.util.Vector;
  */
 public class TileListExporter
 {
-    private Vector _tilesToDownload;
+    private Vector<String> _tilesToDownload;
     private final String _downloadPathBase;
 
     /**
      * @param tilesToDownload
      */
-    public TileListExporter(String downloadPathBase, Vector tilesToDownload)
+    public TileListExporter(String downloadPathBase, Vector<String> tilesToDownload)
     {
         super();
         _downloadPathBase = downloadPathBase;
@@ -70,9 +70,9 @@ public class TileListExporter
             fileWriter = new BufferedWriter(new FileWriter(exportFile));
 
             int count = 0;
-            for (Enumeration enumeration = _tilesToDownload.elements(); enumeration.hasMoreElements();)
+            for (Enumeration<String> enumeration = _tilesToDownload.elements(); enumeration.hasMoreElements();)
             {
-                String tileToDownload = (String) enumeration.nextElement();
+                String tileToDownload = enumeration.nextElement();
                 doSingleExport(tileToDownload, fileWriter);
                 count++;
             }

@@ -39,7 +39,7 @@ public class JTileDownloaderStart
     {
 
         // get command line arguments
-        HashMap arguments = new HashMap();
+        HashMap<String, String> arguments = new HashMap<String, String>();
         if (args != null && args.length > 0)
         {
             for (int index = 0; index < args.length; index++)

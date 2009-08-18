@@ -44,7 +44,7 @@ import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
  */
 public class TileListDownloader
 {
-    private Vector _tilesToDownload;
+    private Vector<String> _tilesToDownload;
     private String _downloadPath;
     private TileListDownloaderThread downloaderThread = null;
 
@@ -79,7 +79,7 @@ public class TileListDownloader
      * @param tilesToDownload
      * @return
      */
-    public final int getNumberOfTilesToDownload(Vector tilesToDownload)
+    public final int getNumberOfTilesToDownload(Vector<String> tilesToDownload)
     {
         if (tilesToDownload == null)
         {
@@ -372,7 +372,7 @@ public class TileListDownloader
     /**
      * 
      */
-    private void fireDownloadCompleteEvent(int errorCount, Vector errorTileList)
+    private void fireDownloadCompleteEvent(int errorCount, Vector<TileDownloadError> errorTileList)
     {
         if (_listener != null)
         {
@@ -424,7 +424,7 @@ public class TileListDownloader
      * Setter for tilesToDownload
      * @param tilesToDownload the tilesToDownload to set
      */
-    public void setTilesToDownload(Vector tilesToDownload)
+    public void setTilesToDownload(Vector<String> tilesToDownload)
     {
         _tilesToDownload = tilesToDownload;
     }
@@ -433,7 +433,7 @@ public class TileListDownloader
      * Getter for tilesToDownload
      * @return the tilesToDownload
      */
-    public Vector getTilesToDownload()
+    public Vector<String> getTilesToDownload()
     {
         return _tilesToDownload;
     }
@@ -447,7 +447,7 @@ public class TileListDownloader
          */
         public void run()
         {
-            Vector errorTileList = new Vector();
+            Vector<TileDownloadError> errorTileList = new Vector<TileDownloadError>();
 
             if (getTilesToDownload() == null || getTilesToDownload().size() == 0)
             {
@@ -468,7 +468,7 @@ public class TileListDownloader
 
             int errorCount = 0;
             int tileCounter = 0;
-            for (Enumeration enumeration = getTilesToDownload().elements(); enumeration.hasMoreElements();)
+            for (Enumeration<String> enumeration = getTilesToDownload().elements(); enumeration.hasMoreElements();)
             {
                 if (interrupted())
                 {

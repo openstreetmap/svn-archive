@@ -25,13 +25,13 @@ import java.util.Vector;
 public class UpdateTileList
 {
     private String _zoomLevel;
-    private Vector _yDirectory;
+    private Vector<YDirectory> _yDirectory;
 
     public void addYDirectory(YDirectory yDirectory)
     {
         if (_yDirectory == null)
         {
-            _yDirectory = new Vector();
+            _yDirectory = new Vector<YDirectory>();
         }
         _yDirectory.add(yDirectory);
     }
@@ -40,7 +40,7 @@ public class UpdateTileList
      * Getter for yDirectory
      * @return the yDirectory
      */
-    public final Vector getYDirectory()
+    public final Vector<YDirectory> getYDirectory()
     {
         return _yDirectory;
     }
@@ -55,7 +55,7 @@ public class UpdateTileList
         int count = 0;
         for (int index = 0; index < _yDirectory.size(); index++)
         {
-            YDirectory yDir = (YDirectory) _yDirectory.elementAt(index);
+            YDirectory yDir = _yDirectory.elementAt(index);
             if (yDir.getTiles() != null)
             {
                 count += yDir.getTiles().length;

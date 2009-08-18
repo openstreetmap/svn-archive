@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxLatLon;
@@ -41,7 +42,7 @@ public class JTileDownloaderCommandLine
 
     private static final Object CMDLINE_DL = "DL";
 
-    private final HashMap _arguments;
+    private final HashMap<String, String> _arguments;
 
     private DownloadConfiguration _downloadTemplateCommon;
     private DownloadConfiguration _downloadTemplate;
@@ -51,7 +52,7 @@ public class JTileDownloaderCommandLine
     /**
      * @param arguments
      */
-    public JTileDownloaderCommandLine(HashMap arguments)
+    public JTileDownloaderCommandLine(HashMap<String, String> arguments)
     {
         _arguments = arguments;
     }
@@ -65,7 +66,7 @@ public class JTileDownloaderCommandLine
 
         if (_arguments.containsKey(CMDLINE_DL))
         {
-            String propertyFile = (String) _arguments.get(CMDLINE_DL);
+            String propertyFile = _arguments.get(CMDLINE_DL);
 
             _downloadTemplateCommon = new DownloadConfiguration(propertyFile);
             _downloadTemplateCommon.loadFromFile();
@@ -209,7 +210,7 @@ public class JTileDownloaderCommandLine
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int)
      * {@inheritDoc}
      */
-    public void downloadComplete(int errorCount, Vector errorTileList)
+    public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList)
     {
         log("download completed with " + errorCount + " errors");
     }

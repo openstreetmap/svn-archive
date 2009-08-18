@@ -18,6 +18,8 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
+
 /**
  * Copyright 2008, Friedrich Maier 
  * 
@@ -50,7 +52,7 @@ public class ErrorTileListView
     private static final String RETRY = "RETRY";
     private static final String CLOSE = "CLOSE";
     private static final long serialVersionUID = 1L;
-    private final Vector _errorTileList; // containing TileDownloadError
+    private final Vector<TileDownloadError> _errorTileList;
 
     private JTable _errorTable;
     private JButton _close;
@@ -65,7 +67,7 @@ public class ErrorTileListView
      * @param title
      * @throws HeadlessException
      */
-    public ErrorTileListView(Vector errorTileList) throws HeadlessException
+    public ErrorTileListView(Vector<TileDownloadError> errorTileList) throws HeadlessException
     {
         super();
         setTitle("ErrorTileListView");
@@ -136,7 +138,7 @@ public class ErrorTileListView
      * Getter for errorTileList
      * @return the errorTileList
      */
-    public Vector getErrorTileList()
+    public Vector<TileDownloadError> getErrorTileList()
     {
         return _errorTileList;
     }

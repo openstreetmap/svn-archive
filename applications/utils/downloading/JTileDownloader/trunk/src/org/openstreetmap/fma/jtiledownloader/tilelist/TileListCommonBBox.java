@@ -37,9 +37,9 @@ public class TileListCommonBBox
      * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getFileListToDownload()
      * {@inheritDoc}
      */
-    public Vector getFileListToDownload()
+    public Vector<String> getFileListToDownload()
     {
-        Vector tilesToDownload = new Vector();
+        Vector<String> tilesToDownload = new Vector<String>();
 
         for (int indexZoomLevel = 0; indexZoomLevel < getDownloadZoomLevels().length; indexZoomLevel++)
         {

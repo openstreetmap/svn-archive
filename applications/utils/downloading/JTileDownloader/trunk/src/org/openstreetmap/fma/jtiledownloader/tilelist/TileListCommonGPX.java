@@ -38,7 +38,7 @@ import org.xml.sax.SAXParseException;
 public class TileListCommonGPX
     extends TileListCommon
 {
-    private Vector tilesToDownload = new Vector();
+    private Vector<String> tilesToDownload = new Vector<String>();
 
     public void updateList(String fileName)
     {
@@ -150,7 +150,7 @@ public class TileListCommonGPX
      * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getFileListToDownload()
      * {@inheritDoc}
      */
-    public Vector getFileListToDownload()
+    public Vector<String> getFileListToDownload()
     {
         return tilesToDownload;
     }

@@ -53,6 +53,8 @@ public class TileListDownloader
 
     private TileDownloaderListener _listener = null;
 
+    private static final int MAX_RETRIES = 5;
+
     /**
      * @param downloadPath
      * @param tilesToDownload
@@ -118,7 +120,7 @@ public class TileListDownloader
             testDir.mkdirs();
         }
 
-        for (int retries = 0; retries < 5; retries++)
+        for (int retries = 0; retries < MAX_RETRIES; retries++)
         {
             result = doSingleDownload(fileName, url);
             if (result.getCode() == TileDownloadResult.CODE_OK)
@@ -136,7 +138,8 @@ public class TileListDownloader
                 }
                 catch (InterruptedException e)
                 {
-                    e.printStackTrace();
+                    retries = MAX_RETRIES;
+                    Thread.currentThread().interrupt();
                 }
             }
             else

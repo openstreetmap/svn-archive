@@ -76,7 +76,6 @@ public class UpdateTilesPanel
     public static final String COMMAND_SELECT_FOLDER = "selectFolder";
     public static final String COMMAND_SEARCH = "search";
     public static final String COMMAND_UPDATE = "update";
-    public static final String COMMAND_STOP = "stop";
 
     private static final String[] COL_HEADS = new String[] { "Zoom Level", "Number of Tiles" };
     private static final int[] COL_SIZE = new int[] { 100, 290 };
@@ -240,11 +239,6 @@ public class UpdateTilesPanel
             {
                 doUpdate();
             }
-            else if (actionCommand.equalsIgnoreCase(COMMAND_STOP))
-            {
-                getTileListDownloader().setStopFlag(true);
-            }
-
         }
 
         /**

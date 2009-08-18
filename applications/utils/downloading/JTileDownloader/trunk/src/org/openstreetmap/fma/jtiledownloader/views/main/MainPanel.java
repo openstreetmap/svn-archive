@@ -18,7 +18,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
@@ -31,6 +30,7 @@ import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxXYPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.GPXPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.UrlSquarePanel;
+import org.openstreetmap.fma.jtiledownloader.views.progressbar.ProgressBar;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -81,8 +81,6 @@ public class MainPanel
 
     JLabel _labelNumberOfTiles = new JLabel("Number Tiles:");
     JTextField _textNumberOfTiles = new JTextField("---");
-
-    JProgressBar _progressBar = new JProgressBar();
 
     public static final String STOP_DOWNLOAD = "Stop Download";
     public static final String DOWNLOAD_TILES = "Download Tiles";
@@ -150,8 +148,6 @@ public class MainPanel
 
         _textNumberOfTiles.setEditable(false);
         _textNumberOfTiles.setFocusable(false);
-
-        _progressBar.setPreferredSize(new Dimension(300, 20));
 
         // set all listeners
         _buttonSelectOutputFolder.addActionListener(new MainViewActionListener());
@@ -278,7 +274,6 @@ public class MainPanel
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_textNumberOfTiles, constraints);
 
-        add(_progressBar, constraints);
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         add(_buttonDownload, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -288,15 +283,6 @@ public class MainPanel
         add(new JPanel(), constraints);
 
         //        return panel;
-    }
-
-    /**
-     * Getter for progressBar
-     * @return the progressBar
-     */
-    protected final JProgressBar getProgressBar()
-    {
-        return _progressBar;
     }
 
     /**
@@ -468,19 +454,9 @@ public class MainPanel
                 _mainView.updateActualDownloadConfig();
                 _mainView.updateAppConfig();
 
-                getButtonDownload().setText(STOP_DOWNLOAD);
-                getButtonDownload().setActionCommand(COMMAND_STOP);
-                getButtonExport().setEnabled(false);
-
                 _mainView.setTileListDownloader(_mainView.createTileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList()));
 
-                getProgressBar().setMinimum(0);
-                getProgressBar().setMaximum(getInputPanel().getNumberOfTilesToDownload());
-                getProgressBar().setStringPainted(true);
-                getProgressBar().setString("Starting download ...");
-
-                _mainView.getTileListDownloader().setListener(_mainView);
-                _mainView.getTileListDownloader().start();
+                ProgressBar pg = new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), _mainView.getTileListDownloader(),_mainView.getAppConfiguration().isShowTilePreview());
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_STOP))
             {

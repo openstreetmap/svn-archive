@@ -32,7 +32,7 @@ import org.openstreetmap.fma.jtiledownloader.datatypes.YDirectory;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
 import org.openstreetmap.fma.jtiledownloader.views.errortilelist.ErrorTileListView;
-import org.openstreetmap.fma.jtiledownloader.views.preview.TilePreview;
+import org.openstreetmap.fma.jtiledownloader.views.progressbar.ProgressBar;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -56,7 +56,6 @@ import org.openstreetmap.fma.jtiledownloader.views.preview.TilePreview;
  */
 public class UpdateTilesPanel
     extends JPanel
-    implements TileDownloaderListener
 {
     private static final long serialVersionUID = 1L;
 
@@ -73,8 +72,6 @@ public class UpdateTilesPanel
     public static final String UPDATE = "Update";
     public static final String STOP = "Stop";
     JButton _buttonUpdate = new JButton(UPDATE);
-
-    private JProgressBar _progressBar = new JProgressBar();
 
     public static final String COMMAND_SELECT_FOLDER = "selectFolder";
     public static final String COMMAND_SEARCH = "search";
@@ -94,7 +91,6 @@ public class UpdateTilesPanel
     private String _folder = "";
 
     private final AppConfiguration _appConfiguration;
-    private TilePreview _tilePreview = null;
 
     private final JTileDownloaderMainView _mainView;
     private TileListDownloader _tileListDownloader;
@@ -159,8 +155,6 @@ public class UpdateTilesPanel
         _scrollPane.getViewport().add(_updateTilesTable, BorderLayout.CENTER);
         panelUpdate.add(_scrollPane, constraintsUpdate);
 
-        panelUpdate.add(getProgressBar(), constraintsUpdate);
-
         constraintsUpdate.gridwidth = GridBagConstraints.RELATIVE;
         panelUpdate.add(_buttonSearch, constraintsUpdate);
         constraintsUpdate.gridwidth = GridBagConstraints.REMAINDER;
@@ -179,8 +173,6 @@ public class UpdateTilesPanel
         //        _buttonSelectFolder.addActionListener(new MyActionListener());
         //        _buttonSelectFolder.setActionCommand(COMMAND_SELECT_FOLDER);
         //        _buttonSelectFolder.setPreferredSize(new Dimension(25, 19));
-
-        getProgressBar().setPreferredSize(new Dimension(300, 20));
 
         _buttonSearch.addActionListener(new MyActionListener());
         _buttonSearch.setActionCommand(COMMAND_SEARCH);
@@ -300,13 +292,6 @@ public class UpdateTilesPanel
             System.out.println("folder:" + getFolder());
             System.out.println("tileServer:" + getTileServer());
 
-            getProgressBar().setValue(0);
-            getProgressBar().setStringPainted(true);
-            if (updateList != null && updateList.getElementCount() > 0)
-            {
-                getProgressBar().setMaximum(updateList.getElementCount());
-            }
-
             // design problem: AppConfiguration doesn't provide the real current config
             setTileListDownloader(new TileListDownloader(getFolder(), updateList));
             getTileListDownloader().setWaitAfterTiles(_mainView.getOptionsPanel().isWaitAfterNumberOfTiles());
@@ -317,14 +302,7 @@ public class UpdateTilesPanel
 
             getTileListDownloader().setMinimumAgeInDays(_mainView.getOptionsPanel().getMinimumAgeInDays());
 
-            getTileListDownloader().setListener(getInstance());
-
-            getButtonSearch().setEnabled(false);
-            getButtonUpdate().setText(STOP);
-            getButtonUpdate().setActionCommand(COMMAND_STOP);
-
-            getTileListDownloader().start();
-
+            ProgressBar pg = new ProgressBar(1, getTileListDownloader(), getAppConfiguration().isShowTilePreview());
         }
 
         /**
@@ -467,8 +445,6 @@ public class UpdateTilesPanel
      */
     public void downloadComplete(int errorCount, Vector errorTileList)
     {
-        getProgressBar().setString("Update completed");
-
         getButtonSearch().setEnabled(true);
         getButtonUpdate().setText(UPDATE);
         getButtonUpdate().setActionCommand(COMMAND_UPDATE);
@@ -476,12 +452,10 @@ public class UpdateTilesPanel
         getTileListDownloader().setListener(null);
         setTileListDownloader(null);
 
-        closeTilePreview();
-
         if (errorTileList != null && errorTileList.size() > 0)
         {
             // TODO: show List of failed tiles
-            ErrorTileListView view = new ErrorTileListView(getMainView(), errorTileList);
+            ErrorTileListView view = new ErrorTileListView(errorTileList);
             view.setVisible(true);
             int exitCode = view.getExitCode();
             view = null;
@@ -497,105 +471,12 @@ public class UpdateTilesPanel
 
                 setTileListDownloader(getMainView().createTileListDownloader(getFolder(), tiles));
 
-                getProgressBar().setMinimum(0);
-                getProgressBar().setMaximum(tiles.getElementCount());
-                getProgressBar().setStringPainted(true);
-                getProgressBar().setString("Retry update ...");
-
-                getTileListDownloader().setListener(this);
                 getTileListDownloader().start();
 
             }
 
         }
 
-    }
-
-    /**
-     * 
-     */
-    private void closeTilePreview()
-    {
-        if (getAppConfiguration().isAutoCloseTilePreview())
-        {
-            if (_tilePreview != null)
-            {
-                try
-                {
-                    Thread.sleep(500);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-                _tilePreview.setVisible(false);
-                _tilePreview = null;
-            }
-        }
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String)
-     * {@inheritDoc}
-     */
-    public void downloadedTile(int actCount, int maxCount, String path)
-    {
-        getProgressBar().setValue(actCount);
-        getProgressBar().setString("Update tile " + actCount + "/" + maxCount);
-
-        if (getAppConfiguration().isShowTilePreview())
-        {
-            if (_tilePreview == null)
-            {
-                _tilePreview = new TilePreview();
-                _tilePreview.setLocation(getMainView().getX() + (getMainView().getWidth() / 2) - (_tilePreview.getWidth() / 2), getMainView().getY() + (getMainView().getHeight() / 2) - (_tilePreview.getHeight() / 2));
-            }
-            if (!_tilePreview.isVisible())
-            {
-                _tilePreview.setVisible(true);
-            }
-
-            _tilePreview.showImage(path);
-        }
-
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#waitResume(java.lang.String)
-     * {@inheritDoc}
-     */
-    public void waitResume(String message)
-    {
-        getProgressBar().setString(message);
-
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#waitWaitHttp500ErrorToResume(java.lang.String)
-     * {@inheritDoc}
-     */
-    public void waitWaitHttp500ErrorToResume(String message)
-    {
-        getProgressBar().setString(message);
-
-    }
-
-    /**
-     * Setter for progressBar
-     * @param progressBar the progressBar to set
-     */
-    public void setProgressBar(JProgressBar progressBar)
-    {
-        _progressBar = progressBar;
-    }
-
-    /**
-     * Getter for progressBar
-     * @return the progressBar
-     */
-    public JProgressBar getProgressBar()
-    {
-        return _progressBar;
     }
 
     public UpdateTilesPanel getInstance()
@@ -656,35 +537,4 @@ public class UpdateTilesPanel
     {
         return _buttonUpdate;
     }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, java.lang.String)
-     * {@inheritDoc}
-     */
-    public void errorOccured(int actCount, int maxCount, String tile)
-    {
-        getProgressBar().setValue(actCount);
-        getProgressBar().setString("Error update tile " + actCount + "/" + maxCount);
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadStopped(int, int)
-     * {@inheritDoc}
-     */
-    public void downloadStopped(int actCount, int maxCount)
-    {
-        getProgressBar().setValue(actCount);
-        getProgressBar().setString("Stopped download at tile " + actCount + "/" + maxCount);
-
-        getButtonSearch().setEnabled(true);
-        getButtonUpdate().setText(UPDATE);
-        getButtonUpdate().setActionCommand(COMMAND_UPDATE);
-
-        getTileListDownloader().setListener(null);
-        setTileListDownloader(null);
-
-        closeTilePreview();
-
-    }
-
 }

@@ -1,4 +1,4 @@
-package org.openstreetmap.fma.jtiledownloader.views.preview;
+package org.openstreetmap.fma.jtiledownloader.views.progressbar;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -26,7 +26,7 @@ import javax.swing.JComponent;
  *    General Public License along with JTileDownloader.  
  *    If not, see <http://www.gnu.org/licenses/>.
  */
-public class ViewComponent
+public class TilePreviewViewComponent
     extends JComponent
 {
     private static final long serialVersionUID = 1L;
@@ -35,7 +35,7 @@ public class ViewComponent
     /**
      * 
      */
-    public ViewComponent()
+    public TilePreviewViewComponent()
     {
         super();
         setDoubleBuffered(true);

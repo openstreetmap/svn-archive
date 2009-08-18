@@ -66,9 +66,11 @@ public class ErrorTileListView
      * @param title
      * @throws HeadlessException
      */
-    public ErrorTileListView(Frame owner, Vector errorTileList) throws HeadlessException
+    public ErrorTileListView(Vector errorTileList) throws HeadlessException
     {
-        super(owner, "ErrorTileListView", true);
+        super();
+        setTitle("ErrorTileListView");
+        setModal(true);
         _errorTileList = errorTileList;
 
         setPreferredSize(new Dimension(VIEW_SIZE_X, VIEW_SIZE_Y));

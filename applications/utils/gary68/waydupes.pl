@@ -4,9 +4,14 @@
 # - added tags in output
 # version 1.2
 # - check only ways with more than one node...
-#
+# version 1.3
+# - speed improvement
+# version 2.0
+# - new algorhithm
 #
 
+my @test = (["highway", "residential"]) ;
+#my @test = (["highway", "residential"], ["highway", "tertiary"]) ;
 
 use strict ;
 use warnings ;
@@ -15,7 +20,7 @@ use OSM::osm 4.0 ;
 
 my $programName = "waydupes.pl" ;
 my $usage = "waydupes.pl file.osm out.htm out.gpx" ; 
-my $version = "1.2" ;
+my $version = "2.0" ;
 
 my $wayId ;
 my $wayUser ;
@@ -31,7 +36,7 @@ my $aRef2 ;
 
 my %wayNodesHash ;
 my %wayTagsHash ;
-my %numberNodesHash ;
+my %startNodeHash ;
 my %neededNodes = () ;
 my @problems = () ;
 
@@ -85,14 +90,15 @@ if ($wayId != -1) {
 }
 while ($wayId != -1) {
 	
-	my $highway = 0 ;
+	my $toTest = 0 ;
 	foreach my $tag (@wayTags) {
-		# if ($tag->[0] eq "highway") { $highway = 1 ; $highwayCount++ ; }
-		if ( ($tag->[0] eq "highway") and ($tag->[1] eq "residential") ){ $highway = 1 ; $highwayCount++ ; }
+		foreach my $t (@test) {
+			if ( ($tag->[0] eq $t->[0]) and ($tag->[1] eq $t->[1]) ){ $toTest = 1 ; $highwayCount++ ; }
+		}
 	}
 
-	if ($highway == 1) {
-		push @{$numberNodesHash{scalar(@wayNodes)}}, $wayId ;
+	if ( ($toTest == 1) and (scalar @wayNodes > 1) ) {
+		push @{$startNodeHash{$wayNodes[0]}}, $wayId ;
 		@{$wayTagsHash{$wayId}} = @wayTags ;
 		@{$wayNodesHash{$wayId}} = @wayNodes ;
 	}
@@ -113,14 +119,13 @@ print "comparing ways...\n" ;
 
 
 my $comparisons = 0 ;
-foreach my $number (keys %numberNodesHash) {
-	if ($number > 1) {
-		# print "checking ways with length $number nodes.\n" ;
-		foreach my $way1 (@{$numberNodesHash{$number}}) {
-			foreach my $way2 (@{$numberNodesHash{$number}}) {
+foreach my $startNode (keys %startNodeHash) {
+	if ( scalar (@{$startNodeHash{$startNode}}) > 1 ) {
+		foreach my $way1 (@{$startNodeHash{$startNode}}) {
+			foreach my $way2 (@{$startNodeHash{$startNode}}) {
 				if ($way1 < $way2) {
 					$comparisons++ ;
-					if (($comparisons % 10000000) == 0 ) { print "$comparisons comparisons done...\n" ; }
+					if (($comparisons % 10000000) == 0 ) { print "$comparisons detailed comparisons done...\n" ; }
 					my %count = () ;
 					my $different = 0 ;
 					foreach my $item (@{$wayNodesHash{$way1}}, @{$wayNodesHash{$way2}}) { $count{$item}++ ; }

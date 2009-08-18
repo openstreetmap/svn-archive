@@ -117,7 +117,7 @@ public class GPXPanel
      */
     public int getNumberOfTilesToDownload()
     {
-        return _tileList.getFileListToDownload().size();
+        return _tileList.getTileListToDownload().size();
     }
 
     class MyFocusListener
@@ -156,7 +156,6 @@ public class GPXPanel
     public void updateAll()
     {
         _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
-        _tileList.setTileServerBaseUrl(getTileServerBaseUrl());
         _tileList.updateList(_textGPXFile.getText());
         updateNumberOfTiles();
     }

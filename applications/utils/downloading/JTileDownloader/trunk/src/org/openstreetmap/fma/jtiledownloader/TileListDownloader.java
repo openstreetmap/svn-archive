@@ -15,6 +15,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
+import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadResult;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
@@ -44,8 +45,9 @@ import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
  */
 public class TileListDownloader
 {
-    private Vector<String> _tilesToDownload;
+    private Vector<Tile> _tilesToDownload;
     private String _downloadPath;
+    private String _serverBasePath;
     private TileListDownloaderThread downloaderThread = null;
 
     private TileDownloaderListener _listener = null;
@@ -54,11 +56,12 @@ public class TileListDownloader
      * @param downloadPath
      * @param tilesToDownload
      */
-    public TileListDownloader(String downloadPath, TileList tilesToDownload)
+    public TileListDownloader(String downloadPath, TileList tilesToDownload, String serverBasePath)
     {
         super();
         setDownloadPath(downloadPath);
-        setTilesToDownload(tilesToDownload.getFileListToDownload());
+        setTilesToDownload(tilesToDownload.getTileListToDownload());
+        _serverBasePath = serverBasePath;
     }
 
     public void start()
@@ -79,7 +82,7 @@ public class TileListDownloader
      * @param tilesToDownload
      * @return
      */
-    public final int getNumberOfTilesToDownload(Vector<String> tilesToDownload)
+    public final int getNumberOfTilesToDownload(Vector<Tile> tilesToDownload)
     {
         if (tilesToDownload == null)
         {
@@ -88,14 +91,14 @@ public class TileListDownloader
         return tilesToDownload.size();
     }
 
-    private TileDownloadResult doDownload(String tileToDownload, int actDownloadCounter)
+    private TileDownloadResult doDownload(Tile tileToDownload, int actDownloadCounter)
     {
         TileDownloadResult result = new TileDownloadResult();
 
         URL url = null;
         try
         {
-            url = new URL(tileToDownload);
+            url = new URL(_serverBasePath + tileToDownload + ".png");
         }
         catch (MalformedURLException e)
         {
@@ -150,24 +153,18 @@ public class TileListDownloader
      * @param tileToDownload
      * @return
      */
-    protected final String getFileName(String tileToDownload)
+    protected final String getFileName(Tile theTileToDownload)
     {
-        int posFileName = tileToDownload.lastIndexOf("/");
-        int posTileXIndex = tileToDownload.lastIndexOf("/", posFileName - 1);
-        int posZoomLevel = tileToDownload.lastIndexOf("/", posTileXIndex - 1);
-
-        String fileName = tileToDownload.substring(posZoomLevel);
-
-        return fileName;
+        return theTileToDownload.toString() + ".png";
     }
 
     /**
      * @param tileToDownload
      * @return
      */
-    protected final String getFilePath(String tileToDownload)
+    protected final String getFilePath(Tile theTileToDownload)
     {
-        String fileName = getFileName(tileToDownload);
+        String fileName = getFileName(theTileToDownload);
         int posFileName = fileName.lastIndexOf("/");
 
         String path = fileName.substring(0, posFileName);
@@ -349,7 +346,7 @@ public class TileListDownloader
      * @param actCount
      * @param maxCount
      */
-    private void fireErrorOccuredEvent(String tile, int actCount, int maxCount)
+    private void fireErrorOccuredEvent(Tile tile, int actCount, int maxCount)
     {
         if (_listener != null)
         {
@@ -424,7 +421,7 @@ public class TileListDownloader
      * Setter for tilesToDownload
      * @param tilesToDownload the tilesToDownload to set
      */
-    public void setTilesToDownload(Vector<String> tilesToDownload)
+    public void setTilesToDownload(Vector<Tile> tilesToDownload)
     {
         _tilesToDownload = tilesToDownload;
     }
@@ -433,7 +430,7 @@ public class TileListDownloader
      * Getter for tilesToDownload
      * @return the tilesToDownload
      */
-    public Vector<String> getTilesToDownload()
+    public Vector<Tile> getTilesToDownload()
     {
         return _tilesToDownload;
     }
@@ -468,7 +465,7 @@ public class TileListDownloader
 
             int errorCount = 0;
             int tileCounter = 0;
-            for (Enumeration<String> enumeration = getTilesToDownload().elements(); enumeration.hasMoreElements();)
+            for (Enumeration<Tile> enumeration = getTilesToDownload().elements(); enumeration.hasMoreElements();)
             {
                 if (interrupted())
                 {
@@ -476,7 +473,7 @@ public class TileListDownloader
                     return;
                 }
 
-                String tileToDownload = (String) enumeration.nextElement();
+                Tile tileToDownload = enumeration.nextElement();
                 System.out.println("try to download tile " + tileToDownload + " to " + getDownloadPath());
                 tileCounter++;
 

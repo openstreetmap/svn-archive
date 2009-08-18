@@ -1,10 +1,9 @@
 package org.openstreetmap.fma.jtiledownloader.datatypes;
 
 /**
- * Copyright 2008, Friedrich Maier 
+ * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
- * This file is part of JTileDownloader. 
- * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
+ * This file is part of JTileDownloader.
  *
  *    JTileDownloader is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -20,45 +19,61 @@ package org.openstreetmap.fma.jtiledownloader.datatypes;
  *    General Public License along with JTileDownloader.  
  *    If not, see <http://www.gnu.org/licenses/>.
  */
-public class TileDownloadError
+
+/**
+ * Tile
+ */
+public class Tile
 {
-    private Tile _tile;
-    private TileDownloadResult result = new TileDownloadResult();
+    private int x;
+    private int y;
+    private int z;
 
     /**
-     * Setter for tile
-     * @param tile the tile to set
+     * @param x
+     * @param y
+     * @param z
      */
-    public void setTile(Tile tile)
+    public Tile(int x, int y, int z)
     {
-        _tile = tile;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     /**
-     * Getter for tile
-     * @return the tile
+     * Getter for x
+     * @return the x
      */
-    public Tile getTile()
+    public int getX()
     {
-        return _tile;
+        return x;
     }
 
     /**
-     * Setter for result
-     * @param result the result to set
+     * Getter for y
+     * @return the y
      */
-    public void setResult(TileDownloadResult result)
+    public int getY()
     {
-        this.result = result;
+        return y;
     }
 
     /**
-     * Getter for result
-     * @return the result
+     * Getter for z
+     * @return the z
      */
-    public TileDownloadResult getResult()
+    public int getZ()
     {
-        return result;
+        return z;
     }
 
+    /**
+     * @see java.lang.Object#toString()
+     * {@inheritDoc}
+     */
+    public String toString()
+    {
+        return z + "/" + x + "/" + y;
+    }
 }

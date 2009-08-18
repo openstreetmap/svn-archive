@@ -2,6 +2,8 @@ package org.openstreetmap.fma.jtiledownloader.tilelist;
 
 import java.util.Vector;
 
+import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
+
 /**
  * Copyright 2008, Friedrich Maier 
  * 
@@ -34,12 +36,12 @@ public class TileListCommonBBox
     private int[] _yBottomRight = new int[] { 0 };
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getFileListToDownload()
+     * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getTileListToDownload()
      * {@inheritDoc}
      */
-    public Vector<String> getFileListToDownload()
+    public Vector<Tile> getTileListToDownload()
     {
-        Vector<String> tilesToDownload = new Vector<String>();
+        Vector<Tile> tilesToDownload = new Vector<Tile>();
 
         for (int indexZoomLevel = 0; indexZoomLevel < getDownloadZoomLevels().length; indexZoomLevel++)
         {
@@ -53,10 +55,10 @@ public class TileListCommonBBox
             {
                 for (int downloadTileYIndex = yStart; downloadTileYIndex <= yEnd; downloadTileYIndex++)
                 {
-                    String urlPathToFile = getTileServerBaseUrl() + getDownloadZoomLevels()[indexZoomLevel] + "/" + downloadTileXIndex + "/" + downloadTileYIndex + ".png";
+                    String urlPathToFile = getDownloadZoomLevels()[indexZoomLevel] + "/" + downloadTileXIndex + "/" + downloadTileYIndex + ".png";
 
                     log("add " + urlPathToFile + " to download list.");
-                    tilesToDownload.addElement(urlPathToFile);
+                    tilesToDownload.addElement(new Tile(downloadTileXIndex, downloadTileYIndex, getDownloadZoomLevels()[indexZoomLevel]));
                 }
             }
 

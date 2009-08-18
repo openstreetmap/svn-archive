@@ -2,6 +2,7 @@ package org.openstreetmap.fma.jtiledownloader.listener;
 
 import java.util.Vector;
 
+import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 
 /**
@@ -55,6 +56,6 @@ public interface TileDownloaderListener
      * @param maxCount
      * @param tile
      */
-    void errorOccured(int actCount, int maxCount, String tile);
+    void errorOccured(int actCount, int maxCount, Tile tile);
 
 }

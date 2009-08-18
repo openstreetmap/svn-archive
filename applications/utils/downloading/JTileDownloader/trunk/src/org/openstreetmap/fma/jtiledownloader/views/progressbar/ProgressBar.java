@@ -19,6 +19,7 @@ import javax.swing.JProgressBar;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
+import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
@@ -166,7 +167,7 @@ public class ProgressBar
                     tiles.addTile(tde.getTile());
                 }
 
-                downloader.setTilesToDownload(tiles.getFileListToDownload());
+                downloader.setTilesToDownload(tiles.getTileListToDownload());
                 downloader.start();
             } else {
                 setVisible(false);
@@ -206,7 +207,7 @@ public class ProgressBar
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, java.lang.String)
      * {@inheritDoc}
      */
-    public void errorOccured(int actCount, int maxCount, String tile)
+    public void errorOccured(int actCount, int maxCount, Tile tile)
     {
     // TODO Auto-generated method stub
 

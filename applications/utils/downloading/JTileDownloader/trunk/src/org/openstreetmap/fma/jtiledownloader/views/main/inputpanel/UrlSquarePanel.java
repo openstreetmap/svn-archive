@@ -180,7 +180,6 @@ public class UrlSquarePanel
         try
         {
             _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
-            _tileList.setTileServerBaseUrl(getTileServerBaseUrl());
             _tileList.setRadius(Integer.parseInt("" + _textRadius.getText()) * 1000);
             _tileList.calculateTileValuesXY();
             updateNumberOfTiles();

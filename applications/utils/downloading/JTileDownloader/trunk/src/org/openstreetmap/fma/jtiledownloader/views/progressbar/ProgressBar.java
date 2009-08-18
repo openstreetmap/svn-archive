@@ -107,7 +107,7 @@ public class ProgressBar
         }
         else
         {
-            downloader.setStopFlag(true);
+            downloader.abort();
         }
     }
 
@@ -140,7 +140,7 @@ public class ProgressBar
         public void windowClosing(WindowEvent e)
         {
             // ask and perform abort
-            downloader.setStopFlag(true);
+            downloader.abort();
         }
     }
 

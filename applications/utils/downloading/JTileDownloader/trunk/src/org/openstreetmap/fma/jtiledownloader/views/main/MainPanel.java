@@ -62,7 +62,6 @@ public class MainPanel
 
     public static final String COMMAND_SELECTOUTPUTFOLDER = "selectOutputFolder";
     public static final String COMMAND_DOWNLOAD = "download";
-    public static final String COMMAND_STOP = "stop";
     public static final String COMMAND_EXPORT = "export";
 
     JLabel _labelOutputZoomLevel = new JLabel("Output Zoom Level:");
@@ -456,13 +455,6 @@ public class MainPanel
                 _mainView.setTileListDownloader(_mainView.createTileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList()));
 
                 ProgressBar pg = new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), _mainView.getTileListDownloader());
-            }
-            else if (actionCommand.equalsIgnoreCase(COMMAND_STOP))
-            {
-                if (_mainView.getTileListDownloader() != null)
-                {
-                    _mainView.getTileListDownloader().setStopFlag(true);
-                }
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_EXPORT))
             {

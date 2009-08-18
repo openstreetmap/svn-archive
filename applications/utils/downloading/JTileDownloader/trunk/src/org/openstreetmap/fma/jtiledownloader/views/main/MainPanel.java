@@ -150,6 +150,7 @@ public class MainPanel
 
         _textNumberOfTiles.setEditable(false);
         _textNumberOfTiles.setFocusable(false);
+        _textNumberOfTiles.setHorizontalAlignment(JTextField.RIGHT);
 
         // set all listeners
         _buttonSelectOutputFolder.addActionListener(new MainViewActionListener());

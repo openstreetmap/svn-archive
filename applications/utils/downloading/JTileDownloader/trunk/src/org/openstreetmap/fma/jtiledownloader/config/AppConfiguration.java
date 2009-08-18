@@ -30,12 +30,13 @@ public class AppConfiguration
     private static final String APP_CONFIG_PROPERTIES = "appConfig.xml";
 
     private static AppConfiguration instance = new AppConfiguration();
-    
+
     private boolean _useProxyServer = false;
     private String _proxyServer = "";
     private String _proxyServerPort = "";
     private boolean _useProxyServerAuth = false;
     private String _proxyServerUser = "";
+    private String _proxyServerPassword = "";
 
     private boolean _showTilePreview = true;
 
@@ -54,9 +55,9 @@ public class AppConfiguration
     private static final String PROXY_SERVER_PORT = "ProxyServerPort";
     private static final String USE_PROXY_SERVER_AUTH = "UseProxyServerAuth";
     private static final String PROXY_SERVER_USER = "ProxyServerUser";
+    private static final String PROXY_SERVER_PASSWORD = "ProxyServerPassword";
 
     private static final String SHOW_TILE_PREVIEW = "ShowTilePreview";
-    private static final String AUTO_CLOSE_TILE_PREVIEW = "AutoCloseTilePreview";
 
     private static final String OVERWRITE_EXISTING_FILES = "OverwriteExistingFiles";
 
@@ -68,11 +69,13 @@ public class AppConfiguration
 
     private static final String INPUT_PANEL_INDEX = "InputPanelIndex";
 
-    private AppConfiguration() {
+    private AppConfiguration()
+    {
         loadFromFile();
     }
 
-    public static AppConfiguration getInstance() {
+    public static AppConfiguration getInstance()
+    {
         return instance;
     }
 
@@ -85,6 +88,7 @@ public class AppConfiguration
         setProperty(prop, PROXY_SERVER_PORT, "" + _proxyServerPort);
         setProperty(prop, USE_PROXY_SERVER_AUTH, "" + _useProxyServerAuth);
         setProperty(prop, PROXY_SERVER_USER, "" + _proxyServerUser);
+        setProperty(prop, PROXY_SERVER_PASSWORD, "" + _proxyServerPassword);
         setProperty(prop, SHOW_TILE_PREVIEW, "" + isShowTilePreview());
 
         setProperty(prop, OVERWRITE_EXISTING_FILES, "" + isOverwriteExistingFiles());
@@ -130,6 +134,8 @@ public class AppConfiguration
         _proxyServerPort = prop.getProperty(PROXY_SERVER_PORT, "");
         _useProxyServerAuth = Boolean.valueOf(prop.getProperty(USE_PROXY_SERVER_AUTH, "false")).booleanValue();
         _proxyServerUser = prop.getProperty(PROXY_SERVER_USER, "");
+        _proxyServerPassword = prop.getProperty(PROXY_SERVER_PASSWORD, "");
+
         setShowTilePreview(Boolean.valueOf(prop.getProperty(SHOW_TILE_PREVIEW, "true")).booleanValue());
 
         setOverwriteExistingFiles(Boolean.valueOf(prop.getProperty(OVERWRITE_EXISTING_FILES, "true")).booleanValue());
@@ -232,6 +238,24 @@ public class AppConfiguration
     public final void setProxyServerUser(String proxyServerUser)
     {
         _proxyServerUser = proxyServerUser;
+    }
+
+    /**
+     * Getter for proxyServerPassword
+     * @return the proxyServerPassword
+     */
+    public final String getProxyServerPassword()
+    {
+        return _proxyServerPassword;
+    }
+
+    /**
+     * Setter for proxyServerPassword
+     * @param proxyServerPassword the proxyServerPassword to set
+     */
+    public final void setProxyServerPassword(String proxyServerPassword)
+    {
+        _proxyServerUser = proxyServerPassword;
     }
 
     /**

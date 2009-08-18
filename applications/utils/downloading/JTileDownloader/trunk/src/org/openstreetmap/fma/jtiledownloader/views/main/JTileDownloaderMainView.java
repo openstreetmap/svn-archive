@@ -11,7 +11,6 @@ import javax.swing.event.ChangeListener;
 import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
-import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 
 /**
@@ -38,8 +37,6 @@ public class JTileDownloaderMainView
     extends JFrame
 {
     private static final long serialVersionUID = 1L;
-
-    private TileListDownloader _tileListDownloader;
 
     private MainPanel _mainPanel;
     private OptionsPanel _optionsPanel;
@@ -146,15 +143,6 @@ public class JTileDownloaderMainView
     /**
      * 
      */
-    protected TileListDownloader createTileListDownloader(String outputFolder, TileList tilesToDownload)
-    {
-        TileListDownloader tld = new TileListDownloader(outputFolder, tilesToDownload, _mainPanel.getSelectedTileProvider());
-        return tld;
-    }
-
-    /**
-     * 
-     */
     public void updateAppConfig()
     {
 
@@ -171,24 +159,6 @@ public class JTileDownloaderMainView
         AppConfiguration.getInstance().setWaitNrTiles(_optionsPanel.getWaitNrTiles());
         AppConfiguration.getInstance().saveToFile();
 
-    }
-
-    /**
-     * Getter for tileListDownloader
-     * @return the tileListDownloader
-     */
-    protected final TileListDownloader getTileListDownloader()
-    {
-        return _tileListDownloader;
-    }
-
-    /**
-     * Setter for tileListDownloader
-     * @param tileListDownloader the tileListDownloader to set
-     */
-    protected final void setTileListDownloader(TileListDownloader tileListDownloader)
-    {
-        _tileListDownloader = tileListDownloader;
     }
 
     /**

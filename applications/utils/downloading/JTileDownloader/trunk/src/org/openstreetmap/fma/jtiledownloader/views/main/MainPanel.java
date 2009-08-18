@@ -11,6 +11,8 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -304,15 +306,7 @@ public class MainPanel
 
     public void valuesChanged()
     {
-        String textZoomLevels = _textOutputZoomLevels.getText().trim();
-        if (textZoomLevels.length() == 0)
-        {
-            getInputPanel().setDownloadZoomLevel(new int[] { Integer.parseInt("" + _comboOutputZoomLevel.getSelectedItem()) });
-        }
-        else
-        {
-            getInputPanel().setDownloadZoomLevel(getOutputZoomLevelArray(textZoomLevels));
-        }
+        getInputPanel().setDownloadZoomLevel(getOutputZoomLevelArray());
 
         String altTileServer = getAltTileServer();
         if (altTileServer == null || altTileServer.length() == 0)
@@ -331,25 +325,41 @@ public class MainPanel
      * @param property
      * @return int[]
      */
-    private int[] getOutputZoomLevelArray(String zoomLevels)
+    private int[] getOutputZoomLevelArray()
     {
-        zoomLevels = zoomLevels.trim();
-
-        String[] zoomLevelsString = zoomLevels.split(",");
-
-        if (zoomLevelsString == null || zoomLevelsString.length == 0)
+        LinkedList<Integer> zoomLevels = new LinkedList<Integer>();
+        if (_textOutputZoomLevels.getText().isEmpty())
         {
-            return new int[] { 12 };
+            try
+            {
+                int selectedZoom = Integer.parseInt(_comboOutputZoomLevel.getSelectedItem().toString());
+                if (selectedZoom <= getSelectedTileProvider().getMaxZoom() && selectedZoom >= getSelectedTileProvider().getMinZoom())
+                {
+                    zoomLevels.add(selectedZoom);
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("could not parse");
+            }
         }
-
-        int[] zoomLevel = new int[zoomLevelsString.length];
-        for (int index = 0; index < zoomLevelsString.length; index++)
+        else
         {
-            zoomLevel[index] = Integer.parseInt(zoomLevelsString[index]);
+            for (String zoomLevel : Arrays.asList(_textOutputZoomLevels.getText().split(",")))
+            {
+                int selectedZoom = Integer.parseInt(zoomLevel.trim());
+                if (selectedZoom < getSelectedTileProvider().getMaxZoom() && selectedZoom > getSelectedTileProvider().getMinZoom())
+                {
+                    zoomLevels.add(selectedZoom);
+                }
+            }
         }
-
-        return zoomLevel;
-
+        int[] parsedLevels = new int[zoomLevels.size()];
+        for (int i = 0; i < zoomLevels.size(); i++)
+        {
+            parsedLevels[i] = zoomLevels.get(i);
+        }
+        return parsedLevels;
     }
 
     /**

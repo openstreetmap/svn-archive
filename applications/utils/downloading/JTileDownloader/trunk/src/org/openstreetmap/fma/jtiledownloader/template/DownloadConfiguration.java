@@ -3,6 +3,8 @@ package org.openstreetmap.fma.jtiledownloader.template;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Properties;
 
 /**
@@ -117,25 +119,28 @@ public class DownloadConfiguration
      * @param property
      * @return int[]
      */
-    private int[] getOutputZoomLevelArray(String zoomLevels)
+    private int[] getOutputZoomLevelArray(String zoomLevelsString)
     {
-        zoomLevels = zoomLevels.trim();
-
-        String[] zoomLevelsString = zoomLevels.split(",");
-
-        if (zoomLevelsString == null || zoomLevelsString.length == 0)
+        // HACK here
+        LinkedList<Integer> zoomLevels = new LinkedList<Integer>();
+        for (String zoomLevel : Arrays.asList(zoomLevelsString.split(",")))
         {
-            return new int[] { 12 };
+            try
+            {
+                int selectedZoom = Integer.parseInt(zoomLevel.trim());
+                zoomLevels.add(selectedZoom);
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("could not parse");
+            }
         }
-
-        int[] zoomLevel = new int[zoomLevelsString.length];
-        for (int index = 0; index < zoomLevelsString.length; index++)
+        int[] parsedLevels = new int[zoomLevels.size()];
+        for (int i = 0; i < zoomLevels.size(); i++)
         {
-            zoomLevel[index] = Integer.parseInt(zoomLevelsString[index]);
+            parsedLevels[i] = zoomLevels.get(i);
         }
-
-        return zoomLevel;
-
+        return parsedLevels;
     }
 
     /**

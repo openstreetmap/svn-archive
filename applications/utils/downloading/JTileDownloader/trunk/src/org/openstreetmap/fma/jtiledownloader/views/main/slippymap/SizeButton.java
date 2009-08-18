@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007 by Tim Haussmann
-package org.openstreetmap.fma.jtiledownloader.views.main;
+package org.openstreetmap.fma.jtiledownloader.views.main.slippymap;
 
 
 import java.awt.Graphics;

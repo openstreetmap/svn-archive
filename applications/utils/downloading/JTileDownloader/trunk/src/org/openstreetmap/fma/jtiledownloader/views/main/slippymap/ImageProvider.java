@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007 by Immanuel Scholz and others
-package org.openstreetmap.fma.jtiledownloader.views.main;
+package org.openstreetmap.fma.jtiledownloader.views.main.slippymap;
 
 import java.awt.Component;
 import java.awt.Cursor;

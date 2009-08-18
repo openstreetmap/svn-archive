@@ -1,4 +1,4 @@
-package org.openstreetmap.fma.jtiledownloader.views.main;
+package org.openstreetmap.fma.jtiledownloader.views.main.slippymap;
 
 //License: GPL. Copyright 2008 by Jan Peter Stotz
 

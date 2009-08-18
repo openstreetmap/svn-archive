@@ -23,6 +23,7 @@ import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 
 /**
  * Copyright 2008, Friedrich Maier 
+ * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader. 
  * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
@@ -42,10 +43,10 @@ import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 public class TileListDownloader
-    extends Thread
 {
     private Vector _tilesToDownload;
     private String _downloadPath;
+    private TileListDownloaderThread downloaderThread = null;
 
     private TileDownloaderListener _listener = null;
 
@@ -62,81 +63,10 @@ public class TileListDownloader
         setTilesToDownload(tilesToDownload.getFileListToDownload());
     }
 
-    /**
-     * @see java.lang.Thread#run()
-     * {@inheritDoc}
-     */
-    public void run()
+    public void start()
     {
-        _stopFlag = false;
-        Vector errorTileList = new Vector();
-
-        if (getTilesToDownload() == null || getTilesToDownload().size() == 0)
-        {
-            return;
-        }
-
-        if (AppConfiguration.getInstance().getUseProxyServer())
-        {
-            if (AppConfiguration.getInstance().getUseProxyServerAuth())
-            {
-                new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()), AppConfiguration.getInstance().getProxyServerUser(), AppConfiguration.getInstance().getProxyServerPassword());
-            }
-            else
-            {
-                new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()));
-            }
-        }
-
-        int errorCount = 0;
-        int tileCounter = 0;
-        for (Enumeration enumeration = getTilesToDownload().elements(); enumeration.hasMoreElements();)
-        {
-            if (_stopFlag)
-            {
-                fireDownloadStoppedEvent(tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
-                return;
-            }
-
-            String tileToDownload = (String) enumeration.nextElement();
-            System.out.println("try to download tile " + tileToDownload + " to " + getDownloadPath());
-            tileCounter++;
-
-            TileDownloadResult result = doDownload(tileToDownload, tileCounter);
-
-            if (result.getCode() != TileDownloadResult.CODE_OK)
-            {
-                errorCount++;
-                TileDownloadError error = new TileDownloadError();
-                error.setTile(tileToDownload);
-                error.setResult(result);
-                errorTileList.add(error);
-                fireErrorOccuredEvent(tileToDownload, tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
-            }
-
-            if ((tileCounter < getNumberOfTilesToDownload(getTilesToDownload())) && AppConfiguration.getInstance().getWaitAfterNrTiles())
-            {
-                if ((tileCounter) % (AppConfiguration.getInstance().getWaitNrTiles()) == 0)
-                {
-                    try
-                    {
-                        int waitSeconds = AppConfiguration.getInstance().getWaitSeconds();
-                        String waitMsg = "Waiting " + waitSeconds + " sec to resume";
-                        System.out.println(waitMsg);
-                        fireWaitResume(waitMsg);
-                        Thread.sleep(waitSeconds * 1000);
-                    }
-                    catch (InterruptedException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-        }
-
-        fireDownloadCompleteEvent(errorCount, errorTileList);
-
+        downloaderThread = new TileListDownloaderThread();
+        downloaderThread.start();
     }
 
     /**
@@ -508,6 +438,83 @@ public class TileListDownloader
     public void setStopFlag(boolean stopFlag)
     {
         _stopFlag = stopFlag;
+    }
 
+    public class TileListDownloaderThread
+        extends Thread
+    {
+        /**
+         * @see java.lang.Thread#run()
+         * {@inheritDoc}
+         */
+        public void run()
+        {
+            _stopFlag = false;
+            Vector errorTileList = new Vector();
+
+            if (getTilesToDownload() == null || getTilesToDownload().size() == 0)
+            {
+                return;
+            }
+
+            if (AppConfiguration.getInstance().getUseProxyServer())
+            {
+                if (AppConfiguration.getInstance().getUseProxyServerAuth())
+                {
+                    new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()), AppConfiguration.getInstance().getProxyServerUser(), AppConfiguration.getInstance().getProxyServerPassword());
+                }
+                else
+                {
+                    new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()));
+                }
+            }
+
+            int errorCount = 0;
+            int tileCounter = 0;
+            for (Enumeration enumeration = getTilesToDownload().elements(); enumeration.hasMoreElements();)
+            {
+                if (_stopFlag)
+                {
+                    fireDownloadStoppedEvent(tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
+                    return;
+                }
+
+                String tileToDownload = (String) enumeration.nextElement();
+                System.out.println("try to download tile " + tileToDownload + " to " + getDownloadPath());
+                tileCounter++;
+
+                TileDownloadResult result = doDownload(tileToDownload, tileCounter);
+
+                if (result.getCode() != TileDownloadResult.CODE_OK)
+                {
+                    errorCount++;
+                    TileDownloadError error = new TileDownloadError();
+                    error.setTile(tileToDownload);
+                    error.setResult(result);
+                    errorTileList.add(error);
+                    fireErrorOccuredEvent(tileToDownload, tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
+                }
+
+                if ((tileCounter < getNumberOfTilesToDownload(getTilesToDownload())) && AppConfiguration.getInstance().getWaitAfterNrTiles())
+                {
+                    if ((tileCounter) % (AppConfiguration.getInstance().getWaitNrTiles()) == 0)
+                    {
+                        try
+                        {
+                            int waitSeconds = AppConfiguration.getInstance().getWaitSeconds();
+                            String waitMsg = "Waiting " + waitSeconds + " sec to resume";
+                            System.out.println(waitMsg);
+                            fireWaitResume(waitMsg);
+                            Thread.sleep(waitSeconds * 1000);
+                        }
+                        catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            fireDownloadCompleteEvent(errorCount, errorTileList);
+        }
     }
 }

@@ -83,6 +83,7 @@ public class JTileDownloaderCommandLine
      */
     private void handleDownloadTemplate(String type, String propertyFile)
     {
+        // TODO: broken ATM
         if (type.equalsIgnoreCase(Constants.CONFIG_TYPE[Constants.TYPE_URLSQUARE]))
         {
             handleUrlSquare(propertyFile);

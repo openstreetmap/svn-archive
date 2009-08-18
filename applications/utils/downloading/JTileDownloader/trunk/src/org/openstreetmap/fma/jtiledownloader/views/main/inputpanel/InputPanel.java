@@ -22,9 +22,9 @@ package org.openstreetmap.fma.jtiledownloader.views.main.inputpanel;
 
 import javax.swing.JPanel;
 
+import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
-import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
 
 /**
  * 
@@ -34,18 +34,31 @@ public abstract class InputPanel
 {
 
     private static final long serialVersionUID = 1L;
-    private int[] _downloadZoomLevel = new int[] { 12 };
-    private String _tileServerBaseUrl = "";
-    private String _outputLocation = "tiles";
-    private final JTileDownloaderMainView _mainView;
+    private final GlobalConfigIf _globalConfig;
+
+    /**
+     * Returns the name/title for the input panel
+     * @return
+     */
+    public abstract String getInputName();
+
+    /**
+     * Returns the default name for the configfile (for DownloadConfig)
+     * @return
+     */
+    public abstract String getConfigFileName();
+
+    public boolean isDownloadOkay() {
+        return true;
+    }
 
     /**
      * 
      */
-    public InputPanel(JTileDownloaderMainView mainView)
+    public InputPanel(GlobalConfigIf globalConfig)
     {
         super();
-        _mainView = mainView;
+        _globalConfig = globalConfig;
     }
 
     /**
@@ -54,16 +67,7 @@ public abstract class InputPanel
      */
     public final int[] getDownloadZoomLevel()
     {
-        return _downloadZoomLevel;
-    }
-
-    /**
-     * Setter for downloadZoomLevel
-     * @param downloadZoomLevel the downloadZoomLevel to set
-     */
-    public final void setDownloadZoomLevel(int[] downloadZoomLevel)
-    {
-        _downloadZoomLevel = downloadZoomLevel;
+        return _globalConfig.getOutputZoomLevelArray();
     }
 
     public abstract void updateAll();
@@ -76,56 +80,11 @@ public abstract class InputPanel
 
     public abstract void loadConfig();
 
-    /**
-     * Getter for tileServerBaseUrl
-     * @return the tileServerBaseUrl
-     */
-    public final String getTileServerBaseUrl()
-    {
-        return _tileServerBaseUrl;
-    }
-
-    /**
-     * Setter for tileServerBaseUrl
-     * @param tileServerBaseUrl the tileServerBaseUrl to set
-     */
-    public final void setTileServerBaseUrl(String tileServerBaseUrl)
-    {
-        _tileServerBaseUrl = tileServerBaseUrl;
-    }
-
-    /**
-     * Getter for outputLocation
-     * @return the outputLocation
-     */
-    public final String getOutputLocation()
-    {
-        return _outputLocation;
-    }
-
-    /**
-     * Setter for outputLocation
-     * @param outputLocation the outputLocation to set
-     */
-    public final void setOutputLocation(String outputLocation)
-    {
-        _outputLocation = outputLocation;
-    }
-
-    /**
-     * Getter for mainView
-     * @return the mainView
-     */
-    public final JTileDownloaderMainView getMainView()
-    {
-        return _mainView;
-    }
-
     public void updateNumberOfTiles()
     {
-        long numberOfTiles = 0;
+        int numberOfTiles = 0;
         numberOfTiles = getNumberOfTilesToDownload();
-        getMainView().getMainPanel().getTextNumberOfTiles().setText("" + numberOfTiles);
+        _globalConfig.setNumberOfTiles(numberOfTiles);
     }
 
     /**
@@ -133,12 +92,12 @@ public abstract class InputPanel
      */
     public void setCommonValues(DownloadConfiguration downloadConfig)
     {
-        setOutputLocation(downloadConfig.getOutputLocation());
-        getMainView().getMainPanel().getTextOutputFolder().setText(getOutputLocation());
+     /*   setOutputLocation(downloadConfig.getOutputLocation());
+        //getMainView().getMainPanel().getTextOutputFolder().setText(getOutputLocation());
         setDownloadZoomLevel(downloadConfig.getOutputZoomLevels());
-        getMainView().getMainPanel().initializeOutputZoomLevel(getDownloadZoomLevel());
+        getMainPanel().initializeOutputZoomLevel(getDownloadZoomLevel());
         setTileServerBaseUrl(downloadConfig.getTileServer());
-        getMainView().getMainPanel().initializeTileServer(getTileServerBaseUrl());
+        getMainPanel().initializeTileServer(getTileServerBaseUrl());*/
     }
 
 }

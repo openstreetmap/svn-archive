@@ -9,6 +9,7 @@ import java.awt.event.FocusListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxXY;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonBBox;
@@ -49,23 +50,23 @@ public class BBoxXYPanel
 
     private TileListCommonBBox _tileList = new TileListCommonBBox();
 
-    JLabel _labelMinX = new JLabel("Min. X:");
-    JTextField _textMinX = new JTextField();
-    JLabel _labelMinY = new JLabel("Min. Y:");
-    JTextField _textMinY = new JTextField();
-    JLabel _labelMaxX = new JLabel("Max. X:");
-    JTextField _textMaxX = new JTextField();
-    JLabel _labelMaxY = new JLabel("Max. Y:");
-    JTextField _textMaxY = new JTextField();
+    private JLabel _labelMinX = new JLabel("Min. X:");
+    private JTextField _textMinX = new JTextField();
+    private JLabel _labelMinY = new JLabel("Min. Y:");
+    private JTextField _textMinY = new JTextField();
+    private JLabel _labelMaxX = new JLabel("Max. X:");
+    private JTextField _textMaxX = new JTextField();
+    private JLabel _labelMaxY = new JLabel("Max. Y:");
+    private JTextField _textMaxY = new JTextField();
 
     private DownloadConfigurationBBoxXY _downloadConfig;
 
     /**
      * 
      */
-    public BBoxXYPanel(JTileDownloaderMainView mainView)
+    public BBoxXYPanel(GlobalConfigIf globalConfig)
     {
-        super(mainView);
+        super(globalConfig);
 
         createPanel();
         initializePanel();
@@ -162,9 +163,6 @@ public class BBoxXYPanel
             return;
         }
 
-        _downloadConfig.setOutputLocation(getOutputLocation());
-        _downloadConfig.setOutputZoomLevels(getDownloadZoomLevel());
-        _downloadConfig.setTileServer(getTileServerBaseUrl());
         _downloadConfig.setMinX(getMinX());
         _downloadConfig.setMinY(getMinY());
         _downloadConfig.setMaxX(getMaxX());
@@ -289,6 +287,25 @@ public class BBoxXYPanel
     public TileList getTileList()
     {
         return _tileList;
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
+     * {@inheritDoc}
+     */
+    public String getInputName()
+    {
+        return "Bounding Box (X/Y)";
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getConfigFileName()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getConfigFileName()
+    {
+        return "BBoxXY";
     }
 
 }

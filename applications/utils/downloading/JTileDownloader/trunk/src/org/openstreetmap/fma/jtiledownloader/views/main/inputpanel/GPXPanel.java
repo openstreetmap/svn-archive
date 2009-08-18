@@ -10,6 +10,7 @@ import java.awt.event.FocusListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonGPX;
@@ -50,17 +51,17 @@ public class GPXPanel
 
     private TileListCommonGPX _tileList = new TileListCommonGPX();
 
-    JLabel _labelGPXFile = new JLabel("GPX File:");
-    JTextField _textGPXFile = new JTextField();
+    private JLabel _labelGPXFile = new JLabel("GPX File:");
+    private JTextField _textGPXFile = new JTextField();
 
     private DownloadConfigurationUrlSquare _downloadConfig;
 
     /**
      * 
      */
-    public GPXPanel(JTileDownloaderMainView mainView)
+    public GPXPanel(GlobalConfigIf globalConfig)
     {
-        super(mainView);
+        super(globalConfig);
 
         createPanel();
         initializePanel();
@@ -167,6 +168,25 @@ public class GPXPanel
     public TileList getTileList()
     {
         return _tileList;
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
+     * {@inheritDoc}
+     */
+    public String getInputName()
+    {
+        return "GPX File";
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getConfigFileName()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getConfigFileName()
+    {
+        return "GPX";
     }
 
 }

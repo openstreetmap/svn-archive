@@ -1,0 +1,81 @@
+REQUIREMENTS
+------------
+
+1. Java Runtime Enviroment 1.5 or higher (http://java.sun.com/)
+2. Apache Ant (http://ant.apache.org/)
+3. Subversion (http://subversion.tigris.org/)
+4. A patched version of Apache Batik (see below)
+
+CREATE A PATCHED VERSION OF APACHE BATIK
+----------------------------------------
+
+Current versions of Apache Batik (as of 2009/08/19) are not able to 
+dynamically change the startOffset of a textPath Element. For details
+read my messages to the batik mailing list:
+http://www.nabble.com/Unable-to-change-startOffset-in-textPath-dynamically-td22113063.html
+
+Therefore it is neccassary to create a patched version of Batik:
+
+1. Get the latest version of Apache Batik from the Batik subversion repository:
+
+     svn export http://svn.apache.org/repos/asf/xmlgraphics/batik/trunk batik-svn
+
+   This will create a directory batik-svn containing the Batik sources.
+
+2. Get the latest version of my patch from the Openstreetmap repository and export 
+   it directly to the batik directory:
+ 
+     svn export http://svn.openstreetmap.org/applications/rendering/OSMLabelOptimizer/misc/batik-patch-r805929.patch batik-svn/batik-patch-r805929.patch
+
+3. Now cd into the batik directory
+  
+     cd batik-svn
+
+   and apply the patch
+
+     patch -p0 < batik-patch-r805929.patch
+
+4. Now build the batik libraries using the build.sh script. For details on that see 
+   the documentation of batik. If everything worked fine there should be a directory
+   batik-1.8pre/lib containing the batik library (i.e. a lot of jar files).
+
+BUILDING OSMLabelOptimizer
+--------------------------
+
+1. Get a current version from the Openstreetmap repository:
+
+     svn co http://svn.openstreetmap.org/applications/rendering/OSMLabelOptimizer OSMLabelOptimizer
+
+2. Copy the patched batik library (see above) to OSMLabelOptimizer/libs.
+
+3. Change to the OSMLabelOptimzer directory and run ant:
+
+     ant dist
+
+RUNNING OSMLabelOptimizer
+-------------------------
+
+You can run OSMLabelOptimizer on any SVG file created with Osmarender 
+(http://wiki.openstreetmap.org/wiki/Osmarender) and zoom leven 17. Examples can be found 
+in the test directory (e.g. test/test17.svg and test/stachus.svg).
+For creating an optimized output "out.svg" from "test/test17.svg" use the
+following command in base directory of the repository:
+
+java -Xmx1000000000 -jar dist/OSMLabelOptimizer.jar test/test17.svg out.svg
+
+Another possibility is to use the experimental GUI for converting maps:
+
+java -Xmx1000000000 -cp dist/OSMLabelOptimizer.jar SVGApplication
+
+Here you can first open a svg file, then preprocess the file and afterwards start
+the optimization. After each step you can save the so far generated svg file. The
+GUI is at moment not very user friendly. You always have to wait until a step finished
+before you do the next step (especially you have to wait until the file is loaded and
+rendered).
+
+PROBLEMS & BUGS
+---------------
+
+If you encounter problems and bugs (so far there may be many of them) please inform me 
+(User:Esscue) via the send email function of the openstreetmap wiki (http://wiki.openstreetmap.org).
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/batik-anim.jar"/>
+	<classpathentry kind="lib" path="libs/batik-awt-util.jar"/>
+	<classpathentry kind="lib" path="libs/batik-bridge.jar"/>
+	<classpathentry kind="lib" path="libs/batik-codec.jar"/>
+	<classpathentry kind="lib" path="libs/batik-css.jar"/>
+	<classpathentry kind="lib" path="libs/batik-dom.jar"/>
+	<classpathentry kind="lib" path="libs/batik-extension.jar"/>
+	<classpathentry kind="lib" path="libs/batik-ext.jar"/>
+	<classpathentry kind="lib" path="libs/batik-gui-util.jar"/>
+	<classpathentry kind="lib" path="libs/batik-gvt.jar"/>
+	<classpathentry kind="lib" path="libs/batik-parser.jar"/>
+	<classpathentry kind="lib" path="libs/batik-script.jar"/>
+	<classpathentry kind="lib" path="libs/batik-svggen.jar"/>
+	<classpathentry kind="lib" path="libs/batik-svg-dom.jar"/>
+	<classpathentry kind="lib" path="libs/batik-swing.jar"/>
+	<classpathentry kind="lib" path="libs/batik-transcoder.jar"/>
+	<classpathentry kind="lib" path="libs/batik-util.jar"/>
+	<classpathentry kind="lib" path="libs/batik-xml.jar"/>
+	<classpathentry kind="lib" path="libs/js.jar"/>
+	<classpathentry kind="lib" path="libs/pdf-transcoder.jar"/>
+	<classpathentry kind="lib" path="libs/xalan-2.6.0.jar"/>
+	<classpathentry kind="lib" path="libs/xerces_2_5_0.jar"/>
+	<classpathentry kind="lib" path="libs/xml-apis-ext.jar"/>
+	<classpathentry kind="lib" path="libs/xml-apis.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

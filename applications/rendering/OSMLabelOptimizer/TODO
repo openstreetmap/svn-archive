@@ -1,0 +1,8 @@
+TODO:
+
+*  Optimize area feature labels
+   o Find the area in the svg file where the label belongs to
+   o Find a set of possible positions for the label 
+* Create a preprocessor for splitting and reversing streets if otherwise labels would be printed upside down
+* Try to avoid having parts of labels cut off at the edge
+* Line wrap for point feature and area feature labels (thanks to Frederik Ramm for this idea) 

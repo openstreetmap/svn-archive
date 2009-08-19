@@ -27,13 +27,18 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.File;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileFilter;
 
-import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonGPX;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
@@ -52,8 +57,7 @@ public class GPXPanel
 
     private JLabel _labelGPXFile = new JLabel("GPX File:");
     private JTextField _textGPXFile = new JTextField();
-
-    private DownloadConfigurationUrlSquare _downloadConfig;
+    private JButton _selectFileButton = new JButton("Select file...");
 
     /**
      * 
@@ -81,6 +85,43 @@ public class GPXPanel
         _textGPXFile.setPreferredSize(new Dimension(330, 20));
         _textGPXFile.addFocusListener(new MyFocusListener());
         _textGPXFile.setName(COMPONENT_GPX_FILE);
+
+        _selectFileButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                chooser.setFileFilter(new FileFilter() {
+
+                    @Override
+                    public boolean accept(File f)
+                    {
+                        if (f.getName().endsWith(".gpx") || f.isDirectory())
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+
+                    @Override
+                    public String getDescription()
+                    {
+                        return "GPX-File";
+                    }
+
+                });
+                chooser.setCurrentDirectory(new File(_textGPXFile.getText()));
+                if (JFileChooser.APPROVE_OPTION == chooser.showDialog(null, "Select"))
+                {
+                    File dir = chooser.getSelectedFile();
+                    _textGPXFile.setText(dir.getAbsolutePath());
+                    updateAll();
+                }
+            }
+        });
     }
 
     /**
@@ -98,6 +139,7 @@ public class GPXPanel
 
         add(_labelGPXFile, constraints);
         add(_textGPXFile, constraints);
+        add(_selectFileButton, constraints);
     }
 
     @Override

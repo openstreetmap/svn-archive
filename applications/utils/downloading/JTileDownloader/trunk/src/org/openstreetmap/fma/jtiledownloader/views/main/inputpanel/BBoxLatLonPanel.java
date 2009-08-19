@@ -37,6 +37,7 @@ import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxL
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
+import org.openstreetmap.fma.jtiledownloader.views.main.slippymap.SlippyMapChooser;
 import org.openstreetmap.fma.jtiledownloader.views.main.slippymap.SlippyMapChooserWindow;
 
 /**
@@ -65,6 +66,7 @@ public class BBoxLatLonPanel
     private JButton _buttonSlippyMapChooser = new JButton("Slippy Map chooser");
 
     private DownloadConfigurationBBoxLatLon _downloadConfig;
+    private SlippyMapChooser changeListener = null;
 
     /**
      * 
@@ -303,6 +305,10 @@ public class BBoxLatLonPanel
     @Override
     public void updateAll()
     {
+        if (changeListener != null)
+        {
+            changeListener.boundingBoxChanged();
+        }
         updateTileList();
     }
 
@@ -324,5 +330,14 @@ public class BBoxLatLonPanel
     public String getInputName()
     {
         return "Bounding Box (Lat/Lon)";
+    }
+
+    /**
+     * Setter for changeListener
+     * @param changeListener the changeListener to set
+     */
+    public void setChangeListener(SlippyMapChooser changeListener)
+    {
+        this.changeListener = changeListener;
     }
 }

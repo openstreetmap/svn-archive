@@ -88,4 +88,21 @@ public class Tile
     {
         return z + "/" + x + "/" + y;
     }
+
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Tile)
+        {
+            return this.toString().equals(obj.toString());
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

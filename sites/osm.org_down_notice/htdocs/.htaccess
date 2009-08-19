@@ -3,6 +3,11 @@
 	ExpiresDefault "access plus 10 minutes"
 </IfModule>
 
+<Directory ~ "\.svn">
+	Order allow,deny
+	Deny from all
+</Directory>
+
 #<Location /api/>
 #503 Service Unavailable
 #</Location>

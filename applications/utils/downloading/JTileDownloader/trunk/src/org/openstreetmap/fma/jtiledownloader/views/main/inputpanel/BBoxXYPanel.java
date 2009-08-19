@@ -148,10 +148,10 @@ public class BBoxXYPanel
     {
         _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
 
-        _tileList.initXTopLeft(getMinX(), getDownloadZoomLevel());
-        _tileList.initYTopLeft(getMinY(), getDownloadZoomLevel());
-        _tileList.initXBottomRight(getMaxX(), getDownloadZoomLevel());
-        _tileList.initYBottomRight(getMaxY(), getDownloadZoomLevel());
+        _tileList.initXTopLeft(getMinX());
+        _tileList.initYTopLeft(getMinY());
+        _tileList.initXBottomRight(getMaxX());
+        _tileList.initYBottomRight(getMaxY());
 
         updateNumberOfTiles();
     }

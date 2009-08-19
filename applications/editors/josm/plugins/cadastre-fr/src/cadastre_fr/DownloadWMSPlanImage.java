@@ -90,6 +90,7 @@ public class DownloadWMSPlanImage {
         @Override
         protected void cancel() {
             grabber.getWmsInterface().cancel();
+            dontGeoreference = true;
         }
 
         @Override

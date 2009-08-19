@@ -36,7 +36,7 @@ public class MenuActionGrab extends JosmAction {
                 JOptionPane.showMessageDialog(Main.parent,
                         tr("To enable the cadastre WMS plugin, change\n"
                          + "the current projection to one of the cadastre\n"
-                         + "projection and retry"));
+                         + "projections and retry"));
             }
         }
     }

@@ -71,11 +71,11 @@ public class CadastreInterface {
             openInterface();
         } catch (IOException e) {
             /*JOptionPane.showMessageDialog(Main.parent,
-                    tr("Town/city {0} not found or not available in WMS.\n" +
-                            "Please check its availibility on www.cadastre.gouv.fr", wmsLayer.getLocation()));*/
+                    tr("Town/city {0} not found or not available\n" +
+                            "or action canceled", wmsLayer.getLocation()));*/
             JOptionPane pane = new JOptionPane(
-                    tr("Town/city {0} not found or not available in WMS.\n" +
-                            "Please check its availibility on www.cadastre.gouv.fr", wmsLayer.getLocation()),
+                    tr("Town/city {0} not found or not available\n" +
+                            "or action canceled", wmsLayer.getLocation()),
                             JOptionPane.INFORMATION_MESSAGE);
             // this below is a temporary workaround to fix the "always on top" issue
             JDialog dialog = pane.createDialog(Main.parent, tr("Select commune"));
@@ -259,18 +259,20 @@ public class CadastreInterface {
             } else if (wmsLayer.isRaster() && lines.indexOf(cInterfaceRasterTA) != -1) { // "afficherCarteTa.do"
                 // list of values parsed in listOfFeuilles (list all non-georeferenced images)
                 lines = getFeuillesList();
-                parseFeuillesList(lines);
-                if (listOfFeuilles.size() > 0) {
-                    int res = selectFeuilleDialog();
-                    if (res != -1) {
-                        wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).name);
-                        checkLayerDuplicates(wmsLayer);
-                        interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
-                        wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).ref);
-                        lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.elementAt(res).ref);
-                        System.out.println("interface ref.:"+lines);
-                        return lines;
-                    }
+                if (!downloadCancelled) {
+                	parseFeuillesList(lines);
+	                if (listOfFeuilles.size() > 0) {
+	                    int res = selectFeuilleDialog();
+	                    if (res != -1) {
+	                        wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).name);
+	                        checkLayerDuplicates(wmsLayer);
+	                        interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
+	                        wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).ref);
+	                        lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.elementAt(res).ref);
+	                        System.out.println("interface ref.:"+lines);
+	                        return lines;
+	                    }
+	                }
                 }
                 return null;
             } else if (lines.indexOf(cCommuneListStart) != -1 && lines.indexOf(cCommuneListEnd) != -1) {

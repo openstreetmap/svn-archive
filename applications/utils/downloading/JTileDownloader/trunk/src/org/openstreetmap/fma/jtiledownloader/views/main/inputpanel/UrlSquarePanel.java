@@ -208,7 +208,7 @@ public class UrlSquarePanel
     }
 
     /**
-     * @return
+     * @return pasted URL
      */
     public String getPasteUrl()
     {
@@ -216,7 +216,7 @@ public class UrlSquarePanel
     }
 
     /**
-     * @return
+     * @return radius
      */
     public int getRadius()
     {
@@ -224,7 +224,7 @@ public class UrlSquarePanel
     }
 
     /**
-     * @return
+     * @return number of tiles to download
      */
     @Override
     public int getNumberOfTilesToDownload()

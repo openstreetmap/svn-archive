@@ -60,12 +60,8 @@ public class NetworkPanel
 
         createNetworkPanel();
         initializeNetworkPanel();
-
     }
 
-    /**
-     * @return
-     */
     private void createNetworkPanel()
     {
         setLayout(new GridBagLayout());
@@ -101,7 +97,6 @@ public class NetworkPanel
 
         constraints.weighty = 1.0;
         add(new JPanel(), constraints);
-
     }
 
     /**
@@ -118,7 +113,7 @@ public class NetworkPanel
     }
 
     /**
-     * @return
+     * @return use proxy server?
      */
     public boolean isUseProxyServer()
     {
@@ -126,7 +121,7 @@ public class NetworkPanel
     }
 
     /**
-     * @return
+     * @return the proxy server address
      */
     public String getProxyServer()
     {
@@ -134,7 +129,7 @@ public class NetworkPanel
     }
 
     /**
-     * @return
+     * @return the proxy port
      */
     public String getProxyServerPort()
     {
@@ -142,7 +137,7 @@ public class NetworkPanel
     }
 
     /**
-     * @return
+     * @return use proxy auth?
      */
     public boolean isUseProxyServerAuth()
     {
@@ -150,7 +145,7 @@ public class NetworkPanel
     }
 
     /**
-     * @return
+     * @return proxy username
      */
     public String getProxyServerUser()
     {
@@ -158,7 +153,7 @@ public class NetworkPanel
     }
 
     /**
-     * @return
+     * @return proxy password
      */
     public String getProxyServerPassword()
     {

@@ -35,7 +35,7 @@ public class UpdateTilesTableModel
     private Vector _data;
 
     /**
-     * @param errorTileList
+     * @param updateTileList
      */
     public UpdateTilesTableModel(Vector<UpdateTileList> updateTileList)
     {

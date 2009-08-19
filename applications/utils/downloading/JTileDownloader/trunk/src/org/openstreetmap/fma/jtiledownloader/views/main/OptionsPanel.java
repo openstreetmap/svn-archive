@@ -64,7 +64,6 @@ public class OptionsPanel
     }
 
     /**
-     * @return
      */
     private void createOptionsPanel()
     {
@@ -142,7 +141,7 @@ public class OptionsPanel
     }
 
     /**
-     * @return
+     * @return show tiles proview while downloading?
      */
     public boolean isShowTilePreview()
     {
@@ -150,7 +149,7 @@ public class OptionsPanel
     }
 
     /**
-     * @return
+     * @return overwrite existing files
      */
     public boolean isOverwriteExistingFiles()
     {
@@ -158,7 +157,7 @@ public class OptionsPanel
     }
 
     /**
-     * @return
+     * @return wait after download a number of tiles
      */
     public boolean isWaitAfterNumberOfTiles()
     {
@@ -166,7 +165,7 @@ public class OptionsPanel
     }
 
     /**
-     * @return
+     * @return wait x seconds after download a number of tiles
      */
     public int getWaitSeconds()
     {
@@ -174,7 +173,7 @@ public class OptionsPanel
     }
 
     /**
-     * @return
+     * @return the number of tiles to wait after
      */
     public int getWaitNrTiles()
     {
@@ -182,7 +181,7 @@ public class OptionsPanel
     }
 
     /**
-     * @return
+     * @return minimum age in days before trying to redownload
      */
     public int getMinimumAgeInDays()
     {

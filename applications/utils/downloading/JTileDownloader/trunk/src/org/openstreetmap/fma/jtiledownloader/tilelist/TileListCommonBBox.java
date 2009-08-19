@@ -104,10 +104,10 @@ public class TileListCommonBBox
      * Setter for topLeft
      * @param value the xTopLeft to set
      */
-    public final void initXTopLeft(int value, int[] zoomLevels)
+    public final void initXTopLeft(int value)
     {
-        _xTopLeft = new int[zoomLevels.length];
-        for (int index = 0; index < zoomLevels.length; index++)
+        _xTopLeft = new int[getDownloadZoomLevels().length];
+        for (int index = 0; index < getDownloadZoomLevels().length; index++)
         {
             _xTopLeft[index] = value;
 
@@ -118,10 +118,10 @@ public class TileListCommonBBox
      * Setter for topLeft
      * @param value the xTopLeft to set
      */
-    public final void initYTopLeft(int value, int[] zoomLevels)
+    public final void initYTopLeft(int value)
     {
-        _yTopLeft = new int[zoomLevels.length];
-        for (int index = 0; index < zoomLevels.length; index++)
+        _yTopLeft = new int[getDownloadZoomLevels().length];
+        for (int index = 0; index < getDownloadZoomLevels().length; index++)
         {
             _yTopLeft[index] = value;
 
@@ -132,10 +132,10 @@ public class TileListCommonBBox
      * Setter for BottomRight
      * @param value the xBottomRight to set
      */
-    public final void initXBottomRight(int value, int[] zoomLevels)
+    public final void initXBottomRight(int value)
     {
-        _xBottomRight = new int[zoomLevels.length];
-        for (int index = 0; index < zoomLevels.length; index++)
+        _xBottomRight = new int[getDownloadZoomLevels().length];
+        for (int index = 0; index < getDownloadZoomLevels().length; index++)
         {
             _xBottomRight[index] = value;
 
@@ -146,10 +146,10 @@ public class TileListCommonBBox
      * Setter for BottomRight
      * @param value the xBottomRight to set
      */
-    public final void initYBottomRight(int value, int[] zoomLevels)
+    public final void initYBottomRight(int value)
     {
-        _yBottomRight = new int[zoomLevels.length];
-        for (int index = 0; index < zoomLevels.length; index++)
+        _yBottomRight = new int[getDownloadZoomLevels().length];
+        for (int index = 0; index < getDownloadZoomLevels().length; index++)
         {
             _yBottomRight[index] = value;
 

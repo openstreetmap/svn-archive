@@ -23,7 +23,6 @@
 			<zipfileset dir="." includes="build.xml" prefix="jTileDownloader" />
 			<zipfileset dir="${source.dir}" prefix="jTileDownloader/${source.dir}" />
 			<zipfileset dir=".settings" prefix="jTileDownloader/.settings" />
-			<zipfileset dir="test" prefix="jTileDownloader/test" />
 			<zipfileset dir="doc" prefix="jTileDownloader/doc" />
 		</zip>
 	</target>

@@ -72,10 +72,6 @@ public class GPXPanel
      */
     public void loadConfig()
     {
-        _downloadConfig = new DownloadConfigurationUrlSquare();
-        _downloadConfig.loadFromFile();
-
-        setCommonValues(_downloadConfig);
     }
 
     /**
@@ -107,10 +103,6 @@ public class GPXPanel
 
     public void saveConfig()
     {
-        if (_downloadConfig == null)
-        {
-            return;
-        }
     }
 
     /**

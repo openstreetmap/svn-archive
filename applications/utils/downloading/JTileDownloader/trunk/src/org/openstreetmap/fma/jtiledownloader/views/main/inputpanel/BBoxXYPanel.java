@@ -173,7 +173,7 @@ public class BBoxXYPanel
     }
 
     /**
-     * @return
+     * @return min X
      */
     public int getMinX()
     {
@@ -186,7 +186,7 @@ public class BBoxXYPanel
     }
 
     /**
-     * @return
+     * @return min Y
      */
     public int getMinY()
     {
@@ -199,7 +199,7 @@ public class BBoxXYPanel
     }
 
     /**
-     * @return
+     * @return max X
      */
     public int getMaxX()
     {
@@ -212,7 +212,7 @@ public class BBoxXYPanel
     }
 
     /**
-     * @return
+     * @return max Y
      */
     public int getMaxY()
     {
@@ -225,7 +225,7 @@ public class BBoxXYPanel
     }
 
     /**
-     * @return
+     * @return number of tiles
      */
     @Override
     public int getNumberOfTilesToDownload()

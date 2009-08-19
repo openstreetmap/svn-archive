@@ -59,7 +59,7 @@ public class Util
 
     /**
      * @param tileServer
-     * @return
+     * @return tileProvider
      */
     public static TileProviderIf getTileProvider(String tileServer)
     {

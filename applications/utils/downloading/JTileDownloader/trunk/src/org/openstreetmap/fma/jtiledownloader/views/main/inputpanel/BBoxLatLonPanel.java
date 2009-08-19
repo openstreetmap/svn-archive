@@ -195,7 +195,7 @@ public class BBoxLatLonPanel
     }
 
     /**
-     * @return
+     * @return min latitude
      */
     public double getMinLat()
     {
@@ -208,7 +208,7 @@ public class BBoxLatLonPanel
     }
 
     /**
-     * @return
+     * @return  min longitude
      */
     public double getMinLon()
     {
@@ -221,7 +221,7 @@ public class BBoxLatLonPanel
     }
 
     /**
-     * @return
+     * @return max latitude
      */
     public double getMaxLat()
     {
@@ -234,7 +234,7 @@ public class BBoxLatLonPanel
     }
 
     /**
-     * @return
+     * @return max longitude
      */
     public double getMaxLon()
     {
@@ -247,7 +247,7 @@ public class BBoxLatLonPanel
     }
 
     /**
-     * @return
+     * @return number of tiles
      */
     @Override
     public int getNumberOfTilesToDownload()

@@ -51,7 +51,6 @@ public class InfoPanel
     }
 
     /**
-     * @return
      */
     private void createPanel()
     {

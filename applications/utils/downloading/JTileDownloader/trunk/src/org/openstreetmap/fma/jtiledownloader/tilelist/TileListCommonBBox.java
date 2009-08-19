@@ -257,7 +257,7 @@ public class TileListCommonBBox
     }
 
     /**
-     * @return
+     * @return tile count
      */
     public int getTileCount()
     {

@@ -64,8 +64,7 @@ public class ErrorTileListView
     public static final int CODE_RETRY = 1;
 
     /**
-     * @param owner
-     * @param title
+     * @param errorTileList
      * @throws HeadlessException
      */
     public ErrorTileListView(Vector<TileDownloadError> errorTileList) throws HeadlessException

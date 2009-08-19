@@ -84,7 +84,7 @@ public class TileListDownloader
 
     /**
      * @param tilesToDownload
-     * @return
+     * @return number of tiles to download
      */
     public final int getNumberOfTilesToDownload(Vector<Tile> tilesToDownload)
     {

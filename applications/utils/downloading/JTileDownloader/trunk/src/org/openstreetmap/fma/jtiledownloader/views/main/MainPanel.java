@@ -105,8 +105,8 @@ public class MainPanel
     private List<InputPanel> inputPanels;
 
     /**
-     * @param i 
-     * @param downloadTemplate 
+     * @param mainView reference to mainView
+     * @param tabIndex tab to select at start up
      * 
      */
     public MainPanel(JTileDownloaderMainView mainView, int tabIndex)
@@ -242,7 +242,6 @@ public class MainPanel
     }
 
     /**
-     * @return
      */
     private void createMainPanel()
     {
@@ -315,7 +314,7 @@ public class MainPanel
     }
 
     /**
-     * @return
+     * @return entered/selected zoomlevels
      */
     public String getOutputZoomLevelString()
     {
@@ -423,7 +422,7 @@ public class MainPanel
     }
 
     /**
-     * @return
+     * @return output folder string
      */
     public String getOutputfolder()
     {

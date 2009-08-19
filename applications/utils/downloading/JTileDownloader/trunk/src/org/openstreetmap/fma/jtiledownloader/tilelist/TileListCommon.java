@@ -33,7 +33,7 @@ public abstract class TileListCommon
     /**
      * @param lat
      * @param zoomLevel
-     * @return
+     * @return tileY
      */
     public int calculateTileY(double lat, int zoomLevel)
     {
@@ -52,7 +52,7 @@ public abstract class TileListCommon
     /**
      * @param lon
      * @param zoomLevel
-     * @return
+     * @return tileX
      */
     public int calculateTileX(double lon, int zoomLevel)
     {

@@ -39,7 +39,7 @@ public abstract class InputPanel
 
     /**
      * Returns the name/title for the input panel
-     * @return
+     * @return name of the panel
      */
     public abstract String getInputName();
 

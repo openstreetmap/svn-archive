@@ -48,8 +48,8 @@ public class GenericTileProvider
     }
 
     /**
-     * @param string
-     * @param string2
+     * @param name
+     * @param url
      */
     public GenericTileProvider(String name, String url)
     {

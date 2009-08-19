@@ -105,7 +105,7 @@ public class GPXPanel
     {}
 
     /**
-     * @return
+     * @return number of tiles
      */
     @Override
     public int getNumberOfTilesToDownload()

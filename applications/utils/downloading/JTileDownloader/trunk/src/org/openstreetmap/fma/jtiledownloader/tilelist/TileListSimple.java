@@ -51,7 +51,7 @@ public class TileListSimple
     }
 
     /**
-     * @return
+     * @return the number of tiles
      */
     public int getElementCount()
     {

@@ -1,0 +1,8 @@
+<IfModule mod_expires.c>
+	ExpiresActive On
+	ExpiresDefault "access plus 10 minutes"
+</IfModule>
+
+#<Location /api/>
+#503 Service Unavailable
+#</Location>

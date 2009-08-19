@@ -42,7 +42,6 @@ public class SlippyMapChooser extends JMapViewer {
     Point iSelectionRectStart;
     Point iSelectionRectEnd;
 
-    private SizeButton iSizeButton = new SizeButton();
     private SourceButton iSourceButton = new SourceButton();
 
     // standard dimension
@@ -82,7 +81,7 @@ public class SlippyMapChooser extends JMapViewer {
             iSourceButton.setMapStyle(SourceButton.CYCLEMAP);
             this.setTileSource(sources[2]);
         }
-        new OsmMapControl(this, slipyyMapTabPanel, iSizeButton, iSourceButton);
+        new OsmMapControl(this, slipyyMapTabPanel, iSourceButton);
         this.bboxlatlonpanel=bboxlatlonpanel;
         boundingBoxChanged();
         bboxlatlonpanel.setChangeListener(this);
@@ -131,7 +130,6 @@ public class SlippyMapChooser extends JMapViewer {
 
             }
 
-            iSizeButton.paint(g);
             iSourceButton.paint(g);
         } catch (Exception e) {
             e.printStackTrace();

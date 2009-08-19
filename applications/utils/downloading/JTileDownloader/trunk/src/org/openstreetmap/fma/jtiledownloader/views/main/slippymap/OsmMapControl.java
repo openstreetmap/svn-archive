@@ -52,13 +52,12 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
     // the SlippyMapChooserComponent
     private final SlippyMapChooser iSlippyMapChooser;
 
-    private SizeButton iSizeButton = null;
     private SourceButton iSourceButton = null;
 
     /**
      * Create a new OsmMapControl
      */
-    public OsmMapControl(SlippyMapChooser navComp, JPanel contentPane, SizeButton sizeButton, SourceButton sourceButton) {
+    public OsmMapControl(SlippyMapChooser navComp, JPanel contentPane, SourceButton sourceButton) {
         this.iSlippyMapChooser = navComp;
         iSlippyMapChooser.addMouseListener(this);
         iSlippyMapChooser.addMouseMotionListener(this);
@@ -73,7 +72,6 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
                         KeyStroke.getKeyStroke(k[i], KeyEvent.CTRL_DOWN_MASK), "MapMover.Zoomer." + n[i]);
             }
         }
-        iSizeButton = sizeButton;
         iSourceButton = sourceButton;
 
         InputMap inputMap = navComp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -116,10 +114,8 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (!iSizeButton.hit(e.getPoint())) {
-                iStartSelectionPoint = e.getPoint();
-                iEndSelectionPoint = e.getPoint();
-            }
+            iStartSelectionPoint = e.getPoint();
+            iEndSelectionPoint = e.getPoint();
         }
 
     }
@@ -143,10 +139,7 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
 
             int sourceButton = iSourceButton.hit(e.getPoint());
 
-            if (iSizeButton.hit(e.getPoint())) {
-                iSizeButton.toggle();
-                iSlippyMapChooser.resizeSlippyMap();
-            } else if (sourceButton == SourceButton.HIDE_OR_SHOW) {
+            if (sourceButton == SourceButton.HIDE_OR_SHOW) {
                 iSourceButton.toggle();
                 iSlippyMapChooser.repaint();
 

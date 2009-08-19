@@ -80,6 +80,7 @@ public class BBoxLatLonPanel
     /**
      * 
      */
+    @Override
     public void loadConfig()
     {
         _downloadConfig = new DownloadConfigurationBBoxLatLon();
@@ -177,6 +178,7 @@ public class BBoxLatLonPanel
         updateNumberOfTiles();
     }
 
+    @Override
     public void saveConfig()
     {
         if (_downloadConfig == null)
@@ -247,6 +249,7 @@ public class BBoxLatLonPanel
     /**
      * @return
      */
+    @Override
     public int getNumberOfTilesToDownload()
     {
         return _tileList.getTileCount();
@@ -297,6 +300,7 @@ public class BBoxLatLonPanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#updateAll()
      * {@inheritDoc}
      */
+    @Override
     public void updateAll()
     {
         updateTileList();
@@ -306,6 +310,7 @@ public class BBoxLatLonPanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getTileList()
      * {@inheritDoc}
      */
+    @Override
     public TileList getTileList()
     {
         return _tileList;
@@ -315,6 +320,7 @@ public class BBoxLatLonPanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
      * {@inheritDoc}
      */
+    @Override
     public String getInputName()
     {
         return "Bounding Box (Lat/Lon)";

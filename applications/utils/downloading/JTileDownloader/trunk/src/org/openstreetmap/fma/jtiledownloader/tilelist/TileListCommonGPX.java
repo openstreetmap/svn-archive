@@ -129,7 +129,7 @@ public class TileListCommonGPX
                 Double lon = Double.parseDouble(attrs.getNamedItem("lon").getTextContent());
                 int downloadTileXIndex = calculateTileX(lon, zoomLevel);
                 int downloadTileYIndex = calculateTileY(lat, zoomLevel);
-                Tile tile = new Tile(downloadTileXIndex,downloadTileYIndex,zoomLevel);
+                Tile tile = new Tile(downloadTileXIndex, downloadTileYIndex, zoomLevel);
                 if (!tilesToDownload.contains(tile))
                 {
                     log("add " + tile + " to download list.");

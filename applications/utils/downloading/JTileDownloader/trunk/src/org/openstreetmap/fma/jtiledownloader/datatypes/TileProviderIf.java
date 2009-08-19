@@ -73,7 +73,7 @@ public interface TileProviderIf
      * @return the relative path and filename of the image file
      */
     public String getTileFilename(Tile tile);
-    
+
     /**
      * Specifies the tile image type. For tiles rendered by Mapnik or
      * Osmarenderer this is usually <code>"png"</code>.

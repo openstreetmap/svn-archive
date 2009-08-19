@@ -75,6 +75,7 @@ public class UrlSquarePanel
     /**
      * 
      */
+    @Override
     public void loadConfig()
     {
         _downloadConfig = new DownloadConfigurationUrlSquare();
@@ -192,6 +193,7 @@ public class UrlSquarePanel
         }
     }
 
+    @Override
     public void saveConfig()
     {
         if (_downloadConfig == null)
@@ -224,6 +226,7 @@ public class UrlSquarePanel
     /**
      * @return
      */
+    @Override
     public int getNumberOfTilesToDownload()
     {
         return _tileList.getTileCount();
@@ -266,6 +269,7 @@ public class UrlSquarePanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#updateAll()
      * {@inheritDoc}
      */
+    @Override
     public void updateAll()
     {
         updateTileListSquare();
@@ -275,6 +279,7 @@ public class UrlSquarePanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getTileList()
      * {@inheritDoc}
      */
+    @Override
     public TileList getTileList()
     {
         return _tileList;
@@ -284,6 +289,7 @@ public class UrlSquarePanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
      * {@inheritDoc}
      */
+    @Override
     public String getInputName()
     {
         return "Paste URL (Square)";

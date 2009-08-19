@@ -42,10 +42,13 @@ public class TilePreviewViewComponent
         setDoubleBuffered(true);
     }
 
+    @Override
     protected void paintComponent(Graphics g)
     {
         if (image != null)
+        {
             g.drawImage(image, 0, 0, this);
+        }
     }
 
     public void setImage(String filePathName)
@@ -61,6 +64,7 @@ public class TilePreviewViewComponent
      * @see javax.swing.JComponent#update(java.awt.Graphics)
      * {@inheritDoc}
      */
+    @Override
     public void update(Graphics g)
     {
         paint(g);

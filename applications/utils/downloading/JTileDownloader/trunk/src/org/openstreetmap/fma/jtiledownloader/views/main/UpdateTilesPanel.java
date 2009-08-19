@@ -30,11 +30,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -47,11 +45,9 @@ import javax.swing.table.TableModel;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
-import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.datatypes.UpdateTileList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.YDirectory;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
-import org.openstreetmap.fma.jtiledownloader.views.errortilelist.ErrorTileListView;
 import org.openstreetmap.fma.jtiledownloader.views.progressbar.ProgressBar;
 
 public class UpdateTilesPanel
@@ -248,7 +244,7 @@ public class UpdateTilesPanel
                             String[] tiles = yDir.getTiles();
                             for (int indexTiles = 0; indexTiles < tiles.length; indexTiles++)
                             {
-                                updateList.addTile(new Tile(Integer.parseInt(tiles[indexTiles]),Integer.parseInt(yDir.getName()),zoomLevel));
+                                updateList.addTile(new Tile(Integer.parseInt(tiles[indexTiles]), Integer.parseInt(yDir.getName()), zoomLevel));
                             }
                         }
 
@@ -399,6 +395,7 @@ public class UpdateTilesPanel
     {
         return _mainView;
     }
+
     /**
      * Getter for tileListDownloader
      * @return the tileListDownloader

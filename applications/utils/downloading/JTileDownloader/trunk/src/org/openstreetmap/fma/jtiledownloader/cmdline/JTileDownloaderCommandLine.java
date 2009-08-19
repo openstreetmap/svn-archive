@@ -24,7 +24,6 @@ package org.openstreetmap.fma.jtiledownloader.cmdline;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.Util;
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;

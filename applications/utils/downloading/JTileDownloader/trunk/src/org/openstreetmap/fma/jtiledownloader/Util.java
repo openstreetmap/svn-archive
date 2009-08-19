@@ -43,7 +43,8 @@ public class Util
             int selectedZoom = Integer.parseInt(zoomLevel.trim());
             if (selectedZoom <= selectedTileProvider.getMaxZoom() && selectedZoom >= selectedTileProvider.getMinZoom())
             {
-                if (!zoomLevels.contains(selectedZoom)) {
+                if (!zoomLevels.contains(selectedZoom))
+                {
                     zoomLevels.add(selectedZoom);
                 }
             }
@@ -65,7 +66,8 @@ public class Util
         TileProviderIf[] _tileProviders = new TileProviderList().getTileProviderList();
         for (TileProviderIf tileProvider : _tileProviders)
         {
-            if (tileProvider.getName().equalsIgnoreCase(tileServer)) {
+            if (tileProvider.getName().equalsIgnoreCase(tileServer))
+            {
                 return tileProvider;
             }
         }

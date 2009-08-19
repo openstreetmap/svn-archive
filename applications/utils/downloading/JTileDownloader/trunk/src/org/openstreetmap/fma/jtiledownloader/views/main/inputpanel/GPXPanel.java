@@ -69,9 +69,9 @@ public class GPXPanel
     /**
      * 
      */
+    @Override
     public void loadConfig()
-    {
-    }
+    {}
 
     /**
      * 
@@ -100,13 +100,14 @@ public class GPXPanel
         add(_textGPXFile, constraints);
     }
 
+    @Override
     public void saveConfig()
-    {
-    }
+    {}
 
     /**
      * @return
      */
+    @Override
     public int getNumberOfTilesToDownload()
     {
         return _tileList.getTileListToDownload().size();
@@ -145,6 +146,7 @@ public class GPXPanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#updateAll()
      * {@inheritDoc}
      */
+    @Override
     public void updateAll()
     {
         _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
@@ -156,6 +158,7 @@ public class GPXPanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getTileList()
      * {@inheritDoc}
      */
+    @Override
     public TileList getTileList()
     {
         return _tileList;
@@ -165,6 +168,7 @@ public class GPXPanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
      * {@inheritDoc}
      */
+    @Override
     public String getInputName()
     {
         return "GPX File";

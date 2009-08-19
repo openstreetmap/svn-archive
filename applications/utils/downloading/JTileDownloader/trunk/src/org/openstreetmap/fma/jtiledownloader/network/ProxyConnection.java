@@ -59,6 +59,7 @@ public class ProxyConnection
             _passwort = passwort;
         }
 
+        @Override
         protected PasswordAuthentication getPasswordAuthentication()
         {
             System.out.println("user " + _username + ", pw " + _passwort);

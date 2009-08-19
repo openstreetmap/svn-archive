@@ -23,8 +23,6 @@ package org.openstreetmap.fma.jtiledownloader.template;
 
 import java.util.Properties;
 
-import org.openstreetmap.fma.jtiledownloader.Constants;
-
 public class DownloadConfigurationUrlSquare
     extends DownloadConfiguration
 {
@@ -58,6 +56,7 @@ public class DownloadConfigurationUrlSquare
      * @see org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration#saveToFile()
      * {@inheritDoc}
      */
+    @Override
     public Properties saveToFile()
     {
         Properties prop = super.saveToFile();
@@ -72,6 +71,7 @@ public class DownloadConfigurationUrlSquare
      * @see org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration#loadFromFile()
      * {@inheritDoc}
      */
+    @Override
     public Properties loadFromFile()
     {
         Properties prop = super.loadFromFile();

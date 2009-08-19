@@ -138,6 +138,7 @@ public class ProgressBar
     private class ProgressBarWindowListener
         extends WindowAdapter
     {
+        @Override
         public void windowClosing(WindowEvent e)
         {
             // ask and perform abort
@@ -169,10 +170,14 @@ public class ProgressBar
 
                 downloader.setTilesToDownload(tiles.getTileListToDownload());
                 downloader.start();
-            } else {
+            }
+            else
+            {
                 setVisible(false);
             }
-        } else {
+        }
+        else
+        {
             setVisible(false);
         }
     }

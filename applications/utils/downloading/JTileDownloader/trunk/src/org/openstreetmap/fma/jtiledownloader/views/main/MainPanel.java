@@ -44,6 +44,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -173,7 +174,7 @@ public class MainPanel
 
         _textNumberOfTiles.setEditable(false);
         _textNumberOfTiles.setFocusable(false);
-        _textNumberOfTiles.setHorizontalAlignment(JTextField.RIGHT);
+        _textNumberOfTiles.setHorizontalAlignment(SwingConstants.RIGHT);
 
         // set all listeners
         _buttonSelectOutputFolder.addActionListener(new MainViewActionListener());

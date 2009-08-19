@@ -40,6 +40,7 @@ public abstract class RotatingTileProvider
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getTileServerUrl()
      * {@inheritDoc}
      */
+    @Override
     public String getTileServerUrl()
     {
         serverNumber = (serverNumber + 1) % getSubDomains().length;

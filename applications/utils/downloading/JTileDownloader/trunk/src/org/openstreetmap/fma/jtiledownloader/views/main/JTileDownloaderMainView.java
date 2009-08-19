@@ -30,9 +30,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.fma.jtiledownloader.Constants;
-import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 
 public class JTileDownloaderMainView
     extends JFrame
@@ -63,7 +61,7 @@ public class JTileDownloaderMainView
 
         setTitle("JTileDownloader" + " Version: " + Constants.VERSION);
 
-        _mainPanel = new MainPanel(getMainView(),AppConfiguration.getInstance().getInputPanelIndex());
+        _mainPanel = new MainPanel(getMainView(), AppConfiguration.getInstance().getInputPanelIndex());
 
         _updateTilesPanel = new UpdateTilesPanel(getMainView());
         _optionsPanel = new OptionsPanel();
@@ -97,6 +95,7 @@ public class JTileDownloaderMainView
          * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
          * {@inheritDoc}
          */
+        @Override
         public void windowClosing(WindowEvent e)
         {
             System.out.println("WindowEvent windowClosing");

@@ -74,6 +74,7 @@ public class BBoxXYPanel
     /**
      * 
      */
+    @Override
     public void loadConfig()
     {
         _downloadConfig = new DownloadConfigurationBBoxXY();
@@ -155,6 +156,7 @@ public class BBoxXYPanel
         updateNumberOfTiles();
     }
 
+    @Override
     public void saveConfig()
     {
         if (_downloadConfig == null)
@@ -225,6 +227,7 @@ public class BBoxXYPanel
     /**
      * @return
      */
+    @Override
     public int getNumberOfTilesToDownload()
     {
         return _tileList.getTileCount();
@@ -275,6 +278,7 @@ public class BBoxXYPanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#updateAll()
      * {@inheritDoc}
      */
+    @Override
     public void updateAll()
     {
         updateTileList();
@@ -284,6 +288,7 @@ public class BBoxXYPanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getTileList()
      * {@inheritDoc}
      */
+    @Override
     public TileList getTileList()
     {
         return _tileList;
@@ -293,6 +298,7 @@ public class BBoxXYPanel
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
      * {@inheritDoc}
      */
+    @Override
     public String getInputName()
     {
         return "Bounding Box (X/Y)";

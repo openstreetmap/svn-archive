@@ -23,8 +23,6 @@ package org.openstreetmap.fma.jtiledownloader.template;
 
 import java.util.Properties;
 
-import org.openstreetmap.fma.jtiledownloader.Constants;
-
 public class DownloadConfigurationBBoxLatLon
     extends DownloadConfiguration
 {
@@ -62,6 +60,7 @@ public class DownloadConfigurationBBoxLatLon
      * @see org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration#saveToFile()
      * {@inheritDoc}
      */
+    @Override
     public Properties saveToFile()
     {
         Properties prop = super.saveToFile();
@@ -78,6 +77,7 @@ public class DownloadConfigurationBBoxLatLon
      * @see org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration#loadFromFile()
      * {@inheritDoc}
      */
+    @Override
     public Properties loadFromFile()
     {
         Properties prop = super.loadFromFile();

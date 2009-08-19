@@ -19,6 +19,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -132,7 +133,8 @@ public class ErrorLayer extends Layer implements LayerChangeListener {
      * If layer is the OSM Data layer, remove all errors
      */
     public void layerRemoved(Layer oldLayer) {
-        if (oldLayer == Main.map.mapView.getEditLayer()) {
+        if (oldLayer instanceof OsmDataLayer &&  Main.map.mapView.getEditLayer() == null) {
+            System.out.println("inside removeLayer");
             Main.map.mapView.removeLayer(this);
         } else if (oldLayer == this) {
             OSMValidatorPlugin.errorLayer = null;

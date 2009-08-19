@@ -1,6 +1,4 @@
-package org.openstreetmap.fma.jtiledownloader.datatypes;
-
-/**
+/*
  * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader.
@@ -16,9 +14,11 @@ package org.openstreetmap.fma.jtiledownloader.datatypes;
  * GNU General Public License for more details.
  *
  * You should have received a copy (see file COPYING.txt) of the GNU 
- * General Public License along with JTileDownloader.  
+ * General Public License along with JTileDownloader.
  * If not, see <http://www.gnu.org/licenses/>.
  */
+
+package org.openstreetmap.fma.jtiledownloader.datatypes;
 
 /**
  * Osmarender Tile Provider

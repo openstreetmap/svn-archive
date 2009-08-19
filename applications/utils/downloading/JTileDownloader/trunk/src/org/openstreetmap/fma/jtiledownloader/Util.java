@@ -1,12 +1,4 @@
-package org.openstreetmap.fma.jtiledownloader;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-
-import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
-import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
-
-/**
+/*
  * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader.
@@ -22,9 +14,17 @@ import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
  * GNU General Public License for more details.
  *
  * You should have received a copy (see file COPYING.txt) of the GNU 
- * General Public License along with JTileDownloader.  
+ * General Public License along with JTileDownloader.
  * If not, see <http://www.gnu.org/licenses/>.
  */
+
+package org.openstreetmap.fma.jtiledownloader;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+
+import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 
 /**
  * Class with helper methods

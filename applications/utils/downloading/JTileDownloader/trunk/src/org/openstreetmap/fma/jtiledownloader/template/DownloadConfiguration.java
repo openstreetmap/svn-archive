@@ -1,14 +1,7 @@
-package org.openstreetmap.fma.jtiledownloader.template;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
-
-/**
- * Copyright 2008, Friedrich Maier 
+/*
+ * Copyright 2008, Friedrich Maier
  * 
- * This file is part of JTileDownloader. 
+ * This file is part of JTileDownloader.
  * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
  *
  *    JTileDownloader is free software: you can redistribute it and/or modify
@@ -22,9 +15,17 @@ import java.util.Properties;
  *    GNU General Public License for more details.
  *
  *    You should have received a copy (see file COPYING.txt) of the GNU 
- *    General Public License along with JTileDownloader.  
+ *    General Public License along with JTileDownloader.
  *    If not, see <http://www.gnu.org/licenses/>.
  */
+
+package org.openstreetmap.fma.jtiledownloader.template;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 public class DownloadConfiguration
 {
     private String _propertyFileName = "downloadConfig.xml";

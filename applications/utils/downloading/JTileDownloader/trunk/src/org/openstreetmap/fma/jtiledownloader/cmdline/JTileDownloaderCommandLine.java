@@ -87,15 +87,15 @@ public class JTileDownloaderCommandLine
      */
     private void handleDownloadTemplate(String type, String propertyFile)
     {
-        if (type.equalsIgnoreCase(Constants.CONFIG_TYPE[Constants.TYPE_URLSQUARE]))
+        if (type.equalsIgnoreCase(DownloadConfigurationUrlSquare.ID))
         {
             handleUrlSquare(propertyFile);
         }
-        else if (type.equalsIgnoreCase(Constants.CONFIG_TYPE[Constants.TYPE_BOUNDINGBOX_LATLON]))
+        else if (type.equalsIgnoreCase(DownloadConfigurationBBoxLatLon.ID))
         {
             handleBBoxLatLon(propertyFile);
         }
-        else if (type.equalsIgnoreCase(Constants.CONFIG_TYPE[Constants.TYPE_BOUNDINGBOX_XY]))
+        else if (type.equalsIgnoreCase(DownloadConfigurationBBoxXY.ID))
         {
             handleBBoxXY(propertyFile);
         }

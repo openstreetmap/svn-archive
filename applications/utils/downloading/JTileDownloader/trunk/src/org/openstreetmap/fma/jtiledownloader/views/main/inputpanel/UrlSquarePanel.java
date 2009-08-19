@@ -290,16 +290,6 @@ public class UrlSquarePanel
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getConfigFileName()
-     * {@inheritDoc}
-     */
-    @Override
-    public String getConfigFileName()
-    {
-        return "UrlSquare";
-    }
-
-    /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#isDownloadOkay()
      * {@inheritDoc}
      */

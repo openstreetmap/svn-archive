@@ -80,7 +80,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
                 JOptionPane.showMessageDialog(Main.parent,
                         tr("To enable the cadastre WMS plugin, change\n"
                          + "the current projection to one of the cadastre\n"
-                         + "projection and retry"));
+                         + "projections and retry"));
             }
         }
     }
@@ -90,11 +90,11 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         boolean loadedFromCache = downloadWMSPlanImage.waitFinished();
         if (wmsLayer.images.size() == 1 && !loadedFromCache) {
             Main.map.mapView.addMouseListener(this);
-            mousePrevious.setLocation(0, 0);
-            mode = cGetCorners;
-            JOptionPane.showMessageDialog(Main.parent,tr("Click first corner for image cropping\n"+
-                    "(two points required)"));
-        } else // action cancelled or image loaded from cache (and already georeferenced)
+            if (Main.pref.getBoolean("cadastrewms.noImageCropping", false) == false)
+                startCropping();
+            else
+                startGeoreferencing();
+    	} else // action cancelled or image loaded from cache (and already georeferenced)
             Main.map.repaint();
     }
 
@@ -113,38 +113,132 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         if (mode == cGetCorners) {
             if (countMouseClicked == 1) {
                 ea1 = ea;
-                JOptionPane.showMessageDialog(Main.parent,tr("Click second corner for image cropping"));
+                continueCropping();
             }
             if (countMouseClicked == 2) {
                 wmsLayer.cropImage(ea1, ea);
                 Main.map.mapView.repaint();
-                countMouseClicked = 0;
-                mode = cGetLambertCrosspieces;
-                JOptionPane.showMessageDialog(Main.parent,tr("Click first Lambert crosspiece for georeferencing\n"+
-                    "(two points required)"));
+                startGeoreferencing();
             }
         } else if (mode == cGetLambertCrosspieces) {
             if (countMouseClicked == 1) {
                 ea1 = ea; 
-                georefpoint1 = inputLambertPosition();
-                if (georefpoint1 == null)
-                    return;
-                JOptionPane.showMessageDialog(Main.parent,tr("Click second Lambert crosspiece for georeferencing\n"));
+                if (inputLambertPosition())
+                    continueGeoreferencing();
             }
             if (countMouseClicked == 2) {
-                Main.map.mapView.removeMouseListener(this);
-                georefpoint2 = inputLambertPosition();
-                if (georefpoint2 == null)
-                    return;
-                affineTransform(ea1, ea, georefpoint1, georefpoint2);
-                wmsLayer.saveNewCache();
-                Main.map.mapView.repaint();
-                actionCompleted();
+                if (inputLambertPosition()) {
+                    Main.map.mapView.removeMouseListener(this);
+                    affineTransform(ea1, ea, georefpoint1, georefpoint2);
+                    wmsLayer.saveNewCache();
+                    Main.map.mapView.repaint();
+                    actionCompleted();
+                }
             }
         }
     }
     
-    private EastNorth inputLambertPosition() {
+    /**
+     * 
+     * @return false if all operations are canceled
+     */
+    private boolean startCropping() {
+	    mode = cGetCorners;
+	    countMouseClicked = 0;
+		Object[] options = { "OK", "Cancel" };
+		int ret = JOptionPane.showOptionDialog( null, 
+				tr("Click first corner for image cropping\n(two points required)"),
+				tr("Image cropping"),
+	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+	    		null, options, options[0]);
+	    if (ret == JOptionPane.OK_OPTION) {
+	        mousePrevious.setLocation(0, 0);
+	    } else
+	    	if (canceledOrRestartCurrAction("image cropping"))
+	    		return startCropping();
+	    return true;
+    }
+    
+    /**
+     * 
+     * @return false if all operations are canceled
+     */
+    private boolean continueCropping() {
+		Object[] options = { "OK", "Cancel" };
+		int ret = JOptionPane.showOptionDialog( null, 
+				tr("Click second corner for image cropping"),
+				tr("Image cropping"),
+	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+	    		null, options, options[0]);
+	    if (ret != JOptionPane.OK_OPTION) {
+	    	if (canceledOrRestartCurrAction("image cropping"))
+	    		return startCropping();
+	    }
+	    return true;
+    }
+    
+    /**
+     * 
+     * @return false if all operations are canceled
+     */
+    private boolean startGeoreferencing() {
+	    countMouseClicked = 0;
+	    mode = cGetLambertCrosspieces;
+		Object[] options = { "OK", "Cancel" };
+		int ret = JOptionPane.showOptionDialog( null, 
+				tr("Click first Lambert crosspiece for georeferencing\n(two points required)"),
+				tr("Image georeferencing"),
+	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+	    		null, options, options[0]);
+	    if (ret == JOptionPane.OK_OPTION) {
+	        mousePrevious.setLocation(0, 0);
+	    } else
+	    	if (canceledOrRestartCurrAction("georeferencing"))
+	    		return startGeoreferencing();
+	    return true;
+    }
+
+    /**
+     * 
+     * @return false if all operations are canceled
+     */
+    private boolean continueGeoreferencing() {
+		Object[] options = { "OK", "Cancel" };
+		int ret = JOptionPane.showOptionDialog( null, 
+				tr("Click second Lambert crosspiece for georeferencing"),
+				tr("Image georeferencing"),
+	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+	    		null, options, options[0]);
+	    if (ret != JOptionPane.OK_OPTION) {
+	    	if (canceledOrRestartCurrAction("georeferencing"))
+	    		return startGeoreferencing();
+	    }
+	    return true;
+    }
+    
+    /**
+     * 
+     * @return false if all operations are canceled
+     */
+    private boolean canceledOrRestartCurrAction(String action) {
+    	Object[] options = { "Cancel", "Retry" };
+    	int selectedValue = JOptionPane.showOptionDialog( null, 
+        		tr("Do you want to cancel completely\n"+
+        				"or just retry "+action+" ?"), "",
+        		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+        		null, options, options[0]);
+        if (selectedValue == 0) { // "Cancel"
+        	// remove layer
+        	Main.map.mapView.removeLayer(wmsLayer);
+            wmsLayer = null;
+            Main.map.mapView.removeMouseListener(this);
+        	return false;
+        } else
+            countMouseClicked = 0;
+        return true;
+    }
+    
+    private boolean inputLambertPosition() {
         JLabel labelEnterPosition = new JLabel(tr("Enter cadastre east,north position"));
         JLabel labelWarning = new JLabel(tr("(Warning: verify north with arrow !!)"));
         JPanel p = new JPanel(new GridBagLayout());
@@ -159,18 +253,29 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         p.add(labelNorth, GBC.std().insets(0, 0, 10, 0));
         p.add(inputNorth, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 5, 0, 5));
         JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
-        pane.createDialog(Main.parent, tr("Set Lambert coordinate")).setVisible(true);
-        if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
-            return null;
-        if (inputEast.getText().length() == 0 || inputNorth.getText().length() == 0)
-            return null;
-        try {
-            double e = Double.parseDouble(inputEast.getText());
-            double n = Double.parseDouble(inputNorth.getText());
-            return new EastNorth(e, n);
-        } catch (NumberFormatException e) {
-            return null;
-        }        
+        String number;
+        if (countMouseClicked == 1) number = "first";
+        else number = "second";
+        pane.createDialog(Main.parent, tr("Set "+number+" Lambert coordinate")).setVisible(true);
+        if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue())) {
+            if (canceledOrRestartCurrAction("georeferencing"))
+                startGeoreferencing();
+            return false;
+        }
+        if (inputEast.getText().length() != 0 && inputNorth.getText().length() != 0) {
+            try {
+                double e = Double.parseDouble(inputEast.getText());
+                double n = Double.parseDouble(inputNorth.getText());
+                if (countMouseClicked == 1)
+                    georefpoint1 = new EastNorth(e, n);
+                else
+                    georefpoint2 = new EastNorth(e, n);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+        return false;
     }
     
     /**

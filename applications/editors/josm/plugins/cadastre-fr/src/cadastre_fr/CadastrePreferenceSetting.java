@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -33,6 +34,8 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JCheckBox drawBoundaries = new JCheckBox(tr("Draw boundaries of downloaded data."));
 
+    private JCheckBox disableImageCropping = new JCheckBox(tr("Disable image cropping during georeferencing."));
+    
     private JRadioButton grabMultiplier1 = new JRadioButton("", true);
 
     private JRadioButton grabMultiplier2 = new JRadioButton("", true);
@@ -105,6 +108,9 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         drawBoundaries.setToolTipText(tr("Draw a rectangle around downloaded data from WMS server."));
         cadastrewms.add(drawBoundaries, GBC.eop().insets(0, 0, 0, 5));
 
+        // separator
+        cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
+        
         // the vectorized images multiplier
         JLabel jLabelScale = new JLabel(tr("Vector images grab multiplier:"));
         cadastrewms.add(jLabelScale, GBC.std().insets(0, 5, 10, 0));
@@ -153,6 +159,9 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         grabMultiplier4Size.setEnabled(currentScale.equals(Scale.SQUARE_100M.value));
         cadastrewms.add(grabMultiplier4Size, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
 
+        // separator
+        cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
+
         // for raster images (not vectorized), image grab divider (from 1 to 10)
         String savedRasterDivider = Main.pref.get("cadastrewms.rasterDivider", DEFAULT_RASTER_DIVIDER);
         JLabel jLabelRasterDivider = new JLabel(tr("Raster images grab multiplier:"));
@@ -160,6 +169,13 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         rasterDivider.setToolTipText("Raster image grab division, from 1 to 10; 10 is very high definition");
         cadastrewms.add(jLabelRasterDivider, GBC.std().insets(0, 5, 10, 0));
         cadastrewms.add(rasterDivider, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
+        // option to disable image cropping during raster image georeferencing
+        disableImageCropping.setSelected(Main.pref.getBoolean("cadastrewms.noImageCropping", false));
+        disableImageCropping.setToolTipText(tr("Disable image cropping during georeferencing."));
+        cadastrewms.add(disableImageCropping, GBC.eop().insets(0, 0, 0, 5));
+
+        // separator
+        cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
 
         // option to enable automatic caching
         enableCache.addActionListener(new ActionListener() {
@@ -212,6 +228,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
                 Main.pref.put("cadastrewms.rasterDivider", String.valueOf(i));
         } catch (NumberFormatException e) { // ignore the last input
         }
+        Main.pref.put("cadastrewms.noImageCropping", disableImageCropping.isSelected());
         Main.pref.put("cadastrewms.enableCaching", enableCache.isSelected());
 
         // spread data into objects instead of restarting the application

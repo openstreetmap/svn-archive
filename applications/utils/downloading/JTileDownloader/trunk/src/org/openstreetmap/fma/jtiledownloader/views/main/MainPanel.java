@@ -271,8 +271,10 @@ public class MainPanel
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_textOutputZoomLevels, constraints);
 
+        _comboTileServer.addItemListener(new MainViewItemListener());
         add(_comboTileServer, constraints);
         add(_labelAltTileServer, constraints);
+        _textAltTileServer.addFocusListener(new MainViewFocusListener());
         add(_textAltTileServer, constraints);
 
         JPanel panelOutputFolder = new JPanel();
@@ -344,18 +346,7 @@ public class MainPanel
          */
         public void focusLost(FocusEvent focusevent)
         {
-            String componentName = focusevent.getComponent().getName();
-            System.out.println("focusLost: " + componentName);
-
-            if (componentName.equalsIgnoreCase(COMPONENT_OUTPUT_ZOOM_LEVEL))
-            {
-                valuesChanged();
-            }
-            if (componentName.equalsIgnoreCase(COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT))
-            {
-                valuesChanged();
-            }
-
+            valuesChanged();
         }
 
     }
@@ -370,11 +361,7 @@ public class MainPanel
          */
         public void itemStateChanged(ItemEvent e)
         {
-            if (e.getSource() == _comboOutputZoomLevel)
-            {
-                valuesChanged();
-            }
-
+            valuesChanged();
         }
     }
 

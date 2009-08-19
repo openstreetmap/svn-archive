@@ -297,15 +297,4 @@ public class BBoxXYPanel
     {
         return "Bounding Box (X/Y)";
     }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getConfigFileName()
-     * {@inheritDoc}
-     */
-    @Override
-    public String getConfigFileName()
-    {
-        return "BBoxXY";
-    }
-
 }

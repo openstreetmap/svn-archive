@@ -38,6 +38,8 @@ public class DownloadConfigurationBBoxXY
     private static final String MAX_X = "MaxX";
     private static final String MAX_Y = "MaxY";
 
+    public static final String ID = "BBoxXY";
+
     /**
      * default constructor
      * 
@@ -62,7 +64,7 @@ public class DownloadConfigurationBBoxXY
     public Properties saveToFile()
     {
         Properties prop = super.saveToFile();
-        setTemplateProperty(prop, TYPE, "" + Constants.CONFIG_TYPE[Constants.TYPE_BOUNDINGBOX_XY]);
+        setTemplateProperty(prop, TYPE, ID);
         setTemplateProperty(prop, MIN_X, "" + _minX);
         setTemplateProperty(prop, MIN_Y, "" + _minY);
         setTemplateProperty(prop, MAX_X, "" + _maxX);

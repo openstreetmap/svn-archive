@@ -43,12 +43,6 @@ public abstract class InputPanel
      */
     public abstract String getInputName();
 
-    /**
-     * Returns the default name for the configfile (for DownloadConfig)
-     * @return
-     */
-    public abstract String getConfigFileName();
-
     public boolean isDownloadOkay()
     {
         return true;

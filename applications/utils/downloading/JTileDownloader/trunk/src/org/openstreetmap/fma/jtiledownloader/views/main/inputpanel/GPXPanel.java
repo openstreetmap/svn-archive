@@ -169,15 +169,4 @@ public class GPXPanel
     {
         return "GPX File";
     }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getConfigFileName()
-     * {@inheritDoc}
-     */
-    @Override
-    public String getConfigFileName()
-    {
-        return "GPX";
-    }
-
 }

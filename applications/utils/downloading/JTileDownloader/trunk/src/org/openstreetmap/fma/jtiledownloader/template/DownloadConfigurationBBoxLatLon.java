@@ -38,6 +38,8 @@ public class DownloadConfigurationBBoxLatLon
     private static final String MAX_LAT = "MaxLat";
     private static final String MAX_LON = "MaxLon";
 
+    public static final String ID = "BBoxLatLon";
+
     /**
      * default constructor
      * 
@@ -62,7 +64,7 @@ public class DownloadConfigurationBBoxLatLon
     public Properties saveToFile()
     {
         Properties prop = super.saveToFile();
-        setTemplateProperty(prop, TYPE, "" + Constants.CONFIG_TYPE[Constants.TYPE_BOUNDINGBOX_LATLON]);
+        setTemplateProperty(prop, TYPE, ID);
         setTemplateProperty(prop, MIN_LAT, "" + _minLat);
         setTemplateProperty(prop, MIN_LON, "" + _minLon);
         setTemplateProperty(prop, MAX_LAT, "" + _maxLat);

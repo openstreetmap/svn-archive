@@ -319,13 +319,4 @@ public class BBoxLatLonPanel
     {
         return "Bounding Box (Lat/Lon)";
     }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getConfigFileName()
-     * {@inheritDoc}
-     */
-    public String getConfigFileName()
-    {
-        return "BBoxLatLon";
-    }
 }

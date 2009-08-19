@@ -34,6 +34,8 @@ public class DownloadConfigurationUrlSquare
     private static final String PASTE_URL = "PasteUrl";
     private static final String RADIUS = "Radius";
 
+    public static final String ID = "UrlSquare";
+
     /**
      * default constructor
      * 
@@ -60,7 +62,7 @@ public class DownloadConfigurationUrlSquare
         Properties prop = super.saveToFile();
         setTemplateProperty(prop, PASTE_URL, _pasteUrl);
         setTemplateProperty(prop, RADIUS, "" + _radius);
-        setTemplateProperty(prop, TYPE, "" + Constants.CONFIG_TYPE[Constants.TYPE_URLSQUARE]);
+        setTemplateProperty(prop, TYPE, ID);
         storeToXml(prop);
         return prop;
     }

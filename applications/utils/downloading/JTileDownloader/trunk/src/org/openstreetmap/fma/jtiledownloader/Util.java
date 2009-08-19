@@ -41,9 +41,11 @@ public class Util
         for (String zoomLevel : Arrays.asList(zoomLevelString.split(",")))
         {
             int selectedZoom = Integer.parseInt(zoomLevel.trim());
-            if (selectedZoom < selectedTileProvider.getMaxZoom() && selectedZoom > selectedTileProvider.getMinZoom())
+            if (selectedZoom <= selectedTileProvider.getMaxZoom() && selectedZoom >= selectedTileProvider.getMinZoom())
             {
-                zoomLevels.add(selectedZoom);
+                if (!zoomLevels.contains(selectedZoom)) {
+                    zoomLevels.add(selectedZoom);
+                }
             }
         }
         int[] parsedLevels = new int[zoomLevels.size()];

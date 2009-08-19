@@ -11,7 +11,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,10 +25,10 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.TileListExporter;
 import org.openstreetmap.fma.jtiledownloader.TileProviderList;
+import org.openstreetmap.fma.jtiledownloader.Util;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
@@ -63,7 +62,6 @@ import org.openstreetmap.fma.jtiledownloader.views.progressbar.ProgressBar;
  */
 public class MainPanel
     extends JPanel
-    implements GlobalConfigIf
 {
     private static final long serialVersionUID = 1L;
 
@@ -74,30 +72,31 @@ public class MainPanel
     public static final String COMMAND_DOWNLOAD = "download";
     public static final String COMMAND_EXPORT = "export";
 
-    JLabel _labelOutputZoomLevel = new JLabel("Output Zoom Level:");
-    JComboBox _comboOutputZoomLevel = new JComboBox();
-    JLabel _labelOutputZoomLevels = new JLabel("Output Zoom Levels (ex. 12,13,14) :");
-    JTextField _textOutputZoomLevels = new JTextField();
-    JComboBox _comboTileServer = new JComboBox();
+    private JLabel _labelOutputZoomLevel = new JLabel("Output Zoom Level:");
+    private JComboBox _comboOutputZoomLevel = new JComboBox();
+    private JLabel _labelOutputZoomLevels = new JLabel("Output Zoom Levels (ex. 12,13,14) :");
+    private JTextField _textOutputZoomLevels = new JTextField();
+    private JComboBox _comboTileServer = new JComboBox();
 
-    JLabel _labelAltTileServer = new JLabel("Alt. Tileserver:");
-    JTextField _textAltTileServer = new JTextField();
+    private JLabel _labelAltTileServer = new JLabel("Alt. Tileserver:");
+    private JTextField _textAltTileServer = new JTextField();
 
-    JLabel _labelOutputFolder = new JLabel("Outputfolder:");
-    JTextField _textOutputFolder = new JTextField();
-    JButton _buttonSelectOutputFolder = new JButton("...");
+    private JLabel _labelOutputFolder = new JLabel("Outputfolder:");
+    private JTextField _textOutputFolder = new JTextField();
+    private JButton _buttonSelectOutputFolder = new JButton("...");
 
-    JLabel _labelNumberOfTiles = new JLabel("Number Tiles:");
-    JTextField _textNumberOfTiles = new JTextField("---");
+    private JLabel _labelNumberOfTiles = new JLabel("Number Tiles:");
+    private JTextField _textNumberOfTiles = new JTextField("---");
 
     public static final String DOWNLOAD_TILES = "Download Tiles";
 
-    JButton _buttonDownload = new JButton(DOWNLOAD_TILES);
-    JButton _buttonExport = new JButton("Export Tilelist");
+    private JButton _buttonDownload = new JButton(DOWNLOAD_TILES);
+    private JButton _buttonExport = new JButton("Export Tilelist");
 
     private final JTileDownloaderMainView _mainView;
 
     private TileProviderIf[] _tileProviders;
+    private int _selectedInputPanel = 0; // HACK to get save of latest setting work
 
     private JTabbedPane _inputTabbedPane;
 
@@ -120,11 +119,12 @@ public class MainPanel
 
         createMainPanel();
         initializeMainPanel();
-
         if (tabIndex >= 0 && tabIndex < _inputTabbedPane.getTabCount())
         {
             _inputTabbedPane.setSelectedIndex(tabIndex);
+            _selectedInputPanel = tabIndex;
         }
+        getInputPanel().loadConfig();
     }
 
     /**
@@ -165,8 +165,7 @@ public class MainPanel
         {
             _comboTileServer.addItem(_tileProviders[index].getName());
         }
-        initializeTileServer("");
-        //TODO
+        //initializeTileServer("");
         //String url = getInputPanel().getTileServerBaseUrl();
         //initializeTileServer(url);
         //_textOutputFolder.setText(getInputPanel().getOutputLocation());//_downloadTemplate.getOutputLocation());
@@ -190,10 +189,11 @@ public class MainPanel
      */
     public void initializeTileServer(String tileServer)
     {
+        TileProviderIf loaded = Util.getTileProvider(tileServer);
         int foundTileServerIndex = -1;
         for (int index = 0; index < _tileProviders.length; index++)
         {
-            if (_tileProviders[index].getTileServerUrl().equals(tileServer)) //_downloadTemplate.getTileServer()))
+            if (_tileProviders[index].getName().equals(loaded.getName())) //_downloadTemplate.getTileServer()))
             {
                 foundTileServerIndex = index;
             }
@@ -202,6 +202,7 @@ public class MainPanel
         if (foundTileServerIndex > -1)
         {
             _comboTileServer.setSelectedIndex(foundTileServerIndex);
+            _textAltTileServer.setText("");
         }
         else
         {
@@ -243,8 +244,6 @@ public class MainPanel
      */
     private void createMainPanel()
     {
-        //        JPanel panel = new JPanel();
-
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         //constraints.gridheight = 1;
@@ -306,53 +305,27 @@ public class MainPanel
         //        return panel;
     }
 
-    public void valuesChanged()
+    private void valuesChanged()
     {
         getInputPanel().updateAll();
     }
 
     /**
-     * @param property
-     * @return int[]
+     * @return
      */
-    public int[] getOutputZoomLevelArray()
+    public String getOutputZoomLevelString()
     {
-        LinkedList<Integer> zoomLevels = new LinkedList<Integer>();
         if (_textOutputZoomLevels.getText().isEmpty())
         {
-            try
-            {
-                int selectedZoom = Integer.parseInt(_comboOutputZoomLevel.getSelectedItem().toString());
-                if (selectedZoom <= getSelectedTileProvider().getMaxZoom() && selectedZoom >= getSelectedTileProvider().getMinZoom())
-                {
-                    zoomLevels.add(selectedZoom);
-                }
-            }
-            catch (NumberFormatException e)
-            {
-                System.out.println("could not parse");
-            }
+            return _comboOutputZoomLevel.getSelectedItem().toString();
         }
         else
         {
-            for (String zoomLevel : Arrays.asList(_textOutputZoomLevels.getText().split(",")))
-            {
-                int selectedZoom = Integer.parseInt(zoomLevel.trim());
-                if (selectedZoom < getSelectedTileProvider().getMaxZoom() && selectedZoom > getSelectedTileProvider().getMinZoom())
-                {
-                    zoomLevels.add(selectedZoom);
-                }
-            }
+            return _textOutputZoomLevels.getText();
         }
-        int[] parsedLevels = new int[zoomLevels.size()];
-        for (int i = 0; i < zoomLevels.size(); i++)
-        {
-            parsedLevels[i] = zoomLevels.get(i);
-        }
-        return parsedLevels;
     }
 
-    class MainViewFocusListener
+    private class MainViewFocusListener
         implements FocusListener
     {
 
@@ -387,7 +360,7 @@ public class MainPanel
 
     }
 
-    class MainViewItemListener
+    private class MainViewItemListener
         implements ItemListener
     {
 
@@ -405,7 +378,7 @@ public class MainPanel
         }
     }
 
-    class MainViewActionListener
+    private class MainViewActionListener
         implements ActionListener
     {
 
@@ -420,6 +393,7 @@ public class MainPanel
                 {
                     return;
                 }
+                getInputPanel().saveConfig();
                 valuesChanged();
 
                 //_mainView.updateActualDownloadConfig();
@@ -462,25 +436,16 @@ public class MainPanel
     /**
      * @return
      */
-    String getOutputfolder()
+    public String getOutputfolder()
     {
         return _textOutputFolder.getText().trim();
-    }
-
-    /**
-     * @return
-     */
-    private String getOutputZoomLevel()
-    {
-        String selectedItem = (String) _comboOutputZoomLevel.getSelectedItem();
-        return selectedItem.trim();
     }
 
     /**
      * Returns the selected tile server
      * @return selected tile server
      */
-    private TileProviderIf getSelectedTileProvider()
+    public TileProviderIf getSelectedTileProvider()
     {
         TileProviderIf provider = getTileProvider();
         if (!_textAltTileServer.getText().trim().isEmpty())
@@ -493,7 +458,7 @@ public class MainPanel
     /**
      * @return
      */
-    public TileProviderIf getTileProvider()
+    private TileProviderIf getTileProvider()
     {
         return _tileProviders[_comboTileServer.getSelectedIndex()];
     }
@@ -504,7 +469,7 @@ public class MainPanel
      */
     private final InputPanel getInputPanel()
     {
-        return inputPanels.get(_inputTabbedPane.getSelectedIndex());
+        return inputPanels.get(_selectedInputPanel);
     }
 
     /**
@@ -540,31 +505,30 @@ public class MainPanel
         public void stateChanged(ChangeEvent evt)
         {
             JTabbedPane pane = (JTabbedPane) evt.getSource();
-            // Get current tab
-            int selectedTab = pane.getSelectedIndex();
-            setInputTabSelectedIndex(selectedTab);
-        }
 
-        /**
-         * Setter for inputTabSelectedIndex
-         * @param inputTabSelectedIndex the inputTabSelectedIndex to set
-         */
-        public final void setInputTabSelectedIndex(int inputTabSelectedIndex)
-        {
+            getInputPanel().saveConfig();
+
             //select new panel & load config
-            AppConfiguration.getInstance().setInputPanelIndex(inputTabSelectedIndex);
+            AppConfiguration.getInstance().setInputPanelIndex(pane.getSelectedIndex());
+            _selectedInputPanel = pane.getSelectedIndex();
             getInputPanel().loadConfig();
             valuesChanged();
-
         }
+    }
 
-        /**
-         * 
-         */
-        public void upDDDDdateActualDownloadConfig()
-        {
-        //getMainPanel().valuesChanged();
-        //getMainPanel().getInputPanel().saveConfig();
-        }
+    /**
+     * @param downloadConfig
+     */
+    public void setOutputFolder(String outputFolder)
+    {
+        _textOutputFolder.setText(outputFolder);
+    }
+
+    /**
+     * Saves all Download configs
+     */
+    public void updateActualDownloadConfig()
+    {
+        getInputPanel().saveConfig();
     }
 }

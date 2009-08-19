@@ -10,11 +10,10 @@ import java.awt.event.FocusListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonGPX;
-import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
+import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
 
 /**
  * Copyright 2009, Sven Strickroth <email@cs-ware.de>
@@ -59,9 +58,9 @@ public class GPXPanel
     /**
      * 
      */
-    public GPXPanel(GlobalConfigIf globalConfig)
+    public GPXPanel(MainPanel mainPanel)
     {
-        super(globalConfig);
+        super(mainPanel);
 
         createPanel();
         initializePanel();

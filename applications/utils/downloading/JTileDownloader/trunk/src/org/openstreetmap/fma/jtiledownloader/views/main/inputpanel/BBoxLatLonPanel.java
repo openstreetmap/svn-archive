@@ -13,11 +13,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
-import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
+import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
 import org.openstreetmap.fma.jtiledownloader.views.main.slippymap.SlippyMapChooserWindow;
 
 /**
@@ -70,9 +69,9 @@ public class BBoxLatLonPanel
     /**
      * 
      */
-    public BBoxLatLonPanel(GlobalConfigIf globalConfig)
+    public BBoxLatLonPanel(MainPanel mainPanel)
     {
-        super(globalConfig);
+        super(mainPanel);
 
         createPanel();
         initializePanel();
@@ -189,6 +188,7 @@ public class BBoxLatLonPanel
         _downloadConfig.setMinLon(getMinLon());
         _downloadConfig.setMaxLat(getMaxLat());
         _downloadConfig.setMaxLon(getMaxLon());
+        super.saveCommonConfig(_downloadConfig);
         _downloadConfig.saveToFile();
     }
 

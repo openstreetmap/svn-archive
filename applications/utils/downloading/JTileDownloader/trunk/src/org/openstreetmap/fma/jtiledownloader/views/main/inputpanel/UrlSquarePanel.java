@@ -11,11 +11,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
-import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
+import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -65,9 +64,9 @@ public class UrlSquarePanel
     /**
      * 
      */
-    public UrlSquarePanel(GlobalConfigIf globalConfig)
+    public UrlSquarePanel(MainPanel mainPanel)
     {
-        super(globalConfig);
+        super(mainPanel);
 
         createPanel();
         initializePanel();
@@ -202,6 +201,7 @@ public class UrlSquarePanel
 
         _downloadConfig.setPasteUrl(getPasteUrl());
         _downloadConfig.setRadius(getRadius());
+        super.saveCommonConfig(_downloadConfig);
         _downloadConfig.saveToFile();
     }
 

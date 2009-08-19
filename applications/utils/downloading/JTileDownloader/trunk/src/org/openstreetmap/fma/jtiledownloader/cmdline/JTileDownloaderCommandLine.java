@@ -5,9 +5,11 @@ import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
+import org.openstreetmap.fma.jtiledownloader.Util;
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxLatLon;
@@ -50,6 +52,7 @@ public class JTileDownloaderCommandLine
     private DownloadConfiguration _downloadTemplate;
     private TileList _tileList;
     private TileListDownloader _tld;
+    private TileProviderIf _tileProvider;
 
     /**
      * @param arguments
@@ -73,9 +76,10 @@ public class JTileDownloaderCommandLine
             _downloadTemplateCommon = new DownloadConfiguration(propertyFile);
             _downloadTemplateCommon.loadFromFile();
 
+            _tileProvider = Util.getTileProvider(_downloadTemplateCommon.getTileServer());
+
             handleDownloadTemplate(_downloadTemplateCommon.getType(), propertyFile);
         }
-
     }
 
     /**
@@ -83,7 +87,6 @@ public class JTileDownloaderCommandLine
      */
     private void handleDownloadTemplate(String type, String propertyFile)
     {
-        // TODO: broken ATM
         if (type.equalsIgnoreCase(Constants.CONFIG_TYPE[Constants.TYPE_URLSQUARE]))
         {
             handleUrlSquare(propertyFile);
@@ -113,12 +116,12 @@ public class JTileDownloaderCommandLine
 
         _tileList = new TileListCommonBBox();
 
-        ((TileListCommonBBox) _tileList).initXTopLeft(((DownloadConfigurationBBoxXY) _downloadTemplate).getMinX(), _downloadTemplate.getOutputZoomLevels());
-        ((TileListCommonBBox) _tileList).initYTopLeft(((DownloadConfigurationBBoxXY) _downloadTemplate).getMinY(), _downloadTemplate.getOutputZoomLevels());
-        ((TileListCommonBBox) _tileList).initXBottomRight(((DownloadConfigurationBBoxXY) _downloadTemplate).getMaxX(), _downloadTemplate.getOutputZoomLevels());
-        ((TileListCommonBBox) _tileList).initYBottomRight(((DownloadConfigurationBBoxXY) _downloadTemplate).getMaxY(), _downloadTemplate.getOutputZoomLevels());
+        ((TileListCommonBBox) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadTemplate.getOutputZoomLevels()));
 
-        ((TileListCommonBBox) _tileList).setDownloadZoomLevels(_downloadTemplate.getOutputZoomLevels());
+        ((TileListCommonBBox) _tileList).initXTopLeft(((DownloadConfigurationBBoxXY) _downloadTemplate).getMinX());
+        ((TileListCommonBBox) _tileList).initYTopLeft(((DownloadConfigurationBBoxXY) _downloadTemplate).getMinY());
+        ((TileListCommonBBox) _tileList).initXBottomRight(((DownloadConfigurationBBoxXY) _downloadTemplate).getMaxX());
+        ((TileListCommonBBox) _tileList).initYBottomRight(((DownloadConfigurationBBoxXY) _downloadTemplate).getMaxY());
 
         startDownload(_downloadTemplate.getTileServer());
     }
@@ -138,7 +141,7 @@ public class JTileDownloaderCommandLine
         ((TileListBBoxLatLon) _tileList).setMinLon(((DownloadConfigurationBBoxLatLon) _downloadTemplate).getMinLon());
         ((TileListBBoxLatLon) _tileList).setMaxLon(((DownloadConfigurationBBoxLatLon) _downloadTemplate).getMaxLon());
 
-        ((TileListBBoxLatLon) _tileList).setDownloadZoomLevels(_downloadTemplate.getOutputZoomLevels());
+        ((TileListBBoxLatLon) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadTemplate.getOutputZoomLevels()));
 
         ((TileListBBoxLatLon) _tileList).calculateTileValuesXY();
 
@@ -175,7 +178,7 @@ public class JTileDownloaderCommandLine
         ((TileListUrlSquare) _tileList).setLongitude(Double.parseDouble(lon));
 
         ((TileListUrlSquare) _tileList).setRadius(((DownloadConfigurationUrlSquare) _downloadTemplate).getRadius() * 1000);
-        ((TileListUrlSquare) _tileList).setDownloadZoomLevels(_downloadTemplate.getOutputZoomLevels());
+        ((TileListUrlSquare) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadTemplate.getOutputZoomLevels()));
 
         ((TileListUrlSquare) _tileList).calculateTileValuesXY();
 

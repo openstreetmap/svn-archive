@@ -3,8 +3,6 @@ package org.openstreetmap.fma.jtiledownloader.template;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Properties;
 
 /**
@@ -31,7 +29,14 @@ public class DownloadConfiguration
 {
     private String _propertyFileName = "downloadConfig.xml";
 
+    private String _outputZoomLevels = "";
+    private String _tileServer = "";
+    private String _outputLocation = "";
     private String _type = "";
+
+    private static final String OUTPUT_ZOOM_LEVEL = "OutputZoomLevel";
+    private static final String TILE_SERVER = "TileServer";
+    private static final String OUTPUTLOCATION = "OutputLocation";
 
     public static final String TYPE = "Type";
 
@@ -49,6 +54,10 @@ public class DownloadConfiguration
     public Properties saveToFile()
     {
         Properties prop = new Properties();
+
+        setTemplateProperty(prop, OUTPUT_ZOOM_LEVEL, _outputZoomLevels);
+        setTemplateProperty(prop, TILE_SERVER, _tileServer);
+        setTemplateProperty(prop, OUTPUTLOCATION, _outputLocation);
 
         return prop;
     }
@@ -71,6 +80,11 @@ public class DownloadConfiguration
     public Properties loadFromFile()
     {
         Properties prop = loadFromXml();
+
+        _type = prop.getProperty(TYPE, "");
+        _outputZoomLevels = prop.getProperty(OUTPUT_ZOOM_LEVEL, "12");
+        _tileServer = prop.getProperty(TILE_SERVER, "");
+        _outputLocation = prop.getProperty(OUTPUTLOCATION, "tiles");
 
         return prop;
     }
@@ -99,6 +113,60 @@ public class DownloadConfiguration
     }
 
     /**
+     * Getter for outputZoomLevel
+     * @return the outputZoomLevel
+     */
+    public final String getOutputZoomLevels()
+    {
+        return _outputZoomLevels;
+    }
+
+    /**
+     * Setter for outputZoomLevel
+     * @param outputZoomLevel the outputZoomLevel to set
+     */
+    public final void setOutputZoomLevels(String outputZoomLevel)
+    {
+        _outputZoomLevels = outputZoomLevel;
+    }
+
+    /**
+     * Getter for tileServer
+     * @return the tileServer
+     */
+    public final String getTileServer()
+    {
+        return _tileServer;
+    }
+
+    /**
+     * Setter for tileServer
+     * @param tileServer the tileServer to set
+     */
+    public final void setTileServer(String tileServer)
+    {
+        _tileServer = tileServer;
+    }
+
+    /**
+     * Getter for outputLocation
+     * @return the outputLocation
+     */
+    public final String getOutputLocation()
+    {
+        return _outputLocation;
+    }
+
+    /**
+     * Setter for outputLocation
+     * @param outputLocation the outputLocation to set
+     */
+    public final void setOutputLocation(String outputLocation)
+    {
+        _outputLocation = outputLocation;
+    }
+
+    /**
      * Setter for propertyFileName
      * @param propertyFileName the propertyFileName to set
      */
@@ -124,5 +192,4 @@ public class DownloadConfiguration
     {
         return _type;
     }
-
 }

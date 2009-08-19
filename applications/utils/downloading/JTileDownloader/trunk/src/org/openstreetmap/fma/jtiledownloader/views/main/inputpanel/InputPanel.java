@@ -22,9 +22,10 @@ package org.openstreetmap.fma.jtiledownloader.views.main.inputpanel;
 
 import javax.swing.JPanel;
 
-import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
+import org.openstreetmap.fma.jtiledownloader.Util;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
+import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
 
 /**
  * 
@@ -34,7 +35,7 @@ public abstract class InputPanel
 {
 
     private static final long serialVersionUID = 1L;
-    private final GlobalConfigIf _globalConfig;
+    private final MainPanel _mainPanel;
 
     /**
      * Returns the name/title for the input panel
@@ -48,17 +49,18 @@ public abstract class InputPanel
      */
     public abstract String getConfigFileName();
 
-    public boolean isDownloadOkay() {
+    public boolean isDownloadOkay()
+    {
         return true;
     }
 
     /**
      * 
      */
-    public InputPanel(GlobalConfigIf globalConfig)
+    public InputPanel(MainPanel mainPanel)
     {
         super();
-        _globalConfig = globalConfig;
+        _mainPanel = mainPanel;
     }
 
     /**
@@ -67,7 +69,7 @@ public abstract class InputPanel
      */
     public final int[] getDownloadZoomLevel()
     {
-        return _globalConfig.getOutputZoomLevelArray();
+        return Util.getOutputZoomLevelArray(_mainPanel.getSelectedTileProvider(), _mainPanel.getOutputZoomLevelString());
     }
 
     public abstract void updateAll();
@@ -84,20 +86,26 @@ public abstract class InputPanel
     {
         int numberOfTiles = 0;
         numberOfTiles = getNumberOfTilesToDownload();
-        _globalConfig.setNumberOfTiles(numberOfTiles);
+        _mainPanel.setNumberOfTiles(numberOfTiles);
     }
 
     /**
      * 
      */
-    public void setCommonValues(DownloadConfiguration downloadConfig)
+    final public void setCommonValues(DownloadConfiguration downloadConfig)
     {
-     /*   setOutputLocation(downloadConfig.getOutputLocation());
-        //getMainView().getMainPanel().getTextOutputFolder().setText(getOutputLocation());
-        setDownloadZoomLevel(downloadConfig.getOutputZoomLevels());
-        getMainPanel().initializeOutputZoomLevel(getDownloadZoomLevel());
-        setTileServerBaseUrl(downloadConfig.getTileServer());
-        getMainPanel().initializeTileServer(getTileServerBaseUrl());*/
+        _mainPanel.setOutputFolder(downloadConfig.getOutputLocation());
+        _mainPanel.initializeOutputZoomLevel(Util.getOutputZoomLevelArray(_mainPanel.getSelectedTileProvider(), downloadConfig.getOutputZoomLevels()));
+        _mainPanel.initializeTileServer(downloadConfig.getTileServer());
     }
 
+    /**
+     * @param downloadConfig
+     */
+    final protected void saveCommonConfig(DownloadConfiguration downloadConfig)
+    {
+        downloadConfig.setOutputLocation(_mainPanel.getOutputfolder());
+        downloadConfig.setOutputZoomLevels(_mainPanel.getOutputZoomLevelString());
+        downloadConfig.setTileServer(_mainPanel.getSelectedTileProvider().getName());
+    }
 }

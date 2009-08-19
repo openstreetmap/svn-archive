@@ -9,11 +9,10 @@ import java.awt.event.FocusListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.GlobalConfigIf;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxXY;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonBBox;
-import org.openstreetmap.fma.jtiledownloader.views.main.JTileDownloaderMainView;
+import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
 
 /**
  * Copyright 2008, Friedrich Maier 
@@ -64,9 +63,9 @@ public class BBoxXYPanel
     /**
      * 
      */
-    public BBoxXYPanel(GlobalConfigIf globalConfig)
+    public BBoxXYPanel(MainPanel mainPanel)
     {
-        super(globalConfig);
+        super(mainPanel);
 
         createPanel();
         initializePanel();
@@ -167,6 +166,7 @@ public class BBoxXYPanel
         _downloadConfig.setMinY(getMinY());
         _downloadConfig.setMaxX(getMaxX());
         _downloadConfig.setMaxY(getMaxY());
+        super.saveCommonConfig(_downloadConfig);
         _downloadConfig.saveToFile();
     }
 

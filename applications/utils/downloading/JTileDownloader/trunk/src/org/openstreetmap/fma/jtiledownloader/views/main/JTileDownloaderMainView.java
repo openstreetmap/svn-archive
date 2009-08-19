@@ -100,7 +100,7 @@ public class JTileDownloaderMainView
         {
             System.out.println("WindowEvent windowClosing");
 
-            //updateActualDownloadConfig();
+            _mainPanel.updateActualDownloadConfig();
             updateAppConfig();
 
             e.getWindow().dispose();
@@ -124,11 +124,8 @@ public class JTileDownloaderMainView
                 System.out.println("changed to update tab");
                 // selected update tab
                 getUpdateTilesPanel().setFolder(getMainPanel().getOutputfolder());
-
-                //getUpdateTilesPanel().setTileServer(getMainPanel().getSelectedTileProvider().getTileServerUrl());
-
+                getUpdateTilesPanel().setTileServer(getMainPanel().getSelectedTileProvider().getName());
             }
-
         }
     }
 

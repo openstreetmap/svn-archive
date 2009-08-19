@@ -13,15 +13,19 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.Point2D;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxLatLonPanel;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
+import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.gui.jmapviewer.OsmFileCacheTileLoader;
+import org.openstreetmap.gui.jmapviewer.OsmMercator;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.OsmTileSource;
+import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
@@ -80,6 +84,8 @@ public class SlippyMapChooser extends JMapViewer {
         }
         new OsmMapControl(this, slipyyMapTabPanel, iSizeButton, iSourceButton);
         this.bboxlatlonpanel=bboxlatlonpanel;
+        boundingBoxChanged();
+        bboxlatlonpanel.setChangeListener(this);
     }
 
     public void setMaxTilesInMemory(int tiles) {
@@ -130,6 +136,32 @@ public class SlippyMapChooser extends JMapViewer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void boundingBoxChanged() {
+
+        // test if a bounding box has been set set
+        if (bboxlatlonpanel.getMinLat() == 0.0 && bboxlatlonpanel.getMinLon() == 0.0 && bboxlatlonpanel.getMaxLat() == 0.0 && bboxlatlonpanel.getMaxLon() == 0.0)
+            return;
+
+        int y1 = OsmMercator.LatToY(bboxlatlonpanel.getMinLat(), MAX_ZOOM);
+        int y2 = OsmMercator.LatToY(bboxlatlonpanel.getMaxLat(), MAX_ZOOM);
+        int x1 = OsmMercator.LonToX(bboxlatlonpanel.getMinLon(), MAX_ZOOM);
+        int x2 = OsmMercator.LonToX(bboxlatlonpanel.getMaxLon(), MAX_ZOOM);
+
+        iSelectionRectStart = new Point(Math.min(x1, x2), Math.min(y1, y2));
+        iSelectionRectEnd = new Point(Math.max(x1, x2), Math.max(y1, y2));
+
+        // calc the screen coordinates for the new selection rectangle
+        MapMarkerDot xmin_ymin = new MapMarkerDot(bboxlatlonpanel.getMinLat(), bboxlatlonpanel.getMinLon());
+        MapMarkerDot xmax_ymax = new MapMarkerDot(bboxlatlonpanel.getMaxLat(), bboxlatlonpanel.getMaxLon());
+
+        Vector<MapMarker> marker = new Vector<MapMarker>(2);
+        marker.add(xmin_ymin);
+        marker.add(xmax_ymax);
+        setMapMarkerList(marker);
+        setDisplayToFitMapMarkers();
+        zoomOut();
     }
 
     /**

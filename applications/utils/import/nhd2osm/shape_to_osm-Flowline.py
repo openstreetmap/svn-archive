@@ -3,8 +3,9 @@
 # based on version 0.1 downloaded from http://boston.freemap.in/osm/files/mgis_to_osm.py 
 # Version 0.2 changes to generalize the script some for use with other data by Dalep
 
-VERSION="0.3"
+VERSION="0.4"
 # Version 0.3 Handles NHD Files - some changes to engine;
+# Version 0.4 Handle type NONE for reach code 
 #  adapted by Theodore Book
 
 # Tag Source  = iSource + _import_v + version + _ + date and time
@@ -90,9 +91,9 @@ def parse_shp_for_osm( filename ):
 	if gnis_id != None:
 	    tags["gnis:feature_id"] = gnis_id
 
-        reachcode = int(poFeature.GetField("ReachCode") )
-	if reachcode != None:
-	    tags["NHD:ReachCode"] = reachcode
+        reachcodeField = poFeature.GetField("ReachCode")
+	if reachcodeField != None:
+            tags["NHD:ReachCode"] = int(reachcodeField)
 
 	res = poFeature.GetField("RESOLUTION")
         if res != None:

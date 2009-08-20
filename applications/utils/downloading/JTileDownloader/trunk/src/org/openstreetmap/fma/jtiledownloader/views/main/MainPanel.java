@@ -384,8 +384,7 @@ public class MainPanel
                 getInputPanel().saveConfig();
                 valuesChanged();
 
-                //_mainView.updateActualDownloadConfig();
-                _mainView.updateAppConfig();
+                saveSettings();
 
                 if (getInputPanel().getTileList().getTileListToDownload().size() > 0)
                 {
@@ -518,5 +517,10 @@ public class MainPanel
     public void updateActualDownloadConfig()
     {
         getInputPanel().saveConfig();
+    }
+
+    public void saveSettings()
+    {
+        _mainView.updateAppConfig();
     }
 }

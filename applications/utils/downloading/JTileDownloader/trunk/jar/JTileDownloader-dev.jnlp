@@ -19,5 +19,5 @@
     <security>
         <all-permissions/>
     </security>
-    <application-desc main-class="JTileDownloader"/>
+    <application-desc main-class="org.openstreetmap.fma.jtiledownloader.JTileDownloaderStart"/>
 </jnlp> 

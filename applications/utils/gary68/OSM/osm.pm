@@ -62,12 +62,16 @@
 # Version 4.8
 # - josm dont select added
 #
+# Version 4.9
+# - APIgetWay new
+#
 
 #
 # USAGE
 #
 # analyzerLink ($id) 					> $htmlString, link to relation analyzer
 # angle (x1,y1,x2,y2)					> angle (N=0,E=90...)
+# APIgetWay ($id)					> ($wayId, $wayUser, \@wayNodes, \@wayTags)
 # binSearch ($value, @ref)				> $index or -1
 # closeOsmFile ()
 # checkOverlap (w1xMin, w1yMin, w1xMax, w1yMax, w2xMin, w2yMin, w2xMax, w2yMax)   > 0=no overlap, 1=overlap
@@ -129,6 +133,7 @@ use strict;
 use warnings;
 
 use LWP::Simple;
+use LWP::Simple;
 use Math::Trig;
 use File::stat;
 use Time::localtime;
@@ -139,13 +144,15 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '4.8' ; 
+$VERSION = '4.9' ; 
+
+my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
 require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue tileNumber openOsmFile osmLink osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader) ;
+@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue tileNumber openOsmFile osmLink osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
 
 our $line ; 
 our $file ; 
@@ -1194,6 +1201,64 @@ sub getBugs {
 
 	#print "$resultString\n\n" ; 
 	return $resultString ;
+}
+
+
+sub APIgetWay {
+#
+# wayId == 0 returned if error
+#
+	my ($wayId) = shift ;
+
+	my $content ;
+	my $url ;
+	my $try = 0 ;
+	my $wayUser = "" ;
+	my @wayNodes = () ;
+	my @wayTags = () ;
+
+	#print "\nAPI request for way $wayId\n" ;
+
+	while ( (!defined($content)) and ($try < 4) ) {
+		$url = $apiUrl . "way/" . $wayId ;
+		$content = get $url ;
+		$try++ ;
+	}
+
+	#print "API result:\n$content\n\n" ;
+
+	if (!defined $content) {
+		print "ERROR: error receiving OSM query result for way $wayId\n" ;
+		$wayId = 0 ;
+	}
+	if (grep(/<error>/, $content)) {
+		print "ERROR: invalid OSM query result for way $wayId\n" ;	
+		$wayId = 0 ;
+	}
+
+	# parse $content
+	if ($wayId != 0) {
+		my (@lines) = split /\n/, $content ;
+		foreach my $line (@lines) {
+			if (grep /<way id/, $line ) {
+				my ($u) = ($line =~ /^.+user=[\'\"](.*)[\'\"]/) ;
+				if (defined $u) { $wayUser = $u ; } 
+			}
+			if (grep /<nd ref/, $line ) {
+				my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/) ;
+				if (defined $node) { push @wayNodes, $node ; }
+			}
+			if (grep /<tag k=/, $line ) {
+				my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
+				if ( (defined $k) and (defined $v) ) { push @wayTags, [$k, $v] ; }
+			}
+		}
+	}
+
+	#print "\nAPI result:\n$wayId\nNodes: @wayNodes\nTags: " ;
+	#foreach my $t (@wayTags) { print "$t->[0]:$t->[1] \n" ; }
+
+	return ($wayId, $wayUser, \@wayNodes, \@wayTags) ;
 }
 
 

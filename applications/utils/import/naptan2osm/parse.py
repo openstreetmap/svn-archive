@@ -23,7 +23,7 @@ class Feature(osmparser.OSMObj):
 
 class ParseXML:
     namespace = '{http://www.naptan.org.uk/}'
-    defaulttags = {'naptan:verified': 'no'}
+    defaulttags = {'naptan:verified': 'no', 'source': 'naptan_import'}
     tagprefix = ''
     tagmap = {}         # The basic tag mappings that are a simple one to one mapping
     

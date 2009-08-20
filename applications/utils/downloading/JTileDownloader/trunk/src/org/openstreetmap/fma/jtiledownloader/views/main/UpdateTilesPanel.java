@@ -43,7 +43,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
-import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.UpdateTileList;
 import org.openstreetmap.fma.jtiledownloader.datatypes.YDirectory;
@@ -81,16 +80,16 @@ public class UpdateTilesPanel
     private String _tileServer = "";
     private String _folder = "";
 
-    private final JTileDownloaderMainView _mainView;
+    private final MainPanel _mainPanel;
     private TileListDownloader _tileListDownloader;
 
     /**
      * 
      */
-    public UpdateTilesPanel(JTileDownloaderMainView mainView)
+    public UpdateTilesPanel(MainPanel mainPanel)
     {
         super();
-        _mainView = mainView;
+        _mainPanel = mainPanel;
 
         createPanel();
         initialize();
@@ -221,33 +220,32 @@ public class UpdateTilesPanel
             int[] selectedRows = _updateTilesTable.getSelectedRows();
             if (selectedRows == null || selectedRows.length == 0)
             {
-                JOptionPane.showMessageDialog(getMainView(), "Please select zoom level(s) to be updated!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(_mainPanel, "Please select zoom level(s) to be updated!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             TileListSimple updateList = new TileListSimple();
             for (int index = 0; index < selectedRows.length; index++)
             {
-                int zoomLevel = Integer.parseInt((String) _updateTilesTable.getValueAt(selectedRows[index], 0));
+                int zoomLevel = (Integer) _updateTilesTable.getValueAt(selectedRows[index], 0);
                 System.out.println("selected zoom level " + zoomLevel);
 
                 for (int indexTileList = 0; indexTileList < _updateList.size(); indexTileList++)
                 {
                     UpdateTileList updateTileList = _updateList.elementAt(indexTileList);
-                    if (updateTileList.getZoomLevel().equals(zoomLevel))
+                    if (updateTileList.getZoomLevel() == zoomLevel)
                     {
                         System.out.println("found updateTileList for zoom level " + zoomLevel);
                         Vector<YDirectory> directory = updateTileList.getYDirectory();
                         for (int indexDirectoryY = 0; indexDirectoryY < directory.size(); indexDirectoryY++)
                         {
                             YDirectory yDir = directory.elementAt(indexDirectoryY);
-                            String[] tiles = yDir.getTiles();
+                            Tile[] tiles = yDir.getTiles();
                             for (int indexTiles = 0; indexTiles < tiles.length; indexTiles++)
                             {
-                                updateList.addTile(new Tile(Integer.parseInt(tiles[indexTiles]), Integer.parseInt(yDir.getName()), zoomLevel));
+                                updateList.addTile(tiles[indexTiles]);
                             }
                         }
-
                     }
                 }
             }
@@ -256,7 +254,7 @@ public class UpdateTilesPanel
             System.out.println("tileServer:" + getTileServer());
 
             // design problem: AppConfiguration doesn't provide the real current config
-            TileListDownloader tld = new TileListDownloader(getFolder(), updateList, new GenericTileProvider(_textTileServer.getText()));
+            TileListDownloader tld = new TileListDownloader(getFolder(), updateList, _mainPanel.getSelectedTileProvider());
 
             ProgressBar pg = new ProgressBar(1, tld);
         }
@@ -284,7 +282,7 @@ public class UpdateTilesPanel
 
             if (zoomLevels == null || zoomLevels.length == 0)
             {
-                JOptionPane.showMessageDialog(getMainView(), "No files found!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(_mainPanel, "No files found!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -296,7 +294,7 @@ public class UpdateTilesPanel
                 if (zoomLevel != null)
                 {
                     UpdateTileList tileList = new UpdateTileList();
-                    tileList.setZoomLevel(zoomLevel.getName());
+                    tileList.setZoomLevel(Integer.parseInt(zoomLevel.getName()));
 
                     File[] yDirs = zoomLevel.listFiles();
                     if (yDirs != null)
@@ -304,22 +302,21 @@ public class UpdateTilesPanel
                         YDirectory yDirectory;
                         for (int indexY = 0; indexY < yDirs.length; indexY++)
                         {
-                            String[] strTiles;
+                            Tile[] theTiles;
                             File yDir = yDirs[indexY];
                             yDirectory = new YDirectory();
                             yDirectory.setName(yDir.getName());
                             File[] tiles = yDir.listFiles();
                             if (tiles != null)
                             {
-                                strTiles = new String[tiles.length];
+                                theTiles = new Tile[tiles.length];
                                 for (int tileIndex = 0; tileIndex < tiles.length; tileIndex++)
                                 {
                                     File tile = tiles[tileIndex];
-                                    strTiles[tileIndex] = tile.getName();
-                                    String subPath = zoomLevel.getName() + File.separator + yDir.getName() + File.separator + tile.getName();
-                                    System.out.println("found tile to update: '" + subPath + "'");
+                                    theTiles[tileIndex] = new Tile(Integer.parseInt(yDir.getName()), Integer.parseInt(tile.getName().substring(0, tile.getName().lastIndexOf("."))), Integer.parseInt(zoomLevel.getName()));
+                                    System.out.println("found tile to update: '" + theTiles[tileIndex] + "'");
                                 }
-                                yDirectory.setTiles(strTiles);
+                                yDirectory.setTiles(theTiles);
                             }
                             tileList.addYDirectory(yDirectory);
                         }
@@ -385,15 +382,6 @@ public class UpdateTilesPanel
     {
         _folder = folder.trim();
         _textFolder.setText(_folder);
-    }
-
-    /**
-     * Getter for mainView
-     * @return the mainView
-     */
-    public JTileDownloaderMainView getMainView()
-    {
-        return _mainView;
     }
 
     /**

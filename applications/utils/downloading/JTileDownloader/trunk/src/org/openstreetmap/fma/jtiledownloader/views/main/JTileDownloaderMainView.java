@@ -63,7 +63,7 @@ public class JTileDownloaderMainView
 
         _mainPanel = new MainPanel(getMainView(), AppConfiguration.getInstance().getInputPanelIndex());
 
-        _updateTilesPanel = new UpdateTilesPanel(getMainView());
+        _updateTilesPanel = new UpdateTilesPanel(_mainPanel);
         _optionsPanel = new OptionsPanel();
         _networkPanel = new NetworkPanel();
 

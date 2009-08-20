@@ -23,14 +23,14 @@ package org.openstreetmap.fma.jtiledownloader.datatypes;
 
 public class YDirectory
 {
-    private String[] _tiles;
+    private Tile[] _tiles;
     private String _name;
 
     /**
      * Setter for tiles
      * @param tiles the tiles to set
      */
-    public void setTiles(String[] tiles)
+    public void setTiles(Tile[] tiles)
     {
         _tiles = tiles;
     }
@@ -39,7 +39,7 @@ public class YDirectory
      * Getter for tiles
      * @return the tiles
      */
-    public String[] getTiles()
+    public Tile[] getTiles()
     {
         return _tiles;
     }

@@ -25,7 +25,7 @@ import java.util.Vector;
 
 public class UpdateTileList
 {
-    private String _zoomLevel;
+    private int _zoomLevel;
     private Vector<YDirectory> _yDirectory;
 
     public void addYDirectory(YDirectory yDirectory)
@@ -70,7 +70,7 @@ public class UpdateTileList
      * Setter for zoomLevel
      * @param zoomLevel the zoomLevel to set
      */
-    public void setZoomLevel(String zoomLevel)
+    public void setZoomLevel(int zoomLevel)
     {
         _zoomLevel = zoomLevel;
     }
@@ -79,7 +79,7 @@ public class UpdateTileList
      * Getter for zoomLevel
      * @return the zoomLevel
      */
-    public String getZoomLevel()
+    public int getZoomLevel()
     {
         return _zoomLevel;
     }

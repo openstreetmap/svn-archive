@@ -7,7 +7,6 @@
         <description>Java Tile Downloader for OpenStreetMap</description>
         <description kind="one-line">JTileDownloader</description>
         <description kind="tooltip">JTileDownloader</description>
-        <icon href="http://svn.openstreetmap.org/applications/utils/downloading/JTileDownloader/trunk/images/logo.png"/> 
         <shortcut>
             <desktop/> <menu/>
         </shortcut>

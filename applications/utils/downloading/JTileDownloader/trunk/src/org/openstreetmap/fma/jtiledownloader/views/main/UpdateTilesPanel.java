@@ -251,7 +251,9 @@ public class UpdateTilesPanel
             }
 
             System.out.println("folder:" + getFolder());
-            System.out.println("tileServer:" + getTileServer());
+            System.out.println("tileServer:" + _tileServer);
+
+            _mainPanel.saveSettings();
 
             // design problem: AppConfiguration doesn't provide the real current config
             TileListDownloader tld = new TileListDownloader(getFolder(), updateList, _mainPanel.getSelectedTileProvider());
@@ -348,15 +350,6 @@ public class UpdateTilesPanel
 
         }
 
-    }
-
-    /**
-     * Getter for tileServer
-     * @return the tileServer
-     */
-    public final String getTileServer()
-    {
-        return _tileServer;
     }
 
     /**

@@ -144,7 +144,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '4.91' ; 
+$VERSION = '4.92' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -1210,7 +1210,7 @@ sub APIgetWay {
 #
 	my ($wayId) = shift ;
 
-	my $content = "" ;
+	my $content ;
 	my $url ;
 	my $try = 0 ;
 	my $wayUser = "" ;
@@ -1235,22 +1235,24 @@ sub APIgetWay {
 		print "ERROR: invalid OSM query result for way $wayId\n" ;	
 		$wayId = 0 ;
 	}
-
-	# parse $content
-	if ($wayId != 0) {
-		my (@lines) = split /\n/, $content ;
-		foreach my $line (@lines) {
-			if (grep /<way id/, $line ) {
-				my ($u) = ($line =~ /^.+user=[\'\"](.*)[\'\"]/) ;
-				if (defined $u) { $wayUser = $u ; } 
-			}
-			if (grep /<nd ref/, $line ) {
-				my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/) ;
-				if (defined $node) { push @wayNodes, $node ; }
-			}
-			if (grep /<tag k=/, $line ) {
-				my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
-				if ( (defined $k) and (defined $v) ) { push @wayTags, [$k, $v] ; }
+	
+	if (defined $content) {
+		# parse $content
+		if ($wayId != 0) {
+			my (@lines) = split /\n/, $content ;
+			foreach my $line (@lines) {
+				if (grep /<way id/, $line ) {
+					my ($u) = ($line =~ /^.+user=[\'\"](.*)[\'\"]/) ;
+					if (defined $u) { $wayUser = $u ; } 
+				}
+				if (grep /<nd ref/, $line ) {
+					my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/) ;
+					if (defined $node) { push @wayNodes, $node ; }
+				}
+				if (grep /<tag k=/, $line ) {
+					my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
+					if ( (defined $k) and (defined $v) ) { push @wayTags, [$k, $v] ; }
+				}
 			}
 		}
 	}

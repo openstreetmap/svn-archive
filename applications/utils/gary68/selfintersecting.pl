@@ -26,7 +26,7 @@ use OSM::osm 4.9 ;
 
 my $programName = "selfintersecting.pl" ;
 my $usage = "selfintersecting.pl file.osm out.htm out.gpx" ; 
-my $version = "1.0" ;
+my $version = "1.1" ;
 
 
 
@@ -188,6 +188,7 @@ while ($wayId != -1) {
 				# check API way data
 				print "request API data for way $wayId...\n" ;
 				$APIcount++ ;
+				sleep (1) ; # don't stress API
 				my ($id, $u, @nds, @tags, $ndsRef, $tagRef) ;
 				($id, $u, $ndsRef, $tagRef) = APIgetWay ($wayId) ;
 				print "API request finished.\n" ;

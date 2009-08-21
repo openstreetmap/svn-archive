@@ -144,7 +144,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '4.92' ; 
+$VERSION = '4.93' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -1230,6 +1230,7 @@ sub APIgetWay {
 	if (!defined $content) {
 		print "ERROR: error receiving OSM query result for way $wayId\n" ;
 		$wayId = 0 ;
+		$content = "" ;
 	}
 	if (grep(/<error>/, $content)) {
 		print "ERROR: invalid OSM query result for way $wayId\n" ;	

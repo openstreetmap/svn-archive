@@ -5,6 +5,8 @@
 
 	osmarender_frontend.version = "0.3.20090821-nightly";
 	osmarender_frontend.date = "20090821"
+	osmarender_frontend.isDebug = true;
+	osmarender_frontend.isOnline = false;
 
 	dojo.registerModulePath("osmafrontend","../../osmafrontend");
 	dojo.registerModulePath("cmyk","../../cmyk");

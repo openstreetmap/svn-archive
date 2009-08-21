@@ -1,13 +1,18 @@
 <div>
-	<div dojoType="dijit.layout.TabContainer" dojoAttachPoint="load_tab_container" style="height:100%; width:100%">
-		<div dojoType="dijit.layout.ContentPane" title="Load a preset file" selected="true" style="height:100%;">
-			Preset
-		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Load a non preset file" style="height:100%">
-			nonPreset
-		</div>
-	<!--div dojoType="dijit.layout.TabContainer" style= "height:50%">
-		<div dojoType="dijit.layout.ContentPane" title="Load a preset file" selected="true" dojoAttachEvent="onshow: _onChange">
+	<style type="text/css">
+		.loadTabContainer {
+			height: 100%;
+			width: 100%;
+		}
+		.loadPresetFile {
+			height: 100%;
+		}
+		.loadNonPresetFile {
+			height: 100%;
+		}
+	</style>
+	<div dojoType="dijit.layout.TabContainer" dojoAttachPoint="load_tab_container" class="loadTabContainer">
+		<div dojoType="dijit.layout.ContentPane" title="Load a preset file" selected="true" class="loadPresetFile">
 			<br />
 			Data File: 
 			<select 	dojoType="dijit.form.FilteringSelect"
@@ -39,9 +44,10 @@
 				<option value="osm-map-features-z16.xml">osm-map-features-z16.xml</option>
 				<option value="osm-map-features-z17.xml">osm-map-features-z17.xml</option>
 			</select><br /><br />
-			<script type="dojo/method" event="onShow">
-				this.handleLoadPreset(dojo.byId("rules_file_name").value,dojo.byId("osm_file_name_selected").value);
-			</script-->
+		</div>
+		<div dojoType="dijit.layout.ContentPane" title="Load a non preset file" class="loadNonPresetFile">
+			nonPreset
+		</div>
 <!--		</div>
 		<div id="load_custom" title="Load a custom file" dojoType="dijit.layout.ContentPane">
 			<br />

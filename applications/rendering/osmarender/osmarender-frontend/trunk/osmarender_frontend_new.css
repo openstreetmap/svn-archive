@@ -1,0 +1,17 @@
+html, body, #main {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#main-center {
+	background: #E9E9E9;
+	height: 100%;
+}
+
+#version_details,
+#loading_pane {
+	height: 100%;
+	width: 100%;
+}

@@ -8,6 +8,12 @@
 	Deny from all
 </Directory>
 
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	RewriteRule ^/([0-9]+)/([0-9]+)/([0-9]+).png /tile/tile-notice.png
+</IfModule>
+
 #<Location /api/>
 #503 Service Unavailable
+#Fix ME
 #</Location>

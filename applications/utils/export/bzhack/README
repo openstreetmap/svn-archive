@@ -6,3 +6,22 @@ planet.bz2 without requiring users to (completely) download, extract and
 load the file in a database. 
 I'm also planning to use HTTP range requests to seek in the remote bz2
 file.
+
+This tool will create the following indexes, ordered by byte offset in
+planet.osm.bz2:
+- bznodeindex (byte offset, node id)
+- bzwayindex (byte offset, way id)
+- bzrelationindex (byte offset, relation id)
+
+The following data tile indexes will be generated (at zoom 15):
+- nodetile (node id, tile lat, tile lon)
+- waytile (way id, tile lat, tile lon), duplicate records if the nodes of a way
+  are on multiple data tiles
+- relationtile (relation id, tile lat, tile lon), duplicate records if the nodes
+  or ways are on multiple data tiles
+
+To improve searching the data tiles are sorted by id:
+- nodetile.srt
+- waytile.srt
+- relationtile.srt
+

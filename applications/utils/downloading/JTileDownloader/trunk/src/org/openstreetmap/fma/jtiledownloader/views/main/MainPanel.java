@@ -387,7 +387,7 @@ public class MainPanel
                 if (getInputPanel().getTileList().getTileListToDownload().size() > 0)
                 {
                     TileListDownloader tld = new TileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList(), getSelectedTileProvider());
-                    ProgressBar pg = new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), tld);
+                    new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), tld);
                 }
             }
             else if (actionCommand.equalsIgnoreCase(COMMAND_EXPORT))

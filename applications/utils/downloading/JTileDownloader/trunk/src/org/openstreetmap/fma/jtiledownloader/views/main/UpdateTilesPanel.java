@@ -255,7 +255,7 @@ public class UpdateTilesPanel
 
             TileListDownloader tld = new TileListDownloader(getFolder(), updateList, _mainPanel.getSelectedTileProvider());
 
-            ProgressBar pg = new ProgressBar(1, tld);
+            new ProgressBar(1, tld);
         }
 
         /**

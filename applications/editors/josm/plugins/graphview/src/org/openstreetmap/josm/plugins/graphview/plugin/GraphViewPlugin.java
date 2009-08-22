@@ -66,8 +66,6 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
 		PROPERTIES.add(new RoadWidth());
 	}
 
-	private final GraphViewDialog laneDialog;
-
 	private final GraphViewPreferences preferences;
 
 	private JOSMTransitionStructure transitionStructure;
@@ -78,8 +76,6 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
 
 		preferences = GraphViewPreferences.getInstance();
 		this.preferences.addObserver(this);
-
-		laneDialog = new GraphViewDialog(this);
 
 	}
 
@@ -234,7 +230,11 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
 		if (newFrame != null) {
-			newFrame.addToggleDialog(laneDialog);
+			if (oldFrame == null) {
+				final GraphViewDialog laneDialog
+					= new GraphViewDialog(this);
+				newFrame.addToggleDialog(laneDialog);
+			}
 			Layer.listeners.add(this);
 		} else {
 			Layer.listeners.remove(this);

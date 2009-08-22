@@ -3,14 +3,9 @@
 	ExpiresDefault "access plus 10 minutes"
 </IfModule>
 
-<Directory ~ "\.svn">
-	Order allow,deny
-	Deny from all
-</Directory>
-
 <IfModule mod_rewrite.c>
 	RewriteEngine on
-	RewriteRule ^/([0-9]+)/([0-9]+)/([0-9]+).png /tile/tile-notice.png
+	RewriteRule ^([0-9]+)/([0-9]+)/([0-9]+).png /tile/tile-notice.png
 </IfModule>
 
 #<Location /api/>

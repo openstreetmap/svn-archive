@@ -87,16 +87,17 @@ int main() {
     strm.next_in = buf;
 
     BZ2_bzDecompressInit(&strm, 0, 0);
-    f = fopen("/media/esata/2000/planet-090608.osm.bz2", "r");
+    f = fopen("/media/esata/2000/planet-090822.osm.bz2", "r");
     if (!f) {
         printf("Kan planet niet openen");
         return 1;
     }
 
     // --- seek
-    #define OFFSET(N) N ## 5
+    #define OFFSET(N) N ## 0
     //fseek(f, 16615273, SEEK_SET); // offset - 1
-    fseek(f, 1191443766, SEEK_SET); // offset - 1
+    //fseek(f, 1191443766, SEEK_SET); // offset - 1
+    fseek(f, 0, SEEK_SET); // offset - 1
     ret = fread(buf+sizeof(OFFSET(sync_block_))-2, 1, 1, f);
     strm.avail_in = sizeof(OFFSET(sync_block_))-1;
     strm.avail_out = avail_out;

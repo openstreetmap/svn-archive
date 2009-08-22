@@ -384,8 +384,6 @@ public class MainPanel
                 getInputPanel().saveConfig();
                 valuesChanged();
 
-                saveSettings();
-
                 if (getInputPanel().getTileList().getTileListToDownload().size() > 0)
                 {
                     TileListDownloader tld = new TileListDownloader(_textOutputFolder.getText(), getInputPanel().getTileList(), getSelectedTileProvider());
@@ -517,10 +515,5 @@ public class MainPanel
     public void updateActualDownloadConfig()
     {
         getInputPanel().saveConfig();
-    }
-
-    public void saveSettings()
-    {
-        _mainView.updateAppConfig();
     }
 }

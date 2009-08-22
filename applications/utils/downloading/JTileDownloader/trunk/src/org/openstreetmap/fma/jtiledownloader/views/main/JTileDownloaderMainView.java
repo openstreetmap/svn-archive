@@ -126,6 +126,7 @@ public class JTileDownloaderMainView
                 getUpdateTilesPanel().setFolder(getMainPanel().getOutputfolder());
                 getUpdateTilesPanel().setTileServer(getMainPanel().getSelectedTileProvider().getName());
             }
+            updateAppConfig();
         }
     }
 

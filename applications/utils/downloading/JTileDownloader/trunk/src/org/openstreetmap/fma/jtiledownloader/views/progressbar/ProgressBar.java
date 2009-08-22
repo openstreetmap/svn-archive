@@ -29,12 +29,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.MessageFormat;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
@@ -54,11 +57,14 @@ public class ProgressBar
 {
     private static final long serialVersionUID = 1L;
     private JProgressBar progressBar = new JProgressBar(0, 0);
+    private JLabel timeElapsed = new JLabel("Elapsed: n/a");
+    private JLabel timeRemaining = new JLabel("Remaining: n/a");
     private JCheckBox showPreview = new JCheckBox("Show Preview");
     private Boolean previewVisible = false;
     private JButton abortButton = new JButton("Abort");
     private TilePreviewViewComponent tilePreviewViewComponent = new TilePreviewViewComponent();
     private TileListDownloader downloader = null;
+    private Calendar start = Calendar.getInstance();
 
     public ProgressBar(int tilesCount, TileListDownloader downloader)
     {
@@ -83,6 +89,8 @@ public class ProgressBar
         constraints.fill = GridBagConstraints.CENTER;
         constraints.insets = new Insets(5, 5, 0, 5);
         add(progressBar, constraints);
+        add(timeElapsed, constraints);
+        add(timeRemaining, constraints);
         add(abortButton, constraints);
         abortButton.addActionListener(this);
         constraints.insets = new Insets(5, 5, 5, 5);
@@ -201,6 +209,7 @@ public class ProgressBar
         progressBar.setValue(actCount);
         progressBar.setMaximum(maxCount);
         progressBar.setString("Download tile " + actCount + "/" + maxCount);
+        updateTimes();
         if (previewVisible)
         {
             tilePreviewViewComponent.setImage(path);
@@ -215,7 +224,6 @@ public class ProgressBar
     public void errorOccured(int actCount, int maxCount, Tile tile)
     {
     // TODO Auto-generated method stub
-
     }
 
     /**
@@ -233,5 +241,54 @@ public class ProgressBar
     protected void center()
     {
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - getWidth()) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getHeight()) / 2);
+    }
+
+    private void updateTimes()
+    {
+        long ticks = Calendar.getInstance().getTimeInMillis() - start.getTimeInMillis();
+        timeElapsed.setText("Elapsed: " + timeDiff(ticks));
+        if (ticks > 0 && progressBar.getValue() > 0)
+        {
+            timeRemaining.setText("Remaining: " + timeDiff((long) (ticks / (double) (progressBar.getValue() / (double) progressBar.getMaximum())) - ticks));
+        }
+    }
+
+    /** Constant for seconds unit and conversion */
+    public static final int SECONDS = 1000;
+    /** Constant for minutes unit and conversion */
+    public static final int MINUTES = SECONDS * 60;
+    /** Constant for hours unit and conversion */
+    public static final int HOURS = MINUTES * 60;
+    /** Constant for days unit and conversion */
+    public static final int DAYS = HOURS * 24;
+
+    /**
+     * @param millisToString
+     * @return
+     */
+    private String timeDiff(long millis)
+    {
+        StringBuffer sb = new StringBuffer();
+        if (millis < 0)
+        {
+            sb.append("-");
+            millis = -millis;
+        }
+
+        long day = millis / DAYS;
+
+        if (day != 0)
+        {
+            sb.append(day);
+            sb.append(".");
+            millis = millis % DAYS;
+        }
+
+        sb.append(MessageFormat.format("{0,number,00}:", new Object[] { millis / HOURS }));
+        millis = millis % HOURS;
+        sb.append(MessageFormat.format("{0,number,00}:", new Object[] { millis / MINUTES }));
+        millis = millis % MINUTES;
+        sb.append(MessageFormat.format("{0,number,00}", new Object[] { millis / SECONDS }));
+        return sb.toString();
     }
 }

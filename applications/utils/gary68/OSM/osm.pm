@@ -65,6 +65,9 @@
 # Version 4.9
 # - APIgetWay new
 #
+# Version 5.0
+# - new osm link function
+#
 
 #
 # USAGE
@@ -94,6 +97,7 @@
 # openOsmFile ($file)					> osm file open and $line set to first node (*.osm or *.osm.bz2)
 # osbLink ($lon, $lat, $zoom) 					> $htmlString
 # osmLink ($lon, $lat, $zoom) 					> $htmlString
+# osmLinkMarkerWay ($lon, $lat, $zoom, $way)		> $htmlString
 # picLinkMapnik ($lon, $lat, $zoom)			> $htmlString
 # picLinkOsmarender ($lon, $lat, $zoom)			> $htmlString
 # printGPXHeader ($file)
@@ -144,7 +148,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '4.93' ; 
+$VERSION = '5.0' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -152,7 +156,7 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue tileNumber openOsmFile osmLink osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
+@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
 
 our $line ; 
 our $file ; 
@@ -801,6 +805,15 @@ sub osmLink {
 	my $lat = shift ;
 	my $zoom = shift ;
 	my $string = "<A HREF=\"http://www.openstreetmap.org/?mlat=" . $lat . "&mlon=" . $lon . "&zoom=" . $zoom . "\">OSM</A>" ;
+	return ($string) ;
+}
+
+sub osmLinkMarkerWay {
+	my $lon = shift ;
+	my $lat = shift ;
+	my $zoom = shift ;
+	my $way = shift ;
+	my $string = "<A HREF=\"http://www.openstreetmap.org/?mlat=" . $lat . "&mlon=" . $lon . "&zoom=" . $zoom . "&way=" . $way . "\">OSM marked</A>" ;
 	return ($string) ;
 }
 

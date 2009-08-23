@@ -22,11 +22,11 @@ use strict ;
 use warnings ;
 
 
-use OSM::osm 4.9 ;
+use OSM::osm 5.0 ;
 
 my $programName = "selfintersecting.pl" ;
 my $usage = "selfintersecting.pl file.osm out.htm out.gpx" ; 
-my $version = "1.1" ;
+my $version = "1.2" ;
 
 
 
@@ -243,7 +243,7 @@ print $html "<H2>Data</H2>\n" ;
 print $html "<table border=\"1\">\n";
 print $html "<tr>\n" ;
 print $html "<th>Line</th>\n" ;
-print $html "<th>Way Id</th>\n" ;
+print $html "<th>Way Id (map/highlight)</th>\n" ;
 print $html "<th>Way tags</th>\n" ;
 print $html "<th>Segment 1</th>\n" ;
 print $html "<th>Segment 2</th>\n" ;
@@ -262,7 +262,7 @@ foreach my $problem (@problems) {
 	
 	print $html "<tr>\n" ;
 	print $html "<td>", $line , "</td>\n" ;
-	print $html "<td>", historyLink ("way", $problem->[0]), "</td>\n"  ;
+	print $html "<td>", historyLink ("way", $problem->[0]), "<br>", osmLinkMarkerWay ($lo, $la, 16, $problem->[0]), "</td>\n"  ;
 	print $html "<td><p>" . $problem->[7] . "</p></td>\n" ;
 	print $html "<td>", $problem->[1], "</td>\n" ;
 	print $html "<td>", $problem->[2], "</td>\n" ;

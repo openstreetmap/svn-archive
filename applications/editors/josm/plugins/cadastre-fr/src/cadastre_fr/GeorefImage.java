@@ -132,8 +132,8 @@ public class GeorefImage implements Serializable {
      * Method required by BufferedImage serialization
      */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        max = (EastNorth) in.readObject();
-        min = (EastNorth) in.readObject();
+        max = new EastNorth((Double)in.readObject(), (Double)in.readObject());
+        min = new EastNorth((Double)in.readObject(), (Double)in.readObject());
         image = (BufferedImage) ImageIO.read(ImageIO.createImageInputStream(in));
         updatePixelPer();
     }
@@ -142,8 +142,10 @@ public class GeorefImage implements Serializable {
      * Method required by BufferedImage serialization
      */
     private void writeObject(ObjectOutputStream out) throws IOException {
-        out.writeObject(max);
-        out.writeObject(min);
+        out.writeObject(max.getX());
+        out.writeObject(max.getY());
+        out.writeObject(min.getX());
+        out.writeObject(min.getY());
         ImageIO.write(image, "png", ImageIO.createImageOutputStream(out));
     }
 

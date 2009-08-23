@@ -19,7 +19,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.actions.UploadAction.UploadHook;
-import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -72,9 +71,14 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - set 4th grab scale fixed size configurable (from 25 to 1000 meters)
  * 1.1 11-Jun-2009 - fixed a null exception error when trying to displace a vectorized layer
  *                 - propose to use shortcut F11 for grabbing
+ * 1.2 16-Aug-2009 - implementation of raster image grabbing, cropping and georeferencing (not the
+ *                   overview rasters (Tableau d'assemblage) but directly small units (Feuille)
+ * 1.3 23-Aug-2009 - improve georeferencing action cancellation
+ *                 - fixed bug of raster image loaded from cache not working on Java1.6
+ *                 - improve mouse click bounce detection during georeferencing process 
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "1.0";
+    static String VERSION = "1.3";
 
     static JMenu cadastreJMenu;
 

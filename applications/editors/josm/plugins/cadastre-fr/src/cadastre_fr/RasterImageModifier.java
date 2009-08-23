@@ -59,7 +59,6 @@ public class RasterImageModifier extends ImageModifier {
 
     private void makeTransparent() {
         if (bufferedImage.getColorModel() instanceof ComponentColorModel) {
-            // raster image (ComponentColorModel)
             int width = bufferedImage.getWidth();
             int height = bufferedImage.getHeight();
             BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -83,6 +82,22 @@ public class RasterImageModifier extends ImageModifier {
             bufferedImage = bi;
         }
         return;
+    }
+    
+    /**
+     * Temporary fix for Java6 which doesn't de-serialize correctly cached image on disk. 
+     * Recreate a new raster image based on what is loaded/serialized from disk cache. 
+     * @param img
+     * @return new image
+     */
+    public static BufferedImage fixRasterImage(BufferedImage img) {
+        int width = img.getWidth();
+        int height = img.getHeight();
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        int rgbArray[] = new int[width * height];
+        img.getRGB(0, 0, width, height, rgbArray, 0, width);
+        bi.setRGB(0, 0, width, height, rgbArray, 0, width);
+        return bi;
     }
 
 }

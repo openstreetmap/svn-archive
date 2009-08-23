@@ -245,41 +245,43 @@ public class CadastreInterface {
             }
             rd.close();
             urlConn.disconnect();
-            if (lines.indexOf(cImageFormat) != -1) {
-                int i = lines.indexOf(cImageFormat);
-                int j = lines.indexOf(".", i);
-                wmsLayer.setRaster(lines.substring(i+cImageFormat.length(), j).equals("image"));
-            }
-            if (!wmsLayer.isRaster() && lines.indexOf(cInterfaceVector) != -1) {  // "afficherCarteCommune.do"
-                // shall be something like: interfaceRef = "afficherCarteCommune.do?c=X2269";
-                lines = lines.substring(lines.indexOf(cInterfaceVector),lines.length());
-                lines = lines.substring(0, lines.indexOf("'"));
-                System.out.println("interface ref.:"+lines);
-                return lines;
-            } else if (wmsLayer.isRaster() && lines.indexOf(cInterfaceRasterTA) != -1) { // "afficherCarteTa.do"
-                // list of values parsed in listOfFeuilles (list all non-georeferenced images)
-                lines = getFeuillesList();
-                if (!downloadCancelled) {
-                	parseFeuillesList(lines);
-	                if (listOfFeuilles.size() > 0) {
-	                    int res = selectFeuilleDialog();
-	                    if (res != -1) {
-	                        wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).name);
-	                        checkLayerDuplicates(wmsLayer);
-	                        interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
-	                        wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).ref);
-	                        lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.elementAt(res).ref);
-	                        System.out.println("interface ref.:"+lines);
-	                        return lines;
-	                    }
-	                }
+            if (lines != null) {
+                if (lines.indexOf(cImageFormat) != -1) {
+                    int i = lines.indexOf(cImageFormat);
+                    int j = lines.indexOf(".", i);
+                    wmsLayer.setRaster(lines.substring(i+cImageFormat.length(), j).equals("image"));
                 }
-                return null;
-            } else if (lines.indexOf(cCommuneListStart) != -1 && lines.indexOf(cCommuneListEnd) != -1) {
-                // list of values parsed in listOfCommunes
-                int i = lines.indexOf(cCommuneListStart);
-                int j = lines.indexOf(cCommuneListEnd, i);
-                parseCommuneList(lines.substring(i, j));
+                if (!wmsLayer.isRaster() && lines.indexOf(cInterfaceVector) != -1) {  // "afficherCarteCommune.do"
+                    // shall be something like: interfaceRef = "afficherCarteCommune.do?c=X2269";
+                    lines = lines.substring(lines.indexOf(cInterfaceVector),lines.length());
+                    lines = lines.substring(0, lines.indexOf("'"));
+                    System.out.println("interface ref.:"+lines);
+                    return lines;
+                } else if (wmsLayer.isRaster() && lines.indexOf(cInterfaceRasterTA) != -1) { // "afficherCarteTa.do"
+                    // list of values parsed in listOfFeuilles (list all non-georeferenced images)
+                    lines = getFeuillesList();
+                    if (!downloadCancelled) {
+                        parseFeuillesList(lines);
+                        if (listOfFeuilles.size() > 0) {
+                            int res = selectFeuilleDialog();
+                            if (res != -1) {
+                                wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).name);
+                                checkLayerDuplicates(wmsLayer);
+                                interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
+                                wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).ref);
+                                lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.elementAt(res).ref);
+                                System.out.println("interface ref.:"+lines);
+                                return lines;
+                            }
+                        }
+                    }
+                    return null;
+                } else if (lines.indexOf(cCommuneListStart) != -1 && lines.indexOf(cCommuneListEnd) != -1) {
+                    // list of values parsed in listOfCommunes
+                    int i = lines.indexOf(cCommuneListStart);
+                    int j = lines.indexOf(cCommuneListEnd, i);
+                    parseCommuneList(lines.substring(i, j));
+                }
             }
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(

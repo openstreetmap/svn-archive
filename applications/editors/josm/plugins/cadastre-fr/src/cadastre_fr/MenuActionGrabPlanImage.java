@@ -3,7 +3,6 @@ package cadastre_fr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -36,9 +35,13 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
     private int cGetCorners = 1;
     private int cGetLambertCrosspieces = 2;
     private EastNorth ea1;
-    private Point mousePrevious = new Point();
+    private long mouseClickedTime = 0;
     private EastNorth georefpoint1;
     private EastNorth georefpoint2;
+    /**
+     * The time which needs to pass between two clicks during georeferencing, in milliseconds
+     */
+    private int initialClickDelay;
 
     public MenuActionGrabPlanImage() {
         super(tr(name), "cadastre_small", tr("Grab non-georeferenced image"), null, false);
@@ -47,7 +50,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
     public void actionCompleted() {
         countMouseClicked = 0;
         mode = 0;
-        mousePrevious.setLocation(0, 0);
+        mouseClickedTime = System.currentTimeMillis();
     }
     
     public void actionInterrupted() {
@@ -74,6 +77,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
                 if (wmsLayer == null) return;
                 downloadWMSPlanImage = new DownloadWMSPlanImage();
                 downloadWMSPlanImage.download(wmsLayer);
+                initialClickDelay = Main.pref.getInteger("cadastrewms.georef-click-delay",200);
                 // download sub-images of the cadastre scan and join them into one single
                 Main.worker.execute(this);
             } else {
@@ -89,23 +93,26 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         // wait until plan image is fully loaded and joined into one single image
         boolean loadedFromCache = downloadWMSPlanImage.waitFinished();
         if (wmsLayer.images.size() == 1 && !loadedFromCache) {
+            mouseClickedTime = System.currentTimeMillis();
             Main.map.mapView.addMouseListener(this);
             if (Main.pref.getBoolean("cadastrewms.noImageCropping", false) == false)
                 startCropping();
             else
                 startGeoreferencing();
-    	} else // action cancelled or image loaded from cache (and already georeferenced)
+        } else // action cancelled or image loaded from cache (and already georeferenced)
             Main.map.repaint();
     }
 
     public void mouseClicked(MouseEvent e) {
-        if (e.getX() == mousePrevious.getX() && e.getY() == mousePrevious.getY())
-            return; // double click filtered
+        if (System.currentTimeMillis() - mouseClickedTime < initialClickDelay) {
+            System.out.println("mouse click bounce detected");
+            return; // mouse click anti-bounce
+        }
         else
-            mousePrevious.setLocation(e.getX(), e.getY());
+            mouseClickedTime = System.currentTimeMillis();
         countMouseClicked++;
         EastNorth ea = Main.proj.latlon2eastNorth(Main.map.mapView.getLatLon(e.getX(), e.getY()));
-        System.out.println("clic:"+countMouseClicked+" ,"+ea);
+        System.out.println("clic:"+countMouseClicked+" ,"+ea+", mode:"+mode);
         // ignore clicks outside the image
         if (ea.east() < wmsLayer.images.get(0).min.east() || ea.east() > wmsLayer.images.get(0).max.east()
                 || ea.north() < wmsLayer.images.get(0).min.north() || ea.north() > wmsLayer.images.get(0).max.north())
@@ -152,7 +159,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
 	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
 	    		null, options, options[0]);
 	    if (ret == JOptionPane.OK_OPTION) {
-	        mousePrevious.setLocation(0, 0);
+	        mouseClickedTime = System.currentTimeMillis();
 	    } else
 	    	if (canceledOrRestartCurrAction("image cropping"))
 	    		return startCropping();
@@ -191,7 +198,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
 	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
 	    		null, options, options[0]);
 	    if (ret == JOptionPane.OK_OPTION) {
-	        mousePrevious.setLocation(0, 0);
+	        mouseClickedTime = System.currentTimeMillis();
 	    } else
 	    	if (canceledOrRestartCurrAction("georeferencing"))
 	    		return startGeoreferencing();
@@ -256,7 +263,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         String number;
         if (countMouseClicked == 1) number = "first";
         else number = "second";
-        pane.createDialog(Main.parent, tr("Set "+number+" Lambert coordinate")).setVisible(true);
+        pane.createDialog(Main.parent, tr("Set "+number+" Lambert coordinates")).setVisible(true);
         if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue())) {
             if (canceledOrRestartCurrAction("georeferencing"))
                 startGeoreferencing();

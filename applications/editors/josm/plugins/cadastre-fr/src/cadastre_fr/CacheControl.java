@@ -10,6 +10,8 @@ package cadastre_fr;
  */
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
@@ -125,6 +127,10 @@ public class CacheControl implements Runnable {
             ex.printStackTrace(System.out);
             JOptionPane.showMessageDialog(Main.parent, tr("Error loading file"), tr("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
+        }
+        if (wmsLayer.isRaster()) {
+            // serialized raster bufferedImage hangs-up on Java6. Recreate them here
+            wmsLayer.images.get(0).image = RasterImageModifier.fixRasterImage(wmsLayer.images.get(0).image);
         }
         return true;
     }

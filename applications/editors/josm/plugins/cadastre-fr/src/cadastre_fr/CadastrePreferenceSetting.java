@@ -80,7 +80,6 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         // option to reverse the grey colors (to see texts background)
         reversGrey.setSelected(Main.pref.getBoolean("cadastrewms.invertGrey", false));
         reversGrey.setToolTipText(tr("Invert the original black and white colors (and all intermediate greys). Useful for texts on dark backgrounds."));
-        reversGrey.setEnabled(alterColors.isSelected());
         cadastrewms.add(reversGrey, GBC.eop().insets(00, 0, 0, 0));
 
         // option to enable transparency
@@ -101,6 +100,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         sliderTrans.setValue((int)(Float.parseFloat(Main.pref.get("cadastrewms.brightness", "1.0f"))*10));
         sliderTrans.setPaintTicks(true);
         sliderTrans.setPaintLabels(false);
+        sliderTrans.setEnabled(transparency.isSelected());
         cadastrewms.add(sliderTrans, GBC.eol().fill(GBC.HORIZONTAL).insets(20, 0, 250, 0));
 
         // option to draw boundaries of downloaded data

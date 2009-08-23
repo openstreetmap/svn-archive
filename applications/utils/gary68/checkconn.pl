@@ -49,6 +49,10 @@
 # Version 3.0
 # - add boundary file support
 #
+# Version 4.0
+# - added online api support
+# - removed boundary support
+#
 
 use strict ;
 use warnings ;
@@ -58,10 +62,8 @@ use File::stat;
 use Time::localtime;
 
 my $program = "checkconn.pl" ;
-my $usage = $program . " def.xml file.osm out.htm out.gpx boundary.poly" ;
-my $version = "3.0" ;
-
-my $borderThreshold = 2 ; # in km
+my $usage = $program . " def.xml file.osm out.htm out.gpx" ;
+my $version = "4.0" ;
 
 my $wayId ; my $wayId2 ;
 my $wayUser ; my @wayNodes ; my @wayTags ;
@@ -74,11 +76,9 @@ my $checkWayCount = 0 ;
 my $againstWayCount = 0 ;
 my $checkedWays = 0 ;
 my $invalidWays ;
-my $borderCollisions = 0 ;
 
 my @check ;
 my @against ;
-my @borderWay = () ;
 
 my $time0 = time() ; my $time1 ; my $timeA ;
 my $i ;
@@ -94,7 +94,6 @@ my $osmName ;
 my $htmlName ;
 my $defName ;
 my $gpxName ;
-my $borderFileName = "" ;
 
 my @wayStat = () ; # 0= fully connected; 3= unconnected; 2= end unconnected; 1= start unconnected
 my @cat1 ; my %cat1hash ;
@@ -102,13 +101,15 @@ my @allWayNodes ;
 my @allCat1Nodes ;
 my %cat1Connected ;
 my @cat1Nodes ; my @cat12Nodes ;
+my %nodeNumber = () ;
 
 my @neededNodes ;
 my %lon ; my %lat ;
 my %wayStart ; my %wayEnd ; my %wayStat ;
 
-my $maxBorderCheckTime = 0 ;
-my $totalBorderCheckTime = 0 ;
+my $APIcount = 0 ;
+my $APIerrors = 0 ;
+my $APIrejections = 0 ;
 
 ###############
 # get parameter
@@ -137,18 +138,8 @@ if (!$gpxName)
 	die (print $usage, "\n");
 }
 
-$borderFileName = shift||'';
-if (!$borderFileName)
-{
-	$borderFileName = "" ;
-}
-
 print "\n$program $version for file $osmName\n\n" ;
 
-
-if ($borderFileName ne "") {
-	readBorder ($borderFileName) ;
-}
 
 
 ##################
@@ -226,6 +217,7 @@ while ($wayId != -1) {
 			$wayStat{$wayId} = 3 ;
 			push @allWayNodes, @wayNodes ;
 			push @allCat1Nodes, ($wayNodes[0], $wayNodes[-1]) ;
+			$nodeNumber{$wayId} = scalar @wayNodes ;
 		}
 
 		$found = 0 ;
@@ -237,6 +229,7 @@ while ($wayId != -1) {
 		if ($found) {
 			$againstWayCount++ ;
 			push @allWayNodes, @wayNodes ;
+			$nodeNumber{$wayId} = scalar @wayNodes ;
 		}
 	}
 	else {
@@ -438,7 +431,7 @@ open ($html, ">", $htmlName) || die ("Can't open html output file") ;
 open ($gpx, ">", $gpxName) || die ("Can't open gpx output file") ;
 
 
-printHTMLHeader ($html, "Connection Check by Gary68") ;
+printHTMLiFrameHeader ($html, "Connection Check by Gary68") ;
 printGPXHeader ($gpx) ;
 
 print $html "<H1>Connection Check by Gary68</H1>\n" ;
@@ -449,8 +442,6 @@ print $html "number ways total: $wayCount<br>\n" ;
 print $html "number invalid ways (1 node only): $invalidWays<br>\n" ;
 print $html "number check ways: $checkWayCount<br>\n" ;
 print $html "number against ways: $againstWayCount</p>\n" ;
-print $html "<p>border file: $borderFileName<br>\n" ;
-print $html "min border distance: $borderThreshold</p>\n" ;
 
 
 print $html "<p>Check ways: " ;
@@ -479,58 +470,59 @@ print $html "</tr>\n" ;
 $i = 0 ;
 foreach $wayId (@cat1) {
 
-	# border check
-	if ( ($wayStat{$wayId} == 1) or ($wayStat{$wayId} == 3) ) {
-		if ( ! minDistToBorderOK ($wayStart{$wayId})   ) {
-			$wayStat{$wayId} = $wayStat{$wayId} - 1 ;
-			#print "dropped start node of way $wayId because low dist to border node\n" ;
-			$borderCollisions++ ;
-		}
-	}
-	if ( ($wayStat{$wayId} == 2) or ($wayStat{$wayId} == 3) ) {
-		if ( ! minDistToBorderOK ($wayEnd{$wayId})   ) {
-			$wayStat{$wayId} = $wayStat{$wayId} - 2 ;
-			#print "dropped end node of way $wayId because low dist to border node\n" ;
-			$borderCollisions++ ;
-		}
-	}
-
 
 	if ($wayStat{$wayId} > 0) {
-		$i++ ;
+		# check API way data
+		my $APIok = 1 ;
+		#print "request API data for way $wayId...\n" ;
+		$APIcount++ ;
+		sleep (1) ; # don't stress API
+		my ($id, $u, @nds, @tags, $ndsRef, $tagRef) ;
+		($id, $u, $ndsRef, $tagRef) = APIgetWay ($wayId) ;
+		#print "API request finished.\n" ;
+		@nds = @$ndsRef ; @tags = @$tagRef ;
+		if ($id == 0) { $APIerrors++ ; }
+		if ( ( $nodeNumber{$wayId} != scalar @nds) and ($wayId == $id) ) { 
+			$APIok = 0 ;
+			$APIrejections++ ;
+			print "WARNING: $wayId ignored because node count of osm file not equal to API node count\n" ;
+		}
+		if ($APIok == 1) {
+			$i++ ;
 
-		my $status ;
-		if ($wayStat{$wayId} == 1) { $status = "start" ; } 
-		if ($wayStat{$wayId} == 2) { $status = "end" ; } 
-		if ($wayStat{$wayId} == 3) { $status = "start/end" ; } 
+			my $status ;
+			if ($wayStat{$wayId} == 1) { $status = "start" ; } 
+			if ($wayStat{$wayId} == 2) { $status = "end" ; } 
+			if ($wayStat{$wayId} == 3) { $status = "start/end" ; } 
 
-		# HTML
-		print $html "<tr>\n" ;
-		print $html "<td>", $i , "</td>\n" ;
-		print $html "<td>", historyLink ("way", $wayId) , "</td>\n" ;
-		print $html "<td>", $status , "</td>\n" ;
-
-		print $html "<td>start ", osmLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16) , "<br>\n" ;
-		print $html "start ", osbLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16) , "</td>\n" ;
-		print $html "<td>start ", josmLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 0.01, $wayId), "</td>\n" ;
-
-		print $html "<td>end ", osmLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16) , "<br>\n" ;
-		print $html "end ", osbLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16) , "</td>\n" ;
-		print $html "<td>end ", josmLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 0.01, $wayId), "</td>\n" ;
-
-		print $html "<td>", picLinkOsmarender ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16), "</td>\n" ;
-		print $html "<td>", picLinkOsmarender ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16), "</td>\n" ;
-		print $html "</tr>\n" ;
-
-		# GPX
-		if (($wayStat{$wayId} == 1) or ($wayStat{$wayId} == 3) ) { 
-			my ($text) = "ChkCon - " . $defName . " - way start unconnected" ;
-			printGPXWaypoint ($gpx, $lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, $text) ;
-		} 
-		if (($wayStat{$wayId} == 2) or ($wayStat{$wayId} == 3) ) { 
-			my ($text) = "ChkCon - " . $defName . " - way end unconnected" ;
-			printGPXWaypoint ($gpx, $lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, $text) ;
-		} 
+			# HTML
+			print $html "<tr>\n" ;
+			print $html "<td>", $i , "</td>\n" ;
+			print $html "<td>", historyLink ("way", $wayId) , "</td>\n" ;
+			print $html "<td>", $status , "</td>\n" ;
+	
+			print $html "<td>start ", osmLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16) , "<br>\n" ;
+			print $html "start ", osbLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16) , "</td>\n" ;
+			print $html "<td>start ", josmLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 0.01, $wayId), "</td>\n" ;
+	
+			print $html "<td>end ", osmLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16) , "<br>\n" ;
+			print $html "end ", osbLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16) , "</td>\n" ;
+			print $html "<td>end ", josmLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 0.01, $wayId), "</td>\n" ;
+	
+			print $html "<td>", picLinkOsmarender ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16), "</td>\n" ;
+			print $html "<td>", picLinkOsmarender ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16), "</td>\n" ;
+			print $html "</tr>\n" ;
+	
+			# GPX
+			if (($wayStat{$wayId} == 1) or ($wayStat{$wayId} == 3) ) { 
+				my ($text) = "ChkCon - " . $defName . " - way start unconnected" ;
+				printGPXWaypoint ($gpx, $lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, $text) ;
+			} 
+			if (($wayStat{$wayId} == 2) or ($wayStat{$wayId} == 3) ) { 
+				my ($text) = "ChkCon - " . $defName . " - way end unconnected" ;
+				printGPXWaypoint ($gpx, $lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, $text) ;
+			} 
+		}
 	}
 }
 print $html "</table>\n" ;
@@ -541,6 +533,9 @@ print $html "<p>$i lines total</p>\n" ;
 ########
 # FINISH
 ########
+print $html "<p>$APIcount API calls</p>" ;
+print $html "<p>$APIerrors API errors</p>" ;
+print $html "<p>$APIrejections API rejections</p>" ;
 print $html "<p>", stringTimeSpent ($time1-$time0), "</p>\n" ;
 printHTMLFoot ($html) ;
 printGPXFoot ($gpx) ;
@@ -550,7 +545,9 @@ close ($gpx) ;
 
 statistics ( ctime(stat($osmName)->mtime),  $program,  $defName, $osmName,  $checkWayCount,  $i) ;
 
-print "\nborder collisions found: $borderCollisions\n" ;
+print "\n$APIcount API calls\n" ;
+print "$APIerrors API errors\n" ;
+print "$APIrejections API rejections\n" ;
 print "\n$program finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;
 
 
@@ -585,69 +582,3 @@ sub statistics {
 	return ;
 }
 
-
-
-sub readBorder {
-	my ($borderFileName) = shift ;
-	my $borderFile ;
-	my $line ;
-	my $id = 0 ;
-	my $dist ;
-	my $lastLon = 0 ; my $lastLat = 0 ; my $maxDist = 0 ;
-	
-	open ($borderFile, "<", $borderFileName) || die ("couldn't open border file");
-	print "parsing border file...\n" ;	
-	$line = <$borderFile> ;
-	$line = <$borderFile> ;
-	$line = <$borderFile> ;
-	while (! (grep /END/, $line) ) {
-		$id-- ; # negative ids for border nodes
-		#($lo, $la) = sscanf ("%g %g", $line) ;
-		#print "line: $line\n" ;
-		my ($lo, $la)   = ($line =~ /^\s*([\-\+\d\.Ee]+)\s+([\-\+\d\.Ee]+)+/ ) ;	
-		if (!defined ($lo))  { print "id: $id line: $line\n" ; }
-		$lon{$id} = $lo ; $lat{$id} = $la ;
-		if ($lastLon == 0) {
-			$lastLon = $lo ;
-			$lastLat = $la ;
-		}
-		push @borderWay, $id ;
-		$line = <$borderFile> ;
-		$dist = distance ($lo, $la, $lastLon, $lastLat) ;
-		if ($dist > $maxDist) { $maxDist = $dist ; }
-		#printf "%3d \n", distance ($lo, $la, $lastLon, $lastLat) ;
-		$lastLon = $lo ;
-		$lastLat = $la ;
-	}
-	close ($borderFile) ;
-	print $id*(-1), " border nodes read.\nmax distance between border nodes: $maxDist\n\n" ;
-}
-
-sub minDistToBorderOK {
-	my (@nodes) = @_ ;
-	my $way ; my $node ; my $borderNode ;
-	my $ok = 1 ;
-	#print "checking distance...\n" ;
-
-	my ($startTime) = time() ;
-	loopA: 
-	foreach $node (@nodes) {
-		foreach $borderNode (@borderWay) {
-			my ($dist) = distance ($lon{$borderNode}, $lat{$borderNode}, $lon{$node}, $lat{$node}) ;
-			if ($dist < $borderThreshold) { 
-				$ok = 0 ; 
-				last loopA ;  
-			}
-		}
-	}
-
-	my ($secs) = time() - $startTime ;
-	#print "done extensive border check in $secs seconds...\n" ;
-	$totalBorderCheckTime += $secs ;
-	if ( $secs > $maxBorderCheckTime ) {
-		$maxBorderCheckTime = $secs ;
-		print "max border check now $maxBorderCheckTime secs\n" ;
-	}
-
-	return $ok ;
-}

@@ -35,7 +35,7 @@ public abstract class TileListCommon
      * @param zoomLevel
      * @return tileY
      */
-    public int calculateTileY(double lat, int zoomLevel)
+    protected final int calculateTileY(double lat, int zoomLevel)
     {
         if (lat < Constants.MIN_LAT)
         {
@@ -54,7 +54,7 @@ public abstract class TileListCommon
      * @param zoomLevel
      * @return tileX
      */
-    public int calculateTileX(double lon, int zoomLevel)
+    protected final int calculateTileX(double lon, int zoomLevel)
     {
         if (lon < Constants.MIN_LON)
         {
@@ -67,6 +67,34 @@ public abstract class TileListCommon
 
         int x = (int) Math.floor((lon + 180) / 360 * (1 << zoomLevel));
         return x;
+    }
+
+    /**
+     * @param minValue
+     * @param maxValue
+     * @return
+     */
+    protected final int getMax(int minValue, int maxValue)
+    {
+        if (minValue > maxValue)
+        {
+            return minValue;
+        }
+        return maxValue;
+    }
+
+    /**
+     * @param minValue
+     * @param maxValue
+     * @return
+     */
+    protected final int getMin(int minValue, int maxValue)
+    {
+        if (minValue > maxValue)
+        {
+            return maxValue;
+        }
+        return minValue;
     }
 
     /**

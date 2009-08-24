@@ -22,10 +22,22 @@
 					</table>
 		      		<table>
 						<tr>
+							<td><img src="markers/marker-green.png"></td>
 							<td><input type="button" name="from" onclick="elementClick(this);" value="From:" tabindex=5></td>
 							<td><input type="text" name="from_text" onclick="elementClick(this);" onchange="elementChange(this);" value="e.g. Street, City" tabindex=1 onfocus="this.select()"></td>
+							<td id="from_pos" />
+						</tr>
+						<tr id="add waypoint">
+							<td></td>
+							<td><input type="button" name="add waypoint" onclick="elementClick(this);" value="Add Waypoint:" tabindex=5></td>
+						</tr>
+						<tr>
+							<td><img src="markers/marker-red.png"></td>
 							<td><input type="button" name="to" onclick="elementClick(this);" value="To:" tabindex=6></td>
 							<td><input type="text" name="to_text" onclick="elementClick(this);" onchange="elementChange(this);" value="e.g. Street, City" tabindex=2 onfocus="this.select()"></td>
+							<td id="to_pos" />
+						</tr>
+						<tr>
 							<td><input type="button" name="calculate" onclick="elementClick(this);" value="Find route" tabindex=3></td>
 			        		<td><input type="button" name="clear" onclick="elementClick(this);" value="Clear" tabindex=4></td>
 			        		<td><input type="button" name="reverse" onclick="reverseRoute(this);" value="Reverse" tabindex=7></td>

@@ -34,10 +34,12 @@ import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxXY;
+import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationGPX;
 import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonBBox;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonGPX;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
 
 public class JTileDownloaderCommandLine
@@ -99,11 +101,34 @@ public class JTileDownloaderCommandLine
         {
             handleBBoxXY(propertyFile);
         }
+        else if (type.equalsIgnoreCase(DownloadConfigurationGPX.ID))
+        {
+            handleGPX(propertyFile);
+        }
         else
         {
             log("File '" + propertyFile + "' contains an unknown format. Please specify a valid file!");
         }
 
+    }
+
+    /**
+     * @param propertyFile
+     */
+    private void handleGPX(String propertyFile)
+    {
+        _downloadTemplate = new DownloadConfigurationGPX(propertyFile);
+        _downloadTemplate.loadFromFile();
+
+        _tileList = new TileListCommonGPX();
+
+        ((TileListCommonGPX) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadTemplate.getOutputZoomLevels()));
+
+        String gpxFile = ((DownloadConfigurationGPX) _downloadTemplate).getGpxFile();
+        int corridor = ((DownloadConfigurationGPX) _downloadTemplate).getCorridor();
+        ((TileListCommonGPX) _tileList).updateList(gpxFile, corridor);
+
+        startDownload(_downloadTemplate.getTileServer());
     }
 
     /**
@@ -216,8 +241,9 @@ public class JTileDownloaderCommandLine
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int)
      * {@inheritDoc}
      */
-    public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList)
+    public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList, int updatedTileCount)
     {
+        log("updated " + updatedTileCount + " tiles");
         log("download completed with " + errorCount + " errors");
     }
 
@@ -225,9 +251,9 @@ public class JTileDownloaderCommandLine
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String)
      * {@inheritDoc}
      */
-    public void downloadedTile(int actCount, int maxCount, String path)
+    public void downloadedTile(int actCount, int maxCount, String path, boolean updatedTile)
     {
-        log("downloaded tile " + actCount + "/" + maxCount + " to " + path);
+        log("downloaded tile " + actCount + "/" + maxCount + " to " + path + ": updated flag is " + updatedTile);
     }
 
     /**

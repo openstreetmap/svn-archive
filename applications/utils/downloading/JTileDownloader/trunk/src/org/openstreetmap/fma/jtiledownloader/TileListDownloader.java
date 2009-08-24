@@ -126,7 +126,7 @@ public class TileListDownloader
             result = doSingleDownload(fileName, url);
             if (result.getCode() == TileDownloadResult.CODE_OK)
             {
-                fireDownloadedTileEvent(fileName, actDownloadCounter, getNumberOfTilesToDownload(getTilesToDownload()));
+                fireDownloadedTileEvent(fileName, actDownloadCounter, getNumberOfTilesToDownload(getTilesToDownload()), result.isUpdatedTile());
                 break;
             }
             else if (result.getCode() == TileDownloadResult.CODE_HTTP_500)
@@ -292,6 +292,7 @@ public class TileListDownloader
 
         result.setCode(TileDownloadResult.CODE_OK);
         result.setMessage(TileDownloadResult.MSG_OK);
+        result.setUpdatedTile(true);
         return result;
     }
 
@@ -315,11 +316,11 @@ public class TileListDownloader
      * @param actCount
      * @param maxCount
      */
-    private void fireDownloadedTileEvent(String fileName, int actCount, int maxCount)
+    private void fireDownloadedTileEvent(String fileName, int actCount, int maxCount, boolean updatedTile)
     {
         if (_listener != null)
         {
-            _listener.downloadedTile(actCount, maxCount, fileName);
+            _listener.downloadedTile(actCount, maxCount, fileName, updatedTile);
         }
     }
 
@@ -351,11 +352,11 @@ public class TileListDownloader
     /**
      * 
      */
-    private void fireDownloadCompleteEvent(int errorCount, Vector<TileDownloadError> errorTileList)
+    private void fireDownloadCompleteEvent(int errorCount, Vector<TileDownloadError> errorTileList, int updatedTileCount)
     {
         if (_listener != null)
         {
-            _listener.downloadComplete(errorCount, errorTileList);
+            _listener.downloadComplete(errorCount, errorTileList, updatedTileCount);
         }
     }
 
@@ -448,6 +449,8 @@ public class TileListDownloader
 
             int errorCount = 0;
             int tileCounter = 0;
+            int updatedTileCount = 0;
+
             for (Enumeration<Tile> enumeration = getTilesToDownload().elements(); enumeration.hasMoreElements();)
             {
                 if (interrupted())
@@ -471,6 +474,10 @@ public class TileListDownloader
                     errorTileList.add(error);
                     fireErrorOccuredEvent(tileToDownload, tileCounter, getNumberOfTilesToDownload(getTilesToDownload()));
                 }
+                else
+                {
+                    updatedTileCount++;
+                }
 
                 if ((tileCounter < getNumberOfTilesToDownload(getTilesToDownload())) && AppConfiguration.getInstance().getWaitAfterNrTiles())
                 {
@@ -491,7 +498,7 @@ public class TileListDownloader
                     }
                 }
             }
-            fireDownloadCompleteEvent(errorCount, errorTileList);
+            fireDownloadCompleteEvent(errorCount, errorTileList, updatedTileCount);
         }
     }
 }

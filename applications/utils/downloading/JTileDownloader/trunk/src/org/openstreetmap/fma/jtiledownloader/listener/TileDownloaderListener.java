@@ -32,13 +32,13 @@ public interface TileDownloaderListener
      * @param maxCount
      * @param path
      */
-    void downloadedTile(int actCount, int maxCount, String path);
+    void downloadedTile(int actCount, int maxCount, String path, boolean updatedTile);
 
     /**
      * @param errorCount
      * @param errorTileList
      */
-    void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList);
+    void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList, int updatedTileCount);
 
     /**
      * @param actCount

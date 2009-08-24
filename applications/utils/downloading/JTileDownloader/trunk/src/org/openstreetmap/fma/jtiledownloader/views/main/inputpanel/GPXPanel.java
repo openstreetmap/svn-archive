@@ -23,6 +23,7 @@
 
 package org.openstreetmap.fma.jtiledownloader.views.main.inputpanel;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -36,9 +37,13 @@ import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
+import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationGPX;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonGPX;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
@@ -59,6 +64,11 @@ public class GPXPanel
     private JTextField _textGPXFile = new JTextField();
     private JButton _selectFileButton = new JButton("Select file...");
 
+    private JLabel _labelSliderCorridor = new JLabel("Corridor in km (0 will use the bounding rectangle of GPX file)");
+    private JSlider _sliderCorridor = new JSlider(0, 30, 0);
+
+    private DownloadConfigurationGPX _downloadConfig;
+
     /**
      * 
      */
@@ -75,7 +85,29 @@ public class GPXPanel
      */
     @Override
     public void loadConfig()
-    {}
+    {
+        _downloadConfig = new DownloadConfigurationGPX();
+        _downloadConfig.loadFromFile();
+
+        _textGPXFile.setText(_downloadConfig.getGpxFile());
+        _sliderCorridor.setValue(_downloadConfig.getCorridor());
+
+        setCommonValues(_downloadConfig);
+    }
+
+    @Override
+    public void saveConfig()
+    {
+        if (_downloadConfig == null)
+        {
+            return;
+        }
+
+        _downloadConfig.setGpxFile(_textGPXFile.getText());
+        _downloadConfig.setCorridor(_sliderCorridor.getValue());
+        super.saveCommonConfig(_downloadConfig);
+        _downloadConfig.saveToFile();
+    }
 
     /**
      * 
@@ -122,6 +154,27 @@ public class GPXPanel
                 }
             }
         });
+
+        _sliderCorridor.setMinorTickSpacing(1);
+        _sliderCorridor.setMajorTickSpacing(5);
+        _sliderCorridor.setPaintTicks(true);
+        _sliderCorridor.setSnapToTicks(true);
+        _sliderCorridor.setPaintLabels(true);
+        _sliderCorridor.addChangeListener(new ChangeListener() {
+            /**
+             * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+             * {@inheritDoc}
+             */
+            public void stateChanged(ChangeEvent e)
+            {
+                JSlider source = (JSlider) e.getSource();
+                if (!source.getValueIsAdjusting())
+                {
+                    updateAll();
+                }
+            }
+
+        });
     }
 
     /**
@@ -140,11 +193,9 @@ public class GPXPanel
         add(_labelGPXFile, constraints);
         add(_textGPXFile, constraints);
         add(_selectFileButton, constraints);
+        add(_labelSliderCorridor, constraints);
+        add(_sliderCorridor, constraints);
     }
-
-    @Override
-    public void saveConfig()
-    {}
 
     /**
      * @return number of tiles
@@ -191,9 +242,13 @@ public class GPXPanel
     @Override
     public void updateAll()
     {
+        setCursor(new Cursor(Cursor.WAIT_CURSOR));
+
         _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
-        _tileList.updateList(_textGPXFile.getText());
+        _tileList.updateList(_textGPXFile.getText(), _sliderCorridor.getValue());
         updateNumberOfTiles();
+
+        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**

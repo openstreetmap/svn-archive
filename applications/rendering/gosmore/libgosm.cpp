@@ -1262,7 +1262,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	}
 	if (nameIsRelation) {
 	  xmlFree (nameTag);
-	  char str[21];
+	  char str[22];
 	  sprintf (str, "%d %d", member[0], member[1]);
 	  nameTag = (char *) xmlStrdup (BAD_CAST str);
 	}

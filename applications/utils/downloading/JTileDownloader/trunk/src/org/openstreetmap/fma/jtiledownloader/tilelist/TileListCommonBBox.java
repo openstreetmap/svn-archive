@@ -157,34 +157,6 @@ public class TileListCommonBBox
     }
 
     /**
-     * @param topLeft
-     * @param bottomRight
-     * @return
-     */
-    private int getMax(int topLeft, int bottomRight)
-    {
-        if (topLeft > bottomRight)
-        {
-            return topLeft;
-        }
-        return bottomRight;
-    }
-
-    /**
-     * @param topLeft
-     * @param bottomRight
-     * @return
-     */
-    private int getMin(int topLeft, int bottomRight)
-    {
-        if (topLeft > bottomRight)
-        {
-            return bottomRight;
-        }
-        return topLeft;
-    }
-
-    /**
      * Getter for xTopLeft
      * @return the xTopLeft
      */

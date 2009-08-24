@@ -28,6 +28,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.openstreetmap.fma.jtiledownloader.Constants;
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -41,7 +42,7 @@ public class TileListCommonGPX
 {
     private Vector<Tile> tilesToDownload = new Vector<Tile>();
 
-    public void updateList(String fileName)
+    public void updateList(String fileName, int corridorSize)
     {
         tilesToDownload.clear();
         File file = new File(fileName);
@@ -75,17 +76,17 @@ public class TileListCommonGPX
                         {
                             // handle all trgSegments
                             NodeList trkSegs = nodes.item(i).getChildNodes();
-                            for (int j = 0; j < trkSegs.getLength(); j++)
+                            for (int indexTrkSeg = 0; indexTrkSeg < trkSegs.getLength(); indexTrkSeg++)
                             {
-                                if (trkSegs.item(j).getLocalName() != null && trkSegs.item(j).getLocalName().equalsIgnoreCase("trkseg"))
+                                if (trkSegs.item(indexTrkSeg).getLocalName() != null && trkSegs.item(indexTrkSeg).getLocalName().equalsIgnoreCase("trkseg"))
                                 {
                                     // handle all trkpts
-                                    NodeList trkPts = trkSegs.item(j).getChildNodes();
-                                    for (int k = 0; k < trkPts.getLength(); k++)
+                                    NodeList trkPts = trkSegs.item(indexTrkSeg).getChildNodes();
+                                    for (int indexTrkPt = 0; indexTrkPt < trkPts.getLength(); indexTrkPt++)
                                     {
-                                        if (trkPts.item(k).getLocalName() != null && trkPts.item(k).getLocalName().equalsIgnoreCase("trkpt"))
+                                        if (trkPts.item(indexTrkPt).getLocalName() != null && trkPts.item(indexTrkPt).getLocalName().equalsIgnoreCase("trkpt"))
                                         {
-                                            handleTrkPt(trkPts.item(k), zoomLevel);
+                                            handleTrkPt(trkPts.item(indexTrkPt), zoomLevel, corridorSize);
                                         }
                                     }
                                 }
@@ -118,7 +119,7 @@ public class TileListCommonGPX
         }
     }
 
-    private void handleTrkPt(Node item, int zoomLevel)
+    private void handleTrkPt(Node item, int zoomLevel, int corridorSize)
     {
         NamedNodeMap attrs = item.getAttributes();
         if (attrs.getNamedItem("lat") != null && attrs.getNamedItem("lon") != null)
@@ -127,13 +128,41 @@ public class TileListCommonGPX
             {
                 Double lat = Double.parseDouble(attrs.getNamedItem("lat").getTextContent());
                 Double lon = Double.parseDouble(attrs.getNamedItem("lon").getTextContent());
-                int downloadTileXIndex = calculateTileX(lon, zoomLevel);
-                int downloadTileYIndex = calculateTileY(lat, zoomLevel);
-                Tile tile = new Tile(downloadTileXIndex, downloadTileYIndex, zoomLevel);
-                if (!tilesToDownload.contains(tile))
+                int minDownloadTileXIndex = 0;
+                int maxDownloadTileXIndex = 0;
+                int minDownloadTileYIndex = 0;
+                int maxDownloadTileYIndex = 0;
+                if (corridorSize > 0)
                 {
-                    log("add " + tile + " to download list.");
-                    tilesToDownload.add(tile);
+                    double minLat = lat - 360 * (corridorSize * 1000 / Constants.EARTH_CIRC_POLE);
+                    double minLon = lon - 360 * (corridorSize * 1000 / (Constants.EARTH_CIRC_EQUATOR * Math.cos(lon * Math.PI / 180)));
+                    double maxLat = lat + 360 * (corridorSize * 1000 / Constants.EARTH_CIRC_POLE);
+                    double maxLon = lon + 360 * (corridorSize * 1000 / (Constants.EARTH_CIRC_EQUATOR * Math.cos(lon * Math.PI / 180)));
+                    minDownloadTileXIndex = calculateTileX(minLon, zoomLevel);
+                    maxDownloadTileXIndex = calculateTileX(maxLon, zoomLevel);
+                    minDownloadTileYIndex = calculateTileY(minLat, zoomLevel);
+                    maxDownloadTileYIndex = calculateTileY(maxLat, zoomLevel);
+                }
+                else
+                {
+                    minDownloadTileXIndex = calculateTileX(lon, zoomLevel);
+                    maxDownloadTileXIndex = minDownloadTileXIndex;
+                    minDownloadTileYIndex = calculateTileY(lat, zoomLevel);
+                    maxDownloadTileYIndex = minDownloadTileYIndex;
+                }
+
+                for (int tileXIndex = getMin(minDownloadTileXIndex, maxDownloadTileXIndex); tileXIndex <= getMax(minDownloadTileXIndex, maxDownloadTileXIndex); tileXIndex++)
+                {
+                    for (int tileYIndex = getMin(minDownloadTileYIndex, maxDownloadTileYIndex); tileYIndex <= getMax(minDownloadTileYIndex, maxDownloadTileYIndex); tileYIndex++)
+                    {
+                        Tile tile = new Tile(tileXIndex, tileYIndex, zoomLevel);
+                        if (!tilesToDownload.contains(tile))
+                        {
+                            log("add " + tile + " to download list.");
+                            tilesToDownload.add(tile);
+                        }
+                    }
+
                 }
             }
             catch (NumberFormatException e)

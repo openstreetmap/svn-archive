@@ -42,6 +42,7 @@ public class TileDownloadResult
 
     private int _code = CODE_OK;
     private String _message = "";
+    private boolean _updatedTile = false;
 
     /**
      * Setter for code
@@ -77,6 +78,24 @@ public class TileDownloadResult
     public String getMessage()
     {
         return _message;
+    }
+
+    /**
+     * Setter for updatedTile
+     * @param updatedTile the updatedTile to set
+     */
+    public void setUpdatedTile(boolean updatedTile)
+    {
+        _updatedTile = updatedTile;
+    }
+
+    /**
+     * Getter for updatedTile
+     * @return the updatedTile
+     */
+    public boolean isUpdatedTile()
+    {
+        return _updatedTile;
     }
 
 }

@@ -49,7 +49,7 @@ import org.openstreetmap.fma.jtiledownloader.tilelist.TileListSimple;
 import org.openstreetmap.fma.jtiledownloader.views.errortilelist.ErrorTileListView;
 
 /**
- * Progressbar for Dowbloader
+ * Progressbar for Downloader
  */
 public class ProgressBar
     extends JDialog
@@ -59,12 +59,15 @@ public class ProgressBar
     private JProgressBar progressBar = new JProgressBar(0, 0);
     private JLabel timeElapsed = new JLabel("Elapsed: n/a");
     private JLabel timeRemaining = new JLabel("Remaining: n/a");
+    private JLabel updatedTileCounter = new JLabel("Updated Tile Counter: n/a");
     private JCheckBox showPreview = new JCheckBox("Show Preview");
     private Boolean previewVisible = false;
     private JButton abortButton = new JButton("Abort");
     private TilePreviewViewComponent tilePreviewViewComponent = new TilePreviewViewComponent();
     private TileListDownloader downloader = null;
     private Calendar start = Calendar.getInstance();
+
+    private int _updatedTileCounter = 0;
 
     public ProgressBar(int tilesCount, TileListDownloader downloader)
     {
@@ -91,6 +94,7 @@ public class ProgressBar
         add(progressBar, constraints);
         add(timeElapsed, constraints);
         add(timeRemaining, constraints);
+        add(updatedTileCounter, constraints);
         add(abortButton, constraints);
         abortButton.addActionListener(this);
         constraints.insets = new Insets(5, 5, 5, 5);
@@ -158,8 +162,17 @@ public class ProgressBar
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.Vector)
      * {@inheritDoc}
      */
-    public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList)
+    public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList, int updatedTileCount)
     {
+        try
+        {
+            // just wait a short time if no tiles were updated
+            Thread.sleep(1500);
+        }
+        catch (InterruptedException e)
+        {
+        }
+
         if (errorTileList != null && errorTileList.size() > 0)
         {
             ErrorTileListView view = new ErrorTileListView(errorTileList);
@@ -204,12 +217,17 @@ public class ProgressBar
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String)
      * {@inheritDoc}
      */
-    public void downloadedTile(int actCount, int maxCount, String path)
+    public void downloadedTile(int actCount, int maxCount, String path, boolean updatedTile)
     {
         progressBar.setValue(actCount);
         progressBar.setMaximum(maxCount);
         progressBar.setString("Download tile " + actCount + "/" + maxCount);
         updateTimes();
+        if (updatedTile)
+        {
+            _updatedTileCounter++;
+        }
+        updatedTileCounter.setText("Updated Tile Counter: " + _updatedTileCounter);
         if (previewVisible)
         {
             tilePreviewViewComponent.setImage(path);

@@ -1638,9 +1638,11 @@ int UserInterface (int argc, char *argv[],
     for (; shortest; shortest = shortest->shortest) {
       wayType *w = Way (shortest->nd);
       char *name = (char*)(w + 1) + 1;
+      unsigned style= StyleNr(w);
       printf ("%lf,%lf,%c,%s,%.*s\n\r", LatInverse (shortest->nd->lat),
         LonInverse (shortest->nd->lon), JunctionType (shortest->nd),
-        klasTable[StyleNr (w)].desc, (int) strcspn (name, "\n"), name);
+	style < sizeof(klasTable)/sizeof(klasTable[0]) ? klasTable[style].desc :
+	"(unknown-style)", (int) strcspn (name, "\n"), name);
     }
     return 0;
   }

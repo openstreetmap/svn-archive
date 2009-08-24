@@ -282,6 +282,21 @@ enum { STYLE_BITS = 8, RESTRICTIONS layerBit1,layerBit2,layerBit3 };
                "  <tag k='amenity' v='place_of_worship' />\n") \
  s (religion, taoist,         "taoism"          , \
                "  <tag k='amenity' v='place_of_worship' />\n") \
+ /* Types for the cyclenet code in RebuildPak. Without the code for QUERY_STRING will
+  * fail to report the correct road type. Has to include all types in elemstyles.xml */ \
+ s (cyclenethighway, unclassified, "unclassified","") \
+ s (cyclenethighway, tertiary, "tertiary"       , "") \
+ s (cyclenethighway, secondary, "secondary"     , "") \
+ s (cyclenethighway, secondary_link, "sec link" , "") \
+ s (cyclenethighway, primary, "primary"         , "") \
+ s (cyclenethighway, primary_link, "primary_link","") \
+ s (cyclenethighway, trunk,   "trunk"           , "") \
+ s (cyclenethighway, trunk_link, "trunk link"   , "") \
+ s (cyclenethighway, footway, "footway"         , "") \
+ s (cyclenethighway, service, "service"         , "") \
+ s (cyclenethighway, steps,   "steps"           , "") \
+ s (cyclenethighway, motorway, "motorway"       , "") \
+ s (cyclenethighway, motorway_link, "mway link" , "") \
  /* relations must be last and restriction_no_right_turn must be first */ \
  s (restriction, no_right_turn, ""              , "") \
  s (restriction, no_left_turn, ""               , "") \

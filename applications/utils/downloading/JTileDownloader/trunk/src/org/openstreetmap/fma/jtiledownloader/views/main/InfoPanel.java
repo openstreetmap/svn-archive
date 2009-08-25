@@ -83,24 +83,24 @@ public class InfoPanel
         _textInfo.setRows(10);
 
         _textInfo.setText("JTileDownloader Version " + Constants.VERSION + "\n");
-        _textInfo.append("-------------------------------------------------------\n");
+        _textInfo.append("----------------------------------------\n");
         _textInfo.append("JTileDownloader  Copyright (C) 2008  Friedrich Maier\n");
         _textInfo.append("This program comes with ABSOLUTELY NO WARRANTY.\n");
         _textInfo.append("This is free software, and you are welcome to redistribute\n");
         _textInfo.append("it under certain conditions\n");
         _textInfo.append("See file COPYING.txt and README.txt for details.\n");
         _textInfo.append("GPLv3 see <http://www.gnu.org/licenses/>\n");
-        _textInfo.append("-------------------------------------------------------\n");
+        _textInfo.append("----------------------------------------\n");
         _textInfo.append("Project Homepage:\n");
         _textInfo.append("http://wiki.openstreetmap.org/index.php/JTileDownloader\n");
-        _textInfo.append("-------------------------------------------------------\n");
+        _textInfo.append("----------------------------------------\n");
 
         _textInfo.append("Downloaded data (tiles) is based on\nhttp://www.openstreetmap.org\n");
         _textInfo.append("see http://wiki.openstreetmap.org/index.php/OpenStreetMap_License\n");
         _textInfo.append("\n");
         _textInfo.append("Plase take also a look at the 'Tile usage policy'\nhttp://wiki.openstreetmap.org/index.php/Tile_usage_policy\n");
         _textInfo.append("\n");
-        _textInfo.append("-------------------------------------------------------\n");
+        _textInfo.append("----------------------------------------\n");
         _textInfo.append("Predefined tile servers are:\n");
         TileProviderIf[] tileServerList = new TileProviderList().getTileProviderList();
         for (int index = 0; index < tileServerList.length; index++)
@@ -109,7 +109,7 @@ public class InfoPanel
             _textInfo.append(tileServerList[index].getTileServerUrl() + "\n");
         }
 
-        _textInfo.append("-------------------------------------------------------\n");
+        _textInfo.append("----------------------------------------\n");
         _textInfo.append("Source code of this program is available at:\n");
         _textInfo.append("http://svn.openstreetmap.org/applications/utils/downloading/JTileDownloader/\n");
 

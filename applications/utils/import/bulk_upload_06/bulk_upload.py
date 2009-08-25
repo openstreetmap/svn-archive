@@ -56,7 +56,6 @@ class APIError(Exception): pass
 
 class ImportProcessor:
     currentChangeset = None
-    relationStore = []
     idMap = None
 
     def __init__(self,user,password,idMap,tags={}):
@@ -68,6 +67,9 @@ class ImportProcessor:
 
 
     def parse(self, infile):
+        relationStore = {}
+        relationSort = False
+        
         osmData=ET.parse(infile)
         osmRoot = osmData.getroot()
         if osmRoot.tag != "osm":
@@ -96,14 +98,35 @@ class ImportProcessor:
                             old_id_type = child.attrib['type']
                             if self.idMap[old_id_type].has_key(old_id):
                                 child.attrib['ref'] = self.idMap[old_id_type][old_id]
-                            if old_id_type == "relation" and elem not in self.relationStore:
-                                self.relationStore.append(elem)
+                            if old_id_type == "relation":
+                                relationSort = True
+                    relationStore[elem.attrib['id']] = elem
 
-                if elem not in self.relationStore:
+                if elem.tag != 'relation':
                     self.addToChangeset(elem)
 
-        for relation in self.relationStore:
-            self.addToChangeset(relation)
+        if relationSort:
+            # For relation tree sorting, sudo easy_install python-graph
+            import pygraph
+            gr = pygraph.digraph()
+            gr.add_nodes(relationStore.keys())
+            for id in relationStore:
+                for child in relationStore[id].getiterator('member'):
+                    if child.attrib['type'] == 'relation':
+                        gr.add_edge(id, child.attrib['ref'])
+
+            # Tree is unconnected, hook them all up to a root
+            gr.add_node('root')
+            for item in gr.node_incidence.iteritems():
+                if not item[1]:
+                    gr.add_edge('root', item[0])
+            for relation in gr.traversal('root', 'post'):
+                if relation == 'root': continue
+                print relation
+                self.addToChangeset(relationStore[relation])
+        else:
+            for relation in relationStore:
+                self.addToChangeset(relation)
 
         self.currentChangeset.close() # (uploads any remaining diffset changes)
 

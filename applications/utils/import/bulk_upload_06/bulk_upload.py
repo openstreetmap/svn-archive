@@ -37,7 +37,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-
+__version__ = "$Id$"
 
 import xml.etree.cElementTree as ET
 import httplib2
@@ -349,7 +349,7 @@ if __name__ == "__main__":
 
     idMap = IdMap(options.infile + ".db")
     tags = {
-        'created_by': 'bulk_upload.py',
+        'created_by': 'bulk_upload.py r' + __version__.split()[2],
         'comment': options.comment
     }
     importProcessor = ImportProcessor(options.user,options.password,idMap,tags)

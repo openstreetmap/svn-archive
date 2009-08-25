@@ -19,14 +19,13 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.fma.jtiledownloader.downloadjob;
+package org.openstreetmap.fma.jtiledownloader.config;
 
 import java.util.Properties;
 
 public class DownloadConfigurationBBoxLatLon
     extends DownloadConfiguration
 {
-
     private double _minLat = 0.0;
     private double _minLon = 0.0;
     private double _maxLat = 0.0;
@@ -39,56 +38,22 @@ public class DownloadConfigurationBBoxLatLon
 
     public static final String ID = "BBoxLatLon";
 
-    /**
-     * default constructor
-     * 
-     */
-    public DownloadConfigurationBBoxLatLon()
-    {
-        super("tilesBBoxLatLon.xml");
-    }
-
-    /**
-     * @param propertyFile
-     */
-    public DownloadConfigurationBBoxLatLon(String propertyFile)
-    {
-        super(propertyFile);
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration#saveToFile()
-     * {@inheritDoc}
-     */
     @Override
-    public Properties saveToFile()
+    public void save(Properties prop)
     {
-        Properties prop = super.saveToFile();
-        setTemplateProperty(prop, TYPE, ID);
         setTemplateProperty(prop, MIN_LAT, "" + _minLat);
         setTemplateProperty(prop, MIN_LON, "" + _minLon);
         setTemplateProperty(prop, MAX_LAT, "" + _maxLat);
         setTemplateProperty(prop, MAX_LON, "" + _maxLon);
-        storeToXml(prop);
-        return prop;
     }
 
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration#loadFromFile()
-     * {@inheritDoc}
-     */
     @Override
-    public Properties loadFromFile()
+    public void load(Properties prop)
     {
-        Properties prop = super.loadFromFile();
-
         _minLat = Double.parseDouble(prop.getProperty(MIN_LAT, "0.0"));
         _minLon = Double.parseDouble(prop.getProperty(MIN_LON, "0.0"));
         _maxLat = Double.parseDouble(prop.getProperty(MAX_LAT, "0.0"));
         _maxLon = Double.parseDouble(prop.getProperty(MAX_LON, "0.0"));
-
-        return prop;
-
     }
 
     /**
@@ -161,5 +126,15 @@ public class DownloadConfigurationBBoxLatLon
     public final void setMaxLon(double maxLon)
     {
         _maxLon = maxLon;
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration#getType()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getType()
+    {
+        return ID;
     }
 }

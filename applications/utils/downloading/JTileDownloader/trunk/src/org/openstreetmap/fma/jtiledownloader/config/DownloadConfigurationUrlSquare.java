@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.fma.jtiledownloader.downloadjob;
+package org.openstreetmap.fma.jtiledownloader.config;
 
 import java.util.Properties;
 
@@ -35,52 +35,18 @@ public class DownloadConfigurationUrlSquare
 
     public static final String ID = "UrlSquare";
 
-    /**
-     * default constructor
-     * 
-     */
-    public DownloadConfigurationUrlSquare()
-    {
-        super("tilesUrlSquare.xml");
-    }
-
-    /**
-     * @param propertyFile
-     */
-    public DownloadConfigurationUrlSquare(String propertyFile)
-    {
-        super(propertyFile);
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration#saveToFile()
-     * {@inheritDoc}
-     */
     @Override
-    public Properties saveToFile()
+    public void save(Properties prop)
     {
-        Properties prop = super.saveToFile();
         setTemplateProperty(prop, PASTE_URL, _pasteUrl);
         setTemplateProperty(prop, RADIUS, "" + _radius);
-        setTemplateProperty(prop, TYPE, ID);
-        storeToXml(prop);
-        return prop;
     }
 
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration#loadFromFile()
-     * {@inheritDoc}
-     */
     @Override
-    public Properties loadFromFile()
+    public void load(Properties prop)
     {
-        Properties prop = super.loadFromFile();
-
         _pasteUrl = prop.getProperty(PASTE_URL, "");
         _radius = Integer.parseInt(prop.getProperty(RADIUS, "5"));
-
-        return prop;
-
     }
 
     /**
@@ -119,4 +85,13 @@ public class DownloadConfigurationUrlSquare
         _radius = radius;
     }
 
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration#getType()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getType()
+    {
+        return ID;
+    }
 }

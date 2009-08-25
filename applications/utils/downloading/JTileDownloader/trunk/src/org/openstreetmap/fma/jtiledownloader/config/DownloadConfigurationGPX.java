@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.fma.jtiledownloader.downloadjob;
+package org.openstreetmap.fma.jtiledownloader.config;
 
 import java.util.Properties;
 
@@ -35,52 +35,18 @@ public class DownloadConfigurationGPX
 
     public static final String ID = "GPX";
 
-    /**
-     * default constructor
-     * 
-     */
-    public DownloadConfigurationGPX()
-    {
-        super("tilesGPX.xml");
-    }
-
-    /**
-     * @param propertyFile
-     */
-    public DownloadConfigurationGPX(String propertyFile)
-    {
-        super(propertyFile);
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration#saveToFile()
-     * {@inheritDoc}
-     */
     @Override
-    public Properties saveToFile()
+    public void save(Properties prop)
     {
-        Properties prop = super.saveToFile();
-        setTemplateProperty(prop, TYPE, ID);
         setTemplateProperty(prop, GPX_FILE, _gpxFile);
         setTemplateProperty(prop, CORRIDOR, "" + _corridor);
-        storeToXml(prop);
-        return prop;
     }
 
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration#loadFromFile()
-     * {@inheritDoc}
-     */
     @Override
-    public Properties loadFromFile()
+    public void load(Properties prop)
     {
-        Properties prop = super.loadFromFile();
-
         _gpxFile = prop.getProperty(GPX_FILE, "");
         _corridor = Integer.parseInt(prop.getProperty(CORRIDOR, "0"));
-
-        return prop;
-
     }
 
     /**
@@ -117,6 +83,16 @@ public class DownloadConfigurationGPX
     public final void setCorridor(int corridor)
     {
         _corridor = corridor;
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration#getType()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getType()
+    {
+        return ID;
     }
 
 }

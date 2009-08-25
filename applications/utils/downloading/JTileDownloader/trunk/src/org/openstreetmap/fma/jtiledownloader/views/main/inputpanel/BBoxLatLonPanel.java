@@ -33,7 +33,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationBBoxLatLon;
+import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationBBoxLatLon;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
@@ -77,23 +79,19 @@ public class BBoxLatLonPanel
 
         createPanel();
         initializePanel();
+
+        loadConfig();
     }
 
-    /**
-     * 
-     */
-    @Override
-    public void loadConfig()
+    private void loadConfig()
     {
         _downloadConfig = new DownloadConfigurationBBoxLatLon();
-        _downloadConfig.loadFromFile();
+        AppConfiguration.getInstance().loadDownloadConfig(_downloadConfig);
 
         _textMinLat.setText("" + _downloadConfig.getMinLat());
         _textMinLon.setText("" + _downloadConfig.getMinLon());
         _textMaxLat.setText("" + _downloadConfig.getMaxLat());
         _textMaxLon.setText("" + _downloadConfig.getMaxLon());
-
-        setCommonValues(_downloadConfig);
     }
 
     /**
@@ -181,7 +179,7 @@ public class BBoxLatLonPanel
     }
 
     @Override
-    public void saveConfig()
+    public void saveConfig(DownloadConfigurationSaverIf configurationSave)
     {
         if (_downloadConfig == null)
         {
@@ -192,8 +190,7 @@ public class BBoxLatLonPanel
         _downloadConfig.setMinLon(getMinLon());
         _downloadConfig.setMaxLat(getMaxLat());
         _downloadConfig.setMaxLon(getMaxLon());
-        super.saveCommonConfig(_downloadConfig);
-        _downloadConfig.saveToFile();
+        configurationSave.saveDownloadConfig(_downloadConfig);
     }
 
     /**

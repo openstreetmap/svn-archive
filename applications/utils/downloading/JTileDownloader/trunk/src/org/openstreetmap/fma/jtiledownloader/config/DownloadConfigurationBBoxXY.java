@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.fma.jtiledownloader.downloadjob;
+package org.openstreetmap.fma.jtiledownloader.config;
 
 import java.util.Properties;
 
@@ -39,62 +39,28 @@ public class DownloadConfigurationBBoxXY
 
     public static final String ID = "BBoxXY";
 
-    /**
-     * default constructor
-     * 
-     */
-    public DownloadConfigurationBBoxXY()
-    {
-        super("tilesBBoxXY.xml");
-    }
-
-    /**
-     * @param propertyFile
-     */
-    public DownloadConfigurationBBoxXY(String propertyFile)
-    {
-        super(propertyFile);
-    }
-
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration#saveToFile()
-     * {@inheritDoc}
-     */
     @Override
-    public Properties saveToFile()
+    public void save(Properties prop)
     {
-        Properties prop = super.saveToFile();
-        setTemplateProperty(prop, TYPE, ID);
         setTemplateProperty(prop, MIN_X, "" + _minX);
         setTemplateProperty(prop, MIN_Y, "" + _minY);
         setTemplateProperty(prop, MAX_X, "" + _maxX);
         setTemplateProperty(prop, MAX_Y, "" + _maxY);
-        storeToXml(prop);
-        return prop;
     }
 
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration#loadFromFile()
-     * {@inheritDoc}
-     */
     @Override
-    public Properties loadFromFile()
+    public void load(Properties prop)
     {
-        Properties prop = super.loadFromFile();
-
         _minX = Integer.parseInt(prop.getProperty(MIN_X, "0"));
         _minY = Integer.parseInt(prop.getProperty(MIN_Y, "0"));
         _maxX = Integer.parseInt(prop.getProperty(MAX_X, "0"));
         _maxY = Integer.parseInt(prop.getProperty(MAX_Y, "0"));
-
-        return prop;
-
     }
 
     /**
-     * Getter for minX
-     * @return the minX
-     */
+    * Getter for minX
+    * @return the minX
+    */
     public final int getMinX()
     {
         return _minX;
@@ -161,6 +127,16 @@ public class DownloadConfigurationBBoxXY
     public final void setMaxY(int maxY)
     {
         _maxY = maxY;
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration#getType()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getType()
+    {
+        return ID;
     }
 
 }

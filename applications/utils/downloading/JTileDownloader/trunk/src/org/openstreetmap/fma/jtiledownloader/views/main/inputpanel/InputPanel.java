@@ -23,7 +23,7 @@ package org.openstreetmap.fma.jtiledownloader.views.main.inputpanel;
 import javax.swing.JPanel;
 
 import org.openstreetmap.fma.jtiledownloader.Util;
-import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
 
@@ -72,34 +72,12 @@ public abstract class InputPanel
 
     public abstract TileList getTileList();
 
-    public abstract void saveConfig();
-
-    public abstract void loadConfig();
+    public abstract void saveConfig(DownloadConfigurationSaverIf configurationSave);
 
     public void updateNumberOfTiles()
     {
         int numberOfTiles = 0;
         numberOfTiles = getNumberOfTilesToDownload();
         _mainPanel.setNumberOfTiles(numberOfTiles);
-    }
-
-    /**
-     * 
-     */
-    final public void setCommonValues(DownloadConfiguration downloadConfig)
-    {
-        _mainPanel.setOutputFolder(downloadConfig.getOutputLocation());
-        _mainPanel.initializeOutputZoomLevel(Util.getOutputZoomLevelArray(_mainPanel.getSelectedTileProvider(), downloadConfig.getOutputZoomLevels()));
-        _mainPanel.initializeTileServer(downloadConfig.getTileServer());
-    }
-
-    /**
-     * @param downloadConfig
-     */
-    final protected void saveCommonConfig(DownloadConfiguration downloadConfig)
-    {
-        downloadConfig.setOutputLocation(_mainPanel.getOutputfolder());
-        downloadConfig.setOutputZoomLevels(_mainPanel.getOutputZoomLevelString());
-        downloadConfig.setTileServer(_mainPanel.getSelectedTileProvider().getName());
     }
 }

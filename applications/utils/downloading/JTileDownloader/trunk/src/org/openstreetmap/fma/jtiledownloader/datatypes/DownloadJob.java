@@ -1,34 +1,39 @@
 /*
- * Copyright 2008, Friedrich Maier
+ * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader.
  * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
  *
- *    JTileDownloader is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * JTileDownloader is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    JTileDownloader is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * JTileDownloader is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy (see file COPYING.txt) of the GNU 
- *    General Public License along with JTileDownloader.
- *    If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy (see file COPYING.txt) of the GNU 
+ * General Public License along with JTileDownloader.
+ * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.fma.jtiledownloader.downloadjob;
+package org.openstreetmap.fma.jtiledownloader.datatypes;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class DownloadConfiguration
+import org.openstreetmap.fma.jtiledownloader.Util;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf;
+
+public class DownloadJob
+    implements DownloadConfigurationSaverIf
 {
-    private String _propertyFileName = "downloadConfig.xml";
+    private Properties prop = new Properties();
 
     private String _outputZoomLevels = "";
     private String _tileServer = "";
@@ -41,36 +46,27 @@ public class DownloadConfiguration
 
     public static final String TYPE = "Type";
 
+    public DownloadJob()
+    {}
+
     /**
      * constructor setting propertyFileName
      * 
      * @param propertyFileName
      */
-    public DownloadConfiguration(String propertyFileName)
+    public DownloadJob(String propertyFileName)
     {
-        super();
-        setPropertyFileName(propertyFileName);
+        loadFromFile(propertyFileName);
     }
 
-    public Properties saveToFile()
+    public void saveToFile(String propertyFileName)
     {
-        Properties prop = new Properties();
-
         setTemplateProperty(prop, OUTPUT_ZOOM_LEVEL, _outputZoomLevels);
         setTemplateProperty(prop, TILE_SERVER, _tileServer);
         setTemplateProperty(prop, OUTPUTLOCATION, _outputLocation);
-
-        return prop;
-    }
-
-    /**
-     * @param prop
-     */
-    protected void storeToXml(Properties prop)
-    {
         try
         {
-            prop.storeToXML(new FileOutputStream(getPropertyFileName()), null);
+            prop.storeToXML(new FileOutputStream(propertyFileName), null);
         }
         catch (IOException e)
         {
@@ -78,33 +74,21 @@ public class DownloadConfiguration
         }
     }
 
-    public Properties loadFromFile()
+    private void loadFromFile(String fileName)
     {
-        Properties prop = loadFromXml();
+        try
+        {
+            prop.loadFromXML(new FileInputStream(fileName));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
         _type = prop.getProperty(TYPE, "");
         _outputZoomLevels = prop.getProperty(OUTPUT_ZOOM_LEVEL, "12");
         _tileServer = prop.getProperty(TILE_SERVER, "");
         _outputLocation = prop.getProperty(OUTPUTLOCATION, "tiles");
-
-        return prop;
-    }
-
-    /**
-     * @return
-     */
-    private Properties loadFromXml()
-    {
-        Properties prop = new Properties();
-        try
-        {
-            prop.loadFromXML(new FileInputStream(getPropertyFileName()));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return prop;
     }
 
     protected void setTemplateProperty(Properties prop, String key, String value)
@@ -140,6 +124,10 @@ public class DownloadConfiguration
         return _tileServer;
     }
 
+    public final TileProviderIf getTileProvider() {
+        return Util.getTileProvider(getTileServer());
+    }
+
     /**
      * Setter for tileServer
      * @param tileServer the tileServer to set
@@ -168,29 +156,24 @@ public class DownloadConfiguration
     }
 
     /**
-     * Setter for propertyFileName
-     * @param propertyFileName the propertyFileName to set
-     */
-    public void setPropertyFileName(String propertyFileName)
-    {
-        _propertyFileName = propertyFileName;
-    }
-
-    /**
-     * Getter for propertyFileName
-     * @return the propertyFileName
-     */
-    public String getPropertyFileName()
-    {
-        return _propertyFileName;
-    }
-
-    /**
      * Getter for type
      * @return the type
      */
     public final String getType()
     {
         return _type;
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf#saveDownloadConfig(org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration)
+     * {@inheritDoc}
+     */
+    public void saveDownloadConfig(DownloadConfiguration config)
+    {
+        config.save(prop);
+    }
+
+    public void loadDownloadConfig(DownloadConfiguration config) {
+        config.load(prop);
     }
 }

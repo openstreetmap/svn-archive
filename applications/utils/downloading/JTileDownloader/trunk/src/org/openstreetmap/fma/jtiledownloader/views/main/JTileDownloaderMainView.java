@@ -109,7 +109,7 @@ public class JTileDownloaderMainView
         {
             System.out.println("WindowEvent windowClosing");
 
-            _mainPanel.updateActualDownloadConfig();
+            _mainPanel.saveAllConfigOptions();
             updateAppConfig();
 
             e.getWindow().dispose();

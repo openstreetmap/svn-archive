@@ -61,6 +61,7 @@
 			<manifest>
 				<attribute name="Main-Class" value="${main.class}" />
 				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="SplashScreen-Image" value="splash/splash.png" />
 			</manifest>
 			<fileset dir="${basedir}">
 				<include name="COPYING.txt" />

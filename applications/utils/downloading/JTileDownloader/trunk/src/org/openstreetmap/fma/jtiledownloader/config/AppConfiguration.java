@@ -37,7 +37,7 @@ public class AppConfiguration
     private boolean _useProxyServer = false;
     private String _proxyServer = "";
     private String _proxyServerPort = "";
-    private boolean _useProxyServerAuth = false;
+    private boolean _proxyServerRequireesAuthentitication = false;
     private String _proxyServerUser = "";
     private String _proxyServerPassword = "";
 
@@ -114,7 +114,7 @@ public class AppConfiguration
         _useProxyServer = Boolean.valueOf(prop.getProperty(USE_PROXY_SERVER, String.valueOf(_useProxyServer))).booleanValue();
         _proxyServer = prop.getProperty(PROXY_SERVER, _proxyServer);
         _proxyServerPort = prop.getProperty(PROXY_SERVER_PORT, _proxyServerPort);
-        _useProxyServerAuth = Boolean.valueOf(prop.getProperty(USE_PROXY_SERVER_AUTH, String.valueOf(_useProxyServerAuth))).booleanValue();
+        _proxyServerRequireesAuthentitication = Boolean.valueOf(prop.getProperty(USE_PROXY_SERVER_AUTH, String.valueOf(_proxyServerRequireesAuthentitication))).booleanValue();
         _proxyServerUser = prop.getProperty(PROXY_SERVER_USER, _proxyServerUser);
         _proxyServerPassword = prop.getProperty(PROXY_SERVER_PASSWORD, _proxyServerPassword);
 
@@ -124,7 +124,7 @@ public class AppConfiguration
 
         setMinimumAgeInDays(Integer.parseInt(prop.getProperty(MINIMUM_AGE_IN_DAYS, String.valueOf(getMinimumAgeInDays()))));
 
-        setWaitAfterNrTiles(Boolean.valueOf(prop.getProperty(WAIT_AFTER_NR_TILES, String.valueOf(getWaitAfterNrTiles()))).booleanValue());
+        setWaitAfterNrTiles(Boolean.valueOf(prop.getProperty(WAIT_AFTER_NR_TILES, String.valueOf(isWaitingAfterNrOfTiles()))).booleanValue());
         setWaitSeconds(Integer.parseInt(prop.getProperty(WAIT_SECONDS, String.valueOf(getWaitSeconds()))));
         setWaitNrTiles(Integer.parseInt(prop.getProperty(WAIT_NR_TILES, String.valueOf(getWaitNrTiles()))));
 
@@ -189,22 +189,22 @@ public class AppConfiguration
     }
 
     /**
-     * Getter for useProxyServerAuth
-     * @return the useProxyServerAuth
+     * Getter for isProxyServerRequiresAuthentitication
+     * @return the isProxyServerRequiresAuthentitication
      */
-    public final boolean getUseProxyServerAuth()
+    public final boolean isProxyServerRequiresAuthentitication()
     {
-        return _useProxyServerAuth;
+        return _proxyServerRequireesAuthentitication;
     }
 
     /**
-     * Setter for useProxyServerAuth
-     * @param useProxyServerAuth the useProxyServerAuth to set
+     * Setter for setProxyServerRequiresAuthentitication
+     * @param setProxyServerRequiresAuthentitication the useProxyServerAuthentitication to set
      */
-    public final void setUseProxyServerAuth(boolean useProxyServerAuth)
+    public final void setProxyServerRequiresAuthentitication(boolean useProxyServerAuthentitication)
     {
-        _useProxyServerAuth = useProxyServerAuth;
-        setProperty(prop, USE_PROXY_SERVER_AUTH, "" + _useProxyServerAuth);
+        _proxyServerRequireesAuthentitication = useProxyServerAuthentitication;
+        setProperty(prop, USE_PROXY_SERVER_AUTH, "" + _proxyServerRequireesAuthentitication);
     }
 
     /**
@@ -275,10 +275,10 @@ public class AppConfiguration
     }
 
     /**
-     * Getter for waitAfterNrTiles
-     * @return the waitAfterNrTiles
+     * Getter for isWaitingAfterNrOfTiles
+     * @return the isWaitingAfterNrOfTiles
      */
-    public boolean getWaitAfterNrTiles()
+    public boolean isWaitingAfterNrOfTiles()
     {
         return _waitAfterNrTiles;
     }

@@ -4,8 +4,9 @@
   <TITLE>tagstat</TITLE>
   <META http-equiv="content-type" content="text/html; charset=UTF-8">
   <LINK rel="stylesheet" type="text/css" href="style.css">
+  <SCRIPT type="text/javascript; e4x=1" language="javascript" src="add_review_links.js"></SCRIPT>
  </HEAD>
- <BODY>
+ <BODY onload="addReviewLinks()">
 <?php
 	require_once "DB.php";
 	include("config.php");
@@ -93,7 +94,7 @@
 				echo "<TD>&nbsp;</TD>";
 			}
 		}
-		echo "<TD><A href=\"http://www.informationfreeway.org/api/0.5/*[{$row[0]}={$row[1]}]\">xapi</A></TD>\n";
+		echo "<TD><A href=\"http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\">xapi</A></TD>\n";
 		echo "</TR>\n";
 		$i++;
 	}

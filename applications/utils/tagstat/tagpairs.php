@@ -49,7 +49,7 @@
 		} else {
 			$style="even";
 		}
-		printf('<TR class="%1$s"><TD><A href="tagdetails.php?tag=%2$s">%3$s</A></TD><TD>%4$s</TD><TD class="count">%5$s</TD><TD class="count">%6$s</TD><TD class="count">%7$s</TD><TD class="count">%8$s</TD><TD><A href="http://www.informationfreeway.org/api/0.5/*[%2$s=%9$s]">xapi</A></TD></TR>', $style, $row[0], displayTag($row[0]), displayTag($row[1]), displayNum($row[2]), displayNum($row[3]), displayNum($row[4]), displayNum($row[5]), $row[1]);
+		printf('<TR class="%1$s"><TD><A href="tagdetails.php?tag=%2$s">%3$s</A></TD><TD>%4$s</TD><TD class="count">%5$s</TD><TD class="count">%6$s</TD><TD class="count">%7$s</TD><TD class="count">%8$s</TD><TD><A href="http://www.informationfreeway.org/api/0.6/*[%2$s=%9$s]">xapi</A></TD></TR>', $style, $row[0], displayTag($row[0]), displayTag($row[1]), displayNum($row[2]), displayNum($row[3]), displayNum($row[4]), displayNum($row[5]), $row[1]);
 		echo "\n";
 		$i++;
 	}

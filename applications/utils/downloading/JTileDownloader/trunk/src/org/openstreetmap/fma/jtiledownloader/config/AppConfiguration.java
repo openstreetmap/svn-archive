@@ -301,7 +301,10 @@ public class AppConfiguration
      */
     public void setWaitSeconds(int waitSeconds)
     {
-        _waitSeconds = waitSeconds;
+        if (waitSeconds > 0)
+        {
+            _waitSeconds = waitSeconds;
+        }
     }
 
     /**
@@ -319,7 +322,10 @@ public class AppConfiguration
      */
     public void setWaitNrTiles(int waitNrTiles)
     {
-        _waitNrTiles = waitNrTiles;
+        if (waitNrTiles > 0)
+        {
+            _waitNrTiles = waitNrTiles;
+        }
     }
 
     /**

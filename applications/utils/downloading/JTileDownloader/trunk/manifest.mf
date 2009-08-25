@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: org.openstreetmap.fma.jtiledownloader.JTileDownloaderStart
-SplashScreen-Image: splash/splash.png

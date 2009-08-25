@@ -1,5 +1,6 @@
 /*
  * Copyright 2008, Friedrich Maier
+ * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader.
  * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
@@ -26,15 +27,14 @@ import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.Util;
-import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationBBoxLatLon;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationBBoxXY;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationGPX;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationUrlSquare;
+import org.openstreetmap.fma.jtiledownloader.datatypes.DownloadJob;
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
-import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration;
-import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationBBoxLatLon;
-import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationBBoxXY;
-import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationGPX;
-import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
@@ -50,8 +50,7 @@ public class JTileDownloaderCommandLine
 
     private final HashMap<String, String> _arguments;
 
-    private DownloadConfiguration _downloadTemplateCommon;
-    private DownloadConfiguration _downloadTemplate;
+    private DownloadJob _downloadJob;
     private TileList _tileList;
     private TileListDownloader _tld;
     private TileProviderIf _tileProvider;
@@ -75,39 +74,38 @@ public class JTileDownloaderCommandLine
         {
             String propertyFile = _arguments.get(CMDLINE_DL);
 
-            _downloadTemplateCommon = new DownloadConfiguration(propertyFile);
-            _downloadTemplateCommon.loadFromFile();
+            _downloadJob = new DownloadJob(propertyFile);
 
-            _tileProvider = Util.getTileProvider(_downloadTemplateCommon.getTileServer());
+            _tileProvider = _downloadJob.getTileProvider();
 
-            handleDownloadTemplate(_downloadTemplateCommon.getType(), propertyFile);
+            handleDownloadTemplate(_downloadJob.getType());
         }
     }
 
     /**
      * @param type
      */
-    private void handleDownloadTemplate(String type, String propertyFile)
+    private void handleDownloadTemplate(String type)
     {
         if (type.equalsIgnoreCase(DownloadConfigurationUrlSquare.ID))
         {
-            handleUrlSquare(propertyFile);
+            handleUrlSquare();
         }
         else if (type.equalsIgnoreCase(DownloadConfigurationBBoxLatLon.ID))
         {
-            handleBBoxLatLon(propertyFile);
+            handleBBoxLatLon();
         }
         else if (type.equalsIgnoreCase(DownloadConfigurationBBoxXY.ID))
         {
-            handleBBoxXY(propertyFile);
+            handleBBoxXY();
         }
         else if (type.equalsIgnoreCase(DownloadConfigurationGPX.ID))
         {
-            handleGPX(propertyFile);
+            handleGPX();
         }
         else
         {
-            log("File '" + propertyFile + "' contains an unknown format. Please specify a valid file!");
+            log("File contains an unknown format. Please specify a valid file!");
         }
 
     }
@@ -115,75 +113,75 @@ public class JTileDownloaderCommandLine
     /**
      * @param propertyFile
      */
-    private void handleGPX(String propertyFile)
+    private void handleGPX()
     {
-        _downloadTemplate = new DownloadConfigurationGPX(propertyFile);
-        _downloadTemplate.loadFromFile();
+        DownloadConfigurationGPX _downloadTemplate = new DownloadConfigurationGPX();
+        _downloadJob.loadDownloadConfig(_downloadTemplate);
 
         _tileList = new TileListCommonGPX();
 
-        ((TileListCommonGPX) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadTemplate.getOutputZoomLevels()));
+        ((TileListCommonGPX) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadJob.getOutputZoomLevels()));
 
-        String gpxFile = ((DownloadConfigurationGPX) _downloadTemplate).getGpxFile();
-        int corridor = ((DownloadConfigurationGPX) _downloadTemplate).getCorridor();
+        String gpxFile = (_downloadTemplate).getGpxFile();
+        int corridor = (_downloadTemplate).getCorridor();
         ((TileListCommonGPX) _tileList).updateList(gpxFile, corridor);
 
-        startDownload(_downloadTemplate.getTileServer());
+        startDownload(_tileProvider);
     }
 
     /**
      * @param propertyFile
      */
-    private void handleBBoxXY(String propertyFile)
+    private void handleBBoxXY()
     {
-        _downloadTemplate = new DownloadConfigurationBBoxXY(propertyFile);
-        _downloadTemplate.loadFromFile();
+        DownloadConfigurationBBoxXY _downloadTemplate = new DownloadConfigurationBBoxXY();
+        _downloadJob.loadDownloadConfig(_downloadTemplate);
 
         _tileList = new TileListCommonBBox();
 
-        ((TileListCommonBBox) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadTemplate.getOutputZoomLevels()));
+        ((TileListCommonBBox) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadJob.getOutputZoomLevels()));
 
-        ((TileListCommonBBox) _tileList).initXTopLeft(((DownloadConfigurationBBoxXY) _downloadTemplate).getMinX());
-        ((TileListCommonBBox) _tileList).initYTopLeft(((DownloadConfigurationBBoxXY) _downloadTemplate).getMinY());
-        ((TileListCommonBBox) _tileList).initXBottomRight(((DownloadConfigurationBBoxXY) _downloadTemplate).getMaxX());
-        ((TileListCommonBBox) _tileList).initYBottomRight(((DownloadConfigurationBBoxXY) _downloadTemplate).getMaxY());
+        ((TileListCommonBBox) _tileList).initXTopLeft((_downloadTemplate).getMinX());
+        ((TileListCommonBBox) _tileList).initYTopLeft((_downloadTemplate).getMinY());
+        ((TileListCommonBBox) _tileList).initXBottomRight((_downloadTemplate).getMaxX());
+        ((TileListCommonBBox) _tileList).initYBottomRight((_downloadTemplate).getMaxY());
 
-        startDownload(_downloadTemplate.getTileServer());
+        startDownload(_tileProvider);
     }
 
     /**
      * @param propertyFile
      */
-    private void handleBBoxLatLon(String propertyFile)
+    private void handleBBoxLatLon()
     {
-        _downloadTemplate = new DownloadConfigurationBBoxLatLon(propertyFile);
-        _downloadTemplate.loadFromFile();
+        DownloadConfigurationBBoxLatLon _downloadTemplate = new DownloadConfigurationBBoxLatLon();
+        _downloadJob.loadDownloadConfig(_downloadTemplate);
 
         _tileList = new TileListBBoxLatLon();
 
-        ((TileListBBoxLatLon) _tileList).setMinLat(((DownloadConfigurationBBoxLatLon) _downloadTemplate).getMinLat());
-        ((TileListBBoxLatLon) _tileList).setMaxLat(((DownloadConfigurationBBoxLatLon) _downloadTemplate).getMaxLat());
-        ((TileListBBoxLatLon) _tileList).setMinLon(((DownloadConfigurationBBoxLatLon) _downloadTemplate).getMinLon());
-        ((TileListBBoxLatLon) _tileList).setMaxLon(((DownloadConfigurationBBoxLatLon) _downloadTemplate).getMaxLon());
+        ((TileListBBoxLatLon) _tileList).setMinLat((_downloadTemplate).getMinLat());
+        ((TileListBBoxLatLon) _tileList).setMaxLat((_downloadTemplate).getMaxLat());
+        ((TileListBBoxLatLon) _tileList).setMinLon((_downloadTemplate).getMinLon());
+        ((TileListBBoxLatLon) _tileList).setMaxLon((_downloadTemplate).getMaxLon());
 
-        ((TileListBBoxLatLon) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadTemplate.getOutputZoomLevels()));
+        ((TileListBBoxLatLon) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadJob.getOutputZoomLevels()));
 
         ((TileListBBoxLatLon) _tileList).calculateTileValuesXY();
 
-        startDownload(_downloadTemplate.getTileServer());
+        startDownload(_tileProvider);
     }
 
     /**
      * @param propertyFile
      */
-    private void handleUrlSquare(String propertyFile)
+    private void handleUrlSquare()
     {
-        _downloadTemplate = new DownloadConfigurationUrlSquare(propertyFile);
-        _downloadTemplate.loadFromFile();
+        DownloadConfigurationUrlSquare _downloadTemplate = new DownloadConfigurationUrlSquare();
+        _downloadJob.loadDownloadConfig(_downloadTemplate);
 
         _tileList = new TileListUrlSquare();
 
-        String url = ((DownloadConfigurationUrlSquare) _downloadTemplate).getPasteUrl();
+        String url = (_downloadTemplate).getPasteUrl();
         if (url == null || url.length() == 0)
         {
             return;
@@ -202,20 +200,20 @@ public class JTileDownloaderCommandLine
         ((TileListUrlSquare) _tileList).setLatitude(Double.parseDouble(lat));
         ((TileListUrlSquare) _tileList).setLongitude(Double.parseDouble(lon));
 
-        ((TileListUrlSquare) _tileList).setRadius(((DownloadConfigurationUrlSquare) _downloadTemplate).getRadius() * 1000);
-        ((TileListUrlSquare) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadTemplate.getOutputZoomLevels()));
+        ((TileListUrlSquare) _tileList).setRadius((_downloadTemplate).getRadius() * 1000);
+        ((TileListUrlSquare) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadJob.getOutputZoomLevels()));
 
         ((TileListUrlSquare) _tileList).calculateTileValuesXY();
 
-        startDownload(_downloadTemplate.getTileServer());
+        startDownload(_tileProvider);
     }
 
     /**
      * 
      */
-    private void startDownload(String server)
+    private void startDownload(TileProviderIf tileProvider)
     {
-        _tld = new TileListDownloader(_downloadTemplate.getOutputLocation(), _tileList, new GenericTileProvider(server));
+        _tld = new TileListDownloader(_downloadJob.getOutputLocation(), _tileList, tileProvider);
         _tld.setListener(this);
         if (_tileList.getTileListToDownload().size() > 0)
         {

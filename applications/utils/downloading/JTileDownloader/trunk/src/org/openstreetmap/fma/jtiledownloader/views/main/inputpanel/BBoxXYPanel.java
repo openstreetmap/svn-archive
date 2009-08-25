@@ -29,7 +29,9 @@ import java.awt.event.FocusListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationBBoxXY;
+import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationBBoxXY;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonBBox;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
@@ -69,23 +71,19 @@ public class BBoxXYPanel
 
         createPanel();
         initializePanel();
+
+        loadConfig();
     }
 
-    /**
-     * 
-     */
-    @Override
-    public void loadConfig()
+    private void loadConfig()
     {
         _downloadConfig = new DownloadConfigurationBBoxXY();
-        _downloadConfig.loadFromFile();
+        AppConfiguration.getInstance().loadDownloadConfig(_downloadConfig);
 
         _textMinX.setText("" + _downloadConfig.getMinX());
         _textMinY.setText("" + _downloadConfig.getMinY());
         _textMaxX.setText("" + _downloadConfig.getMaxX());
         _textMaxY.setText("" + _downloadConfig.getMaxY());
-
-        setCommonValues(_downloadConfig);
     }
 
     /**
@@ -157,7 +155,7 @@ public class BBoxXYPanel
     }
 
     @Override
-    public void saveConfig()
+    public void saveConfig(DownloadConfigurationSaverIf configurationSave)
     {
         if (_downloadConfig == null)
         {
@@ -168,8 +166,8 @@ public class BBoxXYPanel
         _downloadConfig.setMinY(getMinY());
         _downloadConfig.setMaxX(getMaxX());
         _downloadConfig.setMaxY(getMaxY());
-        super.saveCommonConfig(_downloadConfig);
-        _downloadConfig.saveToFile();
+
+        configurationSave.saveDownloadConfig(_downloadConfig);
     }
 
     /**

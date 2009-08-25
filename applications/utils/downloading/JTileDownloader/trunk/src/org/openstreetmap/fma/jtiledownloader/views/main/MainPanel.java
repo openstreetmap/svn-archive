@@ -53,6 +53,7 @@ import org.openstreetmap.fma.jtiledownloader.TileListExporter;
 import org.openstreetmap.fma.jtiledownloader.TileProviderList;
 import org.openstreetmap.fma.jtiledownloader.Util;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
+import org.openstreetmap.fma.jtiledownloader.datatypes.DownloadJob;
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxLatLonPanel;
@@ -72,6 +73,7 @@ public class MainPanel
 
     public static final String COMMAND_SELECTOUTPUTFOLDER = "selectOutputFolder";
     public static final String COMMAND_DOWNLOAD = "download";
+    public static final String COMMAND_SAVEJOB = "savejob";
     public static final String COMMAND_EXPORT = "export";
 
     private JLabel _labelOutputZoomLevel = new JLabel("Output Zoom Level:");
@@ -90,15 +92,13 @@ public class MainPanel
     private JLabel _labelNumberOfTiles = new JLabel("Number Tiles:");
     private JTextField _textNumberOfTiles = new JTextField("---");
 
-    public static final String DOWNLOAD_TILES = "Download Tiles";
-
-    private JButton _buttonDownload = new JButton(DOWNLOAD_TILES);
+    private JButton _buttonDownload = new JButton("Download Tiles");
+    private JButton _buttonSaveJob = new JButton("Save Job");
     private JButton _buttonExport = new JButton("Export Tilelist");
 
     private final JTileDownloaderMainView _mainView;
 
     private TileProviderIf[] _tileProviders;
-    private int _selectedInputPanel = 0; // HACK to get save of latest setting work
 
     private JTabbedPane _inputTabbedPane;
 
@@ -124,9 +124,7 @@ public class MainPanel
         if (tabIndex >= 0 && tabIndex < _inputTabbedPane.getTabCount())
         {
             _inputTabbedPane.setSelectedIndex(tabIndex);
-            _selectedInputPanel = tabIndex;
         }
-        getInputPanel().loadConfig();
     }
 
     /**
@@ -152,6 +150,7 @@ public class MainPanel
         _buttonSelectOutputFolder.setPreferredSize(new Dimension(25, 19));
 
         _buttonDownload.setActionCommand(COMMAND_DOWNLOAD);
+        _buttonSaveJob.setActionCommand(COMMAND_SAVEJOB);
 
         _buttonExport.setActionCommand(COMMAND_EXPORT);
 
@@ -179,6 +178,7 @@ public class MainPanel
         // set all listeners
         _buttonSelectOutputFolder.addActionListener(new MainViewActionListener());
         _buttonDownload.addActionListener(new MainViewActionListener());
+        _buttonSaveJob.addActionListener(new MainViewActionListener());
         _buttonExport.addActionListener(new MainViewActionListener());
 
         _comboOutputZoomLevel.addFocusListener(new MainViewFocusListener());
@@ -297,8 +297,10 @@ public class MainPanel
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_textNumberOfTiles, constraints);
 
-        constraints.gridwidth = GridBagConstraints.RELATIVE;
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_buttonDownload, constraints);
+        constraints.gridwidth = GridBagConstraints.RELATIVE;
+        add(_buttonSaveJob, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_buttonExport, constraints);
 
@@ -381,7 +383,6 @@ public class MainPanel
                 {
                     return;
                 }
-                getInputPanel().saveConfig();
                 valuesChanged();
 
                 if (getInputPanel().getTileList().getTileListToDownload().size() > 0)
@@ -390,8 +391,38 @@ public class MainPanel
                     new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), tld);
                 }
             }
+            else if (actionCommand.equalsIgnoreCase(COMMAND_SAVEJOB))
+            {
+                if (!getInputPanel().isDownloadOkay())
+                {
+                    return;
+                }
+                valuesChanged();
+
+                JFileChooser chooser = new JFileChooser();
+                chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+                if (JFileChooser.APPROVE_OPTION == chooser.showDialog(null, "Save"))
+                {
+                    File dir = chooser.getSelectedFile();
+                    if (dir.exists()) {
+                        JOptionPane.showMessageDialog(_mainView, "File exists. Aborting...", "Info", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    DownloadJob job = new DownloadJob();
+                    job.setOutputLocation(_textOutputFolder.getText());
+                    job.setOutputZoomLevels(getOutputZoomLevelString());
+                    job.setTileServer(getTileProvider().getName());
+                    getInputPanel().saveConfig(job);
+                    job.saveToFile(dir.getAbsolutePath());
+                    JOptionPane.showMessageDialog(_mainView, "Saved.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
             else if (actionCommand.equalsIgnoreCase(COMMAND_EXPORT))
             {
+                if (!getInputPanel().isDownloadOkay())
+                {
+                    return;
+                }
                 valuesChanged();
 
                 TileListExporter tle = new TileListExporter(_textOutputFolder.getText(), getInputPanel().getTileList().getTileListToDownload(), getSelectedTileProvider());
@@ -454,7 +485,7 @@ public class MainPanel
      */
     private final InputPanel getInputPanel()
     {
-        return inputPanels.get(_selectedInputPanel);
+        return inputPanels.get(_inputTabbedPane.getSelectedIndex());
     }
 
     /**
@@ -491,12 +522,8 @@ public class MainPanel
         {
             JTabbedPane pane = (JTabbedPane) evt.getSource();
 
-            getInputPanel().saveConfig();
-
             //select new panel & load config
             AppConfiguration.getInstance().setInputPanelIndex(pane.getSelectedIndex());
-            _selectedInputPanel = pane.getSelectedIndex();
-            getInputPanel().loadConfig();
             valuesChanged();
         }
     }
@@ -512,8 +539,11 @@ public class MainPanel
     /**
      * Saves all Download configs
      */
-    public void updateActualDownloadConfig()
+    public void saveAllConfigOptions()
     {
-        getInputPanel().saveConfig();
+        for (InputPanel inputPanel : inputPanels)
+        {
+            inputPanel.saveConfig(AppConfiguration.getInstance());
+        }
     }
 }

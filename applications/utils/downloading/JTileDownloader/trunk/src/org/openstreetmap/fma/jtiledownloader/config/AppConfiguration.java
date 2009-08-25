@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class AppConfiguration
+    implements DownloadConfigurationSaverIf
 {
     private static final String APP_CONFIG_PROPERTIES = "appConfig.xml";
 
@@ -385,5 +386,34 @@ public class AppConfiguration
             _minimumAgeInDays = minimumAgeInDays;
         }
         setProperty(prop, MINIMUM_AGE_IN_DAYS, "" + _minimumAgeInDays);
+    }
+
+    public void loadDownloadConfig(DownloadConfiguration config)
+    {
+        Properties downloadProps = new Properties();
+        for (Object property : prop.keySet())
+        {
+            String propertyName = (String) property;
+            if (propertyName.startsWith(config.getType() + "."))
+            {
+                downloadProps.setProperty(propertyName.substring(config.getType().length() + 1), prop.getProperty(propertyName));
+            }
+        }
+        config.load(downloadProps);
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf#saveDownloadConfig(org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration)
+     * {@inheritDoc}
+     */
+    public void saveDownloadConfig(DownloadConfiguration config)
+    {
+        Properties downloadProps = new Properties();
+        config.save(downloadProps);
+        for (Object property : downloadProps.keySet())
+        {
+            String propertyName = (String) property;
+            prop.setProperty(config.getType() + "." + propertyName, downloadProps.getProperty(propertyName));
+        }
     }
 }

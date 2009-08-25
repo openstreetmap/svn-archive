@@ -31,7 +31,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationUrlSquare;
+import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
@@ -70,21 +72,17 @@ public class UrlSquarePanel
 
         createPanel();
         initializePanel();
+
+        loadConfig();
     }
 
-    /**
-     * 
-     */
-    @Override
-    public void loadConfig()
+    private void loadConfig()
     {
         _downloadConfig = new DownloadConfigurationUrlSquare();
-        _downloadConfig.loadFromFile();
+        AppConfiguration.getInstance().loadDownloadConfig(_downloadConfig);
 
         _textPasteUrl.setText(_downloadConfig.getPasteUrl());
         _textRadius.setText("" + _downloadConfig.getRadius());
-
-        setCommonValues(_downloadConfig);
 
         parsePasteUrl();
     }
@@ -194,7 +192,7 @@ public class UrlSquarePanel
     }
 
     @Override
-    public void saveConfig()
+    public void saveConfig(DownloadConfigurationSaverIf configurationSave)
     {
         if (_downloadConfig == null)
         {
@@ -203,8 +201,8 @@ public class UrlSquarePanel
 
         _downloadConfig.setPasteUrl(getPasteUrl());
         _downloadConfig.setRadius(getRadius());
-        super.saveCommonConfig(_downloadConfig);
-        _downloadConfig.saveToFile();
+
+        configurationSave.saveDownloadConfig(_downloadConfig);
     }
 
     /**

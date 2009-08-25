@@ -43,7 +43,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationGPX;
+import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationGPX;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonGPX;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
@@ -78,25 +80,21 @@ public class GPXPanel
 
         createPanel();
         initializePanel();
+
+        loadConfig();
     }
 
-    /**
-     * 
-     */
-    @Override
-    public void loadConfig()
+    private void loadConfig()
     {
         _downloadConfig = new DownloadConfigurationGPX();
-        _downloadConfig.loadFromFile();
+        AppConfiguration.getInstance().loadDownloadConfig(_downloadConfig);
 
         _textGPXFile.setText(_downloadConfig.getGpxFile());
         _sliderCorridor.setValue(_downloadConfig.getCorridor());
-
-        setCommonValues(_downloadConfig);
     }
 
     @Override
-    public void saveConfig()
+    public void saveConfig(DownloadConfigurationSaverIf configurationSave)
     {
         if (_downloadConfig == null)
         {
@@ -105,8 +103,8 @@ public class GPXPanel
 
         _downloadConfig.setGpxFile(_textGPXFile.getText());
         _downloadConfig.setCorridor(_sliderCorridor.getValue());
-        super.saveCommonConfig(_downloadConfig);
-        _downloadConfig.saveToFile();
+
+        configurationSave.saveDownloadConfig(_downloadConfig);
     }
 
     /**

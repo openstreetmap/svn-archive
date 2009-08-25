@@ -33,6 +33,8 @@
 # version 1.3
 # - double way in relation check added. according output added to html
 #
+# version 1.4 removed ERROR message
+#
 
 
 use strict ;
@@ -47,7 +49,7 @@ use OSM::osmgraph 2.1 ;
 
 my $program = "checkrelation.pl" ;
 my $usage = $program . " <mode> file.osm baseDir baseName [borderName]\nmode=[M|Re|Ro|B|P]\nM=multipolygon, Re=restriction, Ro=route, B=boundary P=picture" ;
-my $version = "1.3" ;
+my $version = "1.4" ;
 
 my @restrictions = qw (no_right_turn no_left_turn no_u_turn no_straight_on only_right_turn only_left_turn only_straight_on) ;
 my @typesChecked = qw (restriction multipolygon boundary route) ; 
@@ -355,7 +357,7 @@ while ($relationId != -1) {
 
 	foreach my $way (keys %count) {
 		if ( $count{$way} > 1 ) {
-			print "ERROR: relation $relationId contains way $way at least TWICE\n" ;
+			# print "ERROR: relation $relationId contains way $way at least TWICE\n" ;
 			$double = 1 ;
 			push @doubleWays, $way ;
 		}

@@ -27,7 +27,7 @@ use warnings ;
 use OSM::osm 5.0 ;
 
 my $usage = "perl buildWayNodesList.pl file.osm out.txt" ;
-my $version = "1.0" ;
+my $version = "1.1" ;
 
 my $wayId ;
 my $wayUser ;
@@ -46,6 +46,7 @@ my $outName ;
 my $outFile ;
 
 my $time0 ; 
+my $wayCount = 0 ;
 
 # get parameter
 
@@ -78,6 +79,8 @@ if ($wayId != -1) {
 	@wayTags = @$aRef2 ;
 }
 while ($wayId != -1) {
+	$wayCount++ ;
+	if ($wayCount % 100000 == 0) { print "$wayCount ways processed...\n" ; }
 	
 	my ($number) = scalar @wayNodes ;
 
@@ -93,6 +96,7 @@ closeOsmFile() ;
 print "done.\n" ;
 close ($outFile) ;
 
+print "$wayCount ways found.\n" ;
 print "\nfinished after ", stringTimeSpent (time()-$time0), "\n\n" ;
 
 

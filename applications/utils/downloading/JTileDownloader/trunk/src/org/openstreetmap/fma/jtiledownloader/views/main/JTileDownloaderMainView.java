@@ -21,6 +21,7 @@
 
 package org.openstreetmap.fma.jtiledownloader.views.main;
 
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -79,8 +80,16 @@ public class JTileDownloaderMainView
         getContentPane().add(tabbedPane);//, constraints);
 
         pack();
+        center();
         setVisible(true);
+    }
 
+    /**
+     * Centers the window on the screen
+     */
+    protected void center()
+    {
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - getWidth()) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getHeight()) / 2);
     }
 
     protected final JTileDownloaderMainView getMainView()

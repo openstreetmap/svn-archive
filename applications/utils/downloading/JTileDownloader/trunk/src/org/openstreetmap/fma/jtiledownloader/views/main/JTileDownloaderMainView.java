@@ -148,7 +148,7 @@ public class JTileDownloaderMainView
         AppConfiguration.getInstance().setUseProxyServer(_networkPanel.isUseProxyServer());
         AppConfiguration.getInstance().setProxyServer(_networkPanel.getProxyServer());
         AppConfiguration.getInstance().setProxyServerPort(_networkPanel.getProxyServerPort());
-        AppConfiguration.getInstance().setUseProxyServerAuth(_networkPanel.isUseProxyServerAuth());
+        AppConfiguration.getInstance().setProxyServerRequiresAuthentitication(_networkPanel.isUseProxyServerAuth());
         AppConfiguration.getInstance().setProxyServerUser(_networkPanel.getProxyServerUser());
         AppConfiguration.getInstance().setProxyServerPassword(_networkPanel.getProxyServerPassword());
         AppConfiguration.getInstance().setOverwriteExistingFiles(_optionsPanel.isOverwriteExistingFiles());

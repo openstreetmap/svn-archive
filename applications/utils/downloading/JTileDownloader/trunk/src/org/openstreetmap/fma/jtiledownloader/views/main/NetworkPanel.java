@@ -107,7 +107,7 @@ public class NetworkPanel
         _chkUseProxyServer.setSelected(AppConfiguration.getInstance().getUseProxyServer());
         _textProxyServer.setText(AppConfiguration.getInstance().getProxyServer());
         _textProxyPort.setText(AppConfiguration.getInstance().getProxyServerPort());
-        _chkAuthRequired.setSelected(AppConfiguration.getInstance().getUseProxyServerAuth());
+        _chkAuthRequired.setSelected(AppConfiguration.getInstance().isProxyServerRequiresAuthentitication());
         _textProxyUser.setText(AppConfiguration.getInstance().getProxyServerUser());
         _textProxyPassWord.setText(AppConfiguration.getInstance().getProxyServerPassword());
     }

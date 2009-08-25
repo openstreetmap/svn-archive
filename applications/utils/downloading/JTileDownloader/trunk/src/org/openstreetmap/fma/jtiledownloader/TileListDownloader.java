@@ -437,7 +437,7 @@ public class TileListDownloader
 
             if (AppConfiguration.getInstance().getUseProxyServer())
             {
-                if (AppConfiguration.getInstance().getUseProxyServerAuth())
+                if (AppConfiguration.getInstance().isProxyServerRequiresAuthentitication())
                 {
                     new ProxyConnection(AppConfiguration.getInstance().getProxyServer(), Integer.parseInt(AppConfiguration.getInstance().getProxyServerPort()), AppConfiguration.getInstance().getProxyServerUser(), AppConfiguration.getInstance().getProxyServerPassword());
                 }
@@ -479,7 +479,7 @@ public class TileListDownloader
                     updatedTileCount++;
                 }
 
-                if ((tileCounter < getNumberOfTilesToDownload(getTilesToDownload())) && AppConfiguration.getInstance().getWaitAfterNrTiles())
+                if ((tileCounter < getNumberOfTilesToDownload(getTilesToDownload())) && AppConfiguration.getInstance().isWaitingAfterNrOfTiles())
                 {
                     if ((tileCounter) % (AppConfiguration.getInstance().getWaitNrTiles()) == 0)
                     {

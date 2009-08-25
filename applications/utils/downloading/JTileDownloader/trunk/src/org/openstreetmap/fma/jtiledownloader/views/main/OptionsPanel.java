@@ -126,7 +126,7 @@ public class OptionsPanel
      */
     private void initializeOptionsPanel()
     {
-        _chkWaitAfterNrTiles.setSelected(AppConfiguration.getInstance().getWaitAfterNrTiles());
+        _chkWaitAfterNrTiles.setSelected(AppConfiguration.getInstance().isWaitingAfterNrOfTiles());
         _textWaitSeconds.setText("" + AppConfiguration.getInstance().getWaitSeconds());
         _textWaitNrTiles.setText("" + AppConfiguration.getInstance().getWaitNrTiles());
 

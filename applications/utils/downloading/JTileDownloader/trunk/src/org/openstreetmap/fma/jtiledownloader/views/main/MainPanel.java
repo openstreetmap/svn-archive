@@ -160,16 +160,14 @@ public class MainPanel
             _comboOutputZoomLevel.addItem("" + outputZoomLevel);
         }
         _textOutputZoomLevels.setName(COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT);
-        //initializeOutputZoomLevel(getInputPanel().getDownloadZoomLevel());
 
         for (int index = 0; index < _tileProviders.length; index++)
         {
             _comboTileServer.addItem(_tileProviders[index].getName());
         }
-        //initializeTileServer("");
-        //String url = getInputPanel().getTileServerBaseUrl();
-        //initializeTileServer(url);
-        //_textOutputFolder.setText(getInputPanel().getOutputLocation());//_downloadTemplate.getOutputLocation());
+        initializeTileServer(AppConfiguration.getInstance().getTileServer());
+        initializeOutputZoomLevel(AppConfiguration.getInstance().getLastZoom());
+        _textOutputFolder.setText(AppConfiguration.getInstance().getOutputFolder());
 
         _textNumberOfTiles.setEditable(false);
         _textNumberOfTiles.setFocusable(false);
@@ -189,7 +187,7 @@ public class MainPanel
     /**
      * @param tileServer
      */
-    public void initializeTileServer(String tileServer)
+    private void initializeTileServer(String tileServer)
     {
         TileProviderIf loaded = Util.getTileProvider(tileServer);
         int foundTileServerIndex = -1;
@@ -212,8 +210,9 @@ public class MainPanel
         }
     }
 
-    public void initializeOutputZoomLevel(int[] zoomLevels)
+    private void initializeOutputZoomLevel(String zoomLevelsString)
     {
+        int[] zoomLevels = Util.getOutputZoomLevelArray(getSelectedTileProvider(), zoomLevelsString);
         if (zoomLevels == null || zoomLevels.length == 0)
         {
             _textOutputZoomLevels.setText("");
@@ -404,7 +403,8 @@ public class MainPanel
                 if (JFileChooser.APPROVE_OPTION == chooser.showDialog(null, "Save"))
                 {
                     File dir = chooser.getSelectedFile();
-                    if (dir.exists()) {
+                    if (dir.exists())
+                    {
                         JOptionPane.showMessageDialog(_mainView, "File exists. Aborting...", "Info", JOptionPane.ERROR_MESSAGE);
                         return;
                     }

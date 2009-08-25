@@ -36,18 +36,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-__version__ = "$Id$"
-
 import xml.etree.cElementTree as ET
 import httplib2
 import pickle
 import os
+import sys
+
+__version__ = "$Id$"
+user_agent = "bulk_upload.py/%s Python/%s" % (__version__.split()[2], sys.version.split()[0])
 
 api_host='http://api.openstreetmap.org'
 #api_host='http://api06.dev.openstreetmap.org'
 headers = {
-    'User-Agent' : 'bulk_upload.py',
+    'User-Agent' : user_agent,
 }
 
 
@@ -122,7 +123,6 @@ class ImportProcessor:
                     gr.add_edge('root', item[0])
             for relation in gr.traversal('root', 'post'):
                 if relation == 'root': continue
-                print relation
                 self.addToChangeset(relationStore[relation])
         else:
             for relation in relationStore:
@@ -349,7 +349,7 @@ if __name__ == "__main__":
 
     idMap = IdMap(options.infile + ".db")
     tags = {
-        'created_by': 'bulk_upload.py r' + __version__.split()[2],
+        'created_by': user_agent,
         'comment': options.comment
     }
     importProcessor = ImportProcessor(options.user,options.password,idMap,tags)

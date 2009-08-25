@@ -131,6 +131,7 @@ public class ProgressBar
     {
         previewVisible = selected;
         showPreview.setSelected(selected);
+        AppConfiguration.getInstance().setShowTilePreview(selected);
         if (selected == true)
         {
             GridBagConstraints constraints = new GridBagConstraints();

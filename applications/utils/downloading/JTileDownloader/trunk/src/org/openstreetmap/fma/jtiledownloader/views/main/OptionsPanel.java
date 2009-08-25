@@ -48,8 +48,6 @@ public class OptionsPanel
     JLabel _labelMinimumAgeInDays = new JLabel("Minimum age in days:");
     JTextField _textMinimumAgeInDays = new JTextField();
 
-    JCheckBox _chkShowTilePreview = new JCheckBox("Show TilePreview");
-
     JCheckBox _chkOverwriteExistingFiles = new JCheckBox("Overwrite existing files");
 
     /**
@@ -115,7 +113,6 @@ public class OptionsPanel
         constraintsWaitOptions.gridwidth = GridBagConstraints.REMAINDER;
         otherOptions.add(_textMinimumAgeInDays, constraintsWaitOptions);
 
-        otherOptions.add(_chkShowTilePreview, constraintsOtherOptions);
         constraintsOtherOptions.gridwidth = GridBagConstraints.RELATIVE;
         otherOptions.add(_chkOverwriteExistingFiles, constraintsOtherOptions);
 
@@ -135,19 +132,9 @@ public class OptionsPanel
 
         _textMinimumAgeInDays.setText("" + AppConfiguration.getInstance().getMinimumAgeInDays());
 
-        _chkShowTilePreview.setSelected(AppConfiguration.getInstance().isShowTilePreview());
         _chkOverwriteExistingFiles.setSelected(AppConfiguration.getInstance().isOverwriteExistingFiles());
 
     }
-
-    /**
-     * @return show tiles proview while downloading?
-     */
-    public boolean isShowTilePreview()
-    {
-        return _chkShowTilePreview.isSelected();
-    }
-
     /**
      * @return overwrite existing files
      */

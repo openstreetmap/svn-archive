@@ -32,6 +32,8 @@ public class AppConfiguration
 
     private static AppConfiguration instance = new AppConfiguration();
 
+    private Properties prop = new Properties();
+
     private boolean _useProxyServer = false;
     private String _proxyServer = "";
     private String _proxyServerPort = "";
@@ -82,26 +84,6 @@ public class AppConfiguration
 
     public void saveToFile()
     {
-        Properties prop = new Properties();
-
-        setProperty(prop, USE_PROXY_SERVER, "" + _useProxyServer);
-        setProperty(prop, PROXY_SERVER, "" + _proxyServer);
-        setProperty(prop, PROXY_SERVER_PORT, "" + _proxyServerPort);
-        setProperty(prop, USE_PROXY_SERVER_AUTH, "" + _useProxyServerAuth);
-        setProperty(prop, PROXY_SERVER_USER, "" + _proxyServerUser);
-        setProperty(prop, PROXY_SERVER_PASSWORD, "" + _proxyServerPassword);
-        setProperty(prop, SHOW_TILE_PREVIEW, "" + isShowTilePreview());
-
-        setProperty(prop, OVERWRITE_EXISTING_FILES, "" + isOverwriteExistingFiles());
-
-        setProperty(prop, MINIMUM_AGE_IN_DAYS, "" + getMinimumAgeInDays());
-
-        setProperty(prop, WAIT_AFTER_NR_TILES, "" + getWaitAfterNrTiles());
-        setProperty(prop, WAIT_SECONDS, "" + getWaitSeconds());
-        setProperty(prop, WAIT_NR_TILES, "" + getWaitNrTiles());
-
-        setProperty(prop, INPUT_PANEL_INDEX, "" + getInputPanelIndex());
-
         try
         {
             prop.storeToXML(new FileOutputStream(APP_CONFIG_PROPERTIES), null);
@@ -120,7 +102,6 @@ public class AppConfiguration
 
     private void loadFromFile()
     {
-        Properties prop = new Properties();
         try
         {
             prop.loadFromXML(new FileInputStream(APP_CONFIG_PROPERTIES));
@@ -148,7 +129,6 @@ public class AppConfiguration
         setWaitNrTiles(Integer.parseInt(prop.getProperty(WAIT_NR_TILES, String.valueOf(getWaitNrTiles()))));
 
         setInputPanelIndex(Integer.parseInt(prop.getProperty(INPUT_PANEL_INDEX, String.valueOf(getInputPanelIndex()))));
-
     }
 
     /**
@@ -167,6 +147,7 @@ public class AppConfiguration
     public final void setUseProxyServer(boolean useProxyServer)
     {
         _useProxyServer = useProxyServer;
+        setProperty(prop, USE_PROXY_SERVER, "" + _useProxyServer);
     }
 
     /**
@@ -185,6 +166,7 @@ public class AppConfiguration
     public final void setProxyServer(String proxyServer)
     {
         _proxyServer = proxyServer;
+        setProperty(prop, PROXY_SERVER, "" + _proxyServer);
     }
 
     /**
@@ -203,6 +185,7 @@ public class AppConfiguration
     public final void setProxyServerPort(String proxyServerPort)
     {
         _proxyServerPort = proxyServerPort;
+        setProperty(prop, PROXY_SERVER_PORT, "" + _proxyServerPort);
     }
 
     /**
@@ -221,6 +204,7 @@ public class AppConfiguration
     public final void setUseProxyServerAuth(boolean useProxyServerAuth)
     {
         _useProxyServerAuth = useProxyServerAuth;
+        setProperty(prop, USE_PROXY_SERVER_AUTH, "" + _useProxyServerAuth);
     }
 
     /**
@@ -239,6 +223,7 @@ public class AppConfiguration
     public final void setProxyServerUser(String proxyServerUser)
     {
         _proxyServerUser = proxyServerUser;
+        setProperty(prop, PROXY_SERVER_USER, "" + _proxyServerUser);
     }
 
     /**
@@ -257,6 +242,7 @@ public class AppConfiguration
     public final void setProxyServerPassword(String proxyServerPassword)
     {
         _proxyServerPassword = proxyServerPassword;
+        setProperty(prop, PROXY_SERVER_PASSWORD, "" + _proxyServerPassword);
     }
 
     /**
@@ -266,6 +252,7 @@ public class AppConfiguration
     public void setShowTilePreview(boolean showTilePreview)
     {
         _showTilePreview = showTilePreview;
+        setProperty(prop, SHOW_TILE_PREVIEW, "" + _showTilePreview);
     }
 
     /**
@@ -284,6 +271,7 @@ public class AppConfiguration
     public void setWaitAfterNrTiles(boolean waitAfterNrTiles)
     {
         _waitAfterNrTiles = waitAfterNrTiles;
+        setProperty(prop, WAIT_NR_TILES, "" + _waitAfterNrTiles);
     }
 
     /**
@@ -305,6 +293,7 @@ public class AppConfiguration
         {
             _waitSeconds = waitSeconds;
         }
+        setProperty(prop, WAIT_SECONDS, "" + _waitSeconds);
     }
 
     /**
@@ -326,6 +315,7 @@ public class AppConfiguration
         {
             _waitNrTiles = waitNrTiles;
         }
+        setProperty(prop, WAIT_AFTER_NR_TILES, "" + _waitNrTiles);
     }
 
     /**
@@ -353,6 +343,7 @@ public class AppConfiguration
     public final void setInputPanelIndex(int inputPanelIndex)
     {
         _inputPanelIndex = inputPanelIndex;
+        setProperty(prop, INPUT_PANEL_INDEX, "" + _inputPanelIndex);
     }
 
     /**
@@ -371,6 +362,7 @@ public class AppConfiguration
     public final void setOverwriteExistingFiles(boolean overwriteExistingFiles)
     {
         _overwriteExistingFiles = overwriteExistingFiles;
+        setProperty(prop, OVERWRITE_EXISTING_FILES, "" + _overwriteExistingFiles);
     }
 
     /**
@@ -392,5 +384,6 @@ public class AppConfiguration
         {
             _minimumAgeInDays = minimumAgeInDays;
         }
+        setProperty(prop, MINIMUM_AGE_IN_DAYS, "" + _minimumAgeInDays);
     }
 }

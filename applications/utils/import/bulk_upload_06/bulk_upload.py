@@ -75,7 +75,12 @@ class ImportProcessor:
         osmRoot = osmData.getroot()
         if osmRoot.tag != "osm":
             raise XMLException("Input file must be a .osm XML file (JOSM-style)")
-    
+
+        for elem in osmRoot.getiterator('member'):
+            if elem.attrib['type'] == 'relation':
+                relationSort = True
+                break
+        
         for type in ('node','way','relation'):
             for elem in osmRoot.getiterator(type):
                 # If elem.id is already mapped we can skip this object
@@ -93,15 +98,11 @@ class ImportProcessor:
                             if idMap['node'].has_key(old_id):
                                 child.attrib['ref'] = self.idMap['node'][old_id]
                 elif elem.tag=='relation':
-                    for child in elem.getiterator('member'):
-                        if child.attrib.has_key('ref'):
-                            old_id=child.attrib['ref']
-                            old_id_type = child.attrib['type']
-                            if self.idMap[old_id_type].has_key(old_id):
-                                child.attrib['ref'] = self.idMap[old_id_type][old_id]
-                            if old_id_type == "relation":
-                                relationSort = True
-                    relationStore[elem.attrib['id']] = elem
+                    if relationSort:
+                        relationStore[elem.attrib['id']] = elem
+                    else:
+                        self.updateRelationMemberIds(elem)
+                        self.addToChangeset(elem)
 
                 if elem.tag != 'relation':
                     self.addToChangeset(elem)
@@ -123,12 +124,18 @@ class ImportProcessor:
                     gr.add_edge('root', item[0])
             for relation in gr.traversal('root', 'post'):
                 if relation == 'root': continue
+                self.updateRelationMemberIds(relationStore[relation])
                 self.addToChangeset(relationStore[relation])
-        else:
-            for relation in relationStore:
-                self.addToChangeset(relation)
 
         self.currentChangeset.close() # (uploads any remaining diffset changes)
+
+    def updateRelationMemberIds(self, elem):
+        for child in elem.getiterator('member'):
+            if child.attrib.has_key('ref'):
+                old_id=child.attrib['ref']
+                old_id_type = child.attrib['type']
+                if self.idMap[old_id_type].has_key(old_id):
+                    child.attrib['ref'] = self.idMap[old_id_type][old_id]
 
     def createChangeset(self):
         self.currentChangeset = Changeset(tags=self.tags, idMap=self.idMap, httpObj=self.httpObj)

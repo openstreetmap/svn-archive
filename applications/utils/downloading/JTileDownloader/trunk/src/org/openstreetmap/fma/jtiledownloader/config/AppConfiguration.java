@@ -271,7 +271,7 @@ public class AppConfiguration
     public void setWaitAfterNrTiles(boolean waitAfterNrTiles)
     {
         _waitAfterNrTiles = waitAfterNrTiles;
-        setProperty(prop, WAIT_NR_TILES, "" + _waitAfterNrTiles);
+        setProperty(prop, WAIT_AFTER_NR_TILES, "" + _waitAfterNrTiles);
     }
 
     /**

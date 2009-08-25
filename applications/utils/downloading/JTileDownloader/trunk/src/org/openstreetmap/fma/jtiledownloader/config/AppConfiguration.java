@@ -130,24 +130,24 @@ public class AppConfiguration
             e.printStackTrace();
         }
 
-        _useProxyServer = Boolean.valueOf(prop.getProperty(USE_PROXY_SERVER, "false")).booleanValue();
-        _proxyServer = prop.getProperty(PROXY_SERVER, "");
-        _proxyServerPort = prop.getProperty(PROXY_SERVER_PORT, "");
-        _useProxyServerAuth = Boolean.valueOf(prop.getProperty(USE_PROXY_SERVER_AUTH, "false")).booleanValue();
-        _proxyServerUser = prop.getProperty(PROXY_SERVER_USER, "");
-        _proxyServerPassword = prop.getProperty(PROXY_SERVER_PASSWORD, "");
+        _useProxyServer = Boolean.valueOf(prop.getProperty(USE_PROXY_SERVER, String.valueOf(_useProxyServer))).booleanValue();
+        _proxyServer = prop.getProperty(PROXY_SERVER, _proxyServer);
+        _proxyServerPort = prop.getProperty(PROXY_SERVER_PORT, _proxyServerPort);
+        _useProxyServerAuth = Boolean.valueOf(prop.getProperty(USE_PROXY_SERVER_AUTH, String.valueOf(_useProxyServerAuth))).booleanValue();
+        _proxyServerUser = prop.getProperty(PROXY_SERVER_USER, _proxyServerUser);
+        _proxyServerPassword = prop.getProperty(PROXY_SERVER_PASSWORD, _proxyServerPassword);
 
-        setShowTilePreview(Boolean.valueOf(prop.getProperty(SHOW_TILE_PREVIEW, "true")).booleanValue());
+        setShowTilePreview(Boolean.valueOf(prop.getProperty(SHOW_TILE_PREVIEW, String.valueOf(isShowTilePreview()))).booleanValue());
 
-        setOverwriteExistingFiles(Boolean.valueOf(prop.getProperty(OVERWRITE_EXISTING_FILES, "true")).booleanValue());
+        setOverwriteExistingFiles(Boolean.valueOf(prop.getProperty(OVERWRITE_EXISTING_FILES, String.valueOf(isOverwriteExistingFiles()))).booleanValue());
 
-        setMinimumAgeInDays(Integer.parseInt(prop.getProperty(MINIMUM_AGE_IN_DAYS, "7")));
+        setMinimumAgeInDays(Integer.parseInt(prop.getProperty(MINIMUM_AGE_IN_DAYS, String.valueOf(getMinimumAgeInDays()))));
 
-        setWaitAfterNrTiles(Boolean.valueOf(prop.getProperty(WAIT_AFTER_NR_TILES, "true")).booleanValue());
-        setWaitSeconds(Integer.parseInt(prop.getProperty(WAIT_SECONDS, "10")));
-        setWaitNrTiles(Integer.parseInt(prop.getProperty(WAIT_NR_TILES, "50")));
+        setWaitAfterNrTiles(Boolean.valueOf(prop.getProperty(WAIT_AFTER_NR_TILES, String.valueOf(getWaitAfterNrTiles()))).booleanValue());
+        setWaitSeconds(Integer.parseInt(prop.getProperty(WAIT_SECONDS, String.valueOf(getWaitSeconds()))));
+        setWaitNrTiles(Integer.parseInt(prop.getProperty(WAIT_NR_TILES, String.valueOf(getWaitNrTiles()))));
 
-        setInputPanelIndex(Integer.parseInt(prop.getProperty(INPUT_PANEL_INDEX, "0")));
+        setInputPanelIndex(Integer.parseInt(prop.getProperty(INPUT_PANEL_INDEX, String.valueOf(getInputPanelIndex()))));
 
     }
 

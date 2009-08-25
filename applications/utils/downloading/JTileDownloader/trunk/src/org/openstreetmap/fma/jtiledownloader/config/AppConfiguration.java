@@ -44,6 +44,10 @@ public class AppConfiguration
 
     private boolean _showTilePreview = true;
 
+    private String _tileServer = "";
+    private String _lastZoom = "12";
+    private String _outputFolder = "tiles";
+
     private boolean _overwriteExistingFiles = true;
 
     private int _minimumAgeInDays = 7;
@@ -62,6 +66,10 @@ public class AppConfiguration
     private static final String PROXY_SERVER_PASSWORD = "ProxyServerPassword";
 
     private static final String SHOW_TILE_PREVIEW = "ShowTilePreview";
+    
+    private static final String TILE_SERVER = "TileServer";
+    private static final String LAST_ZOOM = "LastZoom";
+    private static final String LAST_OUTPUTFOLDER = "LastOutoutFolder";
 
     private static final String OVERWRITE_EXISTING_FILES = "OverwriteExistingFiles";
 
@@ -120,6 +128,10 @@ public class AppConfiguration
         _proxyServerPassword = prop.getProperty(PROXY_SERVER_PASSWORD, _proxyServerPassword);
 
         setShowTilePreview(Boolean.valueOf(prop.getProperty(SHOW_TILE_PREVIEW, String.valueOf(isShowTilePreview()))).booleanValue());
+
+        setTileServer(prop.getProperty(TILE_SERVER, _tileServer));
+        setLastZoom(prop.getProperty(LAST_ZOOM, _lastZoom));
+        setOutputFolder(prop.getProperty(LAST_OUTPUTFOLDER, _outputFolder));
 
         setOverwriteExistingFiles(Boolean.valueOf(prop.getProperty(OVERWRITE_EXISTING_FILES, String.valueOf(isOverwriteExistingFiles()))).booleanValue());
 
@@ -415,5 +427,62 @@ public class AppConfiguration
             String propertyName = (String) property;
             prop.setProperty(config.getType() + "." + propertyName, downloadProps.getProperty(propertyName));
         }
+    }
+
+    /**
+     * Getter for lastZoom
+     * @return the lastZoom
+     */
+    public String getLastZoom()
+    {
+        return _lastZoom;
+    }
+
+    /**
+     * Setter for lastZoom
+     * @param lastZoom the lastZoom to set
+     */
+    public void setLastZoom(String lastZoom)
+    {
+        _lastZoom = lastZoom;
+        setProperty(prop, LAST_ZOOM, _lastZoom);
+    }
+
+    /**
+     * Getter for outputFolder
+     * @return the outputFolder
+     */
+    public String getOutputFolder()
+    {
+        return _outputFolder;
+    }
+
+    /**
+     * Setter for outputFolder
+     * @param outputFolder the outputFolder to set
+     */
+    public void setOutputFolder(String outputFolder)
+    {
+        _outputFolder = outputFolder;
+        setProperty(prop, LAST_OUTPUTFOLDER, _outputFolder);
+    }
+
+    /**
+     * Getter for tileServer
+     * @return the tileServer
+     */
+    public String getTileServer()
+    {
+        return _tileServer;
+    }
+
+    /**
+     * Setter for tileServer
+     * @param tileServer the tileServer to set
+     */
+    public void setTileServer(String tileServer)
+    {
+        _tileServer = tileServer;
+        setProperty(prop, TILE_SERVER, _tileServer);
     }
 }

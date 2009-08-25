@@ -152,6 +152,9 @@ public class JTileDownloaderMainView
         AppConfiguration.getInstance().setProxyServerUser(_networkPanel.getProxyServerUser());
         AppConfiguration.getInstance().setProxyServerPassword(_networkPanel.getProxyServerPassword());
         AppConfiguration.getInstance().setOverwriteExistingFiles(_optionsPanel.isOverwriteExistingFiles());
+        AppConfiguration.getInstance().setTileServer(_mainPanel.getSelectedTileProvider().getName());
+        AppConfiguration.getInstance().setLastZoom(_mainPanel.getOutputZoomLevelString());
+        AppConfiguration.getInstance().setOutputFolder(_mainPanel.getOutputfolder());
         AppConfiguration.getInstance().setWaitAfterNrTiles(_optionsPanel.isWaitAfterNumberOfTiles());
         AppConfiguration.getInstance().setWaitSeconds(_optionsPanel.getWaitSeconds());
         AppConfiguration.getInstance().setWaitNrTiles(_optionsPanel.getWaitNrTiles());

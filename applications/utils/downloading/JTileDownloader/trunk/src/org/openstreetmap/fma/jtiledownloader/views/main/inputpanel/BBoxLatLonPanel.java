@@ -33,7 +33,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxLatLon;
+import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;

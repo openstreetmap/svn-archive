@@ -29,7 +29,7 @@ import java.awt.event.FocusListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationBBoxXY;
+import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationBBoxXY;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonBBox;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;

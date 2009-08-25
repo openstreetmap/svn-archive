@@ -23,7 +23,7 @@ package org.openstreetmap.fma.jtiledownloader.views.main.inputpanel;
 import javax.swing.JPanel;
 
 import org.openstreetmap.fma.jtiledownloader.Util;
-import org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration;
+import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;
 

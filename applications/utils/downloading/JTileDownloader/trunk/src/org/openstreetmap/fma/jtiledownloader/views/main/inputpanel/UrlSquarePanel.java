@@ -31,7 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationUrlSquare;
+import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;

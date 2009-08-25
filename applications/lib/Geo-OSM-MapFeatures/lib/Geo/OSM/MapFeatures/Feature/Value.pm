@@ -62,6 +62,11 @@ sub new {
         #FIXME: Maybe defined by editor should be separate?
 	$class = $pkg->get_factory_class('userdef');
     }
+    # Empty value - what the heck?
+    elsif( $value eq '' ){
+	    Carp::carp "Empty value, what the heck? Calling it user defined";
+	    $class = $pkg->get_factory_class('userdef');
+    }
     # Numeric value
     elsif( lc($value) eq 'num' || lc($value) eq 'number' ){
         $class = $pkg->get_factory_class('num');
@@ -104,7 +109,7 @@ sub new {
         );
     }
     # Lengths
-    elsif( lc($value) eq 'height' || lc($value) eq 'width' ){
+    elsif( lc($value) eq 'length' || lc($value) eq 'height' || lc($value) eq 'width' ){
         $class = $pkg->get_factory_class('numwithunit');
         %classargs = (
             units => [
@@ -192,7 +197,7 @@ L<http://search.cpan.org/dist/Geo-OSM-MapFeatures>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 Knut Arne Bjørndal, all rights reserved.
+Copyright 2008-2009 Knut Arne Bjørndal, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

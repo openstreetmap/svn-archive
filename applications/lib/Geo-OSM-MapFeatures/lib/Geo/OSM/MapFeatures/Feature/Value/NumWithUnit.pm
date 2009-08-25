@@ -41,7 +41,7 @@ sub init {
     my $value = shift;
     my %classargs = %{ shift() };
 
-    $self->units($classargs{list});
+    $self->units($classargs{units});
 
     return $self;
 }
@@ -101,7 +101,7 @@ L<http://search.cpan.org/dist/Geo-OSM-MapFeatures>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 Knut Arne Bjørndal, all rights reserved.
+Copyright 2008-2009 Knut Arne Bjørndal, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

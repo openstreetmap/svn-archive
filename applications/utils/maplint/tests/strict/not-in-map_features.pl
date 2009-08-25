@@ -75,8 +75,8 @@ sub add_feature( $$$ ){
     my $value = shift;
     my @types = @{ shift() };
 
-    # name:''lg''
-    if( $key =~ /(.*:)''lg''/i ){
+    # name:lg
+    if( $key =~ /(.*:)lg/i ){
 	$key = "contains(\@k, '$1')";
     }
 

@@ -14,6 +14,10 @@ th a {
 color: #000000; text-decoration:none;
 }
 
+td {
+vertical-align: top;
+}
+
 .odd {
 background-color: #ffffff;
 }

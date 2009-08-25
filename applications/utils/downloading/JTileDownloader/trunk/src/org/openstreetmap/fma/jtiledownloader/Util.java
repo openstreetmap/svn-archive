@@ -1,6 +1,9 @@
 /*
  * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
+ * parsePasteUrl by:
+ * Copyright 2008, Friedrich Maier
+ * 
  * This file is part of JTileDownloader.
  *
  * JTileDownloader is free software: you can redistribute it and/or modify
@@ -25,6 +28,7 @@ import java.util.LinkedList;
 
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
 
 /**
  * Class with helper methods
@@ -74,4 +78,27 @@ public class Util
         return new GenericTileProvider(tileServer);
     }
 
+    public static void parsePasteUrl(String url, TileListUrlSquare tileList)
+    {
+        //String pasteUrl = "http://www.openstreetmap.org/?lat=48.256&lon=13.0434&zoom=12&layers=0B0FT";
+        if (url == null || url.length() == 0)
+        {
+            tileList.setLatitude(0);
+            tileList.setLongitude(0);
+            return;
+        }
+
+        int posLat = url.indexOf("lat=");
+        String lat = url.substring(posLat);
+        int posLon = url.indexOf("lon=");
+        String lon = url.substring(posLon);
+
+        int posAnd = lat.indexOf("&");
+        lat = lat.substring(4, posAnd);
+        posAnd = lon.indexOf("&");
+        lon = lon.substring(4, posAnd);
+
+        tileList.setLatitude(Double.parseDouble(lat));
+        tileList.setLongitude(Double.parseDouble(lon));
+    }
 }

@@ -31,6 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.openstreetmap.fma.jtiledownloader.Util;
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
 import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf;
 import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationUrlSquare;
@@ -142,34 +143,10 @@ public class UrlSquarePanel
      */
     public void parsePasteUrl()
     {
-        //String pasteUrl = "http://www.openstreetmap.org/?lat=48.256&lon=13.0434&zoom=12&layers=0B0FT";
-        String url = _textPasteUrl.getText();
-        if (url == null || url.length() == 0)
-        {
-            _textLatitude.setText("" + 0);
-            _textLongitude.setText("" + 0);
+        Util.parsePasteUrl(_textPasteUrl.getText(), _tileList);
 
-            _tileList.setLatitude(0);
-            _tileList.setLongitude(0);
-            return;
-        }
-
-        int posLat = url.indexOf("lat=");
-        String lat = url.substring(posLat);
-        int posLon = url.indexOf("lon=");
-        String lon = url.substring(posLon);
-
-        int posAnd = lat.indexOf("&");
-        lat = lat.substring(4, posAnd);
-        posAnd = lon.indexOf("&");
-        lon = lon.substring(4, posAnd);
-
-        _textLatitude.setText(lat);
-        _textLongitude.setText(lon);
-
-        _tileList.setLatitude(Double.parseDouble(lat));
-        _tileList.setLongitude(Double.parseDouble(lon));
-
+        _textLatitude.setText(String.valueOf(_tileList.getLatitude()));
+        _textLongitude.setText(String.valueOf(_tileList.getLongitude()));
     }
 
     /**

@@ -187,18 +187,7 @@ public class JTileDownloaderCommandLine
             return;
         }
 
-        int posLat = url.indexOf("lat=");
-        String lat = url.substring(posLat);
-        int posLon = url.indexOf("lon=");
-        String lon = url.substring(posLon);
-
-        int posAnd = lat.indexOf("&");
-        lat = lat.substring(4, posAnd);
-        posAnd = lon.indexOf("&");
-        lon = lon.substring(4, posAnd);
-
-        ((TileListUrlSquare) _tileList).setLatitude(Double.parseDouble(lat));
-        ((TileListUrlSquare) _tileList).setLongitude(Double.parseDouble(lon));
+        Util.parsePasteUrl(url, ((TileListUrlSquare) _tileList));
 
         ((TileListUrlSquare) _tileList).setRadius((_downloadTemplate).getRadius() * 1000);
         ((TileListUrlSquare) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadJob.getOutputZoomLevels()));

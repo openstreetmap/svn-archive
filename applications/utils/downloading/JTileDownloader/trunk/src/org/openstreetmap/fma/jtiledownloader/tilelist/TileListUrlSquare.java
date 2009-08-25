@@ -77,7 +77,7 @@ public class TileListUrlSquare
      * Getter for latitude
      * @return the latitude
      */
-    protected final double getLatitude()
+    public final double getLatitude()
     {
         return _latitude;
     }
@@ -95,7 +95,7 @@ public class TileListUrlSquare
      * Getter for longitude
      * @return the longitude
      */
-    protected final double getLongitude()
+    public final double getLongitude()
     {
         return _longitude;
     }

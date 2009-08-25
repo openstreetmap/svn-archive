@@ -1,0 +1,16 @@
+Here is a list of people who contributed to the YOURS 1.0 routing website, in chronologic order:
+
+* Lambertus IJsselstein
+  Original author of YOURS.
+
+* Tobias Lindh
+  HTML and CSS fixes for positioning the map.
+
+* Grant Slater
+  CSS fix for the navigation menu, 3 column layout.
+
+* Philip Homburg
+  Support for via's in routing.
+
+* Anonymous
+  Fix for JavaScript error in IE 6.0

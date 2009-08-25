@@ -15,7 +15,6 @@ var maxNbUses=50;
 
 var nbUsesIndex       = 2; // index of the column containing the number of uses of this key/value pair.
 var nbElementsIndices = {'node':3, 'way':4, 'relation':5};
-var xapiLinkIndex = 7;     // index of the column containing the link to the xapi DB. Point to a file "data.osm".
 var tableIndex    = 0;     // index of the table we will edit.
 var minRowIndex   = 1;     // nb of table header rows we have to skip
 var xapiLinkBaseURL = '';  // prefix of the URL to data.osm
@@ -43,7 +42,7 @@ function addReviewLinks(){ // called once the page is loaded. Add a column with 
 	for (var i=minRowIndex;i<rows.length;i++) {
 		var row = rows[i];
 		var cells = row.cells;
-		var xapiLink=xapiLinkBaseURL + cells[xapiLinkIndex].getElementsByTagName('a')[0].href;
+		var xapiLink=xapiLinkBaseURL + cells[cells.length-1].getElementsByTagName('a')[0].href;
 		var nbUses=cells[nbUsesIndex].innerHTML;
 		if (nbUses <= maxNbUses) {
 			var cell = row.insertCell(-1);

@@ -43,7 +43,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.openstreetmap.fma.jtiledownloader.template.DownloadConfigurationGPX;
+import org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfigurationGPX;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonGPX;
 import org.openstreetmap.fma.jtiledownloader.views.main.MainPanel;

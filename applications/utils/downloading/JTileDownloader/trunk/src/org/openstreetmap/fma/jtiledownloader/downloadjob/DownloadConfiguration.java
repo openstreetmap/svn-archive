@@ -19,7 +19,7 @@
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.fma.jtiledownloader.template;
+package org.openstreetmap.fma.jtiledownloader.downloadjob;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

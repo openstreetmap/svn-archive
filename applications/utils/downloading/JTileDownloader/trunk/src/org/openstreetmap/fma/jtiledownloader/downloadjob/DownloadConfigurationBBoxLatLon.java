@@ -19,7 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.fma.jtiledownloader.template;
+package org.openstreetmap.fma.jtiledownloader.downloadjob;
 
 import java.util.Properties;
 
@@ -57,7 +57,7 @@ public class DownloadConfigurationBBoxLatLon
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration#saveToFile()
+     * @see org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration#saveToFile()
      * {@inheritDoc}
      */
     @Override
@@ -74,7 +74,7 @@ public class DownloadConfigurationBBoxLatLon
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.template.DownloadConfiguration#loadFromFile()
+     * @see org.openstreetmap.fma.jtiledownloader.downloadjob.DownloadConfiguration#loadFromFile()
      * {@inheritDoc}
      */
     @Override
@@ -162,5 +162,4 @@ public class DownloadConfigurationBBoxLatLon
     {
         _maxLon = maxLon;
     }
-
 }

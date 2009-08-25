@@ -306,11 +306,11 @@ class ParseNaptan(ParseXML):
         
         for idx in self.features.copy():
             # Ignore relations with no members
-            if len(self.features[idx].members) > 1:
+            #if len(self.features[idx].members) > 1:
                 self.output.write(self.features[idx])
                 del self.features[idx]
-            else:
-                areacount -= 1
+            #else:
+            #    areacount -= 1
 
         pickles = open("%s.emptyarea.pkl" % (self.options.filenamebase), 'wb')
         pickle.dump(self.features, pickles)
@@ -350,12 +350,24 @@ class OSMWriter:
         self.of.close()
         self.of = None
 
-def treeparse(f, of, options):
+
+class DebugWriter:
+    def __init__(self, outfile):
+        self.of = outfile
+        self.objs = []
+    
+    def write(self, osmobj):
+        self.objs.append(osmobj)
+
+    def close(self):
+        pickle.dump(self.objs, self.of)
+        self.of.close()
+        self.of = None
+
+def treeparse(f, output, options):
     it = iter(ET.iterparse(f, events=('start', 'end')))
     event, root = it.next()
 
-    output = OSMWriter(of)
-    
     if root.tag == ParseNaptan.namespace + 'NaPTAN':
         parser = ParseNaptan(output, options)
     elif root.tag == ParseNPTG.namespace + 'NationalPublicTransportGazetteer':
@@ -372,7 +384,6 @@ def treeparse(f, of, options):
             elem.clear()
             
     parser.finish()
-    output.close()
     
 if __name__ == "__main__":
     from optparse import OptionParser
@@ -384,8 +395,9 @@ if __name__ == "__main__":
     type="string", default=".", help="Write OSM data into dir, defaults to .")
     parser.add_option("-p", "--passive", action="store_true", dest="passive",
     help="'Passive' conversion, don't tag the data visibly, require it to be reviewed before being useful.")
+    parser.add_option("-d", "--debug-output", action="store_true", dest="debug",
+    help="Produce pickled output for debug purposes rather than a .osm")
     (options, args) = parser.parse_args()
-    
     if len(args) != 1:
         parser.error("Input file required")
     
@@ -397,5 +409,8 @@ if __name__ == "__main__":
     options.outfile = '%s.osm' % (options.filenamebase)
     outfile = open(options.outfile, 'w')
     
-    xml = treeparse(infile, outfile, options)
+    output = OSMWriter(outfile) if not options.debug else DebugWriter(outfile)
+    xml = treeparse(infile, output, options)
+    output.close()
+
 

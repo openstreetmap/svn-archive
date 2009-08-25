@@ -58,7 +58,7 @@ if __name__ == "__main__":
     idMap = IdMap(infilebase)
     tags = {
         'created_by': 'naptan2osm',
-        'uploaded_by': 'bulk_upload.py',
+        'uploaded_by': bulk_upload.user_agent,
         'comment': comment,
         'source': 'naptan_import',
         'original_filename': infilebase+'.xml'

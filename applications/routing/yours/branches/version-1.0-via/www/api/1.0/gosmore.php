@@ -234,26 +234,26 @@ if ($nodes == 0)
 echo $output;
 
 // Do some housekeeping (update logfiles)
-if ($bRunGosmore) {
-	$file = $www_dir.'/requests.csv';
-	if (!file_exists($file)) {
-		$fh = fopen($file, 'a+');
-		if ($fh) {		
-			fwrite($fh, "date, client id, referrer, user_agent, query, length, nodes, script time, gosmore time\n");
-			fclose($fh);
-		}
-	}
 
+$file = $www_dir.'/requests.csv';
+if (!file_exists($file)) {
 	$fh = fopen($file, 'a+');
-	if ($fh) {
-		$script_end = microtime(true);
-		$script = $script_end - $script_start;
-		$runtime = $gosmore_end - $gosmore_start;
-		
-		fwrite($fh, date('Y-m-d H:i:s').", ".$yours_client.", ".$referrer.", ".$user_agent.", ".$query.", ".strlen($output).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
+	if ($fh) {		
+		fwrite($fh, "date, client id, referrer, user_agent, query, length, nodes, script time, gosmore time\n");
 		fclose($fh);
 	}
-}  // Done!
+}
+
+$fh = fopen($file, 'a+');
+if ($fh) {
+	$script_end = microtime(true);
+	$script = $script_end - $script_start;
+	$runtime = $gosmore_end - $gosmore_start;
+	
+	fwrite($fh, date('Y-m-d H:i:s').", ".$yours_client.", ".$referrer.", ".$user_agent.", ".$query.", ".strlen($output).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
+	fclose($fh);
+}
+// Done!
 
 function getDistance($latitudeFrom, $longitudeFrom,
     $latituteTo, $longitudeTo)

@@ -1,215 +1,226 @@
 <?php
+$maxAttempts = 5;
+$maxInstances = 2;
 
 $output = "";
-$bRunGosmore = true;
-if (getProcesses() > 2) {
-	$bRunGosmore = false; 
+$nAttempts = 0;
+
+ // Check for running Gosmore instances, max wait is 1 sec
+for ($nAttempts = 0; $nAttempts < $maxAttempts; $nAttempts++) {
+	if (getProcesses() > $maxInstances) {
+		// sleep for 200 msec
+		usleep(200000);
+	} else {
+		break;
+	}
+} 
+
+if ($nAttempts == $maxAttempts) {
 	$output = "Server is busy, please try again later (".getProcesses().")";
+	exit($output);
 }
 
-if ($bRunGosmore) {
-	$script_start = microtime(true);
+$script_start = microtime(true);
 
-	$www_dir = '/home/lambertus/public_html/yours';
-	$yours_dir = '/home/lambertus/planet/yours';
-	$ulimit = 30;
+$www_dir = '/home/lambertus/public_html/yours';
+$yours_dir = '/home/lambertus/planet/yours';
+$ulimit = 30;
 
-	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+$query = "QUERY_STRING='";
+
+//Coordinates
+if (isset($_GET['flat'])) {
+	$query .= 'flat='.$_GET['flat'];
+	$flat = $_GET['flat'];
+}
+else {	
+	$query .= 'flat=53.04821';
+	$flat = 53.04821;
+}
+
+if (isset($_GET['flon'])) {
+	$query .= '&flon='.$_GET['flon'];
+	$flon = $_GET['flon'];
+}
+else {
+	$query .= '&flon=5.65922';
+	$flon = '5.65922';
+}
+
+if (isset($_GET['tlat'])) {
+	$query .= '&tlat='.$_GET['tlat'];
+}
+else {
+	$query .= '&tlat=53.02616';
+}
+
+if (isset($_GET['tlon'])) {
+	$query .= '&tlon='.$_GET['tlon'];
+	$tlon = $_GET['tlon'];
+}
+else {
+	$query .= '&tlon=5.66875';
+	$tlon = '5.66875';
+}
+
+//Fastest/shortest route
+if (isset($_GET['fast'])) {
+	$query .= '&fast='.$_GET['fast'];
+}
+else if (isset($_GET['short'])) {
+	if ($_GET['short'] == '1') {
+		$query .= '&fast=0';
+	}
+}
+else {
+	$query .= '&fast=1';
+}
+
+//Transportation
+if (isset($_GET['v'])) {
+	$query .= '&v='.$_GET['v'];
+}
+else {
+	$query .= '&v=motorcar';
+}
+
+//Map layer
+if (isset($_GET['layer'])) {
+	$layer = $_GET['layer'];
+}
+else {
+	$layer = 'mapnik';
+}
+
+// Query result return format
+$format = 'kml';
+if (isset($_GET['format'])) {
+	if (in_array($_GET['format'], array('kml', 'geojson')) == true) {
+		$format = $_GET['format'];
+	}
+}
+
+$query .= "'";
+//$dir = $yours_dir.'/normal';
+
+// Geographic pak file selection
+if ($flon > -168 and $flon < -30) {
+	// American continents (North and South)
+	$pak = $yours_dir.'/america.pak';
+} else {
+	// Europe, Asia, Africa and Oceania continents
+	$pak = $yours_dir.'/eurasia.pak';
+}
+
+//Decide which routing definition file is going to be used
+switch ($layer) {
+case 'cn':
+	$gosmore = '/normal';
+	$style = 'cyclestyles.xml';
+	break;
+case 'test':
+	$gosmore = '/test';
+	$style = 'elemstyles.xml';
+	break;
+default:
+	$gosmore = '/normal';
+	$style = 'genericstyles.xml';
+	break;
+}
+$dir = $yours_dir.$gosmore;
+$command = "ulimit -t ".$ulimit." && ".$query." nice ./gosmore ".$pak." ".$style;
+
+$fh = fopen($www_dir.'/commands.log', 'a+');
+if ($fh) {
+	fwrite($fh, date('Y-m-d H:i:s').", ".$dir.', '.$command."\n");
+	fclose($fh);
+}
+
+$res = chdir($dir);
+$gosmore_start = microtime(true);
+$result = exec($command, $output);
+$gosmore_end = microtime(true);
+
+$nodes = 0;
+
+if (count($output) > 1)
+{
+	// meta data
+	header('Content-Type: text/xml');
 	
-	$query = "QUERY_STRING='";
-
-	//Coordinates
-	if (isset($_GET['flat'])) {
-		$query .= 'flat='.$_GET['flat'];
-		$flat = $_GET['flat'];
-	}
-	else {	
-		$query .= 'flat=53.04821';
-		$flat = 53.04821;
-	}
-
-	if (isset($_GET['flon'])) {
-		$query .= '&flon='.$_GET['flon'];
-		$flon = $_GET['flon'];
-	}
-	else {
-		$query .= '&flon=5.65922';
-		$flon = '5.65922';
-	}
-
-	if (isset($_GET['tlat'])) {
-		$query .= '&tlat='.$_GET['tlat'];
-	}
-	else {
-		$query .= '&tlat=53.02616';
-	}
-
-	if (isset($_GET['tlon'])) {
-		$query .= '&tlon='.$_GET['tlon'];
-		$tlon = $_GET['tlon'];
-	}
-	else {
-		$query .= '&tlon=5.66875';
-		$tlon = '5.66875';
-	}
-
-	//Fastest/shortest route
-	if (isset($_GET['fast'])) {
-		$query .= '&fast='.$_GET['fast'];
-	}
-	else if (isset($_GET['short'])) {
-		if ($_GET['short'] == '1') {
-			$query .= '&fast=0';
+	// Loop through all the coordinates
+	$flat = $flon = 360.0;
+	$distance = 0;
+	$elements = array();
+	foreach ($output as $line)
+	{
+		$pos = strripos($line, ',');
+		if ($pos)
+		{
+			$node = split(",", $line);
+			for ($i = 0; $i < count($node); $i++)
+			{
+				switch ($i)
+				{
+				case 0:
+					$lat = trim($node[0], "\n\r0");
+					break;
+				case 1:
+					$lon = trim($node[1], "\n\r0");
+					break;
+				case 2:
+					$junction = trim($node[2], "\n\r0");
+					break;
+				case 3:
+					$name = trim($node[3], "\n\r0");
+					break;
+				}
+			}
+			$element = array("lat" => $lat, "lon" => $lon, "junction" => $junction, "name" => $name);
+			array_push($elements, $element);
+			
+			if ($flat < 360)
+			{
+				$distance += getDistance($flat, $flon, $lat, $lon);
+			}
+			$flat = $lat;
+			$flon = $lon;
+			$nodes++;
 		}
 	}
-	else {
-		$query .= '&fast=1';
-	}
-
-	//Transportation
-	if (isset($_GET['v'])) {
-		$query .= '&v='.$_GET['v'];
-	}
-	else {
-		$query .= '&v=motorcar';
-	}
-
-	//Map layer
-	if (isset($_GET['layer'])) {
-		$layer = $_GET['layer'];
-	}
-	else {
-		$layer = 'mapnik';
-	}
-
-	// Query result return format
-	$format = 'kml';
-	if (isset($_GET['format'])) {
-		if (in_array($_GET['format'], array('kml', 'geojson')) == true) {
-			$format = $_GET['format'];
-		}
-	}
- 
-	$query .= "'";
-	//$dir = $yours_dir.'/normal';
 	
-	// Geographic pak file selection
-	if ($flon > -168 and $flon < -30) {
-		// American continents (North and South)
-		$pak = $yours_dir.'/america.pak';
-	} else {
-		// Europe, Asia, Africa and Oceania continents
-		$pak = $yours_dir.'/eurasia.pak';
-	}
-	
-	//Decide which routing definition file is going to be used
-	switch ($layer) {
-	case 'cn':
-		$gosmore = '/normal';
-		$style = 'cyclestyles.xml';
+	// Convert the returned coordinates to the requested output format
+	switch ($format) {
+	case 'kml':
+		$output = asKML($elements, $distance);
 		break;
-	case 'test':
-		$gosmore = '/test';
-	    $style = 'elemstyles.xml';
-	    break;
+	case 'geojson':
+		$output = asGeoJSON($elements, $distance);
+		break;
 	default:
-		$gosmore = '/normal';
-		$style = 'genericstyles.xml';
-		break;
+		$output = "unrecognised output format given";
 	}
-	$dir = $yours_dir.$gosmore;
-	$command = "ulimit -t ".$ulimit." && ".$query." nice ./gosmore ".$pak." ".$style;
-	
-	$fh = fopen($www_dir.'/commands.log', 'a+');
-	if ($fh) {
-		fwrite($fh, date('Y-m-d H:i:s').", ".$dir.', '.$command."\n");
-		fclose($fh);
-	}
+}
 
-	$res = chdir($dir);
-	$gosmore_start = microtime(true);
-	$result = exec($command, $output);
-	$gosmore_end = microtime(true);
-
-	$nodes = 0;
-
+if ($nodes == 0) 
+{
 	if (count($output) > 1)
 	{
-		// meta data
-		header('Content-Type: text/xml');
-		
-		// Loop through all the coordinates
-		$flat = $flon = 360.0;
-		$distance = 0;
-		$elements = array();
-		foreach ($output as $line)
+		if (strcmp($output[2], 'No route found')) {
+			$output = 'Unable to calculate a route';
+		}
+		else
 		{
-			$pos = strripos($line, ',');
-			if ($pos)
-			{
-				$node = split(",", $line);
-				for ($i = 0; $i < count($node); $i++)
-				{
-					switch ($i)
-					{
-					case 0:
-						$lat = trim($node[0], "\n\r0");
-						break;
-					case 1:
-						$lon = trim($node[1], "\n\r0");
-						break;
-					case 2:
-						$junction = trim($node[2], "\n\r0");
-						break;
-					case 3:
-						$name = trim($node[3], "\n\r0");
-						break;
-					}
-				}
-				$element = array("lat" => $lat, "lon" => $lon, "junction" => $junction, "name" => $name);
-				array_push($elements, $element);
-				
-				if ($flat < 360)
-				{
-					$distance += getDistance($flat, $flon, $lat, $lon);
-				}
-				$flat = $lat;
-				$flon = $lon;
-				$nodes++;
-			}
-		}
-		
-		// Convert the returned coordinates to the requested output format
-		switch ($format) {
-		case 'kml':
-			$output = asKML($elements, $distance);
-			break;
-		case 'geojson':
-			$output = asGeoJSON($elements, $distance);
-			break;
-		default:
-			$output = "unrecognised output format given";
-		}
+			$output = "An unexpected error occured in Gosmore:\n".print_r($output);
+		}	
 	}
-
-	if ($nodes == 0) 
+	else if (count($output) == 0)
 	{
-		if (count($output) > 1)
-		{
-			if (strcmp($output[2], 'No route found')) {
-				$output = 'Unable to calculate a route';
-			}
-			else
-			{
-				$output = "An unexpected error occured in Gosmore:\n".print_r($output);
-			}	
-		}
-		else if (count($output) == 0)
-		{
-			$output = "An unexpected error occured in Gosmore:\n".$result;
-		}
-		
+		$output = "An unexpected error occured in Gosmore:\n".$result;
 	}
+	
 }
 
 // Return the result

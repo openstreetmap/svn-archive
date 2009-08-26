@@ -69,6 +69,7 @@ public class BBoxLatLonPanel
 
     private DownloadConfigurationBBoxLatLon _downloadConfig;
     private SlippyMapChooser changeListener = null;
+    private SlippyMapChooserWindow smc = null;
 
     /**
      * 
@@ -114,7 +115,10 @@ public class BBoxLatLonPanel
         _buttonSlippyMapChooser.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0)
             {
-                SlippyMapChooserWindow smc = new SlippyMapChooserWindow((BBoxLatLonPanel) ((Component) arg0.getSource()).getParent());
+                if (smc == null)
+                {
+                    smc = new SlippyMapChooserWindow((BBoxLatLonPanel) ((Component) arg0.getSource()).getParent());
+                }
                 smc.setVisible(true);
             }
         });

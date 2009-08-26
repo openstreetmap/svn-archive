@@ -1263,16 +1263,20 @@ function onXmlHttpReceived() {
 	} else {
 		switch (xmlhttp['what']) {
 		case 'name':
-			html = "Status: waiting for the Namefinder service response";
+			html = "Status: waiting for the Namefinder service response " + addWaitImage();
 			break;
 		case 'route':
-			html = "Status: waiting for the route calculation result";
+			html = "Status: waiting for the route calculation result"  + addWaitImage();
 			break;
 		default:
 			alert('Received AJAX response for unknown request origin: '+xmlhttp['url']);
 		}
 	}
 	OpenLayers.Util.getElement('status').innerHTML = html;
+}
+
+function addWaitImage() {
+	return '<img src="wait_small.gif"/>';
 }
 
 function loadxmldoc(xmlhttp) {

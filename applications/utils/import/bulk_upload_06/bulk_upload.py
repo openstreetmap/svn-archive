@@ -41,6 +41,10 @@ import httplib2
 import pickle
 import os
 import sys
+try:
+    import pygraph
+except ImportError:
+    from graph import graph as pygraph
 
 __version__ = "$Id$"
 user_agent = "bulk_upload.py/%s Python/%s" % (__version__.split()[2], sys.version.split()[0])
@@ -108,8 +112,6 @@ class ImportProcessor:
                     self.addToChangeset(elem)
 
         if relationSort:
-            # For relation tree sorting, sudo easy_install python-graph
-            import pygraph
             gr = pygraph.digraph()
             gr.add_nodes(relationStore.keys())
             for id in relationStore:

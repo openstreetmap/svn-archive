@@ -1286,6 +1286,7 @@ function loadxmldoc(xmlhttp) {
   if (xmlhttp['object'] != null) {
     xmlhttp['object'].onreadystatechange = onXmlHttpReceived;
     xmlhttp['object'].open("GET", xmlhttp['url'], true);
+    xmlhttp['object'].setRequestHeader("X-Yours-Client", "www.yournavigation.org");
     xmlhttp['object'].send(null);
   } else {
     alert("You are not using a suitable browser");

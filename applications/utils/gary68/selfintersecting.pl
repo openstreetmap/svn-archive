@@ -26,7 +26,7 @@ use OSM::osm 5.0 ;
 
 my $programName = "selfintersecting.pl" ;
 my $usage = "selfintersecting.pl file.osm out.htm out.gpx" ; 
-my $version = "1.2" ;
+my $version = "1.3" ;
 
 
 
@@ -80,7 +80,15 @@ if (!$gpxName)
 
 
 print "\n$programName $version for file $osmName\n" ;
-
+print "\n" ;
+print "ATTENTION!\n" ;
+print "----------\n" ;
+print "This program uses API calls.\n" ;
+print "Although generally running this program once on a relatively small planet-excerpt\n" ;
+print "file poses no threat to the API you might be able to disturb the API\n" ;
+print "by running it often or in parallel and on big files.\n" ;
+print "Calls are made at max. 1/sec. (can be coded)\n" ;
+print "\n" ;
 $time0 = time() ;
 
 print "read node data...\n" ;

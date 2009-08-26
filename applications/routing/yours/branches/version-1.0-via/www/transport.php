@@ -11,8 +11,12 @@
  * @package		CrossDomainAjax
  * @category	CURL
  * @author		Md Emran Hasan <phpfour@gmail.com>
+ * @author		Lambertus IJsseltein (security fix -> allowed domains)
  * @link		http://www.phpfour.com
  */
+
+// The domains we're allowed to contact
+$allowedDomains = array('http://gazetteer.openstreetmap.org/');
 
 // The actual form action
 $action = $_REQUEST['url'];
@@ -22,6 +26,22 @@ $method = $_REQUEST['method'];
 
 // Query string
 $fields = '';
+
+// Check the url for allowed domains
+$fail = true;
+foreach ($allowedDomains as $domain)
+{
+    if (strpos(substr($action, 0, strlen($domain)), $domain) !== false)
+    {
+        $fail = false;
+	break;
+    }
+}
+
+if ($fail == true)
+{
+    exit("Domain name not allowed. Access denied.");
+}
 
 // Prepare the fields for query string, don't include the action URL OR method
 if (count($_REQUEST) > 2)

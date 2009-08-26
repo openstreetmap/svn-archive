@@ -5,6 +5,11 @@ $maxInstances = 2;
 $output = "";
 $nAttempts = 0;
 
+// Allowed parameters
+$vehicles = array("motorcar", "bicycle", "foot");
+$layes = array("mapnik", "cn", "test");
+$formats = array("kml", "geojson");
+
  // Check for running Gosmore instances, max wait is 1 sec
 for ($nAttempts = 0; $nAttempts < $maxAttempts; $nAttempts++) {
 	if (getProcesses() > $maxInstances) {
@@ -31,7 +36,7 @@ $user_agent = $_SERVER['HTTP_USER_AGENT'];
 $query = "QUERY_STRING='";
 
 //Coordinates
-if (isset($_GET['flat'])) {
+if (isset($_GET['flat']) && is_numeric($_GET['flat'])) {
 	$query .= 'flat='.$_GET['flat'];
 	$flat = $_GET['flat'];
 }
@@ -40,7 +45,7 @@ else {
 	$flat = 53.04821;
 }
 
-if (isset($_GET['flon'])) {
+if (isset($_GET['flon']) && is_numeric($_GET['flon'])) {
 	$query .= '&flon='.$_GET['flon'];
 	$flon = $_GET['flon'];
 }
@@ -49,14 +54,14 @@ else {
 	$flon = '5.65922';
 }
 
-if (isset($_GET['tlat'])) {
+if (isset($_GET['tlat']) && is_numeric($_GET['tlat'])) {
 	$query .= '&tlat='.$_GET['tlat'];
 }
 else {
 	$query .= '&tlat=53.02616';
 }
 
-if (isset($_GET['tlon'])) {
+if (isset($_GET['tlon']) && is_numeric($_GET['tlon'])) {
 	$query .= '&tlon='.$_GET['tlon'];
 	$tlon = $_GET['tlon'];
 }
@@ -66,10 +71,10 @@ else {
 }
 
 //Fastest/shortest route
-if (isset($_GET['fast'])) {
+if (isset($_GET['fast']) && is_numeric($_GET['fast'])) {
 	$query .= '&fast='.$_GET['fast'];
 }
-else if (isset($_GET['short'])) {
+else if (isset($_GET['short']) && is_numeric($_GET['short'])) {
 	if ($_GET['short'] == '1') {
 		$query .= '&fast=0';
 	}
@@ -79,7 +84,7 @@ else {
 }
 
 //Transportation
-if (isset($_GET['v'])) {
+if (isset($_GET['v']) && in_array($_GET['v'], $vehicles)) {
 	$query .= '&v='.$_GET['v'];
 }
 else {
@@ -87,7 +92,7 @@ else {
 }
 
 //Map layer
-if (isset($_GET['layer'])) {
+if (isset($_GET['layer']) && in_array($_GET['v'], $layers)) {
 	$layer = $_GET['layer'];
 }
 else {
@@ -96,7 +101,7 @@ else {
 
 // Query result return format
 $format = 'kml';
-if (isset($_GET['format'])) {
+if (isset($_GET['format']) && in_array($_GET['v'], $formats)) {
 	if (in_array($_GET['format'], array('kml', 'geojson')) == true) {
 		$format = $_GET['format'];
 	}

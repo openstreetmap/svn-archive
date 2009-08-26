@@ -47,7 +47,7 @@ public class ProxyConnection
         System.getProperties().put("http.proxyPort", String.valueOf(port));
     }
 
-    private class ProxyAuth
+    static private class ProxyAuth
         extends Authenticator
     {
         private String _username;

@@ -103,7 +103,7 @@ public abstract class TileListCommon
      */
     public final int[] getDownloadZoomLevels()
     {
-        return _downloadZoomLevels;
+        return _downloadZoomLevels.clone();
     }
 
     /**
@@ -112,7 +112,7 @@ public abstract class TileListCommon
      */
     public final void setDownloadZoomLevels(int[] downloadZoomLevel)
     {
-        _downloadZoomLevels = downloadZoomLevel;
+        _downloadZoomLevels = downloadZoomLevel.clone();
     }
 
     /**

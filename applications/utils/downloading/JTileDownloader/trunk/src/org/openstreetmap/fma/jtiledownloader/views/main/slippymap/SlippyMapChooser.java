@@ -81,7 +81,6 @@ public class SlippyMapChooser extends JMapViewer {
             iSourceButton.setMapStyle(SourceButton.CYCLEMAP);
             this.setTileSource(sources[2]);
         }
-        new OsmMapControl(this, slipyyMapTabPanel, iSourceButton);
         this.bboxlatlonpanel=bboxlatlonpanel;
         boundingBoxChanged();
         bboxlatlonpanel.setChangeListener(this);

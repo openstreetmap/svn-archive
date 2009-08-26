@@ -89,6 +89,12 @@ public class Tile
         return z + "/" + x + "/" + y;
     }
 
+    public int hashCode()
+    {
+        assert false : "hashCode not designed";
+        return 42; // any arbitrary constant will do 
+    }
+
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      * {@inheritDoc}

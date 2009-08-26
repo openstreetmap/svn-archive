@@ -53,6 +53,6 @@ public class TileProviderList
 
     public TileProviderIf[] getTileProviderList()
     {
-        return tileProviders;
+        return tileProviders.clone();
     }
 }

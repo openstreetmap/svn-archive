@@ -162,7 +162,7 @@ public class TileListCommonBBox
      */
     public final int[] getXTopLeft()
     {
-        return _xTopLeft;
+        return _xTopLeft.clone();
     }
 
     /**
@@ -180,7 +180,7 @@ public class TileListCommonBBox
      */
     public final int[] getYTopLeft()
     {
-        return _yTopLeft;
+        return _yTopLeft.clone();
     }
 
     /**
@@ -198,7 +198,7 @@ public class TileListCommonBBox
      */
     public final int[] getXBottomRight()
     {
-        return _xBottomRight;
+        return _xBottomRight.clone();
     }
 
     /**
@@ -216,7 +216,7 @@ public class TileListCommonBBox
      */
     public final int[] getYBottomRight()
     {
-        return _yBottomRight;
+        return _yBottomRight.clone();
     }
 
     /**

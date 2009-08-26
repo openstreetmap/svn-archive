@@ -496,20 +496,6 @@ public class MainPanel
         _textNumberOfTiles.setText(String.valueOf(numberOfTiles));
     }
 
-    class TabChangeListener
-        implements ChangeListener
-    {
-
-        /**
-         * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
-         * {@inheritDoc}
-         */
-        public void stateChanged(ChangeEvent e)
-        {
-
-        }
-    }
-
     private class InputTabListener
         implements ChangeListener
     {

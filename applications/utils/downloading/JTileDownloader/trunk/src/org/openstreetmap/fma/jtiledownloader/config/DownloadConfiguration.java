@@ -23,6 +23,9 @@ package org.openstreetmap.fma.jtiledownloader.config;
 
 import java.util.Properties;
 
+import org.openstreetmap.fma.jtiledownloader.datatypes.DownloadJob;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
+
 public abstract class DownloadConfiguration
 {
     public static final String TYPE = "Type";
@@ -42,4 +45,6 @@ public abstract class DownloadConfiguration
      * @return the type
      */
     public abstract String getType();
+
+    public abstract TileList getTileList(DownloadJob downloadJob);
 }

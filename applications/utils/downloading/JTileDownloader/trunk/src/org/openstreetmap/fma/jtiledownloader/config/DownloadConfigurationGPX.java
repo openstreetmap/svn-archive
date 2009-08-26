@@ -23,6 +23,11 @@ package org.openstreetmap.fma.jtiledownloader.config;
 
 import java.util.Properties;
 
+import org.openstreetmap.fma.jtiledownloader.Util;
+import org.openstreetmap.fma.jtiledownloader.datatypes.DownloadJob;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonGPX;
+
 public class DownloadConfigurationGPX
     extends DownloadConfiguration
 {
@@ -93,6 +98,25 @@ public class DownloadConfigurationGPX
     public String getType()
     {
         return ID;
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration#getTileList()
+     * {@inheritDoc}
+     */
+    @Override
+    public TileList getTileList(DownloadJob downloadJob)
+    {
+        TileListCommonGPX tileList = new TileListCommonGPX();
+
+        tileList.setDownloadZoomLevels(Util.getOutputZoomLevelArray(downloadJob.getTileProvider(), downloadJob.getOutputZoomLevels()));
+
+        String gpxFile = getGpxFile();
+        int corridor = getCorridor();
+
+        tileList.updateList(gpxFile, corridor);
+
+        return tileList;
     }
 
 }

@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
-import org.openstreetmap.fma.jtiledownloader.Util;
+import org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration;
 import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationBBoxLatLon;
 import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationBBoxXY;
 import org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationGPX;
@@ -37,10 +37,6 @@ import org.openstreetmap.fma.jtiledownloader.datatypes.TileDownloadError;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 import org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener;
 import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonBBox;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListCommonGPX;
-import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
 
 public class JTileDownloaderCommandLine
     implements TileDownloaderListener
@@ -87,114 +83,37 @@ public class JTileDownloaderCommandLine
      */
     private void handleDownloadTemplate(String type)
     {
+        DownloadConfiguration _downloadTemplate = null;
+        
         if (type.equalsIgnoreCase(DownloadConfigurationUrlSquare.ID))
         {
-            handleUrlSquare();
+            _downloadTemplate = new DownloadConfigurationUrlSquare();
         }
         else if (type.equalsIgnoreCase(DownloadConfigurationBBoxLatLon.ID))
         {
-            handleBBoxLatLon();
+            _downloadTemplate = new DownloadConfigurationBBoxLatLon();
         }
         else if (type.equalsIgnoreCase(DownloadConfigurationBBoxXY.ID))
         {
-            handleBBoxXY();
+            _downloadTemplate = new DownloadConfigurationBBoxXY();
         }
         else if (type.equalsIgnoreCase(DownloadConfigurationGPX.ID))
         {
-            handleGPX();
+            _downloadTemplate = new DownloadConfigurationGPX();
         }
         else
         {
             log("File contains an unknown format. Please specify a valid file!");
         }
 
-    }
-
-    /**
-     * @param propertyFile
-     */
-    private void handleGPX()
-    {
-        DownloadConfigurationGPX _downloadTemplate = new DownloadConfigurationGPX();
-        _downloadJob.loadDownloadConfig(_downloadTemplate);
-
-        _tileList = new TileListCommonGPX();
-
-        ((TileListCommonGPX) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadJob.getOutputZoomLevels()));
-
-        String gpxFile = (_downloadTemplate).getGpxFile();
-        int corridor = (_downloadTemplate).getCorridor();
-        ((TileListCommonGPX) _tileList).updateList(gpxFile, corridor);
-
-        startDownload(_tileProvider);
-    }
-
-    /**
-     * @param propertyFile
-     */
-    private void handleBBoxXY()
-    {
-        DownloadConfigurationBBoxXY _downloadTemplate = new DownloadConfigurationBBoxXY();
-        _downloadJob.loadDownloadConfig(_downloadTemplate);
-
-        _tileList = new TileListCommonBBox();
-
-        ((TileListCommonBBox) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadJob.getOutputZoomLevels()));
-
-        ((TileListCommonBBox) _tileList).initXTopLeft((_downloadTemplate).getMinX());
-        ((TileListCommonBBox) _tileList).initYTopLeft((_downloadTemplate).getMinY());
-        ((TileListCommonBBox) _tileList).initXBottomRight((_downloadTemplate).getMaxX());
-        ((TileListCommonBBox) _tileList).initYBottomRight((_downloadTemplate).getMaxY());
-
-        startDownload(_tileProvider);
-    }
-
-    /**
-     * @param propertyFile
-     */
-    private void handleBBoxLatLon()
-    {
-        DownloadConfigurationBBoxLatLon _downloadTemplate = new DownloadConfigurationBBoxLatLon();
-        _downloadJob.loadDownloadConfig(_downloadTemplate);
-
-        _tileList = new TileListBBoxLatLon();
-
-        ((TileListBBoxLatLon) _tileList).setMinLat((_downloadTemplate).getMinLat());
-        ((TileListBBoxLatLon) _tileList).setMaxLat((_downloadTemplate).getMaxLat());
-        ((TileListBBoxLatLon) _tileList).setMinLon((_downloadTemplate).getMinLon());
-        ((TileListBBoxLatLon) _tileList).setMaxLon((_downloadTemplate).getMaxLon());
-
-        ((TileListBBoxLatLon) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadJob.getOutputZoomLevels()));
-
-        ((TileListBBoxLatLon) _tileList).calculateTileValuesXY();
-
-        startDownload(_tileProvider);
-    }
-
-    /**
-     * @param propertyFile
-     */
-    private void handleUrlSquare()
-    {
-        DownloadConfigurationUrlSquare _downloadTemplate = new DownloadConfigurationUrlSquare();
-        _downloadJob.loadDownloadConfig(_downloadTemplate);
-
-        _tileList = new TileListUrlSquare();
-
-        String url = (_downloadTemplate).getPasteUrl();
-        if (url == null || url.length() == 0)
+        if (_downloadTemplate != null)
         {
-            return;
+            _downloadJob.loadDownloadConfig(_downloadTemplate);
+
+            _tileList = _downloadTemplate.getTileList(_downloadJob);
+
+            startDownload(_tileProvider);
         }
-
-        Util.parsePasteUrl(url, ((TileListUrlSquare) _tileList));
-
-        ((TileListUrlSquare) _tileList).setRadius((_downloadTemplate).getRadius() * 1000);
-        ((TileListUrlSquare) _tileList).setDownloadZoomLevels(Util.getOutputZoomLevelArray(_tileProvider, _downloadJob.getOutputZoomLevels()));
-
-        ((TileListUrlSquare) _tileList).calculateTileValuesXY();
-
-        startDownload(_tileProvider);
     }
 
     /**

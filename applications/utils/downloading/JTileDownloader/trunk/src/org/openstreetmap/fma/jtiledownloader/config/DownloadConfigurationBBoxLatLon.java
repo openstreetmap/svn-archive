@@ -23,6 +23,11 @@ package org.openstreetmap.fma.jtiledownloader.config;
 
 import java.util.Properties;
 
+import org.openstreetmap.fma.jtiledownloader.Util;
+import org.openstreetmap.fma.jtiledownloader.datatypes.DownloadJob;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListBBoxLatLon;
+
 public class DownloadConfigurationBBoxLatLon
     extends DownloadConfiguration
 {
@@ -136,5 +141,26 @@ public class DownloadConfigurationBBoxLatLon
     public String getType()
     {
         return ID;
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration#getTileList()
+     * {@inheritDoc}
+     */
+    @Override
+    public TileList getTileList(DownloadJob downloadJob)
+    {
+        TileListBBoxLatLon tileList = new TileListBBoxLatLon();
+
+        tileList.setDownloadZoomLevels(Util.getOutputZoomLevelArray(downloadJob.getTileProvider(), downloadJob.getOutputZoomLevels()));
+
+        tileList.setMinLat(getMinLat());
+        tileList.setMaxLat(getMaxLat());
+        tileList.setMinLon(getMinLon());
+        tileList.setMaxLon(getMaxLon());
+
+        tileList.calculateTileValuesXY();
+
+        return tileList;
     }
 }

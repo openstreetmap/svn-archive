@@ -23,6 +23,11 @@ package org.openstreetmap.fma.jtiledownloader.config;
 
 import java.util.Properties;
 
+import org.openstreetmap.fma.jtiledownloader.Util;
+import org.openstreetmap.fma.jtiledownloader.datatypes.DownloadJob;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileList;
+import org.openstreetmap.fma.jtiledownloader.tilelist.TileListUrlSquare;
+
 public class DownloadConfigurationUrlSquare
     extends DownloadConfiguration
 {
@@ -93,5 +98,30 @@ public class DownloadConfigurationUrlSquare
     public String getType()
     {
         return ID;
+    }
+
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration#getTileList()
+     * {@inheritDoc}
+     */
+    @Override
+    public TileList getTileList(DownloadJob downloadJob)
+    {
+        TileListUrlSquare tileList = new TileListUrlSquare();
+
+        String url = getPasteUrl();
+        if (url == null || url.length() == 0)
+        {
+            throw new RuntimeException("invalid URL");
+        }
+
+        tileList.setDownloadZoomLevels(Util.getOutputZoomLevelArray(downloadJob.getTileProvider(), downloadJob.getOutputZoomLevels()));
+
+        Util.parsePasteUrl(url, tileList);
+        tileList.setRadius(getRadius() * 1000);
+
+        tileList.calculateTileValuesXY();
+
+        return tileList;
     }
 }

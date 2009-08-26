@@ -66,7 +66,7 @@ public class AppConfiguration
     private static final String PROXY_SERVER_PASSWORD = "ProxyServerPassword";
 
     private static final String SHOW_TILE_PREVIEW = "ShowTilePreview";
-    
+
     private static final String TILE_SERVER = "TileServer";
     private static final String LAST_ZOOM = "LastZoom";
     private static final String LAST_OUTPUTFOLDER = "LastOutoutFolder";

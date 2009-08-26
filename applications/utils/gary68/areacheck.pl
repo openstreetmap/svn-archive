@@ -63,7 +63,7 @@ my @areas = qw (area:yes waterway:riverbank aeroway:terminal aeroway:apron man_m
 
 
 my $program = "areacheck.pl" ;
-my $version = "3.0" ;
+my $version = "3.1" ;
 my $usage = $program . " file.osm out.htm out.gpx" ;
 
 my $wayId ;
@@ -133,6 +133,16 @@ if (!$gpxName)
 }
 
 print "\n$program $version for file $osmName\n\n" ;
+print "\n" ;
+print "ATTENTION!\n" ;
+print "----------\n" ;
+print "This program uses API calls.\n" ;
+print "Although generally running this program once on a relatively small planet-excerpt\n" ;
+print "file poses no threat to the API you might be able to disturb the API\n" ;
+print "by running it often or in parallel and on big files.\n" ;
+print "Calls are made at max. 1/sec. (can be coded)\n" ;
+print "\n" ;
+
 foreach (@areas) {
 	print $_, " " ;
 }

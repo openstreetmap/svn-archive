@@ -25,13 +25,13 @@
 **
 -->
 <project name="wmsplugin" default="dist" basedir=".">
-    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
-    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="josm"                   location="../JOSM/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir"        value="dist"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="ant.build.javac.target" value="1.5"/>
 	<property name="commit.message"         value="fixing JOSM issue #3186" />
-	<property name="josm.reference.release" value="1914" />
+	<property name="josm.reference.release" value="1949" />
 	
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>

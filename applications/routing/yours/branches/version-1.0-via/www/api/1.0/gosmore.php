@@ -32,6 +32,8 @@ $yours_dir = '/home/lambertus/planet/yours';
 $ulimit = 30;
 
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
+$yours_client = $_SERVER['HTTP_X_YOURS_CLIENT'];
+$referrer = $_SERVER['HTTP_REFERER'];
 
 $query = "QUERY_STRING='";
 
@@ -237,7 +239,7 @@ if ($bRunGosmore) {
 	if (!file_exists($file)) {
 		$fh = fopen($file, 'a+');
 		if ($fh) {		
-			fwrite($fh, "date, query, length, nodes, script time, gosmore time\n");
+			fwrite($fh, "date, client id, referrer, user_agent, query, length, nodes, script time, gosmore time\n");
 			fclose($fh);
 		}
 	}
@@ -248,7 +250,7 @@ if ($bRunGosmore) {
 		$script = $script_end - $script_start;
 		$runtime = $gosmore_end - $gosmore_start;
 		
-		fwrite($fh, date('Y-m-d H:i:s').", ".$user_agent.", ".$query.", ".strlen($output).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
+		fwrite($fh, date('Y-m-d H:i:s').", ".$yours_client.", ".$referrer.", ".$user_agent.", ".$query.", ".strlen($output).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
 		fclose($fh);
 	}
 }  // Done!

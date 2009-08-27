@@ -7,7 +7,7 @@ $nAttempts = 0;
 
 // Allowed parameters
 $vehicles = array("motorcar", "bicycle", "foot");
-$layes = array("mapnik", "cn", "test");
+$layers = array("mapnik", "cn", "test");
 $formats = array("kml", "geojson");
 
  // Check for running Gosmore instances, max wait is 1 sec

@@ -95,14 +95,12 @@ div#fullscreen {
 }
 
 div#destinations {
-//    width: 100%;
     text-align: center;
-    word-spacing: 6px;
-    padding-bottom: 6px;
+    padding: 0 50px 6px 50px;
+    font-size: 80%;
 }
 
 div#search {
-//    width: 100%;
     min-height: 22px;
     /* for ie */
     // height: 22px;
@@ -111,7 +109,6 @@ div#search {
 }
 
 div#hinweis {
-//    width: 100%;
     min-height: 22px;
     /* for ie */
     // height: 22px;
@@ -286,18 +283,6 @@ div#attribution {
 div#attribution img {
     float: left;
     padding-right: 6px;
-}
-
-div.localgroup {
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #f0f0f0;
-    padding: 4px;
-    margin-top: 4px;
-}
-
-div.localgroup-list {
-    font-size: 80%;
 }
 
 /* to map icon */

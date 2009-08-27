@@ -156,9 +156,10 @@ var currRouteParams;
 var currBounds;
 
 /*
-xmlhttp['object'] = The AJAX JavaScript object that does all the work
-xmlhttp['what'] = Indicates what kind of request we're performing (e.g. NameFinder 'name' query or Gosmore 'route' query)
-xmlhttp['url'] = The URL to query
+xmlhttp keeps track of an AJAX call.
+xmlhttp['object'] = The AJAX JavaScript object that does all the work.
+xmlhttp['what'] = Indicates what kind of request we're performing (e.g. NameFinder 'name' query or Gosmore 'route' query).
+xmlhttp['url'] = The URL to query.
 */
 var xmlhttp = new Array();
 
@@ -458,41 +459,46 @@ function onChangeBaseLayer(e) {
 
 // Deternines what happens if a user clicks the map
 OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
-	    defaultHandlerOptions: {
-	        'single': true,
-	        'double': false,
-	        'pixelTolerance': 0,
-	        'stopSingle': false,
-	        'stopDouble': false
-	    },
-	
-	    initialize: function(options) {
-	        this.handlerOptions = OpenLayers.Util.extend(
-	            {}, this.defaultHandlerOptions
-	        );
-	        OpenLayers.Control.prototype.initialize.apply(
-	            this, arguments
-	        ); 
-	        this.handler = new OpenLayers.Handler.Click(
-	            this, {
-	                'click': this.trigger
-	            }, this.handlerOptions
-	        );
-	    }, 
-	
+	defaultHandlerOptions: {
+		'single': true,
+		'double': false,
+		'pixelTolerance': 0,
+		'stopSingle': false,
+		'stopDouble': false
+	},
+
+		// Initialize is called when the Click control is activated
+		// It sets the behavior of a click on the map
+		initialize: function(options) {
+			this.handlerOptions = OpenLayers.Util.extend(
+				{}, this.defaultHandlerOptions
+			);
+			OpenLayers.Control.prototype.initialize.apply(
+				this, arguments
+			); 
+			this.handler = new OpenLayers.Handler.Click(
+				this, {
+				    'click': this.trigger
+				}, this.handlerOptions
+			);
+		}, 
+
+		// Trigger is called when a user clicks on the map
 	    trigger: function(e) {
 	    	position = this.map.getLonLatFromViewPortPx(e.xy);
 	    	if (currWaypoint != undefined) {
-			currWaypoint.set_position(position);
-			currWaypoint.button_el.disabled= false;
-			currWaypoint = undefined;
-			document.forms['route'].elements['clear'].disabled =
-				false;
-			calculateRoute();
-		}
+				currWaypoint.set_position(position);
+				currWaypoint.button_el.disabled= false;
+				currWaypoint = undefined;
+				document.forms['route'].elements['clear'].disabled =
+					false;
+				calculateRoute();
+			}
+			// Maybe add a new marker by default if none selected?
 	    }
 	}
 );
+
 /*
 function editMap() {
 	lonlat = map.getCenter().transform(map.projection, map.displayProjection);

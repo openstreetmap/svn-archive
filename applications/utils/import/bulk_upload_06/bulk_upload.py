@@ -85,7 +85,7 @@ class ImportProcessor:
                 relationSort = True
                 break
         
-        for type in ('node','way','relation'):
+        for type in ('node','way'):
             for elem in osmRoot.getiterator(type):
                 # If elem.id is already mapped we can skip this object
                 #
@@ -101,14 +101,17 @@ class ImportProcessor:
                             old_id=child.attrib['ref']
                             if idMap['node'].has_key(old_id):
                                 child.attrib['ref'] = self.idMap['node'][old_id]
-                elif elem.tag=='relation':
-                    if relationSort:
-                        relationStore[elem.attrib['id']] = elem
-                    else:
-                        self.updateRelationMemberIds(elem)
-                        self.addToChangeset(elem)
+                
+                self.addToChangeset(elem)
 
-                if elem.tag != 'relation':
+        for elem in osmRoot.getiterator('relation'):
+            if relationSort:
+                relationStore[elem.attrib['id']] = elem
+            else:
+                if self.idMap['relation'].has_key(elem.attrib['id']):
+                    continue
+                else:
+                    self.updateRelationMemberIds(elem)
                     self.addToChangeset(elem)
 
         if relationSort:
@@ -126,8 +129,10 @@ class ImportProcessor:
                     gr.add_edge('root', item[0])
             for relation in gr.traversal('root', 'post'):
                 if relation == 'root': continue
-                self.updateRelationMemberIds(relationStore[relation])
-                self.addToChangeset(relationStore[relation])
+                r = relationStore[relation]
+                if self.idMap['relation'].has_key(r.attrib['id']): continue
+                self.updateRelationMemberIds(r)
+                self.addToChangeset(r)
 
         self.currentChangeset.close() # (uploads any remaining diffset changes)
 

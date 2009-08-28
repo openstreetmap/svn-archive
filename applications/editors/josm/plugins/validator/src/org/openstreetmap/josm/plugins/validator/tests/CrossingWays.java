@@ -43,7 +43,7 @@ public class CrossingWays extends Test
     public CrossingWays()
     {
         super(tr("Crossing ways."),
-              tr("This test checks if two roads, railways or waterways crosses in the same layer, but are not connected by a node."));
+              tr("This test checks if two roads, railways, waterways or buildings crosses in the same layer, but are not connected by a node."));
     }
 
 
@@ -73,7 +73,11 @@ public class CrossingWays extends Test
         boolean isCoastline1 = coastline1 != null && (coastline1.equals("water") || coastline1.equals("coastline"));
         String railway1 = w.get("railway");
         boolean isSubway1 = railway1 != null && railway1.equals("subway");
-        if( w.get("highway") == null && w.get("waterway") == null && (railway1 == null || isSubway1)  && !isCoastline1)
+        boolean isBuilding = false;
+        if(w.get("building") != null)
+            isBuilding = true;
+        
+        if( w.get("highway") == null && w.get("waterway") == null && (railway1 == null || isSubway1)  && !isCoastline1 && !isBuilding)
             return;
 
         String layer1 = w.get("layer");
@@ -115,7 +119,7 @@ public class CrossingWays extends Test
                         highlight.add(es2.ws);
 
                         errors.add(new TestError(this, Severity.WARNING,
-                        tr("Crossing ways"), CROSSING_WAYS, prims, highlight));
+                        isBuilding ? tr("Crossing buildings") : tr("Crossing ways"), CROSSING_WAYS, prims, highlight));
                         ways_seen.put(prims, highlight);
                     }
                     else

@@ -1,5 +1,11 @@
 Revision history for Geo-OSM-MapFeatures
 
+0.10	2009-08-26
+	Complete rewrite of parser, now parses HTML output from MW's api.php
+	instead of trying to make sense of all the weird mess MW calls syntax.
+
+	Also supports multiple languages
+
 0.01    2008-11-05
         First version
 

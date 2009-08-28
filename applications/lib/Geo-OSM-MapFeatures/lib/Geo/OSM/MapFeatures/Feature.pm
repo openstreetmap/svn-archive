@@ -50,24 +50,44 @@ sub new {
     my $self = bless( {}, $class);
 
     my $key = shift;
-    my $value = shift;
+    my $values = shift;
     my @types = @{shift()};
     my $description = shift;
 
+    #
+    # Key
+    #
+
     $self->key( new Geo::OSM::MapFeatures::Feature::Key($key) );
 
-    # Value is single value or a list separated by "/", "|" or "or"
-    # With the exception of 24/7, 
-    my @values = split( m#\s*(?:(?<!24)/(?!7)|\'\'\'or\'\'\'|\bor\b|\|)\s*#, $value );
-    foreach my $value ( @values ){
-        #FIXME: use accessor instead
-        push( @{$self->{values}}, new Geo::OSM::MapFeatures::Feature::Value($value) );
+    #
+    # Value
+    #
+
+    # Hack for empty value list
+    if( @$values < 1 ){
+	    push( @$values, '' );
     }
 
+    foreach my $value ( @$values ){
+	    push( @{$self->{values}}, new Geo::OSM::MapFeatures::Feature::Value($value) );
+    }
+
+    #
+    # Types
+    #
+
+    unless( @types ){
+	    Carp::croak(sprintf("Trying to construct feature without element types. key=%s value(s)=%s", $self->key, join(' / ', @{$self->values})));
+    }
     foreach my $type ( @types ){
         #FIXME: use accessor instead
         push( @{$self->{types}}, new Geo::OSM::MapFeatures::Feature::Type($type) );
     }
+
+    #
+    # Description
+    #
 
     $self->description($description);
 
@@ -128,7 +148,7 @@ L<http://search.cpan.org/dist/Geo-OSM-MapFeatures>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 Knut Arne Bjørndal, all rights reserved.
+Copyright 2008-2009 Knut Arne Bjørndal, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

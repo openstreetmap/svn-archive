@@ -59,7 +59,8 @@ public abstract class PicLayerAbstract extends Layer
     // Angle of rotation of the image
     private double m_angle = 0.0;
     // Scale of the image
-    private double m_scale = 1.0;
+    private double m_scalex = 1.0;
+    private double m_scaley = 1.0;
     // The scale that was set on the map during image creation
     private double m_initial_scale = 0;
     // Popup menu items
@@ -189,8 +190,9 @@ public abstract class PicLayerAbstract extends Layer
             // Rotate
             g.rotate( m_angle * Math.PI / 180.0 );
             // Scale
-            double scale = m_scale * m_initial_scale / Main.map.mapView.getDist100Pixel();
-            g.scale( scale, scale );
+            double scalex = m_scalex * m_initial_scale / Main.map.mapView.getDist100Pixel();
+            double scaley = m_scaley * m_initial_scale / Main.map.mapView.getDist100Pixel();
+            g.scale( scalex, scaley );
 
             // Draw picture
             g.drawImage( m_image, -m_image.getWidth() / 2, -m_image.getHeight() / 2, null );
@@ -221,8 +223,9 @@ public abstract class PicLayerAbstract extends Layer
     /**
      * Scales the picture. Scaled in... don't know but works ok :)
      */
-    public void scalePictureBy( double scale ) {
-        m_scale += scale;
+    public void scalePictureBy( double scalex, double scaley ) {
+        m_scalex += scalex;
+        m_scaley += scaley;
     }
 
     /**
@@ -243,7 +246,8 @@ public abstract class PicLayerAbstract extends Layer
      * Sets the image scale to 1.0
      */
     public void resetScale() {
-        m_scale = 1.0;
+        m_scalex = 1.0;
+        m_scaley = 1.0;
     }
 
     /**

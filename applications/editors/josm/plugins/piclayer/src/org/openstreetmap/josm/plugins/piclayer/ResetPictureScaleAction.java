@@ -38,7 +38,7 @@ public class ResetPictureScaleAction extends JosmAction {
 	 * Constructor
 	 */
 	public ResetPictureScaleAction( PicLayerAbstract owner ) {
-		super("Scale", null, null, null, false);
+		super("Scale", null, "Resets picture scale", null, false);
 		// Remember the owner...
 		m_owner = owner;
 	}

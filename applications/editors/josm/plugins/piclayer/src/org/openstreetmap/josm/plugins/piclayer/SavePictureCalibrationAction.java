@@ -20,6 +20,14 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -29,7 +37,7 @@ import org.openstreetmap.josm.actions.JosmAction;
  * 
  * TODO Four almost identical classes. Refactoring needed.
  */
-public class ResetPictureAllAction extends JosmAction {
+public class SavePictureCalibrationAction extends JosmAction {
 
 	// Owner layer of the action
 	PicLayerAbstract m_owner = null;
@@ -37,8 +45,8 @@ public class ResetPictureAllAction extends JosmAction {
 	/**
 	 * Constructor
 	 */
-	public ResetPictureAllAction( PicLayerAbstract owner ) {
-		super("All", null, "Resets picture calibration", null, false);
+	public SavePictureCalibrationAction( PicLayerAbstract owner ) {
+		super("Save Picture Calibration...", null, "Saves calibration data to a file", null, false);
 		// Remember the owner...
 		m_owner = owner;
 	}
@@ -47,11 +55,32 @@ public class ResetPictureAllAction extends JosmAction {
 	 * Action handler
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		// Reset
-		m_owner.resetAngle();
-		m_owner.resetPosition();
-		m_owner.resetScale();
-		// Redraw
-        Main.map.mapView.repaint();
+		// Save dialog
+		final JFileChooser fc = new JFileChooser();
+		fc.setAcceptAllFileFilterUsed( false );
+		fc.setFileFilter( new CalibrationFileFilter() );
+		fc.setSelectedFile( new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
+		int result = fc.showSaveDialog( Main.parent );
+
+		if ( result == JFileChooser.APPROVE_OPTION ) {
+			// Check file extension and force it to be valid
+			File file = fc.getSelectedFile();
+			String path = file.getAbsolutePath();
+			if ( path.length() < CalibrationFileFilter.EXTENSION.length()
+				|| !path.substring( path.length() - 4 ).equals(CalibrationFileFilter.EXTENSION)) {
+				file = new File( path + CalibrationFileFilter.EXTENSION );
+			}
+						
+			// Save
+			Properties props = new Properties();
+			m_owner.saveCalibration(props);
+			try {
+				props.store(new FileOutputStream(file), "JOSM PicLayer plugin calibration data");
+			} catch (Exception e) {
+				// Error
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(Main.parent , "Saving file failed: " + e.getMessage());
+			}
+		}	
 	}
 }

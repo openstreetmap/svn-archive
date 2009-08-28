@@ -20,6 +20,15 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -29,7 +38,7 @@ import org.openstreetmap.josm.actions.JosmAction;
  * 
  * TODO Four almost identical classes. Refactoring needed.
  */
-public class ResetPictureAllAction extends JosmAction {
+public class LoadPictureCalibrationAction extends JosmAction {
 
 	// Owner layer of the action
 	PicLayerAbstract m_owner = null;
@@ -37,8 +46,8 @@ public class ResetPictureAllAction extends JosmAction {
 	/**
 	 * Constructor
 	 */
-	public ResetPictureAllAction( PicLayerAbstract owner ) {
-		super("All", null, "Resets picture calibration", null, false);
+	public LoadPictureCalibrationAction( PicLayerAbstract owner ) {
+		super("Load Picture Calibration...", null, "Loads calibration data to a file", null, false);
 		// Remember the owner...
 		m_owner = owner;
 	}
@@ -47,11 +56,25 @@ public class ResetPictureAllAction extends JosmAction {
 	 * Action handler
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		// Reset
-		m_owner.resetAngle();
-		m_owner.resetPosition();
-		m_owner.resetScale();
-		// Redraw
-        Main.map.mapView.repaint();
+		// Save dialog
+		final JFileChooser fc = new JFileChooser();
+		fc.setAcceptAllFileFilterUsed( false );
+		fc.setFileFilter( new CalibrationFileFilter() );
+		fc.setSelectedFile( new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
+		int result = fc.showOpenDialog(Main.parent );
+
+		if ( result == JFileChooser.APPROVE_OPTION ) {
+					
+			// Load	
+			try {
+				Properties props = new Properties();
+				props.load(new FileInputStream(fc.getSelectedFile()));
+				m_owner.loadCalibration(props);
+			} catch (Exception e) {
+				// Error
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(Main.parent , "Loading file failed: " + e.getMessage());
+			}
+		}	
 	}
 }

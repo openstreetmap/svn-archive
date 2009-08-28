@@ -9,7 +9,7 @@ Step 2) Go to PicLayer menu and either choose to add a layer from a file or from
 Step 2a) If you chose a file, a file selector will pop-up. Choose the image you want. Of course the format you are using might not be supported yet :)
 Step 2b) If you chose a clipboard, please wait. For some reason it takes time. To be fixed later.
 NOTE) If something failed, you should get a message box. If not - check the console for messages (Linux only?)
-Step 3) Once the image is visible you may start positioning it. For that - select the PicLayer in the layers list.
+Step 3) Once the image is visible you may start positioning it. For that - select the PicLayer in the layers list and activate it (!).
 Step 4) Start aligning the image.
 Step 4a) Move the image by choosing 'Move' from the toolbar and draggin the mouse around with left button pressed.
 Step 4b) Rotate the image by choosing 'Rotate' from the toolbar and draggin the mouse up/down with left button pressed.

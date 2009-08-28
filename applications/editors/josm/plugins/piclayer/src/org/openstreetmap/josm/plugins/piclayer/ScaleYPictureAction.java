@@ -20,10 +20,6 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -34,66 +30,17 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * This class handles the input during scaling the picture.
  */
-public class ScalePictureAction extends MapMode implements MouseListener, MouseMotionListener 
+public class ScaleYPictureAction extends ScalePictureActionAbstract 
 {
-	// Scaling ongoing?
-	private boolean mb_dragging = false;
-	
-	// Last mouse position
-	private int m_prevY;
-	
-	// Layer we're working on
-	private PicLayerAbstract m_currentLayer = null;
-	
-	/**
+	/*
 	 * Constructor
 	 */
-	public ScalePictureAction(MapFrame frame) {
-		super("PicLayer", "scale", "Drag to scale the picture", frame, ImageProvider.getCursor("crosshair", null));
+	public ScaleYPictureAction(MapFrame frame) {
+		super("PicLayer", "scale_y", "Drag to scale the picture in the Y Axis", frame);
 		// TODO Auto-generated constructor stub
 	}
 
-    @Override 
-    public void enterMode() {
-        super.enterMode();
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
-    }
-
-    @Override 
-    public void exitMode() {
-        super.exitMode();
-        Main.map.mapView.removeMouseListener(this);
-        Main.map.mapView.removeMouseMotionListener(this);
-    }	
-	
-    @Override 
-    public void mousePressed(MouseEvent e) {
-    	// Start scaling
-    	if ( Main.map.mapView.getActiveLayer() instanceof PicLayerAbstract ) {
-	        m_currentLayer = (PicLayerAbstract)Main.map.mapView.getActiveLayer();
-	        
-	        if ( m_currentLayer != null && e.getButton() == MouseEvent.BUTTON1 ) {
-	        	mb_dragging = true;
-	        	m_prevY = e.getY();
-	        }
-    	}
-    }   
-    
-    @Override 
-    public void mouseDragged(MouseEvent e) {
-    	// Scale the picture
-        if(mb_dragging) {
-            m_currentLayer.scalePictureBy( ( e.getY() - m_prevY ) / 500.0 );
-            m_prevY = e.getY();
-            Main.map.mapView.repaint();
+	public void doTheScale( double scale ) {
+            m_currentLayer.scalePictureBy( 0.0, scale );
         }
-    }    
-    
-    @Override 
-    public void mouseReleased(MouseEvent e) {
-    	// Stop scaling
-    	mb_dragging = false;
-    }    
-
 }

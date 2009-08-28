@@ -41,7 +41,9 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
 	// Toolbar buttons
 	private IconToggleButton m_movePictureButton = null;
 	private IconToggleButton m_rotatePictureButton = null;
-	private IconToggleButton m_scalePictureButton = null;
+	private IconToggleButton m_scalexPictureButton = null;
+	private IconToggleButton m_scaleyPictureButton = null;
+	private IconToggleButton m_scalexyPictureButton = null;
 	
 	// Menu actions
 	private NewLayerFromFileAction 		m_newFromFileAction = null;  
@@ -80,21 +82,29 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         	// Create plugin map modes
         	MovePictureAction movePictureAction = new MovePictureAction(newFrame);
         	RotatePictureAction rotatePictureAction = new RotatePictureAction(newFrame);
-        	ScalePictureAction scalePictureAction = new ScalePictureAction(newFrame);
+        	ScaleXYPictureAction scaleXYPictureAction = new ScaleXYPictureAction(newFrame);
+        	ScaleXPictureAction scaleXPictureAction = new ScaleXPictureAction(newFrame);
+        	ScaleYPictureAction scaleYPictureAction = new ScaleYPictureAction(newFrame);
         	// Create plugin buttons and add them to the toolbar
         	m_movePictureButton = new IconToggleButton(movePictureAction);
-        	m_rotatePictureButton = new IconToggleButton(rotatePictureAction);
-        	m_scalePictureButton = new IconToggleButton(scalePictureAction);
+            m_rotatePictureButton = new IconToggleButton(rotatePictureAction);
+            m_scalexyPictureButton = new IconToggleButton(scaleXYPictureAction);
+            m_scalexPictureButton = new IconToggleButton(scaleXPictureAction);
+            m_scaleyPictureButton = new IconToggleButton(scaleYPictureAction);
             newFrame.addMapMode(m_movePictureButton);
             newFrame.addMapMode(m_rotatePictureButton);
-            newFrame.addMapMode(m_scalePictureButton);
-            newFrame.toolGroup.add(m_movePictureButton);
-            newFrame.toolGroup.add(m_rotatePictureButton);
-            newFrame.toolGroup.add(m_scalePictureButton);
-            // Hide them by default
+            newFrame.addMapMode(m_scalexyPictureButton);
+            newFrame.addMapMode(m_scalexPictureButton);
+            newFrame.addMapMode(m_scaleyPictureButton);
+//            newFrame.toolGroup.add(m_movePictureButton);
+//            newFrame.toolGroup.add(m_rotatePictureButton);
+//            newFrame.toolGroup.add(m_scalePictureButton);
+            // Show them by default
             m_movePictureButton.setVisible(true);
             m_rotatePictureButton.setVisible(true);
-            m_scalePictureButton.setVisible(true);
+            m_scalexyPictureButton.setVisible(true);
+            m_scalexPictureButton.setVisible(true);
+            m_scaleyPictureButton.setVisible(true);
         }
     }
 
@@ -102,9 +112,6 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
 	 * The toolbar buttons shall be active only when the PicLayer is active.
 	 */
 	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		m_movePictureButton.setEnabled( newLayer instanceof PicLayerAbstract );		
-		m_rotatePictureButton.setEnabled( newLayer instanceof PicLayerAbstract );		
-		m_scalePictureButton.setEnabled( newLayer instanceof PicLayerAbstract );
 	}
 
 	/**

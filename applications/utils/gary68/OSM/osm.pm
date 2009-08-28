@@ -68,6 +68,10 @@
 # Version 5.0
 # - new osm link function
 #
+# Version 5.1
+# - new hash function
+#
+
 
 #
 # USAGE
@@ -86,7 +90,8 @@
 # getRelation 
 # getWay ()						> ($gId, $gU, \@gNodes, \@gTags) ; # in main @array = @$ref
 # getWay2 ()						> ($gId, $gU, \@gNodes, \@gTags) ; # in main @array = @$ref // returns k/v as array, not string!
-# hashValue ($lon, $lat)				> $hashValue
+# hashValue ($lon, $lat)				> $hashValue 0.1 deg
+# hashValue2 ($lon, $lat)				> $hashValue 0.01 deg
 # historyLink ($type, $key) 				> $htmlString
 # josmLinkDontSelect ($lon, $lat, $span)		> $htmlString
 # josmLinkSelectWay ($lon, $lat, $span, $wayId)		> $htmlString
@@ -148,7 +153,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '5.0' ; 
+$VERSION = '5.1' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -156,7 +161,7 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
+@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
 
 our $line ; 
 our $file ; 
@@ -674,6 +679,15 @@ sub hashValue {
 	return ($lo+$la) ;
 }
 
+sub hashValue2 {
+	my $lon = shift ;
+	my $lat = shift ;
+
+	my $lo = int ($lon*100) * 100000 ;
+	my $la = int ($lat*100) ;
+
+	return ($lo+$la) ;
+}
 
 
 ######

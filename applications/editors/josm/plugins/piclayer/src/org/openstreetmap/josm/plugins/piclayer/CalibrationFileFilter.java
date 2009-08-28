@@ -17,50 +17,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
 package org.openstreetmap.josm.plugins.piclayer;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
+import java.io.File;
+
+import javax.swing.filechooser.FileFilter;
 
 /**
- * Layer displaying a picture copied from the clipboard.
+ * Filter for the file dialog. Allows only calibration files.
  */
-public class PicLayerFromClipboard extends PicLayerAbstract {
+public class CalibrationFileFilter extends FileFilter {
+	
+	// Extension used by calibration files
+	public static final String EXTENSION = ".cal";
 
 	@Override
-	protected Image createImage() throws IOException {
-		// Return item
-		Image image = null;
-		// Access the clipboard
-        Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-        // Check result
-        if ( t == null ) {
-        	throw new IOException( "Nothing in clipboard" );
-        }
-        
-        // TODO: Why is it so slow?
-        // Try to make it an image data
-        try {
-            if (t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-                image = (Image)t.getTransferData(DataFlavor.imageFlavor);
-            } else {
-            	throw new IOException( "The clipboard data is not an image" );
-            }
-        } catch (UnsupportedFlavorException e) {
-        	throw new IOException( e.getMessage() );
-        } 
-        
-        return image;
+	public boolean accept(File f) {
+	    String ext3 = ( f.getName().length() > 4 ) ?  f.getName().substring( f.getName().length() - 4 ).toLowerCase() : "";
+
+	    // TODO: check what is supported by Java :)
+	    return ( f.isDirectory() 
+	    	||	ext3.equals( EXTENSION )
+	    	);
 	}
 
 	@Override
-	protected String getPicLayerName() {
-		return "Clipboard";
+	public String getDescription() {
+		return "Calibration Files (*" + EXTENSION + ")";
 	}
 
 }

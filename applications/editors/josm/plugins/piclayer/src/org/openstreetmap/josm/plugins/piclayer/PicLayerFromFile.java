@@ -39,7 +39,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
     	// Remember the file
     	m_file = file;
     	// Generate tooltip text
-    	m_tooltiptext = super.name + " <" + m_file.getAbsolutePath() + ">";
+    	m_tooltiptext = m_file.getAbsolutePath();
     }	
     
 	@Override

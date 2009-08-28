@@ -38,7 +38,7 @@ public class ResetPicturePositionAction extends JosmAction {
 	 * Constructor
 	 */
 	public ResetPicturePositionAction( PicLayerAbstract owner ) {
-		super("Position", null, null, null, false);
+		super("Position", null, "Resets picture position", null, false);
 		// Remember the owner...
 		m_owner = owner;
 	}

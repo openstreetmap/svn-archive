@@ -1,31 +1,19 @@
 PICLAYER
 ========
 
-This plugin is meant for showing images as a background of the data being edited.It offers two ways of loading the data - from a file and from the clipboard.This is an early version and is not end-user-proof, so please follow the steps exactly in case you want to use it.Actually... it's barely working at the moment but I already find it very useful :).
+A plugin for JOSM editor. Use it wisely - do not copy from copyrighted maps. Use "help" option to get a short tutorial.
 
-NOTE: Make sure the image is suitable, copyright-wise, if in doubt, don't use.
-Step 1) Load some data from the server so that map is visible.
-Step 2) Go to PicLayer menu and either choose to add a layer from a file or from the clipboard.
-Step 2a) If you chose a file, a file selector will pop-up. Choose the image you want. Of course the format you are using might not be supported yet :)
-Step 2b) If you chose a clipboard, please wait. For some reason it takes time. To be fixed later.
-NOTE) If something failed, you should get a message box. If not - check the console for messages (Linux only?)
-Step 3) Once the image is visible you may start positioning it. For that - select the PicLayer in the layers list and activate it (!).
-Step 4) Start aligning the image.
-Step 4a) Move the image by choosing 'Move' from the toolbar and draggin the mouse around with left button pressed.
-Step 4b) Rotate the image by choosing 'Rotate' from the toolbar and draggin the mouse up/down with left button pressed.
-Step 4c) Scale the image by choosing 'Scale' from the toolbar and draggin the mouse up/down with left button pressed.
-NOTE) If it does not work - make sure the right layer is selected.
-Step 5) If you need to reset your changes - you can use the popup menu available under the PicLayer entry in the layer list.
-
-This plugin is meant to help with mapping from photos (for me it's mostly buildings) for people who simply don't like MetaCarta Rectifier (like me).
-
-Although I wrote it only to help myself and currently have no intention of extending it beyond what I need, you may still contact me with any suggestions that you think are important: tomasz.stelmach@poczta.onet.pl
-
-I used wmsplugin and routing plugin code very much during coding. Thank you and I hope you don't mind :)
+Author: Tomasz Stelmach
+Email: tomasz.stelmach@poczta.onet.pl
+WWW: http://www.stelmach-online.net/
 
 HISTORY:
 ========
 
 2009.08.28:
 - added support for scaling in one axis only
+- added support for saving / loading image calibration
 - added new icons
+
+2009.04.27:
+- initial version

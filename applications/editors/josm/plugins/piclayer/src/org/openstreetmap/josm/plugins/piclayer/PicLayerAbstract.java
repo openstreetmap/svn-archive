@@ -28,6 +28,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Properties;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
@@ -67,6 +69,16 @@ public abstract class PicLayerAbstract extends Layer
     private Component m_popupmenu[] = null;
     // Layer icon
     private Icon m_layericon = null;
+    
+    // Keys for saving in Properties
+    private final String INITIAL_POS_X = "INITIAL_POS_X";
+    private final String INITIAL_POS_Y = "INITIAL_POS_y";
+    private final String POSITION_X = "POSITION_X";
+    private final String POSITION_Y = "POSITION_Y";
+    private final String ANGLE = "ANGLE";
+    private final String INITIAL_SCALE = "INITIAL_SCALE";
+    private final String SCALEX = "SCALEX";
+    private final String SCALEY = "SCALEY";
 
     /**
      * Constructor
@@ -88,6 +100,9 @@ public abstract class PicLayerAbstract extends Layer
         // Main menu
         m_popupmenu = new Component[]{
                 reset_submenu,
+                new JSeparator(),
+                new JMenuItem( new SavePictureCalibrationAction(this)),
+                new JMenuItem( new LoadPictureCalibrationAction(this)),
                 new JSeparator(),
                 new JMenuItem( new HelpAction() )
         };
@@ -261,5 +276,46 @@ public abstract class PicLayerAbstract extends Layer
     public void visitBoundingBox(BoundingXYVisitor arg0) {
         // TODO Auto-generated method stub
 
+    }
+
+    /**
+     * Saves the calibration data into properties structure
+     * @param props Properties to save to
+     */
+    public void saveCalibration( Properties props ) {
+    	// Save
+    	props.put(INITIAL_POS_X, "" + m_initial_position.getX());
+    	props.put(INITIAL_POS_Y, "" + m_initial_position.getY());
+    	props.put(POSITION_X, "" + m_position.getX());
+    	props.put(POSITION_Y, "" + m_position.getY());
+    	props.put(INITIAL_SCALE, "" + m_initial_scale);
+    	props.put(SCALEX, "" + m_scalex);
+    	props.put(SCALEY, "" + m_scaley);
+    	props.put(ANGLE, "" + m_angle);
+    }
+    
+    /**
+     * Loads calibration data from properties structure
+     * @param props Properties to load from
+     * @return
+     */
+    public void loadCalibration( Properties props ) {
+    	// Load
+    		double pos_x = Double.valueOf( props.getProperty(POSITION_X));
+    		double pos_y = Double.valueOf( props.getProperty(POSITION_Y));
+    		double in_pos_x = Double.valueOf( props.getProperty(INITIAL_POS_X));
+    		double in_pos_y = Double.valueOf( props.getProperty(INITIAL_POS_Y));
+    		double angle = Double.valueOf( props.getProperty(ANGLE));
+    		double in_scale = Double.valueOf( props.getProperty(INITIAL_SCALE));
+    		double scale_x = Double.valueOf( props.getProperty(SCALEX));
+    		double scale_y = Double.valueOf( props.getProperty(SCALEY));
+  			m_position.setLocation(pos_x, pos_y);
+    		m_initial_position.setLocation(pos_x, pos_y);
+    		m_angle = angle;
+    		m_scalex = scale_x;
+    		m_scaley = scale_y;
+    		m_initial_scale = in_scale;
+    		// Refresh
+            Main.map.mapView.repaint();
     }
 }

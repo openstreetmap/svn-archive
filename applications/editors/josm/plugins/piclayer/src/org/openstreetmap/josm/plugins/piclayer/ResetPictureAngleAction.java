@@ -38,7 +38,7 @@ public class ResetPictureAngleAction extends JosmAction {
 	 * Constructor
 	 */
 	public ResetPictureAngleAction( PicLayerAbstract owner ) {
-		super("Angle", null, null, null, false);
+		super("Angle", null, "Resets picture rotation", null, false);
 		// Remember the owner...
 		m_owner = owner;
 	}

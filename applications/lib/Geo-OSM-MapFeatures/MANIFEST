@@ -17,3 +17,4 @@ lib/Geo/OSM/MapFeatures/Feature/Value/Userdef.pm
 t/00-load.t
 t/pod-coverage.t
 t/pod.t
+examples/mf2ascii.pl

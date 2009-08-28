@@ -22,3 +22,10 @@ This plugin is meant to help with mapping from photos (for me it's mostly buildi
 Although I wrote it only to help myself and currently have no intention of extending it beyond what I need, you may still contact me with any suggestions that you think are important: tomasz.stelmach@poczta.onet.pl
 
 I used wmsplugin and routing plugin code very much during coding. Thank you and I hope you don't mind :)
+
+HISTORY:
+========
+
+2009.08.28:
+- added support for scaling in one axis only
+- added new icons

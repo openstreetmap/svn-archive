@@ -53,19 +53,24 @@
 # - gpx file with open bugs for germany can be obtained here: http://openstreetbugs.schokokeks.org/api/0.1/getGPX?b=47.4&t=55.0&l=5.9&r=15.0&limit=100000&open=yes
 # - added map compare link
 #
+# Version 2.0
+# - faster execution parameters
+#
 
 use strict ;
 use warnings ;
 
 use List::Util qw[min max] ;
-use OSM::osm 4.1 ;
+use OSM::osm 5.1 ;
 use File::stat;
 use Time::localtime;
 use LWP::Simple;
 
+my $span = 0.03 ; # steps of 0.01 ! determines how far way centers may be apart to be compared against each other
+
 my $program = "checkcross.pl" ;
 my $usage = $program . " [N|B] def.xml file.osm out.htm out.gpx (mode N = normal or B = also get openstreetbugs" ;
-my $version = "1.6 BETA (004)" ;
+my $version = "2.0" ;
 my $mode = "N" ;
 
 my $gpxFileName = "../../web/osm/qa/bugs/OpenStreetBugsOpen.gpx" ;
@@ -362,7 +367,9 @@ foreach $wayId (@checkWays) {
 # init way hash
 ###############
 foreach $wayId (@checkWays) {
-	my $hashValue = hashValue ($lon{$wayNodesHash{$wayId}[0]}, $lat{$wayNodesHash{$wayId}[0]}) ;
+	my ($lo) = ($lon{$wayNodesHash{$wayId}[0]} + $lon{$wayNodesHash{$wayId}[-1]}) / 2 ;
+	my ($la) = ($lat{$wayNodesHash{$wayId}[0]} + $lat{$wayNodesHash{$wayId}[-1]}) / 2 ;
+	my $hashValue = hashValue2 ($lo, $la) ;
 	push (@{$wayHash {$hashValue}}, $wayId) ;
 }
 
@@ -389,10 +396,10 @@ foreach $wayId1 (@againstWays) {
 	# create temp array according to hash
 	my @temp = () ;
 	my $lo ; my $la ;
-	for ($lo=$lon{$wayNodesHash{$wayId1}[0]}-0.1; $lo<=$lon{$wayNodesHash{$wayId1}[0]}+0.1; $lo=$lo+0.1) {
-		for ($la=$lat{$wayNodesHash{$wayId1}[0]}-0.1; $la<=$lat{$wayNodesHash{$wayId1}[0]}+0.1; $la=$la+0.1) {
-			if ( defined @{$wayHash{hashValue($lo,$la)}} ) {
-				push @temp, @{$wayHash{hashValue($lo,$la)}} ;
+	for ($lo=$lon{$wayNodesHash{$wayId1}[0]}-$span; $lo<=$lon{$wayNodesHash{$wayId1}[0]}+$span; $lo=$lo+0.01) {
+		for ($la=$lat{$wayNodesHash{$wayId1}[0]}-$span; $la<=$lat{$wayNodesHash{$wayId1}[0]}+$span; $la=$la+0.01) {
+			if ( defined @{$wayHash{hashValue2($lo,$la)}} ) {
+				push @temp, @{$wayHash{hashValue2($lo,$la)}} ;
 			}
 		}
 	}
@@ -457,7 +464,7 @@ open ($html, ">", $htmlName) || die ("Can't open html output file") ;
 open ($gpx, ">", $gpxName) || die ("Can't open gpx output file") ;
 
 
-printHTMLHeader ($html, "Crossings Check by Gary68") ;
+printHTMLiFrameHeader ($html, "Crossings Check by Gary68") ;
 printGPXHeader ($gpx) ;
 
 print $html "<H1>Crossing Check by Gary68</H1>\n" ;
@@ -545,7 +552,8 @@ statistics ( ctime(stat($osmName)->mtime),  $program,  $defName, $osmName,  $che
 
 print "\n$program finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;
 
-sub statistics {
+
+sub statistics {
 	my ($date, $program, $def, $area, $total, $errors) = @_ ;
 	my $statfile ; my ($statfileName) = "statistics.csv" ;
 
@@ -638,4 +646,7 @@ sub getGPXWaypoints {
 	$result = $result . "</p>\n" ;
 	return $result ;
 }
+
+
+
 

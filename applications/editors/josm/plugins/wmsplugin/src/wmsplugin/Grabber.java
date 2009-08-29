@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.ProjectionBounds;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
@@ -26,7 +25,7 @@ abstract public class Grabber implements Runnable {
     Grabber(ProjectionBounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache)
     {
         this.b = b;
-        this.proj = Main.main.proj;
+        this.proj = Main.proj;
         this.pixelPerDegree = layer.pixelPerDegree;
         this.image = image;
         this.mv = mv;

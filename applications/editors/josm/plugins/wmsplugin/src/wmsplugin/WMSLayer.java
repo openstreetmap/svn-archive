@@ -1,5 +1,6 @@
 package wmsplugin;
 
+import org.openstreetmap.josm.io.CacheFiles;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
@@ -256,7 +257,7 @@ public class WMSLayer extends Layer {
 		public void actionPerformed(ActionEvent ev) {
 			// Delete small files, because they're probably blank tiles.
 			// See https://josm.openstreetmap.de/ticket/2307
-			WMSPlugin.cache.customCleanUp(WMSPlugin.cache.CLEAN_SMALL_FILES, 2048);
+			WMSPlugin.cache.customCleanUp(CacheFiles.CLEAN_SMALL_FILES, 2048);
 
 			for (int x = 0; x < dax; ++x) {
 				for (int y = 0; y < day; ++y) {

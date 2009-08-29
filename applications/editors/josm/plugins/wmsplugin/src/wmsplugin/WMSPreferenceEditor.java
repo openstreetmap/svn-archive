@@ -1,9 +1,6 @@
 package wmsplugin;
 
 import java.awt.FlowLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import org.openstreetmap.josm.Main;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -55,7 +52,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         final JTable listdef = new JTable(modeldef){
         	@Override
             public boolean isCellEditable(int row,int column){return false;}
-        };;
+        };
         JScrollPane scrolldef = new JScrollPane(listdef);
         p.add(scrolldef, GBC.eol().insets(0,5,0,0).fill(GBC.BOTH));
         scrolldef.setPreferredSize(new Dimension(200,200));

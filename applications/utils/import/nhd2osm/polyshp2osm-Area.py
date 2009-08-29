@@ -79,7 +79,8 @@ def ftype(data):
 def fcode(data):
     """For features where the ftype is not specific enough"""
     water = {
-	'40308': 'intermittent' #Controlled Inundation Area - Non-Flood
+	'40308': 'intermittent',    # Controlled Inundation Area - Non-Flood
+	'36400': 'tidal'            # Foreshore 
     }
 
     if 'fcode' in data:

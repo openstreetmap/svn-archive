@@ -56,23 +56,18 @@ else {
 	$flon = '5.65922';
 }
 
+$query .= '&tlat=53.02616';
 if (isset($_GET['tlat']) && is_numeric($_GET['tlat'])) {
 	$query .= '&tlat='.$_GET['tlat'];
 }
-else {
-	$query .= '&tlat=53.02616';
-}
 
+$query .= '&tlon=5.66875';
 if (isset($_GET['tlon']) && is_numeric($_GET['tlon'])) {
 	$query .= '&tlon='.$_GET['tlon'];
-	$tlon = $_GET['tlon'];
-}
-else {
-	$query .= '&tlon=5.66875';
-	$tlon = '5.66875';
 }
 
 //Fastest/shortest route
+$query .= '&fast=1';
 if (isset($_GET['fast']) && is_numeric($_GET['fast'])) {
 	$query .= '&fast='.$_GET['fast'];
 }
@@ -81,26 +76,18 @@ else if (isset($_GET['short']) && is_numeric($_GET['short'])) {
 		$query .= '&fast=0';
 	}
 }
-else {
-	$query .= '&fast=1';
-}
 
 //Transportation
+$query .= '&v=motorcar';
 if (isset($_GET['v']) && in_array($_GET['v'], $vehicles)) {
 	$query .= '&v='.$_GET['v'];
 }
-else {
-	$query .= '&v=motorcar';
-}
 
 //Map layer
+$layer = 'mapnik';
 if (isset($_GET['layer']) && in_array($_GET['layer'], $layers)) {
 	$layer = $_GET['layer'];
 }
-else {
-	$layer = 'mapnik';
-}
-
 // Query result return format
 $format = 'kml';
 if (isset($_GET['format']) && in_array($_GET['format'], $formats)) {

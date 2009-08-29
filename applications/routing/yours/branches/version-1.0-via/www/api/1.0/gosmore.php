@@ -94,7 +94,7 @@ else {
 }
 
 //Map layer
-if (isset($_GET['layer']) && in_array($_GET['v'], $layers)) {
+if (isset($_GET['layer']) && in_array($_GET['layer'], $layers)) {
 	$layer = $_GET['layer'];
 }
 else {
@@ -103,10 +103,8 @@ else {
 
 // Query result return format
 $format = 'kml';
-if (isset($_GET['format']) && in_array($_GET['v'], $formats)) {
-	if (in_array($_GET['format'], array('kml', 'geojson')) == true) {
-		$format = $_GET['format'];
-	}
+if (isset($_GET['format']) && in_array($_GET['format'], $formats)) {
+	$format = $_GET['format'];
 }
 
 $query .= "'";

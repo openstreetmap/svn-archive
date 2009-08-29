@@ -181,6 +181,7 @@ public class WMSLayer extends Layer {
 					img.image = null;
 					img.flushedResizedCachedInstance();
 					Grabber gr = WMSPlugin.getGrabber(XYtoBounds(x,y), img, mv, this);
+					gr.setPriority(1);
 					executor.submit(gr);
 				}
 			}

@@ -13,7 +13,7 @@ import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
 
-abstract public class Grabber implements Runnable {
+abstract public class Grabber extends Thread {
     protected ProjectionBounds b;
     protected Projection proj;
     protected double pixelPerDegree;

@@ -56,14 +56,20 @@ else {
 	$flon = '5.65922';
 }
 
-$query .= '&tlat=53.02616';
 if (isset($_GET['tlat']) && is_numeric($_GET['tlat'])) {
 	$query .= '&tlat='.$_GET['tlat'];
 }
+else {
+	$query .= '&tlat=53.02616';
+}
 
-$query .= '&tlon=5.66875';
 if (isset($_GET['tlon']) && is_numeric($_GET['tlon'])) {
 	$query .= '&tlon='.$_GET['tlon'];
+	$tlon = $_GET['tlon'];
+}
+else {
+	$query .= '&tlon=5.66875';
+	$tlon = '5.66875';
 }
 
 //Fastest/shortest route
@@ -88,8 +94,10 @@ $layer = 'mapnik';
 if (isset($_GET['layer']) && in_array($_GET['layer'], $layers)) {
 	$layer = $_GET['layer'];
 }
+
 // Query result return format
 $format = 'kml';
+echo $_GET['format'];
 if (isset($_GET['format']) && in_array($_GET['format'], $formats)) {
 	$format = $_GET['format'];
 }
@@ -138,11 +146,7 @@ $gosmore_end = microtime(true);
 $nodes = 0;
 
 if (count($output) > 1)
-{
-	// meta data
-	header('Content-Type: text/xml');
-	
-	// Loop through all the coordinates
+{	// Loop through all the coordinates
 	$flat = $flon = 360.0;
 	$distance = 0;
 	$elements = array();
@@ -284,6 +288,9 @@ function getProcesses()
 }
 
 function asKML($elements, $distance) {
+	// meta data
+	header('Content-Type: text/xml');
+
 	// KML body
 	$kml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 	$kml .= '<kml xmlns="http://earth.google.com/kml/2.0">'."\n";
@@ -314,6 +321,9 @@ function asKML($elements, $distance) {
 	return $kml;
 }
 function asGeoJSON($elements, $distance) {
+	// meta data
+	header('Content-Type: application/json');
+
 	$geoJSON = "{\n";
 	$geoJSON .= "  \"type\": \"LineString\",\n";
 	$geoJSON .= "  \"crs\": {\n";

@@ -261,11 +261,13 @@ public class WMSLayer extends Layer {
 			for (int x = 0; x < dax; ++x) {
 				for (int y = 0; y < day; ++y) {
 					GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
-					img.image = null;
-					img.flushedResizedCachedInstance();
-					img.downloadingStarted = false;
-					img.failed = false;
-					mv.repaint();
+					if(img.failed){
+						img.image = null;
+						img.flushedResizedCachedInstance();
+						img.downloadingStarted = false;
+						img.failed = false;
+						mv.repaint();
+					}
 				}
 			}
 		}

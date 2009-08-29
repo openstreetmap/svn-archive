@@ -24,6 +24,8 @@ public class HTMLGrabber extends WMSGrabber {
     protected BufferedImage grab(URL url) throws IOException {
         String urlstring = url.toExternalForm();
 
+        System.out.println("Grabbing HTML " + url);
+
         BufferedImage cached = cache.getImg(urlstring);
         if(cached != null) return cached;
 

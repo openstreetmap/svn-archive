@@ -142,6 +142,8 @@ public class WMSGrabber extends Grabber {
         BufferedImage cached = cache.getImg(url.toString());
         if(cached != null) return cached;
 
+        System.out.println("Grabbing WMS " + url);
+
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         if(layer.cookies != null && !layer.cookies.equals(""))
             conn.setRequestProperty("Cookie", layer.cookies);

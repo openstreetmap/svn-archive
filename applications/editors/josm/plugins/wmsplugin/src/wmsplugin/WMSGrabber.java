@@ -76,12 +76,12 @@ public class WMSGrabber extends Grabber {
 
     protected URL getURL(double w, double s,double e,double n,
             int wi, int ht) throws MalformedURLException {
-        String proj = Main.proj.toCode();
+        String myProj = Main.proj.toCode();
         if(Main.proj instanceof Mercator) // don't use mercator code directly
         {
             LatLon sw = Main.proj.eastNorth2latlon(new EastNorth(w, s));
             LatLon ne = Main.proj.eastNorth2latlon(new EastNorth(e, n));
-            proj = "EPSG:4326";
+            myProj = "EPSG:4326";
             s = sw.lat();
             w = sw.lon();
             n = ne.lat();
@@ -95,7 +95,7 @@ public class WMSGrabber extends Grabber {
                            + latLonFormat.format(n);
 
         if (urlWithPatterns) {
-            str = str.replaceAll("\\{proj\\}", proj)
+            str = str.replaceAll("\\{proj\\}", myProj)
             .replaceAll("\\{bbox\\}", bbox)
             .replaceAll("\\{width\\}", String.valueOf(wi))
             .replaceAll("\\{height\\}", String.valueOf(ht));

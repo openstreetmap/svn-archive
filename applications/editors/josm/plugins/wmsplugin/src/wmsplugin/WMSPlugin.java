@@ -48,7 +48,7 @@ public class WMSPlugin extends Plugin {
 
     public WMSPlugin() {
         refreshMenu();
-        cache.setExpire(cache.EXPIRE_MONTHLY, false);
+        cache.setExpire(CacheFiles.EXPIRE_MONTHLY, false);
         cache.setMaxSize(70, false);
     }
 

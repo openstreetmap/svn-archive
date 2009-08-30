@@ -81,7 +81,7 @@ public class ReverseTerraceAction extends JosmAction {
 
 			// visit all the nodes in the way, adding the building's they're members of
 			// to the front.
-			for (Node n : w.nodes) {
+			for (Node n : w.getNodes()) {
 				if (!visitedNodes.contains(n)) {
 					CollectBackReferencesVisitor v = new CollectBackReferencesVisitor(Main.main.getCurrentDataSet());
 					v.visit(n);

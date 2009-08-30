@@ -89,7 +89,7 @@ public final class TerracerAction extends JosmAction {
 			if (prim instanceof Way) {
 				Way way = (Way)prim;
 
-				if ((way.nodes.size() >= 5) &&
+				if ((way.getNodesCount() >= 5) &&
 						way.isClosed()) {
 					// first ask the user how many buildings to terrace into
 					HouseNumberDialog dialog = new HouseNumberDialog();
@@ -179,11 +179,11 @@ public final class TerracerAction extends JosmAction {
 			Way terr = new Way();
 			// Using Way.nodes.add rather than Way.addNode because the latter doesn't
 			// exist in older versions of JOSM.
-			terr.nodes.add(new_nodes[0][i]);
-			terr.nodes.add(new_nodes[0][i+1]);
-			terr.nodes.add(new_nodes[1][i+1]);
-			terr.nodes.add(new_nodes[1][i]);
-			terr.nodes.add(new_nodes[0][i]);
+			terr.addNode(new_nodes[0][i]);
+			terr.addNode(new_nodes[0][i+1]);
+			terr.addNode(new_nodes[1][i+1]);
+			terr.addNode(new_nodes[1][i]);
+			terr.addNode(new_nodes[0][i]);
 			terr.put("addr:housenumber", "" + (from + i * step));
 			terr.put("building", "yes");
 			if (streetName != null) {
@@ -226,7 +226,7 @@ public final class TerracerAction extends JosmAction {
 		if (n == null) {
 			// sometimes there is a small overshoot due to numerical roundoff, so we just
 			// set these cases to be equal to the last node. its not pretty, but it works ;-)
-			n = w.nodes.get(w.nodes.size() - 1);
+			n = w.getNode(w.getNodesCount() - 1);
 		}
 		return n;
 	}
@@ -280,7 +280,7 @@ public final class TerracerAction extends JosmAction {
 		if (sideLength(w, side1) > sideLength(w, side1 + 1) &&
 			Math.abs(sideness[side1] - sideness[side1 + 1]) < 0.001) {
 			side1 = side1 + 1;
-			side2 = (side2 + 1) % (w.nodes.size() - 1);
+			side2 = (side2 + 1) % (w.getNodesCount() - 1);
 		}
 
 		// swap side1 and side2 into sorted order.
@@ -294,16 +294,16 @@ public final class TerracerAction extends JosmAction {
 
 		Way front = new Way();
 		Way back = new Way();
-		for (int i = side2 + 1; i < w.nodes.size() - 1; ++i) {
-			front.nodes.add(w.nodes.get(i));
+		for (int i = side2 + 1; i < w.getNodesCount() - 1; ++i) {
+			front.addNode(w.getNode(i));
 		}
 		for (int i = 0; i <= side1; ++i) {
-			front.nodes.add(w.nodes.get(i));
+			front.addNode(w.getNode(i));
 		}
 		// add the back in reverse order so that the front and back ways point
 		// in the same direction.
 		for (int i = side2; i > side1; --i) {
-			back.nodes.add(w.nodes.get(i));
+			back.addNode(w.getNode(i));
 		}
 
 		return new Pair<Way, Way>(front, back);
@@ -314,8 +314,8 @@ public final class TerracerAction extends JosmAction {
 	 * the way is closed, but I only ever call it for buildings.
 	 */
 	private double sideLength(Way w, int i) {
-		Node a = w.nodes.get(i);
-		Node b = w.nodes.get((i+1) % (w.nodes.size() - 1));
+		Node a = w.getNode(i);
+		Node b = w.getNode((i+1) % (w.getNodesCount() - 1));
 		return a.getCoor().greatCircleDistance(b.getCoor());
 	}
 
@@ -362,20 +362,20 @@ public final class TerracerAction extends JosmAction {
 	 * Calculate "sideness" metric for each segment in a way.
 	 */
 	private double[] calculateSideness(Way w) {
-		final int length = w.nodes.size() - 1;
+		final int length = w.getNodesCount() - 1;
 		double[] sideness = new double[length];
 
 		sideness[0] = calculateSideness(
-				w.nodes.get(length - 1), w.nodes.get(0),
-				w.nodes.get(1), w.nodes.get(2));
+				w.getNode(length - 1), w.getNode(0),
+				w.getNode(1), w.getNode(2));
 		for (int i = 1; i < length - 1; ++i) {
 			sideness[i] = calculateSideness(
-					w.nodes.get(i-1), w.nodes.get(i),
-					w.nodes.get(i+1), w.nodes.get(i+2));
+					w.getNode(i-1), w.getNode(i),
+					w.getNode(i+1), w.getNode(i+2));
 		}
 		sideness[length-1] = calculateSideness(
-				w.nodes.get(length - 2), w.nodes.get(length - 1),
-				w.nodes.get(length), w.nodes.get(1));
+				w.getNode(length - 2), w.getNode(length - 1),
+				w.getNode(length), w.getNode(1));
 
 		return sideness;
 	}
@@ -516,10 +516,10 @@ public final class TerracerAction extends JosmAction {
 	private TreeSet<String> createAutoCompletionInfo() {
 		final TreeSet<String> names = new TreeSet<String>();
 		for (OsmPrimitive osm : Main.main.getCurrentDataSet().allNonDeletedPrimitives()) {
-			if (osm.keys != null &&
-					osm.keys.containsKey("highway") &&
-					osm.keys.containsKey("name")) {
-				names.add(osm.keys.get("name"));
+			if (osm.getKeys() != null &&
+					osm.keySet().contains("highway") &&
+					osm.keySet().contains("name")) {
+				names.add(osm.get("name"));
 			}
 		}
 		return names;

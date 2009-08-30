@@ -81,7 +81,7 @@ public class LakewalkerReader {
     						n = tn;
     						tn = null;
     					}
-    					way.nodes.add(n);
+    					way.addNode(n);
     					break;
     				case 's':
     					progressMonitor.indeterminateSubTask(line.substring(2));
@@ -106,7 +106,7 @@ public class LakewalkerReader {
     			input.close();
 
     			// Add the start node to the end of the trace to form a closed shape
-    			way.nodes.add(fn);
+    			way.addNode(fn);
     		}
     		catch (Exception ex) { }
 

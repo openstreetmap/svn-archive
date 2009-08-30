@@ -78,16 +78,7 @@ public class UserToolsPlugin extends Plugin {
         "dialogs/userlist", tr("Show Author Panel"), null, false) {
             public void actionPerformed(ActionEvent ev) {
                 int dialogIndex = 100;
-                for (int i = 0; i < Main.map.toggleDialogs.getComponentCount(); i++) {
-
-                    if (Main.map.toggleDialogs.getComponent(i).getClass()
-                            .getSimpleName().equals("UserListDialog")) {
-
-                        dialogIndex = i;
-                    }
-                }
-                UserListDialog uld = (UserListDialog) Main.map.toggleDialogs.getComponent(dialogIndex);
-
+                UserListDialog uld = Main.map.getToggleDialog(UserListDialog.class);
                 uld.setVisible(true);
             }
         };
@@ -127,17 +118,8 @@ public class UserToolsPlugin extends Plugin {
 
     public static String getSelectedUser(){
         int dialogIndex = 100;
-        for (int i = 0; i < Main.map.toggleDialogs.getComponentCount(); i++) {
-
-            //  System.out.println(Main.map.toggleDialogs.getComponent(i)
-            //      .getClass().getSimpleName());
-
-            if (Main.map.toggleDialogs.getComponent(i).getClass()
-                    .getSimpleName().equals("UserListDialog")) {
-                dialogIndex = i;
-            }
-        }
-        UserListDialog uld = (UserListDialog) Main.map.toggleDialogs.getComponent(dialogIndex);
+        
+        UserListDialog uld = Main.map.getToggleDialog(UserListDialog.class);
 
         //these are hard coded, probably better to search, like above
         JScrollPane jsp = (JScrollPane) uld.getComponent(1);

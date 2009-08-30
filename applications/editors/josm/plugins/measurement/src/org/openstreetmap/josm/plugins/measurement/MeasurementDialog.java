@@ -125,7 +125,7 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
                                     } else if(p instanceof Way){
                                         Way w = (Way)p;
                                         Node lastN = null;
-                                        for(Node n: w.nodes){
+                                        for(Node n: w.getNodes()){
                                             if(lastN != null){
                                                 length += MeasurementLayer.calcDistance(lastN.getCoor(), n.getCoor());
                                                 //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
@@ -134,7 +134,7 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
                                             }
                                             lastN = n;
                                         }
-                                        if (lastN != null && lastN == w.nodes.iterator().next()){
+                                        if (lastN != null && lastN == w.getNodes().iterator().next()){
                                             area = Math.abs(area / 2);
                                         }else{
                                             area = 0;

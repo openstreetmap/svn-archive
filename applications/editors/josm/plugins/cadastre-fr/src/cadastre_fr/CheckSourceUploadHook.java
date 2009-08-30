@@ -40,7 +40,7 @@ public class CheckSourceUploadHook implements UploadHook
             Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>();
             for (OsmPrimitive osm : add) {
                 if ((osm instanceof Node || osm instanceof Way)
-                        && (osm.keys == null || !tagSourceExist(osm))) {
+                        && (osm.getKeys() == null || !tagSourceExist(osm))) {
                     sel.add(osm);
                 }
             }
@@ -57,7 +57,7 @@ public class CheckSourceUploadHook implements UploadHook
      * @return true if one of keys is "source"
      */
     private boolean tagSourceExist(OsmPrimitive osm) {
-        for (String key : osm.keys.keySet()) {
+        for (String key : osm.keySet()) {
             if (key.equals("source") ) {
                 return true;
             }

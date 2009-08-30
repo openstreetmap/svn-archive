@@ -132,7 +132,7 @@ public class RoutingGraph {
         for (Way way : data.ways) {
             if (way != null && !way.deleted && this.isvalidWay(way)) {
                 Node from = null;
-                for (Node to : way.nodes) {
+                for (Node to : way.getNodes()) {
                     // Ignore the node if deleted
                     if (!to.deleted) {
                         graph.addVertex(to);

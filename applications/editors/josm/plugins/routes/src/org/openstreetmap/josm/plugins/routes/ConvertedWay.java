@@ -47,7 +47,7 @@ public class ConvertedWay {
 	
 	public ConvertedWay(BitSet routes, Way way) {
 		this.routes = routes;
-		nodes.addAll(way.nodes);
+		nodes.addAll(way.getNodes());
 	}
 	
 	public WayEnd getStart() {

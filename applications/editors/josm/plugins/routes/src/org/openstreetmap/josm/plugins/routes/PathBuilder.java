@@ -17,7 +17,7 @@ public class PathBuilder {
 
 	public void addWay(Way way, RouteDefinition route) {
 
-		if (way.nodes.size() >= 2) {
+		if (way.getNodesCount() >= 2) {
 			BitSet routes = wayRoutes.get(way);
 			if (routes == null) {
 				routes = new BitSet();

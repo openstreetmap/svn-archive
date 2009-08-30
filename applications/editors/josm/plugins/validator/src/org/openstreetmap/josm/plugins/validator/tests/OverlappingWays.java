@@ -156,7 +156,7 @@ public class OverlappingWays extends Test
     {
         Node lastN = null;
         int i = -2;
-        for (Node n : w.nodes) {
+        for (Node n : w.getNodes()) {
             i++;
             if (lastN == null) {
                 lastN = n;

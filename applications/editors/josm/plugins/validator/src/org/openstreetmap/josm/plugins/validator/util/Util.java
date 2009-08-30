@@ -38,11 +38,11 @@ public class Util
      */
     public static List<List<Way>> getWaysInCell(Way w, Map<Point2D,List<Way>> cellWays)
     {
-        if (w.nodes.size() == 0)
+        if (w.getNodesCount() == 0)
             return Collections.emptyList();
 
-        Node n1 = w.nodes.get(0);
-        Node n2 = w.nodes.get(w.nodes.size() - 1);
+        Node n1 = w.getNode(0);
+        Node n2 = w.getNode(w.getNodesCount() - 1);
 
         List<List<Way>> cells = new ArrayList<List<Way>>(2);
         Set<Point2D> cellNodes = new HashSet<Point2D>();

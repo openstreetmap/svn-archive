@@ -175,7 +175,7 @@ public class UnconnectedWays extends Test
 
         public boolean nearby(Node n, double dist)
         {
-            return !w.nodes.contains(n)
+            return !w.containsNode(n)
             && line.ptSegDist(n.getEastNorth().east(), n.getEastNorth().north()) < dist;
         }
 
@@ -191,20 +191,20 @@ public class UnconnectedWays extends Test
     {
         if( w.deleted || w.incomplete )
             return;
-        int size = w.nodes.size();
+        int size = w.getNodesCount();
         if(size < 2)
             return;
         for(int i = 1; i < size; ++i)
         {
             if(i < size-1)
-                addNode(w.nodes.get(i), middlenodes);
-            ways.add(new MyWaySegment(w, w.nodes.get(i-1), w.nodes.get(i)));
+                addNode(w.getNode(i), middlenodes);
+            ways.add(new MyWaySegment(w, w.getNode(i-1), w.getNode(i)));
         }
         Set<Node> set = endnodes;
         if(w.get("highway") != null || w.get("railway") != null)
             set = endnodes_highway;
-        addNode(w.nodes.get(0), set);
-        addNode(w.nodes.get(size-1), set);
+        addNode(w.getNode(0), set);
+        addNode(w.getNode(size-1), set);
     }
     private void addNode(Node n, Set<Node> s)
     {

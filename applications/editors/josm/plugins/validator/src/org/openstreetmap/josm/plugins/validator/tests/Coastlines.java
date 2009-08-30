@@ -72,7 +72,7 @@ public class Coastlines extends Test
                 if( natural2 == null || !natural2.equals("coastline") )
                     continue;
 
-                if( w.nodes.get(0).equals(w2.nodes.get(0)) || w.nodes.get(w.nodes.size() - 1).equals(w2.nodes.get(w2.nodes.size() - 1)))
+                if( w.getNodes().get(0).equals(w2.getNodes().get(0)) || w.getNodes().get(w.getNodesCount() - 1).equals(w2.getNodes().get(w2.getNodesCount() - 1)))
                 {
                     List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
                     primitives.add(w);

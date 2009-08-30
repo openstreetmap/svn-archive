@@ -30,7 +30,6 @@ import org.openstreetmap.josm.data.projection.Epsg4326;
 import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.projection.Mercator;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
@@ -275,14 +274,14 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
                 }
             } catch (InvocationTargetException ite) {
                 ite.getCause().printStackTrace();
-                OptionPaneUtil.showMessageDialog(Main.parent, 
+                JOptionPane.showMessageDialog(Main.parent, 
                 		tr("Error initializing test {0}:\n {1}", test.getClass()
                         .getSimpleName(), ite.getCause().getMessage()),
                         tr("Error"),
                         JOptionPane.ERROR_MESSAGE);
             } catch (Exception e) {
                 e.printStackTrace();
-                OptionPaneUtil.showMessageDialog(Main.parent, 
+                JOptionPane.showMessageDialog(Main.parent, 
                 		tr("Error initializing test {0}:\n {1}", test.getClass()
                         .getSimpleName(), e),
                         tr("Error"),

@@ -77,7 +77,7 @@ public class UntaggedNode extends Test
     @Override
     public void visit(Way w)
     {
-        for (Node n : w.nodes) {
+        for (Node n : w.getNodes()) {
             emptyNodes.remove(n);
         }
     }

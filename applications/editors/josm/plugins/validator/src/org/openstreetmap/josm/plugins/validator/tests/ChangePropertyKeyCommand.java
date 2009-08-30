@@ -50,10 +50,12 @@ public class ChangePropertyKeyCommand extends Command {
     @Override public boolean executeCommand() {
         if (!super.executeCommand()) return false; // save old
         for (OsmPrimitive osm : objects) {
-            if(osm.keys != null)
+            if(osm.hasKeys())
             {
                 osm.modified = true;
-                osm.put(newKey, osm.keys.remove(key) );
+                String oldValue= osm.get(key);
+                osm.put(newKey, oldValue );
+                osm.remove(key);
             }
         }
         return true;

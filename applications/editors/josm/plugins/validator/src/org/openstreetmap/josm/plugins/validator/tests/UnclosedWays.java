@@ -104,8 +104,8 @@ public class UnclosedWays extends Test {
 
         if (type != null && !w.isClosed())
         {
-            Node f = w.nodes.get(0);
-            Node l = w.nodes.get(w.nodes.size() - 1);
+            Node f = w.getNode(0);
+            Node l = w.getNode(w.getNodesCount() - 1);
             if(force || f.getCoor().greatCircleDistance(l.getCoor()) < 10000)
             {
                 List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();

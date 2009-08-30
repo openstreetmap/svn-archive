@@ -82,7 +82,7 @@ public class CrossingWays extends Test
 
         String layer1 = w.get("layer");
 
-        int nodesSize = w.nodes.size();
+        int nodesSize = w.getNodesCount();
         for (int i = 0; i < nodesSize - 1; i++) {
             WaySegment ws = new WaySegment(w, i);
             ExtendedSegment es1 = new ExtendedSegment(ws, layer1, railway1, coastline1);
@@ -187,8 +187,8 @@ public class CrossingWays extends Test
         public ExtendedSegment(WaySegment ws, String layer, String railway, String coastline)
         {
             this.ws = ws;
-            this.n1 = ws.way.nodes.get(ws.lowerIndex);
-            this.n2 = ws.way.nodes.get(ws.lowerIndex + 1);
+            this.n1 = ws.way.getNodes().get(ws.lowerIndex);
+            this.n2 = ws.way.getNodes().get(ws.lowerIndex + 1);
             this.layer = layer;
             this.railway = railway;
             this.coastline = coastline;

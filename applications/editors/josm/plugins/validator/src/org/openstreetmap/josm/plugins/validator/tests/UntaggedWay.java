@@ -64,7 +64,7 @@ public class UntaggedWay extends Test
     {
         if (w.deleted || w.incomplete) return;
 
-        Map<String, String> tags = w.keys;
+        Map<String, String> tags = w.getKeys();
         if( tags != null )
         {
             String highway = tags.get("highway");
@@ -99,11 +99,11 @@ public class UntaggedWay extends Test
             errors.add( new TestError(this, Severity.WARNING, tr("Untagged ways"), UNTAGGED_WAY, w) );
         }
 
-        if( w.nodes.size() == 0 )
+        if( w.getNodesCount() == 0 )
         {
             errors.add( new TestError(this, Severity.ERROR, tr("Empty ways"), EMPTY_WAY, w) );
         }
-        else if( w.nodes.size() == 1 )
+        else if( w.getNodesCount() == 1 )
         {
             errors.add( new TestError(this, Severity.ERROR, tr("One node ways"), ONE_NODE_WAY, w) );
         }
@@ -116,8 +116,8 @@ public class UntaggedWay extends Test
         multipolygonways = new LinkedList<Way>();
         for (final Relation r : Main.main.getCurrentDataSet().relations)
         {
-            if(!r.deleted && !r.incomplete && r.keys != null
-            && "multipolygon".equals(r.keys.get("type")))
+            if(!r.deleted && !r.incomplete && r.getKeys() != null
+            && "multipolygon".equals(r.get("type")))
             {
                 for (RelationMember m : r.members)
                 {

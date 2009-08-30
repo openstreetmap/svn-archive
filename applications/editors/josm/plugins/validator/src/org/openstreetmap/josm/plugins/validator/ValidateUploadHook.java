@@ -15,7 +15,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction.UploadHook;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.plugins.validator.util.AgregatePrimitivesVisitor;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -114,7 +113,7 @@ public class ValidateUploadHook implements UploadHook
         errorPanel.expandAll();
         p.add(new JScrollPane(errorPanel), GBC.eol());
 
-        int res  = OptionPaneUtil.showConfirmationDialog(Main.parent, p,
+        int res  = JOptionPane.showConfirmDialog(Main.parent, p,
         tr("Data with errors. Upload anyway?"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(res == JOptionPane.NO_OPTION)
         {

@@ -208,24 +208,6 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             LinkedList<UploadHook> hooks = ((UploadAction) Main.main.menu.upload).uploadHooks;
             hooks.add(0, uploadHook);
             
-            // add a listener to the plugin toggle button
-            final JToggleButton toggle = (JToggleButton) dialog.action.button;
-            active = toggle.isSelected();
-            toggle.addActionListener(new ActionListener() {
-                private boolean download = true;
-                
-                public void actionPerformed(ActionEvent e) {
-                    active = toggle.isSelected();
-                    if (toggle.isSelected() && download) {
-                        Main.worker.execute(new Runnable() {
-                            public void run() {
-                                updateData();
-                            }
-                        });
-                        download = false;
-                    }
-                }
-            });
         } else if (oldFrame!=null && newFrame==null ) { // map frame removed
             
         }
@@ -240,7 +222,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 
     public void layerAdded(Layer newLayer) {
         if(newLayer instanceof OsmDataLayer) {
-            active = ((JToggleButton)dialog.action.button).isSelected();
+            active = dialog.isDialogShowing();
             
             // start the auto download loop
             OsbDownloadLoop.getInstance().setPlugin(this);

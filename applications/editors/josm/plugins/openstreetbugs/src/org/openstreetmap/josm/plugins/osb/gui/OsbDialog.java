@@ -310,4 +310,22 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
         }
 
     }
+
+    private boolean downloaded = false;
+    protected void initialDownload() {
+        Main.worker.execute(new Runnable() {
+            public void run() {
+                osbPlugin.updateData();
+            }
+        });
+    }
+    
+	@Override
+	public void showDialog() {
+		if (!downloaded) {
+			initialDownload();
+			downloaded = true;
+		}
+		super.showDialog();
+	}
 }

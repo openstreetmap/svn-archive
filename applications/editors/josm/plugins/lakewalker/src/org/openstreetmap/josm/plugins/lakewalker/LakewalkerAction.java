@@ -253,7 +253,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 			  } catch (Exception ex) {
 			  }
 
-			  way.nodes.add(n);
+			  way.addNode(n);
 
 			  if(nodesinway > Main.pref.getInteger(LakewalkerPreferences.PREF_MAX_SEG, 500)){
 				  String waytype = Main.pref.get(LakewalkerPreferences.PREF_WAYTYPE, "water");
@@ -267,7 +267,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
 				  way = new Way();
 
-				  way.nodes.add(n);
+				  way.addNode(n);
 
 				  nodesinway = 0;
 			  }
@@ -283,7 +283,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
 
 		  way.put("source", Main.pref.get(LakewalkerPreferences.PREF_SOURCE, "Landsat"));
 
-		  way.nodes.add(fn);
+		  way.addNode(fn);
 
 		  commands.add(new AddCommand(way));
 

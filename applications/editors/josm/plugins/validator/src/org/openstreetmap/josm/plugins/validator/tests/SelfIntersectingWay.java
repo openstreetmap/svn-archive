@@ -26,8 +26,8 @@ public class SelfIntersectingWay extends Test {
     @Override public void visit(Way w) {
         HashSet<Node> nodes = new HashSet<Node>();
 
-        for (int i = 1; i < w.nodes.size() - 1; i++) {
-            Node n = w.nodes.get(i);
+        for (int i = 1; i < w.getNodesCount() - 1; i++) {
+            Node n = w.getNode(i);
             if (nodes.contains(n)) {
                 errors.add(new TestError(this,
                     Severity.WARNING, tr("Self-intersecting ways"), SELF_INTERSECT,

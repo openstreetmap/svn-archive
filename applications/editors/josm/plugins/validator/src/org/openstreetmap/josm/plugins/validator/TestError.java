@@ -333,7 +333,7 @@ public class TestError {
 
         public void visit(Way w) {
             Node lastN = null;
-            for (Node n : w.nodes) {
+            for (Node n : w.getNodes()) {
                 if (lastN == null) {
                     lastN = n;
                     continue;
@@ -346,9 +346,9 @@ public class TestError {
         }
 
         public void visit(WaySegment ws) {
-            if (ws.lowerIndex < 0 || ws.lowerIndex + 1 >= ws.way.nodes.size())
+            if (ws.lowerIndex < 0 || ws.lowerIndex + 1 >= ws.way.getNodesCount())
                 return;
-            Node a = ws.way.nodes.get(ws.lowerIndex), b = ws.way.nodes.get(ws.lowerIndex + 1);
+            Node a = ws.way.getNodes().get(ws.lowerIndex), b = ws.way.getNodes().get(ws.lowerIndex + 1);
             if (isSegmentVisible(a, b)) {
                 drawSegment(a, b, severity.getColor());
             }

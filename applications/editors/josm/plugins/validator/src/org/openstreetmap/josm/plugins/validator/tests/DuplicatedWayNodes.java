@@ -27,7 +27,7 @@ public class DuplicatedWayNodes extends Test {
         if (w.deleted || w.incomplete) return;
 
         Node lastN = null;
-        for (Node n : w.nodes) {
+        for (Node n : w.getNodes()) {
             if (lastN == null) {
                 lastN = n;
                 continue;
@@ -44,19 +44,19 @@ public class DuplicatedWayNodes extends Test {
     @Override public Command fixError(TestError testError) {
         Way w = (Way) testError.getPrimitives().iterator().next();
         Way wnew = new Way(w);
-        wnew.nodes.clear();
+        wnew.setNodes(null);
         Node lastN = null;
-        for (Node n : w.nodes) {
+        for (Node n : w.getNodes()) {
             if (lastN == null) {
-                wnew.nodes.add(n);
+            	wnew.addNode(n);
             } else if (n == lastN) {
                 // Skip this node
             } else {
-                wnew.nodes.add(n);
+            	wnew.addNode(n);
             }
             lastN = n;
         }
-        if (wnew.nodes.size() < 2) {
+        if (wnew.getNodesCount() < 2) {
             // Empty way, delete
             return DeleteCommand.delete(Main.map.mapView.getEditLayer(), Collections.singleton(w));
         } else {

@@ -32,10 +32,8 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -118,8 +116,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
     public void setVisible(boolean v) {
         if (tree != null)
             tree.setVisible(v);
-        if (action != null && action.button != null)
-            action.button.setSelected(v);
         super.setVisible(v);
         Main.map.repaint();
     }
@@ -190,8 +186,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
                 // ask if the whole set should be ignored
                 if (asked == JOptionPane.DEFAULT_OPTION) {
                     String[] a = new String[] { tr("Whole group"), tr("Single elements"), tr("Nothing") };
-                    asked = OptionPaneUtil.showOptionDialog(Main.parent, tr("Ignore whole group or individual elements?"),
-                            tr("Ignoring elements"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                    asked = JOptionPane.showOptionDialog(Main.parent, tr("Ignore whole group or individual elements?"),
+                            tr("Ignoring elements"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
                             a, a[1]);
                 }
                 if (asked == JOptionPane.YES_NO_OPTION) {
@@ -424,10 +420,10 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
         }
 
         public void visit(WaySegment ws) {
-            if (ws.lowerIndex < 0 || ws.lowerIndex + 1 >= ws.way.nodes.size())
+            if (ws.lowerIndex < 0 || ws.lowerIndex + 1 >= ws.way.getNodesCount())
                 return;
-            visit(ws.way.nodes.get(ws.lowerIndex));
-            visit(ws.way.nodes.get(ws.lowerIndex + 1));
+            visit(ws.way.getNodes().get(ws.lowerIndex));
+            visit(ws.way.getNodes().get(ws.lowerIndex + 1));
         }
     }
 

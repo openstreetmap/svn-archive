@@ -174,7 +174,7 @@ public class GridLayer extends Layer
         public void visit(Way w)
         {
             Node lastN = null;
-            for (Node n : w.nodes) {
+            for (Node n : w.getNodes()) {
                 if (lastN == null) {
                     lastN = n;
                     continue;

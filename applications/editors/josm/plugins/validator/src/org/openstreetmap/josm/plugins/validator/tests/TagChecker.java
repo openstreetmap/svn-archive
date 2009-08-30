@@ -43,7 +43,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.gui.preferences.TaggingPresetPreference;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 import org.openstreetmap.josm.io.MirroredInputStream;
@@ -389,7 +388,7 @@ public class TagChecker extends Test
 
         if(checkComplex)
         {
-            Map<String, String> props = (p.keys == null) ? Collections.<String, String>emptyMap() : p.keys;
+            Map<String, String> props = (p.getKeys() == null) ? Collections.<String, String>emptyMap() : p.getKeys();
             for(Entry<String, String> prop: props.entrySet() )
             {
                 boolean ignore = true;
@@ -451,7 +450,7 @@ public class TagChecker extends Test
             }
         }
 
-        Map<String, String> props = (p.keys == null) ? Collections.<String, String>emptyMap() : p.keys;
+        Map<String, String> props = (p.getKeys() == null) ? Collections.<String, String>emptyMap() : p.getKeys();
         for(Entry<String, String> prop: props.entrySet() )
         {
             String s = marktr("Key ''{0}'' invalid.");
@@ -619,7 +618,7 @@ public class TagChecker extends Test
         addSrcButton = new JButton(tr("Add"));
         addSrcButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                String source = OptionPaneUtil.showInputDialog(
+                String source = JOptionPane.showInputDialog(
                 		Main.parent, 
                 		tr("TagChecker source"),
                 		tr("TagChecker source"),
@@ -644,13 +643,13 @@ public class TagChecker extends Test
                 {
                     if(Sources.getModel().getSize() == 0)
                     {
-                        String source = OptionPaneUtil.showInputDialog(Main.parent, tr("TagChecker source"), tr("TagChecker source"), JOptionPane.QUESTION_MESSAGE);
+                        String source = JOptionPane.showInputDialog(Main.parent, tr("TagChecker source"), tr("TagChecker source"), JOptionPane.QUESTION_MESSAGE);
                         if (source != null)
                             ((DefaultListModel)Sources.getModel()).addElement(source);
                     }
                     else
                     {
-                        OptionPaneUtil.showMessageDialog(
+                        JOptionPane.showMessageDialog(
                         		Main.parent, 
                         		tr("Please select the row to edit."),
                         		tr("Information"),
@@ -659,7 +658,7 @@ public class TagChecker extends Test
                     }
                 }
                 else {
-                	String source = (String)OptionPaneUtil.showInputDialog(Main.parent,
+                	String source = (String)JOptionPane.showInputDialog(Main.parent,
                 			tr("TagChecker source"),
                 			tr("TagChecker source"),
                 			JOptionPane.QUESTION_MESSAGE, null, null,
@@ -675,7 +674,7 @@ public class TagChecker extends Test
         deleteSrcButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 if (Sources.getSelectedIndex() == -1)
-                    OptionPaneUtil.showMessageDialog(Main.parent, tr("Please select the row to delete."), tr("Information"), JOptionPane.QUESTION_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.parent, tr("Please select the row to delete."), tr("Information"), JOptionPane.QUESTION_MESSAGE);
                 else {
                     ((DefaultListModel)Sources.getModel()).remove(Sources.getSelectedIndex());
                 }
@@ -799,7 +798,7 @@ public class TagChecker extends Test
         for(OsmPrimitive p : primitives )
         {
             i++;
-            Map<String, String> tags = p.keys;
+            Map<String, String> tags = p.getKeys();
             if( tags == null || tags.size() == 0 )
                 continue;
 
@@ -921,7 +920,7 @@ public class TagChecker extends Test
             }
             public Boolean match(OsmPrimitive osm)
             {
-                for(Entry<String, String> prop: osm.keys.entrySet())
+                for(Entry<String, String> prop: osm.getKeys().entrySet())
                 {
                     String key = prop.getKey();
                     String val = valueBool ? OsmUtils.getNamedOsmBoolean(prop.getValue()) : prop.getValue();
@@ -994,7 +993,7 @@ public class TagChecker extends Test
         }
         public Boolean match(OsmPrimitive osm)
         {
-            if(osm.keys == null || (type == NODE && !(osm instanceof Node))
+            if(osm.getKeys() == null || (type == NODE && !(osm instanceof Node))
             || (type == RELATION && !(osm instanceof Relation)) || (type == WAY && !(osm instanceof Way)))
                 return false;
             for(CheckerElement ce : data)

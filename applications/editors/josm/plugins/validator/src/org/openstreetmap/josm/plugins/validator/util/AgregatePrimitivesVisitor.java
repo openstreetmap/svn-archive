@@ -56,7 +56,7 @@ public class AgregatePrimitivesVisitor extends AbstractVisitor
         if(!aggregatedData.contains(w))
         {
             aggregatedData.add(w);
-            for (Node n : w.nodes)
+            for (Node n : w.getNodes())
                 visit(n);
         }
     }

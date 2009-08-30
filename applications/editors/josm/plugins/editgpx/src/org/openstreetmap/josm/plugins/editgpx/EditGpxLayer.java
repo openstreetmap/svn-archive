@@ -150,7 +150,7 @@ public class EditGpxLayer extends Layer {
                 trk.attr.put("name", w.get("name"));
 
             ArrayList<WayPoint> trkseg = null;
-            for (Node n : w.nodes) {
+            for (Node n : w.getNodes()) {
                 if (n.incomplete || n.deleted) {
                     trkseg = null;
                     continue;
@@ -190,8 +190,8 @@ public class EditGpxLayer extends Layer {
             }
             wpt.setTime();
 
-            if (n.keys != null && n.keys.containsKey("name")) {
-                wpt.attr.put("name", n.keys.get("name"));
+            if (n.getKeys() != null && n.keySet().contains("name")) {
+                wpt.attr.put("name", n.get("name"));
             }
             gpxData.waypoints.add(wpt);
         }

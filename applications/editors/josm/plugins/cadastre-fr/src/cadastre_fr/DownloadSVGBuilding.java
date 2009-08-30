@@ -42,7 +42,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     private EastNorthBound viewBox = null;
 
     public DownloadSVGBuilding(WMSLayer wmsLayer) {
-        super(tr("Downloading {0}", wmsLayer.name));
+        super(tr("Downloading {0}", wmsLayer.getName()));
 
         this.wmsLayer = wmsLayer;
         this.wmsInterface = grabber.getWmsInterface();
@@ -112,9 +112,9 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 Node nearestNewNode = checkNearestNode(nodeToAdd, svgDataSet.nodes);
                 if (nearestNewNode == nodeToAdd)
                     svgDataSet.addPrimitive(nearestNewNode);
-                wayToAdd.nodes.add(nearestNewNode); // either a new node or an existing one
+                wayToAdd.addNode(nearestNewNode); // either a new node or an existing one
             }
-            wayToAdd.nodes.add(wayToAdd.nodes.get(0)); // close the way
+            wayToAdd.addNode(wayToAdd.getNode(0)); // close the way
             svgDataSet.addPrimitive(wayToAdd);
         }
 
@@ -136,12 +136,12 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 // replace the SVG node by the OSM node
                 for (Way w : svgDataSet.ways) {
                     int replaced = 0;
-                    for (Node node : w.nodes)
+                    for (Node node : w.getNodes())
                         if (node == n) {
                             node = nearestNewNode;
                             replaced++;
                         }
-                    if (w.nodes.size() == replaced)
+                    if (w.getNodesCount() == replaced)
                         w.delete(true);
                 }
                 n.delete(true);

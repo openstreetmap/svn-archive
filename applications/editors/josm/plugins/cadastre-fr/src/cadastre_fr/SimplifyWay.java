@@ -1,10 +1,12 @@
 package cadastre_fr;
 
 import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
@@ -17,6 +19,8 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.CollectBackReferencesVisitor;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
+ 
+
 /**
  * Imported from plugin UtilsPlugin
  * @author 
@@ -26,19 +30,19 @@ public class SimplifyWay {
     public void simplifyWay(Way w, DataSet dataSet, double threshold) {
         Way wnew = new Way(w);
 
-        int toI = wnew.nodes.size() - 1;
-        for (int i = wnew.nodes.size() - 1; i >= 0; i--) {
+        int toI = wnew.getNodesCount() - 1;
+        for (int i = wnew.getNodesCount() - 1; i >= 0; i--) {
             CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(dataSet, false);
-            backRefsV.visit(wnew.nodes.get(i));
+            backRefsV.visit(wnew.getNode(i));
             boolean used = false;
             if (backRefsV.data.size() == 1) {
-                used = Collections.frequency(w.nodes, wnew.nodes.get(i)) > 1;
+                used = Collections.frequency(w.getNodes(), wnew.getNode(i)) > 1;
             } else {
                 backRefsV.data.remove(w);
                 used = !backRefsV.data.isEmpty();
             }
             if (!used)
-                used = wnew.nodes.get(i).isTagged();
+                used = wnew.getNode(i).isTagged();
 
             if (used) {
                 simplifyWayRange(wnew, i, toI, threshold);
@@ -48,10 +52,10 @@ public class SimplifyWay {
         simplifyWayRange(wnew, 0, toI, threshold);
 
         HashSet<Node> delNodes = new HashSet<Node>();
-        delNodes.addAll(w.nodes);
-        delNodes.removeAll(wnew.nodes);
+        delNodes.addAll(w.getNodes());
+        delNodes.removeAll(wnew.getNodes());
 
-        if (wnew.nodes.size() != w.nodes.size()) {
+        if (wnew.getNodesCount() != w.getNodesCount()) {
             Collection<Command> cmds = new LinkedList<Command>();
             cmds.add(new ChangeCommand(w, wnew));
             cmds.add(new DeleteCommand(delNodes));
@@ -64,9 +68,11 @@ public class SimplifyWay {
         if (to - from >= 2) {
             ArrayList<Node> ns = new ArrayList<Node>();
             simplifyWayRange(wnew, from, to, ns, thr);
+            List<Node> nodes = wnew.getNodes();
             for (int j = to - 1; j > from; j--)
-                wnew.nodes.remove(j);
-            wnew.nodes.addAll(from + 1, ns);
+                nodes.remove(j);
+            nodes.addAll(from+1, ns);
+            wnew.setNodes(nodes);
         }
     }
     
@@ -75,12 +81,12 @@ public class SimplifyWay {
      * (from and to are indices of wnew.nodes.)
      */
     public void simplifyWayRange(Way wnew, int from, int to, ArrayList<Node> ns, double thr) {
-        Node fromN = wnew.nodes.get(from), toN = wnew.nodes.get(to);
+        Node fromN = wnew.getNode(from), toN = wnew.getNode(to);
 
         int imax = -1;
         double xtemax = 0;
         for (int i = from + 1; i < to; i++) {
-            Node n = wnew.nodes.get(i);
+            Node n = wnew.getNode(i);
             double xte = Math.abs(EARTH_RAD
                     * xtd(fromN.getCoor().lat() * Math.PI / 180, fromN.getCoor().lon() * Math.PI / 180, toN.getCoor().lat() * Math.PI
                             / 180, toN.getCoor().lon() * Math.PI / 180, n.getCoor().lat() * Math.PI / 180, n.getCoor().lon() * Math.PI
@@ -93,7 +99,7 @@ public class SimplifyWay {
 
         if (imax != -1 && xtemax >= thr) {
             simplifyWayRange(wnew, from, imax, ns, thr);
-            ns.add(wnew.nodes.get(imax));
+            ns.add(wnew.getNode(imax));
             simplifyWayRange(wnew, imax, to, ns, thr);
         }
     }

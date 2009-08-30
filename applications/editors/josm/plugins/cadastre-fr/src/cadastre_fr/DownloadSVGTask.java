@@ -116,9 +116,9 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         Collection<Command> cmds = new LinkedList<Command>();
         for (Node node : nodeList) {
             cmds.add(new AddCommand(node));
-            wayToAdd.nodes.add(node);
+            wayToAdd.addNode(node);
         }
-        wayToAdd.nodes.add(wayToAdd.nodes.get(0)); // close the circle
+        wayToAdd.addNode(wayToAdd.getNode(0)); // close the circle
 
         // simplify the way
         double threshold = Double.parseDouble(Main.pref.get("cadastrewms.simplify-way-boundary", "1.0"));

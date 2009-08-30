@@ -1,10 +1,9 @@
 package wmsplugin;
 
-import java.awt.FlowLayout;
-import org.openstreetmap.josm.Main;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,7 +21,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import org.openstreetmap.josm.gui.OptionPaneUtil;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.tools.GBC;
@@ -74,7 +73,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
                 p.add(key, GBC.eop().insets(5,0,0,0).fill(GBC.HORIZONTAL));
                 p.add(new JLabel(tr("WMS URL")), GBC.std().insets(0,0,5,0));
                 p.add(value, GBC.eol().insets(5,0,0,0).fill(GBC.HORIZONTAL));
-                int answer = OptionPaneUtil.showConfirmationDialog(
+                int answer = JOptionPane.showConfirmDialog(
                 		gui, p, 
                 		tr("Enter a menu name and WMS URL"), 
                 		JOptionPane.OK_CANCEL_OPTION,
@@ -106,7 +105,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
             public void actionPerformed(ActionEvent e) {
                 Integer line = listdef.getSelectedRow();
                 if (line == -1)
-                    OptionPaneUtil.showMessageDialog(
+                    JOptionPane.showMessageDialog(
                     		gui, 
                     		tr("Please select the row to copy."),
                     		tr("Information"),

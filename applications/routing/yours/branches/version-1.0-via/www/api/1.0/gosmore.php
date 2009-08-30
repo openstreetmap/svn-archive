@@ -73,7 +73,6 @@ else {
 }
 
 //Fastest/shortest route
-$query .= '&fast=1';
 if (isset($_GET['fast']) && is_numeric($_GET['fast'])) {
 	$query .= '&fast='.$_GET['fast'];
 }
@@ -82,11 +81,17 @@ else if (isset($_GET['short']) && is_numeric($_GET['short'])) {
 		$query .= '&fast=0';
 	}
 }
+else {
+	$query .= '&fast=1';
+}
 
 //Transportation
-$query .= '&v=motorcar';
 if (isset($_GET['v']) && in_array($_GET['v'], $vehicles)) {
 	$query .= '&v='.$_GET['v'];
+}
+else 
+{
+	$query .= '&v=motorcar';
 }
 
 //Map layer

@@ -27,7 +27,7 @@ public final class ImageWayPointLayer extends Layer {
 
         @Override
         public final void mouseClicked(final MouseEvent event) {
-            if (MouseEvent.BUTTON1 == event.getButton() && this.layer.visible) {
+            if (MouseEvent.BUTTON1 == event.getButton() && this.layer.isVisible()) {
                 final ImageEntry[] images = ImageEntries.getInstance()
                     .getImages();
 

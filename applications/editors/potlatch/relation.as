@@ -151,10 +151,11 @@
 		var type = this.getType();
 		if ( !this.isHighlighting ) {
 			if ( relcolours[type] != undefined ) {
-				c = relcolours[type]; // linewidth = relwidths[type];
+				c = relcolours[type];	// linewidth = relwidths[type];
 				linealpha = relalphas[type];
 			}
 		}
+		if (linealpha==0) { return; }	// don't draw relations where alpha=0
 		this.line.lineStyle(linewidth,c,linealpha,false,"none");
 
 		var ms = this.members;
@@ -483,6 +484,7 @@
 			setTextFormat(boldText);
 			selectable=false; type='dynamic';
 		}
+		adjustTextField(box.title);
 		
 		box.createTextField("instr",z++,7,30,300-14,40);
 

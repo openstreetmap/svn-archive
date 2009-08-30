@@ -132,7 +132,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 1.2";	// current version
+	var signature="Potlatch 1.2a";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
@@ -765,7 +765,8 @@
 			case 'X':		_root.ws.splitWay(_root.pointselected); break;		// X - split way
 			case 'Z':		_root.undo.rollback(); break;						// Z - undo
 			case '`':		_root.panel.presets.cycleIcon(); break;				// '`' - cycle presets
-			case '+':		_root.panel.properties.enterNewAttribute(); break;	// '+' - add new attribute (107/187)
+			case '=':		var dummy=1;										// '+' - add new attribute (107/187)
+			case '+':		_root.panel.properties.enterNewAttribute(); break;	//    |
 			case '-':		keyDelete(0); break;								// '-' - delete node from this way only (189)
 			case '/':		cycleStacked(); break;								// '/' - cycle between stacked ways (191)
 			case 'M':		maximiseSWF(); break;								// 'M' - maximise/minimise Potlatch
@@ -926,6 +927,10 @@
 		}
 		return s;
 	}
+	
+	function adjustTextField(obj) {
+		if (obj.textWidth>obj._width) { obj._width=obj.textWidth+5; }
+	}
 
 
 	// =====================================================================
@@ -1077,6 +1082,7 @@
 		
 		box.createTextField('externalt',70, 8,155,160,20);
 		with (box.externalt) { text=iText("External launch:",'option_external'); setTextFormat(plainSmall); selectable=false; }
+		adjustTextField(box.externalt);
 		box.createTextField('externali',71,box.externalt.textWidth+15,155,173-box.externalt.textWidth,17);
 		box.externali.setNewTextFormat(plainSmall); box.externali.type='input';
 		box.externali.text=_root.launcher; box.externali.variable="_root.launcher";
@@ -1085,6 +1091,7 @@
 
 		box.createTextField('photot',72, 8,125,160,20);
 		with (box.photot) { text=iText("Photo KML:",'option_photo'); setTextFormat(plainSmall); selectable=false; }
+		adjustTextField(box.photot);
 		box.createTextField('photoi',73,box.photot.textWidth+15,125,173-box.photot.textWidth,17);
 		box.photoi.setNewTextFormat(plainSmall); box.photoi.type='input';
 		box.photoi.text=_root.photokml; box.photoi.variable="_root.photokml";
@@ -1173,12 +1180,18 @@
 		}
 		_root.waysloading.createTextField('prompt',2,0,0,195,20);
 		with (_root.waysloading.prompt) { text=t; setTextFormat(plainRight); selectable=false; }
+		if (_root.waysloading.prompt.textWidth>_root.waysloading.prompt._width) {
+			var d=_root.waysloading.prompt.textWidth-_root.waysloading.prompt._width;
+			_root.waysloading.prompt._width+=d;
+			_root.waysloading.prompt._x-=d;
+		}
 		_root.waysloading.createEmptyMovieClip('bg',1);
 		with (_root.waysloading.bg) {
+			var d=_root.waysloading.prompt._width+20;
 			beginFill(0xFFFFFF,75);
-			moveTo(215,0); lineTo(210-_root.waysloading.prompt.textWidth-22,0);
-			lineTo(210-_root.waysloading.prompt.textWidth-22,_root.waysloading.prompt.textHeight+5);
-			lineTo(215,_root.waysloading.prompt.textHeight+5); lineTo(215,0);
+			moveTo(d,0); lineTo(d-_root.waysloading.prompt.textWidth-27,0);
+			lineTo(d-_root.waysloading.prompt.textWidth-27,_root.waysloading.prompt.textHeight+5);
+			lineTo(d,_root.waysloading.prompt.textHeight+5); lineTo(d,0);
 			endFill();
 		}
 		_root.waysloading._visible=true;

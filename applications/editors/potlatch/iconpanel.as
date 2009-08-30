@@ -12,6 +12,7 @@
 		_root.panel.iconpanel.createTextField("prompt",3,5,-20,300,20);
 		_root.panel.iconpanel.prompt.text=iText("Drag and drop points of interest","drag_pois");
 		_root.panel.iconpanel.prompt.setTextFormat(plainText);
+		adjustTextField(_root.panel.iconpanel.prompt);
 		with (_root.panel.iconpanel) { _x=110; _y=25; _visible=true; };
 		var x=0; var y=0; var n=0;
 		for (var i in iconlist) {

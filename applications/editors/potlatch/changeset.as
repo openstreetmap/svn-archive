@@ -43,10 +43,12 @@
 		box.createTextField("title",z++,7,7,280,20);
 		box.title.text = prompt;
 		with (box.title) { wordWrap=true; setTextFormat(boldText); selectable=false; type='dynamic'; }
+		box.title.adjustTextField();
 
 		box.createTextField("prompt",z++,7,27,280,20);
 		box.prompt.text = iText("Enter a description of your changes:",'prompt_changesetcomment');
 		with (box.prompt) { wordWrap=true; setTextFormat(plainSmall); selectable=false; type='dynamic'; }
+		box.prompt.adjustTextField();
 		
 		box.createTextField("cscomment",z++,10,50,280,50);
 		with (box.cscomment) {

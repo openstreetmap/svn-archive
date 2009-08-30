@@ -22,6 +22,7 @@
 		_root.windows.history.init(275,90,new Array(iText('More','more'),iText('Cancel','cancel')),handleHistoryChoice);
 		_root.windows.history.box.createTextField("prompt",2,7,9,250,100);
 		writeText(_root.windows.history.box.prompt,iText("Revert to an earlier saved version:",'prompt_revertversion'));
+		adjustTextField(_root.windows.history.box.prompt);
 
 		_root.windows.history.box.createEmptyMovieClip('revert' ,21);
 		_root.windows.history.box.createEmptyMovieClip('contact',22);

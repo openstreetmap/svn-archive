@@ -53,8 +53,8 @@ public final class CreateGridOfWaysAction extends JosmAction {
             JOptionPane.showMessageDialog(Main.parent, tr("Select two ways with a node in common"));
             return;
         }
-        nodesWay1.addAll(((Way)sel.toArray()[0]).nodes);
-        nodesWay2.addAll(((Way)sel.toArray()[1]).nodes);
+        nodesWay1.addAll(((Way)sel.toArray()[0]).getNodes());
+        nodesWay2.addAll(((Way)sel.toArray()[1]).getNodes());
         Node nodeCommon = null;
         for (Node n : nodesWay1)
             for (Node m : nodesWay2)
@@ -82,17 +82,17 @@ public final class CreateGridOfWaysAction extends JosmAction {
                 if (n1.equals(nodeCommon) && n2.equals(nodeCommon))
                     continue;
                 if (n2.equals(nodeCommon)) {
-                    w1[c1].nodes.add(n1);
+                    w1[c1].addNode(n1);
                     continue;
                 }
                 if (n1.equals(nodeCommon)) {
-                    w2[c2++].nodes.add(n2);
+                    w2[c2++].addNode(n2);
                     continue;
                 }
                 Node nodeOfGrid = new Node(new LatLon(n2.getCoor().lat()+latDif,n2.getCoor().lon()+lonDif));
                 cmds.add(new AddCommand(nodeOfGrid));
-                w1[c1].nodes.add(nodeOfGrid);
-                w2[c2++].nodes.add(nodeOfGrid);
+                w1[c1].addNode(nodeOfGrid);
+                w2[c2++].addNode(nodeOfGrid);
             }
             if (!n1.equals(nodeCommon))
                c1++;

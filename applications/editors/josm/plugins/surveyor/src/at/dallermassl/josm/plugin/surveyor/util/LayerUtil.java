@@ -24,7 +24,7 @@ public class LayerUtil {
         Layer result = null;
         if(Main.map != null && Main.map.mapView != null) {
             for(Layer layer : Main.map.mapView.getAllLayers()) {
-                if(layerName.equals(layer.name) && layerType.isAssignableFrom(layer.getClass())) {
+                if(layerName.equals(layer.getName()) && layerType.isAssignableFrom(layer.getClass())) {
                     result = layer;
                     break;
                 }

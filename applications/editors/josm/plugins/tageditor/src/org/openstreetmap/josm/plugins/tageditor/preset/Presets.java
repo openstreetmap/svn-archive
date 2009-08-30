@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.plugins.tageditor.preset.io.Parser;
 import org.openstreetmap.josm.plugins.tageditor.preset.io.PresetIOException;
@@ -65,7 +64,7 @@ public class Presets {
                
             } catch(PresetIOException e) {
             	logger.log(Level.SEVERE, tr("Could not read tagging preset source: {0}", source),e);
-            	OptionPaneUtil.showMessageDialog(
+            	JOptionPane.showMessageDialog(
             			Main.parent, tr("Could not read tagging preset source: {0}",source),
             			tr("Error"),
             			JOptionPane.ERROR_MESSAGE);	

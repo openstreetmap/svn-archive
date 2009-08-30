@@ -45,7 +45,7 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation> {
 	}
 
 	public Iterable<Node> getNodes(Way way) {
-		return new FilteredOsmPrimitiveIterable<Node>(way.nodes);
+		return new FilteredOsmPrimitiveIterable<Node>(way.getNodes());
 	}
 
 	public Iterable<Node> getNodes() {
@@ -73,10 +73,10 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation> {
 	}
 
 	private TagGroup getTags(OsmPrimitive primitive) {
-		if (primitive.keys == null) {
+		if (primitive.getKeys() == null) {
 			return EMPTY_TAG_GROUP;
 		} else {
-			return new MapBasedTagGroup(primitive.keys);
+			return new MapBasedTagGroup(primitive.getKeys());
 		}
 	}
 

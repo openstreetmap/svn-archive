@@ -147,7 +147,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                         if (sel.equals(wrapper.file)) {
                             cbGpx.setSelectedIndex(i);
                             if (!sel.getName().equals(wrapper.name)) {
-                                OptionPaneUtil.showMessageDialog(
+                                JOptionPane.showMessageDialog(
                                 		Main.parent,
                                         tr("File {0} is loaded yet under the name \"{1}\"", sel.getName(), wrapper.name),
                                         tr("Error"),
@@ -171,7 +171,7 @@ public class CorrelateGpxWithImages implements ActionListener {
 
                 } catch (SAXException x) {
                     x.printStackTrace();
-                    OptionPaneUtil.showMessageDialog(
+                    JOptionPane.showMessageDialog(
                     		Main.parent, 
                     		tr("Error while parsing {0}",sel.getName())+": "+x.getMessage(),
                     		tr("Error"),
@@ -180,7 +180,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                     return;
                 } catch (IOException x) {
                     x.printStackTrace();
-                    OptionPaneUtil.showMessageDialog(
+                    JOptionPane.showMessageDialog(
                     		Main.parent, 
                     		tr("Could not read \"{0}\"",sel.getName())+"\n"+x.getMessage(),
                     		tr("Error"),
@@ -385,7 +385,7 @@ public class CorrelateGpxWithImages implements ActionListener {
 
             boolean isOk = false;
             while (! isOk) {
-                int answer = OptionPaneUtil.showConfirmationDialog(
+                int answer = JOptionPane.showConfirmDialog(
                 		Main.parent, panel, 
                 		tr("Synchronize time from a photo of the GPS receiver"), 
                 		JOptionPane.OK_CANCEL_OPTION,
@@ -401,7 +401,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                     delta = dateFormat.parse(lbExifTime.getText()).getTime()
                             - dateFormat.parse(tfGpsTime.getText()).getTime();
                 } catch(ParseException e) {
-                    OptionPaneUtil.showMessageDialog(Main.parent, tr("Error while parsing the date.\n"
+                    JOptionPane.showMessageDialog(Main.parent, tr("Error while parsing the date.\n"
                             + "Please use the requested format"),
                             tr("Invalid date"), JOptionPane.ERROR_MESSAGE );
                     continue;
@@ -585,7 +585,7 @@ public class CorrelateGpxWithImages implements ActionListener {
             Object item = cbGpx.getSelectedItem();
 
             if (item == null || ! (item instanceof GpxDataWrapper)) {
-                OptionPaneUtil.showMessageDialog(Main.parent, tr("You should select a GPX track"),
+                JOptionPane.showMessageDialog(Main.parent, tr("You should select a GPX track"),
                                               tr("No selected GPX track"), JOptionPane.ERROR_MESSAGE );
                 continue;
             }
@@ -598,7 +598,7 @@ public class CorrelateGpxWithImages implements ActionListener {
 
             Float timezoneValue = parseTimezone(tfTimezone.getText().trim());
             if (timezoneValue == null) {
-                OptionPaneUtil.showMessageDialog(Main.parent, tr("Error while parsing timezone.\nExpected format: {0}", "+H:MM"),
+                JOptionPane.showMessageDialog(Main.parent, tr("Error while parsing timezone.\nExpected format: {0}", "+H:MM"),
                         tr("Invalid timezone"), JOptionPane.ERROR_MESSAGE);
                 continue;
             }
@@ -611,7 +611,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                         deltaText = deltaText.substring(1);
                     delta = Long.parseLong(deltaText);
                 } catch(NumberFormatException nfe) {
-                    OptionPaneUtil.showMessageDialog(Main.parent, tr("Error while parsing offset.\nExpected format: {0}", "number"),
+                    JOptionPane.showMessageDialog(Main.parent, tr("Error while parsing offset.\nExpected format: {0}", "number"),
                             tr("Invalid offset"), JOptionPane.ERROR_MESSAGE);
                     continue;
                 }
@@ -690,15 +690,14 @@ public class CorrelateGpxWithImages implements ActionListener {
 
         // no images found, exit
         if(autoImgs.size() <= 0) {
-            OptionPaneUtil.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(Main.parent,
                 tr("The selected photos don't contain time information."),
                 tr("Photos don't contain time information"), JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         AgpifojDialog dialog = AgpifojDialog.getInstance();
-        dialog.action.button.setSelected(true);
-        dialog.action.actionPerformed(null);
+        dialog.showDialog();
         // Will show first photo if none is selected yet
         if(!dialog.hasImage())
             yLayer.showNextPhoto();
@@ -726,7 +725,7 @@ public class CorrelateGpxWithImages implements ActionListener {
 
         // No GPX timestamps found, exit
         if(firstGPXDate < 0) {
-            OptionPaneUtil.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(Main.parent,
                 tr("The selected GPX track doesn't contain timestamps. Please select another one."),
                 tr("GPX Track has no time information"), JOptionPane.WARNING_MESSAGE);
             return;
@@ -863,7 +862,7 @@ public class CorrelateGpxWithImages implements ActionListener {
             sldMinutes.setValue(offset/60);
             sldSeconds.setValue(offset%60);
         } catch(Exception e) {
-            OptionPaneUtil.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(Main.parent,
                 tr("An error occurred while trying to match the photos to the GPX track."
                     +" You can adjust the sliders to manually match the photos."),
                 tr("Matching photos to track failed"),

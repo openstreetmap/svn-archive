@@ -119,7 +119,7 @@ class GPXLayerImportAction extends AbstractAction {
                             if(timestr != null)
                                 n.setTimestamp(DateUtils.fromString(timestr));
                             dataSet.nodes.add(n);
-                            w.nodes.add(n); //TODO what to do with these while deletion
+                            w.addNode(n); //TODO what to do with these while deletion
                         }
                         dataSet.ways.add(w);
                     }

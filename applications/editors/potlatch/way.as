@@ -373,6 +373,21 @@
 		} else {
 			// Tidy in line
 			if (this.path.length<3) { return; }
+
+			// First, calculate divergence to make sure we're not straightening a really bendy way
+			var d=0; var t,x1,y1;
+			var thislat=coord2lat(_root.map._y); var latfactor=Math.cos(thislat/(180/Math.PI));
+			for (var i=1; i<this.path.length-1; i++) {
+				u=((this.path[i].x-a.x)*(b.x-a.x)+
+				   (this.path[i].y-a.y)*(b.y-a.y))/
+				   (Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2));
+				x1=a.x+u*(b.x-a.x);
+				y1=a.y+u*(b.y-a.y);
+				t=Math.sqrt(Math.pow(x1-this.path[i].x,2)+Math.pow(y1-this.path[i].y,2));
+				t=Math.floor((111200*latfactor)*t/masterscale);
+				if (t>d) { d=t; }
+			}
+			if (d>50 && !Key.isDown(Key.SHIFT)) { setAdvice(false,iText("Too bendy to straighten (SHIFT to force)",'advice_bendy')); return; }
 			this.saveChangeUndo();
 
 			var el=long2coord(_root.bigedge_l);		// We don't want to delete any off-screen nodes
@@ -580,6 +595,7 @@
 					this.path[i].uploading=true;
 				}
 			}
+			delete this.attr['created_by'];
 			_root.writesrequested++;
 			remote_write.call('putway',putresponder,_root.usertoken,_root.changeset,this.version,Number(this._name),sendpath,this.attr,sendnodes,this.deletednodes);
 			updateInspector();
@@ -1130,6 +1146,7 @@
 			setTextFormat(boldText);
 			selectable=false; type='dynamic';
 		}
+		adjustTextField(box.title);
 		
 		box.createTextField("instr",z++,7,30,300-14,40);
 

@@ -32,7 +32,7 @@
 		for (var id in _root.map.ways) {
 			if (!_root.map.ways[id].clean && !_root.map.ways[id].locked) {
 				way[id]=true; todo++;
-				if (todo==5) { uploadtasks.push([uploadWays,way]); way=new Object(); todo=0; }
+				if (todo==5 || _root.map.ways[id].path.length>200) { uploadtasks.push([uploadWays,way]); way=new Object(); todo=0; }
 			}
 		}
 		if (todo>0) { uploadtasks.push([uploadWays,way]); }
@@ -42,7 +42,7 @@
 		for (var id in _root.map.relations) {
 			if (!_root.map.relations[id].clean && !_root.map.relations[id].locked) {
 				rel[id]=true; todo++;
-				if (todo==5) { uploadtasks.push([uploadRelations,rel]); rel=new Object(); todo=0; }
+				if (todo==5 || _root.map.relations[id].members.length>200) { uploadtasks.push([uploadRelations,rel]); rel=new Object(); todo=0; }
 			}
 		}
 		if (todo>0) { uploadtasks.push([uploadRelations,rel]); }
@@ -82,6 +82,7 @@
 		box.createTextField("title",10,7,7,280,20);
 		box.title.text = iText("Uploading...","uploading");
 		with (box.title) { setTextFormat(boldText); selectable=false; type='dynamic'; }
+		adjustTextField(box.title);
 
         box.createTextField("progress",11,10,40,280,170);
         with (box.progress) {
@@ -90,7 +91,7 @@
             type='dynamic'; wordWrap=true; multiline=true;
             setNewTextFormat(plainSmall); text='';
         }
-        box.progress.onChanged=function() { _root.windows.upload.box.progress.scroll=_root.windows.upload.box.progress.maxscroll; };
+        box.progress.onScroller=function() { _root.windows.upload.box.progress.scroll=_root.windows.upload.box.progress.maxscroll; };
 
 	    operationDone('first');
     }

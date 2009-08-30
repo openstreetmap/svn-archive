@@ -39,6 +39,7 @@
 	function centrelat(o)  { return  coord2lat((yradius-_root.map._y-o)/Math.pow(2,_root.scale-13)); }
 	function centrelong(o) { return coord2long((xradius-_root.map._x-o)/Math.pow(2,_root.scale-13)); }
 
+
 	// resizeWindow - user has enlarged/shrunk window
 
 	function resizeWindow() {

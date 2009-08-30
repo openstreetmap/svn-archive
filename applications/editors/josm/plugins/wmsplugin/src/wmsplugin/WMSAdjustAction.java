@@ -24,7 +24,6 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -186,7 +185,7 @@ public class WMSAdjustAction extends MapMode implements
     * 
     */
    protected void warnNoWMSLayers() {
-       OptionPaneUtil.showMessageDialog(
+       JOptionPane.showMessageDialog(
     		   Main.parent,
                tr("There are currently no WMS layer to adjust."),
                tr("No layers to adjust"), 

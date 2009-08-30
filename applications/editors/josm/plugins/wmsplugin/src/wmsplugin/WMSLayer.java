@@ -31,7 +31,6 @@ import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.OptionPaneUtil;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -163,7 +162,7 @@ public class WMSLayer extends Layer {
 		int bmaxy= (int)Math.ceil  ((bounds.max.north() * pixelPerDegree ) / ImageSize );
 
 		if((bmaxx - bminx > dax) || (bmaxy - bminy > day)){
-			OptionPaneUtil.showMessageDialog(
+			JOptionPane.showMessageDialog(
 					Main.parent,
 					tr("The requested area is too big. Please zoom in a little, or change resolution"),
 					tr("Error"),
@@ -339,7 +338,7 @@ public class WMSLayer extends Layer {
 				ObjectInputStream ois = new ObjectInputStream(fis);
 				int sfv = ois.readInt();
 				if (sfv != serializeFormatVersion) {
-					OptionPaneUtil.showMessageDialog(Main.parent,
+					JOptionPane.showMessageDialog(Main.parent,
 							tr("Unsupported WMS file version; found {0}, expected {1}", sfv, serializeFormatVersion),
 							tr("File Format Error"),
 							JOptionPane.ERROR_MESSAGE);
@@ -360,7 +359,7 @@ public class WMSLayer extends Layer {
 			catch (Exception ex) {
 				// FIXME be more specific
 				ex.printStackTrace(System.out);
-				OptionPaneUtil.showMessageDialog(Main.parent,
+				JOptionPane.showMessageDialog(Main.parent,
 						tr("Error loading file"),
 						tr("Error"),
 						JOptionPane.ERROR_MESSAGE);

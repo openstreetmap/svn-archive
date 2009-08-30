@@ -62,7 +62,7 @@ public class OsmarenderPlugin extends Plugin {
             }
             for (OsmPrimitive p : new HashSet<OsmPrimitive>(backRefsV.data)) {
                 if (p instanceof Way) {
-                    for (Node n : ((Way) p).nodes) {
+                    for (Node n : ((Way) p).getNodes()) {
                         if (n.getCoor().isWithin(b))
                             backRefsV.data.add(n);
                     }

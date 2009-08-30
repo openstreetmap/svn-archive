@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -51,7 +52,7 @@ public class SimplifyWayAction extends JosmAction {
                     // We check if each node of each way is at least in one download
                     // bounding box. Otherwise nodes may get deleted that are necessary by
                     // unloaded ways (see Ticket #1594)
-                    for (Node node : way.nodes) {
+                    for (Node node : way.getNodes()) {
                         boolean isInsideOneBoundingBox = false;
                         for (Bounds b : bounds) {
                             if (b.contains(node.getCoor())) {
@@ -104,19 +105,19 @@ public class SimplifyWayAction extends JosmAction {
 
         Way wnew = new Way(w);
 
-        int toI = wnew.nodes.size() - 1;
-        for (int i = wnew.nodes.size() - 1; i >= 0; i--) {
+        int toI = wnew.getNodesCount() - 1;
+        for (int i = wnew.getNodesCount() - 1; i >= 0; i--) {
             CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(Main.main.getCurrentDataSet(), false);
-            backRefsV.visit(wnew.nodes.get(i));
+            backRefsV.visit(wnew.getNode(i));
             boolean used = false;
             if (backRefsV.data.size() == 1) {
-                used = Collections.frequency(w.nodes, wnew.nodes.get(i)) > 1;
+                used = Collections.frequency(w.getNodes(), wnew.getNode(i)) > 1;
             } else {
                 backRefsV.data.remove(w);
                 used = !backRefsV.data.isEmpty();
             }
             if (!used)
-                used = wnew.nodes.get(i).isTagged();
+                used = wnew.getNode(i).isTagged();
 
             if (used) {
                 simplifyWayRange(wnew, i, toI, threshold);
@@ -126,10 +127,10 @@ public class SimplifyWayAction extends JosmAction {
         simplifyWayRange(wnew, 0, toI, threshold);
 
         HashSet<Node> delNodes = new HashSet<Node>();
-        delNodes.addAll(w.nodes);
-        delNodes.removeAll(wnew.nodes);
+        delNodes.addAll(w.getNodes());
+        delNodes.removeAll(wnew.getNodes());
 
-        if (wnew.nodes.size() != w.nodes.size()) {
+        if (wnew.getNodesCount() != w.getNodesCount()) {
             Collection<Command> cmds = new LinkedList<Command>();
             cmds.add(new ChangeCommand(w, wnew));
             cmds.add(new DeleteCommand(delNodes));
@@ -142,9 +143,12 @@ public class SimplifyWayAction extends JosmAction {
         if (to - from >= 2) {
             ArrayList<Node> ns = new ArrayList<Node>();
             simplifyWayRange(wnew, from, to, ns, thr);
-            for (int j = to - 1; j > from; j--)
-                wnew.nodes.remove(j);
-            wnew.nodes.addAll(from + 1, ns);
+            List<Node> nodes = wnew.getNodes();
+            for (int j = to - 1; j > from; j--) {            	
+            	nodes.remove(j);            	
+            }            
+            nodes.addAll(from + 1, ns);
+            wnew.setNodes(nodes);
         }
     }
 
@@ -153,12 +157,12 @@ public class SimplifyWayAction extends JosmAction {
      * (from and to are indices of wnew.nodes.)
      */
     public void simplifyWayRange(Way wnew, int from, int to, ArrayList<Node> ns, double thr) {
-        Node fromN = wnew.nodes.get(from), toN = wnew.nodes.get(to);
+        Node fromN = wnew.getNode(from), toN = wnew.getNode(to);
 
         int imax = -1;
         double xtemax = 0;
         for (int i = from + 1; i < to; i++) {
-            Node n = wnew.nodes.get(i);
+            Node n = wnew.getNode(i);
             double xte = Math.abs(EARTH_RAD
                     * xtd(fromN.getCoor().lat() * Math.PI / 180, fromN.getCoor().lon() * Math.PI / 180, toN.getCoor().lat() * Math.PI
                             / 180, toN.getCoor().lon() * Math.PI / 180, n.getCoor().lat() * Math.PI / 180, n.getCoor().lon() * Math.PI
@@ -171,7 +175,7 @@ public class SimplifyWayAction extends JosmAction {
 
         if (imax != -1 && xtemax >= thr) {
             simplifyWayRange(wnew, from, imax, ns, thr);
-            ns.add(wnew.nodes.get(imax));
+            ns.add(wnew.getNode(imax));
             simplifyWayRange(wnew, imax, to, ns, thr);
         }
     }

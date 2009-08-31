@@ -23,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.gui.IconToggleButton;
@@ -33,6 +34,9 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.plugins.Plugin;
+
+import wmsplugin.io.WMSLayerExporter;
+import wmsplugin.io.WMSLayerImporter;
 
 public class WMSPlugin extends Plugin {
     static CacheFiles cache = new CacheFiles("wmsplugin");
@@ -45,11 +49,17 @@ public class WMSPlugin extends Plugin {
 
     // remember state of menu item to restore on changed preferences
     static private boolean menuEnabled = false;
+    
+    protected void initExporterAndImporter() {
+    	ExtensionFileFilter.exporters.add(new WMSLayerExporter());
+    	ExtensionFileFilter.importers.add(new WMSLayerImporter());
+    }
 
     public WMSPlugin() {
         refreshMenu();
         cache.setExpire(CacheFiles.EXPIRE_MONTHLY, false);
         cache.setMaxSize(70, false);
+        initExporterAndImporter();
     }
 
     // this parses the preferences settings. preferences for the wms plugin have to

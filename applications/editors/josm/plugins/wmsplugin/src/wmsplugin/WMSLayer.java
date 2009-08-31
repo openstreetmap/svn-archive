@@ -1,6 +1,5 @@
 package wmsplugin;
 
-import org.openstreetmap.josm.io.CacheFiles;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
@@ -34,6 +33,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -60,7 +60,7 @@ public class WMSLayer extends Layer {
 	protected JCheckBoxMenuItem alphaChannel = new JCheckBoxMenuItem(new ToggleAlphaAction());
 	protected String baseURL;
 	protected String cookies;
-	protected final int serializeFormatVersion = 4;
+	protected final int serializeFormatVersion = 5;
 
 	private ExecutorService executor = null;
 
@@ -211,9 +211,9 @@ public class WMSLayer extends Layer {
 				new JSeparator(),
 				startstop,
 				alphaChannel,
-				new JMenuItem(new changeResolutionAction()),
-				new JMenuItem(new reloadErrorTilesAction()),
-				new JMenuItem(new downloadAction()),
+				new JMenuItem(new ChangeResolutionAction()),
+				new JMenuItem(new ReloadErrorTilesAction()),
+				new JMenuItem(new DownloadAction()),
 				new JSeparator(),
 				new JMenuItem(new LayerListPopup.InfoAction(this))
 		};
@@ -229,8 +229,8 @@ public class WMSLayer extends Layer {
 		return null;
 	}
 
-	public class downloadAction extends AbstractAction {
-		public downloadAction() {
+	public class DownloadAction extends AbstractAction {
+		public DownloadAction() {
 			super(tr("Download visible tiles"));
 		}
 		public void actionPerformed(ActionEvent ev) {
@@ -238,8 +238,8 @@ public class WMSLayer extends Layer {
 		}
 	}
 
-	public class changeResolutionAction extends AbstractAction {
-		public changeResolutionAction() {
+	public class ChangeResolutionAction extends AbstractAction {
+		public ChangeResolutionAction() {
 			super(tr("Change resolution"));
 		}
 		public void actionPerformed(ActionEvent ev) {
@@ -250,8 +250,8 @@ public class WMSLayer extends Layer {
 		}
 	}
 
-	public class reloadErrorTilesAction extends AbstractAction {
-		public reloadErrorTilesAction() {
+	public class ReloadErrorTilesAction extends AbstractAction {
+		public ReloadErrorTilesAction() {
 			super(tr("Reload erroneous tiles"));
 		}
 		public void actionPerformed(ActionEvent ev) {
@@ -293,7 +293,7 @@ public class WMSLayer extends Layer {
 			mv.repaint();
 		}
 	}
-
+	
 	public class SaveWmsAction extends AbstractAction {
 		public SaveWmsAction() {
 			super(tr("Save WMS layer to file"), ImageProvider.get("save"));
@@ -301,22 +301,22 @@ public class WMSLayer extends Layer {
 		public void actionPerformed(ActionEvent ev) {
 			File f = SaveActionBase.createAndOpenSaveFileChooser(
 					tr("Save WMS layer"), ".wms");
-			try
-			{
-				FileOutputStream fos = new FileOutputStream(f);
-				ObjectOutputStream oos = new ObjectOutputStream(fos);
-				oos.writeInt(serializeFormatVersion);
-				oos.writeInt(dax);
-				oos.writeInt(day);
-				oos.writeInt(ImageSize);
-				oos.writeDouble(pixelPerDegree);
-				oos.writeObject(getName());
-				oos.writeObject(baseURL);
-				oos.writeObject(images);
-				oos.close();
-				fos.close();
-			}
-			catch (Exception ex) {
+			try {
+				if (f != null) {
+					ObjectOutputStream oos = new ObjectOutputStream(
+							new FileOutputStream(f)
+					);
+					oos.writeInt(serializeFormatVersion);
+					oos.writeInt(dax);
+					oos.writeInt(day);
+					oos.writeInt(ImageSize);
+					oos.writeDouble(pixelPerDegree);
+					oos.writeObject(getName());
+					oos.writeObject(baseURL);
+					oos.writeObject(images);
+					oos.close();
+				}
+			} catch (Exception ex) {
 				ex.printStackTrace(System.out);
 			}
 		}
@@ -328,7 +328,7 @@ public class WMSLayer extends Layer {
 		}
 		public void actionPerformed(ActionEvent ev) {
 			JFileChooser fc = DiskAccessAction.createAndOpenFileChooser(true,
-					false, tr("Load WMS layer"));
+					false, tr("Load WMS layer"), "wms");
 			if(fc == null) return;
 			File f = fc.getSelectedFile();
 			if (f == null) return;

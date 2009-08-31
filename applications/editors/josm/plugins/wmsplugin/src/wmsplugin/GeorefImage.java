@@ -143,16 +143,25 @@ public class GeorefImage implements Serializable {
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         max = (EastNorth) in.readObject();
         min = (EastNorth) in.readObject();
-        image = (BufferedImage) ImageIO.read(ImageIO.createImageInputStream(in));
+        boolean hasImage = in.readBoolean();
+        if (hasImage)
+        	image = (BufferedImage) ImageIO.read(ImageIO.createImageInputStream(in));
+        else {
+        	in.readObject(); // read null from input stream
+        	image = null;
+        }
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeObject(max);
         out.writeObject(min);
-        if(image == null)
+        if(image == null) {
+        	out.writeBoolean(false);
             out.writeObject(null);
-        else
+        } else {
+        	out.writeBoolean(true);
             ImageIO.write(image, "png", ImageIO.createImageOutputStream(out));
+        }
     }
 
     private Image clearAlpha(Image img) {

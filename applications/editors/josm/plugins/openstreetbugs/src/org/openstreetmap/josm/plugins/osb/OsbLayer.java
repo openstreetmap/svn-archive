@@ -30,6 +30,7 @@ package org.openstreetmap.josm.plugins.osb;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -67,6 +68,9 @@ public class OsbLayer extends Layer implements MouseListener {
     private Collection<? extends OsmPrimitive> selection;
 
     private JToolTip tooltip = new JToolTip();
+    
+    private static ImageIcon iconError = OsbPlugin.loadIcon("icon_error16.png");
+    private static ImageIcon iconValid = OsbPlugin.loadIcon("icon_valid16.png");
 
     public OsbLayer(DataSet dataSet, String name) {
         super(name);
@@ -116,20 +120,17 @@ public class OsbLayer extends Layer implements MouseListener {
     @Override
     public void paint(Graphics g, MapView mv) {
         Object[] nodes = data.nodes.toArray();
+        // This loop renders all the bug icons
         for (int i = 0; i < nodes.length; i++) {
             Node node = (Node) nodes[i];
 
             // don't paint deleted nodes
-            if(node.deleted) {
+            if(node.deleted)
                 continue;
-            }
 
             Point p = mv.getPoint(node);
 
-            ImageIcon icon = OsbPlugin.loadIcon("icon_error16.png");
-            if("1".equals(node.get("state"))) {
-                icon = OsbPlugin.loadIcon("icon_valid16.png");
-            }
+            ImageIcon icon = ("1".equals(node.get("state"))) ? iconValid : iconError;
             int width = icon.getIconWidth();
             int height = icon.getIconHeight();
 
@@ -138,44 +139,61 @@ public class OsbLayer extends Layer implements MouseListener {
                     return false;
                 }
             });
+        }
+        
+        if(selection == null)
+            return;
+        
+        // This loop renders the selection border and tooltips so they get drawn
+        // on top of the bug icons
+        for (int i = 0; i < nodes.length; i++) {
+            Node node = (Node) nodes[i];
+            
+            if(node.deleted || !selection.contains(node))
+                continue;
+            
+            // draw selection border
+            Point p = mv.getPoint(node);
+            
+            ImageIcon icon = ("1".equals(node.get("state"))) ? iconValid : iconError;
+            int width = icon.getIconWidth();
+            int height = icon.getIconHeight();
+            
+            g.setColor(ColorHelper.html2color(Main.pref.get("color.selected")));
+            g.drawRect(p.x - (width / 2), p.y - (height / 2), 16, 16);
+            
+            // draw description
+            String desc = node.get("note");
+            if(desc == null)
+                continue;
 
+            // format with html
+            StringBuilder sb = new StringBuilder("<html>");
+            sb.append(desc.replaceAll("<hr />", "<hr>"));
+            sb.append("</html>");
+            desc = sb.toString();
 
-            if(selection != null && selection.contains(node)) {
-                // draw description
-                String desc = node.get("note");
-                if(desc != null) {
-                    // format with html
-                    StringBuilder sb = new StringBuilder("<html>");
-                    //sb.append(desc.replaceAll("\\|", "<br>"));
-                    sb.append(desc.replaceAll("<hr />", "<hr>"));
-                    sb.append("</html>");
-                    desc = sb.toString();
-
-                    // determine tooltip dimensions
-                    int tooltipWidth = 0;
-                    Rectangle2D fontBounds = null;
-                    String[] lines = desc.split("<hr>");
-                    for (int j = 0; j < lines.length; j++) {
-                        String line = lines[j];
-                        fontBounds = g.getFontMetrics().getStringBounds(line, g);
-                        tooltipWidth = Math.max(tooltipWidth, (int)fontBounds.getWidth());
-                    }
-
-                    // draw description as a tooltip
-                    tooltip.setTipText(desc);
-                    tooltip.setSize(tooltip.getUI().getPreferredSize(tooltip));
-                    
-                    int tx = p.x + (width / 2) + 5;
-                    int ty = (int)(p.y - height / 2) -1;
-                    g.translate(tx, ty);
-                    tooltip.paint(g);
-                    g.translate(-tx, -ty);
-                }
-
-                // draw selection border
-                g.setColor(ColorHelper.html2color(Main.pref.get("color.selected")));
-                g.drawRect(p.x - (width / 2), p.y - (height / 2), 16, 16);
+            // draw description as a tooltip
+            tooltip.setTipText(desc);
+            
+            int tx = p.x + (width / 2) + 5;
+            int ty = (int)(p.y - height / 2) -1;
+            g.translate(tx, ty);
+            
+            // This limits the width of the tooltip to 2/3 of the drawing
+            // area, which makes longer tooltips actually readable (they
+            // would disappear if scrolled too much to the right)
+            
+            // Need to do this twice as otherwise getPreferredSize doesn't take
+            // the reduced width into account
+            for(int x = 0; x < 2; x++) {
+                Dimension d = tooltip.getUI().getPreferredSize(tooltip);                
+                d.width = Math.min(d.width, (int)(mv.getWidth()*2/3));
+                tooltip.setSize(d);
+                tooltip.paint(g);
             }
+            
+            g.translate(-tx, -ty);
         }
     }
 

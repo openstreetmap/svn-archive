@@ -36,7 +36,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.util.Collection;
 

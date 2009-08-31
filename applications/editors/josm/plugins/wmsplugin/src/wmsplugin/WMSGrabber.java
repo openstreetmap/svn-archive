@@ -66,6 +66,7 @@ public class WMSGrabber extends Grabber {
             }
             image.downloadingStarted = false;
         } catch(Exception e) {
+        	e.printStackTrace();
             throw new Exception(e.getMessage() + "\nImage couldn't be fetched: " + (url != null ? url.toString() : ""));
         }
     }

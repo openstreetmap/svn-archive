@@ -135,7 +135,7 @@ public class JumpToAction extends JosmAction implements MouseListener {
                 break;
             }
 
-            // 10000000 = 10 000 * 1000 = World * (km -> m)
+            // 10 000 000 = 10 000 * 1000 = World * (km -> m)
             zm.setText(Double.toString(Math.round(10000000 * Math.pow(2, (-1) * zoomLvl))));
         }
     }
@@ -145,8 +145,14 @@ public class JumpToAction extends JosmAction implements MouseListener {
         try {
             double dlat = Double.parseDouble(lat.getText());
             double dlon = Double.parseDouble(lon.getText());
-            int zoomLvl = getZoom(zoomFactor * Double.parseDouble(zm.getText()));
-
+            double m = Double.parseDouble(zm.getText());
+            // Inverse function to the one above. 18 is the current maximum zoom
+            // available on standard renderers, so choose this is in case m
+            // should be zero
+            int zoomLvl = 18;
+            if(m > 0)
+            	zoomLvl = (int)Math.round((-1) * Math.log(m/10000000)/Math.log(2));
+            
             int decimals = (int) Math.pow(10, (zoomLvl / 3));
             dlat = Math.round(dlat * decimals);
             dlat /= decimals;
@@ -158,22 +164,6 @@ public class JumpToAction extends JosmAction implements MouseListener {
 
     public void actionPerformed(ActionEvent e) {
         showJumpToDialog();
-    }
-
-    /**
-     * Converts a given scale into OSM-Style zoom factors
-     * @param double scale
-     */
-    public int getZoom(double scale) {
-        MapView mv = Main.map.mapView;
-        double sizex = scale * mv.getWidth();
-        double sizey = scale * mv.getHeight();
-        ProjectionBounds b = mv.getMaxProjectionBounds();
-        for (int zoom = 0; zoom <= 32; zoom++, sizex *= 2, sizey *= 2) {        	
-            if (sizex > b.max.east() || sizey > b.max.north())
-                return zoom;
-        }
-        return 32;
     }
 
     public void mousePressed(MouseEvent e) {}

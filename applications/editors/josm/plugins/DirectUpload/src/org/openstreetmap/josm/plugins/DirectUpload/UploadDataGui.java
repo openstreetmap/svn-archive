@@ -27,7 +27,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -44,12 +44,48 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.GpxWriter;
 import org.openstreetmap.josm.tools.Base64;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.UrlLabel;
 
 /**
  *
  * @author  subhodip, xeen
  */
 public class UploadDataGui extends ExtendedDialog {
+    /**
+     * This enum contains the possible values for the visibility field and their
+     * explanation. Provides some methods for easier handling.
+     */
+    private enum visibility {
+        PRIVATE      (tr("Private (only shared as anonymous, unordered points)")),
+        PUBLIC       (tr("Public (shown in trace list and as anonymous, unordered points)")),
+        TRACKABLE    (tr("Trackable (only shared as anonymous, ordered points with timestamps)")),
+        IDENTIFIABLE (tr("Identifiable (shown in trace list and as identifiable, ordered points with timestamps)"));
+        
+        public final String description;
+        visibility(String description) {
+            this.description = description;
+        }
+        
+        /**
+         * "Converts" a given description into the actual enum. Returns null if no matching description
+         * is found.
+         * @param desc The description to look for
+         * @return visibility or null
+         */
+        public static visibility desc2visi(Object desc) {
+            for (visibility v : visibility.values()) {
+                if(desc.equals((String)v.description))
+                    return v;
+            }
+            return null;
+        }
+        
+        public String toString() {
+            return this.name().toLowerCase();
+        }
+    }
+
+	
     // User for log in when uploading trace
     private String username = Main.pref.get("osm-server.username");
     private String password = Main.pref.get("osm-server.password");
@@ -61,7 +97,7 @@ public class UploadDataGui extends ExtendedDialog {
     private JMultilineLabel OutputDisplay = new JMultilineLabel(" ");
     private JTextField descriptionField = new JTextField(50);
     private JTextField tagsField = new JTextField(50);
-    private JCheckBox publicCheckbox = new JCheckBox();
+    private JComboBox visibilityCombo = new JComboBox();
 
     // Constants used when generating upload request
     private static final String API_VERSION = "0.6";
@@ -95,13 +131,17 @@ public class UploadDataGui extends ExtendedDialog {
      * @return JPanel with components
      */
     private JPanel initComponents() {
-        publicCheckbox.setText(tr("Public"));
-        publicCheckbox.setToolTipText(tr("Selected makes your trace public in openstreetmap.org"));
+    	JLabel visibilityLabel = new JLabel(tr("Visibility"));
+        visibilityLabel.setToolTipText(tr("Defines the visibility of your trace for other OSM users."));
+        for(visibility v : visibility.values()) {
+        	visibilityCombo.addItem((String)v.description);
+        }
+        UrlLabel visiUrl = new UrlLabel(tr("http://wiki.openstreetmap.org/wiki/Visibility_of_GPS_traces"), tr("(What does that mean?)"));
 
         JLabel descriptionLabel = new JLabel(tr("Description"));
         descriptionField.setToolTipText(tr("Please enter Description about your trace."));
 
-        JLabel tagsLabel = new JLabel(tr("Tags"));
+        JLabel tagsLabel = new JLabel(tr("Tags (comma delimited)"));
         tagsField.setToolTipText(tr("Please enter tags about your trace."));
 
         JPanel p = new JPanel(new GridBagLayout());
@@ -115,7 +155,9 @@ public class UploadDataGui extends ExtendedDialog {
         p.add(descriptionLabel, GBC.eol().insets(0,10,0,0));
         p.add(descriptionField, GBC.eol().fill(GBC.HORIZONTAL));
 
-        p.add(publicCheckbox, GBC.eol());
+        p.add(visibilityLabel, GBC.std().insets(0,10,0,0));
+        p.add(visiUrl, GBC.eol().insets(0,10,0,0));
+        p.add(visibilityCombo, GBC.eol());
 
         return p;
     }
@@ -159,7 +201,7 @@ public class UploadDataGui extends ExtendedDialog {
      * @param boolean Shall the GPX track be public
      * @param GpxData The GPX Data to upload
      */
-    private void upload(String description, String tags, Boolean isPublic, GpxData gpxData, ProgressMonitor progressMonitor) throws IOException {
+    private void upload(String description, String tags, String visi, GpxData gpxData, ProgressMonitor progressMonitor) throws IOException {
     	progressMonitor.beginTask(null);
     	try {
     		if(checkForErrors(username, password, description, gpxData))
@@ -167,7 +209,7 @@ public class UploadDataGui extends ExtendedDialog {
 
     		// Clean description/tags from disallowed chars
     		description = description.replaceAll("[&?/\\\\]"," ");
-    		tags = tags.replaceAll("[&?/\\\\.,;]"," ");
+    		tags = tags.replaceAll("[&?/\\\\.;]"," ");
 
     		// Set progress dialog to indeterminate while connecting
     		progressMonitor.indeterminateSubTask(tr("Connecting..."));
@@ -178,7 +220,7 @@ public class UploadDataGui extends ExtendedDialog {
     			writeGpxFile(baos, "file", gpxData);
     			writeField(baos, "description", description);
     			writeField(baos, "tags", (tags != null && tags.length() > 0) ? tags : "");
-    			writeField(baos, "public", isPublic ? "1" : "0");
+    			writeField(baos, "visibility", visi);
     			writeString(baos, "--" + BOUNDARY + "--" + LINE_END);
 
     			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
@@ -377,7 +419,7 @@ public class UploadDataGui extends ExtendedDialog {
             @Override protected void realRun() throws IOException {
                   upload(descriptionField.getText(),
                          tagsField.getText(),
-                         publicCheckbox.isSelected(),
+                         visibility.desc2visi(visibilityCombo.getSelectedItem()).toString(),
                          ((GpxLayer)Main.map.mapView.getActiveLayer()).data,
                          progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false)
                   );

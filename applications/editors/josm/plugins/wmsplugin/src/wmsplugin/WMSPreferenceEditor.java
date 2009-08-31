@@ -27,7 +27,6 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.tools.GBC;
 
 public class WMSPreferenceEditor implements PreferenceSetting {
-    private Map<String,String> orig;
     private DefaultTableModel model;
     private JComboBox browser;
     private HashMap<Integer, WMSInfo> oldValues = new HashMap<Integer, WMSInfo>();
@@ -53,7 +52,8 @@ public class WMSPreferenceEditor implements PreferenceSetting {
             public boolean isCellEditable(int row,int column){return false;}
         };
         JScrollPane scrolldef = new JScrollPane(listdef);
-        p.add(scrolldef, GBC.eol().insets(0,5,0,0).fill(GBC.BOTH));
+        // scrolldef is added after the buttons so it's clearer the buttons
+        // control the top list and not the default one
         scrolldef.setPreferredSize(new Dimension(200,200));
 
         for (Map.Entry<String,String> i : WMSPlugin.wmsListDefault.entrySet()) {
@@ -99,28 +99,51 @@ public class WMSPreferenceEditor implements PreferenceSetting {
             }
         });
 
-        JButton copy = new JButton(tr("Copy Default"));
+        JButton copy = new JButton(tr("Copy Selected Default(s)"));
         buttonPanel.add(copy, GBC.std().insets(0,5,0,0));
         copy.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                Integer line = listdef.getSelectedRow();
-                if (line == -1)
+                int[] lines = listdef.getSelectedRows();
+                if (lines.length == 0) {
                     JOptionPane.showMessageDialog(
                     		gui, 
-                    		tr("Please select the row to copy."),
+                    		tr("Please select at least one row to copy."),
                     		tr("Information"),
                     		JOptionPane.INFORMATION_MESSAGE
                     		);
-                else
-                {
-                    model.addRow(new String[]{modeldef.getValueAt(line, 0).toString(),
-                    modeldef.getValueAt(line, 1).toString()});
+                    return;
+                }
+                
+                outer: for(int i = 0; i < lines.length; i++) {
+                	String c1 = modeldef.getValueAt(lines[i], 0).toString();
+                	String c2 = modeldef.getValueAt(lines[i], 1).toString();
+                	
+                	// Check if an entry with exactly the same values already
+                	// exists
+                	for(int j = 0; j < model.getRowCount(); j++) {
+                		if(c1.equals(model.getValueAt(j, 0).toString()) 
+                				&& c2.equals(model.getValueAt(j, 1).toString())) {
+                			// Select the already existing row so the user has
+                			// some feedback in case an entry exists
+                			list.getSelectionModel().setSelectionInterval(j, j);
+                			list.scrollRectToVisible(list.getCellRect(j, 0, true));
+                			continue outer;
+                		}
+                	}
+                	
+	                model.addRow(new String[] {c1, c2});
+	                int lastLine = model.getRowCount() - 1;
+	                list.getSelectionModel().setSelectionInterval(lastLine, lastLine);
+	                list.scrollRectToVisible(list.getCellRect(lastLine, 0, true));
                 }
             }
         });
 
         p.add(buttonPanel);
         p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
+        // Add default item list
+        p.add(scrolldef, GBC.eol().insets(0,5,0,0).fill(GBC.BOTH));       
+        
         browser = new JComboBox(new String[]{
         "webkit-image {0}",
         "gnome-web-photo --mode=photo --format=png {0} /dev/stdout",

@@ -64,6 +64,11 @@ public class WMSLayer extends Layer {
 
 	private ExecutorService executor = null;
 
+	/** set to true if this layer uses an invalid base url */
+	private boolean usesInvalidUrl = false;
+	/** set to true if the user confirmed to use an potentially invalid WMS base url */
+	private boolean isInvalidUrlConfirmed = false;
+	
 	public WMSLayer() {
 		this(tr("Blank Layer"), null, null);
 		initializeImages();
@@ -83,14 +88,28 @@ public class WMSLayer extends Layer {
 		pixelPerDegree = getPPD();
 
 		executor = Executors.newFixedThreadPool(3);
+		if (!baseURL.startsWith("html:") && !WMSGrabber.isUrlWithPatterns(baseURL)) {
+			if (!(baseURL.endsWith("&") || baseURL.endsWith("?"))) {
+				if (!confirmMalformedUrl(baseURL)) {
+					System.out.println(tr("Warning: WMS layer deactivated because of malformed base url ''{0}''", baseURL));
+					usesInvalidUrl = true;
+					setName(getName() + tr("(deactivated)"));
+					return;
+				} else {
+					isInvalidUrlConfirmed = true;
+				}
+			}
+		}
 	}
 
 	@Override
-	public void destroy() {
+	public void destroy() {	
 		try {
-			executor.shutdown();
+			executor.shutdownNow();
 			// Might not be initalized, so catch NullPointer as well
-		} catch(Exception x) {}
+		} catch(Exception x) {
+			x.printStackTrace();
+		}
 	}
 
 	public double getPPD(){
@@ -137,6 +156,7 @@ public class WMSLayer extends Layer {
 
 	@Override public void paint(Graphics g, final MapView mv) {
 		if(baseURL == null) return;
+		if (usesInvalidUrl && !isInvalidUrlConfirmed) return;
 
 		if( !startstop.isSelected() || (pixelPerDegree / getPPD() > minZoom) ){ //don't download when it's too outzoomed
 			for(int x = 0; x<dax; ++x) {
@@ -154,7 +174,37 @@ public class WMSLayer extends Layer {
 		this.dy += dy;
 	}
 
+	protected boolean confirmMalformedUrl(String url) {
+		if (isInvalidUrlConfirmed)
+			return true;
+		String msg  = tr("<html>The base URL<br>"
+				        + "''{0}''<br>"
+				        + "for this WML layer does neither end with a ''&'' nor with a ''?''.<br>"
+				        + "This is likely to lead to invalid WMS request. You should check your<br>"
+				        + "preference settings.<br>"
+				        + "Do you want to fetch WMS tiles anyway?",				        
+				        url);
+		String [] options = new String[] {
+			tr("Yes, fetch images"),
+			tr("No, abort")
+		};
+		int ret = JOptionPane.showOptionDialog(
+				Main.parent, 
+				msg,
+				tr("Invalid URL?"),
+				JOptionPane.YES_NO_OPTION, 
+				JOptionPane.WARNING_MESSAGE, 
+				null, 
+				options, options[1]
+		);
+		switch(ret) {
+		case JOptionPane.YES_OPTION: return true;
+		default: return false;
+		}
+	}
 	protected void downloadAndPaintVisible(Graphics g, final MapView mv){
+		if (usesInvalidUrl)
+			return;
 		ProjectionBounds bounds = mv.getProjectionBounds();
 		int bminx= (int)Math.floor ((bounds.min.east() * pixelPerDegree ) / ImageSize );
 		int bminy= (int)Math.floor ((bounds.min.north() * pixelPerDegree ) / ImageSize );
@@ -169,8 +219,8 @@ public class WMSLayer extends Layer {
 					JOptionPane.ERROR_MESSAGE
 			);
 			return;
-		}
-
+		}		
+		
 		for(int x = bminx; x<bmaxx; ++x) {
 			for(int y = bminy; y<bmaxy; ++y){
 				GeorefImage img = images[modulo(x,dax)][modulo(y,day)];

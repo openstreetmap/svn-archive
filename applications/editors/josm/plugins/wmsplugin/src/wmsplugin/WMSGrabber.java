@@ -33,6 +33,10 @@ import org.openstreetmap.josm.io.ProgressInputStream;
 
 
 public class WMSGrabber extends Grabber {
+	public static boolean isUrlWithPatterns(String url) {
+		return  url != null && url.contains("{") && url.contains("}");
+	}
+	
     protected String baseURL;
     private final boolean urlWithPatterns;
 
@@ -40,7 +44,7 @@ public class WMSGrabber extends Grabber {
         super(b, image, mv, layer, cache);
         this.baseURL = layer.baseURL;
         /* URL containing placeholders? */
-        urlWithPatterns = baseURL != null && baseURL.contains("{") && baseURL.contains("}");
+        urlWithPatterns = isUrlWithPatterns(baseURL);
     }
 
     public void run() {
@@ -103,6 +107,11 @@ public class WMSGrabber extends Grabber {
             str += "bbox=" + bbox
                 + getProjection(baseURL, false)
                 + "&width=" + wi + "&height=" + ht;
+        	if (!(baseURL.endsWith("&") || baseURL.endsWith("?"))) {
+        		System.out.println(tr("Warning: The base URL ''{0}'' for a WMS service doesn't have a trailing '&' or a trailing '?'.", baseURL));
+        		System.out.println(tr("Warning: Fetching WMS tiles is likely to fail. Please check you preference settings."));
+        		System.out.println(tr("Warning: The complete URL is ''{0}''.", str));
+        	}
         }
         return new URL(str.replace(" ", "%20"));
     }

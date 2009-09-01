@@ -134,6 +134,8 @@
 				_root.usertoken, _root.changeset, this.version,
 				Math.floor(this._name),
 				this.attr, this.members, 1);
+		} else { 
+			operationDone(this._name);	// next please!
 		}
 	};
 

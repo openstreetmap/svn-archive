@@ -80,6 +80,8 @@
 			_root.writesrequested++;
 			this.uploading=true;
 			remote_write.call('putpoi',poiresponder,_root.usertoken,_root.changeset,Number(this.version),Number(this._name),coord2long(this._x),coord2lat(this._y),this.attr,1);
+		} else { 
+			operationDone(this._name);	// next please!
 		}
 	};
 	POI.prototype.onRollOver=function() {

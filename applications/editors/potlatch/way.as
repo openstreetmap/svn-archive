@@ -599,6 +599,8 @@
 			_root.writesrequested++;
 			remote_write.call('putway',putresponder,_root.usertoken,_root.changeset,this.version,Number(this._name),sendpath,this.attr,sendnodes,this.deletednodes);
 			updateInspector();
+		} else { 
+			operationDone(this._name);	// next please!
 		}
 	};
 

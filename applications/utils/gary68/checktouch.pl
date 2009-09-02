@@ -44,20 +44,25 @@
 # Version 1.3
 # - ignore way starts and ends that are connected
 #
-#
+# Version 1.4
+# - faster parameters
+# - iFrame
+# 
 
 
 use strict ;
 use warnings ;
 
 use List::Util qw[min max] ;
-use OSM::osm 4.7 ;
+use OSM::osm 5.0 ;
 use File::stat;
 use Time::localtime;
 
 my $program = "checktouch.pl" ;
 my $usage = $program . " def.xml file.osm out.htm out.gpx" ;
-my $version = "1.3" ;
+my $version = "1.4" ;
+
+my $span = 0.05 ; # steps of 0.01 - the smaller, the faster, but not all errors will befound then... good values are 0.03 to 0.05
 
 my $threshold = 0.005 ; # ~500m 0.5km degrees!
 my $maxDist = 0.002 ; # in km 
@@ -320,7 +325,10 @@ foreach $wayId (@checkWays) {
 # init way hash
 ###############
 foreach $wayId (@checkWays) {
-	my $hashValue = hashValue ($lon{$wayNodesHash{$wayId}[0]}, $lat{$wayNodesHash{$wayId}[0]}) ;
+
+	my ($lo) = ($lon{$wayNodesHash{$wayId}[0]} + $lon{$wayNodesHash{$wayId}[-1]}) / 2 ;
+	my ($la) = ($lat{$wayNodesHash{$wayId}[0]} + $lat{$wayNodesHash{$wayId}[-1]}) / 2 ;
+	my $hashValue = hashValue2 ($lo, $la) ;
 	push (@{$wayHash {$hashValue}}, $wayId) ;
 }
 
@@ -347,10 +355,10 @@ foreach $wayId1 (@againstWays) {
 	# create temp array according to hash
 	my @temp = () ;
 	my $lo ; my $la ;
-	for ($lo=$lon{$wayNodesHash{$wayId1}[0]}-0.1; $lo<=$lon{$wayNodesHash{$wayId1}[0]}+0.1; $lo=$lo+0.1) {
-		for ($la=$lat{$wayNodesHash{$wayId1}[0]}-0.1; $la<=$lat{$wayNodesHash{$wayId1}[0]}+0.1; $la=$la+0.1) {
-			if ( defined @{$wayHash{hashValue($lo,$la)}} ) {
-				push @temp, @{$wayHash{hashValue($lo,$la)}} ;
+	for ($lo=$lon{$wayNodesHash{$wayId1}[0]}-$span; $lo<=$lon{$wayNodesHash{$wayId1}[0]}+$span; $lo=$lo+0.01) {
+		for ($la=$lat{$wayNodesHash{$wayId1}[0]}-$span; $la<=$lat{$wayNodesHash{$wayId1}[0]}+$span; $la=$la+0.01) {
+			if ( defined @{$wayHash{hashValue2($lo,$la)}} ) {
+				push @temp, @{$wayHash{hashValue2($lo,$la)}} ;
 			}
 		}
 	}

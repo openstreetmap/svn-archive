@@ -17,6 +17,7 @@ WriteMakefile(
         'LWP::UserAgent' => 0,
         'XML::Simple' => 0,
 	'HTML::TableExtract' => 0,
+	'HTML::ElementTable' => 0,
 	'URI::Escape' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

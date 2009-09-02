@@ -789,6 +789,8 @@ sub svn_revision_platform($) {
 
     my $svn_revision = slurp( $rev_file );
     $svn_revision =~ s/\s\n//g;
+
+    $self->debug(8,"Revision for '$platform' '$proj': is at '$svn_revision' ");
     
     return $svn_revision;
 		      };
@@ -946,8 +948,8 @@ sub svn_copy($$){
     my $proj_sub_dir = $self->proj_sub_dir();
 
     if ( $do_fast ) {
-	if ( $self->svn_revision_platform() eq $self->svn_revision_platform() ){
-#	    $self->debug(3,"svn copy already done");    
+	if ( $self->svn_revision() eq $self->svn_revision_platform() ){
+	    $self->debug(7,"svn copy already done");    
 #	    return 0;
 	}
     }
@@ -1597,15 +1599,15 @@ for my $platform ( @platforms ) {
 	    platform => $platform ,
 	    );
 	if ( $DEBUG>2 || $VERBOSE>2 ) {
-	    print STDERR 	"$COLOR{MAGENTA}------------------------------------------------  Platform: $platform$COLOR{NORMAL}	Project: $proj$COLOR{NORMAL}\n";
+	    print STDERR "$COLOR{MAGENTA}------------------------------------------------  Platform: $platform$COLOR{NORMAL}	Project: $proj$COLOR{NORMAL}\n";
 	}
 
 	$task->Clear_Log();
 
 	if ( $do_fast ) {
-	    my $svn_revision = $task->svn_revision_platform();
+	    my $svn_revision = $task->svn_revision();
 	    my $last_result=$task->last_result();
-	    if ( $svn_revision && $last_result eq "success: $svn_revision" ) {
+	    if ( $svn_revision && ($last_result eq "success: $svn_revision") ) {
 		if ( $VERBOSE >1 || $DEBUG >2 ) {
 		    print STDERR "$COLOR{GREEN}---- Project: $proj ($platform) '$last_result' up-to-date --> skipping$COLOR{NORMAL}\n";
 		}
@@ -1615,7 +1617,6 @@ for my $platform ( @platforms ) {
 	    };
 	}
 
-	
 	$task->svn_copy()	if $do_svn_cp;
 	$task->apply_patch();
 	$task->debuild();

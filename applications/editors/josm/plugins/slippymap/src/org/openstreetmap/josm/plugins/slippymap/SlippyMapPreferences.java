@@ -171,7 +171,7 @@ public class SlippyMapPreferences
         if (minZoomLvl == null || "".equals(minZoomLvl))
         {
         	minZoomLvl = "" + (SlippyMapPreferences.getMaxZoomLvl() - 4);
-            Main.pref.put(PREFERENCE_MAX_ZOOM_LVL, minZoomLvl);
+            Main.pref.put(PREFERENCE_MIN_ZOOM_LVL, minZoomLvl);
         }
 
         int navrat;

@@ -71,7 +71,9 @@
 # Version 5.1
 # - new hash function
 #
-
+# Version 5.2
+# - josm select nodes added
+#
 
 #
 # USAGE
@@ -97,6 +99,7 @@
 # josmLinkSelectWay ($lon, $lat, $span, $wayId)		> $htmlString
 # josmLinkSelectWays ($lon, $lat, $span, @wayIds)	> $htmlString
 # josmLinkSelectNode ($lon, $lat, $span, $nodeId)	> $htmlString
+# josmLinkSelectNodes ($lon, $lat, $span, @nodes)	> $htmlString
 # DON'T USE ANYMORE! josmLink ($lon, $lat, $span, $wayId)	> $htmlString
 # mapCompareLink ($lon, $lat, $zoom)			> $htmlString
 # openOsmFile ($file)					> osm file open and $line set to first node (*.osm or *.osm.bz2)
@@ -153,7 +156,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '5.1' ; 
+$VERSION = '5.2' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -161,7 +164,7 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
+@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
 
 our $line ; 
 our $file ; 
@@ -946,6 +949,29 @@ sub josmLinkSelectNode {
 	$string = $string . "\" target=\"hiddenIframe\">Local JOSM</a>" ;
 	return ($string) ;
 }
+
+sub josmLinkSelectNodes {
+	my ($lon, $lat, $span, @nodes) = @_ ;
+	my ($string) = "<A HREF=\"http://localhost:8111/load_and_zoom?" ;
+	my $temp = $lon - $span ;
+	$string = $string . "left=" . $temp ;
+	$temp = $lon + $span ;
+	$string = $string . "&right=" . $temp ;
+	$temp = $lat + $span ;
+	$string = $string . "&top=" . $temp ;
+	$temp = $lat - $span ;
+	$string = $string . "&bottom=" . $temp ;
+	$string = $string . "&select=node" . $nodes[0] ;
+	if (scalar @nodes > 1) {
+		my $i ;
+		for ($i=1; $i < scalar @nodes; $i++) {
+			$string = $string . ",node" . $nodes[$i] ;
+		}
+	}
+	$string = $string . "\" target=\"hiddenIframe\">Local JOSM</a>" ;
+	return ($string) ;
+}
+
 
 sub analyzerLink {
 	my $id = shift ;

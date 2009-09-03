@@ -106,13 +106,6 @@ public class JoinAreasAction extends JosmAction {
      * Checks whether the selected objects are suitable to join and joins them if so
      */
     public void actionPerformed(ActionEvent e) {
-        int result = new ExtendedDialog(Main.parent,
-            tr("Enter values for all conflicts."),
-            new JLabel(tr("THIS IS EXPERIMENTAL. Save your work and verify before uploading.")),
-            new String[] {tr("Continue anyway"), tr("Cancel")},
-            new String[] {"joinareas.png", "cancel.png"}).getValue();
-        if(result != 1) return;
-
         Collection<OsmPrimitive> selection = Main.main.getCurrentDataSet().getSelectedWays();
 
         int ways = 0;
@@ -298,13 +291,14 @@ public class JoinAreasAction extends JosmAction {
         if (components.isEmpty())
             return false; // No conflicts found
 
-        int result = new ExtendedDialog(Main.parent,
-            tr("Enter values for all conflicts."),
-            p,
-            new String[] {tr("Solve Conflicts"), tr("Cancel")},
-            new String[] {"dialogs/conflict.png", "cancel.png"}).getValue();
+        ExtendedDialog ed = new ExtendedDialog(Main.parent,
+        		tr("Enter values for all conflicts."),
+        		new String[] {tr("Solve Conflicts"), tr("Cancel")});
+        ed.setButtonIcons(new String[] {"dialogs/conflict.png", "cancel.png"});
+        ed.setContent(p);
+        ed.showDialog();
 
-        if (result != 1) return true; // user cancel, unresolvable conflicts
+        if (ed.getValue() != 1) return true; // user cancel, unresolvable conflicts
 
         for (Entry<String, JComboBox> e : components.entrySet()) {
             String val = e.getValue().getEditor().getItem().toString();
@@ -448,7 +442,7 @@ public class JoinAreasAction extends JosmAction {
     private ArrayList<RelationRole> removeFromRelations(OsmPrimitive osm) {
         ArrayList<RelationRole> result = new ArrayList<RelationRole>();
         for (Relation r : Main.main.getCurrentDataSet().relations) {
-            if (r.deleted || r.incomplete) continue;
+            if (r.isDeleted() || r.incomplete) continue;
             for (RelationMember rm : r.members) {
                 if (rm.member != osm) continue;
 

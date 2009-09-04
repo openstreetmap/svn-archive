@@ -194,9 +194,9 @@ public class RequestProcessor extends Thread
                                     System.out.println("RemoteControl: invalid selection '"+item+"' ignored");
                                 }
                             }
-                            for (Way w : Main.main.getCurrentDataSet().ways) if (ways.contains(w.id)) newSel.add(w);
-                            for (Node n : Main.main.getCurrentDataSet().nodes) if (nodes.contains(n.id)) newSel.add(n);
-                            for (Relation r : Main.main.getCurrentDataSet().relations) if (relations.contains(r.id)) newSel.add(r);
+                            for (Way w : Main.main.getCurrentDataSet().ways) if (ways.contains(w.getId())) newSel.add(w);
+                            for (Node n : Main.main.getCurrentDataSet().nodes) if (nodes.contains(n.getId())) newSel.add(n);
+                            for (Relation r : Main.main.getCurrentDataSet().relations) if (relations.contains(r.getId())) newSel.add(r);
                             Main.main.getCurrentDataSet().setSelected(newSel);
                             if (Main.pref.getBoolean("remotecontrol.permission.change-viewport", true))
                                 new AutoScaleAction("selection").actionPerformed(null);

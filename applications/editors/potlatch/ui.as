@@ -312,7 +312,7 @@
 		mpos.x=_root._xmouse;
 		mpos.y=_root._ymouse;
 		this.opened.globalToLocal(mpos);
-		if (mpos.x>0 && mpos.x<this.itemwidth && mpos.y>0 && mpos.y<this.options.length*15) {
+		if (mpos.x>0 && mpos.x<this.itemwidth && mpos.y>0 && mpos.y<this.options.length*16) {
 			var i=Math.floor((mpos.y)/16);
 			if (this.opened[i] && this.enable[i]) { return i; }
 		}

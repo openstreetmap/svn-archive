@@ -16,14 +16,13 @@ $rates->fetch($rateProvider, $currencyProvider);
 //BRAINDEAD CHECK
 $GBPEUR = ( (float) $rates->convert('GBP','EUR', 10000));
 $EURGBP = ( (float) $rates->convert('EUR','GBP', $GBPEUR));
-if ($EURGBP<9980 or $EURGBP>10020) die('BAD Exchange Rate COnversion');
+if ($EURGBP<8000 or $EURGBP>12000) die('BAD Exchange Rate COnversion');
 
 
 //$_CURRENCIES = array('AUD','CAD','CHF','CZK','DKK','EUR','GBP','HKD','HUF','JPY','NZD','NOK','PLN','SGD','SEK','USD');
-$_DB_H = mysql_pconnect('localhost','osm_donate','password');
-mysql_select_db('osm_donate', $_DB_H);
-mysql_query('SET NAMES \'utf8\'', $_DB_H);
 
+//CONNECT to DB
+include('../htdocs/process/db-connect.inc.php');
 
 foreach($rates->getRates('GBP') AS $currency => $rate) {
 	$sql_replace= 'REPLACE INTO `currency_rates` (`currency`, `rate`) VALUES ("'.$currency.'","'.$rate.'")';

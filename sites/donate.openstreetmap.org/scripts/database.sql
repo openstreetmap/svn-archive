@@ -7,16 +7,18 @@ CREATE TABLE IF NOT EXISTS `currency_rates` (
 
 CREATE TABLE IF NOT EXISTS `donations` (
   `uid` int(10) unsigned NOT NULL auto_increment,
-  `amount` double(8,2) NOT NULL,
+  `amount` double(12,2) NOT NULL,
+  `amount_gbp` double(12,2) NOT NULL,
   `currency` char(3) NOT NULL,
   `anonymous` tinyint(1) NOT NULL,
   `processed` tinyint(1) NOT NULL default '0',
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `name` varchar(64) NOT NULL,
   `comment` varchar(255) NOT NULL,
+  `target` enum('default','domain') NOT NULL default 'default',
   PRIMARY KEY  (`uid`),
   KEY `processed` (`processed`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
 
 CREATE TABLE IF NOT EXISTS `paypal_callbacks` (
   `uid` int(10) unsigned NOT NULL auto_increment,

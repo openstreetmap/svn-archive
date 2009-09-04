@@ -7,8 +7,8 @@
 	<meta http-equiv="Content-Language" content="en" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Support OpenStreetMap Donate Now</title>
-	<link rel="stylesheet" href="style.css" type="text/css"/>
-	<script type="text/javascript" src="js/main.js"></script>
+	<link rel="stylesheet" href="../style.css" type="text/css"/>
+	<script type="text/javascript" src="../js/main.js"></script>
 <script type="text/javascript" language="javascript">
 //<![CDATA[
 function validateForm( form ) {
@@ -68,18 +68,20 @@ function validateForm( form ) {
 	<div align="center">
 			<div id="container" dir="ltr">
 <div id="banner" dir="ltr">
-<div class="logo-box"><a href="http://www.openstreetmap.org/"><img alt="OpenStreetMap Logo" src="images/osm_logo.png" width="120" height="120" border="0" /></a></div>
+<div class="logo-box"><a href="http://www.openstreetmap.org/"><img alt="OpenStreetMap Logo" src="../images/osm_logo.png" width="120" height="120" border="0" /></a></div>
 <h1>Donate to OpenStreetMap</h1>
+Domain Purchase Funding Appeal
 </div>
 <div class="content-container" style="margin: 5px 80px;"><!-- content container -->
 <div class="infobox">
-	<p><strong>Hardware Fund Update: Thank you to everyone who has donated. <!--<a href="http://www.opengeodata.org/?p=391">More &gt;&gt;</a>--></strong></p>
+	<p><strong>Domain Purchase Funding Appeal... EXPLANATION TEXT GOES HERE</strong></p>
+	<iframe src ="../raised.inc.html" width="100%" height="30"><p>iframe of goal.</p></iframe>
 </div>
 </div>
 <div class="content-container" style="margin: 5px 80px;"><!-- content container -->
 <p></p>
-<form method="post" action="process/paypal-submit.php" name="paypalcontribution" onsubmit="return validateForm(this)">
-<p><input type="hidden" name="gateway" value="paypal" /><input type="hidden" name="language" value="en" /></p>
+<form method="post" action="/process/paypal-submit.php" name="paypalcontribution" onsubmit="return validateForm(this)">
+<p><input type="hidden" name="gateway" value="paypal" /><input type="hidden" name="language" value="en" /><input type="hidden" name="target" value="domain" /></p>
 <div id="liquid-round" style="width:600px;"><a id='newtop' name='newtop'></a>
 <div class="rightside">
 <div class="top"><span></span></div>
@@ -140,7 +142,7 @@ function validateForm( form ) {
 <p></p>
 </div>
 <div id="footer">
-<div class="logo-box"><a href="http://www.openstreetmap.org/"><img alt="OpenStreetMap Logo" src="images/osm_logo.png" width="120" height="120" border="0" /></a></div>
+<div class="logo-box"><a href="http://www.openstreetmap.org/"><img alt="OpenStreetMap Logo" src="../images/osm_logo.png" width="120" height="120" border="0" /></a></div>
 <div>
 <p>OpenStreetMap is supported by the <a href="http://foundation.openstreetmap.org/" class="external text">OpenStreetMap Foundation</a>. Questions or comments? Contact the OpenStreetMap Foundation: <a href="mailto:donate@osmfoundation.org" class="external text">donate@osmfoundation.org</a></p>
 </div>

@@ -48,11 +48,10 @@ if (!$fp) {
 			// check that receiver_email is your Primary PayPal email
 			// check that payment_amount/payment_currency are correct
 			// process payment
-			//CONNECT to DB
 			
-			$_DB_H = mysql_connect('localhost','osm_donate','password');
-			mysql_select_db('osm_donate', $_DB_H);
-			mysql_query('SET NAMES \'utf8\'', $_DB_H);
+			//CONNECT to DB
+			include('db-connect.inc.php');			
+			
 			if ($payment_status == 'Completed' AND $option_name1=='contribution_tracking_id' AND $business == 'treasurer@openstreetmap.org') {
 				if ($payment_currency=='GBP') {
 					$payment_amount_gbp = $payment_amount;

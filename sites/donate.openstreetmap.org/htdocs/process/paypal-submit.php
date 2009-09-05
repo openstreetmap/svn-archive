@@ -25,7 +25,7 @@ $sql_insert =	'INSERT INTO `donations` (`amount`,`currency`,`anonymous`,`comment
 					mysql_real_escape_string($data['currency'],		$_DB_H).'\',\''.
 					mysql_real_escape_string($data['anonymous'],	$_DB_H).'\',\''.
 					mysql_real_escape_string($data['comment'],		$_DB_H).'\',\''.
-					mysql_real_escape_string($data['target'],		$_DB_H)
+					mysql_real_escape_string($data['target'],		$_DB_H).
 				'\')';
 $sql_insert_result = mysql_query($sql_insert, $_DB_H) OR error_log('SQL FAIL: '.$sql_insert);
 $sql_insert_id = mysql_insert_id($_DB_H);

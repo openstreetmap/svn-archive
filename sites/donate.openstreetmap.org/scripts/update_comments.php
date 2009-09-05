@@ -7,7 +7,7 @@ include('../htdocs/process/db-connect.inc.php');
 $sql_query_comments = 'SELECT * FROM `donations` WHERE `processed` =1 ORDER BY `timestamp` DESC';
 $sql_result = mysql_query($sql_query_comments, $_DB_H) OR die('FAIL UPDATING: '.$sql_query_comments);
 if ($sql_result AND mysql_num_rows($sql_result)>0) {
-	$fp = fopen('constributors.inc.html', 'w');
+	$fp = fopen('../htdocs/comments/constributors.inc.html', 'w');
 	$count=0;
 	while($contrib = mysql_fetch_array($sql_result ,MYSQL_ASSOC)) {	
 		$count++;

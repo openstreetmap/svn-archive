@@ -29,8 +29,8 @@ use Getopt::Std;
 use IO::Select;
 use IO::File;
 use IPC::Open3;
+use Pod::Usage;
 use Symbol;
-
 
 my $dir_chroot = "/home/chroot";
 my $dir_log = "/home/chroot/log";
@@ -50,7 +50,8 @@ my $do_svn_changelog = 1;
 my $do_svn_cp= 1;
 my $do_show_results=0;
 my $do_write_html_results_only=0;
-
+my $do_chk_dep=1;
+my $do_debuild=1;
 my $RESULTS={};
 
 my $do_fast= 1; # Skip Stuff like debuild clean, ...
@@ -226,6 +227,7 @@ my $getopt_result = GetOptions (
     "v+"            => \$VERBOSE,
     'help!'         => \$HELP,
     'manual!'       => \$MANUAL,
+    'man!'          => \$MANUAL,
 
     "fast!"         => \$do_fast,
     "force!"        => \$FORCE,
@@ -250,6 +252,9 @@ my $getopt_result = GetOptions (
     "dir-svn"        => \$dir_svn,
     "dir-package-results" => \$package_result_dir,
     "user"           => \$user,
+    "check_dependencies!" =>     \$do_chk_dep,
+    "debuild!"        => \$do_debuild,
+
     "platforms=s"    => sub { my ($a,$b)=(@_);
 			      if ( '*' eq $b ) {
 				  @platforms= @available_platforms;
@@ -1081,6 +1086,69 @@ sub apply_pre_patch($){
 
 # ------------------------------------------------------------------
 # Do one build for platform and Project
+sub dpkg_checkbuilddeps($) {
+    my $self = shift;
+    die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
+    if ( $self->errors() ) {
+	$self->last_result("fail");
+	return -1
+    }
+
+    $self->section("debuild");
+
+    my $platform = $self->platform();
+    my $proj     = $self->proj();
+
+    $self->debug(4,"");
+    $self->debug(4,"------------");
+    $self->debug(3,"dpkg-checkbuilddeps($platform,$proj)");
+    $self->debug(4,"Platform: $platform");
+    $self->debug(4,"Proj: $proj");
+    my $proj_sub_dir = $self->proj_sub_dir();
+
+    my ($rc,$out,$err,$out_all) = $self->dchroot($proj_sub_dir ,"dpkg-checkbuilddeps");
+    if ( $err ) {
+	print "ERR: $err\n";
+    }
+    if ( $err =~ m/error: / ) {
+	$self->error("Error in debuild Output:\n".$err);
+    }
+
+
+    # --- Check on missing Build dependencies
+    my @dependencies= grep { $_ =~ m/^dpkg-checkbuilddeps:/ } split(/\n/,$err);
+    @dependencies = grep { s/.*Unmet build dependencies: //g; }  @dependencies;
+    @dependencies = map { s/\s*\|\s*/\|/g; s/\|[^\s]+//g;$_ }  @dependencies; # remove alternatives in dependencies " | xy"
+#    @dependencies = grep { s/\([^)]+\)//g; }  @dependencies; # remove  "(>> 0.5.0-1)"
+#    print "\t --- ".join("\n\t --- ", @dependencies)."\n";
+#    exit;
+    my $dep_file="$dir_chroot/$platform/home/$user/install-debian-dependencies-$proj.sh";
+    if (  @dependencies ) {
+	write_file($dep_file,
+		   "chroot $dir_chroot/$platform apt-get update\n".
+		   "chroot $dir_chroot/$platform dpkg --configure -a\n".
+		   "chroot $dir_chroot/$platform aptitude --assume-yes install ".
+		   join("\n", @dependencies)."\n");
+	$self->error("!!!!!!!!!!!!!!!!!!!!!! Cannot Build Debian Package because of Missing Dependencies: \n".
+		     "\t".join("\n\t", @dependencies)."\n".
+		     "Written install suggestion to : '$dep_file'\n"	
+	    );
+	$self->last_result("fail-dependency");
+	return -1;
+    } else {
+	unlink($dep_file);
+    }
+    if ( $rc) {
+	$self->error("Error '$rc' in 'debuild binary'");
+	$self->warning("Error '$out_all'");
+    }
+
+
+}
+
+
+# ------------------------------------------------------------------
+# Do one build for platform and Project
 sub debuild($) {
     my $self = shift;
     die "Wrong Reference '".ref($self)."'"  unless ref($self) eq "BuildTask";
@@ -1116,31 +1184,10 @@ sub debuild($) {
 	$self->error("Error in debuild Output:\n".$err);
     }
 
-    # --- Check on missing Build dependencies
-    my @dependencies= grep { $_ =~ m/^dpkg-checkbuilddeps:/ } split(/\n/,$err);
-    @dependencies = grep { s/.*Unmet build dependencies: //g; }  @dependencies;
-    @dependencies = grep { s/\([^)]+\)//g; }  @dependencies; # remove  "(>> 0.5.0-1)"
-    my $dep_file="$dir_chroot/$platform/home/$user/install-debian-dependencies-$proj.sh";
-    if (  @dependencies ) {
-	write_file($dep_file,
-		   "chroot $dir_chroot/$platform apt-get update\n".
-		   "chroot $dir_chroot/$platform aptitude --assume-yes install ".
-		   join("\n", @dependencies)."\n");
-	$self->error("!!!!!!!!!!!!!!!!!!!!!! Cannot Build Debian Package because of Missing Dependencies: \n".
-		     "\t".join("\n\t", @dependencies)."\n".
-		     "Written install suggestion to : '$dep_file'\n"	
-	    );
-	$self->last_result("fail-dependency");
-	return -1;
-    } else {
-	unlink($dep_file);
-    }
     if ( $rc) {
 	$self->error("Error '$rc' in 'debuild binary'");
 	$self->warning("Error '$out_all'");
     }
-
-
 
     # ------ Collect Resulting *.deb names
     my $result_dir=dirname("$dir_chroot/$platform/home/$user/$proj_sub_dir/");
@@ -1519,10 +1566,15 @@ Logfiles are written to:
 The svn Checkout is done to:
        $dir_svn
 
-Results are collected in the DIrectory
+Results are collected in the Directory
        $package_result_dir
 
 EOUSAGE
+
+pod2usage(1) if $HELP;
+pod2usage(-verbose=>2) if $opt_manual;
+
+
 
 die "\n";
 
@@ -1551,6 +1603,8 @@ if ( $DEBUG >= 1 ) {
     print "\t--".($do_svn_co    ?'':'no-')."svn-co\n";
     print "\t--".($do_svn_changelog?'':'no-')."svn-changelog\n";
     print "\t--".($do_svn_cp    ?'':'no-')."svn-cp\n";
+    print "\t--".($do_chk_dep   ?'':'no-')."check_dependencies\n";
+    print "\t--".($do_debuild   ?'':'no-')."debuild\n";
     print "\t--".($do_fast      ?'':'no-')."fast\n";
     print "\t--".($FORCE        ?'':'no-')."force\n";
     print "\t--".($DEBUG        ?'':'no-')."debug = $DEBUG\n";
@@ -1619,7 +1673,8 @@ for my $platform ( @platforms ) {
 
 	$task->svn_copy()	if $do_svn_cp;
 	$task->apply_patch();
-	$task->debuild();
+	$task->dpkg_checkbuilddeps()	if $do_chk_dep;
+	$task->debuild()	if $do_debuild;
 	$RESULTS->{$platform}->{$proj}=$task;
 	$task->section("summary");
 	$task->Log( 1,"\n\nRESULTS:\n".
@@ -1653,7 +1708,7 @@ __END__
 
 =over
 
-=item  C<--debug>
+=item --debug
 
 Add some Debugging Output
 
@@ -1706,6 +1761,14 @@ Specify the directory where the resulting packages are located.
 
 Specify the username to use for the package build directories.
 
+=item --check_dependencies
+
+Check dependencies
+
+=item --debuild
+
+do the debuild
+
 =item --platforms=
 
 Specify the platforms to build for. a * can be used to specify multiple 
@@ -1723,6 +1786,14 @@ Show a summary of all results. This also looks for cached results.
 =item --write-html-results-only
 
 Write Html Pages for the Results and exit.
+
+=item --help
+
+Help Page
+
+=item --man
+
+A little bit more detailed Man page
 
 =back
 

@@ -483,7 +483,7 @@ foreach $key (keys %touchingsHash) {
 	}
 	print $html "<td>", osmLink ($x, $y, 16) , "</td>\n" ;
 	print $html "<td>", osbLink ($x, $y, 16) , "</td>\n" ;
-	print $html "<td>", josmLinkSelectWays ($x, $y, 0.01, $id1, $id2), "</td>\n" ;
+	print $html "<td>", josmLinkSelectWays ($x, $y, 0.005, $id1, $id2), "</td>\n" ;
 	print $html "<td>", picLinkOsmarender ($x, $y, 16), "</td>\n" ;
 	print $html "</tr>\n" ;
 

@@ -7,6 +7,7 @@ import java.awt.geom.Area;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 
@@ -56,8 +57,21 @@ public class DuplicateNode extends Test
         {
             if( duplicated.size() > 1)
             {
-                TestError testError = new TestError(this, Severity.ERROR, tr("Duplicated nodes"), DUPLICATE_NODE, duplicated);
-                errors.add( testError );
+		boolean sameTags=true;
+		Map<String, String> keys0=duplicated.get(0).getKeys();
+		keys0.remove("created_by");
+		for(int i=0;i<duplicated.size();i++) {
+		    Map<String, String> keysI=duplicated.get(i).getKeys();
+		    keysI.remove("created_by");
+		    if (!keys0.equals(keysI)) sameTags=false;
+		}
+		if (!sameTags) {
+	            TestError testError = new TestError(this, Severity.WARNING, tr("Nodes at same position"), DUPLICATE_NODE, duplicated);
+        	    errors.add( testError );		    
+		} else {
+	            TestError testError = new TestError(this, Severity.ERROR, tr("Duplicated nodes"), DUPLICATE_NODE, duplicated);
+        	    errors.add( testError );
+		}
             }
         }
         nodes = null;

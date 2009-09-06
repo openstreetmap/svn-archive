@@ -74,13 +74,24 @@ public class UrlSquarePanel
         createPanel();
         initializePanel();
 
-        loadConfig();
+        loadConfig(AppConfiguration.getInstance());
     }
 
-    private void loadConfig()
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getJobType()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getJobType()
+    {
+        return DownloadConfigurationUrlSquare.ID;
+    }
+
+    @Override
+    public void loadConfig(DownloadConfigurationSaverIf configurationSaver)
     {
         _downloadConfig = new DownloadConfigurationUrlSquare();
-        AppConfiguration.getInstance().loadDownloadConfig(_downloadConfig);
+        configurationSaver.loadDownloadConfig(_downloadConfig);
 
         _textPasteUrl.setText(_downloadConfig.getPasteUrl());
         _textRadius.setText("" + _downloadConfig.getRadius());

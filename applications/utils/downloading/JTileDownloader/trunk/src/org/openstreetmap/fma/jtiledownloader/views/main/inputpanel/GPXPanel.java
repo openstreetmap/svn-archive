@@ -81,13 +81,24 @@ public class GPXPanel
         createPanel();
         initializePanel();
 
-        loadConfig();
+        loadConfig(AppConfiguration.getInstance());
     }
 
-    private void loadConfig()
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getJobType()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getJobType()
+    {
+        return DownloadConfigurationGPX.ID;
+    }
+
+    @Override
+    public void loadConfig(DownloadConfigurationSaverIf configurationSaver)
     {
         _downloadConfig = new DownloadConfigurationGPX();
-        AppConfiguration.getInstance().loadDownloadConfig(_downloadConfig);
+        configurationSaver.loadDownloadConfig(_downloadConfig);
 
         _textGPXFile.setText(_downloadConfig.getGpxFile());
         _sliderCorridor.setValue(_downloadConfig.getCorridor());
@@ -120,7 +131,6 @@ public class GPXPanel
             public void actionPerformed(ActionEvent e)
             {
                 JFileChooser chooser = new JFileChooser();
-                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 chooser.setFileFilter(new FileFilter() {
 
                     @Override

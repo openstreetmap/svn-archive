@@ -81,13 +81,24 @@ public class BBoxLatLonPanel
         createPanel();
         initializePanel();
 
-        loadConfig();
+        loadConfig(AppConfiguration.getInstance());
     }
 
-    private void loadConfig()
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getJobType()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getJobType()
+    {
+        return DownloadConfigurationBBoxLatLon.ID;
+    }
+
+    @Override
+    public void loadConfig(DownloadConfigurationSaverIf configurationSaver)
     {
         _downloadConfig = new DownloadConfigurationBBoxLatLon();
-        AppConfiguration.getInstance().loadDownloadConfig(_downloadConfig);
+        configurationSaver.loadDownloadConfig(_downloadConfig);
 
         _textMinLat.setText("" + _downloadConfig.getMinLat());
         _textMinLon.setText("" + _downloadConfig.getMinLon());

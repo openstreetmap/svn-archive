@@ -47,6 +47,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.fma.jtiledownloader.TileListDownloader;
 import org.openstreetmap.fma.jtiledownloader.TileListExporter;
@@ -73,6 +74,7 @@ public class MainPanel
 
     public static final String COMMAND_SELECTOUTPUTFOLDER = "selectOutputFolder";
     public static final String COMMAND_DOWNLOAD = "download";
+    public static final String COMMAND_LOADJOB = "loadjob";
     public static final String COMMAND_SAVEJOB = "savejob";
     public static final String COMMAND_EXPORT = "export";
 
@@ -94,6 +96,7 @@ public class MainPanel
 
     private JButton _buttonDownload = new JButton("Download Tiles");
     private JButton _buttonSaveJob = new JButton("Save Job");
+    private JButton _buttonLoadJob = new JButton("Load Job");
     private JButton _buttonExport = new JButton("Export Tilelist");
 
     private final JTileDownloaderMainView _mainView;
@@ -151,7 +154,7 @@ public class MainPanel
 
         _buttonDownload.setActionCommand(COMMAND_DOWNLOAD);
         _buttonSaveJob.setActionCommand(COMMAND_SAVEJOB);
-
+        _buttonLoadJob.setActionCommand(COMMAND_LOADJOB);
         _buttonExport.setActionCommand(COMMAND_EXPORT);
 
         _comboOutputZoomLevel.setName(COMPONENT_OUTPUT_ZOOM_LEVEL);
@@ -177,6 +180,7 @@ public class MainPanel
         _buttonSelectOutputFolder.addActionListener(new MainViewActionListener());
         _buttonDownload.addActionListener(new MainViewActionListener());
         _buttonSaveJob.addActionListener(new MainViewActionListener());
+        _buttonLoadJob.addActionListener(new MainViewActionListener());
         _buttonExport.addActionListener(new MainViewActionListener());
 
         _comboOutputZoomLevel.addFocusListener(new MainViewFocusListener());
@@ -296,12 +300,15 @@ public class MainPanel
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         add(_textNumberOfTiles, constraints);
 
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        constraints.gridwidth = GridBagConstraints.RELATIVE;
         add(_buttonDownload, constraints);
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        add(_buttonExport, constraints);
+
         constraints.gridwidth = GridBagConstraints.RELATIVE;
         add(_buttonSaveJob, constraints);
         constraints.gridwidth = GridBagConstraints.REMAINDER;
-        add(_buttonExport, constraints);
+        add(_buttonLoadJob, constraints);
 
         constraints.weighty = 1.0;
         add(new JPanel(), constraints);
@@ -390,6 +397,55 @@ public class MainPanel
                     new ProgressBar(getInputPanel().getNumberOfTilesToDownload(), tld);
                 }
             }
+            else if (actionCommand.equalsIgnoreCase(COMMAND_LOADJOB))
+            {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setDialogType(JFileChooser.OPEN_DIALOG);
+                chooser.setFileFilter(new FileFilter() {
+
+                    @Override
+                    public boolean accept(File f)
+                    {
+                        if (f.getName().endsWith(".xml") || f.isDirectory())
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+
+                    @Override
+                    public String getDescription()
+                    {
+                        return "XML-File";
+                    }
+
+                });
+                if (JFileChooser.APPROVE_OPTION == chooser.showDialog(null, "Open config"))
+                {
+                    DownloadJob job = new DownloadJob(chooser.getSelectedFile().getAbsolutePath());
+
+                    for (InputPanel inputPanel : inputPanels)
+                    {
+                        if (inputPanel.getJobType().equals(job.getType()))
+                        {
+                            inputPanel.loadConfig(job);
+                        }
+                    }
+
+                    if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(_mainView, "Also load general settings?", "JTileDownloader", JOptionPane.YES_NO_OPTION))
+                    {
+                        _textOutputFolder.setText(job.getOutputLocation());
+                        initializeOutputZoomLevel(job.getOutputZoomLevels());
+                        initializeTileServer(job.getTileServer());
+                    }
+
+                    valuesChanged();
+                    JOptionPane.showMessageDialog(_mainView, "Loaded.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
             else if (actionCommand.equalsIgnoreCase(COMMAND_SAVEJOB))
             {
                 if (!getInputPanel().isDownloadOkay())
@@ -400,6 +456,28 @@ public class MainPanel
 
                 JFileChooser chooser = new JFileChooser();
                 chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+                chooser.setFileFilter(new FileFilter() {
+
+                    @Override
+                    public boolean accept(File f)
+                    {
+                        if (f.getName().endsWith(".xml") || f.isDirectory())
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+
+                    @Override
+                    public String getDescription()
+                    {
+                        return "XML-File";
+                    }
+
+                });
                 if (JFileChooser.APPROVE_OPTION == chooser.showDialog(null, "Save"))
                 {
                     File dir = chooser.getSelectedFile();

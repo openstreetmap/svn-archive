@@ -52,7 +52,7 @@ public class WronglyOrderedWays extends Test  {
         String errortype = "";
         int type;
 
-        if( w.deleted || w.incomplete )
+        if( !w.isUsable() )
             return;
 
         String natural = w.get("natural");

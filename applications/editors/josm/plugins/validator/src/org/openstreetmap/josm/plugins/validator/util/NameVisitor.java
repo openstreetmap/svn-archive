@@ -78,6 +78,6 @@ public class NameVisitor extends AbstractVisitor {
 
     private void addId(OsmPrimitive osm) {
         if (Main.pref.getBoolean("osm-primitives.showid"))
-            name += tr(" [id: {0}]", osm.id);
+            name += tr(" [id: {0}]", osm.getId());
     }
 }

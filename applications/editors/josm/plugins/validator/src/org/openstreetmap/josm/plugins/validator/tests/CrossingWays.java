@@ -66,7 +66,7 @@ public class CrossingWays extends Test
     @Override
     public void visit(Way w)
     {
-        if( w.deleted || w.incomplete )
+        if( !w.isUsable() )
             return;
 
         String coastline1 = w.get("natural");

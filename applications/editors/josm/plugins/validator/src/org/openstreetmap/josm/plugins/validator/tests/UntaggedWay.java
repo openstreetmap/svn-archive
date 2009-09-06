@@ -62,10 +62,10 @@ public class UntaggedWay extends Test
     @Override
     public void visit(Way w)
     {
-        if (w.deleted || w.incomplete) return;
+        if (!w.isUsable()) return;
 
         Map<String, String> tags = w.getKeys();
-        if( tags != null )
+        if( tags.size() != 0 )
         {
             String highway = tags.get("highway");
             if(highway != null && NAMED_WAYS.contains(highway))
@@ -116,14 +116,12 @@ public class UntaggedWay extends Test
         multipolygonways = new LinkedList<Way>();
         for (final Relation r : Main.main.getCurrentDataSet().relations)
         {
-            if(!r.deleted && !r.incomplete && r.getKeys() != null
-            && "multipolygon".equals(r.get("type")))
+            if(r.isUsable() && "multipolygon".equals(r.get("type")))
             {
                 for (RelationMember m : r.members)
                 {
                     if(m.member != null && m.member instanceof Way &&
-                    !m.member.deleted && !m.member.incomplete
-                    && !m.member.isTagged())
+                    m.member.isUsable() && !m.member.isTagged())
                         multipolygonways.add((Way)m.member);
                 }
             }

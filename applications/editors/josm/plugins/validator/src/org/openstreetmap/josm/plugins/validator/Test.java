@@ -123,7 +123,7 @@ public class Test extends AbstractVisitor
     {
         for (OsmPrimitive p : selection)
         {
-            if( !p.deleted && !p.incomplete )
+            if( p.isUsable() )
                 p.visit(this);
         }
     }

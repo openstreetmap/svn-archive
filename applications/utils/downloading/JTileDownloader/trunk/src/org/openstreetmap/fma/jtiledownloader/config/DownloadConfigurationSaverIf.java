@@ -26,4 +26,6 @@ package org.openstreetmap.fma.jtiledownloader.config;
 public interface DownloadConfigurationSaverIf
 {
     public void saveDownloadConfig(DownloadConfiguration config);
+
+    public void loadDownloadConfig(DownloadConfiguration config);
 }

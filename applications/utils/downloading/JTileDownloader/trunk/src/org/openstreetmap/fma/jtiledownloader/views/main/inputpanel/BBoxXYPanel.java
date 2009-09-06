@@ -72,13 +72,24 @@ public class BBoxXYPanel
         createPanel();
         initializePanel();
 
-        loadConfig();
+        loadConfig(AppConfiguration.getInstance());
     }
 
-    private void loadConfig()
+    /**
+     * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getJobType()
+     * {@inheritDoc}
+     */
+    @Override
+    public String getJobType()
+    {
+        return DownloadConfigurationBBoxXY.ID;
+    }
+
+    @Override
+    public void loadConfig(DownloadConfigurationSaverIf configurationSaver)
     {
         _downloadConfig = new DownloadConfigurationBBoxXY();
-        AppConfiguration.getInstance().loadDownloadConfig(_downloadConfig);
+        configurationSaver.loadDownloadConfig(_downloadConfig);
 
         _textMinX.setText("" + _downloadConfig.getMinX());
         _textMinY.setText("" + _downloadConfig.getMinY());

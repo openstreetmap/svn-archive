@@ -72,6 +72,10 @@ public abstract class InputPanel
 
     public abstract TileList getTileList();
 
+    public abstract String getJobType();
+
+    public abstract void loadConfig(DownloadConfigurationSaverIf configurationSave);
+
     public abstract void saveConfig(DownloadConfigurationSaverIf configurationSave);
 
     public void updateNumberOfTiles()

@@ -43,6 +43,8 @@ public class DownloadConfigurationUrlSquare
     @Override
     public void save(Properties prop)
     {
+        setTemplateProperty(prop, TYPE, ID);
+
         setTemplateProperty(prop, PASTE_URL, _pasteUrl);
         setTemplateProperty(prop, RADIUS, "" + _radius);
     }

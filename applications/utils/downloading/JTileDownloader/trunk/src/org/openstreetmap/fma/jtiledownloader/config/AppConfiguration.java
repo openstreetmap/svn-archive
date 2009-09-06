@@ -425,7 +425,10 @@ public class AppConfiguration
         for (Object property : downloadProps.keySet())
         {
             String propertyName = (String) property;
-            prop.setProperty(config.getType() + "." + propertyName, downloadProps.getProperty(propertyName));
+            if (!propertyName.equals(DownloadConfiguration.TYPE))
+            {
+                prop.setProperty(config.getType() + "." + propertyName, downloadProps.getProperty(propertyName));
+            }
         }
     }
 

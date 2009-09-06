@@ -43,6 +43,8 @@ public class DownloadConfigurationGPX
     @Override
     public void save(Properties prop)
     {
+        setTemplateProperty(prop, TYPE, ID);
+
         setTemplateProperty(prop, GPX_FILE, _gpxFile);
         setTemplateProperty(prop, CORRIDOR, "" + _corridor);
     }

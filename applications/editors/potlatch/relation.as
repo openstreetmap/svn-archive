@@ -157,7 +157,8 @@
 				linealpha = relalphas[type];
 			}
 		}
-		if (linealpha==0) { return; }	// don't draw relations where alpha=0
+		if (linealpha==0 && !isHighlighting) { return; }	// don't draw relations where alpha=0
+		if (linealpha==0) { linealpha=25; }					//  | unless they're highlighted
 		this.line.lineStyle(linewidth,c,linealpha,false,"none");
 
 		var ms = this.members;

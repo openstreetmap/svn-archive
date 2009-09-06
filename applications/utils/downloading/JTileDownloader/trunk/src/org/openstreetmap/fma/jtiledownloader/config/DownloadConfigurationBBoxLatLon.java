@@ -46,6 +46,8 @@ public class DownloadConfigurationBBoxLatLon
     @Override
     public void save(Properties prop)
     {
+        setTemplateProperty(prop, TYPE, ID);
+
         setTemplateProperty(prop, MIN_LAT, "" + _minLat);
         setTemplateProperty(prop, MIN_LON, "" + _minLon);
         setTemplateProperty(prop, MAX_LAT, "" + _maxLat);

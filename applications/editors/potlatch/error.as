@@ -44,11 +44,16 @@
 		if (writeError) {
 			// loop through all ways which are uploading, and reupload
 			if (retry) { establishConnections(); }
+			for (var q in _root.nodes) {
+				if (_root.nodes[q].uploading) {
+					_root.nodes[q].uploading=false;
+					_root.nodes[q].clean=false;
+				}
+			}
 			for (var q in _root.map.ways) {
 				if (_root.map.ways[q].uploading) {
 					_root.map.ways[q].uploading=false;
 					_root.map.ways[q].clean=false;
-					var z=_root.map.ways[q].path; for (var i in z) { z[i].uploading=false; }
 					if (!_root.sandbox && retry) { _root.map.ways[q].upload(); }
 				}
 			}

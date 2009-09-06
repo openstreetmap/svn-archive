@@ -481,11 +481,17 @@ public class MainPanel
                 if (JFileChooser.APPROVE_OPTION == chooser.showDialog(null, "Save"))
                 {
                     File dir = chooser.getSelectedFile();
+                    // add default extension if missing
+                    if (!dir.getName().endsWith(".xml") && !chooser.accept(dir))
+                    {
+                        dir = new File(dir.getAbsolutePath() + ".xml");
+                    }
                     if (dir.exists())
                     {
                         JOptionPane.showMessageDialog(_mainView, "File exists. Aborting...", "Info", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+
                     DownloadJob job = new DownloadJob();
                     job.setOutputLocation(_textOutputFolder.getText());
                     job.setOutputZoomLevels(getOutputZoomLevelString());

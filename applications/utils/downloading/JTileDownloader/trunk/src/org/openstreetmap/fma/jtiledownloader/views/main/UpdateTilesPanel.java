@@ -1,5 +1,6 @@
 /*
  * Copyright 2008, Friedrich Maier
+ * Copyright 2009, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader.
  * (see http://wiki.openstreetmap.org/index.php/JTileDownloader)
@@ -30,6 +31,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileFilter;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -241,7 +243,7 @@ public class UpdateTilesPanel
                         {
                             YDirectory yDir = directory.elementAt(indexDirectoryY);
                             Tile[] tiles = yDir.getTiles();
-                            for (int indexTiles = 0; indexTiles < tiles.length; indexTiles++)
+                            for (int indexTiles = 0; tiles != null && indexTiles < tiles.length; indexTiles++)
                             {
                                 updateList.addTile(tiles[indexTiles]);
                             }
@@ -265,37 +267,69 @@ public class UpdateTilesPanel
         {
             File file = new File(getFolder());
 
-            if (file == null)
-            {
-                return;
-            }
-
-            if (!file.isDirectory())
+            if (file == null || !file.isDirectory())
             {
                 return;
             }
 
             _updateList = new Vector<UpdateTileList>();
 
-            File[] zoomLevels = file.listFiles();
+            File[] zoomLevels = file.listFiles(new FileFilter() {
+                public boolean accept(File pathname)
+                {
+                    if (pathname.isDirectory() == false)
+                    {
+                        return false;
+                    }
+                    try
+                    {
+                        if (Integer.parseInt(pathname.getName()) > 0)
+                        {
+                            return true;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        // ignore
+                    }
+                    return false;
+                }
+            });
 
             if (zoomLevels == null || zoomLevels.length == 0)
             {
-                JOptionPane.showMessageDialog(_mainPanel, "No files found!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(_mainPanel, "No zoom directories found!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            int zoomLevelCount = zoomLevels.length;
-            for (int indexZoomLevel = 0; indexZoomLevel < zoomLevelCount; indexZoomLevel++)
+            for (File zoomLevel : zoomLevels)
             {
-                File zoomLevel = zoomLevels[indexZoomLevel];
-
                 if (zoomLevel != null)
                 {
                     UpdateTileList tileList = new UpdateTileList();
                     tileList.setZoomLevel(Integer.parseInt(zoomLevel.getName()));
 
-                    File[] yDirs = zoomLevel.listFiles();
+                    File[] yDirs = zoomLevel.listFiles(new FileFilter() {
+                        public boolean accept(File pathname)
+                        {
+                            if (pathname.isDirectory() == false)
+                            {
+                                return false;
+                            }
+                            try
+                            {
+                                if (Integer.parseInt(pathname.getName()) > 0)
+                                {
+                                    return true;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                // ignore
+                            }
+                            return false;
+                        }
+                    });
                     if (yDirs != null)
                     {
                         YDirectory yDirectory;
@@ -305,7 +339,27 @@ public class UpdateTilesPanel
                             File yDir = yDirs[indexY];
                             yDirectory = new YDirectory();
                             yDirectory.setName(yDir.getName());
-                            File[] tiles = yDir.listFiles();
+                            File[] tiles = yDir.listFiles(new FileFilter() {
+                                public boolean accept(File pathname)
+                                {
+                                    if (pathname.isDirectory() == true)
+                                    {
+                                        return false;
+                                    }
+                                    try
+                                    {
+                                        if (pathname.getName().matches("[0-9]+\\.[a-z]+"))
+                                        {
+                                            return true;
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        // ignore
+                                    }
+                                    return false;
+                                }
+                            });
                             if (tiles != null)
                             {
                                 theTiles = new Tile[tiles.length];

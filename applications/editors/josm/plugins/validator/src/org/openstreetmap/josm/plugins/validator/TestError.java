@@ -152,7 +152,7 @@ public class TestError {
         String ignorestring = getIgnoreSubGroup();
         for (OsmPrimitive o : primitives) {
             // ignore data not yet uploaded
-            if (o.id == 0)
+            if (o.getId() == 0)
                 return null;
             String type = "u";
             if (o instanceof Way)
@@ -161,7 +161,7 @@ public class TestError {
                 type = "r";
             else if (o instanceof Node)
                 type = "n";
-            strings.add(type + "_" + o.id);
+            strings.add(type + "_" + o.getId());
         }
         for (String o : strings) {
             ignorestring += ":" + o;
@@ -268,7 +268,7 @@ public class TestError {
         }
 
         public void visit(OsmPrimitive p) {
-            if (!p.deleted && !p.incomplete) {
+            if (p.isUsable()) {
                 p.visit(this);
             }
         }

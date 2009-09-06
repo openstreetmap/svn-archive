@@ -27,7 +27,7 @@ public class NodesWithSameName extends Test {
     }
 
     @Override public void visit(Node n) {
-        if (n.deleted || n.incomplete) return;
+        if (!n.isUsable()) return;
 
         String name = n.get("name");
         String sign = n.get("traffic_sign");

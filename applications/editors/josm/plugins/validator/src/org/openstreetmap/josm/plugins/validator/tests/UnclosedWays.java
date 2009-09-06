@@ -68,7 +68,7 @@ public class UnclosedWays extends Test {
         type = etype = null;
         mode = 0;
 
-        if (w.deleted || w.incomplete)
+        if (!w.isUsable())
             return;
 
         test = w.get("natural");

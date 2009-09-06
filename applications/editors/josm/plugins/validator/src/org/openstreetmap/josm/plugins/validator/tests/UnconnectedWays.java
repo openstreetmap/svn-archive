@@ -189,7 +189,7 @@ public class UnconnectedWays extends Test
     @Override
     public void visit(Way w)
     {
-        if( w.deleted || w.incomplete )
+        if( !w.isUsable() )
             return;
         int size = w.getNodesCount();
         if(size < 2)

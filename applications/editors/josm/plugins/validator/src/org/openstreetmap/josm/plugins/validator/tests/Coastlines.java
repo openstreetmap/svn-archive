@@ -53,7 +53,7 @@ public class Coastlines extends Test
     @Override
     public void visit(Way w)
     {
-        if( w.deleted || w.incomplete )
+        if( !w.isUsable() )
             return;
 
         String natural = w.get("natural");

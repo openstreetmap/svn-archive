@@ -414,7 +414,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
     public static class ValidatorBoundingXYVisitor extends BoundingXYVisitor implements ValidatorVisitor {
 
         public void visit(OsmPrimitive p) {
-            if (!p.deleted && !p.incomplete) {
+            if (p.isUsable()) {
                 p.visit(this);
             }
         }

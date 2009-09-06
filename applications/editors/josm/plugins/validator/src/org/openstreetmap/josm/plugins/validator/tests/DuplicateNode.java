@@ -66,7 +66,7 @@ public class DuplicateNode extends Test
     @Override
     public void visit(Node n)
     {
-        if(!n.deleted && !n.incomplete)
+        if(n.isUsable())
             nodes.add(n.getCoor(), n);
     }
 
@@ -90,7 +90,7 @@ public class DuplicateNode extends Test
         Node target = null;
         // select the target node in the same way as in the core action MergeNodesAction, rev.1084
         for (Node n: nodes) {
-            if (n.id > 0) {
+            if (n.getId() > 0) {
                 target = n;
                 break;
             }
@@ -118,7 +118,7 @@ public class DuplicateNode extends Test
         Area a = Main.main.getCurrentDataSet().getDataSourceArea();
         if (a != null) {
             for (OsmPrimitive osm : del) {
-                if (osm instanceof Node && osm.id != 0) {
+                if (osm instanceof Node && osm.getId() != 0) {
                     Node n = (Node) osm;
                     if (!a.contains(n.getCoor())) {
                         return ConditionalOptionPaneUtil.showConfirmationDialog(

@@ -51,7 +51,7 @@ public class UntaggedNode extends Test
         // case, we must visit all ways, selected or not.
         if (partialSelection) {
             for (OsmPrimitive p : selection) {
-                if (!p.deleted && !p.incomplete && p instanceof Node) {
+                if (p.isUsable() && p instanceof Node) {
                     p.visit(this);
                 }
             }
@@ -60,7 +60,7 @@ public class UntaggedNode extends Test
             }
         } else {
             for (OsmPrimitive p : selection) {
-                if (!p.deleted && !p.incomplete) {
+                if (p.isUsable()) {
                     p.visit(this);
                 }
             }
@@ -70,7 +70,7 @@ public class UntaggedNode extends Test
     @Override
     public void visit(Node n)
     {
-        if(!n.incomplete && !n.deleted && !n.isTagged())
+        if(n.isUsable() && !n.isTagged())
             emptyNodes.add(n);
     }
 

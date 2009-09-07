@@ -108,7 +108,7 @@
 		_root.windows.upload.remove();
 		z=_root.map.pois; for (i in z) { z[i].uploading=false; }
 		z=_root.map.ways; for (i in z) { z[i].uploading=false; }
-		z=_root.map.nodes; for (i in z) { z[i].uploading=false; }
+		z=_root.nodes; for (i in z) { z[i].uploading=false; }
 		z=_root.map.relations; for (i in z) { z[i].uploading=false; }
 	}
 

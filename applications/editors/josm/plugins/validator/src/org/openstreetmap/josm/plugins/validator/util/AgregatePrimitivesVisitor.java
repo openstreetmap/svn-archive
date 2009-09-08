@@ -64,8 +64,8 @@ public class AgregatePrimitivesVisitor extends AbstractVisitor
     public void visit(Relation r) {
         if (!aggregatedData.contains(r)) {
             aggregatedData.add(r);
-            for (RelationMember m : r.members) {
-                m.member.visit(this);
+            for (RelationMember m : r.getMembers()) {
+                m.getMember().visit(this);
             }
         }
     }

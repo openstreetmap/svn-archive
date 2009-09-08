@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction.UploadHook;
+import org.openstreetmap.josm.data.APIDataSet;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.validator.util.AgregatePrimitivesVisitor;
@@ -41,15 +42,15 @@ public class ValidateUploadHook implements UploadHook
     /**
      * Validate the modified data before uploading
      */
-    public boolean checkUpload(Collection<OsmPrimitive> add, Collection<OsmPrimitive> update, Collection<OsmPrimitive> delete)
+    public boolean checkUpload(APIDataSet apiDataSet)
     {
         Collection<Test> tests = OSMValidatorPlugin.getEnabledTests(true);
         if( tests.isEmpty() )
             return true;
 
         AgregatePrimitivesVisitor v = new AgregatePrimitivesVisitor();
-        v.visit(add);
-        Collection<OsmPrimitive> selection = v.visit(update);
+        v.visit(apiDataSet.getPrimitivesToAdd());
+        Collection<OsmPrimitive> selection = v.visit(apiDataSet.getPrimitivesToUpdate());
 
         List<TestError> errors = new ArrayList<TestError>(30);
         for(Test test : tests)

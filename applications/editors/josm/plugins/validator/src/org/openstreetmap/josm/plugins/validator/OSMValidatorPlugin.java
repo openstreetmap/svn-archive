@@ -155,6 +155,8 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
         return new PreferenceEditor(this);
     }
 
+    private ValidateUploadHook uploadHook;
+    
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
@@ -167,17 +169,12 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
         } else
             Layer.listeners.remove(this);
 
-        LinkedList<UploadHook> hooks = ((UploadAction) Main.main.menu.upload).uploadHooks;
-        Iterator<UploadHook> hooksIt = hooks.iterator();
-        while (hooksIt.hasNext()) {
-            if (hooksIt.next() instanceof ValidateUploadHook) {
-                if (newFrame == null)
-                    hooksIt.remove();
-                break;
-            }
+        if (newFrame != null) {
+        	UploadAction.registerUploadHook(uploadHook = new ValidateUploadHook(this));
+        } else {
+        	UploadAction.unregisterUploadHook(uploadHook);
+        	uploadHook = null;
         }
-        if (newFrame != null)
-            hooks.add(0, new ValidateUploadHook(this));
     }
 
     public void initializeErrorLayer() {

@@ -133,9 +133,9 @@ public class RoutingLayer extends Layer {
         Node nearest = null;
         double minDist = 0;
         for (Way w : dataLayer.data.ways) {
-            if (w.deleted || w.incomplete || w.get("highway")==null) continue;
+            if (w.isDeleted() || w.incomplete || w.get("highway")==null) continue;
             for (Node n : w.getNodes()) {
-                if (n.deleted || n.incomplete) continue;
+                if (n.isDeleted() || n.incomplete) continue;
 
                 Point P = Main.map.mapView.getPoint(n);
                 double dist = p.distanceSq(P);

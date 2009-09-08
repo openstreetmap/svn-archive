@@ -130,11 +130,11 @@ public class RoutingGraph {
         rgDelegator.setRouteType(this.routeType);
         // iterate all ways and segments for all nodes:
         for (Way way : data.ways) {
-            if (way != null && !way.deleted && this.isvalidWay(way)) {
+            if (way != null && !way.isDeleted() && this.isvalidWay(way)) {
                 Node from = null;
                 for (Node to : way.getNodes()) {
                     // Ignore the node if deleted
-                    if (!to.deleted) {
+                    if (!to.isDeleted()) {
                         graph.addVertex(to);
                         if (from != null) {
                             addEdge(way, from, to);
@@ -167,9 +167,9 @@ public class RoutingGraph {
         // weight = getWeight(way);
         double weight = getWeight(way, length);
         setWeight(edge, length);
-        logger.debug("edge for way " + way.id
-                     + "(from node " + from.id + " to node "
-                     + to.id + ") has weight: " + weight);
+        logger.debug("edge for way " + way.getId()
+                     + "(from node " + from.getId() + " to node "
+                     + to.getId() + ") has weight: " + weight);
         //((GraphDelegator<Node,OsmEdge>) graph).setEdgeWeight(edge, weight);
         ((DirectedWeightedMultigraph<Node,OsmEdge>)graph).setEdgeWeight(edge, weight);
     }
@@ -278,7 +278,7 @@ public class RoutingGraph {
         logger.debug("apply algorithm between nodes ");
 
         for (Node node : nodes) {
-            logger.debug(node.id);
+            logger.debug(node.getId());
         }
         logger.debug("-----------------------------------");
 

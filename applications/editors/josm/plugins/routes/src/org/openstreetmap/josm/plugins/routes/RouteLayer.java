@@ -84,9 +84,9 @@ public class RouteLayer extends Layer {
 	}
 
 	private void addRelation(Relation relation, RouteDefinition route) {
-		for (RelationMember member:relation.members) {
-			if (member.member instanceof Way) {
-				Way way = (Way)member.member;
+		for (RelationMember member:relation.getMembers()) {
+			if (member.getMember() instanceof Way) {
+				Way way = (Way)member.getMember();
 				pathBuilder.addWay(way, route);
 			}
 		}

@@ -146,13 +146,15 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
 
         ExtendedDialog diag = new ExtendedDialog(Main.parent,
                 tr("Add Rectified Image"),
-                panel,
-                new String[] {tr("Add Rectified Image"), tr("Cancel")},
-                new String[] {"OLmarker.png", "cancel.png"});
+
+                new String[] {tr("Add Rectified Image"), tr("Cancel")});
+        diag.setContent(panel);
+        diag.setButtonIcons(new String[] {"OLmarker.png", "cancel.png"});
 
         // This repeatedly shows the dialog in case there has been an error.
         // The loop is break;-ed if the users cancels
         outer: while(true) {
+        	diag.showDialog();
             int answer = diag.getValue();
             // Break loop when the user cancels
             if(answer != 1)

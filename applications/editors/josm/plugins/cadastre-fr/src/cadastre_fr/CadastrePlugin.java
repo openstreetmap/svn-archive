@@ -123,9 +123,7 @@ public class CadastrePlugin extends Plugin {
         refreshConfiguration();
         refreshMenu();
 
-        // add a hook at uploading to insert/verify the source=cadastre tag
-        LinkedList<UploadHook> hooks = ((UploadAction) Main.main.menu.upload).uploadHooks;
-        hooks.add(0, new CheckSourceUploadHook());
+        UploadAction.registerUploadHook(new CheckSourceUploadHook());
     }
 
     public void refreshMenu() throws Exception {

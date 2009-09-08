@@ -78,7 +78,7 @@ import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectionListener, LayerChangeListener,
-        DataChangeListener, MouseListener, OsbActionObserver {
+DataChangeListener, MouseListener, OsbActionObserver {
 
     private static final long serialVersionUID = 1L;
     private DefaultListModel model;
@@ -187,7 +187,7 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
         Collections.sort(sortedList, new BugComparator());
 
         for (Node node : sortedList) {
-            if (!node.deleted) {
+            if (node.isUsable()) {
                 model.addElement(new OsbListItem(node));
             }
         }
@@ -217,19 +217,24 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
             }
 
             OsbAction.setSelectedNode(node);
-
             scrollToSelected(node);
+        }
 
-            if (fireSelectionChanged) {
-                Main.main.getCurrentDataSet().setSelected(selected);
-            }
+        // CurrentDataSet may be null if there is no normal, edible map
+        // If so, a temporary DataSet is created because it's the simplest way
+        // to fire all necessary events so OSB updates its popups.
+        DataSet ds = Main.main.getCurrentDataSet();
+        if (fireSelectionChanged) {
+            if(ds == null)
+                ds = new DataSet();
+            ds.setSelected(selected);
         }
     }
 
     private void scrollToSelected(Node node) {
         for (int i = 0; i < model.getSize(); i++) {
             Node current = ((OsbListItem) model.get(i)).getNode();
-            if (current.id == node.id) {
+            if (current.getId()== node.getId()) {
                 list.scrollRectToVisible(list.getCellBounds(i, i));
                 list.setSelectedIndex(i);
                 return;
@@ -319,13 +324,13 @@ public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectio
             }
         });
     }
-    
-	@Override
-	public void showDialog() {
-		if (!downloaded) {
-			initialDownload();
-			downloaded = true;
-		}
-		super.showDialog();
-	}
+
+    @Override
+    public void showDialog() {
+        if (!downloaded) {
+            initialDownload();
+            downloaded = true;
+        }
+        super.showDialog();
+    }
 }

@@ -62,7 +62,7 @@ public class OsbListItem {
         if(obj instanceof OsbListItem) {
             OsbListItem other = (OsbListItem)obj;
             if(getNode() != null && other.getNode() != null) {
-                return getNode().id == other.getNode().id;
+                return getNode().getId() == other.getNode().getId();
             }
         }
 

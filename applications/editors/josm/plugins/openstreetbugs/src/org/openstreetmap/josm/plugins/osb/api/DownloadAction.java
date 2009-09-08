@@ -84,8 +84,9 @@ public class DownloadAction {
             double lat = Double.parseDouble(m.group(3));
             double lon = Double.parseDouble(m.group(2));
             LatLon latlon = new LatLon(lat, lon);
-            Node osmNode = new Node(latlon);
-            osmNode.id = Long.parseLong(m.group(1));
+            Node osmNode = new Node(Long.parseLong(m.group(1)));
+            osmNode.setCoor(latlon);
+            osmNode.incomplete = false;
             osmNode.put("id", m.group(1));
             osmNode.put("note", m.group(4));
             osmNode.put("openstreetbug", "FIXME");

@@ -69,7 +69,7 @@ public class EditGpxMode extends MapMode {
             for (Node n: dataSet.nodes) {
                 Point p = Main.map.mapView.getPoint(n);
                 if (r.contains(p)) {
-                    n.deleted = true; //only set as deleted. this makes reset to beginning possible
+                	n.setDeleted(true);
                 }
             }
             oldRect = null;

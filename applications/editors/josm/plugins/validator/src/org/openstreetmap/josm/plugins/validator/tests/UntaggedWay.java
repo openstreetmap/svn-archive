@@ -118,11 +118,11 @@ public class UntaggedWay extends Test
         {
             if(r.isUsable() && "multipolygon".equals(r.get("type")))
             {
-                for (RelationMember m : r.members)
+                for (RelationMember m : r.getMembers())
                 {
-                    if(m.member != null && m.member instanceof Way &&
-                    m.member.isUsable() && !m.member.isTagged())
-                        multipolygonways.add((Way)m.member);
+                    if(m.getMember() != null && m.getMember() instanceof Way &&
+                    m.getMember().isUsable() && !m.getMember().isTagged())
+                        multipolygonways.add((Way)m.getMember());
                 }
             }
         }

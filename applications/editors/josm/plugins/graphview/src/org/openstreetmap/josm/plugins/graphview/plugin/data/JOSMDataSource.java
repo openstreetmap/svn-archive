@@ -35,9 +35,9 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation> {
 	}
 
 	public Iterable<RelationMember> getMembers(Relation relation) {
-		List<RelationMember> members = new ArrayList<RelationMember>(relation.members.size());
-		for (org.openstreetmap.josm.data.osm.RelationMember member : relation.members) {
-			if (!member.member.deleted && !member.member.incomplete) {
+		List<RelationMember> members = new ArrayList<RelationMember>(relation.getMembersCount());
+		for (org.openstreetmap.josm.data.osm.RelationMember member : relation.getMembers()) {
+			if (!member.getMember().isDeleted() && !member.getMember().incomplete) {
 				members.add(new RelationMemberImpl(member));
 			}
 		}
@@ -148,7 +148,7 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation> {
 		}
 
 		protected boolean accept(P primitive) {
-			return !primitive.deleted && !primitive.incomplete;
+			return !primitive.isDeleted() && !primitive.incomplete;
 		}
 	}
 
@@ -165,8 +165,8 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation> {
 		@Override
 		protected boolean accept(Relation relation) {
 			boolean complete = true;
-			for (org.openstreetmap.josm.data.osm.RelationMember member : relation.members) {
-				if (member.member == null || member.member.deleted || member.member.incomplete) {
+			for (org.openstreetmap.josm.data.osm.RelationMember member : relation.getMembers()) {
+				if (member.getMember() == null || member.getMember().isDeleted() || member.getMember().incomplete) {
 					complete = false;
 				}
 			}
@@ -178,8 +178,8 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation> {
 		private final String role;
 		private final Object member;
 		public RelationMemberImpl(org.openstreetmap.josm.data.osm.RelationMember originalMember) {
-			this.role = originalMember.role;
-			this.member = originalMember.member;
+			this.role = originalMember.getRole();
+			this.member = originalMember.getMember();
 		}
 		public String getRole() {
 			return role;

@@ -172,8 +172,15 @@ public class WMSAdjustAction extends MapMode implements
        pnl.add(new JLabel(tr("Please select the WMS layer to adjust.")), GBC.eol());
        pnl.add(layerList, GBC.eol());
    
-       int decision = new ExtendedDialog(Main.parent, tr("Select WMS layer"), pnl, new String[] { tr("Start adjusting"),
-           tr("Cancel") }, new String[] { "mapmode/adjustwms", "cancel" }).getValue();
+       ExtendedDialog diag = new ExtendedDialog(
+    		   Main.parent, 
+    		   tr("Select WMS layer"), 
+    		   new String[] { tr("Start adjusting"),tr("Cancel") }
+    		   );
+       diag.setContent(pnl);
+       diag.setButtonIcons(new String[] { "mapmode/adjustwms", "cancel" });
+       diag.showDialog();
+       int decision = diag.getValue();
        if (decision != 1)
            return null;
        Layer adjustLayer = (Layer) layerList.getSelectedItem();

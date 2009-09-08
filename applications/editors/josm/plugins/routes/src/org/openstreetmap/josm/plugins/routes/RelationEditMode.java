@@ -86,7 +86,7 @@ public class RelationEditMode extends MapMode {
     				Main.main.undoRedo.add(new RemoveRelationMemberCommand(r, new RelationMember("", way)));
     			} else {
     				Relation newRelation = new Relation(r);
-    				newRelation.getMembers().add(new RelationMember("", way));
+    				newRelation.addMember(new RelationMember("", way));
     	            Main.main.undoRedo.add(new ChangeCommand(r, newRelation));
     			}
     		}

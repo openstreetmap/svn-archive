@@ -36,16 +36,16 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction.UploadHook;
+import org.openstreetmap.josm.data.APIDataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class OsbUploadHook implements UploadHook {
 
-    public boolean checkUpload(Collection<OsmPrimitive> add, Collection<OsmPrimitive> update,
-            Collection<OsmPrimitive> delete)
+    public boolean checkUpload(APIDataSet apiData)
     {
-        boolean containsOsbData = checkOpenStreetBugs(add);
-        containsOsbData |= checkOpenStreetBugs(update);
-        containsOsbData |= checkOpenStreetBugs(delete);
+        boolean containsOsbData = checkOpenStreetBugs(apiData.getPrimitivesToAdd());
+        containsOsbData |= checkOpenStreetBugs(apiData.getPrimitivesToUpdate());
+        containsOsbData |= checkOpenStreetBugs(apiData.getPrimitivesToDelete());
         if(containsOsbData) {
             JOptionPane.showMessageDialog(Main.parent,
                 tr("<html>The selected data contains data from OpenStreetBugs.<br>" +

@@ -202,9 +202,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             newFrame.addToggleDialog(dialog);
             
             // add the upload hook
-            LinkedList<UploadHook> hooks = ((UploadAction) Main.main.menu.upload).uploadHooks;
-            hooks.add(0, uploadHook);
-            
+            UploadAction.registerUploadHook(uploadHook);            
         } else if (oldFrame!=null && newFrame==null ) { // map frame removed
             
         }

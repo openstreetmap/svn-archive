@@ -571,12 +571,16 @@ public class CorrelateGpxWithImages implements ActionListener {
         boolean isOk = false;
         GpxDataWrapper selectedGpx = null;
         while (! isOk) {
-            int answer = new ExtendedDialog(Main.parent,
+        	ExtendedDialog dialog = new ExtendedDialog(
+        			Main.parent,
                 tr("Correlate images with GPX track"),
-                panel,
-                new String[] { tr("Correlate"), tr("Auto-Guess"), tr("Cancel") },
-                new String[] { "ok.png", "dialogs/gpx2imgManual.png", "cancel.png" }).getValue();
+                new String[] { tr("Correlate"), tr("Auto-Guess"), tr("Cancel") }
+        			);
 
+        	dialog.setContent(panel);
+        	dialog.setButtonIcons(new String[] { "ok.png", "dialogs/gpx2imgManual.png", "cancel.png" });
+        	dialog.showDialog();
+        	int answer = dialog.getValue();
             if(answer != 1 && answer != 2)
                 return;
 
@@ -879,13 +883,15 @@ public class CorrelateGpxWithImages implements ActionListener {
         // There is no way to cancel this dialog, all changes get applied
         // immediately. Therefore "Close" is marked with an "OK" icon.
         // Settings are only saved temporarily to the layer.
-        int answer = new ExtendedDialog(Main.parent,
+        ExtendedDialog d = new ExtendedDialog(Main.parent,
             tr("Adjust timezone and offset"),
-            p,
-            new String[] { tr("Close"),  tr("Default Values") },
-            new String[] { "ok.png", "dialogs/refresh.png"}
-        ).getValue();
+            new String[] { tr("Close"),  tr("Default Values") }           
+        );
 
+        d.setContent(p);
+        d.setButtonIcons(new String[] { "ok.png", "dialogs/refresh.png"});
+        d.showDialog();
+        int answer = d.getValue();
         // User wants default values; discard old result and re-open dialog
         if(answer == 2) {
             yLayer.hasTimeoffset = false;

@@ -29,10 +29,13 @@ import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.GpxImporter;
 import org.openstreetmap.josm.io.GpxReader;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.io.OsmReader;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
+
+import at.dallermassl.josm.plugin.openvisible.OsmGpxBounds;
 
 /**
  * @author cdaller
@@ -93,12 +96,14 @@ public class OpenVisibleAction extends JosmAction {
                 e1.printStackTrace();
             } catch (SAXException e1) {
                 e1.printStackTrace();
+            } catch(IllegalDataException e1) {
+            	e1.printStackTrace();
             }
         }
 
     }
 
-    private void openAsData(File file) throws SAXException, IOException, FileNotFoundException {
+    private void openAsData(File file) throws SAXException, IOException, FileNotFoundException, IllegalDataException {
         String fn = file.getName();
         if (new OsmImporter().acceptFile(file)) {
             DataSet dataSet = OsmReader.parseDataSet(new FileInputStream(file), NullProgressMonitor.INSTANCE);

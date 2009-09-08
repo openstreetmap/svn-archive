@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction.UploadHook;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.data.APIDataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -34,11 +35,11 @@ public class CheckSourceUploadHook implements UploadHook
     /**
      * Add the tag "source" if it doesn't exist for all new Nodes and Ways before uploading
      */
-    public boolean checkUpload(Collection<OsmPrimitive> add, Collection<OsmPrimitive> update, Collection<OsmPrimitive> delete)
+    public boolean checkUpload(APIDataSet apiDataSet) 
     {
-        if (CadastrePlugin.autoSourcing && CadastrePlugin.pluginUsed && !add.isEmpty()) {
+        if (CadastrePlugin.autoSourcing && CadastrePlugin.pluginUsed && !apiDataSet.getPrimitivesToAdd().isEmpty()) {
             Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>();
-            for (OsmPrimitive osm : add) {
+            for (OsmPrimitive osm : apiDataSet.getPrimitivesToAdd()) {
                 if ((osm instanceof Node || osm instanceof Way)
                         && (osm.getKeys() == null || !tagSourceExist(osm))) {
                     sel.add(osm);

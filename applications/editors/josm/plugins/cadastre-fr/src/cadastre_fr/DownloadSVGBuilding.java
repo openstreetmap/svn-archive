@@ -142,19 +142,19 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                             replaced++;
                         }
                     if (w.getNodesCount() == replaced)
-                        w.delete(true);
+                        w.setDeleted(true);
                 }
-                n.delete(true);
+                n.setDeleted(true);
             }
 
         }
 
         Collection<Command> cmds = new LinkedList<Command>();
         for (Node node : svgDataSet.nodes)
-            if (!node.deleted)
+            if (!node.isDeleted())
                 cmds.add(new AddCommand(node));
         for (Way way : svgDataSet.ways)
-            if (!way.deleted)
+            if (!way.isDeleted())
                 cmds.add(new AddCommand(way));
         Main.main.undoRedo.add(new SequenceCommand(tr("Create buildings"), cmds));
         Main.map.repaint();
@@ -190,7 +190,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     private Node checkNearestNode(Node nodeToAdd, Collection<Node> nodes) {
         double epsilon = 0.05; // smallest distance considering duplicate node
         for (Node n : nodes) {
-            if (!n.deleted && !n.incomplete) {
+            if (!n.isDeleted() && !n.incomplete) {
                 double dist = n.getEastNorth().distance(nodeToAdd.getEastNorth());
                 if (dist < epsilon) {
                     return n;

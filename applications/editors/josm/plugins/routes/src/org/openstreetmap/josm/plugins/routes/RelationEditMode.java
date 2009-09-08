@@ -75,8 +75,8 @@ public class RelationEditMode extends MapMode {
     		for (OsmPrimitive rel:selectedRelations) {
     			Relation r = (Relation)rel;
     			RelationMember foundMember = null;
-    			for (RelationMember member:r.members) {
-    				if (member.member == way) {
+    			for (RelationMember member:r.getMembers()) {
+    				if (member.getMember() == way) {
     					foundMember = member;
     					break;
     				}
@@ -86,7 +86,7 @@ public class RelationEditMode extends MapMode {
     				Main.main.undoRedo.add(new RemoveRelationMemberCommand(r, new RelationMember("", way)));
     			} else {
     				Relation newRelation = new Relation(r);
-    				newRelation.members.add(new RelationMember("", way));
+    				newRelation.getMembers().add(new RelationMember("", way));
     	            Main.main.undoRedo.add(new ChangeCommand(r, newRelation));
     			}
     		}

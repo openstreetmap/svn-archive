@@ -67,7 +67,7 @@ public class OsbLayer extends Layer implements MouseListener {
     private Collection<? extends OsmPrimitive> selection;
 
     private JToolTip tooltip = new JToolTip();
-    
+
     private static ImageIcon iconError = OsbPlugin.loadIcon("icon_error16.png");
     private static ImageIcon iconValid = OsbPlugin.loadIcon("icon_valid16.png");
 
@@ -82,7 +82,7 @@ public class OsbLayer extends Layer implements MouseListener {
 
         // if the map layer has been closed, while we are requesting the osb db,
         // the mapframe is null, so we check that, before installing the mouse listener
-        if(Main.map != null && Main.map.mapView != null) { 
+        if(Main.map != null && Main.map.mapView != null) {
             Main.map.mapView.addMouseListener(this);
         }
     }
@@ -124,7 +124,7 @@ public class OsbLayer extends Layer implements MouseListener {
             Node node = (Node) nodes[i];
 
             // don't paint deleted nodes
-            if(node.deleted)
+            if(!node.isUsable())
                 continue;
 
             Point p = mv.getPoint(node);
@@ -139,28 +139,28 @@ public class OsbLayer extends Layer implements MouseListener {
                 }
             });
         }
-        
+
         if(selection == null)
             return;
-        
+
         // This loop renders the selection border and tooltips so they get drawn
         // on top of the bug icons
         for (int i = 0; i < nodes.length; i++) {
             Node node = (Node) nodes[i];
-            
-            if(node.deleted || !selection.contains(node))
+
+            if(!node.isUsable() || !selection.contains(node))
                 continue;
-            
+
             // draw selection border
             Point p = mv.getPoint(node);
-            
+
             ImageIcon icon = ("1".equals(node.get("state"))) ? iconValid : iconError;
             int width = icon.getIconWidth();
             int height = icon.getIconHeight();
-            
+
             g.setColor(ColorHelper.html2color(Main.pref.get("color.selected")));
-            g.drawRect(p.x - (width / 2), p.y - (height / 2), 16, 16);
-            
+            g.drawRect(p.x-(width/2), p.y-(height/2), width-1, height-1);
+
             // draw description
             String desc = node.get("note");
             if(desc == null)
@@ -174,24 +174,24 @@ public class OsbLayer extends Layer implements MouseListener {
 
             // draw description as a tooltip
             tooltip.setTipText(desc);
-            
+
             int tx = p.x + (width / 2) + 5;
             int ty = (int)(p.y - height / 2) -1;
             g.translate(tx, ty);
-            
+
             // This limits the width of the tooltip to 2/3 of the drawing
             // area, which makes longer tooltips actually readable (they
             // would disappear if scrolled too much to the right)
-            
+
             // Need to do this twice as otherwise getPreferredSize doesn't take
             // the reduced width into account
             for(int x = 0; x < 2; x++) {
-                Dimension d = tooltip.getUI().getPreferredSize(tooltip);                
+                Dimension d = tooltip.getUI().getPreferredSize(tooltip);
                 d.width = Math.min(d.width, (int)(mv.getWidth()*2/3));
                 tooltip.setSize(d);
                 tooltip.paint(g);
             }
-            
+
             g.translate(-tx, -ty);
         }
     }
@@ -209,7 +209,7 @@ public class OsbLayer extends Layer implements MouseListener {
         double minDistanceSq = Double.MAX_VALUE;
         Node minPrimitive = null;
         for (Node n : data.nodes) {
-            if (n.deleted || n.incomplete)
+            if (!n.isUsable())
                 continue;
             Point sp = Main.map.mapView.getPoint(n);
             double dist = p.distanceSq(sp);

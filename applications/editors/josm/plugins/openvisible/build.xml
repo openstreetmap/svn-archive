@@ -25,7 +25,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Dependencies" value="jgrapht-jdk1.5"/>
                 <attribute name="Plugin-Description" value="Allows opening gpx/osm files that intersect the currently visible screen area"/>
-                <attribute name="Plugin-Mainversion" value="1813"/>
+                <attribute name="Plugin-Mainversion" value="2082"/>
                 <attribute name="Plugin-Stage" value="50"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

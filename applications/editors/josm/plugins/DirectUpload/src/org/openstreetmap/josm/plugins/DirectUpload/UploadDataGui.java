@@ -120,8 +120,9 @@ public class UploadDataGui extends ExtendedDialog {
         );
         JPanel content = initComponents();
         autoSelectTrace();
-
-        setupDialog(content, new String[] { "uploadtrace.png", "cancel.png" });
+        setContent(content);
+        setButtonIcons(new String[] { "uploadtrace.png", "cancel.png" });
+        setupDialog();
 
         buttons.get(0).setEnabled(!checkForGPXLayer());
     }

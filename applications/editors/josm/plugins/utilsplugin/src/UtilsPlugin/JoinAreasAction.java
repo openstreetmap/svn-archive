@@ -443,14 +443,16 @@ public class JoinAreasAction extends JosmAction {
         ArrayList<RelationRole> result = new ArrayList<RelationRole>();
         for (Relation r : Main.main.getCurrentDataSet().relations) {
             if (r.isDeleted() || r.incomplete) continue;
-            for (RelationMember rm : r.members) {
-                if (rm.member != osm) continue;
+            for (RelationMember rm : r.getMembers()) {
+                if (rm.getMember() != osm) continue;
 
                 Relation newRel = new Relation(r);
-                newRel.members.remove(rm);
+                List<RelationMember> members = newRel.getMembers();
+                members.remove(rm);
+                newRel.setMembers(members);
 
                 cmds.add(new ChangeCommand(r, newRel));
-                RelationRole saverel =  new RelationRole(r, rm.role);
+                RelationRole saverel =  new RelationRole(r, rm.getRole());
                 if(!result.contains(saverel)) result.add(saverel);
                 break;
             }
@@ -781,7 +783,7 @@ public class JoinAreasAction extends JosmAction {
         Relation newRel = new Relation();
         newRel.put("type", "multipolygon");
         for(Way w : inner)
-            newRel.members.add(new RelationMember("inner", w));
+            newRel.addMember(new RelationMember("inner", w));
         cmds.add(new AddCommand(newRel));
 
         // We don't add outer to the relation because it will be handed to fixRelations()
@@ -810,7 +812,7 @@ public class JoinAreasAction extends JosmAction {
             }
             // Add it back!
             Relation newRel = new Relation(r.rel);
-            newRel.members.add(new RelationMember(r.role, outer));
+            newRel.addMember(new RelationMember(r.role, outer));
             cmds.add(new ChangeCommand(r.rel, newRel));
         }
 
@@ -821,7 +823,7 @@ public class JoinAreasAction extends JosmAction {
             case 1:
                 // Found only one to be part of a multipolygon relation, so just add it back as well
                 newRel = new Relation(multiouters.get(0).rel);
-                newRel.members.add(new RelationMember(multiouters.get(0).role, outer));
+                newRel.addMember(new RelationMember(multiouters.get(0).role, outer));
                 cmds.add(new ChangeCommand(multiouters.get(0).rel, newRel));
                 return;
             default:
@@ -829,8 +831,8 @@ public class JoinAreasAction extends JosmAction {
                 newRel = new Relation();
                 for(RelationRole r : multiouters) {
                     // Add members
-                    for(RelationMember rm : r.rel.members)
-                        if(!newRel.members.contains(rm)) newRel.members.add(rm);
+                    for(RelationMember rm : r.rel.getMembers())
+                        if(!newRel.getMembers().contains(rm)) newRel.addMember(rm);
                     // Add tags
                     for (String key : r.rel.keySet()) {
                         newRel.put(key, r.rel.get(key));
@@ -838,7 +840,7 @@ public class JoinAreasAction extends JosmAction {
                     // Delete old relation
                     cmds.add(new DeleteCommand(r.rel));
                 }
-                newRel.members.add(new RelationMember("outer", outer));
+                newRel.addMember(new RelationMember("outer", outer));
                 cmds.add(new AddCommand(newRel));
         }
     }

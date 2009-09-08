@@ -189,7 +189,7 @@ public final class TerracerAction extends JosmAction {
 			if (streetName != null) {
 				terr.put("addr:street", streetName);
 			}
-			relatedStreet.members.add(new RelationMember("house", terr));
+			relatedStreet.addMember(new RelationMember("house", terr));
 			ways.add(terr);
 			commands.add(new AddCommand(terr));
 		}

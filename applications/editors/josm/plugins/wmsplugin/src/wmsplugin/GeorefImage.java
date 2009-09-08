@@ -4,11 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageProducer;
-import java.awt.image.RGBImageFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -86,13 +82,6 @@ public class GeorefImage implements Serializable {
         }
 
         boolean alphaChannel = Main.pref.getBoolean("wmsplugin.alpha_channel");
-        // We don't need this, as simply saving the image to RGB instead of ARGB removes alpha
-        // But we do get a black instead of white background.
-        //Image ppImg = image;
-        /*if(!alphaChannel) {
-            // set alpha value to 255
-            ppImg = clearAlpha(image);
-        }*/
 
         try {
             if(reImg != null) reImg.flush();
@@ -101,18 +90,19 @@ public class GeorefImage implements Serializable {
             // Notice that this value can get negative due to integer overflows
             //System.out.println("Img Size:              "+ (width*height*3/1024/1024) +" MB");
 
+            int multipl = alphaChannel ? 4 : 3;
             // This happens when requesting images while zoomed out and then zooming in
             // Storing images this large in memory will certainly hang up JOSM. Luckily
             // traditional rendering is as fast at these zoom levels, so it's no loss.
             // Also prevent caching if we're out of memory soon
-            if(width > 10000 || height > 10000 || width*height*3 > freeMem) {
+            if(width > 2000 || height > 2000 || width*height*multipl > freeMem) {
                 fallbackDraw(g, image, minPt, maxPt);
             } else {
                 // We haven't got a saved resized copy, so resize and cache it
                 reImg = new BufferedImage(width, height,
                     alphaChannel
                         ? BufferedImage.TYPE_INT_ARGB
-                        : BufferedImage.TYPE_3BYTE_BGR  // This removes alpha, too
+                        : BufferedImage.TYPE_3BYTE_BGR  // This removes alpha
                     );
                 reImg.getGraphics().drawImage(image,
                     0, 0, width, height, // dest
@@ -162,20 +152,6 @@ public class GeorefImage implements Serializable {
         	out.writeBoolean(true);
             ImageIO.write(image, "png", ImageIO.createImageOutputStream(out));
         }
-    }
-
-    private Image clearAlpha(Image img) {
-        ImageProducer ip = img.getSource();
-        RGBImageFilter filter = new RGBImageFilter() {
-        	@Override
-            public int filterRGB(int x, int y, int rgb) {
-                return rgb | 0xff000000;
-            }
-        };
-        ImageProducer filt_ip = new FilteredImageSource(ip, filter);
-        Image out_img = Toolkit.getDefaultToolkit().createImage(filt_ip);
-
-        return out_img;
     }
 
     public void flushedResizedCachedInstance() {

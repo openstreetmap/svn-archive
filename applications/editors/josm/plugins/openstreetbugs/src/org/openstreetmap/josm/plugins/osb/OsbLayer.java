@@ -124,6 +124,7 @@ public class OsbLayer extends Layer implements MouseListener {
             Node node = (Node) nodes[i];
 
             // don't paint deleted nodes
+
             if(!node.isUsable())
                 continue;
 

@@ -1,5 +1,11 @@
 package wmsplugin;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import org.openstreetmap.josm.Main;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
@@ -31,6 +37,10 @@ public class WMSPreferenceEditor implements PreferenceSetting {
     private JComboBox browser;
     private HashMap<Integer, WMSInfo> oldValues = new HashMap<Integer, WMSInfo>();
 
+    JCheckBox overlapCheckBox;
+    JSpinner spinEast;
+    JSpinner spinNorth;
+    
     public void addGui(final PreferenceDialog gui) {
         JPanel p = gui.createPreferenceTab("wms", tr("WMS Plugin Preferences"), tr("Modify list of WMS servers displayed in the WMS plugin menu"));
 
@@ -152,7 +162,26 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         browser.setEditable(true);
         browser.setSelectedItem(Main.pref.get("wmsplugin.browser", "webkit-image {0}"));
         p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GBC.HORIZONTAL));
-        p.add(browser, GBC.eol().fill(GBC.HORIZONTAL));
+        p.add(browser);
+
+
+        //Overlap
+        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL)); 
+         
+        overlapCheckBox = new JCheckBox(tr("Overlap tiles"), WMSPlugin.doOverlap ); 
+        JLabel labelEast = new JLabel(tr("% of east:")); 
+        JLabel labelNorth = new JLabel(tr("% of north:")); 
+        spinEast = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapEast, 1, 50, 1)); 
+        spinNorth = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapNorth, 1, 50, 1)); 
+         
+        JPanel overlapPanel = new JPanel(new FlowLayout()); 
+        overlapPanel.add(overlapCheckBox); 
+        overlapPanel.add(labelEast); 
+        overlapPanel.add(spinEast); 
+        overlapPanel.add(labelNorth); 
+        overlapPanel.add(spinNorth); 
+         
+        p.add(overlapPanel);	
     }
 
     public boolean ok() {
@@ -191,6 +220,14 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         }
 
         if (change) WMSPlugin.refreshMenu();
+
+        WMSPlugin.doOverlap = overlapCheckBox.getModel().isSelected(); 
+        WMSPlugin.overlapEast = (Integer) spinEast.getModel().getValue(); 
+        WMSPlugin.overlapNorth = (Integer) spinNorth.getModel().getValue(); 
+         
+        Main.pref.put("wmsplugin.url.overlap",    String.valueOf(WMSPlugin.doOverlap)); 
+        Main.pref.put("wmsplugin.url.overlapEast", String.valueOf(WMSPlugin.overlapEast)); 
+        Main.pref.put("wmsplugin.url.overlapNorth", String.valueOf(WMSPlugin.overlapNorth)); 
 
         Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString());
         return false;

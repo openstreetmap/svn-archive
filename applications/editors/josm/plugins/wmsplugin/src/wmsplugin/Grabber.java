@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.ProjectionBounds;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
@@ -24,13 +25,27 @@ abstract public class Grabber extends Thread {
 
     Grabber(ProjectionBounds b, GeorefImage image, MapView mv, WMSLayer layer, CacheFiles cache)
     {
-        this.b = b;
+        if (b.min != null && b.max != null && WMSPlugin.doOverlap) { 
+            double eastSize =  b.max.east() - b.min.east(); 
+            double northSize =  b.max.north() - b.min.north(); 
+    
+            double eastCoef = WMSPlugin.overlapEast / 100.0; 
+            double northCoef = WMSPlugin.overlapNorth / 100.0; 
+             
+            this.b = new ProjectionBounds( new EastNorth(b.min.east(), 
+                                            b.min.north()), 
+                                 new EastNorth(b.max.east() + eastCoef * eastSize, 
+                                            b.max.north() + northCoef * northSize));             
+        } else 
+           this.b = b;
+
         this.proj = Main.proj;
         this.pixelPerDegree = layer.pixelPerDegree;
         this.image = image;
         this.mv = mv;
         this.layer = layer;
         this.cache = cache;
+
     }
 
     abstract void fetch() throws Exception; // the image fetch code

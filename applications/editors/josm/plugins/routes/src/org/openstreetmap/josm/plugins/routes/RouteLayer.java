@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.routes;
 
+import java.awt.Stroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -119,9 +120,13 @@ public class RouteLayer extends Layer {
 			}
 		}
 
+		Stroke stroke = ((Graphics2D)g).getStroke();
+		Color color   = g.getColor();
 		for (ConvertedWay way:pathBuilder.getConvertedWays()) {
 			pathPainter.drawWay(way, mv, (Graphics2D) g);
 		}
+		((Graphics2D)g).setStroke(stroke);
+		g.setColor(color);
 	}
 
 	@Override

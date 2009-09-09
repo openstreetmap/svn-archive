@@ -5,13 +5,13 @@ require ("inc_config.php");
  * Function to get data from node XML
  * Parameters:
  * $node: node object
+ * $type: "pharmacy" or "hospital"
  * $ph: array containing information about the pharmacy, hospital, whatever
 */
-function node_parse ($node, &$ph) {
+function node_parse ($node, $type, &$ph) {
 	$ph ["lat"] = $node ["lat"];
 	$ph ["lon"] = $node ["lon"];
 	foreach ($node->tag as $tag) {
-
 		if ($tag ["k"] == "name")
 			$ph ["name"] = $tag ["v"];
 		if ($tag ["k"] == "operator")
@@ -32,12 +32,19 @@ function node_parse ($node, &$ph) {
 			$ph ["phone"] = $tag ["v"];
 		if ($tag ["k"] == "opening_hours")
 			$ph ["hours"] = $tag ["v"];
-		if ($tag ["k"] == "dispensing")
-			$ph ["dispensing"] = $tag ["v"];
 		if ($tag ["k"] == "description")
 			$ph ["description"] = $tag ["v"];
 		if ($tag ["k"] == "url" || $tag ["k"] == "website")
 			$ph ["url"] = $tag ["v"];
+
+		if ($type == "pharmacy") {
+			if ($tag ["k"] == "dispensing")
+				$ph ["dispensing"] = $tag ["v"];
+		}
+		elseif ($type == "hospital") {
+			if ($tag ["k"] == "emergency")
+				$ph ["emergency"] = $tag ["v"];
+		}
 	}
 }
 

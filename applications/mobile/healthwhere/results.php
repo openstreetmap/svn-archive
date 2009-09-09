@@ -12,6 +12,12 @@ setcookie ("Distance", (float) $_GET ["txtDistance"]);
 setcookie ("ResultsPage", $_SERVER ["REQUEST_URI"]);
 setcookie ("HourOffset", $_GET ["selHourOffset"]);
 
+if ($_GET ["btnSubmit"] == "Find pharmacies")
+	$search = "pharmacy";
+else
+	$search = "hospital";
+setcookie ("SearchType", $search);
+
 require ("inc_head.php");
 require ("inc_openclosed.php");
 
@@ -141,7 +147,7 @@ $left = $user_lon - ($maxdist / 35);
 $right = $user_lon + ($maxdist / 35);
 
 //Get data
-$url = "$osm_xapi_base/node[amenity|healthcare=pharmacy][bbox=$left,$bottom,$right,$top]";
+$url = "$osm_xapi_base/node[amenity|healthcare=$search][bbox=$left,$bottom,$right,$top]";
 $xml = simplexml_load_file ($url);
 if ($xml === False)
 	death ("Error getting data from $url", "Could not get data from OpenStreetMap");
@@ -160,7 +166,7 @@ foreach ($xml->node as $node) {
 	if ($dist <= $maxdist) {
 		//Parse node to get details
 		$ph = array ();
-		node_parse ($node, $ph);
+		node_parse ($node, $search, $ph);
 
 		//Get ID
 		$id = $node ["id"];
@@ -179,6 +185,8 @@ foreach ($xml->node as $node) {
 		$sPharmacy = "<!-- $sorting -->";
 		$url = "detail.php?id=$id&amp;dist=$dist";
 		$sPharmacy .= "<a href = '$url' title = 'Details'>";
+
+		//Get details
 		$sname = stripslashes ($ph ["name"]);
 		$soperator = stripslashes ($ph ["operator"]);
 
@@ -188,6 +196,8 @@ foreach ($xml->node as $node) {
 			$sPharmacy .= "[No name]</a> ($dist)<br>";
 		else
 			$sPharmacy .= "$sname$soperator</a> ($dist)<br>";
+		if ($search == "hospital" && $ph ["emergency"] != "")
+			$sPharmacy .= "Emergency: {$ph ["emergency"]}<br>";
 		if ($ph ["addr_housename"] != "")
 			$sPharmacy .= "{$ph ['addr_housename']}<br>\n";
 		if ($ph ["addr_street"] != "") {

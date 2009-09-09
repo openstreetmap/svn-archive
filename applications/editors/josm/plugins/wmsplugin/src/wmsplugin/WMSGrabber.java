@@ -64,7 +64,7 @@ public class WMSGrabber extends Grabber {
             image.min = b.min;
             image.max = b.max;
 
-            if(image.isVisible(mv)) { //don't download, if the image isn't visible already
+            if(image.isVisible(mv, layer.getDx(), layer.getDy())) { //don't download, if the image isn't visible already
                 image.image = grab(url);
                 image.flushedResizedCachedInstance();
             }

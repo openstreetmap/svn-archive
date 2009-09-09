@@ -102,6 +102,14 @@ public class WMSLayer extends Layer {
 		}
 	}
 
+	public double getDx(){
+		return dx;
+	}
+
+	public double getDy(){
+		return dy;
+	}
+
 	@Override
 	public void destroy() {	
 		try {
@@ -206,10 +214,10 @@ public class WMSLayer extends Layer {
 		if (usesInvalidUrl)
 			return;
 		ProjectionBounds bounds = mv.getProjectionBounds();
-		int bminx= (int)Math.floor ((bounds.min.east() * pixelPerDegree ) / ImageSize );
-		int bminy= (int)Math.floor ((bounds.min.north() * pixelPerDegree ) / ImageSize );
-		int bmaxx= (int)Math.ceil  ((bounds.max.east() * pixelPerDegree ) / ImageSize );
-		int bmaxy= (int)Math.ceil  ((bounds.max.north() * pixelPerDegree ) / ImageSize );
+		int bminx= (int)Math.floor (((bounds.min.east() - dx) * pixelPerDegree) / ImageSize );
+		int bminy= (int)Math.floor (((bounds.min.north() - dy) * pixelPerDegree) / ImageSize );
+		int bmaxx= (int)Math.ceil  (((bounds.max.east() - dx) * pixelPerDegree) / ImageSize );
+		int bmaxy= (int)Math.ceil  (((bounds.max.north() - dy) * pixelPerDegree) / ImageSize );
 
 		if((bmaxx - bminx > dax) || (bmaxy - bminy > day)){
 			JOptionPane.showMessageDialog(

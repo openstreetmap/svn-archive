@@ -34,9 +34,10 @@ public class GeorefImage implements Serializable {
             && min.north()+dy <= en.north() && en.north() <= max.north()+dy;
     }
 
-    /* this does not take dx and dy offset into account! */
-    public boolean isVisible(NavigatableComponent nc) {
-        Point minPt = nc.getPoint(min), maxPt = nc.getPoint(max);
+    public boolean isVisible(NavigatableComponent nc, double dx, double dy) {
+        EastNorth mi = new EastNorth(min.east()+dx, min.north()+dy);
+        EastNorth ma = new EastNorth(max.east()+dx, max.north()+dy);
+        Point minPt = nc.getPoint(mi), maxPt = nc.getPoint(ma);
         Graphics g = nc.getGraphics();
 
         return (g.hitClip(minPt.x, maxPt.y,
@@ -50,8 +51,7 @@ public class GeorefImage implements Serializable {
         EastNorth ma = new EastNorth(max.east()+dx, max.north()+dy);
         Point minPt = nc.getPoint(mi), maxPt = nc.getPoint(ma);
 
-        /* this is isVisible() but taking dx, dy into account */
-        if(!(g.hitClip(minPt.x, maxPt.y, maxPt.x - minPt.x, minPt.y - maxPt.y))) {
+        if(!isVisible(nc, dx, dy)){
             return false;
         }
 

@@ -15,7 +15,7 @@ else
 	$iHourOffset = 0;
 require_once ("inc_head_html.php");
 ?>
-<b>Healthware</b>
+<b>Healthwhere</b>
 
 <p>
 <form action = "results.php" method = "get">
@@ -62,7 +62,8 @@ for ($i=0; $i<=23; $i++) {
 </p>
 
 <p>
-<input type = "submit" value = "Find pharmacies" class = "default">
+<input type = "submit" value = "Find pharmacies" name = "btnSubmit" class = "default">&nbsp;
+<input type = "submit" value = "Find hospitals" name = "btnSubmit" class = "default">
 </p>
 </form>
 

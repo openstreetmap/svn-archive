@@ -24,8 +24,8 @@ $osm_xapi_base = "http://www.informationfreeway.org/api/0.6";
 $db_file = "healthware.db";
 
 //Version info etc.
-define ("SERVICE_NAME", "Healthware");
-define ("VERSION", "1.0");
+define ("SERVICE_NAME", "Healthwhere");
+define ("VERSION", "2.0");
 //Base URL - do not include trailing /
 define ("BASE_URL", "http://www.example.com");
 ?>

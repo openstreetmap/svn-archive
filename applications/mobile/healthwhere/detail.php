@@ -12,7 +12,7 @@ $xml = simplexml_load_file ($url);
 if ($xml === False)
 	death ("Error getting data from $url", "Could not get data from OpenStreetMap");
 $ph = array ();
-node_parse ($xml->node [0], $ph);
+node_parse ($xml->node [0], $_COOKIE ["SearchType"], $ph);
 
 $sname = stripslashes ($ph ["name"]);
 $soperator = stripslashes ($ph ["operator"]);
@@ -38,6 +38,8 @@ echo $sMap;
 
 if ($ph ['dispensing'] != '')
 	echo "Dispensing: {$ph ['dispensing']}</p>\n";
+if ($ph ['emergency'] != '')
+	echo "Emergency: {$ph ['emergency']}</p>\n";
 
 if ($ph ['addr_housename'] != '')
 	echo $ph ['addr_housename'] . "<br>\n";

@@ -1,0 +1,153 @@
+<html>
+<!--
+ This file is part of OSM-Atlas, a script to create an atlas from
+ OpenStreetMap (www.openstreetmap.org) data.
+ Copyright 2009 Russell Phillips
+-->
+<head>
+<title>OSM-Atlas</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	font-size: 12pt;
+	color: black;
+	background-color: white;
+}
+
+h1 {
+	text-align: center;
+}
+</style>
+</head>
+<body>
+
+<h1>OSM-Atlas</h1>
+
+<p>
+OSM-Atlas is a script to create a PDF atlas from <a href = "http://www.openstreetmap.org/">OpenStreetMap</a> data. It creates a PDF file, with front &amp; back covers, overview map, detailed map pages, and index.
+</p>
+
+<p>
+It can be used to create both street atlases of a local area, and road atlases of larger areas.
+</p>
+
+<h1>Initial Setup</h1>
+
+<p>
+You will need the following installed and working:
+</p>
+
+<ul>
+<li><a href = "http://wiki.openstreetmap.org/wiki/Osmosis">Osmosis</a></li>
+<li><a href = "http://wiki.openstreetmap.org/wiki/Osmarender">Osmarender</a></li>
+<li><a href = "http://www.php.net">PHP v5</a>, set up to be run from a <a href = "http://www.php.net/features.commandline">command line</a>, with GD support included</li>
+<li><a href = "http://www.inkscape.org">Inkscape</a></li>
+<li><a href = "http://www.latex-project.org">Pdflatex</a></li>
+</ul>
+
+<p>
+Also, xsltproc and sed, which are normally included in a Linux install by default.
+</p>
+
+<h1>Configuration</h1>
+
+<p>
+When OSM-Atlas is run, a configuration file is specified. This means that you can have several configuration files set up, for different areas. There are two sample configuration files included - <tt>inc_roadatlas.php</tt> (with sensible defaults for a road atlas of a large area) and <tt>inc_streetatlas.php</tt> (with sensible defaults for a street atlas of a smaller area, eg a city).
+<p>
+
+<p>
+Copy one of the sample configuration files, and rename the file to something sensible. Then, edit the file in a text editor. The configuration items are detailed below:
+</p>
+
+<p>
+<b>$LEFT = 0</b>, <b>$RIGHT = 0</b>, <b>$TOP = 0</b>, <b>$BOTTOM = 0</b>: These four settings define the bounding box of the area that the atlas will cover.
+</p>
+
+<p>
+<b>$HORIZ_TILES</b>, <b>$VERT_TILES</b>: The number of horizontal and vertical tiles (images) that the atlas will split the map into. Each tile is on a single page.
+</p>
+
+<p>
+<b>$OV_FONT</b>, <b>$OV_FONT_SIZE</b>: The file name and size of a TTF font that can be used to add numbers to the overview map.
+</p>
+
+<p>
+<b>$OSMARENDER_DIR</b>, <b>$OSMOSIS_DIR</b>: The directories containing osmarender and osmosis.
+</p>
+
+<p>
+<b>$OUTPUT_DIR</b>: The directory where files should be placed. Temporary working files and the created PDF will be put in this directory.
+</p>
+
+<p>
+<b>$DATA_FILE</b>: The location of the .osm data file. Must be a local file. The OSM Wiki <a href = "http://wiki.openstreetmap.org/wiki/Planet">Planet page</a> has links to suitable files (note that they are compressed using bzip2, and will need to be uncompressed).
+</p>
+
+<p>
+<i>The configuration settings shown above are the only settings that have to be configured. Those detailed below can be safely left at their defaults.</i><br>
+</p>
+
+<p><hr></p>
+
+<p>
+<b>$TITLE</b>: The title used on the title page.
+</p>
+
+<p>
+<b>$INDEX_STREET_NAMES</b>, <b>$INDEX_PLACE_NAMES</b>: Set to True to include an index of street/place names, False to not include the index. In the sample files, the street atlas includes street names but not place names, while the road atlas includes place names but not street names.
+</p>
+
+<p>
+<b>$LOG_FILE</b>: Full path to a log file. This will not be deleted when OSM-Atlas has finished. Set it to <tt>/dev/null</tt> if you don't need a log.
+</p>
+
+<b>$INKSCAPE_DPI</b>: Each image in the atlas is a .png file, exported from Inkscape. This sets the DPI (dots per inch) setting that Inkscape uses when exporting.<br>
+
+<p>
+<b>$STYLESHEET</b>: The osmarender stylesheet to use. <tt>osm_atlas-z16.xml</tt>, included with OSM-Atlas, is a customised version of the standard z16 stylesheet, for use when making a street atlas.
+</p>
+
+<p>
+<b>$DELETE_WORKING_FILES</b>: OSM-Atlas creates many temporary files. If this is true, these files are deleted when OSM-Atlas has finished. Setting this to false will mean that these temporary files are not deleted, which may be useful for debugging, or if you wish to manually edit the LaTeX file.
+</p>
+
+<p>
+<b>$PDFTITLE</b>, <b>$PDFAUTHOR</b>, <b>$PDFSUBJECT</b>, <b>$PDFKEYWORDS</b>: PDF file metadata.
+</p>
+
+<h1>Running</h1>
+
+<p>
+Once the configuration file is set up, open a terminal and cd to the directory, then run:
+<pre>
+./osm-atlas.php config.php
+</pre>
+where config.php is the name of the configuration file to use. <i>Note: OSM-Atlas cannot cope with paths or files that include spaces.</i>
+<p>
+
+<p>
+OSM-Atlas will display progress as it works. When it has finished, it will have created a PDF file, with front &amp; back covers, overview map, detailed map pages, and index (if either <tt>$INDEX_STREET_NAMES</tt> or <tt>$INDEX_PLACE_NAMES</tt> was set to True).
+</p>
+
+<h1>Licence Information</h1>
+
+<p>Copyright &copy; 2009 Russell Phillips</p>
+
+<p>
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+</p>
+
+<p>
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+</p>
+
+<p>
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</p>
+
+<p>
+<a href = "http://www.openstreetmap.org/">OpenStreetMap</a> data is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/2.0/">Creative Commons Attribution-Share Alike 2.0 Generic License</a>.
+</p>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+input {
+	width: 5em;
+}
+
+input.default {
+	width: auto;
+}
+
+.small {
+	font-size: 75%;
+}

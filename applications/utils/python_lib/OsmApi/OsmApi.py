@@ -405,8 +405,8 @@ class OsmApi:
             try:
                 return self._http_request(cmd, path, auth, send)
             except:
-                if i == 8: raise
-                if i <> 1: time.sleep(5)
+                if i == 5: raise
+                if i <> 1: time.sleep(2)
                 self._conn = httplib.HTTPConnection(self._api, 80)
     
     def _get(self, path):

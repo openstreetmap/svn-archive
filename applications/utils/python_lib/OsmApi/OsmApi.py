@@ -24,14 +24,17 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.3   2009-09-09 keep http connection alive for multiple request    ##
+##                    (Node|Way|Relation)Get return None when object     ##
+##                    have been deleted (raising error before)           ##
 ## 0.2.2   2009-07-13 can identify applications built on top of the lib  ##
 ## 0.2.1   2009-05-05 some changes in constructor -- chove@crans.org     ##
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 
-import httplib, base64, xml.dom.minidom
+import httplib, base64, xml.dom.minidom, time
 
 ###########################################################################
 ## Main class                                                            ##
@@ -66,6 +69,9 @@ class OsmApi:
 
         # Initialisation     
         self._CurrentChangesetId = -1
+        
+        # Http connection
+        self._conn = httplib.HTTPConnection(self._api, 80)
 
     #######################################################################
     # Capabilities                                                        #
@@ -83,6 +89,7 @@ class OsmApi:
         uri = "/api/0.6/node/"+str(NodeId)
         if NodeVersion <> -1: uri += "/"+str(NodeVersion)
         data = self._get(uri)
+        if not data: return data
         data = xml.dom.minidom.parseString(data.encode("utf-8"))
         data = data.getElementsByTagName("osm")[0].getElementsByTagName("node")[0]
         return self._DomParseNode(data)
@@ -155,6 +162,7 @@ class OsmApi:
         uri = "/api/0.6/way/"+str(WayId)
         if WayVersion <> -1: uri += "/"+str(WayVersion)
         data = self._get(uri)
+        if not data: return data
         data = xml.dom.minidom.parseString(data.encode("utf-8"))
         data = data.getElementsByTagName("osm")[0].getElementsByTagName("way")[0]
         return self._DomParseWay(data)
@@ -226,7 +234,7 @@ class OsmApi:
         uri = "/api/0.6/relation/"+str(RelationId)
         if RelationVersion <> -1: uri += "/"+str(RelationVersion)
         data = self._get(uri)
-        #print type(data)
+        if not data: return data
         data = xml.dom.minidom.parseString(data.encode("utf-8"))
         data = data.getElementsByTagName("osm")[0].getElementsByTagName("relation")[0]
         return self._DomParseRelation(data)
@@ -371,22 +379,35 @@ class OsmApi:
     # Internal http function                                              #
     #######################################################################
 
-    def _http(self, cmd, path, auth, send):
-        h = httplib.HTTPConnection(self._api, 80)
-        h.putrequest(cmd, path)
-        h.putheader('User-Agent', self._created_by)
+    def _http_request(self, cmd, path, auth, send):
+        self._conn.putrequest(cmd, path)
+        self._conn.putheader('User-Agent', self._created_by)
         if auth:
-            h.putheader('Authorization', 'Basic ' + base64.encodestring(self._username + ':' + self._password).strip())
+            self._conn.putheader('Authorization', 'Basic ' + base64.encodestring(self._username + ':' + self._password).strip())
         if send:
             send = send.encode("utf-8")
-            h.putheader('Content-Length', len(send))
-        h.endheaders()
+            self._conn.putheader('Content-Length', len(send))
+        self._conn.endheaders()
         if send:
-            h.send(send)
-        response = h.getresponse()
+            self._conn.send(send)
+        response = self._conn.getresponse()
         if response.status <> 200:
+            response.read()
+            if response.status == 410:
+                return None
             raise Exception, "API returns unexpected status code "+str(response.status)+" ("+response.reason+")"
         return response.read().decode("utf-8")
+    
+    def _http(self, cmd, path, auth, send):
+        i = 0
+        while True:
+            i += 1
+            try:
+                return self._http_request(cmd, path, auth, send)
+            except:
+                if i == 8: raise
+                if i <> 1: time.sleep(5)
+                self._conn = httplib.HTTPConnection(self._api, 80)
     
     def _get(self, path):
         return self._http('GET', path, False, None)
@@ -560,3 +581,23 @@ def RevertIfPossible(self, ChangesetId):
 
 ## End of reverting tools                                                ##
 ###########################################################################
+    def ChangesetDownload(self, ChangesetId):
+        """ Test function """
+        uri = "/api/0.6/changeset/"+str(ChangesetId)+"/download"
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        result = []
+        for action in data.getElementsByTagName("osmChange")[0].childNodes:
+            if action.nodeType == 3:
+                continue
+            for elem in action.childNodes:
+                if elem.nodeType == 3:
+                    continue
+                if elem.tagName == u"node":
+                    data = self._DomParseRelation(elem)
+                if elem.tagName == u"way":
+                    data = self._DomParseRelation(elem)
+                if elem.tagName == u"relation":
+                    data = self._DomParseRelation(elem)
+                result.append((action.tagName, elem.tagName, data))
+        return result

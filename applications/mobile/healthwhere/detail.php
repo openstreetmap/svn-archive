@@ -4,15 +4,44 @@ require_once ("inc_head_html.php");
 
 $id = (int) $_GET ["id"];
 $dist = (float) $_GET ["dist"];
+$search = $_COOKIE ["SearchType"];
 
-//Get data
-$url = "$osm_api_base/node/$id";
-$xml = simplexml_load_file ($url);
+//Delete old cache data
+$db = sqlite_open ($db_file);
+$old = strtotime ("-1 hour");
+$sql = "DELETE FROM node_cache WHERE timestamp < $old";
+logdebug ("Deleting old node cache. SQL:\n$sql");
+sqlite_exec ($db, $sql);
 
-if ($xml === False)
-	death ("Error getting data from $url", "Could not get data from OpenStreetMap");
+//Check for cached data
+$sql = "SELECT * FROM node_cache " .
+	"WHERE nodeid LIKE $id";
+logdebug ("Checking for cached node data. SQL:\n$sql");
+$result = sqlite_query ($db, $sql);
+if (sqlite_num_rows ($result) >= 1) {
+	//Get cached data
+	$row = sqlite_fetch_array ($result, SQLITE_ASSOC);
+	$cached_xml = stripslashes ($row ["data"]);
+	$xml = simplexml_load_string ($cached_xml);
+}
+else {
+	//Get data from OSM
+	$url = "$osm_api_base/node/$id";
+	$xml = simplexml_load_file ($url);
+	if ($xml === False)
+		death ("Error getting data from $url", "Could not get data from OpenStreetMap");
+}
+//Delete any existing data for this node, then cache current data
+$sql = "DELETE FROM node_cache WHERE nodeid LIKE $id";
+sqlite_exec ($db, $sql);
+$sql = "INSERT INTO node_cache ('timestamp','nodeid','data') " .
+	"VALUES (" . time () . ", '$id', '" . sqlite_escape_string ($xml->asXML ()) . "')";
+logdebug ("Adding to node cache. SQL:\n$sql");
+sqlite_exec ($db, $sql);
+sqlite_close ($db);
+
 $ph = array ();
-node_parse ($xml->node [0], $_COOKIE ["SearchType"], $ph);
+node_parse ($xml->node [0], $search, $ph);
 
 $sname = stripslashes ($ph ["name"]);
 $soperator = stripslashes ($ph ["operator"]);
@@ -38,8 +67,6 @@ echo $sMap;
 
 if ($ph ['dispensing'] != '')
 	echo "Dispensing: {$ph ['dispensing']}</p>\n";
-if ($ph ['emergency'] != '')
-	echo "Emergency: {$ph ['emergency']}</p>\n";
 
 if ($ph ['addr_housename'] != '')
 	echo $ph ['addr_housename'] . "<br>\n";

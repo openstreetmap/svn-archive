@@ -44,10 +44,21 @@ function osm_create_changeset ($comment = "") {
  * Returns True if successful, False if not
 */
 function osm_update_node ($id, $xml, $csID) {
-	global $osm_auth, $osm_api_base, $debug_log;
+	global $osm_auth, $osm_api_base, $debug_log, $db_file;
 
 	file_put_contents ($debug_log, "\n------------------\n", FILE_APPEND);
 	file_put_contents ($debug_log, "Updating node $id\n", FILE_APPEND);
+
+	//Delete cached data containing this node
+	$db = sqlite_open ($db_file);
+	$sql = "DELETE FROM xapi_cache WHERE data LIKE '%$id%'";
+	file_put_contents ($debug_log, "Deleting XAPI cache containing node ID $id. SQL:\n$sql\n", FILE_APPEND);
+	sqlite_exec ($db, $sql);
+	$sql = "DELETE FROM node_cache WHERE nodeid LIKE $id";
+	file_put_contents ($debug_log, "Deleting node cache for node ID $id. SQL:\n$sql\n", FILE_APPEND);
+	sqlite_exec ($db, $sql);
+	sqlite_close ($db);
+
 	$cs = "changeset=\"$csID\"";
 	//Set changeset ID in XML string
 	$xml = ereg_replace ('changeset="[0-9]*"', $cs, $xml);

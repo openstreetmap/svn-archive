@@ -1,11 +1,12 @@
 #!/usr/bin/env php
 <?
-$import_log = "/path/to/import.log";
+$import_log = "/dev/null";
 $tmp_database = "healthware.tmp.db";
 $database = "healthware.db";
 $old_database = "old_healthware.db";
 $data_url = "http://www.npemap.org.uk/data/fulllist";
 $data_local = "fulllist";
+chdir ("/home/russ/vhosts/mappage.org/hw/dev/");
 
 /*
  * Function to call when there is a fatal error
@@ -17,12 +18,14 @@ function death ($log_string) {
 	global $import_log;
 
 	file_put_contents ($import_log, date ("Y-m-d H:i:s") . "\t$log_string\n", FILE_APPEND);
+	echo "Fatal error:\n$log_string\n";
 	die ();
 }
 
 //Download text file
-if (rename ($data_local, "$data_local.old") === False)
-	death ("Error renaming data from $data_local to $data_local.old");
+if (file_exists ($data_local))
+	if (rename ($data_local, "$data_local.old") === False)
+		death ("Error renaming data from $data_local to $data_local.old");
 if (copy ($data_url, $data_local) === False)
 	death ("Error copying data from $data_url to $data_local");
 
@@ -34,10 +37,18 @@ if (file_exists ("$tmp_database"))
 $db = sqlite_open ("$tmp_database");
 if ($db === False)
 	death ("Error opening new SQLite database");
-//Create table
+//Create postcode table
 $sql = "CREATE TABLE postcodes ('outward','inward','lat','lon','source')";
 if (sqlite_exec ($db, $sql, $err) === False)
-	death ("Error creating database table:\n$err");
+	death ("Error creating postcodes database table:\n$err");
+//Create XAPI cache table
+$sql = "CREATE TABLE xapi_cache ('timestamp','latitude','longitude','distance','searchtype','data')";
+if (sqlite_exec ($db, $sql, $err) === False)
+	death ("Error creating xapi_cache database table:\n$err");
+//Create node cache table
+$sql = "CREATE TABLE node_cache ('timestamp','nodeid','data')";
+if (sqlite_exec ($db, $sql, $err) === False)
+	death ("Error creating node_cache database table:\n$err");
 
 //Open CSV
 $csv = fopen ($data_local, "r");

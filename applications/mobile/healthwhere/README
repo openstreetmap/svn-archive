@@ -1,2 +1,2 @@
 Access log is a CSV file with the following fields:
-Date,Time,Search Type,Latitude/Postcode,Longitude,Distance,Number Found,Time to run Query (secs)
+Date,Time,Search Type,Latitude/Postcode,Longitude,Distance,Number Found,Time to run Query (secs),Source (Cache/Web)

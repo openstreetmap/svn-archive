@@ -146,11 +146,41 @@ $top = $user_lat + ($maxdist / 35);
 $left = $user_lon - ($maxdist / 35);
 $right = $user_lon + ($maxdist / 35);
 
-//Get data
-$url = "$osm_xapi_base/node[amenity|healthcare=$search][bbox=$left,$bottom,$right,$top]";
-$xml = simplexml_load_file ($url);
-if ($xml === False)
-	death ("Error getting data from $url", "Could not get data from OpenStreetMap");
+//Delete old cache data
+$db = sqlite_open ($db_file);
+$old = strtotime ("-1 hour");
+$sql = "DELETE FROM xapi_cache WHERE timestamp < $old";
+logdebug ("Deleting old XAPI cache. SQL:\n$sql");
+sqlite_exec ($db, $sql);
+//Check for cached data
+$sql = "SELECT * FROM xapi_cache " .
+	"WHERE latitude = '$user_lat' AND " .
+	"longitude = '$user_lon' AND " .
+	"distance >= $maxdist AND " .
+	"searchtype LIKE '$search'";
+$result = sqlite_query ($db, $sql);
+if (sqlite_num_rows ($result) >= 1) {
+	//Get cached data
+	$row = sqlite_fetch_array ($result, SQLITE_ASSOC);
+	$cached_xml = stripslashes ($row ["data"]);
+	$xml = simplexml_load_string ($cached_xml);
+	$source = "Cache";
+}
+else {
+	//Get data from OSM
+	$url = "$osm_xapi_base/node[amenity|healthcare=$search][bbox=$left,$bottom,$right,$top]";
+	$xml = simplexml_load_file ($url);
+	if ($xml === False)
+		death ("Error getting data from $url", "Could not get data from OpenStreetMap");
+	$source = "Web";
+}
+//Cache data
+$sql = "INSERT INTO xapi_cache ('timestamp','latitude','longitude','distance','searchtype','data') " .
+	"VALUES (" . time () . ", '$user_lat', '$user_lon', '$maxdist', '$search', '" . sqlite_escape_string ($xml->asXML ()) . "')";
+logdebug ("Adding to XAPI cache. SQL:\n$sql");
+sqlite_exec ($db, $sql);
+sqlite_close ($db);
+
 //counters for log
 $iCountFound = 0;
 $iCountTimes = 0;
@@ -222,7 +252,7 @@ else
 	$SearchTerm = "Lat/Lon,{$_GET ['txtLatitude']},{$_GET ['txtLongitude']},";
 $SearchTerm .= "{$_GET ['txtDistance']},";
 $iTime = time () - $iStartTime;
-$log_string = date ("Y-m-d,H:i:s,") . $SearchTerm . count ($asPharmacies) . "," . $iTime;
+$log_string = date ("Y-m-d,H:i:s,") . $SearchTerm . count ($asPharmacies) . "," . $iTime . ",$source";
 file_put_contents ($access_log, "$log_string\n", FILE_APPEND);
 
 require_once ("inc_head_html.php");

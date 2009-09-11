@@ -27,6 +27,8 @@ my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm" ;
 my $version = "1.0 BETA" ;
 
+my $topMax = 10 ;
+
 my $wayId1 ; my $wayUser1 ; my @wayNodes1 ; my @wayTags1 ;
 my $wayId2 ; my $wayUser2 ; my @wayNodes2 ; my @wayTags2 ;
 
@@ -41,6 +43,13 @@ my $osm1Name ; my $osm2Name ;
 
 my $file1 ; my $file2 ; my $bz1 ; my $bz2 ; my $isBz21 ; my $isBz22 ; my $line1 ; my $line2 ; my $bzerrno ;
 my $file1Name ; my $file2Name ;
+
+my %minLon ; my %minLat ; my %maxLon ; my %maxLat ; # per user
+my $deletedNodes = 0 ;
+my %nodesAdded ; my %nodesMovedNumber ; my %nodesMovedDistance ; my %nodesMovedMax ;
+my %tagsAdded ; my %tagsDeleted ; my %tagsRenamed ; my %tagsReclassified ;
+my %tagsDeletedName ;
+my %renames ; 
 
 ###############
 # get parameter
@@ -57,14 +66,15 @@ if (!$osm2Name)
 	die (print $usage, "\n");
 }
 
-$htmlName = shift||'';
-if (!$htmlName)
+$topMax = shift||'';
+if (!$topMax)
 {
-	die (print $usage, "\n");
+	$topMax = 10 ;
 }
 
-print "\n$program $version for files $osm1Name $osm2Name\n\n" ;
-
+print "\n$program $version for files:\n" ;
+print stringFileInfo ($osm1Name), "\n"  ;
+print stringFileInfo ($osm2Name), "\n\n"  ;
 
 # test ways 1
 # expand way fields
@@ -78,7 +88,15 @@ print "\n$program $version for files $osm1Name $osm2Name\n\n" ;
 #------------------------------------------------------------------------------------
 
 openOsm1File ($osm1Name) ;
+($nodeId1, $nodeVersion1, $nodeTimestamp1, $nodeUid1, $nodeUser1, $nodeChangeset1, $nodeLat1, $nodeLon1, $aRef1) = getNode1 () ;
+if ($nodeId1 != -1) {
+	@nodeTags1 = @$aRef1 ;
+}
 openOsm2File ($osm2Name) ;
+($nodeId2, $nodeVersion2, $nodeTimestamp2, $nodeUid2, $nodeUser2, $nodeChangeset2, $nodeLat2, $nodeLon2, $aRef1) = getNodeFile2 () ;
+if ($nodeId2 != -1) {
+	@nodeTags2 = @$aRef1 ;
+}
 processNodes() ;
 processWays() ;
 closeOsm1File () ;
@@ -87,58 +105,9 @@ outputConsole() ;
 outputHTML() ;
 
 
-die () ;
-
-my $nodeNumber1 = 0 ;
-openOsm1File ($osm1Name) ;
-($nodeId1, $nodeVersion1, $nodeTimestamp1, $nodeUid1, $nodeUser1, $nodeChangeset1, $nodeLat1, $nodeLon1, $aRef1) = getNode1 () ;
-if ($nodeId1 != -1) {
-	@nodeTags1 = @$aRef1 ;
-}
-
-while ($nodeId1 != -1) {
-	$nodeNumber1++ ;
-	#print "id=$nodeId1\nlon=$nodeLon1\nlat=$nodeLat1\nuid=$nodeUid1\nuser=$nodeUser1\nset=$nodeChangeset1\n" ;
-	#foreach my $t (@nodeTags1) { print $t->[0] . ":" . $t->[1] . "\n" ;} 
-	#print "\n" ;
-
-	# next
-	($nodeId1, $nodeVersion1, $nodeTimestamp1, $nodeUid1, $nodeUser1, $nodeChangeset1, $nodeLat1, $nodeLon1, $aRef1) = getNode1 () ;
-	if ($nodeId1 != -1) {
-		@nodeTags1 = @$aRef1 ;
-	}
-}
-closeOsm1File () ;
-print "$nodeNumber1 nodes read in file 1\n" ; 
-
-
-my $nodeNumber2 = 0 ;
-openOsm2File ($osm2Name) ;
-($nodeId2, $nodeVersion2, $nodeTimestamp2, $nodeUid2, $nodeUser2, $nodeChangeset2, $nodeLat2, $nodeLon2, $aRef1) = getNode2 () ;
-if ($nodeId2 != -1) {
-	@nodeTags2 = @$aRef1 ;
-}
-
-while ($nodeId2 != -1) {
-	$nodeNumber2++ ;
-	#print "id=$nodeId2\nlon=$nodeLon2\nlat=$nodeLat2\nuid=$nodeUid2\nuser=$nodeUser2\nset=$nodeChangeset2\n" ;
-	#foreach my $t (@nodeTags2) { print $t->[0] . ":" . $t->[1] . "\n" ;} 
-	#print "\n" ;
-
-	# next
-	($nodeId2, $nodeVersion2, $nodeTimestamp2, $nodeUid2, $nodeUser2, $nodeChangeset2, $nodeLat2, $nodeLon2, $aRef1) = getNode2 () ;
-	if ($nodeId2 != -1) {
-		@nodeTags2 = @$aRef1 ;
-	}
-}
-closeOsm2File () ;
-print "$nodeNumber2 nodes read in file 2\n" ; 
-
-
-
-########
+#-------
 # FINISH
-########
+#-------
 
 print "\n$program finished after ", stringTimeSpent (time()-$time0), "\n\n" ;
 
@@ -148,7 +117,94 @@ print "\n$program finished after ", stringTimeSpent (time()-$time0), "\n\n" ;
 #------------------------------------------------------------------------------------
 
 sub processNodes {
+	print "processing nodes...\n" ;
+	while ( ($nodeId1 > -1) or ($nodeId2 > -1) ) {
+		# print "while $nodeId1     $nodeId2\n" ;
+		if ($nodeId1 == -1) {
+			# get rest from file 2, new nodes
+			while ( $nodeId2 != -1 ) {
+				# print "$nodeId1     $nodeId2   2-NEW\n" ;
+				$nodesAdded{$nodeUser2}++ ;
+				userArea ($nodeUser2, $nodeLon2, $nodeLat2) ;
+				($nodeId2, $nodeVersion2, $nodeTimestamp2, $nodeUid2, $nodeUser2, $nodeChangeset2, $nodeLat2, $nodeLon2, $aRef1) = getNodeFile2 () ;
+				if ($nodeId2 != -1) {
+					@nodeTags2 = @$aRef1 ;
+				}
+			}
+		}
 
+		if ($nodeId2 == -1) {
+			# get rest from file 1, deleted nodes
+			while ( $nodeId1 != -1 ) {
+				$deletedNodes++ ;
+				($nodeId1, $nodeVersion1, $nodeTimestamp1, $nodeUid1, $nodeUser1, $nodeChangeset1, $nodeLat1, $nodeLon1, $aRef1) = getNode1 () ;
+				if ($nodeId1 != -1) {
+					@nodeTags1 = @$aRef1 ;
+				}
+			}
+		}
+
+		if ( ($nodeId1 == $nodeId2) and ($nodeId1 != -1) ) {
+			# print "equal $nodeId1     $nodeId2\n" ;
+			# position...
+			if ( ($nodeLon1 != $nodeLon2) or ($nodeLat1 != $nodeLat2) ) {
+				$nodesMovedNumber{$nodeUser2}++ ;
+				my ($d) = distance ($nodeLon1, $nodeLat1, $nodeLon2, $nodeLat2) ;
+				$nodesMovedDistance{$nodeUser2} += $d ;
+				if (defined $nodesMovedMax{$nodeUser2}) {
+					if ($nodesMovedMax{$nodeUser2} < $d) { $nodesMovedMax{$nodeUser2} = $d ; }
+				}
+				else {
+					$nodesMovedMax{$nodeUser2} = $d ;
+				}
+				userArea ($nodeUser2, $nodeLon1, $nodeLat1) ;
+				userArea ($nodeUser2, $nodeLon2, $nodeLat2) ;
+			} # moved
+
+			# process tags
+			my ($added, $deleted, $renamed, $reclassified) = compareTags (\@nodeTags1, \@nodeTags2) ; 
+			if ($added) { $tagsAdded{$nodeUser2} += $added ; }
+			if ($deleted) { $tagsDeleted{$nodeUser2} += $deleted ; }
+			if ($renamed) { $tagsRenamed{$nodeUser2} += $renamed ; }
+			# 2x next
+			($nodeId2, $nodeVersion2, $nodeTimestamp2, $nodeUid2, $nodeUser2, $nodeChangeset2, $nodeLat2, $nodeLon2, $aRef1) = getNodeFile2 () ;
+			if ($nodeId2 != -1) {
+				@nodeTags2 = @$aRef1 ;
+			}
+			($nodeId1, $nodeVersion1, $nodeTimestamp1, $nodeUid1, $nodeUser1, $nodeChangeset1, $nodeLat1, $nodeLon1, $aRef1) = getNode1 () ;
+			if ($nodeId1 != -1) {
+				@nodeTags1 = @$aRef1 ;
+			}
+		}
+
+		if ( ($nodeId1 > $nodeId2) and ($nodeId2 != -1) ) {
+			# print "1 > 2 $nodeId1     $nodeId2   2-NEW\n" ;
+			# id 2 not found in file 1, nodeId2 new
+			$nodesAdded{$nodeUser2}++ ;
+			userArea ($nodeUser2, $nodeLon2, $nodeLat2) ;
+			# move file2 until id2>=id1
+			while ( ($nodeId2 < $nodeId1) and ($nodeId2 != -1) ) {
+				($nodeId2, $nodeVersion2, $nodeTimestamp2, $nodeUid2, $nodeUser2, $nodeChangeset2, $nodeLat2, $nodeLon2, $aRef1) = getNodeFile2 () ;
+				if ($nodeId2 != -1) {
+					@nodeTags2 = @$aRef1 ;
+				}
+			}
+		}
+
+		if ( ($nodeId1 < $nodeId2) and ($nodeId1 != -1) ) {
+			# print "1 < 2 $nodeId1     $nodeId2   1-DELETED\n" ;
+			# id 1 not found in file 2, nodeId1 deleted
+			$deletedNodes++ ;
+			# move file1 until id1>=id2
+			while ( ($nodeId1 < $nodeId2) and ($nodeId1 != -1) ) {
+				($nodeId1, $nodeVersion1, $nodeTimestamp1, $nodeUid1, $nodeUser1, $nodeChangeset1, $nodeLat1, $nodeLon1, $aRef1) = getNode1 () ;
+				if ($nodeId1 != -1) {
+					@nodeTags1 = @$aRef1 ;
+				}
+			}
+		}
+	}
+	print "finished.\n" ;
 }
 
 #------------------------------------------------------------------------------------
@@ -164,14 +220,164 @@ sub processWays {
 #------------------------------------------------------------------------------------
 
 sub outputConsole {
+	print "\nResult\n------\n" ;
+	print "DELETED NODES: $deletedNodes\n\n" ;
+	my @a = () ;
+	foreach my $e (keys %nodesMovedNumber) { push @a, [$e, $nodesMovedNumber{$e}] ; }
+	printTop ("MOVED NODES NUMBER", 0, @a) ;
+	@a = () ;
+	foreach my $e (keys %nodesMovedDistance) { push @a, [$e, $nodesMovedDistance{$e}] ; }
+	printTop ("MOVED NODES TOTAL DISTANCE (km)", 1, @a) ;
+	@a = () ;
+	foreach my $e (keys %nodesMovedDistance) { push @a, [$e, $nodesMovedDistance{$e}/$nodesMovedNumber{$e}] ; }
+	printTop ("MOVED NODES AVERAGE DISTANCE (km)", 1, @a) ;
+	@a = () ;
+	foreach my $e (keys %nodesMovedMax) { push @a, [$e, $nodesMovedMax{$e}] ; }
+	printTop ("MOVED NODES MAXIMUM DISTANCE (km)", 1, @a) ;
 
+	@a = () ;
+	foreach my $u (keys %maxLon) {
+		# print "USER: $u\n" ;
+		push @a, [$u, distance ($minLon{$u}, $minLat{$u}, $minLon{$u}, $maxLat{$u}) * distance ($minLon{$u}, $minLat{$u}, $maxLon{$u}, $minLat{$u})] ;
+	}
+	printTop ("WORK AREAS (km²)", 1, @a) ;
+
+	@a = () ;
+	foreach my $e (keys %tagsAdded) { push @a, [$e, $tagsAdded{$e}] ; }
+	printTop ("TAGS ADDED", 0, @a) ;
+
+	@a = () ;
+	foreach my $e (keys %tagsRenamed) { push @a, [$e, $tagsRenamed{$e}] ; }
+	printTop ("OBJECTS RENAMED", 0, @a) ;
+
+	my (@list) = @a ; @list = reverse (sort {$a->[1]<=>$b->[1]} @list) ;
+	# if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
+	print "\n\nRENAMES BY ALL USERS\n\n" ;
+	foreach my $e (@list) {
+		foreach my $t (keys %{$renames{$e->[0]}}) {
+			printf "%-25s %-80s %5i\n" , $e->[0], $t, $renames{$e->[0]}{$t} ;
+		}
+		print "\n" ;
+	}
+
+	@a = () ;
+	foreach my $e (keys %tagsDeleted) { push @a, [$e, $tagsDeleted{$e}] ; }
+	printTop ("TAGS DELETED", 0, @a) ;
+
+	@list = @a ; @list = reverse (sort {$a->[1]<=>$b->[1]} @list) ;
+	if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
+	print "\n\nTAGS REMOVED BY TOP USERS\n\n" ;
+	foreach my $e (@list) {
+		foreach my $t (keys %{$tagsDeletedName{$e->[0]}}) {
+			printf "%-25s %-50s %5i\n" , $e->[0], $t, $tagsDeletedName{$e->[0]}{$t} ;
+		}
+		print "\n" ;
+	}
+	print "\n" ;
+
+
+
+	#@a = () ;
+	#foreach my $e (keys %tagsReclassified) { push @a, [$e, $tagsReclassified{$e}] ; }
+	#printTop ("Highways reclassified", @a) ;
+
+}
+
+sub printTop {
+	my ($heading, $decimal, @list) = @_ ;
+	print "\n\n$heading\n\n" ;
+	@list = reverse (sort {$a->[1]<=>$b->[1]} @list) ;
+	if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
+	foreach my $e (@list) {
+		if ($decimal) { 
+			printf "%-20s %8.3f\n", $e->[0], $e->[1] ;
+		}
+		else {
+			printf "%-20s %8i\n", $e->[0], $e->[1] ;
+		}
+	} 
+	print "\n" ;
 }
 
 sub outputHTML {
 
 }
 
+#------------------------------------------------------------------------------------
+# some functions
+#------------------------------------------------------------------------------------
 
+sub userArea {
+	my ($u, $lon, $lat) = @_ ;
+	if (! defined $maxLon{$u}) {
+		$minLon{$u} = $lon ;
+		$minLat{$u} = $lat ;
+		$maxLon{$u} = $lon ;
+		$maxLat{$u} = $lat ;
+	}
+	else {
+		if ($lon > $maxLon{$u}) { $maxLon{$u} = $lon ; }
+		if ($lon < $minLon{$u}) { $minLon{$u} = $lon ; }
+		if ($lat > $maxLat{$u}) { $maxLat{$u} = $lat ; }
+		if ($lat < $minLat{$u}) { $minLat{$u} = $lat ; }
+	}
+}
+
+sub compareTags {
+	my ($aRef1, $aRef2) = @_ ;
+	my $added = 0 ; my $deleted = 0 ; my $renamed = 0 ; my $reclassified = 0 ;
+	my (@tags1) = @$aRef1 ; my (@tags2) = @$aRef2 ;
+
+	# RENAMED?
+	my $nameGiven = 0 ;
+	my $nameOld = "" ; 
+	my $nameNew = "" ;
+	foreach my $t (@tags1) { 
+		if ($t->[0] eq "name") { $nameGiven = 1 ; $nameOld = $t->[1] ; }
+	}
+	foreach my $t (@tags2) { 
+		if ($t->[0] eq "name") { $nameNew = $t->[1] ; }
+	}
+	if ( ($nameGiven == 1) and ($nameNew ne $nameOld) ) { 
+		$renamed = 1 ; 
+		$renames{$nodeUser2}{$nameOld . " -> " . $nameNew} ++ ;
+	}
+	
+	# RECLASSIFIED?
+	my $highwayGiven = 0 ;
+	my $highwayOld = "" ;
+	my $highwayNew = "" ;
+	foreach my $t (@tags1) { 
+		if ($t->[0] eq "highway") { $highwayGiven = 1 ; $highwayOld = $t->[1] ; }
+	}
+	foreach my $t (@tags2) { 
+		if ($t->[0] eq "highway") { $highwayNew = $t->[1] ; }
+	}
+	if ( ($highwayGiven == 1) and ($highwayNew ne $highwayOld) ) { $reclassified = 1 ; }
+
+	# ADDED?
+	foreach my $t2 (@tags2) {
+		my $found = 0 ;
+		foreach my $t1 (@tags1) {
+			if ( ($t1->[0] eq $t2->[0]) and ($t1->[1] eq $t2->[1]) ) { $found = 1 ; }
+		}
+		if ($found == 0) { $added++ ; }
+	}
+
+	# DELETED?
+	foreach my $t1 (@tags1) {
+		my $found = 0 ;
+		foreach my $t2 (@tags2) {
+			if ( ($t1->[0] eq $t2->[0]) and ($t1->[1] eq $t2->[1]) ) { $found = 1 ; }
+		}
+		if ($found == 0) { 
+			$deleted++ ; 
+			$tagsDeletedName{$nodeUser2}{$t1->[0].":".$t1->[1]}++ ;
+		}
+	}
+
+	return ($added, $deleted, $renamed, $reclassified) ;
+} # compareTags
 
 #------------------------------------------------------------------------------------
 # Basic object operations
@@ -193,7 +399,6 @@ sub getNode1 {
 		if (!defined $user) { $user = "unknown" ; }
 		if (!defined $uid) { $uid = 0 ; }
 
-		# TODO copy sub
 		if (!$id or (! (defined ($lat))) or ( ! (defined ($lon))) ) {
 			print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line1, "\n" ; 
 		}
@@ -223,7 +428,7 @@ sub getNode1 {
 	return ($id, $version, $timestamp, $uid, $user, $changeset, $lat, $lon, \@gTags) ; # in main @array = @$ref
 } # getNode1
 
-sub getNode2 {
+sub getNodeFile2 {
 	my ($id, $version, $timestamp, $uid, $user, $changeset, $lat, $lon) ;
 	my @gTags = () ;
 	if($line2 =~ /^\s*\<node/) {
@@ -266,7 +471,7 @@ sub getNode2 {
 		return (-1, -1, -1, -1, -1) ; 
 	} # node
 	return ($id, $version, $timestamp, $uid, $user, $changeset, $lat, $lon, \@gTags) ; # in main @array = @$ref
-} # getNode2
+} # getNodeFile2
 
 
 

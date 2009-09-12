@@ -15,6 +15,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.MergeNodesAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.BackreferencedDataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
@@ -27,8 +28,22 @@ import org.openstreetmap.josm.plugins.validator.util.Bag;
  *
  * @author frsantos
  */
-public class DuplicateNode extends Test
-{
+public class DuplicateNode extends Test{
+	
+	private static BackreferencedDataSet backreferences;
+	
+	public static BackreferencedDataSet getBackreferenceDataSet() {
+		if (backreferences == null) {
+			backreferences = new BackreferencedDataSet(Main.main.getEditLayer().data);
+			backreferences.build();
+		}
+		return backreferences;
+	}
+	
+	public static void clearBackreferences() {
+		backreferences = null;
+	}
+	
     protected static int DUPLICATE_NODE = 1;
 
     /** Bag of all nodes */
@@ -91,31 +106,14 @@ public class DuplicateNode extends Test
     @Override
     public Command fixError(TestError testError)
     {
-        Collection<? extends OsmPrimitive> sel = testError.getPrimitives();
-        LinkedList<Node> nodes = new LinkedList<Node>();
-
-        for (OsmPrimitive osm : sel)
-            if (osm instanceof Node)
-                nodes.add((Node)osm);
-
-        if( nodes.size() < 2 )
-            return null;
-
-        Node target = null;
-        // select the target node in the same way as in the core action MergeNodesAction, rev.1084
-        for (Node n: nodes) {
-            if (n.getId() > 0) {
-                target = n;
-                break;
-            }
-        }
-        if (target == null)
-            target = nodes.iterator().next();
-
+        Collection<OsmPrimitive> sel = new LinkedList<OsmPrimitive>(testError.getPrimitives());
+        LinkedList<Node> nodes = new LinkedList<Node>(OsmPrimitive.getFilteredList(sel, Node.class));
+        MergeNodesAction mergeAction  = new MergeNodesAction();
+        Node target = mergeAction.selectTargetNode(nodes);
         if(checkAndConfirmOutlyingDeletes(nodes))
-            new MergeNodesAction().mergeNodes(nodes, target);
+            return mergeAction.mergeNodes(Main.main.getEditLayer(),getBackreferenceDataSet(), nodes, target);
 
-        return null; // undoRedo handling done in mergeNodes
+        return null;// undoRedo handling done in mergeNodes
     }
 
     @Override

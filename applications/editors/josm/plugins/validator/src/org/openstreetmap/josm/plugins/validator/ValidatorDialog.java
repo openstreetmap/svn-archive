@@ -10,9 +10,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import javax.swing.JMenuItem;
@@ -20,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -32,9 +37,14 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.plugins.validator.tests.DuplicateNode;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.xml.sax.SAXException;
 
 /**
  * A small tool dialog for displaying the current errors. The selection manager
@@ -132,6 +142,9 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
             return;
 
         Set<DefaultMutableTreeNode> processedNodes = new HashSet<DefaultMutableTreeNode>();
+               
+        DuplicateNode.clearBackreferences();
+        LinkedList<TestError> errorsToFix = new LinkedList<TestError>();
         for (TreePath path : selectionPaths) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
             if (node == null)
@@ -146,19 +159,15 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
                 processedNodes.add(childNode);
                 Object nodeInfo = childNode.getUserObject();
                 if (nodeInfo instanceof TestError) {
-                    TestError error = (TestError) nodeInfo;
-                    Command fixCommand = error.getFix();
-                    if (fixCommand != null) {
-                        Main.main.undoRedo.add(fixCommand);
-                        error.setIgnored(true);
-                    }
+                	errorsToFix.add((TestError)nodeInfo);
                 }
             }
         }
-
-        Main.map.repaint();
-        tree.resetErrors();
-        DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
+        
+        // run fix task asynchronously
+        //
+        FixTask fixTask = new FixTask(errorsToFix);
+        Main.worker.submit(fixTask);
     }
 
     /**
@@ -434,5 +443,78 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
             tree.setFilter(null);
         HashSet<OsmPrimitive> filter = new HashSet<OsmPrimitive>(newSelection);
         tree.setFilter(filter);
+    }
+    
+    /**
+     * Task for fixing a collection of {@see TestError}s. Can be run asynchronously. 
+     * 
+     *
+     */
+    class FixTask extends PleaseWaitRunnable {
+    	private Collection<TestError> testErrors;
+    	private boolean canceled;
+    	private LinkedList<Command> fixCommands;
+    
+    	
+    	public FixTask(Collection<TestError> testErrors) {
+    		super(tr("Fixing errors ..."), false /* don't ignore exceptions */);
+    		this.testErrors = testErrors == null ? new ArrayList<TestError> (): testErrors;
+    		fixCommands = new LinkedList<Command>();
+    	}
+
+		@Override
+		protected void cancel() {
+			this.canceled = true; 			
+		}
+
+		@Override
+		protected void finish() {
+			// do nothing
+		}
+ 		
+		@Override
+		protected void realRun() throws SAXException, IOException,
+				OsmTransferException {
+			ProgressMonitor monitor = getProgressMonitor();
+			try {				
+				monitor.setTicksCount(testErrors.size());
+				int i=0;
+				for (TestError error: testErrors) {
+					i++;
+					monitor.subTask(tr("Fixing ({0}/{1}): ''{2}''", i, testErrors.size(),error.getMessage()));
+					if (this.canceled) 
+						return;
+					final Command fixCommand = error.getFix();
+                    if (fixCommand != null) {
+                    	fixCommands.add(fixCommand);
+        				SwingUtilities.invokeAndWait(
+        						new Runnable() {
+        							public void run() {
+        								Main.main.undoRedo.add(fixCommand);
+        							}
+        						}
+        				);
+                        error.setIgnored(true);
+                    }
+                    monitor.worked(1);
+				}		
+				monitor.subTask(tr("Updating map ..."));
+				SwingUtilities.invokeAndWait(new Runnable() {
+					public void run() {
+						Main.map.repaint();
+						tree.resetErrors();
+						DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
+					}
+				});
+			} catch(InterruptedException e) { 
+				// FIXME: signature of realRun should have a generic checked exception we
+				// could throw here
+				throw new RuntimeException(e);
+			} catch(InvocationTargetException e) {
+				throw new RuntimeException(e);
+			} finally {
+				monitor.finishTask();
+			}			
+		}
     }
 }

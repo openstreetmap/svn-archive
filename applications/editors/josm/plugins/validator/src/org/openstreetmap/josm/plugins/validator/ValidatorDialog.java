@@ -490,7 +490,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
         				SwingUtilities.invokeAndWait(
         						new Runnable() {
         							public void run() {
-        								Main.main.undoRedo.add(fixCommand);
+        								Main.main.undoRedo.addNoRedraw(fixCommand);
         							}
         						}
         				);
@@ -501,6 +501,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
 				monitor.subTask(tr("Updating map ..."));
 				SwingUtilities.invokeAndWait(new Runnable() {
 					public void run() {
+						Main.main.undoRedo.afterAdd();
 						Main.map.repaint();
 						tree.resetErrors();
 						DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());

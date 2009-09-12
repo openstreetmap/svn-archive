@@ -108,10 +108,9 @@ public class DuplicateNode extends Test{
     {
         Collection<OsmPrimitive> sel = new LinkedList<OsmPrimitive>(testError.getPrimitives());
         LinkedList<Node> nodes = new LinkedList<Node>(OsmPrimitive.getFilteredList(sel, Node.class));
-        MergeNodesAction mergeAction  = new MergeNodesAction();
-        Node target = mergeAction.selectTargetNode(nodes);
+        Node target = MergeNodesAction.selectTargetNode(nodes);
         if(checkAndConfirmOutlyingDeletes(nodes))
-            return mergeAction.mergeNodes(Main.main.getEditLayer(),getBackreferenceDataSet(), nodes, target);
+            return MergeNodesAction.mergeNodes(Main.main.getEditLayer(),getBackreferenceDataSet(), nodes, target);
 
         return null;// undoRedo handling done in mergeNodes
     }

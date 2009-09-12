@@ -1149,7 +1149,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
           
 #define M(field) else if (K_IS (#field)) {				\
 	    if (V_IS ("yes") || V_IS ("1") || V_IS ("permissive") ||	\
-		V_IS ("true")) {					\
+		V_IS ("true") || V_IS ("designated") ||			\
+		V_IS ("official")) {					\
 	      yesMask |= 1 << field ## R;				\
 	    } else if (V_IS ("no") || V_IS ("0") || V_IS ("private")) { \
 	      noMask |= 1 << field ## R;				\

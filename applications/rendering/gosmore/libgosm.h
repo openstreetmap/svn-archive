@@ -44,7 +44,8 @@ typedef long long __int64;
 #define TILESIZE (1<<TILEBITS)
 
 #define RESTRICTIONS M (access) M (motorcar) M (bicycle) M (foot) M (goods) \
-  M (hgv) M (horse) M (motorcycle) M (psv) M (motorboat) M (boat) \
+  M (hgv) M (horse) M (motorcycle) M (psv) M (moped) M (mofa) \
+  M (motorboat) M (boat) \
   M (oneway) M (roundabout)
 
 #define M(field) field ## R,

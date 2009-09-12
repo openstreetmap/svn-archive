@@ -24,6 +24,7 @@ import org.openstreetmap.josm.tools.GBC;
 public class RemoteControlPreferences implements PreferenceSetting
 {
     private JCheckBox permissionLoadData = new JCheckBox(tr("load data from API"));
+    private JCheckBox permissionCreateObjects = new JCheckBox(tr("create new objects"));
     private JCheckBox permissionChangeSelection = new JCheckBox(tr("change the selection"));
     private JCheckBox permissionChangeViewport = new JCheckBox(tr("change the viewport"));
     private JCheckBox alwaysAskUserConfirm = new JCheckBox(tr("confirm all Remote Control actions manually"));
@@ -50,6 +51,7 @@ public class RemoteControlPreferences implements PreferenceSetting
         permissionLoadData.setSelected(Main.pref.getBoolean("remotecontrol.permission.load-data", true));
         permissionChangeSelection.setSelected(Main.pref.getBoolean("remotecontrol.permission.change-selection", true));
         permissionChangeViewport.setSelected(Main.pref.getBoolean("remotecontrol.permission.change-viewport", true));
+        permissionCreateObjects.setSelected(Main.pref.getBoolean("remotecontrol.permission.create-objects", true));
         alwaysAskUserConfirm.setSelected(Main.pref.getBoolean("remotecontrol.always-confirm", false));
 
     }
@@ -58,6 +60,7 @@ public class RemoteControlPreferences implements PreferenceSetting
         Main.pref.put("remotecontrol.permission.load-data", permissionLoadData.isSelected());
         Main.pref.put("remotecontrol.permission.change-selection", permissionChangeSelection.isSelected());
         Main.pref.put("remotecontrol.permission.change-viewport", permissionChangeViewport.isSelected());
+        Main.pref.put("remotecontrol.permission.create-objects", permissionCreateObjects.isSelected());
         Main.pref.put("remotecontrol.always-confirm", alwaysAskUserConfirm.isSelected());
         // FIXME confirm return value - really no restart needed?
         return false /* no restart needed */;

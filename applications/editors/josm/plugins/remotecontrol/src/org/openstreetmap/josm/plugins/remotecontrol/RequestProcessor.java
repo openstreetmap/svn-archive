@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -215,6 +216,22 @@ public class RequestProcessor extends Thread
                         }
                     });
                 }
+            } else if (command.equals("/add_node")) {
+                if (!Main.pref.getBoolean("remotecontrol.permission.create-objects", true)) {
+                    sendForbidden(out);
+                    return;
+                }
+                if (Main.pref.getBoolean("remotecontrol.always-confirm", false)) {
+                    if (JOptionPane.showConfirmDialog(Main.parent,
+                        "<html>" + tr("Remote Control has been asked to create a new node.") +
+                        "<br>" + tr("Do you want to allow this?"),
+                        tr("Confirm Remote Control action"),
+                        JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+                            sendForbidden(out);
+                            return;
+                    }
+                }
+                addNode(args, out);
             } else if (command.equals("/import")) {
                 if (Main.pref.getBoolean("remotecontrol.always-confirm", false)) {
                     if (JOptionPane.showConfirmDialog(Main.parent,
@@ -265,6 +282,34 @@ public class RequestProcessor extends Thread
                 request.close();
             } catch (IOException e) {}
         }
+    }
+
+    /**
+     * Adds a node, reacts to the GET /add_node?lon=...&amp;lat=... request.
+     * @param args
+     * @param out 
+     * @throws IOException 
+     */
+    private void addNode(HashMap<String, String> args, Writer out) throws IOException {
+        if(!args.containsKey("lat") || !args.containsKey("lon")) {
+            sendBadRequest(out);
+            return;
+        }
+        
+        // Parse the arguments
+        double lat = Double.parseDouble(args.get("lat"));
+        double lon = Double.parseDouble(args.get("lon"));
+        System.out.println("Adding node at (" + lat + ", " + lon + ")");
+        
+        // Create a new node
+        LatLon ll = new LatLon(lat, lon);
+        Node nnew = new Node(ll);
+        
+        // Now execute the commands to add this node.
+        Main.main.undoRedo.add(new AddCommand(nnew));
+        Main.main.getCurrentDataSet().setSelected(nnew);
+        Main.map.mapView.repaint();
+        
     }
 
     /**

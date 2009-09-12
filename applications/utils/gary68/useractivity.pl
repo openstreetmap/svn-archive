@@ -24,7 +24,7 @@ use File::stat;
 use Time::localtime;
 
 my $program = "useractivity.pl" ;
-my $usage = $program . " file1.osm file2.osm out.htm" ;
+my $usage = $program . " file1.osm file2.osm out.htm [numTopUsers]" ;
 my $version = "1.0 BETA" ;
 
 my $topMax = 10 ;
@@ -45,11 +45,13 @@ my $file1 ; my $file2 ; my $bz1 ; my $bz2 ; my $isBz21 ; my $isBz22 ; my $line1 
 my $file1Name ; my $file2Name ;
 
 my %minLon ; my %minLat ; my %maxLon ; my %maxLat ; # per user
-my $deletedNodes = 0 ;
+my $deletedNodes = 0 ; my $deletedNodesWithTags = 0 ;
 my %nodesAdded ; my %nodesMovedNumber ; my %nodesMovedDistance ; my %nodesMovedMax ;
 my %tagsAdded ; my %tagsDeleted ; my %tagsRenamed ; my %tagsReclassified ;
 my %tagsDeletedName ;
 my %renames ; 
+my @deletedNodesIds = () ; my %deletedNodesTags = () ;
+my %versionJumpsNodes = () ;
 
 ###############
 # get parameter
@@ -66,13 +68,19 @@ if (!$osm2Name)
 	die (print $usage, "\n");
 }
 
+$htmlName = shift||'';
+if (!$htmlName)
+{
+	die (print $usage, "\n");
+}
+
 $topMax = shift||'';
 if (!$topMax)
 {
 	$topMax = 10 ;
 }
 
-print "\n$program $version for files:\n" ;
+print "\n$program $version for files:\n\n" ;
 print stringFileInfo ($osm1Name), "\n"  ;
 print stringFileInfo ($osm2Name), "\n\n"  ;
 
@@ -98,12 +106,14 @@ if ($nodeId2 != -1) {
 	@nodeTags2 = @$aRef1 ;
 }
 processNodes() ;
+
+# TODO get first ways
 processWays() ;
+
 closeOsm1File () ;
 closeOsm2File () ;
-outputConsole() ;
-outputHTML() ;
 
+output() ;
 
 #-------
 # FINISH
@@ -137,6 +147,11 @@ sub processNodes {
 			# get rest from file 1, deleted nodes
 			while ( $nodeId1 != -1 ) {
 				$deletedNodes++ ;
+				if (scalar @nodeTags1 > 0) { 
+					$deletedNodesWithTags++ ; 
+					push @deletedNodesIds, $nodeId1 ;
+					@{$deletedNodesTags{$nodeId1}} = @nodeTags1 ;
+				}
 				($nodeId1, $nodeVersion1, $nodeTimestamp1, $nodeUid1, $nodeUser1, $nodeChangeset1, $nodeLat1, $nodeLon1, $aRef1) = getNode1 () ;
 				if ($nodeId1 != -1) {
 					@nodeTags1 = @$aRef1 ;
@@ -160,6 +175,10 @@ sub processNodes {
 				userArea ($nodeUser2, $nodeLon1, $nodeLat1) ;
 				userArea ($nodeUser2, $nodeLon2, $nodeLat2) ;
 			} # moved
+
+			if ($nodeVersion2 - $nodeVersion1 > 2) { 
+				push @{$versionJumpsNodes{$nodeUser2}}, [$nodeId2, $nodeVersion2 - $nodeVersion1] ;
+			}
 
 			# process tags
 			my ($added, $deleted, $renamed, $reclassified) = compareTags (\@nodeTags1, \@nodeTags2) ; 
@@ -195,6 +214,13 @@ sub processNodes {
 			# print "1 < 2 $nodeId1     $nodeId2   1-DELETED\n" ;
 			# id 1 not found in file 2, nodeId1 deleted
 			$deletedNodes++ ;
+			if (scalar @nodeTags1 > 0) { 
+				$deletedNodesWithTags++ ; 
+				push @deletedNodesIds, $nodeId1 ;
+				@{$deletedNodesTags{$nodeId1}} = @nodeTags1 ;
+			}
+
+
 			# move file1 until id1>=id2
 			while ( ($nodeId1 < $nodeId2) and ($nodeId1 != -1) ) {
 				($nodeId1, $nodeVersion1, $nodeTimestamp1, $nodeUid1, $nodeUser1, $nodeChangeset1, $nodeLat1, $nodeLon1, $aRef1) = getNode1 () ;
@@ -219,62 +245,116 @@ sub processWays {
 # Output functions
 #------------------------------------------------------------------------------------
 
-sub outputConsole {
-	print "\nResult\n------\n" ;
-	print "DELETED NODES: $deletedNodes\n\n" ;
+sub output {
+	open ($html, ">", $htmlName) or die ("can't open html output file") ;
+	printHTMLHeader ($html, "UserActvity by Gary68") ;
+	print $html "<H1>UserActvity by gary68</H1>" ;
+	print $html "<p>", stringFileInfo ($osm1Name), "</p>\n"  ;
+	print $html "<p>", stringFileInfo ($osm2Name), "</p>\n"  ;
+	print $html "<H1>Results</H1>" ;
+	print $html "<p>DELETED NODES: $deletedNodes</p>\n" ;
+	print $html "<p>DELETED NODES WITH TAGS: $deletedNodesWithTags (details see further down)</p>\n" ;
+
 	my @a = () ;
 	foreach my $e (keys %nodesMovedNumber) { push @a, [$e, $nodesMovedNumber{$e}] ; }
-	printTop ("MOVED NODES NUMBER", 0, @a) ;
+	printTop ("TOP moved nodes number", 0, @a) ;
 	@a = () ;
 	foreach my $e (keys %nodesMovedDistance) { push @a, [$e, $nodesMovedDistance{$e}] ; }
-	printTop ("MOVED NODES TOTAL DISTANCE (km)", 1, @a) ;
+	printTop ("TOP moved nodes total distance (km)", 1, @a) ;
 	@a = () ;
 	foreach my $e (keys %nodesMovedDistance) { push @a, [$e, $nodesMovedDistance{$e}/$nodesMovedNumber{$e}] ; }
-	printTop ("MOVED NODES AVERAGE DISTANCE (km)", 1, @a) ;
+	printTop ("TOP moved nodes average distance (km)", 1, @a) ;
 	@a = () ;
 	foreach my $e (keys %nodesMovedMax) { push @a, [$e, $nodesMovedMax{$e}] ; }
-	printTop ("MOVED NODES MAXIMUM DISTANCE (km)", 1, @a) ;
+	printTop ("TOP moved nodes maximum distance (km)", 1, @a) ;
 
 	@a = () ;
 	foreach my $u (keys %maxLon) {
 		# print "USER: $u\n" ;
 		push @a, [$u, distance ($minLon{$u}, $minLat{$u}, $minLon{$u}, $maxLat{$u}) * distance ($minLon{$u}, $minLat{$u}, $maxLon{$u}, $minLat{$u})] ;
 	}
-	printTop ("WORK AREAS (km²)", 1, @a) ;
+	printTop ("TOP work areas (km²)", 1, @a) ;
 
 	@a = () ;
 	foreach my $e (keys %tagsAdded) { push @a, [$e, $tagsAdded{$e}] ; }
-	printTop ("TAGS ADDED", 0, @a) ;
+	printTop ("TOP tags added", 0, @a) ;
 
 	@a = () ;
 	foreach my $e (keys %tagsRenamed) { push @a, [$e, $tagsRenamed{$e}] ; }
-	printTop ("OBJECTS RENAMED", 0, @a) ;
+	printTop ("TOP objects renamed", 0, @a) ;
 
 	my (@list) = @a ; @list = reverse (sort {$a->[1]<=>$b->[1]} @list) ;
 	# if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
-	print "\n\nRENAMES BY ALL USERS\n\n" ;
+	print $html "<h2>Renames by ALL users</h2>\n" ;
+	printHTMLTableHead ($html) ;
+	printHTMLTableHeadings ($html, "User", "Tag", "Number") ; 
 	foreach my $e (@list) {
 		foreach my $t (keys %{$renames{$e->[0]}}) {
-			printf "%-25s %-80s %5i\n" , $e->[0], $t, $renames{$e->[0]}{$t} ;
+			# printf $html "%-25s %-80s %5i<br>\n" , $e->[0], $t, $renames{$e->[0]}{$t} ;
+			printHTMLRowStart ($html) ;
+			printHTMLCellLeft ($html, $e->[0]) ;			
+			printHTMLCellLeft ($html, $t) ;			
+			printHTMLCellRight ($html, $renames{$e->[0]}{$t}) ;			
+			printHTMLRowEnd ($html) ;
 		}
-		print "\n" ;
 	}
+	printHTMLTableFoot ($html) ;
+
+	print $html "<h2>Version jumps nodes by ALL users</h2>\n" ;
+	printHTMLTableHead ($html) ;
+	printHTMLTableHeadings ($html, "User", "Nodes") ; 
+	foreach my $u (keys %versionJumpsNodes) {
+		printHTMLRowStart ($html) ;
+		printHTMLCellLeft ($html, $u) ;			
+		my $jumps = "" ;
+		foreach my $v (@{$versionJumpsNodes{$u}}) {
+			$jumps = $jumps . historyLink ("node", $v->[0]) . " (" . $v->[1] . ") " ;
+		}
+		printHTMLCellLeft ($html, $jumps) ;			
+		printHTMLRowEnd ($html) ;
+	}
+	printHTMLTableFoot ($html) ;
+
+	
 
 	@a = () ;
 	foreach my $e (keys %tagsDeleted) { push @a, [$e, $tagsDeleted{$e}] ; }
-	printTop ("TAGS DELETED", 0, @a) ;
+	printTop ("TOP tags deleted", 0, @a) ;
 
 	@list = @a ; @list = reverse (sort {$a->[1]<=>$b->[1]} @list) ;
 	if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
-	print "\n\nTAGS REMOVED BY TOP USERS\n\n" ;
+	print $html "<h2>Tags removed by TOP users</h2>\n" ;
+	printHTMLTableHead ($html) ;
+	printHTMLTableHeadings ($html, "User", "Rename", "Number") ; 
 	foreach my $e (@list) {
 		foreach my $t (keys %{$tagsDeletedName{$e->[0]}}) {
-			printf "%-25s %-50s %5i\n" , $e->[0], $t, $tagsDeletedName{$e->[0]}{$t} ;
+			# printf $html "%-25s %-50s %5i<br>\n" , $e->[0], $t, $tagsDeletedName{$e->[0]}{$t} ;
+			printHTMLRowStart ($html) ;
+			printHTMLCellLeft ($html, $e->[0]) ;			
+			printHTMLCellLeft ($html, $t) ;			
+			printHTMLCellRight ($html, $tagsDeletedName{$e->[0]}{$t}) ;			
+			printHTMLRowEnd ($html) ;
 		}
-		print "\n" ;
 	}
-	print "\n" ;
+	printHTMLTableFoot ($html) ;
 
+	print $html "<h2>ALL deleted Nodes with tags (details)</h2>\n" ;
+	printHTMLTableHead ($html) ;
+	printHTMLTableHeadings ($html, "NodeId", "Tags") ; 
+	foreach my $n (@deletedNodesIds) {
+		printHTMLRowStart ($html) ;
+		printHTMLCellLeft ($html, historyLink ("node", $n) ) ;			
+		my $tagText = "" ;
+		foreach my $t (@{$deletedNodesTags{$n}}) { $tagText = $tagText . $t->[0] . ":" . $t->[1] . "<br>\n" ; }
+		printHTMLCellLeft ($html, $tagText) ;	
+		printHTMLRowEnd ($html) ;
+	}
+	printHTMLTableFoot ($html) ;
+
+
+	printHTMLFoot ($html) ;
+	print $html "<p>$program finished after ", stringTimeSpent (time()-$time0), "</p>\n" ;
+	close ($html) ;
 
 
 	#@a = () ;
@@ -285,23 +365,27 @@ sub outputConsole {
 
 sub printTop {
 	my ($heading, $decimal, @list) = @_ ;
-	print "\n\n$heading\n\n" ;
+	print $html "<h2>$heading</h2>\n" ;
+	printHTMLTableHead ($html) ;
+	printHTMLTableHeadings ($html, "User", "Data") ; 
 	@list = reverse (sort {$a->[1]<=>$b->[1]} @list) ;
 	if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
 	foreach my $e (@list) {
+		printHTMLRowStart ($html) ;
+		my $s ;
 		if ($decimal) { 
-			printf "%-20s %8.3f\n", $e->[0], $e->[1] ;
+			$s = sprintf "%8.3f", $e->[1] ;
 		}
 		else {
-			printf "%-20s %8i\n", $e->[0], $e->[1] ;
+			$s = sprintf "%8i", $e->[1] ;
 		}
+		printHTMLCellLeft ($html, $e->[0]) ;			
+		printHTMLCellRight ($html, $s) ;			
+		printHTMLRowEnd ($html) ;
 	} 
-	print "\n" ;
+	printHTMLTableFoot ($html) ;
 }
 
-sub outputHTML {
-
-}
 
 #------------------------------------------------------------------------------------
 # some functions
@@ -370,7 +454,8 @@ sub compareTags {
 		foreach my $t2 (@tags2) {
 			if ( ($t1->[0] eq $t2->[0]) and ($t1->[1] eq $t2->[1]) ) { $found = 1 ; }
 		}
-		if ($found == 0) { 
+		# if ($found == 0) { 
+		if ( ($found == 0) and ($t1->[0] ne "created_by") ) { 
 			$deleted++ ; 
 			$tagsDeletedName{$nodeUser2}{$t1->[0].":".$t1->[1]}++ ;
 		}

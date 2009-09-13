@@ -25,7 +25,7 @@ use Time::localtime;
 
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm [numTopUsers]" ;
-my $version = "1.0 BETA" ;
+my $version = "1.0" ;
 
 my $topMax = 10 ;
 
@@ -57,28 +57,16 @@ my %versionJumpsNodes = () ;
 # get parameter
 ###############
 $osm1Name = shift||'';
-if (!$osm1Name)
-{
-	die (print $usage, "\n");
-}
+if (!$osm1Name) { die (print $usage, "\n") ; }
 
 $osm2Name = shift||'';
-if (!$osm2Name)
-{
-	die (print $usage, "\n");
-}
+if (!$osm2Name) { die (print $usage, "\n") ; }
 
 $htmlName = shift||'';
-if (!$htmlName)
-{
-	die (print $usage, "\n");
-}
+if (!$htmlName) { die (print $usage, "\n") ; }
 
 $topMax = shift||'';
-if (!$topMax)
-{
-	$topMax = 10 ;
-}
+if (!$topMax) {	$topMax = 10 ; }
 
 print "\n$program $version for files:\n\n" ;
 print stringFileInfo ($osm1Name), "\n"  ;
@@ -89,7 +77,7 @@ print stringFileInfo ($osm2Name), "\n\n"  ;
 # test ways
 # copy ways file 2
 # test ways file 2
-
+# picture?
 
 #------------------------------------------------------------------------------------
 # Main
@@ -219,8 +207,6 @@ sub processNodes {
 				push @deletedNodesIds, $nodeId1 ;
 				@{$deletedNodesTags{$nodeId1}} = @nodeTags1 ;
 			}
-
-
 			# move file1 until id1>=id2
 			while ( ($nodeId1 < $nodeId2) and ($nodeId1 != -1) ) {
 				($nodeId1, $nodeVersion1, $nodeTimestamp1, $nodeUid1, $nodeUser1, $nodeChangeset1, $nodeLat1, $nodeLon1, $aRef1) = getNode1 () ;
@@ -251,6 +237,7 @@ sub output {
 	print $html "<H1>UserActvity by gary68</H1>" ;
 	print $html "<p>", stringFileInfo ($osm1Name), "</p>\n"  ;
 	print $html "<p>", stringFileInfo ($osm2Name), "</p>\n"  ;
+	print $html "<p>A deleted tag can result out of a change of a tag. The same is true for the addition of a tag. Real changes are not counted.</p>" ;
 	print $html "<H1>Results</H1>" ;
 	print $html "<p>DELETED NODES: $deletedNodes</p>\n" ;
 	print $html "<p>DELETED NODES WITH TAGS: $deletedNodesWithTags (details see further down)</p>\n" ;
@@ -270,7 +257,6 @@ sub output {
 
 	@a = () ;
 	foreach my $u (keys %maxLon) {
-		# print "USER: $u\n" ;
 		push @a, [$u, distance ($minLon{$u}, $minLat{$u}, $minLon{$u}, $maxLat{$u}) * distance ($minLon{$u}, $minLat{$u}, $maxLon{$u}, $minLat{$u})] ;
 	}
 	printTop ("TOP work areas (km²)", 1, @a) ;
@@ -292,7 +278,7 @@ sub output {
 		foreach my $t (keys %{$renames{$e->[0]}}) {
 			# printf $html "%-25s %-80s %5i<br>\n" , $e->[0], $t, $renames{$e->[0]}{$t} ;
 			printHTMLRowStart ($html) ;
-			printHTMLCellLeft ($html, $e->[0]) ;			
+			printHTMLCellLeft ($html, userLink ($e->[0])) ;			
 			printHTMLCellLeft ($html, $t) ;			
 			printHTMLCellRight ($html, $renames{$e->[0]}{$t}) ;			
 			printHTMLRowEnd ($html) ;
@@ -305,7 +291,7 @@ sub output {
 	printHTMLTableHeadings ($html, "User", "Nodes") ; 
 	foreach my $u (keys %versionJumpsNodes) {
 		printHTMLRowStart ($html) ;
-		printHTMLCellLeft ($html, $u) ;			
+		printHTMLCellLeft ($html, userLink ($u)) ;			
 		my $jumps = "" ;
 		foreach my $v (@{$versionJumpsNodes{$u}}) {
 			$jumps = $jumps . historyLink ("node", $v->[0]) . " (" . $v->[1] . ") " ;
@@ -315,8 +301,6 @@ sub output {
 	}
 	printHTMLTableFoot ($html) ;
 
-	
-
 	@a = () ;
 	foreach my $e (keys %tagsDeleted) { push @a, [$e, $tagsDeleted{$e}] ; }
 	printTop ("TOP tags deleted", 0, @a) ;
@@ -325,12 +309,12 @@ sub output {
 	if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
 	print $html "<h2>Tags removed by TOP users</h2>\n" ;
 	printHTMLTableHead ($html) ;
-	printHTMLTableHeadings ($html, "User", "Rename", "Number") ; 
+	printHTMLTableHeadings ($html, "User", "Removed", "Number") ; 
 	foreach my $e (@list) {
 		foreach my $t (keys %{$tagsDeletedName{$e->[0]}}) {
 			# printf $html "%-25s %-50s %5i<br>\n" , $e->[0], $t, $tagsDeletedName{$e->[0]}{$t} ;
 			printHTMLRowStart ($html) ;
-			printHTMLCellLeft ($html, $e->[0]) ;			
+			printHTMLCellLeft ($html, userLink ($e->[0])) ;			
 			printHTMLCellLeft ($html, $t) ;			
 			printHTMLCellRight ($html, $tagsDeletedName{$e->[0]}{$t}) ;			
 			printHTMLRowEnd ($html) ;
@@ -351,16 +335,17 @@ sub output {
 	}
 	printHTMLTableFoot ($html) ;
 
-
 	printHTMLFoot ($html) ;
 	print $html "<p>$program finished after ", stringTimeSpent (time()-$time0), "</p>\n" ;
 	close ($html) ;
 
-
+	# TODO
 	#@a = () ;
 	#foreach my $e (keys %tagsReclassified) { push @a, [$e, $tagsReclassified{$e}] ; }
 	#printTop ("Highways reclassified", @a) ;
 
+
+	# TODO reclassification list
 }
 
 sub printTop {
@@ -379,7 +364,7 @@ sub printTop {
 		else {
 			$s = sprintf "%8i", $e->[1] ;
 		}
-		printHTMLCellLeft ($html, $e->[0]) ;			
+		printHTMLCellLeft ($html, userLink ($e->[0]) ) ;			
 		printHTMLCellRight ($html, $s) ;			
 		printHTMLRowEnd ($html) ;
 	} 
@@ -463,6 +448,13 @@ sub compareTags {
 
 	return ($added, $deleted, $renamed, $reclassified) ;
 } # compareTags
+
+sub userLink {
+	my ($user) = shift ;
+	return "<a href=\"http://www.openstreetmap.org/user/" . $user . "\">" . $user . "</a>" ;
+}
+
+
 
 #------------------------------------------------------------------------------------
 # Basic object operations

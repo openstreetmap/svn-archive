@@ -346,7 +346,7 @@ public class Reasoner {
      */
     private int evalQ(OsmPrimitive prim, AddressElement elem, Integer oldQ) {
 
-        if (prim.deleted)
+        if (prim.isDeleted())
             return MATCH_NOMATCH;
 
         if (oldQ == MATCH_OVERWRITE)

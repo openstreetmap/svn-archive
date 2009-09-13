@@ -79,7 +79,9 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         }
 
         // And finalize initializing the form.
-        setupDialog(mainPanel, new String[] { "ok.png", "cancel.png" });
+        setContent(mainPanel, false);
+        setButtonIcons(new String[] { "ok.png", "cancel.png" });
+        setupDialog();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setAlwaysOnTop(false);
 
@@ -128,22 +130,22 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
      */
     public void updateMatches() {
 
-        if (proposalContainer.getTarget().deleted)
+        if (proposalContainer.getTarget().isDeleted())
             setVisible(false);
         OsmPrimitive prim = this.proposalContainer.getTarget();
         Reasoner r = Reasoner.getInstance();
         List<AddressElement> elems = new NotNullList<AddressElement>();
 
         synchronized (r) {
-            Map<String,String> backup = prim.keys;
+            Map<String,String> backup = prim.getKeys();
             r.openTransaction();
             for (AddressElement elem : r.getCandidates(prim))
                 r.unOverwrite(prim, elem);
-            prim.keys = null;
+            prim.setKeys(null);
             prim.put(PrimUtils.KEY_ADDR_CP, alternateNumberEdit.getText());
             r.update(prim);
             elems.addAll(r.getCandidates(prim));
-            prim.keys = backup;
+            prim.setKeys(backup);
             r.update(prim);
             r.closeTransaction();
         }

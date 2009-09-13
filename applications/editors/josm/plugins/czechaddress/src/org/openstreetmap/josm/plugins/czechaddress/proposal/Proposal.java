@@ -22,7 +22,7 @@ abstract public class Proposal {
      * @param op the primitive to be altered
      */
     public void apply(OsmPrimitive op) {
-        op.modified = true;
+        op.setModified(true);
     }
 
     /**

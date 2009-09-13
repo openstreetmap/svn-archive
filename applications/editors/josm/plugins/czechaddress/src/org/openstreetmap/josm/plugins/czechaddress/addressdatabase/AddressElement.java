@@ -100,7 +100,7 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         else if (prim instanceof Way)
             result += " " + StringUtils.latLonToString(((Way) prim).firstNode().getCoor());
 
-        if (prim.deleted)
+        if (prim.isDeleted())
             result += " DEL";
 
         return result;

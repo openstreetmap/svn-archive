@@ -61,10 +61,10 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
                 if (!(prim2 instanceof Way)) continue;
                 if (prim2.equals(prim))      continue;
                	Way border = (Way) prim2;
-                if (border.nodes.size() == 0)   continue;
+                if (border.getNodes().size() == 0)   continue;
                 if (border.keySet().size() > 0) continue;
-                if (!area.nodes.contains(border.firstNode())) continue;
-                if (!area.nodes.contains(border.lastNode()))  continue;
+                if (!area.getNodes().contains(border.firstNode())) continue;
+                if (!area.getNodes().contains(border.lastNode()))  continue;
 
                 Way newArea1 = new Way();
                 Way newArea2 = new Way();
@@ -82,8 +82,8 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
                     Main.main.getCurrentDataSet().addPrimitive(newArea1);
                     Main.main.getCurrentDataSet().addPrimitive(newArea2);
 
-                    area.delete(true);
-                    border.delete(true);
+                    area.setDeleted(true);
+                    border.setDeleted(true);
                     newSelection.remove(area);
                     newSelection.remove(border);
 
@@ -112,20 +112,20 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
 
         Way tempBorder = new Way(border);
 
-        int index1 = area.nodes.indexOf(tempBorder.firstNode());
-        int index2 = area.nodes.indexOf(tempBorder.lastNode());
+        int index1 = area.getNodes().indexOf(tempBorder.firstNode());
+        int index2 = area.getNodes().indexOf(tempBorder.lastNode());
         if (index1 == index2)
             return 1;
 
         if (index1 > index2) {
-            Collections.reverse(tempBorder.nodes);
-            index1 = area.nodes.indexOf(tempBorder.firstNode());
-            index2 = area.nodes.indexOf(tempBorder.lastNode());
+            Collections.reverse(tempBorder.getNodes());
+            index1 = area.getNodes().indexOf(tempBorder.firstNode());
+            index2 = area.getNodes().indexOf(tempBorder.lastNode());
         }
 
         for (Relation relation : Main.main.getCurrentDataSet().relations)
-            for (RelationMember areaMember : relation.members)
-                if (area.equals(areaMember.member))
+            for (RelationMember areaMember : relation.getMembers())
+                if (area.equals(areaMember.getMember()))
                     return 2;
 
         for (String key : area.keySet()) {
@@ -133,15 +133,15 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
             newArea2.put(key, area.get(key));
         }
 
-        newArea1.nodes.addAll(area.nodes.subList(0, index1));
-        newArea1.nodes.addAll(tempBorder.nodes);
-        newArea1.nodes.addAll(area.nodes.subList(index2, area.nodes.size()-1));
-        newArea1.nodes.add(area.nodes.get(0));
+        newArea1.getNodes().addAll(area.getNodes().subList(0, index1));
+        newArea1.getNodes().addAll(tempBorder.getNodes());
+        newArea1.getNodes().addAll(area.getNodes().subList(index2, area.getNodes().size()-1));
+        newArea1.getNodes().add(area.getNodes().get(0));
 
-        Collections.reverse(tempBorder.nodes);
-        newArea2.nodes.addAll(area.nodes.subList(index1, index2));
-        newArea2.nodes.addAll(tempBorder.nodes);
-        newArea2.nodes.add(area.nodes.get(index1));
+        Collections.reverse(tempBorder.getNodes());
+        newArea2.getNodes().addAll(area.getNodes().subList(index1, index2));
+        newArea2.getNodes().addAll(tempBorder.getNodes());
+        newArea2.getNodes().add(area.getNodes().get(index1));
 
         removeDuplicateNodesFromWay(newArea1);
         removeDuplicateNodesFromWay(newArea2);
@@ -154,9 +154,9 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
      */
     void removeDuplicateNodesFromWay(Way w) {
         int i=0;
-        while (i<w.nodes.size()-1) {
-            if (w.nodes.get(i).equals(w.nodes.get(i+1)))
-                w.nodes.remove(i);
+        while (i<w.getNodes().size()-1) {
+            if (w.getNodes().get(i).equals(w.getNodes().get(i+1)))
+                w.getNodes().remove(i);
             else
                 i++;
         }

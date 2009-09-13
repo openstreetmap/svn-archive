@@ -43,12 +43,12 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="locationEdit" pref="252" max="32767" attributes="0"/>
+                          <Component id="locationEdit" pref="228" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="changeLocationButton" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="alternateNumberEdit" alignment="0" pref="309" max="32767" attributes="0"/>
-                      <Component id="matchesComboBox" alignment="0" pref="309" max="32767" attributes="0"/>
+                      <Component id="alternateNumberEdit" alignment="0" pref="293" max="32767" attributes="0"/>
+                      <Component id="matchesComboBox" alignment="0" pref="293" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <Component id="statusLabel" alignment="0" pref="433" max="32767" attributes="0"/>
@@ -74,7 +74,7 @@
                       <Component id="matchesComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="161" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="153" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusLabel" min="-2" max="-2" attributes="0"/>
               </Group>

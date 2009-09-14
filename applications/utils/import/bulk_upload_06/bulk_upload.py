@@ -184,6 +184,10 @@ class IdMap:
         f=open(self.filename+".tmp","w")
         pickle.dump(self.idMap,f)
         f.close()
+	try:
+            os.remove(self.filename)
+        except os.error:
+            pass
         os.rename(self.filename+".tmp", self.filename)
 
 class ChangesetClosed(Exception): pass

@@ -1,0 +1,48 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="jquery/jquery.js"></script>
+        <script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js" ></script>
+        <script type="text/javascript" src="api/YourNavigation.js"></script>
+        <script type="text/javascript">
+            function init(){
+                // Map definition based on http://wiki.openstreetmap.org/index.php/OpenLayers_Simple_Example
+                var MyFirstMap = new OpenLayers.Map('map');
+
+                var ol_wms = new OpenLayers.Layer.WMS(
+                "OpenLayers WMS",
+                "http://labs.metacarta.com/wms/vmap0",
+                {layers: 'basic'}
+            );
+                MyFirstMap.addLayers([ol_wms]);
+                MyFirstMap.addControl(new OpenLayers.Control.LayerSwitcher());
+
+                MyFirstMap.zoomToMaxExtent();
+
+                /* Initialize a Route object from the YourNavigation API */
+                MyFirstRoute = new YourNavigation.Route(MyFirstMap);
+                var flat=51.158883504779;
+                var flon=3.220214843821;
+                var tlat=51.241492039675;
+                var tlon=4.472656250021;
+                MyFirstRoute.waypoint("from").lonlat = new OpenLayers.LonLat(flon,flat);
+                MyFirstRoute.waypoint("to").lonlat = new OpenLayers.LonLat(tlon,tlat);
+                MyFirstRoute.draw(MyCallBack);
+            }
+            function MyCallBack(response) {
+                alert(response);
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <div id="map" width="200" height="200" class="smallmap"></div>
+
+
+    </body>
+</html>

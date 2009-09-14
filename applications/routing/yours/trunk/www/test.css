@@ -1,0 +1,314 @@
+/* commented backslash hack \*/ 
+html, body{font: 90% arial, helvetica, sans-serif;background: #F9FFF0}
+/* end hack */
+html,body {margin:0;padding:0}
+
+h1, h2 {
+    margin: 0;
+}
+
+#outer{
+
+}
+* html #outer{
+    width:100%;/* box model hack for ie5.+*/
+}
+#title {
+    background-color:#A1E93C;
+}
+#header {
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    background-color: #C5FF73;
+    text-align: center;
+}
+
+#help_about {
+    float: right;
+    margin-right: 10px
+}
+
+#main {
+    position: fixed;
+    top: 50px;
+    bottom: 2em;
+    width: 100%;
+    border: 1px solid #E4FFBE;
+}
+
+#content {
+    margin: 0 0 0 330px;
+    height: 100%;
+}
+
+#map {
+    min-width:300px;
+    min-height:300px;
+    width:100%;
+    height:100%;
+}
+
+#clearfooter{
+    clear: both;
+    height: 1px;
+    font-size: 1px;
+    border: none;
+    margin:0; padding:0;
+    background: transparent;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    height: 2em;
+}
+
+#help {
+    padding: 10px;
+    background: #fff;
+}
+
+div.hover a {
+    display: block;
+    background-color: #ddf;
+    text-decoration: none;
+    padding: 5px;
+    font-weight: bold;
+    font-size : 12px;
+}
+
+div.hover a:hover {
+    background-color: #ddf;
+}
+
+#navigation {
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 320px;
+    background: #F9FFF0;
+}
+/*
+#navigation ul {
+	list-style-image:none;
+	list-style-position:outside;
+	list-style-type:none;
+	margin-left:0;
+	padding-left:1em;
+	text-indent:-1em;
+}
+*/
+.nav_content {
+    padding-top: 10px;
+    padding-left: 10px;
+    clear: both;
+    border: 1px solid #000;
+    background: #fff;
+}
+
+/*
+#nav_header {
+	background: #ccc;
+}
+
+#nav_header ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+#nav_header li {
+	float: left;
+	border: 1px solid #bbb;
+	border-bottom-width: 0;
+	margin: 0;
+}
+
+#nav_header ul:hover {
+	background: #ddf;
+}
+
+#nav_header a {
+	text-decoration: none;
+	display: block;
+	background: #eee;
+	padding: 5px 0px 5px 8px;
+	color: #00c;
+	width: 64px;
+	text-align: center;
+}
+
+#nav_header a:hover {
+	background: #ddf;
+}
+
+#nav_header #selected {
+	border-color: black;
+}
+
+#nav_header #selected a {
+	position: relative;
+	top: 1px;
+	background: #ddf;
+	color: black;
+	font-weight: bold;
+}
+*/
+/* route via stuff */
+.route_via {
+    list-style: none;
+    position: relative;
+    top: 5px;
+}
+.route_plus {
+    position: relative;
+    top: -20px;
+    left: 250px;
+}
+
+#route ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#route ul li {
+    margin: 2px 0 6px 0;
+    padding: 0;
+    font-weight: bold;
+    line-height: 30px; /* height of icon */
+    background-repeat: no-repeat;
+    background-position: 0 50%;
+}
+
+#route ul li a {
+    display: block;
+    margin-left: 30px; /* width of icon + whitespace */
+    padding-left: 20px;
+    width: 30px;
+    style-set: "std-button";
+}
+
+#route input {
+    display: inline-block;        /* inline with outer text */
+    display-model: inline-inside; /* contains only inlines */
+    margin-left: 90;
+    style-set: "std-input";    /* all other visual and behavioral styles are
+                                     derived from standard checkbox */
+}
+
+#via_begin { background-image: url(markers/route1.png); }
+#via_end { background-image: url(markers/route2.png); }
+#via_a { background-image: url(markers/letter1.png); }
+#via_b { background-image: url(markers/letter2.png); }
+#via_c { background-image: url(markers/letter3.png); }
+
+#route_action {
+    position: relative;
+}
+
+/* Caution! Ensure accessibility in print and other media types... */
+@media projection, screen { /* Use class for showing/hiding tab content, so that visibility can be better controlled in different media types... */
+    .ui-tabs-hide {
+        display: none;
+    }
+}
+
+/* Hide useless elements in print layouts... */
+@media print {
+    .ui-tabs-nav {
+        display: none;
+    }
+}
+
+/* Skin */
+.ui-tabs-nav, .ui-tabs-panel {
+    font-family: "Trebuchet MS", Trebuchet, Verdana, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+}
+.ui-tabs-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 3px;
+}
+.ui-tabs-nav:after { /* clearing without presentational markup, IE gets extra treatment */
+    display: block;
+    clear: both;
+    content: " ";
+}
+.ui-tabs-nav li {
+    float: left;
+    margin: 0 0 0 2px;
+    font-weight: bold;
+}
+.ui-tabs-nav a, .ui-tabs-nav a span {
+    float: left; /* fixes dir=ltr problem and other quirks IE */
+    padding: 0 12px;
+    background: url(i/tabs.png) no-repeat;
+}
+.ui-tabs-nav a {
+    margin: 5px 0 0; /* position: relative makes opacity fail for disabled tab in IE */
+    padding-left: 0;
+    background-position: 100% 0;
+    text-decoration: none;
+    white-space: nowrap; /* @ IE 6 */
+    outline: 0; /* @ Firefox, prevent dotted border after click */
+}
+.ui-tabs-nav a:link, .ui-tabs-nav a:visited {
+    color: #000;
+	background: #eeeeee;
+}
+.ui-tabs-nav .ui-tabs-selected a {
+    position: relative;
+    top: 1px;
+    z-index: 2;
+    margin-top: 0;
+    background-position: 100% -23px;
+	background: #ddddff;
+}
+.ui-tabs-nav a span {
+    padding-top: 1px;
+    padding-right: 0;
+    height: 20px;
+    background-position: 0 0;
+    line-height: 20px;
+}
+.ui-tabs-nav .ui-tabs-selected a span {
+    padding-top: 0;
+    height: 27px;
+    background-position: 0 -23px;
+    line-height: 27px;
+}
+.ui-tabs-nav .ui-tabs-selected a:link, .ui-tabs-nav .ui-tabs-selected a:visited,
+.ui-tabs-nav .ui-tabs-disabled a:link, .ui-tabs-nav .ui-tabs-disabled a:visited { /* @ Opera, use pseudo classes otherwise it confuses cursor... */
+    cursor: text;
+}
+.ui-tabs-nav a:hover, .ui-tabs-nav a:focus, .ui-tabs-nav a:active,
+.ui-tabs-nav .ui-tabs-unselect a:hover, .ui-tabs-nav .ui-tabs-unselect a:focus, .ui-tabs-nav .ui-tabs-unselect a:active { /* @ Opera, we need to be explicit again here now... */
+    cursor: pointer;
+}
+.ui-tabs-disabled {
+    opacity: .4;
+    filter: alpha(opacity=40);
+}
+.ui-tabs-nav .ui-tabs-disabled a:link, .ui-tabs-nav .ui-tabs-disabled a:visited {
+    color: #000;
+}
+.ui-tabs-panel {
+    border: 1px solid #bbbbff;
+    padding: 10px;
+    background: #fff; /* declare background color for container to avoid distorted fonts in IE while fading */
+}
+/*.ui-tabs-loading em {
+    padding: 0 0 0 20px;
+    background: url(loading.gif) no-repeat 0 50%;
+}*/
+
+/* Additional IE specific bug fixes... */
+* html .ui-tabs-nav { /* auto clear @ IE 6 & IE 7 Quirks Mode */
+    display: inline-block;
+}
+*:first-child+html .ui-tabs-nav  { /* auto clear @ IE 7 Standards Mode - do not group selectors, otherwise IE 6 will ignore complete rule (because of the unknown + combinator)... */
+    display: inline-block;
+}

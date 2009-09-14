@@ -48,7 +48,7 @@ bin_path="usr/bin"
 lib_path="usr/lib"
 share_path="usr/share/$package_name"
 man1_path="usr/man/man1"
-for sub_package in '' -lib -export -filter -import ; do 
+for sub_package in ''  -export -filter -import ; do 
     mkdir -p "$dst_path$sub_package/$perl_path"
     mkdir -p "$dst_path$sub_package/$bin_path"
     mkdir -p "$dst_path$sub_package/$lib_path"
@@ -59,6 +59,7 @@ done
 # ------------------------------------------------------------------
 # Utilities written in C
 
+if false ; then # lib is not a subdir of utils ... needs seperate build
 # ------------------------------------------------------------------
 # Various libs
 sub_package="-lib"
@@ -141,7 +142,7 @@ for lib in Geo-OSM-MapFeatures ; do
     # 
 done
 cd ../utils/
-
+fi
 
 # ------------------------------------------------------------------
 # Importer

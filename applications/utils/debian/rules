@@ -40,7 +40,7 @@ install: build
 	dh_installdirs
 
 #	./debian/update_svn_revision.sh
-	MAKE_J=$(MAKE_-J) ./debian/make_install_files.sh debian/openstreetmap-utils
+	MAKE_J=$(MAKE_-J) /bin/bash ./debian/make_install_files.sh debian/openstreetmap-utils
 
 # Build architecture-independent files here.
 binary-indep: build install

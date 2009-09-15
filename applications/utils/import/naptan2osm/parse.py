@@ -100,9 +100,13 @@ class ParseXML:
             if not key:
                 key = '%s:%s%s' % (self.tagprefix, midfix or '', node)
             if key in self.feature.tags:
-                self.feature.tags[key] = '%s;%s' % (self.feature.tags[key], value)
-            else:
-                self.feature.tags[key] = value
+                value = '%s;%s' % (self.feature.tags[key], value)
+
+            if len(value) > 255:
+                print "Tag value over 255 chars in %s for:\n%s=%s\n" % (self.feature, key, value)
+                value = value[0:254]
+
+            self.feature.tags[key] = value
 
             # Only do the first tag (most often empty, so copies naptan:value)
             if self.options.passive:

@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.tageditor.ac;
 
-import static org.openstreetmap.josm.plugins.tageditor.josm.CompatibilityUtil.getCurrentDataSet;
+import org.openstreetmap.josm.Main;
+
 
 public class AutoCompletionContext {
 
@@ -13,10 +14,10 @@ public class AutoCompletionContext {
 	}
 
 	public void initFromJOSMSelection() {
-		selectionIncludesNodes = ! getCurrentDataSet().getSelectedNodes().isEmpty();
-		selectionIncludesWays = !getCurrentDataSet().getSelectedWays().isEmpty();
-		selectionIncludesRelations = !getCurrentDataSet().getSelectedRelations().isEmpty();
-		selectionEmpty = (getCurrentDataSet().getSelected().size() == 0);
+		selectionIncludesNodes = ! Main.main.getCurrentDataSet().getSelectedNodes().isEmpty();
+		selectionIncludesWays = !Main.main.getCurrentDataSet().getSelectedWays().isEmpty();
+		selectionIncludesRelations = !Main.main.getCurrentDataSet().getSelectedRelations().isEmpty();
+		selectionEmpty = (Main.main.getCurrentDataSet().getSelected().size() == 0);
 	}
 
 

@@ -1,12 +1,11 @@
 package org.openstreetmap.josm.plugins.tageditor.ac;
 
-import static org.openstreetmap.josm.plugins.tageditor.josm.CompatibilityUtil.getCurrentDataSet;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 /**
  * AutoCompletionCache temporarily holds a cache of keys with a list of
@@ -83,7 +82,7 @@ public class AutoCompletionCache {
 	 */
 	public void initFromJOSMDataset() {
 		cache = new HashMap<String, ArrayList<String>>();
-		Collection<OsmPrimitive> ds = getCurrentDataSet().allNonDeletedPrimitives();
+		Collection<OsmPrimitive> ds = Main.main.getCurrentDataSet().allNonDeletedPrimitives();
 		for (OsmPrimitive primitive : ds) {
 			cachePrimitive(primitive);
 		}

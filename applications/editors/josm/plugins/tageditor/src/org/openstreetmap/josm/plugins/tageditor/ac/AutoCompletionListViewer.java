@@ -38,7 +38,6 @@ public class AutoCompletionListViewer extends JPanel {
 	/** the listeners */
 	private ArrayList<IAutoCompletionListListener> listener = null;
 	
-	
 	/**
 	 * creates the GUI 
 	 */
@@ -52,10 +51,10 @@ public class AutoCompletionListViewer extends JPanel {
 		// the table model
 		//
 		if (autoCompletionList == null) {
-			logger.info("setting model to default model");
+			//logger.info("setting model to default model");
 			table.setModel(new DefaultTableModel());
 		} else {
-			logger.info("setting model to " + autoCompletionList);
+			//logger.info("setting model to " + autoCompletionList);
 			table.setModel(autoCompletionList);
 		}
 		
@@ -89,10 +88,7 @@ public class AutoCompletionListViewer extends JPanel {
 					}					
 				}
 		);
-
-
 	}
-	
 	
 	/**
 	 * constructor 
@@ -106,7 +102,6 @@ public class AutoCompletionListViewer extends JPanel {
 		listener = new ArrayList<IAutoCompletionListListener>();
 	}
 	
-	
 	/**
 	 * constructor 
 	 */
@@ -115,7 +110,6 @@ public class AutoCompletionListViewer extends JPanel {
 		createGUI();
 		listener = new ArrayList<IAutoCompletionListListener>();
 	}
-
 
 	/**
 	 * 
@@ -159,8 +153,6 @@ public class AutoCompletionListViewer extends JPanel {
     		table.setModel(autoCompletionList);
     	}
     }
-
-
 	
 	/**
 	 * add an {@link IAutoCompletionListListener}
@@ -188,7 +180,6 @@ public class AutoCompletionListViewer extends JPanel {
 		}
 	}
 	
-	
 	/**
 	 * notifies listeners about a selected item in the auto completion list  
 	 */
@@ -199,7 +190,6 @@ public class AutoCompletionListViewer extends JPanel {
 			}			
 		}
 	}	
-	
 	
 	public void installKeyAction(Action a) {
 		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke)a.getValue(AbstractAction.ACCELERATOR_KEY), a.getValue(AbstractAction.NAME));

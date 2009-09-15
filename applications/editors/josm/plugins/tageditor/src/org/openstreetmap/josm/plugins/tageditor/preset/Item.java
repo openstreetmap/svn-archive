@@ -13,8 +13,6 @@ import javax.swing.ImageIcon;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.tageditor.util.IndentWriter;
 
-import sun.java2d.loops.ScaledBlit;
-
 
 public class Item  implements INameIconProvider {
 

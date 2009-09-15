@@ -42,7 +42,6 @@ import org.openstreetmap.josm.plugins.tageditor.preset.ui.TabularPresetSelector;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.ui.ITagSelectorListener;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.ui.TabularTagSelector;
-import static org.openstreetmap.josm.plugins.tageditor.josm.CompatibilityUtil.getCurrentDataSet;
 /**
  * The dialog for editing name/value-pairs (aka <em>tags</em>) associated with {@link OsmPrimitive}s.
  * 
@@ -344,7 +343,7 @@ public class TagEditorDialog extends JDialog {
 			setVisible(false);
 			model.updateJOSMSelection();
 
-			Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
+			Collection<OsmPrimitive> sel = Main.main.getCurrentDataSet().getSelected();
 			DataSet.fireSelectionChanged(sel);
 			Main.parent.repaint(); // repaint all - drawing could have been changed
 		}

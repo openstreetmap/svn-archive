@@ -22,7 +22,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.tageditor.preset.Item;
 import org.openstreetmap.josm.plugins.tageditor.preset.Tag;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
-import static org.openstreetmap.josm.plugins.tageditor.josm.CompatibilityUtil.getCurrentDataSet;
 
 /**
  * TagEditorModel is a table model.
@@ -272,7 +271,7 @@ public class TagEditorModel extends AbstractTableModel {
 	 * initializes the model with the tags in the current JOSM selection
 	 */
 	public void initFromJOSMSelection() {
-		Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+		Collection<OsmPrimitive> selection = Main.main.getCurrentDataSet().getSelected();
 		clear();
 		for (OsmPrimitive element : selection) {
 			for (String key : element.keySet()) {
@@ -353,7 +352,7 @@ public class TagEditorModel extends AbstractTableModel {
 	 */
 	public void updateJOSMSelection() {
 		ArrayList<Command> commands = new ArrayList<Command>();
-		Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+		Collection<OsmPrimitive> selection = Main.main.getCurrentDataSet().getSelected();
 		if (selection == null)
 			return;
 		for (TagModel tag : tags) {

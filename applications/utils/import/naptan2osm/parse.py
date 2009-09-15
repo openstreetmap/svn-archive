@@ -90,7 +90,7 @@ class ParseXML:
         except KeyError:
             return None
             
-        value = elem.text.strip(' -')
+        value = elem.text.strip(' -*')
         if not value:
             return None
         
@@ -230,14 +230,14 @@ class ParseNaptan(ParseXML):
                     indicator = elem.text.upper()
                     regexes = (
                         # Mostly produced with reference to London and Surrey data
-                        re.compile('^(?:(?:BAY)|(?:ENTRANCE)|(?:STAND)|(?:STOP)|(?:STANCE) )([A-Z0-9\-& ]{1,7})'),
+                        re.compile('^(?:(?:BAY)|(?:ENTRANCE)|(?:STAND)|(?:STOP)|(?:STANCE) )([A-Z0-9\-& ]+)'),
                         # Unfortunately, still matches 2 letter words (such as 'on') used as Indicators in Surrey
                         re.compile('^([A-Z0-9]{1,2}[0-9]?)$')
                     )
                     for regex in regexes:
                         matches = regex.match(indicator)
                         if matches:
-                            v = matches.group(1).strip(' -')
+                            v = matches.group(1).strip(' -*')
                             if v:
                                 self.feature.tags['local_ref'] = v
                                 break

@@ -20,7 +20,6 @@ public class PresetsTableModel extends AbstractTableModel  {
 	private final ArrayList<Item> visibleItems = new ArrayList<Item>();
 	private Presets presets = null;
 
-
 	protected void initModelFromPresets(Presets presets) {
 		for(Group group: presets.getGroups()) {
 			for(Item item: group.getItems()) {
@@ -29,7 +28,6 @@ public class PresetsTableModel extends AbstractTableModel  {
 			}
 		}
 	}
-
 
 	public PresetsTableModel() {
 	}
@@ -43,15 +41,11 @@ public class PresetsTableModel extends AbstractTableModel  {
 		return presets;
 	}
 
-
-
 	public void setPresets(Presets presets) {
 		this.presets = presets;
 		initModelFromPresets(presets);
 		fireTableDataChanged();
 	}
-
-
 
 	@Override
 	public void addTableModelListener(TableModelListener l) {
@@ -132,6 +126,5 @@ public class PresetsTableModel extends AbstractTableModel  {
 			fireTableDataChanged();
 			fireTableStructureChanged();
 		}
-
 	}
 }

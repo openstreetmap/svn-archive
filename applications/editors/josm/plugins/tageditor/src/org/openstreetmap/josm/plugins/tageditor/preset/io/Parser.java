@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.tageditor.preset.io;
 
 import java.io.Reader;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,18 +22,15 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 public class Parser {
 	
 	static private Logger logger = Logger.getLogger(Parser.class.getName());
-	
-	
-	private Presets presets = null;
+    private Presets presets = null;
 	private Reader reader;
-	private Group currentGroup;
+	private Stack<Group> currentGroup;
 	private Item currentItem;
 	private boolean inOptionalKeys = false; 
 	private XMLReader parser;
-	 
-	
+
 	public Parser() {
-		currentGroup = null;
+		currentGroup = new Stack<Group>();
 		currentItem = null;
 	}
 	
@@ -51,7 +49,6 @@ public class Parser {
 	public Reader getReader() {
 		return reader;
 	}
-	
 	
 	public Presets getPresets() {
 		return presets;
@@ -134,14 +131,15 @@ public class Parser {
 	}
 	
 	protected void onStartGroup(String name, String iconName) {
-		currentGroup = new Group();
-		currentGroup.setName(translatedAttributeValue(name));
-		currentGroup.setIconName(iconName);
+		Group g = new Group();
+		g.setName(translatedAttributeValue(name));
+		g.setIconName(iconName);
+		currentGroup.push(g);
 	}
 	
 	protected void onEndGroup() {
-		presets.addGroup(currentGroup);
-		currentGroup = null; 
+		Group g = currentGroup.pop();
+		presets.addGroup(g); 
 	}
 	
 	protected void onStartItem(String name, String iconName) {
@@ -155,7 +153,7 @@ public class Parser {
 			logger.log(Level.SEVERE, "illegal state. no current group defined");
 			throw new IllegalStateException("illegal state. no current group defined");
 		}
-		currentGroup.addItem(currentItem);
+		currentGroup.peek().addItem(currentItem);
 		currentItem = null; 
 	}
 	
@@ -189,22 +187,17 @@ public class Parser {
 		currentItem.setLabel(label);
 	}
 	
-
-	
 	/**
 	 * The SAX handler for reading XML files with tag specifications 
 	 *
 	 *
 	 */
 	class Handler extends DefaultHandler {
-				
 		
 		@Override
 		public void endDocument() throws SAXException {
 			logger.log(Level.FINE,"END");
 		}
-
-		
 
 		@Override
 		public void error(SAXParseException e) throws SAXException {
@@ -221,7 +214,6 @@ public class Parser {
 			logger.log(Level.FINE,"START");
 		}
 
-		
 		protected String getAttribute(Attributes attributes, String qName) {
 			for (int i =0; i < attributes.getLength();i++) {
 				if (attributes.getQName(i).equals(qName)) {
@@ -230,12 +222,10 @@ public class Parser {
 			}
 			return null;
 		}
-
 		
 		@Override
 		public void startElement(String namespaceURI, String localName, String qName,
 				Attributes atts) throws SAXException {
-			
 			if ("group".equals(qName)) {
 				onStartGroup(getAttribute(atts, "name"), getAttribute(atts, "icon"));
 			} else if ("item".equals(qName)) {
@@ -262,8 +252,7 @@ public class Parser {
 				// do nothing
 			} else if ("optional".equals(qName)) {
 				onEndOptionalKeys();
-			}
-			
+			}			
 		}
 
 		/* (non-Javadoc)
@@ -274,15 +263,5 @@ public class Parser {
 			// TODO Auto-generated method stub
 			logger.log(Level.WARNING, "XML parsing warning", e);
 		}
-		
-		
-		
 	}
-	
-	
-	
- 
-	
-	
-	
 }

@@ -13,17 +13,14 @@ import javax.swing.ImageIcon;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.tageditor.util.IndentWriter;
 
-
 /**
  * Group represents a named group of preset items. Groups can be nested.
  * 
- * @author Gubaer
  *
  */
 public class Group implements INameIconProvider {
 	
 	static private Logger logger = Logger.getLogger(Group.class.getName());
-	
 	
 	private String name;
 	private String iconName;
@@ -100,5 +97,4 @@ public class Group implements INameIconProvider {
 		writer.decLevel();
 		writer.writeLine("</group>");
 	} 
-	
 }

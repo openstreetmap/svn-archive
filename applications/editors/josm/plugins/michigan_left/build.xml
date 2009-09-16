@@ -86,7 +86,7 @@
                 <attribute name="Plugin-Class" value="MichiganLeft.MichiganLeft"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Adds no left turn for sets of 4 or 5 ways"/>
-                <attribute name="Plugin-Link" value="..."/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/MichiganLeft"/>
                 <attribute name="Plugin-Mainversion" value="1"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

@@ -79,10 +79,10 @@ var YourNavigation = {
         on success - 'OK'
         on failure - Error message
  */
-YourNavigation.Lookup = function(value,wp,callback) {
+YourNavigation.Lookup = function(value,wp,map,callback) {
     var namefinderParameters = "find=" + value + "&max=1";
     $.get(namefinderUrl + namefinderParameters, {}, function(xml){
-        var result = YourNavigation.NameFinder(xml,wp);
+        var result = YourNavigation.NameFinder(xml,wp,map);
         if (result == 'OK') {
             //route.draw();
             callback(result);
@@ -176,7 +176,7 @@ YourNavigation.Export = function() {
         on failure - Error message
 
  */
-YourNavigation.NameFinder = function(xml,wp) {
+YourNavigation.NameFinder = function(xml,wp,map) {
     if (xml.childNodes.length > 0) {
         if (xml.documentElement.nodeName == "searchresults") {
             //first test if the response contains an error notice
@@ -245,7 +245,7 @@ YourNavigation.NameFinder = function(xml,wp) {
  */
 
 YourNavigation.Route = function(map) {
-        /**
+    /**
      * Constructor: new YourNavigation.Route(map)
      * Constructor for a new YourNavigation.Route instance.
      *
@@ -283,6 +283,38 @@ YourNavigation.Route = function(map) {
      * (end)
      */
     var self = this;
+    this.permalink = function() {
+        var flonlat = this.Start.lonlat.clone().transform(this.map.projection,this.map.displayProjection);
+        var tlonlat = this.End.lonlat.clone().transform(this.map.projection,this.map.displayProjection);
+        //for each via
+        var via = '';
+        if (this.Waypoints.length > 2) {
+            for (var i = 0; i < this.Waypoints.length -1; i++) {
+                if (this.Waypoints[i].type == 'via') {
+                    var wlonlat = this.Waypoints[i].lonlat.clone().transform(this.map.projection,this.map.displayProjection);
+                    via += '&wlat=' + wlonlat.lat + '&wlon=' + wlonlat.lon;
+                }
+            }
+        }
+        var permalink_url = 'flat=' + flonlat.lat + '&flon=' + flonlat.lon +
+        via + '&tlat=' + tlonlat.lat + '&tlon=' + tlonlat.lon;
+        permalink_url += '&v=' + this.parameters.vehicle +
+        '&fast=' + this.parameters.fast +
+        '&layer=' + this.parameters.layer;
+        return location.protocol + '//' + location.host + location.pathname + "?" + permalink_url;
+    }
+    /*
+        Function: directions
+        Agregate directions for the segments
+    */
+    this.directions = function() {
+    //for each segment in route segments[]
+    /*if(this.feature == undefined) {
+            alert('Feature not set, cannot get directions');
+        } else {
+
+        }*/
+    }
     /**
      * Property: YourNavigation.Route.parameters
      * { Array } with parameters for calculating the route
@@ -305,7 +337,13 @@ YourNavigation.Route = function(map) {
          * psv - Public transport, routing using public transport
          * bicycle - routing using bicycle
          * foot - routing on foot
-         * 
+         * goods
+         * horse
+         * motorcycle
+         * moped
+         * mofa
+         * motorboat
+         * boat
          */
         type: 'motorcar',
         layer: 'mapnik'
@@ -444,11 +482,8 @@ YourNavigation.Route = function(map) {
                 callback("Calculating segment " + (i + 1) + " of " + numsegs + " please wait..");
                 self.Segments[i].Start = self.Waypoints[ i ];
                 self.Segments[i].End = self.Waypoints[ i + 1 ];
-                self.Segments[i].calculate();
+                self.Segments[i].draw(callback);
             }
-            //TODO: This message is returned to the callback before the route is really finished, needs fixing
-            callback("Route finished");
-
         } else {
             if ( this.Start.lonlat != undefined && this.End.lonlat != undefined) {
                 /* simple route, start and finish */
@@ -457,9 +492,7 @@ YourNavigation.Route = function(map) {
                 callback("Calculating route...please wait (for a max. of 1.5 minutes)");
                 self.Segments[0].Start = self.Start;
                 self.Segments[0].End = self.End;
-                self.Segments[0].calculate();
-                //TODO: This message is returned to the callback before the route is really finished, needs fixing
-                callback("Route finished");
+                self.Segments[0].draw(callback);
             }
         }
 
@@ -528,7 +561,11 @@ YourNavigation.Waypoint = function(ParentRoute)
     this.draw = function(lonlat)
     {
         this.destroy();
-        this.lonlat = lonlat;
+        if(lonlat == undefined){
+            lonlat = this.lonlat;
+        } else {
+            this.lonlat = lonlat;
+        }
         var marker_url;
         switch (this.type) {
             case 'via':
@@ -552,7 +589,7 @@ YourNavigation.Waypoint = function(ParentRoute)
 
         /* Create a marker and add it to the marker layer */
         this.marker = new OpenLayers.Marker(lonlat.clone(), icon);
-        //TODO: route is a hardcoded object, should be made dynamic
+
         this.route.Markers.addMarker(this.marker);
     }
 
@@ -565,7 +602,6 @@ YourNavigation.Waypoint = function(ParentRoute)
     this.destroy = function() {
         if (this.marker != undefined)
         {
-            //TODO: route is a hardcoded object, should be made dynamic
             this.route.Markers.removeMarker(this.marker);
             this.marker.destroy();
             this.marker= undefined;
@@ -589,12 +625,6 @@ YourNavigation.Segment = function(ParentRoute) {
     var self = this;
     this.route = ParentRoute;
     /*
-        Function: calculate
-
-        Construct the url to retrieve a route from gosmore and do the AJAX call
-    */
-
-    /*
         Function: create
 
         Create a route from the kml file returned from the gosmore service
@@ -611,14 +641,11 @@ YourNavigation.Segment = function(ParentRoute) {
                     options.externalProjection = this.route.map.displayProjection;
                     options.internalProjection = this.route.map.projection;
                     var kml = new OpenLayers.Format.KML(options);
-
                     this.feature = kml.read(xml);
-                    this.draw(this.feature);
+                    if (typeof(this.route.Layer) != 'undefined') {
+                        this.route.Layer.addFeatures(this.feature);
+                    }
                     this.distance = parseFloat(distance);
-
-                    //routeLayerAdd(vect, distance);
-                    //addAltitudeProfile(vect);
-                    //routeCalculate();
                     return 'Segment is of length:' + distance;
                 }
             } else {
@@ -630,7 +657,7 @@ YourNavigation.Segment = function(ParentRoute) {
         }
     }
 
-    this.calculate = function(){
+    this.draw = function(callback){
         var flonlat= this.Start.lonlat.clone().transform(this.route.map.projection, this.route.map.displayProjection);
         var tlonlat= this.End.lonlat.clone().transform(this.route.map.projection, this.route.map.displayProjection);
 
@@ -640,23 +667,26 @@ YourNavigation.Segment = function(ParentRoute) {
         '&tlon=' + tlonlat.lon;
         this.url += '&v=' + this.route.parameters.vehicle +
         '&fast=' + this.route.parameters.fast +
-        '&layer' + this.route.parameters.layer;
+        '&layer=' + this.route.parameters.layer;
         this.permalink = location.protocol + '//' + location.host + location.pathname + "?" + this.url;
         url = gosmoreUrl + this.url;
         $.get(url, {}, function(xml){
             html = "Status: ready";
             var result = self.create(xml);
-            if (result) { }
+            if (result) {
+                //TODO: Need a way to trigger when the last segment is drawn!
+                callback("segment calculation finished");
+            }
         },"xml");
     }
 
     /*
-        Function: altitudeProfile
+        Function: profile
 
         Generate the altitude profile, requires altitude service
     */
 
-    this.altitudeProfile =function() {
+    this.profile =function() {
         //TODO: does not work, needs fixing.
         var geom = this.feature[0].geometry.clone();
         var length = geom.components.length;
@@ -723,95 +753,16 @@ YourNavigation.Segment = function(ParentRoute) {
     }
 
     /*
-        Function: draw
-        Draw the segment on the route layer
-    */
-    this.draw = function(feature) {
-        if (typeof(this.route.Layer) != 'undefined') {
-            this.route.Layer.onFeatureInsert = function(feature) {
-                self.directions(feature);
-            }
-            sf= feature[0].geometry.getVertices(true);
-            f= sf[0];
-            t= sf[1];
-
-            flonlat= this.Start.lonlat;
-            tlonlat= this.End.lonlat;
-
-            fm= new OpenLayers.Geometry.Point(flonlat.lon, flonlat.lat);
-            tm= new OpenLayers.Geometry.Point(tlonlat.lon, tlonlat.lat);
-            fgeom= new OpenLayers.Geometry.LineString([fm,f])
-            tgeom= new OpenLayers.Geometry.LineString([t,tm])
-
-            //fv= new OpenLayers.Feature.Vector(fgeom,null,style_from);
-            //tv= new OpenLayers.Feature.Vector(tgeom,null,style_to);
-
-            //routelayer.addFeatures(fv);
-            //routelayer.addFeatures(tv);
-            this.route.Layer.addFeatures(feature);
-
-        }
-    }
-
-    /*
         Function: directions
         Get directions for the segment
     */
-    this.directions = function(feature) {
-        bounds= feature.geometry.getBounds();
-        /*if (currBounds == undefined) {
-            currBounds= OpenLayers.Bounds.fromArray(bounds.toArray());
+    this.directions = function() {
+        if(this.feature == undefined) {
+            return 'Feature not set, cannot get directions';
         } else {
-            currBounds.extend(bounds);
-        }*/
-        this.route.map.zoomToExtent(bounds);
-        len = feature.geometry.getLength();
-        /* TODO: fix this for the new Waypoints collection
-    for (wp= fromWaypoint; wp; wp= wp.next)
-    {
-        wpCount++;
-        if (wp.next != undefined)
-            tot_dist += wp.distance;
-    }
-
-    html = "<p>Routes: <br>" + feature.layer.features.length +
-    " (should be " + (wpCount-1)*3 + ")</p>";
-
-    if (wpCount > 2)
-    {
-        html += "<table>"
-        for (i= 1, wp= fromWaypoint; wp && wp.next; i++, wp= wp.next)
-        {
-            html += "<tr><td>Leg " + i + ":</td>";
-            html += "<td>" + Math.round(wp.distance*10)/10 +
-            " km</td></tr>";
+            len = this.feature.geometry.getLength();
+            return len;
         }
-        html += "</table>"
-    }
-    html += "<p>This route:<br>";
-    html += "Points: " + feature.geometry.components.length + "<br>";
-    html += "Length: " + Math.round(tot_dist*10)/10 + " km<br>";
-    notice(html, "#directions");
-    routeURL = '';
-    first= 1;
-    for (wp= fromWaypoint; wp; wp= wp.next)
-    {
-        if (wp.prev == undefined)
-            key= 'f';
-        else if (wp.next == undefined)
-            key= 't';
-        else
-            key= 'w';
-        lonlat= wp.marker.lonlat.clone().transform(map.projection,
-            map.displayProjection);
-        routeURL += (first ? '?' : '&') +
-        key + 'lat='+roundNumber(lonlat.lat, 6) +
-        '&' + key + 'lon='+roundNumber(lonlat.lon, 6);
-        first= 0;
-    }
-             */
-        //notice("<a href=" + this.permalink + ">Permalink</a><br>", "#feature_info");
-        return "Completed successfully";
     }
 }
 

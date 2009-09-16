@@ -129,23 +129,26 @@ function init(){
                 case 'flon':
                     flonlat.lon = parseFloat(fields[1]);
                     MyFirstWayPoint = MyFirstRoute.Start;
-                    MyFirstWayPoint.lonlat = flonlat;
+                    MyFirstWayPoint.lonlat = flonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection);
+                    MyFirstWayPoint.draw();
                     break;
                 case 'wlat':
                     wlonlat.lat = parseFloat(fields[1]);
                     break;
                 case 'wlon':
                     wlonlat.lon = parseFloat(fields[1]);
-                /*TODO: prev is gone. Need a way to determine waypoint in
-                     * Waypoints[] or add it and draw!
-                     */
+                    MyFirstWayPoint = MyFirstRoute.waypoint();
+                    MyFirstWayPoint.lonlat = wlonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection);
+                    MyFirstWayPoint.draw();
+                    break;
                 case 'tlat':
                     tlonlat.lat = parseFloat(fields[1]);
                     break;
                 case 'tlon':
                     tlonlat.lon = parseFloat(fields[1]);
                     MyFirstWayPoint = MyFirstRoute.End;
-                    MyFirstWayPoint.lonlat = flonlat;
+                    MyFirstWayPoint.lonlat = tlonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection);
+                    MyFirstWayPoint.draw();
                     break;
                 case 'v':
                     switch (fields[1]) {
@@ -255,7 +258,9 @@ function onChangeBaseLayer(e) {
     }
 }
 function myRouteCallback(result){
-    alert(result);
+    $('#status').html(result);
+    $('#directions').html();
+    $('#feature_info').html('<a href="' + MyFirstRoute.permalink() + '">permalink</a>');
 }
 function myCallback(result) {
     if(result == 'OK'){
@@ -290,7 +295,7 @@ function elementChange(element) {
         }
 
         wait_image.attr("src","images/ajax-loader.gif");
-        YourNavigation.Lookup(jQuery.trim(element.value),MyFirstWayPoint,myCallback);
+        YourNavigation.Lookup(jQuery.trim(element.value),MyFirstWayPoint,MyFirstMap,myCallback);
         
     }
 }

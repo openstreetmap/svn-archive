@@ -1,5 +1,5 @@
 /* commented backslash hack \*/ 
-html, body{font: 90% arial, helvetica, sans-serif;background: #F9FFF0}
+html, body{font: 90% arial, helvetica, sans-serif;background: #DDD}
 /* end hack */
 html,body {margin:0;padding:0}
 
@@ -14,13 +14,13 @@ h1, h2 {
     width:100%;/* box model hack for ie5.+*/
 }
 #title {
-    background-color:#A1E93C;
+    background-color:#BBB;
 }
 #header {
     position: fixed;
     width: 100%;
     height: 50px;
-    background-color: #C5FF73;
+    background-color: #DDD;
     text-align: center;
 }
 
@@ -34,7 +34,7 @@ h1, h2 {
     top: 50px;
     bottom: 2em;
     width: 100%;
-    border: 1px solid #E4FFBE;
+    border: 1px solid #DDD;
 }
 
 #content {
@@ -87,7 +87,7 @@ div.hover a:hover {
     margin-left: 5px;
     margin-right: 5px;
     width: 320px;
-    background: #F9FFF0;
+    /*background: #F9FFF0;*/
 }
 /*
 #navigation ul {
@@ -240,7 +240,6 @@ div.hover a:hover {
 .ui-tabs-nav li {
     float: left;
     margin: 0 0 0 2px;
-    font-weight: bold;
 }
 .ui-tabs-nav a, .ui-tabs-nav a span {
     float: left; /* fixes dir=ltr problem and other quirks IE */
@@ -256,16 +255,22 @@ div.hover a:hover {
     outline: 0; /* @ Firefox, prevent dotted border after click */
 }
 .ui-tabs-nav a:link, .ui-tabs-nav a:visited {
-    color: #000;
-	background: #eeeeee;
+        color: #555;
+	background: #FFF;
 }
 .ui-tabs-nav .ui-tabs-selected a {
     position: relative;
     top: 1px;
     z-index: 2;
     margin-top: 0;
+    font-weight: bold;
     background-position: 100% -23px;
-	background: #ddddff;
+    border-top: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #fff;
+    color: #000;
+	background: #fff;
 }
 .ui-tabs-nav a span {
     padding-top: 1px;
@@ -296,7 +301,7 @@ div.hover a:hover {
     color: #000;
 }
 .ui-tabs-panel {
-    border: 1px solid #bbbbff;
+    border: 1px solid #bbb;
     padding: 10px;
     background: #fff; /* declare background color for container to avoid distorted fonts in IE while fading */
 }

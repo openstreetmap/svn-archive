@@ -137,7 +137,8 @@ public class WayDownloaderPlugin extends Plugin {
                     if (JOptionPane.showConfirmDialog(null, "Merge duplicate node?")==JOptionPane.YES_OPTION) {
                         LinkedList<Node> dupeNodes = new LinkedList<Node>();
                         dupeNodes.add(dupeNode);
-                        new MergeNodesAction().mergeNodes(dupeNodes, selectedNode);
+                        MergeNodesAction.mergeNodes(Main.main.getEditLayer(),
+                        dupeNodes, selectedNode);
 
                         connectedWays = findConnectedWays(); //Carry on
                     }

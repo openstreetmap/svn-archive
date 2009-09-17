@@ -23,6 +23,7 @@
 	Node.prototype.removeFromAllWays=function() {
 		var qway,qs,x,y,attr;
 		var waylist=new Array(); var poslist=new Array();
+		var undopoint=false;
 		var z=this.ways; for (qway in z) {	// was in _root.map.ways
 			for (qs=0; qs<_root.map.ways[qway].path.length; qs+=1) {
 				if (_root.map.ways[qway].path[qs]==this) {
@@ -35,13 +36,18 @@
 			}
 			_root.map.ways[qway].clean=false;
 			_root.map.ways[qway].removeDuplicates();
-			if (_root.map.ways[qway].path.length<2) { _root.map.ways[qway].remove(); }
-											   else { _root.map.ways[qway].redraw(); }
+			if (_root.map.ways[qway].path.length<2) {
+				_root.map.ways[qway].saveDeleteUndo(iText("deleting",'deleting'));
+				_root.map.ways[qway].remove();
+			} else {
+				_root.map.ways[qway].redraw();
+				undopoint=true;
+			}
 		}
 		if (_root.wayselected) { _root.ws.select(); }
-		_root.undo.append(UndoStack.prototype.undo_deletepoint,
-						  new Array(deepCopy(this),waylist,poslist),
-						  "deleting a point");
+		if (undopoint) { _root.undo.append(UndoStack.prototype.undo_deletepoint,
+										   new Array(deepCopy(this),waylist,poslist),
+										   "deleting a point"); }
 	};
 
 	Node.prototype.moveTo=function(newx,newy,ignoreway,ignore_oneway) {

@@ -5,6 +5,7 @@
 	function handleError(code,msg,result) {
 		if (code==-2 && msg.indexOf('allocate memory')>-1) { code=-1; }
 		if (msg.indexOf('changeset')>-1) { _root.changeset=null; msg+=iText("\nPlease try again: Potlatch will start a new changeset.",'newchangeset'); }	// we really need a dedicated error code for this
+		if (msg.indexOf('logged')>-1) { loginDialogue(); return; }
 		switch (code) {
 			case -1:	errorDialogue(msg,150); break;
 			case -2:	errorDialogue(msg+iText("\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time.",'emailauthor'),200); break;
@@ -26,7 +27,7 @@
 	function handleWarning() {
 		abortUpload();
 		_root.windows.attachMovie("modal","error",++windowdepth);
-		_root.windows.error.init(275,130,new Array(iText('Retry','retry'),iText('Cancel','cancel')),handleWarningAction);
+		_root.windows.error.init(275,130,new Array(iText('Cancel','cancel'),iText('Retry','retry')),handleWarningAction);
 		_root.windows.error.box.createTextField("prompt",2,7,9,250,100);
         _root.uploading=false;
 		if (writeError) {
@@ -109,6 +110,56 @@
 				}
 				break;
 		}
+	}
+
+	// =====================================================================
+	// Login management
+	
+	function loginDialogue() {
+		_root.windows.attachMovie("modal","login",++windowdepth);
+		_root.windows.login.init(300,140,new Array(iText('Cancel','cancel'),iText('Retry','retry')),retryLogin); 
+		var box=_root.windows.login.box;
+		
+		box.createTextField("title",10,7,7,280,20);
+		box.title.text = iText("Couldn't log in","login_title");
+		with (box.title) { setTextFormat(boldText); selectable=false; type='dynamic'; }
+		adjustTextField(box.title);
+
+		box.createTextField('prompt',11, 8,33,280,40);
+		with (box.prompt) { text=iText("Your site login was not recognised. Please try again.",'login_retry'); setTextFormat(plainSmall); selectable=false; }
+		adjustTextField(box.prompt);
+
+		box.createTextField('uidt',12, 8,63,160,20);
+		with (box.uidt) { text=iText("Username:",'login_uid'); setTextFormat(plainSmall); selectable=false; }
+		adjustTextField(box.uidt); var r=box.uidt.textWidth+25;
+		box.createTextField('uidi',13,r,63,120,17);
+		box.uidi.setNewTextFormat(plainSmall); box.uidi.type='input';
+		box.uidi.text='';
+		box.uidi.background=true; box.uidi.backgroundColor=0xDDDDDD;
+		box.uidi.border=true; box.uidi.borderColor=0xFFFFFF;
+
+		box.createTextField('pwdt',14, 8,83,160,20);
+		with (box.pwdt) { text=iText("Password:",'login_pwd'); setTextFormat(plainSmall); selectable=false; }
+		adjustTextField(box.pwdt);
+		box.createTextField('pwdi',15,r,83,120,17);
+		box.pwdi.setNewTextFormat(plainSmall); box.pwdi.type='input';
+		box.pwdi.text='';
+		box.pwdi.background=true; box.pwdi.backgroundColor=0xDDDDDD;
+		box.pwdi.border=true; box.pwdi.borderColor=0xFFFFFF;
+		box.pwdi.password=true;
+	}
+	
+	function retryLogin(choice) {
+		if (choice==iText('Retry','retry')) {
+			_root.usertoken=_root.windows.login.box.uidi.text+":"+_root.windows.login.box.pwdi.text;
+		}
+		_root.changeset=null;
+        _root.uploading=false;
+		removeMovieClip(_root.windows.login);
+		removeMovieClip(_root.windows.upload);
+		removeMovieClip(_root.windows.pleasewait);
+		if (!_root.sandbox) { _root.changecomment=''; startChangeset(true); }
+		writeError=true; handleWarningAction(choice);
 	}
 
 	// =====================================================================

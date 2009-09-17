@@ -486,13 +486,19 @@
 		this.deleteMergedWays();
 		this.removeNodeIndex();
 
-		if (this._name>=0 && !this.historic && !this.locked) {
+		if (!this.historic && !this.locked) {
 			var z=shallowCopy(this.path); this.path=new Array();
-			for (var i in z) { this.markAsDeleted(z[i],false); }
+			for (var i in z) { 
+				this.markAsDeleted(z[i],false); }
 			if (_root.sandbox) {
-				_root.waystodelete[this._name]=[this.version,deepCopy(this.deletednodes)];
-				markClean(false);
-			} else {
+				if (this._name>=0) { 
+					_root.waystodelete[this._name]=[this.version,deepCopy(this.deletednodes)];
+				} else {
+					var z=this.deletednodes; for (var j in z) { deleteNodeAsPOI(j); }
+					var z=this.path;         for (var j in z) { deleteNodeAsPOI(j.id); }
+					markClean(false);
+				}
+			} else if (this._name>=0) {
 				renewChangeset();
 				deleteresponder = function() { };
 				deleteresponder.onResult = function(result) { deletewayRespond(result); };
@@ -512,6 +518,15 @@
 		var z=result[2]; for (var i in z) { delete _root.nodes[i]; }
 		operationDone(result[0]);
 	};
+
+	function deleteNodeAsPOI(nid) {
+		if (nid<0) { return; }
+		if (_root.nodes[nid].numberOfWays()>0) { return; }
+		// if we're not going to send a deleteway for this (because it's negative - probably due to a split),
+		// then delete it as a POI instead
+		var n=_root.nodes[nid];
+		_root.poistodelete[nid]=[n.version,coord2long(n.x),coord2lat(n.y),deepCopy(n.attr)];
+	}
 
 	// ---- Variant with confirmation if any nodes have tags
 	

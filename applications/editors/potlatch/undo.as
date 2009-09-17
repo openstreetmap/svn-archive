@@ -18,9 +18,9 @@
 	};
 
 	UndoStack.prototype.rollback=function() {
-		if (_root.undoing) { return; }		// Stop any routines from adding to the
-		_root.undoing=true;					//  | undo stack
+		if (_root.undoing) { return; }		// Stop any routines from adding to the undo stack
 		if (this.sp==0) { return; }
+		_root.undoing=true;
 		var popped=this[this.sp-1];			// Same as this.pop, but works :)
 		this.sp--;							//	|
 		popped[0].call(this,popped[1]);
@@ -219,7 +219,7 @@
 		_root.map.ways[w]._x=params[1];
 		_root.map.ways[w]._y=params[2];
 		_root.map.ways[w].attr=params[3];
-		if (_root.sandbox) { _root.map.ways[w].path=params[4]; delete _root.waystodelete[w]; }
+		if (_root.sandbox) { _root.map.ways[w].path=restorepath(params[4],w); delete _root.waystodelete[w]; }
 					  else { _root.map.ways[w].path=renumberDeleted(params[4],params[0],w); }
 		_root.map.ways[w].version=params[5];
 		_root.map.ways[w].redraw();
@@ -232,10 +232,21 @@
 
 	UndoStack.prototype.undo_changeway=function(params) {
 		var way=params[0]; var w=_root.map.ways[way];
-		var path=params[1]; var done=new Object();
+		w.path=restorepath(params[1],way);
+		w.deletednodes=params[2];
+		w.attr=params[3];
+		stopDrawing();
+		w.redraw();
+		w.select();
+		w.clean=false;
+		markClean(false);
+	};
+
+	function restorepath(path,way) {
 		// we need to be careful not to end up with duplicate versions of
 		// the same node
-		w.path=new Array();
+		var returnpath=new Array();
+		var done=new Object();
 		for (var i=0; i<path.length; i++) {
 			var id=path[i].id;
 			if (!done[id]) {
@@ -254,17 +265,12 @@
 					_root.nodes[id].redrawWays();
 				}
 			}
-			w.path.push(_root.nodes[id]);
+			returnpath.push(_root.nodes[id]);
 			done[id]=true;
 		}
-		w.deletednodes=params[2];
-		w.attr=params[3];
-		stopDrawing();
-		w.redraw();
-		w.select();
-		w.clean=false;
-		markClean(false);
-	};
+		return returnpath;
+	}
+
 
 	//		Created POI
 

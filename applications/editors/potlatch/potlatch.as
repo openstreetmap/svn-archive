@@ -132,7 +132,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 1.2a";	// current version
+	var signature="Potlatch 1.2b";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
@@ -832,16 +832,15 @@
 			_root.map.pois[poiselected].remove();
 		} else if (_root.drawpoint>-1) {
 			// 'backspace' most recently drawn point
-			_root.undo.append(UndoStack.prototype.undo_deletepoint,
-							  new Array(deepCopy(_root.ws.path[drawpoint]),
-										[wayselected],[drawpoint]),
-							  iText("deleting a point",'action_deletepoint'));
+			var undoarray=new Array(deepCopy(_root.ws.path[drawpoint]),[wayselected],[drawpoint]);
 //			_root.ws.path[drawpoint].removeWay(_root.wayselected);
 			if (_root.drawpoint==0) { rnode=_root.ws.path.shift(); }
 							   else { rnode=_root.ws.path.pop(); _root.drawpoint-=1; }
 			if (!_root.ws.path[pointselected]) { pointselected--; }
 			_root.ws.markAsDeleted(rnode);
 			if (_root.ws.path.length) {
+				_root.undo.append(UndoStack.prototype.undo_deletepoint,undoarray,
+								  iText("deleting a point",'action_deletepoint'));
 				_root.ws.clean=false;
 				markClean(false);
 				_root.ws.redraw();

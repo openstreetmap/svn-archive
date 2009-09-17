@@ -29,7 +29,7 @@
 						 else { die "Bugger! ".$res->status_line."\n"; }
 		print "Reading $lang\n";
 		$lang=~s/[\-_](.+)/\-\U$1\E/;	# dialect in uppercase
-		if ($lang eq 'cs') { $lang='cz'; }
+		if ($lang eq 'cz') { $lang='cs'; }
 		$ct=0;
 		while ($wiki=~/^<td>\s*([^<]+)<\/td><td>\s*([^<]+)<\/td><td>\s*(.+)$/gm) {
 			$id=$1; $en=$2; $tr=$3; $ct++;

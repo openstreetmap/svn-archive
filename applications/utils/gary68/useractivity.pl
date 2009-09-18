@@ -30,7 +30,7 @@ use Time::localtime;
 
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode numTopUsers picSize (Mode = [N|P|D|S|PD], picSize x in pixels)" ;
-my $version = "2.0 BETA" ;
+my $version = "2.0" ;
 
 my $topMax = 10 ;
 
@@ -144,7 +144,6 @@ print "\n$program finished after ", stringTimeSpent (time()-$time0), "\n\n" ;
 sub processNodes {
 	print "processing nodes...\n" ;
 	while ( ($nodeId1 > -1) or ($nodeId2 > -1) ) {
-		if ($nodeId1 % 100000000 == 0) { print "node number $nodeId1 reached...\n" ; }
 		# print "while $nodeId1     $nodeId2\n" ;
 		if ($nodeId1 == -1) {
 			# get rest from file 2, new nodes
@@ -267,7 +266,6 @@ sub processWays {
 	$objectProcessed = 1 ;
 	print "processing ways...\n" ;
 	while ( ($wayId1 > -1) or ($wayId2 > -1) ) {
-		if ($wayId1 % 10000000 == 0) { print "way number $wayId1 reached...\n" ; }
 		if ($wayId1 == -1) {
 			# get rest from file 2, new ways
 			while ( $wayId2 != -1 ) {

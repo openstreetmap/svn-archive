@@ -19,6 +19,9 @@
 # - map support added
 # - way support added
 #
+# Version 2.1
+# - separate files for time slots (privacy)
+#
 
 use strict ;
 use warnings ;
@@ -30,7 +33,7 @@ use Time::localtime;
 
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode numTopUsers picSize (Mode = [N|P|D|S|PD], picSize x in pixels)" ;
-my $version = "2.0" ;
+my $version = "2.1" ;
 
 my $topMax = 10 ;
 
@@ -411,35 +414,6 @@ sub output {
 	print $html "<p>DELETED NODES WITH TAGS: $deletedNodesWithTags (details see further down)</p>\n" ;
 	
 	@a = () ;
-	foreach my $u (keys %opTime) { push @a, [$u, numOpHours ($u)] ; }
-	printTop ("TOP operation hour slots", 0, @a) ;
-
-	@list = reverse (sort {$a->[1]<=>$b->[1]} @a) ;
-	if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
-	print $html "<h2>Operation time slots TOP users</h2>\n" ;
-	printHTMLTableHead ($html) ;
-	printHTMLTableHeadings ($html, "User", "00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23") ; 
-	foreach my $e (@list) {
-		printHTMLRowStart ($html) ;
-		printHTMLCellLeft ($html, userLink ($e->[0])) ;			
-		my $max = 0 ;
-		foreach my $h ("00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23") {
-			if ( (defined $opTime{$e->[0]}{$h}) and ($opTime{$e->[0]}{$h} > $max) )  { $max = $opTime{$e->[0]}{$h} ; } 
-		}
-		# print "$e->[0] $max\n" ;
-		my $value = 0 ;
-		foreach my $h ("00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23") {
-			if (defined $opTime{$e->[0]}{$h}) { $value = $opTime{$e->[0]}{$h} ; } else { $value = 0 ; }
-			my ($colorValue) = 255 - ( int ($value / $max * 255) / 2) ; my ($colorString) = sprintf "%02x", $colorValue ;
-			# print "$value $colorValue $colorString\n" ;
-			my ($htmlString) = "<td align=\"right\" bgcolor=\"#" . $colorString . $colorString . $colorString . "\">" . $value . "</td>" ;
-			print $html $htmlString ;
-		}
-		printHTMLRowEnd ($html) ;
-	}
-	printHTMLTableFoot ($html) ;
-
-	@a = () ;
 	foreach my $e (keys %nodesMovedNumber) { push @a, [$e, $nodesMovedNumber{$e}] ; }
 	printTop ("TOP moved nodes number", 0, @a) ;
 	@a = () ;
@@ -603,9 +577,51 @@ sub output {
 	}
 	printHTMLTableFoot ($html) ;
 
-	printHTMLFoot ($html) ;
 	print $html "<p>$program finished after ", stringTimeSpent (time()-$time0), "</p>\n" ;
+	printHTMLFoot ($html) ;
 	close ($html) ;
+
+	my ($html2Name) = $htmlName ;
+	$html2Name =~ s/.htm/.time.htm/ ;
+	open ($html, ">", $html2Name) or die ("can't open html2 output file") ;
+	printHTMLHeader ($html, "UserActvity (TIME) by Gary68") ;
+	print $html "<H1>UserActvity (TIME) by gary68</H1>" ;
+	print $html "<p>", stringFileInfo ($osm1Name), "</p>\n"  ;
+	print $html "<p>", stringFileInfo ($osm2Name), "</p>\n"  ;
+
+	@a = () ;
+	foreach my $u (keys %opTime) { push @a, [$u, numOpHours ($u)] ; }
+	printTop ("TOP operation hour slots", 0, @a) ;
+
+	@list = reverse (sort {$a->[1]<=>$b->[1]} @a) ;
+	if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
+	print $html "<h2>Operation time slots TOP users</h2>\n" ;
+	printHTMLTableHead ($html) ;
+	printHTMLTableHeadings ($html, "User", "00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23") ; 
+	foreach my $e (@list) {
+		printHTMLRowStart ($html) ;
+		printHTMLCellLeft ($html, userLink ($e->[0])) ;			
+		my $max = 0 ;
+		foreach my $h ("00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23") {
+			if ( (defined $opTime{$e->[0]}{$h}) and ($opTime{$e->[0]}{$h} > $max) )  { $max = $opTime{$e->[0]}{$h} ; } 
+		}
+		# print "$e->[0] $max\n" ;
+		my $value = 0 ;
+		foreach my $h ("00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23") {
+			if (defined $opTime{$e->[0]}{$h}) { $value = $opTime{$e->[0]}{$h} ; } else { $value = 0 ; }
+			my ($colorValue) = 255 - ( int ($value / $max * 255) / 2) ; my ($colorString) = sprintf "%02x", $colorValue ;
+			# print "$value $colorValue $colorString\n" ;
+			my ($htmlString) = "<td align=\"right\" bgcolor=\"#" . $colorString . $colorString . $colorString . "\">" . $value . "</td>" ;
+			print $html $htmlString ;
+		}
+		printHTMLRowEnd ($html) ;
+	}
+	printHTMLTableFoot ($html) ;
+
+
+	printHTMLFoot ($html) ;
+	close ($html) ;
+
 
 	print "done.\n" ;
 }

@@ -57,7 +57,6 @@ Func _LoadUpdateData()
     ;; ==================
 
 	Global $t_global_language = IniRead($s_DatFile, 'Global', 'language', '%language%')
-	Global $t_global_version = IniRead($s_DatFile, 'Global', 'version', '%version%')
 
     ;; =======================
     ;; Get i18n from .ini file

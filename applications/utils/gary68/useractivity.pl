@@ -1,4 +1,4 @@
-# 
+#!/usr/bin/perl 
 #
 # useractivity.pl by gary68
 #
@@ -28,11 +28,13 @@ use warnings ;
 
 use OSM::osm ;
 use OSM::osmgraph ;
-use File::stat;
-use Time::localtime;
+use File::stat ;
+use Time::localtime ;
+use Compress::Bzip2 ;
 
 my $program = "useractivity.pl" ;
-my $usage = $program . " file1.osm file2.osm out.htm Mode numTopUsers picSize (Mode = [N|P|D|S|PD], picSize x in pixels)" ;
+my $usage = $program . " file1.osm file2.osm out.htm Mode [numTopUsers] [picSize] (Mode = [N|P|D|S], picSize x in pixels)\n" ;
+$usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\n" ;
 my $version = "2.1" ;
 
 my $topMax = 10 ;

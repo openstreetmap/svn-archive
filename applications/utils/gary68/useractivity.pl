@@ -22,6 +22,9 @@
 # Version 2.1
 # - separate files for time slots (privacy)
 #
+# Version 2.2
+# - some bugs fixed
+#
 
 use strict ;
 use warnings ;
@@ -754,7 +757,7 @@ sub compareTags {
 		if ( ($refGiven == 1) and ($refNew ne $refOld) ) { 
 			$rereffed = 1 ; 
 			$rerefs{$wayUser2}{$refOld . " > " . $refNew} ++ ;
-			$reRef = 1 ; $ref1 = $refOld ; $name2 = $refNew ;
+			$reRef = 1 ; $ref1 = $refOld ; $ref2 = $refNew ;
 		}
 		# RECLASSIFIED?
 		my $highwayGiven = 0 ;

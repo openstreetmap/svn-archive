@@ -25,6 +25,11 @@
 # Version 2.2
 # - some bugs fixed
 #
+# Version 2.3
+# - html print program version number
+# - draw renamed ways
+# 
+#
 
 use strict ;
 use warnings ;
@@ -38,7 +43,7 @@ use Compress::Bzip2 ;
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode [numTopUsers] [picSize] (Mode = [N|P|D|S], picSize x in pixels)\n" ;
 $usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\n" ;
-my $version = "2.2" ;
+my $version = "2.3" ;
 
 my $topMax = 10 ;
 
@@ -329,7 +334,7 @@ sub processWays {
 			if ($deleted) { $tagsDeleted{$wayUser2} += $deleted ; }
 			if ($renamed) { 
 				$tagsRenamed{$wayUser2} += $renamed ;  
-				# TODO draw
+				if (grep /P/, $mode) { paintRenamedWay() ; }
 			}
 			if ($reclassified) { 
 				$tagsReclassified{$wayUser2} += $reclassified ; 
@@ -411,6 +416,7 @@ sub output {
 	open ($html, ">", $htmlName) or die ("can't open html output file") ;
 	printHTMLHeader ($html, "UserActvity by Gary68") ;
 	print $html "<H1>UserActvity by gary68</H1>" ;
+	print $html "<p>Version: ", $version, "</p>\n"  ;
 	print $html "<p>", stringFileInfo ($osm1Name), "</p>\n"  ;
 	print $html "<p>", stringFileInfo ($osm2Name), "</p>\n"  ;
 	print $html "<p>A deleted tag can result out of a change of a tag. The same is true for the addition of a tag. Real changes are not counted.</p>" ;

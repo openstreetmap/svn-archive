@@ -25,12 +25,12 @@ The installer will currently add:
 - josm into "C:\Program Files\JOSM" (or the corresponding international dir)
 - josm icons to the desktop and quick launch bar
 - josm file associations to .osm and .gpx files
-- some assorted plugins into "C:\Program Files\JOSM\plugins" (more to follow?)
+- some assorted plugins (more to follow?)
 - default preferences to the current user profile (if not already existing)
 - default bookmarks to the current user profile (if not already existing)
 
 When the installed josm.exe is executed, it should ask the user to download 
-JAVA 1.5 runtime if it's not already installed. However, I've not tested this. 
+JAVA runtime if it's not already installed. However, I've not tested this. 
 
 build the installer
 -------------------
@@ -39,10 +39,10 @@ build the installer
 - launch4j - http://launch4j.sourceforge.net/ (currently 3.0.1, older 2.x will NOT work!)
 - NSIS - http://nsis.sourceforge.net/ (any recent version should do)
 
-2.) Edit the two absolute paths in the file josm-setup.sh (in the calls 
+2.) Edit the two absolute paths in the file josm-setup-unix.sh (in the calls 
 to launch4jc and makensis)
 
-3.) Start a cygwin shell and call ./josm-setup.sh
+3.) Start a cygwin shell and call ./josm-setup-unix.sh
 
 how the installer is build
 --------------------------
@@ -53,9 +53,8 @@ create the actual josm-setup-latest.exe.
 
 known issues
 ------------
-- absolute paths in josm-setup.sh
+- absolute paths in josm-setup-unix.sh
 - josm should support "global settings" instead of only the personal profile
-- some way of automatic installer generation on the server (e.g. nightly build)?
 - install all josm plugins by default and only enable them according to user wishes?
 
 build the installer under Linux / Debian

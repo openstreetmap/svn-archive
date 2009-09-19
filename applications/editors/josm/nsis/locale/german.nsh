@@ -44,7 +44,7 @@
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_DEFAULT_UNINSTALL "Default (persönliche Einstellungen und Plugins behalten)"
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_FULL_UNINSTALL "Alles (alles entfernen)"
 
-!insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_IN_USE_ERROR "Achtung: josm.exe konnte nicht entfernt werden, möglicherweise wird es noch benutzt!"
+!insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_IN_USE_ERROR "Achtung: josm konnte nicht entfernt werden, möglicherweise wird es noch benutzt!"
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_INSTDIR_ERROR "Achtung: Das Verzeichnis $INSTDIR konnte nicht entfernt werden!"
 
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_SEC_UNINSTALL "JOSM" 

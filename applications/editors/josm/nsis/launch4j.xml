@@ -1,7 +1,7 @@
 <launch4jConfig>
-  <dontWrapJar>false</dontWrapJar>
+  <dontWrapJar>true</dontWrapJar>
   <headerType>0</headerType>
-  <jar>../core/dist/josm-custom.jar</jar>
+  <jar>josm-custom.jar</jar>
   <outfile>josm.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>

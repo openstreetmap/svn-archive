@@ -21,6 +21,8 @@ if [ -s /cygdrive/c/Programme/Launch4j/launch4jc.exe ]; then
 elif [ -s /usr/share/launch4j/launch4j.jar ]; then
     # as described above
     LAUNCH4J="java -jar /usr/share/launch4j/launch4j.jar"
+elif [ -s ../launch4j/launch4j.jar ]; then
+    LAUNCH4J="java -jar ../launch4j/launch4j.jar"
 else
     # launch4j installed locally under this nsis folder
     LAUNCH4J="java -jar ./launch4j/launch4j.jar"
@@ -33,23 +35,32 @@ if [ -s /cygdrive/c/Programme/nsis/makensis.exe ]; then
     MAKENSIS="/cygdrive/c/Programme/nsis/makensis.exe"
 else
     # UNIX like
-    MAKENSIS=makensis
+    MAKENSIS=/usr/bin/makensis
 fi
 echo Using NSIS: $MAKENSIS
 
-svncorerevision=`svnversion ../core`
-svnpluginsrevision=`svnversion ../plugins`
-svnrevision="$svncorerevision-$svnpluginsrevision"
+if [ -n "$1" ]; then
+  export VERSION=$1
+  export JOSM_BUILD="no"
+  export WEBKIT_DOWNLAD="no"
+else
+  svncorerevision=`svnversion ../core`
+  svnpluginsrevision=`svnversion ../plugins`
+  svnrevision="$svncorerevision-$svnpluginsrevision"
 
-#export VERSION=latest
-export VERSION=custom-${svnrevision}                                         
+  export VERSION=custom-${svnrevision}
+  export JOSM_BUILD="yes"
+  export WEBKIT_DOWNLOAD="yes"
+fi
 
 echo "Creating Windows Installer for josm-$VERSION"
 
 echo 
 echo "##################################################################"
 echo "### Download and unzip the webkit stuff"
-wget --continue --timestamping http://josm.openstreetmap.de/download/windows/webkit-image.zip
+if [ "x$WEBKIT_DOWNLOAD" == "xyes" ]; then
+    wget --continue --timestamping http://josm.openstreetmap.de/download/windows/webkit-image.zip
+fi
 mkdir -p webkit-image
 cd webkit-image
 unzip -o ../webkit-image.zip
@@ -58,7 +69,7 @@ cd ..
 echo 
 echo "##################################################################"
 echo "### Build the Complete josm + Plugin Stuff"
-if true; then
+if [ "x$JOSM_BUILD" == "xyes" ]; then
     (
 	echo "Build the Complete josm Stuff"
 	
@@ -81,7 +92,7 @@ echo "### convert jar to exe with launch4j"
 # (an exe file makes attaching to file extensions a lot easier)
 # launch4j - http://launch4j.sourceforge.net/
 # delete old exe file first
-rm -f josm.exe
+/bin/rm -f josm.exe
 $LAUNCH4J "launch4j.xml"
 
 if ! [ -s josm.exe ]; then
@@ -97,5 +108,5 @@ echo "### create the josm-installer-${VERSION}.exe with makensis"
 $MAKENSIS -V2 -DVERSION=$VERSION josm.nsi
 
 # keep the intermediate file, for debugging
-rm -f josm-intermediate.exe
-mv josm.exe josm-intermediate.exe
+/bin/rm josm-intermediate.exe 2>/dev/null >/dev/null
+/bin/mv josm.exe josm-intermediate.exe 2>/dev/null >/dev/null

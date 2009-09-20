@@ -187,7 +187,7 @@ public class WMSLayer extends Layer {
 			return true;
 		String msg  = tr("<html>The base URL<br>"
 				        + "''{0}''<br>"
-				        + "for this WML layer does neither end with a ''&'' nor with a ''?''.<br>"
+				        + "for this WMS layer does neither end with a ''&'' nor with a ''?''.<br>"
 				        + "This is likely to lead to invalid WMS request. You should check your<br>"
 				        + "preference settings.<br>"
 				        + "Do you want to fetch WMS tiles anyway?",				        

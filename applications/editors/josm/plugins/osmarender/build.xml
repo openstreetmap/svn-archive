@@ -25,7 +25,7 @@
                 <attribute name="Plugin-Class" value="OsmarenderPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Launches FireFox to display the current visible screen as a nice SVG image."/>
-                <attribute name="Plugin-Mainversion" value="2067"/>
+                <attribute name="Plugin-Mainversion" value="2166"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

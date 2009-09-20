@@ -59,15 +59,15 @@ public class OsmarenderPlugin extends Plugin {
                     n.visit(backRefsV);
                 }
             }
-            for (OsmPrimitive p : new HashSet<OsmPrimitive>(backRefsV.data)) {
+            for (OsmPrimitive p : new HashSet<OsmPrimitive>(backRefsV.getData())) {
                 if (p instanceof Way) {
                     for (Node n : ((Way) p).getNodes()) {
                         if (n.getCoor().isWithin(b))
-                            backRefsV.data.add(n);
+                            backRefsV.getData().add(n);
                     }
                 }
             }
-            for (OsmPrimitive p : backRefsV.data)
+            for (OsmPrimitive p : backRefsV.getData())
                 fromDataSet.addPrimitive(p);
 
             String firefox = Main.pref.get("osmarender.firefox", "firefox");

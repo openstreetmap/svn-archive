@@ -362,6 +362,9 @@ inline double LonInverse (int lon)
 extern wayType *gosmSway[searchCnt];
 extern int *hashTable, bucketsMin1, pakHead;
 extern char *gosmData, *gosmSstr[searchCnt];
+/* gosmSstr is no longer nul terminated. If it's a problem, use
+string s (gosmSstr[i], strcspn (gosmSstr[i], "\n")); ... s.c_str() ... */
+
 extern ndType *ndBase;
 extern styleStruct *style;
 

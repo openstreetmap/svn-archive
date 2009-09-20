@@ -78,6 +78,7 @@ using namespace std;
   o (OrientNorthwards,0, 2) \
   o (FastestRoute,    0, 2) \
   o (Vehicle,         motorcarR, onewayR) \
+  o (SearchSpacing,   32, 1) \
   o (English,         0, \
                  sizeof (optionNameTable) / sizeof (optionNameTable[0])) \
   o (ButtonSize,      1, 5) \
@@ -124,6 +125,9 @@ BOOL CALLBACK DlgSearchProc (
 	WPARAM wParam, 
 	LPARAM lParam);
 #else
+#ifndef RES_DIR
+#define RES_DIR "/usr/share/gosmore/" /* Needed for "make CFLAGS=-g" */
+#endif
 const char *FindResource (const char *fname)
 { // Occasional minor memory leak : The caller never frees the memory.
   string s;
@@ -198,7 +202,7 @@ STYLES
   o (ShowTime,        ) \
 
 #define o(en,min,max) en ## Num,
-enum { OPTIONS numberOfOptions, chooseObjectToAdd };
+enum { OPTIONS numberOfOptions, searchMode, chooseObjectToAdd };
 #undef o
 
 //  TEXT (#en), TEXT (de), TEXT (es), TEXT (fr), TEXT (it), TEXT (nl) },
@@ -224,6 +228,7 @@ GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
 int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE, gDisplayOff;
 /* zoom is the amount that fits into the window (regardless of window size) */
 double cosAzimuth = 1.0, sinAzimuth = 0.0;
+string highlight;
 
 inline void SetLocation (int nlon, int nlat)
 {
@@ -863,6 +868,18 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   else if (event->x > w - ButtonSize * 20 && b <
       (!HideZoomButtons || option != numberOfOptions ? 3 : 
       MenuKey != 0 ? 0 : 1)) HitButton (b);
+  else if (option == searchMode) {
+    int row = event->y / SearchSpacing;
+    if (row < searchCnt && gosmSstr[row]) {
+      SetLocation (gosmSway[row]->clon, gosmSway[row]->clat);
+      zoom = gosmSway[row]->dlat + gosmSway[row]->dlon + (1 << 15);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
+      FollowGPSr = FALSE;
+      option = numberOfOptions;
+      highlight = string (gosmSstr[row], strcspn (gosmSstr[row], "\n"));
+      gtk_widget_queue_clear (draw);
+    }
+  }
   else {
     int perpixel = zoom / w;
     int lon = clon + lrint (cosAzimuth * perpixel * (event->x - w / 2) -
@@ -961,13 +978,70 @@ void GetDirections (GtkWidget *, gpointer)
 
 #endif
 
-struct name2renderType { // Build a list of names, sort by name,
-  wayType *w;            // make unique by name, sort by y, then render
-  int x, y, width;       // only if their y's does not overlap
-};
+#ifdef PANGO_VERSION
+PangoContext *pc;
+PangoLayout  *pl;
+#endif
+
+#ifndef _WIN32_WCE
+typedef GdkGC *HDC;
+
+static GdkGC *maskGC = NULL;
+static GdkBitmap *mask = NULL;
+// create bitmap for generation the mask image for icons
+// all icons must be smaller than these dimensions
+static GdkBitmap *maskicon = NULL;
+static GdkPixmap *icons = NULL;
+#else
+HDC icons;
+#endif
+
+static HDC mygc = NULL, iconsgc = NULL;
+
+void DrawString (int x, int y, const char *optStr)
+{
+  #ifndef _WIN32_WCE
+  PangoMatrix mat;
+  mat.xx = mat.yy = 1.0;
+  mat.xy = mat.yx = 0.0;
+  pango_context_set_matrix (pc, &mat);
+  pango_layout_set_text (pl, optStr, -1);
+  gdk_draw_layout (GDK_DRAWABLE (draw->window),
+                     draw->style->fg_gc[0], x, y, pl);
+  #else
+  SelectObject (mygc, sysFont);
+  SetBkMode (mygc, TRANSPARENT);
+  const unsigned char *sStart = (const unsigned char*) optStr;
+  UTF16 *tStart = (UTF16 *) wcTmp;
+  if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (optStr), &tStart,
+           tStart + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
+      == conversionOK) {
+    ExtTextOut (mygc, x, y, 0, NULL, wcTmp, (wchar_t*) tStart - wcTmp, NULL);
+  }
+  #endif
+}
+
+void DrawIcon (int dstx, int dsty, wayType *w)
+{
+  int *icon = Style (w)->x + 4 * IconSet;
+  if (icon[2] == 0) return;
+  #ifndef _WIN32_WCE
+  // for gdk we first need to extract the portion of the mask
+  if (!maskicon) maskicon = gdk_pixmap_new(NULL, 100, 100, 1);
+  gdk_draw_drawable (maskicon, maskGC, mask,
+                     icon[0], icon[1], 0, 0,
+                     icon[2], icon[3]);
+  // and set the clip region using that portion
+  gdk_gc_set_clip_origin(iconsgc, dstx - icon[2] / 2, dsty - icon[3] / 2);
+  gdk_gc_set_clip_mask(iconsgc, maskicon);
+  #endif
+  gdk_draw_drawable (draw->window, iconsgc, icons,
+    icon[0], icon[1], dstx - icon[2] / 2, dsty - icon[3] / 2,
+    icon[2], icon[3]);
+}
 
 #ifdef _WIN32_WCE
-int Expose (HDC mygc, HDC icons, HDC mask, HPEN *pen)
+int Expose (HDC mask, HPEN *pen)
 {
   struct {
     int width, height;
@@ -979,7 +1053,7 @@ int Expose (HDC mygc, HDC icons, HDC mask, HPEN *pen)
   GetObject (sysFont, sizeof (logFont), &logFont);
   WCHAR wcTmp[70];
 
-  HDC iconsgc = mygc;
+  iconsgc = mygc;
 
 #define gtk_combo_box_get_active(x) 1
 #define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
@@ -1019,14 +1093,8 @@ int Expose (HDC mygc, HDC icons, HDC mask, HPEN *pen)
 #else
 gint Expose (void)
 {
-  static GdkColor styleColour[2 << STYLE_BITS][2], routeColour, validateColour;
-  static GdkPixmap *icons = NULL;
-  static GdkBitmap *mask = NULL;
-  static GdkGC *mygc = NULL, *iconsgc = NULL;;
-  static GdkGC *maskGC = NULL;
-  // create bitmap for generation the mask image for icons
-  // all icons must be smaller than these dimensions
-  static GdkBitmap *maskicon = gdk_pixmap_new(NULL, 100, 100, 1);
+  static GdkColor styleColour[2 << STYLE_BITS][2];
+  static GdkColor routeColour, validateColour, resultArrowColour;
   if (!mygc || !iconsgc) {
     mygc = gdk_gc_new (draw->window);
     iconsgc = gdk_gc_new (draw->window);
@@ -1050,6 +1118,10 @@ gint Expose (void)
     validateColour.green = validateColour.blue = 0x9999;
     gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
       &validateColour, FALSE, TRUE);
+    resultArrowColour.green = 0;
+    resultArrowColour.red = resultArrowColour.blue = 0;
+    gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
+      &resultArrowColour, FALSE, TRUE);
     gdk_gc_set_fill (mygc, GDK_SOLID);
 
     icons = gdk_pixmap_create_from_xpm (draw->window, &mask, NULL,
@@ -1071,9 +1143,8 @@ gint Expose (void)
   clip.y = 0;
 
   PangoMatrix mat;
-  PangoContext *pc = gdk_pango_context_get_for_screen (
-    gdk_screen_get_default ());
-  PangoLayout *pl = pango_layout_new (pc);
+  pc = gdk_pango_context_get_for_screen (gdk_screen_get_default ());
+  pl = pango_layout_new (pc);
   pango_layout_set_width (pl, -1); // No wrapping 200 * PANGO_SCALE);
 #endif // !_WIN32_WCE
 
@@ -1091,19 +1162,19 @@ gint Expose (void)
   cairo_matrix_t mat;
   cairo_matrix_init_identity (&mat);
   #endif */
+  if (zoom < 0) zoom = 2012345678;
+  if (zoom / clip.width <= 1) zoom += 4000;
+  int cosa = lrint (4294967296.0 * cosAzimuth * clip.width / zoom);
+  int sina = lrint (4294967296.0 * sinAzimuth * clip.width / zoom);
+  int xadj = clip.width / 2 -
+               ((clon * (__int64) cosa + clat * (__int64) sina) >> 32);
+  int yadj = clip.height / 2 -
+               ((clon * (__int64) sina - clat * (__int64) cosa) >> 32);
+  #define X(lon,lat) (xadj + \
+               (((lon) * (__int64) cosa + (lat) * (__int64) sina) >> 32))
+  #define Y(lon,lat) (yadj + \
+               (((lon) * (__int64) sina - (lat) * (__int64) cosa) >> 32))
   if (option == numberOfOptions) {
-    if (zoom < 0) zoom = 2012345678;
-    if (zoom / clip.width <= 1) zoom += 4000;
-    int cosa = lrint (4294967296.0 * cosAzimuth * clip.width / zoom);
-    int sina = lrint (4294967296.0 * sinAzimuth * clip.width / zoom);
-    int xadj = clip.width / 2 -
-                 ((clon * (__int64) cosa + clat * (__int64) sina) >> 32);
-    int yadj = clip.height / 2 -
-                 ((clon * (__int64) sina - clat * (__int64) cosa) >> 32);
-    #define X(lon,lat) (xadj + \
-                 (((lon) * (__int64) cosa + (lat) * (__int64) sina) >> 32))
-    #define Y(lon,lat) (yadj + \
-                 (((lon) * (__int64) sina - (lat) * (__int64) cosa) >> 32))
 
     int lonRadius = lrint (fabs (cosAzimuth) * zoom +
           fabs (sinAzimuth) * zoom / clip.width * clip.height) / 2 + 1000;
@@ -1164,23 +1235,7 @@ gint Expose (void)
                       (sizeof (blockIcon) / sizeof (blockIcon[0]));
           if (!(*b & (1 << (x / 48 % 32)))) {
             *b |= 1 << (x / 48 % 32);
-            int *icon = Style (w)->x + 4 * IconSet;
-            if (icons && icon[2] != 0) {
-	      int dstx = x - icon[2] / 2;
-	      int dsty = y - icon[3] / 2;
-	      #ifndef _WIN32_WCE
-	      // for gdk we first need to extract the portion of the mask
-	      gdk_draw_drawable (maskicon, maskGC, mask,
-	      			 icon[0], icon[1], 0, 0,
-	      			 icon[2], icon[3]);
-	      // and set the clip region using that portion
-	      gdk_gc_set_clip_origin(iconsgc, dstx, dsty);
-	      gdk_gc_set_clip_mask(iconsgc, maskicon);
-	      #endif
-              gdk_draw_drawable (draw->window, iconsgc, icons,
-                icon[0], icon[1], dstx, dsty,
-                icon[2], icon[3]);
-            }
+            DrawIcon (x, y, w);
             
             #ifdef _WIN32_WCE
             SelectObject (mygc, sysFont);
@@ -1199,7 +1254,8 @@ gint Expose (void)
               mat.xx = mat.yy = 1.0;
               mat.xy = mat.yx = 0;
               x0 = x /*- mat.xx / 3 * len*/; /* Render the name of the node */
-              y0 = y /* + mat.xx * f->ascent */ + icon[3] / 2;
+              y0 = y /* + mat.xx * f->ascent */ +
+                Style (w)->x[IconSet * 4 + 3] / 2;
               maxLenSqr = Sqr ((__int64) Style (w)->scaleMax / 2);
               //4000000000000LL; // Without scaleMax, use 400000000
             //}
@@ -1244,6 +1300,13 @@ gint Expose (void)
 	  } else {
 	    valid = true; 
 	  }
+	  if (highlight != "") {
+            for (char *ptr = (char *)(w + 1) + 1; valid && *ptr != '\0'; ) {
+              if (strncmp (highlight.c_str (), ptr, strcspn (ptr, "\n"))
+                  == 0) valid = false;
+              while (*ptr != '\0' && *ptr++ != '\n') {}
+            } // Shoud highlighting get its own pen ?
+          }
 	  // two stages -> validate (if needed) then normal rendering
 	  ndType *orig = nd;
 	  for (int stage = ( valid ? 1 : 0);stage<2;stage++) {
@@ -1456,6 +1519,49 @@ gint Expose (void)
     }
     #endif
   } // Not in the menu
+  else if (option == searchMode) {
+    for (int i = 0, y = SearchSpacing / 2; i < searchCnt && gosmSstr[i];
+             i++, y += SearchSpacing) {
+      DrawIcon (SearchSpacing / 2, y, gosmSway[i]);
+      
+      double dist = sqrt (Sqr ((__int64) clon - gosmSway[i]->clon) +
+          Sqr ((__int64) clat - gosmSway[i]->clat)) * (20000 / 2147483648.0) *
+        cos (LatInverse (clat) * (M_PI / 180));
+      char distance[10]; // Formula inaccurate over long distances hence "Far"
+      sprintf (distance, dist > 998 ? "Far" : dist > 1 ? "%.0lf km" :
+        "%.0lf m", dist > 1 ? dist : dist * 1000);
+      DrawString (SearchSpacing + 66 - 11 * strlen (distance), y - 10,
+        distance); // Right adjustment is inaccurate
+      
+      #ifndef _WIN32_WCE
+      gdk_gc_set_foreground (mygc, &resultArrowColour);
+      gdk_gc_set_line_attributes (mygc, 1,
+        GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+      #else
+      SelectObject (mygc, GetStockObject (BLACK_PEN));
+      #endif
+      int x = SearchSpacing + 70;
+      __int64 lx = X (gosmSway[i]->clon, gosmSway[i]->clat) - clip.width / 2;
+      __int64 ly = Y (gosmSway[i]->clon, gosmSway[i]->clat) - clip.height / 2;
+      double norm = lx || ly ? sqrt (lx * lx + ly * ly) / 64 : 1;
+      int u = lrint (lx / norm), v = lrint (ly / norm);
+      gdk_draw_line (draw->window, mygc, x + u / 8, y + v / 8,
+        x - u / 8, y - v / 8);
+      gdk_draw_line (draw->window, mygc, x + u / 8, y + v / 8, 
+        x + u / 12 + v / 20, y - u / 20 + v / 12);
+      gdk_draw_line (draw->window, mygc, x + u / 8, y + v / 8,
+        x + u / 12 - v / 20, y + u / 20 + v / 12);
+            
+      string s (gosmSstr[i], strcspn (gosmSstr[i], "\n"));
+      char *name = (char *)(gosmSway[i] + 1) + 1;
+      if (name != gosmSstr[i]) s += " (" +
+                     string (name, strcspn (name, "\n")) + ")";
+      DrawString (SearchSpacing + x, y - 10, s.c_str ());
+
+      gdk_draw_line (draw->window, mygc, 0, y + SearchSpacing / 2,
+        clip.width, y + SearchSpacing / 2);
+    }
+  }
   else {
     char optStr[30];
     if (option == VehicleNum) {
@@ -1469,25 +1575,7 @@ gint Expose (void)
     OPTIONS
     #undef o
       0);
-    #ifndef _WIN32_WCE
-    mat.xx = mat.yy = 1.0;
-    mat.xy = mat.yx = 0.0;
-    pango_context_set_matrix (pc, &mat);
-    pango_layout_set_text (pl, optStr, -1);
-    gdk_draw_layout (GDK_DRAWABLE (draw->window),
-              draw->style->fg_gc[0], 50, draw->allocation.height / 2, pl);
-    #else
-    SelectObject (mygc, sysFont);
-    SetBkMode (mygc, TRANSPARENT);
-    const unsigned char *sStart = (const unsigned char*) optStr;
-    UTF16 *tStart = (UTF16 *) wcTmp;
-    if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (optStr), &tStart,
-             tStart + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
-        == conversionOK) {
-      ExtTextOut (mygc, 50, draw->allocation.height / 2, 0, NULL,
-         wcTmp, (wchar_t*) tStart - wcTmp, NULL);
-    }
-    #endif
+    DrawString (50, draw->allocation.height / 2, optStr);
   }
   #ifndef _WIN32_WCE
   gdk_draw_rectangle (draw->window, draw->style->bg_gc[0], TRUE,
@@ -1542,30 +1630,30 @@ gint Expose (void)
 
 #ifndef _WIN32_WCE
 GtkWidget *searchW;
-GtkWidget *list;
+
+int ToggleSearchResults (void)
+{
+  option = option == searchMode ? numberOfOptions : searchMode;
+  highlight = string ();
+  gtk_widget_queue_clear (draw);
+  return FALSE;
+}
 
 int IncrementalSearch (void)
 {
+  option = searchMode;
   GosmSearch (clon, clat, (char *) gtk_entry_get_text (GTK_ENTRY (searchW)));
-  gtk_clist_freeze (GTK_CLIST (list));
-  gtk_clist_clear (GTK_CLIST (list));
-  for (int i = 0; i < searchCnt; i++) {
-    if (gosmSstr[i]) gtk_clist_append (GTK_CLIST (list), &gosmSstr[i]);
-  }
-  gtk_clist_thaw (GTK_CLIST (list));
+  gtk_widget_queue_clear (draw);
   return FALSE;
 }
 #endif
 
+#if 0
 void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
   GdkEventButton * /*ev*/, void * /*data*/)
 {
-  SetLocation (gosmSway[row]->clon, gosmSway[row]->clat);
-  zoom = gosmSway[row]->dlat + gosmSway[row]->dlon + (1 << 15);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
-  FollowGPSr = FALSE;
-  gtk_widget_queue_clear (draw);
 }
+#endif
 
 void InitializeOptions (void)
 {
@@ -1662,23 +1750,24 @@ int UserInterface (int argc, char *argv[],
                        (GtkSignalFunc) Scroll, NULL);
   
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  /* The new layout will work better on smaller screens esp. touch screens by
+  moving less used options to the menu and only displaying search results
+  when they are required. It will also be more familiar to casual users
+  because it will resemble a webbrowser */
   GtkWidget *hbox = gtk_hbox_new (FALSE, 5), *vbox = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (window), hbox);
-  gtk_box_pack_start (GTK_BOX (hbox), draw, TRUE, TRUE, 0);
-  gtk_box_pack_end (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (window), vbox);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
   searchW = gtk_entry_new ();
-  gtk_box_pack_start (GTK_BOX (vbox), searchW, FALSE, FALSE, 5);
+  gtk_box_pack_start (GTK_BOX (hbox), searchW, FALSE, FALSE, 5);
   gtk_entry_set_text (GTK_ENTRY (searchW), "Search");
   gtk_signal_connect (GTK_OBJECT (searchW), "changed",
     GTK_SIGNAL_FUNC (IncrementalSearch), NULL);
+  gtk_signal_connect (GTK_OBJECT (searchW), "button-press-event",
+    GTK_SIGNAL_FUNC (ToggleSearchResults), NULL);
+
+  gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);
   
-  list = gtk_clist_new (1);
-  gtk_clist_set_selection_mode (GTK_CLIST (list), GTK_SELECTION_SINGLE);
-  gtk_box_pack_start (GTK_BOX (vbox), list, TRUE, TRUE, 5);
-  gtk_signal_connect (GTK_OBJECT (list), "select_row",
-    GTK_SIGNAL_FUNC (SelectName), NULL);
-    
   carBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
   #define M(x) if (motorcarR <= x ## R && x ## R < onewayR) \
                              gtk_combo_box_append_text (carBtn, #x);
@@ -1765,9 +1854,8 @@ int UserInterface (int argc, char *argv[],
   gtk_signal_connect (GTK_OBJECT (window), "delete_event",
     GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
   
-  gtk_widget_set_usize (window, 750, 550);
+  gtk_widget_set_usize (window, 550, 750);
   gtk_widget_show (searchW);
-  gtk_widget_show (list);
   gtk_widget_show (location);
   gtk_widget_show (draw);
   gtk_widget_show (GTK_WIDGET (carBtn));
@@ -2019,7 +2107,10 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	rect.top = rect.left = 0;
 	rect.right = GetSystemMetrics(SM_CXSCREEN);
 	rect.bottom = GetSystemMetrics(SM_CYSCREEN);
-        Expose (bufDc, iconsDc, maskDc, pen);
+	mygc = bufDc;
+	icons = iconsDc;
+	mask = maskDc;
+        Expose (pen);
 	BitBlt (ps.hdc, 0, 0, rect.right,  rect.bottom, bufDc, 0, 0, SRCCOPY);
 	FillRect (bufDc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
 //      HPEN pen = CreatePen (a[c2].lineDashed ? PS_DASH : PS_SOLID,

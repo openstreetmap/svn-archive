@@ -118,7 +118,6 @@ static int IdxSearch (int *idx, int h, char *key, unsigned z)
 void GosmSearch (int clon, int clat, char *key)
 {
   __int64 dista[searchCnt];
-  char *taga[searchCnt];
   int *idx =
     (int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
   int l = IdxSearch (idx, hashTable - idx, key, 0), count;
@@ -136,10 +135,10 @@ void GosmSearch (int clon, int clat, char *key)
         for (ipos = c; count < ipos && distm[dir] < dista[ipos - 1]; ipos--) {
           dista[ipos] = dista[ipos - 1];
           gosmSway[ipos] = gosmSway[ipos - 1];
-          taga[ipos] = taga[ipos - 1];
+          gosmSstr[ipos] = gosmSstr[ipos - 1];
         }
         char *tag = gosmData + idx[m[dir]];
-        taga[ipos] = tag;
+        gosmSstr[ipos] = tag;
         while (*--tag) {}
         gosmSway[ipos] = (wayType*)tag - 1;
         dista[ipos] = distm[dir];
@@ -219,11 +218,11 @@ void GosmSearch (int clon, int clat, char *key)
             for (ipos = count - 1; ipos > c && d < dista[ipos - 1]; ipos--) {
               dista[ipos] = dista[ipos - 1];
               gosmSway[ipos] = gosmSway[ipos - 1];
-              taga[ipos] = taga[ipos - 1];
+              gosmSstr[ipos] = gosmSstr[ipos - 1];
             }
             gosmSway[ipos] = w;
             dista[ipos] = d;
-            taga[ipos] = gosmData + idx[s - 1];
+            gosmSstr[ipos] = gosmData + idx[s - 1];
           }
         } // For each entry in the square
       } // For each of the 4 squares
@@ -231,11 +230,6 @@ void GosmSearch (int clon, int clat, char *key)
     } // If the search list is filled by tags with this text
     count = c;
   } // For each
-  for (int i = 0; i < searchCnt; i++) free (gosmSstr[i]);
-  for (int j = 0; j < count; j++) {
-    gosmSstr[j] = (char *) malloc (strcspn (taga[j], "\n") + 1);
-    sprintf (gosmSstr[j], "%.*s", (int) strcspn (taga[j], "\n"), taga[j]);
-  }
   for (int k = count; k < searchCnt; k++) gosmSstr[k] = NULL;
 }
 
@@ -953,6 +947,9 @@ int LoadElemstyles(/* in */ const char *elemstylesfname,
     return styleCnt;
 }
 
+#define FWRITE(addr,size,count,f) { if (fwrite (addr, size, count, f) \
+  != (size_t)(count)) { perror ("fwrite"); exit (1); } }
+
 int RebuildPak(const char* pakfile, const char* elemstylefile, 
 	       const char* iconscsvfile, const char* masterpakfile, 
 	       const int bbox[4]) {
@@ -978,7 +975,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     fprintf (stderr, "Cannot create %s\n",pakfile);
     return 2;
   }
-  fwrite (&pakHead, sizeof (pakHead), 1, pak);
+  FWRITE (&pakHead, sizeof (pakHead), 1, pak);
 
   //------------------------ elemstylesfile : -----------------------------
   styleStruct srec[2 << STYLE_BITS];
@@ -990,9 +987,9 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   int styleCnt = LoadElemstyles(elemstylefile, iconscsvfile, firstElemStyle, 
 				srec, map, maxspeeds);
   // write number of styles
-  fwrite (&styleCnt, sizeof(styleCnt), 1, pak); 
+  FWRITE (&styleCnt, sizeof(styleCnt), 1, pak); 
   // followed by styleStruct
-  fwrite (&srec, sizeof (srec[0]), styleCnt + 1, pak);    
+  FWRITE (&srec, sizeof (srec[0]), styleCnt + 1, pak);    
 
   //------------------ OSM Data File (/dev/stdin) : ------------------------
   xmlTextReaderPtr xml = xmlReaderForFd (STDIN_FILENO, "", NULL, 0);
@@ -1234,7 +1231,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	else if (stricmp (name, "nd") == 0 ||
 		 stricmp (name, "member") == 0) {
 	  if (s[0].lat) {
-	    fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+	    FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
 	  }
 	  s[0].wayPtr = ftell (pak);
 	  s[1].wayPtr = TO_HALFSEG;
@@ -1248,7 +1245,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
       }
       if (stricmp (name, "node") == 0 && bbox[0] <= nd.lat &&
 	  bbox[1] <= nd.lon && nd.lat <= bbox[2] && nd.lon <= bbox[3]) {
-	fwrite (&nd, sizeof (nd), 1, groupf[NGROUP (nd.id)]);
+	FWRITE (&nd, sizeof (nd), 1, groupf[NGROUP (nd.id)]);
       }
     }
     if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_END_ELEMENT) {
@@ -1279,7 +1276,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	if (!nameIsNode || strlen (tags) > 8 || wStyle != styleCnt) {
 	  if (nameIsNode && (!wayFseek || *wayFseek)) {
 	    if (s[0].lat) { // Flush s
-	      fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+	      FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
 	    }
 	    s[0].lat = nd.id; // Create 2 fake halfSegs
 	    s[0].wayPtr = ftell (pak);
@@ -1298,7 +1295,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    for (int i = 0; i < lowzListCnt; i++) {
 	      if (i % 10 && i < lowzListCnt - 1) continue; // Skip some
 	      if (s[0].lat) { // Flush s
-		fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+		FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
 	      }
 	      s[0].lat = lowzList[i];
 	      s[0].wayPtr = ftell (pak);
@@ -1325,21 +1322,21 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	  if (w.destination & (1 << accessR)) w.destination = ~0;
 	  char *compact = tags[0] == '\n' ? tags + 1 : tags;
 	  if (!wayFseek || *wayFseek) {
-	    fwrite (&w, sizeof (w), 1, pak);
-	    fwrite (tags + strlen (tags), 1, 1, pak); // '\0' at the front
+	    FWRITE (&w, sizeof (w), 1, pak);
+	    FWRITE (tags + strlen (tags), 1, 1, pak); // '\0' at the front
 	    for (char *ptr = tags; *ptr != '\0'; ) {
 	      if (*ptr++ == '\n') {
 		unsigned idx = ftell (pak) + ptr - 1 - tags, grp;
 		for (grp = 0; grp < IDXGROUPS - 1 &&
 		       TagCmp (groupName[grp], ptr) < 0; grp++) {}
-		fwrite (&idx, sizeof (idx), 1, groupf[grp]);
+		FWRITE (&idx, sizeof (idx), 1, groupf[grp]);
 	      }
 	    }
-	    fwrite (compact, strlen (compact) + 1, 1, pak);
+	    FWRITE (compact, strlen (compact) + 1, 1, pak);
             
 	    // Write variable length tags and align on 4 bytes
 	    if (ftell (pak) & 3) {
-	      fwrite (tags, 4 - (ftell (pak) & 3), 1, pak);
+	      FWRITE (tags, 4 - (ftell (pak) & 3), 1, pak);
 	    }
 	  }
 	  if (wayFseek) fseek (pak, *++wayFseek, SEEK_SET);
@@ -1358,7 +1355,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   } // While reading xml
   wayId.clear ();
   if (s[0].lat && (!wayFseek || *wayFseek)) {
-    fwrite (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
+    FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
   }
   assert (nOther * 2 < FIRST_LOWZ_OTHER);
   bucketsMin1 = (nOther >> 5) | (nOther >> 4);
@@ -1393,7 +1390,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
       //if (n->id == -1) printf ("** Undefined node %d\n", s[0].lat);
       s[0].lat = s[1].lat = n->id != -1 ? n->lat : INT_MIN;
       s[0].lon = s[1].lon = n->id != -1 ? n->lon : INT_MIN;
-      fwrite (s, sizeof (s), 1,
+      FWRITE (s, sizeof (s), 1,
 	      groupf[-2 <= s[0].other && s[0].other < FIRST_LOWZ_OTHER
 		     ? S2GROUP (Hash (s[0].lon, s[0].lat)) : PAIRGROUP (0) - 1]);
     }
@@ -1426,7 +1423,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	}
       }
       offsetpair.nOther1 = seg[j].other;
-      if (seg[j].other >= 0) fwrite (&offsetpair, sizeof (offsetpair), 1,
+      if (seg[j].other >= 0) FWRITE (&offsetpair, sizeof (offsetpair), 1,
 				     groupf[PAIRGROUP (offsetpair.nOther1)]);
       offsetpair.final++;
     }
@@ -1448,7 +1445,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     for (int j = 0; j < pairs; j++) {
       offsetpair.final = pairing[j ^ 1];
       offsetpair.nOther1 = pairing[j];
-      fwrite (&offsetpair, sizeof (offsetpair), 1,
+      FWRITE (&offsetpair, sizeof (offsetpair), 1,
 	      groupf[PAIRGROUP2 (offsetpair.nOther1)]);
     }
     fclose (groupf[i]);
@@ -1482,7 +1479,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
       ndWrite.lon = seg[j].lon;
       ndWrite.other[0] = seg[j].other >> 1; // Right shift handles -1 the
       ndWrite.other[1] = seg[j + 1].other >> 1; // way we want.
-      fwrite (&ndWrite, sizeof (ndWrite), 1, pak);
+      FWRITE (&ndWrite, sizeof (ndWrite), 1, pak);
     }
     fclose (groupf[i]);
     unlink (groupName[i]);
@@ -1538,7 +1535,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     unsigned *idx = (unsigned *) mmap (NULL, fsize,
 				       PROT_READ | PROT_WRITE, MAP_SHARED, fileno (groupf[i]), 0);
     qsort (idx, fsize / sizeof (*idx), sizeof (*idx), IdxCmp);
-    fwrite (idx, fsize, 1, pak);
+    FWRITE (idx, fsize, 1, pak);
 #if 0
     for (int j = 0; j < fsize / (int) sizeof (*idx); j++) {
       printf ("%.*s\n", strcspn (data + idx[j], "\n"), data + idx[j]);
@@ -1551,10 +1548,10 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 #endif // LAMBERTUS
   //    printf ("ndCount=%d\n", ndCount);
   munmap (data, ndStart);
-  fwrite (hashTable, sizeof (*hashTable),
+  FWRITE (hashTable, sizeof (*hashTable),
 	  bucketsMin1 + (bucketsMin1 >> 7) + 3, pak);
-  fwrite (&bucketsMin1, sizeof (bucketsMin1), 1, pak);
-  fwrite (&ndStart, sizeof (ndStart), 1, pak); /* for ndBase */
+  FWRITE (&bucketsMin1, sizeof (bucketsMin1), 1, pak);
+  FWRITE (&ndStart, sizeof (ndStart), 1, pak); /* for ndBase */
 
   fclose (pak);
   free (hashTable);

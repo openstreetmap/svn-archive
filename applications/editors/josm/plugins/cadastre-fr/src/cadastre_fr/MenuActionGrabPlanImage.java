@@ -27,7 +27,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
     private static final long serialVersionUID = 1L;
 
     public static String name = "Georeference an image";
-    
+
     private DownloadWMSPlanImage downloadWMSPlanImage;
     private WMSLayer wmsLayer;
     private int countMouseClicked = 0;
@@ -52,12 +52,12 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         mode = 0;
         mouseClickedTime = System.currentTimeMillis();
     }
-    
+
     public void actionInterrupted() {
         actionCompleted();
         wmsLayer = null;
     }
-    
+
     @Override
     protected void updateEnabledState() {
         if (wmsLayer == null || Main.map == null || Main.map.mapView == null) return;
@@ -68,7 +68,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         JOptionPane.showMessageDialog(Main.parent, tr("Georeferencing interrupted"));
         actionInterrupted();
     }
-    
+
     public void actionPerformed(ActionEvent ae) {
         if (Main.map != null) {
             if (CadastrePlugin.isCadastreProjection()) {
@@ -129,7 +129,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
             }
         } else if (mode == cGetLambertCrosspieces) {
             if (countMouseClicked == 1) {
-                ea1 = ea; 
+                ea1 = ea;
                 if (inputLambertPosition())
                     continueGeoreferencing();
             }
@@ -144,16 +144,16 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
             }
         }
     }
-    
+
     /**
-     * 
+     *
      * @return false if all operations are canceled
      */
     private boolean startCropping() {
 	    mode = cGetCorners;
 	    countMouseClicked = 0;
 		Object[] options = { "OK", "Cancel" };
-		int ret = JOptionPane.showOptionDialog( null, 
+		int ret = JOptionPane.showOptionDialog( null,
 				tr("Click first corner for image cropping\n(two points required)"),
 				tr("Image cropping"),
 	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
@@ -165,14 +165,14 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
 	    		return startCropping();
 	    return true;
     }
-    
+
     /**
-     * 
+     *
      * @return false if all operations are canceled
      */
     private boolean continueCropping() {
 		Object[] options = { "OK", "Cancel" };
-		int ret = JOptionPane.showOptionDialog( null, 
+		int ret = JOptionPane.showOptionDialog( null,
 				tr("Click second corner for image cropping"),
 				tr("Image cropping"),
 	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
@@ -183,16 +183,16 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
 	    }
 	    return true;
     }
-    
+
     /**
-     * 
+     *
      * @return false if all operations are canceled
      */
     private boolean startGeoreferencing() {
 	    countMouseClicked = 0;
 	    mode = cGetLambertCrosspieces;
 		Object[] options = { "OK", "Cancel" };
-		int ret = JOptionPane.showOptionDialog( null, 
+		int ret = JOptionPane.showOptionDialog( null,
 				tr("Click first Lambert crosspiece for georeferencing\n(two points required)"),
 				tr("Image georeferencing"),
 	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
@@ -206,12 +206,12 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
     }
 
     /**
-     * 
+     *
      * @return false if all operations are canceled
      */
     private boolean continueGeoreferencing() {
 		Object[] options = { "OK", "Cancel" };
-		int ret = JOptionPane.showOptionDialog( null, 
+		int ret = JOptionPane.showOptionDialog( null,
 				tr("Click second Lambert crosspiece for georeferencing"),
 				tr("Image georeferencing"),
 	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
@@ -222,14 +222,14 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
 	    }
 	    return true;
     }
-    
+
     /**
-     * 
+     *
      * @return false if all operations are canceled
      */
     private boolean canceledOrRestartCurrAction(String action) {
     	Object[] options = { "Cancel", "Retry" };
-    	int selectedValue = JOptionPane.showOptionDialog( null, 
+    	int selectedValue = JOptionPane.showOptionDialog( null,
         		tr("Do you want to cancel completely\n"+
         				"or just retry "+action+" ?"), "",
         		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
@@ -244,7 +244,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
             countMouseClicked = 0;
         return true;
     }
-    
+
     private boolean inputLambertPosition() {
         JLabel labelEnterPosition = new JLabel(tr("Enter cadastre east,north position"));
         JLabel labelWarning = new JLabel(tr("(Warning: verify north with arrow !!)"));
@@ -263,7 +263,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         String number;
         if (countMouseClicked == 1) number = "first";
         else number = "second";
-        pane.createDialog(Main.parent, tr("Set "+number+" Lambert coordinates")).setVisible(true);
+        pane.createDialog(Main.parent, tr("Set {0} Lambert coordinates",number)).setVisible(true);
         if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue())) {
             if (canceledOrRestartCurrAction("georeferencing"))
                 startGeoreferencing();
@@ -284,13 +284,13 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         }
         return false;
     }
-    
+
     /**
-     * Use point org1 as anchor for scale, then move org1 to dst1, then rotate org2 on dst2 
-     * around org1/dst1 anchor 
+     * Use point org1 as anchor for scale, then move org1 to dst1, then rotate org2 on dst2
+     * around org1/dst1 anchor
      * @param org1 first point at original coordinate system (the grabbed image)
      * @param org2 second point "
-     * @param dst1 first point at final destination coordinate system (the real east/north coordinate system) 
+     * @param dst1 first point at final destination coordinate system (the real east/north coordinate system)
      * @param dst2 second point "
      */
     private void affineTransform(EastNorth org1, EastNorth org2, EastNorth dst1, EastNorth dst2) {
@@ -308,7 +308,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         // scale image from anchor org1(=dst1 now)
         wmsLayer.images.get(0).scale(dst1, proportion);
     }
-    
+
     public void mouseEntered(MouseEvent arg0) {
     }
 
@@ -320,5 +320,5 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
 
     public void mouseReleased(MouseEvent arg0) {
     }
-        
+
 }

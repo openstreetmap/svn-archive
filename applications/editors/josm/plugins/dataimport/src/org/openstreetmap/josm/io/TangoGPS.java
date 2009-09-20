@@ -111,7 +111,7 @@ public class TangoGPS extends FileImporter {
         if (success > 0) {
             JOptionPane.showMessageDialog(Main.parent, msg, tr("TangoGPS import success"), JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(Main.parent, msg, tr("TangoGPS import faliure!"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, msg, tr("TangoGPS import failure!"), JOptionPane.ERROR_MESSAGE);
         }
     }
 

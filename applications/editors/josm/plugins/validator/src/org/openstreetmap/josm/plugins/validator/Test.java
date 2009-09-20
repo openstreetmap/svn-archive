@@ -13,7 +13,10 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.AbstractVisitor;
+import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.tools.GBC;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Parent class for all validation tests.
@@ -52,6 +55,9 @@ public class Test extends AbstractVisitor
 
     /** Whether the test is run on a partial selection data */
     protected boolean partialSelection;
+    
+    /** the progress monitor to use */
+    protected ProgressMonitor progressMonitor;
 
     /**
      * Constructor
@@ -81,12 +87,18 @@ public class Test extends AbstractVisitor
     public static void initialize(OSMValidatorPlugin plugin) throws Exception {}
 
     /**
-     * Notification of the start of the test. The tester can initialize the
-     * structures it may need for this test
+     * Start the test using a given progress monitor 
+     * 
+     * @param progressMonitor  the progress monitor 
      */
-    public void startTest()
-    {
-        errors = new ArrayList<TestError>(30);
+    public void startTest(ProgressMonitor progressMonitor) {
+    	if (progressMonitor == null) {
+    		this.progressMonitor = NullProgressMonitor.INSTANCE;
+    	} else {
+    		this.progressMonitor = progressMonitor;
+    	}
+    	this.progressMonitor.beginTask(tr("Running test {0}", name));
+    	errors = new ArrayList<TestError>(30);
     }
 
     /**
@@ -111,7 +123,10 @@ public class Test extends AbstractVisitor
      * Notification of the end of the test. The tester may perform additional
      * actions and destroy the used structures
      */
-    public void endTest() {}
+    public void endTest() {
+    	progressMonitor.finishTask();
+    	progressMonitor = null;
+    }
 
     /**
      * Visits all primitives to be tested. These primitives are always visited
@@ -121,10 +136,11 @@ public class Test extends AbstractVisitor
      */
     public void visit(Collection<OsmPrimitive> selection)
     {
-        for (OsmPrimitive p : selection)
-        {
+    	progressMonitor.setTicksCount(selection.size());
+        for (OsmPrimitive p : selection) {
             if( p.isUsable() )
                 p.visit(this);
+            progressMonitor.worked(1);
         }
     }
 

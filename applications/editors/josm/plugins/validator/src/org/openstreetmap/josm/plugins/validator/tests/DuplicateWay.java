@@ -16,6 +16,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -61,14 +62,16 @@ public class DuplicateWay extends Test
 
 
     @Override
-    public void startTest()
+    public void startTest(ProgressMonitor monitor)
     {
+    	super.startTest(monitor);
         ways = new Bag<WayPair, OsmPrimitive>(1000);
     }
 
     @Override
     public void endTest()
     {
+    	super.endTest();
         for(List<OsmPrimitive> duplicated : ways.values() )
         {
             if( duplicated.size() > 1)

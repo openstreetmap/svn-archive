@@ -44,6 +44,7 @@ import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.preferences.TaggingPresetPreference;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin;
@@ -552,8 +553,9 @@ public class TagChecker extends Test
     }
 
     @Override
-    public void startTest()
+    public void startTest(ProgressMonitor monitor)
     {
+    	super.startTest(monitor);
         checkKeys = Main.pref.getBoolean(PREF_CHECK_KEYS, true);
         if( isBeforeUpload )
             checkKeys = checkKeys && Main.pref.getBoolean(PREF_CHECK_KEYS_BEFORE_UPLOAD, true);

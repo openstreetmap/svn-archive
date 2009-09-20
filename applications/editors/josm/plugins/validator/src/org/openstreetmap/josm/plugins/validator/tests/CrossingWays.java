@@ -14,6 +14,7 @@ import java.util.Map;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -48,8 +49,9 @@ public class CrossingWays extends Test
 
 
     @Override
-    public void startTest()
+    public void startTest(ProgressMonitor monitor)
     {
+    	super.startTest(monitor);
         cellSegments = new HashMap<Point2D,List<ExtendedSegment>>(1000);
         errorSegments = new HashSet<WaySegment>();
         ways_seen = new HashMap<List<Way>, List<WaySegment>>(50);
@@ -58,6 +60,7 @@ public class CrossingWays extends Test
     @Override
     public void endTest()
     {
+    	super.endTest();
         cellSegments = null;
         errorSegments = null;
         ways_seen = null;

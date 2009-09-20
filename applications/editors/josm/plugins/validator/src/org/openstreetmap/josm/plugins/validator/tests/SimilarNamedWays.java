@@ -5,8 +5,10 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.geom.Point2D;
 import java.util.*;
 
+
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -38,8 +40,9 @@ public class SimilarNamedWays extends Test
     }
 
     @Override
-    public void startTest()
+    public void startTest(ProgressMonitor monitor)
     {
+    	super.startTest(monitor);
         cellWays = new HashMap<Point2D,List<Way>>(1000);
         errorWays = new Bag<Way, Way>();
     }
@@ -49,6 +52,7 @@ public class SimilarNamedWays extends Test
     {
         cellWays = null;
         errorWays = null;
+        super.endTest();
     }
 
     @Override

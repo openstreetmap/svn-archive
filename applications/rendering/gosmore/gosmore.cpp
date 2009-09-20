@@ -658,9 +658,14 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
 
 gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
 {
+  int w = draw->allocation.width, h = draw->allocation.height;
+  int perpixel = zoom / w;
   if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
   if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
-  SetLocation (clon, clat);
+  SetLocation (clon + lrint ((perpixel - zoom / w) *
+    (cosAzimuth * (event->x - w / 2) - sinAzimuth * (h / 2 - event->y))),
+    clat + lrint ((perpixel - zoom / w) *
+    (cosAzimuth * (h / 2 - event->y) + sinAzimuth * (event->x - w / 2))));
   gtk_widget_queue_clear (draw);
   return FALSE;
 }
@@ -865,9 +870,11 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     else objectAddRow = int (event->y) * (restriction_no_right_turn / perRow
                                   + 2) / draw->allocation.height * perRow;
   }
+  #ifdef _WIN32_WCE
   else if (event->x > w - ButtonSize * 20 && b <
       (!HideZoomButtons || option != numberOfOptions ? 3 : 
       MenuKey != 0 ? 0 : 1)) HitButton (b);
+  #endif
   else if (option == searchMode) {
     int row = event->y / SearchSpacing;
     if (row < searchCnt && gosmSstr[row]) {
@@ -1578,6 +1585,7 @@ gint Expose (void)
     DrawString (50, draw->allocation.height / 2, optStr);
   }
   #ifndef _WIN32_WCE
+  /* Buttons now on the top row 
   gdk_draw_rectangle (draw->window, draw->style->bg_gc[0], TRUE,
     clip.width - ButtonSize * 20, clip.height - ButtonSize * 60,
     clip.width, clip.height);
@@ -1586,6 +1594,7 @@ gint Expose (void)
       clip.width - ButtonSize * 10 - 5, clip.height + (f->ascent - f->descent)
       / 2 - ButtonSize * (20 * i + 10), i == 0 ? "O" : i == 1 ? "-" : "+");
   }
+  */
   #else
   int i = !HideZoomButtons || option != numberOfOptions ? 3 :
                                                 MenuKey != 0 ? 0 : 1;
@@ -1643,8 +1652,13 @@ int IncrementalSearch (void)
 {
   option = searchMode;
   GosmSearch (clon, clat, (char *) gtk_entry_get_text (GTK_ENTRY (searchW)));
-  gtk_widget_queue_clear (draw);
   return FALSE;
+}
+
+void HitGtkButton (GtkWidget * /*w*/, void *data)
+{
+  HitButton ((int)data);
+  gtk_widget_queue_clear (draw);
 }
 #endif
 
@@ -1754,9 +1768,19 @@ int UserInterface (int argc, char *argv[],
   moving less used options to the menu and only displaying search results
   when they are required. It will also be more familiar to casual users
   because it will resemble a webbrowser */
-  GtkWidget *hbox = gtk_hbox_new (FALSE, 5), *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *hbox = gtk_hbox_new (FALSE, 3), *vbox = gtk_vbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (window), vbox);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+  GtkWidget *btn[3];
+  for (int i = 0; i < 3; i++) {
+    btn[i] = gtk_button_new_with_label (i == 0 ? "O" : i == 1 ? "-" : "+");
+    gtk_widget_set_size_request (btn[i], 27, 20);
+    gtk_box_pack_start (GTK_BOX (hbox), btn[i], FALSE, FALSE, 5);
+    gtk_widget_show (btn[i]);
+    gtk_signal_connect (GTK_OBJECT (btn[i]), "clicked",
+      GTK_SIGNAL_FUNC (HitGtkButton), (char*)i);
+  }  
 
   searchW = gtk_entry_new ();
   gtk_box_pack_start (GTK_BOX (hbox), searchW, FALSE, FALSE, 5);
@@ -1830,21 +1854,21 @@ int UserInterface (int argc, char *argv[],
     GTK_SIGNAL_FUNC (ChangeOption), NULL);
   gtk_widget_show (validateMode);
 
-  followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
+  followGPSr = gtk_toggle_button_new_with_label ("Lock");
   
   #if !defined (_WIN32) && !defined (ROUTE_TEST)
   struct sockaddr_in sa;
   int gpsSock = socket (PF_INET, SOCK_STREAM, 0);
   sa.sin_family = AF_INET;
   sa.sin_port = htons (2947);
-  sa.sin_addr.s_addr = htonl (0x7f000001); // (204<<24)|(17<<16)|(205<<8)|18);
+  sa.sin_addr.s_addr = htonl (0x7f000001); // (204<<24)|(17<<16)|(205<<8)|18;
   if (gpsSock != -1 &&
       connect (gpsSock, (struct sockaddr *)&sa, sizeof (sa)) == 0) {
     send (gpsSock, "R\n", 2, 0);
     gpsSockTag = gdk_input_add (/*gpsData->gps_fd*/ gpsSock, GDK_INPUT_READ,
       (GdkInputFunction) ReceiveNmea /*gps_poll*/, NULL);
 
-    gtk_box_pack_start (GTK_BOX (vbox), followGPSr, FALSE, FALSE, 5);
+    gtk_box_pack_start (GTK_BOX (hbox), followGPSr, FALSE, FALSE, 5);
     gtk_signal_connect (GTK_OBJECT (followGPSr), "clicked",
       GTK_SIGNAL_FUNC (ChangeOption), NULL);
     gtk_widget_show (followGPSr);
@@ -1854,7 +1878,7 @@ int UserInterface (int argc, char *argv[],
   gtk_signal_connect (GTK_OBJECT (window), "delete_event",
     GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
   
-  gtk_widget_set_usize (window, 550, 750);
+  gtk_window_set_default_size (GTK_WINDOW (window), 550, 750);
   gtk_widget_show (searchW);
   gtk_widget_show (location);
   gtk_widget_show (draw);

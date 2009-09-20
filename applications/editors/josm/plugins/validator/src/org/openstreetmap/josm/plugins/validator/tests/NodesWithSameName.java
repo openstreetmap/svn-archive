@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -22,7 +24,8 @@ public class NodesWithSameName extends Test {
             tr("This test finds nodes that have the same name (might be duplicates)."));
     }
 
-    @Override public void startTest() {
+    @Override public void startTest(ProgressMonitor monitor) {
+    	super.startTest(monitor);
         namesToNodes = new HashMap<String, List<Node>>();
     }
 
@@ -47,7 +50,7 @@ public class NodesWithSameName extends Test {
                     tr("Nodes with same name"), SAME_NAME, nodes));
             }
         }
-
+        super.endTest();
         namesToNodes = null;
     }
 }

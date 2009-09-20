@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -35,8 +36,9 @@ public class WronglyOrderedWays extends Test  {
     }
 
     @Override
-    public void startTest()
+    public void startTest(ProgressMonitor monitor)
     {
+    	super.startTest(monitor);
         _errorWays = new Bag<Way, Way>();
     }
 
@@ -44,6 +46,7 @@ public class WronglyOrderedWays extends Test  {
     public void endTest()
     {
         _errorWays = null;
+        super.endTest();
     }
 
     @Override

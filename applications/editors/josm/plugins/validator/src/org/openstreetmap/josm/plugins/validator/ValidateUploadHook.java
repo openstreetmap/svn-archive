@@ -57,7 +57,7 @@ public class ValidateUploadHook implements UploadHook
         {
             test.setBeforeUpload(true);
             test.setPartialSelection(true);
-            test.startTest();
+            test.startTest(null);
             test.visit(selection);
             test.endTest();
             if(Main.pref.getBoolean(PreferenceEditor.PREF_OTHER_UPLOAD, false))

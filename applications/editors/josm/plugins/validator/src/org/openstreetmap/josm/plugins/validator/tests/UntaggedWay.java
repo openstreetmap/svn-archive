@@ -13,6 +13,7 @@ import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -111,8 +112,9 @@ public class UntaggedWay extends Test
     }
 
     @Override
-    public void startTest()
+    public void startTest(ProgressMonitor monitor)
     {
+    	super.startTest(monitor);
         multipolygonways = new LinkedList<Way>();
         for (final Relation r : Main.main.getCurrentDataSet().relations)
         {
@@ -132,6 +134,7 @@ public class UntaggedWay extends Test
     public void endTest()
     {
         multipolygonways = null;
+        super.endTest();
     }
 
     @Override

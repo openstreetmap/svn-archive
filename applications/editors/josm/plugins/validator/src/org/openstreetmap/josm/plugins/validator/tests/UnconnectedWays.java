@@ -14,6 +14,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -47,8 +48,9 @@ public class UnconnectedWays extends Test
     }
 
     @Override
-    public void startTest()
+    public void startTest(ProgressMonitor monitor)
     {
+    	super.startTest(monitor);
         ways = new HashSet<MyWaySegment>();
         endnodes = new HashSet<Node>();
         endnodes_highway = new HashSet<Node>();
@@ -152,6 +154,7 @@ public class UnconnectedWays extends Test
         }
         ways = null;
         endnodes = null;
+        super.endTest();
     }
 
     private class MyWaySegment

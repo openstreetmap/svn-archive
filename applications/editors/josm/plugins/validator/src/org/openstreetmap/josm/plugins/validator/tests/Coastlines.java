@@ -7,6 +7,7 @@ import java.util.*;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -37,8 +38,9 @@ public class Coastlines extends Test
     }
 
     @Override
-    public void startTest()
+    public void startTest(ProgressMonitor monitor)
     {
+    	super.startTest(monitor);
         _cellWays = new HashMap<Point2D,List<Way>>(1000);
         _errorWays = new Bag<Way, Way>();
     }
@@ -46,6 +48,7 @@ public class Coastlines extends Test
     @Override
     public void endTest()
     {
+    	super.endTest();
         _cellWays = null;
         _errorWays = null;
     }

@@ -19,6 +19,7 @@ import org.openstreetmap.josm.data.osm.BackreferencedDataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -58,39 +59,40 @@ public class DuplicateNode extends Test{
               tr("This test checks that there are no nodes at the very same location."));
     }
 
-
     @Override
-    public void startTest()
-    {
+    public void startTest(ProgressMonitor monitor) {
+    	super.startTest(monitor);
         nodes = new Bag<LatLon, OsmPrimitive>(1000);
     }
 
-    @Override
-    public void endTest()
-    {
-        for(List<OsmPrimitive> duplicated : nodes.values() )
-        {
-            if( duplicated.size() > 1)
-            {
-		boolean sameTags=true;
-		Map<String, String> keys0=duplicated.get(0).getKeys();
-		keys0.remove("created_by");
-		for(int i=0;i<duplicated.size();i++) {
-		    Map<String, String> keysI=duplicated.get(i).getKeys();
-		    keysI.remove("created_by");
-		    if (!keys0.equals(keysI)) sameTags=false;
+	@Override
+	public void endTest() {
+		for (List<OsmPrimitive> duplicated : nodes.values()) {
+			if (duplicated.size() > 1) {
+				boolean sameTags = true;
+				Map<String, String> keys0 = duplicated.get(0).getKeys();
+				keys0.remove("created_by");
+				for (int i = 0; i < duplicated.size(); i++) {
+					Map<String, String> keysI = duplicated.get(i).getKeys();
+					keysI.remove("created_by");
+					if (!keys0.equals(keysI))
+						sameTags = false;
+				}
+				if (!sameTags) {
+					TestError testError = new TestError(this, Severity.WARNING,
+							tr("Nodes at same position"), DUPLICATE_NODE,
+							duplicated);
+					errors.add(testError);
+				} else {
+					TestError testError = new TestError(this, Severity.ERROR,
+							tr("Duplicated nodes"), DUPLICATE_NODE, duplicated);
+					errors.add(testError);
+				}
+			}
 		}
-		if (!sameTags) {
-	            TestError testError = new TestError(this, Severity.WARNING, tr("Nodes at same position"), DUPLICATE_NODE, duplicated);
-        	    errors.add( testError );		    
-		} else {
-	            TestError testError = new TestError(this, Severity.ERROR, tr("Duplicated nodes"), DUPLICATE_NODE, duplicated);
-        	    errors.add( testError );
-		}
-            }
-        }
-        nodes = null;
-    }
+		super.endTest();
+		nodes = null;
+	}
 
     @Override
     public void visit(Node n)

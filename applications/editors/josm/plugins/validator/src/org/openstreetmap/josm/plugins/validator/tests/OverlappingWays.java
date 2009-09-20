@@ -12,6 +12,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WaySegment;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -47,8 +48,9 @@ public class OverlappingWays extends Test
 
 
     @Override
-    public void startTest()
+    public void startTest(ProgressMonitor monitor)
     {
+    	super.startTest(monitor);
         nodePairs = new Bag<Pair<Node,Node>, WaySegment>(1000);
     }
 
@@ -148,6 +150,7 @@ public class OverlappingWays extends Test
                 }
             }
         }
+        super.endTest();
         nodePairs = null;
     }
 

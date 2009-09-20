@@ -4,16 +4,22 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.validator.util.AgregatePrimitivesVisitor;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.xml.sax.SAXException;
 
 /**
  * The action that does the validate thing.
@@ -83,36 +89,99 @@ public class ValidateAction extends JosmAction {
                 selection = lastSelection;
         }
 
-        List<TestError> errors = new ArrayList<TestError>(200);
-        for (Test test : tests) {
-            test.setPartialSelection(lastSelection != null);
-            test.startTest();
-            test.visit(selection);
-            test.endTest();
-            errors.addAll(test.getErrors());
-        }
-        tests = null;
-        if (Main.pref.getBoolean(PreferenceEditor.PREF_USE_IGNORE, true)) {
-            for (TestError error : errors) {
-                List<String> s = new ArrayList<String>();
-                s.add(error.getIgnoreState());
-                s.add(error.getIgnoreGroup());
-                s.add(error.getIgnoreSubGroup());
-                for (String state : s) {
-                    if (state != null && plugin.ignoredErrors.contains(state)) {
-                        error.setIgnored(true);
-                    }
-                }
-            }
-        }
-
-        plugin.validationDialog.tree.setErrors(errors);
-        plugin.validationDialog.setVisible(true);
-        DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
+        ValidationTask task = new ValidationTask(tests, selection, lastSelection);
+        Main.worker.submit(task);        
     }
 
     @Override
     public void updateEnabledState() {
         setEnabled(getEditLayer() != null);
+    }
+    
+    /**
+     * Asynchronous task for running a collection of tests against a collection
+     * of primitives 
+     *
+     */
+    
+    class ValidationTask extends PleaseWaitRunnable {
+    	private Collection<Test> tests;
+    	private Collection<OsmPrimitive> validatedPrimitmives;
+    	private Collection<OsmPrimitive> formerValidatedPrimitives;
+    	private boolean canceled;
+        private List<TestError> errors;
+        
+        /**
+         * 
+         * @param tests  the tests to run 
+         * @param validatedPrimitives the collection of primitives to validate. 
+         * @param formerValidatedPrimitives the last collection of primitives being validates. May be null.
+         */
+    	public ValidationTask(Collection<Test> tests, Collection<OsmPrimitive> validatedPrimitives, Collection<OsmPrimitive> formerValidatedPrimitives) {
+    		super(tr("Validating"), false /*don't ignore exceptions */);
+    		this.validatedPrimitmives  = validatedPrimitives;
+    		this.formerValidatedPrimitives = formerValidatedPrimitives;
+    		this.tests = tests;
+    	}
+    	
+		@Override
+		protected void cancel() {
+			this.canceled = true; 			
+		}
+
+		@Override
+		protected void finish() {
+			if (canceled) return;
+			
+			// update GUI on Swing EDT
+			//
+			Runnable r = new Runnable()  {
+				public void run() {
+			        plugin.validationDialog.tree.setErrors(errors);
+			        plugin.validationDialog.setVisible(true);
+			        DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
+				}				
+			};
+			if (SwingUtilities.isEventDispatchThread()) {
+				r.run();				
+			} else {
+				SwingUtilities.invokeLater(r);
+			}
+		}
+
+		@Override
+		protected void realRun() throws SAXException, IOException,
+				OsmTransferException {
+			if (tests == null || tests.isEmpty()) return;		
+	        errors = new ArrayList<TestError>(200);
+	        getProgressMonitor().setTicksCount(tests.size() * validatedPrimitmives.size());
+	        int testCounter = 0;
+			for (Test test : tests) {				
+				if (canceled) return;
+				testCounter++;
+				getProgressMonitor().setCustomText(tr("Test {0}/{1}: Starting {2}", testCounter, tests.size(),test.name));
+	            test.setPartialSelection(formerValidatedPrimitives != null);
+	            test.startTest(getProgressMonitor().createSubTaskMonitor(validatedPrimitmives.size(), false));
+	            test.visit(validatedPrimitmives);
+	            test.endTest();
+	            errors.addAll(test.getErrors());
+	        }
+			tests = null;
+	        if (Main.pref.getBoolean(PreferenceEditor.PREF_USE_IGNORE, true)) {
+				getProgressMonitor().subTask(tr("Updating ignored errors ..."));
+	            for (TestError error : errors) {
+	            	if (canceled) return;
+	                List<String> s = new ArrayList<String>();
+	                s.add(error.getIgnoreState());
+	                s.add(error.getIgnoreGroup());
+	                s.add(error.getIgnoreSubGroup());
+	                for (String state : s) {
+	                    if (state != null && plugin.ignoredErrors.contains(state)) {
+	                        error.setIgnored(true);
+	                    }
+	                }
+	            }
+	        }
+		}
     }
 }

@@ -12,6 +12,7 @@ import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -38,8 +39,9 @@ public class UntaggedNode extends Test
     }
 
     @Override
-    public void startTest()
+    public void startTest(ProgressMonitor monitor)
     {
+    	super.startTest(monitor);
         emptyNodes = new HashSet<Node>(100);
     }
 
@@ -90,6 +92,7 @@ public class UntaggedNode extends Test
             errors.add( new TestError(this, Severity.OTHER, tr("Untagged and unconnected nodes"), UNTAGGED_NODE, node) );
         }
         emptyNodes = null;
+        super.endTest();
     }
 
     @Override

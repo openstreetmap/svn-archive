@@ -25,7 +25,6 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction;
-import org.openstreetmap.josm.actions.UploadAction.UploadHook;
 import org.openstreetmap.josm.data.projection.Epsg4326;
 import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.projection.Mercator;

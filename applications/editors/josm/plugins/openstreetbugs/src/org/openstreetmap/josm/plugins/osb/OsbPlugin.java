@@ -1,18 +1,18 @@
 /* Copyright (c) 2008, Henrik Niehaus
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- *    this list of conditions and the following disclaimer in the documentation 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 3. Neither the name of the project nor the names of its 
- *    contributors may be used to endorse or promote products derived from this 
+ * 3. Neither the name of the project nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -50,24 +50,24 @@ import org.openstreetmap.josm.plugins.osb.api.DownloadAction;
 import org.openstreetmap.josm.plugins.osb.gui.OsbDialog;
 
 /**
- * Shows issues from OpenStreetBugs 
+ * Shows issues from OpenStreetBugs
  *
  * @author Henrik Niehaus (henrik dot niehaus at gmx dot de)
  */
 public class OsbPlugin extends Plugin implements LayerChangeListener {
 
     private DataSet dataSet;
-    
+
     private UploadHook uploadHook;
-    
+
     private OsbDialog dialog;
-    
+
     private OsbLayer layer;
-    
+
     public static boolean active = false;
-    
+
     private DownloadAction download = new DownloadAction();
-    
+
     public OsbPlugin() {
         super();
         initConfig();
@@ -77,58 +77,58 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
         OsbLayer.listeners.add(dialog);
         OsbLayer.listeners.add(this);
     }
-    
+
     private void initConfig() {
         String debug = Main.pref.get(ConfigKeys.OSB_API_DISABLED);
         if(debug == null || debug.length() == 0) {
             debug = "false";
             Main.pref.put(ConfigKeys.OSB_API_DISABLED, debug);
         }
-        
+
         // check, which api is used
         String uriNew = Main.pref.get(ConfigKeys.OSB_API_URI_NEW);
         boolean oldApi = uriNew != null && uriNew.contains("appspot");
         boolean switchApi = true;
         if(oldApi) {
-            int choice = JOptionPane.showConfirmDialog(Main.parent, 
-                    tr("<html>The openstreetbus plugin is using the old server at appspot.com.<br>" +
-                    		"A new server is available at schokokeks.org.<br>" +
-                    		"Do you want to switch to the new server? (Strongly recommended)</html>"), 
+            int choice = JOptionPane.showConfirmDialog(Main.parent,
+                    tr("<html>The openstreetbugs plugin is using the old server at appspot.com.<br>" +
+                            "A new server is available at schokokeks.org.<br>" +
+                            "Do you want to switch to the new server? (Strongly recommended)</html>"),
                     tr("Switch to new openstreetbugs server?"),
                     JOptionPane.YES_NO_OPTION);
             switchApi = choice == JOptionPane.YES_OPTION;
         }
-                
+
         String uri = Main.pref.get(ConfigKeys.OSB_API_URI_EDIT);
         if(uri == null || uri.length() == 0 || switchApi) {
             uri = "http://openstreetbugs.schokokeks.org/api/0.1/editPOIexec";
             Main.pref.put(ConfigKeys.OSB_API_URI_EDIT, uri);
         }
-        
+
         uri = Main.pref.get(ConfigKeys.OSB_API_URI_CLOSE);
         if(uri == null || uri.length() == 0 || switchApi) {
             uri = "http://openstreetbugs.schokokeks.org/api/0.1/closePOIexec";
             Main.pref.put(ConfigKeys.OSB_API_URI_CLOSE, uri);
         }
-        
+
         uri = Main.pref.get(ConfigKeys.OSB_API_URI_DOWNLOAD);
         if(uri == null || uri.length() == 0 || switchApi) {
             uri = "http://openstreetbugs.schokokeks.org/api/0.1/getBugs";
             Main.pref.put(ConfigKeys.OSB_API_URI_DOWNLOAD, uri);
         }
-        
+
         uri = Main.pref.get(ConfigKeys.OSB_API_URI_NEW);
         if(uri == null || uri.length() == 0 || switchApi) {
             uri = "http://openstreetbugs.schokokeks.org/api/0.1/addPOIexec";
             Main.pref.put(ConfigKeys.OSB_API_URI_NEW, uri);
         }
-        
+
         String auto_download = Main.pref.get(ConfigKeys.OSB_AUTO_DOWNLOAD);
         if(auto_download == null || auto_download.length() == 0) {
             auto_download = "true";
             Main.pref.put(ConfigKeys.OSB_AUTO_DOWNLOAD, auto_download);
         }
-        
+
         String include_date = Main.pref.get(ConfigKeys.OSB_INCLUDE_DATE);
         if(include_date == null || include_date.length() == 0) {
             include_date = "true";
@@ -146,7 +146,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             mv.getLatLon(0, mv.getHeight()),
             mv.getLatLon(mv.getWidth(), 0));
     }
-    
+
     public void updateData() {
         // determine the bounds of the currently visible area
         Bounds bounds = null;
@@ -157,7 +157,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             System.err.println("OpenStreetBugs: Couldn't determine bounds of currently visible rect. Cancel auto update");
             return;
         }
-        
+
         try {
             // download the data
             download.execute(dataSet, bounds);
@@ -176,18 +176,18 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             e.printStackTrace();
         }
     }
-    
+
     public void updateGui() {
         // update dialog
         dialog.update(dataSet);
-        
+
         // create a new layer if necessary
         updateLayer(dataSet);
-        
+
         // repaint view, so that changes get visible
         Main.map.mapView.repaint();
     }
-    
+
     private void updateLayer(DataSet osbData) {
         if(layer == null) {
             layer = new OsbLayer(osbData, "OpenStreetBugs");
@@ -200,14 +200,14 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
         if (oldFrame==null && newFrame!=null) { // map frame added
             // add the dialog
             newFrame.addToggleDialog(dialog);
-            
+
             // add the upload hook
-            UploadAction.registerUploadHook(uploadHook);            
+            UploadAction.registerUploadHook(uploadHook);
         } else if (oldFrame!=null && newFrame==null ) { // map frame removed
-            
+
         }
     }
-    
+
     public static ImageIcon loadIcon(String name) {
         URL url = OsbPlugin.class.getResource("/images/".concat(name));
         return new ImageIcon(url);
@@ -218,7 +218,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
     public void layerAdded(Layer newLayer) {
         if(newLayer instanceof OsmDataLayer) {
             active = dialog.isDialogShowing();
-            
+
             // start the auto download loop
             OsbDownloadLoop.getInstance().setPlugin(this);
         }

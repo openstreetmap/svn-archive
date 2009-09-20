@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY svgmap "http://www.openstreetmap.org/osmarender/ontology/svgmap/01/svgmap#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="http://www.openstreetmap.org/osmarender/ontology/svgmap/01/svgmap"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;"
+         xmlns:svgmap="&svgmap;">
+
+<!-- Ontology Information -->
+  <owl:Ontology rdf:about=""/>
+
+<!-- Classes -->
+  <owl:Class rdf:about="#AreaFeature">
+    <rdfs:subClassOf rdf:resource="#Feature"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#AreaFeatureLabel">
+    <rdfs:subClassOf rdf:resource="#Label"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Feature"/>
+  <owl:Class rdf:about="#Label"/>
+  <owl:Class rdf:about="#LineFeature">
+    <rdfs:subClassOf rdf:resource="#Feature"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#LineFeatureLabel">
+    <rdfs:subClassOf rdf:resource="#Label"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#OSMArea">
+    <rdfs:subClassOf rdf:resource="#OSMData"/>
+    <owl:equivalentClass rdf:resource="http://linkedgeodata.org/vocabulary#way"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#OSMData"/>
+  <owl:Class rdf:about="#OSMNode">
+    <rdfs:subClassOf rdf:resource="#OSMData"/>
+    <owl:equivalentClass rdf:resource="http://linkedgeodata.org/vocabulary#node"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#OSMWay">
+    <rdfs:subClassOf rdf:resource="#OSMData"/>
+    <owl:equivalentClass rdf:resource="http://linkedgeodata.org/vocabulary#way"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#PointFeature">
+    <rdfs:subClassOf rdf:resource="#Feature"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#PointFeatureLabel">
+    <rdfs:subClassOf rdf:resource="#Label"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#SVGCircleElement">
+    <rdfs:subClassOf rdf:resource="#SVGElement"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#SVGElement"/>
+  <owl:Class rdf:about="#SVGGElement">
+    <rdfs:subClassOf rdf:resource="#SVGElement"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#SVGMap"/>
+  <owl:Class rdf:about="#SVGPathElement">
+    <rdfs:subClassOf rdf:resource="#SVGElement"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#SVGSVGElement">
+    <rdfs:subClassOf rdf:resource="#SVGElement"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#SVGTextElement">
+    <rdfs:subClassOf rdf:resource="#SVGElement"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#SVGTextPathElement">
+    <rdfs:subClassOf rdf:resource="#SVGElement"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#SVGUseElement">
+    <rdfs:subClassOf rdf:resource="#SVGElement"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="http://linkedgeodata.org/vocabulary#node"/>
+  <owl:Class rdf:about="http://linkedgeodata.org/vocabulary#way"/>
+  <owl:Class rdf:nodeID="b12">
+    <owl:unionOf rdf:parseType="Collection">
+      <rdf:Description rdf:about="#SVGCircleElement"/>
+      <rdf:Description rdf:about="#SVGPathElement"/>
+    </owl:unionOf>
+  </owl:Class>
+
+  <owl:Class rdf:nodeID="b11">
+    <owl:unionOf rdf:parseType="Collection">
+      <rdf:Description rdf:about="#SVGCircleElement"/>
+      <rdf:Description rdf:about="#SVGGElement"/>
+    </owl:unionOf>
+  </owl:Class>
+
+<!-- Object Properties -->
+  <owl:ObjectProperty rdf:about="#areaFeatureDrawnBy">
+    <rdfs:domain rdf:resource="#AreaFeature"/>
+    <rdfs:range rdf:nodeID="b12"/>
+    <rdfs:subPropertyOf rdf:resource="#drawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#areaFeatureLabelDrawnBy">
+    <rdfs:domain rdf:resource="#AreaFeatureLabel"/>
+    <rdfs:range rdf:resource="#SVGTextElement"/>
+    <rdfs:subPropertyOf rdf:resource="#labelDrawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#areaFeatureShownBy">
+    <rdfs:subPropertyOf rdf:resource="#shownBy"/>
+    <owl:inverseOf rdf:resource="#showsAreaFeature"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#areaFeatureStandsFor">
+    <rdfs:domain rdf:resource="#AreaFeature"/>
+    <rdfs:range rdf:resource="#OSMArea"/>
+    <rdfs:subPropertyOf rdf:resource="#standsFor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#drawnBy">
+    <rdfs:domain rdf:resource="#Feature"/>
+    <rdfs:range rdf:resource="#SVGElement"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasAreaFeatureLabel">
+    <rdfs:domain rdf:resource="#AreaFeature"/>
+    <rdfs:range rdf:resource="#AreaFeatureLabel"/>
+    <rdfs:subPropertyOf rdf:resource="#hasLabel"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasLabel">
+    <rdfs:domain rdf:resource="#Feature"/>
+    <rdfs:range rdf:resource="#Label"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasLineFeatureLabel">
+    <rdfs:domain rdf:resource="#LineFeature"/>
+    <rdfs:range rdf:resource="#LineFeatureLabel"/>
+    <rdfs:subPropertyOf rdf:resource="#hasLabel"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasNode"/>
+  <owl:ObjectProperty rdf:about="#hasPointFeatureLabel">
+    <rdfs:domain rdf:resource="#PointFeature"/>
+    <rdfs:range rdf:resource="#PointFeatureLabel"/>
+    <rdfs:subPropertyOf rdf:resource="#hasLabel"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isAreaFeatureLabel">
+    <rdfs:subPropertyOf rdf:resource="#isLabel"/>
+    <owl:inverseOf rdf:resource="#hasAreaFeatureLabel"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isLabel">
+    <owl:inverseOf rdf:resource="#hasLabel"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isLineFeatureLabel">
+    <rdfs:subPropertyOf rdf:resource="#isLabel"/>
+    <owl:inverseOf rdf:resource="#hasLineFeatureLabel"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isPointFeatureLabel">
+    <rdfs:subPropertyOf rdf:resource="#isLabel"/>
+    <owl:inverseOf rdf:resource="#hasPointFeatureLabel"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#labelDrawnBy">
+    <rdfs:domain rdf:resource="#Label"/>
+    <rdfs:range rdf:resource="#SVGElement"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#lineFeatureDrawnBy">
+    <rdfs:domain rdf:resource="#LineFeature"/>
+    <rdfs:range rdf:resource="#SVGUseElement"/>
+    <rdfs:subPropertyOf rdf:resource="#drawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#lineFeatureLabelDrawnBy">
+    <rdfs:domain rdf:resource="#LineFeatureLabel"/>
+    <rdfs:range rdf:resource="#SVGTextElement"/>
+    <rdfs:subPropertyOf rdf:resource="#labelDrawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#lineFeatureShownBy">
+    <rdfs:subPropertyOf rdf:resource="#shownBy"/>
+    <owl:inverseOf rdf:resource="#showsLineFeature"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#lineFeatureStandsFor">
+    <rdfs:domain rdf:resource="#LineFeature"/>
+    <rdfs:range rdf:resource="#OSMWay"/>
+    <rdfs:subPropertyOf rdf:resource="#standsFor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#pointFeatureDrawnBy">
+    <rdfs:domain rdf:resource="#PointFeature"/>
+    <rdfs:range rdf:nodeID="b11"/>
+    <rdfs:subPropertyOf rdf:resource="#drawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#pointFeatureLabelDrawnBy">
+    <rdfs:domain rdf:resource="#PointFeatureLabel"/>
+    <rdfs:range rdf:resource="#SVGTextElement"/>
+    <rdfs:subPropertyOf rdf:resource="#labelDrawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#pointFeatureShownBy">
+    <rdfs:subPropertyOf rdf:resource="#shownBy"/>
+    <owl:inverseOf rdf:resource="#showsPointFeature"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#pointFeatureStandsFor">
+    <rdfs:domain rdf:resource="#PointFeature"/>
+    <rdfs:range rdf:resource="#OSMNode"/>
+    <rdfs:subPropertyOf rdf:resource="#standsFor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#shownBy">
+    <owl:inverseOf rdf:resource="#shows"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#shows">
+    <rdfs:domain rdf:resource="#SVGMap"/>
+    <rdfs:range rdf:resource="#Feature"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#showsAreaFeature">
+    <rdfs:range rdf:resource="#AreaFeature"/>
+    <rdfs:subPropertyOf rdf:resource="#shows"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#showsLineFeature">
+    <rdfs:range rdf:resource="#LineFeature"/>
+    <rdfs:subPropertyOf rdf:resource="#shows"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#showsPointFeature">
+    <rdfs:range rdf:resource="#PointFeature"/>
+    <rdfs:subPropertyOf rdf:resource="#shows"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#standingFor">
+    <owl:inverseOf rdf:resource="#standsFor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#standingForAreaFeature">
+    <rdfs:subPropertyOf rdf:resource="#standingFor"/>
+    <owl:inverseOf rdf:resource="#areaFeatureStandsFor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#standingForLineFeature">
+    <rdfs:subPropertyOf rdf:resource="#standingFor"/>
+    <owl:inverseOf rdf:resource="#lineFeatureStandsFor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#standingForPointFeature">
+    <rdfs:subPropertyOf rdf:resource="#standingFor"/>
+    <owl:inverseOf rdf:resource="#pointFeatureStandsFor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#standsFor">
+    <rdfs:domain rdf:resource="#Feature"/>
+    <rdfs:range rdf:resource="#OSMData"/>
+  </owl:ObjectProperty>
+</rdf:RDF>

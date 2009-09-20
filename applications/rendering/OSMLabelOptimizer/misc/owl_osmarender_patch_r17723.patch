@@ -1,0 +1,919 @@
+Index: osmarender/xslt/osmarender.xsl
+===================================================================
+--- osmarender/xslt/osmarender.xsl	(Revision 17723)
++++ osmarender/xslt/osmarender.xsl	(Arbeitskopie)
+@@ -42,6 +42,11 @@
+   xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+   xmlns:labels="http://openstreetmap.org/osmarender-labels-rtf"
+   xmlns:z="http://openstreetmap.org/osmarender-z-rtf"
++  xmlns:svgmap="http://www.openstreetmap.org/osmarender/ontology/svgmap/01/svgmap"
++  xmlns:owl="http://www.w3.org/2002/07/owl#"
++  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
++  xmlns:xsd ="http://www.w3.org/2001/XMLSchema#"
++  
+   exclude-result-prefixes="exslt msxsl" 
+   version="1.0">
+ 
+@@ -258,6 +263,8 @@
+     </xsl:choose>
+   </xsl:variable>
+ 
++  <xsl:variable name="svg_map_id">map_showing_<xsl:value-of select="$bottomLeftLatitude"/>_<xsl:value-of select="$bottomLeftLongitude"/>_<xsl:value-of select="$topRightLatitude"/>_<xsl:value-of select="$topRightLongitude"/></xsl:variable>
++
+   <!-- Derive the latitude of the middle of the map -->
+   <xsl:variable name="middleLatitude" select="($topRightLatitude + $bottomLeftLatitude) div 2.0"/>
+   <!--woohoo lets do trigonometry in xslt -->
+@@ -510,9 +517,13 @@
+     <xsl:param name='pathId'/>
+     <xsl:param name='extraClasses'/>
+     <xsl:param name='extraStyles'/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="way"/>
++    <xsl:param name="currentCount"/>
+ 
+     <xsl:variable name="maskId" select="concat('mask_',$pathId)"/>
+ 
++    <xsl:if test="not($onlyCreateSemantics)">
+     <xsl:call-template name='generateMask'>
+       <xsl:with-param name='instruction' select='$instruction'/>
+       <xsl:with-param name='pathId' select='$pathId'/>
+@@ -520,6 +531,9 @@
+     </xsl:call-template>
+ 
+     <use xlink:href="#{$pathId}">
++	    <xsl:attribute name="id">
++		    <xsl:value-of select="concat('way_',$pathId, '_', $currentCount)"/>
++	    </xsl:attribute>
+       <!-- Copy all attributes from instruction -->
+       <xsl:apply-templates select="$instruction/@*" mode="copyAttributes" />
+       <!-- Add in any extra classes -->
+@@ -540,6 +554,16 @@
+         </xsl:attribute> 
+       </xsl:if>
+     </use>
++    </xsl:if>
++    <xsl:if test="$onlyCreateSemantics">
++	    <svgmap:LineFeature rdf:about="#lineFeature_way_{$way/@id}">
++		<svgmap:lineFeatureShownBy rdf:resource="#{$svg_map_id}"/>
++		<svgmap:lineFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$way/@id}"/>
++		<svgmap:lineFeatureDrawnBy>
++			<svgmap:SVGUseElement rdf:about="#way_{$pathId}_{$currentCount}"/>
++		</svgmap:lineFeatureDrawnBy>
++	</svgmap:LineFeature>
++    </xsl:if>
+   </xsl:template>
+ 
+ 
+@@ -565,6 +589,8 @@
+   <xsl:template name="drawWay">
+     <xsl:param name="instruction"/>
+     <xsl:param name="way"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+     <!-- The current way element if applicable -->
+ 
+    	<xsl:variable name="layer">
+@@ -672,6 +698,9 @@
+           <xsl:with-param name='instruction' select='$instruction'/>
+           <xsl:with-param name="extraClasses" select='$extraClasses'/>
+           <xsl:with-param name="extraStyles" select='$extraStyles'/>
++	  <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++	  <xsl:with-param name="way" select="$way"/>
++	  <xsl:with-param name="currentCount" select="$currentCount"/>
+         </xsl:call-template>
+       </xsl:when>
+       <xsl:otherwise>
+@@ -680,6 +709,8 @@
+           <xsl:with-param name="way" select="$way"/>
+           <xsl:with-param name="extraClasses" select='$extraClasses'/>
+           <xsl:with-param name="extraStyles" select='$extraStyles'/>
++	  <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++	  <xsl:with-param name="currentCount" select="$currentCount"/>
+         </xsl:call-template>
+       </xsl:otherwise>
+     </xsl:choose>
+@@ -692,6 +723,8 @@
+     <!-- The current way element if applicable -->
+     <xsl:param name="extraClasses"/>
+     <xsl:param name="extraStyles"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 	
+ 	<xsl:variable name="layer">
+ 		<xsl:choose>
+@@ -715,6 +748,9 @@
+         <xsl:with-param name='instruction' select='$instruction'/>
+         <xsl:with-param name='extraClasses'>osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end</xsl:with-param>
+         <xsl:with-param name='extraStyles' select='$extraStyles'/>
++	<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++	<xsl:with-param name="way" select="$way"/>
++	<xsl:with-param name="currentCount" select="$currentCount"/>
+       </xsl:call-template>
+     </xsl:if>
+ 
+@@ -740,6 +776,9 @@
+           <xsl:with-param name='instruction' select='$instruction'/>
+           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-no-marker-end</xsl:with-param>
+           <xsl:with-param name='extraStyles' select='$extraStyles'/>
++	  <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++	  <xsl:with-param name="way" select="$way"/>
++	  <xsl:with-param name="currentCount" select="$currentCount"/>
+         </xsl:call-template>
+       </xsl:when>
+       <xsl:when test="$firstNodeLowerLayerConnectionCount>0">
+@@ -748,6 +787,9 @@
+           <xsl:with-param name='instruction' select='$instruction'/>
+           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-stroke-linecap-butt osmarender-no-marker-end</xsl:with-param>
+           <xsl:with-param name='extraStyles' select='$extraStyles'/>
++	  <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++	  <xsl:with-param name="way" select="$way"/>
++	  <xsl:with-param name="currentCount" select="$currentCount"/>
+         </xsl:call-template>
+       </xsl:when>
+       <xsl:otherwise>
+@@ -756,6 +798,9 @@
+           <xsl:with-param name='instruction' select='$instruction'/>
+           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/>  osmarender-stroke-linecap-round osmarender-no-marker-end</xsl:with-param>
+           <xsl:with-param name='extraStyles' select='$extraStyles'/>
++	  <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++	  <xsl:with-param name="way" select="$way"/>
++	  <xsl:with-param name="currentCount" select="$currentCount"/>
+         </xsl:call-template>
+       </xsl:otherwise>
+ 
+@@ -783,6 +828,9 @@
+           <xsl:with-param name='instruction' select='$instruction'/>
+           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-no-marker-start</xsl:with-param>
+           <xsl:with-param name='extraStyles' select='$extraStyles'/>
++	  <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++	  <xsl:with-param name="way" select="$way"/>
++	  <xsl:with-param name="currentCount" select="$currentCount"/>
+         </xsl:call-template>
+       </xsl:when>
+       <xsl:when test="$lastNodeLowerLayerConnectionCount>0">
+@@ -791,6 +839,9 @@
+           <xsl:with-param name='instruction' select='$instruction'/>
+           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-stroke-linecap-butt osmarender-no-marker-start</xsl:with-param>
+           <xsl:with-param name='extraStyles' select='$extraStyles'/>
++	  <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++	  <xsl:with-param name="way" select="$way"/>
++	  <xsl:with-param name="currentCount" select="$currentCount"/>
+         </xsl:call-template>
+       </xsl:when>
+       <xsl:otherwise>
+@@ -799,6 +850,9 @@
+           <xsl:with-param name='instruction' select='$instruction'/>
+           <xsl:with-param name="extraClasses"><xsl:value-of select="$extraClasses"/> osmarender-stroke-linecap-round osmarender-no-marker-start</xsl:with-param>
+           <xsl:with-param name='extraStyles' select='$extraStyles'/>
++	  <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++	  <xsl:with-param name="way" select="$way"/>
++	  <xsl:with-param name="currentCount" select="$currentCount"/>
+         </xsl:call-template>
+       </xsl:otherwise>
+ 
+@@ -812,20 +866,56 @@
+     <xsl:param name="instruction"/>
+     <xsl:param name="lat"><xsl:value-of select="@lat" /></xsl:param>
+     <xsl:param name="lon"><xsl:value-of select="@lon" /></xsl:param>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="node"/>
++    <xsl:param name="way"/>
++    <xsl:param name="currentCount"/>
+ 
+     <xsl:variable name="x" select="($width)-((($topRightLongitude)-($lon))*10000*$scale)"/>
+     <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($lat))*10000*$scale*$projection)"/>
+ 
++    <xsl:if test="not($onlyCreateSemantics)">
+     <circle cx="{$x}" cy="{$y}">
++	    <xsl:if test="$node">
++		    <xsl:attribute name="id">circle_node_<xsl:value-of select="$node/@id"/>_<xsl:value-of select="$currentCount"/></xsl:attribute>
++	    </xsl:if>
++	    <xsl:if test="$way">
++		    <xsl:attribute name="id">circle_way_<xsl:value-of select="$node/@id"/>_<xsl:value-of select="$currentCount"/></xsl:attribute>
++	    </xsl:if>
+       <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
+       <!-- Copy all the svg attributes from the <circle> instruction -->
+-    </circle>
++      </circle>
++    </xsl:if>
++    <xsl:if test="$onlyCreateSemantics">
++	<xsl:if test="$node">
++	<svgmap:PointFeature rdf:about="#pointFeature_node_{$node/@id}">
++		<svgmap:pointFeatureShownBy rdf:resource="#{$svg_map_id}"/>
++		<svgmap:pointFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/node/{$node/@id}"/>
++		<svgmap:pointFeatureDrawnBy>
++			<svgmap:SVGCircleElement rdf:about="#circle_node_{$node/@id}_{$currentCount}"/>
++		</svgmap:pointFeatureDrawnBy>
++	</svgmap:PointFeature>
++	</xsl:if>
++	<xsl:if test="$way">
++	<svgmap:AreaFeature rdf:about="#areaFeature_way_{$way/@id}">
++		<svgmap:areaFeatureShownBy rdf:resource="#{$svg_map_id}"/>
++		<svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$way/@id}"/>
++		<svgmap:areaFeatureDrawnBy>
++			<svgmap:SVGCircleElement rdf:about="#circle_way_{$way/@id}_{$currentCount}"/>
++		</svgmap:areaFeatureDrawnBy>
++	</svgmap:AreaFeature>
++	</xsl:if>
++    </xsl:if>
+   </xsl:template>
+ 
+   <xsl:template name="renderSymbol">
+     <xsl:param name="instruction"/>
+     <xsl:param name="lon"/>
+     <xsl:param name="lat"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="node"/>
++    <xsl:param name="area"/>
++    <xsl:param name="currentCount"/>
+ 
+     <xsl:variable name="x" select="($width)-((($topRightLongitude)-($lon))*10000*$scale)"/>
+     <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($lat))*10000*$scale*$projection)"/>
+@@ -864,20 +954,54 @@
+       </xsl:if>
+     </xsl:variable>
+ 
++    <xsl:if test="not($onlyCreateSemantics)">
+     <g transform="translate({$x},{$y}) scale({$symbolScale}) {$instruction/@transform} {$symbolShift}">
++	    <xsl:if test="$node">
++		    <xsl:attribute name="id">node_<xsl:value-of select="$node/@id"/>_<xsl:value-of select="$currentCount"/></xsl:attribute>
++	    </xsl:if>
++	    <xsl:if test="$area">
++		    <xsl:attribute name="id">area_<xsl:value-of select="$area/@id"/>_<xsl:value-of select="$currentCount"/></xsl:attribute>
++	    </xsl:if>
+ 	<xsl:copy-of select="$useElement"/>
+     </g>
++    </xsl:if>
++    <xsl:if test="$onlyCreateSemantics">
++	    <xsl:if test="$node">
++	    <svgmap:PointFeature rdf:about="#pointFeature_node_{$node/@id}">
++		<svgmap:pointFeatureShownBy rdf:resource="#{$svg_map_id}"/>
++		<svgmap:pointFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/node/{$node/@id}"/>
++		<svgmap:pointFeatureDrawnBy>
++			<svgmap:SVGGElement rdf:about="#node_{$node/@id}_{$currentCount}"/>
++		</svgmap:pointFeatureDrawnBy>
++	    </svgmap:PointFeature>
++    	    </xsl:if>
++	    <xsl:if test="$area">
++	    <svgmap:AreaFeature rdf:about="#areaFeature_way_{$area/@id}">
++		    <svgmap:areaFeatureShownBy rdf:resource="#{$svg_map_id}"/>
++		    <svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$area/@id}"/>
++		    <svgmap:areaFeatureDrawnBy>
++			    <svgmap:SVGGElement rdf:about="#area_{$area/@id}_{$currentCount}"/>
++		    </svgmap:areaFeatureDrawnBy>
++	    </svgmap:AreaFeature>
++	    </xsl:if>
++    </xsl:if>
+   </xsl:template>
+ 
+ 
+   <!-- Draw a symbol for the current <node> element using the formatting of the current <symbol> instruction -->
+   <xsl:template name="drawSymbol">
+     <xsl:param name="instruction"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="node"/>
++    <xsl:param name="currentCount"/>
+ 
+     <xsl:call-template name="renderSymbol">
+       <xsl:with-param name="instruction" select="$instruction"/>
+       <xsl:with-param name="lon" select="@lon"/>
+       <xsl:with-param name="lat" select="@lat"/>
++      <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++      <xsl:with-param name="currentCount" select="$currentCount"/>
++      <xsl:with-param name="node" select="$node"/>
+     </xsl:call-template>
+ 
+   </xsl:template>
+@@ -889,11 +1013,22 @@
+     <xsl:param name="lon"/>
+     <xsl:param name="lat"/>
+     <xsl:param name="text"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="node"/>
++    <xsl:param name="area"/>
++    <xsl:param name="currentCount"/>
+ 
+     <xsl:variable name="x" select="($width)-((($topRightLongitude)-($lon))*10000*$scale)"/>
+     <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($lat))*10000*$scale*$projection)"/>
+ 
++    <xsl:if test="not($onlyCreateSemantics)">
+     <text>
++      <xsl:if test="$node">
++	      <xsl:attribute name="id">text_node_<xsl:value-of select="$node/@id"/>_<xsl:value-of select="$currentCount"/></xsl:attribute>
++      </xsl:if>
++      <xsl:if test="$area">
++	      <xsl:attribute name="id">text_area_<xsl:value-of select="$area/@id"/>_<xsl:value-of select="$currentCount"/></xsl:attribute>
++      </xsl:if>
+       <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
+       <xsl:attribute name="x">
+         <xsl:value-of select="$x"/>
+@@ -904,6 +1039,35 @@
+       <xsl:call-template name="getSvgAttributesFromOsmTags"/>
+       <xsl:value-of select="$text"/>
+     </text>
++    </xsl:if>
++    <xsl:if test="$onlyCreateSemantics">
++	    <xsl:if test="$node">
++	    <svgmap:PointFeatureLabel rdf:about="#pointFeatureLabel_{$node/@id}">
++		    <svgmap:isPointFeatureLabel>
++			    <svgmap:PointFeature rdf:about="#pointFeature_node_{$node/@id}">
++				<svgmap:pointFeatureShownBy rdf:resource="#{$svg_map_id}"/>
++				<svgmap:pointFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/node/{$node/@id}"/>
++			    </svgmap:PointFeature>
++		    </svgmap:isPointFeatureLabel>
++		    <svgmap:pointFeatureLabelDrawnBy>
++		            <svgmap:SVGTextElement rdf:about="#text_node_{$node/@id}_{$currentCount}"/>
++		    </svgmap:pointFeatureLabelDrawnBy>
++	    </svgmap:PointFeatureLabel>
++	    </xsl:if>
++	    <xsl:if test="$area">
++	    <svgmap:AreaFeatureLabel rdf:about="#areaFeatureLabel_{$area/@id}">
++		    <svgmap:isAreaFeatureLabel>
++			    <svgmap:AreaFeature rdf:about="#areaFeature_way_{$area/@id}">
++				<svgmap:areaFeatureShownBy rdf:resource="#{$svg_map_id}"/>
++				<svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$area/@id}"/>
++			    </svgmap:AreaFeature>
++		    </svgmap:isAreaFeatureLabel>
++		    <svgmap:areaFeatureLabelDrawnBy>
++			    <svgmap:SVGTextElement rdf:about="#text_area_{$area/@id}_{$currentCount}"/>
++		    </svgmap:areaFeatureLabelDrawnBy>
++	    </svgmap:AreaFeatureLabel>
++	    </xsl:if>
++    </xsl:if>
+   </xsl:template>
+ 
+ 
+@@ -913,6 +1077,9 @@
+     <xsl:param name="pathId"/>
+     <xsl:param name="pathDirection"/>
+     <xsl:param name='text'/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="way"/>
++    <xsl:param name="currentCount"/>
+ 
+     <xsl:variable name='pathLengthSquared'>
+       <xsl:call-template name='getPathLength'>
+@@ -938,9 +1105,11 @@
+     <xsl:variable name='textLengthSquared80' select='($textLength *.8)*($textLength*.8)' />
+     <xsl:variable name='textLengthSquared70' select='($textLength *.7)*($textLength*.7)' />
+ 
++    <xsl:if test="not($onlyCreateSemantics)">
+     <xsl:choose>
+       <xsl:when test='($pathLengthSquared) > $textLengthSquared100'>
+         <text>
++	<xsl:attribute name="id">text_way_<xsl:value-of select="$way/@id"/>_<xsl:value-of select="$currentCount"/></xsl:attribute>
+           <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
+           <textPath xlink:href="#{$pathId}">
+             <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-textPath"/>
+@@ -951,6 +1120,7 @@
+       </xsl:when>
+       <xsl:when test='($pathLengthSquared) > ($textLengthSquared90)'>
+         <text>
++	<xsl:attribute name="id">text_way_<xsl:value-of select="$way/@id"/>_<xsl:value-of select="$currentCount"/></xsl:attribute>
+           <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
+           <textPath xlink:href="#{$pathId}">
+             <xsl:attribute name='font-size'>90%</xsl:attribute>
+@@ -962,6 +1132,7 @@
+       </xsl:when>
+       <xsl:when test='($pathLengthSquared) > ($textLengthSquared80)'>
+         <text>
++	<xsl:attribute name="id">text_way_<xsl:value-of select="$way/@id"/>_<xsl:value-of select="$currentCount"/></xsl:attribute>
+           <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
+           <textPath xlink:href="#{$pathId}">
+             <xsl:attribute name='font-size'>80%</xsl:attribute>
+@@ -973,6 +1144,7 @@
+       </xsl:when>
+       <xsl:when test='($pathLengthSquared) > ($textLengthSquared70)'>
+         <text>
++	<xsl:attribute name="id">text_way_<xsl:value-of select="$way/@id"/>_<xsl:value-of select="$currentCount"/></xsl:attribute>
+           <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
+           <textPath xlink:href="#{$pathId}">
+             <xsl:attribute name='font-size'>70%</xsl:attribute>
+@@ -985,6 +1157,20 @@
+       <xsl:otherwise />
+       <!-- Otherwise don't render the text -->
+     </xsl:choose>
++    </xsl:if>
++    <xsl:if test="$onlyCreateSemantics">
++	<svgmap:LineFeatureLabel rdf:about="#lineFeatureLabel_{$way/@id}">
++		<svgmap:isLineFeatureLabel>	
++			<svgmap:LineFeature rdf:about="#lineFeature_way_{$way/@id}">
++				<svgmap:lineFeatureShownBy rdf:resource="#{$svg_map_id}"/>
++				<svgmap:lineFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$way/@id}"/>
++			</svgmap:LineFeature>
++		</svgmap:isLineFeatureLabel>
++		<svgmap:lineFeatureLabelDrawnBy>
++			<svgmap:SVGTextElement rdf:about="#text_way_{$way/@id}_{$currentCount}"/>
++		</svgmap:lineFeatureLabelDrawnBy>
++	</svgmap:LineFeatureLabel>
++    </xsl:if>
+   </xsl:template>
+ 
+ 
+@@ -1132,6 +1318,8 @@
+   <!-- Process a <line> instruction -->
+   <xsl:template match="line" mode="render">
+     <xsl:param name="elements"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- This is the instruction that is currently being processed -->
+     <xsl:variable name="instruction" select="."/>
+@@ -1139,6 +1327,8 @@
+       <!-- For each way -->
+ 	  <xsl:apply-templates select="$elements" mode="line">
+ 		  <xsl:with-param name="instruction" select="$instruction"/>
++		  <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++		  <xsl:with-param name="currentCount" select="$currentCount"/>
+ 	  </xsl:apply-templates>
+ 
+   </xsl:template>
+@@ -1151,6 +1341,8 @@
+   <!-- Draw lines for a way  -->
+   <xsl:template match="way" mode="line">
+     <xsl:param name="instruction"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- The current <way> element -->
+     <xsl:variable name="way" select="."/>
+@@ -1160,6 +1352,8 @@
+ 		<xsl:call-template name="drawWay">
+ 			<xsl:with-param name="instruction" select="$instruction"/>
+ 			<xsl:with-param name="way" select="$way"/>
++			<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++		  	<xsl:with-param name="currentCount" select="$currentCount"/>
+ 		</xsl:call-template>				
+     </xsl:if >
+   </xsl:template>
+@@ -1168,6 +1362,7 @@
+   <!-- Draw lines for a relation -->
+   <xsl:template match="relation" mode="line">
+     <xsl:param name="instruction"/>
++    <xsl:param name="onlyCreateSemantics"/>
+ 
+     <xsl:variable name="relation" select="@id"/>
+ 
+@@ -1185,6 +1380,7 @@
+ 				<xsl:call-template name="drawWay">
+ 					<xsl:with-param name="instruction" select="$instruction"/>
+ 					<xsl:with-param name="way" select="$way"/>
++					<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
+ 				</xsl:call-template>
+ 			</xsl:if >
+ 		</xsl:for-each >
+@@ -1199,6 +1395,8 @@
+   <!-- Process an <area> instruction -->
+   <xsl:template match="area" mode="render">
+     <xsl:param name="elements"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- This is the instruction that is currently being processed -->
+     <xsl:variable name="instruction" select="."/>
+@@ -1206,6 +1404,8 @@
+       <!-- For each way -->
+       <xsl:apply-templates select="$elements" mode="area">
+         <xsl:with-param name="instruction" select="$instruction"/>
++	<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++	<xsl:with-param name="currentCount" select="$currentCount"/>
+       </xsl:apply-templates>
+   </xsl:template>
+ 
+@@ -1217,6 +1417,8 @@
+   <!-- Draw area for a <way> -->
+   <xsl:template match="way" mode="area">
+     <xsl:param name="instruction"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- DODI:  removed because duplicate definition generated if area referenced 2 or more times -->
+     <!-- DODI:  reenabled because of "duplicate point detection in lines2curves.pl " -->
+@@ -1228,9 +1430,20 @@
+ 
+     <!-- DODI: do now draw empty ways/areas-->
+     <xsl:if test ="$pathArea">
+-		<path d="{$pathArea}" style="fill-rule:evenodd">
++	<xsl:if test="not($onlyCreateSemantics)">
++		<path id="area_way_{@id}_{$currentCount}" d="{$pathArea}" style="fill-rule:evenodd">
+ 			<xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
+ 		</path>
++	</xsl:if>
++	<xsl:if test="$onlyCreateSemantics">
++		<svgmap:AreaFeature rdf:about="#areaFeature_way_{@id}">
++			<svgmap:areaFeatureShownBy rdf:resource="#{$svg_map_id}"/>
++			<svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{@id}"/>
++			<svgmap:areaFeatureDrawnBy>
++				<svgmap:SVGPathElement rdf:about="#area_way_{@id}_{$currentCount}"/>
++			</svgmap:areaFeatureDrawnBy>
++		</svgmap:AreaFeature>
++	</xsl:if>
+     </xsl:if>
+   </xsl:template>
+ 
+@@ -1238,6 +1451,8 @@
+   <!-- Process <circle> instruction -->
+   <xsl:template match="circle" mode="render">
+     <xsl:param name="elements"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- This is the instruction that is currently being processed -->
+     <xsl:variable name="instruction" select="."/>
+@@ -1246,6 +1461,8 @@
+     <xsl:apply-templates select="$elements" mode="circle">
+       <xsl:with-param name="instruction" select="$instruction"/>
+       <xsl:with-param name="elements" select="$elements"/>
++      <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++      <xsl:with-param name="currentCount" select="$currentCount"/>
+     </xsl:apply-templates>
+   </xsl:template>
+ 
+@@ -1258,10 +1475,15 @@
+   <xsl:template match="node" mode="circle">
+     <xsl:param name="instruction"/>
+     <xsl:param name="elements"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <xsl:for-each select="$elements[name()='node']">
+ 		<xsl:call-template name="drawCircle">
+ 			<xsl:with-param name="instruction" select="$instruction"/>
++      			<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++			<xsl:with-param name="nodeId" select="@id"/>
++			<xsl:with-param name="currentCount" select="$currentCount"/>
+ 		</xsl:call-template>				
+     </xsl:for-each>
+ 
+@@ -1271,19 +1493,26 @@
+   <xsl:template match="way" mode="circle">
+     <xsl:param name="instruction"/>
+     <xsl:param name="elements"/>
++    <xsl:param name="onlyCreateSemantics"/>
+ 
++    <xsl:if test="not($onlyCreateSemantics)">
+     <xsl:for-each select="$elements[name()='way']">
+ 		<xsl:variable name='center'>
++			<xsl:if test="not($onlyCreateSemantics)">
+ 			<xsl:call-template name="areaCenterWrapper">
+ 				<xsl:with-param name="element" select="." />
+ 			</xsl:call-template>
++			</xsl:if>
+ 		</xsl:variable>
+ 		<xsl:call-template name="drawCircle">
+ 			<xsl:with-param name="instruction" select="$instruction"/>
+ 			<xsl:with-param name="lon" select="substring-before($center, ',')"/>
+ 			<xsl:with-param name="lat" select="substring-after($center, ',')"/>
++      			<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++			<xsl:with-param name="way" select="."/>
+ 		</xsl:call-template>
+-    </xsl:for-each>
++	</xsl:for-each>
++  </xsl:if>
+ 
+   </xsl:template>
+ 
+@@ -1292,6 +1521,7 @@
+   <!-- Draw circle for a relation -->
+   <xsl:template match="relation" mode="circle">
+     <xsl:param name="instruction"/>
++    <xsl:param name="onlyCreateSemantics"/>
+ 
+     <xsl:variable name="relation" select="@id"/>
+ 
+@@ -1304,6 +1534,8 @@
+ 			<xsl:call-template name="drawCircle">
+ 				<xsl:with-param name="instruction" select="$instruction"/>
+ 				<xsl:with-param name="node" select="@id"/>
++      				<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++				<xsl:with-param name="node" select="."/>
+ 			</xsl:call-template>					
+         </xsl:for-each>
+       </xsl:for-each>
+@@ -1317,6 +1549,8 @@
+   <!-- Process a <symbol> instruction -->
+   <xsl:template match="symbol" mode="render">
+     <xsl:param name="elements"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- This is the instruction that is currently being processed -->
+     <xsl:variable name="instruction" select="."/>
+@@ -1324,12 +1558,17 @@
+     <xsl:for-each select="$elements[name()='node']">
+ 		<xsl:call-template name="drawSymbol">
+ 			<xsl:with-param name="instruction" select="$instruction"/>
++			<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++			<xsl:with-param name="node" select="."/>
++			<xsl:with-param name="currentCount" select="$currentCount"/>
+ 		</xsl:call-template>
+     </xsl:for-each>
+ 
+     <!-- Select all <way> elements -->
+     <xsl:apply-templates select="$elements[name()='way']" mode="areaSymbolPath">
+       <xsl:with-param name="instruction" select="$instruction"/>
++      <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++      <xsl:with-param name="currentCount" select="$currentCount"/>
+     </xsl:apply-templates>
+ 
+   </xsl:template>
+@@ -1400,6 +1639,8 @@
+   <!-- Process an <caption> instruction -->
+   <xsl:template match="areaText|caption" mode="render">
+     <xsl:param name="elements"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- This is the instruction that is currently being processed -->
+     <xsl:variable name="instruction" select="."/>
+@@ -1407,6 +1648,8 @@
+     <!-- Select all <way> elements that have a key that matches the k attribute of the text instruction -->
+     <xsl:apply-templates select="$elements[name()='way'][tag[@k=$instruction/@k]]" mode="areaTextPath">
+       <xsl:with-param name="instruction" select="$instruction"/>
++      <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++      <xsl:with-param name="currentCount" select="$currentCount"/>
+     </xsl:apply-templates>
+ 	<!-- Select all <node> elements that have a key that matches the k attribute of the text instruction -->
+ 	<xsl:for-each select="$elements[name()='node'][tag[@k=$instruction/@k]]">
+@@ -1415,6 +1658,9 @@
+ 			<xsl:with-param name="lon" select="@lon"/>
+ 			<xsl:with-param name="lat" select="@lat"/>
+ 			<xsl:with-param name="text" select="tag[@k=$instruction/@k]/@v"/>
++      			<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++			<xsl:with-param name="node" select="."/>
++			<xsl:with-param name="currentCount" select="$currentCount"/>
+ 		</xsl:call-template>
+     </xsl:for-each>
+   </xsl:template>
+@@ -1425,6 +1671,8 @@
+ 
+   <xsl:template match="way" mode="areaTextPath">
+     <xsl:param name="instruction"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- The current <way> element -->
+     <xsl:variable name="way" select="."/>
+@@ -1432,6 +1680,9 @@
+     <xsl:call-template name="renderAreaText">
+       <xsl:with-param name="instruction" select="$instruction"/>
+       <xsl:with-param name="pathId" select="concat('way_normal_',@id)"/>
++      <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++      <xsl:with-param name="way" select="$way"/>
++      <xsl:with-param name="currentCount" select="$currentCount"/>
+     </xsl:call-template>
+ 
+   </xsl:template>
+@@ -1439,6 +1690,9 @@
+ 
+   <xsl:template name="renderAreaText">
+     <xsl:param name="instruction"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="way"/>
++    <xsl:param name="currentCount"/>
+ 
+     <xsl:variable name="element" select="."/>
+     <xsl:variable name="areaLabels" select="exslt:node-set($labels)/labels:area[@id = $element/@id]"/>
+@@ -1454,6 +1708,9 @@
+ 						<xsl:with-param name="lon" select="key('nodeById', $label/@ref)/@lon"/>
+ 						<xsl:with-param name="lat" select="key('nodeById', $label/@ref)/@lat"/>
+ 						<xsl:with-param name="text" select="$text"/>
++      						<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++						<xsl:with-param name="area" select="$way"/>
++						<xsl:with-param name="currentCount" select="$currentCount"/>
+ 					</xsl:call-template>
+ 				</xsl:for-each>
+ 			</xsl:for-each>
+@@ -1461,9 +1718,11 @@
+ 
+ 		<xsl:otherwise>
+ 			<xsl:variable name='center'>
++			<xsl:if test="not($onlyCreateSemantics)">
+ 				<xsl:call-template name="areaCenterWrapper">
+ 					<xsl:with-param name="element" select="." />
+ 				</xsl:call-template>
++			</xsl:if>
+ 			</xsl:variable>
+ 
+ 			<xsl:message>
+@@ -1475,6 +1734,9 @@
+ 				<xsl:with-param name="lon" select="substring-before($center, ',')"/>
+ 				<xsl:with-param name="lat" select="substring-after($center, ',')"/>
+ 				<xsl:with-param name="text" select="$text"/>
++      				<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++				<xsl:with-param name="area" select="$way"/>
++				<xsl:with-param name="currentCount" select="$currentCount"/>
+ 			</xsl:call-template>
+ 		</xsl:otherwise>
+ 
+@@ -1488,6 +1750,8 @@
+   <!-- Process an <areaSymbol> instruction -->
+   <xsl:template match="areaSymbol" mode="render">
+     <xsl:param name="elements"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- This is the instruction that is currently being processed -->
+     <xsl:variable name="instruction" select="."/>
+@@ -1495,6 +1759,8 @@
+     <!-- Select all <way> elements -->
+     <xsl:apply-templates select="$elements[name()='way']" mode="areaSymbolPath">
+       <xsl:with-param name="instruction" select="$instruction"/>
++      <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++      <xsl:with-param name="currentCount" select="$currentCount"/>
+     </xsl:apply-templates>
+   </xsl:template>
+ 
+@@ -1504,6 +1770,8 @@
+ 
+   <xsl:template match="way" mode="areaSymbolPath">
+     <xsl:param name="instruction"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- The current <way> element -->
+     <xsl:variable name="way" select="."/>
+@@ -1511,6 +1779,8 @@
+     <xsl:call-template name="renderAreaSymbol">
+       <xsl:with-param name="instruction" select="$instruction"/>
+       <xsl:with-param name="pathId" select="concat('way_normal_',@id)"/>
++      <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++      <xsl:with-param name="currentCount" select="$currentCount"/>
+     </xsl:call-template>
+ 
+   </xsl:template>
+@@ -1518,6 +1788,8 @@
+ 
+   <xsl:template name="renderAreaSymbol">
+     <xsl:param name="instruction"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <xsl:variable name="element" select="."/>
+ 
+@@ -1532,6 +1804,9 @@
+ 						<xsl:with-param name="instruction" select="$instruction"/>
+ 						<xsl:with-param name="lon" select="key('nodeById', $label/@ref)/@lon"/>
+ 						<xsl:with-param name="lat" select="key('nodeById', $label/@ref)/@lat"/>
++      						<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++						<xsl:with-param name="area" select="$element"/>
++						<xsl:with-param name="currentCount" select="$currentCount"/>
+ 					</xsl:call-template>
+ 				</xsl:for-each>
+ 			</xsl:for-each>
+@@ -1539,9 +1814,11 @@
+ 		
+ 		<xsl:otherwise>
+ 			<xsl:variable name='center'>
++			<xsl:if test="not($onlyCreateSemantics)">
+ 				<xsl:call-template name="areaCenterWrapper">
+ 					<xsl:with-param name="element" select="$element" />
+ 				</xsl:call-template>
++			</xsl:if>
+ 			</xsl:variable>
+ 			
+ 			<xsl:message>
+@@ -1552,6 +1829,9 @@
+ 				<xsl:with-param name="instruction" select="$instruction"/>
+ 				<xsl:with-param name="lon" select="substring-before($center, ',')"/>
+ 				<xsl:with-param name="lat" select="substring-after($center, ',')"/>
++      				<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++				<xsl:with-param name="area" select="$element"/>
++				<xsl:with-param name="currentCount" select="$currentCount"/>
+ 			</xsl:call-template>
+ 		</xsl:otherwise>				
+ 	</xsl:choose>
+@@ -2467,6 +2747,8 @@
+   <!-- Process a <pathText> instruction -->
+   <xsl:template match="text|pathText" mode="render">
+     <xsl:param name="elements"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- This is the instruction that is currently being processed -->
+     <xsl:variable name="instruction" select="."/>
+@@ -2478,12 +2760,17 @@
+ 			<xsl:with-param name="lon" select="@lon"/>
+ 			<xsl:with-param name="lat" select="@lat"/>
+ 			<xsl:with-param name="text" select="tag[@k=$instruction/@k]/@v"/>
++			<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++			<xsl:with-param name="node" select="."/>
++			<xsl:with-param name="currentCount" select="$currentCount"/>
+ 		</xsl:call-template>				
+     </xsl:for-each>
+ 
+     <!-- Select all <way> elements -->
+     <xsl:apply-templates select="$elements[name()='way']" mode="textPath">
+       <xsl:with-param name="instruction" select="$instruction"/>
++      <xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++      <xsl:with-param name="currentCount" select="$currentCount"/>
+     </xsl:apply-templates>
+   </xsl:template>
+ 
+@@ -2495,6 +2782,8 @@
+   <!-- Render textPaths for a way -->
+   <xsl:template match="way" mode="textPath">
+     <xsl:param name="instruction"/>
++    <xsl:param name="onlyCreateSemantics"/>
++    <xsl:param name="currentCount"/>
+ 
+     <!-- The current <way> element -->
+     <xsl:variable name="way" select="."/>
+@@ -2509,6 +2798,7 @@
+ 				<xsl:otherwise>
+ 					<xsl:apply-templates select='$instruction' mode='textformat'>
+ 						<xsl:with-param name='way' select='$way'/>
++      						<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
+ 					</xsl:apply-templates>
+ 				</xsl:otherwise>
+ 			</xsl:choose>
+@@ -2547,6 +2837,9 @@
+ 				<xsl:with-param name="pathId" select="$waypath"/>
+ 				<xsl:with-param name="pathDirection" select="$pathdirection"/>
+ 				<xsl:with-param name="text" select="$text"/>
++      				<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++				<xsl:with-param name="way" select="$way"/>
++				<xsl:with-param name="currentCount" select="$currentCount"/>
+ 			</xsl:call-template>
+ 		</xsl:if>
+ 	</xsl:if>
+@@ -2897,6 +3190,7 @@
+ 	-->
+ <xsl:template name="processRules">
+ 
++	<xsl:param name="onlyCreateSemantics" select="false()" />
+     <!-- First select all elements - exclude those marked as deleted by JOSM -->
+ 	<xsl:variable name='elements' select="$data/osm/*[not(@action) or not(@action='delete')]" />
+ 
+@@ -2922,36 +3216,57 @@
+ 	
+ 	<xsl:for-each select="exslt:node-set($commands)/z:command[z:instruction/*/@z-mode='bottom']">
+ 		<xsl:sort select="@z-index" data-type="number"/>
++		<xsl:variable name="c" select="."/>
+ 		<xsl:call-template name="renderCommand">
+ 			<xsl:with-param name="command" select="."/>
++			<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++			<xsl:with-param name="currentCount" select="count(preceding-sibling::z:command[z:element/@id=$c/z:element/@id and z:element/@type=$c/z:element/@type])"/>
+ 		</xsl:call-template>
+ 	</xsl:for-each>
+ 
+ 	<xsl:for-each select="exslt:node-set($commands)/z:command[z:instruction/*/@z-mode='normal' or not(z:instruction/*/@z-mode)]">
+ 		<xsl:sort select="@layer" data-type="number"/>
+ 		<xsl:sort select="@z-index" data-type="number"/>
++		<xsl:variable name="c" select="."/>
+ 		<xsl:call-template name="renderCommand">
+ 			<xsl:with-param name="command" select="."/>
++			<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++			<xsl:with-param name="currentCount" select="count(preceding-sibling::z:command[z:element/@id=$c/z:element/@id and z:element/@type=$c/z:element/@type])"/>
+ 		</xsl:call-template>
+ 	</xsl:for-each>
+ 	
+ 	<xsl:for-each select="exslt:node-set($commands)/z:command[z:instruction/*/@z-mode='top']">
+ 		<xsl:sort select="@z-index" data-type="number"/>
++		<xsl:variable name="c" select="."/>
+ 		<xsl:call-template name="renderCommand">
+ 			<xsl:with-param name="command" select="."/>
++			<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++			<xsl:with-param name="currentCount" select="count(preceding-sibling::z:command[z:element/@id=$c/z:element/@id and z:element/@type=$c/z:element/@type])"/>
+ 		</xsl:call-template>
+ 	</xsl:for-each>
+ 
+ </xsl:template>
++
+   
+ 	<xsl:template name="renderCommand">
+ 		<xsl:param name="command"/>
++		<xsl:param name="onlyCreateSemantics"/>
++		<xsl:param name="currentCount"/>
++
++		<!--
++		<xsl:if test="$currentCount > 0">
++			<xsl:message>
++				More than one drawing operation: Element with id <xsl:value-of select="$command/z:element/@id"/> Count: <xsl:value-of select="$currentCount"/>
++			</xsl:message>
++		</xsl:if>
++		-->
+ 		
+ 		<xsl:for-each select="$data">
+ 			<xsl:variable name="element" select="key('nodeById', $command/z:element/@id) | key('wayById', $command/z:element/@id) | key('relationById', $command/z:element/@id)"/>
+-			
+ 			<xsl:apply-templates select="$command/z:instruction/*" mode="render">
+ 				<xsl:with-param name="elements" select="$element"/>
++				<xsl:with-param name="onlyCreateSemantics" select="$onlyCreateSemantics"/>
++				<xsl:with-param name="currentCount" select="$currentCount"/>
+ 			</xsl:apply-templates>
+ 		</xsl:for-each>
+ 	</xsl:template>
+@@ -3937,6 +4252,12 @@
+           <cc:requires rdf:resource="http://web.resource.org/cc/Attribution"/>
+           <cc:requires rdf:resource="http://web.resource.org/cc/ShareAlike"/>
+         </cc:License>
++      <owl:Ontology rdf:about="">
++	      <owl:imports rdf:resource="http://www.openstreetmap.org/osmarender/ontology/svgmap/01/svgmap"/>
++      </owl:Ontology>
++	<xsl:call-template name="processRules">
++		<xsl:with-param name="onlyCreateSemantics" select="true()"/>
++	</xsl:call-template>
+       </rdf:RDF>
+     </metadata>
+   </xsl:template>

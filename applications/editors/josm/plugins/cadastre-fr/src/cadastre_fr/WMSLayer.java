@@ -129,9 +129,6 @@ public class WMSLayer extends Layer implements ImageObserver {
             images.add(newImage);
             saveToCache(newImage);
             Main.map.mapView.repaint();
-            /*
-            try { if (dividedBbox.size() > 1) Thread.sleep(1000);
-            } catch (InterruptedException e) {};*/
         }
     }
 
@@ -345,7 +342,7 @@ public class WMSLayer extends Layer implements ImageObserver {
      * @param oos
      * @throws IOException
      */
-    public void write(ObjectOutputStream oos, ArrayList<GeorefImage> imgs) throws IOException {
+    public void write(ObjectOutputStream oos) throws IOException {
         oos.writeInt(this.serializeFormatVersion);
         oos.writeObject(this.location);
         oos.writeObject(this.codeCommune);
@@ -357,11 +354,6 @@ public class WMSLayer extends Layer implements ImageObserver {
             oos.writeDouble(this.rasterRatio);
         }
         oos.writeObject(this.communeBBox);
-        synchronized(this){
-            for (GeorefImage img : imgs) {
-                oos.writeObject(img);
-            }
-        }
     }
 
     /**

@@ -166,7 +166,10 @@ public class CacheControl implements Runnable {
                     } else {
                         ObjectOutputStream oos = new ObjectOutputStream(
                                 new BufferedOutputStream(new FileOutputStream(file)));
-                        wmsLayer.write(oos, images);
+                        wmsLayer.write(oos);
+                        for (GeorefImage img : images) {
+                            oos.writeObject(img);
+                        }
                         oos.close();
                     }
                 } catch (IOException e) {

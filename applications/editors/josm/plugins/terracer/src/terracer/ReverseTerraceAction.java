@@ -85,7 +85,7 @@ public class ReverseTerraceAction extends JosmAction {
 				if (!visitedNodes.contains(n)) {
 					CollectBackReferencesVisitor v = new CollectBackReferencesVisitor(Main.main.getCurrentDataSet());
 					v.visit(n);
-					for (OsmPrimitive prim : v.data) {
+					for (OsmPrimitive prim : v.getData()) {
 						if (prim.keySet().contains("building") && prim instanceof Way) {
 							front.add((Way)prim);
 						}

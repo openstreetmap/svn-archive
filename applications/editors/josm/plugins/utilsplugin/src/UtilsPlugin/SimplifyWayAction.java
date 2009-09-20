@@ -110,11 +110,11 @@ public class SimplifyWayAction extends JosmAction {
             CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(Main.main.getCurrentDataSet(), false);
             backRefsV.visit(wnew.getNode(i));
             boolean used = false;
-            if (backRefsV.data.size() == 1) {
+            if (backRefsV.getData().size() == 1) {
                 used = Collections.frequency(w.getNodes(), wnew.getNode(i)) > 1;
             } else {
-                backRefsV.data.remove(w);
-                used = !backRefsV.data.isEmpty();
+                backRefsV.getData().remove(w);
+                used = !backRefsV.getData().isEmpty();
             }
             if (!used)
                 used = wnew.getNode(i).isTagged();

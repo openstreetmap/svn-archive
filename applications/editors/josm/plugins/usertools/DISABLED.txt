@@ -1,0 +1,5 @@
+usertools plugin is not maintained any more.
+
+Similar actions like those provided by usertool are now available in JOSM core.
+
+Gubaer/2009-09-20

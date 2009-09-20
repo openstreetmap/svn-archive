@@ -18,7 +18,6 @@ import javax.swing.KeyStroke;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.UploadAction;
-import org.openstreetmap.josm.actions.UploadAction.UploadHook;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;

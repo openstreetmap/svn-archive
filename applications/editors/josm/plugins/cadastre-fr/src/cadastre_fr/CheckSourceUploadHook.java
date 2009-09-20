@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.UploadAction.UploadHook;
+import org.openstreetmap.josm.actions.upload.UploadHook;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.APIDataSet;
 import org.openstreetmap.josm.data.osm.Node;

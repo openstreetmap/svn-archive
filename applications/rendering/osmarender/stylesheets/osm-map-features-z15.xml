@@ -1808,9 +1808,13 @@
 			<line class="artificial-pier-core"/>
 		</rule>
 		
+		<!-- Power generators -->
 		<rule e="node" k="power" v="generator">
 			<rule e="node" k="power_source" v="wind">
-				<symbol ref="windpower" position="center"/>
+				<symbol ref="power_wind" position="center"/>
+			</rule>
+			<rule e="node" k="power_source" v="photovoltaic">
+				<symbol ref="power_photovoltaic" position="center"/>			
 			</rule>
 		</rule>
 

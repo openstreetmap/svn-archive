@@ -1,4 +1,4 @@
-/* This software is placed by in the public domain by its authors. */
+
 /* Written by Nic Roets with contribution(s) from Dave Hansen, Ted Mielczarek
    David Dean, Pablo D'Angelo and Dmitry.
    Thanks to
@@ -843,6 +843,24 @@ void HitButton (int b)
     if (returnToMap) option = numberOfOptions;
 }
 
+#ifndef _WIN32_CE
+int firstDrag[2] = { -1, -1 }, lastDrag[2];
+
+gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
+{
+  if (option == numberOfOptions && (event->state & GDK_BUTTON1_MASK)) {
+    if (firstDrag[0] >= 0) gdk_draw_drawable (draw->window,
+      draw->style[0].fg_gc[0], draw->window, 
+      0, 0, lrint (event->x) - lastDrag[0], lrint (event->y) - lastDrag[1],
+      draw->allocation.width, draw->allocation.height);
+    lastDrag[0] = lrint (event->x);
+    lastDrag[1] = lrint (event->y);
+    if (firstDrag[0] < 0) memcpy (firstDrag, lastDrag, sizeof (firstDrag));
+  }
+  return FALSE;
+}
+#endif
+
 int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
   int w = draw->allocation.width, h = draw->allocation.height;
@@ -888,11 +906,16 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     }
   }
   else {
-    int perpixel = zoom / w;
-    int lon = clon + lrint (cosAzimuth * perpixel * (event->x - w / 2) -
-                            sinAzimuth * perpixel * (h / 2 - event->y));
-    int lat = clat + lrint (cosAzimuth * perpixel * (h / 2 - event->y) +
-                            sinAzimuth * perpixel * (event->x - w / 2));
+    int perpixel = zoom / w, dx = event->x - w / 2, dy = h / 2 - event->y;
+    #ifndef _WIN32_WCE
+    if (firstDrag[0] >= 0) {
+      dx = firstDrag[0] - event->x;
+      dy = event->y - firstDrag[1];
+      firstDrag[0] = -1;
+    }
+    #endif
+    int lon = clon + lrint (perpixel * (cosAzimuth * dx - sinAzimuth * dy));
+    int lat = clat + lrint (perpixel * (cosAzimuth * dy + sinAzimuth * dx));
     if (event->button == 1) {
       SetLocation (lon, lat);
 
@@ -999,6 +1022,7 @@ static GdkBitmap *mask = NULL;
 // all icons must be smaller than these dimensions
 static GdkBitmap *maskicon = NULL;
 static GdkPixmap *icons = NULL;
+
 #else
 HDC icons;
 #endif
@@ -1652,6 +1676,7 @@ int IncrementalSearch (void)
 {
   option = searchMode;
   GosmSearch (clon, clat, (char *) gtk_entry_get_text (GTK_ENTRY (searchW)));
+  gtk_widget_queue_clear (draw);
   return FALSE;
 }
 
@@ -1756,10 +1781,12 @@ int UserInterface (int argc, char *argv[],
   draw = gtk_drawing_area_new ();
   gtk_signal_connect (GTK_OBJECT (draw), "expose_event",
     (GtkSignalFunc) Expose, NULL);
-  gtk_signal_connect (GTK_OBJECT (draw), "button_press_event",
+  gtk_signal_connect (GTK_OBJECT (draw), "button-release-event",
     (GtkSignalFunc) Click, NULL);
-  gtk_widget_set_events (draw, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK |
-    GDK_POINTER_MOTION_MASK);
+  gtk_signal_connect (GTK_OBJECT (draw), "motion_notify_event",
+    (GtkSignalFunc) Drag, NULL);
+  gtk_widget_set_events (draw, GDK_EXPOSURE_MASK | GDK_BUTTON_RELEASE_MASK |
+    GDK_BUTTON_PRESS_MASK |  GDK_POINTER_MOTION_MASK);
   gtk_signal_connect (GTK_OBJECT (draw), "scroll_event",
                        (GtkSignalFunc) Scroll, NULL);
   

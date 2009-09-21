@@ -20,7 +20,8 @@ public:
 	/**
 	 * Parses xml provided by the given stream and returns the OSM components contained
 	 * @param stream Input stream containing OSM xml (e.g. read from an OSM server or a local file)
-	 * @return The OSM components contained in the stream
+	 * @return The OSM components contained in the stream, or NULL if the stream cannot be parsed
+	 * @sa getError
 	 */
 	static Components* parse(std::istream &stream);
 

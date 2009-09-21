@@ -4,6 +4,7 @@
 #include "Components.h"
 #include <string>
 #include <cstring>
+#include <sstream>
 
 using std::cerr;
 using std::endl;
@@ -130,13 +131,22 @@ Components* Parser::parse(std::istream &in)
 		done = (n != 4096);
 		if (XML_Parse(p, buf, n, done) == XML_STATUS_ERROR)
 		{
-			error = "xml parsing error";
+			XML_Error errorCode = XML_GetErrorCode(p);
+			int errorLine = XML_GetCurrentLineNumber(p);
+			long errorCol = XML_GetCurrentColumnNumber(p);
+			const XML_LChar *errorString = XML_ErrorString(errorCode);
+		        std::stringstream errorDesc;
+			errorDesc << "XML parsing error at line " << errorLine << ":" << errorCol;
+			errorDesc << ": " << errorString;
+			error = errorDesc.str();
 			delete components;
 			return NULL;
 		}
 		count += n;
 	} while (!done);
+
 	XML_ParserFree(p);
+        error = "";
 	return components;
 }
 

@@ -403,11 +403,11 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 					if (relationType.equals("associatedStreet")) {
 						for (RelationMember relationMember : relation.getMembers()) {
 							if (relationMember.isWay()){
-								Way way = (Way) relationMember.member;
+								Way way = (Way) relationMember.getMember();
 								// System.out.println("Name: " + way.get("name") );
 								if (way == selectedStreet) {
 									associatedStreetRelation = relation;
-									relationDescription = Long.toString(way.id);
+									relationDescription = Long.toString(way.getId());
 
 									String streetName = "";
 									if (relation.getKeys().containsKey("name")) {
@@ -637,7 +637,7 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		String streetName = selectedStreet.get("name");
 
 		if (addrInterpolationWay != null) {
-			addrInterpolationWay.modified = true;
+			addrInterpolationWay.setModified(true);
 
 			Node firstNode = addrInterpolationWay.getNode(0);
 			Node lastNode = addrInterpolationWay.getNode(addrInterpolationWay.getNodesCount()-1);
@@ -680,7 +680,7 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		//   Add optional text fields to all nodes if specified
 		for (Node node : houseNumberNodes) {
 
-			node.modified = true; // Trigger re-upload in case there is a change
+			node.setModified(true); // Trigger re-upload in case there is a change
 
 			if (streetRelationButton.isSelected()) {
 				AddToRelation(associatedStreetRelation, node, "house");
@@ -698,10 +698,9 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		}
 
 		if (relationChanged) {
-			associatedStreetRelation.modified = true;
+			associatedStreetRelation.setModified(true);
 
 			// Redraw relation list dialog
-			Main.main.getEditLayer().setModified(true);
 			Main.main.getEditLayer().fireDataChange();
 		}
 
@@ -743,7 +742,7 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		boolean isFound = false;
 		for (RelationMember relationMember : relation.getMembers()) {
 
-			if (testMember == relationMember.member) {
+			if (testMember == relationMember.getMember()) {
 				isFound = true;
 				break;
 			}

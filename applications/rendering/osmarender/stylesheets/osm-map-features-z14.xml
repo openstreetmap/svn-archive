@@ -1319,6 +1319,9 @@
 		<rule e="node" k="natural" v="peak">
 			<symbol ref="peak" position="center"/>
 		</rule>
+		<rule e="node" k="natural" v="cave_entrance">
+			<symbol ref="cave_entrance" position="center"/>
+		</rule>
 		
 		<!-- Draw marine features -->
 		<rule e="way" k="man_made" v="pier" closed="yes">

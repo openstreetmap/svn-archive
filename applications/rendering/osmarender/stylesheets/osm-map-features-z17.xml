@@ -2745,12 +2745,16 @@
 		</rule>
 
 		<!-- Power generators -->
-		<rule e="node" k="power" v="generator">
+		<rule e="node|way" k="power" v="generator">
 			<rule e="node" k="power_source" v="wind">
 				<symbol ref="power_wind" position="center"/>
 			</rule>
 			<rule e="node" k="power_source" v="photovoltaic">
-				<symbol ref="power_photovoltaic" position="center"/>			
+				<symbol ref="power_photovoltaic" position="center"/>
+				<area class="power-photovoltaic"/>
+			</rule>
+			<rule e="way" k="power_source" v="photovoltaic">
+				<area class="power-photovoltaic"/>
 			</rule>
 		</rule>
 
@@ -5507,6 +5511,13 @@
 			fill: none;
 			}
 
+			/* Power Generator */
+			.power-photovoltaic {
+			fill: url(#power-photovoltaic-pattern);
+			stroke: #333333;
+			stroke-width: 0.05px;
+			}
+
 			/* Pipelines */
 			.pipeline-unknown {
 			stroke-width: 0.1px;
@@ -6008,6 +6019,21 @@
 		</svg:pattern>
 		<svg:pattern id="access-no-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
 			<svg:path fill="none" stroke="#ff4040" stroke-width="0.1" d="M5,0 L0,5 M0,0 L5,5"/>
+		</svg:pattern>
+		<svg:pattern id="power-photovoltaic-pattern" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="scale(0.107)">
+		<!-- power_photovoltaic.svg -->
+		<svg:g transform="matrix(1,0,-0.26,1,0.15,0)">
+				<svg:rect x="3.4" y="3.4" width="13" height="8.9" style="fill:#ffffff;stroke:#000000;stroke-width:0.4"/>
+				<svg:g style="stroke-width:0;fill:#000084" >
+					<svg:rect x="3.9" y="8" width="3.8" height="3.8" />
+					<svg:rect x="8" y="8" width="3.8" height="3.8" />
+					<svg:rect x="12.1" y="8" width="3.8" height="3.8" />
+					<svg:rect x="3.9" y="3.9" width="3.8" height="3.8" />
+					<svg:rect x="8" y="3.9" width="3.8" height="3.8" />
+					<svg:rect x="12.1" y="3.9" width="3.8" height="3.8" />
+				</svg:g>
+			</svg:g>
+			<svg:path d="M 2.72 0.34 L 2.97 2.59 L 1.38 2.13 L 2.44 3.25 L 0.38 3.98 L 2.59 4.38 L 1.59 5.72 L 3.13 5.03 L 3.16 7.22 L 4.25 5.34 L 5.22 6.63 L 5.03 5 L 7.22 5.66 L 5.72 4.06 L 7.25 3.59 L 5.59 3.28 L 6.97 1.41 L 4.88 2.34 L 4.88 0.78 L 4.09 2.13 L 2.72 0.34 z" style="fill:#ffff00;stroke:#000000;stroke-width:0.1" />
 		</svg:pattern>
 
 		<svg:marker fill="none" id="bridge-casing-start" markerHeight="2" markerUnits="strokeWidth" markerWidth="2" orient="auto" refX="1" refY="1" stroke="#707070" stroke-width="0.06px" viewBox="0 0 2 2">

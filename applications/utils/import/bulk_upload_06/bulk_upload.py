@@ -80,6 +80,11 @@ class ImportProcessor:
         if osmRoot.tag != "osm":
             raise XMLException("Input file must be a .osm XML file (JOSM-style)")
 
+        # Add a very loud warning to people who try to force osmChange files through
+        for zomgOsmChange in ('add', 'delete', 'modify'):
+            for arglh in osmRoot.getiterator(zomgOsmChange):
+                raise XMLException("\nYou are processing an osmChange file with a <osm> root element.\nOSM FILES HOWEVER DO NOT HAVE <%s> ELEMENTS.\nYOU ARE PROBABLY TRYING TO UPLOAD A OSM CHANGE FILE\nDIRECTLY *DON'T DO THIS* IT WILL BREAK THINGS\nON THE SERVER AND TOM HUGHES WILL EAT YOUR FAMILY\n(YES REALLY)" % zomgOsmChange)
+
         for elem in osmRoot.getiterator('member'):
             if elem.attrib['type'] == 'relation':
                 relationSort = True

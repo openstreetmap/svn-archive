@@ -202,7 +202,7 @@
 			<rule e="way" k="access" v="private">
 				<area class="access-private-small-area"/>
 			</rule>
-			<rule e="way" k="access" v="permissive">
+			<rule e="way" k="access" v="permissive|public">
 				<area class="access-permissive-small-area"/>
 			</rule>
 			<rule e="way" k="access" v="destination">
@@ -3086,7 +3086,7 @@
 				</else>
 			</rule>
 			<else>
-				<rule e="node|way" k="access" v="permissive">
+				<rule e="node|way" k="access" v="permissive|public">
 					<rule e="node|way" k="parking" v="park_and_ride">
 						<symbol ref="park_and_ride-permissive" position="center"/>
 					</rule>

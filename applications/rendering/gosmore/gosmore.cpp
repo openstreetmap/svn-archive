@@ -1471,11 +1471,12 @@ gint Expose (void)
   //    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
 
     // render route
-    routeNodeType *x;
-    if (shortest && (x = shortest->shortest)) {
+    routeNodeType *itr;
+    if (shortest && (itr = shortest->shortest)) {
       double len;
-      int nodeCnt = 1;
-      __int64 sumLat = x->nd->lat;
+      int nodeCnt = 1, x = X (itr->nd->lon, itr->nd->lat);
+      int y = Y (itr->nd->lon, itr->nd->lat);
+      __int64 sumLat = itr->nd->lat;
       #ifndef _WIN32_WCE
       gdk_gc_set_foreground (mygc, &routeColour);
       gdk_gc_set_line_attributes (mygc, 6,
@@ -1485,24 +1486,29 @@ gint Expose (void)
       #endif
       if (routeHeapSize > 1) {
         gdk_draw_line (draw->window, mygc, X (flon, flat), Y (flon, flat),
-          X (x->nd->lon, x->nd->lat), Y (x->nd->lon, x->nd->lat));
+          x, y);
       }
-      len = sqrt (Sqr ((double) (x->nd->lat - flat)) +
-        Sqr ((double) (x->nd->lon - flon)));
-      for (; x->shortest; x = x->shortest) {
-        gdk_draw_line (draw->window, mygc, X (x->nd->lon, x->nd->lat),
-          Y (x->nd->lon, x->nd->lat),
-          X (x->shortest->nd->lon, x->shortest->nd->lat),
-          Y (x->shortest->nd->lon, x->shortest->nd->lat));
-        len += sqrt (Sqr ((double) (x->nd->lat - x->shortest->nd->lat)) +
-          Sqr ((double) (x->nd->lon - x->shortest->nd->lon)));
-        sumLat += x->nd->lat;
+      len = sqrt (Sqr ((double) (itr->nd->lat - flat)) +
+        Sqr ((double) (itr->nd->lon - flon)));
+      for (; itr->shortest; itr = itr->shortest) {
+        int nx = X (itr->shortest->nd->lon, itr->shortest->nd->lat);
+        int ny = Y (itr->shortest->nd->lon, itr->shortest->nd->lat);
+        if ((nx >= 0 || x >= 0) && (nx < clip.width || x < clip.width) &&
+            (ny >= 0 || y >= 0) && (ny < clip.height || y < clip.height)) {
+          // Gdk looks only at the lower 16 bits ?
+          gdk_draw_line (draw->window, mygc, x, y, nx, ny);
+        }
+        len += sqrt (Sqr ((double) (itr->nd->lat - itr->shortest->nd->lat)) +
+          Sqr ((double) (itr->nd->lon - itr->shortest->nd->lon)));
+        sumLat += itr->nd->lat;
         nodeCnt++;
+        x = nx;
+        y = ny;
       }
-      gdk_draw_line (draw->window, mygc, X (x->nd->lon, x->nd->lat),
-        Y (x->nd->lon, x->nd->lat), X (tlon, tlat), Y (tlon, tlat));
-      len += sqrt (Sqr ((double) (x->nd->lat - tlat)) +
-        Sqr ((double) (x->nd->lon - tlon)));
+      gdk_draw_line (draw->window, mygc, x, y,
+        X (tlon, tlat), Y (tlon, tlat));
+      len += sqrt (Sqr ((double) (itr->nd->lat - tlat)) +
+        Sqr ((double) (itr->nd->lon - tlon)));
       wchar_t distStr[13];
       wsprintf (distStr, TEXT ("%.3lf km"), len * (20000 / 2147483648.0) *
         cos (LatInverse (sumLat / nodeCnt) * (M_PI / 180)));
@@ -1561,7 +1567,7 @@ gint Expose (void)
       char distance[10]; // Formula inaccurate over long distances hence "Far"
       sprintf (distance, dist > 998 ? "Far" : dist > 1 ? "%.0lf km" :
         "%.0lf m", dist > 1 ? dist : dist * 1000);
-      DrawString (SearchSpacing + 66 - 11 * strlen (distance), y - 10,
+      DrawString (SearchSpacing + 33 - 11 * strcspn (distance, " "), y - 10,
         distance); // Right adjustment is inaccurate
       
       #ifndef _WIN32_WCE

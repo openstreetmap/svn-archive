@@ -78,7 +78,7 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 	private JTextField stateTextField = null;
 	private JTextField postCodeTextField = null;
 	private JTextField countryTextField = null;
-	private JTextField allTextField = null;
+	private JTextField fullTextField = null;
 
 	private boolean relationChanged = false; // Whether to re-trigger data changed for relation
 
@@ -133,7 +133,7 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		lastState = stateTextField.getText();
 		lastPostCode = postCodeTextField.getText();
 		lastCountry = countryTextField.getText();
-		lastFullAddress = allTextField.getText();
+		lastFullAddress = fullTextField.getText();
 
 	}
 
@@ -200,15 +200,6 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		Component[] editFields = {addrInterpolationList, startTextField, endTextField};
 		AddEditControlRows(textLabels, editFields,	editControlsPane);
 
-		JPanel optionPanel = new JPanel(new BorderLayout());
-
-		Border dividerBorder = BorderFactory.createEtchedBorder();
-		TitledBorder titleBorder = BorderFactory.createTitledBorder(dividerBorder, tr("Optional Information:"),
-				TitledBorder.LEFT, TitledBorder.BOTTOM);
-
-		optionPanel.setBorder(titleBorder);
-		editControlsPane.add(optionPanel, c);
-
 		// Address interpolation fields not valid if Way not selected
 		if (addrInterpolationWay == null) {
 			addrInterpolationList.setEnabled(false);
@@ -216,36 +207,15 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 			endTextField.setEnabled(false);
 		}
 
-		JLabel[] optionalTextLabels = {new JLabel(tr("City:")),
-				new JLabel(tr("State:")),
-				new JLabel(tr("Post Code:")),
-				new JLabel(tr("Country:")),
-				new JLabel(tr("All:"))};
-		cityTextField = new JTextField(lastCity, 100);
-		stateTextField = new JTextField(lastState, 100);
-		postCodeTextField = new JTextField(lastPostCode, 20);
-		countryTextField = new JTextField(lastCountry, 2);
-		allTextField = new JTextField(lastFullAddress, 300);
 
-		// Special processing for addr:country code, max length and uppercase
-		countryTextField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				JTextField jtextfield = (JTextField)e.getSource();
-				String text = jtextfield.getText();
-				int length = text.length();
-				if (length == jtextfield.getColumns()) {
-					e.consume();
-				} else if (length > jtextfield.getColumns()) {
-					// show error message ??
-				} else {
-					// Accept key; convert to upper case
-					if (!e.isActionKey()) {
-						e.setKeyChar(Character.toUpperCase(e.getKeyChar()) );
-					}
-				}
-			}
-		});
+
+		JPanel optionPanel = CreateOptionalFields();
+		c.gridx = 0;
+		c.gridwidth = 2; // # of columns to span
+		c.fill = GridBagConstraints.BOTH;      // Full width
+		c.gridwidth = GridBagConstraints.REMAINDER;     //end row
+
+		editControlsPane.add(optionPanel, c);
 
 
 		KeyAdapter enterProcessor = new KeyAdapter() {
@@ -265,15 +235,6 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		cityTextField.addKeyListener(enterProcessor);
 
 
-		Component[] optionalEditFields = {cityTextField, stateTextField, postCodeTextField, countryTextField, allTextField};
-		AddEditControlRows(optionalTextLabels, optionalEditFields,	editControlsPane);
-
-
-
-		c.gridx = 0;
-		c.gridwidth = 2; // # of columns to span
-		c.fill = GridBagConstraints.BOTH;      // Full width
-		c.gridwidth = GridBagConstraints.REMAINDER;     //end row
 
 		if (houseNumberNodes.size() > 0) {
 			JLabel houseNumberNodeNote = new JLabel(tr("Will associate {0} additional house number nodes",
@@ -308,6 +269,66 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		cancelButton.addActionListener(this);
 
 		return editControlsPane;
+	}
+
+
+
+	// Create optional control fields in a group box
+	private JPanel CreateOptionalFields() {
+
+		JPanel editControlsPane = new JPanel();
+		GridBagLayout gridbag = new GridBagLayout();
+
+		editControlsPane.setLayout(gridbag);
+
+		editControlsPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+		JLabel[] optionalTextLabels = {new JLabel(tr("City:")),
+				new JLabel(tr("State:")),
+				new JLabel(tr("Post Code:")),
+				new JLabel(tr("Country:")),
+				new JLabel(tr("Full Address:"))};
+		cityTextField = new JTextField(lastCity, 100);
+		stateTextField = new JTextField(lastState, 100);
+		postCodeTextField = new JTextField(lastPostCode, 20);
+		countryTextField = new JTextField(lastCountry, 2);
+		fullTextField = new JTextField(lastFullAddress, 300);
+
+		// Special processing for addr:country code, max length and uppercase
+		countryTextField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				JTextField jtextfield = (JTextField)e.getSource();
+				String text = jtextfield.getText();
+				int length = text.length();
+				if (length == jtextfield.getColumns()) {
+					e.consume();
+				} else if (length > jtextfield.getColumns()) {
+					// show error message ??
+					e.consume();
+				} else {
+					// Accept key; convert to upper case
+					if (!e.isActionKey()) {
+						e.setKeyChar(Character.toUpperCase(e.getKeyChar()) );
+					}
+				}
+			}
+		});
+
+		Component[] optionalEditFields = {cityTextField, stateTextField, postCodeTextField, countryTextField, fullTextField};
+		AddEditControlRows(optionalTextLabels, optionalEditFields,	editControlsPane);
+
+
+
+		JPanel optionPanel = new JPanel(new BorderLayout());
+		Border groupBox = BorderFactory.createEtchedBorder();
+		TitledBorder titleBorder = BorderFactory.createTitledBorder(groupBox, tr("Optional Information:"),
+				TitledBorder.LEFT, TitledBorder.TOP);
+
+		optionPanel.setBorder(titleBorder);
+		optionPanel.add(editControlsPane, BorderLayout.CENTER);
+
+		return optionPanel;
 	}
 
 
@@ -590,7 +611,7 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		String state = ReadTextField(stateTextField);
 		String postCode = ReadTextField(postCodeTextField);
 		String country = ReadTextField(countryTextField);
-		String fullAddress = ReadTextField(allTextField);
+		String fullAddress = ReadTextField(fullTextField);
 
 		String selectedMethod = GetInterpolationMethod();
 		if (addrInterpolationWay != null) {

@@ -208,7 +208,7 @@
 			<rule e="way" k="access" v="private">
 				<area class="access-private-small-area"/>
 			</rule>
-			<rule e="way" k="access" v="permissive">
+			<rule e="way" k="access" v="permissive|public">
 				<area class="access-permissive-small-area"/>
 			</rule>
 			<rule e="way" k="access" v="destination">

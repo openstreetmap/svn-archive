@@ -267,7 +267,7 @@ int Next (OsmItr &itr) /* Friend of osmItr */
    clashes. For short distances we allow for dense urban road networks,
    but beyond a certain point there is bound to be farmland or seas.
 
-   We call nodes that rescently had their "best" increased "active". The
+   We call nodes that recently had their "best" increased "active". The
    active nodes are stored in a heap so that we can quickly find the most
    promissing one.
    
@@ -288,7 +288,7 @@ int routeAddCnt;
 #endif
 
 static ndType *endNd[2] = { NULL, NULL}, from;
-static int toEndNd[2][2];  
+static int toEndNd[2][2], bailout;
 
 routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
 { /* This function is called when we find a valid route that consists of the
@@ -322,7 +322,10 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
       n->dir = dir;
       n->remain = lrint (sqrt (Sqr ((__int64)(nd->lat - rlat)) +
                                Sqr ((__int64)(nd->lon - rlon))));
-      if (!shortest || n->remain < shortest->remain) shortest = n;
+      if (!shortest || n->remain < shortest->remain) {
+        shortest = n;
+        bailout = 65000; // This constant needs tweeking
+      }
       ROUTE_SET_ADDND_COUNT (routeAddCnt + 1);
     }
   } while (n->nd != nd || n->dir != dir);
@@ -496,7 +499,15 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     if (rno) AddNd (&from, 0, toEndNd[1][0], rno);
   }
   
-  while (routeHeapSize > 1) {
+  for (bailout = 65000; bailout > 0 && routeHeapSize > 1; bailout--) {
+  /* Consider the example where 'from' and 'to' are on opposite sides of a
+     a river. The algorithm will quickly advance up to the river bank, and
+     then search along it for a way across. This searching may involve moving
+     away from "from" (backtracking). Some backtracking is reasonable, e.g.
+     when there is a bend in the river, but "bailout" places a limit on it.
+     Please list the worst cases here so that we can test them :
+       Robben Island, South Africa to Bloubergrant, South Africa
+    */
     routeNodeType *root = routeHeap[1];
     routeHeapSize--;
     int beste = routeHeap[routeHeapSize]->best;

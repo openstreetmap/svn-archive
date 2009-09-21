@@ -171,6 +171,10 @@ polygontagmap = {
      (0x51,): {'natural': 'wetland', 'area': 'yes'} # added by JR, was marsh
     }
 
+
+def caps(words):
+          return ' '.join([x.capitalize() for x in words.split()])
+
 sufi=None
 found=False
 for line in file_mp:
@@ -234,7 +238,7 @@ for line in file_mp:
                 codeend = label.find(']',codestart)
                 if codeend != -1:
                     label = label[0:codestart] + ' ' + label[codeend+1:]
-            tag = ET.Element('tag', k='name',v=label.strip().title()) # convert to title case
+            tag = ET.Element('tag', k='name',v=caps(label.strip())) # convert to right case. e.g. Arthur's Pass
             tag.tail = '\n    '
             node.append(tag)
         if line.startswith('Type'):

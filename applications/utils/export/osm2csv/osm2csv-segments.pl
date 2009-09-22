@@ -39,6 +39,7 @@ my $do_list_areas=0;
 my $do_update_only=0;
 my $tie_nodes_hash=undef;
 my $Filename;
+my $planet_dir='';
 
 our $SEGMENTS_FILENAME;
 our $EXT=".csv";
@@ -61,8 +62,12 @@ GetOptions (
 	     'area=s'              => \$areas_todo,
 	     'list-areas'          => \$do_list_areas,
 	     'update-only'         => \$do_update_only,
+	     'planet-dir:s'        => \$planet_dir,
 	     )
     or pod2usage(1);
+
+Geo::OSM::Planet::planet_dir($planet_dir)
+    if $planet_dir;
 
 $areas_todo ||= 'world';
 $areas_todo=lc($areas_todo);
@@ -84,7 +89,7 @@ if ( ! defined $tie_nodes_hash ) {
 	world_west => 4000,
     };
     if ( $Filename =~ /planet/ 
-	 && ( -s "$Filename" > 1000*1000*500) ) { # only for the original full Planet Files
+	 && ( -s "$Filename" > 1000*1000*4000) ) { # Default for large *.osm (Planet) Files
 	for my $area ( split(",",$areas_todo )){
 	    $tie_nodes_hash=1
 		if $estimated_memory->{$area} > $max_ram;
@@ -135,7 +140,7 @@ $IN_BASENAME =~ s/\.osm$//;
 for my $area_name ( split(",",$areas_todo) ) {
     if ( $do_update_only ) {
 	my $needs_update=0;
-	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/osm-segents-$IN_BASENAME-$area_name${EXT}");
+	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/osm-segments-$IN_BASENAME-$area_name${EXT}");
 	next unless $needs_update;
 	print STDERR "Update needed. One of the files is old or non existent\n" if $VERBOSE;
     }
@@ -159,7 +164,7 @@ for my $area_name ( split(",",$areas_todo) ) {
     # Processing stage
     #----------------------------------------------
 
-    $SEGMENTS_FILENAME = "$data_dir/osm-segents-$IN_BASENAME-$area_name";
+    $SEGMENTS_FILENAME = "$data_dir/osm-segments-$IN_BASENAME-$area_name";
     print STDERR "creating $SEGMENTS_FILENAME${EXT}\n" if $VERBOSE;
 
     if ( $tie_nodes_hash ) {
@@ -431,6 +436,12 @@ running out of memory.
 We have an internal list of estimated memory use and we'll try
 automgically to tie it if you don't have enough memory for a
 specified region.
+
+=item B<--planet-dir=[path-to-planet-files]>
+
+The directory to put and check the planet Files.
+Default is ~/osm/planet/
+
 
 =item B<planet_filename.osm>
 

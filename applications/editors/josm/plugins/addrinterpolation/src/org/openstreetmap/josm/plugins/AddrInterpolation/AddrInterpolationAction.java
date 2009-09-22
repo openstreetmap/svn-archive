@@ -31,8 +31,7 @@ SelectionChangedListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		AddrInterpolationDialog addrDialog = new AddrInterpolationDialog(tr("Define Address Interpolation"), "AddrInterpolation",
-				tr("Define Address Interpolation"), null, 100);
+		AddrInterpolationDialog addrDialog = new AddrInterpolationDialog(tr("Define Address Interpolation"));
 
 
 	}

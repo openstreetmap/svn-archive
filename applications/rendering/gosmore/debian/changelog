@@ -1,3 +1,153 @@
+openstreetmap-gosmore (17750) unstable; urgency=low
+
+   * Routing will now give up if progress is no longer being made. (experimental)
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Mon, 21 Sep 2009 22:47:44 +0200
+
+openstreetmap-gosmore (17737) unstable; urgency=low
+
+   * Gtk Dragging
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Mon, 21 Sep 2009 11:24:26 +0200
+
+openstreetmap-gosmore (17734) unstable; urgency=low
+
+   * Make zooming with wheel work like JOSM / Openlayers.
+   * Move important buttons to menu bar.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Mon, 21 Sep 2009 00:02:58 +0200
+
+openstreetmap-gosmore (17731) unstable; urgency=low
+
+   * Search results now include distance, direction, icons and, if they are
+   * different, the names. Selected search results are now highlighted.
+   * It was achieved by drastically changing the layout and will break WinCE and
+   * will need more work.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sun, 20 Sep 2009 21:22:31 +0200
+
+openstreetmap-gosmore (17588) unstable; urgency=low
+
+   * Add moped and mofa routing.
+
+ -- cjw via osm-dev List <dev@openstreetmap.org>  Sat, 12 Sep 2009 12:42:45 +0200
+
+openstreetmap-gosmore (17226) unstable; urgency=low
+
+   * Applying patch by Phicoh (Refs #2113)
+
+ -- lambertus via osm-dev List <dev@openstreetmap.org>  Mon, 24 Aug 2009 21:31:06 +0200
+
+openstreetmap-gosmore (17221) unstable; urgency=low
+
+   * Reserver enough heap space to prevent a crash during db rebuild (refs #2215)
+
+ -- lambertus via osm-dev List <dev@openstreetmap.org>  Mon, 24 Aug 2009 19:56:37 +0200
+
+openstreetmap-gosmore (16705) unstable; urgency=low
+
+   * Complete the move of FreeBSD's definition of fopen64 from gosmore.cpp to libgosmore.h  (refs #2105)
+
+ -- lambertus via osm-dev List <dev@openstreetmap.org>  Mon, 27 Jul 2009 17:03:00 +0200
+
+openstreetmap-gosmore (16704) unstable; urgency=low
+
+   * Added patch to get Gosmore compiled under FreeBSD/Apple (refs #2105)
+
+ -- lambertus via osm-dev List <dev@openstreetmap.org>  Mon, 27 Jul 2009 15:25:52 +0200
+
+openstreetmap-gosmore (16703) unstable; urgency=low
+
+   * Added patch to remove brdige=no line (refs #2104)
+
+ -- lambertus via osm-dev List <dev@openstreetmap.org>  Mon, 27 Jul 2009 13:33:38 +0200
+
+openstreetmap-gosmore (16481) unstable; urgency=low
+
+   * WinCE: Add Hungarian and Russian translations of Gosmore from wiki
+
+ -- city-busz via osm-dev List <dev@openstreetmap.org>  Mon, 13 Jul 2009 21:24:12 +0200
+
+openstreetmap-gosmore (16362) unstable; urgency=low
+
+   * Added filter for 'gnis:'-like keys (refs 2017)
+
+ -- lambertus via osm-dev List <dev@openstreetmap.org>  Mon, 06 Jul 2009 17:27:21 +0200
+
+openstreetmap-gosmore (16267) unstable; urgency=low
+
+   * Added some more mass import tags to the pak rebuild filter (refs #2017)
+
+ -- lambertus via osm-dev List <dev@openstreetmap.org>  Thu, 02 Jul 2009 14:48:33 +0200
+
+openstreetmap-gosmore (16184) unstable; urgency=low
+
+   * Added man page.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Sat, 27 Jun 2009 20:21:37 +0200
+
+openstreetmap-gosmore (16096) unstable; urgency=low
+
+   * Get rid of spaces in gpx output.
+   * Ensure NMEA is always parsed correct by forcing the C locale.
+
+ -- nic via osm-dev List <dev@openstreetmap.org>  Wed, 24 Jun 2009 19:40:01 +0200
+
+openstreetmap-gosmore (16088) unstable; urgency=low
+
+   * fix bug when multiple resource files are not found in the current
+   * directory. Thanks Nic Roets for help.
+
+ -- andreas via osm-dev List <dev@openstreetmap.org>  Wed, 24 Jun 2009 12:19:34 +0200
+
+openstreetmap-gosmore (16087) unstable; urgency=low
+
+   * Added valgrind patch from Klaus Rechert
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Wed, 24 Jun 2009 11:18:02 +0200
+
+openstreetmap-gosmore (16083) unstable; urgency=low
+
+   * define RES_DIR in CFLAGS to be able to overwrite it
+
+ -- andreas via osm-dev List <dev@openstreetmap.org>  Tue, 23 Jun 2009 20:24:42 +0200
+
+openstreetmap-gosmore (16082) unstable; urgency=low
+
+   * fix RES_DIR
+
+ -- andreas via osm-dev List <dev@openstreetmap.org>  Tue, 23 Jun 2009 19:45:08 +0200
+
+openstreetmap-gosmore (15979) unstable; urgency=low
+
+   * Changed appendOSBtoOSM.sh script to be a bit more flexible. Now takes a url parameter pointing to a OSB gpx download url
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Thu, 18 Jun 2009 04:12:40 +0200
+
+openstreetmap-gosmore (15977) unstable; urgency=low
+
+   * Added support for adding openstreetbugs to gosmore through the appendOSBtoOSM.sh script. Currently hard-coded to OSB in Brisbane, Australia. Should probably make more flexible.
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Thu, 18 Jun 2009 03:34:29 +0200
+
+openstreetmap-gosmore (15056) unstable; urgency=low
+
+   * Added style rule for motorroad=yes
+
+ -- lambertus via osm-dev List <dev@openstreetmap.org>  Thu, 14 May 2009 23:05:40 +0200
+
+openstreetmap-gosmore (15004) unstable; urgency=low
+
+   * Fixed gosmore elemstyles.xml to match most new icon locations in map-icons. Added new dog and speed bump icons
+
+ -- daviddean via osm-dev List <dev@openstreetmap.org>  Mon, 11 May 2009 14:31:25 +0200
+
+openstreetmap-gosmore (14792) unstable; urgency=low
+
+   * Update debian Changelog
+
+ -- Joerg Ostertag (Debian Packages) (debian via the domain ostertag.name) via osm-dev List <dev@openstreetmap.org>  Mon, 27 Apr 2009 23:42:36 +0200
+
 openstreetmap-gosmore (13909) unstable; urgency=low
 
    * Made sure gosmore still compiles under windows with the help of tedm.

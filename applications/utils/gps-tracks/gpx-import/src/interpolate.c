@@ -102,7 +102,7 @@ interpolate(DBJob *job, const char *template)
   } else {
     const char *sender;
     char command[256];
-    if ((sender = getenv("MAIL_SENDER")) == NULL) {
+    if ((sender = getenv("GPX_MAIL_SENDER")) == NULL) {
        sender = "";
     }
     snprintf(command, sizeof(command), "/usr/lib/sendmail -t -r '<%s>'", sender);

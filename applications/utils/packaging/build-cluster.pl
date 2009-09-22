@@ -94,7 +94,12 @@ my @available_platforms= qw(
     debian-lenny-64     debian-lenny-32
     ubuntu-hardy-64     ubuntu-hardy-32
     ubuntu-intrepid-64  ubuntu-intrepid-32
+    ubuntu-jaunty-64    ubuntu-jaunty-32
+    ubuntu-karmic-64	ubuntu-karmic-32
 );
+
+#    ubuntu-gutsy-64	ubuntu-gutsy-32
+
 my @default_platforms= qw(
     debian-squeeze-64
     debian-squeeze-32
@@ -169,7 +174,7 @@ my %package_names=(
     'merkaartor' 	=> [qw(merkaartor)],
     'josm' 		=> [qw(openstreetmap-josm)],
     'osm-utils'		=> [qw(openstreetmap-utils openstreetmap-utils-export openstreetmap-utils-filter
-                               openstreetmap-utils-lib openstreetmap-utils-import)],
+                               openstreetmap-utils-import)],
     'osm-mapnik-world-boundaries' 	=> [qw(openstreetmap-mapnik-world-boundaries)],
     'osm-mapnik-data' 	=> [qw(openstreetmap-mapnik-data)],
     'map-icons' 	=> [qw(openstreetmap-map-icons-classic.big openstreetmap-map-icons-classic.small
@@ -206,7 +211,7 @@ my %svn_repository_url=(
 my %svn_update_done;
 
 my @available_proj=  sort keys %package_names;
-my @all_proj = grep { $_ !~ m/osmosis|gpsdrive-maemo|merkaartor|merkaartor-0...|gpsdrive-2.10pre/ } @available_proj;# |osm-editor-qt4
+my @all_proj = grep { $_ !~ m/osmosis|gpsdrive-maemo|merkaartor|merkaartor-0...|gpsdrive-2.10pre|gpsdrive-data-maps-2.10pre7/ } @available_proj;# |osm-editor-qt4
 
 my @projs;
 #@projs= keys %proj2path;
@@ -1119,8 +1124,8 @@ sub dpkg_checkbuilddeps($) {
     my @dependencies= grep { $_ =~ m/^dpkg-checkbuilddeps:/ } split(/\n/,$err);
     @dependencies = grep { s/.*Unmet build dependencies: //g; }  @dependencies;
     @dependencies = map { s/\s*\|\s*/\|/g; s/\|[^\s]+//g;$_ }  @dependencies; # remove alternatives in dependencies " | xy"
-#    @dependencies = grep { s/\([^)]+\)//g; }  @dependencies; # remove  "(>> 0.5.0-1)"
-#    print "\t --- ".join("\n\t --- ", @dependencies)."\n";
+    @dependencies = grep { s/\([\>\= \.\d\-]+\)//g;$_ }  @dependencies; # remove  "(>> 0.5.0-1)"
+#    print "\t -2-- ".join("\n\t --- ", @dependencies)."\n";
 #    exit;
     my $dep_file="$dir_chroot/$platform/home/$user/install-debian-dependencies-$proj.sh";
     if (  @dependencies ) {

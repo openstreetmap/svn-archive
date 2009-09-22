@@ -1336,7 +1336,7 @@
 		
 		<rule e="node" k="power" v="generator">
 			<rule e="node" k="power_source" v="wind">
-				<symbol ref="windpower" position="center"/>
+				<symbol ref="power_wind" position="center"/>
 			</rule>
 		</rule>
 

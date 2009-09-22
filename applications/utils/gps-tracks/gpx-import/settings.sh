@@ -36,6 +36,9 @@ setting LOG_FILE /home/osm/gpx-import.log
 # If you comment out the PIDFILE then it will not daemonise
 setting PID_FILE /home/osm/gpx-import.pid
 
+# Mail notifications
+#setting MAIL_SENDER example@example.com
+
 # Optional debug statements
 #setting INTERPOLATE_STDOUT 1
 

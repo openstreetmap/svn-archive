@@ -100,7 +100,13 @@ interpolate(DBJob *job, const char *template)
   if (getenv("GPX_INTERPOLATE_STDOUT") != NULL) {
     outputfile = stdout;
   } else {
-    outputfile = popen("/usr/lib/sendmail -t -r '<>'", "w");
+    const char *sender;
+    char command[256];
+    if ((sender = getenv("MAIL_SENDER")) == NULL) {
+       sender = "";
+    }
+    snprintf(command, sizeof(command), "/usr/lib/sendmail -t -r '<%s>'", sender);
+    outputfile = popen(command, "w");
     if (outputfile == NULL) {
       ERROR("Unable to open sendmail! (errno=%s)", strerror(errno));
       return;

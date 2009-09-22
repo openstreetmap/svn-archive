@@ -128,7 +128,7 @@ use proxy for download
 
 =item B<--planet-dir=[path-to-planet-files]>
 
-The ddirectory to put and check the planet Files.
+The directory to put and check the planet Files.
 Default is ~/osm/planet/
 
 =item B<--no-symlink>
@@ -140,6 +140,7 @@ If this option is set this will not be done.
 =item B<--print-filename>
 
 print the filename of the mirrored osm file
+
 
 
 =item B<-v>

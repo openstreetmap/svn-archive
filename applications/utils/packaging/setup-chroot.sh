@@ -5,6 +5,13 @@
 #
 # For now I started with the debian based ones.
 
+# TODO:
+# automatic answering Yes to java install
+# setting dpkg question verbosity very low
+# renaming from -64 --> amd64 to reflect debian naming
+# renaming from -32 --> i386  to reflect debian naming (including symlink to old)
+
+
 chroot_base_dir="/home/chroot"
 username=`grep 1000 /etc/passwd | sed 's/:.*//'`
 
@@ -103,7 +110,7 @@ for arg in "$@" ; do
 	
 	--release=*) #	Specify Release
 	             #	debian: etch|lenny|squeeze
-	             #	ubuntu: [dapper|feisty|gutsy|hardy|intrepid]
+	             #	ubuntu: [dapper|feisty|gutsy|hardy|intrepid|jaunty|karmic]
 	             #	maemo: [diablo]
 	             #	Default: debian squeeze
 	             #	If we recognize that it is debian/ubuntu we set this too
@@ -397,7 +404,7 @@ function setup_variables {
 	    archive_url="http://archive.ubuntu.com/ubuntu/"
 	    debian_based=true
 	    case $release in
-		dapper|feisty|gutsy|hardy|intrepid)
+		dapper|feisty|gutsy|hardy|intrepid|jaunty|karmic)
 		    $debug && echo "Specified Release '$release' is OK"
 		    ;;
 		*)
@@ -714,7 +721,7 @@ if $do_all_distributions ; then
 	$quiet || echo "# -------------------- Ubuntu"
 	distri=ubuntu
         #for release in dapper feisty  gutsy hardy intrepid jaunty; do
-	for release in intrepid hardy ; do
+	for release in jaunty karmic intrepid hardy ; do
 	#for release in intrepid ; do
 	    main_func  || echo "Incomplete $distri-$release-$architecture"
 	done

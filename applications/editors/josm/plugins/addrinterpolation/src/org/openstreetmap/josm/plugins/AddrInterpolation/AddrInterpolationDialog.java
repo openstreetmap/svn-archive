@@ -16,6 +16,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -27,6 +29,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -42,9 +45,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.UrlLabel;
 
 /**
@@ -55,7 +56,7 @@ import org.openstreetmap.josm.tools.UrlLabel;
 
 
 
-public class AddrInterpolationDialog extends ToggleDialog implements ActionListener  {
+public class AddrInterpolationDialog extends JDialog implements ActionListener  {
 
 	private Way selectedStreet = null;
 	private Way addrInterpolationWay = null;
@@ -81,6 +82,8 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 	private JTextField fullTextField = null;
 
 	private boolean relationChanged = false; // Whether to re-trigger data changed for relation
+	// Track whether interpolation method is known so that auto detect doesn't override a previous choice.
+	private boolean interpolationMethodSet = false;
 
 
 	// NOTE: The following 2 arrays must match in number of elements and position
@@ -89,9 +92,7 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 	private JComboBox addrInterpolationList = null;
 
 
-	public AddrInterpolationDialog(String name, String iconName,
-			String tooltip, Shortcut shortcut, int preferredHeight) {
-		super(name, iconName, tooltip, shortcut, preferredHeight);
+	public AddrInterpolationDialog(String name) {
 
 		if (!FindAndSaveSelections()) {
 			return;
@@ -119,7 +120,7 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 			public void windowOpened( WindowEvent e )
 			{
 				if (addrInterpolationWay != null) {
-					addrInterpolationList.requestFocus();
+					startTextField.requestFocus();
 				}
 				else {
 					cityTextField.requestFocus();
@@ -196,8 +197,8 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		GetExistingMapKeys();
 
 
-		JLabel[] textLabels = {numberingLabel, startLabel, endLabel};
-		Component[] editFields = {addrInterpolationList, startTextField, endTextField};
+		JLabel[] textLabels = {startLabel, endLabel, numberingLabel};
+		Component[] editFields = {startTextField, endTextField, addrInterpolationList};
 		AddEditControlRows(textLabels, editFields,	editControlsPane);
 
 		// Address interpolation fields not valid if Way not selected
@@ -233,6 +234,20 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		// Make Enter == OK click on fields using this adapter
 		endTextField.addKeyListener(enterProcessor);
 		cityTextField.addKeyListener(enterProcessor);
+		addrInterpolationList.addKeyListener(enterProcessor);
+
+
+		// Watch when Interpolation Method combo box is selected so that
+		// it can auto-detect method based on entered numbers.
+		addrInterpolationList.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent fe){
+				if (!interpolationMethodSet) {
+					AutoDetectInterpolationMethod();
+					interpolationMethodSet = true;  // Don't auto detect over a previous choice
+				}
+			}
+		});
 
 
 
@@ -269,6 +284,78 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 		cancelButton.addActionListener(this);
 
 		return editControlsPane;
+	}
+
+
+
+	// Call after both starting and ending housenumbers have been entered - usually when
+	// combo box gets focus.
+	private void AutoDetectInterpolationMethod() {
+
+		String startValueString = ReadTextField(startTextField);
+		String endValueString = ReadTextField(endTextField);
+		if (startValueString.equals("") || endValueString.equals("")) {
+			// Not all values entered yet
+			return;
+		}
+
+		String selectedMethod = GetInterpolationMethod();  // Currently selected method
+
+		// String[] addrInterpolationTags = { "odd", "even", "all", "alphabetic" };  // Tag values for map
+
+		if (isLong(startValueString) && isLong(endValueString)) {
+			// Have 2 numeric values
+			long startValue = Long.parseLong( startValueString );
+			long endValue = Long.parseLong( endValueString );
+
+			if (isEven(startValue)) {
+				if (isEven(endValue)) {
+					SelectInterpolationMethod("even");
+				}
+				else {
+					SelectInterpolationMethod("all");
+				}
+			} else {
+				if (!isEven(endValue)) {
+					SelectInterpolationMethod("odd");
+				}
+				else {
+					SelectInterpolationMethod("all");
+				}
+			}
+
+
+		} else {
+			// Test for possible alpha
+			char startingChar = startValueString.charAt(startValueString.length()-1);
+			char endingChar = endValueString.charAt(endValueString.length()-1);
+
+			if ( (!IsNumeric("" + startingChar)) &&  (!IsNumeric("" + endingChar)) ) {
+				// Both end with alpha
+				SelectInterpolationMethod("alphabetic");
+			}
+
+
+
+		}
+
+
+	}
+
+
+
+	// Set Interpolation Method combo box to method specified by 'currentMethod' (an OSM key)
+	private void SelectInterpolationMethod(String currentMethod) {
+		int currentIndex = 0;
+		// Must scan OSM key values because combo box is already loaded with translated strings
+		for (int i=0; i<addrInterpolationTags.length; i++) {
+			if (addrInterpolationTags[i].equals(currentMethod)) {
+				currentIndex = i;
+				break;
+			}
+		}
+		addrInterpolationList.setSelectedIndex(currentIndex);
+
 	}
 
 
@@ -347,15 +434,8 @@ public class AddrInterpolationDialog extends ToggleDialog implements ActionListe
 			String currentMethod = addrInterpolationWay.get("addr:interpolation");
 			if (currentMethod != null) {
 
-				int currentIndex = 0;
-				// Must scan key values because combo box is already loaded with translated strings
-				for (int i=0; i<addrInterpolationTags.length; i++) {
-					if (addrInterpolationTags[i].equals(currentMethod)) {
-						currentIndex = i;
-						break;
-					}
-				}
-				addrInterpolationList.setSelectedIndex(currentIndex);
+				SelectInterpolationMethod(currentMethod);
+				interpolationMethodSet = true;  // Don't auto detect over a previous choice
 			}
 
 			Node firstNode = addrInterpolationWay.getNode(0);

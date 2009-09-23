@@ -46,7 +46,7 @@
 			unless (exists $translations{$lang}) { $translations{$lang}=''; }
 			$translations{$lang}.="\"$id\": $tr\n";
 		}
-		unless ($ct) { print "WARNING: no translations read\n"; }
+		unless ($ct) { print "WARNING: no translations read for lang $lang\n"; }
 	}
 
 	# -----	Output translation file

@@ -1590,7 +1590,7 @@
 			stroke-miterlimit: 1.5;
 			}
 			
-			.island-caption         { font-size: 65px; }
+			.island-caption         { font-size: 45px; }
 			.county-caption         { font-size: 150px; }
 			.city-caption           { font-size: 100px; }
 			.town-caption           { font-size: 65px; }

@@ -23,7 +23,7 @@
 	// parsePoint
 	
 	function parseGPX(gpxname) {
-		writeText(_root.windows.pleasewait.box.prompt,iText("Please wait while the GPX track is processed.",'gpxpleasewait'));
+		writeText(_root.windows.pleasewait.box.prompt,iText('gpxpleasewait'));
 
 		_root.tracks=new Array();
 		_root.curtrack=0; _root.tracks[curtrack]=new Array();

@@ -79,7 +79,7 @@
 		box.createTextField("title",1,0,15,350,40);
 		with (box.title) {
 			type='dynamic';
-			text=iText("Welcome to OpenStreetMap!",'prompt_welcome'); setTextFormat(boldLarge);
+			text=iText('prompt_welcome'); setTextFormat(boldLarge);
             _x=(350-textWidth)/2;
 		}
 		adjustTextField(box.title);
@@ -87,7 +87,7 @@
 		box.createTextField("help",4,0,40,350,20);
 		with (box.help) {
 			type='dynamic';
-			text=iText("New user? Look in the bottom left for help.",'prompt_helpavailable'); setTextFormat(plainSmall);
+			text=iText('prompt_helpavailable'); setTextFormat(plainSmall);
             _x=(350-textWidth)/2;
 		}
 		adjustTextField(box.help);
@@ -107,11 +107,11 @@
 		box.start_live.onPress=function() { removeSplash(true); };
 
 		box.createEmptyMovieClip("button_save",2);
-		drawButton(box.button_save,50,225,iText("Edit with save",'prompt_editsave'),'',100);
+		drawButton(box.button_save,50,225,iText('prompt_editsave'),'',100);
 		box.button_save.onPress=function() { removeSplash(false); };
 
 		box.createEmptyMovieClip("button_live",3);
-		drawButton(box.button_live,200,225,iText("Edit live",'prompt_editlive'),'',100);
+		drawButton(box.button_live,200,225,iText('prompt_editlive'),'',100);
 		box.button_live.onPress=function() { removeSplash(true); };
 
         // Optional buttons
@@ -119,13 +119,13 @@
         var h=260;
         if (gpx) { 
     		box.attachMovie("checkbox","convert",5);
-    		box.convert.init(0,h,iText("Convert GPS track to ways",'prompt_track'),false,function(n) { _root.dogpx=n; });
+    		box.convert.init(0,h,iText('prompt_track'),false,function(n) { _root.dogpx=n; });
             box.convert._x=(350-13-box.convert.prompt.textWidth)/2;
             h+=20;
         }
         if (preferences.data.launcher) {
     		box.createEmptyMovieClip("button_launch",6);
-    		drawButton(box.button_launch,100,h+5,iText("Launch external URL",'prompt_launch'),'',150);
+    		drawButton(box.button_launch,100,h+5,iText('prompt_launch'),'',150);
 			box.button_launch.onPress=function() { 
 				var a=preferences.data.launcher.split('!');
 				getUrl(a[0]+_root.scale+a[1]+centrelong(0)+a[2]+centrelat(0)+a[3],"_blank");
@@ -143,12 +143,12 @@
 		if (_root.panel.properties.proptype=='') { drawIconPanel(); }
 		if (_root.dogpx) { gpxToWays(); }
 		if (live) {
-		    setEditingStatus(iText("Editing live",'editinglive'),0xFF0000);
-            pleaseWait(iText("Opening changeset",'openchangeset'));
+		    setEditingStatus(iText('editinglive'),0xFF0000);
+            pleaseWait(iText('openchangeset'));
 	        _root.changecomment=''; startChangeset(true);
 		} else { 
 		    _root.sandbox=true;
-			setEditingStatus(iText("Editing offline",'editingoffline'),0x008800);
+			setEditingStatus(iText('editingoffline'),0x008800);
 			_root.panel.advanced.disableOption(5);
 		}
 	}
@@ -192,7 +192,7 @@
 		
 		if (_root.sandbox) {
 			_root.status.createEmptyMovieClip("save",3);
-			drawButton(_root.status.save,tw+10,0,iText("Save",'save'),"");
+			drawButton(_root.status.save,tw+10,0,iText('save'),"");
 			_root.status.save.onPress=function() { prepareUpload(); };
 			_root.status.save._x=tw+10;	// we don't want it centred, even if internationalised!
 		}

@@ -387,7 +387,7 @@
 				t=Math.floor((111200*latfactor)*t/masterscale);
 				if (t>d) { d=t; }
 			}
-			if (d>50 && !Key.isDown(Key.SHIFT)) { setAdvice(false,iText("Too bendy to straighten (SHIFT to force)",'advice_bendy')); return; }
+			if (d>50 && !Key.isDown(Key.SHIFT)) { setAdvice(false,iText('advice_bendy')); return; }
 			this.saveChangeUndo();
 
 			var el=long2coord(_root.bigedge_l);		// We don't want to delete any off-screen nodes
@@ -537,17 +537,17 @@
 			if (this.path[i].tagged && hashLength(this.path[i].ways)==1) { c=false; }
 		}
 		if (c) {
-			_root.ws.saveDeleteUndo(iText("deleting",'deleting'));
+			_root.ws.saveDeleteUndo(iText('deleting'));
 			this.remove();
 			markClean(true);
 		} else {
 			_root.windows.attachMovie("modal","confirm",++windowdepth);
-			_root.windows.confirm.init(275,80,new Array(iText('Cancel','cancel'),iText('Delete','delete')),
+			_root.windows.confirm.init(275,80,new Array(iText('cancel'),iText('delete')),
 				function(choice) {
-					if (choice==iText('Delete','delete')) { _root.ws.saveDeleteUndo(iText("deleting",'deleting')); _root.ws.remove(); markClean(true); }
+					if (choice==iText('delete')) { _root.ws.saveDeleteUndo(iText('deleting')); _root.ws.remove(); markClean(true); }
 				});
 			_root.windows.confirm.box.createTextField("prompt",2,7,9,250,100);
-			writeText(_root.windows.confirm.box.prompt,iText("Some of the points on this way are tagged. Really delete?",'prompt_taggedpoints'));
+			writeText(_root.windows.confirm.box.prompt,iText('prompt_taggedpoints'));
 		}
 	};
 
@@ -651,13 +651,13 @@
 		_root.undo.append(UndoStack.prototype.undo_deleteway,
 						  new Array(this._name,this._x,this._y,
 									deepCopy(this.attr),deepCopy(this.path),this.version),
-									iText("$1 a way",'a_way',str));
+									iText('a_way',str));
 	};
 	
 	OSMWay.prototype.saveChangeUndo=function(str) {
 		_root.undo.append(UndoStack.prototype.undo_changeway,
 						  new Array(this._name,deepCopy(this.path),deepCopy(this.deletednodes),deepCopy(this.attr)),
-						  iText("changes to a way",'action_changeway'));
+						  iText('action_changeway'));
 	};
 
 
@@ -761,13 +761,13 @@
 		_root.map.anchors._y=_root.map.areas[this._name]._y=_root.map.highlight._y=this._y=0;
 		if (this.dragged) {
 			this.moveNodes(_root.map._xmouse-_root.firstxmouse,_root.map._ymouse-_root.firstymouse);
-			setAdvice(false,iText("Way dragged (Z to undo)",'advice_waydragged'));
+			setAdvice(false,iText('advice_waydragged'));
 			this.redraw();
 			this.select();
 			_root.undo.append(UndoStack.prototype.undo_movenodes,
 							  new Array(this,_root.map._xmouse-_root.firstxmouse,
 								  			 _root.map._ymouse-_root.firstymouse),
-							  iText("moving a way",'action_moveway'));
+							  iText('action_moveway'));
 		}
 	};
 	
@@ -783,7 +783,7 @@
 		this.highlightPoints(5000,"anchor");
 		removeMovieClip(_root.map.anchorhints);
 		this.highlight();
-		setTypeText(iText("Way",'way'),this._name);
+		setTypeText(iText('way'),this._name);
 		removeIconPanel();
 		_root.panel.properties.init('way',getPanelColumns(),4);
 		_root.panel.presets.init(_root.panel.properties);
@@ -873,7 +873,7 @@
 			uploadDirtyRelations();
 			_root.undo.append(UndoStack.prototype.undo_splitway,
 							  new Array(this,_root.map.ways[newwayid]),
-							  iText("splitting a way",'action_splitway'));
+							  iText('action_splitway'));
 		};
 	};
 
@@ -888,11 +888,11 @@
 		if (topos==0) {
 			_root.undo.append(UndoStack.prototype.undo_mergeways,
 							  new Array(this,deepCopy(otherway.attr),deepCopy(this.attr),frompos),
-							  iText("merging two ways",'action_mergeways'));
+							  iText('action_mergeways'));
 		} else {
 			_root.undo.append(UndoStack.prototype.undo_mergeways,
 							  new Array(this,deepCopy(this.attr),deepCopy(otherway.attr),topos),
-							  iText("merging two ways",'action_mergeways'));
+							  iText('action_mergeways'));
 		}
 		if (frompos==0) { for (i=0; i<otherway.path.length;    i+=1) { this.addPointFrom(topos,otherway,i); } }
 				   else { for (i=otherway.path.length-1; i>=0; i-=1) { this.addPointFrom(topos,otherway,i); } }
@@ -937,7 +937,7 @@
 		if (this._name==_root.wayselected) { 
 			_root.panel.properties.reinit();
 		}
-		if (conflict) { setAdvice(false,iText("Tags don't match - please check (Z to undo)",'advice_tagconflict')); }
+		if (conflict) { setAdvice(false,iText('advice_tagconflict')); }
 	};
 
 	OSMWay.prototype.addPointFrom=function(topos,otherway,srcpt) {
@@ -959,7 +959,7 @@
 		else if (selstart==thisend  ) { sel.mergeWay(0,this,thislen);	   return true; }
 		else if (selend  ==thisstart) { sel.mergeWay(sellen,this,0);	   return true; }
 		else if (selend  ==thisend  ) { sel.mergeWay(sellen,this,thislen); return true; }
-		else						  { setAdvice(true,iText("The ways do not share a common point",'advice_nocommonpoint')); return false; }
+		else						  { setAdvice(true,iText('advice_nocommonpoint')); return false; }
 	};
 
 	// ---- Reverse order
@@ -973,7 +973,7 @@
 		this.select();
 		this.clean=false;
 		markClean(false);
-		_root.undo.append(UndoStack.prototype.undo_reverse,new Array(this),iText("reversing a way",'action_reverseway'));
+		_root.undo.append(UndoStack.prototype.undo_reverse,new Array(this),iText('action_reverseway'));
 	};
 
 	// ----	Move all nodes within a way
@@ -1076,7 +1076,7 @@
 			}
 		}
 		_root.undo.append(UndoStack.prototype.undo_addpoint,
-						  new Array(waylist,poslist), iText("adding a node into a way",'action_insertnode'));
+						  new Array(waylist,poslist), iText('action_insertnode'));
 		_root.ws.highlightPoints(5000,"anchor");
 		_root.map.anchors[pointselected].beginDrag();
 		updateInspector();
@@ -1090,7 +1090,7 @@
 						  new Array(deepCopy(this.path[point]),
 						  			new Array(this._name),
 						  			new Array(point)),
-						  iText("deleting a point",'action_deletepoint'));
+						  iText('action_deletepoint'));
 		var rnode=this.path[point];
 		this.path.splice(point,1);
 		this.removeDuplicates();
@@ -1152,12 +1152,12 @@
 	function askOffset() {
 		if (!_root.wayselected) { return; }
 		_root.windows.attachMovie("modal","offset",++windowdepth);
-		_root.windows.offset.init(300, 170, [iText("Cancel",'cancel'), iText("Ok",'ok')], completeOffset);
+		_root.windows.offset.init(300, 170, [iText('cancel'), iText('ok')], completeOffset);
 		var z = 5;
 		var box = _root.windows.offset.box;
 		
 		box.createTextField("title",z++,7,7,300-14,20);
-		box.title.text = iText("Create parallel way",'prompt_createparallel');
+		box.title.text = iText('prompt_createparallel');
 		with (box.title) {
 			wordWrap=true;
 			setTextFormat(boldText);
@@ -1170,11 +1170,11 @@
 		// Create radio buttons and menu
 
 		box.attachMovie("radio","offsetoption",z++);
-		box.offsetoption.addButton(10,35 ,iText("Dual carriageway (D2)",'offset_dual'));
-		box.offsetoption.addButton(10,55 ,iText("Motorway (D3)",'offset_motorway'));
-		box.offsetoption.addButton(10,75 ,iText("Narrow canal towpath",'offset_narrowcanal'));
-		box.offsetoption.addButton(10,95 ,iText("Broad canal towpath",'offset_broadcanal'));
-		box.offsetoption.addButton(10,115,iText("Choose offset (m)",'offset_choose'));
+		box.offsetoption.addButton(10,35 ,iText('offset_dual'));
+		box.offsetoption.addButton(10,55 ,iText('offset_motorway'));
+		box.offsetoption.addButton(10,75 ,iText('offset_narrowcanal'));
+		box.offsetoption.addButton(10,95 ,iText('offset_broadcanal'));
+		box.offsetoption.addButton(10,115,iText('offset_choose'));
 		box.offsetoption.select(1);
 
 		var w=box.offsetoption[5].prompt._width+25;
@@ -1198,7 +1198,7 @@
 	// hard strips are typically 1m 
 
 	function completeOffset(button) {
-		if (button!=iText("Ok",'ok')) { return false; }
+		if (button!=iText('ok')) { return false; }
 		var radio=_root.windows.offset.box.offsetoption.selected;
 		var m;
 		if (radio==5) {
@@ -1215,7 +1215,7 @@
 		_root.ws.offset(-m);
 		_root.undo.append(UndoStack.prototype.undo_makeways,
 						  new Array(_root.newwayid,_root.newwayid+1),
-						  iText("creating parallel ways",'action_createparallel'));
+						  iText('action_createparallel'));
 	}
 
 	// Create (locked) offset way
@@ -1350,7 +1350,7 @@
 		_root.map.anchors[0].startElastic();
 		_root.drawpoint=0;
 		markClean(false);
-		setTooltip(iText("click to add point\ndouble-click/Return\nto end line",'hint_drawmode'),0);
+		setTooltip(iText('hint_drawmode'),0);
 	}
 
 	// addEndPoint(node object) - add point to start/end of line
@@ -1394,7 +1394,7 @@
 		var poslist=new Array(); poslist.push(_root.drawpoint);
 		_root.undo.append(UndoStack.prototype.undo_addpoint,
 						  new Array(new Array(_root.ws),poslist),
-						  iText("adding a node to the end of a way",'action_addpoint'));
+						  iText('action_addpoint'));
 		updateInspector();
 	}
 

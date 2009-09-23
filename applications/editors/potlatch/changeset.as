@@ -10,10 +10,10 @@
 		if (!_root.changeset) { return; }
         if (_root.sandbox) {
 			_root.panel.advanced.disableOption(5);
-            pleaseWait(iText("Closing changeset",'closechangeset'));
+            pleaseWait(iText('closechangeset'));
 		    startChangeset(false);
         } else {
-		    changesetRequest(iText("Close changeset $1",'prompt_closechangeset',_root.changeset),completeClose,'');
+		    changesetRequest(iText('prompt_closechangeset',_root.changeset),completeClose,'');
 		}
 	}
 
@@ -25,7 +25,7 @@
 	function renewChangeset() {
 		if (!_root.changeset) { return false; }
 		var t=new Date(); if (t.getTime()-_root.csopened<3400000) { return false; }
-		pleaseWait(iText("Opening changeset",'openchangeset'));
+		pleaseWait(iText('openchangeset'));
 		_root.changeset=null; startChangeset(true);
 		return true;
 	}
@@ -35,7 +35,7 @@
 	function changesetRequest(prompt,doOnClose,comment) {
 		_root.panel.properties.enableTabs(false);
 		_root.windows.attachMovie("modal","cs",++windowdepth);
-		_root.windows.cs.init(300, 140, [iText("Cancel",'cancel'), iText("Ok",'ok')], completeClose);
+		_root.windows.cs.init(300, 140, [iText('cancel'), iText('ok')], completeClose);
 
 		var z = 5;
 		var box = _root.windows.cs.box;
@@ -46,7 +46,7 @@
 		box.title.adjustTextField();
 
 		box.createTextField("prompt",z++,7,27,280,20);
-		box.prompt.text = iText("Enter a description of your changes:",'prompt_changesetcomment');
+		box.prompt.text = iText('prompt_changesetcomment');
 		with (box.prompt) { wordWrap=true; setTextFormat(plainSmall); selectable=false; type='dynamic'; }
 		box.prompt.adjustTextField();
 		
@@ -73,7 +73,7 @@
 	}
 	
 	function completeClose(button) {
-		if (button!=iText("Ok",'ok')) { return false; }
+		if (button!=iText('ok')) { return false; }
         _root.changecomment=_root.windows.cs.box.cscomment.text;
 		startChangeset(true);
 	}

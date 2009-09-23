@@ -189,31 +189,31 @@
 	_root.panel.attachMovie("scissors","i_scissors",32);
 	with (_root.panel.i_scissors) { _x=10; _y=58; };
 	_root.panel.i_scissors.onPress   =function() { _root.ws.splitWay(_root.pointselected); };
-	_root.panel.i_scissors.onRollOver=function() { setFloater(iText("Split way at selected point (X)",'tip_splitway')); };
+	_root.panel.i_scissors.onRollOver=function() { setFloater(iText('tip_splitway')); };
 	_root.panel.i_scissors.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("rotation","i_direction",39);
 	with (_root.panel.i_direction) { _x=40; _y=63; _rotation=-45; _visible=true; _alpha=50; };
 	_root.panel.i_direction.onPress=function() { _root.ws.reverseWay(); };
-	_root.panel.i_direction.onRollOver=function() { setFloater(iText("Direction of way - click to reverse",'tip_direction')); };
+	_root.panel.i_direction.onRollOver=function() { setFloater(iText('tip_direction')); };
 	_root.panel.i_direction.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("clockwise","i_clockwise",40);
 	with (_root.panel.i_clockwise) { _x=40; _y=63; _visible=false; };
 	_root.panel.i_clockwise.onPress=function() { _root.ws.reverseWay(); };
-	_root.panel.i_clockwise.onRollOver=function() { setFloater(iText("Clockwise circular way - click to reverse",'tip_clockwise')); };
+	_root.panel.i_clockwise.onRollOver=function() { setFloater(iText('tip_clockwise')); };
 	_root.panel.i_clockwise.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("anticlockwise","i_anticlockwise",42);
 	with (_root.panel.i_anticlockwise) { _x=40; _y=63; _visible=false; };
 	_root.panel.i_anticlockwise.onPress=function() { _root.ws.reverseWay(); };
-	_root.panel.i_anticlockwise.onRollOver=function() { setFloater(iText("Anti-clockwise circular way - click to reverse",'tip_anticlockwise')); };
+	_root.panel.i_anticlockwise.onRollOver=function() { setFloater(iText('tip_anticlockwise')); };
 	_root.panel.i_anticlockwise.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("tidy","i_tidy",47);
 	with (_root.panel.i_tidy) { _x=65; _y=63; _visible=true; };
 	_root.panel.i_tidy.onPress=function() { _root.ws.tidy(); };
-	_root.panel.i_tidy.onRollOver=function() { setFloater(iText("Tidy points in way (T)",'tip_tidy')); };
+	_root.panel.i_tidy.onRollOver=function() { setFloater(iText('tip_tidy')); };
 	_root.panel.i_tidy.onRollOut =function() { clearFloater(); };
 
 
@@ -225,50 +225,50 @@
 	_root.panel.attachMovie("undo","i_undo",38);
 	with (_root.panel.i_undo) { _x=10; _y=88; _alpha=50; };
 	_root.panel.i_undo.onPress   =function() { _root.undo.rollback(); };
-	_root.panel.i_undo.onRollOver=function() { setFloater(iText("Nothing to undo",'tip_noundo')); };
+	_root.panel.i_undo.onRollOver=function() { setFloater(iText('tip_noundo')); };
 	_root.panel.i_undo.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("gps","i_gps",36);
 	with (_root.panel.i_gps) { _x=35; _y=88; };
 	_root.panel.i_gps.onPress   =function() { loadGPS(); };
-	_root.panel.i_gps.onRollOver=function() { setFloater(iText("Show GPS tracks (G)",'tip_gps')); };
+	_root.panel.i_gps.onRollOver=function() { setFloater(iText('tip_gps')); };
 	_root.panel.i_gps.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("prefs","i_prefs",37);
 	with (_root.panel.i_prefs) { _x=60; _y=88; };
 	_root.panel.i_prefs.onPress   =function() { openOptionsWindow(); };
-	_root.panel.i_prefs.onRollOver=function() { setFloater(iText("Set options (choose the map background)",'tip_options')); };
+	_root.panel.i_prefs.onRollOver=function() { setFloater(iText('tip_options')); };
 	_root.panel.i_prefs.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("camera","i_photo",43);
 	with (_root.panel.i_photo) { _x=85; _y=88; };
 	_root.panel.i_photo.onPress   =function() { loadPhotos(); };
-	_root.panel.i_photo.onRollOver=function() { setFloater(iText("Load photos",'tip_photo')); };
+	_root.panel.i_photo.onRollOver=function() { setFloater(iText('tip_photo')); };
 	_root.panel.i_photo.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("newattr","i_newattr",33);
 	with (_root.panel.i_newattr) { _x=690; _y=95; };
 	_root.panel.i_newattr.onRelease =function() { _root.panel.properties.enterNewAttribute(); };
-	_root.panel.i_newattr.onRollOver=function() { setFloater(iText("Add a new tag",'tip_addtag')); };
+	_root.panel.i_newattr.onRollOver=function() { setFloater(iText('tip_addtag')); };
 	_root.panel.i_newattr.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("newrel","i_newrel",44);
 	with (_root.panel.i_newrel) { _x=690; _y=75; backgroundColor=0xDDBBBB; background=true;};
 	_root.panel.i_newrel.onRelease =function() { if (Key.isDown(Key.SHIFT)) { _root.panel.properties.repeatAttributes(false);
 												} else { addToRelation(); } };
-	_root.panel.i_newrel.onRollOver=function() { setFloater(iText("Add to a relation",'tip_addrelation')); };
+	_root.panel.i_newrel.onRollOver=function() { setFloater(iText('tip_addrelation')); };
 	_root.panel.i_newrel.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("repeatattr","i_repeatattr",34);
 	with (_root.panel.i_repeatattr) { _x=690; _y=55; };
 	_root.panel.i_repeatattr.onPress   =function() { _root.panel.properties.repeatAttributes(true); };
-	_root.panel.i_repeatattr.onRollOver=function() { setFloater(iText("Repeat tags from the previously selected way (R)",'tip_repeattag')); };
+	_root.panel.i_repeatattr.onRollOver=function() { setFloater(iText('tip_repeattag')); };
 	_root.panel.i_repeatattr.onRollOut =function() { clearFloater(); };
 
 	_root.panel.attachMovie("exclamation","i_warning",35);
 	with (_root.panel.i_warning) { _x=80; _y=50; _visible=false; };
 	_root.panel.i_warning.onPress=function() { handleWarning(); };
-	_root.panel.i_warning.onRollOver=function() { setFloater(iText("An error occurred - click for details",'tip_alert')); };
+	_root.panel.i_warning.onRollOver=function() { setFloater(iText('tip_alert')); };
 	_root.panel.i_warning.onRollOut =function() { clearFloater(); };
 	wflashid=setInterval(function() { _root.panel.i_warning._alpha=150-_root.panel.i_warning._alpha; }, 750);
 
@@ -415,18 +415,18 @@
 	// Help bar
 
 	_root.panel.createEmptyMovieClip("help",80);
-	drawButton(_root.panel.help,7,114,iText("Help",'help'),"");
+	drawButton(_root.panel.help,7,114,iText('help'),"");
 	_root.panel.help.onPress=function() { openHelp(); };
 
 	_root.panel.attachMovie("menu","advanced",81);
 	_root.panel.advanced.init(67,114,-1,
-		new Array(iText("Parallel way","advanced_parallel"),
-				  iText("Way history","advanced_history"),
+		new Array(iText("advanced_parallel"),
+				  iText("advanced_history"),
 				  "--",
-				  iText("Inspector","advanced_inspector"),
-				  iText("Undelete","advanced_undelete"),
-				  iText("Close changeset","advanced_close"),
-				  iText("Maximise window","advanced_maximise")),
+				  iText("advanced_inspector"),
+				  iText("advanced_undelete"),
+				  iText("advanced_close"),
+				  iText("advanced_maximise")),
 		'Advanced editing actions',advancedAction,null,85,"Advanced");
 	selectWay(0);	// just to update the menu items
 
@@ -561,7 +561,7 @@
 				_root.newnodeid--;
 				_root.nodes[newnodeid]=new Node(newnodeid,_root.map._xmouse,_root.map._ymouse,new Array(),0);
 				if (_root.pointselected>-2) {
-					setTypeText(iText("Way",'way'),_root.wayselected);
+					setTypeText(iText('way'),_root.wayselected);
 					_root.panel.properties.tidy();
 					_root.panel.properties.init('way',getPanelColumns(),4);
 				}
@@ -695,7 +695,7 @@
 		} else if (hashLength(_root.windows)) {
 			if (k==187 && _root.windows.relation.box.properties!=undefined) {
 				_root.windows.relation.box.properties.enterNewAttribute();
-			} else if (k==13 && _root.windows.cs) { completeClose(iText("Ok","ok")); _root.windows.cs.remove(); }
+			} else if (k==13 && _root.windows.cs) { completeClose(iText("ok")); _root.windows.cs.remove(); }
 			return;
 		} else if (keytarget!='') { return; }
 
@@ -808,7 +808,7 @@
 	function keyLock() {
 		_root.panel.padlock._x=_root.panel.t_details.textWidth+15;
 		if (_root.wayselected && _root.ws.locked && _root.ws.path.length>200 && !_root.ws.historic) {
-			setAdvice(true,iText("Too long to unlock - please split into shorter ways",'advice_toolong'));
+			setAdvice(true,iText('advice_toolong'));
 		} else if (_root.wayselected) {
 			_root.ws.locked=!_root.ws.locked;
 			_root.ws.redraw();
@@ -828,7 +828,7 @@
 		var rnode;
 		if (_root.poiselected) {
 			// delete POI
-			_root.map.pois[poiselected].saveUndo(iText("deleting",'deleting'));
+			_root.map.pois[poiselected].saveUndo(iText('deleting'));
 			_root.map.pois[poiselected].remove();
 		} else if (_root.drawpoint>-1) {
 			// 'backspace' most recently drawn point
@@ -840,7 +840,7 @@
 			_root.ws.markAsDeleted(rnode);
 			if (_root.ws.path.length) {
 				_root.undo.append(UndoStack.prototype.undo_deletepoint,undoarray,
-								  iText("deleting a point",'action_deletepoint'));
+								  iText('action_deletepoint'));
 				_root.ws.clean=false;
 				markClean(false);
 				_root.ws.redraw();
@@ -849,7 +849,7 @@
 				restartElastic();
 			} else {
 				_root.map.anchors[_root.drawpoint].endElastic();
-				_root.ws.saveDeleteUndo(iText("deleting",'deleting'));
+				_root.ws.saveDeleteUndo(iText('deleting'));
 				_root.ws.remove();
 				deselectAll();
 				markClean(true);
@@ -869,22 +869,22 @@
 
 	function keyRevert() {
 		if		(_root.wayselected<0) { if (_root.ws.path.length>1) {
-											setAdvice(false,iText("Deleting way (Z to undo)",'advice_deletingway'));
-											_root.ws.saveDeleteUndo(iText("deleting",'deleting'));
+											setAdvice(false,iText('advice_deletingway'));
+											_root.ws.saveDeleteUndo(iText('deleting'));
 										}
 										stopDrawing();
 										memberDeleted('Way',wayselected);
 										removeMovieClip(_root.map.areas[wayselected]);
 										removeMovieClip(_root.ws); }
-		else if	(_root.wayselected>0) {	setAdvice(false,iText("Reverting to last saved way (Z to undo)",'advice_revertingway'));
-										_root.ws.saveChangeUndo(iText("cancelling changes to",'action_cancelchanges'));
+		else if	(_root.wayselected>0) {	setAdvice(false,iText('advice_revertingway'));
+										_root.ws.saveChangeUndo(iText('action_cancelchanges'));
 										stopDrawing();
 										_root.ws.reload(); }
-		else if (_root.poiselected>0) { setAdvice(false,iText("Reverting to last saved POI (Z to undo)",'advice_revertingpoi'));
-										_root.map.pois[poiselected].saveUndo(iText("cancelling changes to",'action_cancelchanges'));
+		else if (_root.poiselected>0) { setAdvice(false,iText('advice_revertingpoi'));
+										_root.map.pois[poiselected].saveUndo(iText('action_cancelchanges'));
 										_root.map.pois[poiselected].reload(); }
-		else if (_root.poiselected<0) { setAdvice(false,iText("Deleting POI (Z to undo)",'advice_deletingpoi'));
-										_root.map.pois[poiselected].saveUndo(iText("deleting",'deleting'));
+		else if (_root.poiselected<0) { setAdvice(false,iText('advice_deletingpoi'));
+										_root.map.pois[poiselected].saveUndo(iText('deleting'));
 										memberDeleted('Node',poiselected);
 										removeMovieClip(_root.map.pois[poiselected]); }
 		deselectAll();
@@ -908,11 +908,13 @@
 	// =====================================================================
 	// Internationalisation functions
 	
-	function iText(en,id,key1,key2) {
-		var t=en;
-		if (l!='en' && _root.i18n[id]) { // [_root.lang]) {
-			t=_root.i18n[id]; // [_root.lang];
-		}
+	function iText(id,key1,key2) {
+		var t;
+        if (_root.i18n[id]) {
+            t=_root.i18n[id];
+        } else {
+            t='I18N ERR';
+        }
 		t=replaceStr(t,'$1',key1);
 		t=replaceStr(t,'$2',key2);
 		t=replaceStr(t,'\\n',"\n");
@@ -1034,8 +1036,8 @@
 		box.attachMovie("radio","bgoption",40);
 		box.bgoption.addButton(10,15,'');
 		box.bgoption.addButton(10,35,'Yahoo!');
-		box.bgoption.addButton(10,55,iText("Custom: ",'custom'));
-		box.bgoption.addButton(10,75,iText("No background",'nobackground'));
+		box.bgoption.addButton(10,55,iText('custom'));
+		box.bgoption.addButton(10,75,iText('nobackground'));
 		box.bgoption.doOnChange=function(n) { preferences.data.bgtype=n; initBackground(); };
 
 		box.attachMovie("menu","background",60);
@@ -1057,30 +1059,30 @@
 		// Checkboxes
 
 		box.attachMovie("checkbox","fadepref",5);
-		box.fadepref.init(10,100,iText("Fade background",'option_fadebackground'),preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
+		box.fadepref.init(10,100,iText('option_fadebackground'),preferences.data.dimbackground,function(n) { preferences.data.dimbackground=n; redrawBackground(); });
 
 		box.attachMovie("checkbox","linepref",8);
-		box.linepref.init(220,15,iText("Use thin lines at all scales",'option_thinlines'),preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
+		box.linepref.init(220,15,iText('option_thinlines'),preferences.data.thinlines,function(n) { preferences.data.thinlines=n; changeScaleTo(_root.scale); redrawWays(); });
 
 		box.attachMovie("checkbox","tiger",12);
-		box.tiger.init(220,35,iText("Use thinner lines for areas",'option_thinareas'),preferences.data.thinareas,function(n) { preferences.data.thinareas=n; changeScaleTo(_root.scale); redrawWays(); });
+		box.tiger.init(220,35,iText('option_thinareas'),preferences.data.thinareas,function(n) { preferences.data.thinareas=n; changeScaleTo(_root.scale); redrawWays(); });
 
 		box.attachMovie("checkbox","noname",10);
-		box.noname.init(220,55,iText("Highlight unnamed roads",'option_noname'),preferences.data.noname,function(n) { preferences.data.noname=n; redrawWays(); });
+		box.noname.init(220,55,iText('option_noname'),preferences.data.noname,function(n) { preferences.data.noname=n; redrawWays(); });
 
 		box.attachMovie("checkbox","tiger",11);
-		box.tiger.init(220,75,iText("Highlight unchanged TIGER",'option_tiger'),preferences.data.tiger,function(n) { preferences.data.tiger=n; redrawWays(); });
+		box.tiger.init(220,75,iText('option_tiger'),preferences.data.tiger,function(n) { preferences.data.tiger=n; redrawWays(); });
 
 		box.attachMovie("checkbox","pointer",4);
-		box.pointer.init(220,95,iText("Use pen and hand pointers",'option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+		box.pointer.init(220,95,iText('option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
 
 		box.attachMovie("checkbox","warnings",3);
-		box.warnings.init(220,115,iText("Show floating warnings",'option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
+		box.warnings.init(220,115,iText('option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
 
 		// External link and photo
 		
 		box.createTextField('externalt',70, 8,155,160,20);
-		with (box.externalt) { text=iText("External launch:",'option_external'); setTextFormat(plainSmall); selectable=false; }
+		with (box.externalt) { text=iText('option_external'); setTextFormat(plainSmall); selectable=false; }
 		adjustTextField(box.externalt);
 		box.createTextField('externali',71,box.externalt.textWidth+15,155,173-box.externalt.textWidth,17);
 		box.externali.setNewTextFormat(plainSmall); box.externali.type='input';
@@ -1089,7 +1091,7 @@
 		box.externali.border=true; box.externali.borderColor=0xFFFFFF;
 
 		box.createTextField('photot',72, 8,125,160,20);
-		with (box.photot) { text=iText("Photo KML:",'option_photo'); setTextFormat(plainSmall); selectable=false; }
+		with (box.photot) { text=iText('option_photo'); setTextFormat(plainSmall); selectable=false; }
 		adjustTextField(box.photot);
 		box.createTextField('photoi',73,box.photot.textWidth+15,125,173-box.photot.textWidth,17);
 		box.photoi.setNewTextFormat(plainSmall); box.photoi.type='input';
@@ -1173,9 +1175,9 @@
 		if (_root.io==msg) { return; }
 		_root.io=msg; var t;
 		switch (msg) {
-			case 3:	t=iText("loading/saving data",'hint_saving_loading'); break;
-			case 2:	t=iText("saving data",'hint_saving'); break;
-			case 1: t=iText("loading data",'hint_loading'); break;
+			case 3:	t=iText('hint_saving_loading'); break;
+			case 2:	t=iText('hint_saving'); break;
+			case 1: t=iText('hint_loading'); break;
 		}
 		_root.waysloading.createTextField('prompt',2,0,0,195,20);
 		with (_root.waysloading.prompt) { text=t; setTextFormat(plainRight); selectable=false; }

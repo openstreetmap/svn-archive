@@ -23,7 +23,7 @@
 			_root.map.pois[newnodeid].clean=false;
 			markClean(false);
 			_root.undo.append(UndoStack.prototype.undo_createpoi,
-							  [_root.map.pois[newnodeid]],iText("creating a POI",'action_createpoi'));
+							  [_root.map.pois[newnodeid]],iText('action_createpoi'));
 
 		} else if (Key.isDown(Key.SHIFT) && !this.way.historic) {
 			_root.junction=true;				// flag to prevent elastic band stopping on _this_ mouseUp
@@ -48,14 +48,14 @@
 		_root.panel.properties.saveAttributes();
 		_root.pointselected=this._name;
 		this.way.highlight();
-		setTypeText(iText("Point",'point'),this.node);
+		setTypeText(iText('point'),this.node);
 		removeIconPanel();
 		_root.panel.properties.init('point',getPanelColumns(),4);
 		_root.panel.presets.init(_root.panel.properties);
 		updateButtons();
 		updateScissors(true);
 		updateInspector();
-		setTooltip(iText("point selected\n(shift-click point to\nstart new line)",'hint_pointselected'),0);
+		setTooltip(iText('hint_pointselected'),0);
 	};
 
 	AnchorPoint.prototype.beginDrag=function() {
@@ -93,7 +93,7 @@
 			_root.ws.path[this._name].y=_root.oldy;	//  |
 			_root.undo.append(UndoStack.prototype.undo_movenode,
 							  new Array(deepCopy(_root.ws.path[this._name])),
-							  iText("moving a point",'action_movepoint'));
+							  iText('action_movepoint'));
 			_root.ws.path[this._name].moveTo(newx,newy,undefined);
 			_root.ws.highlightPoints(5000,"anchor");
 			_root.ws.highlight();
@@ -114,7 +114,7 @@
 					stopDrawing();
 				} else if (_root.drawpoint==-1) {
 					// - Start elastic line for adding new point
-					setTooltip(iText("click to add point\ndouble-click/Return\nto end line",'hint_drawmode'),0);
+					setTooltip(iText('hint_drawmode'),0);
 					_root.drawpoint=this._name;
 					this.startElastic();
 				}
@@ -180,7 +180,7 @@
 		}
 		if (poslist.length==0) { return; }
 		_root.undo.append(UndoStack.prototype.undo_addpoint,
-						  new Array(waylist,poslist), iText("adding a node into a way",'action_insertnode'));
+						  new Array(waylist,poslist), iText('action_insertnode'));
 		_root.ws.highlightPoints(5000,"anchor");
 		updateInspector();
 	};
@@ -202,10 +202,10 @@
 	AnchorHint.prototype=new MovieClip();
 	AnchorHint.prototype.onRollOver=function() {
 		if (this._name==0 || this._name==this.way.path.length-1) {
-			setTooltip(iText("over endpoint ($1)\nclick to join\nshift-click to merge",'hint_overendpoint',this.node));
+			setTooltip(iText('hint_overendpoint',this.node));
 			setPointer('peno');
 		} else {
-			setTooltip(iText("over point ($1)\nclick to join",'hint_overpoint',this.node));
+			setTooltip(iText('hint_overpoint',this.node));
 			setPointer('penx');
 		}
 		var a=getName(_root.nodes[this.node].attr,nodenames); if (a) { setFloater(a); }

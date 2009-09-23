@@ -19,9 +19,9 @@
 		// Draw window
 		
 		_root.windows.attachMovie("modal","history",++windowdepth);
-		_root.windows.history.init(275,90,new Array(iText('More','more'),iText('Cancel','cancel')),handleHistoryChoice);
+		_root.windows.history.init(275,90,new Array(iText('more'),iText('cancel')),handleHistoryChoice);
 		_root.windows.history.box.createTextField("prompt",2,7,9,250,100);
-		writeText(_root.windows.history.box.prompt,iText("Revert to an earlier saved version:",'prompt_revertversion'));
+		writeText(_root.windows.history.box.prompt,iText('prompt_revertversion'));
 		adjustTextField(_root.windows.history.box.prompt);
 
 		_root.windows.history.box.createEmptyMovieClip('revert' ,21);
@@ -45,7 +45,7 @@
 		}
 		_root.windows.history.box.attachMovie("menu","version",23);
 		_root.windows.history.box.version.init(9,32,0,versionlist,
-			iText('Choose the date to revert to','tip_revertversion'),
+			iText('tip_revertversion'),
 			function(n) {
 				var a=100; if (versioninfo[n][2]==0) { var a=25; }
 				_root.windows.history.box.revert._alpha=a;
@@ -61,7 +61,7 @@
 	// Respond to buttons
 
 	function handleHistoryChoice(choice) {
-		if (choice==iText('Cancel','cancel')) { return; }
+		if (choice==iText('cancel')) { return; }
 		getURL("http://www.openstreetmap.org/browse/"+_root.reverttype+"/"+_root.revertid,"_blank");
 	};
 
@@ -70,7 +70,7 @@
 		if (_root.revertauthor>0) {
 			getURL("http://www.openstreetmap.org/message/new/"+_root.revertname,"_blank");
 		} else {
-			handleError(-1,new Array(iText("You cannot contact an anonymous mapper.",'error_anonymous')));
+			handleError(-1,new Array(iText('error_anonymous')));
 		}
 	};
 
@@ -82,7 +82,7 @@
 							  new Array(_root.revertid,deepCopy(_root.map.ways[_root.revertid].path),
 													   deepCopy(_root.map.ways[_root.revertid].deletednodes),
 													   deepCopy(_root.map.ways[_root.revertid].attr)),
-							  iText("reverting a way",'action_revertway'));
+							  iText('action_revertway'));
 			_root.map.ways[_root.revertid].loadFromDeleted(_root.reverttime);
 		} else if (nodes[_root.revertid]) { // node in way
 			noderesponder=function() {};

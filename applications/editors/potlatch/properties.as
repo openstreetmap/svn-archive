@@ -96,7 +96,7 @@
 		this.attachMovie("preset_"+this.group,"icon",2);
 		with (this.icon) { _x=10; _y=15; }
 		this.icon.onPress   =function() { this._parent.cycleIcon(); };
-		this.icon.onRollOver=function() { setFloater(iText("Choose what type of presets are offered in the menu.",'tip_presettype')); };
+		this.icon.onRollOver=function() { setFloater(iText('tip_presettype')); };
 		this.icon.onRollOut =function() { clearFloater(); };
 	};
 	PresetMenu.prototype.cycleIcon=function() {
@@ -375,13 +375,13 @@
 		switch (this.proptype) {
 			case 'way':		_root.undo.append(UndoStack.prototype.undo_waytags,
 											  new Array(_root.ws,deepCopy(this.proparr)),
-											  iText("setting tags on a way",'action_waytags')); break;
+											  iText('action_waytags')); break;
 			case 'point':	_root.undo.append(UndoStack.prototype.undo_pointtags,
 											  new Array(_root.ws,_root.pointselected,deepCopy(this.proparr)),
-											  iText("setting tags on a point",'action_pointtags')); break;
+											  iText('action_pointtags')); break;
 			case 'POI':		_root.undo.append(UndoStack.prototype.undo_poitags,
 											  new Array(_root.map.pois[poiselected],deepCopy(this.proparr)),
-											  iText("setting tags on a POI",'action_poitags')); break;
+											  iText('action_poitags')); break;
 		};
 	};
 

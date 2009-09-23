@@ -135,7 +135,7 @@
 			markClean(false);
 			_root.undo.append(UndoStack.prototype.undo_movepoi,
 							  new Array(this,this.originalx,this.originaly),
-							  iText("moving a POI",'action_movepoi'));
+							  iText('action_movepoi'));
 		}
 	};
 	POI.prototype.select=function() {
@@ -144,7 +144,7 @@
 		_root.panel.properties.tidy();
 		_root.panel.properties.saveAttributes();
 		_root.poiselected=this._name;
-		setTypeText(iText("Point",'point'),this._name);
+		setTypeText(iText('point'),this._name);
 		removeIconPanel();
 		_root.panel.properties.init('POI',getPanelColumns(),4);
 		_root.panel.presets.init(_root.panel.properties);
@@ -164,7 +164,7 @@
 	POI.prototype.saveUndo=function(str) {
 		_root.undo.append(UndoStack.prototype.undo_deletepoi,
 						  new Array(this._name,this._x,this._y,
-									deepCopy(this.attr)),iText("$1 a POI",'a_poi',str));
+									deepCopy(this.attr)),iText('a_poi',str));
 	};
 
 	POI.prototype.highlight=function() {

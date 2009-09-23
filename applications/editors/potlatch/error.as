@@ -4,11 +4,11 @@
 
 	function handleError(code,msg,result) {
 		if (code==-2 && msg.indexOf('allocate memory')>-1) { code=-1; }
-		if (msg.indexOf('changeset')>-1) { _root.changeset=null; msg+=iText("\nPlease try again: Potlatch will start a new changeset.",'newchangeset'); }	// we really need a dedicated error code for this
+		if (msg.indexOf('changeset')>-1) { _root.changeset=null; msg+=iText('newchangeset'); }	// we really need a dedicated error code for this
 		if (msg.indexOf('logged')>-1) { loginDialogue(); return; }
 		switch (code) {
 			case -1:	errorDialogue(msg,150); break;
-			case -2:	errorDialogue(msg+iText("\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time.",'emailauthor'),200); break;
+			case -2:	errorDialogue(msg+iText('emailauthor'),200); break;
 			case -3:	resolveConflict(msg,result); break;		// version conflict
 			case -4:	deleteObject(msg,result[0]); break;		// object not found
 			case -5: 	break;									// not executed due to previous error
@@ -18,7 +18,7 @@
 	function errorDialogue(t,h) {
 		abortUpload();
 		_root.windows.attachMovie("modal","error",++windowdepth);
-		_root.windows.error.init(350,h,new Array(iText('Ok','ok')),null);
+		_root.windows.error.init(350,h,new Array(iText('ok')),null);
 		_root.windows.error.box.createTextField("prompt",2,7,9,325,h-40);
 		writeText(_root.windows.error.box.prompt,t);
 		_root.windows.error.box.prompt.selectable=true;
@@ -27,13 +27,13 @@
 	function handleWarning() {
 		abortUpload();
 		_root.windows.attachMovie("modal","error",++windowdepth);
-		_root.windows.error.init(275,130,new Array(iText('Cancel','cancel'),iText('Retry','retry')),handleWarningAction);
+		_root.windows.error.init(275,130,new Array(iText('cancel'),iText('retry')),handleWarningAction);
 		_root.windows.error.box.createTextField("prompt",2,7,9,250,100);
         _root.uploading=false;
 		if (writeError) {
-			writeText(_root.windows.error.box.prompt,iText("Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?",'error_connectionfailed'));
+			writeText(_root.windows.error.box.prompt,iText('error_connectionfailed'));
 		} else {
-			writeText(_root.windows.error.box.prompt,iText("Sorry - the OpenStreetMap server didn't respond when asked for data.\n\nWould you like to try again?",'error_readfailed'));
+			writeText(_root.windows.error.box.prompt,iText('error_readfailed'));
 		}
 	};
 
@@ -41,7 +41,7 @@
 		_root.panel.i_warning._visible=false;
 		_root.writesrequested=0;
 		_root.waysrequested=_root.waysreceived=_root.whichrequested=_root.whichreceived=0;
-        var retry=(choice==iText('Retry','retry'));
+        var retry=(choice==iText('retry'));
 		if (writeError) {
 			// loop through all ways which are uploading, and reupload
 			if (retry) { establishConnections(); }
@@ -117,20 +117,20 @@
 	
 	function loginDialogue() {
 		_root.windows.attachMovie("modal","login",++windowdepth);
-		_root.windows.login.init(300,140,new Array(iText('Cancel','cancel'),iText('Retry','retry')),retryLogin); 
+		_root.windows.login.init(300,140,new Array(iText('cancel'),iText('retry')),retryLogin); 
 		var box=_root.windows.login.box;
 		
 		box.createTextField("title",10,7,7,280,20);
-		box.title.text = iText("Couldn't log in","login_title");
+		box.title.text = iText("login_title");
 		with (box.title) { setTextFormat(boldText); selectable=false; type='dynamic'; }
 		adjustTextField(box.title);
 
 		box.createTextField('prompt',11, 8,33,280,40);
-		with (box.prompt) { text=iText("Your site login was not recognised. Please try again.",'login_retry'); setTextFormat(plainSmall); selectable=false; }
+		with (box.prompt) { text=iText('login_retry'); setTextFormat(plainSmall); selectable=false; }
 		adjustTextField(box.prompt);
 
 		box.createTextField('uidt',12, 8,63,160,20);
-		with (box.uidt) { text=iText("Username:",'login_uid'); setTextFormat(plainSmall); selectable=false; }
+		with (box.uidt) { text=iText('login_uid'); setTextFormat(plainSmall); selectable=false; }
 		adjustTextField(box.uidt); var r=box.uidt.textWidth+25;
 		box.createTextField('uidi',13,r,63,120,17);
 		box.uidi.setNewTextFormat(plainSmall); box.uidi.type='input';
@@ -139,7 +139,7 @@
 		box.uidi.border=true; box.uidi.borderColor=0xFFFFFF;
 
 		box.createTextField('pwdt',14, 8,83,160,20);
-		with (box.pwdt) { text=iText("Password:",'login_pwd'); setTextFormat(plainSmall); selectable=false; }
+		with (box.pwdt) { text=iText('login_pwd'); setTextFormat(plainSmall); selectable=false; }
 		adjustTextField(box.pwdt);
 		box.createTextField('pwdi',15,r,83,120,17);
 		box.pwdi.setNewTextFormat(plainSmall); box.pwdi.type='input';
@@ -150,7 +150,7 @@
 	}
 	
 	function retryLogin(choice) {
-		if (choice==iText('Retry','retry')) {
+		if (choice==iText('retry')) {
 			_root.usertoken=_root.windows.login.box.uidi.text+":"+_root.windows.login.box.pwdi.text;
 		}
 		_root.changeset=null;
@@ -174,13 +174,13 @@
 		abortUpload();
 		switch (rootobj[0]) {
 			case 'way':		var n=getName(_root.map.ways[id].attr,waynames); if (n) { n=" ("+n+")"; }
-							t1=iText("Since you started editing, someone else has changed way $1$2.","conflict_waychanged",id,n);
-							t2=iText("Click 'Ok' to show the way.","conflict_visitway"); break;
+							t1=iText("conflict_waychanged",id,n);
+							t2=iText("conflict_visitway"); break;
 			case 'node':	var n=getName(_root.map.pois[id].attr,nodenames); if (n) { n=" ("+n+")"; }
-							t1=iText("Since you started editing, someone else has changed point $1$2.","conflict_poichanged",id,n);
-							t2=iText("Click 'Ok' to show the point.","conflict_visitpoi"); break;
+							t1=iText("conflict_poichanged",id,n);
+							t2=iText("conflict_visitpoi"); break;
 			case 'relation':var n=_root.map.relations[id].verboseText(); if (n) { n=" ("+n+")"; }
-							t1=iText("Since you started editing, someone else has changed relation $1$2.","conflict_relchanged",id,n);
+							t1=iText("conflict_relchanged",id,n);
 							t2=""; break;
 		}
 		_root.windows.attachMovie("modal","resolve",++windowdepth);
@@ -191,8 +191,8 @@
 		writeText(box.prompt1,t1); var t=box.prompt1.textHeight;
 
 		box.attachMovie("radio","fixoption",3);
-		box.fixoption.addButton(10,t+22,iText("Download their version",'conflict_download'));
-		box.fixoption.addButton(10,t+40,iText("Overwrite their version",'conflict_overwrite'));
+		box.fixoption.addButton(10,t+22,iText('conflict_download'));
+		box.fixoption.addButton(10,t+40,iText('conflict_overwrite'));
 		box.fixoption.select(1);
 
 		if (t2) {

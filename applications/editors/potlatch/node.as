@@ -37,7 +37,7 @@
 			_root.map.ways[qway].clean=false;
 			_root.map.ways[qway].removeDuplicates();
 			if (_root.map.ways[qway].path.length<2) {
-				_root.map.ways[qway].saveDeleteUndo(iText("deleting",'deleting'));
+				_root.map.ways[qway].saveDeleteUndo(iText('deleting'));
 				_root.map.ways[qway].remove();
 			} else {
 				_root.map.ways[qway].redraw();

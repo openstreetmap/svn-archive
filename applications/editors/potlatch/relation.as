@@ -293,7 +293,7 @@
 	OSMRelation.prototype.editRelation = function() {
 		var rel = this;
 		var completeEdit = function(button) {
-			if (button==iText("Ok",'ok') ) {
+			if (button==iText('ok') ) {
 				_root.windows.relation.box.properties.tidy();
 			} else {
 				_root.editingrelation.attr=_root.editingrelationattr;
@@ -306,7 +306,7 @@
 		_root.panel.properties.enableTabs(false);
 		
 		_root.windows.attachMovie("modal","relation",++windowdepth);
-		_root.windows.relation.init(402, 255, [iText("Cancel",'cancel'), iText("Ok",'ok')], completeEdit);
+		_root.windows.relation.init(402, 255, [iText('cancel'), iText('ok')], completeEdit);
 		var z=5;
 		var box=_root.windows.relation.box;
 		
@@ -338,7 +338,7 @@
 			_x = 400-16; _y = 18;
 		}
 		box.newattr.onRelease =function() { box.properties.enterNewAttribute(); };
-		box.newattr.onRollOver=function() { setFloater(iText("Add a new tag",'tip_addtag')); };
+		box.newattr.onRollOver=function() { setFloater(iText('tip_addtag')); };
 		box.newattr.onRollOut =function() { clearFloater(); };
 	};
 
@@ -424,7 +424,7 @@
 
 		var completeAdd = function(button) {
 
-			if ( button != iText("Ok",'ok') ) return false;
+			if ( button != iText('ok') ) return false;
 
 			var box=_root.windows.relation.box;
 			var radio=box.reloption.selected;
@@ -476,12 +476,12 @@
 
 		_root.panel.properties.enableTabs(false);
 		_root.windows.attachMovie("modal","relation",++windowdepth);
-		_root.windows.relation.init(300, 150, [iText("Cancel",'cancel'), iText("Ok",'ok')], completeAdd);
+		_root.windows.relation.init(300, 150, [iText('cancel'), iText('ok')], completeAdd);
 		var z = 5;
 		var box = _root.windows.relation.box;
 		
 		box.createTextField("title",z++,7,7,300-14,20);
-		box.title.text = iText("Add $1 to a relation",'prompt_addtorelation',proptype);
+		box.title.text = iText('prompt_addtorelation',proptype);
 		with (box.title) {
 			wordWrap=true;
 			setTextFormat(boldText);
@@ -494,9 +494,9 @@
 		// Create radio buttons and menu
 
 		box.attachMovie("radio","reloption",z++);
-		box.reloption.addButton(10,35,iText("Add to an existing relation",'existingrelation'));
-		box.reloption.addButton(10,75,iText("Create a new relation",'createrelation'));
-		box.reloption.addButton(10,95,iText("Find a relation containing",'findrelation'));
+		box.reloption.addButton(10,35,iText('existingrelation'));
+		box.reloption.addButton(10,75,iText('createrelation'));
+		box.reloption.addButton(10,95,iText('findrelation'));
 
 		createRelationMenu(box,20);
 
@@ -519,7 +519,7 @@
 		}
 
 		if (relations.length==0) {
-			relations.push(iText("No relations in current area",'norelations'));
+			relations.push(iText('norelations'));
 			box.reloption.disable(1);
 			box.reloption.select(2);
 		} else {
@@ -528,5 +528,5 @@
 		}
 		box.attachMovie("menu", "addroute_menu", z);
 		box.addroute_menu.init(25, 50, 0, relations,
-					iText('Add to the chosen route','tip_selectrelation'),null, null, 268);
+					iText('tip_selectrelation'),null, null, 268);
 	}

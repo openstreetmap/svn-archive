@@ -10,7 +10,7 @@
 		_root.panel.iconpanel.createEmptyMovieClip("icons",1);
 		_root.panel.iconpanel.createEmptyMovieClip("legends",2);
 		_root.panel.iconpanel.createTextField("prompt",3,5,-20,300,20);
-		_root.panel.iconpanel.prompt.text=iText("Drag and drop points of interest","drag_pois");
+		_root.panel.iconpanel.prompt.text=iText("drag_pois");
 		_root.panel.iconpanel.prompt.setTextFormat(plainText);
 		adjustTextField(_root.panel.iconpanel.prompt);
 		with (_root.panel.iconpanel) { _x=110; _y=25; _visible=true; };
@@ -68,5 +68,5 @@
 		markClean(false);
 		removeMovieClip(_root.dragicon);
 		_root.undo.append(UndoStack.prototype.undo_createpoi,
-						  [_root.map.pois[newnodeid]],iText("creating a POI",'action_createpoi'));
+						  [_root.map.pois[newnodeid]],iText('action_createpoi'));
 	}

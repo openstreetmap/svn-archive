@@ -2,13 +2,13 @@
 	// Potlatch help functions
 
 	var topicselected=0;
-	var topics=new Array(iText('Introduction','heading_introduction'),
-	                     iText('Getting started','heading_pois'),
-	                     iText('Surveying','heading_surveying'),
-	                     iText('Drawing','heading_drawing'),
-	                     iText('Tagging','heading_tagging'),
-	                     iText('Troubleshooting','heading_troubleshooting'),
-	                     iText('Quick reference','heading_quickref'));
+	var topics=new Array(iText('heading_introduction'),
+	                     iText('heading_pois'),
+	                     iText('heading_surveying'),
+	                     iText('heading_drawing'),
+	                     iText('heading_tagging'),
+	                     iText('heading_troubleshooting'),
+	                     iText('heading_quickref'));
 
 	var styles=new TextField.StyleSheet();
 	styles.load("/potlatch/help.css?d=5");

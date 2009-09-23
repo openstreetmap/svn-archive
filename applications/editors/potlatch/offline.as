@@ -59,13 +59,13 @@
 
 		// Check there's something to do
 		if (uploadtasks.length==0) { 
-		    setAdvice(true,iText("Nothing to upload",'advice_uploadempty'));
+		    setAdvice(true,iText('advice_uploadempty'));
 			return;
 		}
 		
 		// Ask for changeset comment if not already created
 		if (_root.changeset) { if (!renewChangeset()) { startUpload(); } } 
-		                else { changesetRequest(iText("Save changes",'prompt_savechanges'),completeClose,''); }
+		                else { changesetRequest(iText('prompt_savechanges'),completeClose,''); }
 	}
 
 	// -------------------------------------------------------------------------------------
@@ -76,11 +76,11 @@
 	    _root.uploading=true;
 
 		_root.windows.attachMovie("modal","upload",++windowdepth);
-		_root.windows.upload.init(300,250,[iText('Cancel','cancel')],abortUpload);
+		_root.windows.upload.init(300,250,[iText('cancel')],abortUpload);
 
         box=_root.windows.upload.box;
 		box.createTextField("title",10,7,7,280,20);
-		box.title.text = iText("Uploading...","uploading");
+		box.title.text = iText("uploading");
 		with (box.title) { setTextFormat(boldText); selectable=false; type='dynamic'; }
 		adjustTextField(box.title);
 
@@ -104,7 +104,7 @@
 		var i,z;
 		if (!_root.uploading) { return; }
 		_root.uploading=false;
-		setAdvice(false,iText("Upload stopped",'advice_uploadfail'));
+		setAdvice(false,iText('advice_uploadfail'));
 		_root.windows.upload.remove();
 		z=_root.map.pois; for (i in z) { z[i].uploading=false; }
 		z=_root.map.ways; for (i in z) { z[i].uploading=false; }
@@ -149,10 +149,10 @@
 //        _root.windows.upload.box.progress.text+="Upload complete";
 //		var box=_root.windows.upload.box;
 //		box.createEmptyMovieClip(1,1);
-//		drawButton(box[1],140,220,iText("Ok","ok"),"");
+//		drawButton(box[1],140,220,iText("ok"),"");
 //		box[1].onPress=function() { _root.windows.upload.remove(); };
         _root.windows.upload.remove(); 
-		setAdvice(false,iText("All data successfully uploaded",'advice_uploadsuccess'));
+		setAdvice(false,iText('advice_uploadsuccess'));
         markClean(true);
 	}
 

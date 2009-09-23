@@ -1,3 +1,4 @@
+#!/usr/bin/perl
 #
 #  $Revision$ by $Author$, $Date$
 #
@@ -21,8 +22,8 @@
 #
 # OUT: file.htm (list)
 # OUT: file.csv (list)
-# OUT: file.hirarchy.htm (list)
-# OUT: file.hirarchy.csv (list)
+# OUT: file.hierarchy.htm (list)
+# OUT: file.hierarchy.csv (list)
 # OUT: file.XXXXX.poly (borders original)
 # OUT: file.Simplified.XXXXX.poly (borders simplified)
 # OUT: file.Resized.XXXXX.poly (borders resized and potentially simplified)
@@ -33,8 +34,8 @@
 # parameters and options see below
 #
 # Version 2
-# - find hirarchies and report
-# - use simplified polygons for hirarchy if specified
+# - find hierarchies and report
+# - use simplified polygons for hierarchy if specified
 # - time calc 
 # - error handling for relations caontaining themselves as member
 # - check for max nesting level when parsing relation members being relations (prevent loops eating memory and terminate program)
@@ -124,7 +125,7 @@ my $optResult ;
 my $verbose = "" ;
 my $adminLevelOpt = "" ;
 my $polyOpt = "" ;
-my $hirarchyOpt = 0 ;
+my $hierarchyOpt = 0 ;
 my $simplifyOpt = "" ;
 my $debugOpt = "" ;
 my $picOpt = "" ;
@@ -159,7 +160,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"pics" 		=> \$picOpt,		# specifies if pictures of polygons are drawn. polybasename must be given.
 				"bigpic" 	=> \$bigPicOpt,		# specifies if big pictures of all polygons are drawn. polybasename must be given.
 				"allpics"	=> \$allPicsOpt,	# also invalid and unselected will be drawn (don't use adminlevel selection then)
-				"hirarchy" 	=> \$hirarchyOpt,	# specifies if hirarchies of boundaries are calculated. don't together use with adminlevel. can/should be used with -simplify, then simplified polygons are used for building the hirarchy - much faster
+				"hierarchy" 	=> \$hierarchyOpt,	# specifies if hierarchies of boundaries are calculated. don't together use with adminlevel. can/should be used with -simplify, then simplified polygons are used for building the hierarchy - much faster
 				"resize"	=> \$resizeOpt,	# specifies if new resized polygon will be produced (-polygon must be specified, maybe use -factor, if -simplify is given, simplified polygon will be resized)
 				"factor:f"	=> \$resizeFactor,	# specifies how much bigger the resized polygon will be
 				"picsize:i"	=> \$picSize,		# specifies pic size longitude in pixels
@@ -692,8 +693,8 @@ if ( ($polyBaseName ne "") and ($bigPicOpt eq "1") ) {
 #
 # BUILD AND PRINT HIRARCHIES
 #
-if ($hirarchyOpt eq "1") {
-	print "building hirarchies...\n" ;
+if ($hierarchyOpt eq "1") {
+	print "building hierarchies...\n" ;
 	my $rel ; my $rel1 ; my $rel2 ; 
 	my $count = 0 ; my ($max) = 0 ;
 	# calc max number of checks
@@ -726,15 +727,15 @@ if ($hirarchyOpt eq "1") {
 
 	my ($csvNameHirarchy) = $csvName ;
 	my ($htmlNameHirarchy) = $htmlName ;
-	$csvNameHirarchy =~  s/.csv/.hirarchy.csv/ ;
-	$htmlNameHirarchy =~ s/.htm/.hirarchy.htm/ ;
+	$csvNameHirarchy =~  s/.csv/.hierarchy.csv/ ;
+	$htmlNameHirarchy =~ s/.htm/.hierarchy.htm/ ;
 
 	open ($htmlFile, ">", $htmlNameHirarchy) or die ("can't open html output file") ;
 	open ($csvFile, ">", $csvNameHirarchy) or die ("can't open csv output file") ;
 
-	printHTMLHeader ($htmlFile, "boundaries by gary68 - hirarchy") ;
+	printHTMLHeader ($htmlFile, "boundaries by gary68 - hierarchy") ;
 	print $csvFile "Line;RelationId;Name;Type;Boundary;AdminLevel;is_in\n" ;
-	print $htmlFile "<h1>boundary.pl by gary68 - hirarchy</h1>" ;
+	print $htmlFile "<h1>boundary.pl by gary68 - hierarchy</h1>" ;
 	print $htmlFile "<p>Version ", $version, "</p>\n" ;
 	print $htmlFile "<H2>Statistics</H2>\n" ;
 	print $htmlFile "<p>", stringFileInfo ($osmName), "</p>\n" ;
@@ -789,8 +790,8 @@ if ($hirarchyOpt eq "1") {
 
 	close ($htmlFile) ;
 	close ($csvFile) ;
-	print "building hirarchies done.\n" ;
-} # hirarchy
+	print "building hierarchies done.\n" ;
+} # hierarchy
 
 
 

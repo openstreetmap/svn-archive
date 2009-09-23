@@ -427,7 +427,7 @@
 				  iText("advanced_undelete"),
 				  iText("advanced_close"),
 				  iText("advanced_maximise")),
-		'Advanced editing actions',advancedAction,null,85,"Advanced");
+		iText('advanced_tooltip'),advancedAction,null,85,iText("advanced"));
 	selectWay(0);	// just to update the menu items
 
 

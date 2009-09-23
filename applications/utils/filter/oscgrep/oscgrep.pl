@@ -6,7 +6,7 @@ $0 is a simple script that helps you find certain objects in .osc files.
 
 It is called like this:
 
-perl $0 [-a action] [-t type] [-s shapename] [-q] [regex] [file] [file...]
+perl $0 [-a action] [-t type] [-s shapename] [-q] [-v] [-r regex] [file] [file...]
 
 where
   "action" is either create, modify, or delete;
@@ -15,9 +15,10 @@ where
   "file" is an .osc file (also supports .osc.gz or .osc.bz2)
 
 It lists all elements from the .osc file that match the given action, type, and
-regex (regex is applied against full XML content of the object). If -a, -t or
-regex are omitted, dumps all actions/all types/all content; if file is omitted,
-reads from stdin.
+regex (regex is applied against full XML content of the object). The switch
+-v inverts the regex match (prints records that do NOT match the regex). 
+If -a, -t or -r are omitted, dumps all actions/all types/all content; 
+if file is omitted, reads from stdin.
 
 If the -s parameter is specified, then $0 will, in addition to its normal 
 output, also write a shape file under the given name which contains all
@@ -36,9 +37,8 @@ use Time::Local;
 use Getopt::Std;
 
 my $options = {};
-getopts("a:t:s:q", $options);
-my $grep;
-$grep = shift(@ARGV) unless (-f $ARGV[0]);
+getopts("a:t:s:r:vq", $options);
+my $grep = $options->{"r"};
 
 my $shp;
 if (defined($options->{"s"}))
@@ -108,7 +108,17 @@ sub out
     my ($type, $action, $file, $content) = @_;
     return if (defined($options->{"a"}) && $options->{"a"} ne $action);
     return if (defined($options->{"t"}) && $options->{"t"} ne $type);
-    return if (defined($grep) && $content !~ /$grep/);
+    if (defined($grep))
+    {
+        if ($options->{"v"})
+        {
+            return if ($content =~ /$grep/);
+        }
+        else
+        {
+            return unless ($content =~ /$grep/);
+        }
+    }
     print "<$action>\n$content</$action>\n" unless($options->{"q"});
 
     if (defined($shp) && ($type eq "node"))

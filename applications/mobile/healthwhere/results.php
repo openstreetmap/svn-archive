@@ -2,7 +2,7 @@
 //Get start time for log
 $iStartTime = time ();
 //Store search terms in cookies
-if ($_GET ["SearchType"] == "postcode")
+if ($_GET ["txtPostcode"] != "")
 	setcookie ("Postcode", trim ($_GET ["txtPostcode"]));
 if ($_GET ["txtLatitude"] != "")
 	setcookie ("Latitude", (float) $_GET ["txtLatitude"]);

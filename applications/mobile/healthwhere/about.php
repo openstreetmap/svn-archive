@@ -4,11 +4,11 @@ require_once ("inc_head_html.php");
 ?>
 
 <p>
-<a href = "index.php">Healthwhere</a> v<?=VERSION ?> uses data from <a href = "http://www.openstreetmap.org/">OpenStreetMap</a> (<a href = "http://wiki.openstreetmap.org/wiki/License">licence details</a>) to find local pharmacies.
+<a href = "index.php">Healthwhere</a> v<?=VERSION ?> uses data from <a href = "http://www.openstreetmap.org/">OpenStreetMap</a> (<a href = "http://wiki.openstreetmap.org/wiki/License">licence details</a>) to find local pharmacies and hospitals.
 </p>
 
 <p>
-Postcode lookups via <a href = "http://ernestmarples.com/">Ernest Marples Postcodes Ltd</a>.
+Postcode data from <a href = "http://ernestmarples.com/">Ernest Marples Postcodes Ltd</a> and <a href = "http://www.npemap.org.uk/">NPE Maps</a>.
 </p>
 
 <p>

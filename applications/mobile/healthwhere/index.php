@@ -19,7 +19,6 @@ require_once ("inc_head_html.php");
 
 <p>
 <form action = "results.php" method = "get">
-<input type = "hidden" name = "SearchType" value = "postcode">
 <table border = "0">
 <tr><th colspan = "2">
 Your Position

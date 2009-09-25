@@ -1724,7 +1724,7 @@
 			
 			.city-caption           { font-size: 50px; }
 			.town-caption           { font-size: 40px; }
-			.island-caption         { font-size: 30px; }
+			.island-caption         { font-size: 22px; }
 			.islet-caption          { font-size: 20px; }
 			.village-caption        { font-size: 20px; }
 			.suburb-caption         { font-size: 20px; }

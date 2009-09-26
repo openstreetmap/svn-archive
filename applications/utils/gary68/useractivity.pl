@@ -29,7 +29,11 @@
 # - html print program version number
 # - draw renamed ways
 # 
+# Version 2.4
+# - user "age" added
 #
+#
+
 
 use strict ;
 use warnings ;
@@ -37,13 +41,13 @@ use warnings ;
 use OSM::osm ;
 use OSM::osmgraph ;
 use File::stat ;
-use Time::localtime ;
+#use Time::localtime ;
 use Compress::Bzip2 ;
 
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode [numTopUsers] [picSize] (Mode = [N|P|D|S], picSize x in pixels)\n" ;
 $usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\n" ;
-my $version = "2.3" ;
+my $version = "2.4" ;
 
 my $topMax = 10 ;
 
@@ -78,6 +82,8 @@ my %versionJumpsNodes = () ;
 my %versionJumpsWays = () ;
 my %opTime ;
 my %neededNodes = () ;
+my %age = () ;
+my $localDay ; my $localMonth ; my $localYear ;
 
 my $reName ; my $reClass ; my $reRef ;
 my $name1 ; my $name2 ; my $ref1 ; my $ref2 ; my $class1 ; my $class2 ;
@@ -114,6 +120,9 @@ print stringFileInfo ($osm2Name), "\n\n"  ;
 #------------------------------------------------------------------------------------
 
 if (grep /P/, $mode) { initializeMap() ; }
+
+initLocaltime() ;
+print "local time: $localDay $localMonth $localYear\n" ;
 
 openOsm1File ($osm1Name) ;
 moveNodeFile1() ;
@@ -425,6 +434,9 @@ sub output {
 	print $html "<p>DELETED NODES WITH TAGS: $deletedNodesWithTags (details see further down)</p>\n" ;
 	
 	@a = () ;
+	foreach my $u (keys %age) { push @a, [$u, $age{$u}] ; }
+	printBottom ("BOTTOM age users (in days, derived from timestamps)", 0, @a) ;
+	@a = () ;
 	foreach my $e (keys %nodesMovedNumber) { push @a, [$e, $nodesMovedNumber{$e}] ; }
 	printTop ("TOP moved nodes number", 0, @a) ;
 	@a = () ;
@@ -643,6 +655,30 @@ sub printTop {
 	printHTMLTableHead ($html) ;
 	printHTMLTableHeadings ($html, "User", "Data") ; 
 	@list = reverse (sort {$a->[1]<=>$b->[1]} @list) ;
+	if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
+	foreach my $e (@list) {
+		printHTMLRowStart ($html) ;
+		my $s ;
+		if ($decimal) { 
+			$s = sprintf "%8.3f", $e->[1] ;
+		}
+		else {
+			$s = sprintf "%8i", $e->[1] ;
+		}
+		printHTMLCellLeft ($html, userLink ($e->[0]) ) ;			
+		printHTMLCellRight ($html, $s) ;			
+		printHTMLRowEnd ($html) ;
+	} 
+	printHTMLTableFoot ($html) ;
+}
+
+
+sub printBottom {
+	my ($heading, $decimal, @list) = @_ ;
+	print $html "<h2>$heading</h2>\n" ;
+	printHTMLTableHead ($html) ;
+	printHTMLTableHeadings ($html, "User", "Data") ; 
+	@list = sort {$a->[1]<=>$b->[1]} @list ;
 	if (scalar @list > $topMax) { @list = @list[0..$topMax-1] ; }
 	foreach my $e (@list) {
 		printHTMLRowStart ($html) ;
@@ -1165,6 +1201,7 @@ sub moveNodeFile2 {
 	($nodeId2, $nodeVersion2, $nodeTimestamp2, $nodeUid2, $nodeUser2, $nodeChangeset2, $nodeLat2, $nodeLon2, $aRef1) = getNodeFile2 () ;
 	if ($nodeId2 != -1) {
 		@nodeTags2 = @$aRef1 ;
+		userTimestamp ($nodeUser2, $nodeTimestamp2) ;
 	}
 }
 
@@ -1181,6 +1218,7 @@ sub moveWayFile2 {
 	if ($wayId2 != -1) {
 		@wayNodes2 = @$aRef1 ;
 		@wayTags2 = @$aRef2 ;
+		userTimestamp ($wayUser2, $wayTimestamp2) ;
 	}
 }
 
@@ -1240,4 +1278,54 @@ sub nextLine2 {
 	if ($isBz22) { $bz2->bzreadline($line2) ; }
 	else { $line2 = <$file2> ; }
 }
+#------------------------------------------------------------------------------------
+# Basic date operations
+#------------------------------------------------------------------------------------
+
+
+sub diffDates {
+	my ($d1, $m1, $y1, $d2, $m2, $y2) = @_ ;
+	my $res ;
+	$res = ($y2-$y1) * 365 ;
+	$res += ($m2-$m1) * 30 ;
+	$res += ($d2-$d1) ;
+	return ($res) ;
+}
+
+
+sub extractDateFromTimestamp {
+	my ($str) = shift ;
+	my $d ; my $m; my $y ;
+
+	$d = substr ($str, 8, 2) ;
+	$m = substr ($str, 5, 2) ;
+	$y = substr ($str, 0, 4) ;
+	return ($d, $m, $y) ;
+}
+
+
+sub initLocaltime {
+	my ($second, $minute, $hour, $dayOfMonth, $month, $yearOffset, $dayOfWeek, $dayOfYear, $daylightSavings) = localtime() ;
+	$localYear = 1900 + $yearOffset ;
+	$localDay  = $dayOfMonth ;
+	$localMonth = $month + 1 ;
+}
+
+
+
+sub userTimestamp {
+	my ($u, $timestamp) = @_ ;
+	my $diff ;
+	$diff = diffDates (extractDateFromTimestamp ($timestamp), $localDay, $localMonth, $localYear) ;
+	if (defined $age{$u}) {
+		if ($diff > $age{$u}) {
+			$age{$u} = $diff ;
+		}
+	}
+	else {
+		$age{$u} = $diff ;
+	}
+}
+
+
 

@@ -67,11 +67,32 @@
         	echo "  maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),";
 	        echo "  units: 'meters',";
 		echo "	controls: []});";
+		
+		
+				// three types of Tile-Layers
 		echo "	var mapnik = new OpenLayers.Layer.TMS(";
 		echo "  \"Mapnik\",";
 		echo "  [\"http://a.tile.openstreetmap.org/\",\"http://b.tile.openstreetmap.org/\",\"http://c.tile.openstreetmap.org/\"],";
+		echo "	{ratio:1, type:'png', getURL: get_render_world_url});"; 	
+	
+		echo "	var osmarender = new OpenLayers.Layer.TMS(";
+		echo "  \"Osmarender\",";
+		echo "  [\"http://a.tah.openstreetmap.org/Tiles/tile/\",\"http://b.tah.openstreetmap.org/Tiles/tile/\",\"http://c.tah.openstreetmap.org/Tiles/tile/\"],";
 		echo "	{ratio:1, type:'png', getURL: get_render_world_url});"; 
+				
+		echo "	var openCycleMap = new OpenLayers.Layer.TMS(";
+		echo "  \"openCycleMap\",";
+		echo "  [\"http://a.andy.sandbox.cloudmade.com/tiles/cycle/\",\"http://b.andy.sandbox.cloudmade.com/tiles/cycle/\",\"http://c.andy.sandbox.cloudmade.com/tiles/cycle/\"],";
+		echo "	{ratio:1, type:'png', getURL: get_render_world_url});"; 
+			
+		
+		// add the layers to the map
 		echo "	map.addLayers([mapnik]);"; 
+		echo "	map.addLayers([osmarender]);"; 
+		echo "	map.addLayers([openCycleMap]);"; 
+		
+		
+		
 	}
 
 	echo "	map.setCenter(center,zoom);"; 

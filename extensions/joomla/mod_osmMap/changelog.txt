@@ -1,5 +1,13 @@
 Changelog
 
+______________________________________________________
+Version: 0.0.2
+Author: Godofglow
+Home: http://open-map.org
+
+added new layers
+
+______________________________________________________
 Name: mod_osmMap
 Author: Milo van der Linden, Stichting OpenGeo
 Home: http://www.opengeo.nl

@@ -32,7 +32,10 @@
 # Version 2.4
 # - user "age" added
 #
+# Version 3.0
+# - black and white lists
 #
+
 
 
 use strict ;
@@ -46,8 +49,8 @@ use Compress::Bzip2 ;
 
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode [numTopUsers] [picSize] (Mode = [N|P|D|S], picSize x in pixels)\n" ;
-$usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\n" ;
-my $version = "2.4" ;
+$usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\nout.white.txt and out.black.txt (white and black lists) can be given (enter one user name per line)\n" ;
+my $version = "3.0" ;
 
 my $topMax = 10 ;
 
@@ -87,6 +90,7 @@ my $localDay ; my $localMonth ; my $localYear ;
 
 my $reName ; my $reClass ; my $reRef ;
 my $name1 ; my $name2 ; my $ref1 ; my $ref2 ; my $class1 ; my $class2 ;
+my %white ; my %black ; my %blackActive ; 
 
 my $objectProcessed = 0 ; # 0=node, 1=way
 
@@ -119,10 +123,14 @@ print stringFileInfo ($osm2Name), "\n\n"  ;
 # Main
 #------------------------------------------------------------------------------------
 
+
+
 if (grep /P/, $mode) { initializeMap() ; }
 
 initLocaltime() ;
 print "local time: $localDay $localMonth $localYear\n" ;
+
+readLists() ;
 
 openOsm1File ($osm1Name) ;
 moveNodeFile1() ;
@@ -149,7 +157,8 @@ if (grep /P/, $mode) { paintAreas() ; }
 if (grep /P/, $mode) { saveMap() ; }
 if (grep /P/, $mode) { print "done.\n" ; }
 
-
+removeWhiteListData() ;
+getBlackListData() ;
 output() ;
 
 #-------
@@ -429,6 +438,19 @@ sub output {
 	print $html "<p>", stringFileInfo ($osm1Name), "</p>\n"  ;
 	print $html "<p>", stringFileInfo ($osm2Name), "</p>\n"  ;
 	print $html "<p>A deleted tag can result out of a change of a tag. The same is true for the addition of a tag. Real changes are not counted.</p>" ;
+
+	print $html "<H1>Black and white lists</H1>" ;
+	print $html "<H2>WHITE listed users</H2>\n<p>" ;
+	foreach my $u (sort keys %white) { print $html $u, " " ; }
+	print $html "</p>\n" ;
+	print $html "<H2>BLACK listed users</H2>\n<p>" ;
+	foreach my $u (sort keys %black) { print $html $u, " " ; }
+	print $html "</p>\n" ;
+	print $html "<H2>ACTIVE BLACK listed users</H2>\n<p><strong>" ;
+	foreach my $u (sort keys %blackActive) { print $html $u, " " ; }
+	print $html "</strong></p>\n" ;
+	
+
 	print $html "<H1>Results</H1>" ;
 	print $html "<p>DELETED NODES: $deletedNodes</p>\n" ;
 	print $html "<p>DELETED NODES WITH TAGS: $deletedNodesWithTags (details see further down)</p>\n" ;
@@ -1328,4 +1350,89 @@ sub userTimestamp {
 }
 
 
+#------------------------------------------------------------------------------------
+# Black and white lists
+#------------------------------------------------------------------------------------
+sub readLists {
+	my $file ; my $success ; my $line ;
+	my ($whiteName) = $htmlName ;
+	my ($blackName) = $htmlName ;
+	$whiteName =~ s/.htm/.white.txt/ ;
+	$blackName =~ s/.htm/.black.txt/ ;
 
+	$success = open ($file, "<", $whiteName) ;
+	if ($success) {
+		while ($line = <$file>) {
+			my ($user) = ($line =~ /(.+)/) ;
+			if (defined $user) {
+				$white{$user} = 1 ;
+			}
+		}
+		close ($file) ;
+		print "\nWHITE listed users:\n" ;
+		foreach my $u (sort keys %white) { print $u, " " ; }
+		print "\n\n" ;
+	}
+	else {
+		print "no white list found.\n" ;
+	}
+
+	$success = open ($file, "<", $blackName) ;
+	if ($success) {
+		while ($line = <$file>) {
+			my ($user) = ($line =~ /(.+)/) ;
+			if (defined $user) {
+				$black{$user} = 1 ;
+			}
+		}
+		close ($file) ;
+		print "\nBLACK listed users:\n" ;
+		foreach my $u (sort keys %black) { print $u, " " ; }
+		print "\n\n" ;
+	}
+	else {
+		print "no black list found.\n" ;
+	}
+
+}
+
+sub removeWhiteListData {
+	foreach my $u (keys %white) {
+		delete $age{$u} ;
+		delete $nodesMovedNumber{$u} ;
+		delete $nodesMovedDistance{$u} ;
+		delete $nodesMovedMax{$u} ;
+		delete $minLon{$u} ;
+		delete $minLat{$u} ;
+		delete $maxLon{$u} ;
+		delete $maxLat{$u} ;
+		delete $tagsAdded{$u} ;
+		delete $tagsDeleted{$u} ;
+		delete $tagsRenamed{$u} ;
+		delete $tagsRereffed{$u} ;
+		delete $tagsReclassified{$u} ;
+		delete $versionJumpsNodes{$u} ;
+		delete $versionJumpsWays{$u} ;
+		delete $opTime{$u} ;
+	}
+}
+
+sub getBlackListData {
+	foreach my $u (keys %black) {
+		if (defined  $nodesMovedNumber{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $nodesMovedDistance{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $nodesMovedMax{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $minLon{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $minLat{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $maxLon{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $maxLat{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $tagsAdded{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $tagsDeleted{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $tagsRenamed{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $tagsRereffed{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $tagsReclassified{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $versionJumpsNodes{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $versionJumpsWays{$u}) { $blackActive{$u} = 1 ; }
+		if (defined  $opTime{$u}) { $blackActive{$u} = 1 ; }
+	}
+}

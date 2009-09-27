@@ -78,7 +78,7 @@ public class WMSLayer extends Layer {
 	public WMSLayer(String name, String baseURL, String cookies) {
 		super(name);
 		alphaChannel.setSelected(Main.pref.getBoolean("wmsplugin.alpha_channel"));
-		background = true; /* set global background variable */
+		setBackgroundLayer(true); /* set global background variable */ 
 		initializeImages();
 		this.baseURL = baseURL;
 		this.cookies = cookies;

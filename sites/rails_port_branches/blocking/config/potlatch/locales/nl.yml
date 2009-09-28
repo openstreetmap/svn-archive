@@ -1,0 +1,76 @@
+nl: 
+  a_poi: $1 een POI
+  a_way: $1 een 'way'
+  action_addpoint: "'Node' toevoegen aan eind van de 'way'"
+  action_cancelchanges: veranderingen ongedaan maken naar
+  action_createpoi: Maak een POI (nuttige plaats)
+  action_deletepoint: Verwijder een punt
+  action_insertnode: Punt toevoegen aan 'way'
+  action_mergeways: twee wegen samenvoegen
+  action_movepoi: Verplaats de POI (nuttige plaats)
+  action_movepoint: Verplaats een punt
+  action_moveway: "'Way' verplaatsen"
+  action_pointtags: tags instellen op een 'point'
+  action_poitags: tags instellen op een POI
+  action_reverseway: "'Way' omdraaien"
+  action_splitway: "'Way' splitsen"
+  action_waytags: tags instellen op een 'way'
+  advice_nocommonpoint: De 'ways' hebben geen gemeenschappelijk punt
+  advice_tagconflict: Tags komen niet overeen - a.u.b. nakijken (Z om ongedaan te maken)
+  advice_toolong: Te lang om te unlocken - splits de 'way' in kortere stukken
+  advice_waydragged: "'Way' verplaatst (Z om ongedaan te maken)"
+  cancel: Annuleren
+  createrelation: Nieuwe relatie maken
+  delete: Verwijderen
+  deleting: verwijder
+  drag_pois: Sleep POI's naar de kaart en zet ze neer
+  editinglive: Live bewerken
+  editingoffline: Offline bewerken
+  emailauthor: \n\nStuur een mail naar richard\@systemeD.net met een bug report, schrijf wat je aan het doen was.
+  error_connectionfailed: "Sorry - de verbinding met de server is verbroken. Recente veranderingen zijn misschien niet opgeslagen.\n\nOpnieuw proberen?"
+  error_nopoi: POI niet gevonden (hebt u de kaart weggeschoven?), kan dus niet ongedaan maken.
+  error_nosharedpoint: De 'ways' $1 en $2 hebben geen gemeenschappelijk punt meer, dus ik kan het splitsen niet ongedaan maken.
+  error_noway: "'Way' $1 niet gevonden (hebt u de kaart weggeschoven?), kan dus niet ongedaan maken."
+  existingrelation: Toevoegen aan bestaande relatie
+  findrelation: Relatie zoeken met
+  gpxpleasewait: Even geduld alstublieft, terwijl de GPX trace wordt verwerkt
+  hint_drawmode: Klik om een nieuw punt toe te voegen\ndubbelklik/enter\n om de lijn te stoppen
+  hint_loading: Bezig de 'ways' te laden
+  hint_overendpoint: "Eindpunt van een way:\nKlik om dit punt toe te voegen\nShift-klik om beide ways samen te voegen"
+  hint_overpoint: "Punt:\nKlik om dit punt toe te voegen"
+  hint_pointselected: Punt geselecteerd\n(shift-klik op het punt om een nieuwe lijn te\nbeginnen)
+  norelations: Geen relaties in huidig gebied
+  ok: OK
+  openchangeset: Changeset wordt geopend...
+  option_custompointers: Pen- en handcursors gebruiken
+  option_fadebackground: Achtergrond lichter maken
+  option_thinlines: Altijd dunne lijnen gebruiken
+  option_warnings: Floating warnings weergeven
+  point: Punt
+  prompt_addtorelation: Voeg $1 toe aan een relatie
+  prompt_changesetcomment: "Typ hier een beschrijving van je wijzigingen:"
+  prompt_editlive: Direct bewerken
+  prompt_editsave: Bewerken en opslaan
+  prompt_helpavailable: Nieuwe gebruiker? Kijk linksonder voor hulp.
+  prompt_revertversion: "Teruggaan naar een oudere versie:"
+  prompt_savechanges: Wijzigingen opslaan
+  prompt_taggedpoints: Enkele punten op deze 'way' hebben tags. Wil je hem zeker verwijderen?
+  prompt_track: Converteer uw gps-tracks in 'ways' om deze te gebruiken
+  prompt_welcome: Welkom bij OpenStreetMap!
+  save: Opslaan
+  tip_addrelation: Voeg toe aan een relatie
+  tip_addtag: Voeg een nieuwe tag toe
+  tip_alert: Foutmelding - Klik voor meer details
+  tip_anticlockwise: Gesloten 'way' die tegen de klok ingaat - Klik om om te draaien
+  tip_clockwise: Gesloten 'way' die met de klok meegaat - Klik om om te draaien
+  tip_direction: Richting van de 'way' - Klik om de richting om te draaien
+  tip_gps: Laat de gps-tracks zien (G)
+  tip_noundo: Niets ongedaan te maken
+  tip_options: Opties (kies de achtergrondkaart)
+  tip_presettype: Kies welk type presets in het menu getoond moet worden.
+  tip_repeattag: Herhaal de tags van de vorige geselecteerde 'way' (R)
+  tip_revertversion: Kies naar welke versie moet worden teruggegaan
+  tip_selectrelation: Toevoegen aan gekozen route
+  tip_splitway: Splits de 'way' op het geselecteerde punt (X)
+  tip_undo: $1 ongedaan maken (Z)
+  way: "'Way'"

@@ -1,0 +1,20 @@
+is: 
+  cancel: Hætta við
+  editinglive: Breyti beint
+  editingoffline: Breyti með vistun
+  help: Hjálp
+  hint_drawmode: smelltu til að bæta við punkt\ntvísmelltu/ýttu á Enter\ntil að klára línu
+  point: Hnútur
+  prompt_changesetcomment: "Sláðu inn lýsingu breytingunum:"
+  prompt_editlive: Breyta beint
+  prompt_editsave: Breyta með vistun
+  prompt_helpavailable: Nýr notandi? Skoðaðu hjálpina neðst til vinstri.
+  prompt_savechanges: Vista breytingar
+  prompt_welcome: Velkomin(n) á OpenStreetMap!
+  save: Vista
+  tip_anticlockwise: Rangsælis vegur - smelltu til að breyta átt hans
+  tip_clockwise: Réttsælis vegur - smelltu til að breyta átt hans
+  tip_direction: Átt vegar - smelltu til að breyta henni
+  tip_gps: Sýna GPS fer (G)
+  tip_splitway: Skipta veg á völdum hnút (X)
+  way: Vegur

@@ -1,0 +1,78 @@
+vi: 
+  a_poi: $1 địa điểm
+  a_way: $1 lối
+  action_addpoint: đang thêm nốt vào cuối lối
+  action_cancelchanges: đang hủy bỏ các thay đổi
+  action_createpoi: đang tạo địa điểm
+  action_deletepoint: đang xóa điểm
+  action_insertnode: đang gắn nốt vào lối
+  action_mergeways: đang hợp nhất hai lối
+  action_movepoi: đang chuyển địa điểm
+  action_movepoint: đang chuyển điểm
+  action_moveway: đang chuyển lối
+  action_pointtags: đang gắn thẻ vào điểm
+  action_poitags: đang gắn thẻ vào địa điểm
+  action_reverseway: đang đảo ngược lối
+  action_splitway: đang chia cắt lối
+  action_waytags: đang gắn thẻ vào lối
+  advice_nocommonpoint: Các lối không cắt ngang nhau tại điểm nào
+  advice_tagconflict: Các thẻ không hợp - xin kiểm tra lại
+  advice_toolong: Dài quá không thể mở khóa - xin chia cắt nó thành các lối ngắn hơn
+  advice_waydragged: Đã kéo lối (Z để lùi lại)
+  cancel: Hủy bỏ
+  createrelation: Tạo quan hệ mới
+  delete: Xóa
+  deleting: đang xóa
+  drag_pois: Kéo và thả các địa điểm ưa thích
+  editinglive: Đang áp dụng ngay
+  editingoffline: Đang ngoại tuyến
+  emailauthor: \n\nXin gửi thư điện tử cho richard\@systemeD.net báo cáo lỗi và giải thích bạn làm gì lúc khi gặp lỗi.
+  error_connectionfailed: "Rất tiếc - không thể kết nối với máy chủ OpenStreetMap. Những thay đổi gần đây có thể chưa được lưu.\n\nBạn có muốn thử lại không?"
+  error_nopoi: Không tìm thấy địa điểm (có lẽ bạn đã kéo ra khỏi vùng?) nên không thể lùi lại.
+  error_nosharedpoint: Các lối $1 và $2 không còn cắt ngang nhau tại điểm nào, nên không thể lùi lại việc chia cắt lối.
+  error_noway: Không tìm thấy $1 (có lẽ bạn đã kéo ra khỏi vùng?) nên không thể lùi lại.
+  existingrelation: Xếp vào quan hệ đã tồn tại
+  findrelation: Tìm kiếm quan hệ chứa
+  gpxpleasewait: Xin chờ, đang xử lý tuyến đường GPX.
+  help: Trợ giúp
+  hint_drawmode: nhấn chuột để thêm điểm\nnhấn đúp/Enter\nđể kết thúc lối
+  hint_loading: đang tải các lối
+  hint_overendpoint: đang trên điểm kết thúc\nnhấn chuột để nối\nshift-nhấn chuột để hợp nhất
+  hint_overpoint: đang trên điểm\nnhấn chuột để nối"
+  hint_pointselected: đã chọn điểm\n(shift-nhấn chuột để\nbắt đầu lối mới)
+  norelations: Không có quan hệ trong vùng này
+  ok: OK
+  openchangeset: Đang mở bộ thay đổi
+  option_custompointers: Hiện con trỏ bút và tay
+  option_fadebackground: Nhạt màu nền
+  option_thinlines: Hiện đường hẹp ở các tỷ lệ
+  option_warnings: Nổi các cảnh báo
+  point: Điểm
+  prompt_addtorelation: Xếp $1 vào quan hệ
+  prompt_changesetcomment: "Miêu tả các thay đổi:"
+  prompt_editlive: Áp dụng Ngay
+  prompt_editsave: Lưu Sau
+  prompt_helpavailable: Mới tới đây? Có trợ giúp dưới đây ở bên trái.
+  prompt_launch: Mở URL bên ngoài
+  prompt_revertversion: "Lùi lại phiên bản cũ hơn:"
+  prompt_savechanges: Lưu các thay đổi
+  prompt_taggedpoints: Một số điểm trên lối này đã được gắn thẻ. Bạn có chắc muốn xóa nó?
+  prompt_track: Chuyển đổi tuyến đường GPS thành các lối (khóa) để sửa đổi.
+  prompt_welcome: Hoan nghênh bạn đã đến OpenStreetMap!
+  save: Lưu
+  tip_addrelation: Xếp vào quan hệ
+  tip_addtag: Thêm thẻ mới
+  tip_alert: Đã gặp lỗi - nhấn để xem chi tiết
+  tip_anticlockwise: Lối vòng ngược chiều kim đồng hồ - nhấn để đảo ngược
+  tip_clockwise: Lối vòng theo chiều kim đồng hồ - nhấn để đảo ngược
+  tip_direction: Hướng của lối - nhấn để đảo ngược
+  tip_gps: Hiện các tuyến đường GPS (G)
+  tip_noundo: Không có gì để lùi
+  tip_options: Tùy chỉnh (chọn nền bản đồ)
+  tip_presettype: Chọn các loại thẻ được định trước trong trình đơn.
+  tip_repeattag: Chép các thẻ từ lối được chọn trước (R)
+  tip_revertversion: Chọn phiên bản để lùi lại
+  tip_selectrelation: Thêm vào tuyến đường đã chọn
+  tip_splitway: Chia cắt lối tại điểm đã chọn (X)
+  tip_undo: Lùi $1 (Z)
+  way: Lối

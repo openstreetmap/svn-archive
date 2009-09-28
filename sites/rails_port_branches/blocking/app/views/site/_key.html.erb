@@ -1,0 +1,33 @@
+<script type="text/javascript">
+  function openMapKey() {
+    updateMapKey();
+
+    openSidebar({ 
+      title: "<%= t('site.key.map_key') %>",
+      onclose: closeMapKey
+    });
+
+    map.events.register("zoomend", map, updateMapKey);
+    map.events.register("changelayer", map, updateMapKey);
+  }
+
+  function closeMapKey() {
+    map.events.unregister("zoomend", map, updateMapKey);
+    map.events.unregister("changelayer", map, updateMapKey);
+  }
+
+  function updateMapKey() {
+    var layer = map.baseLayer.name.toLowerCase().replace(/\s+/g, "_");
+    var zoom = map.getZoom();
+
+    <%= remote_function :update => "sidebar_content",
+                        :url => { :action => "key" },
+                        :with => "'layer=' + layer + '&zoom=' + zoom",
+                        :method => :get
+    %>
+  }
+</script>
+
+<% content_for :left_menu do %>
+  <%= link_to_function t('site.key.map_key'), "openMapKey()", :title => t('site.key.map_key_tooltip') %>
+<% end %>

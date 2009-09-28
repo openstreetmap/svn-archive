@@ -1,0 +1,77 @@
+ru: 
+  a_poi: $1 точка интереса (POI)
+  a_way: $1 линия
+  action_addpoint: добавление точки в конец линии
+  action_cancelchanges: отмена изменений к
+  action_createpoi: создание точки интереса (POI)
+  action_deletepoint: удаление точки
+  action_insertnode: добавление точки в линию
+  action_mergeways: соединение двух линий
+  action_movepoi: перемещение точки интереса (POI)
+  action_movepoint: перемещение точки
+  action_moveway: перемещение линии
+  action_pointtags: установку тегов для точки
+  action_poitags: установку тегов для точки интереса (POI)
+  action_reverseway: изменение направления линии
+  action_splitway: разбиение линии
+  action_waytags: установку тегов для линии
+  advice_nocommonpoint: Линии не имеют общей точки
+  advice_tagconflict: Теги не совпадают, пожалуйста проверьте (Z для отмены)
+  advice_toolong: Длина слишком велика. Пожалуйста, разделите на более короткие линии
+  advice_waydragged: Линия передвинута (Z для отмены)
+  cancel: Отмена
+  createrelation: Создать новое отношение
+  delete: Удалить
+  deleting: удаление
+  drag_pois: Перетащите объекты на карту
+  editinglive: Ред. вживую
+  editingoffline: Ред. оффлайн
+  emailauthor: "\n\nПожалуйста, отправьте сообщение об ошибке (на английском языке) на электронную почту: richard\\@systemeD.net, с указанием того, какие действия вы совершали."
+  error_connectionfailed: "Извините, соединение с сервером OpenStreetMap разорвано. Все текущие изменения не были сохранены.\n\nПопробовать ещё раз?"
+  error_nopoi: Точка интереса(POI) не найдена (возможно вы отошли в сторону?), поэтому невозможно отменить.
+  error_nosharedpoint: Линии $1 и $2 больше не содержат общих точек, поэтому невозможно отменить разделение.
+  error_noway: Линия $1 не найдена (возможно вы отошли в сторону?), поэтому невозможно отменить.
+  existingrelation: Добавить в существующее отношение
+  findrelation: Найти отношения
+  gpxpleasewait: Пожалуйста, подождите — GPX-треки обрабатываются.
+  help: Справка
+  hint_drawmode: кликните для добавления точки,\nдвойной клик или Enter\nчтобы закончить линию
+  hint_loading: загрузка линий
+  hint_overendpoint: над конечной точкой\nclick для соединения\nshift-click для слияния
+  hint_overpoint: над точкой\nclick для соединения"
+  hint_pointselected: точка выбрана\n(кликните с нажатым Shift на точку\nчтобы начать новую линию)
+  norelations: Нет отношений в текущей области
+  openchangeset: Откр. изменений
+  option_custompointers: Использовать курсоры пера и руки
+  option_fadebackground: Светлый фон
+  option_thinlines: Использовать тонкие линии на всех масштабах
+  option_warnings: Показывать всплывающие предупреждения
+  point: Точка
+  prompt_addtorelation: Добавить $1 в отношение
+  prompt_changesetcomment: "Опишите ваши изменения:"
+  prompt_editlive: Ред. вживую
+  prompt_editsave: Ред. и сохр.
+  prompt_helpavailable: Вы новичок? Воспользуйтесь кнопкой 'Справка'.
+  prompt_launch: Перейти по внешней ссылке
+  prompt_revertversion: "Восстановить ранее сохраненную версию:"
+  prompt_savechanges: Сохр. измен.
+  prompt_taggedpoints: Некоторые точки данной линии содержат теги. Действительно удалить?
+  prompt_track: Конвертировать GPS-трек в линию(заблокированную), для редактирования.
+  prompt_welcome: Добро пожаловать в OpenStreetMap!
+  save: Сохр.
+  tip_addrelation: Добавить новое отношение (relation)
+  tip_addtag: Добавить новый тег
+  tip_alert: Произошла ошибка — нажмите для получения подробностей
+  tip_anticlockwise: Замкнутая линия против часовой стрелки - изменить на противоположное
+  tip_clockwise: Замкнутая линия по часовой стрелке - изменить на противоположное
+  tip_direction: Направление линии — изменить на противоположное
+  tip_gps: Показать GPS треки (G)
+  tip_noundo: Нечего отменять
+  tip_options: Задать настройки (выбрать карту-подложку)
+  tip_presettype: Выберите, какой набор тегов отображать в меню.
+  tip_repeattag: Повторить теги с предыдущей выбранной линии (R)
+  tip_revertversion: Выберите версию для восстановления
+  tip_selectrelation: Добавить в выбранное отношение
+  tip_splitway: Разделить линию в текущей точке (X)
+  tip_undo: Отменить $1 (Z)
+  way: Линия

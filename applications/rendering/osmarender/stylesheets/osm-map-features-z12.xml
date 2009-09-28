@@ -1592,7 +1592,7 @@
 			
 			.island-caption         { font-size: 40px; opacity: 0.75; }
 			.county-caption         { font-size: 130px; }
-			.city-caption           { font-size: 800px; }
+			.city-caption           { font-size: 80px; }
 			.town-caption           { font-size: 50px; }
 			
 			

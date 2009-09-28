@@ -72,7 +72,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     @SuppressWarnings("serial")
     public SlippyMapLayer() {
         super(tr("Slippy Map"));
-        background = true;
+        setBackgroundLayer(true);
 
         clearTileStorage();
 

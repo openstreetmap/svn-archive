@@ -241,6 +241,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
         jLabel6.setText("Zaznam v databazi:");
 
+        statusLabel.setForeground(new java.awt.Color(176, 1, 1));
         statusLabel.setText(" ");
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -279,7 +280,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
                     .addComponent(jLabel6)
                     .addComponent(matchesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusLabel))
         );
@@ -358,7 +359,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         public void setSelectedItem(Object anItem) {
             if (matches == null) return;
             selected = (AddressElement) anItem;
-            if (Reasoner.getInstance().translate(selected) != proposalContainer.getTarget())
+            if (Reasoner.getInstance().translate(selected) != null)
                 statusLabel.setText("Vybraná adresa už v mapě existuje."+
                                     " Potvrzením vznikne konflikt.");
             else

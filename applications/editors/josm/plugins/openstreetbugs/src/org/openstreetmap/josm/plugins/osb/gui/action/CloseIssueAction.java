@@ -34,7 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.historycombobox.HistoryChangedListener;
+import org.openstreetmap.josm.gui.widgets.HistoryChangedListener;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.CloseAction;

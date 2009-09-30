@@ -42,7 +42,7 @@ import javax.swing.JToggleButton;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.gui.historycombobox.HistoryChangedListener;
+import org.openstreetmap.josm.gui.widgets.HistoryChangedListener;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.NewAction;

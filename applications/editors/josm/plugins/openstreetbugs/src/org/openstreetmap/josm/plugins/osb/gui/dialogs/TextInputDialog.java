@@ -49,8 +49,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import org.openstreetmap.josm.gui.historycombobox.HistoryChangedListener;
-import org.openstreetmap.josm.gui.historycombobox.SuggestingJHistoryComboBox;
+import org.openstreetmap.josm.gui.widgets.ComboBoxHistory;
+import org.openstreetmap.josm.gui.widgets.HistoryChangedListener;
+import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo
@@ -69,7 +70,7 @@ public class TextInputDialog extends JDialog {
     private JButton btnCancel;
     private JButton btnOk;
     private JPanel pnlButtons;
-    private SuggestingJHistoryComboBox input;
+    private HistoryComboBox input;
     private JLabel lblText;
     private JPanel pnlMain;
     
@@ -128,7 +129,7 @@ public class TextInputDialog extends JDialog {
             pnlMain.add(lblText, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
         }
         {
-            input = new SuggestingJHistoryComboBox();
+            input = new HistoryComboBox();
             pnlMain.add(input, new GridBagConstraints(1, 1, 1, 1, 0.9, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 10), 0, 0));
             input.setSize(503, 22);
         }
@@ -199,7 +200,7 @@ public class TextInputDialog extends JDialog {
     }
     
     public void addHistoryChangedListener(HistoryChangedListener l) {
-        input.addHistoryChangedListener(l);
+        ((ComboBoxHistory)input.getModel()).addHistoryChangedListener(l);
     }
     
     public void setIcon(Icon icon) {

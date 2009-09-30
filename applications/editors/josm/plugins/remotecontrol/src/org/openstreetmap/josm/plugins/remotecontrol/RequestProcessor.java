@@ -254,7 +254,7 @@ public class RequestProcessor extends Thread
                         throw new LoadDeniedException();
 
                     DownloadTask osmTask = new DownloadOsmTask();
-                    osmTask.loadUrl(false, URLDecoder.decode(args.get("url"), "UTF-8"));
+                    osmTask.loadUrl(false, URLDecoder.decode(args.get("url"), "UTF-8"), null);
                 } catch (LoadDeniedException ex) {
                     System.out.println("RemoteControl: import forbidden by preferences");
                 } catch (Exception ex) {

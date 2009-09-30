@@ -3,14 +3,14 @@
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <property name="ant.build.javac.target" value="1.5"/>
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
     <target name="compile" depends="init">
         <echo message="creating ${plugin.jar}"/>
-        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
-            <compilerarg value="-Xlint:deprecation"/>
+        <javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}"
+		       target="1.5" source="1.5" encoding="UTF-8">
+		<compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
@@ -25,7 +25,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Let other applications send commands to JOSM."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/RemoteControl"/>
-                <attribute name="Plugin-Mainversion" value="2057"/>
+                <attribute name="Plugin-Mainversion" value="2215"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

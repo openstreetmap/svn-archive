@@ -66,12 +66,15 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <string>
+#include <stack>
+#include <vector>
 #include "libgosm.h"
 using namespace std;
 #define wchar_t char
 #define wsprintf sprintf
 #define OPTIONS \
   o (FollowGPSr,      0, 2) \
+  o (Display3D,       0, 1) \
   o (Search,          0, 1) \
   o (StartRoute,      0, 1) \
   o (EndRoute,        0, 1) \
@@ -223,7 +226,8 @@ OPTIONS
 #ifndef HEADLESS
 #define STATUS_BAR    0
 
-GtkWidget *draw, *location, *followGPSr, *orientNorthwards, *validateMode;
+GtkWidget *draw, *location, *display3D, *followGPSr, *orientNorthwards;
+GtkWidget *validateMode;
 GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
 int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE, gDisplayOff;
 /* zoom is the amount that fits into the window (regardless of window size) */
@@ -267,6 +271,7 @@ int ChangeOption (void)
   IconSet = gtk_combo_box_get_active (iconSet);
   Vehicle = gtk_combo_box_get_active (carBtn) + motorcarR;
   DetailLevel = 4 - gtk_combo_box_get_active (detailBtn);
+  Display3D = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (display3D));
   FollowGPSr = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (followGPSr));
   OrientNorthwards =
     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (orientNorthwards));
@@ -658,14 +663,20 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
 
 gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
 {
-  int w = draw->allocation.width, h = draw->allocation.height;
-  int perpixel = zoom / w;
-  if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
-  if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
-  SetLocation (clon + lrint ((perpixel - zoom / w) *
-    (cosAzimuth * (event->x - w / 2) - sinAzimuth * (h / 2 - event->y))),
-    clat + lrint ((perpixel - zoom / w) *
-    (cosAzimuth * (h / 2 - event->y) + sinAzimuth * (event->x - w / 2))));
+  if (Display3D) {
+    int k = event->direction == GDK_SCROLL_UP ? 2000 : -2000;
+    SetLocation (clon - sinAzimuth * k, clat + cosAzimuth * k);
+  }
+  else {
+    int w = draw->allocation.width, h = draw->allocation.height;
+    int perpixel = zoom / w;
+    if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
+    if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
+    SetLocation (clon + lrint ((perpixel - zoom / w) *
+      (cosAzimuth * (event->x - w / 2) - sinAzimuth * (h / 2 - event->y))),
+      clat + lrint ((perpixel - zoom / w) *
+      (cosAzimuth * (h / 2 - event->y) + sinAzimuth * (event->x - w / 2))));
+  }
   gtk_widget_queue_clear (draw);
   return FALSE;
 }
@@ -914,9 +925,16 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       firstDrag[0] = -1;
     }
     #endif
-    int lon = clon + lrint (perpixel * (cosAzimuth * dx - sinAzimuth * dy));
-    int lat = clat + lrint (perpixel * (cosAzimuth * dy + sinAzimuth * dx));
+    int lon = clon + lrint (perpixel *
+      (cosAzimuth * (Display3D ? 0 : dx) - sinAzimuth * dy));
+    int lat = clat + lrint (perpixel *
+      (cosAzimuth * dy + sinAzimuth * (Display3D ? 0 : dx)));
     if (event->button == 1) {
+      if (Display3D) {
+        double newa = atan2 (sinAzimuth, cosAzimuth) - dx * M_PI / 580;
+        cosAzimuth = cos (newa);
+        sinAzimuth = sin (newa);
+      }
       SetLocation (lon, lat);
 
       #ifdef _WIN32_WCE
@@ -1071,6 +1089,47 @@ void DrawIcon (int dstx, int dsty, wayType *w)
     icon[2], icon[3]);
 }
 
+typedef struct {  /* For 3D, a list of segments is generated that is */
+  ndType *nd;     /* z-sorted and rendered. */
+  int f[2], t[2], tlen;
+  char *text;
+} renderNd;
+
+/*inline double YDivisor (double x) { return x; }
+inline double Clamp (double x) { return x; }*/
+/*
+inline int YDivisor (int y)
+{
+  return y > 5256 || y < -5256 ? y : y < 0 ? -5256 : 5256;
+}
+*/
+/*
+inline int Clamp2 (int x)
+{
+  return x < -32760 ? -32760 : x > 32760 ? 32760 : x;
+}*/
+
+#ifdef _WIN32_WCE
+#define gdk_draw_line(win,gc,sx,sy,dx,dy) \
+  MoveToEx (gc, sx, sy, NULL); LineTo (gc, dx, dy)
+#endif
+
+void Draw3DLine (int sx, int sy, int dx, int dy)
+{
+  if (Display3D) {
+    if (sy < 0) {
+      if (dy < 0) return;
+      sx = dx + (dx - sx) * (/*clip.height*/ 1024 - dy) / (dy - sy);
+      sy = /*clip.height*/ 1024;
+    }
+    else if (dy < 0) {
+      dx = sx + (sx - dx) * (/*clip.height*/ 1024 - sy) / (sy - dy);
+      dy = /*clip.height*/ 1024;
+    }
+  }
+  gdk_draw_line (draw->window, mygc, sx, sy, dx, dy);
+}
+
 #ifdef _WIN32_WCE
 int Expose (HDC mask, HPEN *pen)
 {
@@ -1090,8 +1149,6 @@ int Expose (HDC mask, HPEN *pen)
 #define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
   BitBlt (dgc, dx, dy, w, h, mask, x, y, SRCAND); \
   BitBlt (dgc, dx, dy, w, h, sdc, x, y, SRCPAINT)
-#define gdk_draw_line(win,gc,sx,sy,dx,dy) \
-  MoveToEx (gc, sx, sy, NULL); LineTo (gc, dx, dy)
 
   if (objectAddRow >= 0) {
     SelectObject (mygc, sysFont);
@@ -1197,62 +1254,145 @@ gint Expose (void)
   if (zoom / clip.width <= 1) zoom += 4000;
   int cosa = lrint (4294967296.0 * cosAzimuth * clip.width / zoom);
   int sina = lrint (4294967296.0 * sinAzimuth * clip.width / zoom);
-  int xadj = clip.width / 2 -
-               ((clon * (__int64) cosa + clat * (__int64) sina) >> 32);
-  int yadj = clip.height / 2 -
-               ((clon * (__int64) sina - clat * (__int64) cosa) >> 32);
-  #define X(lon,lat) (xadj + \
-               (((lon) * (__int64) cosa + (lat) * (__int64) sina) >> 32))
-  #define Y(lon,lat) (yadj + \
-               (((lon) * (__int64) sina - (lat) * (__int64) cosa) >> 32))
-  if (option == numberOfOptions) {
+  int xadj =
+    clip.width / 2 - ((clon * (__int64) cosa + clat * (__int64) sina) >> 32);
+  __int64 yadj =
+    clip.height / 2 - ((clon * (__int64) sina - clat * (__int64) cosa) >> 32);
 
-    int lonRadius = lrint (fabs (cosAzimuth) * zoom +
-          fabs (sinAzimuth) * zoom / clip.width * clip.height) / 2 + 1000;
-    int latRadius = lrint (fabs (cosAzimuth) * zoom / clip.width *
-          clip.height + fabs (sinAzimuth) * zoom) / 2 + 10000;
+  #define FAR3D  100000 // 3D view has a limit of roughly 5 km forwards 
+  #define WIDE3D 100000 // and roughly 5km between top left & top right corner
+  #define CAMERA2C 12000 // How far the camera is behind the user (clat/lon)
+  #define HEIGHT   12000 // Height of the camera
+  #define PIX45     256 // Y value corresponding to 45 degrees down
+  #define XFix PIX45
+  
+  #define MUL 64
+  if (Display3D) {
+    cosa = lrint (cosAzimuth * MUL);
+    sina = lrint (sinAzimuth * MUL);
+    
+    #define myint int
+    /* The 3D computations can all be done in signed 32 bits integers,
+       provided overflow bits are simply discarded. The C specification says
+       however that ints that overflow are undefined (as well as any
+       expression that touches them). So if the 3D display looks garbled
+       under a new compiler, try running with #define myint __int64
+    */
+    
+    yadj = (clon + (int)(sinAzimuth * CAMERA2C)) * (myint) sina -
+           (clat - (int)(cosAzimuth * CAMERA2C)) * (myint) cosa;
+    xadj = -(clon + (int)(sinAzimuth * CAMERA2C)) * (myint) cosa -
+            (clat - (int)(cosAzimuth * CAMERA2C)) * (myint) sina;
+  }
+  #define Depth(lon,lat) \
+    (int)(yadj + (lat) * (myint) cosa - (lon) * (myint) sina)
+  #define X1(lon,lat) \
+    (int)(xadj + (lon) * (myint) cosa + (lat) * (myint) sina)
+  #define AdjDepth(lon,lat) (Depth (lon, lat) < PIX45 * HEIGHT * MUL / 5000 \
+    && Depth (lon, lat) > -PIX45 * HEIGHT * MUL / 5000 ? \
+    PIX45 * HEIGHT * MUL / 5000 : Depth (lon, lat))
+  #define Y(lon,lat) (Display3D ? PIX45 * HEIGHT * MUL / AdjDepth (lon, lat) \
+  : yadj + (int)(((lon) * (__int64) sina - (lat) * (__int64) cosa) >> 32))
+  #define X(lon,lat) (Display3D ? clip.width / 2 + \
+   ((AdjDepth (lon, lat) > 0 ? 1 : -1) * \
+      (X1 (lon, lat) / 32000 - AdjDepth (lon, lat) / XFix) > 0 ? 32000 : \
+    (AdjDepth (lon, lat) > 0 ? 1 : -1) * \
+      (X1 (lon, lat) / 32000 + AdjDepth (lon, lat) / XFix) < 0 ? -32000 : \
+   X1(lon,lat) / (AdjDepth (lon, lat) / XFix)) \
+  : xadj + (int)(((lon) * (__int64) cosa + (lat) * (__int64) sina) >> 32))
+
+  /* These macros calling macros may result in very long bloated code and
+     inefficient machine code, depending on how well the compiler optimizes.
+  */
+
+/*  #define X(lon,lat) (Display3D ? Clamp (clip.width / 2 + \
+   (xadj + (lon) * (__int64) cosa + (lat) * (__int64)sina) / ( \
+   YDivisor (yadj + (lat) * (__int64) cosa - (lon) * (__int64) sina) / 256)) \
+  : xadj + (int)(((lon) * (__int64) cosa + (lat) * (__int64) sina) >> 32))
+  #define Y(lon,lat) (Display3D ? Clamp (PIX45 * HEIGHT * MUL / \
+     YDivisor ((yadj + (lat) * (__int64) cosa - (lon) * (__int64) sina))) \
+  : yadj + (int)(((lon) * (__int64) sina - (lat) * (__int64) cosa) >> 32))
+*/
+
+/*printf ("%d ", (int)(yadj + (clat) * (__int64) cosa - (clon) * (__int64) sina));
+printf ("%d\n", Y(clon,clat)); */
+  if (option == numberOfOptions) {
 //    int perpixel = zoom / clip.width;
     int doAreas = TRUE, blockIcon[2 * 128];
+
+    stack<ndType*> dlist[13];
+    // Areas, 5 under + 1 gound level + 5 above + icons
+    
     memset (blockIcon, 0, sizeof (blockIcon)); // One bit per 16 x 16 area
   //    zoom / sqrt (draw->allocation.width * draw->allocation.height);
-
     // render map
-    for (int thisLayer = -5, nextLayer; thisLayer < 6;
-         thisLayer = nextLayer, doAreas = !doAreas) {
-      OsmItr itr (clon - lonRadius, clat - latRadius,
-                  clon + lonRadius, clat + latRadius);
-      // Widen this a bit so that we render nodes that are just a bit offscreen ?
-      nextLayer = 6;
-      
-      while (Next (itr)) {
-        ndType *nd = itr.nd[0];
+    /* We need the smallest bbox that covers the test area. For 2D, the
+       test area is a rectangle that is not aligned with the axis, so the
+       bbox is the maxs and mins of the latitudes and longitudes of the 4
+       corners. For 3D, the test area is a triangle, with the camera
+       coordinate included twice, whence 4 tests
+    */
+    int latRadius[2] = { 0, 0 }, lonRadius[2] = { 0, 0 };
+    for (int wc = -1; wc <= 1; wc += 2) { // width and
+      for (int hc = -1; hc <= 1; hc += 2) { // height coefficients
+        int w = !Display3D ? zoom : hc > 0 ? WIDE3D : 0, h = !Display3D
+          ? zoom / clip.width * clip.height : hc > 0 ? FAR3D : CAMERA2C;
+        int lon = lrint (w * cosAzimuth * wc - h * sinAzimuth * hc);
+        int lat = lrint (h * cosAzimuth * hc + w * sinAzimuth * wc);
+        lonRadius[0] = min (lonRadius[0], lon);
+        lonRadius[1] = max (lonRadius[1], lon);
+        latRadius[0] = min (latRadius[0], lat);
+        latRadius[1] = max (latRadius[1], lat);
+      }
+    }
+    OsmItr itr (clon + lonRadius[0] - 1000, clat + latRadius[0] - 1000,
+                clon + lonRadius[1] + 1000, clat + latRadius[1] + 1000);
+    // Widen this a bit so that we render nodes that are just a bit offscreen ?
+    while (Next (itr)) {
+      ndType *nd = itr.nd[0];
+      wayType *w = Way (nd);
+      if (!Display3D && Style (w)->scaleMax <
+                zoom / clip.width * 175 / (DetailLevel + 6)) continue;
+      if (nd->other[0] >= 0) {
+        nd = ndBase + itr.nd[0]->other[0];
+        if (nd->lat == INT_MIN) nd = itr.nd[0]; // Node excluded from build
+        else if (itr.left <= nd->lon && nd->lon < itr.right &&
+            itr.top  <= nd->lat && nd->lat < itr.bottom) continue;
+      } // Only process this way when the Itr gives us the first node, or
+      // the first node that's inside the viewing area
+      dlist[nd->other[0] < 0 && nd->other[1] < 0 ? 12 :
+            Style (w)->areaColour != -1 ? 0 : Layer (w) + 6].push (nd);
+    }
+    #ifdef _WIN32_WCE
+    for (; !dlist[0].empty (); dlist[0].pop ()) {
+      ndType *nd = dlist[0].top ();
+      wayType *w = Way (nd);
+      while (nd->other[0] >= 0) nd = ndBase + nd->other[0];
+      static GdkPoint pt[1000];
+      unsigned pts;
+      for (pts = 0; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] >= 0;
+           nd = ndBase + nd->other[1]) {
+        if (nd->lat != INT_MIN) {
+          pt[pts].x = X (nd->lon, nd->lat);
+          pt[pts++].y = Y (nd->lon, nd->lat);
+        }
+      }
+      gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][0]);
+      gdk_draw_polygon (draw->window, mygc, TRUE, pt, pts);
+      gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
+      gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
+        Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
+        : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+      gdk_draw_polygon (draw->window, mygc, FALSE, pt, pts);
+    }
+    #endif
+    for (int l = 1; l < 13; l++) {
+      for (; !dlist[l].empty (); dlist[l].pop ()) {
+        ndType *nd = dlist[l].top ();
         wayType *w = Way (nd);
-        if (Style (w)->scaleMax <
-                  zoom / clip.width * 175 / (DetailLevel + 6)) continue;
-        
-        int wLayer = nd->other[0] < 0 && nd->other[1] < 0 ? 5 : Layer (w);
-        if (DetailLevel < 2 && Style (w)->areaColour != -1) {
-          if (thisLayer > -5) continue;  // Draw all areas with layer -5
-        }
-        else if (zoom < 100000*100) {
-        // Under low-zoom we draw everything on layer -5 (faster)
-          if (thisLayer < wLayer && wLayer < nextLayer) nextLayer = wLayer;
-          if (DetailLevel > 1) {
-            if (doAreas) nextLayer = thisLayer;
-            if (Style (w)->areaColour != -1 ? !doAreas : doAreas) continue;
-          }
-          if (wLayer != thisLayer) continue;
-        }
-        if (nd->other[0] >= 0) {
-          nd = ndBase + itr.nd[0]->other[0];
-          if (nd->lat == INT_MIN) nd = itr.nd[0]; // Node excluded from build
-          else if (itr.left <= nd->lon && nd->lon < itr.right &&
-              itr.top  <= nd->lat && nd->lat < itr.bottom) continue;
-        } // Only process this way when the Itr gives us the first node, or
-        // the first node that's inside the viewing area
 
         #ifndef _WIN32_WCE
-        __int64 maxLenSqr = 0;
+        int maxLenSqr = 0;
         double x0 = 0.0, y0 = 0.0; /* shut up gcc */
         #else
         int best = 0, bestW, bestH, x0, y0;
@@ -1287,37 +1427,17 @@ gint Expose (void)
               x0 = x /*- mat.xx / 3 * len*/; /* Render the name of the node */
               y0 = y /* + mat.xx * f->ascent */ +
                 Style (w)->x[IconSet * 4 + 3] / 2;
-              maxLenSqr = Sqr ((__int64) Style (w)->scaleMax / 2);
+              maxLenSqr = Sqr ((__int64) Style (w)->scaleMax / 2 /
+                (zoom / clip.width));
+              //(zoom / clip.width) *
+              //(__int64) (zoom / clip.width) * 
               //4000000000000LL; // Without scaleMax, use 400000000
             //}
             #endif
           }
         }
-        #ifndef _WIN32_WCE
-	// filled areas
-        else if (Style (w)->areaColour != -1) {
-          while (nd->other[0] >= 0) nd = ndBase + nd->other[0];
-          static GdkPoint pt[1000];
-          unsigned pts;
-          for (pts = 0; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] >= 0;
-               nd = ndBase + nd->other[1]) {
-            if (nd->lat != INT_MIN) {
-              pt[pts].x = X (nd->lon, nd->lat);
-              pt[pts++].y = Y (nd->lon, nd->lat);
-            }
-          }
-          gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][0]);
-          gdk_draw_polygon (draw->window, mygc, TRUE, pt, pts);
-          gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
-          gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
-            Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
-            : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
-          gdk_draw_polygon (draw->window, mygc, FALSE, pt, pts);
-        }
-
-        #endif
-	// ways (including areas on WinMob)
-        else if (nd->other[1] >= 0 || Style(w)->areaColour != -1) {
+	// ways (including areas on WinMob : FIXME)
+        else if (nd->other[1] >= 0) {
 	  // perform validation (on non-areas)
 	  bool valid;
 	  if (ValidateMode && Style(w)->areaColour == -1) {
@@ -1366,12 +1486,43 @@ gint Expose (void)
 	    do {
 	      ndType *next = ndBase + nd->other[1];
 	      if (next->lat == INT_MIN) break; // Node excluded from build
-	      int x = X (next->lon, next->lat);
-	      int y = Y (next->lon, next->lat);
+	      int x = X (next->lon, next->lat), x2;
+	      int y = Y (next->lon, next->lat), y2;
+//	      printf ("%6.0lf %6.0lf - %6.0lf %6.0lf - %lf\n", x, y, oldx, oldy,
+//	        AdjDepth (next->lon, next->lat));
 	      if ((x <= clip.width || oldx <= clip.width) &&
 		  (x >= 0 || oldx >= 0) && (y >= 0 || oldy >= 0) &&
 		  (y <= clip.height || oldy <= clip.height)) {
-		gdk_draw_line (draw->window, mygc, oldx, oldy, x, y);
+//                printf ("%4d %4d - %4d %4d\n", x,y,oldx,oldy);
+                /* If we're doing 3D and oldy is negative, it means the point
+                   was behind the camera. Then we must draw an infinitely long
+                   line from (x,y) with the same gradient as (x,y)-(oldx,oldy),
+                   but away from (oldx,oldy). Or at least up to some y value
+                   below the bottom of the screen. So we adjust oldx and oldy.
+                   
+                   When y is negative, we do something very similar. */
+                if (!Display3D || y > 0) {
+                  x2 = x;
+                  y2 = y;
+                  if (Display3D && oldy <= 0) {
+                 /*   if (nx < 32760 && nx > -32760 &&
+                      oldx < 32760 && oldx > -32760 &&
+                      oldy < 32760 && oldy > -32760) */
+                    oldx = x + (x - oldx) * (clip.height + 10 - y) /
+                      (y - oldy);
+                    oldy = clip.height + 10;
+                  }
+                }
+                else /*if (oldy > 0 which is true)*/ {
+/*                  if (nx < 32760 && nx > -32760 &&
+                    oldx < 32760 && oldx > -32760 &&
+                    oldy < 32760 && oldy > -32760) */
+                  x2 = oldx +
+                    (oldx - x) * (clip.height + 10 - oldy) / (oldy - y);
+                  y2 = clip.height + 10;
+                }
+                gdk_draw_line (draw->window, mygc, oldx, oldy, x2, y2);
+                // Draw3DLine
                 #ifdef _WIN32_WCE
 		int newb = oldx > x ? oldx - x : x - oldx;
 		if (newb < oldy - y) newb = oldy - y;
@@ -1385,23 +1536,17 @@ gint Expose (void)
 		}
                 #endif
                 #ifdef PANGO_VERSION
-                __int64 lenSqr = (nd->lon - next->lon) * (__int64)(nd->lon - next->lon) +
-                    (nd->lat - next->lat) * (__int64)(nd->lat - next->lat);
+                int lenSqr = Sqr (oldx - x2) + Sqr (oldy - y2);
                 if (lenSqr > maxLenSqr) {
                   maxLenSqr = lenSqr;
                   double lonDiff = (nd->lon - next->lon) * cosAzimuth +
                                    (nd->lat - next->lat) * sinAzimuth;
-                  mat.yy = mat.xx = 1.0 * fabs (lonDiff) / sqrt (lenSqr);
-                  mat.xy = (lonDiff > 0 ? 1.0 : -1.0) *
-                           ((nd->lat - next->lat) * cosAzimuth -
-                            (nd->lon - next->lon) * sinAzimuth) / sqrt (lenSqr);
+                  mat.yy = mat.xx = 1.0 * fabs (oldx - x2) / sqrt (lenSqr);
+                  mat.xy = (oldx > x2 ? 1.0 : -1.0) *
+                           (y2 - oldy) / sqrt (lenSqr);
                   mat.yx = -mat.xy;
-                  x0 = X (nd->lon / 2 + next->lon / 2,
-                          nd->lat / 2 + next->lat / 2);// +
-  //                  mat.yx * f->descent / 1.0 - mat.xx / 1.0 * 3 * len;
-                  y0 = Y (nd->lon / 2 + next->lon / 2,
-                          nd->lat / 2 + next->lat / 2);// +
-  //                  mat.xx * f->descent / 1.0 - mat.yx / 1.0 * 3 * len;
+                  x0 = (oldx + x2) / 2;
+                  y0 = (oldy + y2) / 2;
                  }
                  #endif
 	      }
@@ -1437,8 +1582,7 @@ gint Expose (void)
         }
         #endif
         #ifdef PANGO_VERSION
-        if (maxLenSqr * DetailLevel > (zoom / clip.width) *
-              (__int64) (zoom / clip.width) * len * len * 100 && len > 0) {
+        if (maxLenSqr * DetailLevel > len * len * 100 && len > 0) {
           double move = 0.6;
           for (char *txt = (char *)(w + 1) + 1; *txt != '\0';) {
             //cairo_set_font_matrix (cai, &mat);
@@ -1464,19 +1608,19 @@ gint Expose (void)
           }
         }
         #endif
-      } /* for each OsmItr */
+      } /* for each way / icon */
     } // For each layer
   //  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[rail]);
   //  gdk_gc_set_line_attributes (draw->style->fg_gc[0],
   //    1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
 
     // render route
-    routeNodeType *itr;
-    if (shortest && (itr = shortest->shortest)) {
+    routeNodeType *rt;
+    if (shortest && (rt = shortest->shortest)) {
       double len;
-      int nodeCnt = 1, x = X (itr->nd->lon, itr->nd->lat);
-      int y = Y (itr->nd->lon, itr->nd->lat);
-      __int64 sumLat = itr->nd->lat;
+      int nodeCnt = 1, x = X (rt->nd->lon, rt->nd->lat);
+      int y = Y (rt->nd->lon, rt->nd->lat);
+      __int64 sumLat = rt->nd->lat;
       #ifndef _WIN32_WCE
       gdk_gc_set_foreground (mygc, &routeColour);
       gdk_gc_set_line_attributes (mygc, 6,
@@ -1485,30 +1629,28 @@ gint Expose (void)
       SelectObject (mygc, pen[ROUTE_PEN]);
       #endif
       if (routeHeapSize > 1) {
-        gdk_draw_line (draw->window, mygc, X (flon, flat), Y (flon, flat),
-          x, y);
+        Draw3DLine (X (flon, flat), Y (flon, flat), x, y);
       }
-      len = sqrt (Sqr ((double) (itr->nd->lat - flat)) +
-        Sqr ((double) (itr->nd->lon - flon)));
-      for (; itr->shortest; itr = itr->shortest) {
-        int nx = X (itr->shortest->nd->lon, itr->shortest->nd->lat);
-        int ny = Y (itr->shortest->nd->lon, itr->shortest->nd->lat);
+      len = sqrt (Sqr ((double) (rt->nd->lat - flat)) +
+        Sqr ((double) (rt->nd->lon - flon)));
+      for (; rt->shortest; rt = rt->shortest) {
+        int nx = X (rt->shortest->nd->lon, rt->shortest->nd->lat);
+        int ny = Y (rt->shortest->nd->lon, rt->shortest->nd->lat);
         if ((nx >= 0 || x >= 0) && (nx < clip.width || x < clip.width) &&
             (ny >= 0 || y >= 0) && (ny < clip.height || y < clip.height)) {
           // Gdk looks only at the lower 16 bits ?
-          gdk_draw_line (draw->window, mygc, x, y, nx, ny);
+          Draw3DLine (x, y, nx, ny);
         }
-        len += sqrt (Sqr ((double) (itr->nd->lat - itr->shortest->nd->lat)) +
-          Sqr ((double) (itr->nd->lon - itr->shortest->nd->lon)));
-        sumLat += itr->nd->lat;
+        len += sqrt (Sqr ((double) (rt->nd->lat - rt->shortest->nd->lat)) +
+          Sqr ((double) (rt->nd->lon - rt->shortest->nd->lon)));
+        sumLat += rt->nd->lat;
         nodeCnt++;
         x = nx;
         y = ny;
       }
-      gdk_draw_line (draw->window, mygc, x, y,
-        X (tlon, tlat), Y (tlon, tlat));
-      len += sqrt (Sqr ((double) (itr->nd->lat - tlat)) +
-        Sqr ((double) (itr->nd->lon - tlon)));
+      Draw3DLine (x, y, X (tlon, tlat), Y (tlon, tlat));
+      len += sqrt (Sqr ((double) (rt->nd->lat - tlat)) +
+        Sqr ((double) (rt->nd->lon - tlon)));
       wchar_t distStr[13];
       wsprintf (distStr, TEXT ("%.3lf km"), len * (20000 / 2147483648.0) *
         cos (LatInverse (sumLat / nodeCnt) * (M_PI / 180)));
@@ -1887,6 +2029,12 @@ int UserInterface (int argc, char *argv[],
     GTK_SIGNAL_FUNC (ChangeOption), NULL);
   gtk_widget_show (validateMode);
 
+  display3D = gtk_toggle_button_new_with_label ("3D");
+  gtk_box_pack_start (GTK_BOX (hbox), display3D, FALSE, FALSE, 5);
+  gtk_signal_connect (GTK_OBJECT (display3D), "clicked",
+    GTK_SIGNAL_FUNC (ChangeOption), NULL);
+  gtk_widget_show (display3D);
+
   followGPSr = gtk_toggle_button_new_with_label ("Lock");
   
   #if !defined (_WIN32) && !defined (ROUTE_TEST)
@@ -1927,6 +2075,7 @@ int UserInterface (int argc, char *argv[],
   ChangeOption ();
   IncrementalSearch ();
   InitializeOptions ();
+  gtk_widget_grab_focus (searchW);
   gtk_main ();
   FlushGpx ();
   

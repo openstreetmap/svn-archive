@@ -333,8 +333,16 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 			if ( (!IsNumeric("" + startingChar)) &&  (!IsNumeric("" + endingChar)) ) {
 				// Both end with alpha
 				SelectInterpolationMethod("alphabetic");
+				return;
 			}
 
+			if ( (IsNumeric("" + startingChar)) &&  (!IsNumeric("" + endingChar)) ) {
+				endingChar = Character.toUpperCase(endingChar);
+				if ( (endingChar >= 'A') && (endingChar <= 'Z') ) {
+					// First is a number, last is Latin alpha
+					SelectInterpolationMethod("alphabetic");
+				}
+			}
 
 
 		}
@@ -872,8 +880,36 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 			char startingChar = startValueString.charAt(startValueString.length()-1);
 			char endingChar = endValueString.charAt(endValueString.length()-1);
 
-			if ( (IsNumeric("" + startingChar)) || (IsNumeric("" + endingChar)) ) {
+
+			boolean isOk = false;
+			if ( (IsNumeric("" + startingChar)) &&  (!IsNumeric("" + endingChar)) ) {
+				endingChar = Character.toUpperCase(endingChar);
+				if ( (endingChar >= 'A') && (endingChar <= 'Z') ) {
+					// First is a number, last is Latin alpha
+					isOk = true;
+				}
+			} else if ( (!IsNumeric("" + startingChar)) && (!IsNumeric("" + endingChar)) ) {
+				// Both are alpha
+				isOk = true;
+			}
+			if (!isOk) {
 				errorMessage = tr("Alphabetic address must end with a letter");
+			}
+
+
+			// if a number is included, validate that it is the same number
+			if (endValueString.length() > 1) {
+
+				// Get number portion of first item: may or may not have letter suffix
+				String numStart = startValueString.substring(0, startValueString.length()-1);
+				if (IsNumeric(startValueString)) {
+					numStart = startValueString;
+				}
+
+				String numEnd = endValueString.substring(0, endValueString.length()-1);
+				if (!numStart.equals(numEnd)) {
+					errorMessage = tr("Starting and ending numbers must be the same for alphabetic addresses");
+				}
 			}
 
 			// ?? Character collation in all languages ??

@@ -210,6 +210,7 @@
 		if (choice==1) { deselectAll(); deleteObject(ctype,cid); }	// downloading new version, so delete old one from Potlatch
 		if (tx && ty && (tx<long2coord(_root.edge_l) || tx>long2coord(_root.edge_r) || ty<lat2coord(_root.edge_t) || ty>lat2coord(_root.edge_b))) {
 			updateCoords(tx,ty);
+			redrawBackground();
 		}
 
 		if (choice==1) {

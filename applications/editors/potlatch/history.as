@@ -40,8 +40,16 @@
 
 		var versionlist=new Array();
 		_root.versioninfo=result[2];
-		for (i=0; i<result[2].length; i+=1) {
-			versionlist.push(result[2][i][0]+' ('+result[2][i][1]+')');
+		if (Stage.height<versioninfo.length*16) {
+			// too many entries, so trim the list
+			var a=Math.floor((versioninfo.length+2)*16/Stage.height);
+			var i=0;
+			while (i<versioninfo.length) {
+				versioninfo.splice(i,a); i++;
+			}
+		}
+		for (i=0; i<versioninfo.length; i+=1) {
+			versionlist.push(versioninfo[i][0]+' ('+versioninfo[i][1]+')');
 		}
 		_root.windows.history.box.attachMovie("menu","version",23);
 		_root.windows.history.box.version.init(9,32,0,versionlist,

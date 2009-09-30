@@ -168,6 +168,23 @@
 		updateLinks();
 		initBackground();
 		whichWays();
+
+		_root.panel.createEmptyMovieClip("help",80);
+		drawButton(_root.panel.help,7,114,iText('help'),"");
+		_root.panel.help.onPress=function() { openHelp(); };
+
+		_root.panel.attachMovie("menu","advanced",81);
+		_root.panel.advanced.init(67,114,-1,
+			new Array(iText("advanced_parallel"),
+					  iText("advanced_history"),
+					  "--",
+					  iText("advanced_inspector"),
+					  iText("advanced_undelete"),
+					  iText("advanced_close"),
+					  iText("advanced_maximise")),
+			iText('advanced_tooltip'),advancedAction,null,85,iText("advanced"));
+		selectWay(0);	// just to update the menu items
+
 		_root.onEnterFrame=function() { everyFrame(); };
 	}
 

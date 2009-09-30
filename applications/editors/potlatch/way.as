@@ -162,7 +162,7 @@
 			else {
 				var c=0xAAAAAA; var z=this.attr;
 				for (var i in z) { if (i!='created_by' && this.attr[i]!='' && this.attr[i].substr(0,6)!='(type ') { c=0x707070; } }
-				this.line.lineStyle((f>-1) ? areawidth : linewidth,c,linealpha,false,"none");
+				this.line.lineStyle((f>-1 || this.attr['boundary']) ? areawidth : linewidth,c,linealpha,false,"none");
 			}
 			
 			// Draw fill/casing
@@ -1458,9 +1458,10 @@
 			whichresponder.onResult=function(result) {
 				_root.whichreceived+=1;
 				var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
-				waylist  =result[0];
-				pointlist=result[1];
-				relationlist=result[2];
+				var waylist  =result[0];
+				var pointlist=result[1];
+				var relationlist=result[2];
+				var s;
 
 				for (i in waylist) {										// ways
 					way=waylist[i][0];										//  |
@@ -1475,12 +1476,12 @@
 				for (i in pointlist) {										// POIs
 					point=pointlist[i][0];									//  |
 					if ((!_root.map.pois[point] || _root.map.pois[point].version!=pointlist[i][4]) && !_root.poistodelete[point]) {
-						var a=getPOIIcon(pointlist[i][3]);				//  |
+						var a=getPOIIcon(pointlist[i][3]);					//  |
+						if (a=='poi') { s=poiscale; } else { s=iconscale; }	//  |
 						_root.map.pois.attachMovie(a,point,++poidepth);	//  |
 						_root.map.pois[point]._x=long2coord(pointlist[i][1]);// |
 						_root.map.pois[point]._y=lat2coord (pointlist[i][2]);// |
-						_root.map.pois[point]._xscale=
-						_root.map.pois[point]._yscale=Math.max(100/Math.pow(2,_root.scale-13),6.25);
+						_root.map.pois[point]._xscale=_root.map.pois[point]._yscale=s;
 						_root.map.pois[point].version=pointlist[i][4];		//  |
 						_root.map.pois[point].attr=pointlist[i][3];			//  |
 						_root.map.pois[point].icon=a;						//  |

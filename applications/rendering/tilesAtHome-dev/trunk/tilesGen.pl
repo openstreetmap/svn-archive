@@ -236,14 +236,14 @@ my $JobTime;
 # The existance check is to attempt to determine we're on a UNIX-like system
 
 ## set all fault counters to 0;
-resetFault("fatal");
-resetFault("rasterizer");
-resetFault("nodata");
-resetFault("nodataROMA");
-resetFault("nodataXAPI");
-resetFault("renderer");
-resetFault("utf8");
-resetFault("upload");
+initFault("fatal");
+initFault("rasterizer");
+initFault("nodata");
+initFault("nodataROMA");
+initFault("nodataXAPI");
+initFault("renderer");
+initFault("utf8");
+initFault("upload");
 
 unlink("stopfile.txt") if $Config->get("AutoResetStopfile");
 
@@ -404,6 +404,9 @@ elsif ($Mode eq "upload_loop")
             statusMessage(sprintf("upload finished in  %d:%02d", 
                                   $elapsedTime/60, $elapsedTime%60),1,0);
             $progressJobs++;
+# if uploaded anything at all this is a reason to reset the faults.
+# should the error persist it will die early enough on the next batch upload attempt.
+            resetFault("upload");
         }
     } #end of infinite while loop
 }

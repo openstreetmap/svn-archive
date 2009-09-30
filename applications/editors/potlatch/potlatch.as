@@ -132,7 +132,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 1.2b";	// current version
+	var signature="Potlatch 1.2c";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
 	var lastgroup='road';			// last preset group used
@@ -409,27 +409,6 @@
 	#include 'offline.as'
 	#include 'error.as'
 	#include 'inspector.as'
-
-
-	// =====================================================================================
-	// Help bar
-
-	_root.panel.createEmptyMovieClip("help",80);
-	drawButton(_root.panel.help,7,114,iText('help'),"");
-	_root.panel.help.onPress=function() { openHelp(); };
-
-	_root.panel.attachMovie("menu","advanced",81);
-	_root.panel.advanced.init(67,114,-1,
-		new Array(iText("advanced_parallel"),
-				  iText("advanced_history"),
-				  "--",
-				  iText("advanced_inspector"),
-				  iText("advanced_undelete"),
-				  iText("advanced_close"),
-				  iText("advanced_maximise")),
-		iText('advanced_tooltip'),advancedAction,null,85,iText("advanced"));
-	selectWay(0);	// just to update the menu items
-
 
 	// =====================================================================================
 	// Start

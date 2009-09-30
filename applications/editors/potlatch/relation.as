@@ -17,7 +17,7 @@
 
 	function OSMRelation() {
 		this.members = new Array();
-		this.attr=new Array();
+		this.attr=new Object();
 		this.isHighlighting = false;
 		this.clean=true;					// altered since last upload?
 		this.uploading=false;				// currently uploading?
@@ -290,12 +290,18 @@
 
 	// ----- UI
 
-	OSMRelation.prototype.editRelation = function() {
+	OSMRelation.prototype.editRelation = function(relexists) {
+		_root.relexists=relexists;
 		var rel = this;
 		var completeEdit = function(button) {
 			if (button==iText('ok') ) {
+				// save changes to relation tags
 				_root.windows.relation.box.properties.tidy();
+			} else if (!relexists) {
+				// cancel in dialogue after "create new relation"
+				removeMovieClip(_root.editingrelation); rel=null;
 			} else {
+				// cancel for existing relation
 				_root.editingrelation.attr=_root.editingrelationattr;
 			}
 			rel.setHighlight(false);
@@ -447,7 +453,7 @@
 						_root.map.relations[nid].setRole(type, id, '');
 						_root.map.relations[nid].attr['type'] = undefined;
 						_root.windows.relation.remove(); keepDialog = true;
-						_root.map.relations[nid].editRelation();
+						_root.map.relations[nid].editRelation(false);
 						break;
 				case 3:	// Find a relation
 						keepDialog=true;

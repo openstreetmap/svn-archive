@@ -850,7 +850,7 @@
 			setNewTextFormat(boldWhite); replaceSel(t+" ");
 		};
 		this.keynameclick.onPress=function() {
-			this._parent.rel.editRelation();
+			this._parent.rel.editRelation(true);
 		};
 		this.keynameclick.onRollOver=function() { this._parent.rel.setHighlight(true); };
 		this.keynameclick.onRollOut=function() { this._parent.rel.setHighlight(false); };

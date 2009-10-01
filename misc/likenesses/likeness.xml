@@ -1,0 +1,16 @@
+<!-- this is a straw man and might not even parse as XML. C'est la vie -->
+<likenesses version="0.1">
+  
+  <likeness object="way" key="highway">
+    <likeness value="motorway" />
+    <likeness value="freeway" />
+    <likeness value="autobahn" />
+  </likeness>
+
+  <likeness object="node" key="amenity">
+    <likeness value="atm" />
+    <likeness value="bankautomat" />
+    <likeness value="geldautomat" />
+  </likeness>
+
+</likenesses>

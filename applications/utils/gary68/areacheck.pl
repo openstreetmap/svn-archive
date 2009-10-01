@@ -30,7 +30,9 @@
 # 3.0
 # - online api support
 #
-
+# 3.2
+# - check if way is part of relation, then omit
+#
 
 use strict ;
 use warnings ;
@@ -63,7 +65,7 @@ my @areas = qw (area:yes waterway:riverbank aeroway:terminal aeroway:apron man_m
 
 
 my $program = "areacheck.pl" ;
-my $version = "3.1" ;
+my $version = "3.2" ;
 my $usage = $program . " file.osm out.htm out.gpx" ;
 
 my $wayId ;
@@ -79,6 +81,11 @@ my $nodeLon ;
 my @nodeTags ;
 my $aRef1 ;
 my $aRef2 ;
+my $relationId ;
+my $relationUser ;
+my @relationMembers ;
+my @relationTags ;
+
 my $wayCount = 0 ;
 my $areaCount = 0 ;
 my $areaOpenCount = 0 ;
@@ -109,7 +116,7 @@ my %wayStart ;
 my %wayEnd ;
 my %openWayTags ;
 my %openWayNodes ;
-
+my %usedInRelation = () ;
 
 ###############
 # get parameter
@@ -151,19 +158,53 @@ print "\n\n" ;
 
 
 
+#################################
+# find all relation members first
+#################################
+openOsmFile ($osmName) ;
+print "INFO: pass1: skipping nodes...\n" ;
+skipNodes () ;
+print "INFO: pass1: skipping ways...\n" ;
+skipWays () ;
+print "INFO: pass1: parsing relations...\n" ;
+
+($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
+if ($relationId != -1) {
+	@relationMembers = @$aRef1 ;
+	@relationTags = @$aRef2 ;
+}
+
+while ($relationId != -1) {
+
+	foreach my $m (@relationMembers) {
+		if ($m->[0] eq "way") { $usedInRelation{$m->[1]} = 1 ; }
+	}
+
+	#next
+	($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
+	if ($relationId != -1) {
+		@relationMembers = @$aRef1 ;
+		@relationTags = @$aRef2 ;
+	}
+}
+
+closeOsmFile () ;
+print "INFO: done.\n" ;
+
+
 
 ######################
 # skip all nodes first
 ######################
 openOsmFile ($osmName) ;
-print "INFO: pass1: skipping nodes...\n" ;
+print "INFO: pass2: skipping nodes...\n" ;
 skipNodes () ;
 
 
 #####################
 # identify open areas
 #####################
-print "INFO: pass1: find open areas...\n" ;
+print "INFO: pass2: find open areas...\n" ;
 ($wayId, $wayUser, $aRef1, $aRef2) = getWay () ;
 if ($wayId != -1) {
 	@wayNodes = @$aRef1 ;
@@ -181,7 +222,7 @@ while ($wayId != -1) {
 
 	if ($found) { 
 		$areaCount++ ;
-		if ($wayNodes[0] != $wayNodes[-1]) {
+		if ( ($wayNodes[0] != $wayNodes[-1]) and (! defined $usedInRelation{$wayId}) ) {
 			# check API way data
 			#print "request API data for way $wayId...\n" ;
 			sleep (1) ; # don't stress API
@@ -234,7 +275,7 @@ print "INFO: API rejections: $APIrejected\n" ;
 ######################
 # collect needed nodes
 ######################
-print "INFO: pass2: collect needed nodes...\n" ;
+print "INFO: pass3: collect needed nodes...\n" ;
 foreach $wayId (@open) {
 	push @neededNodes, $wayStart{$wayId} ;
 	push @neededNodes, $wayEnd{$wayId} ;
@@ -244,7 +285,7 @@ foreach $wayId (@open) {
 ######################
 # get node information
 ######################
-print "INFO: pass2: get node information...\n" ;
+print "INFO: pass3: get node information...\n" ;
 openOsmFile ($osmName) ;
 
 foreach (@neededNodes) { $neededNodesHash{$_} = 1 ; }

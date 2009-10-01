@@ -39,6 +39,7 @@ typedef long long __int64;
 #endif
 
 #define Sqr(x) ((x)*(x))
+inline int isqrt (int x) { return lrint (sqrt (x)); } // Optimize this ?
 
 #define TILEBITS (18)
 #define TILESIZE (1<<TILEBITS)

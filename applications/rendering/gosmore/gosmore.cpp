@@ -68,6 +68,7 @@
 #include <string>
 #include <stack>
 #include <vector>
+#include <queue>
 #include "libgosm.h"
 using namespace std;
 #define wchar_t char
@@ -1170,8 +1171,7 @@ int TestOrSet (int *bits, int set, int x0, int y0, int ax, int ay,
   }
   const int shf = 9;
   x0 <<= shf;
-  int x1 = x0, d0 = (ax << shf) / (ay + 1);
-  int d1 = (bx << shf) / (by + 1);
+  int x1 = x0, d0 = (ax << shf) / (ay + 1), d1 = (bx << shf) / (by + 1);
   int bpr = (draw->allocation.width + 31) / 32;
   bits += bpr * y0;
   for (int cnt = ay + by; cnt > 0 && y0 < draw->allocation.height; cnt--) {
@@ -1182,8 +1182,8 @@ int TestOrSet (int *bits, int set, int x0, int y0, int ax, int ay,
            i < draw->allocation.width && i < (x1 >> shf); i++) {
         if (set) bits[i >> 5] |= 1 << (i & 31);
         else if (bits[i >> 5] & (1 << (i & 31))) return 1;
-      }
-      // gdk_draw_line (draw->window, mygc, x0 >> shf, y0, x1 >> shf, y0);
+      } // This loop can be optimized
+      //gdk_draw_line (draw->window, mygc, x0 >> shf, y0, x1 >> shf, y0);
       // Uncomment this line to see if we're testing the right spot
       // (and it looks kind of interesting )
     }
@@ -1193,6 +1193,35 @@ int TestOrSet (int *bits, int set, int x0, int y0, int ax, int ay,
     y0++;
   }
   return 0;
+}
+
+struct linePtType {
+  int x, y, cumulative;
+  linePtType (int _x, int _y, int _c) : x (_x), y (_y), cumulative (_c) {}
+};
+
+void ConsiderText (queue<linePtType> *q, int finish, int len, int *best,
+  PangoMatrix *mat, int *x0, int *y0)
+{
+  while (!q->empty ()) {
+//  while (len * 14 <
+//      (cumulative - q.front ().cumulative) * DetailLevel) {
+    int dst = isqrt (Sqr (q->front ().x - q->back ().x) +
+                 Sqr (q->front ().y - q->back ().y));
+    if (q->back ().cumulative - q->front ().cumulative - dst <= *best) {
+      if (dst * DetailLevel > len * 14) {
+        mat->yy = mat->xx = fabs (q->front ().x - q->back ().x) / dst;
+        mat->xy = (q->front ().x > q->back ().x ? 1.0 : -1.0) *
+                 (q->back ().y - q->front ().y) / dst;
+        mat->yx = -mat->xy;
+        *x0 = (q->front ().x + q->back ().x) / 2;
+        *y0 = (q->front ().y + q->back ().y) / 2;
+        *best = q->back ().cumulative - q->front (). cumulative - dst;
+      }
+      if (!finish) break;
+    }
+    q->pop ();
+  }
 }
 
 #ifdef _WIN32_WCE
@@ -1371,14 +1400,12 @@ gint Expose (void)
 
   if (option == mapMode) {
 //    int perpixel = zoom / clip.width;
-    int doAreas = TRUE, blockIcon[2 * 128];
+    int doAreas = TRUE;
     int *block = (int*) calloc ((clip.width + 31) / 32 * 4, clip.height);
 
     stack<ndType*> dlist[13];
-    // Areas, 5 under + 1 gound level + 5 above + icons
+    // Areas + 5 under + 1 gound level + 5 above + icons
     
-    memset (blockIcon, 0, sizeof (blockIcon)); // One bit per 16 x 16 area
-  //    zoom / sqrt (draw->allocation.width * draw->allocation.height);
     // render map
     /* We need the smallest bbox that covers the test area. For 2D, the
        test area is a rectangle that is not aligned with the axis, so the
@@ -1440,14 +1467,15 @@ gint Expose (void)
       gdk_draw_polygon (draw->window, mygc, FALSE, pt, pts);
     }
     #endif
+    queue<linePtType> q;
     for (int l = 1; l < 13; l++) {
       for (; !dlist[l].empty (); dlist[l].pop ()) {
         ndType *nd = dlist[l].top ();
         wayType *w = Way (nd);
 
         #ifndef _WIN32_WCE
-        int maxLenSqr = 0;
-        double x0 = 0.0, y0 = 0.0; /* shut up gcc */
+        int best = 30;
+        int x0 = 0, y0 = 0; /* shut up gcc */
         #else
         int best = 0, bestW, bestH, x0, y0;
         #endif
@@ -1456,10 +1484,10 @@ gint Expose (void)
 	// single-point node
         if (nd->other[0] < 0 && nd->other[1] < 0) {
           int x = X (nd->lon, nd->lat), y = Y (nd->lon, nd->lat);
-          int *b = blockIcon + (x / (48 * 32) + y / 22 * 1) %
-                      (sizeof (blockIcon) / sizeof (blockIcon[0]));
-          if (!(*b & (1 << (x / 48 % 32))) && (!Display3D || y > 0)) {
-            *b |= 1 << (x / 48 % 32);
+          int *icon = Style (w)->x + 4 * IconSet, wd = icon[2], ht = icon[3];
+          if ((!Display3D || y > 0) && !TestOrSet (block, FALSE,
+                               x - wd / 2, y - ht / 2, 0, ht, wd, 0)) {
+            TestOrSet (block, TRUE, x - wd / 2, y - ht / 2, 0, ht, wd, 0);
             DrawIcon (x, y, w);
             
             #ifdef _WIN32_WCE
@@ -1481,8 +1509,9 @@ gint Expose (void)
               x0 = x /*- mat.xx / 3 * len*/; /* Render the name of the node */
               y0 = y /* + mat.xx * f->ascent */ +
                 Style (w)->x[IconSet * 4 + 3] / 2;
-              maxLenSqr = Sqr ((__int64) Style (w)->scaleMax / 2 /
-                (zoom / clip.width));
+              if (Sqr ((__int64) Style (w)->scaleMax / 2 /
+                (zoom / clip.width)) * DetailLevel > len * len * 100 &&
+                len > 0) best = 0;
               //(zoom / clip.width) *
               //(__int64) (zoom / clip.width) * 
               //4000000000000LL; // Without scaleMax, use 400000000
@@ -1535,8 +1564,9 @@ gint Expose (void)
 	      SelectObject (mygc, pen[StyleNr (w) + RESERVED_PENS]);
               #endif
 	    }
-	    int oldx = X (nd->lon, nd->lat);
-	    int oldy = Y (nd->lon, nd->lat);
+	    int oldx = X (nd->lon, nd->lat), oldy = Y (nd->lon, nd->lat);
+	    int cumulative = 0;
+            q.push (linePtType (oldx, oldy, cumulative));
 	    do {
 	      ndType *next = ndBase + nd->other[1];
 	      if (next->lat == INT_MIN) break; // Node excluded from build
@@ -1555,6 +1585,11 @@ gint Expose (void)
                    below the bottom of the screen. So we adjust oldx and oldy.
                    
                    When y is negative, we do something very similar. */
+                if (oldx < 0 || oldx >= clip.width ||
+                    oldy < 0 || oldy >= clip.height) {
+                  cumulative += 9999; // Insert a break in the queue
+                  q.push (linePtType (oldx, oldy, cumulative));
+                }
                 if (!Display3D || y > 0) {
                   x2 = x;
                   y2 = y;
@@ -1577,6 +1612,9 @@ gint Expose (void)
                 }
                 gdk_draw_line (draw->window, mygc, oldx, oldy, x2, y2);
                 // Draw3DLine
+                cumulative += isqrt (Sqr (oldx - x2) + Sqr (oldy - y2));
+                q.push (linePtType (x2, y2, cumulative));
+                ConsiderText (&q, FALSE, len, &best, &mat, &x0, &y0);
                 #ifdef _WIN32_WCE
 		int newb = oldx > x ? oldx - x : x - oldx;
 		if (newb < oldy - y) newb = oldy - y;
@@ -1589,7 +1627,7 @@ gint Expose (void)
 		  y0 = next->lat / 2 + nd->lat / 2;
 		}
                 #endif
-                #ifdef PANGO_VERSION
+                #ifdef PANGO_VERSIONxxxxx
                 int lenSqr = Sqr (oldx - x2) + Sqr (oldy - y2);
                 if (lenSqr > maxLenSqr) {
                   maxLenSqr = lenSqr;
@@ -1610,6 +1648,7 @@ gint Expose (void)
 	    } while (itr.left <= nd->lon && nd->lon < itr.right &&
 		     itr.top  <= nd->lat && nd->lat < itr.bottom &&
 		     nd->other[1] >= 0);
+            ConsiderText (&q, TRUE, len, &best, &mat, &x0, &y0);
 	  }
 	} /* If it has one or more segments */
 	  
@@ -1636,7 +1675,8 @@ gint Expose (void)
         }
         #endif
         #ifdef PANGO_VERSION
-        if (maxLenSqr * DetailLevel > len * len * 100 && len > 0) {
+        if (best < 30) {
+        //maxLenSqr * DetailLevel > len * len * 100 && len > 0) {
           double move = 0.6;
           for (char *txt = (char *)(w + 1) + 1; *txt != '\0';) {
             //cairo_set_font_matrix (cai, &mat);
@@ -1649,23 +1689,23 @@ gint Expose (void)
             pango_layout_set_text (pl, line, -1);
             PangoRectangle rect;
             pango_layout_get_pixel_extents (pl, &rect, NULL);
+            y0 += mat.xx * (f->ascent + f->descent) * move;
+            x0 += mat.xy * (f->ascent + f->descent) * move;
+            move = 1.2;
             if (TestOrSet (block, FALSE, 
               //x0 - (rect.width * mat.xx + rect.height * mat.xy) / 2,
               //y0 - (rect.height * mat.yy + rect.width * mat.yx) / 2,
-              x0 - rect.width * mat.xx / 2,
-              y0 - rect.width * mat.yx / 2,
-              mat.xy * (rect.height + 6), mat.xx * (rect.height + 6),
+              x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3,
+              y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3,
+              mat.xy * (rect.height), mat.xx * (rect.height),
               mat.xx * (rect.width + 10), mat.yx * (rect.width + 10))) break;
             TestOrSet (block, TRUE, 
               //x0 - (rect.width * mat.xx + rect.height * mat.xy) / 2,
               //y0 - (rect.height * mat.yy + rect.width * mat.yx) / 2,
-              x0 - rect.width * mat.xx / 2,
-              y0 - rect.width * mat.yx / 2,
-              mat.xy * (rect.height + 6), mat.xx * (rect.height + 6),
+              x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3,
+              y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3,
+              mat.xy * (rect.height), mat.xx * (rect.height),
               mat.xx * (rect.width + 10), mat.yx * (rect.width + 10));
-            y0 += mat.xx * (f->ascent + f->descent) * move;
-            x0 += mat.xy * (f->ascent + f->descent) * move;
-            move = 1.2;
             gdk_draw_layout (GDK_DRAWABLE (draw->window),
               draw->style->fg_gc[0],
               x0 - (rect.width * mat.xx + rect.height * fabs (mat.xy)) / 2,

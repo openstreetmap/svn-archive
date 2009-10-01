@@ -81,14 +81,14 @@ using namespace std;
   o (OrientNorthwards,0, 2) \
   o (FastestRoute,    0, 2) \
   o (Vehicle,         motorcarR, onewayR) \
-  o (SearchSpacing,   32, 1) \
   o (English,         0, \
                  sizeof (optionNameTable) / sizeof (optionNameTable[0])) \
   o (ButtonSize,      1, 5) \
   o (IconSet,         0, 4) \
   o (DetailLevel,     0, 5) \
+  o (ValidateMode,    0, 2) \
   o (ShowActiveRouteNodes, 0, 2) \
-  o (ValidateMode,    0, 2)
+  o (SearchSpacing,   32, 1)
 
 #define HideZoomButtons 0
 #define MenuKey 0
@@ -205,11 +205,13 @@ STYLES
   o (ShowTime,        ) \
 
 #define o(en,min,max) en ## Num,
-enum { OPTIONS numberOfOptions, searchMode, chooseObjectToAdd };
+enum { OPTIONS mapMode, optionMode, searchMode, chooseObjectToAdd };
 #undef o
 
+int listYOffset; // Number of pixel. Changed by dragging.
+
 //  TEXT (#en), TEXT (de), TEXT (es), TEXT (fr), TEXT (it), TEXT (nl) },
-const char *optionNameTable[][numberOfOptions] = {
+const char *optionNameTable[][mapMode] = {
 #define o(en,min,max) #en,
   { OPTIONS }, // English is same as variable names
 #undef o
@@ -224,11 +226,8 @@ OPTIONS
 #undef o
 
 #ifndef HEADLESS
-#define STATUS_BAR    0
 
-GtkWidget *draw, *location, *display3D, *followGPSr, *orientNorthwards;
-GtkWidget *validateMode;
-GtkComboBox *iconSet, *carBtn, *fastestBtn, *detailBtn;
+GtkWidget *draw, *location, *display3D, *followGPSr;
 int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE, gDisplayOff;
 /* zoom is the amount that fits into the window (regardless of window size) */
 double cosAzimuth = 1.0, sinAzimuth = 0.0;
@@ -268,20 +267,8 @@ int ChangeLocation (void)
 
 int ChangeOption (void)
 {
-  IconSet = gtk_combo_box_get_active (iconSet);
-  Vehicle = gtk_combo_box_get_active (carBtn) + motorcarR;
-  DetailLevel = 4 - gtk_combo_box_get_active (detailBtn);
   Display3D = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (display3D));
   FollowGPSr = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (followGPSr));
-  OrientNorthwards =
-    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (orientNorthwards));
-  ValidateMode = 
-    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (validateMode));
-  if (OrientNorthwards) {
-    cosAzimuth = 1.0;
-    sinAzimuth = 0.0;
-  }
-  FastestRoute = !gtk_combo_box_get_active (fastestBtn);
   gtk_widget_queue_clear (draw);
   return FALSE;
 }
@@ -762,7 +749,7 @@ BOOL CALLBACK DlgChooseOProc (HWND hwnd, UINT Msg, WPARAM wParam,
 {
   if (Msg == WM_INITDIALOG) {
     HWND klist = GetDlgItem (hwnd, IDC_LISTO);
-    for (int i = 0; i < numberOfOptions; i++) {
+    for (int i = 0; i < mapMode; i++) {
       const unsigned char *sStart = (const unsigned char*)
         optionNameTable[English][i];
       UTF16 wcTmp[30], *tStart = wcTmp;
@@ -789,17 +776,18 @@ int objectAddRow = -1;
 void HitButton (int b)
 {
   int returnToMap = b > 0 && option <= FastestRouteNum;
+  
   #ifdef _WIN32_WCE
   if (AddWayOrNode && b == 0) {
     AddWayOrNode = 0;
-    option = numberOfOptions;
+    option = mapMode;
     if (newWays[newWayCnt].cnt) objectAddRow = 0;
     return;
   }
   if (QuickOptions && b == 0) {
     option = DialogBox (hInst, MAKEINTRESOURCE (IDD_CHOOSEO), NULL,
       (DLGPROC) DlgChooseOProc);
-    if (option == -1) option = numberOfOptions;
+    if (option == -1) option = mapMode;
     
     #define o(en,min,max) \
       if (option == en ## Num && min == 0 && max <= 2) b = 1;
@@ -810,48 +798,52 @@ void HitButton (int b)
     // If it's a binary option, fall through to toggle it
   }
   #endif
-    if (b == 0) option = (option + 1) % (numberOfOptions + 1);
-    else if (option == StartRouteNum) {
-      flon = clon;
-      flat = clat;
-      free (route);
-      route = NULL;
-      shortest = NULL;
+  if (b == 0) {
+    listYOffset = 0;
+    option = option < mapMode ? mapMode
+       : option == optionMode ? 0 : optionMode;
+  }
+  else if (option == StartRouteNum) {
+    flon = clon;
+    flat = clat;
+    free (route);
+    route = NULL;
+    shortest = NULL;
+  }
+  else if (option == EndRouteNum) {
+    tlon = clon;
+    tlat = clat;
+    Route (TRUE, 0, 0, Vehicle, FastestRoute);
+  }
+  #ifdef _WIN32_WCE
+  else if (option == SearchNum) {
+    SipShowIM (SIPF_ON);
+    if (ModelessDialog) ShowWindow (dlgWnd, SW_SHOW);
+    else DialogBox (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
+             NULL, (DLGPROC)DlgSearchProc);
+  }
+  else if (option == DisplayOffNum) {
+    if (CeEnableBacklight(FALSE)) {
+      gDisplayOff = TRUE;
     }
-    else if (option == EndRouteNum) {
-      tlon = clon;
-      tlat = clat;
-      Route (TRUE, 0, 0, Vehicle, FastestRoute);
-    }
-    #ifdef _WIN32_WCE
-    else if (option == SearchNum) {
-      SipShowIM (SIPF_ON);
-      if (ModelessDialog) ShowWindow (dlgWnd, SW_SHOW);
-      else DialogBox (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
-               NULL, (DLGPROC)DlgSearchProc);
-    }
-    else if (option == DisplayOffNum) {
-      if (CeEnableBacklight(FALSE)) {
-        gDisplayOff = TRUE;
-      }
-    }
-    else if (option == BaudRateNum) BaudRate += b * 4800 - 7200;
-    #endif
-    #define o(en,min,max) else if (option == en ## Num) \
-      en = (en - (min) + (b == 2 ? 1 : (max) - (min) - 1)) % \
-        ((max) - (min)) + (min);
-    OPTIONS
-    #undef o
-    else {
-      if (b == 2) zoom = zoom / 4 * 3;
-      if (b == 1) zoom = zoom / 3 * 4;
-      if (b > 0) SetLocation (clon, clat);
-    }
-    if (option == OrientNorthwardsNum && OrientNorthwards) {
-      cosAzimuth = 1.0;
-      sinAzimuth = 0.0;
-    }
-    if (returnToMap) option = numberOfOptions;
+  }
+  else if (option == BaudRateNum) BaudRate += b * 4800 - 7200;
+  #endif
+  #define o(en,min,max) else if (option == en ## Num) \
+    en = (en - (min) + (b == 2 ? 1 : (max) - (min) - 1)) % \
+      ((max) - (min)) + (min);
+  OPTIONS
+  #undef o
+  else {
+    if (b == 2) zoom = zoom / 4 * 3;
+    if (b == 1) zoom = zoom / 3 * 4;
+    if (b > 0) SetLocation (clon, clat);
+  }
+  if (option == OrientNorthwardsNum && OrientNorthwards) {
+    cosAzimuth = 1.0;
+    sinAzimuth = 0.0;
+  }
+  if (returnToMap) option = mapMode;
 }
 
 #ifndef _WIN32_CE
@@ -859,7 +851,8 @@ int firstDrag[2] = { -1, -1 }, lastDrag[2];
 
 gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
 {
-  if (option == numberOfOptions && (event->state & GDK_BUTTON1_MASK)) {
+  if ((option == mapMode || option == optionMode) &&
+          (event->state & GDK_BUTTON1_MASK)) {
     if (firstDrag[0] >= 0) gdk_draw_drawable (draw->window,
       draw->style[0].fg_gc[0], draw->window, 
       0, 0, lrint (event->x) - lastDrag[0], lrint (event->y) - lastDrag[1],
@@ -871,6 +864,18 @@ gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
   return FALSE;
 }
 #endif
+
+int ListXY (int cnt, int isY)
+{ // Returns either the x or the y for a certain list item
+  int max = mapMode; //option == optionMode ? mapNode :
+  int w = 128, h = 32;
+  while ((draw->allocation.width/w) * (draw->allocation.height/h - 1) > max) {
+    w++;
+    h++;
+  }
+  return isY ? cnt / (draw->allocation.width / w) * h + h / 2 - listYOffset :
+    (cnt % (draw->allocation.width / w)) * w + w / 2;
+}
 
 int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
@@ -901,9 +906,25 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   }
   #ifdef _WIN32_WCE
   else if (event->x > w - ButtonSize * 20 && b <
-      (!HideZoomButtons || option != numberOfOptions ? 3 : 
+      (!HideZoomButtons || option != mapMode ? 3 : 
       MenuKey != 0 ? 0 : 1)) HitButton (b);
   #endif
+  else if (option == optionMode) {
+    if (firstDrag[0] >= 0) {
+      listYOffset += firstDrag[1] - event->y;
+      firstDrag[0] = -1;
+    }
+    else {
+      for (int best = 9999, i = 0; i < mapMode; i++) {
+        int d = abs (ListXY (i, FALSE) - event->x) +
+                abs (ListXY (i, TRUE) - event->y);
+        if (d < best) {
+          best = d;
+          option = i;
+        }
+      }
+    }
+  }
   else if (option == searchMode) {
     int row = event->y / SearchSpacing;
     if (row < searchCnt && gosmSstr[row]) {
@@ -911,7 +932,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       zoom = gosmSway[row]->dlat + gosmSway[row]->dlon + (1 << 15);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
       FollowGPSr = FALSE;
-      option = numberOfOptions;
+      option = mapMode;
       highlight = string (gosmSstr[row], strcspn (gosmSstr[row], "\n"));
       gtk_widget_queue_clear (draw);
     }
@@ -1130,6 +1151,50 @@ void Draw3DLine (int sx, int sy, int dx, int dy)
   gdk_draw_line (draw->window, mygc, sx, sy, dx, dy);
 }
 
+int TestOrSet (int *bits, int set, int x0, int y0, int ax, int ay,
+       int bx, int by)
+/* This funtion manipulates bits in a rectangular area in a bitfield. (x0, y0)
+   is one of the corners. (ax,ay) and (bx,by) are to vectors that define
+   two of the sides. ay > 0
+   The precise operation is determined by the 'set' boolean
+*/
+{
+  if (by < 0) { // Top not given, so we find it first.
+    x0 += bx;
+    y0 += by;
+    int nx = ax, ny = ay;
+    ax = -bx;
+    ay = -by;
+    bx = nx;
+    by = ny;
+  }
+  const int shf = 9;
+  x0 <<= shf;
+  int x1 = x0, d0 = (ax << shf) / (ay + 1);
+  int d1 = (bx << shf) / (by + 1);
+  int bpr = (draw->allocation.width + 31) / 32;
+  bits += bpr * y0;
+  for (int cnt = ay + by; cnt > 0 && y0 < draw->allocation.height; cnt--) {
+    x0 += d0;
+    x1 += d1;
+    if (y0 >= 0) {
+      for (int i = max (x0 >> shf, 0);
+           i < draw->allocation.width && i < (x1 >> shf); i++) {
+        if (set) bits[i >> 5] |= 1 << (i & 31);
+        else if (bits[i >> 5] & (1 << (i & 31))) return 1;
+      }
+      // gdk_draw_line (draw->window, mygc, x0 >> shf, y0, x1 >> shf, y0);
+      // Uncomment this line to see if we're testing the right spot
+      // (and it looks kind of interesting )
+    }
+    bits += bpr;
+    if (cnt == by) d0 = (bx << shf) / by;
+    if (cnt == ay) d1 = (ax << shf) / ay;
+    y0++;
+  }
+  return 0;
+}
+
 #ifdef _WIN32_WCE
 int Expose (HDC mask, HPEN *pen)
 {
@@ -1236,20 +1301,19 @@ gint Expose (void)
   pango_layout_set_width (pl, -1); // No wrapping 200 * PANGO_SCALE);
 #endif // !_WIN32_WCE
 
-  clip.height = draw->allocation.height - STATUS_BAR;
+  clip.height = draw->allocation.height;
   clip.width = draw->allocation.width;
-  if (ButtonSize <= 0) ButtonSize = 4;
-/*  #ifdef CAIRO_VERSION
-  cairo_t *cai = gdk_cairo_create (draw->window);
-  if (DetailLevel < 2) {
-    cairo_font_options_t *caiFontOptions = cairo_font_options_create ();
-    cairo_get_font_options (cai, caiFontOptions);
-    cairo_font_options_set_antialias (caiFontOptions, CAIRO_ANTIALIAS_NONE);
-    cairo_set_font_options (cai, caiFontOptions);
+  
+  if (option == optionMode) {
+    for (int i = 0; i < mapMode; i++) {
+      DrawString (ListXY (i, FALSE) - strlen (optionNameTable[English][i]) *
+        5, ListXY (i, TRUE), optionNameTable[English][i]);
+    }
+    return FALSE;
   }
-  cairo_matrix_t mat;
-  cairo_matrix_init_identity (&mat);
-  #endif */
+  
+  if (ButtonSize <= 0) ButtonSize = 4;
+
   if (zoom < 0) zoom = 2012345678;
   if (zoom / clip.width <= 1) zoom += 4000;
   int cosa = lrint (4294967296.0 * cosAzimuth * clip.width / zoom);
@@ -1305,20 +1369,10 @@ gint Expose (void)
      inefficient machine code, depending on how well the compiler optimizes.
   */
 
-/*  #define X(lon,lat) (Display3D ? Clamp (clip.width / 2 + \
-   (xadj + (lon) * (__int64) cosa + (lat) * (__int64)sina) / ( \
-   YDivisor (yadj + (lat) * (__int64) cosa - (lon) * (__int64) sina) / 256)) \
-  : xadj + (int)(((lon) * (__int64) cosa + (lat) * (__int64) sina) >> 32))
-  #define Y(lon,lat) (Display3D ? Clamp (PIX45 * HEIGHT * MUL / \
-     YDivisor ((yadj + (lat) * (__int64) cosa - (lon) * (__int64) sina))) \
-  : yadj + (int)(((lon) * (__int64) sina - (lat) * (__int64) cosa) >> 32))
-*/
-
-/*printf ("%d ", (int)(yadj + (clat) * (__int64) cosa - (clon) * (__int64) sina));
-printf ("%d\n", Y(clon,clat)); */
-  if (option == numberOfOptions) {
+  if (option == mapMode) {
 //    int perpixel = zoom / clip.width;
     int doAreas = TRUE, blockIcon[2 * 128];
+    int *block = (int*) calloc ((clip.width + 31) / 32 * 4, clip.height);
 
     stack<ndType*> dlist[13];
     // Areas, 5 under + 1 gound level + 5 above + icons
@@ -1404,7 +1458,7 @@ printf ("%d\n", Y(clon,clat)); */
           int x = X (nd->lon, nd->lat), y = Y (nd->lon, nd->lat);
           int *b = blockIcon + (x / (48 * 32) + y / 22 * 1) %
                       (sizeof (blockIcon) / sizeof (blockIcon[0]));
-          if (!(*b & (1 << (x / 48 % 32)))) {
+          if (!(*b & (1 << (x / 48 % 32))) && (!Display3D || y > 0)) {
             *b |= 1 << (x / 48 % 32);
             DrawIcon (x, y, w);
             
@@ -1456,7 +1510,7 @@ printf ("%d\n", Y(clon,clat)); */
               if (strncmp (highlight.c_str (), ptr, strcspn (ptr, "\n"))
                   == 0) valid = false;
               while (*ptr != '\0' && *ptr++ != '\n') {}
-            } // Shoud highlighting get its own pen ?
+            } // Should highlighting get its own pen ?
           }
 	  // two stages -> validate (if needed) then normal rendering
 	  ndType *orig = nd;
@@ -1595,6 +1649,20 @@ printf ("%d\n", Y(clon,clat)); */
             pango_layout_set_text (pl, line, -1);
             PangoRectangle rect;
             pango_layout_get_pixel_extents (pl, &rect, NULL);
+            if (TestOrSet (block, FALSE, 
+              //x0 - (rect.width * mat.xx + rect.height * mat.xy) / 2,
+              //y0 - (rect.height * mat.yy + rect.width * mat.yx) / 2,
+              x0 - rect.width * mat.xx / 2,
+              y0 - rect.width * mat.yx / 2,
+              mat.xy * (rect.height + 6), mat.xx * (rect.height + 6),
+              mat.xx * (rect.width + 10), mat.yx * (rect.width + 10))) break;
+            TestOrSet (block, TRUE, 
+              //x0 - (rect.width * mat.xx + rect.height * mat.xy) / 2,
+              //y0 - (rect.height * mat.yy + rect.width * mat.yx) / 2,
+              x0 - rect.width * mat.xx / 2,
+              y0 - rect.width * mat.yx / 2,
+              mat.xy * (rect.height + 6), mat.xx * (rect.height + 6),
+              mat.xx * (rect.width + 10), mat.yx * (rect.width + 10));
             y0 += mat.xx * (f->ascent + f->descent) * move;
             x0 += mat.xy * (f->ascent + f->descent) * move;
             move = 1.2;
@@ -1697,6 +1765,7 @@ printf ("%d\n", Y(clon,clat)); */
       }
     }
     #endif
+    free (block);
   } // Not in the menu
   else if (option == searchMode) {
     for (int i = 0, y = SearchSpacing / 2; i < searchCnt && gosmSstr[i];
@@ -1768,7 +1837,7 @@ printf ("%d\n", Y(clon,clat)); */
   }
   */
   #else
-  int i = !HideZoomButtons || option != numberOfOptions ? 3 :
+  int i = !HideZoomButtons || option != mapMode ? 3 :
                                                 MenuKey != 0 ? 0 : 1;
   RECT r;
   r.left = clip.width - ButtonSize * 20;
@@ -1814,7 +1883,7 @@ GtkWidget *searchW;
 
 int ToggleSearchResults (void)
 {
-  option = option == searchMode ? numberOfOptions : searchMode;
+  option = option == searchMode ? mapMode : searchMode;
   highlight = string ();
   gtk_widget_queue_clear (draw);
   return FALSE;
@@ -1967,68 +2036,11 @@ int UserInterface (int argc, char *argv[],
 
   gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);
   
-  carBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
-  #define M(x) if (motorcarR <= x ## R && x ## R < onewayR) \
-                             gtk_combo_box_append_text (carBtn, #x);
-  RESTRICTIONS
-  #undef M
-  gtk_combo_box_set_active (carBtn, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (carBtn), FALSE, FALSE, 5);
-  gtk_signal_connect (GTK_OBJECT (carBtn), "changed",
-    GTK_SIGNAL_FUNC (ChangeOption), NULL);
-
-  fastestBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
-  gtk_combo_box_append_text (fastestBtn, "fastest");
-  gtk_combo_box_append_text (fastestBtn, "shortest");
-  gtk_combo_box_set_active (fastestBtn, 0);
-  gtk_box_pack_start (GTK_BOX (vbox),
-    GTK_WIDGET (fastestBtn), FALSE, FALSE, 5);
-  gtk_signal_connect (GTK_OBJECT (fastestBtn), "changed",
-    GTK_SIGNAL_FUNC (ChangeOption), NULL);
-
-  detailBtn = GTK_COMBO_BOX (gtk_combo_box_new_text ());
-  gtk_combo_box_append_text (detailBtn, "Highest");
-  gtk_combo_box_append_text (detailBtn, "High");
-  gtk_combo_box_append_text (detailBtn, "Normal");
-  gtk_combo_box_append_text (detailBtn, "Low");
-  gtk_combo_box_append_text (detailBtn, "Lowest");
-  gtk_combo_box_set_active (detailBtn, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (detailBtn), FALSE, FALSE,5);
-  gtk_signal_connect (GTK_OBJECT (detailBtn), "changed",
-    GTK_SIGNAL_FUNC (ChangeOption), NULL);
-
-  iconSet = GTK_COMBO_BOX (gtk_combo_box_new_text ());
-  gtk_combo_box_append_text (iconSet, "Classic.Big");
-  gtk_combo_box_append_text (iconSet, "Classic.Small                       ");
-  gtk_combo_box_append_text (iconSet, "Square.Big");
-  gtk_combo_box_append_text (iconSet, "Square.Small");
-  gtk_combo_box_set_active (iconSet, 1);
-  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (iconSet), FALSE, FALSE, 5);
-  gtk_signal_connect (GTK_OBJECT (iconSet), "changed",
-    GTK_SIGNAL_FUNC (ChangeOption), NULL);
-
-//  GtkWidget *getDirs = gtk_button_new_with_label ("Get Directions");
-/*  gtk_box_pack_start (GTK_BOX (vbox), getDirs, FALSE, FALSE, 5);
-  gtk_signal_connect (GTK_OBJECT (getDirs), "clicked",
-    GTK_SIGNAL_FUNC (GetDirections), NULL);
-*/
   location = gtk_entry_new ();
   gtk_box_pack_start (GTK_BOX (vbox), location, FALSE, FALSE, 5);
   gtk_signal_connect (GTK_OBJECT (location), "changed",
     GTK_SIGNAL_FUNC (ChangeLocation), NULL);
   
-  orientNorthwards = gtk_check_button_new_with_label ("OrientNorthwards");
-  gtk_box_pack_start (GTK_BOX (vbox), orientNorthwards, FALSE, FALSE, 5);
-  gtk_signal_connect (GTK_OBJECT (orientNorthwards), "clicked",
-    GTK_SIGNAL_FUNC (ChangeOption), NULL);
-  gtk_widget_show (orientNorthwards);
-
-  validateMode = gtk_check_button_new_with_label ("Validation Mode");
-  gtk_box_pack_start (GTK_BOX (vbox), validateMode, FALSE, FALSE, 5);
-  gtk_signal_connect (GTK_OBJECT (validateMode), "clicked",
-    GTK_SIGNAL_FUNC (ChangeOption), NULL);
-  gtk_widget_show (validateMode);
-
   display3D = gtk_toggle_button_new_with_label ("3D");
   gtk_box_pack_start (GTK_BOX (hbox), display3D, FALSE, FALSE, 5);
   gtk_signal_connect (GTK_OBJECT (display3D), "clicked",
@@ -2059,19 +2071,19 @@ int UserInterface (int argc, char *argv[],
   gtk_signal_connect (GTK_OBJECT (window), "delete_event",
     GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
   
-  gtk_window_set_default_size (GTK_WINDOW (window), 550, 750);
+  gtk_window_set_default_size (GTK_WINDOW (window), 550, 550);
   gtk_widget_show (searchW);
   gtk_widget_show (location);
   gtk_widget_show (draw);
-  gtk_widget_show (GTK_WIDGET (carBtn));
-  gtk_widget_show (GTK_WIDGET (fastestBtn));
-  gtk_widget_show (GTK_WIDGET (detailBtn));
-  gtk_widget_show (GTK_WIDGET (iconSet));
 /*  gtk_widget_show (getDirs); */
   gtk_widget_show (hbox);
   gtk_widget_show (vbox);
   gtk_widget_show (window);
-  option = numberOfOptions;
+  option = mapMode;
+  IconSet = 1;
+  DetailLevel = 2;
+  FastestRoute = 1;
+  Vehicle = motorcarR;
   ChangeOption ();
   IncrementalSearch ();
   InitializeOptions ();
@@ -2671,7 +2683,7 @@ int WINAPI WinMain(
     OPTIONS
     #undef o
     fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
-    option = numberOfOptions;
+    option = mapMode;
   }
   Exit = 0;
   InitializeOptions ();

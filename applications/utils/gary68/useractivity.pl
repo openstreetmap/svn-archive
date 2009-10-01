@@ -35,7 +35,9 @@
 # Version 3.0
 # - black and white lists
 #
-
+# Version 3.1
+# - bug fix
+#
 
 
 use strict ;
@@ -50,7 +52,7 @@ use Compress::Bzip2 ;
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode [numTopUsers] [picSize] (Mode = [N|P|D|S], picSize x in pixels)\n" ;
 $usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\nout.white.txt and out.black.txt (white and black lists) can be given (enter one user name per line)\n" ;
-my $version = "3.0" ;
+my $version = "3.1 BETA" ;
 
 my $topMax = 10 ;
 
@@ -123,12 +125,10 @@ print stringFileInfo ($osm2Name), "\n\n"  ;
 # Main
 #------------------------------------------------------------------------------------
 
-
-
-if (grep /P/, $mode) { initializeMap() ; }
-
 initLocaltime() ;
 print "local time: $localDay $localMonth $localYear\n" ;
+
+if (grep /P/, $mode) { initializeMap() ; }
 
 readLists() ;
 
@@ -1008,7 +1008,7 @@ sub initializeMap {
 sub saveMap {
 	print "saving map...\n" ;
 	drawHead ($program . " ". $version . " by Gary68", "black", 3) ;
-	drawFoot ("data by openstreetmap.org" . " " . $osm1Name . " " .ctime(stat($osm1Name)->mtime) . $osm2Name . " " .ctime(stat($osm2Name)->mtime), "black", 3) ;
+	drawFoot ("data by openstreetmap.org" . " " . stringFileInfo ($osm1Name) . stringFileInfo ($osm2Name), "black", 3) ;
 	drawLegend (3, "New", "black", "Deleted", "red", "Moved", "blue", "Renamed", "orange", "Reclassified", "pink", "User Area", "tomato") ;
 	drawRuler ("black") ;
 	my ($pngName) = $htmlName ;

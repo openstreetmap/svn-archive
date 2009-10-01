@@ -2,19 +2,19 @@
 	// Potlatch help functions
 
 	var topicselected=0;
-	var topics=new Array(iText('heading_introduction'),
-	                     iText('heading_pois'),
-	                     iText('heading_surveying'),
-	                     iText('heading_drawing'),
-	                     iText('heading_tagging'),
-	                     iText('heading_troubleshooting'),
-	                     iText('heading_quickref'));
 
 	var styles=new TextField.StyleSheet();
 	styles.load("/potlatch/help.css?d=5");
 	
 	function openHelp() {
 		var tw,aw,i;
+	    var topics=new Array(iText('heading_introduction'),
+    	                     iText('heading_pois'),
+    	                     iText('heading_surveying'),
+    	                     iText('heading_drawing'),
+    	                     iText('heading_tagging'),
+    	                     iText('heading_troubleshooting'),
+    	                     iText('heading_quickref'));
 
 		// Blank rest of page
 		var bh=Stage.height;

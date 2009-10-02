@@ -15,8 +15,8 @@
 		_root.map.gps.createEmptyMovieClip(_root.gpsoffset,_root.gpsoffset);
 		_root.lastgps=q;
 
-		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+q+'&offset='+(_root.gpsoffset*10000)+'&token='+_root.usertoken,_root.map.gps[_root.gpsoffset]); }
-							  else { loadMovie(gpsurl+q+'&offset='+(_root.gpsoffset*10000),_root.map.gps[_root.gpsoffset]); }
+		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+q+'&start='+(_root.gpsoffset*10000)+'&token='+_root.usertoken,_root.map.gps[_root.gpsoffset]); }
+							  else { loadMovie(gpsurl+q+'&start='+(_root.gpsoffset*10000),_root.map.gps[_root.gpsoffset]); }
 	}
 
 	// parseGPX		- parse GPX file

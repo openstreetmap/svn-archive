@@ -12,7 +12,7 @@ datarootdir = $(prefix)/share
 CFLAGS=-O2 -DRES_DIR=\"$(prefix)/share/gosmore/\"
 WARNFLAGS= -W -Wall
 
-#------------------------ Compiling with cegcc : ---------------------------
+#"------------------------ Compiling with cegcc : ---------------------------
 # tar xzf -C / cygwin-cegcc-mingw32ce-0.51.0-1.tar.gz
 # export PATH="$PATH":/opt/mingw32ce/bin/
 ARCH=		arm-wince-mingw32ce
@@ -38,9 +38,19 @@ endif
 
 all: gosmore
 
+# The planet is too big to fit into the address space of a single process on
+# a 32 bit CPUs. So we break it up into pieces (overlapping rectangles and
+# some lowzoom extracts) and then run one process for each piece. The parent
+# task then chooses the most
+# appropriate process and forwards the expose, search or routing request to
+# it. THE CODE IS NOT FINISHED. Linux version looks promising.
 gosmore:	gosmore.cpp libgosm.cpp libgosm.h
-		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
+		g++ -DCHILDREN=16 ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
                   gosmore.cpp libgosm.cpp -o gosmore ${EXTRA}
+
+gosmore16:	gosmore.cpp libgosm.cpp libgosm.h
+		g++ -DGOSMZ=16 ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
+                  gosmore.cpp libgosm.cpp -o gosmore16 ${EXTRA}
 
 gosm_arm.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h translations.c \
                     libgosm.h ceglue.h ceglue.c 

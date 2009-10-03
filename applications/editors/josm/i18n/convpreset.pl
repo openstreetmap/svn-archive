@@ -35,15 +35,16 @@ while(my $line = <>)
   }
   elsif($line =~ /<group.*\s+name=(".*?")/)
   {
-    $group = $group ? "$group$1" : $1;
+    my $gr = $1;
+    $group = $group ? "$group$gr" : $gr;
     $group =~ s/\"\"/\//;
     if($line =~ /name_context=(".*?")/)
     {
-      print "trc($1,$group); /* group $group */\n";
+      print "trc($1,$gr); /* group $group */\n";
     }
     else
     {
-      print "tr($group); /* group $group */\n";
+      print "tr($gr); /* group $group */\n";
     }
   }
   elsif($line =~ /<label.*\s+text=" "/)

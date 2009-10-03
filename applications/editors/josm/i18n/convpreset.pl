@@ -21,64 +21,125 @@ while(my $line = <>)
   chomp($line);
   if($line =~ /<item\s+name=(".*?")/)
   {
-    print "tr($1); /* item $item */\n";
-    $item = $group ? "$group$1" : $1;
+    my $val = $1;
+    $item = $group ? "$group$val" : $val;
     $item =~ s/""/\//;
+    if($line =~ /name_context=(".*?")/)
+    {
+      print "trc($1, $val); /* item $item */\n";
+    }
+    else
+    {
+      print "tr($val); /* item $item */\n";
+    }
   }
-  elsif($line =~ /<group\s+name=(".*?")/)
+  elsif($line =~ /<group.*\s+name=(".*?")/)
   {
-    $group = $1;
-    print "tr($1); /* group $group */\n";
+    $group = $group ? "$group$1" : $1;
+    $group =~ s/\"\"/\//;
+    if($line =~ /name_context=(".*?")/)
+    {
+      print "trc($1,$group); /* group $group */\n";
+    }
+    else
+    {
+      print "tr($group); /* group $group */\n";
+    }
   }
-  elsif($line =~ /<label\s+text=" "/)
+  elsif($line =~ /<label.*\s+text=" "/)
   {
     print "/* item $item empty label */\n";
   }
-  elsif($line =~ /<label\s+text=(".*?")/)
+  elsif($line =~ /<label.*\s+text=(".*?")/)
   {
-    print "tr($1); /* item $item label $1 */\n";
+    my $text = $1;
+    if($line =~ /text_context=(".*?")/)
+    {
+      print "trc($1,$text); /* item $item label $text */\n";
+    }
+    else
+    {
+      print "tr($text); /* item $item label $text */\n";
+    }
   }
-  elsif($line =~ /<text.*text=(".*?")/)
+  elsif($line =~ /<text.*\s+text=(".*?")/)
   {
     my $n = $1;
-    print "tr($n); /* item $item text $n */\n";
+    if($line =~ /text_context=(".*?")/)
+    {
+      print "trc($1,$n); /* item $item text $n */\n";
+    }
+    else
+    {
+      print "tr($n); /* item $item text $n */\n";
+    }
   }
-  elsif($line =~ /<check.*text=(".*?")/)
+  elsif($line =~ /<check.*\s+text=(".*?")/)
   {
     my $n = $1;
-    print "tr($n); /* item $item check $n */\n";
+    if($line =~ /text_context=(".*?")/)
+    {
+      print "trc($1,$n); /* item $item check $n */\n";
+    }
+    else
+    {
+      print "tr($n); /* item $item check $n */\n";
+    }
   }
-  elsif($line =~ /<role.*text=(".*?")/)
+  elsif($line =~ /<role.*\s+text=(".*?")/)
   {
     my $n = $1;
-    print "tr($n); /* item $item role $n */\n";
+    if($line =~ /text_context=(".*?")/)
+    {
+      print "trc($1,$n); /* item $item role $n */\n";
+    }
+    else
+    {
+      print "tr($n); /* item $item role $n */\n";
+    }
   }
   # first handle display values
-  elsif($line =~ /<combo.*text=(".*?").*display_values="(.*?)"/)
+  elsif($line =~ /<combo.*\s+text=(".*?").*\s+display_values="(.*?)"/)
   {
     my ($n,$vals) = ($1,$2);
-    print "tr($n); /* item $item combo $n */";
+    my $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
+    if($line =~ /text_context=(".*?")/)
+    {
+      print "trc($1,$n); /* item $item combo $n */";
+    }
+    else
+    {
+      print "tr($n); /* item $item combo $n */";
+    }
     foreach my $val (split ",",$vals)
     {
       next if $val =~ /^[0-9-]+$/; # search for non-numbers
-      print " tr(\"$val\");";
+      print $vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");";
     }
     print "\n";
   }
-  elsif($line =~ /<combo.*text=(".*?").*values="(.*?)"/)
+  elsif($line =~ /<combo.*\s+text=(".*?").*\s+values="(.*?)"/)
   {
     my ($n,$vals) = ($1,$2);
-    print "tr($n); /* item $item combo $n */";
+    my $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
+    if($line =~ /text_context=(".*?")/)
+    {
+      print "trc($1,$n); /* item $item combo $n */";
+    }
+    else
+    {
+      print "tr($n); /* item $item combo $n */";
+    }
     foreach my $val (split ",",$vals)
     {
       next if $val =~ /^[0-9-]+$/; # search for non-numbers
-      print " tr(\"$val\");";
+      print $vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");";
     }
     print "\n";
   }
   elsif($line =~ /<\/group>/)
   {
-    $group = 0;
+    $group = 0 if !($group =~ s/(.*\/).*?$//);
     print "\n";
   }
   elsif($line =~ /<\/item>/)

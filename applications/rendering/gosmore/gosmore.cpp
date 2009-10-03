@@ -98,6 +98,7 @@ char docPrefix[80] = "";
 
 #if !defined (HEADLESS) && !defined (_WIN32_WCE)
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 #endif
 
 // We emulate just enough of gtk to make it work
@@ -1056,7 +1057,7 @@ PangoLayout  *pl;
 #ifndef _WIN32_WCE
 typedef GdkGC *HDC;
 
-static GdkGC *maskGC = NULL;
+static GdkGC *maskGC = NULL, *fg_gc;
 static GdkBitmap *mask = NULL;
 // create bitmap for generation the mask image for icons
 // all icons must be smaller than these dimensions
@@ -1066,6 +1067,19 @@ static GdkPixmap *icons = NULL;
 #else
 HDC icons;
 #endif
+
+#if 0 //ifdef CHILDREN
+struct childStruct {
+  int minlon, minlat, maxlon, maxlat, z;
+  int pipe[2];
+} child[70];
+#endif
+#define STATEINFO OPTIONS o (clat, 0, 0) o (clon, 0, 0) \
+ o (sinAzimuth, 0, 0) o (cosAzimuth, 0, 0) o (zoom, 0, 0) o (option, 0, 0) \
+ o (draw->allocation.width, 0, 0) o (draw->allocation.height, 0, 0)
+#define o(x,min,max) sizeof (x) +
+static const size_t stateSize = STATEINFO 0;
+#undef o
 
 static HDC mygc = NULL, iconsgc = NULL;
 
@@ -1078,7 +1092,7 @@ void DrawString (int x, int y, const char *optStr)
   pango_context_set_matrix (pc, &mat);
   pango_layout_set_text (pl, optStr, -1);
   gdk_draw_layout (GDK_DRAWABLE (draw->window),
-                     draw->style->fg_gc[0], x, y, pl);
+                     fg_gc /*draw->style->fg_gc[0]*/, x, y, pl);
   #else
   SelectObject (mygc, sysFont);
   SetBkMode (mygc, TRANSPARENT);
@@ -1111,11 +1125,13 @@ void DrawIcon (int dstx, int dsty, wayType *w)
     icon[2], icon[3]);
 }
 
+#if 0
 typedef struct {  /* For 3D, a list of segments is generated that is */
   ndType *nd;     /* z-sorted and rendered. */
   int f[2], t[2], tlen;
   char *text;
 } renderNd;
+#endif
 
 /*inline double YDivisor (double x) { return x; }
 inline double Clamp (double x) { return x; }*/
@@ -1169,39 +1185,52 @@ int TestOrSet (int *bits, int set, int x0, int y0, int ax, int ay,
     bx = nx;
     by = ny;
   }
+  if (y0 < 0 || y0 + ay + by > draw->allocation.height ||
+      x0 - ax < 0 || x0 + by > draw->allocation.width) return TRUE;
+  // Do not place anything offscreen.
   const int shf = 9;
   x0 <<= shf;
   int x1 = x0, d0 = (ax << shf) / (ay + 1), d1 = (bx << shf) / (by + 1);
   int bpr = (draw->allocation.width + 31) / 32;
   bits += bpr * y0;
-  for (int cnt = ay + by; cnt > 0 && y0 < draw->allocation.height; cnt--) {
+  for (int cnt = ay + by; cnt > 0; cnt--) {
     x0 += d0;
     x1 += d1;
-    if (y0 >= 0) {
-      for (int i = max (x0 >> shf, 0);
-           i < draw->allocation.width && i < (x1 >> shf); i++) {
-        if (set) bits[i >> 5] |= 1 << (i & 31);
-        else if (bits[i >> 5] & (1 << (i & 31))) return 1;
-      } // This loop can be optimized
-      //gdk_draw_line (draw->window, mygc, x0 >> shf, y0, x1 >> shf, y0);
-      // Uncomment this line to see if we're testing the right spot
-      // (and it looks kind of interesting )
-    }
+    for (int i = x0 >> shf; i < (x1 >> shf); i++) {
+      if (set) bits[i >> 5] |= 1 << (i & 31);
+      else if (bits[i >> 5] & (1 << (i & 31))) return TRUE;
+    } // This loop can be optimized
+    //gdk_draw_line (draw->window, mygc, x0 >> shf, y0, x1 >> shf, y0);
+    // Uncomment this line to see if we're testing the right spot
+    // (and it looks kind of interesting )
     bits += bpr;
     if (cnt == by) d0 = (bx << shf) / by;
     if (cnt == ay) d1 = (ax << shf) / ay;
     y0++;
   }
-  return 0;
+  return FALSE;
 }
 
+/* Choose the part of the way that is best to render the text on. Currently
+   the straightest part. We look at for the two points where the direct
+   distance is long enough and it is also the closest to the distance
+   between the two points along the curve. 
+   TODO: Use the number of junctions between the two points (T / 4 way)
+   TODO: Consider moments (standard deviation)
+*/
 struct linePtType {
   int x, y, cumulative;
   linePtType (int _x, int _y, int _c) : x (_x), y (_y), cumulative (_c) {}
 };
 
+struct text2Brendered {
+  char *s; // Either \n or \0 terminated
+  int x, y, x2, y2, dst;
+  text2Brendered (void) {}
+};
+
 void ConsiderText (queue<linePtType> *q, int finish, int len, int *best,
-  PangoMatrix *mat, int *x0, int *y0)
+  text2Brendered *t)
 {
   while (!q->empty ()) {
 //  while (len * 14 <
@@ -1210,12 +1239,11 @@ void ConsiderText (queue<linePtType> *q, int finish, int len, int *best,
                  Sqr (q->front ().y - q->back ().y));
     if (q->back ().cumulative - q->front ().cumulative - dst <= *best) {
       if (dst * DetailLevel > len * 14) {
-        mat->yy = mat->xx = fabs (q->front ().x - q->back ().x) / dst;
-        mat->xy = (q->front ().x > q->back ().x ? 1.0 : -1.0) *
-                 (q->back ().y - q->front ().y) / dst;
-        mat->yx = -mat->xy;
-        *x0 = (q->front ().x + q->back ().x) / 2;
-        *y0 = (q->front ().y + q->back ().y) / 2;
+        t->x = q->front ().x;
+        t->y = q->front ().y;
+        t->x2 = q->back ().x;
+        t->y2 = q->back ().y;
+        t->dst = dst;
         *best = q->back ().cumulative - q->front (). cumulative - dst;
       }
       if (!finish) break;
@@ -1224,8 +1252,9 @@ void ConsiderText (queue<linePtType> *q, int finish, int len, int *best,
   }
 }
 
+
 #ifdef _WIN32_WCE
-int Expose (HDC mask, HPEN *pen)
+int DrawExpose (HDC mask, HPEN *pen)
 {
   struct {
     int width, height;
@@ -1273,12 +1302,13 @@ int Expose (HDC mask, HPEN *pen)
     return FALSE;
   } // if displaying the klas / style / rule selection screen
 #else
-gint Expose (void)
+gint DrawExpose (void)
 {
   static GdkColor styleColour[2 << STYLE_BITS][2];
   static GdkColor routeColour, validateColour, resultArrowColour;
   if (!mygc || !iconsgc) {
     mygc = gdk_gc_new (draw->window);
+    fg_gc = gdk_gc_new (draw->window);
     iconsgc = gdk_gc_new (draw->window);
     for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
       for (int j = 0; j < 2; j++) {
@@ -1306,10 +1336,33 @@ gint Expose (void)
       &resultArrowColour, FALSE, TRUE);
     gdk_gc_set_fill (mygc, GDK_SOLID);
 
-    icons = gdk_pixmap_create_from_xpm (draw->window, &mask, NULL,
-      FindResource ("icons.xpm"));
+    if (!icons) icons = gdk_pixmap_create_from_xpm (draw->window, &mask,
+      NULL, FindResource ("icons.xpm"));
+    else gdk_window_set_background (draw->window, &validateColour);
     maskGC = gdk_gc_new(mask);
-  }  
+  }
+  #if 0 //ifdef CHILDREN
+  if (1) {
+    vector<char> msg;
+    msg.resize (4 + 3 * sizeof (XID), 0); // Zero the header
+    *(XID*)&msg[4] = GDK_WINDOW_XID (draw->window);
+    *(XID*)&msg[4 + sizeof (XID)] = GDK_PIXMAP_XID (icons);
+    *(XID*)&msg[4 + sizeof (XID) * 2] = GDK_PIXMAP_XID (mask);
+    #define o(x,min,max) msg.resize (msg.size () + sizeof (x)); \
+                    memcpy (&msg[msg.size () - sizeof (x)], &x, sizeof (x));
+    STATEINFO
+    #undef o
+    write (child[0].pipe[1], &msg[0], msg.size ());
+    // Avoid flicker here : gtk_widget_set_double_buffered
+    //sleep (1);
+    read (child[0].pipe[0], &msg[0], 4);
+    /* Wait for finish to prevent queuing too many requests */
+    return FALSE;
+  }
+  #endif
+  GdkRectangle r =
+    { 0, 0, draw->allocation.width, draw->allocation.height };
+  gdk_window_begin_paint_rect (draw->window, &r);
 
 //  gdk_gc_set_clip_rectangle (mygc, &clip);
 //  gdk_gc_set_foreground (mygc, &styleColour[0][0]);
@@ -1403,6 +1456,8 @@ gint Expose (void)
     int doAreas = TRUE;
     int *block = (int*) calloc ((clip.width + 31) / 32 * 4, clip.height);
 
+    stack<text2Brendered> text2B;
+    text2B.push (text2Brendered ()); // Always have a spare one open
     stack<ndType*> dlist[13];
     // Areas + 5 under + 1 gound level + 5 above + icons
     
@@ -1475,7 +1530,6 @@ gint Expose (void)
 
         #ifndef _WIN32_WCE
         int best = 30;
-        int x0 = 0, y0 = 0; /* shut up gcc */
         #else
         int best = 0, bestW, bestH, x0, y0;
         #endif
@@ -1502,13 +1556,18 @@ gint Expose (void)
                   wcTmp, (wchar_t *) tStart - wcTmp, NULL);
             }
             #endif
+            text2B.top ().x = x - 100;
+            text2B.top ().x2 = x + 100;
+            text2B.top ().dst = 200;
+            text2B.top ().y2 = text2B.top ().y = y +
+                               Style (w)->x[IconSet * 4 + 3] / 2;
             #ifdef PANGO_VERSION
             //if (Style (w)->scaleMax > zoom / 2 || zoom < 2000) {
-              mat.xx = mat.yy = 1.0;
-              mat.xy = mat.yx = 0;
-              x0 = x /*- mat.xx / 3 * len*/; /* Render the name of the node */
-              y0 = y /* + mat.xx * f->ascent */ +
-                Style (w)->x[IconSet * 4 + 3] / 2;
+              //mat.xx = mat.yy = 1.0;
+              //mat.xy = mat.yx = 0;
+              //x0 = x /*- mat.xx / 3 * len*/; /* Render the name of the node */
+              //y0 = y /* + mat.xx * f->ascent */ +
+              //  Style (w)->x[IconSet * 4 + 3] / 2;
               if (Sqr ((__int64) Style (w)->scaleMax / 2 /
                 (zoom / clip.width)) * DetailLevel > len * len * 100 &&
                 len > 0) best = 0;
@@ -1589,6 +1648,8 @@ gint Expose (void)
                     oldy < 0 || oldy >= clip.height) {
                   cumulative += 9999; // Insert a break in the queue
                   q.push (linePtType (oldx, oldy, cumulative));
+                  // TODO: Interpolate the segment to get a point that is
+                  // closer to the screen. The same applies to the other push
                 }
                 if (!Display3D || y > 0) {
                   x2 = x;
@@ -1614,7 +1675,7 @@ gint Expose (void)
                 // Draw3DLine
                 cumulative += isqrt (Sqr (oldx - x2) + Sqr (oldy - y2));
                 q.push (linePtType (x2, y2, cumulative));
-                ConsiderText (&q, FALSE, len, &best, &mat, &x0, &y0);
+                ConsiderText (&q, FALSE, len, &best, &text2B.top ());
                 #ifdef _WIN32_WCE
 		int newb = oldx > x ? oldx - x : x - oldx;
 		if (newb < oldy - y) newb = oldy - y;
@@ -1648,7 +1709,7 @@ gint Expose (void)
 	    } while (itr.left <= nd->lon && nd->lon < itr.right &&
 		     itr.top  <= nd->lat && nd->lat < itr.bottom &&
 		     nd->other[1] >= 0);
-            ConsiderText (&q, TRUE, len, &best, &mat, &x0, &y0);
+            ConsiderText (&q, TRUE, len, &best, &text2B.top ());
 	  }
 	} /* If it has one or more segments */
 	  
@@ -1676,44 +1737,8 @@ gint Expose (void)
         #endif
         #ifdef PANGO_VERSION
         if (best < 30) {
-        //maxLenSqr * DetailLevel > len * len * 100 && len > 0) {
-          double move = 0.6;
-          for (char *txt = (char *)(w + 1) + 1; *txt != '\0';) {
-            //cairo_set_font_matrix (cai, &mat);
-            char *line = (char *) malloc (strcspn (txt, "\n") + 1);
-            memcpy (line, txt, strcspn (txt, "\n"));
-            line[strcspn (txt, "\n")] = '\0';
-            //cairo_move_to (cai, x0, y0);
-            //cairo_show_text (cai, line);
-            pango_context_set_matrix (pc, &mat);
-            pango_layout_set_text (pl, line, -1);
-            PangoRectangle rect;
-            pango_layout_get_pixel_extents (pl, &rect, NULL);
-            y0 += mat.xx * (f->ascent + f->descent) * move;
-            x0 += mat.xy * (f->ascent + f->descent) * move;
-            move = 1.2;
-            if (TestOrSet (block, FALSE, 
-              //x0 - (rect.width * mat.xx + rect.height * mat.xy) / 2,
-              //y0 - (rect.height * mat.yy + rect.width * mat.yx) / 2,
-              x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3,
-              y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3,
-              mat.xy * (rect.height), mat.xx * (rect.height),
-              mat.xx * (rect.width + 10), mat.yx * (rect.width + 10))) break;
-            TestOrSet (block, TRUE, 
-              //x0 - (rect.width * mat.xx + rect.height * mat.xy) / 2,
-              //y0 - (rect.height * mat.yy + rect.width * mat.yx) / 2,
-              x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3,
-              y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3,
-              mat.xy * (rect.height), mat.xx * (rect.height),
-              mat.xx * (rect.width + 10), mat.yx * (rect.width + 10));
-            gdk_draw_layout (GDK_DRAWABLE (draw->window),
-              draw->style->fg_gc[0],
-              x0 - (rect.width * mat.xx + rect.height * fabs (mat.xy)) / 2,
-              y0 - (rect.height * mat.yy + rect.width * fabs (mat.xy)) / 2, pl);
-            free (line);
-            if (zoom / clip.width > 20) break;
-            while (*txt != '\0' && *txt++ != '\n') {}
-          }
+          text2B.top ().s = (char *)(w + 1) + 1;
+          text2B.push (text2Brendered ());
         }
         #endif
       } /* for each way / icon */
@@ -1763,7 +1788,7 @@ gint Expose (void)
       wsprintf (distStr, TEXT ("%.3lf km"), len * (20000 / 2147483648.0) *
         cos (LatInverse (sumLat / nodeCnt) * (M_PI / 180)));
       #ifndef _WIN32_WCE
-      gdk_draw_string (draw->window, f, draw->style->fg_gc[0],
+      gdk_draw_string (draw->window, f, fg_gc, //draw->style->fg_gc[0],
         clip.width - 7 * strlen (distStr), 10, distStr);
       #else
       SelectObject (mygc, sysFont);
@@ -1805,6 +1830,54 @@ gint Expose (void)
       }
     }
     #endif
+    text2B.pop ();
+    while (!text2B.empty ()) {
+      text2Brendered *t = &text2B.top();
+      mat.yy = mat.xx = fabs (t->x - t->x2) / (double) t->dst;
+      mat.xy = (t->y - t->y2) / (double)(t->x > t->x2 ? -t->dst : t->dst);
+      mat.yx = -mat.xy;
+      int x0 = (t->x + t->x2) / 2, y0 = (t->y + t->y2) / 2;
+
+    //maxLenSqr * DetailLevel > len * len * 100 && len > 0) {
+      double move = 0.6;
+      for (char *txt = t->s; *txt != '\0';) {
+        //cairo_set_font_matrix (cai, &mat);
+        /*char *line = (char *) malloc (strcspn (txt, "\n") + 1);
+        memcpy (line, txt, strcspn (txt, "\n"));
+        line[strcspn (txt, "\n")] = '\0'; */
+        //cairo_move_to (cai, x0, y0);
+        //cairo_show_text (cai, line);
+        pango_context_set_matrix (pc, &mat);
+        pango_layout_set_text (pl,
+          string (txt, strcspn (txt, "\n")).c_str (), -1);
+        PangoRectangle rect;
+        pango_layout_get_pixel_extents (pl, &rect, NULL);
+        y0 += mat.xx * (f->ascent + f->descent) * move;
+        x0 += mat.xy * (f->ascent + f->descent) * move;
+        move = 1.2;
+        if (TestOrSet (block, FALSE, 
+          //x0 - (rect.width * mat.xx + rect.height * mat.xy) / 2,
+          //y0 - (rect.height * mat.yy + rect.width * mat.yx) / 2,
+          x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3,
+          y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3,
+          mat.xy * (rect.height), mat.xx * (rect.height),
+          mat.xx * (rect.width + 10), mat.yx * (rect.width + 10))) break;
+        TestOrSet (block, TRUE, 
+          //x0 - (rect.width * mat.xx + rect.height * mat.xy) / 2,
+          //y0 - (rect.height * mat.yy + rect.width * mat.yx) / 2,
+          x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3,
+          y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3,
+          mat.xy * (rect.height), mat.xx * (rect.height),
+          mat.xx * (rect.width + 10), mat.yx * (rect.width + 10));
+        gdk_draw_layout (GDK_DRAWABLE (draw->window),
+          fg_gc /*draw->style->fg_gc[0]*/,
+          x0 - (rect.width * mat.xx + rect.height * fabs (mat.xy)) / 2,
+          y0 - (rect.height * mat.yy + rect.width * fabs (mat.xy)) / 2, pl);
+        if (zoom / clip.width > 20) break;
+        while (*txt != '\0' && *txt++ != '\n') {}
+      }
+      text2B.pop ();
+    }
     free (block);
   } // Not in the menu
   else if (option == searchMode) {
@@ -1876,6 +1949,8 @@ gint Expose (void)
       / 2 - ButtonSize * (20 * i + 10), i == 0 ? "O" : i == 1 ? "-" : "+");
   }
   */
+  gdk_window_end_paint (draw->window);
+  gdk_flush ();
   #else
   int i = !HideZoomButtons || option != mapMode ? 3 :
                                                 MenuKey != 0 ? 0 : 1;
@@ -2036,8 +2111,29 @@ int UserInterface (int argc, char *argv[],
   
   gtk_init (&argc, &argv);
   draw = gtk_drawing_area_new ();
+  gtk_widget_set_double_buffered (draw, FALSE);
+  #if 0 // ndef CHILDREN
+    XID id[3];
+    char sString[50];
+    fread (sString, 4, 1, stdin);
+    fread (id, sizeof (id), 1, stdin);
+    draw->window = gdk_window_foreign_new (id[0]);
+    icons = gdk_pixmap_foreign_new (id[1]);
+    mask = gdk_pixmap_foreign_new (id[2]);
+    for (;;) {
+      #define o(x,min,max) if (fread (&x, sizeof (x), 1, stdin)) {};
+      STATEINFO
+      #undef o
+      //fprintf (stderr, "%d %p | %p %p | %d %d -- %d %d\n", id[0], draw->window,
+      //  icons, mask, id[1], id[2], clon, clat);
+      DrawExpose ();
+      if (write (STDOUT_FILENO, sString, 4) != 4) exit (0);
+      if (fread (sString, 4, 1, stdin) != 1) exit (0);
+      fread (id, sizeof (id), 1, stdin); // Discard
+    }
+  #endif
   gtk_signal_connect (GTK_OBJECT (draw), "expose_event",
-    (GtkSignalFunc) Expose, NULL);
+    (GtkSignalFunc) DrawExpose, NULL);
   gtk_signal_connect (GTK_OBJECT (draw), "button-release-event",
     (GtkSignalFunc) Click, NULL);
   gtk_signal_connect (GTK_OBJECT (draw), "motion_notify_event",
@@ -2137,6 +2233,23 @@ int UserInterface (int argc, char *argv[],
 
 int main (int argc, char *argv[])
 {
+  #if 0 // ifdef CHILDREN
+  if (1) {
+    int cmd[2], result[2];
+    pipe (cmd);
+    pipe (result);
+    child[0].pipe[0] = result[0];
+    child[0].pipe[1] = cmd[1];
+    if (fork () == 0) {
+      dup2 (cmd[0], STDIN_FILENO);
+      dup2 (result[1], STDOUT_FILENO);
+      execl ("./gosmore16", "./gosmore16", NULL);
+      perror ("Starting slave process gosmore16");
+      _exit (1);
+    }
+  }
+  #endif
+  
   int nextarg = 1;
   bool rebuild = false;
   const char* master = "";
@@ -2368,7 +2481,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	mygc = bufDc;
 	icons = iconsDc;
 	mask = maskDc;
-        Expose (pen);
+        DrawExpose (pen);
 	BitBlt (ps.hdc, 0, 0, rect.right,  rect.bottom, bufDc, 0, 0, SRCCOPY);
 	FillRect (bufDc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
 //      HPEN pen = CreatePen (a[c2].lineDashed ? PS_DASH : PS_SOLID,

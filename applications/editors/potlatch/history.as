@@ -26,9 +26,9 @@
 
 		_root.windows.history.box.createEmptyMovieClip('revert' ,21);
 		_root.windows.history.box.createEmptyMovieClip('contact',22);
-		drawButton(_root.windows.history.box.revert , 9,60,"Revert","");
+		drawButton(_root.windows.history.box.revert , 9,60,iText('revert'),"");
 		_root.windows.history.box.revert.onPress=doRevert;
-		drawButton(_root.windows.history.box.contact,69,60,"Mail","");
+		drawButton(_root.windows.history.box.contact,69,60,iText('mail'),"");
 		_root.windows.history.box.contact.onPress=doMail;
 
 		with (_root.windows.history.box) {

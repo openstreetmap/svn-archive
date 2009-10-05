@@ -239,14 +239,14 @@
 
 	function replaceIcon(poi,newicon) {
 		var x=poi._x; var y=poi._y;
-		var s=poi._xscale; var v=poi.version; var a=deepCopy(poi.attr);
+		var v=poi.version; var a=deepCopy(poi.attr);
 		var d=poi.getDepth(); var n=poi._name; var c=poi.clean;
 		_root.map.pois.attachMovie(newicon,n,d);
 		poi=_root.map.pois[n];
 		poi._x=x; poi._y=y;
-		poi._xscale=poi._yscale=s;
+		poi._xscale=poi._yscale=_root.iconscale;
 		poi.version=v; poi.attr=a; poi.icon=newicon; poi.clean=c;
-		if (n==_root.poiselected) { poi.highlight(); }
+		if (n==_root.poiselected) { poi.highlight(); _root.panel.properties.proparr=poi.attr; }
 	}
 
 	// purgePOIs - remove any clean POIs outside current view

@@ -584,7 +584,7 @@
 		var proparr=this.proparr;
 		for (var el in proparr) {
 			var p=proparr[el];
-			if (p=='' || p=='created_by' || p.substr(0,6)=='(type ' || !p) { delete this.proparr[el]; }
+			if (p=='' || el=='created_by' || p.substr(0,6)=='(type ' || !p) { _root.chat.text+=el+","; delete this.proparr[el]; }
 			else if (this.learn[el][p] && !freeform[el]) {
 				var already=false;
 				var z=_root.autotags[this.proptype][el];

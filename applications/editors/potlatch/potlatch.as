@@ -134,7 +134,7 @@
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
 	var signature="Potlatch 1.2c";	// current version
 	var maximised=false;			// minimised/maximised?
-	var sourcetags=new Array("","","","","NPE","OpenTopoMap");
+	var sourcetags=new Array("","","","","NPE","OS7");
 	var lastgroup='road';			// last preset group used
 	var wayrels=new Object();		// which relations are in ways?
 	var noderels=new Object();		// which relations are in nodes?
@@ -153,7 +153,7 @@
 						   "http://tah.openstreetmap.org/Tiles/maplint/!/!/!.png",
 						   "http://andy.sandbox.cloudmade.com/tiles/cycle/!/!/!.png",
 						   "http://npe.openstreetmap.org/!/!/!.png",
-						   "http://tile.openaerialmap.org/tiles/1.0.0/opentopomap-900913/!/!/!.jpg");
+						   "http://old-dev.openstreetmap.org/~timsc/os7/!/!/!.jpg");
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (custombg) { preferences.data.bgtype=3; preferences.data.tilecustom=custombg; }		// custom background layer from JavaScript
@@ -1021,7 +1021,7 @@
 
 		box.attachMovie("menu","background",60);
 		box.background.init(24,12,preferences.data.tileset,
-			new Array("OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Out-of-copyright map","OpenTopoMap"),
+			new Array("OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Out-of-copyright (NPE)","Out-of-copyright (7th)"),
 			'Choose the background to display',function(n) { preferences.data.tileset=n; _root.windows.options.box.bgoption.select(1); },null,0);
 
 		var w=box.bgoption[3].prompt._width+25;

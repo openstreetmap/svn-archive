@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.4   2009-10-06 clean                                              ##
 ## 0.2.3   2009-09-09 keep http connection alive for multiple request    ##
 ##                    (Node|Way|Relation)Get return None when object     ##
 ##                    have been deleted (raising error before)           ##
@@ -32,7 +33,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.3'
+__version__ = '0.2.4'
 
 import httplib, base64, xml.dom.minidom, time
 
@@ -538,66 +539,3 @@ class OsmApi:
 
 ## End of main class                                                     ##
 ###########################################################################
-
-
-###########################################################################
-## Reverting tools : DO NOT USE SINCE IT'S INT DEV                       ##
-
-def RevertAnalyse(self, ChangesetId):
-    """ Returns a string saying if changes are revertable or not. """
-    
-    data   = self.ChangesetDownload(ChangesetId)
-    result = u""
-    
-    for elem in data:
-                
-        if elem[u"type"] == u"node":
-            hist = self.NodeHistory(elem[u"data"][u"id"])
-            elem_latest = hist[sorted(hist.keys())[-1]]
-        elif elem[u"type"] == u"way":
-            hist = self.WayHistory(elem[u"data"][u"id"])
-            elem_latest = hist[sorted(hist.keys())[-1]]
-        elif elem[u"type"] == u"relation":
-            hist = self.RelationHistory(elem[u"data"][u"id"])
-            elem_latest = hist[sorted(hist.keys())[-1]]
-        
-        result += elem[u"action"]           + u" " * (10-len(elem[u"action"]))
-        result += elem[u"type"]             + u" " * (10-len(elem[u"type"]))
-        result += str(elem[u"data"][u"id"]) + u" " * (10-len(str(elem[u"data"][u"id"])))
-        result +=  u" => "
-        if elem[u"data"][u"version"] == elem_latest[u"version"]:
-            result += u"revertable\n"
-        else:
-            result += u"not revertable\n"
-            
-    return result.strip()
-
-def RevertIfPossible(self, ChangesetId):
-    """ Revert all changes if possible. """
-    return
-
-#z = OsmApi()
-#print RevertAnalyse(z, 912290)
-
-## End of reverting tools                                                ##
-###########################################################################
-    def ChangesetDownload(self, ChangesetId):
-        """ Test function """
-        uri = "/api/0.6/changeset/"+str(ChangesetId)+"/download"
-        data = self._get(uri)
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
-        result = []
-        for action in data.getElementsByTagName("osmChange")[0].childNodes:
-            if action.nodeType == 3:
-                continue
-            for elem in action.childNodes:
-                if elem.nodeType == 3:
-                    continue
-                if elem.tagName == u"node":
-                    data = self._DomParseRelation(elem)
-                if elem.tagName == u"way":
-                    data = self._DomParseRelation(elem)
-                if elem.tagName == u"relation":
-                    data = self._DomParseRelation(elem)
-                result.append((action.tagName, elem.tagName, data))
-        return result

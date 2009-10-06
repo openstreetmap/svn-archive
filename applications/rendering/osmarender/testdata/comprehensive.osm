@@ -846,7 +846,7 @@
   </node>
   <node id='-622' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.31295585553146' lon='-0.40382002473227174' />
   <node id='-623' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.336146405912444' lon='-0.4520682416356635' />
-  <node id='-624' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.273301403089974' lon='-0.43982612190373715'>
+  <node id='-624' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.26480279155263' lon='-0.4334954225586515'>
     <tag k='ref' v='ZM 35' />
     <tag k='power' v='tower' />
   </node>
@@ -867,7 +867,7 @@
   <node id='-639' action='modify' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.35314034996878' lon='-0.42173216166392913' />
   <node id='-640' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.29992093396928' lon='-0.4051045962304715' />
   <node id='-641' action='modify' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.350952705056606' lon='-0.43002827361537715' />
-  <node id='-642' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.273306843482025' lon='-0.4332864343950241' />
+  <node id='-642' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.264808232950905' lon='-0.42695573504993856' />
   <node id='-643' action='modify' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.35308813723688' lon='-0.4351449570540812' />
   <node id='-644' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.341549236341265' lon='-0.44384691059662784' />
   <node id='-645' action='modify' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.35538417838573' lon='-0.4301009566815675' />
@@ -1039,7 +1039,10 @@
   <node id='-756' action='modify' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.34993422697998' lon='-0.40678209986700553' />
   <node id='-757' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.27906191488473' lon='-0.42281161877618145' />
   <node id='-758' action='modify' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.35859115837359' lon='-0.431189312956623' />
-  <node id='-759' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.27330684348205' lon='-0.4420322906296297' />
+  <node id='-759' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.26480823295093' lon='-0.4357015912845441'>
+    <tag k='power' v='tower' />
+    <tag k='ref' v='ZM 34' />
+  </node>
   <node id='-760' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.309043701790735' lon='-0.37971432704298796' />
   <node id='-761' action='modify' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.34941973999307' lon='-0.4502552667953558' />
   <node id='-762' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.27587022353791' lon='-0.4399683366860189' />
@@ -1151,7 +1154,7 @@
     <tag k='place' v='town' />
   </node>
   <node id='-843' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.34271983207591' lon='-0.4471143633844403' />
-  <node id='-844' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.27332266149682' lon='-0.43788390523826193'>
+  <node id='-844' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.264824053891374' lon='-0.43155320589317636'>
     <tag k='ref' v='ZM 36' />
     <tag k='power' v='tower' />
   </node>
@@ -1381,7 +1384,7 @@
   <node id='-1008' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.30635767284284' lon='-0.41520487848889787' />
   <node id='-1009' action='modify' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.34933761893001' lon='-0.44674256808884455' />
   <node id='-1010' action='modify' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.35538846371968' lon='-0.4346817885894386' />
-  <node id='-1011' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.27332266149682' lon='-0.4355048682709342'>
+  <node id='-1011' timestamp='2009-07-26T12:50:25Z' visible='true' version='0' lat='51.264824053891374' lon='-0.42917416892584864'>
     <tag k='ref' v='ZM 37' />
     <tag k='power' v='tower' />
   </node>
@@ -1904,6 +1907,86 @@
     <tag k='name' v='Bank' />
     <tag k='amenity' v='bank' />
   </node>
+  <node id='-100055' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26433915512011' lon='-0.4403287151722274' />
+  <node id='-100056' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.266831235933616' lon='-0.44203713117379495' />
+  <node id='-100057' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.265866282111645' lon='-0.4420388654573346' />
+  <node id='-100058' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26303033574677' lon='-0.4403287151722274' />
+  <node id='-100059' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26530631134385' lon='-0.44033044946094674' />
+  <node id='-100060' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.2653052261732' lon='-0.441991826201737' />
+  <node id='-100061' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26434024031036' lon='-0.44199356048527666' />
+  <node id='-100062' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.266832321068236' lon='-0.44037575443300475' />
+  <node id='-100063' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26586519695744' lon='-0.44037402014428534' />
+  <node id='-100064' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26483420850933' lon='-0.44114515418588574' />
+  <node id='-100065' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26379439083067' lon='-0.4410868464305984' />
+  <node id='-100066' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26598653892195' lon='-0.4412097726314739' />
+  <node id='-100067' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26399643431026' lon='-0.441991826201737' />
+  <node id='-100068' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.263997519511804' lon='-0.44033044946094674' />
+  <node id='-100069' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.263031420967934' lon='-0.44199356048527666' />
+  <node id='-1000182' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26379439083067' lon='-0.4356780935920787'>
+    <tag k='power' v='tower' />
+    <tag k='ref' v='ZM 32' />
+  </node>
+  <node id='-1000179' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26598653892195' lon='-0.4356780935920787'>
+    <tag k='power' v='tower' />
+    <tag k='ref' v='ZM 33' />
+  </node>
+  <node id='-1000180' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.264794330999386' lon='-0.4387512486139649'>
+    <tag k='power' v='generator' />
+  </node>
+  <node id='-1000181' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26379439083067' lon='-0.4385668593126517'>
+    <tag k='power' v='generator' />
+    <tag k='power_source' v='photovoltaic' />
+  </node>
+  <node id='-1000183' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26602499672713' lon='-0.4387512486139649'>
+    <tag k='power' v='generator' />
+    <tag k='power_source' v='wind' />
+  </node>
+  <way id='-10001710' timestamp='2009-07-26T12:50:25Z' visible='true'>
+    <nd ref='-100066' />
+    <nd ref='-1000183' />
+    <nd ref='-1000179' />
+    <nd ref='-759' />
+    <tag k='power' v='line' />
+  </way>
+  <way id='-10001932' timestamp='2009-10-06T08:07:19Z' visible='true'>
+    <nd ref='-100065' />
+    <nd ref='-1000181' />
+    <nd ref='-1000182' />
+    <nd ref='-759' />
+    <tag k='power' v='line' />
+  </way>
+  <way id='-10001933' timestamp='2009-10-06T08:07:19Z' visible='true'>
+    <nd ref='-100064' />
+    <nd ref='-1000180' />
+    <nd ref='-759' />
+    <tag k='power' v='line' />
+  </way>
+  <way id='-10001921' timestamp='2009-10-06T08:07:19Z' visible='true'>
+    <nd ref='-100059' />
+    <nd ref='-100055' />
+    <nd ref='-100061' />
+    <nd ref='-100060' />
+    <nd ref='-100059' />
+    <tag k='power' v='generator' />
+  </way>
+  <way id='-10001922' timestamp='2009-10-06T08:07:19Z' visible='true'>
+    <nd ref='-100062' />
+    <nd ref='-100063' />
+    <nd ref='-100057' />
+    <nd ref='-100056' />
+    <nd ref='-100062' />
+    <tag k='power' v='generator' />
+    <tag k='power_source' v='wind' />
+  </way>
+  <way id='-10001923' timestamp='2009-10-06T08:07:19Z' visible='true'>
+    <nd ref='-100068' />
+    <nd ref='-100058' />
+    <nd ref='-100069' />
+    <nd ref='-100067' />
+    <nd ref='-100068' />
+    <tag k='power' v='generator' />
+    <tag k='power_source' v='photovoltaic' />
+  </way>
   <way id='-1475' timestamp='2009-07-26T12:50:25Z' visible='true' version='0'>
     <nd ref='-372' />
     <nd ref='-434' />

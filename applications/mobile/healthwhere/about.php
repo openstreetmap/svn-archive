@@ -8,7 +8,7 @@ require_once ("inc_head_html.php");
 </p>
 
 <p>
-Postcode data from <a href = "http://ernestmarples.com/">Ernest Marples Postcodes Ltd</a> and <a href = "http://www.npemap.org.uk/">NPE Maps</a>.
+Postcode data from <a href = "http://www.npemap.org.uk/">NPE Maps</a>, <a href = "http://www.freethepostcode.org/">Free the Postcode</a> and <a href = "http://www.dracos.co.uk/play/locating-postboxes/">Dracos.co.uk</a>.
 </p>
 
 <p>

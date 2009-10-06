@@ -1941,6 +1941,30 @@
     <tag k='power' v='generator' />
     <tag k='power_source' v='wind' />
   </node>
+  <node id='-100070' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26699625623243' lon='-0.43252985015251794' />
+  <node id='-100071' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.266029135571465' lon='-0.4325281158637986' />
+  <node id='-100072' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.266995171101684' lon='-0.4341912268933082' />
+  <node id='-100073' timestamp='2009-10-06T08:07:18Z' visible='true' lat='51.26603022072181' lon='-0.43419296117684786' />
+  <node id='-1000190' visible='true' lat='51.26684756143086' lon='-0.4356702819327007'>
+    <tag k='power_source' v='hydro' />
+    <tag k='power' v='generator' />
+  </node>
+  <node id='-1000191' visible='true' lat='51.266829937124065' lon='-0.43392389057212266' />
+  <way id='-10001962' action='modify' visible='true'>
+    <nd ref='-1000191' />
+    <nd ref='-1000190' />
+    <nd ref='-1000179' />
+    <tag k='power' v='line' />
+  </way>
+  <way id='-10001963' action='modify' timestamp='2009-10-06T08:07:19Z' visible='true'>
+    <nd ref='-100070' />
+    <nd ref='-100071' />
+    <nd ref='-100073' />
+    <nd ref='-100072' />
+    <nd ref='-100070' />
+    <tag k='power_source' v='hydro' />
+    <tag k='power' v='generator' />
+  </way>
   <way id='-10001710' timestamp='2009-07-26T12:50:25Z' visible='true'>
     <nd ref='-100066' />
     <nd ref='-1000183' />

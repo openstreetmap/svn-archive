@@ -78,51 +78,30 @@ if ($_GET ["txtPostcode"] != "") {
 		$user_lon = $row ['lon'];
 		logdebug ("Fetched postcode $pcOuter $pcInner from local DB. Source: {$row ['source']}");
 	}
-
-	if ($user_lat == 400) {
-		// Get lat/lon from Ernest Marples
-		$csv = file_get_contents ("http://ernestmarples.com/?p=" .
-			urlencode ($pc) . "&f=csv");
-		$latlon = explode (",", $csv);
-		if (strtolower ($latlon [0]) == $pc) {
-			//Successfully got co-ordinates. Parse CSV
-			$user_position = $latlon [0];
-			//casting to floats strips newlines
-			$user_lat = (float) $latlon [1];
-			$user_lon = (float) $latlon [2];
-			//Add to local DB
-			$sql = "INSERT INTO postcodes ('outward','inward','lat','lon','source') " .
-				"VALUES ('$pcOuter','$pcInner',$user_lat,$user_lon,'Ernest Marples')";
-			if (sqlite_exec ($db, $sql))
-				logdebug ("Saved Postcode $pcOuter $pcInner from Earnest Marples in local DB");
-			else
-				logdebug ("Error saving postcode $pcOuter $pcInner in local DB");
+	else {
+		//Unable to get full postcode from local DB. Fail back to sector
+		$sector = substr ($pcInner, 0, 1);
+		$sql = "SELECT avg(lat) as avglat, avg(lon) as avglon FROM postcodes " .
+			"WHERE outward LIKE '$pcOuter' AND inward LIKE '$sector%'";
+		$result = sqlite_query ($db, $sql, SQLITE_ASSOC);
+		if (sqlite_num_rows ($result) > 0) {
+			$row = sqlite_fetch_array ($result, SQLITE_ASSOC);
+			$user_lat = $row ['avglat'];
+			$user_lon = $row ['avglon'];
+			logdebug ("Fetched postcode $pcOuter $sector from local DB (averaged)");
 		}
 		else {
-			//Unable to get postcode from Ernest Marples or local DB. Fail back to sector
-			$sector = substr ($pcInner, 0, 1);
 			$sql = "SELECT avg(lat) as avglat, avg(lon) as avglon FROM postcodes " .
-				"WHERE outward LIKE '$pcOuter' AND inward LIKE '$sector%'";
+				"WHERE outward LIKE '$pcOuter'";
 			$result = sqlite_query ($db, $sql, SQLITE_ASSOC);
 			if (sqlite_num_rows ($result) > 0) {
 				$row = sqlite_fetch_array ($result, SQLITE_ASSOC);
 				$user_lat = $row ['avglat'];
 				$user_lon = $row ['avglon'];
-				logdebug ("Fetched postcode $pcOuter $sector from local DB (averaged)");
+				logdebug ("Fetched postcode $pcOuter from local DB (averaged)");
 			}
-			else {
-				$sql = "SELECT avg(lat) as avglat, avg(lon) as avglon FROM postcodes " .
-					"WHERE outward LIKE '$pcOuter'";
-				$result = sqlite_query ($db, $sql, SQLITE_ASSOC);
-				if (sqlite_num_rows ($result) > 0) {
-					$row = sqlite_fetch_array ($result, SQLITE_ASSOC);
-					$user_lat = $row ['avglat'];
-					$user_lon = $row ['avglon'];
-					logdebug ("Fetched postcode $pcOuter from local DB (averaged)");
-				}
-				else
-					death ("Could not get lat/lon for $pc",	"Unable to get position for postcode $pc.");
-			}
+			else
+				death ("Could not get lat/lon for $pc",	"Unable to get position for postcode $pc.");
 		}
 	}
 	sqlite_close ($db);

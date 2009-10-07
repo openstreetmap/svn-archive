@@ -85,7 +85,7 @@ OpenLayers.Layer.OS7 = OpenLayers.Class(OpenLayers.Layer.XYZ, {
             "http://c.ooc.openstreetmap.org/os7/${z}/${x}/${y}.jpg"
         ];
         options = OpenLayers.Util.extend({
-            numZoomLevels: 16,
+            numZoomLevels: 15,
             transitionEffect: "resize",
             sphericalMercator: true
         }, options);
@@ -120,7 +120,7 @@ OpenLayers.Layer.OS1 = OpenLayers.Class(OpenLayers.Layer.XYZ, {
             "http://c.ooc.openstreetmap.org/os1/${z}/${x}/${y}.jpg"
         ];
         options = OpenLayers.Util.extend({
-            numZoomLevels: 16,
+            numZoomLevels: 17,
             transitionEffect: "resize",
             sphericalMercator: true
         }, options);

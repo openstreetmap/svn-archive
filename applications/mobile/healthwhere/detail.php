@@ -65,8 +65,13 @@ $sMap .= "\n// -->\n";
 $sMap .= "</script>\n<br>\n";
 echo $sMap;
 
-if ($ph ['dispensing'] != '')
-	echo "Dispensing: {$ph ['dispensing']}</p>\n";
+if ($ph ['dispensing'] != '') {
+	$dispensing = strtolower ($ph ['dispensing']);
+	if ($dispensing == "yes" || $dispensing == "true" || $dispensing == "1")
+		echo "<p>Dispensing: Yes</p>\n";
+	elseif ($dispensing == "no" || $dispensing == "false" || $dispensing == "0")
+		echo "<p>Dispensing: No</p>\n";
+}
 
 if ($ph ['addr_housename'] != '')
 	echo $ph ['addr_housename'] . "<br>\n";

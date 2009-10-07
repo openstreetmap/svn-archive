@@ -43,6 +43,7 @@ if [ -n "$1" ]; then
   export VERSION=$1
   export JOSM_BUILD="no"
   export WEBKIT_DOWNLAD="no"
+  export JOSM_FILE="/var/www/josm.openstreetmap.de/download/josm-tested.jar"
 else
   svncorerevision=`svnversion ../core`
   svnpluginsrevision=`svnversion ../plugins`
@@ -51,6 +52,7 @@ else
   export VERSION=custom-${svnrevision}
   export JOSM_BUILD="yes"
   export WEBKIT_DOWNLOAD="yes"
+  export JOSM_FILE="..\core\dist\josm-custom.jar"
 fi
 
 echo "Creating Windows Installer for josm-$VERSION"
@@ -86,6 +88,7 @@ if [ "x$JOSM_BUILD" == "xyes" ]; then
 	) || exit -1
 fi
 
+/bin/cp $JOSM_FILE josm-tested.jar
 echo 
 echo "##################################################################"
 echo "### convert jar to exe with launch4j"
@@ -109,4 +112,5 @@ $MAKENSIS -V2 -DVERSION=$VERSION josm.nsi
 
 # keep the intermediate file, for debugging
 /bin/rm josm-intermediate.exe 2>/dev/null >/dev/null
+/bin/rm -f josm-tested.jar 2>/dev/null >/dev/null
 /bin/mv josm.exe josm-intermediate.exe 2>/dev/null >/dev/null

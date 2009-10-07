@@ -287,7 +287,7 @@ Section $(JOSM_SEC_JOSM) SecJosm
 SectionIn 1
 SetOutPath $INSTDIR
 File "josm.exe"
-File "..\core\dist\josm-custom.jar"
+File "josm-tested.jar"
 
 ; XXX - should be provided/done by josm.jar itself and not here!
 SetShellVarContext current
@@ -427,7 +427,7 @@ Section "un.$(un.JOSM_SEC_UNINSTALL)" un.SecUinstall
 SectionIn 1 2
 SetShellVarContext current
 
-Delete "$INSTDIR\josm-custom.jar"
+Delete "$INSTDIR\josm-tested.jar"
 IfErrors 0 NoJOSMErrorMsg
 	MessageBox MB_OK $(un.JOSM_IN_USE_ERROR) IDOK 0 ;skipped if josm.jar removed
 	Abort $(un.JOSM_IN_USE_ERROR)

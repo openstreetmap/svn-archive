@@ -115,9 +115,9 @@ OpenLayers.Layer.OS1 = OpenLayers.Class(OpenLayers.Layer.XYZ, {
      */
     initialize: function(name, options) {
         var url = [
-            "http://a.ooc.openstreetmap.org/os1/${z}/${x}/${y}.png",
-            "http://b.ooc.openstreetmap.org/os1/${z}/${x}/${y}.png",
-            "http://c.ooc.openstreetmap.org/os1/${z}/${x}/${y}.png"
+            "http://a.ooc.openstreetmap.org/os1/${z}/${x}/${y}.jpg",
+            "http://b.ooc.openstreetmap.org/os1/${z}/${x}/${y}.jpg",
+            "http://c.ooc.openstreetmap.org/os1/${z}/${x}/${y}.jpg"
         ];
         options = OpenLayers.Util.extend({
             numZoomLevels: 16,

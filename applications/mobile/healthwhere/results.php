@@ -91,6 +91,7 @@ if ($_GET ["txtPostcode"] != "") {
 			logdebug ("Fetched postcode $pcOuter $sector from local DB (averaged)");
 		}
 		else {
+			//Unable to get sector from local DB. Fall back to outer only
 			$sql = "SELECT avg(lat) as avglat, avg(lon) as avglon FROM postcodes " .
 				"WHERE outward LIKE '$pcOuter'";
 			$result = sqlite_query ($db, $sql, SQLITE_ASSOC);

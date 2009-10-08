@@ -38,7 +38,9 @@
 # Version 3.1
 # - bug fix
 #
-
+# Version 3.2
+# - Uids added 
+# 
 
 use strict ;
 use warnings ;
@@ -52,7 +54,7 @@ use Compress::Bzip2 ;
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode [numTopUsers] [picSize] (Mode = [N|P|D|S], picSize x in pixels)\n" ;
 $usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\nout.white.txt and out.black.txt (white and black lists) can be given (enter one user name per line)\n" ;
-my $version = "3.1 BETA" ;
+my $version = "3.2" ;
 
 my $topMax = 10 ;
 
@@ -92,7 +94,8 @@ my $localDay ; my $localMonth ; my $localYear ;
 
 my $reName ; my $reClass ; my $reRef ;
 my $name1 ; my $name2 ; my $ref1 ; my $ref2 ; my $class1 ; my $class2 ;
-my %white ; my %black ; my %blackActive ; 
+my %white ; my %black ; my %blackActive ; my %blackUid ; my %whiteUid ; my %blackUidActive ;
+my %activeUid ;
 
 my $objectProcessed = 0 ; # 0=node, 1=way
 
@@ -184,6 +187,7 @@ sub processNodes {
 				addOperationTime ($nodeUser2, $nodeTimestamp2) ;
 				if (grep /P/, $mode) { paintNewNode() ; }
 				userArea ($nodeUser2, $nodeLon2, $nodeLat2) ;
+				$activeUid{$nodeUid2} = $nodeUser2 ;
 				moveNodeFile2() ;
 			}
 		}
@@ -233,6 +237,7 @@ sub processNodes {
 				}
 				userArea ($nodeUser2, $nodeLon1, $nodeLat1) ;
 				userArea ($nodeUser2, $nodeLon2, $nodeLat2) ;
+				$activeUid{$nodeUid2} = $nodeUser2 ;
 			} # moved
 
 			if ($nodeVersion2 - $nodeVersion1 > 2) { 
@@ -249,6 +254,8 @@ sub processNodes {
 			}
 			if ($added or $deleted or $renamed or $reclassified) {
 				addOperationTime ($nodeUser2, $nodeTimestamp2) ;
+				userArea ($nodeUser2, $nodeLon2, $nodeLat2) ;
+				$activeUid{$nodeUid2} = $nodeUser2 ;
 			}
 			moveNodeFile1() ;
 			moveNodeFile2() ;
@@ -261,6 +268,7 @@ sub processNodes {
 			addOperationTime ($nodeUser2, $nodeTimestamp2) ;
 			if (grep /P/, $mode) { paintNewNode() ; }
 			userArea ($nodeUser2, $nodeLon2, $nodeLat2) ;
+			$activeUid{$nodeUid2} = $nodeUser2 ;
 			# move file2 until id2>=id1
 			while ( ($nodeId2 < $nodeId1) and ($nodeId2 != -1) ) {
 				moveNodeFile2() ;
@@ -308,6 +316,7 @@ sub processWays {
 					#userArea ($wayUser2, $lon2{$wayNodes2[-1]}, $lat2{$wayNodes2[-1]}) ;
 					userAreaWay ($wayUser2, $wayNodes2[0]) ;
 					userAreaWay ($wayUser2, $wayNodes2[-1]) ;
+					$activeUid{$wayUid2} = $wayUser2 ;
 					if (grep /P/, $mode) { paintNewWay() ; }
 				}
 				#next
@@ -373,6 +382,7 @@ sub processWays {
 					# userArea ($wayUser2, $lon2{$wayNodes2[-1]}, $lat2{$wayNodes2[-1]}) ;
 					userAreaWay ($wayUser2, $wayNodes2[0]) ;
 					userAreaWay ($wayUser2, $wayNodes2[-1]) ;
+					$activeUid{$wayUid2} = $wayUser2 ;
 				}
 			}
 			moveWayFile1() ;
@@ -389,6 +399,7 @@ sub processWays {
 				# userArea ($wayUser2, $lon2{$wayNodes2[-1]}, $lat2{$wayNodes2[-1]}) ;
 				userAreaWay ($wayUser2, $wayNodes2[0]) ;
 				userAreaWay ($wayUser2, $wayNodes2[-1]) ;
+				$activeUid{$wayUid2} = $wayUser2 ;
 				if (grep /P/, $mode) { paintNewWay() ; }
 			}
 			# move file2 until id2>=id1
@@ -441,13 +452,19 @@ sub output {
 
 	print $html "<H1>Black and white lists</H1>" ;
 	print $html "<H2>WHITE listed users</H2>\n<p>" ;
-	foreach my $u (sort keys %white) { print $html $u, " " ; }
+	foreach my $u (sort keys %white) { print $html $u, "; " ; }
 	print $html "</p>\n" ;
 	print $html "<H2>BLACK listed users</H2>\n<p>" ;
-	foreach my $u (sort keys %black) { print $html $u, " " ; }
+	foreach my $u (sort keys %black) { print $html $u, "; " ; }
 	print $html "</p>\n" ;
 	print $html "<H2>ACTIVE BLACK listed users</H2>\n<p><strong>" ;
-	foreach my $u (sort keys %blackActive) { print $html $u, " " ; }
+	foreach my $u (sort keys %blackActive) { print $html $u, "; " ; }
+	print $html "</strong></p>\n" ;
+	print $html "<H2>BLACK listed uids</H2>\n<p>" ;
+	foreach my $u (sort keys %blackUid) { print $html $u, "; " ; }
+	print $html "</p>\n" ;
+	print $html "<H2>ACTIVE BLACK listed uids</H2>\n<p><strong>" ;
+	foreach my $u (sort keys %blackUidActive) { print $html $u . " - " . $activeUid{$u}, " <br>\n" ; }
 	print $html "</strong></p>\n" ;
 	
 
@@ -1363,14 +1380,15 @@ sub readLists {
 	$success = open ($file, "<", $whiteName) ;
 	if ($success) {
 		while ($line = <$file>) {
-			my ($user) = ($line =~ /(.+)/) ;
-			if (defined $user) {
+			my ($uid, $user) = ($line =~ /^(\d+);"(.+)"$/) ;
+			if ( (defined $user) and (defined $uid) )  {
 				$white{$user} = 1 ;
+				$whiteUid{$uid} = 1 ;
 			}
 		}
 		close ($file) ;
 		print "\nWHITE listed users:\n" ;
-		foreach my $u (sort keys %white) { print $u, " " ; }
+		foreach my $u (sort keys %white) { print $u, "; " ; }
 		print "\n\n" ;
 	}
 	else {
@@ -1380,14 +1398,18 @@ sub readLists {
 	$success = open ($file, "<", $blackName) ;
 	if ($success) {
 		while ($line = <$file>) {
-			my ($user) = ($line =~ /(.+)/) ;
-			if (defined $user) {
+			my ($uid, $user) = ($line =~ /^(\d+);"(.+)"$/) ;
+			if ( (defined $user) and (defined $uid) )  {
 				$black{$user} = 1 ;
+				$blackUid{$uid} = 1 ;
 			}
 		}
 		close ($file) ;
 		print "\nBLACK listed users:\n" ;
-		foreach my $u (sort keys %black) { print $u, " " ; }
+		foreach my $u (sort keys %black) { print $u, "; " ; }
+		print "\n\n" ;
+		print "\nBLACK listed uids:\n" ;
+		foreach my $u (sort keys %blackUid) { print $u, " " ; }
 		print "\n\n" ;
 	}
 	else {
@@ -1434,5 +1456,9 @@ sub getBlackListData {
 		if (defined  $versionJumpsNodes{$u}) { $blackActive{$u} = 1 ; }
 		if (defined  $versionJumpsWays{$u}) { $blackActive{$u} = 1 ; }
 		if (defined  $opTime{$u}) { $blackActive{$u} = 1 ; }
+	}
+
+	foreach my $id (keys %activeUid) {
+		if (defined $blackUid{$id}) { $blackUidActive{$id} = 1 ; }
 	}
 }

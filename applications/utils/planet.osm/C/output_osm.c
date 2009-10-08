@@ -160,7 +160,7 @@ void osm_relation(int id, struct keyval *members, struct keyval *roles, struct k
       for (i = m_type; *i; i++) *i = tolower(*i);
       const char *m_id   = p->value;
       const char *m_role = q->value;
-      printf(INDENT INDENT "<member type=\"%s\" ref=\"%s\" role=\"%s\"/>\n", m_type, m_id, m_role);
+      printf(INDENT INDENT "<member type=\"%s\" ref=\"%s\" role=\"%s\"/>\n", m_type, m_id, xmlescape(m_role));
       freeItem(p);
       freeItem(q);
     }

@@ -10,7 +10,12 @@ require_once ('generalfuncs.php');
 require_once ('wmsdrawfuncs.php');
 list($width,$height) = GetWindowSize();
 
-if(!file_exists(MAP_FOLDER))
+$mapFolder = MAP_FOLDER;
+if(!file_exists($mapFolder))
+{
+	$mapFolder = MAP_FOLDER_FALLBACK;
+}
+if(!file_exists($mapFolder))
 {
 	throw new Exception("MAP_FOLDER does not exist or permission denied");
 }
@@ -61,20 +66,20 @@ $tileBLY = $tileBLY->y;
 //echo "X: ".$tileTRX.", Y: ".$tileTRY.", Z: ".$zoom."<br>\n";
 //echo "X: ".$tileBLX.", Y: ".$tileBLY.", Z: ".$zoom."<br>\n";
 
-for($i=$tileTRY;$i<$tileBLY;$i += 1)
+for($i=$tileTRY;$i<=$tileBLY;$i += 1)
 {
-	for($j=$tileBLX;$j<$tileTRX;$j+=1)
+	for($j=$tileBLX;$j<=$tileTRX;$j+=1)
 	{
 		$tileName = $j.'/'.$i;
 
 		//echo $tileName.'<br/>';
-		//echo MAP_FOLDER.'/'.$tileName.'.jpg'.'<br/>';
+		//echo $mapFolder.'/'.$tileName.'.jpg'.'<br/>';
 
 		$mapFilename = null;
-		if(file_exists(MAP_FOLDER.'/'.$tileName.'.PNG')) $mapFilename = MAP_FOLDER.'/'.$tileName.'.PNG';
-		if(file_exists(MAP_FOLDER.'/'.$tileName.'.png')) $mapFilename = MAP_FOLDER.'/'.$tileName.'.png';
-		if(file_exists(MAP_FOLDER.'/'.$tileName.'.JPG')) $mapFilename = MAP_FOLDER.'/'.$tileName.'.JPG';
-		if(file_exists(MAP_FOLDER.'/'.$tileName.'.jpg')) $mapFilename = MAP_FOLDER.'/'.$tileName.'.jpg';
+		if(file_exists($mapFolder.'/'.$tileName.'.PNG')) $mapFilename = $mapFolder.'/'.$tileName.'.PNG';
+		if(file_exists($mapFolder.'/'.$tileName.'.png')) $mapFilename = $mapFolder.'/'.$tileName.'.png';
+		if(file_exists($mapFolder.'/'.$tileName.'.JPG')) $mapFilename = $mapFolder.'/'.$tileName.'.JPG';
+		if(file_exists($mapFolder.'/'.$tileName.'.jpg')) $mapFilename = $mapFolder.'/'.$tileName.'.jpg';
 
 		if($mapFilename!= NULL)
 		{

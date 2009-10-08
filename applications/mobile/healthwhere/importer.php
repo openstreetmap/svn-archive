@@ -22,12 +22,29 @@ function death ($log_string) {
 	die ();
 }
 
-//Download text file
+/*
+ * Simple logging function
+ * Parameters:
+ * $log_string is saved in log
+ * Returns nothing
+*/
+function logger ($log_string) {
+	global $import_log;
+	file_put_contents ($import_log, date ("Y-m-d H:i:s") . "\t$log_string\n", FILE_APPEND);
+}
+
+//Get postcode data from NPE
+unlink ($import_log);
+logger ("Running importer.php");
 if (file_exists ($data_local))
+	if (file_exists ("$data_local.old"))
+		if (unlink ("$data_local.old") === False)
+			death ("Error deleting file $data_local.old");
 	if (rename ($data_local, "$data_local.old") === False)
 		death ("Error renaming data from $data_local to $data_local.old");
 if (copy ($data_url, $data_local) === False)
 	death ("Error copying data from $data_url to $data_local");
+logger ("Postcode data text file downloaded");
 
 //Create temporary database
 if (file_exists ("$tmp_database"))

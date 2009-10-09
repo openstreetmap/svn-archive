@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.6   2009-10-09 encoding clean-up                                  ##
 ## 0.2.5   2009-10-09 implements NodesGet, WaysGet, RelationsGet         ##
 ##                               ParseOsm, ParseOsc                      ##
 ## 0.2.4   2009-10-06 clean-up                                           ##
@@ -93,7 +94,7 @@ class OsmApi:
         if NodeVersion <> -1: uri += "/"+str(NodeVersion)
         data = self._get(uri)
         if not data: return data
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0].getElementsByTagName("node")[0]
         return self._DomParseNode(data)
 
@@ -135,7 +136,7 @@ class OsmApi:
         """ Returns dict(NodeVerrsion: NodeData). """
         uri = "/api/0.6/node/"+str(NodeId)+"/history"
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = xml.dom.minidom.parseString(data)
         result = {}
         for data in data.getElementsByTagName("osm")[0].getElementsByTagName("node"):
             data = self._DomParseNode(data)
@@ -156,7 +157,7 @@ class OsmApi:
         """ Returns dict(NodeId: NodeData) for each node in NodeIdList """
         uri  = "/api/0.6/nodes?nodes=" + ",".join([str(x) for x in NodeIdList])
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = xml.dom.minidom.parseString(data)
         result = {}
         for data in data.getElementsByTagName("osm")[0].getElementsByTagName("node"):
             data = self._DomParseNode(data)
@@ -173,7 +174,7 @@ class OsmApi:
         if WayVersion <> -1: uri += "/"+str(WayVersion)
         data = self._get(uri)
         if not data: return data
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0].getElementsByTagName("way")[0]
         return self._DomParseWay(data)
     
@@ -215,7 +216,7 @@ class OsmApi:
         """ Returns dict(WayVerrsion: WayData). """
         uri = "/api/0.6/way/"+str(WayId)+"/history"
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = xml.dom.minidom.parseString(data)
         result = {}
         for data in data.getElementsByTagName("osm")[0].getElementsByTagName("way"):
             data = self._DomParseWay(data)
@@ -235,7 +236,7 @@ class OsmApi:
         """ Returns dict(WayId: WayData) for each way in WayIdList """
         uri = "/api/0.6/ways?ways=" + ",".join([str(x) for x in WayIdList])
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = xml.dom.minidom.parseString(data)
         result = {}
         for data in data.getElementsByTagName("osm")[0].getElementsByTagName("way"):
             data = self._DomParseWay(data)
@@ -252,7 +253,7 @@ class OsmApi:
         if RelationVersion <> -1: uri += "/"+str(RelationVersion)
         data = self._get(uri)
         if not data: return data
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0].getElementsByTagName("relation")[0]
         return self._DomParseRelation(data)
 
@@ -294,7 +295,7 @@ class OsmApi:
         """ Returns dict(RelationVerrsion: RelationData). """
         uri = "/api/0.6/relation/"+str(RelationId)+"/history"
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = xml.dom.minidom.parseString(data)
         result = {}
         for data in data.getElementsByTagName("osm")[0].getElementsByTagName("relation"):
             data = self._DomParseRelation(data)
@@ -314,7 +315,7 @@ class OsmApi:
         """ Returns dict(RelationId: RelationData) for each relation in RelationIdList """
         uri = "/api/0.6/relations?relations=" + ",".join([str(x) for x in RelationIdList])
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = xml.dom.minidom.parseString(data)
         result = {}
         for data in data.getElementsByTagName("osm")[0].getElementsByTagName("relation"):
             data = self._DomParseRelation(data)
@@ -328,7 +329,7 @@ class OsmApi:
     def ChangesetGet(self, ChangesetId):
         """ Returns ChangesetData for changeset #ChangesetId. """
         data = self._get("/api/0.6/changeset/"+str(ChangesetId))
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("osm")[0].getElementsByTagName("changeset")[0]
         return self._DomParseChangeset(data)
     
@@ -369,7 +370,7 @@ class OsmApi:
         """ Download data from a changeset. Returns list of dict {type: node|way|relation, action: create|delete|modify, data: {}}. """
         uri = "/api/0.6/changeset/"+str(ChangesetId)+"/download"
         data = self._get(uri)
-        return self.ParseOsc(data.encode("utf-8"))
+        return self.ParseOsc(data)
     
     def ChangesetsGet(self):
         raise NotImplemented
@@ -431,7 +432,6 @@ class OsmApi:
         if auth:
             self._conn.putheader('Authorization', 'Basic ' + base64.encodestring(self._username + ':' + self._password).strip())
         if send:
-            send = send.encode("utf-8")
             self._conn.putheader('Content-Length', len(send))
         self._conn.endheaders()
         if send:
@@ -442,7 +442,7 @@ class OsmApi:
             if response.status == 410:
                 return None
             raise Exception, "API returns unexpected status code "+str(response.status)+" ("+response.reason+")"
-        return response.read().decode("utf-8")
+        return response.read()
     
     def _http(self, cmd, path, auth, send):
         i = 0
@@ -472,8 +472,6 @@ class OsmApi:
         """ Returns a formated dictionnary of attributes of a DomElement. """
         result = {}
         for k, v in DomElement.attributes.items():
-            k = k #.decode("utf8")
-            v = v #.decode("utf8")
             if k == u"uid"         : v = int(v)
             elif k == u"changeset" : v = int(v)
             elif k == u"version"   : v = int(v)
@@ -490,8 +488,8 @@ class OsmApi:
         """ Returns the dictionnary of tags of a DomElement. """
         result = {}
         for t in DomElement.getElementsByTagName("tag"):
-            k = t.attributes["k"].value #.decode("utf8")
-            v = t.attributes["v"].value #.decode("utf8")
+            k = t.attributes["k"].value
+            v = t.attributes["v"].value
             result[k] = v
         return result
 
@@ -577,7 +575,7 @@ class OsmApi:
         
         xml += u"</osm>\n"
 
-        return xml
+        return xml.encode("utf8")
 
     def _XmlEncode(self, text):
         return text.replace("&", "&amp;").replace("\"", "&quot;")

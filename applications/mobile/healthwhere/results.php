@@ -232,12 +232,17 @@ else
 	$SearchTerm = "Lat/Lon,{$_GET ['txtLatitude']},{$_GET ['txtLongitude']},";
 $SearchTerm .= "{$_GET ['txtDistance']},";
 $iTime = time () - $iStartTime;
-$log_string = date ("Y-m-d,H:i:s,") . $SearchTerm . count ($asPharmacies) . "," . $iTime . ",$source";
+$log_string = date ("Y-m-d,H:i:s,") . $SearchTerm . count ($asPharmacies) . "," . $iTime . ",$source,$search";
 file_put_contents ($access_log, "$log_string\n", FILE_APPEND);
 
 require_once ("inc_head_html.php");
 
-echo "<p>" . count ($asPharmacies) . " found within $maxdist miles";
+echo "<p>" . count ($asPharmacies);
+if ($search == "pharmacy")
+	echo " pharmacies";
+else
+	echo " hospitals";
+echo " found within $maxdist miles";
 if ($_GET ["txtPostcode"] != "") {
 	$postcode = htmlentities ($_GET ["txtPostcode"]);
 	//Only display map link in JS-capable browsers
@@ -248,6 +253,7 @@ if ($_GET ["txtPostcode"] != "") {
 	$sMap .= "<noscript>\n of $postcode\n</noscript>\n";
 	echo $sMap;
 }
+
 echo "<br><a href = 'index.php'>Search again</a><br>\n";
 echo "Click on a name to see details</p>\n";
 

@@ -24,6 +24,8 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.7   2009-10-09 implement all missing fonctions except             ##
+##                    ChangesetsGet and GetCapabilities                  ##
 ## 0.2.6   2009-10-09 encoding clean-up                                  ##
 ## 0.2.5   2009-10-09 implements NodesGet, WaysGet, RelationsGet         ##
 ##                               ParseOsm, ParseOsc                      ##
@@ -36,7 +38,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.6'
+__version__ = '0.2.7'
 
 import httplib, base64, xml.dom.minidom, time
 
@@ -145,13 +147,25 @@ class OsmApi:
 
     def NodeWays(self, NodeId):
         """ Returns [WayData, ... ] containing node #NodeId. """
-        # GET node/#/ways TODO
-        raise NotImplemented
+        uri = "/api/0.6/node/%d/ways"%NodeId
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data)
+        result = []
+        for data in data.getElementsByTagName("osm")[0].getElementsByTagName("way"):
+            data = self._DomParseRelation(data)
+            result.append(data)
+        return result
     
     def NodeRelations(self, NodeId):
         """ Returns [RelationData, ... ] containing node #NodeId. """
-        # GET node/#/relations TODO
-        raise NotImplemented
+        uri = "/api/0.6/node/%d/relations"%NodeId
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data)
+        result = []
+        for data in data.getElementsByTagName("osm")[0].getElementsByTagName("relation"):
+            data = self._DomParseRelation(data)
+            result.append(data)
+        return result
 
     def NodesGet(self, NodeIdList):
         """ Returns dict(NodeId: NodeData) for each node in NodeIdList """
@@ -225,12 +239,20 @@ class OsmApi:
     
     def WayRelations(self, WayId):
         """ Returns [RelationData, ...] containing way #WayId. """
-        # GET way/#/relations
-        raise NotImplemented
+        uri = "/api/0.6/way/%d/relations"%WayId
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data)
+        result = []
+        for data in data.getElementsByTagName("osm")[0].getElementsByTagName("relation"):
+            data = self._DomParseRelation(data)
+            result.append(data)
+        return result
 
     def WayFull(self, WayId):
-        """ Will not be implemented. """
-        raise NotImplemented
+        """ Return full data for way WayId as list of {type: node|way|relation, data: {}}. """
+        uri = "/api/0.6/way/"+str(WayId)+"/full"
+        data = self._get(uri)
+        return self.ParseOsm(data)
 
     def WaysGet(self, WayIdList):
         """ Returns dict(WayId: WayData) for each way in WayIdList """
@@ -304,12 +326,20 @@ class OsmApi:
     
     def RelationRelations(self, RelationId):
         """ Returns list of RelationData containing relation #RelationId. """
-        # GET relation/#/relations TODO
-        raise NotImplemented
+        uri = "/api/0.6/relation/%d/relations"%RelationId
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data)
+        result = []
+        for data in data.getElementsByTagName("osm")[0].getElementsByTagName("relation"):
+            data = self._DomParseRelation(data)
+            result.append(data)
+        return result
 
     def RelationFull(self, RelationId):
-        """ Will not be implemented. """
-        raise NotImplemented
+        """ Return full data for way WayId as list of {type: node|way|relation, data: {}}. """
+        uri = "/api/0.6/relation/"+str(RelationId)+"/full"
+        data = self._get(uri)
+        return self.ParseOsm(data)
 
     def RelationsGet(self, RelationIdList):
         """ Returns dict(RelationId: RelationData) for each relation in RelationIdList """
@@ -372,21 +402,19 @@ class OsmApi:
         data = self._get(uri)
         return self.ParseOsc(data)
     
-    def ChangesetsGet(self):
+    def ChangesetsGet(self, min_lon=None, min_lat=None, max_lon=None, max_lat=None, userid=None, closed_after=None, created_before=None, only_open=False, only_closed=False):
+        """ Returns dict(ChangsetId: ChangesetData) matching all criteria. """
         raise NotImplemented
-
+    
     #######################################################################
     # Other                                                               #
     #######################################################################
 
-    def Map(self):
-        raise NotImplemented
-
-    def Trackpoints(self):
-        raise NotImplemented
-    
-    def Changes(self):
-        raise NotImplemented
+    def Map(self, min_lon, min_lat, max_lon, max_lat):
+        """ Download data in bounding box. Returns list of dict {type: node|way|relation, data: {}}. """
+        uri = "/api/0.6/map?bbox=%f,%f,%f,%f"%(min_lon, min_lat, max_lon, max_lat)
+        data = self._get(uri)
+        return self.ParseOsm(data)
 
     #######################################################################
     # Data parser                                                         #

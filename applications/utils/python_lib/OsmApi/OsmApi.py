@@ -36,7 +36,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.5'
+__version__ = '0.2.6'
 
 import httplib, base64, xml.dom.minidom, time
 

@@ -24,7 +24,9 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
-## 0.2.4   2009-10-06 clean                                              ##
+## 0.2.5   2009-10-09 implements NodesGet, WaysGet, RelationsGet         ##
+##                               ParseOsm, ParseOsc                      ##
+## 0.2.4   2009-10-06 clean-up                                           ##
 ## 0.2.3   2009-09-09 keep http connection alive for multiple request    ##
 ##                    (Node|Way|Relation)Get return None when object     ##
 ##                    have been deleted (raising error before)           ##
@@ -33,7 +35,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.4'
+__version__ = '0.2.5'
 
 import httplib, base64, xml.dom.minidom, time
 
@@ -151,8 +153,15 @@ class OsmApi:
         raise NotImplemented
 
     def NodesGet(self, NodeIdList):
-        """ Will not be implemented. """
-        raise NotImplemented
+        """ Returns dict(NodeId: NodeData) for each node in NodeIdList """
+        uri  = "/api/0.6/nodes?nodes=" + ",".join([str(x) for x in NodeIdList])
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        result = {}
+        for data in data.getElementsByTagName("osm")[0].getElementsByTagName("node"):
+            data = self._DomParseNode(data)
+            result[data[u"id"]] = data
+        return result
 
     #######################################################################
     # Way                                                                 #
@@ -223,8 +232,15 @@ class OsmApi:
         raise NotImplemented
 
     def WaysGet(self, WayIdList):
-        """ Will not be implemented. """
-        raise NotImplemented
+        """ Returns dict(WayId: WayData) for each way in WayIdList """
+        uri = "/api/0.6/ways?ways=" + ",".join([str(x) for x in WayIdList])
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        result = {}
+        for data in data.getElementsByTagName("osm")[0].getElementsByTagName("way"):
+            data = self._DomParseWay(data)
+            result[data[u"id"]] = data
+        return result
 
     #######################################################################
     # Relation                                                            #
@@ -295,8 +311,15 @@ class OsmApi:
         raise NotImplemented
 
     def RelationsGet(self, RelationIdList):
-        """ Will not be implemented. """
-        raise NotImplemented
+        """ Returns dict(RelationId: RelationData) for each relation in RelationIdList """
+        uri = "/api/0.6/relations?relations=" + ",".join([str(x) for x in RelationIdList])
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data.encode("utf-8"))
+        result = {}
+        for data in data.getElementsByTagName("osm")[0].getElementsByTagName("relation"):
+            data = self._DomParseRelation(data)
+            result[data[u"id"]] = data            
+        return result
 
     #######################################################################
     # Changeset                                                           #
@@ -346,20 +369,8 @@ class OsmApi:
         """ Download data from a changeset. Returns list of dict {type: node|way|relation, action: create|delete|modify, data: {}}. """
         uri = "/api/0.6/changeset/"+str(ChangesetId)+"/download"
         data = self._get(uri)
-        data = xml.dom.minidom.parseString(data.encode("utf-8"))
-        data = data.getElementsByTagName("osmChange")[0]
-        result = []
-        for action in data.childNodes:
-            if action.nodeName == u"#text": continue
-            for elem in action.childNodes:
-                if elem.nodeName == u"node":
-                    result.append({u"action":action.nodeName, u"type": elem.nodeName, u"data": self._DomParseNode(elem)})
-                elif elem.nodeName == u"way":
-                    result.append({u"action":action.nodeName, u"type": elem.nodeName, u"data": self._DomParseWay(elem)})                        
-                elif elem.nodeName == u"relation":
-                    result.append({u"action":action.nodeName, u"type": elem.nodeName, u"data": self._DomParseRelation(elem)})
-        return result
-
+        return self.ParseOsc(data.encode("utf-8"))
+    
     def ChangesetsGet(self):
         raise NotImplemented
 
@@ -375,6 +386,40 @@ class OsmApi:
     
     def Changes(self):
         raise NotImplemented
+
+    #######################################################################
+    # Data parser                                                         #
+    #######################################################################
+    
+    def ParseOsm(self, data):
+        """ Parse osm data. Returns list of dict {type: node|way|relation, data: {}}. """
+        data = xml.dom.minidom.parseString(data)
+        data = data.getElementsByTagName("osm")[0]
+        result = []
+        for elem in data.childNodes:
+            if elem.nodeName == u"node":
+                result.append({u"type": elem.nodeName, u"data": self._DomParseNode(elem)})
+            elif elem.nodeName == u"way":
+                result.append({u"type": elem.nodeName, u"data": self._DomParseWay(elem)})                        
+            elif elem.nodeName == u"relation":
+                result.append({u"type": elem.nodeName, u"data": self._DomParseRelation(elem)})
+        return result    
+
+    def ParseOsc(self, data):
+        """ Parse osc data. Returns list of dict {type: node|way|relation, action: create|delete|modify, data: {}}. """
+        data = xml.dom.minidom.parseString(data)
+        data = data.getElementsByTagName("osmChange")[0]
+        result = []
+        for action in data.childNodes:
+            if action.nodeName == u"#text": continue
+            for elem in action.childNodes:
+                if elem.nodeName == u"node":
+                    result.append({u"action":action.nodeName, u"type": elem.nodeName, u"data": self._DomParseNode(elem)})
+                elif elem.nodeName == u"way":
+                    result.append({u"action":action.nodeName, u"type": elem.nodeName, u"data": self._DomParseWay(elem)})                        
+                elif elem.nodeName == u"relation":
+                    result.append({u"action":action.nodeName, u"type": elem.nodeName, u"data": self._DomParseRelation(elem)})
+        return result
 
     #######################################################################
     # Internal http function                                              #

@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>OpenStreetMap - Out of Copyright Maps</title>
+    <script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js"></script>
+    <script type="text/javascript" src="openlayers/OOC.js"></script>
+    <script type="text/javascript">
+    //<![CDATA[
+    var map;
+
+    function load () {
+      // Create a map
+      map = new OpenLayers.Map("map", {
+        controls: [
+          new OpenLayers.Control.ArgParser(),
+          new OpenLayers.Control.LayerSwitcher(),
+          new OpenLayers.Control.Navigation(),
+          new OpenLayers.Control.PanZoomBar(),
+          new OpenLayers.Control.Permalink()
+        ],
+        displayProjection: new OpenLayers.Projection("EPSG:4326")
+      });
+
+      // Add OS layers
+      var npe = new OpenLayers.Layer.NPE("OS NPE (1:50000)");
+      map.addLayer(npe);
+      var os7 = new OpenLayers.Layer.OS7("OS 7th Series (1:50000)");
+      map.addLayer(os7);
+      var os1 = new OpenLayers.Layer.OS1("OS 1st Edition (1:25000)");
+      map.addLayer(os1);
+
+      // Set the default centre and scale for the map
+      if (!map.getCenter()) {
+        var gb = new OpenLayers.Bounds(-10.5, 49.85, 1.9, 58.75);
+        var wgs84 = new OpenLayers.Projection("EPSG:4326");
+        gb.transform(wgs84, map.getProjectionObject());
+        map.zoomToExtent(gb);
+      }
+    }
+    //]]>
+    </script>
+  </head>
+  <body onload="load()">
+    <div id="map" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; width: 100%; height: 100%"></div>
+  </body>
+</html

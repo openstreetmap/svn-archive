@@ -3,6 +3,7 @@
     <title>OpenStreetMap - Out of Copyright Maps</title>
     <script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js"></script>
     <script type="text/javascript" src="openlayers/OOC.js"></script>
+    <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
     <script type="text/javascript">
     //<![CDATA[
     var map;
@@ -27,6 +28,10 @@
       map.addLayer(os7);
       var os1 = new OpenLayers.Layer.OS1("OS 1st Edition (1:25000)");
       map.addLayer(os1);
+
+      // Add OpenStreetMap layers
+      var mapnik = new OpenLayers.Layer.OSM.Mapnik("OpenStreetMap (Mapnik)");
+      map.addLayer(mapnik);
 
       // Set the default centre and scale for the map
       if (!map.getCenter()) {

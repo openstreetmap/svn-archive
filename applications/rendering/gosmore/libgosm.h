@@ -50,7 +50,7 @@ inline int isqrt (int x) { return lrint (sqrt (x)); } // Optimize this ?
   M (oneway) M (roundabout)
 
 #define M(field) field ## R,
-enum { STYLE_BITS = 8, RESTRICTIONS layerBit1,layerBit2,layerBit3 };
+enum { STYLE_BITS = 10, RESTRICTIONS layerBit1,layerBit2,layerBit3 };
 #undef M
 
 // Below is a list of the tags that the user may add. It should also include

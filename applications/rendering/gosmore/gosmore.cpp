@@ -1,4 +1,4 @@
-
+/* This software is placed by in the public domain by its authors. */
 /* Written by Nic Roets with contribution(s) from Dave Hansen, Ted Mielczarek
    David Dean, Pablo D'Angelo and Dmitry.
    Thanks to
@@ -1386,14 +1386,6 @@ gint DrawExpose (void)
   clip.height = draw->allocation.height;
   clip.width = draw->allocation.width;
   
-  if (option == optionMode) {
-    for (int i = 0; i < mapMode; i++) {
-      DrawString (ListXY (i, FALSE) - strlen (optionNameTable[English][i]) *
-        5, ListXY (i, TRUE), optionNameTable[English][i]);
-    }
-    return FALSE;
-  }
-  
   if (ButtonSize <= 0) ButtonSize = 4;
 
   if (zoom < 0) zoom = 2012345678;
@@ -1644,13 +1636,6 @@ gint DrawExpose (void)
                    below the bottom of the screen. So we adjust oldx and oldy.
                    
                    When y is negative, we do something very similar. */
-                if (oldx < 0 || oldx >= clip.width ||
-                    oldy < 0 || oldy >= clip.height) {
-                  cumulative += 9999; // Insert a break in the queue
-                  q.push (linePtType (oldx, oldy, cumulative));
-                  // TODO: Interpolate the segment to get a point that is
-                  // closer to the screen. The same applies to the other push
-                }
                 if (!Display3D || y > 0) {
                   x2 = x;
                   y2 = y;
@@ -1673,6 +1658,13 @@ gint DrawExpose (void)
                 }
                 gdk_draw_line (draw->window, mygc, oldx, oldy, x2, y2);
                 // Draw3DLine
+                if (oldx < 0 || oldx >= clip.width ||
+                    oldy < 0 || oldy >= clip.height) {
+                  cumulative += 9999; // Insert a break in the queue
+                  q.push (linePtType (oldx, oldy, cumulative));
+                  // TODO: Interpolate the segment to get a point that is
+                  // closer to the screen. The same applies to the other push
+                }
                 cumulative += isqrt (Sqr (oldx - x2) + Sqr (oldy - y2));
                 q.push (linePtType (x2, y2, cumulative));
                 ConsiderText (&q, FALSE, len, &best, &text2B.top ());
@@ -1921,6 +1913,12 @@ gint DrawExpose (void)
 
       gdk_draw_line (draw->window, mygc, 0, y + SearchSpacing / 2,
         clip.width, y + SearchSpacing / 2);
+    }
+  }
+  else if (option == optionMode) {
+    for (int i = 0; i < mapMode; i++) {
+      DrawString (ListXY (i, FALSE) - strlen (optionNameTable[English][i]) *
+        5, ListXY (i, TRUE), optionNameTable[English][i]);
     }
   }
   else {
@@ -2787,7 +2785,7 @@ int WINAPI WinMain(
 
   wcscat (argv0, TEXT ("gosmore.pak")); // _arm.exe to ore.pak
   HANDLE gmap = CreateFileForMapping (argv0, GENERIC_READ, FILE_SHARE_READ,
-    NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/, NULL);
   if (gmap == INVALID_HANDLE_VALUE) {
     MessageBox (NULL, TEXT ("No pak file"), TEXT (""), MB_APPLMODAL|MB_OK);
     return 1;

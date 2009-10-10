@@ -27,7 +27,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class MichiganLeftAction extends JosmAction {
     private LinkedList<Command> cmds = new LinkedList<Command>();
-    
+
     public MichiganLeftAction() {
     super(tr("Michigan Left"), "michigan_left", tr("Adds no left turn for sets of 4 or 5 ways."), Shortcut.registerShortcut("tools:michigan_left", tr("Tool: {0}", tr("Michigan Left")),
     KeyEvent.VK_M, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
@@ -49,7 +49,7 @@ public class MichiganLeftAction extends JosmAction {
     if (ways == 5)
     {
       // Find extremities of ways
-      Hashtable ExtremNodes=new Hashtable();
+      Hashtable<Node, Integer> ExtremNodes=new Hashtable<Node, Integer>();
       for (OsmPrimitive prim : selection) {
         if (prim instanceof Way)
         {
@@ -58,8 +58,8 @@ public class MichiganLeftAction extends JosmAction {
           incrementHashtable(ExtremNodes, way.lastNode());
         }
       }
-      System.out.println(tr("{0} extrem nodes.", ExtremNodes.size()));     
-      
+      System.out.println(tr("{0} extrem nodes.", ExtremNodes.size()));
+
       ArrayList<Node> viaNodes=new ArrayList<Node>();
       // find via nodes (they have 3 occurences in the list)
       for (Enumeration enumKey = ExtremNodes.keys() ; enumKey.hasMoreElements(); )
@@ -71,14 +71,14 @@ public class MichiganLeftAction extends JosmAction {
         {
           viaNodes.add(extrem);
         }
-      } 
-      System.out.println(tr("{0} via nodes.", viaNodes.size()));     
-  
+      }
+      System.out.println(tr("{0} via nodes.", viaNodes.size()));
+
       if (viaNodes.size() != 2) {
         JOptionPane.showMessageDialog(Main.parent, tr("Unable to find via nodes. Please check your selection"));
         return;
       }
-      
+
       Node viaFirst = viaNodes.get(0);
       Node viaLast = viaNodes.get(1);      // Find middle segment
 
@@ -95,8 +95,8 @@ public class MichiganLeftAction extends JosmAction {
             middle=way;
         }
       }
-      System.out.println(tr("MIddle way: {0}", middle.getId()));       
-         
+      System.out.println(tr("MIddle way: {0}", middle.getId()));
+
       // Build relations
       for (OsmPrimitive prim : selection) {
         if (prim instanceof Way)
@@ -120,11 +120,11 @@ public class MichiganLeftAction extends JosmAction {
       }
       Command c = new SequenceCommand(tr("Create Michigan left turn restriction"), cmds);
       Main.main.undoRedo.add(c);
-      cmds.clear();     
+      cmds.clear();
     }
   }
 
-  public void incrementHashtable(Hashtable hash, Node node)
+  public void incrementHashtable(Hashtable<Node, Integer> hash, Node node)
   {
     System.out.println(tr("Processing {0}", node.getId()));
     if (hash.containsKey(node))
@@ -136,26 +136,26 @@ public class MichiganLeftAction extends JosmAction {
     else
       hash.put(node, new Integer (1));
   }
-  
+
   public void buildRelation(Way fromWay, Way toWay, Node viaNode)
   {
-    System.out.println(tr("Relation: from {0} to {1} via {2}", fromWay.getId(), toWay.getId(), viaNode.getId()));       
-    
+    System.out.println(tr("Relation: from {0} to {1} via {2}", fromWay.getId(), toWay.getId(), viaNode.getId()));
+
     Relation relation = new Relation();
-    
+
     RelationMember from = new RelationMember("from", fromWay);
     relation.addMember(from);
-    
+
     RelationMember to = new RelationMember("to", toWay);
     relation.addMember(to);
-    
+
     RelationMember via = new RelationMember("via", viaNode);
     relation.addMember(via);
-    
+
     relation.put("type", "restriction");
     relation.put("restriction", "no_left_turn");
 
     cmds.add(new AddCommand(relation));
-  }  
+  }
 
 }

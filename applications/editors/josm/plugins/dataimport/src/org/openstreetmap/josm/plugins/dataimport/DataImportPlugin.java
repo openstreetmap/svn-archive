@@ -6,8 +6,8 @@ package org.openstreetmap.josm.plugins.dataimport;
 import java.io.IOException;
 
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
-import org.openstreetmap.josm.io.TangoGPS;
-import org.openstreetmap.josm.io.Tcx;
+import org.openstreetmap.josm.plugins.dataimport.io.TangoGPS;
+import org.openstreetmap.josm.plugins.dataimport.io.Tcx;
 import org.openstreetmap.josm.plugins.Plugin;
 
 public class DataImportPlugin extends Plugin {

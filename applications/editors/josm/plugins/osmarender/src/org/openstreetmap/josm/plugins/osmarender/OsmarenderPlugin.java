@@ -1,3 +1,5 @@
+package org.openstreetmap.josm.plugins.osmarender;
+
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;

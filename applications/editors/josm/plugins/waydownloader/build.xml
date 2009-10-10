@@ -86,7 +86,7 @@
     -->
             <manifest>
                 <attribute name="Author" value="Harry Wood"/>
-                <attribute name="Plugin-Class" value="WayDownloaderPlugin"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.waydownloader.WayDownloaderPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Easy downloading along a long set of interconnected ways"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/WayDownloaderPlugin"/>

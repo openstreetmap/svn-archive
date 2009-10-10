@@ -1,0 +1,2 @@
+Il minitutorial è creato tramite Latex, se volete modificarlo per un utilizzo personale modificatelo a vostro piacere ma se volete aggiornarlo chiedete prima in mailing-list essendo un lavoro della comunità; ricordatevi che le pagine devono essere un multiplo di quattro per creare correttamente il booklet
+Per aggiornare il booklet dovete dare questo comando "pdfbook tutorial.pdf book.pdf"

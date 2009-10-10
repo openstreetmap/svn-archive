@@ -25,7 +25,7 @@ use Time::localtime;
 
 
 my $program = "streetnames.pl" ;
-my $version = "1.0" ;
+my $version = "1.1" ;
 my $usage = $program . " file.osm out.txt" ;
 
 my $wayId ;
@@ -92,7 +92,7 @@ if ($wayId != -1) {
 }
 while ($wayId != -1) {	
 	$wayCount++ ;
-
+	if ($wayCount % 100000 == 0 ) { print "$wayCount ways processed...\n" ; } 
 	my $highway = 0 ;
 	my $name = "" ;
 	foreach my $tag (@wayTags) {

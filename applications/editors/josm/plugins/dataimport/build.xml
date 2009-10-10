@@ -92,7 +92,7 @@
 
           <manifest>
                 <attribute name="Author" value="Dieter Muecke"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.DataImport"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.dataimport.DataImportPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Allows to import various file formats into JOSM directly."/>
                 <attribute name="Plugin-Mainversion" value="1700"/>

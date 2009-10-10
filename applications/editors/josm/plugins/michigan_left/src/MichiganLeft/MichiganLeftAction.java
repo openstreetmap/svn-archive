@@ -95,7 +95,7 @@ public class MichiganLeftAction extends JosmAction {
             middle=way;
         }
       }
-      System.out.println(tr("MIddle way: {0}", middle.getId()));
+      System.out.println(tr("Middle way: {0}", middle.getId()));
 
       // Build relations
       for (OsmPrimitive prim : selection) {

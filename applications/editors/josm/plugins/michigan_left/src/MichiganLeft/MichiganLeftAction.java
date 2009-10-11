@@ -59,7 +59,7 @@ public class MichiganLeftAction extends JosmAction {
           incrementHashtable(ExtremNodes, way.lastNode());
         }
       }
-      System.out.println(tr("{0} extrem nodes.", ExtremNodes.size()));
+      //System.out.println(tr("{0} extrem nodes.", ExtremNodes.size()));
       if (ExtremNodes.size() != 4)
       {
         JOptionPane.showMessageDialog(Main.parent, tr("Please select 4 ways that form a closed relation."));
@@ -120,7 +120,7 @@ public class MichiganLeftAction extends JosmAction {
           incrementHashtable(ExtremNodes, way.lastNode());
         }
       }
-      System.out.println(tr("{0} extrem nodes.", ExtremNodes.size()));
+      //System.out.println(tr("{0} extrem nodes.", ExtremNodes.size()));
 
       ArrayList<Node> viaNodes=new ArrayList<Node>();
       // find via nodes (they have 3 occurences in the list)
@@ -128,13 +128,13 @@ public class MichiganLeftAction extends JosmAction {
       {
         Node extrem=(Node)enumKey.nextElement();
         Integer nb=(Integer) ExtremNodes.get(extrem);
-        System.out.println(tr("Via node {0}, {1}", extrem.getId(), nb.intValue()));
+        //System.out.println(tr("Via node {0}, {1}", extrem.getId(), nb.intValue()));
         if (nb.intValue() == 3)
         {
           viaNodes.add(extrem);
         }
       }
-      System.out.println(tr("{0} via nodes.", viaNodes.size()));
+      //System.out.println(tr("{0} via nodes.", viaNodes.size()));
 
       if (viaNodes.size() != 2) {
         JOptionPane.showMessageDialog(Main.parent, tr("Unable to find via nodes. Please check your selection"));
@@ -157,7 +157,7 @@ public class MichiganLeftAction extends JosmAction {
             middle=way;
         }
       }
-      System.out.println(tr("Middle way: {0}", middle.getId()));
+      //System.out.println(tr("Middle way: {0}", middle.getId()));
 
       // Build relations
       for (OsmPrimitive prim : selection) {
@@ -188,12 +188,12 @@ public class MichiganLeftAction extends JosmAction {
 
   public void incrementHashtable(Hashtable<Node, Integer> hash, Node node)
   {
-    System.out.println(tr("Processing {0}", node.getId()));
+    //System.out.println(tr("Processing {0}", node.getId()));
     if (hash.containsKey(node))
     {
       Integer nb=(Integer) hash.get(node);
       hash.put(node, new Integer (nb.intValue()+1));
-      System.out.println(tr("Old value", nb.intValue()));
+      //System.out.println(tr("Old value", nb.intValue()));
     }
     else
       hash.put(node, new Integer (1));
@@ -201,7 +201,7 @@ public class MichiganLeftAction extends JosmAction {
 
   public void buildRelation(Way fromWay, Way toWay, Node viaNode)
   {
-    System.out.println(tr("Relation: from {0} to {1} via {2}", fromWay.getId(), toWay.getId(), viaNode.getId()));
+    //System.out.println(tr("Relation: from {0} to {1} via {2}", fromWay.getId(), toWay.getId(), viaNode.getId()));
 
     Relation relation = new Relation();
 

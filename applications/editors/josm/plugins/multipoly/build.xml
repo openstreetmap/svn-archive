@@ -5,9 +5,9 @@
  <property name="josm.home.dir"	value="${user.home}/.josm"/>
  <property name="josm"			location="../../core/dist/josm-custom.jar" />
  <property name="plugin.build.dir"	value="build"/>
- <property name="plugin.dist.dir"	value="dist"/>
+ <property name="plugin.dist.dir"	value="../../dist"/>
  <property name="plugin.name"		value="${ant.project.name}"/>
- <property name="plugin.jar"		value="dist/${plugin.name}.jar"/>
+ <property name="plugin.jar"		value="${plugin.dist.dir}/${plugin.name}.jar"/>
 
  <!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
  <property name="josm" location="../../core/dist/josm-custom.jar" />
@@ -15,8 +15,8 @@
  <property name="ant.build.javac.target" value="1.5"/>
 
  <target name="init">
-  <mkdir dir="build"></mkdir>
-  <mkdir dir="dist"></mkdir>
+  <mkdir dir="${plugin.build.dir}"></mkdir>
+  <mkdir dir="${plugin.dist.dir}"></mkdir>
  </target>
 
  <target name="compile" depends="init">
@@ -61,9 +61,6 @@
   <delete file="${plugins}/multipoly.jar" />
  </target>
 
- <target name="install" depends="dist">
-  <copy file="${plugin.jar}" todir="${plugins}"/>
- </target>
  <target name="install" depends="dist">
   <property environment="env"/>
   <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">

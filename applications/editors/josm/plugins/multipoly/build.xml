@@ -1,0 +1,77 @@
+<project name="multipoly" default="dist" basedir=".">
+
+ <!-- compilation properties -->
+ <property name="josm.build.dir"	value="../../core"/>
+ <property name="josm.home.dir"	value="${user.home}/.josm"/>
+ <property name="josm"			location="../../core/dist/josm-custom.jar" />
+ <property name="plugin.build.dir"	value="build"/>
+ <property name="plugin.dist.dir"	value="dist"/>
+ <property name="plugin.name"		value="${ant.project.name}"/>
+ <property name="plugin.jar"		value="dist/${plugin.name}.jar"/>
+
+ <!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
+ <property name="josm" location="../../core/dist/josm-custom.jar" />
+
+ <property name="ant.build.javac.target" value="1.5"/>
+
+ <target name="init">
+  <mkdir dir="build"></mkdir>
+  <mkdir dir="dist"></mkdir>
+ </target>
+
+ <target name="compile" depends="init">
+  <echo message="creating ${plugin.jar}"/>
+  <javac srcdir="src" target="1.5" classpath="${josm}" destdir="build" debug="true">
+   <include name="**/*.java" />
+  </javac>
+ </target>
+
+ <target name="revision">
+  <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+   <env key="LANG" value="C"/>
+   <arg value="info"/>
+   <arg value="--xml"/>
+   <arg value="."/>
+  </exec>
+  <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+  <delete file="REVISION"/>
+ </target>
+
+ <target name="dist" depends="compile,revision">
+  <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+   <manifest>
+    <attribute name="Author" value="Bilbo"/>
+    <attribute name="Plugin-Class" value="multipoly.MultipolyPlugin" />
+    <attribute name="Plugin-Description" value="Create multipolygons by one click, much easier than standard way with relation editor." />
+    <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+    <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+    <attribute name="Plugin-Link" value="http://svn.openstreetmap.org/applications/editors/josm/plugins/multipoly/"/>
+    <attribute name="Plugin-Mainversion" value="2267"/>
+    <attribute name="2000_Plugin-Url" value="16609;http://qq.wz.cz/multipoly-old.jar"/>
+   </manifest>
+  </jar>
+ </target>
+
+ <target name="clean">
+  <delete dir="${plugin.build.dir}" />
+  <delete file="${plugin.jar}" />
+ </target>
+
+ <target name="clean_install">
+  <delete file="${plugins}/multipoly.jar" />
+ </target>
+
+ <target name="install" depends="dist">
+  <copy file="${plugin.jar}" todir="${plugins}"/>
+ </target>
+ <target name="install" depends="dist">
+  <property environment="env"/>
+  <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+   <and>
+    <os family="windows"/>
+   </and>
+  </condition>
+  <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
+ </target>
+
+</project>

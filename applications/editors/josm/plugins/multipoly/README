@@ -1,0 +1,10 @@
+This plugin allows creating multipolygon by one click, which is easier than using traditional way using relation editor.
+Just select some ways and press the button. Polygon will automatically detect which of the ways is the outer way and assign roles automatically.
+
+The plugin check the ways to be closed to avoid creating invalid multipolygon.
+
+Known limitations:
+ * Creates only one multipolygon at time - if you select ways that could form two separate multipolygons, results won't be what you expect.
+ * Does not know about "advanced multipolygons", where some ways may be consisting of more than one ways 
+ * The check which way is outer may not work perfectly if some of the inner ways cross the outer way and protrude significantly from it.
+   (so in fact there are more outer ways and the multipolygon is "invalid")

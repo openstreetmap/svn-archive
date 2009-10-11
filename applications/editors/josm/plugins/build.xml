@@ -21,6 +21,7 @@
         <ant antfile="build.xml" target="dist" dir="livegps"/>
         <ant antfile="build.xml" target="dist" dir="measurement"/>
         <ant antfile="build.xml" target="dist" dir="michigan_left"/>
+        <ant antfile="build.xml" target="dist" dir="multipoly"/>
         <ant antfile="build.xml" target="dist" dir="nearclick"/>
         <ant antfile="build.xml" target="dist" dir="openlayers"/>
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
@@ -64,6 +65,7 @@
         <ant antfile="build.xml" target="clean" dir="livegps"/>
         <ant antfile="build.xml" target="clean" dir="measurement"/>
         <ant antfile="build.xml" target="clean" dir="michigan_left"/>
+        <ant antfile="build.xml" target="clean" dir="multipoly"/>
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
         <ant antfile="build.xml" target="clean" dir="openlayers"/>
         <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>

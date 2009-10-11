@@ -152,7 +152,7 @@ public class TestError {
         String ignorestring = getIgnoreSubGroup();
         for (OsmPrimitive o : primitives) {
             // ignore data not yet uploaded
-            if (o.getId() == 0)
+            if (o.isNew())
                 return null;
             String type = "u";
             if (o instanceof Way)

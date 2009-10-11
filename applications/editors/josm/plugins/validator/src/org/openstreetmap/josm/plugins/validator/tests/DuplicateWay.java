@@ -5,8 +5,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import java.util.Map;
+import java.util.Vector;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
@@ -14,8 +14,8 @@ import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -119,7 +119,7 @@ public class DuplicateWay extends Test
         // Only one way will be kept - the one with lowest positive ID, if such exist
         // or one "at random" if no such exists. Rest of the ways will be deleted
         for (Way w: ways) {
-            if (w.getId() > 0) {
+            if (!w.isNew()) {
                 if (idToKeep == 0 || w.getId() < idToKeep) idToKeep = w.getId();
             }
         }

@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.validator.tests;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.geom.Area;
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,9 +29,9 @@ import org.openstreetmap.josm.plugins.validator.util.Bag;
  * @author frsantos
  */
 public class DuplicateNode extends Test{
-	
+
 	private static BackreferencedDataSet backreferences;
-	
+
 	public static BackreferencedDataSet getBackreferenceDataSet() {
 		if (backreferences == null) {
 			backreferences = new BackreferencedDataSet(Main.main.getEditLayer().data);
@@ -40,11 +39,11 @@ public class DuplicateNode extends Test{
 		}
 		return backreferences;
 	}
-	
+
 	public static void clearBackreferences() {
 		backreferences = null;
 	}
-	
+
     protected static int DUPLICATE_NODE = 1;
 
     /** Bag of all nodes */
@@ -131,7 +130,7 @@ public class DuplicateNode extends Test{
         Area a = Main.main.getCurrentDataSet().getDataSourceArea();
         if (a != null) {
             for (OsmPrimitive osm : del) {
-                if (osm instanceof Node && osm.getId() != 0) {
+                if (osm instanceof Node && !osm.isNew()) {
                     Node n = (Node) osm;
                     if (!a.contains(n.getCoor())) {
                         return ConditionalOptionPaneUtil.showConfirmationDialog(

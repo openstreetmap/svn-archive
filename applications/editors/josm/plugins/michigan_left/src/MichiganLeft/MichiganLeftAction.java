@@ -46,6 +46,68 @@ public class MichiganLeftAction extends JosmAction {
       return;
     }
 
+    if (ways == 4)
+    {
+      // Find extremities of ways
+      Hashtable<Node, Integer> ExtremNodes=new Hashtable<Node, Integer>();
+      for (OsmPrimitive prim : selection)
+      {
+        if (prim instanceof Way)
+        {
+          Way way = (Way) prim;
+          incrementHashtable(ExtremNodes, way.firstNode());
+          incrementHashtable(ExtremNodes, way.lastNode());
+        }
+      }
+      System.out.println(tr("{0} extrem nodes.", ExtremNodes.size()));
+      if (ExtremNodes.size() != 4)
+      {
+        JOptionPane.showMessageDialog(Main.parent, tr("Please select 4 ways that form a closed relation."));
+        return;
+      }
+
+      // order the ways
+      ArrayList<Way> orderedWays=new ArrayList<Way>();
+      Way currentWay=(Way) selection.iterator().next();
+      orderedWays.add((Way) currentWay);
+      selection.remove(currentWay);
+      while (selection.size()>0)
+      {
+          boolean found=false;
+          Node nextNode=currentWay.lastNode();
+          for (OsmPrimitive prim : selection)
+          {
+              Way tmpWay=(Way) prim;
+              if (tmpWay.firstNode() == nextNode)
+              {
+                orderedWays.add(tmpWay);
+                selection.remove(prim);
+                currentWay=tmpWay;
+                found=true;
+                break;
+              }
+          }
+          if (!found)
+          {
+            JOptionPane.showMessageDialog(Main.parent, tr("Unable to order the ways. Please verify their directions"));
+            return;
+          }
+      }
+
+      // Build relations
+      for (int index=0 ; index<4 ; index++)
+      {
+        Way firstWay=orderedWays.get(index);
+        Way lastWay=orderedWays.get( (index+1) % 4);
+        Node lastNode = firstWay.lastNode();
+
+        buildRelation(firstWay, lastWay, lastNode);
+       }
+      Command c = new SequenceCommand(tr("Create Michigan left turn restriction"), cmds);
+      Main.main.undoRedo.add(c);
+      cmds.clear();
+    }
+
     if (ways == 5)
     {
       // Find extremities of ways

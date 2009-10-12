@@ -39,6 +39,7 @@
         var wgs84 = new OpenLayers.Projection("EPSG:4326");
         gb.transform(wgs84, map.getProjectionObject());
         map.zoomToExtent(gb);
+        if (map.getZoom() < 6) map.zoomTo(6);
       }
     }
     //]]>

@@ -732,7 +732,6 @@
 			case 'S':		prepareUpload(); break;								// S - save
 			case 'G':		loadGPS(); break;									// G - load GPS
 			case 'H':		getHistory(); break;								// H - history
-case 'T': errorDialogue("Bollocks!",300); break;
 			case 'I':		toggleInspector(); break;							// I - inspector
 			case 'J':		if (pointselected>-2) { 							// J - join nodes
 								_root.map.anchors[pointselected].joinNodes();	//   | 

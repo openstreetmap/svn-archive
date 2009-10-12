@@ -710,6 +710,9 @@
 		<rule e="way" k="building" v="*">
 			<area class="building-block no-bezier"/>
 		</rule>
+		<rule e="node" k="building" v="*">
+			<symbol ref="building" position="center"/>
+		</rule>
 		
 		<!-- Linear cores -->
 		<rule e="way" k="tunnel" v="~|false|no">

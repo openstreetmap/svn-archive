@@ -1473,6 +1473,9 @@
 		<rule e="way" k="building" v="*">
 			<area class="building-block no-bezier"/>
 		</rule>
+		<rule e="node" k="building" v="*">
+			<symbol ref="building" position="center"/>
+		</rule>
 
 		<!-- Linear cores -->
 		<rule e="way" k="tunnel" v="~|false|no">
@@ -3803,6 +3806,17 @@
 			</else>
 		</rule>
 
+		<rule e="node" k="sport" v="~" layer="5"> <!-- don't render captions for buildings, if sport is also set, thus honor offsets -->
+			<rule e="node" k="building" v="*" layer="5">
+				<!-- same goes if one of the following is set -->
+				<rule e="node" k="amenity|shop|tourism" v="pub|cafe|cinema|theatre|school|college|university|restaurant|shelter|supermarket|bakery|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bureau_de_change|bus_station|supermarket|organic|hotel|hostel|camp_site|information|fast_food|fuel" layer="5">
+				</rule>
+				<else>
+					<caption k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%' dy="-0.7px" layer="5"/>
+					<caption k="name" class="caption-core generic-caption-core" text-anchor='middle' startOffset='50%' dy="-0.7px" layer="5"/>
+				</else>
+			</rule>
+		</rule>
 		<rule e="way" k="sport" v="~" layer="5"> <!-- don't render captions for buildings, if sport is also set, thus honor offsets -->
 			<rule e="way" k="building" v="*" layer="5">
 				<!-- same goes if one of the following is set -->

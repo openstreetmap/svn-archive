@@ -1950,6 +1950,9 @@
     <tag k='power' v='generator' />
   </node>
   <node id='-1000191' visible='true' lat='51.266829937124065' lon='-0.43392389057212266' />
+  <node id='-1000192' visible='true' lat='51.2754' lon='-0.4367'>
+     <tag k='building' v='yes' />
+  </node>
   <way id='-10001962' action='modify' visible='true'>
     <nd ref='-1000191' />
     <nd ref='-1000190' />

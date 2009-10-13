@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.openstreetmap.josm.plugins.graphview.core.graph.GraphEdge;
 import org.openstreetmap.josm.plugins.graphview.core.graph.GraphNode;
+import org.openstreetmap.josm.plugins.graphview.core.property.GraphEdgeSegments;
 import org.openstreetmap.josm.plugins.graphview.core.property.RoadPropertyType;
 import org.openstreetmap.josm.plugins.graphview.core.transition.Segment;
 
@@ -65,15 +66,19 @@ public class FloatPropertyColorScheme implements ColorScheme {
 
 		List<Color> segmentColors = new ArrayList<Color>();
 
+		
+		
 		for (GraphEdge edge : node.getInboundEdges()) {
-			if (edge.getSegments().size() > 0) {
-				Segment firstSegment = edge.getSegments().get(0);
+			List<Segment> edgeSegments = edge.getPropertyValue(GraphEdgeSegments.PROPERTY);
+			if (edgeSegments.size() > 0) {
+				Segment firstSegment = edgeSegments.get(0);
 				segmentColors.add(getSegmentColor(firstSegment));
 			}
 		}
 		for (GraphEdge edge : node.getOutboundEdges()) {
-			if (edge.getSegments().size() > 0) {
-				Segment lastSegment = edge.getSegments().get(edge.getSegments().size()-1);
+			List<Segment> edgeSegments = edge.getPropertyValue(GraphEdgeSegments.PROPERTY);
+			if (edgeSegments.size() > 0) {
+				Segment lastSegment = edgeSegments.get(edgeSegments.size()-1);
 				segmentColors.add(getSegmentColor(lastSegment));
 			}
 		}

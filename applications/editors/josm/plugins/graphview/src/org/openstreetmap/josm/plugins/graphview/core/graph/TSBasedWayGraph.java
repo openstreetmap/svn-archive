@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.openstreetmap.josm.plugins.graphview.core.property.GraphEdgePropertyType;
+import org.openstreetmap.josm.plugins.graphview.core.property.GraphEdgeSegments;
 import org.openstreetmap.josm.plugins.graphview.core.transition.Restriction;
 import org.openstreetmap.josm.plugins.graphview.core.transition.Segment;
 import org.openstreetmap.josm.plugins.graphview.core.transition.SegmentNode;
@@ -20,6 +22,10 @@ import org.openstreetmap.josm.plugins.graphview.core.transition.TransitionStruct
  */
 public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
 
+	private static final GraphEdgePropertyType<?>[] PROPERTY_TYPES =
+		{GraphEdgeSegments.PROPERTY};
+		//TODO: -> parameter
+	
 	private static class GraphNodeImpl implements GraphNode {
 		private final SegmentNode node;
 		private final Segment segment;
@@ -58,28 +64,39 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
 	}
 
 	private static class GraphEdgeImpl implements GraphEdge {
+		
 		private final GraphNode startNode;
 		private final GraphNode targetNode;
-		private final List<Segment> segments;
-		public GraphEdgeImpl(GraphNode startNode, GraphNode targetNode, List<Segment> segments) {
-			assert startNode != null && targetNode != null && segments != null;
+		private final Map<GraphEdgePropertyType<?>, Object> properties;
+		
+		public GraphEdgeImpl(GraphNode startNode, GraphNode targetNode,
+				Map<GraphEdgePropertyType<?>, Object> properties) {
+			assert startNode != null && targetNode != null && properties != null;
 			this.startNode = startNode;
 			this.targetNode = targetNode;
-			this.segments = segments;
+			this.properties = properties;
 		}
+		
 		public GraphNode getStartNode() {
 			return startNode;
 		}
 		public GraphNode getTargetNode() {
 			return targetNode;
 		}
-		public List<Segment> getSegments() {
-			return segments;
+		
+		public Collection<GraphEdgePropertyType<?>> getAvailableProperties() {
+			return properties.keySet();
 		}
+		public <V> V getPropertyValue(GraphEdgePropertyType<V> property) {
+			V result = (V) properties.get(property);
+			return result;
+		}
+		
 		@Override
 		public String toString() {
 			return "(" + startNode + "-->" + targetNode + ")";
 		}
+		
 	};
 
 	private final Set<WayGraphObserver> observers = new HashSet<WayGraphObserver>();
@@ -284,7 +301,8 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
 							createGraphEdge(
 									segment2GNMap_approaching.get(inboundSegment),
 									segment2GNMap_leaving.get(outboundSegment),
-									segmentSequence);
+									segmentSequence,
+									junctionEG);
 
 						}
 					}
@@ -322,7 +340,8 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
 											createGraphEdge(
 													startGraphNode,
 													targetGraphNode,
-													segmentSequence);
+													segmentSequence,
+													connectorEG);
 										}
 
 									}
@@ -340,14 +359,46 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
 
 	}
 
+	private void createGraphEdge(
+			GraphNodeImpl startNode, GraphNodeImpl targetNode, 
+			List<Segment> segments, ConnectorEvaluationGroup evaluationGroup) {
+
+		Map<GraphEdgePropertyType<?>, Object> properties = 
+			new HashMap<GraphEdgePropertyType<?>, Object>(); //TODO: replace HashMap with List-based solution
+		
+		for (GraphEdgePropertyType<?> propertyType : PROPERTY_TYPES) {
+			Object value = propertyType.evaluate(evaluationGroup, segments, transitionStructure);
+			properties.put(propertyType, value);
+		}
+		
+		createGraphEdge(startNode, targetNode, properties);
+
+	}
+
+	private void createGraphEdge(
+			GraphNodeImpl startNode, GraphNodeImpl targetNode, 
+			List<Segment> segments, JunctionEvaluationGroup evaluationGroup) {
+
+		Map<GraphEdgePropertyType<?>, Object> properties = 
+			new HashMap<GraphEdgePropertyType<?>, Object>(); //TODO: replace HashMap with List-based solution
+		
+		for (GraphEdgePropertyType<?> propertyType : PROPERTY_TYPES) {
+			Object value = propertyType.evaluate(evaluationGroup, segments, transitionStructure);
+			properties.put(propertyType, value);
+		}
+		
+		createGraphEdge(startNode, targetNode, properties);
+
+	}
+
 	/**
 	 * creates a GraphEdge;
 	 * adds it to its nodes' collections and {@link #edges} collection.
 	 */
-	private void createGraphEdge(
-			GraphNodeImpl startNode, GraphNodeImpl targetNode, List<Segment> segments) {
+	private void createGraphEdge(GraphNodeImpl startNode, GraphNodeImpl targetNode, 
+			Map<GraphEdgePropertyType<?>, Object> properties) {
 
-		GraphEdge newEdge = new GraphEdgeImpl(startNode, targetNode, segments);
+		GraphEdge newEdge = new GraphEdgeImpl(startNode, targetNode, properties);
 
 		startNode.addOutgoingEdge(newEdge);
 		targetNode.addIncomingEdge(newEdge);
@@ -355,7 +406,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
 		edges.add(newEdge);
 
 	}
-
+	
 	private static boolean isConnectedWithExactly2Nodes(SegmentNode node) {
 
 		Set<SegmentNode> connectedNodes = new HashSet<SegmentNode>(2);

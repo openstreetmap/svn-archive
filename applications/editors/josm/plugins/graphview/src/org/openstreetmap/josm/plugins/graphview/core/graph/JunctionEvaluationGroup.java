@@ -12,7 +12,7 @@ import org.openstreetmap.josm.plugins.graphview.core.transition.SegmentNode;
 /**
  * group of nodes that will be evaluated independently from other groups
  */
-class JunctionEvaluationGroup extends EvaluationGroup {
+public class JunctionEvaluationGroup extends EvaluationGroup {
 
 	private final Set<SegmentNode> segmentNodes;
 

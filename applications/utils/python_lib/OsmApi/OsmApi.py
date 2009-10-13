@@ -24,6 +24,8 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.9   2009-10-13 automatic changeset management                     ##
+##                    ChangesetsUpload implementation                    ##
 ## 0.2.8   2009-10-13 *(Create|Update|Delete) use not unique _do method  ##
 ## 0.2.7   2009-10-09 implement all missing fonctions except             ##
 ##                    ChangesetsGet and GetCapabilities                  ##
@@ -39,7 +41,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.8'
+__version__ = '0.2.9'
 
 import httplib, base64, xml.dom.minidom, time
 
@@ -57,8 +59,7 @@ class OsmApi:
         api = "www.openstreetmap.org",
         changesetauto = False,
         changesetautotags = {},
-        changesetautosize = 500,
-        changesetautogroup = False):
+        changesetautosize = 500):
 
         # Get username
         if username:
@@ -79,7 +80,6 @@ class OsmApi:
         self._changesetauto      = changesetauto      # auto create and close changesets
         self._changesetautotags  = changesetautotags  # tags for automatic created changesets
         self._changesetautosize  = changesetautosize  # change count for auto changeset
-        self._changesetautogroup = changesetautogroup # group data to upload (NodeCreate, NodeUpdate... will return None)
         self._changesetautodata  = []                 # data to upload for auto group
         
         # Get API
@@ -96,6 +96,11 @@ class OsmApi:
         
         # Http connection
         self._conn = httplib.HTTPConnection(self._api, 80)
+
+    def __del__(self):
+        if self._changesetauto:
+            self._changesetautoflush(True)
+        return None
 
     #######################################################################
     # Capabilities                                                        #
@@ -343,9 +348,28 @@ class OsmApi:
         self._CurrentChangesetId = 0
         return CurrentChangesetId
 
-    def ChangesetUpload(self):
-        raise NotImplemented
-
+    def ChangesetUpload(self, ChangesData):
+        """ Upload data. ChangesData is a list of dict {type: node|way|relation, action: create|delete|modify, data: {}}. Returns list with updated ids. """
+        data = ""
+        data += u"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        data += u"<osmChange version=\"0.6\" generator=\"" + self._created_by + "\">\n"
+        for change in ChangesData:
+            data += u"<"+change["action"]+">\n"
+            change["data"]["changeset"] = self._CurrentChangesetId
+            data += self._XmlBuild(change["type"], change["data"], False)
+            data += u"</"+change["action"]+">\n"
+        data += u"</osmChange>"
+        data = self._http("POST", "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/upload", True, data)
+        data = xml.dom.minidom.parseString(data)
+        data = data.getElementsByTagName("diffResult")[0]
+        data = [x for x in data.childNodes if x.nodeType == x.ELEMENT_NODE]
+        for i in range(len(ChangesData)):
+            if ChangesData[i]["action"] == "delete":
+                ChangesData[i]["data"].pop("version")
+            else:
+                ChangesData[i]["data"]["version"] = int(data[i].getAttribute("new_id"))
+        return ChangesData
+        
     def ChangesetDownload(self, ChangesetId):
         """ Download data from a changeset. Returns list of dict {type: node|way|relation, action: create|delete|modify, data: {}}. """
         uri = "/api/0.6/changeset/"+str(ChangesetId)+"/download"
@@ -405,12 +429,18 @@ class OsmApi:
     #######################################################################
 
     def _do(self, action, OsmType, OsmData):
-        
-        if u"timestamp" in OsmData:
-            OsmData.pop(u"timestamp")
-                
+        if self._changesetauto:
+            self._changesetautodata.append({"action":action, "type":OsmType, "data":OsmData})
+            self._changesetautoflush()
+            return None
+        else:
+            return self._do_manu(action, OsmType, OsmData)
+            
+    def _do_manu(self, action, OsmType, OsmData):        
         if not self._CurrentChangesetId:
             raise Exception, "You need to open a changeset before uploading data"
+        if u"timestamp" in OsmData:
+            OsmData.pop(u"timestamp")
         OsmData[u"changeset"] = self._CurrentChangesetId
         if action == "create":
             if OsmData.get(u"id", -1) > 0:
@@ -429,6 +459,14 @@ class OsmApi:
             OsmData[u"visible"] = False
             return OsmData
     
+    def _changesetautoflush(self, force = False):
+        while (len(self._changesetautodata) >= self._changesetautosize) or (force and self._changesetautodata):
+            self.ChangesetCreate(self._changesetautotags)
+            self.ChangesetUpload(self._changesetautodata[:self._changesetautosize])
+            self._changesetautodata = self._changesetautodata[self._changesetautosize:]
+            self.ChangesetClose()
+        return None
+        
     def _http_request(self, cmd, path, auth, send):
         self._conn.putrequest(cmd, path)
         self._conn.putheader('User-Agent', self._created_by)
@@ -540,11 +578,12 @@ class OsmApi:
     # Internal xml builder                                                #
     #######################################################################
 
-    def _XmlBuild(self, ElementType, ElementData):
+    def _XmlBuild(self, ElementType, ElementData, WithHeaders = True):
 
         xml  = u""
-        xml += u"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-        xml += u"<osm version=\"0.6\" generator=\"" + self._created_by + "\">\n"
+        if WithHeaders:
+            xml += u"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            xml += u"<osm version=\"0.6\" generator=\"" + self._created_by + "\">\n"
 
         # <element attr="val">
         xml += u"  <" + ElementType
@@ -576,7 +615,8 @@ class OsmApi:
         # </element>
         xml += u"  </" + ElementType + u">\n"
         
-        xml += u"</osm>\n"
+        if WithHeaders:
+            xml += u"</osm>\n"
 
         return xml.encode("utf8")
 

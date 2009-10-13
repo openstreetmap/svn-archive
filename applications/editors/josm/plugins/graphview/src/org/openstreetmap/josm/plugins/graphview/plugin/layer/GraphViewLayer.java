@@ -10,6 +10,7 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
@@ -29,6 +30,7 @@ import org.openstreetmap.josm.plugins.graphview.core.graph.GraphEdge;
 import org.openstreetmap.josm.plugins.graphview.core.graph.GraphNode;
 import org.openstreetmap.josm.plugins.graphview.core.graph.WayGraph;
 import org.openstreetmap.josm.plugins.graphview.core.graph.WayGraphObserver;
+import org.openstreetmap.josm.plugins.graphview.core.property.GraphEdgeSegments;
 import org.openstreetmap.josm.plugins.graphview.core.transition.Segment;
 import org.openstreetmap.josm.plugins.graphview.core.transition.SegmentNode;
 import org.openstreetmap.josm.plugins.graphview.core.util.GraphUtil;
@@ -144,14 +146,16 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 
 		g2D.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
-		if (e.getSegments().size() > 0) {
+		List<Segment> edgeSegments = e.getPropertyValue(GraphEdgeSegments.PROPERTY);
+		
+		if (edgeSegments.size() > 0) {
 
-			Segment firstSegment = e.getSegments().get(0);
-			Segment lastSegment = e.getSegments().get(e.getSegments().size() - 1);
+			Segment firstSegment = edgeSegments.get(0);
+			Segment lastSegment = edgeSegments.get(edgeSegments.size() - 1);
 
 			//draw segments
 
-			for (Segment segment : e.getSegments()) {
+			for (Segment segment : edgeSegments) {
 
 				Color color = Color.WHITE;
 				if (colorScheme != null) {
@@ -190,8 +194,8 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 			Point p1 = getNodePoint(e.getStartNode(), mv);
 			Point p2 = getNodePoint(e.getTargetNode(), mv);
 
-			if (e.getSegments().size() > 0) {
-				Segment lastSegment = e.getSegments().get(e.getSegments().size() - 1);
+			if (edgeSegments.size() > 0) {
+				Segment lastSegment = edgeSegments.get(edgeSegments.size() - 1);
 				p1 = getNodePoint(lastSegment.getNode1(), mv);
 			}
 

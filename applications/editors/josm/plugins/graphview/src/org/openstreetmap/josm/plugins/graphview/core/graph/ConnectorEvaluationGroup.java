@@ -13,7 +13,7 @@ import org.openstreetmap.josm.plugins.graphview.core.transition.SegmentNode;
  * evaluation group that is based on segments and connects the node-based
  * {@link JunctionEvaluationGroup}s.
  */
-class ConnectorEvaluationGroup extends EvaluationGroup {
+public class ConnectorEvaluationGroup extends EvaluationGroup {
 
 	private final Set<Segment> segments;
 	private final List<SegmentNode> borderNodes;

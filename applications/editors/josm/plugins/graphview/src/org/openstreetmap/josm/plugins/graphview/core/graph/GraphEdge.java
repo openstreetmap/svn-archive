@@ -1,7 +1,9 @@
 package org.openstreetmap.josm.plugins.graphview.core.graph;
 
+import java.util.Collection;
 import java.util.List;
 
+import org.openstreetmap.josm.plugins.graphview.core.property.GraphEdgePropertyType;
 import org.openstreetmap.josm.plugins.graphview.core.transition.Segment;
 
 /**
@@ -15,7 +17,10 @@ public interface GraphEdge {
 	/** returns the node this edge leads to; != null */
 	GraphNode getTargetNode();
 
-	/** returns the series of segments that are represented by this edge; != null */
-	List<Segment> getSegments();
-
+	/** returns all property types for which property values are available */
+	Collection<GraphEdgePropertyType<?>> getAvailableProperties();
+	
+	/** TODO */
+	<V> V getPropertyValue(GraphEdgePropertyType<V> property);
+	
 }

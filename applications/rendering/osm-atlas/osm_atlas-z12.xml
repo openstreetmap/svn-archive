@@ -1054,8 +1054,10 @@
 		<rule e="node" k="natural" v="peak">
 			<symbol ref="peak" position="center"/>
 		</rule>
+		-->
 
 		<!-- Non-physical routes -->
+		<!--
 		<rule e="way" k="route" v="ferry">
 			<line class="route-ferry"/>
 		</rule>
@@ -1400,7 +1402,7 @@
 			.highway-tertiary-link-area-casing      { stroke-width: 0.75px; }
 			.highway-tertiary-link-core             { stroke-width: 5.75px;  stroke: #ffff90; }
 			.highway-tertiary-link-area             { fill: #ffff90; }
-
+/*
 			.highway-unclassified-casing            { stroke-width: 4.0px;   stroke: #e6e6e6; }
 			.highway-unclassified-area-casing       { stroke-width: 1.2px;   }
 			.highway-unclassified-core              { stroke-width: 2.8px;   stroke: #909090; stroke-linecap: butt; }
@@ -1462,15 +1464,16 @@
 			.highway-steps-area-casing              { stroke-width: 1.2px;   }
 			.highway-steps-core                     { stroke-width: 2.8px;   stroke: #bfba4d; stroke-dasharray: 3, 9; stroke-linecap: butt; }
 			.highway-steps-area                     { fill: #e5e0c2; }
-
+*/
 			/* render unmarked paths in the same color as highway=road */
+/*
 			.highway-path-casing                   { stroke-width: 4.0px;   stroke: #e6e6e6; }
 			.highway-path-area-casing              { stroke-width: 1.2px;   }
 			.highway-path-core                     { stroke-width: 2.8px;   stroke: #909090; stroke-dasharray: 9, 12; stroke-linecap: butt; }
 			.highway-path-area                     { fill: #e6e6e6; }
 
 			.highway-scramble-core                  { stroke-width: 0.6px;   stroke: #707070; stroke-linecap: butt;}
-
+*/
 
 
 			/* Aeroways */

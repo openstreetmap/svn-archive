@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.8   2009-10-13 *(Create|Update|Delete) use not unique _do method  ##
 ## 0.2.7   2009-10-09 implement all missing fonctions except             ##
 ##                    ChangesetsGet and GetCapabilities                  ##
 ## 0.2.6   2009-10-09 encoding clean-up                                  ##
@@ -38,7 +39,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.7'
+__version__ = '0.2.8'
 
 import httplib, base64, xml.dom.minidom, time
 
@@ -47,7 +48,17 @@ import httplib, base64, xml.dom.minidom, time
 
 class OsmApi:
     
-    def __init__(self, username = None, password = None, passwordfile = None, appid = "", created_by = "PythonOsmApi/"+__version__, api = "www.openstreetmap.org"):
+    def __init__(self,
+        username = None,
+        password = None,
+        passwordfile = None,
+        appid = "",
+        created_by = "PythonOsmApi/"+__version__,
+        api = "www.openstreetmap.org",
+        changesetauto = False,
+        changesetautotags = {},
+        changesetautosize = 500,
+        changesetautogroup = False):
 
         # Get username
         if username:
@@ -64,17 +75,24 @@ class OsmApi:
                 if l[0] == self._username:
                     self._password = l[1]
 
+        # Changest informations
+        self._changesetauto      = changesetauto      # auto create and close changesets
+        self._changesetautotags  = changesetautotags  # tags for automatic created changesets
+        self._changesetautosize  = changesetautosize  # change count for auto changeset
+        self._changesetautogroup = changesetautogroup # group data to upload (NodeCreate, NodeUpdate... will return None)
+        self._changesetautodata  = []                 # data to upload for auto group
+        
         # Get API
         self._api = api
 
         # Get created_by
-        if appid == "":
-                self._created_by = created_by
+        if not appid:
+            self._created_by = created_by
         else:
-                self._created_by = appid + " (" + created_by + ")"
+            self._created_by = appid + " (" + created_by + ")"
 
         # Initialisation     
-        self._CurrentChangesetId = -1
+        self._CurrentChangesetId = 0
         
         # Http connection
         self._conn = httplib.HTTPConnection(self._api, 80)
@@ -100,39 +118,17 @@ class OsmApi:
         data = data.getElementsByTagName("osm")[0].getElementsByTagName("node")[0]
         return self._DomParseNode(data)
 
+    def NodeCreate(self, NodeData):
+        """ Creates a node. Returns updated NodeData (without timestamp). """
+        return self._do("create", "node", NodeData)
+            
     def NodeUpdate(self, NodeData):
         """ Updates node with NodeData. Returns updated NodeData (without timestamp). """
-        if self._CurrentChangesetId == -1:
-            raise Exception, "No changeset currently opened"
-        NodeData[u"changeset"] = self._CurrentChangesetId
-        result = self._put("/api/0.6/node/"+str(NodeData[u"id"]), self._XmlBuild("node", NodeData))
-        NodeData[u"version"] = int(result.strip())
-        if u"timestamp" in NodeData: NodeData.pop(u"timestamp")
-        return NodeData
+        return self._do("update", "node", NodeData)
 
     def NodeDelete(self, NodeData):
         """ Delete node with NodeData. Returns updated NodeData (without timestamp). """
-        if self._CurrentChangesetId == -1:
-            raise Exception, "No changeset currently opened"
-        NodeData[u"changeset"] = self._CurrentChangesetId
-        result = self._delete("/api/0.6/node/"+str(NodeData[u"id"]), self._XmlBuild("node", NodeData))
-        NodeData[u"version"] = int(result.strip())
-        NodeData[u"visible"] = False
-        if u"timestamp" in NodeData: NodeData.pop(u"timestamp")
-        return NodeData
-
-    def NodeCreate(self, NodeData):
-        """ Creates a node. Returns updated NodeData (without timestamp). """
-        if self._CurrentChangesetId == -1:
-            raise Exception, "No changeset currently opened"
-        if NodeData.get(u"id", -1) > 0:
-            raise Exception, "This node already exists"
-        NodeData[u"changeset"] = self._CurrentChangesetId
-        result = self._put("/api/0.6/node/create", self._XmlBuild("node", NodeData))
-        NodeData[u"id"]      = int(result.strip())
-        NodeData[u"version"] = 1
-        if u"timestamp" in NodeData: NodeData.pop(u"timestamp")
-        return NodeData
+        return self._do("delete", "node", NodeData)
 
     def NodeHistory(self, NodeId):
         """ Returns dict(NodeVerrsion: NodeData). """
@@ -192,39 +188,17 @@ class OsmApi:
         data = data.getElementsByTagName("osm")[0].getElementsByTagName("way")[0]
         return self._DomParseWay(data)
     
+    def WayCreate(self, WayData):
+        """ Creates a way. Returns updated WayData (without timestamp). """
+        return self._do("create", "way", WayData)
+
     def WayUpdate(self, WayData):
         """ Updates way with WayData. Returns updated WayData (without timestamp). """
-        if self._CurrentChangesetId == -1:
-            raise Exception, "No changeset currently opened"
-        WayData[u"changeset"] = self._CurrentChangesetId
-        result = self._put("/api/0.6/way/"+str(WayData[u"id"]), self._XmlBuild("way", WayData))
-        WayData[u"version"] = int(result.strip())
-        if u"timestamp" in WayData: WayData.pop(u"timestamp")
-        return WayData
+        return self._do("update", "way", WayData)
 
     def WayDelete(self, WayData):
         """ Delete way with WayData. Returns updated WayData (without timestamp). """
-        if self._CurrentChangesetId == -1:
-            raise Exception, "No changeset currently opened"
-        WayData[u"changeset"] = self._CurrentChangesetId
-        result = self._delete("/api/0.6/way/"+str(WayData[u"id"]), self._XmlBuild("way", WayData))
-        WayData[u"version"] = int(result.strip())
-        WayData[u"visible"] = False
-        if u"timestamp" in WayData: WayData.pop(u"timestamp")
-        return WayData
-
-    def WayCreate(self, WayData):
-        """ Creates a way. Returns updated WayData (without timestamp). """
-        if self._CurrentChangesetId == -1:
-            raise Exception, "No changeset currently opened"
-        if NodeData.get(u"id", -1) > 0:
-            raise Exception, "This way already exists"
-        WayData[u"changeset"] = self._CurrentChangesetId
-        result = self._put("/api/0.6/way/create", self._XmlBuild("way", WayData))
-        WayData[u"id"]      = int(result.strip())
-        WayData[u"version"] = 1
-        if u"timestamp" in WayData: WayData.pop(u"timestamp")
-        return WayData
+        return self._do("delete", "way", WayData)
 
     def WayHistory(self, WayId):
         """ Returns dict(WayVerrsion: WayData). """
@@ -279,39 +253,17 @@ class OsmApi:
         data = data.getElementsByTagName("osm")[0].getElementsByTagName("relation")[0]
         return self._DomParseRelation(data)
 
+    def RelationCreate(self, RelationData):
+        """ Creates a relation. Returns updated RelationData (without timestamp). """
+        return self._do("create", "relation", RelationData)
+    
     def RelationUpdate(self, RelationData):
         """ Updates relation with RelationData. Returns updated RelationData (without timestamp). """
-        if self._CurrentChangesetId == -1:
-            raise Exception, "No changeset currently opened"
-        RelationData[u"changeset"] = self._CurrentChangesetId
-        result = self._put("/api/0.6/relation/"+str(RelationData[u"id"]), self._XmlBuild("relation", RelationData))
-        RelationData[u"version"] = int(result.strip())
-        if u"timestamp" in RelationData: RelationData.pop(u"timestamp")
-        return RelationData
+        return self._do("update", "relation", RelationData)
 
     def RelationDelete(self, RelationData):
         """ Delete relation with RelationData. Returns updated RelationData (without timestamp). """
-        if self._CurrentChangesetId == -1:
-            raise Exception, "No changeset currently opened"
-        RelationData[u"changeset"] = self._CurrentChangesetId
-        result = self._delete("/api/0.6/relation/"+str(RelationData[u"id"]), self._XmlBuild("relation", RelationData))
-        RelationData[u"version"] = int(result.strip())
-        RelationData[u"visible"] = False
-        if u"timestamp" in RelationData: RelationData.pop(u"timestamp")
-        return RelationData
-
-    def RelationCreate(self, RelationData):
-        """ Creates a relation. Returns updated RelationData (without timestamp). """
-        if self._CurrentChangesetId == -1:
-            raise Exception, "No changeset currently opened"
-        if NodeData.get(u"id", -1) > 0:
-            raise Exception, "This relation already exists"
-        RelationData[u"changeset"] = self._CurrentChangesetId
-        result = self._put("/api/0.6/relation/create", self._XmlBuild("relation", RelationData))
-        RelationData[u"id"]      = int(result.strip())
-        RelationData[u"version"] = 1
-        if u"timestamp" in RelationData: RelationData.pop(u"timestamp")
-        return RelationData
+        return self._do("delete", "relation", RelationData)
 
     def RelationHistory(self, RelationId):
         """ Returns dict(RelationVerrsion: RelationData). """
@@ -374,23 +326,21 @@ class OsmApi:
 
     def ChangesetCreate(self, ChangesetTags = {}):
         """ Opens a changeset. Returns #ChangesetId. """
-        if self._CurrentChangesetId <> -1:
+        if self._CurrentChangesetId:
             raise Exception, "Changeset alreadey opened"
         if u"created_by" not in ChangesetTags:
             ChangesetTags[u"created_by"] = self._created_by
         result = self._put("/api/0.6/changeset/create", self._XmlBuild("changeset", {u"tag": ChangesetTags}))
-        self._CurrentChangesetId   = int(result)
-        self._CurrentChangesetTags = ChangesetTags
-        self._CurrentChangesetCpt  = 0
+        self._CurrentChangesetId = int(result)
         return self._CurrentChangesetId
     
     def ChangesetClose(self):
         """ Closes current changeset. Returns #ChangesetId. """
-        if self._CurrentChangesetId == -1:
+        if not self._CurrentChangesetId:
             raise Exception, "No changeset currently opened"
         result = self._put("/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/close", u"")
         CurrentChangesetId = self._CurrentChangesetId
-        self._CurrentChangesetId = -1
+        self._CurrentChangesetId = 0
         return CurrentChangesetId
 
     def ChangesetUpload(self):
@@ -454,6 +404,31 @@ class OsmApi:
     # Internal http function                                              #
     #######################################################################
 
+    def _do(self, action, OsmType, OsmData):
+        
+        if u"timestamp" in OsmData:
+            OsmData.pop(u"timestamp")
+                
+        if not self._CurrentChangesetId:
+            raise Exception, "You need to open a changeset before uploading data"
+        OsmData[u"changeset"] = self._CurrentChangesetId
+        if action == "create":
+            if OsmData.get(u"id", -1) > 0:
+                raise Exception, "This "+OsmType+" already exists"
+            result = self._put("/api/0.6/"+OsmType+"/create", self._XmlBuild(OsmType, OsmData))
+            OsmData[u"id"] = int(result.strip())
+            OsmData[u"version"] = 1
+            return OsmData
+        elif action == "update":
+            result = self._put("/api/0.6/"+OsmType+"/"+str(OsmData[u"id"]), self._XmlBuild(OsmType, OsmData))
+            OsmData[u"version"] = int(result.strip())
+            return OsmData
+        elif action =="delete":
+            result = self._delete("/api/0.6/"+OsmType+"/"+str(OsmData[u"id"]), self._XmlBuild(OsmType, OsmData))
+            OsmData[u"version"] = int(result.strip())
+            OsmData[u"visible"] = False
+            return OsmData
+    
     def _http_request(self, cmd, path, auth, send):
         self._conn.putrequest(cmd, path)
         self._conn.putheader('User-Agent', self._created_by)

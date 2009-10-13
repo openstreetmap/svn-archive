@@ -16,7 +16,7 @@ Healthwhere is designed to work well on very small screens such as on a mobile p
 </p>
 
 <p>
-The <a href = "healthwhere.tar.gz">source code</a> is copyright &copy; 2009 Russell Phillips, and released under an <a href = "http://www.opensource.org/licenses/mit-license.php">MIT licence</a>.
+The <a href = "/download/healthwhere.tar.gz">source code</a> is copyright &copy; 2009 Russell Phillips, and released under an <a href = "http://www.opensource.org/licenses/mit-license.php">MIT licence</a>.
 </p>
 
 <?php

@@ -93,7 +93,7 @@ public class TransformTask implements SinkSource {
 		
 		Map<String, String> tags = new HashMap<String, String>(originalTags);
 		for ( Translation translation : translations ) {
-			Collection<Match> matches = translation.match(tags, TTEntityType.fromEntityType0_6(entityType));
+			Collection<Match> matches = translation.match(tags, TTEntityType.fromEntityType0_6(entityType), entity.getUser().getName(), entity.getUser().getId());
 			if ( matches == null || matches.isEmpty() )
 				continue;
 			if ( translation.isDropOnMatch() ) {

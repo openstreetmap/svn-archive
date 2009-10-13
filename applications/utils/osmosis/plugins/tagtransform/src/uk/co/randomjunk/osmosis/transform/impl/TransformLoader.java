@@ -103,6 +103,9 @@ public class TransformLoader {
 		if ( name.equals("match") || name.equals("find") ) {
 			NodeList children = matcher.getChildNodes();
 			List<Matcher> matchers = new ArrayList<Matcher>();
+			String uname = null;
+			int uid = 0;
+
 			for ( int i = 0; i < children.getLength(); i++ ) {
 				if ( !(children.item(i) instanceof Element) )
 					continue;
@@ -113,11 +116,17 @@ public class TransformLoader {
 			}
 			
 			TTEntityType type = getType(matcher.getAttribute("type") );
+			if (matcher.getAttribute("user") != "") {
+				uname = matcher.getAttribute("user");
+			}
+			if (matcher.getAttribute("uid") != "") {
+				uid = Integer.parseInt(matcher.getAttribute("uid"));
+			}
 			String mode = name.equals("find") ? "or" : matcher.getAttribute("mode");
 			if ( mode == null || mode.equals("") || mode.equals("and") )
-				return new AndMatcher(matchers, type);
+				return new AndMatcher(matchers, type, uname, uid);
 			else if ( mode.equals("or") )
-				return new OrMatcher(matchers, type);
+				return new OrMatcher(matchers, type, uname, uid);
 			
 		} else if ( name.equals("tag") ) {
 			String k = matcher.getAttribute("k");

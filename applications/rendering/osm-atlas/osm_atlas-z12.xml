@@ -123,9 +123,11 @@
 		<rule e="way" k="sport" v="*" closed="yes">
 			<area class="sport"/>
 		</rule>
+		<!--
 		<rule e="way" k="amenity" v="parking">
 			<area class="amenity parking"/>
 		</rule>
+		-->
 		<rule e="way" k="tourism" v="zoo|picnic_site|caravan_site|camp_site">
 			<area class="tourism green_area"/>
 		</rule>
@@ -142,51 +144,63 @@
 		<rule e="way" k="waterway" v="river">
 			<line class="waterway-casing waterway-river-casing" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="100"/>
 		</rule>
+		<!--
 		<rule e="way" k="waterway" v="stream">
 			<line class="waterway-casing waterway-stream-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="3"/>
 		</rule>
+		-->
 		<rule e="way" k="waterway" v="canal">
 			<line class="waterway-casing waterway-canal-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
 		</rule>
+		<!--
 		<rule e="way" k="waterway" v="drain">
 			<line class="waterway-casing waterway-drain-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="20"/>
 		</rule>
 		<rule e="way" k="waterway" v="ditch">
 			<line class="waterway-casing waterway-ditch-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
 		</rule>
+		-->
 		<rule e="way" k="tunnel" v="yes">
 			<rule e="way" k="waterway" v="river">
 				<line class="waterway-core waterway-river-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="100"/>
 			</rule>
+			<!--
 			<rule e="way" k="waterway" v="stream">
 				<line class="waterway-core waterway-stream-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="3"/>
 			</rule>
+			-->
 			<rule e="way" k="waterway" v="canal">
 				<line class="waterway-core waterway-canal-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
 			</rule>
+			<!--
 			<rule e="way" k="waterway" v="drain">
 				<line class="waterway-core waterway-drain-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="20"/>
 			</rule>
 			<rule e="way" k="waterway" v="ditch">
 				<line class="waterway-core waterway-ditch-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
 			</rule>
+			-->
 		</rule>
 		<else>
 			<rule e="way" k="waterway" v="river">
 				<line class="waterway-core waterway-river-core" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="100"/>
 			</rule>
+			<!--
 			<rule e="way" k="waterway" v="stream">
 				<line class="waterway-core waterway-stream-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="3"/>
 			</rule>
+			-->
 			<rule e="way" k="waterway" v="canal">
 				<line class="waterway-core waterway-canal-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
 			</rule>
+			<!--
 			<rule e="way" k="waterway" v="drain">
 				<line class="waterway-core waterway-drain-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="20"/>
 			</rule>
 			<rule e="way" k="waterway" v="ditch">
 				<line class="waterway-core waterway-ditch-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
 			</rule>
+			-->
 		</else>
 		<rule e="way" k="waterway" v="dock">
 			<area class="natural water"/>
@@ -206,6 +220,7 @@
 
 		<!-- Highway area casings -->
 		<rule e="way" k="area" v="yes|true">
+			<!--
 			<rule e="way" k="highway" v="steps">
 				<area class="highway-casing highway-steps-area-casing highway-steps-area no-bezier"/>
 			</rule>
@@ -261,6 +276,7 @@
 					<area class="highway-casing highway-cycleroad-area-casing highway-cycleroad-area no-bezier"/>
 				</else>
 			</rule>
+			-->
 
 			<rule e="way" k="highway" v="tertiary_link">
 				<area class="highway-casing highway-tertiary-link-casing highway-tertiary-link-area-casing no-bezier"/>
@@ -297,6 +313,7 @@
 		<!-- Linear casings -->
 		<rule e="way" k="tunnel" v="~|no|false">
 			<rule e="way" k="area" v="~|no|false">
+				<!--
 				<rule e="way" k="highway" v="raceway">
 					<rule e="way" k="use_status" v="~">
 						<line class="highway-raceway-casing"/>
@@ -363,6 +380,7 @@
 						<line class="highway-casing highway-cycleroad-casing "/>
 					</else>
 				</rule>
+				-->
 				<rule e="way" k="highway" v="tertiary_link">
 					<rule e="way" k="motorroad" v="yes">
 						<line class="highway-casing highway-tertiary-link-mr2-casing"/>
@@ -448,6 +466,7 @@
 
 		<!-- Highway area cores -->
 		<rule e="way" k="area" v="yes|true">
+			<!--
 			<rule e="way" k="highway" v="steps">
 				<area class="highway-core highway-steps-core no-bezier"/>
 			</rule>
@@ -528,6 +547,7 @@
 			<rule e="way" k="highway" v="unclassified|residential|minor|living_street|road">
 				<area class="highway-core highway-unclassified-core no-bezier"/>
 			</rule>
+			-->
 			<rule e="way" k="highway" v="tertiary_link">
 				<area class="highway-core highway-tertiary-link-area no-bezier"/>
 			</rule>
@@ -561,16 +581,19 @@
 		</rule>
 
 		<!-- Buildings -->
+		<!--
 		<rule e="way" k="aeroway" v="terminal">
 			<area class="building-block"/>
 		</rule>
 		<rule e="way" k="building" v="*">
 			<area class="building-block no-bezier"/>
 		</rule>
+		-->
 
 		<!-- Linear cores -->
 		<rule e="way" k="tunnel" v="~|false|no">
 			<rule e="way" k="area" v="~|false|no">
+				<!--
 				<rule e="way" k="highway" v="ford">
 					<line class="highway-core highway-ford-core" smart-linecap="no"/>
 				</rule>
@@ -679,6 +702,7 @@
 						<line class="highway-core highway-cycleroad-core"/>
 					</else>
 				</rule>
+				-->
 				<rule e="way" k="highway" v="tertiary_link">
 					<line class="highway-core highway-tertiary-link-core"/>
 				</rule>
@@ -782,6 +806,7 @@
 
 		<!-- Tunnels -->
 		<rule e="way" k="tunnel" v="true|yes">
+			<!--
 			<rule e="way" k="highway" v="steps">
 				<line class="tunnel-casing highway-steps-casing tunnel" mask-class="tunnel-core highway-steps-core"/>
 				<line class="highway-steps-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
@@ -841,6 +866,7 @@
 				<line class="tunnel-casing highway-unclassified-casing tunnel" mask-class="tunnel-core highway-road-core"/>
 				<line class="highway-unclassified-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
 			</rule>
+			-->
 			<rule e="way" k="highway" v="tertiary_link">
 				<line class="tunnel-casing highway-tertiary-link-casing tunnel" mask-class="tunnel-core highway-tertiary-link-core"/>
 				<line class="highway-tertiary-link-casing highway-tunnel-ends" suppress-markers-tag="tunnel"/>
@@ -964,6 +990,7 @@
 		</rule>
 
 		<!-- Linear cores (under construction) -->
+		<!--
 		<rule e="way" k="highway" v="construction">
 			<rule e="way" k="construction" v="unsurfaced">
 				<line class="highway-core highway-unsurfaced-core under-construction"/>
@@ -1014,6 +1041,7 @@
 				<line class="wrong-under-construction" smart-linecap="no"/>
 			</rule>
 		</rule>
+		-->
 
 		<!-- Aerialways -->
 		<rule e="way" k="aerialway" v="cable_car|gondola">
@@ -1022,6 +1050,7 @@
 		</rule>
 
 		<!-- Natural features -->
+		<!--
 		<rule e="node" k="natural" v="peak">
 			<symbol ref="peak" position="center"/>
 		</rule>
@@ -1030,6 +1059,7 @@
 		<rule e="way" k="route" v="ferry">
 			<line class="route-ferry"/>
 		</rule>
+		-->
 
 		<!-- Airfields and airports -->
 		<rule e="node|way" k="aeroway" v="airport">

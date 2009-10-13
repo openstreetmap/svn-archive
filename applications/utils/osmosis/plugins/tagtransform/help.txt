@@ -124,6 +124,9 @@ The match element groups together other matches. It has two modes:
 The entity type to enable matches for can also be specified. Valid values are '''all''' (default), '''node''', '''way''',
 and '''relation'''.
 
+The user name and/or user id can also be specified in the match using '''user'''
+and '''uid''' properties respectively.
+
 ==== tag ====
 
 Matches individual or groups of tags. Tags are selected by regular expressions. These are standard

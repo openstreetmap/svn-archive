@@ -15,20 +15,28 @@ public class AndMatcher implements Matcher {
 	private Collection<Matcher> matchers;
 	private long matchHits = 0;
 	private TTEntityType type;
+	private String uname;
+	private int uid;
 
-	public AndMatcher(Collection<Matcher> matchers, TTEntityType type) {
+	public AndMatcher(Collection<Matcher> matchers, TTEntityType type, String uname, int uid) {
 		this.matchers = matchers;
 		this.type = type;
+		this.uname = uname;
+		this.uid = uid;
 	}
 	
 	@Override
-	public Collection<Match> match(Map<String, String> tags, TTEntityType type) {
+	public Collection<Match> match(Map<String, String> tags, TTEntityType type, String uname, int uid) {
 		if ( this.type != null && this.type != type )
+			return null;
+		if ( this.uname != null && ! this.uname.equals(uname) )
+			return null;
+		if ( this.uid != 0 && this.uid != uid )
 			return null;
 		
 		List<Match> allMatches = new ArrayList<Match>();
 		for ( Matcher matcher : matchers ) {
-			Collection<Match> matches = matcher.match(tags, type);
+			Collection<Match> matches = matcher.match(tags, type, uname, uid);
 			if ( matches == null || matches.isEmpty() )
 				return null;
 			allMatches.addAll(matches);

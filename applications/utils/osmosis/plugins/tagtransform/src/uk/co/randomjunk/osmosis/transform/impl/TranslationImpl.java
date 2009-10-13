@@ -40,10 +40,10 @@ public class TranslationImpl implements Translation {
 	}
 
 	@Override
-	public Collection<Match> match(Map<String, String> tags, TTEntityType type) {
-		Collection<Match> matches = matcher.match(tags, type);
+	public Collection<Match> match(Map<String, String> tags, TTEntityType type, String uname, int uid) {
+		Collection<Match> matches = matcher.match(tags, type, uname, uid);
 		if ( matches != null && !matches.isEmpty() ) {
-			Collection<Match> finds = finder == null ? null : finder.match(tags, type);
+			Collection<Match> finds = finder == null ? null : finder.match(tags, type, uname, uid);
 			if ( finds != null && !finds.isEmpty() ) {
 				if ( matches instanceof ArrayList )
 					matches.addAll(finds);

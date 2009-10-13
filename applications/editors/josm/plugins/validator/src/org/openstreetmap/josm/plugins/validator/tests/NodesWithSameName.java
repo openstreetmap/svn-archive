@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ArrayList;
 
 
@@ -25,7 +26,7 @@ public class NodesWithSameName extends Test {
     }
 
     @Override public void startTest(ProgressMonitor monitor) {
-    	super.startTest(monitor);
+        super.startTest(monitor);
         namesToNodes = new HashMap<String, List<Node>>();
     }
 
@@ -46,8 +47,17 @@ public class NodesWithSameName extends Test {
     @Override public void endTest() {
         for (List<Node> nodes : namesToNodes.values()) {
             if (nodes.size() > 1) {
-                errors.add(new TestError(this, Severity.OTHER,
-                    tr("Nodes with same name"), SAME_NAME, nodes));
+                // Report the same-name nodes, unless each has a unique ref=*.
+                HashSet<String> refs = new HashSet<String>();
+
+                for (Node n : nodes) {
+                    String ref = n.get("ref");
+                    if (ref == null || !refs.add(ref)) {
+                        errors.add(new TestError(this, Severity.OTHER,
+                            tr("Nodes with same name"), SAME_NAME, nodes));
+                        break;
+                    }
+                }
             }
         }
         super.endTest();

@@ -23,8 +23,10 @@ $BOTTOM = 0;
 $HORIZ_TILES = 5;
 $VERT_TILES = 3;
 
-// Stylesheet to use
+// Stylesheet to use for main map pages
 $STYLESHEET = "osm-map-features-z17.xml";
+// Stylesheet to use for thumbnails in overview map
+$STYLESHEET_THUMBS = "osm-map-features-z12.xml";
 //Delete working files? Default is True, but setting this to False can
 //be useful to help with debugging, or if you wish to manually
 //edit the .tex file
@@ -52,11 +54,13 @@ $INDEX_PLACE_NAMES = True;
 $OSMARENDER_DIR = "/home/user/osmarender";
 //Directory containing osmosis
 $OSMOSIS_DIR = "/home/user/osmosis-0.30/bin/";
-// Directory where all output files (working files and final PDF) will be placed
+//Directory where all output files (working files and final PDF) will be placed
 $OUTPUT_DIR = "/home/user";
 
-// Data file (.osm file - see http://wiki.openstreetmap.org/wiki/Planet.osm for downloads)
+//Data file (.osm file - see http://wiki.openstreetmap.org/wiki/Planet.osm for downloads)
 $DATA_FILE="/home/user/planet.osm";
 //Log file
 $LOG_FILE = "/home/user/atlas.log";
+//Set to True to enable extra debugging output in the log
+$DEBUG = False;
 ?>

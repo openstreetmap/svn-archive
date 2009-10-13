@@ -97,14 +97,11 @@ Copy one of the sample configuration files, and rename the file to something sen
 <b>$INDEX_STREET_NAMES</b>, <b>$INDEX_PLACE_NAMES</b>: Set to True to include an index of street/place names, False to not include the index. In the sample files, the street atlas includes street names but not place names, while the road atlas includes place names but not street names.
 </p>
 
-<p>
-<b>$LOG_FILE</b>: Full path to a log file. This will not be deleted when OSM-Atlas has finished. Set it to <tt>/dev/null</tt> if you don't need a log.
-</p>
-
 <b>$INKSCAPE_DPI</b>: Each image in the atlas is a .png file, exported from Inkscape. This sets the DPI (dots per inch) setting that Inkscape uses when exporting.<br>
 
 <p>
-<b>$STYLESHEET</b>: The osmarender stylesheet to use. <tt>osm_atlas-z16.xml</tt>, included with OSM-Atlas, is a customised version of the standard z16 stylesheet, for use when making a street atlas.
+<b>$STYLESHEET</b>: The osmarender stylesheet to use. <tt>osm_atlas-z16.xml</tt>, included with OSM-Atlas, is a customised version of the standard z16 stylesheet, for use when making a street atlas.<br>
+<b>$STYLESHEET_THUMBS</b>: The osmarender stylesheet to use for the thumbnail images in the overview map. <tt>osm_atlas-z12.xml</tt>, included with OSM-Atlas, is a customised version of the standard z12 stylesheet, for use when making a street atlas.
 </p>
 
 <p>
@@ -113,6 +110,14 @@ Copy one of the sample configuration files, and rename the file to something sen
 
 <p>
 <b>$PDFTITLE</b>, <b>$PDFAUTHOR</b>, <b>$PDFSUBJECT</b>, <b>$PDFKEYWORDS</b>: PDF file metadata.
+</p>
+
+<p>
+<b>$LOG_FILE</b>: Full path to a log file. This will not be deleted when OSM-Atlas has finished. Set it to <tt>/dev/null</tt> if you don't need a log.
+</p>
+
+<p>
+<b>$DEBUG</b>: If set to True, OSM-Atlas will output extra debugging information to the log file.
 </p>
 
 <h1>Running</h1>

@@ -47,8 +47,10 @@ $LOG_FILE = "/dev/null";
 //DPI for Inkscape export
 $INKSCAPE_DPI = 900;
 
-// Stylesheet to use
+// Stylesheet to use for main map pages
 $STYLESHEET = "osm-map-features-z13.xml";
+// Stylesheet to use for thumbnails in overview map
+$STYLESHEET_THUMBS = "osm-map-features-z12.xml";
 //Delete working files? Default is True, but setting this to False can
 //be useful to help with debugging, or if you wish to manually
 //edit the .tex file

@@ -1,2 +1,8 @@
+ACCESS LOG
+
 Access log is a CSV file with the following fields:
 Date,Time,Search Type,Latitude/Postcode,Longitude,Distance,Number Found,Time to run Query (secs),Source (Cache/Web),Search For (pharmacy/hospital)
+
+SETUP
+
+A cron job should be set up to run importer.php periodically (once a week is recommended), and this script should be run when Healthwhere is first installed, as it will set up the required SQLite database.

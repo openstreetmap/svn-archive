@@ -21,6 +21,13 @@ setcookie ("SearchType", $search);
 require ("inc_head.php");
 require ("inc_openclosed.php");
 
+if ($_GET ["txtPostcode"] == "" && ($_GET ["txtLatitude"] == "" || $_GET ["txtLongitude"] == "")) {
+	echo "<p>You must enter a postcode or a latitude <i>and</i> longitude</p>\n";
+	echo "<p><a href = 'index.php'>Back</a></p>\n";
+	require ("inc_foot.php");
+	exit;
+}
+
 /*
  * http://snipplr.com/view/2531/calculate-the-distance-between-two-coordinates-latitude-longitude
 */

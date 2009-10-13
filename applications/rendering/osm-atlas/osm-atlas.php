@@ -9,7 +9,7 @@
 // This script works with OSM API v0.6
 
 // Program version
-$VERSION = "1.0";
+$VERSION = "1.1-DEV";
 // Page where maps start
 $START_PAGE_NUMBER = 2;
 
@@ -42,12 +42,15 @@ function tile ($tLeft, $tRight, $tTop, $tBottom, $tRow, $tCol, $PageNumber) {
 	global $OUTPUT_DIR;
 	global $OSMARENDER_DIR;
 	global $STYLESHEET;
+	global $STYLESHEET_THUMBS;
 	global $INDEX_STREET_NAMES;
 	global $INDEX_PLACE_NAMES;
 	global $asStreetNameIndex;
 	global $asPlaceNameIndex;
 	global $INKSCAPE_DPI;
 	global $CurrentProgress;
+	global $DEBUG;
+	global $LOG_FILE;
 
 	// Run osmosis to extract tile area
 	Progress ($CurrentProgress, "Running osmosis for tile row=$tRow, col=$tCol");
@@ -55,6 +58,8 @@ function tile ($tLeft, $tRight, $tTop, $tBottom, $tRow, $tCol, $PageNumber) {
 	if (!file_exists ($DATA_FILE))
 		die_error ("Data file $DATA_FILE does not exist");
 	$cmd = "./osmosis --read-xml $DATA_FILE --bounding-box left=$tLeft top=$tTop right=$tRight bottom=$tBottom completeWays=yes --write-xml file=$OUTPUT_DIR/osm-temp-$tRow-$tCol.osm";
+	if ($DEBUG === True)
+		file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
 	shell_exec ("$cmd 2>/dev/null >/dev/null");
 	if (!file_exists ("$OUTPUT_DIR/osm-temp-$tRow-$tCol.osm"))
 		die_error ("osmosis output file $OUTPUT_DIR/osm-temp-$tRow-$tCol.osm does not exist\nCommand:\n$cmd");
@@ -64,6 +69,8 @@ function tile ($tLeft, $tRight, $tTop, $tBottom, $tRow, $tCol, $PageNumber) {
 	Progress ($CurrentProgress, "Setting bounds for tile row=$tRow, col=$tCol");
 	chdir ($OUTPUT_DIR);
 	$cmd = "sed -i -e \"2 s/^<osm .*$/<osm><bounds $bounds \/>/\" osm-temp-$tRow-$tCol.osm";
+	if ($DEBUG === True)
+		file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
 	shell_exec ("$cmd 2>/dev/null >/dev/null");
 
 	// Run osmarender
@@ -73,7 +80,15 @@ function tile ($tLeft, $tRight, $tTop, $tBottom, $tRow, $tCol, $PageNumber) {
 	if (!copy ("$OUTPUT_DIR/osm-temp-$tRow-$tCol.osm", "$OSMARENDER_DIR/data.osm"))
 		die_error ("Error copying $OUTPUT_DIR/osm-temp-$tRow-$tCol.osm to $OSMARENDER_DIR/data.osm");
 	chdir ($OSMARENDER_DIR);
+	//Create image for main map page
 	$cmd = "xsltproc osmarender.xsl $STYLESHEET > $OUTPUT_DIR/osm-temp-$tRow-$tCol.svg";
+	if ($DEBUG === True)
+		file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
+	shell_exec ("$cmd 2>/dev/null");
+	//Create image for overview page
+	$cmd = "xsltproc osmarender.xsl $STYLESHEET_THUMBS > $OUTPUT_DIR/osm-temp-thumb-$tRow-$tCol.svg";
+	if ($DEBUG === True)
+		file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
 	shell_exec ("$cmd 2>/dev/null");
 
 	// Add names to indexes
@@ -127,9 +142,16 @@ function tile ($tLeft, $tRight, $tTop, $tBottom, $tRow, $tCol, $PageNumber) {
 		}
 	}
 
-	// Run inkscape to create PNG
 	Progress ($CurrentProgress, "Running Inkscape to create .png for tile row=$tRow, col=$tCol");
+	// Run inkscape to create PNG for main map page
 	$cmd = "inkscape --without-gui --file=$OUTPUT_DIR/osm-temp-$tRow-$tCol.svg --export-png=$OUTPUT_DIR/osm-temp-$tRow-$tCol.png --export-dpi=$INKSCAPE_DPI";
+	if ($DEBUG === True)
+		file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
+	shell_exec ("$cmd 2>/dev/null >/dev/null");
+	// Run inkscape to create PNG for overview page
+	$cmd = "inkscape --without-gui --file=$OUTPUT_DIR/osm-temp-thumb-$tRow-$tCol.svg --export-png=$OUTPUT_DIR/osm-temp-thumb-$tRow-$tCol.png --export-dpi=$INKSCAPE_DPI";
+	if ($DEBUG === True)
+		file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
 	shell_exec ("$cmd 2>/dev/null >/dev/null");
 
 	if (file_exists ("$OSMARENDER_DIR/data.osm"))
@@ -141,8 +163,10 @@ function tile ($tLeft, $tRight, $tTop, $tBottom, $tRow, $tCol, $PageNumber) {
 */
 function delfile ($s) {
 	global $LOG_FILE;
+	global $DEBUG;
 	foreach (glob ($s) as $f) {
-		file_put_contents ($LOG_FILE, "deleting $f\n", FILE_APPEND);
+		if ($DEBUG === True)
+			file_put_contents ($LOG_FILE, "deleting $f\n", FILE_APPEND);
 		unlink ($f);
 	}
 }
@@ -261,7 +285,7 @@ $tileheight = ($TOP - $BOTTOM) / $VERT_TILES;
 $tTop = $TOP;
 $tBottom = $tTop - $tileheight;
 
-//Page counter
+//Initialise page counter
 $PageNumber = $START_PAGE_NUMBER;
 
 //Generate images
@@ -289,14 +313,17 @@ for ($i = 1; $i <= $HORIZ_TILES; $i++)
 	$latex .= "c|";
 $latex .= "}\n\\hline\n";
 $width = 13 / $HORIZ_TILES;
-//Page counter
+
+//Initialise page counter
 $PageNumber = $START_PAGE_NUMBER;
+
+//Overview map - thumbnails
 for ($tRow = 1; $tRow <= $VERT_TILES; $tRow++) {
 	for ($tCol = 1; $tCol <= $HORIZ_TILES; $tCol++) {
 		Progress ($CurrentProgress, "Generating overview images for tile $tRow-$tCol");
 		//Add number to image
-		$imsize = getimagesize ("$OUTPUT_DIR/osm-temp" . "-$tRow-$tCol.png");
-		$im = @imagecreatefrompng ("$OUTPUT_DIR/osm-temp" . "-$tRow-$tCol.png");
+		$imsize = getimagesize ("$OUTPUT_DIR/osm-temp-thumb-" . "$tRow-$tCol.png");
+		$im = @imagecreatefrompng ("$OUTPUT_DIR/osm-temp-thumb-" . "$tRow-$tCol.png");
 		$bg = imagecolorallocate ($im, 255, 255, 255);
 		$textcolor = imagecolorallocate ($im, 0, 0, 0);
 
@@ -310,7 +337,7 @@ for ($tRow = 1; $tRow <= $VERT_TILES; $tRow++) {
 		$iTxtBottom = (($imsize [1] - $iTxtHeight) / 2) + $iTxtHeight;
 
 		imagettftext($im, $OV_FONT_SIZE, 0, $iTxtLeft, $iTxtBottom, $textcolor, $OV_FONT, $PageNumber);
-		imagepng ($im, "$OUTPUT_DIR/osm-temp" . "-ov-$tRow-$tCol.png");
+		imagepng ($im, "$OUTPUT_DIR/osm-temp-ov-" . "$tRow-$tCol.png");
 		imagedestroy ($im);
 		//Write LaTeX code for the thumbnail
 		$latex .= "\\includegraphics[width={$width}cm]{osm-temp-ov-$tRow-$tCol.png}\n";
@@ -319,13 +346,15 @@ for ($tRow = 1; $tRow <= $VERT_TILES; $tRow++) {
 	// newline
 	$latex .= "\\\\\n";
 }
+
 // Add horizontal line at end of table
 $latex .= "\\hline\n";
 $latex .= "\\end{tabular}\n\\newpage\n";
 file_put_contents ("$OUTPUT_DIR/OSM_Atlas.tex", $latex, FILE_APPEND);
 
-//Page counter
+//Initialise page counter
 $PageNumber = $START_PAGE_NUMBER;
+
 //Create LaTeX for map pages
 for ($tRow = 1; $tRow <= $VERT_TILES; $tRow++) {
 	for ($tCol = 1; $tCol <= $HORIZ_TILES; $tCol++) {
@@ -463,6 +492,8 @@ fclose ($latexfile);
 chdir ($OUTPUT_DIR);
 Progress ($CurrentProgress, "Running pdflatex to create PDF file");
 $cmd = "pdflatex -interaction=batchmode OSM_Atlas.tex";
+if ($DEBUG === True)
+	file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
 shell_exec ("$cmd 2>/dev/null >/dev/null");
 
 // Clean up

@@ -300,7 +300,6 @@ class OsmApi:
         done = []
         while todo:
             rid = todo.pop(0)
-            print rid
             done.append(rid)
             temp = self.RelationFull(rid)
             for item in temp:

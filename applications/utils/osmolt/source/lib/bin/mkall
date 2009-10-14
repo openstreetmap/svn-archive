@@ -1,0 +1,32 @@
+#!/bin/bash 
+
+
+function printhelp
+{
+  echo 'test'
+  exit 0
+}
+date
+
+osmolt='./osmolt.jar'
+folder='./'
+
+
+if [ $# -eq 1 ]
+  then 
+    folder=$1
+  elif [ $# -eq 2 ]
+    then 
+      osmolt=$1
+      folder=$2
+  else 
+    printhelp
+fi
+
+find $folder -name '*.xml' |
+while read txtdatei
+do
+  echo ${txtdatei}
+  java -jar $osmolt -f ${txtdatei} -u
+done 
+date

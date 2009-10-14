@@ -1,0 +1,133 @@
+<?xml version="1.0" ?>
+<project default="compile">
+	<!-- jedes Ant Project besteht aus einer oder mehreren Targets, in denen Tasks ausgefuehrt werden Ant definiert viele Tasks : sie koennen diese einfach einsetzen Welche Tasks existieren sehen Sie im Manual. Wir gehen auf einige ein!
+//-->
+
+	<property name="root.project.name" value="osmolt" />
+	<property name="src" value="src" />
+	<property name="bin" value="bin" />
+	<property name="jar" value="jar" />
+	<property name="binsrc" value="bin/src" />
+	<property name="libbin" value="lib/bin" />
+	<property name="libsrc" value="lib/src" />
+	<property name="doc" value="doc/generated" />
+	<property name="dist" value="dist" />
+	<property name="target" value="1.5" />
+	<property name="source" value="1.5" />
+	<property name="debuglevel" value="lines,vars,source" />
+
+	<path id="osmolt.classpath">
+		<pathelement location="bin" />
+	</path>
+
+	<path id="lib.classpath">
+		<pathelement location="lib/" />
+	</path>
+
+	<!-- CLEAN -->
+
+	<target name="clear">
+		<delete dir="${dist}" />
+		<delete dir="${jar}" />
+		<delete dir="${bin}" />
+		<delete dir="${doc}" />
+	</target>
+
+	<!-- INIT -->
+
+	<target name="init" depends="">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${bin}" />
+		<mkdir dir="${binsrc}" />
+		<mkdir dir="${doc}" />
+		<copy includeemptydirs="false" todir="${bin}">
+			<fileset dir="${libbin}" excludes="**/*.launch, **/*.java, dae/*" />
+		</copy>
+		<copy includeemptydirs="false" todir="${bin}/src">
+			<fileset dir="${src}"/>
+		</copy>
+	</target>
+
+	<!-- COMPILE -->
+
+	<target name="compile" depends="init">
+		<!--
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${bin}" source="${source}" target="${target}">
+			<src path="lib" />
+			<classpath refid="${root.project.name}.classpath" />
+			<patternset>
+				<include name="**/*.java" />
+			</patternset>
+		</javac>-->
+
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${bin}" source="${source}" target="${target}">
+			<src path="${libsrc}" />
+			<classpath refid="${root.project.name}.classpath" />
+		</javac>
+
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${bin}" source="${source}" target="${target}">
+			<src path="src" />
+			<compilerarg value="-Xlint" />
+			<classpath refid="${root.project.name}.classpath" />
+		</javac>
+	</target>
+
+	<!-- JAR -->
+
+	<target name="package" depends="compile">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}" />
+		<jar jarfile="${dist}/${root.project.name}.jar" basedir="${bin}" manifest="manifest" />
+	</target>
+
+	<target name="jar">
+
+		<mkdir dir="${jar}" />
+		<copy file="${libbin}/osmolt" todir="${jar}"/>
+		<copy file="${libbin}/osmolt.bat" todir="${jar}" />
+		<copy file="${libbin}/mkall" todir="${jar}" />
+		<copy file="${libbin}/readme.txt" todir="${jar}" />
+		<jar destfile="${jar}/${root.project.name}.jar" basedir="${bin}">
+			<manifest>
+				<attribute name="Main-Class" value="org/openstreetmap/osmolt/Osmolt" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- DOC -->
+
+	<target name="javadoc" depends="init">
+		<javadoc access="public" author="true" classpath="lib/jogl.jar:lib/jogl-1.1.1-src.zip:lib/gluegen-rt.jar" destdir="doc/generated" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="main,TUIO,output,com.illposed.osc.utility,input,game,com.illposed.osc" source="1.5" sourcepath="lib:src" splitindex="true" use="true" version="true" />
+	</target>
+
+	<target name="doc" depends="javadoc" />
+
+	<!-- SVN -->
+
+	<target name="svn.update" depends="">
+		<exec executable="svn">
+			<arg line="up" />
+		</exec>
+	</target>
+
+	<!-- RUN -->
+
+
+	<target name="run" depends="compile">
+		<java classname="org.openstreetmap.osmolt.Osmolt" failonerror="true" fork="no">
+			<classpath refid="osmolt.classpath" />
+		</java>
+	</target>
+
+	<target name="jarrun">
+		<java jar="jar/osmolt.jar" failonerror="true" fork="true">
+			<classpath refid="osmolt.classpath" />
+		</java>
+	</target>
+
+
+	<!-- PLAYGROUND -->
+
+</project>

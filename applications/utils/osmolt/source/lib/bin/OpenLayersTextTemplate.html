@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title><osmolt type="title"></title>
+    <link type="text/css" rel="stylesheet" href="map.css" />
+    <script src="http://openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+    <style type="text/css">
+      #map {
+        width: 100%;
+        height: 100%;
+        border: 0px;
+        padding: 0px;
+        position: absolute;
+      }
+      
+      body {
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+      }
+           
+      #legend{
+        background:#fff;
+        position:absolute;
+        left:60px;
+        padding:3px 5px;
+        border-radius:3px;
+        border-bottom-right-radius:4px;	
+        -moz-border-radius-bottomright:4px; 	
+        -webkit-border-bottom-right-radius:4px;
+        border-bottom-left-radius:4px; 	
+        -moz-border-radius-bottomleft:4px; 	
+        -webkit-border-bottom-left-radius:4px;
+      }
+      
+      #legendtext{
+        display:none;
+        padding:3px 5px;
+      }
+      
+      #legend:hover #legendtext{
+        display:block;
+      }
+      
+    </style>
+    <script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script> 
+    <!-- OpenStreetMap OpenLayers-Layers laden
+             (hier wird die JavaScript-Datei direkt vom Server geladen,
+              man kann sie aber auch auf den eigenen Server speichern) -->
+    <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+    <script type="text/javascript">  
+      <!--
+        var map;
+
+        function init(){
+          map = new OpenLayers.Map('map',
+                  { maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+                    numZoomLevels: 20,
+                    maxResolution: 156543.0399,
+                    units: 'm',
+                    projection: new OpenLayers.Projection("EPSG:900913"),
+                    displayProjection: new OpenLayers.Projection("EPSG:4326"),
+	                  controls:[
+		                  new OpenLayers.Control.Permalink(),
+		                  new OpenLayers.Control.MouseDefaults(),
+		                  new OpenLayers.Control.LayerSwitcher(),
+		                  new OpenLayers.Control.MousePosition(),
+		                  new OpenLayers.Control.PanZoomBar()
+		                ]
+                  });
+
+          // Basis-Karten definieren, hier sind "Mapnik und Osmarender die Basiskarten
+			    // andere Basiskarten können einfach als Auswahl dazugefügt werden
+          // weitere Basiskarten: OpenLayers.Layer.OSM.Maplint oder OpenLayers.Layer.OSM.CycleMap
+          var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+
+          var layerTah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
+
+          map.addLayers([layerMapnik,layerTah]);
+          // Marker / POI's (Points of interest) hinzufügen
+          //var pois = new OpenLayers.Layer.Text( "Arch&auml;ologie",
+          //        { location:"../data/osm_archaeologie.txt",
+          //          projection: map.displayProjection
+          //        });
+          //map.addLayer(pois);
+
+          <osmolt type="layers">
+
+
+          // Karte ausrichten
+          var theArgs = getArgs();          
+          if (theArgs.lon)
+          {
+            var lon = theArgs.lon ? theArgs.lon : <osmolt type="lon">;
+            var lat = theArgs.lat ? theArgs.lat : <osmolt type="lat">;
+            var zoom = theArgs.zoom ? theArgs.zoom : <osmolt type="zoom">;
+            var lonLat = new OpenLayers.LonLat(lon,lat).transform(map.displayProjection,  map.projection);
+            map.setCenter (lonLat,zoom); // Zoomstufe einstellen
+          }else{
+            var bounds=new OpenLayers.Bounds(<osmolt type="bbox">).transform(map.displayProjection,  map.projection);
+            map.zoomToExtent(bounds); 
+          }
+        }
+        
+        
+        
+        
+        function onPopupClose(evt) {
+            // 'this' is the popup.
+            selectControl.unselect(this.feature);
+        }
+        function onFeatureSelect(evt) {
+            feature = evt.feature;
+            popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+                                     feature.geometry.getBounds().getCenterLonLat(),
+                                     new OpenLayers.Size(100,100),
+                                     "<h2>"+feature.attributes.title + "</h2>" +
+                                     feature.attributes.description,
+                                     null, true, onPopupClose);
+            feature.popup = popup;
+            popup.feature = feature;
+            map.addPopup(popup);
+        }
+        function onFeatureUnselect(evt) {
+            feature = evt.feature;
+            if (feature.popup) {
+                popup.feature = null;
+                map.removePopup(feature.popup);
+                feature.popup.destroy();
+                feature.popup = null;
+            }
+        }
+        
+        function getArgs() {
+            var args = new Object();
+            var query = location.search.substring(1);  // Get query string.
+            var pairs = query.split("&");              // Break at ampersand. //+pjl
+       
+            for(var i = 0; i < pairs.length; i++) {
+                var pos = pairs[i].indexOf('=');       // Look for "name=value".
+                if (pos == -1) continue;               // If not found, skip.
+                var argname = pairs[i].substring(0,pos);  // Extract the name.
+                var value = pairs[i].substring(pos+1); // Extract the value.
+                args[argname] = unescape(value);          // Store as a property.
+            }
+            return args;                               // Return the object.
+        }
+
+      // -->
+    </script>
+  </head>
+
+  <!-- body.onload is called once the page is loaded (call the 'init' function) -->
+  <body onload="init();">
+  
+    <div id="map"></div>
+    <div id="legend">
+      <osmolt type="legendtitle">
+      <div id="legendtext">
+        <osmolt type="legendtext">
+        <br/><a href="../">weitere Karten</a>
+      </div> 
+    </div> 
+    <div style="position:absolute; bottom:10px;width:700px;z-index: 1001;">
+      <img src="mag_map-120x120.png" height="60px" title="Copyright 2007 OpenStreetMap and contributors" onClick="window.open('http://wiki.openstreetmap.org')" />
+      <img src="somerights20.png" height="30px" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
+    </div>
+  </body>
+</html>
+

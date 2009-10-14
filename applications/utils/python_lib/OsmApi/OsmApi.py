@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.10  2009-10-14 RelationFullRecur definition                       ##
 ## 0.2.9   2009-10-13 automatic changeset management                     ##
 ##                    ChangesetUpload implementation                     ##
 ## 0.2.8   2009-10-13 *(Create|Update|Delete) use not unique _do method  ##
@@ -41,7 +42,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.9'
+__version__ = '0.2.10'
 
 import httplib, base64, xml.dom.minidom, time
 
@@ -292,8 +293,27 @@ class OsmApi:
             result.append(data)
         return result
 
+    def RelationFullRecur(self, RelationId):
+        """ Return full data for relation RelationId. Recurisve version relation of relations. """
+        data = []
+        todo = [RelationId]
+        done = []
+        while todo:
+            rid = todo.pop(0)
+            print rid
+            done.append(rid)
+            temp = self.RelationFull(rid)
+            for item in temp:
+                if item["type"] <> "relation":
+                    continue
+                if item["data"]["id"] in done:
+                    continue
+                todo.append(item["data"]["id"])            
+            data += temp
+        return data
+    
     def RelationFull(self, RelationId):
-        """ Return full data for way WayId as list of {type: node|way|relation, data: {}}. """
+        """ Return full data for relation RelationId as list of {type: node|way|relation, data: {}}. """
         uri = "/api/0.6/relation/"+str(RelationId)+"/full"
         data = self._get(uri)
         return self.ParseOsm(data)

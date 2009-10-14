@@ -39,6 +39,7 @@ import org.openstreetmap.josm.plugins.validator.tests.CrossingWays;
 import org.openstreetmap.josm.plugins.validator.tests.DuplicateNode;
 import org.openstreetmap.josm.plugins.validator.tests.DuplicateWay;
 import org.openstreetmap.josm.plugins.validator.tests.DuplicatedWayNodes;
+import org.openstreetmap.josm.plugins.validator.tests.NameMismatch;
 import org.openstreetmap.josm.plugins.validator.tests.NodesWithSameName;
 import org.openstreetmap.josm.plugins.validator.tests.OverlappingWays;
 import org.openstreetmap.josm.plugins.validator.tests.SelfIntersectingWay;
@@ -97,6 +98,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
             TagChecker.class, // ID 1201 .. 1299
             UnconnectedWays.class, // ID 1301 .. 1399
             DuplicateWay.class, // ID 1401 .. 1499
+            NameMismatch.class, // ID  1501 ..  1599
     };
 
     /**

@@ -30,7 +30,6 @@ package org.openstreetmap.josm.plugins.osb;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.net.URL;
-import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -63,8 +62,6 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
     private OsbDialog dialog;
 
     private OsbLayer layer;
-
-    public static boolean active = false;
 
     private DownloadAction download = new DownloadAction();
 
@@ -163,7 +160,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             download.execute(dataSet, bounds);
 
             // display the parsed data
-            if(!dataSet.nodes.isEmpty()) {
+            if(!dataSet.nodes.isEmpty() && dialog.isDialogShowing()) {
                 // if the map layer has been closed, while we are requesting the osb db,
                 // we don't have to update the gui, because the user is not interested
                 // in this area anymore
@@ -217,8 +214,6 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 
     public void layerAdded(Layer newLayer) {
         if(newLayer instanceof OsmDataLayer) {
-            active = dialog.isDialogShowing();
-
             // start the auto download loop
             OsbDownloadLoop.getInstance().setPlugin(this);
         }
@@ -244,5 +239,9 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 
     public void setDataSet(DataSet dataSet) {
         this.dataSet = dataSet;
+    }
+    
+    public OsbDialog getDialog() {
+        return dialog;
     }
 }

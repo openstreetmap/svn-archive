@@ -25,7 +25,7 @@
 ## History                                                               ##
 ###########################################################################
 ## 0.2.9   2009-10-13 automatic changeset management                     ##
-##                    ChangesetsUpload implementation                    ##
+##                    ChangesetUpload implementation                     ##
 ## 0.2.8   2009-10-13 *(Create|Update|Delete) use not unique _do method  ##
 ## 0.2.7   2009-10-09 implement all missing fonctions except             ##
 ##                    ChangesetsGet and GetCapabilities                  ##

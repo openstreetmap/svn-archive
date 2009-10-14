@@ -77,7 +77,8 @@ public class OsbDownloadLoop extends Thread {
                 }
 
                 // auto download if configured
-                if( Main.pref.getBoolean(ConfigKeys.OSB_AUTO_DOWNLOAD) && OsbPlugin.active ) {
+                if( Main.pref.getBoolean(ConfigKeys.OSB_AUTO_DOWNLOAD) && 
+                        plugin != null && plugin.getDialog() != null && plugin.getDialog().isDialogShowing() ) {
                     if(countdown < 0) {
                         if(!downloadDone) {
                             if(plugin != null) {

@@ -1,0 +1,44 @@
+
+
+from 2.1.-2 to 2.1.-1: 
+- Icon vorschau hinzugefügt
+- unnötige felder entfernt
+- Bugreport vereinfacht, Kommentarfeld hinzugefügt
+
+todo: wenn kein ordner übergeben wurde, wohl aber eine steuerdatei: nehme ordner als outputordner
+
+================================
+from 2.0.1 to 2.1.-2:
+- XML
+    rename
+      'filter' -> 'logical'
+      'logical' -> 'type'
+    add rootfilter: filter
+    add
+      type CDATA    #IMPLIED 
+        to restriction
+          equal => exact this String
+          amongothers => the key has among others this value (seperated with ',' or ';') 
+          regex => see http://en.wikipedia.org/wiki/Regular_expression
+          anything => true if this key exists
+    see grammar
+
+Main-Filter als atribut von entry entfernt.
+
+das XML der Version 2.1 muss mindestens so aussehen: (alle leeren atribute bitte ausfüllen)
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE MapFeatures SYSTEM "grammar.dtd">
+    <MapFeatures bbox="" version="2.1">
+      <entry name="" filename="" image="" imagesize="" imageoffset="">
+        <filter>
+          <logical type="and">
+            <restriction osmKey="" osmValue="" type="equal" />
+          </logical>
+        </filter>
+        <titel></titel>
+        <description></description>
+      </entry>
+    </MapFeatures>
+Todo: cahnge all references in the code -> done
+todo: richtiges einlesen der version (korrektes splitten) +test des vergleiches -> done (scheint zu funktionieren.)

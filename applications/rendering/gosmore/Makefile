@@ -15,8 +15,9 @@ WARNFLAGS= -W -Wall
 #"------------------------ Compiling with cegcc : ---------------------------
 # tar xzf -C / cygwin-cegcc-mingw32ce-0.51.0-1.tar.gz
 # export PATH="$PATH":/opt/mingw32ce/bin/
-ARCH=		arm-wince-mingw32ce
-WINDRES=	${ARCH}-windres
+
+ARCH=arm-mingw32ce-
+WINDRES=	${ARCH}windres
 
 # enable this to test the experimental route support
 #CFLAGS += -DROUTE_TEST
@@ -33,7 +34,10 @@ else
 # To compile with mingw, install MSYS and mingw, and then download
 # the "all-in-one bundle" from http://www.gtk.org/download-windows.html
 # and unzip it to C:\msys\1.0.
-EXTRA=-mms-bitfields -mno-cygwin `pkg-config --cflags --libs gtk+-2.0`
+EXTRAC=-mms-bitfields -mno-cygwin -mwindows \
+  `pkg-config --cflags gtk+-2.0 || echo -D NOGTK`
+EXTRAL=`pkg-config --libs gtk+-2.0`
+ARCH=
 endif
 
 all: gosmore
@@ -52,17 +56,17 @@ gosmore16:	gosmore.cpp libgosm.cpp libgosm.h
 		g++ -DGOSMZ=16 ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
                   gosmore.cpp libgosm.cpp -o gosmore16 ${EXTRA}
 
-gosm_arm.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h translations.c \
+$(ARCH)gosmore.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h \
                     libgosm.h ceglue.h ceglue.c 
-		${ARCH}-g++ ${CFLAGS} -c gosmore.cpp
-		${ARCH}-g++ ${CFLAGS} -c libgosm.cpp
-		${ARCH}-gcc ${CFLAGS} -c ConvertUTF.c
-		${ARCH}-gcc ${CFLAGS} -c ceglue.c
-		${ARCH}-gcc ${CFLAGS} -o $@ \
+		${ARCH}g++ ${CFLAGS} ${EXTRAC} -c gosmore.cpp
+		${ARCH}g++ ${CFLAGS} ${EXTRAC} -c libgosm.cpp
+		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ConvertUTF.c
+		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ceglue.c
+		${ARCH}g++ ${CFLAGS} ${EXTRAC} -o $@ \
 		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc
 
 gosmore.rsc:	gosmore.rc icons.bmp icons-mask.bmp gosmore.ico
-		${WINDRES} $< $@
+		$(WINDRES) $< $@
 
 WIKIPAGE=http://wiki.openstreetmap.org/index.php/Special:Export/Gosmore
 translations.c: extract
@@ -132,5 +136,5 @@ dist:
 	rm -rf gosmore-$(VERSION)
 
 clean:
-	$(RM) gosmore *.tmp *~ gosmore.zip gosmore.exe \
-	  gosmore.aps gosmore.vcl gosmore.vcw extract *.o gosm_arm.exe
+	$(RM) gosmore *.tmp *~ gosmore.zip $(ARCH)gosmore.exe gosmore.rsc \
+	  gosmore.aps gosmore.vcl gosmore.vcw extract *.o

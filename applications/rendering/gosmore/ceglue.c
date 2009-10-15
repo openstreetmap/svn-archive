@@ -1,4 +1,5 @@
 #include <windows.h>
+#ifdef _WIN32_WCE
 #include "ceglue.h"
 
 BOOL FAR (*SHFullScreenPtr)(HWND hwnd, DWORD state) = NULL;
@@ -78,4 +79,5 @@ int CeEnableBacklight(int enable)
     return TRUE;
   }
 }
+#endif // Not WIN NT
 

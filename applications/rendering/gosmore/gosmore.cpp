@@ -12,6 +12,11 @@
 #include <ctype.h>
 #include <math.h>
 #include <time.h>
+#include <string>
+#include <stack>
+#include <vector>
+#include <queue>
+using namespace std;
 #ifndef _WIN32
 #include <sys/mman.h>
 #include <arpa/inet.h>
@@ -19,16 +24,26 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #define TEXT(x) x
+#define TCHAR char
 #else
 #include <windows.h>
 #endif
 #ifdef _WIN32_WCE
+#define NOGTK
+#endif
+#ifdef NOGTK
 #include <windowsx.h>
 //#include <winuserm.h> // For playing a sound ??
+#ifdef _WIN32_WCE
 #include <sipapi.h>
 #include <aygshell.h>
-#include "libgosm.h"
 #include "ceglue.h"
+#else
+#define SipShowIM(x)
+#define CeEnableBacklight(x) FALSE
+#define CreateFileForMappingW(a,b,c,d,e,f,g) CreateFileW (a,b,c,d,e,f,g)
+#endif
+#include "libgosm.h"
 #include "ConvertUTF.h"
 #include "resource.h"
 
@@ -50,6 +65,8 @@
   o (DetailLevel,     0, 5) \
   o (CommPort,        0, 13) \
   o (BaudRate,        0, 6) \
+  o (ShowCompass,     0, 2) \
+  o (Background,      0, 16) \
   o (QuickOptions,    0, 2) \
   o (Exit,            0, 2) \
   o (ZoomInKey,       0, 3) \
@@ -61,21 +78,17 @@
   o (ModelessDialog,  0, 2) \
   o (FullScreen,      0, 2) \
   o (ValidateMode,    0, 2) \
-  o (DisplayOff,      0, 1)
+  o (DisplayOff,      0, 1) \
+  o (Display3D,       0, 1) \
+  o (SearchSpacing,   32, 1)
 #else
 #include <unistd.h>
 #include <sys/stat.h>
-#include <string>
-#include <stack>
-#include <vector>
-#include <queue>
 #include "libgosm.h"
-using namespace std;
 #define wchar_t char
 #define wsprintf sprintf
 #define OPTIONS \
   o (FollowGPSr,      0, 2) \
-  o (Display3D,       0, 1) \
   o (Search,          0, 1) \
   o (StartRoute,      0, 1) \
   o (EndRoute,        0, 1) \
@@ -87,8 +100,11 @@ using namespace std;
   o (ButtonSize,      1, 5) \
   o (IconSet,         0, 4) \
   o (DetailLevel,     0, 5) \
+  o (ShowCompass,     0, 2) \
+  o (Background,      0, 16) \
   o (ValidateMode,    0, 2) \
   o (ShowActiveRouteNodes, 0, 2) \
+  o (Display3D,       0, 1) \
   o (SearchSpacing,   32, 1)
 
 #define HideZoomButtons 0
@@ -96,13 +112,13 @@ using namespace std;
 #endif
 char docPrefix[80] = "";
 
-#if !defined (HEADLESS) && !defined (_WIN32_WCE)
+#if !defined (HEADLESS) && !defined (NOGTK)
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 #endif
 
 // We emulate just enough of gtk to make it work
-#ifdef _WIN32_WCE
+#ifdef NOGTK
 #define gtk_widget_queue_clear(x) // After Click() returns we Invalidate
 HWND hwndList;
 #define gtk_toggle_button_set_active(x,y) // followGPRr
@@ -116,6 +132,12 @@ typedef int GtkComboBox;
 struct GdkEventButton {
   int x, y, button;
 };
+
+struct GdkEventScroll {
+  int x, y, direction;
+};
+
+enum { GDK_SCROLL_UP, GDK_SCROLL_DOWN };
 
 #define ROUTE_PEN 0
 #define VALIDATE_PEN 1
@@ -188,7 +210,7 @@ void logprintf(char * format, ...)
 
 
 struct klasTableStruct {
-  const wchar_t *desc;
+  const TCHAR *desc;
   const char *tags;
 } klasTable[] = {
 #define s(k,v,shortname,extraTags) \
@@ -239,7 +261,7 @@ inline void SetLocation (int nlon, int nlat)
 {
   clon = nlon;
   clat = nlat;
-  #ifndef _WIN32_WCE
+  #ifndef NOGTK
   char lstr[50];
   int zl = 0;
   while (zl < 32 && (zoom >> zl)) zl++;
@@ -251,7 +273,7 @@ inline void SetLocation (int nlon, int nlat)
   #endif
 }
 
-#ifndef _WIN32_WCE
+#ifndef NOGTK
 int ChangeLocation (void)
 {
   if (setLocBusy) return FALSE;
@@ -495,6 +517,39 @@ int ProcessNmea (char *rx, unsigned *got)
 
 void DoFollowThing (gpsNewStruct *gps)
 {
+  static int lastTime = -1;
+  char *d = gps->fix.date, *t = gps->fix.tm;
+  int now = (((((t[0] - '0') * 10 + t[1] - '0') * 6 + t[2] - '0') * 10 +
+                 t[3] - '0') * 6 + t[4] - '0') * 10 + t[5];
+  if ((lastTime - now) / 60) {
+    lastTime = now;
+    
+    int cdays[12] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
+    double M = (cdays[(d[2] - '0') * 10 + d[3] - '0' - 1] +
+                   (d[4] - '0') * 10 + d[5] - '0' - 1) * M_PI * 2 / 365.242;
+    int dayLen = lrint (acos (-
+      tan (-cos (M + 10 * M_PI * 2 / 365) * 23.44 / 180 * M_PI) *
+      tan (gps->fix.latitude / 180 * M_PI)) * 2 / M_PI * 12 * 60 * 60);
+    /* See wikipedia/Declination for the "core" of the formula */
+    // TODO: acos() may fail in arctic / antarctic circle.
+    int noon = 12 * 60 * 60 - lrint (gps->fix.longitude / 360 * 24 * 60 * 60
+                - (-7.655 * sin (M) + 9.873 * sin (2 * M + 3.588)) * 60);
+    /* See wikipedia/Equation_of_time */
+    int sSinceSunrise = (now - noon + dayLen / 2 + 24 * 3600) % (24 * 3600);
+    Background = (Background & 7) + (sSinceSunrise < dayLen ? 8 : 0);
+    #if 0
+    noon += 7200; // Central African Time = UTC + 2 hours
+    //printf ("%.5lf %.5lf %s %.3lf\n", lat, lon, date, M / M_PI / 2);
+    printf ("Declination %.5lf\n", -cos (M + 10 * M_PI * 2 / 365) * 23.44);
+    printf ("Noon %02d%02d%02d\n", noon / 60 / 60,
+      noon / 60 % 60, noon % 60);
+    printf ("Sunrise %02d%02d%02d\n", (noon - dayLen / 2) / 60 / 60,
+      (noon - dayLen / 2) / 60 % 60, (noon - dayLen / 2) % 60);
+    printf ("Sunset %02d%02d%02d\n", (noon + dayLen / 2) / 60 / 60,
+      (noon + dayLen / 2) / 60 % 60, (noon + dayLen / 2) % 60);
+    printf ("%6d / %6d at %.6s\n", sSinceSunrise, dayLen, gps->fix.tm);
+    #endif
+  }
   if (!/*gps->fix.mode >= MODE_2D &&*/ FollowGPSr) return;
   SetLocation (Longitude (gps->fix.longitude), Latitude (gps->fix.latitude));
 /*    int plon = Longitude (gps->fix.longitude + gps->fix.speed * 3600.0 /
@@ -512,7 +567,15 @@ void DoFollowThing (gpsNewStruct *gps)
   if (route) Route (FALSE, dlon, dlat, Vehicle, FastestRoute);
 
   static ndType *decide[3] = { NULL, NULL, NULL }, *oldDecide = NULL;
-  static const wchar_t *command[3] = { NULL, NULL, NULL }, *oldCommand = NULL;
+  #ifdef _WIN32_WCE
+  static const wchar_t
+  #else
+  static const char
+  #endif
+    *command[3] = { NULL, NULL, NULL }, *oldCommand = NULL,
+    *rtxt[] = { NULL, TEXT ("round1"), TEXT ("round2"),
+            TEXT ("round3"), TEXT ("round4"), TEXT ("round5"),
+            TEXT ("round6"), TEXT ("round7"), TEXT ("round8") };
   decide[0] = NULL;
   command[0] = NULL;
   if (shortest) {
@@ -537,10 +600,6 @@ void DoFollowThing (gpsNewStruct *gps)
         }
         if (!x->shortest || roundExit) {
           decide[0] = x->nd;
-          static const wchar_t *rtxt[] = { NULL, TEXT ("round1"),
-            TEXT ("round2"),
-            TEXT ("round3"), TEXT ("round4"), TEXT ("round5"),
-            TEXT ("round6"), TEXT ("round7"), TEXT ("round8") };
           command[0] = rtxt[roundExit];
           break;
         }
@@ -556,8 +615,8 @@ void DoFollowThing (gpsNewStruct *gps)
         do {
           // TODO : Only count segment traversable by 'Vehicle'
           // Except for the case where a cyclist crosses a motorway.
-          if (nd->other[0] >= 0) segCnt++;
-          if (nd->other[1] >= 0) segCnt++;
+          if (nd->other[0] != 0) segCnt++;
+          if (nd->other[1] != 0) segCnt++;
         } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
                  nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
         if (segCnt > 2) {
@@ -614,7 +673,7 @@ void DoFollowThing (gpsNewStruct *gps)
   gtk_widget_queue_clear (draw);
 } // If following the GPSr and it has a fix.
 
-#ifndef _WIN32_WCE
+#ifndef NOGTK
 #ifdef ROUTE_TEST
 gint RouteTest (GtkWidget * /*widget*/, GdkEventButton *event, void *)
 {
@@ -650,27 +709,7 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
 }
 #endif // !ROUTE_TEST
 
-gint Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
-{
-  if (Display3D) {
-    int k = event->direction == GDK_SCROLL_UP ? 2000 : -2000;
-    SetLocation (clon - sinAzimuth * k, clat + cosAzimuth * k);
-  }
-  else {
-    int w = draw->allocation.width, h = draw->allocation.height;
-    int perpixel = zoom / w;
-    if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
-    if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
-    SetLocation (clon + lrint ((perpixel - zoom / w) *
-      (cosAzimuth * (event->x - w / 2) - sinAzimuth * (h / 2 - event->y))),
-      clat + lrint ((perpixel - zoom / w) *
-      (cosAzimuth * (h / 2 - event->y) + sinAzimuth * (event->x - w / 2))));
-  }
-  gtk_widget_queue_clear (draw);
-  return FALSE;
-}
-
-#else // _WIN32_WCE
+#else // else NOGTK
 #define NEWWAY_MAX_COORD 10
 struct newWaysStruct {
   int coord[NEWWAY_MAX_COORD][2], klas, cnt, oneway, bridge;
@@ -770,7 +809,28 @@ BOOL CALLBACK DlgChooseOProc (HWND hwnd, UINT Msg, WPARAM wParam,
   }
   return FALSE;
 }
-#endif // _WIN32_WCE
+#endif // NOGTK
+
+int Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
+{
+  if (Display3D) {
+    int k = event->direction == GDK_SCROLL_UP ? 2000 : -2000;
+    SetLocation (clon - lrint (sinAzimuth * k),
+                 clat + lrint (cosAzimuth * k));
+  }
+  else {
+    int w = draw->allocation.width, h = draw->allocation.height;
+    int perpixel = zoom / w;
+    if (event->direction == GDK_SCROLL_UP) zoom = zoom / 4 * 3;
+    if (event->direction == GDK_SCROLL_DOWN) zoom = zoom / 3 * 4;
+    SetLocation (clon + lrint ((perpixel - zoom / w) *
+      (cosAzimuth * (event->x - w / 2) - sinAzimuth * (h / 2 - event->y))),
+      clat + lrint ((perpixel - zoom / w) *
+      (cosAzimuth * (h / 2 - event->y) + sinAzimuth * (event->x - w / 2))));
+  }
+  gtk_widget_queue_clear (draw);
+  return FALSE;
+}
 
 int objectAddRow = -1;
 #define ADD_HEIGHT 32
@@ -779,7 +839,7 @@ void HitButton (int b)
 {
   int returnToMap = b > 0 && option <= FastestRouteNum;
   
-  #ifdef _WIN32_WCE
+  #ifdef NOGTK
   if (AddWayOrNode && b == 0) {
     AddWayOrNode = 0;
     option = mapMode;
@@ -808,8 +868,7 @@ void HitButton (int b)
   else if (option == StartRouteNum) {
     flon = clon;
     flat = clat;
-    free (route);
-    route = NULL;
+    GosmFreeRoute ();
     shortest = NULL;
   }
   else if (option == EndRouteNum) {
@@ -817,7 +876,7 @@ void HitButton (int b)
     tlat = clat;
     Route (TRUE, 0, 0, Vehicle, FastestRoute);
   }
-  #ifdef _WIN32_WCE
+  #ifdef NOGTK
   else if (option == SearchNum) {
     SipShowIM (SIPF_ON);
     if (ModelessDialog) ShowWindow (dlgWnd, SW_SHOW);
@@ -848,9 +907,9 @@ void HitButton (int b)
   if (returnToMap) option = mapMode;
 }
 
-#ifndef _WIN32_CE
 int firstDrag[2] = { -1, -1 }, lastDrag[2];
 
+#ifndef NOGTK
 gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
 {
   if ((option == mapMode || option == optionMode) &&
@@ -892,7 +951,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   if (objectAddRow >= 0) {
     int perRow = (w - ButtonSize * 20) / ADD_WIDTH;
     if (event->x < w - ButtonSize * 20) {
-      #ifdef _WIN32_WCE
+      #ifdef NOGTK
       newWays[newWayCnt].klas = objectAddRow + event->x / ADD_WIDTH +
                                 event->y / ADD_HEIGHT * perRow;
       SipShowIM (SIPF_ON);
@@ -906,7 +965,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     else objectAddRow = int (event->y) * (restriction_no_right_turn / perRow
                                   + 2) / draw->allocation.height * perRow;
   }
-  #ifdef _WIN32_WCE
+  #ifdef NOGTK
   else if (event->x > w - ButtonSize * 20 && b <
       (!HideZoomButtons || option != mapMode ? 3 : 
       MenuKey != 0 ? 0 : 1)) HitButton (b);
@@ -941,13 +1000,11 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   }
   else {
     int perpixel = zoom / w, dx = event->x - w / 2, dy = h / 2 - event->y;
-    #ifndef _WIN32_WCE
     if (firstDrag[0] >= 0) {
       dx = firstDrag[0] - event->x;
       dy = event->y - firstDrag[1];
       firstDrag[0] = -1;
     }
-    #endif
     int lon = clon + lrint (perpixel *
       (cosAzimuth * (Display3D ? 0 : dx) - sinAzimuth * dy));
     int lat = clat + lrint (perpixel *
@@ -960,7 +1017,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       }
       SetLocation (lon, lat);
 
-      #ifdef _WIN32_WCE
+      #ifdef NOGTK
       if (AddWayOrNode && newWays[newWayCnt].cnt < NEWWAY_MAX_COORD) {
         newWays[newWayCnt].coord[newWays[newWayCnt].cnt][0] = clon;
         newWays[newWayCnt].coord[newWays[newWayCnt].cnt++][1] = clat;
@@ -972,8 +1029,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     else if (event->button == 2) {
       flon = lon;
       flat = lat;
-      free (route);
-      route = NULL;
+      GosmFreeRoute ();
       shortest = NULL;
     }
     else {
@@ -986,75 +1042,12 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   return FALSE;
 }
 
-#if 0
-void GetDirections (GtkWidget *, gpointer)
-{
-  char *msg;
-  if (!shortest) msg = strdup (
-    "Mark the starting point with the middle button and the\n"
-    "end point with the right button. Then click Get Directions again\n");
-  else {
-    for (int i = 0; i < 2; i++) {
-      int len = 0;
-      char *last = "";
-      __int64 dlon = 0, dlat = 1, bSqr = 1; /* Point North */
-      for (routeNodeType *x = shortest; x; x = x->shortest) {
-        halfSegType *other = (halfSegType *)(data + x->hs->other);
-        int forward = x->hs->wayPtr != TO_HALFSEG;
-        wayType *w = Way (forward ? x->hs : other);
-        
-        // I think the formula below can be substantially simplified using
-        // the method used in GpsMove
-        __int64 nlon = other->lon - x->hs->lon, nlat = other->lat-x->hs->lat;
-        __int64 cSqr = Sqr (nlon) + Sqr (nlat);
-        __int64 lhs = bSqr + cSqr - Sqr (nlon - dlon) - Sqr (nlat - dlat);
-        /* Use cosine rule to determine if the angle is obtuse or greater than
-           45 degrees */
-        if (lhs < 0 || Sqr (lhs) < 2 * bSqr * cSqr) {
-          /* (-nlat,nlon) is perpendicular to (nlon,nlat). Then we use
-             Pythagoras test for obtuse angle for left and right */
-          if (!i) len += 11;
-          else len += sprintf (msg + len, "%s turn\n",
-            nlon * dlat < nlat * dlon ? "Left" : "Right");
-        }
-        dlon = nlon;
-        dlat = nlat;
-        bSqr = cSqr;
-        
-        if (strcmp (w->name + data, last)) {
-          last = w->name + data;
-          if (!i) len += strlen (last) + 1;
-          else len += sprintf (msg + len, "%s\n", last);
-        }
-      }
-      if (!i) msg = (char*) malloc (len + 1);
-    } // First calculate len, then create message.
-  }
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GtkWidget *view = gtk_text_view_new ();
-  GtkWidget *scrol = gtk_scrolled_window_new (NULL, NULL);
-//  gtk_scrolled_winGTK_POLICY_AUTOMATIC,
-//    GTK_POLICY_ALWAYS);
-  GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
-  gtk_text_view_set_editable (GTK_TEXT_VIEW (view), FALSE);
-  gtk_text_buffer_set_text (buffer, msg, -1);
-  free (msg);
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrol), view);
-  gtk_container_add (GTK_CONTAINER (window), scrol);
-  gtk_widget_set_size_request (window, 300, 300);
-  gtk_widget_show (view);
-  gtk_widget_show (scrol);
-  gtk_widget_show (window);
-}
-
-#endif
-
 #ifdef PANGO_VERSION
 PangoContext *pc;
 PangoLayout  *pl;
 #endif
 
-#ifndef _WIN32_WCE
+#ifndef NOGTK
 typedef GdkGC *HDC;
 
 static GdkGC *maskGC = NULL, *fg_gc;
@@ -1065,7 +1058,13 @@ static GdkBitmap *maskicon = NULL;
 static GdkPixmap *icons = NULL;
 
 #else
-HDC icons;
+HDC icons, maskDc;
+HFONT sysFont;
+
+#define gtk_combo_box_get_active(x) 1
+#define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
+  BitBlt (dgc, dx, dy, w, h, maskDc, x, y, SRCAND); \
+  BitBlt (dgc, dx, dy, w, h, sdc, x, y, SRCPAINT)
 #endif
 
 #if 0 //ifdef CHILDREN
@@ -1085,7 +1084,7 @@ static HDC mygc = NULL, iconsgc = NULL;
 
 void DrawString (int x, int y, const char *optStr)
 {
-  #ifndef _WIN32_WCE
+  #if PANGO_VERSION
   PangoMatrix mat;
   mat.xx = mat.yy = 1.0;
   mat.xy = mat.yx = 0.0;
@@ -1097,20 +1096,20 @@ void DrawString (int x, int y, const char *optStr)
   SelectObject (mygc, sysFont);
   SetBkMode (mygc, TRANSPARENT);
   const unsigned char *sStart = (const unsigned char*) optStr;
-  UTF16 *tStart = (UTF16 *) wcTmp;
+  UTF16 wcTmp[70], *tStart = (UTF16 *) wcTmp;
   if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (optStr), &tStart,
            tStart + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
       == conversionOK) {
-    ExtTextOut (mygc, x, y, 0, NULL, wcTmp, (wchar_t*) tStart - wcTmp, NULL);
+    ExtTextOutW (mygc, x, y, 0, NULL, (wchar_t*) wcTmp, tStart - wcTmp, NULL);
   }
   #endif
 }
 
-void DrawIcon (int dstx, int dsty, wayType *w)
+void DrawPoI (int dstx, int dsty, wayType *w)
 {
   int *icon = Style (w)->x + 4 * IconSet;
   if (icon[2] == 0) return;
-  #ifndef _WIN32_WCE
+  #ifndef NOGTK
   // for gdk we first need to extract the portion of the mask
   if (!maskicon) maskicon = gdk_pixmap_new(NULL, 100, 100, 1);
   gdk_draw_drawable (maskicon, maskGC, mask,
@@ -1147,7 +1146,7 @@ inline int Clamp2 (int x)
   return x < -32760 ? -32760 : x > 32760 ? 32760 : x;
 }*/
 
-#ifdef _WIN32_WCE
+#ifdef NOGTK
 #define gdk_draw_line(win,gc,sx,sy,dx,dy) \
   MoveToEx (gc, sx, sy, NULL); LineTo (gc, dx, dy)
 #endif
@@ -1186,7 +1185,7 @@ int TestOrSet (int *bits, int set, int x0, int y0, int ax, int ay,
     by = ny;
   }
   if (y0 < 0 || y0 + ay + by > draw->allocation.height ||
-      x0 - ax < 0 || x0 + by > draw->allocation.width) return TRUE;
+      x0 + ax < 0 || x0 + bx > draw->allocation.width) return TRUE;
   // Do not place anything offscreen.
   const int shf = 9;
   x0 <<= shf;
@@ -1224,7 +1223,7 @@ struct linePtType {
 };
 
 struct text2Brendered {
-  char *s; // Either \n or \0 terminated
+  const char *s; // Either \n or \0 terminated
   int x, y, x2, y2, dst;
   text2Brendered (void) {}
 };
@@ -1252,26 +1251,30 @@ void ConsiderText (queue<linePtType> *q, int finish, int len, int *best,
   }
 }
 
+int WaySizeCmp (ndType **a, ndType **b)
+{
+  return Way (*a)->dlat * Way (*a)->dlon - Way (*b)->dlat * Way (*b)->dlon;
+}
 
-#ifdef _WIN32_WCE
-int DrawExpose (HDC mask, HPEN *pen)
+#ifdef NOGTK
+int DrawExpose (HPEN *pen, HBRUSH *brush)
 {
   struct {
     int width, height;
   } clip;
 /*  clip.width = GetSystemMetrics(SM_CXSCREEN);
   clip.height = GetSystemMetrics(SM_CYSCREEN); */
-  HFONT sysFont = (HFONT) GetStockObject (SYSTEM_FONT);
+  sysFont = (HFONT) GetStockObject (SYSTEM_FONT);
   LOGFONT logFont;
   GetObject (sysFont, sizeof (logFont), &logFont);
+  #ifndef _WIN32_WCE
+  logFont.lfWeight = 400;
+  strcpy (logFont.lfFaceName, TEXT ("Arial"));
+  #endif
   WCHAR wcTmp[70];
 
   iconsgc = mygc;
 
-#define gtk_combo_box_get_active(x) 1
-#define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
-  BitBlt (dgc, dx, dy, w, h, mask, x, y, SRCAND); \
-  BitBlt (dgc, dx, dy, w, h, sdc, x, y, SRCPAINT)
 
   if (objectAddRow >= 0) {
     SelectObject (mygc, sysFont);
@@ -1295,13 +1298,26 @@ int DrawExpose (HDC mask, HPEN *pen)
           x - icon[2] / 2 + ADD_WIDTH / 2, y, icon[2], icon[3]);
         klip.left = x + 8;
         klip.right = x + ADD_WIDTH - 8;
+        #ifndef _WIN32_WCE
+        DrawString (x + 8, y + ADD_HEIGHT - 16, klasTable[i].desc);
+        #else
         ExtTextOut (mygc, x + 8, y + ADD_HEIGHT - 16, ETO_CLIPPED,
           &klip, klasTable[i].desc, wcslen (klasTable[i].desc), NULL);
+        #endif
       }
     }
     return FALSE;
   } // if displaying the klas / style / rule selection screen
 #else
+void SetColour (GdkColor *c, int hexTrip)
+{
+  c->red =    (hexTrip >> 16)        * 0x101;
+  c->green = ((hexTrip >> 8) & 0xff) * 0x101;
+  c->blue =   (hexTrip       & 0xff) * 0x101;
+  gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
+      c, FALSE, TRUE);
+}
+          
 gint DrawExpose (void)
 {
   static GdkColor styleColour[2 << STYLE_BITS][2];
@@ -1312,34 +1328,29 @@ gint DrawExpose (void)
     iconsgc = gdk_gc_new (draw->window);
     for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
       for (int j = 0; j < 2; j++) {
-        int c = !j ? style[i].areaColour 
+        SetColour (&styleColour[i][j],
+         !j ? style[i].areaColour 
           : style[i].lineColour != -1 ? style[i].lineColour
-          : (style[i].areaColour >> 1) & 0xefefef; // Dark border
-        styleColour[i][j].red =    (c >> 16)        * 0x101;
-        styleColour[i][j].green = ((c >> 8) & 0xff) * 0x101;
-        styleColour[i][j].blue =   (c       & 0xff) * 0x101;
-        gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
-          &styleColour[i][j], FALSE, TRUE);
+          : (style[i].areaColour >> 1) & 0xefefef); // Dark border for polys
       }
     }
-    routeColour.green = 0xffff;
-    routeColour.red = routeColour.blue = 0;
-    gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
-      &routeColour, FALSE, TRUE);
-    validateColour.red = 0xffff;
-    validateColour.green = validateColour.blue = 0x9999;
-    gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
-      &validateColour, FALSE, TRUE);
-    resultArrowColour.green = 0;
-    resultArrowColour.red = resultArrowColour.blue = 0;
-    gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
-      &resultArrowColour, FALSE, TRUE);
+    SetColour (&routeColour, 0x00ff00);
+    SetColour (&validateColour, 0xff9999);
+    SetColour (&resultArrowColour, 0);
     gdk_gc_set_fill (mygc, GDK_SOLID);
 
     if (!icons) icons = gdk_pixmap_create_from_xpm (draw->window, &mask,
       NULL, FindResource ("icons.xpm"));
-    else gdk_window_set_background (draw->window, &validateColour);
     maskGC = gdk_gc_new(mask);
+  }
+  static int oldBackground = -1;
+  if (oldBackground != Background) {
+    static const int bgVal[9] = { 0, 0xe0ffff, 0xd3d3d3, 0xe6e6fa,
+      0xffffe0, 0xf5deb3, 0x7b68ee, 0x6b8e23, 0xffffff };
+    GdkColor bg;
+    SetColour (&bg, bgVal[Background - (Background > 8 ? 8 : 0)]);
+    gdk_window_set_background (draw->window, &bg);
+    oldBackground = Background;
   }
   #if 0 //ifdef CHILDREN
   if (1) {
@@ -1381,7 +1392,19 @@ gint DrawExpose (void)
   pc = gdk_pango_context_get_for_screen (gdk_screen_get_default ());
   pl = pango_layout_new (pc);
   pango_layout_set_width (pl, -1); // No wrapping 200 * PANGO_SCALE);
-#endif // !_WIN32_WCE
+  if (Background == 0) {
+    PangoAttribute *wit = pango_attr_foreground_new (0xffff, 0xffff, 0xffff);
+    PangoAttrList *list = pango_attr_list_new ();//pango_layout_get_attributes (pl);
+    pango_attr_list_insert (list, wit);
+    pango_layout_set_attributes (pl, list);
+    pango_attr_list_unref (list);
+  }
+/*    PangoAttribute *wit = pango_attr_background_new (0xffff, 0xffff, 0xffff);
+    PangoAttrList *list = pango_attr_list_new ();//pango_layout_get_attributes (pl);
+    pango_attr_list_insert (list, wit);
+    pango_layout_set_attributes (pl, list);
+    pango_attr_list_unref (list); */
+#endif // GTK
 
   clip.height = draw->allocation.height;
   clip.width = draw->allocation.width;
@@ -1450,15 +1473,31 @@ gint DrawExpose (void)
 
     stack<text2Brendered> text2B;
     text2B.push (text2Brendered ()); // Always have a spare one open
-    stack<ndType*> dlist[13];
-    // Areas + 5 under + 1 gound level + 5 above + icons
+    vector<ndType*> area;
+    stack<ndType*> dlist[12];
+    // 5 under + 1 gound level + 5 above + icons
+    
+    if (ShowCompass) {
+      for (int i = 0; i < 2; i++) {
+        for (int m = -20; m <= 20; m += 40) {
+          text2B.top ().s = m < 0 ? (i ? "N" : "W") : i ? "S" : "E";
+          text2B.top ().x = clip.width - 40 +
+            lrint ((i ? -sinAzimuth : cosAzimuth) * m) - 50;
+          text2B.top ().x2 = text2B.top ().x + 100;
+          text2B.top ().dst = 100;
+          text2B.top ().y2 = text2B.top ().y = clip.height - 40 +
+            lrint ((i ? cosAzimuth : sinAzimuth) * m);
+          text2B.push (text2Brendered ());
+        }
+      }
+    }
     
     // render map
     /* We need the smallest bbox that covers the test area. For 2D, the
        test area is a rectangle that is not aligned with the axis, so the
        bbox is the maxs and mins of the latitudes and longitudes of the 4
        corners. For 3D, the test area is a triangle, with the camera
-       coordinate included twice, whence 4 tests
+       coordinate included twice, hence 4 tests
     */
     int latRadius[2] = { 0, 0 }, lonRadius[2] = { 0, 0 };
     for (int wc = -1; wc <= 1; wc += 2) { // width and
@@ -1481,70 +1520,118 @@ gint DrawExpose (void)
       wayType *w = Way (nd);
       if (!Display3D && Style (w)->scaleMax <
                 zoom / clip.width * 175 / (DetailLevel + 6)) continue;
-      if (nd->other[0] >= 0) {
-        nd = ndBase + itr.nd[0]->other[0];
+      if (nd->other[0] != 0) {
+        nd = itr.nd[0] + itr.nd[0]->other[0];
         if (nd->lat == INT_MIN) nd = itr.nd[0]; // Node excluded from build
         else if (itr.left <= nd->lon && nd->lon < itr.right &&
             itr.top  <= nd->lat && nd->lat < itr.bottom) continue;
       } // Only process this way when the Itr gives us the first node, or
       // the first node that's inside the viewing area
-      dlist[nd->other[0] < 0 && nd->other[1] < 0 ? 12 :
-            Style (w)->areaColour != -1 ? 0 : Layer (w) + 6].push (nd);
+      if (nd->other[0] == 0 && nd->other[1] == 0) dlist[11].push (nd);
+      else if (Style (w)->areaColour != -1) area.push_back (nd);
+      else dlist[Layer (w) + 5].push (nd);
     }
-    #ifdef _WIN32_WCE
-    for (; !dlist[0].empty (); dlist[0].pop ()) {
-      ndType *nd = dlist[0].top ();
+    qsort (&area[0], area.size (), sizeof (area[0]),
+      (int (*)(const void *a, const void *b))WaySizeCmp);
+    #ifndef _WIN32_WCE
+    //for (; !dlist[0].empty (); dlist[0].pop ()) {
+    //  ndType *nd = dlist[0].top ();
+    for (; !area.empty(); area.pop_back ()) {
+      ndType *nd = area.back ();
       wayType *w = Way (nd);
-      while (nd->other[0] >= 0) nd = ndBase + nd->other[0];
-      static GdkPoint pt[1000];
-      unsigned pts;
-      for (pts = 0; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] >= 0;
-           nd = ndBase + nd->other[1]) {
+      while (nd->other[0] != 0) nd += nd->other[0];
+      #if defined (_WIN32_CE) || defined (NOGTK)
+      #define GdkPoint POINT
+      #endif
+      vector<GdkPoint> pt;
+      int oldx = 0, oldy = 0, x, y, firstx = INT_MIN, firsty;
+      //for (; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] != 0;
+      for (; nd->other[1] != 0;
+           nd += nd->other[1]) {
         if (nd->lat != INT_MIN) {
-          pt[pts].x = X (nd->lon, nd->lat);
-          pt[pts++].y = Y (nd->lon, nd->lat);
+          pt.push_back (GdkPoint ());
+          pt.back ().x = x = X (nd->lon, nd->lat);
+          pt.back ().y = y = Y (nd->lon, nd->lat);
+          if (Display3D) {
+            if (firstx == INT_MIN) {
+              firstx = x;
+              firsty = y;
+            }
+            if (y > 0 && oldy < 0) {
+              pt.back ().x = x + (x - oldx) * (1024 - y) / (y - oldy);
+              pt.back ().y = 1024;
+              pt.push_back (GdkPoint ());
+              pt.back ().x = x; // This point moves one by 1 position
+              pt.back ().y = y;
+            }
+            else if (y < 0) {
+              if (oldy < 0) pt.pop_back ();
+              else {
+                pt.back ().x = oldx + (oldx - x) * (1024 - oldy) / (oldy - y);
+                pt.back ().y = 1024;
+              }
+            }
+            oldx = x;
+            oldy = y;
+          }
+          //pt[pts].x = X (nd->lon, nd->lat);
+          //pt[pts++].y = Y (nd->lon, nd->lat);
         }
       }
-      gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][0]);
-      gdk_draw_polygon (draw->window, mygc, TRUE, pt, pts);
-      gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
-      gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
-        Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
-        : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
-      gdk_draw_polygon (draw->window, mygc, FALSE, pt, pts);
+      if (Display3D && y < 0 && firsty > 0) {
+        pt.push_back (GdkPoint ());
+        pt.back ().x = firstx + (firstx - x) * (1024 - firsty) / (firsty - y);
+        pt.back ().y = 1024;
+      }
+      if (Display3D && firsty < 0 && y > 0) {
+        pt.push_back (GdkPoint ());
+        pt.back ().x = x + (x - firstx) * (1024 - x) / (y - firsty);
+        pt.back ().y = 1024;
+      }
+      if (!pt.empty ()) {
+        #ifdef NOGTK
+        SelectObject (mygc, brush[StyleNr (w)]);
+        SelectObject (mygc, pen[StyleNr (w)]);
+        Polygon (mygc, &pt[0], pt.size ());
+        #else
+        gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][0]);
+        gdk_draw_polygon (draw->window, mygc, TRUE, &pt[0], pt.size ());
+        gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
+        gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
+          Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
+          : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+        gdk_draw_polygon (draw->window, mygc, FALSE, &pt[0], pt.size ());
+        #endif
+      }
     }
     #endif
     queue<linePtType> q;
-    for (int l = 1; l < 13; l++) {
+    for (int l = 0; l < 12; l++) {
       for (; !dlist[l].empty (); dlist[l].pop ()) {
         ndType *nd = dlist[l].top ();
         wayType *w = Way (nd);
 
-        #ifndef _WIN32_WCE
         int best = 30;
-        #else
-        int best = 0, bestW, bestH, x0, y0;
-        #endif
         int len = strcspn ((char *)(w + 1) + 1, "\n");
         
 	// single-point node
-        if (nd->other[0] < 0 && nd->other[1] < 0) {
+        if (nd->other[0] == 0 && nd->other[1] == 0) {
           int x = X (nd->lon, nd->lat), y = Y (nd->lon, nd->lat);
           int *icon = Style (w)->x + 4 * IconSet, wd = icon[2], ht = icon[3];
           if ((!Display3D || y > 0) && !TestOrSet (block, FALSE,
                                x - wd / 2, y - ht / 2, 0, ht, wd, 0)) {
             TestOrSet (block, TRUE, x - wd / 2, y - ht / 2, 0, ht, wd, 0);
-            DrawIcon (x, y, w);
+            DrawPoI (x, y, w);
             
-            #ifdef _WIN32_WCE
+            #if 0 //def NOGTK
             SelectObject (mygc, sysFont);
-	    SetBkMode (mygc, TRANSPARENT);
+            SetBkMode (mygc, TRANSPARENT);
             const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
             UTF16 *tStart = (UTF16 *) wcTmp;
             if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart, tStart +
                   sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
                 == conversionOK) {
-              ExtTextOut (mygc, x - len * 3, y + icon[3] / 2, 0, NULL,
+              ExtTextOutW (mygc, x - len * 3, y + icon[3] / 2, 0, NULL,
                   wcTmp, (wchar_t *) tStart - wcTmp, NULL);
             }
             #endif
@@ -1553,25 +1640,13 @@ gint DrawExpose (void)
             text2B.top ().dst = 200;
             text2B.top ().y2 = text2B.top ().y = y +
                                Style (w)->x[IconSet * 4 + 3] / 2;
-            #ifdef PANGO_VERSION
-            //if (Style (w)->scaleMax > zoom / 2 || zoom < 2000) {
-              //mat.xx = mat.yy = 1.0;
-              //mat.xy = mat.yx = 0;
-              //x0 = x /*- mat.xx / 3 * len*/; /* Render the name of the node */
-              //y0 = y /* + mat.xx * f->ascent */ +
-              //  Style (w)->x[IconSet * 4 + 3] / 2;
-              if (Sqr ((__int64) Style (w)->scaleMax / 2 /
+            if (Sqr ((__int64) Style (w)->scaleMax / 2 /
                 (zoom / clip.width)) * DetailLevel > len * len * 100 &&
                 len > 0) best = 0;
-              //(zoom / clip.width) *
-              //(__int64) (zoom / clip.width) * 
-              //4000000000000LL; // Without scaleMax, use 400000000
-            //}
-            #endif
           }
         }
 	// ways (including areas on WinMob : FIXME)
-        else if (nd->other[1] >= 0) {
+        else if (nd->other[1] != 0) {
 	  // perform validation (on non-areas)
 	  bool valid;
 	  if (ValidateMode && Style(w)->areaColour == -1) {
@@ -1597,7 +1672,7 @@ gint DrawExpose (void)
 	  for (int stage = ( valid ? 1 : 0);stage<2;stage++) {
 	    nd = orig;
 	    if (stage==0) {
-            #ifndef _WIN32_WCE
+            #ifndef NOGTK
 	      gdk_gc_set_foreground (mygc, &validateColour);
 	      gdk_gc_set_line_attributes (mygc, 10,
 		       GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
@@ -1606,7 +1681,7 @@ gint DrawExpose (void)
             #endif
 	    }
 	    else if (stage == 1) {
-              #ifndef _WIN32_WCE
+              #ifndef NOGTK
 	      gdk_gc_set_foreground (mygc, &styleColour[Style (w) - style][1]);
 	      gdk_gc_set_line_attributes (mygc, Style (w)->lineWidth,
 		    Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
@@ -1619,7 +1694,7 @@ gint DrawExpose (void)
 	    int cumulative = 0;
             q.push (linePtType (oldx, oldy, cumulative));
 	    do {
-	      ndType *next = ndBase + nd->other[1];
+	      ndType *next = nd + nd->other[1];
 	      if (next->lat == INT_MIN) break; // Node excluded from build
 	      int x = X (next->lon, next->lat), x2;
 	      int y = Y (next->lon, next->lat), y2;
@@ -1668,71 +1743,21 @@ gint DrawExpose (void)
                 cumulative += isqrt (Sqr (oldx - x2) + Sqr (oldy - y2));
                 q.push (linePtType (x2, y2, cumulative));
                 ConsiderText (&q, FALSE, len, &best, &text2B.top ());
-                #ifdef _WIN32_WCE
-		int newb = oldx > x ? oldx - x : x - oldx;
-		if (newb < oldy - y) newb = oldy - y;
-		if (newb < y - oldy) newb = y - oldy;
-		if (best < newb) {
-		  best = newb;
-		  bestW = (x > oldx ? -1 : 1) * (x - oldx);
-		  bestH = (x > oldx ? -1 : 1) * (oldy - y);
-		  x0 = next->lon / 2 + nd->lon / 2;
-		  y0 = next->lat / 2 + nd->lat / 2;
-		}
-                #endif
-                #ifdef PANGO_VERSIONxxxxx
-                int lenSqr = Sqr (oldx - x2) + Sqr (oldy - y2);
-                if (lenSqr > maxLenSqr) {
-                  maxLenSqr = lenSqr;
-                  double lonDiff = (nd->lon - next->lon) * cosAzimuth +
-                                   (nd->lat - next->lat) * sinAzimuth;
-                  mat.yy = mat.xx = 1.0 * fabs (oldx - x2) / sqrt (lenSqr);
-                  mat.xy = (oldx > x2 ? 1.0 : -1.0) *
-                           (y2 - oldy) / sqrt (lenSqr);
-                  mat.yx = -mat.xy;
-                  x0 = (oldx + x2) / 2;
-                  y0 = (oldy + y2) / 2;
-                 }
-                 #endif
 	      }
 	      nd = next;
 	      oldx = x;
 	      oldy = y;
 	    } while (itr.left <= nd->lon && nd->lon < itr.right &&
 		     itr.top  <= nd->lat && nd->lat < itr.bottom &&
-		     nd->other[1] >= 0);
+		     nd->other[1] != 0);
             ConsiderText (&q, TRUE, len, &best, &text2B.top ());
 	  }
 	} /* If it has one or more segments */
 	  
-        #ifdef _WIN32_WCE
-        if (best > len * 4) {
-          double hoek = atan2 (bestH, bestW);
-          logFont.lfEscapement = logFont.lfOrientation =
-            1800 + int ((1800 / M_PI) * hoek);
-          
-          HFONT customFont = CreateFontIndirect (&logFont);
-          HGDIOBJ oldf = SelectObject (mygc, customFont);
-	  SetBkMode (mygc, TRANSPARENT);
-          const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
-          UTF16 *tStart = (UTF16 *) wcTmp;
-          if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart, tStart +
-                sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
-              == conversionOK) {
-            ExtTextOut (mygc, X (x0, y0) + int (len * 3 * cos (hoek)),
-                  Y (x0, y0) - int (len * 3 * sin (hoek)), 0, NULL,
-                  wcTmp, (wchar_t *) tStart - wcTmp, NULL);
-          }
-          SelectObject (mygc, oldf);
-          DeleteObject (customFont);
-        }
-        #endif
-        #ifdef PANGO_VERSION
         if (best < 30) {
           text2B.top ().s = (char *)(w + 1) + 1;
           text2B.push (text2Brendered ());
         }
-        #endif
       } /* for each way / icon */
     } // For each layer
   //  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[rail]);
@@ -1746,7 +1771,7 @@ gint DrawExpose (void)
       int nodeCnt = 1, x = X (rt->nd->lon, rt->nd->lat);
       int y = Y (rt->nd->lon, rt->nd->lat);
       __int64 sumLat = rt->nd->lat;
-      #ifndef _WIN32_WCE
+      #ifndef NOGTK
       gdk_gc_set_foreground (mygc, &routeColour);
       gdk_gc_set_line_attributes (mygc, 6,
         GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
@@ -1776,20 +1801,17 @@ gint DrawExpose (void)
       Draw3DLine (x, y, X (tlon, tlat), Y (tlon, tlat));
       len += sqrt (Sqr ((double) (rt->nd->lat - tlat)) +
         Sqr ((double) (rt->nd->lon - tlon)));
-      wchar_t distStr[13];
-      wsprintf (distStr, TEXT ("%.3lf km"), len * (20000 / 2147483648.0) *
+      char distStr[13];
+      sprintf (distStr, "%.3lf km", len * (20000 / 2147483648.0) *
         cos (LatInverse (sumLat / nodeCnt) * (M_PI / 180)));
-      #ifndef _WIN32_WCE
+      DrawString (clip.width - 7 * strlen (distStr), 10, distStr);
+      #if 0 //ndef NOGTK
       gdk_draw_string (draw->window, f, fg_gc, //draw->style->fg_gc[0],
         clip.width - 7 * strlen (distStr), 10, distStr);
       #else
-      SelectObject (mygc, sysFont);
-      SetBkMode (mygc, TRANSPARENT);
-      ExtTextOut (mygc, clip.width - 7 * wcslen (distStr), 0, 0, NULL,
-        distStr, wcslen (distStr), NULL);
       #endif
     }
-    #ifndef _WIN32_WCE
+    #ifndef NOGTK
     for (int i = 1; ShowActiveRouteNodes && i < routeHeapSize; i++) {
       gdk_draw_line (draw->window, mygc,
         X (routeHeap[i]->nd->lon, routeHeap[i]->nd->lat) - 2,
@@ -1825,46 +1847,69 @@ gint DrawExpose (void)
     text2B.pop ();
     while (!text2B.empty ()) {
       text2Brendered *t = &text2B.top();
+      #ifdef PANGO_VERSION
+      PangoRectangle rect;
+      #else
+      struct { int width, height; } rect;
+      struct { double xx, xy, yy, yx; } mat;
+      #endif
+      int x0 = (t->x + t->x2) / 2, y0 = (t->y + t->y2) / 2;
       mat.yy = mat.xx = fabs (t->x - t->x2) / (double) t->dst;
       mat.xy = (t->y - t->y2) / (double)(t->x > t->x2 ? -t->dst : t->dst);
       mat.yx = -mat.xy;
-      int x0 = (t->x + t->x2) / 2, y0 = (t->y + t->y2) / 2;
 
-    //maxLenSqr * DetailLevel > len * len * 100 && len > 0) {
       double move = 0.6;
-      for (char *txt = t->s; *txt != '\0';) {
-        //cairo_set_font_matrix (cai, &mat);
-        /*char *line = (char *) malloc (strcspn (txt, "\n") + 1);
-        memcpy (line, txt, strcspn (txt, "\n"));
-        line[strcspn (txt, "\n")] = '\0'; */
-        //cairo_move_to (cai, x0, y0);
-        //cairo_show_text (cai, line);
+      for (const char *txt = t->s; *txt != '\0';) {
+        #if PANGO_VERSION
         pango_context_set_matrix (pc, &mat);
         pango_layout_set_text (pl,
           string (txt, strcspn (txt, "\n")).c_str (), -1);
-        PangoRectangle rect;
         pango_layout_get_pixel_extents (pl, &rect, NULL);
-        y0 += mat.xx * (f->ascent + f->descent) * move;
-        x0 += mat.xy * (f->ascent + f->descent) * move;
+        #else
+        rect.width = strcspn (txt, "\n") * 9;
+        rect.height = 11;
+        #endif
+        y0 += mat.xx * (rect.height + 3) * move;
+        x0 += mat.xy * (rect.height + 3) * move;
         move = 1.2;
         if (TestOrSet (block, FALSE, 
-          //x0 - (rect.width * mat.xx + rect.height * mat.xy) / 2,
-          //y0 - (rect.height * mat.yy + rect.width * mat.yx) / 2,
           x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3,
           y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3,
           mat.xy * (rect.height), mat.xx * (rect.height),
           mat.xx * (rect.width + 10), mat.yx * (rect.width + 10))) break;
         TestOrSet (block, TRUE, 
-          //x0 - (rect.width * mat.xx + rect.height * mat.xy) / 2,
-          //y0 - (rect.height * mat.yy + rect.width * mat.yx) / 2,
           x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3,
           y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3,
           mat.xy * (rect.height), mat.xx * (rect.height),
           mat.xx * (rect.width + 10), mat.yx * (rect.width + 10));
+        #ifndef NOGTK
         gdk_draw_layout (GDK_DRAWABLE (draw->window),
           fg_gc /*draw->style->fg_gc[0]*/,
           x0 - (rect.width * mat.xx + rect.height * fabs (mat.xy)) / 2,
           y0 - (rect.height * mat.yy + rect.width * fabs (mat.xy)) / 2, pl);
+        #else
+        double hoek = atan2 (t->y2 - t->y, t->x - t->x2);
+        if (t->x2 < t->x) hoek += M_PI;
+        logFont.lfEscapement = logFont.lfOrientation =
+          1800 + int ((1800 / M_PI) * hoek);
+        
+        HFONT customFont = CreateFontIndirect (&logFont);
+        HGDIOBJ oldf = SelectObject (mygc, customFont);
+        SetBkMode (mygc, TRANSPARENT);
+        const unsigned char *sStart = (const unsigned char *) txt;
+        UTF16 *tStart = (UTF16 *) wcTmp;
+        int len = strcspn (txt, "\n");
+        if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart,
+              tStart + sizeof (wcTmp) / sizeof (wcTmp[0]),  lenientConversion)
+            == conversionOK) {
+          ExtTextOutW (mygc,
+                x0 - lrint (len * 4 * mat.xx + rect.height / 2 * mat.xy),
+                y0 + lrint (len * 4 * mat.xy - rect.height / 2 * mat.xx), 
+                0, NULL, wcTmp, (wchar_t *) tStart - wcTmp, NULL);
+        }
+        SelectObject (mygc, oldf);
+        DeleteObject (customFont);
+        #endif
         if (zoom / clip.width > 20) break;
         while (*txt != '\0' && *txt++ != '\n') {}
       }
@@ -1875,7 +1920,7 @@ gint DrawExpose (void)
   else if (option == searchMode) {
     for (int i = 0, y = SearchSpacing / 2; i < searchCnt && gosmSstr[i];
              i++, y += SearchSpacing) {
-      DrawIcon (SearchSpacing / 2, y, gosmSway[i]);
+      DrawPoI (SearchSpacing / 2, y, gosmSway[i]);
       
       double dist = sqrt (Sqr ((__int64) clon - gosmSway[i]->clon) +
           Sqr ((__int64) clat - gosmSway[i]->clat)) * (20000 / 2147483648.0) *
@@ -1886,7 +1931,7 @@ gint DrawExpose (void)
       DrawString (SearchSpacing + 33 - 11 * strcspn (distance, " "), y - 10,
         distance); // Right adjustment is inaccurate
       
-      #ifndef _WIN32_WCE
+      #ifndef NOGTK
       gdk_gc_set_foreground (mygc, &resultArrowColour);
       gdk_gc_set_line_attributes (mygc, 1,
         GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
@@ -1936,7 +1981,7 @@ gint DrawExpose (void)
       0);
     DrawString (50, draw->allocation.height / 2, optStr);
   }
-  #ifndef _WIN32_WCE
+  #ifndef NOGTK
   /* Buttons now on the top row 
   gdk_draw_rectangle (draw->window, draw->style->bg_gc[0], TRUE,
     clip.width - ButtonSize * 20, clip.height - ButtonSize * 60,
@@ -1966,6 +2011,8 @@ gint DrawExpose (void)
         i == 1 ? TEXT ("-") : TEXT ("+"), 1, NULL);
   }
 
+ #endif
+ #if 0
   wchar_t coord[21];
   if (ShowCoordinates == 1) {
     wsprintf (coord, TEXT ("%9.5lf %10.5lf"), LatInverse (clat),
@@ -1991,7 +2038,7 @@ gint DrawExpose (void)
   return FALSE;
 }
 
-#ifndef _WIN32_WCE
+#ifndef NOGTK
 GtkWidget *searchW;
 
 int ToggleSearchResults (void)
@@ -2035,7 +2082,7 @@ void InitializeOptions (void)
 
 #endif // HEADLESS
 
-#ifndef _WIN32_WCE
+#ifndef NOGTK
 int UserInterface (int argc, char *argv[], 
 		   const char* pakfile, const char* stylefile) {
 
@@ -2217,6 +2264,7 @@ int UserInterface (int argc, char *argv[],
   IconSet = 1;
   DetailLevel = 2;
   FastestRoute = 1;
+  Background = 1;
   Vehicle = motorcarR;
   ChangeOption ();
   IncrementalSearch ();
@@ -2308,13 +2356,14 @@ int main (int argc, char *argv[])
   // close the logfile if it has been opened
   if (logFP(false)) fclose(logFP(false));
 }
-#else // _WIN32_WCE
-//----------------------------- _WIN32_WCE ------------------
+#else // NOGTK / WIN32 Native;
+//----------------------------- WIN32 Native ------------------
 HANDLE port = INVALID_HANDLE_VALUE;
 
 HBITMAP bmp;
-HDC iconsDc, maskDc, bufDc;
+HDC iconsDc, bufDc;
 HPEN pen[2 << STYLE_BITS];
+HBRUSH brush[2 << STYLE_BITS];
 int pakSize;
 UTF16 appendTmp[50];
 
@@ -2324,6 +2373,7 @@ BOOL CALLBACK DlgSearchProc (
 	WPARAM wParam, 
 	LPARAM lParam)
 {
+#if 0
   SHINITDLGINFO di;
 
     switch (Msg) {
@@ -2358,32 +2408,6 @@ BOOL CALLBACK DlgSearchProc (
       }
       return TRUE;
     case WM_COMMAND:
-      if (LOWORD (wParam) == IDC_EDIT1) {
-        HWND edit = GetDlgItem (hwnd, IDC_EDIT1);
-        char editStr[50];
-
-        memset (appendTmp, 0, sizeof (appendTmp));
-        int wstrlen = Edit_GetLine (edit, 0, appendTmp, sizeof (appendTmp));
-        unsigned char *tStart = (unsigned char*) editStr;
-        const UTF16 *sStart = (const UTF16 *) appendTmp;
-        if (ConvertUTF16toUTF8 (&sStart,  sStart + wstrlen,
-              &tStart, tStart + sizeof (gosmSstr), lenientConversion)
-            == conversionOK) {
-          *tStart = '\0';
-          hwndList = GetDlgItem (hwnd, IDC_LIST1);
-          SendMessage (hwndList, LB_RESETCONTENT, 0, 0);
-          GosmSearch (clon, clat, editStr);
-          for (int i = 0; i < searchCnt && gosmSstr[i]; i++) {
-            const unsigned char *sStart = (const unsigned char*) gosmSstr[i];
-            UTF16 *tStart = appendTmp;
-            if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (gosmSstr[i]) + 1,
-              &tStart, appendTmp + sizeof (appendTmp) / sizeof (appendTmp[0]),
-              lenientConversion) == conversionOK) {
-              SendMessage (hwndList, LB_ADDSTRING, 0, (LPARAM) appendTmp);
-            }
-          }
-        }
-	return TRUE;
       }
       else if (wParam == IDC_SEARCHGO
          || LOWORD (wParam) == IDC_LIST1 && HIWORD (wParam) == LBN_DBLCLK) {
@@ -2402,16 +2426,20 @@ BOOL CALLBACK DlgSearchProc (
         else EndDialog (hwnd, 0);
       }
     }
+#endif
     return FALSE;
 }
+
+static HWND hwndEdit, button3D;
 
 LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
                                   WPARAM wParam,LPARAM lParam)
 {
   PAINTSTRUCT ps;
   RECT rect;
-  static wchar_t msg[200] = TEXT("No coms");
+  //static wchar_t msg[200] = TEXT("No coms");
   static int done = FALSE;
+  const int topBar = 30;
 
   switch(message) {
     #if 0
@@ -2420,7 +2448,6 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         PostQuitMessage (0);
       }
       break;
-    #endif
 
     case WM_ACTIVATE:
       // Ensure that unwanted wince elements are hidden
@@ -2433,6 +2460,41 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	}
       }
       break;
+    #endif
+ 
+    case WM_CREATE:
+      for (int i = 0; i < 3; i++) {
+        CreateWindow(TEXT ("BUTTON"), i == 0 ? TEXT ("O") :
+                      i == 1 ? TEXT ("-") : TEXT ("+"), BS_PUSHBUTTON |
+                      WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+                      (2 * i + 1) * 70 / 3 - 15, 5, 30, 20, 
+                      hWnd, (HMENU) (IDC_EDIT1 + 1 + i),
+                      (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), 
+                      NULL);       // pointer not needed 
+      }
+      button3D = CreateWindow(TEXT ("BUTTON"), TEXT ("3D"), BS_CHECKBOX |
+                    WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+                    0, 0, 0, 0, hWnd, (HMENU) (IDC_EDIT1 + 1 + 3),
+                    (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), 
+                    NULL);       // pointer not needed 
+      hwndEdit = CreateWindow(TEXT ("EDIT"), NULL, 
+                    WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT,
+                    0, 0, 0, 0,  // set size in WM_SIZE message
+                    hWnd, (HMENU) IDC_EDIT1/*ID_EDITCHILD*/,
+                    (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), 
+                    NULL);       // pointer not needed 
+      SendMessage (hwndEdit, WM_SETTEXT, 0, (LPARAM) "Search"); 
+//      SendMessage (hwndEdit, EM_SETEVENTMASK, 0, ENM_UPDATE | ENM_SETFOCUS);
+      break;
+    case WM_SETFOCUS: 
+      SetFocus(hwndEdit); 
+      break;
+    case WM_SIZE: 
+      draw->allocation.width = LOWORD (lParam);
+      draw->allocation.height = HIWORD (lParam) - topBar;
+      MoveWindow(hwndEdit, 140, topBar - 25, LOWORD(lParam) - 200, 20, TRUE);
+      MoveWindow(button3D, LOWORD (lParam) - 55, 5, 50, 20, TRUE);
+      break;
     case WM_DESTROY:
       PostQuitMessage(0);
       break;
@@ -2440,7 +2502,6 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       do { // Keep compiler happy.
         BeginPaint (hWnd, &ps);
       //GetClientRect (hWnd, &r);
-      //SetBkColor(ps.hdc,RGB(63,63,63));
       //SetTextColor(ps.hdc,(i==state)?RGB(0,128,0):RGB(0,0,0));
       //r.left = 50;
       // r.top = 50;
@@ -2455,8 +2516,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	  SelectObject(maskDc, bmp);
 
           bufDc = CreateCompatibleDC (ps.hdc); //bufDc //GetDC (hWnd));
-          bmp = CreateCompatibleBitmap (ps.hdc, GetSystemMetrics(SM_CXSCREEN),
-            GetSystemMetrics(SM_CYSCREEN));
+          bmp = CreateCompatibleBitmap (ps.hdc, draw->allocation.width,
+            draw->allocation.height);
           SelectObject (bufDc, bmp);
           pen[ROUTE_PEN] = CreatePen (PS_SOLID, 6, 0x00ff00);
 	  pen[VALIDATE_PEN] = CreatePen (PS_SOLID, 10, 0x9999ff);
@@ -2464,24 +2525,29 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	    // replace line colour with area colour 
 	    // if no line colour specified
 	    int c = style[i].lineColour != -1 ? style[i].lineColour
-	      : style[i].areaColour; 
-            pen[i + RESERVED_PENS] = 
+	      : (style[i].areaColour & 0xfefefe) >> 1; 
+            if (c != -1) pen[i + RESERVED_PENS] = 
 	      CreatePen (style[i].dashed ? PS_DASH : PS_SOLID,
-			 style[i].lineWidth, (c >> 16) |
+			 max (1, style[i].lineWidth), (c >> 16) |
 			 (c & 0xff00) |
 			 ((c & 0xff) << 16));
+			if ((c = style[i].areaColour) != -1) brush[i] = CreateSolidBrush
+			  ((c >> 16) | (c & 0xff00) | ((c & 0xff) << 16));
           }
           done = TRUE;
         }
 	rect.top = rect.left = 0;
-	rect.right = GetSystemMetrics(SM_CXSCREEN);
-	rect.bottom = GetSystemMetrics(SM_CYSCREEN);
+	rect.right = draw->allocation.width;
+	rect.bottom = draw->allocation.height;
 	mygc = bufDc;
 	icons = iconsDc;
-	mask = maskDc;
-        DrawExpose (pen);
-	BitBlt (ps.hdc, 0, 0, rect.right,  rect.bottom, bufDc, 0, 0, SRCCOPY);
+        DrawExpose (pen, brush);
+        
+	BitBlt (ps.hdc, 0, topBar, rect.right,  rect.bottom, bufDc, 0, 0, SRCCOPY);
+      //SetBkColor(ps.hdc,RGB(63,63,63));
 	FillRect (bufDc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
+	rect.bottom = topBar;
+	FillRect (ps.hdc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
 //      HPEN pen = CreatePen (a[c2].lineDashed ? PS_DASH : PS_SOLID,
         EndPaint (hWnd, &ps);
       } while (0);
@@ -2529,35 +2595,87 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       if (FollowGPSr) InvalidateRect (hWnd, NULL, FALSE);
       break;
     case WM_LBUTTONDOWN:
-      //MoveTo (LOWORD(lParam), HIWORD(lParam));
-      //PostQuitMessage (0);
-      //if (HIWORD(lParam) < 30) {
-        // state=LOWORD(lParam)/STATEWID;
-      //}
+      SetCapture (hWnd);
+      break;
+    case WM_LBUTTONUP:
+      ReleaseCapture ();
       if (gDisplayOff) {
         CeEnableBacklight(TRUE);
         gDisplayOff = FALSE;
         break;
       }
       GdkEventButton ev;
-      ev.x = LOWORD (lParam);
-      ev.y = HIWORD (lParam);
-      ev.button = 1;
-      Click (NULL, &ev, NULL);
+      if ((ev.y = HIWORD (lParam) - topBar) > 0) {
+        ev.x = LOWORD (lParam);
+        ev.button = 1;
+        Click (NULL, &ev, NULL);
+      }
       if (Exit) PostMessage (hWnd, WM_CLOSE, 0, 0);
       InvalidateRect (hWnd, NULL, FALSE);
       break;
-    case WM_LBUTTONUP:
-      break;
     case WM_MOUSEMOVE:
-      //LineTo (LOWORD(lParam), HIWORD(lParam));
+      if (wParam & MK_LBUTTON) {
+        if (firstDrag[0] >= 0) BitBlt (GetDC (hWnd), 0, topBar,
+          draw->allocation.width, 
+          draw->allocation.height + topBar, GetDC (hWnd),
+          lastDrag[0] - LOWORD (lParam),
+          lastDrag[1] - HIWORD (lParam) + 2 * topBar, SRCCOPY);
+        lastDrag[0] = LOWORD (lParam);
+        lastDrag[1] = HIWORD (lParam) - topBar;
+        if (firstDrag[0] < 0) memcpy (firstDrag, lastDrag, sizeof (firstDrag));
+      }
       break;
-    /*case WM_COMMAND:
-     //switch(wParam) {
-     //}
-     break; */
+    case WM_MOUSEWHEEL:
+      do {
+        GdkEventScroll ev;
+        POINT p;
+        p.x = GET_X_LPARAM (lParam);
+        p.y = GET_Y_LPARAM (lParam);
+        ScreenToClient (hWnd, &p);
+        ev.x = p.x;
+        ev.y = p.y - topBar;
+        
+        ev.direction = GET_WHEEL_DELTA_WPARAM (wParam) > 0
+          ? GDK_SCROLL_UP : GDK_SCROLL_DOWN;
+        Scroll (NULL, &ev, NULL);
+        InvalidateRect (hWnd, NULL, FALSE);
+      } while (0);
+      break;
+    case WM_COMMAND:
+      if (HIWORD (wParam) == BN_CLICKED &&
+          LOWORD (wParam) > IDC_EDIT1 && LOWORD (wParam) <= IDC_EDIT1 + 3) {
+        HitButton (LOWORD (wParam) - IDC_EDIT1 - 1);
+        InvalidateRect (hWnd, NULL, FALSE);
+      }
+      if (HIWORD (wParam) == BN_CLICKED && LOWORD (wParam) == IDC_EDIT1 + 4) {
+        Display3D ^= 1;
+        Button_SetCheck (button3D, Display3D ? BST_CHECKED : BST_UNCHECKED);
+        InvalidateRect (hWnd, NULL, FALSE);
+      }
+      if (HIWORD (wParam) == EN_UPDATE && LOWORD (wParam) == IDC_EDIT1) {
+        char editStr[50];
+
+        memset (appendTmp, 0, sizeof (appendTmp));
+        #ifndef _WIN32_WCE
+        Edit_GetLine (hwndEdit, 0, editStr, sizeof (editStr));
+        if (1) {
+        #else
+        int wstrlen = Edit_GetLine (hwndEdit, 0, appendTmp, sizeof (appendTmp));
+        unsigned char *tStart = (unsigned char*) editStr;
+        const UTF16 *sStart = (const UTF16 *) appendTmp;
+        if (ConvertUTF16toUTF8 (&sStart,  sStart + wstrlen,
+              &tStart, tStart + sizeof (gosmSstr), lenientConversion)
+            == conversionOK) {
+          *tStart = '\0';
+        #endif
+          option = searchMode;
+          GosmSearch (clon, clat, editStr);
+          InvalidateRect (hWnd, NULL, FALSE);
+        }
+     }
+	 break;
     default:
-      return(DefWindowProc(hWnd,message,wParam,lParam));
+      return DefWindowProc (hWnd, message, wParam, lParam);
   }
   return FALSE;
 }
@@ -2591,7 +2709,12 @@ HWND InitInstance(int nCmdShow)
     return FALSE;
   } else {
     
-    mWnd = CreateWindow (TEXT ("GosmoreWClass"), TEXT ("gosmore"), WS_DLGFRAME,
+    mWnd = CreateWindow (TEXT ("GosmoreWClass"), TEXT ("gosmore"), 
+    #ifdef _WIN32_WCE
+    WS_DLGFRAME,
+    #else
+    WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
+    #endif
 			 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
 			 CW_USEDEFAULT,NULL,NULL, hInst,NULL);
     
@@ -2611,6 +2734,9 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
 {
   // loop back here if existing connection fails
   while (!guiDone) {
+  #ifndef _WIN32_WCE
+    Sleep (1000);
+  #else
     // $GPGLL,2546.6752,S,02817.5780,E,210130.812,V,S*5B
     DWORD nBytes, got = 0;
     COMMTIMEOUTS commTiming;
@@ -2733,6 +2859,7 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
 	logprintf("Connection to CommPort failed.\n");
       }
     } // if port != INVALID_FILE_HANDLE
+  #endif
   } // while !guiDone
   guiDone = FALSE;
   //if (log) fclose (log);
@@ -2754,23 +2881,32 @@ void XmlOut (FILE *newWayFile, char *k, char *v)
   }
 }
 
+extern "C" {
 int WINAPI WinMain(
     HINSTANCE  hInstance,	  // handle of current instance
     HINSTANCE  hPrevInstance,	  // handle of previous instance
+    #ifdef _WIN32_WCE
     LPWSTR  lpszCmdLine,	          // pointer to command line
+    #else
+    LPSTR lpszCmdLine,
+    #endif
     int  nCmdShow)	          // show state of window
 {
   if(hPrevInstance) return(FALSE);
   hInst = hInstance;
   gDisplayOff = FALSE;
   wchar_t argv0[80];
-  GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
-  UTF16 *sStart = (UTF16*) argv0, *rchr = (UTF16*) wcsrchr (argv0, '\\');
-  wcscpy (rchr ? (wchar_t *) rchr + 1 : argv0, TEXT (""));
+  GetModuleFileNameW (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
+  UTF16 *sStart = (UTF16*) argv0, *rchr = (UTF16*) wcsrchr (argv0, L'\\');
+  wcscpy (rchr ? (wchar_t *) rchr + 1 : argv0, L"");
   unsigned char *tStart = (unsigned char *) docPrefix;
   ConvertUTF16toUTF8 ((const UTF16 **) &sStart, sStart + wcslen (argv0),
     &tStart, tStart + sizeof (docPrefix), lenientConversion);
   *tStart = '\0';
+  #if 0
+  GetModuleFileName (NULL, docPrefix, sizeof (docPrefix));
+  if (strrchr (docPrefix, '\\')) *strrchr (docPrefix, '\\') = '\0';
+  #endif
 
   char optFileName[sizeof(docPrefix) + 13];
   sprintf (optFileName, "%s\\gosmore.opt", docPrefix);
@@ -2783,8 +2919,12 @@ int WINAPI WinMain(
   //store log file name
   sprintf (logFileName, "%s\\gosmore.log.txt", docPrefix);
 
-  wcscat (argv0, TEXT ("gosmore.pak")); // _arm.exe to ore.pak
-  HANDLE gmap = CreateFileForMapping (argv0, GENERIC_READ, FILE_SHARE_READ,
+  wcscat (argv0, L"gosmore.pak"); // _arm.exe to ore.pak
+  #if 0
+  char argv0[80];
+  sprintf (argv0, "%s\\gosmore.pak", docPrefix);
+  #endif
+  HANDLE gmap = CreateFileForMappingW (argv0, GENERIC_READ, FILE_SHARE_READ,
     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/, NULL);
   if (gmap == INVALID_HANDLE_VALUE) {
     MessageBox (NULL, TEXT ("No pak file"), TEXT (""), MB_APPLMODAL|MB_OK);
@@ -2821,6 +2961,9 @@ int WINAPI WinMain(
   bucketsMin1 = hashTable[-2];
   hashTable -= bucketsMin1 + (bucketsMin1 >> 7) + 5;
 */
+  GtkWidget dumdraw;
+  draw = &dumdraw;
+
   if(!InitApplication ()) return(FALSE);
   if (!InitInstance (nCmdShow)) return(FALSE);
 
@@ -2839,6 +2982,7 @@ int WINAPI WinMain(
   Exit = 0;
   InitializeOptions ();
 
+  #ifdef _WIN32_WCE
   InitCeGlue();
   if (SHFullScreenPtr) {
     if (FullScreen) {
@@ -2850,13 +2994,7 @@ int WINAPI WinMain(
       (*SHFullScreenPtr)(mWnd, SHFS_HIDESIPBUTTON);
     }  
   }
-
-  GtkWidget dumdraw;
-  RECT r;
-  GetClientRect(mWnd,&r);
-  dumdraw.allocation.width = r.right;
-  dumdraw.allocation.height = r.bottom;
-  draw = &dumdraw;
+  #endif
 
   dlgWnd = CreateDialog (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
     NULL, (DLGPROC)DlgSearchProc); // Just in case user goes modeless
@@ -2871,6 +3009,10 @@ int WINAPI WinMain(
 
   MSG    msg;
   while (GetMessage (&msg, NULL, 0, 0)) {
+    if (msg.hwnd == hwndEdit && msg.message == WM_LBUTTONDOWN) {
+      option = option == searchMode ? mapMode : searchMode;
+      InvalidateRect (mWnd, NULL, FALSE);
+    }
     TranslateMessage (&msg);
     DispatchMessage (&msg);
   }
@@ -2935,4 +3077,5 @@ int WINAPI WinMain(
 
   return 0;
 }
+} // extern "C"
 #endif

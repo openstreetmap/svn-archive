@@ -81,24 +81,26 @@
 	};
 
 	Node.prototype.inspect=function() {
-		var str;
-		str ="Lat "+Math.floor(coord2lat (this.y)*10000)/10000+"\n";
-		str+="Lon "+Math.floor(coord2long(this.x)*10000)/10000+"\n";
+		var str = iText('inspector_latlon', Math.floor(coord2lat (this.y)*10000)/10000, Math.floor(coord2long(this.x)*10000)/10000);
 
 		// Status
-		if (!this.clean) { str+="Unsaved"; }
-		if (this.uploading) { str+=" (uploading)"; }
+		if (!this.clean) { str+=iText('inspector_unsaved'); }
+		if (this.uploading) { str+=' ' + iText('inspector_uploading'); }
 		if (!this.clean) { str+="\n"; }
 
 		// Which ways is this in?
 		if (this.numberOfWays()==0) { 
-			str+="Not in any ways (POI)\n";
+			str+=iText('inspector_not_in_any_ways') + "\n";
 		} else {
-			str+="In ways ";
+			str+=iText('inspector_in_ways') + ' ';
 			var w=this.ways; for (var i in w) {
-				str+=i;
-				var n=getName(_root.map.ways[i].attr,waynames); if (n) { str+=" ("+n+")"; }
-				str+=", ";
+				var n=getName(_root.map.ways[i].attr,waynames);
+                if (n) {
+                    str += iText('inspector_way_name', i, n);
+                } else {
+                    str += iText('inspector_way', i);
+                }
+				str += ", ";
 			}
 			str=str.substr(0,str.length-2);
 		}

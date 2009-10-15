@@ -7,7 +7,7 @@
 			removeMovieClip(_root.palettes.inspector);
 		} else {
 			_root.palettes.attachMovie("palette","inspector",++palettedepth);
-			_root.palettes.inspector.initHTML(Stage.width-210,Stage.height-300,"Inspector","<h3>Connections</h3><p></p>");
+			_root.palettes.inspector.initHTML(Stage.width-210,Stage.height-300,iText('inspector'));
 			updateInspector();
 		}
 	};

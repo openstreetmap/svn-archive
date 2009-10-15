@@ -47,7 +47,7 @@
 		if (_root.wayselected) { _root.ws.select(); }
 		if (undopoint) { _root.undo.append(UndoStack.prototype.undo_deletepoint,
 										   new Array(deepCopy(this),waylist,poslist),
-										   "deleting a point"); }
+										   iText('action_deletepoint')); }
 	};
 
 	Node.prototype.moveTo=function(newx,newy,ignoreway,ignore_oneway) {

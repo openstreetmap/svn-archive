@@ -74,7 +74,11 @@ while(my $current_file = shift(@ARGV))
     my $action;
     while(<F>)
     {
-        if (/<(modify|create|delete)/)
+	if (/<\/?osmChange/)
+	{
+	    print;
+	}
+        elsif (/<(modify|create|delete)/)
         {
             $action = $1;
         }

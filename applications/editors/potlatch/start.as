@@ -5,7 +5,7 @@
 	// Load presets
 	
 	function loadPresets() {
-        pleaseWait("Please wait - loading presets.");
+        pleaseWait("Please wait - reticulating splines.");
 		preresponder = function() { };
 		preresponder.onResult = function(result) {
 			_root.presets=result[0];

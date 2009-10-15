@@ -32,7 +32,7 @@ get_header();
 							You'll need to download this plugin, and follow the instructions:
 							http://binarybonsai.com/wordpress/time-since/ */
 							/* $entry_datetime = abs(strtotime($post->post_date) - (60*120)); echo time_since($entry_datetime); echo ' ago'; */ ?>
-						on <?php the_time('l, F jS, Y') ?> at <?php the_time() ?>
+						on <?php the_time('l, F jS, Y') ?> at <?php the_time() ?> by <?php the_author() ?>
 						and is filed under <?php the_category(', ') ?>.
 						You can follow any responses to this entry through the <?php post_comments_feed_link('RSS 2.0'); ?> feed.
 

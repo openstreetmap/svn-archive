@@ -761,8 +761,9 @@
 		};
 	}
 
-	function showPosition() { setTooltip("lat "+Math.floor(coord2lat (_root.map._ymouse)*10000)/10000
-									  +"\nlon "+Math.floor(coord2long(_root.map._xmouse)*10000)/10000,0); }
+	function showPosition() { setTooltip(iText('hint_latlon',
+                                                 Math.floor(coord2lat (_root.map._ymouse)*10000)/10000,
+									             Math.floor(coord2long(_root.map._xmouse)*10000)/10000,0)); }
 	function startCount()	{ z=new Date(); _root.startTime=z.getTime(); }
 	function endCount(id)	{ z=new Date(); zz=Math.floor((z.getTime()-_root.startTime)*100);
 							if (zz>100) { _root.chat.text+=id+":"+zz+";"; } }
@@ -1022,8 +1023,14 @@
 
 		box.attachMovie("menu","background",60);
 		box.background.init(24,12,preferences.data.tileset,
-			new Array("OSM - Mapnik","OSM - Osmarender","OSM - Maplint (errors)","OSM - cycle map","Out-of-copyright (NPE)","Out-of-copyright (7th)","Out-of-copyright (25k)"),
-			'Choose the background to display',function(n) { preferences.data.tileset=n; _root.windows.options.box.bgoption.select(1); },null,0);
+			new Array(iText('option_layer_mapnik'),
+                      iText('option_layer_osmarender'),
+                      iText('option_layer_maplint'),
+                      iText('option_layer_cycle_map'),
+                      iText('option_layer_ooc_npe'),
+                      iText('option_layer_ooc_7th'),
+                      iText('option_layer_ooc_25k')),
+			iText('option_layer_tip'),function(n) { preferences.data.tileset=n; _root.windows.options.box.bgoption.select(1); },null,0);
 
 		var w=box.bgoption[3].prompt._width+25;
 		box.createTextField("custom",50,w,52,190-w,17);

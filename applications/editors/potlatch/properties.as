@@ -76,7 +76,7 @@
 		this.attachMovie("menu","dropdown",1);
 		this.dropdown.init(30,5,value,
 						   presetnames[this.pw.proptype][this.group],
-						   'Choose from a menu of preset tags describing the '+pw.proptype,
+						   iText('preset_tip', pw.proptype),
 						   this.setAttributesFromPreset,this,151);
 	};
 	PresetMenu.prototype.reflect=function() {

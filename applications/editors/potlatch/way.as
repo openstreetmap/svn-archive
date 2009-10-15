@@ -1290,14 +1290,17 @@
 		var str='';
 
 		// Status
-		if (this.locked) { str+="Locked\n"; }
-		if (!this.clean) { str+="Unsaved"; }
-		if (this.uploading) { str+=" (uploading)"; }
+		if (this.locked) { str+=iText('inspector_way_locked') + "\n"; }
+		if (!this.clean) { str+=iText('inspector_unsaved'); }
+		if (this.uploading) { str+=' ' + iText('inspector_uploading'); }
 		if (!this.clean || this.uploading) { str+="\n"; }
 
 		// Number of nodes
-		str+=this.path.length+" nodes";
-		if (this.path[this.path.length-1]==this.path[0]) { str+=" (closed)"; }
+		if (this.path[this.path.length-1]==this.path[0]) {
+            str += iText('inspector_way_nodes_closed', this.path.length);
+        } else {
+            str += iText('inspector_way_nodes', this.path.length);
+        }
 		str+="\n";
 
 		// Connections to other ways of same type
@@ -1314,11 +1317,11 @@
 				}
 			}
 		}
-		str+="Connects to ";
+
 		if (this.attr[principal]==undefined) { 
-			str+=same+" ways";
+            str += iText('inspector_way_connects_to', same);
 		} else {
-			str+=same+" "+this.attr[principal]+" and "+different+" other "+principal;
+            str += iText('inspector_way_connects_to_principal', same, this.attr[principal], different, principal);
 		}
 
 		return "<p>"+str+"</p>";

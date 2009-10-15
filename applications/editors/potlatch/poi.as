@@ -180,13 +180,11 @@
 	};
 
 	POI.prototype.inspect=function() {
-		var str;
-		str ="Lat "+Math.floor(coord2lat (this._y)*10000)/10000+"\n";
-		str+="Lon "+Math.floor(coord2long(this._x)*10000)/10000+"\n";
+		var str = iText('inspector_latlon', Math.floor(coord2lat (this._y)*10000)/10000, Math.floor(coord2long(this._x)*10000)/10000);
 
-		if (this.locked) { str+="Locked\n"; }
-		if (!this.clean) { str+="Unsaved"; }
-		if (this.uploading) { str+=" (uploading)"; }
+		if (this.locked) { str+=iText('inspector_locked') + "\n"; }
+		if (!this.clean) { str+=iText('inspector_unsaved'); }
+		if (this.uploading) { str+=' ' + iText('inspector_uploading'); }
 		return "<p>"+str+"</p>";
 	};
 

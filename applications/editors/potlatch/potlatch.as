@@ -889,7 +889,7 @@
 	// =====================================================================
 	// Internationalisation functions
 	
-	function iText(id,key1,key2) {
+	function iText(id,key1,key2,key3,key4) {
 		var t;
         if (_root.i18n[id]) {
             t=_root.i18n[id];
@@ -898,6 +898,8 @@
         }
 		t=replaceStr(t,'$1',key1);
 		t=replaceStr(t,'$2',key2);
+		t=replaceStr(t,'$3',key3);
+		t=replaceStr(t,'$4',key4);
 		t=replaceStr(t,'\\n',"\n");
 		return t;
 	}
@@ -1016,7 +1018,7 @@
 
 		box.attachMovie("radio","bgoption",40);
 		box.bgoption.addButton(10,15,'');
-		box.bgoption.addButton(10,35,'Yahoo!');
+		box.bgoption.addButton(10,35,iText('option_layer_yahoo'));
 		box.bgoption.addButton(10,55,iText('custom'));
 		box.bgoption.addButton(10,75,iText('nobackground'));
 		box.bgoption.doOnChange=function(n) { preferences.data.bgtype=n; initBackground(); };

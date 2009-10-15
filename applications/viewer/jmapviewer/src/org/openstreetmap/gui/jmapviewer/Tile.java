@@ -175,6 +175,9 @@ public class Tile {
         return loaded;
     }
 
+    public boolean isLoading() {
+        return loading;
+    }
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
     }
@@ -214,6 +217,14 @@ public class Tile {
 
     public static String getTileKey(TileSource source, int xtile, int ytile, int zoom) {
         return zoom + "/" + xtile + "/" + ytile + "@" + source.getName();
+    }
+    public String getStatus() {
+        String status = "new";
+        if (this.loading)
+            status = "loading";
+        if (this.loaded)
+            status = "loaded";
+        return status;
     }
 
 }

@@ -161,30 +161,42 @@
 
 	function uploadPOIs(list) {
 		for (var id in list) {
-			var n=getName(_root.map.pois[id].attr,nodenames); if (n!='') { n=", "+n; }
-            _root.windows.upload.box.progress.text+="Uploading POI "+id+n+"\n";
+			var n=getName(_root.map.pois[id].attr,nodenames);
+            if (n!='') {
+                _root.windows.upload.box.progress.text += iText('uploading_poi_name', id, n) + "\n";
+            } else {
+                _root.windows.upload.box.progress.text += iText('uploading_poi', id) + "\n";
+            }
 			_root.map.pois[id].upload();
 		}
 	}
 
 	function uploadWays(list) {
 		for (var id in list) {
-			var n=getName(_root.map.ways[id].attr,waynames); if (n!='') { n=", "+n; }
-            _root.windows.upload.box.progress.text+="Uploading way "+id+n+"\n";
+			var n=getName(_root.map.ways[id].attr,waynames);
+            if (n!='') {
+                _root.windows.upload.box.progress.text += iText('uploading_way_name', id, n) + "\n";
+            } else {
+                _root.windows.upload.box.progress.text += iText('uploading_way', id) + "\n";
+            }
 			_root.map.ways[id].upload();
 		}
 	}
 	
 	function uploadRelations(list) {
 		for (var id in list) {
-			var n=getName(_root.map.relations[id].attr,[]); if (n!='') { n=", "+n; }
-            _root.windows.upload.box.progress.text+="Uploading relation "+id+n+"\n";
+			var n=getName(_root.map.relations[id].attr,[]);
+            if (n!='') {
+                _root.windows.upload.box.progress.text += iText('uploading_relation_name', id, n) + "\n";
+            } else {
+                _root.windows.upload.box.progress.text += iText('uploading_relation', id) + "\n";
+            }
 			_root.map.relations[id].upload();
 		}
 	}
 	
 	function uploadDeletedWays(list) {
-        _root.windows.upload.box.progress.text+="Deleting ways";
+        _root.windows.upload.box.progress.text+=iText('uploading_deleting_ways');
 		for (var id in list) {
             _root.windows.upload.box.progress.text+=".";
 			deleteresponder = function() { };
@@ -196,7 +208,7 @@
 	}
 
 	function uploadDeletedPOIs(list) {
-        _root.windows.upload.box.progress.text+="Deleting POIs";
+        _root.windows.upload.box.progress.text+=iText('uploading_deleting_pois');
 		for (var id in list) {
             _root.windows.upload.box.progress.text+=".";
 			poidelresponder = function() { };

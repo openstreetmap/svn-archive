@@ -1,5 +1,8 @@
-#ifdef ROUTE_SRV
+#ifndef _WIN32
 #include <sys/mman.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #endif
 
 #include <stdio.h>
@@ -17,20 +20,14 @@ using namespace std;
 routeNodeType *route = NULL, *shortest = NULL, **routeHeap;
 long dhashSize;
 int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
-int *hashTable, bucketsMin1, pakHead = 0xEB3A943;
+int *hashTable, bucketsMin1, pakHead = 0xEB3A943, gosmStyleCnt;
 char *gosmData, *gosmSstr[searchCnt];
-
-// this is used if the stylerec in the pakfile are overwritten with
-// one loaded from an alternative xml stylefile
-styleStruct srec[2 << STYLE_BITS];
 
 ndType *ndBase;
 styleStruct *style;
 wayType *gosmSway[searchCnt];
 
 // store the maximum speeds (over all waytypes) of each vehicle type
-float maxspeeds[layerBit1];
-
 int TagCmp (char *a, char *b)
 { // This works like the ordering of books in a library : We ignore
   // meaningless words like "the", "street" and "north". We (should) also map
@@ -292,6 +289,18 @@ int routeAddCnt;
 static ndType *endNd[2] = { NULL, NULL}, from;
 static int toEndNd[2][2], bailout;
 
+void GosmFreeRoute (void)
+{
+  #ifndef _WIN32
+  if (route) {
+    munmap (route, (sizeof (*route) + sizeof (*routeHeap)) * dhashSize);
+  }    
+  #else
+  free (route);
+  #endif
+  route = NULL;
+}
+
 routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
 { /* This function is called when we find a valid route that consists of the
      segments (hs, hs->other), (newshort->hs, newshort->hs->other),
@@ -302,17 +311,15 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
      modifying anything. */
   unsigned hash = (intptr_t) nd / 10 + dir, i = 0;
   routeNodeType *n;
+  if (nd->lat == INT_MIN) return NULL; // Nodes missing from OSM-XML
   do {
-    #ifdef ROUTE_SRV
-    n = route + (nd == &from ? dhashSize - 2 : (nd - ndBase) * 2) + dir;
-    #else
     if (i++ > 10) {
       //fprintf (stderr, "Double hash bailout : Table full, hash function "
       //  "bad or no route exists\n");
       return NULL;
     }
     n = route + hash % dhashSize;
-    #endif
+
     /* Linear congruential generator from wikipedia */
     hash = (unsigned) (hash * (__int64) 1664525 + 1013904223);
     if (n->nd == NULL) { /* First visit of this node */
@@ -326,7 +333,7 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
                                Sqr ((__int64)(nd->lon - rlon))));
       if (!shortest || n->remain < shortest->remain) {
         shortest = n;
-        bailout = 65000; // This constant needs tweeking
+        bailout = 123000; // This constant needs tweeking
       }
       ROUTE_SET_ADDND_COUNT (routeAddCnt + 1);
     }
@@ -353,20 +360,6 @@ inline int IsOneway (wayType *w, int Vehicle)
     (w->bits & (1 << motorcarR))) && (w->bits & (1<<onewayR));
 }
 
-inline float GetWayInvSpeed (wayType *w, int Vehicle) {
-  if (w->maxspeed < Style (w)->aveSpeed[Vehicle]) {
-    // if w.maxspeed is less than the vehicle speed, then calculate
-    // invSpeed from w->maxspeed
-    // printf("DEBUG: overriding %f with %f (%f with %f)\n",
-    // 	   Style(w)->aveSpeed[Vehicle], w->maxspeed,
-    // 	   Style(w)->invSpeed[Vehicle], maxspeeds[Vehicle]/w->maxspeed);
-    return maxspeeds[Vehicle] / w->maxspeed;
-  } else {
-    // otherwise, just use the stored vehicle invSpeed
-    return Style (w)->invSpeed[Vehicle];
-  }
-}
-
 void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
 { /* Recalculate is faster but only valid if 'to', 'Vehicle' and
      'fast' did not change */
@@ -386,10 +379,10 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
       if (!(Way (itr.nd[0])->bits & (1 << Vehicle))) {
         continue;
       }
-      if (itr.nd[0]->other[0] < 0) continue;
+      if (itr.nd[0]->other[0] == 0) continue;
       __int64 lon0 = lon - itr.nd[0]->lon, lat0 = lat - itr.nd[0]->lat,
-              lon1 = lon - (ndBase + itr.nd[0]->other[0])->lon,
-              lat1 = lat - (ndBase + itr.nd[0]->other[0])->lat,
+              lon1 = lon - (itr.nd[0] + itr.nd[0]->other[0])->lon,
+              lat1 = lat - (itr.nd[0] + itr.nd[0]->other[0])->lat,
               dlon = lon1 - lon0, dlat = lat1 - lat0;
       /* We use Pythagoras to test angles for being greater that 90 and
          consequently if the point is behind hs[0] or hs[1].
@@ -416,7 +409,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
       
       if (d < bestd) {
         bestd = d;
-        double invSpeed = !fast ? 1.0 : GetWayInvSpeed(w,Vehicle);
+        double invSpeed = !fast ? 1.0 : Style (w)->invSpeed[Vehicle];
         //printf ("%d %lf\n", i, invSpeed);
         toEndNd[i][0] =
           lrint (sqrt ((double)(Sqr (lon0) + Sqr (lat0))) * invSpeed);
@@ -445,24 +438,21 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
   from.lat = flat;
   from.lon = flon;
   if (recalculate || !route) {
-    #ifdef ROUTE_SRV
-    static FILE *tfile = NULL;
-    if (tfile) {
-      fclose (tfile);
-      munmap (route, (sizeof (*route) + sizeof (*routeHeap)) * dhashSize);
-    }
-    dhashSize = hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2] * 2;
-    if ((tfile = tmpfile ()) == NULL || ftruncate (fileno (tfile), dhashSize *
-               (sizeof (*route) + sizeof (*routeHeap))) != 0 ||
+    GosmFreeRoute ();
+    #ifndef _WIN32
+    int dzero = open ("/dev/zero", O_RDWR);
+    dhashSize = 10619863; // Always allocate roughly 300MB
+     //hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2] * 2;
+    if (dzero == -1 ||
         (route = (routeNodeType*) mmap (NULL, dhashSize *
         (sizeof (*route) + sizeof (*routeHeap)),
-        PROT_READ | PROT_WRITE, MAP_SHARED, fileno (tfile), 0)) == MAP_FAILED) {
-      fprintf (stderr, "Ftruncate and Mmap of routing arrays\n");
+        PROT_READ | PROT_WRITE, MAP_SHARED, dzero, 0)) == MAP_FAILED) {
+      fprintf (stderr, "Error: Mmap of dnull for routing arrays\n");
       route = NULL;
       return;
     }
+    if (dzero != -1) close (dzero);
     #else
-    free (route);
     dhashSize = Sqr ((tlon - flon) >> 16) + Sqr ((tlat - flat) >> 16) + 20;
     dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
     // Allocate one piece of memory for both route and routeHeap, so that
@@ -487,9 +477,9 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     rlat = flat;
     rlon = flon;
     AddNd (endNd[0], 0, toEndNd[0][0], NULL);
-    AddNd (ndBase + endNd[0]->other[0], 1, toEndNd[0][1], NULL);
+    AddNd (endNd[0] + endNd[0]->other[0], 1, toEndNd[0][1], NULL);
     AddNd (endNd[0], 1, toEndNd[0][0], NULL);
-    AddNd (ndBase + endNd[0]->other[0], 0, toEndNd[0][1], NULL);
+    AddNd (endNd[0] + endNd[0]->other[0], 0, toEndNd[0][1], NULL);
   }
   else {
     routeNodeType *frn = AddNd (&from, 0, -1, NULL);
@@ -497,11 +487,11 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
 
     routeNodeType *rn = AddNd (endNd[1], 0, -1, NULL);
     if (rn) AddNd (&from, 0, toEndNd[1][1], rn);
-    routeNodeType *rno = AddNd (ndBase + endNd[1]->other[0], 1, -1, NULL);
+    routeNodeType *rno = AddNd (endNd[1] + endNd[1]->other[0], 1, -1, NULL);
     if (rno) AddNd (&from, 0, toEndNd[1][0], rno);
   }
   
-  for (bailout = 65000; bailout > 0 && routeHeapSize > 1; bailout--) {
+  for (bailout = 123000; bailout > 0 && routeHeapSize > 1; bailout--) {
   /* Consider the example where 'from' and 'to' are on opposite sides of a
      a river. The algorithm will quickly advance up to the river bank, and
      then search along it for a way across. This searching may involve moving
@@ -511,6 +501,14 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
        Robben Island, South Africa to Bloubergrant, South Africa
     */
     routeNodeType *root = routeHeap[1];
+    /* routeHeap[1] is not the best choice because it may not be in memory,
+       or in memory but not in the cache.
+       So it may be better to choose a different node that is both near the
+       root of the heap and near (in address space) to the last node processed
+       
+       Then the loop will terminate not when root points to 'from' but when
+       routeHeap[1] points to 'from'.
+    */
     routeHeapSize--;
     int beste = routeHeap[routeHeapSize]->best;
     for (int i = 2; ; ) {
@@ -532,7 +530,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
       shortest = root->shortest; // get called with recalculate=0
       break;
     }
-    if (root->nd == (!root->dir ? endNd[1] : ndBase + endNd[1]->other[0])) {
+    if (root->nd == (!root->dir ? endNd[1] : endNd[1] + endNd[1]->other[0])) {
       AddNd (&from, 0, toEndNd[1][1 - root->dir], root);
     }
     ndType *nd = root->nd, *other, *firstNd, *restrictItr;
@@ -557,51 +555,31 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
         /* Don't consider an immediate U-turn to reach root->hs->other.
            This doesn't exclude 179.99 degree turns though. */
         
-        if (nd->other[dir] < 0) continue;
+        if (nd->other[dir] == 0) continue;
         if (Vehicle != footR && Vehicle != bicycleR) {
-          for (restrictItr = firstNd; restrictItr->other[0] < 0 &&
-                          restrictItr->other[1] < 0; restrictItr++) {
+          for (restrictItr = firstNd; restrictItr->other[0] == 0 &&
+                          restrictItr->other[1] == 0; restrictItr++) {
             wayType *w  = Way (restrictItr);
-            if (StyleNr (w) < restriction_no_right_turn ||
-                StyleNr (w) > restriction_only_straight_on) continue;
-  //          printf ("aa\n");
-            if (atoi ((char*)(w + 1) + 1) == nd->wayPtr &&
-                atoi (strchr ((char*)(w + 1) + 1, ' ')) == root->nd->wayPtr) {
-               ndType *n2 = ndBase + root->nd->other[root->dir];
-               ndType *n0 = ndBase + nd->other[dir];
-               __int64 straight =
-                 (n2->lat - nd->lat) * (__int64)(nd->lat - n0->lat) +
-                 (n2->lon - nd->lon) * (__int64)(nd->lon - n0->lon), left =
-                 (n2->lat - nd->lat) * (__int64)(nd->lon - n0->lon) -
-                 (n2->lon - nd->lon) * (__int64)(nd->lat - n0->lat);
-               int azi = straight < left ? (straight < -left ? 3 : 0) :
-                 straight < -left ? 2 : 1;
-//               printf ("%d %9d %9d %d %d\n", azi, n2->lon - nd->lon, n0->lon - nd->lon, straight < left, straight < -left);
-//               printf ("%d %9d %9d\n", azi, n2->lat - nd->lat, n0->lat - nd->lat);
-               static const int no[] = { restriction_no_left_turn,
-                 restriction_no_straight_on, restriction_no_right_turn,
-                 restriction_no_u_turn },
-                 only[] = { restriction_only_left_turn,
-                 restriction_only_straight_on, restriction_only_right_turn,
-                 -1 /*  restriction_only_u_turn */ };
-               if (StyleNr (w) == only[azi ^ 1] ||
-                   StyleNr (w) == only[azi ^ 2] || StyleNr (w) == only[azi ^ 3]
-                   || StyleNr (w) == no[azi]) break;
-//               printf ("%d %d %d\n", azi, n2->lon, n0->lon);
+            if (StyleNr (w) >= restriction_no_right_turn &&
+                StyleNr (w) <= restriction_only_straight_on &&
+                atoi ((char*)(w + 1) + 1) == nd->wayPtr &&
+            (StyleNr (w) <= restriction_no_straight_on) ==
+            (atoi (strchr ((char*)(w + 1) + 1, ' ')) == root->nd->wayPtr)) {
+              break;
             }
           }
-          if (restrictItr->other[0] < 0 &&
-              restrictItr->other[1] < 0) continue;
+          if (restrictItr->other[0] == 0 &&
+              restrictItr->other[1] == 0) continue;
         }
         // Tagged node, start or end of way or restriction.
         
-        other = ndBase + nd->other[dir];
+        other = nd + nd->other[dir];
         wayType *w = Way (nd);
         if ((w->bits & (1 << Vehicle)) && (dir || !IsOneway (w, Vehicle))) {
           int d = lrint (sqrt ((double)
             (Sqr ((__int64)(nd->lon - other->lon)) +
              Sqr ((__int64)(nd->lat - other->lat)))) *
-			 (fast ? GetWayInvSpeed(w, Vehicle) : 1.0));     
+			 (fast ? Style (w)->invSpeed[Vehicle] : 1.0));     
           if (rootIsAdestination && !(w->destination & (1 << Vehicle))) {
             d += 5000000; // 500km penalty for entering v='destination' area.
           }
@@ -626,8 +604,8 @@ int JunctionType (ndType *nd)
     // TODO : Only count segment traversable by 'Vehicle'
     // Except for the case where a cyclist passes a motorway_link.
     // TODO : Don't count oneways entering the roundabout
-    if (nd->other[0] >= 0) segCnt++;
-    if (nd->other[1] >= 0) segCnt++;
+    if (nd->other[0] != 0) segCnt++;
+    if (nd->other[1] != 0) segCnt++;
     if (StyleNr (Way (nd)) == highway_traffic_signals) {
       ret = 't';
     }
@@ -639,39 +617,19 @@ int JunctionType (ndType *nd)
   return segCnt > 2 ? toupper (ret) : ret;
 }
 
-void CalculateMaxSpeeds(/* in */ const styleStruct* srec, int styleCnt, 
-			/* out */ float* maxspeeds) {
-  //calculate maxspeeds for vehicles from styles
-  for (int i = 0; i < layerBit1; i++) {
-    // first calculate the maximum specified speed for each vehicle
-    // over all styles
-    maxspeeds[i] = 0;
-    // for style
-    for (int j = 0; j < styleCnt; j++) {
-      if (srec[j].aveSpeed[i] > maxspeeds[i]) {
-	maxspeeds[i] = srec[j].aveSpeed[i];
-      }
-    }
-  }
-}
-
 int GosmInit (void *d, long size)
 {
   if (!d) return FALSE;
   gosmData = (char*) d;
   ndBase = (ndType *)(gosmData + ((int*)(gosmData + size))[-1]);
   bucketsMin1 = ((int *) (gosmData + size))[-2];
-  int styleCnt = ((int *) (gosmData + size))[-3];
+  gosmStyleCnt = ((int *) (gosmData + size))[-3];
   style = (struct styleStruct *)
-    (gosmData + size - sizeof (styleCnt) * 3) - styleCnt;
+    (gosmData + size - sizeof (gosmStyleCnt) * 3) - gosmStyleCnt;
   hashTable = (int *) (style) - bucketsMin1 - (bucketsMin1 >> 7) - 3;
   
   memset (gosmSway, 0, sizeof (gosmSway));
 
-  // calculate the maximum specified speed for each vehicle over all styles
-  // (used for routing later)
-  CalculateMaxSpeeds(style, styleCnt, maxspeeds);
-  
   return ndBase && hashTable && *(int*) gosmData == pakHead;
 }
 
@@ -679,15 +637,47 @@ int GosmInit (void *d, long size)
 
 #ifndef _WIN32
 
+void CalculateInvSpeeds (styleStruct *srec, int styleCnt)
+{
+  // for vehicle
+  for (int i = 0; i < layerBit1; i++) {
+    double maxspeed = 0; // More vehicle limit than (legal) maxspeed.
+    for (int j = 0; j < styleCnt; j++) {
+      maxspeed = max (srec[j].aveSpeed[i], maxspeed);
+    }
+    // for style
+    for (int j = 0; j < styleCnt; j++) {
+      // if no speed is defined for a vehicle on this style, then
+      // set the aveSpeed to be the maximum of any other
+      // vehicles. This speed will only be used if vehicle=yes is
+      // defined on the way. (e.g. highway=foot motorcar=yes)
+      if (srec[j].aveSpeed[i] == 0) { 
+        for (int k = 0; k < layerBit1; k++) {
+          if (srec[j].aveSpeed[i] < srec[j].aveSpeed[k]) {
+            srec[j].aveSpeed[i] = srec[j].aveSpeed[k];
+          } 
+        } // without breaking the normal maximum speed for this vehicle
+        if (srec[j].aveSpeed[i] > maxspeed) {
+          srec[j].aveSpeed[i] = maxspeed;
+        }
+      }
+      // store the proportion of maxspeed for routing
+      srec[j].invSpeed[i] = maxspeed / srec[j].aveSpeed[i];
+    }
+  }
+}
+
 void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile) {
+//  static styleStruct srec[2 << STYLE_BITS];
   elemstyleMapping map[2 << STYLE_BITS]; // this is needed for
 					 // LoadElemstyles but ignored
-  memset (&srec, 0, sizeof (srec)); // defined globally
+  styleStruct *old = style;
+  style = (styleStruct*) malloc (gosmStyleCnt * sizeof (*style)); // Mem leak
+  memcpy (style, old, gosmStyleCnt * sizeof (*style));
+  //memset (&srec, 0, sizeof (srec)); // defined globally
   memset (&map, 0, sizeof (map));
-  LoadElemstyles(elemstylefile, iconscsvfile, firstElemStyle, 
-		 srec, map, maxspeeds);
-  // over-ride style record loaded from pakfile with alternative
-  style = &(srec[0]);
+  LoadElemstyles(elemstylefile, iconscsvfile, style, map);
+  CalculateInvSpeeds (style, gosmStyleCnt);
 }
 
 /*--------------------------------- Rebuild code ---------------------------*/
@@ -790,12 +780,11 @@ int MasterWayCmp (const void *a, const void *b)
 }
 
 int LoadElemstyles(/* in */ const char *elemstylesfname, 
-		   const char *iconsfname, int styleCnt,
-		   /* out */ styleStruct *srec, elemstyleMapping *map, 
-		   float* maxspeeds)
+		   const char *iconsfname,
+		   /* out */ styleStruct *srec, elemstyleMapping *map)
 {
    //------------------------- elemstyle.xml : --------------------------
-    int ruleCnt = 0;
+    int ruleCnt = 0, styleCnt = firstElemStyle;
     // zero-out elemstyle-to-stylestruct mappings
     FILE *icons_csv = fopen (iconsfname, "r");
     xmlTextReaderPtr sXml = xmlNewTextReaderFilename (elemstylesfname);
@@ -803,10 +792,13 @@ int LoadElemstyles(/* in */ const char *elemstylesfname,
       fprintf (stderr, "Either icons.csv or elemstyles.xml not found\n");
       return 3;
     }
-    for (int i = 0; i < (2 << STYLE_BITS); i++) {
-      srec[i].lineColour = -1;
-      srec[i].areaColour = -1;
-    }
+    styleStruct s;
+    memset (&s, 0, sizeof (s));
+    s.lineColour = -1;
+    s.areaColour = -1;
+
+    for (int i = 0; i < styleCnt; i++) memcpy (&srec[i], &s, sizeof (s));
+
     /* If elemstyles contain these, we can delete these assignments : */
     for (int i = restriction_no_right_turn;
             i <= restriction_only_straight_on; i++) {
@@ -829,7 +821,7 @@ int LoadElemstyles(/* in */ const char *elemstylesfname,
         if (strcasecmp (name, "scale_max") == 0) {
           while (xmlTextReaderRead (sXml) && // memory leak :
             xmlStrcmp (xmlTextReaderName (sXml), BAD_CAST "#text") != 0) {}
-          srec[styleCnt].scaleMax = atoi ((char *) xmlTextReaderValue (sXml));
+          s.scaleMax = atoi ((char *) xmlTextReaderValue (sXml));
         }
         while (xmlTextReaderMoveToNextAttribute (sXml)) {
           char *n = (char *) xmlTextReaderName (sXml);
@@ -840,35 +832,36 @@ int LoadElemstyles(/* in */ const char *elemstylesfname,
           }
           if (strcasecmp (name, "line") == 0) {
             if (strcasecmp (n, "width") == 0) {
-              srec[styleCnt].lineWidth = atoi (v);
+              s.lineWidth = atoi (v);
             }
             if (strcasecmp (n, "realwidth") == 0) {
-              srec[styleCnt].lineRWidth = atoi (v);
+              s.lineRWidth = atoi (v);
             }
             if (strcasecmp (n, "colour") == 0) {
-              sscanf (v, "#%x", &srec[styleCnt].lineColour);
+              sscanf (v, "#%x", &s.lineColour);
             }
             if (strcasecmp (n, "colour_bg") == 0) {
-              sscanf (v, "#%x", &srec[styleCnt].lineColourBg);
+              sscanf (v, "#%x", &s.lineColourBg);
             }
-            srec[styleCnt].dashed = srec[styleCnt].dashed ||
+            s.dashed = s.dashed ||
               (strcasecmp (n, "dashed") == 0 && strcasecmp (v, "true") == 0);
           }
           if (strcasecmp (name, "area") == 0) {
             if (strcasecmp (n, "colour") == 0) {
-              sscanf (v, "#%x", &srec[styleCnt].areaColour);
+              sscanf (v, "#%x", &s.areaColour);
             }
           }
           if (strcasecmp (name, "icon") == 0) {
             if (strcasecmp (n, "src") == 0) {
-              while (v[strcspn ((char *) v, "/ ")]) {
+              /*while (v[strcspn ((char *) v, "/ ")]) {
                 v[strcspn ((char *) v, "/ ")] = '_';
-              }
-              char line[80], fnd = FALSE;
-              static const char *set[] = { "classic.big_", "classic.small_",
-                "square.big_", "square.small_" };
+              }*/
+              char line[400], fnd = FALSE;
+              static const char *set[] = { "map-icons/classic.big/",
+                "map-icons/classic.small/", "map-icons/square.big/",
+                "map-icons/square.small/" };
               for (int i = 0; i < 4; i++) {
-                srec[styleCnt].x[i * 4 + 2] = srec[styleCnt].x[i * 4 + 3] = 1;
+                s.x[i * 4 + 2] = s.x[i * 4 + 3] = 1;
               // Default to 1x1 dummys
                 int slen = strlen (set[i]), vlen = strlen (v);
                 rewind (icons_csv);
@@ -876,9 +869,8 @@ int LoadElemstyles(/* in */ const char *elemstylesfname,
                   if (strncmp (line, set[i], slen) == 0 &&
                       strncmp (line + slen, v, vlen - 1) == 0) {
                     sscanf (line + slen + vlen, ":%d:%d:%d:%d",
-                      srec[styleCnt].x + i * 4, srec[styleCnt].x + i * 4 + 1,
-                      srec[styleCnt].x + i * 4 + 2,
-                      srec[styleCnt].x + i * 4 + 3);
+                      s.x + i * 4,     s.x + i * 4 + 1,
+                      s.x + i * 4 + 2, s.x + i * 4 + 3);
                     fnd = TRUE;
                   }
                 }
@@ -889,7 +881,7 @@ int LoadElemstyles(/* in */ const char *elemstylesfname,
           if (strcasecmp (name, "routing") == 0 && atoi (v) > 0) {
             #define M(field) if (strcasecmp (n, #field) == 0) {\
               map[styleCnt].defaultRestrict |= 1 << field ## R; \
-              srec[styleCnt].aveSpeed[field ## R] = atof (v); \
+              s.aveSpeed[field ## R] = atof (v); \
             }
             RESTRICTIONS
             #undef M
@@ -911,46 +903,25 @@ int LoadElemstyles(/* in */ const char *elemstylesfname,
         }
         map[ipos < firstElemStyle ? ipos : styleCnt].ruleNr = ruleCnt++;
         if (ipos < firstElemStyle) {
-          memcpy (&srec[ipos], &srec[styleCnt], sizeof (srec[ipos]));
-          memcpy (&srec[styleCnt], &srec[styleCnt + 1], sizeof (srec[0]));
+          memcpy (&srec[ipos], &s, sizeof (srec[ipos]));
           map[ipos].defaultRestrict = map[styleCnt].defaultRestrict;
           map[styleCnt].defaultRestrict = 0;
           strcpy(map[ipos].style_k,map[styleCnt].style_k);
           strcpy(map[ipos].style_v,map[styleCnt].style_v);
         }
-        else if (styleCnt < (2 << STYLE_BITS) - 2) styleCnt++;
+        else if (styleCnt < (2 << STYLE_BITS) - 2) {
+          memcpy (&srec[styleCnt++], &s, sizeof (srec[0]));
+        }
         else fprintf (stderr, "Too many rules. Increase STYLE_BITS\n");
+
+        memset (&s, 0, sizeof (s));
+        s.lineColour = -1;
+        s.areaColour = -1;
       }
       xmlFree (name);
       //xmlFree (val);      
     }
 
-    // calculate the maximum specified speed for each vehicle over all
-    // styles
-    CalculateMaxSpeeds(srec, styleCnt, maxspeeds);
-
-    // for vehicle
-    for (int i = 0; i < layerBit1; i++) {
-      // for style
-      for (int j = 0; j < styleCnt; j++) {
-	// if no speed is defined for a vehicle on this style, then
-	// set the aveSpeed to be the maximum of any other
-	// vehicles. This speed will only be used if vehicle=yes is
-	// defined on the way. (e.g. highway=foot motorcar=yes)
-        if (srec[j].aveSpeed[i] == 0) { 
-          for (int k = 0; k < layerBit1; k++) {
-            if (srec[j].aveSpeed[i] < srec[j].aveSpeed[k]) {
-              srec[j].aveSpeed[i] = srec[j].aveSpeed[k];
-            } 
-          } // without breaking the normal maximum speed for this vehicle
-          if (srec[j].aveSpeed[i] > maxspeeds[i]) {
-	    srec[j].aveSpeed[i] = maxspeeds[i];
-	  }
-        }
-	// store the proportion of maxspeed for routing
-        srec[j].invSpeed[i] = maxspeeds[i] / srec[j].aveSpeed[i];
-      }
-    }
     xmlFreeTextReader (sXml);
 
     return styleCnt;
@@ -962,6 +933,14 @@ struct ltstr
   {
     return strcmp (a, b) < 0;
   }
+};
+
+struct k2vType {
+  map<const char *, const char *, ltstr> m;
+  const char *operator[](const char *k) const
+  {
+    return m.find (k) == m.end () ? NULL : m.find (k)->second;
+  } // For std:map the operator[] is not const, so we wrap it in a new class
 };
 
 //----------------------------[ Osm2Gosmore ]-----------------------------
@@ -993,31 +972,49 @@ struct ltstr
 // Furthermore, a clever renderer can then render the correct name.
 // A single line can also be indexed multiple times. For example
 // { "city:", "Paris\n" } will be indexed as "Paris" and "city:Paris".
-
-typedef map<const char *, const char *, ltstr> k2vType;
+//
+// NOTE: Gosmore currently requires that you return the same strings during
+// both passes of the rebuild, i.e. the strings cannot depend on w.c{lat,lon}
 
 deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s)
 {
   deque<string> result;
-  for (k2vType::iterator i = k2v.begin (); i != k2v.end (); i++) {
+  map<const char *, const char *, ltstr>::iterator i = k2v.m.begin ();
+  for (; i != k2v.m.end (); i++) {
     if (strcmp (i->first, "name") != 0 && strcmp (i->first, "ref") != 0) {
       result.push_back (string (strcmp (i->second, "true") == 0 ||
         strcmp (i->second, "yes") == 0 || strcmp (i->second, "1") == 0
         ? i->first : i->second) + "\n");
     }
   }
-  if (k2v.find ("ref") != k2v.end ()) {
-    result.push_front (string (k2v["ref"]) + "\n");
-  }
-  if (k2v.find ("name") != k2v.end ()) {
+  if (k2v["ref"]) result.push_front (string (k2v["ref"]) + "\n");
+  if (k2v["name"]) {
     result.push_front (string (k2v["name"]) + "\n");
-    if (k2v.find ("place") != k2v.end () &&
-        strcmp (k2v["place"], "city") == 0) {
+    if (k2v["place"] && strcmp (k2v["place"], "city") == 0) {
       result.push_back (string (k2v["name"]) + " City\n");
       // I don't think users search for this. Furthermore the new lowzoom
       // code will deprecate it.
     }
   }
+  if (k2v["maxspeed"] && isdigit (k2v["maxspeed"][0])) {
+    const char *m = k2v["maxspeed"];
+    double maxs = atof (m), best = 30, m2km = 1.609344;
+    if (tolower (m[strcspn (m, "KMPSkmps")]) == 'm') maxs *= m2km;
+    int v[] = { 5,7,10,15,20,30,32,40,50,60,70,80,90,100,110,120,130 };
+    for (unsigned i = 0; i < sizeof (v) / sizeof (v); i++) {
+      if (fabs (maxs - best) > fabs (maxs - v[i])) best = v[i];
+      if (fabs (maxs - best) > fabs (maxs - v[i] * m2km)) best = v[i] * m2km;
+    }
+    s.aveSpeed[accessR] = best;
+    for (int i = 0; i < layerBit1; i++) {
+      if (s.aveSpeed[i] > best) s.aveSpeed[i] = best;
+    }
+  }
+  if (k2v["tracktype"] && isdigit (k2v["tracktype"][5])) {
+    s.aveSpeed[motorcarR] *= ('6' - k2v["tracktype"][5]) / 5.0;
+    // TODO: Mooaar
+  }
+//  printf ("%.5lf %.5lf\n", LonInverse (w.clon), LatInverse (w.clat));
   return result;
 }
 
@@ -1056,12 +1053,11 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   //------------------------ elemstylesfile : -----------------------------
   styleStruct srec[2 << STYLE_BITS];
   elemstyleMapping map[2 << STYLE_BITS];
-  float maxspeeds[layerBit1];
   memset (&srec, 0, sizeof (srec));
   memset (&map, 0, sizeof (map));
   
-  int elemCnt = LoadElemstyles(elemstylefile, iconscsvfile, firstElemStyle, 
-				srec, map, maxspeeds), styleCnt = elemCnt;
+  int elemCnt = LoadElemstyles(elemstylefile, iconscsvfile,
+				srec, map), styleCnt = elemCnt;
   
   
   //------------------ OSM Data File (/dev/stdin) : ------------------------
@@ -1093,7 +1089,11 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   nodeType nd;
   halfSegType s[2];
   int nOther = 0, lowzOther = FIRST_LOWZ_OTHER, isNode = 0;
-  int yesMask = 0, noMask = 0, *wayFseek = NULL;
+  int yesMask = 0, noMask = 0;
+  struct {
+    wayType *w; // Pointer to the first version in the master file.
+    int off;
+  } *wayFseek = NULL;
   int lowzList[1000], lowzListCnt = 0, wStyle = elemCnt, ref = 0, role = 0;
   int member[2], relationType = 0, onewayReverse = 0;
   vector<int> wayId, wayMember, cycleNet;
@@ -1104,7 +1104,6 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   w.dlon = INT_MIN;
   w.bits = 0;
   w.destination = 0;
-  w.maxspeed = FLT_MAX;
   
   // if we are doing a second pass bbox rebuild
   if (master) {
@@ -1123,18 +1122,19 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 		     ((1 + strlen ((char*)(m + 1) + 1) + 1 + 3) & ~3)) + 1;
     }
     qsort (masterWay, i, sizeof (*masterWay), MasterWayCmp);
-    assert (wayFseek = (int*) calloc (sizeof (*wayFseek),
+    assert (wayFseek = (typeof (wayFseek)) calloc (sizeof (*wayFseek),
 				      ndStart / (sizeof (wayType) + 4)));
     for (unsigned j = 0; j < i; j++) {
-      wayFseek[masterWay[j].idx] = offset;
+      wayFseek[masterWay[j].idx].off = offset;
+      wayFseek[masterWay[j].idx].w = masterWay[j].w;
       offset += sizeof (*masterWay[j].w) +
 	((1 + strlen ((char*)(masterWay[j].w + 1) + 1) + 1 + 3) & ~3);
     }
-    wayFseek[wcnt] = offset;
+    wayFseek[wcnt].off = offset;
     fflush (pak);
     if (ftruncate (fileno (pak), offset) != 0) perror ("ftruncate");
     free (masterWay);
-    fseek (pak, *wayFseek, SEEK_SET);
+    fseek (pak, wayFseek->off, SEEK_SET);
   }
   
   char *tag_k = NULL; //, *tags = (char *) BAD_CAST xmlStrdup (BAD_CAST "");
@@ -1166,7 +1166,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    cycleNet.insert (cycleNet.end (), wayMember.begin (), 
 			     wayMember.end ());
 	  }
-	  if ((!wayFseek || *wayFseek) &&
+	  if ((!wayFseek || wayFseek->off) &&
 	      (K_IS ("lcn_ref") || K_IS ("rcn_ref") || K_IS ("ncn_ref"))) {
 	    cycleNet.push_back (ftell (pak));
 	  }
@@ -1203,7 +1203,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    tags = (char*) xmlStrcat (tmp, BAD_CAST tags);
 	    // name always first tag.
 	  }
-	  else */ if (K_IS ("maxspeed")) {
+	  else  if (K_IS ("maxspeed")) {
 	    char units[80] = "";
 	    sscanf(avalue,"%f%s",&(w.maxspeed),units);
 	    // check for mph and variants and convert to kph
@@ -1213,7 +1213,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	      }
 	    }
 	  }
-	  else if (K_IS ("layer")) w.bits |= atoi (avalue) << 29;
+	  else */ if (K_IS ("layer")) w.bits |= atoi (avalue) << 29;
           
 #define M(field) else if (K_IS (#field)) {				\
 	    if (V_IS ("yes") || V_IS ("1") || V_IS ("permissive") ||	\
@@ -1262,7 +1262,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 						V_IS ("yes") || V_IS ("1") || V_IS ("true")
 						? BAD_CAST tag_k : BAD_CAST avalue);
 	    */
-	    k2v[tag_k] = avalue;
+	    k2v.m[tag_k] = avalue;
 	    tag_k = (char*) xmlStrdup (BAD_CAST "");
 	    avalue = (char*) xmlStrdup (BAD_CAST "");
 	  }
@@ -1297,7 +1297,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	  if (ref == wayId[i]) wayMember.push_back (wayId[i + 1]);
 	}
       }
-      if (!wayFseek || *wayFseek) {
+      if (!wayFseek || wayFseek->off) {
 	if (stricmp (name, "member") == 0 && role != 'v') {
 	  for (unsigned i = 0; i < wayId.size (); i += 2) {
 	    if (ref == wayId[i]) member[role == 'f' ? 0 : 1] = wayId[i + 1];
@@ -1324,7 +1324,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	  //xmlFree (nameTag);
 	  char str[22];
 	  sprintf (str, "%d %d", member[0], member[1]);
-	  k2v[(char *) xmlStrdup (BAD_CAST "name")] =
+	  k2v.m[(char *) xmlStrdup (BAD_CAST "name")] =
 	    (char *) xmlStrdup (BAD_CAST str);
 	  //nameTag = (char *) xmlStrdup (BAD_CAST str);
 	}
@@ -1353,7 +1353,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
             s[0].other = wayNd.empty () ? -2 : nOther++ * 2;
             FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
           }
-	  if (nameIsNode && (!wayFseek || *wayFseek)) {
+	  if (nameIsNode && (!wayFseek || wayFseek->off)) {
 	    s[0].lat = nd.id; // Create 2 fake halfSegs
 	    s[0].wayPtr = ftell (pak);
 	    s[1].wayPtr = TO_HALFSEG;
@@ -1367,6 +1367,12 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 					  ((noMask & (1 << accessR)) ? (1 << onewayR) : ~0)));
 	  if (w.destination & (1 << accessR)) w.destination = ~0;
 	  memcpy (&srec[styleCnt], &srec[wStyle], sizeof (srec[0]));
+	  if (wayFseek && wayFseek->off) {
+	    w.clat = wayFseek->w->clat;
+	    w.clon = wayFseek->w->clon;
+	    w.dlat = wayFseek->w->dlat;
+	    w.dlon = wayFseek->w->dlon;
+          }
 	  deque<string> tags = Osm2Gosmore (k2v, w, srec[styleCnt]);
 	  while (memcmp (&srec[styleCnt], &srec[wStyle], sizeof (srec[0]))
 	         != 0) wStyle++;
@@ -1379,7 +1385,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
           }
           
 	  if (srec[StyleNr (&w)].scaleMax > 10000000 &&
-	      (!wayFseek || *wayFseek)) { 
+	      (!wayFseek || wayFseek->off)) { 
 	    for (int i = 0; i < lowzListCnt; i++) {
 	      if (i % 10 && i < lowzListCnt - 1) continue; // Skip some
 	      s[0].lat = lowzList[i];
@@ -1404,7 +1410,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    tags = n; 
 	  }
 	  char *compact = tags[0] == '\n' ? tags + 1 : tags; */
-	  if (!wayFseek || *wayFseek) {
+	  if (!wayFseek || wayFseek->off) {
 	    FWRITE (&w, sizeof (w), 1, pak);
 	    FWRITE ("", 1, 1, pak); // '\0' at the front
 	    unsigned newln = 0;
@@ -1426,7 +1432,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
                  TagCmp (groupName[grp], (char*) line.c_str ()) < 0; grp++) {}
 		FWRITE (&idx, sizeof (idx), 1, groupf[grp]);
 	      }
-	      int l = strlen (compact);
+	      unsigned l = strlen (compact);
 	      newln = compact[l - 1] == '\n' ? 1 : 0;
 	      if (l > newln) FWRITE (compact, l - newln, 1, pak);
 	    }
@@ -1446,7 +1452,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	      FWRITE ("   ", 4 - (ftell (pak) & 3), 1, pak);
 	    }
 	  }
-	  if (wayFseek) fseek (pak, *++wayFseek, SEEK_SET);
+	  if (wayFseek) fseek (pak, (++wayFseek)->off, SEEK_SET);
 	  //xmlFree (tags); // Just set tags[0] = '\0'
 	  //tags = (char *) xmlStrdup (BAD_CAST "");
 	}
@@ -1454,13 +1460,12 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	yesMask = noMask = 0;
 	w.bits = 0;
 	w.destination = 0;
-	w.maxspeed = FLT_MAX;
 	wStyle = elemCnt;
 	onewayReverse = FALSE;
-	while (!k2v.empty ()) {
-	  xmlFree ((char*) k2v.begin()->second);
-	  xmlFree ((char*) k2v.begin()->first);
-	  k2v.erase (k2v.begin ());
+	while (!k2v.m.empty ()) {
+	  xmlFree ((char*) k2v.m.begin()->second);
+	  xmlFree ((char*) k2v.m.begin()->first);
+	  k2v.m.erase (k2v.m.begin ());
 	}
       }
     } // if it was </...>
@@ -1563,7 +1568,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   }
   free (pairing);
   
-  int s2grp = S2GROUP (0), pairs;
+  int s2grp = S2GROUP (0), pairs, totalp = 0;
   halfSegType *seg = (halfSegType *) malloc (PAIRS * sizeof (*seg));
   assert (seg /* Out of memory. Reduce PAIRS for small scale rebuilds. */);
   ndType ndWrite;
@@ -1587,8 +1592,11 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
       ndWrite.wayPtr = seg[j].wayPtr;
       ndWrite.lat = seg[j].lat;
       ndWrite.lon = seg[j].lon;
-      ndWrite.other[0] = seg[j].other >> 1; // Right shift handles -1 the
-      ndWrite.other[1] = seg[j + 1].other >> 1; // way we want.
+      ndWrite.other[0] = //seg[j].other >> 1; // Right shift handles -1 the
+        seg[j].other < 0 ? 0 : (seg[j].other >> 1) - totalp;
+      ndWrite.other[1] = //seg[j + 1].other >> 1; // way we want.
+        seg[j + 1].other < 0 ? 0 : (seg[j + 1].other >> 1) - totalp;
+      totalp++;
       FWRITE (&ndWrite, sizeof (ndWrite), 1, pak);
     }
     fclose (groupf[i]);
@@ -1662,6 +1670,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   munmap (data, ndStart);
   FWRITE (hashTable, sizeof (*hashTable),
 	  bucketsMin1 + (bucketsMin1 >> 7) + 3, pak);
+	  
+  CalculateInvSpeeds (srec, styleCnt);
   FWRITE (&srec, sizeof (srec[0]), styleCnt, pak);
   FWRITE (&styleCnt, sizeof(styleCnt), 1, pak); // File ends with these
   FWRITE (&bucketsMin1, sizeof (bucketsMin1), 1, pak); // 3 variables

@@ -73,12 +73,12 @@ echo "Icon distribution list is in $name.csv ($(cat $allicons | wc -l) not inclu
 
 echo "Creating $name.png"
 
-convert -size 0x0 xc:black $name.png
+convert -quality 0 -size 0x0 xc:black $name.png
 for line in $(cat $name.csv); do
     convert $name.png \
 	-page +$(echo $line | cut -d':' -f2)+$(echo $line | cut -d':' -f3) \
 	"$(echo $line | cut -d':' -f1)" \
-	-background None -mosaic $name.png
+	-background None -mosaic -quality 0 $name.png
 done
 
 echo "Flattening image (see $name-flatten.png)"
@@ -101,20 +101,20 @@ pngtopnm $tmpdir/mask.png | pnminvert | ppmtobmp > $name-mask.bmp
 # imagemagick works ok for xpm though
 convert $tmpdir/binalpha.png $name.xpm
 
-echo "Making icons.csv compatable with old version"
+# echo "Making icons.csv compatable with old version"
 # this would probably be better done in gosmore.cpp, but I'll do
 # it here to maintain compatability for now
-sed -i -e 's|^map-icons/||' -e 's|/|_|g' $name.csv
+# sed -i -e 's|^map-icons/||' -e 's|/|_|g' $name.csv
 
 # Suppress the icons Ulf is using to highlight errors
-echo 'classic.big_misc_deprecated.png:0:0:1:1
-square.big_misc_deprecated.png:0:0:1:1
-classic.small_misc_deprecated.png:0:0:1:1
-square.small_misc_deprecated.png:0:0:1:1
-classic.big_misc_no_icon.png:0:0:1:1
-square.big_misc_no_icon.png:0:0:1:1
-classic.small_misc_no_icon.png:0:0:1:1
-square.small_misc_no_icon.png:0:0:1:1' >> $name.csv
+echo 'map-icons/classic.big/misc/deprecated.png:0:0:1:1
+map-icons/square.big/misc/deprecated.png:0:0:1:1
+map-icons/classic.small/misc/deprecated.png:0:0:1:1
+map-icons/square.small/misc/deprecated.png:0:0:1:1
+map-icons/classic.big/misc/no_icon.png:0:0:1:1
+map-icons/square.big/misc/no_icon.png:0:0:1:1
+map-icons/classic.small/misc/no_icon.png:0:0:1:1
+map-icons/square.small/misc/no_icon.png:0:0:1:1' >> $name.csv
 
 rm -r $tmpdir
 

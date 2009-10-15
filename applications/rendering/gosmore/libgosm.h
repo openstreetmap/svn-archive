@@ -221,6 +221,7 @@ enum { STYLE_BITS = 10, RESTRICTIONS layerBit1,layerBit2,layerBit3 };
  s (tourism, caravan_site,    "caravan site"    , "") \
  s (amenity, pharmacy,        "pharmacy"        , "") \
  s (amenity, dentist,         "dentist"         , "") \
+ s (amenity, doctor,          "doctor"          , "") \
  s (amenity, hospital,        "hospital"        , "") \
  s (amenity, bank,            "bank"            , "") \
  s (amenity, bureau_de_change, "bureau de change" , "") \
@@ -304,6 +305,7 @@ enum { STYLE_BITS = 10, RESTRICTIONS layerBit1,layerBit2,layerBit3 };
  s (restriction, no_left_turn, ""               , "") \
  s (restriction, no_u_turn, ""                  , "") \
  s (restriction, no_straight_on, ""             , "") \
+ /* restriction_no_straight_on must be the last "no_" restriction */ \
  s (restriction, only_right_turn, ""            , "") \
  s (restriction, only_left_turn, ""             , "") \
  s (restriction, only_straight_on, ""           , "") \
@@ -327,11 +329,19 @@ struct styleStruct {
 struct ndType {
   int wayPtr, lat, lon, other[2];
 };
+/* This struct takes up a lot of space, but compressing is possible: If
+other is encoded as byte offset from the current position, it should typically
+be close to 0. So it can be huffman encoded. Then the struct will no longer
+have a fixed size, and the final position of an nd will not be know during
+the first pass. So we over estimate the space needed between 2 nds and we can
+do multiple passes until all the excess has been removed.
+
+Similar tricks are possible with the other members of the structure.
+*/
 
 struct wayType {
   int bits, destination;
   int clat, clon, dlat, dlon; /* Centre coordinates and (half)diameter */
-  float maxspeed;
 };
 
 inline int Layer (wayType *w) { return w->bits >> 29; }
@@ -442,6 +452,7 @@ extern routeNodeType *route, *shortest, **routeHeap;
 extern int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
 
 void Route (int recalculate, int plon, int plat, int Vehicle, int fast);
+void GosmFreeRoute (void);
 
 int JunctionType (ndType *nd);
 
@@ -469,9 +480,8 @@ typedef struct {
 // speeds for each vehicle type in maxspeeds. styleCnt representing
 // the location of the first elemstyle. Returns the final styleCnt.
 int LoadElemstyles(/* in */ const char *elemstylesfname, 
-		   const char *iconsfname, int styleCnt,
-		   /* out */ styleStruct *srec, elemstyleMapping *map, 
-		   float *maxspeeds);
+		   const char *iconsfname,
+		   /* out */ styleStruct *srec, elemstyleMapping *map);
 
 // creates a new pakfile from an osmdata file read from standard in
 int RebuildPak(const char* pakfile, const char* elemstylefile, 

@@ -19,7 +19,7 @@
 		// Draw window
 		
 		_root.windows.attachMovie("modal","history",++windowdepth);
-		_root.windows.history.init(275,90,new Array(iText('more'),iText('cancel')),handleHistoryChoice);
+		_root.windows.history.init(375,90,new Array(iText('more'),iText('cancel')),handleHistoryChoice);
 		_root.windows.history.box.createTextField("prompt",2,7,9,250,100);
 		writeText(_root.windows.history.box.prompt,iText('prompt_revertversion'));
 		adjustTextField(_root.windows.history.box.prompt);
@@ -60,7 +60,7 @@
 				_root.reverttime   =versioninfo[n][0]; 
 				_root.revertauthor =versioninfo[n][2];
 				_root.revertname   =versioninfo[n][1];
-			},null,256);
+			},null,356);
 		_root.reverttime  =versioninfo[0][0];
 		_root.revertname  =versioninfo[0][1];
 		_root.revertauthor=versioninfo[0][2];

@@ -1814,10 +1814,10 @@ gint DrawExpose (void)
     #ifndef NOGTK
     for (int i = 1; ShowActiveRouteNodes && i < routeHeapSize; i++) {
       gdk_draw_line (draw->window, mygc,
-        X (routeHeap[i]->nd->lon, routeHeap[i]->nd->lat) - 2,
-        Y (routeHeap[i]->nd->lon, routeHeap[i]->nd->lat),
-        X (routeHeap[i]->nd->lon, routeHeap[i]->nd->lat) + 2,
-        Y (routeHeap[i]->nd->lon, routeHeap[i]->nd->lat));
+        X (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat) - 2,
+        Y (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat),
+        X (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat) + 2,
+        Y (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat));
     }
     #else
     for (int j = 0; j <= newWayCnt; j++) {

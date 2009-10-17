@@ -17,7 +17,8 @@ using namespace std;
 
 #include "libgosm.h"
 
-routeNodeType *route = NULL, *shortest = NULL, **routeHeap;
+routeNodeType *route = NULL, *shortest = NULL;
+routeHeapType *routeHeap;
 long dhashSize;
 int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
 int *hashTable, bucketsMin1, pakHead = 0xEB3A943, gosmStyleCnt;
@@ -325,31 +326,35 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
     if (n->nd == NULL) { /* First visit of this node */
       if (cost < 0) return NULL;
       n->nd = nd;
-      n->best = 0x7fffffff;
-      /* Will do later : routeHeap[routeHeapSize] = n; */
+      routeHeap[routeHeapSize].best = 0x7fffffff;
+      /* Will do later : routeHeap[routeHeapSize].r = n; */
       n->heapIdx = routeHeapSize++;
       n->dir = dir;
       n->remain = lrint (sqrt (Sqr ((__int64)(nd->lat - rlat)) +
                                Sqr ((__int64)(nd->lon - rlon))));
       if (!shortest || n->remain < shortest->remain) {
         shortest = n;
-        bailout = 123000; // This constant needs tweeking
+        bailout = 410000; // This constant needs tweeking
       }
       ROUTE_SET_ADDND_COUNT (routeAddCnt + 1);
     }
   } while (n->nd != nd || n->dir != dir);
 
-  int diff = n->remain + (newshort ? newshort->best - newshort->remain : 0);
-  if (cost >= 0 && n->best > cost + diff) {
-    n->best = cost + diff;
+  int diff = n->remain - (!newshort ? 0 : newshort->heapIdx < 0
+    ? newshort->remain + newshort->heapIdx
+    : newshort->remain - routeHeap[newshort->heapIdx].best);
+  if (cost >= 0 && (n->heapIdx < 0 ? -n->heapIdx : routeHeap[n->heapIdx].best)
+                   > cost + diff) {
     n->shortest = newshort;
     if (n->heapIdx < 0) n->heapIdx = routeHeapSize++;
     for (; n->heapIdx > 1 &&
-         n->best < routeHeap[n->heapIdx / 2]->best; n->heapIdx /= 2) {
-      routeHeap[n->heapIdx] = routeHeap[n->heapIdx / 2];
-      routeHeap[n->heapIdx]->heapIdx = n->heapIdx;
+         cost + diff < routeHeap[n->heapIdx / 2].best; n->heapIdx /= 2) {
+      memcpy (routeHeap + n->heapIdx, routeHeap + n->heapIdx / 2,
+        sizeof (*routeHeap));
+      routeHeap[n->heapIdx].r->heapIdx = n->heapIdx;
     }
-    routeHeap[n->heapIdx] = n;
+    routeHeap[n->heapIdx].r = n;
+    routeHeap[n->heapIdx].best = cost + diff;
   }
   return n;
 }
@@ -359,6 +364,19 @@ inline int IsOneway (wayType *w, int Vehicle)
   return !((Vehicle == footR || Vehicle == bicycleR) &&
     (w->bits & (1 << motorcarR))) && (w->bits & (1<<onewayR));
 }
+
+static const int rhdBbox[][4] = {
+  { Longitude (10.2), Latitude (-85.0), Longitude (42.1), Latitude (4.7) },
+  // Africa. Not correct for Angola, DRC and a few other poor countries.
+  { Longitude (-14.11), Latitude (49.83), Longitude (1.84), Latitude (60.03) },
+  // UK & IE
+  { Longitude (68.0), Latitude (0.0), Longitude (90.2), Latitude (31.4) },
+  // India & Sri Lanka
+  { Longitude (9.3), Latitude (-85.0), Longitude (179.0), Latitude (19.1) },
+  // Aus, NZ, Indonesia, Malazia, Thailand.
+  { Longitude (129.55), Latitude (18.0), Longitude (145.84), Latitude (45.55) }
+  // Japan
+};
 
 void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
 { /* Recalculate is faster but only valid if 'to', 'Vehicle' and
@@ -472,7 +490,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     memset (route, 0, (sizeof (*route) + sizeof (*routeHeap)) * dhashSize); 
     #endif
     routeHeapSize = 1; /* Leave position 0 open to simplify the math */
-    routeHeap = (routeNodeType**) (route + dhashSize) - 1;
+    routeHeap = (routeHeapType*) (route + dhashSize) - 1;
 
     rlat = flat;
     rlon = flon;
@@ -483,15 +501,24 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
   }
   else {
     routeNodeType *frn = AddNd (&from, 0, -1, NULL);
-    if (frn) frn->best = 0x7fffffff;
+    if (frn) {
+      if (frn->heapIdx < 0) frn->heapIdx = -0x7fffffff;
+      else routeHeap[frn->heapIdx].best = 0x7fffffff;
+    }
 
     routeNodeType *rn = AddNd (endNd[1], 0, -1, NULL);
     if (rn) AddNd (&from, 0, toEndNd[1][1], rn);
     routeNodeType *rno = AddNd (endNd[1] + endNd[1]->other[0], 1, -1, NULL);
     if (rno) AddNd (&from, 0, toEndNd[1][0], rno);
   }
+  int rhd = FALSE;
+  for (int i = 0; i < sizeof (rhdBbox) / sizeof (rhdBbox[0]); i++) {
+    rhd = rhd || (rhdBbox[i][0] < tlon && rhdBbox[i][1] < tlat &&
+                  tlon < rhdBbox[i][2] && tlat < rhdBbox[i][3]);
+  }
+  printf (rhd ? "Right Hand Drive\n" : "Left Hand Drive\n");
   
-  for (bailout = 123000; bailout > 0 && routeHeapSize > 1; bailout--) {
+  for (bailout = 410000; bailout > 0 && routeHeapSize > 1; bailout--) {
   /* Consider the example where 'from' and 'to' are on opposite sides of a
      a river. The algorithm will quickly advance up to the river bank, and
      then search along it for a way across. This searching may involve moving
@@ -499,8 +526,9 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
      when there is a bend in the river, but "bailout" places a limit on it.
      Please list the worst cases here so that we can test them :
        Robben Island, South Africa to Bloubergrant, South Africa
+       Phoenix, AZ to Golden Gate Bridge (could be due bad highways...)
     */
-    routeNodeType *root = routeHeap[1];
+    routeNodeType *root = routeHeap[1].r;
     /* routeHeap[1] is not the best choice because it may not be in memory,
        or in memory but not in the cache.
        So it may be better to choose a different node that is both near the
@@ -509,23 +537,24 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
        Then the loop will terminate not when root points to 'from' but when
        routeHeap[1] points to 'from'.
     */
+    root->heapIdx = -routeHeap[1].best; /* Root now removed from the heap */
     routeHeapSize--;
-    int beste = routeHeap[routeHeapSize]->best;
+    int beste = routeHeap[routeHeapSize].best;
     for (int i = 2; ; ) {
-      int besti = i < routeHeapSize ? routeHeap[i]->best : beste;
-      int bestipp = i + 1 < routeHeapSize ? routeHeap[i + 1]->best : beste;
+      int besti = i < routeHeapSize ? routeHeap[i].best : beste;
+      int bestipp = i + 1 < routeHeapSize ? routeHeap[i + 1].best : beste;
       if (besti > bestipp) i++;
       else bestipp = besti;
       if (beste <= bestipp) {
-        routeHeap[i / 2] = routeHeap[routeHeapSize];
-        routeHeap[i / 2]->heapIdx = i / 2;
+        memcpy (routeHeap + i / 2, routeHeap + routeHeapSize,
+          sizeof (*routeHeap));
+        routeHeap[i / 2].r->heapIdx = i / 2;
         break;
       }
-      routeHeap[i / 2] = routeHeap[i];
-      routeHeap[i / 2]->heapIdx = i / 2;
+      memcpy (routeHeap + i / 2, routeHeap + i, sizeof (*routeHeap));
+      routeHeap[i / 2].r->heapIdx = i / 2;
       i = i * 2;
     }
-    root->heapIdx = -1; /* Root now removed from the heap */
     if (root->nd == &from) { // Remove 'from' from the heap in case we
       shortest = root->shortest; // get called with recalculate=0
       break;
@@ -543,7 +572,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
       if (StyleNr (Way (nd)) >= barrier_bollard &&
           StyleNr (Way (nd)) <= barrier_toll_booth &&
           !(Way (nd)->bits & (1 << Vehicle))) break;
-      if (root->remain > 500000 && root->best - root->remain > 500000 &&
+      if (root->remain > 500000 && -root->heapIdx - root->remain > 500000 &&
           (StyleNr (Way (nd)) == highway_residential ||
            StyleNr (Way (nd)) == highway_service ||
            StyleNr (Way (nd)) == highway_living_street ||

@@ -331,12 +331,18 @@ struct ndType {
 };
 /* This struct takes up a lot of space, but compressing is possible: If
 other is encoded as byte offset from the current position, it should typically
-be close to 0. So it can be huffman encoded. Then the struct will no longer
-have a fixed size, and the final position of an nd will not be know during
+be close to 0. So it can be Huffman encoded. Then the struct will no longer
+have a fixed size, and the final position of an nd will not be known during
 the first pass. So we over estimate the space needed between 2 nds and we can
 do multiple passes until all the excess has been removed.
 
-Similar tricks are possible with the other members of the structure.
+The difference between lat and wayPtr->clat will normally also be quite
+small and can also be Huffman coded. The same applies to lon.
+
+C code can be generated for these non dynamic Huffman decoders and the C
+compiler can then optimize it for efficient decompression. Not only will this
+save (flash) storage, but it will also increase the size of maps that can be
+loaded and reduce the paging that is so slow on mobile devices.
 */
 
 struct wayType {
@@ -445,10 +451,19 @@ int Next (OsmItr &itr); /* Friend of osmItr */
 struct routeNodeType {
   ndType *nd;
   routeNodeType *shortest;
-  int best, heapIdx, dir, remain; // Dir is 0 or 1
+  int heapIdx, dir, remain; // Dir is 0 or 1
+  // if heapIdx is negative, the node is not in the heap and best = -heapIdx.
+};
+/* The data is split over two structures (routeNodeType and routeHeapType).
+  Some of these fields may cause fewer cache misses if their are in
+  routeHeapType */
+struct routeHeapType {
+  routeNodeType *r;
+  int best;
 };
 
-extern routeNodeType *route, *shortest, **routeHeap;
+extern routeNodeType *route, *shortest;
+extern routeHeapType *routeHeap;
 extern int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
 
 void Route (int recalculate, int plon, int plat, int Vehicle, int fast);

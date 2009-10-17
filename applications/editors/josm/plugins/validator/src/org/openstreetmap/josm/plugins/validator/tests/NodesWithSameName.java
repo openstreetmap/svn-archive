@@ -35,7 +35,12 @@ public class NodesWithSameName extends Test {
 
         String name = n.get("name");
         String sign = n.get("traffic_sign");
-        if (name == null || (sign != null && sign.equals("city_limit"))) return;
+        String highway = n.get("highway");
+        if (name == null
+            || (sign != null && sign.equals("city_limit"))
+            || (highway != null && highway.equals("bus_stop"))) {
+            return;
+        }
 
         List<Node> nodes = namesToNodes.get(name);
         if (nodes == null)

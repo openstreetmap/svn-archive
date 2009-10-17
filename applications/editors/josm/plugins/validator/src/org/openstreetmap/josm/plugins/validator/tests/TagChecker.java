@@ -580,7 +580,7 @@ public class TagChecker extends Test
     @Override
     public void visit(Collection<OsmPrimitive> selection)
     {
-        if( checkKeys || checkValues || checkComplex)
+        if( checkKeys || checkValues || checkComplex || checkPaint || checkFixmes)
             super.visit(selection);
     }
 

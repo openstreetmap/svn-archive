@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <bounds minlat='0.0' minlon='0.0' maxlat='0.025' maxlon='0.025' origin='petschge' />
+  <node id='-1' timestamp='2009-10-17T11:16:25Z' visible='true' lat='0.010486577455402536' lon='0.012520973155027914' />
+  <node id='-2' timestamp='2009-10-17T11:16:25Z' user='petschge' visible='true' lat='0.0' lon='0.025' />
+  <node id='-3' timestamp='2009-10-17T11:16:25Z' visible='true' lat='0.007843959955930211' lon='0.012646812085195384' />
+  <node id='-4' timestamp='2009-10-17T11:16:25Z' visible='true' lat='0.01862416133680968' lon='0.012562919465083736' />
+  <node id='-5' action='modify' timestamp='2009-10-17T11:16:25Z' visible='true' lat='0.005662751848310787' lon='0.012646812085195384'>
+    <tag k='lock' v='yes' />
+  </node>
+  <node id='-6' timestamp='2009-10-17T11:16:25Z' visible='true' lat='0.0024161074870470913' lon='0.012588087370107866' />
+  <node id='-7' timestamp='2009-10-17T11:16:25Z' visible='true' lat='0.0032298658725814283' lon='0.01260486577513956' />
+  <node id='-8' timestamp='2009-10-17T11:16:25Z' user='petschge' visible='true' lat='0.0' lon='0.0' />
+  <node id='-9' timestamp='2009-10-17T11:16:25Z' visible='true' lat='0.021476510245660302' lon='0.012562919465083736' />
+  <node id='-10' timestamp='2009-10-17T11:16:25Z' visible='true' lat='0.01350671171287028' lon='0.012646812085195384' />
+  <node id='-11' timestamp='2009-10-17T11:16:25Z' visible='true' lat='0.016149329157656583' lon='0.012353187914804617' />
+  <node id='-12' action='modify' visible='true' lat='0.014874773032169934' lon='0.01258284091171952' />
+  <node id='-13' visible='true' lat='0.0023158540862319205' lon='0.018683231688072576' />
+  <node id='-14' visible='true' lat='0.006888327923633324' lon='0.018631271757920707' />
+  <node id='-15' action='modify' visible='true' lat='0.004706010868549704' lon='0.018735191618224446'>
+    <tag k='lock' v='yes' />
+  </node>
+  <node id='-16' timestamp='2009-10-17T11:16:25Z' user='petschge' visible='true' lat='0.025' lon='0.0' />
+  <node id='-17' timestamp='2009-10-17T11:16:25Z' user='petschge' visible='true' lat='0.025' lon='0.025' />
+  <node id='-18' timestamp='2009-10-17T11:16:25Z' visible='true' lat='0.022416107493419126' lon='0.012588087370107866' />
+  <way id='-19' action='modify' timestamp='2009-10-17T12:16:47Z' visible='true'>
+    <nd ref='-11' />
+    <nd ref='-12' />
+    <nd ref='-10' />
+    <tag k='lock' v='yes' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-20' timestamp='2009-10-17T11:16:25Z' user='petschge' visible='true'>
+    <nd ref='-8' />
+    <nd ref='-16' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='-21' action='modify' timestamp='2009-10-17T12:16:47Z' visible='true'>
+    <nd ref='-10' />
+    <nd ref='-1' />
+    <nd ref='-3' />
+    <nd ref='-5' />
+    <nd ref='-7' />
+    <nd ref='-6' />
+    <nd ref='-13' />
+    <nd ref='-15' />
+    <nd ref='-14' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-22' action='modify' timestamp='2009-10-17T11:16:25Z' visible='true'>
+    <nd ref='-18' />
+    <nd ref='-9' />
+    <nd ref='-4' />
+    <nd ref='-11' />
+    <tag k='waterway' v='river' />
+  </way>
+  <way id='-23' timestamp='2009-10-17T11:16:25Z' user='petschge' visible='true'>
+    <nd ref='-2' />
+    <nd ref='-17' />
+    <tag k='highway' v='residential' />
+  </way>
+</osm>

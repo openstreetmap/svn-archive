@@ -233,6 +233,10 @@
 		</rule>
 
 		<!-- Waterways -->
+		<rule e="way" k="lock" v="yes">
+			<line class="waterway-lock-casing" smart-linecap="no" />
+			<line class="waterway-lock-core" smart-linecap="no" />
+		</rule>
 		<rule e="way" k="waterway" v="river">
 			<line class="waterway-casing waterway-river-casing" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="100"/>
 		</rule>
@@ -299,6 +303,12 @@
 		</rule>
 		<rule e="way" k="waterway" v="riverbank">
 			<area class="waterway-riverbank"/>
+		</rule>
+		<rule e="node" k="lock" v="yes">
+			<wayMarker k="waterway" class="canal-lock"/>
+		</rule>
+		<rule e="node" s="way" k="lock" v="yes">
+			<wayMarker k="waterway" class="canal-lock"/>
 		</rule>
 
 		<rule e="way" k="highway" v="*">
@@ -3931,6 +3941,14 @@
 			stroke-dasharray: 0.5,0.5;
 			}
 
+			.canal-lock {
+			fill: none;
+			stroke: #ffffff;
+			stroke-width: 0.1px;
+			stroke-opacity: 0;
+			marker-mid: url(#canal-lock);
+			}
+
 			.noexit-all {
 			fill: none;
 			stroke: #ffffff;
@@ -4708,6 +4726,9 @@
 			stroke: #b0b0b0;
 			stroke-width: 0px;
 			}
+
+			.waterway-lock-casing                   { stroke: #000000; stroke-width: 2.0px; stroke-linecap: butt; }
+			.waterway-lock-core                     { stroke: #f8f8f8; stroke-width: 1.5px; stroke-linecap: butt; }
 
 			.waterway-river-casing                  { stroke-width: 1px; }
 			.waterway-river-core                    { stroke-width: 1px; }
@@ -6137,6 +6158,9 @@
 		</svg:marker>
 		<svg:marker fill="none" id="noexit-no" markerHeight="3px" markerUnits="userSpaceOnUse" markerWidth="3px" orient="auto" refX="1px" refY="5px" stroke="#55dd55" stroke-width="1.5px" stroke-opacity="0.7" viewBox="0 0 10 10">
 			<svg:path d="M 1,2 L 1,8"/>
+		</svg:marker>
+		<svg:marker fill="none" id="canal-lock" markerHeight="2px" markerUnits="userSpaceOnUse" markerWidth="2px" orient="auto" refX="1px" refY="5px" stroke="#000000" stroke-width="1px" stroke-opacity="1" viewBox="0 0 10 10">
+			<svg:path d="M 1,0 L -2,5 L 1,10"/>
 		</svg:marker>
 	</defs>
 </rules>

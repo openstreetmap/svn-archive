@@ -24,10 +24,7 @@ public class WalkingPapersPlugin extends Plugin
     public WalkingPapersPlugin()
     {
         MainMenu menu = Main.main.menu;
-        // Note to translators. Please do not translate "Walking Papers", because it is 
-        // the name of the project (www.walking-papers.org) and should retain this name
-        // in every language until and unless the project itself is i18nised.
-        walkingPapersMenu = menu.addMenu("Walking Papers", KeyEvent.VK_K, menu.defaultMenuPos);
+        walkingPapersMenu = menu.addMenu(tr("Walking Papers"), KeyEvent.VK_K, menu.defaultMenuPos);
         walkingPapersMenu.add(new JMenuItem(new WalkingPapersAddLayerAction()));
     }
 

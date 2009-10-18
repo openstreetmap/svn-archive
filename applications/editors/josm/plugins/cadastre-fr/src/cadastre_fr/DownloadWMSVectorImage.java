@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 
@@ -37,12 +38,18 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                             return;
                         }
                     }
-                    if (wmsLayer.isRaster())
+                    if (wmsLayer.isRaster()) {
                         // set raster image commune bounding box based on current view (before adjustment)
                         wmsLayer.setRasterBounds(bounds);
-                    else
+                    } else {
                         // set vectorized commune bounding box by opening the standard web window
                         wmsLayer.setCommuneBBox( grabber.getWmsInterface().retrieveCommuneBBox());
+                        // if it is the first layer, use the communeBBox as grab bbox
+                        if (Main.proj instanceof LambertCC9Zones && Main.map.mapView.getAllLayers().size() == 1 ) {
+                            bounds = wmsLayer.getCommuneBBox().toBounds();
+                            Main.map.mapView.zoomTo(bounds);
+                        }
+                    }
                 }
                 // grab new images from wms server into active layer
                 wmsLayer.grab(grabber, bounds);

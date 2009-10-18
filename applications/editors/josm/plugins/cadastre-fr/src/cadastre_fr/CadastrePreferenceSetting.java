@@ -239,6 +239,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         }
         CacheControl.cacheEnabled = enableCache.isSelected();
         CadastrePlugin.refreshConfiguration();
+        CadastrePlugin.refreshMenu();
 
         return false;
     }

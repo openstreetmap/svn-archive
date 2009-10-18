@@ -18,12 +18,14 @@ import java.util.Vector;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.projection.Lambert;
+import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
@@ -41,7 +43,7 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     Component[] component = null;
 
-    public int lambertZone = -1;
+    private int lambertZone = -1;
 
     protected static final Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
             CadastrePlugin.class.getResource("/images/cadastre_small.png")));
@@ -76,7 +78,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         super(buildName(location, codeCommune));
         this.location = location;
         this.codeCommune = codeCommune;
-        this.lambertZone = Lambert.layoutZone;
+        this.lambertZone = lambertZone;
         // enable auto-sourcing option
         CadastrePlugin.pluginUsed = true;
     }
@@ -379,7 +381,7 @@ public class WMSLayer extends Layer implements ImageObserver {
             this.rasterRatio = ois.readDouble();
         }
         this.communeBBox = (EastNorthBound) ois.readObject();
-        if (this.lambertZone != currentLambertZone) {
+        if (this.lambertZone != currentLambertZone && currentLambertZone != -1) {
             JOptionPane.showMessageDialog(Main.parent, tr("Lambert zone {0} in cache "+
                     "incompatible with current Lambert zone {1}",
                     this.lambertZone+1, currentLambertZone), tr("Cache Lambert Zone Error"), JOptionPane.ERROR_MESSAGE);
@@ -483,6 +485,8 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public void setCommuneBBox(EastNorthBound entireCommune) {
         this.communeBBox = entireCommune;
+        if (Main.proj instanceof LambertCC9Zones)
+            setLambertCC9Zone(communeBBox.min.north());
     }
 
     /**
@@ -490,6 +494,36 @@ public class WMSLayer extends Layer implements ImageObserver {
      */
     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
         return false;
+    }
+
+    public int getLambertZone() {
+        return lambertZone;
+    }
+
+    public void setLambertCC9Zone(double north) {
+        int lambertZone = LambertCC9Zones.north2ZoneNumber(north);
+        this.lambertZone = lambertZone;
+        if (LambertCC9Zones.layoutZone != lambertZone) {
+            String currentZone = MenuActionLambertZone.lambert9zones[LambertCC9Zones.layoutZone+1];
+            String destZone = MenuActionLambertZone.lambert9zones[lambertZone+1];
+            if (Main.map.mapView.getAllLayers().size() == 1) {
+                /* Enable this code below when JOSM will have a proper support of dynamic projection change
+                 * 
+                System.out.println("close all layers and change current Lambert zone from "+LambertCC9Zones.layoutZone+" to "+lambertZone);
+                Bounds b = null;
+                if (Main.map != null && Main.map.mapView != null)
+                    b = Main.map.mapView.getRealBounds();
+                LambertCC9Zones.layoutZone = lambertZone;
+                Main.map.mapView.zoomTo(b);
+                */
+            } else {
+                JOptionPane.showMessageDialog(Main.parent, tr("Current layer is in Lambert CC9 Zone \"{0}\"\n"+
+                        "where the commune is in Lambert CC9 Zone \"{1}\".\n"+
+                        "Upload your changes, close all layers and change\n"+
+                        "manually the Lambert zone from the Cadastre menu"
+                        , currentZone, destZone));
+            }
+        }
     }
 
 }

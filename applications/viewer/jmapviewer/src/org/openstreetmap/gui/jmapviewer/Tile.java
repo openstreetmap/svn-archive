@@ -46,6 +46,7 @@ public class Tile {
     protected String key;
     protected boolean loaded = false;
     protected boolean loading = false;
+    protected boolean error = false;
     public static final int SIZE = 256;
 
     /**
@@ -224,7 +225,12 @@ public class Tile {
             status = "loading";
         if (this.loaded)
             status = "loaded";
+        if (this.error)
+            status = "error";
         return status;
+    }
+    public boolean hasError() {
+        return error;
     }
 
 }

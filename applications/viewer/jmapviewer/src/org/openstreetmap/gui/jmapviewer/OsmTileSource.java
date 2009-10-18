@@ -5,9 +5,20 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 public class OsmTileSource {
 
     public static final String MAP_MAPNIK = "http://tile.openstreetmap.org";
-    public static final String MAP_OSMA = "http://tah.openstreetmap.org/Tiles/tile";
+    public static final String MAP_OSMA = "http://tah.openstreetmap.org/Tiles";
 
-    protected static abstract class AbstractOsmTileSource implements TileSource {
+    public static abstract class AbstractOsmTileSource implements TileSource {
+        protected String NAME;
+        protected String BASE_URL;
+        public AbstractOsmTileSource(String name, String base_url)
+        {
+            NAME = name;
+            BASE_URL = base_url;
+        }
+
+        public String getName() {
+            return NAME;
+        }
 
         public int getMaxZoom() {
             return 18;
@@ -17,8 +28,16 @@ public class OsmTileSource {
             return 0;
         }
 
-        public String getTileUrl(int zoom, int tilex, int tiley) {
+        public String getTilePath(int zoom, int tilex, int tiley) {
             return "/" + zoom + "/" + tilex + "/" + tiley + ".png";
+        }
+
+        public String getBaseUrl() {
+            return this.BASE_URL;
+        }
+
+        public String getTileUrl(int zoom, int tilex, int tiley) {
+            return this.getBaseUrl() + getTilePath(zoom, tilex, tiley);
         }
 
         @Override
@@ -33,16 +52,8 @@ public class OsmTileSource {
     }
 
     public static class Mapnik extends AbstractOsmTileSource {
-
-        public static String NAME = "Mapnik";
-
-        public String getName() {
-            return NAME;
-        }
-
-        @Override
-        public String getTileUrl(int zoom, int tilex, int tiley) {
-            return MAP_MAPNIK + super.getTileUrl(zoom, tilex, tiley);
+        public Mapnik() {
+            super("Mapnik", MAP_MAPNIK);
         }
 
         public TileUpdate getTileUpdate() {
@@ -53,16 +64,19 @@ public class OsmTileSource {
 
     public static class CycleMap extends AbstractOsmTileSource {
 
-        private static final String PATTERN = "http://%s.andy.sandbox.cloudmade.com/tiles/cycle/%d/%d/%d.png";
-        public static String NAME = "OSM Cycle Map";
+        private static final String PATTERN = "http://%s.andy.sandbox.cloudmade.com/tiles/cycle";
 
         private static final String[] SERVER = { "a", "b", "c" };
 
         private int SERVER_NUM = 0;
 
+        public CycleMap() {
+            super("OSM Cycle Map", PATTERN);
+        }
+
         @Override
-        public String getTileUrl(int zoom, int tilex, int tiley) {
-            String url = String.format(PATTERN, new Object[] { SERVER[SERVER_NUM], zoom, tilex, tiley });
+        public String getBaseUrl() {
+            String url = String.format(this.BASE_URL, new Object[] { SERVER[SERVER_NUM] });
             SERVER_NUM = (SERVER_NUM + 1) % SERVER.length;
             return url;
         }
@@ -71,35 +85,40 @@ public class OsmTileSource {
             return 17;
         }
 
-        public String getName() {
-            return NAME;
-        }
-
         public TileUpdate getTileUpdate() {
             return TileUpdate.LastModified;
         }
 
     }
 
-    public static class TilesAtHome extends AbstractOsmTileSource {
-
-        public static String NAME = "TilesAtHome";
+    public static abstract class OsmaSource extends AbstractOsmTileSource {
+        String osmaSuffix;
+        public OsmaSource(String name, String osmaSuffix) {
+            super(name, MAP_OSMA);
+            this.osmaSuffix = osmaSuffix;
+        }
 
         public int getMaxZoom() {
             return 17;
         }
 
-        public String getName() {
-            return NAME;
-        }
-
         @Override
-        public String getTileUrl(int zoom, int tilex, int tiley) {
-            return MAP_OSMA + super.getTileUrl(zoom, tilex, tiley);
+        public String getBaseUrl() {
+            return MAP_OSMA + "/" + osmaSuffix;
         }
 
         public TileUpdate getTileUpdate() {
             return TileUpdate.IfModifiedSince;
+        }
+    }
+    public static class TilesAtHome extends OsmaSource {
+        public TilesAtHome() {
+            super("TilesAtHome", "tile");
+        }
+    }
+    public static class Maplint extends OsmaSource {
+        public Maplint() {
+            super("Maplint", "maplint");
         }
     }
 }

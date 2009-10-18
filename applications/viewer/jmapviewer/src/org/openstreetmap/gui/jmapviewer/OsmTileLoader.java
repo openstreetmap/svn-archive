@@ -56,6 +56,7 @@ public class OsmTileLoader implements TileLoader {
                     input = null;
                 } catch (Exception e) {
                     tile.setImage(Tile.ERROR_IMAGE);
+                    tile.error = true;
                     listener.tileLoadingFinished(tile, false);
                     if (input == null)
                         System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());

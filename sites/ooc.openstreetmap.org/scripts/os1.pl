@@ -43,17 +43,43 @@ sub process_tile
 
         $tile->read(file => "${SrcDir}/${z}/${x}/${y}.jpg") || die $tile->errstr;
 
-	for (my $dz = 1; $Tiles[$z - $dz]; $dz++)
+        if ($z == 15)
         {
-            my $f = 2 ** $dz;
-            my $s = 256 / $f;
+            for (my $dz = 1; $Tiles[$z - $dz]; $dz++)
+            {
+                my $f = 2 ** $dz;
+                my $s = 256 / $f;
 
-            $Tiles[$z - $dz]->paste(left => $s * ($x % $f),
-                                    top => $s * ($y % $f),
-                                    src => $tile->scale(xpixels => $s)) || die $Tiles[$z - $dz]->errstr;
+                $Tiles[$z - $dz]->paste(left => $s * ($x % $f),
+                                        top => $s * ($y % $f),
+                                        src => $tile->scale(xpixels => $s)) || die $Tiles[$z - $dz]->errstr;
+            }
         }
+        elsif ($z == 16)
+        {
+            foreach my $dz (1 .. 1)
+            {
+                my $f = 2 ** $dz;
+                my $s = 256 / $f;
 
-        save_tile($tile, $z, $x, $y);
+                foreach my $ix (0 .. $f - 1)
+                {
+                    foreach my $iy (0 .. $f - 1)
+                    {
+                        my $cropped = $tile->crop(left => $s * $ix,
+                                                  top => $s * $iy,
+                                                  width => $s, height => $s) || die $tile->errstr;
+                        my $scaled = $cropped->scale(xpixels => 256) || die $cropped->errstr;
+
+                        save_tile($scaled, $z + $dz, $x * $f + $ix, $y * $f + $iy);
+                    }
+                }
+            }
+        }
+        else
+        {
+            die "Unexpected tile found at z$z!";
+        }
     }
 
     return;

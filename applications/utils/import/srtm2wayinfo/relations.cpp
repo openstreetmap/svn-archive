@@ -75,6 +75,7 @@ void RelationWriter::writeRelation(OsmWayId wayId, OsmNodeId startNode, OsmNodeI
         "\t<tag k=\"length\" v=\"%5\"/>\n"
         "\t<tag k=\"up\" v=\"%6\"/>\n"
         "\t<tag k=\"down\" v=\"%7\"/>\n"
+        "\t<tag k=\"type\" v=\"altitude\">\n"
         "</relation>\n").arg(relationId--).arg(wayId).arg(startNode).arg(endNode).arg(length, 3, 'f').arg(up, 3, 'f').arg(down, 4, 'f');
     output->write(text.toAscii());
 }
@@ -112,3 +113,4 @@ void RelationWriter::calcUpDown(float from_lat, float from_lon, float to_lat, fl
         calcUpDown(center_lat, center_lon, to_lat, to_lon, up, down);
     }
 }
+

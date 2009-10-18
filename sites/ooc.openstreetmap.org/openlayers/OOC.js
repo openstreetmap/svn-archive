@@ -120,7 +120,7 @@ OpenLayers.Layer.OS1 = OpenLayers.Class(OpenLayers.Layer.XYZ, {
             "http://c.ooc.openstreetmap.org/os1/${z}/${x}/${y}.jpg"
         ];
         options = OpenLayers.Util.extend({
-            numZoomLevels: 17,
+            numZoomLevels: 18,
             transitionEffect: "resize",
             sphericalMercator: true
         }, options);

@@ -210,7 +210,11 @@
 		</rule>
 		
 		<!-- Waterways -->
-		<rule e="way" k="lock" v="yes">
+		<rule e="way" k="lock" v="yes|true">
+			<line class="waterway-lock-casing" smart-linecap="no" />
+			<line class="waterway-lock-core" smart-linecap="no" />
+		</rule>
+		<rule e="way" k="waterway" v="lock">
 			<line class="waterway-lock-casing" smart-linecap="no" />
 			<line class="waterway-lock-core" smart-linecap="no" />
 		</rule>
@@ -281,10 +285,16 @@
 		<rule e="way" k="waterway" v="riverbank">
 			<area class="waterway-riverbank"/>
 		</rule>
-		<rule e="node" k="lock" v="yes">
+		<rule e="node" k="lock" v="yes|true">
 			<wayMarker k="waterway" class="canal-lock"/>
 		</rule>
-		<rule e="node" s="way" k="lock" v="yes">
+		<rule e="node" s="way" k="lock" v="yes|true">
+			<wayMarker k="waterway" class="canal-lock"/>
+		</rule>
+		<rule e="node" k="waterway" v="lock">
+			<wayMarker k="waterway" class="canal-lock"/>
+		</rule>
+		<rule e="node" s="way" k="waterway" v="lock">
 			<wayMarker k="waterway" class="canal-lock"/>
 		</rule>
 		

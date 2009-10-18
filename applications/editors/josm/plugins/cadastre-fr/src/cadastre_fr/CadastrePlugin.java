@@ -6,7 +6,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.LinkedList;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
@@ -74,10 +73,11 @@ import org.openstreetmap.josm.data.projection.*;
  *                   overview rasters (Tableau d'assemblage) but directly small units (Feuille)
  * 1.3 23-Aug-2009 - improve georeferencing action cancellation
  *                 - fixed bug of raster image loaded from cache not working on Java1.6
- *                 - improve mouse click bounce detection during georeferencing process 
+ *                 - improve mouse click bounce detection during georeferencing process
+ * 1.4 17-Oct-2009 - add support for new Lambert CC 9 Zones projection 
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "1.3";
+    static String VERSION = "1.4";
 
     static JMenu cadastreJMenu;
 
@@ -120,12 +120,11 @@ public class CadastrePlugin extends Plugin {
         System.out.println("current cache directory: "+cacheDir);
 
         refreshConfiguration();
-        refreshMenu();
 
         UploadAction.registerUploadHook(new CheckSourceUploadHook());
     }
 
-    public void refreshMenu() throws Exception {
+    public static void refreshMenu() {
         MainMenu menu = Main.main.menu;
 
         if (cadastreJMenu == null) {
@@ -206,6 +205,8 @@ public class CadastrePlugin extends Plugin {
             }
         } else
             System.out.println("shortcut F11 already redefined; do not change");
+
+        refreshMenu();
     }
 
     @Override
@@ -213,12 +214,13 @@ public class CadastrePlugin extends Plugin {
         return new CadastrePreferenceSetting();
     }
 
-    private void setEnabledAll(boolean isEnabled) {
+    private static void setEnabledAll(boolean isEnabled) {
+        boolean isLambertCC9Zones = Main.proj instanceof LambertCC9Zones;
         for (int i = 0; i < cadastreJMenu.getItemCount(); i++) {
             JMenuItem item = cadastreJMenu.getItem(i);
             if (item != null)
-                if (item.getText().equals(MenuActionGrab.name) ||
-                    item.getText().equals(MenuActionGrabPlanImage.name) /* ||
+                if (item.getText().equals(MenuActionGrabPlanImage.name) /*||
+                    item.getText().equals(MenuActionGrab.name) ||
                     item.getText().equals(MenuActionBoundaries.name) ||
                     item.getText().equals(MenuActionBuildings.name)*/) {
                     item.setEnabled(isEnabled);
@@ -238,6 +240,7 @@ public class CadastrePlugin extends Plugin {
             } else if (oldFrame != null && newFrame == null) {
                 setEnabledAll(false);
                 Lambert.layoutZone = -1;
+                LambertCC9Zones.layoutZone = -1;
             }
         }
     }
@@ -247,7 +250,8 @@ public class CadastrePlugin extends Plugin {
             || Main.proj.toString().equals(new UTM_20N_Guadeloupe_Fort_Marigot().toString())
             || Main.proj.toString().equals(new UTM_20N_Guadeloupe_Ste_Anne().toString())
             || Main.proj.toString().equals(new UTM_20N_Martinique_Fort_Desaix().toString())
-            || Main.proj.toString().equals(new GaussLaborde_Reunion().toString());
+            || Main.proj.toString().equals(new GaussLaborde_Reunion().toString())
+            || Main.proj.toString().equals(new LambertCC9Zones().toString());
     }
 
     public static void safeSleep(long milliseconds) {

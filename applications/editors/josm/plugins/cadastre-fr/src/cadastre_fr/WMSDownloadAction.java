@@ -25,11 +25,11 @@ public class WMSDownloadAction extends JosmAction {
 
     public static WMSLayer getLayer() {
         // check if we already have a layer created. if not, create; if yes, reuse.
+        ArrayList<WMSLayer> existingWMSlayers = new ArrayList<WMSLayer>();
         if (Main.map != null) {
             Layer activeLayer = Main.map.mapView.getActiveLayer();
             if (activeLayer instanceof WMSLayer)
                 return (WMSLayer) activeLayer;
-            ArrayList<WMSLayer> existingWMSlayers = new ArrayList<WMSLayer>();
             for (Layer l : Main.map.mapView.getAllLayers()) {
                 if (l instanceof WMSLayer) {
                     existingWMSlayers.add((WMSLayer)l);
@@ -41,6 +41,8 @@ public class WMSDownloadAction extends JosmAction {
                 return new MenuActionNewLocation().addNewLayer(existingWMSlayers);
             JOptionPane.showMessageDialog(Main.parent,
                     tr("More than one WMS layer present\nSelect one of them first, then retry"));
+        } else {
+            return new MenuActionNewLocation().addNewLayer(existingWMSlayers);
         }
         return null;
     }

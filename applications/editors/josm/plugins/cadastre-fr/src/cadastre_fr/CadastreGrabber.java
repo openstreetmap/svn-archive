@@ -73,6 +73,7 @@ public class CadastreGrabber {
         str += lambertMax.north();
         //str += "&width=800&height=600"; // maximum allowed by wms server
         str += "&width=1000&height=800"; // maximum allowed by wms server
+        //str += "&exception=application/vnd.ogc.se_inimage"; // used by normal client but not required
         str += "&styles=LS3_90,LS2_90,LS1_90,PARCELLE_90,NUMERO_90,PT3_90,PT2_90,PT1_90,LIEUDIT_90";
         str += ",SUBSECTION_90";
         str += ",SECTION_90";

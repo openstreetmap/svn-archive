@@ -20,8 +20,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 
 public class CacheControl implements Runnable {
+    
+    public static final String cLambertCC9Z = "CC";
 
     public class ObjectOutputStreamAppend extends ObjectOutputStream {
         public ObjectOutputStreamAppend(OutputStream out) throws IOException {
@@ -80,7 +83,10 @@ public class CacheControl implements Runnable {
 
     public boolean loadCacheIfExist() {
         try {
-            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + String.valueOf(wmsLayer.lambertZone+1));
+            String extension = String.valueOf((wmsLayer.getLambertZone() + 1));
+            if (Main.proj instanceof LambertCC9Zones)
+                extension = cLambertCC9Z + extension;
+            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + extension);
             if (file.exists()) {
                 JOptionPane pane = new JOptionPane(
                         tr("Location \"{0}\" found in cache.\n"+
@@ -95,7 +101,7 @@ public class CacheControl implements Runnable {
                 // till here
 
                 if (reply == JOptionPane.OK_OPTION) {
-                    return loadCache(file, wmsLayer.lambertZone);
+                    return loadCache(file, wmsLayer.getLambertZone());
                 } else
                     file.delete();
             }
@@ -107,7 +113,10 @@ public class CacheControl implements Runnable {
 
     public void deleteCacheFile() {
         try {
-            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + String.valueOf(wmsLayer.lambertZone+1));
+            String extension = String.valueOf((wmsLayer.getLambertZone() + 1));
+            if (Main.proj instanceof LambertCC9Zones)
+                extension = cLambertCC9Z + extension;
+            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + extension);
             if (file.exists())
                 file.delete();
         } catch (Exception e) {
@@ -154,7 +163,10 @@ public class CacheControl implements Runnable {
             imagesToSave.clear();
             imagesLock.unlock();
             if (images != null && !images.isEmpty()) {
-                File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + String.valueOf((wmsLayer.lambertZone + 1)));
+                String extension = String.valueOf((wmsLayer.getLambertZone() + 1));
+                if (Main.proj instanceof LambertCC9Zones)
+                    extension = cLambertCC9Z + extension;
+                File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + extension);
                 try {
                     if (file.exists()) {
                         ObjectOutputStreamAppend oos = new ObjectOutputStreamAppend(

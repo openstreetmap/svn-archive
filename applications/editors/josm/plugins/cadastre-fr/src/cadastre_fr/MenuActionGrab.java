@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class MenuActionGrab extends JosmAction {
@@ -27,7 +28,9 @@ public class MenuActionGrab extends JosmAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (Main.map != null) {
+        // with the new projection LambertCC9Zones, we are able to determin the zone and thus lat/lon of 
+        // downloaded commune bounding box
+        if (Main.map != null || Main.proj instanceof LambertCC9Zones) {
             if (CadastrePlugin.isCadastreProjection()) {
                 WMSLayer wmsLayer = WMSDownloadAction.getLayer();
                 if (wmsLayer != null)

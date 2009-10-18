@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.projection.Lambert;
+import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -33,16 +34,11 @@ public class MenuActionNewLocation extends JosmAction {
     }
 
     public WMSLayer addNewLayer(ArrayList<WMSLayer> existingLayers) {
-        if (Main.map == null) {
+        /*if (Main.map == null) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Open a layer first (GPX, OSM, cache)"));
             return null;
-            /*
-        } else if (existingLayers != null && existingLayers.size() > 0) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("Select one cadastre layer first"));
-            return null;*/
-        } else {
+        } else {*/
             String location = "";
             String codeDepartement = "";
             String codeCommune = "";
@@ -77,13 +73,18 @@ public class MenuActionNewLocation extends JosmAction {
                 resetCookie = true;
                 Main.pref.put("cadastrewms.location", location);
                 Main.pref.put("cadastrewms.codeCommune", codeCommune);
-                for (Layer l : Main.map.mapView.getAllLayers()) {
-                    if (l instanceof WMSLayer && l.getName().equalsIgnoreCase(location + codeDepartement)) {
-                        return null;
+                if (Main.map != null) {
+                    for (Layer l : Main.map.mapView.getAllLayers()) {
+                        if (l instanceof WMSLayer && l.getName().equalsIgnoreCase(location + codeDepartement)) {
+                            return null;
+                        }
                     }
                 }
                 // add the layer if it doesn't exist
-                wmsLayer = new WMSLayer(location, codeCommune, Lambert.layoutZone);
+                if (Main.proj instanceof LambertCC9Zones)
+                    wmsLayer = new WMSLayer(location, codeCommune, LambertCC9Zones.layoutZone);
+                else
+                    wmsLayer = new WMSLayer(location, codeCommune, Lambert.layoutZone);
                 Main.main.addLayer(wmsLayer);
                 System.out.println("Add new layer with Location:" + inputTown.getText());
             } else if (existingLayers != null && existingLayers.size() > 0 && inputWMSList.getSelectedIndex() > 0) {
@@ -94,7 +95,7 @@ public class MenuActionNewLocation extends JosmAction {
             if (resetCookie)
                 CadastrePlugin.cadastreGrabber.getWmsInterface().resetCookieIfNewLayer(wmsLayer.getName());
             return wmsLayer;
-        }
+        //}
     }
 
 }

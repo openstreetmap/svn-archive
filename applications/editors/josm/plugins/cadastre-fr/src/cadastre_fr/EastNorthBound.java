@@ -2,6 +2,8 @@ package cadastre_fr;
 
 import java.io.Serializable;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 
 public class EastNorthBound implements Serializable {
@@ -26,6 +28,10 @@ public class EastNorthBound implements Serializable {
         EastNorthBound enb = new EastNorthBound(this.min.interpolate(en2.min, proportion),
                 this.max.interpolate(en2.max, proportion));
         return enb;
+    }
+    
+    public Bounds toBounds() {
+        return new Bounds(Main.proj.eastNorth2latlon(min), Main.proj.eastNorth2latlon(max));
     }
 
     @Override public String toString() {

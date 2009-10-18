@@ -54,6 +54,11 @@ sub process_tile
                                         top => $s * ($y % $f),
                                         src => $tile->scale(xpixels => $s)) || die $Tiles[$z - $dz]->errstr;
             }
+
+            process_tile($z + 1, $x * 2 + 0, $y * 2 + 0);
+            process_tile($z + 1, $x * 2 + 1, $y * 2 + 0);
+            process_tile($z + 1, $x * 2 + 0, $y * 2 + 1);
+            process_tile($z + 1, $x * 2 + 1, $y * 2 + 1);
         }
         elsif ($z == 16)
         {

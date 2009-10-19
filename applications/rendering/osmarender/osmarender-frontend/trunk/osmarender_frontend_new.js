@@ -3,8 +3,8 @@
 		return new osmarender_frontend();
 	};
 
-	osmarender_frontend.version = "0.3.20090821-nightly";
-	osmarender_frontend.date = "20090821"
+	osmarender_frontend.version = "0.3.20091016-nightly";
+	osmarender_frontend.date = "20091016"
 	osmarender_frontend.isDebug = true;
 	osmarender_frontend.isOnline = false;
 
@@ -15,9 +15,12 @@
 	dojo.require("dijit.layout.ContentPane");
 	dojo.require("dijit.layout.BorderContainer");
 	dojo.require("osmafrontend.version");
-	dojo.require("osmafrontend.load");
+	dojo.require("osmafrontend.load.load");
 
 	dojo.addOnLoad(function () {
 	
 	})
+
+	osmarender_frontend.loadOsmRule = function (osm_file,rule_file) {
+	}
 }());

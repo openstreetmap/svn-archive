@@ -7,47 +7,20 @@
 		.loadPresetFile {
 			height: 100%;
 		}
-		.loadNonPresetFile {
+		.loadLocalFile {
 			height: 100%;
+		}
+		.loadFromUrl {
+			height: 100%;
+		}
+		.bold {
+			font-weight: bold;
 		}
 	</style>
 	<div dojoType="dijit.layout.TabContainer" dojoAttachPoint="load_tab_container" class="loadTabContainer">
-		<div dojoType="dijit.layout.ContentPane" title="Load a preset file" selected="true" class="loadPresetFile">
-			<br />
-			Data File: 
-			<select 	dojoType="dijit.form.FilteringSelect"
-					id="preset_osm_file_name"
-					autoComplete="false"
-					invalidMessage="Invalid OSM file name"
-					dojoAttachPoint="preset_osm_file_name"
-					dojoAttachEvent="onchange: _onChange"
-			>
-				<option value="blank"></option>
-				<option value="data.xml">data.xml</option>
-				<option value="somewhere_in_london.xml">somewhere_in_london.xml</option>
-				<option value="rome_centre.xml">rome_centre.xml</option>
-				<option value="zurich_google.xml">zurich_google.xml</option>
-			</select><br />
-			Rule File: 
-			<select 	dojoType="dijit.form.FilteringSelect"
-					id="preset_rules_file_name"
-					dojoAttachPoint="preset_rules_file_name"
-					autoComplete="false"
-					invalidMessage="Invalid rules file name"
-					dojoAttachEvent="onchange: _onChange"
-			>
-				<option value="blank"></option>
-				<option value="osm-map-features-z12.xml">osm-map-features-z12.xml</option>
-				<option value="osm-map-features-z13.xml">osm-map-features-z13.xml</option>
-				<option value="osm-map-features-z14.xml">osm-map-features-z14.xml</option>
-				<option value="osm-map-features-z15.xml">osm-map-features-z15.xml</option>
-				<option value="osm-map-features-z16.xml">osm-map-features-z16.xml</option>
-				<option value="osm-map-features-z17.xml">osm-map-features-z17.xml</option>
-			</select><br /><br />
-		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Load a non preset file" class="loadNonPresetFile">
-			nonPreset
-		</div>
+		<div dojoType="osmafrontend.load.preset" title="{{ _nls.loadPresetFile }}" selected="true" class="loadPresetFile"></div>
+		<div dojoType="osmafrontend.load.local" title="{{ _nls.loadLocalFile }}" class="loadLocalFile"></div>
+		<div dojoType="osmafrontend.load.url" title="{{ _nls.loadFromUrl }}" class="loadFromUrl"></div>
 <!--		</div>
 		<div id="load_custom" title="Load a custom file" dojoType="dijit.layout.ContentPane">
 			<br />

@@ -1,0 +1,27 @@
+<div>
+	<br />
+	{{ _nls.load.dataFile }}:
+	<select 	dojoType="dijit.form.FilteringSelect"
+			autoComplete="false"
+			invalidMessage="{{ _nls.load.invalidOSM }}"
+			dojoAttachPoint="preset_osm_file_name"
+			dojoAttachEvent="onChange:_onChange"
+	>
+	{% for title,value in defaultOSMFiles.items %}
+		<option value="{{ value }}">{{ title }}</option>
+	{% endfor %}
+	</select><br />
+	{{ _nls.load.ruleFile }}:
+	<select 	dojoType="dijit.form.FilteringSelect"
+			dojoAttachPoint="preset_rules_file_name"
+			autoComplete="false"
+			invalidMessage="{{ _nls.load.invalidRules }}"
+			dojoAttachEvent="onChange:_onChange"
+	>
+	{% for title,value in defaultRuleFiles.items %}
+		<option value="{{ value }}">{{ title }}</option>
+	{% endfor %}
+	</select>
+	<br /><br />
+	<button dojoType="dijit.form.Button" dojoAttachPoint="button_load_preset" dojoAttachEvent="onClick:_loadData">{{ _nls.load.load }} <span id="span_load_preset_data" class="bold"></span> {{ _nls.load.dataFile }}<br />with <span id="span_load_preset_rule" class="bold"></span> {{ _nls.load.ruleFile }}</button>
+</div>

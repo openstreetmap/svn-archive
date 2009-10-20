@@ -50,7 +50,7 @@ public class UnconnectedWays extends Test
     @Override
     public void startTest(ProgressMonitor monitor)
     {
-    	super.startTest(monitor);
+        super.startTest(monitor);
         ways = new HashSet<MyWaySegment>();
         endnodes = new HashSet<Node>();
         endnodes_highway = new HashSet<Node>();
@@ -161,17 +161,18 @@ public class UnconnectedWays extends Test
     {
         private Line2D line;
         public Way w;
-        public Boolean isAbandoned = false;
-        public Boolean isBoundary = false;
-        public Boolean highway;
+        public boolean isAbandoned = false;
+        public boolean isBoundary = false;
+        public boolean highway;
 
         public MyWaySegment(Way w, Node n1, Node n2)
         {
             this.w = w;
             String railway = w.get("railway");
-            this.isAbandoned = railway != null && railway.equals("abandoned");
-            this.highway = w.get("highway") != null || (railway != null && !isAbandoned);
-            this.isBoundary = w.get("boundary") != null && w.get("boundary").equals("administrative") && !this.highway;
+            String highway = w.get("highway");
+            this.isAbandoned = "abandoned".equals(railway) || "yes".equals(w.get("disused"));
+            this.highway = (highway != null || railway != null) && !isAbandoned;
+            this.isBoundary = !this.highway && "administrative".equals(w.get("boundary"));
             line = new Line2D.Double(n1.getEastNorth().east(), n1.getEastNorth().north(),
             n2.getEastNorth().east(), n2.getEastNorth().north());
         }
@@ -192,8 +193,11 @@ public class UnconnectedWays extends Test
     @Override
     public void visit(Way w)
     {
-        if( !w.isUsable() )
+        if (!w.isUsable()
+            || w.get("barrier") != null
+            || "cliff".equals(w.get("natural")))
             return;
+
         int size = w.getNodesCount();
         if(size < 2)
             return;

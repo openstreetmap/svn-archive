@@ -2111,6 +2111,20 @@ int UserInterface (int argc, char *argv[],
     #endif
     return 8;
   }
+  #if 0
+  /* This code give an idea for the order of magnitude of the theorical
+     limit of exhaustive search routing */
+  __int64 total = 0;
+  printf ("%d\n", hashTable[bucketsMin1 + 1]);
+  for (ndType *nd = ndBase; nd < ndBase + hashTable[bucketsMin1 + 1]; nd++) {    
+    if (nd->other[1]) total += lrint (sqrt (    
+      Sqr ((__int64)(nd->lat - (nd + nd->other[1])->lat)) +    
+      Sqr ((__int64)(nd->lon - (nd + nd->other[1])->lon))) *
+      Style (Way (nd))->invSpeed[motorcarR]);
+  }
+  printf ("%lf\n", (double) total);
+  exit (0);
+  #endif
 
   if (stylefile) {
 #ifndef _WIN32

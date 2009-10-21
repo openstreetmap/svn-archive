@@ -1,34 +1,45 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- Copyright (c) 2009, L. IJsselstein and others
+     Yournavigation.org All rights reserved.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>Your navigation</title>
-		<link rel="stylesheet" href="main.css"/>
+		<link rel="stylesheet" href="yournavigation.css"/>
 	</head>
-	<body>	
-		<div id="header">
-			<div id="title">
-				<h1>OpenStreetMap routing service</h1>
-			</div>
-		
-			<div id="help_about">
+	<body>
+		<div class="wrapper">
+			<div id="header">
+				<div id="header_left">&nbsp;</div>
+				<div class="header_pixel">&nbsp;</div>
+				<div id="header_text">&nbsp;</div>
+				<div class="header_pixel">&nbsp;</div>
+				<div id="header_right">&nbsp;</div>
+	        </div>
+			<div id="site_menu">
 				<a href="index.php">Home</a>
 				<a href="help.html">Help</a>
 				<a href="about.html">About</a>
 			</div>
-		</div>
-		<div id="main">
-			<div id="help">
-				<h3>About</h3>
-				<p>This website is about making a routeplanner using OpenSource software and data as much as possible.
+			<div style="clear:both;"></div>
+			<div id="outer"><!-- this div fixes a render problem in Opera-->
+				<h1>About</h1>
+
+				<h3>YOURS</h3>
+				YOURS is about making an OpenSource routeplanner using OpenSource software and data as much as possible.
 				The OpenStreetMap geographic data is the most important part in this project. 
 				While being nowhere near complete enough to be able to say that it covers the whole world, it contains some pretty complete data for countries like: the Netherlands, United Kingdon, United States and Germany. 
 				Some other countries are not far behind. 
-				So the time is there to actually put the OpenStreetMap data to use. 
-				This website being one of the possible useable scenarios.
-				</p>
+				So the time is there to actually put the OpenStreetMap data to use.
+				<h3>www.yournavigation.org</h3>
+				This website is a showcase for the YOURS project.
 				
-				<p>
-				Gosmore is usually very quick in returning a route, often a route is calculated in under 0.1 seconds and downloading the resulting route takes more time. If it takes more then 30 seconds to calculate a route then you can assume there is some problem in the underlying OSM data and often your route won't be complete. The route data is updated once a week after a new planet dump is available, so it is possible that the map is not always in sync with the routing engine.
-				</p>
+				<h3>License</h3>
+				The source code for the YOURS project and this website is available under the BSD license. See the wiki link below for more information.
+				
+				<h3>Use YOURS as the routing engine in your application</h3>
+				The routing API is OpenSource and open to 3rd party applications. This means that you can either implement a copy of the routing API or use this website as the routing backend for your application. See the wiki link below for more information.
+				
 				<h3>More information</h3>
 				Please visit the <a href="http://wiki.openstreetmap.org/index.php/YOURS">YOURS wiki page</a> for more information.
 				
@@ -44,8 +55,9 @@
 					<li><del>Interface with the altitude profile service from Sjors Provoost.</del></li>
 					<li><del>Accurately calculate route length (current length is an 'estimate').</del></li>
 					<li><del>Add link from the current mapview to the online 'Potlatch' map editor for quick bugfixing.</del></li>
+					<li><del>Interface with Gosmore to find routes using (geo)JSON, for 3rd party applications.</del></li>
+					<li><del>Add 'route via' possibilities.</del></li>
 					<li>Export as <del>GPX.</del>, WPT and KML file.</li>
-					<li>Add 'route via' possibilities.</li>
 					<li>Allow changes to existing route (i.e. move to/from/via markers) a la Google.</li>
 					<li>Show driving directions.</li>
 					<li>Support for multiple languages.</li>
@@ -53,16 +65,14 @@
 					<li>Interface with the RemoteControl plugin for the JOSM editor for easy data-bug fixing.</li>
 					<li>Add Munin plugin to keep track of the number of requests, route calculation times, etc.</li>
 					<li>Add caching of route calculation results.</li>
-					<li>Interface with Gosmore to find routes using (geo)JSON, for 3rd party applications.</li>
 				</ul>
 				<h3>Contact</h3>
-				Please visit the <a href="http://forum.openstreetmap.org/viewtopic.php?id=735">forum</a> for feedback and questions. You can also send me a message through the <a href="http://www.openstreetmap.org/message/new/6424">OSM messaging</a> function.
-			</div>
-		</div>
-		
-		</div>
+				Please visit the <a href="http://forum.openstreetmap.org/viewtopic.php?id=735">forum</a> for feedback and questions or send me a message through the <a href="http://www.openstreetmap.org/message/new/6424">OSM messaging</a> function. If you do not have an OpenStreetMap account email me directly: osm at na1400 dot info.
+			</div>		
+			<div class="push"></div>
+		</div>	<!--/wrapper-->
 		<div id="footer">
-			<i>This site is hosted on the Netherlands tileserver, sponsored by <a href="http://www.jronline.nl/">JROnline</a>.
+			<i>This site is sponsored by <a href="http://www.jronline.nl/">JROnline</a>.
 		</div>
 	</body>
 </html>

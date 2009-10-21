@@ -10,6 +10,8 @@ class little_php_proxy {
        var $PURL=array();
        var $RESPONSE=array();
 
+       var $allowedHosts = array('gazetteer.openstreetmap.org','www.yournavigation.org','yournavigation.org');
+
        public function __construct() {
              define(HOST,$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']);
        }
@@ -51,6 +53,21 @@ class little_php_proxy {
              define(PHOST,$this->PURL['host']);
              define(DOMAIN,$this->DOMAIN);
              $ch = curl_init($this->POSTURL);
+             
+			$fail = true;
+			foreach ($this->allowedHosts as $host)
+			{
+				if (strpos($host, PHOST) !== false)
+				{
+					$fail = false;
+				break;
+				}
+			}
+			if ($fail == true)
+			{
+				exit("Hostname ".PHOST." not in whitelist. Access denied.");
+			}
+
              if($posted) curl_setopt($ch, CURLOPT_POST,                                                0);
                            curl_setopt($ch, CURLOPT_VERBOSE,                                          0);
                          curl_setopt($ch, CURLOPT_USERAGENT,                      $_SERVER['user-agent']);

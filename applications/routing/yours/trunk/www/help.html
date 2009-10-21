@@ -1,41 +1,70 @@
+<!-- Copyright (c) 2009, L. IJsselstein and others
+     Yournavigation.org All rights reserved.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>Your navigation</title>
-		<link rel="stylesheet" href="main.css"/>
+		<link rel="stylesheet" href="yournavigation.css"/>
 	</head>
-	<body>	
-		<div id="header">
-			<div id="title">
-				<h1>OpenStreetMap routing service</h1>
-			</div>
-		
-			<div id="help_about">
+	<body>
+		<div class="wrapper">
+			<div id="header">
+				<div id="header_left">&nbsp;</div>
+				<div class="header_pixel">&nbsp;</div>
+				<div id="header_text">&nbsp;</div>
+				<div class="header_pixel">&nbsp;</div>
+				<div id="header_right">&nbsp;</div>
+	        </div>
+			<div id="site_menu">
 				<a href="index.php">Home</a>
 				<a href="help.html">Help</a>
 				<a href="about.html">About</a>
 			</div>
-		</div>
-		<div id="main">
-			<div id="help">
-				<h3>Creating a route</h3>
-				<p>Determine a TO and FROM coordinate (markers) which can be done with two methods (or a combination of):
+			<div style="clear:both;"></div>
+			<div id="outer"> <!-- this div fixes a render problem in Opera-->
+				<h1>Help</h1>
+				<h3>Markers explained</h3>
+				<ul>
+					<li><img src="markers/route-start.png">Start, marks the beginpoint of the route.</li>
+					<li><img src="markers/route-stop.png">Stop, marks the endpoint of the route.</li>
+					<li><img src="markers/yellow.png">Clicking on 'Add waypoint' will add a waypoint to the route.</li>
+					<li><img src="markers/number1.png">Waypoint 1, the first waypoint in the route. You can add 2 waypoints at this moment (server side limitation).</li>
+				</ul>
+				<h3>Create a route</h3>
+				<p>A route is created by placing at least one Start and one Finish marker on the map. Placing a marker on the map is easy. Open the 'Route' tab and either:
 					<ul>
-						<li>- By using the TO and FROM buttons. Click one of these buttons and then click on the map to add a marker. Repeat for the other button.</li>
-						<li>- By searching for a given street and city combination. This feature uses the nameserver to translate names to coordinates. See <a href=http://wiki.openstreetmap.org/index.php/Namefinder>here for more info</a> on how to use these fields.</li>
+						<li>Click on a green, orange or yellow balloon and then click somewhere on the map. You should see that a marker is places where you click on the map. Click the map again to move the marker to a different position.</li>
+						<li>Type a name in the searchbox and hit the Enter key. For better results you can add the place- or country-name as wellto narrow the search results. The marker will be placed on the map when the search is completed successfully.</li>
 					</ul>
-				A route is automatically generated as soon both markers are placed on the map. If a route is found it will plot it on the map, otherwise an error description will appear.
-				<h3>Changing route parameters</h3>
-				You can change the route parameters (e.g. from 'Car' to 'Bicycle') and when you click the FIND ROUTE button a new calculation is performed based on the given parameters.
-				<h3>Partial new route (single click map/routing data testing)</h3>
-				If you click on the map again a new TO or FROM marker is placed and a new route is calculated. This is very handy for mappers when testing the route network of a certain area. Once you've spotted a bug in the data you can click on the 'EDIT MAP' button and the online 'Potlatch' map data editor is automatically loaded with the current map view.
-				<h3>Completely new route</h3>
-				Click the CLEAR button if you want to generate a completely new route (or when things go wrong, which happens sometimes...). This should work as a rest. If the site continues to be non-functional please try a forced reload of your browser by pressing ctrl-F5.
-				</p>
+					Both methods can be used in combination.<br>
+					You can create a more advanced route by adding one or more Waypoints. Click the 'Add Waypoint' button and you will see a new entry in the waypoint list. Add the new Waypoint to the map just like the Start and Finish waypoint as described above.
+				Click 'Find route' when you've added the Start and Finish markers (and maybe even some Waypoint markers too) on the map. The Routing Service will now try to calculate a route. The route is automatically plotted on the map when the calculation has finished.
 				
+				<h3>Change the route parameters</h3>
+				You can change the route parameters (e.g. from 'Car' to 'Bicycle') by clicking on the radio button on the Route tab and then click the 'Find Route' button. A new route will be calculated based on the given parameters.
+				
+				<h3>Partial new route (single click map/routing data testing)</h3>
+				If you click on the map again a new TO or FROM marker is placed. Click on 'Find Route' and the new route is calculated. This is very handy for mappers when testing the route network of a certain area. Once you've spotted a bug in the data you can click on the 'EDIT MAP' button and the online 'Potlatch' map data editor is automatically loaded in a new window/tab with the current map view.
+				
+				<h3>Reverse a route</h3>
+				If you want to know how the return trip might look like then click on the 'Reverse' button on the 'Route' tab. All Waypoints will be reversed and a new route will be calculated.
+				
+				<h3>Completely new route</h3>
+				Click the CLEAR button if you want to generate a completely new route (or when things go wrong, which happens sometimes...). This should work as a reset. If the site continues to be non-functional please try a forced reload of your browser by pressing ctrl-F5.
+				</p>
+				<h1>Known issues</h1>
+				<ul>
+					<li>Gosmore is usually very quick in returning a route, often a route is calculated in under 0.1 seconds and downloading the resulting route takes more time. If it takes more then 30 seconds to calculate a route then you can assume there is some problem in the underlying OSM data and often your route won't be complete.</li>
+					<li>There is a maximum of 2 Waypoints (plus Start and Finish marker) due to server-side limits. If more waypoints are used then it's possible that some route segments will not be calculated.</li>
+					<li>Moped and Mofa routing currently behaves identically to car routing.</li>
+					<li>The route data is updated approximately once a week after a new planet dump is available, so it is possible that the map is not always in sync with the routing engine.</li>
+				</ul>
 			</div>
-		</div>
-		<div id="footer">
-			<i>This site is hosted on the Netherlands tileserver, sponsored by <a href="http://www.jronline.nl/">JROnline</a>.
+			<div class="push"></div>
+		</div>	<!--/wrapper-->
+		<div class="footer">
+			<i>This site is sponsored by <a href="http://www.jronline.nl/">JROnline</a>.
 		</div>
 	</body>
 </html>

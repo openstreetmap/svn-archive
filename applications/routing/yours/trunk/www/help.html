@@ -56,9 +56,10 @@
 				<h1>Known issues</h1>
 				<ul>
 					<li>Gosmore is usually very quick in returning a route, often a route is calculated in under 0.1 seconds and downloading the resulting route takes more time. If it takes more then 30 seconds to calculate a route then you can assume there is some problem in the underlying OSM data and often your route won't be complete.</li>
-					<li>There is a maximum of 2 Waypoints (plus Start and Finish marker) due to server-side limits. If more waypoints are used then it's possible that some route segments will not be calculated.</li>
+					<li>There is a soft maximum of 2 Waypoints (plus Start and Finish marker) due to server-side limits. If more waypoints are used then it's possible that some route segments will not be calculated.</li>
 					<li>Moped and Mofa routing currently behaves identically to car routing.</li>
 					<li>The route data is updated approximately once a week after a new planet dump is available, so it is possible that the map is not always in sync with the routing engine.</li>
+					<li>Due to lack of memory on the server, calculation time can take very long. The server is then busy loading data from the harddisk into memory which is very slow compared to reading cached data from memory. This can be a problem especially when multiple pleople are requesting routes and the routing engines are fighting for resources as a result.</li>
 				</ul>
 			</div>
 			<div class="push"></div>

@@ -51,27 +51,26 @@ function WaypointAdd() {
     var text = $(document.createElement("input"));
     text.attr("type", "text");
     text.attr("name", "via_text");
+	text.attr("value", "e.g. Street, City");
     text.attr("waypointnr", MyFirstWayPoint.position);
     text.attr("onclick", "elementClick(this);");
     text.attr("onchange", "elementChange(this);");
-    text.attr("value", "e.g. Street, City");
     text.attr("onfocus", "this.select();");
 
 	var img = $(document.createElement("img"));
-	img.attr("id", "via_image");
+	img.attr("id", "via_image"+MyFirstWayPoint.position);
 	img.attr("src", "images/blank.gif");
 	img.attr("alt", "");
 	img.attr("title", "");
 	img.attr("style", "vertical-align:middle;");
 	img.attr("name", "via_image");
 	
-                                       //<div id="to_message" style="display:inline"></div>
     wypt_div.attr("class", "via");
     wypt_div.append(button);
-    wypt_div.append(' ');
+    //wypt_div.append(' ');
     wypt_div.append(text);
     wypt_div.append(img);
-    wypt_div.append('<div id="via_message" style="display:inline"></div>');
+    wypt_div.append('<div id="via_message'+MyFirstWayPoint.position+'" style="display:inline"></div>');
     
     wypt_li.append(wypt_div);
     wypt_li.insertBefore("#WaypointTo");
@@ -335,7 +334,7 @@ function myRouteCallback(code, result) {
 			message_div.html('Calculating route <img src="images/ajax-loader.gif">');
 			break;
 		case Yours.status.error:
-			alert(result);
+			//alert(result);
 			message_div.html('<font color="red">' + result + '</font>');
 		default:
 			//$('#status').html(result);
@@ -349,8 +348,12 @@ function myRouteCallback(code, result) {
  */
 function myCallback(result) {
     if (result == "OK") {
-        wait_image.attr("src","images/blank.gif");
-		message_div.html('');
+		if (undefined !== wait_image) {
+			wait_image.attr("src","images/blank.gif");
+		}
+		if (undefined !== message_div) {
+			message_div.html('');
+		}
     } else {
         wait_image.attr("src","images/blank.gif");
         message_div.html('<font color="red">' + result + '</font>');
@@ -389,8 +392,9 @@ function elementChange(element) {
                 break;
             default:
             	// via
-            	wait_image = $(element['#via_image']);
-            	message_div = $(element['#via_message']);
+				viaNr = element.attributes['waypointnr'].value;
+            	wait_image = $('#via_image'+viaNr);
+            	message_div = $('#via_message'+viaNr);
                 MyFirstWayPoint = MyFirstRoute.Waypoints[element.attributes.waypointnr.value];
                 break;
         }

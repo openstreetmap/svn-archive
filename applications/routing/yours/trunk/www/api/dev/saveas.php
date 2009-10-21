@@ -52,5 +52,3 @@ function GPX($data) {
 	
 	echo $xml;
 }
-
-?>

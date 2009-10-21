@@ -46,6 +46,7 @@ function init() {
         displayProjection: proj4326,
         controls: [
             new OpenLayers.Control.Navigation(),
+            new OpenLayers.Control.Attribution(),
             new OpenLayers.Control.LayerSwitcher(),
             new OpenLayers.Control.MousePosition({ div: jQuery('#customMousePosition')[0] }),
             new OpenLayers.Control.Permalink('permalink'),
@@ -59,8 +60,12 @@ function init() {
     });
 
     map.addLayers([
-        new OpenLayers.Layer.OSM.Mapnik("Mapnik"),
-        new OpenLayers.Layer.OSM.Osmarender("Osmarender")
+        new OpenLayers.Layer.OSM.Mapnik("OSM Standard", { attribution: '', keyname: 'mapnik' }),
+        new OpenLayers.Layer.OSM.Osmarender("OSM Alternativ (Tiles@Home)", { attribution: '', keyname: 'osmarender' }),
+        new OpenLayers.Layer.XYZ("Testbetrieb Tile-Server", "http://tile.openstreetmap.de/osm/${z}/${x}/${y}.png", {
+            attribution: 'Map tiles from server sponsored by STRATO',
+            keyname: 'mapnik'
+        })
     ]);
 
     jumpTo(lon, lat, zoom);

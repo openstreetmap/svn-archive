@@ -52,3 +52,7 @@ table.event td {
     vertical-align: top;
 }
 
+.olControlAttribution {
+    bottom: 0 !important;
+}
+

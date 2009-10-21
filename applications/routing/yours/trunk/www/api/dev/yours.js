@@ -17,7 +17,8 @@ var apiUrl = "http://yournavigation.org/yours-devel/trunk/www/api/dev/";
 
 //leave blank when using a local gazetteer service.
 //var namefinderUrl = "";
-var namefinderUrl = "proxy.php?u=http://gazetteer.openstreetmap.org/namefinder/search.xml?";
+//var namefinderUrl = "proxy.php?u=http://gazetteer.openstreetmap.org/namefinder/search.xml?";
+var namefinderUrl = "transport.php?url=http://gazetteer.openstreetmap.org/namefinder/search.xml&";
 
 // Create OpenLayers Control Click handler
 OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
@@ -61,6 +62,84 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
 	}
 );
 
+/**
+*
+*  URL encode / decode
+*  http://www.webtoolkit.info/
+*
+**/
+
+var Url = {
+
+    // public method for url encoding
+    encode : function (string) {
+        return escape(this._utf8_encode(string));
+    },
+
+    // public method for url decoding
+    decode : function (string) {
+        return this._utf8_decode(unescape(string));
+    },
+
+    // private method for UTF-8 encoding
+    _utf8_encode : function (string) {
+        string = string.replace(/\r\n/g,"\n");
+        var utftext = "";
+
+        for (var n = 0; n < string.length; n++) {
+
+            var c = string.charCodeAt(n);
+
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            }
+            else if((c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+            else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+
+        }
+
+        return utftext;
+    },
+
+    // private method for UTF-8 decoding
+    _utf8_decode : function (utftext) {
+        var string = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+
+        while ( i < utftext.length ) {
+
+            c = utftext.charCodeAt(i);
+
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            }
+            else if((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            }
+            else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+
+        }
+
+        return string;
+    }
+
+}
 
 /*
 	Class: Yours
@@ -87,7 +166,7 @@ var Yours = {
 		on failure - Error message
  */
 Yours.Lookup = function(value, wp, map, callback) {
-	var namefinderParameters = "find=" + value + "&max=1";
+	var namefinderParameters = "find=" + Url.encode(value) + "&max=1";
 	$.get(namefinderUrl + namefinderParameters, {}, 
 		function(xml){
 			var result = Yours.NameFinder(xml, wp, map);

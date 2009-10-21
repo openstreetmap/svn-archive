@@ -25,6 +25,8 @@
         </script>
     </head>
     <body onload="init();">
+		
+
         <div id="header">
 			<!--
             <div id="title">
@@ -46,6 +48,7 @@
 		</div>
 		<div style="clear:both;"></div>
         <div id="main">
+			
             <div id="outer">
                 <div id="navigation">
                     <!-- Tabs -->
@@ -141,7 +144,11 @@
             </div>
 
             <div id="content">
-                <div id="map"></div>
+                <div id="map">
+					<!--[if IE]>
+						<h2>This website is under development. Internet Explorere is not supported yet. Please use a standards compliant browser like FireFox or Opera or come back later</h2>
+					<![endif]--> <!--BTW, somehow this text triggers IE to show the map :-) -->
+				</div>
             </div>
 
             <!--<div id="clearfooter">&nbsp;</div>-->
@@ -149,7 +156,7 @@
 			<div id="footer">
 	            <i>This site is sponsored by <a href="http://www.oxilion.nl/">Oxilion</a>. Routing data from planet file:
 <?php 
-$datefile = "planet-date.txt";
+$datefile = "../../yours/planet-date.txt";
 if (file_exists($datefile)) {
 		$myFile = $datefile;
 		$fh = fopen($myFile, 'r');

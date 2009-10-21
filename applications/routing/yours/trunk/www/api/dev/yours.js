@@ -678,8 +678,8 @@ Yours.Segment = function(ParentRoute) {
 				case "kml":
 					var distance = xml.getElementsByTagName('distance')[0].textContent;
 					if(distance == 0 || distance === undefined) {
-						alert(xml+'1');
-						return 'Segment has no length, or kml has no distance attribute';
+						self.route._segmentError(self, 'Segment has no length, or kml has no distance attribute');
+						//return 'Segment has no length, or kml has no distance attribute';
 					} else {
 						var options = {};
 						options.externalProjection = this.route.map.displayProjection;
@@ -700,12 +700,14 @@ Yours.Segment = function(ParentRoute) {
 				self.route._segmentError(self, error);
 				break;
 			default:
-				return 'Response is no kml, segment cannot be constructed';
+				self.route._segmentError(self, 'Response is no kml, segment cannot be constructed');
+				//return 'Response is no kml, segment cannot be constructed';
 				break;
 			}
 		} else {
-			alert(xml+'3');
-			return 'No segment found!';
+			//alert(xml+'3');
+			self.route._segmentError(self, 'No segment found!');
+			//return 'No segment found!';
 		}
 	};
 

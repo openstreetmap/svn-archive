@@ -336,6 +336,7 @@ function myRouteCallback(code, result) {
 			break;
 		case Yours.status.error:
 			alert(result);
+			message_div.html('<font color="red">' + result + '</font>');
 		default:
 			//$('#status').html(result);
 			break;

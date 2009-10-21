@@ -68,10 +68,9 @@ function setMarker() {
     layer_marker.addMarker(marker);
 }
 
-
 function updateMapKey(force) {
     if (force || jQuery('#mapkey_area iframe').size() > 0) {
-        var layer = map.baseLayer.name.toLowerCase().replace(/\s+/g, "_");
+        var layer = map.baseLayer.keyname;
         var zoom = map.getZoom();
 
         var mapkey = jQuery('#mapkey_area');

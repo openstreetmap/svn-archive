@@ -238,9 +238,9 @@ ncurses_refresh();
 
 //Calculate number of steps to be done & initialise $CurrentProgress
 if ($DELETE_WORKING_FILES)
-	$TotalSteps = 4 + ($HORIZ_TILES * $VERT_TILES * 7);
+	$TotalSteps = 5 + ($HORIZ_TILES * $VERT_TILES * 7);
 else
-	$TotalSteps = 3 + ($HORIZ_TILES * $VERT_TILES * 7);
+	$TotalSteps = 4 + ($HORIZ_TILES * $VERT_TILES * 7);
 $CurrentProgress = 0;
 
 //Set up arrays for index of names. Key is name, value is map number

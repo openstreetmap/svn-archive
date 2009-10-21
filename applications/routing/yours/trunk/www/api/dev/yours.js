@@ -9,7 +9,7 @@
  */
 
 
-var apiUrl = "http://yournavigation.org/yours-devel/trunk/www/api/dev/";
+var apiUrl = "http://yournavigation.org/api/dev/";
 //var apiUrl = "proxy.php?u=http://yournavigation.org/api/dev/";
 
 //var proxyUrl = "proxy.php?u=http://yournavigation.org/api";

@@ -350,6 +350,7 @@ function myRouteCallback(code, result) {
 function myCallback(result) {
     if (result == "OK") {
         wait_image.attr("src","images/blank.gif");
+		message_div.html('');
     } else {
         wait_image.attr("src","images/blank.gif");
         message_div.html('<font color="red">' + result + '</font>');

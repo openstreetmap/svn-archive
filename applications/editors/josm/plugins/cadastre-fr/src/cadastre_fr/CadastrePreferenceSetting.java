@@ -43,6 +43,12 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     private JRadioButton grabMultiplier3 = new JRadioButton("", true);
 
     private JRadioButton grabMultiplier4 = new JRadioButton("", true);
+    
+    private JRadioButton crosspiece1 = new JRadioButton("off");
+    
+    private JRadioButton crosspiece2 = new JRadioButton("50m");
+
+    private JRadioButton crosspiece3 = new JRadioButton("100m");
 
     static final int DEFAULT_SQUARE_SIZE = 100;
     private JTextField grabMultiplier4Size = new JTextField(5);
@@ -56,6 +62,8 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     static final String DEFAULT_RASTER_DIVIDER = "5";
     private JTextField rasterDivider = new JTextField(10);
 
+    static final int DEFAULT_CROSSPIECES = 0;
+    
     public void addGui(final PreferenceDialog gui) {
 
         String description = tr("A special handler of the French cadastre wms at www.cadastre.gouv.fr" + "<BR><BR>"
@@ -114,7 +122,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         // the vectorized images multiplier
         JLabel jLabelScale = new JLabel(tr("Vector images grab multiplier:"));
         cadastrewms.add(jLabelScale, GBC.std().insets(0, 5, 10, 0));
-        ButtonGroup bg = new ButtonGroup();
+        ButtonGroup bgGrabMultiplier = new ButtonGroup();
         ActionListener multiplierActionListener = new ActionListener() {
             public void actionPerformed(ActionEvent actionEvent) {
               AbstractButton button = (AbstractButton) actionEvent.getSource();
@@ -136,10 +144,10 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         grabMultiplier4.setSelectedIcon(ImageProvider.get("preferences", "sel_box_4"));
         grabMultiplier4.addActionListener( multiplierActionListener);
         grabMultiplier4.setToolTipText(tr("Fixed size square (default is 100m)"));
-        bg.add(grabMultiplier1);
-        bg.add(grabMultiplier2);
-        bg.add(grabMultiplier3);
-        bg.add(grabMultiplier4);
+        bgGrabMultiplier.add(grabMultiplier1);
+        bgGrabMultiplier.add(grabMultiplier2);
+        bgGrabMultiplier.add(grabMultiplier3);
+        bgGrabMultiplier.add(grabMultiplier4);
         String currentScale = Main.pref.get("cadastrewms.scale", "1");
         if (currentScale.equals(Scale.X1.value))
             grabMultiplier1.setSelected(true);
@@ -172,7 +180,21 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         // option to disable image cropping during raster image georeferencing
         disableImageCropping.setSelected(Main.pref.getBoolean("cadastrewms.noImageCropping", false));
         disableImageCropping.setToolTipText(tr("Disable image cropping during georeferencing."));
-        cadastrewms.add(disableImageCropping, GBC.eop().insets(0, 0, 0, 5));
+        cadastrewms.add(disableImageCropping, GBC.eop().insets(0, 0, 0, 0));
+        // the crosspiece display
+        JLabel jLabelCrosspieces = new JLabel(tr("Display crosspieces:"));
+        cadastrewms.add(jLabelCrosspieces, GBC.std().insets(0, 0, 10, 0));
+        ButtonGroup bgCrosspieces = new ButtonGroup();
+        int crosspieces = getNumber("cadastrewms.crosspieces", DEFAULT_CROSSPIECES);
+        if (crosspieces == 0) crosspiece1.setSelected(true);
+        if (crosspieces == 1) crosspiece2.setSelected(true);
+        if (crosspieces == 2) crosspiece3.setSelected(true);
+        bgCrosspieces.add(crosspiece1);
+        bgCrosspieces.add(crosspiece2);
+        bgCrosspieces.add(crosspiece3);
+        cadastrewms.add(crosspiece1, GBC.std().insets(5, 0, 5, 0));
+        cadastrewms.add(crosspiece2, GBC.std().insets(5, 0, 5, 0));
+        cadastrewms.add(crosspiece3, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
 
         // separator
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
@@ -229,6 +251,9 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         } catch (NumberFormatException e) { // ignore the last input
         }
         Main.pref.put("cadastrewms.noImageCropping", disableImageCropping.isSelected());
+        if (crosspiece1.isSelected()) Main.pref.put("cadastrewms.crosspieces", "0");
+        else if (crosspiece2.isSelected()) Main.pref.put("cadastrewms.crosspieces", "1");
+        else if (crosspiece3.isSelected()) Main.pref.put("cadastrewms.crosspieces", "2");
         Main.pref.put("cadastrewms.enableCaching", enableCache.isSelected());
 
         // spread data into objects instead of restarting the application

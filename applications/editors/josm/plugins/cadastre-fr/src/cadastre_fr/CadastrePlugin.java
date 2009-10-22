@@ -19,6 +19,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.data.projection.*;
@@ -215,7 +216,6 @@ public class CadastrePlugin extends Plugin {
     }
 
     private static void setEnabledAll(boolean isEnabled) {
-        boolean isLambertCC9Zones = Main.proj instanceof LambertCC9Zones;
         for (int i = 0; i < cadastreJMenu.getItemCount(); i++) {
             JMenuItem item = cadastreJMenu.getItem(i);
             if (item != null)
@@ -235,8 +235,8 @@ public class CadastrePlugin extends Plugin {
         if (cadastreJMenu != null) {
             if (oldFrame == null && newFrame != null) {
                 setEnabledAll(true);
-                /*Main.map.addMapMode(new IconToggleButton
-                        (new WMSAdjustAction(Main.map)));*/
+                Main.map.addMapMode(new IconToggleButton
+                        (new WMSAdjustAction(Main.map)));
             } else if (oldFrame != null && newFrame == null) {
                 setEnabledAll(false);
                 Lambert.layoutZone = -1;

@@ -2,10 +2,12 @@ package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -18,13 +20,11 @@ import java.util.Vector;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapView;
@@ -202,6 +202,9 @@ public class WMSLayer extends Layer implements ImageObserver {
             for (GeorefImage img : images)
                 img.paint((Graphics2D) g, mv, CadastrePlugin.backgroundTransparent,
                         CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
+        }
+        if (this.isRaster) {
+            paintCrosspieces(g, mv);
         }
     }
 
@@ -526,4 +529,50 @@ public class WMSLayer extends Layer implements ImageObserver {
         }
     }
 
+    public EastNorth getRasterCenter() {
+        return new EastNorth((images.get(0).max.east()+images.get(0).min.east())/2,
+                (images.get(0).max.north()+images.get(0).min.north())/2);
+    }
+    
+    public void displace(double dx, double dy) {
+        this.rasterMin = new EastNorth(rasterMin.east() + dx, rasterMin.north() + dy);
+        images.get(0).shear(dx, dy);
+    }
+
+    public void resize(EastNorth rasterCenter, double proportion) {
+        this.rasterMin = rasterMin.interpolate(rasterCenter, proportion);
+        images.get(0).scale(rasterCenter, proportion);
+    }
+
+    public void rotate(EastNorth rasterCenter, double angle) {
+        this.rasterMin = rasterMin.rotate(rasterCenter, angle);
+        images.get(0).rotate(rasterCenter, angle);
+    }
+
+    private void paintCrosspieces(Graphics g, MapView mv) {
+        String crosspieces = Main.pref.get("cadastrewms.crosspieces", "0");
+        if (!crosspieces.equals("0")) {
+            int modulo = 50;
+            if (crosspieces.equals("2")) modulo = 100; 
+            EastNorthBound currentView = new EastNorthBound(mv.getEastNorth(0, mv.getHeight()),
+                    mv.getEastNorth(mv.getWidth(), 0));
+            int minX = ((int)currentView.min.east()/modulo+1)*modulo;
+            int minY = ((int)currentView.min.north()/modulo+1)*modulo;
+            int maxX = ((int)currentView.max.east()/modulo)*modulo;
+            int maxY = ((int)currentView.max.north()/modulo)*modulo;
+            int size=(maxX-minX)/modulo;
+            if (size<20) {
+                int px= size > 10 ? 2 : Math.abs(12-size);
+                g.setColor(Color.green);
+                for (int x=minX; x<=maxX; x+=modulo) {
+                    for (int y=minY; y<=maxY; y+=modulo) {
+                        Point p = mv.getPoint(new EastNorth(x,y));
+                        g.drawLine(p.x-px, p.y, p.x+px, p.y);
+                        g.drawLine(p.x, p.y-px, p.x, p.y+px);
+                    }
+                }
+            }
+        }
+    }
+    
 }

@@ -7,4 +7,7 @@ XML file for Corine).
 The second change is the storage of the old_id's, new_id's table in the *.osm.db file with the
 Python "shelve" persistence library, also for performance reasons.
 
+A second version introduces an automatic retry when the last http request has been rejected by 
+the OSM server with the http code 500.
+
 Pieren3@gmail.com on behalf of Yann Coupin

@@ -44,15 +44,18 @@ import optparse
 import httplib2
 import shelve
 import os
-import time
 from xml.sax import make_parser, SAXParseException
 from xml.sax.handler import ContentHandler
+from time import sleep
+import sys, traceback
+import socket
 
 #api_host='http://api.openstreetmap.org'
 api_host='http://api06.dev.openstreetmap.org'
 headers = {
     'User-Agent' : 'bulk_upload.py',
 }
+retryDelays = [0, 10, 60, 300]
 
 
 
@@ -65,6 +68,32 @@ class ImportProcessor:
         self.idMap = idMap
         self.httpCon = httpObj
         self.createChangeSet()
+
+    def doHttpRequest(self, message, url, method, data=None, headers=None):
+        count = 0
+        while count <= len(retryDelays):
+            try:
+                resp,content=self.httpCon.request(url, method, data, headers=headers)
+                if resp.status == 500 and count < len(retryDelays):
+                    print '%sError 500, retrying in %u seconds' % (message, retryDelays[count])
+                    sleep(retryDelays[count])
+                    count += 1
+                    continue
+                if resp.status != 200:
+                    print message + str(resp.status)
+                    exit(-1)
+                return (resp, content)
+            except socket.error, e:
+                if count < len(retryDelays):
+                    print '%s%s, retrying in %u seconds' % (message, e, retryDelays[count])
+                    sleep(retryDelays[count])
+                    count += 1
+                    continue
+                else:
+                    print message + str(e)
+                    exit(-1)
+
+
     def createChangeSet(self):
         createReq=ET.Element('osm',version="0.6")
         change=ET.Element('changeset')
@@ -72,11 +101,8 @@ class ImportProcessor:
         change.append(ET.Element('tag',k='created_by', v='bulk_upload.py'))
         createReq.append(change)
         xml=ET.tostring(createReq)
-        resp,content=self.httpCon.request(api_host +
+        resp,content=self.doHttpRequest('Error creating changeset:', api_host +
                                           '/api/0.6/changeset/create','PUT',xml,headers=headers)
-        if resp.status != 200:
-            print 'Error creating changeset:' + str(resp.status)
-            exit(-1)
         self.changesetid=content
 
     def createStructure(self, item):
@@ -116,22 +142,15 @@ class ImportProcessor:
         xml.append(self.modifyElem)
         xml.append(self.deleteElem)
         print "Uploading change set:" + self.changesetid        
-        resp,content = self.httpCon.request(api_host +
+        resp,content = self.doHttpRequest("Error uploading changeset:", api_host +
                                             '/api/0.6/changeset/'+self.changesetid+
                                             '/upload',
                                             'POST', ET.tostring(xml),headers=headers)        
-        if resp.status != 200:
-            print "Error uploading changeset:" + str(resp.status)
-            print content
-            exit(-1)
-        else:
-            self.processResult(content)
+        self.processResult(content)
     def closeSet(self):
-        resp,content=self.httpCon.request(api_host +
+        resp,content=self.doHttpRequest("Error closing changeset " + str(self.changesetid) + ":", api_host +
                                           '/api/0.6/changeset/' +
                                           self.changesetid + '/close','PUT',headers=headers)
-        if resp.status != 200:
-            print "Error closing changeset " + str(self.changesetid) + ":" + str(resp.status)
     #
     # Uploading a change set returns a <diffResult> containing elements
     # that map the old id to the new id
@@ -139,15 +158,15 @@ class ImportProcessor:
     def processResult(self,content):
         diffResult=ET.fromstring(content)
         for child in diffResult.getchildren():
-            old_id=child.attrib['old_id']
+            old_id=child.attrib['old_id'].encode('ascii')
             if child.attrib.has_key('new_id'):
                 new_id=child.attrib['new_id']
-                self.idMap[old_id]=new_id.encode("utf-8")
+                self.idMap[old_id]=new_id
             else:
-                self.idMap[old_id]=old_id.encode("utf-8")
+                self.idMap[old_id]=old_id
     
     def getAPILimit(self):
-        return 500
+        return 1000
 
 # Allow enforcing of required arguements
 # code from http://www.python.org/doc/2.3/lib/optparse-extending-examples.html
@@ -165,9 +184,9 @@ class BulkParser(ContentHandler):
     pathStack = []
 
     def getRef(self, attrs):
-        ref = attrs.get('ref', None)
+        ref = attrs.get('ref', None).encode('ascii')
         if ref:
-            new_id = self.idMap.get(ref.encode("utf-8"), None)
+            new_id = self.idMap.get(ref, None)
             if new_id:
                 return new_id
         return ref
@@ -175,7 +194,7 @@ class BulkParser(ContentHandler):
     def startDocument(self):
         self.httpObj = httplib2.Http()
         self.httpObj.add_credentials(options.user,options.password)
-        self.idMap=shelve.open(options.infile+'.db')
+        self.idMap=shelve.open('%s.db' % options.infile)
         self.importer=ImportProcessor(self.httpObj,options.comment,self.idMap)
         self.object = None
         self.cnt = 0
@@ -189,7 +208,7 @@ class BulkParser(ContentHandler):
         self.pathStack.append(name)
         self.path = '/'.join(self.pathStack)
         if self.path in ('osm/node', 'osm/way', 'osm/relation'):
-            id=attrs.get('id', None).encode("utf-8")
+            id=attrs.get('id', None).encode('ascii')
             if self.idMap.has_key(id):
                 return
 
@@ -227,9 +246,7 @@ class BulkParser(ContentHandler):
                 self.importer.closeSet()
                 self.importer=ImportProcessor(self.httpObj,options.comment,self.idMap)
                 self.cnt=0
-                time.sleep(15) # 15 seconds delay between changesets
             self.cnt=self.cnt+1
-            
 
         del self.pathStack[-1]
         self.path = '/'.join(self.pathStack)

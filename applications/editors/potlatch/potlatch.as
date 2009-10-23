@@ -1007,7 +1007,7 @@
 		_root.launcher=preferences.data.launcher;	// .variable doesn't work well with preferences.data...
 		_root.photokml=preferences.data.photokml;	//   |
 		_root.windows.attachMovie("modal","options",++windowdepth);
-		_root.windows.options.init(390,185,new Array('Ok'),function() {
+		_root.windows.options.init(430,185,new Array('Ok'),function() {
 			preferences.data.launcher=_root.launcher; 
 			preferences.data.photokml=_root.photokml; 
 			preferences.flush();

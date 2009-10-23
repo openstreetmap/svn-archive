@@ -709,6 +709,9 @@
 			initBackground(); return;
 		}
 
+		var xinc=140; var yinc=100;
+		if (Key.isDown(Key.SPACE)) { xinc=0.5; yinc=0.5; }
+		
 		switch (k) {
 			case 46:		;													// DELETE/backspace - delete way/node
 			case 8:			if (Key.isDown(Key.SHIFT)) {						//  |
@@ -719,10 +722,10 @@
 			case 48:		_root.panel.properties.nukeAttributes(); break;		// 0 - remove all tags
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
 			case Key.PGDN:	zoomOut(); break;									// Page Down - zoom out
-			case Key.LEFT:  moveMap( 140,0); updateLinks(); redrawBackground(); whichWays(); break;	// cursor keys
-			case Key.RIGHT: moveMap(-140,0); updateLinks(); redrawBackground(); whichWays(); break;	//  |
-			case Key.DOWN:  moveMap(0,-100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
-			case Key.UP:    moveMap(0, 100); updateLinks(); redrawBackground(); whichWays(); break;	//  |
+			case Key.LEFT:  moveMap( xinc,0); updateLinks(); redrawBackground(); whichWays(); break;	// cursor keys
+			case Key.RIGHT: moveMap(-xinc,0); updateLinks(); redrawBackground(); whichWays(); break;	//  |
+			case Key.DOWN:  moveMap(0,-yinc); updateLinks(); redrawBackground(); whichWays(); break;	//  |
+			case Key.UP:    moveMap(0, yinc); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.CAPSLOCK: dimMap(); break;									// CAPS LOCK - dim map
 			case 167:		_root.panel.presets.cycleIcon(); break;				// cycle presets
 		}

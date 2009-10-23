@@ -1,6 +1,0 @@
-User-agent: *
-Disallow: /api/
-Disallow: /browse/
-Disallow: /trace/
-Disallow: /edit
-Disallow: /login

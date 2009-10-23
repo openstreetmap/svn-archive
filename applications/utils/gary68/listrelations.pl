@@ -16,6 +16,9 @@
 #
 # 
 # 
+# Version 1.1
+# - route info added
+# - note info added
 #
 
 
@@ -29,7 +32,7 @@ use OSM::osm 4.4 ;
 
 my $program = "listrelations.pl" ;
 my $usage = $program . " file.osm out.htm out.csv" ;
-my $version = "1.0" ;
+my $version = "1.1" ;
 
 
 my $wayId ;
@@ -106,10 +109,10 @@ print $html "<p>", stringFileInfo ($osmName), "</p>\n" ;
 
 print $html "<H2>Data</H2>\n" ;
 printHTMLTableHead ($html) ;
-printHTMLTableHeadings ($html, "Line", "RelationId", "Type", "Name", "Ref", "#members") ;
+printHTMLTableHeadings ($html, "Line", "RelationId", "Type", "Route", "Name", "Ref", "Note", "#members") ;
 
 print $csv $program . " " . stringFileInfo ($osmName), "\n" ;
-print $csv "line;relationId;type;name;ref;members\n" ;
+print $csv "line;relationId;type;route;name;ref;note;members\n" ;
 
 ($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
 if ($relationId != -1) {
@@ -124,6 +127,8 @@ while ($relationId != -1) {
 	my $name = "-" ;
 	my $ref = "-" ;
 	my $type = "-" ;
+	my $note = "-" ;
+	my $route = "-" ;
 
 	my $i ;
 	if (scalar (@relationTags) > 0) {
@@ -132,6 +137,8 @@ while ($relationId != -1) {
 			if ( ${$relationTags[$i]}[0] eq "name") { $name =  ${$relationTags[$i]}[1] ; }
 			if ( ${$relationTags[$i]}[0] eq "ref") { $ref =  ${$relationTags[$i]}[1] ; }
 			if ( ${$relationTags[$i]}[0] eq "type") { $type =  ${$relationTags[$i]}[1] ; }
+			if ( ${$relationTags[$i]}[0] eq "note") { $note =  ${$relationTags[$i]}[1] ; }
+			if ( ${$relationTags[$i]}[0] eq "route") { $route =  ${$relationTags[$i]}[1] ; }
 		}
 	}
 
@@ -146,16 +153,20 @@ while ($relationId != -1) {
 	printHTMLCellLeft ($html, $line) ;
 	printHTMLCellLeft ($html, historyLink ("relation", $relationId) . "(osm) " . analyzerLink ($relationId) . "(analyzer)" ) ;
 	printHTMLCellLeft ($html, $type) ;
+	printHTMLCellLeft ($html, $route) ;
 	printHTMLCellLeft ($html, $name) ;
 	printHTMLCellLeft ($html, $ref) ;
+	printHTMLCellLeft ($html, $note) ;
 	printHTMLCellLeft ($html, $members) ;
 	printHTMLRowEnd ($html) ;
 	
 	print $csv $line, ";" ; 
 	print $csv $relationId, ";" ; 
 	print $csv $type, ";" ; 
+	print $csv $route, ";" ; 
 	print $csv "\"", $name,  "\"", ";" ; 
 	print $csv "\"", $ref,  "\"",  ";" ; 
+	print $csv "\"", $note,  "\"",  ";" ; 
 	print $csv $members, "\n" ; 
 
 	#next

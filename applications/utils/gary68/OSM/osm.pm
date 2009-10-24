@@ -74,6 +74,9 @@
 # Version 5.2
 # - josm select nodes added
 #
+# Version 5.3
+# - new html output functions
+#
 
 #
 # USAGE
@@ -113,6 +116,8 @@
 # printGPXWaypoint ($file, $lon, $lat, $text) 
 # printHTMLCellCenter ($file, $value)
 # printHTMLCellLeft ($file, $value)
+# printHTMLCellLeftEM
+# printHTMLCellLeftTwoValues
 # printHTMLCellRight ($file, $value)
 # printHTMLFoot ($file) 				> print foot to file
 # printHTMLHeader ($file, $title) 			> print header to file
@@ -156,7 +161,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '5.2' ; 
+$VERSION = '5.3' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -164,7 +169,7 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
+@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
 
 our $line ; 
 our $file ; 
@@ -1167,6 +1172,21 @@ sub printHTMLCellLeft {
 	my ($value) = shift ;
 	print $file "<td align=\"left\">" . $value . "</td>\n" ;
 }
+
+sub printHTMLCellLeftEM {
+	my ($file) = shift ;
+	my ($value) = shift ;
+	print $file "<td align=\"left\"><em>" . $value . "</em></td>\n" ;
+}
+
+sub printHTMLCellLeftTwoValues {
+	my ($file) = shift ;
+	my ($value1) = shift ;
+	my ($value2) = shift ;
+	print $file "<td align=\"left\">" . $value1 . "<br><em>" . $value2 . "</em></td>\n" ;
+}
+
+
 
 sub printHTMLCellCenter {
 	my ($file) = shift ;

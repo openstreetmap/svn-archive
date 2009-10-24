@@ -93,12 +93,24 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         // wait until plan image is fully loaded and joined into one single image
         boolean loadedFromCache = downloadWMSPlanImage.waitFinished();
         if (wmsLayer.images.size() == 1 && !loadedFromCache) {
-            mouseClickedTime = System.currentTimeMillis();
-            Main.map.mapView.addMouseListener(this);
-            if (Main.pref.getBoolean("cadastrewms.noImageCropping", false) == false)
-                startCropping();
-            else
-                startGeoreferencing();
+            int reply = JOptionPane.CANCEL_OPTION;
+            if (wmsLayer.isAlreadyGeoreferenced()) {
+                reply = JOptionPane.showConfirmDialog(null,
+                        tr("This image contains georeference data.\n"+
+                                "Do you want to use them ?"),
+                        null,
+                        JOptionPane.YES_NO_OPTION);
+            }
+            if (reply == JOptionPane.OK_OPTION) {
+                transformGeoreferencedImg();
+            } else {
+                mouseClickedTime = System.currentTimeMillis();
+                Main.map.mapView.addMouseListener(this);
+                if (Main.pref.getBoolean("cadastrewms.noImageCropping", false) == false)
+                    startCropping();
+                else
+                    startGeoreferencing();
+            }
         } else // action cancelled or image loaded from cache (and already georeferenced)
             Main.map.repaint();
     }
@@ -307,6 +319,17 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         org2 = org2.rotate(dst1, angle);
         // scale image from anchor org1(=dst1 now)
         wmsLayer.images.get(0).scale(dst1, proportion);
+    }
+
+    private void transformGeoreferencedImg() {
+        georefpoint1 = new EastNorth(wmsLayer.X0, wmsLayer.Y0);
+        georefpoint2 = new EastNorth(wmsLayer.X0+wmsLayer.fX*wmsLayer.communeBBox.max.getX(),
+                wmsLayer.Y0+wmsLayer.fY*wmsLayer.communeBBox.max.getX());
+        ea1 = new EastNorth(wmsLayer.images.get(0).min.east(), wmsLayer.images.get(0).max.north());
+        EastNorth ea2 = wmsLayer.images.get(0).max;
+        affineTransform(ea1, ea2, georefpoint1, georefpoint2);
+        wmsLayer.saveNewCache();
+        Main.map.mapView.repaint();
     }
 
     public void mouseEntered(MouseEvent arg0) {

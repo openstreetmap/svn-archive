@@ -397,9 +397,17 @@ public class CadastreInterface {
         return cInterfaceRasterFeuille + "?f=" + codeCommune;
     }
 
-    public EastNorthBound retrieveCommuneBBox() throws IOException {
+    /**
+     * Retrieve the bounding box size in pixels of the whole commune (point 0,0 at top, left corner)
+     * and store it in given wmsLayer
+     * In case of raster image, we also check in the same http request if the image is already georeferenced
+     * and store the result in the wmsLayer as well. 
+     * @param wmsLayer the WMSLayer where the commune data and images are stored
+     * @throws IOException
+     */
+    public void retrieveCommuneBBox(WMSLayer wmsLayer) throws IOException {
         if (interfaceRef == null)
-            return null;
+            return;
         String ln = null;
         String line = null;
         // send GET opening normally the small window with the commune overview
@@ -420,10 +428,13 @@ public class CadastreInterface {
         }
         in.close();
         urlConn.disconnect();
-        return parseBBoxCommune(line);
+        parseBBoxCommune(wmsLayer, line);
+        if (wmsLayer.isRaster() && !wmsLayer.isAlreadyGeoreferenced()) {
+            parseGeoreferences(wmsLayer, line);
+        }
     }
 
-    private EastNorthBound parseBBoxCommune(String input) {
+    private void parseBBoxCommune(WMSLayer wmsLayer, String input) {
         if (input.indexOf(cBBoxCommunStart) != -1) {
             input = input.substring(input.indexOf(cBBoxCommunStart));
             int i = input.indexOf(",");
@@ -434,9 +445,40 @@ public class CadastreInterface {
             double maxx = Double.parseDouble(input.substring(j+1, k));
             int l = input.indexOf(cBBoxCommunEnd, k+1);
             double maxy = Double.parseDouble(input.substring(k+1, l));
-            return new EastNorthBound(new EastNorth(minx,miny), new EastNorth(maxx,maxy));
+            wmsLayer.setCommuneBBox( new EastNorthBound(new EastNorth(minx,miny), new EastNorth(maxx,maxy)));
         }
-        return null;
+    }
+    
+    private void parseGeoreferences(WMSLayer wmsLayer, String input) {
+        if (input.lastIndexOf(cBBoxCommunStart) != -1) {
+            input = input.substring(input.lastIndexOf(cBBoxCommunStart));
+            input = input.substring(input.indexOf(cBBoxCommunEnd)+cBBoxCommunEnd.length());
+            int i = input.indexOf(",");
+            int j = input.indexOf(",", i+1);
+            double angle = Double.parseDouble(input.substring(i+1, j));
+            int k = input.indexOf(",", j+1);
+            double scale_origin = Double.parseDouble(input.substring(j+1, k));
+            int l = input.indexOf(",", k+1);
+            double dpi = Double.parseDouble(input.substring(k+1, l));
+            int m = input.indexOf(",", l+1);
+            double fX = Double.parseDouble(input.substring(l+1, m));
+            int n = input.indexOf(",", m+1);
+            double fY = Double.parseDouble(input.substring(m+1, n));
+            int o = input.indexOf(",", n+1);
+            double X0 = Double.parseDouble(input.substring(n+1, o));
+            int p = input.indexOf(",", o+1);
+            double Y0 = Double.parseDouble(input.substring(o+1, p));
+            if (X0 != 0.0 && Y0 != 0) {
+                wmsLayer.setAlreadyGeoreferenced(true);
+                wmsLayer.fX = fX;
+                wmsLayer.fY = fY;
+                wmsLayer.angle = angle;
+                wmsLayer.X0 = X0;
+                wmsLayer.Y0 = Y0;
+            }
+            System.out.println("parse georef:"+angle+","+scale_origin+","+dpi+","+fX+","+
+                    fY+","+X0+","+Y0);
+        }
     }
 
     private void checkLayerDuplicates(WMSLayer wmsLayer) throws DuplicateLayerException {

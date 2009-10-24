@@ -56,7 +56,7 @@ public class DownloadWMSPlanImage {
                         }
                         if (wmsLayer.isRaster()) {
                             // set raster image commune bounding box based on current view (before adjustment)
-                            wmsLayer.setCommuneBBox( grabber.getWmsInterface().retrieveCommuneBBox());
+                            grabber.getWmsInterface().retrieveCommuneBBox(wmsLayer);
                             wmsLayer.setRasterBounds(bounds);
                             // grab new images from wms server into active layer
                             wmsLayer.grab(grabber, bounds);

@@ -43,7 +43,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                         wmsLayer.setRasterBounds(bounds);
                     } else {
                         // set vectorized commune bounding box by opening the standard web window
-                        wmsLayer.setCommuneBBox( grabber.getWmsInterface().retrieveCommuneBBox());
+                        grabber.getWmsInterface().retrieveCommuneBBox(wmsLayer);
                         // if it is the first layer, use the communeBBox as grab bbox
                         if (Main.proj instanceof LambertCC9Zones && Main.map.mapView.getAllLayers().size() == 1 ) {
                             bounds = wmsLayer.getCommuneBBox().toBounds();

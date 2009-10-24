@@ -63,6 +63,10 @@ public class WMSLayer extends Layer implements ImageObserver {
     public EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0,0), new EastNorth(0,0));
 
     private boolean isRaster = false;
+    
+    private boolean isAlreadyGeoreferenced = false;
+    
+    public double X0, Y0, angle, fX, fY;
 
     private EastNorth rasterMin;
     private EastNorth rasterMax;
@@ -319,6 +323,14 @@ public class WMSLayer extends Layer implements ImageObserver {
         this.isRaster = isRaster;
         if (saveAsPng != null)
             saveAsPng.setEnabled(isRaster);
+    }
+
+    public boolean isAlreadyGeoreferenced() {
+        return isAlreadyGeoreferenced;
+    }
+
+    public void setAlreadyGeoreferenced(boolean isAlreadyGeoreferenced) {
+        this.isAlreadyGeoreferenced = isAlreadyGeoreferenced;
     }
 
     /**

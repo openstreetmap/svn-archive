@@ -20,6 +20,9 @@
 # - route info added
 # - note info added
 #
+# Version 1.2
+# - reduced view to 6 columns again
+#
 
 
 use strict ;
@@ -28,11 +31,11 @@ use warnings ;
 use File::stat ;
 use Time::localtime ; 
 
-use OSM::osm 4.4 ;
+use OSM::osm 5.3 ;
 
 my $program = "listrelations.pl" ;
 my $usage = $program . " file.osm out.htm out.csv" ;
-my $version = "1.1" ;
+my $version = "1.2" ;
 
 
 my $wayId ;
@@ -109,7 +112,7 @@ print $html "<p>", stringFileInfo ($osmName), "</p>\n" ;
 
 print $html "<H2>Data</H2>\n" ;
 printHTMLTableHead ($html) ;
-printHTMLTableHeadings ($html, "Line", "RelationId", "Type", "Route", "Name", "Ref", "Note", "#members") ;
+printHTMLTableHeadings ($html, "Line", "RelationId", "Type", "Name / Note", "Ref", "#members") ;
 
 print $csv $program . " " . stringFileInfo ($osmName), "\n" ;
 print $csv "line;relationId;type;route;name;ref;note;members\n" ;
@@ -128,17 +131,17 @@ while ($relationId != -1) {
 	my $ref = "-" ;
 	my $type = "-" ;
 	my $note = "-" ;
-	my $route = "-" ;
+	my $route = "" ;
 
 	my $i ;
 	if (scalar (@relationTags) > 0) {
 		for ($i=0; $i<scalar (@relationTags); $i++) {
 			#print "${$relationTags[$i]}[0] = ${$relationTags[$i]}[1]\n" ; 
-			if ( ${$relationTags[$i]}[0] eq "name") { $name =  ${$relationTags[$i]}[1] ; }
-			if ( ${$relationTags[$i]}[0] eq "ref") { $ref =  ${$relationTags[$i]}[1] ; }
-			if ( ${$relationTags[$i]}[0] eq "type") { $type =  ${$relationTags[$i]}[1] ; }
-			if ( ${$relationTags[$i]}[0] eq "note") { $note =  ${$relationTags[$i]}[1] ; }
-			if ( ${$relationTags[$i]}[0] eq "route") { $route =  ${$relationTags[$i]}[1] ; }
+			if ( ${$relationTags[$i]}[0] eq "name")  { $name  = ${$relationTags[$i]}[1] ; }
+			if ( ${$relationTags[$i]}[0] eq "ref")   { $ref   = ${$relationTags[$i]}[1] ; }
+			if ( ${$relationTags[$i]}[0] eq "type")  { $type  = ${$relationTags[$i]}[1] . " " . $route; }
+			if ( ${$relationTags[$i]}[0] eq "note")  { $note  = ${$relationTags[$i]}[1] ; }
+			if ( ${$relationTags[$i]}[0] eq "route") { $route = ${$relationTags[$i]}[1] ; }
 		}
 	}
 
@@ -151,12 +154,18 @@ while ($relationId != -1) {
 
 	printHTMLRowStart ($html) ;
 	printHTMLCellLeft ($html, $line) ;
-	printHTMLCellLeft ($html, historyLink ("relation", $relationId) . "(osm) " . analyzerLink ($relationId) . "(analyzer)" ) ;
+	printHTMLCellLeft ($html, historyLink ("relation", $relationId) . "(osm)&nbsp;" . analyzerLink ($relationId) . "(analyzer)" ) ;
 	printHTMLCellLeft ($html, $type) ;
-	printHTMLCellLeft ($html, $route) ;
-	printHTMLCellLeft ($html, $name) ;
+	if($note eq "-") {
+		printHTMLCellLeft ($html, $name);
+	}
+	elsif($name eq "-") {
+		printHTMLCellLeftEM ($html, $note);
+	}
+	else {
+		printHTMLCellLeftTwoValues ($html, $name, $note) ;
+	}
 	printHTMLCellLeft ($html, $ref) ;
-	printHTMLCellLeft ($html, $note) ;
 	printHTMLCellLeft ($html, $members) ;
 	printHTMLRowEnd ($html) ;
 	

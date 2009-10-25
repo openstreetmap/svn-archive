@@ -6,7 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -49,7 +48,6 @@ public class MenuActionNewLocation extends JosmAction {
             final JTextField inputTown = new JTextField( Main.pref.get("cadastrewms.location") );
             inputTown.setToolTipText(tr("<html>Enter the town,village or city name.<br>"
                     + "Use the syntax and punctuation known by www.cadastre.gouv.fr .</html>"));
-            JComboBox inputWMSList = null;
 
             p.add(labelSectionNewLocation, GBC.eol());
             p.add(labelLocation, GBC.std().insets(10, 0, 0, 0));
@@ -87,8 +85,8 @@ public class MenuActionNewLocation extends JosmAction {
                     wmsLayer = new WMSLayer(location, codeCommune, Lambert.layoutZone);
                 Main.main.addLayer(wmsLayer);
                 System.out.println("Add new layer with Location:" + inputTown.getText());
-            } else if (existingLayers != null && existingLayers.size() > 0 && inputWMSList.getSelectedIndex() > 0) {
-                wmsLayer = existingLayers.get(inputWMSList.getSelectedIndex()-1);
+            } else if (existingLayers != null && existingLayers.size() > 0 && Main.map.mapView.getActiveLayer() instanceof WMSLayer) {
+                wmsLayer = (WMSLayer)Main.map.mapView.getActiveLayer();
                 resetCookie = true;
             }
 

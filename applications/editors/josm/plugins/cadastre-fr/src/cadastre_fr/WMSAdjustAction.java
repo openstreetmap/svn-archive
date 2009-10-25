@@ -37,13 +37,26 @@ public class WMSAdjustAction extends MapMode implements
 
     @Override public void enterMode() {
         if (Main.map != null) {
+            selectedLayer = null;
+            WMSLayer possibleLayer = null;
+            int cRasterLayers = 0;
+            for (Layer l : Main.map.mapView.getAllLayers()) {
+                if (l instanceof WMSLayer && ((WMSLayer)l).isRaster()) {
+                    possibleLayer = (WMSLayer)l;
+                    cRasterLayers++;
+                }
+            }
             Layer activeLayer = Main.map.mapView.getActiveLayer();
             if (activeLayer instanceof WMSLayer && ((WMSLayer)activeLayer).isRaster()) {
+                selectedLayer = (WMSLayer)activeLayer;
+            } else if (cRasterLayers == 1) {
+                selectedLayer = possibleLayer;
+            }
+            if (selectedLayer != null) {
                 super.enterMode();
                 Main.map.mapView.addMouseListener(this);
                 Main.map.mapView.addMouseMotionListener(this);
                 rasterMoved = false;
-                selectedLayer = (WMSLayer)activeLayer;
             } else {
                 JOptionPane.showMessageDialog(Main.parent,tr("This mode works only if active layer is\n"
                         +"a cadastre \"plan image\" (raster image)"));

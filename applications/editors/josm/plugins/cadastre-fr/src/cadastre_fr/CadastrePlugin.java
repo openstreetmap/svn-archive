@@ -75,7 +75,7 @@ import org.openstreetmap.josm.data.projection.*;
  * 1.3 23-Aug-2009 - improve georeferencing action cancellation
  *                 - fixed bug of raster image loaded from cache not working on Java1.6
  *                 - improve mouse click bounce detection during georeferencing process
- * 1.4 23-Oct-2009 - add support for new Lambert CC 9 Zones projection
+ * 1.4 25-Oct-2009 - add support for new Lambert CC 9 Zones projection
  *                 - add optional crosspieces display on raster image layers
  *                 - add automatic raster images georeferencing when WMS provides data
  *                 - re-implement manual adjustment mode in raster image layer  

@@ -11,7 +11,6 @@ package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;

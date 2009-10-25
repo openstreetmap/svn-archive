@@ -3,7 +3,6 @@ package cadastre_fr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.Future;
 
 import javax.swing.JDialog;

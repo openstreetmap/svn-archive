@@ -128,24 +128,26 @@ public class GeorefImage implements Serializable {
         }
     }
 
-    /*
-     * Method required by BufferedImage serialization
+    /**
+     * Method required by BufferedImage serialization.
+     * Save only primitives to keep cache independent of software changes.
      */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        max = new EastNorth((Double)in.readObject(), (Double)in.readObject());
-        min = new EastNorth((Double)in.readObject(), (Double)in.readObject());
+        max = new EastNorth(in.readDouble(), in.readDouble());
+        min = new EastNorth(in.readDouble(), in.readDouble());
         image = (BufferedImage) ImageIO.read(ImageIO.createImageInputStream(in));
         updatePixelPer();
     }
 
-    /*
-     * Method required by BufferedImage serialization
+    /**
+     * Method required by BufferedImage serialization.
+     * Cache uses only primitives to stay independent of software changes.
      */
     private void writeObject(ObjectOutputStream out) throws IOException {
-        out.writeObject(max.getX());
-        out.writeObject(max.getY());
-        out.writeObject(min.getX());
-        out.writeObject(min.getY());
+        out.writeDouble(max.getX());
+        out.writeDouble(max.getY());
+        out.writeDouble(min.getX());
+        out.writeDouble(min.getY());
         ImageIO.write(image, "png", ImageIO.createImageOutputStream(out));
     }
 

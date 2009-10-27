@@ -137,10 +137,10 @@ public class OsmarenderPlugin extends Plugin {
 
     private void writeGenerated(Bounds b) throws IOException {
         String bounds_tag = "<bounds " +
-            "minlat=\"" + b.min.lat() + "\" " +
-            "maxlat=\"" + b.max.lat() + "\" " +
-            "minlon=\"" + b.min.lon() + "\" " +
-            "maxlon=\"" + b.max.lon() + "\" " + "/>";
+            "minlat=\"" + b.getMin().lat() + "\" " +
+            "maxlat=\"" + b.getMax().lat() + "\" " +
+            "minlon=\"" + b.getMin().lon() + "\" " +
+            "maxlon=\"" + b.getMax().lon() + "\" " + "/>";
 
         BufferedReader reader = new BufferedReader(
                 new FileReader( getPluginDir() + File.separator + "osm-map-features.xml") );

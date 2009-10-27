@@ -18,12 +18,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.StringTokenizer;
+import java.util.concurrent.Future;
 
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
+import org.openstreetmap.josm.actions.downloadtasks.DownloadTask;
+import org.openstreetmap.josm.actions.downloadtasks.PostDownloadHandler;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -33,7 +36,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.gui.download.DownloadDialog.DownloadTask;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 
 /**
@@ -164,7 +166,8 @@ public class RequestProcessor extends Thread
                         maxlat = downloadBounds.getMaxY();
                         maxlon = downloadBounds.getMaxX();
                     }
-                    osmTask.download(null, minlat,minlon,maxlat,maxlon, new PleaseWaitProgressMonitor());
+                    Future<?> future = osmTask.download(false /*no new layer*/, new Bounds(minlat,minlon,maxlat,maxlon), new PleaseWaitProgressMonitor());                    
+                    Main.worker.submit(new PostDownloadHandler(osmTask, future));                    
                 } catch (AlreadyLoadedException ex) {
                     System.out.println("RemoteControl: no download necessary");
                 } catch (LoadDeniedException ex) {

@@ -148,8 +148,8 @@ public class WMSLayer extends Layer implements ImageObserver {
      *                   grabbing of next contiguous zone
      */
     private void divideBbox(Bounds b, int factor) {
-        EastNorth lambertMin = Main.proj.latlon2eastNorth(b.min);
-        EastNorth lambertMax = Main.proj.latlon2eastNorth(b.max);
+        EastNorth lambertMin = Main.proj.latlon2eastNorth(b.getMin());
+        EastNorth lambertMax = Main.proj.latlon2eastNorth(b.getMax());
         double minEast = lambertMin.east();
         double minNorth = lambertMin.north();
         double dEast = (lambertMax.east() - minEast) / factor;
@@ -253,8 +253,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     public boolean isOverlapping(Bounds bounds) {
         GeorefImage georefImage =
             new GeorefImage(new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB ), // not really important
-            Main.proj.latlon2eastNorth(bounds.min),
-            Main.proj.latlon2eastNorth(bounds.max));
+            Main.proj.latlon2eastNorth(bounds.getMin()),
+            Main.proj.latlon2eastNorth(bounds.getMax()));
         for (GeorefImage img : images) {
             if (img.overlap(georefImage))
                 return true;
@@ -343,8 +343,8 @@ public class WMSLayer extends Layer implements ImageObserver {
      */
     public void setRasterBounds(Bounds bounds) {
         EastNorth rasterCenter = Main.proj.latlon2eastNorth(bounds.getCenter());
-        EastNorth eaMin = Main.proj.latlon2eastNorth(bounds.min);
-        EastNorth eaMax = Main.proj.latlon2eastNorth(bounds.max);
+        EastNorth eaMin = Main.proj.latlon2eastNorth(bounds.getMin());
+        EastNorth eaMax = Main.proj.latlon2eastNorth(bounds.getMax());
         double rasterSizeX = communeBBox.max.getX() - communeBBox.min.getX(); 
         double rasterSizeY = communeBBox.max.getY() - communeBBox.min.getY();
         double ratio = rasterSizeY/rasterSizeX;

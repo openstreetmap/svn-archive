@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
+import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
  * A simple implementation of the {@link MapMarker} interface. Each map marker
@@ -24,6 +25,10 @@ public class MapMarkerDot implements MapMarker {
 
     public MapMarkerDot(double lat, double lon) {
         this(Color.YELLOW, lat, lon);
+    }
+
+    public MapMarkerDot(LatLon latlon) {
+        this(Color.YELLOW, latlon.lat(), latlon.lon());
     }
 
     public MapMarkerDot(Color color, double lat, double lon) {

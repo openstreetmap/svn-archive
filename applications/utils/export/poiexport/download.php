@@ -5,10 +5,10 @@ if (!isset($_GET["output"]) || !isset($_GET["k"]) || !isset($_GET["v"]) || !isse
   die("Error, Not all parameters supplied");
 }
 
-$output = $_GET["output"];
-$k = $_GET["k"];
-$v = $_GET["v"];
-$filename = $_GET["filename"];
+$output = pg_escape_string(utf8_encode($_GET["output"]));
+$k = pg_escape_string(utf8_encode($_GET["k"]));
+$v = pg_escape_string(utf8_encode($_GET["v"]));
+$filename = pg_escape_string(utf8_encode($_GET["filename"]));
 
 $dbconn = pg_connect("host=" . $config['Database']['servername'] . " port=" . $config['Database']['port'] . " dbname=" . $config['Database']['dbname'] . " user=".$config['Database']['username'] . " password=" . $config['Database']['password']) or die('Could not connect: ' . pg_last_error());
 

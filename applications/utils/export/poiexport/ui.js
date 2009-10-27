@@ -1,5 +1,4 @@
 var WizardPages = { PoiSelection:1, NaviSelection:2, Finish:3 };
-var BaseUrl = "http://poi.openstreetmap.nl";
 
 function LoadNextPage(divout,divin){
 	$("." + divout).fadeOut("fast", function () {
@@ -45,7 +44,7 @@ function DownloadFile() {
 	var PoiType = $("#poitype :selected").val();
 	var NaviType = $("#navitype :selected").val();
 	var kv = PoiType.split(":"); // get key value pair
-	var DownloadUrl = BaseUrl + "/download.php?" + "k=" + kv[0] + "&v=" + kv[1] + "&output=" +  NaviType + "&filename=" + Filename;
+	var DownloadUrl = "download.php?" + "k=" + kv[0] + "&v=" + kv[1] + "&output=" +  NaviType + "&filename=" + Filename;
 	window.location.href = DownloadUrl;  // goto download url
 }
 $(document).ready(function(){

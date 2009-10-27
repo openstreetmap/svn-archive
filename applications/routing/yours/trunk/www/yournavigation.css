@@ -5,7 +5,11 @@
 /* commented backslash hack \*/ 
 html, body{font: 90% arial, helvetica, sans-serif;}
 /* end hack */
-html,body {margin:0;padding:0;height:100%;}
+html,body {margin:0;padding:0;}
+
+.indexbody{
+    height:100%;
+}
 
 h1, h2 {
     margin: 0;
@@ -74,6 +78,15 @@ h1, h2 {
     background: #EEE;
 }
 
+#main2 {
+    top: 54px;
+    padding-left:10px;
+    bottom: 2em;
+    height: 85%;
+    border: 1px solid #DDD;
+    background: #EEE;
+}
+
 #content {
     margin: 0 0 0 320px;
     height: 100%;
@@ -106,6 +119,7 @@ input#from_text_id{
 
 .footer, .push {
 	border-top: 1px solid #DDD;
+        background-color: #fff;
 	xheight: 20px; /* .push must be the same height as .footer */
 }
 

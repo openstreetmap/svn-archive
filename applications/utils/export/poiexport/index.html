@@ -1,153 +1,121 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>OpenStreetMap POI Export</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="Description" content="OpenStreetMap poi Export select a poi category and download to a device of choice" />
-        <meta name="Keywords" content="openstreetmap,poi,export,free,tomtom,garmin,google earth,ov2,csv,gpx" />
-        <meta name="robots" content="index, follow" />
-        <meta http-equiv="Content-Language" content="en" />
-        <link rel="SHORTCUT ICON" href="favicon.ico" />
-        <link href="style.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="lib/jquery-latest.pack.js"></script>
+<head>
+	<title>OpenStreetMap POI Export - download free point of interest</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="Description" content="OpenStreetMap POI Export, de poi export site van OpenStreetMap Nederland" />
+    <meta name="Keywords" content="openstreetmap,poi,waypoint,export,free,tomtom,garmin,google earth,ov2,csv,gpx" />
+    <meta name="robots" content="index, follow" />
+    <meta http-equiv="Content-Language" content="nl" />
+    <link rel="SHORTCUT ICON" href="/img/nl.ico" />
+	<link type="text/css" href="style.css" rel="stylesheet" />
+	<script type="text/javascript" src="lib/jquery-latest.pack.js"></script>
+	<script type="text/javascript" src="ui.js"></script>
+</head>
 
-        <script type="text/javascript">
+<body>
+<div class="wizardwrapper">
+  <div class="wizardpanel 1">
+          <ul class="mainNav threeStep">
+          <li class="current"><a title=""><em> 1: POI type</em><span>Selecteer hier het type poi</span></a></li>
+          <li><a title=""><em>2: Doel apparaat</em><span>Kies het gewenste doel apparaat</span></a></li>
+          <li class="mainNavNoBg"><a title=""><em>3: Exporteren</em><span>Download poi file</span></a></li>
+        </ul>
 
-            function loadnext(divout,divin){
-                $("." + divout).hide();
-                $("." + divin).fadeIn("slow");
-                if (divin == 3)
-                {
-                    UpdateFinishPage();
-                }
-            }
-            function UpdateButtons1(selectionlist){
-                var selection = $("#poitype :selected").text();
-                if (selection == "")
-                {
-                    $("#next1").attr("disabled","disabled");
-                } else {
-                    $("#next1").removeAttr("disabled");
-                }
-            }
-            function UpdateButtons2(selectionlist){
-                var selection = $("#navitype :selected").text();
-                if (selection == "")
-                {
-                    $("#next2").attr("disabled","disabled");
-                } else {
-                    $("#next2").removeAttr("disabled");
-                }
-            }
-            function UpdateFinishPage()
-            {
-                $("#action").html("<p>Poi type : " + $("#poitype :selected").text() + "</p><p>Device type : " + $("#navitype :selected").text() + "</p>");
-            }
-            function download() {
-                var filename = $("#poitype :selected").text();
-                var PoiType = $("#poitype :selected").val();
-                var NaviType = $("#navitype :selected").val();
-                var kv = PoiType.split(":");
-                var myUrl = "http://poi.openstreetmap.nl/download.php?output=" +  NaviType + "&k=" + kv[0] + "&v=" + kv[1] + "&filename=" + filename.replace(" ", "_");
-                window.location.href = myUrl;
-            }
-            $(document).ready(function(){
-                $("#wizardpanel").css('display', 'block');
-            });
-        </script>
-    </head>
-    <body>
-        <div id="title"><a href="http://www.openstreetmap.nl/"><img src="images/osm.jpg" alt="OpenStreetMap Logo" border="0" /></a> OpenStreetMap POI Export (beta)</div>
-        <div id="wizardwrapper">
-            <div id="wizardpanel" class="1">
-                <ul id="mainNav" class="threeStep">
-                    <li class="current"><a title=""><em> 1: POI type</em><span>Select a POI type</span></a></li>
-                    <li><a title=""><em>2: Device</em><span>Select your device</span></a></li>
-                    <li class="mainNavNoBg"><a title=""><em>3: Export</em><span>Download POI file</span></a></li>
-                </ul>
-                <div style="clear:both"></div>
-                <img src="images/needle.png" alt="POI" /><h3>POI type</h3>
-                <div id="wizardcontent">
-                    <div id="description">Select a POI type for downloading (Only one type currently supported)</div>
-                    <select name="select" size="10" id="poitype" onchange="UpdateButtons1(this);loadnext(1,2);">
-                        <option value="amenity:fuel">Fuelstation</option>
-                        <option value="amenity:atm">ATM</option>
-                        <option value="amenity:speed_camera">Speed camera</option>
-                        <option value="highway:bus_stop">Bus stop</option>
-                        <option value="amenity:parking">Parking</option>
-                        <option value="amenity:bicycle_parking">Bicycle parking</option>
-                        <option value="amenity:place_of_worship">Church, Mosque and Temple</option>
-                        <option value="amenity:hospital">Hospital</option>
-                        <option value="shop:supermarket">Supermarket</option>
-                        <option value="amenity:theatre">Theatre</option>
-                        <option value="amenity:police">Police</option>
-                        <option value="amenity:fire_station">Fire station</option>
-                        <option value="amenity:post_box">Post box</option>
-                        <option value="amenity:post_office">Post Office</option>
-                        <option value="amenity:recycling">Recycling</option>
-                        <option value="amenity:restaurant">Restaurant</option>
-                        <option value="amenity:fast_food">Fast food</option>
-                        <option value="amenity:toilets">Public toilet</option>
-                        <option value="amenity:pub">Pub</option>
-                        <option value="amenity:waste_basket">Waste basket</option>
-                        <option value="tourism:camp_site">Camp site</option>
-                        <option value="tourism:hotel">Hotel</option>
-                        <option value="tourism:museum">Museum</option>
-                        <option value="tourism:zoo">Zoo</option>
-                        <option value="historic:castle">Castle</option>
-                        <option value="man_made:windmill">Windmill</option>
-                        <option value="man_made:lighthouse">Lighthouse</option>
-                        <option value="man_made:watermill">Watermill</option>
-                        <option value="man_made:water_tower">Water tower</option>
-                        <option value="amenity:nightclub">Nightclub</option>
-                        <option value="amenity:stripclub">Stripclub</option>
-                    </select>
-                </div>
-            </div>
-            <div id="wizardpanel" class="2">
-                <ul id="mainNav" class="threeStep">
-                    <li class="lastDone"><a href="#" onclick="loadnext(2,1);"><em> 1: POI type</em><span>Select a POI type</span></a></li>
-                    <li class="current"><a title=""><em>2: Device</em><span>Select your device</span></a></li>
-                    <li class="mainNavNoBg"><a title=""><em>3: Export</em><span>Download POI file</span></a></li>
-                </ul>
-                <div style="clear:both"></div>
-                <img src="images/navi.png" alt="Device"/>
-                <h3>Device</h3>
-                <div id="wizardcontent">
-                    <div id=description">Select one of the supported device types. </div>
-                    <select name="select" size="10" id="navitype" onchange="UpdateButtons2(this);loadnext(2,3);">
-                        <option value="ov2">TomTom overlay (ov2)</option>
-                        <option value="csv">Garmin (csv)</option>
-                        <option value="gpx">GPS Exchange format (gpx)</option>
-                        <option value="kml">Google Earth (kml)</option>
-                    </select>
-                </div>
+      <div class="wizardcontent">
+      <img src="images/needle.png" alt="" />
+      <div class="explanation">Maak hieronder een keuze welk type POI je wilt downloaden. Je kunt maar 1 type tegelijk downloaden. Het gebied beperkt zich tot de Benelux.</div>
+      <select name="select" multiple size="10" id="poitype" onchange="UpdateButtons(1)">
+		      <option value="amenity:fuel">Tankstation</option>
+              <option value="amenity:atm">Pinautomaat</option>
+              <option value="amenity:speed_camera">Flitspaal</option>
+			  <option value="highway:bus_stop">Bushalte</option>
+			  <option value="amenity:parking">Parkeerplaats</option>
+			  <option value="amenity:bicycle_parking">Fiets parkeerplaats</option>
+              <option value="amenity:place_of_worship">Kerk Moskee Tempel</option>
+			  <option value="amenity:hospital">Ziekenhuis</option>
+			  <option value="shop:supermarket">Supermarkt</option>
+			  <option value="amenity:theatre">Theater</option>
+			  <option value="amenity:police">Politie</option>
+			  <option value="amenity:fire_station">Brandweer</option>
+			  <option value="amenity:post_box">Brievenbus</option>
+			  <option value="amenity:post_office">Postkantoor</option>
+			  <option value="amenity:recycling">Milieu perron</option>
+              <option value="amenity:restaurant">Restaurant</option>
+              <option value="amenity:fast_food">Fastfood restaurant</option>
+              <option value="amenity:toilets">Publieke wc</option>
+              <option value="amenity:pub">Cafe</option>
+			  <option value="amenity:waste_basket">Vuilnisbak</option>
+			  <option value="tourism:camp_site">Camping</option>
+			  <option value="tourism:hotel">Hotel</option>
+			  <option value="tourism:museum">Museum</option>
+			  <option value="tourism:zoo">Dierentuin</option>
+			  <option value="historic:castle">Kasteel</option>
+			  
+              <option value="man_made:windmill">Windmolen</option>
+              <option value="man_made:lighthouse">Vuurtoren</option>
+              <option value="man_made:watermill">Watermolen</option>              	  
+              <option value="man_made:water_tower">Watertoren</option>              	  
 
-            </div>
-            <div id="wizardpanel" class="3">
-                <ul id="mainNav" class="threeStep">
-                    <li class="done"><a href="#" onclick="loadnext(3,1);"><em> 1: POI type</em><span>Select a POI type</span></a></li>
-                    <li class="lastDone"><a  href="#" onclick="loadnext(3,2);" title=""><em>2: Device</em><span>Select your device</span></a></li>
-                    <li class="mainNavNoBg current"><a title=""><em>3: Export</em><span>Download POI file</span></a></li>
-                </ul>
-                <div style="clear:both"></div>
-                <img src="images/world.png" alt="Export" />
-                     <h3>Export</h3>
-                    <div id="wizardcontent">
-                        <div id="description">You have selected the following set and device, please click export to download the POI set</div>
-                        <div id="action">
-                            <p>Poi type : - </p>
-                            <p>Device type : -</p>
-                        </div>
-                        <button type="submit" class="next"  onclick="download();"> Export</button>
-                    </div>
-            </div>
+			  <option value="amenity:nightclub">Nachtclub</option>
+			  <option value="amenity:stripclub">Stripclub</option>
+	    </select>
+      </div>
+        <div class="buttons">
+          <button type="submit" id="next1" class="next" disabled="disabled" onclick="LoadNextPage(1,2);"> Volgende &gt;&gt;  </button>
         </div>
-        <div id="footer">
-            Data <a href="http://creativecommons.org/licenses/by-sa/2.0/">cc-by-sa</a>
-            By the <a href="http://www.openstreetmap.nl/">OpenStreetMap</a> community
-            development contacts: <a href="http://www.openstreetmap.org/user/rullzer">rullzer</a>
-            and <a href="http://www.openstreetmap.org/user/Rubke">rubke</a>
-            or send a <a href="mailto:poiexport@opengeo.nl">e-mail</a></div>
-    </body>
+        <div style="clear:both"></div>
+  </div>
+ 
+  <div class="wizardpanel 2">
+  	<ul class="mainNav threeStep">
+      <li class="lastDone"><a href="#" onclick="LoadNextPage(2,1);"><em> 1: POI type</em><span>Selecteer hier het type POI</span></a></li>
+      <li class="current"><a title=""><em>2: Doel apparaat</em><span>Kies het gewenste doel apparaat</span></a></li>
+      <li class="mainNavNoBg"><a title=""><em>3: Exporteren</em><span>Download POI file</span></a></li>
+    </ul>
+    <div class="wizardcontent">
+		<img src="images/navi.png" alt="" />
+	    <div class="explanation">Maak hieronder een keuze voor welk apparaat je wilt downloaden. </div>
+	    <select id="navitype" size="10"  onchange="UpdateButtons(2)">
+          <option value="ov2">TomTom overlay (ov2)</option>
+          <option value="csv">Garmin (csv)</option>
+          <option value="gpx">GPS Exchange format (gpx)</option>
+          <option value="kml">Google Earth (kml)</option>
+        </select>
+    </div>
+    <div class="buttons">
+      <button type="submit" id="back2" class="previous" onclick="LoadNextPage(2,1);"> &lt;&lt; Terug </button>
+      <button type="submit" id="next2" class="next" disabled="disabled" onclick="LoadNextPage(2,3);"> Volgende &gt;&gt;  </button>
+    </div>
+    
+    <div style="clear:both"></div>
+  </div>
+  
+  
+  <div class="wizardpanel 3">
+  	 <ul class="mainNav threeStep">
+      <li class="done"><a href="#" onclick="LoadNextPage(3,1);" title=""><em> 1: POI type</em><span>Selecteer hier het type POI</span></a></li>
+      <li class="lastDone"><a href="#" onclick="LoadNextPage(3,2);" title=""><em>2: Doel apparaat</em><span>Kies het gewenste doel apparaat</span></a></li>
+      <li class="mainNavNoBg current"><a title=""><em>3: Exporteren</em><span>Download poi file</span></a></li>
+    </ul>
+    <div class="wizardcontent">
+	    <img src="images/world.png" alt="" />
+        <div class="explanation">Klik op exporten om de gewenste file te downloaden.</div>
+        <div id="action">
+            <p>Poi type : - </p>
+            <p>Apparaat type : -</p>
+        </div>    
+    </div>
+    <div class="buttons">
+      <button type="submit" id="back3" class="previous" onclick="LoadNextPage(3,2);"> &lt;&lt; Terug </button>
+      <button type="submit" id="next3" class="next"  onclick="DownloadFile();"> Exporteren </button>
+    </div>
+   
+    <div style="clear:both"></div>
+  </div>
+
+<div class="footer">Poi Export v0.2 - Data <a href="http://creativecommons.org/licenses/by-sa/2.0/">cc-by-sa</a> <a href="http://www.openstreetmap.nl/">OpenStreetMap</a> gebruikers - een <a href="http://www.opengeo.nl/">OpenGeo.nl</a> applicatie - backend door <a href="http://www.openstreetmap.org/user/rullzer">rullzer</a> - frontend door <a href="http://www.openstreetmap.org/user/Rubke">rubke</a> - <a href="mailto:poiexport@opengeo.nl">contact</a></div>
+
+</div>
+</body>
 </html>

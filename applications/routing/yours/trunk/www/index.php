@@ -25,21 +25,21 @@
 
         </script>
     </head>
-    <body onload="init();">
+    <body class="indexbody" onload="init();">
 		<div id="header">
 			<!--
 			<div id="title">
 				<h1>OpenStreetMap routing service</h1>
 			</div>
 			-->
-			<img id="left_image" src="images/yours_left.png"> 
-			<img id="middle_image" src="images/yours_text.png">
-			<img id="right_image" src="images/yours_right.png">
+			<img id="left_image" src="images/yours_left.png" alt="(Y)" />
+			<img id="middle_image" src="images/yours_text.png" alt="OpenStreetMap Routing Service" />
+			<img id="right_image" src="images/yours_right.png" alt="(R)" />
 			<div id="site_menu">
-			<a href="index.php">Home</a>
-			<a href="help.html">Help</a>
-			<a href="about.html">About</a>
-		</div>
+                            <a href="index.php">Home</a>
+                            <a href="help.html">Help</a>
+                            <a href="about.html">About</a>
+                        </div>
 		<div style="clear:both;"></div>
 		</div>
 		<div id="main">

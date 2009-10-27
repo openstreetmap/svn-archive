@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
@@ -101,11 +103,16 @@ public class AgpifojLayer extends Layer {
         private AgpifojLayer layer;
         private final File[] selection;
         private HashSet<String> loadedDirectories = new HashSet<String>();
-        private String errorMessage = "";
+        private LinkedHashSet<String> errorMessages;
 
+        protected void rememberError(String message) {
+        	this.errorMessages.add(message);
+        }
+        
         public Loader(File[] selection) {
             super(tr("Extracting GPS locations from EXIF"));
             this.selection = selection;
+            errorMessages = new LinkedHashSet<String>(); 
         }
 
         @Override protected void realRun() throws IOException {
@@ -114,8 +121,8 @@ public class AgpifojLayer extends Layer {
             List<File> files = new ArrayList<File>();
             try {
                 addRecursiveFiles(files, selection);
-            } catch(NullPointerException npe) {
-                errorMessage += tr("One of the selected files was null !!!");
+            } catch(NullPointerException npe) {            	
+                rememberError(tr("One of the selected files was null"));
             }
 
             if (cancelled) {
@@ -155,9 +162,6 @@ public class AgpifojLayer extends Layer {
             }
             layer = new AgpifojLayer(data);
             files.clear();
-            if (errorMessage != null && ! errorMessage.trim().equals("")) {
-            	progressMonitor.setErrorMessage(errorMessage);
-            }
         }
 
         private void addRecursiveFiles(List<File> files, File[] sel) {
@@ -178,8 +182,8 @@ public class AgpifojLayer extends Layer {
                         canonical = f.getCanonicalPath();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        errorMessage += tr("Unable to get canonical path for directory {0}\n",
-                                           f.getAbsolutePath());
+                        rememberError(tr("Unable to get canonical path for directory {0}\n",
+                                           f.getAbsolutePath()));
                     }
 
                     if (canonical == null || loadedDirectories.contains(canonical)) {
@@ -195,10 +199,11 @@ public class AgpifojLayer extends Layer {
                             addRecursiveFiles(files, children);
                         } catch(NullPointerException npe) {
                             npe.printStackTrace();
-                            errorMessage += tr("Found null file in directory {0}\n", f.getPath());
+                            
+                            rememberError(tr("Found null file in directory {0}\n", f.getPath()));
                         }
                     } else {
-                    	errorMessage += tr("Error while getting files from directory {0}\n", f.getPath());
+                    	rememberError(tr("Error while getting files from directory {0}\n", f.getPath()));
                     }
 
                 } else {
@@ -211,7 +216,31 @@ public class AgpifojLayer extends Layer {
             }
         }
 
+        protected String formatErrorMessages() {
+        	StringBuffer sb = new StringBuffer();
+        	sb.append("<html>");
+    		if (errorMessages.size() == 1) {
+    			sb.append(errorMessages.iterator().next());
+    		} else {
+    			sb.append("<ul>");
+    			for (String msg: errorMessages) {
+    				sb.append("<li>").append(msg).append("</li>");
+    			}
+    			sb.append("/ul>");
+    		}
+    		sb.append("</html>");
+    		return sb.toString();
+        }
+        
         @Override protected void finish() {
+        	if (!errorMessages.isEmpty()) {
+        		JOptionPane.showMessageDialog(
+        				Main.parent,
+        				formatErrorMessages(),
+        				tr("Error"),
+        				JOptionPane.ERROR_MESSAGE
+        		);
+        	}
             if (layer != null) {
                 Main.main.addLayer(layer);
                 layer.hook_up_mouse_events(); // Main.map.mapView should exist

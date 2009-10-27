@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.concurrent.Future;
 
 import javax.swing.JOptionPane;
 
@@ -99,13 +100,32 @@ public class WayDownloaderPlugin extends Plugin {
                         double latbuffer=0.0003; //TODO make this an option
                         double lonbuffer=0.0005;
                         DownloadOsmTask downloadTask = new DownloadOsmTask();
-                        downloadTask.download( null,
-                                               selectedNode.getCoor().lat()-latbuffer,
-                                               selectedNode.getCoor().lon()-lonbuffer,
-                                               selectedNode.getCoor().lat()+latbuffer,
-                                               selectedNode.getCoor().lon()+lonbuffer,
-                                               new PleaseWaitProgressMonitor());
-
+                        final PleaseWaitProgressMonitor monitor = new PleaseWaitProgressMonitor();
+                        final Future<?> future = downloadTask.download( 
+                        		false /* no new layer */,
+                        		new Bounds(
+                        				selectedNode.getCoor().lat()- latbuffer, 
+                        				selectedNode.getCoor().lon()- lonbuffer, 
+                        				selectedNode.getCoor().lat()+ latbuffer, 
+                        				selectedNode.getCoor().lon()+ lonbuffer
+                        		), 
+                        		monitor
+                        );
+                        // schedule closing of the progress monitor after the download
+                        // job has finished
+                        Main.worker.submit(
+                                new Runnable() {
+                                    public void run() {
+                                        try {
+                                            future.get();
+                                        } catch(Exception e) {
+                                            e.printStackTrace();
+                                            return;
+                                        }
+                                        monitor.close();
+                                    }
+                                }
+                        );
                         //The download is scheduled to be executed.
                         //Now schedule the run() method (below) to be executed once that's completed.
                         Main.worker.execute(this);
@@ -237,10 +257,10 @@ public class WayDownloaderPlugin extends Plugin {
         for (DataSource datasource:Main.main.getCurrentDataSet().dataSources) {
             Bounds bounds = datasource.bounds;
 
-            if (node.getCoor().lat()>bounds.min.lat() &&
-                node.getCoor().lat()<bounds.max.lat() &&
-                node.getCoor().lon()>bounds.min.lon() &&
-                node.getCoor().lon()<bounds.max.lon()) {
+            if (node.getCoor().lat()>bounds.getMin().lat() &&
+                node.getCoor().lat()<bounds.getMax().lat() &&
+                node.getCoor().lon()>bounds.getMin().lon() &&
+                node.getCoor().lon()<bounds.getMax().lon()) {
                 return true;
             }
         }

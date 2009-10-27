@@ -10,7 +10,7 @@ class little_php_proxy {
        var $PURL=array();
        var $RESPONSE=array();
 
-       var $allowedHosts = array('gazetteer.openstreetmap.org','www.yournavigation.org','yournavigation.org');
+       var $allowedHosts = array('gazetteer.openstreetmap.org','www.yournavigation.org','yournavigation.org', 'dev.openstreetmap.nl');
 
        public function __construct() {
              define(HOST,$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']);
@@ -60,12 +60,12 @@ class little_php_proxy {
 				if (strpos($host, PHOST) !== false)
 				{
 					$fail = false;
-				break;
+					break;
 				}
 			}
 			if ($fail == true)
 			{
-				exit("Hostname ".PHOST." not in whitelist. Access denied.");
+				exit("Hostname ".PHOST."(".$this->PURL['host'].") not in whitelist. Access denied.");
 			}
 
              if($posted) curl_setopt($ch, CURLOPT_POST,                                                0);

@@ -16,7 +16,7 @@
  */
 
 // The domains we're allowed to contact
-$allowedDomains = array('http://gazetteer.openstreetmap.org/');
+$allowedDomains = array('http://gazetteer.openstreetmap.org/', 'http://dev.openstreetmap.nl/~rullzer');
 
 // The actual form action
 $action = $_REQUEST['url'];

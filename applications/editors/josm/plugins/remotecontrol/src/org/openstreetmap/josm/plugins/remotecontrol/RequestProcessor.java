@@ -166,7 +166,7 @@ public class RequestProcessor extends Thread
                         maxlat = downloadBounds.getMaxY();
                         maxlon = downloadBounds.getMaxX();
                     }
-                    Future<?> future = osmTask.download(false /*no new layer*/, new Bounds(minlat,minlon,maxlat,maxlon), new PleaseWaitProgressMonitor());                    
+                    Future<?> future = osmTask.download(false /*no new layer*/, new Bounds(minlat,minlon,maxlat,maxlon), null /* let the task manage the progress monitor */);                    
                     Main.worker.submit(new PostDownloadHandler(osmTask, future));                    
                 } catch (AlreadyLoadedException ex) {
                     System.out.println("RemoteControl: no download necessary");

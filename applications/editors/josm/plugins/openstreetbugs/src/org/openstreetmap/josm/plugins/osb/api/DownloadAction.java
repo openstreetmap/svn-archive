@@ -56,10 +56,10 @@ public class DownloadAction {
 
         // add query params to the uri
         StringBuilder sb = new StringBuilder(uri)
-            .append("?b=").append(bounds.min.lat())
-            .append("&t=").append(bounds.max.lat())
-            .append("&l=").append(bounds.min.lon())
-            .append("&r=").append(bounds.max.lon());
+            .append("?b=").append(bounds.getMin().lat())
+            .append("&t=").append(bounds.getMax().lat())
+            .append("&l=").append(bounds.getMin().lon())
+            .append("&r=").append(bounds.getMax().lon());
         uri = sb.toString();
 
         // download the data

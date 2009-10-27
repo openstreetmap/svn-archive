@@ -144,8 +144,8 @@ sub get_grid_display_num {
 	$out   .= "\\begin{tabular}{" . "c|" x $numsubs . "}\n";
 	$out =~ s/\|}\n$/}\n/;
 
-	foreach my $xn (1 .. $numsubs) {
-	    foreach my $yn (1 .. $numsubs) {
+	foreach my $yn (1 .. $numsubs) {
+	    foreach my $xn (1 .. $numsubs) {
 		$out .= $gridnum . "-" . ($numsubs*($yn-1) + $xn) . " & ";
 	    }
 	    $out =~ s/\& $/\\\\\n\\hline\n/;
@@ -164,6 +164,8 @@ foreach my $y (reverse(1..$ygridnum)) {
     foreach my $x (1..$proj->{'gridwidth'}) {
 
 	my $gridsquare = get_grid_num($x, $y);
+
+	next if ($gridinfo->{'grid'}{$gridsquare}{'skip'});
 
 	print "----------------------------------------------------------------------\n";
 	print "Starting grid $gridsquare\n";
@@ -451,6 +453,7 @@ sub make_overview_grid {
     for my $x (0..($numx-1)) {
 	for my $y (0..($numy-1)) {
 	    my $gridsquare = $y*$numx + $x + 1;
+	    next if ($gridinfo->{'grid'}{$gridsquare}{'skip'});
 	    if (!$prefix &&
 		$gridinfo->{'grid'}{$gridsquare}{'subgrid'}) {
 		my $subnum = $gridinfo->{'grid'}{$gridsquare}{'subgrid'};

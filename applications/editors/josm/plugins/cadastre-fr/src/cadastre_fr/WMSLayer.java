@@ -355,26 +355,33 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     /**
-     * Called by CacheControl when a new cache file is created on disk
+     * Called by CacheControl when a new cache file is created on disk.
+     * Save only primitives to keep cache independent of software changes.
      * @param oos
      * @throws IOException
      */
     public void write(ObjectOutputStream oos) throws IOException {
         oos.writeInt(this.serializeFormatVersion);
-        oos.writeObject(this.location);
-        oos.writeObject(this.codeCommune);
+        oos.writeObject(this.location);    // String
+        oos.writeObject(this.codeCommune); // String
         oos.writeInt(this.lambertZone);
         oos.writeBoolean(this.isRaster);
         if (this.isRaster) {
-            oos.writeObject(this.rasterMin);
-            oos.writeObject(this.rasterMax);
+            oos.writeDouble(this.rasterMin.getX());
+            oos.writeDouble(this.rasterMin.getY());
+            oos.writeDouble(this.rasterMax.getX());
+            oos.writeDouble(this.rasterMax.getY());
             oos.writeDouble(this.rasterRatio);
         }
-        oos.writeObject(this.communeBBox);
+        oos.writeObject(this.communeBBox.min.getX());
+        oos.writeObject(this.communeBBox.min.getY());
+        oos.writeObject(this.communeBBox.max.getX());
+        oos.writeObject(this.communeBBox.max.getY());
     }
 
     /**
-     * Called by CacheControl when a cache file is read from disk
+     * Called by CacheControl when a cache file is read from disk.
+     * Cache uses only primitives to stay independent of software changes.
      * @param ois
      * @throws IOException
      * @throws ClassNotFoundException
@@ -391,11 +398,19 @@ public class WMSLayer extends Layer implements ImageObserver {
         this.lambertZone = ois.readInt();
         this.setRaster(ois.readBoolean());
         if (this.isRaster) {
-            this.rasterMin = (EastNorth) ois.readObject();
-            this.rasterMax = (EastNorth) ois.readObject();
+            double X = ois.readDouble();
+            double Y = ois.readDouble();
+            this.rasterMin = new EastNorth(X, Y);
+            X = ois.readDouble();
+            Y = ois.readDouble();
+            this.rasterMax = new EastNorth(X, Y);
             this.rasterRatio = ois.readDouble();
         }
-        this.communeBBox = (EastNorthBound) ois.readObject();
+        double minX = ois.readDouble();
+        double minY = ois.readDouble();
+        double maxX = ois.readDouble();
+        double maxY = ois.readDouble();
+        this.communeBBox =  new EastNorthBound(new EastNorth(minX, minY), new EastNorth(maxX, maxY));
         if (this.lambertZone != currentLambertZone && currentLambertZone != -1) {
             JOptionPane.showMessageDialog(Main.parent, tr("Lambert zone {0} in cache "+
                     "incompatible with current Lambert zone {1}",

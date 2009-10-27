@@ -1,27 +1,32 @@
 <!-- Copyright (c) 2009, L. IJsselstein and others
      Yournavigation.org All rights reserved.
 -->
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
- <html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>Your navigation</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 		<link rel="stylesheet" href="yournavigation.css"/>
 	</head>
 	<body>
-		<div class="wrapper">
-			<div id="header">
-				<div id="header_left">&nbsp;</div>
-				<div class="header_pixel">&nbsp;</div>
-				<div id="header_text">&nbsp;</div>
-				<div class="header_pixel">&nbsp;</div>
-				<div id="header_right">&nbsp;</div>
-	        </div>
-			<div id="site_menu">
-				<a href="index.php">Home</a>
-				<a href="help.html">Help</a>
-				<a href="about.html">About</a>
+		<div id="header">
+			<!--
+			<div id="title">
+				<h1>OpenStreetMap routing service</h1>
 			</div>
-			<div style="clear:both;"></div>
+			-->
+			<img id="left_image" src="images/yours_left.png"> 
+			<img id="middle_image" src="images/yours_text.png">
+			<img id="right_image" src="images/yours_right.png">
+			<div id="site_menu">
+			<a href="index.php">Home</a>
+			<a href="help.html">Help</a>
+			<a href="about.html">About</a>
+		</div>
+		<div style="clear:both;"></div>
+        </div>
+        <div id="main">
 			<div id="outer"><!-- this div fixes a render problem in Opera-->
 				<h1>About</h1>
 
@@ -43,7 +48,7 @@
 				<h3>More information</h3>
 				Please visit the <a href="http://wiki.openstreetmap.org/index.php/YOURS">YOURS wiki page</a> for more information.
 				
-				<h3>Things to do (in random order)</h3>
+				<h3>Things to do (Wishlist in random order)</h3>
 				<ul>
 					<li><del>Interface with Gosmore to find routes using KML.</del></li>
 					<li><del>Use the Namefinder service to find the 'To' and 'From' coordinates.</del></li>
@@ -65,14 +70,22 @@
 					<li>Interface with the RemoteControl plugin for the JOSM editor for easy data-bug fixing.</li>
 					<li>Add Munin plugin to keep track of the number of requests, route calculation times, etc.</li>
 					<li>Add caching of route calculation results.</li>
+					<li>Add a cycle nodenetwork routing option.</li>
+					<li>Add context menu's to right mouse clicks (add marker etc.).</li>
+					<li>Cafe/bar/pub finding mode (on click on the map gives pubs in the area).</li>
+					<li>Add nautic routing.</li>
+					<li>Generate route information in a printer friendly way.</li>
+					<li>Add a text only mode (for the visually impaired).</li>
+					<li>Add routing description specifically for visually impaired users (distance in steps and such).</li>
 				</ul>
 				<h3>Contact</h3>
-				Please visit the <a href="http://forum.openstreetmap.org/viewtopic.php?id=735">forum</a> for feedback and questions or send me a message through the <a href="http://www.openstreetmap.org/message/new/6424">OSM messaging</a> function. If you do not have an OpenStreetMap account email me directly: osm at na1400 dot info.
+				For more information, questions/feedback or want to lend a helping hand please visit the <a href="http://forum.openstreetmap.org/viewtopic.php?id=735">OpenStreetMap forum</a> or send me a message through the <a href="http://www.openstreetmap.org/message/new/6424">OSM messaging</a> function. If you do not have an OpenStreetMap account email me directly: osm at na1400 dot info.
+				
 			</div>		
 			<div class="push"></div>
-		</div>	<!--/wrapper-->
-		<div id="footer">
-			<i>This site is sponsored by <a href="http://www.jronline.nl/">JROnline</a>.
+			<div id="footer">
+				<i>This site is sponsored by <a href="http://www.oxilion.nl/">Oxilion</a>.
+			</div>
 		</div>
 	</body>
 </html>

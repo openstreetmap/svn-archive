@@ -794,6 +794,12 @@ Yours.Segment = function(ParentRoute) {
 		var flonlat= this.Start.lonlat.clone().transform(this.route.map.projection, this.route.map.displayProjection);
 		var tlonlat= this.End.lonlat.clone().transform(this.route.map.projection, this.route.map.displayProjection);
 
+		if (flonlat.lon > 3.2 && flonlat.lon < 7 && flonlat.lat > 50.7 && flonlat.lat < 53.6 && tlonlat.lon > 3.2 && tlonlat.lon < 7 && tlonlat.lat > 50.7 && tlonlat.lat < 53.6) {
+			// Test send Dutch requests to rullzer
+			apiUrl = "proxy.php?u=http://dev.openstreetmap.nl/~rullzer/yours/api/dev/";
+			//apiUrl = "transport.php?url=http://dev.openstreetmap.nl/~rullzer/yours/api/dev/";
+		}
+			
 		this.url = 'flat=' + flonlat.lat +
 			'&flon=' + flonlat.lon +
 			'&tlat=' + tlonlat.lat +

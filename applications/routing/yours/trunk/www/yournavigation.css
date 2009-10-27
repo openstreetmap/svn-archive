@@ -10,7 +10,11 @@ html,body {margin:0;padding:0;height:100%;}
 h1, h2 {
     margin: 0;
 }
-
+<![if lt IE 7]>
+* html #outer{
+    width:100%;/* box model hack for ie5.+*/
+}
+<![endif]>
 #outer{
 	padding-left: 5px;
 	padding-right: 5px;
@@ -20,9 +24,6 @@ h1, h2 {
 	background-color:#EEE;
 	border-bottom: 1px solid #DDD;
 	border-top: 1px solid #DDD;
-}
-* html #outer{
-    width:100%;/* box model hack for ie5.+*/
 }
 #title {
     
@@ -38,71 +39,64 @@ h1, h2 {
 }
 */
 
+#left_image {
+    border: 0px;
+    float: left;
+}
+#right_image {
+    float: right;
+    display: block;
+}
+#middle_image {
+    float: left;
+}
+
 #header {
+	background: white;
 	background-image:url(images/yours_pixel.png);
 	background-repeat:repeat-x;
-	height:53px;
-	//background: white;
-	min-width:600px;
-	margin-bottom: -35px;
+	height: 53px;
 }
 
-#header_left {
-	background-image:url(images/yours_left.png);
-	display:block;
-	float:left;
-	height:53px;
-	width:81px;
-}
-
-#header_right {
-	background-image:url(images/yours_right.png);
-	display:block;
-	float:right;
-	height:53px;
-	width:63px;
-}
-
-#header_text {
-	background-image:url(images/yours_text.png);
-	display:block;
-	float:left;
-	height:53px;
-	width:406px;
-}
-
-.header_pixel {
-	display:block;
-	float:left;
-}
 
 #site_menu {
     float: right;
+    margin-top: 18px;
 }
 
 #main {
     position: fixed;
-    top: 53px;
+    top: 54px;
     bottom: 2em;
     width: 100%;
+    height: 85%;
     border: 1px solid #DDD;
-	background: #EEE;
+    background: #EEE;
 }
 
 #content {
     margin: 0 0 0 320px;
     height: 100%;
-	border-top: 1px solid #DDD;
+    border-top: 1px solid #DDD;
+}
+
+
+input.marker {
+    xdisplay: inline;
+    vertical-align: middle;
+}
+
+input#from_text_id{
 }
 
 #map {
-    min-width:315px;
-    min-height:300px;
     width:100%;
     height:100%;
+    min-width:315px;
+    min-height:300px;
 }
 
-.wrapper {
+.xxxxwrapper {
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;
@@ -111,7 +105,8 @@ h1, h2 {
 }
 
 .footer, .push {
-	height: 20px; /* .push must be the same height as .footer */
+	border-top: 1px solid #DDD;
+	xheight: 20px; /* .push must be the same height as .footer */
 }
 
 div.hover a {
@@ -129,10 +124,13 @@ div.hover a:hover {
 
 #navigation {
     float: left;
-    //margin-left: 5px;
+    margin-left: 5px;
     margin-right: 5px;
     width: 305px;
     /*background: #F9FFF0;*/
+	height:85%
+	overflow: auto;
+	overflow-x: hidden;
 }
 /*
 #navigation ul {
@@ -235,10 +233,9 @@ div.hover a:hover {
     style-set: "std-button";
 }
 
-#route input {
+#route input.box {
     display: inline-block;        /* inline with outer text */
     display-model: inline-inside; /* contains only inlines */
-    margin-left: 90;
     style-set: "std-input";    /* all other visual and behavioral styles are
                                      derived from standard checkbox */
 }

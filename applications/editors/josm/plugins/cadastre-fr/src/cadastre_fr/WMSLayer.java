@@ -373,10 +373,10 @@ public class WMSLayer extends Layer implements ImageObserver {
             oos.writeDouble(this.rasterMax.getY());
             oos.writeDouble(this.rasterRatio);
         }
-        oos.writeObject(this.communeBBox.min.getX());
-        oos.writeObject(this.communeBBox.min.getY());
-        oos.writeObject(this.communeBBox.max.getX());
-        oos.writeObject(this.communeBBox.max.getY());
+        oos.writeDouble(this.communeBBox.min.getX());
+        oos.writeDouble(this.communeBBox.min.getY());
+        oos.writeDouble(this.communeBBox.max.getX());
+        oos.writeDouble(this.communeBBox.max.getY());
     }
 
     /**

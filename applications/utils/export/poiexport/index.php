@@ -123,10 +123,10 @@ i18n();
                 </div>
                 <div style="clear:both"></div>
             </div>
-            <div class="footer"><? msg('Poi Export v0.2'); ?> -&nbsp;
-                <? msg('Data'); ?> <a href="http://creativecommons.org/licenses/by-sa/2.0/">cc-by-sa</a>&nbsp;
+            <div class="footer"><? msg('Poi Export'); ?> - 1.0&nbsp;
+                <? msg('data'); ?> <a href="http://creativecommons.org/licenses/by-sa/2.0/">cc-by-sa</a>&nbsp;
                 <a href="http://www.openstreetmap.nl/"><? msg('OpenStreetMap'); ?></a>&nbsp;
-                <? msg('community') ?> -&nbsp;
+                <? msg('community') ?>. -&nbsp;
                 <? msg('Created by'); ?> <a href="http://www.openstreetmap.org/user/rullzer">rullzer</a> <? msg('and'); ?>&nbsp;
                 <a href="http://www.openstreetmap.org/user/Rubke">rubke</a>
            </div>

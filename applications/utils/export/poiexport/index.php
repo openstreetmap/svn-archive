@@ -18,10 +18,10 @@ i18n();
         <title><? msg('OpenStreetMap POI export');?> - <? msg('download free point of interest'); ?></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="Description" content="<? msg('OpenStreetMap POI Export'); ?>" />
-        <meta name="Keywords" content="openstreetmap,poi,waypoint,export,free,tomtom,garmin,google earth,ov2,csv,gpx" />
+        <meta name="Keywords" content="openstreetmap,poi,waypoint,export,free,tomtom,garmin,google earth,oziexplorer,ov2,csv,gpx,wpt" />
         <meta name="robots" content="index, follow" />
         <meta http-equiv="Content-Language" content="<? echo $_SESSION['LANG']; ?>" />
-        <link rel="SHORTCUT ICON" href="/img/nl.ico" />
+        <link rel="shortcut icon" href="favicon.ico" />
         <link type="text/css" href="style.css" rel="stylesheet" />
         <script type="text/javascript" src="lib/jquery-latest.pack.js"></script>
         <script type="text/javascript" src="ui.js"></script>

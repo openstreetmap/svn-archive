@@ -28,8 +28,12 @@ public class OsmTileSource {
             return 0;
         }
 
+        public String getExtension() {
+            return "png";
+        }
+
         public String getTilePath(int zoom, int tilex, int tiley) {
-            return "/" + zoom + "/" + tilex + "/" + tiley + ".png";
+            return "/" + zoom + "/" + tilex + "/" + tiley + "." + getExtension();
         }
 
         public String getBaseUrl() {

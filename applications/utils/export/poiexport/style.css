@@ -73,7 +73,7 @@ font-weight:bold;
 }
 
 .mainNav li a span{
-width:140px;
+width:250px;
 display:block;
 margin-left:10px;
 font-weight:normal;
@@ -108,7 +108,7 @@ display:block;
 
 
 .wizardpanel {
-	background-color: #C8C8C8; 
+	background-color: #EBEBEB;
 	margin:5px;
 	display:none;
 	border:solid 1px #AAAAAA;
@@ -160,7 +160,7 @@ display:block;
 	margin-bottom: 30px;
 }
 .wizardcontent #action {
-	background-color: #EEEEEE;
+	background-color: #EBEBEB;
 	font-size:18px;
 	width: 400px;
 	padding: 5px;

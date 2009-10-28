@@ -36,8 +36,11 @@ function i18n() {
 		}
 	}
 	global $messages;
+        
 	//if the language file does not exist, default to english
-	if (include_once 'include/'.$LANG.'.php'){
+        // The @ is used to suppress warnings if a localization file does not
+        // exist for the language
+	if (@include_once 'include/'.$LANG.'.php'){
 		$_SESSION['LANG']=$LANG;
 	} else {
 		$LANG='en';

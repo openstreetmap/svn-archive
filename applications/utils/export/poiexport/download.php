@@ -43,19 +43,22 @@ $result = pg_query($query) or die('Query failed: ' . pg_last_error());
 
 switch($output) {
     case "csv":
-        asGarmin($result, $filename . ".csv");
+        asGarmin($result, GenerateSafeFileName($filename . ".csv"));
         break;
     case "ov2":
-        asOv2($result, $filename . ".ov2");
+        asOv2($result, GenerateSafeFileName($filename . ".ov2"));
         break;
     case "gpx":
-        asGpx($result, $filename . ".gpx");
+        asGpx($result, GenerateSafeFileName($filename . ".gpx"));
         break;
     case "kml":
-        asKml($result, $filename . ".kml");
+        asKml($result, GenerateSafeFileName($filename . ".kml"));
         break;
     case "osm":
-        asOSM($result, $filename . ".osm");
+        asOSM($result, GenerateSafeFileName(filename . ".osm"));
+        break;
+    case "wpt":
+        asOziExplorer($result, GenerateSafeFileName($filename . ".wpt"));
         break;
     default:
         die("No valid output specified");
@@ -63,6 +66,7 @@ switch($output) {
 
 pg_free_result($result);
 pg_close($dbconn);
+
 
 /**
  * Create a Garmin specific csv file
@@ -81,8 +85,7 @@ function asGarmin($data, $filename) {
     header("Cache-Control: public");
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
-    header("Content-Type: text/plain"); // Content-Type: text/html
-    //header("Content-Transfer-Encoding: binary");
+	header("Content-Type: application/force-download");
 
     while ($line = pg_fetch_array($data, null, PGSQL_ASSOC)) {
         echo $line["lon"] . ", " .
@@ -108,7 +111,7 @@ function asOv2($data, $filename) {
 
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
-    header("Content-Type: application/octet-stream"); // Content-Type: text/html
+    header("Content-Type: application/octet-stream");
     header("Content-Transfer-Encoding: binary");
 
     while ($line = pg_fetch_array($data, null, PGSQL_ASSOC)) {
@@ -137,8 +140,7 @@ function asGpx($data, $filename) {
 
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
-    header("Content-Type: application/force-download"); // Content-Type: text/html
-    //header("Content-Transfer-Encoding: binary");
+    header("Content-Type: application/force-download");
 
     echo "<?xml version='1.0' encoding='UTF-8'?>\n" .
         "<gpx version=\"1.1\" creator=\"OSM-NL POI export\" xmlns=\"http://www.topografix.com/GPX/1/1\"\n" .
@@ -173,7 +175,7 @@ function asKml($data, $filename) {
 
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
-    header("Content-Type: application/vnd.google-earth.kml+xml"); // Content-Type: text/html
+    header("Content-Type: application/vnd.google-earth.kml+xml");
 
     echo "<?xml version='1.0' encoding='UTF-8'?>\n<kml xmlns='http://earth.google.com/kml/2.2'>\n";
     echo "<Document>\n";
@@ -204,7 +206,7 @@ function asOSM($data, $filename) {
 
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
-    header("Content-Type: text/xml"); // Content-Type: text/html
+    header("Content-Type: application/force-download");
 
     echo '<?xml version="1.0" encoding="UTF-8"?>';
     echo "\n";
@@ -224,5 +226,53 @@ function asOSM($data, $filename) {
         echo "\n";
     }
     echo "</osm>";
+}
+
+/**
+ * Create an OziExplorer specific wpt file
+ *
+ * Reference: oziexplorer help
+ * 
+ * @param postgresl resultset $data
+ * @param string $filename
+ */
+function asOziExplorer($data, $filename) {
+// Set headers
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: public");
+
+    header("Content-Description: File Transfer");
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Content-Type: application/force-download");
+
+	$counter = 1;
+	echo "OziExplorer Waypoint File Version 1.1\n";
+	echo "WGS 84\n";
+	echo "Reserved 2\n";
+	echo "Reserved 3\n";
+    while ($line = pg_fetch_array($data, null, PGSQL_ASSOC)) {
+		$name = str_replace(",", "_", $line["name"]); // replace any comma's with _
+        echo $counter++ . ", " . 
+			$name . ", " .
+			$line["lat"] . ", " .
+            $line["lon"] . ", " .
+			",0,1,3,0,65535,,0,0,0,-777\n";
+    }
+}
+
+function GenerateSafeFileName($filename) {
+	$filename = strtolower($filename);
+	$filename = str_replace("#","_",$filename);
+	$filename = str_replace(" ","_",$filename);
+	$filename = str_replace("'","",$filename);
+	$filename = str_replace('"',"",$filename);
+	$filename = str_replace("__","_",$filename);
+	$filename = str_replace("&","and",$filename);
+	$filename = str_replace("/","_",$filename);
+	$filename = str_replace("\\","_",$filename);
+	$filename = str_replace("?","",$filename);
+	return $filename;
 }
 ?>

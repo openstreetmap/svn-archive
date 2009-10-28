@@ -343,8 +343,8 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
   // Either too far beyond 'to' or too far beyond 'from'
   do {
     if (i++ > 10) {
-      fprintf (stderr, "Double hash bailout : Table full. %9d %d\n",
-        routeHeapSize, (intptr_t) nd);
+      fprintf (stderr, "Double hash bailout : Table full. %9d %p\n",
+        routeHeapSize, nd);
       return NULL;
     }
     n = base + ((/*(hash >> 16) ^ */hash) & RT_BLK_SIZE);
@@ -361,7 +361,7 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
             
     if (n->nd == NULL) { /* First visit of this node */
       if (cost < 0) return NULL;
-      if (routeHeapSize >= RT_BLK_SIZE) {
+      if ((unsigned)routeHeapSize >= RT_BLK_SIZE) {
         printf ("Route Heap too big\n");
         return NULL;
       }
@@ -563,7 +563,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     if (rno) AddNd (&from, 0, toEndNd[1][0], rno);
   }
   int rhd = FALSE;
-  for (int i = 0; i < sizeof (rhdBbox) / sizeof (rhdBbox[0]); i++) {
+  for (size_t i = 0; i < sizeof (rhdBbox) / sizeof (rhdBbox[0]); i++) {
     rhd = rhd || (rhdBbox[i][0] < tlon && rhdBbox[i][1] < tlat &&
                   tlon < rhdBbox[i][2] && tlat < rhdBbox[i][3]);
   }
@@ -1042,7 +1042,7 @@ struct k2vType {
 // NOTE: Gosmore currently requires that you return the same strings during
 // both passes of the rebuild, i.e. the strings cannot depend on w.c{lat,lon}
 
-deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s)
+deque<string> Osm2Gosmore (k2vType &k2v, styleStruct &s)
 {
   deque<string> result;
   map<const char *, const char *, ltstr>::iterator i = k2v.m.begin ();
@@ -1439,7 +1439,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    w.dlat = wayFseek->w->dlat;
 	    w.dlon = wayFseek->w->dlon;
           }
-	  deque<string> tags = Osm2Gosmore (k2v, w, srec[styleCnt]);
+	  deque<string> tags = Osm2Gosmore (k2v, srec[styleCnt]);
 	  while (memcmp (&srec[styleCnt], &srec[wStyle], sizeof (srec[0]))
 	         != 0) wStyle++;
           w.bits += wStyle;

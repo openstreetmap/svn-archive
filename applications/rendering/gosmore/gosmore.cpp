@@ -947,7 +947,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   }
   #endif
   if (ButtonSize <= 0) ButtonSize = 4;
-  int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);
+  //int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);
   if (objectAddRow >= 0) {
     int perRow = (w - ButtonSize * 20) / ADD_WIDTH;
     if (event->x < w - ButtonSize * 20) {
@@ -1383,7 +1383,7 @@ gint DrawExpose (void)
 //  clip.width = draw->allocation.width - ZOOM_PAD_SIZE;
 //  gdk_gc_set_clip_rectangle (mygc, &clip);
   
-  GdkFont *f = gtk_style_get_font (draw->style);
+  //GdkFont *f = gtk_style_get_font (draw->style);
   GdkRectangle clip;
   clip.x = 0;
   clip.y = 0;
@@ -1468,7 +1468,7 @@ gint DrawExpose (void)
 
   if (option == mapMode) {
 //    int perpixel = zoom / clip.width;
-    int doAreas = TRUE;
+    //int doAreas = TRUE;
     int *block = (int*) calloc ((clip.width + 31) / 32 * 4, clip.height);
 
     stack<text2Brendered> text2B;
@@ -1544,7 +1544,7 @@ gint DrawExpose (void)
       #define GdkPoint POINT
       #endif
       vector<GdkPoint> pt;
-      int oldx = 0, oldy = 0, x, y, firstx = INT_MIN, firsty;
+      int oldx = 0, oldy = 0, x=0, y=0, firstx = INT_MIN, firsty = INT_MIN;
       //for (; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] != 0;
       for (; nd->other[1] != 0;
            nd += nd->other[1]) {
@@ -2059,7 +2059,7 @@ int IncrementalSearch (void)
 
 void HitGtkButton (GtkWidget * /*w*/, void *data)
 {
-  HitButton ((int)data);
+  HitButton ((intptr_t)data);
   gtk_widget_queue_clear (draw);
 }
 #endif

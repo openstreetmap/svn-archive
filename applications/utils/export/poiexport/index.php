@@ -38,7 +38,7 @@ i18n();
                 <div class="wizardcontent">
                     <img src="images/pushpin.png" alt="" />
                     <div class="explanation"><? msg('Select the type of POI you would like to download. Currently only one type can be selected.') ?></div>
-                    <select name="select" multiple size="10" id="poitype" onchange="UpdateButtons(1)">
+                    <select name="select" multiple size="10" id="poitype" onDblclick="UpdateButtons(1);LoadNextPage(1,2);" onchange="UpdateButtons(1)">
                         <option value="amenity:fuel"><? msg('Fuel'); ?></option>
                         <option value="amenity:atm"><? msg('ATM'); ?></option>
                         <option value="amenity:speed_camera"><? msg('Speed camera'); ?></option>
@@ -87,7 +87,7 @@ i18n();
                 <div class="wizardcontent">
                     <img src="images/device.png" alt="" />
                     <div class="explanation"><? msg('Select the device or file type you want to download the POI in'); ?></div>
-                    <select id="navitype" size="10"  onchange="UpdateButtons(2)">
+                    <select id="navitype" size="10"  onDblclick="UpdateButtons(2);LoadNextPage(2,3);" onchange="UpdateButtons(2)">
                         <option value="ov2"><? msg('TomTom overlay (ov2)'); ?></option>
                         <option value="csv"><? msg('Garmin (csv)'); ?></option>
                         <option value="gpx"><? msg('GPS Exchange format (gpx)'); ?></option>

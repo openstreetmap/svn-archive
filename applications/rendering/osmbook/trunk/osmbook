@@ -60,8 +60,8 @@ $proj->{'overview-rule-file'}  = $opts{'O'}  || $proj->{'overview-rule-file'};
 $proj->{'latex-file'}          = $opts{'l'}  || $proj->{'latex-file'};
 
 my $gridinfo = $proj->{'gridinfo'};
-print STDERR Dumper($proj);
-print STDERR Dumper($gridinfo);
+#print STDERR Dumper($proj);
+#print STDERR Dumper($gridinfo);
 
 die "need at least -mx -Mx -my -My and -n\n"
   if (!$proj->{'minlon'} || !$proj->{'maxlon'} || !$proj->{'minlat'} || !$proj->{'maxlat'} || !$proj->{'gridwidth'});
@@ -87,8 +87,6 @@ while ($proj->{'gridwidth'}*$dydx/$ygridnum > $P) {
     $ygridnum++;
 }
 print "Y grid squares: $ygridnum\n";
-
-
 
 my $segx = $diffx/$proj->{'gridwidth'};
 my $segy = $diffy/$ygridnum;
@@ -118,48 +116,9 @@ if ($proj->{'latex-file'}) {
 
 my $needoverview = 0;
 
-sub get_grid_num {
-    my ($x, $y, $numsubx, $numsuby) = @_;
-
-    $numsubx ||= $proj->{'gridwidth'};
-    $numsuby ||= $ygridnum;
-
-    return "X" if ($y < 1 || $y > $numsuby);
-    return "X" if ($x < 1 || $x > $numsubx);
-
-    return (($numsuby - $y) * $numsubx + $x);
-}
-
-sub get_grid_display_num {
-    my ($x, $y) = @_;
-
-    my $gridnum = get_grid_num($x, $y);
-
-    return $gridnum if ($gridnum eq "X");
-
-    # if a sub-grid, return it as a latex table
-    if ($gridinfo->{'grid'}{$gridnum}{'subgrid'}) {
-	my $numsubs = $gridinfo->{'grid'}{$gridnum}{'subgrid'};
-	my $out = "\\begin{tiny}\n";
-	$out   .= "\\begin{tabular}{" . "c|" x $numsubs . "}\n";
-	$out =~ s/\|}\n$/}\n/;
-
-	foreach my $yn (1 .. $numsubs) {
-	    foreach my $xn (1 .. $numsubs) {
-		$out .= $gridnum . "-" . ($numsubs*($yn-1) + $xn) . " & ";
-	    }
-	    $out =~ s/\& $/\\\\\n\\hline\n/;
-	}
-	$out =~ s/\\hline\n$//m;
-	$out .= "\\end{tabular}\n";
-	$out .= "\\end{tiny}\n";
-	return $out;
-    }
-
-    # return the original singual grid square
-    return $gridnum;
-}
-
+######################################################################
+# Build each grid square
+#
 foreach my $y (reverse(1..$ygridnum)) {
     foreach my $x (1..$proj->{'gridwidth'}) {
 
@@ -202,7 +161,10 @@ foreach my $y (reverse(1..$ygridnum)) {
     }
 }
 
-#System("osmmerge all.osm ",join(" ",@osmfiles));
+######################################################################
+# Now build the overall combined overview map
+#
+
 # combine all the exsting OSM files into a single combined OSM file
 if ($needoverview || ! -f $combinedosm) {
 
@@ -240,6 +202,7 @@ if (! -f $overviewpng  ||
     make_overviewpng($combinedpng, $overviewpng, $proj->{'gridwidth'}, $ygridnum);
 }
 
+# export to postscript
 if ($opts{'ps'}) {
     if (! -f $overvieweps  ||
 	Stat($overviewpng, $overvieweps)) {
@@ -248,10 +211,58 @@ if ($opts{'ps'}) {
     }
 }
 
+######################################################################
+# subroutines
+#
 
-sub System {
-    print join(" ",@_),"\n";
-    system(@_);
+sub get_grid_num {
+    my ($x, $y, $numsubx, $numsuby) = @_;
+
+    $numsubx ||= $proj->{'gridwidth'};
+    $numsuby ||= $ygridnum;
+
+    return "X" if ($y < 1 || $y > $numsuby);
+    return "X" if ($x < 1 || $x > $numsubx);
+
+    return (($numsuby - $y) * $numsubx + $x);
+}
+
+sub get_grid_display_num {
+    my ($x, $y, $format) = @_;
+    $format ||= 'latex';
+
+    my $gridnum = get_grid_num($x, $y);
+
+    return $gridnum if ($gridnum eq "X");
+
+    # if a sub-grid, return it as a latex table
+    if ($gridinfo->{'grid'}{$gridnum}{'subgrid'}) {
+	my $numsubs = $gridinfo->{'grid'}{$gridnum}{'subgrid'};
+	if ($format eq 'latex') {
+	    # latex style output
+	    my $out = "\\begin{tiny}\n";
+	    $out   .= "\\begin{tabular}{" . "c|" x $numsubs . "}\n";
+	    $out =~ s/\|}\n$/}\n/;
+
+	    foreach my $yn (1 .. $numsubs) {
+		foreach my $xn (1 .. $numsubs) {
+		    $out .= $gridnum . "-" . ($numsubs*($yn-1) + $xn) . " & ";
+		}
+		$out =~ s/\& $/\\\\\n\\hline\n/;
+	    }
+	    $out =~ s/\\hline\n$//m;
+	    $out .= "\\end{tabular}\n";
+	    $out .= "\\end{tiny}\n";
+	    return $out;
+	} else {
+	    # svn style output
+	    my $out = "XXX";
+	    return $out;
+	}
+    }
+
+    # return the original singual grid square
+    return $gridnum;
 }
 
 sub do_grid {
@@ -626,6 +637,9 @@ sub make_overviewpng {
     close(OPNG);
 }
 
+########################################
+# utility routines
+#
 
 # returns true if the timestamp from file ARG1 is newer than file ARG2
 sub Stat {
@@ -635,5 +649,10 @@ sub Stat {
 #    print STDERR "newer: $file1\n" if ($attr1[9] > $attr2[9]);
 #    print STDERR "newer: $file2\n" if ($attr1[9] <= $attr2[9]);
     return $attr1[9] > $attr2[9];
+}
+
+sub System {
+    print join(" ",@_),"\n";
+    system(@_);
 }
 

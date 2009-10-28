@@ -227,6 +227,11 @@ sub get_grid_num {
     return (($numsuby - $y) * $numsubx + $x);
 }
 
+#
+# converts a x,y grid square into a printable form of a grid square
+#
+# (in particular, it knows how to print sub-grid formatted squares)
+#
 sub get_grid_display_num {
     my ($x, $y, $format) = @_;
     $format ||= 'latex';

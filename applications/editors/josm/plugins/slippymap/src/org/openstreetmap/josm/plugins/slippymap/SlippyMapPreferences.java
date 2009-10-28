@@ -18,6 +18,7 @@ public class SlippyMapPreferences
     public static final String PREFERENCE_AUTOLOADTILES = PREFERENCE_PREFIX + ".autoload_tiles";
     public static final String PREFERENCE_MIN_ZOOM_LVL = PREFERENCE_PREFIX + ".min_zoom_lvl";
     public static final String PREFERENCE_MAX_ZOOM_LVL = PREFERENCE_PREFIX + ".max_zoom_lvl";
+    public static final String PREFERENCE_LAST_ZOOM = PREFERENCE_PREFIX + ".last_zoom_lvl";
     public static final String PREFERENCE_FADE_BACKGROUND = PREFERENCE_PREFIX + ".fade_background";
     public static final String PREFERENCE_DRAW_DEBUG = PREFERENCE_PREFIX + ".draw_debug";
     
@@ -59,6 +60,19 @@ public class SlippyMapPreferences
     	Main.pref.put(SlippyMapPreferences.PREFERENCE_DRAW_DEBUG, drawDebug);
     }
     
+    public static void setLastZoom(int zoom) {
+    	Main.pref.put(SlippyMapPreferences.PREFERENCE_LAST_ZOOM, ""+zoom);
+    }
+    public static int getLastZoom() {
+    	int ret = -1;
+        String pref = Main.pref.get(SlippyMapPreferences.PREFERENCE_LAST_ZOOM);
+        try {
+            ret = Integer.parseInt(pref);
+        } catch (NumberFormatException e) {
+        }
+        return ret;
+    }
+
     public static boolean getDrawDebug()
     {
         String drawDebug = Main.pref.get(PREFERENCE_DRAW_DEBUG);

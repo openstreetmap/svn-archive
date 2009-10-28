@@ -253,7 +253,7 @@ function asOziExplorer($data, $filename) {
 	echo "Reserved 2\n";
 	echo "Reserved 3\n";
     while ($line = pg_fetch_array($data, null, PGSQL_ASSOC)) {
-		$name = str_replace(",", "_", $line["name"]); // replace any comma's with _
+		$name = str_replace(",", chr(209), $line["name"]); // substitude comma's, see docs
         echo $counter++ . ", " . 
 			$name . ", " .
 			$line["lat"] . ", " .

@@ -1,4 +1,5 @@
 <?php
+$version = "1.0";
 
 $LANG = $_SESSION['LANG'];
 

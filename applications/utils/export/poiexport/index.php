@@ -23,7 +23,7 @@ i18n();
         <meta http-equiv="Content-Language" content="<? echo $_SESSION['LANG']; ?>" />
         <link rel="shortcut icon" href="favicon.ico" />
         <link type="text/css" href="style.css" rel="stylesheet" />
-        <script type="text/javascript" src="lib/jquery-latest.pack.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
         <script type="text/javascript" src="ui.js"></script>
     </head>
 

@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.geom.Area;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -108,7 +109,7 @@ public class DuplicateNode extends Test{
     public Command fixError(TestError testError)
     {
         Collection<OsmPrimitive> sel = new LinkedList<OsmPrimitive>(testError.getPrimitives());
-        LinkedList<Node> nodes = new LinkedList<Node>(OsmPrimitive.getFilteredList(sel, Node.class));
+        LinkedHashSet<Node> nodes = new LinkedHashSet<Node>(OsmPrimitive.getFilteredList(sel, Node.class));
         Node target = MergeNodesAction.selectTargetNode(nodes);
         if(checkAndConfirmOutlyingDeletes(nodes))
             return MergeNodesAction.mergeNodes(Main.main.getEditLayer(),getBackreferenceDataSet(), nodes, target);
@@ -126,7 +127,7 @@ public class DuplicateNode extends Test{
      * Check whether user is about to delete data outside of the download area.
      * Request confirmation if he is.
      */
-    private static boolean checkAndConfirmOutlyingDeletes(LinkedList<Node> del) {
+    private static boolean checkAndConfirmOutlyingDeletes(LinkedHashSet<Node> del) {
         Area a = Main.main.getCurrentDataSet().getDataSourceArea();
         if (a != null) {
             for (OsmPrimitive osm : del) {

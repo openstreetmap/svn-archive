@@ -2,6 +2,14 @@
 
 $LANG = $_SESSION['LANG'];
 
+
+/**
+ *
+ * Translate a text into the active language
+ * @global string $LANG
+ * @global string array $messages (see en.php for example)
+ * @param string $s (message to look up and translate
+ */
 function msg($s) {
 	global $LANG;
 	global $messages;
@@ -13,7 +21,9 @@ function msg($s) {
 	}
 }
 
-//include the required localization file
+/**
+ * include the required localization file
+ */
 function i18n() {
         global $LANG;
 	$LANG = $_SESSION['LANG'];

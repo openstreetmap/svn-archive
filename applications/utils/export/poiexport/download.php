@@ -67,6 +67,8 @@ pg_close($dbconn);
 /**
  * Create a Garmin specific csv file
  *
+ * Reference: http://www.poi-factory.com/garmin-csv-file-format (no official file description unfortunatelly)
+ * 
  * @param postgresl resultset $data
  * @param string $filename
  */
@@ -92,6 +94,8 @@ function asGarmin($data, $filename) {
 /**
  * Create a tomtom specific ov2 file
  *
+ * Reference: http://www.tomtom.com/lib/doc/ttnavsdk3_manual.pdf
+ * 
  * @param postgresql resultset $data
  * @param string $filename
  */
@@ -120,6 +124,7 @@ function asOv2($data, $filename) {
 /**
  * Create a generic GPX file
  *
+ * Reference: http://www.topografix.com/gpx/1/1/
  * @param postgresql resultset $data
  * @param string $filename
  */
@@ -151,9 +156,10 @@ function asGpx($data, $filename) {
 }
 
 /**
- * Create a Google *MAPS* file (2D)
+ * Create a Google Earth/Maps .kml file (2D)
  *
  * TODO: Add 3D option for Google Earth
+ * Reference: http://code.google.com/intl/nl/apis/kml/documentation/kmlreference.html
  *
  * @param postgresql resultset $data
  * @param string $filename
@@ -181,9 +187,10 @@ function asKml($data, $filename) {
 }
 
 /**
- * Create a Google *MAPS* file (2D)
+ * Create a .osm file
  *
- * TODO: Add 3D option for Google Earth
+ * TODO: Needs fixing
+ * Reference: http://wiki.openstreetmap.org/wiki/.osm
  *
  * @param postgresql resultset $data
  * @param string $filename

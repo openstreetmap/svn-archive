@@ -53,6 +53,7 @@ $messages = array (
         'Garmin (csv)' => 'Garmin (csv)',
         'GPS Exchange format (gpx)' => 'GPS Exchange format (gpx)',
         'Google Earth (kml)' => 'Google Earth (kml)',
+        'OpenStreetMap (osm)' => 'OpenStreetMap (osm)',
         'The file is ready for download.' => 'The file is ready for download.',
         'Poi type' => 'Poi type',
         'Device type' => 'Device type',

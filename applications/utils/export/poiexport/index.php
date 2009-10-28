@@ -92,6 +92,7 @@ i18n();
                         <option value="csv"><? msg('Garmin (csv)'); ?></option>
                         <option value="gpx"><? msg('GPS Exchange format (gpx)'); ?></option>
                         <option value="kml"><? msg('Google Earth (kml)'); ?></option>
+                        <!--<option value="osm"><? msg('OpenStreetMap (osm)'); ?></option>-->
                     </select>
                 </div>
                 <div class="buttons">

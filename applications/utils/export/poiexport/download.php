@@ -21,7 +21,7 @@ $filename = pg_escape_string(utf8_encode($_GET["filename"]));
 
 // Connect to the postgresql database server
 $dbconn = pg_connect("host=" . $config['Database']['servername'] . " port=" . $config['Database']['port'] . " dbname=" . $config['Database']['dbname'] . " user=".$config['Database']['username'] . " password=" . $config['Database']['password']) or die('Could not connect: ' . pg_last_error());
-
+pg_set_client_encoding("UTF-8");
 // Initialize query
 $query = "SELECT name, lat, lon
 FROM (
@@ -54,6 +54,9 @@ switch($output) {
     case "kml":
         asKml($result, $filename . ".kml");
         break;
+    case "osm":
+        asOSM($result, $filename . ".osm");
+        break;
     default:
         die("No valid output specified");
 }
@@ -82,7 +85,7 @@ function asGarmin($data, $filename) {
     while ($line = pg_fetch_array($data, null, PGSQL_ASSOC)) {
         echo $line["lon"] . ", " .
             $line["lat"] . ", \"" .
-            utf8_decode($line["name"]) . "\"\n";
+            $line["name"] . "\"\n";
     }
 }
 
@@ -139,7 +142,7 @@ function asGpx($data, $filename) {
         "<metadata></metadata>\n";
 
     while ($line = pg_fetch_array($data, null, PGSQL_ASSOC)) {
-        $name = normalize($line["name"]);
+        $name = htmlspecialchars($line["name"]);
         echo "<wpt lat=\"" . $line["lat"] . "\" lon=\"" . $line["lon"] . "\">\n" .
             "  <name>" . $name . "</name>\n" .
             "</wpt>\n";
@@ -167,34 +170,52 @@ function asKml($data, $filename) {
     header("Content-Type: application/vnd.google-earth.kml+xml"); // Content-Type: text/html
 
     echo "<?xml version='1.0' encoding='UTF-8'?>\n<kml xmlns='http://earth.google.com/kml/2.2'>\n";
-
+    echo "<Document>\n";
     while ($line = pg_fetch_array($data, null, PGSQL_ASSOC)) {
-        $name = normalize($line["name"]);
+       $name = htmlspecialchars($line["name"]);
         echo "<Placemark>\n\t<name>" . $name . "</name>\n" .
             "\t<Point>\n\t\t<coordinates>" . $line["lon"] . ", " . $line["lat"] . "</coordinates>\n\t</Point>\n</Placemark>\n";
     }
+    echo "</Document>\n";
     echo "</kml>";
 }
 
-
 /**
- * UTF sanitizer function
- * @param decodable string $string
- * @return utf8-decoded string
+ * Create a Google *MAPS* file (2D)
+ *
+ * TODO: Add 3D option for Google Earth
+ *
+ * @param postgresql resultset $data
+ * @param string $filename
  */
-function normalize ($string) {
-    $table = array(
-        'Å '=>'S', 'Å¡'=>'s', 'Ä'=>'Dj', 'Ä‘'=>'dj', 'Å½'=>'Z', 'Å¾'=>'z', 'ÄŒ'=>'C', 'Ä'=>'c', 'Ä†'=>'C', 'Ä‡'=>'c',
-        'Ã€'=>'A', 'Ã'=>'A', 'Ã‚'=>'A', 'Ãƒ'=>'A', 'Ã„'=>'A', 'Ã…'=>'A', 'Ã†'=>'A', 'Ã‡'=>'C', 'Ãˆ'=>'E', 'Ã‰'=>'E',
-        'ÃŠ'=>'E', 'Ã‹'=>'E', 'ÃŒ'=>'I', 'Ã'=>'I', 'ÃŽ'=>'I', 'Ã'=>'I', 'Ã‘'=>'N', 'Ã’'=>'O', 'Ã“'=>'O', 'Ã”'=>'O',
-        'Ã•'=>'O', 'Ã–'=>'O', 'Ã˜'=>'O', 'Ã™'=>'U', 'Ãš'=>'U', 'Ã›'=>'U', 'Ãœ'=>'U', 'Ã'=>'Y', 'Ãž'=>'B', 'ÃŸ'=>'Ss',
-        'Ã '=>'a', 'Ã¡'=>'a', 'Ã¢'=>'a', 'Ã£'=>'a', 'Ã¤'=>'a', 'Ã¥'=>'a', 'Ã¦'=>'a', 'Ã§'=>'c', 'Ã¨'=>'e', 'Ã©'=>'e',
-        'Ãª'=>'e', 'Ã«'=>'e', 'Ã¬'=>'i', 'Ã­'=>'i', 'Ã®'=>'i', 'Ã¯'=>'i', 'Ã°'=>'o', 'Ã±'=>'n', 'Ã²'=>'o', 'Ã³'=>'o',
-        'Ã´'=>'o', 'Ãµ'=>'o', 'Ã¶'=>'o', 'Ã¸'=>'o', 'Ã¹'=>'u', 'Ãº'=>'u', 'Ã»'=>'u', 'Ã½'=>'y', 'Ã½'=>'y', 'Ã¾'=>'b',
-        'Ã¿'=>'y', 'Å”'=>'R', 'Å•'=>'r', 'Ã¼'=>'u', 'Ãœ'=>'U', '&'=>'and', 'Â´'=>'\'', '<' => '' , '>' => ''
-    );
+function asOSM($data, $filename) {
+// Set headers
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: public");
 
-    return utf8_decode(strtr($string, $table));
+    header("Content-Description: File Transfer");
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Content-Type: text/xml"); // Content-Type: text/html
+
+    echo '<?xml version="1.0" encoding="UTF-8"?>';
+    echo "\n";
+    echo '<osm version="0.6" generator="POI export">';
+    echo "\n";
+    echo '<bounds minlat="-180" minlon="-90" maxlat="180" maxlon="90"/>';
+    echo "\n";
+
+    while ($line = pg_fetch_array($data, null, PGSQL_ASSOC)) {
+        //$name = htmlentities($line["name"], ENT_QUOTES);
+        $name = htmlspecialchars($line["name"]);
+        echo '<node id="-1" lat="' . $line["lat"] . '" lon="' .  $line["lon"] . '" version="1" changeset="-1" user="poiexport" uid="-1" visible="true" timestamp="2008-12-17T01:18:42Z">';
+        echo "\n";
+        echo '<tag k="name" v="' . $name . '"/>';
+        echo "\n";
+        echo '</node>';
+        echo "\n";
+    }
+    echo "</osm>";
 }
-
 ?>

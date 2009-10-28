@@ -1,7 +1,11 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/*
+ * the messages array is a from => to replacement array used by localization
+ * copy this file and create a file named:
+ * <your language 2lettercode>.php
+ * And translate *ONLY* the strings after the => sign
+ *
+ * TODO: Finish Dutch translation
  */
 $messages = array (
 		'OpenStreetMap POI export' => 'OpenStreetMap POI export',

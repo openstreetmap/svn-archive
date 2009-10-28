@@ -9,6 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import java.util.Collection;
+
+import org.openstreetmap.gui.jmapviewer.*;
+import org.openstreetmap.gui.jmapviewer.interfaces.*;
 
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -28,18 +33,21 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
     
     private JCheckBox autozoomActive = new JCheckBox(tr("autozoom"));
     private JCheckBox autoloadTiles = new JCheckBox(tr("autoload tiles"));
-    private JSpinner maxZoomLvl = new JSpinner();
+    private JSpinner maxZoomLvl;
+    private JSpinner minZoomLvl = new JSpinner();
     private JSlider fadeBackground = new JSlider(0, 100);
     
     public void addGui(PreferenceDialog gui)
     {
+        minZoomLvl = new JSpinner(new SpinnerNumberModel(SlippyMapPreferences.DEFAULT_MIN_ZOOM, SlippyMapPreferences.MIN_ZOOM, SlippyMapPreferences.MAX_ZOOM, 1));
+        maxZoomLvl = new JSpinner(new SpinnerNumberModel(SlippyMapPreferences.DEFAULT_MAX_ZOOM, SlippyMapPreferences.MIN_ZOOM, SlippyMapPreferences.MAX_ZOOM, 1));
         //String description = tr("A plugin that adds to JOSM new layer. This layer could render external tiles.");
         JPanel slippymapTab = gui.createPreferenceTab("slippymap.png", tr("SlippyMap"), tr("Settings for the SlippyMap plugin."));
-        String[] allMapUrls = SlippyMapPreferences.getAllMapUrls();
-        tileSourceCombo = new JComboBox(allMapUrls);
-        tileSourceCombo.setEditable(true);
-        String source = SlippyMapPreferences.getMapUrl();
-        tileSourceCombo.setSelectedItem(source);
+        Collection<TileSource> allSources = SlippyMapPreferences.getAllMapSources();
+        //Collection<String> allSources = SlippyMapPreferences.getAllMapNames();
+        tileSourceCombo = new JComboBox(allSources.toArray());
+        //tileSourceCombo.setEditable(true);
+        tileSourceCombo.setSelectedItem(SlippyMapPreferences.getMapSource());
         slippymapTab.add(new JLabel(tr("Tile Sources")), GBC.std());
         slippymapTab.add(GBC.glue(5, 0), GBC.std());
         slippymapTab.add(tileSourceCombo, GBC.eol().fill(GBC.HORIZONTAL));
@@ -52,10 +60,14 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
         slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         slippymapTab.add(autoloadTiles, GBC.eol().fill(GBC.HORIZONTAL));
         
+        slippymapTab.add(new JLabel(tr("Min zoom lvl: ")), GBC.std());
+        slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        slippymapTab.add(this.minZoomLvl, GBC.eol().fill(GBC.HORIZONTAL));
+        
         slippymapTab.add(new JLabel(tr("Max zoom lvl: ")), GBC.std());
         slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         slippymapTab.add(this.maxZoomLvl, GBC.eol().fill(GBC.HORIZONTAL));
-        
+
         slippymapTab.add(new JLabel(tr("Fade background: ")), GBC.std());
         slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         slippymapTab.add(this.fadeBackground, GBC.eol().fill(GBC.HORIZONTAL));
@@ -74,6 +86,7 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
      * 	<li>autozoom - {@link #autozoomActive} - {@link SlippyMapPreferences#getAutozoom()}</li>
      * 	<li>autoload - {@link #autoloadTiles} - {@link SlippyMapPreferences#getAutoloadTiles()}</li>
      * 	<li>maxZoomLvl - {@link #maxZoomLvl} - {@link SlippyMapPreferences#getMaxZoomLvl()}</li>
+     * 	<li>minZoomLvl - {@link #minZoomLvl} - {@link SlippyMapPreferences#getMaxZoomLvl()}</li>
      * </ul>
      * </p>
      */
@@ -81,6 +94,7 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
         this.autozoomActive.setSelected(SlippyMapPreferences.getAutozoom());
         this.autoloadTiles.setSelected(SlippyMapPreferences.getAutoloadTiles());
         this.maxZoomLvl.setValue(SlippyMapPreferences.getMaxZoomLvl());
+        this.minZoomLvl.setValue(SlippyMapPreferences.getMinZoomLvl());
         this.fadeBackground.setValue(Math.round(SlippyMapPreferences.getFadeBackground()*100f));
     }
     
@@ -94,10 +108,11 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
      */
     public boolean ok()
     {
-        SlippyMapPreferences.setMapUrl(this.tileSourceCombo.getSelectedItem().toString());
+        SlippyMapPreferences.setMapSource((TileSource)this.tileSourceCombo.getSelectedItem());
         SlippyMapPreferences.setAutozoom(this.autozoomActive.isSelected());
         SlippyMapPreferences.setAutoloadTiles(this.autoloadTiles.isSelected());
         SlippyMapPreferences.setMaxZoomLvl((Integer)this.maxZoomLvl.getValue());
+        SlippyMapPreferences.setMinZoomLvl((Integer)this.minZoomLvl.getValue());
         SlippyMapPreferences.setFadeBackground(this.fadeBackground.getValue()/100f);
         //restart isn't required
         return false;

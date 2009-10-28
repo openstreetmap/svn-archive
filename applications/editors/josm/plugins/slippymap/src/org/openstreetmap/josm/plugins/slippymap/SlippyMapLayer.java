@@ -62,7 +62,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
     }
 
     protected MemoryTileCache tileCache;
-    protected TileSource tileSource = new OsmTileSource.Mapnik();
+    protected TileSource tileSource;
     protected TileLoader tileLoader;
     JobDispatcher jobDispatcher = JobDispatcher.getInstance();
 
@@ -80,9 +80,10 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
     {
         return tileCache;
     }
-    void clearTileStorage()
+    void clearTileCache()
     {
-        out("clearing tile storage");
+        if (debug)
+            out("clearing tile storage");
         tileCache = new MemoryTileCache();
         tileCache.setCacheSize(2000);
     }
@@ -108,6 +109,27 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         Main.map.repaint();
     }
 
+    void newTileStorage()
+    {
+        int origZoom = currentZoomLevel;
+        tileSource = SlippyMapPreferences.getMapSource();
+        // The minimum should also take care of integer parsing
+        // errors which would leave us with a zoom of -1 otherwise
+        if (tileSource.getMaxZoom() < currentZoomLevel)
+            currentZoomLevel = tileSource.getMaxZoom();
+        if (tileSource.getMinZoom() > currentZoomLevel)
+            currentZoomLevel = tileSource.getMinZoom();
+        if (currentZoomLevel != origZoom) {
+            out("changed currentZoomLevel loading new tile store from " + origZoom + " to " + currentZoomLevel);
+            out("tileSource.getMinZoom(): " + tileSource.getMinZoom());
+            out("tileSource.getMaxZoom(): " + tileSource.getMaxZoom());
+            SlippyMapPreferences.setLastZoom(currentZoomLevel);
+        }
+        clearTileCache();
+        //tileLoader = new OsmTileLoader(this);
+        tileLoader = new OsmFileCacheTileLoader(this);
+    }
+
     @SuppressWarnings("serial")
     public SlippyMapLayer() {
         super(tr("Slippy Map"));
@@ -116,11 +138,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         this.setVisible(true);
 
         currentZoomLevel = SlippyMapPreferences.getLastZoom();
-        if (currentZoomLevel <= 0)
-            currentZoomLevel = SlippyMapPreferences.getMinZoomLvl();
-        clearTileStorage();
-        //tileLoader = new OsmTileLoader(this);
-        tileLoader = new OsmFileCacheTileLoader(this);
+        newTileStorage();
 
         tileOptionMenu = new JPopupMenu();
 
@@ -167,7 +185,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         tileOptionMenu.add(new JMenuItem(new AbstractAction(
                 tr("Load All Tiles")) {
             public void actionPerformed(ActionEvent ae) {
-                loadAllTiles();
+                loadAllTiles(true);
                 redraw();
             }
         }));
@@ -190,10 +208,22 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 }));
 
         tileOptionMenu.add(new JMenuItem(
+                new AbstractAction(tr("Snap to tile size")) {
+                    public void actionPerformed(ActionEvent ae) {
+                        double new_factor = Math.sqrt(lastImageScale);
+                        if (debug)
+                            out("tile snap: scale was: " + lastImageScale + ", new factor: " + new_factor);
+                        Main.map.mapView.zoomToFactor(new_factor);
+                        redraw();
+                    }
+                }));
+        // end of adding menu commands
+
+        tileOptionMenu.add(new JMenuItem(
                 new AbstractAction(tr("Flush Tile Cache")) {
                     public void actionPerformed(ActionEvent ae) {
                         System.out.print("flushing all tiles...");
-                        clearTileStorage();
+                        clearTileCache();
                         System.out.println("done");
                     }
                 }));
@@ -237,6 +267,23 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         tileRequestsOutstanding.clear();
         SlippyMapPreferences.setLastZoom(currentZoomLevel);
     }
+
+    int getMaxZoomLvl()
+    {
+        int ret = SlippyMapPreferences.getMaxZoomLvl();
+        if (tileSource.getMaxZoom() < ret)
+            ret = tileSource.getMaxZoom();
+        return ret;
+    }
+
+    int getMinZoomLvl()
+    {
+        int ret = SlippyMapPreferences.getMinZoomLvl();
+        if (tileSource.getMinZoom() > ret)
+            ret = tileSource.getMinZoom();
+        return ret;
+    }
+
     /**
      * Zoom in, go closer to map.
      *
@@ -244,9 +291,9 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
      */
     public boolean zoomIncreaseAllowed()
     {
-        boolean zia = currentZoomLevel < SlippyMapPreferences.getMaxZoomLvl();
+        boolean zia = currentZoomLevel < this.getMaxZoomLvl();
         if (debug)
-            out("zoomIncreaseAllowed(): " + zia + " " + currentZoomLevel + " vs. " + SlippyMapPreferences.getMaxZoomLvl() );
+            out("zoomIncreaseAllowed(): " + zia + " " + currentZoomLevel + " vs. " + this.getMaxZoomLvl() );
         return zia;
     }
     public boolean increaseZoomLevel()
@@ -259,7 +306,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
             zoomChanged();
         } else {
             System.err.println("current zoom lvl ("+currentZoomLevel+") couldnt be increased. "+
-                             "MaxZoomLvl ("+SlippyMapPreferences.getMaxZoomLvl()+") reached.");
+                             "MaxZoomLvl ("+this.getMaxZoomLvl()+") reached.");
             return false;
         }
         return true;
@@ -272,10 +319,10 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
      */
     public boolean zoomDecreaseAllowed()
     {
-        return currentZoomLevel > SlippyMapPreferences.getMinZoomLvl();
+        return currentZoomLevel > this.getMinZoomLvl();
     }
     public boolean decreaseZoomLevel() {
-        int minZoom = SlippyMapPreferences.getMinZoomLvl();
+        int minZoom = this.getMinZoomLvl();
         lastImageScale = null;
         if (zoomDecreaseAllowed()) {
             if (debug)
@@ -315,6 +362,8 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
     {
         if (tile == null)
             return false;
+        if (tile.hasError())
+            return false;
         if (tile.isLoaded())
             return false;
         if (tile.isLoading())
@@ -327,7 +376,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         return true;
     }
 
-    void loadAllTiles() {
+    void loadAllTiles(boolean force) {
         MapView mv = Main.map.mapView;
         LatLon topLeft = mv.getLatLon(0, 0);
         LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
@@ -340,7 +389,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
             System.out.println("Not downloading all tiles because there is more than 18 tiles on an axis!");
             return;
         }
-        ts.loadAllTiles();
+        ts.loadAllTiles(force);
     }
 
     /*
@@ -422,6 +471,11 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         LatLon topLeft  = tileLatLon(topLeftTile);
         LatLon botRight = tileLatLon(botRightTile);
 
+        if (!autoZoomEnabled())
+            return 0;
+        if (!SlippyMapPreferences.getAutoloadTiles())
+            return 0;
+
         /*
          * Go looking for tiles in zoom levels *other* than the current
          * one. Even if they might look bad, they look better than a
@@ -436,8 +490,8 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         int painted = 0;;
         for (int zoomOff : otherZooms) {
             int zoom = currentZoomLevel + zoomOff;
-            if ((zoom < SlippyMapPreferences.getMinZoomLvl()) ||
-                (zoom > SlippyMapPreferences.getMaxZoomLvl())) {
+            if ((zoom < this.getMinZoomLvl()) ||
+                (zoom > this.getMaxZoomLvl())) {
                 continue;
             }
             TileSet ts = new TileSet(topLeft, botRight, zoom);
@@ -611,9 +665,12 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
             }
             return ret;
         }
-        void loadAllTiles()
+        void loadAllTiles(boolean force)
         {
             List<Tile> tiles = this.allTiles(true);
+            boolean autoload = SlippyMapPreferences.getAutoloadTiles();
+            if (!autoload && !force)
+               return;
             int nr_queued = 0;
             for (Tile t : tiles) {
                 if (loadTile(t))
@@ -696,7 +753,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         if (ts.tilesSpanned() > 18)
             return;
 
-        ts.loadAllTiles();
+        ts.loadAllTiles(false);
 
         int fontHeight = g.getFontMetrics().getHeight();
 
@@ -735,8 +792,8 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                     if (debug)
                         out("autozoom increase: scale: " + lastImageScale);
                     increaseZoomLevel();
+                    this.paint(oldg, mv);
                 }
-                this.paint(oldg, mv);
             // If each source image pixel is being squished into > 0.32
             // of a drawn pixels, zoom out.
             } else if ((lastImageScale < 0.45) && (lastImageScale > 0) && zoomDecreaseAllowed()) {
@@ -744,8 +801,8 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                     if (debug)
                         out("autozoom decrease: scale: " + lastImageScale);
                     decreaseZoomLevel();
+                    this.paint(oldg, mv);
                 }
-                this.paint(oldg, mv);
             }
         }
         g.setColor(Color.black);
@@ -766,7 +823,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         int z = currentZoomLevel;
         TileSet ts = new TileSet(topLeft, botRight, z);
 
-        ts.loadAllTiles(); // make sure there are tile objects for all tiles
+        ts.loadAllTiles(false); // make sure there are tile objects for all tiles
         Tile clickedTile = null;
         Point p1 = null, p2 = null;
         for (Tile t1 : ts.allTiles()) {
@@ -864,6 +921,9 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
             // TODO move this code to SlippyMapPreferences class.
             if (!key.equals(SlippyMapPreferences.PREFERENCE_FADE_BACKGROUND)) {
                 autoZoomPopup.setSelected(SlippyMapPreferences.getAutozoom());
+            }
+            if (key.equals(SlippyMapPreferences.PREFERENCE_TILE_SOURCE)) {
+                newTileStorage();
             }
             redraw();
         }

@@ -82,11 +82,11 @@ my $ygridnum = ceil($proj->{'gridwidth'}*$diffy/$diffx);
 # page, then keep adding more squares to the Y grid till we fall
 # within it.
 # IE: we're optimizing for the x-axis since we can control that in latex
-print "Y grid guess:   $ygridnum  ($proj->{'gridwidth'}*$diffy/$diffx)\n";
+DEBUG("Y grid guess:   $ygridnum  ($proj->{'gridwidth'}*$diffy/$diffx)\n");
 while ($proj->{'gridwidth'}*$dydx/$ygridnum > $P) {
     $ygridnum++;
 }
-print "Y grid squares: $ygridnum\n";
+DEBUG("Y grid squares: $ygridnum\n");
 
 my $segx = $diffx/$proj->{'gridwidth'};
 my $segy = $diffy/$ygridnum;
@@ -126,9 +126,9 @@ foreach my $y (reverse(1..$ygridnum)) {
 
 	next if ($gridinfo->{'grid'}{$gridsquare}{'skip'});
 
-	print "----------------------------------------------------------------------\n";
-	print "Starting grid $gridsquare\n";
-	print "----------------------------------------------------------------------\n";
+	DEBUG("----------------------------------------------------------------------\n");
+	DEBUG("Starting grid $gridsquare\n");
+	DEBUG("----------------------------------------------------------------------\n");
 
 	# calculate the bounding box (BB)
 	my $minx = $proj->{'minlon'} + ($x-1)*$segx;
@@ -296,7 +296,7 @@ sub do_grid {
 
     # render the page
     if (! -f $xmlfile || Stat($rulefile, $xmlfile)) {
-	print STDERR "creating $xmlfile\n";
+	DEBUG("creating $xmlfile\n");
 
 	# sigh...  xmlstarlet already assumes the subdir for some reason
 	my $starfile = $osmfile;
@@ -386,7 +386,6 @@ sub do_grid {
 	if ($#{$gridinfo->{'grid'}{$label}{'note'}} > -1) {
 	    print L "\\NotesBegin\n";
 	    foreach my $note (@{$gridinfo->{'grid'}{$label}{'note'}}) {
-		print STDERR "yay!: $note $label\n";
 		print L "\\Note{" . $note . "}\n";
 	    }
 	    print L "\\NotesEnd\n";
@@ -405,12 +404,11 @@ sub make_overview {
 
     use SVG;
 
-    print "Creating $out\n";
+    DEBUG("Creating $out\n");
 
     # read in the existing SVG and determine the existing x/y bounds
     open(IIMG, "<$img");
     my $initline = <IIMG>;
-    print "looking at $initline\n";
     ($width) = ($initline =~ /width=\"([\.\d]+)px\"/);
     ($height) = ($initline =~ /height=\"([\.\d]+)(|px)\"/);
 
@@ -505,7 +503,7 @@ sub make_svggrid {
     my @xlabels = (1..100);
     my @ylabels = ('A' .. 'Z');
 
-    print "modifying SVG to add grids\n";
+    DEBUG("modifying SVG to add grids\n");
 
     # extract the width/height and bourdary box of the original image
     # so we know how much to scale it by.
@@ -596,7 +594,7 @@ sub make_svggrid {
 sub make_overviewpng {
     my ($inpng, $outpng, $numx, $numy) = @_;
 
-    print "Creating $outpng\n";
+    DEBUG("Creating $outpng\n");
 
     my $overviewimg = GD::Image->newFromPng($inpng, 1);
     die ("couldn't open/create $combinedpng") if (!$overviewimg);
@@ -664,3 +662,7 @@ sub System {
     system(@_);
 }
 
+sub DEBUG {
+    # XXX: make output optional
+    print join(" ",@_),"\n";
+}

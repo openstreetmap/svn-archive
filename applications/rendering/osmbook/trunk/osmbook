@@ -270,6 +270,9 @@ sub get_grid_display_num {
     return $gridnum;
 }
 
+#
+# actually render a particular grid square
+#
 sub do_grid {
     my ($label, $minx, $miny, $maxx, $maxy, $x, $y, $rulefile) = @_;
 

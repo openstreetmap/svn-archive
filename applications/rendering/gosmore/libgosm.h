@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <limits.h>
 
 #ifdef _WIN32_WCE
 #include <windows.h>
@@ -34,8 +35,14 @@ typedef long long __int64;
 #define FALSE 0
 #endif
 
+// this definitions have been changes to prevent compiler warnings
+// copied verbatim for /usr/include/limits.h
+#ifndef INT_MAX
+#define INT_MAX       2147483647
+#endif
+
 #ifndef INT_MIN
-#define INT_MIN 0x80000000 // -2147483648
+#define INT_MIN       (-INT_MAX - 1)
 #endif
 
 #define Sqr(x) ((x)*(x))

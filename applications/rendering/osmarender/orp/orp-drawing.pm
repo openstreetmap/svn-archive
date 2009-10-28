@@ -69,7 +69,11 @@ sub draw_lines
         if ($scale eq "") {$scale = 1}
 
         my $width = $_->{"tags"}->{"width"};
+        # get rid of the meter unit
         $width =~ s/m$//;
+        # some stupid german people use a komma as decimal separator
+        $width =~ s/,/\./;
+        
         my $w;
         # make sure, that width is a numeric value
         { no warnings; $w = $meter2pixel*$width if 0+$width;}

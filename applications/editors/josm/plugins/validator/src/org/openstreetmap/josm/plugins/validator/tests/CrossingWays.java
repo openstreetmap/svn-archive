@@ -73,14 +73,13 @@ public class CrossingWays extends Test
             return;
 
         String coastline1 = w.get("natural");
-        boolean isCoastline1 = coastline1 != null && (coastline1.equals("water") || coastline1.equals("coastline"));
+        boolean isCoastline1 = "water".equals(coastline1) || "coastline".equals(coastline1);
         String railway1 = w.get("railway");
-        boolean isSubway1 = railway1 != null && railway1.equals("subway");
-        boolean isBuilding = false;
-        if(w.get("building") != null)
-            isBuilding = true;
-        
-        if( w.get("highway") == null && w.get("waterway") == null && (railway1 == null || isSubway1)  && !isCoastline1 && !isBuilding)
+        boolean isSubway1 = "subway".equals(railway1);
+        boolean isTram1 = "tram".equals(railway1);
+        boolean isBuilding = (w.get("building") != null);
+
+        if( w.get("highway") == null && w.get("waterway") == null && (railway1 == null || isSubway1 || isTram1)  && !isCoastline1 && !isBuilding)
             return;
 
         String layer1 = w.get("layer");
@@ -108,6 +107,7 @@ public class CrossingWays extends Test
 
                     if( !es1.intersects(es2) ) continue;
                     if( isSubway1 && "subway".equals(railway2)) continue;
+                    if( isTram1 && "tram".equals(railway2)) continue;
 
                     boolean isCoastline2 = coastline2 != null && (coastline2.equals("water") || coastline2.equals("coastline"));
                     if( isCoastline1 != isCoastline2 ) continue;

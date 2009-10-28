@@ -17,7 +17,7 @@ i18n();
     <head>
         <title><? msg('OpenStreetMap POI export');?> - <? msg('download free point of interest'); ?></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="Description" content="OpenStreetMap POI Export, de poi export site van OpenStreetMap Nederland" />
+        <meta name="Description" content="<? msg('OpenStreetMap POI Export'); ?>" />
         <meta name="Keywords" content="openstreetmap,poi,waypoint,export,free,tomtom,garmin,google earth,ov2,csv,gpx" />
         <meta name="robots" content="index, follow" />
         <meta http-equiv="Content-Language" content="<? echo $_SESSION['LANG']; ?>" />

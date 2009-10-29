@@ -17,11 +17,12 @@ if (!isset($_GET["output"]) || !isset($_GET["k"]) || !isset($_GET["v"]) || !isse
 $output = pg_escape_string(utf8_encode($_GET["output"]));
 $k = pg_escape_string(utf8_encode($_GET["k"]));
 $v = pg_escape_string(utf8_encode($_GET["v"]));
-$filename = pg_escape_string(utf8_encode($_GET["filename"]));
+$filename = pg_escape_string($_GET["filename"]);
 
 // Connect to the postgresql database server
 $dbconn = pg_connect("host=" . $config['Database']['servername'] . " port=" . $config['Database']['port'] . " dbname=" . $config['Database']['dbname'] . " user=".$config['Database']['username'] . " password=" . $config['Database']['password']) or die('Could not connect: ' . pg_last_error());
 pg_set_client_encoding("UTF-8");
+
 // Initialize query
 $query = "SELECT name, lat, lon
 FROM (
@@ -85,7 +86,7 @@ function asGarmin($data, $filename) {
     header("Cache-Control: public");
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
-	header("Content-Type: application/force-download");
+	header("Content-Type: application/force-download; charset=utf-8");
 
     while ($line = pg_fetch_array($data, null, PGSQL_ASSOC)) {
         echo $line["lon"] . ", " .
@@ -112,7 +113,7 @@ function asOv2($data, $filename) {
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
     header("Content-Type: application/octet-stream");
-    header("Content-Transfer-Encoding: binary");
+    header("Content-Transfer-Encoding: binary; charset=utf-8");
 
     while ($line = pg_fetch_array($data, null, PGSQL_ASSOC)) {
         echo chr(0x02) .
@@ -140,7 +141,7 @@ function asGpx($data, $filename) {
 
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
-    header("Content-Type: application/force-download");
+    header("Content-Type: application/force-download; charset=utf-8");
 
     echo "<?xml version='1.0' encoding='UTF-8'?>\n" .
         "<gpx version=\"1.1\" creator=\"OSM-NL POI export\" xmlns=\"http://www.topografix.com/GPX/1/1\"\n" .
@@ -175,7 +176,7 @@ function asKml($data, $filename) {
 
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
-    header("Content-Type: application/vnd.google-earth.kml+xml");
+    header("Content-Type: application/vnd.google-earth.kml+xml; charset=utf-8");
 
     echo "<?xml version='1.0' encoding='UTF-8'?>\n<kml xmlns='http://earth.google.com/kml/2.2'>\n";
     echo "<Document>\n";
@@ -206,7 +207,7 @@ function asOSM($data, $filename) {
 
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
-    header("Content-Type: application/force-download");
+    header("Content-Type: application/force-download; charset=utf-8");
 
     echo '<?xml version="1.0" encoding="UTF-8"?>';
     echo "\n";
@@ -245,7 +246,7 @@ function asOziExplorer($data, $filename) {
 
     header("Content-Description: File Transfer");
     header("Content-Disposition: attachment; filename=$filename");
-    header("Content-Type: application/force-download");
+    header("Content-Type: application/force-download; charset=utf-8");
 
 	$counter = 1;
 	echo "OziExplorer Waypoint File Version 1.1\n";
@@ -275,4 +276,15 @@ function GenerateSafeFileName($filename) {
 	$filename = str_replace("?","",$filename);
 	return $filename;
 }
+
+/*
+function fixEncoding($in_str)
+{
+  $cur_encoding = mb_detect_encoding($in_str);
+  if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8"))
+    return $in_str;
+  else
+    return utf8_encode($in_str);
+} // fixEncoding 
+*/
 ?>

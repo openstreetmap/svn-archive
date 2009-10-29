@@ -14,10 +14,18 @@ if (!isset($_GET["output"]) || !isset($_GET["k"]) || !isset($_GET["v"]) || !isse
 }
 
 // Parse GET parameters
-$output = pg_escape_string($_GET["output"]);
-$k = pg_escape_string($_GET["k"]);
-$v = pg_escape_string($_GET["v"]);
-$filename = pg_escape_string($_GET["filename"]);
+$pos = strpos(strtolower($_SERVER['HTTP_ACCEPT_CHARSET']),'utf-8');
+if ( $pos == false ) {
+    $output = pg_escape_string(utf8_encode($_GET["output"]));
+    $k = pg_escape_string(utf8_encode($_GET["k"]));
+    $v = pg_escape_string(utf8_encode($_GET["v"]));
+    $filename = pg_escape_string(utf8_encode($_GET["filename"]));
+} else {
+    $output = pg_escape_string($_GET["output"]);
+    $k = pg_escape_string($_GET["k"]);
+    $v = pg_escape_string($_GET["v"]);
+    $filename = pg_escape_string($_GET["filename"]);
+}
 
 // Connect to the postgresql database server
 $dbconn = pg_connect("host=" . $config['Database']['servername'] . " port=" . $config['Database']['port'] . " dbname=" . $config['Database']['dbname'] . " user=".$config['Database']['username'] . " password=" . $config['Database']['password']) or die('Could not connect: ' . pg_last_error());

@@ -506,9 +506,6 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 break;
             }
         }
-        /*
-         * Save this for last since it will get painted over all the others
-         */
         return painted;
     }
     // This function is called for several zoom levels, not just

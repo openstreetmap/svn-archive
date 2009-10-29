@@ -1,7 +1,12 @@
 <?php
-$version = "v1.1";
+/* globals */
+$VERSION = "v1.2";  // poi export version
+$LANG = "en";       // default language file is english
+$messages = null;   // array of message translations
 
-$LANG = $_SESSION['LANG'];
+if(isset($_SESSION['LANG'])) {
+	$LANG = $_SESSION['LANG'];
+}
 
 
 /**
@@ -26,8 +31,7 @@ function msg($s) {
  * include the required localization file
  */
 function i18n() {
-        global $LANG;
-	$LANG = $_SESSION['LANG'];
+    global $LANG;
 	if (!isset($LANG) OR !isset($_SESSION['LANG'])) {
 		$LANG = split(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
 		$LANG = split("-",$LANG[0]);
@@ -39,13 +43,13 @@ function i18n() {
 	global $messages;
         
 	//if the language file does not exist, default to english
-        // The @ is used to suppress warnings if a localization file does not
-        // exist for the language
+    // The @ is used to suppress warnings if a localization file does not
+    // exist for the language
 	if (@include_once 'include/'.$LANG.'.php'){
-		$_SESSION['LANG']=$LANG;
 	} else {
-		$LANG='en';
-		$_SESSION['LANG']=$LANG;
+		$LANG = 'en';
+		include_once 'include/'.$LANG.'.php';
 	}
+	$_SESSION['LANG'] = $LANG;
 }
 ?>

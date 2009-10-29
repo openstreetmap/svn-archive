@@ -59,6 +59,7 @@ i18n();
                         <option value="amenity:toilets"><? msg('Toilets'); ?></option>
                         <option value="amenity:pub"><? msg('Pub'); ?></option>
                         <option value="amenity:waste_basket"><? msg('Waste basket'); ?></option>
+						<option value="barrier:cattle_grid"><? msg('Cattle grid'); ?></option>
                         <option value="tourism:camp_site"><? msg('Camp site'); ?></option>
                         <option value="tourism:hotel"><? msg('Hotel'); ?></option>
                         <option value="tourism:museum"><? msg('Museum'); ?></option>
@@ -73,7 +74,7 @@ i18n();
                     </select>
                 </div>
                 <div class="buttons">
-                    <button type="submit" id="next1" class="next" disabled="disabled" onclick="LoadNextPage(1,2);"><? msg('Next'); ?> &gt;&gt;</button>
+                    <button type="submit" id="next1" class="next" disabled="disabled" onclick="LoadNextPage(1,2);"><? msg('Next'); ?>&nbsp;&gt;&gt;</button>
                 </div>
                 <div style="clear:both"></div>
             </div>
@@ -97,8 +98,8 @@ i18n();
                     </select>
                 </div>
                 <div class="buttons">
-                    <button type="submit" id="back2" class="previous" onclick="LoadNextPage(2,1);"> &lt;&lt;<? msg('Previous'); ?></button>
-                    <button type="submit" id="next2" class="next" disabled="disabled" onclick="LoadNextPage(2,3);"><? msg('Next'); ?> &gt;&gt;</button>
+                    <button type="submit" id="back2" class="previous" onclick="LoadNextPage(2,1);">&lt;&lt;&nbsp;<? msg('Previous'); ?></button>
+                    <button type="submit" id="next2" class="next" disabled="disabled" onclick="LoadNextPage(2,3);"><? msg('Next'); ?>&nbsp;&gt;&gt;</button>
                 </div>
 
                 <div style="clear:both"></div>
@@ -120,17 +121,16 @@ i18n();
                     </div>
                 </div>
                 <div class="buttons">
-                    <button type="submit" id="back3" class="previous" onclick="LoadNextPage(3,2);">&lt;&lt; <? msg('Previous'); ?></button>
+                    <button type="submit" id="back3" class="previous" onclick="LoadNextPage(3,2);">&lt;&lt;&nbsp;<? msg('Previous'); ?></button>
                     <button type="submit" id="next3" class="next"  onclick="DownloadFile();"><? msg('Download'); ?></button>
                 </div>
                 <div style="clear:both"></div>
             </div>
-            <div class="footer"><? msg('Poi Export'); ?> - <? echo $version; ?>&nbsp;
+            <div class="footer"><? msg('Poi Export'); ?> - <? echo $VERSION; ?>&nbsp;
                 <? msg('data'); ?> <a href="http://creativecommons.org/licenses/by-sa/2.0/">cc-by-sa</a>&nbsp;
                 <a href="http://www.openstreetmap.nl/"><? msg('OpenStreetMap'); ?></a>&nbsp;
-                <? msg('community') ?>. -&nbsp;
-                <? msg('Created by'); ?> <a href="http://www.openstreetmap.org/user/rullzer">rullzer</a> <? msg('and'); ?>&nbsp;
-                <a href="http://www.openstreetmap.org/user/Rubke">rubke</a>
+                <? msg('community') ?>.&nbsp;-&nbsp;
+                <? msg('Created by'); ?>&nbsp;<a href="http://www.openstreetmap.org/user/rullzer">rullzer</a>&nbsp;<? msg('and'); ?>&nbsp;<a href="http://www.openstreetmap.org/user/Rubke">rubke</a>
            </div>
         </div>
     </body>

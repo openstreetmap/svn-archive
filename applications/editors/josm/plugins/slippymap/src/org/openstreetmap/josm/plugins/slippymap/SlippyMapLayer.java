@@ -172,15 +172,16 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
             }
         }));
 
+        /* FIXME
         tileOptionMenu.add(new JMenuItem(new AbstractAction(
                 tr("Request Update")) {
             public void actionPerformed(ActionEvent ae) {
                 if (clickedTile != null) {
-                    //FIXME//clickedTile.requestUpdate();
+                    clickedTile.requestUpdate();
                     redraw();
                 }
             }
-        }));
+        }));*/
 
         tileOptionMenu.add(new JMenuItem(new AbstractAction(
                 tr("Load All Tiles")) {
@@ -203,7 +204,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 new AbstractAction(tr("Decrease zoom")) {
                     public void actionPerformed(ActionEvent ae) {
                         decreaseZoomLevel();
-                        Main.map.repaint();
+                        redraw();
                     }
                 }));
 
@@ -336,6 +337,20 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         return true;
     }
 
+    /*
+     * We use these for quick, hackish calculations.  They
+     * are temporary only and intentionally not inserted
+     * into the tileCache.
+     */
+    synchronized Tile tempCornerTile(Tile t) {
+        int x = t.getXtile() + 1;
+        int y = t.getYtile() + 1;
+        int zoom = t.getZoom();
+        Tile tile = getTile(x, y, zoom);
+        if (tile != null)
+            return tile;
+        return new Tile(tileSource, x, y, zoom);
+    }
     synchronized Tile getOrCreateTile(int x, int y, int zoom) {
         Tile tile = getTile(x, y, zoom);
         if (tile == null) {
@@ -385,7 +400,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
 
         // if there is more than 18 tiles on screen in any direction, do not
         // load all tiles!
-        if (ts.tilesSpanned() > (18*18)) {
+        if (ts.tooLarge()) {
             System.out.println("Not downloading all tiles because there is more than 18 tiles on an axis!");
             return;
         }
@@ -400,6 +415,8 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
         boolean done = ((infoflags & (ERROR | FRAMEBITS | ALLBITS)) != 0);
         needRedraw = true;
+        if (debug)
+            out("imageUpdate() done: " + done + " calling repaint");
         Main.map.repaint(done ? 0 : 100);
         return !done;
     }
@@ -421,12 +438,12 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         return img;
     }
 
-    double getImageScaling(Image img, Point p0, Point p1) {
+    double getImageScaling(Image img, Rectangle r) {
         int realWidth = -1;
         int realHeight = -1;
-           if (img != null) {
+        if (img != null) {
             realWidth = img.getHeight(this);
-               realWidth = img.getWidth(this);
+            realWidth = img.getWidth(this);
         }
         if (realWidth == -1 || realHeight == -1) {
             /*
@@ -436,7 +453,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
              * guess.
              */
             if (lastScaledImage != null) {
-                return getImageScaling(lastScaledImage, p0, p1);
+                return getImageScaling(lastScaledImage, r);
             }
             realWidth = 256;
             realHeight = 256;
@@ -448,8 +465,8 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
          * the millions, so make this a double to prevent integer
          * overflows.
          */
-        double drawWidth = p1.x - p0.x;
-        double drawHeight = p1.x - p0.x;
+        double drawWidth = r.width;
+        double drawHeight = r.height;
         // stem.out.println("drawWidth: " + drawWidth + " drawHeight: " +
         // drawHeight);
 
@@ -471,10 +488,6 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         LatLon topLeft  = tileLatLon(topLeftTile);
         LatLon botRight = tileLatLon(botRightTile);
 
-        if (!autoZoomEnabled())
-            return 0;
-        if (!SlippyMapPreferences.getAutoloadTiles())
-            return 0;
 
         /*
          * Go looking for tiles in zoom levels *other* than the current
@@ -488,6 +501,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         //int otherZooms[] = {-5, -4, -3, 2, -2, 1, -1};
         int otherZooms[] = { -1, 1, -2, 2, -3, -4, -5};
         int painted = 0;;
+        debug = true;
         for (int zoomOff : otherZooms) {
             int zoom = currentZoomLevel + zoomOff;
             if ((zoom < this.getMinZoomLvl()) ||
@@ -495,7 +509,8 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 continue;
             }
             TileSet ts = new TileSet(topLeft, botRight, zoom);
-            int zoom_painted = this.paintTileImages(g, ts, zoom);
+            int zoom_painted = 0;
+            this.paintTileImages(g, ts, zoom, null);
             if (debug && zoom_painted > 0)
                 out("painted " + zoom_painted + "/"+ ts.size() +
                     " tiles from zoom("+zoomOff+"): " + zoom);
@@ -506,46 +521,115 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 break;
             }
         }
+        debug = false;
         return painted;
     }
+    Rectangle tileToRect(Tile t1)
+    {
+        /*
+         * We need to get a box in which to draw, so advance by one tile in
+         * each direction to find the other corner of the box.
+         * Note: this somewhat pollutes the tile cache
+         */
+        Tile t2 = tempCornerTile(t1);
+        Rectangle rect = new Rectangle(pixelPos(t1));
+        rect.add(pixelPos(t2));
+        return rect;
+    }
+
+    // 'source' is the pixel coordinates for the area that
+    // the img is capable of filling in.  However, we probably
+    // only want a portion of it.
+    //
+    // 'border' is the screen cordinates that need to be drawn.
+    //  We must not draw outside of it.
+    void drawImageInside(Graphics g, Image sourceImg, Rectangle source, Rectangle border)
+    {
+        Rectangle target = source;
+
+        // If a border is specified, only draw the intersection
+        // if what we have combined with what we are supposed
+        // to draw.
+        if (border != null) {
+            target = source.intersection(border);
+            if (debug)
+                out("source: " + source + "\nborder: " + border + "\nintersection: " + target);
+        }
+
+        // All of the rectangles are in screen coordinates.  We need
+        // to how these correlate to the sourceImg pixels.  We could
+        // avoid doing this by scaling the image up to the 'source' size,
+        // but this should be cheaper.
+        //
+        // In some projections, x any y are scaled differently enough to
+        // cause a pixel or two of fudge.  Calculate them separately.
+        double imageYScaling = sourceImg.getHeight(this) / source.getHeight();
+        double imageXScaling = sourceImg.getWidth(this) / source.getWidth();
+
+        // How many pixels into the 'source' rectangle are we drawing?
+        int screen_x_offset = target.x - source.x;
+        int screen_y_offset = target.y - source.y;
+        // And how many pixels into the image itself does that
+        // correlate to?
+        int img_x_offset = (int)(screen_x_offset * imageXScaling);
+        int img_y_offset = (int)(screen_y_offset * imageYScaling);
+        // Now calculate the other corner of the image that we need
+        // by scaling the 'target' rectangle's dimensions.
+        int img_x_end   = img_x_offset + (int)(target.getWidth() * imageXScaling);
+        int img_y_end   = img_y_offset + (int)(target.getHeight() * imageYScaling);
+
+        if (debug) {
+            out("drawing image into target rect: " + target);
+        }
+        g.drawImage(sourceImg,
+                        target.x, target.y,
+                        target.x + target.width, target.y + target.height,
+                        img_x_offset, img_y_offset,
+                        img_x_end, img_y_end,
+                        this);
+        float fadeBackground = SlippyMapPreferences.getFadeBackground();
+        if (fadeBackground != 0f) {
+            // dimm by painting opaque rect...
+            g.setColor(new Color(1f, 1f, 1f, fadeBackground));
+            g.fillRect(target.x, target.y,
+                       target.width, target.height);
+        }
+    }
+    Double lastImageScale = null;
     // This function is called for several zoom levels, not just
     // the current one.  It should not trigger any tiles to be
     // downloaded.  It should also avoid polluting the tile cache
     // with any tiles since these tiles are not mandatory.
-    Double lastImageScale = null;
-    int paintTileImages(Graphics g, TileSet ts, int zoom) {
-        int paintedTiles = 0;
+    //
+    // The "border" tile tells us the boundaries of where we may
+    // draw.  It will not be from the zoom level that is being
+    // drawn currently.  If drawing the currentZoomLevel, 
+    // border is null and we draw the entire tile set.
+    List<Tile> paintTileImages(Graphics g, TileSet ts, int zoom, Tile border) {
+        Rectangle borderRect = null;
+        if (border != null)
+            borderRect = tileToRect(border);
+        List<Tile> missedTiles = new LinkedList<Tile>();
         boolean imageScaleRecorded = false;
         for (Tile tile : ts.allTiles()) {
-            /*
-             * We need to get a box in which to draw, so advance by one tile in
-             * each direction to find the other corner of the box.
-             * Note: this somewhat pollutes the tile cache
-             */
-            Tile t2 = getOrCreateTile(tile.getXtile() + 1, tile.getYtile() + 1, zoom);
             Image img = getLoadedTileImage(tile);
-            Point p = pixelPos(tile);
-            Point p2 = pixelPos(t2);
-            if (currentZoomLevel == zoom && img == null) {
-                int painted = paintFromOtherZooms(g, tile, t2);
-                if (painted > 0 && debug)
-                    out("painted a total of " + painted);
+            if (img == null) {
+                if (debug)
+                    out("missed tile: " + tile); 
+                missedTiles.add(tile);
                 continue;
             }
-            g.drawImage(img, p.x, p.y, p2.x - p.x, p2.y - p.y, this);
-            paintedTiles++;
-            if (!imageScaleRecorded && zoom == currentZoomLevel) {
-                lastImageScale = new Double(getImageScaling(img, p, p2));
+            Rectangle sourceRect = tileToRect(tile);
+            if (borderRect != null && !sourceRect.intersects(borderRect))
+                continue;
+            drawImageInside(g, img, sourceRect, borderRect);
+            if (autoZoomEnabled() &&
+                !imageScaleRecorded && zoom == currentZoomLevel) {
+                lastImageScale = new Double(getImageScaling(img, sourceRect));
                 imageScaleRecorded = true;
             }
-            float fadeBackground = SlippyMapPreferences.getFadeBackground();
-            if (fadeBackground != 0f) {
-                // dimm by painting opaque rect...
-                g.setColor(new Color(1f, 1f, 1f, fadeBackground));
-                g.fillRect(p.x, p.y, p2.x - p.x, p2.y - p.y);
-            }
         }// end of for
-        return paintedTiles;
+        return missedTiles;
     }
 
     void paintTileText(TileSet ts, Tile tile, Graphics g, MapView mv, int zoom, Tile t) {
@@ -577,30 +661,43 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
             g.drawString(tr("image " + tileStatus), p.x + 2, texty);
             texty += 1 + fontHeight;
         }
-        /*
-        We already do repaint when the images load
-        we don't need to poll like this
-        */
-        if (!tile.isLoaded())
-            redraw();
 
+        int xCursor = -1;
+        int yCursor = -1;
         if (SlippyMapPreferences.getDrawDebug()) {
-            if (ts.leftTile(t)) {
+            if (yCursor < t.getYtile()) {
                 if (t.getYtile() % 32 == 31) {
                     g.fillRect(0, p.y - 1, mv.getWidth(), 3);
                 } else {
                     g.drawLine(0, p.y, mv.getWidth(), p.y);
                 }
+                yCursor = t.getYtile();
             }
-        }// /end of if draw debug
+            // This draws the vertical lines for the entire
+            // column. Only draw them for the top tile in
+            // the column.
+            if (xCursor < t.getXtile()) {
+                if (SlippyMapPreferences.getDrawDebug()) {
+                    if (t.getXtile() % 32 == 0) {
+                        // level 7 tile boundary
+                        g.fillRect(p.x - 1, 0, 3, mv.getHeight());
+                    } else {
+                        g.drawLine(p.x, 0, p.x, mv.getHeight());
+                    }
+                }
+                xCursor = t.getXtile();
+            }
+        }
     }
 
+    public Point pixelPos(LatLon ll) {
+        return Main.map.mapView.getPoint(ll);
+    }
     public Point pixelPos(Tile t) {
-            double lon = tileXToLon(t.getXtile(), t.getZoom());
-            LatLon tmpLL = new LatLon(tileYToLat(t.getYtile(), t.getZoom()), lon);
-            MapView mv = Main.map.mapView;
-            return mv.getPoint(tmpLL);
-        }
+        double lon = tileXToLon(t.getXtile(), t.getZoom());
+        LatLon tmpLL = new LatLon(tileYToLat(t.getYtile(), t.getZoom()), lon);
+        return pixelPos(tmpLL);
+    }
     private class TileSet {
         int z12x0, z12x1, z12y0, z12y1;
         int zoom;
@@ -608,10 +705,10 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
 
         TileSet(LatLon topLeft, LatLon botRight, int zoom) {
             this.zoom = zoom;
-            z12x0 = lonToTileX(topLeft.lon(), zoom) - 1;
-            z12y0 = latToTileY(topLeft.lat(),  zoom) - 1;
-            z12x1 = lonToTileX(botRight.lon(), zoom) + 1;
-            z12y1 = latToTileY(botRight.lat(), zoom) + 1;
+            z12x0 = lonToTileX(topLeft.lon(),  zoom);
+            z12y0 = latToTileY(topLeft.lat(),  zoom);
+            z12x1 = lonToTileX(botRight.lon(), zoom);
+            z12y1 = latToTileY(botRight.lat(), zoom);
             if (z12x0 > z12x1) {
                 int tmp = z12x0;
                 z12x0 = z12x1;
@@ -627,6 +724,12 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
             if (z12y0 < 0) z12y0 = 0;
             if (z12x1 > tileMax) z12x1 = tileMax;
             if (z12y1 > tileMax) z12y1 = tileMax;
+        }
+        boolean tooSmall() {
+            return this.tilesSpanned() < 2.1;
+        }
+        boolean tooLarge() {
+            return this.tilesSpanned() > 10;
         }
         double tilesSpanned() {
             return Math.sqrt(1.0 * this.size());
@@ -729,16 +832,16 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         TileSet ts = new TileSet(topLeft, botRight, zoom);
 
         if (autoZoomEnabled()) {
-            if (zoomDecreaseAllowed() && (ts.tilesSpanned() > 18)) {
+            if (zoomDecreaseAllowed() && ts.tooLarge()) {
                 if (debug)
                     out("too many tiles, decreasing zoom from " + currentZoomLevel);
                 if (decreaseZoomLevel())
                     this.paint(oldg, mv);
                 return;
             }
-            if (zoomIncreaseAllowed() && (ts.tilesSpanned() < 1.0)) {
+            if (zoomIncreaseAllowed() && ts.tooSmall()) {
                 if (debug)
-                    out("doesn't even cover one tile (" + ts.tilesSpanned()
+                    out("too zoomed in, (" + ts.tilesSpanned()
                         + "), increasing zoom from " + currentZoomLevel);
                 if (increaseZoomLevel())
                      this.paint(oldg, mv);
@@ -747,63 +850,71 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         }
 
         // Too many tiles... refuse to draw
-        if (ts.tilesSpanned() > 18)
-            return;
-
-        ts.loadAllTiles(false);
+        if (!ts.tooLarge()) {
+            ts.loadAllTiles(false);
+        }
 
         int fontHeight = g.getFontMetrics().getHeight();
 
         g.setColor(Color.DARK_GRAY);
 
-        this.paintTileImages(g, ts, currentZoomLevel);
+        List<Tile> missedTiles = this.paintTileImages(g, ts, currentZoomLevel, null);
+        int otherZooms[] = { -1, 1, -2, 2, -3, -4, -5};
+        for (int zoomOffset : otherZooms) {
+            if (!autoZoomEnabled())
+                break;
+            if (!SlippyMapPreferences.getAutoloadTiles())
+                break;
+            int newzoom = currentZoomLevel + zoomOffset;
+            if (missedTiles.size() <= 0)
+                break;
+            List<Tile> newlyMissedTiles = new LinkedList<Tile>();
+            for (Tile missed : missedTiles) {
+                Tile t2 = tempCornerTile(missed);
+                LatLon topLeft2  = tileLatLon(missed);
+                LatLon botRight2 = tileLatLon(t2);
+                TileSet ts2 = new TileSet(topLeft2, botRight2, newzoom);
+                newlyMissedTiles.addAll(this.paintTileImages(g, ts2, newzoom, missed));
+            }
+            missedTiles = newlyMissedTiles;
+        }
+        if (debug && missedTiles.size() > 0) {
+            out("still missed "+missedTiles.size()+" in the end");
+        }
         g.setColor(Color.red);
 
         // The current zoom tileset is guaranteed to have all of
         // its tiles
         for (Tile t : ts.allTiles()) {
-            // This draws the vertical lines for the entire
-            // column. Only draw them for the top tile in
-            // the column.
-            if (ts.topTile(t)) {
-                Point p = pixelPos(t);
-                if (SlippyMapPreferences.getDrawDebug()) {
-                    if (t.getXtile() % 32 == 0) {
-                        // level 7 tile boundary
-                        g.fillRect(p.x - 1, 0, 3, mv.getHeight());
-                    } else {
-                        g.drawLine(p.x, 0, p.x, mv.getHeight());
-                    }
-                }
-            }
             this.paintTileText(ts, t, g, mv, currentZoomLevel, t);
         }
         float fadeBackground = SlippyMapPreferences.getFadeBackground();
         oldg.drawImage(bufferImage, 0, 0, null);
 
-        if (lastImageScale != null) {
+        if (autoZoomEnabled() && lastImageScale != null) {
             // If each source image pixel is being stretched into > 3
             // drawn pixels, zoom in... getting too pixelated
             if (lastImageScale > 3 && zoomIncreaseAllowed()) {
-                if (autoZoomEnabled()) {
-                    if (debug)
-                        out("autozoom increase: scale: " + lastImageScale);
-                    increaseZoomLevel();
-                    this.paint(oldg, mv);
-                }
+                if (debug)
+                    out("autozoom increase: scale: " + lastImageScale);
+                increaseZoomLevel();
+                this.paint(oldg, mv);
             // If each source image pixel is being squished into > 0.32
             // of a drawn pixels, zoom out.
             } else if ((lastImageScale < 0.45) && (lastImageScale > 0) && zoomDecreaseAllowed()) {
-                if (autoZoomEnabled()) {
-                    if (debug)
-                        out("autozoom decrease: scale: " + lastImageScale);
-                    decreaseZoomLevel();
-                    this.paint(oldg, mv);
-                }
+                if (debug)
+                    out("autozoom decrease: scale: " + lastImageScale);
+                decreaseZoomLevel();
+                this.paint(oldg, mv);
             }
         }
-        g.setColor(Color.black);
-        g.drawString("currentZoomLevel=" + currentZoomLevel, 120, 120);
+        //g.drawString("currentZoomLevel=" + currentZoomLevel, 120, 120);
+        oldg.setColor(Color.black);
+        if (ts.tooLarge()) {
+            oldg.drawString("zoom in to load more tiles", 120, 120);
+        } else if (ts.tooSmall()) {
+            oldg.drawString("increase zoom level to see more detail", 120, 120);
+        }
     }// end of paint method
 
     /**
@@ -820,11 +931,12 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         int z = currentZoomLevel;
         TileSet ts = new TileSet(topLeft, botRight, z);
 
-        ts.loadAllTiles(false); // make sure there are tile objects for all tiles
+        if (!ts.tooLarge())
+            ts.loadAllTiles(false); // make sure there are tile objects for all tiles
         Tile clickedTile = null;
         Point p1 = null, p2 = null;
         for (Tile t1 : ts.allTiles()) {
-            Tile t2 = getOrCreateTile(t1.getXtile()+1, t1.getYtile()+1, z);
+            Tile t2 = tempCornerTile(t1);
             Rectangle r = new Rectangle(pixelPos(t1));
             r.add(pixelPos(t2));
             if (debug)

@@ -14,9 +14,9 @@ if (!isset($_GET["output"]) || !isset($_GET["k"]) || !isset($_GET["v"]) || !isse
 }
 
 // Parse GET parameters
-$output = pg_escape_string(utf8_encode($_GET["output"]));
-$k = pg_escape_string(utf8_encode($_GET["k"]));
-$v = pg_escape_string(utf8_encode($_GET["v"]));
+$output = pg_escape_string($_GET["output"]);
+$k = pg_escape_string($_GET["k"]);
+$v = pg_escape_string($_GET["v"]);
 $filename = pg_escape_string($_GET["filename"]);
 
 // Connect to the postgresql database server
@@ -276,15 +276,4 @@ function GenerateSafeFileName($filename) {
 	$filename = str_replace("?","",$filename);
 	return $filename;
 }
-
-/*
-function fixEncoding($in_str)
-{
-  $cur_encoding = mb_detect_encoding($in_str);
-  if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8"))
-    return $in_str;
-  else
-    return utf8_encode($in_str);
-} // fixEncoding 
-*/
 ?>

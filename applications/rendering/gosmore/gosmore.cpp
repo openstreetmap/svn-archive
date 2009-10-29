@@ -67,7 +67,6 @@ using namespace std;
   o (BaudRate,        0, 6) \
   o (ShowCompass,     0, 2) \
   o (Background,      0, 16) \
-  o (QuickOptions,    0, 2) \
   o (Exit,            0, 2) \
   o (ZoomInKey,       0, 3) \
   o (ZoomOutKey,      0, 3) \
@@ -146,11 +145,6 @@ enum { GDK_SCROLL_UP, GDK_SCROLL_DOWN };
 HINSTANCE hInst;
 HWND   mWnd, dlgWnd = NULL;
 
-BOOL CALLBACK DlgSearchProc (
-	HWND hwnd, 
-	UINT Msg, 
-	WPARAM wParam, 
-	LPARAM lParam);
 #else
 #ifndef RES_DIR
 #define RES_DIR "/usr/share/gosmore/" /* Needed for "make CFLAGS=-g" */
@@ -785,30 +779,6 @@ BOOL CALLBACK DlgSetTags2Proc (HWND hwnd, UINT Msg, WPARAM wParam,
   return FALSE;
 }*/
 
-BOOL CALLBACK DlgChooseOProc (HWND hwnd, UINT Msg, WPARAM wParam,
-  LPARAM lParam)
-{
-  if (Msg == WM_INITDIALOG) {
-    HWND klist = GetDlgItem (hwnd, IDC_LISTO);
-    for (int i = 0; i < mapMode; i++) {
-      const unsigned char *sStart = (const unsigned char*)
-        optionNameTable[English][i];
-      UTF16 wcTmp[30], *tStart = wcTmp;
-      if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen ((char*) sStart) + 1,
-            &tStart, wcTmp + sizeof (wcTmp) / sizeof (wcTmp[0]),
-            lenientConversion) == conversionOK) {
-        SendMessage (klist, LB_ADDSTRING, 0, (LPARAM) wcTmp);
-      }
-    }
-  }
-  
-  if (Msg == WM_COMMAND && (wParam == IDCANCEL || wParam == IDOK)) {
-    EndDialog (hwnd, wParam == IDOK ? SendMessage (
-      GetDlgItem (hwnd, IDC_LISTO), LB_GETCURSEL, 0, 0) : -1);
-    return TRUE;
-  }
-  return FALSE;
-}
 #endif // NOGTK
 
 int Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
@@ -846,19 +816,6 @@ void HitButton (int b)
     if (newWays[newWayCnt].cnt) objectAddRow = 0;
     return;
   }
-  if (QuickOptions && b == 0) {
-    option = DialogBox (hInst, MAKEINTRESOURCE (IDD_CHOOSEO), NULL,
-      (DLGPROC) DlgChooseOProc);
-    if (option == -1) option = mapMode;
-    
-    #define o(en,min,max) \
-      if (option == en ## Num && min == 0 && max <= 2) b = 1;
-    OPTIONS
-    #undef o
-    if (b == 0) return;
-    returnToMap = TRUE;
-    // If it's a binary option, fall through to toggle it
-  }
   #endif
   if (b == 0) {
     listYOffset = 0;
@@ -877,12 +834,6 @@ void HitButton (int b)
     Route (TRUE, 0, 0, Vehicle, FastestRoute);
   }
   #ifdef NOGTK
-  else if (option == SearchNum) {
-    SipShowIM (SIPF_ON);
-    if (ModelessDialog) ShowWindow (dlgWnd, SW_SHOW);
-    else DialogBox (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
-             NULL, (DLGPROC)DlgSearchProc);
-  }
   else if (option == DisplayOffNum) {
     if (CeEnableBacklight(FALSE)) {
       gDisplayOff = TRUE;
@@ -947,7 +898,6 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   }
   #endif
   if (ButtonSize <= 0) ButtonSize = 4;
-  //int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);
   if (objectAddRow >= 0) {
     int perRow = (w - ButtonSize * 20) / ADD_WIDTH;
     if (event->x < w - ButtonSize * 20) {
@@ -965,7 +915,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     else objectAddRow = int (event->y) * (restriction_no_right_turn / perRow
                                   + 2) / draw->allocation.height * perRow;
   }
-  #ifdef NOGTK
+  #if 0 //def NOGTK
   else if (event->x > w - ButtonSize * 20 && b <
       (!HideZoomButtons || option != mapMode ? 3 : 
       MenuKey != 0 ? 0 : 1)) HitButton (b);
@@ -984,6 +934,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
           option = i;
         }
       }
+      if (option <= OrientNorthwardsNum) HitButton (1);
     }
   }
   else if (option == searchMode) {
@@ -1383,7 +1334,6 @@ gint DrawExpose (void)
 //  clip.width = draw->allocation.width - ZOOM_PAD_SIZE;
 //  gdk_gc_set_clip_rectangle (mygc, &clip);
   
-  //GdkFont *f = gtk_style_get_font (draw->style);
   GdkRectangle clip;
   clip.x = 0;
   clip.y = 0;
@@ -1468,7 +1418,6 @@ gint DrawExpose (void)
 
   if (option == mapMode) {
 //    int perpixel = zoom / clip.width;
-    //int doAreas = TRUE;
     int *block = (int*) calloc ((clip.width + 31) / 32 * 4, clip.height);
 
     stack<text2Brendered> text2B;
@@ -1544,7 +1493,8 @@ gint DrawExpose (void)
       #define GdkPoint POINT
       #endif
       vector<GdkPoint> pt;
-      int oldx = 0, oldy = 0, x=0, y=0, firstx = INT_MIN, firsty = INT_MIN;
+      int oldx = 0, oldy = 0, x = 0 /* Shut up gcc*/, y = 0 /*Shut up gcc*/;
+      int firstx = INT_MIN, firsty = INT_MIN /* Shut up gcc */;
       //for (; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] != 0;
       for (; nd->other[1] != 0;
            nd += nd->other[1]) {
@@ -1585,7 +1535,7 @@ gint DrawExpose (void)
       }
       if (Display3D && firsty < 0 && y > 0) {
         pt.push_back (GdkPoint ());
-        pt.back ().x = x + (x - firstx) * (1024 - x) / (y - firsty);
+        pt.back ().x = x + (x - firstx) * (1024 - y) / (y - firsty);
         pt.back ().y = 1024;
       }
       if (!pt.empty ()) {
@@ -1995,6 +1945,7 @@ gint DrawExpose (void)
   gdk_window_end_paint (draw->window);
   gdk_flush ();
   #else
+  #if 0
   int i = !HideZoomButtons || option != mapMode ? 3 :
                                                 MenuKey != 0 ? 0 : 1;
   RECT r;
@@ -2010,9 +1961,10 @@ gint DrawExpose (void)
         ButtonSize * (20 * i + 10), 0, NULL, i == 0 ? TEXT ("O") :
         i == 1 ? TEXT ("-") : TEXT ("+"), 1, NULL);
   }
+  #endif
 
- #endif
- #if 0
+ #endif
+ #if 0
   wchar_t coord[21];
   if (ShowCoordinates == 1) {
     wsprintf (coord, TEXT ("%9.5lf %10.5lf"), LatInverse (clat),
@@ -2370,79 +2322,16 @@ int main (int argc, char *argv[])
   // close the logfile if it has been opened
   if (logFP(false)) fclose(logFP(false));
 }
-#else // NOGTK / WIN32 Native;
-//----------------------------- WIN32 Native ------------------
+#else // NOGTK / WIN32 and WINCE Native;
+//-------------------------- WIN32 and WINCE Native ------------------
 HANDLE port = INVALID_HANDLE_VALUE;
 
-HBITMAP bmp;
+HBITMAP bmp = NULL, bufBmp = NULL;
 HDC iconsDc, bufDc;
 HPEN pen[2 << STYLE_BITS];
 HBRUSH brush[2 << STYLE_BITS];
 int pakSize;
 UTF16 appendTmp[50];
-
-BOOL CALLBACK DlgSearchProc (
-	HWND hwnd, 
-	UINT Msg, 
-	WPARAM wParam, 
-	LPARAM lParam)
-{
-#if 0
-  SHINITDLGINFO di;
-
-    switch (Msg) {
-    case WM_INITDIALOG:
-      if (SHInitDialogPtr) {
-	di.dwMask = SHIDIM_FLAGS;
-	di.dwFlags = SHIDIF_SIZEDLG;
-	di.hDlg = hwnd;
-	(*SHInitDialogPtr)(&di);
-      }
-      return TRUE;
-    case WM_SIZE: 
-      {
-    	int width = LOWORD(lParam) - GetSystemMetrics(SM_CXVSCROLL);
-    	int height = LOWORD(lParam);
-    	HWND hEdit = GetDlgItem(hwnd, IDC_EDIT1);
-    	HWND hList = GetDlgItem(hwnd, IDC_LIST1);
-	RECT rWnd, rEdit, rList;
-	
-	// Find the locations of the edit and list, and map to client
-	// coordinates
-	GetWindowRect(hEdit, &rEdit); 
-	MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT) &rEdit, 2);
-	GetWindowRect(hList, &rList);
-	MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT) &rList, 2);
-
-	// Change the width of the edit and list to match the client area
-	MoveWindow(hEdit, rEdit.left, rEdit.top, width-2*rEdit.left, 
-		   rEdit.bottom-rEdit.top, TRUE);
-	MoveWindow(hList, rList.left, rList.top, width-2*rList.left, 
-		   rList.bottom-rList.top, TRUE);
-      }
-      return TRUE;
-    case WM_COMMAND:
-      }
-      else if (wParam == IDC_SEARCHGO
-         || LOWORD (wParam) == IDC_LIST1 && HIWORD (wParam) == LBN_DBLCLK) {
-        HWND hwndList = GetDlgItem (hwnd, IDC_LIST1);
-        int idx = SendMessage (hwndList, LB_GETCURSEL, 0, 0);
-        SipShowIM (SIPF_OFF);
-        if (ModelessDialog) ShowWindow (hwnd, SW_HIDE);
-        else EndDialog (hwnd, 0);
-        if (idx != LB_ERR) SelectName (NULL, idx, 0, NULL, NULL);
-        InvalidateRect (mWnd, NULL, FALSE);
-        return TRUE;
-      }
-      else if (wParam == IDC_BUTTON1) {
-        SipShowIM (SIPF_OFF);
-        if (ModelessDialog) ShowWindow (hwnd, SW_HIDE);
-        else EndDialog (hwnd, 0);
-      }
-    }
-#endif
-    return FALSE;
-}
 
 static HWND hwndEdit, button3D;
 
@@ -2452,7 +2341,6 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
   PAINTSTRUCT ps;
   RECT rect;
   //static wchar_t msg[200] = TEXT("No coms");
-  static int done = FALSE;
   const int topBar = 30;
 
   switch(message) {
@@ -2508,6 +2396,11 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       draw->allocation.height = HIWORD (lParam) - topBar;
       MoveWindow(hwndEdit, 140, topBar - 25, LOWORD(lParam) - 200, 20, TRUE);
       MoveWindow(button3D, LOWORD (lParam) - 55, 5, 50, 20, TRUE);
+      if (bufBmp) {
+        DeleteObject (bufBmp);
+        bufBmp = NULL;
+      }
+      InvalidateRect (hWnd, NULL, FALSE);
       break;
     case WM_DESTROY:
       PostQuitMessage(0);
@@ -2519,7 +2412,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       //SetTextColor(ps.hdc,(i==state)?RGB(0,128,0):RGB(0,0,0));
       //r.left = 50;
       // r.top = 50;
-	if (!done) {
+	if (bmp == NULL) {
           bmp = LoadBitmap (hInst, MAKEINTRESOURCE (IDB_BITMAP1));
           iconsDc = CreateCompatibleDC (ps.hdc);
           SelectObject(iconsDc, bmp);
@@ -2530,9 +2423,6 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	  SelectObject(maskDc, bmp);
 
           bufDc = CreateCompatibleDC (ps.hdc); //bufDc //GetDC (hWnd));
-          bmp = CreateCompatibleBitmap (ps.hdc, draw->allocation.width,
-            draw->allocation.height);
-          SelectObject (bufDc, bmp);
           pen[ROUTE_PEN] = CreatePen (PS_SOLID, 6, 0x00ff00);
 	  pen[VALIDATE_PEN] = CreatePen (PS_SOLID, 10, 0x9999ff);
           for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
@@ -2548,11 +2438,16 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 			if ((c = style[i].areaColour) != -1) brush[i] = CreateSolidBrush
 			  ((c >> 16) | (c & 0xff00) | ((c & 0xff) << 16));
           }
-          done = TRUE;
         }
 	rect.top = rect.left = 0;
 	rect.right = draw->allocation.width;
 	rect.bottom = draw->allocation.height;
+        if (bufBmp == NULL) { // i.e. after WM_SIZE
+          bufBmp = CreateCompatibleBitmap (ps.hdc, draw->allocation.width,
+            draw->allocation.height);
+          SelectObject (bufDc, bufBmp);
+          FillRect (bufDc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
+        }
 	mygc = bufDc;
 	icons = iconsDc;
         DrawExpose (pen, brush);
@@ -2623,6 +2518,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         ev.x = LOWORD (lParam);
         ev.button = 1;
         Click (NULL, &ev, NULL);
+        if (optionMode == mapMode) SipShowIM (SIPF_OFF);
       }
       if (Exit) PostMessage (hWnd, WM_CLOSE, 0, 0);
       InvalidateRect (hWnd, NULL, FALSE);
@@ -2681,6 +2577,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
               &tStart, tStart + sizeof (gosmSstr), lenientConversion)
             == conversionOK) {
           *tStart = '\0';
+          /* SipShowIM (SIPF_ON); The only way we can get here without the
+          IM showing is if the device has a hardware keyboard/keypak */
         #endif
           option = searchMode;
           GosmSearch (clon, clat, editStr);
@@ -3010,9 +2908,6 @@ int WINAPI WinMain(
   }
   #endif
 
-  dlgWnd = CreateDialog (hInst, MAKEINTRESOURCE(IDD_DLGSEARCH),
-    NULL, (DLGPROC)DlgSearchProc); // Just in case user goes modeless
-
   DWORD threadId;
   if (CommPort == 0) {}
   else /* if((port=CreateFile (portname, GENERIC_READ | GENERIC_WRITE, 0,
@@ -3025,6 +2920,7 @@ int WINAPI WinMain(
   while (GetMessage (&msg, NULL, 0, 0)) {
     if (msg.hwnd == hwndEdit && msg.message == WM_LBUTTONDOWN) {
       option = option == searchMode ? mapMode : searchMode;
+      SipShowIM (option == searchMode ? SIPF_ON : SIPF_OFF);
       InvalidateRect (mWnd, NULL, FALSE);
     }
     TranslateMessage (&msg);

@@ -76,6 +76,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
        <scale_min>1</scale_min>
        <scale_max>8000</scale_max>
      </rule>
+<!--
     <rule>
        <condition k="tunnel" v="no"/>
        <line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
@@ -98,11 +99,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
        <scale_max>40000</scale_max>
      </rule>
 
-<!--restrictions tags -->
-<!--the restrictions rules should be placed before the path rule! -->
 	<rule>
-		<!-- New tag that designates a road with motorway access restrictions
-			(replacement for trunk outside the UK) -->
 		<condition k="motorroad" v="yes" />
 		<icon src="misc/deprecated.png" />
 		<scale_min>1</scale_min>
@@ -116,7 +113,6 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         	<scale_min>1</scale_min>
         	<scale_max>5000</scale_max>
 	</rule>
-
 	<rule>
 		<condition k="bicycle" v="no" />
 		<icon src="vehicle/restriction/bicycle.png" />
@@ -129,7 +125,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="vehicle/restriction/bicycle-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
-                <routing bicycle="23"/> <!-- Also see cycleway -->
+                <routing bicycle="23"/> 
 	</rule>
 
 	<rule>
@@ -144,8 +140,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon annotate="true" src="vehicle/restriction/foot-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>10000</scale_max>
-                <routing bicycle="5" foot="5"/> <!-- Usually you can push
-                your bicycle on one of these. Also see footway -->
+                <routing bicycle="5" foot="5"/> 
 	</rule>
 	<rule>
 		<condition k="cyclenetfoot" v="designated"/>
@@ -182,7 +177,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<icon src="vehicle/restriction/horse-designated.png" />
 		<scale_min>1</scale_min>
 		<scale_max>30000</scale_max>
-                <routing bicycle="20" foot="5" horse="10"/> <!-- Also see bridleway -->
+                <routing bicycle="20" foot="5" horse="10"/> 
 	</rule>
 
 	<rule>
@@ -219,14 +214,14 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
-
+-->
 	<rule>
 		<condition k="noexit" v="yes" />
 		<icon src="vehicle/restriction/dead_end.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
-
+<!--
 	<rule>
 		<condition k="maxweight" v="yes" />
 		<icon src="vehicle/restriction/maxweight.png" />
@@ -282,7 +277,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>
-
+-->
 	<rule>
 		<condition k="barrier" v="bollard" />
 		<icon annotate="true" src="vehicle/restriction/bollard.png" />

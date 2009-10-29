@@ -16,7 +16,6 @@ WARNFLAGS= -W -Wall
 # tar xzf -C / cygwin-cegcc-mingw32ce-0.51.0-1.tar.gz
 # export PATH="$PATH":/opt/mingw32ce/bin/
 
-ARCH=arm-mingw32ce-
 WINDRES=	${ARCH}windres
 
 # enable this to test the experimental route support
@@ -30,6 +29,7 @@ ifneq (${OS},Windows_NT)
 EXTRA=`pkg-config --cflags --libs gtk+-2.0 || echo -D HEADLESS`
 XMLFLAGS=`pkg-config --cflags libxml-2.0 || echo -I /usr/include/libxml2` \
   `pkg-config --libs libxml-2.0 || echo -l xml2 -lz -lm`
+ARCH=arm-mingw32ce-
 else
 # To compile with mingw, install MSYS and mingw, and then download
 # the "all-in-one bundle" from http://www.gtk.org/download-windows.html
@@ -37,10 +37,10 @@ else
 EXTRAC=-mms-bitfields -mno-cygwin -mwindows \
   `pkg-config --cflags gtk+-2.0 || echo -D NOGTK`
 EXTRAL=`pkg-config --libs gtk+-2.0`
-ARCH=
+EXE=.exe
 endif
 
-all: gosmore
+all: gosmore$(EXE)
 
 # The planet is too big to fit into the address space of a single process on
 # a 32 bit CPUs. So we break it up into pieces (overlapping rectangles and

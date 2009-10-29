@@ -17,9 +17,9 @@ using namespace std;
 
 #include "libgosm.h"
 
-routeNodeType *route = NULL, *shortest = NULL, *routeEnd;
+routeNodeType *route = NULL, *shortest = NULL;
 routeHeapType *routeHeap;
-long dhashSize;
+long dhashSize, dLength;
 int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon, dlon16348, dlat16348;
 int *hashTable, bucketsMin1, pakHead = 0xEB3A943, gosmStyleCnt;
 char *gosmData, *gosmSstr[searchCnt];
@@ -292,19 +292,20 @@ static int toEndNd[2][2];
 
 void GosmFreeRoute (void)
 {
-  #ifndef _WIN32
   if (route) {
-    munmap (route, (sizeof (*route) + sizeof (*routeHeap)) * dhashSize);
-  }    
+  #ifndef _WIN32
+    munmap (route, (sizeof (*route)) * dhashSize);
   #else
-  free (route);
+    free (route);
   #endif
-  route = NULL;
+    free (routeHeap);
+    route = NULL;
+  }    
 }
 
 #ifndef _WIN32_WCE
 #define RT_BLK_SIZE (unsigned long) 0x3ffff
-#define RT_WIDTH 23400000
+#define RT_WIDTH 53400000
 // Specifies maximum deviation from the direct path / as the crow flies
 #define RT_LENGTH_SHR 2
 /* Within a block we allocate roughly 1 routeNodeType for every 
@@ -319,7 +320,6 @@ inline long HeapCmp (routeHeapType *a, routeHeapType *b)
 {
   return ((a->r - route) ^ (b->r - route)) & ~RT_BLK_SIZE
     ? a->r - b->r : a->best - b->best;
-//  return a->best - b->best;
 }
 
 routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
@@ -335,16 +335,24 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
                    (nd->lon - tlon) * (__int64) dlat16348) >> 14;
   if (offcenter < -RT_WIDTH / 2 || offcenter > RT_WIDTH / 2) return NULL;
   unsigned i = 0, hash = (intptr_t) nd / 10 + dir;
-  routeNodeType *n, *base = route + (((6200000 >> RT_LENGTH_SHR) +
-    (unsigned long)(((nd->lat - tlat) * (__int64) dlat16348 +
-                     (nd->lon - tlon) * (__int64) dlon16348)
-                     >> (14 + RT_LENGTH_SHR))) & ~RT_BLK_SIZE);
-  if (base < route || base > routeEnd) return NULL;
+  unsigned dst = (unsigned)(((nd->lat - tlat) * (__int64) dlat16348 +
+                    (nd->lon - tlon) * (__int64) dlon16348) >> 14) + 6200000;
+  if (dst > (unsigned) (6200000 * 2 + dLength)) return NULL;
   // Either too far beyond 'to' or too far beyond 'from'
+
+  routeNodeType *n, *base = route +
+    ((unsigned long)(dst >> RT_LENGTH_SHR) & ~RT_BLK_SIZE);
+  // The value for route computed above works, but on short routes it
+  // sometimes takes longer because it starts with the region beyond 'to'
+  // and on longer routes it it is not realistic to expect the user to wait
+  // a couple of minutes for a result. So we just use the first rt_block:
+  base = route;
+
   do {
     if (i++ > 10) {
-      fprintf (stderr, "Double hash bailout : Table full. %9d %p\n",
-        routeHeapSize, nd);
+      //fprintf (stderr, "Double hash bailout : Table full. %9d %p\n",
+      //  routeHeapSize, nd);
+      // If you get the
       return NULL;
     }
     n = base + ((/*(hash >> 16) ^ */hash) & RT_BLK_SIZE);
@@ -361,7 +369,7 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
             
     if (n->nd == NULL) { /* First visit of this node */
       if (cost < 0) return NULL;
-      if ((unsigned)routeHeapSize >= RT_BLK_SIZE) {
+      if ((unsigned) routeHeapSize >= RT_BLK_SIZE) {
         printf ("Route Heap too big\n");
         return NULL;
       }
@@ -497,33 +505,38 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
   from.lon = flon;
   if (recalculate || !route) {
     GosmFreeRoute ();
-    int dLength = lrint (sqrt (Sqr ((__int64)(flat - tlat)) +
+    dLength = lrint (sqrt (Sqr ((__int64)(flat - tlat)) +
                                Sqr ((__int64)(flon - tlon))));
     dlat16348 = ((__int64)(flat - tlat) << 14) / dLength;
     dlon16348 = ((__int64)(flon - tlon) << 14) / dLength;
-    #ifndef _WIN32
     routeHeapSize = 1; /* Leave position 0 open to simplify the math */
     routeHeap = (routeHeapType*) malloc (RT_BLK_SIZE *
       sizeof (*routeHeap)); //(route + dhashSize) - 1;
-    dLength = (dLength + 6200000*2) >> RT_LENGTH_SHR;
-    // Padding near 'from' and 'to'
+    dLength += 6200000*2; // Padding near 'from' and 'to'
+    #if 0 // See AddNd() why we don't do this currently
+    dhashSize = ((dLength >> RT_LENGTH_SHR) + RT_BLK_SIZE) & ~RT_BLK_SIZE;
+    // Round up
+    #else
+    dhashSize = RT_BLK_SIZE;
+    #endif
+    #ifndef _WIN32
     #if 1 // If you have lots of swap space
     int dzero = open ("/dev/zero", O_RDWR);
     if (!routeHeap || dzero == -1 ||
     #else // If you have lots of disk space
     int dzero = open ("route.tmp", O_CREAT | O_RDWR | O_TRUNC, 0600);
     if (!routeHeap || dzero == -1 || ftruncate (dzero,
-                                 dLength * sizeof (*route)) != 0 ||
+                                 dhashSize * sizeof (*route)) != 0 ||
     #endif
-        (route = (routeNodeType*) mmap (NULL, dLength * sizeof (*route),
+        (route = (routeNodeType*) mmap (NULL, dhashSize * sizeof (*route),
         PROT_READ | PROT_WRITE, MAP_SHARED, dzero, 0)) == MAP_FAILED) {
       fprintf (stderr, "Error: Mmap of dnull for routing arrays\n");
       route = NULL;
       return;
     }
     if (dzero != -1) close (dzero);
-    routeEnd = route + dLength;
     #else
+/*    RT_BLK_SIZE should be variable for this case...
     dhashSize = Sqr ((tlon - flon) >> 16) + Sqr ((tlat - flat) >> 16) + 20;
     dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
     // Allocate one piece of memory for both route and routeHeap, so that
@@ -534,13 +547,17 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     int lim = (memStat.dwAvailPhys - 1400000) / // Leave 1.4 MB free
                  (sizeof (*route) + sizeof (*routeHeap));
     if (dhashSize > lim && lim > 0) dhashSize = lim;
-    #endif
+    #endif */
 
     while (dhashSize > 0 && !(route = (routeNodeType*)
-        malloc ((sizeof (*route) + sizeof (*routeHeap)) * dhashSize))) {
+        malloc ((sizeof (*route)) * dhashSize))) {
+      if(1) { // Needs variable RT_BLK_SIZE
+        free (routeHeap);
+        return;
+      }
       dhashSize = dhashSize / 4 * 3;
     }
-    memset (route, 0, (sizeof (*route) + sizeof (*routeHeap)) * dhashSize); 
+    memset (route, 0, (sizeof (*route)) * dhashSize); 
     #endif
 
     rlat = flat;
@@ -567,7 +584,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     rhd = rhd || (rhdBbox[i][0] < tlon && rhdBbox[i][1] < tlat &&
                   tlon < rhdBbox[i][2] && tlat < rhdBbox[i][3]);
   }
-  printf (rhd ? "Right Hand Drive\n" : "Left Hand Drive\n");
+  //printf (rhd ? "Right Hand Drive\n" : "Left Hand Drive\n");
   
   while (routeHeapSize > 1) {
     routeNodeType *root = routeHeap[1].r;
@@ -593,27 +610,42 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     ndType *nd = root->nd, *other, *firstNd, *restrictItr;
     while (nd > ndBase && nd[-1].lon == nd->lon &&
       nd[-1].lat == nd->lat) nd--; /* Find first nd in node */
-    firstNd = nd; // Save it for checking restrictions
+    firstNd = nd; // Save it for checking layout and restrictions
     int rootIsAdestination = Way (root->nd)->destination & (1 << Vehicle);
     /* Now work through the segments connected to root. */
+    
+    unsigned layout[4] = { 0, 0, 0, 0 }, lmask = 1;
+    ndType *rtother = root->nd + root->nd->other[root->dir], *layoutNd[4];
     do {
+      lmask <<= 2;
       for (int dir = 0; dir < 2; dir++) {
         if (nd->other[dir] != 0) {
+          other = nd + nd->other[dir];
+          int dot = (other->lat - nd->lat) * (nd->lat - rtother->lat) +
+                    (other->lon - nd->lon) * (nd->lon - rtother->lon);
+          int cross = (other->lat - nd->lat) * (nd->lon - rtother->lon) -
+                      (other->lon - nd->lon) * (nd->lat - rtother->lat);
+          int azimuth = (dot > cross ? 0 : 3) ^ (dot + cross > 0 ? 0 : 1);
+          layout[azimuth] |= lmask << dir;
+          layoutNd[azimuth] = nd;
         }
       }
     } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
              nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
+             
+    //printf ("%d %d %d %d\n", layout[0], layout[1], layout[2], layout[3]);
     nd = firstNd;
-
+    lmask = 1;
     do {
       if (StyleNr (Way (nd)) >= barrier_bollard &&
           StyleNr (Way (nd)) <= barrier_toll_booth &&
           !(Way (nd)->bits & (1 << Vehicle))) break;
-/*      if (root->remain > 500000 && -root->heapIdx - root->remain > 500000 &&
+      lmask <<= 2;
+      if (root->remain > 500000 && -root->heapIdx - root->remain > 500000 &&
           (StyleNr (Way (nd)) == highway_residential ||
            StyleNr (Way (nd)) == highway_service ||
            StyleNr (Way (nd)) == highway_living_street ||
-           StyleNr (Way (nd)) == highway_unclassified)) continue; */
+           StyleNr (Way (nd)) == highway_unclassified)) continue;
       /* When more than 50km from the start and the finish, ignore minor
          roads. This reduces the number of calculations. */
       for (int dir = 0; dir < 2; dir++) {
@@ -649,9 +681,36 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
           if (rootIsAdestination && !(w->destination & (1 << Vehicle))) {
             d += 5000000; // 500km penalty for entering v='destination' area.
           }
+          
+          // If (lmask<<dir)&layout[x] is set, we are going approximately
+          // in direction x * 90 degrees, relative to the direction we
+          // are going to (Remeber that we are coming from 'root')
+          // If layout[x] is not zero, there are segments going in that
+          // direction
+          if (layout[rhd ? 1 : 3] && ((lmask << dir) & layout[rhd ? 3 : 1])) {
+            d += 300000 * (fast ? Style (w)->invSpeed[Vehicle] : 1);;
+          // Turning right in the UK (or left in the rest of the world), when
+          // the straight on road exist, you will probably have to wait for
+          // oncoming traffic.
+          }
+          
+          if (layout[1] && layout[3] && ((lmask << dir) & layout[0])) {
+            // Straight over a T-junction
+            if ((Way (layoutNd[1])->bits & (1 << motorcarR)) &&
+                (Way (layoutNd[3])->bits & (1 << motorcarR))) {
+            // And motorcars are allowed on both sides
+              d += (Style (Way (layoutNd[1]))->invSpeed[motorcarR] <
+                    Style (w)->invSpeed[motorcarR] ? 50000 : 9000) *
+                    (fast ? Style (w)->invSpeed[Vehicle] : 1);
+            // Crossing a road that is faster that the road we are traveling
+            // on incurs a 500m penalty. If they are equal, the penality is
+            // 90m. TODO: residential crossing residential should be less,
+            // perhaps 20m.
+            }
+          }
           AddNd (other, 1 - dir, d, root);
         } // If we found a segment we may follow
-      }
+      } // for each direction
     } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
              nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
   } // While there are active nodes left
@@ -1042,7 +1101,7 @@ struct k2vType {
 // NOTE: Gosmore currently requires that you return the same strings during
 // both passes of the rebuild, i.e. the strings cannot depend on w.c{lat,lon}
 
-deque<string> Osm2Gosmore (k2vType &k2v, styleStruct &s)
+deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s)
 {
   deque<string> result;
   map<const char *, const char *, ltstr>::iterator i = k2v.m.begin ();
@@ -1439,7 +1498,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    w.dlat = wayFseek->w->dlat;
 	    w.dlon = wayFseek->w->dlon;
           }
-	  deque<string> tags = Osm2Gosmore (k2v, srec[styleCnt]);
+	  deque<string> tags = Osm2Gosmore (k2v, w, srec[styleCnt]);
 	  while (memcmp (&srec[styleCnt], &srec[wStyle], sizeof (srec[0]))
 	         != 0) wStyle++;
           w.bits += wStyle;

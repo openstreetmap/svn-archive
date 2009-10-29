@@ -409,8 +409,10 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
 
 inline int IsOneway (wayType *w, int Vehicle)
 {
-  return !((Vehicle == footR || Vehicle == bicycleR) &&
-    (w->bits & (1 << motorcarR))) && (w->bits & (1<<onewayR));
+  return Vehicle != footR &&
+    (w->bits & (1 << (Vehicle == bicycleR ? bicycleOneway : onewayR)));
+  //!((Vehicle == footR || Vehicle == bicycleR) &&
+  //  (w->bits & (1 << motorcarR))) && (w->bits & (1<<onewayR));
 }
 
 static const int rhdBbox[][4] = {
@@ -566,6 +568,18 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     AddNd (endNd[0] + endNd[0]->other[0], 1, toEndNd[0][1], NULL);
     AddNd (endNd[0], 1, toEndNd[0][0], NULL);
     AddNd (endNd[0] + endNd[0]->other[0], 0, toEndNd[0][1], NULL);
+
+    #ifdef INSPECT
+    printf ("\ncycleonewa: %s\n",
+      Way (endNd[0])->bits & (1 << bicycleOneway) ? "yes" : "no");
+    #define M(x) printf ("%10s: %s\n", #x, \
+                   Way (endNd[0])->bits & (1 << x ## R) ? "yes" : "no");
+    RESTRICTIONS
+    #undef M
+    // A bit confusing when the user clicks a way on which the selected
+    // vehicle type is not allowed, because endNd will then be a different
+    // way.
+    #endif
   }
   else {
     routeNodeType *frn = AddNd (&from, 0, -1, NULL);
@@ -673,11 +687,16 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
         
         other = nd + nd->other[dir];
         wayType *w = Way (nd);
-        if ((w->bits & (1 << Vehicle)) && (dir || !IsOneway (w, Vehicle))) {
+        int myV = Vehicle == bicycleR && (!(w->bits & (1 << bicycleR)) 
+          || ((w->bits & (1 << bicycleOneway)) && !dir)) ? footR : Vehicle;
+        // If pedestrians are allowed and cyclists not, we can dismount and
+        // walk. The same applies when we can't cycle in the wrong direction.
+        if ((w->bits & (1 << myV)) && (dir || !IsOneway (w, myV))) {
           int d = lrint (sqrt ((double)
             (Sqr ((__int64)(nd->lon - other->lon)) +
              Sqr ((__int64)(nd->lat - other->lat)))) *
-			 (fast ? Style (w)->invSpeed[Vehicle] : 1.0));     
+            (!fast ? 1.0 : Style (w)->invSpeed[Vehicle]));
+          if (Vehicle != myV) d *= 4; // Penalty for dismounting
           if (rootIsAdestination && !(w->destination & (1 << Vehicle))) {
             d += 5000000; // 500km penalty for entering v='destination' area.
           }
@@ -1101,30 +1120,109 @@ struct k2vType {
 // NOTE: Gosmore currently requires that you return the same strings during
 // both passes of the rebuild, i.e. the strings cannot depend on w.c{lat,lon}
 
-deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s)
+deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s,
+  int isNode, int isRelation)
 {
   deque<string> result;
+  // First add name and 'ref' to the front so that they are displayed
+  if (k2v["name"]) {
+    result.push_front (string (k2v["name"]) + "\n");
+    if (k2v["place"] && strcmp (k2v["place"], "city") == 0) {
+      result.push_back ("city:" + string (k2v["name"]) + "\n");
+    }
+  }
+  if (k2v["ref"]) result.push_back (string (k2v["ref"]) + "\n");
   map<const char *, const char *, ltstr>::iterator i = k2v.m.begin ();
+  // Go through all the tags and add all the interesting things to 'result'
+  // so that they will be indexed.
   for (; i != k2v.m.end (); i++) {
-    if (strcmp (i->first, "name") != 0 && strcmp (i->first, "ref") != 0) {
+    if (strcmp (i->first, "name") != 0 &&
+        strcmp (i->first, "ref") != 0 &&
+        strncasecmp (i->first, "tiger:", 6) != 0 &&
+        strcmp (i->first, "created_by") != 0 &&
+        strcmp (i->first, "converted_by") != 0 &&
+        strncasecmp (i->first, "source", 6) != 0 &&
+        strncasecmp (i->first, "AND_", 4) != 0 &&
+        strncasecmp (i->first, "AND:", 4) != 0 &&
+        strncasecmp (i->first, "KSJ2:", 5) != 0 && 
+        strncasecmp (i->first, "geobase:", 8)  != 0 &&
+        strncasecmp (i->first, "kms:", 4)  != 0 &&
+        strncasecmp (i->first, "openGeoDB:", 10)  != 0 &&
+        strncasecmp (i->first, "gnis:", 5)  != 0 &&
+        strcmp (i->first, "note:ja") != 0 &&
+        strcmp (i->first, "attribution") /* Mostly MassGIS */ != 0 &&
+        strcmp (i->first, "layer") != 0 &&
+        strcmp (i->first, "access") != 0 &&
+        strcmp (i->first, "motorcar") != 0 &&
+        strcmp (i->first, "bicycle") != 0 &&
+        strcmp (i->first, "foot") != 0 &&
+        strcmp (i->first, "goods") != 0 &&
+        strcmp (i->first, "hgv") != 0 &&
+        strcmp (i->first, "horse") != 0 &&
+        strcmp (i->first, "motorcycle") != 0 &&
+        strcmp (i->first, "psv") != 0 &&
+        strcmp (i->first, "moped") != 0 &&
+        strcmp (i->first, "mofa") != 0 &&
+        strcmp (i->first, "motorboat") != 0 &&
+        strcmp (i->first, "boat") != 0 &&
+        strcmp (i->first, "oneway") != 0 &&
+        strcmp (i->first, "roundabout") != 0 &&
+        strcmp (i->first, "time") != 0 &&
+        strcmp (i->first, "ele") != 0 &&
+        strcmp (i->first, "hdop") != 0 &&
+        strcmp (i->first, "sat") != 0 &&
+        strcmp (i->first, "pdop") != 0 &&
+        strcmp (i->first, "speed") != 0 &&
+        strcmp (i->first, "course") != 0 &&
+        strcmp (i->first, "fix") != 0 &&
+        strcmp (i->first, "vdop") != 0 &&
+        strcmp (i->second, "no") != 0      &&
+        strcmp (i->second, "false") != 0 &&
+        strcmp (i->first, "sagns_id") != 0 &&
+        strcmp (i->first, "sangs_id") != 0 &&
+        strcmp (i->first,"is_in") !=0 &&
+        strcmp (i->second, "residential") != 0 &&
+        strcmp (i->second, "unclassified") != 0 &&
+        strcmp (i->second, "tertiary") != 0 &&
+        strcmp (i->second, "secondary") != 0 && 
+        strcmp (i->second, "primary") != 0 && // Esp. ValidateMode
+        strcmp (i->second, "junction") != 0 && 
+   /* Not approved and when it isn't obvious
+      from the ways that it's a junction, the tag will 
+      often be something ridiculous like 
+      junction=junction ! */
+        // blocked as highway:  strcmp (i->second, "mini_roundabout") != 0
+        //                      && strcmp (i->second, "roundabout") != 0
+        strcmp (i->second, "traffic_signals") != 0 &&
+        strcmp (i->first, "editor") != 0 &&
+        strcmp (i->first, "class") != 0 /* esp. class=node */ &&
+        strcmp (i->first, "type") != 0 &&
+        /* "type=..." is only allow for boules grounds. We block it because it
+        is often misused. */
+         0 != strcmp (i->second, 
+  "National-Land Numerical Information (Railway) 2007, MLIT Japan") &&
+         0 != strcmp (i->second, 
+  "National-Land Numerical Information (Lake and Pond) 2005, MLIT Japan") &&
+         0 != strcmp (i->second, 
+  "National-Land Numerical Information (Administrative area) 2007, MLIT Japan") &&
+         strcmp (i->second, "coastline_old") != 0 &&
+         strcmp (i->first, "upload_tag") != 0 &&
+         strcmp (i->first, "admin_level") != 0 &&
+         (!isNode || (strcmp (i->first, "highway") != 0 &&
+                      strcmp (i->second, "water") != 0 &&
+                      strcmp (i->first, "abutters") != 0 &&
+                      strcmp (i->second, "coastline") != 0))) {
       result.push_back (string (strcmp (i->second, "true") == 0 ||
         strcmp (i->second, "yes") == 0 || strcmp (i->second, "1") == 0
         ? i->first : i->second) + "\n");
     }
   }
-  if (k2v["ref"]) result.push_front (string (k2v["ref"]) + "\n");
-  if (k2v["name"]) {
-    result.push_front (string (k2v["name"]) + "\n");
-    if (k2v["place"] && strcmp (k2v["place"], "city") == 0) {
-      result.push_back (string (k2v["name"]) + " City\n");
-      // I don't think users search for this. Furthermore the new lowzoom
-      // code will deprecate it.
-    }
-  }
+  // Reduce the aveSpeeds when maxspeed mandates it
   if (k2v["maxspeed"] && isdigit (k2v["maxspeed"][0])) {
     const char *m = k2v["maxspeed"];
     double maxs = atof (m), best = 30, m2km = 1.609344;
     if (tolower (m[strcspn (m, "KMPSkmps")]) == 'm') maxs *= m2km;
+    // Here we find the first alphabetic character and compare it to 'm'
     int v[] = { 5,7,10,15,20,30,32,40,50,60,70,80,90,100,110,120,130 };
     for (unsigned i = 0; i < sizeof (v) / sizeof (v); i++) {
       if (fabs (maxs - best) > fabs (maxs - v[i])) best = v[i];
@@ -1135,9 +1233,19 @@ deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s)
       if (s.aveSpeed[i] > best) s.aveSpeed[i] = best;
     }
   }
+  // Now adjust for track type.
   if (k2v["tracktype"] && isdigit (k2v["tracktype"][5])) {
     s.aveSpeed[motorcarR] *= ('6' - k2v["tracktype"][5]) / 5.0;
+    // Alternatively use ... (6 - atoi (k2v["tracktype"] + 5)) / 5.0;
     // TODO: Mooaar
+  }
+  if ((w.bits & (1 << onewayR)) && !(k2v["cycleway"] &&
+    (strcmp (k2v["cycleway"], "opposite_lane") == 0 ||
+     strcmp (k2v["cycleway"], "opposite_track") == 0 ||
+     strcmp (k2v["cycleway"], "opposite") == 0))) {
+    // On oneway roads, cyclists are only allowed to go in the opposite
+    // direction, if the cycleway tag exist and starts with "opposite"
+    w.bits |= 1 << bicycleOneway;
   }
 //  printf ("%.5lf %.5lf\n", LonInverse (w.clon), LatInverse (w.clat));
   return result;
@@ -1317,28 +1425,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    wStyle = newStyle;
 	  }
 	  
-	  /*if (K_IS ("name")) {
-	    nameTag = avalue;
-	    avalue = (char*) xmlStrdup (BAD_CAST "");
-	  }
-	  else if (K_IS ("ref")) {
-	    xmlChar *tmp = xmlStrdup (BAD_CAST "\n");
-	    tmp = xmlStrcat (BAD_CAST tmp, BAD_CAST avalue);
-	    avalue = tags; // Old 'tags' will be freed
-	    tags = (char*) xmlStrcat (tmp, BAD_CAST tags);
-	    // name always first tag.
-	  }
-	  else  if (K_IS ("maxspeed")) {
-	    char units[80] = "";
-	    sscanf(avalue,"%f%s",&(w.maxspeed),units);
-	    // check for mph and variants and convert to kph
-	    if (strlen(units) > 0) {
-	      if (units[0] == 'm' || units[0] == 'M' ) {
-		w.maxspeed *= 1.609344;
-	      }
-	    }
-	  }
-	  else */ if (K_IS ("layer")) w.bits |= atoi (avalue) << 29;
+	  if (K_IS ("layer")) w.bits |= atoi (avalue) << 29;
           
 #define M(field) else if (K_IS (#field)) {				\
 	    if (V_IS ("yes") || V_IS ("1") || V_IS ("permissive") ||	\
@@ -1357,64 +1444,11 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	  RESTRICTIONS
 #undef M
 	    
-	  else if (!V_IS ("no") && !V_IS ("false") && 
-		   !K_IS ("sagns_id") && !K_IS ("sangs_id") && 
-		   !K_IS ("is_in") && !V_IS ("residential") &&
-		   !V_IS ("unclassified") && !V_IS ("tertiary") &&
-		   !V_IS ("secondary") && !V_IS ("primary") && // Esp. ValidateMode
-		   !V_IS ("junction") && /* Not approved and when it isn't obvious
-					    from the ways that it's a junction, the tag will 
-					    often be something ridiculous like 
-					    junction=junction ! */
-		   // blocked as highway:  !V_IS ("mini_roundabout") && !V_IS ("roundabout") &&
-		   !V_IS ("traffic_signals") && !K_IS ("editor") &&
-		   !K_IS ("class") /* esp. class=node */ &&
-		   !K_IS ("type") /* This is only for boules, but we drop it
-				     because it's often misused */ &&
-		   !V_IS ("National-Land Numerical Information (Railway) 2007, MLIT Japan") &&
-		   !V_IS ("National-Land Numerical Information (Lake and Pond) 2005, MLIT Japan") &&
-		   !V_IS ("National-Land Numerical Information (Administrative area) 2007, MLIT Japan") &&
-		   !V_IS ("coastline_old") &&
-		   !K_IS ("upload_tag") && !K_IS ("admin_level") &&
-		   (!isNode || (!K_IS ("highway") && !V_IS ("water") &&
-				!K_IS ("abutters") && !V_IS ("coastline")))) {
-	    // First block out tags that will bloat the index, will not make
-	    // sense or are implied.
-	    // tags = xmlStrcat (tags, tag_k); // with this it's
-	    // tags = xmlStrcat (tags, "="); // it's amenity=fuel
-	    /*tags = (char *) xmlStrcat (BAD_CAST tags, BAD_CAST "\n");
-	    tags = (char *) BAD_CAST xmlStrcat (BAD_CAST tags,  
-						V_IS ("yes") || V_IS ("1") || V_IS ("true")
-						? BAD_CAST tag_k : BAD_CAST avalue);
-	    */
-	    k2v.m[tag_k] = avalue;
-	    tag_k = (char*) xmlStrdup (BAD_CAST "");
-	    avalue = (char*) xmlStrdup (BAD_CAST "");
-	  }
+          k2v.m[tag_k] = avalue; // Will be freed after Osm2Gosmore()
 	}
-	if (stricmp (aname, "k") == 0) { /* Prevent useless tags from ending up in the pak file */
-	  xmlFree (tag_k);
-	  tag_k = avalue;
-	  if (strncasecmp (tag_k, "tiger:", 6) == 0 ||
-	      K_IS ("created_by") || K_IS ("converted_by") ||
-	      strncasecmp (tag_k, "source", 6) == 0 ||
-	      strncasecmp (tag_k, "AND_", 4) == 0 ||
-	      strncasecmp (tag_k, "AND:", 4) == 0 ||
-	      strncasecmp (tag_k, "KSJ2:", 5) == 0 || 
-		  strncasecmp (tag_k, "geobase:", 8) == 0 ||
-		  strncasecmp (tag_k, "kms:", 4) == 0 ||
-		  strncasecmp (tag_k, "openGeoDB:", 10) == 0 ||
-		  strncasecmp (tag_k, "gnis:", 5) == 0 ||
-		  K_IS ("note:ja") ||
-	      K_IS ("attribution") /* Mostly MassGIS */ ||
-	      K_IS ("time") || K_IS ("ele") || K_IS ("hdop") ||
-	      K_IS ("sat") || K_IS ("pdop") || K_IS ("speed") ||
-	      K_IS ("course") || K_IS ("fix") || K_IS ("vdop")) {
-	    xmlFree (aname);
-	    break;
-	  }
-	}
-	else xmlFree (avalue);
+	else if (stricmp (aname, "k") == 0) tag_k = avalue;
+	else xmlFree (avalue); // Not "k" or "v"
+	
 	xmlFree (aname);
       } /* While it's an attribute */
       if (relationType == 'w' && stricmp (name, "member") == 0) {
@@ -1498,7 +1532,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    w.dlat = wayFseek->w->dlat;
 	    w.dlon = wayFseek->w->dlon;
           }
-	  deque<string> tags = Osm2Gosmore (k2v, w, srec[styleCnt]);
+	  deque<string> tags = Osm2Gosmore (k2v, w, srec[styleCnt], isNode,
+	    nameIsRelation);
 	  while (memcmp (&srec[styleCnt], &srec[wStyle], sizeof (srec[0]))
 	         != 0) wStyle++;
           w.bits += wStyle;

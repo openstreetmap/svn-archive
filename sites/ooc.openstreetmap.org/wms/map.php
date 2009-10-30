@@ -13,8 +13,9 @@
 
 try
 {
-require_once ('defines.php');
 require_once ('generalfuncs.php');
+if(!file_exists('defines.php')) throw new Exception("defines.php does not exist or permission denied");
+require_once ('defines.php');
 require_once ('wmsdrawfuncs.php');
 
 list($width,$height) = GetWindowSize();
@@ -41,14 +42,20 @@ switch($source)
 		$zoom_min = OS7_ZOOM_MIN;
 		break;
 	
-	default:
+	case "npe":
 		$mapFolder = NPE_MAP_FOLDER;
 		$zoom_max = NPE_ZOOM_MAX;
 		$zoom_min = NPE_ZOOM_MIN;
 		break;
+
+	default:
+		$mapFolder = DEFAULT_MAP_FOLDER;
+		$zoom_max = DEFAULT_ZOOM_MAX;
+		$zoom_min = DEFAULT_ZOOM_MIN;
+		break;
 	}
 
-if(!file_exists($mapFolder)) throw new Exception("MAP_FOLDER does not exist or permission denied");
+if(!file_exists($mapFolder)) throw new Exception("Map folder does not exist or permission denied\n".$mapFolder);
 
 //phpinfo(); exit();
 //print_r($_SERVER); exit();
@@ -82,6 +89,27 @@ $painter->createImage($width, $height, 0, 0, 0);
 //TrySetImageFormat($image,'jpg',1);
 //$image->setCompressionQuality(40);
 
+/* 
+	TimSC: Check at run time which zoom layers are available on the server
+
+*/
+	$zoomMinOnServer = -1;
+	$zoomMaxOnServer = -1; 
+	$zoomRangeSet = 0;  
+	for($zoom = $zoom_max; $zoom > $zoom_min; $zoom--)
+	{		
+		$zoomFolderName = $mapFolder.'/'.$zoom;
+		if ($debug) echo $zoom." ".$zoomFolderName." exists=".file_exists($zoomFolderName)."<br/>\n";
+		$exists = file_exists($zoomFolderName);
+		if($exists && (!$zoomRangeSet || $zoomMaxOnServer < $zoom)) $zoomMaxOnServer = $zoom;
+		if($exists && (!$zoomRangeSet || $zoomMinOnServer > $zoom)) $zoomMinOnServer = $zoom;
+		if($exists) $zoomRangeSet = 1;
+	}
+	if ($debug) echo "Zoom range on server " . $zoomMinOnServer. " to " . $zoomMaxOnServer."<br/>\n";
+	$zoom_max = $zoomMaxOnServer;
+	$zoom_min = $zoomMinOnServer;
+
+	if($zoomRangeSet == 0) throw new Exception("No zoom folders found in folder:\n".$mapFolder);
 
 /*	JP80: Find best zoom level for chosen area. 
 	General idea is to iterate through each zoom level and calculate the projected tile size.

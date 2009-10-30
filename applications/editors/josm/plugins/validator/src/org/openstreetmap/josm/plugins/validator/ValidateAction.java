@@ -139,7 +139,7 @@ public class ValidateAction extends JosmAction {
 				public void run() {
 			        plugin.validationDialog.tree.setErrors(errors);
 			        plugin.validationDialog.setVisible(true);
-			        DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
+			        Main.main.getCurrentDataSet().fireSelectionChanged();
 				}				
 			};
 			if (SwingUtilities.isEventDispatchThread()) {

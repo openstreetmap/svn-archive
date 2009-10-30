@@ -504,7 +504,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
 						Main.main.undoRedo.afterAdd();
 						Main.map.repaint();
 						tree.resetErrors();
-						DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
+			            Main.main.getCurrentDataSet().fireSelectionChanged();
 					}
 				});
 			} catch(InterruptedException e) { 

@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use IO::File;
 use Getopt::GUI::Long;
 use GD;
 use POSIX qw(ceil floor);
@@ -25,6 +26,7 @@ GetOptions(\%opts,
 	   ["force-fetch",    "Force fetching of new data"],
 	   ["ps",             "Expect a postscript generation instead"],
 	   ["png",            "Make grid png files"],
+	   ["svg",            "Make fully rendered SVG pages"],
 	  ) || exit;
 
 #
@@ -490,10 +492,65 @@ sub make_overview_grid {
 
 }
 
+# it's generally faster to read straight SVG files as text than completely
+# parse them; so because we're really just taking one file and adding data
+# we don't pull in the full SVG to parse and just copy it till the end
+# but remembering the bounding area size
+
+sub copy_svg {
+    my ($infile, $outfile, $hscale, $vscale) = @_;
+
+    $hscale ||= 1;
+    $vscale ||= 1;
+
+    DEBUG("copying (augmenting?) SVG $infile to SVG $outfile\n");
+
+    my $inh = new IO::File;
+    $inh->open("<$infile");
+
+    my $outh = new IO::File;
+    $outh->open(">$outfile");
+
+    # find the width/height spec
+    my $initline = <$inh>;
+
+    # find original width/height
+    my ($origwidth, $origheight);
+    ($origwidth) = ($initline =~ /width=\"([\.\d]+)px\"/);
+    ($origheight) = ($initline =~ /height=\"([\.\d]+)(|px)\"/);
+
+    # scale the canvas as requested
+    my $width = $origwidth * $hscale;
+    my $height = $origheight * $vscale;
+
+    # and put out the new scale
+    print "here: $initline\n";
+    $initline =~ s/(width=\")([\.\d]+)(px\")/$1$width$3/;
+    $initline =~ s/(height=\")([\.\d]+)(px\")/$1$height$3/;
+    $initline =~ s/(viewBox=\"[-\.\d]+\s+[-\.\d]+\s+)[^\"]+/$1$width $height/;
+
+    print "here: $initline\n";
+
+    $outh->print($initline);
+
+    # copy everything but the closing svg line to the new file
+    while (<$inh>) {
+	last if (/<\/svg>/);
+
+	# make the background bigger
+	# XXX: assumes height comes first on line
+	s/(<rect.*height=\")([^"]+)(\".*width=\")([^"]+)(\".*class=\"map-background\".*)/$1$height$3$width$5/;
+
+	print $outh $_;
+    }
+
+    $inh->close();
+
+    return ($outh, $width, $height, $origwidth, $origheight);
+}
+
 sub make_svggrid {
     my ($infile, $outfile) = @_;
-    open(I, $infile);
-    open(O, ">$outfile");
 
     my $hsize = .03;
     my $vsize = .03;
@@ -505,34 +562,8 @@ sub make_svggrid {
 
     DEBUG("modifying SVG to add grids\n");
 
-    # extract the width/height and bourdary box of the original image
-    # so we know how much to scale it by.
-    my $initline = <I>;
-
-    my ($origwidth, $origheight);
-    ($origwidth) = ($initline =~ /width=\"([\.\d]+)px\"/);
-    ($origheight) = ($initline =~ /height=\"([\.\d]+)(|px)\"/);
-
-    my $width = $origwidth * (1 + $hsize);
-    my $height = $origheight * (1 + $vsize);
-
-    $initline =~ s/(width=\")([\.\d]+)(px\")/$1$width$3/;
-    $initline =~ s/(height=\")([\.\d]+)(px\")/$1$height$3/;
-    $initline =~ s/(viewBox=\"[-\.\d]+\s+[-\.\d]+\s+)[^\"]+/$1$width $height/;
-
-    # print out modified the first line
-    print O $initline;
-
-    # dump the rest of the file out
-    while (<I>) {
-	last if (/<\/svg>/);
-
-	# make the background bigger
-	# XXX: assumes height comes first on line
-	s/(<rect.*height=\")([^"]+)(\".*width=\")([^"]+)(\".*class=\"map-background\".*)/$1$height$3$width$5/;
-
-	print O $_;
-    }
+    my ($outh, $width, $height, $origwidth, $origheight) =
+      copy_svg($infile, $outfile, 1+$hsize, 1+$vsize);
 
     # add in our own side grid lines
 
@@ -544,28 +575,28 @@ sub make_svggrid {
 
 
     # add a blank white square underneath
-    print O "<rect id=\"marginalia-background\" x=\"0px\" y=\"$origheight\" height=\"${hlinegap}px\" width=\"${width}px\" class=\"map-marginalia-background\" />\n";
-    print O "<rect id=\"marginalia-background\" x=\"${origwidth}px\" y=\"0\" height=\"${height}px\" width=\"${vlinegap}px\" class=\"map-marginalia-background\" />\n";
+    print $outh "<rect id=\"marginalia-background\" x=\"0px\" y=\"$origheight\" height=\"${hlinegap}px\" width=\"${width}px\" class=\"map-marginalia-background\" />\n";
+    print $outh "<rect id=\"marginalia-background\" x=\"${origwidth}px\" y=\"0\" height=\"${height}px\" width=\"${vlinegap}px\" class=\"map-marginalia-background\" />\n";
 
     # outer black lines
     # horizontal
-    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"1\" y2=\"1\" />\n";
-    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"$vlinetop\" y2=\"$vlinetop\" />\n";
-    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"" . ($height-1) . "\" y2=\"" . ($height-1) . "\" />\n";
+    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"1\" y2=\"1\" />\n";
+    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"$vlinetop\" y2=\"$vlinetop\" />\n";
+    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"" . ($height-1) . "\" y2=\"" . ($height-1) . "\" />\n";
 
     # vertical
-    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"1\" y1=\"1\" y2=\"$height\" />\n";
-    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"$hlinetop\" x2=\"$hlinetop\" y1=\"1\" y2=\"$height\" />\n";
-    print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"" . ($width-1) . "\" x2=\"" . ($width-1) . "\" y1=\"1\" y2=\"$height\" />\n";
+    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"1\" y1=\"1\" y2=\"$height\" />\n";
+    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"$hlinetop\" x2=\"$hlinetop\" y1=\"1\" y2=\"$height\" />\n";
+    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"" . ($width-1) . "\" x2=\"" . ($width-1) . "\" y1=\"1\" y2=\"$height\" />\n";
 
 
     # vertical grid lines and horizontal labels
     for my $x (0..($numx)) {
-	print O "<line style=\"stroke: rgb(0,0,0)\" x1=\"",
+	print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"",
 	  $x * $vlinegap, "\" x2=\"", $x * $vlinegap, 
 	    "\" y1=\"$vlinetop\" y2=\"$height\" />\n";
 	if ($x != $numx) {
-	    print O "<text $textstyle x=\"", $x*$vlinegap + $vlinegap/2,
+	    print $outh "<text $textstyle x=\"", $x*$vlinegap + $vlinegap/2,
 	      "\" y=\"", $height - $hlinegap/16, "\">",
 		$xlabels[$x], "</text>\n";
 	}
@@ -573,19 +604,18 @@ sub make_svggrid {
 
     # horizontal grid lines and virtical labels
     for my $y (0..($numy)) {
-	print O "<line style=\"stroke: rgb(0,0,0)\" y1=\"",
+	print $outh "<line style=\"stroke: rgb(0,0,0)\" y1=\"",
 	  $y * $hlinegap, "\" y2=\"", $y * $hlinegap, 
 	    "\" x1=\"$hlinetop\" x2=\"$width\" />\n";
 	if ($y != $numy) {
-	    print O "<text $textstyle y=\"", $y*$hlinegap + $hlinegap/2,
+	    print $outh "<text $textstyle y=\"", $y*$hlinegap + $hlinegap/2,
 	      "\" x=\"", $width - $vlinegap/4, "\">",
 		$ylabels[$y], "</text>\n";
 	}
     }
 
-    print O "</svg>\n";
-    close(I);
-    close(O);
+    print $outh "</svg>\n";
+    $outh->close();
 
     return "-a 0:0:$width:$height";
 }

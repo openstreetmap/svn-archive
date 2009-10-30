@@ -334,8 +334,15 @@ sub do_grid {
     my $extrainkargs = "";
     if (! -f $svg2file || Stat($svgfile, $svg2file)) {
 	$extrainkargs = make_svggrid($svgfile, $svg2file);
-	$svgfile = $svg2file;
     }
+    $svgfile = $svg2file;
+
+    my $svgfinalfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy-page.svg";
+    if ($opts{'svg'} &&
+	(! -f $svgfinalfile || Stat($svg2file, $svgfinalfile))) {
+	make_svgpage($svgfile, $svgfinalfile, $x, $y);
+    }
+    $svgfile = $svgfinalfile;
 
     # convert to png
     # inkscape -f map.svg -e map.png
@@ -524,12 +531,9 @@ sub copy_svg {
     my $height = $origheight * $vscale;
 
     # and put out the new scale
-    print "here: $initline\n";
     $initline =~ s/(width=\")([\.\d]+)(px\")/$1$width$3/;
     $initline =~ s/(height=\")([\.\d]+)(px\")/$1$height$3/;
     $initline =~ s/(viewBox=\"[-\.\d]+\s+[-\.\d]+\s+)[^\"]+/$1$width $height/;
-
-    print "here: $initline\n";
 
     $outh->print($initline);
 
@@ -620,6 +624,135 @@ sub make_svggrid {
     return "-a 0:0:$width:$height";
 }
 
+sub svg_text {
+    my ($outh, $text, $x, $y, $fontsize) = @_;
+    print $outh
+      "<text font-size=\"$fontsize\" x=\"$x\" y=\"$y\">$text</text>\n";
+}
+
+sub make_svgpage {
+    my ($infile, $outfile, $x, $y) = @_;
+
+    my $vscale = 1.25;
+
+    DEBUG("modifying SVG to add bottom grid note\n");
+
+    my ($outh, $width, $height, $origwidth, $origheight) =
+      copy_svg($infile, $outfile, 1, $vscale);
+
+    # a thickline
+    my $thick = int($origheight*.01);
+    my $thin = int($origheight*.005);
+
+    # add in our bottom enclosing rectangle
+    my $outrectleft = 1;
+    my $outrectright = $width;
+    my $outrecttop = 1.05*$origheight;
+    print "STROKE: $thick\n";
+    my $outrectbot = 1.25*$origheight - $thick;
+    my $outrectht = $outrectbot-$outrecttop;
+    my $outrectwid = $outrectright-$outrectleft;
+
+    print $outh "<rect x=\"$outrectleft\" y=\"$origheight\"
+                  width=\"$outrectwid\" height=\"$outrectht\"
+                  stroke=\"black\" stroke-width=\"0\"
+                  fill=\"\#fff\"/>\n";
+
+    print $outh "<rect x=\"$outrectleft\" y=\"$outrecttop\"
+                  width=\"$outrectwid\" height=\"$outrectht\"
+                  stroke=\"black\" stroke-width=\"$thick\"
+                  fill=\"\#ddd\"/>\n";
+
+    # next page box
+    my $nextpageleft = $width*.75;
+    my $nextpageright = $width - $thick;
+    my $nextpagewid = $nextpageright - $nextpageleft;
+    my $nextpagetop = $outrecttop;
+    my $nextpagebot = $outrectbot;
+    my $nextpageht = $outrectht;
+
+    print $outh "<rect x=\"$nextpageleft\" y=\"$nextpagetop\"
+                  width=\"$nextpagewid\" height=\"$nextpageht\"
+                  stroke=\"black\" stroke-width=\"$thick\"
+                  fill=\"\#ddd\"/>\n";
+
+    # now the 4 grid dividing lines:
+
+    # Horizontal first
+    print $outh "<line x1=\"$nextpageleft\" y1=\"" .
+      ($nextpagetop + $nextpageht / 3) . "\"
+      x2=\"$nextpageright\" y2=\"" .
+      ($nextpagetop + $nextpageht / 3) . "\"
+                  stroke=\"black\" stroke-width=\"$thin\" />\n";
+
+    print $outh "<line x1=\"$nextpageleft\" y1=\"" .
+      ($nextpagetop + 2 * $nextpageht / 3) . "\"
+      x2=\"$nextpageright\" y2=\"" .
+      ($nextpagetop + 2 * $nextpageht / 3) . "\"
+                  stroke=\"black\" stroke-width=\"$thin\" />\n";
+
+    # Vertical first
+    print $outh "<line y1=\"$nextpagetop\" x1=\"" .
+      ($nextpageleft + $nextpagewid / 3) . "\"
+      y2=\"$nextpagebot\" x2=\"" .
+      ($nextpageleft + $nextpagewid / 3) . "\"
+                  stroke=\"black\" stroke-width=\"$thin\" />\n";
+
+    print $outh "<line y1=\"$nextpagetop\" x1=\"" .
+      ($nextpageleft + 2 * $nextpagewid / 3) . "\"
+      y2=\"$nextpagebot\" x2=\"" .
+      ($nextpageleft + 2 * $nextpagewid / 3) . "\"
+                  stroke=\"black\" stroke-width=\"$thin\" />\n";
+
+    # now add the text
+    my $nw = get_grid_display_num($x-1, $y+1, 'svg');
+    my $n  = get_grid_display_num($x,   $y+1, 'svg');
+    my $ne = get_grid_display_num($x+1, $y+1, 'svg');
+
+    my $w  = get_grid_display_num($x-1, $y, 'svg');
+    my $here = get_grid_display_num($x, $y, 'svg');
+    my $e  = get_grid_display_num($x+1, $y, 'svg');
+
+    my $sw = get_grid_display_num($x-1, $y-1, 'svg');
+    my $s  = get_grid_display_num($x,   $y-1, 'svg');
+    my $se = get_grid_display_num($x+1, $y-1, 'svg');
+
+    my $xoff = $nextpagewid / 6;
+    my $yoff = $nextpageht / 6;
+    my $xadj = 0 - $nextpagewid / 12;
+    my $yadj = $nextpageht / 12;
+
+    my $gridxoff = $nextpagewid / 3;
+    my $gridyoff = $nextpageht / 3;
+
+    my $fontsize = $xoff * .9;
+    my $heresize = $xoff;
+
+    svg_text($outh, $nw, $nextpageleft + $xoff + $xadj,
+	     $nextpagetop + $yoff + $yadj, $fontsize);
+    svg_text($outh, $n,  $nextpageleft + $xoff + $gridxoff + $xadj,
+	     $nextpagetop + $yoff +$yadj, $fontsize);
+    svg_text($outh, $ne,  $nextpageleft + $xoff + 2 * $gridxoff + $xadj,
+	     $nextpagetop + $yoff +$yadj, $fontsize);
+
+    svg_text($outh, $w, $nextpageleft + $xoff + $xadj,
+	     $nextpagetop + $yoff + $yadj + $gridyoff, $fontsize);
+    svg_text($outh, $here,  $nextpageleft + $xoff + $gridxoff + $xadj,
+	     $nextpagetop + $yoff +$yadj + $gridyoff, $heresize);
+    svg_text($outh, $e,  $nextpageleft + $xoff + 2 * $gridxoff + $xadj,
+	     $nextpagetop + $yoff +$yadj + $gridyoff, $fontsize);
+
+    svg_text($outh, $sw, $nextpageleft + $xoff + $xadj,
+	     $nextpagetop + $yoff + $yadj + 2 * $gridyoff, $fontsize);
+    svg_text($outh, $s,  $nextpageleft + $xoff + $gridxoff + $xadj,
+	     $nextpagetop + $yoff +$yadj + 2 * $gridyoff, $fontsize);
+    svg_text($outh, $se,  $nextpageleft + $xoff + 2 * $gridxoff + $xadj,
+	     $nextpagetop + $yoff +$yadj + 2 * $gridyoff, $fontsize);
+
+
+    print $outh "</svg>\n";
+    $outh->close();
+}
 
 sub make_overviewpng {
     my ($inpng, $outpng, $numx, $numy) = @_;

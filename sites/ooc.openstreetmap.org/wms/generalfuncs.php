@@ -141,6 +141,9 @@ function SendImageWithTextMessage($message,$width, $height)
 	header('Content-type: image/png');
 
 	// Create the image
+	if(!isset($width)) $width = 512;
+	if(!isset($height)) $height = 512;
+
 	$im = imagecreatetruecolor($width, $height);
 
 	// Create some colors

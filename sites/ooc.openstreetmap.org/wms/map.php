@@ -13,7 +13,7 @@
 
 try
 {
-require_once ('defines.example.php');
+require_once ('defines.php');
 require_once ('generalfuncs.php');
 require_once ('wmsdrawfuncs.php');
 

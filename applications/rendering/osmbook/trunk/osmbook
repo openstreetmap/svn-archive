@@ -240,7 +240,7 @@ sub get_grid_display_num {
 
     my $gridnum = get_grid_num($x, $y);
 
-    return $gridnum if ($gridnum eq "X");
+    return '-' if ($gridnum eq "X");
 
     # if a sub-grid, return it as a latex table
     if ($gridinfo->{'grid'}{$gridnum}{'subgrid'}) {
@@ -627,7 +627,7 @@ sub make_svggrid {
 sub svg_text {
     my ($outh, $text, $x, $y, $fontsize) = @_;
     print $outh
-      "<text font-size=\"$fontsize\" x=\"$x\" y=\"$y\">$text</text>\n";
+      "<text text-anchor=\"middle\" font-size=\"$fontsize\" x=\"$x\" y=\"$y\">$text</text>\n";
 }
 
 sub make_svgpage {
@@ -704,7 +704,7 @@ sub make_svgpage {
       ($nextpageleft + 2 * $nextpagewid / 3) . "\"
                   stroke=\"black\" stroke-width=\"$thin\" />\n";
 
-    # now add the text
+    # now add the text for the navigation grid
     my $nw = get_grid_display_num($x-1, $y+1, 'svg');
     my $n  = get_grid_display_num($x,   $y+1, 'svg');
     my $ne = get_grid_display_num($x+1, $y+1, 'svg');
@@ -719,7 +719,7 @@ sub make_svgpage {
 
     my $xoff = $nextpagewid / 6;
     my $yoff = $nextpageht / 6;
-    my $xadj = 0 - $nextpagewid / 12;
+    my $xadj = 0;
     my $yadj = $nextpageht / 12;
 
     my $gridxoff = $nextpagewid / 3;
@@ -737,7 +737,8 @@ sub make_svgpage {
 
     svg_text($outh, $w, $nextpageleft + $xoff + $xadj,
 	     $nextpagetop + $yoff + $yadj + $gridyoff, $fontsize);
-    svg_text($outh, $here,  $nextpageleft + $xoff + $gridxoff + $xadj,
+    svg_text($outh, "<tspan font-weight=\"bold\" fill=\"\#800\">$here</tspan>",
+	     $nextpageleft + $xoff + $gridxoff + $xadj,
 	     $nextpagetop + $yoff +$yadj + $gridyoff, $heresize);
     svg_text($outh, $e,  $nextpageleft + $xoff + 2 * $gridxoff + $xadj,
 	     $nextpagetop + $yoff +$yadj + $gridyoff, $fontsize);

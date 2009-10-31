@@ -90,7 +90,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Group common Address Interpolation inputs in a single dialog,"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/AddrInterpolation"/>
-                <attribute name="Plugin-Mainversion" value="2161"/>
+                <attribute name="Plugin-Mainversion" value="2350"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

@@ -73,6 +73,14 @@ public class UnconnectedWays extends Test
         minmiddledist = Main.pref.getDouble(PREFIX + ".way_way_distance", 0.0)/6378135.0;
         this.ds = Main.main.getCurrentDataSet();
         this.ds_area = ds.getDataSourceArea();
+        // This is temporary until we get proper
+        // reindexing in the dataset code.
+        ArrayList<Node> ntmp = new ArrayList<Node>(ds.nodes);
+        ds.nodes.clear();
+        ds.nodes.addAll(ntmp);
+        ArrayList<Way> wtmp = new ArrayList<Way>(ds.ways);
+        ds.ways.clear();
+        ds.ways.addAll(wtmp);
     }
 
     @Override

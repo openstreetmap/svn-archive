@@ -169,7 +169,8 @@ public class JoinAreasAction extends JosmAction {
 
         if(joinAreas(selWays[0], selWays[ways == 2 ? 1 : 0])) {
             Main.map.mapView.repaint();
-            DataSet.fireSelectionChanged(Main.main.getCurrentDataSet().getSelected());
+            DataSet ds = Main.main.getCurrentDataSet();
+            ds.fireSelectionChanged();
         } else
             JOptionPane.showMessageDialog(Main.parent, tr("No intersection found. Nothing was changed."));
     }

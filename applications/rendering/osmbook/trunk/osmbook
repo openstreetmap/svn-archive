@@ -553,6 +553,29 @@ sub copy_svg {
     return ($outh, $width, $height, $origwidth, $origheight);
 }
 
+sub svg_text {
+    my ($outh, $text, $x, $y, $fontsize) = @_;
+    print $outh
+      "<text text-anchor=\"middle\" font-size=\"$fontsize\" x=\"$x\" y=\"$y\">$text</text>\n";
+}
+
+sub svg_line {
+    my ($outh, $x1, $x2, $y1, $y2, $thickness, $color) = @_;
+    $thickness ||= 1;
+    $color ||= '#000';
+    print $outh "<line x1=\"$x1\" x2=\"$x2\" y1=\"$y1\" y2=\"$y2\" stroke=\"$color\" stroke-width=\"$thickness\"/>\n";
+}
+
+sub svg_vline {
+    my ($outh, $x, $y1, $y2, $thickness, $color) = @_;
+    svg_line($outh, $x, $x, $y1, $y2, $thickness, $color);
+}
+
+sub svg_hline {
+    my ($outh, $x1, $x2, $y, $thickness, $color) = @_;
+    svg_line($outh, $x1, $x2, $y, $y, $thickness, $color);
+}
+
 sub make_svggrid {
     my ($infile, $outfile) = @_;
 
@@ -575,7 +598,8 @@ sub make_svggrid {
     my $vlinegap = $origwidth / $numx;
     my $hlinetop = $width - $origwidth * $hsize;
     my $hlinegap = $origheight / $numx;
-    my $textstyle = "style=\"font-size: " . int($vlinegap/4) . "px;\"";
+    my $fontsize = int($vlinegap/5);
+    my $textstyle = "style=\"font-size: ${fontsize}px;\"";
 
 
     # add a blank white square underneath
@@ -584,37 +608,31 @@ sub make_svggrid {
 
     # outer black lines
     # horizontal
-    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"1\" y2=\"1\" />\n";
-    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"$vlinetop\" y2=\"$vlinetop\" />\n";
-    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"$width\" y1=\"" . ($height-1) . "\" y2=\"" . ($height-1) . "\" />\n";
+    svg_hline($outh, 1, $width, 1);
+    svg_hline($outh, 1, $width, $vlinetop);
+    svg_hline($outh, 1, $width, $height - 1);
 
     # vertical
-    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"1\" x2=\"1\" y1=\"1\" y2=\"$height\" />\n";
-    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"$hlinetop\" x2=\"$hlinetop\" y1=\"1\" y2=\"$height\" />\n";
-    print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"" . ($width-1) . "\" x2=\"" . ($width-1) . "\" y1=\"1\" y2=\"$height\" />\n";
-
+    svg_vline($outh, 1, 1, $height);
+    svg_vline($outh, $hlinetop, 1, $height);
+    svg_vline($outh, $width - 1, 1, $height);
 
     # vertical grid lines and horizontal labels
     for my $x (0..($numx)) {
-	print $outh "<line style=\"stroke: rgb(0,0,0)\" x1=\"",
-	  $x * $vlinegap, "\" x2=\"", $x * $vlinegap, 
-	    "\" y1=\"$vlinetop\" y2=\"$height\" />\n";
+	svg_vline($outh, $x * $vlinegap, $vlinetop, $height);
 	if ($x != $numx) {
-	    print $outh "<text $textstyle x=\"", $x*$vlinegap + $vlinegap/2,
-	      "\" y=\"", $height - $hlinegap/16, "\">",
-		$xlabels[$x], "</text>\n";
+	    svg_text($outh, $xlabels[$x], ($x + .5) * $vlinegap,
+		     $height - $hlinegap/16, $fontsize);
 	}
     }
 
     # horizontal grid lines and virtical labels
     for my $y (0..($numy)) {
-	print $outh "<line style=\"stroke: rgb(0,0,0)\" y1=\"",
-	  $y * $hlinegap, "\" y2=\"", $y * $hlinegap, 
-	    "\" x1=\"$hlinetop\" x2=\"$width\" />\n";
+	svg_hline($outh, $hlinetop, $width, $y * $hlinegap);
+
 	if ($y != $numy) {
-	    print $outh "<text $textstyle y=\"", $y*$hlinegap + $hlinegap/2,
-	      "\" x=\"", $width - $vlinegap/4, "\">",
-		$ylabels[$y], "</text>\n";
+	    svg_text($outh, $ylabels[$y], $width - $vlinegap/8,
+		     (.5 + $y)*$hlinegap, $fontsize);
 	}
     }
 
@@ -622,12 +640,6 @@ sub make_svggrid {
     $outh->close();
 
     return "-a 0:0:$width:$height";
-}
-
-sub svg_text {
-    my ($outh, $text, $x, $y, $fontsize) = @_;
-    print $outh
-      "<text text-anchor=\"middle\" font-size=\"$fontsize\" x=\"$x\" y=\"$y\">$text</text>\n";
 }
 
 sub make_svgpage {

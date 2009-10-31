@@ -603,19 +603,19 @@ sub make_svggrid {
 
 
     # add a blank white square underneath
-    print $outh "<rect id=\"marginalia-background\" x=\"0px\" y=\"$origheight\" height=\"${hlinegap}px\" width=\"${width}px\" class=\"map-marginalia-background\" />\n";
-    print $outh "<rect id=\"marginalia-background\" x=\"${origwidth}px\" y=\"0\" height=\"${height}px\" width=\"${vlinegap}px\" class=\"map-marginalia-background\" />\n";
+    print $outh "<rect x=\"0px\" y=\"$origheight\" height=\"${hlinegap}px\" width=\"${width}px\" class=\"map-marginalia-background\" />\n";
+    print $outh "<rect x=\"${origwidth}px\" y=\"0\" height=\"${height}px\" width=\"${vlinegap}px\" class=\"map-marginalia-background\" />\n";
 
     # outer black lines
     # horizontal
     svg_hline($outh, 1, $width, 1);
     svg_hline($outh, 1, $width, $vlinetop);
-    svg_hline($outh, 1, $width, $height - 1);
+    svg_hline($outh, 1, $width, $height);
 
     # vertical
     svg_vline($outh, 1, 1, $height);
     svg_vline($outh, $hlinetop, 1, $height);
-    svg_vline($outh, $width - 1, 1, $height);
+    svg_vline($outh, $width, 1, $height);
 
     # vertical grid lines and horizontal labels
     for my $x (0..($numx)) {

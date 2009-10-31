@@ -342,9 +342,8 @@ public class TagEditorDialog extends JDialog {
 			tagEditor.stopEditing();
 			setVisible(false);
 			model.updateJOSMSelection();
-
-			Collection<OsmPrimitive> sel = Main.main.getCurrentDataSet().getSelected();
-			DataSet.fireSelectionChanged(sel);
+			DataSet ds = Main.main.getCurrentDataSet();
+			ds.fireSelectionChanged();
 			Main.parent.repaint(); // repaint all - drawing could have been changed
 		}
 

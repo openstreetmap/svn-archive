@@ -2,14 +2,17 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.util.*;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -26,7 +29,7 @@ public class Coastlines extends Test
     protected static int UNCONNECTED_COASTLINE = 903;
 
     private boolean fixable = false;
-    
+
     /**
      * Constructor
      */
@@ -37,62 +40,75 @@ public class Coastlines extends Test
     }
 
     @Override
-    public void visit(Way w)
+    public void visit(Way way)
     {
-        if(!w.isUsable() || w.isClosed())
+        if(!way.isUsable() || way.isClosed())
             return;
 
-        String natural = w.get("natural");
+        String natural = way.get("natural");
         if(natural == null || !natural.equals("coastline"))
             return;
 
-        Node f = w.firstNode();
-        Node l = w.lastNode();
-        Way prev = null;
-        Way next = null;
+        Node firstNode = way.firstNode();
+        Node lastNode = way.lastNode();
+        Way previousWay = null;
+        Way nextWay = null;
 
-        for (OsmPrimitive parent: this.backreferenceDataSet.getParents(f)) {
+        for (OsmPrimitive parent: this.backreferenceDataSet.getParents(firstNode)) {
             natural = parent.get("natural");
-            if (parent instanceof Way && !w.equals(parent) && (natural != null && "coastline".equals(natural))) {
-                prev = (Way)parent;
+            if (parent instanceof Way && !way.equals(parent) && (natural != null && "coastline".equals(natural))) {
+                previousWay = (Way)parent;
                 break;
             }
         }
-        for (OsmPrimitive parent: this.backreferenceDataSet.getParents(l)) {
+        for (OsmPrimitive parent: this.backreferenceDataSet.getParents(lastNode)) {
             natural = parent.get("natural");
-            if (parent instanceof Way && !w.equals(parent) && (natural != null && "coastline".equals(natural))) {
-                next = (Way)parent;
+            if (parent instanceof Way && !way.equals(parent) && (natural != null && "coastline".equals(natural))) {
+                nextWay = (Way)parent;
                 break;
             }
         }
 
         List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
         List<OsmPrimitive> highlight = new ArrayList<OsmPrimitive>();
-        primitives.add(w);
+        primitives.add(way);
 
-        if (prev == null || next == null) {
-            if (prev == null)
-                highlight.add(f);
-            if (next == null)
-                highlight.add(l);
+        OsmDataLayer layer = Main.map.mapView.getEditLayer();
+        Area downloadedArea = null;
+        if (layer != null)
+            downloadedArea = layer.data.getDataSourceArea();
 
-            errors.add(new TestError(this, Severity.ERROR, tr("Unconnected coastline"),
-                                     UNCONNECTED_COASTLINE, primitives, highlight));
+        if (previousWay == null || nextWay == null) {
+            boolean firstNodeUnconnected = false;
+            boolean lastNodeUnconnected = false;
+
+            if (previousWay == null && (downloadedArea == null || downloadedArea.contains(firstNode.getCoor()))) {
+                firstNodeUnconnected = true;
+                highlight.add(firstNode);
+            }
+            if (nextWay == null && (downloadedArea == null || downloadedArea.contains(lastNode.getCoor()))) {
+                lastNodeUnconnected = true;
+                highlight.add(lastNode);
+            }
+
+            if (firstNodeUnconnected || lastNodeUnconnected)
+                errors.add(new TestError(this, Severity.ERROR, tr("Unconnected coastline"),
+                                         UNCONNECTED_COASTLINE, primitives, highlight));
         }
 
-        boolean fuo = (prev != null && !f.equals(prev.lastNode()));
-        boolean luo = (next != null && !l.equals(next.firstNode()));
+        boolean firstNodeUnordered = (previousWay != null && !firstNode.equals(previousWay.lastNode()));
+        boolean lastNodeUnordered = (nextWay != null && !lastNode.equals(nextWay.firstNode()));
 
-        if (fuo || luo) {
-            if (fuo && luo) {
+        if (firstNodeUnordered || lastNodeUnordered) {
+            if (firstNodeUnordered && lastNodeUnordered && !previousWay.equals(nextWay)) {
                 errors.add(new TestError(this, Severity.ERROR, tr("Reversed coastline"),
                                          REVERSED_COASTLINE, primitives));
 
             } else {
-                if (fuo)
-                    highlight.add(f);
-                if (luo)
-                    highlight.add(l);
+                if (firstNodeUnordered)
+                    highlight.add(firstNode);
+                if (lastNodeUnordered)
+                    highlight.add(lastNode);
 
                 errors.add(new TestError(this, Severity.ERROR, tr("Unordered coastline"),
                                          UNORDERED_COASTLINE, primitives, highlight));
@@ -103,14 +119,14 @@ public class Coastlines extends Test
     @Override
     public Command fixError(TestError testError) {
         if (isFixable(testError)) {
-            Way w = (Way) testError.getPrimitives().iterator().next();
-            Way wnew = new Way(w);
+            Way way = (Way) testError.getPrimitives().iterator().next();
+            Way newWay = new Way(way);
 
-            List<Node> nodesCopy = wnew.getNodes();
+            List<Node> nodesCopy = newWay.getNodes();
             Collections.reverse(nodesCopy);
-            wnew.setNodes(nodesCopy);
+            newWay.setNodes(nodesCopy);
 
-            return new ChangeCommand(w, wnew);
+            return new ChangeCommand(way, newWay);
         }
 
         return null;

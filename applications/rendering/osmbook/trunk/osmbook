@@ -623,12 +623,12 @@ sub make_svggrid {
     # horizontal
     svg_hline($outh, 1, $width, 1);
     svg_hline($outh, 1, $width, $vlinetop);
-    svg_hline($outh, 1, $width, $height);
+    svg_hline($outh, 1, $hlinetop, $height);
 
     # vertical
     svg_vline($outh, 1, 1, $height);
-    svg_vline($outh, $hlinetop, 1, $height);
-    svg_vline($outh, $width, 1, $height);
+    svg_vline($outh, $hlinetop, 1, $vlinetop);
+    svg_vline($outh, $width, 1, $vlinetop);
 
     # vertical grid lines and horizontal labels
     for my $x (0..($numx)) {

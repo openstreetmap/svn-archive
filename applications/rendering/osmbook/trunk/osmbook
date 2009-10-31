@@ -340,7 +340,8 @@ sub do_grid {
     my $svgfinalfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy-page.svg";
     if ($opts{'svg'} &&
 	(! -f $svgfinalfile || Stat($svg2file, $svgfinalfile))) {
-	make_svgpage($svgfile, $svgfinalfile, $x, $y);
+	make_svgpage($svgfile, $svgfinalfile, $x, $y,
+		     $minx, $maxx, $miny, $maxy);
     }
     $svgfile = $svgfinalfile;
 
@@ -559,6 +560,18 @@ sub svg_text {
       "<text text-anchor=\"middle\" font-size=\"$fontsize\" x=\"$x\" y=\"$y\">$text</text>\n";
 }
 
+sub svg_ltext {
+    my ($outh, $text, $x, $y, $fontsize) = @_;
+    print $outh
+      "<text font-size=\"$fontsize\" x=\"$x\" y=\"$y\">$text</text>\n";
+}
+
+sub svg_rtext {
+    my ($outh, $text, $x, $y, $fontsize) = @_;
+    print $outh
+      "<text text-anchor=\"end\" font-size=\"$fontsize\" x=\"$x\" y=\"$y\">$text</text>\n";
+}
+
 sub svg_line {
     my ($outh, $x1, $x2, $y1, $y2, $thickness, $color) = @_;
     $thickness ||= 1;
@@ -643,7 +656,7 @@ sub make_svggrid {
 }
 
 sub make_svgpage {
-    my ($infile, $outfile, $x, $y) = @_;
+    my ($infile, $outfile, $x, $y, $minx, $maxx, $miny, $maxy) = @_;
 
     my $vscale = 1.25;
 
@@ -762,6 +775,21 @@ sub make_svgpage {
     svg_text($outh, $se,  $nextpageleft + $xoff + 2 * $gridxoff + $xadj,
 	     $nextpagetop + $yoff +$yadj + 2 * $gridyoff, $fontsize);
 
+
+    # Add the coordinate information
+    my $thisgrid = get_grid_num($x, $y);
+    svg_ltext($outh, "Page: $thisgrid",
+	      $outrectleft + $fontsize/8, $outrecttop + $fontsize);
+    svg_rtext($outh, sprintf("%3.3f, %3.3f to %3.3f, %3.3f",
+			     $minx, $miny, $maxx, $maxy),
+	      $nextpageleft - $fontsize/4,
+	      $outrecttop + $fontsize/2, $fontsize/2);
+
+    if ($proj->{'title'}) {
+	svg_text($outh, "<tspan font-weight=\"bold\">$proj->{title}</tspan>",
+		 $outrectleft + ($nextpageleft - $outrectleft)/2,
+		 $outrectbot - $fontsize/4, $fontsize*1.2);
+    }
 
     print $outh "</svg>\n";
     $outh->close();

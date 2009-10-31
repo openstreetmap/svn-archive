@@ -23,6 +23,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
@@ -39,6 +41,11 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -91,6 +98,9 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 	String[] addrInterpolationStrings = { tr("Odd"), tr("Even"), tr("All"), tr("Alphabetic") }; // Translatable names for display
 	private JComboBox addrInterpolationList = null;
 
+	// For tracking edit changes as group for undo
+	private Collection<Command> commandGroup = null;
+	private Relation editedRelation = null;
 
 	public AddrInterpolationDialog(String name) {
 
@@ -743,21 +753,23 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 		}
 
 		// Entries are valid ... save in map
+
+		commandGroup = new LinkedList<Command>();
+
 		String streetName = selectedStreet.get("name");
 
 		if (addrInterpolationWay != null) {
-			addrInterpolationWay.setModified(true);
 
 			Node firstNode = addrInterpolationWay.getNode(0);
 			Node lastNode = addrInterpolationWay.getNode(addrInterpolationWay.getNodesCount()-1);
 
-			addrInterpolationWay.put("addr:interpolation", selectedMethod);
-			firstNode.put("addr:housenumber", startValueString);
-			lastNode.put("addr:housenumber", endValueString);
+			commandGroup.add(new ChangePropertyCommand(addrInterpolationWay, "addr:interpolation", selectedMethod));
+			commandGroup.add(new ChangePropertyCommand(firstNode, "addr:housenumber", startValueString));
+			commandGroup.add(new ChangePropertyCommand(lastNode, "addr:housenumber", endValueString));
 			if (streetNameButton.isSelected()) {
 
-				firstNode.put("addr:street", streetName);
-				lastNode.put("addr:street", streetName);
+				commandGroup.add(new ChangePropertyCommand(firstNode, "addr:street", streetName));
+				commandGroup.add(new ChangePropertyCommand(lastNode, "addr:street", streetName));
 
 			}
 			// Add address interpolation house number nodes to main house number node list for common processing
@@ -778,9 +790,10 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 			// Relation button was selected
 			if (associatedStreetRelation == null) {
 				CreateRelation(streetName);
-				relationChanged = true;
+				// relationChanged = true;   (not changed since it was created)
 			}
-
+			// Make any additional changes only to the copy
+			editedRelation = new Relation(associatedStreetRelation);
 
 			if (addrInterpolationWay != null) {
 				AddToRelation(associatedStreetRelation, addrInterpolationWay, "house");
@@ -792,44 +805,40 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 		//   Add optional text fields to all nodes if specified
 		for (Node node : houseNumberNodes) {
 
-			node.setModified(true); // Trigger re-upload in case there is a change
-
 			if (streetRelationButton.isSelected()) {
 				AddToRelation(associatedStreetRelation, node, "house");
 			}
 			if ((city != null) || (streetNameButton.isSelected()) ) {
 				// Include street unconditionally if adding nodes only or city name specified
-				node.put("addr:street", streetName);
+				commandGroup.add(new ChangePropertyCommand(node, "addr:street", streetName));
 			}
 			// Set or remove remaining optional fields
-			node.put("addr:city", city);
-			node.put("addr:state", state);
-			node.put("addr:postcode", postCode);
-			node.put("addr:country", country);
-			node.put("addr:full", fullAddress);
+			commandGroup.add(new ChangePropertyCommand(node, "addr:city", city));
+			commandGroup.add(new ChangePropertyCommand(node, "addr:state", state));
+			commandGroup.add(new ChangePropertyCommand(node, "addr:postcode", postCode));
+			commandGroup.add(new ChangePropertyCommand(node, "addr:country", country));
+			commandGroup.add(new ChangePropertyCommand(node, "addr:full", fullAddress));
 		}
 
 		if (relationChanged) {
-			associatedStreetRelation.setModified(true);
-
-			// Redraw relation list dialog
-			Main.main.getEditLayer().fireDataChange();
+			commandGroup.add(new ChangeCommand(associatedStreetRelation, editedRelation));
 		}
 
 
-		Main.map.mapView.repaint();
+		Main.main.undoRedo.add(new SequenceCommand(tr("Address Interpolation"), commandGroup));
+		Main.map.repaint();
 
 		return true;
 	}
 
-	// Create Associated Street relation, add street, and add to map
+	// Create Associated Street relation, add street, and add to list of commands to perform
 	private void CreateRelation(String streetName) {
 		associatedStreetRelation = new Relation();
 		associatedStreetRelation.put("name", streetName);
 		associatedStreetRelation.put("type", "associatedStreet");
 		RelationMember newStreetMember = new RelationMember("street", selectedStreet);
 		associatedStreetRelation.addMember(newStreetMember);
-		Main.main.getCurrentDataSet().addPrimitive(associatedStreetRelation);
+		commandGroup.add(new AddCommand(associatedStreetRelation));
 	}
 
 
@@ -862,7 +871,8 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 		if (!isFound) {
 			RelationMember newMember = new RelationMember(role, testMember);
-			associatedStreetRelation.addMember(newMember);
+			editedRelation.addMember(newMember);
+
 			relationChanged = true;
 		}
 	}

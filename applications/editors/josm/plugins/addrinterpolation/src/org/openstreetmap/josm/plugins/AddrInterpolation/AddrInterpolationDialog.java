@@ -765,7 +765,10 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 			houseNumberNodes.add(lastNode);
 
 			// De-select address interpolation way; leave street selected
-			addrInterpolationWay.setSelected(false);
+			DataSet currentDataSet = Main.main.getCurrentDataSet();
+			if (currentDataSet != null) {
+				currentDataSet.clearSelection(addrInterpolationWay);
+			}
 		}
 
 

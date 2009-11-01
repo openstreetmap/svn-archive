@@ -1,6 +1,6 @@
 package wmsplugin;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -50,10 +50,10 @@ public class WMSPlugin extends Plugin {
     static boolean doOverlap = false;
     static int overlapEast = 14;
     static int overlapNorth = 4;
-    
+
     // remember state of menu item to restore on changed preferences
     static private boolean menuEnabled = false;
-    
+
     protected void initExporterAndImporter() {
     	ExtensionFileFilter.exporters.add(new WMSLayerExporter());
     	ExtensionFileFilter.importers.add(new WMSLayerImporter());
@@ -93,19 +93,19 @@ public class WMSPlugin extends Plugin {
 
         TreeSet<String> keys = new TreeSet<String>(prefs.keySet());
 
-        // Here we load the settings for "overlap" checkbox and spinboxes. 
-         
-        try { 
-            doOverlap = Boolean.valueOf(prefs.get("wmsplugin.url.overlap"));             
-        } catch (Exception e) {} // If sth fails, we drop to default settings. 
- 
-        try { 
-            overlapEast = Integer.valueOf(prefs.get("wmsplugin.url.overlapEast"));             
-        } catch (Exception e) {} // If sth fails, we drop to default settings. 
- 
-        try { 
-            overlapNorth = Integer.valueOf(prefs.get("wmsplugin.url.overlapNorth"));             
-        } catch (Exception e) {} // If sth fails, we drop to default settings. 
+        // Here we load the settings for "overlap" checkbox and spinboxes.
+
+        try {
+            doOverlap = Boolean.valueOf(prefs.get("wmsplugin.url.overlap"));
+        } catch (Exception e) {} // If sth fails, we drop to default settings.
+
+        try {
+            overlapEast = Integer.valueOf(prefs.get("wmsplugin.url.overlapEast"));
+        } catch (Exception e) {} // If sth fails, we drop to default settings.
+
+        try {
+            overlapNorth = Integer.valueOf(prefs.get("wmsplugin.url.overlapNorth"));
+        } catch (Exception e) {} // If sth fails, we drop to default settings.
 
         // And then the names+urls of WMS servers
         int prefid = 0;
@@ -168,7 +168,7 @@ public class WMSPlugin extends Plugin {
         MainMenu menu = Main.main.menu;
 
         if (wmsJMenu == null)
-            wmsJMenu = menu.addMenu(marktr("WMS"), KeyEvent.VK_W, menu.defaultMenuPos);
+            wmsJMenu = menu.addMenu(tr("WMS"), KeyEvent.VK_W, menu.defaultMenuPos, ht("/Plugin/WMS"));
         else
             wmsJMenu.removeAll();
 

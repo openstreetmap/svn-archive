@@ -27,6 +27,7 @@
 
 package com.innovant.josm.plugin.routing.gui;
 
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -70,9 +71,9 @@ public class RoutingMenu extends JMenu {
     /**
      * @param s
      */
-    public RoutingMenu(final String name) {
+    public RoutingMenu() {
         MainMenu mm = Main.main.menu;
-        menu = mm.addMenu(name, KeyEvent.VK_O, mm.defaultMenuPos);
+        menu = mm.addMenu(tr("Routing"), KeyEvent.VK_O, mm.defaultMenuPos, ht("/Plugin/Routing"));
 
         startMI = new JMenuItem(tr("Add routing layer"));
         startMI.addActionListener(new ActionListener() {

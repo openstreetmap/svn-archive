@@ -136,7 +136,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
         // Initialize layers list
         layers = new ArrayList<RoutingLayer>();
         // Add menu
-        menu = new RoutingMenu(marktr("Routing"));
+        menu = new RoutingMenu();
         // Register this class as LayerChangeListener
         Layer.listeners.add(this);
         logger.debug("Finished loading plugin");

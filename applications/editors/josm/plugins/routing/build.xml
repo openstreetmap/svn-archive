@@ -43,7 +43,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Provides routing capabilities."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Routing"/>
-                <attribute name="Plugin-Mainversion" value="2082"/>
+                <attribute name="Plugin-Mainversion" value="2323"/>
                 <attribute name="Plugin-Stage" value="50"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

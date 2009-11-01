@@ -1,6 +1,6 @@
 package livegps;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -97,7 +97,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener
     public LiveGpsPlugin()
     {
         MainMenu menu = Main.main.menu;
-        lgpsmenu = menu.addMenu(marktr("LiveGPS"), KeyEvent.VK_G, menu.defaultMenuPos);
+        lgpsmenu = menu.addMenu(tr("LiveGPS"), KeyEvent.VK_G, menu.defaultMenuPos, ht("/Plugin/LiveGPS"));
 
         JosmAction captureAction = new CaptureAction();
         lgpscapture = new JCheckBoxMenuItem(captureAction);

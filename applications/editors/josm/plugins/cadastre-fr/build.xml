@@ -25,8 +25,8 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="A special handler for the French land registry WMS server."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/FR:JOSM/Fr:Plugin/Cadastre"/>
-                <attribute name="Plugin-Mainversion" value="2012"/>
-                <attribute name="Plugin-Stage" value="2327"/>
+                <attribute name="Plugin-Mainversion" value="2327"/>
+                <attribute name="Plugin-Stage" value="60"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

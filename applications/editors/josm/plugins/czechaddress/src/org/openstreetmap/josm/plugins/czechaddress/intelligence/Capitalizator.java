@@ -18,7 +18,7 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 
 /**
  * Updates the names in the database according the map.
- * 
+ *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
 public class Capitalizator {
@@ -40,12 +40,12 @@ public class Capitalizator {
 
         for (Street elem : results.keySet()) {
             try {
-                
+
                 OsmPrimitive match = results.get(elem).get();
                 if (match == null) continue;
 
                 map.put(elem, match);
-                
+
             } catch (InterruptedException ex) {
                 logger.log(Level.SEVERE, "Thread interrupted during matching", ex);
             } catch (ExecutionException ex) {
@@ -54,7 +54,7 @@ public class Capitalizator {
         }
     }
 
-    private class StreetMatcher implements Callable {
+    private class StreetMatcher implements Callable<OsmPrimitive> {
 
         private AddressElement elem;
         private List<OsmPrimitive> prims;
@@ -74,7 +74,7 @@ public class Capitalizator {
 
                 if (prim.get("name").equals(elem.getName()))
                     return prim;
-                
+
                 if (StringUtils.matchAbbrev(prim.get("name"), elem.getName()))
                     candidate = prim;
             }

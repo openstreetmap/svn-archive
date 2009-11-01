@@ -52,9 +52,10 @@ public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerLi
         proposalTree.setCellRenderer(new UniversalTreeRenderer());
 
         // And finalize initializing the form.
-        setupDialog(mainPanel, new String[] { "ok.png", "cancel.png" });
+        setContent(mainPanel);
+        setButtonIcons(new String[] {"ok.png", "cancel.png"});
+        setupDialog();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setAlwaysOnTop(false);
 
         // TODO: Why does it always crash if the modality is set in constructor?
         setModal(false);

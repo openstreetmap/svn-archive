@@ -1,6 +1,6 @@
 <?php
 /* globals */
-$VERSION = "v1.2";  // poi export version
+$VERSION = "v1.3";  // poi export version
 $LANG = "en";       // default language file is english
 $messages = null;   // array of message translations
 

@@ -93,7 +93,8 @@ i18n();
                         <option value="csv"><? msg('Garmin (csv)'); ?></option>
                         <option value="gpx"><? msg('GPS Exchange format (gpx)'); ?></option>
                         <option value="kml"><? msg('Google Earth (kml)'); ?></option>
-						<option value="wpt"><? msg('OziExplorer (wpt)'); ?></option>
+			<option value="wpt"><? msg('OziExplorer (wpt)'); ?></option>
+			<option value="geojson"><? msg('GeoJSON (geojson)'); ?></option>
                         <!--<option value="osm"><? msg('OpenStreetMap (osm)'); ?></option>-->
                     </select>
                 </div>
@@ -128,8 +129,7 @@ i18n();
             </div>
             <div class="footer"><? msg('Poi Export'); ?> - <? echo $VERSION; ?>&nbsp;
                 <? msg('data'); ?> <a href="http://creativecommons.org/licenses/by-sa/2.0/">cc-by-sa</a>&nbsp;
-                <a href="http://www.openstreetmap.nl/"><? msg('OpenStreetMap'); ?></a>&nbsp;
-                <? msg('community') ?>.&nbsp;-&nbsp;
+                <a href="http://www.openstreetmap.nl/"><? msg('OpenStreetMap'); ?></a>&nbsp;<? msg('community') ?>.&nbsp;-&nbsp;
                 <? msg('Created by'); ?>&nbsp;<a href="http://www.openstreetmap.org/user/rullzer">rullzer</a>&nbsp;<? msg('and'); ?>&nbsp;<a href="http://www.openstreetmap.org/user/Rubke">rubke</a>
            </div>
         </div>

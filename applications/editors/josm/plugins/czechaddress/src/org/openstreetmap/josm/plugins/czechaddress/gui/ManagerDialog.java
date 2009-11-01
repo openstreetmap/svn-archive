@@ -68,7 +68,9 @@ public class ManagerDialog extends ExtendedDialog {
                                         new AddressElementRenderer());
 
         // And finalize initializing the form.
-        setupDialog(mainPanel, new String[] {});
+        setContent(mainPanel);
+        setButtonIcons(new String[] {"ok.png", "cancel.png"});
+        setupDialog();
     }
 
     public int countAutomaticRenameProposals() {

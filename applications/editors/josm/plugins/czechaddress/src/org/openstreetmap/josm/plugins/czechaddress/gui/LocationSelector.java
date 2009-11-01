@@ -49,7 +49,9 @@ public class LocationSelector extends ExtendedDialog {
                             new String[] { "OK", "Zrušit"}, true);
 
         initComponents();
-        setupDialog(mainPanel, new String[] { "ok.png", "cancel.png"});
+        setContent(mainPanel);
+        setButtonIcons(new String[] {"ok.png", "cancel.png"});
+        setupDialog();
 
         oblastComboBox.setRenderer(new AddressElementRenderer());
         vitociComboBox.setRenderer(new AddressElementRenderer());

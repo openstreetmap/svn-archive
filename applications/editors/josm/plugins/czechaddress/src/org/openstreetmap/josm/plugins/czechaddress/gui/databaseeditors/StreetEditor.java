@@ -44,7 +44,9 @@ public class StreetEditor extends ExtendedDialog {
         houseListChanged(null);
 
         // And finalize initializing the form.
-        setupDialog(mainPanel, new String[] {"ok.png", "cancel.png"});
+        setContent(mainPanel);
+        this.setButtonIcons(new String[] {"ok.png", "cancel.png"});
+        setupDialog();
     }
 
     public String getStreetName() {

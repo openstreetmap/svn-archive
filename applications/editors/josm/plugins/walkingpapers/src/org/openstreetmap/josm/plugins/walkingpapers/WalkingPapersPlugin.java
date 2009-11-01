@@ -1,7 +1,7 @@
 package org.openstreetmap.josm.plugins.walkingpapers;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.event.KeyEvent;
 
@@ -25,7 +25,7 @@ public class WalkingPapersPlugin extends Plugin
     public WalkingPapersPlugin()
     {
         MainMenu menu = Main.main.menu;
-        walkingPapersMenu = menu.addMenu(tr("Walking Papers"), KeyEvent.VK_K, menu.defaultMenuPos, ht("/Plugin/WalkingPapers"));
+        walkingPapersMenu = menu.addMenu(marktr("Walking Papers"), KeyEvent.VK_K, menu.defaultMenuPos, ht("/Plugin/WalkingPapers"));
         walkingPapersMenu.add(new JMenuItem(new WalkingPapersAddLayerAction()));
     }
 }

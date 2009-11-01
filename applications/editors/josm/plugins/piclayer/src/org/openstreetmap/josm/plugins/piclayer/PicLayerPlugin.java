@@ -21,7 +21,7 @@
 package org.openstreetmap.josm.plugins.piclayer;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 
 import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
@@ -59,7 +59,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
 
         // Create menu entry
         if ( Main.main.menu != null ) {
-            m_menu = Main.main.menu.addMenu(tr("PicLayer") , KeyEvent.VK_I, Main.main.menu.defaultMenuPos, ht("/Plugin/PicLayer"));
+            m_menu = Main.main.menu.addMenu(marktr("PicLayer") , KeyEvent.VK_I, Main.main.menu.defaultMenuPos, ht("/Plugin/PicLayer"));
         }
 
         // Add menu items

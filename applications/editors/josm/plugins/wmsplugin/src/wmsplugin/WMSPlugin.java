@@ -1,6 +1,7 @@
 package wmsplugin;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -168,7 +169,7 @@ public class WMSPlugin extends Plugin {
         MainMenu menu = Main.main.menu;
 
         if (wmsJMenu == null)
-            wmsJMenu = menu.addMenu(tr("WMS"), KeyEvent.VK_W, menu.defaultMenuPos, ht("/Plugin/WMS"));
+            wmsJMenu = menu.addMenu(marktr("WMS"), KeyEvent.VK_W, menu.defaultMenuPos, ht("/Plugin/WMS"));
         else
             wmsJMenu.removeAll();
 

@@ -1,6 +1,7 @@
 package cadastre_fr;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -132,7 +133,7 @@ public class CadastrePlugin extends Plugin {
         MainMenu menu = Main.main.menu;
 
         if (cadastreJMenu == null) {
-            cadastreJMenu = menu.addMenu(tr("Cadastre"), KeyEvent.VK_C, menu.defaultMenuPos, ht("/Plugin/CadastreFr"));
+            cadastreJMenu = menu.addMenu(marktr("Cadastre"), KeyEvent.VK_C, menu.defaultMenuPos, ht("/Plugin/CadastreFr"));
             JosmAction grab = new MenuActionGrab();
             JMenuItem menuGrab = new JMenuItem(grab);
             KeyStroke ks = grab.getShortcut().getKeyStroke();

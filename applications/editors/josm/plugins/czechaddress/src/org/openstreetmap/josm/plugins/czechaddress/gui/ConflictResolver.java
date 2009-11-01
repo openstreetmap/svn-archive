@@ -64,7 +64,8 @@ public class ConflictResolver extends ExtendedDialog {
         candPickButton.setIcon(cursorIcon); candPickButton.setText("");
 
         // And finalize initializing the form.
-        setupDialog(mainPanel, new String[] {});
+        setContent(mainPanel);
+        setupDialog();
         // TODO: Why does it always crash if the modality is set in constructor?
         setModal(false);
     }

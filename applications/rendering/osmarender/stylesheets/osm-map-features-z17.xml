@@ -3697,6 +3697,10 @@
 				<caption k="name" class="place-caption peak-caption" dy="-1.5px" layer="5"/>
 				<caption k="ele" class="place-caption" font-size="1px" dy="2.0px" layer="5"/>
 			</rule>
+			<rule e="node" k="mountain_pass" v="yes" layer="5">
+				<caption k="name" class="place-caption pass-caption" dy="-1.5px" layer="5"/>
+				<caption k="ele" class="place-caption" font-size="1px" dy="2.0px" layer="5"/>
+			</rule>
 			<rule e="node|way" k="natural" v="cave_entrance" layer="5">
 				<caption k="name" class="place-caption cave-caption" dy="-1.5px" layer="5"/>
 			</rule>
@@ -4834,6 +4838,7 @@
 			}
 
 			.peak-caption           { font-size: 2px; }
+			.pass-caption           { font-size: 2px; }
 			.cave-caption           { font-size: 2px; }
 			.islet-caption          { font-size: 3px; }
 			.village-caption        { font-size: 3px; }

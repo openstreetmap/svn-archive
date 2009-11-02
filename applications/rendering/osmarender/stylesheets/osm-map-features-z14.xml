@@ -1395,6 +1395,10 @@
 			</else>
 		</rule>
 
+		<!-- Electrical substations -->
+		<rule e="way" k="power" v="sub_station">
+			<area class="power-generic"/>
+		</rule>
 
 		<!-- Non-physical routes -->
 		<rule e="way" k="route" v="ferry">

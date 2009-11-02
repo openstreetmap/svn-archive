@@ -36,7 +36,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 
 /**
  * Processes HTTP "remote control" requests.
@@ -166,8 +165,8 @@ public class RequestProcessor extends Thread
                         maxlat = downloadBounds.getMaxY();
                         maxlon = downloadBounds.getMaxX();
                     }
-                    Future<?> future = osmTask.download(false /*no new layer*/, new Bounds(minlat,minlon,maxlat,maxlon), null /* let the task manage the progress monitor */);                    
-                    Main.worker.submit(new PostDownloadHandler(osmTask, future));                    
+                    Future<?> future = osmTask.download(false /*no new layer*/, new Bounds(minlat,minlon,maxlat,maxlon), null /* let the task manage the progress monitor */);
+                    Main.worker.submit(new PostDownloadHandler(osmTask, future));
                 } catch (AlreadyLoadedException ex) {
                     System.out.println("RemoteControl: no download necessary");
                 } catch (LoadDeniedException ex) {
@@ -198,9 +197,9 @@ public class RequestProcessor extends Thread
                                     System.out.println("RemoteControl: invalid selection '"+item+"' ignored");
                                 }
                             }
-                            for (Way w : Main.main.getCurrentDataSet().ways) if (ways.contains(w.getId())) newSel.add(w);
-                            for (Node n : Main.main.getCurrentDataSet().nodes) if (nodes.contains(n.getId())) newSel.add(n);
-                            for (Relation r : Main.main.getCurrentDataSet().relations) if (relations.contains(r.getId())) newSel.add(r);
+                            for (Way w : Main.main.getCurrentDataSet().getWays()) if (ways.contains(w.getId())) newSel.add(w);
+                            for (Node n : Main.main.getCurrentDataSet().getNodes()) if (nodes.contains(n.getId())) newSel.add(n);
+                            for (Relation r : Main.main.getCurrentDataSet().getRelations()) if (relations.contains(r.getId())) newSel.add(r);
                             Main.main.getCurrentDataSet().setSelected(newSel);
                             if (Main.pref.getBoolean("remotecontrol.permission.change-viewport", true))
                                 new AutoScaleAction("selection").actionPerformed(null);
@@ -290,29 +289,29 @@ public class RequestProcessor extends Thread
     /**
      * Adds a node, reacts to the GET /add_node?lon=...&amp;lat=... request.
      * @param args
-     * @param out 
-     * @throws IOException 
+     * @param out
+     * @throws IOException
      */
     private void addNode(HashMap<String, String> args, Writer out) throws IOException {
         if(!args.containsKey("lat") || !args.containsKey("lon")) {
             sendBadRequest(out);
             return;
         }
-        
+
         // Parse the arguments
         double lat = Double.parseDouble(args.get("lat"));
         double lon = Double.parseDouble(args.get("lon"));
         System.out.println("Adding node at (" + lat + ", " + lon + ")");
-        
+
         // Create a new node
         LatLon ll = new LatLon(lat, lon);
         Node nnew = new Node(ll);
-        
+
         // Now execute the commands to add this node.
         Main.main.undoRedo.add(new AddCommand(nnew));
         Main.main.getCurrentDataSet().setSelected(nnew);
         Main.map.mapView.repaint();
-        
+
     }
 
     /**

@@ -48,7 +48,7 @@ all: gosmore$(EXE)
 # task then chooses the most
 # appropriate process and forwards the expose, search or routing request to
 # it. THE CODE IS NOT FINISHED. Linux version looks promising.
-gosmore:	gosmore.cpp libgosm.cpp libgosm.h
+gosmore:	gosmore.cpp libgosm.cpp libgosm.h bboxes.c
 		g++ -DCHILDREN=16 ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
                   gosmore.cpp libgosm.cpp -o gosmore ${EXTRA}
 
@@ -57,7 +57,7 @@ gosmore16:	gosmore.cpp libgosm.cpp libgosm.h
                   gosmore.cpp libgosm.cpp -o gosmore16 ${EXTRA}
 
 $(ARCH)gosmore.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h \
-                    libgosm.h ceglue.h ceglue.c 
+                    libgosm.h ceglue.h ceglue.c bboxes.c
 		${ARCH}g++ ${CFLAGS} ${EXTRAC} -c gosmore.cpp
 		${ARCH}g++ ${CFLAGS} ${EXTRAC} -c libgosm.cpp
 		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ConvertUTF.c
@@ -74,6 +74,12 @@ translations.c: extract
 
 extract:	extract.c
 		${CC} ${CFLAGS} ${XMLFLAGS} extract.c -o extract
+
+bboxes.c:	density.c density.txt
+		gcc -lm density.c -o density
+		./density <density.txt >density.sh
+# wget http://www.openstreetmap.org/api/0.6/changeset/1707270/download -O \
+#   countries.osm
 
 osmunda:	osmunda.cpp libgosm.cpp libgosm.h
 		g++ ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \

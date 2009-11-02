@@ -54,10 +54,12 @@ montagelist=$tmpdir/montages
 
 name=icons
 
+# Add PD Icons from openclipart.org
+cp -a [^i]*.png iconset.png $ICONDIR/classic.big
+
 # list all icons we want, sorting them by height then width
 find $ICONDIR -iname '*.png' \
     -not -iwholename '*people*' \
-    -not -iwholename '*waypoint*' \
     -not -iwholename '*wlan*' \
     -not -iwholename '*rendering*' \
     -not -iwholename '*svg*' \
@@ -80,6 +82,11 @@ for line in $(cat $name.csv); do
 	"$(echo $line | cut -d':' -f1)" \
 	-background None -mosaic -quality 0 $name.png
 done
+# The for loop can also be replaced with these 3 lines, which is slower for
+# some reason:
+#convert $name.png `
+#  sed -e 's/\(.*\):\(.*\):\(.*\):.*:.*/ -page +\2+\3 \1/' <$name.csv` \
+#  -background None -mosaic -quality 0 $name.png
 
 echo "Flattening image (see $name-flatten.png)"
 # convert to binary transparency through thresholding of alpha channel
@@ -100,11 +107,6 @@ pngtopnm $name-flatten.png | ppmtobmp > $name.bmp
 pngtopnm $tmpdir/mask.png | pnminvert | ppmtobmp > $name-mask.bmp
 # imagemagick works ok for xpm though
 convert $tmpdir/binalpha.png $name.xpm
-
-# echo "Making icons.csv compatable with old version"
-# this would probably be better done in gosmore.cpp, but I'll do
-# it here to maintain compatability for now
-# sed -i -e 's|^map-icons/||' -e 's|/|_|g' $name.csv
 
 # Suppress the icons Ulf is using to highlight errors
 echo 'map-icons/classic.big/misc/deprecated.png:0:0:1:1

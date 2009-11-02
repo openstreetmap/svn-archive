@@ -25,6 +25,308 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 -->
 
 <rules>
+<!-- The following rules must be at the beginning of this file and must be
+  in the same order as the OPTIONS COMMANDS enum in gosmore.cpp -->
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="FollowGPSr" />
+       <icon annotate="true" src="satellite.png" />
+       <area colour="#000000"/> <!-- Overloaded as Background=0 -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="AddWayOrNode" />
+       <icon annotate="true" src="pencil.png" />
+       <area colour="#e0ffff"/> <!-- Overloaded as Background=1 -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="StartRoute" />
+       <icon annotate="true" src="waypoint/pin/green.png" />
+       <line width="6" realwidth="6" colour="#00ff00"/>
+       <!-- These line attributes are used for drawing the route -->
+       <area colour="#d3d3d3"/> <!-- Overloaded as Background=2 -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="EndRoute" />
+       <icon annotate="true" src="waypoint/pin/red.png" />
+       <area colour="#e6e6fa"/> <!-- Overloaded as Background=3 -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="OrientNorthwards" />
+       <icon annotate="true" src="compass.png" />
+       <area colour="#ffffe0"/> <!-- Overloaded as Background=4 -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="LoadGPX" />
+       <icon annotate="true" src="compass.png" />
+       <area colour="#f5deb3"/> <!-- Overloaded as Background=5 -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="FastestRoute" />
+       <icon annotate="true" src="road.png" />
+       <area colour="#7b68ee"/> <!-- Overloaded as Background=6 -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="Vehicle" />
+       <icon annotate="true" src="transport/car.png" />
+       <area colour="#6b8e23"/> <!-- Overloaded as Background=7 -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="English" />
+       <icon annotate="true" src="flags.png" />
+       <area colour="#ffffff"/> <!-- Overloaded as Background=8 -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="ButtonSize" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="IconSet" />
+       <icon annotate="true" src="iconset.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="DetailLevel" />
+       <icon annotate="true" src="magnify.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="ValidateMode" />
+       <icon annotate="true" src="valid.png" />
+       <line width="10" realwidth="10" colour="#ff9999"/>
+       <!-- These line attributes are used for marking invalid objects -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="Exit" />
+       <icon annotate="true" src="exit.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="DisplayOff" />
+       <icon annotate="true" src="sleep.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="FullScreen" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="ShowCompass" />
+       <icon annotate="true" src="compass.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="Background" />
+       <icon annotate="true" src="palette.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="ShowCoordinates" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="ShowTrace" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="CommPort" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="BaudRate" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="ZoomInKey" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="ZoomOutKey" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="MenuKey" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="ShowActiveRouteNodes" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="SearchSpacing" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdturnleft" />
+       <icon annotate="true" src="waypoint/route/left.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdkeepleft" />
+       <icon annotate="true" src="waypoint/route/left/fork.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdturnright" />
+       <icon annotate="true" src="waypoint/route/right.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdkeepright" />
+       <icon annotate="true" src="waypoint/route/right/fork.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdstop" />
+       <icon annotate="true" src="waypoint/route/destination.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmduturn" />
+       <icon annotate="true" src="waypoint/route/right/uturn.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdround1" />
+       <icon annotate="true" src="waypoint/wpt1.png" /> <!-- Bad choice -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdround2" />
+       <icon annotate="true" src="waypoint/wpt2.png" /> <!-- Bad choice -->
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdround3" />
+       <icon annotate="true" src="waypoint/wpt3.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdround4" />
+       <icon annotate="true" src="waypoint/wpt4.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdround5" />
+       <icon annotate="true" src="waypoint/wpt5.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdround6" />
+       <icon annotate="true" src="waypoint/wpt6.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdround7" />
+       <icon annotate="true" src="waypoint/wpt7.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="cmdround8" />
+       <icon annotate="true" src="waypoint/wpt8.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
 
 	<!-- mark some specials that should be fixed - they are already the default and therefore shouldn't be tagged -->
     <rule>

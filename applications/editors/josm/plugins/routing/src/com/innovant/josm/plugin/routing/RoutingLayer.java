@@ -132,7 +132,7 @@ public class RoutingLayer extends Layer {
     public final Node getNearestHighwayNode(Point p) {
         Node nearest = null;
         double minDist = 0;
-        for (Way w : dataLayer.data.ways) {
+        for (Way w : dataLayer.data.getWays()) {
             if (w.isDeleted() || w.incomplete || w.get("highway")==null) continue;
             for (Node n : w.getNodes()) {
                 if (n.isDeleted() || n.incomplete) continue;

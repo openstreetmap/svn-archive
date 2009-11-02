@@ -1,0 +1,4513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osmChange version="0.6" generator="OpenStreetMap server">
+  <create>
+    <node id="432424924" lat="33.0000012" lon="64.9999946" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:05Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="阿富汗"/>
+      <tag k="name" v="Afghanistan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AF"/>
+      <tag k="name:zh_pyt" v="Āfùhàn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Afuhan"/>
+      <tag k="name:ar" v="أفغانستان"/>
+      <tag k="name:he" v="אפגניסטן"/>
+      <tag k="name:da" v="Afghanistan"/>
+      <tag k="name:en" v="Afghanistan"/>
+      <tag k="capital_city" v="Kabul"/>
+      <tag k="name:eo" v="Afganio"/>
+      <tag k="is_in" v="Asia"/>
+      <tag k="country_code_fips" v="AF"/>
+      <tag k="source" v="CIA World Factbook"/>
+      <tag k="name:de" v="Afghanistan"/>
+      <tag k="name:hu" v="Afganisztán"/>
+      <tag k="name:cs_ascii" v="Afganistan"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424925" lat="41.0" lon="20.0" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:05Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="阿尔巴尼亚"/>
+      <tag k="name" v="Shqipëria"/>
+      <tag k="name:sl" v="Albanija"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AL"/>
+      <tag k="name:zh_pyt" v="Āěrbāníyà"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Aerbaniya"/>
+      <tag k="name:ar" v="ألبانيا"/>
+      <tag k="name:he" v="אלבניה"/>
+      <tag k="name:da" v="Albanien"/>
+      <tag k="name:nl" v="Albanië"/>
+      <tag k="name:en" v="Albania"/>
+      <tag k="name:eo" v="Albanio"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="country_code_fips" v="AL"/>
+      <tag k="source" v="CIA World Factbook"/>
+      <tag k="name:de" v="Albanien"/>
+      <tag k="name:hu" v="Albánia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424926" lat="28.0" lon="3.0" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:05Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="阿尔及利亚"/>
+      <tag k="name:fi" v="Algeria"/>
+      <tag k="name:ber" v="ⴷⵥⴰⵢⴻⵔ (Dzayer)"/>
+      <tag k="name" v="Algeria"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="DZ"/>
+      <tag k="official_name" v="People&amp;apos;s Democratic Republic of Algeria"/>
+      <tag k="name:zh_pyt" v="Āěrjílìyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Aerjiliya"/>
+      <tag k="name:pl" v="Algieria"/>
+      <tag k="name:ar" v="الجزائر"/>
+      <tag k="official_name:ar" v="الجمهورية الجزائرية الديمقراطية الشعبية"/>
+      <tag k="name:he" v="אלג&amp;apos;יר"/>
+      <tag k="name:da" v="Algeriet"/>
+      <tag k="population" v="33769669"/>
+      <tag k="name:nl" v="Algerije"/>
+      <tag k="name:en" v="Algeria"/>
+      <tag k="capital_city" v="Algiers"/>
+      <tag k="name:eo" v="Alĝerio"/>
+      <tag k="is_in" v="Africa"/>
+      <tag k="country_code_fips" v="AG"/>
+      <tag k="source" v="CIA World Factbook"/>
+      <tag k="name:de" v="Algerien"/>
+      <tag k="name:hu" v="Algéria"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424927" lat="42.5406807" lon="1.5732521" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:06Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="安道尔"/>
+      <tag k="name:fi" v="Andorra"/>
+      <tag k="name" v="Andorra"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AD"/>
+      <tag k="name:zh_pyt" v="Āndàoěr"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Andaoer"/>
+      <tag k="name:pl" v="Andora"/>
+      <tag k="name:ar" v="أندورا"/>
+      <tag k="name:he" v="אנדורה"/>
+      <tag k="name:oc" v="Andòrra"/>
+      <tag k="name:eo" v="Andoro"/>
+      <tag k="name:de" v="Andorra"/>
+      <tag k="name:hu" v="Andorra"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424928" lat="-13.7464942" lon="16.7519683" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:06Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="安哥拉"/>
+      <tag k="name" v="Angola"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AO"/>
+      <tag k="name:zh_pyt" v="Āngēlā"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Angela"/>
+      <tag k="name:ar" v="أنغولا"/>
+      <tag k="name:he" v="אנגולה"/>
+      <tag k="name:da" v="Angola"/>
+      <tag k="int_name" v="Angola"/>
+      <tag k="name:en" v="Angola"/>
+      <tag k="name:eo" v="Angolo"/>
+      <tag k="geonames:id" v="3351879"/>
+      <tag k="country_code_fips" v="AO"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Angola"/>
+      <tag k="name:hu" v="Angola"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424929" lat="17.0790698" lon="-61.8221895" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:06Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Antigua and Barbuda"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AG"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="أنتيغوا وبربودا"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:da" v="Antigua og Barbuda"/>
+      <tag k="int_name" v="Antigua and Barbuda"/>
+      <tag k="name:en" v="Antigua and Barbuda"/>
+      <tag k="name:eo" v="Antigvo-Barbudo"/>
+      <tag k="geonames:id" v="3576396"/>
+      <tag k="country_code_fips" v="AC"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Antigua a Barbuda"/>
+      <tag k="name:hu" v="Antigua és Barbuda"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424930" lat="-35.1125305" lon="-65.2419436" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:07Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Argentiina"/>
+      <tag k="name" v="Argentina"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AR"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="الأرجنتين"/>
+      <tag k="name:he" v="ארגנטינה"/>
+      <tag k="name:da" v="Argentina"/>
+      <tag k="int_name" v="Argentina"/>
+      <tag k="name:en" v="Argentina"/>
+      <tag k="name:eo" v="Argentino"/>
+      <tag k="geonames:id" v="3865483"/>
+      <tag k="country_code_fips" v="AR"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Argentinien"/>
+      <tag k="name:cy" v="Yr Ariannin"/>
+      <tag k="name:hu" v="Argentína"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424931" lat="40.7587844" lon="44.6519728" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:07Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="亚美尼亚"/>
+      <tag k="name:fi" v="Armenia"/>
+      <tag k="name:ay" v="Հայաստան (Hayastan)"/>
+      <tag k="name" v="Armenia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AM"/>
+      <tag k="official_name" v="Republic of Armenia"/>
+      <tag k="name:zh_pyt" v="Yàměiníyà"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Yameiniya"/>
+      <tag k="name:ar" v="أرمينيا"/>
+      <tag k="name:he" v="ארמניה"/>
+      <tag k="name:da" v="Armenien"/>
+      <tag k="int_name" v="Armenia"/>
+      <tag k="population" v="3231900"/>
+      <tag k="name:en" v="Armenia"/>
+      <tag k="capital_city" v="Yerevan"/>
+      <tag k="name:eo" v="Armenio"/>
+      <tag k="geonames:id" v="174982"/>
+      <tag k="country_code_fips" v="AM"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Armenien"/>
+      <tag k="name:hu" v="Örményország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424932" lat="-27.2693086" lon="136.1049177" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:07Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Australia"/>
+      <tag k="name" v="Australia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AU"/>
+      <tag k="is_in:continent" v="Australia"/>
+      <tag k="name:ar" v="أستراليا"/>
+      <tag k="name:he" v="אוסטרליה"/>
+      <tag k="name:da" v="Australien"/>
+      <tag k="int_name" v="Australia"/>
+      <tag k="name:en" v="Australia"/>
+      <tag k="capital_city" v="Canberra"/>
+      <tag k="name:eo" v="Aŭstralio"/>
+      <tag k="geonames:id" v="2077456"/>
+      <tag k="country_code_fips" v="AS"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Australien"/>
+      <tag k="name:cy" v="Awstralia"/>
+      <tag k="name:hu" v="Ausztrália"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424933" lat="47.2000035" lon="13.2000007" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:07Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="奥地利"/>
+      <tag k="name:fi" v="Itävalta"/>
+      <tag k="name" v="Österreich"/>
+      <tag k="name:sl" v="Avstrija"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AT"/>
+      <tag k="name:zh_pyt" v="Àodìlì"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Audili"/>
+      <tag k="name:pl" v="Austria"/>
+      <tag k="name:ar" v="النمسا"/>
+      <tag k="name:he" v="אוסטריה"/>
+      <tag k="name:da" v="Østrig"/>
+      <tag k="name:nl" v="Oostenrijk"/>
+      <tag k="name:en" v="Austria"/>
+      <tag k="capital_city" v="Vienna"/>
+      <tag k="name:eo" v="Aŭstrio"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="country_code_fips" v="AU"/>
+      <tag k="source" v="CIA World Factbook"/>
+      <tag k="name:fr" v="Autriche"/>
+      <tag k="name:de" v="Österreich"/>
+      <tag k="name:cy" v="Awstria"/>
+      <tag k="name:hu" v="Ausztria"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424934" lat="40.1636112" lon="47.8208333" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:07Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="阿塞拜疆"/>
+      <tag k="name:fi" v="Azerbaidžan"/>
+      <tag k="name" v="Azerbaijan"/>
+      <tag k="name:az" v="Azərbaycan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AZ"/>
+      <tag k="official_name:az" v="Azərbaycan Respublikası"/>
+      <tag k="official_name" v="Republic of Azerbaijan"/>
+      <tag k="name:zh_pyt" v="Āsàibàijiāng"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Asaibaijiang"/>
+      <tag k="name:ar" v="أذربيجان"/>
+      <tag k="wikipedia:en" v="Azerbaijan"/>
+      <tag k="name:he" v="אזרבייג&amp;apos;ן"/>
+      <tag k="name:da" v="Aserbajdsjan"/>
+      <tag k="int_name" v="Azerbaijan"/>
+      <tag k="population" v="8676000"/>
+      <tag k="name:en" v="Azerbaijan"/>
+      <tag k="capital_city" v="Baku"/>
+      <tag k="name:eo" v="Azerbajĝano"/>
+      <tag k="geonames:id" v="587116"/>
+      <tag k="country_code_fips" v="AJ"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Aserbeidschan"/>
+      <tag k="name:hu" v="Azerbajdzsán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424935" lat="24.7736111" lon="-78.0" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:08Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Bahama"/>
+      <tag k="name" v="Bahamas"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BS"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="جزر البهاما"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="wikipedia" v="The Bahamas"/>
+      <tag k="name:he" v="בהמה"/>
+      <tag k="int_name" v="Bahamas"/>
+      <tag k="name:en" v="Bahamas"/>
+      <tag k="name:eo" v="Bahamoj"/>
+      <tag k="geonames:id" v="3572887"/>
+      <tag k="country_code_fips" v="BF"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Y Bahamas"/>
+      <tag k="name:hu" v="Bahama-szigetek"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424936" lat="26.1550678" lon="50.5345106" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:08Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="巴林"/>
+      <tag k="name:fi" v="Bahrain"/>
+      <tag k="name" v="البحرين"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BH"/>
+      <tag k="official_name" v="Kingdom of Bahrain"/>
+      <tag k="name:zh_pyt" v="Bālín"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="is_in:island" v="Bahrain"/>
+      <tag k="name:zh_py" v="Balin"/>
+      <tag k="name:ar" v="البحرين"/>
+      <tag k="is_in:sea" v="Persian Gulf"/>
+      <tag k="official_name:ar" v="‎مملكة البحرين  (Mamlakat al-Baḥrayn)"/>
+      <tag k="name:he" v="בחריין"/>
+      <tag k="name:da" v="Bahrain"/>
+      <tag k="int_name" v="Bahrain"/>
+      <tag k="population" v="1046814"/>
+      <tag k="name:en" v="Bahrain"/>
+      <tag k="capital_city" v="Manama"/>
+      <tag k="name:eo" v="Barejno"/>
+      <tag k="country_code_fips" v="BA"/>
+      <tag k="name:de" v="Bahrain"/>
+      <tag k="name:cy" v="Bahrain"/>
+      <tag k="name:hu" v="Bahrein"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424937" lat="24.6753868" lon="89.4019881" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:08Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="孟加拉国"/>
+      <tag k="name" v="Bangladesh"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BD"/>
+      <tag k="name:zh_pyt" v="Mèngjiālāguó"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Mengjialaguo"/>
+      <tag k="name:ar" v="بنغلاديش"/>
+      <tag k="name:he" v="בנגלדש"/>
+      <tag k="name:da" v="Bangladesh"/>
+      <tag k="int_name" v="Bangladesh"/>
+      <tag k="name:en" v="Bangladesh"/>
+      <tag k="name:eo" v="Bangladeŝo"/>
+      <tag k="geonames:id" v="1210997"/>
+      <tag k="country_code_fips" v="BG"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Banglades"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424938" lat="13.15" lon="-59.525" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:09Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Barbados"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BB"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="بربادوس"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:he" v="ברבדוס"/>
+      <tag k="name:da" v="Barbados"/>
+      <tag k="int_name" v="Barbados"/>
+      <tag k="name:en" v="Barbados"/>
+      <tag k="name:eo" v="Barbado"/>
+      <tag k="geonames:id" v="3374084"/>
+      <tag k="country_code_fips" v="BB"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Barbados"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424939" lat="53.4250088" lon="27.6999889" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:09Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="白俄罗斯"/>
+      <tag k="name:ru" v="Республика Беларусь"/>
+      <tag k="name:fi" v="Valko-Venäjä"/>
+      <tag k="name:be" v="Рэспублiка Беларусь"/>
+      <tag k="name" v="Рэспублiка Беларусь"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BY"/>
+      <tag k="name:zh_pyt" v="Báiéluósī"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Baieluosi"/>
+      <tag k="name:ar" v="بيلاروس"/>
+      <tag k="name:he" v="בלרוס"/>
+      <tag k="name:da" v="Hviderusland"/>
+      <tag k="int_name" v="Belarus"/>
+      <tag k="population" v="9689800"/>
+      <tag k="name:en" v="Republic of Belarus"/>
+      <tag k="capital_city" v="Minsk"/>
+      <tag k="name:eo" v="Belorusio"/>
+      <tag k="geonames:id" v="630336"/>
+      <tag k="country_code_fips" v="BO"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Belarws"/>
+      <tag k="name:hu" v="Fehéroroszország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424940" lat="50.5916695" lon="4.3833255" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:09Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="比利时"/>
+      <tag k="name:fi" v="Belgia"/>
+      <tag k="name:es" v="Bélgica"/>
+      <tag k="name" v="België - Belgique - Belgien"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BE"/>
+      <tag k="name:zh_pyt" v="Bǐlìshí"/>
+      <tag k="name:ga" v="An_Bheilg"/>
+      <tag k="name:cs" v="Belgie"/>
+      <tag k="name:af" v="België"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="created_by" v="Potlatch 0.10f"/>
+      <tag k="name:zh_py" v="Bilishi"/>
+      <tag k="name:hy" v="Բելգիա"/>
+      <tag k="name:el" v="Βέλγιο"/>
+      <tag k="name:ar" v="بلجيكا"/>
+      <tag k="name:he" v="בלגיה"/>
+      <tag k="name:da" v="Belgien"/>
+      <tag k="int_name" v="Belgium"/>
+      <tag k="name:nl" v="België"/>
+      <tag k="name:en" v="Belgium"/>
+      <tag k="name:ca" v="Bèlgica"/>
+      <tag k="name:eo" v="Belgio"/>
+      <tag k="name:la" v="Belgia"/>
+      <tag k="geonames:id" v="2802361"/>
+      <tag k="country_code_fips" v="BE"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Belgique"/>
+      <tag k="name:de" v="Belgien"/>
+      <tag k="name:cy" v="Gwlad Belg"/>
+      <tag k="name:hu" v="Belgium"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424941" lat="16.8259461" lon="-88.7600599" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:09Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Belize"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BZ"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="بليز"/>
+      <tag k="name:da" v="Belize"/>
+      <tag k="int_name" v="Belize"/>
+      <tag k="name:en" v="Belize"/>
+      <tag k="name:eo" v="Belizo"/>
+      <tag k="geonames:id" v="3582678"/>
+      <tag k="country_code_fips" v="BH"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Belize"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424942" lat="9.5576162" lon="2.1006104" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:09Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="贝宁"/>
+      <tag k="name" v="Benin"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BJ"/>
+      <tag k="name:zh_pyt" v="Bèiníng"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Beining"/>
+      <tag k="name:ar" v="بنن"/>
+      <tag k="name:he" v="בנין"/>
+      <tag k="name:da" v="Benin"/>
+      <tag k="int_name" v="Benin"/>
+      <tag k="name:en" v="Benin"/>
+      <tag k="name:eo" v="Benino"/>
+      <tag k="geonames:id" v="2395170"/>
+      <tag k="country_code_fips" v="BN"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Benin"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424943" lat="27.5494611" lon="90.5120023" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:09Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="不丹"/>
+      <tag k="name" v="Bhutan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BT"/>
+      <tag k="official_name" v="Kingdom of Bhutan"/>
+      <tag k="name:zh_pyt" v="Bùdān"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Budan"/>
+      <tag k="name:ar" v="بوتان"/>
+      <tag k="name:he" v="בוטן"/>
+      <tag k="name:da" v="Bhutan"/>
+      <tag k="int_name" v="Bhutan"/>
+      <tag k="population" v="672425"/>
+      <tag k="name:en" v="Bhutan"/>
+      <tag k="capital_city" v="Thimphu"/>
+      <tag k="name:eo" v="Butano"/>
+      <tag k="geonames:id" v="1252634"/>
+      <tag k="country_code_fips" v="BT"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:dz" v="འབྲུག་ཡུལ་"/>
+      <tag k="name:de" v="Bhutan"/>
+      <tag k="name:hu" v="Bhután"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424944" lat="-16.1779383" lon="-62.7866332" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:10Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Bolivia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BO"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="بوليفيا"/>
+      <tag k="name:he" v="בוליוויה"/>
+      <tag k="name:da" v="Bolivia"/>
+      <tag k="int_name" v="Bolivia"/>
+      <tag k="name:en" v="Bolivia"/>
+      <tag k="name:eo" v="Bolivio"/>
+      <tag k="geonames:id" v="3923057"/>
+      <tag k="country_code_fips" v="BL"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Bolivien"/>
+      <tag k="name:cy" v="Bolifia"/>
+      <tag k="name:hu" v="Bolívia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424945" lat="43.9131969" lon="17.6823536" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:10Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="波斯尼亚和黑塞哥维纳"/>
+      <tag k="name:fi" v="Bosnia ja Hertsegovina"/>
+      <tag k="name" v="Bosna i Hercegovina"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BA"/>
+      <tag k="name:zh_pyt" v="Bōsīníyà hé Hēisāigēwéinà"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Bosiniya he Heisaigeweina"/>
+      <tag k="name:ar" v="البوسنة والهرسك"/>
+      <tag k="name:he" v="בוסניה הרצגובינה"/>
+      <tag k="name:da" v="Bosnien-Hercegovina"/>
+      <tag k="int_name" v="Bosnia and Herzegovina"/>
+      <tag k="name:en" v="Bosnia and Herzegovina"/>
+      <tag k="name:eo" v="Bosnio kaj Hercegovino"/>
+      <tag k="geonames:id" v="3277605"/>
+      <tag k="country_code_fips" v="BK"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Bosnien und Herzegovina"/>
+      <tag k="name:cy" v="Bosna a Hercegovina"/>
+      <tag k="name:hu" v="Bosznia-Hercegovina"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424946" lat="-23.1682102" lon="24.5929109" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:10Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="博茨瓦纳"/>
+      <tag k="name:fi" v="Botswana"/>
+      <tag k="name" v="Botswana"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BW"/>
+      <tag k="official_name" v="Republic of Botswana"/>
+      <tag k="name:zh_pyt" v="Bócíwǎnà"/>
+      <tag k="name:tn" v="Lefatshe la Botswana"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Bociwana"/>
+      <tag k="name:ar" v="بوتسوانا"/>
+      <tag k="name:he" v="בוטסוונה"/>
+      <tag k="name:da" v="Botswana"/>
+      <tag k="int_name" v="Botswana"/>
+      <tag k="population" v="1639833"/>
+      <tag k="name:en" v="Botswana"/>
+      <tag k="capital_city" v="Gaborone"/>
+      <tag k="name:eo" v="Bocvano"/>
+      <tag k="geonames:id" v="933860"/>
+      <tag k="country_code_fips" v="BC"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Botswana"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424947" lat="-8.4666585" lon="-51.3333416" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:10Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Brasilia"/>
+      <tag k="name" v="Brasil"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BR"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="البرازيل"/>
+      <tag k="name:he" v="ברזיל"/>
+      <tag k="name:da" v="Brasilien"/>
+      <tag k="int_name" v="Brazil"/>
+      <tag k="name:en" v="Brazil"/>
+      <tag k="name:eo" v="Brzilo"/>
+      <tag k="name:it" v="Brasile"/>
+      <tag k="geonames:id" v="3469034"/>
+      <tag k="country_code_fips" v="BR"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Brasilien"/>
+      <tag k="name:hu" v="Brazília"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424948" lat="4.4161362" lon="114.564173" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:10Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="文莱"/>
+      <tag k="name:fi" v="Brunei"/>
+      <tag k="name" v="Brunei Darussalam"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BN"/>
+      <tag k="name:zh_pyt" v="Wénlái"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Wenlai"/>
+      <tag k="name:ar" v="بروني دار السلام"/>
+      <tag k="wikipedia" v="Brunei"/>
+      <tag k="name:he" v="ברוניי"/>
+      <tag k="name:da" v="Brunei"/>
+      <tag k="int_name" v="Brunei Darussalam"/>
+      <tag k="name:en" v="Brunei Darussalam"/>
+      <tag k="name:eo" v="Brunejo"/>
+      <tag k="geonames:id" v="1820814"/>
+      <tag k="country_code_fips" v="BX"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Brunei"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424949" lat="42.6073614" lon="25.4856918" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:10Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="保加利亚"/>
+      <tag k="name" v="България"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BG"/>
+      <tag k="name:zh_pyt" v="Bǎojiālìyà"/>
+      <tag k="name:bg" v="България"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Baojialiya"/>
+      <tag k="name:ar" v="بلغاريا"/>
+      <tag k="name:he" v="בולגריה"/>
+      <tag k="name:da" v="Bulgarien"/>
+      <tag k="int_name" v="Bulgaria"/>
+      <tag k="name:en" v="Bulgaria"/>
+      <tag k="name:eo" v="Bulgario"/>
+      <tag k="geonames:id" v="732800"/>
+      <tag k="country_code_fips" v="BU"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Bulgarie"/>
+      <tag k="name:de" v="Bulgarien"/>
+      <tag k="name:cy" v="Bwlgaria"/>
+      <tag k="name:hu" v="Bulgária"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424950" lat="11.7099999" lon="-2.37" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:11Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="布基纳法索"/>
+      <tag k="name" v="Burkina Faso"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BF"/>
+      <tag k="name:zh_pyt" v="Bùjīnàfǎsuǒ"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Bujinafasuo"/>
+      <tag k="name:ar" v="بوركينا فاصو"/>
+      <tag k="name:da" v="Burkina Faso"/>
+      <tag k="int_name" v="Burkina Faso"/>
+      <tag k="name:en" v="Burkina Faso"/>
+      <tag k="name:eo" v="Burkino"/>
+      <tag k="geonames:id" v="2361809"/>
+      <tag k="country_code_fips" v="UV"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Burkina Faso"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424951" lat="-2.7025" lon="30.4008333" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:11Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="布隆迪"/>
+      <tag k="name" v="Burundi"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="BI"/>
+      <tag k="name:zh_pyt" v="Bùlóngdí"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Bulongdi"/>
+      <tag k="name:ar" v="بوروندي"/>
+      <tag k="name:he" v="בורונדי"/>
+      <tag k="name:da" v="Burundi"/>
+      <tag k="int_name" v="Burundi"/>
+      <tag k="name:en" v="Burundi"/>
+      <tag k="name:eo" v="Burundo"/>
+      <tag k="geonames:id" v="433561"/>
+      <tag k="country_code_fips" v="BY"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Bwrwndi"/>
+      <tag k="name:hu" v="Burundi"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424952" lat="13.5065805" lon="104.8695042" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:11Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="高棉"/>
+      <tag k="name:fi" v="Kambodža"/>
+      <tag k="name" v="Cambodia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="KH"/>
+      <tag k="name:zh_pyt" v="Gāomián"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Gaomian"/>
+      <tag k="name:ar" v="كمبوديا"/>
+      <tag k="name:he" v="קמבודיה"/>
+      <tag k="name:da" v="Cambodja"/>
+      <tag k="int_name" v="Cambodia"/>
+      <tag k="name:en" v="Cambodia"/>
+      <tag k="name:eo" v="Kamboĝo"/>
+      <tag k="geonames:id" v="1831722"/>
+      <tag k="country_code_fips" v="CB"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Kambodscha"/>
+      <tag k="name:hu" v="Kambodzsa"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424953" lat="4.6125069" lon="13.1536428" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:12Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="喀麦隆"/>
+      <tag k="name:fi" v="Kamerun"/>
+      <tag k="name" v="Cameroon"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CM"/>
+      <tag k="name:zh_pyt" v="Kāmàilóng"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Kamailong"/>
+      <tag k="name:ar" v="الكاميرون"/>
+      <tag k="name:he" v="קמרון"/>
+      <tag k="name:da" v="Cameroun"/>
+      <tag k="int_name" v="Cameroon"/>
+      <tag k="name:en" v="Cameroon"/>
+      <tag k="name:eo" v="Kameruno"/>
+      <tag k="geonames:id" v="2233387"/>
+      <tag k="country_code_fips" v="CM"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Kamerun"/>
+      <tag k="name:cy" v="Camerŵn"/>
+      <tag k="name:hu" v="Kamerun"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424954" lat="61.0666667" lon="-107.9916667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:12Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="加拿大"/>
+      <tag k="name:fi" v="Kanada"/>
+      <tag k="name" v="Canada"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CA"/>
+      <tag k="name:zh_pyt" v="Jiānádà"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:zh_py" v="Jianada"/>
+      <tag k="name:ar" v="كندا"/>
+      <tag k="name:he" v="קנדה"/>
+      <tag k="name:da" v="Canada"/>
+      <tag k="int_name" v="Canada"/>
+      <tag k="name:en" v="Canada"/>
+      <tag k="name:eo" v="Kanado"/>
+      <tag k="geonames:id" v="6251999"/>
+      <tag k="country_code_fips" v="CA"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Kanada"/>
+      <tag k="name:hu" v="Kanada"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424955" lat="16.0" lon="-24.0083334" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:12Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Kap Verde"/>
+      <tag k="name" v="Cape Verde"/>
+      <tag k="is_in:ocean" v="Atlantic"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CV"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:ar" v="الرأس الأخضر"/>
+      <tag k="name:da" v="Kap Verde"/>
+      <tag k="int_name" v="Cape Verde"/>
+      <tag k="name:en" v="Cape Verde"/>
+      <tag k="capital_city" v="Praia"/>
+      <tag k="name:eo" v="Kabo-Verdo"/>
+      <tag k="geonames:id" v="3374766"/>
+      <tag k="country_code_fips" v="CV"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Cabo Verde"/>
+      <tag k="name:hu" v="Zöld-Fok"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424956" lat="5.4916667" lon="20.425" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:12Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="中非"/>
+      <tag k="name" v="Central African Republic"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CF"/>
+      <tag k="name:zh_pyt" v="Zhōng Fēi"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Zhong Fei"/>
+      <tag k="name:ar" v="جمهورية أفريقيا الوسطى"/>
+      <tag k="name:da" v="Centralafrikanske Republik"/>
+      <tag k="int_name" v="Central African Republic"/>
+      <tag k="name:en" v="Central African Republic"/>
+      <tag k="name:eo" v="Centr-Afrika Respubliko"/>
+      <tag k="geonames:id" v="239880"/>
+      <tag k="country_code_fips" v="CT"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Gweriniaeth Canolbarth Affrica"/>
+      <tag k="name:hu" v="Közép-Afrikai Köztarsaság"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424957" lat="16.6403646" lon="17.5278888" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:12Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="乍得"/>
+      <tag k="name:fi" v="Tšad"/>
+      <tag k="name" v="Chad"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TD"/>
+      <tag k="name:zh_pyt" v="Zhàdé"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Zhade"/>
+      <tag k="name:ar" v="تشاد"/>
+      <tag k="name:he" v="צ&amp;apos;אד"/>
+      <tag k="name:da" v="Tchad"/>
+      <tag k="int_name" v="Chad"/>
+      <tag k="name:en" v="Chad"/>
+      <tag k="name:eo" v="Ĉado"/>
+      <tag k="country_code_fips" v="CD"/>
+      <tag k="name:de" v="Tschad"/>
+      <tag k="name:cy" v="Tchad"/>
+      <tag k="name:hu" v="Csád"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424958" lat="-31.7613461" lon="-71.3198939" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:12Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Chile"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CL"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="شيلي"/>
+      <tag k="name:he" v="צילה"/>
+      <tag k="name:da" v="Chile"/>
+      <tag k="int_name" v="Chile"/>
+      <tag k="name:en" v="Chile"/>
+      <tag k="name:eo" v="Ĉilio"/>
+      <tag k="geonames:id" v="3895114"/>
+      <tag k="country_code_fips" v="CI"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Chile"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424959" lat="35.0000046" lon="104.9999916" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:13Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="中国"/>
+      <tag k="name:fi" v="Kiina"/>
+      <tag k="name" v="China 中国"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CN"/>
+      <tag k="official_name:zh_py" v="Zhonghua Renmin Gongheguo"/>
+      <tag k="official_name" v="中华人民共和国"/>
+      <tag k="name:zh_pyt" v="Zhōngguó"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="gns:UFI" v="-1900673"/>
+      <tag k="gns:DSG" v="PCLI"/>
+      <tag k="gns:ADM1" v="00"/>
+      <tag k="name:zh_py" v="Zhongguo"/>
+      <tag k="name:ar" v="الصين"/>
+      <tag k="name:he" v="סין"/>
+      <tag k="name:da" v="Kina"/>
+      <tag k="int_name" v="China"/>
+      <tag k="population" v="1300000000"/>
+      <tag k="name:en" v="China"/>
+      <tag k="gns:UNI" v="-2618136"/>
+      <tag k="capital_city" v="Beijing"/>
+      <tag k="name:eo" v="Ĉinio"/>
+      <tag k="official_name:en" v="People&amp;apos;s Republic of China"/>
+      <tag k="country_code_fips" v="CH"/>
+      <tag k="name:de" v="China"/>
+      <tag k="name:cy" v="Tsieina"/>
+      <tag k="official_name:zh_pyt" v="Zhōnghuá Rénmín Gònghéguó"/>
+      <tag k="name:hu" v="Kína"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424960" lat="4.1662894" lon="-73.4492894" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:13Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Colombia"/>
+      <tag k="name:pt" v="Colômbia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CO"/>
+      <tag k="official_name:es" v="República de Colombia"/>
+      <tag k="official_name" v="Republic of Colombia"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="created_by" v="Potlatch 0.10f"/>
+      <tag k="name:ar" v="كولومبيا"/>
+      <tag k="name:he" v="קולומביה"/>
+      <tag k="name:da" v="Colombia"/>
+      <tag k="int_name" v="Colombia"/>
+      <tag k="population" v="44050548"/>
+      <tag k="name:en" v="Colombia"/>
+      <tag k="name:la" v="Columbia"/>
+      <tag k="country_code_fips" v="CO"/>
+      <tag k="name:fr" v="Colombie"/>
+      <tag k="name:de" v="Kolumbien"/>
+      <tag k="name:ja" v="コロンビア"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424961" lat="-12.175" lon="44.1916667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:13Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="科摩洛"/>
+      <tag k="name" v="Comoros"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="KM"/>
+      <tag k="name:zh_pyt" v="Kēmóluò"/>
+      <tag k="name:zh_py" v="Kemoluo"/>
+      <tag k="name:ar" v="جزر القمر"/>
+      <tag k="name:da" v="Comorerne"/>
+      <tag k="int_name" v="Comoros"/>
+      <tag k="name:en" v="Comoros"/>
+      <tag k="name:eo" v="Komoroj"/>
+      <tag k="geonames:id" v="921929"/>
+      <tag k="country_code_fips" v="CN"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Comore-szigetek"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424962" lat="-5.2" lon="21.7166667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:13Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Kongon demokraattinen tasavalta"/>
+      <tag k="name" v="Democratic Republic of the Congo"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CD"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="old_name" v="Congo Free State;Belgian Congo;Congo-Léopoldville;Congo-Kinshasa;Zaire"/>
+      <tag k="name:ar" v="الكونغو"/>
+      <tag k="name:da" v="Demokratiske Republik Congo"/>
+      <tag k="int_name" v="Democratic Republic of the Congo"/>
+      <tag k="alt_name" v="DR Congo;DRC;RDC;Congo (Kinshasa)"/>
+      <tag k="population" v="62600000"/>
+      <tag k="name:en" v="Democratic Republic of the Congo"/>
+      <tag k="capital_city" v="Kinshasa"/>
+      <tag k="note" v="Do not confuse with  Republic of the Congo"/>
+      <tag k="name:eo" v="Demokratia Respubliko Kongo"/>
+      <tag k="geonames:id" v="203312"/>
+      <tag k="country_code_fips" v="CG"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="République démocratique du Congo"/>
+      <tag k="name:cy" v="Gweriniaeth Ddemocrataidd Congo"/>
+      <tag k="name:hu" v="Kongói Demokratikus Köztársaság"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424963" lat="10.2735332" lon="-84.07388" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:13Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Costa Rica"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CR"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="كوستاريكا"/>
+      <tag k="name:he" v="קוסטה ריקה"/>
+      <tag k="name:da" v="Costa Rica"/>
+      <tag k="int_name" v="Costa Rica"/>
+      <tag k="name:en" v="Costa Rica"/>
+      <tag k="name:eo" v="Kostariko"/>
+      <tag k="geonames:id" v="3624060"/>
+      <tag k="country_code_fips" v="CS"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Costa Rica"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424964" lat="45.6729877" lon="16.75883" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:13Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="克罗地亚"/>
+      <tag k="name:fi" v="Kroatia"/>
+      <tag k="name" v="Hrvatska"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="HR"/>
+      <tag k="name:zh_pyt" v="Kèluódìyà"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Keluodiya"/>
+      <tag k="name:ar" v="كرواتيا"/>
+      <tag k="name:he" v="קרואטיה"/>
+      <tag k="name:da" v="Kroatien"/>
+      <tag k="int_name" v="Croatia"/>
+      <tag k="name:en" v="Croatia"/>
+      <tag k="name:eo" v="Kroatio"/>
+      <tag k="geonames:id" v="3202326"/>
+      <tag k="country_code_fips" v="HR"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Horvátország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424965" lat="22.1217469" lon="-81.8707403" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:14Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Kuuba"/>
+      <tag k="name" v="Cuba"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CU"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="كوبا"/>
+      <tag k="name:he" v="קובה"/>
+      <tag k="name:da" v="Cuba"/>
+      <tag k="int_name" v="Cuba"/>
+      <tag k="name:en" v="Cuba"/>
+      <tag k="name:eo" v="Kubo"/>
+      <tag k="geonames:id" v="3562981"/>
+      <tag k="country_code_fips" v="CU"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Kuba"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424966" lat="34.982258" lon="33.1451644" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:14Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="塞浦路斯"/>
+      <tag k="name:fi" v="Kypros"/>
+      <tag k="name" v="Cyprus"/>
+      <tag k="name:sl" v="Ciper"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CY"/>
+      <tag k="name:zh_pyt" v="Sàipǔlùsī"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Saipulusi"/>
+      <tag k="name:pl" v="Cypr"/>
+      <tag k="name:el" v="Κύπρος"/>
+      <tag k="name:ar" v="قبرص"/>
+      <tag k="name:he" v="קפריסין"/>
+      <tag k="name:da" v="Cypern"/>
+      <tag k="name:tr" v="Kibris"/>
+      <tag k="name:en" v="Cyprus"/>
+      <tag k="name:eo" v="Kipro"/>
+      <tag k="name:fr" v="Chypre"/>
+      <tag k="name:de" v="Zypern"/>
+      <tag k="name:hu" v="Ciprus"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424967" lat="49.8166667" lon="15.475" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:14Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="捷克"/>
+      <tag k="name:fi" v="Tšekki"/>
+      <tag k="name:es" v="República Checa"/>
+      <tag k="name" v="Česká republika"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CZ"/>
+      <tag k="name:zh_pyt" v="Jiékè"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Jieke"/>
+      <tag k="name:ar" v="الجمهورية التشيكية"/>
+      <tag k="name:he" v="צכיה"/>
+      <tag k="name:da" v="Tjekkiet"/>
+      <tag k="int_name" v="Czech Republic"/>
+      <tag k="name:en" v="Czech Republic"/>
+      <tag k="name:eo" v="Ĉeĥio"/>
+      <tag k="geonames:id" v="3077311"/>
+      <tag k="country_code_fips" v="EZ"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="République tchèque"/>
+      <tag k="name:de" v="Tschechien"/>
+      <tag k="name:cy" v="Gweriniaeth Tsiec"/>
+      <tag k="name:hu" v="Csehország"/>
+      <tag k="name:cz" v="Česká republika"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424968" lat="55.6702227" lon="10.3333827" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:14Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="丹麦"/>
+      <tag k="name:fi" v="Tanska"/>
+      <tag k="name" v="Danmark"/>
+      <tag k="country_code" v="dk"/>
+      <tag k="name:sl" v="Danska"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="DK"/>
+      <tag k="official_name" v="Kingdom of Denmark"/>
+      <tag k="name:zh_pyt" v="Dānmài"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Danmai"/>
+      <tag k="name:pl" v="Dania"/>
+      <tag k="name:ar" v="الدانمرك"/>
+      <tag k="name:he" v="דנמרק"/>
+      <tag k="name:da" v="Danmark"/>
+      <tag k="int_name" v="Denmark"/>
+      <tag k="official_name:da" v="Kongeriget Danmark"/>
+      <tag k="name:en" v="Denmark"/>
+      <tag k="name:eo" v="Danio"/>
+      <tag k="name:la" v="Danica"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="name:fr" v="Danemark"/>
+      <tag k="name:de" v="Dänemark"/>
+      <tag k="name:cy" v="Denmarc"/>
+      <tag k="name:hu" v="Dánia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424969" lat="12.0199999" lon="42.6" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:14Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="吉布提"/>
+      <tag k="name:fi" v="Djibouti"/>
+      <tag k="name" v="Djibouti"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="DJ"/>
+      <tag k="official_name" v="Republic of Djibouti"/>
+      <tag k="name:zh_pyt" v="Jíbùtí"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Jibuti"/>
+      <tag k="name:ar" v="جيبوتي"/>
+      <tag k="name:he" v="ג&amp;apos;יבוטי"/>
+      <tag k="name:da" v="Djibouti"/>
+      <tag k="int_name" v="Djibouti"/>
+      <tag k="population" v="496373"/>
+      <tag k="name:en" v="Djibouti"/>
+      <tag k="name:eo" v="Ĝibutio"/>
+      <tag k="geonames:id" v="223816"/>
+      <tag k="country_code_fips" v="DJ"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Dschibuti"/>
+      <tag k="name:hu" v="Dzsibuti"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424970" lat="15.4112636" lon="-61.3653297" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:15Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Dominica"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="DM"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="دومينيكا"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:da" v="Dominica"/>
+      <tag k="int_name" v="Dominica"/>
+      <tag k="name:en" v="Dominica"/>
+      <tag k="name:eo" v="Dominiko"/>
+      <tag k="geonames:id" v="3575830"/>
+      <tag k="country_code_fips" v="DO"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Dominikai Közösség"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424971" lat="19.0941392" lon="-70.3012329" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:15Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Dominican Republic"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="DO"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="الجمهورية الدومينيكية"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:he" v="דומיניק"/>
+      <tag k="name:da" v="Dominikanske Republik"/>
+      <tag k="name:eo" v="Domingo"/>
+      <tag k="name:do" v="República Dominicána"/>
+      <tag k="de:name" v="Dominikanische Republik"/>
+      <tag k="country_code_fips" v="DR"/>
+      <tag k="name:de" v="Dominikanische Republik"/>
+      <tag k="name:cy" v="Gweriniaeth Dominica"/>
+      <tag k="name:hu" v="Dominikai Köztársaság"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424972" lat="-8.5152777" lon="125.8376389" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:15Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Timor-Leste"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TL"/>
+      <tag k="official_name" v="Democratic Republic of Timor-Leste"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:ar" v="جمهورية تيمور"/>
+      <tag k="wikipedia" v="East Timor"/>
+      <tag k="name:da" v="Østtimor"/>
+      <tag k="int_name" v="Timor-Leste"/>
+      <tag k="alt_name" v="East Timor"/>
+      <tag k="population" v="1115000"/>
+      <tag k="name:en" v="Timor-Leste"/>
+      <tag k="capital_city" v="Dili"/>
+      <tag k="name:eo" v="Orienta Timoro"/>
+      <tag k="country_code_fips" v="TT"/>
+      <tag k="is_in:archipelago" v="Lesser Sunda Islands"/>
+      <tag k="name:hu" v="Kelet-Timor"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424973" lat="-1.3398086" lon="-79.366648" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:15Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Ecuador"/>
+      <tag k="gns_uni" v="-1371330"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="EC"/>
+      <tag k="official_name:es" v="República del Ecuador"/>
+      <tag k="official_name" v="Republic of Ecuador"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="إكوادور"/>
+      <tag k="name:he" v="אקואדור"/>
+      <tag k="name:da" v="Ecuador"/>
+      <tag k="int_name" v="Ecuador"/>
+      <tag k="population" v="13755680"/>
+      <tag k="name:en" v="Ecuador"/>
+      <tag k="capital_city" v="Quito"/>
+      <tag k="name:eo" v="Ekvadoro"/>
+      <tag k="gns_classification" v="PCLI"/>
+      <tag k="geonames:id" v="3658394"/>
+      <tag k="country_code_fips" v="EC"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="source" v="GNS"/>
+      <tag k="name:de" v="Ekuador"/>
+      <tag k="name:hu" v="Ecuador"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424974" lat="26.2540097" lon="29.2675781" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:15Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="埃及"/>
+      <tag k="name:fi" v="Egypti"/>
+      <tag k="name" v="Egypt"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="EG"/>
+      <tag k="name:zh_pyt" v="Āijí"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Aiji"/>
+      <tag k="name:ar" v="مصر"/>
+      <tag k="name:he" v="מצריים"/>
+      <tag k="name:da" v="Egypten"/>
+      <tag k="int_name" v="Egypt"/>
+      <tag k="name:en" v="Egypt"/>
+      <tag k="capital_city" v="Cairo"/>
+      <tag k="name:eo" v="Egiptio"/>
+      <tag k="geonames:id" v="357994"/>
+      <tag k="country_code_fips" v="EG"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Ägypten"/>
+      <tag k="name:cy" v="Yr Aifft"/>
+      <tag k="name:hu" v="Egyiptom"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424975" lat="13.8" lon="-88.9140278" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:15Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="El Salvador"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SV"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="السلفادور"/>
+      <tag k="name:he" v="אל סלבדור"/>
+      <tag k="name:da" v="El Salvador"/>
+      <tag k="int_name" v="El Salvador"/>
+      <tag k="name:en" v="El Salvador"/>
+      <tag k="name:eo" v="Salvadoro"/>
+      <tag k="country_code_fips" v="ES"/>
+      <tag k="name:hu" v="El Salvador"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424976" lat="1.6131603" lon="10.5170762" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:16Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="赤道几内亚"/>
+      <tag k="name:fi" v="Päiväntasaajan Guinea"/>
+      <tag k="name" v="Equatorial Guinea"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GQ"/>
+      <tag k="name:zh_pyt" v="Chìdào Jīnèiyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Chidao Jineiya"/>
+      <tag k="name:ar" v="غينيا الاستوائية"/>
+      <tag k="name:da" v="Ækvatorialguinea"/>
+      <tag k="int_name" v="Equatorial Guinea"/>
+      <tag k="name:en" v="Equatorial Guinea"/>
+      <tag k="name:eo" v="Ekvatora Gvineo"/>
+      <tag k="geonames:id" v="2309096"/>
+      <tag k="country_code_fips" v="EK"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Äquatorialguinea"/>
+      <tag k="name:cy" v="Guinea Gyhydeddol"/>
+      <tag k="name:hu" v="Egyenlítői-Guinea"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424977" lat="15.95" lon="37.9999999" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:16Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="厄立特里亚"/>
+      <tag k="name:fi" v="Eritrea"/>
+      <tag k="name" v="Eritrea"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="ER"/>
+      <tag k="name:zh_pyt" v="Èlìtèlǐyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Eliteliya"/>
+      <tag k="name:ar" v="إريتريا"/>
+      <tag k="name:he" v="אריתריאה"/>
+      <tag k="name:da" v="Eritrea"/>
+      <tag k="int_name" v="Eritrea"/>
+      <tag k="name:en" v="Eritrea"/>
+      <tag k="name:eo" v="Eritreo"/>
+      <tag k="geonames:id" v="338010"/>
+      <tag k="country_code_fips" v="ER"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Eritrea"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424978" lat="58.7523611" lon="25.3319445" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:16Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="爱沙尼亚"/>
+      <tag k="name:fi" v="Viro"/>
+      <tag k="name" v="Eesti"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="EE"/>
+      <tag k="name:zh_pyt" v="Àishāníyà"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Aishaniya"/>
+      <tag k="name:ar" v="إستونيا"/>
+      <tag k="name:he" v="אסטוניה"/>
+      <tag k="name:da" v="Estland"/>
+      <tag k="int_name" v="Estonia"/>
+      <tag k="name:en" v="Estonia"/>
+      <tag k="name:eo" v="Estonio"/>
+      <tag k="geonames:id" v="453733"/>
+      <tag k="country_code_fips" v="EN"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Estonie"/>
+      <tag k="name:de" v="Estland"/>
+      <tag k="name:hu" v="Észtország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424979" lat="11.1166619" lon="40.4000036" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:17Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="埃塞俄比亚"/>
+      <tag k="name:fi" v="Etiopia"/>
+      <tag k="name" v="Ethiopia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="ET"/>
+      <tag k="official_name" v="Federal Democratic Republic of Ethiopia"/>
+      <tag k="name:zh_pyt" v="Āisàiébǐyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="old_name" v="Abyssinia"/>
+      <tag k="name:zh_py" v="Aisaiebiya"/>
+      <tag k="name:ar" v="إثيوبيا"/>
+      <tag k="name:he" v="אתיופיה"/>
+      <tag k="name:da" v="Etiopien"/>
+      <tag k="int_name" v="Ethiopia"/>
+      <tag k="population" v="78254090"/>
+      <tag k="name:en" v="Ethiopia"/>
+      <tag k="name:eo" v="Etiopio"/>
+      <tag k="geonames:id" v="337996"/>
+      <tag k="country_code_fips" v="ET"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Äthiopien"/>
+      <tag k="name:am" v="ኢትዮጵያ"/>
+      <tag k="name:hu" v="Etiópia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424980" lat="-18.1240122" lon="179.0123269" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:17Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Fidži"/>
+      <tag k="name" v="Fiji"/>
+      <tag k="is_in:ocean" v="Pacific"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="FJ"/>
+      <tag k="name:ar" v="فيجي"/>
+      <tag k="name:he" v="פיג&amp;apos;י"/>
+      <tag k="name:da" v="Fiji"/>
+      <tag k="int_name" v="Fiji"/>
+      <tag k="name:en" v="Fiji"/>
+      <tag k="name:eo" v="Fiĝioj"/>
+      <tag k="geonames:id" v="2205218"/>
+      <tag k="country_code_fips" v="FJ"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Fidzsi-szigetek"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424981" lat="63.2467681" lon="25.92094" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:17Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="芬兰"/>
+      <tag k="name:sv" v="Finland"/>
+      <tag k="name:fi" v="Suomi"/>
+      <tag k="name" v="Suomi"/>
+      <tag k="name:sl" v="Finska"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="FI"/>
+      <tag k="name:zh_pyt" v="Fēnlán"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="url" v="http://www.finland.fi/"/>
+      <tag k="name:zh_py" v="Fenlan"/>
+      <tag k="name:pl" v="Finlandia"/>
+      <tag k="name:ar" v="فنلندا"/>
+      <tag k="wikipedia" v="http://en.wikipedia.org/wiki/Finland"/>
+      <tag k="name:he" v="פינלנד"/>
+      <tag k="name:da" v="Finland"/>
+      <tag k="name:nl" v="Finland"/>
+      <tag k="name:en" v="Finland"/>
+      <tag k="name:eo" v="Finnlando"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="name:fr" v="Finlande"/>
+      <tag k="name:de" v="Finnland"/>
+      <tag k="name:cy" v="Y Ffindir"/>
+      <tag k="name:hu" v="Finnország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424982" lat="46.2" lon="2.0" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:17Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="法国"/>
+      <tag k="name:fi" v="Ranska"/>
+      <tag k="name" v="France"/>
+      <tag k="country_code" v="FR"/>
+      <tag k="name:sl" v="Francija"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="FR"/>
+      <tag k="name:zh_pyt" v="Fǎguó"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Faguo"/>
+      <tag k="name:pl" v="Francja"/>
+      <tag k="name:ar" v="فرنسا"/>
+      <tag k="name:he" v="צרפת"/>
+      <tag k="name:da" v="Frankrig"/>
+      <tag k="name:nl" v="Frankrijk"/>
+      <tag k="name:en" v="France"/>
+      <tag k="capital_city" v="Paris"/>
+      <tag k="name:eo" v="Francio"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="country_code_fips" v="FR"/>
+      <tag k="name:fr" v="France"/>
+      <tag k="name:de" v="Frankreich"/>
+      <tag k="name:cy" v="Ffrainc"/>
+      <tag k="name:hu" v="Franciaország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424983" lat="-0.9" lon="11.69" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:17Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="加蓬"/>
+      <tag k="name" v="Gabon"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GA"/>
+      <tag k="name:zh_pyt" v="Jiāpéng"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Jiapeng"/>
+      <tag k="name:ar" v="غابون"/>
+      <tag k="name:he" v="גבון"/>
+      <tag k="name:da" v="Gabon"/>
+      <tag k="int_name" v="Gabon"/>
+      <tag k="name:en" v="Gabon"/>
+      <tag k="name:eo" v="Gabono"/>
+      <tag k="geonames:id" v="2400553"/>
+      <tag k="country_code_fips" v="GB"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Gabon"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424984" lat="13.47" lon="-15.49" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:17Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="冈比亚"/>
+      <tag k="name" v="Gambia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GM"/>
+      <tag k="name:zh_pyt" v="Gāngbǐyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Gangbiya"/>
+      <tag k="name:ar" v="غامبيا"/>
+      <tag k="wikipedia" v="The Gambia"/>
+      <tag k="name:he" v="גמביה"/>
+      <tag k="name:da" v="Gambia"/>
+      <tag k="int_name" v="Gambia"/>
+      <tag k="name:en" v="Gambia"/>
+      <tag k="name:eo" v="Gambio"/>
+      <tag k="geonames:id" v="2413451"/>
+      <tag k="country_code_fips" v="GA"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Gambia"/>
+      <tag k="name:cy" v="Y Gambia"/>
+      <tag k="name:hu" v="Gambia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424985" lat="42.3525002" lon="43.3379086" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:18Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="乔治亚"/>
+      <tag k="name:fi" v="Georgia"/>
+      <tag k="name" v="საქართველო"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GE"/>
+      <tag k="name:zh_pyt" v="Qiáozhìyà"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Qiaozhiya"/>
+      <tag k="name:ar" v="جورجيا"/>
+      <tag k="wikipedia:en" v="Georgia_(country)"/>
+      <tag k="wikipedia" v="Georgia (country)"/>
+      <tag k="name:he" v="גיאורגיה"/>
+      <tag k="name:da" v="Georgien"/>
+      <tag k="int_name" v="Georgia"/>
+      <tag k="population" v="4630841"/>
+      <tag k="name:en" v="Georgia"/>
+      <tag k="capital_city" v="Tbilisi"/>
+      <tag k="name:eo" v="Kartvelio"/>
+      <tag k="geonames:id" v="614540"/>
+      <tag k="country_code_fips" v="GG"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:ka" v="საქართველო"/>
+      <tag k="name:de" v="Georgien"/>
+      <tag k="name:hu" v="Grúzia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424986" lat="51.0833888" lon="10.4235046" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:18Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="德国"/>
+      <tag k="name:fi" v="Saksa"/>
+      <tag k="name" v="Deutschland"/>
+      <tag k="name:sl" v="Nemčija"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="DE"/>
+      <tag k="nat_name" v="Deutschland"/>
+      <tag k="name:zh_pyt" v="Déguó"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="created_by" v="Potlatch 0.10f"/>
+      <tag k="name:zh_py" v="Deguo"/>
+      <tag k="name:pl" v="Niemcy"/>
+      <tag k="name:ar" v="ألمانيا"/>
+      <tag k="name:he" v="גרמניה"/>
+      <tag k="name:da" v="Tyskland"/>
+      <tag k="int_name" v="Germany"/>
+      <tag k="name:nl" v="Duitsland"/>
+      <tag k="name:en" v="Germany"/>
+      <tag k="name:eo" v="Germanio"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="name:fr" v="Allemagne"/>
+      <tag k="name:de" v="Deutschland"/>
+      <tag k="name:cy" v="Yr Almaen"/>
+      <tag k="name:hu" v="Németország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424987" lat="8.03" lon="-1.0799999" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:18Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="加纳"/>
+      <tag k="name" v="Ghana"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GH"/>
+      <tag k="name:zh_pyt" v="Jiānà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Jiana"/>
+      <tag k="name:ar" v="غانا"/>
+      <tag k="name:he" v="גאנה"/>
+      <tag k="name:da" v="Ghana"/>
+      <tag k="int_name" v="Ghana"/>
+      <tag k="name:en" v="Ghana"/>
+      <tag k="name:eo" v="Ganao"/>
+      <tag k="geonames:id" v="2300660"/>
+      <tag k="country_code_fips" v="GH"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Ghána"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424988" lat="36.141265" lon="-5.3480556" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:18Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="直布罗陀"/>
+      <tag k="name:fi" v="Gibraltar"/>
+      <tag k="name" v="Gibraltar"/>
+      <tag k="country_code" v="GI"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GI"/>
+      <tag k="name:zh_pyt" v="Zhíbùluótuó"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="old_name" v="Mons Calpe"/>
+      <tag k="name:zh_py" v="Zhibuluotuo"/>
+      <tag k="name:ar" v="جبل طارق"/>
+      <tag k="is_in:country" v="UK"/>
+      <tag k="name:he" v="גיברלטר"/>
+      <tag k="name:da" v="Gibraltar"/>
+      <tag k="population" v="28875"/>
+      <tag k="description" v="British overseas territory"/>
+      <tag k="capital_city" v="Gibraltar"/>
+      <tag k="name:eo" v="Ĝibraltaro"/>
+      <tag k="country_code_fips" v="GI"/>
+      <tag k="name:de" v="Gibraltar"/>
+      <tag k="name:hu" v="Gibraltár"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424989" lat="39.000003" lon="21.9999916" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:18Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="希腊"/>
+      <tag k="name:fi" v="Kreikka"/>
+      <tag k="name" v="Ελλάδα"/>
+      <tag k="name:sl" v="Grčija"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GR"/>
+      <tag k="name:zh_pyt" v="Xīlà"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Xila"/>
+      <tag k="name:pl" v="Grecja"/>
+      <tag k="name:el" v="Ελλάδα"/>
+      <tag k="name:ar" v="اليونان"/>
+      <tag k="name:he" v="יוון"/>
+      <tag k="name:da" v="Grækenland"/>
+      <tag k="int_name" v="Greece"/>
+      <tag k="name:nl" v="Griekenland"/>
+      <tag k="name:en" v="Greece"/>
+      <tag k="capital_city" v="Athens"/>
+      <tag k="name:eo" v="Grekio"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="country_code_fips" v="GR"/>
+      <tag k="source" v="CIA World Factbook"/>
+      <tag k="name:fr" v="Grèce"/>
+      <tag k="name:de" v="Griechenland"/>
+      <tag k="name:cy" v="Gwlad Groeg"/>
+      <tag k="name:hu" v="Görögország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424990" lat="12.1360041" lon="-61.6903814" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:19Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Grenada"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GD"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="غرينادا"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:he" v="גרנדה"/>
+      <tag k="name:da" v="Grenada"/>
+      <tag k="int_name" v="Grenada"/>
+      <tag k="name:en" v="Grenada"/>
+      <tag k="name:eo" v="Grenado"/>
+      <tag k="geonames:id" v="3580239"/>
+      <tag k="country_code_fips" v="GJ"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Grenada"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424991" lat="15.132844" lon="-90.2877684" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:19Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Guatemala"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GT"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="غواتيمالا"/>
+      <tag k="name:he" v="גואטמלה"/>
+      <tag k="name:da" v="Guatemala"/>
+      <tag k="int_name" v="Guatemala"/>
+      <tag k="name:en" v="Guatemala"/>
+      <tag k="name:eo" v="Gvatemalo"/>
+      <tag k="geonames:id" v="3595528"/>
+      <tag k="country_code_fips" v="GT"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Guatemala"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424992" lat="10.7399999" lon="-10.72" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:19Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="几内亚"/>
+      <tag k="name" v="Guinea"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GN"/>
+      <tag k="name:zh_pyt" v="Jīnèiyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Jineiya"/>
+      <tag k="name:ar" v="غينيا"/>
+      <tag k="name:he" v="גינאה"/>
+      <tag k="name:da" v="Guinea"/>
+      <tag k="int_name" v="Guinea"/>
+      <tag k="name:en" v="Guinea"/>
+      <tag k="name:eo" v="Gvineo"/>
+      <tag k="geonames:id" v="2420477"/>
+      <tag k="country_code_fips" v="GV"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Guinée"/>
+      <tag k="name:hu" v="Guinea"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424993" lat="12.0999999" lon="-14.9" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:19Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="几内亚比绍"/>
+      <tag k="name" v="Guinea-Bissau"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GW"/>
+      <tag k="name:zh_pyt" v="Jīnèiyà Bǐshào"/>
+      <tag k="name:zh_py" v="Jineiya Bishao"/>
+      <tag k="name:ar" v="غينيا-بيساو"/>
+      <tag k="name:da" v="Guinea-Bissau"/>
+      <tag k="int_name" v="Guinea-Bissau"/>
+      <tag k="name:en" v="Guinea-Bissau"/>
+      <tag k="name:eo" v="Gvineo Bisaŭa"/>
+      <tag k="geonames:id" v="2372248"/>
+      <tag k="country_code_fips" v="PU"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Guiné-Bissau"/>
+      <tag k="name:hu" v="Bissau-Guinea"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424994" lat="4.0039471" lon="-53.000103" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:19Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Ranskan Guayana"/>
+      <tag k="name" v="Guyane"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GF"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="غيانا"/>
+      <tag k="name:da" v="Fransk Guyana"/>
+      <tag k="int_name" v="French Guiana"/>
+      <tag k="name:en" v="French Guiana"/>
+      <tag k="name:eo" v="Gujano"/>
+      <tag k="country_code_fips" v="FG"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Guyane française"/>
+      <tag k="name:de" v="Französisch Guayana"/>
+      <tag k="name:cy" v="Guyane"/>
+      <tag k="name:hu" v="Francia Guyana"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424995" lat="4.8416667" lon="-58.6416667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:19Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Guyana"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GY"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="غيانا"/>
+      <tag k="name:da" v="Guyana"/>
+      <tag k="int_name" v="Guyana"/>
+      <tag k="name:en" v="Guyana"/>
+      <tag k="name:eo" v="Gujano"/>
+      <tag k="geonames:id" v="3378535"/>
+      <tag k="country_code_fips" v="GY"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Guyana"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424997" lat="19.1399521" lon="-72.3570683" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:20Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Haiti"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="HT"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="هايتي"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:he" v="האיטי"/>
+      <tag k="name:da" v="Haiti"/>
+      <tag k="name:eo" v="Haitio"/>
+      <tag k="country_code_fips" v="HA"/>
+      <tag k="name:hu" v="Haiti"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424998" lat="52.5001555" lon="5.7481038" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:20Z" version="1">
+      <tag k="name:uz" v="Niderlandlar"/>
+      <tag k="name:ro" v="Olanda"/>
+      <tag k="name:it" v="Paesi Bassi"/>
+      <tag k="name:ku" v="Holanda"/>
+      <tag k="name:bg" v="Холандия"/>
+      <tag k="name:fi" v="Alankomaat"/>
+      <tag k="name:ia" v="Pais Basse"/>
+      <tag k="name:nn" v="Nederland"/>
+      <tag k="name:ga" v="An Ísiltír"/>
+      <tag k="name:es" v="Países Bajos"/>
+      <tag k="name:tr" v="Hollanda"/>
+      <tag k="name:sh" v="Nizozemska"/>
+      <tag k="name:ln" v="Holanda"/>
+      <tag k="name:no" v="Nederland"/>
+      <tag k="name:cs" v="Nizozemsko"/>
+      <tag k="name:et" v="Holland"/>
+      <tag k="name:ta" v="நெதர்லாந்து"/>
+      <tag k="name:ca" v="Països Baixos"/>
+      <tag k="name:ar" v="هولندا"/>
+      <tag k="name:id" v="Belanda"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:eu" v="Herbehereak"/>
+      <tag k="name:gv" v="Yn Ollan"/>
+      <tag k="name:uk" v="Нідерланди"/>
+      <tag k="name:ie" v="Nederland"/>
+      <tag k="name:sk" v="Holandsko"/>
+      <tag k="name:ps" v="نېدرلانډ/هالېن"/>
+      <tag k="place" v="country"/>
+      <tag k="name:sl" v="Nizozemska"/>
+      <tag k="name:ru" v="Нидерланды"/>
+      <tag k="name:pt" v="Países Baixos"/>
+      <tag k="name:cv" v="Нидерланды"/>
+      <tag k="name:fo" v="Niðurlond"/>
+      <tag k="name:zh" v="荷兰"/>
+      <tag k="name:wo" v="Olaand"/>
+      <tag k="name:ce" v="Нидерланд"/>
+      <tag k="name:bn" v="নেদারল্যান্ড্‌স"/>
+      <tag k="name:na" v="Eben Eyong"/>
+      <tag k="name:rw" v="U Buholandi"/>
+      <tag k="name:la" v="Nederlandia"/>
+      <tag k="name:hr" v="Nizozemska"/>
+      <tag k="name:mk" v="Холандија"/>
+      <tag k="name:lt" v="Nyderlandai"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="NL"/>
+      <tag k="name:so" v="Nederland"/>
+      <tag k="name:ja" v="オランダ"/>
+      <tag k="name:cy" v="Yr Iseldiroedd"/>
+      <tag k="name:fr" v="Pays-Bas"/>
+      <tag k="name:lb" v="Holland"/>
+      <tag k="is_in" v="NL"/>
+      <tag k="name:af" v="Nederland"/>
+      <tag k="name" v="Nederland"/>
+      <tag k="name:tg" v="Нидерланд"/>
+      <tag k="name:tet" v="Olanda"/>
+      <tag k="name:ht" v="Peyiba"/>
+      <tag k="name:lv" v="Nīderlande"/>
+      <tag k="name:wa" v="Bas Payis"/>
+      <tag k="name:vi" v="Hà Lan"/>
+      <tag k="name:th" v="ประเทศเนเธอร์แลนด์"/>
+      <tag k="name:sq" v="Holanda"/>
+      <tag k="name:hu" v="Hollandia"/>
+      <tag k="name:fa" v="هلند"/>
+      <tag k="name:br" v="Izelvroioù"/>
+      <tag k="name:az" v="Niderland"/>
+      <tag k="name:zh_pyt" v="Hélán"/>
+      <tag k="name:sr" v="Холандија"/>
+      <tag k="name:da" v="Holland"/>
+      <tag k="name:gl" v="Países Baixos"/>
+      <tag k="source" v="Wikipedia"/>
+      <tag k="name:war" v="Paises Bajos"/>
+      <tag k="name:bs" v="Holandija"/>
+      <tag k="name:el" v="Ολλανδία"/>
+      <tag k="name:ko" v="네덜란드"/>
+      <tag k="name:vec" v="Paéxi Basi"/>
+      <tag k="name:st" v="Hôlanê"/>
+      <tag k="name:he" v="הולנד"/>
+      <tag k="name:gn" v="Holanda"/>
+      <tag k="name:io" v="Nederlando"/>
+      <tag k="name:zh_py" v="Helan"/>
+      <tag k="name:tl" v="Netherlands"/>
+      <tag k="name:su" v="Walanda"/>
+      <tag k="name:en" v="The Netherlands"/>
+      <tag k="name:mr" v="नेदरलँड्स"/>
+      <tag k="name:os" v="Нидерландтæ"/>
+      <tag k="name:sv" v="Nederländerna"/>
+      <tag k="name:qu" v="Urasuyu"/>
+      <tag k="name:de" v="Niederlande"/>
+      <tag k="name:eo" v="Nederlando"/>
+      <tag k="name:hy" v="Նիդեռլանդներ"/>
+      <tag k="name:ms" v="Belanda"/>
+      <tag k="name:vo" v="Nedän"/>
+      <tag k="name:sw" v="Uholanzi"/>
+      <tag k="name:an" v="Países Baxos"/>
+      <tag k="name:fy" v="Nederlân"/>
+      <tag k="name:ks" v="नेदरलैंड्स"/>
+      <tag k="name:pl" v="Holandia"/>
+      <tag k="name:be" v="Нідэрланды"/>
+      <tag k="name:to" v="Holani"/>
+      <tag k="name:se" v="Vuolleeatnamat"/>
+      <tag k="name:is" v="Holland"/>
+      <tag k="name:oc" v="Païses Basses"/>
+      <tag k="name:nl" v="Nederland"/>
+    </node>
+  </create>
+  <create>
+    <node id="432424999" lat="15.0610437" lon="-84.5978415" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:21Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Honduras"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="HN"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="هندوراس"/>
+      <tag k="name:he" v="הונדורס"/>
+      <tag k="name:da" v="Honduras"/>
+      <tag k="int_name" v="Honduras"/>
+      <tag k="name:en" v="Honduras"/>
+      <tag k="name:eo" v="Honduro"/>
+      <tag k="geonames:id" v="3608932"/>
+      <tag k="country_code_fips" v="HO"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Honduras"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425000" lat="47.1801069" lon="19.5037201" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:21Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="匈牙利"/>
+      <tag k="name:fi" v="Unkari"/>
+      <tag k="name" v="Magyarország"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="HU"/>
+      <tag k="name:zh_pyt" v="Xiōngyálì"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Xiongyali"/>
+      <tag k="name:ar" v="هنغاريا"/>
+      <tag k="name:ro" v="Ungaria"/>
+      <tag k="name:he" v="הונגריה"/>
+      <tag k="name:da" v="Ungarn"/>
+      <tag k="int_name" v="Hungary"/>
+      <tag k="name:en" v="Hungary"/>
+      <tag k="name:eo" v="Hungario"/>
+      <tag k="geonames:id" v="719819"/>
+      <tag k="country_code_fips" v="HU"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Hongrie"/>
+      <tag k="name:de" v="Ungarn"/>
+      <tag k="name:cy" v="Hwngari"/>
+      <tag k="name:hu" v="Magyarország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425001" lat="64.9841665" lon="-18.1058718" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:21Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="冰岛"/>
+      <tag k="name:fi" v="Islanti"/>
+      <tag k="name" v="Ísland"/>
+      <tag k="is_in:ocean" v="Atlantic"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="IS"/>
+      <tag k="official_name" v="Republic of Iceland"/>
+      <tag k="name:zh_pyt" v="Bīngdǎo"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Bingdao"/>
+      <tag k="name:ar" v="آيسلندا"/>
+      <tag k="name:he" v="איסלנד"/>
+      <tag k="int_name" v="Iceland"/>
+      <tag k="population" v="320000"/>
+      <tag k="name:en" v="Iceland"/>
+      <tag k="capital_city" v="Reykjavík"/>
+      <tag k="name:is" v="Ísland"/>
+      <tag k="name:eo" v="Islando"/>
+      <tag k="geonames:id" v="2629691"/>
+      <tag k="country_code_fips" v="IC"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Island"/>
+      <tag k="name:cy" v="Gwlad yr Iâ"/>
+      <tag k="name:hu" v="Izland"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425002" lat="22.3510786" lon="78.6677674" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:21Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="印度"/>
+      <tag k="name:fi" v="Intia"/>
+      <tag k="name" v="India"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="IN"/>
+      <tag k="name:zh_pyt" v="Yìndù"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Yindu"/>
+      <tag k="name:ar" v="الهند"/>
+      <tag k="name:he" v="הודו"/>
+      <tag k="name:da" v="Indien"/>
+      <tag k="int_name" v="India"/>
+      <tag k="name:en" v="India"/>
+      <tag k="name:eo" v="Barato"/>
+      <tag k="geonames:id" v="1269750"/>
+      <tag k="country_code_fips" v="IN"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Indien"/>
+      <tag k="name:hu" v="India"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425003" lat="-4.7993863" lon="114.5632448" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:22Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Indonesia"/>
+      <tag k="name" v="Indonesia"/>
+      <tag k="is_in:ocean" v="Indian"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="ID"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:ar" v="إندونيسيا"/>
+      <tag k="name:he" v="אינדונזיה"/>
+      <tag k="name:da" v="Indonesien"/>
+      <tag k="int_name" v="Indonesia"/>
+      <tag k="name:en" v="Indonesia"/>
+      <tag k="capital_city" v="Jakarta"/>
+      <tag k="name:eo" v="Indonezio"/>
+      <tag k="country_code_alpha2" v="ID"/>
+      <tag k="geonames:id" v="1643084"/>
+      <tag k="country_code_fips" v="ID"/>
+      <tag k="name:hu" v="Indonézia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425004" lat="32.9407059" lon="52.9471794" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:22Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="old_name:en" v="Persia"/>
+      <tag k="name:zh" v="伊朗"/>
+      <tag k="name:ru" v="Иран"/>
+      <tag k="name:fi" v="Iran"/>
+      <tag k="name" v="ایران"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="IR"/>
+      <tag k="official_name" v="جمهوری اسلامی ایران"/>
+      <tag k="name:zh_pyt" v="Yīlǎng"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:fa" v="ایران"/>
+      <tag k="name:zh_py" v="Yilang"/>
+      <tag k="name:ar" v="إيران"/>
+      <tag k="name:he" v="אירן"/>
+      <tag k="name:da" v="Iran"/>
+      <tag k="int_name" v="Iran"/>
+      <tag k="population" v="70472846"/>
+      <tag k="name:en" v="Iran"/>
+      <tag k="capital_city" v="Tehran"/>
+      <tag k="name:eo" v="Irano"/>
+      <tag k="official_name:en" v="Islamic Republic of Iran"/>
+      <tag k="is_in" v="Asia"/>
+      <tag k="country_code_fips" v="IR"/>
+      <tag k="name:de" v="Iran"/>
+      <tag k="name:cy" v="Iran"/>
+      <tag k="name:hu" v="Irán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425005" lat="33.0955556" lon="44.175" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:22Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="伊拉克"/>
+      <tag k="name:fi" v="Irak"/>
+      <tag k="name" v="Iraq"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="IQ"/>
+      <tag k="name:zh_pyt" v="Yīlākè"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Yilake"/>
+      <tag k="name:ar" v="العراق"/>
+      <tag k="name:he" v="עירק"/>
+      <tag k="name:da" v="Irak"/>
+      <tag k="int_name" v="Iraq"/>
+      <tag k="name:en" v="Iraq"/>
+      <tag k="name:eo" v="Irako"/>
+      <tag k="geonames:id" v="99237"/>
+      <tag k="country_code_fips" v="IZ"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Irak"/>
+      <tag k="name:cy" v="Irac"/>
+      <tag k="name:hu" v="Irak"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425006" lat="53.4" lon="-7.3416667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:22Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="爱尔兰"/>
+      <tag k="name:fi" v="Irlanti"/>
+      <tag k="name" v="Ireland"/>
+      <tag k="is_in:ocean" v="Atlantic"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="IE"/>
+      <tag k="official_name" v="Republic of Ireland"/>
+      <tag k="name:zh_pyt" v="Àiěrlán"/>
+      <tag k="name:ga" v="Éire"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Aierlan"/>
+      <tag k="name:ar" v="أيرلندا"/>
+      <tag k="wikipedia" v="Republic_of_Ireland"/>
+      <tag k="name:he" v="אירלנד"/>
+      <tag k="int_name" v="Ireland"/>
+      <tag k="population" v="4422100"/>
+      <tag k="name:en" v="Ireland"/>
+      <tag k="capital_city" v="Dublin"/>
+      <tag k="name:lv" v="Īrija"/>
+      <tag k="name:eo" v="Irlando"/>
+      <tag k="geonames:id" v="2963597"/>
+      <tag k="country_code_fips" v="EI"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Irlande"/>
+      <tag k="name:de" v="Irland"/>
+      <tag k="name:cy" v="Iwerddon"/>
+      <tag k="name:hu" v="Írország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425007" lat="31.1430556" lon="34.975" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:23Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="以色列"/>
+      <tag k="name:fi" v="Israel"/>
+      <tag k="name" v="ישראל"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="IL"/>
+      <tag k="name:zh_pyt" v="Yǐsèliè"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Yiselie"/>
+      <tag k="name:ar" v="إسرائيل"/>
+      <tag k="name:he" v="ישראל"/>
+      <tag k="name:da" v="Israel"/>
+      <tag k="int_name" v="Israel"/>
+      <tag k="name:en" v="Israel"/>
+      <tag k="capital_city" v="Jerusalem"/>
+      <tag k="name:eo" v="Israelo"/>
+      <tag k="geonames:id" v="294640"/>
+      <tag k="country_code_fips" v="IS"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Israel"/>
+      <tag k="name:hu" v="Izrael"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425008" lat="42.4" lon="12.6" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:23Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="意大利"/>
+      <tag k="name:fi" v="Italia"/>
+      <tag k="name" v="Italia"/>
+      <tag k="name:sl" v="Italija"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="IT"/>
+      <tag k="name:zh_pyt" v="Yìdàlì"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Yidali"/>
+      <tag k="name:pl" v="Włochy"/>
+      <tag k="name:ar" v="إيطاليا"/>
+      <tag k="name:he" v="איטליה"/>
+      <tag k="name:da" v="Italien"/>
+      <tag k="name:nl" v="Italië"/>
+      <tag k="name:en" v="Italy"/>
+      <tag k="capital_city" v="Rome"/>
+      <tag k="name:eo" v="Italio"/>
+      <tag k="name:it" v="Italia"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="country_code_fips" v="IT"/>
+      <tag k="name:fr" v="Italie"/>
+      <tag k="name:de" v="Italien"/>
+      <tag k="name:cy" v="Yr Eidal"/>
+      <tag k="name:hu" v="Olaszország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425009" lat="7.9896848" lon="-5.5678953" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:23Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="科特迪瓦"/>
+      <tag k="name:fi" v="Norsunluurannikko"/>
+      <tag k="name" v="Côte d&amp;apos;Ivoire"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CI"/>
+      <tag k="name:zh_pyt" v="Kētèdíwǎ"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Ketediwa"/>
+      <tag k="name:ar" v="كوت ديفوار"/>
+      <tag k="name:he" v="חוף השנהב"/>
+      <tag k="name:da" v="Elfenbenskysten"/>
+      <tag k="int_name" v="Côte d&amp;apos;Ivoire"/>
+      <tag k="name:en" v="Côte d&amp;apos;Ivoire"/>
+      <tag k="name:eo" v="Ebur-Bordo"/>
+      <tag k="geonames:id" v="2287781"/>
+      <tag k="country_code_fips" v="IV"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Elefántcsontpart"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425010" lat="18.1850104" lon="-77.3947347" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:23Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Jamaika"/>
+      <tag k="name" v="Jamaica"/>
+      <tag k="country_code" v="JM"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="JM"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="جامايكا"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:he" v="ג&amp;apos;מייקה"/>
+      <tag k="name:da" v="Jamaica"/>
+      <tag k="name:eo" v="Jamajko"/>
+      <tag k="country_code_fips" v="JM"/>
+      <tag k="name:hu" v="Jamaica"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425011" lat="36.5747826" lon="139.2394743" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:23Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="日本"/>
+      <tag k="name:fi" v="Japani"/>
+      <tag k="name" v="日本 (Japan)"/>
+      <tag k="is_in:ocean" v="Pacific"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="JP"/>
+      <tag k="name:zh_pyt" v="Rìběn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Riben"/>
+      <tag k="name:pl" v="Japonia"/>
+      <tag k="name:ar" v="اليابان"/>
+      <tag k="name:he" v="יפן"/>
+      <tag k="name:da" v="Japan"/>
+      <tag k="name:en" v="Japan"/>
+      <tag k="capital_city" v="Tokyo"/>
+      <tag k="name:eo" v="Japanio"/>
+      <tag k="is_in" v="Asia"/>
+      <tag k="country_code_fips" v="JA"/>
+      <tag k="name:ja_rm" v="Nippon"/>
+      <tag k="name:de" v="Japan"/>
+      <tag k="name:cy" v="Japan"/>
+      <tag k="name:ja" v="日本"/>
+      <tag k="name:hu" v="Japán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425012" lat="31.1666667" lon="36.9416667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:24Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="约旦"/>
+      <tag k="name:fi" v="Jordania"/>
+      <tag k="name" v="Jordan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="JO"/>
+      <tag k="name:zh_pyt" v="Yuēdàn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Yuedan"/>
+      <tag k="name:ar" v="الأردن"/>
+      <tag k="name:he" v="ירדן"/>
+      <tag k="name:da" v="Jordan"/>
+      <tag k="int_name" v="Jordan"/>
+      <tag k="name:en" v="Jordan"/>
+      <tag k="name:eo" v="Jordanio"/>
+      <tag k="geonames:id" v="248816"/>
+      <tag k="country_code_fips" v="JO"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Jordanien"/>
+      <tag k="name:cy" v="Gwlad Iorddonen"/>
+      <tag k="name:hu" v="Jordánia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425013" lat="47.228589" lon="65.2093468" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:24Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="哈萨克斯坦"/>
+      <tag k="name:ru" v="Казахстан (Kazakhstán)"/>
+      <tag k="name:fi" v="Kazakstan"/>
+      <tag k="name" v="Kazakhstan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="KZ"/>
+      <tag k="official_name" v="Republic of Kazakhstan"/>
+      <tag k="name:zh_pyt" v="Hāsàkèsītǎn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Hasakesitan"/>
+      <tag k="name:ar" v="كازاخستان"/>
+      <tag k="wikipedia:en" v="Kazakhstan"/>
+      <tag k="name:he" v="קזחסטן"/>
+      <tag k="name:da" v="Kasakhstan"/>
+      <tag k="int_name" v="Kazakhstan"/>
+      <tag k="population" v="15217711"/>
+      <tag k="name:en" v="Kazakhstan"/>
+      <tag k="name:eo" v="Kazaĥio"/>
+      <tag k="name:kk" v="Қазақстан (Qazaqstan)"/>
+      <tag k="geonames:id" v="1522867"/>
+      <tag k="country_code_fips" v="KZ"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Kasachstan"/>
+      <tag k="name:cy" v="Kazakstan"/>
+      <tag k="name:hu" v="Kazahsztán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425014" lat="1.4419471" lon="38.4314107" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:24Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="肯尼亚"/>
+      <tag k="name:fi" v="Kenia"/>
+      <tag k="name" v="Kenya"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="KE"/>
+      <tag k="name:zh_pyt" v="Kěnníyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Kenniya"/>
+      <tag k="name:ar" v="كينيا"/>
+      <tag k="name:he" v="קניה"/>
+      <tag k="name:da" v="Kenya"/>
+      <tag k="int_name" v="Kenya"/>
+      <tag k="name:en" v="Kenya"/>
+      <tag k="name:eo" v="Kenjo"/>
+      <tag k="geonames:id" v="192950"/>
+      <tag k="country_code_fips" v="KE"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Kenia"/>
+      <tag k="name:hu" v="Kenya"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425015" lat="-7.5" lon="-179.6" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:24Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Kiribati"/>
+      <tag k="is_in:ocean" v="Pacific"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="KI"/>
+      <tag k="name:ar" v="كيريباس"/>
+      <tag k="name:he" v="קיריבטי"/>
+      <tag k="name:da" v="Kiribati"/>
+      <tag k="int_name" v="Kiribati"/>
+      <tag k="name:en" v="Kiribati"/>
+      <tag k="name:eo" v="Kiribato"/>
+      <tag k="geonames:id" v="4030945"/>
+      <tag k="country_code_fips" v="KR"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Kiribati"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425016" lat="29.2733758" lon="47.497961" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:24Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="科威特"/>
+      <tag k="name:fi" v="Kuwait"/>
+      <tag k="name" v="Kuwait"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="KW"/>
+      <tag k="official_name" v="State of Kuwait"/>
+      <tag k="name:zh_pyt" v="Kēwēitè"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Keweite"/>
+      <tag k="name:ar" v="الكويت"/>
+      <tag k="name:he" v="כווית"/>
+      <tag k="name:da" v="Kuwait"/>
+      <tag k="int_name" v="Kuwait"/>
+      <tag k="population" v="3399637"/>
+      <tag k="name:en" v="Kuwait"/>
+      <tag k="capital_city" v="Kuwait City"/>
+      <tag k="name:eo" v="Kuvajto"/>
+      <tag k="geonames:id" v="285570"/>
+      <tag k="country_code_fips" v="KU"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Kuwait"/>
+      <tag k="name:hu" v="Kuvait"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425017" lat="41.5083333" lon="74.7245833" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:24Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="吉尔吉斯斯坦"/>
+      <tag k="name:ru" v="Киргизия"/>
+      <tag k="name:ky" v="Кыргызстан"/>
+      <tag k="name:fi" v="Kirgisia"/>
+      <tag k="name" v="Kyrgyzstan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="KG"/>
+      <tag k="name:zh_pyt" v="Jíěrjísīsītǎn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Jierjisisitan"/>
+      <tag k="name:ar" v="قيرغيزستان"/>
+      <tag k="name:he" v="קירגיסטן"/>
+      <tag k="name:da" v="Kirgisistan"/>
+      <tag k="int_name" v="Kyrgyzstan"/>
+      <tag k="population" v="5356869"/>
+      <tag k="name:en" v="Kyrgyzstan"/>
+      <tag k="capital_city" v="Bishkek"/>
+      <tag k="name:eo" v="Kirgizio"/>
+      <tag k="geonames:id" v="1527747"/>
+      <tag k="country_code_fips" v="KG"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Kirgisistan"/>
+      <tag k="name:hu" v="Kirgizisztán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425018" lat="20.0170797" lon="103.3782729" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:25Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="老挝"/>
+      <tag k="name" v="Laos"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LA"/>
+      <tag k="name:zh_pyt" v="Lǎowō"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Laowo"/>
+      <tag k="name:ar" v="لاوس"/>
+      <tag k="name:he" v="לאוס"/>
+      <tag k="name:da" v="Laos"/>
+      <tag k="int_name" v="Laos"/>
+      <tag k="name:en" v="Laos"/>
+      <tag k="name:eo" v="Laoso"/>
+      <tag k="geonames:id" v="1655842"/>
+      <tag k="country_code_fips" v="LA"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Laosz"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425019" lat="56.8666667" lon="24.6" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:25Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="拉脱维亚"/>
+      <tag k="name:fi" v="Latvia"/>
+      <tag k="name" v="Latvija"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LV"/>
+      <tag k="name:zh_pyt" v="Lātuōwéiyà"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Latuoweiya"/>
+      <tag k="name:ar" v="لاتفيا"/>
+      <tag k="name:he" v="לטביה"/>
+      <tag k="name:da" v="Letland"/>
+      <tag k="int_name" v="Latvia"/>
+      <tag k="name:en" v="Latvia"/>
+      <tag k="name:eo" v="Latvio"/>
+      <tag k="geonames:id" v="458258"/>
+      <tag k="country_code_fips" v="LG"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Lettonie"/>
+      <tag k="name:de" v="Lettland"/>
+      <tag k="name:cy" v="Latfia"/>
+      <tag k="name:hu" v="Lettország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425020" lat="33.8750071" lon="35.8434571" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:25Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="黎巴嫩"/>
+      <tag k="name:fi" v="Libanon"/>
+      <tag k="name" v="لبنان  Lebanon"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LB"/>
+      <tag k="official_name" v="Republic of Lebanon"/>
+      <tag k="name:zh_pyt" v="Líbānèn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Libanen"/>
+      <tag k="name:ar" v="لبنان"/>
+      <tag k="name:he" v="לבנון"/>
+      <tag k="name:da" v="Libanon"/>
+      <tag k="int_name" v="Lebanon"/>
+      <tag k="population" v="4196453"/>
+      <tag k="name:en" v="Lebanon"/>
+      <tag k="capital_city" v="Beirut"/>
+      <tag k="name:eo" v="Libano"/>
+      <tag k="geonames:id" v="272103"/>
+      <tag k="country_code_fips" v="LE"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Liban"/>
+      <tag k="name:de" v="Libanon"/>
+      <tag k="name:cy" v="Libanus"/>
+      <tag k="name:hu" v="Libanon"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425021" lat="-29.462404" lon="28.0903154" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:25Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="莱索托"/>
+      <tag k="name:fi" v="Lesotho"/>
+      <tag k="name" v="Lesotho"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LS"/>
+      <tag k="name:zh_pyt" v="Láisuǒtuō"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Laisuotuo"/>
+      <tag k="name:pl" v="Lesoto"/>
+      <tag k="name:ar" v="ليسوتو"/>
+      <tag k="name:da" v="Lesotho"/>
+      <tag k="name:eo" v="Lesoto"/>
+      <tag k="name:hu" v="Lesotho"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425022" lat="5.7499316" lon="-9.365827" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:25Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="利比里亚"/>
+      <tag k="name" v="Liberia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LR"/>
+      <tag k="name:zh_pyt" v="Lìbǐlǐyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Libiliya"/>
+      <tag k="name:ar" v="ليبريا"/>
+      <tag k="name:he" v="ליבריה"/>
+      <tag k="name:da" v="Liberia"/>
+      <tag k="int_name" v="Liberia"/>
+      <tag k="name:en" v="Liberia"/>
+      <tag k="name:eo" v="Liberio"/>
+      <tag k="geonames:id" v="2275384"/>
+      <tag k="country_code_fips" v="LI"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Libéria"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425023" lat="26.7" lon="15.25" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:26Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="利比亚"/>
+      <tag k="name:fi" v="Libya"/>
+      <tag k="name" v="Libya"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LY"/>
+      <tag k="name:zh_pyt" v="Lìbǐyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Libiya"/>
+      <tag k="name:ar" v="ليبيا"/>
+      <tag k="name:he" v="לוב"/>
+      <tag k="name:da" v="Libyen"/>
+      <tag k="int_name" v="Libya"/>
+      <tag k="name:en" v="Libya"/>
+      <tag k="name:eo" v="Libio"/>
+      <tag k="geonames:id" v="2215636"/>
+      <tag k="country_code_fips" v="LY"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Libyen"/>
+      <tag k="name:hu" v="Líbia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425024" lat="47.1324057" lon="9.5728939" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:26Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="列支敦士登"/>
+      <tag k="name" v="Liechtenstein"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LI"/>
+      <tag k="name:zh_pyt" v="Lièzhīdūnshìdēng"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Liezhidunshideng"/>
+      <tag k="name:ar" v="ليختنشتاين"/>
+      <tag k="name:he" v="ליכטנשטיין"/>
+      <tag k="name:da" v="Liechtenstein"/>
+      <tag k="int_name" v="Liechtenstein"/>
+      <tag k="name:en" v="Liechtenstein"/>
+      <tag k="name:eo" v="Liĥtenŝtejno"/>
+      <tag k="geonames:id" v="3042058"/>
+      <tag k="country_code_fips" v="LS"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Liechtenstein"/>
+      <tag k="name:hu" v="Liechtenstein"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425025" lat="54.7333339" lon="24.6120711" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:27Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="立陶宛"/>
+      <tag k="name:fi" v="Liettua"/>
+      <tag k="name" v="Lietuva"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LT"/>
+      <tag k="official_name" v="Republic of Lithuania"/>
+      <tag k="name:zh_pyt" v="Lìtáowǎn"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Litaowan"/>
+      <tag k="name:ar" v="ليتوانيا"/>
+      <tag k="name:he" v="לטביה"/>
+      <tag k="name:da" v="Litauen"/>
+      <tag k="int_name" v="Lithuania"/>
+      <tag k="population" v="3369600"/>
+      <tag k="name:en" v="Lithuania"/>
+      <tag k="official_name:lt" v="Lietuvos Respublika"/>
+      <tag k="name:eo" v="Litovio"/>
+      <tag k="geonames:id" v="597427"/>
+      <tag k="country_code_fips" v="LH"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Lituanie"/>
+      <tag k="name:de" v="Litauen"/>
+      <tag k="name:cy" v="Lithwania"/>
+      <tag k="name:hu" v="Litvánia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425026" lat="49.8158334" lon="6.1297223" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:27Z" version="1">
+      <tag k="user" v="rasher"/>
+      <tag k="timestamp" v="2009-03-11T16:12:37Z"/>
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="???"/>
+      <tag k="name:fi" v="Luxemburg"/>
+      <tag k="name" v="Luxembourg"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LU"/>
+      <tag k="name:zh_pyt" v="Lúsenbao"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Lusenbao"/>
+      <tag k="name:ar" v="لكسمبرغ"/>
+      <tag k="name:he" v="לוקסמבורג"/>
+      <tag k="name:da" v="Luxembourg"/>
+      <tag k="int_name" v="Luxembourg"/>
+      <tag k="name:en" v="Luxembourg"/>
+      <tag k="name:eo" v="Luksemburgo"/>
+      <tag k="is_in" v="Luxembourg, Luxembourg"/>
+      <tag k="geonames:id" v="2960313"/>
+      <tag k="country_code_fips" v="LU"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:lb" v="Lëtzebuerg"/>
+      <tag k="name:fr" v="Luxembourg"/>
+      <tag k="name:de" v="Luxemburg"/>
+      <tag k="name:cy" v="Lwcsembwrg"/>
+      <tag k="name:hu" v="Luxemburg"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425027" lat="41.6198612" lon="21.7190278" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:27Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="马其顿"/>
+      <tag k="name:fi" v="Makedonia"/>
+      <tag k="name" v="Macedonia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MK"/>
+      <tag k="name:zh_pyt" v="Mǎqídùn"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Maqidun"/>
+      <tag k="name:ar" v="مقدونيا"/>
+      <tag k="wikipedia" v="Republic of Macedonia"/>
+      <tag k="name:he" v="מקדוניה"/>
+      <tag k="name:da" v="Makedonien"/>
+      <tag k="int_name" v="Macedonia"/>
+      <tag k="name:en" v="Macedonia"/>
+      <tag k="name:eo" v="Makedonio"/>
+      <tag k="geonames:id" v="718075"/>
+      <tag k="country_code_fips" v="MK"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Gweriniaeth Macedonia"/>
+      <tag k="name:hu" v="Macedónia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425028" lat="-18.925" lon="46.4416667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:27Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="马达加斯加"/>
+      <tag k="name:fi" v="Madagaskar"/>
+      <tag k="name" v="Madagascar"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MG"/>
+      <tag k="name:zh_pyt" v="Mǎdájiāsījiā"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Madajiasijia"/>
+      <tag k="name:ar" v="مدغشقر"/>
+      <tag k="name:he" v="מדגסקר"/>
+      <tag k="name:da" v="Madagaskar"/>
+      <tag k="int_name" v="Madagascar"/>
+      <tag k="name:en" v="Madagascar"/>
+      <tag k="name:eo" v="Madagaskaro"/>
+      <tag k="geonames:id" v="1062947"/>
+      <tag k="country_code_fips" v="MA"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Madagaszkár"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425029" lat="-11.0756208" lon="34.1734825" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:27Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="马拉维"/>
+      <tag k="name:fi" v="Malawi"/>
+      <tag k="name" v="Malawi"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MW"/>
+      <tag k="name:zh_pyt" v="Mǎlāwéi"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Malawei"/>
+      <tag k="name:ar" v="ملاوي"/>
+      <tag k="name:da" v="Malawi"/>
+      <tag k="int_name" v="Malawi"/>
+      <tag k="name:en" v="Malawi"/>
+      <tag k="name:eo" v="Malavio"/>
+      <tag k="geonames:id" v="927384"/>
+      <tag k="country_code_fips" v="MI"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Malawi"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425030" lat="4.5693476" lon="102.2657003" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:28Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="马来西亚"/>
+      <tag k="name:fi" v="Malesia"/>
+      <tag k="name" v="Malaysia"/>
+      <tag k="is_in:ocean" v="Pacific"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MY"/>
+      <tag k="name:zh_pyt" v="Mǎláixīyà"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Malaixiya"/>
+      <tag k="name:ar" v="ماليزي"/>
+      <tag k="name:he" v="מלזיה"/>
+      <tag k="name:da" v="Malaysia"/>
+      <tag k="int_name" v="Malaysia"/>
+      <tag k="name:en" v="Malaysia"/>
+      <tag k="capital_city" v="Kuala Lumpur"/>
+      <tag k="name:eo" v="Malajzio"/>
+      <tag k="geonames:id" v="1733045"/>
+      <tag k="country_code_fips" v="MY"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Malaysia"/>
+      <tag k="name:hu" v="Malajzia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425031" lat="16.37" lon="-2.29" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:28Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Mali"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="ML"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:ar" v="مالي"/>
+      <tag k="name:he" v="מאלי"/>
+      <tag k="name:da" v="Mali"/>
+      <tag k="int_name" v="Mali"/>
+      <tag k="name:en" v="Mali"/>
+      <tag k="name:eo" v="Malio"/>
+      <tag k="geonames:id" v="2453866"/>
+      <tag k="country_code_fips" v="ML"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Mali"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425032" lat="35.9545761" lon="14.540552" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:28Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="马尔他"/>
+      <tag k="name:fi" v="Malta"/>
+      <tag k="name" v="Malta"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MT"/>
+      <tag k="name:zh_pyt" v="Mǎěrtā"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Maerta"/>
+      <tag k="name:ar" v="مالطا"/>
+      <tag k="name:he" v="מלטה"/>
+      <tag k="name:da" v="Malta"/>
+      <tag k="int_name" v="Malta"/>
+      <tag k="name:en" v="Malta"/>
+      <tag k="capital_city" v="Valleta"/>
+      <tag k="name:eo" v="Malto"/>
+      <tag k="geonames:id" v="2562770"/>
+      <tag k="country_code_fips" v="MT"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Malte"/>
+      <tag k="name:de" v="Malta"/>
+      <tag k="name:hu" v="Málta"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425033" lat="6.9518191" lon="170.9985511" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:28Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Marshall Islands"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MH"/>
+      <tag k="name:ar" v="جزر مارشال"/>
+      <tag k="name:he" v="איי מרשל"/>
+      <tag k="name:da" v="Marshalløerne"/>
+      <tag k="int_name" v="Marshall Islands"/>
+      <tag k="name:en" v="Marshall Islands"/>
+      <tag k="name:eo" v="Marŝala Insularo"/>
+      <tag k="geonames:id" v="2080185"/>
+      <tag k="country_code_fips" v="RM"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Marshallinseln"/>
+      <tag k="name:cy" v="Ynysoedd Marshall"/>
+      <tag k="name:hu" v="Marshall-szigetek"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425034" lat="20.2539976" lon="-9.2398844" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:28Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="毛里塔尼亚"/>
+      <tag k="name:fi" v="Mauritania"/>
+      <tag k="name" v="Mauritania"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MR"/>
+      <tag k="name:zh_pyt" v="Máolǐtǎníyà"/>
+      <tag k="name:zh_py" v="Maolitaniya"/>
+      <tag k="name:ar" v="موريتانيا"/>
+      <tag k="name:he" v="מאוריטניה"/>
+      <tag k="name:da" v="Mauretanien"/>
+      <tag k="int_name" v="Mauritania"/>
+      <tag k="name:en" v="Mauritania"/>
+      <tag k="name:eo" v="Maŭritanio"/>
+      <tag k="geonames:id" v="2378080"/>
+      <tag k="country_code_fips" v="MR"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Mauretanien"/>
+      <tag k="name:hu" v="Mauritánia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425035" lat="-20.3436899" lon="57.6681328" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:29Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="毛里求斯"/>
+      <tag k="name" v="Mauritius"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MU"/>
+      <tag k="nat_name" v="Republic of Mauritius"/>
+      <tag k="name:zh_pyt" v="Máolǐqiúsī"/>
+      <tag k="name:zh_py" v="Maoliquisi"/>
+      <tag k="name:ar" v="موريشيوس"/>
+      <tag k="name:da" v="Mauritius"/>
+      <tag k="int_name" v="Mauritius"/>
+      <tag k="name:en" v="Mauritius"/>
+      <tag k="name:eo" v="Maŭricio"/>
+      <tag k="geonames:id" v="934292"/>
+      <tag k="country_code_fips" v="MP"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="République de Maurice"/>
+      <tag k="name:hu" v="Mauritius"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425036" lat="22.4999985" lon="-100.0000059" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:29Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Meksiko"/>
+      <tag k="name:es" v="México"/>
+      <tag k="name" v="México"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MX"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="المكسيك"/>
+      <tag k="name:he" v="מקסיקו"/>
+      <tag k="name:da" v="Mexico"/>
+      <tag k="int_name" v="Mexico"/>
+      <tag k="name:en" v="Mexico"/>
+      <tag k="name:eo" v="Meksiko"/>
+      <tag k="geonames:id" v="3996063"/>
+      <tag k="country_code_fips" v="MX"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Mexiko"/>
+      <tag k="name:hu" v="Mexikó"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425037" lat="5.56" lon="150.1983333" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:29Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Micronesia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="FM"/>
+      <tag k="name:ar" v="ميكرونيزيا"/>
+      <tag k="name:he" v="מיקרונזיה"/>
+      <tag k="name:da" v="Mikronesien"/>
+      <tag k="int_name" v="Micronesia"/>
+      <tag k="name:en" v="Micronesia"/>
+      <tag k="name:eo" v="Mikronezio"/>
+      <tag k="geonames:id" v="2081918"/>
+      <tag k="country_code_fips" v="FM"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Mikronesien"/>
+      <tag k="name:hu" v="Mikronézia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425038" lat="46.9702189" lon="28.4023995" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:29Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="摩尔多瓦"/>
+      <tag k="name:ru" v="Молдавия"/>
+      <tag k="name:fi" v="Moldova"/>
+      <tag k="name" v="Republica Moldova"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MD"/>
+      <tag k="official_name" v="The Republic of Moldova"/>
+      <tag k="name:zh_pyt" v="Móěrduōwǎ"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Moerduowa"/>
+      <tag k="name:ar" v="جمهورية مولدوفا"/>
+      <tag k="name:he" v="מולדובה"/>
+      <tag k="name:da" v="Moldova"/>
+      <tag k="int_name" v="The Republic of Moldova"/>
+      <tag k="population" v="4128047"/>
+      <tag k="name:en" v="Moldova"/>
+      <tag k="capital_city" v="Chişinău"/>
+      <tag k="name:eo" v="Moldavio"/>
+      <tag k="geonames:id" v="617790"/>
+      <tag k="country_code_fips" v="MD"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Moldavien"/>
+      <tag k="name:cy" v="Moldofa"/>
+      <tag k="name:hu" v="Moldova"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425039" lat="43.73125" lon="7.4197222" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:29Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="摩纳哥"/>
+      <tag k="name:fi" v="Monaco"/>
+      <tag k="name" v="Monaco"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MC"/>
+      <tag k="name:zh_pyt" v="Mónàgē"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Monage"/>
+      <tag k="name:ar" v="موناكو"/>
+      <tag k="name:he" v="מונקו"/>
+      <tag k="name:da" v="Monaco"/>
+      <tag k="int_name" v="Monaco"/>
+      <tag k="name:en" v="Monaco"/>
+      <tag k="name:eo" v="Monako"/>
+      <tag k="geonames:id" v="2993457"/>
+      <tag k="country_code_fips" v="MN"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Monaco"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425040" lat="46.825" lon="103.85" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:30Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Монгол Улс"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MN"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:ar" v="منغوليا"/>
+      <tag k="name:he" v="מונגוליה"/>
+      <tag k="name:da" v="Mongoliet"/>
+      <tag k="int_name" v="Mongolia"/>
+      <tag k="name:en" v="Mongolia"/>
+      <tag k="name:eo" v="Mongolio"/>
+      <tag k="geonames:id" v="2029969"/>
+      <tag k="country_code_fips" v="MG"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Mongolei"/>
+      <tag k="name:hu" v="Mongólia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425041" lat="30.8506457" lon="-7.3478891" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:30Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="摩洛哥"/>
+      <tag k="name:fi" v="Marokko"/>
+      <tag k="name" v="Morocco"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MA"/>
+      <tag k="name:zh_pyt" v="Móluògē"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Moluoge"/>
+      <tag k="name:pl" v="Maroko"/>
+      <tag k="name:ar" v="المغرب"/>
+      <tag k="name:he" v="מרוקו"/>
+      <tag k="name:da" v="Marokko"/>
+      <tag k="int_name" v="Morocco"/>
+      <tag k="name:en" v="Morocco"/>
+      <tag k="name:eo" v="Maroko"/>
+      <tag k="geonames:id" v="2542007"/>
+      <tag k="country_code_fips" v="MO"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Marokko"/>
+      <tag k="name:cy" v="Moroco"/>
+      <tag k="name:hu" v="Marokkó"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425042" lat="-19.3022645" lon="34.9145101" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:30Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="莫桑比克"/>
+      <tag k="name:fi" v="Mosambik"/>
+      <tag k="name" v="Mozambique"/>
+      <tag k="name:pt" v="Moçambique"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MZ"/>
+      <tag k="official_name" v="República de Moçambique"/>
+      <tag k="name:zh_pyt" v="Mòsāngbǐkè"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Mosangbike"/>
+      <tag k="name:ar" v="موزمبيق"/>
+      <tag k="name:he" v="מוזמביק"/>
+      <tag k="name:da" v="Mozambique"/>
+      <tag k="int_name" v="Mozambique"/>
+      <tag k="population" v="21397000"/>
+      <tag k="name:en" v="Mozambique"/>
+      <tag k="capital_city" v="Maputo"/>
+      <tag k="name:eo" v="Mozambiko"/>
+      <tag k="geonames:id" v="1036973"/>
+      <tag k="country_code_fips" v="MZ"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Mosambic"/>
+      <tag k="name:hu" v="Mozambik"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425043" lat="17.175" lon="96.0" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:30Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="缅甸"/>
+      <tag k="name" v="Myanmar"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MM"/>
+      <tag k="name:zh_pyt" v="Miǎndiàn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Miandian"/>
+      <tag k="name:ar" v="ميانمار"/>
+      <tag k="wikipedia" v="Burma"/>
+      <tag k="name:he" v="מיאנמר"/>
+      <tag k="name:da" v="Myanmar"/>
+      <tag k="int_name" v="Myanmar"/>
+      <tag k="name:en" v="Myanmar"/>
+      <tag k="name:eo" v="Birmo"/>
+      <tag k="geonames:id" v="1327865"/>
+      <tag k="country_code_fips" v="BM"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Mianmar"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425044" lat="-24.3953879" lon="17.9884646" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:30Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="纳米比亚"/>
+      <tag k="name:fi" v="Namibia"/>
+      <tag k="name" v="Namibia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="NA"/>
+      <tag k="name:zh_pyt" v="Nàmǐbǐyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Namibiya"/>
+      <tag k="name:ar" v="ناميبيا"/>
+      <tag k="name:he" v="נמיביה"/>
+      <tag k="name:da" v="Namibia"/>
+      <tag k="int_name" v="Namibia"/>
+      <tag k="name:en" v="Namibia"/>
+      <tag k="name:eo" v="Namibio"/>
+      <tag k="geonames:id" v="3355338"/>
+      <tag k="country_code_fips" v="WA"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Namibia"/>
+      <tag k="name:hu" v="Namíbia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425045" lat="-0.525" lon="166.9333334" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:31Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Nauru"/>
+      <tag k="is_in:ocean" v="Pacific"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="NR"/>
+      <tag k="official_name" v="Republic of Nauru"/>
+      <tag k="is_in:island" v="Nauru"/>
+      <tag k="name:ar" v="ناورو"/>
+      <tag k="name:da" v="Nauru"/>
+      <tag k="int_name" v="Nauru"/>
+      <tag k="population" v="13770"/>
+      <tag k="name:en" v="Nauru"/>
+      <tag k="name:eo" v="Nauro"/>
+      <tag k="geonames:id" v="2110425"/>
+      <tag k="country_code_fips" v="NR"/>
+      <tag k="name:hu" v="Nauru"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425046" lat="28.1083334" lon="84.0916666" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:31Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="尼泊尔"/>
+      <tag k="name" v="Nepal"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="NP"/>
+      <tag k="name:zh_pyt" v="Níbóěr"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Niboer"/>
+      <tag k="name:ar" v="نيبال"/>
+      <tag k="name:he" v="נפאל"/>
+      <tag k="name:da" v="Nepal"/>
+      <tag k="int_name" v="Nepal"/>
+      <tag k="name:en" v="Nepal"/>
+      <tag k="name:eo" v="Nepalo"/>
+      <tag k="geonames:id" v="1282988"/>
+      <tag k="country_code_fips" v="NP"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Nepal"/>
+      <tag k="name:hu" v="Nepál"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425047" lat="-41.3117326" lon="174.9746694" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:32Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Uusi-Seelanti"/>
+      <tag k="name" v="New Zealand"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="NZ"/>
+      <tag k="is_in:continent" v="Oceania"/>
+      <tag k="name:mi" v="Aotearoa"/>
+      <tag k="name:ar" v="نيوزيلندا"/>
+      <tag k="name:he" v="ניו זילנד"/>
+      <tag k="name:da" v="New Zealand"/>
+      <tag k="int_name" v="New Zealand"/>
+      <tag k="name:en" v="New Zealand"/>
+      <tag k="capital_city" v="Wellington"/>
+      <tag k="name:eo" v="Nov-Zelando"/>
+      <tag k="country_code_fips" v="NZ"/>
+      <tag k="name:de" v="Neuseeland"/>
+      <tag k="name:cy" v="Seland Newydd"/>
+      <tag k="name:hu" v="Új-Zéland"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425048" lat="12.3724492" lon="-84.8700031" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:32Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Nicaragua"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="NI"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="نيكاراغوا"/>
+      <tag k="name:he" v="ניקרגואה"/>
+      <tag k="name:da" v="Nicaragua"/>
+      <tag k="int_name" v="Nicaragua"/>
+      <tag k="name:en" v="Nicaragua"/>
+      <tag k="name:eo" v="Nikaragvo"/>
+      <tag k="geonames:id" v="3617476"/>
+      <tag k="country_code_fips" v="NU"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Nicaragua"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425049" lat="19.4799091" lon="9.9859088" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:32Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="尼日尔"/>
+      <tag k="name" v="Niger"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="NE"/>
+      <tag k="name:zh_pyt" v="Nírìěr"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Nirier"/>
+      <tag k="name:ar" v="النيجر"/>
+      <tag k="name:da" v="Niger"/>
+      <tag k="int_name" v="Niger"/>
+      <tag k="name:en" v="Niger"/>
+      <tag k="name:eo" v="Niĝero"/>
+      <tag k="geonames:id" v="2440476"/>
+      <tag k="country_code_fips" v="NG"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Niger"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425050" lat="9.6" lon="8.0" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:32Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="尼日利亚"/>
+      <tag k="name" v="Nigeria"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="NG"/>
+      <tag k="name:zh_pyt" v="Nírìlìyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Niriliya"/>
+      <tag k="name:ar" v="نيجيريا"/>
+      <tag k="name:he" v="ניגריה"/>
+      <tag k="name:da" v="Nigeria"/>
+      <tag k="int_name" v="Nigeria"/>
+      <tag k="name:en" v="Nigeria"/>
+      <tag k="name:eo" v="Niĝerio"/>
+      <tag k="geonames:id" v="2328926"/>
+      <tag k="country_code_fips" v="NI"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Nigéria"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425051" lat="40.3123611" lon="127.4" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:32Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="朝鲜"/>
+      <tag k="name:fi" v="Pohjois-Korea"/>
+      <tag k="name" v="North Korea"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="KP"/>
+      <tag k="name:zh_pyt" v="Cháoxiǎn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Chaoxian"/>
+      <tag k="name:ar" v="كوريا الشمالية"/>
+      <tag k="name:he" v="קוריאה הצפונית"/>
+      <tag k="name:da" v="Nordkorea"/>
+      <tag k="int_name" v="North Korea"/>
+      <tag k="name:en" v="North Korea"/>
+      <tag k="name:eo" v="Nord-Koreio"/>
+      <tag k="geonames:id" v="1873107"/>
+      <tag k="country_code_fips" v="KN"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Nordkorea"/>
+      <tag k="name:cy" v="Gogledd Corea"/>
+      <tag k="name:hu" v="Észak-Korea"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425052" lat="60.5000042" lon="9.0999914" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:33Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="挪威"/>
+      <tag k="name:fi" v="Norja"/>
+      <tag k="name" v="Norge"/>
+      <tag k="name:sl" v="Norveška"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="NO"/>
+      <tag k="official_name" v="Kingdom of Norway"/>
+      <tag k="name:zh_pyt" v="Nuówēi"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Nuowei"/>
+      <tag k="name:pl" v="Norwegia"/>
+      <tag k="name:ar" v="النرويج"/>
+      <tag k="name:he" v="נורווגיה"/>
+      <tag k="name:da" v="Norge"/>
+      <tag k="population" v="4785200"/>
+      <tag k="name:nl" v="Noorwegen"/>
+      <tag k="name:en" v="Norway"/>
+      <tag k="capital_city" v="Oslo"/>
+      <tag k="name:eo" v="Norvegio"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="country_code_fips" v="NO"/>
+      <tag k="name:no" v="Norge"/>
+      <tag k="name:fr" v="Norvège"/>
+      <tag k="name:de" v="Norwegen"/>
+      <tag k="name:cy" v="Norwy"/>
+      <tag k="name:hu" v="Norvégia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425053" lat="20.9999816" lon="57.0037413" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:33Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="阿曼"/>
+      <tag k="name:fi" v="Oman"/>
+      <tag k="name" v="سلطنة عُمان Oman"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="OM"/>
+      <tag k="official_name" v="Sultanate of Oman"/>
+      <tag k="name:zh_pyt" v="Āmàn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Aman"/>
+      <tag k="name:ar" v="عمان"/>
+      <tag k="off_name" v="Sultanate of Oman"/>
+      <tag k="name:he" v="עומן"/>
+      <tag k="name:da" v="Oman"/>
+      <tag k="population" v="2577000"/>
+      <tag k="name:en" v="Oman"/>
+      <tag k="capital_city" v="Muscat"/>
+      <tag k="name:eo" v="Omano"/>
+      <tag k="country_code_fips" v="MU"/>
+      <tag k="name:de" v="Oman"/>
+      <tag k="name:cy" v="Oman"/>
+      <tag k="name:hu" v="Omán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425054" lat="30.3308102" lon="71.2475309" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:33Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="巴基斯坦"/>
+      <tag k="name" v="Pakistan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="PK"/>
+      <tag k="official_name" v="Islamic Republic of Pakistan"/>
+      <tag k="name:zh_pyt" v="Bājīsītǎn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Bajisitan"/>
+      <tag k="name:ar" v="باكستان"/>
+      <tag k="name:ur" v="پاکستان"/>
+      <tag k="name:he" v="פקיסטן"/>
+      <tag k="name:da" v="Pakistan"/>
+      <tag k="int_name" v="Pakistan"/>
+      <tag k="population" v="172800000"/>
+      <tag k="name:en" v="Pakistan"/>
+      <tag k="capital_city" v="Karachi"/>
+      <tag k="name:eo" v="Pakistano"/>
+      <tag k="geonames:id" v="1168579"/>
+      <tag k="country_code_fips" v="PK"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Pakistan"/>
+      <tag k="name:hu" v="Pakisztán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425055" lat="8.3095638" lon="-81.3065967" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:33Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Panama"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="PA"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="بنما"/>
+      <tag k="name:he" v="פנמה"/>
+      <tag k="name:da" v="Panama"/>
+      <tag k="int_name" v="Panama"/>
+      <tag k="name:en" v="Panama"/>
+      <tag k="name:eo" v="Panamo"/>
+      <tag k="geonames:id" v="3703430"/>
+      <tag k="country_code_fips" v="PM"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Panama"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425056" lat="-5.6816629" lon="144.2489365" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:33Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Papua-Uusi-Guinea"/>
+      <tag k="name" v="Papua New Guinea"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="PG"/>
+      <tag k="name:ar" v="بابوا نيوغينيا"/>
+      <tag k="name:da" v="Papua Ny Guinea"/>
+      <tag k="int_name" v="Papua New Guinea"/>
+      <tag k="name:en" v="Papua New Guinea"/>
+      <tag k="capital_city" v="Port Moresby"/>
+      <tag k="name:eo" v="Papuo-Nov-Gvineo"/>
+      <tag k="geonames:id" v="2088628"/>
+      <tag k="country_code_fips" v="PP"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Papua-Neuguinea"/>
+      <tag k="name:cy" v="Papua Guinea Newydd"/>
+      <tag k="name:hu" v="Pápua Új-Guinea"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425057" lat="-23.4333334" lon="-58.45" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:34Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Paraguay"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="PY"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="باراغواي"/>
+      <tag k="name:he" v="פראגואי"/>
+      <tag k="name:da" v="Paraguay"/>
+      <tag k="int_name" v="Paraguay"/>
+      <tag k="name:en" v="Paraguay"/>
+      <tag k="name:eo" v="Paragvajo"/>
+      <tag k="geonames:id" v="3437598"/>
+      <tag k="country_code_fips" v="PA"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Paraguay"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425058" lat="-6.87" lon="-75.0458333" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:34Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Peru"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="PE"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="بيرو"/>
+      <tag k="name:he" v="פרו"/>
+      <tag k="name:da" v="Peru"/>
+      <tag k="int_name" v="Peru"/>
+      <tag k="name:en" v="Peru"/>
+      <tag k="name:eo" v="Peruo"/>
+      <tag k="geonames:id" v="3932488"/>
+      <tag k="country_code_fips" v="PE"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:cy" v="Periw"/>
+      <tag k="name:hu" v="Peru"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425059" lat="12.7502921" lon="122.731255" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:34Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="菲律宾"/>
+      <tag k="name:fi" v="Filippiinit"/>
+      <tag k="name" v="Philippines"/>
+      <tag k="is_in:ocean" v="Pacific"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="PH"/>
+      <tag k="name:zh_pyt" v="Fēilǜbīn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Feilübin"/>
+      <tag k="name:ar" v="الفلبين"/>
+      <tag k="name:he" v="פיליפינים"/>
+      <tag k="name:da" v="Filippinerne"/>
+      <tag k="capital_city" v="Manila"/>
+      <tag k="name:eo" v="Filipinoj"/>
+      <tag k="is_in" v="Asia, ASEAN, South East Asia, Pacific Ocean"/>
+      <tag k="country_code_fips" v="RP"/>
+      <tag k="name:de" v="Philippinen"/>
+      <tag k="name:cy" v="Pilipinas"/>
+      <tag k="name:hu" v="Fülöp-szigetek"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425060" lat="52.0976954" lon="19.025852" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:34Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="波兰"/>
+      <tag k="name:fi" v="Puola"/>
+      <tag k="name" v="Polska"/>
+      <tag k="name:sl" v="Poljska"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="PL"/>
+      <tag k="name:zh_pyt" v="Bōlán"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Bolan"/>
+      <tag k="name:pl" v="Polska"/>
+      <tag k="name:ar" v="بولندا"/>
+      <tag k="name:he" v="פולין"/>
+      <tag k="name:da" v="Polen"/>
+      <tag k="name:nl" v="Polen"/>
+      <tag k="name:en" v="Poland"/>
+      <tag k="name:eo" v="Pollando"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="name:fr" v="Pologne"/>
+      <tag k="name:de" v="Polen"/>
+      <tag k="name:cy" v="Gwlad Pwyl"/>
+      <tag k="name:hu" v="Lengyelország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425061" lat="39.4999613" lon="-8.0074031" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:34Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="葡萄牙"/>
+      <tag k="name:fi" v="Portugali"/>
+      <tag k="name" v="Portugal"/>
+      <tag k="country_code" v="PT"/>
+      <tag k="name:sl" v="Portugalska"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="PT"/>
+      <tag k="name:zh_pyt" v="Pútáoyá"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Putaoya"/>
+      <tag k="name:pl" v="Portugalia"/>
+      <tag k="name:ar" v="البرتغال"/>
+      <tag k="name:he" v="פורטוגל"/>
+      <tag k="name:da" v="Portugal"/>
+      <tag k="name:en" v="Portugal"/>
+      <tag k="capital_city" v="Lisbon"/>
+      <tag k="name:eo" v="Portugalio"/>
+      <tag k="country_code_fips" v="PO"/>
+      <tag k="name:fr" v="Portugal"/>
+      <tag k="name:de" v="Portugal"/>
+      <tag k="name:cy" v="Portiwgal"/>
+      <tag k="name:hu" v="Portugália"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425062" lat="25.3629167" lon="51.6972222" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:34Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="卡塔尔"/>
+      <tag k="name:fi" v="Qatar"/>
+      <tag k="name" v="Qatar"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="QA"/>
+      <tag k="name:zh_pyt" v="Kǎtǎěr"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Kataer"/>
+      <tag k="name:ar" v="قطر"/>
+      <tag k="name:he" v="קטר"/>
+      <tag k="name:da" v="Qatar"/>
+      <tag k="int_name" v="Qatar"/>
+      <tag k="name:en" v="Qatar"/>
+      <tag k="name:eo" v="Kataro"/>
+      <tag k="geonames:id" v="289688"/>
+      <tag k="country_code_fips" v="QA"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Katar"/>
+      <tag k="name:hu" v="Katar"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425063" lat="-0.5318323" lon="15.8515814" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:35Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:fi" v="Kongon tasavalta"/>
+      <tag k="name" v="Republic of the Congo"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CG"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:kg" v="Repubilika ya Kongo"/>
+      <tag k="name:ar" v="جمهورية الكونغو الديمقراطية"/>
+      <tag k="name:he" v="קונגו"/>
+      <tag k="name:da" v="Republikken Congo"/>
+      <tag k="int_name" v="Republic of the Congo"/>
+      <tag k="alt_name" v="Congo-Brazzaville;Congo (Brazzaville);The Congo"/>
+      <tag k="population" v="3999000"/>
+      <tag k="name:en" v="Republic of the Congo"/>
+      <tag k="name:eo" v="Respubliko Kongo"/>
+      <tag k="geonames:id" v="2260494"/>
+      <tag k="country_code_fips" v="CF"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="République du Congo"/>
+      <tag k="name:cy" v="Gweriniaeth y Congo"/>
+      <tag k="name:ln" v="Republiki ya Kongó"/>
+      <tag k="name:hu" v="Kongó"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425064" lat="45.8833382" lon="24.4833389" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:35Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="罗马尼亚"/>
+      <tag k="name" v="România"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="RO"/>
+      <tag k="name:zh_pyt" v="Luómăníyà"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="wikipedia:ro" v="yes"/>
+      <tag k="name:zh_py" v="Luomaniya"/>
+      <tag k="name:ar" v="رومانيا"/>
+      <tag k="wikipedia:en" v="yes"/>
+      <tag k="name:ro" v="România"/>
+      <tag k="name:he" v="רומניה"/>
+      <tag k="name:da" v="Rumænien"/>
+      <tag k="int_name" v="Romania"/>
+      <tag k="name:en" v="Romania"/>
+      <tag k="name:eo" v="Rumanio"/>
+      <tag k="wikipedia:de" v="yes"/>
+      <tag k="geonames:id" v="798549"/>
+      <tag k="country_code_fips" v="RO"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:fr" v="Roumanie"/>
+      <tag k="name:de" v="Rumänien"/>
+      <tag k="name:cy" v="Rwmania"/>
+      <tag k="name:hu" v="Románia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425065" lat="64.6862927" lon="97.7453312" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:35Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="俄罗斯"/>
+      <tag k="name:ru" v="Российская Федерация"/>
+      <tag k="name:fi" v="Venäjä"/>
+      <tag k="name" v="Российская Федерация"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="RU"/>
+      <tag k="name:zh_pyt" v="Éluósī"/>
+      <tag k="is_in:continent" v="Europe;Asia"/>
+      <tag k="name:zh_py" v="Eluosi"/>
+      <tag k="name:ar" v="روسيا الاتحادية"/>
+      <tag k="name:ro" v="Rusia"/>
+      <tag k="name:he" v="רוסיה"/>
+      <tag k="name:da" v="Rusland"/>
+      <tag k="int_name" v="Russian Federation"/>
+      <tag k="alt_name" v="Russia, Россия"/>
+      <tag k="population" v="142008838"/>
+      <tag k="name:en" v="Russian Federation"/>
+      <tag k="capital_city" v="Moscow"/>
+      <tag k="name:eo" v="Rusio"/>
+      <tag k="country_code_fips" v="RS"/>
+      <tag k="name:ua" v="Росія"/>
+      <tag k="name:de" v="Russland"/>
+      <tag k="name:cy" v="Ffederasiwn Rwsia"/>
+      <tag k="name:hu" v="Oroszország"/>
+      <tag k="name:by" v="Расія"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425066" lat="-1.9519668" lon="29.9574216" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:35Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="卢旺达"/>
+      <tag k="name:fi" v="Ruanda"/>
+      <tag k="name" v="Rwanda"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="RW"/>
+      <tag k="name:zh_pyt" v="Lúwàngdá"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Luwangda"/>
+      <tag k="name:ar" v="رواندا"/>
+      <tag k="name:he" v="רואנדה"/>
+      <tag k="name:da" v="Rwanda"/>
+      <tag k="int_name" v="Rwanda"/>
+      <tag k="name:en" v="Rwanda"/>
+      <tag k="name:eo" v="Ruando"/>
+      <tag k="country_code_fips" v="RW"/>
+      <tag k="name:de" v="Ruanda"/>
+      <tag k="name:hu" v="Ruanda"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425067" lat="24.3916667" lon="-12.875" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:35Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="西撒哈拉"/>
+      <tag k="name:fi" v="Länsi-Sahara"/>
+      <tag k="name" v="Western Sahara"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="EH"/>
+      <tag k="name:zh_pyt" v="Xī Sāhālā"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Xi Sahala"/>
+      <tag k="name:ar" v="الجمهورية العربية الصحراوية"/>
+      <tag k="name:da" v="Vestsahara"/>
+      <tag k="int_name" v="Western Sahara"/>
+      <tag k="name:en" v="Western Sahara"/>
+      <tag k="name:eo" v="Okcidenta Saharo"/>
+      <tag k="geonames:id" v="2461445"/>
+      <tag k="country_code_fips" v="WI"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Westsahara"/>
+      <tag k="name:cy" v="Gorllewin Sahara"/>
+      <tag k="name:hu" v="Nyugat-Szahara"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425068" lat="17.3461794" lon="-62.7687025" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:36Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Saint Kitts and Nevis"/>
+      <tag k="is_in:ocean" v="Atlantic"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="KN"/>
+      <tag k="official_name" v="Federation of Saint Kitts and Nevis"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="سانت كيتس ونيفس"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:da" v="Saint Kitts og Nevis"/>
+      <tag k="alt_name" v="Federation of Saint Christopher and Nevis"/>
+      <tag k="population" v="42696"/>
+      <tag k="capital_city" v="Basseterre"/>
+      <tag k="name:eo" v="Sankta-Kito kaj Neviso"/>
+      <tag k="country_code_fips" v="SC"/>
+      <tag k="name:cy" v="Saint Kitts a Nevis"/>
+      <tag k="name:hu" v="Saint Christopher és Nevis"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425069" lat="13.825" lon="-60.975" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:36Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Saint Lucia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LC"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="سانت لوسيا"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:da" v="Saint Lucia"/>
+      <tag k="int_name" v="Saint Lucia"/>
+      <tag k="name:en" v="Saint Lucia"/>
+      <tag k="name:eo" v="Sankta Lucio"/>
+      <tag k="geonames:id" v="3576468"/>
+      <tag k="country_code_fips" v="ST"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Saint Lucia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425070" lat="12.9044136" lon="-61.2765287" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:36Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Saint Vincent and the Grenadines"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="VC"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="سانت فنسنت وجزر غرينادين"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:da" v="Saint Vincent og Grenadinerne"/>
+      <tag k="int_name" v="Saint Vincent and the Grenadines"/>
+      <tag k="name:en" v="Saint Vincent and the Grenadines"/>
+      <tag k="name:eo" v="Sankta Vincento kaj Grenadinoj"/>
+      <tag k="country_code_fips" v="VC"/>
+      <tag k="name:cy" v="Saint Vincent a&amp;apos;r Grenadines"/>
+      <tag k="name:hu" v="Saint Vincent és a Grenadine-szigetek"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425071" lat="-13.7333334" lon="-171.9333334" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:36Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Samoa"/>
+      <tag k="is_in:ocean" v="Pacific"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="WS"/>
+      <tag k="name:ar" v="ساموا"/>
+      <tag k="name:he" v="סמואה"/>
+      <tag k="name:da" v="Samoa"/>
+      <tag k="int_name" v="Samoa"/>
+      <tag k="name:en" v="Samoa"/>
+      <tag k="name:eo" v="Samoo"/>
+      <tag k="country_code_fips" v="WS"/>
+      <tag k="name:hu" v="Szamoa"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425072" lat="43.9458333" lon="12.4583334" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:37Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="圣马力诺"/>
+      <tag k="name" v="San Marino"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SM"/>
+      <tag k="name:zh_pyt" v="Shèngmǎlìnuò"/>
+      <tag k="name:zh_py" v="Shengmalinuo"/>
+      <tag k="name:ar" v="سان مارينو"/>
+      <tag k="name:he" v="סן מרינו"/>
+      <tag k="name:da" v="San Marino"/>
+      <tag k="int_name" v="San Marino"/>
+      <tag k="name:en" v="San Marino"/>
+      <tag k="name:eo" v="San-Marino"/>
+      <tag k="country_code_fips" v="SM"/>
+      <tag k="name:hu" v="San Marino"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425073" lat="0.2313989" lon="6.6137695" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:37Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="圣多美和普林西比"/>
+      <tag k="name" v="São Tomé and Príncipe"/>
+      <tag k="name:pt" v="São Tomé e Príncipe"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="ST"/>
+      <tag k="name:zh_pyt" v="Shèngduōměi hé Pǔlínxībǐ"/>
+      <tag k="name:zh_py" v="Shengduomei he Pulinxibi"/>
+      <tag k="name:ar" v="سان تومي وبرينسيبي"/>
+      <tag k="name:da" v="São Tomé og Príncipe"/>
+      <tag k="int_name" v="São Tomé and Príncipe"/>
+      <tag k="name:en" v="São Tomé and Príncipe"/>
+      <tag k="name:eo" v="Sao-Tomeo kaj Principeo"/>
+      <tag k="country_code_fips" v="TP"/>
+      <tag k="name:de" v="São Tomé und Príncipe"/>
+      <tag k="name:hu" v="São Tomé és Príncipe"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425074" lat="26.2097327" lon="42.1165356" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:37Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="沙特阿拉伯"/>
+      <tag k="name" v="Saudi Arabia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SA"/>
+      <tag k="name:zh_pyt" v="Shātè Ālābó"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Shate Alabo"/>
+      <tag k="name:ar" v="المملكة العربية السعودية"/>
+      <tag k="name:he" v="ערב הסעודית"/>
+      <tag k="name:da" v="Saudi-Arabien"/>
+      <tag k="int_name" v="Saudi Arabia"/>
+      <tag k="name:en" v="Saudi Arabia"/>
+      <tag k="name:eo" v="Saŭda Arabio"/>
+      <tag k="country_code_fips" v="SA"/>
+      <tag k="name:de" v="Saudi-Arabien"/>
+      <tag k="name:hu" v="Szaúd-Arábia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425075" lat="14.475" lon="-14.4529167" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:37Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="塞内加尔"/>
+      <tag k="name:fi" v="Senegal"/>
+      <tag k="name" v="Senegal"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SN"/>
+      <tag k="name:zh_pyt" v="Sàinèijiāěr"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Saineijiaer"/>
+      <tag k="name:ar" v="السنغال"/>
+      <tag k="name:he" v="סנגל"/>
+      <tag k="name:da" v="Senegal"/>
+      <tag k="int_name" v="Senegal"/>
+      <tag k="name:en" v="Senegal"/>
+      <tag k="name:eo" v="Senegaleo"/>
+      <tag k="country_code_fips" v="SG"/>
+      <tag k="name:de" v="Senegal"/>
+      <tag k="name:cy" v="Sénégal"/>
+      <tag k="name:hu" v="Szenegál"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425076" lat="-4.6575416" lon="55.454042" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:37Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="塞舌尔群岛"/>
+      <tag k="name:fi" v="Seychellit"/>
+      <tag k="name" v="Seychelles"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SC"/>
+      <tag k="name:zh_pyt" v="Sàishéěr Qúndǎo"/>
+      <tag k="name:zh_py" v="Saisheerqundao"/>
+      <tag k="name:ar" v="سيشيل"/>
+      <tag k="name:he" v="סיישל"/>
+      <tag k="name:da" v="Seychellerne"/>
+      <tag k="int_name" v="Seychelles"/>
+      <tag k="name:en" v="Seychelles"/>
+      <tag k="name:eo" v="Sejŝeloj"/>
+      <tag k="country_code_fips" v="SE"/>
+      <tag k="name:hu" v="Seychelle-szigetek"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425077" lat="8.64" lon="-11.84" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:37Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="塞拉利昂"/>
+      <tag k="name" v="Sierra Leone"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SL"/>
+      <tag k="name:zh_pyt" v="Sàilālì&amp;apos;áng"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Sailali&amp;apos;ang"/>
+      <tag k="name:ar" v="سيراليون"/>
+      <tag k="name:he" v="סיארה ליאון"/>
+      <tag k="name:da" v="Sierra Leone"/>
+      <tag k="int_name" v="Sierra Leone"/>
+      <tag k="name:en" v="Sierra Leone"/>
+      <tag k="name:eo" v="Siera-Leono"/>
+      <tag k="country_code_fips" v="SL"/>
+      <tag k="name:hu" v="Sierra Leone"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425078" lat="1.3571683" lon="103.8195384" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:38Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="新加坡"/>
+      <tag k="name:fi" v="Singapore"/>
+      <tag k="name" v="Singapore"/>
+      <tag k="is_in:ocean" v="Pacific"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SG"/>
+      <tag k="official_name" v="Republic of Singapore"/>
+      <tag k="name:zh_pyt" v="Xīnjiāpō"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:ms" v="Singapura"/>
+      <tag k="name:zh_py" v="Xinjiapo"/>
+      <tag k="name:pl" v="Singapur"/>
+      <tag k="name:ar" v="سنغافورة"/>
+      <tag k="name:he" v="סינגפור"/>
+      <tag k="name:da" v="Singapore"/>
+      <tag k="population" v="4839400"/>
+      <tag k="capital_city" v="Singapore City"/>
+      <tag k="name:eo" v="Singapuro"/>
+      <tag k="country_code_fips" v="SN"/>
+      <tag k="name:de" v="Singapur"/>
+      <tag k="name:hu" v="Szingapúr"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425079" lat="48.4836522" lon="20.1493638" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:38Z" version="1">
+      <tag k="reg_name" v="Slovensko"/>
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="斯洛伐克"/>
+      <tag k="name:sk" v="Slovenská republika"/>
+      <tag k="name:fi" v="Slovakia"/>
+      <tag k="name:es" v="Eslovaquia"/>
+      <tag k="name" v="Slovensko"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SK"/>
+      <tag k="nat_name" v="Slovenská republika"/>
+      <tag k="name:zh_pyt" v="Sīluòfákè"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Siluofake"/>
+      <tag k="name:pl" v="Słowacja"/>
+      <tag k="name:ar" v="جمهورية سلوفاكيا"/>
+      <tag k="name:he" v="סלובקיה"/>
+      <tag k="name:da" v="Slovakiet"/>
+      <tag k="int_name" v="Slovak Republic"/>
+      <tag k="name:en" v="Slovakia"/>
+      <tag k="name:eo" v="Slovakio"/>
+      <tag k="name:it" v="Slovacchia"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="country_code_fips" v="LO"/>
+      <tag k="name:fr" v="Slovaque"/>
+      <tag k="name:de" v="Slowakei"/>
+      <tag k="name:cy" v="Slofacia"/>
+      <tag k="name:hu" v="Szlovákia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425080" lat="46.119944" lon="14.815333" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:38Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="斯洛文尼亚"/>
+      <tag k="name:sk" v="Slovinsko"/>
+      <tag k="name:ps" v="سلووېنيا"/>
+      <tag k="name:fi" v="Slovenia"/>
+      <tag k="name:es" v="Eslovenia"/>
+      <tag k="name" v="Slovenija"/>
+      <tag k="watch:StefanB" v="1"/>
+      <tag k="name:sl" v="Slovenija"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SI"/>
+      <tag k="name:zh_pyt" v="Sīluòwénníyà"/>
+      <tag k="name:cs" v="Slovinsko"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Siluowenniya"/>
+      <tag k="name:pl" v="Słowenia"/>
+      <tag k="name:ar" v="سلوفينيا"/>
+      <tag k="name:he" v="סלובניה"/>
+      <tag k="name:da" v="Slovenien"/>
+      <tag k="name:en" v="Slovenia"/>
+      <tag k="note" v="Geometric centre of Republic of Slovenia (GEOSS)"/>
+      <tag k="name:eo" v="Slovenio"/>
+      <tag k="name:it" v="Slovenia"/>
+      <tag k="name:ee" v="Sloveenia"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="country_code_fips" v="SI"/>
+      <tag k="name:fr" v="Slovénie"/>
+      <tag k="name:de" v="Slowenien"/>
+      <tag k="name:cy" v="Slofenia"/>
+      <tag k="source:name" v="Wikipedia"/>
+      <tag k="name:ne" v="स्लोभेनिया"/>
+      <tag k="name:hu" v="Szlovénia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425081" lat="8.3676254" lon="49.0834557" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:38Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="索马里"/>
+      <tag k="name:fi" v="Somalia"/>
+      <tag k="name" v="Somalia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SO"/>
+      <tag k="official_name" v="Somali Republic"/>
+      <tag k="name:zh_pyt" v="Suǒmǎlǐ"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Suomali"/>
+      <tag k="name:so" v="Soomaaliya"/>
+      <tag k="name:ar" v="الصومال"/>
+      <tag k="official_name:so" v="Jamhuuriyadda Soomaaliya"/>
+      <tag k="official_name:ar" v="جمهورية الصومال‎"/>
+      <tag k="name:he" v="סומליה"/>
+      <tag k="name:da" v="Somalia"/>
+      <tag k="int_name" v="Somalia"/>
+      <tag k="population" v="9558666"/>
+      <tag k="name:en" v="Somalia"/>
+      <tag k="name:eo" v="Somalio"/>
+      <tag k="country_code_fips" v="SO"/>
+      <tag k="name:hu" v="Szomália"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425082" lat="-28.8166667" lon="24.9916667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:39Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="南非"/>
+      <tag k="name:fi" v="Etelä-Afrikka"/>
+      <tag k="name" v="South Africa"/>
+      <tag k="name:ve" v="Afurika Tshipembe"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="ZA"/>
+      <tag k="name:zh_pyt" v="Nán Fēi"/>
+      <tag k="name:xh" v="uMzantsi Afrika"/>
+      <tag k="name:tn" v="Aferika Borwa"/>
+      <tag k="name:af" v="Suid-Afrika"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zu" v="Ningizimu Afrika"/>
+      <tag k="name:zh_py" v="Nan Fei"/>
+      <tag k="name:ar" v="جنوب أفريقيا"/>
+      <tag k="name:he" v="דרום אפריקה"/>
+      <tag k="name:da" v="Sydafrika"/>
+      <tag k="int_name" v="South Africa"/>
+      <tag k="name:en" v="South Africa"/>
+      <tag k="name:ts" v="Afrika-Dzonga"/>
+      <tag k="name:eo" v="Sudafriko"/>
+      <tag k="name:ss" v="INingizimu Afrika"/>
+      <tag k="country_code_fips" v="SF"/>
+      <tag k="name:st" v="Afrika Borwa"/>
+      <tag k="name:de" v="Südafrika"/>
+      <tag k="name:cy" v="De Affrica"/>
+      <tag k="name:hu" v="Dél-Afrikai Köztársaság"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425083" lat="35.3984488" lon="127.9371471" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:39Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="韩国"/>
+      <tag k="name:fi" v="Etelä-Korea"/>
+      <tag k="name" v="Republic of Korea"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="KR"/>
+      <tag k="name:zh_pyt" v="Hánguó"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Hanguo"/>
+      <tag k="name:ar" v="كوريا الجنوبية"/>
+      <tag k="wikipedia" v="South Korea"/>
+      <tag k="name:he" v="קוריאה הדרומית"/>
+      <tag k="name:da" v="Sydkorea"/>
+      <tag k="int_name" v="Republic of Korea"/>
+      <tag k="name:en" v="Republic of Korea"/>
+      <tag k="name:eo" v="Sud-Koreio"/>
+      <tag k="geonames:id" v="1835841"/>
+      <tag k="country_code_fips" v="KS"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Südkorea"/>
+      <tag k="name:hu" v="Dél-Korea"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425084" lat="40.0027417" lon="-4.0030298" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:39Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="西班牙"/>
+      <tag k="name:fi" v="Espanja"/>
+      <tag k="name:es" v="España"/>
+      <tag k="name" v="España"/>
+      <tag k="country_code" v="ES"/>
+      <tag k="name:sl" v="Španija"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="ES"/>
+      <tag k="name:zh_pyt" v="Xībānyá"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Xibanya"/>
+      <tag k="name:pl" v="Hiszpania"/>
+      <tag k="name:ar" v="إسبانيا"/>
+      <tag k="name:he" v="ספרד"/>
+      <tag k="name:da" v="Spanien"/>
+      <tag k="name:nl" v="Spanje"/>
+      <tag k="name:en" v="Spain"/>
+      <tag k="capital_city" v="Madrid"/>
+      <tag k="name:eo" v="Hispanio"/>
+      <tag k="country_code_fips" v="SP"/>
+      <tag k="name:fr" v="Espagne"/>
+      <tag k="name:de" v="Spanien"/>
+      <tag k="name:cy" v="Sbaen"/>
+      <tag k="name:hu" v="Spanyolország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425085" lat="7.9090102" lon="80.833875" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:39Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="斯里兰卡"/>
+      <tag k="name" v="Sri Lanka"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="LK"/>
+      <tag k="name:zh_pyt" v="Sīlǐlánkǎ"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Sililanka"/>
+      <tag k="name:ar" v="سري لنكا"/>
+      <tag k="name:he" v="סרי לנקה"/>
+      <tag k="name:da" v="Sri Lanka"/>
+      <tag k="int_name" v="Sri Lanka"/>
+      <tag k="name:en" v="Sri Lanka"/>
+      <tag k="name:eo" v="Sri-Lanko"/>
+      <tag k="geonames:id" v="1227603"/>
+      <tag k="country_code_fips" v="CE"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Srí Lanka"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425086" lat="17.7520935" lon="28.9776374" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:40Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="苏丹"/>
+      <tag k="name:fi" v="Sudan"/>
+      <tag k="name" v="السودان ‎al-Sūdān"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SD"/>
+      <tag k="official_name" v="Republic of Sudan"/>
+      <tag k="name:zh_pyt" v="Sūdān"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Sudan"/>
+      <tag k="name:ar" v="السودان"/>
+      <tag k="name:he" v="סודן"/>
+      <tag k="name:da" v="Sudan"/>
+      <tag k="int_name" v="Sudan"/>
+      <tag k="population" v="39379358"/>
+      <tag k="name:en" v="Sudan"/>
+      <tag k="capital_city" v="Khartoum"/>
+      <tag k="name:eo" v="Sudano"/>
+      <tag k="country_code_fips" v="SU"/>
+      <tag k="name:de" v="Sudan"/>
+      <tag k="name:cy" v="Sudan"/>
+      <tag k="name:hu" v="Szudán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425087" lat="4.0083334" lon="-56.9833334" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:40Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Suriname"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SR"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="سورينام"/>
+      <tag k="name:da" v="Surinam"/>
+      <tag k="int_name" v="Suriname"/>
+      <tag k="name:en" v="Suriname"/>
+      <tag k="capital_city" v="Paramaribo"/>
+      <tag k="name:eo" v="Surinamo"/>
+      <tag k="country_code_fips" v="NS"/>
+      <tag k="name:hu" v="Suriname"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425088" lat="3.9999997" lon="-56.0" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:40Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Suriname"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SR"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="سورينام"/>
+      <tag k="name:he" v="סורינאם"/>
+      <tag k="name:da" v="Surinam"/>
+      <tag k="int_name" v="Suriname"/>
+      <tag k="name:eo" v="Surinamo"/>
+      <tag k="country_code_fips" v="NS"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:hu" v="Suriname"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425090" lat="-26.5625198" lon="31.3991563" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:40Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="斯威士兰"/>
+      <tag k="name:fi" v="Swazimaa"/>
+      <tag k="name" v="Swaziland"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SZ"/>
+      <tag k="name:zh_pyt" v="Sīwēishìlán"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Siweishilan"/>
+      <tag k="name:ar" v="سوازيلند"/>
+      <tag k="name:da" v="Swaziland"/>
+      <tag k="name:eo" v="Svazilando"/>
+      <tag k="name:de" v="Swasiland"/>
+      <tag k="name:cy" v="Gwlad Swazi"/>
+      <tag k="name:hu" v="Szváziföld"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425093" lat="59.6749543" lon="14.5208804" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:40Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="瑞典"/>
+      <tag k="name:sv" v="Sverige"/>
+      <tag k="name:fi" v="Ruotsi"/>
+      <tag k="name" v="Sverige"/>
+      <tag k="name:sl" v="Švedska"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SE"/>
+      <tag k="name:zh_pyt" v="Ruìdiǎn"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Ruidian"/>
+      <tag k="name:pl" v="Szwecja"/>
+      <tag k="name:ar" v="السويد"/>
+      <tag k="name:he" v="שוודיה"/>
+      <tag k="name:da" v="Sverige"/>
+      <tag k="name:en" v="Sweden"/>
+      <tag k="capital_city" v="Stockholm"/>
+      <tag k="name:eo" v="Svedio"/>
+      <tag k="name:it" v="Svezia"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="country_code_fips" v="SW"/>
+      <tag k="name:fr" v="Suède"/>
+      <tag k="name:de" v="Schweden"/>
+      <tag k="name:cy" v="Sweden"/>
+      <tag k="name:hu" v="Svédország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425095" lat="46.7486848" lon="8.0156517" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:40Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="瑞士"/>
+      <tag k="name:fi" v="Sveitsi"/>
+      <tag k="name:es" v="Suiza"/>
+      <tag k="name" v="Switzerland"/>
+      <tag k="name:sl" v="Švica"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="CH"/>
+      <tag k="name:zh_pyt" v="Ruìshì"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:rm" v="Svizra"/>
+      <tag k="url" v="http://www.ch.ch"/>
+      <tag k="name:zh_py" v="Ruishi"/>
+      <tag k="name:pl" v="Szwajcaria"/>
+      <tag k="name:ar" v="سويسرا"/>
+      <tag k="name:he" v="שוויץ"/>
+      <tag k="name:da" v="Schweiz"/>
+      <tag k="name:nl" v="Zwitserland"/>
+      <tag k="name:en" v="Switzerland"/>
+      <tag k="capital_city" v="Bern"/>
+      <tag k="name:eo" v="Svislando"/>
+      <tag k="name:la" v="Helvetia"/>
+      <tag k="name:it" v="Svizzera"/>
+      <tag k="is_in" v="Europe"/>
+      <tag k="country_code_fips" v="SZ"/>
+      <tag k="name:fr" v="Suisse"/>
+      <tag k="name:de" v="Schweiz"/>
+      <tag k="name:cy" v="Y Swistir"/>
+      <tag k="name:hu" v="Svájc"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425098" lat="34.6401389" lon="39.0494445" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:41Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="叙利亚"/>
+      <tag k="name:fi" v="Syyria"/>
+      <tag k="name" v="Syria"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="SY"/>
+      <tag k="name:zh_pyt" v="Xùlìyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Xuliya"/>
+      <tag k="name:ar" v="سوريا"/>
+      <tag k="name:he" v="סוריה"/>
+      <tag k="name:da" v="Syrien"/>
+      <tag k="int_name" v="Syria"/>
+      <tag k="name:en" v="Syria"/>
+      <tag k="name:eo" v="Sirio"/>
+      <tag k="country_code_fips" v="SY"/>
+      <tag k="name:de" v="Syrien"/>
+      <tag k="name:hu" v="Szíria"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425099" lat="24.7909626" lon="121.5335873" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:41Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="台湾"/>
+      <tag k="name" v="Taiwan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TW"/>
+      <tag k="name:zh_pyt" v="Táiwān"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Taiwan"/>
+      <tag k="name:ar" v="تايوان"/>
+      <tag k="name:he" v="טייואן"/>
+      <tag k="name:da" v="Taiwan"/>
+      <tag k="int_name" v="Taiwan"/>
+      <tag k="name:en" v="Taiwan"/>
+      <tag k="name:zh-Hans" v="台湾"/>
+      <tag k="name:eo" v="Tajvano"/>
+      <tag k="name:zh-Hant" v="台灣"/>
+      <tag k="country_code_fips" v="TW"/>
+      <tag k="name:hu" v="Tajvan"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425100" lat="38.825" lon="71.2083334" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:41Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="塔吉克斯坦"/>
+      <tag k="name:fi" v="Tadžikistan"/>
+      <tag k="name" v="Tajikistan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TJ"/>
+      <tag k="name:zh_pyt" v="Tǎjíkèsītǎn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:fa" v="تاجیکستان"/>
+      <tag k="name:zh_py" v="Tajikesitan"/>
+      <tag k="name:ar" v="طاجيكستان"/>
+      <tag k="name:he" v="טג&amp;apos;יקיסטן"/>
+      <tag k="name:da" v="Tadsjikistan"/>
+      <tag k="int_name" v="Tajikistan"/>
+      <tag k="population" v="7215700"/>
+      <tag k="name:tg" v="Тоҷикистон"/>
+      <tag k="name:en" v="Tajikistan"/>
+      <tag k="capital_city" v="Dushanbe"/>
+      <tag k="name:eo" v="Taĝikio"/>
+      <tag k="country_code_fips" v="TI"/>
+      <tag k="name:de" v="Tadschikistan"/>
+      <tag k="name:hu" v="Tádzsikisztán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425101" lat="-3.3666667" lon="35.0166667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:41Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="坦桑尼亚"/>
+      <tag k="name:fi" v="Tansania"/>
+      <tag k="name" v="Tanzania"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TZ"/>
+      <tag k="name:zh_pyt" v="Tǎnsāngníyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Tansangniya"/>
+      <tag k="name:ar" v="تنـزاني"/>
+      <tag k="name:he" v="טנזניה"/>
+      <tag k="name:da" v="Tanzania"/>
+      <tag k="int_name" v="Tanzania"/>
+      <tag k="name:en" v="Tanzania"/>
+      <tag k="name:eo" v="Tanzanio"/>
+      <tag k="country_code_fips" v="TZ"/>
+      <tag k="name:de" v="Tansania"/>
+      <tag k="name:hu" v="Tanzánia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425102" lat="14.8971238" lon="100.8327648" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:42Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Thailand"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TH"/>
+      <tag k="created_by" v="Potlatch 0.10f"/>
+      <tag k="name:ar" v="تايلند"/>
+      <tag k="name:he" v="תאילנד"/>
+      <tag k="int_name" v="Thailand"/>
+      <tag k="name:th" v="ไทย"/>
+      <tag k="is_in" v="Asia"/>
+      <tag k="country_code_fips" v="TH"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425103" lat="4.2217921" lon="73.4868379" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:42Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="马尔代夫"/>
+      <tag k="name" v="Maldives"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="MV"/>
+      <tag k="name:zh_pyt" v="Mǎěrdàifū"/>
+      <tag k="name:zh_py" v="Maerdaifu"/>
+      <tag k="name:ar" v="ملديف"/>
+      <tag k="name:da" v="Maldiverne"/>
+      <tag k="int_name" v="Maldives"/>
+      <tag k="name:en" v="Maldives"/>
+      <tag k="name:eo" v="Maldivoj"/>
+      <tag k="geonames:id" v="1282028"/>
+      <tag k="country_code_fips" v="MV"/>
+      <tag k="watch:hakan" v="countries"/>
+      <tag k="name:de" v="Malediven"/>
+      <tag k="name:hu" v="Maldív-szigetek"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425104" lat="8.78" lon="1.0199999" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:42Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="多哥"/>
+      <tag k="name" v="Togo"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TG"/>
+      <tag k="name:zh_pyt" v="Duōgē"/>
+      <tag k="name:zh_py" v="Duoge"/>
+      <tag k="name:ar" v="توغو"/>
+      <tag k="name:he" v="טוגו"/>
+      <tag k="name:da" v="Togo"/>
+      <tag k="int_name" v="Togo"/>
+      <tag k="name:en" v="Togo"/>
+      <tag k="name:eo" v="Togo"/>
+      <tag k="country_code_fips" v="TO"/>
+      <tag k="name:hu" v="Togo"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425105" lat="-22.5" lon="-179.6" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:42Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Tonga"/>
+      <tag k="is_in:ocean" v="Pacific"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TO"/>
+      <tag k="name:ar" v="تونغا"/>
+      <tag k="name:he" v="טונגה"/>
+      <tag k="name:da" v="Tonga"/>
+      <tag k="int_name" v="Tonga"/>
+      <tag k="name:en" v="Tonga"/>
+      <tag k="name:eo" v="Tongo"/>
+      <tag k="country_code_fips" v="TN"/>
+      <tag k="name:hu" v="Tonga"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425106" lat="10.8677288" lon="-60.9820799" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:42Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Trinidad and Tobago"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TT"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:ar" v="ترينيداد وتوباغو"/>
+      <tag k="is_in:sea" v="Caribbean Sea"/>
+      <tag k="name:he" v="טרינידד וטובגו"/>
+      <tag k="name:da" v="Trinidad og Tobago"/>
+      <tag k="int_name" v="Trinidad and Tobago"/>
+      <tag k="name:en" v="Trinidad and Tobago"/>
+      <tag k="name:eo" v="Trinidado kaj Tobago"/>
+      <tag k="country_code_fips" v="TD"/>
+      <tag k="name:cy" v="Trinidad a Tobago"/>
+      <tag k="name:hu" v="Trinidad és Tobago"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425107" lat="33.8439007" lon="9.4001769" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:43Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="突尼西亚"/>
+      <tag k="name:fi" v="Tunisia"/>
+      <tag k="name" v="Tunisia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TN"/>
+      <tag k="name:zh_pyt" v="Tūníxīyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Tunixiya"/>
+      <tag k="name:ar" v="تونس"/>
+      <tag k="name:he" v="טוניס"/>
+      <tag k="name:da" v="Tunesien"/>
+      <tag k="int_name" v="Tunisia"/>
+      <tag k="name:en" v="Tunisia"/>
+      <tag k="name:eo" v="Tunizio"/>
+      <tag k="country_code_fips" v="TS"/>
+      <tag k="name:de" v="Tunesien"/>
+      <tag k="name:hu" v="Tunézia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425108" lat="38.9597222" lon="34.925" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:43Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="土耳其"/>
+      <tag k="name:fi" v="Turkki"/>
+      <tag k="name" v="Türkiye"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TR"/>
+      <tag k="name:zh_pyt" v="Tǔěrqí"/>
+      <tag k="is_in:continent" v="Europe;Asia"/>
+      <tag k="name:zh_py" v="Tuerqi"/>
+      <tag k="name:ar" v="تركيا"/>
+      <tag k="name:he" v="טורקיה"/>
+      <tag k="name:da" v="Tyrkiet"/>
+      <tag k="int_name" v="Turkey"/>
+      <tag k="name:tr" v="Türkiye"/>
+      <tag k="name:en" v="Turkey"/>
+      <tag k="name:eo" v="Turkio"/>
+      <tag k="geonames:id" v="298795"/>
+      <tag k="country_code_fips" v="TU"/>
+      <tag k="watch:hakan" v="country"/>
+      <tag k="name:de" v="Türkei"/>
+      <tag k="name:cy" v="Twrci"/>
+      <tag k="name:hu" v="Törökország"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425109" lat="38.9229167" lon="59.3833334" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:43Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="土库曼斯坦"/>
+      <tag k="name:fi" v="Turkmenistan"/>
+      <tag k="name" v="Türkmenistan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TM"/>
+      <tag k="name:zh_pyt" v="Tǔkùmànsītǎn"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Tukumansitan"/>
+      <tag k="name:ar" v="تركمانستان"/>
+      <tag k="name:he" v="טורקמניסטן"/>
+      <tag k="name:da" v="Turkmenistan"/>
+      <tag k="int_name" v="Turkmenistan"/>
+      <tag k="alt_name" v="Turkmenia"/>
+      <tag k="population" v="5110023"/>
+      <tag k="name:en" v="Turkmenistan"/>
+      <tag k="capital_city" v="Ashgabat"/>
+      <tag k="name:eo" v="Turkmenio"/>
+      <tag k="country_code_fips" v="TX"/>
+      <tag k="name:tk" v="Türkmenistan"/>
+      <tag k="name:hu" v="Türkmenisztán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425110" lat="-8.2" lon="177.9916667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:43Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Tuvalu"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="TV"/>
+      <tag k="name:ar" v="توفالو"/>
+      <tag k="name:he" v="טובלו"/>
+      <tag k="name:da" v="Tuvalu"/>
+      <tag k="int_name" v="Tuvalu"/>
+      <tag k="name:en" v="Tuvalu"/>
+      <tag k="name:eo" v="Tuvalo"/>
+      <tag k="country_code_fips" v="TV"/>
+      <tag k="name:cy" v="Twfalw"/>
+      <tag k="name:hu" v="Tuvalu"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425111" lat="1.5333334" lon="32.2166667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:43Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="乌干达"/>
+      <tag k="name:fi" v="Uganda"/>
+      <tag k="name" v="Uganda"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="UG"/>
+      <tag k="name:zh_pyt" v="Wūgāndá"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Wuganda"/>
+      <tag k="name:ar" v="أوغندا"/>
+      <tag k="name:he" v="אוגנדה"/>
+      <tag k="name:da" v="Uganda"/>
+      <tag k="int_name" v="Uganda"/>
+      <tag k="name:en" v="Uganda"/>
+      <tag k="name:eo" v="Ugando"/>
+      <tag k="country_code_fips" v="UG"/>
+      <tag k="name:de" v="Uganda"/>
+      <tag k="name:hu" v="Uganda"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425112" lat="49.4871636" lon="31.271872" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:43Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="乌克兰"/>
+      <tag k="name" v="Україна"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="UA"/>
+      <tag k="name:zh_pyt" v="Wūkèlán"/>
+      <tag k="geoname:id" v="690791"/>
+      <tag k="name:zh_py" v="Wukelan"/>
+      <tag k="name:ar" v="أوكرانيا"/>
+      <tag k="name:he" v="אוקראינה"/>
+      <tag k="name:da" v="Ukraine"/>
+      <tag k="int_name" v="Ukraine"/>
+      <tag k="name:en" v="Ukraine"/>
+      <tag k="name:eo" v="Ukrainio"/>
+      <tag k="country_code_fips" v="UP"/>
+      <tag k="name:cy" v="Wcráin"/>
+      <tag k="name:hu" v="Ukrajna"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425113" lat="24.0001945" lon="53.9995319" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:44Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="阿拉伯联合酋长国"/>
+      <tag k="name:fi" v="Yhdistyneet arabiemiirikunnat"/>
+      <tag k="name" v="United Arab Emirates"/>
+      <tag k="name:sl" v="Združeni arabski emirati"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="AE"/>
+      <tag k="name:zh_pyt" v="Ālābó Liánhé Qiúchángguó"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Alabo Lianhe Qiuchangguo"/>
+      <tag k="name:pl" v="Zjednoczone Emiraty Arabskie"/>
+      <tag k="name:ar" v="الإمارات العربية المتحدة"/>
+      <tag k="name:he" v="איחוד האמירויות הערביות"/>
+      <tag k="name:da" v="Forenede Arabiske Emirater"/>
+      <tag k="int_name" v="United Arab Emirates"/>
+      <tag k="name:nl" v="Verenigde Arabische Emiraten"/>
+      <tag k="name:en" v="United Arab Emirates"/>
+      <tag k="name:eo" v="Unuiĝintaj Arabaj Emirlandoj"/>
+      <tag k="country_code_fips" v="AE"/>
+      <tag k="name:de" v="Vereinigte Arabische Emirate"/>
+      <tag k="name:cy" v="Yr Emiradau Arabaidd Unedig"/>
+      <tag k="name:hu" v="Egyesült Arab Emírségek"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425114" lat="54.8847109" lon="-2.4359629" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:44Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="英国"/>
+      <tag k="name:sv" v="Storbritannien"/>
+      <tag k="name:fi" v="Yhdistynyt kuningaskunta"/>
+      <tag k="name" v="United Kingdom"/>
+      <tag k="country_code" v="gb"/>
+      <tag k="is_in:ocean" v="Atlantic"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="GB"/>
+      <tag k="official_name" v="United Kingdom of Great Britain and Northern Ireland"/>
+      <tag k="name:zh_pyt" v="Yīngguó"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Yingguo"/>
+      <tag k="name:ar" v="المملكة المتحدة"/>
+      <tag k="name:he" v="בריטניה"/>
+      <tag k="name:gd" v="An Rìoghachd Aonaichte"/>
+      <tag k="alt_name" v="United Kingdom; UK; Britain; Great Britain"/>
+      <tag k="population" v="60975000"/>
+      <tag k="name:en" v="United Kingdom"/>
+      <tag k="capital_city" v="London"/>
+      <tag k="name:eo" v="Unuiĝinta Reĝlando"/>
+      <tag k="country_code_fips" v="UK"/>
+      <tag k="name:fr" v="Royaume-Uni"/>
+      <tag k="name:de" v="Vereinigtes Königreich"/>
+      <tag k="name:cy" v="Y Deyrnas Unedig"/>
+      <tag k="name:hu" v="Nagy-Britannia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425115" lat="39.7836936" lon="-100.4458446" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:44Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="美国"/>
+      <tag k="name:fi" v="Yhdysvallat"/>
+      <tag k="name:es" v="Estados Unidos"/>
+      <tag k="name" v="United States of America"/>
+      <tag k="country_code" v="US"/>
+      <tag k="name:sl" v="Združene države Amerike"/>
+      <tag k="is_in:ocean" v="Pacific;Atlantic"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="US"/>
+      <tag k="name:zh_pyt" v="Měiguó"/>
+      <tag k="is_in:continent" v="North America"/>
+      <tag k="name:zh_py" v="Meiguo"/>
+      <tag k="name:pl" v="Stany Zjednoczone Ameryki"/>
+      <tag k="name:ar" v="الولايات المتحدة الأمريكية"/>
+      <tag k="name:he" v="ארצות הברית של אמריקה"/>
+      <tag k="name:da" v="USA"/>
+      <tag k="alt_name" v="USA;US;The States"/>
+      <tag k="name:nl" v="Verenigde Staten van Amerika"/>
+      <tag k="name:en" v="United States of America"/>
+      <tag k="capital_city" v="Washington DC"/>
+      <tag k="name:eo" v="Usono"/>
+      <tag k="country_code_fips" v="US"/>
+      <tag k="source" v="Wikipedia"/>
+      <tag k="name:fr" v="États-Unis d&amp;apos;Amérique"/>
+      <tag k="name:de" v="Vereinigte Staaten von Amerika"/>
+      <tag k="name:cy" v="Unol Daleithiau America"/>
+      <tag k="name:hu" v="Amerikai Egyesült Államok"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425116" lat="-32.95" lon="-54.8916667" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:44Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Uruguay"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="UY"/>
+      <tag k="official_name:es" v="República Oriental del Uruguay"/>
+      <tag k="official_name" v="Oriental Republic of Uruguay"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="أوروغواي"/>
+      <tag k="wikipedia" v="Uruguay"/>
+      <tag k="name:he" v="אורוגואי"/>
+      <tag k="name:da" v="Uruguay"/>
+      <tag k="int_name" v="Uruguay"/>
+      <tag k="population" v="3477778"/>
+      <tag k="name:en" v="Uruguay"/>
+      <tag k="capital_city" v="Montevideo"/>
+      <tag k="name:eo" v="Urugvajo"/>
+      <tag k="country_code_fips" v="UY"/>
+      <tag k="name:hu" v="Uruguay"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425117" lat="41.2010481" lon="64.9183958" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:44Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="乌兹别克斯坦"/>
+      <tag k="name:fi" v="Uzbekistan"/>
+      <tag k="name" v="Uzbekistan"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="UZ"/>
+      <tag k="name:zh_pyt" v="Wūzībiékèsītǎn"/>
+      <tag k="name:uz" v="Ўзбекистон Республикаси (O‘zbekiston Respublikasi)"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Wuzibiekesitan"/>
+      <tag k="name:ar" v="أوزبكستان"/>
+      <tag k="name:he" v="אוזבקיסטן"/>
+      <tag k="name:da" v="Usbekistan"/>
+      <tag k="int_name" v="Uzbekistan"/>
+      <tag k="population" v="27372000"/>
+      <tag k="name:en" v="Uzbekistan"/>
+      <tag k="capital_city" v="Tashkent"/>
+      <tag k="name:eo" v="Uzbekio"/>
+      <tag k="country_code_fips" v="UZ"/>
+      <tag k="name:de" v="Usbekistan"/>
+      <tag k="name:hu" v="Üzbegisztán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425118" lat="-17.6257563" lon="168.4077491" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:45Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="official_name:fr" v="République de Vanuatu"/>
+      <tag k="name" v="Vanuatu"/>
+      <tag k="is_in:ocean" v="Pacific"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="VU"/>
+      <tag k="official_name" v="Republic of Vanuatu"/>
+      <tag k="name:ar" v="فانواتو"/>
+      <tag k="name:he" v="ונואטו"/>
+      <tag k="name:da" v="Vanuatu"/>
+      <tag k="population" v="215446"/>
+      <tag k="official_name:bi" v="Ripablik blong Vanuatu"/>
+      <tag k="capital_city" v="Port Vila"/>
+      <tag k="name:eo" v="Vanuatuo"/>
+      <tag k="is_in" v="Pacific Ocean"/>
+      <tag k="country_code_fips" v="NH"/>
+      <tag k="name:hu" v="Vanuatu"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425119" lat="41.9040921" lon="12.4548076" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:45Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="梵蒂冈"/>
+      <tag k="name" v="Città del Vaticano"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="VA"/>
+      <tag k="name:zh_pyt" v="Fàndìgāng"/>
+      <tag k="is_in:continent" v="Europe"/>
+      <tag k="name:zh_py" v="Fandigang"/>
+      <tag k="name:ar" v="الفاتيكان"/>
+      <tag k="name:he" v="ותיקן"/>
+      <tag k="name:da" v="Vatikanstaten"/>
+      <tag k="int_name" v="Vatican City"/>
+      <tag k="name:en" v="Vatican City"/>
+      <tag k="name:eo" v="Vatikanurbo"/>
+      <tag k="name:it" v="Città del Vaticano"/>
+      <tag k="country_code_fips" v="VT"/>
+      <tag k="name:de" v="Vatikanstadt"/>
+      <tag k="name:cy" v="Y Fatican"/>
+      <tag k="name:hu" v="Vatikán"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425120" lat="8.0018341" lon="-66.1109085" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:45Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name" v="Venezuela"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="VE"/>
+      <tag k="official_name:es" v="República Bolivariana de Venezuela"/>
+      <tag k="official_name" v="Bolivarian Republic of Venezuela"/>
+      <tag k="is_in:continent" v="South America"/>
+      <tag k="name:ar" v="فنزويلا"/>
+      <tag k="name:he" v="ונצואלה"/>
+      <tag k="name:da" v="Venezuela"/>
+      <tag k="int_name" v="Venezuela"/>
+      <tag k="population" v="28199822"/>
+      <tag k="name:en" v="Venezuela"/>
+      <tag k="name:eo" v="Venezuelo"/>
+      <tag k="country_code_fips" v="VE"/>
+      <tag k="name:hu" v="Venezuela"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425121" lat="13.2902342" lon="108.425224" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:45Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="越南"/>
+      <tag k="name:fi" v="Vietnam"/>
+      <tag k="name" v="Viet Nam"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="VN"/>
+      <tag k="name:zh_pyt" v="Yuènán"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Yuenan"/>
+      <tag k="name:ar" v="فييت نام"/>
+      <tag k="name:he" v="ויאטנם"/>
+      <tag k="name:da" v="Vietnam"/>
+      <tag k="int_name" v="Viet Nam"/>
+      <tag k="name:en" v="Vietnam"/>
+      <tag k="name:eo" v="Vjetnamio"/>
+      <tag k="country_code_fips" v="VM"/>
+      <tag k="name:de" v="Vietnam"/>
+      <tag k="name:hu" v="Vietnam"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425122" lat="14.495528" lon="47.0735445" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:45Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="也门"/>
+      <tag k="name:fi" v="Jemen"/>
+      <tag k="name" v="اليَمَن al-Yaman"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="YE"/>
+      <tag k="official_name" v="Republic of Yemen"/>
+      <tag k="name:zh_pyt" v="Yěmén"/>
+      <tag k="is_in:continent" v="Asia"/>
+      <tag k="name:zh_py" v="Yemen"/>
+      <tag k="name:ar" v="اليمن"/>
+      <tag k="name:he" v="תימן"/>
+      <tag k="name:da" v="Yemen"/>
+      <tag k="int_name" v="Yemen"/>
+      <tag k="name:en" v="Yemen"/>
+      <tag k="capital_city" v="San‘a’"/>
+      <tag k="name:eo" v="Jemeno"/>
+      <tag k="country_code_fips" v="YM"/>
+      <tag k="name:de" v="Jemen"/>
+      <tag k="name:cy" v="Yemen"/>
+      <tag k="name:hu" v="Jemen"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425123" lat="-14.4220022" lon="24.0945554" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:46Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="赞比亚"/>
+      <tag k="name:fi" v="Sambia"/>
+      <tag k="name" v="Zambia"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="ZM"/>
+      <tag k="official_name" v="Republic of Zambia"/>
+      <tag k="name:zh_pyt" v="Zànbǐyà"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Zanbiya"/>
+      <tag k="name:ar" v="زامبيا"/>
+      <tag k="name:he" v="זמביה"/>
+      <tag k="name:da" v="Zambia"/>
+      <tag k="int_name" v="Zambia"/>
+      <tag k="population" v="11668000"/>
+      <tag k="name:en" v="Zambia"/>
+      <tag k="capital_city" v="Lusaka"/>
+      <tag k="name:eo" v="Zambio"/>
+      <tag k="country_code_fips" v="ZA"/>
+      <tag k="name:de" v="Sambia"/>
+      <tag k="name:hu" v="Zambia"/>
+    </node>
+  </create>
+  <create>
+    <node id="432425124" lat="-19.7632201" lon="29.3528701" changeset="1707270" user="mikelmaron" uid="999" visible="true" timestamp="2009-07-02T07:30:46Z" version="1">
+      <tag k="place" v="country"/>
+      <tag k="name:zh" v="津巴布韦"/>
+      <tag k="name" v="Zimbabwe"/>
+      <tag k="country_code_iso3166_1_alpha_2" v="ZW"/>
+      <tag k="name:zh_pyt" v="Jīnbābùwéi"/>
+      <tag k="is_in:continent" v="Africa"/>
+      <tag k="name:zh_py" v="Jinbabuwei"/>
+      <tag k="name:ar" v="زمبابوي"/>
+      <tag k="name:he" v="זימבבווה"/>
+      <tag k="name:da" v="Zimbabwe"/>
+      <tag k="int_name" v="Zimbabwe"/>
+      <tag k="name:en" v="Zimbabwe"/>
+      <tag k="name:eo" v="Zimbabvo"/>
+      <tag k="country_code_fips" v="ZI"/>
+      <tag k="name:hu" v="Zimbabwe"/>
+    </node>
+  </create>
+</osmChange>

@@ -957,7 +957,8 @@ int LoadElemstyles(/* in */ const char *elemstylesfname,
     strcpy(map[restriction_only_right_turn].style_v,"only_right_turn");
     strcpy(map[restriction_only_left_turn].style_v,"only_left_turn");
     strcpy(map[restriction_only_straight_on].style_v,"only_straight_on");
-
+    /* These strcpys are necessary because elemstyles does not contain them */
+    
     while (xmlTextReaderRead (sXml)) {
       char *name = (char*) xmlTextReaderName (sXml);
       //xmlChar *val = xmlTextReaderValue (sXml);
@@ -1144,6 +1145,15 @@ deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s,
         strncasecmp (i->first, "source", 6) != 0 &&
         strncasecmp (i->first, "AND_", 4) != 0 &&
         strncasecmp (i->first, "AND:", 4) != 0 &&
+        strncasecmp (i->first, "kms:", 4) != 0 &&
+        strncasecmp (i->first, "LandPro08:", 10) != 0 &&
+        strncasecmp (i->first, "NHD:", 4) != 0 &&
+        strncasecmp (i->first, "massgis:", 8) != 0 &&
+        strcmp (i->first, "addr:street") != 0 &&
+        strcmp (i->first, "addr:postcode") != 0 &&
+        strcmp (i->first, "addr:state") != 0 &&
+        strcmp (i->first, "addr:city") != 0 &&
+        strcmp (i->first, "addr:country") != 0 &&        
         strncasecmp (i->first, "KSJ2:", 5) != 0 && 
         strncasecmp (i->first, "geobase:", 8)  != 0 &&
         strncasecmp (i->first, "kms:", 4)  != 0 &&

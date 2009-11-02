@@ -41,18 +41,15 @@ using namespace std;
 #else
 #define SipShowIM(x)
 #define CeEnableBacklight(x) FALSE
-#define CreateFileForMappingW(a,b,c,d,e,f,g) CreateFileW (a,b,c,d,e,f,g)
+#define CreateFileForMapping(a,b,c,d,e,f,g) CreateFile (a,b,c,d,e,f,g)
 #endif
 #include "libgosm.h"
 #include "ConvertUTF.h"
 #include "resource.h"
 
-// Unfortunately eMbedded Visual C++ TEXT() function does not use UTF8
-// So we have to repeat the OPTIONS table
-#define OPTIONS \
+#define OLDOLDOPTIONS \
   o (FollowGPSr,      0, 2) \
   o (AddWayOrNode,    0, 2) \
-  o (Search,          0, 1) \
   o (StartRoute,      0, 1) \
   o (EndRoute,        0, 1) \
   o (OrientNorthwards,0, 2) \
@@ -63,21 +60,12 @@ using namespace std;
   o (ButtonSize,      1, 5) \
   o (IconSet,         0, 4) \
   o (DetailLevel,     0, 5) \
-  o (CommPort,        0, 13) \
-  o (BaudRate,        0, 6) \
   o (ShowCompass,     0, 2) \
   o (Background,      0, 16) \
   o (Exit,            0, 2) \
-  o (ZoomInKey,       0, 3) \
-  o (ZoomOutKey,      0, 3) \
-  o (MenuKey,         0, 3) \
   o (HideZoomButtons, 0, 2) \
-  o (ShowCoordinates, 0, 3) \
-  o (ShowTrace,       0, 2) \
   o (ModelessDialog,  0, 2) \
-  o (FullScreen,      0, 2) \
   o (ValidateMode,    0, 2) \
-  o (DisplayOff,      0, 1) \
   o (Display3D,       0, 1) \
   o (SearchSpacing,   32, 1)
 #else
@@ -86,29 +74,47 @@ using namespace std;
 #include "libgosm.h"
 #define wchar_t char
 #define wsprintf sprintf
+#endif
+
 #define OPTIONS \
   o (FollowGPSr,      0, 2) \
-  o (Search,          0, 1) \
+  o (AddWayOrNode,    0, 2) \
   o (StartRoute,      0, 1) \
   o (EndRoute,        0, 1) \
   o (OrientNorthwards,0, 2) \
+  o (LoadGPX,         0, 1) \
   o (FastestRoute,    0, 2) \
   o (Vehicle,         motorcarR, onewayR) \
   o (English,         0, \
                  sizeof (optionNameTable) / sizeof (optionNameTable[0])) \
-  o (ButtonSize,      1, 5) \
+  o (ButtonSize,      1, 5) /* Currently only used for AddWay scrollbar */ \
   o (IconSet,         0, 4) \
   o (DetailLevel,     0, 5) \
+  o (ValidateMode,    0, 2) \
+  o (Exit,            0, 2) \
+  o (DisplayOff,      0, 1) \
+  o (FullScreen,      0, 2) \
   o (ShowCompass,     0, 2) \
   o (Background,      0, 16) \
-  o (ValidateMode,    0, 2) \
+  o (ShowCoordinates, 0, 3) \
+  o (ShowTrace,       0, 2) \
+  o (CommPort,        0, 13) \
+  o (BaudRate,        0, 6) \
+  o (ZoomInKey,       0, 3) \
+  o (ZoomOutKey,      0, 3) \
+  o (MenuKey,         0, 3) \
   o (ShowActiveRouteNodes, 0, 2) \
-  o (Display3D,       0, 1) \
-  o (SearchSpacing,   32, 1)
+  o (SearchSpacing,   32, 1) \
 
-#define HideZoomButtons 0
-#define MenuKey 0
-#endif
+int Display3D = 0; // Not an option but a button for now.
+
+#define COMMANDS o (cmdturnleft /* Must be first */, 0, 0) \
+  o (cmdkeepleft, 0, 0) \
+  o (cmdturnright, 0, 0) o (cmdkeepright, 0, 0) o (cmdstop, 0, 0) \
+  o (cmduturn, 0, 0) o (cmdround1, 0, 0) o (cmdround2, 0, 0) \
+  o (cmdround3, 0, 0) o (cmdround4, 0, 0) o (cmdround5, 0, 0) \
+  o (cmdround6, 0, 0) o (cmdround7, 0, 0) o (cmdround8, 0, 0)
+
 char docPrefix[80] = "";
 
 #if !defined (HEADLESS) && !defined (NOGTK)
@@ -138,9 +144,9 @@ struct GdkEventScroll {
 
 enum { GDK_SCROLL_UP, GDK_SCROLL_DOWN };
 
-#define ROUTE_PEN 0
+/*#define ROUTE_PEN 0
 #define VALIDATE_PEN 1
-#define RESERVED_PENS 2
+#define RESERVED_PENS 2 */
 
 HINSTANCE hInst;
 HWND   mWnd, dlgWnd = NULL;
@@ -223,7 +229,7 @@ STYLES
   o (ShowTime,        ) \
 
 #define o(en,min,max) en ## Num,
-enum { OPTIONS mapMode, optionMode, searchMode, chooseObjectToAdd };
+enum { OPTIONS COMMANDS mapMode, optionMode, searchMode, chooseObjectToAdd };
 #undef o
 
 int listYOffset; // Number of pixel. Changed by dragging.
@@ -234,20 +240,113 @@ const char *optionNameTable[][mapMode] = {
   { OPTIONS }, // English is same as variable names
 #undef o
 
-#ifdef _WIN32_WCE
 #include "translations.c"
-#endif
 };
 
 #define o(en,min,max) int en = min;
-OPTIONS
+OPTIONS // Define a global variable for each option
 #undef o
+
+int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE, gDisplayOff;
+/* zoom is the amount that fits into the window (regardless of window size) */
+
+void ChangePak (const TCHAR *pakfile)
+{
+  static int bboxList[][4] = { 
+#include "bboxes.c"
+  }, world[] = { -512, -512, 512, 512 }, *bbox = NULL;
+  TCHAR l2[80];
+     
+  if (bbox && bbox[0] <= (clon >> 22) && bbox[1] <= ((-clat) >> 22) &&
+              bbox[2] >  (clon >> 22) && bbox[3] >  ((-clat) >> 22)) return;
+  GosmFreeRoute ();
+  shortest = NULL;
+        
+  if (!pakfile) {
+    int best = 0;
+    for (size_t j = 0; j < sizeof (bboxList) / sizeof (bboxList[0]); j++) {
+      int worst = min (clon / 8 - (bboxList[j][0] << 19),
+                  min (-clat / 8 - (bboxList[j][1] << 19),
+                  min ((bboxList[j][2] << 19) - clon / 8,
+                       (bboxList[j][3] << 19) + clat / 8)));
+      // Find the worst border of bbox j. worst < 0 implies we are
+      // outside it.
+      if (worst > best) { 
+        best = worst;
+        pakfile = l2;
+        bbox = bboxList[j];
+        #ifdef _WIN32_WCE
+        GetModuleFileName (NULL, l2, sizeof (l2) / sizeof (l2[0]));
+        wsprintf (wcsrchr (l2, L'\\'), TEXT ("%04d%04d%04d%04d.pak"),
+        #else
+        sprintf (l2, "%s%04d%04d%04d%04d.pak", "", //RES_DIR,
+        #endif
+          bboxList[j][0] + 512, bboxList[j][1] + 512,
+          bboxList[j][2] + 512, bboxList[j][3] + 512);
+      }
+    }
+  }
+  else bbox = world;
+
+  #ifdef WIN32
+  static HANDLE gmap = INVALID_HANDLE_VALUE, fm = INVALID_HANDLE_VALUE;
+  static void *map = NULL;
+  if (map) UnmapViewOfFile (map);
+  if (fm != INVALID_HANDLE_VALUE) CloseHandle (fm);
+  if (gmap != INVALID_HANDLE_VALUE) CloseHandle (gmap);
+  gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
+    NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
+    NULL);
+  fm = gmap == INVALID_HANDLE_VALUE ? INVALID_HANDLE_VALUE :
+    CreateFileMapping(gmap, NULL, PAGE_READONLY, 0, 0, 0);
+  map = fm == INVALID_HANDLE_VALUE ? INVALID_HANDLE_VALUE :
+    MapViewOfFile (fm, FILE_MAP_READ, 0, 0, 0);
+  Exit = !map || !GosmInit (MapViewOfFile (fm, FILE_MAP_READ, 0, 0, 0),
+                      GetFileSize(gmap, NULL));
+  if (Exit && gmap != INVALID_HANDLE_VALUE) {
+    MessageBox (NULL, TEXT ("mmap problem. Pak file too big ?"),
+      TEXT (""), MB_APPLMODAL|MB_OK);
+  }
+
+  #if 0
+  FILE *gmap = _wfopen (/*"./gosmore.pak"*/ , TEXT ("rb"));
+
+  if (!gmap) {
+    MessageBox (NULL, TEXT ("No pak file"), TEXT (""), MB_APPLMODAL|MB_OK);
+    return 1;
+  }
+  fseek (gmap, 0, SEEK_END);
+  pakSize = ftell (gmap);
+  fseek (gmap, 0, SEEK_SET);
+  data = (char *) malloc (pakSize);
+  if (!data) {
+    MessageBox (NULL, TEXT ("Out of memory"), TEXT (""), MB_APPLMODAL|MB_OK);
+    return 1; // This may mean memory is available, but fragmented.
+  } // Splitting the 5 parts may help.
+  fread (data, pakSize, 1, gmap);
+  #endif
+  #elif 1 // defined (__linux__)
+  static void *map = (void*) -1;
+  static size_t len = 0 /* Shut up gcc */;
+//  printf ("%s %d %d\n", pakfile, (clon >> 22) + 512, 512 - (clat >> 22));
+  if (map != (void*) -1) munmap (map, len);
+  FILE *gmap = fopen64 (pakfile, "r");
+  len = gmap && fseek (gmap, 0, SEEK_END) == 0 ? ftell (gmap) : 0;
+  map = !len ? (void*)-1
+     : mmap (NULL, ftell (gmap), PROT_READ, MAP_SHARED, fileno (gmap), 0);
+  Exit = map == (void *) -1 || !GosmInit (map, len);
+  if (gmap) fclose (gmap);
+  #else
+  GMappedFile *gmap = g_mapped_file_new (pakfile, FALSE, NULL);
+  Exit = !gmap || !GosmInit (g_mapped_file_get_contents (gmap),
+      g_mapped_file_get_length (gmap));
+  #endif
+  if (Exit) bbox = NULL;
+}
 
 #ifndef HEADLESS
 
 GtkWidget *draw, *location, *display3D, *followGPSr;
-int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE, gDisplayOff;
-/* zoom is the amount that fits into the window (regardless of window size) */
 double cosAzimuth = 1.0, sinAzimuth = 0.0;
 string highlight;
 
@@ -509,6 +608,8 @@ int ProcessNmea (char *rx, unsigned *got)
   return dataReady;
 }
 
+int command[3] = { 0, 0, 0 }, oldCommand = 0;
+
 void DoFollowThing (gpsNewStruct *gps)
 {
   static int lastTime = -1;
@@ -561,24 +662,15 @@ void DoFollowThing (gpsNewStruct *gps)
   if (route) Route (FALSE, dlon, dlat, Vehicle, FastestRoute);
 
   static ndType *decide[3] = { NULL, NULL, NULL }, *oldDecide = NULL;
-  #ifdef _WIN32_WCE
-  static const wchar_t
-  #else
-  static const char
-  #endif
-    *command[3] = { NULL, NULL, NULL }, *oldCommand = NULL,
-    *rtxt[] = { NULL, TEXT ("round1"), TEXT ("round2"),
-            TEXT ("round3"), TEXT ("round4"), TEXT ("round5"),
-            TEXT ("round6"), TEXT ("round7"), TEXT ("round8") };
   decide[0] = NULL;
-  command[0] = NULL;
+  command[0] = 0;
   if (shortest) {
     routeNodeType *x = shortest->shortest;
-    if (!x) command[0] = TEXT ("stop");
+    if (!x) command[0] = cmdstopNum;
     if (x && Sqr (dlon) + Sqr (dlon) > 10000 /* faster than ~3 km/h */ &&
         dlon * (x->nd->lon - clon) + dlat * (x->nd->lat - clat) < 0) {
-      command[0] = TEXT ("uturn");
-      decide[0] = NULL;
+      command[0] = cmduturnNum;
+      decide[0] = 0;
     }
     else if (x) {
       int nextJunction = TRUE;
@@ -594,7 +686,7 @@ void DoFollowThing (gpsNewStruct *gps)
         }
         if (!x->shortest || roundExit) {
           decide[0] = x->nd;
-          command[0] = rtxt[roundExit];
+          command[0] = cmdround1Num - 1 + roundExit;
           break;
         }
         
@@ -621,12 +713,11 @@ void DoFollowThing (gpsNewStruct *gps)
             (n2lon - n1->lon) * (__int64) (n1->lat - n0->lat);
           decide[0] = n1;
           if (straight < left) {
-            command[0] = nextJunction ? TEXT ("turnleft") : TEXT ("keepleft");
+            command[0] = nextJunction ? cmdturnleftNum : cmdkeepleftNum;
             break;
           }
           if (straight < -left) {
-            command[0] = nextJunction
-                             ? TEXT ("turnright"): TEXT ("keepright");
+            command[0] = nextJunction ? cmdturnrightNum : cmdkeeprightNum;
             break;
           }
           nextJunction = FALSE;
@@ -635,7 +726,7 @@ void DoFollowThing (gpsNewStruct *gps)
                       Sqr ((double) (n2lon - n1->lon)));
       } // While looking ahead to the next turn.
       if (!x->shortest && dist < 6000) {
-        command[0] = TEXT ("stop");
+        command[0] = cmdstopNum;
         decide[0] = NULL;
       }
     } // If not on final segment
@@ -646,15 +737,20 @@ void DoFollowThing (gpsNewStruct *gps)
       decide[0] == decide[1] && decide[1] == decide[2]) {
     oldCommand = command[0];
     oldDecide = decide[0];
+    #define o(cmd,dummy1,dummy2) TEXT (#cmd),
 #ifdef _WIN32_WCE
+    static const wchar_t *cmdStr[] = { COMMANDS };
     wchar_t argv0[80];
     GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
-    wcscpy (argv0 + wcslen (argv0) - 12, command[0]); // gosm_arm.exe to a.wav
+    wcscpy (argv0 + wcslen (argv0) - 12, cmdStr[command[0] - cmdturnleftNum]);
+    // gosm_arm.exe to a.wav
     wcscpy (argv0 + wcslen (argv0), TEXT (".wav"));
     PlaySound (argv0, NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC );
 #else
-    printf ("%s\n", command[0]);
+    static const char *cmdStr[] = { COMMANDS };
+    printf ("%s\n", cmdStr[command[0] - cmdturnleftNum]);
 #endif
+    #undef o
   }
   memmove (command + 1, command, sizeof (command) - sizeof (command[0]));
   memmove (decide + 1, decide, sizeof (decide) - sizeof (decide[0]));
@@ -731,6 +827,12 @@ BOOL CALLBACK DlgSetTagsProc (HWND hwnd, UINT Msg, WPARAM wParam,
     Edit_ReplaceSel (edit, TEXT (" Drive"));
   }
   if (wParam == IDOK) {
+    #ifndef _WIN32_WCE
+    Edit_GetLine (edit, 0, newWays[newWayCnt].name,
+      sizeof (newWays[newWayCnt].name));
+    Edit_GetLine (GetDlgItem (hwnd, IDC_NOTE), 0, newWays[newWayCnt].note,
+      sizeof (newWays[newWayCnt].note));
+    #else
     UTF16 name[40], *sStart = name;
     int wstrlen = Edit_GetLine (edit, 0, name, sizeof (name));
     unsigned char *tStart = (unsigned char*) newWays[newWayCnt].name;
@@ -743,7 +845,7 @@ BOOL CALLBACK DlgSetTagsProc (HWND hwnd, UINT Msg, WPARAM wParam,
     tStart = (unsigned char*) newWays[newWayCnt].note;
     ConvertUTF16toUTF8 ((const UTF16 **)&sStart,  sStart + wstrlen,
         &tStart, tStart + sizeof (newWays[0].note), lenientConversion);
-
+    #endif
     newWays[newWayCnt].oneway = IsDlgButtonChecked (hwnd, IDC_ONEWAY2);
     newWays[newWayCnt++].bridge = IsDlgButtonChecked (hwnd, IDC_BRIDGE2);
   }
@@ -820,7 +922,7 @@ void HitButton (int b)
   if (b == 0) {
     listYOffset = 0;
     option = option < mapMode ? mapMode
-       : option == optionMode ? 0 : optionMode;
+       : option == optionMode ? mapMode : optionMode;
   }
   else if (option == StartRouteNum) {
     flon = clon;
@@ -880,7 +982,7 @@ gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
 int ListXY (int cnt, int isY)
 { // Returns either the x or the y for a certain list item
   int max = mapMode; //option == optionMode ? mapNode :
-  int w = 128, h = 32;
+  int w = 128, h = 80;
   while ((draw->allocation.width/w) * (draw->allocation.height/h - 1) > max) {
     w++;
     h++;
@@ -892,11 +994,6 @@ int ListXY (int cnt, int isY)
 int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
   int w = draw->allocation.width, h = draw->allocation.height;
-  #ifdef ROUTE_TEST
-  if (event->state) {
-    return RouteTest (NULL /*widget*/, event, NULL /*para*/);
-  }
-  #endif
   if (ButtonSize <= 0) ButtonSize = 4;
   if (objectAddRow >= 0) {
     int perRow = (w - ButtonSize * 20) / ADD_WIDTH;
@@ -921,14 +1018,14 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       MenuKey != 0 ? 0 : 1)) HitButton (b);
   #endif
   else if (option == optionMode) {
-    if (firstDrag[0] >= 0) {
-      listYOffset += firstDrag[1] - event->y;
+    if (firstDrag[0] >= 0 && fabs (firstDrag[1] - event->y) > 15) {
+      listYOffset = max (0, listYOffset + (int)lrint (firstDrag[1]-event->y));
       firstDrag[0] = -1;
     }
     else {
       for (int best = 9999, i = 0; i < mapMode; i++) {
-        int d = abs (ListXY (i, FALSE) - event->x) +
-                abs (ListXY (i, TRUE) - event->y);
+        int d = lrint (fabs (ListXY (i, FALSE) - event->x) +
+                       fabs (ListXY (i, TRUE) - event->y));
         if (d < best) {
           best = d;
           option = i;
@@ -950,6 +1047,11 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     }
   }
   else {
+    #ifdef ROUTE_TEST
+    if (event->state) {
+      return RouteTest (NULL /*widget*/, event, NULL /*para*/);
+    }
+    #endif
     int perpixel = zoom / w, dx = event->x - w / 2, dy = h / 2 - event->y;
     if (firstDrag[0] >= 0) {
       dx = firstDrag[0] - event->x;
@@ -1056,10 +1158,12 @@ void DrawString (int x, int y, const char *optStr)
   #endif
 }
 
-void DrawPoI (int dstx, int dsty, wayType *w)
+void DrawPoI (int dstx, int dsty, int *icon)
 {
-  int *icon = Style (w)->x + 4 * IconSet;
-  if (icon[2] == 0) return;
+  if (icon[2] == 0 || dstx < -icon[2] || dsty < -icon[3] ||
+    dstx > draw->allocation.width + icon[2] ||
+    // GDK need these tests for the Start&EndRoute markers
+    dsty > draw->allocation.height + icon[3]) return;
   #ifndef NOGTK
   // for gdk we first need to extract the portion of the mask
   if (!maskicon) maskicon = gdk_pixmap_new(NULL, 100, 100, 1);
@@ -1227,6 +1331,7 @@ int DrawExpose (HPEN *pen, HBRUSH *brush)
   iconsgc = mygc;
 
 
+  SetTextColor (mygc, Background ? 0 : 0xffffff);
   if (objectAddRow >= 0) {
     SelectObject (mygc, sysFont);
     SetBkMode (mygc, TRANSPARENT);
@@ -1272,7 +1377,7 @@ void SetColour (GdkColor *c, int hexTrip)
 gint DrawExpose (void)
 {
   static GdkColor styleColour[2 << STYLE_BITS][2];
-  static GdkColor routeColour, validateColour, resultArrowColour;
+  static GdkColor /*routeColour, validateColour,*/ resultArrowColour;
   if (!mygc || !iconsgc) {
     mygc = gdk_gc_new (draw->window);
     fg_gc = gdk_gc_new (draw->window);
@@ -1285,8 +1390,8 @@ gint DrawExpose (void)
           : (style[i].areaColour >> 1) & 0xefefef); // Dark border for polys
       }
     }
-    SetColour (&routeColour, 0x00ff00);
-    SetColour (&validateColour, 0xff9999);
+    /*SetColour (&routeColour, 0x00ff00);
+    SetColour (&validateColour, 0xff9999);*/
     SetColour (&resultArrowColour, 0);
     gdk_gc_set_fill (mygc, GDK_SOLID);
 
@@ -1296,11 +1401,12 @@ gint DrawExpose (void)
   }
   static int oldBackground = -1;
   if (oldBackground != Background) {
-    static const int bgVal[9] = { 0, 0xe0ffff, 0xd3d3d3, 0xe6e6fa,
+    /*static const int bgVal[9] = { 0, 0xe0ffff, 0xd3d3d3, 0xe6e6fa,
       0xffffe0, 0xf5deb3, 0x7b68ee, 0x6b8e23, 0xffffff };
-    GdkColor bg;
-    SetColour (&bg, bgVal[Background - (Background > 8 ? 8 : 0)]);
-    gdk_window_set_background (draw->window, &bg);
+    GdkColor bg; */
+    //SetColour (&bg, bgVal[
+    gdk_window_set_background (draw->window, &styleColour[
+              firstElemStyle + Background - (Background > 8 ? 8 : 0)][0]);
     oldBackground = Background;
   }
   #if 0 //ifdef CHILDREN
@@ -1355,13 +1461,14 @@ gint DrawExpose (void)
     pango_layout_set_attributes (pl, list);
     pango_attr_list_unref (list); */
 #endif // GTK
+  ChangePak (NULL); // This call can be almost anywhere, e.g. SetLocation()
 
   clip.height = draw->allocation.height;
   clip.width = draw->allocation.width;
   
   if (ButtonSize <= 0) ButtonSize = 4;
 
-  if (zoom < 0) zoom = 2012345678;
+  if (zoom < 0 || zoom > 1023456789) zoom = 1023456789;
   if (zoom / clip.width <= 1) zoom += 4000;
   int cosa = lrint (4294967296.0 * cosAzimuth * clip.width / zoom);
   int sina = lrint (4294967296.0 * sinAzimuth * clip.width / zoom);
@@ -1571,7 +1678,7 @@ gint DrawExpose (void)
           if ((!Display3D || y > 0) && !TestOrSet (block, FALSE,
                                x - wd / 2, y - ht / 2, 0, ht, wd, 0)) {
             TestOrSet (block, TRUE, x - wd / 2, y - ht / 2, 0, ht, wd, 0);
-            DrawPoI (x, y, w);
+            DrawPoI (x, y, Style (w)->x + 4 * IconSet);
             
             #if 0 //def NOGTK
             SelectObject (mygc, sysFont);
@@ -1623,11 +1730,13 @@ gint DrawExpose (void)
 	    nd = orig;
 	    if (stage==0) {
             #ifndef NOGTK
-	      gdk_gc_set_foreground (mygc, &validateColour);
+	      gdk_gc_set_foreground (mygc,
+	        &styleColour[firstElemStyle + ValidateModeNum][1]); //&validateColour);
 	      gdk_gc_set_line_attributes (mygc, 10,
 		       GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
             #else
-	      SelectObject (mygc, pen[VALIDATE_PEN]);
+	      SelectObject (mygc, pen[firstElemStyle + ValidateModeNum]);
+	        //pen[VALIDATE_PEN]);
             #endif
 	    }
 	    else if (stage == 1) {
@@ -1637,7 +1746,7 @@ gint DrawExpose (void)
 		    Style (w)->dashed ? GDK_LINE_ON_OFF_DASH
 		    : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
               #else
-	      SelectObject (mygc, pen[StyleNr (w) + RESERVED_PENS]);
+	      SelectObject (mygc, pen[StyleNr (w)]);
               #endif
 	    }
 	    int oldx = X (nd->lon, nd->lat), oldy = Y (nd->lon, nd->lat);
@@ -1722,11 +1831,12 @@ gint DrawExpose (void)
       int y = Y (rt->nd->lon, rt->nd->lat);
       __int64 sumLat = rt->nd->lat;
       #ifndef NOGTK
-      gdk_gc_set_foreground (mygc, &routeColour);
+      gdk_gc_set_foreground (mygc,
+        &styleColour[firstElemStyle + StartRouteNum][1]); //routeColour);
       gdk_gc_set_line_attributes (mygc, 6,
         GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
       #else
-      SelectObject (mygc, pen[ROUTE_PEN]);
+      SelectObject (mygc, pen[firstElemStyle + StartRouteNum]);
       #endif
       if (routeHeapSize > 1) {
         Draw3DLine (X (flon, flat), Y (flon, flat), x, y);
@@ -1754,13 +1864,17 @@ gint DrawExpose (void)
       char distStr[13];
       sprintf (distStr, "%.3lf km", len * (20000 / 2147483648.0) *
         cos (LatInverse (sumLat / nodeCnt) * (M_PI / 180)));
-      DrawString (clip.width - 7 * strlen (distStr), 10, distStr);
+      DrawString (clip.width - 12 * strlen (distStr), 10, distStr);
       #if 0 //ndef NOGTK
       gdk_draw_string (draw->window, f, fg_gc, //draw->style->fg_gc[0],
         clip.width - 7 * strlen (distStr), 10, distStr);
       #else
       #endif
     }
+    DrawPoI (X (flon, flat), Y (flon, flat), IconSet * 4 +
+      style[firstElemStyle + StartRouteNum].x);
+    DrawPoI (X (tlon, tlat), Y (tlon, tlat), IconSet * 4 +
+      style[firstElemStyle + EndRouteNum].x);
     #ifndef NOGTK
     for (int i = 1; ShowActiveRouteNodes && i < routeHeapSize; i++) {
       gdk_draw_line (draw->window, mygc,
@@ -1780,7 +1894,7 @@ gint DrawExpose (void)
           x - icon[2] / 2, y - icon[3] / 2, icon[2], icon[3]);
       }
       else {
-        SelectObject (mygc, pen[j < newWayCnt ? newWays[j].klas + RESERVED_PENS: 0]);
+        SelectObject (mygc, pen[j < newWayCnt ? newWays[j].klas: 0]);
         MoveToEx (mygc, x, y, NULL);
         for (int i = 1; i < newWays[j].cnt; i++) {
           LineTo (mygc, X (newWays[j].coord[i][0], newWays[j].coord[i][1]),
@@ -1819,19 +1933,21 @@ gint DrawExpose (void)
         rect.width = strcspn (txt, "\n") * 9;
         rect.height = 11;
         #endif
-        y0 += mat.xx * (rect.height + 3) * move;
-        x0 += mat.xy * (rect.height + 3) * move;
+        y0 += lrint (mat.xx * (rect.height + 3) * move);
+        x0 += lrint (mat.xy * (rect.height + 3) * move);
         move = 1.2;
         if (TestOrSet (block, FALSE, 
-          x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3,
-          y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3,
-          mat.xy * (rect.height), mat.xx * (rect.height),
-          mat.xx * (rect.width + 10), mat.yx * (rect.width + 10))) break;
+          lrint (x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3),
+          lrint (y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3),
+          lrint (mat.xy * (rect.height)), lrint (mat.xx * (rect.height)),
+          lrint (mat.xx * (rect.width + 10)),
+          lrint (mat.yx * (rect.width + 10)))) break;
         TestOrSet (block, TRUE, 
-          x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3,
-          y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3,
-          mat.xy * (rect.height), mat.xx * (rect.height),
-          mat.xx * (rect.width + 10), mat.yx * (rect.width + 10));
+          lrint (x0 - rect.width * mat.xx / 2 - mat.xy * rect.height / 3),
+          lrint (y0 - rect.width * mat.yx / 2 - mat.yy * rect.height / 3),
+          lrint (mat.xy * (rect.height)), lrint (mat.xx * (rect.height)),
+          lrint (mat.xx * (rect.width + 10)),
+          lrint (mat.yx * (rect.width + 10)));
         #ifndef NOGTK
         gdk_draw_layout (GDK_DRAWABLE (draw->window),
           fg_gc /*draw->style->fg_gc[0]*/,
@@ -1866,11 +1982,15 @@ gint DrawExpose (void)
       text2B.pop ();
     }
     free (block);
+    if (command[0] && command[0] == command[1] && command[0] == command[2]) {
+      DrawPoI (draw->allocation.width / 2, draw->allocation.height / 6,
+        style[firstElemStyle + command[0]].x + 8); // Always square.big
+    }
   } // Not in the menu
   else if (option == searchMode) {
     for (int i = 0, y = SearchSpacing / 2; i < searchCnt && gosmSstr[i];
              i++, y += SearchSpacing) {
-      DrawPoI (SearchSpacing / 2, y, gosmSway[i]);
+      DrawPoI (SearchSpacing / 2, y, Style (gosmSway[i])->x + 4 * IconSet);
       
       double dist = sqrt (Sqr ((__int64) clon - gosmSway[i]->clon) +
           Sqr ((__int64) clat - gosmSway[i]->clat)) * (20000 / 2147483648.0) *
@@ -1911,9 +2031,12 @@ gint DrawExpose (void)
     }
   }
   else if (option == optionMode) {
-    for (int i = 0; i < mapMode; i++) {
+    for (int i = 0; i < cmdturnleftNum; i++) {
+      DrawPoI (ListXY (i, FALSE), ListXY (i, TRUE) - 5,
+        style[firstElemStyle + i].x); // Always classic.big
       DrawString (ListXY (i, FALSE) - strlen (optionNameTable[English][i]) *
-        5, ListXY (i, TRUE), optionNameTable[English][i]);
+        5, ListXY (i, TRUE) + style[firstElemStyle + i].x[3] / 2 - 5,
+        optionNameTable[English][i]);
     }
   }
   else {
@@ -2023,13 +2146,32 @@ void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
 }
 #endif
 
-void InitializeOptions (void)
+inline void SerializeOptions (FILE *optFile, int r, const TCHAR *pakfile)
 {
-  char *tag = gosmData +
+  IconSet = 1;
+  DetailLevel = 3;
+  ButtonSize = 4;
+  if (optFile) {
+    #define o(en,min,max) Exit = r ? !fread (&en, sizeof (en), 1, optFile) \
+                                   : !fwrite (&en, sizeof (en), 1, optFile);
+    OPTIONS
+    o (clat, 0, 0)
+    o (clon, 0, 0)
+    o (zoom, 0, 0)
+    o (tlat, 0, 0)
+    o (tlon, 0, 0)
+    o (flat, 0, 0)
+    o (flon, 0, 0)
+    #undef o
+    option = mapMode;
+  }
+  if (r) ChangePak (pakfile); // This will set up Exit
+  if (Exit && r) ChangePak (NULL);
+/*  char *tag = gosmData +
     *(int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
   while (*--tag) {}
   SetLocation (((wayType*)tag)[-1].clon, ((wayType*)tag)[-1].clat);
-  zoom = ((wayType*)tag)[-1].dlat + ((wayType*)tag)[-1].dlon + (1 << 15);
+  zoom = ((wayType*)tag)[-1].dlat + ((wayType*)tag)[-1].dlon + (1 << 15); */
 }
 
 #endif // HEADLESS
@@ -2038,16 +2180,16 @@ void InitializeOptions (void)
 int UserInterface (int argc, char *argv[], 
 		   const char* pakfile, const char* stylefile) {
 
-  #if defined (__linux__)
-  FILE *gmap = fopen64 (pakfile, "r");
-  if (!gmap || fseek (gmap, 0, SEEK_END) != 0 ||
-      !GosmInit (mmap (NULL, ftell (gmap), PROT_READ, MAP_SHARED,
-                fileno (gmap), 0), ftell (gmap))) {
-  #else
-  GMappedFile *gmap = g_mapped_file_new (pakfile, FALSE, NULL);
-  if (!gmap || !GosmInit (g_mapped_file_get_contents (gmap),
-      g_mapped_file_get_length (gmap))) {
-  #endif
+  option = mapMode;
+  IconSet = 1;
+  DetailLevel = 2;
+  FastestRoute = 1;
+  Background = 1;
+  Vehicle = motorcarR;
+  string optFname = string (getenv ("HOME")) + "/.gosmore.opt";
+  FILE *optFile = fopen (optFname.c_str(), "r+");
+  SerializeOptions (optFile, TRUE, pakfile);
+  if (Exit) {
     fprintf (stderr, "Cannot read %s\n"
 	     "You can (re)build it from\n"
 	     "the planet file e.g. " 
@@ -2226,18 +2368,14 @@ int UserInterface (int argc, char *argv[],
   gtk_widget_show (hbox);
   gtk_widget_show (vbox);
   gtk_widget_show (window);
-  option = mapMode;
-  IconSet = 1;
-  DetailLevel = 2;
-  FastestRoute = 1;
-  Background = 1;
-  Vehicle = motorcarR;
   ChangeOption ();
   IncrementalSearch ();
-  InitializeOptions ();
   gtk_widget_grab_focus (searchW);
   gtk_main ();
   FlushGpx ();
+  if (optFile) rewind (optFile);
+  else optFile = fopen (optFname.c_str (), "w");
+  SerializeOptions (optFile, FALSE, NULL);
   
   #endif // HEADLESS
   return 0;
@@ -2330,7 +2468,6 @@ HBITMAP bmp = NULL, bufBmp = NULL;
 HDC iconsDc, bufDc;
 HPEN pen[2 << STYLE_BITS];
 HBRUSH brush[2 << STYLE_BITS];
-int pakSize;
 UTF16 appendTmp[50];
 
 static HWND hwndEdit, button3D;
@@ -2385,7 +2522,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
                     hWnd, (HMENU) IDC_EDIT1/*ID_EDITCHILD*/,
                     (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), 
                     NULL);       // pointer not needed 
-      SendMessage (hwndEdit, WM_SETTEXT, 0, (LPARAM) "Search"); 
+      SendMessage (hwndEdit, WM_SETTEXT, 0, (LPARAM) TEXT ("Search")); 
 //      SendMessage (hwndEdit, EM_SETEVENTMASK, 0, ENM_UPDATE | ENM_SETFOCUS);
       break;
     case WM_SETFOCUS: 
@@ -2423,19 +2560,19 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	  SelectObject(maskDc, bmp);
 
           bufDc = CreateCompatibleDC (ps.hdc); //bufDc //GetDC (hWnd));
-          pen[ROUTE_PEN] = CreatePen (PS_SOLID, 6, 0x00ff00);
-	  pen[VALIDATE_PEN] = CreatePen (PS_SOLID, 10, 0x9999ff);
+          /*pen[ROUTE_PEN] = CreatePen (PS_SOLID, 6, 0x00ff00);
+	  pen[VALIDATE_PEN] = CreatePen (PS_SOLID, 10, 0x9999ff); */
           for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
 	    // replace line colour with area colour 
 	    // if no line colour specified
 	    int c = style[i].lineColour != -1 ? style[i].lineColour
 	      : (style[i].areaColour & 0xfefefe) >> 1; 
-            if (c != -1) pen[i + RESERVED_PENS] = 
+            if (c != -1) pen[i] = 
 	      CreatePen (style[i].dashed ? PS_DASH : PS_SOLID,
 			 max (1, style[i].lineWidth), (c >> 16) |
 			 (c & 0xff00) |
 			 ((c & 0xff) << 16));
-			if ((c = style[i].areaColour) != -1) brush[i] = CreateSolidBrush
+            if ((c = style[i].areaColour) != -1) brush[i] = CreateSolidBrush
 			  ((c >> 16) | (c & 0xff00) | ((c & 0xff) << 16));
           }
         }
@@ -2454,7 +2591,9 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         
 	BitBlt (ps.hdc, 0, topBar, rect.right,  rect.bottom, bufDc, 0, 0, SRCCOPY);
       //SetBkColor(ps.hdc,RGB(63,63,63));
-	FillRect (bufDc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
+	FillRect (bufDc, &rect,
+	  brush[firstElemStyle + Background - (Background > 8 ? 8 : 0)]);
+	 //(HBRUSH) GetStockObject(WHITE_BRUSH));
 	rect.bottom = topBar;
 	FillRect (ps.hdc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
 //      HPEN pen = CreatePen (a[c2].lineDashed ? PS_DASH : PS_SOLID,
@@ -2474,8 +2613,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       if (wParam == '0' || wParam == MenuKey) HitButton (0);
       if (wParam == '8') HitButton (1);
       if (wParam == '9') HitButton (2);
-      if (Exit) PostMessage (hWnd, WM_CLOSE, 0, 0);
-      if (ZoomInKeyNum <= option && option < HideZoomButtonsNum) {
+      if (ZoomInKeyNum <= option && option <= MenuKeyNum) {
         #define o(en,min,max) if (option == en ## Num) en = wParam;
         OPTIONS
         #undef o
@@ -2518,9 +2656,8 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         ev.x = LOWORD (lParam);
         ev.button = 1;
         Click (NULL, &ev, NULL);
-        if (optionMode == mapMode) SipShowIM (SIPF_OFF);
+        if (optionMode != searchMode) SipShowIM (SIPF_OFF);
       }
-      if (Exit) PostMessage (hWnd, WM_CLOSE, 0, 0);
       InvalidateRect (hWnd, NULL, FALSE);
       break;
     case WM_MOUSEMOVE:
@@ -2589,6 +2726,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
     default:
       return DefWindowProc (hWnd, message, wParam, lParam);
   }
+  if (Exit) PostMessage (hWnd, WM_CLOSE, 0, 0);
   return FALSE;
 }
 
@@ -2831,48 +2969,15 @@ int WINAPI WinMain(
   //store log file name
   sprintf (logFileName, "%s\\gosmore.log.txt", docPrefix);
 
-  wcscat (argv0, L"gosmore.pak"); // _arm.exe to ore.pak
-  #if 0
-  char argv0[80];
-  sprintf (argv0, "%s\\gosmore.pak", docPrefix);
+  #ifdef _WIN32_WCE
+  wcscat (argv0, L"gosmore.pak");
+  SerializeOptions (optFile, TRUE, argv0);
+  #else
+  SerializeOptions (optFile, TRUE, "gosmore.pak");
   #endif
-  HANDLE gmap = CreateFileForMappingW (argv0, GENERIC_READ, FILE_SHARE_READ,
-    NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/, NULL);
-  if (gmap == INVALID_HANDLE_VALUE) {
-    MessageBox (NULL, TEXT ("No pak file"), TEXT (""), MB_APPLMODAL|MB_OK);
-    return 1;
-  }
-  pakSize = GetFileSize(gmap, NULL);
-  gmap = CreateFileMapping(gmap, NULL, PAGE_READONLY, 0, 0, 0);
-  if (!GosmInit (MapViewOfFile (gmap, FILE_MAP_READ, 0, 0, 0), pakSize)) {
-    MessageBox (NULL, TEXT ("mmap problem. Pak file too big ?"),
-      TEXT (""), MB_APPLMODAL|MB_OK);
-    return 1;
-  }
-
-  #if 0
-  FILE *gmap = _wfopen (/*"./gosmore.pak"*/ argv0, TEXT ("rb"));
-
-  if (!gmap) {
-    MessageBox (NULL, TEXT ("No pak file"), TEXT (""), MB_APPLMODAL|MB_OK);
-    return 1;
-  }
-  fseek (gmap, 0, SEEK_END);
-  pakSize = ftell (gmap);
-  fseek (gmap, 0, SEEK_SET);
-  data = (char *) malloc (pakSize);
-  if (!data) {
-    MessageBox (NULL, TEXT ("Out of memory"), TEXT (""), MB_APPLMODAL|MB_OK);
-    return 1; // This may mean memory is available, but fragmented.
-  } // Splitting the 5 parts may help.
-  fread (data, pakSize, 1, gmap);
-  #endif
-/*  style = (struct styleStruct *)(data + 4);
-  hashTable = (int *) (data + pakSize);
-  ndBase = (ndType *)(data + hashTable[-1]);
-  bucketsMin1 = hashTable[-2];
-  hashTable -= bucketsMin1 + (bucketsMin1 >> 7) + 5;
-*/
+  int newWayFileNr = 0;
+  if (optFile) fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
+  if (Exit) return 1;
   GtkWidget dumdraw;
   draw = &dumdraw;
 
@@ -2880,19 +2985,6 @@ int WINAPI WinMain(
   if (!InitInstance (nCmdShow)) return(FALSE);
 
   newWays[0].cnt = 0;
-  IconSet = 1;
-  DetailLevel = 3;
-  ButtonSize = 4;
-  int newWayFileNr = 0;
-  if (optFile) {
-    #define o(en,min,max) fread (&en, sizeof (en), 1, optFile);
-    OPTIONS
-    #undef o
-    fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
-    option = mapMode;
-  }
-  Exit = 0;
-  InitializeOptions ();
 
   #ifdef _WIN32_WCE
   InitCeGlue();
@@ -2922,7 +3014,7 @@ int WINAPI WinMain(
       option = option == searchMode ? mapMode : searchMode;
       SipShowIM (option == searchMode ? SIPF_ON : SIPF_OFF);
       InvalidateRect (mWnd, NULL, FALSE);
-    }
+    } // I couldn't find an EN_ event that traps a click on the searchbar.
     TranslateMessage (&msg);
     DispatchMessage (&msg);
   }
@@ -2932,10 +3024,8 @@ int WINAPI WinMain(
 
   optFile = fopen (optFileName, "r+b");
   if (!optFile) optFile = fopen ("\\My Documents\\gosmore.opt", "wb");
+  SerializeOptions (optFile, FALSE, NULL);
   if (optFile) {
-    #define o(en,min,max) fwrite (&en, sizeof (en),1, optFile);
-    OPTIONS
-    #undef o
     fwrite (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
     fclose (optFile);
   }

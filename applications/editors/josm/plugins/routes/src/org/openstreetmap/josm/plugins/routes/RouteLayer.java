@@ -1,10 +1,10 @@
 package org.openstreetmap.josm.plugins.routes;
 
-import java.awt.Stroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,7 +104,7 @@ public class RouteLayer extends Layer {
 
 		pathBuilder.clear();
 
-		for (Relation relation:dataset.relations) {
+		for (Relation relation:dataset.getRelations()) {
 			for (RouteDefinition route:routes) {
 				if (route.matches(relation)) {
 					addRelation(relation, route);
@@ -112,7 +112,7 @@ public class RouteLayer extends Layer {
 			}
 		}
 
-		for (Way way:dataset.ways) {
+		for (Way way:dataset.getWays()) {
 			for (RouteDefinition route:routes) {
 				if (route.matches(way)) {
 					pathBuilder.addWay(way, route);

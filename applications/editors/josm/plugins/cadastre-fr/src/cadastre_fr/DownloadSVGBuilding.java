@@ -109,7 +109,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
             for (EastNorth eastNorth : path) {
                 Node nodeToAdd = new Node(Main.proj.eastNorth2latlon(eastNorth));
                 // check if new node is not already created by another new path
-                Node nearestNewNode = checkNearestNode(nodeToAdd, svgDataSet.nodes);
+                Node nearestNewNode = checkNearestNode(nodeToAdd, svgDataSet.getNodes());
                 if (nearestNewNode == nodeToAdd)
                     svgDataSet.addPrimitive(nearestNewNode);
                 wayToAdd.addNode(nearestNewNode); // either a new node or an existing one
@@ -127,14 +127,14 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 }*/
 
         // simplify ways and check if we can reuse existing OSM nodes
-        for (Way wayToAdd : svgDataSet.ways)
+        for (Way wayToAdd : svgDataSet.getWays())
             new SimplifyWay().simplifyWay(wayToAdd, svgDataSet, 0.5);
         // check if the new way or its nodes is already in OSM layer
-        for (Node n : svgDataSet.nodes) {
-            Node nearestNewNode = checkNearestNode(n, Main.main.getCurrentDataSet().nodes);
+        for (Node n : svgDataSet.getNodes()) {
+            Node nearestNewNode = checkNearestNode(n, Main.main.getCurrentDataSet().getNodes());
             if (nearestNewNode != n) {
                 // replace the SVG node by the OSM node
-                for (Way w : svgDataSet.ways) {
+                for (Way w : svgDataSet.getWays()) {
                     int replaced = 0;
                     for (Node node : w.getNodes())
                         if (node == n) {
@@ -150,10 +150,10 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         }
 
         Collection<Command> cmds = new LinkedList<Command>();
-        for (Node node : svgDataSet.nodes)
+        for (Node node : svgDataSet.getNodes())
             if (!node.isDeleted())
                 cmds.add(new AddCommand(node));
-        for (Way way : svgDataSet.ways)
+        for (Way way : svgDataSet.getWays())
             if (!way.isDeleted())
                 cmds.add(new AddCommand(way));
         Main.main.undoRedo.add(new SequenceCommand(tr("Create buildings"), cmds));

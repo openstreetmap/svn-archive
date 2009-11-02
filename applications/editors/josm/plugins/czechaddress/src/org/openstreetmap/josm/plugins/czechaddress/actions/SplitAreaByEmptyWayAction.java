@@ -123,7 +123,7 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
             index2 = area.getNodes().indexOf(tempBorder.lastNode());
         }
 
-        for (Relation relation : Main.main.getCurrentDataSet().relations)
+        for (Relation relation : Main.main.getCurrentDataSet().getRelations())
             for (RelationMember areaMember : relation.getMembers())
                 if (area.equals(areaMember.getMember()))
                     return 2;

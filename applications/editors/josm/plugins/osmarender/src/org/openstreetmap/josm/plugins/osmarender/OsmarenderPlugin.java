@@ -55,9 +55,9 @@ public class OsmarenderPlugin extends Plugin {
 
             CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(Main.main.getCurrentDataSet(), true);
             DataSet fromDataSet = new DataSet();
-            for (Node n : Main.main.getCurrentDataSet().nodes) {
+            for (Node n : Main.main.getCurrentDataSet().getNodes()) {
                 if (n.isUsable() && n.getCoor().isWithin(b)) {
-                    fromDataSet.nodes.add(n);
+                    fromDataSet.addPrimitive(n);
                     n.visit(backRefsV);
                 }
             }

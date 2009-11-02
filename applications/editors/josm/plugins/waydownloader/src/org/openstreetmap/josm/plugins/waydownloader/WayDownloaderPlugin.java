@@ -101,14 +101,14 @@ public class WayDownloaderPlugin extends Plugin {
                         double lonbuffer=0.0005;
                         DownloadOsmTask downloadTask = new DownloadOsmTask();
                         final PleaseWaitProgressMonitor monitor = new PleaseWaitProgressMonitor();
-                        final Future<?> future = downloadTask.download( 
+                        final Future<?> future = downloadTask.download(
                         		false /* no new layer */,
                         		new Bounds(
-                        				selectedNode.getCoor().lat()- latbuffer, 
-                        				selectedNode.getCoor().lon()- lonbuffer, 
-                        				selectedNode.getCoor().lat()+ latbuffer, 
+                        				selectedNode.getCoor().lat()- latbuffer,
+                        				selectedNode.getCoor().lon()- lonbuffer,
+                        				selectedNode.getCoor().lat()+ latbuffer,
                         				selectedNode.getCoor().lon()+ lonbuffer
-                        		), 
+                        		),
                         		monitor
                         );
                         // schedule closing of the progress monitor after the download
@@ -199,7 +199,7 @@ public class WayDownloaderPlugin extends Plugin {
 
     /** See if there's another node at the same coordinates. If so return it. Otherwise null */
     private Node duplicateNode() {
-        for (Node onNode:Main.main.getCurrentDataSet().nodes) {
+        for (Node onNode:Main.main.getCurrentDataSet().getNodes()) {
             if (!onNode.equals(this.selectedNode)
                     && !onNode.incomplete
                     && onNode.getCoor().lat()==selectedNode.getCoor().lat()
@@ -222,7 +222,7 @@ public class WayDownloaderPlugin extends Plugin {
         ArrayList<Way> connectedWays = new ArrayList<Way>();
 
         //loop through every way
-        for (Way onWay:Main.main.getCurrentDataSet().ways) {
+        for (Way onWay:Main.main.getCurrentDataSet().getWays()) {
             if (onWay.getNodesCount() >= 2) {
                 if (onWay.isFirstLastNode(selectedNode)) {
                     //Found it

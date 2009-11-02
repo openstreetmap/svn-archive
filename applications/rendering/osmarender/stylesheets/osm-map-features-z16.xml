@@ -2298,6 +2298,14 @@
 		<rule e="node" k="natural" v="cave_entrance">
 			<symbol ref="cave_entrance" position="center"/>
 		</rule>
+		<rule e="node" k="mountain_pass" v="yes" layer="-5">
+			<rule e="node" s="way" k="highway|track" v="path|secondary|track|unclassified|tertiary|primary|footway|unclassified|trunk|service|motorway|residential|bridleway|road|cycleway">
+				<wayMarker k="highway" class="mountain_pass" layer="-5"/>
+			</rule>
+			<else>
+				<symbol ref="mountain_pass" position="center" layer="-5"/>
+			</else>
+		</rule>
 		
 		<!-- Draw marine features -->
 		<rule e="way" k="man_made" v="breakwater">
@@ -3813,6 +3821,14 @@
 			stroke: none;
 			}
 			
+			.mountain_pass {
+			fill: none;
+			<!-- don't remove. otherwise the waymarker will get clipped -->
+			stroke: red;
+			stroke-opacity: 0;
+			marker-mid: url(#mountain-pass);
+			}
+			
 			/* Landuse */
 			.landuse-wood {
 			fill: #6fc18e;
@@ -5028,6 +5044,10 @@
 		</svg:marker>
 		<svg:marker fill="none" id="canal-lock" markerHeight="3px" markerUnits="userSpaceOnUse" markerWidth="3px" orient="auto" refX="1px" refY="5px" stroke="#000000" stroke-width="1px" stroke-opacity="1" viewBox="0 0 10 10">
 			<svg:path d="M 1,0 L -2,5 L 1,10"/>
+		</svg:marker>
+		<svg:marker fill="none" id="mountain-pass" markerHeight="24px" markerUnits="userSpaceOnUse" markerWidth="12px" orient="auto" refX="64px" refY="32px" stroke="#000000" stroke-width="0.66px" viewBox="0 0 64 128">
+			<svg:path d="M 1,1 L 16,21 L 112,21 L 127,1"/>
+			<svg:path d="M 1,63 L 16,43 L 112,43 L 127,63"/>
 		</svg:marker>
 	</defs>
 </rules>

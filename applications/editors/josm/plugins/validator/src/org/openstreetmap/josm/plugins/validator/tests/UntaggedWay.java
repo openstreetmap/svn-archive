@@ -116,7 +116,7 @@ public class UntaggedWay extends Test
     {
         super.startTest(monitor);
         multipolygonways = new LinkedList<Way>();
-        for (final Relation r : Main.main.getCurrentDataSet().relations)
+        for (Relation r : Main.main.getCurrentDataSet().getRelations())
         {
             if(r.isUsable() && "multipolygon".equals(r.get("type")))
             {

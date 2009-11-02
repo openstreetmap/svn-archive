@@ -9,21 +9,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmUtils;
-import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.QuadBuckets;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.QuadBuckets.BBox;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -73,15 +74,8 @@ public class UnconnectedWays extends Test
         minmiddledist = Main.pref.getDouble(PREFIX + ".way_way_distance", 0.0)/6378135.0;
         this.ds = Main.main.getCurrentDataSet();
         this.ds_area = ds.getDataSourceArea();
-        // This is temporary until we get proper
-        // reindexing in the dataset code.
-        ArrayList<Node> ntmp = new ArrayList<Node>(ds.nodes);
-        ds.nodes.clear();
-        ds.nodes.addAll(ntmp);
-        ArrayList<Way> wtmp = new ArrayList<Way>(ds.ways);
-        ds.ways.clear();
-        ds.ways.addAll(wtmp);
-    }
+        this.ds.reindexAll();
+        }
 
     @Override
     public void endTest()
@@ -305,9 +299,8 @@ public class UnconnectedWays extends Test
             // This needs to be a hash set because the searches
             // overlap a bit and can return duplicate nodes.
             nearbyNodeCache = null;
-            nodecache = ds.nodes;
             List<LatLon> bounds = this.getBounds(dist);
-            List<Node> found_nodes = nodecache.search(bounds.get(0), bounds.get(1));
+            List<Node> found_nodes = ds.searchNodes(new BBox(bounds.get(0), bounds.get(1)));
             if (found_nodes == null)
                 return Collections.emptySet();
 

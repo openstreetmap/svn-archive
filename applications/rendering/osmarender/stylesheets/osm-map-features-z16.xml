@@ -2359,6 +2359,11 @@
 			</else>
 		</rule>
 
+		<!-- Electrical substations -->
+		<rule e="way" k="power" v="sub_station">
+			<area class="power-generic"/>
+		</rule>
+
 		<!-- Pipelines -->
 		<rule e="way" k="man_made" v="pipeline">
 			<rule e="way" k="type" v="water">

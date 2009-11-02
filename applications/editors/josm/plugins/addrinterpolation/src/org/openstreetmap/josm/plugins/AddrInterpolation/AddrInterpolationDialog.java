@@ -56,7 +56,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.UrlLabel;
 
 /**
- * 
+ *
  */
 
 
@@ -515,7 +515,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 		String relationDescription = null;
 		DataSet currentDataSet = Main.main.getCurrentDataSet();
 		if (currentDataSet != null) {
-			for (Relation relation : currentDataSet.relations) {
+			for (Relation relation : currentDataSet.getRelations()) {
 
 				String relationType = relation.get("type");
 				if (relationType != null) {

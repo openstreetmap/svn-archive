@@ -12,7 +12,6 @@ import java.awt.event.MouseEvent;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -66,7 +65,7 @@ public class EditGpxMode extends MapMode {
             Rectangle r = createRect(pointReleased, pointPressed);
 
             //go through nodes and mark the ones in the selection rect as deleted
-            for (Node n: dataSet.nodes) {
+            for (Node n: dataSet.getNodes()) {
                 Point p = Main.map.mapView.getPoint(n);
                 if (r.contains(p)) {
                 	n.setDeleted(true);

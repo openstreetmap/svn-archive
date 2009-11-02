@@ -260,6 +260,7 @@ void ChangePak (const TCHAR *pakfile)
   if (bbox && bbox[0] <= (clon >> 22) && bbox[1] <= ((-clat) >> 22) &&
               bbox[2] >  (clon >> 22) && bbox[3] >  ((-clat) >> 22)) return;
   GosmFreeRoute ();
+  memset (gosmSstr, 0, sizeof (gosmSstr));
   shortest = NULL;
         
   if (!pakfile) {

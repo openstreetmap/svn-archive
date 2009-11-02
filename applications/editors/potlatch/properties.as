@@ -103,9 +103,12 @@
 		var j=0;
 		var pt=this.pw.proptype;
 		for (var i=0; i<presetmenus[pt].length; i+=1) {
-			if (presetmenus[pt][i]==this.group) { j=i+1; }
+			if (presetmenus[pt][i]==this.group) {
+				if (Key.isDown(Key.SHIFT)) { j=i-1; }
+									  else { j=i+1; }
+			}
 		}
-		this.group=presetmenus[pt][j%i];
+		this.group=presetmenus[pt][(j+presetmenus[pt].length)%i];
 		this.setIcon();
 		this.initMenu(this.pw.findInPresetMenu(this.group));
 	};

@@ -53,9 +53,13 @@
 		remote_read.call('getpresets',preresponder,_root.usertoken,_root.lang);
 	}
 
-    function pleaseWait(a) {
+    function pleaseWait(a,cancelFunction) {
 		_root.windows.attachMovie("modal","pleasewait",++windowdepth);
-		_root.windows.pleasewait.init(295,35,new Array(),null);
+		if (cancelFunction) {
+			_root.windows.pleasewait.init(295,65,new Array(iText('cancel')),cancelFunction);
+		} else {
+			_root.windows.pleasewait.init(295,35,new Array(),null);
+		}
 		_root.windows.pleasewait.box.createTextField("prompt",2,37,8,280,20);
 		_root.windows.pleasewait.box.attachMovie("whirl","whirl",3);
 		with (_root.windows.pleasewait.box.whirl) { _x=20; _y=18; }

@@ -22,7 +22,7 @@
 				_root.poistodelete[this._name]=[this.version,coord2long(this._x),coord2lat(this._y),deepCopy(this.attr)];
 				markClean(false);
 			} else {
-				renewChangeset();
+				if (renewChangeset()) { return; }
 				poidelresponder = function() { };
 				poidelresponder.onResult = function(result) { deletepoiRespond(result); };
 				_root.writesrequested++;
@@ -41,6 +41,7 @@
 		delete _root.nodes[result[0]];
 		removeMovieClip(_root.map.pois[result[0]]);
 		operationDone(result[0]);
+		freshenChangeset();
 	}
 	POI.prototype.reload=function(timestamp) {
 		poirelresponder=function() {};
@@ -74,9 +75,10 @@
 			_root.map.pois[ni].uploading=false;
 			_root.map.pois[ni].version=result[2];
 			operationDone(result[0]);
+			freshenChangeset();
 		};
 		if (!this.uploading && !this.locked && (!_root.sandbox || _root.uploading)) {
-			renewChangeset();
+			if (renewChangeset()) { return; }
 			_root.writesrequested++;
 			this.uploading=true;
 			remote_write.call('putpoi',poiresponder,_root.usertoken,_root.changeset,Number(this.version),Number(this._name),coord2long(this._x),coord2lat(this._y),this.attr,1);
@@ -263,3 +265,11 @@
 			}
 		}
 	}
+
+	function uploadDirtyPOIs() {
+		if (_root.sandbox) { return; }
+		var z=_root.map.pois;
+		for (i in z) {
+			if (!_root.map.pois[i].clean) { _root.map.pois[i].upload(); }
+		}
+	};

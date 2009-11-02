@@ -20,16 +20,21 @@
 	// -----------------------------------------------------------------------
 	// renewChangeset
 	// renew a right changeset within us (if it's over an hour since the last)
-	// returns false if it hasn't requested a new one, true if it has
+	// returns:
+	//		false - no changeset needed, continue
+	//		true  - new changeset needed
 	
 	function renewChangeset() {
 		if (!_root.changeset) { return false; }
 		var t=new Date(); if (t.getTime()-_root.csopened<3400000) { return false; }
-		pleaseWait(iText('openchangeset'));
+		pleaseWait(iText('openchangeset'),abortOpen);
 		_root.changeset=null; startChangeset(true);
 		return true;
 	}
-
+	
+	function abortOpen() { _root.changeset=null; }
+	function freshenChangeset() { var t=new Date(); _root.csopened=t.getTime(); }
+	
 	// changesetRequest(text,exit routine,comment)
 
 	function changesetRequest(prompt,doOnClose,comment) {
@@ -90,9 +95,15 @@
 			var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 			// ** probably needs to fail really catastrophically here...
 			_root.changeset=result[0];
-			var t=new Date(); _root.csopened=t.getTime();
+			freshenChangeset();
 			if (_root.windows.pleasewait) { _root.windows.pleasewait.remove(); }
-            if (_root.sandbox && !_root.uploading && _root.changeset) { startUpload(); }
+            if (_root.sandbox && !_root.uploading && _root.changeset) {
+				startUpload();
+			} else if (!_root.sandbox) { 
+				uploadDirtyWays();
+				uploadDirtyPOIs();
+				uploadDirtyRelations();
+			}
 		};
 
 		var cstags=new Object();														// Changeset tags

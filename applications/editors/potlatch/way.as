@@ -499,7 +499,7 @@
 					markClean(false);
 				}
 			} else if (this._name>=0) {
-				renewChangeset();
+				if (renewChangeset()) { return; }
 				deleteresponder = function() { };
 				deleteresponder.onResult = function(result) { deletewayRespond(result); };
 				_root.writesrequested++;
@@ -517,6 +517,7 @@
 		var code=result.shift(); var msg=result.shift(); if (code) { handleError(code,msg,result); return; }
 		var z=result[2]; for (var i in z) { delete _root.nodes[i]; }
 		operationDone(result[0]);
+		freshenChangeset();
 	};
 
 	function deleteNodeAsPOI(nid) {
@@ -589,6 +590,7 @@
 			_root.map.ways[nw].deleteMergedWays();
 			uploadDirtyWays();			// make sure dependencies are uploaded
 			operationDone(ow);
+			freshenChangeset();
 			updateInspector();
 		};
 
@@ -596,7 +598,7 @@
 			this.deleteMergedWays();
 
 			// Assemble list of changed nodes, and send
-			renewChangeset();
+			if (renewChangeset()) { return; }
 			this.uploading=true;
 			var sendpath =new Array();
 			var sendnodes=new Array();

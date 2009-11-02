@@ -132,7 +132,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 1.2c";	// current version
+	var signature="Potlatch 1.2d";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k");
 	var lastgroup='road';			// last preset group used
@@ -743,11 +743,15 @@
 			case 'L':		showPosition(); break;								// L - show latitude/longitude
 			case 'P':		askOffset(); break;									// P - parallel path
 			case 'R':		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes
-			case 'T':		_root.ws.tidy(); break;								// T - tidy
+			case 'T':		if (!Key.isDown(Key.CONTROL)) { _root.ws.tidy(); }	// T - tidy
+							break;												//   |
 			case 'U':		getDeleted(); break;								// U - undelete
+			case 'W':		if (_root.ws) { stopDrawing(); _root.ws.select();};	// W - select way
+							break;												//   |
 			case 'X':		_root.ws.splitWay(_root.pointselected); break;		// X - split way
 			case 'Z':		_root.undo.rollback(); break;						// Z - undo
-			case '`':		_root.panel.presets.cycleIcon(); break;				// '`' - cycle presets
+			case '~':		var dummy=1;										// '`' - cycle presets
+			case '`':		_root.panel.presets.cycleIcon(); break;				//    |
 			case '=':		var dummy=1;										// '+' - add new attribute (107/187)
 			case '+':		_root.panel.properties.enterNewAttribute(); break;	//    |
 			case '-':		keyDelete(0); break;								// '-' - delete node from this way only (189)
@@ -760,7 +764,7 @@
 								case 3: s=preferences.data.tilecustom; break;
 							}
 							_root.panel.properties.setTag("source",s); break;
-//			default:		_root.chat.text=Key.getCode()+" pressed";
+//			default:		_root.chat.text=Key.getCode()+" -"+s+"- pressed";
 		};
 	}
 

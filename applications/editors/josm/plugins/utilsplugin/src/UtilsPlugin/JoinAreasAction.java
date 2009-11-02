@@ -442,7 +442,7 @@ public class JoinAreasAction extends JosmAction {
      */
     private ArrayList<RelationRole> removeFromRelations(OsmPrimitive osm) {
         ArrayList<RelationRole> result = new ArrayList<RelationRole>();
-        for (Relation r : Main.main.getCurrentDataSet().relations) {
+        for (Relation r : Main.main.getCurrentDataSet().getRelations()) {
             if (r.isDeleted() || r.incomplete) continue;
             for (RelationMember rm : r.getMembers()) {
                 if (rm.getMember() != osm) continue;

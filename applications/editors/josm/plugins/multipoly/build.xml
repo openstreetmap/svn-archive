@@ -46,7 +46,7 @@
     <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
     <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
     <attribute name="Plugin-Link" value="http://svn.openstreetmap.org/applications/editors/josm/plugins/multipoly/"/>
-    <attribute name="Plugin-Mainversion" value="2267"/>
+    <attribute name="Plugin-Mainversion" value="2381"/>
    </manifest>
   </jar>
  </target>

@@ -129,7 +129,7 @@ public class RoutingGraph {
         rgDelegator=new RoutingGraphDelegator(graph);
         rgDelegator.setRouteType(this.routeType);
         // iterate all ways and segments for all nodes:
-        for (Way way : data.ways) {
+        for (Way way : data.getWays()) {
             if (way != null && !way.isDeleted() && this.isvalidWay(way)) {
                 Node from = null;
                 for (Node to : way.getNodes()) {

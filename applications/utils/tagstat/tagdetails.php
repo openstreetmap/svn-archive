@@ -78,7 +78,7 @@
 		} else {
 			$style="even";
 		}
-		printf('<TR class="%1$s"><TD>%2$s</TD><TD>%3$s</TD><TD class="count">%4$s</TD><TD class="count">%5$s</TD><TD class="count">%6$s</TD><TD class="count">%7$s</TD>', $style, displayTag($row[0]), displayTag($row[1]), displayNum($row[2]), displayNum($row[3]), displayNum($row[4]), displayNum($row[5]));
+		printf('<TR class="%1$s"><TD>%2$s</TD><TD><A href="tagvaluedetails.php?tag=%2$s&value=%3$s">%3$s</A></TD><TD class="count">%4$s</TD><TD class="count">%5$s</TD><TD class="count">%6$s</TD><TD class="count">%7$s</TD>', $style, displayTag($row[0]), displayTag($row[1]), displayNum($row[2]), displayNum($row[3]), displayNum($row[4]), displayNum($row[5]));
 		if($dir == "ASC") {
 			$getsuggestion =& $conn->prepare("SELECT value, c_total FROM tagpairs WHERE tag = ? AND SOUNDEX(value) = SOUNDEX(?) AND value <> ? ORDER BY c_total DESC LIMIT 1");
 			$result2 =& $conn->execute($getsuggestion, array($row[0], $row[1], $row[1]));

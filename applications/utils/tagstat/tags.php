@@ -12,7 +12,7 @@
 	include("func.php");
 
 	$limit = getIntFromRequest("limit", 25);
-	$skip = getIntFromRequest("skip", 25);
+	$skip = getIntFromRequest("skip", 0);
 	$dir = getValueFromRequest("dir", "DESC", array("ASC", "DESC"));
 
 	$invdir = flipDir($dir);

@@ -56,7 +56,7 @@ public class EditGpxLayer extends Layer {
      */
     public void initializeImport() {
         try {
-            if(dataSet.nodes.isEmpty() ) {
+            if(dataSet.getNodes().isEmpty() ) {
                 layerImport.activateImport();
             }
         } catch (Exception e) {
@@ -110,7 +110,7 @@ public class EditGpxLayer extends Layer {
 
         //don't iterate through dataSet whiling making changes
         synchronized(layerImport.importing) {
-            for(Node n: dataSet.nodes) {
+            for(Node n: dataSet.getNodes()) {
                 if (!n.isDeleted()) {
                     Point pnt = Main.map.mapView.getPoint(n.getEastNorth());
                     g.drawOval(pnt.x - 2, pnt.y - 2, 4, 4);
@@ -141,7 +141,7 @@ public class EditGpxLayer extends Layer {
         GpxData gpxData = new GpxData();
         HashSet<Node> doneNodes = new HashSet<Node>();
         //add all ways
-        for (Way w : dataSet.ways) {
+        for (Way w : dataSet.getWays()) {
             if (w.incomplete || w.isDeleted()) continue;
             GpxTrack trk = new GpxTrack();
             gpxData.tracks.add(trk);
@@ -177,7 +177,7 @@ public class EditGpxLayer extends Layer {
         }
 
         // add nodes as waypoints
-        for (Node n : dataSet.nodes) {
+        for (Node n : dataSet.getNodes()) {
             if (n.incomplete || n.isDeleted() || doneNodes.contains(n)) continue;
 
             Date tstamp = n.getTimestamp();

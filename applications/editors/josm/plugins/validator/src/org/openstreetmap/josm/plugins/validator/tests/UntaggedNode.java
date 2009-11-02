@@ -57,7 +57,7 @@ public class UntaggedNode extends Test
                     p.visit(this);
                 }
             }
-            for (Way w : Main.main.getCurrentDataSet().ways) {
+            for (Way w : Main.main.getCurrentDataSet().getWays()) {
                 visit(w);
             }
         } else {

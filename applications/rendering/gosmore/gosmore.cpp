@@ -278,7 +278,7 @@ void ChangePak (const TCHAR *pakfile)
         bbox = bboxList[j];
         #ifdef _WIN32_WCE
         GetModuleFileName (NULL, l2, sizeof (l2) / sizeof (l2[0]));
-        wsprintf (wcsrchr (l2, L'\\'), TEXT ("%04d%04d%04d%04d.pak"),
+        wsprintf (wcsrchr (l2, L'\\'), TEXT ("\\%04d%04d%04d%04d.pak"),
         #else
         sprintf (l2, "%s%04d%04d%04d%04d.pak", "", //RES_DIR,
         #endif
@@ -295,15 +295,15 @@ void ChangePak (const TCHAR *pakfile)
   if (map) UnmapViewOfFile (map);
   if (fm != INVALID_HANDLE_VALUE) CloseHandle (fm);
   if (gmap != INVALID_HANDLE_VALUE) CloseHandle (gmap);
+  
   gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
     NULL);
   fm = gmap == INVALID_HANDLE_VALUE ? INVALID_HANDLE_VALUE :
     CreateFileMapping(gmap, NULL, PAGE_READONLY, 0, 0, 0);
-  map = fm == INVALID_HANDLE_VALUE ? INVALID_HANDLE_VALUE :
+  map = fm == INVALID_HANDLE_VALUE ? NULL :
     MapViewOfFile (fm, FILE_MAP_READ, 0, 0, 0);
-  Exit = !map || !GosmInit (MapViewOfFile (fm, FILE_MAP_READ, 0, 0, 0),
-                      GetFileSize(gmap, NULL));
+  Exit = !map || !GosmInit (map, GetFileSize(gmap, NULL));
   if (Exit && gmap != INVALID_HANDLE_VALUE) {
     MessageBox (NULL, TEXT ("mmap problem. Pak file too big ?"),
       TEXT (""), MB_APPLMODAL|MB_OK);
@@ -2978,7 +2978,11 @@ int WINAPI WinMain(
   #endif
   int newWayFileNr = 0;
   if (optFile) fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
-  if (Exit) return 1;
+  if (Exit) {
+    MessageBox (NULL, TEXT ("Pak file not found"), TEXT (""),
+      MB_APPLMODAL|MB_OK);
+    return 1;
+  }
   GtkWidget dumdraw;
   draw = &dumdraw;
 

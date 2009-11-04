@@ -20,8 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import geometry
 from base import pyrouteModule
+import geometry
 import listable
 
 class poi:

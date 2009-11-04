@@ -25,6 +25,7 @@ _debug = 0
 
 import cairo
 import os
+
 class menuIcons:
 	def __init__(self):
 		self.images = {}

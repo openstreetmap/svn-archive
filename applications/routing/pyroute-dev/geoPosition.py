@@ -25,11 +25,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import sys
-import os
-import socket
 from time import sleep
+import os
 import re
+import socket
+import sys
 
 class geoPosition:
 	def __init__(self):

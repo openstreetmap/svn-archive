@@ -25,12 +25,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import sys
-import os
-from xml.sax import make_parser, handler
-import xml
-from util_binary import *
 from struct import *
+from util_binary import *
+from xml.sax import make_parser, handler
+import os
+import sys
+import xml
 
 execfile(os.path.join(os.path.dirname(__file__), "weights.py"))
 

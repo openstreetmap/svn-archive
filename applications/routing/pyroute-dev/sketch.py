@@ -24,9 +24,9 @@ _debug = 0
 
 
 from base import pyrouteModule
-import os
-import cairo
 from lib_gpx import lib_gpx
+import cairo
+import os
 
 class sketching(pyrouteModule, lib_gpx):
 	""""""

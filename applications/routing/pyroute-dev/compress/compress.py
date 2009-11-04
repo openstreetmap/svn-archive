@@ -20,11 +20,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import sys
-import os
-from xml.sax import make_parser, handler
-import xml
 from struct import *
+from xml.sax import make_parser, handler
+import os
+import sys
+import xml
 
 class BinaryOsm(handler.ContentHandler):
 

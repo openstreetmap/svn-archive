@@ -3,8 +3,8 @@
 
 """Handles geometry on the earth's surface (e.g. bearing/distance)
 
-Usage: 
-  (library code)
+Usage:
+	(library code)
 """
 
 __version__ = "$Rev$"
@@ -31,7 +31,7 @@ def bearing(a,b):
 	dlon = radians(b[1] - a[1])
 
 	dlon = dlon * cos(radians(a[0]))
-	
+
 	return(degrees(atan2(dlon, dlat)))
 
 def distance(a,b, haversine=False):
@@ -44,7 +44,7 @@ def distance(a,b, haversine=False):
 	d = acos(sin(lat1)*sin(lat2) + cos(lat1)*cos(lat2) * cos(lon2-lon1)) * 6371;
 	return(d)
 
- 	
+
 def distance_haversine(a,b):
 	dlat = radians(b[0] - a[0])
 	dlon = radians(b[1] - a[1])
@@ -52,7 +52,7 @@ def distance_haversine(a,b):
 	a2a = cos(radians(a[0]))
 	a2b = cos(radians(b[0]))
 	a3 = sin(0.5 * dlon)
-	
+
 	a = a1*a1 + a2a*a2b * a3*a3
 	c = 2 * atan2(sqrt(a), sqrt(1-a))
 	d = 6371 * c
@@ -76,12 +76,12 @@ if(__name__ == "__main__"):
 		while(x < 360):
 			print "%05.1f: %s" % (x, compassPoint(x))
 			x = x + 15
-	
+
 	a = (51.478,-0.4856)
 	b = (51.477,-0.4328)
 
 	print bearing(a,b)
-	
+
 	for h in (True,False):
 		start = clock()
 		it = 5000

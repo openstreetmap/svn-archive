@@ -66,7 +66,7 @@ class geoRss(poiModule):
 			pass
 
 		return(0,0,False)
-		
+
 	def add(self, name, feed):
 		group = poiGroup(name)
 		count = 0
@@ -85,4 +85,4 @@ if __name__ == "__main__":
 	g = geoRss('../Setup/feeds.txt')
 	name = g.groups.keys()[0]
 	print g.groups[name].items
-	
+

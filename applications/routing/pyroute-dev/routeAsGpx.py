@@ -4,8 +4,8 @@
 """routeAsOsm - routes within an OSM file, and generates a
 GPX file containing the result
 
-Usage: 
- routeAsGpx.py [input OSM file] [start node] [end node] [transport] [description]
+Usage:
+	routeAsGpx.py [input OSM file] [start node] [end node] [transport] [description]
 """
 
 __version__ = "$Rev$"
@@ -25,18 +25,18 @@ _debug = 0
 
 
 from route import *
-	
+
 def routeToGpx(nodeList, osmData, description=""):
 	"""Format a route (as list of nodes) into a GPX file"""
-	
+
 	output = ''
 	output = output + "<?xml version='1.0'?>\n";
-	
+
 	output = output + "<gpx version='1.1' creator='pyroute' xmlns='http://www.topografix.com/GPX/1/1' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd'>\n"
-		
+
 	output = output + " <rte>\n"
 	output = output + "  <name>%s</name>\n" % description
-	
+
 	count = 0;
 	for i in nodeList:
 		output = output + "   <rtept lat='%f' lon='%f'>\n" % ( \
@@ -46,24 +46,24 @@ def routeToGpx(nodeList, osmData, description=""):
 		output = output + "   </rtept>\n"
 		count = count + 1
 	output = output + " </rte>\n</gpx>\n"
-	
+
 	return(output)
 
 if __name__ == "__main__":
 	try:
 		# Load data
 		data = LoadOsm(sys.argv[1])
-	
+
 		# Do routing
 		router = Router(data)
 		result, route = router.doRoute(int(sys.argv[2]), int(sys.argv[3]), sys.argv[4])
-	
+
 		# Display result
 		if result == 'success':
 			print routeToGpx(route, data, sys.argv[5])
 		else:
 			sys.stderr.write("Failed (%s)" % result)
-	
+
 	except IndexError:
 		# Not enough argv[]s
 		sys.stderr.write("Usage: routeAsGpx.py [OSM file] [from node] [to node] [transport method] [description]\n")

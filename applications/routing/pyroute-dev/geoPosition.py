@@ -4,9 +4,9 @@
 """report "current position" (currently accepts replayed GPX
 files from follow.py)
 
-Usage: 
-  pos = geoPosition(filename_of_latlong_file)
-  lat,lon = pos.get()
+Usage:
+	pos = geoPosition(filename_of_latlong_file)
+	lat,lon = pos.get()
 """
 
 __version__ = "$Rev$"
@@ -41,7 +41,7 @@ class geoPosition:
 		except socket.error:
 			print "No GPSD detected, position information will not be available"
 			pass # leave mode at "none"
-		
+
 		self.filename = os.path.join(os.path.dirname(__file__), "pos.txt")
 		if(os.path.exists(self.filename)):
 			self.mode = "file"
@@ -51,26 +51,26 @@ class geoPosition:
 		if(os.path.exists(self.filename)):
 			self.mode = "initfile"
 			print "Using %s as initial position reference" % self.filename
-	
+
 	def get(self):
 		try:
 				function = getattr(self, 'get_%s' % self.mode)
 		except AttributeError:
 				return({'valid':False,'message':"function for %s not defined" % self.mode})
 		return(function())
-		
+
 	def get_none(self):
 		return({'valid':False,'message':"no gps"})
-	
+
 	def socket_cmd(self, cmd):
 		self.s.send("%s\r\n" % cmd)
 		return self.s.recv(8192)
-		
+
 	def test_socket(self):
 		for i in ('i','p','p','p','p'):
 			print "%s = %s" % (i, self.socket_cmd(i))
 			sleep(1)
-		
+
 	def get_socket(self):
 		pos = self.socket_cmd("p")
 		p = re.compile('P=(.*?)\s*$')
@@ -83,7 +83,7 @@ class geoPosition:
 		lat,lon = [float(ll) for ll in text.split(' ')]
 		#print "matched '%s', '%s'"%(lat,lon)
 		return({'valid':True, 'lat':lat, 'lon':lon, 'source':'GPS'})
-	
+
 	def get_file(self):
 		file = open(self.filename, 'r')
 		text = file.readline(50)
@@ -105,7 +105,7 @@ class geoPosition:
 			return({'valid':True, 'lat':lat, 'lon':lon, 'source':'textfile'})
 		except ValueError:
 			return({'valid':False, 'message':'Invalid textfile'})
-		
+
 if __name__ == "__main__":
 	#print dir(socket)
 	pos = geoPosition()

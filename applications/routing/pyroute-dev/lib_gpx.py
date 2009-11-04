@@ -3,7 +3,7 @@
 
 """Library for handling GPX files
 
-Usage: 
+Usage:
 """
 
 __version__ = "$Rev$"
@@ -46,7 +46,7 @@ class lib_gpx(handler.ContentHandler):
 				else:
 					cr.line_to(x,y)
 			cr.stroke()
-			
+
 	def saveAs(self,filename, title="untitled"):
 		file = open(filename,"w")
 		file.write("<?xml version=\"1.0\"?>\n")
@@ -71,7 +71,7 @@ class lib_gpx(handler.ContentHandler):
 		parser = make_parser()
 		parser.setContentHandler(self)
 		parser.parse(filename)
-	
+
 	def startElement(self, name, attrs):
 		if name == 'trk':
 			pass

@@ -3,16 +3,16 @@
 
 """Graphics library for drawing pyroute GUI menus
 
-Usage: 
-  (library code for pyroute GUI)
+Usage:
+	(library code for pyroute GUI)
 
 Features:
-  Start by initialising a 'rectangle' that covers a certain bit of screen
-  Then you can
-    * Draw an icon there
-    * Draw text in the rectangle
-    * Make it clickable (so that it triggers an event when clicked)
-    * Split it into smaller rectangles (to do complex GUI layouts)
+	Start by initialising a 'rectangle' that covers a certain bit of screen
+	Then you can
+		* Draw an icon there
+		* Draw text in the rectangle
+		* Make it clickable (so that it triggers an event when clicked)
+		* Split it into smaller rectangles (to do complex GUI layouts)
 """
 
 __version__ = "$Rev$"
@@ -72,7 +72,7 @@ class overlayArea:
 		ratiox = textwidth / self.w
 		ratioy = textheight / self.h
 		ratio = max(ratiox,ratioy)
-		
+
 		self.cr.set_font_size(test_fontsize / ratio)
 		textwidth = textwidth / ratio
 		textheight = textheight / ratio
@@ -83,7 +83,7 @@ class overlayArea:
 		self.cr.move_to(self.x1 + marginx, self.y2 - marginy)
 		self.cr.set_source_rgba(0, 0, 0, 0.5)
 		self.cr.show_text(text)
-		
+
 	def button(self,text=None,event=None,icon=None):
 		# Rectangle
 		if(not icon):
@@ -148,7 +148,7 @@ class overlayArea:
 			py = py1 + i * dpy
 			cells.append(self.copyself(px1,py,px2,py+dpy))
 		return(cells)
-			
+
 	def contains(self,x,y):
 		if(x > self.x1 and x < self.x2 and y > self.y1 and y < self.y2):
 			return(1)

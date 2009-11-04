@@ -30,14 +30,14 @@ class osmPoiModule(poiModule, handler.ContentHandler):
 		poiModule.__init__(self, modules)
 		self.draw = False
 		self.loadPOIs("all", "amenity|shop=*")
-		
+
 	def loadPOIs(self, name, search):
 		filename = os.path.join(os.path.dirname(__file__),
 														"data", "poi_%s.osm" % name)
-		
+
 		url = "http://www.informationfreeway.org/api/0.5/node[%s][%s]" %(search,
 																																		 self.bbox())
-		
+
 		if(not os.path.exists(filename)):
 			print "Downloading POIs from OSM"
 			urllib.urlretrieve(url, filename)
@@ -47,7 +47,7 @@ class osmPoiModule(poiModule, handler.ContentHandler):
 	def bbox(self):
 		# TODO: based on location!
 		return "bbox=-6,48,2.5,61"
-	
+
 	def load(self, filename, listfile):
 		self.filters = []
 		print "Loading POIs from %s" % listfile
@@ -62,7 +62,7 @@ class osmPoiModule(poiModule, handler.ContentHandler):
 					self.filters.append({'name':name,'filter':filter,'group':group})
 		finally:
 			f.close()
-		
+
 		if(not os.path.exists(filename)):
 			print "Can't load %s"%filename
 			return
@@ -70,8 +70,8 @@ class osmPoiModule(poiModule, handler.ContentHandler):
 		parser = make_parser()
 		parser.setContentHandler(self)
 		parser.parse(filename)
-		
-	
+
+
 	def startElement(self, name, attrs):
 		if name == "node":
 			self.currentNode = { \
@@ -80,7 +80,7 @@ class osmPoiModule(poiModule, handler.ContentHandler):
 			self.inNode = True
 		if name == "tag" and self.inNode:
 			self.currentNode[attrs.get('k')] = attrs.get('v')
-	
+
 	def endElement(self, name):
 		if(name == "node"):
 			self.storeNode(self.currentNode)
@@ -94,7 +94,7 @@ class osmPoiModule(poiModule, handler.ContentHandler):
 			if(n.get(k,'') != v):
 				matched = False
 		return(matched)
-		
+
 	def storeNode(self, n):
 		for f in self.filters:
 			if(self.passesFilter(n,f['filter'])):
@@ -110,12 +110,12 @@ class osmPoiModule(poiModule, handler.ContentHandler):
 														"data", "poi.osm")
 
 		self.saveAs(self.filename)
-	
+
 	def saveAs(self,filename):
 		if(filename == None):
 			return
 		pass
-	
+
 
 if __name__ == "__main__":
 	nodes = osmPoiModule(None)

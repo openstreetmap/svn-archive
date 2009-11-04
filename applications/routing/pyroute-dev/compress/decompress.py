@@ -28,7 +28,7 @@ class BinaryOsm:
 	def __init__(self):
 		self.values = {}
 		pass
-		
+
 	def decode(self, filename, output):
 		if(not os.path.exists(filename)):
 			print "No such data file %s" % filename
@@ -57,7 +57,7 @@ class BinaryOsm:
 		lat,lon = self.decodeLL(Input.read(8))
 		#print "Node %u at (%f,%f)"%(nid,lat,lon)
 		self.readTags(Input, Output)
-		
+
 	def readWay(self, Input, Output):
 		wid = unpack("L", Input.read(4))[0]
 		numNodes = unpack("H", Input.read(2))[0]
@@ -84,7 +84,7 @@ class BinaryOsm:
 			lenX = unpack('B', Input.read(1))[0]
 			text = Input.read(lenX)
 			return(text.decode("utf-8"))
-		
+
 		if(ID == 1):
 			# New + store
 			NewID = unpack('H', Input.read(2))[0]
@@ -93,12 +93,12 @@ class BinaryOsm:
 			X = X.decode("utf-8")
 			self.values[NewID] = X
 			return(X)
-			
+
 		else:
 			# ID that we should already know
 			return(self.values[ID])
-		
-		
+
+
 	def decodeLL(self,data):
 		iLat,iLon = unpack("II", data)
 		pLat = self.decodeP(iLat)
@@ -106,11 +106,11 @@ class BinaryOsm:
 		lat = pLat * 180.0 - 90.0
 		lon = pLon * 360.0 - 180.0
 		return(lat,lon)
-		
+
 	def decodeP(self,i):
 		p = float(i) / 4294967296.0
 		return(p)
-		
+
 # Parse the supplied OSM file
 if __name__ == "__main__":
 	print "Loading data..."

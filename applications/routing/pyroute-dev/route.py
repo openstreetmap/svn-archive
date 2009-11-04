@@ -3,12 +3,12 @@
 
 """Routing for OSM data
 
-Usage as library: 
-  router = Router(LoadOsmObject)
-  result, route = router.doRoute(node1, node2, transport)
+Usage as library:
+	router = Router(LoadOsmObject)
+	result, route = router.doRoute(node1, node2, transport)
 
 Usage from command-line:
-  route.py filename.osm node1 node2 transport
+	route.py filename.osm node1 node2 transport
 
 (where transport is cycle, foot, car, etc...)
 """
@@ -30,7 +30,7 @@ _debug = 0
 
 
 import sys
-import math 
+import math
 from loadOsm import *
 
 class Router:
@@ -61,7 +61,7 @@ class Router:
 		self.searchEnd = end
 		closed = [start]
 		self.queue = []
-		
+
 		# Start by queueing all outbound links from the start node
 		blankQueueItem = {'end':-1,'distance':0,'nodes':str(start)}
 		try:
@@ -69,7 +69,7 @@ class Router:
 				self.addToQueue(start,i, blankQueueItem, weight)
 		except KeyError:
 			return('no_such_node',[])
-		
+
 		# Limit for how long it will search
 		count = 0
 		while count < 10000:
@@ -95,10 +95,10 @@ class Router:
 				pass
 		else:
 			return('gave_up',[])
-	
+
 	def addToQueue(self,start,end, queueSoFar, weight = 1):
 		"""Add another potential route to the queue"""
-		
+
 		# If already in queue
 		for test in self.queue:
 			if test['end'] == end:
@@ -107,7 +107,7 @@ class Router:
 		if(weight == 0):
 			return
 		distance = distance / weight
-		
+
 		# Create a hash for all the route's attributes
 		distanceSoFar = queueSoFar['distance']
 		queueItem = { \
@@ -115,7 +115,7 @@ class Router:
 			'maxdistance': distanceSoFar + self.distance(end, self.searchEnd),
 			'nodes': queueSoFar['nodes'] + "," + str(end),
 			'end': end}
-		
+
 		# Try to insert, keeping the queue ordered by decreasing worst-case distance
 		count = 0
 		for test in self.queue:
@@ -128,16 +128,16 @@ class Router:
 
 if __name__ == "__main__":
 	data = LoadOsm(sys.argv[1])
-	
+
 	try:
 		transport = sys.argv[4]
 	except IndexError:
 		transport = 'cycle'
 		print "WARNING: No transport type specified, assuming \"%s\"" % transport
-	
+
 	router = Router(data)
 	result, route = router.doRouteAsLL(int(sys.argv[2]), int(sys.argv[3]), transport)
-	
+
 	if result == 'success':
 		print "Route: %s" % ",".join("%1.4f,%1.4f" % (i[0],i[1]) for i in route)
 	else:

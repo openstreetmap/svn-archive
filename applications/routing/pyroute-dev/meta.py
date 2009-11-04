@@ -3,8 +3,8 @@
 
 """Meta-information (self-testing, self-diagnosis, etc.) for pyroute
 
-Usage: 
-  Library for pyroute
+Usage:
+	Library for pyroute
 """
 
 __version__ = "$Rev$"

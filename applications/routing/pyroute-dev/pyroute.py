@@ -3,7 +3,7 @@
 
 """pyRoute, a routing program for OpenStreetMap-style data
 
-Usage: 
+Usage:
  pyroute.py [input OSM file] [start node] [end node]
 """
 
@@ -25,7 +25,7 @@ _debug = 0
 
 import sys
 import cairo
-import math 
+import math
 from xml.sax import make_parser, handler
 
 class GetRoutes(handler.ContentHandler):
@@ -94,7 +94,7 @@ class GetRoutes(handler.ContentHandler):
 			self.routing[fr].append(to)
 		except KeyError:
 			self.routing[fr] = [to]
-	
+
 	def initProj(self,w,h, lat,lon, scale=1):
 		"""Setup an image coordinate system"""
 		self.w = w
@@ -103,13 +103,13 @@ class GetRoutes(handler.ContentHandler):
 		self.clon = lon
 		self.dlat = (self.maxLat - self.minLat) / scale
 		self.dlon = (self.maxLon - self.minLon) / scale
-	
+
 	def project(self, lat, lon):
 		"""Convert from lat/long to image coordinates"""
 		x = self.w * (0.5 + 0.5 * (lon - self.clon) / (0.5 * self.dlon))
 		y = self.h * (0.5 - 0.5 * (lat - self.clat) / (0.5 * self.dlat))
 		return(x,y)
-	
+
 	def markNode(self,node,r,g,b):
 		"""Mark a node on the map"""
 		self.ctx.set_source_rgb(r,g,b)
@@ -118,7 +118,7 @@ class GetRoutes(handler.ContentHandler):
 		x,y = self.project(lat,lon)
 		self.ctx.arc(x,y,2, 0,2*3.14)
 		self.ctx.fill()
-	
+
 	def markLine(self,n1,n2,r,g,b):
 		"""Draw a line on the map between two nodes"""
 		self.ctx.set_source_rgba(r,g,b,0.3)
@@ -143,7 +143,7 @@ class GetRoutes(handler.ContentHandler):
 		dlon = lon2 - lon1
 		dist2 = dlat * dlat + dlon * dlon
 		return(math.sqrt(dist2))
-		
+
 	def doRouting(self, routeFrom, routeTo):
 		"""Wrapper around the routing function, which creates the output image, etc"""
 		size = 800
@@ -153,7 +153,7 @@ class GetRoutes(handler.ContentHandler):
 		ctrLon = (self.nodes[routeFrom][1] + self.nodes[routeTo][1]) / 2
 		self.initProj(size, size, ctrLat, ctrLon, scalemap)
 		surface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.w, self.h)
-		
+
 		self.ctx = cairo.Context(surface)
 		# Dump all the nodes onto the map, to give the routes some context
 		self.ctx.set_source_rgb(1.0, 0.0, 0.0)
@@ -163,28 +163,28 @@ class GetRoutes(handler.ContentHandler):
 			self.ctx.move_to(x,y)
 			self.ctx.line_to(x,y)
 			self.ctx.stroke()
-		
+
 		# Do the routing itself
 		self.doRoute(routeFrom, routeTo)
-		
+
 		# Highlight which nodes were the start and end
 		self.markNode(routeFrom,1,1,1)
 		self.markNode(routeTo,1,1,0)
-		
+
 		# Image is complete
 		surface.write_to_png("output.png")
-	
+
 	def doRoute(self,start,end):
 		"""Do the routing"""
 		self.searchEnd = end
 		closed = [start]
 		self.queue = []
-		
+
 		# Start by queueing all outbound links from the start node
 		blankQueueItem = {'end':-1,'distance':0,'nodes':str(start)}
 		for i in self.routing[start]:
 			self.addToQueue(start,i, blankQueueItem)
-		
+
 		# Limit for how long it will search (also useful for debugging step-by-step)
 		maxSteps = 10000
 		while maxSteps > 0:
@@ -211,21 +211,21 @@ class GetRoutes(handler.ContentHandler):
 				pass
 		else:
 			self.debugQueue()
-	
+
 	def debugQueue(self):
 		"""Display some information about the state of our queue"""
 		print "Queue now %d items long" % len(self.queue)
 		# Display on map
 		for i in self.queue:
 			self.markNode(i['end'],0,0.5,0)
-	
+
 	def printRoute(self,item):
 		"""Output stage, for printing the route once found"""
-		
+
 		# Route is stored as text initially. Split into a list
 		print "Route: %s" % item['nodes']
 		listNodes = [int(i) for i in item['nodes'].split(",")]
-		
+
 		# Display the route on the map
 		last = -1
 		for i in listNodes:
@@ -233,12 +233,12 @@ class GetRoutes(handler.ContentHandler):
 				self.markLine(last,i,0.5,1.0,0.5)
 			self.markNode(i,0.5,1.0,0.5)
 			last = i
-		
+
 		# Send the route to an OSM file
 		fout = open("route.osm", "w")
 		fout.write("<?xml version='1.0' encoding='UTF-8'?>");
 		fout.write("<osm version='0.5' generator='route.py'>");
-		
+
 		for i in listNodes:
 			fout.write("<node id='%d' lat='%f' lon='%f'>\n</node>\n" % ( \
 				i,
@@ -254,23 +254,23 @@ class GetRoutes(handler.ContentHandler):
 		fout.write("</way>\n")
 		fout.write("</osm>")
 		fout.close()
-	
+
 	def addToQueue(self,start,end, queueSoFar):
 		"""Add another potential route to the queue"""
-		
+
 		# If already in queue
 		for test in self.queue:
 			if test['end'] == end:
 				return
 		distance = self.distance(start, end)
-		
+
 		# Create a hash for all the route's attributes
 		queueItem = {}
 		queueItem['distance'] = queueSoFar['distance'] + distance
 		queueItem['maxdistance'] = queueItem['distance'] + self.distance(end, self.searchEnd)
 		queueItem['nodes'] = queueSoFar['nodes'] + ","+str(end)
 		queueItem['end'] = end
-		
+
 		# Try to insert, keeping the queue ordered by decreasing worst-case distance
 		count = 0
 		for test in self.queue:
@@ -280,7 +280,7 @@ class GetRoutes(handler.ContentHandler):
 			count = count + 1
 		else:
 			self.queue.append(queueItem)
-		
+
 		# Show on the map
 		self.markLine(start,end,0.5,0.5,0.5)
 

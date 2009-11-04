@@ -5,8 +5,8 @@
 to do various things (e.g. save a waypoint, open a menu, route to
 some point)
 
-Usage: 
-  (library code)
+Usage:
+	(library code)
 """
 
 __version__ = "$Rev$"
@@ -44,7 +44,7 @@ class pyrouteEvents(pyrouteModule):
 	def handle_menu(self,params):
 		"""menu:(name) - displays a menu. Use blank name to hide the menu"""
 		self.set('menu', params)
-	
+
 	def handle_mode(self,params):
 		"""mode:(name) - sets the transport type in use (e.g. car, bike)"""
 		self.set('mode', params)
@@ -52,7 +52,7 @@ class pyrouteEvents(pyrouteModule):
 	def handle_save(self,params):
 		whichModule = params
 		self.m[whichModule].save()
-		
+
 	def handle_option(self,params):
 		"""option:add|toggle:(name):(value)"""
 		method, name = params.split(':',1)
@@ -64,14 +64,14 @@ class pyrouteEvents(pyrouteModule):
 		elif(method == 'set'):
 			name,value = name.split(':')
 			self.set(name, value)
-	
+
 	def handle_set_colour(self,params):
 		use,r,g,b = params.split(':')
 		print "Setting %s to %s,%s,%s" % (use,r,g,b)
 		self.set('%s_r' % (use), r)
 		self.set('%s_g' % (use), g)
 		self.set('%s_b' % (use), b)
-		
+
 	def handle_add_waypoint(self,params):
 		if(params == 'clicked'):
 			lat,lon = self.get('clicked')
@@ -79,10 +79,10 @@ class pyrouteEvents(pyrouteModule):
 			self.m['poi']['waypoints'].save()
 		else:
 			print "Not handled: dropping waypoint somewhere other than last click"
-	
+
 	def handle_route(self,params):
 		ownpos = self.get('ownpos')
-		
+
 		if(not ownpos['valid']):
 			print "Can't route, don't know start position"
 		else:
@@ -125,15 +125,15 @@ class pyrouteEvents(pyrouteModule):
 
 	def handleEvent(self,event):
 		closeMenuAfterwards = False
-		
+
 		# Events prefixed with a + means "...and then close the menu"
 		if(event[0] == '+'):
 			event = event[1:]
 			closeMenuAfterwards = True
-		
+
 		# format is "eventname:parameters" (where parameters may be further split)
 		action,params = event.split(':',1)
-		
+
 		# Look for an event-handler function, and call it
 		print "Handling event %s" % event
 		functionName = "handle_%s" % action
@@ -144,7 +144,7 @@ class pyrouteEvents(pyrouteModule):
 			self.set('menu',None)
 		else:
 			function(params)
-		
+
 		# Optionally return to the map
 		if(closeMenuAfterwards):
 			self.set('menu',None)

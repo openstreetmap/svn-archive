@@ -27,16 +27,16 @@ import xml
 from struct import *
 
 class BinaryOsm(handler.ContentHandler):
-	
+
 	def __init__(self):
 		pass
-		
+
 	def encode(self, filename, output):
 		self.nextKID = 3
 		self.nextVID = 1
 		self.tags = {}
 		self.values = {}
-		
+
 		if(not os.path.exists(filename)):
 			print "No such data file %s" % filename
 			return
@@ -73,7 +73,7 @@ class BinaryOsm(handler.ContentHandler):
 			k,v = (attrs.get('k'), attrs.get('v'))
 			if not k in ('created_by'):
 				self.tags[k] = v
-	
+
 	def endElement(self, name):
 		"""Handle ways in the OSM data"""
 		writeTags = False
@@ -81,7 +81,7 @@ class BinaryOsm(handler.ContentHandler):
 			data = 'N' + pack("L", self.meta['id']) + self.encodeLL(self.meta['lat'], self.meta['lon'])
 			self.out.write(data)
 			writeTags = True
-		
+
 		elif(name == 'way'):
 			data = 'W' + pack("L", self.meta['id'])
 			self.out.write(data)
@@ -89,7 +89,7 @@ class BinaryOsm(handler.ContentHandler):
 			for n in self.waynodes:
 				self.out.write(pack('L', n))
 			writeTags = True
-			
+
 		if(writeTags):
 			n = len(self.tags.keys())
 			if(n > 255):
@@ -124,16 +124,16 @@ class BinaryOsm(handler.ContentHandler):
 			#print "Storing simple %s" % (text)
 
 	def encodeLL(self,lat,lon):
-		pLat = (lat + 90.0) / 180.0 
-		pLon = (lon + 180.0) / 360.0 
+		pLat = (lat + 90.0) / 180.0
+		pLon = (lon + 180.0) / 360.0
 		iLat = self.encodeP(pLat)
 		iLon = self.encodeP(pLon)
 		return(pack("II", iLat, iLon))
-		
+
 	def encodeP(self,p):
 		i = int(p * 4294967296.0)
 		return(i)
-		
+
 # Parse the supplied OSM file
 if __name__ == "__main__":
 	print "Loading data..."

@@ -60,6 +60,6 @@ class RouteOrDirect(Router):
 			self.route['route'].append(self.route['startpos'])
 			self.route['route'].append(self.route['endpos'])
 			self.route['valid'] = True
-		
+
 	def valid(self):
 		return(self.route['valid'])

@@ -24,32 +24,32 @@ _debug = 0
 
 
 class listable:
-  """Base-class (interface) for anything that can be listed in a menu"""
-  def numItems(self):
-    """Return how many items are available"""
-    return(0)
-  
-  def getItemText(self,n):
-    """Return the label for any item number"""
-    return("-")
-  
-  def getItemStatus(self,n):
-    """Return current status for any item number"""
-    return("-")
-  
-  def isLocation(self,n):
-    """Return true if the item represents a location"""
-    return(False)
-  
-  def getItemLatLon(self,n):
-    """If the item represents a location, return it's position"""
-    return(0,0)
-  
-  def getItemClickable(self,n):
-    """If not a location, return true if the item should have a button to click on"""
-    return(False)
-    
-  def getItemAction(self,n):
-    """If the item isn't a location, return what happens if it's selected"""
-    return("")
+	"""Base-class (interface) for anything that can be listed in a menu"""
+	def numItems(self):
+		"""Return how many items are available"""
+		return(0)
+	
+	def getItemText(self,n):
+		"""Return the label for any item number"""
+		return("-")
+	
+	def getItemStatus(self,n):
+		"""Return current status for any item number"""
+		return("-")
+	
+	def isLocation(self,n):
+		"""Return true if the item represents a location"""
+		return(False)
+	
+	def getItemLatLon(self,n):
+		"""If the item represents a location, return it's position"""
+		return(0,0)
+	
+	def getItemClickable(self,n):
+		"""If not a location, return true if the item should have a button to click on"""
+		return(False)
+		
+	def getItemAction(self,n):
+		"""If the item isn't a location, return what happens if it's selected"""
+		return("")
 

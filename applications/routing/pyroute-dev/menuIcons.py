@@ -26,39 +26,37 @@ _debug = 0
 import cairo
 import os
 class menuIcons:
-  def __init__(self):
-    self.images = {}
-    self.cantLoad = []
-    self.load('blank')
-    self.load('generic')
-  def load(self,name):
-    filename = os.path.join(os.path.dirname(__file__), "icons", "bitmap/%s.png" % name)
-    if(not os.path.exists(filename)):
-      print "Can't load %s" % filename
-      return(0)
-    
-    image = cairo.ImageSurface.create_from_png(filename)
-    if(not image):
-      return(0)
-    w = float(image.get_width())
-    h = float(image.get_height())
-    #print "Loaded %s: %d x %d" % (name,w,h)
-    self.images[name] = {'image':image,'w':w,'h':h}
-    return(1)
-  def draw(self,cr,name,x,y,w,h):
-    if not name in self.images.keys():
-      if(name in self.cantLoad):
-        name = 'generic'
-      elif(not self.load(name)):
-        self.cantLoad.append(name)
-        name='generic'
-        
-    icon = self.images[name]
-    cr.save()
-    cr.translate(x,y)
-    cr.scale(w / icon['w'], h / icon['h'])
-    cr.set_source_surface(icon['image'],0,0)
-    cr.paint()
-    cr.restore()
-  
-
+	def __init__(self):
+		self.images = {}
+		self.cantLoad = []
+		self.load('blank')
+		self.load('generic')
+	def load(self,name):
+		filename = os.path.join(os.path.dirname(__file__), "icons", "bitmap/%s.png" % name)
+		if(not os.path.exists(filename)):
+			print "Can't load %s" % filename
+			return(0)
+		
+		image = cairo.ImageSurface.create_from_png(filename)
+		if(not image):
+			return(0)
+		w = float(image.get_width())
+		h = float(image.get_height())
+		#print "Loaded %s: %d x %d" % (name,w,h)
+		self.images[name] = {'image':image,'w':w,'h':h}
+		return(1)
+	def draw(self,cr,name,x,y,w,h):
+		if not name in self.images.keys():
+			if(name in self.cantLoad):
+				name = 'generic'
+			elif(not self.load(name)):
+				self.cantLoad.append(name)
+				name='generic'
+				
+		icon = self.images[name]
+		cr.save()
+		cr.translate(x,y)
+		cr.scale(w / icon['w'], h / icon['h'])
+		cr.set_source_surface(icon['image'],0,0)
+		cr.paint()
+		cr.restore()

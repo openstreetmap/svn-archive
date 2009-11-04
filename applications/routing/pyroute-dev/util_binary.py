@@ -1,4 +1,4 @@
-from struct import *
+﻿from struct import *
 
 def encodeLL(lat,lon):
   pLat = (lat + 90.0) / 180.0 

@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 from xml.sax import make_parser, handler
 from time import *
 

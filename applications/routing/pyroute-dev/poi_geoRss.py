@@ -1,4 +1,4 @@
-from poi_base import *
+﻿from poi_base import *
 import feedparser
 
 class geoRss(poiModule):

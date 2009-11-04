@@ -1,4 +1,4 @@
------
+﻿-----
 Up
 Pub food|search:amenity=pub;food=yes
 Restaurant|search:amenity=restaurant

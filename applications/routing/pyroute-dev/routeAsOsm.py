@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #----------------------------------------------------------------
 # routeAsOsm - routes within an OSM file, and generates an
 # OSM file containing the result

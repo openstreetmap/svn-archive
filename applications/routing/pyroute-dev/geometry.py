@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #-----------------------------------------------------------------------------
 # Handles geometry on the earth's surface (e.g. bearing/distance)
 #

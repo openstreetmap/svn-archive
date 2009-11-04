@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #-----------------------------------------------------------------------------
 # Interface for things which can be listed
 #

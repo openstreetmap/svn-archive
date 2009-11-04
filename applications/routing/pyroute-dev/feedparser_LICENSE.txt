@@ -1,4 +1,4 @@
-Universal Feed Parser (feedparser.py), its testing harness (feedparsertest.py),
+﻿Universal Feed Parser (feedparser.py), its testing harness (feedparsertest.py),
 and its unit tests (everything in the tests/ directory) are released under the
 following license:
 

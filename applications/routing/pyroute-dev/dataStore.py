@@ -38,12 +38,12 @@ _debug = 0
 from base import pyrouteModule
 
 class DataStore(pyrouteModule):
-    def __init__(self, modules):
-        pyrouteModule.__init__(self,modules)
-        self.options = {}
-    
-    def getData(self,name,default=None):
-        return(self.options.get(name,default))
-    
-    def setData(self,name,value):
-        self.options[name] = value
+	def __init__(self, modules):
+		pyrouteModule.__init__(self,modules)
+		self.options = {}
+	
+	def getData(self,name,default=None):
+		return(self.options.get(name,default))
+	
+	def setData(self,name,value):
+		self.options[name] = value

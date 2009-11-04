@@ -25,94 +25,94 @@ import os
 from struct import *
 
 class BinaryOsm:
-  def __init__(self):
-    self.values = {}
-    pass
-    
-  def decode(self, filename, output):
-    if(not os.path.exists(filename)):
-      print "No such data file %s" % filename
-      return
-    Output = open(output, "w")
-    Input = open(filename, "rb")
-    self.readBinary(Input, Output)
-    Input.close()
-    Output.close()
+	def __init__(self):
+		self.values = {}
+		pass
+		
+	def decode(self, filename, output):
+		if(not os.path.exists(filename)):
+			print "No such data file %s" % filename
+			return
+		Output = open(output, "w")
+		Input = open(filename, "rb")
+		self.readBinary(Input, Output)
+		Input.close()
+		Output.close()
 
-  def readBinary(self, Input, Output):
-    while(True):
-      type = Input.read(1)
-      if(type == 'N'):
-        self.readNode(Input, Output)
-      elif(type == 'W'):
-        self.readWay(Input, Output)
-      elif(type == 'X'):
-        print "Reached end of data!!!"
-        return
-      else:
-        print "Unknown type"
+	def readBinary(self, Input, Output):
+		while(True):
+			type = Input.read(1)
+			if(type == 'N'):
+				self.readNode(Input, Output)
+			elif(type == 'W'):
+				self.readWay(Input, Output)
+			elif(type == 'X'):
+				print "Reached end of data!!!"
+				return
+			else:
+				print "Unknown type"
 
-  def readNode(self, Input, Output):
-    nid = unpack("L", Input.read(4))[0]
-    lat,lon = self.decodeLL(Input.read(8))
-    #print "Node %u at (%f,%f)"%(nid,lat,lon)
-    self.readTags(Input, Output)
-    
-  def readWay(self, Input, Output):
-    wid = unpack("L", Input.read(4))[0]
-    numNodes = unpack("H", Input.read(2))[0]
-    nodes = []
-    for i in range(numNodes):
-      nid = unpack('L',Input.read(4))[0]
-      nodes.append(nid)
-    #print "Read way %u, %u nodes" % (wid,numNodes)
-    self.readTags(Input, Output)
+	def readNode(self, Input, Output):
+		nid = unpack("L", Input.read(4))[0]
+		lat,lon = self.decodeLL(Input.read(8))
+		#print "Node %u at (%f,%f)"%(nid,lat,lon)
+		self.readTags(Input, Output)
+		
+	def readWay(self, Input, Output):
+		wid = unpack("L", Input.read(4))[0]
+		numNodes = unpack("H", Input.read(2))[0]
+		nodes = []
+		for i in range(numNodes):
+			nid = unpack('L',Input.read(4))[0]
+			nodes.append(nid)
+		#print "Read way %u, %u nodes" % (wid,numNodes)
+		self.readTags(Input, Output)
 
-  def readTags(self, Input, Output):
-    n = unpack('B', Input.read(1))[0]
-    if(n == 0):
-      return
-    for i in range(n):
-      k = self.readKV(Input,Output)
-      v = self.readKV(Input,Output)
-      #print "%s = %s" % (k,v)
+	def readTags(self, Input, Output):
+		n = unpack('B', Input.read(1))[0]
+		if(n == 0):
+			return
+		for i in range(n):
+			k = self.readKV(Input,Output)
+			v = self.readKV(Input,Output)
+			#print "%s = %s" % (k,v)
 
-  def readKV(self, Input, Output):
-    ID = unpack('H', Input.read(2))[0]
-    if(ID == 0):
-      # one-off
-      lenX = unpack('B', Input.read(1))[0]
-      text = Input.read(lenX)
-      return(text.decode("utf-8"))
-    
-    if(ID == 1):
-      # New + store
-      NewID = unpack('H', Input.read(2))[0]
-      lenX = unpack('B', Input.read(1))[0]
-      X = Input.read(lenX)
-      X = X.decode("utf-8")
-      self.values[NewID] = X
-      return(X)
-      
-    else:
-      # ID that we should already know
-      return(self.values[ID])
-    
-    
-  def decodeLL(self,data):
-    iLat,iLon = unpack("II", data)
-    pLat = self.decodeP(iLat)
-    pLon = self.decodeP(iLon)
-    lat = pLat * 180.0 - 90.0
-    lon = pLon * 360.0 - 180.0
-    return(lat,lon)
-    
-  def decodeP(self,i):
-    p = float(i) / 4294967296.0
-    return(p)
-    
+	def readKV(self, Input, Output):
+		ID = unpack('H', Input.read(2))[0]
+		if(ID == 0):
+			# one-off
+			lenX = unpack('B', Input.read(1))[0]
+			text = Input.read(lenX)
+			return(text.decode("utf-8"))
+		
+		if(ID == 1):
+			# New + store
+			NewID = unpack('H', Input.read(2))[0]
+			lenX = unpack('B', Input.read(1))[0]
+			X = Input.read(lenX)
+			X = X.decode("utf-8")
+			self.values[NewID] = X
+			return(X)
+			
+		else:
+			# ID that we should already know
+			return(self.values[ID])
+		
+		
+	def decodeLL(self,data):
+		iLat,iLon = unpack("II", data)
+		pLat = self.decodeP(iLat)
+		pLon = self.decodeP(iLon)
+		lat = pLat * 180.0 - 90.0
+		lon = pLon * 360.0 - 180.0
+		return(lat,lon)
+		
+	def decodeP(self,i):
+		p = float(i) / 4294967296.0
+		return(p)
+		
 # Parse the supplied OSM file
 if __name__ == "__main__":
-  print "Loading data..."
-  Binary = BinaryOsm()
-  Binary.decode(sys.argv[1], sys.argv[2])
+	print "Loading data..."
+	Binary = BinaryOsm()
+	Binary.decode(sys.argv[1], sys.argv[2])

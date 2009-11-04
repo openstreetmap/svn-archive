@@ -25,45 +25,45 @@ _debug = 0
 
 
 from route import *
-  
+	
 def routeToGpx(nodeList, osmData, description=""):
-  """Format a route (as list of nodes) into a GPX file"""
-  
-  output = ''
-  output = output + "<?xml version='1.0'?>\n";
-  
-  output = output + "<gpx version='1.1' creator='pyroute' xmlns='http://www.topografix.com/GPX/1/1' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd'>\n"
-    
-  output = output + " <rte>\n"
-  output = output + "  <name>%s</name>\n" % description
-  
-  count = 0;
-  for i in nodeList:
-    output = output + "   <rtept lat='%f' lon='%f'>\n" % ( \
-      osmData.nodes[i][0],
-      osmData.nodes[i][1])
-    output = output + "    <name>%d</name>\n" % count
-    output = output + "   </rtept>\n"
-    count = count + 1
-  output = output + " </rte>\n</gpx>\n"
-  
-  return(output)
+	"""Format a route (as list of nodes) into a GPX file"""
+	
+	output = ''
+	output = output + "<?xml version='1.0'?>\n";
+	
+	output = output + "<gpx version='1.1' creator='pyroute' xmlns='http://www.topografix.com/GPX/1/1' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd'>\n"
+		
+	output = output + " <rte>\n"
+	output = output + "  <name>%s</name>\n" % description
+	
+	count = 0;
+	for i in nodeList:
+		output = output + "   <rtept lat='%f' lon='%f'>\n" % ( \
+			osmData.nodes[i][0],
+			osmData.nodes[i][1])
+		output = output + "    <name>%d</name>\n" % count
+		output = output + "   </rtept>\n"
+		count = count + 1
+	output = output + " </rte>\n</gpx>\n"
+	
+	return(output)
 
 if __name__ == "__main__":
-  try:
-    # Load data
-    data = LoadOsm(sys.argv[1])
-  
-    # Do routing
-    router = Router(data)
-    result, route = router.doRoute(int(sys.argv[2]), int(sys.argv[3]), sys.argv[4])
-  
-    # Display result
-    if result == 'success':
-      print routeToGpx(route, data, sys.argv[5])
-    else:
-      sys.stderr.write("Failed (%s)" % result)
-  
-  except IndexError:
-    # Not enough argv[]s
-    sys.stderr.write("Usage: routeAsGpx.py [OSM file] [from node] [to node] [transport method] [description]\n")
+	try:
+		# Load data
+		data = LoadOsm(sys.argv[1])
+	
+		# Do routing
+		router = Router(data)
+		result, route = router.doRoute(int(sys.argv[2]), int(sys.argv[3]), sys.argv[4])
+	
+		# Display result
+		if result == 'success':
+			print routeToGpx(route, data, sys.argv[5])
+		else:
+			sys.stderr.write("Failed (%s)" % result)
+	
+	except IndexError:
+		# Not enough argv[]s
+		sys.stderr.write("Usage: routeAsGpx.py [OSM file] [from node] [to node] [transport method] [description]\n")

@@ -29,21 +29,21 @@ import cairo
 from lib_gpx import lib_gpx
 
 class sketching(pyrouteModule, lib_gpx):
-  """  """
-  def __init__(self, modules):
-    lib_gpx.__init__(self)
-    pyrouteModule.__init__(self, modules)
-    
-  def startStroke(self,x,y):
-    lat,lon = self.m['projection'].xy2ll(x,y)
-    self.latest = [(lat,lon)]
-    self.lines.append(self.latest)
-    
-  def moveTo(self,x,y):
-    lat,lon = self.m['projection'].xy2ll(x,y)
-    self.latest.append((lat,lon))
-    self.set("needRedraw", 1)
+	""""""
+	def __init__(self, modules):
+		lib_gpx.__init__(self)
+		pyrouteModule.__init__(self, modules)
+		
+	def startStroke(self,x,y):
+		lat,lon = self.m['projection'].xy2ll(x,y)
+		self.latest = [(lat,lon)]
+		self.lines.append(self.latest)
+		
+	def moveTo(self,x,y):
+		lat,lon = self.m['projection'].xy2ll(x,y)
+		self.latest.append((lat,lon))
+		self.set("needRedraw", 1)
 
-  def save(self):
-      self.saveAs("data/sketches/latest.gpx")
+	def save(self):
+			self.saveAs("data/sketches/latest.gpx")
       

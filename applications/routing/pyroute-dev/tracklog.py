@@ -26,24 +26,24 @@ import cairo
 from lib_gpx import lib_gpx
 
 class tracklog(pyrouteModule, lib_gpx):
-  """  """
-  def __init__(self, modules):
-    lib_gpx.__init__(self)
-    pyrouteModule.__init__(self, modules)
-    self.active = []
-    self.lines.append(self.active)
-    self.pointsSinceSave = 0
-    
-  def addPoint(self,lat,lon):
-    self.active.append([lat,lon])
-    self.pointsSinceSave = self.pointsSinceSave + 1
+	""""""
+	def __init__(self, modules):
+		lib_gpx.__init__(self)
+		pyrouteModule.__init__(self, modules)
+		self.active = []
+		self.lines.append(self.active)
+		self.pointsSinceSave = 0
+		
+	def addPoint(self,lat,lon):
+		self.active.append([lat,lon])
+		self.pointsSinceSave = self.pointsSinceSave + 1
 
-  def checkIfNeedsSaving(self, forceSave = False):
-    if(self.pointsSinceSave > 20 or forceSave):
-      self.save()
-      
-  def save(self):
-    self.saveAs(os.path.join(os.path.dirname(__file__),
-                             "data","tracklogs.gpx"), "tracklogs")
-    self.pointsSinceSave = 0
-    
+	def checkIfNeedsSaving(self, forceSave = False):
+		if(self.pointsSinceSave > 20 or forceSave):
+			self.save()
+			
+	def save(self):
+		self.saveAs(os.path.join(os.path.dirname(__file__),
+														 "data","tracklogs.gpx"), "tracklogs")
+		self.pointsSinceSave = 0
+		

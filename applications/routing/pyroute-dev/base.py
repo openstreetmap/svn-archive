@@ -32,16 +32,16 @@ _debug = 0
 
 
 class pyrouteModule:
-  def __init__(self, modules):
-    self.m  = modules
-  def get(self, name, default=None):
-    return(self.m['data'].getData(name, default))
-  def set(self, name, value):
-    return(self.m['data'].setData(name, value))
-  def action(self, message):
-    self.m['events'].handleEvent(message)
-  def ownPos(self):
-    return(self.m['position'].get())
-  # Meta-info
-  def getStatus(self):
-    return("")
+	def __init__(self, modules):
+		self.m = modules
+	def get(self, name, default=None):
+		return(self.m['data'].getData(name, default))
+	def set(self, name, value):
+		return(self.m['data'].setData(name, value))
+	def action(self, message):
+		self.m['events'].handleEvent(message)
+	def ownPos(self):
+		return(self.m['position'].get())
+	# Meta-info
+	def getStatus(self):
+		return("")

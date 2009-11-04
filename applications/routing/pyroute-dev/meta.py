@@ -27,19 +27,19 @@ from base import pyrouteModule
 from listable import *
 
 class moduleInfo(pyrouteModule, listable):
-  def __init__(self, modules):
-    pyrouteModule.__init__(self, modules)
-    
-  def numItems(self):
-    return(len(self.m))
-  def getItemText(self,n):
-    return("Module: \"%s\"" % (self.m.keys()[n]))
-  def getItemStatus(self,n):
-    module = self.m.values()[n]
-    if("getStatus" in dir(module)):
-      return module.getStatus();
-    return("")
-  def getItemClickable(self,n):
-    return(True)
-  def getItemAction(self,n):
-    return("")
+	def __init__(self, modules):
+		pyrouteModule.__init__(self, modules)
+
+	def numItems(self):
+		return(len(self.m))
+	def getItemText(self,n):
+		return("Module: \"%s\"" % (self.m.keys()[n]))
+	def getItemStatus(self,n):
+		module = self.m.values()[n]
+		if("getStatus" in dir(module)):
+			return module.getStatus();
+		return("")
+	def getItemClickable(self,n):
+		return(True)
+	def getItemAction(self,n):
+		return("")

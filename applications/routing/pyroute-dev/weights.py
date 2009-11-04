@@ -1,4 +1,6 @@
-﻿Weightings = { \
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+Weightings = { \
   'motorway': {'car':10},
   'trunk':    {'car':10, 'cycle':0.05},
   'primary':  {'cycle': 0.3, 'car':2, 'foot':1, 'horse':0.1},

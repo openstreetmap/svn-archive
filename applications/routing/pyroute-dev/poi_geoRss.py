@@ -1,4 +1,6 @@
-﻿from poi_base import *
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from poi_base import *
 import feedparser
 
 class geoRss(poiModule):

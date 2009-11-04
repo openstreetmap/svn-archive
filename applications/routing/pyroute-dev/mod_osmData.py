@@ -1,4 +1,6 @@
-﻿from loadOsm import LoadOsm
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from loadOsm import LoadOsm
 from base import pyrouteModule
 import os
 import urllib

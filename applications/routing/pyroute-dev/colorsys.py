@@ -1,4 +1,6 @@
-﻿"""Conversion functions between RGB and other color systems.
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""Conversion functions between RGB and other color systems.
 
 This modules provides two functions for each color system ABC:
 

@@ -1,4 +1,6 @@
-﻿from route import Router
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from route import Router
 
 class RouteOrDirect(Router):
     def __init__(self, data):

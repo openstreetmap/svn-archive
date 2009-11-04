@@ -1,4 +1,6 @@
-﻿from struct import *
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from struct import *
 
 def encodeLL(lat,lon):
   pLat = (lat + 90.0) / 180.0 

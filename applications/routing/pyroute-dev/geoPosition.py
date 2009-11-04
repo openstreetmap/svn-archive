@@ -1,4 +1,5 @@
-﻿#!/usr/bin/python
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #----------------------------------------------------------------
 # report "current position" (currently accepts replayed GPX
 # files from follow.py)

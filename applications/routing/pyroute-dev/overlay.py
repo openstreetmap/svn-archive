@@ -1,4 +1,6 @@
-﻿import cairo
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import cairo
 import os
 from base import pyrouteModule
 from pyrouteMenu import *

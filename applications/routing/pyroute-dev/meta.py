@@ -1,4 +1,5 @@
-﻿#!/usr/bin/python
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #-----------------------------------------------------------------------------# Meta-information (self-testing, self-diagnosis, etc.) for pyroute
 #
 # Usage: 

@@ -1,4 +1,6 @@
-﻿import sys
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import sys
 from xml.sax import make_parser, handler
 from time import *
 

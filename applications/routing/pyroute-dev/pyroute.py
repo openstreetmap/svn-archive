@@ -1,4 +1,5 @@
-﻿#!/usr/bin/python
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #----------------------------------------------------------------
 # pyRoute, a routing program for OpenStreetMap-style data
 #

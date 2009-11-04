@@ -1,4 +1,5 @@
-﻿#!/usr/bin/python
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #----------------------------------------------------------------
 # routeAsOsm - routes within an OSM file, and generates an
 # OSM file containing the result

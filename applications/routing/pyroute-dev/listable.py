@@ -1,4 +1,5 @@
-﻿#!/usr/bin/python
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #-----------------------------------------------------------------------------
 # Interface for things which can be listed
 #

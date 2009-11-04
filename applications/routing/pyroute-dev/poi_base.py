@@ -1,4 +1,6 @@
-﻿import geometry
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import geometry
 from base import pyrouteModule
 import listable
 

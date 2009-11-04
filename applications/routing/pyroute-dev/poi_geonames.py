@@ -1,4 +1,6 @@
-﻿from poi_base import *
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from poi_base import *
 import feedparser
 from xml.sax import make_parser, handler
 

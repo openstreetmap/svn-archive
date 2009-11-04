@@ -3,16 +3,16 @@
 
 """Projection code (lat/long to screen conversions)
 
-Usage: 
-  * Derive all pyroute modules fom this class
-  * Put "pyrouteModule.__init__(self,modules)" in your init function
-  * Instantiate using modules.append(yourmodule(modules))
-     where "modules" is the list of all pyroute modules
+Usage:
+	* Derive all pyroute modules fom this class
+	* Put "pyrouteModule.__init__(self,modules)" in your init function
+	* Instantiate using modules.append(yourmodule(modules))
+		 where "modules" is the list of all pyroute modules
 
 Features:
-  * Get and set data from the global table
-  * Send messages or trigger events
-  * Access other modules (using "self.m['modulename']")
+	* Get and set data from the global table
+	* Send messages or trigger events
+	* Access other modules (using "self.m['modulename']")
 """
 
 __version__ = "$Rev$"

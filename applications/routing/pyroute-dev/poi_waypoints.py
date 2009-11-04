@@ -42,7 +42,7 @@ class waypointsModule(poiModule, handler.ContentHandler):
 		parser = make_parser()
 		parser.setContentHandler(self)
 		parser.parse(filename)
-	
+
 	def startElement(self, name, attrs):
 		if name == "wpt":
 			self.parsedWaypoint = { \
@@ -51,7 +51,7 @@ class waypointsModule(poiModule, handler.ContentHandler):
 		if name in self.storeFields:
 			self.fieldText = ''
 			self.inField = True
-			
+
 	def endElement(self, name):
 		if self.inField:
 			if name in self.storeFields:
@@ -59,11 +59,11 @@ class waypointsModule(poiModule, handler.ContentHandler):
 			self.inField = False
 		if(name == "wpt"):
 			self.storeWaypoint(self.parsedWaypoint)
-				
+
 	def characters(self, text):
 		if self.inField:
 			self.fieldText = self.fieldText + text
-		
+
 	def storeWaypoint(self, waypoint):
 		x = poi(waypoint['lat'], waypoint['lon'])
 		x.title = waypoint['name']
@@ -83,7 +83,7 @@ class waypointsModule(poiModule, handler.ContentHandler):
 		if(self.filename == None):
 			self.filename = os.path.join(os.path.dirname(__file__), "data", "waypoints.gpx")
 		self.saveAs(self.filename)
-	
+
 	def saveAs(self,filename):
 		if(filename == None):
 			return
@@ -99,10 +99,10 @@ class waypointsModule(poiModule, handler.ContentHandler):
 			f.write('</wpt>\n')
 		f.write('</gpx>\n')
 		f.close()
-	
+
 	def nextNumber(self):
 		return(str(self.nextNumericWpt))
-	
+
 if __name__ == "__main__":
 	wpt = waypointsModule(None,"data/waypoints.gpx")
 	wpt.report()

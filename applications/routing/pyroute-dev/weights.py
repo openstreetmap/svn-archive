@@ -46,5 +46,4 @@ def getWeight(transport, wayType):
 	except KeyError:
 		# Default: if no weighting is defined, then assume it can't be routed
 		return(0)
- 
- 
+

@@ -3,8 +3,8 @@
 
 """Projection code (lat/long to screen conversions)
 
-Usage: 
-  (library code for pyroute GUI, not for direct use)
+Usage:
+	(library code for pyroute GUI, not for direct use)
 """
 
 __version__ = "$Rev$"
@@ -30,14 +30,14 @@ class Projection:
 		self.xyValid = False
 		self.llValid = False
 		self.needsEdgeFind = False
-		
+
 		# Scale is the number of display pixels per projected unit
 		self.scale = tileSizePixels()
-		
+
 	def isValid(self):
 		"""Test if the module contains all the information needed to do conversions"""
 		return(self.xyValid and self.llValid)
-	
+
 	def setView(self,x,y,w,h):
 		"""Setup the display"""
 		self.w = w
@@ -47,7 +47,7 @@ class Projection:
 		self.xyValid = True
 		if(self.needsEdgeFind):
 			self.findEdges()
-		
+
 	def recentre(self,lat,lon,zoom = None):
 		"""Move the projection to a particular geographic location
 		(with optional zoom level)"""
@@ -59,7 +59,7 @@ class Projection:
 		else:
 			self.findEdges()
 		self.llValid = True
-		
+
 	def setZoom(self, value, isAdjustment=False):
 		"""Change the zoom level, keeping same map centre
 		if isAdjustment is true, then value is relative to current zoom
@@ -69,7 +69,7 @@ class Projection:
 			self.implementNewZoom(self.zoom + value)
 		else:
 			self.implementNewZoom(value)
-	
+
 	def limitZoom(self):
 		"""Check the zoom level, and move it if necessary to one of
 		the 'allowed' zoom levels"""
@@ -77,7 +77,7 @@ class Projection:
 			self.zoom = 6
 		if(self.zoom > 17):
 			self.zoom = 17
-	
+
 	def implementNewZoom(self, zoom):
 		"""Change the zoom level"""
 		self.zoom = int(zoom)
@@ -85,43 +85,43 @@ class Projection:
 		self.limitZoom()
 		# Update the projection
 		self.findEdges()
-	
+
 	def findEdges(self):
 		"""Update the projection meta-info based on its fundamental parameters"""
 		if(not self.xyValid):
 			# If the display is not known yet, then we can't do anything, but we'll
-			# mark it as something that needs doing as soon as the display 
+			# mark it as something that needs doing as soon as the display
 			# becomes valid
 			self.needsEdgeFind = True
 			return
-		
+
 		# Find the map centre in projection units
 		self.px, self.py = latlon2xy(self.lat,self.lon,self.zoom)
-		
+
 		# Find the map edges in projection units
 		self.px1 = self.px - 0.5 * self.w / self.scale
 		self.px2 = self.px + 0.5 * self.w / self.scale
 		self.py1 = self.py - 0.5 * self.h / self.scale
 		self.py2 = self.py + 0.5 * self.h / self.scale
-		
+
 		# Store width and height in projection units, just to save time later
 		self.pdx = self.px2 - self.px1
 		self.pdy = self.py2 - self.py1
-		
-		# Calculate the bounding box 
+
+		# Calculate the bounding box
 		# ASSUMPTION: (that the projection is regular and north-up)
 		self.N,self.W = xy2latlon(self.px1, self.py1, self.zoom)
 		self.S,self.E = xy2latlon(self.px2, self.py2, self.zoom)
-		
+
 		# Mark the meta-info as valid
 		self.needsEdgeFind = False
-	
+
 	def pxpy2xy(self,px,py):
 		"""Convert projection units to display units"""
 		x = self.w * (px - self.px1) / self.pdx
 		y = self.h * (py - self.py1) / self.pdy
 		return(x,y)
-	
+
 	def nudge(self,dx,dy):
 		"""Move the map by a number of pixels relative to its current position"""
 		if(dx == 0 and dy == 0):
@@ -139,17 +139,17 @@ class Projection:
 		x = (px - self.px1) * self.scale
 		y = (py - self.py1) * self.scale
 		return(x,y)
-	
+
 	def xy2ll(self,x,y):
 		"""Convert display units to geographic units"""
 		px = self.px1 + x / self.scale
 		py = self.py1 + y / self.scale
 		lat,lon = xy2latlon(px, py, self.zoom)
 		return(lat,lon)
-	
+
 	def onscreen(self,x,y):
 		"""Test if a position (in display units) is visible"""
 		return(x >= 0 and x < self.w and y >= 0 and y < self.h)
-	
+
 	def relXY(self,x,y):
 		return(x/self.w, y/self.h)

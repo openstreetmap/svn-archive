@@ -3,10 +3,10 @@
 
 """load OSM data file into memory
 
-Usage: 
-  data = LoadOsm(filename)
+Usage:
+	data = LoadOsm(filename)
 or:
-  loadOsm.py filename.osm
+	loadOsm.py filename.osm
 """
 
 __version__ = "$Rev$"
@@ -47,11 +47,11 @@ class LoadOsm(handler.ContentHandler):
 		self.nodes = {}
 		self.ways = []
 		self.storeMap = storeMap
-		
+
 		if(filename == None):
 			return
 		self.loadOsm(filename)
-		
+
 	def loadOsm(self, filename):
 		if(not os.path.exists(filename)):
 			print "No such data file %s" % filename
@@ -62,7 +62,7 @@ class LoadOsm(handler.ContentHandler):
 			parser.parse(filename)
 		except xml.sax._exceptions.SAXParseException:
 			print "Error loading %s" % filename
-		
+
 	def report(self):
 		"""Display some info about the loaded data"""
 		report = "Loaded %d nodes,\n" % len(self.nodes.keys())
@@ -72,10 +72,10 @@ class LoadOsm(handler.ContentHandler):
 				len(self.routing[routeType].keys()),
 				routeType)
 		return(report)
-		
+
 	def savebin(self,filename):
 		self.newIDs = {}
-		
+
 		f = open(filename,"wb")
 		f.write(pack('L',len(self.nodes.keys())))
 		count = 0
@@ -83,13 +83,13 @@ class LoadOsm(handler.ContentHandler):
 			self.newIDs[id] = count
 			f.write(encodeLL(n[0],n[1]))
 			count = count + 1
-			
+
 		f.write(pack('B', len(self.routing.keys())))
 		errors = 0
 		for routeType, data in self.routing.items():
 			f.write(pack('B', len(routeType)))
 			f.write(routeType)
-			
+
 			f.write(pack('L', len(data.keys())))
 			for fr, destinations in data.items():
 				try:
@@ -106,10 +106,10 @@ class LoadOsm(handler.ContentHandler):
 					except KeyError:
 						f.write(pack('Lf', 0, 0))
 						errors = errors + 1
-		
+
 		print "%d key errors" % errors
 		f.close()
-		
+
 	def loadbin(self,filename):
 		f = open(filename,"rb")
 		n = unpack('L', f.read(4))[0]
@@ -119,14 +119,14 @@ class LoadOsm(handler.ContentHandler):
 			lat,lon = decodeLL(f.read(8))
 			#print "%u: %f, %f" % (id,lat,lon)
 			id = id + 1
-		
+
 		numTypes = unpack('B', f.read(1))[0]
 		print "%u types:" % numTypes
 		for typ in range(numTypes):
 			lenName = unpack('B', f.read(1))[0]
 			name = f.read(lenName)
 			numLinks = 0
-			
+
 			numHubs = unpack('L', f.read(4))[0]
 			for hub in range(numHubs):
 				fr = unpack('L', f.read(4))[0]
@@ -157,7 +157,7 @@ class LoadOsm(handler.ContentHandler):
 			k,v = (attrs.get('k'), attrs.get('v'))
 			if not k in ('created_by'):
 				self.tags[k] = v
-  
+
 	def endElement(self, name):
 		"""Handle ways in the OSM data"""
 		if name == 'way':
@@ -165,7 +165,7 @@ class LoadOsm(handler.ContentHandler):
 			railway = self.equivalent(self.tags.get('railway', ''))
 			oneway = self.tags.get('oneway', '')
 			reversible = not oneway in('yes','true','1')
-		
+
 			# Calculate what vehicles can use this route
 			access = {}
 			access['cycle'] = highway in ('primary','secondary','tertiary','unclassified','minor','cycleway','residential', 'track','service')
@@ -173,7 +173,7 @@ class LoadOsm(handler.ContentHandler):
 			access['train'] = railway in('rail','light_rail','subway')
 			access['foot'] = access['cycle'] or highway in('footway','steps')
 			access['horse'] = highway in ('track','unclassified','bridleway')
-			
+
 			# Store routing information
 			last = -1
 			for i in self.waynodes:
@@ -186,7 +186,7 @@ class LoadOsm(handler.ContentHandler):
 							if reversible or routeType == 'foot':
 								self.addLink(i, last, routeType, weight)
 				last = i
-			
+
 			# Store map information
 			if(self.storeMap):
 				wayType = self.WayType(self.tags)
@@ -194,7 +194,7 @@ class LoadOsm(handler.ContentHandler):
 					self.ways.append({ \
 						't':wayType,
 						'n':self.waynodes})
-	
+
 	def addLink(self,fr,to, routeType, weight=1):
 		"""Add a routeable edge to the scenario"""
 		self.routeablefrom(fr,routeType)
@@ -238,7 +238,7 @@ class LoadOsm(handler.ContentHandler):
 			return(equivalent[tag])
 		except KeyError:
 			return(tag)
-		
+
 	def routeablefrom(self,fr,routeType):
 		self.routeableNodes[routeType][fr] = 1
 
@@ -259,7 +259,7 @@ class LoadOsm(handler.ContentHandler):
 				maxDist = dist
 				nodeFound = id
 		return(nodeFound)
-		
+
 # Parse the supplied OSM file
 if __name__ == "__main__":
 	#print "Loading data..."

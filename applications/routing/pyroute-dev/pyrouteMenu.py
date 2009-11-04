@@ -3,22 +3,22 @@
 
 """Loads touchscreen menus from textfiles on disk
 
-Usage: 
-  (library code for pyroute GUI, not for direct use)
+Usage:
+	(library code for pyroute GUI, not for direct use)
 
 Format:
-  * One menu per textfile  (menuname.txt)
-  * One line per 'column'
-  * Line containing "-----" starts a new row 
-     (the first line should also contain one of these)
-  * 4 rows of 3 columns. all must be defined, even if blank
-  * Item is "name" or "name|event"
-    * name should be unique amongst all menus
-    * name is currently displayed as-is (TODO: translation table)
-    * "Up" is a special name that closes the menu
-       * Typically the top/left item is always 'Up'
-    * event is a message to send when the menu item is pressed
-    * lines can be blank to represent no menu item in that position
+	* One menu per textfile  (menuname.txt)
+	* One line per 'column'
+	* Line containing "-----" starts a new row
+		 (the first line should also contain one of these)
+	* 4 rows of 3 columns. all must be defined, even if blank
+	* Item is "name" or "name|event"
+		* name should be unique amongst all menus
+		* name is currently displayed as-is (TODO: translation table)
+		* "Up" is a special name that closes the menu
+			 * Typically the top/left item is always 'Up'
+		* event is a message to send when the menu item is pressed
+		* lines can be blank to represent no menu item in that position
 """
 
 
@@ -62,7 +62,7 @@ def loadMenu(filename):
 			icon = re.sub('\s+', '_', icon)
 			menu["%d,%d"%(x,y)] = {'name':name,'action':action,'icon':icon}
 			x = x + 1
-			
+
 		file.close()
 	except IOError:
 		print "Can't open file %s" % filename
@@ -110,7 +110,7 @@ def printStrings(menus):
 	names.sort()
 	for name in names:
 		print name
-		
+
 def checkIcons(menus, directory):
 	print "\n\nMissing icons:"
 	count = 0
@@ -134,7 +134,7 @@ def expand(text,size):
 
 if(__name__ == "__main__"):
 	menus = loadMenus('.')
-	
+
 	import sys
 	try:
 		if(sys.argv[1] == 'list'):
@@ -152,4 +152,3 @@ if(__name__ == "__main__"):
 		print "  * 'list' - lists the contents of all menus"
 		print "  * 'strings' - exports names, ready for translating"
 		print "  * 'icons' - checks that all the icons exist"
-		

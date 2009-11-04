@@ -43,7 +43,7 @@ class geonamesParser(handler.ContentHandler):
 			self.entry[name] = float(self.text)
 		if(name == "entry"):
 			self.entries.append(self.entry)
-			
+
 class geonames(poiModule):
 		def __init__(self, modules):
 				poiModule.__init__(self, modules)

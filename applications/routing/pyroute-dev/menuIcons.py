@@ -3,8 +3,8 @@
 
 """Menu graphics (icons)
 
-Usage: 
-  (library code for pyroute GUI, not for direct use)
+Usage:
+	(library code for pyroute GUI, not for direct use)
 """
 
 __version__ = "$Rev$"
@@ -36,7 +36,7 @@ class menuIcons:
 		if(not os.path.exists(filename)):
 			print "Can't load %s" % filename
 			return(0)
-		
+
 		image = cairo.ImageSurface.create_from_png(filename)
 		if(not image):
 			return(0)
@@ -52,7 +52,7 @@ class menuIcons:
 			elif(not self.load(name)):
 				self.cantLoad.append(name)
 				name='generic'
-				
+
 		icon = self.images[name]
 		cr.save()
 		cr.translate(x,y)

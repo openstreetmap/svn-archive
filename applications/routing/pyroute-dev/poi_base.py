@@ -36,7 +36,7 @@ class poi:
 		b = (self.lat,self.lon)
 		self.d = geometry.distance(a,b)
 		return(self.d)
-		
+
 	def __cmp__(self, other):
 		return cmp(self.d, other.d)
 
@@ -45,7 +45,7 @@ class poiGroup(listable.listable):
 		self.items = []
 		self.name = name
 		self.sortpos = {'valid':False}
-		
+
 	# Functions to implement the listable interface
 	def numItems(self):
 		return(len(self.items))
@@ -58,7 +58,7 @@ class poiGroup(listable.listable):
 		return(item.lat,item.lon)
 
 	def sort(self,pos):
-		
+
 		if(pos == self.sortpos):
 			return
 		self.sortpos = pos
@@ -73,7 +73,7 @@ class poiGroup(listable.listable):
 			for i in self.items:
 				print "%1.3f" % i.d
 
-		
+
 class poiModule(pyrouteModule):
 	def __init__(self, modules):
 		pyrouteModule.__init__(self, modules)
@@ -83,7 +83,7 @@ class poiModule(pyrouteModule):
 	def sort(self, pos):
 		for g in self.groups:
 			g.sort(pos)
-			
+
 	def report(self):
 		for g in self.groups:
 			print "=== %s ===" % g.name

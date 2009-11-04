@@ -42,7 +42,7 @@ class guiOverlay(pyrouteModule):
 		"""Asks if the menu is fullscreen -- if it is, then the
 		map doesn't need to be drawn underneath"""
 		return(self.get('menu'))
-	
+
 	def handleDrag(self,dx,dy,startX,startY):
 		if(self.dragbar):
 			if(self.dragbar.contains(startX,startY)):
@@ -53,7 +53,7 @@ class guiOverlay(pyrouteModule):
 				#print "Dragging %1.2f (by %1.2f * %1.2f)" % (self.dragpos, dy,scale)
 				return(True)
 		return(False)
-		
+
 	def handleClick(self,x,y):
 		"""return 1 if click was handled"""
 		for cell in self.clickable:
@@ -91,9 +91,9 @@ class guiOverlay(pyrouteModule):
 					x1 = rect.x + j * dx
 					self.cells[i][j] = overlayArea(cr,x1,y1,dx,dy,self.modules, self.icons)
 					self.clickable.append(self.cells[i][j])
-		  
 
-		  
+
+
 		currentMenu = self.get('menu')
 		if(currentMenu):
 			self.drawMenu(currentMenu)
@@ -103,7 +103,7 @@ class guiOverlay(pyrouteModule):
 	def mapOverlay(self):
 		if(self.get("shaded")):
 			self.rect.fill(0,0,0,False,self.get("shade_amount",0.5))
-			
+
 		if(1):
 			self.cells[0][0].button("Menu",None,"hint")
 			self.cells[1][0].button("","zoom:out","zoom_out")
@@ -118,10 +118,10 @@ class guiOverlay(pyrouteModule):
 			self.cr.line_to(button.x2,button.y2)
 			self.cr.line_to(button.x2,button.yc(0.5))
 			self.cr.stroke()
-		
+
 		# Make the buttons clickable
 		self.cells[0][0].setEvent("menu:main")
-	  
+
 		# New-style zoom buttons on map: much smaller
 		if(0):
 			z1 = self.cells[2][0].copyself(0.5,0,1,0.5)
@@ -152,10 +152,10 @@ class guiOverlay(pyrouteModule):
 		colourMenu.fill(r,g,b)
 		colourMenu.setEvent("menu:sketch_colour")
 		# TODO: all clickable places to global array/module
-				
+
 	def menu_gps(self):
 		self.backButton(0,0)
-		
+
 		selectLine = self.cells[0][1].copyAndExtendTo(self.cells[2][1])
 		selectLine.icon("3h")
 		mode = self.get("PositionMode")
@@ -171,7 +171,7 @@ class guiOverlay(pyrouteModule):
 			"pos.txt",
 			"option:set:PositionMode:txt",
 			mode == 'txt' and 'selected' or 'unselected')
-		
+
 	def menu_download(self):
 		self.backButton(0,0)
 		self.cells[0][1].button('Routes', 'menu:download_data', None)
@@ -184,7 +184,7 @@ class guiOverlay(pyrouteModule):
 
 		distanceLine = self.cells[0][2].copyAndExtendTo(self.cells[2][2])
 		distanceLine.icon("3h")
-		
+
 		self.cells[0][2].button( \
 			"20km",
 			"option:set:DownloadRange:20",
@@ -197,16 +197,16 @@ class guiOverlay(pyrouteModule):
 			"500km",
 			"option:set:DownloadRange:500",
 			self.get('DownloadRange') == '500' and 'selected' or 'unselected')
-		
+
 		self.cells[2][3].button("Go","+download:","download")
 
 	def menu_download_tiles(self):
 		self.backButton(0,0)
-		
+
 
 		distanceLine = self.cells[0][1].copyAndExtendTo(self.cells[2][1])
 		distanceLine.icon("3h")
-		
+
 		self.cells[0][1].button( \
 			"20km",
 			"option:set:DownloadRange:20",
@@ -219,10 +219,10 @@ class guiOverlay(pyrouteModule):
 			"500km",
 			"option:set:DownloadRange:150",
 			self.get('DownloadRange') == '150' and 'selected' or 'unselected')
-				
+
 		centreLine = self.cells[0][2].copyAndExtendTo(self.cells[2][2])
 		centreLine.icon("3h")
-		
+
 		self.cells[0][2].button( \
 			"Around me",
 			"option:set:DownloadCentre:pos",
@@ -235,10 +235,10 @@ class guiOverlay(pyrouteModule):
 			"Destination",
 			"option:set:DownloadCentre:dest",
 			self.get('DownloadCentre') == 'dest' and 'selected' or 'unselected')
-			
+
 		detailLine = self.cells[0][3].copyAndExtendTo(self.cells[1][3])
 		detailLine.icon("2h")
-		
+
 		self.cells[0][3].button( \
 			"This zoom",
 			"option:set:DownloadDetail:selected",
@@ -247,7 +247,7 @@ class guiOverlay(pyrouteModule):
 			"All zoom",
 			"option:set:DownloadDetail:all",
 			self.get('DownloadDetail') == 'all' and 'selected' or 'unselected')
-		
+
 		self.cells[2][3].button("Go","+download_tiles:","download")
 
 
@@ -261,12 +261,12 @@ class guiOverlay(pyrouteModule):
 		self.colourMenu(0,2, 1,0,0, 'sketch')
 		self.colourMenu(1,2, 0,0,0, 'sketch')
 		self.colourMenu(2,2, 1,1,1, 'sketch')
-		
+
 	def colourMenu(self,x,y,r,g,b,use):
 		self.cells[x][y].fill(r,g,b)
 		self.cells[x][y].setEvent("+set_colour:%s:%1.2f:%1.2f:%1.2f" % (use,r,g,b))
-		
-	
+
+
 	def backButton(self,i,j):
 			self.cells[i][j].button("","menu:","up")
 	def genericMenu(self, menu):
@@ -286,7 +286,7 @@ class guiOverlay(pyrouteModule):
 		self.menu_list("waypoints")
 	def menu_poi(self):
 		self.menu_list("osm")
-		
+
 	def menu_list(self, module):
 		self.backButton(0,0)
 		selectedFeed = int(self.get('selectedFeed',0))
@@ -307,25 +307,25 @@ class guiOverlay(pyrouteModule):
 		except IndexError:
 			line2.drawText("No such set #%d"%selectedFeed)
 			return
-		  
+
 		group.sort(self.get('ownpos'))
-		
+
 		line1.copyself(0.28,0,0.73,1).drawText("Set %d of %d" % (selectedFeed + 1, len(self.modules['poi'][module].groups)))
-		
+
 		line2.drawText(group.name)
 		self.drawListableItem(group)
-		
+
 	def drawListableItem(self,group):
 		n = 9
 		offset = int(self.dragpos)
 		listrect = self.rect.ysplitn(0, 0.25, 1.0, 1, n)
 		ownpos = self.get('ownpos')
-		
+
 		self.dragbar = self.rect.copyself(0.0,0.25,0.88,1.0)
-		
+
 		listLen = group.numItems()
 		for i in range(0,n):
-		  
+
 			itemNum = i + offset
 			if(itemNum >= listLen):
 				return
@@ -333,7 +333,7 @@ class guiOverlay(pyrouteModule):
 			# Separate area
 			textarea, button = listrect[i].xsplit(0.88)
 			color, textarea = textarea.xsplit(0.025)
-			
+
 			# Pattern for the left hand side to show how far down the list
 			# we are - model it as a colour, where red is the top, and purple
 			# is bottom
@@ -341,7 +341,7 @@ class guiOverlay(pyrouteModule):
 			v = (((i + offset) % 2) == 0) and 1.0 or 0.95
 			r,g,b = hsv_to_rgb(h, 1, v)
 			color.fill(r,g,b)
-			
+
 			if(i > 0):
 				# Line between list items
 				self.cr.set_line_width(0.5)
@@ -354,7 +354,7 @@ class guiOverlay(pyrouteModule):
 				# Draw each item
 				label = group.getItemText(itemNum)
 				textarea.drawTextSomewhere(label, 0.1,0.1,0.9,0.5)
-				
+
 				action = None
 				if(group.isLocation(itemNum)):
 					location = group.getItemLatLon(itemNum)
@@ -365,14 +365,14 @@ class guiOverlay(pyrouteModule):
 					if(group.getItemClickable(itemNum)):
 						action = group.getItemAction(itemNum)
 				textarea.drawTextSomewhere(subtitleText, 0.1,0.6,0.9,0.9)
-				
+
 				if(action != None):
 					button.button("", action, "goto")
 					self.clickable.append(button)
-					
+
 			except IndexError:
 				pass
-			
+
 	def formatPosition(self,pos, ownPos = None):
 		if(ownPos and ownPos['valid']):
 			a = (ownPos['lat'], ownPos['lon'])
@@ -382,11 +382,11 @@ class guiOverlay(pyrouteModule):
 				geometry.compassPoint(geometry.bearing(a,b))))
 		else:
 			return("%f,%f" % (self.lat,self.lon))
-		
+
 	def menu_meta(self):
 		self.backButton(0,0)
 		self.drawListableItem(self.m["meta"])
-		
+
 	def menu_main(self):
 		self.backButton(0,0)
 		self.checkbox(2,0,"Sketch mode","sketch",True)
@@ -411,19 +411,19 @@ class guiOverlay(pyrouteModule):
 		if(returnToMap):
 			action = "+" + action
 		button.button(label, action, self.get(setting) and "checked" or "unchecked")
-	
+
 	def menu_click(self):
 		self.backButton(0,0)
-		
+
 		latlonRect = self.rect.copyself(0.33,0,1,0.25)
 		latRect = latlonRect.copyself(0,0,1,0.5)
 		lonRect = latlonRect.copyself(0,0.5,1,1)
-		
+
 		lat,lon = self.get('clicked')
-		
+
 		NS = lat > 0 and 'N' or 'S'
 		EW = lon > 0 and 'E' or 'W'
-		
+
 		latRect.drawTextSomewhere('%1.4f %s' % (abs(lat), NS), 0.05, 0.05, 0.7, 0.95)
 		lonRect.drawTextSomewhere('%1.4f %s' % (abs(lon), EW), 0.3, 0.05, 0.95, 0.95)
 		#def drawTextSomewhere(self,text,px1,py1,px2,py2):

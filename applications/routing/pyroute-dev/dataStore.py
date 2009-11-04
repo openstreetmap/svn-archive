@@ -1,22 +1,22 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Global data table 
+"""Global data table
 
-Usage: 
-  (library code for pyroute GUI, not for direct use)
+Usage:
+	(library code for pyroute GUI, not for direct use)
 
 Types of data stored:
-  * Options and settings
-  * Data (e.g. current position)
-  * Event-related data (e.g. position of last click)
+	* Options and settings
+	* Data (e.g. current position)
+	* Event-related data (e.g. position of last click)
 
 Not stored here:
-  * Routes (internal within the routing module)
-  * POIs and map data
+	* Routes (internal within the routing module)
+	* POIs and map data
 
 TODO:
-  * Event handling code needs to be moved into a module
+	* Event handling code needs to be moved into a module
 """
 
 __version__ = "$Rev$"
@@ -41,9 +41,9 @@ class DataStore(pyrouteModule):
 	def __init__(self, modules):
 		pyrouteModule.__init__(self,modules)
 		self.options = {}
-	
+
 	def getData(self,name,default=None):
 		return(self.options.get(name,default))
-	
+
 	def setData(self,name,value):
 		self.options[name] = value

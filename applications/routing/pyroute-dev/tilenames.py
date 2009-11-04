@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 #-------------------------------------------------------
 # Translates between lat/long and the slippy-map tile
 # numbering scheme

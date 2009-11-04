@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #-----------------------------------------------------------------------------# Event handler.  Messages (as text) get sent here, telling pyroute
 # to do various things (e.g. save a waypoint, open a menu, route to
 # some point)

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #-----------------------------------------------------------------------------
 # Tile image handler (download, cache, and display tiles) 
 #

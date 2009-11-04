@@ -1,0 +1,17 @@
+-----
+Up
+People
+Wiki|menu:geonames
+-----
+Business|menu:search
+RSS|menu:feeds
+POIs|menu:poi
+-----
+Routes
+Waypoints|menu:waypoints
+Drawings
+-----
+Events
+
+Map type|menu:maptype
+-----

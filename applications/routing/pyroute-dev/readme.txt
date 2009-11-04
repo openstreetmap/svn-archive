@@ -1,4 +1,4 @@
-Quick start:
+﻿Quick start:
 
 Just type "python route.py data.osm node1 node2 cycle" from command line
 where node1 and node2 are nodes in the data.osm file.

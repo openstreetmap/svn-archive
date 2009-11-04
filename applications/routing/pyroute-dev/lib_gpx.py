@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #-----------------------------------------------------------------------------
 # Library for handling GPX files
 #

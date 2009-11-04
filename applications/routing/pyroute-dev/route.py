@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #----------------------------------------------------------------
 # Routing for OSM data
 #

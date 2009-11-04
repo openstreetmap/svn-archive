@@ -1,4 +1,4 @@
------
+﻿-----
 Up
 Eat|menu:search_food
 Sleep|menu:search_accomodation

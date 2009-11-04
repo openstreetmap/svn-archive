@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #----------------------------------------------------------------
 # pyRoute, a routing program for OpenStreetMap-style data
 #

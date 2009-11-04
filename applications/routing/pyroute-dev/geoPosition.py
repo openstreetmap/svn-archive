@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #----------------------------------------------------------------
 # report "current position" (currently accepts replayed GPX
 # files from follow.py)

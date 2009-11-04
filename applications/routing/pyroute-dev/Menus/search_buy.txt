@@ -1,4 +1,4 @@
------
+﻿-----
 Up
 Supermarket|search:amenity=supermarket
 Mall

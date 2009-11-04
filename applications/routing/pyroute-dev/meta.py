@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #-----------------------------------------------------------------------------# Meta-information (self-testing, self-diagnosis, etc.) for pyroute
 #
 # Usage: 

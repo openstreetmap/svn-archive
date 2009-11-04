@@ -1,4 +1,4 @@
-from route import Router
+﻿from route import Router
 
 class RouteOrDirect(Router):
     def __init__(self, data):

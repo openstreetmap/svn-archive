@@ -1,4 +1,4 @@
-from poi_base import *
+﻿from poi_base import *
 import feedparser
 from xml.sax import make_parser, handler
 

@@ -24,11 +24,11 @@ _debug = 0
 
 
 from base import pyrouteModule
-from tilenames import *
-import urllib
-import os
-import cairo
 from threading import Thread
+from tilenames import *
+import cairo
+import os
+import urllib
 
 def downloadTile(x,y,z,layer,filename):
 	url = tileURL(x,y,z,layer)

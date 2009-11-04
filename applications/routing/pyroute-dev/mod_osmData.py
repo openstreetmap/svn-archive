@@ -20,8 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-from loadOsm import LoadOsm
 from base import pyrouteModule
+from loadOsm import LoadOsm
 import os
 import urllib
 

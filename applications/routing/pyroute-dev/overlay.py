@@ -20,14 +20,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import cairo
-import os
 from base import pyrouteModule
-from pyrouteMenu import *
+from colorsys import hsv_to_rgb
 from menuIcons import menuIcons
 from overlayArea import overlayArea
-from colorsys import hsv_to_rgb
+from pyrouteMenu import *
+import cairo
 import geometry
+import os
 
 class guiOverlay(pyrouteModule):
 	def __init__(self, modules):

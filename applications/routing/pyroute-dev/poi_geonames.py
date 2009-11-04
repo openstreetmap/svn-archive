@@ -21,8 +21,8 @@ _debug = 0
 
 
 from poi_base import *
-import feedparser
 from xml.sax import make_parser, handler
+import feedparser
 
 class geonamesParser(handler.ContentHandler):
 	def __init__(self, filename):

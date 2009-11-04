@@ -23,10 +23,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import sys
+from xml.sax import make_parser, handler
 import cairo
 import math
-from xml.sax import make_parser, handler
+import sys
 
 class GetRoutes(handler.ContentHandler):
 	"""Parse an OSM file looking for routing information, and do routing with it"""

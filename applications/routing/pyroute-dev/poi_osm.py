@@ -20,8 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-from xml.sax import make_parser, handler
 from poi_base import *
+from xml.sax import make_parser, handler
 import os
 import urllib
 

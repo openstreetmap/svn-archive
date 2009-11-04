@@ -22,9 +22,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import os
-import cairo
 from xml.sax import make_parser, handler
+import cairo
+import os
 
 class lib_gpx(handler.ContentHandler):
 	""""""

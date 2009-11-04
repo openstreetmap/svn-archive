@@ -20,9 +20,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import sys
-import os
 from struct import *
+import os
+import sys
 
 class BinaryOsm:
 	def __init__(self):

@@ -37,36 +37,36 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import pygtk
-pygtk.require('2.0')
-import gobject
-import gtk
-import sys
-import cairo
-import urllib
-import os
+from gtk import gdk
 from math import sqrt
 from time import clock
-from gtk import gdk
+import cairo
+import gobject
+import gtk
+import os
+import pygtk
+import sys
+import urllib
+pygtk.require('2.0')
 
 # Our modules:
-from mod_osmData import osmData
-from routeOrDirect import *
-from tilenames import *
-from geoPosition import *
-from projection import Projection
-from overlay import *
+from base import pyrouteModule
 from dataStore import *
+from events import pyrouteEvents
+from geoPosition import *
+from meta import moduleInfo
+from mod_osmData import osmData
+from overlay import *
 from poi_geoRss import geoRss
 from poi_geonames import geonames
-from poi_waypoints import waypointsModule
 from poi_osm import osmPoiModule
-from base import pyrouteModule
-from tiles import tileHandler
-from events import pyrouteEvents
+from poi_waypoints import waypointsModule
+from projection import Projection
+from routeOrDirect import *
 from sketch import sketching
+from tilenames import *
+from tiles import tileHandler
 from tracklog import tracklog
-from meta import moduleInfo
 
 def update(mapWidget):
 	mapWidget.update();

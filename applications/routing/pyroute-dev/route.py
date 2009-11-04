@@ -29,9 +29,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import sys
-import math
 from loadOsm import *
+import math
+import sys
 
 class Router:
 	def __init__(self, data):

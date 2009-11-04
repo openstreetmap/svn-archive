@@ -20,9 +20,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>."""
 _debug = 0
 
 
-import sys
-from xml.sax import make_parser, handler
 from time import *
+from xml.sax import make_parser, handler
+import sys
 
 class LoadTrack(handler.ContentHandler):
 	def __init__(self, filename):

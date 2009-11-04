@@ -1,40 +1,42 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#-----------------------------------------------------------------------------
-# Pyroute main GUI
-#
-# Usage: 
-#   gui.py
-#
-# Controls:
-#   * drag left/right along top of window to zoom in/out
-#   * drag the map to move around
-#   * click on the map for a position menu
-#       * set your own position, if the GPS didn't already do that
-#       * set that location as a destination
-#       * route to that point
-#   * click on the top-left of the window for the main menu
-#       * download routing data around your position
-#       * browse geoRSS, wikipedia, and OSM points of interest
-#       * select your mode of transport for routing
-#           * car, bike, foot currently supported
-#       * toggle whether the map is centred on your GPS position
-#-----------------------------------------------------------------------------
-# Copyright 2007, Oliver White
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#-----------------------------------------------------------------------------
+
+"""Pyroute main GUI
+
+Usage: 
+  gui.py
+
+Controls:
+  * drag left/right along top of window to zoom in/out
+  * drag the map to move around
+  * click on the map for a position menu
+      * set your own position, if the GPS didn't already do that
+      * set that location as a destination
+      * route to that point
+  * click on the top-left of the window for the main menu
+      * download routing data around your position
+      * browse geoRSS, wikipedia, and OSM points of interest
+      * select your mode of transport for routing
+          * car, bike, foot currently supported
+      * toggle whether the map is centred on your GPS position
+"""
+
+__version__ = "$Rev$"
+__license__ = """This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>."""
+_debug = 0
+
+
 import pygtk
 pygtk.require('2.0')
 import gobject

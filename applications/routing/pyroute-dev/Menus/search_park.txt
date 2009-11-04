@@ -1,0 +1,17 @@
+-----
+Up
+Car park|search:amenity=parking
+Free car park|search:amenity=parking;cost=free
+-----
+Bike park|search:amenity=cycle_parking
+Lay-by|search:amenity=layby
+
+-----
+
+
+
+-----
+
+
+
+-----

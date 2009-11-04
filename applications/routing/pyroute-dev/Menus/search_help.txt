@@ -1,0 +1,17 @@
+-----
+Up
+Police Stn|search:amenity=police
+Fire Stn|search:amenity=fire
+-----
+Hospital|search:amenity=hospital
+Ranger|search:amenity=ranger_station
+Pharmacy|search:amenity=pharmacy
+-----
+
+
+
+-----
+
+
+
+-----

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """Translates between lat/long and the slippy-map tile
@@ -7,7 +7,7 @@ numbering scheme
 http://wiki.openstreetmap.org/index.php/Slippy_map_tilenames
 """
 
-__version__ = "$Rev$"
+__version__ = "$Rev$"[1:-2]
 __license__ = """This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or

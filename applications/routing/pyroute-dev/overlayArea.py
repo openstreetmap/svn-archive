@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """Graphics library for drawing pyroute GUI menus
@@ -15,7 +15,7 @@ Features:
 		* Split it into smaller rectangles (to do complex GUI layouts)
 """
 
-__version__ = "$Rev$"
+__version__ = "$Rev$"[1:-2]
 __license__ = """This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or

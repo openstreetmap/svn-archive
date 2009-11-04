@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """Projection code (lat/long to screen conversions)
@@ -15,7 +15,7 @@ Features:
 	* Access other modules (using "self.m['modulename']")
 """
 
-__version__ = "$Rev$"
+__version__ = "$Rev$"[1:-2]
 __license__ = """This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or

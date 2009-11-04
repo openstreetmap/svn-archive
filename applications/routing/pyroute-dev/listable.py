@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """Interface for things which can be listed
@@ -7,7 +7,7 @@ Usage:
 	(base-class for pyroute GUI libraries)
 """
 
-__version__ = "$Rev$"
+__version__ = "$Rev$"[1:-2]
 __license__ = """This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or

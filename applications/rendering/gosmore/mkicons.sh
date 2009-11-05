@@ -55,7 +55,7 @@ montagelist=$tmpdir/montages
 name=icons
 
 # Add PD Icons from openclipart.org
-cp -a [^i]*.png iconset.png $ICONDIR/classic.big
+cp -a [^i0]*.png iconset.png $ICONDIR/classic.big
 
 # list all icons we want, sorting them by height then width
 find $ICONDIR -iname '*.png' \

@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.11  2009-10-14 unicode error on ChangesetUpload                   ##
 ## 0.2.10  2009-10-14 RelationFullRecur definition                       ##
 ## 0.2.9   2009-10-13 automatic changeset management                     ##
 ##                    ChangesetUpload implementation                     ##
@@ -42,7 +43,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.10'
+__version__ = '0.2.11'
 
 import httplib, base64, xml.dom.minidom, time
 
@@ -375,10 +376,10 @@ class OsmApi:
         for change in ChangesData:
             data += u"<"+change["action"]+">\n"
             change["data"]["changeset"] = self._CurrentChangesetId
-            data += self._XmlBuild(change["type"], change["data"], False)
+            data += self._XmlBuild(change["type"], change["data"], False).decode("utf-8")
             data += u"</"+change["action"]+">\n"
         data += u"</osmChange>"
-        data = self._http("POST", "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/upload", True, data)
+        data = self._http("POST", "/api/0.6/changeset/"+str(self._CurrentChangesetId)+"/upload", True, data.encode("utf-8"))
         data = xml.dom.minidom.parseString(data)
         data = data.getElementsByTagName("diffResult")[0]
         data = [x for x in data.childNodes if x.nodeType == x.ELEMENT_NODE]

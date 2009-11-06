@@ -206,6 +206,12 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 		bufferImage = mv.createImage(mv.getWidth(), mv.getHeight());
 		g = bufferImage.getGraphics();
 
+        if (!LatLon.isValidLat(topLeft.lat())  ||
+            !LatLon.isValidLat(botRight.lat()) ||
+            !LatLon.isValidLon(topLeft.lon())  ||
+            !LatLon.isValidLon(botRight.lon()))
+            return;
+
 		viewportMinX = lonToTileX(topLeft.lon());
 		viewportMaxX = lonToTileX(botRight.lon());
 		viewportMinY = latToTileY(topLeft.lat());
@@ -365,6 +371,8 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 
 	@Override
 	public void visitBoundingBox(BoundingXYVisitor v) {
+        if (printBounds != null)
+            v.visit(printBounds);
 	}
 
 	private int latToTileY(double lat) {

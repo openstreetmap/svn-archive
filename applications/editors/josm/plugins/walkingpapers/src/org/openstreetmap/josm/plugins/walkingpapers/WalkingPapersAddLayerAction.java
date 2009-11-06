@@ -71,6 +71,13 @@ public class WalkingPapersAddLayerAction extends JosmAction {
         	return;
         }
 
+
+        //http://walking-papers.org/scan.php?id=rmvdr3lq
+        // The server is apparently broken and returning the WpId in the URL twice
+        // which makes it return errors when we fetch it.  So, strip out one of
+        // the dups.  This is a hack and needs to get removed when the server
+        // is fixed.
+        tile = tile.replaceFirst(mungedWpId+"/"+mungedWpId, mungedWpId);
         Main.pref.put("walkingpapers.last-used-id", mungedWpId);
 
         Bounds b = new Bounds(new LatLon(south, west), new LatLon(north, east));

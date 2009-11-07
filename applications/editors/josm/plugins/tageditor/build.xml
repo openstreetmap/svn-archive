@@ -188,13 +188,9 @@
 			<echo>Commiting ${plugin.jar} with message '${commit.message}' ...</echo>
 			<echo>Plugin-Mainversion is '${plugin.main.version}' ...</echo>
 			<echo>Plugin-Version is ${version.entry.commit.revision} ...</echo>
-			<if>
+			<condition property="difference-in-josm-version">
 				<equals arg1="${plugin.main.version}" arg2="${coreversion.info.entry.revision}" />
-				<then></then>
-				<else>				
-			<echo level="warning" if="${difference-in-josm-version}">!!!WARNING!!! Plugin-Mainversion is not equal to the JOSM version used in this build. !!!WARNING!!!</echo>
-				</else>
-			</if>
+			</condition>
 		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 		                    <env key="LANG" value="C"/>
 		                    <arg value="commit"/>
@@ -203,6 +199,10 @@
 		    </exec>	    
    	</target>
 	
-	<target name="publish" depends="core-info,commit-current,update-current,clean,dist,commit-dist">
+	<target name="warn-difference-in-josm-version" if="${difference-in-josm-version}">
+		<echo level="warning" if="${difference-in-josm-version}">!!!WARNING!!! Plugin-Mainversion is not equal to the JOSM version used in this build. !!!WARNING!!!</echo>
+	</target>
+	
+	<target name="publish" depends="core-info,commit-current,update-current,clean,dist,commit-dist,warn-difference-in-josm-version">
 	</target>
 </project>

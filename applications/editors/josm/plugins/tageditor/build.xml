@@ -199,8 +199,8 @@
 		    </exec>	    
    	</target>
 	
-	<target name="warn-difference-in-josm-version" if="${difference-in-josm-version}">
-		<echo level="warning" if="${difference-in-josm-version}">!!!WARNING!!! Plugin-Mainversion is not equal to the JOSM version used in this build. !!!WARNING!!!</echo>
+	<target name="warn-difference-in-josm-version" unless="${difference-in-josm-version}">
+		<echo level="warning">!!!WARNING!!! Plugin-Mainversion is not equal to the JOSM version used in this build. !!!WARNING!!!</echo>
 	</target>
 	
 	<target name="publish" depends="core-info,commit-current,update-current,clean,dist,commit-dist,warn-difference-in-josm-version">

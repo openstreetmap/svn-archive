@@ -183,7 +183,7 @@ DataChangeListener, MouseListener, OsbActionObserver {
     public synchronized void update(final DataSet dataset) {
         Node lastNode = OsbAction.getSelectedNode();
         model = new DefaultListModel();
-        List<Node> sortedList = new ArrayList<Node>(dataset.nodes);
+        List<Node> sortedList = new ArrayList<Node>(dataset.getNodes());
         Collections.sort(sortedList, new BugComparator());
 
         for (Node node : sortedList) {

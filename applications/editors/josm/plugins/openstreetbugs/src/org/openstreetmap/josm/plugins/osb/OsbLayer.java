@@ -118,7 +118,7 @@ public class OsbLayer extends Layer implements MouseListener {
 
     @Override
     public void paint(Graphics g, MapView mv) {
-        Object[] nodes = data.nodes.toArray();
+        Object[] nodes = data.getNodes().toArray();
         // This loop renders all the bug icons
         for (int i = 0; i < nodes.length; i++) {
             Node node = (Node) nodes[i];
@@ -209,7 +209,7 @@ public class OsbLayer extends Layer implements MouseListener {
         double snapDistance = 10;
         double minDistanceSq = Double.MAX_VALUE;
         Node minPrimitive = null;
-        for (Node n : data.nodes) {
+        for (Node n : data.getNodes()) {
             if (!n.isUsable())
                 continue;
             Point sp = Main.map.mapView.getPoint(n);
@@ -231,7 +231,7 @@ public class OsbLayer extends Layer implements MouseListener {
         if(e.getButton() == MouseEvent.BUTTON1) {
             if(Main.map.mapView.getActiveLayer() == this) {
                 Node n = (Node) getNearestNode(e.getPoint());
-                if(data.nodes.contains(n)) {
+                if(data.getNodes().contains(n)) {
                     data.setSelected(n);
                 }
             }
@@ -251,7 +251,7 @@ public class OsbLayer extends Layer implements MouseListener {
             if(Main.map.mapView.getActiveLayer() == this) {
                 Node n = (Node) getNearestNode(e.getPoint());
                 OsbAction.setSelectedNode(n);
-                if(data.nodes.contains(n)) {
+                if(data.getNodes().contains(n)) {
                     PopupFactory.createPopup(n).show(e.getComponent(), e.getX(), e.getY());
                 }
             }

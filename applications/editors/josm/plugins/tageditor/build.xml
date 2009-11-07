@@ -186,7 +186,8 @@
 	
 	<target name="commit-dist">
 			<echo>Commiting ${plugin.jar} with message '${commit.message}' ...</echo>
-			<echo>Plugin-Mainversion is '${plugin.main.version}' ...</echo>
+			<echo>Plugin-Mainversion is ${plugin.main.version} ...</echo>
+			<echo>JOSM build version is ${coreversion.info.entry.revision} ...</echo>
 			<echo>Plugin-Version is ${version.entry.commit.revision} ...</echo>
 			<condition property="difference-in-josm-version">
 				<equals arg1="${plugin.main.version}" arg2="${coreversion.info.entry.revision}" />

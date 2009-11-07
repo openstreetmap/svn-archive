@@ -75,7 +75,7 @@ public class OsmarenderPlugin extends Plugin {
             String firefox = Main.pref.get("osmarender.firefox", "firefox");
             try {
                 // write to plugin dir
-                OsmWriter w = new OsmWriter(new PrintWriter(new FileOutputStream(getPluginDir()+File.separator+"data.osm")), false, fromDataSet.version);
+                OsmWriter w = new OsmWriter(new PrintWriter(new FileOutputStream(getPluginDir()+File.separator+"data.osm")), false, fromDataSet.getVersion());
                 w.header();
                 w.writeDataSources(fromDataSet);
                 w.writeContent(fromDataSet);

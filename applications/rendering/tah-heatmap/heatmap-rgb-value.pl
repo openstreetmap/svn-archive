@@ -17,7 +17,21 @@ if (-f $arg) {
 
 sub rgb_str
 {
-    "rgb(" . join(',', heatmap(shift)) . ")";
+    "rgb(" . join(',', heatmap(warp_size_for_heatmap(shift))) . ")";
+}
+
+sub warp_size_for_heatmap
+{
+    my $size = shift;
+
+    # FIXME: This results in a very lousy distribution, the map is all
+    # blue
+    my $n = log $size / log $max;
+#    my $n = (log($size)/log(10)) / (log($max)/log(10));
+    #my $n = (($size-$min+1) / $max)**0.2;
+    #my $n = $size / (227879*32);
+
+    return $n;
 }
 
 # From http://google.com/codesearch/p?hl=en#v85D9_xn8lk/viewcvs.py/gmod/graphbrowse/cgi/graphbrowse%3Frev%3D1.10&q=heat map rgb lang:perl

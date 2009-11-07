@@ -143,6 +143,11 @@
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
 
+	<!--
+	  ** extracts the JOSM release for the JOSM version in ../core and saves it in the 
+	  ** property ${coreversion.info.entry.revision}
+	  **
+	-->
 	<target name="core-info">
         <exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
                     <env key="LANG" value="C"/>
@@ -157,7 +162,9 @@
 		<delete file="core.info.xml" />
 	</target>
 
-	
+	<!--
+	 ** commits the source tree for this plugin
+	-->
 	<target name="commit-current">
 		<echo>Commiting the plugin source with message '${commit.message}' ...</echo>
 	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
@@ -168,7 +175,9 @@
 	    </exec>	    
 	</target>
 
-	
+	<!--
+	** updates (svn up) the source tree for this plugin
+	-->
 	<target name="update-current">
 		<echo>Updating plugin source ...</echo>
 	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
@@ -184,6 +193,9 @@
 	    </exec>	    
 	</target>
 	
+	<!--
+	 ** commits the plugin.jar 
+	 -->
 	<target name="commit-dist">
 			<echo>Commiting ${plugin.jar} with message '${commit.message}' ...</echo>
 			<echo>Plugin-Mainversion is ${plugin.main.version} ...</echo>
@@ -200,6 +212,12 @@
 		    </exec>	    
    	</target>
 	
+	<!--
+	 ** outputs a warning if the JOSM version inserted in the plugin manifest isn't equal to the
+	 ** the JOSM version the plugin was built against. 
+	 **
+	 ** This isn't necessarily an error but it is a sign that something could be wrong.
+	-->
 	<target name="warn-difference-in-josm-version" unless="${difference-in-josm-version}">
 		<echo level="warning">!!!WARNING!!! Plugin-Mainversion is not equal to the JOSM version used in this build. !!!WARNING!!!</echo>
 	</target>

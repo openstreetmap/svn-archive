@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.czechaddress.intelligence;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
@@ -26,7 +28,7 @@ public class Capitalizator {
     Map<Street, OsmPrimitive> map;
     Logger logger =  Logger.getLogger(Capitalizator.class.getName());
 
-    public Capitalizator(List<OsmPrimitive> prims, List<Street> elems) {
+    public Capitalizator(Collection<OsmPrimitive> prims, List<Street> elems) {
 
         int expResults = elems.size()/2;
 
@@ -57,9 +59,9 @@ public class Capitalizator {
     private class StreetMatcher implements Callable<OsmPrimitive> {
 
         private AddressElement elem;
-        private List<OsmPrimitive> prims;
+        private Collection<OsmPrimitive> prims;
 
-        public StreetMatcher(AddressElement elem, List<OsmPrimitive> prims) {
+        public StreetMatcher(AddressElement elem, Collection<OsmPrimitive> prims) {
             this.elem = elem;
             this.prims = prims;
         }

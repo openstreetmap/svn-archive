@@ -27,9 +27,11 @@ foreach my $plugin (@names)
   {
     my $svndate = "";
     my $svnversion = "";
+    my $svnmversion = "";
     $svndate = $1 if $manifest =~ /Plugin-Date: ([^\r\n]+)/;
     $svnversion = $1 if $manifest =~ /Plugin-Version: ([^\r\n]+)/;
-    printf " SVN: %28s %6s%s", $svndate,$svnversion,
+    $svnmversion = $1 if $manifest =~ /Plugin-Mainversion: ([^\r\n]+)/;
+    printf " SVN: %28s %6s (%4s)%s", $svndate,$svnversion,$svnmversion,
     ($svndate ne $date || $svnversion ne $version) ? " changed" : "";
   }
   printf "\n";

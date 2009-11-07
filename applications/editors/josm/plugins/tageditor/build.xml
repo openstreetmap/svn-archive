@@ -17,14 +17,20 @@
 **    > ant  install
 **
 ** To build against the core in ../../core, create a correct manifest and deploy to
-** SVN, run
-**
-**    > ant  deploy
+** SVN, 
+**    set the properties commit.message and plugin.main.version
+** and run
+**    > ant  publish
 **
 **
 -->
 <project name="tageditor" default="dist" basedir=".">
-    <!--
+    
+
+	<property name="commit.message" value="Updated build.xml" />		
+	<property name="plugin.main.version" value="2355" />
+
+	<!--
       ************************************************
       ** should not be necessary to change the following properties
      -->
@@ -36,8 +42,7 @@
     <property name="ant.build.javac.target" value="1.5"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <property name="commit.message" value="" />	
-
+    
     <!--
     **********************************************************
     ** init - initializes the build
@@ -88,7 +93,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Provides a dialog for editing tags in a tabular grid."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/TagEditor"/>
-                <attribute name="Plugin-Mainversion" value="2355"/>
+                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>
@@ -146,13 +151,14 @@
                     <arg value="../../core"/>
         </exec>
         <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
-		<echo>Building against core revision ${coreversion.info.entry.revision} ...</echo>
+		<echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
+		<echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
 		<delete file="core.info.xml" />
 	</target>
 
 	
 	<target name="commit-current">
-		<echo>Commiting the plugin source ...</echo>
+		<echo>Commiting the plugin source with message '${commit.message}' ...</echo>
 	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 	                    <env key="LANG" value="C"/>
 	                    <arg value="commit"/>
@@ -163,7 +169,7 @@
 
 	
 	<target name="update-current">
-		<echo>Updating basedir ...</echo>
+		<echo>Updating plugin source ...</echo>
 	    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 	                    <env key="LANG" value="C"/>
 	                    <arg value="up"/>
@@ -178,7 +184,9 @@
 	</target>
 	
 	<target name="commit-dist">
-			<echo>Commiting ${plugin.jar} ...</echo>
+			<echo>Commiting ${plugin.jar} with message '${commit.message}' ...</echo>
+			<echo>Plugin-Mainversion is '${plugin.main.version}' ...</echo>
+			<echo>Plugin-Version is ${version.entry.commit.revision} ...</echo>
 		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 		                    <env key="LANG" value="C"/>
 		                    <arg value="commit"/>
@@ -187,6 +195,6 @@
 		    </exec>	    
    	</target>
 	
-	<target name="deploy" depends="core-info,commit-current,update-current,clean,dist,commit-dist">
+	<target name="publish" depends="core-info,commit-current,update-current,clean,dist,commit-dist">
 	</target>
 </project>

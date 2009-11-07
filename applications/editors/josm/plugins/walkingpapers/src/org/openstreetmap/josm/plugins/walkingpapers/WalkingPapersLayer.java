@@ -340,7 +340,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 
 	@Override
 	public Object getInfoComponent() {
-		return null;
+		return getToolTipText();
 	}
 
 	@Override
@@ -357,7 +357,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 
 	@Override
 	public String getToolTipText() {
-		return null;
+		return tr("Walking Papers layer ({0}) in zoom {1}", this.getWalkingPapersId(), currentZoomLevel);
 	}
 
 	@Override

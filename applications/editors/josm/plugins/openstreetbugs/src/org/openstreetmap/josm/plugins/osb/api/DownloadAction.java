@@ -66,9 +66,7 @@ public class DownloadAction {
         String content = HttpUtils.get(uri, null, CHARSET);
 
         // clear dataset
-        dataset.nodes.clear();
-        dataset.relations.clear();
-        dataset.ways.clear();
+        dataset.clear();
 
         // parse the data
         parseData(dataset, content);

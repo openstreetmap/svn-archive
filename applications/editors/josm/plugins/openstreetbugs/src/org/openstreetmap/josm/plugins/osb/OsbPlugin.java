@@ -71,8 +71,8 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
         dataSet = new DataSet();
         uploadHook = new OsbUploadHook();
         dialog = new OsbDialog(this);
-        OsbLayer.listeners.add(dialog);
-        OsbLayer.listeners.add(this);
+        Layer.listeners.add(dialog);
+        Layer.listeners.add(this);
     }
 
     private void initConfig() {
@@ -240,7 +240,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
     public void setDataSet(DataSet dataSet) {
         this.dataSet = dataSet;
     }
-    
+
     public OsbDialog getDialog() {
         return dialog;
     }

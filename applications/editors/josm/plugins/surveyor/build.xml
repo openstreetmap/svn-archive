@@ -36,7 +36,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Allow adding markers/nodes on current gps positions."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Surveyor"/>
-                <attribute name="Plugin-Mainversion" value="2396"/>
+                <attribute name="Plugin-Mainversion" value="2401"/>
                 <attribute name="Plugin-Requires" value="livegps"/>
                 <attribute name="Plugin-Stage" value="60"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

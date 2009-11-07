@@ -20,7 +20,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.io.OsmWriter;
-import org.openstreetmap.josm.io.XmlWriter;
 
 /**
  * @author cdaller
@@ -54,7 +53,7 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
             File tmpFile = new File(file.getAbsoluteFile()+".tmp");
             System.out.println("AutoSaving osm data to file " + file.getAbsolutePath());
             synchronized(LiveGpsLock.class) {
-                OsmWriter w = new OsmWriter(new PrintWriter(new FileOutputStream(tmpFile)), false, dataset.version);
+                OsmWriter w = new OsmWriter(new PrintWriter(new FileOutputStream(tmpFile)), false, dataset.getVersion());
                 w.header();
                 w.writeDataSources(dataset);
                 w.writeContent(dataset);

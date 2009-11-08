@@ -99,8 +99,7 @@ public class Test extends AbstractVisitor
      * @param progressMonitor  the progress monitor 
      */
     public void startTest(ProgressMonitor progressMonitor) {
-        backreferenceDataSet = new BackreferencedDataSet(Main.main.getCurrentDataSet());
-        backreferenceDataSet.build();
+        backreferenceDataSet = new BackreferencedDataSet();
         if (progressMonitor == null) {
                 this.progressMonitor = NullProgressMonitor.INSTANCE;
         } else {

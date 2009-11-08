@@ -1,4 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+** This is the build.xml for the validator plugin
+**
+** Usage
+** =====
+** To build it run
+**
+**    > ant  dist
+**
+** To install the generated plugin locally (in your default plugin directory) run
+**
+**    > ant  install
+**
+** To build against the core in ../../core, create a correct manifest and deploy to
+** SVN, 
+**    set the properties commit.message and plugin.main.version
+** and run
+**    > ant  publish
+**
+**
+-->
 <project name="validator" default="dist" basedir=".">
+	
+	<!-- 
+	  ** update before publishing 
+	-->
+	<property name="commit.message" value="Updating to JOSM 2414" />		
+	<property name="plugin.main.version" value="2414" />
+		
+		
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
@@ -25,7 +55,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="An OSM data validator. It checks for problems in data, and provides fixes for the common ones. Spellcheck integrated for tag names."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Validator"/>
-                <attribute name="Plugin-Mainversion" value="2388"/>
+                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>
@@ -53,4 +83,89 @@
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
+	
+	<!--
+	 ************************** Publishing the plugin *********************************** 
+	-->
+		<!--
+		  ** extracts the JOSM release for the JOSM version in ../core and saves it in the 
+		  ** property ${coreversion.info.entry.revision}
+		  **
+		-->
+		<target name="core-info">
+	        <exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
+	                    <env key="LANG" value="C"/>
+	                    <arg value="info"/>
+	                    <arg value="--xml"/>
+	                    <arg value="../../core"/>
+	        </exec>
+	        <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
+			<echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
+			
+			<echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
+			<delete file="core.info.xml" />
+		</target>
+
+		<!--
+		 ** commits the source tree for this plugin
+		-->
+		<target name="commit-current">
+			<echo>Commiting the plugin source with message '${commit.message}' ...</echo>
+		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		                    <env key="LANG" value="C"/>
+		                    <arg value="commit"/>
+		                    <arg value="-m &quot;${commit.message}&quot;"/>
+		                    <arg value="."/>
+		    </exec>	    
+		</target>
+
+		<!--
+		** updates (svn up) the source tree for this plugin
+		-->
+		<target name="update-current">
+			<echo>Updating plugin source ...</echo>
+		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		                    <env key="LANG" value="C"/>
+		                    <arg value="up"/>
+		                    <arg value="."/>
+		    </exec>	    
+			<echo>Updating ${plugin.jar} ...</echo>
+		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		                    <env key="LANG" value="C"/>
+		                    <arg value="up"/>
+		                    <arg value="../dist/${plugin.jar}"/>
+		    </exec>	    
+		</target>
+		
+		<!--
+		 ** commits the plugin.jar 
+		 -->
+		<target name="commit-dist">
+				<echo>Commiting ${plugin.jar} with message '${commit.message}' ...</echo>
+				<echo>Plugin-Mainversion is ${plugin.main.version} ...</echo>
+				<echo>JOSM build version is ${coreversion.info.entry.revision} ...</echo>
+				<echo>Plugin-Version is ${version.entry.commit.revision} ...</echo>
+				<condition property="difference-in-josm-version">
+					<equals arg1="${plugin.main.version}" arg2="${coreversion.info.entry.revision}" />
+				</condition>
+			    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			                    <env key="LANG" value="C"/>
+			                    <arg value="commit"/>
+	                			<arg value="-m &quot;${commit.message}&quot;"/>
+			                    <arg value="../dist/${plugin.jar}"/>
+			    </exec>	    
+	   	</target>
+		
+		<!--
+		 ** outputs a warning if the JOSM version inserted in the plugin manifest isn't equal to the
+		 ** the JOSM version the plugin was built against. 
+		 **
+		 ** This isn't necessarily an error but it is a sign that something could be wrong.
+		-->
+		<target name="warn-difference-in-josm-version" unless="${difference-in-josm-version}">
+			<echo level="warning">!!!WARNING!!! Plugin-Mainversion is not equal to the JOSM version used in this build. !!!WARNING!!!</echo>
+		</target>
+		
+		<target name="publish" depends="core-info,commit-current,update-current,clean,dist,commit-dist,warn-difference-in-josm-version">
+		</target>
 </project>

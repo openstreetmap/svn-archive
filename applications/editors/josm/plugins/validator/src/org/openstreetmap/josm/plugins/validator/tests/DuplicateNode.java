@@ -35,8 +35,7 @@ public class DuplicateNode extends Test{
 
 	public static BackreferencedDataSet getBackreferenceDataSet() {
 		if (backreferences == null) {
-			backreferences = new BackreferencedDataSet(Main.main.getEditLayer().data);
-			backreferences.build();
+			backreferences = new BackreferencedDataSet();
 		}
 		return backreferences;
 	}

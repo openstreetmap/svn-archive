@@ -145,9 +145,11 @@
 				<echo>Plugin-Mainversion is ${plugin.main.version} ...</echo>
 				<echo>JOSM build version is ${coreversion.info.entry.revision} ...</echo>
 				<echo>Plugin-Version is ${version.entry.commit.revision} ...</echo>
+			    <echo>Commiting ../dist/${ant.project.name}.jar</echo>
 				<condition property="difference-in-josm-version">
 					<equals arg1="${plugin.main.version}" arg2="${coreversion.info.entry.revision}" />
 				</condition>
+			
 			    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 			                    <env key="LANG" value="C"/>
 			                    <arg value="commit"/>

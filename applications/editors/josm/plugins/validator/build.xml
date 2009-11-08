@@ -100,8 +100,7 @@
 	                    <arg value="../../core"/>
 	        </exec>
 	        <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
-			<echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
-			
+			<echo>Building against core revision ${coreversion.info.entry.revision}.</echo>			
 			<echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
 			<delete file="core.info.xml" />
 		</target>
@@ -114,7 +113,7 @@
 		    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 		                    <env key="LANG" value="C"/>
 		                    <arg value="commit"/>
-		                    <arg value="-m &quot;${commit.message}&quot;"/>
+		                    <arg value="-m '${commit.message}'"/>
 		                    <arg value="."/>
 		    </exec>	    
 		</target>
@@ -141,33 +140,24 @@
 		 ** commits the plugin.jar 
 		 -->
 		<target name="commit-dist">
-				<echo>Commiting ${plugin.jar} with message '${commit.message}' ...</echo>
-				<echo>Plugin-Mainversion is ${plugin.main.version} ...</echo>
-				<echo>JOSM build version is ${coreversion.info.entry.revision} ...</echo>
-				<echo>Plugin-Version is ${version.entry.commit.revision} ...</echo>
-			    <echo>Commiting ${plugin.jar} ...</echo>
-				<condition property="difference-in-josm-version">
-					<equals arg1="${plugin.main.version}" arg2="${coreversion.info.entry.revision}" />
-				</condition>
-			
+				<echo>
+***** Properties of published ${plugin.jar} *****
+Commit message    : '${commit.message}'					
+Plugin-Mainversion: ${plugin.main.version}
+JOSM build version: ${coreversion.info.entry.revision}
+Plugin-Version    : ${version.entry.commit.revision}
+***** / Properties of published ${plugin.jar} *****					
+					
+Now commiting ${plugin.jar} ...
+</echo>					
 			    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
 			                    <env key="LANG" value="C"/>
-			                    <arg value="commit"/>
-	                			<arg value="-m &quot;${commit.message}&quot;"/>
-			                    <arg value="../../dist/validator.jar"/>
+				    			<arg value="-m '${commit.message}'"/>
+			    				<arg value="commit"/>	                			
+            			        <arg value="${plugin.jar}"/>
 			    </exec>	    
 	   	</target>
-		
-		<!--
-		 ** outputs a warning if the JOSM version inserted in the plugin manifest isn't equal to the
-		 ** the JOSM version the plugin was built against. 
-		 **
-		 ** This isn't necessarily an error but it is a sign that something could be wrong.
-		-->
-		<target name="warn-difference-in-josm-version" unless="${difference-in-josm-version}">
-			<echo level="warning">!!!WARNING!!! Plugin-Mainversion is not equal to the JOSM version used in this build. !!!WARNING!!!</echo>
-		</target>
-		
-		<target name="publish" depends="core-info,commit-current,update-current,clean,dist,commit-dist,warn-difference-in-josm-version">
+				
+		<target name="publish" depends="core-info,commit-current,update-current,clean,dist,commit-dist">
 		</target>
 </project>

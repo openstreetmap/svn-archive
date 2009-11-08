@@ -154,7 +154,7 @@
 			                    <env key="LANG" value="C"/>
 			                    <arg value="commit"/>
 	                			<arg value="-m &quot;${commit.message}&quot;"/>
-			                    <arg value="${plugin.jar}"/>
+			                    <arg value="../../dist/validator.jar"/>
 			    </exec>	    
 	   	</target>
 		

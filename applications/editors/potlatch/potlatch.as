@@ -132,7 +132,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 1.2d";	// current version
+	var signature="Potlatch 1.2e";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k");
 	var lastgroup='road';			// last preset group used
@@ -163,6 +163,9 @@
 	if (preferences.data.tilecustom   ==undefined) { preferences.data.tilecustom   =''; }	// custom background URL
 	if (preferences.data.launcher     ==undefined) { preferences.data.launcher     =''; }	// external launch URL
 	if (preferences.data.photokml     ==undefined) { preferences.data.photokml     ='http://www.openstreetphoto.org/openstreetphoto.kml'; }	// photo KML
+	if (preferences.data.twitterid    ==undefined) { preferences.data.twitterid    =''; }	// Twitter ID, password, post?
+	if (preferences.data.twitterpwd   ==undefined) { preferences.data.twitterpwd   =''; }	//  |
+	if (preferences.data.twitter      ==undefined) { preferences.data.twitter	   =false;}	//  |
 	if (preferences.data.dimbackground==undefined) { preferences.data.dimbackground=true; }	// dim background?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
@@ -272,10 +275,6 @@
 	_root.panel.i_warning.onRollOver=function() { setFloater(iText('tip_alert')); };
 	_root.panel.i_warning.onRollOut =function() { clearFloater(); };
 	wflashid=setInterval(function() { _root.panel.i_warning._alpha=150-_root.panel.i_warning._alpha; }, 750);
-
-	_root.panel.attachMovie("padlock","padlock",41);
-	with (_root.panel.padlock) { _y=32; _visible=false; };
-	_root.panel.padlock.onPress=function() { keyLock(); };
 
 	_root.createEmptyMovieClip("pointer",0xFFFFFF);
 
@@ -465,6 +464,7 @@
 			} else if (preferences.data.bgtype!=4) {
 				redrawBackground();
 			}
+			_quality="LOW";
 			moveMap(Math.floor(_xmouse-lastxmouse),Math.floor(_ymouse-lastymouse));
 		}
 	}
@@ -472,6 +472,7 @@
 	function endMapDrag() {
 		delete _root.onMouseMove;
 		delete _root.onMouseUp;
+		_quality="HIGH";
 		if (mapDragging()) {
 			redrawBackground();
 			updateLinks();
@@ -794,20 +795,19 @@
 	}
 
 	function keyLock() {
-		_root.panel.padlock._x=_root.panel.t_details.textWidth+15;
-		if (_root.wayselected && _root.ws.locked && _root.ws.path.length>200 && !_root.ws.historic) {
+		if (_root.wayselected && _root.ws.locked && _root.ws.path.length>=2000 && !_root.ws.historic) {
 			setAdvice(true,iText('advice_toolong'));
 		} else if (_root.wayselected) {
 			_root.ws.locked=!_root.ws.locked;
 			_root.ws.redraw();
-			_root.panel.padlock._visible=_root.ws.locked;
 			if (!_root.ws.locked) { markWayRelationsDirty(_root.wayselected); }
 			updateInspector();
+			_root.panel.properties.reinit();
 		} else if (_root.poiselected) {
 			_root.map.pois[poiselected].locked=!_root.map.pois[poiselected].locked;
 			_root.map.pois[poiselected].recolour();
-			_root.panel.padlock._visible=_root.map.pois[poiselected].locked;
 			if (!_root.map.pois[poiselected].locked) { markNodeRelationsDirty(poiselected); }
+			_root.panel.properties.reinit();
 		}
 	}
 
@@ -1011,12 +1011,16 @@
 	// Options window
 	
 	function openOptionsWindow() {
-		_root.launcher=preferences.data.launcher;	// .variable doesn't work well with preferences.data...
-		_root.photokml=preferences.data.photokml;	//   |
+		_root.launcher  =preferences.data.launcher;		// .variable doesn't work well with preferences.data...
+		_root.photokml  =preferences.data.photokml;		//   |
+		_root.twitterid =preferences.data.twitterid;	//   |
+		_root.twitterpwd=preferences.data.twitterpwd;	//   |
 		_root.windows.attachMovie("modal","options",++windowdepth);
-		_root.windows.options.init(430,185,new Array('Ok'),function() {
-			preferences.data.launcher=_root.launcher; 
-			preferences.data.photokml=_root.photokml; 
+		_root.windows.options.init(430,225,new Array('Ok'),function() {
+			preferences.data.launcher  =_root.launcher; 
+			preferences.data.photokml  =_root.photokml; 
+			preferences.data.twitterid =_root.twitterid;
+			preferences.data.twitterpwd=_root.twitterpwd;
 			preferences.flush();
 		} );
 		var box=_root.windows.options.box;
@@ -1070,31 +1074,33 @@
 		box.tiger.init(220,75,iText('option_tiger'),preferences.data.tiger,function(n) { preferences.data.tiger=n; redrawWays(); });
 
 		box.attachMovie("checkbox","pointer",4);
-		box.pointer.init(220,95,iText('option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
+		box.pointer.init(220,105,iText('option_custompointers'),preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
 
 		box.attachMovie("checkbox","warnings",3);
-		box.warnings.init(220,115,iText('option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
+		box.warnings.init(220,125,iText('option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
 
 		// External link and photo
 		
-		box.createTextField('externalt',70, 8,155,160,20);
-		with (box.externalt) { text=iText('option_external'); setTextFormat(plainSmall); selectable=false; }
-		adjustTextField(box.externalt);
-		box.createTextField('externali',71,box.externalt.textWidth+15,155,173-box.externalt.textWidth,17);
-		box.externali.setNewTextFormat(plainSmall); box.externali.type='input';
-		box.externali.text=_root.launcher; box.externali.variable="_root.launcher";
-		box.externali.background=true; box.externali.backgroundColor=0xDDDDDD;
-		box.externali.border=true; box.externali.borderColor=0xFFFFFF;
-
-		box.createTextField('photot',72, 8,125,160,20);
-		with (box.photot) { text=iText('option_photo'); setTextFormat(plainSmall); selectable=false; }
-		adjustTextField(box.photot);
-		box.createTextField('photoi',73,box.photot.textWidth+15,125,173-box.photot.textWidth,17);
-		box.photoi.setNewTextFormat(plainSmall); box.photoi.type='input';
-		box.photoi.text=_root.photokml; box.photoi.variable="_root.photokml";
-		box.photoi.background=true; box.photoi.backgroundColor=0xDDDDDD;
-		box.photoi.border=true; box.photoi.borderColor=0xFFFFFF;
-
+		createInputPrompt(box,'external',70,'option_external',	'_root.launcher',145);
+		createInputPrompt(box,'photo'	,72,'option_photo',		'_root.photokml',125);
+		createInputPrompt(box,'tw_id'	,74,'option_twitterid',	'_root.twitterid',175);
+		createInputPrompt(box,'tw_pwd'	,76,'option_twitterpwd','_root.twitterpwd',195);
+		box.tw_pwdi.password=true;
+	}
+	
+	function createInputPrompt(box,objname,objpos,tname,varset,py) {
+		var objt=objname+'t';
+		var obji=objname+'i';
+		
+		box.createTextField(objt,objpos,8,py,160,20);
+		with (box[objt]) { text=iText(tname); setTextFormat(plainSmall); selectable=false; }
+		adjustTextField(box[objt]);
+		
+		box.createTextField(obji,objpos+1,box[objt].textWidth+15,py,173-box[objt].textWidth,17);
+		box[obji].setNewTextFormat(plainSmall); box[obji].type='input';
+		box[obji].text=_root.photokml; box[obji].variable=varset;
+		box[obji].background=true; box[obji].backgroundColor=0xDDDDDD;
+		box[obji].border=true; box[obji].borderColor=0xFFFFFF;
 	}
 	
 	// markClean -	set JavaScript variable for alert when leaving page
@@ -1119,7 +1125,6 @@
 		_root.panel.i_direction._alpha=50;
 		clearTooltip();
 		setTypeText("","");
-		_root.panel.padlock._visible=false;
 
 		_root.panel.properties.saveAttributes();
 		_root.panel.properties.tidy();

@@ -201,19 +201,26 @@
 	$bq->movePenTo(6,9); $bq->drawLineTo(14,9);
 	$ec->add($bq); $ec->nextFrame();
 	$m->addExport($ec,"zoomout");
-
-	# ------ padlock sprite
 	
+	# -----	'locked' entry
+
 	$ec=new SWF::MovieClip();
 	$s=new SWF::Shape();
-	$s->movePenTo(3,-2); $s->setLine(35*$cw,0,0,0); $s->drawCircle(2);
-	$s->movePenTo(0,0); $s->setRightFill($s->addFill(0,0,0));
+	$s->setRightFill($s->addFill(0xFF,0,0));
+	$s->movePenTo(0,0); $s->drawLineTo(182,0);
+	$s->drawLineTo(182,17); $s->drawLineTo(0,17);
+	$s->drawLineTo(0,0); $ec->add($s); 
+
+	$s=new SWF::Shape();
+	$s->movePenTo(3,-2); $s->setLine(25*$cw,255,255,255); $s->drawCircle(2);
+	$s->movePenTo(0,0); $s->setRightFill($s->addFill(255,255,255));
 	$s->drawLineTo(6,0); $s->drawLineTo(6,6);
 	$s->drawLineTo(0,6); $s->drawLineTo(0,0); 
-	$ec->add($s);
-	$ec->nextFrame();
-	$m->addExport($ec,"padlock");
+	$r=$ec->add($s);
+	$r->moveTo(4,7);
 	
+	$ec->nextFrame();
+	$m->addExport($ec,'locked');
 
 	# ------ exclamation sprite
 	

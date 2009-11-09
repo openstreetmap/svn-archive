@@ -40,7 +40,7 @@
 	function changesetRequest(prompt,doOnClose,comment) {
 		_root.panel.properties.enableTabs(false);
 		_root.windows.attachMovie("modal","cs",++windowdepth);
-		_root.windows.cs.init(300, 140, [iText('cancel'), iText('ok')], completeClose);
+		_root.windows.cs.init(300, 160, [iText('cancel'), iText('ok')], completeClose);
 
 		var z = 5;
 		var box = _root.windows.cs.box;
@@ -54,6 +54,9 @@
 		box.prompt.text = iText('prompt_changesetcomment');
 		with (box.prompt) { wordWrap=true; setTextFormat(plainSmall); selectable=false; type='dynamic'; }
 		box.prompt.adjustTextField();
+
+		box.attachMovie("checkbox","twitter",z++);
+		box.twitter.init(10,110,iText('prompt_twitter',100),preferences.data.twitter,function(n) { preferences.data.twitter=n; },(preferences.data.twitterid!='' && preferences.data.twitterpwd!=''));
 		
 		box.createTextField("cscomment",z++,10,50,280,50);
 		with (box.cscomment) {
@@ -73,6 +76,7 @@
 			if ((box.cscomment.text.toUpperCase()=='C' || box.cscomment.text.toUpperCase()=='S') && !_root.csswallowed ) {
 				box.cscomment.text='';
 			}
+			_root.windows.cs.box.twitter.prompt.text=iText('prompt_twitter',100-box.cscomment.text.length);
 			_root.csswallowed=true;
 		};
 	}
@@ -80,6 +84,7 @@
 	function completeClose(button) {
 		if (button!=iText('ok')) { return false; }
         _root.changecomment=_root.windows.cs.box.cscomment.text;
+		if (_root.windows.cs.box.twitter.state) { twitterPost(); }
 		startChangeset(true);
 	}
 	
@@ -112,3 +117,98 @@
 		remote_write.call('startchangeset',csresponder,_root.usertoken,cstags,_root.changeset,_root.changecomment,open_new);
 		if (open_new) {	_root.panel.advanced.enableOption(5); }
 	}
+
+	// -----------------------------------------------------------------------
+	// shortLink (from site.js)
+
+	function shortLink(lat, lon, zoom) {
+	    var char_array="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_@";
+		var i;
+	    var x=Math.round((lon+180.0) * ((1 << 30) /90.0));
+	    var y=Math.round((lat+ 90.0) * ((1 << 30) /45.0));
+ 	    var c1=0, c2=0;
+	    for (i=31; i>16; --i) {
+			c1=(c1 << 1) | ((x >> i) & 1);
+			c1=(c1 << 1) | ((y >> i) & 1);
+	    }
+	    for (i=16; i>1; --i) {
+			c2=(c2 << 1) | ((x >> i) & 1);
+			c2=(c2 << 1) | ((y >> i) & 1);
+	    }
+	    var str="";
+	    for (i=0; i<Math.ceil((zoom+8) / 3.0) && i<5; ++i) {
+			digit=(c1 >> (24 - 6 * i)) & 0x3f;
+			str += char_array.charAt(digit);
+	    }
+	    for (i=5; i<Math.ceil((zoom+8) / 3.0); ++i) {
+			digit=(c2 >> (24 - 6 * (i - 5))) & 0x3f;
+			str += char_array.charAt(digit);
+	    }
+	    for (i=0; i<((zoom+8) % 3); ++i) {
+			str += "-";
+	    }
+	    return str;
+	}
+
+	function twitterPost() {
+		if (preferences.data.twitterid=='' || preferences.data.twitterpwd=='' || _root.changecomment=='') { return; }
+		_root.twitterresponse=new LoadVars();
+		var lv=new LoadVars();
+		lv.twitter_id =preferences.data.twitterid;
+		lv.twitter_pwd=preferences.data.twitterpwd;
+		lv.tweet      ="#osmedit "+_root.changecomment+" http://osm.org/go/"+shortLink(centrelat(0),centrelong(0),Math.min(_root.scale,18));
+		lv.lat        =centrelat(0);
+		lv.long       =centrelong(0);
+		lv.onLoad     =twitterLoaded;
+		lv.sendAndLoad("http://richard.dev.openstreetmap.org/cgi-bin/potlatchtweet.cgi",_root.twitterresponse,"POST");
+
+/*
+	The following code will be used when Twitter relax crossdomain restrictions on api.twitter.com (as promised).
+	Until then we have to go via a proxy.
+		_root.twitterresponse=new Object();
+		var lv=new LoadVars();
+		lv.addRequestHeader("Authorization","BASIC "+base64(preferences.data.twitterid+":"+preferences.data.twitterpwd));
+		lv.addRequestHeader("X-Twitter-Client","Potlatch");
+		lv.onLoad=function(success) { _root.chat.text+="onLoad "+success+"\n"; twitterUpdate(); };
+		resp=lv.sendAndLoad("http://twitter.com/account/verify_credentials.json",_root.twitterresponse,"POST");
+
+	...and then in the twitterUpdate function, the same lv stuff plus:
+		lv['status']="#osmedit "+_root.changecomment+" http://osm.org/go/"+shortLink(centrelat(0),centrelong(0),Math.min(_root.scale,18));
+		lv['lat']=centrelat(0);
+		lv['long']=centrelong(0);
+		lv.sendAndLoad("http://twitter.com/account/update.json",_root.twitterresponse,"POST");
+
+	And for the Base64 function:
+
+		// base64 - public domain from http://rumkin.com/tools/compression/base64.php (thanks!)
+		function base64(input) {
+			var char_array="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+			var output='';
+			var i=0;
+
+			while (i < input.length) {
+				var chr1 = input.charCodeAt(i++);
+				var chr2 = input.charCodeAt(i++);
+				var chr3 = input.charCodeAt(i++);
+
+				var enc1 = chr1 >> 2;
+				var enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+				var enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+				var enc4 = chr3 & 63;
+
+				if (isNaN(chr2)) { enc3 = enc4 = 64; }
+				else if (isNaN(chr3)) { enc4 = 64; }
+
+				output+=char_array.charAt(enc1) + char_array.charAt(enc2) + char_array.charAt(enc3) + char_array.charAt(enc4);
+		   }
+		   return output;
+		}
+
+*/
+
+	}
+
+	function twitterLoaded(success) {
+		if (_root.twitterresponse.success==0 || !success) { setAdvice(false,iText("error_twitter")); }
+	}
+	

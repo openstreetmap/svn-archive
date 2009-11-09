@@ -4,11 +4,6 @@
 
 You will need Ming (www.libming.net) and the Perl bindings.
 
-The unit used by Ming to specify line widths has changed in recent versions. You will need to alter the first line of potlatch_assets.pl (all the sprites) depending which version you are using.
-
-If you are using current Ming:		$cw=1/20;
-If you are using an old Ming:		$cw=1;
-
 === Against a local installation ===
 
 If you have the Rails port (full OSM codebase) set up on your machine, it's best to run Potlatch directly against that.
@@ -22,6 +17,8 @@ If you'd like to enable a debug window, add --trace:
 You can write to the debug window from the Potlatch source like this:
 	_root.chat.text="Some text";
 	
+If you're using Ming 0.3, add --ming3 to ensure that line widths are correct.
+
 === Against the main OSM server ===
 
 You can also run Potlatch locally, talking to the main openstreetmap.org server. In this case, to compile it, run:

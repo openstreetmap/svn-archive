@@ -43,6 +43,13 @@
 			if ( this.attr['ref'] )		text += this.attr['ref']+" ";
 			if ( this.attr['name'] )	text += this.attr['name']+" ";
 			if ( this.attr['state'] )	text += "("+this.attr['state']+") ";
+		} else if ( type == 'multipolygon' ) {
+			if      ( this.attr['place'] )   text += this.attr['place']+" ";
+			else if ( this.attr['amenity'] ) text += this.attr['amenity']+" ";
+			else if ( this.attr['leisure'] ) text += this.attr['leisure']+" ";
+			else if ( this.attr['landuse'] ) text += this.attr['landuse'] + " ";
+			else if ( this.attr['natural'] ) text += this.attr['natural'] + " ";
+			if ( this.attr['name'] )         text += this.attr['name']+" ";
 		} else if ( this.attr['name'] )	text += this.attr['name'];
 
 		return text;
@@ -55,6 +62,13 @@
 		if (this.attr['type']=='route') {
 			if (this.attr['network']) { return this.attr['network']; }
 			if (this.attr['route']) { return this.attr['route']; }
+		}
+		if (this.attr['type']=='multipolygon') {
+			if (this.attr['place']  ) { return this.attr['place']; }
+			if (this.attr['amenity']) { return this.attr['amenity']; }
+			if (this.attr['leisure']) { return this.attr['leisure']; }
+			if (this.attr['landuse']) { return this.attr['landuse']; }
+			if (this.attr['natural']) { return this.attr['natural']; }
 		}
 		return this.attr['type'];
 	};

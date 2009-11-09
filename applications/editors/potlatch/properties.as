@@ -279,6 +279,15 @@
 		this.proptype='';
 	};
 	PropertyWindow.prototype=new MovieClip();
+
+	PropertyWindow.prototype.selectedObject=function() {
+		switch (this.proptype) {
+			case 'point': 		return _root.ws.path[_root.pointselected];
+			case 'POI': 		return _root.map.pois[poiselected];
+			case 'way': 		return _root.ws;
+			case 'relation': 	return _root.editingrelation;
+		}
+	};
 	
 	PropertyWindow.prototype.reinit=function() {
 		var n=this.savedundo;
@@ -300,39 +309,29 @@
 		this.learn=new Object();
 		if (proptype=='') { return; }
 
-		this.relarr = new Object();
+		this.proparr=this.selectedObject().attr;
 		switch (proptype) {
-			case 'point':
-				this.proparr=_root.ws.path[_root.pointselected].attr;
-				this.relarr=_root.noderels[_root.ws.path[pointselected].id];
-				break;
-			case 'POI':
-				this.proparr=_root.map.pois[poiselected].attr;
-				this.relarr=_root.noderels[poiselected];
-				break;
-			case 'way':
-				this.proparr=_root.ws.attr;
-				this.relarr=_root.wayrels[wayselected];
-				break;
-			case 'relation':
-				this.proparr=_root.editingrelation.attr;
-				break;
+			case 'point': 		this.relarr=_root.noderels[_root.ws.path[pointselected].id]; break;
+			case 'POI': 		this.relarr=_root.noderels[poiselected]; break;
+			case 'way': 		this.relarr=_root.wayrels[wayselected]; break;
+			case 'relation': 	this.relarr=new Object(); break;	// we don't do nested relations
 		}
-
 		this.xpos=0; this.ypos=0;
+
+		// Attach 'locked' entry
+		if (this.selectedObject().locked) {
+			this.addToAttributes('locked');
+			this.attributes['0'].createTextField('prompt',1,12,-1,170,18);
+			this.attributes['0'].prompt.text=iText("prompt_unlock");
+			this.attributes['0'].prompt.setTextFormat(boldWhite);
+			this.attributes['0'].onPress=keyLock;
+		}
 
 		// Attach relations
 		relarr=this.relarr;
 		for (var rel in relarr) {
 			if (_root.map.relations[rel]) {
-				this.attributes.attachMovie("relmember",this.tagcount, this.tagcount);
-				var pos = this.getXY(this.tagcount);
-				this.attributes[this.tagcount]._x=pos[0];
-				this.attributes[this.tagcount]._y=pos[1];
-				this.attributes[this.tagcount].init(rel);
-				this.attributes[this.tagcount].value.tabIndex=++this.tab;
-				this.attributes[this.tagcount].value.tabEnabled=true;
-				this.tagcount+=1;
+				this.addToAttributes("relmember",rel);
 			}
 		}
 
@@ -352,20 +351,23 @@
 		for (i=0; i<proplist.length; i++) {
 			el=proplist[i];
 			if (proparr[el]!='' && el!='created_by' && el!='edited_by') {
-				this.attributes.attachMovie("keyvalue",this.tagcount,this.tagcount);
-				var pos = this.getXY(this.tagcount);
-				this.attributes[this.tagcount]._x=pos[0];
-				this.attributes[this.tagcount]._y=pos[1];
-				this.attributes[this.tagcount].init(el);
-				this.attributes[this.tagcount].keyname.tabIndex=++this.tab;
-				this.attributes[this.tagcount].value.tabIndex=++this.tab;
-				this.tagcount+=1;
+				this.addToAttributes("keyvalue",el);
 			}
 		}
 
-
 		this.scrollbar._x=0; this.scrollbar._y=this.ynumber*19;
 		this.updateMask();					// Draw scrollbar
+	};
+
+	PropertyWindow.prototype.addToAttributes=function(mcname,obj) {
+		this.attributes.attachMovie(mcname,this.tagcount, this.tagcount);
+		var pos = this.getXY(this.tagcount);
+		this.attributes[this.tagcount]._x=pos[0];
+		this.attributes[this.tagcount]._y=pos[1];
+		if (obj) { this.attributes[this.tagcount].init(obj); }
+		this.attributes[this.tagcount].value.tabIndex=++this.tab;
+		this.attributes[this.tagcount].value.tabEnabled=true;
+		this.tagcount+=1;
 	};
 
 	PropertyWindow.prototype.saveUndo=function() {
@@ -733,13 +735,13 @@
 	// for a given key, returns the value from the way, point or POI
 
 	KeyValue.prototype.getValueFromObject=function(k) {
-		var v;
-		switch (this._parent._parent.proptype) {
-			case 'point':	v=_root.ws.path[_root.pointselected].attr[k]; break;
-			case 'POI':		v=_root.map.pois[poiselected].attr[k]; break;
-			case 'way':		v=_root.ws.attr[k]; break;
-			case 'relation':v=_root.editingrelation.attr[k]; break;
-		}
+		var v=this._parent._parent.selectedObject().attr[k];
+//		switch (this._parent._parent.proptype) {
+//			case 'point':	v=_root.ws.path[_root.pointselected].attr[k]; break;
+//			case 'POI':		v=_root.map.pois[poiselected].attr[k]; break;
+//			case 'way':		v=_root.ws.attr[k]; break;
+//			case 'relation':v=_root.editingrelation.attr[k]; break;
+//		}
 		if (v==undefined) { v='(type value here)'; }
 		return v;
 	};
@@ -893,6 +895,7 @@
 	};
 
 	RelMember.prototype.setRole=function(tf) {
+		var v;
 		var role = tf.text;
 		switch (this._parent._parent.proptype) {
 			case 'point':	v=this.rel.setNodeRole(_root.ws.path[_root.pointselected].id, role); break;
@@ -925,7 +928,7 @@
 	function setTypeText(a,b) {
 		if (a=='') {
 			_root.panel.scale._visible=true;
-			_root.panel.t_type._visible=_root.panel.t_details._visible=_root.panel.padlock._visible=false;
+			_root.panel.t_type._visible=_root.panel.t_details._visible=false;
 			removeMovieClip(_root.panel.historylink);
 
 			var thislat=coord2lat(_root.map._y);
@@ -941,13 +944,6 @@
 			_root.panel.t_type._visible=_root.panel.t_details._visible=true;
 			_root.panel.t_type.text=a;    _root.panel.t_type.setTextFormat(boldText);
 			_root.panel.t_details.text=b; _root.panel.t_details.setTextFormat(plainText);
-			if (_root.ws.locked ||
-				_root.map.pois[_root.poiselected].locked) {
-				_root.panel.padlock._visible=true;
-				_root.panel.padlock._x=_root.panel.t_details.textWidth+15;
-			} else {
-				_root.panel.padlock._visible=false;
-			}
 			_root.panel.createEmptyMovieClip('historylink',25);
 			with (_root.panel.historylink) {
 				beginFill(0,0); moveTo(5,23);
@@ -1053,3 +1049,4 @@
 			s.text=s.text.split(String.fromCharCode(0x03)).join('');
 		}
 	}
+

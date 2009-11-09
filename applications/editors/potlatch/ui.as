@@ -137,34 +137,38 @@
 	Object.registerClass("radio",UIRadio);
 
 	// Checkboxes
-	// UICheckbox.init(x,y,text,state,changefunction)
+	// UICheckbox.init(x,y,text,state,changefunction,enabled?)
 
 	UICheckbox=function() {
 	};
 	UICheckbox.prototype=new MovieClip();
-	UICheckbox.prototype.init=function(x,y,prompttext,state,changefunction) {
+	UICheckbox.prototype.init=function(x,y,prompttext,state,changefunction,enabled) {
+		if (enabled==undefined) { enabled=true; }
 		this._x=x;
 		this._y=y;
+		this.enabled=enabled;
 		this.state=state;
 		this.doOnChange=changefunction;
-		createHitRegion(this,prompttext,0,1);
-		this.hitregion.onPress=function() {
-			this._parent.state=!this._parent.state;
-			this._parent.draw();
-			this._parent.doOnChange(this._parent.state);
-		};
-
+		createHitRegion(this,prompttext,0,1,enabled);
+		if (enabled) {
+			this.hitregion.onPress=function() {
+				this._parent.state=!this._parent.state;
+				this._parent.draw();
+				this._parent.doOnChange(this._parent.state);
+			};
+		}
 		this.createEmptyMovieClip('box',2);
 		this.draw();
 	};
 	UICheckbox.prototype.draw=function() {
 		with (this.box) {
 			clear();
-			lineStyle(2,0,100);
+			if (this.enabled) { lineStyle(2,0,100); }
+						 else { lineStyle(2,0,30); }
 			moveTo(1,0);
 			lineTo(9,0); lineTo(9,9);
 			lineTo(0,9); lineTo(0,0);
-			if (this.state==true) {
+			if (this.state) {
 				lineStyle(2,0,100);
 				moveTo(1,1); lineTo(8,8);
 				moveTo(8,1); lineTo(1,8);
@@ -452,12 +456,14 @@
 	}
 
 	// createHitRegion		- write a prompt and draw a hit region around it
-	// (object,prompt text,depth for text object,depth for hit region)
+	// (object,prompt text,depth for text object,depth for hit region,enabled?)
 
-	function createHitRegion(obj,prompttext,promptdepth,hitdepth) {
+	function createHitRegion(obj,prompttext,promptdepth,hitdepth,enabled) {
+		if (enabled==undefined) { enabled=true; }
 		obj.createTextField('prompt',promptdepth,13,-5,200,19);
+		if (enabled) { obj.prompt.setNewTextFormat(plainSmall); }
+				else { obj.prompt.setNewTextFormat(greySmall);  }
 		obj.prompt.text=prompttext;
-		obj.prompt.setTextFormat(plainSmall);
 		obj.prompt.selectable=false;
 		tw=obj.prompt._width=obj.prompt.textWidth+5;
 

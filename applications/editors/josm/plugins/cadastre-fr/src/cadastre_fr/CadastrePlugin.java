@@ -173,8 +173,7 @@ public class CadastrePlugin extends Plugin {
     }
 
     public static void refreshConfiguration() {
-        source = Main.pref.get("cadastrewms.source",
-                "cadastre-dgi-fr source : Direction G\u00e9n\u00e9rale des Imp\u00f4ts - Cadastre ; mise \u00e0 jour : AAAA");
+        source = checkSourceMillesime(); 
         autoSourcing = Main.pref.getBoolean("cadastrewms.autosourcing", true);
         alterColors = Main.pref.getBoolean("cadastrewms.alterColors");
         drawBoundaries = Main.pref.getBoolean("cadastrewms.drawBoundaries", false);
@@ -278,5 +277,23 @@ public class CadastrePlugin extends Plugin {
         dialog.setModal(true);
         dialog.toFront();
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    }
+    
+    private static String checkSourceMillesime() {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        int currentYear = calendar.get(java.util.Calendar.YEAR);
+        String src = Main.pref.get("cadastrewms.source",
+            "cadastre-dgi-fr source : Direction G\u00e9n\u00e9rale des Imp\u00f4ts - Cadastre ; mise \u00e0 jour : AAAA");
+        String srcYear = src.substring(src.lastIndexOf(" ")+1);
+        Integer year = null;
+        try {
+            year = Integer.decode(srcYear);
+        } catch (NumberFormatException e) {}
+        if (srcYear.equals("AAAA") || (year != null && year < currentYear)) {
+            System.out.println("Replace source year "+srcYear+" by current year "+currentYear);
+            src = src.substring(0, src.lastIndexOf(" ")+1)+currentYear;
+            Main.pref.put("cadastrewms.source", src);
+        }
+        return src;
     }
 }

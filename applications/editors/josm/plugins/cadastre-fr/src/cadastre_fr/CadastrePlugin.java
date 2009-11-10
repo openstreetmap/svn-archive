@@ -283,7 +283,7 @@ public class CadastrePlugin extends Plugin {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         int currentYear = calendar.get(java.util.Calendar.YEAR);
         String src = Main.pref.get("cadastrewms.source",
-            "cadastre-dgi-fr source : Direction G\u00e9n\u00e9rale des Imp\u00f4ts - Cadastre ; mise \u00e0 jour : AAAA");
+            "cadastre-dgi-fr source : Direction G\u00e9n\u00e9rale des Imp\u00f4ts - Cadastre. Mise \u00e0 jour : AAAA");
         String srcYear = src.substring(src.lastIndexOf(" ")+1);
         Integer year = null;
         try {

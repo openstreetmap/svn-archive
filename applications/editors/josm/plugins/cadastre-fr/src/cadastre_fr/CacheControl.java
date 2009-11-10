@@ -1,3 +1,4 @@
+// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
 package cadastre_fr;
 /**
  * This class handles the WMS layer cache mechanism. The design is oriented for a good performance (no

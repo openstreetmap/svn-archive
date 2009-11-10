@@ -87,7 +87,7 @@ public class WalkingPapersAddLayerAction extends JosmAction {
 
     }
 
-    public static String getWalkingPapersId(String wpid) {
+    private static String getWalkingPapersId(String wpid) {
         if (!wpid.contains("id=")) {
             return wpid;
         } else {

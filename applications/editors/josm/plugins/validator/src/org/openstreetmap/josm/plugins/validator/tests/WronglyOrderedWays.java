@@ -57,6 +57,8 @@ public class WronglyOrderedWays extends Test  {
 
         if( !w.isUsable() )
             return;
+        if (w.getNodesCount() <= 0)
+            return;
 
         String natural = w.get("natural");
         if( natural == null)

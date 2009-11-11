@@ -715,7 +715,6 @@
 			if (_root.scale<17) { xinc=0.5; yinc=0.5; }
 			               else { xinc=0.1; yinc=0.1; }
 		}
-		_root.chat.text=xinc;
 		
 		switch (k) {
 			case 46:		;													// DELETE/backspace - delete way/node

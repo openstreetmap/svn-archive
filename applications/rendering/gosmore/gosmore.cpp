@@ -229,7 +229,10 @@ STYLES
   o (ShowTime,        ) \
 
 #define o(en,min,max) en ## Num,
-enum { OPTIONS COMMANDS mapMode, optionMode, searchMode, chooseObjectToAdd };
+enum {
+  OPTIONS wayPointIconNum, COMMANDS
+  mapMode, optionMode, searchMode, chooseObjectToAdd
+};
 #undef o
 
 int listYOffset; // Number of pixel. Changed by dragging.
@@ -299,6 +302,12 @@ void ChangePak (const TCHAR *pakfile)
   gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
     NULL);
+  if (gmap == INVALID_HANDLE_VALUE && l2 == pakfile) {
+    wsprintf (wcsrchr (l2, L'\\'), TEXT ("\\default.pak"));
+    gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
+      NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
+      NULL);    
+  }
   fm = gmap == INVALID_HANDLE_VALUE ? INVALID_HANDLE_VALUE :
     CreateFileMapping(gmap, NULL, PAGE_READONLY, 0, 0, 0);
   map = fm == INVALID_HANDLE_VALUE ? NULL :
@@ -331,7 +340,9 @@ void ChangePak (const TCHAR *pakfile)
   static size_t len = 0 /* Shut up gcc */;
 //  printf ("%s %d %d\n", pakfile, (clon >> 22) + 512, 512 - (clat >> 22));
   if (map != (void*) -1) munmap (map, len);
+  
   FILE *gmap = fopen64 (pakfile, "r");
+  if (!gmap && l2 == pakfile) gmap = fopen64 ("default.pak", "r");
   len = gmap && fseek (gmap, 0, SEEK_END) == 0 ? ftell (gmap) : 0;
   map = !len ? (void*)-1
      : mmap (NULL, ftell (gmap), PROT_READ, MAP_SHARED, fileno (gmap), 0);
@@ -978,6 +989,67 @@ gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
   }
   return FALSE;
 }
+
+struct wayPointStruct {
+  int lat, lon;
+};
+deque<wayPointStruct> wayPoint;
+
+void ExtractClipboard (GtkClipboard *, const gchar *t, void *data)
+{
+  unsigned lonFirst = FALSE, hash = 0;
+  double deg[2];
+  static unsigned oldh = 0; // Sometimes an extra queue_clear is needed
+  wayPoint.clear ();
+  if (!t) return;
+  for (; *t != '\0'; t++) {
+    if (strncasecmp (t, "lat", 3) == 0) lonFirst = FALSE;
+    else if (strncasecmp (t, "lon", 3) == 0) lonFirst = TRUE;
+
+    for (int i = 0; i < 2 && (isdigit (*t) || *t == '-'); i++) {
+      deg[i] = atof (t);
+      while (isdigit (*t) || *t == '-') t++;
+      if (*t != '.') {
+        // 25S 28E or 25°58′25″S 28°7′42″E or 25 58.5 S 28 6.3 E
+        while (*t != '\0' && !isdigit (*t) && !isalpha (*t)) t++;
+        deg[i] += atof (t) / (deg[i] < 0 ? -60 : 60);
+        while (isdigit (*t) || *t == '.' || *t == ',') t++;
+        while (*t != '\0' && !isalnum (*t)) t++;
+        deg[i] += atof (t) / (deg[i] < 0 ? -3600 : 3600);
+        while (*t != '\0' && !isalpha (*t)) t++;
+      }
+      else { // -25.12 28.1
+        while (*t != '\0' && (isalnum (*t) || *t == '-' || *t == '.')) t++;
+        while (*t != '\0' && !isalnum (*t)) t++;
+      }
+      
+      if (*t != '\0' && strchr ("westWEST", *t) && !isalpha (t[1])) {
+        // If t[1] is a letter, then it could be something like
+        // "-25.1 28.2 school".
+        if (strchr ("swSW", *t)) deg[i] = -deg[i];
+        lonFirst = i == (strchr ("snSN", *t) ? 1 : 0);
+        for (t++; isspace (*t); t++) {}
+      }
+      if (deg[i] < -180 || deg[i] > 180) break;
+      if (i == 0 && (strncasecmp (t, "lat", 3) == 0 ||
+                     strncasecmp (t, "lon", 3) == 0)) { // lat=-25.7 lon=28.2
+        for (t += 3; t != '\0' && !isalnum (*t); t++) {}
+      }
+      if (i == 1) { // Success !
+        //printf ("%lf %lf %u\n", deg[lonFirst ? 1 : 0], deg[lonFirst ? 0 : 1],
+        //  lonFirst); // Debugging
+        wayPoint.push_back (wayPointStruct ());
+        wayPoint.back ().lon = Longitude (deg[lonFirst ? 0 : 1]);
+        wayPoint.back ().lat = Latitude (deg[lonFirst ? 1 : 0]);
+        lonFirst = FALSE; // Not too sure if we should reset lonFirst here.
+        hash += wayPoint.back ().lon + wayPoint.back ().lat;
+        // Bad but adequote hash function.
+      }
+    }
+  }
+  if (oldh != hash) gtk_widget_queue_clear (draw);
+  oldh = hash;
+}
 #endif
 
 int ListXY (int cnt, int isY)
@@ -1021,7 +1093,6 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   else if (option == optionMode) {
     if (firstDrag[0] >= 0 && fabs (firstDrag[1] - event->y) > 15) {
       listYOffset = max (0, listYOffset + (int)lrint (firstDrag[1]-event->y));
-      firstDrag[0] = -1;
     }
     else {
       for (int best = 9999, i = 0; i < mapMode; i++) {
@@ -1053,11 +1124,14 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       return RouteTest (NULL /*widget*/, event, NULL /*para*/);
     }
     #endif
+    #ifndef NOGTK
+      GtkClipboard *c = gtk_clipboard_get (GDK_SELECTION_PRIMARY);
+      gtk_clipboard_request_text (c, ExtractClipboard, &wayPoint);
+    #endif
     int perpixel = zoom / w, dx = event->x - w / 2, dy = h / 2 - event->y;
     if (firstDrag[0] >= 0) {
       dx = firstDrag[0] - event->x;
       dy = event->y - firstDrag[1];
-      firstDrag[0] = -1;
     }
     int lon = clon + lrint (perpixel *
       (cosAzimuth * (Display3D ? 0 : dx) - sinAzimuth * dy));
@@ -1092,7 +1166,8 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       Route (TRUE, 0, 0, Vehicle, FastestRoute);
     }
   }
-  gtk_widget_queue_clear (draw);
+  firstDrag[0] = -1;
+  gtk_widget_queue_clear (draw); // TODO: Don't do this when updating wayPoint
   return FALSE;
 }
 
@@ -1366,6 +1441,7 @@ int DrawExpose (HPEN *pen, HBRUSH *brush)
     return FALSE;
   } // if displaying the klas / style / rule selection screen
 #else
+
 void SetColour (GdkColor *c, int hexTrip)
 {
   c->red =    (hexTrip >> 16)        * 0x101;
@@ -1877,6 +1953,12 @@ gint DrawExpose (void)
     DrawPoI (X (tlon, tlat), Y (tlon, tlat), IconSet * 4 +
       style[firstElemStyle + EndRouteNum].x);
     #ifndef NOGTK
+    for (deque<wayPointStruct>::iterator w = wayPoint.begin ();
+         w != wayPoint.end (); w++) {
+      DrawPoI (X (w->lon, w->lat), Y (w->lon, w->lat),
+        style[firstElemStyle + wayPointIconNum].x);
+    }
+    
     for (int i = 1; ShowActiveRouteNodes && i < routeHeapSize; i++) {
       gdk_draw_line (draw->window, mygc,
         X (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat) - 2,
@@ -2032,7 +2114,7 @@ gint DrawExpose (void)
     }
   }
   else if (option == optionMode) {
-    for (int i = 0; i < cmdturnleftNum; i++) {
+    for (int i = 0; i < wayPointIconNum; i++) {
       DrawPoI (ListXY (i, FALSE), ListXY (i, TRUE) - 5,
         style[firstElemStyle + i].x); // Always classic.big
       DrawString (ListXY (i, FALSE) - strlen (optionNameTable[English][i]) *
@@ -2248,14 +2330,23 @@ int UserInterface (int argc, char *argv[],
     printf ("Content-Type: text/plain\n\r\n\r");
     if (!shortest) printf ("No route found\n\r");
     else if (routeHeapSize <= 1) printf ("Jump\n\r");
+    styleStruct *firstS = Style (Way (shortest->nd));
+    double ups = lrint (3.6 / firstS->invSpeed[Vehicle]
+        / firstS->aveSpeed[Vehicle] / (20000 / 2147483648.0) /
+        cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180)));
+    // ups (Units per second) also works as an unsigned int.
+
     for (; shortest; shortest = shortest->shortest) {
       wayType *w = Way (shortest->nd);
       char *name = (char*)(w + 1) + 1;
       unsigned style= StyleNr(w);
-      printf ("%lf,%lf,%c,%s,%.*s\n\r", LatInverse (shortest->nd->lat),
+      printf ("%lf,%lf,%c,%s,%.0lf,%.*s\n\r", LatInverse (shortest->nd->lat),
         LonInverse (shortest->nd->lon), JunctionType (shortest->nd),
 	style < sizeof(klasTable)/sizeof(klasTable[0]) ? klasTable[style].desc :
-	"(unknown-style)", (int) strcspn (name, "\n"), name);
+	"(unknown-style)", ((shortest->heapIdx < 0
+	? -shortest->heapIdx : routeHeap[shortest->heapIdx].best) -
+	shortest->remain) / ups,
+	(int) strcspn (name, "\n"), name);
     }
     return 0;
   }

@@ -703,20 +703,21 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
           
           // If (lmask<<dir)&layout[x] is set, we are going approximately
           // in direction x * 90 degrees, relative to the direction we
-          // are going to (Remeber that we are coming from 'root')
+          // are going to (Remember that we are coming from 'root')
           // If layout[x] is not zero, there are segments going in that
           // direction
-          if (layout[rhd ? 1 : 3] && ((lmask << dir) & layout[rhd ? 3 : 1])) {
-            d += 300000 * (fast ? Style (w)->invSpeed[Vehicle] : 1);;
+          if (layout[rhd ? 1 : 3] && ((lmask << dir) & layout[rhd ? 3 : 1])
+              && fast && Style (w)->scaleMax > 100000) {
+            d += 100000 * (fast ? Style (w)->invSpeed[Vehicle] : 1);
           // Turning right in the UK (or left in the rest of the world), when
-          // the straight on road exist, you will probably have to wait for
-          // oncoming traffic.
+          // we are on a major road (secondary+) that continues straight on,
+          // you will probably have to wait for oncoming traffic.
           }
           
           if (layout[1] && layout[3] && ((lmask << dir) & layout[0])) {
             // Straight over a T-junction
             if ((Way (layoutNd[1])->bits & (1 << motorcarR)) &&
-                (Way (layoutNd[3])->bits & (1 << motorcarR))) {
+                (Way (layoutNd[3])->bits & (1 << motorcarR)) && fast) {
             // And motorcars are allowed on both sides
               d += (Style (Way (layoutNd[1]))->invSpeed[motorcarR] <
                     Style (w)->invSpeed[motorcarR] ? 50000 : 9000) *
@@ -1295,12 +1296,12 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 
   //------------------------ elemstylesfile : -----------------------------
   styleStruct srec[2 << STYLE_BITS];
-  elemstyleMapping map[2 << STYLE_BITS];
+  elemstyleMapping eMap[2 << STYLE_BITS];
   memset (&srec, 0, sizeof (srec));
-  memset (&map, 0, sizeof (map));
+  memset (&eMap, 0, sizeof (eMap));
   
   int elemCnt = LoadElemstyles(elemstylefile, iconscsvfile,
-				srec, map), styleCnt = elemCnt;
+				srec, eMap), styleCnt = elemCnt;
   
   
   //------------------ OSM Data File (/dev/stdin) : ------------------------
@@ -1339,7 +1340,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   } *wayFseek = NULL;
   int lowzList[1000], lowzListCnt = 0, wStyle = elemCnt, ref = 0, role = 0;
   int member[2], relationType = 0, onewayReverse = 0;
-  vector<int> wayId, wayMember, cycleNet;
+  vector<int> wayMember, cycleNet;
+  map<int,int> wayId;
   wayType w;
   w.clat = 0;
   w.clon = 0;
@@ -1416,8 +1418,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
           
 	  int newStyle = 0;
 	  // TODO: this for loop could be clearer as a while
-	  for (; newStyle < elemCnt && !(K_IS (map[newStyle].style_k) &&
-					  (map[newStyle].style_v[0] == '\0' || V_IS (map[newStyle].style_v)) &&
+	  for (; newStyle < elemCnt && !(K_IS (eMap[newStyle].style_k) &&
+					  (eMap[newStyle].style_v[0] == '\0' || V_IS (eMap[newStyle].style_v)) &&
 					  (isNode ? srec[newStyle].x[2] :
 					   srec[newStyle].lineColour != -1 ||
 					   srec[newStyle].areaColour != -1)); newStyle++) {}
@@ -1431,7 +1433,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	  }
 	  else if (newStyle < elemCnt && 
 		   (wStyle == elemCnt || 
-		    map[wStyle].ruleNr > map[newStyle].ruleNr)) {
+		    eMap[wStyle].ruleNr > eMap[newStyle].ruleNr)) {
 	    wStyle = newStyle;
 	  }
 	  
@@ -1462,15 +1464,13 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	xmlFree (aname);
       } /* While it's an attribute */
       if (relationType == 'w' && stricmp (name, "member") == 0) {
-	for (unsigned i = 0; i < wayId.size (); i += 2) {
-	  if (ref == wayId[i]) wayMember.push_back (wayId[i + 1]);
-	}
+	map<int,int>::iterator refId = wayId.find (ref);
+	if (refId != wayId.end ()) wayMember.push_back (refId->second);
       }
       if (!wayFseek || wayFseek->off) {
 	if (stricmp (name, "member") == 0 && role != 'v') {
-	  for (unsigned i = 0; i < wayId.size (); i += 2) {
-	    if (ref == wayId[i]) member[role == 'f' ? 0 : 1] = wayId[i + 1];
-	  }
+          map<int,int>::iterator refId = wayId.find (ref);
+          if (refId != wayId.end ()) member[role == 'f' ? 0 : 1] = refId->second;
 	}
 	else if (stricmp (name, "nd") == 0 ||
 		 stricmp (name, "member") == 0) wayNd.push_back (ref);
@@ -1486,8 +1486,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
       if (nameIsRelation) wayMember.clear ();
       if (stricmp (name, "way") == 0 || nameIsNode || nameIsRelation) {
 	if (!nameIsRelation && !nameIsNode) {
-	  wayId.push_back (nd.id);
-	  wayId.push_back (ftell (pak));
+	  wayId[nd.id] = ftell (pak);
 	}
 	if (nameIsRelation) {
 	  //xmlFree (nameTag);
@@ -1532,7 +1531,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
             FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
 	  }
 	  
-	  w.bits |= ~noMask & (yesMask | (map[wStyle].defaultRestrict &
+	  w.bits |= ~noMask & (yesMask | (eMap[wStyle].defaultRestrict &
 					  ((noMask & (1 << accessR)) ? (1 << onewayR) : ~0)));
 	  if (w.destination & (1 << accessR)) w.destination = ~0;
 	  memcpy (&srec[styleCnt], &srec[wStyle], sizeof (srec[0]));
@@ -1568,7 +1567,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	  }
 	  lowzListCnt = 0;
           
-	  /*if (StyleNr (&w) < elemCnt && stricmp (map[StyleNr (&w)].style_v,
+	  /*if (StyleNr (&w) < elemCnt && stricmp (eMap[StyleNr (&w)].style_v,
 						  "city") == 0 && tags[0] == '\n') {
 	    int nlen = strcspn (tags + 1, "\n");
 	    char *n = (char *) xmlMalloc (strlen (tags) + 1 + nlen + 5 + 1);
@@ -1781,9 +1780,9 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   REBUILDWATCH (for (unsigned i = 0; i < cycleNet.size (); i++)) {
     wayType *way = (wayType*) (data + cycleNet[i]);
     for (int j = StyleNr (way) + 1; j < elemCnt; j++) {
-      if (strncasecmp (map[j].style_k, "cyclenet", 8) == 0 &&
-	  stricmp (map[j].style_k + 8, map[StyleNr (way)].style_k) == 0 &&
-	  stricmp (map[j].style_v, map[StyleNr (way)].style_v) == 0) {
+      if (strncasecmp (eMap[j].style_k, "cyclenet", 8) == 0 &&
+	  stricmp (eMap[j].style_k + 8, eMap[StyleNr (way)].style_k) == 0 &&
+	  stricmp (eMap[j].style_v, eMap[StyleNr (way)].style_v) == 0) {
 	way->bits = (way->bits & ~((2 << STYLE_BITS) - 1)) | j;
       }
     }

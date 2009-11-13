@@ -1,0 +1,15 @@
+OpenStreetMap data
+--------------------------
+(C) www.OpenStreetMap.org and contributors
+Creative Commons Attribution-ShareAlike 2.0 license
+See: http://wiki.openstreetmap.org/wiki/OpenStreetMap_License
+
+====================================================
+
+The following license details only apply to this installer and not the installed maps!!!
+
+This Installer code
+----------------------
+GNU GPL V2 or later
+See: http://www.gnu.org/licenses/gpl-2.0.html
+

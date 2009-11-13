@@ -20,6 +20,7 @@
 # along with Tagwatch.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------
 use strict;
+use DB_File;
 use libs::getWikiSettings;
 
 sub processOSMFiles
@@ -83,6 +84,17 @@ sub processOSMFiles
 		my %Relations;
 		my @TempMember;
 		my $Relationtype=="-";
+
+		if($Config{'diskhash_folder'})
+		{
+			my $dir = $Config{'diskhash_folder'};
+			mkdir $dir if ! -d $dir;
+			tie my %Keys, "DB_File", "$dir/keys";
+			tie my %Tags, "DB_File", "$dir/tags";
+			tie my %Values, "DB_File", "$dir/values";
+			tie my %Stats, "DB_File", "$dir/stats";
+			tie my %Relations, "DB_File", "$dir/relations";
+		}
 
 		my $name = "$Config{'osmfile_folder'}/$OSMfile";
 		my $splitvals = ($Config{'split_values'} || "no") eq "yes";

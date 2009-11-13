@@ -206,6 +206,33 @@ sub getOSMFiles
 	my $new = 0;
 	foreach my $Url (@Urls)
 	{
+                if($Url =~ /^\//)
+                {
+                        my $files = `find '$Url' -maxdepth 1 -type f -printf '%f|%TY-%Tm-%Td %TH:%TM\n'`;
+                        foreach my $file (sort split"\n", $files)
+                        {
+                                $file =~ s/(.*)\|(.*)//;
+				my $Date = $2;
+				my $FileName = $1;
+				my $usename = $FileName;
+				next if %usefiles && !$usefiles{$usename};
+
+				$usename =~ s/.bz2// if($Config{'extract_OsmFiles'} eq "yes");
+
+				if(!$files{$usename} || $files{$usename} ne $Date)#
+				{
+                                        system "ln -sf '$Url/$FileName' '$Folder/'";
+					++$new;
+					if($Config{'extract_OsmFiles'} eq "yes")
+					{
+						system("bunzip2 $Folder/$FileName");
+					}
+				}
+				delete $files{$usename};
+				print FILELIST "$usename|$Date\n";
+                        }
+                        next;
+                }
 		foreach my $Line (split("\n",get($Url)))
 		{
 			if($Line =~ m{(.*)<a href="(.*).osm.bz2">(.*)</a></td><td align="right">(.*?) *</td>(.*)<td align="right">(.*)}
@@ -233,7 +260,7 @@ sub getOSMFiles
 		}
 	}
 	die "Nothing changed\n" if !$new && $Config{'die_when_unchanged'} eq "yes";
-;
+
 	if($Config{'delete_OldOsmFiles'} eq "yes")
 	{
 		foreach my $file (keys %files)

@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type"><title>Gosmin To Do</title>
+<link rel="shortcut icon" type="image/x-icon" href="gosmininst.ico"></head>
+<body><h1>Gosmin To Do</h1><h2>Page Overview</h2>
+<table style="text-align: left;" border="1" cellpadding="2" cellspacing="2"><tbody><tr>
+<th>Welcome</th>
+<th>License</th>
+<td style="font-weight: bold;">Preparations</td><th>Device</th>
+
+<th>Destination</th>
+<th>Source</th>
+<th>Summary</th>
+<th>Installation</th>
+<th>Finish</th>
+</tr><tr>
+<td><a href="#Welcome"><img style="border: 0px solid ; width: 120px; height: 94px;" alt="" src="Screenshots/Welcome.png"></a></td>
+<td><a href="#License"><img style="border: 0px solid ; width: 120px; height: 94px;" alt="" src="Screenshots/License.png"></a></td>
+<td><a href="#Preparations"><img style="border: 0px solid ; width: 120px; height: 94px;" alt="" src="Screenshots/Preparations.png"></a></td>
+<td><a href="#Device"><img style="border: 0px solid ; width: 120px; height: 94px;" alt="" src="Screenshots/Device.png"></a></td>
+<td><a href="#Destination"><img style="border: 0px solid ; width: 120px; height: 94px;" alt="" src="Screenshots/Destination.png"></a></td>
+<td><a href="#Source"><img style="border: 0px solid ; width: 120px; height: 94px;" alt="" src="Screenshots/Source.png"></a></td>
+<td><a href="#Summary"><img style="border: 0px solid ; width: 120px; height: 94px;" alt="" src="Screenshots/Summary.png"></a></td>
+<td><a href="#Installation"><img style="border: 0px solid ; width: 120px; height: 94px;" alt="" src="Screenshots/Installation.png"></a></td>
+<td><a href="#Finish"><img style="border: 0px solid ; width: 120px; height: 94px;" alt="" src="Screenshots/Finish.png"></a></td>
+</tr>
+<tr>
+<td>Give the user a warm welcome!</td>
+<td>The license of osm garmin maps and gosmin itself.</td>
+<td>Hints for a successful installation.</td><td>Garmin device type selection.</td>
+
+<td>Where to install the map file (which drive or folder)?</td>
+<td>Which remote or local) map to install?</td>
+<td>Summary of what will happen (not yet done).</td>
+<td>Installation progress. Will raise "dos box" while doing decompression.</td>
+<td>We're done! :-)</td>
+</tr>
+</tbody>
+</table>
+<br>
+<h2>Page List</h2>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="vertical-align: top;">
+<h3><a name="General"></a>General</h3>
+<ul>
+<li><span style="font-weight: bold;">Language switch</span> (deutsch/english/francais/...)</li>
+<li><span style="font-weight: bold;">Keep settings</span> between installer runs (gosmin.ini file)</li>
+<li><span style="font-weight: bold;">Block "Next" button</span>, if selection is not ok (how to display the reason so user "gets it"?)</li>
+<li><span style="font-weight: bold;">Icon beautifying</span> on top banner right side (32pixels?)</li>
+<li><span style="font-weight: bold;">Multi .img file</span> on Oregon (free space calculation, handling while installation, ...)</li>
+<li>Some maps have <span style="font-weight: bold;">special/additional license</span> restrictions</li>
+</ul>
+<span style="font-weight: bold;">Not in this version:</span><br>
+<ul>
+<li>Currently only MassStorageMode:</li>
+<ul>
+<li>No <span style="font-weight: bold;">MapSource</span> installation</li>
+</ul>
+<ul>
+<li>No <span style="font-weight: bold;">Native Garmin connection</span> (USB/serial)</li>
+</ul>
+<li><span style="font-weight: bold;">Backup/Restore</span> of existing map files</li>
+<li><span style="font-weight: bold;">Update of existing map</span> files</li>
+<li><span style="font-weight: bold;">Map update</span>: "Rythm" vs. last Update?</li>
+</ul>
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">
+<h3><a name="Welcome"></a>Welcome</h3>
+
+</td>
+<td><img style="width: 503px; height: 393px;" alt="" src="Screenshots/Welcome.png"></td>
+</tr>
+<tr>
+<td style="vertical-align: top;">
+<h3><a name="License"></a>License</h3>
+<ul>
+<li>License of special maps: "For some maps, additional licenses apply and will be shown before the download."</li>
+</ul>
+</td>
+<td><img style="width: 503px; height: 393px;" alt="" src="Screenshots/License.png"></td>
+</tr>
+<tr>
+<td style="vertical-align: top;">
+<h3><a name="Preparations"></a>Preparations</h3>
+<ul><li>Add: <span style="font-weight: bold;">Establish Internet connection</span></li>
+<li>Add: other <span style="font-weight: bold;">removable drives disconnect </span>(to avoid confusion of removable drives)</li>
+<li>Connect device vs. Kartenleser</li>
+</ul>
+</td>
+<td>
+<img style="width: 503px; height: 393px;" alt="" src="Screenshots/Preparations.png"></td>
+</tr>
+<tr>
+<td style="vertical-align: top;">
+<h3><a name="Device"></a>Device</h3>
+<ul>
+<li>display <span style="font-weight: bold;">color count</span></li>
+<li><span style="font-weight: bold;">download list of devices</span> from server - currently hardcoded xml (-&gt; generated .ini)</li>
+<li>too many details - add a <span style="font-weight: bold;">"More Details" button</span> or alike?</li><li>detect details from \Garmin\GarminDevice.xml</li>
+<li>Firmware version:</li>
+<ul>
+<li>special notice, if <span style="font-weight: bold;">Firmware update</span> is important (e.g. if new firmware supports required functionality)?</li>
+<li>how to <span style="font-weight: bold;">detect installed Firmware</span> version?</li>
+</ul>
+</ul>
+</td>
+<td><img style="width: 503px; height: 393px;" alt="" src="Screenshots/Device.png"></td>
+</tr>
+
+<tr>
+<td style="vertical-align: top;">
+<h3><a name="Destination"></a>Destination</h3>
+<ul>
+<li>Test <span style="font-weight: bold;">fully qualified folder names</span>: "\\server\folder"</li>
+<li>add <span style="font-weight: bold;">refresh button</span><br>
+</li>
+</ul>
+</td>
+<td><img style="width: 503px; height: 393px;" alt="" src="Screenshots/Destination.png"></td>
+</tr>
+<tr>
+<td style="vertical-align: top;">
+<h3><a name="Source"></a>Source</h3>
+<ul>
+<li style="background-color: rgb(255, 0, 0);">
+<span style="font-weight: bold;">Small Testmap</span> (only a few MB on server)</li>
+<li style="background-color: rgb(255, 0, 0);">Small <span style="font-weight: bold;">map preview</span> picture (like on device page)</li>
+<li style="background-color: rgb(255, 0, 0);">Disable (or mark) <span style="font-weight: bold;">maps that won't fit</span> on device free space</li>
+<li><span style="font-weight: bold;">Disable Next button</span>, if map won't fit on device free space</li>
+<li><span style="font-weight: bold;">Disable Next button</span>, if local file doesn't exist</li>
+<li>How user gets the <span style="font-weight: bold;">reason of a disabled button</span>?</li>
+<li>Map "<span style="font-weight: bold;">additional license</span>" label / button?</li>
+<li><span style="font-weight: bold;">download list of maps</span> (currently hardcoded .ini file)</li>
+<li><span style="font-weight: bold;">select continent</span> (once we have too many maps)</li>
+<li><span style="font-weight: bold;">select intended use</span> of map (walking, bicycle, ...)</li>
+<li>Map <span style="font-weight: bold;">optimised for display characteristic</span> xy (color count, .typ file, ...)</li>
+<li>Already <span style="font-weight: bold;">ask here</span>: file already exists, won't fit on drive, ...</li>
+</ul>
+<br></td>
+<td><img style="width: 503px; height: 393px;" alt="" src="Screenshots/Source.png"></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><h3>
+<a name="Summary"></a>Summary</h3>
+(page currently not existing)</td>
+<td><img style="width: 503px; height: 393px;" alt="" src="Screenshots/Summary.png"></td>
+</tr>
+<tr>
+<td style="vertical-align: top;">
+<h3><a name="Installation"></a>Installation</h3>
+<ul style="font-weight: bold;">
+<li style="background-color: rgb(255, 0, 0);">check for free disk space on host before download / unzip</li>
+<li style="background-color: rgb(255, 255, 255);">download mirrors</li>
+<li style="background-color: rgb(255, 255, 255);">write potection<span style="font-weight: normal;"> switch set?</span></li>
+</ul>
+</td>
+<td>
+<img style="width: 503px; height: 393px;" alt="" src="Screenshots/Installation.png"></td>
+</tr>
+<tr>
+<td style="vertical-align: top;">
+<h3><a name="Finish"></a>Finish</h3>
+<ul>
+<li>Any final hints?</li>
+</ul>
+</td>
+<td>
+<img style="width: 503px; height: 393px;" alt="" src="Screenshots/Finish.png">
+</td>
+</tr>
+</tbody>
+</table>
+<h2>Links</h2>
+<h3>OSM Wiki</h3>Device details:<br>
+<a href="http://wiki.openstreetmap.org/wiki/Garmin">http://wiki.openstreetmap.org/wiki/Garmin</a><br>
+<a href="http://wiki.openstreetmap.org/wiki/GPS_Reviews#G-MINI_to_GlobalSat">http://wiki.openstreetmap.org/wiki/GPS_Reviews#G-MINI_to_GlobalSat</a><br>
+<br>
+OSM Maps on Garmin:<br>
+<a href="http://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/Mass_Storage_Mode">http://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/Mass_Storage_Mode</a><br>
+<a href="http://wiki.openstreetmap.org/wiki/DE:OSM_Map_On_MapSource">http://wiki.openstreetmap.org/wiki/DE:OSM_Map_On_MapSource</a><br>
+<a href="http://wiki.openstreetmap.org/wiki/User:Computerteddy">http://wiki.openstreetmap.org/wiki/User:Computerteddy</a><br>
+<h3>Wikipedia / Commons</h3>
+<a href="http://en.wikipedia.org/wiki/List_of_Garmin_products">http://en.wikipedia.org/wiki/List_of_Garmin_products</a><br>
+<a href="http://de.wikipedia.org/wiki/Garmin">http://de.wikipedia.org/wiki/Garmin</a><br>
+<a href="http://commons.wikimedia.org/wiki/Category:Garmin_GPS_device">http://commons.wikimedia.org/wiki/Category:Garmin_GPS_device</a><br>
+<h3>Other Garmin map downloads</h3>
+<a href="http://www.mapsntrails.com/de/">http://www.mapsntrails.com/de/</a> (lot's of OSM and none OSM Garmin maps)<br>
+<a href="http://mapcenter2.cgpsmapper.com/">http://mapcenter2.cgpsmapper.com/</a><br>
+<h3>Software</h3>
+<h4>Qlandkarte</h4>
+<a href="http://www.qlandkarte.org/index.php?option=com_content&amp;view=article&amp;id=16&amp;Itemid=18">http://www.qlandkarte.org/index.php?option=com_content&amp;view=article&amp;id=16&amp;Itemid=18</a> (Garmin native connection drivers)<h4>NSIS</h4><a href="http://nsis.sourceforge.net/NSISdl_plug-in">http://nsis.sourceforge.net/NSISdl_plug-in</a>
+(NSIS standard download)<br>
+<a href="http://nsis.sourceforge.net/Metadl">http://nsis.sourceforge.net/Metadl</a>
+(comfort download, e.g. with resume)<br>
+<br>
+<a href="http://nsis.sourceforge.net/Contrib/InstallOptions/Readme.html">http://nsis.sourceforge.net/Contrib/InstallOptions/Readme.html</a><br>
+<a href="http://nsis.sourceforge.net/InstallOptions_The_Usage_of_NOTIFY_Flag">http://nsis.sourceforge.net/InstallOptions_The_Usage_of_NOTIFY_Flag</a><br>
+<a href="http://nsis.sourceforge.net/Add_link_to_welcome_page_%28MUI%29">http://nsis.sourceforge.net/Add_link_to_welcome_page_%28MUI%29</a><br>
+<br>
+<a href="http://forums.winamp.com/showthread.php?s=&amp;threadid=314098">http://forums.winamp.com/showthread.php?s=&amp;threadid=314098</a> (ulfls own thread about decompression)<br>
+</body></html>

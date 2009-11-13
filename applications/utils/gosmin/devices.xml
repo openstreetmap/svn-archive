@@ -1,0 +1,831 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet href="devices.xsl" type="text/xsl" ?> 
+<devices>
+    <device brand="Garmin" series="Colorado" name="Colorado 300">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="SD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Colorado_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Edge" name="Edge 205">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="USB" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Edge_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Edge" name="Edge 305">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="USB" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Edge_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Edge" name="Edge 605">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="512" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="2" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Edge_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Edge" name="Edge 705">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="512" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="2" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Edge_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="Serial" version="" massstoragemode="No"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="eTrex_h.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex H">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="Serial" version="" massstoragemode="No"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="eTrex_h.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Legend">
+        <display map="Mono" colors="" typfile=""/>
+        <connection type="Serial" version="" massstoragemode="No"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="eTrex_Legend.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Legend C">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="Serial" version="" massstoragemode="No"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="eTrex_Legend_HCx.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Legend Cx">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="1" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="eTrex_Legend_HCx.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Legend HCx">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="No" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="2" unit="GB"/>
+              <card type="SDHC" maxsize="8" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version="3.00"/>
+        <picture url="eTrex_Legend_HCx.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Summit">
+        <display map="" colors="" typfile=""/>
+        <connection type="Serial" version="" massstoragemode="No"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="eTrex_Summit.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Summit HC">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="eTrex_Summit_HC.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Venture Cx">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode=""/>
+        <memory>
+          <internal size="No" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="eTrex_Venture_HC.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Venture HC">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode=""/>
+        <memory>
+          <internal size="24" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="eTrex_Venture_HC.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Vista">
+        <display map="" colors="" typfile=""/>
+        <connection type="Serial" version="" massstoragemode="No"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="etrex_Vista.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Vista C">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="24" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="etrex_Vista.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Vista Cx">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="64" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="1" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="etrex_Vista.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Vista HC">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="etrex_Vista.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="eTrex" name="eTrex Vista HCx">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="1.1" massstoragemode="Yes"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="2" unit="GB"/>
+              <card type="SDHC" maxsize="4" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version="3.0"/>
+        <picture url="etrex_Vista.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
+    </device>    
+
+    <device brand="Garmin" series="Forerunner" name="Forerunner 101">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Forerunner_205.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Forerunner_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Forerunner" name="Forerunner 201">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="Serial" version="" massstoragemode="No"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="Forerunner_205.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Forerunner_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Forerunner" name="Forerunner 205">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="USB" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="Forerunner_205.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Forerunner_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Forerunner" name="Forerunner 301">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Forerunner_205.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Forerunner_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Forerunner" name="Forerunner 305">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="USB" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="No"/>
+        </memory>
+        <firmware version=""/>
+        <picture url="Forerunner_205.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Forerunner_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Geko" name="Geko 101">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="No" version="" massstoragemode="No"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Geko_101.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Geko_series#Geko_101"/>
+    </device>    
+    
+    <device brand="Garmin" series="Geko" name="Geko 201">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="Serial" version="" massstoragemode="No"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Geko_201.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Geko_series#Geko_201"/>
+    </device>    
+    
+    <device brand="Garmin" series="Geko" name="Geko 301">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="Serial" version="" massstoragemode="No"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Geko_301.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Geko_series#Geko_301"/>
+    </device>    
+    
+    <device brand="Garmin" series="GPS" name="GPS 12XL">
+        <display map="" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="GPS_12.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/GPS_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="GPS" name="GPS II">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="GPS_V_IIIplus.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/GPS_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="GPS" name="GPS III">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="GPS_V_IIIplus.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/GPS_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="GPS" name="GPS V">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="GPS_V_IIIplus.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/GPS_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="GPS" name="GPS 60">
+        <display map="No" colors="" typfile="No"/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="1" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="GPS_60.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/GPS_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="GPSMAP" name="GPSMAP 60Cx">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="0" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="8" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="GPSMap_60CSx.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/GPS_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="GPSMAP" name="GPSMAP 60CSx">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="0" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="4" unit="GB"/>
+              <card type="SDHC" maxsize="8" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version="3.90"/>
+        <picture url="GPSMap_60CSx.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/GPS_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="GPSMAP" name="GPSMAP 76Cx">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="0" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="8" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="GPSMap_76CS.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/GPS_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="GPSMAP" name="GPSMAP 76CSx">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="0" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="8" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="GPSMap_76CS.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/GPS_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Nuevi" name="Nuevi 200">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="SD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="nuevi_200w.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/N%C3%BCvi_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Nuevi" name="Nuevi 200w">
+        <display map="Color" colors="" typfile="Yes"/>
+        <connection type="USB" version="2.0" massstoragemode="Auto" imgfiles="1"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="SD">
+              <card type="SD" maxsize="2" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version="4.00"/>
+        <picture url="nuevi_200w.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/N%C3%BCvi_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Nuevi" name="Nuevi 205">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="940" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="nuevi_200w.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/N%C3%BCvi_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Nuevi" name="Nuevi 360">
+        <display map="" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/N%C3%BCvi_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Nuevi" name="Nuevi 370">
+        <display map="" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="SD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/N%C3%BCvi_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Nuevi" name="Nuevi 760">
+        <display map="" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="SD">
+              <card type="SD" maxsize="4" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/N%C3%BCvi_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Oregon" name="Oregon 200">
+        <display map="Color" colors="65000" typfile="yes"/>
+        <connection type="USB" version="1.1" massstoragemode="Auto"/>
+        <memory>
+          <internal size="24" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Oregon_400t.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Oregon" name="Oregon 300">
+        <display map="Color" colors="65000" typfile="yes"/>
+        <connection type="USB" version="1.1" massstoragemode="Auto"/>
+        <memory>
+          <internal size="850" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="2" unit="GB"/>
+              <card type="SDHC" maxsize="4" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version="3.10"/>
+        <picture url="Oregon_400t.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Oregon" name="Oregon 400t">
+        <display map="Color" colors="65000" typfile="yes"/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="1500" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Oregon_400t.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
+    </device>
+    
+    <device brand="Garmin" series="Oregon" name="Oregon 400i">
+        <display map="Color" colors="65000" typfile="yes"/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="1500" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Oregon_400t.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Oregon" name="Oregon 400c">
+        <display map="Color" colors="65000" typfile="yes"/>
+        <connection type="USB" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="1500" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Oregon_400t.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Oregon" name="Oregon 550">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Oregon_400t.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Oregon" name="Oregon 550t">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="microSD">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="Oregon_400t.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Quest" name="Quest 1">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/Quest_series"/>
+    </device>    
+    
+    <device brand="Garmin" series="Zumo" name="Zumo 400">
+        <display map="" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="zumo_550.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/z%C5%ABmo_series"/>
+    </device>
+    
+    <device brand="Garmin" series="Zumo" name="Zumo 450">
+        <display map="" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="zumo_550.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/z%C5%ABmo_series"/>
+    </device>
+    
+    <device brand="Garmin" series="Zumo" name="Zumo 500">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="zumo_550.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/z%C5%ABmo_series"/>
+    </device>
+    
+    <device brand="Garmin" series="Zumo" name="Zumo 510">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="zumo_550.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/z%C5%ABmo_series"/>
+    </device>
+    
+    <device brand="Garmin" series="Zumo" name="Zumo 550">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="USB" version="2.0" massstoragemode="Auto" imgfiles="1"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="SD">
+              <card type="SD" maxsize="2" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version="4.80"/>
+        <picture url="zumo_550.bmp" identical="yes"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/z%C5%ABmo_series"/>
+    </device>
+    
+    <device brand="Garmin" series="Zumo" name="Zumo 660">
+        <display map="Color" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode="Yes"/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="nuevi_200w.bmp" identical="similiar"/>
+        <help url="http://wiki.openstreetmap.org/wiki/Garmin/z%C5%ABmo_series"/>
+    </device>    
+    
+</devices>
+
+<!--
+    <device brand="Garmin" series="" name="">
+        <display map="" colors="" typfile=""/>
+        <connection type="" version="" massstoragemode=""/>
+        <memory>
+          <internal size="" unit="MB"/>
+          <slot type="">
+              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SDHC" maxsize="" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help url=""/>
+    </device>    
+-->

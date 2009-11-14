@@ -26,7 +26,7 @@
 	  ** update before publishing 
 	-->
 	<property name="commit.message" value="Updated build.xml" />		
-	<property name="plugin.main.version" value="2414" />
+	<property name="plugin.main.version" value="2450" />
 		
 		
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>

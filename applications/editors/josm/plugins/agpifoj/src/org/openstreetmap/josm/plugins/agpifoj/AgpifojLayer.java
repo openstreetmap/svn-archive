@@ -8,7 +8,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
 import java.awt.Component;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -30,6 +30,7 @@ import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.CachedLatLon;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -108,11 +109,11 @@ public class AgpifojLayer extends Layer {
         protected void rememberError(String message) {
         	this.errorMessages.add(message);
         }
-        
+
         public Loader(File[] selection) {
             super(tr("Extracting GPS locations from EXIF"));
             this.selection = selection;
-            errorMessages = new LinkedHashSet<String>(); 
+            errorMessages = new LinkedHashSet<String>();
         }
 
         @Override protected void realRun() throws IOException {
@@ -121,13 +122,13 @@ public class AgpifojLayer extends Layer {
             List<File> files = new ArrayList<File>();
             try {
                 addRecursiveFiles(files, selection);
-            } catch(NullPointerException npe) {            	
+            } catch(NullPointerException npe) {
                 rememberError(tr("One of the selected files was null"));
             }
 
             if (cancelled) {
                 return;
-            }            
+            }
             progressMonitor.subTask(tr("Read photos..."));
             progressMonitor.setTicksCount(files.size());
 
@@ -199,7 +200,7 @@ public class AgpifojLayer extends Layer {
                             addRecursiveFiles(files, children);
                         } catch(NullPointerException npe) {
                             npe.printStackTrace();
-                            
+
                             rememberError(tr("Found null file in directory {0}\n", f.getPath()));
                         }
                     } else {
@@ -231,7 +232,7 @@ public class AgpifojLayer extends Layer {
     		sb.append("</html>");
     		return sb.toString();
         }
-        
+
         @Override protected void finish() {
         	if (!errorMessages.isEmpty()) {
         		JOptionPane.showMessageDialog(
@@ -360,7 +361,7 @@ public class AgpifojLayer extends Layer {
     }
 
     @Override
-    public void paint(Graphics g, MapView mv) {
+    public void paint(Graphics2D g, MapView mv, Bounds bounds) {
 
         int iconWidth = icon.getIconWidth() / 2;
         int iconHeight = icon.getIconHeight() / 2;

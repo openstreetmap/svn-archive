@@ -18,6 +18,7 @@ import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -147,7 +148,7 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 		g2D.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
 		List<Segment> edgeSegments = e.getPropertyValue(GraphEdgeSegments.PROPERTY);
-		
+
 		if (edgeSegments.size() > 0) {
 
 			Segment firstSegment = edgeSegments.get(0);
@@ -282,11 +283,7 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 	}
 
 	@Override
-	public void paint(final Graphics g, final MapView mv) {
-
-		assert g instanceof Graphics2D;
-		Graphics2D g2D = ((Graphics2D)g);
-
+	public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
 		if (wayGraph != null) {
 
 			for (GraphNode n : wayGraph.getNodes()) {
@@ -294,7 +291,7 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 			}
 
 			for (GraphEdge e : wayGraph.getEdges()) {
-				paintGraphEdge(e, g2D, mv);
+				paintGraphEdge(e, g, mv);
 			}
 
 		}

@@ -4,8 +4,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -15,23 +15,29 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.LinkedList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
-import javax.swing.JMenuItem;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 
+import org.openstreetmap.gui.jmapviewer.JobDispatcher;
+import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
+import org.openstreetmap.gui.jmapviewer.OsmFileCacheTileLoader;
+import org.openstreetmap.gui.jmapviewer.Tile;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -40,10 +46,6 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
-
-import org.openstreetmap.gui.jmapviewer.*;
-import org.openstreetmap.gui.jmapviewer.interfaces.*;
-import org.openstreetmap.gui.jmapviewer.Tile;
 
 /**
  * Class that displays a slippy map layer.
@@ -500,7 +502,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
          */
         //int otherZooms[] = {-5, -4, -3, 2, -2, 1, -1};
         int otherZooms[] = { -1, 1, -2, 2, -3, -4, -5};
-        int painted = 0;;
+        int painted = 0;
         debug = true;
         for (int zoomOff : otherZooms) {
             int zoom = currentZoomLevel + zoomOff;
@@ -603,7 +605,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
     //
     // The "border" tile tells us the boundaries of where we may
     // draw.  It will not be from the zoom level that is being
-    // drawn currently.  If drawing the currentZoomLevel, 
+    // drawn currently.  If drawing the currentZoomLevel,
     // border is null and we draw the entire tile set.
     List<Tile> paintTileImages(Graphics g, TileSet ts, int zoom, Tile border) {
         Rectangle borderRect = null;
@@ -615,7 +617,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
             Image img = getLoadedTileImage(tile);
             if (img == null) {
                 if (debug)
-                    out("missed tile: " + tile); 
+                    out("missed tile: " + tile);
                 missedTiles.add(tile);
                 continue;
             }
@@ -807,11 +809,11 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
     /**
      */
     @Override
-    public void paint(Graphics g, MapView mv) {
-        long start = System.currentTimeMillis();
+    public void paint(Graphics2D g, MapView mv, Bounds bounds) {
+        //long start = System.currentTimeMillis();
         LatLon topLeft = mv.getLatLon(0, 0);
         LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
-        Graphics oldg = g;
+        Graphics2D oldg = g;
 
         if (botRight.lon() == 0.0 || botRight.lat() == 0) {
             Main.debug("still initializing??");
@@ -833,7 +835,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         lastTopLeft = topLeft;
         lastBotRight = botRight;
         bufferImage = mv.createImage(mv.getWidth(), mv.getHeight());
-        g = bufferImage.getGraphics();
+        g = (Graphics2D) bufferImage.getGraphics();
 
         int zoom = currentZoomLevel;
         TileSet ts = new TileSet(topLeft, botRight, zoom);
@@ -843,7 +845,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 if (debug)
                     out("too many tiles, decreasing zoom from " + currentZoomLevel);
                 if (decreaseZoomLevel())
-                    this.paint(oldg, mv);
+                    this.paint(oldg, mv, bounds);
                 return;
             }
             if (zoomIncreaseAllowed() && ts.tooSmall()) {
@@ -851,7 +853,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                     out("too zoomed in, (" + ts.tilesSpanned()
                         + "), increasing zoom from " + currentZoomLevel);
                 if (increaseZoomLevel())
-                     this.paint(oldg, mv);
+                     this.paint(oldg, mv, bounds);
                 return;
             }
         }
@@ -898,7 +900,6 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         for (Tile t : ts.allTiles()) {
             this.paintTileText(ts, t, g, mv, currentZoomLevel, t);
         }
-        float fadeBackground = SlippyMapPreferences.getFadeBackground();
         oldg.drawImage(bufferImage, 0, 0, null);
 
         if (autoZoomEnabled() && lastImageScale != null) {
@@ -908,14 +909,14 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 if (debug)
                     out("autozoom increase: scale: " + lastImageScale);
                 increaseZoomLevel();
-                this.paint(oldg, mv);
+                this.paint(oldg, mv, bounds);
             // If each source image pixel is being squished into > 0.32
             // of a drawn pixels, zoom out.
             } else if ((lastImageScale < 0.45) && (lastImageScale > 0) && zoomDecreaseAllowed()) {
                 if (debug)
                     out("autozoom decrease: scale: " + lastImageScale);
                 decreaseZoomLevel();
-                this.paint(oldg, mv);
+                this.paint(oldg, mv, bounds);
             }
         }
         //g.drawString("currentZoomLevel=" + currentZoomLevel, 120, 120);

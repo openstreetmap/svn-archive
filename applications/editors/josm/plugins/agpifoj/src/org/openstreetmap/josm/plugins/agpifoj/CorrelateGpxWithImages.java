@@ -95,7 +95,8 @@ public class CorrelateGpxWithImages implements ActionListener {
             this.file = file;
         }
 
-        public String toString() {
+        @Override
+		public String toString() {
             return name;
         }
     }
@@ -171,7 +172,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                 } catch (SAXException x) {
                     x.printStackTrace();
                     JOptionPane.showMessageDialog(
-                    		Main.parent, 
+                    		Main.parent,
                     		tr("Error while parsing {0}",sel.getName())+": "+x.getMessage(),
                     		tr("Error"),
                     		JOptionPane.ERROR_MESSAGE
@@ -180,7 +181,7 @@ public class CorrelateGpxWithImages implements ActionListener {
                 } catch (IOException x) {
                     x.printStackTrace();
                     JOptionPane.showMessageDialog(
-                    		Main.parent, 
+                    		Main.parent,
                     		tr("Could not read \"{0}\"",sel.getName())+"\n"+x.getMessage(),
                     		tr("Error"),
                     		JOptionPane.ERROR_MESSAGE
@@ -385,8 +386,8 @@ public class CorrelateGpxWithImages implements ActionListener {
             boolean isOk = false;
             while (! isOk) {
                 int answer = JOptionPane.showConfirmDialog(
-                		Main.parent, panel, 
-                		tr("Synchronize time from a photo of the GPS receiver"), 
+                		Main.parent, panel,
+                		tr("Synchronize time from a photo of the GPS receiver"),
                 		JOptionPane.OK_CANCEL_OPTION,
                 		JOptionPane.QUESTION_MESSAGE
                 		);
@@ -636,11 +637,8 @@ public class CorrelateGpxWithImages implements ActionListener {
 
         // Search whether an other layer has yet defined some bounding box.
         // If none, we'll zoom to the bounding box of the layer with the photos.
-        Collection<Layer> layerCol = Main.map.mapView.getAllLayers();
-        Iterator<Layer> layerIter = layerCol.iterator();
         boolean boundingBoxedLayerFound = false;
-        while (layerIter.hasNext()) {
-            Layer l = layerIter.next();
+        for (Layer l: Main.map.mapView.getAllLayers()) {
             if (l != yLayer) {
                 BoundingXYVisitor bbox = new BoundingXYVisitor();
                 l.visitBoundingBox(bbox);
@@ -656,7 +654,7 @@ public class CorrelateGpxWithImages implements ActionListener {
             Main.map.mapView.recalculateCenterScale(bbox);
         }
 
-        Main.main.map.repaint();
+        Main.map.repaint();
 
         JOptionPane.showMessageDialog(Main.parent, tr("Found {0} matches of {1} in GPX track {2}", matched, dateImgLst.size(), selectedGpx.name),
                 tr("GPX Track loaded"),
@@ -885,7 +883,7 @@ public class CorrelateGpxWithImages implements ActionListener {
         // Settings are only saved temporarily to the layer.
         ExtendedDialog d = new ExtendedDialog(Main.parent,
             tr("Adjust timezone and offset"),
-            new String[] { tr("Close"),  tr("Default Values") }           
+            new String[] { tr("Close"),  tr("Default Values") }
         );
 
         d.setContent(p);

@@ -3,7 +3,7 @@ package org.openstreetmap.josm.plugins.validator;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -14,6 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
@@ -26,7 +27,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * A layer showing error messages.
- * 
+ *
  * @author frsantos
  */
 public class ErrorLayer extends Layer implements LayerChangeListener {
@@ -53,7 +54,7 @@ public class ErrorLayer extends Layer implements LayerChangeListener {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void paint(final Graphics g, final MapView mv) {
+    public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
         DefaultMutableTreeNode root = plugin.validationDialog.tree.getRoot();
         if (root == null || root.getChildCount() == 0)
             return;
@@ -113,7 +114,7 @@ public class ErrorLayer extends Layer implements LayerChangeListener {
     @Override
     public Component[] getMenuEntries() {
         return new Component[] { new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)), 
+                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
                 new JSeparator(),
                 new JMenuItem(new RenameLayerAction(null, this)), new JSeparator(),
                 new JMenuItem(new LayerListPopup.InfoAction(this)) };

@@ -31,7 +31,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -47,6 +47,7 @@ import javax.swing.JToolTip;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -117,7 +118,7 @@ public class OsbLayer extends Layer implements MouseListener {
     public void mergeFrom(Layer from) {}
 
     @Override
-    public void paint(Graphics g, MapView mv) {
+    public void paint(Graphics2D g, MapView mv, Bounds bounds) {
         Object[] nodes = data.getNodes().toArray();
         // This loop renders all the bug icons
         for (int i = 0; i < nodes.length; i++) {
@@ -177,7 +178,7 @@ public class OsbLayer extends Layer implements MouseListener {
             tooltip.setTipText(desc);
 
             int tx = p.x + (width / 2) + 5;
-            int ty = (int)(p.y - height / 2) -1;
+            int ty = (p.y - height / 2) -1;
             g.translate(tx, ty);
 
             // This limits the width of the tooltip to 2/3 of the drawing
@@ -188,7 +189,7 @@ public class OsbLayer extends Layer implements MouseListener {
             // the reduced width into account
             for(int x = 0; x < 2; x++) {
                 Dimension d = tooltip.getUI().getPreferredSize(tooltip);
-                d.width = Math.min(d.width, (int)(mv.getWidth()*2/3));
+                d.width = Math.min(d.width, (mv.getWidth()*2/3));
                 tooltip.setSize(d);
                 tooltip.paint(g);
             }
@@ -230,7 +231,7 @@ public class OsbLayer extends Layer implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         if(e.getButton() == MouseEvent.BUTTON1) {
             if(Main.map.mapView.getActiveLayer() == this) {
-                Node n = (Node) getNearestNode(e.getPoint());
+                Node n = getNearestNode(e.getPoint());
                 if(data.getNodes().contains(n)) {
                     data.setSelected(n);
                 }
@@ -249,7 +250,7 @@ public class OsbLayer extends Layer implements MouseListener {
     private void mayTriggerPopup(MouseEvent e) {
         if(e.isPopupTrigger()) {
             if(Main.map.mapView.getActiveLayer() == this) {
-                Node n = (Node) getNearestNode(e.getPoint());
+                Node n = getNearestNode(e.getPoint());
                 OsbAction.setSelectedNode(n);
                 if(data.getNodes().contains(n)) {
                     PopupFactory.createPopup(n).show(e.getComponent(), e.getX(), e.getY());

@@ -25,15 +25,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.projection.LambertCC9Zones;
-import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.OsmTransferException;
-import org.openstreetmap.josm.data.coor.EastNorth;
 
 /**
  * This is a layer that grabs the current screen from the French cadastre WMS
@@ -64,15 +64,15 @@ public class WMSLayer extends Layer implements ImageObserver {
     public EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0,0), new EastNorth(0,0));
 
     private boolean isRaster = false;
-    
+
     private boolean isAlreadyGeoreferenced = false;
-    
+
     public double X0, Y0, angle, fX, fY;
 
     private EastNorth rasterMin;
     private EastNorth rasterMax;
     private double rasterRatio;
-    
+
     private JMenuItem saveAsPng;
 
     public WMSLayer() {
@@ -102,7 +102,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     public void grab(CadastreGrabber grabber, Bounds b) throws IOException {
         if (isRaster) {
             b = new Bounds(Main.proj.eastNorth2latlon(rasterMin), Main.proj.eastNorth2latlon(rasterMax));
-            divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider", 
+            divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider",
                     CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
         } else
             divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())));
@@ -202,10 +202,10 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     @Override
-    public void paint(Graphics g, final MapView mv) {
+    public void paint(Graphics2D g, final MapView mv, Bounds bounds) {
         synchronized(this){
             for (GeorefImage img : images)
-                img.paint((Graphics2D) g, mv, CadastrePlugin.backgroundTransparent,
+                img.paint(g, mv, CadastrePlugin.backgroundTransparent,
                         CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
         }
         if (this.isRaster) {
@@ -235,7 +235,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 new JMenuItem(new MenuActionLoadFromCache()),
                 saveAsPng,
                 new JMenuItem(new LayerListPopup.InfoAction(this)),
-                
+
         };
         return component;
     }
@@ -335,18 +335,18 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     /**
-     * Set raster positions used for grabbing and georeferencing. 
+     * Set raster positions used for grabbing and georeferencing.
      * rasterMin is the Eaast North of bottom left corner raster image on the screen when image is grabbed.
      * The bounds width and height are the raster width and height. The image width matches the current view
      * and the image height is adapted.
-     * Required: the communeBBox must be set (normally it is catched by CadastreInterface and saved by DownloadWMSPlanImage)   
+     * Required: the communeBBox must be set (normally it is catched by CadastreInterface and saved by DownloadWMSPlanImage)
      * @param bounds the current main map view boundaries
      */
     public void setRasterBounds(Bounds bounds) {
         EastNorth rasterCenter = Main.proj.latlon2eastNorth(bounds.getCenter());
         EastNorth eaMin = Main.proj.latlon2eastNorth(bounds.getMin());
         EastNorth eaMax = Main.proj.latlon2eastNorth(bounds.getMax());
-        double rasterSizeX = communeBBox.max.getX() - communeBBox.min.getX(); 
+        double rasterSizeX = communeBBox.max.getX() - communeBBox.min.getX();
         double rasterSizeY = communeBBox.max.getY() - communeBBox.min.getY();
         double ratio = rasterSizeY/rasterSizeX;
         // keep same ratio on screen as WMS bbox (stored in communeBBox)
@@ -442,7 +442,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         }
         return true;
     }
-    
+
     /**
      * Join the grabbed images into one single.
      * Works only for images grabbed from non-georeferenced images (Feuilles cadastrales)(same amount of
@@ -453,7 +453,7 @@ public class WMSLayer extends Layer implements ImageObserver {
             EastNorth min = images.get(0).min;
             EastNorth max = images.get(images.size()-1).max;
             int oldImgWidth = images.get(0).image.getWidth();
-            int oldImgHeight = images.get(0).image.getHeight(); 
+            int oldImgHeight = images.get(0).image.getHeight();
             int newWidth = oldImgWidth*(int)Math.sqrt(images.size());
             int newHeight = oldImgHeight*(int)Math.sqrt(images.size());
             BufferedImage new_img = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
@@ -474,17 +474,17 @@ public class WMSLayer extends Layer implements ImageObserver {
             }
         }
     }
-    
+
     /**
      * Image cropping based on two EN coordinates pointing to two corners in diagonal
      * Because it's coming from user mouse clics, we have to sort de positions first.
      * Works only for raster image layer (only one image in collection).
-     * Updates layer georeferences. 
+     * Updates layer georeferences.
      * @param en1
      * @param en2
      */
     public void cropImage(EastNorth en1, EastNorth en2){
-        // adj1 is corner bottom, left 
+        // adj1 is corner bottom, left
         EastNorth adj1 = new EastNorth(en1.east() <= en2.east() ? en1.east() : en2.east(),
                 en1.north() <= en2.north() ? en1.north() : en2.north());
         // adj2 is corner top, right
@@ -500,7 +500,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         BufferedImage new_img = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics g = new_img.getGraphics();
         g.drawImage(images.get(0).image, 0, 0, newWidth-1, newHeight-1,
-                (int)sx1, (int)sy1, (int)sx2, (int)sy2,
+                sx1, sy1, sx2, sy2,
                 this);
         images.set(0, new GeorefImage(new_img, adj1, adj2));
         // important: update the layer georefs !
@@ -521,7 +521,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     /**
-     * Method required by ImageObserver when drawing an image 
+     * Method required by ImageObserver when drawing an image
      */
     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
         return false;
@@ -539,7 +539,7 @@ public class WMSLayer extends Layer implements ImageObserver {
             String destZone = MenuActionLambertZone.lambert9zones[lambertZone+1];
             if (Main.map.mapView.getAllLayers().size() == 1) {
                 /* Enable this code below when JOSM will have a proper support of dynamic projection change
-                 * 
+                 *
                 System.out.println("close all layers and change current Lambert zone from "+LambertCC9Zones.layoutZone+" to "+lambertZone);
                 Bounds b = null;
                 if (Main.map != null && Main.map.mapView != null)
@@ -561,7 +561,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         return new EastNorth((images.get(0).max.east()+images.get(0).min.east())/2,
                 (images.get(0).max.north()+images.get(0).min.north())/2);
     }
-    
+
     public void displace(double dx, double dy) {
         this.rasterMin = new EastNorth(rasterMin.east() + dx, rasterMin.north() + dy);
         images.get(0).shear(dx, dy);
@@ -581,7 +581,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         String crosspieces = Main.pref.get("cadastrewms.crosspieces", "0");
         if (!crosspieces.equals("0")) {
             int modulo = 50;
-            if (crosspieces.equals("2")) modulo = 100; 
+            if (crosspieces.equals("2")) modulo = 100;
             EastNorthBound currentView = new EastNorthBound(mv.getEastNorth(0, mv.getHeight()),
                     mv.getEastNorth(mv.getWidth(), 0));
             int minX = ((int)currentView.min.east()/modulo+1)*modulo;
@@ -602,5 +602,5 @@ public class WMSLayer extends Layer implements ImageObserver {
             }
         }
     }
-    
+
 }

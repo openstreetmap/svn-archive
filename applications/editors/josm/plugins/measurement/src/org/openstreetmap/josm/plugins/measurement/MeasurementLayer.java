@@ -4,7 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
@@ -70,7 +71,7 @@ public class MeasurementLayer extends Layer {
 
     }
 
-    @Override public void paint(Graphics g, final MapView mv) {
+    @Override public void paint(Graphics2D g, final MapView mv, Bounds bounds) {
         g.setColor(Color.green);
         Point l = null;
         for(WayPoint p:points){

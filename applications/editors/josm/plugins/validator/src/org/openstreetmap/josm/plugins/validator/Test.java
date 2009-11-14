@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.validator;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,7 +9,6 @@ import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.BackreferencedDataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -18,7 +19,6 @@ import org.openstreetmap.josm.data.osm.visitor.AbstractVisitor;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.tools.GBC;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Parent class for all validation tests.
@@ -94,9 +94,9 @@ public class Test extends AbstractVisitor
     public static void initialize(OSMValidatorPlugin plugin) throws Exception {}
 
     /**
-     * Start the test using a given progress monitor 
-     * 
-     * @param progressMonitor  the progress monitor 
+     * Start the test using a given progress monitor
+     *
+     * @param progressMonitor  the progress monitor
      */
     public void startTest(ProgressMonitor progressMonitor) {
         backreferenceDataSet = new BackreferencedDataSet();

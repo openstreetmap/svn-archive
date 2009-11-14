@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.validator;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
@@ -12,6 +13,7 @@ import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -53,7 +55,7 @@ public class GridLayer extends Layer
      * Draw the grid and highlight all cells acuppied by any selected primitive.
      */
     @Override
-    public void paint(final Graphics g, final MapView mv)
+    public void paint(final Graphics2D g, final MapView mv, Bounds bounds)
     {
         if( !Main.pref.hasKey(PreferenceEditor.PREF_DEBUG + ".grid") )
             return;

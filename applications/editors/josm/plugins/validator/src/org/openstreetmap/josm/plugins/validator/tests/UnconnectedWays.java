@@ -18,12 +18,12 @@ import java.util.Set;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.QuadBuckets;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.QuadBuckets.BBox;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
 import org.openstreetmap.josm.plugins.validator.Severity;
@@ -74,8 +74,7 @@ public class UnconnectedWays extends Test
         minmiddledist = Main.pref.getDouble(PREFIX + ".way_way_distance", 0.0)/6378135.0;
         this.ds = Main.main.getCurrentDataSet();
         this.ds_area = ds.getDataSourceArea();
-        this.ds.reindexAll();
-        }
+    }
 
     @Override
     public void endTest()
@@ -195,16 +194,16 @@ public class UnconnectedWays extends Test
 
     private class MyWaySegment
     {
-        private Line2D line;
-        public Way w;
-        public boolean isAbandoned = false;
-        public boolean isBoundary = false;
-        public boolean highway;
-        private double len;
+        private final Line2D line;
+        public final Way w;
+        public final boolean isAbandoned;
+        public final boolean isBoundary;
+        public final boolean highway;
+        private final double len;
         private Set<Node> nearbyNodeCache;
         double nearbyNodeCacheDist = -1.0;
-        Node n1;
-        Node n2;
+        final Node n1;
+        final Node n2;
 
         public MyWaySegment(Way w, Node n1, Node n2)
         {
@@ -367,10 +366,10 @@ public class UnconnectedWays extends Test
     }
     private void addNode(Node n, Set<Node> s)
     {
-        Boolean m = middlenodes.contains(n);
-        Boolean e = endnodes.contains(n);
-        Boolean eh = endnodes_highway.contains(n);
-        Boolean o = othernodes.contains(n);
+        boolean m = middlenodes.contains(n);
+        boolean e = endnodes.contains(n);
+        boolean eh = endnodes_highway.contains(n);
+        boolean o = othernodes.contains(n);
         if(!m && !e && !o && !eh)
             s.add(n);
         else if(!o)

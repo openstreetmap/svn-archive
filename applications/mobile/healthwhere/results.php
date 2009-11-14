@@ -21,13 +21,6 @@ setcookie ("SearchType", $search);
 require ("inc_head.php");
 require ("inc_openclosed.php");
 
-if ($_GET ["txtPostcode"] == "" && ($_GET ["txtLatitude"] == "" || $_GET ["txtLongitude"] == "")) {
-	echo "<p>You must enter a postcode or a latitude <i>and</i> longitude</p>\n";
-	echo "<p><a href = 'index.php'>Back</a></p>\n";
-	require ("inc_foot.php");
-	exit;
-}
-
 /*
  * http://snipplr.com/view/2531/calculate-the-distance-between-two-coordinates-latitude-longitude
 */
@@ -46,6 +39,70 @@ function distance ($lat1, $lng1, $lat2, $lng2, $miles = true) {
 	$km = $r * $c;
 
 	return ($miles ? ($km * 0.621371192) : $km);
+}
+
+//Add pharmacies/hospitals to an array
+function AddPharmHospital (&$asPharmacies, &$ph, &$node, $user_lat, $user_lon, $phlat, $phlon, $waynode) {
+	global $maxdist, $search;
+	$dist = round (distance ($user_lat, $user_lon, $phlat, $phlon, True), 1);
+
+	if ($dist <= $maxdist) {
+		//Parse node to get details
+		$ph = array ();
+		node_parse ($node, $search, $ph);
+
+		//Get ID
+		$id = $node ["id"];
+
+		//If $dist is a round number, add a ".0" suffix
+		if ($dist == round ($dist, 0))
+			$dist = "$dist.0";
+		//pad $dist with leading zeroes for sorting
+		$sorting = str_pad ($dist, 5, "0", STR_PAD_LEFT);
+		//Prefix $sorting with 0 (open) or 1 (closed/don't know)
+		if (OpenClosed ($ph ["hours"]))
+			$sorting = "0$sorting";
+		else
+			$sorting = "1$sorting";
+		//Add $sorting as a comment, so array can be sorted by distance
+		$sPharmacy = "<!-- $sorting -->";
+		$url = "detail.php?id=$id&amp;dist=$dist&amp;waynode=$waynode";
+		$sPharmacy .= "<a href = '$url' title = 'Details'>";
+
+		//Get details
+		$sname = stripslashes ($ph ["name"]);
+		$soperator = stripslashes ($ph ["operator"]);
+
+		if ($sname != "" && $soperator != "")
+			$sPharmacy .= "$sname</a> ($soperator) ($dist)<br>";
+		elseif ($sname == "" && $soperator == "")
+			$sPharmacy .= "[No name]</a> ($dist)<br>";
+		else
+			$sPharmacy .= "$sname$soperator</a> ($dist)<br>";
+		if ($search == "hospital" && $ph ["emergency"] != "")
+			$sPharmacy .= "Emergency: {$ph ["emergency"]}<br>";
+		if ($ph ["addr_housename"] != "")
+			$sPharmacy .= "{$ph ['addr_housename']}<br>\n";
+		if ($ph ["addr_street"] != "") {
+			if ($ph ["addr_housenumber"] != "")
+				$sPharmacy .= "{$ph ['addr_housenumber']} ";
+			$sPharmacy .= "{$ph ['addr_street']}<br>\n";
+		}
+		if ($ph ["phone"] != "")
+			$sPharmacy .= "{$ph ['phone']}<br>\n";
+		// Increment counters
+		if ($ph ["hours"] != "")
+			$iCountTimes++;
+		$iCountFound++;
+		$asPharmacies [] = $sPharmacy;
+	}
+}
+
+if ($_GET ["txtPostcode"] == "" && ($_GET ["txtLatitude"] == "" || $_GET ["txtLongitude"] == "")) {
+	echo "<p>You must enter a postcode or a latitude <i>and</i> longitude</p>\n";
+	echo "<p><a href = 'index.php'>Back</a></p>\n";
+	require ("inc_foot.php");
+	exit;
 }
 
 if ($_GET ["txtPostcode"] != "") {
@@ -133,103 +190,56 @@ $top = $user_lat + ($maxdist / 35);
 $left = $user_lon - ($maxdist / 35);
 $right = $user_lon + ($maxdist / 35);
 
-//Delete old cache data
-$db = sqlite_open ($db_file);
-$old = strtotime ("-1 hour");
-$sql = "DELETE FROM xapi_cache WHERE timestamp < $old";
-logdebug ("Deleting old XAPI cache. SQL:\n$sql");
-sqlite_exec ($db, $sql);
-//Check for cached data
-$sql = "SELECT * FROM xapi_cache " .
-	"WHERE latitude = '$user_lat' AND " .
-	"longitude = '$user_lon' AND " .
-	"distance >= $maxdist AND " .
-	"searchtype LIKE '$search'";
-$result = sqlite_query ($db, $sql);
-if (sqlite_num_rows ($result) >= 1) {
-	//Get cached data
-	$row = sqlite_fetch_array ($result, SQLITE_ASSOC);
-	$cached_xml = stripslashes ($row ["data"]);
-	$xml = simplexml_load_string ($cached_xml);
-	$source = "Cache";
-}
-else {
-	//Get data from OSM
-	$url = "$osm_xapi_base/node[amenity|healthcare=$search][bbox=$left,$bottom,$right,$top]";
-	$xml = simplexml_load_file ($url);
-	if ($xml === False)
-		death ("Error getting data from $url", "Could not get data from OpenStreetMap");
-	$source = "Web";
-}
-//Cache data
-$sql = "INSERT INTO xapi_cache ('timestamp','latitude','longitude','distance','searchtype','data') " .
-	"VALUES (" . time () . ", '$user_lat', '$user_lon', '$maxdist', '$search', '" . sqlite_escape_string ($xml->asXML ()) . "')";
-logdebug ("Adding to XAPI cache. SQL:\n$sql");
-sqlite_exec ($db, $sql);
-sqlite_close ($db);
+//Get data from OSM
+$url = "$osm_xapi_base/node[amenity|healthcare=$search][bbox=$left,$bottom,$right,$top]";
+$xml = simplexml_load_file ($url);
+$url = "$osm_xapi_base/way[amenity|healthcare=$search][bbox=$left,$bottom,$right,$top]";
+$wayxml = simplexml_load_file ($url);
+if ($xml === False || $wayxml === False)
+	death ("Error getting data from $url", "Could not get data from OpenStreetMap");
 
 //counters for log
 $iCountFound = 0;
 $iCountTimes = 0;
 
-//Add pharmacies to an array
+//Add pharmacies/hospitals to an array
 $asPharmacies = array ();
+//Check nodes
 foreach ($xml->node as $node) {
 	//Get latitude & longitude
 	$phlat = (float) $node ["lat"];
 	$phlon = (float) $node ["lon"];
 
-	$dist = round (distance ($user_lat, $user_lon, $phlat, $phlon, True), 1);
-	if ($dist <= $maxdist) {
-		//Parse node to get details
-		$ph = array ();
-		node_parse ($node, $search, $ph);
+	AddPharmHospital ($asPharmacies, $ph, $node, $user_lat, $user_lon, $phlat, $phlon, "node");
+}
+//Check ways
+foreach ($wayxml->way as $way) {
+	//Get latitude & longitude
 
-		//Get ID
-		$id = $node ["id"];
+	// Number of nodes found in the way
+	$iNodeCount = 0;
+	// Variables to hold sum of latitudes & longitudes
+	$fLatSum = 0;
+	$fLonSum = 0;
 
-		//If $dist is a round number, add a ".0" suffix
-		if ($dist == round ($dist, 0))
-			$dist = "$dist.0";
-		//pad $dist with leading zeroes for sorting
-		$sorting = str_pad ($dist, 5, "0", STR_PAD_LEFT);
-		//Prefix $sorting with 0 (open) or 1 (closed/don't know)
-		if (OpenClosed ($ph ["hours"]))
-			$sorting = "0$sorting";
-		else
-			$sorting = "1$sorting";
-		//Add $sorting as a comment, so array can be sorted by distance
-		$sPharmacy = "<!-- $sorting -->";
-		$url = "detail.php?id=$id&amp;dist=$dist";
-		$sPharmacy .= "<a href = '$url' title = 'Details'>";
-
-		//Get details
-		$sname = stripslashes ($ph ["name"]);
-		$soperator = stripslashes ($ph ["operator"]);
-
-		if ($sname != "" && $soperator != "")
-			$sPharmacy .= "$sname</a> ($soperator) ($dist)<br>";
-		elseif ($sname == "" && $soperator == "")
-			$sPharmacy .= "[No name]</a> ($dist)<br>";
-		else
-			$sPharmacy .= "$sname$soperator</a> ($dist)<br>";
-		if ($search == "hospital" && $ph ["emergency"] != "")
-			$sPharmacy .= "Emergency: {$ph ["emergency"]}<br>";
-		if ($ph ["addr_housename"] != "")
-			$sPharmacy .= "{$ph ['addr_housename']}<br>\n";
-		if ($ph ["addr_street"] != "") {
-			if ($ph ["addr_housenumber"] != "")
-				$sPharmacy .= "{$ph ['addr_housenumber']} ";
-			$sPharmacy .= "{$ph ['addr_street']}<br>\n";
+	// Get nodes belonging to the way
+	foreach ($way->nd as $ndref) {
+		$nodeid = (int) $ndref ["ref"];
+		// Loop through nodes in XML
+		foreach ($wayxml->node as $node) {
+			// If node is part of the way, get lat & lon
+			if ((int) $node ["id"] == $nodeid) {
+				$iNodeCount++;
+				$fLatSum += (float) $node ["lat"];
+				$fLonSum += (float) $node ["lon"];
+			}
 		}
-		if ($ph ["phone"] != "")
-			$sPharmacy .= "{$ph ['phone']}<br>\n";
-		// Increment counters
-		if ($ph ["hours"] != "")
-			$iCountTimes++;
-		$iCountFound++;
-		$asPharmacies [] = $sPharmacy;
 	}
+
+	// Get average lat/lon
+	$phlat = $fLatSum / $iNodeCount;
+	$phlon = $fLonSum / $iNodeCount;
+	AddPharmHospital ($asPharmacies, $ph, $way, $user_lat, $user_lon, $phlat, $phlon, "way");
 }
 
 //Write results to log
@@ -239,7 +249,7 @@ else
 	$SearchTerm = "Lat/Lon,{$_GET ['txtLatitude']},{$_GET ['txtLongitude']},";
 $SearchTerm .= "{$_GET ['txtDistance']},";
 $iTime = time () - $iStartTime;
-$log_string = date ("Y-m-d,H:i:s,") . $SearchTerm . count ($asPharmacies) . "," . $iTime . ",$source,$search";
+$log_string = date ("Y-m-d,H:i:s,") . $SearchTerm . count ($asPharmacies) . "," . $iTime . ",$search";
 file_put_contents ($access_log, "$log_string\n", FILE_APPEND);
 
 require_once ("inc_head_html.php");

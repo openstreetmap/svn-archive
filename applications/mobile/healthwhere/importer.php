@@ -58,14 +58,6 @@ if ($db === False)
 $sql = "CREATE TABLE postcodes ('outward','inward','lat','lon','source')";
 if (sqlite_exec ($db, $sql, $err) === False)
 	death ("Error creating postcodes database table:\n$err");
-//Create XAPI cache table
-$sql = "CREATE TABLE xapi_cache ('timestamp','latitude','longitude','distance','searchtype','data')";
-if (sqlite_exec ($db, $sql, $err) === False)
-	death ("Error creating xapi_cache database table:\n$err");
-//Create node cache table
-$sql = "CREATE TABLE node_cache ('timestamp','nodeid','data')";
-if (sqlite_exec ($db, $sql, $err) === False)
-	death ("Error creating node_cache database table:\n$err");
 
 //Open CSV
 $csv = fopen ($data_local, "r");

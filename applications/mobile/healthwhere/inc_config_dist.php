@@ -25,7 +25,7 @@ $db_file = "healthware.db";
 
 //Version info etc.
 define ("SERVICE_NAME", "Healthwhere");
-define ("VERSION", "2.0");
+define ("VERSION", "3.0");
 //Base URL - do not include trailing /
 define ("BASE_URL", "http://www.example.com");
 ?>

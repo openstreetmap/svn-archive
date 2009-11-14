@@ -37,8 +37,8 @@
     <map name="All in One" boundary="Germany" comment="Lot's of OSM features" updated="Weekly">
         <lang iso="de" name="All in One"  boundary="Deutschland" comment="Moeglichst viele OSM Elemente" updated="Woechentlich"/>
         <attributes routing="yes"/>
-        <file name="gmapsupp.img" sizeMB="640"/>
-        <download url="http://www.juergen-frank.de/osm/gmapsupps/germany/gmapsupp.img.bz2" sizeMB="490"/>
+        <file name="gmapsupp.img" sizeMB="590"/>
+        <download url="http://www.juergen-frank.de/osm/gmapsupps/germany/gmapsupp.img.bz2" sizeMB="460"/>
         <picture url="http://wiki.openstreetmap.org/images/9/9f/Aiom4.jpg"/>
         <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
     </map>    
@@ -52,6 +52,15 @@
         <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
     </map>    
 
+    <map name="Ivko Maksimovic" boundary="Dominican Republic" comment="" updated="Monthly">
+        <lang iso="de" name="Ivko Maksimovic"  boundary="Dominikanische Republik" comment="" updated="Monatlich"/>
+        <attributes routing="no"/>
+        <file name="gmapsupp.img" sizeMB="2"/>
+        <download url="http://www.ivkoandruth.com/navigation/gmapsupp.zip" sizeMB="2"/>
+        <picture url=""/>
+        <details url=""/>
+    </map>
+    
     <!--<map name="Radkarte" boundary="Germany" comment="Map designed for the everyday cyclist. Focus on cycle routes and auto-routing." updated="Every 2nd day">
         <lang iso="de" name="Radkarte"  boundary="Deutschland" comment="Karte fuer den Alltagsradfahrer. Fokus auf Fahrradrouting." updated="Jeder 2. Tag"/>
         <attributes routing="yes"/>
@@ -61,12 +70,4 @@
         <details url="http://wiki.openstreetmap.org/wiki/User:Radfahrer/Radkarte"/>
     </map>-->
 
-    <map name="Ivko Maksimovic" boundary="Dominican Republic" comment="" updated="Monthly">
-        <lang iso="de" name="Ivko Maksimovic"  boundary="Dominikanische Republik" comment="" updated="Monatlich"/>
-        <attributes routing="no"/>
-        <file name="gmapsupp.img" sizeMB="2"/>
-        <download url="http://www.ivkoandruth.com/navigation/gmapsupp.zip" sizeMB="2"/>
-        <picture url=""/>
-        <details url=""/>
-    </map>    
 </maps>

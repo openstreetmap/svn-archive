@@ -611,9 +611,14 @@
               <card type="SDHC" maxsize="" unit="GB"/>
           </slot>
         </memory>
-        <firmware version=""/>
+        <firmware version="3.20"/>
         <picture url="Oregon_400t.bmp" identical="yes"/>
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
+        <Model>
+          <PartNumber>006-B0795-00</PartNumber>
+          <SoftwareVersion>230</SoftwareVersion>
+          <Description>Oregon 200</Description>
+        </Model>  
     </device>    
     
     <device brand="Garmin" series="Oregon" name="Oregon 300">

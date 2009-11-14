@@ -3,7 +3,7 @@ package livegps;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -13,13 +13,13 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
-import org.openstreetmap.josm.tools.ColorHelper;
 
 public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public static final String LAYER_NAME = tr("LiveGPS layer");
@@ -100,12 +100,12 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         autocenter = ac;
     }
 
-    @Override public void paint(Graphics g, MapView mv)
+    @Override public void paint(Graphics2D g, MapView mv, Bounds bounds)
     {
         //System.out.println("in paint");
         synchronized (LiveGpsLock.class) {
             //System.out.println("in synced paint");
-            super.paint(g, mv);
+            super.paint(g, mv, bounds);
 //          int statusHeight = 50;
 //          Rectangle mvs = mv.getBounds();
 //          mvs.y = mvs.y + mvs.height - statusHeight;

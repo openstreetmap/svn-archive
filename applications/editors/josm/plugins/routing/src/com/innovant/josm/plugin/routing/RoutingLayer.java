@@ -45,6 +45,7 @@ import javax.swing.JSeparator;
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -226,7 +227,7 @@ public class RoutingLayer extends Layer {
      * @see org.openstreetmap.josm.gui.layer.Layer#paint(java.awt.Graphics, org.openstreetmap.josm.gui.MapView)
      */
     @Override
-    public void paint(Graphics g, MapView mv) {
+    public void paint(Graphics2D g, MapView mv, Bounds bounds) {
         boolean isActiveLayer = (mv.getActiveLayer().equals(this));
         // Get routing nodes (start, middle, end)
         List<Node> nodes = routingModel.getSelectedNodes();

@@ -34,7 +34,7 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.routes.RoutesPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be defined in routes.xml file in plugin directory"/>
-                <attribute name="Plugin-Mainversion" value="2388"/>
+                <attribute name="Plugin-Mainversion" value="2450"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

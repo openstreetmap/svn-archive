@@ -1,14 +1,19 @@
 package org.openstreetmap.josm.plugins.openLayers;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
 
 import org.mozilla.javascript.NativeArray;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -50,7 +55,7 @@ public class OpenLayersLayer extends Layer implements PreferenceChangedListener,
      * Draws current map onto the graphics
      */
     @Override
-    public void paint(Graphics g, MapView mv) {
+    public void paint(Graphics2D g, MapView mv, Bounds bounds) {
         setSize(Main.map.mapView.getSize());
         browser.paint(g);
     }

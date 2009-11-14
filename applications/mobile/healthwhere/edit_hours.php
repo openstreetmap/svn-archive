@@ -124,7 +124,7 @@ if ($hours != "" && isset ($_POST ["btnSubmit"])) {
 				//Changeset is not closed, in case further edits are made.
 				//It will be closed automatically at the server
 				//osm_close_changeset ($iCS);
-				header("Location: " . BASE_URL . "/detail.php?id=$id&amp;dist=$dist&amp;edit=yes");
+				header("Location: " . BASE_URL . "/detail.php?id=$id&amp;dist=$dist&amp;edit=yes&amp;waynode=$waynode");
 				$bUpdated = True;
 			}
 		}
@@ -143,16 +143,16 @@ if ($hours != "" && isset ($_POST ["btnSubmit"])) {
 		//Changeset is not closed, in case further edits are made.
 		//It will be closed automatically at the server
 		//osm_close_changeset ($iCS);
-		header("Location: " . BASE_URL . "/detail.php?id=$id&amp;dist=$dist&amp;edit=yes");
+		header("Location: " . BASE_URL . "/detail.php?id=$id&amp;dist=$dist&amp;edit=yes&amp;waynode=$waynode");
 	}
 }
 require_once ("inc_head_html.php");
 ?>
 
-<form action = "edit_hours.php?id=<?=$id?>&amp;name=<?php echo urlencode ($display_name); ?>&amp;dist=<?=$dist?>" method = "post">
+<form action = "edit_hours.php?id=<?=$id?>&amp;name=<?php echo urlencode ($display_name); ?>&amp;dist=<?=$dist?>&amp;waynode=<?=$waynode?>" method = "post">
 <p>
 <table>
-<tr><th colspan = "2" align = "center"><?php echo htmlentities ($_GET ['name']); ?></th></tr>
+<tr><th colspan = "2" align = "center"><?php echo htmlentities (stripslashes ($_GET ['name'])); ?></th></tr>
 <tr><th colspan = "2" align = "center">Opening Hours</th></tr>
 <tr><td colspan = "2" align = "center">
 <?php
@@ -182,7 +182,7 @@ for ($iCount = 0; $iCount <= 6; $iCount++) {
 <tr><td align = "center" colspan = "2"><input type = "reset" value = "Reset">&nbsp;
 &nbsp;<input type = "submit" value = "Submit" name = "btnSubmit"></td></tr>
 <tr><td align = "center" colspan = "2">
-<a href = "detail.php?id=<?=$id?>&amp;dist=<?=$dist?>">Cancel</a>
+<a href = "detail.php?id=<?=$id?>&amp;dist=<?=$dist?>&amp;waynode=<?=$waynode?>">Cancel</a>
 </td></tr>
 </table>
 </form>

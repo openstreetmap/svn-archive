@@ -97,30 +97,30 @@ if ($sXML != "") {
 		//Changeset is not closed, in case further edits are made.
 		//It will be closed automatically at the server
 		//osm_close_changeset ($iCS);
-		header("Location: " . BASE_URL . "/detail.php?id=$id&amp;dist=$dist&amp;edit=yes");
+		header("Location: " . BASE_URL . "/detail.php?id=$id&amp;dist=$dist&amp;edit=yes&amp;waynode=$waynode");
 	}
 require_once ("inc_head_html.php");
 ?>
 
 	<p>
-	<form action = "edit_addr.php?id=<?=$id?>&amp;name=<?php echo urlencode ($display_name); ?>&amp;dist=<?=$dist?>" method = "post">
+	<form action = "edit_addr.php?id=<?=$id?>&amp;name=<?php echo urlencode ($display_name); ?>&amp;dist=<?=$dist?>&amp;waynode=<?=$waynode?>" method = "post">
 	<table border = "0">
-	<tr><th colspan = "2" align = "center"><?php echo htmlentities ($_GET ['name']); ?></th></tr>
+	<tr><th colspan = "2" align = "center"><?php echo htmlentities (stripslashes ($_GET ['name'])); ?></th></tr>
 	<tr><td>House Name:</td>
-	<td><input name = "addr_housename" value = "<?=$addr_housename?>" class = 'default'></td></tr>
+	<td><input name = "addr_housename" value = "<?=stripslashes ($addr_housename)?>" class = 'default'></td></tr>
 	<tr><td>House Number:</td>
-	<td><input name = "addr_housenumber" value = "<?=$addr_housenumber?>" class = 'default'></td></tr>
+	<td><input name = "addr_housenumber" value = "<?=stripslashes ($addr_housenumber)?>" class = 'default'></td></tr>
 	<tr><td>Street:</td>
-	<td><input name = "addr_street" value = "<?=$addr_street?>" class = 'default'></td></tr>
+	<td><input name = "addr_street" value = "<?=stripslashes ($addr_street)?>" class = 'default'></td></tr>
 	<tr><td>City:</td>
-	<td><input name = "addr_city" value = "<?=$addr_city?>" class = 'default'></td></tr>
+	<td><input name = "addr_city" value = "<?=stripslashes ($addr_city)?>" class = 'default'></td></tr>
 	<tr><td>Postcode:</td>
-	<td><input name = "addr_postcode" value = "<?=$addr_postcode?>" class = 'default'></td></tr>
+	<td><input name = "addr_postcode" value = "<?=stripslashes ($addr_postcode)?>" class = 'default'></td></tr>
 
 	<tr><td align = "center"><input type = "reset" value = "Reset"></td>
 	<td align = "center"><input type = "submit" value = "Submit" name = "btnSubmit"></td></tr>
 	<tr><td align = "center" colspan = "2">
-	<a href = "detail.php?id=<?=$id?>&amp;dist=<?=$dist?>">Cancel</a>
+	<a href = "detail.php?id=<?=$id?>&amp;dist=<?=$dist?>&amp;waynode=<?=$waynode?>">Cancel</a>
 	</td></tr>
 	</table>
 	</form>

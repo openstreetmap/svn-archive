@@ -1,6 +1,7 @@
 <?php
 //Functions used when editing OSM data
 $osm_auth = array ("httpauth"=>"$osm_user:$osm_password");
+$waynode = $_GET ['waynode'];
 
 /*
  * Create a changeset
@@ -48,16 +49,6 @@ function osm_update_node ($id, $xml, $csID) {
 
 	file_put_contents ($debug_log, "\n------------------\n", FILE_APPEND);
 	file_put_contents ($debug_log, "Updating node $id\n", FILE_APPEND);
-
-	//Delete cached data containing this node
-	$db = sqlite_open ($db_file);
-	$sql = "DELETE FROM xapi_cache WHERE data LIKE '%$id%'";
-	file_put_contents ($debug_log, "Deleting XAPI cache containing node ID $id. SQL:\n$sql\n", FILE_APPEND);
-	sqlite_exec ($db, $sql);
-	$sql = "DELETE FROM node_cache WHERE nodeid LIKE $id";
-	file_put_contents ($debug_log, "Deleting node cache for node ID $id. SQL:\n$sql\n", FILE_APPEND);
-	sqlite_exec ($db, $sql);
-	sqlite_close ($db);
 
 	$cs = "changeset=\"$csID\"";
 	//Set changeset ID in XML string

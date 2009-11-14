@@ -119,18 +119,18 @@ if ($sXML != '') {
 		//Changeset is not closed, in case further edits are made.
 		//It will be closed automatically at the server
 		//osm_close_changeset ($iCS);
-		header("Location: " . BASE_URL . "/detail.php?id=$id&amp;dist=$dist&amp;edit=yes");
+		header("Location: " . BASE_URL . "/detail.php?id=$id&amp;dist=$dist&amp;edit=yes&amp;waynode=$waynode");
 	}
 require_once ("inc_head_html.php");
 ?>
 	<p>
-	<form action = "edit.php?id=<?=$id?>&amp;name=<?php echo urlencode ($display_name); ?>&amp;dist=<?=$dist?>" method = "post">
+	<form action = "edit.php?id=<?=$id?>&amp;name=<?php echo urlencode ($display_name); ?>&amp;dist=<?=$dist?>&amp;waynode=<?=$waynode?>" method = "post">
 	<table border = "0">
-	<tr><th colspan = "2" align = "center"><?php echo htmlentities ($display_name); ?></th></tr>
+	<tr><th colspan = "2" align = "center"><?php echo htmlentities (stripslashes ($display_name)); ?></th></tr>
 	<tr><td>Name:</td>
-	<td><input name = "txtName" value = "<?=$name?>" class = 'default'></td></tr>
+	<td><input name = "txtName" value = "<?=stripslashes ($name)?>" class = 'default'></td></tr>
 	<tr><td>Operator:</td>
-	<td><input name = "txtOperator" value = "<?=$operator?>" class = 'default'></td></tr>
+	<td><input name = "txtOperator" value = "<?=stripslashes ($operator)?>" class = 'default'></td></tr>
 	<?php
 	if ($_COOKIE ["SearchType"] == "pharmacy") {
 		echo "<tr><td>Dispensing:</td>\n";
@@ -161,7 +161,7 @@ require_once ("inc_head_html.php");
 	<tr><td align = "center"><input type = "reset" value = "Reset"></td>
 	<td align = "center"><input type = "submit" value = "Submit" name = "btnSubmit"></td></tr>
 	<tr><td align = "center" colspan = "2">
-	<a href = "detail.php?id=<?=$id?>&amp;dist=<?=$dist?>">Cancel</a>
+	<a href = "detail.php?id=<?=$id?>&amp;dist=<?=$dist?>&amp;waynode=<?=$waynode?>">Cancel</a>
 	</td></tr>
 	</table>
 	</form>

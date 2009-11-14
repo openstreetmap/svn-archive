@@ -83,6 +83,7 @@ Var sourcePageRoutingLabel
 Var sourcePageRoutingValue
 Var sourcePageUpdateLabel
 Var sourcePageUpdateValue
+Var SourceHelpButton
 Var sourcePageCommentLabel
 Var sourcePageCommentValue
 Var sourcePageFileSizeLabel
@@ -168,6 +169,7 @@ FunctionEnd
     EnableWindow $sourcePageRoutingValue ${enable}
     EnableWindow $sourcePageUpdateLabel ${enable}
     EnableWindow $sourcePageUpdateValue ${enable}
+    EnableWindow $SourceHelpButton ${enable}
     EnableWindow $sourcePageCommentLabel ${enable}
     EnableWindow $sourcePageCommentValue ${enable}
     EnableWindow $sourcePageFileSizeLabel ${enable}
@@ -237,6 +239,22 @@ Function OnSourcePageFileBrowseButton
 FunctionEnd
 
 ; ============================================================================
+; user clicked on Wiki button
+; ============================================================================
+Function onClickSourceWikiLink
+  Pop $0 ; don't forget to pop HWND of the stack
+
+  ; get the link corresponding to the currently selected device
+  ReadINIStr $0 "$PLUGINSDIR\Maps.ini" "$sourcePageCurrentMap" "HelpUrl"
+
+  ;MessageBox MB_OK "Map: $sourcePageCurrentMap Link: $0"
+
+  ; open the page
+  ExecShell "open" "$0"
+
+FunctionEnd
+
+; ============================================================================
 ; display the source page
 ; ============================================================================
 Function sourcePageDisplay
@@ -260,7 +278,7 @@ Function sourcePageDisplay
     Pop $sourcePageDownloadRadio
     ${NSD_OnClick} $sourcePageDownloadRadio sourcePageDownloadRadioClicked
     
-    ${NSD_CreateDropList} 5 20 420 10u ""
+    ${NSD_CreateDropList} 5 20 270 10u ""
     Pop $sourcePageMapList
     !insertmacro sourcePageFillListOfMaps $sourcePageMapList
     ${NSD_OnChange} $sourcePageMapList MapListChanged
@@ -270,6 +288,11 @@ Function sourcePageDisplay
 	;${NSD_CreateLabel} $xSPPosValues $ySPPos 100% 10u ""
 	;Pop $sourcePageBoundaryValue
     ;IntOp $ySPPos $ySPPos + $ySPStep
+
+	${NSD_CreateButton} $xSPPosLabels 110 80u 15u "Kartendetails Online"
+    Pop $SourceHelpButton
+    ${NSD_OnClick} $SourceHelpButton onClickSourceWikiLink
+    ToolTips::Classic $SourceHelpButton "Wiki Seite über diese Karte im Browser anzeigen" 0x0066FBF2 0x00000000 "Comic Sans Ms" 9    
     
 	${NSD_CreateLabel} $xSPPosLabels $ySPPos 100% 10u "Kommentar:"
 	Pop $sourcePageCommentLabel
@@ -295,15 +318,15 @@ Function sourcePageDisplay
 	Pop $sourcePageFileSizeValue
     IntOp $ySPPos $ySPPos + $ySPStep
 
-    ${NSD_CreateRadioButton} 0 160 100% 10u "Lokale Datei:"
+    ${NSD_CreateRadioButton} 0 170 100% 10u "Lokale Datei:"
     Pop $sourcePageLocalRadio
     ${NSD_OnClick} $sourcePageLocalRadio sourcePageLocalRadioClicked
 
-    ${NSD_CreateDirRequest} 15 180 380 12u ""
+    ${NSD_CreateDirRequest} 15 190 380 12u ""
     Pop $sourcePageFileName
     ${NSD_SetText} $sourcePageFileName $sourcePageLocalFile
     ${NSD_OnChange} $sourcePageFileName sourcePageLocalFileChanged
-    ${NSD_CreateBrowseButton} 400 179 25 22 "..."
+    ${NSD_CreateBrowseButton} 400 189 25 22 "..."
     Pop $sourcePageFileButton
     ${NSD_OnClick} $sourcePageFileButton OnSourcePageFileBrowseButton
 

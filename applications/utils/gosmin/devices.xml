@@ -539,7 +539,12 @@
         <firmware version="4.00"/>
         <picture url="nuevi_200w.bmp" identical="yes"/>
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/N%C3%BCvi_series"/>
-    </device>    
+        <Model>
+          <PartNumber>006-B0737-00</PartNumber>
+          <SoftwareVersion>400</SoftwareVersion>
+          <Description>n&#195;&#188;vi 200W</Description>
+        </Model>
+    </device>
     
     <device brand="Garmin" series="Nuevi" name="Nuevi 205">
         <display map="Color" colors="" typfile=""/>
@@ -607,7 +612,7 @@
         <memory>
           <internal size="24" unit="MB"/>
           <slot type="microSD">
-              <card type="SD" maxsize="" unit="GB"/>
+              <card type="SD" maxsize="2" unit="GB"/>
               <card type="SDHC" maxsize="" unit="GB"/>
           </slot>
         </memory>
@@ -616,10 +621,10 @@
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
         <Model>
           <PartNumber>006-B0795-00</PartNumber>
-          <SoftwareVersion>230</SoftwareVersion>
+          <SoftwareVersion>320</SoftwareVersion>
           <Description>Oregon 200</Description>
-        </Model>  
-    </device>    
+        </Model>
+    </device>
     
     <device brand="Garmin" series="Oregon" name="Oregon 300">
         <display map="Color" colors="65000" typfile="yes"/>
@@ -634,7 +639,12 @@
         <firmware version="3.10"/>
         <picture url="Oregon_400t.bmp" identical="yes"/>
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
-    </device>    
+        <Model>
+          <PartNumber>006-B0795-00</PartNumber>
+          <SoftwareVersion>310</SoftwareVersion>
+          <Description>Oregon 300</Description>
+        </Model>
+    </device>
     
     <device brand="Garmin" series="Oregon" name="Oregon 400t">
         <display map="Color" colors="65000" typfile="yes"/>
@@ -799,6 +809,11 @@
         <firmware version="4.80"/>
         <picture url="zumo_550.bmp" identical="yes"/>
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/z%C5%ABmo_series"/>
+        <Model>
+          <PartNumber>006-B0580-00</PartNumber>
+          <SoftwareVersion>480</SoftwareVersion>
+          <Description>zumo 550</Description>
+        </Model>
     </device>
     
     <device brand="Garmin" series="Zumo" name="Zumo 660">

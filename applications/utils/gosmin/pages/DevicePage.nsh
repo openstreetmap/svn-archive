@@ -6,13 +6,12 @@
 ; the selected series "eTrex"
 Var /GLOBAL devicePageSelectedSeries
 
+; the currently selected device "eTrex Legend HCx"
 Var /GLOBAL devicePageSelectedDevice
 
 ; ============================================================================
 ; internally used stuff
 ; ============================================================================
-; the currently selected device "eTrex Legend HCx"
-;Var /GLOBAL devicePageCurrentDevice
 
 !include "nsDialogs.nsh"
 
@@ -22,14 +21,8 @@ Var /GLOBAL devicePageSelectedDevice
 
 !addplugindir "3rdparty"
 
-;Var /GLOBAL devicePageSeriesList
-
-;!macro deviceProperty DeviceNr Property Value
-;  ReadINIStr ${Value} "$PLUGINSDIR\devices.ini" "Device ${DeviceNr}" "${Property}"
-;!macroend
-
 ; ============================================================================
-; build list of series
+; fill "series" drop list
 ; ============================================================================
 !macro devicePageFillListOfSeries HWND
   StrCpy $4 "1"
@@ -53,7 +46,7 @@ enumSeriesDevicesFinished:
 !macroend
 
 ; ============================================================================
-; build list of types
+; fill "types" drop list
 ; ============================================================================
 !macro devicePageFillListOfTypes Series HWND FirstItem
   ; reset
@@ -140,7 +133,6 @@ Var MemoryCardSDStateLabel
 Var MemoryCardSDHCLabel
 Var MemoryCardSDHCStateLabel
 Var HelpButton
-;Var HelpButtonLabel
 Var FirmwareStateLabel
 
 Var xPosHeader
@@ -311,9 +303,6 @@ Function devicePageDisplay
 	Pop $FirmwareStateLabel
     IntOp $yPos $yPos + $yStep
 
-	;${NSD_CreateLabel} $xPosHeader 200 150 10u "Geräte / Details eintragen:"
-	;Pop $HelpButtonLabel
-    
 	${NSD_CreateButton} 240 205 80u 15u "Gerätedetails Online"
     Pop $HelpButton
     ${NSD_OnClick} $HelpButton onClickWikiLink

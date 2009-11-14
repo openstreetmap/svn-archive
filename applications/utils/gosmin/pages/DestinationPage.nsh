@@ -13,12 +13,6 @@ Var /GLOBAL destinationFreeMB
 ; internally used stuff
 ; ============================================================================
 
-!include "MUI.nsh"
-!include "FileFunc.nsh"
-!include "LogicLib.nsh"
-
-!include "3rdparty\XML.nsh"
-
 Var DriveCurrent
 Var DriveSmall
 Var DriveEmpty

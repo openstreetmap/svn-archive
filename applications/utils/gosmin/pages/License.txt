@@ -1,5 +1,5 @@
-OpenStreetMap data
---------------------------
+OpenStreetMap data / maps
+-----------------------------------
 (C) www.OpenStreetMap.org and contributors
 Creative Commons Attribution-ShareAlike 2.0 license
 See: http://wiki.openstreetmap.org/wiki/OpenStreetMap_License

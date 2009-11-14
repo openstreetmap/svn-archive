@@ -20,17 +20,20 @@ OutFile "gosmin.exe"
 
 XPStyle on
 
+!addplugindir "3rdparty"
+
+!include "3rdparty\XML.nsh"
+
+!include "MUI.nsh"
+!include "FileFunc.nsh"
+!include "LogicLib.nsh"
+!include "WordFunc.nsh"
 
 !include "pages\WelcomePage.nsh"
 !include "pages\PreparationsPage.nsh"
 !include "pages\DevicePage.nsh"
 !include "pages\DestinationPage.nsh"
 !include "pages\SourcePage.nsh"
-
-!addplugindir "3rdparty"
-!include "LogicLib.nsh"
-!include "FileFunc.nsh"
-!include "WordFunc.nsh"
 
 ; ============================================================================
 ; Modern UI

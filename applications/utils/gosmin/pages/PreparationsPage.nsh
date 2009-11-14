@@ -36,7 +36,7 @@ Function preparationsPageDisplay
     !insertmacro MUI_HEADER_TEXT "Vorbereitungen" "Bitte folgendes beachten."
     
     StrCpy $yCPPos 0
-    StrCpy $yCPSpacer 20
+    StrCpy $yCPSpacer 10
     
     ; create the new dialog
 	nsDialogs::Create 1018
@@ -46,22 +46,33 @@ Function preparationsPageDisplay
 	${EndIf}
 
     ; Gerät anschliessen
-	${NSD_CreateGroupBox} 0 $yCPPos 100% 22u "Garmin anschliessen"
+	${NSD_CreateGroupBox} 0 $yCPPos 100% 38 "Garmin anschliessen"
     Pop $0
     
     IntOp $1 $yCPPos + 15
-	${NSD_CreateLabel} 10 $1 435 10u "Bitte jetzt das Garmin Gerät an den Computer anschliessen, falls nicht bereits geschehen."
+	${NSD_CreateLabel} 10 $1 435 10u "Bitte das Garmin Gerät an den Computer anschliessen, falls nicht bereits geschehen."
 	Pop $preparationsPageLabel    
 
-    IntOp $yCPPos $yCPPos + 22
+    IntOp $yCPPos $yCPPos + 38
+    IntOp $yCPPos $yCPPos + $yCPSpacer
+    
+    ; Speicherkarte anschliessen
+	${NSD_CreateGroupBox} 0 $yCPPos 100% 65 "Speicherkarte anschliessen"
+    Pop $0
+    
+    IntOp $1 $yCPPos + 15
+	${NSD_CreateLabel} 10 $1 435 30u "Die Verwendung einer (micro)SD Speicherkarte wird empfohlen. Falls nicht bereits geschehen, bitte diese an den Computer anschliessen. Notfalls kann die Karte auch in den Garmin gesteckt werden, oder der (meist begrenzte) interne Speicher verwendet werden."
+	Pop $preparationsPageLabel    
+
+    IntOp $yCPPos $yCPPos + 65
     IntOp $yCPPos $yCPPos + $yCPSpacer
     
     ; Massenspeichermodus
-	${NSD_CreateGroupBox} 0 $yCPPos 100% 55u "Massenspeichermodus"
+	${NSD_CreateGroupBox} 0 $yCPPos 100% 88 "Massenspeichermodus"
     Pop $0
     
     IntOp $1 $yCPPos + 15
-	${NSD_CreateLabel} 10 $1 435 25u "Dieser Installer unterstützt nur Garmin Geräte im Massenspeichermodus (die als Laufwerke im Windows Explorer erscheinen). Evtl. muss dieser Modus im Gerätemenu aktiviert werden. Proprietäre Garmin (USB / serielle) Verbindungen werden nicht unterstützt."
+	${NSD_CreateLabel} 10 $1 435 25u "Dieser Installer unterstützt nur Garmin Geräte im Massenspeichermodus (die als Laufwerke im Windows Explorer erscheinen). Evtl. muss dieser Modus im Gerätemenu aktiviert werden."
 	Pop $preparationsPageLabel    
 
 	IntOp $1 $yCPPos + 55
@@ -69,7 +80,7 @@ Function preparationsPageDisplay
     Pop $preparationsPageMSMLink
     ${NSD_OnClick} $preparationsPageMSMLink onClickMSMLink
     
-    IntOp $yCPPos $yCPPos + 55
+    IntOp $yCPPos $yCPPos + 88
     IntOp $yCPPos $yCPPos + $yCPSpacer
 
     ; show page (stays in there)

@@ -731,13 +731,16 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         boolean tooLarge() {
             return this.tilesSpanned() > 10;
         }
+        boolean insane() {
+            return this.tilesSpanned() > 100;
+        }
         double tilesSpanned() {
             return Math.sqrt(1.0 * this.size());
         }
 
-        int size() {
-            int x_span = z12x1 - z12x0 + 1;
-            int y_span = z12y1 - z12y0 + 1;
+        double size() {
+            double x_span = z12x1 - z12x0 + 1.0;
+            double y_span = z12y1 - z12y0 + 1.0;
             return x_span * y_span;
         }
 
@@ -752,6 +755,10 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         private List<Tile> allTiles(boolean create)
         {
             List<Tile> ret = new ArrayList<Tile>();
+            // Don't even try to iterate over the set.
+            // Someone created a crazy number of them
+            if (this.insane())
+                return ret;
             for (int x = z12x0; x <= z12x1; x++) {
                 for (int y = z12y0; y <= z12y1; y++) {
                     Tile t;
@@ -851,6 +858,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
 
         // Too many tiles... refuse to draw
         if (!ts.tooLarge()) {
+            //out("size: " + ts.size() + " spanned: " + ts.tilesSpanned());
             ts.loadAllTiles(false);
         }
 
@@ -874,6 +882,8 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 LatLon topLeft2  = tileLatLon(missed);
                 LatLon botRight2 = tileLatLon(t2);
                 TileSet ts2 = new TileSet(topLeft2, botRight2, newzoom);
+                if (ts2.tooLarge())
+                    continue;
                 newlyMissedTiles.addAll(this.paintTileImages(g, ts2, newzoom, missed));
             }
             missedTiles = newlyMissedTiles;
@@ -910,7 +920,9 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         }
         //g.drawString("currentZoomLevel=" + currentZoomLevel, 120, 120);
         oldg.setColor(Color.black);
-        if (ts.tooLarge()) {
+        if (ts.insane()) {
+            oldg.drawString("zoom in to load any tiles", 120, 120);
+        } else if (ts.tooLarge()) {
             oldg.drawString("zoom in to load more tiles", 120, 120);
         } else if (ts.tooSmall()) {
             oldg.drawString("increase zoom level to see more detail", 120, 120);

@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.12  2009-11-14 raise ApiError on 4xx errors -- Xoff               ##
 ## 0.2.11  2009-10-14 unicode error on ChangesetUpload                   ##
 ## 0.2.10  2009-10-14 RelationFullRecur definition                       ##
 ## 0.2.9   2009-10-13 automatic changeset management                     ##
@@ -43,9 +44,18 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.11'
+__version__ = '0.2.12'
 
 import httplib, base64, xml.dom.minidom, time
+
+class ApiError(Exception):
+    	
+    def __init__(self, status, reason):
+        self.status = status
+        self.reason = reason
+    
+    def __str__(self):
+        return "Request failed: " + str(self.status) + " - " + self.reason
 
 ###########################################################################
 ## Main class                                                            ##
@@ -502,7 +512,7 @@ class OsmApi:
             response.read()
             if response.status == 410:
                 return None
-            raise Exception, "API returns unexpected status code "+str(response.status)+" ("+response.reason+")"
+            raise ApiError(response.status, response.reason)
         return response.read()
     
     def _http(self, cmd, path, auth, send):
@@ -511,7 +521,13 @@ class OsmApi:
             i += 1
             try:
                 return self._http_request(cmd, path, auth, send)
-            except:
+            except ApiError, e:
+                if e.status >= 500:
+                    if i == 5: raise
+                    if i <> 1: time.sleep(2)
+                    self._conn = httplib.HTTPConnection(self._api, 80)
+                else: raise
+            except Exception:
                 if i == 5: raise
                 if i <> 1: time.sleep(2)
                 self._conn = httplib.HTTPConnection(self._api, 80)

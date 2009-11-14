@@ -439,9 +439,9 @@ public class TagChecker extends Test
                 }
             }
         }
-        if(checkPaint && p.errors != null)
+        if(checkPaint && p.getErrors() != null)
         {
-            for(String s: p.errors)
+            for(String s: p.getErrors())
             {
                 /* passing translated text also to original string, as we already
                 translated the stuff before. Makes the ignore file language dependend. */
@@ -621,7 +621,7 @@ public class TagChecker extends Test
         addSrcButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 String source = JOptionPane.showInputDialog(
-                		Main.parent, 
+                		Main.parent,
                 		tr("TagChecker source"),
                 		tr("TagChecker source"),
                 		JOptionPane.QUESTION_MESSAGE
@@ -652,7 +652,7 @@ public class TagChecker extends Test
                     else
                     {
                         JOptionPane.showMessageDialog(
-                        		Main.parent, 
+                        		Main.parent,
                         		tr("Please select the row to edit."),
                         		tr("Information"),
                         		JOptionPane.INFORMATION_MESSAGE

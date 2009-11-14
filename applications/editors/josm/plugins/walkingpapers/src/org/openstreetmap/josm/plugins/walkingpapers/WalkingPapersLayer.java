@@ -4,7 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.ImageObserver;
@@ -29,11 +29,11 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Class that displays a slippy map layer. Adapted from SlippyMap plugin for Walking Papers use.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  * @author LuVar <lubomir.varga@freemap.sk>
  * @author Dave Hansen <dave@sr71.net>
- * 
+ *
  */
 public class WalkingPapersLayer extends Layer implements ImageObserver {
 	/**
@@ -54,7 +54,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 	private Bounds printBounds;
 	private String tileUrlTemplate;
 	private String walkingPapersId;
-	
+
 	@SuppressWarnings("serial")
 	public WalkingPapersLayer(String id, String tile, Bounds b, int minz, int maxz) {
 		super(tr("Walking Papers: {0}", id));
@@ -65,9 +65,9 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 		this.printBounds = b;
 		this.minzoom = minz; this.maxzoom = maxz;
 		currentZoomLevel = minz;
-		
+
 		clearTileStorage();
-		
+
 	    Layer.listeners.add(new LayerChangeListener() {
 	        public void activeLayerChange(Layer oldLayer, Layer newLayer) {
 	        	// if user changes to a walking papers layer, zoom there just as if
@@ -181,10 +181,10 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 	/**
      */
 	@Override
-	public void paint(Graphics g, MapView mv) {
+	public void paint(Graphics2D g, MapView mv, Bounds bounds) {
 		LatLon topLeft = mv.getLatLon(0, 0);
 		LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
-		Graphics oldg = g;
+		Graphics2D oldg = g;
 
 		if (botRight.lon() == 0.0 || botRight.lat() == 0) {
 				// probably still initializing
@@ -199,12 +199,12 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 			g.drawImage(bufferImage, 0, 0, null);
 			return;
 		}
-		
+
 		needRedraw = false;
 		lastTopLeft = topLeft;
 		lastBotRight = botRight;
 		bufferImage = mv.createImage(mv.getWidth(), mv.getHeight());
-		g = bufferImage.getGraphics();
+		g = (Graphics2D) bufferImage.getGraphics();
 
         if (!LatLon.isValidLat(topLeft.lat())  ||
             !LatLon.isValidLat(botRight.lat()) ||
@@ -227,7 +227,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 			viewportMinY = viewportMaxY;
 			viewportMaxY = tmp;
 		}
-		
+
 		if (viewportMaxX-viewportMinX > 18) return;
 		if (viewportMaxY-viewportMinY > 18) return;
 
@@ -254,7 +254,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 				if (!key.valid) continue;
 				if (tile == null) {
 					// check if tile is in range
-					Bounds tileBounds = new Bounds(new LatLon(tileYToLat(y+1), tileXToLon(x)), 
+					Bounds tileBounds = new Bounds(new LatLon(tileYToLat(y+1), tileXToLon(x)),
 						new LatLon(tileYToLat(y), tileXToLon(x+1)));
 					if (!tileBounds.asRect().intersects(printBounds.asRect())) continue;
 					tile = new WalkingPapersTile(x, y, currentZoomLevel, this);
@@ -274,7 +274,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 				}
 			}
 		}
-		
+
 		if (count == 0)
 		{
 			//System.out.println("no images on " + walkingPapersId + ", return");
@@ -282,22 +282,22 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 		}
 
 		oldg.drawImage(bufferImage, 0, 0, null);
-		
+
 		if (imageScale != null) {
 			// If each source image pixel is being stretched into > 3
 			// drawn pixels, zoom in... getting too pixelated
 			if (imageScale > 3) {
 				increaseZoomLevel();
-				this.paint(oldg, mv);
+				this.paint(oldg, mv, bounds);
 			}
 
 			// If each source image pixel is being squished into > 0.32
 			// of a drawn pixels, zoom out.
 			else if (imageScale < 0.32) {
 				decreaseZoomLevel();
-				this.paint(oldg, mv);
+				this.paint(oldg, mv, bounds);
 			}
-		}	
+		}
 	}// end of paint metod
 
 	WalkingPapersTile getTileForPixelpos(int px, int py) {
@@ -309,16 +309,16 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 				break;
 			}
 		}
-		
+
 		if (tilex == -1) return null;
-		
+
 		for (int y = viewportMinY; y <= viewportMaxY; y++) {
 			if (pixelpos[0][y - viewportMinY + 1].y > py) {
 				tiley = y - 1;
 				break;
 			}
 		}
-		
+
 		if (tiley == -1) return null;
 
 		WalkingPapersKey key = new WalkingPapersKey(currentZoomLevel, tilex, tiley);
@@ -410,11 +410,11 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 	public void destroy() {
 		Main.pref.listener.remove(WalkingPapersLayer.this);
 	}
-	
+
 	public String getWalkingPapersId() {
 		return walkingPapersId;
 	}
-	
+
 	public URL formatImageUrl(int x, int y, int z) {
 		String urlstr = tileUrlTemplate.
 			replace("{x}", String.valueOf(x)).
@@ -426,5 +426,5 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 			return null;
 		}
 	}
-	
+
 }

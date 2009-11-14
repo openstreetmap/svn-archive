@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.routes;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.List;
 import javax.swing.Icon;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -94,7 +94,7 @@ public class RouteLayer extends Layer {
 	}
 
 	@Override
-	public void paint(Graphics g, MapView mv) {
+	public void paint(Graphics2D g, MapView mv, Bounds bounds) {
 
 		DataSet dataset = Main.main.getCurrentDataSet();
 
@@ -120,12 +120,12 @@ public class RouteLayer extends Layer {
 			}
 		}
 
-		Stroke stroke = ((Graphics2D)g).getStroke();
+		Stroke stroke = g.getStroke();
 		Color color   = g.getColor();
 		for (ConvertedWay way:pathBuilder.getConvertedWays()) {
-			pathPainter.drawWay(way, mv, (Graphics2D) g);
+			pathPainter.drawWay(way, mv, g);
 		}
-		((Graphics2D)g).setStroke(stroke);
+		g.setStroke(stroke);
 		g.setColor(color);
 	}
 

@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -26,6 +27,7 @@ import javax.swing.JSeparator;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.actions.SaveActionBase;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -68,7 +70,7 @@ public class WMSLayer extends Layer {
 	private boolean usesInvalidUrl = false;
 	/** set to true if the user confirmed to use an potentially invalid WMS base url */
 	private boolean isInvalidUrlConfirmed = false;
-	
+
 	public WMSLayer() {
 		this(tr("Blank Layer"), null, null);
 		initializeImages();
@@ -78,7 +80,7 @@ public class WMSLayer extends Layer {
 	public WMSLayer(String name, String baseURL, String cookies) {
 		super(name);
 		alphaChannel.setSelected(Main.pref.getBoolean("wmsplugin.alpha_channel"));
-		setBackgroundLayer(true); /* set global background variable */ 
+		setBackgroundLayer(true); /* set global background variable */
 		initializeImages();
 		this.baseURL = baseURL;
 		this.cookies = cookies;
@@ -111,7 +113,7 @@ public class WMSLayer extends Layer {
 	}
 
 	@Override
-	public void destroy() {	
+	public void destroy() {
 		try {
 			executor.shutdownNow();
 			// Might not be initalized, so catch NullPointer as well
@@ -162,7 +164,7 @@ public class WMSLayer extends Layer {
 		return a % b >= 0 ? a%b : a%b+b;
 	}
 
-	@Override public void paint(Graphics g, final MapView mv) {
+	@Override public void paint(Graphics2D g, final MapView mv, Bounds bounds) {
 		if(baseURL == null) return;
 		if (usesInvalidUrl && !isInvalidUrlConfirmed) return;
 
@@ -190,19 +192,19 @@ public class WMSLayer extends Layer {
 				        + "for this WMS layer does neither end with a ''&'' nor with a ''?''.<br>"
 				        + "This is likely to lead to invalid WMS request. You should check your<br>"
 				        + "preference settings.<br>"
-				        + "Do you want to fetch WMS tiles anyway?",				        
+				        + "Do you want to fetch WMS tiles anyway?",
 				        url);
 		String [] options = new String[] {
 			tr("Yes, fetch images"),
 			tr("No, abort")
 		};
 		int ret = JOptionPane.showOptionDialog(
-				Main.parent, 
+				Main.parent,
 				msg,
 				tr("Invalid URL?"),
-				JOptionPane.YES_NO_OPTION, 
-				JOptionPane.WARNING_MESSAGE, 
-				null, 
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE,
+				null,
 				options, options[1]
 		);
 		switch(ret) {
@@ -227,8 +229,8 @@ public class WMSLayer extends Layer {
 					JOptionPane.ERROR_MESSAGE
 			);
 			return;
-		}		
-		
+		}
+
 		for(int x = bminx; x<bmaxx; ++x) {
 			for(int y = bminy; y<bmaxy; ++y){
 				GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
@@ -351,7 +353,7 @@ public class WMSLayer extends Layer {
 			mv.repaint();
 		}
 	}
-	
+
 	public class SaveWmsAction extends AbstractAction {
 		public SaveWmsAction() {
 			super(tr("Save WMS layer to file"), ImageProvider.get("save"));

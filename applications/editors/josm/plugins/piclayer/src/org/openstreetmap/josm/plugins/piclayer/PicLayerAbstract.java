@@ -36,9 +36,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 
@@ -69,7 +70,7 @@ public abstract class PicLayerAbstract extends Layer
     private Component m_popupmenu[] = null;
     // Layer icon
     private Icon m_layericon = null;
-    
+
     // Keys for saving in Properties
     private final String INITIAL_POS_X = "INITIAL_POS_X";
     private final String INITIAL_POS_Y = "INITIAL_POS_y";
@@ -185,9 +186,9 @@ public abstract class PicLayerAbstract extends Layer
     }
 
     @Override
-    public void paint(Graphics arg0, MapView arg1) {
+    public void paint(Graphics2D g2, MapView mv, Bounds bounds) {
 
-        if ( m_image != null && arg0 instanceof Graphics2D) {
+        if ( m_image != null && g2 instanceof Graphics2D) {
 
             // Position image at the right graphical place
             EastNorth center = Main.map.mapView.getCenter();
@@ -199,7 +200,7 @@ public abstract class PicLayerAbstract extends Layer
             double pic_offset_y = (( leftop.north() - m_position.north() ) * pixel_per_en);
 
             // Let's use Graphics 2D
-            Graphics2D g = (Graphics2D)arg0.create();
+            Graphics2D g = (Graphics2D)g2.create();
             // Move
             g.translate( pic_offset_x, pic_offset_y );
             // Rotate
@@ -293,7 +294,7 @@ public abstract class PicLayerAbstract extends Layer
     	props.put(SCALEY, "" + m_scaley);
     	props.put(ANGLE, "" + m_angle);
     }
-    
+
     /**
      * Loads calibration data from properties structure
      * @param props Properties to load from

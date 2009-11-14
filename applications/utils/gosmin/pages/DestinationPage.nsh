@@ -123,9 +123,9 @@ FunctionEnd
 
 Var hwnd
 
-!macro DetectDevice GarminDeviceFile
-  ;MessageBox MB_OK "Trying to detect device at: ${GarminDeviceFile}"
-  ${xml::LoadFile} "${GarminDeviceFile}" $0
+!macro DetectDevice GarminDevice
+  ;MessageBox MB_OK "Trying to detect device at: ${GarminDevice"
+  ${xml::LoadFile} "${GarminDevice}\Garmin\GarminDevice.xml" $0
   ${if} $0 == -1
     Goto GarminDeviceFileEnd    
   ${EndIf}
@@ -135,7 +135,7 @@ Var hwnd
   ${xml::GetText} $1 $0
   ${xml::GotoPath} "/Device/Model/SoftwareVersion" $0
   ${xml::GetText} $2 $0
-  MessageBox MB_OK "${GarminDeviceFile}: Description: $1 SoftwareVersion: $2"
+  MessageBox MB_OK "Laufwerk: ${GarminDevice} Beschreibung: $1 SoftwareVersion: $2"
 GarminDeviceFileEnd:
   ${xml::Unload}
 !macroend
@@ -182,7 +182,7 @@ Function FddDriveCallback
 
   ; Garmin dir existing?
   IfFileExists "$9\Garmin" 0 nogarmindir
-    !insertmacro DetectDevice $9\Garmin\GarminDevice.xml
+    !insertmacro DetectDevice $9
     ${If} $1 < ${MAX_DRIVE_SIZE}
       StrCpy $DriveGarmin $hwnd
     ${EndIf}  

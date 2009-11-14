@@ -116,14 +116,10 @@ Var ImageSD
 Var ImageSDHandle
 Var MapDisplayLabel
 Var MapDisplayStateLabel
-Var MapTypLabel
-Var MapTypStateLabel
 Var ConnectionLabel
 Var ConnectionStateLabel
 Var ConnectionMSMLabel
 Var ConnectionMSMStateLabel
-Var MapImgFilesLabel
-Var MapImgFilesStateLabel
 Var MemoryLabel
 Var MemoryStateLabel
 Var MemoryCardLabel
@@ -133,7 +129,10 @@ Var MemoryCardSDStateLabel
 Var MemoryCardSDHCLabel
 Var MemoryCardSDHCStateLabel
 Var HelpButton
-Var FirmwareStateLabel
+Var FirmwareInstalledLabel
+Var FirmwareInstalledStateLabel
+Var FirmwareAvailableLabel
+Var FirmwareAvailableStateLabel
 
 Var xPosHeader
 Var xPosItem
@@ -231,12 +230,6 @@ Function devicePageDisplay
 	Pop $MapDisplayStateLabel
     IntOp $yPos $yPos + $yStep
     
-	${NSD_CreateLabel} $xPosItem $yPos 100% 10u "Änderbar (.typ Datei):"
-	Pop $MapTypLabel
-	${NSD_CreateLabel} $xPosValues $yPos 100% 10u ""
-	Pop $MapTypStateLabel
-    IntOp $yPos $yPos + $yStep
-
     
     IntOp $yPos $yPos + $ySpacer
 	${NSD_CreateLabel} $xPosHeader $yPos 100% 10u "Computer-Anschluß:"
@@ -255,19 +248,13 @@ Function devicePageDisplay
 	Pop $ConnectionMSMStateLabel
     IntOp $yPos $yPos + $yStep
     
-	${NSD_CreateLabel} $xPosItem $yPos 100% 10u "Kartendatei(en) (.img):"
-	Pop $MapImgFilesLabel
-	${NSD_CreateLabel} $xPosValues $yPos 100% 10u ""
-	Pop $MapImgFilesStateLabel
-    IntOp $yPos $yPos + $yStep
-
     
     IntOp $yPos $yPos + $ySpacer
 	${NSD_CreateLabel} $xPosHeader $yPos 100% 10u "Speicher:"
 	Pop $0
     IntOp $yPos $yPos + $yStep
 
-    ${NSD_CreateBitmap} 410 130 37 50 ""
+    ${NSD_CreateBitmap} 410 110 37 50 ""
 	Pop $ImageSD
 	${NSD_SetImage} $ImageSD "" $ImageSDHandle
     
@@ -299,8 +286,18 @@ Function devicePageDisplay
     IntOp $yPos $yPos + $ySpacer
 	${NSD_CreateLabel} $xPosHeader $yPos 100% 10u "Firmware:"
 	Pop $0
+    IntOp $yPos $yPos + $yStep
+
+	${NSD_CreateLabel} $xPosItem $yPos 100% 10u "installiert:"
+	Pop $FirmwareInstalledLabel
 	${NSD_CreateLabel} $xPosValues $yPos 100% 10u ""
-	Pop $FirmwareStateLabel
+	Pop $FirmwareInstalledStateLabel
+    IntOp $yPos $yPos + $yStep
+
+	${NSD_CreateLabel} $xPosItem $yPos 100% 10u "verfügbar:"
+	Pop $FirmwareAvailableLabel
+	${NSD_CreateLabel} $xPosValues $yPos 100% 10u ""
+	Pop $FirmwareAvailableStateLabel
     IntOp $yPos $yPos + $yStep
 
 	${NSD_CreateButton} 240 205 80u 15u "Gerätedetails Online"
@@ -394,15 +391,6 @@ Function TypesListChanged
           SendMessage $MapDisplayStateLabel ${WM_SETTEXT} 0 "STR:?"
         ${EndIf}
         
-        ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "MapTypFile"
-        ${If} $5 == "No"
-          SendMessage $MapTypStateLabel ${WM_SETTEXT} 0 "STR:Nein"
-        ${ElseIf} $5 == "Yes"
-          SendMessage $MapTypStateLabel ${WM_SETTEXT} 0 "STR:Ja"
-        ${Else}
-          SendMessage $MapTypStateLabel ${WM_SETTEXT} 0 "STR:?"
-        ${EndIf}
-        
         ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "Connection"
         ${If} $5 == "No"
           SendMessage $ConnectionStateLabel ${WM_SETTEXT} 0 "STR:Nein"
@@ -429,17 +417,6 @@ Function TypesListChanged
           SendMessage $ConnectionMSMStateLabel ${WM_SETTEXT} 0 "STR:Nein"
         ${Else}
           SendMessage $ConnectionMSMStateLabel ${WM_SETTEXT} 0 "STR:?"
-        ${EndIf}
-        
-        ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "MapImgFiles"
-        ${If} $5 == "*"
-          SendMessage $MapImgFilesStateLabel ${WM_SETTEXT} 0 "STR:mehrere *.img"
-        ${ElseIf} $5 == "1"
-          SendMessage $MapImgFilesStateLabel ${WM_SETTEXT} 0 "1 (gmapsupp.img)"
-        ${ElseIf} $5 == "No"
-          SendMessage $MapImgFilesStateLabel ${WM_SETTEXT} 0 "Nein"
-        ${Else}
-          SendMessage $MapImgFilesStateLabel ${WM_SETTEXT} 0 "STR:?"
         ${EndIf}
         
         ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "MemoryMB"
@@ -492,11 +469,20 @@ Function TypesListChanged
           SendMessage $MemoryCardSDHCStateLabel ${WM_SETTEXT} 0 "STR:$5 GB"
         ${EndIf}
         
+        ; TODO: get info from xml file
+        ;ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "Firmware"
+        StrCpy $5 ""
+        ${If} $5 == ""
+          SendMessage $FirmwareInstalledStateLabel ${WM_SETTEXT} 0 "STR:?"
+        ${Else}
+          SendMessage $FirmwareInstalledStateLabel ${WM_SETTEXT} 0 "STR:$5"
+        ${EndIf}
+        
         ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "Firmware"
         ${If} $5 == ""
-          SendMessage $FirmwareStateLabel ${WM_SETTEXT} 0 "STR:?"
+          SendMessage $FirmwareAvailableStateLabel ${WM_SETTEXT} 0 "STR:?"
         ${Else}
-          SendMessage $FirmwareStateLabel ${WM_SETTEXT} 0 "STR:$5"
+          SendMessage $FirmwareAvailableStateLabel ${WM_SETTEXT} 0 "STR:$5"
         ${EndIf}
         
         ;MessageBox MB_OK "New Type: $1 (device $0) new image: $5"

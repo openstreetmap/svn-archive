@@ -367,9 +367,9 @@ Function TypesListChanged
     !insertmacro devicePageGetDeviceIndexFromName $devicePageSelectedDevice $0
     ;MessageBox MB_OK "New Index: $0"
     ${If} $0 != -1
-        ${NSD_FreeImage} $ImageHandle
         SendMessage $TypesList ${CB_GETCURSEL} 0 0 $2
         IntOp $2 $2 + 1
+        ${NSD_FreeImage} $ImageHandle
         ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "Picture"
         ${NSD_SetImage} $Image "$PLUGINSDIR\$5" $ImageHandle
         

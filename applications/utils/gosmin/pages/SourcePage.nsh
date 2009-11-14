@@ -55,6 +55,10 @@ Var /GLOBAL sourcePageMapName
 ; init page values (only once, so "back" is working as expected
 ; ============================================================================
 Function sourcePageInit
+    File "images\maps\AllInOne.bmp"
+    File "images\maps\Computerteddy.bmp"
+    File "images\maps\Radkarte.bmp"
+    
     StrCpy $sourcePageSelect "download"
     StrCpy $sourcePageCurrentMap "Map 1"
     !insertmacro sourcePageMapNameDisplay $sourcePageCurrentMap $sourcePageMapName
@@ -74,6 +78,9 @@ Var ySPStep
 
 ; HWND of controls
 Var sourcePageDialog
+
+Var MapImage
+Var MapImageHandle
 
 Var sourcePageDownloadRadio
 Var sourcePageMapList
@@ -158,6 +165,10 @@ MapEnd5:
   
   ReadINIStr $sourcePageMapUrl "$PLUGINSDIR\Maps.ini" $sourcePageCurrentMap "DownloadUrl"
   ReadINIStr $sourcePageMapFileSizeMB "$PLUGINSDIR\Maps.ini" $sourcePageCurrentMap "FileSizeMB"
+  
+  ${NSD_FreeImage} $MapImageHandle
+  ReadINIStr $5 "$PLUGINSDIR\maps.ini" "$sourcePageCurrentMap" "Picture"
+  ${NSD_SetImage} $MapImage "$PLUGINSDIR\$5" $MapImageHandle
 FunctionEnd
 
 !macro changeLabelStates enable
@@ -193,6 +204,11 @@ Function sourcePageDownloadRadioClicked
     ;MessageBox MB_OK "Changed to download"
     StrCpy $sourcePageSelect "download"
     !insertmacro changeLabelStates 1
+    
+    ; update map picture
+    ${NSD_FreeImage} $MapImageHandle
+    ReadINIStr $5 "$PLUGINSDIR\maps.ini" "$sourcePageCurrentMap" "Picture"
+    ${NSD_SetImage} $MapImage "$PLUGINSDIR\$5" $MapImageHandle
 FunctionEnd
 
 ; ============================================================================
@@ -204,6 +220,10 @@ Function sourcePageLocalRadioClicked
     ;MessageBox MB_OK "Changed to local file"
     StrCpy $sourcePageSelect "file"
     !insertmacro changeLabelStates 0
+
+    ; update map picture
+    ${NSD_FreeImage} $MapImageHandle
+    ${NSD_SetImage} $MapImage "$PLUGINSDIR\EmptyImage.bmp" $MapImageHandle
 FunctionEnd
 
 ;; ============================================================================
@@ -260,7 +280,7 @@ FunctionEnd
 Function sourcePageDisplay
     ; prepare switch values
     StrCpy $xSPPosLabels "10"
-    StrCpy $xSPPosValues "100"
+    StrCpy $xSPPosValues "90"
     StrCpy $ySPPos "45"
     StrCpy $ySPStep "15"
     
@@ -274,6 +294,11 @@ Function sourcePageDisplay
 	${EndIf}
 
     
+    ; image
+    ${NSD_CreateBitmap} 280 5 170u 170u ""
+	Pop $MapImage
+	${NSD_SetImage} $MapImage "$PLUGINSDIR\Computerteddy.bmp" $MapImageHandle
+
     ${NSD_CreateRadioButton} 0 0 100% 10u "Download:"
     Pop $sourcePageDownloadRadio
     ${NSD_OnClick} $sourcePageDownloadRadio sourcePageDownloadRadioClicked
@@ -318,15 +343,15 @@ Function sourcePageDisplay
 	Pop $sourcePageFileSizeValue
     IntOp $ySPPos $ySPPos + $ySPStep
 
-    ${NSD_CreateRadioButton} 0 170 100% 10u "Lokale Datei:"
+    ${NSD_CreateRadioButton} 0 175 100% 10u "Lokale Datei:"
     Pop $sourcePageLocalRadio
     ${NSD_OnClick} $sourcePageLocalRadio sourcePageLocalRadioClicked
 
-    ${NSD_CreateDirRequest} 15 190 380 12u ""
+    ${NSD_CreateDirRequest} 15 195 380 12u ""
     Pop $sourcePageFileName
     ${NSD_SetText} $sourcePageFileName $sourcePageLocalFile
     ${NSD_OnChange} $sourcePageFileName sourcePageLocalFileChanged
-    ${NSD_CreateBrowseButton} 400 189 25 22 "..."
+    ${NSD_CreateBrowseButton} 400 194 25 22 "..."
     Pop $sourcePageFileButton
     ${NSD_OnClick} $sourcePageFileButton OnSourcePageFileBrowseButton
 
@@ -347,6 +372,8 @@ Function sourcePageDisplay
     
     ; show page (stays in there)
 	nsDialogs::Show
+    
+	${NSD_FreeImage} $MapImageHandle
     
     ${If} $sourcePageSelect == "download"
       ;MessageBox MB_OK "Download: URL: $sourcePageMapUrl FileSize: $sourcePageMapFileSizeMB MB"

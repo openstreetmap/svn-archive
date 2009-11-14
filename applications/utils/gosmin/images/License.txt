@@ -28,6 +28,11 @@ http://wiki.openstreetmap.org/wiki/Image:Garmin_GPSMap_60CSx.jpg
 http://wiki.openstreetmap.org/wiki/Image:Garmin_GPSmap_76CS.jpg
 http://en.wikipedia.org/wiki/File:Garmin_Forerunner_205.jpg
 
+Maps:
+http://wiki.openstreetmap.org/wiki/Image:Oregon.png
+http://wiki.openstreetmap.org/wiki/Image:Aiom4.jpg
+http://wiki.openstreetmap.org/wiki/Image:Radkarte_Oregon_Screenshot_Walberla.png
+
 Icons:
 http://wiki.openstreetmap.org/wiki/Image:Usb.png
 http://wiki.openstreetmap.org/wiki/Image:SerialCOM.jpg

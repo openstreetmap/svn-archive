@@ -12,7 +12,7 @@
         <attributes routing="no"/>
         <file name="gmapsupp.img" sizeMB="355"/>
         <download url="ftp://ftp5.gwdg.de/pub/misc/openstreetmap/teddynetz.de/latest/gmapsupp.img.gz" sizeMB="285"/>
-        <picture url="http://wiki.openstreetmap.org/images/3/37/Oregon.png"/>
+        <picture url="Computerteddy.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/User:Computerteddy"/>
         <!-- following is currently unused -->
         <boundary>
@@ -30,7 +30,7 @@
         <attributes routing="no"/>
         <file name="gmapsupp.img" sizeMB=""/>
         <download url="ftp://ftp5.gwdg.de/pub/misc/openstreetmap/teddynetz.de/latest/eu_gmapsupp.img.gz" sizeMB="612"/>
-        <picture url="http://wiki.openstreetmap.org/images/3/37/Oregon.png"/>
+        <picture url="Computerteddy.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/User:Computerteddy"/>
     </map>    
 
@@ -39,7 +39,7 @@
         <attributes routing="yes"/>
         <file name="gmapsupp.img" sizeMB="590"/>
         <download url="http://www.juergen-frank.de/osm/gmapsupps/germany/gmapsupp.img.bz2" sizeMB="460"/>
-        <picture url="http://wiki.openstreetmap.org/images/9/9f/Aiom4.jpg"/>
+        <picture url="AllInOne.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
     </map>    
 
@@ -48,7 +48,7 @@
         <attributes routing="yes"/>
         <file name="gmapsupp.img" sizeMB=""/>
         <download url="http://dev.openstreetmap.de/aio/europe/gmapsupp.img.bz2" sizeMB="1500"/>
-        <picture url="http://wiki.openstreetmap.org/images/9/9f/Aiom4.jpg"/>
+        <picture url="AllInOne.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
     </map>    
 
@@ -66,7 +66,7 @@
         <attributes routing="yes"/>
         <file name="gmapsupp.img" sizeMB="570"/>
         <download url="http://osm.arndnet.de/20091108/gmapsupp.img.zip" sizeMB="410"/>
-        <picture url="http://wiki.openstreetmap.org/images/3/3d/Radkarte_Oregon_Screenshot_Walberla.png"/>
+        <picture url="Radkarte.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/User:Radfahrer/Radkarte"/>
     </map>-->
 

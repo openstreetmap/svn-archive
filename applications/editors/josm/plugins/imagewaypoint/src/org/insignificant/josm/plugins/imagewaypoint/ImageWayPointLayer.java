@@ -3,7 +3,7 @@ package org.insignificant.josm.plugins.imagewaypoint;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import javax.swing.Icon;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -115,7 +116,7 @@ public final class ImageWayPointLayer extends Layer {
     }
 
     @Override
-    public final void paint(final Graphics graphics, final MapView mapView) {
+    public final void paint(final Graphics2D graphics, final MapView mapView, Bounds box) {
         final ImageEntry[] images = ImageEntries.getInstance().getImages();
 
         if (null != images) {

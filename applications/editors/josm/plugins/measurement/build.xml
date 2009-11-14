@@ -24,7 +24,7 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.measurement.MeasurementPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Provide a measurement dialog and a layer to measure length and angle of segments, area surrounded by a (simple) closed way and create measurement paths (which also can be imported from a gps layer)."/>
-                <attribute name="Plugin-Mainversion" value="2012"/>
+                <attribute name="Plugin-Mainversion" value="2450"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

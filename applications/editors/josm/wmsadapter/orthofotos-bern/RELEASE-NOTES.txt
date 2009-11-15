@@ -1,0 +1,5 @@
+Release 21 - 2009-11-15
+* new: select whether orthofotos of the city of Bern or the region of Bern are displayed
+  (feature request by Jose Riha) 
+  
+  

@@ -439,15 +439,19 @@ public class TagChecker extends Test
                 }
             }
         }
-        if(checkPaint && p.getErrors() != null)
+        if(checkPaint)
         {
-            for(String s: p.getErrors())
+            List<String> pe = p.getDataSet().getErrors(p);
+            if(pe != null)
             {
-                /* passing translated text also to original string, as we already
-                translated the stuff before. Makes the ignore file language dependend. */
-                errors.add( new TestError(this, Severity.WARNING, tr("Painting problem"),
-                s, s, PAINT, p) );
-                withErrors.add(p, "P");
+                for(String s: pe)
+                {
+                    /* passing translated text also to original string, as we already
+                    translated the stuff before. Makes the ignore file language dependend. */
+                    errors.add( new TestError(this, Severity.WARNING, tr("Painting problem"),
+                    s, s, PAINT, p) );
+                    withErrors.add(p, "P");
+                }
             }
         }
 
@@ -555,7 +559,7 @@ public class TagChecker extends Test
     @Override
     public void startTest(ProgressMonitor monitor)
     {
-    	super.startTest(monitor);
+        super.startTest(monitor);
         checkKeys = Main.pref.getBoolean(PREF_CHECK_KEYS, true);
         if( isBeforeUpload )
             checkKeys = checkKeys && Main.pref.getBoolean(PREF_CHECK_KEYS_BEFORE_UPLOAD, true);
@@ -621,11 +625,11 @@ public class TagChecker extends Test
         addSrcButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 String source = JOptionPane.showInputDialog(
-                		Main.parent,
-                		tr("TagChecker source"),
-                		tr("TagChecker source"),
-                		JOptionPane.QUESTION_MESSAGE
-                		);
+                        Main.parent,
+                        tr("TagChecker source"),
+                        tr("TagChecker source"),
+                        JOptionPane.QUESTION_MESSAGE
+                        );
                 if (source != null)
                     ((DefaultListModel)Sources.getModel()).addElement(source);
                 Sources.clearSelection();
@@ -652,19 +656,19 @@ public class TagChecker extends Test
                     else
                     {
                         JOptionPane.showMessageDialog(
-                        		Main.parent,
-                        		tr("Please select the row to edit."),
-                        		tr("Information"),
-                        		JOptionPane.INFORMATION_MESSAGE
-                        		);
+                                Main.parent,
+                                tr("Please select the row to edit."),
+                                tr("Information"),
+                                JOptionPane.INFORMATION_MESSAGE
+                                );
                     }
                 }
                 else {
-                	String source = (String)JOptionPane.showInputDialog(Main.parent,
-                			tr("TagChecker source"),
-                			tr("TagChecker source"),
-                			JOptionPane.QUESTION_MESSAGE, null, null,
-                			Sources.getSelectedValue());
+                    String source = (String)JOptionPane.showInputDialog(Main.parent,
+                            tr("TagChecker source"),
+                            tr("TagChecker source"),
+                            JOptionPane.QUESTION_MESSAGE, null, null,
+                            Sources.getSelectedValue());
                     if (source != null)
                         ((DefaultListModel)Sources.getModel()).setElementAt(source, row);
                 }

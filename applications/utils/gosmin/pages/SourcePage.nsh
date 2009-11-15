@@ -287,7 +287,7 @@ Function sourcePageDisplay
 
     
     ; image
-    ${NSD_CreateBitmap} 280 5 170u 170u ""
+    ${NSD_CreateBitmap} 300 5 150u 150u ""
 	Pop $MapImage
 	${NSD_SetImage} $MapImage "$PLUGINSDIR\Computerteddy.bmp" $MapImageHandle
 

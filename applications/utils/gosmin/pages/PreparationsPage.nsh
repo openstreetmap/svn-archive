@@ -45,18 +45,7 @@ Function preparationsPageDisplay
 		Abort
 	${EndIf}
 
-    ; Gerät anschliessen
-	${NSD_CreateGroupBox} 0 $yCPPos 100% 38 "Garmin anschliessen"
-    Pop $0
-    
-    IntOp $1 $yCPPos + 15
-	${NSD_CreateLabel} 10 $1 435 10u "Bitte das Garmin Gerät an den Computer anschliessen, falls nicht bereits geschehen."
-	Pop $preparationsPageLabel    
-
-    IntOp $yCPPos $yCPPos + 38
-    IntOp $yCPPos $yCPPos + $yCPSpacer
-    
-    ; Speicherkarte anschliessen
+    ; attach memory card
 	${NSD_CreateGroupBox} 0 $yCPPos 100% 65 "Speicherkarte anschliessen"
     Pop $0
     
@@ -67,18 +56,30 @@ Function preparationsPageDisplay
     IntOp $yCPPos $yCPPos + 65
     IntOp $yCPPos $yCPPos + $yCPSpacer
     
-    ; Massenspeichermodus
+    ; attach device
+	${NSD_CreateGroupBox} 0 $yCPPos 100% 38 "Garmin anschliessen"
+    Pop $0
+    
+    IntOp $1 $yCPPos + 15
+	${NSD_CreateLabel} 10 $1 435 10u "Bitte das Garmin Gerät an den Computer anschliessen, falls nicht bereits geschehen."
+	Pop $preparationsPageLabel    
+
+    IntOp $yCPPos $yCPPos + 38
+    IntOp $yCPPos $yCPPos + $yCPSpacer
+    
+    ; mass storage mode
 	${NSD_CreateGroupBox} 0 $yCPPos 100% 88 "Massenspeichermodus"
     Pop $0
     
     IntOp $1 $yCPPos + 15
-	${NSD_CreateLabel} 10 $1 435 25u "Dieser Installer unterstützt nur Garmin Geräte im Massenspeichermodus (die als Laufwerke im Windows Explorer erscheinen). Evtl. muss dieser Modus im Gerätemenu aktiviert werden."
+	${NSD_CreateLabel} 10 $1 435 25u "Aktuellere Garmin Geräte bieten den USB Massenspeichermodus (die dann als Laufwerke im Windows Explorer erscheinen). Evtl. muss der Massenspeichermodus im Garmin über das Menu aktiviert werden."
 	Pop $preparationsPageLabel    
 
 	IntOp $1 $yCPPos + 55
     ${NSD_CreateButton} 260 $1 180 15u "Was ist der Massenspeichermodus?"
     Pop $preparationsPageMSMLink
     ${NSD_OnClick} $preparationsPageMSMLink onClickMSMLink
+    ToolTips::Classic $preparationsPageMSMLink "Wiki Seite über den Massenspeichermodus im Browser anzeigen" 0x0066FBF2 0x00000000 "Comic Sans Ms" 9
     
     IntOp $yCPPos $yCPPos + 88
     IntOp $yCPPos $yCPPos + $yCPSpacer

@@ -23,10 +23,6 @@ Var /GLOBAL sourcePageCurrentMap
 ; Name of map "Deutschland - All in One ..."
 Var /GLOBAL sourcePageMapName
 
-!include "MUI.nsh"
-!include "LogicLib.nsh"
-
-
 ; ============================================================================
 ; convsersion of user visible strings
 ; ============================================================================
@@ -84,8 +80,6 @@ Var MapImageHandle
 
 Var sourcePageDownloadRadio
 Var sourcePageMapList
-;Var sourcePageBoundaryLabel
-;Var sourcePageBoundaryValue
 Var sourcePageRoutingLabel
 Var sourcePageRoutingValue
 Var sourcePageUpdateLabel
@@ -147,9 +141,6 @@ MapNext5:
 MapEnd5:
 
   ; update info value fields
-  ;ReadINIStr $0 "$PLUGINSDIR\Maps.ini" "$sourcePageCurrentMap" "Boundary:de"
-  ;SendMessage $sourcePageBoundaryValue ${WM_SETTEXT} 1 'STR:$0'
-
   !insertmacro sourcePageRoutingDisplay $sourcePageCurrentMap $0
   SendMessage $sourcePageRoutingValue ${WM_SETTEXT} 1 'STR:$0'
   
@@ -171,11 +162,12 @@ MapEnd5:
   ${NSD_SetImage} $MapImage "$PLUGINSDIR\$5" $MapImageHandle
 FunctionEnd
 
+; ============================================================================
+; change enable/disable label states
+; ============================================================================
 !macro changeLabelStates enable
     ;MessageBox MB_OK "radio changed: ${enable}"
     EnableWindow $sourcePageMapList ${enable}
-    ;EnableWindow $sourcePageBoundaryLabel ${enable}
-    ;EnableWindow $sourcePageBoundaryValue ${enable}
     EnableWindow $sourcePageRoutingLabel ${enable}
     EnableWindow $sourcePageRoutingValue ${enable}
     EnableWindow $sourcePageUpdateLabel ${enable}
@@ -233,7 +225,7 @@ Function sourcePageLocalFileChanged
     Pop $0
 
     ${NSD_GetText} $sourcePageFileName $sourcePageLocalFile
-    MessageBox MB_OK "Changed local file name to: $sourcePageLocalFile"
+    ;MessageBox MB_OK "Changed local file name to: $sourcePageLocalFile"
 
     ; TODO: disable Next button, if file doesn't exist
 FunctionEnd
@@ -299,6 +291,7 @@ Function sourcePageDisplay
 	Pop $MapImage
 	${NSD_SetImage} $MapImage "$PLUGINSDIR\Computerteddy.bmp" $MapImageHandle
 
+    
     ${NSD_CreateRadioButton} 0 0 100% 10u "Download:"
     Pop $sourcePageDownloadRadio
     ${NSD_OnClick} $sourcePageDownloadRadio sourcePageDownloadRadioClicked
@@ -307,12 +300,6 @@ Function sourcePageDisplay
     Pop $sourcePageMapList
     !insertmacro sourcePageFillListOfMaps $sourcePageMapList
     ${NSD_OnChange} $sourcePageMapList MapListChanged
-
-	;${NSD_CreateLabel} $xSPPosLabels $ySPPos 100% 10u "Ausschnitt:"
-	;Pop $sourcePageBoundaryLabel
-	;${NSD_CreateLabel} $xSPPosValues $ySPPos 100% 10u ""
-	;Pop $sourcePageBoundaryValue
-    ;IntOp $ySPPos $ySPPos + $ySPStep
 
 	${NSD_CreateButton} $xSPPosLabels 110 80u 15u "Kartendetails Online"
     Pop $SourceHelpButton
@@ -343,6 +330,7 @@ Function sourcePageDisplay
 	Pop $sourcePageFileSizeValue
     IntOp $ySPPos $ySPPos + $ySPStep
 
+    
     ${NSD_CreateRadioButton} 0 175 100% 10u "Lokale Datei:"
     Pop $sourcePageLocalRadio
     ${NSD_OnClick} $sourcePageLocalRadio sourcePageLocalRadioClicked

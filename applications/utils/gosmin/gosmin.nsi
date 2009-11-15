@@ -15,7 +15,6 @@ SetCompressor /SOLID lzma
 Name "${PROGRAM_NAME}"
 
 ; The file to write
-;OutFile "gosmin-${VERSION}.exe"
 OutFile "gosmin.exe"
 
 XPStyle on

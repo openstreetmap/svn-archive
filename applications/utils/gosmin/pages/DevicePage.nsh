@@ -13,14 +13,6 @@ Var /GLOBAL devicePageSelectedDevice
 ; internally used stuff
 ; ============================================================================
 
-!include "nsDialogs.nsh"
-
-!include "MUI.nsh"
-!include "LogicLib.nsh"
-!include "WordFunc.nsh"
-
-!addplugindir "3rdparty"
-
 ; ============================================================================
 ; fill "series" drop list
 ; ============================================================================
@@ -493,7 +485,5 @@ Function TypesListChanged
         ${NSD_SetImage} $ImageSD "$PLUGINSDIR\EmptyImage.bmp" $ImageSDHandle
         ;MessageBox MB_OK "New Type: Empty"
     ${EndIf}
-
-    ;!insertmacro deviceProperty DeviceNr Property Value
 
 FunctionEnd

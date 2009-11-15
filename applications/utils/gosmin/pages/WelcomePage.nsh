@@ -1,6 +1,4 @@
 
-!include "MUI.nsh"
-!addplugindir "3rdparty"
 
 Function WelcomePageSetupLinkPre
   !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Settings" "Numfields" "4" ; increase counter

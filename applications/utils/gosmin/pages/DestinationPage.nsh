@@ -13,6 +13,7 @@ Var /GLOBAL destinationFreeMB
 ; internally used stuff
 ; ============================================================================
 
+Var hwnd
 Var DriveCurrent
 Var DriveSmall
 Var DriveEmpty
@@ -26,6 +27,9 @@ Var destinationPageLabel
 Var destinationPageDirRadio
 Var destinationPageDirName
 Var destinationPageDirButton
+
+; no current SD card is larger than 64GB, so probably a USB connected hard drive
+!define MAX_DRIVE_SIZE_MB 64000
 
 ; ============================================================================
 ; build the "free MB" display string
@@ -121,8 +125,6 @@ Function GetDriveLabel
   Exch $R0
 FunctionEnd
 
-Var hwnd
-
 !macro DetectDevice GarminDevice
   ;MessageBox MB_OK "Trying to detect device at: ${GarminDevice"
   ${xml::LoadFile} "${GarminDevice}\Garmin\GarminDevice.xml" $0
@@ -139,9 +141,6 @@ Var hwnd
 GarminDeviceFileEnd:
   ${xml::Unload}
 !macroend
-
-; no current SD card is larger than 64GB, so probably a USB connected hard drive
-!define MAX_DRIVE_SIZE 64000
 
 ; ============================================================================
 ; callback for GetDrives (fdd = removable drive)
@@ -163,7 +162,7 @@ Function FddDriveCallback
   ; if this drive completly empty?
   ${If} $1 == $2
     ${If} $1 != ""
-      ${If} $1 < ${MAX_DRIVE_SIZE}
+      ${If} $1 < ${MAX_DRIVE_SIZE_MB}
         StrCpy $DriveEmpty $hwnd
       ${EndIf}
     ${EndIf}
@@ -175,7 +174,7 @@ Function FddDriveCallback
     ${GetSize} "$9Garmin" "/M=gmapsupp.img /S=0M /G=0" $4 $5 $6
     ;MessageBox MB_OK "$9Garmin Size: $4!"
     IntOp $7 $7 + $4
-    ${If} $1 < ${MAX_DRIVE_SIZE}
+    ${If} $1 < ${MAX_DRIVE_SIZE_MB}
       StrCpy $DriveGmapsupp $hwnd
     ${EndIf}
   nogmapsupp:
@@ -183,12 +182,12 @@ Function FddDriveCallback
   ; Garmin dir existing?
   IfFileExists "$9\Garmin" 0 nogarmindir
     !insertmacro DetectDevice $9
-    ${If} $1 < ${MAX_DRIVE_SIZE}
+    ${If} $1 < ${MAX_DRIVE_SIZE_MB}
       StrCpy $DriveGarmin $hwnd
     ${EndIf}  
   nogarmindir:
   
-  ${If} $1 < ${MAX_DRIVE_SIZE}
+  ${If} $1 < ${MAX_DRIVE_SIZE_MB}
     StrCpy $DriveCurrent $hwnd
   ${EndIf}  
   

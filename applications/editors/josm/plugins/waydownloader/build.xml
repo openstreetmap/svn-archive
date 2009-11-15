@@ -25,7 +25,7 @@
 	<!-- 
       ** update before publishing 
 	-->
-	<property name="commit.message" value="Fixed merging of nodes; improved messages; completed I18n; now uses referers and searching of nodes in a bounding box; now only enabled if current layer is a data layer; Updated build.xml" />		
+	<property name="commit.message" value="Publishing: various fixes and improvements, see 18613" />		
 	<property name="plugin.main.version" value="2457" />
 	
 	

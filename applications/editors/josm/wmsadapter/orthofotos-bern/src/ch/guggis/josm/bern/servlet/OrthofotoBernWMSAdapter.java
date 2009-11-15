@@ -82,23 +82,14 @@ public class OrthofotoBernWMSAdapter extends HttpServlet {
 	static public final String DEFAULT_URL_GEN_SESSION_ID1 = "http://www.stadtplan.bern.ch/";
 	static public final String DEFAULT_URL_GEN_SESSION_ID2 = "http://www.stadtplan.bern.ch/TBInternet/WebMapPageLV.aspx";
 
-	/**
-	 * the default URL to enter Berns map application. The session ID is
-	 * retrieved from this URL
-	 */
-	static public final String DEFAULT_URL_MAP_APP_ENTRY = "http://www.stadtplan.bern.ch/TBInternet/WebTitlePage.aspx";
-	// static public final String DEFAULT_URL_MAP_APP_ENTRY =
-	// "http://www.stadtplan.bern.ch/TBInternet/WebMapPageLV.aspx";
-
-	/** the default URL to retrieve map tiles from Berns map application */
-	static public final String DEFAULT_URL_MAP_REQUESTS = "http://www.stadtplan.bern.ch/TBInternet/WebMapServer.aspx?VERSION=1.0.0&REQUEST=GETMAP&TYPE=11&LAYERS=TBI_orthofoto_08.mwf&FORMAT=image/jpeg&EXCEPTIONS=image/jpeg";
-
 	/** the logger */
-	private static Logger logger = Logger
-			.getLogger(OrthofotoBernWMSAdapter.class.getName());
+	private static Logger logger = Logger.getLogger(OrthofotoBernWMSAdapter.class.getName());
 
 	HashMap<String, String> cityMapSessionCookies = new HashMap<String, String>();
 
+	static private final String DEFAULT_LAYER = "TBI_orthofoto_08.mwf"; 
+	private String layer = DEFAULT_LAYER;
+	
 	/**
 	 * remembers session cookie retrieved from Berns map server
 	 * 
@@ -311,6 +302,18 @@ public class OrthofotoBernWMSAdapter extends HttpServlet {
 
 	}
 
+	protected String buildDefaultUrlForMapRequests() {		
+		StringBuffer sb = new StringBuffer();
+		sb.append("http://www.stadtplan.bern.ch/TBInternet/WebMapServer.aspx?");
+		sb.append("VERSION=1.0.0").append("&");
+		sb.append("REQUEST=GETMAP").append("&");
+		sb.append("TYPE=11").append("&");
+		sb.append("LAYERS=").append(layer).append("&");
+		sb.append("FORMAT=image/jpeg").append("&");
+		sb.append("EXCEPTIONS=image/jpeg");
+		return sb.toString();
+	}
+	
 	/**
 	 * handles a tile request
 	 * 
@@ -375,7 +378,7 @@ public class OrthofotoBernWMSAdapter extends HttpServlet {
 		// build request URL
 		//
 		StringBuffer sb = new StringBuffer();
-		sb.append(DEFAULT_URL_MAP_REQUESTS);
+		sb.append(buildDefaultUrlForMapRequests());
 		sb.append("&WIDTH=");
 		sb.append(width);
 		sb.append("&HEIGHT=");
@@ -436,22 +439,39 @@ public class OrthofotoBernWMSAdapter extends HttpServlet {
 				"unexpected value for parameter 'action'. Got " + action);
 	}
 
+	protected String buildConfigurationForm(HttpServletRequest req) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<html><head></head><body>").append("\n");
+		sb.append("<h1>WMS Adapter for Orthofots of Bern</h1>").append("\n");
+		sb.append("Please open <a href=\"http://www.stadtplan.bern.ch/TBInternet/default.aspx?User=1\">the city map of Bern</a> in your browser.</br>").append("\n");
+		sb.append("Then lookup the cookie <strong>ASP.Net_SessionId</strong> for domain <strong>www.stadtplan.bern.ch</strong> in your browser and enter it in the form below.</br>").append("\n");
+		sb.append("<form action=\"").append(req.getRequestURL()).append("\">").append("\n");
+		sb.append("<input type=\"hidden\" name=\"action\" value=\"set-session-id\">").append("\n");
+		sb.append("Session ID: <input type=\"text\" name=\"session-id\" value=\"\"><br/>").append("\n");
+		sb.append("Select a layer:<br/>").append("\n");
+		String checked;
+		if (layer == null || layer.equals("TBI_orthofoto_08.mwf")) {
+			checked=" checked ";			
+		} else {
+			checked = "";
+		}		
+		sb.append("<input type=\"radio\" name=\"layer\" value=\"TBI_orthofoto_08.mwf\"").append(checked).append(">Luftbilder 2008 Stadt Bern<br>").append("\n");
+		if (layer != null && layer.equals("orthofoto_Regio_08.mwf")) {
+			checked=" checked ";			
+		} else {
+			checked = "";
+		}
+		sb.append("<input type=\"radio\" name=\"layer\" value=\"orthofoto_Regio_08.mwf\"").append(checked).append(">Luftbilder 2008 Region Bern<br>").append("\n");
+		sb.append("<input type=\"submit\" value=\"Submit\">").append("\n");
+		sb.append("</form").append("\n");
+		sb.append("</body></html>").append("\n");
+		return sb.toString();
+
+	}
 	protected void renderSessionIDInputForm(HttpServletRequest req,
 			HttpServletResponse resp) throws IOException {
-		String msg = "<html><head></head><body>\n"
-				+ "<h1>WMS Adapter for Orthofots of Bern</h1>"
-				+ "Please open <a href=\"http://www.stadtplan.bern.ch/TBInternet/default.aspx?User=1\">the city map of Bern</a> in your browser.</br>"
-				+ "Then lookup the cookie <strong>ASP.Net_SessionId</strong> for domain <strong>www.stadtplan.bern.ch</strong> in your browser and enter it in the form below.</br>\n"
-				+ "<form action=\""
-				+ req.getRequestURL()
-				+ "\">\n"
-				+ "<input type=\"hidden\" name=\"action\" value=\"set-session-id\">\n"
-				+ "<input type=\"text\" name=\"session-id\" value=\"\">\n"
-				+ "<input type=\"submit\" value=\"Submit\">\n" + "</form>\n"
-				+ "</body></html>";
-
 		PrintWriter pw = new PrintWriter(resp.getWriter());
-		pw.println(msg);
+		pw.println(buildConfigurationForm(req));
 	}
 
 	protected void handleSetSessionId(HttpServletRequest req,
@@ -459,6 +479,11 @@ public class OrthofotoBernWMSAdapter extends HttpServlet {
 			IOException {
 		if (req.getParameter("session-id") == null) {
 			throw new MissingParameterException("session-id");
+		}
+		if (req.getParameter("layer") != null) {
+			layer = req.getParameter("layer");
+		} else {
+			layer = DEFAULT_LAYER;
 		}
 
 		cityMapSessionCookies.put(COOKIE_NAME_SESSION_ID2, req

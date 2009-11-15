@@ -11,7 +11,7 @@
 	<property name="build.dir.lib" value="${build.dir}/lib"/>
 
 	<path id="javax.servlet.classpath">
-		  <fileset dir="${basedir}/../javax.servlet" includes="*.jar" />
+		  <fileset dir="${library.dir}" includes="*.jar" />
 	</path>
 	
 	<path id="project.classpath">
@@ -84,6 +84,7 @@ Build-ID: ${build.number}
 		<copy file="${build.dir.lib}/orthofoto-bern-wms-adapter.war" todir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}" />
 		<copy file="${library.dir}/winstone-0.9.10.jar" todir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}" />
 		<copy file="${basedir}/README.txt" todir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}" />
+		<copy file="${basedir}/RELEASE-NOTES.txt" todir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}" />
 		<copy file="${basedir}/VERSION.txt" todir="${build.dir}/distrib/orthofoto-bern-wms-adapter-${build.number}" />
 		
 		<zip destfile="${basedir}/distrib/orthofoto-bern-wms-adapter-${build.number}.zip">

@@ -68,7 +68,7 @@ Function preparationsPageDisplay
     IntOp $yCPPos $yCPPos + $yCPSpacer
     
     ; mass storage mode
-	${NSD_CreateGroupBox} 0 $yCPPos 100% 88 "Massenspeichermodus"
+	${NSD_CreateGroupBox} 0 $yCPPos 100% 88 "Massenspeichermodus aktivieren"
     Pop $0
     
     IntOp $1 $yCPPos + 15

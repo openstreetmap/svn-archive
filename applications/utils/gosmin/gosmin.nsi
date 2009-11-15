@@ -48,7 +48,7 @@ XPStyle on
 !define MUI_HEADERIMAGE_BITMAP "images\brand\header.bmp"
 
 !define MUI_FINISHPAGE_NOAUTOCLOSE
-!define MUI_WELCOMEPAGE_TEXT "Installation einer OpenStreetMap Karte auf einem Garmin GPS Ger‰t.\r\n\r\nVersion: ${VERSION}\r\n\r\nKlicken Sie auf 'Weiter' um fortzufahren."
+!define MUI_WELCOMEPAGE_TEXT "Einfache Installation einer OpenStreetMap Karte auf einem Garmin GPS Ger‰t.\r\n\r\nVersion: ${VERSION}\r\n\r\nKlicken Sie auf 'Weiter' um fortzufahren."
 !define MUI_FINISHPAGE_TEXT "ACHTUNG: Die Karte muﬂ im Garmin Ger‰t unter: Einstellungen / Karte / Karteninfo eingeschaltet werden!!!"
 !define MUI_FINISHPAGE_LINK "Hinweise zum Umgang mit OSM Karten!"
 !define MUI_FINISHPAGE_LINK_LOCATION "http://wiki.openstreetmap.org/wiki/Garmin"

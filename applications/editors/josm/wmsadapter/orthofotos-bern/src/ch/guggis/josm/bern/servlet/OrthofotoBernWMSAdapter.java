@@ -442,7 +442,7 @@ public class OrthofotoBernWMSAdapter extends HttpServlet {
 	protected String buildConfigurationForm(HttpServletRequest req) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<html><head></head><body>").append("\n");
-		sb.append("<h1>WMS Adapter for Orthofots of Bern</h1>").append("\n");
+		sb.append("<h1>WMS Adapter for Orthofotos of Bern</h1>").append("\n");
 		sb.append("Please open <a href=\"http://www.stadtplan.bern.ch/TBInternet/default.aspx?User=1\">the city map of Bern</a> in your browser.</br>").append("\n");
 		sb.append("Then lookup the cookie <strong>ASP.Net_SessionId</strong> for domain <strong>www.stadtplan.bern.ch</strong> in your browser and enter it in the form below.</br>").append("\n");
 		sb.append("<form action=\"").append(req.getRequestURL()).append("\">").append("\n");

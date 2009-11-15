@@ -33,8 +33,9 @@ http://wiki.openstreetmap.org/wiki/Image:Oregon.png
 http://wiki.openstreetmap.org/wiki/Image:Aiom4.jpg
 http://wiki.openstreetmap.org/wiki/Image:Radkarte_Oregon_Screenshot_Walberla.png
 
-Icons:
+
 http://wiki.openstreetmap.org/wiki/Image:Usb.png
 http://wiki.openstreetmap.org/wiki/Image:SerialCOM.jpg
 http://wiki.openstreetmap.org/wiki/Image:SecureDigitalMicro.png
 http://wiki.openstreetmap.org/wiki/Image:SecureDigital.png
+http://openclipart.org/Xiph/files/Gerald_G/5289

@@ -41,10 +41,10 @@
 </xsl:if>
 <xsl:if test="picture/@url != ''">
 <a>
-<xsl:attribute name="href">images/<xsl:value-of select="picture/@url"/></xsl:attribute>
+<xsl:attribute name="href">images/devices/<xsl:value-of select="picture/@url"/></xsl:attribute>
 <xsl:attribute name="target">_blank</xsl:attribute>
 <img border="0" width="60" height="60">
-<xsl:attribute name="src">images/<xsl:value-of select="picture/@url"/></xsl:attribute>
+<xsl:attribute name="src">images/devices/<xsl:value-of select="picture/@url"/></xsl:attribute>
 </img></a>
 </xsl:if>
 <xsl:if test="picture/@identical = 'similiar'">

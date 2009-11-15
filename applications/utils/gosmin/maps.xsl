@@ -22,10 +22,10 @@
 <xsl:attribute name="bgcolor">#00ff00</xsl:attribute>
 </xsl:if>
 <a>
-<xsl:attribute name="href"><xsl:value-of select="picture/@url"/></xsl:attribute>
+<xsl:attribute name="href">images/maps/<xsl:value-of select="picture/@url"/></xsl:attribute>
 <xsl:attribute name="target">_blank</xsl:attribute>
 <img height="60" border="0">
-<xsl:attribute name="src"><xsl:value-of select="picture/@url"/></xsl:attribute></img>
+<xsl:attribute name="src">images/maps/<xsl:value-of select="picture/@url"/></xsl:attribute></img>
 </a>
 </td>
 

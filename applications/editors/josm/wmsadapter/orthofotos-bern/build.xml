@@ -9,6 +9,8 @@
 	<property name="build.dir" value="${basedir}/build"/>
 	<property name="build.dir.classes" value="${build.dir}/classes"/>
 	<property name="build.dir.lib" value="${build.dir}/lib"/>
+	
+	<property name="build.number" value="25"/>
 
 	<path id="javax.servlet.classpath">
 		  <fileset dir="${library.dir}" includes="*.jar" />
@@ -22,9 +24,7 @@
     <target name="default" depends="clean,compile,servlet.war" description="description">       
     </target>
 	<!-- *********************************************************************************** -->
-	<target name="init">
-    	<buildnumber file="build.number" />
-		
+	<target name="init">    	
 	</target>
 	<!-- *********************************************************************************** -->
 	<target name="clean">

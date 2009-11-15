@@ -187,8 +187,6 @@ public class WMSPlugin extends Plugin {
                 Main.main.addLayer(new WMSLayer());
             }
         }));
-        wmsJMenu.addSeparator();
-        wmsJMenu.add(new JMenuItem(new Help_WMSmenuAction()));
         setEnabledAll(menuEnabled);
     }
 

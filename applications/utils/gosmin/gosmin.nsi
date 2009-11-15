@@ -10,7 +10,7 @@ SetCompressor /SOLID lzma
 ; ============================================================================
 ; The name and version of the installer
 !define PROGRAM_NAME "OSM Karten"
-!define VERSION "0.0.2"
+!define VERSION "0.0.3"
 
 Name "${PROGRAM_NAME}"
 

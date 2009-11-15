@@ -24,7 +24,7 @@
                 <attribute name="Plugin-Class" value="UtilsPlugin.UtilsPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Several utilities that make your life easier: e.g. simplify way, join areas, jump to position."/>
-                <attribute name="Plugin-Mainversion" value="2401"/>
+                <attribute name="Plugin-Mainversion" value="2402"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

@@ -100,6 +100,11 @@
                 } else {
                     str += iText('inspector_way', i);
                 }
+				var c=0;
+				for (j=0; j<_root.map.ways[i].path.length; j++) {
+					if (_root.map.ways[i].path[j]==this) { c++; }
+				}
+				if (c>1) { str += ' <b>'+iText('inspector_node_count', c)+'</b>'; }
 				str += ", ";
 			}
 			str=str.substr(0,str.length-2);

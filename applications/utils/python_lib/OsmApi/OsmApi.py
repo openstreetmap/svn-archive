@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.13  2009-11-16 modify instead update for osc                      ##
 ## 0.2.12  2009-11-14 raise ApiError on 4xx errors -- Xoff               ##
 ## 0.2.11  2009-10-14 unicode error on ChangesetUpload                   ##
 ## 0.2.10  2009-10-14 RelationFullRecur definition                       ##
@@ -44,7 +45,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.12'
+__version__ = '0.2.13'
 
 import httplib, base64, xml.dom.minidom, time
 
@@ -141,7 +142,7 @@ class OsmApi:
             
     def NodeUpdate(self, NodeData):
         """ Updates node with NodeData. Returns updated NodeData (without timestamp). """
-        return self._do("update", "node", NodeData)
+        return self._do("modify", "node", NodeData)
 
     def NodeDelete(self, NodeData):
         """ Delete node with NodeData. Returns updated NodeData (without timestamp). """
@@ -211,7 +212,7 @@ class OsmApi:
 
     def WayUpdate(self, WayData):
         """ Updates way with WayData. Returns updated WayData (without timestamp). """
-        return self._do("update", "way", WayData)
+        return self._do("modify", "way", WayData)
 
     def WayDelete(self, WayData):
         """ Delete way with WayData. Returns updated WayData (without timestamp). """
@@ -276,7 +277,7 @@ class OsmApi:
     
     def RelationUpdate(self, RelationData):
         """ Updates relation with RelationData. Returns updated RelationData (without timestamp). """
-        return self._do("update", "relation", RelationData)
+        return self._do("modify", "relation", RelationData)
 
     def RelationDelete(self, RelationData):
         """ Delete relation with RelationData. Returns updated RelationData (without timestamp). """
@@ -479,7 +480,7 @@ class OsmApi:
             OsmData[u"id"] = int(result.strip())
             OsmData[u"version"] = 1
             return OsmData
-        elif action == "update":
+        elif action == "modify":
             result = self._put("/api/0.6/"+OsmType+"/"+str(OsmData[u"id"]), self._XmlBuild(OsmType, OsmData))
             OsmData[u"version"] = int(result.strip())
             return OsmData

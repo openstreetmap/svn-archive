@@ -17,12 +17,14 @@ Var /GLOBAL devicePageSelectedDevice
 ; fill "series" drop list
 ; ============================================================================
 !macro devicePageFillListOfSeries HWND
+  ${LogOut} "devicePageFillListOfSeries"
   StrCpy $4 "1"
   SendMessage ${HWND} ${CB_RESETCONTENT} 0 0
   
 enumSeriesDevices:
   ; get next device, finish if we don't have any more
   ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $4" "Series"
+  ;${LogOut} "Device[$4]: $5"
   ${If} $5 == ""
     Goto enumSeriesDevicesFinished
   ${EndIf}
@@ -30,6 +32,7 @@ enumSeriesDevices:
   ; add the series to the ComboBox if its not already in there (avoid duplicates)
   SendMessage ${HWND} ${CB_FINDSTRINGEXACT} -1 "STR:$5" $0
   ${If} $0 == -1
+    ${LogOut} "Series[$4]: $5"
     SendMessage ${HWND} ${CB_ADDSTRING} 0 "STR:$5"
   ${EndIf}  
   IntOp $4 $4 + 1
@@ -41,7 +44,7 @@ enumSeriesDevicesFinished:
 ; fill "types" drop list
 ; ============================================================================
 !macro devicePageFillListOfTypes Series HWND FirstItem
-  ; reset
+  ${LogOut} "devicePageFillListOfTypes"
   StrCpy ${FirstItem} ""
   StrCpy $4 "1"
   SendMessage ${HWND} ${CB_RESETCONTENT} 0 0
@@ -56,7 +59,9 @@ enumDevices:
   ; add the type to the ComboBox, if its part of the requested series
   ${If} $5 == ${Series}
     ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $4" "Name"
+    ${LogOut} "Device[$4]: $5"
     ${If} ${FirstItem} == ""
+      ${LogOut} "First: $5"
       StrCpy ${FirstItem} $5
     ${EndIf}
     SendMessage ${HWND} ${CB_ADDSTRING} 0 "STR:$5"
@@ -75,7 +80,8 @@ enumDevicesFinished:
 !macro devicePageGetDeviceIndexFromName Name Index
   ; reset
   StrCpy $4 "1"
-  
+  ${LogOut} "devicePageGetDeviceIndexFromName"
+
 enumDevices:
   ; get next device, finish if we don't have anymore
   ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $4" "Name"
@@ -86,6 +92,7 @@ enumDevices:
   ; is this the one we are searching for?
   ${If} $5 == ${Name}
     StrCpy ${Index} $4
+    ${LogOut} "Device found: ${Index}"    
     Goto enumDevicesFinished
   ${EndIf}  
   
@@ -137,6 +144,7 @@ Var ySpacer
 ; init vars and page values
 ; ============================================================================
 Function devicePageInit
+  ${LogOut} "devicePageInit"
   File "images\devices\eTrex_h.bmp"
   File "images\devices\eTrex_Legend.bmp"
   File "images\devices\eTrex_Legend_HCx.bmp"
@@ -161,8 +169,10 @@ Function devicePageInit
   File "images\SecureDigitalNone.bmp"
   File "images\SecureDigitalUnknown.bmp"
 
-  StrCpy $devicePageSelectedSeries "Oregon"
-  StrCpy $devicePageSelectedDevice "Oregon 300"
+  ;StrCpy $devicePageSelectedSeries "Oregon"
+  ;StrCpy $devicePageSelectedDevice "Oregon 300"
+  StrCpy $devicePageSelectedSeries "Bitte auswaehlen!"
+  StrCpy $devicePageSelectedDevice "Bitte auswaehlen!"
 FunctionEnd
 
 
@@ -170,6 +180,8 @@ FunctionEnd
 ; display the page
 ; ============================================================================
 Function devicePageDisplay
+
+    ${LogOut} "devicePageDisplay"
 
     ; init
     !insertmacro MUI_HEADER_TEXT "Gerät auswählen" "Auf welches Garmin Gerät soll installiert werden?"
@@ -304,9 +316,17 @@ Function devicePageDisplay
     SendMessage $TypesList ${CB_SELECTSTRING} 0 "STR:$R6"
     Call TypesListChanged
 
+    ; disable Next button
+    GetDlgItem $1 $HWNDPARENT 1
+    EnableWindow $1 0
+    
+    ${LogOut} "devicePageDisplay: Show"
+    
     ; show page (stays in there)
 	nsDialogs::Show
     ; page is closed now
+    
+    ${LogOut} "devicePageDisplay: Finish"
     
 	${NSD_FreeImage} $ImageHandle
 	${NSD_FreeImage} $ImageSDHandle
@@ -323,7 +343,7 @@ Function onClickWikiLink
   !insertmacro devicePageGetDeviceIndexFromName $devicePageSelectedDevice $0
   ReadINIStr $0 "$PLUGINSDIR\devices.ini" "Device $0" "Help"
 
-  ;MessageBox MB_OK "Device: $devicePageSelectedDevice Link: $0"
+  ${LogOut} "onClickWikiLink($devicePageSelectedDevice): $0"    
 
   ; open the page
   ExecShell "open" "$0"
@@ -338,6 +358,7 @@ Function SeriesListChanged
 	System::Call 'user32::SendMessage(i $SeriesList, i ${CB_GETLBTEXT}, i $1, t .s)'
 	Pop $1
 
+    ${LogOut} "SeriesListChanged: $1"
     StrCpy $devicePageSelectedSeries $1
     
     ;MessageBox MB_OK "New Series: $1"
@@ -351,13 +372,14 @@ FunctionEnd
 ; the type selection changed
 ; ============================================================================
 Function TypesListChanged
+    ${LogOut} "TypesListChanged"
     ; get the name of the currently selected device
 	SendMessage $TypesList ${CB_GETCURSEL} 0 0 $1
 	System::Call 'user32::SendMessage(i $TypesList, i ${CB_GETLBTEXT}, i $1, t .s)'
 	Pop $devicePageSelectedDevice
-    ;MessageBox MB_OK "New Type: $devicePageSelectedDevice"
+    ${LogOut} "TypesListChanged: New Type: $devicePageSelectedDevice"
     !insertmacro devicePageGetDeviceIndexFromName $devicePageSelectedDevice $0
-    ;MessageBox MB_OK "New Index: $0"
+    ${LogOut} "TypesListChanged: New Index: $0"
     ${If} $0 != -1
         SendMessage $TypesList ${CB_GETCURSEL} 0 0 $2
         IntOp $2 $2 + 1
@@ -476,14 +498,31 @@ Function TypesListChanged
         ${Else}
           SendMessage $FirmwareAvailableStateLabel ${WM_SETTEXT} 0 "STR:$5"
         ${EndIf}
-        
-        ;MessageBox MB_OK "New Type: $1 (device $0) new image: $5"
+
+        ; wiki button
+        ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "Help"
+        ${LogOut} "TypesListChanged: WikiButton: $5"
+        ${If} $5 == ""
+          EnableWindow $HelpButton 0
+        ${Else}
+          EnableWindow $HelpButton 1
+        ${EndIf}
+
+        ; en-/disable Next button        
+        GetDlgItem $1 $HWNDPARENT 1
+        ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "MapDisplay"
+        ${LogOut} "TypesListChanged: NextButton: $5"
+        ${If} $5 == "No"
+          EnableWindow $1 0
+        ${Else}
+          EnableWindow $1 1
+        ${EndIf}
     ${Else}
+        ${LogOut} "TypesListChanged: Unknown index of $devicePageSelectedDevice"
         ${NSD_FreeImage} $ImageHandle
         ${NSD_SetImage} $Image "$PLUGINSDIR\EmptyImage.bmp" $ImageHandle
         ${NSD_FreeImage} $ImageSDHandle
         ${NSD_SetImage} $ImageSD "$PLUGINSDIR\EmptyImage.bmp" $ImageSDHandle
-        ;MessageBox MB_OK "New Type: Empty"
     ${EndIf}
 
 FunctionEnd

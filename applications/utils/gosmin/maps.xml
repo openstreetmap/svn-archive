@@ -10,8 +10,8 @@
         <!-- colors(min): 2, 256 or 65000 -->
         <!-- nightmode: no, yes -->
         <attributes routing="no"/>
-        <file name="gmapsupp.img" sizeMB="355"/>
-        <download url="ftp://ftp5.gwdg.de/pub/misc/openstreetmap/teddynetz.de/latest/gmapsupp.img.gz" sizeMB="285"/>
+        <file name="gmapsupp.img" sizeMB="370"/>
+        <download url="ftp://ftp5.gwdg.de/pub/misc/openstreetmap/teddynetz.de/latest/gmapsupp.img.gz" sizeMB="290"/>
         <picture url="Computerteddy.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/User:Computerteddy"/>
         <!-- following is currently unused -->
@@ -22,7 +22,7 @@
             <country>germany</country>
         </boundary>
          <!-- yes/no or better: good, bad, usable, ...? -->
-        <usage hiking="yes" climbing="no" cycling="yes" mtb="no" skiing="no" car="yes" motorcycle="yes" marine="no"/>
+        <usage hiking="yes" climbing="no" cycling="yes" mtb="no" skiing="no" riding="no" car="yes" motorcycle="yes" marine="no"/>
     </map>    
 
     <map name="Computerteddy" boundary="Europe" comment="" updated="Weekly">
@@ -50,6 +50,15 @@
         <download url="http://dev.openstreetmap.de/aio/europe/gmapsupp.img.bz2" sizeMB="1500"/>
         <picture url="AllInOne.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
+    </map>    
+
+    <map name="OSMC Reit und Wanderkarte" boundary="DACH" comment="" updated="Monthly">
+        <lang iso="de" name="OSMC Reit und Wanderkarte"  boundary="DACH" comment="" updated="Monatlich"/>
+        <attributes routing="no"/>
+        <file name="gmapsupp.img" sizeMB="840"/>
+        <download url="http://topo.geofabrik.de/OSM%20Wanderkarte_gmapsupp.zip" sizeMB="680"/>
+        <picture url="OSMC.bmp"/>
+        <details url="http://wiki.openstreetmap.org/wiki/DE:OSMC_Reitkarte#Garmin-Version_der_Karte"/>
     </map>    
 
     <map name="Ivko Maksimovic" boundary="Dominican Republic" comment="" updated="Monthly">

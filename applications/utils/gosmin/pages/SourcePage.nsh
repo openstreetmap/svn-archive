@@ -53,6 +53,7 @@ Var /GLOBAL sourcePageMapName
 Function sourcePageInit
     File "images\maps\AllInOne.bmp"
     File "images\maps\Computerteddy.bmp"
+    File "images\maps\OSMC.bmp"
     File "images\maps\Radkarte.bmp"
     
     StrCpy $sourcePageSelect "download"

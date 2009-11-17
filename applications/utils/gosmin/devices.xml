@@ -1,6 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?xml-stylesheet href="devices.xsl" type="text/xsl" ?> 
 <devices>
+    <device brand="Garmin" series="Bitte auswaehlen!" name="Bitte auswaehlen!">
+        <display map="No" colors="-" typfile="-"/>
+        <connection type="-" version="" massstoragemode="-"/>
+        <memory>
+          <internal size="-" unit="MB"/>
+          <slot type="-">
+              <card type="SD" maxsize="-" unit="GB"/>
+              <card type="SDHC" maxsize="-" unit="GB"/>
+          </slot>
+        </memory>
+        <firmware version=""/>
+        <picture url="" identical=""/>
+        <help/>
+    </device>    
+    
     <device brand="Garmin" series="Colorado" name="Colorado 300">
         <display map="Color" colors="" typfile=""/>
         <connection type="USB" version="" massstoragemode="Yes"/>
@@ -636,12 +651,12 @@
               <card type="SDHC" maxsize="4" unit="GB"/>
           </slot>
         </memory>
-        <firmware version="3.10"/>
+        <firmware version="3.20"/>
         <picture url="Oregon_400t.bmp" identical="yes"/>
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
         <Model>
           <PartNumber>006-B0795-00</PartNumber>
-          <SoftwareVersion>310</SoftwareVersion>
+          <SoftwareVersion>320</SoftwareVersion>
           <Description>Oregon 300</Description>
         </Model>
     </device>

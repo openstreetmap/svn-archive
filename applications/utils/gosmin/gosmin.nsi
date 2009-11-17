@@ -19,6 +19,18 @@ OutFile "gosmin.exe"
 
 XPStyle on
 
+
+; ============================================================================
+; log output
+; ============================================================================
+!include "FileFunc.nsh"
+Var LogFile
+!define LogOut `!insertmacro _LogOut`
+!macro _LogOut Text
+FileWrite $LogFile "${Text}$\r$\n"
+!macroend
+
+
 !addplugindir "3rdparty"
 
 !include "3rdparty\XML.nsh"
@@ -96,6 +108,9 @@ ShowInstDetails show
 ; ============================================================================
 
 Function myShowCallback
+
+  FileOpen $LogFile "$PLUGINSDIR\gosmin.log" w
+  ${LogOut} "myShowCallback"
 
   SetOutPath '$PLUGINSDIR'
   File "pages\maps.ini"

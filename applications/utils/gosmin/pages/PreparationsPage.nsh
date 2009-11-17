@@ -20,8 +20,10 @@ Var preparationsPageMSMLink
 ; user clicked on MSM button
 ; ============================================================================
 Function onClickMSMLink
- Pop $0 ; don't forget to pop HWND of the stack
+  Pop $0 ; don't forget to pop HWND of the stack
 
+  ${LogOut} "onClickMSMLink"
+  
   ExecShell "open" "http://wiki.openstreetmap.org/index.php?title=DE:OSM_Map_On_Garmin/Mass_Storage_Mode&uselang=de"
 
 FunctionEnd
@@ -33,6 +35,7 @@ Var yCPSpacer
 ; display the page
 ; ============================================================================
 Function preparationsPageDisplay
+    ${LogOut} "preparationsPageDisplay"
     !insertmacro MUI_HEADER_TEXT "Vorbereitungen" "Bitte folgendes beachten."
     
     StrCpy $yCPPos 0

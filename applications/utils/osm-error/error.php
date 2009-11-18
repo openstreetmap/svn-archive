@@ -7,6 +7,13 @@ $bottom = (float) $_GET ['bottom'];
 $right = (float) $_GET ['right'];
 $top = (float) $_GET ['top'];
 
+// Store co-ordinates in cookies
+$iExpireTime = time()+60*60*24*90;
+setcookie ("left", $left, $iExpireTime);
+setcookie ("bottom", $bottom, $iExpireTime);
+setcookie ("right", $right, $iExpireTime);
+setcookie ("top", $top, $iExpireTime);
+
 // Get OSM data
 $xml = simplexml_load_file ("$osm_xapi_base/map?bbox=$left,$bottom,$right,$top");
 if ($xml === False)

@@ -6,13 +6,13 @@ body {
 }
 input.text {
 	font-family: sans-serif;
-	width: 10ex;
+	width: 12ex;
 }
 td {
 	text-align: center;
 }
 </style>
-<title>OSM-Error</title>
+<title>OSM Error</title>
 <script>
 function CreateDownloadLink () {
 	sLink = "error.php?left=" + document.getElementById ("left").value
@@ -31,7 +31,7 @@ function CreateDownloadLink () {
 <h1>OSM Error</h1>
 
 <p>
-Enter a set of co-ordinates, then click Download. This will download a GPX file with a waypoint for each error found.<br>
+Enter a set of co-ordinates, then click Download. This will download a GPX file with a waypoint for each error found. The GPX file can then be loaded onto a GPS, to make it easier to find the issues that need attention when you are next out mapping.<br>
 </p>
 
 <form action = "error.php" method = "get">
@@ -63,13 +63,18 @@ document.write ('<li>The download link can be bookmarked, or used with tools lik
 </script>
 <li>Some GPS units may truncate the waypoint names
 <li>If an error is found on a way, the waypoint will be positioned at the first node in the way
-<li>To Do: Add descriptions to waypoints
-<li>To Do: Allow user to choose which things to check for
-<li>To Do: Store co-ordinates in cookies
+</ul>
+
+<h2>To Do</h2>
+<ul>
+<li>Add descriptions to waypoints
+<li>Allow user to choose which things to check for
+<li>Store co-ordinates in cookies
+<li>Use a map to choose area (in similar manner to the export tab on the main OSM web site)
 </ul>
 
 <p><hr>
-<a href = "../download/osm-error.tar.gz">Download OSM-Error v0.1</a> source code (released under an <a href = "http://www.opensource.org/licenses/mit-license.php">MIT Licence</a>)<br>
+<a href = "../download/osm-error.tar.gz">Download source code</a> (released under an <a href = "http://www.opensource.org/licenses/mit-license.php">MIT Licence</a>)<br>
 Back to <a href = "http://www.mappage.org/">mappage.org</a>
 </p>
 

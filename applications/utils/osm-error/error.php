@@ -58,18 +58,26 @@ function TagCheck ($node, $checkfor) {
 /*
  * Check a node or way does *not* have a tag.
  * If tag does exist, writes a waypoint
- * $node: node to be checked
+ * $node: node/way to be checked
  * $tag: tag in $node to be checked for
  * $k/$v: define type of node to check (eg $k == "source", $v == "extrapolation")
  * Either $k or $v can be a wildcard (*)
+ * $waynode - "way" or "node" to indicate whether $node is a way or a node
 */
-function NoTagCheck ($node, $tag, $k, $v) {
+function NoTagCheck ($node, $tag, $k, $v, $waynode) {
 	global $iCount;
 
 	if (($tag ["k"] == $k && $tag ["v"] == $v) ||
 			($tag ["k"] == $k && $v == "*") ||
 			($k == "*" && $tag ["v"] == $v)) {
-		$sOut = "<wpt lat='" . $node ["lat"] . "' lon='" . $node ["lon"] . "'>\n";
+		if ($waynode == "way") {
+			$fWayLat = 0;
+			$fWayLon = 0;
+			GetWayLatLon ($node, $fWayLat, $fWayLon);
+			$sOut = "<wpt lat='$fWayLat' lon='$fWayLon'>\n";
+		}
+		else
+			$sOut = "<wpt lat='" . $node ["lat"] . "' lon='" . $node ["lon"] . "'>\n";
 		$sOut .= "<name>" . $iCount++ . " $k - {$tag ["v"]}</name>\n</wpt>\n";
 		echo $sOut;
 	}
@@ -145,25 +153,42 @@ foreach ($xml->node as $node) {
 	if ($DEBUG)
 		file_put_contents ($LOG_FILE, "Checking node {$node ["id"]}\n", FILE_APPEND);
 	foreach ($node->tag as $tag) {
-		// Post boxes
+		// Post box reference
 		TagCheck ($node, $tag, "amenity", "post_box", "ref");
 
 		// Name
-		NodeCheck ($node, $tag, "amenity", "cafe", "name");
-		NodeCheck ($node, $tag, "amenity", "pub", "name");
+		NodeCheck ($node, $tag, "*", "cafe", "name");
+		NodeCheck ($node, $tag, "*", "restaurant", "name");
+		NodeCheck ($node, $tag, "*", "pub", "name");
+
+		NodeCheck ($node, $tag, "*", "school", "name");
+		NodeCheck ($node, $tag, "*", "college", "name");
+		NodeCheck ($node, $tag, "*", "library", "name");
+		NodeCheck ($node, $tag, "*", "university", "name");
+
 		NodeCheck ($node, $tag, "shop", "*", "name");
+		NodeCheck ($node, $tag, "*", "post_office", "name");
+		NodeCheck ($node, $tag, "amenity", "cinema", "name");
 
 		// Opening hours
-		NodeCheck ($node, $tag, "amenity", "cafe", "opening_hours");
+		NodeCheck ($node, $tag, "*", "cafe", "opening_hours");
 		NodeCheck ($node, $tag, "shop", "*", "opening_hours");
+		NodeCheck ($node, $tag, "*", "post_office", "opening_hours");
 		NodeCheck ($node, $tag, "*", "fast_food", "opening_hours");
 		NodeCheck ($node, $tag, "*", "pharmacy", "opening_hours");
+		NodeCheck ($node, $tag, "*", "restaurant", "opening_hours");
+		NodeCheck ($node, $tag, "*", "library", "opening_hours");
 
 		// Source
 		NoTagCheck ($node, $tag, "source", "extrapolation");
+		NoTagCheck ($node, $tag, "source", "NPE");
+		NoTagCheck ($node, $tag, "source", "historical");
 
-		//FIXME tags
+		// FIXME tags
 		NoTagCheck ($node, $tag, "FIXME", "*");
+
+		// NAPTAN import
+		NoTagCheck ($node, $tag, "naptan:verified", "no");
 	}
 }
 
@@ -172,18 +197,48 @@ foreach ($xml->way as $way) {
 	if ($DEBUG)
 		file_put_contents ($LOG_FILE, "Checking way {$way ["id"]}\n", FILE_APPEND);
 	foreach ($way->tag as $tag) {
+
+		// Ref
+		WayCheck ($way, $tag, "highway", "motorway", "ref");
+		WayCheck ($way, $tag, "highway", "trunk", "ref");
+		WayCheck ($way, $tag, "highway", "primary", "ref");
+		WayCheck ($way, $tag, "highway", "secondary", "ref");
+
 		// Name
 		WayCheck ($way, $tag, "highway", "residential", "name");
+
+		WayCheck ($way, $tag, "*", "cafe", "name");
+		WayCheck ($way, $tag, "*", "restaurant", "name");
+		WayCheck ($way, $tag, "*", "pub", "name");
+
+		WayCheck ($way, $tag, "*", "school", "name");
+		WayCheck ($way, $tag, "*", "college", "name");
+		WayCheck ($way, $tag, "*", "library", "name");
+		WayCheck ($way, $tag, "*", "university", "name");
+
 		WayCheck ($way, $tag, "shop", "*", "name");
+		WayCheck ($way, $tag, "*", "post_office", "name");
+		WayCheck ($way, $tag, "amenity", "cinema", "name");
 
 		// Opening hours
+		WayCheck ($way, $tag, "*", "cafe", "opening_hours");
 		WayCheck ($way, $tag, "shop", "*", "opening_hours");
+		WayCheck ($way, $tag, "*", "post_office", "opening_hours");
+		WayCheck ($way, $tag, "*", "fast_food", "opening_hours");
+		WayCheck ($way, $tag, "*", "pharmacy", "opening_hours");
+		WayCheck ($way, $tag, "*", "restaurant", "opening_hours");
+		WayCheck ($way, $tag, "*", "library", "opening_hours");
 
 		// Source
-		NoTagCheck ($node, $tag, "source", "extrapolation");
+		NoTagCheck ($way, $tag, "source", "extrapolation");
+		NoTagCheck ($way, $tag, "source", "NPE");
+		NoTagCheck ($way, $tag, "source", "historical");
 
-		//FIXME tags
-		NoTagCheck ($node, $tag, "FIXME", "*");
+		// FIXME etc
+		NoTagCheck ($way, $tag, "FIXME", "*");
+
+		// Unknown road classification
+		NoTagCheck ($way, $tag, "highway", "road");
 	}
 }
 

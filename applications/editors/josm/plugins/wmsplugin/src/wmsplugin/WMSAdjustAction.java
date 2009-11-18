@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -29,9 +30,9 @@ import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 
-public class WMSAdjustAction extends MapMode implements
-    MouseListener, MouseMotionListener{
-
+public class WMSAdjustAction extends MapMode implements MouseListener, MouseMotionListener{
+	static private final Logger logger = Logger.getLogger(WMSAdjustAction.class.getName());
+	
     GeorefImage selectedImage;
     boolean mouseDown;
     EastNorth prevEastNorth;
@@ -210,8 +211,6 @@ public class WMSAdjustAction extends MapMode implements
 	   if (Main.map.mapView == null) return false;
 	   return ! Main.map.mapView.getLayersOfType(WMSLayer.class).isEmpty();
    }
-
-
 
 	@Override
 	protected void updateEnabledState() {

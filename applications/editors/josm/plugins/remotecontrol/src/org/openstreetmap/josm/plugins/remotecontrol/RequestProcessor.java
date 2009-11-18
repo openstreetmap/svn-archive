@@ -210,13 +210,17 @@ public class RequestProcessor extends Thread
                     final Bounds bounds = new Bounds(new LatLon(minlat, minlon),
                         new LatLon(maxlat, maxlon));
 
-                    Main.worker.execute(new Runnable() {
-                        public void run() {
-                            BoundingXYVisitor bbox = new BoundingXYVisitor();
-                            bbox.visit(bounds);
-                            Main.map.mapView.recalculateCenterScale(bbox);
-                        }
-                    });
+                    // make sure this isn't called unless there *is* a MapView
+                    //
+                    if (Main.map != null && Main.map.mapView != null) {
+	                    Main.worker.execute(new Runnable() {
+	                        public void run() {
+	                            BoundingXYVisitor bbox = new BoundingXYVisitor();
+	                            bbox.visit(bounds);
+	                            Main.map.mapView.recalculateCenterScale(bbox);
+	                        }
+	                    });
+                    }
                 }
             } else if (command.equals("/add_node")) {
                 if (!Main.pref.getBoolean("remotecontrol.permission.create-objects", true)) {

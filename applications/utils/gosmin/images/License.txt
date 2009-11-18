@@ -32,7 +32,7 @@ Maps:
 http://wiki.openstreetmap.org/wiki/Image:Oregon.png
 http://wiki.openstreetmap.org/wiki/Image:Aiom4.jpg
 http://wiki.openstreetmap.org/wiki/Image:Radkarte_Oregon_Screenshot_Walberla.png
-
+http://wiki.openstreetmap.org/wiki/Image:OSMC_Screenshot3.jpg
 
 http://wiki.openstreetmap.org/wiki/Image:Usb.png
 http://wiki.openstreetmap.org/wiki/Image:SerialCOM.jpg

@@ -34,17 +34,37 @@ function CreateDownloadLink () {
 Enter a set of co-ordinates, then click Download. This will download a GPX file with a waypoint for each error found. The GPX file can then be loaded onto a GPS, to make it easier to find the issues that need attention when you are next out mapping.<br>
 </p>
 
+<?php
+// Get saved values from cookies if present
+if (isset ($_COOKIE ['left']))
+	$left = $_COOKIE ['left'];
+else
+	$left = "";
+if (isset ($_COOKIE ['bottom']))
+	$bottom = $_COOKIE ['bottom'];
+else
+	$bottom = "";
+if (isset ($_COOKIE ['right']))
+	$right = $_COOKIE ['right'];
+else
+	$right = "";
+if (isset ($_COOKIE ['top']))
+	$top = $_COOKIE ['top'];
+else
+	$top = "";
+?>
+
 <form action = "error.php" method = "get">
 <table>
 <tr>
-<td><input name = "top" value = "53.4355" class = "text" onchange = "CreateDownloadLink ()" id = "top"></td>
+<td><input name = "top" value = "<?=$top;?>" class = "text" onchange = "CreateDownloadLink ()" id = "top"></td>
 </tr>
 <tr>
-<td><input name = "left" value = "-1.2293" class = "text" onchange = "CreateDownloadLink ()" id = "left">
-<input name = "right" value = "-1.1845" class = "text" onchange = "CreateDownloadLink ()" id = "right"></td>
+<td><input name = "left" value = "<?=$left;?>" class = "text" onchange = "CreateDownloadLink ()" id = "left">
+<input name = "right" value = "<?=$right;?>" class = "text" onchange = "CreateDownloadLink ()" id = "right"></td>
 </tr>
 <tr>
-<td><input name = "bottom" value = "53.4137" class = "text" onchange = "CreateDownloadLink ()" id = "bottom"></td>
+<td><input name = "bottom" value = "<?=$bottom;?>" class = "text" onchange = "CreateDownloadLink ()" id = "bottom"></td>
 </tr>
 <tr>
 <td><span id = "download">
@@ -69,7 +89,7 @@ document.write ('<li>The download link can be bookmarked, or used with tools lik
 <ul>
 <li>Add descriptions to waypoints
 <li>Allow user to choose which things to check for
-<li>Store co-ordinates in cookies
+<li><s>Store co-ordinates in cookies</s>
 <li>Use a map to choose area (in similar manner to the export tab on the main OSM web site)
 </ul>
 

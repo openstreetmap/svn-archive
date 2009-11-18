@@ -29,6 +29,7 @@ use File::stat;
 use Time::localtime;
 use GD ;
 use Encode ;
+use URI::Escape 'uri_escape';
 
 ##########
 #constants
@@ -363,7 +364,9 @@ print $html_file "  <th>Nodes added/changed</th>\n" ;
 print $html_file " </tr>\n" ;
 
 foreach $key (sort { $user_num{$b} <=> $user_num{$a} } keys %user_num) {
-	print $html_file "<tr><td>".$key."</td><td>".$user_num{$key}."</td></tr>\n" ;
+	my $user_escaped = uri_escape($key);
+	my $user_link = "http://openstreetmap.org/user/$user_escaped";
+	print $html_file "<tr><td><a href=\"$user_link\" title=\"${key}'s user page\">$key</a></td><td>".$user_num{$key}."</td></tr>\n" ;
 }
 print $html_file "</table>\n" ;
 

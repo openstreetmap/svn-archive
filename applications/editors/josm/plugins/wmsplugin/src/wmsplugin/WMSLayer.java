@@ -90,7 +90,7 @@ public class WMSLayer extends Layer {
 		pixelPerDegree = getPPD();
 
 		executor = Executors.newFixedThreadPool(3);
-		if (!baseURL.startsWith("html:") && !WMSGrabber.isUrlWithPatterns(baseURL)) {
+		if (baseURL != null && !baseURL.startsWith("html:") && !WMSGrabber.isUrlWithPatterns(baseURL)) {
 			if (!(baseURL.endsWith("&") || baseURL.endsWith("?"))) {
 				if (!confirmMalformedUrl(baseURL)) {
 					System.out.println(tr("Warning: WMS layer deactivated because of malformed base url ''{0}''", baseURL));

@@ -2,11 +2,16 @@
 use strict;
 use Net::Twitter;
 use CGI;
+use URI;
 
 my $query = CGI->new;
+my $res = URI->new;
+
 my $success = 0;
 my $errcode = 0;
-my $params = 0;
+my $errmsg = '';
+my $errerr = '';
+my $submitted = 0;
 
 if ($query->param('tweet') and
     $query->param('lat') and
@@ -14,7 +19,8 @@ if ($query->param('tweet') and
     $query->param('twitter_id') and
     $query->param('twitter_pwd') and
     $query->param('clientver')) {
-    $params = 1;
+    $submitted = 1;
+
     my $app = 'Potlatch';
     my $ver = $query->param('clientver');
     my $ua = "$app/$ver";
@@ -48,13 +54,27 @@ if ($query->param('tweet') and
     };
     if (my $err = $@) {
         $errcode = $err->code;
+        $errmsg  = $err->message;
+        $errerr  = $err->error;
     } else {
         $success = 1;
     }
 }
+
+$res->query_form(
+    success => $success,
+    errcode => $errcode,
+    errmsg  => $errmsg,
+    errerr  => $errerr,
+    submit  => $submitted,
+);
+
+my $q = $res->as_string;
+$q =~ s/^\?//;
+
 	print <<EOF;
 Content-Type: application/x-www-form-urlencoded
 
-&success=$success&errcode=$errcode&params=$params&
+&$q&
 EOF
 

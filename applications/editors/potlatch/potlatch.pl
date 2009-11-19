@@ -49,6 +49,12 @@
 		elsif ($a eq '--ming3'   ) { $ming =0.3; }
 		else					   { $ofn  =$a;  }
 	}
+
+    # I r lazy
+    if ($ofn eq '' and -f '../../../sites/rails_port/public/potlatch/potlatch.swf') {
+        $ofn = '../../../sites/rails_port/public/potlatch/potlatch.swf';
+    }
+
 	if ($ming==0.3) { $cw=1; } else { $cw=1/20; }	# scaling factor
 
 	require "potlatch_assets.pl";

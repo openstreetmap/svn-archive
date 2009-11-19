@@ -7,16 +7,19 @@
 		if (msg.indexOf('changeset')>-1) { _root.changeset=null; msg+=iText('newchangeset'); }	// we really need a dedicated error code for this
 		if (msg.indexOf('logged')>-1) { loginDialogue(); return; }
 		switch (code) {
-			case -1:	errorDialogue(msg,150); break;
-			case -2:	errorDialogue(msg+iText('emailauthor'),200); break;
+			case -1:	errorDialogueAbortUpload(msg,150); break;
+			case -2:	errorDialogueAbortUpload(msg+iText('emailauthor'),200); break;
 			case -3:	resolveConflict(msg,result); break;		// version conflict
 			case -4:	deleteObject(msg,result[0]); break;		// object not found
 			case -5: 	break;									// not executed due to previous error
 		}
 	}
 
-	function errorDialogue(t,h) {
+	function errorDialogueAbortUpload(t,h) {
 		abortUpload();
+        errorDialogue(t,h);
+    }
+    function errorDialogue(t,h) {
 		_root.windows.attachMovie("modal","error",++windowdepth);
 		_root.windows.error.init(350,h,new Array(iText('ok')),null);
 		_root.windows.error.box.createTextField("prompt",2,7,9,325,h-40);

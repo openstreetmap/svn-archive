@@ -117,8 +117,6 @@ Var MapDisplayLabel
 Var MapDisplayStateLabel
 Var ConnectionLabel
 Var ConnectionStateLabel
-Var ConnectionMSMLabel
-Var ConnectionMSMStateLabel
 Var MemoryLabel
 Var MemoryStateLabel
 Var MemoryCardLabel
@@ -246,19 +244,14 @@ Function devicePageDisplay
 	Pop $ConnectionStateLabel
     IntOp $yPos $yPos + $yStep
 
-	${NSD_CreateLabel} $xPosItem $yPos 100% 10u "Mass-Storage-Mode:"
-	Pop $ConnectionMSMLabel
-	${NSD_CreateLabel} $xPosValues $yPos 100% 10u ""
-	Pop $ConnectionMSMStateLabel
-    IntOp $yPos $yPos + $yStep
-    
     
     IntOp $yPos $yPos + $ySpacer
 	${NSD_CreateLabel} $xPosHeader $yPos 100% 10u "Speicher:"
 	Pop $0
     IntOp $yPos $yPos + $yStep
 
-    ${NSD_CreateBitmap} 410 110 37 50 ""
+    ; SD card image
+    ${NSD_CreateBitmap} 410 80 37 50 ""
 	Pop $ImageSD
 	${NSD_SetImage} $ImageSD "" $ImageSDHandle
     
@@ -316,10 +309,6 @@ Function devicePageDisplay
     SendMessage $TypesList ${CB_SELECTSTRING} 0 "STR:$R6"
     Call TypesListChanged
 
-    ; disable Next button
-    GetDlgItem $1 $HWNDPARENT 1
-    EnableWindow $1 0
-    
     ${LogOut} "devicePageDisplay: Show"
     
     ; show page (stays in there)
@@ -418,19 +407,6 @@ Function TypesListChanged
           SendMessage $ConnectionStateLabel ${WM_SETTEXT} 0 "STR:Seriell"
         ${Else}
           SendMessage $ConnectionStateLabel ${WM_SETTEXT} 0 "STR:?"
-        ${EndIf}
-        
-        ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "MassStorageMode"
-        ${If} $5 == "Auto"
-          SendMessage $ConnectionMSMStateLabel ${WM_SETTEXT} 0 "STR:Autom. Umschaltung"
-        ${ElseIf} $5 == "Manual"
-          SendMessage $ConnectionMSMStateLabel ${WM_SETTEXT} 0 "STR:Man. Umschaltung"
-        ${ElseIf} $5 == "Yes"
-          SendMessage $ConnectionMSMStateLabel ${WM_SETTEXT} 0 "STR:Ja"
-        ${ElseIf} $5 == "No"
-          SendMessage $ConnectionMSMStateLabel ${WM_SETTEXT} 0 "STR:Nein"
-        ${Else}
-          SendMessage $ConnectionMSMStateLabel ${WM_SETTEXT} 0 "STR:?"
         ${EndIf}
         
         ReadINIStr $5 "$PLUGINSDIR\devices.ini" "Device $0" "MemoryMB"

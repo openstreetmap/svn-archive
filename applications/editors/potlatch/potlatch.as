@@ -132,7 +132,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 1.2e";	// current version
+	var signature="Potlatch 1.2f";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k");
 	var lastgroup='road';			// last preset group used

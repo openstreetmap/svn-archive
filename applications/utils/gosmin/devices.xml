@@ -483,7 +483,7 @@
     
     <device brand="Garmin" series="GPSMAP" name="GPSMAP 60CSx">
         <display map="Color" colors="" typfile=""/>
-        <connection type="USB" version="" massstoragemode="Yes"/>
+        <connection type="USB" version="" massstoragemode="Manual"/>
         <memory>
           <internal size="0" unit="MB"/>
           <slot type="microSD">
@@ -492,6 +492,7 @@
           </slot>
         </memory>
         <firmware version="3.90"/>
+        <!-- No GarminDevices.xml -->
         <picture url="GPSMap_60CSx.bmp" identical="yes"/>
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/GPS_series"/>
     </device>    

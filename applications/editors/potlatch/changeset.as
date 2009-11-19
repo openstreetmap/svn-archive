@@ -112,7 +112,7 @@
 		};
 
 		var cstags=new Object();														// Changeset tags
-		cstags['created_by']=_root.signature + ' (' + (_root.sandbox ? 'save' : 'live') + ' ' + iText('__potlatch_locale') + ')';
+		cstags['created_by']="Potlatch "+_root.signature + ' (' + (_root.sandbox ? 'save' : 'live') + ' ' + iText('__potlatch_locale') + ')';
 
 		remote_write.call('startchangeset',csresponder,_root.usertoken,cstags,_root.changeset,_root.changecomment,open_new);
 		if (open_new) {	_root.panel.advanced.enableOption(5); }

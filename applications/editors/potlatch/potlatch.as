@@ -132,7 +132,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="Potlatch 1.2f";	// current version
+	var signature="1.2f";	// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k");
 	var lastgroup='road';			// last preset group used
@@ -356,7 +356,7 @@
 	with (_root.tooltip  ) { text=""; setTextFormat(plainRight); selectable=false; type='dynamic'; };
 
 	_root.panel.createTextField('t_type',23,5,5,220,20);
-	with (_root.panel.t_type	 ) { text=signature; setTextFormat(boldText); selectable=false; };
+	with (_root.panel.t_type	 ) { text="Potlatch "+signature; setTextFormat(boldText); selectable=false; };
 	
 	_root.panel.createTextField('t_details',24,5,23,220,20);
 	with (_root.panel.t_details) { text=""; setTextFormat(plainText); selectable=false; };

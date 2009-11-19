@@ -17,13 +17,12 @@ if ($query->param('tweet') and
     $query->param('lat') and
     $query->param('long') and
     $query->param('twitter_id') and
-    $query->param('twitter_pwd') and
-    $query->param('clientver')) {
+    $query->param('twitter_pwd')) {
     $submitted = 1;
 
     my $app = 'Potlatch';
     my $ver = $query->param('clientver');
-    my $ua = "$app/$ver";
+    my $ua = $ver ? "$app/$ver" : $app;
 
     my $twat = Net::Twitter->new(
         traits => ['API::REST'],
@@ -31,7 +30,9 @@ if ($query->param('tweet') and
         password => $query->param('twitter_pwd'),
         useragent  => $ua,
         clientname => $app,
-        clientver  => $ver,
+        ($query->param('clientver')
+         ? (clientver  => $ver)
+         : ()),
         clienturl  => 'http://openstreetap.org/edit',
 
         # identi.ca or twitter?

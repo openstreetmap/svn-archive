@@ -154,7 +154,8 @@
 						   "http://andy.sandbox.cloudmade.com/tiles/cycle/!/!/!.png",
 						   "http://ooc.openstreetmap.org/npe/!/!/!.png",
 						   "http://ooc.openstreetmap.org/os7/!/!/!.jpg",
-						   "http://ooc.openstreetmap.org/os1/!/!/!.jpg");
+						   "http://ooc.openstreetmap.org/os1/!/!/!.jpg",
+                           "http://www.nearmap.com/maps/nml=Vert&zxy=!,!,!");
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (custombg) { preferences.data.bgtype=3; preferences.data.tilecustom=custombg; }		// custom background layer from JavaScript
@@ -1045,7 +1046,8 @@
                       iText('option_layer_cycle_map'),
                       iText('option_layer_ooc_npe'),
                       iText('option_layer_ooc_7th'),
-                      iText('option_layer_ooc_25k')),
+                      iText('option_layer_ooc_25k'),
+                      iText('option_layer_nearmap')),
 			iText('option_layer_tip'),function(n) { preferences.data.tileset=n; _root.windows.options.box.bgoption.select(1); },null,0);
 
 		var w=box.bgoption[3].prompt._width+25;

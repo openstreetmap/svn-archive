@@ -27,7 +27,7 @@
 <project name="tageditor" default="dist" basedir=".">
     
 
-	<property name="commit.message" value="Updated build.xml" />		
+	<property name="commit.message" value="Updated tag definitions (thanks to Hans F. Nordhaug)" />		
 	<property name="plugin.main.version" value="2355" />
 
 	<!--

@@ -39,6 +39,8 @@
 		<label value="construction" for-way="yes"/>
 		<label value="emergency_access_point" for-node="yes"/>
 		<label value="motorway_junction" for-node="yes"/>
+		<label value="speed_camera" for-node="yes"/>
+		<label value="passing_place" for-node="yes"/>
 	</tag>	
 	
 	
@@ -976,19 +978,39 @@
 		<label value="county"  for-way="yes" for-node="yes"/>
 		<label value="city"  for-way="yes" for-node="yes"/>
 		<label value="town"  for-way="yes" for-node="yes"/>
+		<label value="municipality"  for-way="yes" for-node="yes"/>
 		<label value="village"  for-way="yes" for-node="yes"/>
 		<label value="hamlet"  for-way="yes" for-node="yes"/>
 		<label value="suburb"  for-way="yes" for-node="yes"/>
 		<label value="locality"  for-way="yes" for-node="yes"/>
+		<label value="farm"  for-way="yes" for-node="yes"/>
 		<label value="island"  for-way="yes" for-node="yes"/>		
+		<label value="islet"  for-way="yes" for-node="yes"/>		
 	</tag>
 	
 	<tag key="place_name" type="xs:string" for-way="yes"  />
 	<tag key="place_numbers" type="xs:string" for-way="yes" for-node="yes" />
 	<tag key="postal_code" type="xs:string" for-way="yes" for-node="yes" />
 	<tag key="is_in" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="is_in:continent" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:country" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:country_code" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:state" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:state_code" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:region" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:county" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:city" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:town" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:municipality" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:village" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:hamlet" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:suburb" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:locality" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:farm" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:island" type="xs:string" for-way="yes" for-node="yes"/>		
+	<tag key="is_in:islet" type="xs:string" for-way="yes" for-node="yes"/>		
 	<tag key="population" type="xs:integer" for-way="yes" for-node="yes" />
-	
+
 	<tag key="note" type="xs:string" for-way="yes" for-node="yes" />
 	<tag key="description" type="xs:string" for-way="yes" for-node="yes" />
 	<tag key="image" type="xs:string" for-way="yes" for-node="yes" />

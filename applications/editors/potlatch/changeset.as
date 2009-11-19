@@ -156,6 +156,7 @@
 		var lv=new LoadVars();
 		lv.twitter_id =preferences.data.twitterid;
 		lv.twitter_pwd=preferences.data.twitterpwd;
+		lv.clientver = _root.signature;
 		lv.tweet      ="#osmedit "+_root.changecomment+" http://osm.org/go/"+shortLink(centrelat(0),centrelong(0),Math.min(_root.scale,18));
 		lv.lat        =centrelat(0);
 		lv.long       =centrelong(0);

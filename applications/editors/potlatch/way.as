@@ -687,14 +687,12 @@
 		if (Key.isDown(Key.SHIFT) && this._name==_root.wayselected && _root.drawpoint==-1) {
 			// shift-click current way: insert point
 			this.insertAnchorPointAtMouse();
-		} else if (Key.isDown(Key.SHIFT) && _root.wayselected && this.name!=_root.wayselected && _root.drawpoint==-1) {
-			if (_root.ws.hitTest(_root._xmouse,_root._ymouse,true)) {
-				// shift-click other way (at intersection with current): make intersection
-				this.insertAnchorPointAtMouse();
-			} else {
-				// shift-click other way: merge two ways
-				mergeWayKeepingID(this,_root.ws);
-			}
+		} else if (Key.isDown(Key.SHIFT) && _root.wayselected && this.name!=_root.wayselected && _root.drawpoint==-1 && _root.ws.hitTest(_root._xmouse,_root._ymouse,true)) {
+			// shift-click other way (at intersection with current): make intersection
+			this.insertAnchorPointAtMouse();
+		} else if (Key.isDown(Key.CONTROL) && _root.wayselected && this.name!=_root.wayselected && _root.drawpoint==-1) {
+			// control/command-click other way: merge two ways
+			mergeWayKeepingID(this,_root.ws);
 		} else if (_root.drawpoint>-1) {
 			// click other way while drawing: insert point as junction
 			if (!this.historic) {

@@ -152,16 +152,23 @@
 
 	function twitterPost() {
 		if (preferences.data.twitterid=='' || preferences.data.twitterpwd=='' || _root.changecomment=='') { return; }
-		_root.twitterresponse=new LoadVars();
+		var rv=new LoadVars();
 		var lv=new LoadVars();
+        rv.onLoad = function(success) {
+            if (rv.success == 0) {
+                errorDialogue(iText("error_twitter_long", rv.errcode, rv.errmsg, rv.errerr),130);
+            } else {
+                setAdvice(false, iText('advice_twatted'), true);
+            }
+        };
 		lv.twitter_id =preferences.data.twitterid;
 		lv.twitter_pwd=preferences.data.twitterpwd;
 		lv.clientver = _root.signature;
 		lv.tweet      ="#osmedit "+_root.changecomment+" http://osm.org/go/"+shortLink(centrelat(0),centrelong(0),Math.min(_root.scale,18));
 		lv.lat        =centrelat(0);
 		lv.long       =centrelong(0);
-		lv.onLoad     =twitterLoaded;
-		lv.sendAndLoad("http://richard.dev.openstreetmap.org/cgi-bin/potlatchtweet.cgi",_root.twitterresponse,"POST");
+		
+		lv.sendAndLoad("http://richard.dev.openstreetmap.org/cgi-bin/potlatchtweet.cgi",rv,"POST");
 
 /*
 	The following code will be used when Twitter relax crossdomain restrictions on api.twitter.com (as promised).
@@ -209,7 +216,4 @@
 
 	}
 
-	function twitterLoaded(success) {
-		if (_root.twitterresponse.success==0 || !success) { setAdvice(false,iText("error_twitter")); }
-	}
 	

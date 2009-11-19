@@ -1,7 +1,7 @@
 
 	// Advice window
 	
-	function setAdvice(severe,str) {
+	function setAdvice(severe,str,nobeep) {
 		if (!preferences.data.advice && !severe) { return; }
 		_root.panel.advice._visible=false;
 		_root.advicepos=0;
@@ -33,8 +33,9 @@
 		_root.panel.advice.onPress=function() { clearAdvice(); };
 		clearInterval(_root.advicescroll);
 		_root.advicescroll=setInterval(scrollAdvice,85);
-		beep.start();
-
+        if (!nobeep) {
+		    beep.start();
+        }
 	};
 	function scrollAdvice() {
 		_root.advicepos+=20;

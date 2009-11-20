@@ -549,12 +549,12 @@ class OsmApi:
             except ApiError, e:
                 if e.status >= 500:
                     if i == 5: raise
-                    if i <> 1: time.sleep(2)
+                    if i <> 1: time.sleep(5)
                     self._conn = httplib.HTTPConnection(self._api, 80)
                 else: raise
             except Exception:
                 if i == 5: raise
-                if i <> 1: time.sleep(2)
+                if i <> 1: time.sleep(5)
                 self._conn = httplib.HTTPConnection(self._api, 80)
     
     def _get(self, path):

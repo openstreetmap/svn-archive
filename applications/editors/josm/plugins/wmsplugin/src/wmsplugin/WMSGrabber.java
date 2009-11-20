@@ -33,9 +33,9 @@ import org.openstreetmap.josm.io.ProgressInputStream;
 
 
 public class WMSGrabber extends Grabber {
-	public static boolean isUrlWithPatterns(String url) {
-		return  url != null && url.contains("{") && url.contains("}");
-	}
+    public static boolean isUrlWithPatterns(String url) {
+        return url != null && url.contains("{") && url.contains("}");
+    }
 	
     protected String baseURL;
     private final boolean urlWithPatterns;
@@ -101,6 +101,10 @@ public class WMSGrabber extends Grabber {
         if (urlWithPatterns) {
             str = str.replaceAll("\\{proj\\}", myProj)
             .replaceAll("\\{bbox\\}", bbox)
+            .replaceAll("\\{w\\}", latLonFormat.format(w))
+            .replaceAll("\\{s\\}", latLonFormat.format(s))
+            .replaceAll("\\{e\\}", latLonFormat.format(e))
+            .replaceAll("\\{n\\}", latLonFormat.format(n))
             .replaceAll("\\{width\\}", String.valueOf(wi))
             .replaceAll("\\{height\\}", String.valueOf(ht));
         } else {

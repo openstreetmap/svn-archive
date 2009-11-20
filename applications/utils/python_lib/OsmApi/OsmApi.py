@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.14  2009-11-20 changesetautomulti parameter                       ##
 ## 0.2.13  2009-11-16 modify instead update for osc                      ##
 ## 0.2.12  2009-11-14 raise ApiError on 4xx errors -- Xoff               ##
 ## 0.2.11  2009-10-14 unicode error on ChangesetUpload                   ##
@@ -45,9 +46,9 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.13'
+__version__ = '0.2.14'
 
-import httplib, base64, xml.dom.minidom, time
+import httplib, base64, xml.dom.minidom, time, sys
 
 class ApiError(Exception):
     	
@@ -62,7 +63,7 @@ class ApiError(Exception):
 ## Main class                                                            ##
 
 class OsmApi:
-    
+        
     def __init__(self,
         username = None,
         password = None,
@@ -72,8 +73,14 @@ class OsmApi:
         api = "www.openstreetmap.org",
         changesetauto = False,
         changesetautotags = {},
-        changesetautosize = 500):
-
+        changesetautosize = 500,
+        changesetautomulti = 1,
+        debug = False
+        ):
+    
+        # debug
+        self._debug = debug
+        
         # Get username
         if username:
             self._username = username
@@ -93,6 +100,9 @@ class OsmApi:
         self._changesetauto      = changesetauto      # auto create and close changesets
         self._changesetautotags  = changesetautotags  # tags for automatic created changesets
         self._changesetautosize  = changesetautosize  # change count for auto changeset
+        self._changesetautosize  = changesetautosize  # change count for auto changeset
+        self._changesetautomulti = changesetautomulti # close a changeset every # upload
+        self._changesetautocpt   = 0
         self._changesetautodata  = []                 # data to upload for auto group
         
         # Get API
@@ -490,15 +500,27 @@ class OsmApi:
             OsmData[u"visible"] = False
             return OsmData
     
+    def flush(self):
+        return self._changesetautoflush(True)
+        
     def _changesetautoflush(self, force = False):
         while (len(self._changesetautodata) >= self._changesetautosize) or (force and self._changesetautodata):
-            self.ChangesetCreate(self._changesetautotags)
+            if self._changesetautocpt == 0:
+                self.ChangesetCreate(self._changesetautotags)
             self.ChangesetUpload(self._changesetautodata[:self._changesetautosize])
             self._changesetautodata = self._changesetautodata[self._changesetautosize:]
-            self.ChangesetClose()
+            self._changesetautocpt += 1
+            if self._changesetautocpt == self._changesetautomulti:
+                self.ChangesetClose()
+                self._changesetautocpt = 0
         return None
         
     def _http_request(self, cmd, path, auth, send):
+        if self._debug:
+            path2 = path
+            if len(path2) > 50:
+                path2 = path2[:50]+"[...]"
+            print >>sys.stderr, "%s %s %s"%(time.strftime("%Y-%m-%d %H:%M:%S"),cmd,path2)
         self._conn.putrequest(cmd, path)
         self._conn.putheader('User-Agent', self._created_by)
         if auth:
@@ -514,6 +536,8 @@ class OsmApi:
             if response.status == 410:
                 return None
             raise ApiError(response.status, response.reason)
+        if self._debug:
+            print >>sys.stderr, "%s %s %s done"%(time.strftime("%Y-%m-%d %H:%M:%S"),cmd,path2)
         return response.read()
     
     def _http(self, cmd, path, auth, send):

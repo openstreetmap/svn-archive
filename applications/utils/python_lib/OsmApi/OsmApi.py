@@ -510,7 +510,7 @@ class OsmApi:
             self.ChangesetUpload(self._changesetautodata[:self._changesetautosize])
             self._changesetautodata = self._changesetautodata[self._changesetautosize:]
             self._changesetautocpt += 1
-            if self._changesetautocpt == self._changesetautomulti:
+            if self._changesetautocpt == self._changesetautomulti or force:
                 self.ChangesetClose()
                 self._changesetautocpt = 0
         return None

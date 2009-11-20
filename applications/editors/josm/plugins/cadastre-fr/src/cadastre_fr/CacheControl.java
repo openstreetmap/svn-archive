@@ -21,10 +21,13 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.projection.LambertCC9Zones;
+import org.openstreetmap.josm.data.projection.UTM_20N_France_DOM;
 
 public class CacheControl implements Runnable {
     
     public static final String cLambertCC9Z = "CC";
+
+    public static final String cUTM20N = "UTM";
 
     public class ObjectOutputStreamAppend extends ObjectOutputStream {
         public ObjectOutputStreamAppend(OutputStream out) throws IOException {
@@ -86,6 +89,8 @@ public class CacheControl implements Runnable {
             String extension = String.valueOf((wmsLayer.getLambertZone() + 1));
             if (Main.proj instanceof LambertCC9Zones)
                 extension = cLambertCC9Z + extension;
+            else if (Main.proj instanceof UTM_20N_France_DOM)
+                extension = cUTM20N + extension;
             File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + extension);
             if (file.exists()) {
                 JOptionPane pane = new JOptionPane(
@@ -166,6 +171,8 @@ public class CacheControl implements Runnable {
                 String extension = String.valueOf((wmsLayer.getLambertZone() + 1));
                 if (Main.proj instanceof LambertCC9Zones)
                     extension = cLambertCC9Z + extension;
+                else if (Main.proj instanceof UTM_20N_France_DOM)
+                    extension = cUTM20N + extension;
                 File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + extension);
                 try {
                     if (file.exists()) {

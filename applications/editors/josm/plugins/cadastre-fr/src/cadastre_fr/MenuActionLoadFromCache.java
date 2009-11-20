@@ -12,6 +12,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.projection.LambertCC9Zones;
+import org.openstreetmap.josm.data.projection.UTM_20N_France_DOM;
 import org.openstreetmap.josm.gui.layer.Layer;
 
 public class MenuActionLoadFromCache extends JosmAction {
@@ -29,50 +30,51 @@ public class MenuActionLoadFromCache extends JosmAction {
             return;
 
         File[] files = fc.getSelectedFiles();
+        int layoutZone = getCurrentProjZone();
         nextFile:
         for (File file : files) {
             if (file.exists()) {
                 String filename = file.getName();
                 String ext = (filename.lastIndexOf(".")==-1)?"":filename.substring(filename.lastIndexOf(".")+1,filename.length());
-                if ((ext.length() > 2 && ext.substring(0, CacheControl.cLambertCC9Z.length()).equals(CacheControl.cLambertCC9Z) &&
+                if ((ext.length() == 3 && ext.substring(0, CacheControl.cLambertCC9Z.length()).equals(CacheControl.cLambertCC9Z) &&
                     !(Main.proj instanceof LambertCC9Zones))
+                    || (ext.length() == 4 && ext.substring(0, CacheControl.cUTM20N.length()).equals(CacheControl.cUTM20N) &&
+                            !(Main.proj instanceof UTM_20N_France_DOM))
                     || (ext.length() == 1) && !(Main.proj instanceof Lambert)) {
                         JOptionPane.showMessageDialog(Main.parent, tr("{0} not allowed with the current projection", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
                         continue;
                 } else {
                     String location = filename.substring(0, filename.lastIndexOf("."));
-                    if (ext.length() > 2 && ext.substring(0, CacheControl.cLambertCC9Z.length()).equals(CacheControl.cLambertCC9Z))
+                    if (ext.length() == 3 && ext.substring(0, CacheControl.cLambertCC9Z.length()).equals(CacheControl.cLambertCC9Z))
                         ext = ext.substring(2);
-                    // check the extension and its Lambert zone consistency
+                    else if (ext.length() == 4 && ext.substring(0, CacheControl.cUTM20N.length()).equals(CacheControl.cUTM20N))
+                        ext = ext.substring(3);
+                    // check the extension and its compatibility with current projection
                     try {
                         int cacheZone = Integer.parseInt(ext) - 1;
-                        if (cacheZone >=0 && cacheZone <= 3) {
-                            if (Lambert.layoutZone == -1) {
-                                Lambert.layoutZone = cacheZone;
-                                System.out.println("Load cache \"" + filename + "\" in Lambert Zone " + (Lambert.layoutZone+1));
-                            } else if (cacheZone != Lambert.layoutZone) {
-                                System.out.println("Cannot load cache \"" + filename + "\" which is not in current Lambert Zone "
-                                        + Lambert.layoutZone);
+                        if (cacheZone >=0 && cacheZone <= 9) {
+                            if (cacheZone != layoutZone) {
+                                JOptionPane.showMessageDialog(Main.parent, tr("Cannot load cache {0} which is not compatible with current projection zone", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
                                 continue nextFile;
                             } else
                                 System.out.println("Load cache " + filename);
                         }
                     } catch (NumberFormatException ex) {
-                        System.out.println("Selected file \"" + filename + "\" is not a WMS cache file (invalid extension)");
-                        continue;
+                        JOptionPane.showMessageDialog(Main.parent, tr("Selected file {0} is not a cache file from this plugin (invalid extension)", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
+                        continue nextFile;
                     }
                     // check if the selected cache is not already displayed
                     if (Main.map != null) {
                         for (Layer l : Main.map.mapView.getAllLayers()) {
                             if (l instanceof WMSLayer && l.getName().equals(location)) {
-                                System.out.println("The location " + filename + " is already on screen. Cache not loaded.");
+                                JOptionPane.showMessageDialog(Main.parent, tr("The location {0} is already on screen. Cache not loaded.", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
                                 continue nextFile;
                             }
                         }
                     }
                     // create layer and load cache
                     WMSLayer wmsLayer = new WMSLayer("", "", Integer.parseInt(ext)-1);
-                    if (wmsLayer.getCacheControl().loadCache(file, Lambert.layoutZone))
+                    if (wmsLayer.getCacheControl().loadCache(file, layoutZone))
                         Main.main.addLayer(wmsLayer);
                     
                 }
@@ -84,8 +86,15 @@ public class MenuActionLoadFromCache extends JosmAction {
     protected static JFileChooser createAndOpenFileChooser() {
         JFileChooser fc = new JFileChooser(new File(CadastrePlugin.cacheDir));
         fc.setMultiSelectionEnabled(true);
-        if (Lambert.layoutZone != -1)
-            fc.addChoosableFileFilter(CacheFileFilter.filters[Lambert.layoutZone]);
+        int layoutZone = new MenuActionLoadFromCache().getCurrentProjZone();
+        if (layoutZone != -1) {
+            if (Main.proj instanceof Lambert)
+                fc.addChoosableFileFilter(CacheFileLambert4ZoneFilter.filters[layoutZone]);
+            else if (Main.proj instanceof LambertCC9Zones)
+                fc.addChoosableFileFilter(CacheFileLambert9ZoneFilter.filters[layoutZone]);
+            else if (Main.proj instanceof UTM_20N_France_DOM)
+                fc.addChoosableFileFilter(CacheFileUTM20NFilter.filters[layoutZone]);
+        }
         fc.setAcceptAllFileFilterUsed(false);
 
         int answer = fc.showOpenDialog(Main.parent);
@@ -95,4 +104,14 @@ public class MenuActionLoadFromCache extends JosmAction {
         return fc;
     }
 
+    private int getCurrentProjZone() {
+        int zone = -1;
+        if (Main.proj instanceof LambertCC9Zones)
+            zone = ((LambertCC9Zones)Main.proj).getLayoutZone();
+        else if (Main.proj instanceof Lambert)
+            zone = ((Lambert)Main.proj).getLayoutZone();
+        else if (Main.proj instanceof UTM_20N_France_DOM)
+            zone = ((UTM_20N_France_DOM)Main.proj).getCurrentGeodesic();
+        return zone;
+    }
 }

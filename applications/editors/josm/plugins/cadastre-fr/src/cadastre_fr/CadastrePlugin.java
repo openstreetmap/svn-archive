@@ -24,6 +24,8 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.*;
 
 /**
@@ -128,6 +130,11 @@ public class CadastrePlugin extends Plugin {
         refreshConfiguration();
 
         UploadAction.registerUploadHook(new CheckSourceUploadHook());
+        
+        Lambert proj = new Lambert();
+        LatLon ll = new LatLon(48.559902360278954, 7.75309953770033);
+        EastNorth ea = proj.latlon2eastNorth(ll);
+        System.out.println(ea);
     }
 
     public static void refreshMenu() {
@@ -153,8 +160,9 @@ public class CadastrePlugin extends Plugin {
             });
 
             JMenuItem menuResetCookie = new JMenuItem(new MenuActionResetCookie());
-            JMenuItem menuLambertZone = new JMenuItem(new MenuActionLambertZone());
+            //JMenuItem menuLambertZone = new JMenuItem(new MenuActionLambertZone());
             JMenuItem menuLoadFromCache = new JMenuItem(new MenuActionLoadFromCache());
+            // temporary disabled:
             //JMenuItem menuActionBoundaries = new JMenuItem(new MenuActionBoundaries());
             //JMenuItem menuActionBuildings = new JMenuItem(new MenuActionBuildings());
 
@@ -163,7 +171,7 @@ public class CadastrePlugin extends Plugin {
             cadastreJMenu.add(menuSettings);
             cadastreJMenu.add(menuSource);
             cadastreJMenu.add(menuResetCookie);
-            cadastreJMenu.add(menuLambertZone);
+            //cadastreJMenu.add(menuLambertZone);
             cadastreJMenu.add(menuLoadFromCache);
             // all SVG features disabled until official WMS is released
             //cadastreJMenu.add(menuActionBoundaries);
@@ -228,8 +236,6 @@ public class CadastrePlugin extends Plugin {
                     item.getText().equals(MenuActionBoundaries.name) ||
                     item.getText().equals(MenuActionBuildings.name)*/) {
                     item.setEnabled(isEnabled);
-                } else if (item.getText().equals(MenuActionLambertZone.name)) {
-                    item.setEnabled(!isEnabled);
                 }
         }
         menuEnabled = isEnabled;
@@ -243,17 +249,15 @@ public class CadastrePlugin extends Plugin {
                         (new WMSAdjustAction(Main.map)));
             } else if (oldFrame != null && newFrame == null) {
                 setEnabledAll(false);
-                Lambert.layoutZone = -1;
-                LambertCC9Zones.layoutZone = -1;
+                //Lambert.layoutZone = -1;
+                //LambertCC9Zones.layoutZone = -1;
             }
         }
     }
     
     public static boolean isCadastreProjection() {
-            return Main.proj.toString().equals(new Lambert().toString())
-            || Main.proj.toString().equals(new UTM_20N_Guadeloupe_Fort_Marigot().toString())
-            || Main.proj.toString().equals(new UTM_20N_Guadeloupe_Ste_Anne().toString())
-            || Main.proj.toString().equals(new UTM_20N_Martinique_Fort_Desaix().toString())
+        return Main.proj.toString().equals(new Lambert().toString())
+            || Main.proj.toString().equals(new UTM_20N_France_DOM().toString())
             || Main.proj.toString().equals(new GaussLaborde_Reunion().toString())
             || Main.proj.toString().equals(new LambertCC9Zones().toString());
     }

@@ -16,6 +16,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.projection.LambertCC9Zones;
+import org.openstreetmap.josm.data.projection.UTM_20N_France_DOM;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -80,10 +81,14 @@ public class MenuActionNewLocation extends JosmAction {
                     }
                 }
                 // add the layer if it doesn't exist
+                int zone = -1;
                 if (Main.proj instanceof LambertCC9Zones)
-                    wmsLayer = new WMSLayer(location, codeCommune, LambertCC9Zones.layoutZone);
-                else
-                    wmsLayer = new WMSLayer(location, codeCommune, Lambert.layoutZone);
+                    zone = ((LambertCC9Zones)Main.proj).getLayoutZone();
+                else if (Main.proj instanceof Lambert)
+                    zone = ((Lambert)Main.proj).getLayoutZone();
+                else if (Main.proj instanceof UTM_20N_France_DOM)
+                    zone = ((UTM_20N_France_DOM)Main.proj).getCurrentGeodesic();
+                wmsLayer = new WMSLayer(location, codeCommune, zone);
                 Main.main.addLayer(wmsLayer);
                 System.out.println("Add new layer with Location:" + inputTown.getText());
             } else if (existingLayers != null && existingLayers.size() > 0 && Main.map.mapView.getActiveLayer() instanceof WMSLayer) {

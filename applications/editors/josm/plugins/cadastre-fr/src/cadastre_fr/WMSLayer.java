@@ -28,7 +28,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
@@ -516,8 +515,8 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public void setCommuneBBox(EastNorthBound entireCommune) {
         this.communeBBox = entireCommune;
-        if (Main.proj instanceof LambertCC9Zones)
-            setLambertCC9Zone(communeBBox.min.north());
+//        if (Main.proj instanceof LambertCC9Zones)
+//            setLambertCC9Zone(communeBBox.min.north());
     }
 
     /**
@@ -531,31 +530,31 @@ public class WMSLayer extends Layer implements ImageObserver {
         return lambertZone;
     }
 
-    public void setLambertCC9Zone(double north) {
-        int lambertZone = LambertCC9Zones.north2ZoneNumber(north);
-        this.lambertZone = lambertZone;
-        if (LambertCC9Zones.layoutZone != lambertZone) {
-            String currentZone = MenuActionLambertZone.lambert9zones[LambertCC9Zones.layoutZone+1];
-            String destZone = MenuActionLambertZone.lambert9zones[lambertZone+1];
-            if (Main.map.mapView.getAllLayers().size() == 1) {
-                /* Enable this code below when JOSM will have a proper support of dynamic projection change
-                 *
-                System.out.println("close all layers and change current Lambert zone from "+LambertCC9Zones.layoutZone+" to "+lambertZone);
-                Bounds b = null;
-                if (Main.map != null && Main.map.mapView != null)
-                    b = Main.map.mapView.getRealBounds();
-                LambertCC9Zones.layoutZone = lambertZone;
-                Main.map.mapView.zoomTo(b);
-                */
-            } else {
-                JOptionPane.showMessageDialog(Main.parent, tr("Current layer is in Lambert CC9 Zone \"{0}\"\n"+
-                        "where the commune is in Lambert CC9 Zone \"{1}\".\n"+
-                        "Upload your changes, close all layers and change\n"+
-                        "manually the Lambert zone from the Cadastre menu"
-                        , currentZone, destZone));
-            }
-        }
-    }
+//    public void setLambertCC9Zone(double north) {
+//        int lambertZone = LambertCC9Zones.north2ZoneNumber(north);
+//        this.lambertZone = lambertZone;
+//        if (((LambertCC9Zones)Main.proj).getLayoutZone() != lambertZone) {
+//            String currentZone = MenuActionLambertZone.lambert9zones[((LambertCC9Zones)Main.proj).getLayoutZone()+1];
+//            String destZone = MenuActionLambertZone.lambert9zones[lambertZone+1];
+//            if (Main.map.mapView.getAllLayers().size() == 1) {
+//                /* Enable this code below when JOSM will have a proper support of dynamic projection change
+//                 *
+//                System.out.println("close all layers and change current Lambert zone from "+LambertCC9Zones.layoutZone+" to "+lambertZone);
+//                Bounds b = null;
+//                if (Main.map != null && Main.map.mapView != null)
+//                    b = Main.map.mapView.getRealBounds();
+//                LambertCC9Zones.layoutZone = lambertZone;
+//                Main.map.mapView.zoomTo(b);
+//                */
+//            } else {
+//                JOptionPane.showMessageDialog(Main.parent, tr("Current layer is in Lambert CC9 Zone \"{0}\"\n"+
+//                        "where the commune is in Lambert CC9 Zone \"{1}\".\n"+
+//                        "Upload your changes, close all layers and change\n"+
+//                        "manually the Lambert zone from the Cadastre menu"
+//                        , currentZone, destZone));
+//            }
+//        }
+//    }
 
     public EastNorth getRasterCenter() {
         return new EastNorth((images.get(0).max.east()+images.get(0).min.east())/2,

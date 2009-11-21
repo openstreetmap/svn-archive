@@ -210,7 +210,9 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                     }
                 }));
 
-        tileOptionMenu.add(new JMenuItem(
+        // FIXME: currently ran in errors
+		/*
+		tileOptionMenu.add(new JMenuItem(
                 new AbstractAction(tr("Snap to tile size")) {
                     public void actionPerformed(ActionEvent ae) {
                         double new_factor = Math.sqrt(lastImageScale);
@@ -219,7 +221,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                         Main.map.mapView.zoomToFactor(new_factor);
                         redraw();
                     }
-                }));
+                }));*/
         // end of adding menu commands
 
         tileOptionMenu.add(new JMenuItem(

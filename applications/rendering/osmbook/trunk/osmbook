@@ -27,7 +27,12 @@ GetOptions(\%opts,
 	   ["ps",             "Expect a postscript generation instead"],
 	   ["png",            "Make grid png files"],
 	   ["svg",            "Make fully rendered SVG pages"],
+	   ["svgpdf",         "Make fully rendered PNGs from complete SVG pages"],
 	  ) || exit;
+
+if ($opts{'svgpdf'}) {
+    $opts{'svg'} = 1;
+}
 
 #
 # read in the project definition file
@@ -352,16 +357,39 @@ sub do_grid {
 	System("inkscape -f $svgfile -e $pngfile");
     }
 
-    # convert to eps
-    # inkscape -f map.svg -E map.eps
     my $outfile;
     if ($opts{'ps'}) {
+	# convert to eps
+	# inkscape -f map.svg -E map.eps
 	my $epsfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.eps";
 	if (! -f $epsfile || Stat($svgfile, $epsfile)) {
 	    System("inkscape $extrainkargs -f $svgfile -E $epsfile");
 	}
 	$outfile = $epsfile;
+    } elsif ($opts{'svgpdf'}) {
+	# convert to pdf and process a bit
+	# inkscape -f map.svg -E map.eps
+	my $pdffile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.pdf";
+	my $tmpfile =
+	  "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy-tmp.pdf";
+	if (! -f $pdffile || Stat($svgfile, $pdffile)) {
+	    # convert to a PDF
+	    System("inkscape -f $svgfile -A $pdffile");
+
+	    # add some margins
+	    System("pdfcrop --margins 30 $pdffile $tmpfile");
+
+	    # make printable to the page size
+	    # scale_pdf($tmpfile, $pdffile); # outputs to $pdffile
+
+	    System("pdfposter -m letter $tmpfile $pdffile");
+
+	    print "wrote page to $pdffile\n";
+	    # tmp file no longer needed
+	    # unlink($tmpfile);
+	}
     } else {
+	# convert to pdf
 	my $pdffile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.pdf";
 	if (! -f $pdffile || Stat($svgfile, $pdffile)) {
 	    System("inkscape -f $svgfile -A $pdffile");
@@ -407,6 +435,35 @@ sub do_grid {
 	print STDERR "reached maximum\n";
 	exit;
     }
+}
+
+sub scale_pdf {
+    my ($infile, $outfile) = @_;
+    my $if = new IO::File;
+    my $of = new IO::File;
+
+    system("cp $outfile $outfile.bak");
+
+    $if->open("<$infile") || die "can't open $infile";
+    $of->open(">$outfile") || die "can't open $outfile for writing";
+
+    my $dpi = 72;
+    my $widthin = 8.5;
+    # resulting scale should be 612 in width for 8.5x11 (72dpi)
+    my $width = $dpi*$widthin;
+    my $scale;
+
+    while (<$if>) {
+	if (/\/MediaBox \[0 0 (\d+) (\d+)\]/) {
+	    $scale = $width / $1;
+	    $of->print("/MediaBox [0 0 $width " . ($2 * $scale) . "]\n");
+	    next;
+	}
+	s/\/BBox \[([-\.\d]+) ([-\.\d]+) ([-\.\d]+) ([-\.\d]+)\]/"\/BBox [" . ($1*$scale) . " " . ($2*$scale) . " " . ($3*$scale) . " " . ($4*$scale) . "]"/e;
+	$of->write($_);	
+    }
+    $of->close();
+    $if->close();
 }
 
 sub make_overview {

@@ -28,7 +28,7 @@
     <map name="Computerteddy" boundary="Europe" comment="" updated="Weekly">
         <lang iso="de" name="Computerteddy"  boundary="Europa" comment="" updated="Woechentlich"/>
         <attributes routing="no"/>
-        <file name="gmapsupp.img" sizeMB=""/>
+        <file name="gmapsupp.img" sizeMB="870"/>
         <download url="ftp://ftp5.gwdg.de/pub/misc/openstreetmap/teddynetz.de/latest/eu_gmapsupp.img.gz" sizeMB="612"/>
         <picture url="Computerteddy.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/User:Computerteddy"/>
@@ -37,7 +37,7 @@
     <map name="All in One" boundary="Germany" comment="Lot's of OSM features" updated="Weekly">
         <lang iso="de" name="All in One"  boundary="Deutschland" comment="Moeglichst viele OSM Elemente" updated="Woechentlich"/>
         <attributes routing="yes"/>
-        <file name="gmapsupp.img" sizeMB="590"/>
+        <file name="gmapsupp.img" sizeMB="610"/>
         <download url="http://www.juergen-frank.de/osm/gmapsupps/germany/gmapsupp.img.bz2" sizeMB="460"/>
         <picture url="AllInOne.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
@@ -46,8 +46,8 @@
     <map name="All in One" boundary="Europe" comment="Lot's of OSM features" updated="Weekly">
         <lang iso="de" name="All in One"  boundary="Europa" comment="Moeglichst viele OSM Elemente" updated="Woechentlich"/>
         <attributes routing="yes"/>
-        <file name="gmapsupp.img" sizeMB=""/>
-        <download url="http://dev.openstreetmap.de/aio/europe/gmapsupp.img.bz2" sizeMB="1500"/>
+        <file name="gmapsupp.img" sizeMB="1800"/>
+        <download url="http://dev.openstreetmap.de/aio/europe/gmapsupp.img.bz2" sizeMB="1410"/>
         <picture url="AllInOne.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
     </map>    

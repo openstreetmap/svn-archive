@@ -10,7 +10,7 @@ SetCompressor /SOLID lzma
 ; ============================================================================
 ; The name and version of the installer
 !define PROGRAM_NAME "OSM Karten"
-!define VERSION "0.0.3"
+!define VERSION "0.0.4"
 
 Name "${PROGRAM_NAME}"
 
@@ -147,15 +147,11 @@ Var /GLOBAL installSizeMB
 ; ============================================================================
 ; "calculate" local filename to install
 ; ============================================================================
+StrCpy $installFile $sourcePageLocalFile
 ${If} $sourcePageSelect == "download"
-  ; get file name without url prefix
-  ${WordReplace} "$sourcePageMapUrl" "/" "\" "+" $0
-  ${GetFileName} $0 "$installFile"
   StrCpy $installSizeMB $sourcePageMapFileSizeMB
 ${Else}
-  StrCpy $installFile $sourcePageLocalFile
   !insertmacro FileSize $installFile $1
-  ;MessageBox MB_OK "Size ($installFile): $1!"  
   StrCpy $installSizeMB $1
 ${EndIf}
 DetailPrint "Verwende Datei: $installFile ($installSizeMB MB)"
@@ -200,16 +196,16 @@ mapcopy:
 ${If} $sourcePageSelect == "download"
   ; TODO: check, if file already existing
   DetailPrint "Download: $sourcePageMapUrl"
-  ;NSISdl::download $sourcePageMapUrl .\$installFile
-  metadl::download $sourcePageMapUrl .\$installFile
+  ;NSISdl::download $sourcePageMapUrl $installFile
+  metadl::download $sourcePageMapUrl $installFile
   Pop $R0 ;Get the return value
   ${If} $R0 != "success"
     DetailPrint "Download failed: $R0"
     MessageBox MB_OK|MB_ICONSTOP "Download failed: $R0"
     Abort
   ${EndIf}
-  !insertmacro FileSize .\$installFile $1
-  DetailPrint "Download finished: .\$installFile ($1 MB)"
+  !insertmacro FileSize $installFile $1
+  DetailPrint "Download finished: $installFile ($1 MB)"
 ${EndIf}
 
 ; ============================================================================

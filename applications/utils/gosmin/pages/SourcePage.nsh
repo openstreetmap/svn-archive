@@ -88,7 +88,7 @@ Function sourcePageInit
     StrCpy $sourcePageLocalFile $DOCUMENTS
     
     ${Locate} "$EXEDIR" "/L=F /M=*gmapsupp* /G=0" "LocalMapFileFound"
-    ${If} $sourcePageSelect == "download"
+    ${If} $sourcePageLocalFile == $DOCUMENTS
       ${Locate} "$DOCUMENTS" "/L=F /M=*gmapsupp* /G=0" "LocalMapFileFound"
     ${EndIf}
 FunctionEnd

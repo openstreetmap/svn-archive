@@ -215,6 +215,10 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
 		tileOptionMenu.add(new JMenuItem(
                 new AbstractAction(tr("Snap to tile size")) {
                     public void actionPerformed(ActionEvent ae) {
+                        if (lastImageScale == null) {
+                            out("please wait for a tile to be loaded before snapping");
+                            return;
+                        }
                         double new_factor = Math.sqrt(lastImageScale);
                         if (debug)
                             out("tile snap: scale was: " + lastImageScale + ", new factor: " + new_factor);
@@ -627,8 +631,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
             if (borderRect != null && !sourceRect.intersects(borderRect))
                 continue;
             drawImageInside(g, img, sourceRect, borderRect);
-            if (autoZoomEnabled() &&
-                !imageScaleRecorded && zoom == currentZoomLevel) {
+            if (!imageScaleRecorded && zoom == currentZoomLevel) {
                 lastImageScale = new Double(getImageScaling(img, sourceRect));
                 imageScaleRecorded = true;
             }

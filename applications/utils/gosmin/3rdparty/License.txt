@@ -15,3 +15,6 @@ See: http://nsis.sourceforge.net/Joel_plugin_src
 XML: BSD
 See: http://nsis.sourceforge.net/XML_plug-in
 
+nsisdt: BSD
+See: http://forums.winamp.com/showthread.php?threadid=70281
+

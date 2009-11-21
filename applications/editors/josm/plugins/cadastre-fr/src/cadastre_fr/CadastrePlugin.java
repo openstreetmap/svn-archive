@@ -82,7 +82,11 @@ import org.openstreetmap.josm.data.projection.*;
  * 1.4 25-Oct-2009 - add support for new Lambert CC 9 Zones projection
  *                 - add optional crosspieces display on raster image layers
  *                 - add automatic raster images georeferencing when WMS provides data
- *                 - re-implement manual adjustment mode in raster image layer  
+ *                 - re-implement manual adjustment mode in raster image layer
+ * 1.5 21-Nov-2009 - major changes in projection in core : no magical zone prediction anymore for
+ *                   Lambert 4 and 9 zones; grid translation implemented for Lambert 4 zones;
+ *                   support of subprojections in preferences for zones setting and UTM20N
+ *                 - removed autosourcing of empty new nodes
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "1.4";

@@ -34,6 +34,21 @@ Var /GLOBAL sourcePageMapName
   ;MessageBox MB_OK ${mapDisplayName}
 !macroend
 
+!macro sourcePageMapFileName mapName mapFileName
+  ReadINIStr $5 "$PLUGINSDIR\Maps.ini" "${mapName}" "Boundary:de"
+  ReadINIStr $6 "$PLUGINSDIR\Maps.ini" "${mapName}" "Name:de"
+  ; get file name without url prefix
+  ${WordReplace} "$sourcePageMapUrl" "/" "\" "+" $7
+  ${GetFileName} $7 "$8"
+  ; get current date
+  File 3rdparty\nsisdt.dll
+  StrCpy $0 "%Y%m%d"
+  CallInstDLL "nsisdt.dll" currentdate
+  ; build file name
+  StrCpy ${mapFileName} "$DOCUMENTS\$5 - $6 - $0 - $8"
+  ;MessageBox MB_OK ${mapFileName}
+!macroend
+
 !macro sourcePageRoutingDisplay mapName RoutingDisplay
   ReadINIStr $5 "$PLUGINSDIR\Maps.ini" "${mapName}" "Routing"
   ;MessageBox MB_OK $5
@@ -47,10 +62,20 @@ Var /GLOBAL sourcePageMapName
   ;MessageBox MB_OK ${RoutingDisplay}
 !macroend
 
+
+Function LocalMapFileFound
+    ;MessageBox MB_OK "Local Map found $R9"
+    ;StrCpy $sourcePageSelect "file"
+    StrCpy $sourcePageLocalFile $R9
+    StrCpy $0 "StopLocate"
+	Push $0    ; If $var="StopLocate" Then exit from function    
+FunctionEnd
+
 ; ============================================================================
 ; init page values (only once, so "back" is working as expected
 ; ============================================================================
 Function sourcePageInit
+    File "images\devices\EmptyImage.bmp"
     File "images\maps\AllInOne.bmp"
     File "images\maps\Computerteddy.bmp"
     File "images\maps\OSMC.bmp"
@@ -60,7 +85,12 @@ Function sourcePageInit
     StrCpy $sourcePageCurrentMap "Map 1"
     !insertmacro sourcePageMapNameDisplay $sourcePageCurrentMap $sourcePageMapName
     
-    StrCpy $sourcePageLocalFile $EXEDIR
+    StrCpy $sourcePageLocalFile $DOCUMENTS
+    
+    ${Locate} "$EXEDIR" "/L=F /M=*gmapsupp* /G=0" "LocalMapFileFound"
+    ${If} $sourcePageSelect == "download"
+      ${Locate} "$DOCUMENTS" "/L=F /M=*gmapsupp* /G=0" "LocalMapFileFound"
+    ${EndIf}
 FunctionEnd
 
 ; ============================================================================
@@ -159,8 +189,13 @@ MapEnd5:
   ReadINIStr $sourcePageMapFileSizeMB "$PLUGINSDIR\Maps.ini" $sourcePageCurrentMap "FileSizeMB"
   
   ${NSD_FreeImage} $MapImageHandle
-  ReadINIStr $5 "$PLUGINSDIR\maps.ini" "$sourcePageCurrentMap" "Picture"
-  ${NSD_SetImage} $MapImage "$PLUGINSDIR\$5" $MapImageHandle
+  ${If} $sourcePageSelect == "download"
+    ReadINIStr $5 "$PLUGINSDIR\maps.ini" "$sourcePageCurrentMap" "Picture"
+    ${NSD_SetImage} $MapImage "$PLUGINSDIR\$5" $MapImageHandle
+  ${Else}
+    ${NSD_SetImage} $MapImage "$PLUGINSDIR\EmptyImage.bmp" $MapImageHandle
+  ${EndIf}
+  ;MessageBox MB_OK "Map $5"
 FunctionEnd
 
 ; ============================================================================
@@ -239,8 +274,7 @@ Function OnSourcePageFileBrowseButton
 
   ${NSD_GetText} $sourcePageFileName $R4
 
-  ; TODO: add a suitable file filter here?
-  nsDialogs::SelectFileDialog open $R4
+  nsDialogs::SelectFileDialog open $R4 "Karten (*.img, *.zip, *.gz, *.bz2, *.7z)|*.img;*.zip;*.gz;*.bz2;*.7z|Alle Dateien|*.*"
   Pop $R3
 
   ${If} $R3 != error
@@ -365,6 +399,7 @@ Function sourcePageDisplay
 	${NSD_FreeImage} $MapImageHandle
     
     ${If} $sourcePageSelect == "download"
+      !insertmacro sourcePageMapFileName $sourcePageCurrentMap $sourcePageLocalFile
       ;MessageBox MB_OK "Download: URL: $sourcePageMapUrl FileSize: $sourcePageMapFileSizeMB MB"
     ${Else}
       ;MessageBox MB_OK "Local file: $sourcePageLocalFile"

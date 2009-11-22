@@ -23,6 +23,7 @@
 package org.openstreetmap.fma.jtiledownloader;
 
 import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
+import org.openstreetmap.fma.jtiledownloader.datatypes.MapSurferTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.MapnikTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.OsmarenderTileProvider;
 import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
@@ -45,6 +46,7 @@ public class TileProviderList
             new GenericTileProvider("OpenStreetBrowser (Europe)", "http://www.openstreetbrowser.org/tiles/base/"),
             new GenericTileProvider("OpenPisteMap", "http://openpistemap.org/tiles/contours/"),
             new GenericTileProvider("Maplint", "http://tah.openstreetmap.org/Tiles/maplint/"),
+            new MapSurferTileProvider(),
             new GenericTileProvider("CloudMade Web style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/1/256/"),
             new GenericTileProvider("CloudMade Mobile style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/2/256/"),
             new GenericTileProvider("CloudMade NoNames style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/3/256/")

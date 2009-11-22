@@ -291,7 +291,7 @@
 		<rule e="way" k="natural" v="water|pond|lake">
 			<area class="natural-water"/>
 		</rule>
-		<rule e="way" k="natural" v="marsh">
+		<rule e="way" k="natural" v="marsh|wetland">
 			<area class="natural-water-marsh"/>
 		</rule>
 		<rule e="way" k="landuse" v="reservoir">

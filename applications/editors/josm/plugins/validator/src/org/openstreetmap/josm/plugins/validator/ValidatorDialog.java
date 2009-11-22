@@ -142,7 +142,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
             return;
 
         Set<DefaultMutableTreeNode> processedNodes = new HashSet<DefaultMutableTreeNode>();
-               
+
         DuplicateNode.clearBackreferences();
         LinkedList<TestError> errorsToFix = new LinkedList<TestError>();
         for (TreePath path : selectionPaths) {
@@ -159,11 +159,11 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
                 processedNodes.add(childNode);
                 Object nodeInfo = childNode.getUserObject();
                 if (nodeInfo instanceof TestError) {
-                	errorsToFix.add((TestError)nodeInfo);
+                    errorsToFix.add((TestError)nodeInfo);
                 }
             }
         }
-        
+
         // run fix task asynchronously
         //
         FixTask fixTask = new FixTask(errorsToFix);
@@ -444,78 +444,78 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
         HashSet<OsmPrimitive> filter = new HashSet<OsmPrimitive>(newSelection);
         tree.setFilter(filter);
     }
-    
+
     /**
-     * Task for fixing a collection of {@see TestError}s. Can be run asynchronously. 
-     * 
+     * Task for fixing a collection of {@see TestError}s. Can be run asynchronously.
+     *
      *
      */
     class FixTask extends PleaseWaitRunnable {
-    	private Collection<TestError> testErrors;
-    	private boolean canceled;
-    	private LinkedList<Command> fixCommands;
-    
-    	
-    	public FixTask(Collection<TestError> testErrors) {
-    		super(tr("Fixing errors ..."), false /* don't ignore exceptions */);
-    		this.testErrors = testErrors == null ? new ArrayList<TestError> (): testErrors;
-    		fixCommands = new LinkedList<Command>();
-    	}
+        private Collection<TestError> testErrors;
+        private boolean canceled;
+        private LinkedList<Command> fixCommands;
 
-		@Override
-		protected void cancel() {
-			this.canceled = true; 			
-		}
 
-		@Override
-		protected void finish() {
-			// do nothing
-		}
- 		
-		@Override
-		protected void realRun() throws SAXException, IOException,
-				OsmTransferException {
-			ProgressMonitor monitor = getProgressMonitor();
-			try {				
-				monitor.setTicksCount(testErrors.size());
-				int i=0;
-				for (TestError error: testErrors) {
-					i++;
-					monitor.subTask(tr("Fixing ({0}/{1}): ''{2}''", i, testErrors.size(),error.getMessage()));
-					if (this.canceled) 
-						return;
-					final Command fixCommand = error.getFix();
+        public FixTask(Collection<TestError> testErrors) {
+            super(tr("Fixing errors ..."), false /* don't ignore exceptions */);
+            this.testErrors = testErrors == null ? new ArrayList<TestError> (): testErrors;
+            fixCommands = new LinkedList<Command>();
+        }
+
+        @Override
+        protected void cancel() {
+            this.canceled = true;
+        }
+
+        @Override
+        protected void finish() {
+            // do nothing
+        }
+
+        @Override
+        protected void realRun() throws SAXException, IOException,
+                OsmTransferException {
+            ProgressMonitor monitor = getProgressMonitor();
+            try {
+                monitor.setTicksCount(testErrors.size());
+                int i=0;
+                for (TestError error: testErrors) {
+                    i++;
+                    monitor.subTask(tr("Fixing ({0}/{1}): ''{2}''", i, testErrors.size(),error.getMessage()));
+                    if (this.canceled)
+                        return;
+                    final Command fixCommand = error.getFix();
                     if (fixCommand != null) {
-                    	fixCommands.add(fixCommand);
-        				SwingUtilities.invokeAndWait(
-        						new Runnable() {
-        							public void run() {
-        								Main.main.undoRedo.addNoRedraw(fixCommand);
-        							}
-        						}
-        				);
+                        fixCommands.add(fixCommand);
+                        SwingUtilities.invokeAndWait(
+                                new Runnable() {
+                                    public void run() {
+                                        Main.main.undoRedo.addNoRedraw(fixCommand);
+                                    }
+                                }
+                        );
                         error.setIgnored(true);
                     }
                     monitor.worked(1);
-				}		
-				monitor.subTask(tr("Updating map ..."));
-				SwingUtilities.invokeAndWait(new Runnable() {
-					public void run() {
-						Main.main.undoRedo.afterAdd();
-						Main.map.repaint();
-						tree.resetErrors();
-			            Main.main.getCurrentDataSet().fireSelectionChanged();
-					}
-				});
-			} catch(InterruptedException e) { 
-				// FIXME: signature of realRun should have a generic checked exception we
-				// could throw here
-				throw new RuntimeException(e);
-			} catch(InvocationTargetException e) {
-				throw new RuntimeException(e);
-			} finally {
-				monitor.finishTask();
-			}			
-		}
+                }
+                monitor.subTask(tr("Updating map ..."));
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        Main.main.undoRedo.afterAdd();
+                        Main.map.repaint();
+                        tree.resetErrors();
+                        Main.main.getCurrentDataSet().fireSelectionChanged();
+                    }
+                });
+            } catch(InterruptedException e) {
+                // FIXME: signature of realRun should have a generic checked exception we
+                // could throw here
+                throw new RuntimeException(e);
+            } catch(InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } finally {
+                monitor.finishTask();
+            }
+        }
     }
 }

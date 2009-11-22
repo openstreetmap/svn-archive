@@ -251,6 +251,24 @@ public class SlippyMapPreferences
         }
     }
 
+    public static class NearMap extends OsmTileSource.AbstractOsmTileSource {
+        public NearMap() {
+            super("NearMap Australia", "http://www.nearmap.com/maps/hl=en&nml=Vert&");
+        }
+
+        public int getMaxZoom() {
+            return 21;
+        }
+
+        public String getTilePath(int zoom, int tilex, int tiley) {
+            return "z=" + zoom + "&x=" + tilex + "&y=" + tiley;
+        }
+
+        public TileUpdate getTileUpdate() {
+            return TileUpdate.IfNoneMatch;
+        }
+    }
+
     public static class Custom extends OsmTileSource.AbstractOsmTileSource {
         public Custom(String name, String url) {
             super(name, url);
@@ -308,6 +326,7 @@ public class SlippyMapPreferences
         sources.add(new Coastline());
         sources.add(new FreeMapySkPokus());
         sources.add(new FreeMapySk());
+        sources.add(new NearMap());
         sources.addAll(getCustomSources());
         // Probably need to either add these or let users add them somehow
         //      "http://hypercube.telascience.org/tiles/1.0.0/coastline", // coastline

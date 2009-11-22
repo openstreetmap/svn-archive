@@ -49,7 +49,8 @@ public class TileProviderList
             new MapSurferTileProvider(),
             new GenericTileProvider("CloudMade Web style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/1/256/"),
             new GenericTileProvider("CloudMade Mobile style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/2/256/"),
-            new GenericTileProvider("CloudMade NoNames style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/3/256/")
+            new GenericTileProvider("CloudMade NoNames style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/3/256/"),
+            new GenericTileProvider("CloudMade Night style", "http://tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/999/256/")
         };
     }
 

@@ -24,8 +24,6 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
-import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.*;
 
 /**
@@ -134,11 +132,7 @@ public class CadastrePlugin extends Plugin {
         refreshConfiguration();
 
         UploadAction.registerUploadHook(new CheckSourceUploadHook());
-        
-        Lambert proj = new Lambert();
-        LatLon ll = new LatLon(48.559902360278954, 7.75309953770033);
-        EastNorth ea = proj.latlon2eastNorth(ll);
-        System.out.println(ea);
+
     }
 
     public static void refreshMenu() {

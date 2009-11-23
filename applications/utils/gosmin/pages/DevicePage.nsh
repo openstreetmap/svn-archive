@@ -143,6 +143,7 @@ Var ySpacer
 ; ============================================================================
 Function devicePageInit
   ${LogOut} "devicePageInit"
+  File "images\devices\Edge_705.bmp"
   File "images\devices\eTrex_h.bmp"
   File "images\devices\eTrex_Legend.bmp"
   File "images\devices\eTrex_Legend_HCx.bmp"
@@ -150,6 +151,7 @@ Function devicePageInit
   File "images\devices\eTrex_Summit_HC.bmp"
   File "images\devices\eTrex_Venture_HC.bmp"
   File "images\devices\etrex_Vista.bmp"
+  File "images\devices\etrex_Vista_HCx.bmp"
   File "images\devices\Forerunner_205.bmp"
   File "images\devices\Geko_101.bmp"
   File "images\devices\Geko_201.bmp"

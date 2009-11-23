@@ -16,7 +16,7 @@ $script_start = microtime(true);
 // Allowed parameters
 $vehicles = array("motorcar", "hgv", "goods", "psv", "bicycle", "cycleroute", "foot", "moped", "mofa");
 $layers = array("mapnik", "cn", "test");
-$formats = array("kml", "geojson");
+$formats = array("kml", "geojson", "gpx");
 
 $blocked = array('77.215.30.153');
 
@@ -185,7 +185,8 @@ $gosmore_end = microtime(true);
 $nodes = 0;
 
 if (count($output) > 1)
-{	// Loop through all the coordinates
+{
+	// Loop through all the coordinates
 	$flat = $flon = 360.0;
 	$distance = 0;
 	$elements = array();
@@ -233,6 +234,9 @@ if (count($output) > 1)
 		break;
 	case 'geojson':
 		$output = asGeoJSON($elements, $distance);
+		break;
+	case 'gpx':
+		$output = asGPX($elements, $distance);
 		break;
 	default:
 		$output = kmlError("unrecognised output format given");
@@ -346,7 +350,8 @@ function asKML($elements, $distance) {
 	// KML body
 	$kml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 	$kml .= '<kml xmlns="http://earth.google.com/kml/2.0">'."\n";
-	$kml .= '  <Document>'."\n";	$kml .= '    <name>KML Samples</name>'."\n";
+	$kml .= '  <Document>'."\n";
+	$kml .= '    <name>KML Samples</name>'."\n";
 	$kml .= '    <open>1</open>'."\n";
 	$kml .= '    <distance>'.$distance.'</distance>'."\n";
 	$kml .= '    <description>Unleash your creativity with the help of these examples!</description>'."\n";
@@ -398,3 +403,20 @@ function asGeoJSON($elements, $distance) {
 	return $geoJSON;
 }
 
+function asGPX($elements, $distance) {
+	// meta data
+	header('Content-Type: text/xml');
+
+	// GPX body     
+	$kml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+	$kml .= '<gpx version="1.0" creator="http://www.yournavigation.org/" xmlns="http://www.topografix.com/GPX/1/0">'."\n";
+	$kml .= '  <trk>'."\n";
+	$kml .= '    <trkseg>'."\n";	
+	foreach($elements as $element) {
+		$kml .= '        <trkpt lon="'.$element["lon"].'" lat="'.$element["lat"].'"/>'."\n";
+	}
+	$kml .= '    </trkseg>'."\n";
+	$kml .= '  </trk>'."\n";
+	$kml .= '</gpx>'."\n";
+	return $kml;
+}

@@ -9,7 +9,7 @@
  */
 
 
-var apiUrl = "http://yournavigation.org/api/dev/";
+var apiUrl = "http://" + document.domain + "/api/dev/";
 //var apiUrl = "proxy.php?u=http://yournavigation.org/api/dev/";
 
 //var proxyUrl = "proxy.php?u=http://yournavigation.org/api";
@@ -19,6 +19,9 @@ var apiUrl = "http://yournavigation.org/api/dev/";
 //var namefinderUrl = "";
 //var namefinderUrl = "proxy.php?u=http://gazetteer.openstreetmap.org/namefinder/search.xml?";
 var namefinderUrl = "transport.php?url=http://gazetteer.openstreetmap.org/namefinder/search.xml&";
+var nominatimUrl = "transport.php?url=http://nominatim.openstreetmap.org/";
+
+var reverseNamefinderUrl = "transport.php?url=http://dev.openstreetmap.nl/~rullzer/rev_namefinder/&";
 
 // Create OpenLayers Control Click handler
 OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
@@ -35,7 +38,7 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
 		 */
 		initialize: function() {
 			this.handlerOptions = OpenLayers.Util.extend(
-			{}, this.defaultHandlerOptions
+				{}, this.defaultHandlerOptions
 				);
 			OpenLayers.Control.prototype.initialize.apply(
 				this, arguments
@@ -54,6 +57,8 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
 		trigger: function(e) {
 			var location = this.map.getLonLatFromViewPortPx(e.xy);
 			if (MyFirstWayPoint !== undefined) {
+				MyFirstWayPoint.name = undefined;
+				
 				MyFirstWayPoint.draw(location);
 			//route.draw();
 			}
@@ -112,7 +117,9 @@ var Url = {
     _utf8_decode : function (utftext) {
         var string = "";
         var i = 0;
-        var c = c1 = c2 = 0;
+        var c = 0;
+        var c1 = 0;
+        var c2 = 0;
 
         while ( i < utftext.length ) {
 
@@ -139,7 +146,7 @@ var Url = {
         return string;
     }
 
-}
+};
 
 /*
 	Class: Yours
@@ -152,8 +159,13 @@ var Yours = {
 
 };
 
+Yours.lookupMethod = {
+	nameToCoord : 1,
+	coordToName : 2
+};
+
 /*
-	Function: Lookup
+	Function: NamefinderLookup
 
 	Parameters:
 
@@ -165,19 +177,89 @@ var Yours = {
 		on success - 'OK'
 		on failure - Error message
  */
-Yours.Lookup = function(value, wp, map, callback) {
-	var namefinderParameters = "find=" + Url.encode(value) + "&max=1";
-	$.get(namefinderUrl + namefinderParameters, {}, 
-		function(xml){
-			var result = Yours.NameFinder(xml, wp, map);
-			if (result == 'OK') {
-				//route.draw();
-				callback(result);
-			} else {
-				callback(result);
-			}
-		},
-	"xml");
+Yours.NamefinderLookup = function(lookupMethod, value, wp, map, callback) {
+	var parameters;
+	switch (lookupMethod) {
+	case Yours.lookupMethod.nameToCoord:
+		parameters = "find=" + Url.encode(value) + "&max=1";
+		$.get(namefinderUrl + parameters, {}, 
+			function(xml) {
+				var result = Yours.NameFinder(xml, wp, map);
+				if (result == 'OK') {
+					//route.draw();
+					callback(result);
+				} else {
+					callback(result);
+				}
+			},
+		"xml");
+		break;
+	case Yours.lookupMethod.coordToName:
+		point = wp.lonlat.clone();
+		newPoint = point.transform(map.projection, map.displayProjection);
+		parameters = "lon=" + newPoint.lon + "&lat=" + newPoint.lat;
+		$.get(reverseNamefinderUrl + parameters, {}, 
+			function(xml) {
+				var result = Yours.reverseNameFinder(xml, wp, map);
+				if (result == 'OK') {
+					callback(result);
+				} else {
+					callback(result);
+				}
+			},
+		"xml");
+		break;
+	}
+};
+
+/*
+	Function: NominatimLookup
+
+	Parameters:
+
+		value - value to lookup (string)
+		wp - waypoint to place when lookup is succesfull (object)
+		callback - Pass a function to handle the result message
+
+	Returns:
+		on success - 'OK'
+		on failure - Error message
+ */
+Yours.NominatimLookup = function(lookupMethod, value, wp, map, callback) {
+	var parameters;
+	switch (lookupMethod) {
+	case Yours.lookupMethod.nameToCoord:
+		parameters = "q=" + Url.encode(value) + "&format=xml";
+		$.get(nominatimUrl + "search/&"+ parameters, {}, 
+			function(xml) {
+				var result = Yours.Nominatim(xml, wp, map);
+				if (result == 'OK') {
+					//route.draw();
+					callback(result);
+				} else {
+					callback(result);
+				}
+			},
+		"xml");
+		break;
+	case Yours.lookupMethod.coordToName:
+		if (wp !== undefined) {
+			point = wp.marker.lonlat.clone();
+			newPoint = point.transform(map.projection, map.displayProjection);
+			parameters = "lon=" + newPoint.lon + "&lat=" + newPoint.lat;
+			$.get(nominatimUrl + "reverse/&" + parameters, {}, 
+				function(xml) {
+					var result = Yours.Nominatim(xml, wp, map);
+					if (result == 'OK') {
+						callback(result);
+					} else {
+						callback(result);
+					}
+				},
+			"xml");
+		}
+		break;
+	}
 };
 
 /*
@@ -299,13 +381,90 @@ Yours.NameFinder = function(xml, wp, map) {
 					}
 				}
 			}
-			var transformedLonLat = new OpenLayers.LonLat();
-			transformedLonLat = responseLonLat.transform(map.displayProjection, map.projection);
-			wp.draw(transformedLonLat);
-			map.setCenter(transformedLonLat);
-			return 'OK';
-
+			if (responseLonLat !== undefined) {
+				transformedLonLat = responseLonLat.transform(map.displayProjection, map.projection);
+				wp.draw(transformedLonLat);
+				map.setCenter(transformedLonLat);
+				return 'OK';
+			}
 		} else if (xml.documentElement.nodeName == "parsererror") {
+			error = 'No results, please try other search';
+			return error;
+		}
+	} else {
+		// xml doc contains no searchresults
+		error = 'No results, please try other search';
+		return error;
+	}
+	error = "Something went wrong, but I don't know what";
+	return error;
+};
+
+/*
+	Function: Nominatim
+
+	Parameters:
+
+		xml - file in xml format returned from a namefinder service
+		wp - Waypoint that will be matched when a valid location is found in the xml
+
+
+	Returns:
+		on success - 'OK' and Waypoint with location, drawn on Waypoints Layer
+		on failure - Error message
+
+ */
+Yours.Nominatim = function(xml, wp, map) {
+	var responseLonLat;
+	var i;
+	
+	if (xml.childNodes.length > 0) {
+		switch (xml.documentElement.nodeName) {
+		case "searchresults":
+			// No error found, continue -->
+			
+			for (i = 0; i < xml.documentElement.childNodes.length; i++) {
+				if (xml.documentElement.childNodes[i].nodeName == "place") {
+					named = xml.documentElement.childNodes[i];
+					responseLonLat = new OpenLayers.LonLat();
+					for (j = 0; j < named.attributes.length; j++) {
+						switch(named.attributes[j].nodeName)
+						{
+							case "lat":
+								responseLonLat.lat = parseFloat(named.attributes[j].nodeValue);
+								break;
+							case "lon":
+								responseLonLat.lon = parseFloat(named.attributes[j].nodeValue);
+								break;
+							case "display_name":
+								wp.name = named.attributes[j].nodeValue;
+								break;
+						}
+					}
+					break;	//1st result only at this point
+				}
+			}
+			if (responseLonLat !== undefined) {
+				var transformedLonLat = new OpenLayers.LonLat();
+				transformedLonLat = responseLonLat.transform(map.displayProjection, map.projection);
+				wp.draw(transformedLonLat);
+				map.setCenter(transformedLonLat);
+				return 'OK';
+			} else {
+				error = 'No results, please try other search';
+				return error;
+			}
+			break;
+		case "reversegeocode":
+			for (i = 0; i < xml.documentElement.childNodes.length; i++) {
+				if (xml.documentElement.childNodes[i].nodeName == "result") {
+					wp.name = xml.documentElement.childNodes[i].textContent;
+					wp.update('OK');
+					return 'OK';
+				}
+			}
+			break;
+		default:
 			error = 'No results, please try other search';
 			return error;
 		}
@@ -323,14 +482,15 @@ Yours.status = {
 	segmentStarted : 1,
 	segmentFinished : 2,
 	routeFinished : 3,
-	error : 4
+	error : 4,
+	waypointUpdate : 5
 };
 	
 /**
  *	Class: Yours.Route
  */
 
-Yours.Route = function(map, customcallback) {
+Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 	/**
 	 * Constructor: new Yours.Route(map)
 	 * Constructor for a new Yours.Route instance.
@@ -369,41 +529,8 @@ Yours.Route = function(map, customcallback) {
 	 * (end)
 	 */
 	var self = this;
-	this.callback = customcallback;
-	
-	this.permalink = function() {
-		var flonlat = this.Start.lonlat.clone().transform(this.map.projection,this.map.displayProjection);
-		var tlonlat = this.End.lonlat.clone().transform(this.map.projection,this.map.displayProjection);
-		//for each via
-		var via = '';
-		if (this.Waypoints.length > 2) {
-			for (var i = 0; i < this.Waypoints.length -1; i++) {
-				if (this.Waypoints[i].type == 'via') {
-					var wlonlat = this.Waypoints[i].lonlat.clone().transform(this.map.projection,this.map.displayProjection);
-					via += '&wlat=' + wlonlat.lat + '&wlon=' + wlonlat.lon;
-				}
-			}
-		}
-		var permalink_url = 'flat=' + flonlat.lat + '&flon=' + flonlat.lon +
-			via + '&tlat=' + tlonlat.lat + '&tlon=' + tlonlat.lon;
-		permalink_url += '&v=' + this.parameters.type +
-			'&fast=' + this.parameters.fast +
-			'&layer=' + this.parameters.layer;
-		return location.protocol + '//' + location.host + location.pathname + "?" + permalink_url;
-	};
-	
-	/*
-		Function: directions
-		Agregate directions for the segments
-	*/
-	this.directions = function() {
-	//for each segment in route segments[]
-	/*if(this.feature === undefined) {
-			alert('Feature not set, cannot get directions');
-		} else {
-
-		}*/
-	};
+	this.callback = customRouteCallback;
+	this.waypointcallback = customWaypointCallback;
 	
 	/**
 	 * Property: Yours.Route.parameters
@@ -439,6 +566,40 @@ Yours.Route = function(map, customcallback) {
 		layer: 'mapnik'
 	};
 
+	this.permalink = function() {
+		var flonlat = this.Start.lonlat.clone().transform(this.map.projection,this.map.displayProjection);
+		var tlonlat = this.End.lonlat.clone().transform(this.map.projection,this.map.displayProjection);
+		//for each via
+		var via = '';
+		if (this.Waypoints.length > 2) {
+			for (var i = 0; i < this.Waypoints.length -1; i++) {
+				if (this.Waypoints[i].type == 'via') {
+					var wlonlat = this.Waypoints[i].lonlat.clone().transform(this.map.projection,this.map.displayProjection);
+					via += '&wlat=' + wlonlat.lat + '&wlon=' + wlonlat.lon;
+				}
+			}
+		}
+		var permalink_url = 'flat=' + flonlat.lat + '&flon=' + flonlat.lon +
+			via + '&tlat=' + tlonlat.lat + '&tlon=' + tlonlat.lon;
+		permalink_url += '&v=' + this.parameters.type +
+			'&fast=' + this.parameters.fast +
+			'&layer=' + this.parameters.layer;
+		return location.protocol + '//' + location.host + location.pathname + "?" + permalink_url;
+	};
+	
+	/*
+		Function: directions
+		Agregate directions for the segments
+	*/
+	this.directions = function() {
+	//for each segment in route segments[]
+	/*if(this.feature === undefined) {
+			alert('Feature not set, cannot get directions');
+		} else {
+
+		}*/
+	};
+	
 	/**
 	 * Function: Yours.Route.waypoint(id)
 	 *
@@ -556,7 +717,7 @@ Yours.Route = function(map, customcallback) {
 
 		Parameters:
 
-		callback - Pass a function to handle the result message
+		none
 
 	*/
 	this.draw = function() {
@@ -564,7 +725,6 @@ Yours.Route = function(map, customcallback) {
 		this.Layer.destroyFeatures();
 		this.Segments = [];
 		
-		//alert("length:" + this.Waypoints.length);
 		if (this.Waypoints.length > 2) {
 			//determine the numer of segments..
 			self.callback(Yours.status.starting, "");
@@ -572,27 +732,22 @@ Yours.Route = function(map, customcallback) {
 			//loop the number of segments, -1, no segment required from the to node.
 			for (var i = 0; i < self.Waypoints.length - 1; i++) {
 				self.Segments[i] = new Yours.Segment(this);
-				//callback("Calculating segment " + (i + 1) + " of " + numsegs + " please wait..");
 				self.callback(Yours.status.segmentStarted, i+1);
 				self.Segments[i].Start = self.Waypoints[ i ];
 				self.Segments[i].End = self.Waypoints[ i + 1 ];
 				self.Segments[i].draw(self.callback);
 			}
-			//self.callback(Yours.status.route_finished, "");
 		} else {
 			if ( this.Start.lonlat !== undefined && this.End.lonlat !== undefined) {
 				/* simple route, start and finish only */
 				self.Layer.destroyFeatures();
 				self.Segments[0] = new Yours.Segment(self);
-				//callback("Calculating route, please wait..");
 				self.callback(Yours.status.starting, "");
 				self.Segments[0].Start = self.Start;
 				self.Segments[0].End = self.End;
 				self.Segments[0].draw(self.callback);
 			}
-			//self.callback(Yours.status.route_finished, "");
 		}
-
 	};
 
 	/*
@@ -628,7 +783,6 @@ Yours.Route = function(map, customcallback) {
 	};
 	
 	this._segmentFinished = function(segment) {
-		//self.callback(Yours.status.segmentFinished, segment);
 		bFinished = true;
 		this.distance = 0;
 		this.nodes = 0;
@@ -671,6 +825,7 @@ Yours.Route = function(map, customcallback) {
 Yours.Waypoint = function(ParentRoute)
 {
 	this.route = ParentRoute;
+	var self = this;
 	/*
 		Function: draw
 
@@ -691,7 +846,6 @@ Yours.Waypoint = function(ParentRoute)
 		var marker_url;
 		switch (this.type) {
 			case 'via':
-				//marker_url= 'markers/marker-yellow.png';
 				marker_url= 'markers/number'+this.position+'.png';
 				break;
 			case 'from':
@@ -705,7 +859,7 @@ Yours.Waypoint = function(ParentRoute)
 				break;
 		}
 		/* Waypoint symbol placement */
-		var size = new OpenLayers.Size(21,25);
+		var size = new OpenLayers.Size(20,34);
 		var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 		var icon = new OpenLayers.Icon(marker_url, size, offset);
 
@@ -713,6 +867,16 @@ Yours.Waypoint = function(ParentRoute)
 		this.marker = new OpenLayers.Marker(lonlat.clone(), icon);
 
 		this.route.Markers.addMarker(this.marker);
+		
+		
+		/* Update the marker's location information */
+		
+		if (this.name === undefined) {
+			var that = this;
+			Yours.NominatimLookup(Yours.lookupMethod.coordToName, "", that, this.route.map, this.update);
+		}
+		
+		
 	};
 
 	/*
@@ -727,6 +891,19 @@ Yours.Waypoint = function(ParentRoute)
 			this.marker.destroy();
 			this.marker= undefined;
 			this.lonlat = undefined;
+		}
+	};
+	
+	this.setName = function(theName) {
+		this.thwname = theName;
+	};
+	
+	this.update = function (result) {
+		if (result == 'OK') {
+			if (this.route !== undefined && this.route.waypointcallback !== undefined) {
+				var that = this;
+				this.route.waypointcallback(that);
+			}
 		}
 	};
 };
@@ -756,7 +933,7 @@ Yours.Segment = function(ParentRoute) {
 			switch (xml.childNodes[0].nodeName) {
 				case "kml":
 					var distance = xml.getElementsByTagName('distance')[0].textContent;
-					if(distance == 0 || distance === undefined) {
+					if(distance === 0 || distance === undefined) {
 						self.route._segmentError(self, 'Segment has no length, or kml has no distance attribute');
 						//return 'Segment has no length, or kml has no distance attribute';
 					} else {
@@ -793,18 +970,18 @@ Yours.Segment = function(ParentRoute) {
 	this.draw = function() {
 		var flonlat= this.Start.lonlat.clone().transform(this.route.map.projection, this.route.map.displayProjection);
 		var tlonlat= this.End.lonlat.clone().transform(this.route.map.projection, this.route.map.displayProjection);
-
+/*
 		if (flonlat.lon > 3.2 && flonlat.lon < 7 && flonlat.lat > 50.7 && flonlat.lat < 53.6 && tlonlat.lon > 3.2 && tlonlat.lon < 7 && tlonlat.lat > 50.7 && tlonlat.lat < 53.6) {
 			// Test send Dutch requests to rullzer
 			apiUrl = "proxy.php?u=http://dev.openstreetmap.nl/~rullzer/yours/api/dev/";
 			//apiUrl = "transport.php?url=http://dev.openstreetmap.nl/~rullzer/yours/api/dev/";
 		}
-			
+	*/		
 		this.url = 'flat=' + flonlat.lat +
 			'&flon=' + flonlat.lon +
 			'&tlat=' + tlonlat.lat +
 			'&tlon=' + tlonlat.lon;
-		this.url += '&v=' + this.route.parameters.vehicle +
+		this.url += '&v=' + this.route.parameters.type +
 			'&fast=' + this.route.parameters.fast +
 			'&layer=' + this.route.parameters.layer;
 		this.permalink = location.protocol + '//' + location.host + location.pathname + "?" + this.url;

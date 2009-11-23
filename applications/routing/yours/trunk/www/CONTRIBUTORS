@@ -17,3 +17,6 @@ This is a list of people who contributed to the YOURS routing website, in chrono
 
 * Milo van der Linden
   Rewrite of JavaScript code, CSS, added JavaDoc and logo.
+
+* David Wilkins
+  HTML and CSS fixes for IE

@@ -250,6 +250,7 @@ div.hover a:hover {
 #route input.box {
     display: inline-block;        /* inline with outer text */
     display-model: inline-inside; /* contains only inlines */
+    width: 225px; 
     style-set: "std-input";    /* all other visual and behavioral styles are
                                      derived from standard checkbox */
 }

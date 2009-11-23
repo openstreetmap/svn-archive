@@ -122,7 +122,7 @@ function init(){
 	*/
 	
 	/* Initialize a Route object from the YourNavigation API */
-	MyFirstRoute = new Yours.Route(MyFirstMap, myRouteCallback);
+	MyFirstRoute = new Yours.Route(MyFirstMap, myRouteCallback, updateWaypointCallback);
 
 	// Check if a permalink is used
 	if (location.search.length > 0) {
@@ -142,7 +142,7 @@ function init(){
 					break;
 				case 'flon':
 					value = parseFloat(fields[1]);
-					if (value != 0) {
+					if (value !== 0) {
 						flonlat.lon = value;
 						MyFirstWayPoint = MyFirstRoute.Start;
 						MyFirstWayPoint.lonlat = flonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection);
@@ -154,7 +154,7 @@ function init(){
 					break;
 				case 'wlon':
 					value = parseFloat(fields[1]);
-					if (value != 0) {
+					if (value !== 0) {
 						wlonlat.lon = value;
 						MyFirstWayPoint = MyFirstRoute.waypoint();
 						MyFirstWayPoint.lonlat = wlonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection);
@@ -166,7 +166,7 @@ function init(){
 					break;
 				case 'tlon':
 					value = parseFloat(fields[1]);
-					if (value != 0) {
+					if (value !== 0) {
 						tlonlat.lon = value;
 						MyFirstWayPoint = MyFirstRoute.End;
 						MyFirstWayPoint.lonlat = tlonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection);
@@ -234,7 +234,7 @@ function init(){
 					break;
 				case 'zlon':
 					value = parseFloat(fields[1]);
-					if (value != 0) {
+					if (value !== 0) {
 						zlonlat.lon = value;
 						zlonlat.transform(MyFirstMap.displayProjection, MyFirstMap.projection);
 					}
@@ -254,15 +254,16 @@ function init(){
 		if (zlevel == -1) {
 			MyFirstMap.zoomToExtent(MyFirstRoute.Markers.getDataExtent());
 		}
-			
+		
+		prepareDrawRoute();
 		MyFirstRoute.draw();
-		if (zlevel != -1)
+		if (zlevel != -1) {
 			MyFirstMap.zoomToExtent(MyFirstRoute.Markers.getDataExtent());
-		else {
+		} else {
 			zlevel = MyFirstMap.getZoom();
 		}
 			
-		if (zlonlat.lon != 0) {
+		if (zlonlat.lon !== 0) {
 			MyFirstMap.setCenter(zlonlat, zlevel);
 		}
 	} else {
@@ -275,7 +276,7 @@ function init(){
 			MyFirstMap.setCenter(pos.transform(MyFirstMap.displayProjection,MyFirstMap.projection), 3);
 		}
 		if (typeof(document.baseURI) != 'undefined') {
-			if (document.baseURI.indexOf('-devel') > 0) {
+			if (document.baseURI.indexOf('-devel') > 0 || document.baseURI.indexOf('test') > 0) {
 				pos = new OpenLayers.LonLat(6, 52.2);
 				MyFirstMap.setCenter(pos.transform(MyFirstMap.displayProjection,MyFirstMap.projection), 14);
 			}
@@ -397,6 +398,26 @@ function myCallback(result) {
 	}
 }
 
+/*
+ * Called when a reverse gecoder result is returned
+ */
+function updateWaypointCallback(waypoint) {
+	if (waypoint !== undefined) {
+		switch (waypoint.type) {
+		case "to":
+			$('input[name=to_text]').val(waypoint.name);
+			break;
+		case "from":
+			$('input[name=from_text]').val(waypoint.name);
+			break;
+		case "via":
+			pos = waypoint.position;
+			$('input[waypointnr='+pos+']').val(waypoint.name);
+			break;
+		}
+	}
+}
+
 function typeChange(element) {
 	if (element.value == "cycleroute") {
 		// Disable the shortest route option
@@ -409,7 +430,7 @@ function typeChange(element) {
 }
 
 /*
- * Function to read input in text field and try to get a location from namefinder
+ * Function to read input in text field and try to get a location from geocoder
  */
 function elementChange(element) {
 	if (element.value.length > 0) {
@@ -437,7 +458,9 @@ function elementChange(element) {
 		}
 
 		wait_image.attr("src","images/ajax-loader.gif");
-		Yours.Lookup(jQuery.trim(element.value), MyFirstWayPoint, MyFirstMap, myCallback);
+		// Choose between Namefinder or Nominatim
+		//Yours.NamefinderLookup( Yours.lookupMethod.nameToCoord, jQuery.trim(element.value), MyFirstWayPoint, MyFirstMap, myCallback);
+		Yours.NominatimLookup( Yours.lookupMethod.nameToCoord, jQuery.trim(element.value), MyFirstWayPoint, MyFirstMap, myCallback);
 	}
 }
 
@@ -475,42 +498,7 @@ function elementClick(element) {
 				MyFirstRoute.reverse();
 				break;
 			case 'calculate':
-				$('#feature_info').empty();
-				
-				for (var i = 0; i < document.forms['parameters'].elements.length; i++) {
-					element = document.forms['parameters'].elements[i];
-					if (element.checked === true) {
-						MyFirstRoute.parameters.vehicle = element.value;
-						break;
-					}
-				}
-				for (var j = 0; j < document.forms['options'].elements.length; j++) {
-					element = document.forms['options'].elements[j];
-					if (element.value == 'fast' &&
-						element.checked === true) {
-						MyFirstRoute.parameters.fast = '1';
-					} else if (element.value == 'short' &&
-						element.checked === true) {
-						MyFirstRoute.parameters.fast = '0';
-					}
-				}
-				
-				//Layer
-				for (var k = 0; k < MyFirstRoute.map.layers.length; k++) {
-					if (MyFirstRoute.map.layers[k].visibility === true) {
-						switch (MyFirstRoute.map.layers[k].name) {
-							case 'Cycle Networks':
-								MyFirstRoute.parameters.layer = 'cn';
-								break;
-							case 'Cycle Map':
-								MyFirstRoute.parameters.layer = 'cycle';
-								break;
-							case 'Mapnik':
-								MyFirstRoute.parameters.layer = 'mapnik';
-								break;
-						}
-					}
-				}
+				prepareDrawRoute();
 
 				MyFirstRoute.draw();
 				break;
@@ -532,6 +520,45 @@ function elementClick(element) {
 					element.value = "";
 				}
 				break;
+		}
+	}
+}
+
+function prepareDrawRoute() {
+	$('#feature_info').empty();
+				
+	for (var i = 0; i < document.forms['parameters'].elements.length; i++) {
+		element = document.forms['parameters'].elements[i];
+		if (element.checked === true) {
+			MyFirstRoute.parameters.type = element.value;
+			break;
+		}
+	}
+	for (var j = 0; j < document.forms['options'].elements.length; j++) {
+		element = document.forms['options'].elements[j];
+		if (element.value == 'fast' &&
+			element.checked === true) {
+			MyFirstRoute.parameters.fast = '1';
+		} else if (element.value == 'short' &&
+			element.checked === true) {
+			MyFirstRoute.parameters.fast = '0';
+		}
+	}
+	
+	//Layer
+	for (var k = 0; k < MyFirstRoute.map.layers.length; k++) {
+		if (MyFirstRoute.map.layers[k].visibility === true) {
+			switch (MyFirstRoute.map.layers[k].name) {
+				case 'Cycle Networks':
+					MyFirstRoute.parameters.layer = 'cn';
+					break;
+				case 'Cycle Map':
+					MyFirstRoute.parameters.layer = 'cycle';
+					break;
+				case 'Mapnik':
+					MyFirstRoute.parameters.layer = 'mapnik';
+					break;
+			}
 		}
 	}
 }

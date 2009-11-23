@@ -5,7 +5,7 @@
 	// updateCoords - update all co-ordinate global variables
 
 	function updateCoords(tx,ty) {
-		_root.bscale=Math.pow(2,_root.scale-13);
+		_root.bscale=Math.pow(2,_root.scale-_root.flashscale);
 		_root.xradius=Stage.width/2;
 		_root.yradius=(Stage.height-panelheight)/2;
 
@@ -36,8 +36,8 @@
 	function coord2y(a)		{ return a/-masterscale+basey; }
 	function y2lat(a) { return 180/Math.PI * (2 * Math.atan(Math.exp(a*Math.PI/180)) - Math.PI/2); }
 	function lat2y(a) { return 180/Math.PI * Math.log(Math.tan(Math.PI/4+a*(Math.PI/180)/2)); }
-	function centrelat(o)  { return  coord2lat((yradius-_root.map._y-o)/Math.pow(2,_root.scale-13)); }
-	function centrelong(o) { return coord2long((xradius-_root.map._x-o)/Math.pow(2,_root.scale-13)); }
+	function centrelat(o)  { return  coord2lat((yradius-_root.map._y-o)/Math.pow(2,_root.scale-_root.flashscale)); }
+	function centrelong(o) { return coord2long((xradius-_root.map._x-o)/Math.pow(2,_root.scale-_root.flashscale)); }
 
 
 	// resizeWindow - user has enlarged/shrunk window
@@ -139,6 +139,7 @@
 		if (ww) { whichWays(); }
 		else if (_root.waycount>500) { purgeWays(); }
 		redrawWays(oldwidth==linewidth);
+		redrawRelations();
 	}
 
 	function changeScaleTo(newscale) {
@@ -148,16 +149,22 @@
 									else { _root.i_zoomout._alpha=100; }
 		if (_root.scale==_root.maxscale) { _root.i_zoomin._alpha =25;  }
 									else { _root.i_zoomin._alpha =100; }
-		_root.tolerance=4/Math.pow(2,_root.scale-13);
-		_root.poiscale=Math.max(100/Math.pow(2,_root.scale-13),3);
-		_root.iconscale=100/Math.pow(2,_root.scale-13);
+		_root.tolerance=4/Math.pow(2,_root.scale-_root.flashscale);
+		_root.poiscale=Math.max(100/Math.pow(2,_root.scale-_root.flashscale),3);
+		_root.iconscale=100/Math.pow(2,_root.scale-_root.flashscale);
+
+		_root.anchorsize=_root.iconscale*3;
+		if (_root.scale>=16 && _root.scale<=17) { _root.anchorsize *=0.8; }
+		if (                   _root.scale<=15) { _root.anchorsize *=0.6; }
+
 		if (preferences.data.thinlines) {
 			_root.linewidth=3;
-			_root.taggedscale=100/Math.pow(2,_root.scale-13); 
+			_root.taggedscale=100/Math.pow(2,_root.scale-_root.flashscale); 
+			if (_root.scale>=16) { _root.anchorsize*=0.8; }
 		} else {
 			_root.linewidth=Math.min(10, 3+Math.pow(Math.max(0,_root.scale-15),2));
-			_root.taggedscale=Math.max(100/Math.pow(2,_root.scale-13),5);
-			if (_root.scale>=16 && _root.scale<=18) { _root.taggedscale*=1.3; }
+			_root.taggedscale=Math.max(100/Math.pow(2,_root.scale-_root.flashscale),5);
+			if (_root.scale>=16) { _root.taggedscale*=1.3; }
 			if (_root.scale>=17 && _root.scale<=18) { _root.poiscale   *=1.3; }
 		}
 		if (preferences.data.thinareas) { _root.areawidth=_root.linewidth/3; }
@@ -173,7 +180,11 @@
 		restartElastic();
 		_root.redrawlist=new Array();
 		if (_root.redrawskip) { _root.redrawskip=skip; }
-		for (var qway in _root.map.ways) { _root.redrawlist.push(qway); }
+		for (var qway in _root.map.ways) { _root.redrawlist.push(_root.map.ways[qway]); }
+	}
+
+	function redrawRelations() {
+		for (var qrel in _root.map.relations) { _root.redrawlist.push(_root.map.relations[qrel]); }
 	}
 
 	// =====================================================================================

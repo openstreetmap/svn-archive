@@ -161,7 +161,9 @@
 
 	OSMRelation.prototype.redraw=function() {
 		this.createEmptyMovieClip("line",1);					// clear line
-		var linewidth=Math.max(_root.linewidth*3,10); if (scale>17) { linewidth*=0.8; }
+		var linewidth=Math.max(_root.linewidth*3,10);
+		if (preferences.data.thinlines) { linewidth*=1.2; }
+		else if (scale>16) { linewidth*=0.8; }
 		var linealpha= this.isHighlighting ? 75 : 50;
 		var c = this.isHighlighting ? 0xff8800 : 0x8888ff;
 
@@ -187,15 +189,17 @@
 				}
 			} else if ( ms[m][0] == 'Node' && _root.map.pois[ms[m][1]] ) {
 				var poi = _root.map.pois[ms[m][1]];
-				this.drawPoint(poi._x, poi._y);
+				this.drawPoint(poi.icon!='poi',poi._x, poi._y);
 			} else if ( ms[m][0] == 'Node' ) {
-				this.drawPoint(nodes[ms[m][1]].x,nodes[ms[m][1]].y);
+				this.drawPoint(false,nodes[ms[m][1]].x,nodes[ms[m][1]].y);
 			}
 		}
 	};
 
-	OSMRelation.prototype.drawPoint = function(x, y) {
-		var z = Math.max(100/Math.pow(2,_root.scale-13),6.25)/30;
+	OSMRelation.prototype.drawPoint = function(is_icon, x, y) {
+		var z;
+		if (is_icon) { z=6*_root.iconscale/100; }
+				else { z=3*_root.poiscale/100; }
 		this.line.moveTo(x-z,y-z);
 		this.line.lineTo(x-z,y+z);
 		this.line.lineTo(x+z,y+z);

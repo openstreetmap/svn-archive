@@ -794,7 +794,7 @@
 	OSMWay.prototype.highlight=function() {
 		_root.map.createEmptyMovieClip("highlight",5);
 		if (_root.pointselected>-2) {
-			highlightSquare(_root.map.anchors[pointselected]._x,_root.map.anchors[pointselected]._y,8/Math.pow(2,Math.min(_root.scale,17)-13));
+			highlightSquare(_root.map.anchors[pointselected]._x,_root.map.anchors[pointselected]._y, _root.anchorsize*0.05);
 		} else {
 			var linecolour=0xFFFF00; if (this.locked) { var linecolour=0x00FFFF; }
 			_root.map.highlight.lineStyle(linewidth*1.5+8,linecolour,80,false,"none");
@@ -807,18 +807,6 @@
 	};
 
 	OSMWay.prototype.highlightPoints=function(d,atype) {
-		var enlarge=1;
-		var anchorsize=120/Math.pow(2,_root.scale-13);
-		if (preferences.data.thinlines) { enlarge=0.5; }
-		if (_root.scale>15) {
-			switch (_root.scale) {
-				case 15: anchorsize+=10*enlarge; break;
-				case 16: anchorsize+=7 *enlarge; break;
-				case 17: anchorsize+=5 *enlarge; break;
-				case 18: anchorsize+=6 *enlarge; break;
-				case 19: anchorsize+=6 *enlarge; break;
-			}
-		}
 		var group=atype+"s";
 		_root.map.createEmptyMovieClip(group,d);
 		for (var i=0; i<this.path.length; i+=1) {
@@ -826,8 +814,8 @@
 			_root.map[group].attachMovie(asprite,i,i);
 			_root.map[group][i]._x=this.path[i].x;
 			_root.map[group][i]._y=this.path[i].y;
-			_root.map[group][i]._xscale=anchorsize;
-			_root.map[group][i]._yscale=anchorsize;
+			_root.map[group][i]._xscale=_root.anchorsize;
+			_root.map[group][i]._yscale=_root.anchorsize;
 			_root.map[group][i].node=this.path[i].id;
 			_root.map[group][i].way=this;
 			if (this.path[i].tagged) {

@@ -66,7 +66,7 @@
           </slot>
         </memory>
         <firmware version=""/>
-        <picture url="" identical=""/>
+        <picture url="Edge_705.bmp" identical="similiar"/>
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/Edge_series"/>
     </device>    
     
@@ -81,7 +81,7 @@
           </slot>
         </memory>
         <firmware version=""/>
-        <picture url="" identical=""/>
+        <picture url="Edge_705.bmp" identical="Yes"/>
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/Edge_series"/>
     </device>    
     
@@ -276,7 +276,7 @@
           </slot>
         </memory>
         <firmware version="3.0"/>
-        <picture url="etrex_Vista.bmp" identical="similiar"/>
+        <picture url="etrex_Vista_HCx.bmp" identical="Yes"/>
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/eTrex_series"/>
     </device>    
 

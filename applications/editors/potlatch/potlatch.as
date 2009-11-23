@@ -489,6 +489,7 @@
 		_root.lastxmouse=_root._xmouse;
 		_root.lastymouse=_root._ymouse;
 		if (Key.isDown(Key.SPACE)) {
+			xdiff*=16; ydiff*=16;
 			_root.bgxoffset+=xdiff; _root.map.tiles._x+=xdiff;
 			_root.bgyoffset+=ydiff; _root.map.tiles._y+=ydiff;
 			updateCoords(_root.map._x,_root.map._y);

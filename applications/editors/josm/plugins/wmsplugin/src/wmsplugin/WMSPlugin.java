@@ -56,8 +56,8 @@ public class WMSPlugin extends Plugin {
     static private boolean menuEnabled = false;
 
     protected void initExporterAndImporter() {
-    	ExtensionFileFilter.exporters.add(new WMSLayerExporter());
-    	ExtensionFileFilter.importers.add(new WMSLayerImporter());
+        ExtensionFileFilter.exporters.add(new WMSLayerExporter());
+        ExtensionFileFilter.importers.add(new WMSLayerImporter());
     }
 
     public WMSPlugin() {

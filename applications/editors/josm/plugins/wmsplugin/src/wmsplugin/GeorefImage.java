@@ -136,10 +136,10 @@ public class GeorefImage implements Serializable {
         min = (EastNorth) in.readObject();
         boolean hasImage = in.readBoolean();
         if (hasImage)
-        	image = (BufferedImage) ImageIO.read(ImageIO.createImageInputStream(in));
+            image = (BufferedImage) ImageIO.read(ImageIO.createImageInputStream(in));
         else {
-        	in.readObject(); // read null from input stream
-        	image = null;
+            in.readObject(); // read null from input stream
+            image = null;
         }
     }
 
@@ -147,10 +147,10 @@ public class GeorefImage implements Serializable {
         out.writeObject(max);
         out.writeObject(min);
         if(image == null) {
-        	out.writeBoolean(false);
+            out.writeBoolean(false);
             out.writeObject(null);
         } else {
-        	out.writeBoolean(true);
+            out.writeBoolean(true);
             ImageIO.write(image, "png", ImageIO.createImageOutputStream(out));
         }
     }

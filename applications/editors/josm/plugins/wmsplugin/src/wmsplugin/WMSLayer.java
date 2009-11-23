@@ -86,6 +86,14 @@ public class WMSLayer extends Layer {
         this.cookies = cookies;
         WMSGrabber.getProjection(baseURL, true);
         mv = Main.map.mapView;
+
+        // quick hack to predefine the PixelDensity to reuse the cache
+        int codeIndex = getName().indexOf("#PPD=");
+        if (codeIndex != -1) {
+            pixelPerDegree = Double.valueOf(getName().substring(codeIndex+5));
+        } else {
+            pixelPerDegree = getPPD();
+        }
         resolution = mv.getDist100PixelText();
         pixelPerDegree = getPPD();
 
@@ -116,7 +124,7 @@ public class WMSLayer extends Layer {
     public void destroy() {
         try {
             executor.shutdownNow();
-            // Might not be initalized, so catch NullPointer as well
+            // Might not be initialized, so catch NullPointer as well
         } catch(Exception x) {
             x.printStackTrace();
         }
@@ -268,6 +276,7 @@ public class WMSLayer extends Layer {
                 new JSeparator(),
                 new JMenuItem(new LoadWmsAction()),
                 new JMenuItem(new SaveWmsAction()),
+                new JMenuItem(new BookmarkWmsAction()),
                 new JSeparator(),
                 startstop,
                 alphaChannel,
@@ -317,7 +326,7 @@ public class WMSLayer extends Layer {
         public void actionPerformed(ActionEvent ev) {
             // Delete small files, because they're probably blank tiles.
             // See https://josm.openstreetmap.de/ticket/2307
-            WMSPlugin.cache.customCleanUp(CacheFiles.CLEAN_SMALL_FILES, 2048);
+            WMSPlugin.cache.customCleanUp(CacheFiles.CLEAN_SMALL_FILES, 4096);
 
             for (int x = 0; x < dax; ++x) {
                 for (int y = 0; y < day; ++y) {
@@ -425,6 +434,33 @@ public class WMSLayer extends Layer {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
+        }
+    }
+    /**
+     * This action will add a WMS layer menu entry with the current WMS layer URL and name extended by the current resolution.
+     * When using the menu entry again, the WMS cache will be used properly.
+     */
+    public class BookmarkWmsAction extends AbstractAction {
+        public BookmarkWmsAction() {
+            super(tr("Set WMS Bookmark"));
+        }
+        public void actionPerformed(ActionEvent ev) {
+            int i = 0;
+            while (Main.pref.hasKey("wmsplugin.url."+i+".url")) {
+                i++;
+            }
+            String baseName;
+            // cut old parameter
+            int parameterIndex = getName().indexOf("#PPD=");
+            if (parameterIndex != -1) {
+                baseName = getName().substring(0,parameterIndex);
+            }
+            else {
+                baseName = getName();
+            }
+            Main.pref.put("wmsplugin.url."+ i +".url",baseURL );
+            Main.pref.put("wmsplugin.url."+String.valueOf(i)+".name", baseName + "#" + getPPD() );
+            WMSPlugin.refreshMenu();
         }
     }
 }

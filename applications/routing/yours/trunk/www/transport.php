@@ -16,7 +16,7 @@
  */
 
 // The domains we're allowed to contact
-$allowedDomains = array('http://gazetteer.openstreetmap.org/', 'http://dev.openstreetmap.nl/~rullzer');
+$allowedDomains = array('http://gazetteer.openstreetmap.org/', 'http://nominatim.openstreetmap.org/', 'http://dev.openstreetmap.nl/~rullzer');
 
 // The actual form action
 $action = $_REQUEST['url'];
@@ -79,10 +79,15 @@ curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
 // Get result and close cURL
 $result = curl_exec($ch);
+
+
+$curl_info = curl_getinfo($ch);
+
 curl_close($ch);
 
 // Return the response
-header("Content-type: text/xml");
+header("Content-type: ".$curl_info['content_type']);
+//header('Content-Type: application/json');
 echo $result;
 
 ?>

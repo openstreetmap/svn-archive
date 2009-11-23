@@ -88,7 +88,7 @@
 					_x=long2coord(tile2long(x));
 					_y=lat2coord(tile2lat(y));
 					// ** check that this shouldn't be y-1, etc.
-					_xscale=_yscale=100/Math.pow(2,sc-13);
+					_xscale=_yscale=100/Math.pow(2,sc-_root.flashscale);
 				}
 				_root.tilesloaded++;
 				_root.ages[sc+','+x+','+y]=_root.age;

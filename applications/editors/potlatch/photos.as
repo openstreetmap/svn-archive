@@ -5,7 +5,7 @@
 	Photo.prototype.init=function(lat,lon,thumb,desc,name) {
 		this._x=long2coord(lon);
 		this._y=lat2coord(lat); 
-		this._xscale=this._yscale=Math.max(100/Math.pow(2,_root.scale-13),2);
+		this._xscale=this._yscale=Math.max(100/Math.pow(2,_root.scale-_root.flashscale),2);
 		this.thumb=thumb; this.desc=desc; this.name=name;
 	};
 	

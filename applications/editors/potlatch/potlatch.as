@@ -43,13 +43,14 @@
 
 	// Co-ordinates
 	// London 51.5,0; Weybridge 51.4,-0.5; Worcester 52.2,-2.25; Woodstock 51.85,-1.35
-	var minscale=13;				// don't zoom out past this
-	var maxscale=19;				// don't zoom in past this
-	if (scale) {} else {scale=14;}	// default scale if not provided (e.g. GPX)
+	var minscale=13;					// don't zoom out past this
+	var maxscale=23;					// don't zoom in past this
+	if (scale) {} else {scale=14;}		// default scale if not provided (e.g. GPX)
 	var scale=Math.max(Math.min(Math.floor(scale),maxscale),minscale);
-	var masterscale=5825.4222222222;// master map scale - how many Flash pixels in 1 degree longitude
-									// (for Landsat, 5120)
-	updateCoords();					// get radius, scale
+	var masterscale=5825.4222222222*64;	// master map scale - how many Flash pixels in 1 degree longitude
+										// (for Landsat, 5120)
+	var flashscale=19;					// scale at which map is viewed at 100%
+	updateCoords();						// get radius, scale
 	
 	// Preselected way/node (from query string)
 	var preway=Number(way);
@@ -126,13 +127,13 @@
 	var lastkeypressed=null;		// code of last key pressed
 	var keytarget='';				// send keys where? ('','key','value')
 	var tilesetloaded='';			// which tileset is loaded?
-	var tolerance=4/Math.pow(2,_root.scale-13);
+	var tolerance=4/Math.pow(2,_root.scale-_root.flashscale);
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="1.2g";	// current version
+	var signature="1.3";			// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k");
 	var lastgroup='road';			// last preset group used
@@ -519,7 +520,7 @@
 	
 	function mapDragging() {
 		var t=new Date();
-		var tol=Math.max(_root.tolerance,2);
+		var tol=8;
 		var longclick=(t.getTime()-_root.clicktime)>300;
 		var xdist=Math.abs(_root.firstxmouse-_root._xmouse);
 		var ydist=Math.abs(_root.firstymouse-_root._ymouse);
@@ -987,7 +988,7 @@
 		if (_root.redrawlist.length) {
 			for (var i=0; i<20; i++) {
 				var w=_root.redrawlist.pop();
-				_root.map.ways[w].redraw(_root.redrawskip);
+				w.redraw(_root.redrawskip);
 			}
 		} else { _root.redrawskip=true; }
 

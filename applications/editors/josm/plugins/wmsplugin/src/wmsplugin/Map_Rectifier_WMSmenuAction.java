@@ -154,7 +154,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
         // This repeatedly shows the dialog in case there has been an error.
         // The loop is break;-ed if the users cancels
         outer: while(true) {
-        	diag.showDialog();
+            diag.showDialog();
             int answer = diag.getValue();
             // Break loop when the user cancels
             if(answer != 1)

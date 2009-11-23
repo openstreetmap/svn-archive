@@ -31,8 +31,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 
 public class WMSAdjustAction extends MapMode implements MouseListener, MouseMotionListener{
-	static private final Logger logger = Logger.getLogger(WMSAdjustAction.class.getName());
-	
+    static private final Logger logger = Logger.getLogger(WMSAdjustAction.class.getName());
+    
     GeorefImage selectedImage;
     boolean mouseDown;
     EastNorth prevEastNorth;
@@ -49,19 +49,19 @@ public class WMSAdjustAction extends MapMode implements MouseListener, MouseMoti
     @Override public void enterMode() {
         super.enterMode();       
         if (!hasWMSLayersToAdjust()) {
-        	warnNoWMSLayers();
-        	return;
+            warnNoWMSLayers();
+            return;
         }
         List<WMSLayer> wmsLayers = Main.map.mapView.getLayersOfType(WMSLayer.class);
         if (wmsLayers.size() == 1) {
-        	adjustingLayer = wmsLayers.get(0);
+            adjustingLayer = wmsLayers.get(0);
         } else {
-        	adjustingLayer = (WMSLayer)askAdjustLayer(Main.map.mapView.getLayersOfType(WMSLayer.class));
+            adjustingLayer = (WMSLayer)askAdjustLayer(Main.map.mapView.getLayersOfType(WMSLayer.class));
         }
         if (adjustingLayer == null)
-        	return;
+            return;
         if (!adjustingLayer.isVisible()) {
-        	adjustingLayer.setVisible(true);
+            adjustingLayer.setVisible(true);
         }
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
@@ -174,10 +174,10 @@ public class WMSAdjustAction extends MapMode implements MouseListener, MouseMoti
        pnl.add(layerList, GBC.eol());
    
        ExtendedDialog diag = new ExtendedDialog(
-    		   Main.parent, 
-    		   tr("Select WMS layer"), 
-    		   new String[] { tr("Start adjusting"),tr("Cancel") }
-    		   );
+               Main.parent, 
+               tr("Select WMS layer"), 
+               new String[] { tr("Start adjusting"),tr("Cancel") }
+               );
        diag.setContent(pnl);
        diag.setButtonIcons(new String[] { "mapmode/adjustwms", "cancel" });
        diag.showDialog();
@@ -194,7 +194,7 @@ public class WMSAdjustAction extends MapMode implements MouseListener, MouseMoti
     */
    protected void warnNoWMSLayers() {
        JOptionPane.showMessageDialog(
-    		   Main.parent,
+               Main.parent,
                tr("There are currently no WMS layer to adjust."),
                tr("No layers to adjust"), 
                JOptionPane.WARNING_MESSAGE
@@ -207,13 +207,13 @@ public class WMSAdjustAction extends MapMode implements MouseListener, MouseMoti
     * @return true if there is at least one WMS layer
     */
    protected boolean hasWMSLayersToAdjust() {
-	   if (Main.map == null) return false;
-	   if (Main.map.mapView == null) return false;
-	   return ! Main.map.mapView.getLayersOfType(WMSLayer.class).isEmpty();
+       if (Main.map == null) return false;
+       if (Main.map.mapView == null) return false;
+       return ! Main.map.mapView.getLayersOfType(WMSLayer.class).isEmpty();
    }
 
-	@Override
-	protected void updateEnabledState() {
-		setEnabled(hasWMSLayersToAdjust());
-	}   
+    @Override
+    protected void updateEnabledState() {
+        setEnabled(hasWMSLayersToAdjust());
+    }   
 }

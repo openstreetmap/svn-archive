@@ -36,7 +36,7 @@ public class WMSGrabber extends Grabber {
     public static boolean isUrlWithPatterns(String url) {
         return url != null && url.contains("{") && url.contains("}");
     }
-	
+    
     protected String baseURL;
     private final boolean urlWithPatterns;
 
@@ -70,7 +70,7 @@ public class WMSGrabber extends Grabber {
             }
             image.downloadingStarted = false;
         } catch(Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             throw new Exception(e.getMessage() + "\nImage couldn't be fetched: " + (url != null ? url.toString() : ""));
         }
     }
@@ -111,11 +111,11 @@ public class WMSGrabber extends Grabber {
             str += "bbox=" + bbox
                 + getProjection(baseURL, false)
                 + "&width=" + wi + "&height=" + ht;
-        	if (!(baseURL.endsWith("&") || baseURL.endsWith("?"))) {
-        		System.out.println(tr("Warning: The base URL ''{0}'' for a WMS service doesn't have a trailing '&' or a trailing '?'.", baseURL));
-        		System.out.println(tr("Warning: Fetching WMS tiles is likely to fail. Please check you preference settings."));
-        		System.out.println(tr("Warning: The complete URL is ''{0}''.", str));
-        	}
+            if (!(baseURL.endsWith("&") || baseURL.endsWith("?"))) {
+                System.out.println(tr("Warning: The base URL ''{0}'' for a WMS service doesn't have a trailing '&' or a trailing '?'.", baseURL));
+                System.out.println(tr("Warning: Fetching WMS tiles is likely to fail. Please check you preference settings."));
+                System.out.println(tr("Warning: The complete URL is ''{0}''.", str));
+            }
         }
         return new URL(str.replace(" ", "%20"));
     }

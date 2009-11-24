@@ -8,7 +8,7 @@ import org.openstreetmap.gui.jmapviewer.Tile;
 /**
  * Implement this interface for creating your custom tile cache for
  * {@link JMapViewer}.
- * 
+ *
  * @author Jan Peter Stotz
  */
 public interface TileCache {
@@ -16,7 +16,7 @@ public interface TileCache {
     /**
      * Retrieves a tile from the cache if present, otherwise <code>null</code>
      * will be returned.
-     * 
+     *
      * @param source
      * @param x
      *            tile number on the x axis of the tile to be retrieved
@@ -33,7 +33,7 @@ public interface TileCache {
      * Adds a tile to the cache. How long after adding a tile can be retrieved
      * via {@link #getTile(int, int, int)} is unspecified and depends on the
      * implementation.
-     * 
+     *
      * @param tile
      */
     public void addTile(Tile tile);

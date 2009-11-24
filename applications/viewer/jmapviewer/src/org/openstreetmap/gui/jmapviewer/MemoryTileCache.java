@@ -12,7 +12,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  * {@link TileCache} implementation that stores all {@link Tile} objects in
  * memory up to a certain limit ({@link #getCacheSize()}). If the limit is
  * exceeded the least recently used {@link Tile} objects will be deleted.
- * 
+ *
  * @author Jan Peter Stotz
  */
 public class MemoryTileCache implements TileCache {
@@ -80,7 +80,7 @@ public class MemoryTileCache implements TileCache {
     }
 
     /**
-     * Clears the cache deleting all tiles from memory 
+     * Clears the cache deleting all tiles from memory
      */
     public void clear() {
         synchronized (lruTiles) {
@@ -99,7 +99,7 @@ public class MemoryTileCache implements TileCache {
 
     /**
      * Changes the maximum number of {@link Tile} objects that this cache holds.
-     * 
+     *
      * @param cacheSize
      *            new maximum number of tiles
      */
@@ -141,7 +141,7 @@ public class MemoryTileCache implements TileCache {
      * Special implementation of a double linked list for {@link CacheEntry}
      * elements. It supports element removal in constant time - in difference to
      * the Java implementation which needs O(n).
-     * 
+     *
      * @author Jan Peter Stotz
      */
     protected static class CacheLinkedListElement {
@@ -161,7 +161,7 @@ public class MemoryTileCache implements TileCache {
 
         /**
          * Add the element to the head of the list.
-         * 
+         *
          * @param new element to be added
          */
         public synchronized void addFirst(CacheEntry element) {
@@ -181,7 +181,7 @@ public class MemoryTileCache implements TileCache {
 
         /**
          * Removes the specified elemntent form the list.
-         * 
+         *
          * @param element
          *            to be removed
          */

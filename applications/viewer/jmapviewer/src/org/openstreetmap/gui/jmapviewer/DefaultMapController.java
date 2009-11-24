@@ -12,9 +12,9 @@ import java.awt.event.MouseWheelListener;
 /**
  * Default map controller which implements map moving by pressing the right
  * mouse button and zooming by double click or by mouse wheel.
- * 
+ *
  * @author Jan Peter Stotz
- * 
+ *
  */
 public class DefaultMapController extends JMapController implements MouseListener, MouseMotionListener,
 MouseWheelListener {
@@ -86,7 +86,7 @@ MouseWheelListener {
 
     /**
      * Enables or disables that the map pane can be moved using the mouse.
-     * 
+     *
      * @param movementEnabled
      */
     public void setMovementEnabled(boolean movementEnabled) {
@@ -105,7 +105,7 @@ MouseWheelListener {
      * <li>{@link MouseEvent#BUTTON2} (middle mouse button)</li>
      * <li>{@link MouseEvent#BUTTON3} (right mouse button)</li>
      * </ul>
-     * 
+     *
      * @param movementMouseButton
      */
     public void setMovementMouseButton(int movementMouseButton) {

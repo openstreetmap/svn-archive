@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * 1 and {@link #WORKER_THREAD_MAX_COUNT} (default: 8). If an instance is idle
  * more than {@link #WORKER_THREAD_TIMEOUT} seconds (default: 30), the instance
  * ends itself.
- * 
+ *
  * @author Jan Peter Stotz
  */
 public class JobDispatcher {

@@ -26,7 +26,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource.TileUpdate;
  * A {@link TileLoader} implementation that loads tiles from OSM via HTTP and
  * saves all loaded files in a directory located in the the temporary directory.
  * If a tile is present in this file cache it will not be loaded from OSM again.
- * 
+ *
  * @author Jan Peter Stotz
  * @author Stefan Zeller
  */
@@ -70,8 +70,8 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                 if (tempDir == null)
                     throw new IOException("No temp directory set");
                 String subDirName = "JMapViewerTiles";
-                // On Linux/Unix systems we do not have a per user tmp directory. 
-                // Therefore we add the user name for getting a unique dir name.  
+                // On Linux/Unix systems we do not have a per user tmp directory.
+                // Therefore we add the user name for getting a unique dir name.
                 if (userName != null && userName.length() > 0)
                     subDirName += "_" + userName;
                 cacheDir = new File(tempDir, subDirName);
@@ -272,14 +272,14 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
         /**
          * Performs a <code>HEAD</code> request for retrieving the
          * <code>LastModified</code> header value.
-         * 
+         *
          * Note: This does only work with servers providing the
          * <code>LastModified</code> header:
          * <ul>
          * <li>{@link OsmTileLoader#MAP_OSMA} - supported</li>
          * <li>{@link OsmTileLoader#MAP_MAPNIK} - not supported</li>
          * </ul>
-         * 
+         *
          * @param fileAge
          * @return <code>true</code> if the tile on the server is newer than the
          *         file
@@ -370,7 +370,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
      * {@link OsmFileCacheTileLoader} will connect to the tile server and check
      * if a newer tile is available using the mechanism specified for the
      * selected tile source/server.
-     * 
+     *
      * @param maxFileAge
      *            maximum age in milliseconds
      * @see #FILE_AGE_ONE_DAY

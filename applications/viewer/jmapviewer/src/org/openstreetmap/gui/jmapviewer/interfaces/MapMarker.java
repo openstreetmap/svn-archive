@@ -9,7 +9,7 @@ import org.openstreetmap.gui.jmapviewer.JMapViewer;
 
 /**
  * Interface to be implemented by all one dimensional elements that can be displayed on the map.
- * 
+ *
  * @author Jan Peter Stotz
  * @see JMapViewer#addMapMarker(MapMarker)
  * @see JMapViewer#getMapMarkerList()
@@ -29,7 +29,7 @@ public interface MapMarker {
     /**
      * Paints the map marker on the map. The <code>position</code> specifies the
      * coordinates within <code>g</code>
-     * 
+     *
      * @param g
      * @param position
      */

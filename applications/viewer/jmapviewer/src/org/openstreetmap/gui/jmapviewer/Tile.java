@@ -17,7 +17,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 /**
  * Holds one map tile. Additionally the code for loading the tile image and
  * painting it is also included in this class.
- * 
+ *
  * @author Jan Peter Stotz
  */
 public class Tile {
@@ -51,7 +51,7 @@ public class Tile {
 
     /**
      * Creates a tile with empty image.
-     * 
+     *
      * @param source
      * @param xtile
      * @param ytile
@@ -190,7 +190,7 @@ public class Tile {
     /**
      * Paints the tile-image on the {@link Graphics} <code>g</code> at the
      * position <code>x</code>/<code>y</code>.
-     * 
+     *
      * @param g
      * @param x
      *            x-coordinate in <code>g</code>

@@ -10,20 +10,20 @@ public class TileController {
     protected TileLoader tileLoader;
     protected TileCache tileCache;
     protected TileSource tileSource;
-    
+
     JobDispatcher jobDispatcher;
-    
+
     public TileController(TileSource source, TileCache tileCache, TileLoaderListener listener) {
         tileSource = new OsmTileSource.Mapnik();
         tileLoader = new OsmTileLoader(listener);
         this.tileCache = tileCache;
         jobDispatcher = JobDispatcher.getInstance();
     }
-    
+
     /**
      * retrieves a tile from the cache. If the tile is not present in the cache
      * a load job is added to the working queue of {@link JobThread}.
-     * 
+     *
      * @param tilex
      * @param tiley
      * @param zoom
@@ -75,7 +75,7 @@ public class TileController {
     }
 
     /**
-     * 
+     *
      */
     public void cancelOutstandingJobs() {
         jobDispatcher.cancelOutstandingJobs();

@@ -7,12 +7,31 @@ $bottom = (float) $_GET ['bottom'];
 $right = (float) $_GET ['right'];
 $top = (float) $_GET ['top'];
 
-// Store co-ordinates in cookies
+// Checkbox values
+$ref = (bool) $_GET ['ref'];
+$name = (bool) $_GET ['name'];
+$hours = (bool) $_GET ['hours'];
+$source = (bool) $_GET ['source'];
+$fixme = (bool) $_GET ['fixme'];
+$naptan = (bool) $_GET ['naptan'];
+$road = (bool) $_GET ['road'];
+$pbref = (bool) $_GET ['pbref'];
+
+// Store co-ordinates & checkbox values in cookies
 $iExpireTime = time()+60*60*24*90;
 setcookie ("left", $left, $iExpireTime);
 setcookie ("bottom", $bottom, $iExpireTime);
 setcookie ("right", $right, $iExpireTime);
 setcookie ("top", $top, $iExpireTime);
+
+setcookie ("ref", $ref, $iExpireTime);
+setcookie ("name", $name, $iExpireTime);
+setcookie ("hours", $hours, $iExpireTime);
+setcookie ("source", $source, $iExpireTime);
+setcookie ("fixme", $fixme, $iExpireTime);
+setcookie ("naptan", $naptan, $iExpireTime);
+setcookie ("road", $road, $iExpireTime);
+setcookie ("pbref", $pbref, $iExpireTime);
 
 // Get OSM data
 $xml = simplexml_load_file ("$osm_xapi_base/map?bbox=$left,$bottom,$right,$top");
@@ -161,41 +180,50 @@ foreach ($xml->node as $node) {
 		file_put_contents ($LOG_FILE, "Checking node {$node ["id"]}\n", FILE_APPEND);
 	foreach ($node->tag as $tag) {
 		// Post box reference
-		TagCheck ($node, $tag, "amenity", "post_box", "ref");
+		if ($pbref === True)
+			TagCheck ($node, $tag, "amenity", "post_box", "ref");
 
 		// Name
-		NodeCheck ($node, $tag, "*", "cafe", "name");
-		NodeCheck ($node, $tag, "*", "restaurant", "name");
-		NodeCheck ($node, $tag, "*", "pub", "name");
+		if ($name === True) {
+			NodeCheck ($node, $tag, "*", "cafe", "name");
+			NodeCheck ($node, $tag, "*", "restaurant", "name");
+			NodeCheck ($node, $tag, "*", "pub", "name");
 
-		NodeCheck ($node, $tag, "*", "school", "name");
-		NodeCheck ($node, $tag, "*", "college", "name");
-		NodeCheck ($node, $tag, "*", "library", "name");
-		NodeCheck ($node, $tag, "*", "university", "name");
+			NodeCheck ($node, $tag, "*", "school", "name");
+			NodeCheck ($node, $tag, "*", "college", "name");
+			NodeCheck ($node, $tag, "*", "library", "name");
+			NodeCheck ($node, $tag, "*", "university", "name");
 
-		NodeCheck ($node, $tag, "shop", "*", "name");
-		NodeCheck ($node, $tag, "*", "post_office", "name");
-		NodeCheck ($node, $tag, "amenity", "cinema", "name");
+			NodeCheck ($node, $tag, "shop", "*", "name");
+			NodeCheck ($node, $tag, "*", "post_office", "name");
+			NodeCheck ($node, $tag, "amenity", "cinema", "name");
+		}
 
 		// Opening hours
-		NodeCheck ($node, $tag, "*", "cafe", "opening_hours");
-		NodeCheck ($node, $tag, "shop", "*", "opening_hours");
-		NodeCheck ($node, $tag, "*", "post_office", "opening_hours");
-		NodeCheck ($node, $tag, "*", "fast_food", "opening_hours");
-		NodeCheck ($node, $tag, "*", "pharmacy", "opening_hours");
-		NodeCheck ($node, $tag, "*", "restaurant", "opening_hours");
-		NodeCheck ($node, $tag, "*", "library", "opening_hours");
+		if ($hours === True) {
+			NodeCheck ($node, $tag, "*", "cafe", "opening_hours");
+			NodeCheck ($node, $tag, "shop", "*", "opening_hours");
+			NodeCheck ($node, $tag, "*", "post_office", "opening_hours");
+			NodeCheck ($node, $tag, "*", "fast_food", "opening_hours");
+			NodeCheck ($node, $tag, "*", "pharmacy", "opening_hours");
+			NodeCheck ($node, $tag, "*", "restaurant", "opening_hours");
+			NodeCheck ($node, $tag, "*", "library", "opening_hours");
+		}
 
 		// Source
-		NoTagCheck ($node, $tag, "source", "extrapolation");
-		NoTagCheck ($node, $tag, "source", "NPE");
-		NoTagCheck ($node, $tag, "source", "historical");
+		if ($source === True) {
+			NoTagCheck ($node, $tag, "source", "extrapolation");
+			NoTagCheck ($node, $tag, "source", "NPE");
+			NoTagCheck ($node, $tag, "source", "historical");
+		}
 
 		// FIXME tags
-		NoTagCheck ($node, $tag, "FIXME", "*");
+		if ($fixme === True)
+			NoTagCheck ($node, $tag, "FIXME", "*");
 
 		// NAPTAN import
-		NoTagCheck ($node, $tag, "naptan:verified", "no");
+		if ($naptan === True)
+			NoTagCheck ($node, $tag, "naptan:verified", "no");
 	}
 }
 
@@ -206,46 +234,56 @@ foreach ($xml->way as $way) {
 	foreach ($way->tag as $tag) {
 
 		// Ref
-		WayCheck ($way, $tag, "highway", "motorway", "ref");
-		WayCheck ($way, $tag, "highway", "trunk", "ref");
-		WayCheck ($way, $tag, "highway", "primary", "ref");
-		WayCheck ($way, $tag, "highway", "secondary", "ref");
+		if ($ref === True) {
+			WayCheck ($way, $tag, "highway", "motorway", "ref");
+			WayCheck ($way, $tag, "highway", "trunk", "ref");
+			WayCheck ($way, $tag, "highway", "primary", "ref");
+			WayCheck ($way, $tag, "highway", "secondary", "ref");
+		}
 
 		// Name
-		WayCheck ($way, $tag, "highway", "residential", "name");
+		if ($name === True) {
+			WayCheck ($way, $tag, "highway", "residential", "name");
 
-		WayCheck ($way, $tag, "*", "cafe", "name");
-		WayCheck ($way, $tag, "*", "restaurant", "name");
-		WayCheck ($way, $tag, "*", "pub", "name");
+			WayCheck ($way, $tag, "*", "cafe", "name");
+			WayCheck ($way, $tag, "*", "restaurant", "name");
+			WayCheck ($way, $tag, "*", "pub", "name");
 
-		WayCheck ($way, $tag, "*", "school", "name");
-		WayCheck ($way, $tag, "*", "college", "name");
-		WayCheck ($way, $tag, "*", "library", "name");
-		WayCheck ($way, $tag, "*", "university", "name");
+			WayCheck ($way, $tag, "*", "school", "name");
+			WayCheck ($way, $tag, "*", "college", "name");
+			WayCheck ($way, $tag, "*", "library", "name");
+			WayCheck ($way, $tag, "*", "university", "name");
 
-		WayCheck ($way, $tag, "shop", "*", "name");
-		WayCheck ($way, $tag, "*", "post_office", "name");
-		WayCheck ($way, $tag, "amenity", "cinema", "name");
+			WayCheck ($way, $tag, "shop", "*", "name");
+			WayCheck ($way, $tag, "*", "post_office", "name");
+			WayCheck ($way, $tag, "amenity", "cinema", "name");
+		}
 
 		// Opening hours
-		WayCheck ($way, $tag, "*", "cafe", "opening_hours");
-		WayCheck ($way, $tag, "shop", "*", "opening_hours");
-		WayCheck ($way, $tag, "*", "post_office", "opening_hours");
-		WayCheck ($way, $tag, "*", "fast_food", "opening_hours");
-		WayCheck ($way, $tag, "*", "pharmacy", "opening_hours");
-		WayCheck ($way, $tag, "*", "restaurant", "opening_hours");
-		WayCheck ($way, $tag, "*", "library", "opening_hours");
+		if ($hours === True) {
+			WayCheck ($way, $tag, "*", "cafe", "opening_hours");
+			WayCheck ($way, $tag, "shop", "*", "opening_hours");
+			WayCheck ($way, $tag, "*", "post_office", "opening_hours");
+			WayCheck ($way, $tag, "*", "fast_food", "opening_hours");
+			WayCheck ($way, $tag, "*", "pharmacy", "opening_hours");
+			WayCheck ($way, $tag, "*", "restaurant", "opening_hours");
+			WayCheck ($way, $tag, "*", "library", "opening_hours");
+		}
 
 		// Source
-		NoTagCheck ($way, $tag, "source", "extrapolation");
-		NoTagCheck ($way, $tag, "source", "NPE");
-		NoTagCheck ($way, $tag, "source", "historical");
+		if ($source === True) {
+			NoTagCheck ($way, $tag, "source", "extrapolation");
+			NoTagCheck ($way, $tag, "source", "NPE");
+			NoTagCheck ($way, $tag, "source", "historical");
+		}
 
 		// FIXME etc
-		NoTagCheck ($way, $tag, "FIXME", "*");
+		if ($fixme === True)
+			NoTagCheck ($way, $tag, "FIXME", "*");
 
 		// Unknown road classification
-		NoTagCheck ($way, $tag, "highway", "road");
+		if ($road === True)
+			NoTagCheck ($way, $tag, "highway", "road");
 	}
 }
 

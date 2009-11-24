@@ -14,10 +14,10 @@ public class CacheFileLambert4ZoneFilter extends FileFilter {
     private final String description;
 
     public static CacheFileLambert4ZoneFilter[] filters = {
-        new CacheFileLambert4ZoneFilter("1", tr("Lambert Zone 1 cache file (.1)")),
-        new CacheFileLambert4ZoneFilter("2", tr("Lambert Zone 2 cache file (.2)")),
-        new CacheFileLambert4ZoneFilter("3", tr("Lambert Zone 3 cache file (.3)")),
-        new CacheFileLambert4ZoneFilter("4", tr("Lambert Zone 4 cache file (.4)"))
+        new CacheFileLambert4ZoneFilter("1", tr("Lambert Zone {0} cache file (.{0})", 1)),
+        new CacheFileLambert4ZoneFilter("2", tr("Lambert Zone {0} cache file (.{0})", 2)),
+        new CacheFileLambert4ZoneFilter("3", tr("Lambert Zone {0} cache file (.{0})", 3)),
+        new CacheFileLambert4ZoneFilter("4", tr("Lambert Zone {0} cache file (.{0})", 4))
         };
 
     /**

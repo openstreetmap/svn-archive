@@ -16,15 +16,15 @@ public class CacheFileLambert9ZoneFilter extends FileFilter {
     private final String description;
 
     public static CacheFileLambert9ZoneFilter[] filters = {
-        new CacheFileLambert9ZoneFilter("cc1", tr("Lambert CC9 Zone 1 cache file (.CC1)")),
-        new CacheFileLambert9ZoneFilter("cc2", tr("Lambert CC9 Zone 2 cache file (.CC2)")),
-        new CacheFileLambert9ZoneFilter("cc3", tr("Lambert CC9 Zone 3 cache file (.CC3)")),
-        new CacheFileLambert9ZoneFilter("cc4", tr("Lambert CC9 Zone 4 cache file (.CC4)")),
-        new CacheFileLambert9ZoneFilter("cc5", tr("Lambert CC9 Zone 5 cache file (.CC5)")),
-        new CacheFileLambert9ZoneFilter("cc6", tr("Lambert CC9 Zone 6 cache file (.CC6)")),
-        new CacheFileLambert9ZoneFilter("cc7", tr("Lambert CC9 Zone 7 cache file (.CC7)")),
-        new CacheFileLambert9ZoneFilter("cc8", tr("Lambert CC9 Zone 8 cache file (.CC8)")),
-        new CacheFileLambert9ZoneFilter("cc9", tr("Lambert CC9 Zone 9 cache file (.CC9)"))
+        new CacheFileLambert9ZoneFilter("cc1", tr("Lambert CC9 Zone {0} cache file (.CC{0})",1)),
+        new CacheFileLambert9ZoneFilter("cc2", tr("Lambert CC9 Zone {0} cache file (.CC{0})",2)),
+        new CacheFileLambert9ZoneFilter("cc3", tr("Lambert CC9 Zone {0} cache file (.CC{0})",3)),
+        new CacheFileLambert9ZoneFilter("cc4", tr("Lambert CC9 Zone {0} cache file (.CC{0})",4)),
+        new CacheFileLambert9ZoneFilter("cc5", tr("Lambert CC9 Zone {0} cache file (.CC{0})",5)),
+        new CacheFileLambert9ZoneFilter("cc6", tr("Lambert CC9 Zone {0} cache file (.CC{0})",6)),
+        new CacheFileLambert9ZoneFilter("cc7", tr("Lambert CC9 Zone {0} cache file (.CC{0})",7)),
+        new CacheFileLambert9ZoneFilter("cc8", tr("Lambert CC9 Zone {0} cache file (.CC{0})",8)),
+        new CacheFileLambert9ZoneFilter("cc9", tr("Lambert CC9 Zone {0} cache file (.CC{0})",9))
         };
 
     /**

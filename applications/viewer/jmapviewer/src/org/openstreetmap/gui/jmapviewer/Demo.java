@@ -19,11 +19,11 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
- * 
+ *
  * Demonstrates the usage of {@link JMapViewer}
- * 
+ *
  * @author Jan Peter Stotz
- * 
+ *
  */
 public class Demo extends JFrame {
 

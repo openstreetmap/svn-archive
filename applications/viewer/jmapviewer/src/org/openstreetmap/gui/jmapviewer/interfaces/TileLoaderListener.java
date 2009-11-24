@@ -7,9 +7,9 @@ import org.openstreetmap.gui.jmapviewer.Tile;
 public interface TileLoaderListener {
 
     /**
-     * Will be called if a new {@link Tile} has been loaded successfully. 
-     * Loaded can mean downloaded or loaded from file cache. 
-     * 
+     * Will be called if a new {@link Tile} has been loaded successfully.
+     * Loaded can mean downloaded or loaded from file cache.
+     *
      * @param tile
      */
     public void tileLoadingFinished(Tile tile, boolean success);

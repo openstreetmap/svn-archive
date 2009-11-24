@@ -10,7 +10,7 @@ import org.openstreetmap.gui.jmapviewer.JMapViewer;
 
 /**
  * Interface to be implemented by squares that can be displayed on the map.
- * 
+ *
  * @author Stefan Zeller
  * @see JMapViewer#addMapSquare(MapSquare)
  * @see JMapViewer#getMapSquareList()
@@ -31,7 +31,7 @@ public interface MapSquare {
     /**
      * Paints the map square on the map. The <code>topLeft</code> and
      * <code>bottomRight</code> specifies the coordinates within <code>g</code>
-     * 
+     *
      * @param g
      * @param position
      */

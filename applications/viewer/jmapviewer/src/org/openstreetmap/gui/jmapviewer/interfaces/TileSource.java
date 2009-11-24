@@ -5,7 +5,7 @@ import org.openstreetmap.gui.jmapviewer.JMapViewer;
 //License: GPL. Copyright 2008 by Jan Peter Stotz
 
 /**
- * 
+ *
  * @author Jan Peter Stotz
  */
 public interface TileSource {
@@ -39,17 +39,17 @@ public interface TileSource {
     /**
      * Specifies the maximum zoom value. The number of zoom levels is [0..
      * {@link #getMaxZoom()}].
-     * 
+     *
      * @return maximum zoom value that has to be smaller or equal to
      *         {@link JMapViewer#MAX_ZOOM}
      */
     public int getMaxZoom();
 
     /**
-     * Specifies the minimum zoom value. This value is usually 0. 
-     * Only for maps that cover a certain region up to a limited zoom level 
-     * this method should return a value different than 0.  
-     * 
+     * Specifies the minimum zoom value. This value is usually 0.
+     * Only for maps that cover a certain region up to a limited zoom level
+     * this method should return a value different than 0.
+     *
      * @return minimum zoom value - usually 0
      */
     public int getMinZoom();
@@ -63,14 +63,14 @@ public interface TileSource {
     /**
      * A tile layer name has to be unique and has to consist only of characters
      * valid for filenames.
-     * 
+     *
      * @return Name of the tile layer
      */
     public String getName();
 
     /**
      * Constructs the tile url.
-     * 
+     *
      * @param zoom
      * @param tilex
      * @param tiley
@@ -81,7 +81,7 @@ public interface TileSource {
     /**
      * Specifies the tile image type. For tiles rendered by Mapnik or
      * Osmarenderer this is usually <code>"png"</code>.
-     * 
+     *
      * @return file extension of the tile image type
      */
     public String getTileType();

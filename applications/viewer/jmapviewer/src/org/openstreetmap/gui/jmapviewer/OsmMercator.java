@@ -8,9 +8,9 @@ package org.openstreetmap.gui.jmapviewer;
  * into latitude and longitude (on the WGS84 ellipsoid) and vice versa. Map
  * space is measured in pixels. The origin of the map space is the top left
  * corner. The map space origin (0,0) has latitude ~85 and longitude -180
- * 
+ *
  * @author Tim Haussmann
- * 
+ *
  */
 
 public class OsmMercator {
@@ -26,7 +26,7 @@ public class OsmMercator {
     /**
      * Returns the absolut number of pixels in y or x, defined as: 2^Zoomlevel *
      * TILE_WIDTH where TILE_WIDTH is the width of a tile in pixels
-     * 
+     *
      * @param aZoomlevel
      * @return
      */
@@ -44,7 +44,7 @@ public class OsmMercator {
 
     /**
      * Transform longitude to pixelspace
-     * 
+     *
      * <p>
      * Mathematical optimization<br>
      * <code>
@@ -54,7 +54,7 @@ public class OsmMercator {
      * x = getMaxPixels(aZoomlevel) * (aLongitude + 180) / 360<br>
      * </code>
      * </p>
-     * 
+     *
      * @param aLongitude
      *            [-180..180]
      * @return [0..2^Zoomlevel*TILE_SIZE[
@@ -73,7 +73,7 @@ public class OsmMercator {
      * Mathematical optimization<br>
      * <code>
      * log(u) := log((1.0 + sin(toRadians(aLat))) / (1.0 - sin(toRadians(aLat))<br>
-     * 
+     *
      * y = -1 * (radius(aZoomlevel) / 2 * log(u)))) - falseNorthing(aZoomlevel))<br>
      * y = -1 * (getMaxPixel(aZoomlevel) / 2 * PI / 2 * log(u)) - -1 * getMaxPixel(aZoomLevel) / 2<br>
      * y = getMaxPixel(aZoomlevel) / (-4 * PI) * log(u)) + getMaxPixel(aZoomLevel) / 2<br>
@@ -100,7 +100,7 @@ public class OsmMercator {
 
     /**
      * Transforms pixel coordinate X to longitude
-     * 
+     *
      * <p>
      * Mathematical optimization<br>
      * <code>
@@ -122,7 +122,7 @@ public class OsmMercator {
 
     /**
      * Transforms pixel coordinate Y to latitude
-     * 
+     *
      * @param aY
      *            [0..2^Zoomlevel*TILE_WIDTH[
      * @return [MIN_LAT..MAX_LAT] is about [-85..85]

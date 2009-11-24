@@ -11,9 +11,9 @@ import java.io.Serializable;
 /**
  * This class encapsulates a Point2D.Double and provide access
  * via <tt>lat</tt> and <tt>lon</tt>.
- * 
+ *
  * @author Jan Peter Stotz
- * 
+ *
  */
 public class Coordinate implements Serializable {
     private transient Point2D.Double data;

@@ -12,9 +12,9 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
  * A simple implementation of the {@link MapMarker} interface. Each map marker
  * is painted as a circle with a black border line and filled with a specified
  * color.
- * 
+ *
  * @author Jan Peter Stotz
- * 
+ *
  */
 public class MapMarkerDot implements MapMarker {
 

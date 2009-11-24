@@ -24,8 +24,7 @@ else
 system "ant";
 my $outdate = `date -u +"%Y-%m-%dT%H_%M_%S"`;
 chomp $outdate;
-mkdir "keys";
-system "cp po/*.po keys";
-system "cp po/josm.pot keys/keys.pot";
-system "tar -czf launchpad_upload_josm_$outdate.tgz keys";
-system "rm -rv keys new";
+mkdir "josm";
+system "cp po/*.po po/josm.pot josm";
+system "tar -czf launchpad_upload_josm_$outdate.tgz josm";
+system "rm -rv josm new";

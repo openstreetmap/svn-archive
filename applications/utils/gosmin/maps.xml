@@ -1,6 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?xml-stylesheet href="maps.xsl" type="text/xsl" ?> 
 <maps>
+    <map name="All in One" boundary="Germany" comment="Lot's of OSM features" updated="Weekly">
+        <lang iso="de" name="All in One"  boundary="Deutschland" comment="Moeglichst viele OSM Elemente" updated="Woechentlich"/>
+        <attributes routing="yes"/>
+        <file name="gmapsupp.img" sizeMB="610"/>
+        <download url="http://www.juergen-frank.de/osm/gmapsupps/germany/gmapsupp.img.bz2" sizeMB="460"/>
+        <picture url="AllInOne.bmp"/>
+        <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
+    </map>    
+
+    <map name="All in One" boundary="Europe" comment="Lot's of OSM features" updated="Weekly">
+        <lang iso="de" name="All in One"  boundary="Europa" comment="Moeglichst viele OSM Elemente" updated="Woechentlich"/>
+        <attributes routing="yes"/>
+        <file name="gmapsupp.img" sizeMB="1800"/>
+        <download url="http://dev.openstreetmap.de/aio/europe/gmapsupp.img.bz2" sizeMB="1410"/>
+        <picture url="AllInOne.bmp"/>
+        <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
+    </map>    
+
     <map name="Computerteddy" boundary="Germany" comment="" updated="Weekly">
         <lang iso="de" name="Computerteddy"  boundary="Deutschland" comment="" updated="Woechentlich"/>
         <!-- routing: yes, no -->
@@ -34,23 +52,14 @@
         <details url="http://wiki.openstreetmap.org/wiki/User:Computerteddy"/>
     </map>    
 
-    <map name="All in One" boundary="Germany" comment="Lot's of OSM features" updated="Weekly">
-        <lang iso="de" name="All in One"  boundary="Deutschland" comment="Moeglichst viele OSM Elemente" updated="Woechentlich"/>
+    <map name="Radkarte" boundary="Germany" comment="Map designed for the everyday cyclist" updated="Every 2nd day">
+        <lang iso="de" name="Radkarte"  boundary="Deutschland" comment="Karte fuer den Alltagsradfahrer" updated="Jeder 2. Tag"/>
         <attributes routing="yes"/>
-        <file name="gmapsupp.img" sizeMB="610"/>
-        <download url="http://www.juergen-frank.de/osm/gmapsupps/germany/gmapsupp.img.bz2" sizeMB="460"/>
-        <picture url="AllInOne.bmp"/>
-        <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
-    </map>    
-
-    <map name="All in One" boundary="Europe" comment="Lot's of OSM features" updated="Weekly">
-        <lang iso="de" name="All in One"  boundary="Europa" comment="Moeglichst viele OSM Elemente" updated="Woechentlich"/>
-        <attributes routing="yes"/>
-        <file name="gmapsupp.img" sizeMB="1800"/>
-        <download url="http://dev.openstreetmap.de/aio/europe/gmapsupp.img.bz2" sizeMB="1410"/>
-        <picture url="AllInOne.bmp"/>
-        <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
-    </map>    
+        <file name="gmapsupp.img" sizeMB="570"/>
+        <download url="http://osm.arndnet.de/latest/gmapsupp.img.zip" sizeMB="410"/>
+        <picture url="Radkarte.bmp"/>
+        <details url="http://wiki.openstreetmap.org/wiki/User:Radfahrer/Radkarte"/>
+    </map>
 
     <map name="OSMC Reit und Wanderkarte" boundary="DACH" comment="" updated="Monthly">
         <lang iso="de" name="OSMC Reit und Wanderkarte"  boundary="DACH" comment="" updated="Monatlich"/>
@@ -70,16 +79,6 @@
         <details url=""/>
     </map>
     
-    <!-- currently unused, no stable download URL
-    <map name="Radkarte" boundary="Germany" comment="Map designed for the everyday cyclist. Focus on cycle routes and auto-routing." updated="Every 2nd day">
-        <lang iso="de" name="Radkarte"  boundary="Deutschland" comment="Karte fuer den Alltagsradfahrer. Fokus auf Fahrradrouting." updated="Jeder 2. Tag"/>
-        <attributes routing="yes"/>
-        <file name="gmapsupp.img" sizeMB="570"/>
-        <download url="http://osm.arndnet.de/20091108/gmapsupp.img.zip" sizeMB="410"/>
-        <picture url="Radkarte.bmp"/>
-        <details url="http://wiki.openstreetmap.org/wiki/User:Radfahrer/Radkarte"/>
-    </map>-->
-
     <!-- currently unused, complicated licensing
     <map name="MTBNavi.de" boundary="Alps" comment="MTB- / Cycle- / Hikingmap" updated="22.09.09">
         <lang iso="de" name="MTBNavi.de"  boundary="Alpen" comment="Moutainbike-/Fahrrad-/Wanderkarte" updated="22.09.09"/>

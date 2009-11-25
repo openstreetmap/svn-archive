@@ -45,7 +45,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class MultipolyAction extends JosmAction {
 
  public MultipolyAction() {
-  super(tr("Create multipolygon"), null, tr("Create multipolygon."),
+  super(tr("Create multipolygon"), "multipoly_create", tr("Create multipolygon."),
   Shortcut.registerShortcut("tools:multipoly", tr("Tool: {0}", tr("Create multipolygon")),
   KeyEvent.VK_M, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
   setEnabled(true);

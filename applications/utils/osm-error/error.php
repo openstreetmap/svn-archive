@@ -1,11 +1,30 @@
 <?php
+/*
+Code to get co-ordinates from map taken from http://maposmatic.org/ and
+copyright (c) 2009 Étienne Loks <etienne.loks_AT_peacefrogsDOTnet>
+Other code copyright (c) Russ Phillips <russ AT phillipsuk DOT org>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 require ("inc_config.php");
 
 // Co-ordinates
-$left = (float) $_GET ['left'];
-$bottom = (float) $_GET ['bottom'];
-$right = (float) $_GET ['right'];
-$top = (float) $_GET ['top'];
+$left = (float) $_GET ['lon_upper_left'];
+$bottom = (float) $_GET ['lat_bottom_right'];
+$right = (float) $_GET ['lon_bottom_right'];
+$top = (float) $_GET ['lat_upper_left'];
 
 // Checkbox values
 $ref = (bool) $_GET ['ref'];
@@ -34,7 +53,7 @@ setcookie ("road", $road, $iExpireTime);
 setcookie ("pbref", $pbref, $iExpireTime);
 
 // Get OSM data
-$xml = simplexml_load_file ("$osm_xapi_base/map?bbox=$left,$bottom,$right,$top");
+$xml = simplexml_load_file ($osm_api_base . "?bbox=$left,$bottom,$right,$top");
 if ($xml === False)
 	die ("There was a problem getting data from OSM");
 

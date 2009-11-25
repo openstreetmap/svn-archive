@@ -1,3 +1,22 @@
+<!--
+Code to get co-ordinates from map taken from http://maposmatic.org/ and
+copyright (c) 2009 Étienne Loks <etienne.loks_AT_peacefrogsDOTnet>
+Other code copyright (c) Russ Phillips <russ AT phillipsuk DOT org>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <?php
 // Get saved values from cookies if present
 if (isset ($_COOKIE ['left']))
@@ -52,18 +71,7 @@ else
 ?>
 <html>
 <head>
-<style>
-body {
-	font-family: sans-serif;
-}
-input.text {
-	font-family: sans-serif;
-	width: 12ex;
-}
-td {
-	text-align: center;
-}
-</style>
+<link rel = "stylesheet" type = "text/css" media = "all" href = "style.css" />
 <title>OSM Error</title>
 <script>
 function select (state) {
@@ -73,8 +81,15 @@ function select (state) {
 			oElements.elements [i].checked = state
 }
 </script>
+<!-- OpenLayers javascript library -->
+<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<!-- OpenStreetMap OpenLayers layers -->
+<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+<script src = "map.js"></script>
 </head>
-<body>
+<body onload = "init ()">
+
+<div style="width:49%; height:100%; float: left;" id="text">
 
 <h1>OSM Error</h1>
 
@@ -83,18 +98,12 @@ Enter a set of co-ordinates, tick the issues you would like highlighted, and cli
 </p>
 
 <form action = "error.php" method = "get" id = "frmError">
-<table>
-<tr>
-<td><input name = "top" value = "<?=$top;?>" class = "text" onchange = "CreateDownloadLink ()" id = "top"></td>
-</tr>
-<tr>
-<td><input name = "left" value = "<?=$left;?>" class = "text" onchange = "CreateDownloadLink ()" id = "left">
-<input name = "right" value = "<?=$right;?>" class = "text" onchange = "CreateDownloadLink ()" id = "right"></td>
-</tr>
-<tr>
-<td><input name = "bottom" value = "<?=$bottom;?>" class = "text" onchange = "CreateDownloadLink ()" id = "bottom"></td>
-</tr>
-</table>
+<p class = "mid">
+<input name = "lat_upper_left" value = "<?=$top;?>" class = "text" id = "lat_upper_left"><br>
+<input name = "lon_upper_left" value = "<?=$left;?>" class = "text" id = "lon_upper_left">
+<input name = "lon_bottom_right" value = "<?=$right;?>" class = "text" id = "lon_bottom_right"><br>
+<input name = "lat_bottom_right" value = "<?=$bottom;?>" class = "text" id = "lat_bottom_right">
+</p>
 
 <p>A waypoint will be created for each of the following that is found:</p>
 <p>
@@ -107,32 +116,20 @@ Enter a set of co-ordinates, tick the issues you would like highlighted, and cli
 <input type = "checkbox" name = "road" id = "road" <?=$road?>>&nbsp;<label for = "road">Any way tagged with &quot;highway=road&quot;</label><br>
 <input type = "checkbox" name = "pbref" id = "pbref" <?=$pbref?>>&nbsp;<label for = "ref">Postboxes without a &quot;ref&quot; tag</label><br>
 </p>
+<p>
 <small><a href = "#" onclick = "select (true)">select all</a> : <a href = "#" onclick = "select (false)">select none</a></small>
+</p>
+<p class = "mid">
+<input type = "submit" value = "Download">
+</p>
 
-<p><input type = "submit" value = "Download"></p>
-
-<h2>Notes</h2>
-<ul>
-<li>Each waypoint name has a number prefix, to ensure that the name is unique
-<script>
-document.write ('<li>The download link can be bookmarked, or used with tools like <a href = "http://www.gnu.org/software/wget/">wget</a>')
-</script>
-<li>Some GPS units may truncate the waypoint names
-<li>If an error is found on a way, the waypoint will be positioned at the first node in the way
-</ul>
-
-<h2>To Do</h2>
-<ul>
-<li>Add descriptions to waypoints
-<li><s>Allow user to choose which things to check for</s>
-<li><s>Store co-ordinates in cookies</s>
-<li>Use a map to choose area (in similar manner to the export tab on the main OSM web site)
-</ul>
-
-<p><hr>
-<a href = "../download/osm-error.tar.gz">Download source code</a> (released under an <a href = "http://www.opensource.org/licenses/mit-license.php">MIT Licence</a>)<br>
+<p>
+<a href = "notes.php">Notes, source code, etc</a><br>
 Back to <a href = "http://www.mappage.org/">mappage.org</a>
 </p>
+</div>
+
+<div style="width:49%; height:100%; float: right;" id="map"></div>
 
 </body>
 </html>

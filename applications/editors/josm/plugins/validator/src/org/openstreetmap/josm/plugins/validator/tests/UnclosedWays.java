@@ -72,7 +72,7 @@ public class UnclosedWays extends Test {
             return;
 
         test = w.get("natural");
-        if (test != null && !"coastline".equals(test))
+        if (test != null && !"coastline".equals(test) && !"cliff".equals(test))
             set(1101, marktr("natural type {0}"), test);
         test = w.get("landuse");
         if (test != null)

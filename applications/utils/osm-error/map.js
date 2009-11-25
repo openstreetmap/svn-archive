@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // If download area is larger than this, Download button will be disabled
-var MAX_SIZE = 0.25
+var MAX_SIZE = 0.25;
 
 var map;
 var update_lock = 0;
@@ -31,6 +31,22 @@ function getUpperLeftLat() { return document.getElementById('lat_upper_left'); }
 function getUpperLeftLon() { return document.getElementById('lon_upper_left'); }
 function getBottomRightLat() { return document.getElementById('lat_bottom_right'); }
 function getBottomRightLon() { return document.getElementById('lon_bottom_right'); }
+
+// Check size of download area
+function CheckDownloadArea (topleft, bottomright) {
+	fWidth = Math.abs (topleft.lon.toFixed(4) - bottomright.lon.toFixed(4))
+	fHeight = Math.abs (topleft.lat.toFixed(4) - bottomright.lat.toFixed(4))
+
+	oSubmit = document.getElementById('btnSubmit')
+	if (fWidth * fHeight > MAX_SIZE) {
+		oSubmit.disabled = true
+		oSubmit.value = "Area too large. Zoom in further"
+	}
+	else {
+		oSubmit.disabled = false
+		oSubmit.value = "Download"
+	}
+}
 
 /* update form fields on zoom action */
 function updateForm()
@@ -52,18 +68,7 @@ function updateForm()
     getBottomRightLon().value = bottomright.lon.toFixed(4);
 
 	// Check size of download area
-	fWidth = Math.abs (topleft.lon.toFixed(4) - bottomright.lon.toFixed(4))
-	fHeight = Math.abs (topleft.lat.toFixed(4) - bottomright.lat.toFixed(4))
-
-	oSubmit = document.getElementById('btnSubmit')
-	if (fWidth * fHeight > MAX_SIZE) {
-		oSubmit.disabled = true
-		oSubmit.value = "Area too large. Zoom in further"
-	}
-	else {
-		oSubmit.disabled = false
-		oSubmit.value = "Download"
-	}
+	CheckDownloadArea (topleft, bottomright)
 }
 
 /* update map on form field modification */
@@ -78,6 +83,15 @@ function updateMap()
     update_lock = 1;
     map.zoomToExtent(bounds);
     update_lock = 0;
+
+    var topleft = new OpenLayers.LonLat(bounds.left, bounds.top);
+    topleft = topleft.transform(epsg_projection, epsg_display_projection);
+
+    var bottomright = new OpenLayers.LonLat(bounds.right, bounds.bottom);
+    bottomright = bottomright.transform(epsg_projection, epsg_display_projection);
+
+	// Check size of download area
+	CheckDownloadArea (topleft, bottomright)
 }
 
 /* main initialisation function */

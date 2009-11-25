@@ -632,12 +632,12 @@
               <card type="SDHC" maxsize="" unit="GB"/>
           </slot>
         </memory>
-        <firmware version="3.20"/>
+        <firmware version="3.40"/>
         <picture url="Oregon_400t.bmp" identical="yes"/>
         <help url="http://wiki.openstreetmap.org/wiki/Garmin/Oregon_series"/>
         <Model>
           <PartNumber>006-B0795-00</PartNumber>
-          <SoftwareVersion>320</SoftwareVersion>
+          <SoftwareVersion>340</SoftwareVersion>
           <Description>Oregon 200</Description>
         </Model>
     </device>

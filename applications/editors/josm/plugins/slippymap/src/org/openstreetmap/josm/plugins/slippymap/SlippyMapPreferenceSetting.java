@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.util.Collection;
 
 import org.openstreetmap.gui.jmapviewer.*;
@@ -74,9 +76,36 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
         
         slippymapTab.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
 
+        tileSourceCombo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //Main.debug("updating spinner models because of tileSourceCombo");
+                updateSpinnerModels();
+            }
+        });
+
         this.loadSettings();
+        updateSpinnerModels();
     }
 
+
+    void updateSpinnerModel(JSpinner s, int min, int max)
+    {
+        int val = (Integer)s.getValue();
+        //Main.debug("updating spinner model val: " + val + " " + min + "->" + max);
+        val = Math.min(max, val);
+        val = Math.max(min, val);
+        SpinnerNumberModel model = new SpinnerNumberModel(val, min, max, 1);
+        s.setModel(model);
+    }
+
+    void updateSpinnerModels()
+    {
+        TileSource ts = (TileSource)this.tileSourceCombo.getSelectedItem();
+        int min = ts.getMinZoom();
+        int max = ts.getMaxZoom();
+        updateSpinnerModel(minZoomLvl, min, max);
+        updateSpinnerModel(maxZoomLvl, min, max);
+    }
 
     /**
      * <p>

@@ -37,6 +37,10 @@ public class SlippyMapPreferences
     public static TileSource getMapSource()
     {
         String name = Main.pref.get(PREFERENCE_TILE_SOURCE);
+        return getMapSource(name);
+    }
+    public static TileSource getMapSource(String name)
+    {
         List<TileSource> sources = SlippyMapPreferences.getAllMapSources();
         TileSource source = sources.get(0);
         if (name == null || "".equals(name)) {
@@ -184,6 +188,11 @@ public class SlippyMapPreferences
     		System.err.println("maxZoomLvl shouldnt be more than minZoomLvl! Setting to minZoomLvl.");
     		maxZoomLvl = SlippyMapPreferences.__getMinZoomLvl();
     	}
+        TileSource ts = getMapSource();
+        if (ts != null && ts.getMaxZoom() < SlippyMapPreferences.__getMinZoomLvl()) {
+    		System.err.println("decreasing maxZoomLvl to match new tile source");
+            maxZoomLvl = ts.getMaxZoom();
+        }
         return maxZoomLvl;
     }
 

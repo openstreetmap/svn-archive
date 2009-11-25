@@ -3,7 +3,9 @@ Code to get co-ordinates from map taken from http://maposmatic.org/ and
 copyright (c) 2009 Étienne Loks <etienne.loks_AT_peacefrogsDOTnet>
 Other code copyright (c) Russ Phillips <russ AT phillipsuk DOT org>
 
-This program is free software: you can redistribute it and/or modify
+This file is part of OSM Error.
+
+OSM Error is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
@@ -16,6 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+// If download area is larger than this, Download button will be disabled
+var MAX_SIZE = 0.25
 
 var map;
 var update_lock = 0;
@@ -45,6 +50,20 @@ function updateForm()
     getUpperLeftLon().value = topleft.lon.toFixed(4);
     getBottomRightLat().value = bottomright.lat.toFixed(4);
     getBottomRightLon().value = bottomright.lon.toFixed(4);
+
+	// Check size of download area
+	fWidth = Math.abs (topleft.lon.toFixed(4) - bottomright.lon.toFixed(4))
+	fHeight = Math.abs (topleft.lat.toFixed(4) - bottomright.lat.toFixed(4))
+
+	oSubmit = document.getElementById('btnSubmit')
+	if (fWidth * fHeight > MAX_SIZE) {
+		oSubmit.disabled = true
+		oSubmit.value = "Area too large. Zoom in further"
+	}
+	else {
+		oSubmit.disabled = false
+		oSubmit.value = "Download"
+	}
 }
 
 /* update map on form field modification */

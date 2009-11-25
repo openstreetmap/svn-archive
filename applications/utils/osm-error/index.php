@@ -3,7 +3,9 @@ Code to get co-ordinates from map taken from http://maposmatic.org/ and
 copyright (c) 2009 Étienne Loks <etienne.loks_AT_peacefrogsDOTnet>
 Other code copyright (c) Russ Phillips <russ AT phillipsuk DOT org>
 
-This program is free software: you can redistribute it and/or modify
+This file is part of OSM Error.
+
+OSM Error is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
@@ -69,11 +71,13 @@ if (isset ($_COOKIE ['pbref']))
 else
 	$pbref = "";
 ?>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
 <head>
-<link rel = "stylesheet" type = "text/css" media = "all" href = "style.css" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<link rel = "stylesheet" type = "text/css" media = "all" href = "style.css">
 <title>OSM Error</title>
-<script>
+<script type="text/javascript">
 function select (state) {
 	var oElements = document.getElementById ("frmError")
 	for (var i = 0; i < oElements.length; i++)
@@ -82,10 +86,10 @@ function select (state) {
 }
 </script>
 <!-- OpenLayers javascript library -->
-<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript"></script>
 <!-- OpenStreetMap OpenLayers layers -->
-<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
-<script src = "map.js"></script>
+<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js" type="text/javascript"></script>
+<script src = "map.js" type="text/javascript"></script>
 </head>
 <body onload = "init ()">
 
@@ -94,7 +98,7 @@ function select (state) {
 <h1>OSM Error</h1>
 
 <p>
-Enter a set of co-ordinates, tick the issues you would like highlighted, and click Download. This will download a GPX file with a waypoint for each error found. The GPX file can then be loaded onto a GPS, to make it easier to find the issues that need attention when you are next out mapping.<br>
+Download a GPX file with a waypoint for each error found. The GPX file can then be loaded onto a GPS, to make it easier to find the issues that need attention when you are next out mapping.<br>
 </p>
 
 <form action = "error.php" method = "get" id = "frmError">
@@ -120,11 +124,20 @@ Enter a set of co-ordinates, tick the issues you would like highlighted, and cli
 <small><a href = "#" onclick = "select (true)">select all</a> : <a href = "#" onclick = "select (false)">select none</a></small>
 </p>
 <p class = "mid">
-<input type = "submit" value = "Download">
+<input type = "submit" value = "Download" id = "btnSubmit">
 </p>
+</form>
+
+<h2>Notes</h2>
+<ul>
+<li>Each waypoint name has a number prefix, to ensure that the name is unique
+<li>The download URL can be bookmarked, or used with tools like <a href = "http://www.gnu.org/software/wget/">wget</a>
+<li>Some GPS units may truncate the waypoint names. The full name will be in the description
+<li>If an error is found on a way, the waypoint will be positioned at the first node in the way
+<li><a href = "../download/osm-error.tar.gz">Download source code</a> (released under <a href = "gpl.txt">GNU General Public License</a>)
+</ul>
 
 <p>
-<a href = "notes.php">Notes, source code, etc</a><br>
 Back to <a href = "http://www.mappage.org/">mappage.org</a>
 </p>
 </div>

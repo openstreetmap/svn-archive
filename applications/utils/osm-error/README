@@ -1,3 +1,6 @@
-OSM Error is a web application that generates a GPX waypoint file showing the location of likely errors/missing information in the OSM dataset.
+OSM Error is a web application that generates a GPX waypoint file showing
+the location of likely errors/missing information in the OSM dataset.
 
 Rename inc_config_dist.php to inc_config.php before running OSM-Error
+
+OSM Error is released under the GNU GPL. See the file gpl.txt for full details

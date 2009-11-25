@@ -4,7 +4,9 @@ Code to get co-ordinates from map taken from http://maposmatic.org/ and
 copyright (c) 2009 Étienne Loks <etienne.loks_AT_peacefrogsDOTnet>
 Other code copyright (c) Russ Phillips <russ AT phillipsuk DOT org>
 
-This program is free software: you can redistribute it and/or modify
+This file is part of OSM Error.
+
+OSM Error is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
@@ -55,7 +57,7 @@ setcookie ("pbref", $pbref, $iExpireTime);
 // Get OSM data
 $xml = simplexml_load_file ($osm_api_base . "?bbox=$left,$bottom,$right,$top");
 if ($xml === False)
-	die ("There was a problem getting data from OSM");
+	die ("There was a problem getting data from OSM. Go back and try a smaller area.");
 
 // Write header to download XML
 header("Content-Type: application/gpx+xml");
@@ -123,7 +125,10 @@ function NoTagCheck ($node, $tag, $k, $v, $waynode) {
 		}
 		else
 			$sOut = "<wpt lat='" . $node ["lat"] . "' lon='" . $node ["lon"] . "'>\n";
-		$sOut .= "<name>" . $iCount++ . " $k - {$tag ["v"]}</name>\n</wpt>\n";
+		$sErrText =  $iCount++ . " $k - " . $tag ["v"];
+		$sOut .= "<name>$sErrText</name>\n";
+		$sOut .= "<desc>$sErrText</desc>\n";
+		$sOut .= "</wpt>\n";
 		echo $sOut;
 	}
 }
@@ -146,9 +151,12 @@ function NodeCheck ($node, $tag, $k, $v, $checkfor) {
 		if (TagCheck ($node, $checkfor) === False) {
 			$sOut = "<wpt lat='" . $node ["lat"] . "' lon='" . $node ["lon"] . "'>\n";
 			if ($v == "*")
-				$sOut .= "<name>" . $iCount++ . " $k - $checkfor</name>\n</wpt>\n";
+				$sErrText = $iCount++ . " $k - $checkfor";
 			else
-				$sOut .= "<name>" . $iCount++ . " $v - $checkfor</name>\n</wpt>\n";
+				$sErrText = $iCount++ . " $v - $checkfor";
+			$sOut .= "<name>$sErrText</name>\n";
+			$sOut .= "<desc>$sErrText</desc>\n";
+			$sOut .= "</wpt>\n";
 			echo $sOut;
 		}
 }
@@ -174,9 +182,12 @@ function WayCheck ($way, $tag, $k, $v, $checkfor) {
 			GetWayLatLon ($way, $lat, $lon);
 			$sOut = "<wpt lat='$lat' lon='$lon'>\n";
 			if ($v == "*")
-				$sOut .= "<name>" . $iCount++ . " $k - $checkfor</name>\n</wpt>\n";
+				$sErrText = $iCount++ . " $k - $checkfor";
 			else
-				$sOut .= "<name>" . $iCount++ . " $v - $checkfor</name>\n</wpt>\n";
+				$sErrText = $iCount++ . " $v - $checkfor";
+			$sOut .= "<name>$sErrText</name>\n";
+			$sOut .= "<desc>$sErrText</desc>\n";
+			$sOut .= "</wpt>\n";
 			echo $sOut;
 		}
 }

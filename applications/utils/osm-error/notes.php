@@ -3,7 +3,9 @@ Code to get co-ordinates from map taken from http://maposmatic.org/ and
 copyright (c) 2009 Étienne Loks <etienne.loks_AT_peacefrogsDOTnet>
 Other code copyright (c) Russ Phillips <russ AT phillipsuk DOT org>
 
-This program is free software: you can redistribute it and/or modify
+This file is part of OSM Error.
+
+OSM Error is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
@@ -36,15 +38,17 @@ document.write ('<li>The download link can be bookmarked, or used with tools lik
 
 <h2>To Do</h2>
 <ul>
-<li>Add descriptions to waypoints
+<li><s>Add descriptions to waypoints</s>
 <li><s>Allow user to choose which things to check for</s>
 <li><s>Store co-ordinates in cookies</s>
 <li><s>Use a map to choose area (in similar manner to the export tab on the main OSM web site)</s>
+<li><s>Only enable download button if area is small enough for OSM API</s>
 </ul>
 
 <h2>Source Code</h2>
 <p>
-<a href = "../download/osm-error.tar.gz">Download source code</a> (released under an <a href = "http://www.opensource.org/licenses/mit-license.php">MIT Licence</a>)
+<a href = "../download/osm-error.tar.gz">Download source code</a>
+(released under <a href = "gpl.txt">GNU General Public License</a>)
 </p>
 
 <p>

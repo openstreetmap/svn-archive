@@ -27,12 +27,7 @@ public class RouteDefinition {
 	}
 			
 	public boolean matches(OsmPrimitive primitive) {
-		try {
-			return match.match(primitive);
-		} catch (ParseError e) {
-			e.printStackTrace();
-			return false;
-		}
+		return match.match(primitive);
 	}
 	
 	public Color getColor() {

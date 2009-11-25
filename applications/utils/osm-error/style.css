@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 body {
 	font-family: sans-serif;
+	font-size: 10pt;
 }
 
 input.text {

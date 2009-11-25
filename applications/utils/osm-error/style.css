@@ -1,4 +1,3 @@
-<?php
 /*
 Code to get co-ordinates from map taken from http://maposmatic.org/ and
 copyright (c) 2009 Étienne Loks <etienne.loks_AT_peacefrogsDOTnet>
@@ -18,18 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Configuration file
+body {
+	font-family: sans-serif;
+}
 
-// Base API URL to get map via bounding box. Do not include query string
-$osm_api_base = "http://api.openstreetmap.org/api/0.6/map";
+input.text {
+	font-family: sans-serif;
+	width: 12ex;
+}
 
-// Bounding box
-$left = -1.2288;
-$bottom = 53.4151;
-$right = -1.188;
-$top = 53.4346;
-
-// Debug?
-$DEBUG = False;
-$LOG_FILE = "/dev/null";
-?>
+p.mid {
+	text-align: center;
+}

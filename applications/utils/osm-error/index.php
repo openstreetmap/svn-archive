@@ -71,13 +71,12 @@ if (isset ($_COOKIE ['pbref']))
 else
 	$pbref = "";
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<meta http-equiv = "Content-Type" content = "text/html;charset=utf-8">
 <link rel = "stylesheet" type = "text/css" media = "all" href = "style.css">
 <title>OSM Error</title>
-<script type="text/javascript">
+<script type = "text/javascript">
 function select (state) {
 	var oElements = document.getElementById ("frmError")
 	for (var i = 0; i < oElements.length; i++)
@@ -86,14 +85,14 @@ function select (state) {
 }
 </script>
 <!-- OpenLayers javascript library -->
-<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript"></script>
+<script src = "http://www.openlayers.org/api/OpenLayers.js" type = "text/javascript"></script>
 <!-- OpenStreetMap OpenLayers layers -->
-<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js" type="text/javascript"></script>
-<script src = "map.js" type="text/javascript"></script>
+<script src = "http://www.openstreetmap.org/openlayers/OpenStreetMap.js" type = "text/javascript"></script>
+<script src = "map.js" type = "text/javascript"></script>
 </head>
 <body onload = "init ()">
 
-<div style="width:49%; height:100%; float: left;" id="text">
+<div style = "width: 49%; height: 100%; float: left;" id = "text">
 
 <h1>OSM Error</h1>
 
@@ -103,10 +102,10 @@ Download a GPX file with a waypoint for each error found. The GPX file can then 
 
 <form action = "error.php" method = "get" id = "frmError">
 <p class = "mid">
-<input name = "lat_upper_left" value = "<?=$top;?>" class = "text" id = "lat_upper_left"><br>
-<input name = "lon_upper_left" value = "<?=$left;?>" class = "text" id = "lon_upper_left">
-<input name = "lon_bottom_right" value = "<?=$right;?>" class = "text" id = "lon_bottom_right"><br>
-<input name = "lat_bottom_right" value = "<?=$bottom;?>" class = "text" id = "lat_bottom_right">
+<input name = "lat_upper_left" value = "<?=$top;?>" class = "text" id = "lat_upper_left" onchange =" updateMap()"><br>
+<input name = "lon_upper_left" value = "<?=$left;?>" class = "text" id = "lon_upper_left" onchange =" updateMap()">
+<input name = "lon_bottom_right" value = "<?=$right;?>" class = "text" id = "lon_bottom_right" onchange =" updateMap()"><br>
+<input name = "lat_bottom_right" value = "<?=$bottom;?>" class = "text" id = "lat_bottom_right" onchange =" updateMap()">
 </p>
 
 <p>A waypoint will be created for each of the following that is found:</p>
@@ -142,7 +141,7 @@ Back to <a href = "http://www.mappage.org/">mappage.org</a>
 </p>
 </div>
 
-<div style="width:49%; height:100%; float: right;" id="map"></div>
+<div style = "width: 49%; height: 100%; float: right;" id = "map"></div>
 
 </body>
 </html>

@@ -106,6 +106,7 @@ public class UnconnectedWays extends Test
                     continue;
                 Boolean isexit = OsmUtils.getOsmBoolean(en.get("noexit"));
                 if("turning_circle".equals(en.get("highway")) ||
+                   "bus_stop".equals(en.get("highway")) ||
                   (isexit != null && isexit) || en.get("barrier") != null)
                     continue;
                 // There's a small false-positive here.  Imagine an intersection

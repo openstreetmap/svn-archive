@@ -38,13 +38,24 @@ function CheckDownloadArea (topleft, bottomright) {
 	fHeight = Math.abs (topleft.lat.toFixed(4) - bottomright.lat.toFixed(4))
 
 	oSubmit = document.getElementById('btnSubmit')
+	//Get URL, without "index.php"
+	var sURL = new String (document.URL)
+	sURL.replace ("index.php", "")
+
 	if (fWidth * fHeight > MAX_SIZE) {
 		oSubmit.disabled = true
 		oSubmit.value = "Area too large. Zoom in further"
+		document.getElementById('spLink').innerHTML = ""
 	}
 	else {
 		oSubmit.disabled = false
 		oSubmit.value = "Download"
+		sURL += "error.php?"
+		sURL += "lon_upper_left=" + topleft.lon.toFixed(4) + "&amp;"
+		sURL += "lat_bottom_right=" + bottomright.lat.toFixed(4) + "&amp;"
+		sURL += "lon_bottom_right=" + bottomright.lon.toFixed(4) + "&amp;"
+		sURL += "lat_upper_left=" + topleft.lat.toFixed(4)
+		document.getElementById('spLink').innerHTML = "<p><a href = '" + sURL + "'>Download link</a></p>"
 	}
 }
 

@@ -1,0 +1,5 @@
+[Autorun]
+Open=gosmin.exe
+Action=gosmin - OSM Map on Garmin
+Icon=gosmin.exe
+Label=Gosmin

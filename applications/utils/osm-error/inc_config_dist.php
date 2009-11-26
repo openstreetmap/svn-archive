@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Base API URL to get map via bounding box. Do not include query string
 $osm_api_base = "http://api.openstreetmap.org/api/0.6/map";
 
-// Bounding box
+// Initial bounding box
 $left = -1.2288;
 $bottom = 53.4151;
 $right = -1.188;

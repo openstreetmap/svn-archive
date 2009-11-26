@@ -124,13 +124,14 @@ Download a GPX file with a waypoint for each error found. The GPX file can then 
 </p>
 <p class = "mid">
 <input type = "submit" value = "Download" id = "btnSubmit">
+<span id = "spLink"></span>
 </p>
 </form>
 
 <h2>Notes</h2>
 <ul>
 <li>Each waypoint name has a number prefix, to ensure that the name is unique
-<li>The download URL can be bookmarked, or used with tools like <a href = "http://www.gnu.org/software/wget/">wget</a>
+<li>The download link can be bookmarked, or used with tools like <a href = "http://www.gnu.org/software/wget/">wget</a>
 <li>Some GPS units may truncate the waypoint names. The full name will be in the description
 <li>If an error is found on a way, the waypoint will be positioned at the first node in the way
 <li><a href = "../download/osm-error.tar.gz">Download source code</a> (released under <a href = "gpl.txt">GNU General Public License</a>)
@@ -141,7 +142,7 @@ Back to <a href = "http://www.mappage.org/">mappage.org</a>
 </p>
 </div>
 
-<div style = "width: 49%; height: 100%; float: right;" id = "map"></div>
+<div style = "width: 49%; height: 50em; border: thin solid black; float: right;" id = "map"></div>
 
 </body>
 </html>

@@ -33,7 +33,7 @@ if ($query->param('tweet') and
         ($query->param('clientver')
          ? (clientver  => $ver)
          : ()),
-        clienturl  => 'http://openstreetap.org/edit',
+        clienturl  => 'http://openstreetmap.org/edit',
 
         # identi.ca or twitter?
         ($query->param('identica')

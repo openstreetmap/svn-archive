@@ -91,7 +91,6 @@ public class LakewalkerPreferences implements PreferenceSetting {
         epsilonConfig.setValue(Main.pref.getDouble(PREF_EPSILON, 0.0003));
         landsatResConfig.setValue(Main.pref.getInteger(PREF_LANDSAT_RES, 4000));
         landsatSizeConfig.setValue(Main.pref.getInteger(PREF_LANDSAT_SIZE, 2000));
-System.out.println("set");
         eastOffsetConfig.setValue(Main.pref.getDouble(PREF_EAST_OFFSET, 0.0));
         northOffsetConfig.setValue(Main.pref.getDouble(PREF_NORTH_OFFSET, 0.0));
         startDirConfig.setValue(Main.pref.get(PREF_START_DIR, "east"));

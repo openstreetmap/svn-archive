@@ -13,7 +13,7 @@
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, copies are available 
+ * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
 package org.openstreetmap.josm.plugins.lakewalker;
@@ -23,38 +23,41 @@ package org.openstreetmap.josm.plugins.lakewalker;
  */
 public class DoubleConfigurer extends StringConfigurer {
 
-  public DoubleConfigurer() {
-    super();
-  }
-
-  public DoubleConfigurer(String key, String name) {
-    this(key, name, new Double(0));
-  }
-
-  public DoubleConfigurer(String key, String name, Double val) {
-    super(key, name, val == null ? null : val.toString());
-  }
-
-  public void setValue(String s) {
-    Double d = null;
-    try {
-      d = Double.valueOf(s);
+    public DoubleConfigurer() {
+        super();
     }
-    catch (NumberFormatException e) {
-      d = null;
-    }
-    if (d != null) {
-      setValue(d);
-      if (!noUpdate && nameField != null) {
-        nameField.setText(d.toString());
-      }
-    }
-  }
 
-  public String getValueString() {
-    if (value == null || value.equals("")) {
-      return null;
+    public DoubleConfigurer(String key, String name) {
+        this(key, name, new Double(0));
     }
-    return value.toString();
-  }
+
+    public DoubleConfigurer(String key, String name, Double val) {
+        super(key, name, val == null ? null : val.toString());
+    }
+
+    public void setValue(String s) {
+        Double d = null;
+        try {
+            d = Double.valueOf(s);
+        }
+        catch (NumberFormatException e) {
+            d = null;
+        }
+        if (d != null)
+            setValue(d);
+    }
+
+    public void setValue(Object o) {
+        if (!noUpdate && nameField != null && o != null) {
+            nameField.setText(o.toString());
+        }
+        super.setValue(o);
+    }
+
+    public String getValueString() {
+        if (value == null || value.equals("")) {
+            return null;
+        }
+        return value.toString();
+    }
 }

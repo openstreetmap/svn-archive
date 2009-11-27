@@ -38,6 +38,19 @@ public class IntConfigurer extends StringConfigurer {
     }
   }
 
+  public void setValue(String s) {
+    Integer i = null;
+    try {
+      i = Integer.valueOf(s);
+    }
+    catch (NumberFormatException e) {
+      i = null;
+    }
+    if (i != null) {
+      setValue(i);
+    }
+  }
+  
   public int getIntValue(int defaultValue) {
     if (getValue() instanceof Integer) {
       return ((Integer)getValue()).intValue();

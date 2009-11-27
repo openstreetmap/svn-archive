@@ -128,7 +128,7 @@
 		}
 	}
 
-	function zoomTo(newscale,newx,newy,ww) {
+	function zoomTo(newscale,newx,newy,ww,wwforce) {
 		var oldwidth=linewidth;
 		blankTileQueue();
 		changeScaleTo(newscale);
@@ -136,7 +136,7 @@
 		updateLinks();
 		redrawBackground();
 		resizePOIs();
-		if (ww) { whichWays(); }
+		if (ww) { whichWays(wwforce); }
 		else if (_root.waycount>500) { purgeWays(); }
 		redrawWays(oldwidth==linewidth);
 		redrawRelations();

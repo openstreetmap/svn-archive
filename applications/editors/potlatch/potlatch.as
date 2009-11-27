@@ -133,7 +133,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="1.3";			// current version
+	var signature="1.3a";			// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k");
 	var lastgroup='road';			// last preset group used
@@ -144,6 +144,8 @@
     var changecomment=null;         // comment on current changeset
 	var waystodelete=new Object();	// hash of ways to delete (offline)
 	var poistodelete=new Object();	// hash of POIs to delete (offline)
+	var waystoload=new Array();		// array of ways to load (if dialogue presented)
+	var relstoload=new Array();		// array of relations to load (if dialogue presented)
 
 	var waynames=new Array("highway","barrier","waterway","railway","man_made","leisure","amenity","military","shop","tourism","historic","landuse","natural","sport","cycleway","aeroway","boundary");
 	var nodenames=new Array("highway","barrier","waterway","railway","man_made","leisure","amenity","military","shop","tourism","historic","landuse","natural","sport");
@@ -168,6 +170,9 @@
 	if (preferences.data.twitterid    ==undefined) { preferences.data.twitterid    =''; }	// Twitter ID, password, post?
 	if (preferences.data.twitterpwd   ==undefined) { preferences.data.twitterpwd   =''; }	//  |
 	if (preferences.data.twitter      ==undefined) { preferences.data.twitter	   =false;}	//  |
+	if (preferences.data.twitterclient==undefined) { preferences.data.twitterclient=1; }	// Twitter or Identica
+	if (preferences.data.limitways    ==undefined) { preferences.data.limitways	   =true;}	// prompt if too many ways requested?
+	if (preferences.data.livewarned   ==undefined) { preferences.data.livewarned   =false;}	// does the user know what live mode is?
 	if (preferences.data.dimbackground==undefined) { preferences.data.dimbackground=true; }	// dim background?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	if (preferences.data.thinlines    ==undefined) { preferences.data.thinlines    =false;}	// always use thin lines?
@@ -1022,7 +1027,7 @@
 		_root.twitterid =preferences.data.twitterid;	//   |
 		_root.twitterpwd=preferences.data.twitterpwd;	//   |
 		_root.windows.attachMovie("modal","options",++windowdepth);
-		_root.windows.options.init(430,225,new Array('Ok'),function() {
+		_root.windows.options.init(430,245,new Array('Ok'),function() {
 			preferences.data.launcher  =_root.launcher; 
 			preferences.data.photokml  =_root.photokml; 
 			preferences.data.twitterid =_root.twitterid;
@@ -1086,12 +1091,22 @@
 		box.attachMovie("checkbox","warnings",3);
 		box.warnings.init(220,125,iText('option_warnings'),preferences.data.advice,function(n) { preferences.data.advice=n; });
 
+		box.attachMovie("checkbox","limitways",13);
+		box.limitways.init(220,145,iText('option_limitways'),preferences.data.limitways,function(n) { preferences.data.limitways=n; });
+
 		// External link and photo
 		
 		createInputPrompt(box,'external',70,'option_external',	'_root.launcher',145);
 		createInputPrompt(box,'photo'	,72,'option_photo',		'_root.photokml',125);
 		createInputPrompt(box,'tw_id'	,74,'option_twitterid',	'_root.twitterid',175);
 		createInputPrompt(box,'tw_pwd'	,76,'option_twitterpwd','_root.twitterpwd',195);
+
+		box.attachMovie("radio","twoption",14);
+		box.twoption.addButton(13,220,"Twitter");
+		box.twoption.addButton(90,220,"identi.ca");
+		box.twoption.select(preferences.data.twitterclient);
+		box.twoption.doOnChange=function(n) { preferences.data.twitterclient=n; };
+
 		box.tw_pwdi.password=true;
 	}
 	

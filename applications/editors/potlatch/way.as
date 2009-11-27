@@ -871,6 +871,7 @@
 		var i,z;
 		var conflict=false;
 		if (this.historic || otherway.historic) { return; }
+		if (otherway==this) { return; }
 
 		var mergepoint=this.path.length;
 		if (topos==0) {
@@ -1437,12 +1438,13 @@
 
 	function whichWays(force) {
 		_root.lastwhichways=new Date();
+		var within=(_root.edge_l>=_root.bigedge_l &&
+					_root.edge_r<=_root.bigedge_r &&
+					_root.edge_b>=_root.bigedge_b &&
+					_root.edge_t<=_root.bigedge_t);
 		if (_root.waycount>500) { purgeWays(); }
 		if (_root.poicount>500) { purgePOIs(); }
-		if (_root.edge_l>=_root.bigedge_l &&
-			_root.edge_r<=_root.bigedge_r &&
-			_root.edge_b>=_root.bigedge_b &&
-			_root.edge_t<=_root.bigedge_t && (!force)) {
+		if (within && !force) {
 			// we have already loaded this area, so ignore
 		} else {
 			whichresponder=function() {};
@@ -1454,16 +1456,6 @@
 				var relationlist=result[2];
 				var s;
 
-				for (i in waylist) {										// ways
-					way=waylist[i][0];										//  |
-					if ((!_root.map.ways[way] || _root.map.ways[way].version!=waylist[i][1]) && !_root.waystodelete[way]) {
-						_root.map.ways.attachMovie("way",way,++waydepth);	//  |
-						_root.map.ways[way].load();							//  |
-						_root.waycount+=1;									//  |
-						_root.waysrequested+=1;								//  |
-					}
-				}
-				
 				for (i in pointlist) {										// POIs
 					point=pointlist[i][0];									//  |
 					if ((!_root.map.pois[point] || _root.map.pois[point].version!=pointlist[i][4]) && !_root.poistodelete[point]) {
@@ -1482,21 +1474,72 @@
 					}
 				}
 
+				for (i in waylist) {										// ways
+					way=waylist[i][0];										//  |
+					if ((!_root.map.ways[way] || _root.map.ways[way].version!=waylist[i][1]) && !_root.waystodelete[way]) {
+						_root.waystoload.push(way);
+					}
+				}
+				
 				for (i in relationlist) {
 					rel = relationlist[i][0];
                     if (!_root.map.relations[rel] || _root.map.relations[rel].version!=relationlist[i][1]) {
-						_root.map.relations.attachMovie("relation",rel,++reldepth);
-						_root.map.relations[rel].load();
-						_root.relcount+=1;
-						_root.relsrequested+=1;
+						_root.relstoload.push(rel);
 					}
                 }
+
+				if (preferences.data.limitways && _root.relstoload.length+_root.waystoload.length>1200) {
+					_root.windows.attachMovie("modal","confirm",++windowdepth);
+					_root.windows.confirm.init(275,100,new Array(iText('no'),iText('yes')),
+						function(choice) {
+							if (choice==iText('yes')) { 
+								_root.waystoload=[];
+								_root.relstoload=[];
+								zoomTo(Math.min(_root.scale+2,_root.maxscale),_root.map._x*2-xradius,_root.map._y*2-yradius,true,true);
+							} else {
+								loadItems();
+							}
+						});
+					_root.windows.confirm.box.createTextField("prompt",2,7,9,250,120);
+					writeText(_root.windows.confirm.box.prompt,iText('prompt_manyways'));
+				} else {
+					loadItems();
+				}
+
 			};
 			remote_read.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
-			_root.bigedge_l=_root.edge_l; _root.bigedge_r=_root.edge_r;
-			_root.bigedge_b=_root.edge_b; _root.bigedge_t=_root.edge_t;
 			_root.whichrequested+=1;
 		}
+	}
+
+	// loadWay/loadRelation
+
+	function loadItems() {
+		while (_root.waystoload.length) { loadWay(_root.waystoload.pop()); }
+		while (_root.relstoload.length) { loadRelation(_root.relstoload.pop()); }
+		if (_root.edge_l<_root.bigedge_l ||
+			_root.edge_r>_root.bigedge_r ||
+			_root.edge_t>_root.bigedge_t ||
+			_root.edge_b<_root.bigedge_b) { setBigEdges(); }
+	}
+
+	function loadWay(way) {
+		_root.map.ways.attachMovie("way",way,++waydepth);
+		_root.map.ways[way].load();
+		_root.waycount+=1;
+		_root.waysrequested+=1;
+	}
+	
+	function loadRelation(rel) {
+		_root.map.relations.attachMovie("relation",rel,++reldepth);
+		_root.map.relations[rel].load();
+		_root.relcount+=1;
+		_root.relsrequested+=1;
+	}
+	
+	function setBigEdges() {
+		_root.bigedge_l=_root.edge_l; _root.bigedge_r=_root.edge_r;
+		_root.bigedge_b=_root.edge_b; _root.bigedge_t=_root.edge_t;
 	}
 
 	// purgeWays - remove any clean ways outside current view
@@ -1516,8 +1559,7 @@
 				_root.waycount-=1;
 			}
 		}
-		_root.bigedge_l=_root.edge_l; _root.bigedge_r=_root.edge_r;
-		_root.bigedge_b=_root.edge_b; _root.bigedge_t=_root.edge_t;
+		setBigEdges();
 	}
 
 	function selectWay(id) {

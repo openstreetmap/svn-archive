@@ -146,16 +146,38 @@
 		_root.windows.splashscreen.remove();
 		if (_root.panel.properties.proptype=='') { drawIconPanel(); }
 		if (_root.dogpx) { gpxToWays(); }
+		if (live && !preferences.data.livewarned) {
+			_root.windows.attachMovie("modal","confirm",++windowdepth);
+			_root.windows.confirm.init(275,140,new Array(iText('no'),iText('yes')),
+				function(choice) {
+					preferences.data.livewarned=true;
+					preferences.flush();
+					if (choice==iText('yes')) { beginEditing(true); }
+										 else { beginEditing(false); }
+				});
+			_root.windows.confirm.box.createTextField("title",12,7,7,400-14,20);
+			with (_root.windows.confirm.box.title) {
+				type='dynamic'; text="Warning!"; setTextFormat(boldText);
+			}
+			_root.windows.confirm.box.createTextField("prompt",13,7,29,250,140);
+			writeText(_root.windows.confirm.box.prompt,iText('prompt_live'));
+		} else {
+			beginEditing(live);
+		}
+	}
+
+	function beginEditing(live) {
 		if (live) {
-		    setEditingStatus(iText('editinglive'),0xFF0000);
-            pleaseWait(iText('openchangeset'));
-	        _root.changecomment=''; startChangeset(true);
-		} else { 
-		    _root.sandbox=true;
+			setEditingStatus(iText('editinglive'),0xFF0000);
+			pleaseWait(iText('openchangeset'));
+			_root.changecomment=''; startChangeset(true);
+		} else {
+			_root.sandbox=true;
 			setEditingStatus(iText('editingoffline'),0x008800);
 			_root.panel.advanced.disableOption(5);
 		}
 	}
+
 
 	// -----------------------------------------------------------------------
 	// Main start function

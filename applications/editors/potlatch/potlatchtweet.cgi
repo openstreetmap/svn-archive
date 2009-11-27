@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 use strict;
-use Net::Twitter;
+use Net::Twitter::Lite;
 use CGI;
 use URI;
 
@@ -14,8 +14,8 @@ my $errerr = '';
 my $submitted = 0;
 
 if ($query->param('tweet') and
-    $query->param('lat') and
-    $query->param('long') and
+    defined ($query->param('lat')) and
+    defined ($query->param('long')) and
     $query->param('twitter_id') and
     $query->param('twitter_pwd')) {
     $submitted = 1;
@@ -24,7 +24,7 @@ if ($query->param('tweet') and
     my $ver = $query->param('clientver');
     my $ua = $ver ? "$app/$ver" : $app;
 
-    my $twat = Net::Twitter->new(
+    my $twat = Net::Twitter::Lite->new(
         traits => ['API::REST'],
         username => $query->param('twitter_id'),
         password => $query->param('twitter_pwd'),
@@ -41,7 +41,7 @@ if ($query->param('tweet') and
          : ()),
 
         # identica takes this as-is, twitter says "from web" because
-        # it isn't registering source paramaters anymore, we'd have to
+        # it isn't registering source parameters anymore, we'd have to
         # use OAuth to play nice with it.
         source => $app,
     );

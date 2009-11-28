@@ -38,6 +38,9 @@
  </target>
 
  <target name="dist" depends="compile,revision">
+  <copy todir="${plugin.build.dir}/images">
+     <fileset dir="images"/>
+  </copy>
   <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
    <manifest>
     <attribute name="Author" value="Bilbo"/>

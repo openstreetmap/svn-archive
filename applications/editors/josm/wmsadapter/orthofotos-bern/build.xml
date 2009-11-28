@@ -10,7 +10,7 @@
 	<property name="build.dir.classes" value="${build.dir}/classes"/>
 	<property name="build.dir.lib" value="${build.dir}/lib"/>
 	
-	<property name="build.number" value="25"/>
+	<property name="build.number" value="26"/>
 
 	<path id="javax.servlet.classpath">
 		  <fileset dir="${library.dir}" includes="*.jar" />

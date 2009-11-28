@@ -35,71 +35,65 @@ public class MenuActionNewLocation extends JosmAction {
     }
 
     public WMSLayer addNewLayer(ArrayList<WMSLayer> existingLayers) {
-        /*if (Main.map == null) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("Open a layer first (GPX, OSM, cache)"));
+        String location = "";
+        String codeDepartement = "";
+        String codeCommune = "";
+        boolean resetCookie = false;
+        JLabel labelSectionNewLocation = new JLabel(tr("Add a new layer"));
+        JPanel p = new JPanel(new GridBagLayout());
+        JLabel labelLocation = new JLabel(tr("Location"));
+        final JTextField inputTown = new JTextField( Main.pref.get("cadastrewms.location") );
+        inputTown.setToolTipText(tr("<html>Enter the town,village or city name.<br>"
+                + "Use the syntax and punctuation known by www.cadastre.gouv.fr .</html>"));
+
+        p.add(labelSectionNewLocation, GBC.eol());
+        p.add(labelLocation, GBC.std().insets(10, 0, 0, 0));
+        p.add(inputTown, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 5));
+        JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null) {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void selectInitialValue() {
+                inputTown.requestFocusInWindow();
+                inputTown.selectAll();
+            }
+        };
+        pane.createDialog(Main.parent, tr("Add new layer")).setVisible(true);
+        if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
             return null;
-        } else {*/
-            String location = "";
-            String codeDepartement = "";
-            String codeCommune = "";
-            boolean resetCookie = false;
-            JLabel labelSectionNewLocation = new JLabel(tr("Add a new layer"));
-            JPanel p = new JPanel(new GridBagLayout());
-            JLabel labelLocation = new JLabel(tr("Location"));
-            final JTextField inputTown = new JTextField( Main.pref.get("cadastrewms.location") );
-            inputTown.setToolTipText(tr("<html>Enter the town,village or city name.<br>"
-                    + "Use the syntax and punctuation known by www.cadastre.gouv.fr .</html>"));
 
-            p.add(labelSectionNewLocation, GBC.eol());
-            p.add(labelLocation, GBC.std().insets(10, 0, 0, 0));
-            p.add(inputTown, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 5));
-            JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null) {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void selectInitialValue() {
-                    inputTown.requestFocusInWindow();
-                    inputTown.selectAll();
-                }
-            };
-            pane.createDialog(Main.parent, tr("Add new layer")).setVisible(true);
-            if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
-                return null;
-
-            WMSLayer wmsLayer = null;
-            if (!inputTown.getText().equals("")) {
-                location = inputTown.getText().toUpperCase();
-                resetCookie = true;
-                Main.pref.put("cadastrewms.location", location);
-                Main.pref.put("cadastrewms.codeCommune", codeCommune);
-                if (Main.map != null) {
-                    for (Layer l : Main.map.mapView.getAllLayers()) {
-                        if (l instanceof WMSLayer && l.getName().equalsIgnoreCase(location + codeDepartement)) {
-                            return null;
-                        }
+        WMSLayer wmsLayer = null;
+        if (!inputTown.getText().equals("")) {
+            location = inputTown.getText().toUpperCase();
+            resetCookie = true;
+            Main.pref.put("cadastrewms.location", location);
+            Main.pref.put("cadastrewms.codeCommune", codeCommune);
+            if (Main.map != null) {
+                for (Layer l : Main.map.mapView.getAllLayers()) {
+                    if (l instanceof WMSLayer && l.getName().equalsIgnoreCase(location + codeDepartement)) {
+                        return null;
                     }
                 }
-                // add the layer if it doesn't exist
-                int zone = -1;
-                if (Main.proj instanceof LambertCC9Zones)
-                    zone = ((LambertCC9Zones)Main.proj).getLayoutZone();
-                else if (Main.proj instanceof Lambert)
-                    zone = ((Lambert)Main.proj).getLayoutZone();
-                else if (Main.proj instanceof UTM_20N_France_DOM)
-                    zone = ((UTM_20N_France_DOM)Main.proj).getCurrentGeodesic();
-                wmsLayer = new WMSLayer(location, codeCommune, zone);
-                Main.main.addLayer(wmsLayer);
-                System.out.println("Add new layer with Location:" + inputTown.getText());
-            } else if (existingLayers != null && existingLayers.size() > 0 && Main.map.mapView.getActiveLayer() instanceof WMSLayer) {
-                wmsLayer = (WMSLayer)Main.map.mapView.getActiveLayer();
-                resetCookie = true;
             }
+            // add the layer if it doesn't exist
+            int zone = -1;
+            if (Main.proj instanceof LambertCC9Zones)
+                zone = ((LambertCC9Zones)Main.proj).getLayoutZone();
+            else if (Main.proj instanceof Lambert)
+                zone = ((Lambert)Main.proj).getLayoutZone();
+            else if (Main.proj instanceof UTM_20N_France_DOM)
+                zone = ((UTM_20N_France_DOM)Main.proj).getCurrentGeodesic();
+            wmsLayer = new WMSLayer(location, codeCommune, zone);
+            Main.main.addLayer(wmsLayer);
+            System.out.println("Add new layer with Location:" + inputTown.getText());
+        } else if (existingLayers != null && existingLayers.size() > 0 && Main.map.mapView.getActiveLayer() instanceof WMSLayer) {
+            wmsLayer = (WMSLayer)Main.map.mapView.getActiveLayer();
+            resetCookie = true;
+        }
 
-            if (resetCookie)
-                CadastrePlugin.cadastreGrabber.getWmsInterface().resetCookieIfNewLayer(wmsLayer.getName());
-            return wmsLayer;
-        //}
+        if (resetCookie)
+            CadastrePlugin.cadastreGrabber.getWmsInterface().resetCookieIfNewLayer(wmsLayer.getName());
+        return wmsLayer;
     }
 
 }

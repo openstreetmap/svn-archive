@@ -16,10 +16,27 @@ mapfile="/var/www/wms4osm/osmwms.map"
 
 josmdefaults={'SERVICE': 'WMS', 'VERSION': '1.1.1', 'FORMAT':'image/png', 'REQUEST':'GetMap'}
 
-import os,crypt,mapscript,sys
+import os,crypt,mapscript,sys,math,string
 
 from mod_python import apache
 from mod_python.util import parse_qsl
+
+# make our WMS also usable as TMS
+def TileToMeters(tx, ty, zoom):
+  initialResolution = 20037508.342789244 * 2.0 / 256.0
+  originShift = 20037508.342789244
+  tileSize = 256.0
+  zoom2 = (2.0**zoom)
+  res = initialResolution / zoom2
+  mx = (res*tileSize*(tx+1))-originShift
+  my = (res*tileSize*(zoom2-ty))-originShift
+  return mx, my
+
+# this will give the BBox Parameter from x,y,z
+def TileToBBox(x,y,z):
+  x1,y1=TileToMeters(x-1,y+1,z)
+  x2,y2=TileToMeters(x,y,z) 
+  return x1,y1,x2,y2
 
 # generate a valid XML ServiceException message text
 # from a simple textual error message
@@ -59,7 +76,10 @@ def index(req):
   
   # MAP=something in request is always an error  
   if "MAP=" in qupper:
-    return SException(req,'Invalid argument "MAP=..." in request')   
+    return SException(req,'Invalid argument "MAP=..." in request')
+    
+  # if tile=something is given we are in TMS mode
+  
     
   # parse QUERY_STRING
   query = parse_qsl(querystr)
@@ -68,6 +88,7 @@ def index(req):
   msreq = mapscript.OWSRequest()
 
   query_layers=''
+  tilemode=0
   # ad QUERY items into mapscript request object
   for key, value in query.items():
     key=key.upper()
@@ -75,11 +96,36 @@ def index(req):
       debug = 1
     if (key == "LAYERS"):
       query_layers=value
-    msreq.setParameter(key,value)
+    if key != "TILE":
+      msreq.setParameter(key,value)
+    else:
+      xyz=value.split(',')
+      if (len(xyz) != 3):
+        return SException(req,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)
+      try:
+        x=int(xyz[0])
+      except:
+        return SException(req,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)
+      try:
+        y=int(xyz[1])
+      except:
+        return SException(req,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)
+      try:
+        z=int(xyz[2])
+      except:
+        return SException(req,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)                                                                                                                                                      
+      tilemode=1
+
+  # we are in tilemode, lets add the required keys
+  if (tilemode):
+    msreq.setParameter("srs","EPSG:900913")
+    msreq.setParameter("bbox","%f,%f,%f,%f" % TileToBBox(x,y,z))
+    msreq.setParameter("width","256")
+    msreq.setParameter("height","256")
 
   # add default QUERY items for use with JOSM
   # this will allow for easy to remember WMS Request-URLs
-  if "JOSM" in uagent:
+  if ("JOSM" in uagent) or (tilemode):
     for d in josmdefaults:
       if d not in qupper:
         msreq.setParameter(d,josmdefaults[d])

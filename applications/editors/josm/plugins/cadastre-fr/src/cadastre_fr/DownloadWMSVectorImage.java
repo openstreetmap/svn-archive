@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 
@@ -31,11 +30,13 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
         progressMonitor.indeterminateSubTask(tr("Contacting WMS Server..."));
         try {
             if (grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
+                boolean useFactor = true;
                 if (wmsLayer.images.isEmpty()) {
                     // first time we grab an image for this layer
                     if (CacheControl.cacheEnabled) {
                         if (wmsLayer.getCacheControl().loadCacheIfExist()) {
-                            Main.map.mapView.repaint();
+                            Main.map.mapView.zoomTo(wmsLayer.getCommuneBBox().toBounds());
+                            //Main.map.mapView.repaint();
                             return;
                         }
                     }
@@ -45,15 +46,16 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                     } else {
                         // set vectorized commune bounding box by opening the standard web window
                         grabber.getWmsInterface().retrieveCommuneBBox(wmsLayer);
-                        // if it is the first layer, use the communeBBox as grab bbox
-                        if (Main.proj instanceof LambertCC9Zones && Main.map.mapView.getAllLayers().size() == 1 ) {
+                        // if it is the first layer, use the communeBBox as grab bbox (and not divided)
+                        if (Main.map.mapView.getAllLayers().size() == 1 ) {
                             bounds = wmsLayer.getCommuneBBox().toBounds();
                             Main.map.mapView.zoomTo(bounds);
+                            useFactor = false;
                         }
                     }
                 }
                 // grab new images from wms server into active layer
-                wmsLayer.grab(grabber, bounds);
+                wmsLayer.grab(grabber, bounds, useFactor);
             }
         } catch (DuplicateLayerException e) {
             // we tried to grab onto a duplicated layer (removed)

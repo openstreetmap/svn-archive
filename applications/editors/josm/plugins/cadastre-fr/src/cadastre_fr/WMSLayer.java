@@ -99,12 +99,19 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     public void grab(CadastreGrabber grabber, Bounds b) throws IOException {
-        if (isRaster) {
-            b = new Bounds(Main.proj.eastNorth2latlon(rasterMin), Main.proj.eastNorth2latlon(rasterMax));
-            divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider",
-                    CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
+        grab(grabber, b, true);
+    }
+    
+    public void grab(CadastreGrabber grabber, Bounds b, boolean useFactor) throws IOException {
+        if (useFactor) {
+            if (isRaster) {
+                b = new Bounds(Main.proj.eastNorth2latlon(rasterMin), Main.proj.eastNorth2latlon(rasterMax));
+                divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider",
+                        CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
+            } else
+                divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())));
         } else
-            divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())));
+            divideBbox(b, 1);
 
         for (EastNorthBound n : dividedBbox) {
             GeorefImage newImage;
@@ -439,6 +446,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 // expected exception when all images are read
             }
         }
+        System.out.println("Cache loaded for location "+location+" with "+images.size()+" images");
         return true;
     }
 

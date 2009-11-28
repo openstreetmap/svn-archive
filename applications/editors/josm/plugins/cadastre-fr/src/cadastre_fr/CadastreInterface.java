@@ -181,7 +181,7 @@ public class CadastreInterface {
             }
             System.out.println("GET "+interfaceURL);
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-            //while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
+            // read the buffer otherwise we sent POST too early
             while ((ln = in.readLine()) != null) {
                 lines += ln;
             }

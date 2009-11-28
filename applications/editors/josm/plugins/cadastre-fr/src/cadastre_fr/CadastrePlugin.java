@@ -85,9 +85,10 @@ import org.openstreetmap.josm.data.projection.*;
  *                   Lambert 4 and 9 zones; grid translation implemented for Lambert 4 zones;
  *                   support of subprojections in preferences for zones setting and UTM20N
  *                 - removed autosourcing of empty new nodes
+ * 1.6 28-Nov-2009 - Fix minor issues if Grab is called without layer (possible since projection rework)
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "1.4";
+    static String VERSION = "1.6";
 
     static JMenu cadastreJMenu;
 

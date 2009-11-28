@@ -105,10 +105,11 @@ public class CacheControl implements Runnable {
                 int reply = (Integer)pane.getValue();
                 // till here
 
-                if (reply == JOptionPane.OK_OPTION) {
-                    return loadCache(file, wmsLayer.getLambertZone());
-                } else
-                    file.delete();
+                if (reply == JOptionPane.OK_OPTION && loadCache(file, wmsLayer.getLambertZone())) {
+                    return true;
+                } else {
+                    delete(file);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -121,32 +122,38 @@ public class CacheControl implements Runnable {
             String extension = String.valueOf((wmsLayer.getLambertZone() + 1));
             if (Main.proj instanceof LambertCC9Zones)
                 extension = cLambertCC9Z + extension;
-            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + extension);
-            if (file.exists())
-                file.delete();
+            delete(new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + extension));
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
     }
+    
+    private void delete(File file) {
+        System.out.println("Delete file "+file);
+        if (file.exists())
+            file.delete();
+        while (file.exists()) // wait until file is really gone (otherwise appends to existing one)
+            CadastrePlugin.safeSleep(500);
+    }
 
     public boolean loadCache(File file, int currentLambertZone) {
+        boolean successfulRead = false;
         try {
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            if (wmsLayer.read(ois, currentLambertZone) == false)
-                return false;
+            successfulRead = wmsLayer.read(ois, currentLambertZone);
             ois.close();
             fis.close();
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
-            JOptionPane.showMessageDialog(Main.parent, tr("Error loading file"), tr("Error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, tr("Error loading file.\nProbably an old version of the cache file."), tr("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (wmsLayer.isRaster()) {
+        if (successfulRead && wmsLayer.isRaster()) {
             // serialized raster bufferedImage hangs-up on Java6. Recreate them here
             wmsLayer.images.get(0).image = RasterImageModifier.fixRasterImage(wmsLayer.images.get(0).image);
         }
-        return true;
+        return successfulRead;
     }
 
 

@@ -91,7 +91,7 @@ public class UnconnectedWays extends Test
             nr++;
             long now = System.currentTimeMillis();
             if (now - last_print > 200) {
-                System.err.println("processing segment nr: " + nr + " of " + ways.size());
+                //System.err.println("processing segment nr: " + nr + " of " + ways.size());
                 last_print = now;
             }
             for(Node en : s.nearbyNodes(mindist)) {
@@ -117,7 +117,7 @@ public class UnconnectedWays extends Test
                 map.put(en, s.w);
             }
         }
-        System.out.println("p1 elapesd: " + (System.currentTimeMillis()-last));
+        //System.out.println("p1 elapsed: " + (System.currentTimeMillis()-last));
         last = System.currentTimeMillis();
         }
         for(Map.Entry<Node, Way> error : map.entrySet())
@@ -138,7 +138,7 @@ public class UnconnectedWays extends Test
                 }
             }
         }
-        System.out.println("p2 elapesd: " + (System.currentTimeMillis()-last));
+        //System.out.println("p2 elapsed: " + (System.currentTimeMillis()-last));
         last = System.currentTimeMillis();
         for(Map.Entry<Node, Way> error : map.entrySet())
         {
@@ -159,7 +159,7 @@ public class UnconnectedWays extends Test
                     map.put(en, s.w);
                 }
             }
-            System.out.println("p3 elapesd: " + (System.currentTimeMillis()-last));
+            //System.out.println("p3 elapsed: " + (System.currentTimeMillis()-last));
             last = System.currentTimeMillis();
             for(Map.Entry<Node, Way> error : map.entrySet())
             {
@@ -177,7 +177,7 @@ public class UnconnectedWays extends Test
                     map.put(en, s.w);
                 }
             }
-            System.out.println("p4 elapesd: " + (System.currentTimeMillis()-last));
+            //System.out.println("p4 elapsed: " + (System.currentTimeMillis()-last));
             last = System.currentTimeMillis();
             for(Map.Entry<Node, Way> error : map.entrySet())
             {
@@ -189,7 +189,7 @@ public class UnconnectedWays extends Test
         ways = null;
         endnodes = null;
         super.endTest();
-        System.out.println("p99 elapesd: " + (System.currentTimeMillis()-last));
+        //System.out.println("p99 elapsed: " + (System.currentTimeMillis()-last));
         last = System.currentTimeMillis();
     }
 
@@ -277,7 +277,7 @@ public class UnconnectedWays extends Test
                 // If we've cached an aread greater than the
                 // one now being asked for...
                 if (nearbyNodeCacheDist > dist) {
-                    System.out.println("had to trim MyWaySegment nearby node cache.");
+                    //System.out.println("had to trim MyWaySegment nearby node cache.");
                     // Used the cached result and trim out
                     // the nodes that are not in the smaller
                     // area, but keep the old larger cache.

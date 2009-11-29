@@ -13,6 +13,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.AbstractVisitor;
+import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -42,7 +43,7 @@ public class NameVisitor extends AbstractVisitor {
      * is displayed.
      */
     public void visit(Node n) {
-        name = n.getName();
+        name = n.getDisplayName(DefaultNameFormatter.getInstance());
         addId(n);
         icon = ImageProvider.get("data", "node");
         className = "node";
@@ -54,7 +55,7 @@ public class NameVisitor extends AbstractVisitor {
      * is displayed with x being the number of nodes in the way.
      */
     public void visit(Way w) {
-        name = w.getName();
+        name = w.getDisplayName(DefaultNameFormatter.getInstance());
         addId(w);
         icon = ImageProvider.get("data", "way");
         className = "way";
@@ -64,7 +65,7 @@ public class NameVisitor extends AbstractVisitor {
     /**
      */
     public void visit(Relation e) {
-        name = e.getName();
+        name = e.getDisplayName(DefaultNameFormatter.getInstance());
         addId(e);
         icon = ImageProvider.get("data", "relation");
         className = "relation";

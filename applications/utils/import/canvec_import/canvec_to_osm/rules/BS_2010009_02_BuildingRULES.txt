@@ -1,0 +1,1246 @@
+# last updated 1:49 AM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+# Note: This script omits the description tags.  Use rules_canvecMETAosm.txt for the full version.
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, #inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+#point,GEOMETRY,,GEOMETRY,-
+#outer,GEOMETRY,,GEOMETRY,-
+##inner,GEOMETRY,,GEOMETRY,-
+#
+#
+#
+#
+#
+point,CODE,2010020,canvec:CODE,2010020
+point,CODE,2010020,attribution,Natural Resources Canada
+point,CODE,2010020,source,CanVec_Import_2009
+point,CODE,2010020,created_by,canvec-to-osm
+#point,CODE,2010020,canvec:generic_code,2010009
+#point,CODE,2010020,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010020,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010020,canvec:value,Arena - ( Aréna )
+#point,CODE,2010020,canvec:value_definition,An enclosed; large surface used for sporting activities.
+point,CODE,2010020,leisure,arena
+point,CODE,2010020,sport,multi
+outer,CODE,2010022,canvec:CODE,2010022
+outer,CODE,2010022,attribution,Natural Resources Canada
+outer,CODE,2010022,source,CanVec_Import_2009
+outer,CODE,2010022,created_by,canvec-to-osm
+#outer,CODE,2010022,canvec:generic_code,2010009
+#outer,CODE,2010022,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010022,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010022,canvec:value,Arena - ( Aréna )
+#outer,CODE,2010022,canvec:value_definition,An enclosed; large surface used for sporting activities.
+#outer,CODE,2010022,canvec:min_size:CODE,2010022	
+#outer,CODE,2010022,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010022,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010022,canvec:min_size:length_meter,---
+#outer,CODE,2010022,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010022,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010022,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010022,leisure,arena
+outer,CODE,2010022,sport,multi
+#inner,CODE,2010022,canvec:CODE,2010022
+#inner,CODE,2010022,attribution,Natural Resources Canada
+#inner,CODE,2010022,source,CanVec_Import_2009
+#inner,CODE,2010022,created_by,canvec-to-osm
+##inner,CODE,2010022,canvec:generic_code,2010009
+##inner,CODE,2010022,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010022,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010022,canvec:value,Arena - ( Aréna )
+##inner,CODE,2010022,canvec:value_definition,An enclosed; large surface used for sporting activities.
+##inner,CODE,2010022,canvec:min_size:CODE,2010022	
+##inner,CODE,2010022,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010022,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010022,canvec:min_size:length_meter,---
+##inner,CODE,2010022,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010022,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010022,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010022,leisure,arena
+#inner,CODE,2010022,sport,multi
+#
+#
+point,CODE,2010030,canvec:CODE,2010030
+point,CODE,2010030,attribution,Natural Resources Canada
+point,CODE,2010030,source,CanVec_Import_2009
+point,CODE,2010030,created_by,canvec-to-osm
+#point,CODE,2010030,canvec:generic_code,2010009
+#point,CODE,2010030,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010030,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010030,canvec:value,Armoury - ( Manège militaire )
+#point,CODE,2010030,canvec:value_definition,A building used by the militia.
+point,CODE,2010030,military,armoury
+outer,CODE,2010032,canvec:CODE,2010032
+outer,CODE,2010032,attribution,Natural Resources Canada
+outer,CODE,2010032,source,CanVec_Import_2009
+outer,CODE,2010032,created_by,canvec-to-osm
+#outer,CODE,2010032,canvec:generic_code,2010009
+#outer,CODE,2010032,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010032,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010032,canvec:value,Armoury - ( Manège militaire )
+#outer,CODE,2010032,canvec:value_definition,A building used by the militia.
+#outer,CODE,2010032,canvec:min_size:CODE,2010032	
+#outer,CODE,2010032,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010032,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010032,canvec:min_size:length_meter,---
+#outer,CODE,2010032,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010032,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010032,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010032,military,armoury
+#inner,CODE,2010032,canvec:CODE,2010032
+#inner,CODE,2010032,attribution,Natural Resources Canada
+#inner,CODE,2010032,source,CanVec_Import_2009
+#inner,CODE,2010032,created_by,canvec-to-osm
+##inner,CODE,2010032,canvec:generic_code,2010009
+##inner,CODE,2010032,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010032,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010032,canvec:value,Armoury - ( Manège militaire )
+##inner,CODE,2010032,canvec:value_definition,A building used by the militia.
+##inner,CODE,2010032,canvec:min_size:CODE,2010032	
+##inner,CODE,2010032,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010032,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010032,canvec:min_size:length_meter,---
+##inner,CODE,2010032,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010032,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010032,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010032,military,armoury
+#
+#
+point,CODE,2010060,canvec:CODE,2010060
+point,CODE,2010060,attribution,Natural Resources Canada
+point,CODE,2010060,source,CanVec_Import_2009
+point,CODE,2010060,created_by,canvec-to-osm
+#point,CODE,2010060,canvec:generic_code,2010009
+#point,CODE,2010060,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010060,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010060,canvec:value,City hall - ( Hôtel de ville )
+#point,CODE,2010060,canvec:value_definition,A building where the principal offices of a city administration are located.
+point,CODE,2010060,amenity,townhall
+outer,CODE,2010062,canvec:CODE,2010062
+outer,CODE,2010062,attribution,Natural Resources Canada
+outer,CODE,2010062,source,CanVec_Import_2009
+outer,CODE,2010062,created_by,canvec-to-osm
+#outer,CODE,2010062,canvec:generic_code,2010009
+#outer,CODE,2010062,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010062,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010062,canvec:value,City hall - ( Hôtel de ville )
+#outer,CODE,2010062,canvec:value_definition,A building where the principal offices of a city administration are located.
+#outer,CODE,2010062,canvec:min_size:CODE,2010062	
+#outer,CODE,2010062,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010062,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010062,canvec:min_size:length_meter,---
+#outer,CODE,2010062,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010062,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010062,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010062,amenity,townhall
+#inner,CODE,2010062,canvec:CODE,2010062
+#inner,CODE,2010062,attribution,Natural Resources Canada
+#inner,CODE,2010062,source,CanVec_Import_2009
+#inner,CODE,2010062,created_by,canvec-to-osm
+##inner,CODE,2010062,canvec:generic_code,2010009
+##inner,CODE,2010062,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010062,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010062,canvec:value,City hall - ( Hôtel de ville )
+##inner,CODE,2010062,canvec:value_definition,A building where the principal offices of a city administration are located.
+##inner,CODE,2010062,canvec:min_size:CODE,2010062	
+##inner,CODE,2010062,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010062,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010062,canvec:min_size:length_meter,---
+##inner,CODE,2010062,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010062,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010062,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010062,amenity,townhall
+#
+#
+point,CODE,2010070,canvec:CODE,2010070
+point,CODE,2010070,attribution,Natural Resources Canada
+point,CODE,2010070,source,CanVec_Import_2009
+point,CODE,2010070,created_by,canvec-to-osm
+#point,CODE,2010070,canvec:generic_code,2010009
+#point,CODE,2010070,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010070,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010070,canvec:value,Coast guard station - ( Station de la garde côtière )
+#point,CODE,2010070,canvec:value_definition,A building housing the Coast Guard administrative offices.
+point,CODE,2010070,amenity,coast_guard
+outer,CODE,2010072,canvec:CODE,2010072
+outer,CODE,2010072,attribution,Natural Resources Canada
+outer,CODE,2010072,source,CanVec_Import_2009
+outer,CODE,2010072,created_by,canvec-to-osm
+#outer,CODE,2010072,canvec:generic_code,2010009
+#outer,CODE,2010072,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010072,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010072,canvec:value,Coast guard station - ( Station de la garde côtière )
+#outer,CODE,2010072,canvec:value_definition,A building housing the Coast Guard administrative offices.
+#outer,CODE,2010072,canvec:min_size:CODE,2010072	
+#outer,CODE,2010072,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010072,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010072,canvec:min_size:length_meter,---
+#outer,CODE,2010072,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010072,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010072,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010072,amenity,coast_guard
+#inner,CODE,2010072,canvec:CODE,2010072
+#inner,CODE,2010072,attribution,Natural Resources Canada
+#inner,CODE,2010072,source,CanVec_Import_2009
+#inner,CODE,2010072,created_by,canvec-to-osm
+##inner,CODE,2010072,canvec:generic_code,2010009
+##inner,CODE,2010072,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010072,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010072,canvec:value,Coast guard station - ( Station de la garde côtière )
+##inner,CODE,2010072,canvec:value_definition,A building housing the Coast Guard administrative offices.
+##inner,CODE,2010072,canvec:min_size:CODE,2010072	
+##inner,CODE,2010072,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010072,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010072,canvec:min_size:length_meter,---
+##inner,CODE,2010072,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010072,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010072,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010072,amenity,coast_guard
+#
+#
+point,CODE,2010080,canvec:CODE,2010080
+point,CODE,2010080,attribution,Natural Resources Canada
+point,CODE,2010080,source,CanVec_Import_2009
+point,CODE,2010080,created_by,canvec-to-osm
+#point,CODE,2010080,canvec:generic_code,2010009
+#point,CODE,2010080,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010080,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010080,canvec:value,Community centre - ( Centre communautaire )
+#point,CODE,2010080,canvec:value_definition,A public building in which community gatherings and/or sporting activities are held.
+#point,CODE,2010080,amenity,arts_centre
+point,CODE,2010080,amenity,community_centre
+outer,CODE,2010082,canvec:CODE,2010082
+outer,CODE,2010082,attribution,Natural Resources Canada
+outer,CODE,2010082,source,CanVec_Import_2009
+outer,CODE,2010082,created_by,canvec-to-osm
+#outer,CODE,2010082,canvec:generic_code,2010009
+#outer,CODE,2010082,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010082,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010082,canvec:value,Community centre - ( Centre communautaire )
+#outer,CODE,2010082,canvec:value_definition,A public building in which community gatherings and/or sporting activities are held.
+#outer,CODE,2010082,canvec:min_size:CODE,2010082	
+#outer,CODE,2010082,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010082,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010082,canvec:min_size:length_meter,---
+#outer,CODE,2010082,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010082,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010082,canvec:min_size:spike_angle_tollerance_degree,10
+#outer,CODE,2010082,amenity,arts_centre
+outer,CODE,2010082,amenity,community_centre
+#inner,CODE,2010082,canvec:CODE,2010082
+#inner,CODE,2010082,attribution,Natural Resources Canada
+#inner,CODE,2010082,source,CanVec_Import_2009
+#inner,CODE,2010082,created_by,canvec-to-osm
+##inner,CODE,2010082,canvec:generic_code,2010009
+##inner,CODE,2010082,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010082,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010082,canvec:value,Community centre - ( Centre communautaire )
+##inner,CODE,2010082,canvec:value_definition,A public building in which community gatherings and/or sporting activities are held.
+##inner,CODE,2010082,canvec:min_size:CODE,2010082	
+##inner,CODE,2010082,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010082,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010082,canvec:min_size:length_meter,---
+##inner,CODE,2010082,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010082,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010082,canvec:min_size:spike_angle_tollerance_degree,10
+##inner,CODE,2010082,amenity,arts_centre
+#inner,CODE,2010082,amenity,community_centre
+#
+#
+#
+point,CODE,2010090,canvec:CODE,2010090
+point,CODE,2010090,attribution,Natural Resources Canada
+point,CODE,2010090,source,CanVec_Import_2009
+point,CODE,2010090,created_by,canvec-to-osm
+#point,CODE,2010090,canvec:generic_code,2010009
+#point,CODE,2010090,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010090,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010090,canvec:value,Courthouse - ( Palais de justice )
+#point,CODE,2010090,canvec:value_definition,A public building housing the judicial courts.
+point,CODE,2010090,amenity,courthouse
+outer,CODE,2010092,canvec:CODE,2010092
+outer,CODE,2010092,attribution,Natural Resources Canada
+outer,CODE,2010092,source,CanVec_Import_2009
+outer,CODE,2010092,created_by,canvec-to-osm
+#outer,CODE,2010092,canvec:generic_code,2010009
+#outer,CODE,2010092,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010092,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010092,canvec:value,Courthouse - ( Palais de justice )
+#outer,CODE,2010092,canvec:value_definition,A public building housing the judicial courts.
+#outer,CODE,2010092,canvec:min_size:CODE,2010092	
+#outer,CODE,2010092,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010092,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010092,canvec:min_size:length_meter,---
+#outer,CODE,2010092,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010092,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010092,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010092,amenity,courthouse
+#inner,CODE,2010092,canvec:CODE,2010092
+#inner,CODE,2010092,attribution,Natural Resources Canada
+#inner,CODE,2010092,source,CanVec_Import_2009
+#inner,CODE,2010092,created_by,canvec-to-osm
+##inner,CODE,2010092,canvec:generic_code,2010009
+##inner,CODE,2010092,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010092,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010092,canvec:value,Courthouse - ( Palais de justice )
+##inner,CODE,2010092,canvec:value_definition,A public building housing the judicial courts.
+##inner,CODE,2010092,canvec:min_size:CODE,2010092	
+##inner,CODE,2010092,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010092,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010092,canvec:min_size:length_meter,---
+##inner,CODE,2010092,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010092,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010092,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010092,amenity,courthouse
+#
+#
+point,CODE,2010100,canvec:CODE,2010100
+point,CODE,2010100,attribution,Natural Resources Canada
+point,CODE,2010100,source,CanVec_Import_2009
+point,CODE,2010100,created_by,canvec-to-osm
+#point,CODE,2010100,canvec:generic_code,2010009
+#point,CODE,2010100,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010100,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010100,canvec:value,Customs post - ( Poste de douane )
+#point,CODE,2010100,canvec:value_definition,A structure near or at an international boundary where travellers and vehicles crossing the border are inspected.
+point,CODE,2010100,amenity,customs
+outer,CODE,2010102,canvec:CODE,2010102
+outer,CODE,2010102,attribution,Natural Resources Canada
+outer,CODE,2010102,source,CanVec_Import_2009
+outer,CODE,2010102,created_by,canvec-to-osm
+#outer,CODE,2010102,canvec:generic_code,2010009
+#outer,CODE,2010102,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010102,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010102,canvec:value,Customs post - ( Poste de douane )
+#outer,CODE,2010102,canvec:value_definition,A structure near or at an international boundary where travellers and vehicles crossing the border are inspected.
+#outer,CODE,2010102,canvec:min_size:CODE,2010102	
+#outer,CODE,2010102,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010102,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010102,canvec:min_size:length_meter,---
+#outer,CODE,2010102,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010102,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010102,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010102,amenity,customs
+#inner,CODE,2010102,canvec:CODE,2010102
+#inner,CODE,2010102,attribution,Natural Resources Canada
+#inner,CODE,2010102,source,CanVec_Import_2009
+#inner,CODE,2010102,created_by,canvec-to-osm
+##inner,CODE,2010102,canvec:generic_code,2010009
+##inner,CODE,2010102,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010102,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010102,canvec:value,Customs post - ( Poste de douane )
+##inner,CODE,2010102,canvec:value_definition,A structure near or at an international boundary where travellers and vehicles crossing the border are inspected.
+##inner,CODE,2010102,canvec:min_size:CODE,2010102	
+##inner,CODE,2010102,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010102,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010102,canvec:min_size:length_meter,---
+##inner,CODE,2010102,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010102,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010102,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010102,amenity,customs
+#
+#
+point,CODE,2010120,canvec:CODE,2010120
+point,CODE,2010120,attribution,Natural Resources Canada
+point,CODE,2010120,source,CanVec_Import_2009
+point,CODE,2010120,created_by,canvec-to-osm
+#point,CODE,2010120,canvec:generic_code,2010009
+#point,CODE,2010120,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010120,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010120,canvec:value,Electric power station - ( Poste électrique )
+#point,CODE,2010120,canvec:value_definition,A building where electricity is generated.
+point,CODE,2010120,power,generator
+outer,CODE,2010122,canvec:CODE,2010122
+outer,CODE,2010122,attribution,Natural Resources Canada
+outer,CODE,2010122,source,CanVec_Import_2009
+outer,CODE,2010122,created_by,canvec-to-osm
+#outer,CODE,2010122,canvec:generic_code,2010009
+#outer,CODE,2010122,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010122,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010122,canvec:value,Electric power station - ( Poste électrique )
+#outer,CODE,2010122,canvec:value_definition,A building where electricity is generated.
+#outer,CODE,2010122,canvec:min_size:CODE,2010122
+#outer,CODE,2010122,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010122,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010122,canvec:min_size:length_meter,---
+#outer,CODE,2010122,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010122,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010122,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010122,power,generator
+#inner,CODE,2010122,canvec:CODE,2010122
+#inner,CODE,2010122,attribution,Natural Resources Canada
+#inner,CODE,2010122,source,CanVec_Import_2009
+#inner,CODE,2010122,created_by,canvec-to-osm
+##inner,CODE,2010122,canvec:generic_code,2010009
+##inner,CODE,2010122,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010122,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010122,canvec:value,Electric power station - ( Poste électrique )
+##inner,CODE,2010122,canvec:value_definition,A building where electricity is generated.
+##inner,CODE,2010122,canvec:min_size:CODE,2010122
+##inner,CODE,2010122,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010122,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010122,canvec:min_size:length_meter,---
+##inner,CODE,2010122,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010122,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010122,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010122,power,generator
+#
+#
+#
+point,CODE,2010130,canvec:CODE,2010130
+point,CODE,2010130,attribution,Natural Resources Canada
+point,CODE,2010130,source,CanVec_Import_2009
+point,CODE,2010130,created_by,canvec-to-osm
+#point,CODE,2010130,canvec:generic_code,2010009
+#point,CODE,2010130,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010130,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010130,canvec:value,Fire station - ( Poste de pompiers )
+#point,CODE,2010130,canvec:value_definition,A building housing fire-fighting equipment.
+point,CODE,2010130,amenity,fire_station
+outer,CODE,2010132,canvec:CODE,2010132
+outer,CODE,2010132,attribution,Natural Resources Canada
+outer,CODE,2010132,source,CanVec_Import_2009
+outer,CODE,2010132,created_by,canvec-to-osm
+#outer,CODE,2010132,canvec:generic_code,2010009
+#outer,CODE,2010132,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010132,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010132,canvec:value,Fire station - ( Poste de pompiers )
+#outer,CODE,2010132,canvec:value_definition,A building housing fire-fighting equipment.
+#outer,CODE,2010132,canvec:min_size:CODE,2010132
+#outer,CODE,2010132,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010132,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010132,canvec:min_size:length_meter,---
+#outer,CODE,2010132,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010132,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010132,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010132,amenity,fire_station
+#inner,CODE,2010132,canvec:CODE,2010132
+#inner,CODE,2010132,attribution,Natural Resources Canada
+#inner,CODE,2010132,source,CanVec_Import_2009
+#inner,CODE,2010132,created_by,canvec-to-osm
+##inner,CODE,2010132,canvec:generic_code,2010009
+##inner,CODE,2010132,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010132,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010132,canvec:value,Fire station - ( Poste de pompiers )
+##inner,CODE,2010132,canvec:value_definition,A building housing fire-fighting equipment.
+##inner,CODE,2010132,canvec:min_size:CODE,2010132
+##inner,CODE,2010132,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010132,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010132,canvec:min_size:length_meter,---
+##inner,CODE,2010132,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010132,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010132,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010132,amenity,fire_station
+#
+#
+#
+point,CODE,2010170,canvec:CODE,2010170
+point,CODE,2010170,attribution,Natural Resources Canada
+point,CODE,2010170,source,CanVec_Import_2009
+point,CODE,2010170,created_by,canvec-to-osm
+#point,CODE,2010170,canvec:generic_code,2010009
+#point,CODE,2010170,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010170,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010170,canvec:value,Highway service centre - ( Centre de services autoroutiers )
+#point,CODE,2010170,canvec:value_definition,A building beside and directly accessible from the highway; providing automotive sevices and restaurant facilities.
+point,CODE,2010170,highway,services
+outer,CODE,2010172,canvec:CODE,2010172
+outer,CODE,2010172,attribution,Natural Resources Canada
+outer,CODE,2010172,source,CanVec_Import_2009
+outer,CODE,2010172,created_by,canvec-to-osm
+#outer,CODE,2010172,canvec:generic_code,2010009
+#outer,CODE,2010172,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010172,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010172,canvec:value,Highway service centre - ( Centre de services autoroutiers )
+#outer,CODE,2010172,canvec:value_definition,A building beside and directly accessible from the highway; providing automotive sevices and restaurant facilities.
+#outer,CODE,2010172,canvec:min_size:CODE,2010172
+#outer,CODE,2010172,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010172,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010172,canvec:min_size:length_meter,---
+#outer,CODE,2010172,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010172,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010172,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010172,highway,services
+#inner,CODE,2010172,canvec:CODE,2010172
+#inner,CODE,2010172,attribution,Natural Resources Canada
+#inner,CODE,2010172,source,CanVec_Import_2009
+#inner,CODE,2010172,created_by,canvec-to-osm
+##inner,CODE,2010172,canvec:generic_code,2010009
+##inner,CODE,2010172,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010172,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010172,canvec:value,Highway service centre - ( Centre de services autoroutiers )
+##inner,CODE,2010172,canvec:value_definition,A building beside and directly accessible from the highway; providing automotive sevices and restaurant facilities.
+##inner,CODE,2010172,canvec:min_size:CODE,2010172
+##inner,CODE,2010172,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010172,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010172,canvec:min_size:length_meter,---
+##inner,CODE,2010172,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010172,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010172,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010172,highway,services
+#
+#
+point,CODE,2010180,canvec:CODE,2010180
+point,CODE,2010180,attribution,Natural Resources Canada
+point,CODE,2010180,source,CanVec_Import_2009
+point,CODE,2010180,created_by,canvec-to-osm
+#point,CODE,2010180,canvec:generic_code,2010009
+#point,CODE,2010180,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010180,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010180,canvec:value,Hospital - ( Hôpital )
+#point,CODE,2010180,canvec:value_definition,An institution where sick or injured people receive medical care.
+point,CODE,2010180,amenity,hospital
+outer,CODE,2010182,canvec:CODE,2010182
+outer,CODE,2010182,attribution,Natural Resources Canada
+outer,CODE,2010182,source,CanVec_Import_2009
+outer,CODE,2010182,created_by,canvec-to-osm
+#outer,CODE,2010182,canvec:generic_code,2010009
+#outer,CODE,2010182,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010182,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010182,canvec:value,Hospital - ( Hôpital )
+#outer,CODE,2010182,canvec:value_definition,An institution where sick or injured people receive medical care.
+#outer,CODE,2010182,canvec:min_size:CODE,2010182
+#outer,CODE,2010182,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010182,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010182,canvec:min_size:length_meter,---
+#outer,CODE,2010182,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010182,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010182,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010182,amenity,hospital
+#inner,CODE,2010182,canvec:CODE,2010182
+#inner,CODE,2010182,attribution,Natural Resources Canada
+#inner,CODE,2010182,source,CanVec_Import_2009
+#inner,CODE,2010182,created_by,canvec-to-osm
+##inner,CODE,2010182,canvec:generic_code,2010009
+##inner,CODE,2010182,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010182,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010182,canvec:value,Hospital - ( Hôpital )
+##inner,CODE,2010182,canvec:value_definition,An institution where sick or injured people receive medical care.
+##inner,CODE,2010182,canvec:min_size:CODE,2010182
+##inner,CODE,2010182,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010182,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010182,canvec:min_size:length_meter,---
+##inner,CODE,2010182,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010182,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010182,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010182,amenity,hospital
+#
+#
+point,CODE,2010200,canvec:CODE,2010200
+point,CODE,2010200,attribution,Natural Resources Canada
+point,CODE,2010200,source,CanVec_Import_2009
+point,CODE,2010200,created_by,canvec-to-osm
+#point,CODE,2010200,canvec:generic_code,2010009
+#point,CODE,2010200,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010200,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010200,canvec:value,Medical centre - ( Centre médical )
+#point,CODE,2010200,canvec:value_definition,Replaces a full service hospital in satellite communities or other areas without hospital services.
+point,CODE,2010200,amenity,doctors
+outer,CODE,2010202,canvec:CODE,2010202
+outer,CODE,2010202,attribution,Natural Resources Canada
+outer,CODE,2010202,source,CanVec_Import_2009
+outer,CODE,2010202,created_by,canvec-to-osm
+#outer,CODE,2010202,canvec:generic_code,2010009
+#outer,CODE,2010202,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010202,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010202,canvec:value,Medical centre - ( Centre médical )
+#outer,CODE,2010202,canvec:value_definition,Replaces a full service hospital in satellite communities or other areas without hospital services.
+#outer,CODE,2010202,canvec:min_size:CODE,2010202
+#outer,CODE,2010202,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010202,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010202,canvec:min_size:length_meter,---
+#outer,CODE,2010202,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010202,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010202,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010202,amenity,doctors
+#inner,CODE,2010202,canvec:CODE,2010202
+#inner,CODE,2010202,attribution,Natural Resources Canada
+#inner,CODE,2010202,source,CanVec_Import_2009
+#inner,CODE,2010202,created_by,canvec-to-osm
+##inner,CODE,2010202,canvec:generic_code,2010009
+##inner,CODE,2010202,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010202,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010202,canvec:value,Medical centre - ( Centre médical )
+##inner,CODE,2010202,canvec:value_definition,Replaces a full service hospital in satellite communities or other areas without hospital services.
+##inner,CODE,2010202,canvec:min_size:CODE,2010202
+##inner,CODE,2010202,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010202,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010202,canvec:min_size:length_meter,---
+##inner,CODE,2010202,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010202,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010202,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010202,amenity,doctors
+#
+#
+point,CODE,2010210,canvec:CODE,2010210
+point,CODE,2010210,attribution,Natural Resources Canada
+point,CODE,2010210,source,CanVec_Import_2009
+point,CODE,2010210,created_by,canvec-to-osm
+#point,CODE,2010210,canvec:generic_code,2010009
+#point,CODE,2010210,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010210,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010210,canvec:value,Municipal hall - ( Salle municipale )
+#point,CODE,2010210,canvec:value_definition,Where the main offices of a municipal administration are located.
+point,CODE,2010210,amenity,townhall
+outer,CODE,2010212,canvec:CODE,2010212
+outer,CODE,2010212,attribution,Natural Resources Canada
+outer,CODE,2010212,source,CanVec_Import_2009
+outer,CODE,2010212,created_by,canvec-to-osm
+#outer,CODE,2010212,canvec:generic_code,2010009
+#outer,CODE,2010212,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010212,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010212,canvec:value,Municipal hall - ( Salle municipale )
+#outer,CODE,2010212,canvec:value_definition,Where the main offices of a municipal administration are located.
+#outer,CODE,2010212,canvec:min_size:CODE,2010212
+#outer,CODE,2010212,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010212,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010212,canvec:min_size:length_meter,---
+#outer,CODE,2010212,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010212,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010212,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010212,amenity,townhall
+#inner,CODE,2010212,canvec:CODE,2010212
+#inner,CODE,2010212,attribution,Natural Resources Canada
+#inner,CODE,2010212,source,CanVec_Import_2009
+#inner,CODE,2010212,created_by,canvec-to-osm
+##inner,CODE,2010212,canvec:generic_code,2010009
+##inner,CODE,2010212,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010212,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010212,canvec:value,Municipal hall - ( Salle municipale )
+##inner,CODE,2010212,canvec:value_definition,Where the main offices of a municipal administration are located.
+##inner,CODE,2010212,canvec:min_size:CODE,2010212
+##inner,CODE,2010212,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010212,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010212,canvec:min_size:length_meter,---
+##inner,CODE,2010212,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010212,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010212,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010212,amenity,townhall
+#
+#
+#
+outer,CODE,2010242,canvec:CODE,2010242
+outer,CODE,2010242,attribution,Natural Resources Canada
+outer,CODE,2010242,source,CanVec_Import_2009
+outer,CODE,2010242,created_by,canvec-to-osm
+#outer,CODE,2010242,canvec:generic_code,2010009
+#outer,CODE,2010242,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010242,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010242,canvec:value,Gas and oil facilities building - ( Édifice d'installations gaz et pétrole )
+#outer,CODE,2010242,canvec:value_definition,A building or structure dedicated to in the production or distribution of chemical products represented by the entity "Gas and Oil Facilities" if its area is less than 30 meters.
+#outer,CODE,2010242,canvec:min_size:CODE,2010242
+#outer,CODE,2010242,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010242,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010242,canvec:min_size:length_meter,---
+#outer,CODE,2010242,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010242,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010242,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010242,building,yes
+outer,CODE,2010242,landuse,industrial
+outer,CODE,2010242,industrial:type,Gas and oil facilities
+#inner,CODE,2010242,canvec:CODE,2010242
+#inner,CODE,2010242,attribution,Natural Resources Canada
+#inner,CODE,2010242,source,CanVec_Import_2009
+#inner,CODE,2010242,created_by,canvec-to-osm
+##inner,CODE,2010242,canvec:generic_code,2010009
+##inner,CODE,2010242,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010242,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010242,canvec:value,Gas and oil facilities building - ( Édifice d'installations gaz et pétrole )
+##inner,CODE,2010242,canvec:value_definition,A building or structure dedicated to in the production or distribution of chemical products represented by the entity "Gas and Oil Facilities" if its area is less than 30 meters.
+##inner,CODE,2010242,canvec:min_size:CODE,2010242
+##inner,CODE,2010242,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010242,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010242,canvec:min_size:length_meter,---
+##inner,CODE,2010242,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010242,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010242,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010242,building,yes
+#inner,CODE,2010242,landuse,industrial
+#inner,CODE,2010242,industrial:type,Gas and oil facilities
+#
+#
+#
+point,CODE,2010250,canvec:CODE,2010250
+point,CODE,2010250,attribution,Natural Resources Canada
+point,CODE,2010250,source,CanVec_Import_2009
+point,CODE,2010250,created_by,canvec-to-osm
+#point,CODE,2010250,canvec:generic_code,2010009
+#point,CODE,2010250,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010250,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010250,canvec:value,Other - ( Autre )
+#point,CODE,2010250,canvec:value_definition,A residential; public; or commercial building with a function other than those listed herein. If the "Other" building is not residential; public; or commercial; its size must be greater than 10 meters X 10 meters. In the case of farm complexes; such a building must be greater than 30 meters.
+point,CODE,2010250,building,yes
+point,CODE,2010250,delete_me,yes
+outer,CODE,2010252,canvec:CODE,2010252
+outer,CODE,2010252,attribution,Natural Resources Canada
+outer,CODE,2010252,source,CanVec_Import_2009
+outer,CODE,2010252,created_by,canvec-to-osm
+#outer,CODE,2010252,canvec:generic_code,2010009
+#outer,CODE,2010252,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010252,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010252,canvec:min_size:CODE,2010252
+#outer,CODE,2010252,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010252,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010252,canvec:min_size:length_meter,---
+#outer,CODE,2010252,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010252,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010252,canvec:min_size:spike_angle_tollerance_degree,10
+#outer,CODE,2010252,canvec:value,Other - ( Autre )
+#outer,CODE,2010252,canvec:value_definition,A residential; public; or commercial building with a function other than those listed herein. If the "Other" building is not residential; public; or commercial; its size must be greater than 10 meters X 10 meters. In the case of farm complexes; such a building must be greater than 30 meters.
+outer,CODE,2010252,building,yes
+#inner,CODE,2010252,canvec:CODE,2010252
+#inner,CODE,2010252,attribution,Natural Resources Canada
+#inner,CODE,2010252,source,CanVec_Import_2009
+#inner,CODE,2010252,created_by,canvec-to-osm
+##inner,CODE,2010252,canvec:generic_code,2010009
+##inner,CODE,2010252,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010252,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010252,canvec:value,Other - ( Autre )
+##inner,CODE,2010252,canvec:value_definition,A residential; public; or commercial building with a function other than those listed herein. If the "Other" building is not residential; public; or commercial; its size must be greater than 10 meters X 10 meters. In the case of farm complexes; such a building must be greater than 30 meters.
+##inner,CODE,2010252,canvec:min_size:CODE,2010252
+##inner,CODE,2010252,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010252,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010252,canvec:min_size:length_meter,---
+##inner,CODE,2010252,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010252,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010252,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010252,building,yes
+#
+#
+#
+point,CODE,2010260,canvec:CODE,2010260
+point,CODE,2010260,attribution,Natural Resources Canada
+point,CODE,2010260,source,CanVec_Import_2009
+point,CODE,2010260,created_by,canvec-to-osm
+#point,CODE,2010260,canvec:generic_code,2010009
+#point,CODE,2010260,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010260,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010260,canvec:value,Parliament building - ( Édifice parlementaire )
+#point,CODE,2010260,canvec:value_definition,A building in which the elected or appointed members of provincial or federal governments meet and enact laws.
+point,CODE,2010260,building,parliament
+outer,CODE,2010262,canvec:CODE,2010262
+outer,CODE,2010262,attribution,Natural Resources Canada
+outer,CODE,2010262,source,CanVec_Import_2009
+outer,CODE,2010262,created_by,canvec-to-osm
+#outer,CODE,2010262,canvec:generic_code,2010009
+#outer,CODE,2010262,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010262,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010262,canvec:value,Parliament building - ( Édifice parlementaire )
+#outer,CODE,2010262,canvec:value_definition,A building in which the elected or appointed members of provincial or federal governments meet and enact laws.
+#outer,CODE,2010262,canvec:min_size:CODE,2010262
+#outer,CODE,2010262,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010262,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010262,canvec:min_size:length_meter,---
+#outer,CODE,2010262,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010262,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010262,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010262,building,parliament
+#inner,CODE,2010262,canvec:CODE,2010262
+#inner,CODE,2010262,attribution,Natural Resources Canada
+#inner,CODE,2010262,source,CanVec_Import_2009
+#inner,CODE,2010262,created_by,canvec-to-osm
+##inner,CODE,2010262,canvec:generic_code,2010009
+##inner,CODE,2010262,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010262,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010262,canvec:value,Parliament building - ( Édifice parlementaire )
+##inner,CODE,2010262,canvec:value_definition,A building in which the elected or appointed members of provincial or federal governments meet and enact laws.
+##inner,CODE,2010262,canvec:min_size:CODE,2010262
+##inner,CODE,2010262,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010262,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010262,canvec:min_size:length_meter,---
+##inner,CODE,2010262,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010262,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010262,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010262,building,parliament
+#
+#
+#
+point,CODE,2010270,canvec:CODE,2010270
+point,CODE,2010270,attribution,Natural Resources Canada
+point,CODE,2010270,source,CanVec_Import_2009
+point,CODE,2010270,created_by,canvec-to-osm
+#point,CODE,2010270,canvec:generic_code,2010009
+#point,CODE,2010270,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010270,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010270,canvec:value,Police station - ( Poste de police )
+#point,CODE,2010270,canvec:value_definition,The main offices of a local or regional police force; including the RCMP.
+point,CODE,2010270,amenity,police
+outer,CODE,2010272,canvec:CODE,2010272
+outer,CODE,2010272,attribution,Natural Resources Canada
+outer,CODE,2010272,source,CanVec_Import_2009
+outer,CODE,2010272,created_by,canvec-to-osm
+#outer,CODE,2010272,canvec:generic_code,2010009
+#outer,CODE,2010272,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010272,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010272,canvec:value,Police station - ( Poste de police )
+#outer,CODE,2010272,canvec:value_definition,The main offices of a local or regional police force; including the RCMP.
+#outer,CODE,2010272,canvec:min_size:CODE,2010272
+#outer,CODE,2010272,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010272,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010272,canvec:min_size:length_meter,---
+#outer,CODE,2010272,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010272,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010272,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010272,amenity,police
+#inner,CODE,2010272,canvec:CODE,2010272
+#inner,CODE,2010272,attribution,Natural Resources Canada
+#inner,CODE,2010272,source,CanVec_Import_2009
+#inner,CODE,2010272,created_by,canvec-to-osm
+##inner,CODE,2010272,canvec:generic_code,2010009
+##inner,CODE,2010272,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010272,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010272,canvec:value,Police station - ( Poste de police )
+##inner,CODE,2010272,canvec:value_definition,The main offices of a local or regional police force; including the RCMP.
+##inner,CODE,2010272,canvec:min_size:CODE,2010272
+##inner,CODE,2010272,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010272,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010272,canvec:min_size:length_meter,---
+##inner,CODE,2010272,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010272,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010272,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010272,amenity,police
+#
+#
+#
+point,CODE,2010280,canvec:CODE,2010280
+point,CODE,2010280,attribution,Natural Resources Canada
+point,CODE,2010280,source,CanVec_Import_2009
+point,CODE,2010280,created_by,canvec-to-osm
+#point,CODE,2010280,canvec:generic_code,2010009
+#point,CODE,2010280,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010280,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010280,canvec:value,Railway station - ( Gare )
+#point,CODE,2010280,canvec:value_definition,A building along a railway where the train stops to load and unload passengers or freight.
+point,CODE,2010280,railway,station
+outer,CODE,2010282,canvec:CODE,2010282
+outer,CODE,2010282,attribution,Natural Resources Canada
+outer,CODE,2010282,source,CanVec_Import_2009
+outer,CODE,2010282,created_by,canvec-to-osm
+#outer,CODE,2010282,canvec:generic_code,2010009
+#outer,CODE,2010282,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010282,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010282,canvec:value,Railway station - ( Gare )
+#outer,CODE,2010282,canvec:value_definition,A building along a railway where the train stops to load and unload passengers or freight.
+#outer,CODE,2010282,canvec:min_size:CODE,2010282
+#outer,CODE,2010282,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010282,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010282,canvec:min_size:length_meter,---
+#outer,CODE,2010282,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010282,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010282,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010282,railway,station
+#inner,CODE,2010282,canvec:CODE,2010282
+#inner,CODE,2010282,attribution,Natural Resources Canada
+#inner,CODE,2010282,source,CanVec_Import_2009
+#inner,CODE,2010282,created_by,canvec-to-osm
+##inner,CODE,2010282,canvec:generic_code,2010009
+##inner,CODE,2010282,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010282,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010282,canvec:value,Railway station - ( Gare )
+##inner,CODE,2010282,canvec:value_definition,A building along a railway where the train stops to load and unload passengers or freight.
+##inner,CODE,2010282,canvec:min_size:CODE,2010282
+##inner,CODE,2010282,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010282,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010282,canvec:min_size:length_meter,---
+##inner,CODE,2010282,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010282,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010282,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010282,railway,station
+#
+#
+#
+point,CODE,2010300,canvec:CODE,2010300
+point,CODE,2010300,attribution,Natural Resources Canada
+point,CODE,2010300,source,CanVec_Import_2009
+point,CODE,2010300,created_by,canvec-to-osm
+#point,CODE,2010300,canvec:generic_code,2010009
+#point,CODE,2010300,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010300,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010300,canvec:value,Satellite-tracking station - ( Station de détection de satellites )
+#point,CODE,2010300,canvec:value_definition,A building containing receiving devices to record information from satellites.
+point,CODE,2010300,building,satellite_tracking_station
+outer,CODE,2010302,canvec:CODE,2010302
+outer,CODE,2010302,attribution,Natural Resources Canada
+outer,CODE,2010302,source,CanVec_Import_2009
+outer,CODE,2010302,created_by,canvec-to-osm
+#outer,CODE,2010302,canvec:generic_code,2010009
+#outer,CODE,2010302,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010302,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010302,canvec:value,Satellite-tracking station - ( Station de détection de satellites )
+#outer,CODE,2010302,canvec:value_definition,A building containing receiving devices to record information from satellites.
+#outer,CODE,2010302,canvec:min_size:CODE,2010302
+#outer,CODE,2010302,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010302,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010302,canvec:min_size:length_meter,---
+#outer,CODE,2010302,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010302,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010302,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010302,building,satellite_tracking_station
+#inner,CODE,2010302,canvec:CODE,2010302
+#inner,CODE,2010302,attribution,Natural Resources Canada
+#inner,CODE,2010302,source,CanVec_Import_2009
+#inner,CODE,2010302,created_by,canvec-to-osm
+##inner,CODE,2010302,canvec:generic_code,2010009
+##inner,CODE,2010302,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010302,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010302,canvec:value,Satellite-tracking station - ( Station de détection de satellites )
+##inner,CODE,2010302,canvec:value_definition,A building containing receiving devices to record information from satellites.
+##inner,CODE,2010302,canvec:min_size:CODE,2010302
+##inner,CODE,2010302,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010302,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010302,canvec:min_size:length_meter,---
+##inner,CODE,2010302,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010302,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010302,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010302,building,satellite_tracking_station
+#
+#
+#
+point,CODE,2010330,canvec:CODE,2010330
+point,CODE,2010330,attribution,Natural Resources Canada
+point,CODE,2010330,source,CanVec_Import_2009
+point,CODE,2010330,created_by,canvec-to-osm
+#point,CODE,2010330,canvec:generic_code,2010009
+#point,CODE,2010330,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010330,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010330,canvec:value,Sportsplex - ( Centre sportif )
+#point,CODE,2010330,canvec:value_definition,A building providing facilities for various sporting and recreational activities.
+point,CODE,2010330,leisure,sports_center
+point,CODE,2010330,sport,multi
+outer,CODE,2010332,canvec:CODE,2010332
+outer,CODE,2010332,attribution,Natural Resources Canada
+outer,CODE,2010332,source,CanVec_Import_2009
+outer,CODE,2010332,created_by,canvec-to-osm
+#outer,CODE,2010332,canvec:generic_code,2010009
+#outer,CODE,2010332,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010332,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010332,canvec:value,Sportsplex - ( Centre sportif )
+#outer,CODE,2010332,canvec:value_definition,A building providing facilities for various sporting and recreational activities.
+#outer,CODE,2010332,canvec:min_size:CODE,2010332
+#outer,CODE,2010332,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010332,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010332,canvec:min_size:length_meter,---
+#outer,CODE,2010332,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010332,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010332,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010332,leisure,sports_center
+outer,CODE,2010332,sport,multi
+#inner,CODE,2010332,canvec:CODE,2010332
+#inner,CODE,2010332,attribution,Natural Resources Canada
+#inner,CODE,2010332,source,CanVec_Import_2009
+#inner,CODE,2010332,created_by,canvec-to-osm
+##inner,CODE,2010332,canvec:generic_code,2010009
+##inner,CODE,2010332,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010332,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010332,canvec:value,Sportsplex - ( Centre sportif )
+##inner,CODE,2010332,canvec:value_definition,A building providing facilities for various sporting and recreational activities.
+##inner,CODE,2010332,canvec:min_size:CODE,2010332
+##inner,CODE,2010332,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010332,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010332,canvec:min_size:length_meter,---
+##inner,CODE,2010332,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010332,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010332,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010332,leisure,sports_center
+#inner,CODE,2010332,sport,multi
+#
+#
+#
+outer,CODE,2010382,canvec:CODE,2010382
+outer,CODE,2010382,attribution,Natural Resources Canada
+outer,CODE,2010382,source,CanVec_Import_2009
+outer,CODE,2010382,created_by,canvec-to-osm
+#outer,CODE,2010382,canvec:generic_code,2010009
+#outer,CODE,2010382,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010382,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010382,canvec:value,Industrial building - ( Établissement industriel )
+#outer,CODE,2010382,canvec:value_definition,A building for manufacturing products; processing or preserving raw materials; or producing energy outlets. Represented by "Building : other" if its area is less than 30 meters. Industrial building includes: steel mill; shipyard; cement plant; factory; sawmill; lumber mill; plant; automobile plant; chemical plant; water treatment plant; filtration plant; sewage treatment plant; pulp/paper mill; fish processing plant; petroleum refinery.
+#outer,CODE,2010382,canvec:min_size:CODE,2010382
+#outer,CODE,2010382,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010382,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010382,canvec:min_size:length_meter,---
+#outer,CODE,2010382,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010382,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010382,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010382,landuse,industrial
+#inner,CODE,2010382,canvec:CODE,2010382
+#inner,CODE,2010382,attribution,Natural Resources Canada
+#inner,CODE,2010382,source,CanVec_Import_2009
+#inner,CODE,2010382,created_by,canvec-to-osm
+##inner,CODE,2010382,canvec:generic_code,2010009
+##inner,CODE,2010382,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010382,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010382,canvec:value,Industrial building - ( Établissement industriel )
+##inner,CODE,2010382,canvec:value_definition,A building for manufacturing products; processing or preserving raw materials; or producing energy outlets. Represented by "Building : other" if its area is less than 30 meters. Industrial building includes: steel mill; shipyard; cement plant; factory; sawmill; lumber mill; plant; automobile plant; chemical plant; water treatment plant; filtration plant; sewage treatment plant; pulp/paper mill; fish processing plant; petroleum refinery.
+##inner,CODE,2010382,canvec:min_size:CODE,2010382
+##inner,CODE,2010382,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010382,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010382,canvec:min_size:length_meter,---
+##inner,CODE,2010382,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010382,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010382,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010382,landuse,industrial
+#
+#
+#
+point,CODE,2010390,canvec:CODE,2010390
+point,CODE,2010390,attribution,Natural Resources Canada
+point,CODE,2010390,source,CanVec_Import_2009
+point,CODE,2010390,created_by,canvec-to-osm
+#point,CODE,2010390,canvec:generic_code,2010009
+#point,CODE,2010390,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010390,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010390,canvec:value,Religious building - ( Établissement religieux )
+#point,CODE,2010390,canvec:value_definition,A building serving as a place of worship or residence for Christian or non-Christian religious order. Religious building includes: convent; church; non-Christian place of worship; monastery.
+point,CODE,2010390,amenity,place_of_worship
+outer,CODE,2010392,canvec:CODE,2010392
+outer,CODE,2010392,attribution,Natural Resources Canada
+outer,CODE,2010392,source,CanVec_Import_2009
+outer,CODE,2010392,created_by,canvec-to-osm
+#outer,CODE,2010392,canvec:generic_code,2010009
+#outer,CODE,2010392,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010392,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010392,canvec:value,Religious building - ( Établissement religieux )
+#outer,CODE,2010392,canvec:value_definition,A building serving as a place of worship or residence for Christian or non-Christian religious order. Religious building includes: convent; church; non-Christian place of worship; monastery.
+#outer,CODE,2010392,canvec:min_size:CODE,2010392
+#outer,CODE,2010392,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010392,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010392,canvec:min_size:length_meter,---
+#outer,CODE,2010392,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010392,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010392,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010392,amenity,place_of_worship
+#inner,CODE,2010392,canvec:CODE,2010392
+#inner,CODE,2010392,attribution,Natural Resources Canada
+#inner,CODE,2010392,source,CanVec_Import_2009
+#inner,CODE,2010392,created_by,canvec-to-osm
+##inner,CODE,2010392,canvec:generic_code,2010009
+##inner,CODE,2010392,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010392,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010392,canvec:value,Religious building - ( Établissement religieux )
+##inner,CODE,2010392,canvec:value_definition,A building serving as a place of worship or residence for Christian or non-Christian religious order. Religious building includes: convent; church; non-Christian place of worship; monastery.
+##inner,CODE,2010392,canvec:min_size:CODE,2010392
+##inner,CODE,2010392,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010392,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010392,canvec:min_size:length_meter,---
+##inner,CODE,2010392,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010392,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010392,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010392,amenity,place_of_worship
+#
+#
+point,CODE,2010400,canvec:CODE,2010400
+point,CODE,2010400,attribution,Natural Resources Canada
+point,CODE,2010400,source,CanVec_Import_2009
+point,CODE,2010400,created_by,canvec-to-osm
+#point,CODE,2010400,canvec:generic_code,2010009
+#point,CODE,2010400,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010400,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010400,canvec:value,Penal building - ( Établissement d'incarcération )
+#point,CODE,2010400,canvec:value_definition,A facility for confining or rehabilitating of persons convicted of breaking the law. Penal facilities includes: correctionnal institute; reformatory; penitentiary.
+point,CODE,2010400,amenity,prison
+outer,CODE,2010402,canvec:CODE,2010402
+outer,CODE,2010402,attribution,Natural Resources Canada
+outer,CODE,2010402,source,CanVec_Import_2009
+outer,CODE,2010402,created_by,canvec-to-osm
+#outer,CODE,2010402,canvec:generic_code,2010009
+#outer,CODE,2010402,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010402,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010402,canvec:value,Penal building - ( Établissement d'incarcération )
+#outer,CODE,2010402,canvec:value_definition,A facility for confining or rehabilitating of persons convicted of breaking the law. Penal facilities includes: correctionnal institute; reformatory; penitentiary.
+#outer,CODE,2010402,canvec:min_size:CODE,2010402
+#outer,CODE,2010402,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010402,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010402,canvec:min_size:length_meter,---
+#outer,CODE,2010402,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010402,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010402,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010402,amenity,prison
+#inner,CODE,2010402,canvec:CODE,2010402
+#inner,CODE,2010402,attribution,Natural Resources Canada
+#inner,CODE,2010402,source,CanVec_Import_2009
+#inner,CODE,2010402,created_by,canvec-to-osm
+##inner,CODE,2010402,canvec:generic_code,2010009
+##inner,CODE,2010402,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010402,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010402,canvec:value,Penal building - ( Établissement d'incarcération )
+##inner,CODE,2010402,canvec:value_definition,A facility for confining or rehabilitating of persons convicted of breaking the law. Penal facilities includes: correctionnal institute; reformatory; penitentiary.
+##inner,CODE,2010402,canvec:min_size:CODE,2010402
+##inner,CODE,2010402,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010402,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010402,canvec:min_size:length_meter,---
+##inner,CODE,2010402,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010402,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010402,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010402,amenity,prison
+#
+#
+point,CODE,2010420,canvec:CODE,2010420
+point,CODE,2010420,attribution,Natural Resources Canada
+point,CODE,2010420,source,CanVec_Import_2009
+point,CODE,2010420,created_by,canvec-to-osm
+#point,CODE,2010420,canvec:generic_code,2010009
+#point,CODE,2010420,canvec:entity,Building - ( Bâtiment )
+#point,CODE,2010420,canvec:entity_definition,Permanent walled and roofed construction.
+#point,CODE,2010420,canvec:value,Educational building - ( Établissement d'enseignement )
+#point,CODE,2010420,canvec:value_definition,An institution for elementary; secondary; or post-secondary education. Educational building contains: college; school; seminary; university.
+point,CODE,2010420,amenity,school
+#point,CODE,2010420,college,yes
+#point,CODE,2010420,university,yes
+#point,CODE,2010420,elementary,yes
+#point,CODE,2010420,post_secondary,yes
+#point,CODE,2010420,seminary,yes
+outer,CODE,2010422,canvec:CODE,2010422
+outer,CODE,2010422,attribution,Natural Resources Canada
+outer,CODE,2010422,source,CanVec_Import_2009
+outer,CODE,2010422,created_by,canvec-to-osm
+#outer,CODE,2010422,canvec:generic_code,2010009
+#outer,CODE,2010422,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010422,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010422,canvec:value,Educational building - ( Établissement d'enseignement )
+#outer,CODE,2010422,canvec:value_definition,An institution for elementary; secondary; or post-secondary education. Educational building contains: college; school; seminary; university.
+#outer,CODE,2010422,canvec:min_size:CODE,2010422
+#outer,CODE,2010422,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010422,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010422,canvec:min_size:length_meter,---
+#outer,CODE,2010422,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010422,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010422,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010422,amenity,school
+outer,CODE,2010422,building,yes
+#outer,CODE,2010422,college,yes
+#outer,CODE,2010422,university,yes
+#outer,CODE,2010422,elementary,yes
+#outer,CODE,2010422,post_secondary,yes
+#outer,CODE,2010422,seminary,yes
+#inner,CODE,2010422,canvec:CODE,2010422
+#inner,CODE,2010422,attribution,Natural Resources Canada
+#inner,CODE,2010422,source,CanVec_Import_2009
+#inner,CODE,2010422,created_by,canvec-to-osm
+##inner,CODE,2010422,canvec:generic_code,2010009
+##inner,CODE,2010422,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010422,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010422,canvec:value,Educational building - ( Établissement d'enseignement )
+##inner,CODE,2010422,canvec:value_definition,An institution for elementary; secondary; or post-secondary education. Educational building contains: college; school; seminary; university.
+##inner,CODE,2010422,canvec:min_size:CODE,2010422
+##inner,CODE,2010422,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010422,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010422,canvec:min_size:length_meter,---
+##inner,CODE,2010422,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010422,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010422,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010422,amenity,school
+#inner,CODE,2010422,building,yes
+##inner,CODE,2010422,college,yes
+##inner,CODE,2010422,university,yes
+##inner,CODE,2010422,elementary,yes
+##inner,CODE,2010422,post_secondary,yes
+##inner,CODE,2010422,seminary,yes
+#
+#
+#
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#point,VALDATE,,canvec:VALDATE,-
+#outer,VALDATE,,canvec:VALDATE,-
+##inner,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#point,PROVIDER,1,canvec:PROVIDER,Other
+#point,PROVIDER,2,canvec:PROVIDER,Federal
+#point,PROVIDER,3,canvec:PROVIDER,Provincial_territorial
+#point,PROVIDER,4,canvec:PROVIDER,Municipal
+#outer,PROVIDER,1,canvec:PROVIDER,Other
+#outer,PROVIDER,2,canvec:PROVIDER,Federal
+#outer,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#outer,PROVIDER,4,canvec:PROVIDER,Municipal
+##inner,PROVIDER,1,canvec:PROVIDER,Other
+##inner,PROVIDER,2,canvec:PROVIDER,Federal
+##inner,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+##inner,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+point,ID,,canvec:UUID,-
+outer,ID,,canvec:UUID,-
+#inner,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+#point,DATANAME,,canvec:datasetName,-
+#outer,DATANAME,,canvec:datasetName,-
+##inner,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#point,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#outer,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+##inner,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#point,THEME,BS,canvec:Theme,BS Buildings and structures
+#outer,THEME,BS,canvec:Theme,BS Buildings and structures
+##inner,THEME,BS,canvec:Theme,BS Buildings and structures
+#
+#
+#ORIENTATIO,N,31,8
+#Name Orientation
+#Definition Gives the direction of an occurrence of a point entity. The orientation is measured counterclockwise from the X-axis.
+#Data type Integer
+#Measurement unit Degree
+#Domain [-1,0..359]
+#point,ORIENTATIO,,canvec:ORIENTATIO,-
+#outer,ORIENTATIO,,canvec:ORIENTATIO,-
+##inner,ORIENTATIO,,canvec:ORIENTATIO,-
+#
+#FUNCTION,N,3,0
+#Name Building function
+#Definition Function of the building.
+#Data type Integer
+#Domain [-1,1,2,5..9,11,12,16,17,19,20,23..27,29,32,37..39,41]
+#point,FUNCTION,,canvec:FUNCTION,-
+#outer,FUNCTION,,canvec:FUNCTION,-
+##inner,FUNCTION,,canvec:FUNCTION,-
+#

@@ -1,0 +1,115 @@
+# last updated 1:47 AM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+# BS_1250009_0_Navigational_aidRULES.txt
+# Note: This script omits the description tags.  Use rules_canvecMETAosm.txt for the full version.
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, #inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+point,GEOMETRY,,GEOMETRY,-
+outer,GEOMETRY,,GEOMETRY,-
+#inner,GEOMETRY,,GEOMETRY,-
+#
+# note,"CODE" is used to note all the other attributes for each feature
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+point,CODE,,attribution,Natural Resources Canada
+point,CODE,,source,CanVec_Import_2009
+point,CODE,,created_by,canvec-to-osm
+#point,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+#
+point,CODE,1250010,canvec:CODE,1250010
+#point,CODE,1250010,canvec:generic_code,1250009
+#point,CODE,1250010,canvec:entity,Navigational aid - ( Repère de navigation )
+#point,CODE,1250010,canvec:entity_definition,A structure erected to guide navigators.
+#point,CODE,1250010,canvec:value,Navigation beacon - ( Balise de navigation )
+#point,CODE,1250010,canvec:value_definition,A non-lighted structure.
+point,CODE,1250010,sea_mark,day_beacon
+#
+point,CODE,1250020,canvec:CODE,1250020
+#point,CODE,1250020,canvec:generic_code,1250009
+#point,CODE,1250020,canvec:entity,Navigational aid - ( Repère de navigation )
+#point,CODE,1250020,canvec:entity_definition,A structure erected to guide navigators.
+#point,CODE,1250020,canvec:value,Navigation light - ( Feu de navigation )
+#point,CODE,1250020,canvec:value_definition,A structure equipped with a light.
+point,CODE,1250020,man_made,lighthouse
+point,CODE,1250020,sea_mark,lighthouse
+#
+point,CODE,1250030,canvec:CODE,1250030
+#point,CODE,1250030,canvec:generic_code,1250009
+#point,CODE,1250030,canvec:entity,Navigational aid - ( Repère de navigation )
+#point,CODE,1250030,canvec:entity_definition,A structure erected to guide navigators.
+#point,CODE,1250030,canvec:value,Unknown - ( Inconnu )
+#point,CODE,1250030,canvec:value_definition,Impossible to determine the navigational aid type from the data source.
+point,CODE,1250030,man_made,beacon
+point,CODE,1250030,sea_mark,beacon
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#point,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#point,PROVIDER,1,canvec:PROVIDER,Other
+#point,PROVIDER,2,canvec:PROVIDER,Federal
+#point,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#point,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+point,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+#point,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#point,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#point,THEME,LX,canvec:Theme,LX Places of Interest
+#

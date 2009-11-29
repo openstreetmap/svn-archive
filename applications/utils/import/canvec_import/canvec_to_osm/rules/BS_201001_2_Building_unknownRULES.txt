@@ -1,0 +1,71 @@
+# last updated 1:46 AM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+#
+# BS_201001_2_Building_unknownRULES.txt
+#
+# Note: This script omits the description tags.  Use rules_canvecMETAosm.txt for the full version.
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, ##inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+point,GEOMETRY,,GEOMETRY,-
+outer,GEOMETRY,,GEOMETRY,-
+##inner,GEOMETRY,,GEOMETRY,-
+#
+#
+#
+outer,CODE,2010012,canvec:CODE,2010012
+outer,CODE,2010012,attribution,Natural Resources Canada
+outer,CODE,2010012,source,CanVec_Import_2009
+outer,CODE,2010012,created_by,canvec-to-osm
+#outer,CODE,2010012,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#outer,CODE,2010012,canvec:generic_code,2010009
+#outer,CODE,2010012,canvec:entity,Building - ( Bâtiment )
+#outer,CODE,2010012,canvec:entity_definition,Permanent walled and roofed construction.
+#outer,CODE,2010012,canvec:value,Unknown - ( Inconnu )
+#outer,CODE,2010012,canvec:value_definition,Impossible to determine the building function from the data source.
+#outer,CODE,2010012,canvec:min_size:CODE,2010012	
+#outer,CODE,2010012,canvec:min_size:area_sq_meter,100
+#outer,CODE,2010012,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,2010012,canvec:min_size:length_meter,---
+#outer,CODE,2010012,canvec:min_size:long_distance_meter,1.5
+#outer,CODE,2010012,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,2010012,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,2010012,building,yes
+#inner,CODE,2010012,canvec:CODE,2010012
+#inner,CODE,2010012,attribution,Natural Resources Canada
+#inner,CODE,2010012,source,CanVec_Import_2009
+#inner,CODE,2010012,created_by,canvec-to-osm
+##inner,CODE,2010012,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+##inner,CODE,2010012,canvec:generic_code,2010009
+##inner,CODE,2010012,canvec:entity,Building - ( Bâtiment )
+##inner,CODE,2010012,canvec:entity_definition,Permanent walled and roofed construction.
+##inner,CODE,2010012,canvec:value,Unknown - ( Inconnu )
+##inner,CODE,2010012,canvec:value_definition,Impossible to determine the building function from the data source.
+##inner,CODE,2010012,canvec:min_size:CODE,2010012	
+##inner,CODE,2010012,canvec:min_size:area_sq_meter,100
+##inner,CODE,2010012,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,2010012,canvec:min_size:length_meter,---
+##inner,CODE,2010012,canvec:min_size:long_distance_meter,1.5
+##inner,CODE,2010012,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,2010012,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,2010012,building,yes
+#**
+#
+#
+outer,ID,,canvec:UUID,-
+#inner,ID,,canvec:UUID,-

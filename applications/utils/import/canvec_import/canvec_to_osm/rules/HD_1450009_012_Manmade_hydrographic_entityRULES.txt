@@ -1,0 +1,844 @@
+#
+# Updated 3:44 AM 10/19/2009
+# HD_1450009_012_Manmade_hydrographic_entityRULES.txt 
+# v0.9.5.0
+# 
+# 
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, #inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#
+point,GEOMETRY,,GEOMETRY,-
+line,GEOMETRY,,GEOMETRY,-
+outer,GEOMETRY,,GEOMETRY,-
+#inner,GEOMETRY,,GEOMETRY,-
+#
+# Attributes common to all entities (except those from GeoBase) 
+#
+#note,"CODE" is used to note all the other attributes for each feature
+#
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+point,CODE,,attribution,Natural Resources Canada
+point,CODE,,source,CanVec_Import_2009
+point,CODE,,created_by,canvec-to-osm
+#point,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+line,CODE,,attribution,Natural Resources Canada
+line,CODE,,source,CanVec_Import_2009
+line,CODE,,created_by,canvec-to-osm
+#line,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+outer,CODE,,attribution,Natural Resources Canada
+outer,CODE,,source,CanVec_Import_2009
+outer,CODE,,created_by,canvec-to-osm
+#outer,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#inner,CODE,,attribution,Natural Resources Canada
+#inner,CODE,,source,CanVec_Import_2009
+#inner,CODE,,created_by,canvec-to-osm
+##inner,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#point,VALDATE,,canvec:VALDATE,-
+#line,VALDATE,,canvec:VALDATE,-
+#outer,VALDATE,,canvec:VALDATE,-
+##inner,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#point,PROVIDER,1,canvec:PROVIDER,Other
+#point,PROVIDER,2,canvec:PROVIDER,Federal
+#point,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#point,PROVIDER,4,canvec:PROVIDER,Municipal
+#line,PROVIDER,1,canvec:PROVIDER,other
+#line,PROVIDER,2,canvec:PROVIDER,federal
+#line,PROVIDER,3,canvec:PROVIDER,provincial_territorial
+#line,PROVIDER,4,canvec:PROVIDER,municipal
+#outer,PROVIDER,1,canvec:PROVIDER,Other
+#outer,PROVIDER,2,canvec:PROVIDER,Federal
+#outer,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#outer,PROVIDER,4,canvec:PROVIDER,Municipal
+##inner,PROVIDER,1,canvec:PROVIDER,Other
+##inner,PROVIDER,2,canvec:PROVIDER,Federal
+##inner,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+##inner,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+point,ID,,canvec:UUID,-
+line,ID,,canvec:UUID,-
+outer,ID,,canvec:UUID,-
+#inner,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+#point,DATANAME,,canvec:datasetName,-
+#line,DATANAME,,canvec:datasetName,-
+#outer,DATANAME,,canvec:datasetName,-
+##inner,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#point,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#line,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#outer,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+##inner,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#point,THEME,BS,canvec:Theme,BS Buildings and structures
+#point,THEME,EN,canvec:Theme,EN Energy
+#point,THEME,FO,canvec:Theme,FO Relief and landforms
+#point,THEME,HD,canvec:Theme,HD Hydrography
+#point,THEME,IC,canvec:Theme,IC Industrial and commercial areas
+#point,THEME,LI,canvec:Theme,LI Administrative boundaries
+#point,THEME,LX,canvec:Theme,LX Places of Interest
+#point,THEME,SS,canvec:Theme,SS Water saturated soils 
+#point,THEME,TO,canvec:Theme,TO Toponymy
+#point,THEME,TR,canvec:Theme,TR Transportation
+#point,THEME,VE,canvec:Theme,VE Vegetation
+#line,THEME,BS,canvec:Theme,BS Buildings and structures
+#line,THEME,EN,canvec:Theme,EN Energy
+#line,THEME,FO,canvec:Theme,FO Relief and landforms
+#line,THEME,HD,canvec:Theme,HD Hydrography
+#line,THEME,IC,canvec:Theme,IC Industrial and commercial areas
+#line,THEME,LI,canvec:Theme,LI Administrative boundaries
+#line,THEME,LX,canvec:Theme,LX Places of Interest
+#line,THEME,SS,canvec:Theme,SS Water saturated soils 
+#line,THEME,TO,canvec:Theme,TO Toponymy
+#line,THEME,TR,canvec:Theme,TR Transportation
+#line,THEME,VE,canvec:Theme,VE Vegetation
+#outer,THEME,BS,canvec:Theme,BS Buildings and structures
+#outer,THEME,EN,canvec:Theme,EN Energy
+#outer,THEME,FO,canvec:Theme,FO Relief and landforms
+#outer,THEME,HD,canvec:Theme,HD Hydrography
+#outer,THEME,IC,canvec:Theme,IC Industrial and commercial areas
+#outer,THEME,LI,canvec:Theme,LI Administrative boundaries
+#outer,THEME,LX,canvec:Theme,LX Places of Interest
+#outer,THEME,SS,canvec:Theme,SS Water saturated soils 
+#outer,THEME,TO,canvec:Theme,TO Toponymy
+#outer,THEME,TR,canvec:Theme,TR Transportation
+#outer,THEME,VE,canvec:Theme,VE Vegetation
+##inner,THEME,BS,canvec:Theme,BS Buildings and structures
+##inner,THEME,EN,canvec:Theme,EN Energy
+##inner,THEME,FO,canvec:Theme,FO Relief and landforms
+##inner,THEME,HD,canvec:Theme,HD Hydrography
+##inner,THEME,IC,canvec:Theme,IC Industrial and commercial areas
+##inner,THEME,LI,canvec:Theme,LI Administrative boundaries
+##inner,THEME,LX,canvec:Theme,LX Places of Interest
+##inner,THEME,SS,canvec:Theme,SS Water saturated soils 
+##inner,THEME,TO,canvec:Theme,TO Toponymy
+##inner,THEME,TR,canvec:Theme,TR Transportation
+##inner,THEME,VE,canvec:Theme,VE Vegetation
+#
+#
+#
+# Attributes common to all GeoBase entities
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#
+#
+#ACQTECH
+#Name,Acquisition technique
+#Definition,The type of data source or technique used to populate (create or revise) the data.
+#Data type,Integer
+#Domain,[-1,0,1..12]
+#point,ACQTECH,-1,canvec:ACQTECH,Unknown
+#point,ACQTECH,0,canvec:ACQTECH,None
+#point,ACQTECH,1,canvec:ACQTECH,Other
+#point,ACQTECH,2,canvec:ACQTECH,GPS
+#point,ACQTECH,3,canvec:ACQTECH,Orthoimage
+#point,ACQTECH,4,canvec:ACQTECH,Orthophoto
+#point,ACQTECH,5,canvec:ACQTECH,Vector data
+#point,ACQTECH,6,canvec:ACQTECH,Paper map
+#point,ACQTECH,7,canvec:ACQTECH,Field completion
+#point,ACQTECH,8,canvec:ACQTECH,Raster data
+#point,ACQTECH,9,canvec:ACQTECH,Digital elevation model
+#point,ACQTECH,10,canvec:ACQTECH,Aerial photo
+#point,ACQTECH,11,canvec:ACQTECH,Raw imagery data
+#point,ACQTECH,12,canvec:ACQTECH,Computed
+#line,ACQTECH,-1,canvec:ACQTECH,Unknown
+#line,ACQTECH,0,canvec:ACQTECH,None
+#line,ACQTECH,1,canvec:ACQTECH,Other
+#line,ACQTECH,2,canvec:ACQTECH,GPS
+#line,ACQTECH,3,canvec:ACQTECH,Orthoimage
+#line,ACQTECH,4,canvec:ACQTECH,Orthophoto
+#line,ACQTECH,5,canvec:ACQTECH,Vector data
+#line,ACQTECH,6,canvec:ACQTECH,Paper map
+#line,ACQTECH,7,canvec:ACQTECH,Field completion
+#line,ACQTECH,8,canvec:ACQTECH,Raster data
+#line,ACQTECH,9,canvec:ACQTECH,Digital elevation model
+#line,ACQTECH,10,canvec:ACQTECH,Aerial photo
+#line,ACQTECH,11,canvec:ACQTECH,Raw imagery data
+#line,ACQTECH,12,canvec:ACQTECH,Computed
+#outer,ACQTECH,-1,canvec:ACQTECH,Unknown
+#outer,ACQTECH,0,canvec:ACQTECH,None
+#outer,ACQTECH,1,canvec:ACQTECH,Other
+#outer,ACQTECH,2,canvec:ACQTECH,GPS
+#outer,ACQTECH,3,canvec:ACQTECH,Orthoimage
+#outer,ACQTECH,4,canvec:ACQTECH,Orthophoto
+#outer,ACQTECH,5,canvec:ACQTECH,Vector data
+#outer,ACQTECH,6,canvec:ACQTECH,Paper map
+#outer,ACQTECH,7,canvec:ACQTECH,Field completion
+#outer,ACQTECH,8,canvec:ACQTECH,Raster data
+#outer,ACQTECH,9,canvec:ACQTECH,Digital elevation model
+#outer,ACQTECH,10,canvec:ACQTECH,Aerial photo
+#outer,ACQTECH,11,canvec:ACQTECH,Raw imagery data
+#outer,ACQTECH,12,canvec:ACQTECH,Computed
+##inner,ACQTECH,-1,canvec:ACQTECH,Unknown
+##inner,ACQTECH,0,canvec:ACQTECH,None
+##inner,ACQTECH,1,canvec:ACQTECH,Other
+##inner,ACQTECH,2,canvec:ACQTECH,GPS
+##inner,ACQTECH,3,canvec:ACQTECH,Orthoimage
+##inner,ACQTECH,4,canvec:ACQTECH,Orthophoto
+##inner,ACQTECH,5,canvec:ACQTECH,Vector data
+##inner,ACQTECH,6,canvec:ACQTECH,Paper map
+##inner,ACQTECH,7,canvec:ACQTECH,Field completion
+##inner,ACQTECH,8,canvec:ACQTECH,Raster data
+##inner,ACQTECH,9,canvec:ACQTECH,Digital elevation model
+##inner,ACQTECH,10,canvec:ACQTECH,Aerial photo
+##inner,ACQTECH,11,canvec:ACQTECH,Raw imagery data
+##inner,ACQTECH,12,canvec:ACQTECH,Computed
+#
+#
+#SOURCEID
+#Name,Source identifier
+#Definition,A unique national identifier.
+#Data type,Character (32)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+#point,SOURCEID,,canvec:SOURCEID_UUID,-
+#line,SOURCEID,,canvec:SOURCEID_UUID,-
+#outer,SOURCEID,,canvec:SOURCEID_UUID,-
+##inner,SOURCEID,,canvec:SOURCEID_UUID,-
+#
+#
+#
+#  Attributes related to toponymy (geographical names)
+#
+#
+#CONCISCODE
+#Name,Toponymic concise code
+#Definition,Toponymic type used to specify the category of the named phenomenon. Called "Concise code" in the Canadian Geographical Names Data Base (CGNDB).
+#Data type,Integer
+#Domain [-1,5,7,10,20,30,40,45,50,60,80,90,100,110,115,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340,350,370,380,390,400,410,420,430,440,450,460]
+#
+#-1
+#Unknown
+#Toponymic feature type as defined in the Canadian Geographical Names Data Base.
+#point,CONCISCODE,-1,canvec:CONCISCODE,-1 Unknown
+#point,CONCISCODE,5,canvec:CONCISCODE,5 PROV Province
+#point,CONCISCODE,5,place,state
+#point,CONCISCODE,7,canvec:CONCISCODE,7 TERR Territory
+#point,CONCISCODE,7,place,state
+#point,CONCISCODE,10,canvec:CONCISCODE,10 CITY City
+#point,CONCISCODE,10,place,city
+#point,CONCISCODE,20,canvec:CONCISCODE,20 TOWN Town
+#point,CONCISCODE,20,place,town
+#point,CONCISCODE,30,canvec:CONCISCODE,30 VILG Village
+#point,CONCISCODE,30,place,village
+#point,CONCISCODE,40,canvec:CONCISCODE,40 HAM Hamlet
+#point,CONCISCODE,40,place,hamlet
+#point,CONCISCODE,45,canvec:CONCISCODE,45 DMUN District municipality
+#point,CONCISCODE,45,place,district_municipality
+#point,CONCISCODE,50,canvec:CONCISCODE,50 MUN1 Other municipal/district area - major agglomeration
+#point,CONCISCODE,60,canvec:CONCISCODE,60 MUN2 Other municipal/district area - miscellaneous
+#point,CONCISCODE,80,canvec:CONCISCODE,80 UNP Unincorporated area
+#point,CONCISCODE,80,place,unincorporated_area
+#point,CONCISCODE,90,canvec:CONCISCODE,90 IR Indian Reserve
+#point,CONCISCODE,90,place,indian_reserve
+#point,CONCISCODE,100,canvec:CONCISCODE,100 GEOG Geographical area
+#point,CONCISCODE,100,place,locality
+#point,CONCISCODE,110,canvec:CONCISCODE,110 PARK Conservation area
+#point,CONCISCODE,110,leisure,nature_reserve
+#point,CONCISCODE,115,canvec:CONCISCODE,115 MIL Military area
+#point,CONCISCODE,115,landuse,military
+#point,CONCISCODE,120,canvec:CONCISCODE,120 RIV River
+#point,CONCISCODE,120,natural,river
+#point,CONCISCODE,130,canvec:CONCISCODE,130 RIVF River feature
+#point,CONCISCODE,130,natural,river
+#point,CONCISCODE,140,canvec:CONCISCODE,140 FALL Falls
+#point,CONCISCODE,140,natural,waterfall
+#point,CONCISCODE,140,waterway,waterfall
+#point,CONCISCODE,150,canvec:CONCISCODE,150 LAKE Lake
+#point,CONCISCODE,150,natural,water
+#point,CONCISCODE,160,canvec:CONCISCODE,160 SPRG Spring
+#point,CONCISCODE,160,natural,spring
+#point,CONCISCODE,170,canvec:CONCISCODE,170 SEA Sea
+#point,CONCISCODE,170,natural,water
+#point,CONCISCODE,180,canvec:CONCISCODE,180 SEAF Sea feature
+#point,CONCISCODE,180,natural,sea_feature
+#point,CONCISCODE,190,canvec:CONCISCODE,190 SEAU Undersea feature
+#point,CONCISCODE,190,sub_sea,feature
+#point,CONCISCODE,200,canvec:CONCISCODE,200 CHAN Channel
+#point,CONCISCODE,200,natural,channel
+#point,CONCISCODE,210,canvec:CONCISCODE,210 RAP Rapids
+#point,CONCISCODE,210,waterway,rapids
+#point,CONCISCODE,220,canvec:CONCISCODE,220 BAY Bay
+#point,CONCISCODE,220,natural,bay
+#point,CONCISCODE,230,canvec:CONCISCODE,230 CAPE Cape
+#point,CONCISCODE,230,natural,cape
+#
+#point,CONCISCODE,270,canvec:CONCISCODE,240 BCH Beach
+#point,CONCISCODE,270,natural,beach
+#
+#250 SHL Shoal
+#http://en.wikipedia.org/wiki/Barrier_island
+#point,CONCISCODE,250,canvec:CONCISCODE,250 SHL Shoal
+#point,CONCISCODE,250,natural,shoal
+#
+#point,CONCISCODE,260,canvec:CONCISCODE,260 ISL Island
+#point,CONCISCODE,260,place,island
+#
+#point,CONCISCODE,270,canvec:CONCISCODE,270 CLF Cliff
+#point,CONCISCODE,270,natural,cliff
+#
+#point,CONCISCODE,280,canvec:CONCISCODE,280 MTN Mountain
+#point,CONCISCODE,280,natural,peak
+#
+#point,CONCISCODE,290,canvec:CONCISCODE,290 VALL Valley
+#point,CONCISCODE,290,natural,valley
+#
+#point,CONCISCODE,300,canvec:CONCISCODE,300 PLN Plain
+#point,CONCISCODE,300,natural,plain
+#
+#point,CONCISCODE,310,canvec:CONCISCODE,310 CAVE Cave
+#point,CONCISCODE,310,natural,cave_entrance
+#
+#point,CONCISCODE,320,canvec:CONCISCODE,320 CRAT Crater
+#point,CONCISCODE,320,natural,crater
+#
+#point,CONCISCODE,330,canvec:CONCISCODE,330 GLAC Glacier
+#point,CONCISCODE,330,natural,glacier
+#
+#point,CONCISCODE,340,canvec:CONCISCODE,340 FOR Forest
+#point,CONCISCODE,340,landuse,forest
+#point,CONCISCODE,340,natural,wood
+#
+#point,CONCISCODE,350,canvec:CONCISCODE,350 VEGL Low vegetation
+#point,CONCISCODE,350,landuse,meadow
+#
+#point,CONCISCODE,370,canvec:CONCISCODE,370 MISC Miscellaneous
+#
+#point,CONCISCODE,380,canvec:CONCISCODE,380 RAIL Railway feature
+#point,CONCISCODE,380,railway,rail
+#
+#point,CONCISCODE,390,canvec:CONCISCODE,390 ROAD Road feature
+#point,CONCISCODE,390,highway,road
+#
+#point,CONCISCODE,400,canvec:CONCISCODE,400 AIR Air navigation feature
+#point,CONCISCODE,400,aeroway,aerodrome
+#
+#point,CONCISCODE,410,canvec:CONCISCODE,410 MAR Marine navigation feature
+#point,CONCISCODE,410,man_made,beacon
+#
+#point,CONCISCODE,420,canvec:CONCISCODE,420 HYDR Hydraulic construction
+#
+#point,CONCISCODE,430,canvec:CONCISCODE,430 RECR Recreational site
+#point,CONCISCODE,430,landuse,recreation_ground
+#
+#point,CONCISCODE,440,canvec:CONCISCODE,440 RES Natural resources site
+#point,CONCISCODE,440,leisure,nature_reserve
+#
+#point,CONCISCODE,450,canvec:CONCISCODE,450 CAMP Miscellaneous campsite
+#point,CONCISCODE,450,tourism,camp_site
+#
+#point,CONCISCODE,460,canvec:CONCISCODE,460 SITE Miscellaneous site
+#
+#
+#
+#
+#GEONAMEDB
+#Name,Geographical name database
+#Definition,Name of the database from which the geographical name comes from.
+#Data type,Character (20)
+#Domain,The name or acronym of a geographical name database. The field is left blank when not applicable or unknown.
+#point,GEONAMEDB,,canvec:GEONAMEDB,-
+#line,GEONAMEDB,,canvec:GEONAMEDB,-
+#outer,GEONAMEDB,,canvec:GEONAMEDB,-
+##inner,GEONAMEDB,,canvec:GEONAMEDB,-
+#
+#
+#LANGUAGE
+#Name,Language
+#Definition,Attribute used to indicate the official geographical name (toponym) language.
+#Data type,Integer
+#Domain,[-1,1,2,4]
+#point,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+#point,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+#point,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+#point,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+#line,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+#line,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+#line,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+#line,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+#outer,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+#outer,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+#outer,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+#outer,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+##inner,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+##inner,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+##inner,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+##inner,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+#
+#
+#NAMEEN
+#Attributes related to toponymy (geographical names)
+#Name,English name
+#Definition,The English geographical name of the toponymic phenomenon.
+#Data type,Character (100)
+#Domain,An English toponym. If no English name exists, the French or Aboriginal name is provided, the priority is given to the French name. The field is left blank when not applicable or unknown.
+#point,NAMEEN,,name:EN,- *using english as the default language, change default language where appropriate
+point,NAMEEN,,name,-
+line,NAMEEN,,name,-
+outer,NAMEEN,,name,-
+#inner,NAMEEN,,name,-
+#
+#
+#NAMEFR
+#Name,French name
+#Definition,The French geographical name of the toponymic phenomenon.
+#Data type,Character (100)
+#Domain,An French toponym. If no French name exists, the English or Aboriginal name is provided, the priority is given to the English name. The field is left blank when not applicable or unknown.
+#line,NAMEFR,,name,- *using english as the default language, change default language where appropriate
+point,NAMEFR,,name:fr,-
+line,NAMEFR,,name:fr,-
+outer,NAMEFR,,name:fr,-
+#inner,NAMEFR,,name:fr,-
+#
+#
+#NAMEID
+#Name,Name ID
+#Definition,The geographical name identifier from the geographical name database.
+#Data type,Character (32)
+#Domain,A geographical name identifier. The field is left blank when not applicable or unknown.
+#point,NAMEID,,canvec:NAMEID,-
+#line,NAMEID,,canvec:NAMEID,-
+#outer,NAMEID,,canvec:NAMEID,-
+##inner,NAMEID,,canvec:NAMEID,-
+#
+#
+# Everything above this line is on all features
+# Everything below this line is on some features with SAME values
+# 
+###point,STATUS,,canvec:STATUS,-
+####point,TYPE,,canvec:TYPE,-
+# a separate txt file is made
+#
+#NHNAREA
+#Name,NHN drainage area
+#Definition,NHN dataset (drainage area) identifier.
+#Data type,Character (7)
+#Domain 7-characters code based on the naming convention of the Water Survey of Canada Sub-Sub-Drainage Areas (WSCSSDA) and/or the Fondamental Drainage Areas from the Atlas of Canada (FDAAC). The field is left blank when not applicable.
+#point,NHNAREA,,canvec:NHNAREA,-
+#line,NHNAREA,,canvec:NHNAREA,-
+#outer,NHNAREA,,canvec:NHNAREA,-
+##inner,NHNAREA,,canvec:NHNAREA,-
+#
+#
+#TYPE
+#
+#point,TYPE,,canvec:TYPE,-
+#line,TYPE,,canvec:TYPE,-
+#outer,TYPE,,canvec:TYPE,-
+##inner,TYPE,,canvec:TYPE,-
+# 
+#
+#
+#LAKCONCOD,N,10,0	
+#Name Toponymic concise code
+#Definition Toponymic type used to specify the category of the named phenomenon. Called "Concise code" in the Canadian Geographical Names Data Base (CGNDB).
+#
+#
+#RIVCONCOD,N,10
+#Name Toponymic concise code
+#Definition Toponymic type used to specify the category of the named phenomenon. Called "Concise code" in the Canadian Geographical Names Data Base (CGNDB).
+# see HD_1480009_2waterbody_GeoBase.txt
+#
+#
+#point,ID_CANAC,,canvec:ID_CANAC,-
+#line,ID_CANAC,,canvec:ID_CANAC,-
+#outer,ID_CANAC,,canvec:ID_CANAC,-
+##inner,ID_CANAC,,canvec:ID_CANAC,-
+#
+#
+point,LAKNAMEEN,,name,-
+point,LAKNAMEFR,,name:fr,-
+line,LAKNAMEEN,,name,-
+line,LAKNAMEFR,,name:fr,-
+outer,LAKNAMEEN,,name,-
+outer,LAKNAMEFR,,name:fr,-
+#inner,LAKNAMEEN,,name,-
+#inner,LAKNAMEFR,,name:fr,-
+#
+#
+#point,FID,,canvec:FID,-
+#line,FID,,canvec:FID,-
+#outer,FID,,canvec:FID,-
+##inner,FID,,canvec:FID,-
+#
+#
+#
+#
+#
+#
+#line,STATUS,,canvec:STATUS,-
+#outer,STATUS,,canvec:STATUS,-
+#outer,TYPE,,canvec:TYPE,-
+#
+##inner,STATUS,,canvec:STATUS,-
+#
+#
+#GeoBaseNHN:point,TYPE_TEXT,Unknown,man_made,yes
+#GeoBaseNHN:line,TYPE_TEXT,Unknown,man_made,yes
+#GeoBaseNHN:outer,TYPE_TEXT,Unknown,man_made,yes
+point,CODE,1450010,canvec:CODE,1450010
+#point,CODE,1450010,canvec:generic_code,1450009
+#point,CODE,1450010,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#point,CODE,1450010,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#point,CODE,1450010,canvec:value,Unknown - ( Inconnu )
+#point,CODE,1450010,canvec:value_definition,Impossible to determine.
+point,CODE,1450010,man_made,yes
+line,CODE,1450011,canvec:CODE,1450011
+#line,CODE,1450011,canvec:generic_code,1450009
+#line,CODE,1450011,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#line,CODE,1450011,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1450011,canvec:value,Unknown - ( Inconnu )
+#line,CODE,1450011,canvec:value_definition,Impossible to determine.
+line,CODE,1450011,man_made,yes
+outer,CODE,1450012,canvec:CODE,1450012
+#outer,CODE,1450012,canvec:generic_code,1450009
+#outer,CODE,1450012,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#outer,CODE,1450012,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#outer,CODE,1450012,canvec:value,Unknown - ( Inconnu )
+#outer,CODE,1450012,canvec:value_definition,Impossible to determine.
+outer,CODE,1450012,man_made,yes
+#inner,CODE,1450012,canvec:CODE,1450012
+##inner,CODE,1450012,canvec:generic_code,1450009
+##inner,CODE,1450012,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+##inner,CODE,1450012,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+##inner,CODE,1450012,canvec:value,Unknown - ( Inconnu )
+##inner,CODE,1450012,canvec:value_definition,Impossible to determine.
+#inner,CODE,1450012,man_made,yes
+#
+#GeoBaseNHN:point,TYPE_TEXT,Unknown,man_made,yes
+#GeoBaseNHN:line,TYPE_TEXT,Unknown,man_made,yes
+#GeoBaseNHN:outer,TYPE_TEXT,Unknown,man_made,yes
+point,CODE,1450020,canvec:CODE,1450020
+#point,CODE,1450020,canvec:generic_code,1450009
+#point,CODE,1450020,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#point,CODE,1450020,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#point,CODE,1450020,canvec:value,None - ( Aucun )
+#point,CODE,1450020,canvec:value_definition,None of the other values.
+point,CODE,1450020,man_made,yes
+line,CODE,1450021,canvec:CODE,1450021
+#line,CODE,1450021,canvec:generic_code,1450009
+#line,CODE,1450021,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#line,CODE,1450021,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1450021,canvec:value,None - ( Aucun )
+#line,CODE,1450021,canvec:value_definition,None of the other values.
+line,CODE,1450021,man_made,yes
+outer,CODE,1450022,canvec:CODE,1450022
+#outer,CODE,1450022,canvec:generic_code,1450009
+#outer,CODE,1450022,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#outer,CODE,1450022,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#outer,CODE,1450022,canvec:value,None - ( Aucun )
+#outer,CODE,1450022,canvec:value_definition,None of the other values.
+outer,CODE,1450022,man_made,yes
+#inner,CODE,1450022,canvec:CODE,1450012
+##inner,CODE,1450022,canvec:generic_code,1450009
+##inner,CODE,1450022,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+##inner,CODE,1450022,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+##inner,CODE,1450022,canvec:value,None - ( Aucun )
+##inner,CODE,1450022,canvec:value_definition,None of the other values.
+#inner,CODE,1450022,man_made,yes
+#
+#GeoBaseNHN:point,TYPE_TEXT,Dam,waterway,dam
+point,CODE,1450030,canvec:CODE,1450030
+#point,CODE,1450030,canvec:generic_code,1450009
+#point,CODE,1450030,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#point,CODE,1450030,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#point,CODE,1450030,canvec:value,Dam - ( Barrage )
+#point,CODE,1450030,canvec:value_definition,A manmade structure built across a body of water to control the water flow.
+point,CODE,1450030,waterway,dam
+line,CODE,1450031,canvec:CODE,1450031
+#line,CODE,1450031,canvec:generic_code,1450009
+#line,CODE,1450031,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#line,CODE,1450031,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1450031,canvec:value,Dam - ( Barrage )
+#line,CODE,1450031,canvec:value_definition,A manmade structure built across a body of water to control the water flow.
+line,CODE,1450031,waterway,dam
+outer,CODE,1450032,canvec:CODE,1450032
+#outer,CODE,1450032,canvec:generic_code,1450009
+#outer,CODE,1450032,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#outer,CODE,1450032,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#outer,CODE,1450032,canvec:value,Dam - ( Barrage )
+#outer,CODE,1450032,canvec:value_definition,A manmade structure built across a body of water to control the water flow.
+outer,CODE,1450032,waterway,dam
+#inner,CODE,1450032,canvec:CODE,1450032
+##inner,CODE,1450032,canvec:generic_code,1450009
+##inner,CODE,1450032,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+##inner,CODE,1450032,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+##inner,CODE,1450032,canvec:value,Dam - ( Barrage )
+##inner,CODE,1450032,canvec:value_definition,A manmade structure built across a body of water to control the water flow.
+#inner,CODE,1450032,waterway,dam
+#
+#GeoBaseNHN:point,TYPE_TEXT,Lock Gate,waterway,lock_gate
+#outer,TYPE_TEXT,Lock Gate,waterway,lock_gate
+##inner,TYPE_TEXT,Lock Gate,waterway,lock_gate
+point,CODE,1450040,canvec:CODE,1450040
+#point,CODE,1450040,canvec:generic_code,1450009
+#point,CODE,1450040,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#point,CODE,1450040,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#point,CODE,1450040,canvec:value,Lock gate - ( Porte d'écluse )
+#point,CODE,1450040,canvec:value_definition,A gate on a navigable canal used to raise or lower the water level so that boats may pass from one level to another.
+point,CODE,1450040,waterway,lock_gate
+line,CODE,1450041,canvec:CODE,1450041
+#line,CODE,1450041,canvec:generic_code,1450009
+#line,CODE,1450041,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#line,CODE,1450041,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1450041,canvec:value,Lock gate - ( Porte d'écluse )
+#line,CODE,1450041,canvec:value_definition,A gate on a navigable canal used to raise or lower the water level so that boats may pass from one level to another.
+line,CODE,1450041,waterway,lock_gate
+#
+#GeoBaseNHN:point,TYPE_TEXT,Boat Ramp,leisure,slipway
+#line,TYPE_TEXT,Boat Ramp,leisure,slipway
+#outer,TYPE_TEXT,Boat Ramp,leisure,slipway
+##inner,TYPE_TEXT,Boat Ramp,leisure,slipway
+point,CODE,1450050,canvec:CODE,1450050
+#point,CODE,1450050,canvec:generic_code,1450009
+#point,CODE,1450050,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#point,CODE,1450050,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#point,CODE,1450050,canvec:value,Boat ramp - ( Rampe de mise à l'eau )
+#point,CODE,1450050,canvec:value_definition,A sloped area partially above and partially below the water surface used for launching or landing watercraft.
+point,CODE,1450050,leisure,slipway
+#
+#GeoBaseNHN:point,TYPE_TEXT,Fish Ladder,man_made,fish_passage
+point,CODE,1450060,canvec:CODE,1450060
+#point,CODE,1450060,canvec:generic_code,1450009
+#point,CODE,1450060,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#point,CODE,1450060,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#point,CODE,1450060,canvec:value,Fish ladder - ( Échelle à poissons )
+#point,CODE,1450060,canvec:value_definition,A constructed series of pools arranged like steps to enable fish to pass an obstacle. Fish ladders are also referred to as fish ways; fish passes; and fish passage facilities.
+point,CODE,1450060,man_made,fish_passage
+#
+#note,Is in GeoBase – do not use - 
+#point,TYPE_TEXT,Dock,waterway,dock
+point,CODE,1450070,canvec:CODE,1450070
+#point,CODE,1450070,canvec:generic_code,1450009
+#point,CODE,1450070,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#point,CODE,1450070,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#point,CODE,1450070,canvec:value,Dock - ( Dock )
+#point,CODE,1450070,canvec:value_definition,A waterway extending between two piers or wharves or cut into the land to receive ships.
+point,CODE,1450070,waterway,dock
+line,CODE,1450071,canvec:CODE,1450071
+#line,CODE,1450071,canvec:generic_code,1450009
+#line,CODE,1450071,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#line,CODE,1450071,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1450071,canvec:value,Dock - ( Dock )
+#line,CODE,1450071,canvec:value_definition,A waterway extending between two piers or wharves or cut into the land to receive ships.
+line,CODE,1450071,waterway,dock
+outer,CODE,1450072,canvec:CODE,1450072
+#outer,CODE,1450072,canvec:generic_code,1450009
+#outer,CODE,1450072,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#outer,CODE,1450072,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#outer,CODE,1450072,canvec:value,Dock - ( Dock )
+#outer,CODE,1450072,canvec:value_definition,A waterway extending between two piers or wharves or cut into the land to receive ships.
+outer,CODE,1450072,waterway,dock
+#inner,CODE,1450072,canvec:CODE,1450072
+##inner,CODE,1450072,canvec:generic_code,1450009
+##inner,CODE,1450072,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+##inner,CODE,1450072,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+##inner,CODE,1450072,canvec:value,Dock - ( Dock )
+##inner,CODE,1450072,canvec:value_definition,A waterway extending between two piers or wharves or cut into the land to receive ships.
+#inner,CODE,1450072,waterway,dock
+#*
+#note,Is in GeoBase – do not use - 
+point,CODE,1450080,canvec:CODE,1450080
+#point,CODE,1450080,canvec:generic_code,1450009
+#point,CODE,1450080,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#point,CODE,1450080,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#point,CODE,1450080,canvec:value,Wharf - ( Quai )
+#point,CODE,1450080,canvec:value_definition,A structure built along or at an angle to the shore of navigable waters so that ships may lie alongside to receive and discharge cargo and passengers.
+point,CODE,1450080,manmade,pier
+line,CODE,1450081,canvec:CODE,1450081
+#line,CODE,1450081,canvec:generic_code,1450009
+#line,CODE,1450081,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#line,CODE,1450081,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1450081,canvec:value,Wharf - ( Quai )
+#line,CODE,1450081,canvec:value_definition,A structure built along or at an angle to the shore of navigable waters so that ships may lie alongside to receive and discharge cargo and passengers.
+line,CODE,1450081,man_made,pier
+outer,CODE,1450082,canvec:CODE,1450082
+#outer,CODE,1450082,canvec:generic_code,1450009
+#outer,CODE,1450082,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#outer,CODE,1450082,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#outer,CODE,1450082,canvec:value,Wharf - ( Quai )
+#outer,CODE,1450082,canvec:value_definition,A structure built along or at an angle to the shore of navigable waters so that ships may lie alongside to receive and discharge cargo and passengers.
+outer,CODE,1450082,man_made,pier
+#inner,CODE,1450082,canvec:CODE,1450082
+##inner,CODE,1450082,canvec:generic_code,1450009
+##inner,CODE,1450082,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+##inner,CODE,1450082,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+##inner,CODE,1450082,canvec:value,Wharf - ( Quai )
+##inner,CODE,1450082,canvec:value_definition,A structure built along or at an angle to the shore of navigable waters so that ships may lie alongside to receive and discharge cargo and passengers.
+#inner,CODE,1450082,man_made,pier
+#*
+#GeoBaseNHN,point,TYPE_TEXT,Breakwater,waterway,breakwater
+line,CODE,1450091,canvec:CODE,1450091
+#line,CODE,1450091,canvec:generic_code,1450009
+#line,CODE,1450091,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#line,CODE,1450091,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1450091,canvec:value,Breakwater - ( Brise-lames )
+#line,CODE,1450091,canvec:value_definition,A structure used for breaking the force of waves to protect a beach; harbour; or other waterfront facilities.
+line,CODE,1450091,waterway,breakwater
+outer,CODE,1450092,canvec:CODE,1450092
+#outer,CODE,1450092,canvec:generic_code,1450009
+#outer,CODE,1450092,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#outer,CODE,1450092,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#outer,CODE,1450092,canvec:value,Breakwater - ( Brise-lames )
+#outer,CODE,1450092,canvec:value_definition,A structure used for breaking the force of waves to protect a beach; harbour; or other waterfront facilities.
+outer,CODE,1450092,waterway,breakwater
+#inner,CODE,1450092,canvec:CODE,1450092
+##inner,CODE,1450092,canvec:generic_code,1450009
+##inner,CODE,1450092,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+##inner,CODE,1450092,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+##inner,CODE,1450092,canvec:value,Breakwater - ( Brise-lames )
+##inner,CODE,1450092,canvec:value_definition,A structure used for breaking the force of waves to protect a beach; harbour; or other waterfront facilities.
+#inner,CODE,1450092,waterway,breakwater
+#
+#GeoBaseNHN,point,TYPE_TEXT,Dike/Levee,waterway,dike
+#outer,TYPE_TEXT,Dike/Levee,man_made,dyke
+##inner,TYPE_TEXT,Dike/Levee,man_made,dyke
+line,CODE,1450101,canvec:CODE,1450101
+#line,CODE,1450101,canvec:generic_code,1450009
+#line,CODE,1450101,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#line,CODE,1450101,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1450101,canvec:value,Dike/Levee - ( Digue )
+#line,CODE,1450101,canvec:value_definition,An embankment built to restrict the flow of water or other liquids.
+line,CODE,1450101,man_made,dyke
+#
+#GeoBaseNHN,point,TYPE_TEXT,Slip,waterway,boatyard
+#point,TYPE_TEXT,Slip,waterway,boatyard
+#line,TYPE_TEXT,Slip,waterway,boatyard
+#outer,TYPE_TEXT,Slip,waterway,boatyard
+##inner,TYPE_TEXT,Slip,waterway,boatyard
+point,CODE,1450110,canvec:CODE,1450110
+#point,CODE,1450110,canvec:generic_code,1450009
+#point,CODE,1450110,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#point,CODE,1450110,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#point,CODE,1450110,canvec:value,Slip - ( Cale )
+#point,CODE,1450110,canvec:value_definition,A substructure serving as a place for building or repairing ships.
+point,CODE,1450110,waterway,boatyard
+line,CODE,1450111,canvec:CODE,1450111
+#line,CODE,1450111,canvec:generic_code,1450009
+#line,CODE,1450111,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#line,CODE,1450111,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1450111,canvec:value,Slip - ( Cale )
+#line,CODE,1450111,canvec:value_definition,A substructure serving as a place for building or repairing ships.
+line,CODE,1450111,waterway,boatyard
+outer,CODE,1450112,canvec:CODE,1450112
+#outer,CODE,1450112,canvec:generic_code,1450009
+#outer,CODE,1450112,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#outer,CODE,1450112,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#outer,CODE,1450112,canvec:value,Slip - ( Cale )
+#outer,CODE,1450112,canvec:value_definition,A substructure serving as a place for building or repairing ships.
+outer,CODE,1450112,waterway,boatyard
+#inner,CODE,1450112,canvec:CODE,1450112
+##inner,CODE,1450112,canvec:generic_code,1450009
+##inner,CODE,1450112,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+##inner,CODE,1450112,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+##inner,CODE,1450112,canvec:value,Slip - ( Cale )
+##inner,CODE,1450112,canvec:value_definition,A substructure serving as a place for building or repairing ships.
+#inner,CODE,1450112,waterway,boatyard
+#
+#note,	Breakwater in the ocean - ( Brise-lames dans l'océan )	 A structure totally included in an ocean and disjoint from any Bank, used for breaking the force of waves to protect a beach, harbour, or other waterfront facilities.
+#GeoBaseNHN,point,TYPE_TEXT,Breakwater,waterway,breakwater
+#line,TYPE_TEXT,Breakwater,man_made,breakwater
+#outer,TYPE_TEXT,Breakwater,man_made,breakwater
+##inner,TYPE_TEXT,Breakwater,man_made,breakwater
+line,CODE,1451091,canvec:CODE,1451091
+#line,CODE,1451091,canvec:generic_code,1450009
+#line,CODE,1451091,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#line,CODE,1451091,canvec:entity_definition,A feature representing a manmade structure constructed to facilitate access to a water resource or control water level.
+#line,CODE,1451091,canvec:value,Breakwater in the ocean - ( Brise-lames dans l'océan )
+#line,CODE,1451091,canvec:value_definition,A structure totally included in an ocean and disjoint from any Bank; used for breaking the force of waves to protect a beach; harbour; or other waterfront facilities.
+line,CODE,1451091,man_made,breakwater
+outer,CODE,1451092,canvec:CODE,1451092
+#outer,CODE,1451092,canvec:generic_code,1450009
+#outer,CODE,1451092,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+#outer,CODE,1451092,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#outer,CODE,1451092,canvec:value,Breakwater in the ocean - ( Brise-lames dans l'océan )
+#outer,CODE,1451092,canvec:value_definition,A structure totally included in an ocean and disjoint from any Bank; used for breaking the force of waves to protect a beach; harbour; or other waterfront facilities.
+outer,CODE,1451092,man_made,breakwater
+#inner,CODE,1451092,canvec:CODE,1451092
+##inner,CODE,1451092,canvec:generic_code,1450009
+##inner,CODE,1451092,canvec:entity,Manmade hydrographic entity - ( Entité hydrographique anthropique )
+##inner,CODE,1451092,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+##inner,CODE,1451092,canvec:value,Breakwater in the ocean - ( Brise-lames dans l'océan )
+##inner,CODE,1451092,canvec:value_definition,A structure totally included in an ocean and disjoint from any Bank; used for breaking the force of waves to protect a beach; harbour; or other waterfront facilities.
+#inner,CODE,1451092,man_made,breakwater
+#

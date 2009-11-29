@@ -1,0 +1,364 @@
+# last updated 3:45 AM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+# HD_1470009_1_Single_line_watercourseRULES.txt
+# Note: This script omits the description tags.  Use rules_canvecMETAosm.txt for the full version.
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+line,GEOMETRY,,GEOMETRY,-
+outer,GEOMETRY,,GEOMETRY,-
+inner,GEOMETRY,,GEOMETRY,-
+#
+# note,"CODE" is used to note all the other attributes for each feature
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+line,CODE,,attribution,Natural Resources Canada
+line,CODE,,source,CanVec_Import_2009
+line,CODE,,created_by,canvec-to-osm
+#line,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+#None, isolated - ( Aucun, isolé )
+line,CODE,1470011,canvec:CODE,1470011
+#line,CODE,1470011,canvec:generic_code,1470009
+#line,CODE,1470011,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470011,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470011,canvec:value,None; isolated - ( Aucun, isolé )
+#line,CODE,1470011,canvec:value_definition:None,None of the other values.
+#line,CODE,1470011,canvec:value_definition:isolated,Any waterbody or single line watercourse that has no connection with any other waterbody or single line watercource.
+line,CODE,1470011,waterway,stream
+#
+#1	Canal	An artificial body of water serving as a navigable waterway or to channel water.
+#Canal, isolated - ( Canal, isolé )
+#line,TYPE_TEXT,Canal,waterway,canal
+#outer,TYPE_TEXT,Canal,waterway,Canal
+#inner,TYPE_TEXT,Canal,waterway,Canal
+line,CODE,1470021,canvec:CODE,1470021
+#line,CODE,1470021,canvec:generic_code,1470009
+#line,CODE,1470021,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470021,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470021,canvec:value,Canal; isolated - ( Canal, isolé )
+#line,CODE,1470021,canvec:value_defintion:Canal,An artificial body of water serving as a navigable waterway or to channel water.
+#line,CODE,1470021,canvec:value_defintion:isolated,Any waterbody or single line watercourse that has no connection with any other waterbody or single line watercource.
+line,CODE,1470021,waterway,canal
+#
+#line,TYPE_TEXT,Conduit,waterway,drain
+#note,Is in GeoBase – do not use - N/A in OSM
+line,CODE,1470031,canvec:CODE,1470031
+#line,CODE,1470031,canvec:generic_code,1470009
+#line,CODE,1470031,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470031,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470031,canvec:value,Conduit; isolated - ( Conduit, isolé )
+#line,CODE,1470031,canvec:value_definition:Conduit,An artificial system; such as an aqueduct; penstock; flume; or sluice; designed to carry water for purposes other than drainage.
+#line,CODE,1470031,canvec:value_definition:isolated,Any waterbody or single line watercourse that has no connection with any other waterbody or single line watercource.
+line,CODE,1470031,waterway,drain
+#
+#line,TYPE_TEXT,Ditch,waterway,drain
+line,CODE,1470041,canvec:CODE,1470041
+#line,CODE,1470041,canvec:generic_code,1470009
+#line,CODE,1470041,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470041,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470041,canvec:value,Ditch; isolated - ( Fossé de drainage, isolé )
+#line,CODE,1470041,canvec:value_definition:Ditch,Small; open manmade channel constructed through earth or rock for the purpose of conveying water.
+#line,CODE,1470041,canvec:value_definition:isolated,Any waterbody or single line watercourse that has no connection with any other waterbody or single line watercource.
+line,CODE,1470041,waterway,drain
+#
+#line,TYPE_TEXT,Watercourse,waterway,stream
+#outer,TYPE_TEXT,Watercourse,waterway,stream
+#inner,TYPE_TEXT,Watercourse,waterway,stream
+line,CODE,1470071,canvec:CODE,1470071
+#line,CODE,1470071,canvec:generic_code,1470009
+#line,CODE,1470071,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470071,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470071,canvec:value,Watercourse, isolated - ( Cours d'eau, isolé )
+#line,CODE,1470071,canvec:value_definition:Watercourse,A natural body of water through which water may flow.
+#line,CODE,1470071,canvec:value_definition:isolated,Any waterbody or single line watercourse that has no connection with any other waterbody or single line watercource.
+line,CODE,1470071,waterway,stream
+#
+line,CODE,1470111,canvec:CODE,1470111
+#line,CODE,1470111,canvec:generic_code,1470009
+#line,CODE,1470111,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470111,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470111,canvec:value,None, non isolated - ( Aucun, non isolé )
+#line,CODE,1470111,canvec:value_definition:None,None of the other values.
+#line,CODE,1470111,canvec:value_definition:non_isolated,Not isolated
+line,CODE,1470111,waterway,river
+#
+line,CODE,1470121,canvec:CODE,1470121
+#line,CODE,1470121,canvec:generic_code,1470009
+#line,CODE,1470121,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470121,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470121,canvec:value,Canal; non isolated - ( Canal, non isolé )
+#line,CODE,1470121,canvec:value_definition:Canal,An artificial body of water serving as a navigable waterway or to channel water.
+#line,CODE,1470121,canvec:value_definition:non_isolated,Not isolated
+line,CODE,1470121,waterway,canal
+#
+#note,Is in GeoBase – do not use - N/A in OSM
+line,CODE,1470131,canvec:CODE,1470131
+#line,CODE,1470131,canvec:generic_code,1470009
+#line,CODE,1470131,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470131,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470131,canvec:value,Conduit, non isolated - ( Conduit, non isolé )
+#line,CODE,1470131,canvec:value_definition:Conduit,An artificial system; such as an aqueduct; penstock; flume; or sluice; designed to carry water for purposes other than drainage.
+#line,CODE,1470131,canvec:value_definition:non_isolated,Not isolated
+line,CODE,1470131,waterway,drain
+#
+#note,Is in GeoBase – do not use - N/A in OSM
+line,CODE,1470141,canvec:CODE,1470141
+#line,CODE,1470141,canvec:generic_code,1470009
+#line,CODE,1470141,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470141,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470141,canvec:value,Ditch, non isolated - ( Fossé de drainage; non isolé )
+#line,CODE,1470141,canvec:value_definition:Ditch,Small; open manmade channel constructed through earth or rock for the purpose of conveying water.
+#line,CODE,1470141,canvec:value_definition:non_isolated,Not isolated
+line,CODE,1470141,waterway,drain
+#
+#line,TYPE_TEXT,Watercourse,waterway,stream
+#outer,TYPE_TEXT,Watercourse,waterway,stream
+#inner,TYPE_TEXT,Watercourse,waterway,stream
+line,CODE,1470171,canvec:CODE,1470171
+#line,CODE,1470171,canvec:generic_code,1470009
+#line,CODE,1470171,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470171,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470171,canvec:value,Watercourse, non isolated - ( Cours d'eau; non isolé )
+#line,CODE,1470171,canvec:value_definition:Watercourse,A natural body of water through which water may flow.
+#line,CODE,1470171,canvec:value_definition:non_isolated,Not isolated
+line,CODE,1470171,waterway,stream
+#
+#line,TYPE_TEXT,Tidal River,waterway,stream
+#outer,TYPE_TEXT,Tidal River,natural,water
+#inner,TYPE_TEXT,Tidal River,natural,water
+line,CODE,1470181,canvec:CODE,1470181
+#line,CODE,1470181,canvec:generic_code,1470009
+#line,CODE,1470181,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470181,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470181,canvec:value,Tidal river; non isolated - ( Rivière à marées; non isolé )
+#line,CODE,1470181,canvec:value_definition:Tidal_river,A natural body of water in which flow and water surface elevation are affected by the tide.
+#line,CODE,1470181,canvec:value_definition:non_isolated,Not isolated
+line,CODE,1470181,waterway,stream
+line,CODE,1470181,type,tidal_river
+#
+line,CODE,1470191,canvec:CODE,1470191
+#line,CODE,1470191,canvec:generic_code,1470009
+#line,CODE,1470191,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470191,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470191,canvec:value,Watercourse; indefinite - ( Cours d'eau; indéfini )
+#line,CODE,1470191,canvec:value_definition:Watercourse,A natural body of water through which water may flow.
+#line,CODE,1470191,canvec:value_definition:indefinite,Not determined
+line,CODE,1470191,waterway,stream
+#
+line,CODE,1470201,canvec:CODE,1470201
+#line,CODE,1470201,canvec:generic_code,1470009
+#line,CODE,1470201,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470201,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470201,canvec:value,Conduit, indefinite - ( Conduit; indéfini )
+#line,CODE,1470201,canvec:value_definition:Conduit,An artificial system; such as an aqueduct; penstock; flume; or sluice; designed to carry water for purposes other than drainage.
+#line,CODE,1470201,canvec:value_definition:indefinite,Not determined
+line,CODE,1470201,waterway,canal
+#note,Is in GeoBase – do not use - N/A in OSM
+#
+line,CODE,1470211,canvec:CODE,1470211
+#line,CODE,1470211,canvec:generic_code,1470009
+#line,CODE,1470211,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470211,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470211,canvec:value,None; unknown - ( Aucun; inconnu )
+#line,CODE,1470211,canvec:value_definition:None,None of the other values.
+#line,CODE,1470211,canvec:value_definition:unknown,Impossible to determine.
+line,CODE,1470211,waterway,stream
+#note,Is in GeoBase – do not use - N/A in OSM
+#
+line,CODE,1470221,canvec:CODE,1470221
+#line,CODE,1470221,canvec:generic_code,1470009
+#line,CODE,1470221,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470221,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470221,canvec:value,Canal, unknown - ( Canal, inconnu )
+#line,CODE,1470221,canvec:value_definition,An artificial body of water serving as a navigable waterway or to channel water.
+line,CODE,1470221,waterway,canal
+#note,Canal, unknown - ( Canal, inconnu )
+#note,Is in GeoBase – do not use - N/A in OSM
+#
+line,CODE,1470231,canvec:CODE,1470231
+#line,CODE,1470231,canvec:generic_code,1470009
+#line,CODE,1470231,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470231,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470231,canvec:value,Conduit, unknown - ( Conduit, inconnu )
+#line,CODE,1470231,canvec:value_definition,An artificial system; such as an aqueduct; penstock; flume; or sluice; designed to carry water for purposes other than drainage.
+line,CODE,1470231,waterway,drain
+#
+#6 	Ditch 	A natural body of water through which water may flow.
+#line,TYPE_TEXT,Ditch,waterway,drain
+#outer,TYPE_TEXT,Ditch,waterway,drain
+#inner,TYPE_TEXT,Ditch,waterway,drain
+line,CODE,1470241,canvec:CODE,1470241
+#line,CODE,1470241,canvec:generic_code,1470009
+#line,CODE,1470241,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470241,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470241,canvec:value,Ditch, unknown - ( Fossé de drainage, inconnu )
+#line,CODE,1470241,canvec:value_definition,Small; open manmade channel constructed through earth or rock for the purpose of conveying water.
+line,CODE,1470241,waterway,ditch
+#
+line,CODE,1470251,canvec:CODE,1470251
+#line,CODE,1470251,canvec:generic_code,1470009
+#line,CODE,1470251,canvec:entity,Single line watercourse - ( Cours d'eau simple )
+#line,CODE,1470251,canvec:entity_definition,A linear feature describing the path of a narrow flow of water on the earth's surface.
+#line,CODE,1470251,canvec:value,Watercourse, unknown - ( Cours d'eau, inconnu )
+#line,CODE,1470251,canvec:value_definition:Perminancy,Unknown
+line,CODE,1470251,waterway,stream
+#Watercourse, unknown - ( Cours d'eau, inconnu )
+#note,Is in GeoBase – do not use - N/A in OSM
+#
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#point,VALDATE,,canvec:VALDATE,-
+#line,VALDATE,,canvec:VALDATE,-
+#outer,VALDATE,,canvec:VALDATE,-
+#inner,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#point,PROVIDER,1,canvec:PROVIDER,Other
+#point,PROVIDER,2,canvec:PROVIDER,Federal
+#point,PROVIDER,3,canvec:PROVIDER,Provincial_territorial
+#point,PROVIDER,4,canvec:PROVIDER,Municipal
+#line,PROVIDER,1,canvec:PROVIDER,Other
+#line,PROVIDER,2,canvec:PROVIDER,Federal
+#line,PROVIDER,3,canvec:PROVIDER,Provincial_territorial
+#line,PROVIDER,4,canvec:PROVIDER,Municipal
+#outer,PROVIDER,1,canvec:PROVIDER,Other
+#outer,PROVIDER,2,canvec:PROVIDER,Federal
+#outer,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#outer,PROVIDER,4,canvec:PROVIDER,Municipal
+#inner,PROVIDER,1,canvec:PROVIDER,Other
+#inner,PROVIDER,2,canvec:PROVIDER,Federal
+#inner,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#inner,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+point,ID,,canvec:UUID,-
+line,ID,,canvec:UUID,-
+outer,ID,,canvec:UUID,-
+inner,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+#point,DATANAME,,canvec:datasetName,-
+#line,DATANAME,,canvec:datasetName,-
+#outer,DATANAME,,canvec:datasetName,-
+#inner,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#point,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#line,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#outer,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#inner,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#
+#
+#GAUGE,N,3,0
+#Name Railway gauge
+#Definition Type of track based on the distance between the two rails.
+#Data type Integer
+#Domain [-1,1..3]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the gauge from the data source.
+#1 Narrow Railway with a gauge of 0.967 m.
+#2 Standard Railway with a gauge of 1.435 m.
+#3 Special A railway-like feature, such as a subway or miniature railway.
+#
+#
+#COMPETENCE,N,3,0
+#Name Competence
+#Definition Legislative authority of the railway.
+#Data type Integer
+#Domain [1,2]
+#Values Code Label Definition
+#1 Other Other than federal authority.
+#2 Federal Railway governed by federal laws.
+#
+#STATUS,N,3,0
+#Name Railway status
+#Definition Status of the railway.
+#Data type Integer
+#Domain [-1,1..3]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the railway status from the data source.
+#1 Under construction Railroad under construction when the field survey was carried out.
+#2 Non-operational Railway no longer suitable for rail traffic.
+#3 Operational Any useable or used railway.
+#
+#SUPPORT,N,3,0
+#Name Railway support
+#Definition Portion of a railway having a structure to cross an obstacle.
+#Data type Integer
+#Domain [-1,1..4]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the railway support from the data source.
+#1 Ground level Railway built directly at ground level.
+#2 Snowshed Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#3 Bridge Railway built on a raised structure spanning an obstacle.
+#4 Tunnel Railway built in a cavity or underground structure to get through or under an obstacle.
+#
+#TYPE,N,3,0
+#Name Railway type
+#Definition Description of existing infrastructure.
+#Data type Integer
+#Domain [-1,1..3]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the railway type from the data source.
+#1 Other Any known railway section that is not categorized as multiple or unique, such as a siding, passing track, spur, etc.
+#2 Multiple More than one railway on the same roadbed.
+#3 Single Railroad with only one railway.
+#
+#
+#
+#NAMEEN,C,100
+line,NAMEEN,,name,-
+#
+#NAMEFR,C,100
+line,NAMEFR,,name:fr,-

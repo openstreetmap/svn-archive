@@ -1,0 +1,1672 @@
+# last updated 3:45 AM 10/19/2009
+# v0.9.5.0
+# 
+# HD_1480009_2_WaterbodyRULES.txt
+#
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, #inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+point,GEOMETRY,,GEOMETRY,-
+line,GEOMETRY,,GEOMETRY,-
+outer,GEOMETRY,,GEOMETRY,-
+#inner,GEOMETRY,,GEOMETRY,-
+#
+# Attributes common to all entities (except those from GeoBase) 
+#
+#note,"CODE" is used to note all the other attributes for each feature
+#
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+point,CODE,,attribution,Natural Resources Canada
+point,CODE,,source,CanVec_Import_2009
+point,CODE,,created_by,canvec-to-osm
+#point,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+line,CODE,,attribution,Natural Resources Canada
+line,CODE,,source,CanVec_Import_2009
+line,CODE,,created_by,canvec-to-osm
+#line,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+outer,CODE,,attribution,Natural Resources Canada
+outer,CODE,,source,CanVec_Import_2009
+outer,CODE,,created_by,canvec-to-osm
+#outer,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#inner,CODE,,attribution,Natural Resources Canada
+#inner,CODE,,source,CanVec_Import_2009
+#inner,CODE,,created_by,canvec-to-osm
+##inner,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#point,VALDATE,,canvec:VALDATE,-
+#line,VALDATE,,canvec:VALDATE,-
+#outer,VALDATE,,canvec:VALDATE,-
+##inner,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#point,PROVIDER,1,canvec:PROVIDER,Other
+#point,PROVIDER,2,canvec:PROVIDER,Federal
+#point,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#point,PROVIDER,4,canvec:PROVIDER,Municipal
+#line,PROVIDER,1,canvec:PROVIDER,other
+#line,PROVIDER,2,canvec:PROVIDER,federal
+#line,PROVIDER,3,canvec:PROVIDER,provincial_territorial
+#line,PROVIDER,4,canvec:PROVIDER,municipal
+#outer,PROVIDER,1,canvec:PROVIDER,Other
+#outer,PROVIDER,2,canvec:PROVIDER,Federal
+#outer,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#outer,PROVIDER,4,canvec:PROVIDER,Municipal
+##inner,PROVIDER,1,canvec:PROVIDER,Other
+##inner,PROVIDER,2,canvec:PROVIDER,Federal
+##inner,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+##inner,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+point,ID,,canvec:UUID,-
+line,ID,,canvec:UUID,-
+outer,ID,,canvec:UUID,-
+#inner,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+#point,DATANAME,,canvec:datasetName,-
+#line,DATANAME,,canvec:datasetName,-
+#outer,DATANAME,,canvec:datasetName,-
+##inner,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#point,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#line,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#outer,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+##inner,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#point,THEME,BS,canvec:Theme,BS Buildings and structures
+#point,THEME,EN,canvec:Theme,EN Energy
+#point,THEME,FO,canvec:Theme,FO Relief and landforms
+#point,THEME,HD,canvec:Theme,HD Hydrography
+#point,THEME,IC,canvec:Theme,IC Industrial and commercial areas
+#point,THEME,LI,canvec:Theme,LI Administrative boundaries
+#point,THEME,LX,canvec:Theme,LX Places of Interest
+#point,THEME,SS,canvec:Theme,SS Water saturated soils 
+#point,THEME,TO,canvec:Theme,TO Toponymy
+#point,THEME,TR,canvec:Theme,TR Transportation
+#point,THEME,VE,canvec:Theme,VE Vegetation
+#line,THEME,BS,canvec:Theme,BS Buildings and structures
+#line,THEME,EN,canvec:Theme,EN Energy
+#line,THEME,FO,canvec:Theme,FO Relief and landforms
+#line,THEME,HD,canvec:Theme,HD Hydrography
+#line,THEME,IC,canvec:Theme,IC Industrial and commercial areas
+#line,THEME,LI,canvec:Theme,LI Administrative boundaries
+#line,THEME,LX,canvec:Theme,LX Places of Interest
+#line,THEME,SS,canvec:Theme,SS Water saturated soils 
+#line,THEME,TO,canvec:Theme,TO Toponymy
+#line,THEME,TR,canvec:Theme,TR Transportation
+#line,THEME,VE,canvec:Theme,VE Vegetation
+#outer,THEME,BS,canvec:Theme,BS Buildings and structures
+#outer,THEME,EN,canvec:Theme,EN Energy
+#outer,THEME,FO,canvec:Theme,FO Relief and landforms
+#outer,THEME,HD,canvec:Theme,HD Hydrography
+#outer,THEME,IC,canvec:Theme,IC Industrial and commercial areas
+#outer,THEME,LI,canvec:Theme,LI Administrative boundaries
+#outer,THEME,LX,canvec:Theme,LX Places of Interest
+#outer,THEME,SS,canvec:Theme,SS Water saturated soils 
+#outer,THEME,TO,canvec:Theme,TO Toponymy
+#outer,THEME,TR,canvec:Theme,TR Transportation
+#outer,THEME,VE,canvec:Theme,VE Vegetation
+##inner,THEME,BS,canvec:Theme,BS Buildings and structures
+##inner,THEME,EN,canvec:Theme,EN Energy
+##inner,THEME,FO,canvec:Theme,FO Relief and landforms
+##inner,THEME,HD,canvec:Theme,HD Hydrography
+##inner,THEME,IC,canvec:Theme,IC Industrial and commercial areas
+##inner,THEME,LI,canvec:Theme,LI Administrative boundaries
+##inner,THEME,LX,canvec:Theme,LX Places of Interest
+##inner,THEME,SS,canvec:Theme,SS Water saturated soils 
+##inner,THEME,TO,canvec:Theme,TO Toponymy
+##inner,THEME,TR,canvec:Theme,TR Transportation
+##inner,THEME,VE,canvec:Theme,VE Vegetation
+#
+#
+#
+# Attributes common to all GeoBase entities
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#
+#
+#ACQTECH
+#Name,Acquisition technique
+#Definition,The type of data source or technique used to populate (create or revise) the data.
+#Data type,Integer
+#Domain,[-1,0,1..12]
+#point,ACQTECH,-1,canvec:ACQTECH,Unknown
+#point,ACQTECH,0,canvec:ACQTECH,None
+#point,ACQTECH,1,canvec:ACQTECH,Other
+#point,ACQTECH,2,canvec:ACQTECH,GPS
+#point,ACQTECH,3,canvec:ACQTECH,Orthoimage
+#point,ACQTECH,4,canvec:ACQTECH,Orthophoto
+#point,ACQTECH,5,canvec:ACQTECH,Vector data
+#point,ACQTECH,6,canvec:ACQTECH,Paper map
+#point,ACQTECH,7,canvec:ACQTECH,Field completion
+#point,ACQTECH,8,canvec:ACQTECH,Raster data
+#point,ACQTECH,9,canvec:ACQTECH,Digital elevation model
+#point,ACQTECH,10,canvec:ACQTECH,Aerial photo
+#point,ACQTECH,11,canvec:ACQTECH,Raw imagery data
+#point,ACQTECH,12,canvec:ACQTECH,Computed
+#line,ACQTECH,-1,canvec:ACQTECH,Unknown
+#line,ACQTECH,0,canvec:ACQTECH,None
+#line,ACQTECH,1,canvec:ACQTECH,Other
+#line,ACQTECH,2,canvec:ACQTECH,GPS
+#line,ACQTECH,3,canvec:ACQTECH,Orthoimage
+#line,ACQTECH,4,canvec:ACQTECH,Orthophoto
+#line,ACQTECH,5,canvec:ACQTECH,Vector data
+#line,ACQTECH,6,canvec:ACQTECH,Paper map
+#line,ACQTECH,7,canvec:ACQTECH,Field completion
+#line,ACQTECH,8,canvec:ACQTECH,Raster data
+#line,ACQTECH,9,canvec:ACQTECH,Digital elevation model
+#line,ACQTECH,10,canvec:ACQTECH,Aerial photo
+#line,ACQTECH,11,canvec:ACQTECH,Raw imagery data
+#line,ACQTECH,12,canvec:ACQTECH,Computed
+#outer,ACQTECH,-1,canvec:ACQTECH,Unknown
+#outer,ACQTECH,0,canvec:ACQTECH,None
+#outer,ACQTECH,1,canvec:ACQTECH,Other
+#outer,ACQTECH,2,canvec:ACQTECH,GPS
+#outer,ACQTECH,3,canvec:ACQTECH,Orthoimage
+#outer,ACQTECH,4,canvec:ACQTECH,Orthophoto
+#outer,ACQTECH,5,canvec:ACQTECH,Vector data
+#outer,ACQTECH,6,canvec:ACQTECH,Paper map
+#outer,ACQTECH,7,canvec:ACQTECH,Field completion
+#outer,ACQTECH,8,canvec:ACQTECH,Raster data
+#outer,ACQTECH,9,canvec:ACQTECH,Digital elevation model
+#outer,ACQTECH,10,canvec:ACQTECH,Aerial photo
+#outer,ACQTECH,11,canvec:ACQTECH,Raw imagery data
+#outer,ACQTECH,12,canvec:ACQTECH,Computed
+##inner,ACQTECH,-1,canvec:ACQTECH,Unknown
+##inner,ACQTECH,0,canvec:ACQTECH,None
+##inner,ACQTECH,1,canvec:ACQTECH,Other
+##inner,ACQTECH,2,canvec:ACQTECH,GPS
+##inner,ACQTECH,3,canvec:ACQTECH,Orthoimage
+##inner,ACQTECH,4,canvec:ACQTECH,Orthophoto
+##inner,ACQTECH,5,canvec:ACQTECH,Vector data
+##inner,ACQTECH,6,canvec:ACQTECH,Paper map
+##inner,ACQTECH,7,canvec:ACQTECH,Field completion
+##inner,ACQTECH,8,canvec:ACQTECH,Raster data
+##inner,ACQTECH,9,canvec:ACQTECH,Digital elevation model
+##inner,ACQTECH,10,canvec:ACQTECH,Aerial photo
+##inner,ACQTECH,11,canvec:ACQTECH,Raw imagery data
+##inner,ACQTECH,12,canvec:ACQTECH,Computed
+#
+#
+#SOURCEID
+#Name,Source identifier
+#Definition,A unique national identifier.
+#Data type,Character (32)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+#point,SOURCEID,,canvec:SOURCEID_UUID,-
+#line,SOURCEID,,canvec:SOURCEID_UUID,-
+#outer,SOURCEID,,canvec:SOURCEID_UUID,-
+##inner,SOURCEID,,canvec:SOURCEID_UUID,-
+#
+#
+#
+#  Attributes related to toponymy (geographical names)
+#
+#
+#CONCISCODE
+#Name,Toponymic concise code
+#Definition,Toponymic type used to specify the category of the named phenomenon. Called "Concise code" in the Canadian Geographical Names Data Base (CGNDB).
+#Data type,Integer
+#Domain [-1,5,7,10,20,30,40,45,50,60,80,90,100,110,115,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340,350,370,380,390,400,410,420,430,440,450,460]
+#
+#-1
+#Unknown
+#Toponymic feature type as defined in the Canadian Geographical Names Data Base.
+#point,CONCISCODE,-1,canvec:CONCISCODE,-1 Unknown
+#point,CONCISCODE,5,canvec:CONCISCODE,5 PROV Province
+#point,CONCISCODE,5,place,state
+#point,CONCISCODE,7,canvec:CONCISCODE,7 TERR Territory
+#point,CONCISCODE,7,place,state
+#point,CONCISCODE,10,canvec:CONCISCODE,10 CITY City
+#point,CONCISCODE,10,place,city
+#point,CONCISCODE,20,canvec:CONCISCODE,20 TOWN Town
+#point,CONCISCODE,20,place,town
+#point,CONCISCODE,30,canvec:CONCISCODE,30 VILG Village
+#point,CONCISCODE,30,place,village
+#point,CONCISCODE,40,canvec:CONCISCODE,40 HAM Hamlet
+#point,CONCISCODE,40,place,hamlet
+#point,CONCISCODE,45,canvec:CONCISCODE,45 DMUN District municipality
+#point,CONCISCODE,45,place,district_municipality
+#point,CONCISCODE,50,canvec:CONCISCODE,50 MUN1 Other municipal/district area - major agglomeration
+#point,CONCISCODE,60,canvec:CONCISCODE,60 MUN2 Other municipal/district area - miscellaneous
+#point,CONCISCODE,80,canvec:CONCISCODE,80 UNP Unincorporated area
+#point,CONCISCODE,80,place,unincorporated_area
+#point,CONCISCODE,90,canvec:CONCISCODE,90 IR Indian Reserve
+#point,CONCISCODE,90,place,indian_reserve
+#point,CONCISCODE,100,canvec:CONCISCODE,100 GEOG Geographical area
+#point,CONCISCODE,100,place,locality
+#point,CONCISCODE,110,canvec:CONCISCODE,110 PARK Conservation area
+#point,CONCISCODE,110,leisure,nature_reserve
+#point,CONCISCODE,115,canvec:CONCISCODE,115 MIL Military area
+#point,CONCISCODE,115,landuse,military
+#point,CONCISCODE,120,canvec:CONCISCODE,120 RIV River
+#point,CONCISCODE,120,natural,river
+#point,CONCISCODE,130,canvec:CONCISCODE,130 RIVF River feature
+#point,CONCISCODE,130,natural,river
+#point,CONCISCODE,140,canvec:CONCISCODE,140 FALL Falls
+#point,CONCISCODE,140,natural,waterfall
+#point,CONCISCODE,140,waterway,waterfall
+#point,CONCISCODE,150,canvec:CONCISCODE,150 LAKE Lake
+#point,CONCISCODE,150,natural,water
+#point,CONCISCODE,160,canvec:CONCISCODE,160 SPRG Spring
+#point,CONCISCODE,160,natural,spring
+#point,CONCISCODE,170,canvec:CONCISCODE,170 SEA Sea
+#point,CONCISCODE,170,natural,water
+#point,CONCISCODE,180,canvec:CONCISCODE,180 SEAF Sea feature
+#point,CONCISCODE,180,natural,sea_feature
+#point,CONCISCODE,190,canvec:CONCISCODE,190 SEAU Undersea feature
+#point,CONCISCODE,190,sub_sea,feature
+#point,CONCISCODE,200,canvec:CONCISCODE,200 CHAN Channel
+#point,CONCISCODE,200,natural,channel
+#point,CONCISCODE,210,canvec:CONCISCODE,210 RAP Rapids
+#point,CONCISCODE,210,waterway,rapids
+#point,CONCISCODE,220,canvec:CONCISCODE,220 BAY Bay
+#point,CONCISCODE,220,natural,bay
+#point,CONCISCODE,230,canvec:CONCISCODE,230 CAPE Cape
+#point,CONCISCODE,230,natural,cape
+#
+#point,CONCISCODE,270,canvec:CONCISCODE,240 BCH Beach
+#point,CONCISCODE,270,natural,beach
+#
+#250 SHL Shoal
+#http://en.wikipedia.org/wiki/Barrier_island
+#point,CONCISCODE,250,canvec:CONCISCODE,250 SHL Shoal
+#point,CONCISCODE,250,natural,shoal
+#
+#point,CONCISCODE,260,canvec:CONCISCODE,260 ISL Island
+#point,CONCISCODE,260,place,island
+#
+#point,CONCISCODE,270,canvec:CONCISCODE,270 CLF Cliff
+#point,CONCISCODE,270,natural,cliff
+#
+#point,CONCISCODE,280,canvec:CONCISCODE,280 MTN Mountain
+#point,CONCISCODE,280,natural,peak
+#
+#point,CONCISCODE,290,canvec:CONCISCODE,290 VALL Valley
+#point,CONCISCODE,290,natural,valley
+#
+#point,CONCISCODE,300,canvec:CONCISCODE,300 PLN Plain
+#point,CONCISCODE,300,natural,plain
+#
+#point,CONCISCODE,310,canvec:CONCISCODE,310 CAVE Cave
+#point,CONCISCODE,310,natural,cave_entrance
+#
+#point,CONCISCODE,320,canvec:CONCISCODE,320 CRAT Crater
+#point,CONCISCODE,320,natural,crater
+#
+#point,CONCISCODE,330,canvec:CONCISCODE,330 GLAC Glacier
+#point,CONCISCODE,330,natural,glacier
+#
+#point,CONCISCODE,340,canvec:CONCISCODE,340 FOR Forest
+#point,CONCISCODE,340,landuse,forest
+#point,CONCISCODE,340,natural,wood
+#
+#point,CONCISCODE,350,canvec:CONCISCODE,350 VEGL Low vegetation
+#point,CONCISCODE,350,landuse,meadow
+#
+#point,CONCISCODE,370,canvec:CONCISCODE,370 MISC Miscellaneous
+#
+#point,CONCISCODE,380,canvec:CONCISCODE,380 RAIL Railway feature
+#point,CONCISCODE,380,railway,rail
+#
+#point,CONCISCODE,390,canvec:CONCISCODE,390 ROAD Road feature
+#point,CONCISCODE,390,highway,road
+#
+#point,CONCISCODE,400,canvec:CONCISCODE,400 AIR Air navigation feature
+#point,CONCISCODE,400,aeroway,aerodrome
+#
+#point,CONCISCODE,410,canvec:CONCISCODE,410 MAR Marine navigation feature
+#point,CONCISCODE,410,man_made,beacon
+#
+#point,CONCISCODE,420,canvec:CONCISCODE,420 HYDR Hydraulic construction
+#
+#point,CONCISCODE,430,canvec:CONCISCODE,430 RECR Recreational site
+#point,CONCISCODE,430,landuse,recreation_ground
+#
+#point,CONCISCODE,440,canvec:CONCISCODE,440 RES Natural resources site
+#point,CONCISCODE,440,leisure,nature_reserve
+#
+#point,CONCISCODE,450,canvec:CONCISCODE,450 CAMP Miscellaneous campsite
+#point,CONCISCODE,450,tourism,camp_site
+#
+#point,CONCISCODE,460,canvec:CONCISCODE,460 SITE Miscellaneous site
+#
+#
+#
+#
+#GEONAMEDB
+#Name,Geographical name database
+#Definition,Name of the database from which the geographical name comes from.
+#Data type,Character (20)
+#Domain,The name or acronym of a geographical name database. The field is left blank when not applicable or unknown.
+#point,GEONAMEDB,,canvec:GEONAMEDB,-
+#line,GEONAMEDB,,canvec:GEONAMEDB,-
+#outer,GEONAMEDB,,canvec:GEONAMEDB,-
+##inner,GEONAMEDB,,canvec:GEONAMEDB,-
+#
+#
+#LANGUAGE
+#Name,Language
+#Definition,Attribute used to indicate the official geographical name (toponym) language.
+#Data type,Integer
+#Domain,[-1,1,2,4]
+#point,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+#point,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+#point,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+#point,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+#line,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+#line,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+#line,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+#line,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+#outer,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+#outer,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+#outer,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+#outer,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+##inner,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+##inner,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+##inner,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+##inner,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+#
+#
+#NAMEEN
+#Attributes related to toponymy (geographical names)
+#Name,English name
+#Definition,The English geographical name of the toponymic phenomenon.
+#Data type,Character (100)
+#Domain,An English toponym. If no English name exists, the French or Aboriginal name is provided, the priority is given to the French name. The field is left blank when not applicable or unknown.
+#point,NAMEEN,,name:EN,- *using english as the default language, change default language where appropriate
+point,NAMEEN,,name,-
+line,NAMEEN,,name,-
+outer,NAMEEN,,name,-
+#inner,NAMEEN,,name,-
+#
+#
+#NAMEFR
+#Name,French name
+#Definition,The French geographical name of the toponymic phenomenon.
+#Data type,Character (100)
+#Domain,An French toponym. If no French name exists, the English or Aboriginal name is provided, the priority is given to the English name. The field is left blank when not applicable or unknown.
+#line,NAMEFR,,name,- *using english as the default language, change default language where appropriate
+point,NAMEFR,,name:fr,-
+line,NAMEFR,,name:fr,-
+outer,NAMEFR,,name:fr,-
+#inner,NAMEFR,,name:fr,-
+#
+#
+#NAMEID
+#Name,Name ID
+#Definition,The geographical name identifier from the geographical name database.
+#Data type,Character (32)
+#Domain,A geographical name identifier. The field is left blank when not applicable or unknown.
+#point,NAMEID,,canvec:NAMEID,-
+#line,NAMEID,,canvec:NAMEID,-
+#outer,NAMEID,,canvec:NAMEID,-
+##inner,NAMEID,,canvec:NAMEID,-
+#
+#
+#
+# Everything above this line is on all features
+# Everything below this line is on some features with SAME values
+# 
+###point,STATUS,,canvec:STATUS,-
+####point,TYPE,,canvec:TYPE,-
+# a separate txt file is made
+#
+#NHNAREA
+#Name,NHN drainage area
+#Definition,NHN dataset (drainage area) identifier.
+#Data type,Character (7)
+#Domain 7-characters code based on the naming convention of the Water Survey of Canada Sub-Sub-Drainage Areas (WSCSSDA) and/or the Fondamental Drainage Areas from the Atlas of Canada (FDAAC). The field is left blank when not applicable.
+#point,NHNAREA,,canvec:NHNAREA,-
+#line,NHNAREA,,canvec:NHNAREA,-
+#outer,NHNAREA,,canvec:NHNAREA,-
+##inner,NHNAREA,,canvec:NHNAREA,-
+#
+#
+# #
+#DEFINITION,N,3,0	
+#
+#ISOLATED,N,3,0	
+#Name Isolated
+#Definition Any waterbody or single line watercourse disjoint from any other waterbody or single line watercourse.
+#-2 Indefinite Not determined.
+#-1 Unknown Impossible to determine.
+#0 False Not isolated.
+#1 True Isolated.
+#outer,ISOLATED,-2,canvec:ISOLATED,-2 Indefinite
+##inner,ISOLATED,-2,canvec:ISOLATED,-2 Indefinite
+#outer,ISOLATED,-1,canvec:ISOLATED,-1 Unknown
+##inner,ISOLATED,-1,canvec:ISOLATED,-1 Unknown
+#outer,ISOLATED,0,canvec:ISOLATED,0 False
+##inner,ISOLATED,0,canvec:ISOLATED,0 False
+#outer,ISOLATED,1,canvec:ISOLATED,1 True
+##inner,ISOLATED,1,canvec:ISOLATED,1 True
+#
+#
+#PERMANENCY,N,3,0	
+#Name Permanency
+#Definition Nature of the occurence through time.
+#-1 Unknown Impossible to determine.
+#1 Permanent Intended to exist or function for a long, indefinite period.
+#2 Intermittent Coming and going at intervals.
+#outer,PERMANENCY,-1,canvec:PERMANENCY,-1 Unknown
+##inner,PERMANENCY,-1,canvec:PERMANENCY,-1 Unknown
+#outer,PERMANENCY,1,canvec:PERMANENCY,1 Permanent
+##inner,PERMANENCY,1,canvec:PERMANENCY,1 Permanent
+#outer,PERMANENCY,2,canvec:PERMANENCY,2 Intermittent
+##inner,PERMANENCY,2,canvec:PERMANENCY,2 Intermittent
+#
+#
+#SOURCEID,C,32	
+#
+#LAKNAMEEN,C,100
+outer,LAKNAMEEN,,name,-
+#inner,LAKNAMEEN,,name,-
+outer,LAKNAMEEN,,name:en,-
+#inner,LAKNAMEEN,,name:en,-
+#
+#LAKNAMEFR,C,100
+outer,LAKNAMEFR,,name:fr,-
+#inner,LAKNAMEFR,,name:fr,-
+#
+#outer,NHNAREA,,canvec:NHNAREA,-
+##inner,NHNAREA,,canvec:NHNAREA,-
+#
+#LAKGEODB,C,20
+#Name Lake geographical name database	
+#Data type Character (20)
+#Domain The name or acronym of a geographical name database. The field is left blank when not applicable or unknown.
+#
+#LAKLANG,N,3,0
+#Name Lake language
+#Name Language
+#Definition Attribute used to indicate the official geographical name (toponym) language.
+#-1 Unknown Unknown
+#1 French unilingual French unilingual
+#2 English unilingual English unilingual
+#4 Bilingual French/English Bilingual Fench/English
+#
+#
+#	
+#LAKNAMEID,C,32	
+#Name Name ID
+#Definition The geographical name identifier from the geographical name database.
+#
+#
+#RIVNAMEEN,C,100	
+#Name English name
+#Definition The English geographical name of the toponymic phenomenon.
+#
+#RIVNAMEFR,C,100	
+#Name French name
+#Definition The French geographical name of the toponymic phenomenon.
+#
+#RIVGEODB,C,20	
+#Name Geographical name database
+#Definition Name of the database from which the geographical name comes from.
+#
+#RIVLANG,N,3,0	
+#Name Language
+#Definition Attribute used to indicate the official geographical name (toponym) language.
+#-1 Unknown Unknown
+#1 French unilingual French unilingual
+#2 English unilingual English unilingual
+#4 Bilingual French/English Bilingual Fench/English
+#outer,RIVLANG,-1,canvec:RIVLANG,-1 Unknown
+##inner,RIVLANG,-1,canvec:RIVLANG,-1 Unknown
+#outer,RIVLANG,1,canvec:RIVLANG,1 French
+##inner,RIVLANG,1,canvec:RIVLANG,1 French
+#outer,RIVLANG,2,canvec:RIVLANG,2 English
+##inner,RIVLANG,2,canvec:RIVLANG,2 English
+#outer,RIVLANG,4,canvec:RIVLANG,4 Bilingual
+##inner,RIVLANG,4,canvec:RIVLANG,4 Bilingual
+#
+#
+#
+#RIVNAMEID,C,32	
+# See rules.txt
+#Name Name ID
+#Definition The geographical name identifier from the geographical name database.
+#
+#LAKCONCOD,N,10,0	
+#Name Toponymic concise code
+#Definition Toponymic type used to specify the category of the named phenomenon. Called "Concise code" in the Canadian Geographical Names Data Base (CGNDB).
+# See rules.txt
+#
+#
+#RIVCONCOD,N,10
+#Name Toponymic concise code
+#Definition Toponymic type used to specify the category of the named phenomenon. Called "Concise code" in the Canadian Geographical Names Data Base (CGNDB).
+# See rules.txt
+#
+#-1 Unknown Toponymic feature type as defined in the Canadian Geographical Names Data Base.
+#outer,LAKCONCOD,-1,canvec:LAKCONCOD,-1 Unknown
+##inner,LAKCONCOD,-1,canvec:LAKCONCOD,-1 Unknown
+#outer,RIVCONCOD,-1,canvec:RIVCONCOD,-1 Unknown
+##inner,RIVCONCOD,-1,canvec:RIVCONCOD,-1 Unknown
+#
+#5 PROV Province
+#outer,LAKCONCOD,5,canvec:LAKCONCOD,5 PROV Province
+#outer,LAKCONCOD,5,place,state
+##inner,LAKCONCOD,5,canvec:LAKCONCOD,5 PROV Province
+##inner,LAKCONCOD,5,place,state
+#outer,RIVCONCOD,5,canvec:RIVCONCOD,5 PROV Province
+#outer,RIVCONCOD,5,place,state
+##inner,RIVCONCOD,5,canvec:RIVCONCOD,5 PROV Province
+##inner,RIVCONCOD,5,place,state
+#
+#7 TERR Territory
+#outer,LAKCONCOD,7,canvec:LAKCONCOD,7 TERR Territory
+#outer,LAKCONCOD,7,place,state
+##inner,LAKCONCOD,7,canvec:LAKCONCOD,7 TERR Territory
+##inner,LAKCONCOD,7,place,state
+#outer,RIVCONCOD,7,canvec:RIVCONCOD,7 TERR Territory
+#outer,RIVCONCOD,7,place,state
+##inner,RIVCONCOD,7,canvec:RIVCONCOD,7 TERR Territory
+##inner,RIVCONCOD,7,place,state
+#
+#10 CITY City
+#outer,LAKCONCOD,10,canvec:LAKCONCOD,10 CITY City
+#outer,LAKCONCOD,10,place,city
+##inner,LAKCONCOD,10,canvec:LAKCONCOD,10 CITY City
+##inner,LAKCONCOD,10,place,city
+#outer,RIVCONCOD,10,canvec:RIVCONCOD,10 CITY City
+#outer,RIVCONCOD,10,place,city
+##inner,RIVCONCOD,10,canvec:RIVCONCOD,10 CITY City
+##inner,RIVCONCOD,10,place,city
+#
+#20 TOWN Town
+#outer,LAKCONCOD,20,canvec:LAKCONCOD,20 TOWN Town
+#outer,LAKCONCOD,20,place,town
+##inner,LAKCONCOD,20,canvec:LAKCONCOD,20 TOWN Town
+##inner,LAKCONCOD,20,place,town
+#outer,RIVCONCOD,20,canvec:RIVCONCOD,20 TOWN Town
+#outer,RIVCONCOD,20,place,town
+##inner,RIVCONCOD,20,canvec:RIVCONCOD,20 TOWN Town
+##inner,RIVCONCOD,20,place,town
+#
+#30 VILG Village
+#outer,LAKCONCOD,30,canvec:LAKCONCOD,30 VILG Village
+#outer,LAKCONCOD,30,place,village
+##inner,LAKCONCOD,30,canvec:LAKCONCOD,30 VILG Village
+##inner,LAKCONCOD,30,place,village
+#outer,RIVCONCOD,30,canvec:RIVCONCOD,30 VILG Village
+#outer,RIVCONCOD,30,place,village
+##inner,RIVCONCOD,30,canvec:RIVCONCOD,30 VILG Village
+##inner,RIVCONCOD,30,place,village
+#
+#40 HAM Hamlet
+#outer,LAKCONCOD,40,canvec:LAKCONCOD,40 HAM Hamlet
+#outer,LAKCONCOD,40,place,hamlet
+##inner,LAKCONCOD,40,canvec:LAKCONCOD,40 HAM Hamlet
+##inner,LAKCONCOD,40,place,hamlet
+#outer,RIVCONCOD,40,canvec:RIVCONCOD,40 HAM Hamlet
+#outer,RIVCONCOD,40,place,hamlet
+##inner,RIVCONCOD,40,canvec:RIVCONCOD,40 HAM Hamlet
+##inner,RIVCONCOD,40,place,hamlet
+#
+#45 DMUN District municipality
+#outer,LAKCONCOD,45,canvec:LAKCONCOD,45 DMUN District municipality
+##inner,LAKCONCOD,45,canvec:LAKCONCOD,45 DMUN District municipality
+#outer,RIVCONCOD,45,canvec:RIVCONCOD,45 DMUN District municipality
+##inner,RIVCONCOD,45,canvec:RIVCONCOD,45 DMUN District municipality
+#
+#50 MUN1 Other municipal/district area - major agglomeration
+#outer,LAKCONCOD,50,canvec:LAKCONCOD,50 MUN1 Other municipal/district area - major agglomeration
+##inner,LAKCONCOD,50,canvec:LAKCONCOD,50 MUN1 Other municipal/district area - major agglomeration
+#outer,RIVCONCOD,50,canvec:RIVCONCOD,50 MUN1 Other municipal/district area - major agglomeration
+##inner,RIVCONCOD,50,canvec:RIVCONCOD,50 MUN1 Other municipal/district area - major agglomeration
+#
+#60 MUN2 Other municipal/district area - miscellaneous
+#outer,LAKCONCOD,60,canvec:LAKCONCOD,60 MUN2 Other municipal/district area - miscellaneous
+##inner,LAKCONCOD,60,canvec:LAKCONCOD,60 MUN2 Other municipal/district area - miscellaneous
+#outer,RIVCONCOD,60,canvec:RIVCONCOD,60 MUN2 Other municipal/district area - miscellaneous
+##inner,RIVCONCOD,60,canvec:RIVCONCOD,60 MUN2 Other municipal/district area - miscellaneous
+#
+#80 UNP Unincorporated area
+#outer,LAKCONCOD,80,canvec:LAKCONCOD,80 UNP Unincorporated area
+#outer,LAKCONCOD,80,place,unincorporated_area
+##inner,LAKCONCOD,80,canvec:LAKCONCOD,80 UNP Unincorporated area
+##inner,LAKCONCOD,80,place,unincorporated_area
+#outer,RIVCONCOD,80,canvec:RIVCONCOD,80 UNP Unincorporated area
+#outer,RIVCONCOD,80,place,unincorporated_area
+##inner,RIVCONCOD,80,canvec:RIVCONCOD,80 UNP Unincorporated area
+##inner,RIVCONCOD,80,place,unincorporated_area
+#
+#90 IR Indian Reserve
+#outer,LAKCONCOD,90,canvec:LAKCONCOD,90 IR Indian Reserve
+#outer,LAKCONCOD,90,place,indian_reserve
+##inner,LAKCONCOD,90,canvec:LAKCONCOD,90 IR Indian Reserve
+##inner,LAKCONCOD,90,place,indian_reserve
+#outer,RIVCONCOD,90,canvec:RIVCONCOD,90 IR Indian Reserve
+#outer,RIVCONCOD,90,place,indian_reserve
+##inner,RIVCONCOD,90,canvec:RIVCONCOD,90 IR Indian Reserve
+##inner,RIVCONCOD,90,place,indian_reserve
+#
+#100 GEOG Geographical area
+#outer,LAKCONCOD,100,canvec:LAKCONCOD,100 GEOG Geographical area
+#outer,LAKCONCOD,100,place,locality
+##inner,LAKCONCOD,100,canvec:LAKCONCOD,100 GEOG Geographical area
+##inner,LAKCONCOD,100,place,locality
+#outer,RIVCONCOD,100,canvec:RIVCONCOD,100 GEOG Geographical area
+#outer,RIVCONCOD,100,place,locality
+##inner,RIVCONCOD,100,canvec:RIVCONCOD,100 GEOG Geographical area
+##inner,RIVCONCOD,100,place,locality
+#
+#110 PARK Conservation area
+#outer,LAKCONCOD,110,canvec:LAKCONCOD,110 PARK Conservation area
+#outer,LAKCONCOD,110,leisure,nature_reserve
+##inner,LAKCONCOD,110,canvec:LAKCONCOD,110 PARK Conservation area
+##inner,LAKCONCOD,110,leisure,nature_reserve
+#outer,RIVCONCOD,110,canvec:RIVCONCOD,110 PARK Conservation area
+#outer,RIVCONCOD,110,leisure,nature_reserve
+##inner,RIVCONCOD,110,canvec:RIVCONCOD,110 PARK Conservation area
+##inner,RIVCONCOD,110,leisure,nature_reserve
+#
+#115 MIL Military area
+#outer,LAKCONCOD,115,canvec:LAKCONCOD,115 MIL Military area
+#outer,LAKCONCOD,115,landuse,military
+##inner,LAKCONCOD,115,canvec:LAKCONCOD,115 MIL Military area
+##inner,LAKCONCOD,115,landuse,military
+#outer,RIVCONCOD,115,canvec:RIVCONCOD,115 MIL Military area
+#outer,RIVCONCOD,115,landuse,military
+##inner,RIVCONCOD,115,canvec:RIVCONCOD,115 MIL Military area
+##inner,RIVCONCOD,115,landuse,military
+#
+#120 RIV River
+#outer,LAKCONCOD,120,canvec:LAKCONCOD,120 RIV River
+#outer,LAKCONCOD,120,natural,river
+##inner,LAKCONCOD,120,canvec:LAKCONCOD,120 RIV River
+##inner,LAKCONCOD,120,natural,river
+#outer,RIVCONCOD,120,canvec:RIVCONCOD,120 RIV River
+#outer,RIVCONCOD,120,natural,river
+##inner,RIVCONCOD,120,canvec:RIVCONCOD,120 RIV River
+##inner,RIVCONCOD,120,natural,river
+#
+#130 RIVF River feature
+#outer,LAKCONCOD,130,canvec:LAKCONCOD,130 RIVF River feature
+#outer,LAKCONCOD,130,natural,river
+##inner,LAKCONCOD,130,canvec:LAKCONCOD,130 RIVF River feature
+##inner,LAKCONCOD,130,natural,river
+#outer,RIVCONCOD,130,canvec:RIVCONCOD,130 RIVF River feature
+#outer,RIVCONCOD,130,natural,river
+##inner,RIVCONCOD,130,canvec:RIVCONCOD,130 RIVF River feature
+##inner,RIVCONCOD,130,natural,river
+#
+#140 FALL Falls
+#outer,LAKCONCOD,140,canvec:LAKCONCOD,140 FALL Falls
+#outer,LAKCONCOD,140,waterway,waterfall
+##inner,LAKCONCOD,140,canvec:LAKCONCOD,140 FALL Falls
+##inner,LAKCONCOD,140,waterway,waterfall
+#outer,RIVCONCOD,140,canvec:RIVCONCOD,140 FALL Falls
+#outer,RIVCONCOD,140,waterway,waterfall
+##inner,RIVCONCOD,140,canvec:RIVCONCOD,140 FALL Falls
+##inner,RIVCONCOD,140,waterway,waterfall
+#
+#150 LAKE Lake
+#outer,LAKCONCOD,150,canvec:LAKCONCOD,150 LAKE Lake
+#outer,LAKCONCOD,150,natural,water
+##inner,LAKCONCOD,150,canvec:LAKCONCOD,150 LAKE Lake
+##inner,LAKCONCOD,150,natural,water
+#outer,RIVCONCOD,150,canvec:RIVCONCOD,150 LAKE Lake
+#outer,RIVCONCOD,150,natural,water
+##inner,RIVCONCOD,150,canvec:RIVCONCOD,150 LAKE Lake
+##inner,RIVCONCOD,150,natural,water
+#
+#160 SPRG Spring
+#outer,LAKCONCOD,160,canvec:LAKCONCOD,160 SPRG Spring
+#outer,LAKCONCOD,160,natural,spring
+##inner,LAKCONCOD,160,canvec:LAKCONCOD,160 SPRG Spring
+##inner,LAKCONCOD,160,natural,spring
+#outer,RIVCONCOD,160,canvec:RIVCONCOD,160 SPRG Spring
+#outer,RIVCONCOD,160,natural,spring
+##inner,RIVCONCOD,160,canvec:RIVCONCOD,160 SPRG Spring
+##inner,RIVCONCOD,160,natural,spring
+#
+#170 SEA Sea
+#outer,LAKCONCOD,170,canvec:LAKCONCOD,170 SEA Sea
+#outer,LAKCONCOD,170,natural,water
+##inner,LAKCONCOD,170,canvec:LAKCONCOD,170 SEA Sea
+##inner,LAKCONCOD,170,natural,water
+#outer,RIVCONCOD,170,canvec:RIVCONCOD,170 SEA Sea
+#outer,RIVCONCOD,170,natural,water
+##inner,RIVCONCOD,170,canvec:RIVCONCOD,170 SEA Sea
+##inner,RIVCONCOD,170,natural,water
+#
+#180 SEAF Sea feature
+#outer,LAKCONCOD,180,canvec:LAKCONCOD,180 SEAF Sea feature
+#outer,LAKCONCOD,180,natural,sea_feature
+##inner,LAKCONCOD,180,canvec:LAKCONCOD,180 SEAF Sea feature
+##inner,LAKCONCOD,180,natural,sea_feature
+#outer,RIVCONCOD,180,canvec:RIVCONCOD,180 SEAF Sea feature
+#outer,RIVCONCOD,180,natural,sea_feature
+##inner,RIVCONCOD,180,canvec:RIVCONCOD,180 SEAF Sea feature
+##inner,RIVCONCOD,180,natural,sea_feature
+#
+#190 SEAU Undersea feature
+#outer,LAKCONCOD,190,canvec:LAKCONCOD,190 SEAU Undersea feature
+#outer,LAKCONCOD,190,sub_sea,feature
+##inner,LAKCONCOD,190,canvec:LAKCONCOD,190 SEAU Undersea feature
+##inner,LAKCONCOD,190,sub_sea,feature
+#outer,RIVCONCOD,190,canvec:RIVCONCOD,190 SEAU Undersea feature
+#outer,RIVCONCOD,190,sub_sea,feature
+##inner,RIVCONCOD,190,canvec:RIVCONCOD,190 SEAU Undersea feature
+##inner,RIVCONCOD,190,sub_sea,feature
+#
+#200 CHAN Channel
+#outer,LAKCONCOD,200,canvec:LAKCONCOD,200 CHAN Channel
+#outer,LAKCONCOD,200,natural,channel
+##inner,LAKCONCOD,200,canvec:LAKCONCOD,200 CHAN Channel
+##inner,LAKCONCOD,200,natural,channel
+#outer,RIVCONCOD,200,canvec:RIVCONCOD,200 CHAN Channel
+#outer,RIVCONCOD,200,natural,channel
+##inner,RIVCONCOD,200,canvec:RIVCONCOD,200 CHAN Channel
+##inner,RIVCONCOD,200,natural,channel
+#
+#210 RAP Rapids
+#outer,LAKCONCOD,210,canvec:LAKCONCOD,210 RAP Rapids
+#outer,LAKCONCOD,210,waterway,rapids
+##inner,LAKCONCOD,210,canvec:LAKCONCOD,210 RAP Rapids
+##inner,LAKCONCOD,210,waterway,rapids
+#outer,RIVCONCOD,210,canvec:RIVCONCOD,210 RAP Rapids
+#outer,RIVCONCOD,210,waterway,rapids
+##inner,RIVCONCOD,210,canvec:RIVCONCOD,210 RAP Rapids
+##inner,RIVCONCOD,210,waterway,rapids
+#
+#220 BAY Bay
+#outer,LAKCONCOD,220,canvec:LAKCONCOD,220 BAY Bay
+#outer,LAKCONCOD,220,natural,bay
+##inner,LAKCONCOD,220,canvec:LAKCONCOD,220 BAY Bay
+##inner,LAKCONCOD,220,natural,bay
+#outer,RIVCONCOD,220,canvec:RIVCONCOD,220 BAY Bay
+#outer,RIVCONCOD,220,natural,bay
+##inner,RIVCONCOD,220,canvec:RIVCONCOD,220 BAY Bay
+##inner,RIVCONCOD,220,natural,bay
+#
+#230 CAPE Cape
+#outer,LAKCONCOD,230,canvec:LAKCONCOD,230 CAPE Cape
+#outer,LAKCONCOD,230,natural,cape
+##inner,LAKCONCOD,230,canvec:LAKCONCOD,230 CAPE Cape
+##inner,LAKCONCOD,230,natural,cape
+#outer,RIVCONCOD,230,canvec:RIVCONCOD,230 CAPE Cape
+#outer,RIVCONCOD,230,natural,cape
+##inner,RIVCONCOD,230,canvec:RIVCONCOD,230 CAPE Cape
+##inner,RIVCONCOD,230,natural,cape
+#
+#240 BCH Beach
+#outer,LAKCONCOD,270,canvec:LAKCONCOD,240 BCH Beach
+#outer,LAKCONCOD,270,natural,beach
+##inner,LAKCONCOD,270,canvec:LAKCONCOD,240 BCH Beach
+##inner,LAKCONCOD,270,natural,beach
+#outer,RIVCONCOD,270,canvec:RIVCONCOD,240 BCH Beach
+#outer,RIVCONCOD,270,natural,beach
+##inner,RIVCONCOD,270,canvec:RIVCONCOD,240 BCH Beach
+##inner,RIVCONCOD,270,natural,beach
+#
+#250 SHL Shoal
+#http://en.wikipedia.org/wiki/Barrier_island
+#outer,LAKCONCOD,250,canvec:LAKCONCOD,250 SHL Shoal
+#outer,LAKCONCOD,250,natural,shoal
+##inner,LAKCONCOD,250,canvec:LAKCONCOD,250 SHL Shoal
+##inner,LAKCONCOD,250,natural,shoal
+#outer,RIVCONCOD,250,canvec:RIVCONCOD,250 SHL Shoal
+#outer,RIVCONCOD,250,natural,shoal
+##inner,RIVCONCOD,250,canvec:RIVCONCOD,250 SHL Shoal
+##inner,RIVCONCOD,250,natural,shoal
+#
+#260 ISL Island
+#outer,LAKCONCOD,260,canvec:LAKCONCOD,260 ISL Island
+#outer,LAKCONCOD,260,place,island
+##inner,LAKCONCOD,260,canvec:LAKCONCOD,260 ISL Island
+##inner,LAKCONCOD,260,place,island
+#outer,RIVCONCOD,260,canvec:RIVCONCOD,260 ISL Island
+#outer,RIVCONCOD,260,place,island
+##inner,RIVCONCOD,260,canvec:RIVCONCOD,260 ISL Island
+##inner,RIVCONCOD,260,place,island
+#
+#270 CLF Cliff
+#outer,LAKCONCOD,270,canvec:LAKCONCOD,270 CLF Cliff
+#outer,LAKCONCOD,270,natural,cliff
+##inner,LAKCONCOD,270,canvec:LAKCONCOD,270 CLF Cliff
+##inner,LAKCONCOD,270,natural,cliff
+#outer,RIVCONCOD,270,canvec:RIVCONCOD,270 CLF Cliff
+#outer,RIVCONCOD,270,natural,cliff
+##inner,RIVCONCOD,270,canvec:RIVCONCOD,270 CLF Cliff
+##inner,RIVCONCOD,270,natural,cliff
+#
+#280 MTN Mountain
+#outer,LAKCONCOD,280,canvec:LAKCONCOD,280 MTN Mountain
+#outer,LAKCONCOD,280,natural,peak
+##inner,LAKCONCOD,280,canvec:LAKCONCOD,280 MTN Mountain
+##inner,LAKCONCOD,280,natural,peak
+#outer,RIVCONCOD,280,canvec:RIVCONCOD,280 MTN Mountain
+#outer,RIVCONCOD,280,natural,peak
+##inner,RIVCONCOD,280,canvec:RIVCONCOD,280 MTN Mountain
+##inner,RIVCONCOD,280,natural,peak
+#natural,peak
+#
+#290 VALL Valley
+#outer,LAKCONCOD,290,canvec:LAKCONCOD,290 VALL Valley
+#outer,LAKCONCOD,290,natural,valley
+##inner,LAKCONCOD,290,canvec:LAKCONCOD,290 VALL Valley
+##inner,LAKCONCOD,290,natural,valley
+#outer,RIVCONCOD,290,canvec:RIVCONCOD,290 VALL Valley
+#outer,RIVCONCOD,290,natural,valley
+##inner,RIVCONCOD,290,canvec:RIVCONCOD,290 VALL Valley
+##inner,RIVCONCOD,290,natural,valley
+#
+#300 PLN Plain
+#outer,LAKCONCOD,300,canvec:LAKCONCOD,300 PLN Plain
+#outer,LAKCONCOD,300,natural,plain
+##inner,LAKCONCOD,300,canvec:LAKCONCOD,300 PLN Plain
+##inner,LAKCONCOD,300,natural,plain
+#outer,RIVCONCOD,300,canvec:RIVCONCOD,300 PLN Plain
+#outer,RIVCONCOD,300,natural,plain
+##inner,RIVCONCOD,300,canvec:RIVCONCOD,300 PLN Plain
+##inner,RIVCONCOD,300,natural,plain
+#
+#310 CAVE Cave
+#outer,LAKCONCOD,310,canvec:LAKCONCOD,310 CAVE Cave
+#outer,LAKCONCOD,310,natural,cave_entrance
+##inner,LAKCONCOD,310,canvec:LAKCONCOD,310 CAVE Cave
+##inner,LAKCONCOD,310,natural,cave_entrance
+#outer,RIVCONCOD,310,canvec:RIVCONCOD,310 CAVE Cave
+#outer,RIVCONCOD,310,natural,cave_entrance
+##inner,RIVCONCOD,310,canvec:RIVCONCOD,310 CAVE Cave
+##inner,RIVCONCOD,310,natural,cave_entrance
+#
+#320 CRAT Crater
+#outer,LAKCONCOD,320,canvec:LAKCONCOD,320 CRAT Crater
+#outer,LAKCONCOD,320,natural,crater
+##inner,LAKCONCOD,320,canvec:LAKCONCOD,320 CRAT Crater
+##inner,LAKCONCOD,320,natural,crater
+#outer,RIVCONCOD,320,canvec:RIVCONCOD,320 CRAT Crater
+#outer,RIVCONCOD,320,natural,crater
+##inner,RIVCONCOD,320,canvec:RIVCONCOD,320 CRAT Crater
+##inner,RIVCONCOD,320,natural,crater
+#
+#330 GLAC Glacier
+#outer,LAKCONCOD,330,canvec:LAKCONCOD,330 GLAC Glacier
+#outer,LAKCONCOD,330,natural,glacier
+##inner,LAKCONCOD,330,canvec:LAKCONCOD,330 GLAC Glacier
+##inner,LAKCONCOD,330,natural,glacier
+#outer,RIVCONCOD,330,canvec:RIVCONCOD,330 GLAC Glacier
+#outer,RIVCONCOD,330,natural,glacier
+##inner,RIVCONCOD,330,canvec:RIVCONCOD,330 GLAC Glacier
+##inner,RIVCONCOD,330,natural,glacier
+#
+#340 FOR Forest
+#outer,LAKCONCOD,340,canvec:LAKCONCOD,340 FOR Forest
+#outer,LAKCONCOD,340,landuse,forest
+#outer,LAKCONCOD,340,natural,wood
+##inner,LAKCONCOD,340,canvec:LAKCONCOD,340 FOR Forest
+##inner,LAKCONCOD,340,landuse,forest
+##inner,LAKCONCOD,340,natural,wood
+#outer,RIVCONCOD,340,canvec:RIVCONCOD,340 FOR Forest
+#outer,RIVCONCOD,340,landuse,forest
+#outer,RIVCONCOD,340,natural,wood
+##inner,RIVCONCOD,340,canvec:RIVCONCOD,340 FOR Forest
+##inner,RIVCONCOD,340,landuse,forest
+##inner,RIVCONCOD,340,natural,wood
+#landuse,forest
+#natural,wood
+#
+#350 VEGL Low vegetation
+#outer,LAKCONCOD,350,canvec:LAKCONCOD,350 VEGL Low vegetation
+#outer,LAKCONCOD,350,landuse,meadow
+##inner,LAKCONCOD,350,canvec:LAKCONCOD,350 VEGL Low vegetation
+##inner,LAKCONCOD,350,landuse,meadow
+#outer,RIVCONCOD,350,canvec:RIVCONCOD,350 VEGL Low vegetation
+#outer,RIVCONCOD,350,landuse,meadow
+##inner,RIVCONCOD,350,canvec:RIVCONCOD,350 VEGL Low vegetation
+##inner,RIVCONCOD,350,landuse,meadow
+#
+#370 MISC Miscellaneous
+#outer,LAKCONCOD,370,canvec:LAKCONCOD,370 MISC Miscellaneous
+##inner,LAKCONCOD,370,canvec:LAKCONCOD,370 MISC Miscellaneous
+#outer,RIVCONCOD,370,canvec:RIVCONCOD,370 MISC Miscellaneous
+##inner,RIVCONCOD,370,canvec:RIVCONCOD,370 MISC Miscellaneous
+#
+#380 RAIL Railway feature
+#outer,LAKCONCOD,380,canvec:LAKCONCOD,380 RAIL Railway feature
+#outer,LAKCONCOD,380,railway,rail
+##inner,LAKCONCOD,380,canvec:LAKCONCOD,380 RAIL Railway feature
+##inner,LAKCONCOD,380,railway,rail
+#outer,RIVCONCOD,380,canvec:RIVCONCOD,380 RAIL Railway feature
+#outer,RIVCONCOD,380,railway,rail
+##inner,RIVCONCOD,380,canvec:RIVCONCOD,380 RAIL Railway feature
+##inner,RIVCONCOD,380,railway,rail
+#
+#390 ROAD Road feature
+#outer,LAKCONCOD,390,canvec:LAKCONCOD,390 ROAD Road feature
+##inner,LAKCONCOD,390,canvec:LAKCONCOD,390 ROAD Road feature
+#outer,RIVCONCOD,390,canvec:RIVCONCOD,390 ROAD Road feature
+##inner,RIVCONCOD,390,canvec:RIVCONCOD,390 ROAD Road feature
+#highway,road
+#
+#400 AIR Air navigation feature
+#outer,LAKCONCOD,400,canvec:LAKCONCOD,400 AIR Air navigation feature
+#outer,LAKCONCOD,400,aeroway,aerodrome
+##inner,LAKCONCOD,400,canvec:LAKCONCOD,400 AIR Air navigation feature
+##inner,LAKCONCOD,400,aeroway,aerodrome
+#outer,RIVCONCOD,400,canvec:RIVCONCOD,400 AIR Air navigation feature
+#outer,RIVCONCOD,400,aeroway,aerodrome
+##inner,RIVCONCOD,400,canvec:RIVCONCOD,400 AIR Air navigation feature
+##inner,RIVCONCOD,400,aeroway,aerodrome
+#
+#410 MAR Marine navigation feature
+#outer,LAKCONCOD,410,canvec:LAKCONCOD,410 MAR Marine navigation feature
+#outer,LAKCONCOD,410,man_made,beacon
+##inner,LAKCONCOD,410,canvec:LAKCONCOD,410 MAR Marine navigation feature
+##inner,LAKCONCOD,410,man_made,beacon
+#outer,RIVCONCOD,410,canvec:RIVCONCOD,410 MAR Marine navigation feature
+#outer,RIVCONCOD,410,man_made,beacon
+##inner,RIVCONCOD,410,canvec:RIVCONCOD,410 MAR Marine navigation feature
+##inner,RIVCONCOD,410,man_made,beacon
+#
+#420 HYDR Hydraulic construction
+#outer,LAKCONCOD,420,canvec:LAKCONCOD,420 HYDR Hydraulic construction
+##inner,LAKCONCOD,420,canvec:LAKCONCOD,420 HYDR Hydraulic construction
+#outer,RIVCONCOD,420,canvec:RIVCONCOD,420 HYDR Hydraulic construction
+##inner,RIVCONCOD,420,canvec:RIVCONCOD,420 HYDR Hydraulic construction
+#
+#430 RECR Recreational site
+#outer,LAKCONCOD,430,canvec:LAKCONCOD,430 RECR Recreational site
+#outer,LAKCONCOD,430,landuse,recreation_ground
+##inner,LAKCONCOD,430,canvec:LAKCONCOD,430 RECR Recreational site
+##inner,LAKCONCOD,430,landuse,recreation_ground
+#outer,RIVCONCOD,430,canvec:RIVCONCOD,430 RECR Recreational site
+#outer,RIVCONCOD,430,landuse,recreation_ground
+##inner,RIVCONCOD,430,canvec:RIVCONCOD,430 RECR Recreational site
+##inner,RIVCONCOD,430,landuse,recreation_ground
+#
+#440 RES Natural resources site
+#outer,LAKCONCOD,440,canvec:LAKCONCOD,440 RES Natural resources site
+#outer,LAKCONCOD,440,leisure,nature_reserve
+##inner,LAKCONCOD,440,canvec:LAKCONCOD,440 RES Natural resources site
+##inner,LAKCONCOD,440,leisure,nature_reserve
+#outer,RIVCONCOD,440,canvec:RIVCONCOD,440 RES Natural resources site
+#outer,RIVCONCOD,440,leisure,nature_reserve
+##inner,RIVCONCOD,440,canvec:RIVCONCOD,440 RES Natural resources site
+##inner,RIVCONCOD,440,leisure,nature_reserve
+#
+#450 CAMP Miscellaneous campsite
+#outer,LAKCONCOD,450,canvec:LAKCONCOD,450 CAMP Miscellaneous campsite
+#outer,LAKCONCOD,450,tourism,camp_site
+##inner,LAKCONCOD,450,canvec:LAKCONCOD,450 CAMP Miscellaneous campsite
+##inner,LAKCONCOD,450,tourism,camp_site
+#outer,RIVCONCOD,450,canvec:RIVCONCOD,450 CAMP Miscellaneous campsite
+#outer,RIVCONCOD,450,tourism,camp_site
+##inner,RIVCONCOD,450,canvec:RIVCONCOD,450 CAMP Miscellaneous campsite
+##inner,RIVCONCOD,450,tourism,camp_site
+#
+#460 SITE Miscellaneous site
+#outer,LAKCONCOD,460,canvec:LAKCONCOD,460 SITE Miscellaneous site
+##inner,LAKCONCOD,460,canvec:LAKCONCOD,460 SITE Miscellaneous site
+#outer,RIVCONCOD,460,canvec:RIVCONCOD,460 SITE Miscellaneous site
+##inner,RIVCONCOD,460,canvec:RIVCONCOD,460 SITE Miscellaneous site
+#
+#
+#
+#*
+#outer,CODE,1480012,canvec:CODE,1480012
+outer,CODE,1480012,canvec:generic_code,1480009
+#outer,CODE,1480012,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480012,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480012,canvec:value,None; isolated - ( Aucun; isolé )
+#outer,CODE,1480012,canvec:value_definition:None,None of the other values.
+#outer,CODE,1480012,canvec:value_definition:True,Isolated.
+outer,CODE,1480012,natural,water
+#note,None (Aucun), isolated;non isolated;unknown	 None of the other values.
+#note,Is in GeoBase – do not use -
+#1 	Canal 	An artificial body of water serving as a navigable waterway or to channel water.
+#outer,TYPE_TEXT,Canal,waterway,canal
+##inner,TYPE_TEXT,Canal,waterway,canal
+#inner,CODE,1480012,canvec:CODE,1480012
+##inner,CODE,1480012,canvec:generic_code,1480009
+##inner,CODE,1480012,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480012,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480012,canvec:value,None; isolated - ( Aucun; isolé )
+##inner,CODE,1480012,canvec:value_definition:None,None of the other values.
+##inner,CODE,1480012,canvec:value_definition:True,Isolated.
+#inner,CODE,1480012,natural,water
+#
+#1 	Canal 	An artificial body of water serving as a navigable waterway or to channel water.
+#outer,TYPE_TEXT,Canal,waterway,canal
+##inner,TYPE_TEXT,Canal,waterway,canal
+outer,CODE,1480022,canvec:CODE,1480022
+#outer,CODE,1480022,canvec:generic_code,1480009
+#outer,CODE,1480022,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480022,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480022,canvec:value,Canal; isolated - ( Canal; isolé )
+#outer,CODE,1480022,canvec:value_definition:Canal,An artificial body of water serving as a navigable waterway or to channel water.
+#outer,CODE,1480022,canvec:value_definition:True,Isolated.
+outer,CODE,1480022,waterway,canal
+outer,CODE,1480022,natural,water
+#inner,CODE,1480022,canvec:CODE,1480022
+##inner,CODE,1480022,canvec:generic_code,1480009
+##inner,CODE,1480022,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480022,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480022,canvec:value,Canal; isolated - ( Canal; isolé )
+##inner,CODE,1480022,canvec:value_definition:Canal,An artificial body of water serving as a navigable waterway or to channel water.
+##inner,CODE,1480022,canvec:value_definition:True,Isolated.
+#inner,CODE,1480022,waterway,canal
+#inner,CODE,1480022,natural,water
+#
+#4 	Lake 	A natural and usually flat body of water.
+#outer,TYPE_TEXT,Lake,natural,water
+#outer,TYPE_TEXT,Lake,type,lake
+##inner,TYPE_TEXT,Lake,natural,water
+##inner,TYPE_TEXT,Lake,type,lake
+outer,CODE,1480052,canvec:CODE,1480052
+#outer,CODE,1480052,canvec:generic_code,1480009
+#outer,CODE,1480052,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480052,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480052,canvec:value,Lake; isolated - ( Lac; isolé )
+#outer,CODE,1480052,canvec:value_definition:Lake,A natural and usually flat body of water.
+#outer,CODE,1480052,canvec:value_definition:True,Isolated.
+outer,CODE,1480052,natural,water
+outer,CODE,1480052,type,lake
+#inner,CODE,1480052,canvec:CODE,1480052
+##inner,CODE,1480052,canvec:generic_code,1480009
+##inner,CODE,1480052,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480052,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480052,canvec:value,Lake; isolated - ( Lac; isolé )
+##inner,CODE,1480052,canvec:value_definition:Lake,A natural and usually flat body of water.
+##inner,CODE,1480052,canvec:value_definition:True,Isolated.
+#inner,CODE,1480052,natural,water
+#inner,CODE,1480052,type,lake
+#*
+#5 	Reservoir 	A wholly or partially manmade body of water for storing and/or regulating and controlling water.
+#outer,TYPE_TEXT,Reservoir,landuse,reservoir
+##inner,TYPE_TEXT,Reservoir,landuse,reservoir
+outer,CODE,1480062,canvec:CODE,1480062
+#outer,CODE,1480062,canvec:generic_code,1480009
+#outer,CODE,1480062,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480062,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480062,canvec:value,Reservoir; isolated - ( Réservoir; isolé )
+#outer,CODE,1480062,canvec:value_definition:Reservoir,A wholly or partially manmade body of water for storing and/or regulating and controlling water.
+#outer,CODE,1480062,canvec:value_definition:True,Isolated.
+outer,CODE,1480062,landuse,reservoir
+#inner,CODE,1480062,canvec:CODE,1480062
+##inner,CODE,1480062,canvec:generic_code,1480009
+##inner,CODE,1480062,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480062,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480062,canvec:value,Reservoir; isolated - ( Réservoir; isolé )
+##inner,CODE,1480062,canvec:value_definition:Reservoir,A wholly or partially manmade body of water for storing and/or regulating and controlling water.
+##inner,CODE,1480062,canvec:value_definition:True,Isolated.
+#inner,CODE,1480062,landuse,reservoir
+#
+outer,CODE,1480072,canvec:CODE,1480072
+#outer,CODE,1480072,canvec:generic_code,1480009
+#outer,CODE,1480072,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480072,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480072,canvec:value,Watercourse; isolated - ( Cours d'eau; isolé )
+#outer,CODE,1480072,canvec:value_definition:Watercourse,A natural body of water through which water may flow.
+#outer,CODE,1480072,canvec:value_definition:True,Isolated.
+outer,CODE,1480072,waterway,riverbank
+outer,CODE,1480072,natural,water
+outer,CODE,1480072,type,watercourse
+#inner,CODE,1480072,canvec:CODE,1480072
+##inner,CODE,1480072,canvec:generic_code,1480009
+##inner,CODE,1480072,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480072,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480072,canvec:value,Watercourse; isolated - ( Cours d'eau; isolé )
+##inner,CODE,1480072,canvec:value_definition:Watercourse,A natural body of water through which water may flow.
+##inner,CODE,1480072,canvec:value_definition:True,Isolated.
+#inner,CODE,1480072,waterway,riverbank
+#inner,CODE,1480072,natural,water
+#inner,CODE,1480072,type,watercourse
+#
+#line,TYPE_TEXT,Liquid Waste,landuse,basin
+#line,TYPE_TEXT,Liquid Waste,basin,infiltration
+#outer,TYPE_TEXT,Liquid Waste,landuse,basin
+#outer,TYPE_TEXT,Liquid Waste,basin,infiltration
+##inner,TYPE_TEXT,Liquid Waste,landuse,basin
+##inner,TYPE_TEXT,Liquid Waste,basin,infiltration
+outer,CODE,1480092,canvec:CODE,1480092
+#outer,CODE,1480092,canvec:generic_code,1480009
+#outer,CODE,1480092,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480092,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480092,canvec:value,Liquid waste; isolated - ( Déchets liquides; isolé )
+#outer,CODE,1480092,canvec:value_definition:Liquid_waste,Liquid waste or discharge from an industrial complex.
+#outer,CODE,1480092,canvec:value_definition:True,Isolated.
+outer,CODE,1480092,landuse,basin
+outer,CODE,1480092,basin,infiltration
+#inner,CODE,1480092,canvec:CODE,1480092
+##inner,CODE,1480092,canvec:generic_code,1480009
+##inner,CODE,1480092,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480092,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480092,canvec:value,Liquid waste; isolated - ( Déchets liquides; isolé )
+##inner,CODE,1480092,canvec:value_definition:Liquid_waste,Liquid waste or discharge from an industrial complex.
+##inner,CODE,1480092,canvec:value_definition:True,Isolated.
+#inner,CODE,1480092,landuse,basin
+#inner,CODE,1480092,basin,infiltration
+#
+#line,TYPE_TEXT,Pond,natural,water
+#outer,TYPE_TEXT,Pond,natural,water
+##inner,TYPE_TEXT,Pond,natural,water
+outer,CODE,1480102,canvec:CODE,1480102
+#outer,CODE,1480102,canvec:generic_code,1480009
+#outer,CODE,1480102,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480102,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480102,canvec:value,Pond; isolated - ( Étang; isolé )
+#outer,CODE,1480102,canvec:value_definition:Pond,A body of standing water; usually smaller than a lake.
+#outer,CODE,1480102,canvec:value_definition:True,Isolated.
+outer,CODE,1480102,natural,water
+outer,CODE,1480102,type,pond
+#inner,CODE,1480102,canvec:CODE,1480102
+##inner,CODE,1480102,canvec:generic_code,1480009
+##inner,CODE,1480102,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480102,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480102,canvec:value,Pond; isolated - ( Étang; isolé )
+##inner,CODE,1480102,canvec:value_definition:Pond,A body of standing water; usually smaller than a lake.
+##inner,CODE,1480102,canvec:value_definition:True,Isolated.
+#inner,CODE,1480102,natural,water
+#inner,CODE,1480102,type,pond
+#
+outer,CODE,1480112,canvec:CODE,1480112
+#outer,CODE,1480112,canvec:generic_code,1480009
+#outer,CODE,1480112,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480112,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480112,canvec:value,None; non isolated - ( Aucun; non isolé )
+#outer,CODE,1480112,canvec:value_definition:None,None of the other values.
+#outer,CODE,1480112,canvec:value_definition:False,Not isolated.
+outer,CODE,1480112,natural,water
+#inner,CODE,1480112,canvec:CODE,1480112
+##inner,CODE,1480112,canvec:generic_code,1480009
+##inner,CODE,1480112,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480112,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480112,canvec:value,None; non isolated - ( Aucun; non isolé )
+##inner,CODE,1480112,canvec:value_definition:None,None of the other values.
+##inner,CODE,1480112,canvec:value_definition:False,Not isolated.
+#inner,CODE,1480112,natural,water
+#
+outer,CODE,1480122,canvec:CODE,1480122
+#outer,CODE,1480122,canvec:generic_code,1480009
+#outer,CODE,1480122,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480122,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480122,canvec:value,Canal; non isolated - ( Canal; non isolé )
+#outer,CODE,1480122,canvec:value_definition:Canal,An artificial body of water serving as a navigable waterway or to channel water.
+#outer,CODE,1480122,canvec:value_definition:False,Not isolated.
+outer,CODE,1480122,natural,water
+outer,CODE,1480122,type,canal
+#inner,CODE,1480122,canvec:CODE,1480122
+##inner,CODE,1480122,canvec:generic_code,1480009
+##inner,CODE,1480122,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480122,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480122,canvec:value,Canal; non isolated - ( Canal; non isolé )
+##inner,CODE,1480122,canvec:value_definition:Canal,An artificial body of water serving as a navigable waterway or to channel water.
+##inner,CODE,1480122,canvec:value_definition:False,Not isolated.
+#inner,CODE,1480122,natural,water
+#inner,CODE,1480122,type,canal
+#
+#line,TYPE_TEXT,Side Channel,natural,water
+#outer,TYPE_TEXT,Side Channel,natural,water
+##inner,TYPE_TEXT,Side Channel,natural,water
+outer,CODE,1480132,canvec:CODE,1480132
+#outer,CODE,1480132,canvec:generic_code,1480009
+#outer,CODE,1480132,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480132,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480132,canvec:value,Side_channel; non isolated - ( Voie d'eau latérale; non isolé )
+#outer,CODE,1480132,canvec:value_definition:Side_channel,A channel providing an alternative water way within a flowing body of water.
+#outer,CODE,1480132,canvec:value_definition:False,Not isolated.
+outer,CODE,1480132,natural,water
+outer,CODE,1480132,type,side_channel
+#inner,CODE,1480132,canvec:CODE,1480132
+##inner,CODE,1480132,canvec:generic_code,1480009
+##inner,CODE,1480132,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480132,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480132,canvec:value,Side_channel; non isolated - ( Voie d'eau latérale; non isolé )
+##inner,CODE,1480132,canvec:value_definition:Side_channel,A channel providing an alternative water way within a flowing body of water.
+##inner,CODE,1480132,canvec:value_definition:False,Not isolated.
+#inner,CODE,1480132,natural,water
+#inner,CODE,1480132,type,side_channel
+#
+outer,CODE,1480152,canvec:CODE,1480152
+#outer,CODE,1480152,canvec:generic_code,1480009
+#outer,CODE,1480152,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480152,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480152,canvec:value,Lake; non isolated - ( Lac; non isolé )
+#outer,CODE,1480152,canvec:value_definition:Lake,A natural and usually flat body of water.
+#outer,CODE,1480152,canvec:value_definition:False,Not isolated.
+outer,CODE,1480152,natural,water
+outer,CODE,1480152,type,lake
+#note,Lake (Lac), isolated;non isolated;unknown	 A natural and usually flat body of water.
+#inner,CODE,1480152,canvec:CODE,1480152
+##inner,CODE,1480152,canvec:generic_code,1480009
+##inner,CODE,1480152,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480152,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480152,canvec:value,Lake; non isolated - ( Lac; non isolé )
+##inner,CODE,1480152,canvec:value_definition:Lake,A natural and usually flat body of water.
+##inner,CODE,1480152,canvec:value_definition:False,Not isolated.
+#inner,CODE,1480152,natural,water
+#inner,CODE,1480152,type,lake
+#*
+outer,CODE,1480162,canvec:CODE,1480162
+#outer,CODE,1480162,canvec:generic_code,1480009
+#outer,CODE,1480162,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480162,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480162,canvec:value,Reservoir; non isolated - ( Réservoir; non isolé )
+#outer,CODE,1480162,canvec:value_definition:Reservoir,A wholly or partially manmade body of water for storing and/ or regulating and controlling water.
+#outer,CODE,1480162,canvec:value_definition:False,Not isolated.
+outer,CODE,1480162,landuse,reservoir
+#note,Reservoir - ( Réservoir ), indefinite;isolated;non isolated;unknown	 A wholly or partially manmade body of water for storing and/or regulating and controlling water.
+#inner,CODE,1480162,canvec:CODE,1480162
+##inner,CODE,1480162,canvec:generic_code,1480009
+##inner,CODE,1480162,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480162,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480162,canvec:value,Reservoir; non isolated - ( Réservoir; non isolé )
+##inner,CODE,1480162,canvec:value_definition:Reservoir,A wholly or partially manmade body of water for storing and/ or regulating and controlling water.
+##inner,CODE,1480162,canvec:value_definition:False,Not isolated.
+#inner,CODE,1480162,landuse,reservoir
+#
+outer,CODE,1480172,canvec:CODE,1480172
+#outer,CODE,1480172,canvec:generic_code,1480009
+#outer,CODE,1480172,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480172,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480172,canvec:value,Watercourse; non isolated - ( Cours d'eau; non isolé )
+#outer,CODE,1480172,canvec:value_definition:Watercourse,A natural body of water through which water may flow.
+#outer,CODE,1480172,canvec:value_definition:False,Not isolated.
+outer,CODE,1480172,waterway,riverbank
+#note,Watercourse - ( Cours d'eau), isolated;non isolated	 A natural body of water through which water may flow.
+#inner,CODE,1480172,canvec:CODE,1480172
+##inner,CODE,1480172,canvec:generic_code,1480009
+##inner,CODE,1480172,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480172,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480172,canvec:value,Watercourse; non isolated - ( Cours d'eau; non isolé )
+##inner,CODE,1480172,canvec:value_definition:Watercourse,A natural body of water through which water may flow.
+##inner,CODE,1480172,canvec:value_definition:False,Not isolated.
+#inner,CODE,1480172,waterway,riverbank
+#
+outer,CODE,1480182,canvec:CODE,1480182
+#outer,CODE,1480182,canvec:generic_code,1480009
+#outer,CODE,1480182,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480182,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480182,canvec:value,Tidal river; non isolated - ( Rivière à marées; non isolé )
+#outer,CODE,1480182,canvec:value_definition:Tidal_river,A natural body of water in which flow and water surface elevation are affected by the tide.
+#outer,CODE,1480182,canvec:value_definition:False,Not isolated.
+outer,CODE,1480182,natural,water
+outer,CODE,1480182,type,tidal_river
+outer,CODE,1480182,waterway,stream
+#note,Tidal river, non isolated - ( Rivière à marées, non isolé )	 A natural body of water in which flow and water surface elevation are affected by the tide.
+#inner,CODE,1480182,canvec:CODE,1480182
+##inner,CODE,1480182,canvec:generic_code,1480009
+##inner,CODE,1480182,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480182,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480182,canvec:value,Tidal river; non isolated - ( Rivière à marées; non isolé )
+##inner,CODE,1480182,canvec:value_definition:Tidal_river,A natural body of water in which flow and water surface elevation are affected by the tide.
+##inner,CODE,1480182,canvec:value_definition:False,Not isolated.
+#inner,CODE,1480182,natural,water
+#inner,CODE,1480182,type,tidal_river
+#inner,CODE,1480182,waterway,stream
+#
+outer,CODE,1480192,canvec:CODE,1480192
+#outer,CODE,1480192,canvec:generic_code,1480009
+#outer,CODE,1480192,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480192,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480192,canvec:value,Liquid waste; non isolated - ( Déchets liquides; non isolé )
+#outer,CODE,1480192,canvec:value_definition:Liquid_waste,Liquid waste or discharge from an industrial complex.
+#outer,CODE,1480192,canvec:value_definition:False,Not isolated.
+outer,CODE,1480192,landuse,basin
+outer,CODE,1480192,type,liquid_waste
+#note,Liquid waste (Déchets liquides), indefinite;isolated;non isolated;unknown	 Liquid waste or discharge from an industrial complex.
+#inner,CODE,1480192,canvec:CODE,1480192
+##inner,CODE,1480192,canvec:generic_code,1480009
+##inner,CODE,1480192,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480192,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480192,canvec:value,Liquid waste; non isolated - ( Déchets liquides; non isolé )
+##inner,CODE,1480192,canvec:value_definition:Liquid_waste,Liquid waste or discharge from an industrial complex.
+##inner,CODE,1480192,canvec:value_definition:False,Not isolated.
+#inner,CODE,1480192,landuse,basin
+#inner,CODE,1480192,type,liquid_waste
+#
+outer,CODE,1480202,canvec:CODE,1480202
+#outer,CODE,1480202,canvec:generic_code,1480009
+#outer,CODE,1480202,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480202,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480202,canvec:value,Pond; non isolated - ( Étang; non isolé )
+#outer,CODE,1480202,canvec:value_definition:Pond,A body of standing water, usually smaller than a lake.
+#outer,CODE,1480202,canvec:value_definition:False,Not isolated.
+outer,CODE,1480202,natural,water
+outer,CODE,1480202,type,pond
+#inner,CODE,1480202,canvec:CODE,1480202
+##inner,CODE,1480202,canvec:generic_code,1480009
+##inner,CODE,1480202,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480202,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480202,canvec:value,Pond; non isolated - ( Étang; non isolé )
+##inner,CODE,1480202,canvec:value_definition:Pond,A body of standing water, usually smaller than a lake.
+##inner,CODE,1480202,canvec:value_definition:False,Not isolated.
+#inner,CODE,1480202,natural,water
+#inner,CODE,1480202,type,pond
+#
+outer,CODE,1480212,canvec:CODE,1480212
+#outer,CODE,1480212,canvec:generic_code,1480009
+#outer,CODE,1480212,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480212,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480212,canvec:value,Indefinite; isolated - ( Indéfini; isolé )
+#outer,CODE,1480212,canvec:value_definition:Indefinite,Not determined.
+#outer,CODE,1480212,canvec:value_definition:True,Isolated.
+outer,CODE,1480212,natural,water	
+#inner,CODE,1480212,canvec:CODE,1480212
+##inner,CODE,1480212,canvec:generic_code,1480009
+##inner,CODE,1480212,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480212,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480212,canvec:value,Indefinite; isolated - ( Indéfini; isolé )
+##inner,CODE,1480212,canvec:value_definition:Indefinite,Not determined.
+##inner,CODE,1480212,canvec:value_definition:True,Isolated.
+#inner,CODE,1480212,natural,water
+#
+outer,CODE,1480222,canvec:CODE,1480222
+#outer,CODE,1480222,canvec:generic_code,1480009
+#outer,CODE,1480222,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480222,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480222,canvec:value,Indefinite; non isolated - ( Indéfini; non isolé )
+#outer,CODE,1480222,canvec:value_definition:Indefinite,Not determined.
+#outer,CODE,1480222,canvec:value_definition:False,Not isolated.
+outer,CODE,1480222,natural,water
+#inner,CODE,1480222,canvec:CODE,1480222
+#inner,CODE,1480222,natural,water
+#
+outer,CODE,1480232,canvec:CODE,1480232
+#outer,CODE,1480232,canvec:generic_code,1480009
+#outer,CODE,1480232,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480232,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480232,canvec:value,Indefinite; indefinite - ( Indéfini; indéfini )
+#outer,CODE,1480232,canvec:value_definition:Indefinite,Not determined.
+#outer,CODE,1480232,canvec:value_definition:Indefinite,Not determined.
+#outer,CODE,1480232,canvec:Value,Indefinite_ indefinite - ( Indéfini indéfini )
+outer,CODE,1480232,natural,water
+#same as 1460092 (sub_sea=reef) (layer=-1)
+#inner,CODE,1480232,canvec:CODE,1480232
+##inner,CODE,1480232,canvec:generic_code,1480009
+##inner,CODE,1480232,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480232,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480232,canvec:value,Indefinite; indefinite - ( Indéfini; indéfini )
+##inner,CODE,1480232,canvec:value_definition:Indefinite,Not determined.
+##inner,CODE,1480232,canvec:value_definition:Indefinite,Not determined.
+#inner,CODE,1480232,natural,land
+#*
+outer,CODE,1480242,canvec:CODE,1480242
+#outer,CODE,1480242,canvec:generic_code,1480009
+#outer,CODE,1480242,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480242,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480242,canvec:value,Liquid waste; indefinite - ( Déchets liquides; indéfini )
+#outer,CODE,1480242,canvec:value_definition:Liquid_waste,Liquid waste or discharge from an industrial complex.
+#outer,CODE,1480242,canvec:value_definition:Indefinite,Not determined.
+outer,CODE,1480242,landuse,basin
+outer,CODE,1480242,basin,infiltration
+#inner,CODE,1480242,canvec:CODE,1480242
+##inner,CODE,1480242,canvec:generic_code,1480009
+##inner,CODE,1480242,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480242,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480242,canvec:value,Liquid waste; indefinite - ( Déchets liquides; indéfini )
+##inner,CODE,1480242,canvec:value_definition:Liquid_waste,Liquid waste or discharge from an industrial complex.
+##inner,CODE,1480242,canvec:value_definition:Indefinite,Not determined.
+#inner,CODE,1480242,landuse,basin
+#inner,CODE,1480242,basin,infiltration
+#*
+outer,CODE,1480252,canvec:CODE,1480252
+#outer,CODE,1480252,canvec:generic_code,1480009
+#outer,CODE,1480252,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480252,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480252,canvec:value,Reservoir; indefinite - ( Réservoir; indéfini )
+#outer,CODE,1480252,canvec:value_definition:Reservoir,A wholly or partially manmade body of water for storing and/ or regulating and controlling water.
+#outer,CODE,1480252,canvec:value_definition:Indefinite,Not determined.
+outer,CODE,1480252,landuse,reservoir
+#inner,CODE,1480252,canvec:CODE,1480252
+##inner,CODE,1480252,canvec:generic_code,1480009
+##inner,CODE,1480252,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480252,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480252,canvec:value,Reservoir; indefinite - ( Réservoir; indéfini )
+##inner,CODE,1480252,canvec:value_definition:Reservoir,A wholly or partially manmade body of water for storing and/ or regulating and controlling water.
+##inner,CODE,1480252,canvec:value_definition:Indefinite,Not determined.
+#inner,CODE,1480252,landuse,reservoir
+#
+outer,CODE,1480262,canvec:CODE,1480262
+#outer,CODE,1480262,canvec:generic_code,1480009
+#outer,CODE,1480262,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480262,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480262,canvec:value,Unknown; unknown - ( Inconnu; inconnu )
+#outer,CODE,1480262,canvec:value_definition:Unknown,Impossible to determine.
+#outer,CODE,1480262,canvec:value_definition:Unknown,Impossible to determine.
+outer,CODE,1480262,natural,water
+#inner,CODE,1480262,canvec:CODE,1480262
+##inner,CODE,1480262,canvec:generic_code,1480009
+##inner,CODE,1480262,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480262,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480262,canvec:value,Unknown; unknown - ( Inconnu; inconnu )
+##inner,CODE,1480262,canvec:value_definition:Unknown,Impossible to determine.
+##inner,CODE,1480262,canvec:value_definition:Unknown,Impossible to determine.
+#inner,CODE,1480262,natural,water
+#
+outer,CODE,1480272,canvec:CODE,1480272
+#outer,CODE,1480272,canvec:generic_code,1480009
+#outer,CODE,1480272,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480272,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480272,canvec:value,Unknown; non isolated - ( Inconnu; non isolé )
+#outer,CODE,1480272,canvec:value_definition:Unknown,Impossible to determine.
+#outer,CODE,1480272,canvec:value_definition:False,Not isolated.
+outer,CODE,1480272,natural,water
+#note,Pond - ( Étang ), isolated;non isolated;unknown	 A body of standing water, usually smaller than a lake.
+#inner,CODE,1480272,canvec:CODE,1480272
+##inner,CODE,1480272,canvec:generic_code,1480009
+##inner,CODE,1480272,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480272,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480272,canvec:value,Unknown; non isolated - ( Inconnu; non isolé )
+##inner,CODE,1480272,canvec:value_definition:Unknown,Impossible to determine.
+##inner,CODE,1480272,canvec:value_definition:False,Not isolated.
+#inner,CODE,1480272,natural,water
+#
+outer,CODE,1480282,canvec:CODE,1480282
+outer,CODE,1480282,natural,water
+#inner,CODE,1480282,canvec:CODE,1480282
+#inner,CODE,1480282,natural,water
+#
+outer,CODE,1480292,canvec:CODE,1480292
+#outer,CODE,1480292,canvec:generic_code,1480009
+#outer,CODE,1480292,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480292,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480292,canvec:value,None; unknown - ( Aucun; inconnu )
+#outer,CODE,1480292,canvec:value_definition:None,None of the other values.
+#outer,CODE,1480292,canvec:value_definition:Unknown,Impossible to determine.
+outer,CODE,1480292,natural,water
+#inner,CODE,1480292,canvec:CODE,1480292
+##inner,CODE,1480292,canvec:generic_code,1480009
+##inner,CODE,1480292,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480292,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480292,canvec:value,None; unknown - ( Aucun; inconnu )
+##inner,CODE,1480292,canvec:value_definition:None,None of the other values.
+##inner,CODE,1480292,canvec:value_definition:Unknown,Impossible to determine.
+#inner,CODE,1480292,natural,water
+# 
+outer,CODE,1480302,canvec:CODE,1480302
+#outer,CODE,1480302,canvec:generic_code,1480009
+#outer,CODE,1480302,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480302,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480302,canvec:value,Canal; unknown - ( Canal; inconnu )
+#outer,CODE,1480302,canvec:value_definition:Canal,An artificial body of water serving as a navigable waterway or to channel water.
+#outer,CODE,1480302,canvec:value_definition:Unknown,Impossible to determine.
+outer,CODE,1480302,waterway,canal
+#inner,CODE,1480302,canvec:CODE,1480302
+##inner,CODE,1480302,canvec:generic_code,1480009
+##inner,CODE,1480302,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480302,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480302,canvec:value,Canal; unknown - ( Canal; inconnu )
+##inner,CODE,1480302,canvec:value_definition:Canal,An artificial body of water serving as a navigable waterway or to channel water.
+##inner,CODE,1480302,canvec:value_definition:Unknown,Impossible to determine.
+#inner,CODE,1480302,waterway,canal
+#
+outer,CODE,1480312,canvec:CODE,1480312
+#outer,CODE,1480312,canvec:generic_code,1480009
+#outer,CODE,1480312,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480312,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480312,canvec:value,Lake; unknown - ( Lac; inconnu )
+#outer,CODE,1480312,canvec:value_definition:Lake,A natural and usually flat body of water.
+#outer,CODE,1480312,canvec:value_definition:Unknown,Impossible to determine.
+outer,CODE,1480312,natural,water
+outer,CODE,1480312,type,lake
+#inner,CODE,1480312,canvec:CODE,1480312
+##inner,CODE,1480312,canvec:generic_code,1480009
+##inner,CODE,1480312,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480312,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480312,canvec:value,Lake; unknown - ( Lac; inconnu )
+##inner,CODE,1480312,canvec:value_definition:Lake,A natural and usually flat body of water.
+##inner,CODE,1480312,canvec:value_definition:Unknown,Impossible to determine.
+#inner,CODE,1480312,natural,water
+#inner,CODE,1480312,type,lake
+#*
+outer,CODE,1480322,canvec:CODE,1480322
+#outer,CODE,1480322,canvec:generic_code,1480009
+#outer,CODE,1480322,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480322,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480322,canvec:value,Reservoir; unknown - ( Réservoir; inconnu )
+#outer,CODE,1480322,canvec:value_definition:Reservoir,A wholly or partially manmade body of water for storing and/ or regulating and controlling water.
+#outer,CODE,1480322,canvec:value_definition:Unknown,Impossible to determine.
+outer,CODE,1480322,landuse,reservoir
+#inner,CODE,1480322,canvec:CODE,1480322
+##inner,CODE,1480322,canvec:generic_code,1480009
+##inner,CODE,1480322,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480322,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480322,canvec:value,Reservoir; unknown - ( Réservoir; inconnu )
+##inner,CODE,1480322,canvec:value_definition:Reservoir,A wholly or partially manmade body of water for storing and/ or regulating and controlling water.
+##inner,CODE,1480322,canvec:value_definition:Unknown,Impossible to determine.
+#inner,CODE,1480322,landuse,reservoir
+#
+outer,CODE,1480332,canvec:CODE,1480332
+#outer,CODE,1480332,canvec:generic_code,1480009
+#outer,CODE,1480332,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480332,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480332,canvec:value,Liquid waste; unknown - ( Déchets liquides; inconnu )
+#outer,CODE,1480332,canvec:value_definition:Liquid_waste,Liquid waste or discharge from an industrial complex.
+#outer,CODE,1480332,canvec:value_definition:Unknown,Impossible to determine.
+outer,CODE,1480332,landuse,basin
+outer,CODE,1480332,basin,infiltration
+#inner,CODE,1480332,canvec:CODE,1480332
+##inner,CODE,1480332,canvec:generic_code,1480009
+##inner,CODE,1480332,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480332,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480332,canvec:value,Liquid waste; unknown - ( Déchets liquides; inconnu )
+##inner,CODE,1480332,canvec:value_definition:Liquid_waste,Liquid waste or discharge from an industrial complex.
+##inner,CODE,1480332,canvec:value_definition:Unknown,Impossible to determine.
+#inner,CODE,1480332,landuse,basin
+#inner,CODE,1480332,basin,infiltration
+#
+outer,CODE,1480342,canvec:CODE,1480342
+#outer,CODE,1480342,canvec:generic_code,1480009
+#outer,CODE,1480342,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1480342,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1480342,canvec:value,Pond; unknown - ( Étang; inconnu )
+#outer,CODE,1480342,canvec:value_definition:Pond,A body of standing water; usually smaller than a lake.
+#outer,CODE,1480342,canvec:value_definition:Unknown,Impossible to determine.
+outer,CODE,1480342,natural,water
+outer,CODE,1480342,type,pond
+#inner,CODE,1480342,canvec:CODE,1480342
+##inner,CODE,1480342,canvec:generic_code,1480009
+##inner,CODE,1480342,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1480342,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1480342,canvec:value,Pond; unknown - ( Étang; inconnu )
+##inner,CODE,1480342,canvec:value_definition:Pond,A body of standing water; usually smaller than a lake.
+##inner,CODE,1480342,canvec:value_definition:Unknown,Impossible to determine.
+#inner,CODE,1480342,natural,water
+#inner,CODE,1480342,type,pond
+#
+outer,CODE,1481352,canvec:CODE,1481352
+#outer,CODE,1481352,canvec:generic_code,1480009
+#outer,CODE,1481352,canvec:entity,Waterbody - ( Région hydrique )
+#outer,CODE,1481352,canvec:entity_definition,A polygon feature describing a body of water.
+#outer,CODE,1481352,canvec:value,Ocean; unknown - ( Océan; inconnu )
+#outer,CODE,1481352,canvec:value_definition:Ocean,Coastal waterbody.
+#outer,CODE,1481352,canvec:value_definition:Unknown,Impossible to determine.
+outer,CODE,1481352,natural,water
+outer,CODE,1481352,type,ocean
+#note,Ocean, unknown - ( Océan, inconnu )	 Coastal waterbody.
+#inner,CODE,1481352,canvec:CODE,1481352
+##inner,CODE,1481352,canvec:generic_code,1480009
+##inner,CODE,1481352,canvec:entity,Waterbody - ( Région hydrique )
+##inner,CODE,1481352,canvec:entity_definition,A polygon feature describing a body of water.
+##inner,CODE,1481352,canvec:value,Ocean; unknown - ( Océan; inconnu )
+##inner,CODE,1481352,canvec:value_definition:Ocean,Coastal waterbody.
+##inner,CODE,1481352,canvec:value_definition:Unknown,Impossible to determine.
+#inner,CODE,1481352,natural,water
+#inner,CODE,1481352,type,ocean
+#

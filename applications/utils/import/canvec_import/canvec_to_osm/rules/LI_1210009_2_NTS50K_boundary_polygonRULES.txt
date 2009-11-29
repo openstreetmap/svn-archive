@@ -1,0 +1,215 @@
+# last updated 3:48 AM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+# LI_1210009_2_NTS50K_boundary_polygonRULES.txt
+# Note: This script omits the description tags.  Use rules_canvecMETAosm.txt for the full version.
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+outer,GEOMETRY,,GEOMETRY,-
+inner,GEOMETRY,,GEOMETRY,-
+#
+# note,"CODE" is used to note all the other attributes for each feature
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+outer,CODE,,attribution,Natural Resources Canada
+outer,CODE,,source,CanVec_Import_2009
+outer,CODE,,created_by,canvec-to-osm
+#outer,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+inner,CODE,,attribution,Natural Resources Canada
+inner,CODE,,source,CanVec_Import_2009
+inner,CODE,,created_by,canvec-to-osm
+#inner,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+#
+#note,not needed in OSM
+outer,CODE,1210012,canvec:CODE,1210012
+#outer,CODE,1210012,canvec:generic_code,1210009
+#outer,CODE,1210012,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#outer,CODE,1210012,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#outer,CODE,1210012,canvec:value,Extended; partly flooded - ( Allongé; partiellement submergé )
+#outer,CODE,1210012,canvec:value_definition:Extended,A polygon that has been extended to include a narrow portion of territory of the theoretical adjoining polygon at an international boundary.
+#outer,CODE,1210012,canvec:value_definition:Partly_flooded,The boundary polygon do not contain only surface topographic objects of permanent water type.
+outer,CODE,1210012,boundary,administrative
+inner,CODE,1210012,canvec:CODE,1210012
+#inner,CODE,1210012,canvec:generic_code,1210009
+#inner,CODE,1210012,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#inner,CODE,1210012,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#inner,CODE,1210012,canvec:value,Extended; partly flooded - ( Allongé; partiellement submergé )
+#inner,CODE,1210012,canvec:value_definition:Extended,A polygon that has been extended to include a narrow portion of territory of the theoretical adjoining polygon at an international boundary.
+#inner,CODE,1210012,canvec:value_definition:Partly_flooded,The boundary polygon do not contain only surface topographic objects of permanent water type.
+inner,CODE,1210012,boundary,administrative
+#
+#note,not needed in OSM
+outer,CODE,1210022,canvec:CODE,1210022
+#outer,CODE,1210022,canvec:generic_code,1210009
+#outer,CODE,1210022,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#outer,CODE,1210022,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#outer,CODE,1210022,canvec:value,Multiple; partly flooded - ( Multiple; partiellement submergé )
+#outer,CODE,1210022,canvec:value_definition:Multiple,A polygon representing a portion of a territory comprised of one or many other polygons. The polygons do not correspond to NTS theoretical limits because they are segmented at the international boundary.
+#outer,CODE,1210022,canvec:value_definition:Partly_flooded,The boundary polygon do not contain only surface topographic objects of permanent water type.
+outer,CODE,1210022,boundary,administrative
+inner,CODE,1210022,canvec:CODE,1210022
+#inner,CODE,1210022,canvec:generic_code,1210009
+#inner,CODE,1210022,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#inner,CODE,1210022,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#inner,CODE,1210022,canvec:value,Multiple; partly flooded - ( Multiple; partiellement submergé )
+#inner,CODE,1210022,canvec:value_definition:Multiple,A polygon representing a portion of a territory comprised of one or many other polygons. The polygons do not correspond to NTS theoretical limits because they are segmented at the international boundary.
+#inner,CODE,1210022,canvec:value_definition:Partly_flooded,The boundary polygon do not contain only surface topographic objects of permanent water type.
+inner,CODE,1210022,boundary,administrative
+#
+#note,not needed in OSM
+outer,CODE,1210032,canvec:CODE,1210032
+#outer,CODE,1210032,canvec:generic_code,1210009
+#outer,CODE,1210032,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#outer,CODE,1210032,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#outer,CODE,1210032,canvec:value,Simple; partly flooded - ( Simple; partiellement submergé )
+#outer,CODE,1210032,canvec:value_definition:Simple,A polygon representing a portion of a territory comprised of a single polygon. The polygon does not correspond to NTS theoretical limits it is segmented at the international boundary.
+#outer,CODE,1210032,canvec:value_definition:Partly_flooded,The boundary polygon do not contain only surface topographic objects of permanent water type.
+outer,CODE,1210032,boundary,administrative
+inner,CODE,1210032,canvec:CODE,121032
+#inner,CODE,1210032,canvec:generic_code,1210009
+#inner,CODE,1210032,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#inner,CODE,1210032,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#inner,CODE,1210032,canvec:value,Simple; partly flooded - ( Simple; partiellement submergé )
+#inner,CODE,1210032,canvec:value_definition:Simple,A polygon representing a portion of a territory comprised of a single polygon. The polygon does not correspond to NTS theoretical limits it is segmented at the international boundary.
+#inner,CODE,1210032,canvec:value_definition:Partly_flooded,The boundary polygon do not contain only surface topographic objects of permanent water type.
+inner,CODE,1210032,boundary,administrative
+#
+#note,not needed in OSM
+outer,CODE,1210042,canvec:CODE,1210042
+#outer,CODE,1210042,canvec:generic_code,1210009
+#outer,CODE,1210042,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#outer,CODE,1210042,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#outer,CODE,1210042,canvec:value,Simple; totally flooded - ( Simple; totalement submergé )
+#outer,CODE,1210042,canvec:value_definition:Simple,A polygon representing a portion of a territory comprised of a single polygon. The polygon does not correspond to NTS theoretical limits it is segmented at the international boundary.
+#outer,CODE,1210042,canvec:value_definition:Totally_flooded,The boundary polygon contains only surface topographic objects of permanent water type.
+outer,CODE,1210042,boundary,administrative
+inner,CODE,1210042,canvec:CODE,1210042
+#inner,CODE,1210042,canvec:generic_code,1210009
+#inner,CODE,1210042,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#inner,CODE,1210042,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#inner,CODE,1210042,canvec:value,Simple; totally flooded - ( Simple; totalement submergé )
+#inner,CODE,1210042,canvec:value_definition:Simple,A polygon representing a portion of a territory comprised of a single polygon. The polygon does not correspond to NTS theoretical limits it is segmented at the international boundary.
+#inner,CODE,1210042,canvec:value_definition:Totally_flooded,The boundary polygon contains only surface topographic objects of permanent water type.
+inner,CODE,1210042,boundary,administrative
+#
+#note,NTS50K boundary polygon
+#not needed in OSM
+outer,CODE,1210052,canvec:CODE,1210052
+#outer,CODE,1210052,canvec:generic_code,1210009
+#outer,CODE,1210052,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#outer,CODE,1210052,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#outer,CODE,1210052,canvec:value,Theoretical; partly flooded - ( Théorique; partiellement submergé )
+#outer,CODE,1210052,canvec:value_definition:Theoretical,A polygon that is identical to the NTS theoretical limit.
+#outer,CODE,1210052,canvec:value_definition:Partly flooded,The boundary polygon do not contain only surface topographic objects of permanent water type.
+outer,CODE,1210052,boundary,administrative
+outer,CODE,1210052,render,no
+inner,CODE,1210052,canvec:CODE,121052
+#inner,CODE,1210052,canvec:generic_code,1210009
+#inner,CODE,1210052,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#inner,CODE,1210052,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#inner,CODE,1210052,canvec:value,Theoretical; partly flooded - ( Théorique; partiellement submergé )
+#inner,CODE,1210052,canvec:value_definition:Theoretical,A polygon that is identical to the NTS theoretical limit.
+#inner,CODE,1210052,canvec:value_definition:Partly flooded,The boundary polygon do not contain only surface topographic objects of permanent water type.
+inner,CODE,1210052,boundary,administrative
+inner,CODE,1210052,render,no
+#
+#note,not needed in OSM
+outer,CODE,1210062,canvec:CODE,1210062
+#outer,CODE,1210062,canvec:generic_code,1210009
+#outer,CODE,1210062,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#outer,CODE,1210062,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#outer,CODE,1210062,canvec:value,Theoretical; totally flooded - ( Théorique; totalement submergé )
+#outer,CODE,1210062,canvec:value_definition:Theoretical,A polygon that is identical to the NTS theoretical limit.
+#outer,CODE,1210062,canvec:value_definition:Totally_flooded,The boundary polygon contains only surface topographic objects of permanent water type.
+outer,CODE,1210062,boundary,administrative
+outer,CODE,1210062,render,no
+inner,CODE,1210062,canvec:CODE,1210062
+#inner,CODE,1210062,canvec:generic_code,1210009
+#inner,CODE,1210062,canvec:entity,NTS50K boundary polygon - ( Polygone de découpage SNRC50K )
+#inner,CODE,1210062,canvec:entity_definition,Polygon corresponding to a National Topographic System of Canada (NTS) tile.
+#inner,CODE,1210062,canvec:value,Theoretical; totally flooded - ( Théorique; totalement submergé )
+#inner,CODE,1210062,canvec:value_definition:Theoretical,A polygon that is identical to the NTS theoretical limit.
+#inner,CODE,1210062,canvec:value_definition:Totally_flooded,The boundary polygon contains only surface topographic objects of permanent water type.
+inner,CODE,1210062,boundary,administrative
+inner,CODE,1210062,render,no
+#
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#outer,VALDATE,,canvec:VALDATE,-
+#inner,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#outer,PROVIDER,1,canvec:PROVIDER,Other
+#outer,PROVIDER,2,canvec:PROVIDER,Federal
+#outer,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#outer,PROVIDER,4,canvec:PROVIDER,Municipal
+#inner,PROVIDER,1,canvec:PROVIDER,Other
+#inner,PROVIDER,2,canvec:PROVIDER,Federal
+#inner,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#inner,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+outer,ID,,canvec:UUID,-
+inner,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+outer,DATANAME,,canvec:datasetName,-
+inner,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#outer,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#inner,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#outer,THEME,LX,canvec:Theme,LX Places of Interest
+#inner,THEME,LX,canvec:Theme,LX Places of Interest
+#

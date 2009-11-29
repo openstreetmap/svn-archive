@@ -1,0 +1,128 @@
+# last updated 3:39 PM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+# SS_1320029_2_Palsa_bogRULES.txt
+# Note: This script omits the description tags.  Use rules_canvecMETAosm.txt for the full version.
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, #inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+outer,GEOMETRY,,GEOMETRY,-
+#inner,GEOMETRY,,GEOMETRY,-
+#
+# note,"CODE" is used to note all the other attributes for each feature
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+outer,CODE,,attribution,Natural Resources Canada
+outer,CODE,,source,CanVec_Import_2009
+outer,CODE,,created_by,canvec-to-osm
+#outer,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#inner,CODE,,attribution,Natural Resources Canada
+#inner,CODE,,source,CanVec_Import_2009
+#inner,CODE,,created_by,canvec-to-osm
+##inner,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+#tag proposal
+outer,CODE,1320022,canvec:CODE,1320022
+#outer,CODE,1320022,canvec:generic_code,1320029
+#outer,CODE,1320022,canvec:entity,Palsa bog - ( Tourbière de palse )
+#outer,CODE,1320022,canvec:entity_definition,A marsh-like area with mounds of peat and ice normally less than 10 meters in height.
+#outer,CODE,1320022,canvec:value,Palsa bog - ( Tourbière de palse )
+#outer,CODE,1320022,canvec:min_size:CODE,1320022
+#outer,CODE,1320022,canvec:min_size:area_sq_meter,1000
+#outer,CODE,1320022,canvec:min_size:lat_distance_meter,1.5
+#outer,CODE,1320022,canvec:min_size:length_meter,---
+#outer,CODE,1320022,canvec:min_size:long_distance_meter,3
+#outer,CODE,1320022,canvec:min_size:right_angle_tollerance_degree,---
+#outer,CODE,1320022,canvec:min_size:spike_angle_tollerance_degree,10
+outer,CODE,1320022,natural,palsa_bog
+#inner,CODE,1320022,canvec:CODE,1320022
+##inner,CODE,1320022,canvec:generic_code,1320029
+##inner,CODE,1320022,canvec:entity,Palsa bog - ( Tourbière de palse )
+##inner,CODE,1320022,canvec:entity_definition,A marsh-like area with mounds of peat and ice normally less than 10 meters in height.
+##inner,CODE,1320022,canvec:value,Palsa bog - ( Tourbière de palse )
+##inner,CODE,1320022,canvec:min_size:CODE,1320022
+##inner,CODE,1320022,canvec:min_size:area_sq_meter,1000
+##inner,CODE,1320022,canvec:min_size:lat_distance_meter,1.5
+##inner,CODE,1320022,canvec:min_size:length_meter,---
+##inner,CODE,1320022,canvec:min_size:long_distance_meter,3
+##inner,CODE,1320022,canvec:min_size:right_angle_tollerance_degree,---
+##inner,CODE,1320022,canvec:min_size:spike_angle_tollerance_degree,10
+#inner,CODE,1320022,natural,palsa_bog
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#outer,VALDATE,,canvec:VALDATE,-
+##inner,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#outer,PROVIDER,1,canvec:PROVIDER,Other
+#outer,PROVIDER,2,canvec:PROVIDER,Federal
+#outer,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#outer,PROVIDER,4,canvec:PROVIDER,Municipal
+##inner,PROVIDER,1,canvec:PROVIDER,Other
+##inner,PROVIDER,2,canvec:PROVIDER,Federal
+##inner,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+##inner,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+outer,ID,,canvec:UUID,-
+#inner,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+#outer,DATANAME,,canvec:datasetName,-
+##inner,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#outer,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+##inner,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#outer,THEME,LX,canvec:Theme,LX Places of Interest
+##inner,THEME,LX,canvec:Theme,LX Places of Interest
+#

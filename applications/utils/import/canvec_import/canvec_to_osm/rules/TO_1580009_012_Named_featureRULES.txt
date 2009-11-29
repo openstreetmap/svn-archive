@@ -1,0 +1,725 @@
+# last updated 3:40 PM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+# TO_1580009_012_Named_featureRULES.txt
+# Note: This script omits the description tags.  Use rules_canvecMETAosm.txt for the full version.
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, #inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+#point,GEOMETRY,,GEOMETRY,-
+#line,GEOMETRY,,GEOMETRY,-
+#outer,GEOMETRY,,GEOMETRY,-
+##inner,GEOMETRY,,GEOMETRY,-
+#
+# note,"CODE" is used to note all the other attributes for each feature
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+point,CONCISCODE,,attribution,Natural Resources Canada
+point,CONCISCODE,,source,CanVec_Import_2009
+point,CONCISCODE,,created_by,canvec-to-osm
+#point,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+line,CONCISCODE,,attribution,Natural Resources Canada
+line,CONCISCODE,,source,CanVec_Import_2009
+line,CONCISCODE,,created_by,canvec-to-osm
+#line,CONCISCODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+outer,CONCISCODE,,attribution,Natural Resources Canada
+outer,CONCISCODE,,source,CanVec_Import_2009
+outer,CONCISCODE,,created_by,canvec-to-osm
+#outer,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+##inner,CONCISCODE,,attribution,Natural Resources Canada
+##inner,CONCISCODE,,source,CanVec_Import_2009
+##inner,CONCISCODE,,created_by,canvec-to-osm
+##inner,CONCISCODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+#point,CODE,1580010,canvec:CODE,1580010
+#point,CODE,1580010,canvec:generic_code,1580009
+#point,CODE,1580010,canvec:entity,Named feature - ( Entité nommée )
+#point,CODE,1580010,canvec:entity_definition,A feature delineating the extent; in whole or in part; of a toponymic phenomenon for which the geometry does not fully correspond to that of another feature.
+#point,CODE,1580010,natural,feature
+#line,CODE,1580011,canvec:CODE,1580011
+#line,CODE,1580011,canvec:generic_code,1580009
+#line,CODE,1580011,canvec:entity,Named feature - ( Entité nommée )
+#line,CODE,1580011,canvec:entity_definition,A feature delineating the extent; in whole or in part; of a toponymic phenomenon for which the geometry does not fully correspond to that of another feature.
+#line,CODE,1580011,natural,feature
+#outer,CODE,1580012,canvec:CODE,1580012
+#outer,CODE,1580012,canvec:generic_code,1580009
+#outer,CODE,1580012,canvec:entity,Named feature - ( Entité nommée )
+#outer,CODE,1580012,canvec:entity_definition,A feature delineating the extent; in whole or in part; of a toponymic phenomenon for which the geometry does not fully correspond to that of another feature.
+#outer,CODE,1580012,natural,feature
+##inner,CODE,1580012,canvec:CODE,1580012
+##inner,CODE,1580012,canvec:generic_code,1580009
+##inner,CODE,1580012,canvec:entity,Named feature - ( Entité nommée )
+##inner,CODE,1580012,canvec:entity_definition,A feature delineating the extent; in whole or in part; of a toponymic phenomenon for which the geometry does not fully correspond to that of another feature.
+##inner,CODE,1580012,natural,feature
+#note,tag proposal
+#
+#
+#
+#NAMEFR,C,100
+#point,NAMEFR,,name:fr,-
+#outer,NAMEFR,,name:fr,-
+##inner,NAMEFR,,name:fr,-
+#
+#****
+#NAMEEN,C,100
+#point,NAMEEN,,name,-
+#outer,NAMEEN,,name,-
+##inner,NAMEEN,,name,-
+#
+point,NAMEFR,,name:fr,-
+point,NAMEEN,,name,-
+#
+#CONCISCODE
+#Name,Toponymic concise code
+#Definition,Toponymic type used to specify the category of the named phenomenon. Called "Concise code" in the Canadian Geographical Names Data Base (CGNDB).
+#Data type,Integer
+#Domain [-1,5,7,10,20,30,40,45,50,60,80,90,100,110,115,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340,350,370,380,390,400,410,420,430,440,450,460]
+#
+#-1
+#Unknown
+#Toponymic feature type as defined in the Canadian Geographical Names Data Base.
+#point,CONCISCODE,-1,canvec:CONCISCODE,-1 Unknown
+point,CONCISCODE,-1,canvec:CODE:1580010,-1
+line,CONCISCODE,-1,canvec:CODE:1580011,-1
+outer,CONCISCODE,-1,canvec:CODE:1580012,-1
+##inner,CONCISCODE,-1,canvec:CODE:1580012,-1
+#
+#point,CONCISCODE,5,canvec:CONCISCODE,5 PROV Province
+point,CONCISCODE,5,canvec:CODE:1580010,005
+point,CONCISCODE,5,place,state
+line,CONCISCODE,5,canvec:CODE:1580011,005
+line,CONCISCODE,5,place,state
+outer,CONCISCODE,5,canvec:CODE:1580012,005
+outer,CONCISCODE,5,place,state
+##inner,CONCISCODE,5,canvec:CODE:1580012,005
+##inner,CONCISCODE,5,place,state
+#
+#point,CONCISCODE,7,canvec:CONCISCODE,7 TERR Territory
+point,CONCISCODE,7,canvec:CODE:1580010,007
+point,CONCISCODE,7,place,state
+line,CONCISCODE,7,canvec:CODE:1580011,007
+line,CONCISCODE,7,place,state
+outer,CONCISCODE,7,canvec:CODE:1580012,007
+outer,CONCISCODE,7,place,state
+##inner,CONCISCODE,7,canvec:CODE:1580012,007
+##inner,CONCISCODE,7,place,state
+#
+#***
+#point,CONCISCODE,10,canvec:CONCISCODE,10 CITY City
+point,CONCISCODE,10,canvec:CODE:1580010,010
+point,CONCISCODE,10,place,city
+line,CONCISCODE,10,canvec:CODE:1580011,010
+line,CONCISCODE,10,place,city
+outer,CONCISCODE,10,canvec:CODE:1580012,010
+outer,CONCISCODE,10,place,city
+##inner,CONCISCODE,10,canvec:CODE:1580012,010
+##inner,CONCISCODE,10,place,city
+#
+#point,CONCISCODE,20,canvec:CONCISCODE,20 TOWN Town
+point,CONCISCODE,20,canvec:CODE:1580010,020
+point,CONCISCODE,20,place,town
+line,CONCISCODE,20,canvec:CODE:1580011,020
+line,CONCISCODE,20,place,town
+outer,CONCISCODE,20,canvec:CODE:1580012,020
+outer,CONCISCODE,20,place,town
+##inner,CONCISCODE,20,canvec:CODE:1580012,020
+##inner,CONCISCODE,20,place,town
+#
+#point,CONCISCODE,30,canvec:CONCISCODE,30 VILG Village
+point,CONCISCODE,30,canvec:CODE:1580010,030
+point,CONCISCODE,30,place,village
+line,CONCISCODE,30,canvec:CODE:1580011,030
+line,CONCISCODE,30,place,village
+outer,CONCISCODE,30,canvec:CODE:1580012,30
+outer,CONCISCODE,30,place,village
+##inner,CONCISCODE,30,canvec:CODE:1580012,30
+##inner,CONCISCODE,30,place,village
+#
+#point,CONCISCODE,40,canvec:CONCISCODE,40 HAM Hamlet
+point,CONCISCODE,40,canvec:CODE:1580010,040
+point,CONCISCODE,40,place,hamlet
+line,CONCISCODE,40,canvec:CODE:1580011,040
+line,CONCISCODE,40,place,hamlet
+outer,CONCISCODE,40,canvec:CODE:1580012,040
+outer,CONCISCODE,40,place,hamlet
+##inner,CONCISCODE,40,canvec:CODE:1580012,040
+##inner,CONCISCODE,40,place,hamlet
+#
+#point,CONCISCODE,45,canvec:CONCISCODE,45 DMUN District municipality
+point,CONCISCODE,45,canvec:CODE:1580010,045
+point,CONCISCODE,45,place,district_municipality
+line,CONCISCODE,45,canvec:CODE:1580011,045
+line,CONCISCODE,45,place,district_municipality
+outer,CONCISCODE,45,canvec:CODE:1580012,045
+outer,CONCISCODE,45,place,district_municipality
+##inner,CONCISCODE,45,canvec:CODE:1580012,045
+##inner,CONCISCODE,45,place,district_municipality
+#
+#point,CONCISCODE,50,canvec:CONCISCODE,50 MUN1 Other municipal/district area - major agglomeration
+point,CONCISCODE,50,canvec:CODE:1580010,050
+point,CONCISCODE,50,place,major_municipality
+line,CONCISCODE,50,canvec:CODE:1580011,050
+line,CONCISCODE,50,place,major_municipality
+outer,CONCISCODE,50,canvec:CODE:1580012,050
+outer,CONCISCODE,50,place,major_municipality
+##inner,CONCISCODE,50,canvec:CODE:1580012,050
+##inner,CONCISCODE,50,place,major_municipality
+#
+#point,CONCISCODE,60,canvec:CONCISCODE,60 MUN2 Other municipal/district area - miscellaneous
+point,CONCISCODE,60,canvec:CODE:1580010,060
+point,CONCISCODE,60,place,misc_municipality
+line,CONCISCODE,60,canvec:CODE:1580011,060
+line,CONCISCODE,60,place,misc_municipality
+outer,CONCISCODE,60,canvec:CODE:1580012,060
+outer,CONCISCODE,60,place,misc_municipality
+##inner,CONCISCODE,60,canvec:CODE:1580012,060
+##inner,CONCISCODE,60,place,misc_municipality
+#
+#odd are
+#point,CONCISCODE,80,canvec:CONCISCODE,80 UNP Unincorporated area
+point,CONCISCODE,80,canvec:CODE:1580010,080
+point,CONCISCODE,80,place,unincorporated_area
+line,CONCISCODE,80,canvec:CODE:1580011,080
+line,CONCISCODE,80,place,unincorporated_area
+outer,CONCISCODE,80,canvec:CODE:1580012,080
+outer,CONCISCODE,80,place,unincorporated_area
+##inner,CONCISCODE,80,canvec:CODE:1580012,080
+##inner,CONCISCODE,80,place,unincorporated_area
+#
+#this data is also available in geobase..as polygons.
+#point,CONCISCODE,90,canvec:CONCISCODE,90 IR Indian Reserve
+point,CONCISCODE,90,canvec:CODE:1580010,090
+point,CONCISCODE,90,place,indian_reserve
+line,CONCISCODE,90,canvec:CODE:1580011,090
+line,CONCISCODE,90,place,indian_reserve
+outer,CONCISCODE,90,canvec:CODE:1580012,090
+outer,CONCISCODE,90,place,indian_reserve
+##inner,CONCISCODE,90,canvec:CODE:1580012,090
+##inner,CONCISCODE,90,place,indian_reserve
+#
+#point,CONCISCODE,100,canvec:CONCISCODE,100 GEOG Geographical area
+point,CONCISCODE,100,canvec:CODE:1580010,100
+point,CONCISCODE,100,place,locality
+line,CONCISCODE,100,canvec:CODE:1580011,100
+line,CONCISCODE,100,place,locality
+outer,CONCISCODE,100,canvec:CODE:1580012,100
+outer,CONCISCODE,100,place,locality
+##inner,CONCISCODE,100,canvec:CODE:1580012,100
+##inner,CONCISCODE,100,place,locality
+#
+#search '110' PARK Conservation area and remove the place=city tag
+#point,CONCISCODE,110,canvec:CONCISCODE,110 PARK Conservation area
+point,CONCISCODE,110,canvec:CODE:1580010,110
+point,CONCISCODE,110,leisure,nature_reserve
+line,CONCISCODE,110,canvec:CODE:1580011,110
+line,CONCISCODE,110,leisure,nature_reserve
+outer,CONCISCODE,110,canvec:CODE:1580012,110
+outer,CONCISCODE,110,leisure,nature_reserve
+##inner,CONCISCODE,110,canvec:CODE:1580012,110
+##inner,CONCISCODE,110,leisure,nature_reserve
+#
+#point,CONCISCODE,115,canvec:CONCISCODE,115 MIL Military area
+point,CONCISCODE,115,canvec:CODE:1580010,115
+point,CONCISCODE,115,landuse,military
+line,CONCISCODE,115,canvec:CODE:1580011,115
+line,CONCISCODE,115,landuse,military
+outer,CONCISCODE,115,canvec:CODE:1580012,115
+outer,CONCISCODE,115,landuse,military
+##inner,CONCISCODE,115,canvec:CODE:1580012,115
+##inner,CONCISCODE,115,landuse,military
+#
+#remove the feature.
+#120 RIV River ... it also uses '20', but is included in the geobaseNHN dataset 
+#as a line.
+#point,CONCISCODE,120,canvec:CONCISCODE,120 RIV River
+point,CONCISCODE,120,canvec:CODE:1580010,120
+point,CONCISCODE,120,natural,river
+line,CONCISCODE,120,canvec:CODE:1580011,120
+line,CONCISCODE,120,natural,river
+outer,CONCISCODE,120,canvec:CODE:1580012,120
+outer,CONCISCODE,120,natural,river
+##inner,CONCISCODE,120,canvec:CODE:1580012,120
+##inner,CONCISCODE,120,natural,river
+#
+#remove the feature.. 
+#130 RIVF River feature remove the 'place=village' which '30' uses.
+#point,CONCISCODE,130,canvec:CONCISCODE,130 RIVF River feature
+point,CONCISCODE,130,canvec:CODE:1580010,130
+point,CONCISCODE,130,natural,river
+line,CONCISCODE,130,canvec:CODE:1580011,130
+line,CONCISCODE,130,natural,river
+outer,CONCISCODE,130,canvec:CODE:1580012,130
+outer,CONCISCODE,130,natural,river
+##inner,CONCISCODE,130,canvec:CODE:1580012,130
+##inner,CONCISCODE,130,natural,river
+#
+#Search '140' (FALL Falls) and remove the 'place=hamlet' tag which looks 
+#at the '40' that uses that. 
+#point,CONCISCODE,140,canvec:CONCISCODE,140 FALL Falls
+point,CONCISCODE,140,canvec:CODE:1580010,140
+point,CONCISCODE,140,natural,waterfall
+line,CONCISCODE,140,canvec:CODE:1580011,140
+line,CONCISCODE,140,waterway,waterfall
+outer,CONCISCODE,140,canvec:CODE:1580012,140
+outer,CONCISCODE,140,waterway,waterfall
+##inner,CONCISCODE,140,canvec:CODE:1580012,140
+##inner,CONCISCODE,140,waterway,waterfall
+#
+#remove feature 
+#6 - search for '150' (LAKE Lake) and remove the 'place=major_municipality'
+#which looks at the '50' that uses that.
+#point,CONCISCODE,150,canvec:CONCISCODE,150 LAKE Lake
+point,CONCISCODE,150,canvec:CODE:1580010,150
+point,CONCISCODE,150,natural,water
+line,CONCISCODE,150,canvec:CODE:1580011,150
+line,CONCISCODE,150,natural,water
+outer,CONCISCODE,150,canvec:CODE:1580012,150
+outer,CONCISCODE,150,natural,water
+##inner,CONCISCODE,150,canvec:CODE:1580012,150
+##inner,CONCISCODE,150,natural,water
+#
+#point,CONCISCODE,160,canvec:CONCISCODE,160 SPRG Spring
+point,CONCISCODE,160,canvec:CODE:1580010,160
+point,CONCISCODE,160,natural,spring
+line,CONCISCODE,160,canvec:CODE:1580011,160
+line,CONCISCODE,160,natural,spring
+outer,CONCISCODE,160,canvec:CODE:1580012,160
+outer,CONCISCODE,160,natural,spring
+##inner,CONCISCODE,160,canvec:CODE:1580012,160
+##inner,CONCISCODE,160,natural,spring
+#
+#point,CONCISCODE,170,canvec:CONCISCODE,170 SEA Sea
+point,CONCISCODE,170,canvec:CODE:1580010,170
+point,CONCISCODE,170,natural,water
+line,CONCISCODE,170,canvec:CODE:1580011,170
+line,CONCISCODE,170,natural,water
+outer,CONCISCODE,170,canvec:CODE:1580012,170
+outer,CONCISCODE,170,natural,water
+##inner,CONCISCODE,170,canvec:CODE:1580012,170
+##inner,CONCISCODE,170,natural,water
+#
+#point,CONCISCODE,180,canvec:CONCISCODE,180 SEAF Sea feature
+point,CONCISCODE,180,canvec:CODE:1580010,180
+point,CONCISCODE,180,natural,sea_feature
+line,CONCISCODE,180,canvec:CODE:1580011,180
+line,CONCISCODE,180,natural,sea_feature
+outer,CONCISCODE,180,canvec:CODE:1580012,180
+outer,CONCISCODE,180,natural,sea_feature
+##inner,CONCISCODE,180,canvec:CODE:1580012,180
+##inner,CONCISCODE,180,natural,sea_feature
+#
+#point,CONCISCODE,190,canvec:CONCISCODE,190 SEAU Undersea feature
+point,CONCISCODE,190,canvec:CODE:1580010,190
+point,CONCISCODE,190,sub_sea,feature
+line,CONCISCODE,190,canvec:CODE:1580011,190
+line,CONCISCODE,190,sub_sea,feature
+outer,CONCISCODE,190,canvec:CODE:1580012,190
+outer,CONCISCODE,190,sub_sea,feature
+##inner,CONCISCODE,190,canvec:CODE:1580012,190
+##inner,CONCISCODE,190,sub_sea,feature
+#
+#'200'  remove the place=town that the '20' uses (search *=200)
+#point,CONCISCODE,200,canvec:CONCISCODE,200 CHAN Channel
+point,CONCISCODE,200,canvec:CODE:1580010,200
+point,CONCISCODE,200,natural,channel
+line,CONCISCODE,200,canvec:CODE:1580011,200
+line,CONCISCODE,200,natural,channel
+outer,CONCISCODE,200,canvec:CODE:1580012,200
+outer,CONCISCODE,200,natural,channel
+##inner,CONCISCODE,200,canvec:CODE:1580012,200
+##inner,CONCISCODE,200,natural,channel
+#
+#point,CONCISCODE,210,canvec:CONCISCODE,210 RAP Rapids
+point,CONCISCODE,210,canvec:CODE:1580010,210
+point,CONCISCODE,210,waterway,rapids
+line,CONCISCODE,210,canvec:CODE:1580011,210
+line,CONCISCODE,210,waterway,rapids
+outer,CONCISCODE,210,canvec:CODE:1580012,210
+outer,CONCISCODE,210,waterway,rapids
+##inner,CONCISCODE,210,canvec:CODE:1580012,210
+##inner,CONCISCODE,210,waterway,rapids
+#
+#a polygon could be imported from the geobaseNHN set with the name.
+# so it might not be needed.
+#'220' (BAY Bay) and remove the 'place=town' tag that '20' uses.
+#point,CONCISCODE,220,canvec:CONCISCODE,220 BAY Bay
+point,CONCISCODE,220,canvec:CODE:1580010,220
+point,CONCISCODE,220,natural,bay
+line,CONCISCODE,220,canvec:CODE:1580011,220
+line,CONCISCODE,220,natural,bay
+outer,CONCISCODE,220,canvec:CODE:1580012,220
+outer,CONCISCODE,220,natural,bay
+##inner,CONCISCODE,220,canvec:CODE:1580012,220
+##inner,CONCISCODE,220,natural,bay
+#
+#search fpr '230' (CAPE Cape) and remove the 'place=village' which looks
+#at the '30' which uses that.
+#point,CONCISCODE,230,canvec:CONCISCODE,230 CAPE Cape
+point,CONCISCODE,230,canvec:CODE:1580010,230
+point,CONCISCODE,230,natural,cape
+line,CONCISCODE,230,canvec:CODE:1580011,230
+line,CONCISCODE,230,natural,cape
+outer,CONCISCODE,230,canvec:CODE:1580012,230
+outer,CONCISCODE,230,natural,cape
+##inner,CONCISCODE,230,canvec:CODE:1580012,230
+##inner,CONCISCODE,230,natural,cape
+#
+#point,CONCISCODE,240,canvec:CONCISCODE,240 BCH Beach
+point,CONCISCODE,240,canvec:CODE:1580010,240
+point,CONCISCODE,240,natural,beach
+line,CONCISCODE,240,canvec:CODE:1580011,240
+line,CONCISCODE,240,natural,beach
+outer,CONCISCODE,240,canvec:CODE:1580012,240
+outer,CONCISCODE,240,natural,beach
+##inner,CONCISCODE,240,canvec:CODE:1580012,240
+##inner,CONCISCODE,240,natural,beach
+#
+#5 - search for '250' (SHL Shoal) and remove the 'place=major_municipality'
+#which looks at the '25' that uses that.
+#250 SHL Shoal
+#http://en.wikipedia.org/wiki/Barrier_island
+#point,CONCISCODE,250,canvec:CONCISCODE,250 SHL Shoal
+point,CONCISCODE,250,canvec:CODE:1580010,250
+point,CONCISCODE,250,natural,shoal
+line,CONCISCODE,250,canvec:CODE:1580011,250
+line,CONCISCODE,250,natural,shoal
+outer,CONCISCODE,250,canvec:CODE:1580012,250
+outer,CONCISCODE,250,natural,shoal
+##inner,CONCISCODE,250,canvec:CODE:1580012,250
+##inner,CONCISCODE,250,natural,shoal
+#
+#
+#point,CONCISCODE,260,canvec:CONCISCODE,260 ISL Island
+point,CONCISCODE,260,canvec:CODE:1580010,260
+point,CONCISCODE,260,place,island
+line,CONCISCODE,260,canvec:CODE:1580011,260
+line,CONCISCODE,260,place,island
+outer,CONCISCODE,260,canvec:CODE:1580012,260
+outer,CONCISCODE,260,place,island
+##inner,CONCISCODE,260,canvec:CODE:1580012,260
+##inner,CONCISCODE,260,place,island
+#
+#point,CONCISCODE,270,canvec:CONCISCODE,270 CLF Cliff
+point,CONCISCODE,270,canvec:CODE:1580010,270
+point,CONCISCODE,270,natural,cliff
+line,CONCISCODE,270,canvec:CODE:1580011,270
+line,CONCISCODE,270,natural,cliff
+outer,CONCISCODE,270,canvec:CODE:1580012,270
+outer,CONCISCODE,270,natural,cliff
+##inner,CONCISCODE,270,canvec:CODE:1580012,270
+##inner,CONCISCODE,270,natural,cliff
+#
+#3 - seach for '280' (MTN Mountain) and remove the 'place=unincorporated_area' tag, which 
+#shows up for some reason (i dont know why it looks at the '80' feature and uses that.
+#point,CONCISCODE,280,canvec:CONCISCODE,280 MTN Mountain
+point,CONCISCODE,280,canvec:CODE:1580010,280
+point,CONCISCODE,280,natural,peak
+line,CONCISCODE,280,canvec:CODE:1580011,280
+line,CONCISCODE,280,natural,peak
+outer,CONCISCODE,280,canvec:CODE:1580012,280
+outer,CONCISCODE,280,natural,peak
+##inner,CONCISCODE,280,canvec:CODE:1580012,280
+##inner,CONCISCODE,280,natural,peak
+#
+#
+#this feature is most likely available in the "GeoBase Aborigional Lands database"
+#4 - search for '290' (VALL Valley) and remove the 'place=indian_reserve'
+#.. again it looks at the '90' feature that uses that.
+#point,CONCISCODE,290,canvec:CONCISCODE,290 VALL Valley
+point,CONCISCODE,290,canvec:CODE:1580010,290
+point,CONCISCODE,290,natural,valley
+line,CONCISCODE,290,canvec:CODE:1580011,290
+line,CONCISCODE,290,natural,valley
+outer,CONCISCODE,290,canvec:CODE:1580012,290
+outer,CONCISCODE,290,natural,valley
+##inner,CONCISCODE,290,canvec:CODE:1580012,290
+##inner,CONCISCODE,290,natural,valley
+#
+#point,CONCISCODE,300,canvec:CONCISCODE,300 PLN Plain
+point,CONCISCODE,300,canvec:CODE:1580010,300
+point,CONCISCODE,300,natural,plain
+line,CONCISCODE,300,canvec:CODE:1580011,300
+line,CONCISCODE,300,natural,plain
+outer,CONCISCODE,300,canvec:CODE:1580012,300
+outer,CONCISCODE,300,natural,plain
+##inner,CONCISCODE,300,canvec:CODE:1580012,300
+##inner,CONCISCODE,300,natural,plain
+#
+#point,CONCISCODE,310,canvec:CONCISCODE,310 CAVE Cave
+point,CONCISCODE,310,canvec:CODE:1580010,310
+point,CONCISCODE,310,natural,cave_entrance
+#
+#point,CONCISCODE,320,canvec:CONCISCODE,320 CRAT Crater
+point,CONCISCODE,320,canvec:CODE:1580010,320
+point,CONCISCODE,320,natural,crater
+line,CONCISCODE,320,canvec:CODE:1580011,320
+line,CONCISCODE,320,natural,crater
+outer,CONCISCODE,320,canvec:CODE:1580012,320
+outer,CONCISCODE,320,natural,crater
+##inner,CONCISCODE,320,canvec:CODE:1580012,320
+##inner,CONCISCODE,320,natural,crater
+#
+#point,CONCISCODE,330,canvec:CONCISCODE,330 GLAC Glacier
+point,CONCISCODE,330,canvec:CODE:1580010,330
+point,CONCISCODE,330,natural,glacier
+line,CONCISCODE,330,canvec:CODE:1580011,330
+line,CONCISCODE,330,natural,glacier
+outer,CONCISCODE,330,canvec:CODE:1580012,330
+outer,CONCISCODE,330,natural,glacier
+##inner,CONCISCODE,330,canvec:CODE:1580012,330
+##inner,CONCISCODE,330,natural,glacier
+#
+#point,CONCISCODE,340,canvec:CONCISCODE,340 FOR Forest
+point,CONCISCODE,340,canvec:CODE:1580010,340
+point,CONCISCODE,340,landuse,forest
+point,CONCISCODE,340,natural,wood
+line,CONCISCODE,340,canvec:CODE:1580011,340
+line,CONCISCODE,340,landuse,forest
+line,CONCISCODE,340,natural,wood
+outer,CONCISCODE,340,canvec:CODE:1580012,340
+outer,CONCISCODE,340,landuse,forest
+outer,CONCISCODE,340,natural,wood
+#inner,CONCISCODE,340,canvec:CODE:1580012,340
+##inner,CONCISCODE,340,landuse,forest
+##inner,CONCISCODE,340,natural,wood
+#
+#this might also be included...in geobaseNHN
+#search 350, and remove the "place=major_municipality" tag.
+#point,CONCISCODE,350,canvec:CONCISCODE,350 VEGL Low vegetation
+point,CONCISCODE,350,canvec:CODE:1580010,350
+point,CONCISCODE,350,landuse,meadow
+line,CONCISCODE,350,canvec:CODE:1580011,350
+line,CONCISCODE,350,landuse,meadow
+outer,CONCISCODE,350,canvec:CODE:1580012,350
+outer,CONCISCODE,350,landuse,meadow
+##inner,CONCISCODE,350,canvec:CODE:1580012,350
+##inner,CONCISCODE,350,landuse,meadow
+#
+#point,CONCISCODE,370,canvec:CONCISCODE,370 MISC Miscellaneous
+point,CONCISCODE,370,canvec:CODE:1580010,370
+line,CONCISCODE,370,canvec:CODE:1580011,370
+outer,CONCISCODE,370,canvec:CODE:1580012,370
+##inner,CONCISCODE,370,canvec:CODE:1580012,370
+#
+#point,CONCISCODE,380,canvec:CONCISCODE,380 RAIL Railway feature
+point,CONCISCODE,380,canvec:CODE:1580010,380
+point,CONCISCODE,380,railway,rail
+line,CONCISCODE,380,canvec:CODE:1580011,380
+line,CONCISCODE,380,railway,rail
+outer,CONCISCODE,380,canvec:CODE:1580012,380
+outer,CONCISCODE,380,railway,rail
+##inner,CONCISCODE,380,canvec:CODE:1580012,380
+##inner,CONCISCODE,380,railway,rail
+#
+#point,CONCISCODE,390,canvec:CONCISCODE,390 ROAD Road feature
+#point,CONCISCODE,390,highway,road
+#
+#point,CONCISCODE,400,canvec:CONCISCODE,400 AIR Air navigation feature
+point,CONCISCODE,400,canvec:CODE:1580010,400
+point,CONCISCODE,400,aeroway,aerodrome
+line,CONCISCODE,400,canvec:CODE:1580011,400
+line,CONCISCODE,400,aeroway,aerodrome
+outer,CONCISCODE,400,canvec:CODE:1580012,400
+outer,CONCISCODE,400,aeroway,aerodrome
+#inner,CONCISCODE,400,canvec:CODE:1580012,400
+#inner,CONCISCODE,400,aeroway,aerodrome
+#
+#point,CONCISCODE,410,canvec:CONCISCODE,410 MAR Marine navigation feature
+point,CONCISCODE,410,canvec:CODE:1580010,410
+point,CONCISCODE,410,man_made,beacon
+line,CONCISCODE,410,canvec:CODE:1580011,410
+line,CONCISCODE,410,man_made,beacon
+outer,CONCISCODE,410,canvec:CODE:1580012,410
+outer,CONCISCODE,410,man_made,beacon
+#inner,CONCISCODE,410,canvec:CODE:1580012,410
+#inner,CONCISCODE,410,man_made,beacon
+#
+#point,CONCISCODE,420,canvec:CONCISCODE,420 HYDR Hydraulic construction
+point,CONCISCODE,420,canvec:CODE:1580010,420
+point,CONCISCODE,420,man_made,hydraulic_construction
+line,CONCISCODE,420,canvec:CODE:1580011,420
+line,CONCISCODE,420,man_made,hydraulic_construction
+outer,CONCISCODE,420,canvec:CODE:1580012,420
+outer,CONCISCODE,420,man_made,hydraulic_construction
+#inner,CONCISCODE,420,canvec:CODE:1580012,420
+#inner,CONCISCODE,420,man_made,hydraulic_construction
+#
+#point,CONCISCODE,430,canvec:CONCISCODE,430 RECR Recreational site
+point,CONCISCODE,430,canvec:CODE:1580010,430
+point,CONCISCODE,430,landuse,recreation_ground
+line,CONCISCODE,430,canvec:CODE:1580011,430
+line,CONCISCODE,430,landuse,recreation_ground
+outer,CONCISCODE,430,canvec:CODE:1580012,430
+outer,CONCISCODE,430,landuse,recreation_ground
+#inner,CONCISCODE,430,canvec:CODE:1580012,430
+#inner,CONCISCODE,430,landuse,recreation_ground
+#
+#point,CONCISCODE,440,canvec:CONCISCODE,440 RES Natural resources site
+point,CONCISCODE,440,canvec:CODE:1580010,440
+point,CONCISCODE,440,leisure,nature_reserve
+line,CONCISCODE,440,canvec:CODE:1580011,440
+line,CONCISCODE,440,leisure,nature_reserve
+outer,CONCISCODE,440,canvec:CODE:1580012,440
+outer,CONCISCODE,440,leisure,nature_reserve
+#inner,CONCISCODE,440,canvec:CODE:1580012,440
+#inner,CONCISCODE,440,leisure,nature_reserve
+#
+#point,CONCISCODE,450,canvec:CONCISCODE,450 CAMP Miscellaneous campsite
+point,CONCISCODE,450,canvec:CODE:1580010,450
+point,CONCISCODE,450,tourism,camp_site
+line,CONCISCODE,450,canvec:CODE:1580011,450
+line,CONCISCODE,450,tourism,camp_site
+outer,CONCISCODE,450,canvec:CODE:1580012,450
+outer,CONCISCODE,450,tourism,camp_site
+#inner,CONCISCODE,450,canvec:CODE:1580012,450
+#inner,CONCISCODE,450,tourism,camp_site
+#
+#point,CONCISCODE,460,canvec:CONCISCODE,460 SITE Miscellaneous site
+point,CONCISCODE,460,canvec:CODE:1580010,460
+point,CONCISCODE,460,feature,misc_site
+line,CONCISCODE,460,canvec:CODE:1580011,460
+line,CONCISCODE,460,feature,misc_site
+outer,CONCISCODE,460,canvec:CODE:1580012,460
+outer,CONCISCODE,460,feature,misc_site
+#inner,CONCISCODE,460,canvec:CODE:1580012,460
+#inner,CONCISCODE,460,feature,misc_site
+#
+#
+#
+#
+#GEONAMEDB
+#Name,Geographical name database
+#Definition,Name of the database from which the geographical name comes from.
+#Data type,Character (20)
+#Domain,The name or acronym of a geographical name database. The field is left blank when not applicable or unknown.
+#point,GEONAMEDB,,canvec:GEONAMEDB,-
+#line,GEONAMEDB,,canvec:GEONAMEDB,-
+#outer,GEONAMEDB,,canvec:GEONAMEDB,-
+##inner,GEONAMEDB,,canvec:GEONAMEDB,-
+#
+#
+#LANGUAGE
+#Name,Language
+#Definition,Attribute used to indicate the official geographical name (toponym) language.
+#Data type,Integer
+#Domain,[-1,1,2,4]
+#point,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+#point,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+#point,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+#point,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+#line,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+#line,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+#line,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+#line,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+#outer,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+#outer,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+#outer,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+#outer,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+##inner,LANGUAGE,-1,canvec:LANGUAGE,Unknown
+##inner,LANGUAGE,1,canvec:LANGUAGE,French unilingual
+##inner,LANGUAGE,2,canvec:LANGUAGE,English unilingual
+##inner,LANGUAGE,4,canvec:LANGUAGE,Bilingual Fench/English
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#point,VALDATE,,canvec:VALDATE,-
+#line,VALDATE,,canvec:VALDATE,-
+#outer,VALDATE,,canvec:VALDATE,-
+##inner,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#point,PROVIDER,1,canvec:PROVIDER,Other
+#point,PROVIDER,2,canvec:PROVIDER,Federal
+#point,PROVIDER,3,canvec:PROVIDER,Provincial_territorial
+#point,PROVIDER,4,canvec:PROVIDER,Municipal
+#line,PROVIDER,1,canvec:PROVIDER,Other
+#line,PROVIDER,2,canvec:PROVIDER,Federal
+#line,PROVIDER,3,canvec:PROVIDER,Provincial_territorial
+#line,PROVIDER,4,canvec:PROVIDER,Municipal
+#outer,PROVIDER,1,canvec:PROVIDER,Other
+#outer,PROVIDER,2,canvec:PROVIDER,Federal
+#outer,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#outer,PROVIDER,4,canvec:PROVIDER,Municipal
+##inner,PROVIDER,1,canvec:PROVIDER,Other
+##inner,PROVIDER,2,canvec:PROVIDER,Federal
+##inner,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+##inner,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+point,ID,,canvec:UUID,-
+line,ID,,canvec:UUID,-
+outer,ID,,canvec:UUID,-
+#inner,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+#point,DATANAME,,canvec:datasetName,-
+#line,DATANAME,,canvec:datasetName,-
+#outer,DATANAME,,canvec:datasetName,-
+##inner,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#point,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#line,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#outer,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+##inner,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#
+#
+#ORIENTATIO,N,31,8
+#Name Orientation
+#Definition Gives the direction of an occurrence of a point entity. The orientation is measured counterclockwise from the X-axis.
+#Data type Integer
+#Measurement unit Degree
+#Domain [-1,0..359]
+#point,ORIENTATIO,,canvec:ORIENTATIO,-
+#line,ORIENTATIO,,canvec:ORIENTATIO,-
+#outer,ORIENTATIO,,canvec:ORIENTATIO,-
+##inner,ORIENTATIO,,canvec:ORIENTATIO,-
+#

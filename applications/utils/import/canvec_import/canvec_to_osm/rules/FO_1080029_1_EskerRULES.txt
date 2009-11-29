@@ -1,0 +1,184 @@
+# last updated 3:41 AM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+# FO_1080029_1_EskerRULES.txt
+# Note: This script omits the description tags.  Use rules_canvecMETAosm.txt for the full version.
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+line,GEOMETRY,,GEOMETRY,-
+outer,GEOMETRY,,GEOMETRY,-
+inner,GEOMETRY,,GEOMETRY,-
+#
+# note,"CODE" is used to note all the other attributes for each feature
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+line,CODE,,attribution,Natural Resources Canada
+line,CODE,,source,CanVec_Import_2009
+line,CODE,,created_by,canvec-to-osm
+#line,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+line,CODE,1080021,canvec:CODE,1080021
+#line,CODE,1080021,canvec:generic_code,1080029
+#line,CODE,1080021,canvec:entity,Esker - ( Esker )
+#line,CODE,1080021,canvec:entity_definition,A narrow; sinuous; steep-sided ridge composed of sand or gravel deposited by a glacial stream
+#line,CODE,1080021,canvec:value,Esker - ( Esker )
+#line,CODE,1080021,canvec:min_size:CODE,1080021
+#line,CODE,1080021,canvec:min_size:area_sq_meter,---
+#line,CODE,1080021,canvec:min_size:lat_distance_meter,1.5
+#line,CODE,1080021,canvec:min_size:length_meter,20
+#line,CODE,1080021,canvec:min_size:long_distance_meter,3
+#line,CODE,1080021,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1080021,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1080021,natural,esker
+#
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#point,VALDATE,,canvec:VALDATE,-
+#line,VALDATE,,canvec:VALDATE,-
+#outer,VALDATE,,canvec:VALDATE,-
+#inner,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#point,PROVIDER,1,canvec:PROVIDER,Other
+#point,PROVIDER,2,canvec:PROVIDER,Federal
+#point,PROVIDER,3,canvec:PROVIDER,Provincial_territorial
+#point,PROVIDER,4,canvec:PROVIDER,Municipal
+#line,PROVIDER,1,canvec:PROVIDER,Other
+#line,PROVIDER,2,canvec:PROVIDER,Federal
+#line,PROVIDER,3,canvec:PROVIDER,Provincial_territorial
+#line,PROVIDER,4,canvec:PROVIDER,Municipal
+#outer,PROVIDER,1,canvec:PROVIDER,Other
+#outer,PROVIDER,2,canvec:PROVIDER,Federal
+#outer,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#outer,PROVIDER,4,canvec:PROVIDER,Municipal
+#inner,PROVIDER,1,canvec:PROVIDER,Other
+#inner,PROVIDER,2,canvec:PROVIDER,Federal
+#inner,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#inner,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+point,ID,,canvec:UUID,-
+line,ID,,canvec:UUID,-
+outer,ID,,canvec:UUID,-
+inner,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+#point,DATANAME,,canvec:datasetName,-
+#line,DATANAME,,canvec:datasetName,-
+#outer,DATANAME,,canvec:datasetName,-
+#inner,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#point,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#line,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#outer,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#inner,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#
+#
+#GAUGE,N,3,0
+#Name Railway gauge
+#Definition Type of track based on the distance between the two rails.
+#Data type Integer
+#Domain [-1,1..3]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the gauge from the data source.
+#1 Narrow Railway with a gauge of 0.967 m.
+#2 Standard Railway with a gauge of 1.435 m.
+#3 Special A railway-like feature, such as a subway or miniature railway.
+#
+#
+#COMPETENCE,N,3,0
+#Name Competence
+#Definition Legislative authority of the railway.
+#Data type Integer
+#Domain [1,2]
+#Values Code Label Definition
+#1 Other Other than federal authority.
+#2 Federal Railway governed by federal laws.
+#
+#STATUS,N,3,0
+#Name Railway status
+#Definition Status of the railway.
+#Data type Integer
+#Domain [-1,1..3]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the railway status from the data source.
+#1 Under construction Railroad under construction when the field survey was carried out.
+#2 Non-operational Railway no longer suitable for rail traffic.
+#3 Operational Any useable or used railway.
+#
+#SUPPORT,N,3,0
+#Name Railway support
+#Definition Portion of a railway having a structure to cross an obstacle.
+#Data type Integer
+#Domain [-1,1..4]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the railway support from the data source.
+#1 Ground level Railway built directly at ground level.
+#2 Snowshed Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#3 Bridge Railway built on a raised structure spanning an obstacle.
+#4 Tunnel Railway built in a cavity or underground structure to get through or under an obstacle.
+#
+#TYPE,N,3,0
+#Name Railway type
+#Definition Description of existing infrastructure.
+#Data type Integer
+#Domain [-1,1..3]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the railway type from the data source.
+#1 Other Any known railway section that is not categorized as multiple or unique, such as a siding, passing track, spur, etc.
+#2 Multiple More than one railway on the same roadbed.
+#3 Single Railroad with only one railway.
+#
+#
+#

@@ -1,0 +1,1883 @@
+# last updated 3:41 PM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+# TR_1020009_1_RailwayRULES.txt
+# Note: This script omits the description tags.  Use rules_canvecMETAosm.txt for the full version.
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+line,GEOMETRY,,GEOMETRY,-
+outer,GEOMETRY,,GEOMETRY,-
+inner,GEOMETRY,,GEOMETRY,-
+#
+# note,"CODE" is used to note all the other attributes for each feature
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+line,CODE,,attribution,Natural Resources Canada
+line,CODE,,source,CanVec_Import_2009
+line,CODE,,created_by,canvec-to-osm
+#line,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+line,CODE,1020011,canvec:CODE,1020011
+#line,CODE,1020011,canvec:generic_code,1020009
+#line,CODE,1020011,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020011,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020011,canvec:value,Other narrow operational unknown other - ( Autre étroit opérationnel inconnu autre )
+#line,CODE,1020011,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020011,canvec:value_definition:Narrow,Railway with a gauge of 0.967 m.
+#line,CODE,1020011,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020011,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020011,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1020011,canvec:min_size:CODE,1020011
+#line,CODE,1020011,canvec:min_size:area_sq_meter,---
+#line,CODE,1020011,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020011,canvec:min_size:length_meter,10
+#line,CODE,1020011,canvec:min_size:long_distance_meter,3
+#line,CODE,1020011,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020011,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020011,railway,narrow_gauge
+#
+line,CODE,1020021,canvec:CODE,1020021
+#line,CODE,1020021,canvec:generic_code,1020009
+#line,CODE,1020021,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020021,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020021,canvec:value,Other narrow operational unknown unknown - ( Autre étroit opérationnel inconnu inconnu )
+#line,CODE,1020021,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020021,canvec:value_definition:Narrow,Railway with a gauge of 0.967 m.
+#line,CODE,1020021,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020021,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020021,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1020021,canvec:min_size:CODE,1020021
+#line,CODE,1020021,canvec:min_size:area_sq_meter,---
+#line,CODE,1020021,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020021,canvec:min_size:length_meter,10
+#line,CODE,1020021,canvec:min_size:long_distance_meter,3
+#line,CODE,1020021,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020021,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020021,railway,narrow_gauge
+#
+line,CODE,1020031,canvec:CODE,1020031
+#line,CODE,1020031,canvec:generic_code,1020009
+#line,CODE,1020031,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020031,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020031,canvec:value,Other unknown non-operatinal unknown unknown - ( Autre inconnu non opérationnel inconnu inconnu )
+#line,CODE,1020031,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020031,canvec:value_definition:Unknown,Impossible to determine the gauge from the data source.
+#line,CODE,1020031,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020031,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020031,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1020031,canvec:min_size:CODE,1020031
+#line,CODE,1020031,canvec:min_size:area_sq_meter,---
+#line,CODE,1020031,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020031,canvec:min_size:length_meter,10
+#line,CODE,1020031,canvec:min_size:long_distance_meter,3
+#line,CODE,1020031,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020031,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020031,railway,abandoned
+#
+line,CODE,1020041,canvec:CODE,1020041
+#line,CODE,1020041,canvec:generic_code,1020009
+#line,CODE,1020041,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020041,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020041,canvec:value,Other unknown unknown unknown unknown - ( Autre inconnu inconnu inconnu inconnu )
+#line,CODE,1020041,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020041,canvec:value_definition:Unknown,Impossible to determine the gauge from the data source.
+#line,CODE,1020041,canvec:value_definition:Unknown,Impossible to determine the railway status from the data source.
+#line,CODE,1020041,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020041,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1020041,canvec:min_size:CODE,1020041
+#line,CODE,1020041,canvec:min_size:area_sq_meter,---
+#line,CODE,1020041,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020041,canvec:min_size:length_meter,10
+#line,CODE,1020041,canvec:min_size:long_distance_meter,3
+#line,CODE,1020041,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020041,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020041,railway,rail
+#
+line,CODE,1020051,canvec:CODE,1020051
+#line,CODE,1020051,canvec:generic_code,1020009
+#line,CODE,1020051,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020051,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020051,canvec:value,Other unknown operational unknown unknown - ( Autre inconnu opérationnel inconnu inconnu )
+#line,CODE,1020051,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020051,canvec:value_definition:Unknown,Impossible to determine the gauge from the data source.
+#line,CODE,1020051,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020051,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020051,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1020051,canvec:min_size:CODE,1020051
+#line,CODE,1020051,canvec:min_size:area_sq_meter,---
+#line,CODE,1020051,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020051,canvec:min_size:length_meter,10
+#line,CODE,1020051,canvec:min_size:long_distance_meter,3
+#line,CODE,1020051,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020051,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020051,railway,rail
+#**
+line,CODE,1020061,canvec:CODE,1020061
+#line,CODE,1020061,canvec:generic_code,1020009
+#line,CODE,1020061,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020061,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020061,canvec:value,Other standard under construction unknown multiple - ( Autre normal en construction inconnu multiple )
+#line,CODE,1020061,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020061,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020061,canvec:value_definition:Under_construction,Railroad under construction when the field survey was carried out.
+#line,CODE,1020061,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020061,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020061,canvec:min_size:CODE,1020061
+#line,CODE,1020061,canvec:min_size:area_sq_meter,---
+#line,CODE,1020061,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020061,canvec:min_size:length_meter,10
+#line,CODE,1020061,canvec:min_size:long_distance_meter,3
+#line,CODE,1020061,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020061,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020061,railway,rail
+line,CODE,1020061,service,construction
+line,CODE,1020061,tracks,multiple
+#
+line,CODE,1020071,canvec:CODE,1020071
+#line,CODE,1020071,canvec:generic_code,1020009
+#line,CODE,1020071,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020071,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020071,canvec:value,Other standard under construction unknown single - ( Autre normal en construction inconnu unique )
+#line,CODE,1020071,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020071,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020071,canvec:value_definition:Under_construction,Railroad under construction when the field survey was carried out.
+#line,CODE,1020071,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020071,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020071,canvec:min_size:CODE,1020071
+#line,CODE,1020071,canvec:min_size:area_sq_meter,---
+#line,CODE,1020071,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020071,canvec:min_size:length_meter,10
+#line,CODE,1020071,canvec:min_size:long_distance_meter,3
+#line,CODE,1020071,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020071,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020071,railway,rail
+line,CODE,1020071,service,construction
+line,CODE,1020071,tracks,single
+#
+line,CODE,1020351,canvec:CODE,1020351
+#line,CODE,1020351,canvec:generic_code,1020009
+#line,CODE,1020351,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020351,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020351,canvec:value,Other standard operational ground level other - ( Autre normal opérationnel au sol autre )
+#line,CODE,1020351,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020351,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020351,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020351,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1020351,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1020351,canvec:min_size:CODE,1020351
+#line,CODE,1020351,canvec:min_size:area_sq_meter,---
+#line,CODE,1020351,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020351,canvec:min_size:length_meter,10
+#line,CODE,1020351,canvec:min_size:long_distance_meter,3
+#line,CODE,1020351,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020351,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020351,railway,rail
+#
+line,CODE,1020361,canvec:CODE,1020361
+#line,CODE,1020361,canvec:generic_code,1020009
+#line,CODE,1020361,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020361,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020361,canvec:value,Other; standard; operational; ground level; multiple - ( Autre; normal; opérationnel; au sol; multiple )
+#line,CODE,1020361,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020361,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020361,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020361,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1020361,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020361,canvec:min_size:CODE,1020361
+#line,CODE,1020361,canvec:min_size:area_sq_meter,---
+#line,CODE,1020361,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020361,canvec:min_size:length_meter,10
+#line,CODE,1020361,canvec:min_size:long_distance_meter,3
+#line,CODE,1020361,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020361,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020361,railway,rail
+line,CODE,1020361,tracks,multiple
+#
+line,CODE,1020371,canvec:CODE,1020371
+#line,CODE,1020371,canvec:generic_code,1020009
+#line,CODE,1020371,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020371,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020371,canvec:value,Other, standard; operational; ground level; single - ( Autre; normal; opérationnel; au sol; unique )
+#line,CODE,1020371,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020371,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020371,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020371,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1020371,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020371,canvec:min_size:CODE,1020371
+#line,CODE,1020371,canvec:min_size:area_sq_meter,---
+#line,CODE,1020371,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020371,canvec:min_size:length_meter,10
+#line,CODE,1020371,canvec:min_size:long_distance_meter,3
+#line,CODE,1020371,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020371,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020371,railway,rail
+line,CODE,1020371,tracks,single
+#
+line,CODE,1020381,canvec:CODE,1020381
+#line,CODE,1020381,canvec:generic_code,1020009
+#line,CODE,1020381,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020381,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020381,canvec:value,Other; standard; operational; unknown; other - ( Autre; normal; opérationnel; inconnu; autre )
+#line,CODE,1020381,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020381,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020381,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020381,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020381,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1020381,canvec:min_size:CODE,1020381
+#line,CODE,1020381,canvec:min_size:area_sq_meter,---
+#line,CODE,1020381,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020381,canvec:min_size:length_meter,10
+#line,CODE,1020381,canvec:min_size:long_distance_meter,3
+#line,CODE,1020381,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020381,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020381,railway,rail
+#
+line,CODE,1020391,canvec:CODE,1020391
+#line,CODE,1020391,canvec:generic_code,1020009
+#line,CODE,1020391,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020391,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020391,canvec:value,Other; standard; operational; unknown; multiple - ( Autre; normal; opérationnel; inconnu; multiple )
+#line,CODE,1020391,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020391,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020391,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020391,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020391,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020391,canvec:min_size:CODE,1020391
+#line,CODE,1020391,canvec:min_size:area_sq_meter,---
+#line,CODE,1020391,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020391,canvec:min_size:length_meter,10
+#line,CODE,1020391,canvec:min_size:long_distance_meter,3
+#line,CODE,1020391,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020391,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020391,railway,rail
+line,CODE,1020391,tracks,multiple
+#
+line,CODE,1020401,canvec:CODE,1020401
+#line,CODE,1020401,canvec:generic_code,1020009
+#line,CODE,1020401,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020401,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020401,canvec:value,Other; standard; operational; unknown; single - ( Autre; normal; opérationnel; inconnu; unique )
+#line,CODE,1020401,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020401,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020401,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020401,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020401,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020401,canvec:min_size:CODE,1020401
+#line,CODE,1020401,canvec:min_size:area_sq_meter,---
+#line,CODE,1020401,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020401,canvec:min_size:length_meter,10
+#line,CODE,1020401,canvec:min_size:long_distance_meter,3
+#line,CODE,1020401,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020401,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020401,railway,rail
+line,CODE,1020401,tracks,single
+#*
+line,CODE,1020411,canvec:CODE,1020411
+#line,CODE,1020411,canvec:generic_code,1020009
+#line,CODE,1020411,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020411,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020411,canvec:value,Other; standard; operational; snowshed; other - ( Autre; normal; opérationnel; paraneige; autre )
+#line,CODE,1020411,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020411,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020411,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020411,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1020411,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1020411,canvec:min_size:CODE,1020411
+#line,CODE,1020411,canvec:min_size:area_sq_meter,---
+#line,CODE,1020411,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020411,canvec:min_size:length_meter,10
+#line,CODE,1020411,canvec:min_size:long_distance_meter,3
+#line,CODE,1020411,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020411,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020411,railway,rail
+line,CODE,1020411,snowshed,yes
+#*
+line,CODE,1020421,canvec:CODE,1020421
+#line,CODE,1020421,canvec:generic_code,1020009
+#line,CODE,1020421,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020421,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020421,canvec:value,Other; standard; operational; snowshed; multiple - ( Autre; normal; opérationnel; paraneige; multiple )
+#line,CODE,1020421,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020421,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020421,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020421,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1020421,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020421,canvec:min_size:CODE,1020421
+#line,CODE,1020421,canvec:min_size:area_sq_meter,---
+#line,CODE,1020421,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020421,canvec:min_size:length_meter,10
+#line,CODE,1020421,canvec:min_size:long_distance_meter,3
+#line,CODE,1020421,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020421,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020421,railway,rail
+line,CODE,1020421,snowshed,yes
+line,CODE,1020421,tracks,multiple
+#
+line,CODE,1020431,canvec:CODE,1020431
+#line,CODE,1020431,canvec:generic_code,1020009
+#line,CODE,1020431,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020431,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020431,canvec:value,Other; standard; operational; snowshed; single - ( Autre; normal; opérationnel; paraneige; unique )
+#line,CODE,1020431,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020431,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020431,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020431,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1020431,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020431,canvec:min_size:CODE,1020431
+#line,CODE,1020431,canvec:min_size:area_sq_meter,---
+#line,CODE,1020431,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020431,canvec:min_size:length_meter,10
+#line,CODE,1020431,canvec:min_size:long_distance_meter,3
+#line,CODE,1020431,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020431,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020431,railway,rail
+line,CODE,1020431,snowshed,yes
+line,CODE,1020431,tracks,single
+#
+line,CODE,1020441,canvec:CODE,1020441
+#line,CODE,1020441,canvec:generic_code,1020009
+#line,CODE,1020441,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020441,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020441,canvec:value,Other; standard; operational; bridge; other - ( Autre; normal; opérationnel; pont; autre )
+#line,CODE,1020441,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020441,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020441,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020441,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1020441,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1020441,canvec:min_size:CODE,1020441
+#line,CODE,1020441,canvec:min_size:area_sq_meter,---
+#line,CODE,1020441,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020441,canvec:min_size:length_meter,10
+#line,CODE,1020441,canvec:min_size:long_distance_meter,3
+#line,CODE,1020441,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020441,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020441,railway,rail
+line,CODE,1020441,bridge,yes
+#
+line,CODE,1020451,canvec:CODE,1020451
+#line,CODE,1020451,canvec:generic_code,1020009
+#line,CODE,1020451,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020451,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020451,canvec:value,Other; standard; operational; bridge; multiple - ( Autre; normal; opérationnel; pont; multiple )
+#line,CODE,1020451,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020451,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020451,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020451,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1020451,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020451,canvec:min_size:CODE,1020451
+#line,CODE,1020451,canvec:min_size:area_sq_meter,---
+#line,CODE,1020451,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020451,canvec:min_size:length_meter,10
+#line,CODE,1020451,canvec:min_size:long_distance_meter,3
+#line,CODE,1020451,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020451,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020451,railway,rail
+line,CODE,1020451,bridge,yes
+line,CODE,1020451,tracks,multiple
+#
+line,CODE,1020461,canvec:CODE,1020461
+#line,CODE,1020461,canvec:generic_code,1020009
+#line,CODE,1020461,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020461,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020461,canvec:value,Other; standard; operational; bridge; single - ( Autre; normal; opérationnel; pont; unique )
+#line,CODE,1020461,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020461,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020461,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020461,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1020461,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020461,canvec:min_size:CODE,1020461
+#line,CODE,1020461,canvec:min_size:area_sq_meter,---
+#line,CODE,1020461,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020461,canvec:min_size:length_meter,10
+#line,CODE,1020461,canvec:min_size:long_distance_meter,3
+#line,CODE,1020461,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020461,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020461,railway,rail
+line,CODE,1020461,bridge,yes
+line,CODE,1020461,tracks,single
+#
+line,CODE,1020471,canvec:CODE,1020471
+#line,CODE,1020471,canvec:generic_code,1020009
+#line,CODE,1020471,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020471,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020471,canvec:value,Other; standard; operational; tunnel; other - ( Autre; normal; opérationnel; tunnel; autre )
+#line,CODE,1020471,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020471,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020471,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020471,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1020471,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1020471,canvec:min_size:CODE,1020471
+#line,CODE,1020471,canvec:min_size:area_sq_meter,---
+#line,CODE,1020471,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020471,canvec:min_size:length_meter,10
+#line,CODE,1020471,canvec:min_size:long_distance_meter,3
+#line,CODE,1020471,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020471,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020471,railway,rail
+line,CODE,1020471,tunnel,yes
+#
+line,CODE,1020481,canvec:CODE,1020481
+#line,CODE,1020481,canvec:generic_code,1020009
+#line,CODE,1020481,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020481,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020481,canvec:value,Other; standard; operational; tunnel; multiple - ( Autre; normal; opérationnel; tunnel; multiple )
+#line,CODE,1020481,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020481,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020481,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020481,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1020481,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020481,canvec:min_size:CODE,1020481
+#line,CODE,1020481,canvec:min_size:area_sq_meter,---
+#line,CODE,1020481,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020481,canvec:min_size:length_meter,10
+#line,CODE,1020481,canvec:min_size:long_distance_meter,3
+#line,CODE,1020481,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020481,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020481,railway,rail
+line,CODE,1020481,tunnel,yes
+line,CODE,1020481,tracks,multiple
+#
+line,CODE,1020491,canvec:CODE,1020491
+#line,CODE,1020491,canvec:generic_code,1020009
+#line,CODE,1020491,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020491,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020491,canvec:value,Other; standard; operational; tunnel; single - ( Autre; normal; opérationnel; tunnel; unique )
+#line,CODE,1020491,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020491,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020491,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020491,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1020491,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020491,canvec:min_size:CODE,1020491
+#line,CODE,1020491,canvec:min_size:area_sq_meter,---
+#line,CODE,1020491,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020491,canvec:min_size:length_meter,10
+#line,CODE,1020491,canvec:min_size:long_distance_meter,3
+#line,CODE,1020491,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020491,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020491,railway,rail
+line,CODE,1020491,tunnel,yes
+line,CODE,1020491,tracks,single
+#*
+line,CODE,1020501,canvec:CODE,1020501
+#line,CODE,1020501,canvec:generic_code,1020009
+#line,CODE,1020501,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020501,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020501,canvec:value,Other; special; under construction; unknown; multiple - ( Autre; spécial; en construction; inconnu; multiple )
+#line,CODE,1020501,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020501,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020501,canvec:value_definition:Under_construction,Railroad under construction when the field survey was carried out.
+#line,CODE,1020501,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020501,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020501,canvec:min_size:CODE,1020501
+#line,CODE,1020501,canvec:min_size:area_sq_meter,---
+#line,CODE,1020501,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020501,canvec:min_size:length_meter,10
+#line,CODE,1020501,canvec:min_size:long_distance_meter,3
+#line,CODE,1020501,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020501,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020501,railway,preserved
+line,CODE,1020501,service,construction
+line,CODE,1020501,tracks,multiple
+#
+line,CODE,1020511,canvec:CODE,1020511
+#line,CODE,1020511,canvec:generic_code,1020009
+#line,CODE,1020511,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020511,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020511,canvec:value,Other; special; under construction; unknown; single - ( Autre; spécial; en construction; inconnu; unique )
+#line,CODE,1020511,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020511,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020511,canvec:value_definition:Under_construction,Railroad under construction when the field survey was carried out.
+#line,CODE,1020511,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020511,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020511,canvec:min_size:CODE,1020511
+#line,CODE,1020511,canvec:min_size:area_sq_meter,---
+#line,CODE,1020511,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020511,canvec:min_size:length_meter,10
+#line,CODE,1020511,canvec:min_size:long_distance_meter,3
+#line,CODE,1020511,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020511,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020511,railway,preserved
+line,CODE,1020511,service,construction
+line,CODE,1020511,tracks,single
+#
+line,CODE,1020521,canvec:CODE,1020521
+#line,CODE,1020521,canvec:generic_code,1020009
+#line,CODE,1020521,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020521,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020521,canvec:value,Other; special; operational; ground level; multiple - ( Autre; spécial; opérationnel; au sol; multiple )
+#line,CODE,1020521,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020521,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020521,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020521,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1020521,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020521,canvec:min_size:CODE,1020521
+#line,CODE,1020521,canvec:min_size:area_sq_meter,---
+#line,CODE,1020521,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020521,canvec:min_size:length_meter,10
+#line,CODE,1020521,canvec:min_size:long_distance_meter,3
+#line,CODE,1020521,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020521,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020521,railway,preserved
+line,CODE,1020521,tracks,multiple
+#
+line,CODE,1020531,canvec:CODE,1020531
+#line,CODE,1020531,canvec:generic_code,1020009
+#line,CODE,1020531,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020531,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020531,canvec:value,Other; special; operational; ground level; single - ( Autre; spécial; opérationnel; au sol; unique )
+#line,CODE,1020531,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020531,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020531,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020531,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1020531,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020531,canvec:min_size:CODE,1020531
+#line,CODE,1020531,canvec:min_size:area_sq_meter,---
+#line,CODE,1020531,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020531,canvec:min_size:length_meter,10
+#line,CODE,1020531,canvec:min_size:long_distance_meter,3
+#line,CODE,1020531,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020531,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020531,railway,preserved
+line,CODE,1020531,tracks,single
+#
+line,CODE,1020541,canvec:CODE,1020541
+#line,CODE,1020541,canvec:generic_code,1020009
+#line,CODE,1020541,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020541,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020541,canvec:value,Other; special; operational; unknown; multiple - ( Autre; spécial; opérationnel; inconnu; multiple )
+#line,CODE,1020541,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020541,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020541,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020541,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020541,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020541,canvec:min_size:CODE,1020541
+#line,CODE,1020541,canvec:min_size:area_sq_meter,---
+#line,CODE,1020541,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020541,canvec:min_size:length_meter,10
+#line,CODE,1020541,canvec:min_size:long_distance_meter,3
+#line,CODE,1020541,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020541,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020541,railway,preserved
+line,CODE,1020541,tracks,multiple
+#
+line,CODE,1020551,canvec:CODE,1020551
+#line,CODE,1020551,canvec:generic_code,1020009
+#line,CODE,1020551,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020551,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020551,canvec:value,Other; special; operational; unknown; single - ( Autre; spécial; opérationnel; inconnu; unique )
+#line,CODE,1020551,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020551,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020551,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020551,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020551,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020551,canvec:min_size:CODE,1020551
+#line,CODE,1020551,canvec:min_size:area_sq_meter,---
+#line,CODE,1020551,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020551,canvec:min_size:length_meter,10
+#line,CODE,1020551,canvec:min_size:long_distance_meter,3
+#line,CODE,1020551,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020551,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020551,railway,preserved
+line,CODE,1020551,tracks,single
+#*
+line,CODE,1020561,canvec:CODE,1020561
+#line,CODE,1020561,canvec:generic_code,1020009
+#line,CODE,1020561,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020561,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020561,canvec:value,Other; special; operational; snowshed; multiple - ( Autre; spécial; opérationnel; paraneige; multiple )
+#line,CODE,1020561,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020561,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020561,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020561,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1020561,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020561,canvec:min_size:CODE,1020561
+#line,CODE,1020561,canvec:min_size:area_sq_meter,---
+#line,CODE,1020561,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020561,canvec:min_size:length_meter,10
+#line,CODE,1020561,canvec:min_size:long_distance_meter,3
+#line,CODE,1020561,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020561,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020561,railway,preserved
+line,CODE,1020561,snowshed,yes
+line,CODE,1020561,tracks,multiple
+#
+line,CODE,1020571,canvec:CODE,1020571
+#line,CODE,1020571,canvec:generic_code,1020009
+#line,CODE,1020571,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020571,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020571,canvec:value,Other; special; operational; snowshed; single - ( Autre; spécial; opérationnel; paraneige; unique )
+#line,CODE,1020571,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020571,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020571,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020571,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1020571,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020571,canvec:min_size:CODE,1020571
+#line,CODE,1020571,canvec:min_size:area_sq_meter,---
+#line,CODE,1020571,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020571,canvec:min_size:length_meter,10
+#line,CODE,1020571,canvec:min_size:long_distance_meter,3
+#line,CODE,1020571,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020571,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020571,railway,preserved
+line,CODE,1020571,snowshed,yes
+line,CODE,1020571,tracks,single
+#
+line,CODE,1020581,canvec:CODE,1020581
+#line,CODE,1020581,canvec:generic_code,1020009
+#line,CODE,1020581,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020581,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020581,canvec:value,Other; special; operational; bridge; multiple - ( Autre; spécial; opérationnel; pont; multiple )
+#line,CODE,1020581,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020581,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020581,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020581,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1020581,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020581,canvec:min_size:CODE,1020581
+#line,CODE,1020581,canvec:min_size:area_sq_meter,---
+#line,CODE,1020581,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020581,canvec:min_size:length_meter,10
+#line,CODE,1020581,canvec:min_size:long_distance_meter,3
+#line,CODE,1020581,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020581,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020581,railway,preserved
+line,CODE,1020581,bridge,yes
+line,CODE,1020581,tracks,multiple
+#
+line,CODE,1020591,canvec:CODE,1020591
+#line,CODE,1020591,canvec:generic_code,1020009
+#line,CODE,1020591,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020591,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020591,canvec:value,Other; special; operational; bridge; single - ( Autre; spécial; opérationnel; pont; unique )
+#line,CODE,1020591,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020591,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020591,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020591,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1020591,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020591,canvec:min_size:CODE,1020591
+#line,CODE,1020591,canvec:min_size:area_sq_meter,---
+#line,CODE,1020591,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020591,canvec:min_size:length_meter,10
+#line,CODE,1020591,canvec:min_size:long_distance_meter,3
+#line,CODE,1020591,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020591,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020591,railway,preserved
+line,CODE,1020591,bridge,yes
+line,CODE,1020591,tracks,single
+#
+line,CODE,1020601,canvec:CODE,1020601
+#line,CODE,1020601,canvec:generic_code,1020009
+#line,CODE,1020601,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020601,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020601,canvec:value,Other; special; operational; tunnel; multiple - ( Autre; spécial; opérationnel; tunnel; multiple )
+#line,CODE,1020601,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020601,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020601,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020601,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1020601,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020601,canvec:min_size:CODE,1020601
+#line,CODE,1020601,canvec:min_size:area_sq_meter,---
+#line,CODE,1020601,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020601,canvec:min_size:length_meter,10
+#line,CODE,1020601,canvec:min_size:long_distance_meter,3
+#line,CODE,1020601,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020601,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020601,railway,preserved
+line,CODE,1020601,tunnel,yes
+line,CODE,1020601,tracks,multiple
+#
+line,CODE,1020611,canvec:CODE,1020611
+#line,CODE,1020611,canvec:generic_code,1020009
+#line,CODE,1020611,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020611,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020611,canvec:value,Other; special; operational; tunnel; single - ( Autre; spécial; opérationnel; tunnel; unique )
+#line,CODE,1020611,canvec:value_definition:Other,Other than federal authority.
+#line,CODE,1020611,canvec:value_definition:Special,A railway-like feature, such as a subway or miniature railway.
+#line,CODE,1020611,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020611,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1020611,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020611,canvec:min_size:CODE,1020611
+#line,CODE,1020611,canvec:min_size:area_sq_meter,---
+#line,CODE,1020611,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020611,canvec:min_size:length_meter,10
+#line,CODE,1020611,canvec:min_size:long_distance_meter,3
+#line,CODE,1020611,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020611,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020611,railway,preserved
+line,CODE,1020611,tunnel,yes
+line,CODE,1020611,tracks,single
+#
+line,CODE,1020621,canvec:CODE,1020621
+#line,CODE,1020621,canvec:generic_code,1020009
+#line,CODE,1020621,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020621,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020621,canvec:value,Federal; narrow; non-operational; unknown; unknown - ( Fédéral; étroit; non opérationnel; inconnu; inconnu )
+#line,CODE,1020621,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020621,canvec:value_definition:Narrow,Railway with a gauge of 0.967 m.
+#line,CODE,1020621,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020621,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020621,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source. 
+#line,CODE,1020621,canvec:min_size:CODE,1020621
+#line,CODE,1020621,canvec:min_size:area_sq_meter,---
+#line,CODE,1020621,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020621,canvec:min_size:length_meter,10
+#line,CODE,1020621,canvec:min_size:long_distance_meter,3
+#line,CODE,1020621,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020621,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020621,railway,narrow_gauge
+line,CODE,1020621,disused,yes
+#
+line,CODE,1020631,canvec:CODE,1020631
+line,CODE,1020631,canvec:generic_code,1020009
+#line,CODE,1020631,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020631,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020631,canvec:value,Federal; narrow; operational; unknown; other - ( Fédéral; étroit; opérationnel; inconnu; autre )
+#line,CODE,1020631,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020631,canvec:value_definition:Narrow,Railway with a gauge of 0.967 m.
+#line,CODE,1020631,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020631,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020631,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1020631,canvec:min_size:CODE,1020631
+#line,CODE,1020631,canvec:min_size:area_sq_meter,---
+#line,CODE,1020631,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020631,canvec:min_size:length_meter,10
+#line,CODE,1020631,canvec:min_size:long_distance_meter,3
+#line,CODE,1020631,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020631,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020631,railway,narrow_gauge
+#
+line,CODE,1020641,canvec:CODE,1020641
+#line,CODE,1020641,canvec:generic_code,1020009
+#line,CODE,1020641,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020641,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020641,canvec:value,Federal; narrow; operational; unknown; unknown - ( Fédéral; étroit; opérationnel; inconnu; inconnu )
+#line,CODE,1020641,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020641,canvec:value_definition:Narrow,Railway with a gauge of 0.967 m.
+#line,CODE,1020641,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020641,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020641,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source. 
+#line,CODE,1020641,canvec:min_size:CODE,1020641
+#line,CODE,1020641,canvec:min_size:area_sq_meter,---
+#line,CODE,1020641,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020641,canvec:min_size:length_meter,10
+#line,CODE,1020641,canvec:min_size:long_distance_meter,3
+#line,CODE,1020641,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020641,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020641,railway,narrow_gauge
+#
+line,CODE,1020651,canvec:CODE,1020651
+#line,CODE,1020651,canvec:generic_code,1020009
+#line,CODE,1020651,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020651,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020651,canvec:value,Federal; unknown; unknown; unknown; unknown - ( Fédéral; inconnu; inconnu; inconnu; inconnu )
+#line,CODE,1020651,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020651,canvec:value_definition:Unknown,Impossible to determine the gauge from the data source.
+#line,CODE,1020651,canvec:value_definition:Unknown,Impossible to determine the railway status from the data source.
+#line,CODE,1020651,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020651,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source. 
+#line,CODE,1020651,canvec:min_size:CODE,1020651
+#line,CODE,1020651,canvec:min_size:area_sq_meter,---
+#line,CODE,1020651,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020651,canvec:min_size:length_meter,10
+#line,CODE,1020651,canvec:min_size:long_distance_meter,3
+#line,CODE,1020651,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020651,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020651,railway,rail
+#
+line,CODE,1020661,canvec:CODE,1020661
+#line,CODE,1020661,canvec:generic_code,1020009
+#line,CODE,1020661,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020661,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020661,canvec:value,Federal; unknown; non-operational; unknown; unknown - ( Fédéral; inconnu; non opérationnel; inconnu; inconnu )
+#line,CODE,1020661,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020661,canvec:value_definition:Unknown,Impossible to determine the gauge from the data source.
+#line,CODE,1020661,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020661,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020661,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source. 
+#line,CODE,1020661,canvec:min_size:CODE,1020661
+#line,CODE,1020661,canvec:min_size:area_sq_meter,---
+#line,CODE,1020661,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020661,canvec:min_size:length_meter,10
+#line,CODE,1020661,canvec:min_size:long_distance_meter,3
+#line,CODE,1020661,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020661,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020661,railway,abandoned
+#
+line,CODE,1020671,canvec:CODE,1020671
+#line,CODE,1020671,canvec:generic_code,1020009
+#line,CODE,1020671,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020671,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020671,canvec:value,Federal; unknown; operational; unknown; unknown - ( Fédéral; inconnu; opérationnel; inconnu; inconnu )
+#line,CODE,1020671,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020671,canvec:value_definition:Unknown,Impossible to determine the gauge from the data source.
+#line,CODE,1020671,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020671,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020671,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source. 
+#line,CODE,1020671,canvec:min_size:CODE,1020671
+#line,CODE,1020671,canvec:min_size:area_sq_meter,---
+#line,CODE,1020671,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020671,canvec:min_size:length_meter,10
+#line,CODE,1020671,canvec:min_size:long_distance_meter,3
+#line,CODE,1020671,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020671,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020671,railway,rail
+#*
+line,CODE,1020681,canvec:CODE,1020681
+#line,CODE,1020681,canvec:generic_code,1020009
+#line,CODE,1020681,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020681,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020681,canvec:value,Federal; standard; under construction; unknown; multiple - ( Fédéral; normal; en construction; inconnu; multiple )
+#line,CODE,1020681,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020681,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020681,canvec:value_definition:Under_construction,Railroad under construction when the field survey was carried out.
+#line,CODE,1020681,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020681,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020681,canvec:min_size:CODE,1020681
+#line,CODE,1020681,canvec:min_size:area_sq_meter,---
+#line,CODE,1020681,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020681,canvec:min_size:length_meter,10
+#line,CODE,1020681,canvec:min_size:long_distance_meter,3
+#line,CODE,1020681,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020681,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020681,railway,rail
+line,CODE,1020681,service,construction
+line,CODE,1020681,tracks,multiple
+#
+line,CODE,1020691,canvec:CODE,1020691
+#line,CODE,1020691,canvec:generic_code,1020009
+#line,CODE,1020691,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020691,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020691,canvec:value,Federal; standard; under construction; unknown; single - ( Fédéral; normal; en construction; inconnu; unique )
+#line,CODE,1020691,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020691,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020691,canvec:value_definition:Under_construction,Railroad under construction when the field survey was carried out.
+#line,CODE,1020691,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020691,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020691,canvec:min_size:CODE,1020691
+#line,CODE,1020691,canvec:min_size:area_sq_meter,---
+#line,CODE,1020691,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020691,canvec:min_size:length_meter,10
+#line,CODE,1020691,canvec:min_size:long_distance_meter,3
+#line,CODE,1020691,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020691,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020691,railway,rail
+line,CODE,1020691,service,construction
+line,CODE,1020691,tracks,single
+#
+line,CODE,1020701,canvec:CODE,1020701
+#line,CODE,1020701,canvec:generic_code,1020009
+#line,CODE,1020701,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020701,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020701,canvec:value,Federal; special; operational; ground level; single - ( Fédéral; spécial; opérationnel; au sol; unique )
+#line,CODE,1020701,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020701,canvec:value_definition:Special,A railway-like feature; such as a subway or miniature railway.
+#line,CODE,1020701,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020701,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1020701,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020701,canvec:min_size:CODE,1020701
+#line,CODE,1020701,canvec:min_size:area_sq_meter,---
+#line,CODE,1020701,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020701,canvec:min_size:length_meter,10
+#line,CODE,1020701,canvec:min_size:long_distance_meter,3
+#line,CODE,1020701,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020701,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020701,railway,preserved
+line,CODE,1020701,tracks,single
+#
+line,CODE,1020711,canvec:CODE,1020711
+#line,CODE,1020711,canvec:generic_code,1020009
+#line,CODE,1020711,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020711,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020711,canvec:value,Federal; special; operational; bridge; single - ( Fédéral; spécial; opérationnel; pont; unique )
+#line,CODE,1020711,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020711,canvec:value_definition:Special,A railway-like feature; such as a subway or miniature railway.
+#line,CODE,1020711,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020711,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1020711,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020711,canvec:min_size:CODE,1020711
+#line,CODE,1020711,canvec:min_size:area_sq_meter,---
+#line,CODE,1020711,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020711,canvec:min_size:length_meter,10
+#line,CODE,1020711,canvec:min_size:long_distance_meter,3
+#line,CODE,1020711,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020711,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020711,railway,preserved
+line,CODE,1020711,bridge,yes
+line,CODE,1020711,tracks,single
+#
+line,CODE,1020721,canvec:CODE,1020721
+#line,CODE,1020721,canvec:generic_code,1020009
+#line,CODE,1020721,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020721,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020721,canvec:value,Federal; special; operational; tunnel; single - ( Fédéral; spécial; opérationnel; tunnel; unique )
+#line,CODE,1020721,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020721,canvec:value_definition:Special,A railway-like feature; such as a subway or miniature railway.
+#line,CODE,1020721,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1020721,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1020721,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020721,canvec:min_size:CODE,1020721
+#line,CODE,1020721,canvec:min_size:area_sq_meter,---
+#line,CODE,1020721,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020721,canvec:min_size:length_meter,10
+#line,CODE,1020721,canvec:min_size:long_distance_meter,3
+#line,CODE,1020721,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020721,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020721,railway,preserved
+line,CODE,1020721,tunnel,yes
+line,CODE,1020721,tracks,single
+#
+line,CODE,1020881,canvec:CODE,1020881
+#line,CODE,1020881,canvec:generic_code,1020009
+#line,CODE,1020881,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020881,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020881,canvec:value,Federal; standard; non-operational; ground level; other - ( Fédéral; normal; non opérationnel; au sol autre )
+#line,CODE,1020881,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020881,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020881,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020881,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1020881,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1020881,canvec:min_size:CODE,1020881
+#line,CODE,1020881,canvec:min_size:area_sq_meter,---
+#line,CODE,1020881,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020881,canvec:min_size:length_meter,10
+#line,CODE,1020881,canvec:min_size:long_distance_meter,3
+#line,CODE,1020881,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020881,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020881,railway,adandoned
+#
+line,CODE,1020891,canvec:CODE,1020891
+#line,CODE,1020891,canvec:generic_code,1020009
+#line,CODE,1020891,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020891,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020891,canvec:value,Federal; standard; non-operational; ground level; unknown - ( Fédéral; normal; non opérationnel; au sol; inconnu )
+#line,CODE,1020891,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020891,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020891,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020891,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1020891,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1020891,canvec:min_size:CODE,1020891
+#line,CODE,1020891,canvec:min_size:area_sq_meter,---
+#line,CODE,1020891,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020891,canvec:min_size:length_meter,10
+#line,CODE,1020891,canvec:min_size:long_distance_meter,3
+#line,CODE,1020891,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020891,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020891,railway,abandoned
+#
+line,CODE,1020901,canvec:CODE,1020901
+#line,CODE,1020901,canvec:generic_code,1020009
+#line,CODE,1020901,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020901,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020901,canvec:value,Federal; standard; non-operational; ground level; multiple - ( Fédéral; normal; non opérationnel; au sol; multiple )
+#line,CODE,1020901,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020901,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020901,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020901,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1020901,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020901,canvec:min_size:CODE,1020901
+#line,CODE,1020901,canvec:min_size:area_sq_meter,---
+#line,CODE,1020901,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020901,canvec:min_size:length_meter,10
+#line,CODE,1020901,canvec:min_size:long_distance_meter,3
+#line,CODE,1020901,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020901,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020901,railway,abandoned
+line,CODE,1020901,tracks,multiple
+#
+line,CODE,1020911,canvec:CODE,1020911
+#line,CODE,1020911,canvec:generic_code,1020009
+#line,CODE,1020911,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020911,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020911,canvec:value,Federal; standard; non-operational; ground level; single - ( Fédéral; normal; non opérationnel; au sol; unique )
+#line,CODE,1020911,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020911,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020911,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020911,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1020911,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020911,canvec:min_size:CODE,1020911
+#line,CODE,1020911,canvec:min_size:area_sq_meter,---
+#line,CODE,1020911,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020911,canvec:min_size:length_meter,10
+#line,CODE,1020911,canvec:min_size:long_distance_meter,3
+#line,CODE,1020911,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020911,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020911,railway,abandoned
+line,CODE,1020911,tracks,single
+#
+line,CODE,1020921,canvec:CODE,1020921
+#line,CODE,1020921,canvec:generic_code,1020009
+#line,CODE,1020921,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020921,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020921,canvec:value,Federal; standard; non-operational; unknown; other - ( Fédéral; normal; non opérationnel; inconnu; autre )
+#line,CODE,1020921,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020921,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020921,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020921,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020921,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1020921,canvec:min_size:CODE,1020921
+#line,CODE,1020921,canvec:min_size:area_sq_meter,---
+#line,CODE,1020921,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020921,canvec:min_size:length_meter,10
+#line,CODE,1020921,canvec:min_size:long_distance_meter,3
+#line,CODE,1020921,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020921,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020921,railway,abandoned
+#
+line,CODE,1020931,canvec:CODE,1020931
+#line,CODE,1020931,canvec:generic_code,1020009
+#line,CODE,1020931,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020931,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020931,canvec:value,Federal; standard; non-operational; unknown; unknown - ( Fédéral; normal; non opérationnel; inconnu; inconnu )
+#line,CODE,1020931,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020931,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020931,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020931,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020931,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1020931,canvec:min_size:CODE,1020931
+#line,CODE,1020931,canvec:min_size:area_sq_meter,---
+#line,CODE,1020931,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020931,canvec:min_size:length_meter,10
+#line,CODE,1020931,canvec:min_size:long_distance_meter,3
+#line,CODE,1020931,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020931,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020931,railway,abandoned
+#
+line,CODE,1020941,canvec:CODE,1020941
+#line,CODE,1020941,canvec:generic_code,1020009
+#line,CODE,1020941,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020941,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020941,canvec:value,Federal; standard; non-operational; unknown; multiple - ( Fédéral; normal; non opérationnel; inconnu; multiple )
+#line,CODE,1020941,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020941,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020941,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020941,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020941,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020941,canvec:min_size:CODE,1020941
+#line,CODE,1020941,canvec:min_size:area_sq_meter,---
+#line,CODE,1020941,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020941,canvec:min_size:length_meter,10
+#line,CODE,1020941,canvec:min_size:long_distance_meter,3
+#line,CODE,1020941,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020941,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020941,railway,abandoned
+line,CODE,1020941,tracks,multiple
+#
+line,CODE,1020951,canvec:CODE,1020951
+#line,CODE,1020951,canvec:generic_code,1020009
+#line,CODE,1020951,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020951,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020951,canvec:value,Federal; standard; non-operational; unknown; single - ( Fédéral; normal; non opérationnel; inconnu; unique )
+#line,CODE,1020951,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020951,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020951,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020951,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1020951,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020951,canvec:min_size:CODE,1020951
+#line,CODE,1020951,canvec:min_size:area_sq_meter,---
+#line,CODE,1020951,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020951,canvec:min_size:length_meter,10
+#line,CODE,1020951,canvec:min_size:long_distance_meter,3
+#line,CODE,1020951,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020951,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020951,railway,abandoned
+line,CODE,1020951,tracks,single
+#
+#line,CODE,1020961,canvec:CODE,1020961
+#line,CODE,1020961,canvec:generic_code,1020009
+#line,CODE,1020961,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020961,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020961,canvec:value,Federal; standard; non-operational; snowshed; other - ( Fédéral; normal; non opérationnel; paraneige; autre )
+#line,CODE,1020961,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020961,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020961,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020961,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1020961,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1020961,canvec:min_size:CODE,1020961
+#line,CODE,1020961,canvec:min_size:area_sq_meter,---
+#line,CODE,1020961,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020961,canvec:min_size:length_meter,10
+#line,CODE,1020961,canvec:min_size:long_distance_meter,3
+#line,CODE,1020961,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020961,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020961,railway,abandoned
+line,CODE,1020961,snowshed,yes
+#
+line,CODE,1020971,canvec:CODE,1020971
+#line,CODE,1020971,canvec:generic_code,1020009
+#line,CODE,1020971,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020971,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020971,canvec:value,Federal; standard; non-operational; snowshed; unknown - ( Fédéral; normal; non opérationnel; paraneige; inconnu )
+#line,CODE,1020971,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020971,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020971,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020971,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1020971,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1020971,canvec:min_size:CODE,1020971
+#line,CODE,1020971,canvec:min_size:area_sq_meter,---
+#line,CODE,1020971,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020971,canvec:min_size:length_meter,10
+#line,CODE,1020971,canvec:min_size:long_distance_meter,3
+#line,CODE,1020971,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020971,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020971,railway,abandoned
+line,CODE,1020971,showshed,yes
+#
+line,CODE,1020981,canvec:CODE,1020981
+#line,CODE,1020981,canvec:generic_code,1020009
+#line,CODE,1020981,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020981,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020981,canvec:value,Federal; standard; non-operational; snowshed; multiple - ( Fédéral; normal; non opérationnel; paraneige; multiple )
+#line,CODE,1020981,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020981,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020981,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020981,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1020981,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1020981,canvec:min_size:CODE,1020981
+#line,CODE,1020981,canvec:min_size:area_sq_meter,---
+#line,CODE,1020981,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020981,canvec:min_size:length_meter,10
+#line,CODE,1020981,canvec:min_size:long_distance_meter,3
+#line,CODE,1020981,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020981,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020981,railway,abandoned
+line,CODE,1020981,snowshed,yes
+line,CODE,1020981,tracks,multiple
+#
+line,CODE,1020991,canvec:CODE,1020991
+#line,CODE,1020991,canvec:generic_code,1020009
+#line,CODE,1020991,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1020991,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1020991,canvec:value,Federal; standard; non-operational; snowshed; single - ( Fédéral; normal; non opérationnel; paraneige; unique )
+#line,CODE,1020991,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1020991,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1020991,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1020991,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1020991,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1020991,canvec:min_size:CODE,1020991
+#line,CODE,1020991,canvec:min_size:area_sq_meter,---
+#line,CODE,1020991,canvec:min_size:lat_distance_meter,6
+#line,CODE,1020991,canvec:min_size:length_meter,10
+#line,CODE,1020991,canvec:min_size:long_distance_meter,3
+#line,CODE,1020991,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1020991,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1020991,railway,abandoned
+line,CODE,1020991,snowshed,yes
+line,CODE,1020991,tracks,single
+#
+line,CODE,1021001,canvec:CODE,1021001
+#line,CODE,1021001,canvec:generic_code,1020009
+#line,CODE,1021001,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021001,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021001,canvec:value,Federal; standard; non-operational; bridge; other - ( Fédéral; normal; non opérationnel; pont; autre )
+#line,CODE,1021001,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021001,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021001,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1021001,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1021001,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1021001,canvec:min_size:CODE,1021001
+#line,CODE,1021001,canvec:min_size:area_sq_meter,---
+#line,CODE,1021001,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021001,canvec:min_size:length_meter,10
+#line,CODE,1021001,canvec:min_size:long_distance_meter,3
+#line,CODE,1021001,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021001,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021001,railway,abandoned
+line,CODE,1021001,bridge,yes
+#
+line,CODE,1021011,canvec:CODE,1021011
+#line,CODE,1021011,canvec:generic_code,1020009
+#line,CODE,1021011,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021011,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021011,canvec:value,Federal; standard; non-operational; bridge; unknown - ( Fédéral; normal; non opérationnel; pont; inconnu )
+#line,CODE,1021011,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021011,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021011,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1021011,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1021011,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1021011,canvec:min_size:CODE,1021011
+#line,CODE,1021011,canvec:min_size:area_sq_meter,---
+#line,CODE,1021011,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021011,canvec:min_size:length_meter,10
+#line,CODE,1021011,canvec:min_size:long_distance_meter,3
+#line,CODE,1021011,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021011,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021011,railway,abandoned
+line,CODE,1021011,bridge,yes
+#
+line,CODE,1021021,canvec:CODE,1021021
+#line,CODE,1021021,canvec:generic_code,1020009
+#line,CODE,1021021,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021021,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021021,canvec:value,Federal; standard; non-operational; bridge; multiple - ( Fédéral; normal; non opérationnel; pont; multiple )
+#line,CODE,1021021,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021021,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021021,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1021021,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1021021,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1021021,canvec:min_size:CODE,1021021
+#line,CODE,1021021,canvec:min_size:area_sq_meter,---
+#line,CODE,1021021,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021021,canvec:min_size:length_meter,10
+#line,CODE,1021021,canvec:min_size:long_distance_meter,3
+#line,CODE,1021021,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021021,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021021,railway,abandoned
+line,CODE,1021021,bridge,yes
+line,CODE,1021021,tracks,multiple
+#
+line,CODE,1021031,canvec:CODE,1021031
+#line,CODE,1021031,canvec:generic_code,1020009
+#line,CODE,1021031,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021031,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021031,canvec:value,Federal; standard; non-operational; bridge; single - ( Fédéral; normal; non opérationnel; pont; unique )
+#line,CODE,1021031,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021031,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021031,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1021031,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1021031,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1021031,canvec:min_size:CODE,1021031
+#line,CODE,1021031,canvec:min_size:area_sq_meter,---
+#line,CODE,1021031,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021031,canvec:min_size:length_meter,10
+#line,CODE,1021031,canvec:min_size:long_distance_meter,3
+#line,CODE,1021031,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021031,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021031,railway,abandoned
+line,CODE,1021031,bridge,yes
+line,CODE,1021031,tracks,single
+#**
+line,CODE,1021041,canvec:CODE,1021041
+#line,CODE,1021041,canvec:generic_code,1020009
+#line,CODE,1021041,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021041,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021041,canvec:value,Federal; standard; non-operational; tunnel; other - ( Fédéral; normal; non opérationnel; tunnel; autre )
+#line,CODE,1021041,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021041,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021041,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1021041,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1021041,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1021041,canvec:min_size:CODE,1021041
+#line,CODE,1021041,canvec:min_size:area_sq_meter,---
+#line,CODE,1021041,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021041,canvec:min_size:length_meter,10
+#line,CODE,1021041,canvec:min_size:long_distance_meter,3
+#line,CODE,1021041,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021041,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021041,railway,abandoned
+line,CODE,1021041,tunnel,yes
+#
+line,CODE,1021051,canvec:CODE,1021051
+#line,CODE,1021051,canvec:generic_code,1020009
+#line,CODE,1021051,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021051,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021051,canvec:value,Federal; standard; non-operational; tunnel; unknown - ( Fédéral; normal; non opérationnel; tunnel; inconnu )
+#line,CODE,1021051,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021051,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021051,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1021051,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1021051,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1021051,canvec:min_size:CODE,1021051
+#line,CODE,1021051,canvec:min_size:area_sq_meter,---
+#line,CODE,1021051,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021051,canvec:min_size:length_meter,10
+#line,CODE,1021051,canvec:min_size:long_distance_meter,3
+#line,CODE,1021051,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021051,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021051,railway,abandoned
+line,CODE,1021051,tunnel,yes
+#
+line,CODE,1021061,canvec:CODE,1021061
+#line,CODE,1021061,canvec:generic_code,1020009
+#line,CODE,1021061,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021061,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021061,canvec:value,Federal; standard; non-operational; tunnel; multiple - ( Fédéral; normal; non opérationnel; tunnel; multiple )
+#line,CODE,1021061,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021061,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021061,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1021061,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1021061,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1021061,canvec:min_size:CODE,1021061
+#line,CODE,1021061,canvec:min_size:area_sq_meter,---
+#line,CODE,1021061,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021061,canvec:min_size:length_meter,10
+#line,CODE,1021061,canvec:min_size:long_distance_meter,3
+#line,CODE,1021061,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021061,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021061,railway,abandoned
+line,CODE,1021061,tunnel,yes
+line,CODE,1021061,tracks,multiple
+#**
+line,CODE,1021071,canvec:CODE,1021071
+#line,CODE,1021071,canvec:generic_code,1020009
+#line,CODE,1021071,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021071,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021071,canvec:value,Federal; standard; non-operational; tunnel; single - ( Fédéral; normal; non opérationnel; tunnel; unique )
+#line,CODE,1021071,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021071,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021071,canvec:value_definition:Non-operational,Railway no longer suitable for rail traffic.
+#line,CODE,1021071,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1021071,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1021071,canvec:min_size:CODE,1021071
+#line,CODE,1021071,canvec:min_size:area_sq_meter,---
+#line,CODE,1021071,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021071,canvec:min_size:length_meter,10
+#line,CODE,1021071,canvec:min_size:long_distance_meter,3
+#line,CODE,1021071,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021071,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021071,railway,abandoned
+line,CODE,1021071,tunnel,yes
+line,CODE,1021071,tracks,single
+#
+line,CODE,1021081,canvec:CODE,1021081
+#line,CODE,1021081,canvec:generic_code,1020009
+#line,CODE,1021081,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021081,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021081,canvec:value,Federal; standard; operational; ground level; other - ( Fédéral; normal; opérationnel; au sol; autre )
+#line,CODE,1021081,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021081,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021081,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021081,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1021081,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1021081,canvec:min_size:CODE,1021081
+#line,CODE,1021081,canvec:min_size:area_sq_meter,---
+#line,CODE,1021081,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021081,canvec:min_size:length_meter,10
+#line,CODE,1021081,canvec:min_size:long_distance_meter,3
+#line,CODE,1021081,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021081,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021081,railway,rail
+#
+line,CODE,1021091,canvec:CODE,1021091
+#line,CODE,1021091,canvec:generic_code,1020009
+#line,CODE,1021091,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021091,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021091,canvec:value,Federal; standard; operational; ground level; unknown - ( Fédéral; normal; opérationnel; au sol; inconnu )
+#line,CODE,1021091,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021091,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021091,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021091,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1021091,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1021091,canvec:min_size:CODE,1021091
+#line,CODE,1021091,canvec:min_size:area_sq_meter,---
+#line,CODE,1021091,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021091,canvec:min_size:length_meter,10
+#line,CODE,1021091,canvec:min_size:long_distance_meter,3
+#line,CODE,1021091,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021091,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021091,railway,rail
+#
+line,CODE,1021101,canvec:CODE,1021101
+#line,CODE,1021101,canvec:generic_code,1020009
+#line,CODE,1021101,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021101,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021101,canvec:value,Federal standard operational ground level multiple - ( Fédéral normal opérationnel au sol multiple )
+#line,CODE,1021101,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021101,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021101,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021101,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1021101,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1021101,canvec:min_size:CODE,1021101
+#line,CODE,1021101,canvec:min_size:area_sq_meter,---
+#line,CODE,1021101,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021101,canvec:min_size:length_meter,10
+#line,CODE,1021101,canvec:min_size:long_distance_meter,3
+#line,CODE,1021101,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021101,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021101,railway,rail
+line,CODE,1021101,tracks,multiple
+#
+line,CODE,1021111,canvec:CODE,1021111
+#line,CODE,1021111,canvec:generic_code,1020009
+#line,CODE,1021111,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021111,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021111,canvec:value,Federal standard operational ground level single - ( Fédéral normal opérationnel au sol unique )
+#line,CODE,1021111,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021111,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021111,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021111,canvec:value_definition:Ground_level,Railway built directly at ground level.
+#line,CODE,1021111,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1021111,canvec:min_size:CODE,1021111
+#line,CODE,1021111,canvec:min_size:area_sq_meter,---
+#line,CODE,1021111,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021111,canvec:min_size:length_meter,10
+#line,CODE,1021111,canvec:min_size:long_distance_meter,3
+#line,CODE,1021111,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021111,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021111,railway,rail
+line,CODE,1021111,tracks,single
+#
+line,CODE,1021121,canvec:CODE,1021121
+#line,CODE,1021121,canvec:generic_code,1020009
+#line,CODE,1021121,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021121,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021121,canvec:value,Federal standard operational unknown other - ( Fédéral normal opérationnel inconnu autre )
+#line,CODE,1021121,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021121,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021121,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021121,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1021121,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1021121,canvec:min_size:CODE,1021121
+#line,CODE,1021121,canvec:min_size:area_sq_meter,---
+#line,CODE,1021121,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021121,canvec:min_size:length_meter,10
+#line,CODE,1021121,canvec:min_size:long_distance_meter,3
+#line,CODE,1021121,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021121,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021121,railway,rail
+#
+line,CODE,1021131,canvec:CODE,1021131
+#line,CODE,1021131,canvec:generic_code,1020009
+#line,CODE,1021131,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021131,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021131,canvec:value,Federal standard operational unknown unknown - ( Fédéral normal opérationnel inconnu inconnu )
+#line,CODE,1021131,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021131,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021131,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021131,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1021131,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1021131,canvec:min_size:CODE,1021131
+#line,CODE,1021131,canvec:min_size:area_sq_meter,---
+#line,CODE,1021131,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021131,canvec:min_size:length_meter,10
+#line,CODE,1021131,canvec:min_size:long_distance_meter,3
+#line,CODE,1021131,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021131,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021131,railway,rail
+#
+line,CODE,1021141,canvec:CODE,1021141
+#line,CODE,1021141,canvec:generic_code,1020009
+#line,CODE,1021141,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021141,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021141,canvec:value,Federal standard operational unknown multiple - ( Fédéral normal opérationnel inconnu multiple )
+#line,CODE,1021141,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021141,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021141,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021141,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1021141,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1021141,canvec:min_size:CODE,1021141
+#line,CODE,1021141,canvec:min_size:area_sq_meter,---
+#line,CODE,1021141,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021141,canvec:min_size:length_meter,10
+#line,CODE,1021141,canvec:min_size:long_distance_meter,3
+#line,CODE,1021141,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021141,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021141,railway,rail
+line,CODE,1021141,tracks,multiple
+#
+line,CODE,1021151,canvec:CODE,1021151
+#line,CODE,1021151,canvec:generic_code,1020009
+#line,CODE,1021151,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021151,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021151,canvec:value,Federal standard operational unknown single - ( Fédéral normal opérationnel inconnu unique )
+#line,CODE,1021151,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021151,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021151,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021151,canvec:value_definition:Unknown,Impossible to determine the railway support from the data source.
+#line,CODE,1021151,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1021151,canvec:min_size:CODE,1021151
+#line,CODE,1021151,canvec:min_size:area_sq_meter,---
+#line,CODE,1021151,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021151,canvec:min_size:length_meter,10
+#line,CODE,1021151,canvec:min_size:long_distance_meter,3
+#line,CODE,1021151,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021151,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021151,railway,rail
+line,CODE,1021151,tracks,single
+#
+line,CODE,1021161,canvec:CODE,1021161
+#line,CODE,1021161,canvec:generic_code,1020009
+#line,CODE,1021161,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021161,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021161,canvec:value,Federal standard operational snowshed other - ( Fédéral normal opérationnel paraneige autre )
+#line,CODE,1021161,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021161,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021161,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021161,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1021161,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1021161,canvec:min_size:CODE,1021161
+#line,CODE,1021161,canvec:min_size:area_sq_meter,---
+#line,CODE,1021161,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021161,canvec:min_size:length_meter,10
+#line,CODE,1021161,canvec:min_size:long_distance_meter,3
+#line,CODE,1021161,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021161,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021161,railway,rail
+line,CODE,1021161,snowshed,yes
+#
+line,CODE,1021171,canvec:CODE,1021171
+#line,CODE,1021171,canvec:generic_code,1020009
+#line,CODE,1021171,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021171,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021171,canvec:value,Federal standard operational snowshed unknown - ( Fédéral normal opérationnel paraneige inconnu )
+#line,CODE,1021171,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021171,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021171,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021171,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1021171,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1021171,canvec:min_size:CODE,1021171
+#line,CODE,1021171,canvec:min_size:area_sq_meter,---
+#line,CODE,1021171,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021171,canvec:min_size:length_meter,10
+#line,CODE,1021171,canvec:min_size:long_distance_meter,3
+#line,CODE,1021171,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021171,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021171,railway,rail
+line,CODE,1021171,snowshed,yes
+#
+line,CODE,1021181,canvec:CODE,1021181
+#line,CODE,1021181,canvec:generic_code,1020009
+#line,CODE,1021181,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021181,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021181,canvec:value,Federal standard operational snowshed multiple - ( Fédéral normal opérationnel paraneige multiple )
+#line,CODE,1021181,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021181,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021181,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021181,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1021181,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1021181,canvec:min_size:CODE,1021181
+#line,CODE,1021181,canvec:min_size:area_sq_meter,---
+#line,CODE,1021181,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021181,canvec:min_size:length_meter,10
+#line,CODE,1021181,canvec:min_size:long_distance_meter,3
+#line,CODE,1021181,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021181,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021181,railway,rail
+line,CODE,1021181,snowshed,yes
+line,CODE,1021181,tracks,multiple
+#
+line,CODE,1021191,canvec:CODE,1021191
+#line,CODE,1021191,canvec:generic_code,1020009
+#line,CODE,1021191,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021191,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021191,canvec:value,Federal standard operational snowshed single - ( Fédéral normal opérationnel paraneige unique )
+#line,CODE,1021191,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021191,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021191,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021191,canvec:value_definition:Snowshed,Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#line,CODE,1021191,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1021191,canvec:min_size:CODE,1021191
+#line,CODE,1021191,canvec:min_size:area_sq_meter,---
+#line,CODE,1021191,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021191,canvec:min_size:length_meter,10
+#line,CODE,1021191,canvec:min_size:long_distance_meter,3
+#line,CODE,1021191,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021191,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021191,railway,rail
+line,CODE,1021191,snowshed,yes
+line,CODE,1021191,tracks,single
+#
+line,CODE,1021201,canvec:CODE,1021201
+#line,CODE,1021201,canvec:generic_code,1020009
+#line,CODE,1021201,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021201,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021201,canvec:value,Federal standard operational bridge other - ( Fédéral normal opérationnel pont autre )
+#line,CODE,1021201,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021201,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021201,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021201,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1021201,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1021201,canvec:min_size:CODE,1021201
+#line,CODE,1021201,canvec:min_size:area_sq_meter,---
+#line,CODE,1021201,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021201,canvec:min_size:length_meter,10
+#line,CODE,1021201,canvec:min_size:long_distance_meter,3
+#line,CODE,1021201,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021201,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021201,railway,rail
+line,CODE,1021201,bridge,yes
+#
+line,CODE,1021211,canvec:CODE,1021211
+#line,CODE,1021211,canvec:generic_code,1020009
+#line,CODE,1021211,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021211,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021211,canvec:value,Federal standard operational bridge unknown - ( Fédéral normal opérationnel pont inconnu )
+#line,CODE,1021211,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021211,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021211,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021211,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1021211,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1021211,canvec:min_size:CODE,1021211
+#line,CODE,1021211,canvec:min_size:area_sq_meter,---
+#line,CODE,1021211,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021211,canvec:min_size:length_meter,10
+#line,CODE,1021211,canvec:min_size:long_distance_meter,3
+#line,CODE,1021211,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021211,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021211,railway,rail
+line,CODE,1021211,bridge,yes
+#
+line,CODE,1021221,canvec:CODE,1021221
+#line,CODE,1021221,canvec:generic_code,1020009
+#line,CODE,1021221,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021221,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021221,canvec:value,Federal standard operational bridge multiple - ( Fédéral normal opérationnel pont multiple )
+#line,CODE,1021221,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021221,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021221,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021221,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1021221,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1021221,canvec:min_size:CODE,1021221
+#line,CODE,1021221,canvec:min_size:area_sq_meter,---
+#line,CODE,1021221,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021221,canvec:min_size:length_meter,10
+#line,CODE,1021221,canvec:min_size:long_distance_meter,3
+#line,CODE,1021221,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021221,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021221,railway,rail
+line,CODE,1021221,bridge,yes
+line,CODE,1021221,tracks,multiple
+#
+line,CODE,1021231,canvec:CODE,1021231
+#line,CODE,1021231,canvec:generic_code,1020009
+#line,CODE,1021231,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021231,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021231,canvec:value,Federal standard operational bridge single - ( Fédéral normal opérationnel pont unique )
+#line,CODE,1021231,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021231,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021231,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021231,canvec:value_definition:Bridge,Railway built on a raised structure spanning an obstacle.
+#line,CODE,1021231,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1021231,canvec:min_size:CODE,1021231
+#line,CODE,1021231,canvec:min_size:area_sq_meter,---
+#line,CODE,1021231,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021231,canvec:min_size:length_meter,10
+#line,CODE,1021231,canvec:min_size:long_distance_meter,3
+#line,CODE,1021231,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021231,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021231,railway,rail
+line,CODE,1021231,bridge,yes
+line,CODE,1021231,tracks,single
+#
+line,CODE,1021241,canvec:CODE,1021241
+#line,CODE,1021241,canvec:generic_code,1020009
+#line,CODE,1021241,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021241,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021241,canvec:value,Federal standard operational tunnel other - ( Fédéral normal opérationnel tunnel autre )
+#line,CODE,1021241,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021241,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021241,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021241,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1021241,canvec:value_definition:Other,Any known railway section that is not categorized as multiple or unique; such as a siding; passing track; spur; etc.
+#line,CODE,1021241,canvec:min_size:CODE,1021241
+#line,CODE,1021241,canvec:min_size:area_sq_meter,---
+#line,CODE,1021241,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021241,canvec:min_size:length_meter,10
+#line,CODE,1021241,canvec:min_size:long_distance_meter,3
+#line,CODE,1021241,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021241,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021241,railway,rail
+line,CODE,1021241,tunnel,yes
+#
+line,CODE,1021251,canvec:CODE,1021251
+#line,CODE,1021251,canvec:generic_code,1020009
+#line,CODE,1021251,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021251,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021251,canvec:value,Federal standard operational tunnel unknown - ( Fédéral normal opérationnel tunnel inconnu )
+#line,CODE,1021251,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021251,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021251,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021251,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1021251,canvec:value_definition:Unknown,Impossible to determine the railway type from the data source.
+#line,CODE,1021251,canvec:min_size:CODE,1021251
+#line,CODE,1021251,canvec:min_size:area_sq_meter,---
+#line,CODE,1021251,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021251,canvec:min_size:length_meter,10
+#line,CODE,1021251,canvec:min_size:long_distance_meter,3
+#line,CODE,1021251,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021251,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021251,railway,rail
+line,CODE,1021251,tunnel,yes
+#
+line,CODE,1021261,canvec:CODE,1021261
+#line,CODE,1021261,canvec:generic_code,1020009
+#line,CODE,1021261,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021261,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021261,canvec:value,Federal standard operational tunnel multiple - ( Fédéral normal opérationnel tunnel multiple )
+#line,CODE,1021261,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021261,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021261,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021261,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1021261,canvec:value_definition:Multiple,More than one railway on the same roadbed.
+#line,CODE,1021261,canvec:min_size:CODE,1021261
+#line,CODE,1021261,canvec:min_size:area_sq_meter,---
+#line,CODE,1021261,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021261,canvec:min_size:length_meter,10
+#line,CODE,1021261,canvec:min_size:long_distance_meter,3
+#line,CODE,1021261,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021261,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021261,railway,rail
+line,CODE,1021261,tunnel,yes
+line,CODE,1021261,tracks,multiple
+#
+line,CODE,1021271,canvec:CODE,1021271
+#line,CODE,1021271,canvec:generic_code,1020009
+#line,CODE,1021271,canvec:entity,Railway - ( Chemin de fer )
+#line,CODE,1021271,canvec:entity_definition,Infrastructure including two steel rails set on crosspieces on which trains can travel.
+#line,CODE,1021271,canvec:value,Federal; standard; operational; tunnel; single - ( Fédéral; normal; opérationnel; tunnel; unique )
+#line,CODE,1021271,canvec:value_definition:Federal,Railway governed by federal laws.
+#line,CODE,1021271,canvec:value_definition:Standard,Railway with a gauge of 1.435 m.
+#line,CODE,1021271,canvec:value_definition:Operational,Any useable or used railway.
+#line,CODE,1021271,canvec:value_definition:Tunnel,Railway built in a cavity or underground structure to get through or under an obstacle.
+#line,CODE,1021271,canvec:value_definition:Single,Railroad with only one railway.
+#line,CODE,1021271,canvec:min_size:CODE,1021271
+#line,CODE,1021271,canvec:min_size:area_sq_meter,---
+#line,CODE,1021271,canvec:min_size:lat_distance_meter,6
+#line,CODE,1021271,canvec:min_size:length_meter,10
+#line,CODE,1021271,canvec:min_size:long_distance_meter,3
+#line,CODE,1021271,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,1021271,canvec:min_size:spike_angle_tollerance_degree,10
+line,CODE,1021271,railway,rail
+line,CODE,1021271,tunnel,yes
+line,CODE,1021271,tracks,single
+#
+#
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#point,VALDATE,,canvec:VALDATE,-
+#line,VALDATE,,canvec:VALDATE,-
+#outer,VALDATE,,canvec:VALDATE,-
+#inner,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#point,PROVIDER,1,canvec:PROVIDER,Other
+#point,PROVIDER,2,canvec:PROVIDER,Federal
+#point,PROVIDER,3,canvec:PROVIDER,Provincial_territorial
+#point,PROVIDER,4,canvec:PROVIDER,Municipal
+#line,PROVIDER,1,canvec:PROVIDER,Other
+#line,PROVIDER,2,canvec:PROVIDER,Federal
+#line,PROVIDER,3,canvec:PROVIDER,Provincial_territorial
+#line,PROVIDER,4,canvec:PROVIDER,Municipal
+#outer,PROVIDER,1,canvec:PROVIDER,Other
+#outer,PROVIDER,2,canvec:PROVIDER,Federal
+#outer,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#outer,PROVIDER,4,canvec:PROVIDER,Municipal
+#inner,PROVIDER,1,canvec:PROVIDER,Other
+#inner,PROVIDER,2,canvec:PROVIDER,Federal
+#inner,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#inner,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+point,ID,,canvec:UUID,-
+line,ID,,canvec:UUID,-
+outer,ID,,canvec:UUID,-
+inner,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+#point,DATANAME,,canvec:datasetName,-
+#line,DATANAME,,canvec:datasetName,-
+#outer,DATANAME,,canvec:datasetName,-
+#inner,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#point,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#line,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#outer,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#inner,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#
+#
+#GAUGE,N,3,0
+#Name Railway gauge
+#Definition Type of track based on the distance between the two rails.
+#Data type Integer
+#Domain [-1,1..3]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the gauge from the data source.
+#1 Narrow Railway with a gauge of 0.967 m.
+#2 Standard Railway with a gauge of 1.435 m.
+#3 Special A railway-like feature, such as a subway or miniature railway.
+#
+#
+#COMPETENCE,N,3,0
+#Name Competence
+#Definition Legislative authority of the railway.
+#Data type Integer
+#Domain [1,2]
+#Values Code Label Definition
+#1 Other Other than federal authority.
+#2 Federal Railway governed by federal laws.
+#
+#STATUS,N,3,0
+#Name Railway status
+#Definition Status of the railway.
+#Data type Integer
+#Domain [-1,1..3]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the railway status from the data source.
+#1 Under construction Railroad under construction when the field survey was carried out.
+#2 Non-operational Railway no longer suitable for rail traffic.
+#3 Operational Any useable or used railway.
+#
+#SUPPORT,N,3,0
+#Name Railway support
+#Definition Portion of a railway having a structure to cross an obstacle.
+#Data type Integer
+#Domain [-1,1..4]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the railway support from the data source.
+#1 Ground level Railway built directly at ground level.
+#2 Snowshed Roofed structure built over a railway in mountainous areas to protect railway from snow slides.
+#3 Bridge Railway built on a raised structure spanning an obstacle.
+#4 Tunnel Railway built in a cavity or underground structure to get through or under an obstacle.
+#
+#TYPE,N,3,0
+#Name Railway type
+#Definition Description of existing infrastructure.
+#Data type Integer
+#Domain [-1,1..3]
+#Values Code Label Definition
+#-1 Unknown Impossible to determine the railway type from the data source.
+#1 Other Any known railway section that is not categorized as multiple or unique, such as a siding, passing track, spur, etc.
+#2 Multiple More than one railway on the same roadbed.
+#3 Single Railroad with only one railway.
+#
+#
+#

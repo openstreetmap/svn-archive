@@ -1,0 +1,259 @@
+# last updated 3:43 PM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+# this script is for roads_segment_GeoBase.osm
+# Road segment
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+point,GEOMETRY,,GEOMETRY,-
+line,GEOMETRY,,GEOMETRY,-
+outer,GEOMETRY,,GEOMETRY,-
+inner,GEOMETRY,,GEOMETRY,-
+#
+# Attributes common to all entities (except those from GeoBase) 
+#
+#note,"CODE" is used to note all the other attributes for each feature
+#
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+point,CODE,,attribution,Natural Resources Canada
+point,CODE,,source,CanVec_Import_2009
+point,CODE,,created_by,canvec-to-osm
+point,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+line,CODE,1760011,attribution,Natural Resources Canada
+line,CODE,1760011,source,CanVec_Import_2009
+line,CODE,1760011,created_by,canvec-to-osm
+#line,CODE,1760011,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#outer,CODE,,attribution,Natural Resources Canada
+#outer,CODE,,source,CanVec_Import_2009
+#outer,CODE,,created_by,canvec-to-osm
+#outer,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#inner,CODE,,attribution,Natural Resources Canada
+#inner,CODE,,source,CanVec_Import_2009
+#inner,CODE,,created_by,canvec-to-osm
+#inner,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#ID,C,64
+line,ID,,canvec:UUID,-
+#
+#
+#
+#NAMEEN
+#Attributes related to toponymy (geographical names)
+#Name,English name
+#Definition,The English geographical name of the toponymic phenomenon.
+#Data type,Character (100)
+#Domain,An English toponym. If no English name exists, the French or Aboriginal name is provided, the priority is given to the French name. The field is left blank when not applicable or unknown.
+#point,NAMEEN,,name:EN,- *using english as the default language, change default language where appropriate
+#point,NAMEEN,,name,-
+#line,NAMEEN,,name,-
+#line,NAMEEN,,addr:street,-
+#outer,NAMEEN,,name,-
+#inner,NAMEEN,,name,-
+#
+point,L_STNAME,,name,-
+point,L_STNAME,,address:street:leftside,-
+point,R_STNAME,,address:street:rightside,-
+point,R_STNAME,,name2,-
+line,L_STNAME,,name,-
+line,L_STNAME,,address:street:leftside,-
+line,R_STNAME,,address:street:rightside,-
+line,R_STNAME,,name2,-
+#
+#NAMEFR
+#Name,French name
+#Definition,The French geographical name of the toponymic phenomenon.
+#Data type,Character (100)
+#Domain,An French toponym. If no French name exists, the English or Aboriginal name is provided, the priority is given to the English name. The field is left blank when not applicable or unknown.
+#line,NAMEFR,,name,- *using english as the default language, change default language where appropriate
+#point,NAMEFR,,name:fr,-
+#line,NAMEFR,,name:fr,-
+#line,NAMEFR,,addr:street,-
+#outer,NAMEFR,,name:fr,-
+#inner,NAMEFR,,name:fr,-
+#
+#
+#NAMEID
+#Name,Name ID
+#Definition,The geographical name identifier from the geographical name database.
+#Data type,Character (32)
+#Domain,A geographical name identifier. The field is left blank when not applicable or unknown.
+point,NAMEID,,canvec:NAMEID,-
+#line,NAMEID,,canvec:NAMEID,-
+#outer,NAMEID,,canvec:NAMEID,-
+#inner,NAMEID,,canvec:NAMEID,-
+#
+#
+#
+# Everything above this line is on all features
+# Everything below this line is on some features with SAME values
+# 
+#
+#geobaseNRN
+#CODE,N,10,0
+#Specification code
+#Entity specification code.
+#note,Road segment - ( Segment routier )	 
+#A road is a linear section of the earth designed for or the result of vehicular movement. 
+#A road segment is the specific representation of a portion of a road with uniform characteristics. 
+#When crossing roads are separated by grades, the bisecting road segments do not share a junction. 
+#Grade separated crossings between road segments involve road structure objects, that is, either bridges or tunnels. 
+#If a junction occurs at a grade separation, it is either connected to the lower set of road segments or to the higher, 
+#but never to both. Proposed roads are not represented.
+line,CODE,1760011,canvec:CODE,1760011
+line,CODE,1760011,highway,residential
+#
+#Values Code Label Definition
+#1 Freeway An unimpeded, high speed controlled access thoroughfare
+#for through traffic with typically no at grade intersections,
+#usually with no property access or direct access and which is
+#accessed by a ramp. Pedestrians prohibited.
+line,ROADCLASS,1,highway,trunk
+line,ROADCLASS,1,canvec:ROADCLASS,Freeway
+#
+#2 Expressway/Highway A high-speed thoroughfare with a combination of controlled
+#access intersections at any grade.
+line,ROADCLASS,2,highway,primary
+line,ROADCLASS,2,canvec:ROADCLASS,Expressway/Highway
+#
+#
+#3 Arterial A major thoroughfare with medium to large traffic capacity.
+#note: We chose this because across provinces the road classification changes.  And for osm
+# to be more clear, we kept it all as the same.  Of course, local mapper who know the road 
+#better, will be able to change it if they like.
+line,ROADCLASS,3,highway,secondary
+line,ROADCLASS,3,canvec:ROADCLASS,Arterial
+#
+#4 Collector A minor thoroughfare mainly used to access properties and to
+#feed traffic with right of way.
+line,ROADCLASS,4,highway,tertiary
+line,ROADCLASS,4,canvec:ROADCLASS,Collector
+#
+#5 Local/Street A low-speed thoroughfare dedicated to provide full access to
+#the front of properties.
+line,ROADCLASS,5,highway,residential
+line,ROADCLASS,5,canvec:ROADCLASS,Local/Street
+#
+#6 Local/Strata A low-speed thoroughfare dedicated to provide access to
+#properties with potential public restriction: trailer parks, First
+#Nations, strata, private estates.
+line,ROADCLASS,6,highway,unclassified
+line,ROADCLASS,6,canvec:ROADCLASS,Local/Strata
+#
+#7 Local/Unknown A low-speed thoroughfare dedicated to provide access to the
+#front of properties but for which the access regulations are
+#unknown.
+line,ROADCLASS,7,highway,unclassified
+line,ROADCLASS,7,canvec:ROADCLASS,Local/Unknown
+#
+#8 Alleyway/Lane A low-speed thoroughfare dedicated to provide access to the
+#rear of properties.
+line,ROADCLASS,8,highway,service
+line,ROADCLASS,8,canvec:ROADCLASS,Alleyway/Lane
+#
+#9 Ramp A system of interconnecting roadways providing for the
+#controlled movement between two or more roadways.
+line,ROADCLASS,9,highway,unclassified
+line,ROADCLASS,9,canvec:ROADCLASS,Ramp
+#
+#10 Resource/Recreation A narrow passage whose primary function is to provide
+#access for resource extraction and may also have serve in
+#providing public access to the backcountry.
+line,ROADCLASS,10,highway,unclassified
+line,ROADCLASS,10,canvec:ROADCLASS,Resource/Recreation
+#
+#11 Rapid transit A thoroughfare restricted to public transit buses.
+line,ROADCLASS,11,highway,unclassified
+line,ROADCLASS,11,canvec:ROADCLASS,Rapid transit
+#
+#12 Service lane A stretch of road permitting vehicles to come to a stop along
+#a freeway or highway. Scale, service lane, emergency lane,
+#lookout and rest area.
+line,ROADCLASS,12,highway,service
+line,ROADCLASS,12,canvec:ROADCLASS,Service lane
+#
+#13 Winter A road that is only useable during the winter when conditions
+#allow for passage over lakes, rivers and wetlands.
+# note: there was a heated debate about this..  as on the one hand, you need to get a permit
+# to cross... as it's super dangerious
+line,ROADCLASS,13,highway,unclassified
+line,ROADCLASS,13,canvec:ROADCLASS,Winter
+#
+#
+#NOLANES,N,3,0
+#Name Number of lanes
+#Definition The number of dedicated traffic lanes on a road surface.
+#Data type Integer
+#Domain [1..10]
+line,NOLANES,,lanes,-
+#
+#
+#
+#
+#STRUCTYPE,N,3,0
+#Values Code Label Definition
+#-1 Unknown A paved road with an unknown surface type.
+line,STRUCTYPE,-1,canvec:STRUCTYPE,Unknown
+#
+#
+#0 None No value applies.
+line,STRUCTYPE,0,canvec:STRUCTYPE,None
+#
+#1 Rigid A paved road with a rigid surface such as concrete.
+line,STRUCTYPE,1,surface,concrete
+line,STRUCTYPE,1,canvec:STRUCTYPE,Rigid
+#
+#2 Flexible A paved road with a flexible surface such as asphalt.
+line,STRUCTYPE,2,surface,asphalt
+line,STRUCTYPE,2,canvec:STRUCTYPE,Flexible
+#
+#3 Blocks A paved road with a surface made of blocks such as
+#cobblestones.
+line,STRUCTYPE,3,surface,blocks
+line,STRUCTYPE,3,canvec:STRUCTYPE,Blocks
+#
+#
+#PAVSTATUS,N,3,0
+#Name Pavement status
+#Definition The type of improvement applied to a road surface.
+#Data type Integer
+#Domain [1,2]
+#Values Code Label Definition
+#1 Paved A road with a surface made of hardened material such as
+#concrete, asphalt, tar gravel, or steel decks.
+line,PAVSTATUS,1,surface,paved
+#
+#2 Unpaved A road with a surface made of loose material such as gravel
+#or dirt.
+line,PAVSTATUS,2,surface,gravel
+#
+#
+#CODEPROV,C,2
+line,CODEPROV,,is_in:province,-
+#
+#
+#R_PLACENAM,C,100
+line,R_PLACENAM,,is_in,-
+#
+#
+#R_STNAME,C,100
+line,R_STNAME,,name,-
+#
+#RTENUMBER1,C,10
+line,RTENUMBER1,,ref,-

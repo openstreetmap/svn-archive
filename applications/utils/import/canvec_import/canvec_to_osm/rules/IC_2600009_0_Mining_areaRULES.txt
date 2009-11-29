@@ -1,0 +1,112 @@
+# IC_2600009_0_Mining_areaRULES.txt
+#
+# last updated 3:48 AM 10/19/2009
+# canvec-to-osm BETAv0.9.5.0
+# this script is to convert the canvec SHP file FO_2570009_1 to usable OSM format
+#
+point,CODE,,attribution,Natural Resources Canada
+line,CODE,,attribution,Natural Resources Canada
+line,CODE,,source,CanVec_Import_2009
+point,CODE,,source,CanVec_Import_2009
+line,CODE,,created_by,canvec-to-osm
+point,CODE,,created_by,canvec-to-osm
+#line,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+point,CODE,2600010,canvec:CODE,2600010
+#point,CODE,2600010,canvec:generic_code,2600009
+#point,CODE,2600010,canvec:entity,Mining area - ( Zone d'extraction de minerai )
+#point,CODE,2600010,canvec:entity_definition,Area or site where minerals are extracted; including sand; broken rock; gravel; and clay.
+#point,CODE,2600010,canvec:value,Mine underground operational - ( Mine souterraine opérationnelle )
+#point,CODE,2600010,canvec:value_definition:Mine,An excavation or tunnel in the earth from which mineral substances are extracted.
+#point,CODE,2600010,canvec:value_definition:Underground,Under the surface of the earth.
+#point,CODE,2600010,canvec:value_definition:Operational,Can be used or is in full operation.
+point,CODE,2600010,landuse,mining
+point,CODE,2600010,location,underground
+line,CODE,2600010,landuse,mining
+line,CODE,2600010,location,underground
+#
+#
+#VALDATE,C,8	
+#Name Validity date
+#line,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER,N,3,0	
+#Name Provider
+#line,PROVIDER,1,canvec:PROVIDER,Other
+#line,PROVIDER,2,canvec:PROVIDER,Federal
+#line,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#line,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID,C,64
+#Feature identifier
+line,ID,,canvec:UUID,-
+point,ID,,canvec:UUID,-
+#
+#
+#DATANAME,C,10	
+#Name Dataset name
+#line,DATANAME,,canvec:datasetname,-
+#
+#
+#ACCURACY,N,10,0	
+#Name Planimetric accuracy
+#line,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME,C,2	
+#Name Theme
+#line,THEME,FO,canvec:Theme,FO Relief and landforms
+#
+#
+#ELEVATION,N,10,0	
+#Name Hypsometric value
+#Definition Numerical value for the altitude.
+#Data type Integer
+#Measurement unit Foot
+#line,ELEVATION,,canvec:ELEVATION,-
+#line,ELEVATION,,ele,-
+#line,ELEVATION,,name,-
+#line,ELEVATION,,measurement_unit,foot
+#
+#
+#GENERATION,N,3,0	
+#Name 		Contour generation
+#Definition 	Method used to get the hypsometric value.
+#-1 Unknown 	Impossible to determine the generation method used.
+#line,GENERATION,-1,canvec:GENERATION,unknown
+#
+#1 Collected 	Contour directly compiled from the source material with a collection method during a data acquisition process.
+#line,GENERATION,1,canvec:GENERATION,collected
+#
+#2 Derived 	Other than collected.
+#line,GENERATION,2,canvec:GENERATION,derived
+#
+#
+#GEOMREP,N,3,0	
+#Name 		Geometric representation qualifier
+#Definition 	Identifies the nature of the entity's geometric representation.
+#1 Position definite 	Qualifies the planimetric position of all or part of the geometric representation of an entity occurrence when it is visible and discernable.
+#line,GEOMREP,1,canvec:GEOMREP,Position definite
+#
+#2 Position approximate Qualifies the planimetric position of all or part of the geometric representation of an entity occurrence when it is not visible or not clearly discernable on the data source.
+#line,GEOMREP,2,canvec:GEOMREP,Position approximate
+#
+#
+#TYPE,N,3,0	
+#Name 		Contour type
+#Definition 	Characteristics of the contour.
+#1 Depression 	Contour representing a depression in the terrain relief where no surface drainage exists.
+#line,TYPE,1,canvec:TYPE,depression
+#
+#2 Elevation 	Standard contour.
+#line,TYPE,2,canvec:TYPE,elevation
+#
+#
+#ALTIACCU,N,10,0
+#Name 		Altimetric accuracy
+#Definition 	Alimetric data accuracy expressed as the Linear Map Accuracy Standard (LMAS).
+#line,ALTIACCU,-1,canvec:ALTIACCU,unknown
+#line,ALTIACCU,,canvec:ALTIACCU,-

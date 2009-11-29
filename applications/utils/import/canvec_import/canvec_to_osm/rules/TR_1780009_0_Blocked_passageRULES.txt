@@ -1,0 +1,226 @@
+# last updated 3:44 PM 10/19/2009
+# TITLE canvec-to-osm script BETA v0.9.5.0
+# Note: This script omits the description tags.  Use rules_canvecMETAosm.txt for the full version.
+#
+# This is a comma-delimited format.
+#
+# Field:  Description:
+#      1  The shapefile types to match (outer, inner, line, point) (see below)
+#      2  The source attribute name to match
+#      3  The source attribute value to match. Can be empty to match all values.
+#      4  The name of the tag to apply when the source key/value pair match.
+#      5  The value of the tag to apply. Use a sinlgle dash ("-") to use the original value.
+#
+# The shape file types are:
+#  outer  = The outer polygon of a MultiPolygon
+#  inner  = The inner polygon of a MultiPolygon
+#  line   = A line string of a MultiLineString
+#  point  = A point of a PointString
+#
+#	
+#
+outer,GEOMETRY,,GEOMETRY,-
+inner,GEOMETRY,,GEOMETRY,-
+#
+# note,"CODE" is used to note all the other attributes for each feature
+#CODE
+#Name,Specification code
+#Definition,Entity specification code.
+#Data type,Integer
+#Domain [AAABBBG] => AAA = Unique value for each entity; BBB = Unique value for each combination of attribute values; G = Geometry indicator (0 = Point, 1 = Line, 2 = Area) or Generic code (9).
+point,CODE,,attribution,Natural Resources Canada
+point,CODE,,source,CanVec_Import_2009
+point,CODE,,created_by,canvec-to-osm
+#point,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+#
+#** Is in Geobase
+point,CODE,1780010,canvec:CODE,1780010
+point,CODE,1780010,canvec:generic_code,1780009
+point,CODE,1780010,canvec:entity,Blocked passage - ( Passage obstrué )
+point,CODE,1780010,canvec:entity_definition,A structure intentionally placed across a road to prevent or control further access.
+point,CODE,1780010,canvec:GeoBase,Yes
+#point,CODE,1780010,barrier,retaining_wall
+point,CODE,1780010,barrier,bollard
+point,CODE,1780010,bicyle,yes
+point,CODE,1780010,foot,yes
+point,CODE,1780010,horse,yes
+#
+#
+#VALDATE
+#Name,Validity date
+#Definition,Date of the data source used to create, revise or confirm an object. A source corresponds to any analog or digital document or field validation (e.g. aerial photography, imagery, GPS).
+#Data type,Character (8)
+#Domain,A date in the format YYYYMMDD. If the month or the day is unknown, the corresponding characters are left blank (e.g. 20060630, 200606, 2006). The whole field is left blank if unknown.
+#point,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER
+#Name,Provider
+#Definition,The affiliation of the organization that generated (created or revised) the object.
+#Data type,Integer
+#Domain,[1..4]
+#point,PROVIDER,1,canvec:PROVIDER,Other
+#point,PROVIDER,2,canvec:PROVIDER,Federal
+#point,PROVIDER,3,canvec:PROVIDER,Provincial_territorial
+#point,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#SOURCEID
+#Name,Source identifier
+#Definition,A unique national identifier.
+#Data type,Character (32)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+#point,SOURCEID,,canvec:SOURCEID_UUID,-
+#
+#ID
+#Name,Feature identifier
+#Definition,Identifier for the entity of the source database.
+#Data type,Character (64)
+#Domain,A string of 32 lowercase characters random based UUID (Universal unique identifier) generated without "-". Example: 69822b23d217494896014e57a2edb8ac.
+point,ID,,canvec:UUID,-
+#
+#
+#DATANAME
+#Name,Dataset name
+#Definition,Dataset identifier according to the National Topographic System (NTS).
+#Data type,Character (10)
+#Domain,[999A99] NTS identifier (6 characters).
+#point,DATANAME,,canvec:datasetName,-
+#
+#
+#ACCURACY
+#Name,Planimetric accuracy
+#Definition,Planimetric data accuracy expressed as the Circular Map Accuracy Standard (CMAS).
+#Data type,Integer
+#Domain,[-1,0..50] A real value equal or greater than the accuracy of the Landsat 7 Orthorectified product for the concerned area. Value "-1" is used when non applicable.
+#point,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#ACQTECH
+#Name,Acquisition technique
+#Definition,The type of data source or technique used to populate (create or revise) the data.
+#Data type,Integer
+#Domain,[-1,0,1..12]
+#point,ACQTECH,-1,canvec:ACQTECH,Unknown
+#point,ACQTECH,0,canvec:ACQTECH,None
+#point,ACQTECH,1,canvec:ACQTECH,Other
+#point,ACQTECH,2,canvec:ACQTECH,GPS
+#point,ACQTECH,3,canvec:ACQTECH,Orthoimage
+#point,ACQTECH,4,canvec:ACQTECH,Orthophoto
+#point,ACQTECH,5,canvec:ACQTECH,Vector data
+#point,ACQTECH,6,canvec:ACQTECH,Paper map
+#point,ACQTECH,7,canvec:ACQTECH,Field completion
+#point,ACQTECH,8,canvec:ACQTECH,Raster data
+#point,ACQTECH,9,canvec:ACQTECH,Digital elevation model
+#point,ACQTECH,10,canvec:ACQTECH,Aerial photo
+#point,ACQTECH,11,canvec:ACQTECH,Raw imagery data
+#point,ACQTECH,12,canvec:ACQTECH,Computed
+#
+#THEME
+#Name,Theme
+#Definition,Entity theme code.
+#Data type,Character (2)
+#Domain,[BS,EN,FO,HD,IC,LI,LX,SS,TO,TR,VE]
+#point,THEME,TR,canvec:Theme,TR Transportation
+#
+#STDVER,C,10
+#Name 		Standards version
+#Definition 	Version number of the GeoBase Product Specifications to which the dataset conforms.
+#point,STDVER,,canvec:STDVER,-
+#
+#ROADNID,C,32
+#Name Network linear network NID
+#Definition The source identifer or national identifier (NID) of the road segment along which the feature is located.
+#Data type UUID
+#Domain A UUID string representation (32 characters).
+#point,ROADNID,,canvec:ROADNID:UUID,-
+#
+#
+#TYPE,N,3,0
+#Name Blocked passage type
+#Definition The characteristics of the blocked passage.
+#Data type Integer
+#Domain [-1,1,2]
+#Values Code Label Definition
+#-1 Unknown A blocked passage for which the specific type is unknown.
+#point,TYPE,-1,canvec:TYPE,Unknown
+#
+#1 Removable A manmade obstacle placed across a road and designed to easily allow further access when so desired.
+#point,TYPE,1,canvce:TYPE,Removable
+#
+#2 Permanently fixed An obstacle placed across a road that must be demolished or removed with heavy equipment in order to allow further
+#access. Examples of permanently fixed blocked passage are concrete blocks or a mound of earth.
+#point,TYPE,2,canvec:TYPE,Permanently_fixed
+#
+#
+#
+#CODEPROV,C,2
+#Name 		Province/territory code
+#Definition 	Canadian province or territory code.
+#AB AB 	Alberta
+#point,CODEPROV,AB,canvec:CODEPROV,Alberta
+#point,CODEPROV,AB,is_in,Alberta
+#point,CODEPROV,AB,addr:province,Alberta
+#
+#point,CODEPROV,BC,canvec:CODEPROV,British Columbia
+#point,CODEPROV,BC,is_in,British Columbia
+#point,CODEPROV,BC,addr:province,British Columbia
+#
+#point,CODEPROV,MB,canvec:CODEPROV,Manitoba
+#point,CODEPROV,MB,is_in,Manitoba
+#point,CODEPROV,MB,addr:province,Manitoba
+#
+#point,CODEPROV,NB,CODEPROV,New Brunswick
+#point,CODEPROV,NB,is_in,New Brunswick
+#point,CODEPROV,NB,addr:province,New Brunswick
+#
+#point,CODEPROV,NL,canvec:CODEPROV,Newfoundland and Labrador
+#point,CODEPROV,NL,is_in,Newfoundland and Labrador
+#point,CODEPROV,NL,addr:province,Newfoundland and Labrador
+#
+#point,CODEPROV,NS,canvec:CODEPROV,Nova Scotia
+#point,CODEPROV,NS,is_in,Nova Scotia
+#point,CODEPROV,NS,addr:province,Nova Scotia
+#
+#point,CODEPROV,NT,canvec:CODEPROV,Northwest Territories
+#point,CODEPROV,NT,is_in,Northwest Territories
+#point,CODEPROV,NT,addr:province,Northwest Territories
+#
+#point,CODEPROV,NU,canvec:CODEPROV,Nunavut
+#point,CODEPROV,NU,is_in,Nunavut
+#point,CODEPROV,NU,addr:province,Nunavut
+#
+#point,CODEPROV,ON,canvec:CODEPROV,Ontario
+#point,CODEPROV,ON,is_in,Ontario
+#point,CODEPROV,ON,addr:province,Ontario
+#
+#point,CODEPROV,PE,canvec:CODEPROV,Prince Edward Island
+#point,CODEPROV,PE,is_in,Prince Edward Island
+#point,CODEPROV,PE,addr:province,Prince Edward Island
+#
+#point,CODEPROV,QC,canvec:CODEPROV,Quebec
+#point,CODEPROV,QC,is_in,Quebec
+#point,CODEPROV,QC,addr:province,Quebec
+#
+#point,CODEPROV,SK,canvec:CODEPROV,Saskatchewan
+#point,CODEPROV,SK,is_in,Saskatchewan
+#point,CODEPROV,SK,addr:province,Saskatchewan
+#
+#point,CODEPROV,YT,canvec:CODEPROV,Yukon
+#point,CODEPROV,YT,is_in,Yukon
+#point,CODEPROV,YT,addr:province,Yukon
+#
+#
+#
+#CREDATE,C,8	
+#Name 	Creation date
+#Definition 	The date of data creation.
+#point,CREDATE,,canvec:CREDATE,-
+#
+#
+#REVDATE,C,8
+#Name 		Revision date
+#Definition 	The date of data revision.
+#point,REVDATE,,canvec:REVDATE,-
+#

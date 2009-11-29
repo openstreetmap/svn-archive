@@ -1,0 +1,186 @@
+# FO_2570009_1_Contour_imperialRULES.txt
+#
+# last updated 3:43 AM 10/19/2009
+# this script is to convert the canvec SHP file FO_2570009_1 to usable OSM format
+#
+line,CODE,,attribution,Natural Resources Canada
+line,CODE,,source,CanVec_Import_2009
+line,CODE,,created_by,canvec-to-osm
+#line,CODE,,canvec:source,CanVec_Feature_Catalogue_Edition_1_0_2.pdf
+#
+#
+line,CODE,2570011,canvec:CODE,2570011
+#line,CODE,2570011,canvec:generic_code,2570009
+#line,CODE,2570011,canvec:entity,Contour imperial - ( Courbe de niveau impériale )
+#line,CODE,2570011,canvec:entity_definition,A continuous line formed of vertices located at a constant elevation from mean sea level (MSL) to describe terrain relief
+#line,CODE,2570011,canvec:value,Elevation collected - ( Élévation capté )
+#line,CODE,2570011,canvec:value_definition:Elevation,Standard contour.
+#line,CODE,2570011,canvec:value_definition:Collected,Contour directly compiled from the source material with a collection method during a data acquisition process.
+#line,CODE,2570011,canvec:min_size:CODE,2570011
+#line,CODE,2570011,canvec:min_size:area_sq_meter,---
+#line,CODE,2570011,canvec:min_size:lat_distance_meter,1
+#line,CODE,2570011,canvec:min_size:length_meter,20
+#line,CODE,2570011,canvec:min_size:long_distance_meter,---
+#line,CODE,2570011,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,2570011,canvec:min_size:spike_angle_tollerance_degree,10
+line,ELEVATION,,ele,-
+#
+line,CODE,2570021,canvec:CODE,2570021
+#line,CODE,2570021,canvec:generic_code,2570009
+#line,CODE,2570021,canvec:entity,Contour imperial - ( Courbe de niveau impériale )
+#line,CODE,2570021,canvec:entity_definition,A continuous line formed of vertices located at a constant elevation from mean sea level (MSL) to describe terrain relief
+#line,CODE,2570021,canvec:value,Elevation derived - ( Élévation dérivé )
+#line,CODE,2570021,canvec:value_definition:Elevation,Standard contour.
+#line,CODE,2570021,canvec:value_definition:Derived,Other than collected.
+#line,CODE,2570021,canvec:min_size:CODE,2570021
+#line,CODE,2570021,canvec:min_size:area_sq_meter,---
+#line,CODE,2570021,canvec:min_size:lat_distance_meter,1
+#line,CODE,2570021,canvec:min_size:length_meter,20
+#line,CODE,2570021,canvec:min_size:long_distance_meter,---
+#line,CODE,2570021,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,2570021,canvec:min_size:spike_angle_tollerance_degree,10
+#
+line,CODE,2570031,canvec:CODE,2570031
+#line,CODE,2570031,canvec:generic_code,2570009
+#line,CODE,2570031,canvec:entity,Contour imperial - ( Courbe de niveau impériale )
+#line,CODE,2570051,canvec:entity_definition,A continuous line formed of vertices located at a constant elevation from mean sea level (MSL) to describe terrain relief
+#line,CODE,2570031,canvec:value,Elevation unknown - ( Élévation inconnu )
+#line,CODE,2570031,canvec:value_definition:Elevation,Standard contour.
+#line,CODE,2570031,canvec:value_definition:Unknown,Impossible to determine the generation method used.
+#line,CODE,2570031,canvec:min_size:CODE,2570031
+#line,CODE,2570031,canvec:min_size:area_sq_meter,---
+#line,CODE,2570031,canvec:min_size:lat_distance_meter,1
+#line,CODE,2570031,canvec:min_size:length_meter,20
+#line,CODE,2570031,canvec:min_size:long_distance_meter,---
+#line,CODE,2570031,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,2570031,canvec:min_size:spike_angle_tollerance_degree,10
+#
+line,CODE,2570041,canvec:CODE,2570041
+#line,CODE,2570041,canvec:generic_code,2570009
+#line,CODE,2570041,canvec:entity,Contour imperial - ( Courbe de niveau impériale )
+#line,CODE,2570051,canvec:entity_definition,A continuous line formed of vertices located at a constant elevation from mean sea level (MSL) to describe terrain relief
+#line,CODE,2570041,canvec:value,Depression collected - ( Dépression capté )
+#line,CODE,2570041,canvec:value_definition:Depression,Contour representing a depression in the terrain relief where no surface drainage exists.
+#line,CODE,2570041,canvec:value_definition:Collected,Contour directly compiled from the source material with a collection method during a data acquisition process.
+#line,CODE,2570041,canvec:min_size:CODE,2570041
+#line,CODE,2570041,canvec:min_size:area_sq_meter,---
+#line,CODE,2570041,canvec:min_size:lat_distance_meter,1
+#line,CODE,2570041,canvec:min_size:length_meter,20
+#line,CODE,2570041,canvec:min_size:long_distance_meter,---
+#line,CODE,2570041,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,2570041,canvec:min_size:spike_angle_tollerance_degree,10
+#
+line,CODE,2570051,canvec:CODE,2570051
+#line,CODE,2570051,canvec:generic_code,2570009
+#line,CODE,2570051,canvec:entity,Contour imperial - ( Courbe de niveau impériale )
+#line,CODE,2570051,canvec:entity_definition,A continuous line formed of vertices located at a constant elevation from mean sea level (MSL) to describe terrain relief
+#line,CODE,2570051,canvec:value,Depression derived - ( Dépression dérivé )
+#line,CODE,2570051,canvec:value_definition:Depression,Contour representing a depression in the terrain relief where no surface drainage exists.
+#line,CODE,2570051,canvec:value_definition:Derived,Other than collected.
+#line,CODE,2570051,canvec:min_size:CODE,2570051
+#line,CODE,2570051,canvec:min_size:area_sq_meter,---
+#line,CODE,2570051,canvec:min_size:lat_distance_meter,1
+#line,CODE,2570051,canvec:min_size:length_meter,20
+#line,CODE,2570051,canvec:min_size:long_distance_meter,---
+#line,CODE,2570051,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,2570051,canvec:min_size:spike_angle_tollerance_degree,10
+#
+line,CODE,2570061,canvec:CODE,2570061
+#line,CODE,2570061,canvec:generic_code,2570009
+#line,CODE,2570061,canvec:entity,Contour imperial - ( Courbe de niveau impériale )
+#line,CODE,2570061,canvec:entity_definition,A continuous line formed of vertices located at a constant elevation from mean sea level (MSL) to describe terrain relief
+#line,CODE,2570061,canvec:value,Depression unknown - ( Dépression inconnu )
+#line,CODE,2570061,canvec:value_definition:Depression,Contour representing a depression in the terrain relief where no surface drainage exists; Impossible to determine the generation method used.
+#line,CODE,2570061,canvec:value_definition:Unknown,Impossible to determine the generation method used.
+#line,CODE,2570061,canvec:min_size:CODE,2570061
+#line,CODE,2570061,canvec:min_size:area_sq_meter,---
+#line,CODE,2570061,canvec:min_size:lat_distance_meter,1
+#line,CODE,2570061,canvec:min_size:length_meter,20
+#line,CODE,2570061,canvec:min_size:long_distance_meter,---
+#line,CODE,2570061,canvec:min_size:right_angle_tollerance_degree,---
+#line,CODE,2570061,canvec:min_size:spike_angle_tollerance_degree,10
+#
+#
+#
+#VALDATE,C,8	
+#Name Validity date
+#line,VALDATE,,canvec:VALDATE,-
+#
+#
+#PROVIDER,N,3,0	
+#Name Provider
+#line,PROVIDER,1,canvec:PROVIDER,Other
+#line,PROVIDER,2,canvec:PROVIDER,Federal
+#line,PROVIDER,3,canvec:PROVIDER,Provincial/territorial
+#line,PROVIDER,4,canvec:PROVIDER,Municipal
+#
+#
+#ID,C,64
+#Feature identifier
+line,ID,,canvec:UUID,-
+#
+#
+#DATANAME,C,10	
+#Name Dataset name
+#line,DATANAME,,canvec:datasetname,-
+#
+#
+#ACCURACY,N,10,0	
+#Name Planimetric accuracy
+#line,ACCURACY,,canvec:Planimetric Accuracy (CMAS),-
+#
+#
+#THEME,C,2	
+#Name Theme
+#line,THEME,FO,canvec:Theme,FO Relief and landforms
+#
+#
+#ELEVATION,N,10,0	
+#Name Hypsometric value
+#Definition Numerical value for the altitude.
+#Data type Integer
+#Measurement unit Foot
+#line,ELEVATION,,canvec:ELEVATION,-
+line,ELEVATION,,ele,-
+#line,ELEVATION,,name,-
+line,ELEVATION,,measurement_unit,foot
+#
+#
+#GENERATION,N,3,0	
+#Name 		Contour generation
+#Definition 	Method used to get the hypsometric value.
+#-1 Unknown 	Impossible to determine the generation method used.
+#line,GENERATION,-1,canvec:GENERATION,unknown
+#
+#1 Collected 	Contour directly compiled from the source material with a collection method during a data acquisition process.
+#line,GENERATION,1,canvec:GENERATION,collected
+#
+#2 Derived 	Other than collected.
+#line,GENERATION,2,canvec:GENERATION,derived
+#
+#
+#GEOMREP,N,3,0	
+#Name 		Geometric representation qualifier
+#Definition 	Identifies the nature of the entity's geometric representation.
+#1 Position definite 	Qualifies the planimetric position of all or part of the geometric representation of an entity occurrence when it is visible and discernable.
+#line,GEOMREP,1,canvec:GEOMREP,Position definite
+#
+#2 Position approximate Qualifies the planimetric position of all or part of the geometric representation of an entity occurrence when it is not visible or not clearly discernable on the data source.
+#line,GEOMREP,2,canvec:GEOMREP,Position approximate
+#
+#
+#TYPE,N,3,0	
+#Name 		Contour type
+#Definition 	Characteristics of the contour.
+#1 Depression 	Contour representing a depression in the terrain relief where no surface drainage exists.
+#line,TYPE,1,canvec:TYPE,depression
+#
+#2 Elevation 	Standard contour.
+#line,TYPE,2,canvec:TYPE,elevation
+#
+#
+#ALTIACCU,N,10,0
+#Name 		Altimetric accuracy
+#Definition 	Alimetric data accuracy expressed as the Linear Map Accuracy Standard (LMAS).
+#line,ALTIACCU,-1,canvec:ALTIACCU,unknown
+#line,ALTIACCU,,canvec:ALTIACCU,-

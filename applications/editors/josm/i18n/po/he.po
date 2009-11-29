@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-29 13:30+0100\n"
+"POT-Creation-Date: 2009-11-29 16:20+0100\n"
 "PO-Revision-Date: 2009-10-17 15:07+0000\n"
 "Last-Translator: Tsvi Mostovicz <ttmost@gmail.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-29 12:15+0000\n"
+"X-Launchpad-Export-Date: 2009-11-29 21:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:207
@@ -73,7 +73,7 @@ msgstr "מתעלם מ-URL לא תקין: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:192
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:378
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:355
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:763
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:801
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:739
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:71
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:234
@@ -140,7 +140,7 @@ msgstr "<html>אין אפשרות לקרוא קובץ''{0}''.<br>הודעת שג
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:755
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:802
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:809
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1036
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1074
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:251
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:345
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:242
@@ -332,7 +332,7 @@ msgstr "המשך"
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersDialog.java:284
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:516
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadSelectionDialog.java:267
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:165
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:167
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:239
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:201
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:738
@@ -376,8 +376,8 @@ msgstr "מזג"
 #: ../core/src/org/openstreetmap/josm/actions/AbstractMergeAction.java:85
 #, java-format
 msgid ""
-"<html>There are no layers the source layer<br>''{0}''<br>could be merged to."
-"</html>"
+"<html>There are no layers the source layer<br>''{0}''<br>could be merged "
+"to.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractMergeAction.java:86
@@ -445,25 +445,23 @@ msgid "Please enter a valid latitude in the range -90..90"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:228
-#, fuzzy
 msgid "Please enter a latitude in the range -90..90"
-msgstr "הזן שם משתמש"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:236
 msgid "Please enter a valid longitude in the range -180..180"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:239
-#, fuzzy
 msgid "Please enter a longitude in the range -180..180"
-msgstr "הזן שם משתמש"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:275
 #: ../core/src/org/openstreetmap/josm/actions/upload/RelationUploadOrderHook.java:88
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:80
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:325
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1129
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:165
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:167
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:368
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:239
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:201
@@ -608,8 +606,8 @@ msgstr "קרב את התצוגה לכדי {0}."
 
 #: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:57
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:17
-#: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:17
-#: ../core/src/org/openstreetmap/josm/actions/ZoomOutAction.java:17
+#: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:23
+#: ../core/src/org/openstreetmap/josm/actions/ZoomOutAction.java:20
 #, java-format
 msgid "View: {0}"
 msgstr "תצוגה: {0}"
@@ -1447,7 +1445,8 @@ msgid "Show Status Report"
 msgstr "הצג דו\"ח מצב"
 
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:41
-msgid "Show status report with useful information that can be attached to bugs"
+msgid ""
+"Show status report with useful information that can be attached to bugs"
 msgstr "הצג דו\"ח מצב עם מידע שימושי שיכול ליהיות מצורף לבאגים"
 
 #: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:42
@@ -1590,7 +1589,8 @@ msgid "* One node that is used by more than one way, or"
 msgstr "* נקודה אחת המשותפת ליותר מדרך אחת, או"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:119
-msgid "* One node that is used by more than one way and one of those ways, or"
+msgid ""
+"* One node that is used by more than one way and one of those ways, or"
 msgstr "* נקודה אחת המשותפת ליותר מדרך אחת ואחת מהדרכים הללו, או"
 
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:120
@@ -1664,9 +1664,9 @@ msgid "Updates the objects in the active data layer from the server."
 msgstr ""
 
 #. bounds defined? => use the bbox downloader
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/actions/UpdateDataAction.java:85
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:943
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:981
 msgid "Download data"
 msgstr ""
 
@@ -1756,10 +1756,11 @@ msgid ""
 "<html>Uploading <strong>failed</strong> because the server has a newer "
 "version of one<br>of your nodes, ways, or relations.<br>The conflict is "
 "caused by the <strong>{0}</strong> with id <strong>{1}</strong>,<br>the "
-"server has version {2}, your version is {3}.<br><br>Click <strong>{4}</"
-"strong> to synchronize the conflicting primitive only.<br>Click <strong>{5}</"
-"strong> to synchronize the entire local dataset with the server.<br>Click "
-"<strong>{6}</strong> to abort and continue editing.<br></html>"
+"server has version {2}, your version is {3}.<br><br>Click "
+"<strong>{4}</strong> to synchronize the conflicting primitive only.<br>Click "
+"<strong>{5}</strong> to synchronize the entire local dataset with the "
+"server.<br>Click <strong>{6}</strong> to abort and continue "
+"editing.<br></html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:268
@@ -1772,9 +1773,10 @@ msgstr ""
 #, java-format
 msgid ""
 "<html>Uploading <strong>failed</strong> because the server has a newer "
-"version of one<br>of your nodes, ways, or relations.<br><br>Click <strong>{0}"
-"</strong> to synchronize the entire local dataset with the server.<br>Click "
-"<strong>{1}</strong> to abort and continue editing.<br></html>"
+"version of one<br>of your nodes, ways, or relations.<br><br>Click "
+"<strong>{0}</strong> to synchronize the entire local dataset with the "
+"server.<br>Click <strong>{1}</strong> to abort and continue "
+"editing.<br></html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:330
@@ -1831,7 +1833,7 @@ msgid "Uploading data for layer ''{0}''"
 msgstr ""
 
 #. we tried to delete an already deleted primitive.
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:611
 #, java-format
 msgid ""
@@ -1851,7 +1853,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:649
 #, java-format
-msgid "Ignoring caught exception because upload is canceled. Exception is: {0}"
+msgid ""
+"Ignoring caught exception because upload is canceled. Exception is: {0}"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:45
@@ -1888,13 +1891,18 @@ msgstr ""
 msgid "Toggle Wireframe view"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:16
-#: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:17
+#. make numpad + behave like + (action is already registred)
+#: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:20
+#: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:22
+#: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:23
+#: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:28
 msgid "Zoom In"
 msgstr "התקרב"
 
-#: ../core/src/org/openstreetmap/josm/actions/ZoomOutAction.java:16
-#: ../core/src/org/openstreetmap/josm/actions/ZoomOutAction.java:17
+#. make numpad - behave like -
+#: ../core/src/org/openstreetmap/josm/actions/ZoomOutAction.java:19
+#: ../core/src/org/openstreetmap/josm/actions/ZoomOutAction.java:20
+#: ../core/src/org/openstreetmap/josm/actions/ZoomOutAction.java:23
 msgid "Zoom Out"
 msgstr "התרחק"
 
@@ -2028,8 +2036,8 @@ msgid ""
 "<html>There are {0} primitives in your local dataset which<br>might be "
 "deleted on the server. If you later try to delete or<br>update them the "
 "server is likely to report a<br>conflict.<br><br>Click <strong>{1}</strong> "
-"to check the state of these primitives<br>on the server.<br>Click <strong>{2}"
-"</strong> to ignore.<br></html>"
+"to check the state of these primitives<br>on the server.<br>Click "
+"<strong>{2}</strong> to ignore.<br></html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTaskList.java:183
@@ -2178,8 +2186,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/PlayHeadDragMode.java:82
 msgid ""
-"Drag play head and release near track to play audio from there; SHIFT"
-"+release to synchronize audio at that point."
+"Drag play head and release near track to play audio from there; "
+"SHIFT+release to synchronize audio at that point."
 msgstr ""
 "גרור את ראש הנגינה ושחרר ליד הרצועה המבוקשת לניגון שמע ממנה; SHIFT+שחרור "
 "לסנכרון השמע בנקודה זו."
@@ -2275,7 +2283,7 @@ msgid "Search for objects."
 msgstr "חיפוש אחר פריטים."
 
 #. -- prepare the combo box with the search expressions
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:77
 msgid "Please enter a filter string."
 msgstr ""
@@ -2804,9 +2812,9 @@ msgstr[1] ""
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:443
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:139
 msgid ""
-"You are about to delete nodes outside of the area you have downloaded."
-"<br>This can cause problems because other objects (that you don't see) might "
-"use them.<br>Do you really want to delete?"
+"You are about to delete nodes outside of the area you have "
+"downloaded.<br>This can cause problems because other objects (that you don't "
+"see) might use them.<br>Do you really want to delete?"
 msgstr ""
 "אתה עומד למחוק נקודות מחוץ לשטח שהורדת.<br>זה עלול לגרום לבעיות כיוון שעצמים "
 "אחרים {שאתה לא רואה) עשויים להשתמש בהם.<br>האם אתה באמת רוצה למחוק?"
@@ -3075,8 +3083,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:452
 #, java-format
 msgid ""
-"<html>Preferences file had errors.<br> Making backup of old one to <br>{0}"
-"<br> and creating a new default preference file.</html>"
+"<html>Preferences file had errors.<br> Making backup of old one to "
+"<br>{0}<br> and creating a new default preference file.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:462
@@ -3157,14 +3165,14 @@ msgstr ""
 
 #. *
 #. * the decimal format 999.999
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/data/coor/CoordinateFormat.java:15
 msgid "Decimal Degrees"
 msgstr "מעלות עשרוניות"
 
 #. *
 #. * the minutes/seconds format 99" 99'
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/data/coor/CoordinateFormat.java:20
 msgid "Degrees Minutes Seconds"
 msgstr "מעלות דקות שניות"
@@ -3237,7 +3245,7 @@ msgid "Missing merge target of type {0} with id {1}"
 msgstr ""
 
 #. should not happen
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:254
 #, java-format
 msgid ""
@@ -3384,7 +3392,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/history/HistoryOsmPrimitive.java:114
 #, java-format
-msgid "Can''t compare primitive with ID ''{0}'' to primitive with ID ''{1}''."
+msgid ""
+"Can''t compare primitive with ID ''{0}'' to primitive with ID ''{1}''."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/history/HistoryRelation.java:89
@@ -3535,7 +3544,7 @@ msgstr "לא פעיל"
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:98
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:98
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:562
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:49
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:50
 msgid "node"
 msgid_plural "nodes"
 msgstr[0] "צומת"
@@ -3543,7 +3552,7 @@ msgstr[1] "צמתים"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:99
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:562
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:61
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:62
 msgid "way"
 msgid_plural "ways"
 msgstr[0] "דרך"
@@ -3552,7 +3561,7 @@ msgstr[1] "דרכים"
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/SimplePaintVisitor.java:100
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:157
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:562
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:71
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:72
 msgid "relation"
 msgid_plural "relations"
 msgstr[0] "יחס"
@@ -3684,7 +3693,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:55
 #, java-format
-msgid "<html>Could not read bookmarks from<br>''{0}''<br>Error was: {1}</html>"
+msgid ""
+"<html>Could not read bookmarks from<br>''{0}''<br>Error was: {1}</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:78
@@ -3698,7 +3708,7 @@ msgid "Do not show again"
 msgstr "אל תציג שוב"
 
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:76
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:81
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:82
 #, java-format
 msgid " [id: {0}]"
 msgstr ""
@@ -4204,21 +4214,21 @@ msgstr ""
 
 #. *
 #. * compare my version of an {@see OsmPrimitive} with their version
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ComparePairType.java:17
 msgid "My with Their"
 msgstr "שלי עם שלהם"
 
 #. *
 #. * compare my version of an {@see OsmPrimitive} with the merged version
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ComparePairType.java:22
 msgid "My with Merged"
 msgstr "שלי עם המיזוג"
 
 #. *
 #. * compare their version of an {@see OsmPrimitive} with the merged veresion
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ComparePairType.java:27
 msgid "Their with Merged"
 msgstr "שלהם עם המיזוג"
@@ -4418,7 +4428,8 @@ msgid ""
 msgstr "העתק את האלמנט הנבחר שלהם לתחילת רשימת האלמנטים הממוזגים"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:547
-msgid "Copy their selected elements to the end of the list of merged elements."
+msgid ""
+"Copy their selected elements to the end of the list of merged elements."
 msgstr "העתק את האלמנטים הנבחרים שלהם לסוף רשימת האלמנטים הממוזגים"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:569
@@ -4489,15 +4500,15 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:781
 #, java-format
 msgid ""
-"<html>Click <strong>{0}</strong> to start merging my and their entries.</"
-"html>"
+"<html>Click <strong>{0}</strong> to start merging my and their "
+"entries.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:786
 #, java-format
 msgid ""
-"<html>Click <strong>{0}</strong> to finish merging my and their entries.</"
-"html>"
+"<html>Click <strong>{0}</strong> to finish merging my and their "
+"entries.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:804
@@ -4552,8 +4563,8 @@ msgstr "אינדקס טור לא צפוי. התקבל {0}"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:419
 #, java-format
 msgid ""
-"<html>An error occurred while communicating with the server<br>Details: {0}</"
-"html>"
+"<html>An error occurred while communicating with the server<br>Details: "
+"{0}</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:423
@@ -4584,9 +4595,9 @@ msgstr "בטל מחיקת נקודות נוספות?"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:499
 #, java-format
 msgid ""
-"<html>There are {0} additional primitives referred to by relation {1}"
-"<br>which are deleted on the server.<br><br>Do you want to undelete them too?"
-"</html>"
+"<html>There are {0} additional primitives referred to by relation "
+"{1}<br>which are deleted on the server.<br><br>Do you want to undelete them "
+"too?</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:504
@@ -5156,11 +5167,12 @@ msgstr "המשך לפתור"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:217
 #, java-format
 msgid ""
-"<html>You didn''t finish to merge the differences in this conflict."
-"<br>Conflict resolutions won't be applied unless all differences<br>are "
-"resolved.Click <strong>{0}</strong> to close anyway."
-"<strong>Already<br>resolved differences won't be applied.</strong><br>Click "
-"<strong>{1}</strong> to return to resolving conflicts.</html>"
+"<html>You didn''t finish to merge the differences in this "
+"conflict.<br>Conflict resolutions won't be applied unless all "
+"differences<br>are resolved.Click <strong>{0}</strong> to close "
+"anyway.<strong>Already<br>resolved differences won't be "
+"applied.</strong><br>Click <strong>{1}</strong> to return to resolving "
+"conflicts.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:225
@@ -5517,7 +5529,8 @@ msgstr "\"שחרר\" את הפאנל"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:355
 msgid ""
 "Close this panel. You can reopen it with the buttons in the left toolbar."
-msgstr "סגור את הפאנל. ניתן לפתוח אותו מחדש בעזרת הכפתורים בסרגל הכלים השמאלי."
+msgstr ""
+"סגור את הפאנל. ניתן לפתוח אותו מחדש בעזרת הכפתורים בסרגל הכלים השמאלי."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:366
 msgid "Click to minimize/maximize the panel content"
@@ -5649,8 +5662,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:583
 msgid ""
 "<html>There is at least one member in this relation referring<br>to the "
-"relation itself.<br>This creates circular dependencies and is discouraged."
-"<br>How do you want to proceed with circular dependencies?</html>"
+"relation itself.<br>This creates circular dependencies and is "
+"discouraged.<br>How do you want to proceed with circular dependencies?</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:590
@@ -5666,8 +5679,8 @@ msgstr ""
 #, java-format
 msgid ""
 "<html>This relation already has one or more members referring to<br>the "
-"primitive ''{0}''<br><br>Do you really want to add another relation member?</"
-"html>"
+"primitive ''{0}''<br><br>Do you really want to add another relation "
+"member?</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:623
@@ -5801,8 +5814,9 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1080
 #, java-format
 msgid ""
-"<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
-"<br>Please resolve this conflict first, then try again.</html>"
+"<html>Layer ''{0}'' already has a conflict for "
+"primitive<br>''{1}''.<br>Please resolve this conflict first, then try "
+"again.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1094
@@ -5866,7 +5880,7 @@ msgid "Edit the relation the currently selected relation member refers to"
 msgstr ""
 
 #. download the relation
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1427
 #, java-format
 msgid "Downloading relation ''{0}''"
@@ -5947,7 +5961,8 @@ msgid "Load relation"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationTree.java:161
-msgid "Warning: ignoring exception because task was cancelled. Exception was: "
+msgid ""
+"Warning: ignoring exception because task was cancelled. Exception was: "
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/WayConnectionType.java:72
@@ -6124,8 +6139,9 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:407
 #, java-format
 msgid ""
-"<html>Neither <strong>{0}</strong> nor <strong>{1}</strong> is enabled."
-"<br>Please chose to either download OSM data, or GPX data, or both.</html>"
+"<html>Neither <strong>{0}</strong> nor <strong>{1}</strong> is "
+"enabled.<br>Please chose to either download OSM data, or GPX data, or "
+"both.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:80
@@ -6896,7 +6912,7 @@ msgstr ""
 #. <optional>
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:394
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableColumnModel.java:21
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:351
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:389
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:69
 #: build/trans_presets.java:78 build/trans_presets.java:114
 #: build/trans_presets.java:154 build/trans_presets.java:191
@@ -7131,8 +7147,8 @@ msgid ""
 "is not available yet. It is missing both in your local language ({1}) and in "
 "english.<br><br>Please help to improve the JOSM help system and fill in the "
 "missing information.You can both edit the <a href=\"{2}\">help topic in your "
-"local language ({1})</a> and the <a href=\"{3}\">help topic in english</a>.</"
-"p></html>"
+"local language ({1})</a> and the <a href=\"{3}\">help topic in "
+"english</a>.</p></html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:210
@@ -7140,8 +7156,8 @@ msgstr ""
 msgid ""
 "<html><p class=\"error-header\">Error when retrieving help information</p><p "
 "class=\"error-body\">The content for the help topic <strong>{0}</strong> "
-"could not be loaded. The error message is (untranslated):<br><tt>{1}</tt></"
-"p></html>"
+"could not be loaded. The error message is "
+"(untranslated):<br><tt>{1}</tt></p></html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:312
@@ -7509,7 +7525,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:47
 #, java-format
-msgid "Layer ''{0}'' has modifications which should be uploaded to the server."
+msgid ""
+"Layer ''{0}'' has modifications which should be uploaded to the server."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:49
@@ -7592,8 +7609,8 @@ msgid ""
 "file for this layer or discard the changes.<br>Layer without a file:</html>"
 msgid_plural ""
 "<html>{0} layers need saving but have no associated file.<br>Either select a "
-"file for each of them or discard the changes.<br>Layers without a file:</"
-"html>"
+"file for each of them or discard the changes.<br>Layers without a "
+"file:</html>"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -7605,8 +7622,8 @@ msgstr ""
 #, java-format
 msgid ""
 "<html>{0} layer needs saving but has an associated file<br>which can't be "
-"written.<br>Either select another file for this layer or discard the changes."
-"<br>Layer with a non-writable file:</html>"
+"written.<br>Either select another file for this layer or discard the "
+"changes.<br>Layer with a non-writable file:</html>"
 msgid_plural ""
 "<html>{0} layers need saving but have associated files<br>which can't be "
 "written.<br>Either select another file for each of them or discard the "
@@ -7878,7 +7895,7 @@ msgid "Changeset ID > 0 expected. Got {0}."
 msgstr ""
 
 #. we tried to delete an already deleted primitive.
-#.
+#. 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadLayerTask.java:91
 #, java-format
 msgid ""
@@ -7984,7 +8001,7 @@ msgid "Sync clock"
 msgstr "סנכרן שעון"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:698
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:297
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:335
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:37
 msgid "JPEG images (*.jpg)"
 msgstr "תמונות JPEG (*.jpg)"
@@ -8020,96 +8037,117 @@ msgstr "סנכרן את השעה עם יחידת ה-GPS"
 msgid "Time entered could not be parsed."
 msgstr "לא ניתן לנתח את הזמן שהוזן."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:118
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:120
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:126
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:238
 msgid "gps point"
 msgstr "נקודת gps"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:123
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:125
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:198
 msgid "Customize line drawing"
 msgstr "התאם ציור קו"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:127
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:129
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:202
 msgid "Use global settings."
 msgstr "השתמש בהגדרות הגלובליות."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:128
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:130
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:203
 msgid "Draw lines between points for this layer."
 msgstr "צייר קווים בין נקודות בשכבה זו."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:129
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:131
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:204
 msgid "Do not draw lines between points for this layer."
 msgstr "אל תצייר קווים בין נקודות בשכבה זו."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:143
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:145
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:220
 msgid "Select line drawing options"
 msgstr "בחר אפשרויות ציור קו"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:160
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:162
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:235
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:196
 msgid "Customize Color"
 msgstr "התאם צבעים"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:165
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:167
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:239
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:201
 #: ../plugins/grid/src/grid/GridLayer.java:162
 msgid "Default"
 msgstr "ברירת מחדל"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:169
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:171
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:243
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:205
 #: ../plugins/grid/src/grid/GridLayer.java:163
 msgid "Choose a color"
 msgstr "בחר צבע"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:189
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:191
 msgid "Markers From Named Points"
 msgstr "סמנים מנקודות בעלות שם"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:204
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:206
 #, java-format
 msgid "Named Trackpoints from {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:212
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:214
 msgid "Import Audio"
 msgstr "ייבא שמע"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:228
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:218
+#, java-format
+msgid ""
+"<html>The data in the GPX layer ''{0}'' has been downloaded from the "
+"server.<br>Because its way points don''t include a timestamp we can''t "
+"correlate them with audio data.</html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:225
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:312
+msgid "Import not possible"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:247
 msgid "Wave Audio files (*.wav)"
 msgstr "קובץ שמע (wav.*)"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:264
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:283
 #, java-format
 msgid "Audio markers from {0}"
 msgstr "סמן שמע מ {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:281
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:300
 msgid "Import images"
 msgstr "ייבא תמונות"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:341
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:305
+#, java-format
+msgid ""
+"<html>The data in the GPX layer ''{0}'' has been downloaded from the "
+"server.<br>Because its way points don''t include a timestamp we can''t "
+"correlate them with images.</html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:379
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:170
 #, java-format
 msgid "Name: {0}"
 msgstr "שם: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:345
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:383
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:415
 #, java-format
 msgid "Description: {0}"
 msgstr "תיאור: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:350
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:388
 #, java-format
 msgid "{0} track"
 msgid_plural "{0} tracks"
@@ -8117,62 +8155,62 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. item "Relations/Route" text "Symbol description"
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:352
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:390
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:142
 #: build/trans_presets.java:3190
 msgid "Description"
 msgstr "תיאור"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:352
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:390
 msgid "Timespan"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:353
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:391
 msgid "Length"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:353
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:391
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:91
 msgid "URL"
 msgstr "כתובת"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:404
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:442
 msgid "Length: "
 msgstr "אורך: "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:407
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:445
 #, java-format
 msgid "{0} route, "
 msgid_plural "{0} routes, "
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:408
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:446
 #, java-format
 msgid "{0} waypoint"
 msgid_plural "{0} waypoints"
 msgstr[0] "נקודת דרך {0}"
 msgstr[1] "{0} נקודות דרך"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:752
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:790
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:61
 msgid "Convert to data layer"
 msgstr "המר לשכבת נתונים"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:760
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:798
 msgid ""
-"<html>Upload of unprocessed GPS data as map data is considered harmful."
-"<br>If you want to upload traces, look here:"
+"<html>Upload of unprocessed GPS data as map data is considered "
+"harmful.<br>If you want to upload traces, look here:"
 msgstr ""
 "<html>העלאת קובץ נתוני GPS לא מעובדים נחשבת מזיקה.<br>אם אתה רוצה להעלות "
 "מסלולים, ראה כאן:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:762
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:800
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:66
 msgid "http://www.openstreetmap.org/traces"
 msgstr "http://www.openstreetmap.org/traces"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:785
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:823
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:634
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:88
 #: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:208
@@ -8181,50 +8219,50 @@ msgstr "http://www.openstreetmap.org/traces"
 msgid "Converted from: {0}"
 msgstr "המר מ: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:807
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:833
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:931
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:845
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:871
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:969
 msgid "Download from OSM along this track"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:815
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:853
 msgid "Download everything within:"
 msgstr "הורד הכל עם:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:818
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:856
 #, java-format
 msgid "{0} meters"
 msgstr "{0} מטרים"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:822
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:860
 msgid "Maximum area per request:"
 msgstr "שטח מירבי לבקשה"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:825
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:863
 #, java-format
 msgid "{0} sq km"
 msgstr "{0} קמ\"ר"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:924
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:962
 #, java-format
 msgid ""
 "<html>This action will require {0} individual<br>download requests. Do you "
 "wish<br>to continue?</html>"
 msgstr ""
-"<html>הפעולה הזו דורשת {0} בקשות<br>הורדה נפרדות. האם אתה רוצה<br>להמשיך?</"
-"html>"
+"<html>הפעולה הזו דורשת {0} בקשות<br>הורדה נפרדות. האם אתה "
+"רוצה<br>להמשיך?</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1035
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1073
 msgid "No GPX track available in layer to associate audio with."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1204
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1242
 msgid ""
 "Some waypoints with timestamps from before the start of the track or after "
 "the end were omitted or moved to the start."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1211
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1249
 msgid ""
 "Some waypoints which were too far from the track to sensibly estimate their "
 "time were omitted."
@@ -8326,8 +8364,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:65
 msgid ""
-"<html>Upload of unprocessed GPS data as map data is considered harmful."
-"<br>If you want to upload traces, look here:</html>"
+"<html>Upload of unprocessed GPS data as map data is considered "
+"harmful.<br>If you want to upload traces, look here:</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:160
@@ -8849,7 +8887,8 @@ msgstr "צייר חצי כיוון לקווים המחברים נקודות GPS.
 
 #. drawGpsArrowsFast
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:135
-msgid "Draw the direction arrows using table lookups instead of complex math."
+msgid ""
+"Draw the direction arrows using table lookups instead of complex math."
 msgstr "צייר את חצי הכיוון תוך שימוש בטבלת חיפוש במקום חישובים מסובכים."
 
 #. drawGpsArrowsMinDist
@@ -8906,7 +8945,8 @@ msgstr "צייר את המספרים הסידוריים של כל הקטעים �
 
 #. antialiasing
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:242
-msgid "Apply antialiasing to the map view resulting in a smoother appearance."
+msgid ""
+"Apply antialiasing to the map view resulting in a smoother appearance."
 msgstr ""
 
 #. downloaded area
@@ -9243,8 +9283,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:725
 #, java-format
 msgid ""
-"<html>Failed to load the list of style sources from<br>''{0}''."
-"<br><br>Details (untranslated):<br>{1}</html>"
+"<html>Failed to load the list of style sources "
+"from<br>''{0}''.<br><br>Details (untranslated):<br>{1}</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:765
@@ -9305,8 +9345,8 @@ msgid ""
 "<p>Furthermore, the shortcuts are activated when the actions are assigned to "
 "a menu entry of button for the first time. So some of your changes may "
 "become active even without restart --- but also without collistion handling. "
-"This is another reason to <b>restart</b> JOSM after making any changes here."
-"</p>"
+"This is another reason to <b>restart</b> JOSM after making any changes "
+"here.</p>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:170
@@ -9317,10 +9357,11 @@ msgid ""
 "correspond to a real key on your keyboard. So if your keyboard has no 'Copy' "
 "key (PC keyboard don't have them, Sun keyboards do), the do not use it. Also "
 "there will be 'keys' listed that correspond to a shortcut on your keyboard "
-"(e.g. ':'/Colon). Please also do not use them, use the base key (';'/"
-"Semicolon on US keyboards, '.'/Period on German keyboards, ...) instead. Not "
-"doing so may result in conflicts, as there is no way for JOSM to know that "
-"Ctrl+Shift+; and Ctrl+: actually is the same thing on an US keyboard...</p>"
+"(e.g. ':'/Colon). Please also do not use them, use the base key "
+"(';'/Semicolon on US keyboards, '.'/Period on German keyboards, ...) "
+"instead. Not doing so may result in conflicts, as there is no way for JOSM "
+"to know that Ctrl+Shift+; and Ctrl+: actually is the same thing on an US "
+"keyboard...</p>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:177
@@ -9342,8 +9383,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/prefJPanel.java:183
 msgid ""
-"<p>The pseudo-modifier 'disabled' will disable the shortcut when encountered."
-"</p>"
+"<p>The pseudo-modifier 'disabled' will disable the shortcut when "
+"encountered.</p>"
 msgstr ""
 
 #. scroll up
@@ -9645,7 +9686,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:115
 #, java-format
-msgid "No primitive with id {0} in local dataset. Can't infer primitive type."
+msgid ""
+"No primitive with id {0} in local dataset. Can't infer primitive type."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:308
@@ -9956,9 +9998,9 @@ msgstr "סיסמת OSM"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmConnection.java:260
 msgid ""
-"<html>WARNING: The password is stored in plain text in the preferences file."
-"<br>The password is transferred in plain text to the server, encoded in the "
-"URL.<br><b>Do not use a valuable Password.</b></html>"
+"<html>WARNING: The password is stored in plain text in the preferences "
+"file.<br>The password is transferred in plain text to the server, encoded in "
+"the URL.<br><b>Do not use a valuable Password.</b></html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmDataParsingException.java:44
@@ -9984,8 +10026,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/io/OsmExporter.java:98
 #, java-format
 msgid ""
-"<html>An error occurred while restoring backup file.<br>Error is:<br>{0}</"
-"html>"
+"<html>An error occurred while restoring backup file.<br>Error "
+"is:<br>{0}</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmExporter.java:113
@@ -10052,8 +10094,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:207
 #, java-format
 msgid ""
-"Missing manadatory attributes on element ''bounds''. Got minlon=''{0}'',"
-"minlat=''{1}'',maxlon=''{3}'',maxlat=''{4}'', origin=''{5}''."
+"Missing manadatory attributes on element ''bounds''. Got "
+"minlon=''{0}'',minlat=''{1}'',maxlon=''{3}'',maxlat=''{4}'', origin=''{5}''."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:230
@@ -10081,7 +10123,8 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:269
 #, java-format
-msgid "Illegal value for attribute ''ref'' on member in relation {0}. Got {1}"
+msgid ""
+"Illegal value for attribute ''ref'' on member in relation {0}. Got {1}"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:273
@@ -10369,15 +10412,16 @@ msgstr "אירעה שגיאה בתוסף {0}"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:74
 #, java-format
-msgid "Loading of {0} plugin was requested. This plugin is no longer required."
+msgid ""
+"Loading of {0} plugin was requested. This plugin is no longer required."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:83
 #, java-format
 msgid ""
 "<html>Loading of {0} plugin was requested.<br>This plugin is no longer "
-"developed and very likely will produce errors.<br>It should be disabled."
-"<br>Delete from preferences?</html>"
+"developed and very likely will produce errors.<br>It should be "
+"disabled.<br>Delete from preferences?</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:101
@@ -10595,8 +10639,8 @@ msgstr ""
 msgid ""
 "<html><p>There the the error information provided below should already "
 "be<br>filled out for you. Please include information on how to "
-"reproduce<br>the error and try to supply as much detail as possible.</p></"
-"html>"
+"reproduce<br>the error and try to supply as much detail as "
+"possible.</p></html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:103
@@ -10632,8 +10676,8 @@ msgstr ""
 #, java-format
 msgid ""
 "<html>Uploading to the server <strong>failed</strong> because your "
-"current<br>dataset violates a precondition.<br>The error message is:<br>{0}</"
-"html>"
+"current<br>dataset violates a precondition.<br>The error message "
+"is:<br>{0}</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:115
@@ -10693,8 +10737,9 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:240
 #, java-format
 msgid ""
-"<html>The OSM server<br>''{0}''<br>reported an internal server error."
-"<br>This is most likely a temporary problem. Please try again later.</html>"
+"<html>The OSM server<br>''{0}''<br>reported an internal server "
+"error.<br>This is most likely a temporary problem. Please try again "
+"later.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:254
@@ -10704,9 +10749,9 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:257
 msgid ""
-"The area you tried to download is too big or your request was too large."
-"<br>Either request a smaller area or use an export file provided by the OSM "
-"community."
+"The area you tried to download is too big or your request was too "
+"large.<br>Either request a smaller area or use an export file provided by "
+"the OSM community."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:260
@@ -10736,19 +10781,17 @@ msgstr ""
 msgid ""
 "<html>The server reports that an object is deleted.<br><strong>Uploading "
 "failed</strong> if you tried to update or delete this object.<br> "
-"<strong>Downloading failed</strong> if you tried to download this object."
-"<br><br>The error message is:<br>{0}</html>"
+"<strong>Downloading failed</strong> if you tried to download this "
+"object.<br><br>The error message is:<br>{0}</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/I18n.java:98
-#, fuzzy
 msgid "Loading available locales..."
-msgstr "התאם תוספים זמינים."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/I18n.java:102
-#, fuzzy
 msgid "Checking locales..."
-msgstr "בודק מטמון..."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/I18n.java:105
 #, java-format
@@ -11247,9 +11290,9 @@ msgstr "לא ניתן לקרוא את \"{0}\""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:224
 msgid ""
-"<html>Take a photo of your GPS receiver while it displays the time."
-"<br>Display that photo here.<br>And then, simply capture the time you read "
-"on the photo and select a timezone<hr></html>"
+"<html>Take a photo of your GPS receiver while it displays the "
+"time.<br>Display that photo here.<br>And then, simply capture the time you "
+"read on the photo and select a timezone<hr></html>"
 msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:242
@@ -11312,7 +11355,8 @@ msgid "Offset:"
 msgstr "היסט:"
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:510
-msgid "<html>I can take a picture of my GPS receiver.<br>Can this help?</html>"
+msgid ""
+"<html>I can take a picture of my GPS receiver.<br>Can this help?</html>"
 msgstr ""
 
 #: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:527
@@ -11606,12 +11650,13 @@ msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:70
 msgid ""
-"A special handler of the French cadastre wms at www.cadastre.gouv."
-"fr<BR><BR>Please read the Terms and Conditions of Use here (in French): "
-"<br><a href=\"http://www.cadastre.gouv.fr/scpc/html/"
-"CU_01_ConditionsGenerales_fr.html\"> http://www.cadastre.gouv.fr/scpc/html/"
-"CU_01_ConditionsGenerales_fr.html</a> <BR>before any upload of data created "
-"by this plugin."
+"A special handler of the French cadastre wms at "
+"www.cadastre.gouv.fr<BR><BR>Please read the Terms and Conditions of Use here "
+"(in French): <br><a "
+"href=\"http://www.cadastre.gouv.fr/scpc/html/CU_01_ConditionsGenerales_fr.htm"
+"l\"> "
+"http://www.cadastre.gouv.fr/scpc/html/CU_01_ConditionsGenerales_fr.html</a> "
+"<BR>before any upload of data created by this plugin."
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:75
@@ -12389,7 +12434,7 @@ msgstr "בודק מטמון..."
 
 #. *
 #. * Run the nodelist through a vertex reduction algorithm
-#.
+#. 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:187
 msgid "Running vertex reduction..."
 msgstr "מריץ הפחתת קודקודים..."
@@ -12449,9 +12494,9 @@ msgstr "דרום-מזרח"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--waterway tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="river"/>
 #. color riverbank
@@ -12459,7 +12504,7 @@ msgstr "דרום-מזרח"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="canal"/>
 #. color stream
@@ -12467,14 +12512,14 @@ msgstr "דרום-מזרח"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="drain"/>
 #. color marsh
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="water"/>
 #. <icon src="misc/no_icon.png"/>
@@ -12482,7 +12527,7 @@ msgstr "דרום-מזרח"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="coastline"/>
 #. <icon src="misc/no_icon.png"/>
@@ -12558,7 +12603,8 @@ msgid "Source text"
 msgstr "טקסט מקור"
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:69
-msgid "Maximum number of segments allowed in each generated way. Default 250."
+msgid ""
+"Maximum number of segments allowed in each generated way. Default 250."
 msgstr ""
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:70
@@ -12576,8 +12622,9 @@ msgstr ""
 
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:72
 msgid ""
-"Accuracy of Douglas-Peucker line simplification, measured in degrees."
-"<br>Lower values give more nodes, and more accurate lines. Default 0.0003."
+"Accuracy of Douglas-Peucker line simplification, measured in "
+"degrees.<br>Lower values give more nodes, and more accurate lines. Default "
+"0.0003."
 msgstr ""
 "הדיוק של פישוט קו דאגלס-פאוקר, נמדד במעלות. <br>ערכים נמוכים נותנים יותר "
 "נקודות, וקווים מדוייקים יותר. ברירת מחדל 0.0003."
@@ -12869,7 +12916,8 @@ msgid "Couldn't create new bug. Result: {0}"
 msgstr "לא יכול ליצור תקלה חדשה. תוצאה: {0}"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/util/HttpUtils.java:169
-msgid "Header contains several values and cannot be mapped to a single string"
+msgid ""
+"Header contains several values and cannot be mapped to a single string"
 msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:96
@@ -14010,8 +14058,9 @@ msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:692
 msgid ""
-"The sources (URL or filename) of spell check (see http://wiki.openstreetmap."
-"org/index.php/User:JLS/speller) or tag checking data files."
+"The sources (URL or filename) of spell check (see "
+"http://wiki.openstreetmap.org/index.php/User:JLS/speller) or tag checking "
+"data files."
 msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:693
@@ -14152,13 +14201,13 @@ msgstr "סוג נתיב מים {0}"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- special display of unreviewed tiger data (USA) -->
 #. <rule>
 #. <condition k="tiger:reviewed" v="no"/>
 #. <linemod mode="under" width="10" colour="#808000"/>
 #. </rule>
-#.
+#. 
 #. <!-- lot's of "openGeoDB:..." tags can be found in germany -->
 #. <rule>
 #. <condition k="openGeoDB:type" v="Stadt"/>
@@ -14166,46 +14215,46 @@ msgstr "סוג נתיב מים {0}"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="openGeoDB:type" v="Kreis"/>
 #. <icon annotate="true" src="place/settlement/town.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="openGeoDB:type" v="Gemeinde"/>
 #. <icon annotate="true" src="place/settlement/town.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="openGeoDB:type" v="Ort"/>
 #. <icon annotate="true" src="place/settlement/town.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="openGeoDB:type" v="District"/>
 #. <icon annotate="true" src="place/settlement/town.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="openGeoDB:location" v="locality"/>
 #. <icon annotate="true" src="place/settlement/town.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--annotation tags -->
-#.
+#. 
 #. <!--"work in progress" tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="building" b="yes"/>
 #. <icon annotate="true" src="misc/landmark/building.png" priority="-10000"/>
@@ -14248,7 +14297,7 @@ msgstr "בניין"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="area" b="yes"/>
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:103
@@ -14700,14 +14749,14 @@ msgstr ""
 #. *
 #. This file can be used to add some special messages to the translation,
 #. which are not part of the programm texts, but should be translated nevertheless.
-#.
+#. 
 #: build/specialmessages.java:6
 msgid ""
 "You requested too many nodes (limit is 50,000). Either request a smaller "
 "area, or use planet.osm"
 msgstr ""
-"ביקשת יותר מידי נקודות (מוגבל ל 50,000). בקש שטח קטן יותר או השתמש ב planet."
-"osm"
+"ביקשת יותר מידי נקודות (מוגבל ל 50,000). בקש שטח קטן יותר או השתמש ב "
+"planet.osm"
 
 #. OSM server message
 #: build/specialmessages.java:7
@@ -14800,7 +14849,8 @@ msgstr ""
 
 #. Plugin globalsat
 #: build/trans_plugins.java:23
-msgid "Download GPS points from Globalsat dg100 data logger directly in JOSM."
+msgid ""
+"Download GPS points from Globalsat dg100 data logger directly in JOSM."
 msgstr ""
 
 #. Plugin graphview
@@ -16019,10 +16069,10 @@ msgstr "יעד"
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--restrictions tags -->
 #. <!--the restrictions rules should be placed before the path rule! -->
-#.
+#. 
 #. <rule>
 #. <condition k="access" b="no"/>
 #. <icon src="vehicle/restriction/access.png" priority="-100"/>
@@ -16217,7 +16267,7 @@ msgstr "ערוך צומת"
 #. item "Highways/Streets/Roundabout" combo "Type"
 #. color motorroad
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="motorway"/>
 #. color motorway
@@ -16225,7 +16275,7 @@ msgstr "ערוך צומת"
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="motorway_link"/>
 #: build/trans_presets.java:361 build/trans_style.java:547
@@ -16242,7 +16292,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="trunk"/>
 #. color trunk
@@ -16250,7 +16300,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="trunk_link"/>
 #: build/trans_presets.java:361 build/trans_style.java:563
@@ -16267,7 +16317,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="primary"/>
 #. color primary
@@ -16275,7 +16325,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="primary_link"/>
 #: build/trans_presets.java:361 build/trans_style.java:579
@@ -16292,7 +16342,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="secondary"/>
 #. color secondary
@@ -16300,7 +16350,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>300000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="secondary_link"/>
 #: build/trans_presets.java:361 build/trans_style.java:595
@@ -16313,7 +16363,7 @@ msgstr "משני"
 #. <scale_min>1</scale_min>
 #. <scale_max>300000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="tertiary"/>
 #: build/trans_presets.java:361 build/trans_style.java:611
@@ -16329,7 +16379,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="residential"/>
 #: build/trans_presets.java:361 build/trans_style.java:3159
@@ -16345,14 +16395,14 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="service"/>
 #. color address
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--public_transport tags -->
 #. <rule>
 #. <condition k="public_transport" v="stop_position"/>
@@ -16360,7 +16410,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="public_transport" v="platform"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
@@ -16378,14 +16428,14 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="passing_place"/>
 #. <icon annotate="true" src="vehicle/passing_place.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="construction"/>
 #. color railland
@@ -16393,7 +16443,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="construction"/>
 #. color construction
@@ -16441,9 +16491,9 @@ msgstr "צומת"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- junction tag -->
-#.
+#. 
 #. <rule>
 #. <condition k="junction" v="roundabout"/>
 #: build/trans_presets.java:423 build/trans_style.java:895
@@ -17140,7 +17190,7 @@ msgstr "ערוך ביקורת גבולות"
 
 #. item "Barriers/Border Control" check "Motorcar"
 #. <separator/>
-#.
+#. 
 #. <!-- *** linear barriers *** -->
 #: build/trans_presets.java:932
 msgid "Hedge"
@@ -17177,7 +17227,7 @@ msgstr ""
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:barrier=retaining_wall" />
 #. <key key="barrier" value="retaining_wall" />
 #. <separator/>
-#.
+#. 
 #. <!-- *** access *** -->
 #: build/trans_presets.java:954
 msgid "Entrance"
@@ -17271,7 +17321,7 @@ msgid "Edit Sally Port"
 msgstr ""
 
 #. item "Barriers/Sally Port" check "Motorcar"
-#.
+#. 
 #. group "Water"
 #. item "Water/Water/River" combo "Layer"
 #. <separator/>
@@ -17426,7 +17476,7 @@ msgstr "אדמה בוצית"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="wetland"/>
 #. <icon src="misc/no_icon.png"/>
@@ -18811,7 +18861,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>30000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="unclassified"/>
 #. color deprecated
@@ -18819,7 +18869,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="unsurfaced"/>
 #. color highway_track
@@ -18827,7 +18877,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>20000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="residential"/>
 #. color street
@@ -18835,7 +18885,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="living_street"/>
 #: build/trans_presets.java:1735 build/trans_style.java:619
@@ -19191,9 +19241,9 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--sport tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="9pin"/>
 #. color sport
@@ -19201,7 +19251,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="10pin"/>
 #. color sport
@@ -19209,7 +19259,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="athletics"/>
 #. color sport
@@ -19217,7 +19267,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="australian_football"/>
 #. color sport
@@ -19225,7 +19275,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="baseball"/>
 #. color sport
@@ -19233,7 +19283,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="basketball"/>
 #. color sport
@@ -19241,7 +19291,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="boules"/>
 #. color sport
@@ -19249,7 +19299,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="bowls"/>
 #. color sport
@@ -19257,7 +19307,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="canoe"/>
 #. color sport
@@ -19265,7 +19315,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="chess"/>
 #. color sport
@@ -19273,7 +19323,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="climbing"/>
 #. color sport
@@ -19281,7 +19331,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="cricket"/>
 #. color sport
@@ -19289,7 +19339,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="cricket_nets"/>
 #. color sport
@@ -19297,7 +19347,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="croquet"/>
 #. color sport
@@ -19305,7 +19355,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="cycling"/>
 #. color sport
@@ -19313,7 +19363,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="dog_racing"/>
 #. color sport
@@ -19321,7 +19371,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="equestrian"/>
 #. color sport
@@ -19329,7 +19379,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="football"/>
 #. color sport
@@ -19337,7 +19387,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="golf"/>
 #. color sport
@@ -19345,7 +19395,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="gymnastics"/>
 #. color sport
@@ -19353,7 +19403,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="hockey"/>
 #. color sport
@@ -19361,7 +19411,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="horse_racing"/>
 #. color sport
@@ -19369,7 +19419,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="motor"/>
 #. color sport
@@ -19377,7 +19427,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="multi"/>
 #. color sport
@@ -19385,7 +19435,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="pelota"/>
 #. color sport
@@ -19393,7 +19443,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="racquet"/>
 #. color sport
@@ -19401,7 +19451,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="rugby"/>
 #. color sport
@@ -19409,7 +19459,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="skating"/>
 #. color sport
@@ -19417,7 +19467,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="skateboard"/>
 #. color sport
@@ -19425,7 +19475,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="soccer"/>
 #. color sport
@@ -19433,7 +19483,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="swimming"/>
 #. color sport
@@ -19441,7 +19491,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="skiing"/>
 #. color sport
@@ -19449,7 +19499,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="table_tennis"/>
 #. color sport
@@ -19457,7 +19507,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="tennis"/>
 #. color sport
@@ -19465,7 +19515,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="paintball"/>
 #. color sport
@@ -19473,7 +19523,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="squash"/>
 #. color sport
@@ -19481,7 +19531,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="shooting"/>
 #. color sport
@@ -19489,7 +19539,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="volleyball"/>
 #. color sport
@@ -19497,7 +19547,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="beachvolleyball"/>
 #. color sport
@@ -19505,7 +19555,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="bowling"/>
 #. color sport
@@ -19513,7 +19563,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="handball"/>
 #. color sport
@@ -19521,7 +19571,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="rowing"/>
 #. color sport
@@ -19529,7 +19579,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="sailing"/>
 #. color sport
@@ -19537,7 +19587,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="diving"/>
 #. color sport
@@ -19545,7 +19595,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="badminton"/>
 #. color sport
@@ -19553,7 +19603,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="archery"/>
 #. color sport
@@ -19561,7 +19611,7 @@ msgstr "בחר ענף ספורט:"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="sport" v="fishing"/>
 #: build/trans_presets.java:1903 build/trans_presets.java:1912
@@ -21253,9 +21303,9 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--landuse tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="farm"/>
 #. color green
@@ -21263,7 +21313,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="farmland"/>
 #. color green
@@ -21271,7 +21321,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="meadow"/>
 #. color green
@@ -21279,7 +21329,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="vineyard"/>
 #. color forest
@@ -21287,7 +21337,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="allotments"/>
 #. color green
@@ -21295,7 +21345,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="grass"/>
 #. color cemetery
@@ -21303,7 +21353,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="village_green"/>
 #. color green
@@ -21311,7 +21361,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="recreation_ground"/>
 #: build/trans_presets.java:2476 build/trans_style.java:3071
@@ -22640,7 +22690,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="bicycle" b="no"/>
 #. <icon src="vehicle/restriction/bicycle.png"/>
@@ -22654,7 +22704,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>30000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="cycleway"/>
 #. color roundabout
@@ -22663,9 +22713,9 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- cycleway tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="cycleway" v="lane"/>
 #. color bicycle
@@ -22673,7 +22723,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="cycleway" v="track"/>
 #. color bicycle
@@ -22681,7 +22731,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="cycleway" v="opposite_lane"/>
 #. color bicycle
@@ -22689,7 +22739,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="cycleway" v="opposite_track"/>
 #. color bicycle
@@ -22697,7 +22747,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="cycleway" v="opposite"/>
 #: build/trans_presets.java:3186 build/trans_style.java:233
@@ -22728,7 +22778,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="foot" b="no"/>
 #. <icon src="vehicle/restriction/foot.png"/>
@@ -22742,7 +22792,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="footway"/>
 #. color foot
@@ -22750,7 +22800,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>10000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="path"/>
 #. color foot
@@ -22758,7 +22808,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>10000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="pedestrian"/>
 #. color foot
@@ -22767,7 +22817,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>10000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="steps"/>
 #: build/trans_presets.java:3186 build/trans_style.java:247
@@ -22794,7 +22844,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="subway"/>
 #: build/trans_presets.java:3186 build/trans_style.java:1206
@@ -22907,17 +22957,17 @@ msgstr ""
 #. - annonate (true or false)
 #. 7. scale_min / scale_max
 #. - zoom scale for display
-#.
+#. 
 #. Using both area and line attributes for the same key/value pair does work. For areas
 #. first the rbest matching area rule is searched and the best matching line rule is
 #. connected with it. They need not have the same key/value pair.
-#.
+#. 
 #. The colours can consist of the two components - name and hex code (e.g. water#0000ff).
 #. If both are given, the color name is introduced in preferences with that value. If only
 #. code is given (e.g. #0000ff), it is used directly. If only name is given, either user
 #. modified preferences or previous value is used. The 6 hex digit color code can also
 #. be appended by a hex value of the alpha channel (thus having 8 hex digits instead of 6).
-#.
+#. 
 #. Linemod's are drawn over or under the line they are associated with and modify the
 #. appearance. There can be multiple linemod's for one way (contrary to line styles,
 #. where only one applies). When drawn over a way either a very small width must be choosen
@@ -22925,10 +22975,10 @@ msgstr ""
 #. not visible). When the mod is under the way, then it must be wide enough to be visible
 #. on the sides of the way or the waystyles itself must use alpha channel (which may
 #. look strange).
-#.
+#. 
 #. If a key/value pair matches more than one rule, the "rule that wins" is unpredicted
 #. in case they have same priority! Using priority settings helps to solve conflicts.
-#.
+#. 
 #. For external files the <rules> should have following elements:
 #. - author           the author of the style
 #. - version          a version number of some sort (e.g. creation date)
@@ -22940,13 +22990,13 @@ msgstr ""
 #. - when the style replaces the whole rendering choose a new name
 #. - when the style is additional choose "standard" or don't use name tag
 #. -->
-#.
+#. 
 #: build/trans_style.java:72
 msgid "standard"
 msgstr "סטנדרטי"
 
 #. mappaint style named "standard"
-#.
+#. 
 #. <rule>
 #. <condition k="restriction" v="no_left_turn"/>
 #. <icon annotate="true" src="vehicle/restriction/turn_restrictions/no_left_turn.png"/>
@@ -22993,8 +23043,8 @@ msgstr "סטנדרטי"
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
-#.
+#. 
+#. 
 #. <!-- mark some specials that should be fixed - they are already the default and therefore shouldn't be tagged -->
 #. <rule>
 #. <condition k="oneway"/>
@@ -23072,7 +23122,7 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="road"/>
 #. color rail
@@ -23080,14 +23130,14 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>10000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="direction" v="clockwise"/>
 #. <icon annotate="true" src="vehicle/restriction/roundabout_left.png" priority="10000"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="mini_roundabout"/>
 #. <icon annotate="true" src="vehicle/restriction/roundabout_right.png"/>
@@ -23095,84 +23145,84 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="stop"/>
 #. <icon annotate="true" src="vehicle/restriction/stop.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="traffic_signals"/>
 #. <icon annotate="true" src="vehicle/restriction/traffic-light.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="street_lamp"/>
 #. <icon annotate="true" src="misc/streetlamp.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="speed_camera"/>
 #. <icon annotate="true" src="vehicle/restriction/speed_trap.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="traffic_sign" v="city_limit"/>
 #. <icon annotate="true" src="vehicle/restriction/citylimit.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="crossing"/>
 #. <icon annotate="true" src="vehicle/zebra_crossing.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="gate"/>
 #. <icon annotate="true" src="misc/deprecated.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="cattle_grid"/>
 #. <icon annotate="true" src="misc/deprecated.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="toll_booth"/>
 #. <icon annotate="true" src="misc/deprecated.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="incline"/>
 #. <icon annotate="true" src="vehicle/restriction/incline.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="incline_steep"/>
 #. <icon annotate="true" src="vehicle/restriction/incline.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="viaduct"/>
 #. color railwaypoint
@@ -23180,14 +23230,14 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="viaduct"/>
 #. color amenity_light
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <!-- deprecated; use information=guidepost instead -->
 #. <condition k="amenity" v="signpost"/>
@@ -23196,7 +23246,7 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="marsh"/>
 #. <icon src="misc/deprecated.png"/>
@@ -23206,22 +23256,22 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--abutters tags -->
-#.
+#. 
 #. <!--accessories tags -->
-#.
+#. 
 #. <!--properties tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="mountain_pass" b="yes"/>
 #. color service
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--"deprecated" tags -->
-#.
+#. 
 #. <!-- historic=museum -> tourism=museum -->
 #. <rule>
 #. <condition k="historic" v="museum"/>
@@ -23230,7 +23280,7 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- man_made=power_wind -> power=generator and power_source=wind -->
 #. <rule>
 #. <condition k="man_made" v="power_wind"/>
@@ -23239,7 +23289,7 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- man_made=power_hydro -> power=generator and power_source=hydro -->
 #. <rule>
 #. <condition k="man_made" v="power_hydro"/>
@@ -23248,7 +23298,7 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- man_made=power_fossil -> power=generator and power_source=fossil -->
 #. <rule>
 #. <condition k="man_made" v="power_fossil"/>
@@ -23257,7 +23307,7 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- man_made=power_nuclear -> power=generator and power_source=nuclear -->
 #. <rule>
 #. <condition k="man_made" v="power_nuclear"/>
@@ -23266,7 +23316,7 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- highway classification now more detailed -->
 #. <rule>
 #. <condition k="highway" v="minor"/>
@@ -23275,7 +23325,7 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- amenity=park_bench -> amenity=bench -->
 #. <rule>
 #. <condition k="amenity" v="park_bench"/>
@@ -23285,7 +23335,7 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- highway=stile -> barrier=stile -->
 #. <rule>
 #. <condition k="highway" v="stile"/>
@@ -23294,7 +23344,7 @@ msgstr "גשר"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- there's a bit confusion about this tag, the proposal says leisure, map features say tourism ?!? -->
 #. <rule>
 #. <condition k="leisure" v="zoo"/>
@@ -23317,21 +23367,21 @@ msgstr "מיושן"
 #. <scale_min>1</scale_min>
 #. <scale_max>10000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="goods" b="no"/>
 #. <icon src="vehicle/restriction/goods.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="hgv" b="no"/>
 #. <icon src="vehicle/restriction/goods.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="horse" b="no"/>
 #. <icon src="vehicle/restriction/horse.png"/>
@@ -23345,7 +23395,7 @@ msgstr "מיושן"
 #. <scale_min>1</scale_min>
 #. <scale_max>20000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="bridleway"/>
 #: build/trans_style.java:275 build/trans_style.java:675
@@ -23357,105 +23407,105 @@ msgstr "סוס"
 #. <scale_min>1</scale_min>
 #. <scale_max>30000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="motorcycle" b="no"/>
 #. <icon src="vehicle/restriction/motorbike.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="motorcar" b="no"/>
 #. <icon src="vehicle/restriction/motorcar.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="psv" b="no"/>
 #. <icon src="vehicle/restriction/psv.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="motorboat" b="no"/>
 #. <icon src="misc/no_icon.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="boat" b="no"/>
 #. <icon src="misc/no_icon.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="noexit" b="yes"/>
 #. <icon src="vehicle/restriction/dead_end.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="maxweight"/>
 #. <icon src="vehicle/restriction/maxweight.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="maxheight"/>
 #. <icon src="vehicle/restriction/maxheight.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="maxwidth"/>
 #. <icon src="vehicle/restriction/maxwidth.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="maxlength"/>
 #. <icon src="vehicle/restriction/maxlength.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="maxspeed"/>
 #. <icon src="vehicle/restriction/speed.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="minspeed"/>
 #. <icon src="vehicle/restriction/minspeed.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="maxstay"/>
 #. <icon src="misc/no_icon.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="toll"/>
 #. <icon src="misc/no_icon.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="barrier" v="bollard"/>
 #. <icon annotate="true" src="vehicle/restriction/bollard.png"/>
@@ -23624,9 +23674,9 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- highway tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="motorroad" v="yes"/>
 #: build/trans_style.java:542
@@ -23638,7 +23688,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="track"/>
 #. color bicycle
@@ -23646,9 +23696,9 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- tracktype tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="tracktype" v="grade1"/>
 #. color highway_track
@@ -23656,7 +23706,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tracktype" v="grade2"/>
 #. color highway_track
@@ -23664,7 +23714,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tracktype" v="grade3"/>
 #. color highway_track
@@ -23672,7 +23722,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tracktype" v="grade4"/>
 #. color highway_track
@@ -23680,7 +23730,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tracktype" v="grade5"/>
 #: build/trans_style.java:643 build/trans_style.java:948
@@ -23694,7 +23744,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>10000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="bus_guideway"/>
 #. color railwaypoint
@@ -23702,7 +23752,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="rail"/>
 #. color oldrail
@@ -23710,7 +23760,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="narrow_gauge"/>
 #. color rail
@@ -23718,7 +23768,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="monorail"/>
 #. color rail
@@ -23726,7 +23776,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="turntable"/>
 #. <icon annotate="true" src="transport/turntable.png"/>
@@ -23734,7 +23784,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="buffer_stop"/>
 #. <icon annotate="true" src="transport/buffer_stop.png"/>
@@ -23742,7 +23792,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="platform"/>
 #. <icon annotate="true" src="misc/deprecated.png"/>
@@ -23759,14 +23809,14 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="motorway_junction"/>
 #. <icon annotate="true" src="vehicle/exit.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="services"/>
 #: build/trans_style.java:839
@@ -23778,7 +23828,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="ford"/>
 #: build/trans_style.java:847
@@ -23790,14 +23840,14 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="bus_stop"/>
 #. <icon annotate="true" src="transport/bus_small.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="turning_circle"/>
 #: build/trans_style.java:862
@@ -23809,7 +23859,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="highway" v="emergency_access_point"/>
 #. <icon src="service/emergency_access_point.png"/>
@@ -23822,7 +23872,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="riverbank"/>
 #. color riverbank
@@ -23835,7 +23885,7 @@ msgstr "גדת נחל"
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="stream"/>
 #: build/trans_style.java:1015
@@ -23847,7 +23897,7 @@ msgstr "זרם"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="dock"/>
 #: build/trans_style.java:1031
@@ -23859,21 +23909,21 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="lock_gate"/>
 #. <icon annotate="true" src="nautical/lock_gate.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="turning_point"/>
 #. <icon annotate="true" src="nautical/turning.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="aqueduct"/>
 #: build/trans_style.java:1053
@@ -23885,7 +23935,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="boatyard"/>
 #. <icon annotate="true" src="nautical/boatyard.png"/>
@@ -23893,28 +23943,28 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="water_point"/>
 #. <icon annotate="true" src="accommodation/camping/water.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="waste_disposal"/>
 #. <icon annotate="true" src="accommodation/camping/wastewater.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="mooring"/>
 #. <icon annotate="true" src="nautical/marina.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="weir"/>
 #. <icon annotate="true" src="nautical/weir.png"/>
@@ -23922,7 +23972,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="dam"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
@@ -23931,7 +23981,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="waterway" v="waterfall"/>
 #. <icon annotate="true" src="nautical/waterfall.png"/>
@@ -23939,9 +23989,9 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--man_made tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="beacon"/>
 #. <icon annotate="true" src="misc/landmark/beacon.png"/>
@@ -23949,7 +23999,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="crane"/>
 #. color manmade
@@ -23957,7 +24007,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="gasometer"/>
 #. <icon annotate="true" src="misc/landmark/gasometer.png"/>
@@ -23965,7 +24015,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="lighthouse"/>
 #. <icon annotate="true" src="misc/landmark/lighthouse.png"/>
@@ -23974,7 +24024,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="reservoir_covered"/>
 #. <icon annotate="true" src="misc/landmark/reservoir_covered.png"/>
@@ -23982,7 +24032,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="surveillance"/>
 #. <icon annotate="true" src="misc/surveillance.png"/>
@@ -23990,7 +24040,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="survey_point"/>
 #. <icon annotate="true" src="misc/landmark/survey_point.png"/>
@@ -23998,7 +24048,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="tower"/>
 #. <icon annotate="true" src="misc/landmark/tower.png"/>
@@ -24006,7 +24056,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="wastewater_plant"/>
 #. color manmade
@@ -24014,7 +24064,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="watermill"/>
 #. <icon annotate="true" src="misc/landmark/watermill.png"/>
@@ -24022,7 +24072,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="water_tower"/>
 #. <icon annotate="true" src="misc/landmark/water_tower.png"/>
@@ -24030,7 +24080,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="windmill"/>
 #. <icon annotate="true" src="misc/landmark/windmill.png"/>
@@ -24038,7 +24088,7 @@ msgstr "אקוודוקט"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="works"/>
 #. <icon annotate="true" src="misc/landmark/works.png"/>
@@ -24059,9 +24109,9 @@ msgstr "מעשה אדם"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- railway tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="station"/>
 #. color railwaypoint
@@ -24069,14 +24119,14 @@ msgstr "מעשה אדם"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="halt"/>
 #. <icon annotate="true" src="transport/railway_small.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="tram_station"/>
 #. color railwaypoint
@@ -24084,14 +24134,14 @@ msgstr "מעשה אדם"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="tram_stop"/>
 #. <icon annotate="true" src="transport/railway_small.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="subway_entrance"/>
 #. color deprecated
@@ -24099,7 +24149,7 @@ msgstr "מעשה אדם"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="crossing"/>
 #. color railwaypoint
@@ -24107,7 +24157,7 @@ msgstr "מעשה אדם"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="level_crossing"/>
 #: build/trans_style.java:1118 build/trans_style.java:1133
@@ -24121,7 +24171,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="tram"/>
 #. <!-- prefer way types over tram - draw tram as overlay in joined cases -->
@@ -24130,7 +24180,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="light_rail"/>
 #: build/trans_style.java:1189 build/trans_style.java:1198
@@ -24147,7 +24197,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="railway" v="preserved"/>
 #. color oldrail
@@ -24155,7 +24205,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- disused often appears together with highway=xy -->
 #. <!-- -> normal display with line, linemod for combinations -->
 #. <rule>
@@ -24166,7 +24216,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- abandoned often appears together with highway=xy -->
 #. <!-- -> normal display with line, linemod for combinations -->
 #. <rule>
@@ -24182,30 +24232,30 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="service" v="yard"/>
 #. <icon annotate="true" src="misc/deprecated.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="service" v="siding"/>
 #. <icon annotate="true" src="misc/deprecated.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="service" v="spur"/>
 #. <icon annotate="true" src="misc/deprecated.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--aeroway tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="aeroway" v="aerodrome"/>
 #. color aeroway
@@ -24214,7 +24264,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="aeroway" v="taxiway"/>
 #: build/trans_style.java:1308 build/trans_style.java:1309
@@ -24227,7 +24277,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="aeroway" v="terminal"/>
 #: build/trans_style.java:1317
@@ -24239,7 +24289,7 @@ msgstr "מסוף"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="aeroway" v="helipad"/>
 #. color aeroway_dark
@@ -24247,7 +24297,7 @@ msgstr "מסוף"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="aeroway" v="runway"/>
 #: build/trans_style.java:1325 build/trans_style.java:1333
@@ -24259,7 +24309,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="aeroway" v="apron"/>
 #: build/trans_style.java:1349
@@ -24271,16 +24321,16 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="aeroway" v="windsock"/>
 #. <icon annotate="true" src="transport/airport/windsock.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--aerialway tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="aerialway" v="cable_car"/>
 #. color aerialway
@@ -24288,7 +24338,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="aerialway" v="gondola"/>
 #. color aerialway
@@ -24296,7 +24346,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="aerialway" v="chair_lift"/>
 #. color aerialway
@@ -24304,7 +24354,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="aerialway" v="drag_lift"/>
 #. color aerialway
@@ -24312,7 +24362,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="aerialway" v="station"/>
 #: build/trans_style.java:1366 build/trans_style.java:1374
@@ -24326,9 +24376,9 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- piste tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="piste:difficulty" v="easy"/>
 #. color piste_easy
@@ -24341,7 +24391,7 @@ msgstr "מסלול קל"
 #. <scale_min>1</scale_min>
 #. <scale_max>30000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="piste:difficulty" v="intermediate"/>
 #. color piste_intermediate
@@ -24354,7 +24404,7 @@ msgstr "מסלול בינוניים"
 #. <scale_min>1</scale_min>
 #. <scale_max>30000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="piste:difficulty" v="advanced"/>
 #. color piste_advanced
@@ -24367,7 +24417,7 @@ msgstr "מסלול מתקדמים"
 #. <scale_min>1</scale_min>
 #. <scale_max>30000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="piste:difficulty" v="expert"/>
 #. color piste_expert
@@ -24380,7 +24430,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>30000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="piste:difficulty" v="freeride"/>
 #. color piste_freeride
@@ -24393,7 +24443,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>30000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="piste:difficulty" v="novice"/>
 #. color piste_novice
@@ -24406,9 +24456,9 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>300000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--power tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="power" v="tower"/>
 #. <icon annotate="true" src="misc/landmark/power/tower_small.png"/>
@@ -24416,14 +24466,14 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power" v="pole"/>
 #. <icon annotate="true" src="misc/landmark/power/pole.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power" v="line"/>
 #. color power
@@ -24431,7 +24481,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power" v="minor_line"/>
 #. color power
@@ -24439,7 +24489,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power" v="station"/>
 #. <icon annotate="true" src="misc/landmark/power.png"/>
@@ -24447,7 +24497,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power" v="sub_station"/>
 #. <icon annotate="true" src="misc/landmark/power.png"/>
@@ -24455,7 +24505,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power_source" v="wind"/>
 #. <icon annotate="true" src="misc/landmark/power/wind.png"/>
@@ -24463,7 +24513,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power_source" v="hydro"/>
 #. <icon annotate="true" src="misc/landmark/power/hydro.png"/>
@@ -24471,7 +24521,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power_source" v="fossil"/>
 #. <icon annotate="true" src="misc/landmark/power/fossil.png"/>
@@ -24479,7 +24529,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power_source" v="coal"/>
 #. <icon annotate="true" src="misc/landmark/power/fossil.png"/>
@@ -24487,7 +24537,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power_source" v="gas"/>
 #. <icon annotate="true" src="misc/landmark/power/fossil.png"/>
@@ -24495,7 +24545,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power_source" v="photovoltaic"/>
 #. <icon annotate="true" src="misc/landmark/power/fossil.png"/>
@@ -24503,7 +24553,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power_source" v="nuclear"/>
 #. <icon annotate="true" src="misc/landmark/power/nuclear.png"/>
@@ -24511,7 +24561,7 @@ msgstr "מסלול מתחילים"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="power" v="generator"/>
 #. <icon annotate="true" src="misc/landmark/power.png" priority="-10000"/>
@@ -24529,7 +24579,7 @@ msgstr "תחנת כח"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="pier"/>
 #. color pier
@@ -24542,7 +24592,7 @@ msgstr "מזח"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="man_made" v="pipeline"/>
 #: build/trans_style.java:1618
@@ -24553,9 +24603,9 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--leisure tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="sports_centre"/>
 #. <icon annotate="true" src="sport/centre.png"/>
@@ -24563,7 +24613,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="golf_course"/>
 #. <icon annotate="true" src="sport/golf.png"/>
@@ -24571,7 +24621,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="stadium"/>
 #. <icon annotate="true" src="sport/stadium.png"/>
@@ -24579,7 +24629,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="track"/>
 #. <icon annotate="true" src="sport/track.png"/>
@@ -24587,7 +24637,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="pitch"/>
 #. <icon annotate="true" src="sport/pitch.png"/>
@@ -24595,7 +24645,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="water_park"/>
 #. <icon annotate="true" src="leisure/water_park.png"/>
@@ -24603,7 +24653,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="slipway"/>
 #. <icon annotate="true" src="nautical/slipway.png"/>
@@ -24611,7 +24661,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="fishing"/>
 #. <icon annotate="true" src="sport/fishing.png"/>
@@ -24619,7 +24669,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="nature_reserve"/>
 #. <icon annotate="true" src="leisure/nature_reserve.png"/>
@@ -24627,7 +24677,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="park"/>
 #. <icon annotate="true" src="leisure/park.png"/>
@@ -24635,7 +24685,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="playground"/>
 #. <icon annotate="true" src="leisure/playground.png"/>
@@ -24643,7 +24693,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="garden"/>
 #. <icon annotate="true" src="leisure/garden.png"/>
@@ -24651,7 +24701,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="common"/>
 #. <icon annotate="true" src="leisure/common.png"/>
@@ -24659,7 +24709,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="swimming_pool"/>
 #. <icon annotate="true" src="sport/pool.png"/>
@@ -24667,7 +24717,7 @@ msgstr "צינור"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="miniature_golf"/>
 #. <icon annotate="true" src="sport/golf.png"/>
@@ -24686,7 +24736,7 @@ msgstr "פנאי"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="leisure" v="marina"/>
 #. <icon annotate="true" src="nautical/marina.png"/>
@@ -24698,9 +24748,9 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--amenity tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="pub"/>
 #. <icon annotate="true" src="food/pub.png"/>
@@ -24708,7 +24758,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="biergarten"/>
 #. <icon annotate="true" src="food/biergarten.png"/>
@@ -24716,7 +24766,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="nightclub"/>
 #. <icon annotate="true" src="leisure/nightclub.png"/>
@@ -24724,7 +24774,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="cafe"/>
 #. <icon annotate="true" src="food/cafe.png"/>
@@ -24732,7 +24782,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="restaurant"/>
 #. <icon annotate="true" src="food/restaurant.png"/>
@@ -24740,7 +24790,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="fast_food"/>
 #. <icon annotate="true" src="food/fastfood.png"/>
@@ -24748,7 +24798,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="bar"/>
 #. <icon annotate="true" src="food/bar.png"/>
@@ -24756,7 +24806,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="ice_cream"/>
 #. <icon annotate="true" src="food/icecream.png"/>
@@ -24771,7 +24821,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="parking" v="multi-storey"/>
 #. <icon annotate="true" src="vehicle/parking/multi-storey.png" priority="10000"/>
@@ -24779,7 +24829,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="parking" v="underground"/>
 #. <icon annotate="true" src="vehicle/parking/underground.png" priority="10000"/>
@@ -24787,7 +24837,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="parking" v="park_and_ride"/>
 #. <icon annotate="true" src="vehicle/parking/park_ride.png" priority="10000"/>
@@ -24795,7 +24845,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="parking" v="surface"/>
 #. <icon annotate="true" src="vehicle/parking.png"/>
@@ -24803,7 +24853,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="parking"/>
 #. <icon annotate="true" src="vehicle/parking.png"/>
@@ -24811,7 +24861,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="bicycle_parking"/>
 #. <icon annotate="true" src="vehicle/parking/bicycle.png"/>
@@ -24819,7 +24869,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="bicycle_rental"/>
 #. <icon annotate="true" src="vehicle/rental/bicycle.png"/>
@@ -24827,7 +24877,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="car_rental"/>
 #. <icon annotate="true" src="vehicle/rental/car.png"/>
@@ -24835,7 +24885,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="car_sharing"/>
 #. <icon annotate="true" src="vehicle/car_sharing.png"/>
@@ -24843,7 +24893,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="car_wash"/>
 #. color amenity_traffic
@@ -24851,7 +24901,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="taxi"/>
 #. <icon annotate="true" src="transport/taxi.png"/>
@@ -24859,7 +24909,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="fuel"/>
 #. <icon annotate="true" src="vehicle/fuel.png" priority="10000"/>
@@ -24876,7 +24926,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="telephone"/>
 #. <icon annotate="true" src="service/telephone.png"/>
@@ -24884,14 +24934,14 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="clock"/>
 #. <icon annotate="true" src="service/clock.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="emergency_phone"/>
 #. <icon annotate="true" src="vehicle/emergency_phone.png"/>
@@ -24899,7 +24949,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="toilets"/>
 #. <icon annotate="true" src="service/toilets.png"/>
@@ -24907,7 +24957,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="recycling"/>
 #. <icon annotate="true" src="service/recycling.png"/>
@@ -24915,14 +24965,14 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="waste_basket"/>
 #. <icon annotate="true" src="service/recycling/trash-bin.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="public_building"/>
 #. <icon annotate="true" src="service.png"/>
@@ -24930,7 +24980,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="embassy"/>
 #. <icon annotate="true" src="service.png"/>
@@ -24938,7 +24988,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="townhall"/>
 #. <icon annotate="true" src="service.png"/>
@@ -24946,7 +24996,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="community_centre"/>
 #. <icon annotate="true" src="service.png"/>
@@ -24954,98 +25004,98 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="bahai"/>
 #. <icon annotate="true" src="religion/bahai.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="buddhist"/>
 #. <icon annotate="true" src="religion/buddhism.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="christian"/>
 #. <icon annotate="true" src="religion/church.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="hindu"/>
 #. <icon annotate="true" src="religion/hinduism.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="jain"/>
 #. <icon annotate="true" src="religion/jainism.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="jewish"/>
 #. <icon annotate="true" src="religion/jewish.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="muslim"/>
 #. <icon annotate="true" src="religion/muslim.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="sikh"/>
 #. <icon annotate="true" src="religion/sikhism.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="shinto"/>
 #. <icon annotate="true" src="religion/shinto.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="spiritualist"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="taoist"/>
 #. <icon annotate="true" src="religion/taoism.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="unitarian"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="religion" v="zoroastrian"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="place_of_worship"/>
 #. <icon annotate="true" src="religion.png" priority="-10000"/>
@@ -25053,7 +25103,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="grave_yard"/>
 #. <icon annotate="true" src="rendering/landuse/cemetery.png"/>
@@ -25061,7 +25111,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="crematorium"/>
 #. color amenity_light
@@ -25069,7 +25119,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="post_office"/>
 #. <icon annotate="true" src="service/post_office.png"/>
@@ -25077,7 +25127,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="post_box"/>
 #. <icon annotate="true" src="service/post_box.png"/>
@@ -25085,7 +25135,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="school"/>
 #. <icon annotate="true" src="education/school.png"/>
@@ -25093,7 +25143,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="university"/>
 #. <icon annotate="true" src="education/university.png"/>
@@ -25101,7 +25151,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="college"/>
 #. <icon annotate="true" src="education/college.png"/>
@@ -25109,7 +25159,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="kindergarten"/>
 #. <icon annotate="true" src="education/kindergarten.png"/>
@@ -25117,7 +25167,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="driving_school"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
@@ -25126,7 +25176,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="library"/>
 #. color amenity_light
@@ -25134,7 +25184,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="police"/>
 #. color amenity_light
@@ -25142,7 +25192,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="fire_station"/>
 #. color amenity_light
@@ -25150,7 +25200,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="bus_station"/>
 #. <icon annotate="true" src="transport/bus.png"/>
@@ -25158,7 +25208,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="ferry_terminal"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
@@ -25166,7 +25216,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="theatre"/>
 #. color amenity_light
@@ -25174,7 +25224,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="cinema"/>
 #. color amenity_light
@@ -25182,7 +25232,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="arts_centre"/>
 #. color amenity_light
@@ -25190,7 +25240,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="courthouse"/>
 #. color amenity_light
@@ -25198,7 +25248,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="prison"/>
 #. color amenity_light
@@ -25206,7 +25256,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="bank"/>
 #. color amenity_light
@@ -25214,7 +25264,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="bureau_de_change"/>
 #. color amenity_light
@@ -25222,7 +25272,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="atm"/>
 #. color amenity_light
@@ -25230,7 +25280,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="bench"/>
 #. color amenity_light
@@ -25238,7 +25288,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="bbq"/>
 #. color amenity_light
@@ -25246,7 +25296,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="shelter"/>
 #. color amenity_light
@@ -25254,7 +25304,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="hunting_stand"/>
 #. color amenity_light
@@ -25262,7 +25312,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="wlan"/>
 #. <icon annotate="true" src="wlan.png"/>
@@ -25270,14 +25320,14 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="vending" v="excrement_bags"/>
 #. <icon annotate="true" src="service/excrement_bags.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="vending_machine"/>
 #. <icon src="transport/ticket-machine.png" priority="-10"/>
@@ -25307,7 +25357,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="drinking_water"/>
 #. <icon annotate="true" src="food/drinking_water.png"/>
@@ -25315,7 +25365,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="fountain"/>
 #. <icon annotate="true" src="misc/landmark/spring.png"/>
@@ -25323,9 +25373,9 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--natural tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="spring"/>
 #. <icon annotate="true" src="misc/landmark/spring.png"/>
@@ -25338,7 +25388,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="pharmacy"/>
 #. color health
@@ -25346,7 +25396,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="hospital"/>
 #. color health
@@ -25354,7 +25404,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="nursery"/>
 #. color health
@@ -25362,7 +25412,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="baby_hatch"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
@@ -25370,7 +25420,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="doctors"/>
 #. color health
@@ -25378,7 +25428,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="dentist"/>
 #. color health
@@ -25386,7 +25436,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="amenity" v="veterinary"/>
 #: build/trans_style.java:2255 build/trans_style.java:2263
@@ -25400,9 +25450,9 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--shop tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="supermarket"/>
 #. <icon annotate="true" src="shop/supermarket.png"/>
@@ -25410,7 +25460,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="convenience"/>
 #. <icon annotate="true" src="shop/supermarket.png"/>
@@ -25418,7 +25468,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="bakery"/>
 #. <icon annotate="true" src="shop/groceries/bakery.png"/>
@@ -25426,7 +25476,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="butcher"/>
 #. <icon annotate="true" src="shop/groceries/butcher.png"/>
@@ -25434,7 +25484,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="bicycle"/>
 #. <icon annotate="true" src="sport/bicycle.png"/>
@@ -25442,7 +25492,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="doityourself"/>
 #. <icon annotate="true" src="shop/diy_store.png"/>
@@ -25450,7 +25500,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="dry_cleaning"/>
 #. <icon annotate="true" src="shop/laundry.png"/>
@@ -25458,7 +25508,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="laundry"/>
 #. <icon annotate="true" src="shop/laundry.png"/>
@@ -25466,7 +25516,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="outdoor"/>
 #. <icon annotate="true" src="shop/sports/outdoor.png"/>
@@ -25474,7 +25524,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="kiosk"/>
 #. <icon annotate="true" src="shop/kiosk.png"/>
@@ -25482,7 +25532,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="alcohol"/>
 #. <icon annotate="true" src="shop/beverages.png"/>
@@ -25490,7 +25540,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="beverages"/>
 #. <icon annotate="true" src="shop/beverages.png"/>
@@ -25498,7 +25548,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="books"/>
 #. <icon annotate="true" src="shop/rental/library.png"/>
@@ -25506,7 +25556,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="car"/>
 #. <icon annotate="true" src="transport/car.png"/>
@@ -25514,7 +25564,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="car_dealer"/>
 #. <icon annotate="true" src="transport/car.png"/>
@@ -25522,7 +25572,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="car_repair"/>
 #. <icon annotate="true" src="transport/car.png"/>
@@ -25530,7 +25580,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="chemist"/>
 #. <icon annotate="true" src="shop/chemist.png"/>
@@ -25538,7 +25588,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="clothes"/>
 #. <icon annotate="true" src="shop/clothes.png"/>
@@ -25546,7 +25596,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="computer"/>
 #. <icon annotate="true" src="shop/computer.png"/>
@@ -25554,7 +25604,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="cycle_repair"/>
 #. <icon annotate="true" src="sport/bicycle.png"/>
@@ -25562,7 +25612,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="department_store"/>
 #. <icon annotate="true" src="shop/mall.png"/>
@@ -25570,7 +25620,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="electronics"/>
 #. <icon annotate="true" src="shop/electronics.png"/>
@@ -25578,7 +25628,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="furniture"/>
 #. <icon annotate="true" src="shop/furniture.png"/>
@@ -25586,7 +25636,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="florist"/>
 #. <icon annotate="true" src="shop/florist.png"/>
@@ -25594,7 +25644,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="groceries"/>
 #. <icon annotate="true" src="shop/groceries/fruits.png"/>
@@ -25602,7 +25652,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="garden_centre"/>
 #. <icon annotate="true" src="shop/garden_centre.png"/>
@@ -25610,7 +25660,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="hairdresser"/>
 #. <icon annotate="true" src="shop/hairdresser.png"/>
@@ -25618,7 +25668,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="hardware"/>
 #. <icon annotate="true" src="shop/diy_store.png"/>
@@ -25626,7 +25676,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="hifi"/>
 #. <icon annotate="true" src="shop/hifi.png"/>
@@ -25634,7 +25684,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="jewelry"/>
 #. <icon annotate="true" src="shop/jewelry.png"/>
@@ -25642,7 +25692,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="mall"/>
 #. <icon annotate="true" src="shop/mall.png"/>
@@ -25650,7 +25700,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="motorcycle"/>
 #. <icon annotate="true" src="vehicle/motorbike.png"/>
@@ -25658,7 +25708,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="newsagent"/>
 #. <icon annotate="true" src="shop/kiosk.png"/>
@@ -25666,7 +25716,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="organic"/>
 #. <icon annotate="true" src="shop/groceries/fruits.png"/>
@@ -25674,7 +25724,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="optician"/>
 #. <icon annotate="true" src="shop/optician.png"/>
@@ -25682,7 +25732,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="shoes"/>
 #. <icon annotate="true" src="shop/shoes.png"/>
@@ -25690,7 +25740,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="sports"/>
 #. <icon annotate="true" src="sport/multi.png"/>
@@ -25698,7 +25748,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="stationery"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
@@ -25706,7 +25756,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="tailor"/>
 #. <icon annotate="true" src="shop/tailor.png"/>
@@ -25714,7 +25764,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="travel_agency"/>
 #. <icon annotate="true" src="place/island.png"/>
@@ -25722,7 +25772,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="toys"/>
 #. <icon annotate="true" src="shop/toys.png"/>
@@ -25730,7 +25780,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="shop" v="video"/>
 #. <icon annotate="true" src="shop/video.png"/>
@@ -25738,7 +25788,7 @@ msgstr "בריאות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- duplicate of shopping_centre? -->
 #. <rule>
 #. <condition k="shop" v="shopping_centre"/>
@@ -25772,9 +25822,9 @@ msgstr "חנות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--tourism tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="hotel"/>
 #. <icon annotate="true" src="accommodation.png"/>
@@ -25782,7 +25832,7 @@ msgstr "חנות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="motel"/>
 #. <icon annotate="true" src="accommodation/motel.png"/>
@@ -25790,7 +25840,7 @@ msgstr "חנות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="guest_house"/>
 #. <icon annotate="true" src="accommodation/guest_house.png"/>
@@ -25798,7 +25848,7 @@ msgstr "חנות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="hostel"/>
 #. <icon annotate="true" src="accommodation/hostel.png"/>
@@ -25806,7 +25856,7 @@ msgstr "חנות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="chalet"/>
 #. <icon annotate="true" src="accommodation/chalet.png"/>
@@ -25814,7 +25864,7 @@ msgstr "חנות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="alpine_hut"/>
 #. <icon annotate="true" src="accommodation/alpine_hut.png"/>
@@ -25822,7 +25872,7 @@ msgstr "חנות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="camp_site"/>
 #. <icon annotate="true" src="accommodation/camping.png"/>
@@ -25830,7 +25880,7 @@ msgstr "חנות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="caravan_site"/>
 #. <icon annotate="true" src="accommodation/camping/caravan.png"/>
@@ -25845,7 +25895,7 @@ msgstr "מלון"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="picnic_site"/>
 #. <icon annotate="true" src="leisure/picnic.png"/>
@@ -25853,7 +25903,7 @@ msgstr "מלון"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="viewpoint"/>
 #. <icon annotate="true" src="sightseeing/viewpoint.png"/>
@@ -25861,7 +25911,7 @@ msgstr "מלון"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="theme_park"/>
 #. <icon annotate="true" src="leisure/theme_park.png"/>
@@ -25869,7 +25919,7 @@ msgstr "מלון"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="attraction"/>
 #. <icon annotate="true" src="sightseeing.png"/>
@@ -25877,7 +25927,7 @@ msgstr "מלון"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="zoo"/>
 #. <icon annotate="true" src="leisure/zoo.png"/>
@@ -25885,7 +25935,7 @@ msgstr "מלון"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="artwork"/>
 #. <icon annotate="true" src="service/arts_centre.png"/>
@@ -25894,7 +25944,7 @@ msgstr "מלון"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="museum"/>
 #. <icon annotate="true" src="sightseeing/museum.png"/>
@@ -25902,7 +25952,7 @@ msgstr "מלון"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- information tags -->
 #. <rule>
 #. <condition k="information" v="guidepost"/>
@@ -25910,7 +25960,7 @@ msgstr "מלון"
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="information" v="office"/>
 #. <icon annotate="true" src="misc/information/informationoffice.png"/>
@@ -25918,21 +25968,21 @@ msgstr "מלון"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="information" v="map"/>
 #. <icon annotate="true" src="misc/information/map.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="information" v="board"/>
 #. <icon annotate="true" src="misc/information/board.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="tourism" v="information"/>
 #. <icon annotate="true" src="misc/information.png"/>
@@ -25948,9 +25998,9 @@ msgstr "תיירות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--historic tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="historic" v="castle"/>
 #. <icon annotate="true" src="sightseeing/castle.png"/>
@@ -25958,7 +26008,7 @@ msgstr "תיירות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="historic" v="monument"/>
 #. <icon annotate="true" src="sightseeing/monument.png"/>
@@ -25966,7 +26016,7 @@ msgstr "תיירות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="historic" v="memorial"/>
 #. <icon annotate="true" src="sightseeing/memorial.png"/>
@@ -25974,7 +26024,7 @@ msgstr "תיירות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="historic" v="archaeological_site"/>
 #. <icon annotate="true" src="sightseeing/archaeological.png"/>
@@ -25982,7 +26032,7 @@ msgstr "תיירות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="historic" v="ruins"/>
 #. <icon annotate="true" src="sightseeing/ruins.png"/>
@@ -25990,7 +26040,7 @@ msgstr "תיירות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="historic" v="battlefield"/>
 #. <icon annotate="true" src="sightseeing/battlefield.png"/>
@@ -25998,7 +26048,7 @@ msgstr "תיירות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="geological" v="palaeontological_site"/>
 #. <icon annotate="true" src="historic/palaeontological_site.png"/>
@@ -26006,7 +26056,7 @@ msgstr "תיירות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="historic" v="wayside_cross"/>
 #. <icon annotate="true" src="religion/wayside_cross.png"/>
@@ -26014,7 +26064,7 @@ msgstr "תיירות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="historic" v="wayside_shrine"/>
 #. <icon annotate="true" src="religion/wayside_shrine.png"/>
@@ -26022,7 +26072,7 @@ msgstr "תיירות"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="historic" v="boundary_stone"/>
 #. <icon annotate="true" src="historic/boundary_stone.png"/>
@@ -26039,7 +26089,7 @@ msgstr "היסטורי"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="quarry"/>
 #: build/trans_style.java:3103
@@ -26051,7 +26101,7 @@ msgstr "מחצבה"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="landfill"/>
 #: build/trans_style.java:3111
@@ -26063,7 +26113,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="basin"/>
 #. color basin
@@ -26071,7 +26121,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="reservoir"/>
 #: build/trans_style.java:3119 build/trans_style.java:3127
@@ -26083,7 +26133,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="forest"/>
 #: build/trans_style.java:3135
@@ -26095,7 +26145,7 @@ msgstr "יער"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="farmyard"/>
 #: build/trans_style.java:3167
@@ -26107,8 +26157,8 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
-#.
+#. 
+#. 
 #. <rule>
 #. <condition k="landuse" v="retail"/>
 #. color retail
@@ -26116,7 +26166,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="commercial"/>
 #: build/trans_style.java:3176 build/trans_style.java:3184
@@ -26128,7 +26178,7 @@ msgstr "קמעוני"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="industrial"/>
 #: build/trans_style.java:3192
@@ -26140,7 +26190,7 @@ msgstr "תעשייתי"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="brownfield"/>
 #: build/trans_style.java:3200
@@ -26152,7 +26202,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="greenfield"/>
 #: build/trans_style.java:3208
@@ -26164,7 +26214,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="railway"/>
 #: build/trans_style.java:3216
@@ -26176,7 +26226,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="military"/>
 #. color green
@@ -26184,9 +26234,9 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--military tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="military" v="airfield"/>
 #. <icon src="transport/airport/airfield.png"/>
@@ -26194,7 +26244,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="military" v="bunker"/>
 #. <icon src="misc/landmark/bunker.png"/>
@@ -26202,7 +26252,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="military" v="barracks"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26210,7 +26260,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="military" v="danger_area"/>
 #. <icon src="misc/danger.png"/>
@@ -26218,7 +26268,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="military" v="range"/>
 #. <icon src="misc/landmark/range.png"/>
@@ -26233,7 +26283,7 @@ msgstr "צבאי"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="landuse" v="cemetery"/>
 #: build/trans_style.java:3241
@@ -26244,7 +26294,7 @@ msgstr "בית עלמין"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="peak"/>
 #: build/trans_style.java:3317
@@ -26256,7 +26306,7 @@ msgstr "פיסגה"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="glacier"/>
 #. <icon annotate="true" src="misc/landmark/glacier_small.png"/>
@@ -26268,7 +26318,7 @@ msgstr "קרחון"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="volcano"/>
 #. <icon annotate="true" src="misc/landmark/volcano_small.png"/>
@@ -26280,7 +26330,7 @@ msgstr "הר געש"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="cliff"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26289,7 +26339,7 @@ msgstr "הר געש"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="scree"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26297,7 +26347,7 @@ msgstr "הר געש"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="fell"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26305,7 +26355,7 @@ msgstr "הר געש"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="bay"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26313,7 +26363,7 @@ msgstr "הר געש"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="land"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26321,7 +26371,7 @@ msgstr "הר געש"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="cave_entrance"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26336,7 +26386,7 @@ msgstr "טבעי"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="scrub"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26348,7 +26398,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="heath"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26360,7 +26410,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="wood"/>
 #. <icon src="misc/landmark/trees.png"/>
@@ -26372,7 +26422,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="mud"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26384,7 +26434,7 @@ msgstr "בוץ"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="beach"/>
 #. <icon src="misc/no_icon.png"/>
@@ -26396,16 +26446,16 @@ msgstr "חוף"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="natural" v="tree"/>
 #. <icon src="misc/landmark/trees.png"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--route tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="route" v="bus"/>
 #. color route
@@ -26413,7 +26463,7 @@ msgstr "חוף"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="route" v="ferry"/>
 #. color route
@@ -26421,7 +26471,7 @@ msgstr "חוף"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="route" v="flight"/>
 #. color route
@@ -26429,7 +26479,7 @@ msgstr "חוף"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="route" v="ncn"/>
 #. color route
@@ -26437,7 +26487,7 @@ msgstr "חוף"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="route" v="subsea"/>
 #. color route
@@ -26445,7 +26495,7 @@ msgstr "חוף"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="route" v="ski"/>
 #. color route
@@ -26453,7 +26503,7 @@ msgstr "חוף"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="route" v="tour"/>
 #. color route
@@ -26461,7 +26511,7 @@ msgstr "חוף"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="route" v="pub_crawl"/>
 #: build/trans_style.java:3472 build/trans_style.java:3480
@@ -26476,9 +26526,9 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!--boundary tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="boundary" v="national"/>
 #. color boundary
@@ -26486,7 +26536,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="boundary" v="administrative"/>
 #. color boundary
@@ -26494,7 +26544,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="boundary" v="civil"/>
 #. color boundary
@@ -26502,7 +26552,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="boundary" v="political"/>
 #. color boundary
@@ -26510,7 +26560,7 @@ msgstr ""
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="boundary" v="national_park"/>
 #: build/trans_style.java:3538 build/trans_style.java:3546
@@ -26524,7 +26574,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <!-- this will badly display otherwise well tagged footways and alike, so comment it out until we have better ways to display this in JOSM!
 #. XXX - maybe it's possible to use linemod's here?
 #. <rule>
@@ -26548,7 +26598,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="surface" v="cobblestone"/>
 #. <linemod mode="under" width="0" dashedcolour="#600060"/>
@@ -26557,13 +26607,13 @@ msgstr "גבול"
 #. <scale_max>40000</scale_max>
 #. </rule>
 #. -->
-#.
+#. 
 #. <!--name tags -->
-#.
+#. 
 #. <!--preferences tags -->
-#.
+#. 
 #. <!--place tags -->
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="continent"/>
 #. <icon annotate="true" src="place/settlement/capital.png"/>
@@ -26571,7 +26621,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="country"/>
 #. <icon annotate="true" src="place/settlement/capital.png"/>
@@ -26579,7 +26629,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="state"/>
 #. <icon annotate="true" src="place/settlement/capital.png"/>
@@ -26587,7 +26637,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="region"/>
 #. <icon annotate="true" src="place/settlement/capital.png"/>
@@ -26595,7 +26645,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="county"/>
 #. <icon annotate="true" src="place/settlement/capital.png"/>
@@ -26603,7 +26653,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="city"/>
 #. <icon annotate="true" src="place/settlement/city.png"/>
@@ -26611,7 +26661,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>200000000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="town"/>
 #. <icon annotate="true" src="place/settlement/town.png"/>
@@ -26619,7 +26669,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="village"/>
 #. <icon annotate="true" src="place/settlement/town.png"/>
@@ -26627,7 +26677,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="hamlet"/>
 #. <icon annotate="true" src="place/settlement/town.png"/>
@@ -26635,7 +26685,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="suburb"/>
 #. <icon annotate="true" src="place/settlement/town.png"/>
@@ -26643,7 +26693,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="locality"/>
 #. <icon annotate="true" src="place/locality.png"/>
@@ -26651,7 +26701,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="island"/>
 #. <icon annotate="true" src="place/island.png"/>
@@ -26659,7 +26709,7 @@ msgstr "גבול"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="place" v="islet"/>
 #. <icon annotate="true" src="place/islet.png"/>
@@ -26677,42 +26727,42 @@ msgstr "מקום"
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="addr:housenumber"/>
 #. <icon annotate="true" src="misc/housenumber.png" priority="-50000"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="addr:postcode"/>
 #. <icon annotate="true" src="misc/housenumber.png" priority="-50000"/>
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="addr:interpolation" v="odd"/>
 #. color address
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="addr:interpolation" v="even"/>
 #. color address
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="addr:interpolation" v="all"/>
 #. color address
 #. <scale_min>1</scale_min>
 #. <scale_max>40000</scale_max>
 #. </rule>
-#.
+#. 
 #. <rule>
 #. <condition k="addr:interpolation" v="alphabetic"/>
 #: build/trans_style.java:4223 build/trans_style.java:4230
@@ -26805,36 +26855,36 @@ msgstr "ניסיון"
 #. Format:
 #. Each line specifies a certain error to be reported
 #. <data type> : messagetype : <key><expression><value>
-#.
+#. 
 #. Data type can be:
 #. node        - a node point
 #. way         - a way
 #. relation    - a relation
 #. *           - all data types
-#.
+#. 
 #. Message type can be:
 #. E            - an error
 #. W            - a warning
 #. I            - an low priority informational warning
-#.
+#. 
 #. Key and value are expressions describing certain keys and values of these keys.
 #. Regulator expressions are supported. In this case the expressions starts and
 #. ends with // signs. If an 'i' is appended, the regular expression is
 #. case insensitive.
-#.
+#. 
 #. The * sign indicates any string.
 #. The texts BOOLEAN_TRUE and BOOLEAN_FALSE in the value part indicate a special
 #. handling for boolean values (yes, true, 0, false, no, ...).
-#.
+#. 
 #. Expression can be:
 #. !=          - the key/value combination does not match
 #. ==          - the key/value combination does match
-#.
+#. 
 #. To have more complicated expressions, multiple elements can be grouped together
 #. with an logical and (&&).
-#.
+#. 
 #. The comment at the end of a rule is displayed in validator description
-#.
+#. 
 #. Empty lines and space signs are ignored
 #: build/trans_validator.java:38
 msgid "abbreviated street name"
@@ -26947,7 +26997,7 @@ msgstr "צירוף תגיות לא רגיל"
 #. FORMAT
 #. default(true or false);Name;URL
 #. NOTE: default items should be common and worldwide
-#.
+#. 
 #: build/trans_wms.java:5
 msgid "Landsat"
 msgstr ""
@@ -26958,7 +27008,7 @@ msgid "Open Aerial Map"
 msgstr ""
 
 #. http://openaerialmap.org/wms/?VERSION=1.0&request=GetMap&layers=world&styles=&format=image/jpeg&
-#.
+#. 
 #. different forms for web access
 #. must be html:<url>
 #: build/trans_wms.java:10
@@ -26981,16 +27031,16 @@ msgid "TilesAtHome"
 msgstr ""
 
 #. html:http://josm.openstreetmap.de/wmsplugin/TilesAtHome.html?
-#.
-#.
+#. 
+#. 
 #. only for Germany
 #: build/trans_wms.java:17
 msgid "Streets NRW Geofabrik.de"
 msgstr ""
 
 #. http://tools.geofabrik.de/osmi/view/strassennrw/josmwms?
-#.
-#.
+#. 
+#. 
 #. only for North America
 #. Terraserver USCG - High resolution maps
 #: build/trans_wms.java:22
@@ -27003,8 +27053,8 @@ msgid "Terraserver Urban"
 msgstr ""
 
 #. http://terraservice.net/ogcmap.ashx?version=1.1.1&request=GetMap&Layers=urbanarea&styles=&format=image/jpeg&
-#.
-#.
+#. 
+#. 
 #. only for Czech Republic
 #: build/trans_wms.java:27
 msgid "Czech CUZK:KM"
@@ -27016,8 +27066,8 @@ msgid "Czech UHUL:ORTOFOTO"
 msgstr ""
 
 #. http://geoportal2.uhul.cz/cgi-bin/oprl.asp?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&SRS=EPSG:4326&LAYERS=Ortofoto_cb&STYLES=default&FORMAT=image/jpeg&TRANSPARENT=TRUE&
-#.
-#.
+#. 
+#. 
 #. only for GB
 #. fails with division by zero error
 #: build/trans_wms.java:33
@@ -27035,8 +27085,8 @@ msgid "7th Series (OS7)"
 msgstr ""
 
 #. http://ooc.openstreetmap.org/wms/map.php?source=os7&
-#.
-#.
+#. 
+#. 
 #. only for Japan
 #: build/trans_wms.java:39
 msgid "MLIT Japan (ORTHO)"
@@ -27058,8 +27108,8 @@ msgid "MLIT Japan (ORTHO03)"
 msgstr ""
 
 #. http://orthophoto.mlit.go.jp:8888/wms/service/wmsRasterTileMap?VERSION=1.3.0&REQUEST=GetMap&LAYERS=ORTHO03&STYLES=Default&CRS=EPSG:4612&BBOX={s},{w},{n},{e}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png&BGCOLOR=OxFFFFFF
-#.
-#.
+#. 
+#. 
 #. only for Italy
 #: build/trans_wms.java:46
 msgid "Lodi - Italy"
@@ -27069,20 +27119,6 @@ msgstr ""
 #: build/trans_wms.java:47
 msgid "Sicily - Italy"
 msgstr ""
-
-#~ msgid "Please report a ticket at {0}"
-#~ msgstr "אנא דווח על {0}"
-
-#~ msgid "Include your steps to get to the error (as detailed as possible)!"
-#~ msgstr "כלול את הצעדים לקבלת השגיאה (בפירוט רב ככל האפשר)!"
-
-#~ msgid ""
-#~ "Try updating to the newest version of JOSM and all plugins before "
-#~ "reporting a bug."
-#~ msgstr "נסה לעדכן לגירסא האחרונה של JOSM וכל התוספים לפני דיווח על תקלה."
-
-#~ msgid "Be sure to include the following information:"
-#~ msgstr "וודא שכללת את המידע הבא:"
 
 #~ msgid "Move"
 #~ msgstr "הזז"
@@ -27123,6 +27159,7 @@ msgstr ""
 #~ msgid "Unsaved Changes"
 #~ msgstr "שינויים לא שמורים"
 
+#, java-format
 #~ msgid "Cannot open preferences directory: {0}"
 #~ msgstr "לא ניתן לפתוח את תיקיית ההעדפות: {0}"
 
@@ -27135,6 +27172,7 @@ msgstr ""
 #~ msgid "resolved version:"
 #~ msgstr "הגירסה הפתורה:"
 
+#, java-format
 #~ msgid "{0} object has conflicts:"
 #~ msgid_plural "{0} objects have conflicts:"
 #~ msgstr[0] "קיימות התנגשויות עם פריט {0}:"
@@ -27150,10 +27188,9 @@ msgstr ""
 #~ msgstr "לשלב שתי דרכים בעלות חברויות שונות?"
 
 #~ msgid ""
-#~ "The selected ways have differing relation memberships.  Do you still want "
-#~ "to combine them?"
-#~ msgstr ""
-#~ "לדרכים הנבחרות ישנם יחסים משתנים. האם אתה עדיין מעוניין לשלב ביניהם?"
+#~ "The selected ways have differing relation memberships.  Do you still want to "
+#~ "combine them?"
+#~ msgstr "לדרכים הנבחרות ישנם יחסים משתנים. האם אתה עדיין מעוניין לשלב ביניהם?"
 
 #~ msgid "All the ways were empty"
 #~ msgstr "כל הדרכים היו ריקות"
@@ -27170,12 +27207,13 @@ msgstr ""
 #~ msgid "JOSM Online Help"
 #~ msgstr "עזרה מקוונת עבור JOSM"
 
+#, java-format
 #~ msgid "Error while loading page {0}"
 #~ msgstr "שגיאה בעת טעינת העמוד {0}"
 
 #~ msgid ""
-#~ "The selected nodes have differing relation memberships.  Do you still "
-#~ "want to merge them?"
+#~ "The selected nodes have differing relation memberships.  Do you still want "
+#~ "to merge them?"
 #~ msgstr ""
 #~ "לצמתים האפשריים ישנן קשרי חברות שונים. האם אתה עדיין מעוניין למזג אותם?"
 
@@ -27186,16 +27224,30 @@ msgstr ""
 #~ msgstr "ללא שם"
 
 #~ msgid ""
-#~ "Internal Error: cannot check conditions for no layer. Please report this "
-#~ "as a bug."
+#~ "Internal Error: cannot check conditions for no layer. Please report this as "
+#~ "a bug."
 #~ msgstr ""
-#~ "שגיאה פנימית: לא ניתן לבדוק תנאים לשכבה שלא נבחרה. אנא דווח על זאת כעל "
-#~ "תקלה."
+#~ "שגיאה פנימית: לא ניתן לבדוק תנאים לשכבה שלא נבחרה. אנא דווח על זאת כעל תקלה."
+
+#, java-format
+#~ msgid "Please report a ticket at {0}"
+#~ msgstr "אנא דווח על {0}"
 
 #~ msgid ""
 #~ "The plugin could not be removed. Please tell the people you got JOSM from "
 #~ "about the problem."
 #~ msgstr "לא ניתן להסיר את התוסף. אנא ספר למי שסיפק לך את JOSM על הבעיה."
+
+#~ msgid "Include your steps to get to the error (as detailed as possible)!"
+#~ msgstr "כלול את הצעדים לקבלת השגיאה (בפירוט רב ככל האפשר)!"
+
+#~ msgid ""
+#~ "Try updating to the newest version of JOSM and all plugins before reporting "
+#~ "a bug."
+#~ msgstr "נסה לעדכן לגירסא האחרונה של JOSM וכל התוספים לפני דיווח על תקלה."
+
+#~ msgid "Be sure to include the following information:"
+#~ msgstr "וודא שכללת את המידע הבא:"
 
 #~ msgid ""
 #~ "Server returned internal error. Try a reduced area or retry after waiting "
@@ -27215,6 +27267,7 @@ msgstr ""
 #~ msgid "Transfer aborted due to error (will wait for 5 seconds):"
 #~ msgstr "ההעברה הופסקה בגלל שגיאה (יחכה 5 שניות):"
 
+#, java-format
 #~ msgid "Plugin requires JOSM update: {0}."
 #~ msgstr "תוסף דורש את עדכון JOSM: {0}."
 
@@ -27236,6 +27289,7 @@ msgstr ""
 #~ msgid "Date"
 #~ msgstr "תאריך"
 
+#, java-format
 #~ msgid "Authors: {0}"
 #~ msgstr "מחברים: {0}"
 
@@ -27245,6 +27299,7 @@ msgstr ""
 #~ msgid "OSM username (email)"
 #~ msgstr "שם משתמש OSM (אי-מייל)"
 
+#, java-format
 #~ msgid "Error deleting plugin file: {0}"
 #~ msgstr "שגיאה במחיקת קובץ התוסף: {0}"
 
@@ -27299,6 +27354,7 @@ msgstr ""
 #~ msgid "Navigation"
 #~ msgstr "ניווט"
 
+#, java-format
 #~ msgid "requested: {0}"
 #~ msgstr "התבקש: {0}"
 
@@ -27326,6 +27382,7 @@ msgstr ""
 #~ msgid "Open the OpenStreetBugs window and activate the automatic download"
 #~ msgstr "פתח את חלון OpenStreetBugs והפעל את ההורדה האוטומטית"
 
+#, java-format
 #~ msgid ""
 #~ "Plugin archive already available. Do you want to download the current "
 #~ "version by deleting existing archive?\n"
@@ -27336,6 +27393,7 @@ msgstr ""
 #~ "הארכיון הקיים?\n"
 #~ "{0}"
 
+#, java-format
 #~ msgid "Conflicts: {0}"
 #~ msgstr "התנגשויות: {0}"
 
@@ -27369,24 +27427,26 @@ msgstr ""
 #~ msgid "Please choose a user using the author panel"
 #~ msgstr "בחר משתמש בעזרת פאנל המחברים"
 
+#, java-format
 #~ msgid ""
-#~ "The plugin {0} seems to be broken or could not be downloaded "
-#~ "automatically."
+#~ "The plugin {0} seems to be broken or could not be downloaded automatically."
 #~ msgstr "כנראה שהתוסף {0} אינו תקין או שאי אפשר להוריד אותו בצורה אוטומטית."
 
 #~ msgid ""
 #~ "(You can change the number of days after which this warning appears<br>by "
 #~ "setting the config option 'pluginmanager.warntime'.)"
 #~ msgstr ""
-#~ "(ניתן לשנות את מספר הימים שאחריהם האזהרה תופיע<br>ע\"י קביעת אפשרות "
-#~ "התצורה 'pluginmanager.warntime')."
+#~ "(ניתן לשנות את מספר הימים שאחריהם האזהרה תופיע<br>ע\"י קביעת אפשרות התצורה "
+#~ "'pluginmanager.warntime')."
 
+#, java-format
 #~ msgid "Could not download plugin: {0} from {1}"
 #~ msgstr "לא יכול להוריד תוסף: {0} מ{1}"
 
 #~ msgid "EPSG:4326"
 #~ msgstr "EPSG:4326"
 
+#, java-format
 #~ msgid "Resolve {0} conflicts in {1} objects"
 #~ msgstr "פתור {0} התנגשויות ב{1} עצמים"
 
@@ -27414,6 +27474,7 @@ msgstr ""
 #~ msgid "You can use the mouse or Ctrl+Arrow keys/./ to zoom and pan."
 #~ msgstr "ניתן להשתמש בעכבר או ב- Ctrl+מקשי חיצים/./ למיקוד והזזה."
 
+#, java-format
 #~ msgid "Skipping a way because it includes a node that doesn''t exist: {0}\n"
 #~ msgstr "מדלג על דרך כי היא מכילה נקודה שאינה קיימת: {0}\n"
 
@@ -27422,12 +27483,12 @@ msgstr ""
 
 #~ msgid ""
 #~ "<html>WARNING: The password is stored in plain text in the preferences "
-#~ "file.<br>The password is transfered in plain text to the server, encoded "
-#~ "in the URL.<br><b>Do not use a valuable Password.</b></html>"
+#~ "file.<br>The password is transfered in plain text to the server, encoded in "
+#~ "the URL.<br><b>Do not use a valuable Password.</b></html>"
 #~ msgstr ""
-#~ "<html>הזערה: הסיסמא נשמרת בצורה לא מוצפנת בקובץ המאפיינים.<br>הסיסמא "
-#~ "נשלחת בצורה לא מוצפנת לשרת, מקודדת בכתובת.<br><b>אל תשתמש בסיסמא בעלת ערך."
-#~ "</b></html>"
+#~ "<html>הזערה: הסיסמא נשמרת בצורה לא מוצפנת בקובץ המאפיינים.<br>הסיסמא נשלחת "
+#~ "בצורה לא מוצפנת לשרת, מקודדת בכתובת.<br><b>אל תשתמש בסיסמא בעלת "
+#~ "ערך.</b></html>"
 
 #~ msgid "Combine Anyway"
 #~ msgstr "אחד בכל זאת"
@@ -27435,6 +27496,7 @@ msgstr ""
 #~ msgid "Merge Anyway"
 #~ msgstr "מזג בכל זאת"
 
+#, java-format
 #~ msgid ""
 #~ "This action will require {0} individual download requests. Do you wish to "
 #~ "continue?"
@@ -27476,6 +27538,7 @@ msgstr ""
 #~ msgid "Please select ways with almost right angles to orthogonalize."
 #~ msgstr "בחר דרכים עם זווית כמעט ישרה ליישור"
 
+#, java-format
 #~ msgid "Checking whether node {0} is gone ..."
 #~ msgstr "בודק האם נקודה {0} נעלמה..."
 
@@ -27527,12 +27590,14 @@ msgstr ""
 #~ msgid "Move Down"
 #~ msgstr "הורד"
 
+#, java-format
 #~ msgid "Relation Editor: {0}"
 #~ msgstr "עורך יחסים: {0}"
 
 #~ msgid "Hint: Some changes came from uploading new data to the server."
 #~ msgstr "רמז: כמה מהשינויים נובעים מהעלאת נתונים חדשים לשרת."
 
+#, java-format
 #~ msgid "Unexpected return value. Got {0}."
 #~ msgstr "ערך מוחזר לא צפוי. התקבל {0}"
 

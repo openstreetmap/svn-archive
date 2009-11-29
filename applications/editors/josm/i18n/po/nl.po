@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-28 17:51+0100\n"
-"PO-Revision-Date: 2009-11-24 12:37+0000\n"
+"POT-Creation-Date: 2009-11-29 13:30+0100\n"
+"PO-Revision-Date: 2009-11-28 20:34+0000\n"
 "Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-28 14:33+0000\n"
+"X-Launchpad-Export-Date: 2009-11-29 12:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:207
@@ -87,7 +87,6 @@ msgstr "Ongeldige URL negeren: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceDialog.java:109
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:75
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:149
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:85
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:53
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:126
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:67
@@ -160,7 +159,7 @@ msgstr "<html>Kon bestand ''{0}' niet lezen'.<br> Error is: <br>{1}</html>"
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:342
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:70
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:412
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:44
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:49
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:458
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:611
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:624
@@ -309,6 +308,7 @@ msgstr "Doorgaan"
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:88
 #: ../core/src/org/openstreetmap/josm/actions/AbstractMergeAction.java:72
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:288
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:57
 #: ../core/src/org/openstreetmap/josm/actions/DiskAccessAction.java:56
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:89
@@ -387,17 +387,18 @@ msgstr ""
 msgid "No target layers"
 msgstr "Geen doel lagen"
 
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:33
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:34
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:69
+#. modal
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:57
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:58
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:165
 msgid "Add Node..."
 msgstr "Knoop toevoegen..."
 
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:33
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:57
 msgid "Add a node by entering latitude and longitude."
 msgstr "Knoop toevoegen door invoeren lengte- en breedtegraad."
 
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:34
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:58
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:26
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:19
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:21
@@ -416,40 +417,76 @@ msgstr "Knoop toevoegen door invoeren lengte- en breedtegraad."
 msgid "Edit: {0}"
 msgstr "Bewerk: {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:53
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:103
 msgid "Enter the coordinates for the new node."
 msgstr "Coördinaten van de nieuwe knoop invoeren."
 
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:54
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:104
 msgid "Use decimal degrees."
 msgstr "Decimale graden gebruiken."
 
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:55
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:105
 msgid "Negative values denote Western/Southern hemisphere."
 msgstr "Negatieve waarden duiden op het westelijk/zuidelijk halfrond."
 
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:58
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:108
 #: ../plugins/grid/src/grid/GridLayer.java:193
 #: ../plugins/livegps/src/livegps/LiveGpsDialog.java:54
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:82
 msgid "Latitude"
 msgstr "Breedtegraad"
 
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:61
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:111
 #: ../plugins/grid/src/grid/GridLayer.java:195
 #: ../plugins/livegps/src/livegps/LiveGpsDialog.java:56
 #: ../plugins/utilsplugin/src/UtilsPlugin/JumpToAction.java:85
 msgid "Longitude"
 msgstr "Lengtegraad"
 
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:98
-#, fuzzy
-msgid "Could not create a node with the entered latitude/longitude."
-msgstr "Knoop toevoegen door invoeren lengte- en breedtegraad."
-
-#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:99
-msgid "Illegal lat/lon value"
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:225
+msgid "Please enter a valid latitude in the range -90..90"
 msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:228
+#, fuzzy
+msgid "Please enter a latitude in the range -90..90"
+msgstr "Voer een gebruikersnaam in"
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:236
+msgid "Please enter a valid longitude in the range -180..180"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:239
+#, fuzzy
+msgid "Please enter a longitude in the range -180..180"
+msgstr "Voer een gebruikersnaam in"
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:275
+#: ../core/src/org/openstreetmap/josm/actions/upload/RelationUploadOrderHook.java:88
+#: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:80
+#: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:325
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1129
+#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:165
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:368
+#: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:239
+#: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:201
+#: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:280
+#: ../plugins/grid/src/grid/GridLayer.java:162
+#: ../plugins/grid/src/grid/GridLayer.java:199
+#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:145
+#: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:333
+msgid "OK"
+msgstr "OK"
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:276
+#, fuzzy
+msgid "Close the dialog and create a new node"
+msgstr "Sluit dialoog en stop het downloaden"
+
+#: ../core/src/org/openstreetmap/josm/actions/AddNodeAction.java:289
+#, fuzzy
+msgid "Close the dialog, don't create a new node"
+msgstr "Sluit dialoog en stop het downloaden"
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:37
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:38
@@ -858,20 +895,17 @@ msgid "All Formats"
 msgstr "Alle formaten"
 
 #: ../core/src/org/openstreetmap/josm/actions/FullscreenToggleAction.java:30
-#, fuzzy
 msgid "Fullscreen View"
-msgstr "Volledig scherm"
+msgstr ""
 
 #. no icon
 #: ../core/src/org/openstreetmap/josm/actions/FullscreenToggleAction.java:32
-#, fuzzy
 msgid "Toggle fullscreen view"
-msgstr "Volledig scherm aan-/uitzetten"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/FullscreenToggleAction.java:33
-#, fuzzy
 msgid "Toggle Fullscreen view"
-msgstr "Volledig scherm aan-/uitzetten"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:28
 #: ../core/src/org/openstreetmap/josm/actions/GpxExportAction.java:29
@@ -2634,22 +2668,6 @@ msgstr "... verwijst naar relatie"
 #: ../core/src/org/openstreetmap/josm/actions/upload/RelationUploadOrderHook.java:87
 msgid "Cycling dependencies"
 msgstr "Fietsen afhankelijkheden"
-
-#: ../core/src/org/openstreetmap/josm/actions/upload/RelationUploadOrderHook.java:88
-#: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:80
-#: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:325
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1129
-#: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:165
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:368
-#: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:239
-#: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:201
-#: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:280
-#: ../plugins/grid/src/grid/GridLayer.java:162
-#: ../plugins/grid/src/grid/GridLayer.java:199
-#: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:145
-#: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:333
-msgid "OK"
-msgstr "OK"
 
 #: ../core/src/org/openstreetmap/josm/command/AddCommand.java:66
 #, java-format
@@ -9065,9 +9083,8 @@ msgid "Language"
 msgstr "Taal"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/LanguagePreference.java:112
-#, fuzzy
 msgid "Looking up available translations..."
-msgstr "Beschikbare plugins configureren"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/MapPaintPreference.java:35
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:41
@@ -10457,19 +10474,19 @@ msgstr ""
 msgid "Downloading Plugin {0}..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:133
+#: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:139
 msgid "Skip download"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:134
+#: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:140
 msgid "Download Plugin"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:134
+#: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:140
 msgid "Skip Download"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:136
+#: ../core/src/org/openstreetmap/josm/plugins/PluginDownloader.java:142
 #, java-format
 msgid "JOSM version {0} required for plugin {1}."
 msgstr ""
@@ -10673,15 +10690,15 @@ msgstr "Dit is na het einde van de opname"
 msgid "Error playing sound"
 msgstr "Fout tijdens afspelen van het geluid"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:53
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:58
 msgid "Do nothing"
 msgstr "Niets doen"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:53
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:58
 msgid "Report Bug"
 msgstr "Fout melden"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:54
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:59
 msgid ""
 "An unexpected exception occurred.\n"
 "\n"
@@ -10693,35 +10710,43 @@ msgstr ""
 "Dit is altijd een programmeerfout. Als je de nieuwste versie\n"
 "van JOSM gebruikt, wees dan vriendelijk en dien een foutenrapport in."
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:57
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:62
 msgid "Unexpected Exception"
 msgstr "Er is een onverwachte fout opgetreden"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:68
-#, java-format
-msgid "Please report a ticket at {0}"
-msgstr "Maak een melding bij {0}"
-
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:69
-msgid "Include your steps to get to the error (as detailed as possible)!"
-msgstr ""
-"Beschrijf de gevolgde stappen die tot de fout leidde (zo precies mogelijk)!"
-
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:70
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:92
 msgid ""
-"Try updating to the newest version of JOSM and all plugins before reporting "
-"a bug."
+"<html><p>You've encountered an error in JOSM. Before you file a bug<br>make "
+"sure you've updated to the latest version of JOSM here:</p></html>"
 msgstr ""
-"Probeer te updaten naar de nieuwste versie van JOSM en alle plugins voordat "
-"je de fout meldt."
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:71
-msgid "Be sure to include the following information:"
-msgstr "Voeg zeker de volgende informatie toe:"
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:96
+msgid ""
+"<html>You should also update your plugins. If neither of those help "
+"please<br>file a bug in our bugtracker using this link:</p></html>"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:76
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:99
+msgid ""
+"<html><p>There the the error information provided below should already "
+"be<br>filled out for you. Please include information on how to "
+"reproduce<br>the error and try to supply as much detail as possible.</p></"
+"html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:103
+msgid ""
+"<html><p>Alternatively if that doesn't work you can manually fill in the "
+"information<br>below at this URL:</p></html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:111
 msgid "(The text has already been copied to your clipboard.)"
 msgstr "(De tekst is reeds gekopieerd naar je klembord.)"
+
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:120
+msgid "You've encountered a bug in JOSM"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:39
 #, java-format
@@ -10850,7 +10875,22 @@ msgid ""
 "<br><br>The error message is:<br>{0}</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:159
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:98
+#, fuzzy
+msgid "Loading available locales..."
+msgstr "Beschikbare plugins configureren"
+
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:102
+#, fuzzy
+msgid "Checking locales..."
+msgstr "Buffergeheugen controleren..."
+
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:105
+#, fuzzy, java-format
+msgid "Checking translation for locale ''{0}''"
+msgstr "Data aan het uploaden voor laag ''{0}''"
+
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:171
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr "Kan geen vertaling voor taalgebied {0} vinden. Naar {1} terugvallen."
@@ -27248,8 +27288,23 @@ msgstr ""
 msgid "Sicily - Italy"
 msgstr ""
 
-#~ msgid "Split way segment"
-#~ msgstr "Wegsegment splitsen"
+#~ msgid "Please report a ticket at {0}"
+#~ msgstr "Maak een melding bij {0}"
+
+#~ msgid "Include your steps to get to the error (as detailed as possible)!"
+#~ msgstr ""
+#~ "Beschrijf de gevolgde stappen die tot de fout leidde (zo precies "
+#~ "mogelijk)!"
+
+#~ msgid ""
+#~ "Try updating to the newest version of JOSM and all plugins before "
+#~ "reporting a bug."
+#~ msgstr ""
+#~ "Probeer te updaten naar de nieuwste versie van JOSM en alle plugins "
+#~ "voordat je de fout meldt."
+
+#~ msgid "Be sure to include the following information:"
+#~ msgstr "Voeg zeker de volgende informatie toe:"
 
 #~ msgid "Select a bookmark first."
 #~ msgstr "Selecteer eerst een bladwijzer."
@@ -27397,6 +27452,9 @@ msgstr ""
 
 #~ msgid "Conflicting relation"
 #~ msgstr "Conflicterende relatie"
+
+#~ msgid "Split way segment"
+#~ msgstr "Wegsegment splitsen"
 
 #~ msgid "EPSG:4326"
 #~ msgstr "EPSG:4326"

@@ -6,6 +6,7 @@ package org.openstreetmap.josm.plugins.AddrInterpolation;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -45,7 +46,9 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -56,7 +59,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.UrlLabel;
 
 /**
- *
+ * 
  */
 
 
@@ -70,11 +73,14 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 	private Relation associatedStreetRelation = null;
 	private ArrayList<Node> houseNumberNodes = null;  // Additional nodes with addr:housenumber
 
+	private static String lastIncrement = "";
+	private static int lastAccuracyIndex = 0;
 	private static String lastCity = "";
 	private static String lastState = "";
 	private static String lastPostCode = "";
 	private static String lastCountry = "";
 	private static String lastFullAddress = "";
+	private static boolean lastConvertToHousenumber = false;
 
 	// Edit controls
 	private EscapeDialog dialog=null;
@@ -82,11 +88,13 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 	private JRadioButton streetRelationButton  = null;
 	private JTextField startTextField = null;
 	private JTextField endTextField = null;
+	private JTextField incrementTextField = null;
 	private JTextField cityTextField = null;
 	private JTextField stateTextField = null;
 	private JTextField postCodeTextField = null;
 	private JTextField countryTextField = null;
 	private JTextField fullTextField = null;
+	private Checkbox cbConvertToHouseNumbers = null;
 
 	private boolean relationChanged = false; // Whether to re-trigger data changed for relation
 	// Track whether interpolation method is known so that auto detect doesn't override a previous choice.
@@ -94,9 +102,18 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 
 	// NOTE: The following 2 arrays must match in number of elements and position
-	String[] addrInterpolationTags = { "odd", "even", "all", "alphabetic" };  // Tag values for map
-	String[] addrInterpolationStrings = { tr("Odd"), tr("Even"), tr("All"), tr("Alphabetic") }; // Translatable names for display
+	// Tag values for map (Except that 'Numeric' is replaced by actual # on map)
+	String[] addrInterpolationTags = { "odd", "even", "all", "alphabetic", "Numeric" };
+	String[] addrInterpolationStrings = { tr("Odd"), tr("Even"), tr("All"), tr("Alphabetic"), tr("Numeric") }; // Translatable names for display
+	private final int NumericIndex = 4;
 	private JComboBox addrInterpolationList = null;
+
+	// NOTE: The following 2 arrays must match in number of elements and position
+	String[] addrInclusionTags = { "actual", "estimate", "potential" }; // Tag values for map
+	String[] addrInclusionStrings = { tr("Actual"), tr("Estimate"), tr("Potential") }; // Translatable names for display
+	private JComboBox addrInclusionList = null;
+
+
 
 	// For tracking edit changes as group for undo
 	private Collection<Command> commandGroup = null;
@@ -120,7 +137,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 		dialog = new EscapeDialog((Frame) Main.parent, name, true);
 
 		dialog.add(editControlsPane);
-		dialog.setSize(new Dimension(300,450));
+		dialog.setSize(new Dimension(300,500));
 		dialog.setLocation(new Point(100,300));
 
 		// Listen for windowOpened event to set focus
@@ -140,11 +157,13 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 		dialog.setVisible(true);
 
+		lastIncrement = incrementTextField.getText();
 		lastCity = cityTextField.getText();
 		lastState = stateTextField.getText();
 		lastPostCode = postCodeTextField.getText();
 		lastCountry = countryTextField.getText();
 		lastFullAddress = fullTextField.getText();
+		lastConvertToHousenumber = cbConvertToHouseNumbers.getState();
 
 	}
 
@@ -194,28 +213,37 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 		JLabel numberingLabel = new JLabel(tr("Numbering Scheme:"));
 		addrInterpolationList = new JComboBox(addrInterpolationStrings);
 
+		JLabel incrementLabel = new JLabel(tr("Increment:"));
+		incrementTextField = new JTextField(lastIncrement, 100);
+		incrementTextField.setEnabled(false);
+
 		JLabel startLabel = new JLabel(tr("Starting #:"));
 		JLabel endLabel = new JLabel(tr("Ending #:"));
 
 		startTextField = new JTextField(10);
 		endTextField = new JTextField(10);
 
-
-
+		JLabel inclusionLabel = new JLabel(tr("Accuracy:"));
+		addrInclusionList = new JComboBox(addrInclusionStrings);
+		addrInclusionList.setSelectedIndex(lastAccuracyIndex);
 
 		// Preload any values already set in map
 		GetExistingMapKeys();
 
 
-		JLabel[] textLabels = {startLabel, endLabel, numberingLabel};
-		Component[] editFields = {startTextField, endTextField, addrInterpolationList};
+		JLabel[] textLabels = {startLabel, endLabel, numberingLabel, incrementLabel, inclusionLabel};
+		Component[] editFields = {startTextField, endTextField, addrInterpolationList, incrementTextField, addrInclusionList};
 		AddEditControlRows(textLabels, editFields,	editControlsPane);
+
+		cbConvertToHouseNumbers = new Checkbox(tr("Convert way to individual house numbers."), null, lastConvertToHousenumber);
+		// cbConvertToHouseNumbers.setSelected(lastConvertToHousenumber);
 
 		// Address interpolation fields not valid if Way not selected
 		if (addrInterpolationWay == null) {
 			addrInterpolationList.setEnabled(false);
 			startTextField.setEnabled(false);
 			endTextField.setEnabled(false);
+			cbConvertToHouseNumbers.setEnabled(false);
 		}
 
 
@@ -245,6 +273,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 		endTextField.addKeyListener(enterProcessor);
 		cityTextField.addKeyListener(enterProcessor);
 		addrInterpolationList.addKeyListener(enterProcessor);
+		incrementTextField.addKeyListener(enterProcessor);
 
 
 		// Watch when Interpolation Method combo box is selected so that
@@ -258,6 +287,19 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 				}
 			}
 		});
+
+
+		// Watch when Interpolation Method combo box is changed so that
+		// Numeric increment box can be enabled or disabled.
+		addrInterpolationList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				int selectedIndex = addrInterpolationList.getSelectedIndex();
+				incrementTextField.setEnabled(selectedIndex == NumericIndex); // Enable or disable numeric field
+			}
+		});
+
+
+		editControlsPane.add(cbConvertToHouseNumbers, c);
 
 
 
@@ -309,9 +351,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 			return;
 		}
 
-		String selectedMethod = GetInterpolationMethod();  // Currently selected method
-
-		// String[] addrInterpolationTags = { "odd", "even", "all", "alphabetic" };  // Tag values for map
+		// String[] addrInterpolationTags = { "odd", "even", "all", "alphabetic", ### };  // Tag values for map
 
 		if (isLong(startValueString) && isLong(endValueString)) {
 			// Have 2 numeric values
@@ -362,17 +402,40 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 
 
-	// Set Interpolation Method combo box to method specified by 'currentMethod' (an OSM key)
+	// Set Interpolation Method combo box to method specified by 'currentMethod' (an OSM key value)
 	private void SelectInterpolationMethod(String currentMethod) {
 		int currentIndex = 0;
+		if (isLong(currentMethod)) {
+			// Valid number: Numeric increment method
+			currentIndex = addrInterpolationTags.length-1;
+			incrementTextField.setText(currentMethod);
+			incrementTextField.setEnabled(true);
+		}
+		else {
+			// Must scan OSM key values because combo box is already loaded with translated strings
+			for (int i=0; i<addrInterpolationTags.length; i++) {
+				if (addrInterpolationTags[i].equals(currentMethod)) {
+					currentIndex = i;
+					break;
+				}
+			}
+		}
+		addrInterpolationList.setSelectedIndex(currentIndex);
+
+	}
+
+
+	// Set Inclusion Method combo box to method specified by 'currentMethod' (an OSM key value)
+	private void SelectInclusion(String currentMethod) {
+		int currentIndex = 0;
 		// Must scan OSM key values because combo box is already loaded with translated strings
-		for (int i=0; i<addrInterpolationTags.length; i++) {
-			if (addrInterpolationTags[i].equals(currentMethod)) {
+		for (int i=0; i<addrInclusionTags.length; i++) {
+			if (addrInclusionTags[i].equals(currentMethod)) {
 				currentIndex = i;
 				break;
 			}
 		}
-		addrInterpolationList.setSelectedIndex(currentIndex);
+		addrInclusionList.setSelectedIndex(currentIndex);
 
 	}
 
@@ -454,6 +517,11 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 				SelectInterpolationMethod(currentMethod);
 				interpolationMethodSet = true;  // Don't auto detect over a previous choice
+			}
+
+			String currentInclusion = addrInterpolationWay.get("addr:inclusion");
+			if (currentInclusion != null) {
+				SelectInclusion(currentInclusion);
 			}
 
 			Node firstNode = addrInterpolationWay.getNode(0);
@@ -676,13 +744,38 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 	}
 
 
-	// Test for valid long int
+
+	// For Alpha interpolation, return base string
+	//   For example: "22A" -> "22"
+	//   For example: "A" -> ""
+	//    Input string must not be empty
+	private String BaseAlpha(String strValue) {
+		if (strValue.length() > 0) {
+			return strValue.substring(0, strValue.length()-1);
+		}
+		else {
+			return "";
+		}
+	}
+
+
+	private char LastChar(String strValue) {
+		if (strValue.length() > 0) {
+			return strValue.charAt(strValue.length()-1);
+		}
+		else {
+			return 0;
+		}
+	}
+
+
+	// Test for valid positive long int
 	private boolean isLong( String input )
 	{
 		try
 		{
-			Long.parseLong( input );
-			return true;
+			Long val = Long.parseLong( input );
+			return (val > 0);
 		}
 		catch( Exception e)
 		{
@@ -701,10 +794,266 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 	}
 
 
+	private void InterpolateAlphaSection(int startNodeIndex, int endNodeIndex, String endValueString,
+			char startingChar, char endingChar) {
+
+
+		String baseAlpha = BaseAlpha(endValueString);
+		int nSegments  =endNodeIndex - startNodeIndex;
+
+		double[] segmentLengths = new double[nSegments];
+		// Total length of address interpolation way section
+		double totalLength= CalculateSegmentLengths(startNodeIndex, endNodeIndex, segmentLengths);
+
+
+		int nHouses = endingChar - startingChar-1;  // # of house number nodes to create
+		if (nHouses > 0) {
+
+			double houseSpacing = totalLength / (nHouses+1);
+
+			Node lastHouseNode = addrInterpolationWay.getNode(startNodeIndex);
+			int currentSegment = 0; // Segment being used to place new house # node
+			char currentChar= startingChar;
+			while (nHouses > 0) {
+				double distanceNeeded = houseSpacing;
+
+				// Move along segments until we can place the new house number
+				while (distanceNeeded > segmentLengths[currentSegment]) {
+					distanceNeeded -= segmentLengths[currentSegment];
+					currentSegment++;
+					lastHouseNode = addrInterpolationWay.getNode(startNodeIndex + currentSegment);
+				}
+
+				// House number is to be positioned in current segment.
+				double proportion = distanceNeeded / segmentLengths[currentSegment];
+				Node toNode = addrInterpolationWay.getNode(startNodeIndex + 1 + currentSegment);
+				LatLon newHouseNumberPosition = lastHouseNode.getCoor().interpolate(toNode.getCoor(), proportion);
+
+
+
+				Node newHouseNumberNode = new Node(newHouseNumberPosition);
+				currentChar++;
+				if ( (currentChar >'Z') && (currentChar <'a')) {
+					// Wraparound past uppercase Z: go directly to lower case a
+					currentChar = 'a';
+
+				}
+				String newHouseNumber = baseAlpha + currentChar;
+				newHouseNumberNode.put("addr:housenumber", newHouseNumber);
+
+				commandGroup.add(new AddCommand(newHouseNumberNode));
+				houseNumberNodes.add(newHouseNumberNode);   // Street, etc information to be added later
+
+				lastHouseNode = newHouseNumberNode;
+
+
+				segmentLengths[currentSegment] -= distanceNeeded; // Track amount used
+				nHouses -- ;
+			}
+		}
+
+
+	}
+
+
+	private void CreateAlphaInterpolation(String startValueString, String endValueString) {
+		char startingChar = LastChar(startValueString);
+		char endingChar = LastChar(endValueString);
+
+		if (isLong(startValueString)) {
+			// Special case of numeric first value, followed by 'A'
+			startingChar = 'A'-1;
+		}
+
+		// Search for possible anchors from the 2nd node to 2nd from last, interpolating between each anchor
+		int startIndex = 0; // Index into first interpolation zone of address interpolation way
+		for (int i=1; i<addrInterpolationWay.getNodesCount()-1; i++) {
+			Node testNode = addrInterpolationWay.getNode(i);
+			String endNodeNumber = testNode.get("addr:housenumber");
+			if (endNodeNumber != null) {
+				// This is a potential anchor node
+				if (endNodeNumber != "") {
+					char anchorChar = LastChar(endNodeNumber);
+					if ( (anchorChar >startingChar) && (anchorChar < endingChar) ) {
+						// Lies within the expected range
+						InterpolateAlphaSection(startIndex, i, endNodeNumber, startingChar, anchorChar);
+
+						// For next interpolation section
+						startingChar = anchorChar;
+						startValueString = endNodeNumber;
+						startIndex = i;
+					}
+				}
+
+			}
+		}
+
+		// End nodes do not actually contain housenumber value yet (command has not executed), so use user-entered value
+		InterpolateAlphaSection(startIndex, addrInterpolationWay.getNodesCount()-1, endValueString, startingChar, endingChar);
+
+	}
+
+
+	private double CalculateSegmentLengths(int startNodeIndex, int endNodeIndex, double segmentLengths[]) {
+		Node fromNode = addrInterpolationWay.getNode(startNodeIndex);
+		double totalLength = 0.0;
+		int nSegments = segmentLengths.length;
+		for (int segment = 0; segment < nSegments; segment++) {
+			Node toNode = addrInterpolationWay.getNode(startNodeIndex + 1 + segment);
+			segmentLengths[segment]= fromNode.getCoor().greatCircleDistance(toNode.getCoor());
+			totalLength += segmentLengths[segment];
+
+			fromNode = toNode;
+		}
+		return totalLength;
+
+	}
+
+
+	private void InterpolateNumericSection(int startNodeIndex, int endNodeIndex,
+			long startingAddr, long endingAddr,
+			long increment) {
+
+
+		int nSegments  =endNodeIndex - startNodeIndex;
+
+		double[] segmentLengths = new double[nSegments];
+
+		// Total length of address interpolation way section
+		double totalLength= CalculateSegmentLengths(startNodeIndex, endNodeIndex, segmentLengths);
+
+
+		int nHouses = (int)((endingAddr - startingAddr) / increment) -1;
+		if (nHouses > 0) {
+
+			double houseSpacing = totalLength / (nHouses+1);
+
+			Node lastHouseNode = addrInterpolationWay.getNode(startNodeIndex);
+			int currentSegment = 0; // Segment being used to place new house # node
+			long currentHouseNumber = startingAddr;
+			while (nHouses > 0) {
+				double distanceNeeded = houseSpacing;
+
+				// Move along segments until we can place the new house number
+				while (distanceNeeded > segmentLengths[currentSegment]) {
+					distanceNeeded -= segmentLengths[currentSegment];
+					currentSegment++;
+					lastHouseNode = addrInterpolationWay.getNode(startNodeIndex + currentSegment);
+				}
+
+				// House number is to be positioned in current segment.
+				double proportion = distanceNeeded / segmentLengths[currentSegment];
+				Node toNode = addrInterpolationWay.getNode(startNodeIndex + 1 + currentSegment);
+				LatLon newHouseNumberPosition = lastHouseNode.getCoor().interpolate(toNode.getCoor(), proportion);
+
+
+				Node newHouseNumberNode = new Node(newHouseNumberPosition);
+				currentHouseNumber += increment;
+				String newHouseNumber = Long.toString(currentHouseNumber);
+				newHouseNumberNode.put("addr:housenumber", newHouseNumber);
+
+				commandGroup.add(new AddCommand(newHouseNumberNode));
+				houseNumberNodes.add(newHouseNumberNode);   // Street, etc information to be added later
+
+				lastHouseNode = newHouseNumberNode;
+
+
+				segmentLengths[currentSegment] -= distanceNeeded; // Track amount used
+				nHouses -- ;
+			}
+		}
+
+
+	}
+
+
+	private void CreateNumericInterpolation(String startValueString, String endValueString, long increment) {
+
+		long startingAddr = Long.parseLong( startValueString );
+		long endingAddr = Long.parseLong( endValueString );
+
+
+		// Search for possible anchors from the 2nd node to 2nd from last, interpolating between each anchor
+		int startIndex = 0; // Index into first interpolation zone of address interpolation way
+		for (int i=1; i<addrInterpolationWay.getNodesCount()-1; i++) {
+			Node testNode = addrInterpolationWay.getNode(i);
+			String strEndNodeNumber = testNode.get("addr:housenumber");
+			if (strEndNodeNumber != null) {
+				// This is a potential anchor node
+				if (isLong(strEndNodeNumber)) {
+
+					long anchorAddrNumber = Long.parseLong( strEndNodeNumber );
+					if ( (anchorAddrNumber >startingAddr) && (anchorAddrNumber < endingAddr) ) {
+						// Lies within the expected range
+						InterpolateNumericSection(startIndex, i, startingAddr, anchorAddrNumber, increment);
+
+						// For next interpolation section
+						startingAddr = anchorAddrNumber;
+						startValueString = strEndNodeNumber;
+						startIndex = i;
+					}
+				}
+
+			}
+		}
+
+		// End nodes do not actually contain housenumber value yet (command has not executed), so use user-entered value
+		InterpolateNumericSection(startIndex, addrInterpolationWay.getNodesCount()-1, startingAddr, endingAddr, increment);
+	}
+
+
+	// Called if user has checked "Convert to House Numbers" checkbox.
+	private void ConvertWayToHousenumbers(String selectedMethod, String startValueString, String endValueString,
+			String incrementString) {
+		// - Use nodes labeled with 'same type' as interim anchors in the middle of the way to identify unequal spacing.
+		// - Ignore nodes of different type; for example '25b' is ignored in sequence 5..15
+
+		// Calculate required number of house numbers to create
+		if (selectedMethod.equals("alphabetic")) {
+
+			CreateAlphaInterpolation(startValueString, endValueString);
+
+
+		} else {
+			long increment = 1;
+			if (selectedMethod.equals("odd") || selectedMethod.equals("even")) {
+				increment = 2;
+			} else if (selectedMethod.equals("Numeric")) {
+				increment = Long.parseLong(incrementString);
+			}
+			CreateNumericInterpolation(startValueString, endValueString, increment);
+
+		}
+
+
+		RemoveAddressInterpolationWay();
+
+	}
+
+
+	private void RemoveAddressInterpolationWay() {
+
+		// Remove untagged nodes
+		for (int i=1; i<addrInterpolationWay.getNodesCount()-1; i++) {
+			Node testNode = addrInterpolationWay.getNode(i);
+			if (!testNode.hasKeys()) {
+				commandGroup.add(new DeleteCommand(testNode));
+			}
+		}
+
+		// Remove way
+		commandGroup.add(new DeleteCommand(addrInterpolationWay));
+		addrInterpolationWay = null;
+
+	}
+
+
+
 	private boolean ValidateAndSave() {
 
 		String startValueString = ReadTextField(startTextField);
 		String endValueString = ReadTextField(endTextField);
+		String incrementString = ReadTextField(incrementTextField);
 		String city = ReadTextField(cityTextField);
 		String state = ReadTextField(stateTextField);
 		String postCode = ReadTextField(postCodeTextField);
@@ -737,6 +1086,13 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 			}else if (selectedMethod.equals("alphabetic")) {
 				errorMessage = ValidateAlphaAddress(startValueString, endValueString);
+
+			}else if (selectedMethod.equals("Numeric")) {
+
+				if (!ValidNumericIncrementString(incrementString, startAddr, endAddr)) {
+					errorMessage = tr("Expected valid number for address increment");
+				}
+
 			}
 			if (!errorMessage.equals("")) {
 				JOptionPane.showMessageDialog(Main.parent, errorMessage, tr("Error"), 	JOptionPane.ERROR_MESSAGE);
@@ -763,24 +1119,36 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 			Node firstNode = addrInterpolationWay.getNode(0);
 			Node lastNode = addrInterpolationWay.getNode(addrInterpolationWay.getNodesCount()-1);
 
-			commandGroup.add(new ChangePropertyCommand(addrInterpolationWay, "addr:interpolation", selectedMethod));
-			commandGroup.add(new ChangePropertyCommand(firstNode, "addr:housenumber", startValueString));
-			commandGroup.add(new ChangePropertyCommand(lastNode, "addr:housenumber", endValueString));
-			if (streetNameButton.isSelected()) {
-
-				commandGroup.add(new ChangePropertyCommand(firstNode, "addr:street", streetName));
-				commandGroup.add(new ChangePropertyCommand(lastNode, "addr:street", streetName));
-
-			}
-			// Add address interpolation house number nodes to main house number node list for common processing
-			houseNumberNodes.add(firstNode);
-			houseNumberNodes.add(lastNode);
-
 			// De-select address interpolation way; leave street selected
 			DataSet currentDataSet = Main.main.getCurrentDataSet();
 			if (currentDataSet != null) {
 				currentDataSet.clearSelection(addrInterpolationWay);
+				currentDataSet.clearSelection(lastNode);  // Workaround for JOSM Bug #3838
 			}
+
+
+			String interpolationTagValue = selectedMethod;
+			if (selectedMethod.equals("Numeric")) {
+				// The interpolation method is the number for 'Numeric' case
+				interpolationTagValue = incrementString;
+			}
+
+			if (cbConvertToHouseNumbers.getState()) {
+				// Convert way to house numbers is checked.
+				//  Create individual nodes and delete interpolation way
+				ConvertWayToHousenumbers(selectedMethod, startValueString, endValueString, incrementString);
+			} else {
+				// Address interpolation way will remain
+				commandGroup.add(new ChangePropertyCommand(addrInterpolationWay, "addr:interpolation", interpolationTagValue));
+				commandGroup.add(new ChangePropertyCommand(addrInterpolationWay, "addr:inclusion", GetInclusionMethod()));
+			}
+
+			commandGroup.add(new ChangePropertyCommand(firstNode, "addr:housenumber", startValueString));
+			commandGroup.add(new ChangePropertyCommand(lastNode, "addr:housenumber", endValueString));
+			// Add address interpolation house number nodes to main house number node list for common processing
+			houseNumberNodes.add(firstNode);
+			houseNumberNodes.add(lastNode);
+
 		}
 
 
@@ -830,6 +1198,25 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 		return true;
 	}
+
+
+	private boolean ValidNumericIncrementString(String incrementString, long startingAddr, long endingAddr) {
+
+		if (!isLong(incrementString)) {
+			return false;
+		}
+		long testIncrement = Long.parseLong(incrementString);
+		if ( (testIncrement <=0) || (testIncrement > endingAddr ) ) {
+			return false;
+		}
+
+		if ( ((endingAddr - startingAddr) % testIncrement) != 0) {
+			return false;
+		}
+		return true;
+	}
+
+
 
 	// Create Associated Street relation, add street, and add to list of commands to perform
 	private void CreateRelation(String streetName) {
@@ -890,8 +1277,8 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 		if (startValueString.equals("") || endValueString.equals("")) {
 			errorMessage = tr("Please enter valid number for starting and ending address");
 		} else {
-			char startingChar = startValueString.charAt(startValueString.length()-1);
-			char endingChar = endValueString.charAt(endValueString.length()-1);
+			char startingChar = LastChar(startValueString);
+			char endingChar = LastChar(endValueString);
 
 
 			boolean isOk = false;
@@ -914,12 +1301,12 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 			if (endValueString.length() > 1) {
 
 				// Get number portion of first item: may or may not have letter suffix
-				String numStart = startValueString.substring(0, startValueString.length()-1);
+				String numStart = BaseAlpha(startValueString);
 				if (IsNumeric(startValueString)) {
 					numStart = startValueString;
 				}
 
-				String numEnd = endValueString.substring(0, endValueString.length()-1);
+				String numEnd = BaseAlpha(endValueString);
 				if (!numStart.equals(numEnd)) {
 					errorMessage = tr("Starting and ending numbers must be the same for alphabetic addresses");
 				}
@@ -971,6 +1358,13 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 	private String GetInterpolationMethod() {
 		int selectedIndex = addrInterpolationList.getSelectedIndex();
 		return addrInterpolationTags[selectedIndex];
+	}
+
+
+	private String GetInclusionMethod() {
+		int selectedIndex = addrInclusionList.getSelectedIndex();
+		lastAccuracyIndex = selectedIndex;
+		return addrInclusionTags[selectedIndex];
 	}
 
 

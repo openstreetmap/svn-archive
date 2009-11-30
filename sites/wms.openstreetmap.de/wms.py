@@ -8,11 +8,12 @@
 # Released under the GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/copyleft/gpl.html
 #
-#
+# $Id$
 #
 
 debug = 0
-mapfile="/var/www/wms4osm/osmwms.map"
+mapfile="/osm/wms/osmwms.map"
+tcopyright="copyrighted Material: OSM use only"
 
 josmdefaults={'SERVICE': 'WMS', 'VERSION': '1.1.1', 'FORMAT':'image/png', 'REQUEST':'GetMap'}
 
@@ -132,6 +133,10 @@ def index(req):
 
   map = mapscript.mapObj(mapfile)
   map.setMetaData("wms_onlineresource",url.split("?")[0])
+  
+  clayer=map.getLayerByName("copyright")
+  cclass=clayer.getClass(0)
+  cclass.setText(tcopyright)
   
   # write a mapfile for debugging purposes
   if (debug):

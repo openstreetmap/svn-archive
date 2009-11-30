@@ -1,26 +1,25 @@
-# Example URL:
-#
-# http://localhost/wms?SERVICE=WMS&VERSION=1.1.1&LAYERS=LAUF&srs=EPSG:4326&format=image/png&request=GetMap&bbox=11.27944,49.50938,11.28368,49.51277&width=512&height=512
+# BeispielURL:
+# http://localhost/cgi-bin/mapserv?map=/home_local/osm/osmwms.map&SERVICE=WMS&VERSION=1.1.1&LAYERS=LAUF&srs=EPSG:4326&format=image/png&request=GetMap&bbox=11.27944,49.50938,11.28368,49.51277&width=512&height=512
 #
 MAP
     NAME OSM-WMS
-    FONTSET "/var/www/wms4osm/fonts.list"
+    FONTSET "/osm/wms/fonts.list"
     STATUS ON
     UNITS METERS
     WEB         
         METADATA
 			"wms_title"     "openstreetmap.de WMS-Server"
-			"wms_onlineresource" "to_be_set_by_mapscript"
+			"wms_onlineresource" "to_be_replaced_by_wms.py"
 			"wms_srs"       "EPSG:4326 EPSG:900913"
         END
     END    
-    EXTENT -180 -90 180 90
+    EXTENT 11.1747901 48.7403310 13.1960986 50.0685678
     PROJECTION
 		"init=epsg:4326"
     END
         
 	IMAGETYPE jpeg                  
-	SHAPEPATH "/home_local/osm/luftbilder-lauf/"
+	SHAPEPATH "/osm/wms/"
 	OUTPUTFORMAT
 		NAME png
 		DRIVER "GD/PNG"
@@ -37,9 +36,32 @@ MAP
         END
         TYPE RASTER
         STATUS ON
-	DATA "all-4326.img"
+	DATA "luftbilder-lauf/all-4326.img"
         PROJECTION
 			"init=epsg:4326"
+        END
+    END
+
+    LAYER                                                      
+        NAME "Neunkirchen"
+        METADATA
+		        "wms_title" "Katasterplan Gemeinde Neunkirchen am Sand"
+                        "wms_extent" "11.3014 49.5112 11.3869 49.558"
+        END
+        DATA "neunkirchen/neunkirchen-4326.shp"
+             TYPE LINE
+             DUMP TRUE
+             PROJECTION
+                     "init=epsg:4326"
+             END
+             STATUS ON
+             SYMBOLSCALE 5000
+             CLASS
+               STYLE
+                 SIZE 1
+                 COLOR 0 128 128
+                 ANTIALIAS true
+             END
         END
     END
 
@@ -56,9 +78,9 @@ MAP
           POINTS
             120 -10 #set the offset from lower left position in pixels
           END
-          TEXT "copyrighted Material: OSM use only" #this is your displaying text
         END   
         CLASS
+	  TEXT "to be set from mapscript"
           LABEL #defines the font, colors etc. of the text
             FONT arial-bold
             TYPE TRUETYPE

@@ -1,5 +1,8 @@
-# BeispielURL:
-# http://localhost/cgi-bin/mapserv?map=/home_local/osm/osmwms.map&SERVICE=WMS&VERSION=1.1.1&LAYERS=LAUF&srs=EPSG:4326&format=image/png&request=GetMap&bbox=11.27944,49.50938,11.28368,49.51277&width=512&height=512
+#
+# Mapscript for OSM WMS to be read by mapscript
+#
+# $Id: $
+#
 #
 MAP
     NAME OSM-WMS

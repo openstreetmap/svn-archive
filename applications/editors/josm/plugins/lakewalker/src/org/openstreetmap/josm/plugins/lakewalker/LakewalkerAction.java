@@ -153,9 +153,10 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                 }
                 @Override protected void finish() {
                 }
-                @Override protected void cancel() {
-                  cancel();
-                }
+
+				@Override protected void cancel() {
+					LakewalkerAction.this.cancel();
+				}
             };
             Thread executeThread = new Thread(lakewalkerTask);
             executeThread.start();

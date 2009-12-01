@@ -205,7 +205,7 @@ struct relation_member_stream
 
   relation_member_stream(pqxx::work &x) 
     : table_stream<int>(x, "select id, member_id, member_type, "
-			"lower(member_role) from current_relation_members "
+			"member_role from current_relation_members "
 			"ORDER BY id, sequence_id", "fetch_relation_members") {
   }
 

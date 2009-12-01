@@ -39,7 +39,7 @@ $road = (bool) $_GET ['road'];
 $pbref = (bool) $_GET ['pbref'];
 
 // Store co-ordinates & checkbox values in cookies
-$iExpireTime = time()+60*60*24*90;
+$iExpireTime = time ()+60*60*24*90;
 setcookie ("left", $left, $iExpireTime);
 setcookie ("bottom", $bottom, $iExpireTime);
 setcookie ("right", $right, $iExpireTime);
@@ -74,9 +74,9 @@ $iCount = 1;
 */
 function GetWayLatLon ($way, &$fWayLat, &$fWayLon) {
 	global $xml;
-
 	// Get lat/lon of first node
 	$nodeid = $way->nd [0]["ref"];
+
 	// Loop through nodes in XML
 	foreach ($xml->node as $node) {
 		// If node is part of the way, get lat & lon
@@ -97,7 +97,7 @@ function GetWayLatLon ($way, &$fWayLat, &$fWayLon) {
 */
 function TagCheck ($node, $checkfor) {
 	foreach ($node->tag as $tag)
-		if ($tag ["k"] == $checkfor)
+		if (strtolower ($tag ["k"]) == strtolower ($checkfor))
 			return True;
 	return False;
 }
@@ -112,11 +112,16 @@ function TagCheck ($node, $checkfor) {
  * $waynode - "way" or "node" to indicate whether $node is a way or a node
 */
 function NoTagCheck ($node, $tag, $k, $v, $waynode) {
-	global $iCount;
+	global $iCount, $DEBUG, $LOG_FILE;
+	//Make check case-insensitive
+	$k = strtolower ($k);
+	$v = strtolower ($v);
+	$tagk = strtolower ($tag ["k"]);
+	$tagv = strtolower ($tag ["v"]);
 
-	if (($tag ["k"] == $k && $tag ["v"] == $v) ||
-			($tag ["k"] == $k && $v == "*") ||
-			($k == "*" && $tag ["v"] == $v)) {
+	if (($tagk == $k && $tagv == $v) ||
+			($tagk == $k && $v == "*") ||
+			($k == "*" && $tagv == $v)) {
 		if ($waynode == "way") {
 			$fWayLat = 0;
 			$fWayLon = 0;
@@ -130,6 +135,9 @@ function NoTagCheck ($node, $tag, $k, $v, $waynode) {
 		$sOut .= "<desc>$sErrText</desc>\n";
 		$sOut .= "</wpt>\n";
 		echo $sOut;
+		if ($DEBUG)
+			file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
+
 	}
 }
 
@@ -143,11 +151,16 @@ function NoTagCheck ($node, $tag, $k, $v, $waynode) {
  * $checkfor: tag to check for existence of (eg "opening_hours")
 */
 function NodeCheck ($node, $tag, $k, $v, $checkfor) {
-	global $iCount;
+	global $iCount, $DEBUG, $LOG_FILE;
+	//Make check case-insensitive
+	$k = strtolower ($k);
+	$v = strtolower ($v);
+	$tagk = strtolower ($tag ["k"]);
+	$tagv = strtolower ($tag ["v"]);
 
-	if (($tag ["k"] == $k && $tag ["v"] == $v) ||
-			($tag ["k"] == $k && $v == "*") ||
-			($k == "*" && $tag ["v"] == $v))
+	if (($tagk == $k && $tagv == $v) ||
+			($tagk == $k && $v == "*") ||
+			($k == "*" && $tagv == $v))
 		if (TagCheck ($node, $checkfor) === False) {
 			$sOut = "<wpt lat='" . $node ["lat"] . "' lon='" . $node ["lon"] . "'>\n";
 			if ($v == "*")
@@ -158,6 +171,8 @@ function NodeCheck ($node, $tag, $k, $v, $checkfor) {
 			$sOut .= "<desc>$sErrText</desc>\n";
 			$sOut .= "</wpt>\n";
 			echo $sOut;
+			if ($DEBUG)
+				file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
 		}
 }
 
@@ -171,11 +186,16 @@ function NodeCheck ($node, $tag, $k, $v, $checkfor) {
  * $checkfor: tag to check for existence of (eg "name")
 */
 function WayCheck ($way, $tag, $k, $v, $checkfor) {
-	global $iCount;
+	global $iCount, $DEBUG, $LOG_FILE;
+	//Make check case-insensitive
+	$k = strtolower ($k);
+	$v = strtolower ($v);
+	$tagk = strtolower ($tag ["k"]);
+	$tagv = strtolower ($tag ["v"]);
 
-	if (($tag ["k"] == $k && $tag ["v"] == $v) ||
-			($tag ["k"] == $k && $v == "*") ||
-			($k == "*" && $tag ["v"] == $v))
+	if (($tagk == $k && $tagv == $v) ||
+			($tagk == $k && $v == "*") ||
+			($k == "*" && $tagv == $v))
 		if (TagCheck ($way, $checkfor) === False) {
 			$lat = 0;
 			$lon = 0;
@@ -189,6 +209,8 @@ function WayCheck ($way, $tag, $k, $v, $checkfor) {
 			$sOut .= "<desc>$sErrText</desc>\n";
 			$sOut .= "</wpt>\n";
 			echo $sOut;
+			if ($DEBUG)
+				file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
 		}
 }
 
@@ -242,18 +264,18 @@ foreach ($xml->node as $node) {
 
 		// Source
 		if ($source === True) {
-			NoTagCheck ($node, $tag, "source", "extrapolation");
-			NoTagCheck ($node, $tag, "source", "NPE");
-			NoTagCheck ($node, $tag, "source", "historical");
+			NoTagCheck ($node, $tag, "source", "extrapolation", "node");
+			NoTagCheck ($node, $tag, "source", "NPE", "node");
+			NoTagCheck ($node, $tag, "source", "historical", "node");
 		}
 
 		// FIXME tags
 		if ($fixme === True)
-			NoTagCheck ($node, $tag, "FIXME", "*");
+			NoTagCheck ($node, $tag, "FIXME", "*", "node");
 
 		// NAPTAN import
 		if ($naptan === True)
-			NoTagCheck ($node, $tag, "naptan:verified", "no");
+			NoTagCheck ($node, $tag, "naptan:verified", "no", "node");
 	}
 }
 
@@ -302,18 +324,18 @@ foreach ($xml->way as $way) {
 
 		// Source
 		if ($source === True) {
-			NoTagCheck ($way, $tag, "source", "extrapolation");
-			NoTagCheck ($way, $tag, "source", "NPE");
-			NoTagCheck ($way, $tag, "source", "historical");
+			NoTagCheck ($way, $tag, "source", "extrapolation", "way");
+			NoTagCheck ($way, $tag, "source", "NPE", "way");
+			NoTagCheck ($way, $tag, "source", "historical", "way");
 		}
 
 		// FIXME etc
 		if ($fixme === True)
-			NoTagCheck ($way, $tag, "FIXME", "*");
+			NoTagCheck ($way, $tag, "FIXME", "*", "way");
 
 		// Unknown road classification
 		if ($road === True)
-			NoTagCheck ($way, $tag, "highway", "road");
+			NoTagCheck ($way, $tag, "highway", "road", "way");
 	}
 }
 

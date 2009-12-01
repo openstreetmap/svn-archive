@@ -137,6 +137,11 @@ Download a GPX file with a waypoint for each error found. The GPX file can then 
 <li><a href = "../download/osm-error.tar.gz">Download source code</a> (released under <a href = "gpl.txt">GNU General Public License</a>)
 </ul>
 
+<h2>To Do</h2>
+<p>
+Limit waypoint names to 6 or 14 characters (selectable)<br>
+</p>
+
 <p>
 Back to <a href = "http://www.mappage.org/">mappage.org</a>
 </p>

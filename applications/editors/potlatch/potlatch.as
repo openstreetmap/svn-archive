@@ -133,7 +133,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="1.3a";			// current version
+	var signature="1.3b";			// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k");
 	var lastgroup='road';			// last preset group used
@@ -912,7 +912,7 @@
         if (_root.i18n[id]) {
             t=_root.i18n[id];
         } else {
-            t='I18N ERR';
+            t='E:'+id;
         }
 		t=replaceStr(t,'$1',key1);
 		t=replaceStr(t,'$2',key2);
@@ -1096,14 +1096,14 @@
 
 		// External link and photo
 		
-		createInputPrompt(box,'external',70,'option_external',	'_root.launcher',145);
-		createInputPrompt(box,'photo'	,72,'option_photo',		'_root.photokml',125);
-		createInputPrompt(box,'tw_id'	,74,'option_twitterid',	'_root.twitterid',175);
-		createInputPrompt(box,'tw_pwd'	,76,'option_twitterpwd','_root.twitterpwd',195);
+		createInputPrompt(box,'external',70,'option_external',     '_root.launcher',145);
+		createInputPrompt(box,'photo'	,72,'option_photo',		   '_root.photokml',125);
+		createInputPrompt(box,'tw_id'	,74,'option_microblog_id',  '_root.twitterid',175);
+		createInputPrompt(box,'tw_pwd'	,76,'option_microblog_pwd', '_root.twitterpwd',195);
 
 		box.attachMovie("radio","twoption",14);
-		box.twoption.addButton(13,220,"Twitter");
-		box.twoption.addButton(90,220,"identi.ca");
+		box.twoption.addButton(13,220,iText("microblog_name_twitter"));
+		box.twoption.addButton(90,220,iText("microblog_name_identica"));
 		box.twoption.select(preferences.data.twitterclient);
 		box.twoption.doOnChange=function(n) { preferences.data.twitterclient=n; };
 

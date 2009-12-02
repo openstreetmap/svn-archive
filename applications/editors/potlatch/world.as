@@ -192,9 +192,12 @@
 
 	function initBackground() {
 		preferences.flush();
-		_root.bgxoffset=0; _root.bgyoffset=0;
 		setStatusPosition();
 		redrawBackground(); 
+	}
+	
+	function resetBackgroundOffset() {
+		_root.bgxoffset=0; _root.bgyoffset=0;
 	}
 
 	function redrawBackground() {

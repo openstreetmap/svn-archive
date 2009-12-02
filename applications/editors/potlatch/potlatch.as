@@ -494,9 +494,9 @@
 		_root.lastxmouse=_root._xmouse;
 		_root.lastymouse=_root._ymouse;
 		if (Key.isDown(Key.SPACE)) {
+			_root.bgxoffset   +=xdiff; _root.bgyoffset   +=ydiff;
 			xdiff*=16; ydiff*=16;
-			_root.bgxoffset+=xdiff; _root.map.tiles._x+=xdiff;
-			_root.bgyoffset+=ydiff; _root.map.tiles._y+=ydiff;
+			_root.map.tiles._x+=xdiff; _root.map.tiles._y+=ydiff;
 			updateCoords(_root.map._x,_root.map._y);
 			_root.mapdragged=true;
 		} else {
@@ -715,6 +715,7 @@
 				case 113:	preferences.data.bgtype=2; break;
 				default:	preferences.data.bgtype=1; preferences.data.tileset=k-114; break;
 			}
+			resetBackgroundOffset();
 			initBackground(); return;
 		}
 
@@ -1064,7 +1065,7 @@
 		box.custom.background=true; box.custom.backgroundColor=0xDDDDDD;
 		box.custom.border=true; box.custom.borderColor=0xFFFFFF;
 		box.custom.onSetFocus=function() { this._parent.bgoption.select(3); };
-		box.custom.onKillFocus=function() { initBackground(); };
+		box.custom.onKillFocus=function() { resetBackgroundOffset(); initBackground(); };
 
 		box.bgoption.select(preferences.data.bgtype);
 

@@ -56,7 +56,7 @@
 		box.prompt.adjustTextField();
 
 		box.attachMovie("checkbox","twitter",z++);
-		box.twitter.init(10,110,iText('prompt_twitter',100),preferences.data.twitter,function(n) { preferences.data.twitter=n; },(preferences.data.twitterid!='' && preferences.data.twitterpwd!=''));
+		box.twitter.init(10,110,iText('prompt_microblog',iText(preferences.data.twitterclient==2?'microblog_name_identica':'microblog_name_twitter'),100),preferences.data.twitter,function(n) { preferences.data.twitter=n; },(preferences.data.twitterid!='' && preferences.data.twitterpwd!=''));
 		
 		box.createTextField("cscomment",z++,10,50,280,50);
 		with (box.cscomment) {
@@ -76,7 +76,7 @@
 			if ((box.cscomment.text.toUpperCase()=='C' || box.cscomment.text.toUpperCase()=='S') && !_root.csswallowed ) {
 				box.cscomment.text='';
 			}
-			_root.windows.cs.box.twitter.prompt.text=iText('prompt_twitter',100-box.cscomment.text.length);
+			_root.windows.cs.box.twitter.prompt.text=iText('prompt_microblog',iText(preferences.data.twitterclient==2?'microblog_name_identica':'microblog_name_twitter'),100-box.cscomment.text.length);
 			_root.csswallowed=true;
 		};
 	}
@@ -156,9 +156,9 @@
 		var lv=new LoadVars();
         rv.onLoad = function(success) {
             if (rv.success == 0) {
-                errorDialogue(iText("error_twitter_long", rv.errcode, rv.errmsg, rv.errerr),130);
+                errorDialogue(iText("error_microblog_long", iText(preferences.data.twitterclient==2?'microblog_name_identica':'microblog_name_twitter'), rv.errcode, rv.errmsg, rv.errerr),130);
             } else {
-                setAdvice(false, iText('advice_twatted'), true);
+                setAdvice(false, iText('advice_microblogged', iText(preferences.data.twitterclient==2?'microblog_name_identica':'microblog_name_twitter')), true);
             }
         };
 		lv.twitter_id =preferences.data.twitterid;

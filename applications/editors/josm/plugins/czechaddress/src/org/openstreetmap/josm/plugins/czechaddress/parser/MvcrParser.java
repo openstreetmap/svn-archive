@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.czechaddress.parser;
 
 import static org.openstreetmap.josm.plugins.czechaddress.StringUtils.capitalize;
+import static org.openstreetmap.josm.plugins.czechaddress.StringUtils.tryTrim;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,8 +43,8 @@ public class MvcrParser extends XMLParser {
         // ========== PARSING HOUSE ========== //
         if (name.equals("a")) {
 
-            String cp = attributes.getValue("p");
-            String co = attributes.getValue("o");
+            String cp = tryTrim(attributes.getValue("p"));
+            String co = tryTrim(attributes.getValue("o"));
             if ((cp == null) && (co == null))
                 return;
 
@@ -58,7 +59,7 @@ public class MvcrParser extends XMLParser {
         
         // ========== PARSING STREET ========== //
         if (name.equals("ulice")) {
-            String nazev = attributes.getValue("nazev");
+            String nazev = tryTrim(attributes.getValue("nazev"));
 
             // If the street filter is on, apply it!
             if (filStreet != null && !nazev.equals(filStreet)) {
@@ -84,7 +85,7 @@ public class MvcrParser extends XMLParser {
             if (curViToCi == null)
                 return;
 
-            String nazev = attributes.getValue("nazev");
+            String nazev = tryTrim(attributes.getValue("nazev"));
 
             // If the suburb filter is on, apply it!
             if (filSuburb != null && !nazev.equals(filSuburb)) {
@@ -105,7 +106,7 @@ public class MvcrParser extends XMLParser {
         // ========== PARSING ViToCi ========== //
         if (name.equals("obec")) {
 
-            String nazev = attributes.getValue("nazev");
+            String nazev = tryTrim(attributes.getValue("nazev"));
 
             // If the viToCi filter is on, apply it!
             if (filViToCi != null && !nazev.equals(filViToCi)) {
@@ -128,7 +129,8 @@ public class MvcrParser extends XMLParser {
         if (name.equals("oblast")) {
 
             // If the region filter is on, apply it!
-            if (filRegion != null && !attributes.getValue("nazev").equals(filRegion)) {
+            if (filRegion != null &&
+                    !attributes.getValue("nazev").trim().equals(filRegion)) {
                 curRegion = null;
                 curViToCi = null;
                 curSuburb = null;
@@ -143,9 +145,9 @@ public class MvcrParser extends XMLParser {
 
             if (curRegion == null) {*/
                 curRegion = new Region(
-                    capitalize(attributes.getValue("nazev")),
-                    capitalize(attributes.getValue("kraj")),
-                    capitalize(attributes.getValue("okres")));
+                    capitalize(tryTrim(attributes.getValue("nazev"))),
+                    capitalize(tryTrim(attributes.getValue("kraj"))),
+                    capitalize(tryTrim(attributes.getValue("okres"))));
 
                 target.regions.add(curRegion);
             //}

@@ -74,7 +74,8 @@
             <arg value="--xml"/>
             <arg value="."/>
         </exec>
-        <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+        <xmlproperty file="REVISION" prefix="version"
+                     keepRoot="false" collapseAttributes="true"/>
         <delete file="REVISION"/>
     </target>
 
@@ -93,11 +94,16 @@
 
 
     <target name="run" depends="compile">
-        <fail message="You must firstly compile the JOSM itself"><condition><not>
-            <resourcecount count="1" when="gt">
-                <fileset id="josm" dir="${josm.classpath}" includes="*"/>
-            </resourcecount>
-        </not></condition></fail>
+        <fail message="You must firstly compile the JOSM itself">
+            <condition>
+                <not>
+                    <resourcecount count="1" when="gt">
+                        <fileset  includes="*" id="josm"
+                                 dir="${josm.classpath}"/>
+                    </resourcecount>
+                </not>
+            </condition>
+        </fail>
 
         <java classname="JOSM" fork="true">
             <jvmarg value="-Xmx1024m"/>
@@ -116,10 +122,15 @@
 
 
 
-    <target name="profile" depends="compile" description="Profile CzechAddress">
-        <fail unless="netbeans.home">This target can only run inside the NetBeans IDE.</fail>
+    <target name="profile" depends="compile"
+            description="Profile CzechAddress with Netbeans">
+        <fail unless="netbeans.home">
+            This target can only run inside the NetBeans IDE.
+        </fail>
         <nbprofiledirect>
-            <classpath><pathelement location="${plugin.build.dir}"/></classpath>
+            <classpath>
+                <pathelement location="${plugin.build.dir}"/>
+            </classpath>
         </nbprofiledirect>
         <java classname="JOSM" fork="true">
             <jvmarg value="${profiler.info.jvmargs.agent}"/>
@@ -134,4 +145,36 @@
             </classpath>
         </java>
     </target>
+
+    <target name="debug" depends="compile"
+            description="Debug CzechAddress with Netbeans">
+        <fail message="You must firstly compile the JOSM itself">
+            <condition>
+                <not>
+                    <resourcecount count="1" when="gt">
+                        <fileset dir="${josm.classpath}"
+                                 includes="*" id="josm"/>
+                    </resourcecount>
+                </not>
+            </condition>
+        </fail>
+        <nbjpdastart addressproperty="jpda.address"
+                     name="czechaddress"
+                     transport="dt_socket"/>
+        <java classname="JOSM" fork="true">
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
+            <jvmarg value="-Xmx1024m"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-ea"/>
+            <classpath>
+                <pathelement location="${plugin.build.dir}"/>
+                <pathelement path="${java.class.path}"/>
+            </classpath>
+            <classpath>
+                <pathelement location="${josm}"/>
+                <pathelement path="${java.class.path}"/>
+            </classpath>
+        </java>
+    </target>
+
 </project>

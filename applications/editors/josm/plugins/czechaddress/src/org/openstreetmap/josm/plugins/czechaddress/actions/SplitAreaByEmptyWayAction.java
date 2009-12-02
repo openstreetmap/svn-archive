@@ -6,11 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -110,55 +112,44 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
      */
     private int splitArea(Way area, Way border, Way newArea1, Way newArea2) {
 
-        Way tempBorder = new Way(border);
+        for (Relation r : Main.main.getCurrentDataSet().getRelations())
+            for (RelationMember rm : r.getMembers())
+                if (rm.refersTo(area) || rm.refersTo(border))
+                    return 2;
 
-        int index1 = area.getNodes().indexOf(tempBorder.firstNode());
-        int index2 = area.getNodes().indexOf(tempBorder.lastNode());
+        List<Node> bordNodes = border.getNodes();
+        List<Node> areaNodes = area.getNodes();
+
+        int index1 = areaNodes.indexOf(bordNodes.get(0));
+        int index2 = areaNodes.indexOf(bordNodes.get(bordNodes.size()-1));
         if (index1 == index2)
             return 1;
 
         if (index1 > index2) {
-            Collections.reverse(tempBorder.getNodes());
-            index1 = area.getNodes().indexOf(tempBorder.firstNode());
-            index2 = area.getNodes().indexOf(tempBorder.lastNode());
+            Collections.reverse(areaNodes);
+            index1 = areaNodes.indexOf(bordNodes.get(0));
+            index2 = areaNodes.indexOf(bordNodes.get(bordNodes.size()-1));
         }
-
-        for (Relation relation : Main.main.getCurrentDataSet().getRelations())
-            for (RelationMember areaMember : relation.getMembers())
-                if (area.equals(areaMember.getMember()))
-                    return 2;
 
         for (String key : area.keySet()) {
             newArea1.put(key, area.get(key));
             newArea2.put(key, area.get(key));
         }
 
-        newArea1.getNodes().addAll(area.getNodes().subList(0, index1));
-        newArea1.getNodes().addAll(tempBorder.getNodes());
-        newArea1.getNodes().addAll(area.getNodes().subList(index2, area.getNodes().size()-1));
-        newArea1.getNodes().add(area.getNodes().get(0));
+        List<Node> newNodeList1 = newArea1.getNodes();
+        List<Node> newNodeList2 = newArea1.getNodes();
 
-        Collections.reverse(tempBorder.getNodes());
-        newArea2.getNodes().addAll(area.getNodes().subList(index1, index2));
-        newArea2.getNodes().addAll(tempBorder.getNodes());
-        newArea2.getNodes().add(area.getNodes().get(index1));
+        newNodeList1.addAll(areaNodes.subList(0, index1));
+        newNodeList1.addAll(bordNodes);
+        newNodeList1.addAll(areaNodes.subList(index2 + 1, areaNodes.size()));
 
-        removeDuplicateNodesFromWay(newArea1);
-        removeDuplicateNodesFromWay(newArea2);
+        Collections.reverse(bordNodes);
+        newNodeList2.addAll(areaNodes.subList(index1, index2));
+        newNodeList2.addAll(bordNodes);
+
+        newArea1.setNodes(newNodeList1);
+        newArea2.setNodes(newNodeList2);
 
         return 0;
-    }
-
-    /**
-     * Removes all consequent nodes, which are on the same way.
-     */
-    void removeDuplicateNodesFromWay(Way w) {
-        int i=0;
-        while (i<w.getNodes().size()-1) {
-            if (w.getNodes().get(i).equals(w.getNodes().get(i+1)))
-                w.getNodes().remove(i);
-            else
-                i++;
-        }
     }
 }

@@ -9,28 +9,28 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 
 /**
- * Interface to be implemented by squares that can be displayed on the map.
+ * Interface to be implemented by rectangles that can be displayed on the map.
  *
  * @author Stefan Zeller
- * @see JMapViewer#addMapSquare(MapSquare)
- * @see JMapViewer#getMapSquareList()
+ * @see JMapViewer#addMapRectangle(MapRectangle)
+ * @see JMapViewer#getMapRectangleList()
  * @date 21.06.2009S
  */
-public interface MapSquare {
+public interface MapRectangle {
 
     /**
-     * @return Latitude/Longitude of top left of square
+     * @return Latitude/Longitude of top left of rectangle
      */
     public Coordinate getTopLeft();
 
     /**
-     * @return Latitude/Longitude of bottom right of square
+     * @return Latitude/Longitude of bottom right of rectangle
      */
     public Coordinate getBottomRight();
 
     /**
-     * Paints the map square on the map. The <code>topLeft</code> and
-     * <code>bottomRight</code> specifies the coordinates within <code>g</code>
+     * Paints the map rectangle on the map. The <code>topLeft</code> and
+     * <code>bottomRight</code> are specifying the coordinates within <code>g</code>
      *
      * @param g
      * @param position

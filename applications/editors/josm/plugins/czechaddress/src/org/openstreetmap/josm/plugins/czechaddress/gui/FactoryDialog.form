@@ -25,12 +25,12 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="streetComboBox" pref="199" max="32767" attributes="0"/>
+                  <Component id="streetComboBox" pref="175" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="relocateButton" min="-2" max="-2" attributes="0"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="keepOddityCheckBox" pref="278" max="32767" attributes="0"/>
+                  <Component id="keepOddityCheckBox" pref="282" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
               <Component id="jScrollPane1" alignment="0" pref="290" max="32767" attributes="3"/>

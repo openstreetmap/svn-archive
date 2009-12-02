@@ -205,6 +205,7 @@ public class Reasoner {
             logger.log(Level.FINE, "new primitive detected", AddressElement.getName(prim));
             matches = new HashMap<AddressElement, Integer>();
             primMatchIndex.put(prim, matches);
+            primToUpdate.add(prim);
         }
 
         for (AddressElement elem : elemMatchIndex.keySet())
@@ -232,6 +233,7 @@ public class Reasoner {
             logger.log(Level.FINE, "new element detected", elem);
             matches = new HashMap<OsmPrimitive, Integer>();
             elemMatchIndex.put(elem, matches);
+            elemToUpdate.add(elem);
         }
 
         for (OsmPrimitive prim : primMatchIndex.keySet())
@@ -312,7 +314,6 @@ public class Reasoner {
      */
     private int getQ(OsmPrimitive prim, AddressElement elem) {
 
-        // TODO: This is a workaround. We should not be here at all.
         if (elemMatchIndex.get(elem) == null) return MATCH_NOMATCH;
         if (primMatchIndex.get(prim) == null) return MATCH_NOMATCH;
 
@@ -393,7 +394,7 @@ public class Reasoner {
      * Returns the element, which is a unique counterpart of the primitive.
      *
      * <p>This method is probably the single most used method of the reasoner.
-     * It allows the unique translation between map and the database.</p>
+     * It allows the unique translation between the map and the database.</p>
      *
      * <p>An element <i>elem</i> and primitive <i>prim</i> can be translated
      * between each other iff

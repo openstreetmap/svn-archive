@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
+import java.util.Set;
 import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedListModel;
 import org.openstreetmap.josm.plugins.czechaddress.gui.utils.HalfCookedComboBoxModel;
 import org.openstreetmap.josm.plugins.czechaddress.StringUtils;
@@ -181,7 +182,9 @@ public class FactoryDialog extends ToggleDialog
 
             } while ((oldNum + newNum) % 2 == 1 &&
                      houseList.getSelectedIndex() != 0);
-            
+
+        // If anything goes wrong, we can silently ignore the errors.
+        // The selected item just does not get updated...
         } catch (Exception exp) {}
     }
 
@@ -423,12 +426,6 @@ public class FactoryDialog extends ToggleDialog
         public FreeStreetProvider() {
             super("nepřiřazené domy");
             Reasoner.getInstance().addListener(this);
-
-            for (AddressElement house : Reasoner.getInstance().getUnassignedElements())
-                if (house instanceof House)
-                    houses.add((House) house);
-
-            Collections.sort(houses);
         }
 
         public void resonerReseted() { houses.clear(); }

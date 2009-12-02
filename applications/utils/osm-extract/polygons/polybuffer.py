@@ -6,11 +6,18 @@
 # - 12/01/2009 0.1   First release
 
 
-# Poly file is in WGS84
-# TODO Use a different SRS in PostGIS, eventually make it an option. For now, WGS84 is sufficient
-
 # Usage: ./polybuffer.py -h
 # Example use with stdin and stdout: cat quebec.poly | ./polybuffer.py >out.txt
+
+# Requirements:
+# * Recent Python version (tested with 2.6)
+# * PostGIS (tested with 1.3)
+
+# Notes:
+# * Only tested on Ubuntu, but should return everywhere
+# * In the input file, holes in polygons are not (yet?) recognized, but they are generated in the output file
+# * Poly file is assumed to be in WGS84
+# * TODO Use a different SRS in PostGIS, eventually make it an option. For now, WGS84 is sufficient
 
 
 import random

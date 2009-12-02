@@ -20,7 +20,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
-import org.openstreetmap.gui.jmapviewer.interfaces.MapSquare;
+import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
@@ -47,10 +47,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     public static final int MIN_ZOOM = 0;
 
     protected List<MapMarker> mapMarkerList;
-    protected List<MapSquare> mapSquareList;
+    protected List<MapRectangle> mapRectangleList;
 
     protected boolean mapMarkersVisible;
-    protected boolean mapSquaresVisible;
+    protected boolean mapRectanglesVisible;
 
     protected boolean tileGridVisible;
 
@@ -87,9 +87,9 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         super();
         tileController = new TileController(new OsmTileSource.Mapnik(), tileCache, this);
         mapMarkerList = new LinkedList<MapMarker>();
-        mapSquareList = new LinkedList<MapSquare>();
+        mapRectangleList = new LinkedList<MapRectangle>();
         mapMarkersVisible = true;
-        mapSquaresVisible = true;
+        mapRectanglesVisible = true;
         tileGridVisible = false;
         setLayout(null);
         initializeZoomSlider();
@@ -254,8 +254,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * Sets the displayed map pane and zoom level so that all map markers are
      * visible.
      */
-    public void setDisplayToFitMapSquares() {
-        if (mapSquareList == null || mapSquareList.size() == 0) {
+    public void setDisplayToFitMapRectangle() {
+        if (mapRectangleList == null || mapRectangleList.size() == 0) {
             return;
         }
         int x_min = Integer.MAX_VALUE;
@@ -263,11 +263,11 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         int x_max = Integer.MIN_VALUE;
         int y_max = Integer.MIN_VALUE;
         int mapZoomMax = tileController.getTileSource().getMaxZoom();
-        for (MapSquare square : mapSquareList) {
-            x_max = Math.max(x_max, OsmMercator.LonToX(square.getBottomRight().getLon(), mapZoomMax));
-            y_max = Math.max(y_max, OsmMercator.LatToY(square.getTopLeft().getLat(), mapZoomMax));
-            x_min = Math.min(x_min, OsmMercator.LonToX(square.getTopLeft().getLon(), mapZoomMax));
-            y_min = Math.min(y_min, OsmMercator.LatToY(square.getBottomRight().getLat(), mapZoomMax));
+        for (MapRectangle rectangle : mapRectangleList) {
+            x_max = Math.max(x_max, OsmMercator.LonToX(rectangle.getBottomRight().getLon(), mapZoomMax));
+            y_max = Math.max(y_max, OsmMercator.LatToY(rectangle.getTopLeft().getLat(), mapZoomMax));
+            x_min = Math.min(x_min, OsmMercator.LonToX(rectangle.getTopLeft().getLon(), mapZoomMax));
+            y_min = Math.min(y_min, OsmMercator.LatToY(rectangle.getBottomRight().getLat(), mapZoomMax));
         }
         int height = Math.max(0, getHeight());
         int width = Math.max(0, getWidth());
@@ -447,15 +447,15 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
         // g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
 
-        if (mapSquaresVisible && mapSquareList != null) {
-            for (MapSquare square : mapSquareList) {
-                Coordinate topLeft = square.getTopLeft();
-                Coordinate bottomRight = square.getBottomRight();
+        if (mapRectanglesVisible && mapRectangleList != null) {
+            for (MapRectangle rectangle : mapRectangleList) {
+                Coordinate topLeft = rectangle.getTopLeft();
+                Coordinate bottomRight = rectangle.getBottomRight();
                 if (topLeft != null && bottomRight != null) {
                     Point pTopLeft = getMapPosition(topLeft.getLat(), topLeft.getLon(), false);
                     Point pBottomRight = getMapPosition(bottomRight.getLat(), bottomRight.getLon(), false);
                     if (pTopLeft != null && pBottomRight != null) {
-                        square.paint(g, pTopLeft, pBottomRight);
+                        rectangle.paint(g, pTopLeft, pBottomRight);
                     }
                 }
             }
@@ -521,7 +521,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     }
 
     public void setZoom(int zoom, Point mapPoint) {
-        if (zoom > tileController.getTileSource().getMaxZoom() || zoom < tileController.getTileSource().getMinZoom() || zoom == this.zoom)
+        if (zoom > tileController.getTileSource().getMaxZoom() || zoom < tileController.getTileSource().getMinZoom()
+                || zoom == this.zoom)
             return;
         Coordinate zoomPos = getPosition(mapPoint);
         tileController.cancelOutstandingJobs(); // Clearing outstanding load
@@ -583,13 +584,13 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         return mapMarkerList;
     }
 
-    public void setMapSquareList(List<MapSquare> mapSquareList) {
-        this.mapSquareList = mapSquareList;
+    public void setMapRectangleList(List<MapRectangle> mapRectangleList) {
+        this.mapRectangleList = mapRectangleList;
         repaint();
     }
 
-    public List<MapSquare> getMapSquareList() {
-        return mapSquareList;
+    public List<MapRectangle> getMapRectangleList() {
+        return mapRectangleList;
     }
 
     public void addMapMarker(MapMarker marker) {
@@ -597,13 +598,13 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         repaint();
     }
 
-    public void addMapSquare(MapSquare square) {
-        mapSquareList.add(square);
+    public void addMapRectangle(MapRectangle rectangle) {
+        mapRectangleList.add(rectangle);
         repaint();
     }
 
-    public void removeMapSquare(MapSquare square) {
-        mapSquareList.remove(square);
+    public void removeMapRectangle(MapRectangle rectangle) {
+        mapRectangleList.remove(rectangle);
         repaint();
     }
 
@@ -635,19 +636,19 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         repaint();
     }
 
-    public boolean isMapSquaresVisible() {
-        return mapSquaresVisible;
+    public boolean isMapRectanglesVisible() {
+        return mapRectanglesVisible;
     }
 
     /**
-     * Enables or disables painting of the {@link MapSquare}
+     * Enables or disables painting of the {@link MapRectangle}
      *
      * @param mapMarkersVisible
-     * @see #addMapSquare(MapSquare)
-     * @see #getMapSquareList()
+     * @see #addMapRectangle(MapRectangle)
+     * @see #getMapRectangleList()
      */
-    public void setMapSquaresVisible(boolean mapSquaresVisible) {
-        this.mapSquaresVisible = mapSquaresVisible;
+    public void setMapRectanglesVisible(boolean mapRectanglesVisible) {
+        this.mapRectanglesVisible = mapRectanglesVisible;
         repaint();
     }
 

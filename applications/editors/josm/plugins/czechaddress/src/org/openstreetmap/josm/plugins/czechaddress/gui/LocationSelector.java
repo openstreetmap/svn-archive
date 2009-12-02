@@ -63,7 +63,7 @@ public class LocationSelector extends ExtendedDialog {
         try {
             autodetectLocation();
         } catch (Exception e) {}
-        oblastComboBoxItemStateChanged(null);
+        //oblastComboBoxItemStateChanged(null);
     }
 
     /**

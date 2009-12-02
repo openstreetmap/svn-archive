@@ -157,7 +157,7 @@
 				});
 			_root.windows.confirm.box.createTextField("title",12,7,7,400-14,20);
 			with (_root.windows.confirm.box.title) {
-				type='dynamic'; text="Warning!"; setTextFormat(boldText);
+				type='dynamic'; text=iText("warning"); setTextFormat(boldText);
 			}
 			_root.windows.confirm.box.createTextField("prompt",13,7,29,250,140);
 			writeText(_root.windows.confirm.box.prompt,iText('prompt_live'));

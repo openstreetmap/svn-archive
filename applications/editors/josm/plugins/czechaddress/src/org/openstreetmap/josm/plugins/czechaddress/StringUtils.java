@@ -110,6 +110,11 @@ public abstract class StringUtils {
         return true;
     }
 
+    public static String tryTrim(String s) {
+        if (s == null) return null;
+        return s.trim();
+    }
+
     /**
      * Capitalizes the given string (first letter of every word upper-case,
      * others lower-case). Czech grammar rules are more or less obeyed.

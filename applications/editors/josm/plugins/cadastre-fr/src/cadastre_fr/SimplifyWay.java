@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
@@ -16,8 +17,8 @@ import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.visitor.CollectBackReferencesVisitor;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
  
@@ -32,15 +33,18 @@ public class SimplifyWay {
         Way wnew = new Way(w);
 
         int toI = wnew.getNodesCount() - 1;
+        List<OsmPrimitive> parents = new ArrayList<OsmPrimitive>();
         for (int i = wnew.getNodesCount() - 1; i >= 0; i--) {
-            CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(dataSet, false);
-            backRefsV.visit(wnew.getNode(i));
+            //CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(dataSet, false);
+            //backRefsV.visit(wnew.getNode(i));
+           parents.addAll(w.getNode(i).getReferrers());
             boolean used = false;
-            if (backRefsV.getData().size() == 1) {
+            if (parents.size() == 1) {
                 used = Collections.frequency(w.getNodes(), wnew.getNode(i)) > 1;
             } else {
-                backRefsV.getData().remove(w);
-                used = !backRefsV.getData().isEmpty();
+                //backRefsV.getData().remove(w);
+                parents.remove(w);
+                used = !parents.isEmpty();
             }
             if (!used)
                 used = wnew.getNode(i).isTagged();

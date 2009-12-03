@@ -25,8 +25,8 @@
 	<!-- 
 	  ** update before publishing 
 	-->
-	<property name="commit.message" value="Updated build.xml" />		
-	<property name="plugin.main.version" value="2452" />
+	<property name="commit.message" value="Updated to new referrer support in OsmPrimitive" />		
+	<property name="plugin.main.version" value="2565" />
 		
 		
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>

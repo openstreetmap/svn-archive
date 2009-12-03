@@ -15,7 +15,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.MergeNodesAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.BackreferencedDataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
@@ -30,19 +29,6 @@ import org.openstreetmap.josm.plugins.validator.util.Bag;
  * @author frsantos
  */
 public class DuplicateNode extends Test{
-
-	private static BackreferencedDataSet backreferences;
-
-	public static BackreferencedDataSet getBackreferenceDataSet() {
-		if (backreferences == null) {
-			backreferences = new BackreferencedDataSet();
-		}
-		return backreferences;
-	}
-
-	public static void clearBackreferences() {
-		backreferences = null;
-	}
 
     protected static int DUPLICATE_NODE = 1;
 
@@ -111,7 +97,7 @@ public class DuplicateNode extends Test{
         LinkedHashSet<Node> nodes = new LinkedHashSet<Node>(OsmPrimitive.getFilteredList(sel, Node.class));
         Node target = MergeNodesAction.selectTargetNode(nodes);
         if(checkAndConfirmOutlyingDeletes(nodes))
-            return MergeNodesAction.mergeNodes(Main.main.getEditLayer(),getBackreferenceDataSet(), nodes, target);
+            return MergeNodesAction.mergeNodes(Main.main.getEditLayer(), nodes, target);
 
         return null;// undoRedo handling done in mergeNodes
     }

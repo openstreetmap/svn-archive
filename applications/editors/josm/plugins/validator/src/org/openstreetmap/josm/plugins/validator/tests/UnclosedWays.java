@@ -103,7 +103,7 @@ public class UnclosedWays extends Test {
             set(1130, marktr("area"));
 
         if (type != null && !w.isClosed()) {
-            for (OsmPrimitive parent: this.backreferenceDataSet.getParents(w)) {
+            for (OsmPrimitive parent: w.getReferrers()) {
                 if (parent instanceof Relation && "multipolygon".equals(parent.get("type")))
                     return;
             }

@@ -111,7 +111,7 @@ function TagCheck ($node, $checkfor) {
  * Either $k or $v can be a wildcard (*)
  * $waynode - "way" or "node" to indicate whether $node is a way or a node
 */
-function NoTagCheck ($node, $tag, $k, $v, $waynode) {
+function NoTagCheck ($node, $tag, $k, $v, $waynode, $name, $shortname) {
 	global $iCount, $DEBUG, $LOG_FILE;
 	//Make check case-insensitive
 	$k = strtolower ($k);
@@ -130,8 +130,8 @@ function NoTagCheck ($node, $tag, $k, $v, $waynode) {
 		}
 		else
 			$sOut = "<wpt lat='" . $node ["lat"] . "' lon='" . $node ["lon"] . "'>\n";
-		$sErrText =  $iCount++ . " $k - " . $tag ["v"];
-		$sOut .= "<name>$sErrText</name>\n";
+		$sErrText =  "$k - " . $tag ["v"];
+		$sOut .= "<name>$name" . $iCount++ . "</name>\n";
 		$sOut .= "<desc>$sErrText</desc>\n";
 		$sOut .= "</wpt>\n";
 		echo $sOut;
@@ -150,7 +150,7 @@ function NoTagCheck ($node, $tag, $k, $v, $waynode) {
  * Either $k or $v can be a wildcard (*)
  * $checkfor: tag to check for existence of (eg "opening_hours")
 */
-function NodeCheck ($node, $tag, $k, $v, $checkfor) {
+function NodeCheck ($node, $tag, $k, $v, $checkfor, $name, $shortname) {
 	global $iCount, $DEBUG, $LOG_FILE;
 	//Make check case-insensitive
 	$k = strtolower ($k);
@@ -164,10 +164,10 @@ function NodeCheck ($node, $tag, $k, $v, $checkfor) {
 		if (TagCheck ($node, $checkfor) === False) {
 			$sOut = "<wpt lat='" . $node ["lat"] . "' lon='" . $node ["lon"] . "'>\n";
 			if ($v == "*")
-				$sErrText = $iCount++ . " $k - $checkfor";
+				$sErrText = "$k - $checkfor";
 			else
-				$sErrText = $iCount++ . " $v - $checkfor";
-			$sOut .= "<name>$sErrText</name>\n";
+				$sErrText = "$v - $checkfor";
+			$sOut .= "<name>$name" . $iCount++ . "</name>\n";
 			$sOut .= "<desc>$sErrText</desc>\n";
 			$sOut .= "</wpt>\n";
 			echo $sOut;
@@ -185,7 +185,7 @@ function NodeCheck ($node, $tag, $k, $v, $checkfor) {
  * Either $k or $v can be a wildcard (*)
  * $checkfor: tag to check for existence of (eg "name")
 */
-function WayCheck ($way, $tag, $k, $v, $checkfor) {
+function WayCheck ($way, $tag, $k, $v, $checkfor, $name, $shortname) {
 	global $iCount, $DEBUG, $LOG_FILE;
 	//Make check case-insensitive
 	$k = strtolower ($k);
@@ -202,10 +202,10 @@ function WayCheck ($way, $tag, $k, $v, $checkfor) {
 			GetWayLatLon ($way, $lat, $lon);
 			$sOut = "<wpt lat='$lat' lon='$lon'>\n";
 			if ($v == "*")
-				$sErrText = $iCount++ . " $k - $checkfor";
+				$sErrText = "$k - $checkfor";
 			else
-				$sErrText = $iCount++ . " $v - $checkfor";
-			$sOut .= "<name>$sErrText</name>\n";
+				$sErrText = "$v - $checkfor";
+			$sOut .= "<name>$name" . $iCount++ . "</name>\n";
 			$sOut .= "<desc>$sErrText</desc>\n";
 			$sOut .= "</wpt>\n";
 			echo $sOut;
@@ -233,49 +233,49 @@ foreach ($xml->node as $node) {
 	foreach ($node->tag as $tag) {
 		// Post box reference
 		if ($pbref === True)
-			TagCheck ($node, $tag, "amenity", "post_box", "ref");
+			TagCheck ($node, $tag, "amenity", "post_box", "ref", "Postbox ref", "pb ref");
 
 		// Name
 		if ($name === True) {
-			NodeCheck ($node, $tag, "*", "cafe", "name");
-			NodeCheck ($node, $tag, "*", "restaurant", "name");
-			NodeCheck ($node, $tag, "*", "pub", "name");
+			NodeCheck ($node, $tag, "*", "cafe", "name", "Cafe name ", "Name");
+			NodeCheck ($node, $tag, "*", "restaurant", "name", "Restnt name", "Name");
+			NodeCheck ($node, $tag, "*", "pub", "name", "Pub name ", "Name");
 
-			NodeCheck ($node, $tag, "*", "school", "name");
-			NodeCheck ($node, $tag, "*", "college", "name");
-			NodeCheck ($node, $tag, "*", "library", "name");
-			NodeCheck ($node, $tag, "*", "university", "name");
+			NodeCheck ($node, $tag, "*", "school", "name", "School name", "Name");
+			NodeCheck ($node, $tag, "*", "college", "name", "Coll name ", "Name");
+			NodeCheck ($node, $tag, "*", "library", "name", "Liby name ", "Name");
+			NodeCheck ($node, $tag, "*", "university", "name", "Uni name ", "Name");
 
-			NodeCheck ($node, $tag, "shop", "*", "name");
-			NodeCheck ($node, $tag, "*", "post_office", "name");
-			NodeCheck ($node, $tag, "amenity", "cinema", "name");
+			NodeCheck ($node, $tag, "shop", "*", "name", "Shop name ", "Name");
+			NodeCheck ($node, $tag, "*", "post_office", "name", "POffice nme", "Name");
+			NodeCheck ($node, $tag, "amenity", "cinema", "name", "Cinema name", "Name");
 		}
 
 		// Opening hours
 		if ($hours === True) {
-			NodeCheck ($node, $tag, "*", "cafe", "opening_hours");
-			NodeCheck ($node, $tag, "shop", "*", "opening_hours");
-			NodeCheck ($node, $tag, "*", "post_office", "opening_hours");
-			NodeCheck ($node, $tag, "*", "fast_food", "opening_hours");
-			NodeCheck ($node, $tag, "*", "pharmacy", "opening_hours");
-			NodeCheck ($node, $tag, "*", "restaurant", "opening_hours");
-			NodeCheck ($node, $tag, "*", "library", "opening_hours");
+			NodeCheck ($node, $tag, "*", "cafe", "opening_hours", "Open hours ", "OHours");
+			NodeCheck ($node, $tag, "shop", "*", "opening_hours", "Open hours ", "OHours");
+			NodeCheck ($node, $tag, "*", "post_office", "opening_hours", "Open hours ", "OHours");
+			NodeCheck ($node, $tag, "*", "fast_food", "opening_hours", "Open hours ", "OHours");
+			NodeCheck ($node, $tag, "*", "pharmacy", "opening_hours", "Open hours ", "OHours");
+			NodeCheck ($node, $tag, "*", "restaurant", "opening_hours", "Open hours ", "OHours");
+			NodeCheck ($node, $tag, "*", "library", "opening_hours", "Open hours ", "OHours");
 		}
 
 		// Source
 		if ($source === True) {
-			NoTagCheck ($node, $tag, "source", "extrapolation", "node");
-			NoTagCheck ($node, $tag, "source", "NPE", "node");
-			NoTagCheck ($node, $tag, "source", "historical", "node");
+			NoTagCheck ($node, $tag, "source", "extrapolation", "node", "Src extrap", "Source");
+			NoTagCheck ($node, $tag, "source", "NPE", "node", "Src NPE ", "SrcNPE");
+			NoTagCheck ($node, $tag, "source", "historical", "node", "Src Hist ", "SrcHis");
 		}
 
 		// FIXME tags
 		if ($fixme === True)
-			NoTagCheck ($node, $tag, "FIXME", "*", "node");
+			NoTagCheck ($node, $tag, "FIXME", "*", "node", "Fixme ", "Fixme");
 
 		// NAPTAN import
 		if ($naptan === True)
-			NoTagCheck ($node, $tag, "naptan:verified", "no", "node");
+			NoTagCheck ($node, $tag, "naptan:verified", "no", "node", "Naptan vrfy", "Naptan");
 	}
 }
 
@@ -287,55 +287,55 @@ foreach ($xml->way as $way) {
 
 		// Ref
 		if ($ref === True) {
-			WayCheck ($way, $tag, "highway", "motorway", "ref");
-			WayCheck ($way, $tag, "highway", "trunk", "ref");
-			WayCheck ($way, $tag, "highway", "primary", "ref");
-			WayCheck ($way, $tag, "highway", "secondary", "ref");
+			WayCheck ($way, $tag, "highway", "motorway", "ref", "Motrway ref", "Ref");
+			WayCheck ($way, $tag, "highway", "trunk", "ref", "Trunk ref", "Ref");
+			WayCheck ($way, $tag, "highway", "primary", "ref", "Primry ref ", "Ref");
+			WayCheck ($way, $tag, "highway", "secondary", "ref", "Secndry ref", "Ref");
 		}
 
 		// Name
 		if ($name === True) {
-			WayCheck ($way, $tag, "highway", "residential", "name");
+			WayCheck ($way, $tag, "highway", "residential", "name", "Resid name ", "Name");
 
-			WayCheck ($way, $tag, "*", "cafe", "name");
-			WayCheck ($way, $tag, "*", "restaurant", "name");
-			WayCheck ($way, $tag, "*", "pub", "name");
+			WayCheck ($way, $tag, "*", "cafe", "name", "Cafe name ", "Name");
+			WayCheck ($way, $tag, "*", "restaurant", "name", "Restnt name", "Name");
+			WayCheck ($way, $tag, "*", "pub", "name", "Pub name ", "Name");
 
-			WayCheck ($way, $tag, "*", "school", "name");
-			WayCheck ($way, $tag, "*", "college", "name");
-			WayCheck ($way, $tag, "*", "library", "name");
-			WayCheck ($way, $tag, "*", "university", "name");
+			WayCheck ($way, $tag, "*", "school", "name", "School name", "Name");
+			WayCheck ($way, $tag, "*", "college", "name", "Coll name ", "Name");
+			WayCheck ($way, $tag, "*", "library", "name", "Liby name ", "Name");
+			WayCheck ($way, $tag, "*", "university", "name", "Uni name ", "Name");
 
-			WayCheck ($way, $tag, "shop", "*", "name");
-			WayCheck ($way, $tag, "*", "post_office", "name");
-			WayCheck ($way, $tag, "amenity", "cinema", "name");
+			WayCheck ($way, $tag, "shop", "*", "name", "Shop name ", "Name");
+			WayCheck ($way, $tag, "*", "post_office", "name", "POffice nme", "Name");
+			WayCheck ($way, $tag, "amenity", "cinema", "name", "Cinema name", "Name");
 		}
 
 		// Opening hours
 		if ($hours === True) {
-			WayCheck ($way, $tag, "*", "cafe", "opening_hours");
-			WayCheck ($way, $tag, "shop", "*", "opening_hours");
-			WayCheck ($way, $tag, "*", "post_office", "opening_hours");
-			WayCheck ($way, $tag, "*", "fast_food", "opening_hours");
-			WayCheck ($way, $tag, "*", "pharmacy", "opening_hours");
-			WayCheck ($way, $tag, "*", "restaurant", "opening_hours");
-			WayCheck ($way, $tag, "*", "library", "opening_hours");
+			WayCheck ($way, $tag, "*", "cafe", "opening_hours", "Open hours ", "OHours");
+			WayCheck ($way, $tag, "shop", "*", "opening_hours", "Open hours ", "OHours");
+			WayCheck ($way, $tag, "*", "post_office", "opening_hours", "Open hours ", "OHours");
+			WayCheck ($way, $tag, "*", "fast_food", "opening_hours", "Open hours ", "OHours");
+			WayCheck ($way, $tag, "*", "pharmacy", "opening_hours", "Open hours ", "OHours");
+			WayCheck ($way, $tag, "*", "restaurant", "opening_hours", "Open hours ", "OHours");
+			WayCheck ($way, $tag, "*", "library", "opening_hours", "Open hours ", "OHours");
 		}
 
 		// Source
 		if ($source === True) {
-			NoTagCheck ($way, $tag, "source", "extrapolation", "way");
-			NoTagCheck ($way, $tag, "source", "NPE", "way");
-			NoTagCheck ($way, $tag, "source", "historical", "way");
+			NoTagCheck ($way, $tag, "source", "extrapolation", "way", "Src extrap", "Source");
+			NoTagCheck ($way, $tag, "source", "NPE", "way", "Src NPE ", "SrcNPE");
+			NoTagCheck ($way, $tag, "source", "historical", "way", "Src Hist ", "SrcHis");
 		}
 
 		// FIXME etc
 		if ($fixme === True)
-			NoTagCheck ($way, $tag, "FIXME", "*", "way");
+			NoTagCheck ($way, $tag, "FIXME", "*", "way", "Fixme ", "Fixme");
 
 		// Unknown road classification
 		if ($road === True)
-			NoTagCheck ($way, $tag, "highway", "road", "way");
+			NoTagCheck ($way, $tag, "highway", "road", "way", "Road type ", "Road");
 	}
 }
 

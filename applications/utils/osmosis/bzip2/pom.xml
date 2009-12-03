@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.openstreetmap.osmosis.org.apache.tools</groupId>
+	<artifactId>bzip2</artifactId>
+	<version>20090327</version>
+
+	<packaging>jar</packaging>
+
+	<name>Bzip2</name>
+	<description></description>
+	<url></url>
+
+	<licenses>
+		<!--
+			TODO find applicable licence, "copying.txt" places it into public
+			domain
+		-->
+	</licenses>
+
+	<developers>
+		<!-- TODO full list of developers, if applicable -->
+	</developers>
+
+	<properties>
+	</properties>
+
+	<!-- contributors -->
+	<contributors>
+	</contributors>
+
+	<!-- Global Build Settings -->
+	<build>
+	</build>
+
+	<dependencies>
+	</dependencies>
+
+	<!-- Global Reporting Settings -->
+	<reporting>
+	</reporting>
+
+	<distributionManagement>
+		<repository>
+			<id>sonatype-openstreetmap-snapshots</id>
+			<name>Sonatype OpenStreetMap Snapshots Repo</name>
+			<url>http://oss.sonatype.org/content/repositories/openstreetmap-snapshots</url>
+		</repository>
+	</distributionManagement>
+
+</project>

@@ -16,7 +16,6 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.visitor.CollectBackReferencesVisitor;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -83,9 +82,7 @@ public class ReverseTerraceAction extends JosmAction {
 			// to the front.
 			for (Node n : w.getNodes()) {
 				if (!visitedNodes.contains(n)) {
-					CollectBackReferencesVisitor v = new CollectBackReferencesVisitor(Main.main.getCurrentDataSet());
-					v.visit(n);
-					for (OsmPrimitive prim : v.getData()) {
+					for (OsmPrimitive prim : n.getReferrers()) {
 						if (prim.keySet().contains("building") && prim instanceof Way) {
 							front.add((Way)prim);
 						}

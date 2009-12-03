@@ -143,7 +143,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
 
         Set<DefaultMutableTreeNode> processedNodes = new HashSet<DefaultMutableTreeNode>();
 
-        DuplicateNode.clearBackreferences();
         LinkedList<TestError> errorsToFix = new LinkedList<TestError>();
         for (TreePath path : selectionPaths) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();

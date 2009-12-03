@@ -10,7 +10,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.osm.BackreferencedDataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -60,12 +59,6 @@ public class Test extends AbstractVisitor
 
     /** the progress monitor to use */
     protected ProgressMonitor progressMonitor;
-
-    /**
-     * the data structure with child->parent references
-     */
-    protected BackreferencedDataSet backreferenceDataSet;
-
     /**
      * Constructor
      * @param name Name of the test
@@ -99,7 +92,6 @@ public class Test extends AbstractVisitor
      * @param progressMonitor  the progress monitor
      */
     public void startTest(ProgressMonitor progressMonitor) {
-        backreferenceDataSet = new BackreferencedDataSet();
         if (progressMonitor == null) {
                 this.progressMonitor = NullProgressMonitor.INSTANCE;
         } else {
@@ -134,7 +126,6 @@ public class Test extends AbstractVisitor
     public void endTest() {
         progressMonitor.finishTask();
         progressMonitor = null;
-        backreferenceDataSet = null;
     }
 
     /**

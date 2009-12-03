@@ -110,14 +110,14 @@ Download a GPX file with a waypoint for each error found. The GPX file can then 
 
 <p>A waypoint will be created for each of the following that is found:</p>
 <p>
-<input type = "checkbox" name = "ref" id = "ref" <?=$ref?>>&nbsp;<label for = "ref">Motorways, trunk, primary and secondary roads without a &quot;ref&quot; tag</label><br>
-<input type = "checkbox" name = "name" id = "name" <?=$name?>>&nbsp;<label for = "name">Various things without names</label><br>
-<input type = "checkbox" name = "hours" id = "hours" <?=$hours?>>&nbsp;<label for = "hours">Shops etc without opening hours</label><br>
-<input type = "checkbox" name = "source" id = "source" <?=$source?>>&nbsp;<label for = "source">Anything with &quot;source&quot; set to &quot;extrapolation&quot;, &quot;NPE&quot; or &quot;historical&quot;</label><br>
-<input type = "checkbox" name = "fixme" id = "fixme" <?=$fixme?>>&nbsp;<label for = "fixme">Anything with a &quot;FIXME&quot; tag</label><br>
-<input type = "checkbox" name = "naptan" id = "naptan" <?=$naptan?>>&nbsp;<label for = "naptan">Any node tagged with &quot;naptan:verified=no&quot;</label><br>
-<input type = "checkbox" name = "road" id = "road" <?=$road?>>&nbsp;<label for = "road">Any way tagged with &quot;highway=road&quot;</label><br>
-<input type = "checkbox" name = "pbref" id = "pbref" <?=$pbref?>>&nbsp;<label for = "ref">Postboxes without a &quot;ref&quot; tag</label><br>
+<input type = "checkbox" name = "ref" id = "ref" <?=$ref?>>&nbsp;<label for = "ref"><a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dmotorway">Motorways</a>, <a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dtrunk">trunk</a>, <a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dprimary">primary</a> and <a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dsecondary">secondary</a> roads without a &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:ref">ref</a>&quot; tag</label><br>
+<input type = "checkbox" name = "road" id = "road" <?=$road?>>&nbsp;<label for = "road">Any way tagged with &quot;<a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Droad">highway=road</a>&quot;</label><br>
+<input type = "checkbox" name = "name" id = "name" <?=$name?>>&nbsp;<label for = "name">Various things without <a href = "http://wiki.openstreetmap.org/wiki/Key:name">names</a></label><br>
+<input type = "checkbox" name = "hours" id = "hours" <?=$hours?>>&nbsp;<label for = "hours">Shops etc without <a href = "http://wiki.openstreetmap.org/wiki/Key:opening_hours">opening hours</a></label><br>
+<input type = "checkbox" name = "source" id = "source" <?=$source?>>&nbsp;<label for = "source">Anything with &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:source">source</a>&quot; set to &quot;extrapolation&quot;, &quot;NPE&quot; or &quot;historical&quot;</label><br>
+<input type = "checkbox" name = "fixme" id = "fixme" <?=$fixme?>>&nbsp;<label for = "fixme">Anything with a &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:fixme">fixme</a>&quot; tag</label><br>
+<input type = "checkbox" name = "naptan" id = "naptan" <?=$naptan?>>&nbsp;<label for = "naptan">Any node tagged with &quot;<a href = "http://wiki.openstreetmap.org/wiki/NaPTAN/Surveying_and_Merging_NaPTAN_and_OSM_data">naptan:verified=no</a>&quot;</label><br>
+<input type = "checkbox" name = "pbref" id = "pbref" <?=$pbref?>>&nbsp;<label for = "ref"><a href = "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dpost_box">Postboxes</a> without a &quot;ref&quot; tag</label><br>
 </p>
 <p>
 <small><a href = "#" onclick = "select (true)">select all</a> : <a href = "#" onclick = "select (false)">select none</a></small>

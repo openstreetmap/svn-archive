@@ -1,3 +1,28 @@
+<!--
+** This is a template build file for the osmarender plugin
+**
+** Maintaining versions
+** ====================
+** see README.template
+**
+** Usage
+** =====
+** To build it run
+**
+**    > ant  dist
+**
+** To install the generated plugin locally (in your default plugin directory) run
+**
+**    > ant  install
+**
+** To build against the core in ../../core, create a correct manifest and deploy to
+** SVN, 
+**    set the properties commit.message and plugin.main.version
+** and run
+**    > ant  publish
+**
+**
+-->
 <project name="osmarender" default="install" basedir=".">
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
@@ -6,6 +31,11 @@
     <property name="ant.build.javac.target" value="1.5"/>
     <property name="stylesheets"            location="./stylesheets"/>
     <property name="xslt"                   location="./xslt"/>
+	
+
+    <property name="commit.message" value="Updated to new referrer support in OsmPrimitive" />		
+    <property name="plugin.main.version" value="2565" />
+	
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>
@@ -25,7 +55,7 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.osmarender.OsmarenderPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Launches FireFox to display the current visible screen as a nice SVG image."/>
-                <attribute name="Plugin-Mainversion" value="2396"/>
+                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>
@@ -53,4 +83,81 @@
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
+	
+	<!--
+		 ************************** Publishing the plugin *********************************** 
+		-->
+			<!--
+			  ** extracts the JOSM release for the JOSM version in ../core and saves it in the 
+			  ** property ${coreversion.info.entry.revision}
+			  **
+			-->
+			<target name="core-info">
+		        <exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
+		                    <env key="LANG" value="C"/>
+		                    <arg value="info"/>
+		                    <arg value="--xml"/>
+		                    <arg value="../../core"/>
+		        </exec>
+		        <xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
+				<echo>Building against core revision ${coreversion.info.entry.revision}.</echo>			
+				<echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
+				<delete file="core.info.xml" />
+			</target>
+
+			<!--
+			 ** commits the source tree for this plugin
+			-->
+			<target name="commit-current">
+				<echo>Commiting the plugin source with message '${commit.message}' ...</echo>
+			    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			                    <env key="LANG" value="C"/>
+			                    <arg value="commit"/>
+			                    <arg value="-m '${commit.message}'"/>
+			                    <arg value="."/>
+			    </exec>	    
+			</target>
+
+			<!--
+			** updates (svn up) the source tree for this plugin
+			-->
+			<target name="update-current">
+				<echo>Updating plugin source ...</echo>
+			    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			                    <env key="LANG" value="C"/>
+			                    <arg value="up"/>
+			                    <arg value="."/>
+			    </exec>	    
+				<echo>Updating ${plugin.jar} ...</echo>
+			    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			                    <env key="LANG" value="C"/>
+			                    <arg value="up"/>
+			                    <arg value="../dist/${plugin.jar}"/>
+			    </exec>	    
+			</target>
+			
+			<!--
+			 ** commits the plugin.jar 
+			 -->
+			<target name="commit-dist">
+					<echo>
+	***** Properties of published ${plugin.jar} *****
+	Commit message    : '${commit.message}'					
+	Plugin-Mainversion: ${plugin.main.version}
+	JOSM build version: ${coreversion.info.entry.revision}
+	Plugin-Version    : ${version.entry.commit.revision}
+	***** / Properties of published ${plugin.jar} *****					
+						
+	Now commiting ${plugin.jar} ...
+	</echo>					
+				    <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+				                    <env key="LANG" value="C"/>
+					    			<arg value="-m '${commit.message}'"/>
+				    				<arg value="commit"/>	                			
+	            			        <arg value="${plugin.jar}"/>
+				    </exec>	    
+		   	</target>
+					
+			<target name="publish" depends="core-info,commit-current,update-current,clean,dist,commit-dist">
+			</target>	
 </project>

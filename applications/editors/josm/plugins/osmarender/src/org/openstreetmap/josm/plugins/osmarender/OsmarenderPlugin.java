@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -24,7 +25,6 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.visitor.CollectBackReferencesVisitor;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
@@ -53,23 +53,23 @@ public class OsmarenderPlugin extends Plugin {
                 //how handle the exception?
             }
 
-            CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(Main.main.getCurrentDataSet(), true);
+            Set<OsmPrimitive> parents = new HashSet<OsmPrimitive>();
             DataSet fromDataSet = new DataSet();
             for (Node n : Main.main.getCurrentDataSet().getNodes()) {
                 if (n.isUsable() && n.getCoor().isWithin(b)) {
                     fromDataSet.addPrimitive(n);
-                    n.visit(backRefsV);
+                    parents.addAll(n.getReferrers());
                 }
             }
-            for (OsmPrimitive p : new HashSet<OsmPrimitive>(backRefsV.getData())) {
+            for (OsmPrimitive p : new HashSet<OsmPrimitive>(parents)) {
                 if (p instanceof Way) {
                     for (Node n : ((Way) p).getNodes()) {
                         if (n.getCoor().isWithin(b))
-                            backRefsV.getData().add(n);
+                        	parents.add(n);
                     }
                 }
             }
-            for (OsmPrimitive p : backRefsV.getData())
+            for (OsmPrimitive p : parents)
                 fromDataSet.addPrimitive(p);
 
             String firefox = Main.pref.get("osmarender.firefox", "firefox");

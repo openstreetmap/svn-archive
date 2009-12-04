@@ -1,39 +1,47 @@
 package livegps;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.LatLon;
 
 public class LiveGpsAcquirer implements Runnable {
     Socket gpsdSocket;
     BufferedReader gpsdReader;
     boolean connected = false;
-    String gpsdHost = Main.pref.get("livegps.gpsd.host","localhost");
+    String gpsdHost = Main.pref.get("livegps.gpsd.host", "localhost");
     int gpsdPort = Main.pref.getInteger("livegps.gpsd.port", 2947);
     boolean shutdownFlag = false;
-    private List<PropertyChangeListener> propertyChangeListener = new ArrayList<PropertyChangeListener>();
+    private final List<PropertyChangeListener> propertyChangeListener = new ArrayList<PropertyChangeListener>();
     private PropertyChangeEvent lastStatusEvent;
     private PropertyChangeEvent lastDataEvent;
+
+    /**
+     * The LiveGpsSuppressor is queried, if an event shall be suppressed.
+     */
+    private LiveGpsSuppressor suppressor = null;
+
+    /**
+     * separate thread, where the LiveGpsSuppressor executes.
+     */
+    private Thread suppressorThread = null;
 
     /**
      * Adds a property change listener to the acquirer.
      * @param listener the new listener
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-        if(!propertyChangeListener.contains(listener)) {
+        if (!propertyChangeListener.contains(listener)) {
             propertyChangeListener.add(listener);
         }
     }
@@ -43,7 +51,7 @@ public class LiveGpsAcquirer implements Runnable {
      * @param listener the new listener
      */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-        if(propertyChangeListener.contains(listener)) {
+        if (propertyChangeListener.contains(listener)) {
             propertyChangeListener.remove(listener);
         }
     }
@@ -51,12 +59,16 @@ public class LiveGpsAcquirer implements Runnable {
     /**
      * Fire a gps status change event. Fires events with key "gpsstatus" and a {@link LiveGpsStatus}
      * object as value.
+     * The status event may be sent any time.
      * @param status the status.
      * @param statusMessage the status message.
      */
-    public void fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus status, String statusMessage) {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, "gpsstatus", null, new LiveGpsStatus(status, statusMessage));
-        if(!event.equals(lastStatusEvent)) {
+    public void fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus status,
+            String statusMessage) {
+        PropertyChangeEvent event = new PropertyChangeEvent(this, "gpsstatus",
+                null, new LiveGpsStatus(status, statusMessage));
+
+        if (!event.equals(lastStatusEvent)) {
             firePropertyChangeEvent(event);
             lastStatusEvent = event;
         }
@@ -65,12 +77,16 @@ public class LiveGpsAcquirer implements Runnable {
     /**
      * Fire a gps data change event to all listeners. Fires events with key "gpsdata" and a
      * {@link LiveGpsData} object as values.
+     * This event is only sent, when the suppressor permits it. This
+     * event will cause the UI to re-draw itself, which has some performance penalty,
      * @param oldData the old gps data.
      * @param newData the new gps data.
      */
     public void fireGpsDataChangeEvent(LiveGpsData oldData, LiveGpsData newData) {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, "gpsdata", oldData, newData);
-        if(!event.equals(lastDataEvent)) {
+        PropertyChangeEvent event = new PropertyChangeEvent(this, "gpsdata",
+                oldData, newData);
+
+        if (!event.equals(lastDataEvent) && checkSuppress()) {
             firePropertyChangeEvent(event);
             lastDataEvent = event;
         }
@@ -89,48 +105,57 @@ public class LiveGpsAcquirer implements Runnable {
     public void run() {
         LiveGpsData oldGpsData = null;
         LiveGpsData gpsData = null;
+
+        initSuppressor();
+
         shutdownFlag = false;
-        while(!shutdownFlag) {
+        while (!shutdownFlag) {
             double lat = 0;
             double lon = 0;
             float speed = 0;
             float course = 0;
             boolean haveFix = false;
 
-            try
-            {
-                if (!connected)
-                {
+            try {
+                if (!connected) {
                     System.out.println("LiveGps tries to connect to gpsd");
-                    fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTING, tr("Connecting"));
+                    fireGpsStatusChangeEvent(
+                            LiveGpsStatus.GpsStatus.CONNECTING,
+                            tr("Connecting"));
                     InetAddress[] addrs = InetAddress.getAllByName(gpsdHost);
-                    for (int i=0; i < addrs.length && gpsdSocket == null; i++) {
+                    for (int i = 0; i < addrs.length && gpsdSocket == null; i++) {
                         try {
                             gpsdSocket = new Socket(addrs[i], gpsdPort);
                             break;
                         } catch (Exception e) {
-                            System.out.println("LiveGps: Could not open connection to gpsd: " + e);
+                            System.out
+                            .println("LiveGps: Could not open connection to gpsd: "
+                                    + e);
                             gpsdSocket = null;
                         }
                     }
 
-                    if (gpsdSocket != null)
-                    {
-                        gpsdReader = new BufferedReader(new InputStreamReader(gpsdSocket.getInputStream()));
-                        gpsdSocket.getOutputStream().write(new byte[] { 'w', 13, 10 });
-                        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTING, tr("Connecting"));
+                    if (gpsdSocket != null) {
+                        gpsdReader = new BufferedReader(new InputStreamReader(
+                                gpsdSocket.getInputStream()));
+                        gpsdSocket.getOutputStream().write(
+                                new byte[] { 'w', 13, 10 });
+                        fireGpsStatusChangeEvent(
+                                LiveGpsStatus.GpsStatus.CONNECTING,
+                                tr("Connecting"));
                         connected = true;
-                    System.out.println("LiveGps: Connected to gpsd");
+                        System.out.println("LiveGps: Connected to gpsd");
                     }
                 }
 
-
-                if(connected) {
+                if (connected) {
                     // <FIXXME date="23.06.2007" author="cdaller">
-                    // TODO this read is blocking if gps is connected but has no fix, so gpsd does not send positions
+                    // TODO this read is blocking if gps is connected but has no
+                    // fix, so gpsd does not send positions
                     String line = gpsdReader.readLine();
                     // </FIXXME>
-                    if (line == null) break;
+                    if (line == null)
+                        break;
                     String words[] = line.split(",");
 
                     if ((words.length == 0) || (!words[0].equals("GPSD"))) {
@@ -140,7 +165,8 @@ public class LiveGpsAcquirer implements Runnable {
 
                     for (int i = 1; i < words.length; i++) {
 
-                        if ((words[i].length() < 2) || (words[i].charAt(1) != '=')) {
+                        if ((words[i].length() < 2)
+                                || (words[i].charAt(1) != '=')) {
                             // unexpected response.
                             continue;
                         }
@@ -149,7 +175,7 @@ public class LiveGpsAcquirer implements Runnable {
                         String value = words[i].substring(2);
                         oldGpsData = gpsData;
                         gpsData = new LiveGpsData();
-                        switch(what) {
+                        switch (what) {
                         case 'O':
                             // full report, tab delimited.
                             String[] status = value.split("\\s+");
@@ -159,9 +185,10 @@ public class LiveGpsAcquirer implements Runnable {
                                 try {
                                     speed = Float.parseFloat(status[9]);
                                     course = Float.parseFloat(status[8]);
-                                    //view.setSpeed(speed);
-                                    //view.setCourse(course);
-                                } catch (NumberFormatException nex) {}
+                                    // view.setSpeed(speed);
+                                    // view.setCourse(course);
+                                } catch (NumberFormatException nex) {
+                                }
                                 haveFix = true;
                             }
                             break;
@@ -178,10 +205,12 @@ public class LiveGpsAcquirer implements Runnable {
                         default:
                             // not interested
                         }
-                        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTED, tr("Connected"));
+                        fireGpsStatusChangeEvent(
+                                LiveGpsStatus.GpsStatus.CONNECTED,
+                                tr("Connected"));
                         gpsData.setFix(haveFix);
                         if (haveFix) {
-                            //view.setCurrentPosition(lat, lon);
+                            // view.setCurrentPosition(lat, lon);
                             gpsData.setLatLon(new LatLon(lat, lon));
                             gpsData.setSpeed(speed);
                             gpsData.setCourse(course);
@@ -190,37 +219,77 @@ public class LiveGpsAcquirer implements Runnable {
                     }
                 } else {
                     // not connected:
-                    fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED, tr("Not connected"));
-                    try { Thread.sleep(1000); } catch (InterruptedException ignore) {};
+                    fireGpsStatusChangeEvent(
+                            LiveGpsStatus.GpsStatus.DISCONNECTED,
+                            tr("Not connected"));
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ignore) {
+                    }
+                    ;
                 }
-            } catch(IOException iox) {
+            } catch (IOException iox) {
                 connected = false;
-                if(gpsData != null) {
+                if (gpsData != null) {
                     gpsData.setFix(false);
                     fireGpsDataChangeEvent(oldGpsData, gpsData);
                 }
-                fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTION_FAILED, tr("Connection Failed"));
-                try { Thread.sleep(1000); } catch (InterruptedException ignore) {};
+                fireGpsStatusChangeEvent(
+                        LiveGpsStatus.GpsStatus.CONNECTION_FAILED,
+                        tr("Connection Failed"));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignore) {
+                }
+                ;
                 // send warning to layer
 
             }
         }
 
-        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED, tr("Not connected"));
+        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED,
+                tr("Not connected"));
         if (gpsdSocket != null) {
             try {
-              gpsdSocket.close();
-              gpsdSocket = null;
-                  System.out.println("LiveGps: Disconnected from gpsd");
-            }
-            catch (Exception e) {
-              System.out.println("LiveGps: Unable to close socket; reconnection may not be possible");
+                gpsdSocket.close();
+                gpsdSocket = null;
+                System.out.println("LiveGps: Disconnected from gpsd");
+            } catch (Exception e) {
+                System.out
+                .println("LiveGps: Unable to close socket; reconnection may not be possible");
             }
         }
     }
 
-    public void shutdown()
-    {
+    /**
+     * Initialize the suppressor and start its thread.
+     */
+    private void initSuppressor() {
+        suppressor = new LiveGpsSuppressor();
+        suppressorThread = new Thread(suppressor);
+        suppressorThread.start();
+    }
+
+    public void shutdown() {
+        // shut down the suppressor thread, too.
+        suppressor.shutdown();
+        this.suppressor = null;
         shutdownFlag = true;
+    }
+
+    /**
+     * Check, if an event may be sent now.
+     * @return true, if an event may be sent.
+     */
+    private boolean checkSuppress() {
+        if (suppressor != null) {
+            if (suppressor.isAllowUpdate()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 }

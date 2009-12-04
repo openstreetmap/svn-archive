@@ -14,22 +14,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.openstreetmap.osmosis.core.container.v0_5.EntityContainer;
-import org.openstreetmap.osmosis.core.container.v0_5.NodeContainer;
-import org.openstreetmap.osmosis.core.container.v0_5.RelationContainer;
-import org.openstreetmap.osmosis.core.container.v0_5.WayContainer;
-import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
-import org.openstreetmap.osmosis.core.domain.common.TimestampFormat;
-import org.openstreetmap.osmosis.core.domain.common.UnparsedTimestampContainer;
-import org.openstreetmap.osmosis.core.domain.v0_5.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_5.EntityType;
-import org.openstreetmap.osmosis.core.domain.v0_5.Node;
-import org.openstreetmap.osmosis.core.domain.v0_5.Relation;
-import org.openstreetmap.osmosis.core.domain.v0_5.Tag;
-import org.openstreetmap.osmosis.core.domain.v0_5.Way;
-import org.openstreetmap.osmosis.core.task.v0_5.Sink;
-import org.openstreetmap.osmosis.core.task.v0_5.SinkSource;
-import org.openstreetmap.osmosis.core.xml.common.XmlTimestampFormat;
+import javax.management.relation.Relation;
 
 import uk.co.randomjunk.osmosis.transform.Match;
 import uk.co.randomjunk.osmosis.transform.Output;
@@ -42,9 +27,9 @@ public class TransformTask implements SinkSource {
 	private static Logger logger = Logger.getLogger(TransformTask.class.getName());
 	
 	private Sink sink;
-	private List<Translation> translations;
-	private String statsFile;
-	private String configFile;
+	private final List<Translation> translations;
+	private final String statsFile;
+	private final String configFile;
 	private static TimestampFormat timestampFormat = new XmlTimestampFormat();
 
 	public TransformTask(String configFile, String statsFile) {
@@ -91,7 +76,7 @@ public class TransformTask implements SinkSource {
 		
 		Map<String, String> tags = new HashMap<String, String>(originalTags);
 		for ( Translation translation : translations ) {
-			Collection<Match> matches = translation.match(tags, TTEntityType.fromEntityType0_5(entityType));
+            Collection<Match> matches = translation.match(tags, TTEntityType.fromEntityType0_5(entityType), null, null);
 			if ( matches == null || matches.isEmpty() )
 				continue;
 			if ( translation.isDropOnMatch() ) {

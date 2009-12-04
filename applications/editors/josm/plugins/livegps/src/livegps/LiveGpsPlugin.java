@@ -173,7 +173,6 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener
         }
     }
 
-
     /**
      * Add a listener for gps events.
      * @param listener the listener.

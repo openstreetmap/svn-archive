@@ -28,14 +28,14 @@ abstract public class Grabber extends Thread {
         if (b.min != null && b.max != null && WMSPlugin.doOverlap) { 
             double eastSize =  b.max.east() - b.min.east(); 
             double northSize =  b.max.north() - b.min.north(); 
-    
+
             double eastCoef = WMSPlugin.overlapEast / 100.0; 
             double northCoef = WMSPlugin.overlapNorth / 100.0; 
-             
-            this.b = new ProjectionBounds( new EastNorth(b.min.east(), 
+
+            this.b = new ProjectionBounds( new EastNorth(b.min.east(),
                                             b.min.north()), 
                                  new EastNorth(b.max.east() + eastCoef * eastSize, 
-                                            b.max.north() + northCoef * northSize));             
+                                            b.max.north() + northCoef * northSize));
         } else 
            this.b = b;
 

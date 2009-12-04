@@ -62,6 +62,7 @@
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
                 <attribute name="de_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/DE:JOSM/Plugins/WMSPlugin"/>
+                <attribute name="ja_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/Ja:JOSM/Plugins/WMSPlugin?uselang=ja"/>
             </manifest>
         </jar>
     </target>

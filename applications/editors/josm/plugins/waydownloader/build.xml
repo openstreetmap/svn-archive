@@ -26,7 +26,7 @@
       ** update before publishing 
 	-->
 	<property name="commit.message" value="Publishing: various fixes and improvements, see 18613" />		
-	<property name="plugin.main.version" value="2457" />
+	<property name="plugin.main.version" value="2578" />
 	
 	
     <!--

@@ -103,7 +103,7 @@ public class NameMismatch extends Test {
      */
     @Override public void visit(Collection<OsmPrimitive> selection) {
         for (OsmPrimitive p : selection)
-            if (!p.isDeleted() && !p.incomplete)
+            if (!p.isDeleted() && !p.isIncomplete())
                 check(p);
     }
 }

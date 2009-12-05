@@ -143,7 +143,7 @@ public class EditGpxLayer extends Layer {
         HashSet<Node> doneNodes = new HashSet<Node>();
         //add all ways
         for (Way w : dataSet.getWays()) {
-            if (w.incomplete || w.isDeleted()) continue;
+            if (w.isIncomplete() || w.isDeleted()) continue;
             GpxTrack trk = new GpxTrack();
             gpxData.tracks.add(trk);
 
@@ -152,7 +152,7 @@ public class EditGpxLayer extends Layer {
 
             ArrayList<WayPoint> trkseg = null;
             for (Node n : w.getNodes()) {
-                if (n.incomplete || n.isDeleted()) {
+                if (n.isIncomplete() || n.isDeleted()) {
                     trkseg = null;
                     continue;
                 }
@@ -179,7 +179,7 @@ public class EditGpxLayer extends Layer {
 
         // add nodes as waypoints
         for (Node n : dataSet.getNodes()) {
-            if (n.incomplete || n.isDeleted() || doneNodes.contains(n)) continue;
+            if (n.isIncomplete() || n.isDeleted() || doneNodes.contains(n)) continue;
 
             Date tstamp = n.getTimestamp();
 

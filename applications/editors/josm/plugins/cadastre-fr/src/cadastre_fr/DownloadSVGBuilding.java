@@ -191,7 +191,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     private Node checkNearestNode(Node nodeToAdd, Collection<Node> nodes) {
         double epsilon = 0.05; // smallest distance considering duplicate node
         for (Node n : nodes) {
-            if (!n.isDeleted() && !n.incomplete) {
+            if (!n.isDeleted() && !n.isIncomplete()) {
                 double dist = n.getEastNorth().distance(nodeToAdd.getEastNorth());
                 if (dist < epsilon) {
                     return n;

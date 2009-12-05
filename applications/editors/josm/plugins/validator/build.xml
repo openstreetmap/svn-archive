@@ -26,7 +26,7 @@
 	  ** update before publishing 
 	-->
 	<property name="commit.message" value="Made build file more robust" />
-	<property name="plugin.main.version" value="2565" />
+	<property name="plugin.main.version" value="2578" />
 
 
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>

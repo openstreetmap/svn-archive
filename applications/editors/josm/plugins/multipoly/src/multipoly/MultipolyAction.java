@@ -55,7 +55,7 @@ public class MultipolyAction extends JosmAction {
   * The action button has been clicked
   * @param e Action Event
   */
- @Override public void actionPerformed(ActionEvent e) {
+ public void actionPerformed(ActionEvent e) {
 
   // Get all ways in some type=multipolygon relation
   HashSet<OsmPrimitive> relationsInMulti = new HashSet<OsmPrimitive>();

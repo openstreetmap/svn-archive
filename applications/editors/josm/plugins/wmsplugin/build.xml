@@ -27,7 +27,7 @@
 <project name="wmsplugin" default="dist" basedir=".">
 	
 	
-	<property name="commit.message" value="fixed JOSM issue #3940" />		
+	<property name="commit.message" value="added Activate to layer popup menu" />		
 	<property name="plugin.main.version" value="2450" />
 	
 	

@@ -2606,6 +2606,9 @@
 		<rule e="way" k="landuse" v="construction|greenfield" layer="-5">
 			<area class="landuse-construction" layer="-5"/>
 		</rule>
+		<rule e="way" k="landuse" v="garages" layer="-5">
+			<area class="landuse-garages" layer="-5"/>
+		</rule>
 		
 		<!-- Artificial landuse -->
 		<rule e="way" k="amenity" v="school|college|university" layer="-5">
@@ -3915,7 +3918,12 @@
 			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}
-			
+
+			.landuse-garages {
+			stroke: none;
+			fill: #d6d6e4;
+			}
+
 			.landuse-quarry {
 			fill: #e9dd72;
 			stroke: #556b2f;

@@ -1953,6 +1953,36 @@
   <node id='-1000192' visible='true' lat='51.2754' lon='-0.4367'>
      <tag k='building' v='yes' />
   </node>
+  <node id='-10002000' action='modify' visible='true' lat='51.30919896382204' lon='-0.3739127502118958' />
+  <node id='-10002001' action='modify' visible='true' lat='51.3130305509978' lon='-0.3739669948540364' />
+  <node id='-10002002' action='modify' visible='true' lat='51.31310020470559' lon='-0.36137490752016566' />
+  <node id='-10002003' action='modify' visible='true' lat='51.30926862334657' lon='-0.36132066287802517' />
+  <node id='-10002004' action='modify' visible='true' lat='51.320020331730895' lon='-0.374629711027341' />
+  <node id='-10002005' action='modify' visible='true' lat='51.32008997482678' lon='-0.36203762369347037' />
+  <node id='-10002006' action='modify' visible='true' lat='51.316258977204434' lon='-0.3619833790513299' />
+  <node id='-10002007' action='modify' visible='true' lat='51.31618932829217' lon='-0.3745754663852005' />
+  <node id='-10002008' action='modify' visible='true' lat='51.31156388162202' lon='-0.35505222157324096'>
+    <tag k='leisure' v='dog_park' />
+  </node>
+  <node id='-10002009' action='modify' visible='true' lat='51.31819146732193' lon='-0.3547208634865886'>
+    <tag k='leisure' v='playground' />
+  </node>
+  <way id='-10002010' action='modify' visible='true'>
+    <nd ref='-10002000' />
+    <nd ref='-10002001' />
+    <nd ref='-10002002' />
+    <nd ref='-10002003' />
+    <nd ref='-10002000' />
+    <tag k='leisure' v='dog_park' />
+  </way>
+  <way id='-10002011' action='modify' visible='true'>
+    <nd ref='-10002004' />
+    <nd ref='-10002005' />
+    <nd ref='-10002006' />
+    <nd ref='-10002007' />
+    <nd ref='-10002004' />
+    <tag k='leisure' v='playground' />
+  </way>
   <way id='-10001962' action='modify' visible='true'>
     <nd ref='-1000191' />
     <nd ref='-1000190' />

@@ -103,7 +103,7 @@
 		<rule e="way" k="leisure" v="park|garden|golf_course|common|green">
 			<area class="leisure-park"/>
 		</rule>
-		<rule e="way" k="leisure" v="playground|playing_fields|pitch">
+		<rule e="way" k="leisure" v="playground|playing_fields|pitch|dog_park">
 			<rule e="way" k="sport" v="tennis">
 				<area class="sport-tennis"/>
 			</rule>
@@ -3255,6 +3255,9 @@
 		</rule>
 		<rule e="node|way" k="leisure" v="playground">
 			<symbol ref="playground" position="center"/>
+		</rule>
+		<rule e="node|way" k="leisure" v="dog_park">
+			<symbol ref="dog_park" position="center"/>
 		</rule>
 
 		<!-- Sport symbols with border on nodes -->

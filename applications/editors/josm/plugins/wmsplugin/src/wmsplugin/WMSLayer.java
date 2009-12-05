@@ -271,6 +271,7 @@ public class WMSLayer extends Layer {
 
     @Override public Component[] getMenuEntries() {
         return new Component[]{
+                new JMenuItem(LayerListDialog.getInstance().createActivateLayerAction(this)),
                 new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
                 new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
                 new JSeparator(),

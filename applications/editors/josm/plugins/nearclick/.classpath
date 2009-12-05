@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="/josm"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

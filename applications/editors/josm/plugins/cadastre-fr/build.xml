@@ -33,7 +33,7 @@
 	
 
     <property name="commit.message" value="Updated to new referrer support in OsmPrimitive" />		
-    <property name="plugin.main.version" value="2565" />
+    <property name="plugin.main.version" value="2578" />
 	
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>

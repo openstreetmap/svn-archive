@@ -7,7 +7,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -264,7 +263,7 @@ public class WayDownloaderPlugin extends Plugin {
         List<Node> candidates = ds.searchNodes(new BBox(new Bounds(referenceNode.getCoor(), 0.0003, 0.0005)));
         for (Node candidate: candidates) {
             if (!candidate.equals(referenceNode)
-                    && !candidate.incomplete
+                    && !candidate.isIncomplete()
                     && candidate.getCoor().equals(referenceNode.getCoor()))
                 return candidate;
         }

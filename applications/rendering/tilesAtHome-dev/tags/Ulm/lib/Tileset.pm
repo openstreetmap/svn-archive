@@ -1328,7 +1328,9 @@ sub SplitTiles
         ::statusMessage("Splitting stripe $stripe",0,3);
 
         my $png_file = File::Spec->join($self->{JobDir},"$layer-z$zoom-s$stripe.png");
-        my $Image = GD::Image->newFromPng($png_file);
+        my $Image = undef;
+
+        eval { $Image = GD::Image->newFromPng($png_file); };
 
         if( not defined $Image ) {
             throw TilesetError "SplitTiles: Missing File $png_file encountered", "fatal";

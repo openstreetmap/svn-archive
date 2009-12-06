@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.osmarender;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,9 +13,12 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
@@ -123,10 +127,14 @@ public class OsmarenderPlugin extends Plugin {
         return new PreferenceSetting(){
             private JTextField firefox = new JTextField(10);
             public void addGui(PreferenceDialog gui) {
-                gui.map.add(new JLabel(tr("osmarender options")), GBC.eol().insets(0,5,0,0));
-                gui.map.add(new JLabel(tr("Firefox executable")), GBC.std().insets(10,5,5,0));
-                gui.map.add(firefox, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
+                final JPanel panel = new JPanel(new GridBagLayout());
+                panel.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
+
+                panel.add(new JLabel(tr("Firefox executable")), GBC.std().insets(10,5,5,0));
+                panel.add(firefox, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
+                panel.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.BOTH));
                 firefox.setText(Main.pref.get("osmarender.firefox"));
+                gui.mapcontent.addTab(tr("Osmarender"), panel);
             }
             public boolean ok() {
                 Main.pref.put("osmarender.firefox", firefox.getText());

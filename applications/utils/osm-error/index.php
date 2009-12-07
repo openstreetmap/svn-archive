@@ -160,10 +160,11 @@ echo "<input type = 'radio' $checked name = 'namelen' value = '0' id = 'name0'>&
 <li>The download link can be bookmarked, or used with tools like <a href = "http://www.gnu.org/software/wget/">wget</a>
 <li>If an error is found on a way, the waypoint will be positioned at the first node in the way
 <li><a href = "../download/osm-error.tar.gz">Download source code</a> (released under <a href = "gpl.txt">GNU General Public License</a>)
+<li><a href = "README.html">About OSM Error</a>
 </ul>
 
 <p>
-Back to <a href = "http://www.mappage.org/">mappage.org</a>
+<a href = "http://www.mappage.org/">mappage.org</a>
 </p>
 </div>
 

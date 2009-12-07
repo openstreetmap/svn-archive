@@ -70,6 +70,10 @@ if (isset ($_COOKIE ['pbref']))
 	$pbref = " checked";
 else
 	$pbref = "";
+if (isset ($_COOKIE ['namelen']))
+	$namelen = (int) $_COOKIE ['namelen'];
+else
+	$namelen = 14;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <head>
@@ -82,6 +86,7 @@ function select (state) {
 	for (var i = 0; i < oElements.length; i++)
 		if (oElements.elements [i].type == "checkbox")
 			oElements.elements [i].checked = state
+	updateForm ()
 }
 </script>
 <!-- OpenLayers javascript library -->
@@ -102,22 +107,43 @@ Download a GPX file with a waypoint for each error found. The GPX file can then 
 
 <form action = "error.php" method = "get" id = "frmError">
 <p class = "mid">
-<input name = "lat_upper_left" value = "<?=$top;?>" class = "text" id = "lat_upper_left" onchange =" updateMap()"><br>
-<input name = "lon_upper_left" value = "<?=$left;?>" class = "text" id = "lon_upper_left" onchange =" updateMap()">
-<input name = "lon_bottom_right" value = "<?=$right;?>" class = "text" id = "lon_bottom_right" onchange =" updateMap()"><br>
-<input name = "lat_bottom_right" value = "<?=$bottom;?>" class = "text" id = "lat_bottom_right" onchange =" updateMap()">
+<input name = "lat_upper_left" value = "<?=$top;?>" class = "text" id = "lat_upper_left" onchange = "updateMap()"><br>
+<input name = "lon_upper_left" value = "<?=$left;?>" class = "text" id = "lon_upper_left" onchange = "updateMap()">
+<input name = "lon_bottom_right" value = "<?=$right;?>" class = "text" id = "lon_bottom_right" onchange = "updateMap()"><br>
+<input name = "lat_bottom_right" value = "<?=$bottom;?>" class = "text" id = "lat_bottom_right" onchange = "updateMap()">
 </p>
 
 <p>A waypoint will be created for each of the following that is found:</p>
 <p>
-<input type = "checkbox" name = "ref" id = "ref" <?=$ref?>>&nbsp;<label for = "ref"><a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dmotorway">Motorways</a>, <a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dtrunk">trunk</a>, <a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dprimary">primary</a> and <a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dsecondary">secondary</a> roads without a &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:ref">ref</a>&quot; tag</label><br>
-<input type = "checkbox" name = "road" id = "road" <?=$road?>>&nbsp;<label for = "road">Any way tagged with &quot;<a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Droad">highway=road</a>&quot;</label><br>
-<input type = "checkbox" name = "name" id = "name" <?=$name?>>&nbsp;<label for = "name">Various things without <a href = "http://wiki.openstreetmap.org/wiki/Key:name">names</a></label><br>
-<input type = "checkbox" name = "hours" id = "hours" <?=$hours?>>&nbsp;<label for = "hours">Shops etc without <a href = "http://wiki.openstreetmap.org/wiki/Key:opening_hours">opening hours</a></label><br>
-<input type = "checkbox" name = "source" id = "source" <?=$source?>>&nbsp;<label for = "source">Anything with &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:source">source</a>&quot; set to &quot;extrapolation&quot;, &quot;NPE&quot; or &quot;historical&quot;</label><br>
-<input type = "checkbox" name = "fixme" id = "fixme" <?=$fixme?>>&nbsp;<label for = "fixme">Anything with a &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:fixme">fixme</a>&quot; tag</label><br>
-<input type = "checkbox" name = "naptan" id = "naptan" <?=$naptan?>>&nbsp;<label for = "naptan">Any node tagged with &quot;<a href = "http://wiki.openstreetmap.org/wiki/NaPTAN/Surveying_and_Merging_NaPTAN_and_OSM_data">naptan:verified=no</a>&quot;</label><br>
-<input type = "checkbox" name = "pbref" id = "pbref" <?=$pbref?>>&nbsp;<label for = "ref"><a href = "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dpost_box">Postboxes</a> without a &quot;ref&quot; tag</label><br>
+<input type = "checkbox" onchange = "updateForm ()" name = "ref" id = "ref" <?=$ref?>>&nbsp;<label for = "ref"><a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dmotorway">Motorways</a>, <a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dtrunk">trunk</a>, <a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dprimary">primary</a> and <a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Dsecondary">secondary</a> roads without a &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:ref">ref</a>&quot; tag</label><br>
+<input type = "checkbox" onchange = "updateForm ()" name = "road" id = "road" <?=$road?>>&nbsp;<label for = "road">Any way tagged with &quot;<a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Droad">highway=road</a>&quot;</label><br>
+<input type = "checkbox" onchange = "updateForm ()" name = "name" id = "name" <?=$name?>>&nbsp;<label for = "name">Various things without <a href = "http://wiki.openstreetmap.org/wiki/Key:name">names</a></label><br>
+<input type = "checkbox" onchange = "updateForm ()" name = "hours" id = "hours" <?=$hours?>>&nbsp;<label for = "hours">Shops etc without <a href = "http://wiki.openstreetmap.org/wiki/Key:opening_hours">opening hours</a></label><br>
+<input type = "checkbox" onchange = "updateForm ()" name = "source" id = "source" <?=$source?>>&nbsp;<label for = "source">Anything with &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:source">source</a>&quot; set to &quot;extrapolation&quot;, &quot;NPE&quot; or &quot;historical&quot;</label><br>
+<input type = "checkbox" onchange = "updateForm ()" name = "fixme" id = "fixme" <?=$fixme?>>&nbsp;<label for = "fixme">Anything with a &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:fixme">fixme</a>&quot; tag</label><br>
+<input type = "checkbox" onchange = "updateForm ()" name = "naptan" id = "naptan" <?=$naptan?>>&nbsp;<label for = "naptan">Any node tagged with &quot;<a href = "http://wiki.openstreetmap.org/wiki/NaPTAN/Surveying_and_Merging_NaPTAN_and_OSM_data">naptan:verified=no</a>&quot;</label><br>
+<input type = "checkbox" onchange = "updateForm ()" name = "pbref" id = "pbref" <?=$pbref?>>&nbsp;<label for = "ref"><a href = "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dpost_box" onchange = "updateForm ()">Postboxes</a> without a &quot;ref&quot; tag</label><br>
+</p>
+
+<p>Length of waypoint names:</p>
+<p>
+<?
+if ($namelen == 6)
+	$checked = "checked";
+else
+	$checked = "";
+echo "<input type = 'radio' $checked name = 'namelen' value = '6' id = 'name6'>&nbsp;<label for = 'name6'>Limit waypoint name to 6 characters</label><br>\n";
+if ($namelen == 14)
+	$checked = "checked";
+else
+	$checked = "";
+echo "<input type = 'radio' $checked name = 'namelen' value = '14' id = 'name14'>&nbsp;<label for = 'name14'>Limit waypoint name to 14 characters</label><br>\n";
+if ($namelen == 0)
+	$checked = "checked";
+else
+	$checked = "";
+echo "<input type = 'radio' $checked name = 'namelen' value = '0' id = 'name0'>&nbsp;<label for = 'name0'>Do not limit waypoint name length</label><br>\n";
+?>
 </p>
 <p>
 <small><a href = "#" onclick = "select (true)">select all</a> : <a href = "#" onclick = "select (false)">select none</a></small>
@@ -130,17 +156,11 @@ Download a GPX file with a waypoint for each error found. The GPX file can then 
 
 <h2>Notes</h2>
 <ul>
-<li>Each waypoint name has a number prefix, to ensure that the name is unique
+<li>Each waypoint name has a number suffix, to ensure that the name is unique
 <li>The download link can be bookmarked, or used with tools like <a href = "http://www.gnu.org/software/wget/">wget</a>
-<li>Some GPS units may truncate the waypoint names. The full name will be in the description
 <li>If an error is found on a way, the waypoint will be positioned at the first node in the way
 <li><a href = "../download/osm-error.tar.gz">Download source code</a> (released under <a href = "gpl.txt">GNU General Public License</a>)
 </ul>
-
-<h2>To Do</h2>
-<p>
-Limit waypoint names to 6 or 14 characters (selectable)<br>
-</p>
 
 <p>
 Back to <a href = "http://www.mappage.org/">mappage.org</a>

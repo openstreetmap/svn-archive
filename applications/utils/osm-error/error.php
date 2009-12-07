@@ -38,8 +38,11 @@ $naptan = (bool) $_GET ['naptan'];
 $road = (bool) $_GET ['road'];
 $pbref = (bool) $_GET ['pbref'];
 
-// Store co-ordinates & checkbox values in cookies
-$iExpireTime = time ()+60*60*24*90;
+// Waypoint name length
+$namelen = (int) $_GET ['namelen'];
+
+// Store values in cookies
+$iExpireTime = time ()+60*60*24*365;
 setcookie ("left", $left, $iExpireTime);
 setcookie ("bottom", $bottom, $iExpireTime);
 setcookie ("right", $right, $iExpireTime);
@@ -53,6 +56,8 @@ setcookie ("fixme", $fixme, $iExpireTime);
 setcookie ("naptan", $naptan, $iExpireTime);
 setcookie ("road", $road, $iExpireTime);
 setcookie ("pbref", $pbref, $iExpireTime);
+
+setcookie ("namelen", $namelen, $iExpireTime);
 
 // Get OSM data
 $xml = simplexml_load_file ($osm_api_base . "?bbox=$left,$bottom,$right,$top");
@@ -131,7 +136,12 @@ function NoTagCheck ($node, $tag, $k, $v, $waynode, $name, $shortname) {
 		else
 			$sOut = "<wpt lat='" . $node ["lat"] . "' lon='" . $node ["lon"] . "'>\n";
 		$sErrText =  "$k - " . $tag ["v"];
-		$sOut .= "<name>$name" . $iCount++ . "</name>\n";
+		if ($namelen == 6)
+			$sOut .= "<name>$shortname" . $iCount++ . "</name>\n";
+		elseif ($namelen == 14)
+			$sOut .= "<name>$name" . $iCount++ . "</name>\n";
+		else
+			$sOut .= "<name>$sErrText (" . $iCount++ . ")</name>\n";
 		$sOut .= "<desc>$sErrText</desc>\n";
 		$sOut .= "</wpt>\n";
 		echo $sOut;
@@ -167,7 +177,12 @@ function NodeCheck ($node, $tag, $k, $v, $checkfor, $name, $shortname) {
 				$sErrText = "$k - $checkfor";
 			else
 				$sErrText = "$v - $checkfor";
+		if ($namelen == 6)
+			$sOut .= "<name>$shortname" . $iCount++ . "</name>\n";
+		elseif ($namelen == 14)
 			$sOut .= "<name>$name" . $iCount++ . "</name>\n";
+		else
+			$sOut .= "<name>$sErrText (" . $iCount++ . ")</name>\n";
 			$sOut .= "<desc>$sErrText</desc>\n";
 			$sOut .= "</wpt>\n";
 			echo $sOut;
@@ -205,7 +220,12 @@ function WayCheck ($way, $tag, $k, $v, $checkfor, $name, $shortname) {
 				$sErrText = "$k - $checkfor";
 			else
 				$sErrText = "$v - $checkfor";
+		if ($namelen == 6)
+			$sOut .= "<name>$shortname" . $iCount++ . "</name>\n";
+		elseif ($namelen == 14)
 			$sOut .= "<name>$name" . $iCount++ . "</name>\n";
+		else
+			$sOut .= "<name>$sErrText (" . $iCount++ . ")</name>\n";
 			$sOut .= "<desc>$sErrText</desc>\n";
 			$sOut .= "</wpt>\n";
 			echo $sOut;

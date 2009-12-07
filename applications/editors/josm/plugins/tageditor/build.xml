@@ -219,16 +219,26 @@ Now commiting ${plugin.jar} ...
 
 	<!-- ** make sure svn is present as a command line tool ** -->
 	<target name="ensure-svn-present">
-		<exec append="true" output="svn.log" executable="svn" failonerror="false" resultproperty="svn.exit.code">
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
 			<env key="LANG" value="C" />
 			<arg value="--version" />
 		</exec>
-		<fail message="Fatal: command 'svn' not found. Please make sure svn is installed on your system.">
+		<fail message="Fatal: command 'svn --version' failed. Please make sure svn is installed on your system.">
+			<!-- return code not set at all? Most likely svn isn't installed -->
+			<condition>
+				<not>
+					<isset property="svn.exit.code" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="Fatal: command 'svn --version' failed. Please make sure a working copy of svn is installed on your system.">
+			<!-- error code from SVN? Most likely svn is not what we are looking on this system -->
 			<condition>
 				<isfailure code="${svn.exit.code}" />
 			</condition>
 		</fail>
 	</target>
+
 	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
 	</target>
 </project>

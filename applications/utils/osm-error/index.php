@@ -124,6 +124,9 @@ Download a GPX file with a waypoint for each error found. The GPX file can then 
 <input type = "checkbox" onchange = "updateForm ()" name = "naptan" id = "naptan" <?=$naptan?>>&nbsp;<label for = "naptan">Any node tagged with &quot;<a href = "http://wiki.openstreetmap.org/wiki/NaPTAN/Surveying_and_Merging_NaPTAN_and_OSM_data">naptan:verified=no</a>&quot;</label><br>
 <input type = "checkbox" onchange = "updateForm ()" name = "pbref" id = "pbref" <?=$pbref?>>&nbsp;<label for = "ref"><a href = "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dpost_box" onchange = "updateForm ()">Postboxes</a> without a &quot;ref&quot; tag</label><br>
 </p>
+<p>
+<small><a href = "#" onclick = "select (true)">select all</a> : <a href = "#" onclick = "select (false)">select none</a></small>
+</p>
 
 <p>Length of waypoint names:</p>
 <p>
@@ -144,9 +147,6 @@ else
 	$checked = "";
 echo "<input type = 'radio' $checked name = 'namelen' value = '0' id = 'name0'>&nbsp;<label for = 'name0'>Do not limit waypoint name length</label><br>\n";
 ?>
-</p>
-<p>
-<small><a href = "#" onclick = "select (true)">select all</a> : <a href = "#" onclick = "select (false)">select none</a></small>
 </p>
 <p class = "mid">
 <input type = "submit" value = "Download" id = "btnSubmit">

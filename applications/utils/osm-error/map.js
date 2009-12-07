@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // If download area is larger than this, Download button will be disabled
 var MAX_SIZE = 0.25;
+// base URL. Includes trailing slash
+var BASE_URL = "http://www.mappage.org/error/"
 
 var map;
 var update_lock = 0;
@@ -32,15 +34,21 @@ function getUpperLeftLon() { return document.getElementById('lon_upper_left'); }
 function getBottomRightLat() { return document.getElementById('lat_bottom_right'); }
 function getBottomRightLon() { return document.getElementById('lon_bottom_right'); }
 
+// Return part of query based on whether item is checked or not
+function CheckedOrNot (id) {
+	if (document.getElementById(id).checked)
+		return id + "=1"
+	else
+		return id + "=0"
+}
+
 // Check size of download area
 function CheckDownloadArea (topleft, bottomright) {
 	fWidth = Math.abs (topleft.lon.toFixed(4) - bottomright.lon.toFixed(4))
 	fHeight = Math.abs (topleft.lat.toFixed(4) - bottomright.lat.toFixed(4))
 
-	oSubmit = document.getElementById('btnSubmit')
-	//Get URL, without "index.php"
-	var sURL = new String (document.URL)
-	sURL.replace ("index.php", "")
+	oSubmit = document.getElementById ('btnSubmit')
+	var sURL = BASE_URL
 
 	if (fWidth * fHeight > MAX_SIZE) {
 		oSubmit.disabled = true
@@ -54,13 +62,23 @@ function CheckDownloadArea (topleft, bottomright) {
 		sURL += "lon_upper_left=" + topleft.lon.toFixed(4) + "&amp;"
 		sURL += "lat_bottom_right=" + bottomright.lat.toFixed(4) + "&amp;"
 		sURL += "lon_bottom_right=" + bottomright.lon.toFixed(4) + "&amp;"
-		sURL += "lat_upper_left=" + topleft.lat.toFixed(4)
+		sURL += "lat_upper_left=" + topleft.lat.toFixed(4) + "&amp;"
+
+		sURL += CheckedOrNot ('ref') + "&amp;"
+		sURL += CheckedOrNot ('road') + "&amp;"
+		sURL += CheckedOrNot ('name') + "&amp;"
+		sURL += CheckedOrNot ('hours') + "&amp;"
+		sURL += CheckedOrNot ('source') + "&amp;"
+		sURL += CheckedOrNot ('fixme') + "&amp;"
+		sURL += CheckedOrNot ('naptan') + "&amp;"
+		sURL += CheckedOrNot ('pbref') + "&amp;"
+
 		document.getElementById('spLink').innerHTML = "<p><a href = '" + sURL + "'>Download link</a></p>"
 	}
 }
 
 /* update form fields on zoom action */
-function updateForm()
+function updateForm ()
 {
     if (update_lock)
       return;
@@ -83,7 +101,7 @@ function updateForm()
 }
 
 /* update map on form field modification */
-function updateMap()
+function updateMap ()
 {
     var bounds = new OpenLayers.Bounds(getUpperLeftLon().value,
                                        getUpperLeftLat().value,
@@ -127,4 +145,3 @@ function init()
     updateMap();
     updateForm();
 }
-

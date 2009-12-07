@@ -11,7 +11,10 @@
     </description>
 
 	<path id="libs">
-		<fileset dir="libs" includes="**/*.jar"/>
+		<fileset dir="libs">
+			 <include name="**/*.jar" />
+			 <include name="**/*.zip" />
+		</fileset>
 	</path>
 
     <!-- ================================= 

@@ -40,6 +40,12 @@ Edit the bin/osmosis file -- on the EXEC= line, replace with:
 
 The tasks provided are:
 
+====--tag-transform-change (--ttc)====
+Transform the tags in the change input stream according to the rules specified in a transform file. 
+Actually all rules the same as for *tt* task with the only difference: *ttc* task is applicable for _OSC files_ 
+and transforms tags in every MODIFY or CREATE action.s  
+
+
 ====--tag-transform (--tt)====
 Transform the tags in the input stream according to the rules specified in a transform file.
 

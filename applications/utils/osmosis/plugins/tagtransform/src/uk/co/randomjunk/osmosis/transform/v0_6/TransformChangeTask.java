@@ -125,6 +125,8 @@ public class TransformChangeTask implements ChangeSinkChangeSource {
 			
 			if ( output != null )
 				sink.process(output);
+		} else {
+			sink.process(changeContainer);
 		}
 	}
 

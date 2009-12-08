@@ -1303,7 +1303,7 @@
 			<line class="piste-type-sled"/>
 		</rule>
 		<rule e="way" k="piste:type" v="nordic">
-			<line class="piste-type-nordic"/>
+			<line smart-linecap="no" class="piste-type-nordic"/>
 		</rule>
 		<rule e="way" k="man_made" v="piste:halfpipe">
 			<area class="man-made-piste-halfpipe"/>
@@ -2756,6 +2756,8 @@
 			stroke: #c00000;
 			stroke-width: 1px;
 			stroke-dasharray: 3,0.5;
+			stroke-linejoin: bevel;
+			stroke-linecap: butt;
 			marker-start:url(#marker-piste-type-nordic);
 			}
 			

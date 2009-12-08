@@ -20,7 +20,7 @@ public class LiveGpsSuppressor implements Runnable {
 	/**
 	 * Default sleep time is 5 seconds.
 	 */
-	private static final int DEFAULT_SLEEP_TIME = 5000;
+	private static final int DEFAULT_SLEEP_TIME = 5;
 
 	/**
 	 * The currently used sleepTime.
@@ -45,7 +45,9 @@ public class LiveGpsSuppressor implements Runnable {
 		initSleepTime();
 
 		shutdownFlag = false;
-		while (!shutdownFlag) {
+		// stop the thread, when explicitely shut down or when disabled by
+		// config setting
+		while (!shutdownFlag && isEnabled()) {
 			setAllowUpdate(true);
 
 			try {
@@ -91,12 +93,29 @@ public class LiveGpsSuppressor implements Runnable {
 	 */
 	public synchronized boolean isAllowUpdate() {
 
-		if (allowUpdate) {
-			allowUpdate = false;
+		// if disabled, always permit a re-draw.
+		if (!isEnabled()) {
 			return true;
 		} else {
-			return false;
+
+			if (allowUpdate) {
+				allowUpdate = false;
+				return true;
+			} else {
+				return false;
+			}
 		}
+	}
+
+	/**
+	 * A value below 1 disables this feature.
+	 * This ensures that a small value does not run this thread
+	 * in a tight loop.
+	 * 
+	 * @return true, if suppressing is enabled
+	 */
+	private boolean isEnabled() {
+		return this.sleepTime > 0;
 	}
 
 	/**

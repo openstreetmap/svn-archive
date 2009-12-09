@@ -19,12 +19,25 @@ public class LiveGpsAcquirer implements Runnable {
 	Socket gpsdSocket;
 	BufferedReader gpsdReader;
 	boolean connected = false;
-	String gpsdHost = Main.pref.get("livegps.gpsd.host", "localhost");
-	int gpsdPort = Main.pref.getInteger("livegps.gpsd.port", 2947);
+	String gpsdHost;
+	int gpsdPort;
 	boolean shutdownFlag = false;
 	private final List<PropertyChangeListener> propertyChangeListener = new ArrayList<PropertyChangeListener>();
 	private PropertyChangeEvent lastStatusEvent;
 	private PropertyChangeEvent lastDataEvent;
+
+	/**
+	 * Constructor, initializes the configurable settings. 
+	 */
+	public LiveGpsAcquirer() {
+		super();
+
+		gpsdHost = Main.pref.get("livegps.gpsd.host", "localhost");
+		gpsdPort = Main.pref.getInteger("livegps.gpsd.port", 2947);
+		// put the settings back in to the preferences, makes keys appear.
+		Main.pref.put("livegps.gpsd.host", gpsdHost);
+		Main.pref.putInteger("livegps.gpsd.port", gpsdPort);
+	}
 
 	/**
 	 * Adds a property change listener to the acquirer.

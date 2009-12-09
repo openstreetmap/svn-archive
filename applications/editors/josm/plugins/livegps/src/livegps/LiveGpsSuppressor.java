@@ -15,7 +15,7 @@ import org.openstreetmap.josm.Main;
  * @author casualwalker
  *
  */
-public class LiveGpsSuppressor implements Runnable {
+public class LiveGpsSuppressor implements Runnable, ILiveGpsSuppressor {
 
 	/**
 	 * Default sleep time is 5 seconds.
@@ -35,7 +35,7 @@ public class LiveGpsSuppressor implements Runnable {
 	/**
 	 * Controls if this thread is still in used.
 	 */
-	boolean shutdownFlag = false;
+	private boolean shutdownFlag = false;
 
 	/**
 	 * Run thread enables the allowUpdate flag once during its cycle.
@@ -90,6 +90,7 @@ public class LiveGpsSuppressor implements Runnable {
 	 * (this means, one thread got to issue an update event)
 	 *
 	 * @return true, if an update is currently allowed; false, if the update shall be suppressed.
+	 * @see livegps.ILiveGpsSuppressor#isAllowUpdate()
 	 */
 	public synchronized boolean isAllowUpdate() {
 

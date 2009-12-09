@@ -91,8 +91,8 @@
 		_root.gpxpoints++;
 		if (lat) {
 		} else {									// Get root co-ords from first point in GPX
-			lat =xmlobj.attributes['lat'];			// (was briefly if (gpxpoints>4), but 
-			long=xmlobj.attributes['lon'];			//  obviously this broke lat2coord for the
+			_root.lat =xmlobj.attributes['lat'];	// (was briefly if (gpxpoints>4), but 
+			_root.long=xmlobj.attributes['lon'];	//  obviously this broke lat2coord for the
 			changeScaleTo(17); bscale=16;			//  first four points... ** need to fix)
 			startPotlatch();						//
 		}

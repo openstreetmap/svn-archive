@@ -137,7 +137,7 @@
 		redrawBackground();
 		resizePOIs();
 		if (ww) { whichWays(wwforce); }
-		else if (_root.waycount>500) { purgeWays(); }
+		else if (_root.waycount>500) {}
 		redrawWays(oldwidth==linewidth);
 		redrawRelations();
 	}

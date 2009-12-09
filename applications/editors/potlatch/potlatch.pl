@@ -82,6 +82,7 @@ EOF
 	var apiurl='http://www.openstreetmap.org/api/0.6/amf';
 	var gpsurl='http://www.openstreetmap.org/api/0.6/swf/trackpoints';
 	var gpxurl="http://www.openstreetmap.org/trace/";
+	var gpxurl="http://"+this._url.split('/')[2]+"/trace/";
 	var tileprefix='';
 	var yahoourl='/potlatch/ymap2.swf';
 	var gpxsuffix='/data.xml';

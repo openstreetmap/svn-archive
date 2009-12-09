@@ -45,8 +45,9 @@
 
 			if (lat!=undefined) { startPotlatch(); }	// Parse GPX if supplied
 			if (gpx) { parseGPX(gpx); }					//  |
-				else { _root.windows.pleasewait.remove(); }
-			if (lat==undefined) { lat=0; long=0; startPotlatch(); }
+				else { _root.windows.pleasewait.remove();
+					   if (lat==undefined) { lat=0; long=0; startPotlatch(); }
+			}
 			splashScreen();
 			welcomeButtons();
 		};

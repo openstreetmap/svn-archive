@@ -1,17 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>simplifyOsmosisPlugin</name>
-	<comment></comment>
-	<projects>
-	</projects>
-	<buildSpec>
-		<buildCommand>
-			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-	</buildSpec>
-	<natures>
-		<nature>org.eclipse.jdt.core.javanature</nature>
-	</natures>
+  <name>osmosis-simplify-plugin-0.1-SNAPSHOT</name>
+  <comment></comment>
+  <projects>
+    <project>osmosis-0.32.1-SNAPSHOT</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+    <buildCommand>
+      <name>com.atlassw.tools.eclipse.checkstyle.CheckstyleBuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+    <nature>com.atlassw.tools.eclipse.checkstyle.CheckstyleNature</nature>
+  </natures>
 </projectDescription>

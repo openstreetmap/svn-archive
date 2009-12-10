@@ -1,3 +1,4 @@
+package org.openstreetmap.osmosis.plugins.simplify;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;

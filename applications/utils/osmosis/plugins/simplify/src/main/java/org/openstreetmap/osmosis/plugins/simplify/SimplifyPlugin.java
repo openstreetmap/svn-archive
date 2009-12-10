@@ -1,3 +1,4 @@
+package org.openstreetmap.osmosis.plugins.simplify;
 import java.util.HashMap;
 import java.util.Map;
 

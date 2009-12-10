@@ -1,3 +1,4 @@
+package org.openstreetmap.osmosis.plugins.simplify;
 import org.openstreetmap.osmosis.core.filter.common.IdTrackerType;
 import org.openstreetmap.osmosis.core.filter.v0_6.AreaFilterTaskManagerFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;

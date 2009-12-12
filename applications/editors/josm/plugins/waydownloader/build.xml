@@ -215,7 +215,7 @@
 						
 	Now commiting ${plugin.jar} ...
 	</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="true">
 			<env key="LANG" value="C"/>
 			<arg value="-m '${commit.message}'"/>
 			<arg value="commit"/>

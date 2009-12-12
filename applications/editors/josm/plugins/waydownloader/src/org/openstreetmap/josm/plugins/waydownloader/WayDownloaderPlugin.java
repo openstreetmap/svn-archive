@@ -91,10 +91,10 @@ public class WayDownloaderPlugin extends Plugin {
         /** Called when the WayDownloadAction action is triggered (e.g. user clicked the menu option) */
         public void actionPerformed(ActionEvent e) {
             selectedNode = null;
-            Collection<OsmPrimitive> selection = Main.main.getCurrentDataSet().getSelectedNodes();
+            Collection<Node> selection = Main.main.getCurrentDataSet().getSelectedNodes();
             if (selection.size()==0) {
-                selection = Main.main.getCurrentDataSet().getSelectedWays();
-                if (!workFromWaySelection(selection)) {
+                Collection<Way> selWays = Main.main.getCurrentDataSet().getSelectedWays();
+                if (!workFromWaySelection(selWays)) {
                     showWarningMessage(tr("<html>Neither a node nor a way with an endpoint outside of the<br>current download areas is selected.<br>Select a node on the start or end of a way or an entire way first.</html>"));
                     return;
                 }
@@ -301,7 +301,7 @@ public class WayDownloaderPlugin extends Plugin {
      * given a selected way, select a node on the end of the way which is not in a downloaded area
      * return true if this worked
      */
-    private boolean workFromWaySelection(Collection<OsmPrimitive> selection) {
+    private boolean workFromWaySelection(Collection<? extends OsmPrimitive> selection) {
         if (selection.size() != 1)
             return false;
         Way selectedWay = (Way) selection.iterator().next();

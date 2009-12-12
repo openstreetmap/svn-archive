@@ -23,10 +23,10 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.plugins.graphview.core.graph.GraphEdge;
 import org.openstreetmap.josm.plugins.graphview.core.graph.GraphNode;
 import org.openstreetmap.josm.plugins.graphview.core.graph.WayGraph;
@@ -83,7 +83,7 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 
 	public GraphViewLayer() {
 		super("Graph view");
-		Layer.listeners.add(this);
+		MapView.addLayerChangeListener(this);
 	}
 
 	/** sets the WayGraph that is to be displayed by this layer, may be null */
@@ -342,6 +342,8 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 		//do nothing
 	}
 	public void layerRemoved(Layer oldLayer) {
-		//do nothing
+		if (oldLayer == this) {
+			MapView.removeLayerChangeListener(this);
+		}
 	}
 }

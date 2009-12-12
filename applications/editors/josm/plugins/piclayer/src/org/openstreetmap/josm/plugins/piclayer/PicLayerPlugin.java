@@ -29,8 +29,9 @@ import javax.swing.JMenu;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.gui.MapFrame;
 
 /**
@@ -73,8 +74,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         }
 
         // Listen to layers
-        Layer.listeners.add( this );
-
+        MapView.addLayerChangeListener(this);
     }
 
     /**

@@ -171,11 +171,11 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         // separator
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
 
-        // for raster images (not vectorized), image grab divider (from 1 to 10)
+        // for raster images (not vectorized), image grab divider (from 1 to 12)
         String savedRasterDivider = Main.pref.get("cadastrewms.rasterDivider", DEFAULT_RASTER_DIVIDER);
         JLabel jLabelRasterDivider = new JLabel(tr("Raster images grab multiplier:"));
         rasterDivider.setText(savedRasterDivider);
-        rasterDivider.setToolTipText("Raster image grab division, from 1 to 10; 10 is very high definition");
+        rasterDivider.setToolTipText("Raster image grab division, from 1 to 12; 12 is very high definition");
         cadastrewms.add(jLabelRasterDivider, GBC.std().insets(0, 5, 10, 0));
         cadastrewms.add(rasterDivider, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
         // option to disable image cropping during raster image georeferencing
@@ -247,7 +247,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         }
         try {
             int i = Integer.parseInt(rasterDivider.getText());
-            if (i > 0 && i < 11)
+            if (i > 0 && i < 13)
                 Main.pref.put("cadastrewms.rasterDivider", String.valueOf(i));
         } catch (NumberFormatException e) { // ignore the last input
         }

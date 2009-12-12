@@ -37,9 +37,10 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 
@@ -138,7 +139,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
         // Add menu
         menu = new RoutingMenu();
         // Register this class as LayerChangeListener
-        Layer.listeners.add(this);
+        MapView.addLayerChangeListener(this);
         logger.debug("Finished loading plugin");
     }
 

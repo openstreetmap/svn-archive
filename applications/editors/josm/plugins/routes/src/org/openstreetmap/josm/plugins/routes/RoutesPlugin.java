@@ -14,9 +14,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
+
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.routes.xml.Routes;
 import org.openstreetmap.josm.plugins.routes.xml.RoutesXMLLayer;
@@ -27,8 +29,7 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
     private boolean isShown;
     
     public RoutesPlugin() {
-        Layer.listeners.add(this);
-        
+    	MapView.addLayerChangeListener(this);
         
         File routesFile = new File(getPluginDir() + File.separator + "routes.xml");
         if (!routesFile.exists()) {

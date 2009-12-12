@@ -29,9 +29,10 @@ import org.openstreetmap.josm.data.projection.Epsg4326;
 import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.projection.Mercator;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.validator.tests.Coastlines;
@@ -166,10 +167,9 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
             initializeErrorLayer();
             if (Main.pref.hasKey(PreferenceEditor.PREF_DEBUG + ".grid"))
                 Main.main.addLayer(new GridLayer(tr("Grid")));
-            Layer.listeners.add(this);
+            MapView.addLayerChangeListener(this);            
         } else
-            Layer.listeners.remove(this);
-
+        	MapView.removeLayerChangeListener(this);
         if (newFrame != null) {
         	UploadAction.registerUploadHook(uploadHook = new ValidateUploadHook(this));
         } else {

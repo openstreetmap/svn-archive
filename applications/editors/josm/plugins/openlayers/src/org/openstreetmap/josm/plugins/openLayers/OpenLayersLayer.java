@@ -14,7 +14,6 @@ import org.mozilla.javascript.NativeArray;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
@@ -29,8 +28,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Francisco R. Santos <frsantos@gmail.com>
  *
  */
-public class OpenLayersLayer extends Layer implements PreferenceChangedListener,
-    PropertyChangeListener, MyHtmlBlockPanel.ViewUpdateListener {
+public class OpenLayersLayer extends Layer implements PropertyChangeListener, MyHtmlBlockPanel.ViewUpdateListener {
 
     private Browser browser;
 
@@ -109,16 +107,11 @@ public class OpenLayersLayer extends Layer implements PreferenceChangedListener,
 
     @Override
     public void destroy() {
-        Main.pref.listener.remove(this);
-
         if( Main.map != null )
             Main.map.mapView.removePropertyChangeListener(this);
 
         OpenLayersPlugin.layer = null;
         StorageManager.flush();
-    }
-
-    public void preferenceChanged(String key, String newValue) {
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

@@ -38,6 +38,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -211,7 +212,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 }));
 
         // FIXME: currently ran in errors
-		
+
 		tileOptionMenu.add(new JMenuItem(
                 new AbstractAction(tr("Snap to tile size")) {
                     public void actionPerformed(ActionEvent ae) {
@@ -250,21 +251,23 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                     }
                 });
 
-                listeners.add(new LayerChangeListener() {
+                addLayerChangeListener(new LayerChangeListener() {
                     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+                    	//
                     }
 
                     public void layerAdded(Layer newLayer) {
+                    	//
                     }
 
                     public void layerRemoved(Layer oldLayer) {
-                        Main.pref.listener.remove(SlippyMapLayer.this);
+                        Main.pref.addPreferenceChangeListener(SlippyMapLayer.this);
                     }
                 });
             }
         });
 
-        Main.pref.listener.add(this);
+        Main.pref.addPreferenceChangeListener(this);
     }
 
     void zoomChanged()
@@ -794,17 +797,6 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 if (nr_queued > 0)
                     out("queued to load: " + nr_queued + "/" + tiles.size() + " tiles at zoom: " + zoom);
         }
-        boolean topTile(Tile t) {
-            if (t.getYtile() == z12y0 )
-                return true;
-            return false;
-        }
-
-        boolean leftTile(Tile t) {
-            if (t.getXtile() == z12x0 )
-                return true;
-            return false;
-        }
     }
 
     boolean autoZoomEnabled()
@@ -1031,25 +1023,22 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         return x * 45.0 / Math.pow(2.0, zoom - 3) - 180.0;
     }
 
-    private static int nr_loaded = 0;
-    private static int at_zoom = -1;
-
     /*
      * (non-Javadoc)
      *
      * @seeorg.openstreetmap.josm.data.Preferences.PreferenceChangedListener#
      * preferenceChanged(java.lang.String, java.lang.String)
      */
-    public void preferenceChanged(String key, String newValue) {
-        if (key.startsWith(SlippyMapPreferences.PREFERENCE_PREFIX)) {
+    public void preferenceChanged(PreferenceChangeEvent event) {
+        if (event.getKey().startsWith(SlippyMapPreferences.PREFERENCE_PREFIX)) {
             // System.err.println(this + ".preferenceChanged('" + key + "', '"
             // + newValue + "') called");
             // when fade background changed, no need to clear tile storage
             // TODO move this code to SlippyMapPreferences class.
-            if (!key.equals(SlippyMapPreferences.PREFERENCE_FADE_BACKGROUND)) {
+            if (!event.getKey().equals(SlippyMapPreferences.PREFERENCE_FADE_BACKGROUND)) {
                 autoZoomPopup.setSelected(SlippyMapPreferences.getAutozoom());
             }
-            if (key.equals(SlippyMapPreferences.PREFERENCE_TILE_SOURCE)) {
+            if (event.getKey().equals(SlippyMapPreferences.PREFERENCE_TILE_SOURCE)) {
                 newTileStorage();
             }
             redraw();
@@ -1058,6 +1047,6 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
 
     @Override
     public void destroy() {
-        Main.pref.listener.remove(SlippyMapLayer.this);
+        Main.pref.removePreferenceChangeListener(SlippyMapLayer.this);
     }
 }

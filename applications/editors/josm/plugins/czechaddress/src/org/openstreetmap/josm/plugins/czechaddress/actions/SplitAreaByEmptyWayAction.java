@@ -52,7 +52,7 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
      */
     public void actionPerformed(ActionEvent e) {
 
-        Collection<OsmPrimitive> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
+        Collection<Way> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
         Collection<OsmPrimitive> newSelection = Main.main.getCurrentDataSet().getSelected();
 
         for (OsmPrimitive prim : selectedWays) {

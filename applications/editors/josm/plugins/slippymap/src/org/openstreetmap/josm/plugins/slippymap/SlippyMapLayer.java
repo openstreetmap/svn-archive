@@ -47,6 +47,7 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 
 /**
  * Class that displays a slippy map layer.
@@ -251,7 +252,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                     }
                 });
 
-                addLayerChangeListener(new LayerChangeListener() {
+                MapView.addLayerChangeListener(new LayerChangeListener() {
                     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
                     	//
                     }
@@ -261,7 +262,8 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                     }
 
                     public void layerRemoved(Layer oldLayer) {
-                        Main.pref.addPreferenceChangeListener(SlippyMapLayer.this);
+                    	MapView.removeLayerChangeListener(this);
+                        Main.pref.removePreferenceChangeListener(SlippyMapLayer.this);
                     }
                 });
             }

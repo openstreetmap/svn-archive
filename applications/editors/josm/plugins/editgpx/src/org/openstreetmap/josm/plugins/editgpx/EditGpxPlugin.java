@@ -13,8 +13,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.plugins.Plugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -84,7 +85,7 @@ public class EditGpxPlugin extends Plugin {
         if(eGpxLayer == null) {
             eGpxLayer = new EditGpxLayer(tr("EditGpx"), dataSet);
             Main.main.addLayer(eGpxLayer);
-            Layer.listeners.add(new LayerChangeListener(){
+            MapView.addLayerChangeListener(new LayerChangeListener(){
 
                 public void activeLayerChange(final Layer oldLayer, final Layer newLayer) {
                     if(newLayer instanceof EditGpxLayer)
@@ -98,7 +99,7 @@ public class EditGpxPlugin extends Plugin {
                     if(oldLayer == eGpxLayer) {
                         eGpxLayer = null;
                         //dataSet = new DataSet();
-
+                        MapView.removeLayerChangeListener(this);
                     }
                 }
             });

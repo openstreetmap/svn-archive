@@ -45,7 +45,7 @@ public class CadastreGrabber {
 
     private URL getURLRaster(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax) throws MalformedURLException {
         // GET /scpc/wms?version=1.1&request=GetMap&layers=CDIF:PMC@QH4480001701&format=image/png&bbox=-1186,0,13555,8830&width=576&height=345&exception=application/vnd.ogc.se_inimage&styles= HTTP/1.1
-        final int cRasterX = 1000; // keep width constant and adjust width to original image proportions
+        final int cRasterX = 800; // keep width constant and adjust width to original image proportions
         String str = new String(wmsInterface.baseURL+"/scpc/wms?version=1.1&request=GetMap");
         str += "&layers=CDIF:PMC@";
         str += wmsLayer.getCodeCommune();
@@ -72,8 +72,8 @@ public class CadastreGrabber {
         str += lambertMin.north() + ",";
         str += lambertMax.east() + ",";
         str += lambertMax.north();
-        //str += "&width=800&height=600"; // maximum allowed by wms server
-        str += "&width=1000&height=800"; // maximum allowed by wms server
+        str += "&width=800&height=600"; // maximum allowed by wms server
+        //str += "&width=1000&height=800"; // maximum allowed by wms server
         //str += "&exception=application/vnd.ogc.se_inimage"; // used by normal client but not required
         str += "&styles=LS3_90,LS2_90,LS1_90,PARCELLE_90,NUMERO_90,PT3_90,PT2_90,PT1_90,LIEUDIT_90";
         str += ",SUBSECTION_90";

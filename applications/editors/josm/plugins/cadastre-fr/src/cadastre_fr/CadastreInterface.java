@@ -91,7 +91,7 @@ public class CadastreInterface {
     private void getCookie() throws IOException {
         try {
             // first, get the cookie from Cadastre to allow next downloads
-            searchFormURL = new URL(baseURL + "/scpc/rechercherPlan.do");
+            searchFormURL = new URL(baseURL + "/scpc/accueil.do");
             urlConn = (HttpURLConnection)searchFormURL.openConnection();
             urlConn.setRequestMethod("GET");
             urlConn.connect();
@@ -230,6 +230,8 @@ public class CadastreInterface {
             }
             content += "&codeDepartement=";
             content += "&nbResultatParPage=10";
+            content += "&x=0&y=0";
+            searchFormURL = new URL(baseURL + "/scpc/rechercherPlan.do");
             urlConn = (HttpURLConnection)searchFormURL.openConnection();
             urlConn.setRequestMethod("POST");
             urlConn.setDoOutput(true);

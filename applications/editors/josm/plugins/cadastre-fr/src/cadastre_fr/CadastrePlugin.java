@@ -86,9 +86,10 @@ import org.openstreetmap.josm.data.projection.*;
  *                   support of subprojections in preferences for zones setting and UTM20N
  *                 - removed autosourcing of empty new nodes
  * 1.6 28-Nov-2009 - Fix minor issues if Grab is called without layer (possible since projection rework)
+ * 1.7 12-Dec-2009 - Change URL's changes for cookie and downgrade imgs resolution due to WMS changes 
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "1.6";
+    static String VERSION = "1.7";
 
     static JMenu cadastreJMenu;
 

@@ -19,8 +19,9 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -108,7 +109,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 			enableTracking(false);
 			lgpscapture.setSelected(false);
 			removePropertyChangeListener(lgpslayer);
-			Layer.listeners.remove(this);
+			MapView.removeLayerChangeListener(this);
 			lgpslayer = null;
 		}
 	}
@@ -189,7 +190,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 				if (lgpslayer == null) {
 					lgpslayer = new LiveGpsLayer(data);
 					Main.main.addLayer(lgpslayer);
-					Layer.listeners.add(this);
+					MapView.addLayerChangeListener(this);
 					lgpslayer.setAutoCenter(isAutoCenter());
 				}
 				// connect layer with acquirer:

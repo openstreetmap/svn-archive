@@ -36,9 +36,9 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.api.util.HttpUtils;
+import org.openstreetmap.josm.tools.OsmUrlToBounds;
 
 public class DownloadAction {
 
@@ -82,9 +82,8 @@ public class DownloadAction {
             double lat = Double.parseDouble(m.group(3));
             double lon = Double.parseDouble(m.group(2));
             LatLon latlon = new LatLon(lat, lon);
-            Node osmNode = new Node(Long.parseLong(m.group(1)));
+            Node osmNode = new Node(Long.parseLong(m.group(1)), 1);
             osmNode.setCoor(latlon);
-            osmNode.setIncomplete(false);
             osmNode.put("id", m.group(1));
             osmNode.put("note", m.group(4));
             osmNode.put("openstreetbug", "FIXME");

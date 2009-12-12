@@ -68,7 +68,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 
 		clearTileStorage();
 
-	    Layer.listeners.add(new LayerChangeListener() {
+	    Layer.addLayerChangeListener(new LayerChangeListener() {
 	        public void activeLayerChange(Layer oldLayer, Layer newLayer) {
 	        	// if user changes to a walking papers layer, zoom there just as if
 	        	// it was newly added
@@ -85,6 +85,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 	        }
 
 	        public void layerRemoved(Layer oldLayer) {
+	        	//
 	        }
 	    });
 	}
@@ -404,11 +405,6 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 		needRedraw = true;
 		Main.map.repaint(done ? 0 : 100);
 		return !done;
-	}
-
-	@Override
-	public void destroy() {
-		Main.pref.listener.remove(WalkingPapersLayer.this);
 	}
 
 	public String getWalkingPapersId() {

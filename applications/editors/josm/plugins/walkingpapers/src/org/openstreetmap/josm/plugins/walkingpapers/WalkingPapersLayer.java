@@ -22,6 +22,7 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -68,7 +69,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 
 		clearTileStorage();
 
-	    Layer.addLayerChangeListener(new LayerChangeListener() {
+	    MapView.addLayerChangeListener(new LayerChangeListener() {
 	        public void activeLayerChange(Layer oldLayer, Layer newLayer) {
 	        	// if user changes to a walking papers layer, zoom there just as if
 	        	// it was newly added
@@ -85,7 +86,9 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 	        }
 
 	        public void layerRemoved(Layer oldLayer) {
-	        	//
+	        	if (oldLayer == WalkingPapersLayer.this) {
+	        		MapView.removeLayerChangeListener(this);
+	        	}
 	        }
 	    });
 	}

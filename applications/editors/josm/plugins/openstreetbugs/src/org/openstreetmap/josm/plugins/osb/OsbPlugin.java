@@ -41,9 +41,9 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.osb.api.DownloadAction;
 import org.openstreetmap.josm.plugins.osb.gui.OsbDialog;
@@ -71,8 +71,8 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
         dataSet = new DataSet();
         uploadHook = new OsbUploadHook();
         dialog = new OsbDialog(this);
-        Layer.listeners.add(dialog);
-        Layer.listeners.add(this);
+        MapView.addLayerChangeListener(dialog);
+        MapView.addLayerChangeListener(this);
     }
 
     private void initConfig() {
@@ -221,6 +221,8 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 
     public void layerRemoved(Layer oldLayer) {
         if(oldLayer == layer) {
+        	MapView.removeLayerChangeListener(this);
+        	MapView.removeLayerChangeListener(dialog);
             layer = null;
         }
     }

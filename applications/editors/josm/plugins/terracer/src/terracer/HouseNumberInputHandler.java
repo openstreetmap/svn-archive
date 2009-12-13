@@ -1,5 +1,9 @@
 /**
- * 
+ * Terracer: A JOSM Plugin for terraced houses.
+ *
+ * Copyright 2009 CloudMade Ltd.
+ *
+ * Released under the GPLv2, see LICENSE file for details.
  */
 package terracer;
 
@@ -26,19 +30,26 @@ import org.openstreetmap.josm.data.osm.Way;
  * 
  * From a refactoring viewpoint, this class is indeed more interested in the fields
  * of the HouseNumberInputDialog. This is desired design, as the HouseNumberInputDialog 
- * is already cluttered with auto-generated layout code.  
+ * is already cluttered with auto-generated layout code.
  * 
  * @author casualwalker
  */
 public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 		ActionListener, FocusListener {
 
-	TerracerAction terracerAction;
-	Way way;
-	HouseNumberInputDialog dialog;
+	private TerracerAction terracerAction;
+	private Way way;
+	private HouseNumberInputDialog dialog;
 
-	public HouseNumberInputHandler(TerracerAction terracerAction, Way way,
-			String title) {
+	/**
+	 * Instantiates a new house number input handler.
+	 * 
+	 * @param terracerAction the terracer action
+	 * @param way the way
+	 * @param title the title
+	 */
+	public HouseNumberInputHandler(final TerracerAction terracerAction,
+			final Way way, final String title) {
 		this.terracerAction = terracerAction;
 		this.way = way;
 		dialog = new HouseNumberInputDialog(null);
@@ -49,6 +60,13 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 
 	}
 
+	/**
+	 * Validate the current input fields.
+	 * When the validation fails, a red message is 
+	 * displayed and the OK button is disabled.
+	 * 
+	 * Should be triggered each time the input changes.
+	 */
 	private void validateInput() {
 		boolean isOk = true;
 		StringBuffer message = new StringBuffer();
@@ -57,16 +75,20 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 		isOk = isOk && checkSegmentsFromHousenumber(message);
 		isOk = isOk && checkSegments(message);
 		isOk = isOk
-				&& checkNumberStringField(dialog.lo, "Lowest number", message);
+				&& checkNumberStringField(dialog.lo, tr("Lowest number"),
+						message);
 		isOk = isOk
-				&& checkNumberStringField(dialog.hi, "Highest number", message);
+				&& checkNumberStringField(dialog.hi, tr("Highest number"),
+						message);
 		isOk = isOk
-				&& checkNumberStringField(dialog.segments, "Segments", message);
+				&& checkNumberStringField(dialog.segments, tr("Segments"),
+						message);
 
 		if (isOk) {
 			dialog.okButton.setEnabled(true);
 			dialog.messageLabel.setForeground(Color.black);
-			dialog.messageLabel.setText(HouseNumberInputDialog.DEFAULT_MESSAGE);
+			dialog.messageLabel
+					.setText(tr(HouseNumberInputDialog.DEFAULT_MESSAGE));
 
 		} else {
 			dialog.okButton.setEnabled(false);
@@ -75,31 +97,55 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 		}
 	}
 
-	private boolean checkNumberOrder(StringBuffer message) {
+	/**
+	 * Checks, if the lowest house number is indeed lower than the 
+	 * highest house number.
+	 * This check applies only, if the house number fields are used at all. 
+	 * 
+	 * @param message the message
+	 * 
+	 * @return true, if successful
+	 */
+	private boolean checkNumberOrder(final StringBuffer message) {
 		if (numberFrom() != null && numberTo() != null) {
 			if (numberFrom().intValue() > numberTo().intValue()) {
 				appendMessageNewLine(message);
 				message
-						.append("Lowest housenumber cannot be higher than highest housenumber");
+						.append(tr("Lowest housenumber cannot be higher than highest housenumber"));
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private boolean checkSegmentsFromHousenumber(StringBuffer message) {
+	/**
+	 * Obtain the number segments from the house number fields and check, 
+	 * if they are valid.
+	 * 
+	 * Also disables the segments field, if the house numbers contain
+	 * valid information.
+	 * 
+	 * @param message the message
+	 * 
+	 * @return true, if successful
+	 */
+	private boolean checkSegmentsFromHousenumber(final StringBuffer message) {
 		dialog.segments.setEditable(true);
 
 		if (numberFrom() != null && numberTo() != null) {
+
 			int segments = numberTo().intValue() - numberFrom().intValue();
 
 			if (segments % stepSize() != 0) {
 				appendMessageNewLine(message);
-				message.append("Housenumbers do not match odd/even setting");
+				message
+						.append(tr("Housenumbers do not match odd/even setting"));
 				return false;
 			}
 
 			int steps = segments / stepSize();
+			steps++; // difference 0 means 1 building, see
+			// TerracerActon.terraceBuilding
 			dialog.segments.setText(String.valueOf(steps));
 			dialog.segments.setEditable(false);
 
@@ -107,10 +153,18 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 		return true;
 	}
 
-	private boolean checkSegments(StringBuffer message) {
+	/**
+	 * Check the number of segments.
+	 * It must be a number and greater than 1. 
+	 * 
+	 * @param message the message
+	 * 
+	 * @return true, if successful
+	 */
+	private boolean checkSegments(final StringBuffer message) {
 		if (segments() == null || segments().intValue() < 1) {
 			appendMessageNewLine(message);
-			message.append("Segment must be a number greater 1");
+			message.append(tr("Segment must be a number greater 1"));
 			return false;
 
 		}
@@ -126,20 +180,20 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 	 * 
 	 * @return true, if successful
 	 */
-	private boolean checkNumberStringField(JTextField field, String label,
-			StringBuffer message) {
-		String content = field.getText();
+	private boolean checkNumberStringField(final JTextField field,
+			final String label, final StringBuffer message) {
+		final String content = field.getText();
 		if (content != null && !content.isEmpty()) {
 			try {
 				int i = Integer.parseInt(content);
 				if (i < 0) {
 					appendMessageNewLine(message);
-					message.append(label + " must be greater than 0");
+					message.append(label + tr(" must be greater than 0"));
 					return false;
 				}
 			} catch (NumberFormatException e) {
 				appendMessageNewLine(message);
-				message.append(label + " is not a number");
+				message.append(label + tr(" is not a number"));
 				return false;
 			}
 
@@ -148,28 +202,40 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 	}
 
 	/**
-	 * @param message
+	 * Append a new line to the message, if the message is not empty.
+	 * 
+	 * @param message the message
 	 */
-	private void appendMessageNewLine(StringBuffer message) {
+	private void appendMessageNewLine(final StringBuffer message) {
 		if (message.length() > 0) {
 			message.append("\n");
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+	 */
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		validateInput();
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	 */
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		validateInput();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(final ActionEvent e) {
 
+		// OK or Cancel button-actions
 		if (e.getSource() instanceof JButton) {
 			JButton button = (JButton) e.getSource();
 			if ("OK".equals(button.getName())) {
@@ -181,15 +247,28 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 				this.dialog.dispose();
 			}
 		} else {
+			// anything else is a change in the input
 			validateInput();
 		}
 
 	}
 
+	/**
+	 * Calculate the step size between two house numbers,
+	 * based on the interpolation setting.
+	 * 
+	 * @return the stepSize (1 for all, 2 for odd /even)
+	 */
 	public int stepSize() {
-		return (dialog.interpolation.getSelectedItem() == tr("All")) ? 1 : 2;
+		return (dialog.interpolation.getSelectedItem().equals(tr("All"))) ? 1
+				: 2;
 	}
 
+	/**
+	 * Gets the number of segments, if set.
+	 * 
+	 * @return the number of segments or null, if not set / invalid.
+	 */
 	public Integer segments() {
 		try {
 			return Integer.parseInt(dialog.segments.getText());
@@ -198,6 +277,11 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 		}
 	}
 
+	/**
+	 * Gets the lowest house number.
+	 * 
+	 * @return the number of lowest house number or null, if not set / invalid.
+	 */
 	public Integer numberFrom() {
 		try {
 			return Integer.parseInt(dialog.lo.getText());
@@ -206,6 +290,11 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 		}
 	}
 
+	/**
+	 * Gets the highest house number.
+	 * 
+	 * @return the number of highest house number or null, if not set / invalid.
+	 */
 	public Integer numberTo() {
 		try {
 			return Integer.parseInt(dialog.hi.getText());
@@ -214,6 +303,11 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 		}
 	}
 
+	/**
+	 * Gets the street name.
+	 * 
+	 * @return the  street name or null, if not set / invalid.
+	 */
 	public String streetName() {
 		// Object selected = street.getSelectedItem();
 		Object selected = dialog.street.getSelectedItem();
@@ -229,23 +323,20 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
+	 */
 	@Override
 	public void focusGained(FocusEvent e) {
 		validateInput();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
+	 */
 	@Override
 	public void focusLost(FocusEvent e) {
 		validateInput();
 	}
 
-	/**
-	 * Indicates, if house numbers should be used (instead of segments).
-	 * 
-	 * @return true, if if both number values are set to a number.
-	 */
-	private boolean useHouseNumbers() {
-		return numberFrom() != null && numberTo() != null;
-
-	}
 }

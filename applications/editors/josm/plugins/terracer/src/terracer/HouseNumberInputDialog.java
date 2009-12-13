@@ -1,5 +1,9 @@
 /**
- * 
+ * Terracer: A JOSM Plugin for terraced houses.
+ *
+ * Copyright 2009 CloudMade Ltd.
+ *
+ * Released under the GPLv2, see LICENSE file for details.
  */
 package terracer;
 
@@ -29,7 +33,8 @@ import org.openstreetmap.josm.gui.widgets.AutoCompleteComboBox;
  * The HouseNumberInputDialog is the layout of the house number input logic.
  * Created with the Eclipse Visual Editor.
  * 
- *  This dialog is concerned with the layout.
+ *  This dialog is concerned with the layout, all logic goes into the
+ *  HouseNumberinputHandler class.
  * 
  * @author casualwalker
  *
@@ -255,6 +260,11 @@ public class HouseNumberInputDialog extends JDialog {
 		return interpolation;
 	}
 
+	/**
+	 * Registers the handler as a listener to all relevant events.
+	 * 
+	 * @param handler the handler
+	 */
 	public void addHandler(HouseNumberInputHandler handler) {
 		this.hi.addActionListener(handler);
 		this.hi.addFocusListener(handler);

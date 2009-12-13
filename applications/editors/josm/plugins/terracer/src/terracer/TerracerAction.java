@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 
@@ -79,41 +78,9 @@ public final class TerracerAction extends JosmAction {
 					if (sel.size() == 0)
 						title = tr("Nothing selected!");
 
-					// first ask the user how many buildings to terrace into
-					HouseNumberInputHandler handler = new HouseNumberInputHandler(
-							this, way, title);
+					// show input dialog.
+					new HouseNumberInputHandler(this, way, title);
 
-					// IntermediateInputDialog inputDialog = new
-					// IntermediateInputDialog(
-					// this, way);
-					// inputDialog.pack();
-					// inputDialog.setVisible(true);
-
-					// HouseNumberDialog dialog = new HouseNumberDialog(this);
-					// final JOptionPane optionPane = new JOptionPane(dialog,
-					// JOptionPane.PLAIN_MESSAGE,
-					// JOptionPane.OK_CANCEL_OPTION);
-					//
-					// String title = trn("Change {0} object",
-					// "Change {0} objects", sel.size(), sel.size());
-					// if (sel.size() == 0)
-					// title = tr("Nothing selected!");
-					//
-					// optionPane.createDialog(Main.parent, title)
-					// .setVisible(true);
-					// Object answerObj = optionPane.getValue();
-					// if (answerObj != null
-					// && answerObj != JOptionPane.UNINITIALIZED_VALUE
-					// && (answerObj instanceof Integer && (Integer) answerObj
-					// == JOptionPane.OK_OPTION)) {
-					//
-					// // call out to the method which does the actual
-					// // terracing.
-					// terraceBuilding(way, dialog.numberFrom(), dialog
-					// .numberTo(), dialog.stepSize(), dialog
-					// .streetName());
-					//
-					// }
 				} else {
 					badSelect = true;
 				}
@@ -148,9 +115,11 @@ public final class TerracerAction extends JosmAction {
 		} else if (segments != null) {
 			nb = segments.intValue();
 		} else {
-			// TODO: we're in trouble.
-			// do exception handling.
-			nb = 0;
+			// if we get here, there is is a bug in the input validation.
+			throw new TerracerRuntimeException(
+					"Could not determine segments from parameters, this is a bug. "
+							+ "Parameters were: segments " + segments
+							+ " from " + from + " to " + to + " step " + step);
 		}
 
 		// now find which is the longest side connecting the first node
@@ -415,24 +384,6 @@ public final class TerracerAction extends JosmAction {
 
 		return (ndx * pdx + ndy * pdy)
 				/ Math.sqrt((ndx * ndx + ndy * ndy) * (pdx * pdx + pdy * pdy));
-	}
-
-	/**
-	 * Generates a list of all visible names of highways in order to do
-	 * autocompletion on the road name.
-	 * 
-	 * TODO: REMOVE this method here!
-	 */
-	TreeSet<String> createAutoCompletionInfo() {
-		final TreeSet<String> names = new TreeSet<String>();
-		for (OsmPrimitive osm : Main.main.getCurrentDataSet()
-				.allNonDeletedPrimitives()) {
-			if (osm.getKeys() != null && osm.keySet().contains("highway")
-					&& osm.keySet().contains("name")) {
-				names.add(osm.get("name"));
-			}
-		}
-		return names;
 	}
 
 	/**

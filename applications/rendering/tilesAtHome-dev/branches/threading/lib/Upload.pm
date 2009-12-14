@@ -229,6 +229,7 @@ sub upload
 
         my $queue_length = scalar(@queue_files);
         my $max_queue = $Config->get("UploadToDirectoryMaxQueue");
+        $max_queue = $Config->get("UploadToDirectoryMaxQueueLimit") if $max_queue >= $Config->get("UploadToDirectoryMaxQueueLimit");
         if ($queue_length >= $max_queue) {
             ::statusMessage("Not uploading, upload directory full",0,0);
             sleep(1);

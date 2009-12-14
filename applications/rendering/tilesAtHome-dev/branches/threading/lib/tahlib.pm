@@ -146,25 +146,58 @@ sub getIdle
 #-----------------------------------------------------------------------------
 # fault handling
 #-----------------------------------------------------------------------------
+sub initFaults
+{
+    my @faultlist = @_;
+    foreach my $faulttype (@faultlist)
+    {
+        initFault($faulttype);
+    }
+}
+
+sub initFault
+{
+   my ($faulttype) = @_;
+   $faults{$faulttype} = 0;
+   return "0 but true";
+}
+
 sub addFault
 {
     my ($faulttype,$diff) = @_;
     $diff = 1 if (not $diff);
-    $faults{$faulttype} += $diff;
-    return $faults{$faulttype};
+    if (defined ($faults{$faulttype}))
+    {
+        $faults{$faulttype} += $diff;
+        return $faults{$faulttype};
+    }
+    else
+    {
+        statusMessage("Warning: used uninitialized fault ".$faulttype,1,0);
+        return -1;
+    }
 }
 
 sub getFault
 {
     my ($faulttype) = @_;
-    return $faults{$faulttype};
+    return $faults{$faulttype} if (defined ($faults{$faulttype}));
+    return -1;
 }
 
 sub resetFault
 {
     my ($faulttype) = @_;
-    $faults{$faulttype} = 0;
-    return "0 but true";
+    if (defined ($faults{$faulttype}))
+    {
+        $faults{$faulttype} = 0;
+        return "0 but true";
+    }
+    else
+    {
+        statusMessage("Warning: used uninitialized fault ".$faulttype,1,0);
+        return -1;
+    }
 }
 
 #-----------------------------------------------------------------------------

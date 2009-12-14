@@ -32,6 +32,14 @@ DownloadTimeout=1800
 #APIServers = API,TRAPI,ROMA
 #XAPIServers = XAPI
 
+# Threading Options
+# Cores=n, is the number of the pysical existing cpu cores in ur system
+# normal start the client pro n, 1 renderer and 1 png optimizer thread
+# MaxMemory=n, n is in KB 1000=1GB
+# this is only a helper option and have a effect of paralel running rederer on big osm files (experimental)
+Cores=1
+MaxMemory=1000
+
 # Hand back render requests that have a tileset on a server bigger than
 # MaxTilesetComplexity. Useful if you do not have much RAM and inkscape
 # crashes. The biggest tileset is about 31000000, so playing with values

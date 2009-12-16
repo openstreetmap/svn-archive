@@ -12,6 +12,7 @@
 	<name>Osmosis Simplify Plugin</name>
 	<description></description>
 	<url>http://wiki.openstreetmap.org/wiki/Osmosis</url>
+	<inceptionYear>2009</inceptionYear>
 
 	<organization>
 		<name>OpenStreetMap</name>
@@ -42,6 +43,26 @@
 	<!-- contributors -->
 	<contributors>
 	</contributors>
+
+	<scm>
+		<url>http://trac.openstreetmap.org/browser/applications/utils/osmosis/plugins/simplify</url>
+		<connection>scm:svn:http://svn.openstreetmap.org/applications/utils/osmosis/plugins/simplify</connection>
+		<developerConnection>scm:svn:http://svn.openstreetmap.org/applications/utils/osmosis/plugins/simplify</developerConnection>
+	</scm>
+
+	<ciManagement>
+		<system>Hudson</system>
+		<url>http://dev.openstreetmap.de:23457/hudson/</url>
+	</ciManagement>
+
+	<!-- Mailing Lists -->
+	<mailingLists>
+		<mailingList>
+			<name>Developer List</name>
+			<post>osmosis-dev@openstreetmap.org</post>
+			<archive>http://lists.openstreetmap.org/pipermail/osmosis-dev/</archive>
+		</mailingList>
+	</mailingLists>
 
 	<!-- Global Build Settings -->
 	<build>

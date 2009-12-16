@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.15  2009-12-16 xml encoding error for < and >                     ##
 ## 0.2.14  2009-11-20 changesetautomulti parameter                       ##
 ## 0.2.13  2009-11-16 modify instead update for osc                      ##
 ## 0.2.12  2009-11-14 raise ApiError on 4xx errors -- Xoff               ##
@@ -46,7 +47,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.14'
+__version__ = '0.2.15'
 
 import httplib, base64, xml.dom.minidom, time, sys
 
@@ -682,7 +683,7 @@ class OsmApi:
         return xml.encode("utf8")
 
     def _XmlEncode(self, text):
-        return text.replace("&", "&amp;").replace("\"", "&quot;")
+        return text.replace("&", "&amp;").replace("\"", "&quot;").replace("<","&lt;").replace(">","&gt;")
 
 ## End of main class                                                     ##
 ###########################################################################

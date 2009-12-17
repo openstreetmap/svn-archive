@@ -31,7 +31,7 @@
     <property name="ant.build.javac.target" value="1.5"/>
 	
 
-    <property name="commit.message" value="Updated to new referrer support in OsmPrimitive" />		
+    <property name="commit.message" value="Compatibility issues with Java 1.5. We didn't switch to 1.6 yet." />		
     <property name="plugin.main.version" value="2565" />
     	
     	

@@ -21,7 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
+ 
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
@@ -183,7 +183,7 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 	private boolean checkNumberStringField(final JTextField field,
 			final String label, final StringBuffer message) {
 		final String content = field.getText();
-		if (content != null && !content.isEmpty()) {
+		if (content != null && content.length() != 0) {
 			try {
 				int i = Integer.parseInt(content);
 				if (i < 0) {
@@ -215,7 +215,6 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 	/* (non-Javadoc)
 	 * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
 	 */
-	@Override
 	public void stateChanged(ChangeEvent e) {
 		validateInput();
 
@@ -224,7 +223,6 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 	/* (non-Javadoc)
 	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
 	 */
-	@Override
 	public void itemStateChanged(ItemEvent e) {
 		validateInput();
 	}
@@ -232,7 +230,6 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
-	@Override
 	public void actionPerformed(final ActionEvent e) {
 
 		// OK or Cancel button-actions
@@ -326,7 +323,6 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 	/* (non-Javadoc)
 	 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
 	 */
-	@Override
 	public void focusGained(FocusEvent e) {
 		validateInput();
 	}
@@ -334,7 +330,6 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 	/* (non-Javadoc)
 	 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
 	 */
-	@Override
 	public void focusLost(FocusEvent e) {
 		validateInput();
 	}

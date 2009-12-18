@@ -1,12 +1,12 @@
 #!/usr/bin/perl
 
-# A script that merges ways into one if they share certain characterstics.
+# A script that merges ways into one if they share certain characteristics.
 #     
 # Reads an OSM file on stdin, writes the merged file on stdout.
 #
 # May break referential integrity by dropping ways that are referenced by a relation!
 #
-# Writtern by Frederik Ramm <frederik@remote.org>, public domain.
+# Written by Frederik Ramm <frederik@remote.org>, public domain.
 # -----------------------------------------------------------------------------
 
 # this is basically the configuration function: it controls which ways may be merged:

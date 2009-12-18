@@ -45,18 +45,23 @@ while(<>)
             $copy = 1;
         }
     }
+    elsif (/^\s*<\/osm/)
+    {
+        print_ways();
+        $copy = 1;
+    }
     if ($copy)
     {
         print;
         next;
     }
-    if (/way id=['"](\d+)['"]/)
+    if (/way id=['"]([-0-9]+)['"]/)
     {
         $w = {};
         $w->{attr} = $_;
         $w->{id} = $1;
     }
-    elsif (/<nd ref=['"](\d+)['"]/)
+    elsif (/<nd ref=['"]([-0-9]+)['"]/)
     {
         if (defined($w->{firstnode}))
         {
@@ -77,6 +82,7 @@ while(<>)
     {
         push(@{$ways_beginning_at->{$w->{firstnode}}}, $w);
     }
+
 }
 
 sub print_ways

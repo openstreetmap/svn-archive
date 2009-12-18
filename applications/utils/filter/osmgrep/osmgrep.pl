@@ -4,7 +4,7 @@
 #
 # called like this:
 #
-# perl oscgrep.pl [-i] [-l] [-t type] [-r regex] file file...
+# perl osmgrep.pl [-i] [-l] [-t type] [-r regex] file file...
 #
 # where
 #   "type" is either way, node, or relation;

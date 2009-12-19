@@ -1,6 +1,5 @@
 /build
 /eclipse
-/ivy
 /osmosis.jar
 /dist
 /*.externalToolBuilders

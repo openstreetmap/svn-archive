@@ -295,7 +295,32 @@
 			<area class="natural-water-marsh"/>
 		</rule>
 		<rule e="way" k="landuse" v="reservoir">
-			<area class="natural-water"/>
+			<rule e="way" k="reservoir_type" v="evaporator">
+			<area class="reservoir-evaporator"/>
+			</rule>
+			<else>
+				<rule e="way" k="reservoir_type" v="cooling">
+					<area class="reservoir-cooling"/>
+				</rule>
+				<else>
+					<rule e="way" k="reservoir_type" v="sewage">
+						<area class="reservoir-sewage"/>
+					</rule>
+					<else>
+						<rule e="way" k="reservoir_type" v="tailings">
+							<area class="reservoir-tailings"/>
+						</rule>
+						<else>
+							<rule e="way" k="reservoir_type" v="water_storage">
+								<area class="natural-water"/>
+							</rule>
+							<else>
+								<area class="natural-water"/>
+							</else>
+						</else>
+					</else>
+				</else>
+			</else>
 		</rule>
 		<rule e="way" k="landuse" v="basin">
 			<area class="natural-water"/>
@@ -3581,6 +3606,26 @@
 			stroke-width: 0.05px;
 			}
 
+			.reservoir-evaporator {
+			fill: url(#reservoir-evaporator-pattern);
+			stroke: none;
+			}
+
+			.reservoir-cooling {
+			fill: url(#reservoir-cooling-pattern);
+			stroke: none;
+			}
+
+			.reservoir-sewage {
+			fill: url(#reservoir-sewage-pattern);
+			stroke: none;
+			}
+
+			.reservoir-tailings {
+			fill: url(#reservoir-tailings-pattern);
+			stroke: none;
+			}
+
 			/* Area captions */
 			.park-name {
 			fill: #404040;
@@ -3950,22 +3995,49 @@
 		</svg:pattern>
 		<svg:pattern id="power-generic-pattern" x="4" y="4" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="scale(0.4)">
 		<!-- power_generic.svg -->
-			<path d="M 8.5,12.8 L 11.9,6.5 L 7.1,7.6 L 10.8,1.5 L 8.2,0.17 L 4.1,10.1 L 9,8.6 L 7.4,12.3 L 7.1,11.6 L 6.65,15.7 L 9.3,12.5 L 8.5,12.8 z" style="fill:#ffff00;stroke:#000000;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;" />
+			<svg:path d="M 8.5,12.8 L 11.9,6.5 L 7.1,7.6 L 10.8,1.5 L 8.2,0.17 L 4.1,10.1 L 9,8.6 L 7.4,12.3 L 7.1,11.6 L 6.65,15.7 L 9.3,12.5 L 8.5,12.8 z" style="fill:#ffff00;stroke:#000000;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;" />
 		</svg:pattern>
-
-		
+		<!-- reservoir patterns -->
+		<svg:pattern id="reservoir-evaporator-pattern" patternUnits="userSpaceOnUse" width="2" height="2" >
+			<svg:path style="stroke:#007fff;stroke-width:.06px;stroke-linecap:round;" d="M 0.1,1.9 L 1.9,1.9" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 0.96,1.8 C 1.25,1.4 0.75,1.4 1.04,1" />
+			<svg:path style="stroke:#007fff;stroke-width:.035px;fill:none" d="M 0.61,1.8 C 0.8,1.55 0.5,1.55 .69,1.3" />
+			<svg:path style="stroke:#007fff;stroke-width:.035px;fill:none" d="M 1.31,1.8 C 1.5,1.55 1.2,1.55 1.39,1.3" />
+		</svg:pattern>
+		<svg:pattern id="reservoir-cooling-pattern" patternUnits="userSpaceOnUse" width="2" height="2" >
+			<svg:path style="stroke:#007fff;stroke-width:.06px;stroke-linecap:round;" d="M 0.1,1.9 L 1.9,1.9" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 1,1.25 L 0.784,1.125 L 0.784,0.875 L 1,0.75 L 1.217,0.875 L 1.217,1.125 z" />
+			<svg:path style="stroke:#007fff;stroke-width:.04px;fill:none" d="M 1,1.25 L 1,1.75" />
+			<svg:path style="stroke:#007fff;stroke-width:.04px;fill:none" d="M 0.784,1.125 L 0.35,1.375" />
+			<svg:path style="stroke:#007fff;stroke-width:.04px;fill:none" d="M 0.784,0.875 L 0.35,0.625" />
+			<svg:path style="stroke:#007fff;stroke-width:.04px;fill:none" d="M 1,0.75 L 1,0.25" />
+			<svg:path style="stroke:#007fff;stroke-width:.04px;fill:none" d="M 1.217,0.875 L 1.65,0.625" />
+			<svg:path style="stroke:#007fff;stroke-width:.04px;fill:none" d="M 1.217,1.125 L 1.65,1.375" />
+			<svg:path style="stroke:#007fff;stroke-width:.02px;fill:none" d="M 1.257,1.705 L 1.000,1.550 L 0.743,1.705" />
+			<svg:path style="stroke:#007fff;stroke-width:.02px;fill:none" d="M 0.518,1.575 L 0.524,1.275 L 0.261,1.130" />
+			<svg:path style="stroke:#007fff;stroke-width:.02px;fill:none" d="M 0.261,0.870 L 0.524,0.725 L 0.518,0.425" />
+			<svg:path style="stroke:#007fff;stroke-width:.02px;fill:none" d="M 0.743,0.295 L 1.000,0.450 L 1.257,0.295" />
+			<svg:path style="stroke:#007fff;stroke-width:.02px;fill:none" d="M 1.482,0.425 L 1.476,0.725 L 1.739,0.870" />
+			<svg:path style="stroke:#007fff;stroke-width:.02px;fill:none" d="M 1.739,1.139 L 1.476,1.275 L 1.482,1.575" />
+		</svg:pattern>
+		<svg:pattern id="reservoir-sewage-pattern" patternUnits="userSpaceOnUse" width="0.5" height="0.5" >
+			<svg:path style="stroke:#997700;stroke-width:.1px;" d="M -0.01,-0.01 L 0.51,0.51" />
+		</svg:pattern>
+		<svg:pattern id="reservoir-tailings-pattern" patternUnits="userSpaceOnUse" width="0.5" height="0.5" >
+		<svg:path style="stroke:black;stroke-width:.1px;" d="M -0.01,-0.01 L 0.51,0.51" />
+		</svg:pattern>
 		<svg:marker fill="none" id="bridge-casing-start" markerHeight="1px" markerWidth="1px" orient="auto" stroke="#707070" stroke-width="0.1px">
-			<svg:path d="M-0.25,0.75 L0.5,0 L-0.25,-0.75"/>
+		<svg:path d="M-0.25,0.75 L0.5,0 L-0.25,-0.75"/>
 		</svg:marker>
 		<svg:marker fill="none" id="bridge-casing-end" markerHeight="1px" markerWidth="1px" orient="auto" stroke="#707070" stroke-width="0.1px">
-			<svg:path d="M0.25,0.75 L-0.5,0 L0.25,-0.75"/>
+		<svg:path d="M0.25,0.75 L-0.5,0 L0.25,-0.75"/>
 		</svg:marker>
 		<svg:marker fill="none" id="canal-lock" markerHeight="5px" markerUnits="userSpaceOnUse" markerWidth="5px" orient="auto" refX="1px" refY="5px" stroke="#000000" stroke-width="0.5px" stroke-opacity="1" viewBox="0 0 10 10">
-			<svg:path d="M 1,0 L -2,5 L 1,10"/>
+		<svg:path d="M 1,0 L -2,5 L 1,10"/>
 		</svg:marker>
 		<svg:marker fill="none" id="mountain-pass" markerHeight="48px" markerUnits="userSpaceOnUse" markerWidth="24px" orient="auto" refX="64px" refY="32px" stroke="#000000" stroke-width="0.66px" viewBox="0 0 64 128">
-			<svg:path d="M 1,1 L 16,21 L 112,21 L 127,1"/>
-			<svg:path d="M 1,63 L 16,43 L 112,43 L 127,63"/>
+		<svg:path d="M 1,1 L 16,21 L 112,21 L 127,1"/>
+		<svg:path d="M 1,63 L 16,43 L 112,43 L 127,63"/>
 		</svg:marker>
-	</defs>
+		</defs>
 </rules>

@@ -32,7 +32,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  *
  * New relation with type=multipolygon is created
  *
- * If one or more of ways is already in relation with type=multipolygon or the way os not closed,
+ * If one or more of ways is already in relation with type=multipolygon or the way is not closed,
  * then error is reported and no relation is created
  *
  * The "inner" and "outer" roles are guessed automatically.
@@ -48,7 +48,6 @@ public class MultipolyAction extends JosmAction {
   super(tr("Create multipolygon"), "multipoly_create", tr("Create multipolygon."),
   Shortcut.registerShortcut("tools:multipoly", tr("Tool: {0}", tr("Create multipolygon")),
   KeyEvent.VK_M, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
-  setEnabled(true);
  }
 
  /**
@@ -141,6 +140,20 @@ public class MultipolyAction extends JosmAction {
   //Commit
   Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygon"), cmds));
   Main.map.repaint();
+ }
+
+ /** Enable this action only if something is selected */
+ @Override protected void updateEnabledState() {
+  if (getCurrentDataSet()==null) {
+   setEnabled(false);
+  } else {
+   updateEnabledState(getCurrentDataSet().getSelected());
+  }
+ }
+
+ /** Enable this action only if something is selected */
+ @Override protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
+  setEnabled(selection != null && !selection.isEmpty());
  }
 
 }

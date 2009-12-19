@@ -34,7 +34,7 @@ public class MultipolyPlugin extends Plugin {
       toolsMenu.addSeparator();
       toolsMenu.add(new JMenuItem(new MultipolyAction()));
     }
-    
+
   }
 
 }

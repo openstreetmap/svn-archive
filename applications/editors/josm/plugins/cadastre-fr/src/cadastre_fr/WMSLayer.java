@@ -587,8 +587,9 @@ public class WMSLayer extends Layer implements ImageObserver {
     private void paintCrosspieces(Graphics g, MapView mv) {
         String crosspieces = Main.pref.get("cadastrewms.crosspieces", "0");
         if (!crosspieces.equals("0")) {
-            int modulo = 50;
-            if (crosspieces.equals("2")) modulo = 100;
+            int modulo = 25;
+            if (crosspieces.equals("2")) modulo = 50;
+            if (crosspieces.equals("3")) modulo = 100;
             EastNorthBound currentView = new EastNorthBound(mv.getEastNorth(0, mv.getHeight()),
                     mv.getEastNorth(mv.getWidth(), 0));
             int minX = ((int)currentView.min.east()/modulo+1)*modulo;

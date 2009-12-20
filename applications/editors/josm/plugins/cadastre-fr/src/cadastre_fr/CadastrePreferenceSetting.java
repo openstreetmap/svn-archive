@@ -47,9 +47,11 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     
     private JRadioButton crosspiece1 = new JRadioButton("off");
     
-    private JRadioButton crosspiece2 = new JRadioButton("50m");
+    private JRadioButton crosspiece2 = new JRadioButton("25m");
 
-    private JRadioButton crosspiece3 = new JRadioButton("100m");
+    private JRadioButton crosspiece3 = new JRadioButton("50m");
+
+    private JRadioButton crosspiece4 = new JRadioButton("100m");
 
     static final int DEFAULT_SQUARE_SIZE = 100;
     private JTextField grabMultiplier4Size = new JTextField(5);
@@ -190,12 +192,15 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         if (crosspieces == 0) crosspiece1.setSelected(true);
         if (crosspieces == 1) crosspiece2.setSelected(true);
         if (crosspieces == 2) crosspiece3.setSelected(true);
+        if (crosspieces == 3) crosspiece4.setSelected(true);
         bgCrosspieces.add(crosspiece1);
         bgCrosspieces.add(crosspiece2);
         bgCrosspieces.add(crosspiece3);
+        bgCrosspieces.add(crosspiece4);
         cadastrewms.add(crosspiece1, GBC.std().insets(5, 0, 5, 0));
         cadastrewms.add(crosspiece2, GBC.std().insets(5, 0, 5, 0));
-        cadastrewms.add(crosspiece3, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
+        cadastrewms.add(crosspiece3, GBC.std().insets(5, 0, 5, 0));
+        cadastrewms.add(crosspiece4, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
 
         // separator
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
@@ -255,6 +260,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         if (crosspiece1.isSelected()) Main.pref.put("cadastrewms.crosspieces", "0");
         else if (crosspiece2.isSelected()) Main.pref.put("cadastrewms.crosspieces", "1");
         else if (crosspiece3.isSelected()) Main.pref.put("cadastrewms.crosspieces", "2");
+        else if (crosspiece4.isSelected()) Main.pref.put("cadastrewms.crosspieces", "3");
         Main.pref.put("cadastrewms.enableCaching", enableCache.isSelected());
 
         // spread data into objects instead of restarting the application

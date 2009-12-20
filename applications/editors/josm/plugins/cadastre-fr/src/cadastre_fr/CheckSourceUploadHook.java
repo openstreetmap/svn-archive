@@ -12,6 +12,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.upload.UploadHook;
@@ -77,7 +78,9 @@ public class CheckSourceUploadHook implements UploadHook
         if (!sel.isEmpty()) {
             JPanel p = new JPanel(new GridBagLayout());
             OsmPrimitivRenderer renderer = new OsmPrimitivRenderer();
-            p.add(new JLabel(tr("Auto-tag source added:")), GBC.eol());
+            p.add(new JLabel(tr("Add \"source=...\" to elements?")), GBC.eol());
+            JTextField tf = new JTextField(CadastrePlugin.source);
+            p.add(tf, GBC.eol());
             JList l = new JList(sel.toArray());
             l.setCellRenderer(renderer);
             l.setVisibleRowCount(l.getModel().getSize() < 6 ? l.getModel().getSize() : 10);
@@ -85,8 +88,9 @@ public class CheckSourceUploadHook implements UploadHook
             boolean bContinue = JOptionPane.showConfirmDialog(Main.parent, p, tr("Add \"source=...\" to elements?"),
                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
             if (bContinue)
-                Main.main.undoRedo.add(new ChangePropertyCommand(sel, "source", CadastrePlugin.source));
+                Main.main.undoRedo.add(new ChangePropertyCommand(sel, "source", tf.getText()));
         }
 
     }
 }
+

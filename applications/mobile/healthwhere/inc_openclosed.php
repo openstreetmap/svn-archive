@@ -36,7 +36,7 @@ function CheckTime ($timerange) {
 
 /*
  * Function to determine if facility is open now
- * Returns True if it is open, False if it is closed
+ * Returns True if it is open, False if it is closed, empty string if not known
  * $open_hours: value of opening_hours tag
 */
 function OpenClosed ($open_hours) {
@@ -50,6 +50,9 @@ function OpenClosed ($open_hours) {
 	$today = $weekdays [strtolower (substr (date ("D"), 0, 2))];
 	//Default to returning False
 	$bOpen = False;
+	//If opening hours aren't specified, return empty string
+	if ($open_hours == "")
+		return "";
 
 	//Ensure $open_hours is lower case - makes life simpler
 	$open_hours = strtolower ($open_hours);

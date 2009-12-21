@@ -60,7 +60,8 @@ function AddPharmHospital (&$asPharmacies, &$ph, &$node, $user_lat, $user_lon, $
 		//pad $dist with leading zeroes for sorting
 		$sorting = str_pad ($dist, 5, "0", STR_PAD_LEFT);
 		//Prefix $sorting with 0 (open) or 1 (closed/don't know)
-		if (OpenClosed ($ph ["hours"]))
+		$bOpen = OpenClosed ($ph ["hours"]);
+		if ($bOpen === True)
 			$sorting = "0$sorting";
 		else
 			$sorting = "1$sorting";
@@ -74,11 +75,16 @@ function AddPharmHospital (&$asPharmacies, &$ph, &$node, $user_lat, $user_lon, $
 		$soperator = stripslashes ($ph ["operator"]);
 
 		if ($sname != "" && $soperator != "")
-			$sPharmacy .= "$sname</a> ($soperator) ($dist)<br>";
+			$sPharmacy .= "$sname</a> ($soperator)<br>";
 		elseif ($sname == "" && $soperator == "")
-			$sPharmacy .= "[No name]</a> ($dist)<br>";
+			$sPharmacy .= "[No name]</a><br>";
 		else
-			$sPharmacy .= "$sname$soperator</a> ($dist)<br>";
+			$sPharmacy .= "$sname$soperator</a><br>";
+		if ($bOpen === True)
+			$sPharmacy .= "Open, ";
+		elseif ($bOpen === False)
+			$sPharmacy .= "Closed, ";
+		$sPharmacy .= "$dist miles away<br>";
 		if ($search == "hospital" && $ph ["emergency"] != "")
 			$sPharmacy .= "Emergency: {$ph ["emergency"]}<br>";
 		if ($ph ["addr_housename"] != "")

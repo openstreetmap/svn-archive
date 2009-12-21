@@ -29,7 +29,7 @@ const char *xmlescape(const char *in)
     // To fix this we'd need to fix the DB output parameters too
 #ifdef USE_ICONV 
     if (cd != ICONV_ERROR) {
-        char iconv_tmp[1024];
+        char iconv_tmp[2048];
         char *inbuf = in, *outbuf = iconv_tmp;
         size_t ret;
         size_t inlen = strlen(inbuf);
@@ -67,8 +67,7 @@ const char *xmlescape(const char *in)
             strcpy(&escape_tmp[len], "&quot;");
             len += strlen("&quot;");
         } else if ((*in >= 0) && (*in < 32)) {
-            escape_tmp[len] = '?';
-            len++;
+            len+=sprintf(&escape_tmp[len], "&#%d;", *in);
         } else {
             escape_tmp[len] = *in;
             len++;
@@ -93,10 +92,11 @@ void osm_tags(struct keyval *tags)
    resetList(tags);
 }
 
-void osm_changeset(int id, const char *user, const char *created_at, const char *closed_at, int has_bbox, 
+void osm_changeset(int id, const char *user, const char *created_at, const char *closed_at, 
+           int num_changes, int has_bbox, 
 		   long double min_lat, long double max_lat, long double min_lon, long double max_lon, 
 		   int open, struct keyval *tags) {
-  printf(INDENT "<changeset id=\"%d\" created_at=\"%s\" ", id, created_at);
+  printf(INDENT "<changeset id=\"%d\" created_at=\"%s\" num_changes=\"%d\" ", id, created_at, num_changes);
   if (open) {
     printf("open=\"true\" ");
   } else {

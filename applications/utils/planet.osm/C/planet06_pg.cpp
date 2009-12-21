@@ -259,6 +259,7 @@ void changesets(pqxx::work &xaction) {
 		    lookup_user(row[1].c_str()), // user_id
 		    created_at, // created_at
 		    reformDate(row[3].c_str()), // closed_at
+            row[4].as<int>(), // num_changes
 		    null_bbox ? 0 : 1,
 		    null_bbox ? 0 : row[5].as<int>() / SCALE, // min_lat
 		    null_bbox ? 0 : row[6].as<int>() / SCALE, // max_lat
